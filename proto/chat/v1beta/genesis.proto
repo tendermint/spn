@@ -1,0 +1,8 @@
+syntax = "proto3";
+package spn.chat.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/chat/types";
+
+// GenesisState defines the chat module's genesis state.
+message GenesisState {
+}
