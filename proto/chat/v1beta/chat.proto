@@ -1,0 +1,48 @@
+syntax = "proto3";
+package spn.chat.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/chat/types";
+
+import "google/protobuf/any.proto";
+
+message Channel {
+  int32 id = 1;
+  User creator = 2;
+  string name = 3; 
+  string subject = 4; 
+  int32 messageCount = 5; 
+  google.protobuf.Any metadata = 6;
+}
+
+message Message {
+  int32 channelID = 1;
+  int32 messageIndex = 2;
+  User author = 3;
+  string content = 4; 
+  repeated string tags = 5;
+  int64 createdAt = 6;
+  message Poll {
+    repeated string options = 1;
+    message UserVote {
+      User voter = 1;
+      Vote vote = 2;
+    }
+    repeated UserVote votes = 2;
+  }
+  Poll poll = 7;
+  bool hasPoll = 8;
+  google.protobuf.Any metadata = 9;
+}
+
+message User {
+  enum UserFormat {
+    PLAIN_ADDRESS = 0;
+  }
+  UserFormat format = 1;
+  bytes value = 2;
+}
+
+message Vote {
+    int32 value = 1;
+    google.protobuf.Any metadata = 2;
+}

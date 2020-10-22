@@ -1,0 +1,30 @@
+syntax = "proto3";
+package spn.chat.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/chat/types";
+
+import "google/protobuf/any.proto";
+import "chat/v1beta/chat.proto";
+
+message MsgCreateChannel {
+  User creator = 1;
+  string name = 2; 
+  string subject = 3; 
+  google.protobuf.Any metadata = 4;
+}
+
+message MsgSendMessage {
+  int32 channelId = 1;
+  User author = 2;
+  string content = 3; 
+  repeated string tags = 4;
+  repeated string pollOptions = 5;
+  google.protobuf.Any metadata = 6;
+}
+
+message MsgVotePoll {
+  string messageId = 1;
+  User author = 2;
+  int32 value = 3; 
+  google.protobuf.Any metadata = 4;
+}

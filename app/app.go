@@ -78,6 +78,9 @@ import (
 	spnkeeper "github.com/tendermint/spn/x/spn/keeper"
 	spntypes "github.com/tendermint/spn/x/spn/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
+		"github.com/tendermint/spn/x/chat"
+		chatkeeper "github.com/tendermint/spn/x/chat/keeper"
+		chattypes "github.com/tendermint/spn/x/chat/types"
 )
 
 var (
@@ -109,6 +112,7 @@ var (
 		transfer.AppModuleBasic{},
 		spn.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
+		chat.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -169,6 +173,7 @@ type App struct {
 
 	spnKeeper spnkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
+		chatKeeper chatkeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -198,6 +203,7 @@ func New(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
         spntypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
+		chattypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -301,6 +307,11 @@ func New(
 	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
+		app.chatKeeper = *chatkeeper.NewKeeper(
+			appCodec,
+			keys[chattypes.StoreKey],
+			keys[chattypes.MemStoreKey],
+		)
 
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
@@ -327,6 +338,7 @@ func New(
 		transferModule,
 		spn.NewAppModule(appCodec, app.spnKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
+		chat.NewAppModule(appCodec, app.chatKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -360,6 +372,7 @@ func New(
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
+		chattypes.ModuleName,
 	)
 
     app.mm.RegisterInvariants(&app.CrisisKeeper)
@@ -534,6 +547,7 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
     paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
+		paramsKeeper.Subspace(chattypes.ModuleName)
 
 	return paramsKeeper
 }
