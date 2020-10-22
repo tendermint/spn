@@ -4,11 +4,10 @@ package spn.chat.v1beta1;
 option go_package = "github.com/tendermint/spn/x/chat/types";
 
 import "google/protobuf/any.proto";
-import "gogoproto/gogo.proto";
 
 message Channel {
   int32 id = 1;
-  bytes creator = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  User creator = 2;
   string name = 3; 
   string subject = 4; 
   int32 messageCount = 5; 
@@ -16,19 +15,31 @@ message Channel {
 }
 
 message Message {
-  int32 channelId = 1;
-  int32 messageNb = 2;
-  bytes author = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  int32 channelID = 1;
+  int32 messageIndex = 2;
+  User author = 3;
   string content = 4; 
   repeated string tags = 5;
-  int64 timestamp = 6;
-  message UserVote {
-    bytes user = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-    Vote vote = 2;
+  int64 createdAt = 6;
+  message Poll {
+    repeated string options = 1;
+    message UserVote {
+      User voter = 1;
+      Vote vote = 2;
+    }
+    repeated UserVote votes = 2;
   }
-  repeated UserVote userVotes = 7;
-  map<int32,int32> voteCount = 8; 
+  Poll poll = 7;
+  bool hasPoll = 8;
   google.protobuf.Any metadata = 9;
+}
+
+message User {
+  enum UserFormat {
+    PLAIN_ADDRESS = 0;
+  }
+  UserFormat format = 1;
+  bytes value = 2;
 }
 
 message Vote {

@@ -6,8 +6,6 @@ package types
 import (
 	fmt "fmt"
 	types "github.com/cosmos/cosmos-sdk/codec/types"
-	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
-	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -25,13 +23,35 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type User_UserFormat int32
+
+const (
+	User_PLAIN_ADDRESS User_UserFormat = 0
+)
+
+var User_UserFormat_name = map[int32]string{
+	0: "PLAIN_ADDRESS",
+}
+
+var User_UserFormat_value = map[string]int32{
+	"PLAIN_ADDRESS": 0,
+}
+
+func (x User_UserFormat) String() string {
+	return proto.EnumName(User_UserFormat_name, int32(x))
+}
+
+func (User_UserFormat) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_f6ad9904b1cb24fd, []int{2, 0}
+}
+
 type Channel struct {
-	Id           int32                                         `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Creator      github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,2,opt,name=creator,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"creator,omitempty"`
-	Name         string                                        `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	Subject      string                                        `protobuf:"bytes,4,opt,name=subject,proto3" json:"subject,omitempty"`
-	MessageCount int32                                         `protobuf:"varint,5,opt,name=messageCount,proto3" json:"messageCount,omitempty"`
-	Metadata     *types.Any                                    `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	Id           int32      `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Creator      *User      `protobuf:"bytes,2,opt,name=creator,proto3" json:"creator,omitempty"`
+	Name         string     `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	Subject      string     `protobuf:"bytes,4,opt,name=subject,proto3" json:"subject,omitempty"`
+	MessageCount int32      `protobuf:"varint,5,opt,name=messageCount,proto3" json:"messageCount,omitempty"`
+	Metadata     *types.Any `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`
 }
 
 func (m *Channel) Reset()         { *m = Channel{} }
@@ -74,7 +94,7 @@ func (m *Channel) GetId() int32 {
 	return 0
 }
 
-func (m *Channel) GetCreator() github_com_cosmos_cosmos_sdk_types.AccAddress {
+func (m *Channel) GetCreator() *User {
 	if m != nil {
 		return m.Creator
 	}
@@ -110,15 +130,15 @@ func (m *Channel) GetMetadata() *types.Any {
 }
 
 type Message struct {
-	ChannelId int32                                         `protobuf:"varint,1,opt,name=channelId,proto3" json:"channelId,omitempty"`
-	MessageNb int32                                         `protobuf:"varint,2,opt,name=messageNb,proto3" json:"messageNb,omitempty"`
-	Author    github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,3,opt,name=author,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"author,omitempty"`
-	Content   string                                        `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
-	Tags      []string                                      `protobuf:"bytes,5,rep,name=tags,proto3" json:"tags,omitempty"`
-	Timestamp int64                                         `protobuf:"varint,6,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	UserVotes []*Message_UserVote                           `protobuf:"bytes,7,rep,name=userVotes,proto3" json:"userVotes,omitempty"`
-	VoteCount map[int32]int32                               `protobuf:"bytes,8,rep,name=voteCount,proto3" json:"voteCount,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
-	Metadata  *types.Any                                    `protobuf:"bytes,9,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	ChannelID    int32         `protobuf:"varint,1,opt,name=channelID,proto3" json:"channelID,omitempty"`
+	MessageIndex int32         `protobuf:"varint,2,opt,name=messageIndex,proto3" json:"messageIndex,omitempty"`
+	Author       *User         `protobuf:"bytes,3,opt,name=author,proto3" json:"author,omitempty"`
+	Content      string        `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	Tags         []string      `protobuf:"bytes,5,rep,name=tags,proto3" json:"tags,omitempty"`
+	CreatedAt    int64         `protobuf:"varint,6,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	Poll         *Message_Poll `protobuf:"bytes,7,opt,name=poll,proto3" json:"poll,omitempty"`
+	HasPoll      bool          `protobuf:"varint,8,opt,name=hasPoll,proto3" json:"hasPoll,omitempty"`
+	Metadata     *types.Any    `protobuf:"bytes,9,opt,name=metadata,proto3" json:"metadata,omitempty"`
 }
 
 func (m *Message) Reset()         { *m = Message{} }
@@ -154,21 +174,21 @@ func (m *Message) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Message proto.InternalMessageInfo
 
-func (m *Message) GetChannelId() int32 {
+func (m *Message) GetChannelID() int32 {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return 0
 }
 
-func (m *Message) GetMessageNb() int32 {
+func (m *Message) GetMessageIndex() int32 {
 	if m != nil {
-		return m.MessageNb
+		return m.MessageIndex
 	}
 	return 0
 }
 
-func (m *Message) GetAuthor() github_com_cosmos_cosmos_sdk_types.AccAddress {
+func (m *Message) GetAuthor() *User {
 	if m != nil {
 		return m.Author
 	}
@@ -189,25 +209,25 @@ func (m *Message) GetTags() []string {
 	return nil
 }
 
-func (m *Message) GetTimestamp() int64 {
+func (m *Message) GetCreatedAt() int64 {
 	if m != nil {
-		return m.Timestamp
+		return m.CreatedAt
 	}
 	return 0
 }
 
-func (m *Message) GetUserVotes() []*Message_UserVote {
+func (m *Message) GetPoll() *Message_Poll {
 	if m != nil {
-		return m.UserVotes
+		return m.Poll
 	}
 	return nil
 }
 
-func (m *Message) GetVoteCount() map[int32]int32 {
+func (m *Message) GetHasPoll() bool {
 	if m != nil {
-		return m.VoteCount
+		return m.HasPoll
 	}
-	return nil
+	return false
 }
 
 func (m *Message) GetMetadata() *types.Any {
@@ -217,23 +237,23 @@ func (m *Message) GetMetadata() *types.Any {
 	return nil
 }
 
-type Message_UserVote struct {
-	User github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,1,opt,name=user,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"user,omitempty"`
-	Vote *Vote                                         `protobuf:"bytes,2,opt,name=vote,proto3" json:"vote,omitempty"`
+type Message_Poll struct {
+	Options []string                 `protobuf:"bytes,1,rep,name=options,proto3" json:"options,omitempty"`
+	Votes   []*Message_Poll_UserVote `protobuf:"bytes,2,rep,name=votes,proto3" json:"votes,omitempty"`
 }
 
-func (m *Message_UserVote) Reset()         { *m = Message_UserVote{} }
-func (m *Message_UserVote) String() string { return proto.CompactTextString(m) }
-func (*Message_UserVote) ProtoMessage()    {}
-func (*Message_UserVote) Descriptor() ([]byte, []int) {
+func (m *Message_Poll) Reset()         { *m = Message_Poll{} }
+func (m *Message_Poll) String() string { return proto.CompactTextString(m) }
+func (*Message_Poll) ProtoMessage()    {}
+func (*Message_Poll) Descriptor() ([]byte, []int) {
 	return fileDescriptor_f6ad9904b1cb24fd, []int{1, 0}
 }
-func (m *Message_UserVote) XXX_Unmarshal(b []byte) error {
+func (m *Message_Poll) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *Message_UserVote) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *Message_Poll) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_Message_UserVote.Marshal(b, m, deterministic)
+		return xxx_messageInfo_Message_Poll.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -243,28 +263,132 @@ func (m *Message_UserVote) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 		return b[:n], nil
 	}
 }
-func (m *Message_UserVote) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Message_UserVote.Merge(m, src)
+func (m *Message_Poll) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Message_Poll.Merge(m, src)
 }
-func (m *Message_UserVote) XXX_Size() int {
+func (m *Message_Poll) XXX_Size() int {
 	return m.Size()
 }
-func (m *Message_UserVote) XXX_DiscardUnknown() {
-	xxx_messageInfo_Message_UserVote.DiscardUnknown(m)
+func (m *Message_Poll) XXX_DiscardUnknown() {
+	xxx_messageInfo_Message_Poll.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Message_UserVote proto.InternalMessageInfo
+var xxx_messageInfo_Message_Poll proto.InternalMessageInfo
 
-func (m *Message_UserVote) GetUser() github_com_cosmos_cosmos_sdk_types.AccAddress {
+func (m *Message_Poll) GetOptions() []string {
 	if m != nil {
-		return m.User
+		return m.Options
 	}
 	return nil
 }
 
-func (m *Message_UserVote) GetVote() *Vote {
+func (m *Message_Poll) GetVotes() []*Message_Poll_UserVote {
+	if m != nil {
+		return m.Votes
+	}
+	return nil
+}
+
+type Message_Poll_UserVote struct {
+	Voter *User `protobuf:"bytes,1,opt,name=voter,proto3" json:"voter,omitempty"`
+	Vote  *Vote `protobuf:"bytes,2,opt,name=vote,proto3" json:"vote,omitempty"`
+}
+
+func (m *Message_Poll_UserVote) Reset()         { *m = Message_Poll_UserVote{} }
+func (m *Message_Poll_UserVote) String() string { return proto.CompactTextString(m) }
+func (*Message_Poll_UserVote) ProtoMessage()    {}
+func (*Message_Poll_UserVote) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f6ad9904b1cb24fd, []int{1, 0, 0}
+}
+func (m *Message_Poll_UserVote) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Message_Poll_UserVote) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Message_Poll_UserVote.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Message_Poll_UserVote) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Message_Poll_UserVote.Merge(m, src)
+}
+func (m *Message_Poll_UserVote) XXX_Size() int {
+	return m.Size()
+}
+func (m *Message_Poll_UserVote) XXX_DiscardUnknown() {
+	xxx_messageInfo_Message_Poll_UserVote.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Message_Poll_UserVote proto.InternalMessageInfo
+
+func (m *Message_Poll_UserVote) GetVoter() *User {
+	if m != nil {
+		return m.Voter
+	}
+	return nil
+}
+
+func (m *Message_Poll_UserVote) GetVote() *Vote {
 	if m != nil {
 		return m.Vote
+	}
+	return nil
+}
+
+type User struct {
+	Format User_UserFormat `protobuf:"varint,1,opt,name=format,proto3,enum=spn.chat.v1beta1.User_UserFormat" json:"format,omitempty"`
+	Value  []byte          `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
+}
+
+func (m *User) Reset()         { *m = User{} }
+func (m *User) String() string { return proto.CompactTextString(m) }
+func (*User) ProtoMessage()    {}
+func (*User) Descriptor() ([]byte, []int) {
+	return fileDescriptor_f6ad9904b1cb24fd, []int{2}
+}
+func (m *User) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *User) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_User.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *User) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_User.Merge(m, src)
+}
+func (m *User) XXX_Size() int {
+	return m.Size()
+}
+func (m *User) XXX_DiscardUnknown() {
+	xxx_messageInfo_User.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_User proto.InternalMessageInfo
+
+func (m *User) GetFormat() User_UserFormat {
+	if m != nil {
+		return m.Format
+	}
+	return User_PLAIN_ADDRESS
+}
+
+func (m *User) GetValue() []byte {
+	if m != nil {
+		return m.Value
 	}
 	return nil
 }
@@ -278,7 +402,7 @@ func (m *Vote) Reset()         { *m = Vote{} }
 func (m *Vote) String() string { return proto.CompactTextString(m) }
 func (*Vote) ProtoMessage()    {}
 func (*Vote) Descriptor() ([]byte, []int) {
-	return fileDescriptor_f6ad9904b1cb24fd, []int{2}
+	return fileDescriptor_f6ad9904b1cb24fd, []int{3}
 }
 func (m *Vote) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -322,52 +446,54 @@ func (m *Vote) GetMetadata() *types.Any {
 }
 
 func init() {
+	proto.RegisterEnum("spn.chat.v1beta1.User_UserFormat", User_UserFormat_name, User_UserFormat_value)
 	proto.RegisterType((*Channel)(nil), "spn.chat.v1beta1.Channel")
 	proto.RegisterType((*Message)(nil), "spn.chat.v1beta1.Message")
-	proto.RegisterMapType((map[int32]int32)(nil), "spn.chat.v1beta1.Message.VoteCountEntry")
-	proto.RegisterType((*Message_UserVote)(nil), "spn.chat.v1beta1.Message.UserVote")
+	proto.RegisterType((*Message_Poll)(nil), "spn.chat.v1beta1.Message.Poll")
+	proto.RegisterType((*Message_Poll_UserVote)(nil), "spn.chat.v1beta1.Message.Poll.UserVote")
+	proto.RegisterType((*User)(nil), "spn.chat.v1beta1.User")
 	proto.RegisterType((*Vote)(nil), "spn.chat.v1beta1.Vote")
 }
 
 func init() { proto.RegisterFile("chat/v1beta/chat.proto", fileDescriptor_f6ad9904b1cb24fd) }
 
 var fileDescriptor_f6ad9904b1cb24fd = []byte{
-	// 548 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x94, 0x4f, 0x6b, 0xdb, 0x4c,
-	0x10, 0xc6, 0xbd, 0xb6, 0xfc, 0x6f, 0x1d, 0x42, 0x58, 0x4c, 0xd0, 0x6b, 0x5e, 0x54, 0xe1, 0x43,
-	0x11, 0x85, 0xac, 0x6a, 0xf7, 0x52, 0x4a, 0x0f, 0x71, 0x42, 0x0a, 0xa1, 0x34, 0x07, 0x41, 0x73,
-	0xe8, 0x6d, 0x25, 0x6d, 0x65, 0x37, 0xd6, 0xae, 0xd1, 0x8e, 0x4c, 0x7d, 0xe8, 0x77, 0xe8, 0xc7,
-	0xea, 0x31, 0x97, 0x42, 0x4f, 0xa5, 0xd8, 0xb7, 0x7e, 0x84, 0x9e, 0xca, 0xae, 0x24, 0x3b, 0x6e,
-	0x29, 0x84, 0x9c, 0x3c, 0x33, 0xfb, 0xec, 0x78, 0x9e, 0xdf, 0x2c, 0xc2, 0xc7, 0xd1, 0x94, 0x81,
-	0xbf, 0x1c, 0x85, 0x1c, 0x98, 0xaf, 0x63, 0xba, 0xc8, 0x24, 0x48, 0x72, 0xa4, 0x16, 0x82, 0x9a,
-	0xbc, 0x38, 0x1b, 0x0d, 0xfe, 0x4b, 0xa4, 0x4c, 0xe6, 0xdc, 0x37, 0xe7, 0x61, 0xfe, 0xde, 0x67,
-	0x62, 0x55, 0x88, 0x07, 0xfd, 0x44, 0x26, 0xd2, 0x84, 0xbe, 0x8e, 0x8a, 0xea, 0xf0, 0x27, 0xc2,
-	0xed, 0xf3, 0x29, 0x13, 0x82, 0xcf, 0xc9, 0x21, 0xae, 0xcf, 0x62, 0x1b, 0xb9, 0xc8, 0x6b, 0x06,
-	0xf5, 0x59, 0x4c, 0x5e, 0xe3, 0x76, 0x94, 0x71, 0x06, 0x32, 0xb3, 0xeb, 0x2e, 0xf2, 0x0e, 0xce,
-	0x46, 0xbf, 0xbe, 0x3f, 0x3a, 0x49, 0x66, 0x30, 0xcd, 0x43, 0x1a, 0xc9, 0xd4, 0x8f, 0xa4, 0x4a,
-	0xa5, 0x2a, 0x7f, 0x4e, 0x54, 0x7c, 0xe3, 0xc3, 0x6a, 0xc1, 0x15, 0x9d, 0x44, 0xd1, 0x24, 0x8e,
-	0x33, 0xae, 0x54, 0x50, 0x75, 0x20, 0x04, 0x5b, 0x82, 0xa5, 0xdc, 0x6e, 0xb8, 0xc8, 0xeb, 0x06,
-	0x26, 0x26, 0x36, 0x6e, 0xab, 0x3c, 0xfc, 0xc0, 0x23, 0xb0, 0x2d, 0x53, 0xae, 0x52, 0x32, 0xc4,
-	0x07, 0x29, 0x57, 0x8a, 0x25, 0xfc, 0x5c, 0xe6, 0x02, 0xec, 0xa6, 0x19, 0x6a, 0xaf, 0x46, 0x9e,
-	0xe2, 0x4e, 0xca, 0x81, 0xc5, 0x0c, 0x98, 0xdd, 0x72, 0x91, 0xd7, 0x1b, 0xf7, 0x69, 0x61, 0x9f,
-	0x56, 0xf6, 0xe9, 0x44, 0xac, 0x82, 0xad, 0x6a, 0xf8, 0xd5, 0xc2, 0xed, 0x37, 0x45, 0x0b, 0xf2,
-	0x3f, 0xee, 0x46, 0x85, 0xef, 0xcb, 0xca, 0xf3, 0xae, 0xa0, 0x4f, 0xcb, 0xff, 0xba, 0x0a, 0x8d,
-	0xf9, 0x66, 0xb0, 0x2b, 0x90, 0x4b, 0xdc, 0x62, 0x39, 0x4c, 0x65, 0x66, 0xdc, 0x3c, 0x88, 0x4b,
-	0xd9, 0x40, 0x23, 0x88, 0xa4, 0x00, 0x2e, 0xb6, 0x08, 0xca, 0x54, 0x03, 0x03, 0x96, 0x28, 0xbb,
-	0xe9, 0x36, 0x34, 0x30, 0x1d, 0xeb, 0xb1, 0x60, 0x96, 0x72, 0x05, 0x2c, 0x5d, 0x18, 0xcf, 0x8d,
-	0x60, 0x57, 0x20, 0xa7, 0xb8, 0x9b, 0x2b, 0x9e, 0x5d, 0x4b, 0xe0, 0xca, 0x6e, 0xbb, 0x0d, 0xaf,
-	0x37, 0x1e, 0xd2, 0x3f, 0x9f, 0x08, 0x2d, 0x01, 0xd0, 0xb7, 0xa5, 0x34, 0xd8, 0x5d, 0x22, 0xaf,
-	0x70, 0x77, 0x29, 0xa1, 0x64, 0xde, 0x31, 0x1d, 0xbc, 0x7f, 0x77, 0xb8, 0xae, 0xa4, 0x17, 0x02,
-	0xb2, 0x55, 0xb0, 0xbb, 0xba, 0xb7, 0x9a, 0xee, 0x7d, 0x56, 0x33, 0xf8, 0x84, 0x3b, 0xd5, 0x40,
-	0xe4, 0x02, 0x5b, 0x7a, 0x24, 0xb3, 0x95, 0x07, 0xc1, 0x35, 0xd7, 0xc9, 0x13, 0x6c, 0xe9, 0x89,
-	0xcc, 0xfa, 0x7a, 0xe3, 0xe3, 0xbf, 0x7d, 0x18, 0xf7, 0x46, 0x33, 0x78, 0x89, 0x0f, 0xf7, 0xdd,
-	0x90, 0x23, 0xdc, 0xb8, 0xe1, 0xab, 0xf2, 0x65, 0xe8, 0x90, 0xf4, 0x71, 0x73, 0xc9, 0xe6, 0x39,
-	0x2f, 0xdf, 0x43, 0x91, 0xbc, 0xa8, 0x3f, 0x47, 0xc3, 0x2b, 0x6c, 0x99, 0xc1, 0xb7, 0x0a, 0x74,
-	0x47, 0xb1, 0x07, 0xa3, 0x7e, 0x1f, 0x18, 0x67, 0xa7, 0x5f, 0xd6, 0x0e, 0xba, 0x5d, 0x3b, 0xe8,
-	0xc7, 0xda, 0x41, 0x9f, 0x37, 0x4e, 0xed, 0x76, 0xe3, 0xd4, 0xbe, 0x6d, 0x9c, 0xda, 0xbb, 0xc7,
-	0x77, 0x40, 0x00, 0x17, 0x31, 0xcf, 0xd2, 0x99, 0x00, 0x5f, 0x2d, 0x84, 0xff, 0xd1, 0x7c, 0x19,
-	0x0a, 0x18, 0x61, 0xcb, 0x74, 0x7e, 0xf6, 0x3b, 0x00, 0x00, 0xff, 0xff, 0xf0, 0xb8, 0xd1, 0x4e,
-	0x3a, 0x04, 0x00, 0x00,
+	// 560 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x54, 0x4f, 0x6f, 0xd3, 0x4e,
+	0x10, 0x8d, 0x13, 0xe7, 0x4f, 0xa7, 0xfd, 0x55, 0xfd, 0xad, 0xaa, 0x6a, 0xa9, 0x90, 0x31, 0x3e,
+	0x40, 0x84, 0x90, 0xdd, 0x86, 0x13, 0x07, 0x24, 0x42, 0x0b, 0x52, 0x25, 0xa8, 0x22, 0x57, 0x70,
+	0xe0, 0x82, 0x36, 0xf6, 0x36, 0x09, 0xb2, 0x77, 0x2d, 0x7b, 0x1d, 0x25, 0x9f, 0x02, 0xbe, 0x14,
+	0x12, 0x37, 0x7a, 0xe4, 0x88, 0x92, 0x2f, 0x82, 0x3c, 0x6b, 0x27, 0x04, 0x08, 0xea, 0xc5, 0x9a,
+	0x99, 0x7d, 0x33, 0x6f, 0xde, 0xdb, 0x95, 0xe1, 0x28, 0x18, 0x33, 0xe5, 0x4d, 0x4f, 0x87, 0x5c,
+	0x31, 0xaf, 0x88, 0xdd, 0x24, 0x95, 0x4a, 0x92, 0x83, 0x2c, 0x11, 0x2e, 0xe6, 0xfa, 0xec, 0xf4,
+	0xf8, 0xce, 0x48, 0xca, 0x51, 0xc4, 0x3d, 0x3c, 0x1f, 0xe6, 0xd7, 0x1e, 0x13, 0x73, 0x0d, 0x76,
+	0xbe, 0x19, 0xd0, 0x3e, 0x1b, 0x33, 0x21, 0x78, 0x44, 0xf6, 0xa1, 0x3e, 0x09, 0xa9, 0x61, 0x1b,
+	0xdd, 0xa6, 0x5f, 0x9f, 0x84, 0xe4, 0x04, 0xda, 0x41, 0xca, 0x99, 0x92, 0x29, 0xad, 0xdb, 0x46,
+	0x77, 0xb7, 0x77, 0xe4, 0xfe, 0x3e, 0xda, 0x7d, 0x9b, 0xf1, 0xd4, 0xaf, 0x60, 0x84, 0x80, 0x29,
+	0x58, 0xcc, 0x69, 0xc3, 0x36, 0xba, 0x3b, 0x3e, 0xc6, 0x84, 0x42, 0x3b, 0xcb, 0x87, 0x1f, 0x79,
+	0xa0, 0xa8, 0x89, 0xe5, 0x2a, 0x25, 0x0e, 0xec, 0xc5, 0x3c, 0xcb, 0xd8, 0x88, 0x9f, 0xc9, 0x5c,
+	0x28, 0xda, 0x44, 0xe6, 0x8d, 0x1a, 0x39, 0x81, 0x4e, 0xcc, 0x15, 0x0b, 0x99, 0x62, 0xb4, 0x85,
+	0x4b, 0x1c, 0xba, 0x5a, 0x8d, 0x5b, 0xa9, 0x71, 0xfb, 0x62, 0xee, 0xaf, 0x50, 0xce, 0x27, 0x13,
+	0xda, 0x6f, 0xf4, 0x08, 0x72, 0x17, 0x76, 0x02, 0x2d, 0xee, 0xe2, 0xbc, 0x14, 0xb6, 0x2e, 0xfc,
+	0xc2, 0x7f, 0x21, 0x42, 0x3e, 0x43, 0x91, 0x6b, 0x7e, 0xac, 0x11, 0x17, 0x5a, 0x2c, 0x57, 0x63,
+	0x99, 0xa2, 0xa6, 0xed, 0x16, 0x94, 0xa8, 0x42, 0x6d, 0x20, 0x85, 0xe2, 0x62, 0xa5, 0xb6, 0x4c,
+	0x0b, 0x6f, 0x14, 0x1b, 0x65, 0xb4, 0x69, 0x37, 0x0a, 0x6f, 0x8a, 0x18, 0xf7, 0x2b, 0xac, 0xe3,
+	0x61, 0x5f, 0xa1, 0xbc, 0x86, 0xbf, 0x2e, 0x90, 0x1e, 0x98, 0x89, 0x8c, 0x22, 0xda, 0x46, 0x66,
+	0xeb, 0x4f, 0xe6, 0x52, 0xa6, 0x3b, 0x90, 0x51, 0xe4, 0x23, 0xb6, 0xe0, 0x1f, 0xb3, 0xac, 0x28,
+	0xd0, 0x8e, 0x6d, 0x74, 0x3b, 0x7e, 0x95, 0x6e, 0x38, 0xb9, 0x73, 0x1b, 0x27, 0x8f, 0xbf, 0x18,
+	0x60, 0x0e, 0xca, 0xa1, 0x32, 0x51, 0x13, 0x29, 0x32, 0x6a, 0xe0, 0xf6, 0x55, 0x4a, 0x9e, 0x41,
+	0x73, 0x2a, 0x15, 0xcf, 0x68, 0xdd, 0x6e, 0x74, 0x77, 0x7b, 0x0f, 0xff, 0xbd, 0x23, 0x5a, 0xf5,
+	0x4e, 0x2a, 0xee, 0xeb, 0xae, 0xe3, 0x10, 0x3a, 0x55, 0x89, 0x3c, 0xd6, 0xa3, 0x52, 0xbc, 0xa7,
+	0xed, 0x46, 0x6b, 0x10, 0x79, 0x04, 0x66, 0x11, 0x6c, 0x7f, 0x98, 0x48, 0x83, 0x18, 0x67, 0x06,
+	0x66, 0xd1, 0x4a, 0x9e, 0x42, 0xeb, 0x5a, 0xa6, 0x31, 0x53, 0x48, 0xb1, 0xdf, 0xbb, 0xff, 0x77,
+	0x0a, 0xfc, 0xbc, 0x42, 0xa0, 0x5f, 0x36, 0x90, 0x43, 0x68, 0x4e, 0x59, 0x94, 0x6b, 0xbe, 0x3d,
+	0x5f, 0x27, 0xce, 0x3d, 0x80, 0x35, 0x96, 0xfc, 0x0f, 0xff, 0x0d, 0x5e, 0xf7, 0x2f, 0x2e, 0x3f,
+	0xf4, 0xcf, 0xcf, 0xfd, 0x97, 0x57, 0x57, 0x07, 0x35, 0xe7, 0x12, 0x4c, 0xd4, 0xb6, 0x6a, 0xd7,
+	0x6f, 0x50, 0x27, 0x1b, 0x37, 0x52, 0xbf, 0xcd, 0x8d, 0xbc, 0x78, 0xfe, 0x75, 0x61, 0x19, 0x37,
+	0x0b, 0xcb, 0xf8, 0xb1, 0xb0, 0x8c, 0xcf, 0x4b, 0xab, 0x76, 0xb3, 0xb4, 0x6a, 0xdf, 0x97, 0x56,
+	0xed, 0xfd, 0x83, 0xd1, 0x44, 0x8d, 0xf3, 0xa1, 0x1b, 0xc8, 0xd8, 0x53, 0x5c, 0x84, 0x3c, 0x8d,
+	0x27, 0x42, 0x79, 0x59, 0x22, 0xbc, 0x19, 0xfe, 0x1c, 0x3c, 0x35, 0x4f, 0x78, 0x36, 0x6c, 0xe1,
+	0xe4, 0x27, 0x3f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x0a, 0x45, 0x9c, 0x48, 0x3d, 0x04, 0x00, 0x00,
 }
 
 func (m *Channel) Marshal() (dAtA []byte, err error) {
@@ -421,10 +547,15 @@ func (m *Channel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x1a
 	}
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintChat(dAtA, i, uint64(len(m.Creator)))
+	if m.Creator != nil {
+		{
+			size, err := m.Creator.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintChat(dAtA, i, uint64(size))
+		}
 		i--
 		dAtA[i] = 0x12
 	}
@@ -468,37 +599,30 @@ func (m *Message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x4a
 	}
-	if len(m.VoteCount) > 0 {
-		for k := range m.VoteCount {
-			v := m.VoteCount[k]
-			baseI := i
-			i = encodeVarintChat(dAtA, i, uint64(v))
-			i--
-			dAtA[i] = 0x10
-			i = encodeVarintChat(dAtA, i, uint64(k))
-			i--
-			dAtA[i] = 0x8
-			i = encodeVarintChat(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x42
+	if m.HasPoll {
+		i--
+		if m.HasPoll {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
 		}
+		i--
+		dAtA[i] = 0x40
 	}
-	if len(m.UserVotes) > 0 {
-		for iNdEx := len(m.UserVotes) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.UserVotes[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintChat(dAtA, i, uint64(size))
+	if m.Poll != nil {
+		{
+			size, err := m.Poll.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
 			}
-			i--
-			dAtA[i] = 0x3a
+			i -= size
+			i = encodeVarintChat(dAtA, i, uint64(size))
 		}
+		i--
+		dAtA[i] = 0x3a
 	}
-	if m.Timestamp != 0 {
-		i = encodeVarintChat(dAtA, i, uint64(m.Timestamp))
+	if m.CreatedAt != 0 {
+		i = encodeVarintChat(dAtA, i, uint64(m.CreatedAt))
 		i--
 		dAtA[i] = 0x30
 	}
@@ -518,27 +642,32 @@ func (m *Message) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x22
 	}
-	if len(m.Author) > 0 {
-		i -= len(m.Author)
-		copy(dAtA[i:], m.Author)
-		i = encodeVarintChat(dAtA, i, uint64(len(m.Author)))
+	if m.Author != nil {
+		{
+			size, err := m.Author.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintChat(dAtA, i, uint64(size))
+		}
 		i--
 		dAtA[i] = 0x1a
 	}
-	if m.MessageNb != 0 {
-		i = encodeVarintChat(dAtA, i, uint64(m.MessageNb))
+	if m.MessageIndex != 0 {
+		i = encodeVarintChat(dAtA, i, uint64(m.MessageIndex))
 		i--
 		dAtA[i] = 0x10
 	}
-	if m.ChannelId != 0 {
-		i = encodeVarintChat(dAtA, i, uint64(m.ChannelId))
+	if m.ChannelID != 0 {
+		i = encodeVarintChat(dAtA, i, uint64(m.ChannelID))
 		i--
 		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *Message_UserVote) Marshal() (dAtA []byte, err error) {
+func (m *Message_Poll) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -548,12 +677,58 @@ func (m *Message_UserVote) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *Message_UserVote) MarshalTo(dAtA []byte) (int, error) {
+func (m *Message_Poll) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *Message_UserVote) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *Message_Poll) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Votes) > 0 {
+		for iNdEx := len(m.Votes) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Votes[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintChat(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.Options) > 0 {
+		for iNdEx := len(m.Options) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Options[iNdEx])
+			copy(dAtA[i:], m.Options[iNdEx])
+			i = encodeVarintChat(dAtA, i, uint64(len(m.Options[iNdEx])))
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *Message_Poll_UserVote) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Message_Poll_UserVote) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Message_Poll_UserVote) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -570,12 +745,52 @@ func (m *Message_UserVote) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.User) > 0 {
-		i -= len(m.User)
-		copy(dAtA[i:], m.User)
-		i = encodeVarintChat(dAtA, i, uint64(len(m.User)))
+	if m.Voter != nil {
+		{
+			size, err := m.Voter.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintChat(dAtA, i, uint64(size))
+		}
 		i--
 		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *User) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *User) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *User) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Value) > 0 {
+		i -= len(m.Value)
+		copy(dAtA[i:], m.Value)
+		i = encodeVarintChat(dAtA, i, uint64(len(m.Value)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.Format != 0 {
+		i = encodeVarintChat(dAtA, i, uint64(m.Format))
+		i--
+		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -640,8 +855,8 @@ func (m *Channel) Size() (n int) {
 	if m.Id != 0 {
 		n += 1 + sovChat(uint64(m.Id))
 	}
-	l = len(m.Creator)
-	if l > 0 {
+	if m.Creator != nil {
+		l = m.Creator.Size()
 		n += 1 + l + sovChat(uint64(l))
 	}
 	l = len(m.Name)
@@ -668,14 +883,14 @@ func (m *Message) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.ChannelId != 0 {
-		n += 1 + sovChat(uint64(m.ChannelId))
+	if m.ChannelID != 0 {
+		n += 1 + sovChat(uint64(m.ChannelID))
 	}
-	if m.MessageNb != 0 {
-		n += 1 + sovChat(uint64(m.MessageNb))
+	if m.MessageIndex != 0 {
+		n += 1 + sovChat(uint64(m.MessageIndex))
 	}
-	l = len(m.Author)
-	if l > 0 {
+	if m.Author != nil {
+		l = m.Author.Size()
 		n += 1 + l + sovChat(uint64(l))
 	}
 	l = len(m.Content)
@@ -688,22 +903,15 @@ func (m *Message) Size() (n int) {
 			n += 1 + l + sovChat(uint64(l))
 		}
 	}
-	if m.Timestamp != 0 {
-		n += 1 + sovChat(uint64(m.Timestamp))
+	if m.CreatedAt != 0 {
+		n += 1 + sovChat(uint64(m.CreatedAt))
 	}
-	if len(m.UserVotes) > 0 {
-		for _, e := range m.UserVotes {
-			l = e.Size()
-			n += 1 + l + sovChat(uint64(l))
-		}
+	if m.Poll != nil {
+		l = m.Poll.Size()
+		n += 1 + l + sovChat(uint64(l))
 	}
-	if len(m.VoteCount) > 0 {
-		for k, v := range m.VoteCount {
-			_ = k
-			_ = v
-			mapEntrySize := 1 + sovChat(uint64(k)) + 1 + sovChat(uint64(v))
-			n += mapEntrySize + 1 + sovChat(uint64(mapEntrySize))
-		}
+	if m.HasPoll {
+		n += 2
 	}
 	if m.Metadata != nil {
 		l = m.Metadata.Size()
@@ -712,18 +920,55 @@ func (m *Message) Size() (n int) {
 	return n
 }
 
-func (m *Message_UserVote) Size() (n int) {
+func (m *Message_Poll) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.User)
-	if l > 0 {
+	if len(m.Options) > 0 {
+		for _, s := range m.Options {
+			l = len(s)
+			n += 1 + l + sovChat(uint64(l))
+		}
+	}
+	if len(m.Votes) > 0 {
+		for _, e := range m.Votes {
+			l = e.Size()
+			n += 1 + l + sovChat(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *Message_Poll_UserVote) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Voter != nil {
+		l = m.Voter.Size()
 		n += 1 + l + sovChat(uint64(l))
 	}
 	if m.Vote != nil {
 		l = m.Vote.Size()
+		n += 1 + l + sovChat(uint64(l))
+	}
+	return n
+}
+
+func (m *User) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Format != 0 {
+		n += 1 + sovChat(uint64(m.Format))
+	}
+	l = len(m.Value)
+	if l > 0 {
 		n += 1 + l + sovChat(uint64(l))
 	}
 	return n
@@ -803,7 +1048,7 @@ func (m *Channel) Unmarshal(dAtA []byte) error {
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
 			}
-			var byteLen int
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowChat
@@ -813,24 +1058,26 @@ func (m *Channel) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				byteLen |= int(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if byteLen < 0 {
+			if msglen < 0 {
 				return ErrInvalidLengthChat
 			}
-			postIndex := iNdEx + byteLen
+			postIndex := iNdEx + msglen
 			if postIndex < 0 {
 				return ErrInvalidLengthChat
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Creator = append(m.Creator[:0], dAtA[iNdEx:postIndex]...)
 			if m.Creator == nil {
-				m.Creator = []byte{}
+				m.Creator = &User{}
+			}
+			if err := m.Creator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
 			}
 			iNdEx = postIndex
 		case 3:
@@ -1007,9 +1254,9 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
-			m.ChannelId = 0
+			m.ChannelID = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowChat
@@ -1019,16 +1266,16 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ChannelId |= int32(b&0x7F) << shift
+				m.ChannelID |= int32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MessageNb", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MessageIndex", wireType)
 			}
-			m.MessageNb = 0
+			m.MessageIndex = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowChat
@@ -1038,7 +1285,7 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.MessageNb |= int32(b&0x7F) << shift
+				m.MessageIndex |= int32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1047,7 +1294,7 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Author", wireType)
 			}
-			var byteLen int
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowChat
@@ -1057,24 +1304,26 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				byteLen |= int(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if byteLen < 0 {
+			if msglen < 0 {
 				return ErrInvalidLengthChat
 			}
-			postIndex := iNdEx + byteLen
+			postIndex := iNdEx + msglen
 			if postIndex < 0 {
 				return ErrInvalidLengthChat
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Author = append(m.Author[:0], dAtA[iNdEx:postIndex]...)
 			if m.Author == nil {
-				m.Author = []byte{}
+				m.Author = &User{}
+			}
+			if err := m.Author.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
 			}
 			iNdEx = postIndex
 		case 4:
@@ -1143,9 +1392,9 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 6:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Timestamp", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
 			}
-			m.Timestamp = 0
+			m.CreatedAt = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowChat
@@ -1155,14 +1404,14 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Timestamp |= int64(b&0x7F) << shift
+				m.CreatedAt |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 7:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field UserVotes", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Poll", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1189,16 +1438,18 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.UserVotes = append(m.UserVotes, &Message_UserVote{})
-			if err := m.UserVotes[len(m.UserVotes)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if m.Poll == nil {
+				m.Poll = &Message_Poll{}
+			}
+			if err := m.Poll.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 8:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VoteCount", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HasPoll", wireType)
 			}
-			var msglen int
+			var v int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowChat
@@ -1208,91 +1459,12 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				v |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
-				return ErrInvalidLengthChat
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthChat
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.VoteCount == nil {
-				m.VoteCount = make(map[int32]int32)
-			}
-			var mapkey int32
-			var mapvalue int32
-			for iNdEx < postIndex {
-				entryPreIndex := iNdEx
-				var wire uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowChat
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					wire |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				fieldNum := int32(wire >> 3)
-				if fieldNum == 1 {
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return ErrIntOverflowChat
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						mapkey |= int32(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-				} else if fieldNum == 2 {
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return ErrIntOverflowChat
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						mapvalue |= int32(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-				} else {
-					iNdEx = entryPreIndex
-					skippy, err := skipChat(dAtA[iNdEx:])
-					if err != nil {
-						return err
-					}
-					if skippy < 0 {
-						return ErrInvalidLengthChat
-					}
-					if (iNdEx + skippy) > postIndex {
-						return io.ErrUnexpectedEOF
-					}
-					iNdEx += skippy
-				}
-			}
-			m.VoteCount[mapkey] = mapvalue
-			iNdEx = postIndex
+			m.HasPoll = bool(v != 0)
 		case 9:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
@@ -1353,7 +1525,126 @@ func (m *Message) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *Message_UserVote) Unmarshal(dAtA []byte) error {
+func (m *Message_Poll) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowChat
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Poll: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Poll: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Options", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowChat
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthChat
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthChat
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Options = append(m.Options, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Votes", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowChat
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthChat
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthChat
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Votes = append(m.Votes, &Message_Poll_UserVote{})
+			if err := m.Votes[len(m.Votes)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipChat(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthChat
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthChat
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Message_Poll_UserVote) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1384,9 +1675,9 @@ func (m *Message_UserVote) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field User", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Voter", wireType)
 			}
-			var byteLen int
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowChat
@@ -1396,24 +1687,26 @@ func (m *Message_UserVote) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				byteLen |= int(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if byteLen < 0 {
+			if msglen < 0 {
 				return ErrInvalidLengthChat
 			}
-			postIndex := iNdEx + byteLen
+			postIndex := iNdEx + msglen
 			if postIndex < 0 {
 				return ErrInvalidLengthChat
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.User = append(m.User[:0], dAtA[iNdEx:postIndex]...)
-			if m.User == nil {
-				m.User = []byte{}
+			if m.Voter == nil {
+				m.Voter = &User{}
+			}
+			if err := m.Voter.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
 			}
 			iNdEx = postIndex
 		case 2:
@@ -1450,6 +1743,112 @@ func (m *Message_UserVote) Unmarshal(dAtA []byte) error {
 			}
 			if err := m.Vote.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipChat(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthChat
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthChat
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *User) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowChat
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: User: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: User: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Format", wireType)
+			}
+			m.Format = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowChat
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Format |= User_UserFormat(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Value", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowChat
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthChat
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthChat
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Value = append(m.Value[:0], dAtA[iNdEx:postIndex]...)
+			if m.Value == nil {
+				m.Value = []byte{}
 			}
 			iNdEx = postIndex
 		default:
