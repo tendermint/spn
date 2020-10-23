@@ -14,7 +14,7 @@ message MsgCreateChannel {
 }
 
 message MsgSendMessage {
-  int32 channelId = 1;
+  int32 channelID = 1;
   User author = 2;
   string content = 3; 
   repeated string tags = 4;
@@ -23,7 +23,7 @@ message MsgSendMessage {
 }
 
 message MsgVotePoll {
-  string messageId = 1;
+  string messageID = 1;
   User author = 2;
   int32 value = 3; 
   google.protobuf.Any metadata = 4;
