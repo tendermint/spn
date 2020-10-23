@@ -5,7 +5,6 @@ import (
 
 	types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	proto "github.com/gogo/protobuf/proto"
 )
 
 // NewPoll creates a new poll
@@ -89,18 +88,13 @@ func checkOptions(options []string) bool {
 func NewVote(
 	author User,
 	value int32,
-	metadata proto.Message,
+	metadata *types.Any,
 ) (Vote, error) {
 	vote := new(Vote)
 
 	vote.Author = &author
 	vote.Value = value
-
-	metadataAny, err := types.NewAnyWithValue(metadata)
-	if err != nil {
-		return *vote, sdkerrors.Wrap(ErrInvalidVote, err.Error())
-	}
-	vote.Metadata = metadataAny
+	vote.Metadata = metadata
 
 	return *vote, nil
 }

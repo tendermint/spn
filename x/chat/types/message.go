@@ -5,7 +5,6 @@ import (
 
 	types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	proto "github.com/gogo/protobuf/proto"
 )
 
 const (
@@ -21,7 +20,7 @@ func NewMessage(
 	tags []string,
 	createdAt time.Time,
 	pollOptions []string,
-	metadata proto.Message,
+	metadata *types.Any,
 ) (Message, error) {
 	message := new(Message)
 
@@ -52,11 +51,7 @@ func NewMessage(
 		message.Poll = &newPoll
 	}
 
-	metadataAny, err := types.NewAnyWithValue(metadata)
-	if err != nil {
-		return *message, sdkerrors.Wrap(ErrInvalidMessage, err.Error())
-	}
-	message.Metadata = metadataAny
+	message.Metadata = metadata
 
-	return *message, err
+	return *message, nil
 }

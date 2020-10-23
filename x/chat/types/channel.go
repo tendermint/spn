@@ -3,7 +3,6 @@ package types
 import (
 	types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	proto "github.com/gogo/protobuf/proto"
 )
 
 const (
@@ -17,7 +16,7 @@ func NewChannel(
 	creator User,
 	name string,
 	subject string,
-	metadata proto.Message,
+	metadata *types.Any,
 ) (Channel, error) {
 	channel := new(Channel)
 	channel.Creator = &creator
@@ -31,16 +30,10 @@ func NewChannel(
 		return *channel, sdkerrors.Wrap(ErrInvalidChannel, "subject too big")
 	}
 	channel.Subject = subject
-
 	channel.MessageCount = 0
+	channel.Metadata = metadata
 
-	metadataAny, err := types.NewAnyWithValue(metadata)
-	if err != nil {
-		return *channel, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
-	}
-	channel.Metadata = metadataAny
-
-	return *channel, err
+	return *channel, nil
 }
 
 // IncrementMessageCount increments the message count inside the channel
