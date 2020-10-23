@@ -22,6 +22,17 @@ func TestNewPoll(t *testing.T) {
 	}
 }
 
+func TestNewVote(t *testing.T) {
+	user := chat.MockUser()
+
+	// Can create a vote with metadata
+	_, metadata := chat.MockMetadata()
+	_, err := types.NewVote(user, 0, metadata)
+	if err != nil {
+		t.Errorf("NewVote should create a new vote: %v", err)
+	}
+}
+
 func TestAppendVote(t *testing.T) {
 	pollOptions := []string{"coffee", "tea", "water", "beer"}
 	poll, _ := types.NewPoll(pollOptions)

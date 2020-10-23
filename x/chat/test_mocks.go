@@ -1,6 +1,7 @@
 package chat
 
 import (
+	cdc "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	proto "github.com/gogo/protobuf/proto"
 	"github.com/tendermint/spn/x/chat/types"
@@ -25,8 +26,13 @@ func MockUser() types.User {
 }
 
 // MockMetadata mocks a miscellaneous metadata
-func MockMetadata() proto.Message {
-	return nil
+func MockMetadata() (proto.Message, *cdc.Any) {
+	// User is a protobuf mesage and can be then used as a metadata
+	user := MockUser()
+	userAny, _ := cdc.NewAnyWithValue(&user)
+
+	// TODO: Implement a better protobuf message generation with random data etc...
+	return &user, userAny
 }
 
 // MockRandomString returns a random string of length n

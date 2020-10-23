@@ -27,6 +27,22 @@ func TestNewMessage(t *testing.T) {
 		t.Errorf("NewMessage with no poll options should not create a poll")
 	}
 
+	// Can create a message
+	_, metadata := chat.MockMetadata()
+	message, err = types.NewMessage(
+		0,
+		0,
+		chat.MockUser(),
+		"foo",
+		[]string{"bar"},
+		time.Now(),
+		[]string{},
+		metadata,
+	)
+	if err != nil {
+		t.Errorf("NewMessage should create a new message: %v", err)
+	}
+
 	// Create create a message with a poll
 	pollOptions := []string{"coffee", "tea", "water", "beer"}
 	message, err = types.NewMessage(

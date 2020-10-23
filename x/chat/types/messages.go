@@ -28,13 +28,17 @@ func NewMsgCreateChannel(
 	creator User,
 	name string,
 	subject string,
-	metadata proto.Message,
+	metadata *proto.Message,
 	signAddress sdk.AccAddress,
 ) (*MsgCreateChannel, error) {
-	// Convert the proto message in any
-	metadataAny, err := types.NewAnyWithValue(metadata)
-	if err != nil {
-		return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
+	// Convert the proto message into any
+	var metadataAny *types.Any
+	var err error
+	if metadata != nil {
+		metadataAny, err = types.NewAnyWithValue(*metadata)
+		if err != nil {
+			return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
+		}
 	}
 
 	return &MsgCreateChannel{
@@ -95,13 +99,17 @@ func NewMsgSendMessage(
 	content string,
 	tags []string,
 	pollOptions []string,
-	metadata proto.Message,
+	metadata *proto.Message,
 	signAddress sdk.AccAddress,
 ) (*MsgSendMessage, error) {
-	// Convert the proto message in any
-	metadataAny, err := types.NewAnyWithValue(metadata)
-	if err != nil {
-		return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
+	// Convert the proto message into any
+	var metadataAny *types.Any
+	var err error
+	if metadata != nil {
+		metadataAny, err = types.NewAnyWithValue(*metadata)
+		if err != nil {
+			return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
+		}
 	}
 
 	return &MsgSendMessage{
@@ -162,13 +170,17 @@ func NewMsgVotePoll(
 	messageID string,
 	author User,
 	value int32,
-	metadata proto.Message,
+	metadata *proto.Message,
 	signAddress sdk.AccAddress,
 ) (*MsgVotePoll, error) {
-	// Convert the proto message in any
-	metadataAny, err := types.NewAnyWithValue(metadata)
-	if err != nil {
-		return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
+	// Convert the proto message into any
+	var metadataAny *types.Any
+	var err error
+	if metadata != nil {
+		metadataAny, err = types.NewAnyWithValue(*metadata)
+		if err != nil {
+			return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
+		}
 	}
 
 	return &MsgVotePoll{

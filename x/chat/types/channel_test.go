@@ -23,6 +23,19 @@ func TestNewChannel(t *testing.T) {
 		t.Errorf("NewChannel should create a channel with 0 message")
 	}
 
+	// Can create a channel with metadata
+	_, metadata := chat.MockMetadata()
+	channel, err = types.NewChannel(
+		0,
+		chat.MockUser(),
+		"foo",
+		"bar",
+		metadata,
+	)
+	if err != nil {
+		t.Errorf("NewChannel should create a new channel: %v", err)
+	}
+
 	// Prevent creating a channel with an invalid name
 	bigName := chat.MockRandomString(types.ChannelNameMaxLength + 1)
 	_, err = types.NewChannel(
