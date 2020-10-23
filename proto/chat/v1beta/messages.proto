@@ -5,12 +5,15 @@ option go_package = "github.com/tendermint/spn/x/chat/types";
 
 import "google/protobuf/any.proto";
 import "chat/v1beta/chat.proto";
+import "gogoproto/gogo.proto";
+
 
 message MsgCreateChannel {
   User creator = 1;
   string name = 2; 
   string subject = 3; 
   google.protobuf.Any metadata = 4;
+  bytes signAddress = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
 }
 
 message MsgSendMessage {
@@ -20,6 +23,7 @@ message MsgSendMessage {
   repeated string tags = 4;
   repeated string pollOptions = 5;
   google.protobuf.Any metadata = 6;
+  bytes signAddress = 7 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
 }
 
 message MsgVotePoll {
@@ -27,4 +31,5 @@ message MsgVotePoll {
   User author = 2;
   int32 value = 3; 
   google.protobuf.Any metadata = 4;
+  bytes signAddress = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
 }

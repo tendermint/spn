@@ -23,24 +23,24 @@ func NewPoll(options []string) (Poll, error) {
 // HasUserVoted checks if a user voted for a poll
 func (poll Poll) HasUserVoted(user *User) (bool, error) {
 	// Decode into an addressable user
-	addressableUser, err := user.DecodeAddressableUser()
+	chatUser, err := user.DecodeChatUser()
 	if err != nil {
 		return false, err
 	}
 
-	_, ok := poll.Votes[addressableUser.Address().String()]
+	_, ok := poll.Votes[chatUser.Identifier()]
 	return ok, nil
 }
 
 // GetUserVote retrieves the vote of a user
 func (poll Poll) GetUserVote(user *User) (*Vote, error) {
 	// Decode into an addressable user
-	addressableUser, err := user.DecodeAddressableUser()
+	chatUser, err := user.DecodeChatUser()
 	if err != nil {
 		return nil, err
 	}
 
-	vote, ok := poll.Votes[addressableUser.Address().String()]
+	vote, ok := poll.Votes[chatUser.Identifier()]
 	if !ok {
 		return nil, errors.New("No vote found")
 	}
@@ -65,13 +65,13 @@ func (poll *Poll) AppendVote(vote *Vote) error {
 	}
 
 	// Decode into an addressable user
-	addressableUser, err := vote.Author.DecodeAddressableUser()
+	chatUser, err := vote.Author.DecodeChatUser()
 	if err != nil {
 		return err
 	}
 
 	// Get a string representation of the address
-	addressString := addressableUser.Address().String()
+	addressString := chatUser.Identifier()
 
 	poll.Votes[addressString] = vote
 

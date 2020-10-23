@@ -11,16 +11,16 @@ const (
 	UserFormatAccountAddress = iota
 )
 
-// AddressableUser represents a user that possesses an Cosmos SDK account address
-type AddressableUser interface {
-	Address() sdk.AccAddress
+// ChatUser represents a user that can be used with the Chat module
+type ChatUser interface {
+	Addresses() []sdk.AccAddress
+	Username() string
+	Identifier() string
 	ToProtobuf() (User, error)
 }
 
-// DecodeAddressableUser decodes the protobuf user into an addressable user
-func (user User) DecodeAddressableUser() (AddressableUser, error) {
-	var addressableUser AddressableUser
-
+// DecodeChatUser decodes the protobuf user into an addressable user
+func (user User) DecodeChatUser() (ChatUser, error) {
 	// CHeck the user format
 	switch user.Format {
 	case UserFormatAccountAddress:
@@ -28,12 +28,12 @@ func (user User) DecodeAddressableUser() (AddressableUser, error) {
 		var accountAddressUser AccountAddressUser
 		err := accountAddressUser.Unmarshal(user.Data.GetValue())
 		if err != nil {
-			return accountAddressUser, sdkerrors.Wrap(ErrInvalidPoll, "user cannot be decoded")
+			return nil, sdkerrors.Wrap(ErrInvalidPoll, "user cannot be decoded")
 		}
 		return accountAddressUser, nil
 	default:
 		// The user format is not recognize
-		return addressableUser, sdkerrors.Wrap(ErrInvalidPoll, "invalid user format")
+		return nil, sdkerrors.Wrap(ErrInvalidPoll, "invalid user format")
 	}
 }
 
@@ -51,9 +51,20 @@ func NewAccountAddressUser(
 	return *accountAddressUser, nil
 }
 
-// Address returns the account address of the user
-func (aaUser AccountAddressUser) Address() sdk.AccAddress {
-	return aaUser.AccountAddress
+// Addresses returns the account address of the user
+func (aaUser AccountAddressUser) Addresses() []sdk.AccAddress {
+	return []sdk.AccAddress{aaUser.AccountAddress}
+}
+
+// Username returns a username that can be displayed in the chat
+func (aaUser AccountAddressUser) Username() string {
+	return aaUser.AccountAddress.String()
+}
+
+// Identifier returns a string that uniquely idenitfy a user
+// This ensure a user votes only once for a poll
+func (aaUser AccountAddressUser) Identifier() string {
+	return aaUser.AccountAddress.String()
 }
 
 // ToProtobuf returns protobuf encoded user
