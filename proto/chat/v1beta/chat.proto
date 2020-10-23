@@ -48,6 +48,7 @@ message User {
 
 message AccountAddressUser {
   bytes accountAddress = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string name = 2;
 }
 
 

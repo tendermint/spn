@@ -40,6 +40,7 @@ func (user User) DecodeChatUser() (ChatUser, error) {
 // NewAccountAddressUser create a new user that is represented only by its account address
 func NewAccountAddressUser(
 	address sdk.AccAddress,
+	username string,
 ) (AccountAddressUser, error) {
 	accountAddressUser := new(AccountAddressUser)
 
@@ -47,6 +48,7 @@ func NewAccountAddressUser(
 		return *accountAddressUser, sdkerrors.Wrap(ErrInvalidPoll, "empty address")
 	}
 	accountAddressUser.AccountAddress = address
+	accountAddressUser.Name = username
 
 	return *accountAddressUser, nil
 }
@@ -58,7 +60,7 @@ func (aaUser AccountAddressUser) Addresses() []sdk.AccAddress {
 
 // Username returns a username that can be displayed in the chat
 func (aaUser AccountAddressUser) Username() string {
-	return aaUser.AccountAddress.String()
+	return aaUser.Name
 }
 
 // Identifier returns a string that uniquely idenitfy a user
