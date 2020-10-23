@@ -19,7 +19,7 @@ type ChatUser interface {
 	ToProtobuf() (User, error)
 }
 
-// DecodeChatUser decodes the protobuf user into an addressable user
+// DecodeChatUser decodes the protobuf user into a user implementing the ChatUser interface
 func (user User) DecodeChatUser() (ChatUser, error) {
 	// CHeck the user format
 	switch user.Format {
@@ -53,7 +53,7 @@ func NewAccountAddressUser(
 	return *accountAddressUser, nil
 }
 
-// Addresses returns the account address of the user
+// Addresses returns the account addresses of the user
 func (aaUser AccountAddressUser) Addresses() []sdk.AccAddress {
 	return []sdk.AccAddress{aaUser.AccountAddress}
 }
@@ -63,7 +63,7 @@ func (aaUser AccountAddressUser) Username() string {
 	return aaUser.Name
 }
 
-// Identifier returns a string that uniquely idenitfy a user
+// Identifier returns a string that uniquely identify a user
 // This ensure a user votes only once for a poll
 func (aaUser AccountAddressUser) Identifier() string {
 	return aaUser.AccountAddress.String()
