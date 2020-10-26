@@ -6,6 +6,8 @@ package types
 import (
 	fmt "fmt"
 	types "github.com/cosmos/cosmos-sdk/codec/types"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -24,10 +26,11 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type MsgCreateChannel struct {
-	Creator  *User      `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Name     string     `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Subject  string     `protobuf:"bytes,3,opt,name=subject,proto3" json:"subject,omitempty"`
-	Metadata *types.Any `protobuf:"bytes,4,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	Creator     *User                                         `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Name        string                                        `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Subject     string                                        `protobuf:"bytes,3,opt,name=subject,proto3" json:"subject,omitempty"`
+	Payload     *types.Any                                    `protobuf:"bytes,4,opt,name=payload,proto3" json:"payload,omitempty"`
+	SignAddress github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,5,opt,name=signAddress,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"signAddress,omitempty"`
 }
 
 func (m *MsgCreateChannel) Reset()         { *m = MsgCreateChannel{} }
@@ -84,20 +87,28 @@ func (m *MsgCreateChannel) GetSubject() string {
 	return ""
 }
 
-func (m *MsgCreateChannel) GetMetadata() *types.Any {
+func (m *MsgCreateChannel) GetPayload() *types.Any {
 	if m != nil {
-		return m.Metadata
+		return m.Payload
+	}
+	return nil
+}
+
+func (m *MsgCreateChannel) GetSignAddress() github_com_cosmos_cosmos_sdk_types.AccAddress {
+	if m != nil {
+		return m.SignAddress
 	}
 	return nil
 }
 
 type MsgSendMessage struct {
-	ChannelId   int32      `protobuf:"varint,1,opt,name=channelId,proto3" json:"channelId,omitempty"`
-	Author      *User      `protobuf:"bytes,2,opt,name=author,proto3" json:"author,omitempty"`
-	Content     string     `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
-	Tags        []string   `protobuf:"bytes,4,rep,name=tags,proto3" json:"tags,omitempty"`
-	PollOptions []string   `protobuf:"bytes,5,rep,name=pollOptions,proto3" json:"pollOptions,omitempty"`
-	Metadata    *types.Any `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	ChannelID   int32                                         `protobuf:"varint,1,opt,name=channelID,proto3" json:"channelID,omitempty"`
+	Creator     *User                                         `protobuf:"bytes,2,opt,name=creator,proto3" json:"creator,omitempty"`
+	Content     string                                        `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Tags        []string                                      `protobuf:"bytes,4,rep,name=tags,proto3" json:"tags,omitempty"`
+	PollOptions []string                                      `protobuf:"bytes,5,rep,name=pollOptions,proto3" json:"pollOptions,omitempty"`
+	Payload     *types.Any                                    `protobuf:"bytes,6,opt,name=payload,proto3" json:"payload,omitempty"`
+	SignAddress github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,7,opt,name=signAddress,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"signAddress,omitempty"`
 }
 
 func (m *MsgSendMessage) Reset()         { *m = MsgSendMessage{} }
@@ -133,16 +144,16 @@ func (m *MsgSendMessage) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgSendMessage proto.InternalMessageInfo
 
-func (m *MsgSendMessage) GetChannelId() int32 {
+func (m *MsgSendMessage) GetChannelID() int32 {
 	if m != nil {
-		return m.ChannelId
+		return m.ChannelID
 	}
 	return 0
 }
 
-func (m *MsgSendMessage) GetAuthor() *User {
+func (m *MsgSendMessage) GetCreator() *User {
 	if m != nil {
-		return m.Author
+		return m.Creator
 	}
 	return nil
 }
@@ -168,18 +179,26 @@ func (m *MsgSendMessage) GetPollOptions() []string {
 	return nil
 }
 
-func (m *MsgSendMessage) GetMetadata() *types.Any {
+func (m *MsgSendMessage) GetPayload() *types.Any {
 	if m != nil {
-		return m.Metadata
+		return m.Payload
+	}
+	return nil
+}
+
+func (m *MsgSendMessage) GetSignAddress() github_com_cosmos_cosmos_sdk_types.AccAddress {
+	if m != nil {
+		return m.SignAddress
 	}
 	return nil
 }
 
 type MsgVotePoll struct {
-	MessageId string     `protobuf:"bytes,1,opt,name=messageId,proto3" json:"messageId,omitempty"`
-	Author    *User      `protobuf:"bytes,2,opt,name=author,proto3" json:"author,omitempty"`
-	Value     int32      `protobuf:"varint,3,opt,name=value,proto3" json:"value,omitempty"`
-	Metadata  *types.Any `protobuf:"bytes,4,opt,name=metadata,proto3" json:"metadata,omitempty"`
+	MessageID   string                                        `protobuf:"bytes,1,opt,name=messageID,proto3" json:"messageID,omitempty"`
+	Creator     *User                                         `protobuf:"bytes,2,opt,name=creator,proto3" json:"creator,omitempty"`
+	Value       int32                                         `protobuf:"varint,3,opt,name=value,proto3" json:"value,omitempty"`
+	Payload     *types.Any                                    `protobuf:"bytes,4,opt,name=payload,proto3" json:"payload,omitempty"`
+	SignAddress github_com_cosmos_cosmos_sdk_types.AccAddress `protobuf:"bytes,5,opt,name=signAddress,proto3,casttype=github.com/cosmos/cosmos-sdk/types.AccAddress" json:"signAddress,omitempty"`
 }
 
 func (m *MsgVotePoll) Reset()         { *m = MsgVotePoll{} }
@@ -215,16 +234,16 @@ func (m *MsgVotePoll) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgVotePoll proto.InternalMessageInfo
 
-func (m *MsgVotePoll) GetMessageId() string {
+func (m *MsgVotePoll) GetMessageID() string {
 	if m != nil {
-		return m.MessageId
+		return m.MessageID
 	}
 	return ""
 }
 
-func (m *MsgVotePoll) GetAuthor() *User {
+func (m *MsgVotePoll) GetCreator() *User {
 	if m != nil {
-		return m.Author
+		return m.Creator
 	}
 	return nil
 }
@@ -236,9 +255,16 @@ func (m *MsgVotePoll) GetValue() int32 {
 	return 0
 }
 
-func (m *MsgVotePoll) GetMetadata() *types.Any {
+func (m *MsgVotePoll) GetPayload() *types.Any {
 	if m != nil {
-		return m.Metadata
+		return m.Payload
+	}
+	return nil
+}
+
+func (m *MsgVotePoll) GetSignAddress() github_com_cosmos_cosmos_sdk_types.AccAddress {
+	if m != nil {
+		return m.SignAddress
 	}
 	return nil
 }
@@ -252,32 +278,36 @@ func init() {
 func init() { proto.RegisterFile("chat/v1beta/messages.proto", fileDescriptor_3395017881b3c0cc) }
 
 var fileDescriptor_3395017881b3c0cc = []byte{
-	// 399 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x92, 0x4f, 0x8e, 0xd3, 0x30,
-	0x18, 0xc5, 0x6b, 0xa6, 0xe9, 0x50, 0x57, 0x42, 0x23, 0x6b, 0x34, 0x0a, 0x15, 0x8a, 0xa2, 0x59,
-	0xa0, 0x59, 0xd9, 0x53, 0xb8, 0x00, 0xd0, 0x15, 0x8b, 0x08, 0x14, 0x04, 0x0b, 0x76, 0x4e, 0xf2,
-	0xe1, 0x14, 0x25, 0x76, 0x14, 0x7f, 0xa9, 0xe8, 0x2d, 0xb8, 0x03, 0x1c, 0x86, 0x65, 0x97, 0x2c,
-	0xab, 0xf6, 0x22, 0x28, 0x4e, 0xfa, 0x07, 0x24, 0xa4, 0xe9, 0xce, 0xdf, 0x7b, 0x2f, 0xf6, 0xfb,
-	0xc5, 0xa6, 0xd3, 0x34, 0x97, 0x28, 0x96, 0xb3, 0x04, 0x50, 0x8a, 0x12, 0xac, 0x95, 0x0a, 0x2c,
-	0xaf, 0x6a, 0x83, 0x86, 0x5d, 0xd9, 0x4a, 0xf3, 0xd6, 0xe7, 0x9d, 0x3f, 0x9b, 0x3e, 0x55, 0xc6,
-	0xa8, 0x02, 0x84, 0xf3, 0x93, 0xe6, 0x8b, 0x90, 0x7a, 0xd5, 0x85, 0xa7, 0x37, 0xa7, 0x1b, 0xb9,
-	0x8f, 0x9c, 0x7e, 0xfb, 0x93, 0xd0, 0xab, 0xc8, 0xaa, 0x79, 0x0d, 0x12, 0x61, 0x9e, 0x4b, 0xad,
-	0xa1, 0x60, 0xf7, 0xf4, 0x32, 0x6d, 0x05, 0x53, 0xfb, 0x24, 0x24, 0x77, 0x93, 0x17, 0x37, 0xfc,
-	0xdf, 0xb3, 0xf8, 0x47, 0x0b, 0x75, 0xbc, 0x8f, 0x31, 0x46, 0x87, 0x5a, 0x96, 0xe0, 0x3f, 0x0a,
-	0xc9, 0xdd, 0x38, 0x76, 0x6b, 0xe6, 0xd3, 0x4b, 0xdb, 0x24, 0x5f, 0x21, 0x45, 0xff, 0xc2, 0xc9,
-	0xfb, 0x91, 0xdd, 0xd3, 0xc7, 0x25, 0xa0, 0xcc, 0x24, 0x4a, 0x7f, 0xe8, 0x0e, 0xb8, 0xe6, 0x5d,
-	0x75, 0xbe, 0xaf, 0xce, 0x5f, 0xeb, 0x55, 0x7c, 0x48, 0xdd, 0x6e, 0x08, 0x7d, 0x12, 0x59, 0xf5,
-	0x01, 0x74, 0x16, 0x75, 0x7f, 0x81, 0x3d, 0xa3, 0xe3, 0xb4, 0xeb, 0xfb, 0x36, 0x73, 0x35, 0xbd,
-	0xf8, 0x28, 0x30, 0x4e, 0x47, 0xb2, 0xc1, 0xdc, 0xd4, 0xae, 0xd2, 0xff, 0x09, 0xfa, 0x54, 0x5b,
-	0x36, 0x35, 0x1a, 0x41, 0x1f, 0xca, 0xf6, 0x63, 0x8b, 0x86, 0x52, 0x59, 0x7f, 0x18, 0x5e, 0xb4,
-	0x68, 0xed, 0x9a, 0x85, 0x74, 0x52, 0x99, 0xa2, 0x78, 0x57, 0xe1, 0xc2, 0x68, 0xeb, 0x7b, 0xce,
-	0x3a, 0x95, 0xfe, 0x42, 0x1c, 0x3d, 0x08, 0xf1, 0x07, 0xa1, 0x93, 0xc8, 0xaa, 0x4f, 0x06, 0xe1,
-	0xbd, 0x29, 0x8a, 0x96, 0xaf, 0xbf, 0xf0, 0x9e, 0x6f, 0x1c, 0x1f, 0x85, 0xb3, 0xf9, 0xae, 0xa9,
-	0xb7, 0x94, 0x45, 0x03, 0x8e, 0xce, 0x8b, 0xbb, 0xe1, 0xfc, 0x8b, 0x78, 0xf3, 0xea, 0xd7, 0x36,
-	0x20, 0xeb, 0x6d, 0x40, 0x36, 0xdb, 0x80, 0x7c, 0xdf, 0x05, 0x83, 0xf5, 0x2e, 0x18, 0xfc, 0xde,
-	0x05, 0x83, 0xcf, 0xcf, 0xd5, 0x02, 0xf3, 0x26, 0xe1, 0xa9, 0x29, 0x05, 0x82, 0xce, 0xa0, 0x2e,
-	0x17, 0x1a, 0x85, 0xad, 0xb4, 0xf8, 0xe6, 0x5e, 0x9c, 0xc0, 0x55, 0x05, 0x36, 0x19, 0xb9, 0x9d,
-	0x5f, 0xfe, 0x09, 0x00, 0x00, 0xff, 0xff, 0x89, 0x34, 0x36, 0x9a, 0xdb, 0x02, 0x00, 0x00,
+	// 454 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x93, 0xc1, 0x8e, 0xd3, 0x30,
+	0x10, 0x86, 0x37, 0xdd, 0x76, 0xa3, 0xba, 0x08, 0xad, 0xa2, 0x6a, 0x15, 0x2a, 0x14, 0xa2, 0x3d,
+	0xa0, 0x5e, 0xd6, 0xa6, 0xf0, 0x02, 0x74, 0x97, 0x0b, 0x87, 0x0a, 0x94, 0x15, 0x1c, 0xb8, 0x39,
+	0xce, 0xe0, 0x16, 0x12, 0x3b, 0xca, 0xb8, 0x2b, 0xfa, 0x16, 0xbc, 0x0c, 0xef, 0xc0, 0x71, 0x8f,
+	0x9c, 0x10, 0x6a, 0x1f, 0x02, 0xc4, 0x09, 0xd9, 0x4e, 0xd9, 0x88, 0x13, 0x5a, 0x71, 0xe0, 0x94,
+	0x99, 0x7f, 0xc6, 0xbf, 0xfc, 0x7f, 0x72, 0xc8, 0x44, 0x2c, 0xb9, 0x61, 0x57, 0xb3, 0x1c, 0x0c,
+	0x67, 0x15, 0x20, 0x72, 0x09, 0x48, 0xeb, 0x46, 0x1b, 0x1d, 0x1d, 0x63, 0xad, 0xa8, 0x9d, 0x53,
+	0x3f, 0x9f, 0x4d, 0xee, 0x49, 0xad, 0x65, 0x09, 0xcc, 0xcd, 0xf3, 0xf5, 0x5b, 0xc6, 0xd5, 0xc6,
+	0x2f, 0x4f, 0x4e, 0xba, 0x46, 0xee, 0x90, 0xd7, 0xc7, 0x52, 0x4b, 0xed, 0x4a, 0x66, 0x2b, 0xaf,
+	0x9e, 0x7e, 0x0f, 0xc8, 0xf1, 0x02, 0xe5, 0x45, 0x03, 0xdc, 0xc0, 0xc5, 0x92, 0x2b, 0x05, 0x65,
+	0xf4, 0x88, 0x84, 0xc2, 0x0a, 0xba, 0x89, 0x83, 0x34, 0x98, 0x8e, 0x1e, 0x9f, 0xd0, 0x3f, 0x6f,
+	0x40, 0x5f, 0x21, 0x34, 0xd9, 0x7e, 0x2d, 0x8a, 0x48, 0x5f, 0xf1, 0x0a, 0xe2, 0x5e, 0x1a, 0x4c,
+	0x87, 0x99, 0xab, 0xa3, 0x98, 0x84, 0xb8, 0xce, 0xdf, 0x81, 0x30, 0xf1, 0xa1, 0x93, 0xf7, 0x6d,
+	0x44, 0x49, 0x58, 0xf3, 0x4d, 0xa9, 0x79, 0x11, 0xf7, 0x9d, 0xff, 0x98, 0xfa, 0x3c, 0x74, 0x9f,
+	0x87, 0xce, 0xd5, 0x26, 0xdb, 0x2f, 0x45, 0x97, 0x64, 0x84, 0x2b, 0xa9, 0xe6, 0x45, 0xd1, 0x00,
+	0x62, 0x3c, 0x48, 0x83, 0xe9, 0x9d, 0xf3, 0xd9, 0xcf, 0xaf, 0x0f, 0xce, 0xe4, 0xca, 0x2c, 0xd7,
+	0x39, 0x15, 0xba, 0x62, 0x42, 0x63, 0xa5, 0xb1, 0xfd, 0x9c, 0x61, 0xf1, 0x9e, 0x99, 0x4d, 0x0d,
+	0x48, 0xe7, 0x42, 0xb4, 0x07, 0xb3, 0xae, 0xcb, 0xe9, 0xa7, 0x1e, 0xb9, 0xbb, 0x40, 0x79, 0x09,
+	0xaa, 0x58, 0x78, 0xdc, 0xd1, 0x7d, 0x32, 0x14, 0x1e, 0xc1, 0xf3, 0x67, 0x2e, 0xf9, 0x20, 0xbb,
+	0x11, 0xba, 0x54, 0x7a, 0x7f, 0x47, 0x25, 0x26, 0xa1, 0xd0, 0xca, 0x80, 0xfa, 0x4d, 0xa0, 0x6d,
+	0x2d, 0x2f, 0xc3, 0x25, 0xc6, 0xfd, 0xf4, 0xd0, 0xf2, 0xb2, 0x75, 0x94, 0x92, 0x51, 0xad, 0xcb,
+	0xf2, 0x45, 0x6d, 0x56, 0x5a, 0xd9, 0x94, 0x76, 0xd4, 0x95, 0xba, 0xdc, 0x8e, 0x6e, 0xc1, 0x2d,
+	0xfc, 0x27, 0xdc, 0x7e, 0x04, 0x64, 0xb4, 0x40, 0xf9, 0x5a, 0x1b, 0x78, 0xa9, 0xcb, 0xd2, 0x42,
+	0x6b, 0x9f, 0x6b, 0x0b, 0x6d, 0x98, 0xdd, 0x08, 0xb7, 0x80, 0x36, 0x26, 0x83, 0x2b, 0x5e, 0xae,
+	0xc1, 0x21, 0x1b, 0x64, 0xbe, 0xf9, 0x2f, 0x9e, 0xcc, 0xf9, 0xd3, 0xcf, 0xdb, 0x24, 0xb8, 0xde,
+	0x26, 0xc1, 0xb7, 0x6d, 0x12, 0x7c, 0xdc, 0x25, 0x07, 0xd7, 0xbb, 0xe4, 0xe0, 0xcb, 0x2e, 0x39,
+	0x78, 0xf3, 0xb0, 0xe3, 0x6a, 0x40, 0x15, 0xd0, 0x54, 0x2b, 0x65, 0x18, 0xd6, 0x8a, 0x7d, 0x70,
+	0x3f, 0xa1, 0x77, 0xce, 0x8f, 0xdc, 0x6d, 0x9f, 0xfc, 0x0a, 0x00, 0x00, 0xff, 0xff, 0x38, 0x71,
+	0x4b, 0x22, 0xee, 0x03, 0x00, 0x00,
 }
 
 func (m *MsgCreateChannel) Marshal() (dAtA []byte, err error) {
@@ -300,9 +330,16 @@ func (m *MsgCreateChannel) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Metadata != nil {
+	if len(m.SignAddress) > 0 {
+		i -= len(m.SignAddress)
+		copy(dAtA[i:], m.SignAddress)
+		i = encodeVarintMessages(dAtA, i, uint64(len(m.SignAddress)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.Payload != nil {
 		{
-			size, err := m.Metadata.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Payload.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -361,9 +398,16 @@ func (m *MsgSendMessage) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Metadata != nil {
+	if len(m.SignAddress) > 0 {
+		i -= len(m.SignAddress)
+		copy(dAtA[i:], m.SignAddress)
+		i = encodeVarintMessages(dAtA, i, uint64(len(m.SignAddress)))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if m.Payload != nil {
 		{
-			size, err := m.Metadata.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Payload.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -398,9 +442,9 @@ func (m *MsgSendMessage) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x1a
 	}
-	if m.Author != nil {
+	if m.Creator != nil {
 		{
-			size, err := m.Author.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Creator.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -410,8 +454,8 @@ func (m *MsgSendMessage) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if m.ChannelId != 0 {
-		i = encodeVarintMessages(dAtA, i, uint64(m.ChannelId))
+	if m.ChannelID != 0 {
+		i = encodeVarintMessages(dAtA, i, uint64(m.ChannelID))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -438,9 +482,16 @@ func (m *MsgVotePoll) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.Metadata != nil {
+	if len(m.SignAddress) > 0 {
+		i -= len(m.SignAddress)
+		copy(dAtA[i:], m.SignAddress)
+		i = encodeVarintMessages(dAtA, i, uint64(len(m.SignAddress)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.Payload != nil {
 		{
-			size, err := m.Metadata.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Payload.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -455,9 +506,9 @@ func (m *MsgVotePoll) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x18
 	}
-	if m.Author != nil {
+	if m.Creator != nil {
 		{
-			size, err := m.Author.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Creator.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -467,10 +518,10 @@ func (m *MsgVotePoll) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.MessageId) > 0 {
-		i -= len(m.MessageId)
-		copy(dAtA[i:], m.MessageId)
-		i = encodeVarintMessages(dAtA, i, uint64(len(m.MessageId)))
+	if len(m.MessageID) > 0 {
+		i -= len(m.MessageID)
+		copy(dAtA[i:], m.MessageID)
+		i = encodeVarintMessages(dAtA, i, uint64(len(m.MessageID)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -506,8 +557,12 @@ func (m *MsgCreateChannel) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovMessages(uint64(l))
 	}
-	if m.Metadata != nil {
-		l = m.Metadata.Size()
+	if m.Payload != nil {
+		l = m.Payload.Size()
+		n += 1 + l + sovMessages(uint64(l))
+	}
+	l = len(m.SignAddress)
+	if l > 0 {
 		n += 1 + l + sovMessages(uint64(l))
 	}
 	return n
@@ -519,11 +574,11 @@ func (m *MsgSendMessage) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.ChannelId != 0 {
-		n += 1 + sovMessages(uint64(m.ChannelId))
+	if m.ChannelID != 0 {
+		n += 1 + sovMessages(uint64(m.ChannelID))
 	}
-	if m.Author != nil {
-		l = m.Author.Size()
+	if m.Creator != nil {
+		l = m.Creator.Size()
 		n += 1 + l + sovMessages(uint64(l))
 	}
 	l = len(m.Content)
@@ -542,8 +597,12 @@ func (m *MsgSendMessage) Size() (n int) {
 			n += 1 + l + sovMessages(uint64(l))
 		}
 	}
-	if m.Metadata != nil {
-		l = m.Metadata.Size()
+	if m.Payload != nil {
+		l = m.Payload.Size()
+		n += 1 + l + sovMessages(uint64(l))
+	}
+	l = len(m.SignAddress)
+	if l > 0 {
 		n += 1 + l + sovMessages(uint64(l))
 	}
 	return n
@@ -555,19 +614,23 @@ func (m *MsgVotePoll) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.MessageId)
+	l = len(m.MessageID)
 	if l > 0 {
 		n += 1 + l + sovMessages(uint64(l))
 	}
-	if m.Author != nil {
-		l = m.Author.Size()
+	if m.Creator != nil {
+		l = m.Creator.Size()
 		n += 1 + l + sovMessages(uint64(l))
 	}
 	if m.Value != 0 {
 		n += 1 + sovMessages(uint64(m.Value))
 	}
-	if m.Metadata != nil {
-		l = m.Metadata.Size()
+	if m.Payload != nil {
+		l = m.Payload.Size()
+		n += 1 + l + sovMessages(uint64(l))
+	}
+	l = len(m.SignAddress)
+	if l > 0 {
 		n += 1 + l + sovMessages(uint64(l))
 	}
 	return n
@@ -710,7 +773,7 @@ func (m *MsgCreateChannel) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Payload", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -737,11 +800,45 @@ func (m *MsgCreateChannel) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Metadata == nil {
-				m.Metadata = &types.Any{}
+			if m.Payload == nil {
+				m.Payload = &types.Any{}
 			}
-			if err := m.Metadata.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Payload.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SignAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMessages
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthMessages
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMessages
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SignAddress = append(m.SignAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.SignAddress == nil {
+				m.SignAddress = []byte{}
 			}
 			iNdEx = postIndex
 		default:
@@ -799,9 +896,9 @@ func (m *MsgSendMessage) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
 			}
-			m.ChannelId = 0
+			m.ChannelID = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowMessages
@@ -811,14 +908,14 @@ func (m *MsgSendMessage) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ChannelId |= int32(b&0x7F) << shift
+				m.ChannelID |= int32(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Author", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -845,10 +942,10 @@ func (m *MsgSendMessage) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Author == nil {
-				m.Author = &User{}
+			if m.Creator == nil {
+				m.Creator = &User{}
 			}
-			if err := m.Author.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Creator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -950,7 +1047,7 @@ func (m *MsgSendMessage) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Payload", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -977,11 +1074,45 @@ func (m *MsgSendMessage) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Metadata == nil {
-				m.Metadata = &types.Any{}
+			if m.Payload == nil {
+				m.Payload = &types.Any{}
 			}
-			if err := m.Metadata.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Payload.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SignAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMessages
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthMessages
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMessages
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SignAddress = append(m.SignAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.SignAddress == nil {
+				m.SignAddress = []byte{}
 			}
 			iNdEx = postIndex
 		default:
@@ -1039,7 +1170,7 @@ func (m *MsgVotePoll) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MessageId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MessageID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1067,11 +1198,11 @@ func (m *MsgVotePoll) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.MessageId = string(dAtA[iNdEx:postIndex])
+			m.MessageID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Author", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1098,10 +1229,10 @@ func (m *MsgVotePoll) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Author == nil {
-				m.Author = &User{}
+			if m.Creator == nil {
+				m.Creator = &User{}
 			}
-			if err := m.Author.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Creator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1126,7 +1257,7 @@ func (m *MsgVotePoll) Unmarshal(dAtA []byte) error {
 			}
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Metadata", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Payload", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1153,11 +1284,45 @@ func (m *MsgVotePoll) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Metadata == nil {
-				m.Metadata = &types.Any{}
+			if m.Payload == nil {
+				m.Payload = &types.Any{}
 			}
-			if err := m.Metadata.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Payload.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SignAddress", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMessages
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthMessages
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMessages
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SignAddress = append(m.SignAddress[:0], dAtA[iNdEx:postIndex]...)
+			if m.SignAddress == nil {
+				m.SignAddress = []byte{}
 			}
 			iNdEx = postIndex
 		default:
