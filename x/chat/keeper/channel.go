@@ -101,8 +101,8 @@ func getChannelCount(k Keeper, ctx sdk.Context) (channelCount int32) {
 	// Search the channel
 	encodedChannelCount := store.Get(types.GetChannelCountKey())
 	if encodedChannelCount == nil {
-		// This value must be initialized at genesis
-		panic("No channel count")
+		// This value is not initilialized, the channel count is 0
+		return 0
 	}
 
 	// Return the value

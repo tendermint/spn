@@ -4,20 +4,11 @@ import (
 	"testing"
 )
 
-func TestGetChannel(t *testing.T) {
-}
-
-func TestGetChannelCount(t *testing.T) {
-}
-
 func TestAppendChannel(t *testing.T) {
+	// A channel can be appended and retrieved
+
+	// The channel count is incremented
 }
 
 func TestAppendMessageToChannel(t *testing.T) {
-}
-
-func TestgetChannelCount(t *testing.T) {
-}
-
-func TestGetMessageIDFromChannelIDandIndex(t *testing.T) {
 }
