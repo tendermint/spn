@@ -4,6 +4,9 @@ import (
 	"testing"
 )
 
+func TestAppendMessageToChannel(t *testing.T) {
+}
+
 func TestGetMessageFromIndex(t *testing.T) {
 }
 

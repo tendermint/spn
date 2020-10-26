@@ -1,6 +1,9 @@
 package keeper
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -77,4 +80,54 @@ func (k Keeper) UpdateMessagePoll(ctx sdk.Context, messageID string, poll types.
 	store.Set(types.GetMessageKey(messageID), encodedMessage)
 
 	return true
+}
+
+// AppendMessageToChannel appends a new message in the channel, updates its message count and stores the tag references
+func (k Keeper) AppendMessageToChannel(ctx sdk.Context, message types.Message) (channelFound bool) {
+	store := ctx.KVStore(k.storeKey)
+
+	// Get the current message count of the channel
+	channel, channelFound := k.GetChannel(ctx, message.ChannelID)
+	if !channelFound {
+		return channelFound
+	}
+	messageCount := channel.MessageCount
+
+	// Append the message
+	message.MessageIndex = messageCount
+	encodedMessage := types.MarshalMessage(k.cdc, message)
+	messageID := GetMessageIDFromChannelIDandIndex(message.ChannelID, message.MessageIndex)
+	store.Set(types.GetMessageKey(messageID), encodedMessage)
+
+	// Update message count of the channel
+	channel.MessageCount = messageCount + 1
+	encodedChannel := types.MarshalChannel(k.cdc, channel)
+	store.Set(types.GetChannelKey(message.ChannelID), encodedChannel)
+
+	// Store the tags references
+	for _, tag := range message.Tags {
+		// Get the tag references and append the message ID to them
+		tagReferences := k.GetTagReferencesFromChannel(ctx, tag, message.ChannelID)
+		tagReferences = append(tagReferences, messageID)
+		encodedTagReferences := types.MarshalTagReferences(k.cdc, tagReferences)
+		store.Set(types.GetTagReferenceFromChannelKey(tag, message.ChannelID), encodedTagReferences)
+	}
+
+	return true
+}
+
+// GetMessageIDFromChannelIDandIndex computes the messageID from the channelID and the message index in this channel
+// We use a hash function in order to use a fixed length ID
+func GetMessageIDFromChannelIDandIndex(channelID int32, messageIndex int32) string {
+	chunk := struct {
+		ChannedID    int32
+		MessageIndex int32
+	}{channelID, messageIndex}
+
+	// Compute the hash
+	encodedChunk, _ := json.Marshal(chunk)
+	hash := sha256.Sum256(encodedChunk)
+
+	idBytes := hash[:32]
+	return hex.EncodeToString(idBytes)
 }
