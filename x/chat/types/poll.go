@@ -56,7 +56,7 @@ func (poll *Poll) AppendVote(vote *Vote) error {
 	}
 
 	// Check if the user already voted
-	hasVoted, err := poll.HasUserVoted(vote.Author)
+	hasVoted, err := poll.HasUserVoted(vote.Creator)
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func (poll *Poll) AppendVote(vote *Vote) error {
 	}
 
 	// Decode into an addressable user
-	chatUser, err := vote.Author.DecodeChatUser()
+	chatUser, err := vote.Creator.DecodeChatUser()
 	if err != nil {
 		return err
 	}
@@ -86,13 +86,13 @@ func checkOptions(options []string) bool {
 
 // NewVote create a new vote
 func NewVote(
-	author User,
+	creator User,
 	value int32,
 	metadata *types.Any,
 ) (Vote, error) {
 	vote := new(Vote)
 
-	vote.Author = &author
+	vote.Creator = &creator
 	vote.Value = value
 	vote.Metadata = metadata
 

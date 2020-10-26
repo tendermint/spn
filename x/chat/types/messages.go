@@ -73,7 +73,7 @@ func (msg MsgCreateChannel) ValidateBasic() error {
 	// The user must possess the sign address
 	chatUser, err := msg.Creator.DecodeChatUser()
 	if err != nil {
-		panic(err)
+		return err
 	}
 	addressFound := false
 	for _, address := range chatUser.Addresses() {
@@ -95,7 +95,7 @@ func (msg MsgCreateChannel) ValidateBasic() error {
 // NewMsgSendMessage creates a new message to send a message to a chanel
 func NewMsgSendMessage(
 	channelID int32,
-	author User,
+	creator User,
 	content string,
 	tags []string,
 	pollOptions []string,
@@ -114,7 +114,7 @@ func NewMsgSendMessage(
 
 	return &MsgSendMessage{
 		ChannelID:   channelID,
-		Author:      &author,
+		Creator:     &creator,
 		Content:     content,
 		Tags:        tags,
 		PollOptions: pollOptions,
@@ -144,9 +144,9 @@ func (msg MsgSendMessage) GetSignBytes() []byte {
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgSendMessage) ValidateBasic() error {
 	// The user must possess the sign address
-	chatUser, err := msg.Author.DecodeChatUser()
+	chatUser, err := msg.Creator.DecodeChatUser()
 	if err != nil {
-		panic(err)
+		return err
 	}
 	addressFound := false
 	for _, address := range chatUser.Addresses() {
@@ -168,7 +168,7 @@ func (msg MsgSendMessage) ValidateBasic() error {
 // NewMsgVotePoll creates a new message to vote to a poll
 func NewMsgVotePoll(
 	messageID string,
-	author User,
+	creator User,
 	value int32,
 	metadata *proto.Message,
 	signAddress sdk.AccAddress,
@@ -185,7 +185,7 @@ func NewMsgVotePoll(
 
 	return &MsgVotePoll{
 		MessageID:   messageID,
-		Author:      &author,
+		Creator:     &creator,
 		Value:       value,
 		Metadata:    metadataAny,
 		SignAddress: signAddress,
@@ -213,9 +213,9 @@ func (msg MsgVotePoll) GetSignBytes() []byte {
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgVotePoll) ValidateBasic() error {
 	// The user must possess the sign address
-	chatUser, err := msg.Author.DecodeChatUser()
+	chatUser, err := msg.Creator.DecodeChatUser()
 	if err != nil {
-		panic(err)
+		return err
 	}
 	addressFound := false
 	for _, address := range chatUser.Addresses() {

@@ -18,7 +18,7 @@ message Channel {
 message Message {
   int32 channelID = 1;
   int32 messageIndex = 2;
-  User author = 3;
+  User creator = 3;
   string content = 4; 
   repeated string tags = 5;
   int64 createdAt = 6;
@@ -33,7 +33,7 @@ message Poll {
 }
 
 message Vote {
-    User author = 1;
+    User creator = 1;
     int32 value = 2;
     google.protobuf.Any metadata = 3;
 }
