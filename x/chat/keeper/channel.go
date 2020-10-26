@@ -73,7 +73,7 @@ func (k Keeper) AppendMessageToChannel(ctx sdk.Context, message types.Message) (
 		tagReferences := k.GetTagReferencesFromChannel(ctx, tag, message.ChannelID)
 		tagReferences = append(tagReferences, messageID)
 		encodedTagReferences = types.MustMarshalTagReferences(k.cdc, tagReferences)
-		store.Set(types.GetTagReferencesFromChannelKey(tag, message.ChannelID), encodedTagReferences)
+		store.Set(types.GetTagReferenceFromChannelKey(tag, message.ChannelID), encodedTagReferences)
 	}
 
 	return true

@@ -9,7 +9,7 @@ func (k Keeper) GetTagReferencesFromChannel(ctx sdk.Context, tag string, channel
 	store := ctx.KVStore(k.storeKey)
 
 	// Search the references
-	encodedReferences := store.Get(types.GetTagReferencesFromChannelKey(tag, channelID))
+	encodedReferences := store.Get(types.GetTagReferenceFromChannelKey(tag, channelID))
 	if encodedReferences == nil {
 		return []string{}
 	}
@@ -23,7 +23,7 @@ func (k Keeper) GetTagReferencesFromChannel(ctx sdk.Context, tag string, channel
 func (k Keeper) GetAllTagReferences(ctx sdk.Context, tag string) (allReferences []string) {
 	store := ctx.KVStore(k.storeKey)
 
-	iterator := sdk.KVStorePrefixIterator(store, types.GetTagReferencesKey(tag))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetTagReferenceKey(tag))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
