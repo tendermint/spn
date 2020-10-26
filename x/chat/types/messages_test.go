@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/chat"
 	"github.com/tendermint/spn/x/chat/types"
 	"testing"
@@ -19,13 +20,9 @@ func TestMsgCreateChannel(t *testing.T) {
 		nil,
 		address,
 	)
-	if err != nil {
-		t.Errorf("NewMsgCreateChannel should create a MsgCreateChannel: %v", err)
-	}
+	require.NoError(t, err, "NewMsgCreateChannel should create a MsgCreateChannel")
 	err = msg.ValidateBasic()
-	if err != nil {
-		t.Errorf("NewMsgCreateChannel should create a valid MsgCreateChannel: %v", err)
-	}
+	require.NoError(t, err, "NewMsgCreateChannel should create a valid MsgCreateChannel")
 
 	// Can create a MsgCreateChannel with metadata
 	metadata, _ := chat.MockMetadata()
@@ -36,13 +33,9 @@ func TestMsgCreateChannel(t *testing.T) {
 		&metadata,
 		address,
 	)
-	if err != nil {
-		t.Errorf("NewMsgCreateChannel should create a MsgCreateChannel: %v", err)
-	}
+	require.NoError(t, err, "NewMsgCreateChannel should create a MsgCreateChannel")
 	err = msg.ValidateBasic()
-	if err != nil {
-		t.Errorf("NewMsgCreateChannel should create a valid MsgCreateChannel: %v", err)
-	}
+	require.NoError(t, err, "NewMsgCreateChannel should create a valid MsgCreateChannel")
 
 	// Message is not valid if sign address is not from the user
 	otherAddress := chat.MockAccAddress()
@@ -54,9 +47,7 @@ func TestMsgCreateChannel(t *testing.T) {
 		otherAddress,
 	)
 	err = msg.ValidateBasic()
-	if err == nil {
-		t.Errorf("NewMsgCreateChannel with invalid address should create an invalid MsgCreateChannel")
-	}
+	require.Error(t, err, "NewMsgCreateChannel with invalid address should create an invalid MsgCreateChannel")
 }
 
 func TestMsgSendMessage(t *testing.T) {
@@ -74,13 +65,9 @@ func TestMsgSendMessage(t *testing.T) {
 		nil,
 		address,
 	)
-	if err != nil {
-		t.Errorf("MsgSendMessage should create a MsgSendMessage: %v", err)
-	}
+	require.NoError(t, err, "MsgSendMessage should create a MsgSendMessage")
 	err = msg.ValidateBasic()
-	if err != nil {
-		t.Errorf("MsgSendMessage should create a valid MsgSendMessage: %v", err)
-	}
+	require.NoError(t, err, "MsgSendMessage should create a valid MsgSendMessage")
 
 	// Can create a MsgSendMessage with metadata
 	metadata, _ := chat.MockMetadata()
@@ -93,13 +80,9 @@ func TestMsgSendMessage(t *testing.T) {
 		&metadata,
 		address,
 	)
-	if err != nil {
-		t.Errorf("MsgSendMessage should create a MsgSendMessage: %v", err)
-	}
+	require.NoError(t, err, "MsgSendMessage should create a MsgSendMessage")
 	err = msg.ValidateBasic()
-	if err != nil {
-		t.Errorf("MsgSendMessage should create a valid MsgSendMessage: %v", err)
-	}
+	require.NoError(t, err, "MsgSendMessage should create a valid MsgSendMessage")
 
 	// Message is not valid if sign address is not from the user
 	otherAddress := chat.MockAccAddress()
@@ -113,9 +96,8 @@ func TestMsgSendMessage(t *testing.T) {
 		otherAddress,
 	)
 	err = msg.ValidateBasic()
-	if err == nil {
-		t.Errorf("NewMsgSendMessage with invalid address should create an invalid MsgSendMessage")
-	}
+	require.Error(t, err, "NewMsgSendMessage with invalid address should create an invalid MsgSendMessage")
+
 }
 
 func TestMsgVotePoll(t *testing.T) {
@@ -131,13 +113,9 @@ func TestMsgVotePoll(t *testing.T) {
 		nil,
 		address,
 	)
-	if err != nil {
-		t.Errorf("MsgVotePoll should create a MsgVotePoll: %v", err)
-	}
+	require.NoError(t, err, "MsgVotePoll should create a MsgVotePoll")
 	err = msg.ValidateBasic()
-	if err != nil {
-		t.Errorf("MsgVotePoll should create a valid MsgVotePoll: %v", err)
-	}
+	require.NoError(t, err, "MsgVotePoll should create a valid MsgVotePoll")
 
 	// Can create a MsgVotePoll
 	metadata, _ := chat.MockMetadata()
@@ -148,13 +126,9 @@ func TestMsgVotePoll(t *testing.T) {
 		&metadata,
 		address,
 	)
-	if err != nil {
-		t.Errorf("MsgVotePoll should create a MsgVotePoll: %v", err)
-	}
+	require.NoError(t, err, "MsgVotePoll should create a MsgVotePoll")
 	err = msg.ValidateBasic()
-	if err != nil {
-		t.Errorf("MsgVotePoll should create a valid MsgVotePoll: %v", err)
-	}
+	require.NoError(t, err, "MsgVotePoll should create a valid MsgVotePoll")
 
 	// Message is not valid if sign address is not from the user
 	otherAddress := chat.MockAccAddress()
@@ -166,7 +140,5 @@ func TestMsgVotePoll(t *testing.T) {
 		otherAddress,
 	)
 	err = msg.ValidateBasic()
-	if err == nil {
-		t.Errorf("NewMsgVotePoll with invalid address should create an invalid MsgVotePoll")
-	}
+	require.Error(t, err, "NewMsgVotePoll with invalid address should create an invalid MsgVotePoll")
 }

@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/chat"
 	"github.com/tendermint/spn/x/chat/types"
 	"math/rand"
@@ -16,12 +17,8 @@ func TestNewChannel(t *testing.T) {
 		"bar",
 		nil,
 	)
-	if err != nil {
-		t.Errorf("NewChannel should create a new channel: %v", err)
-	}
-	if channel.MessageCount != 0 {
-		t.Errorf("NewChannel should create a channel with 0 message")
-	}
+	require.NoError(t, err, "NewChannel should create a new channel")
+	require.Zero(t, channel.MessageCount, "NewChannel should create a channel with 0 message")
 
 	// Can create a channel with metadata
 	_, metadata := chat.MockMetadata()
@@ -32,9 +29,7 @@ func TestNewChannel(t *testing.T) {
 		"bar",
 		metadata,
 	)
-	if err != nil {
-		t.Errorf("NewChannel should create a new channel: %v", err)
-	}
+	require.NoError(t, err, "NewChannel should create a new channel")
 
 	// Prevent creating a channel with an invalid name
 	bigName := chat.MockRandomString(types.ChannelNameMaxLength + 1)
@@ -45,9 +40,7 @@ func TestNewChannel(t *testing.T) {
 		"bar",
 		nil,
 	)
-	if err == nil {
-		t.Errorf("NewChannel should prevent creating a channel with an invalid name")
-	}
+	require.Error(t, err, "NewChannel should prevent creating a channel with an invalid name")
 
 	// Prevent creating a channel with an invalid subject
 	bigSubject := chat.MockRandomString(types.ChannelSubjectMaxLength + 1)
@@ -58,9 +51,8 @@ func TestNewChannel(t *testing.T) {
 		bigSubject,
 		nil,
 	)
-	if err == nil {
-		t.Errorf("NewChannel should prevent creating a channel with an invalid subject")
-	}
+	require.Error(t, err, "NewChannel should prevent creating a channel with an invalid subject")
+
 }
 
 func TestIncrementMessageCount(t *testing.T) {
@@ -75,15 +67,11 @@ func TestIncrementMessageCount(t *testing.T) {
 
 	oldCount := channel.MessageCount
 	channel.IncrementMessageCount()
-	if channel.MessageCount != oldCount+1 {
-		t.Errorf("IncrementMessageCount should increment the message count")
-	}
+	require.Equal(t, oldCount+1, channel.MessageCount, "IncrementMessageCount should increment the message count")
 
 	// Test from a random number
 	channel.MessageCount = rand.Int31()
 	oldCount = channel.MessageCount
 	channel.IncrementMessageCount()
-	if channel.MessageCount != oldCount+1 {
-		t.Errorf("IncrementMessageCount should increment the message count")
-	}
+	require.Equal(t, oldCount+1, channel.MessageCount, "IncrementMessageCount should increment the message count")
 }

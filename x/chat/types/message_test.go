@@ -1,7 +1,8 @@
 package types_test
 
 import (
-	"github.com/google/go-cmp/cmp"
+	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/x/chat"
 	"github.com/tendermint/spn/x/chat/types"
 	"testing"
@@ -20,12 +21,8 @@ func TestNewMessage(t *testing.T) {
 		[]string{},
 		nil,
 	)
-	if err != nil {
-		t.Errorf("NewMessage should create a new message: %v", err)
-	}
-	if message.HasPoll {
-		t.Errorf("NewMessage with no poll options should not create a poll")
-	}
+	require.NoError(t, err, "NewMessage should create a new message")
+	require.False(t, message.HasPoll, "NewMessage with no poll options should not create a poll")
 
 	// Can create a message
 	_, metadata := chat.MockMetadata()
@@ -39,9 +36,7 @@ func TestNewMessage(t *testing.T) {
 		[]string{},
 		metadata,
 	)
-	if err != nil {
-		t.Errorf("NewMessage should create a new message: %v", err)
-	}
+	require.NoError(t, err, "NewMessage should create a new message")
 
 	// Create create a message with a poll
 	pollOptions := []string{"coffee", "tea", "water", "beer"}
@@ -55,15 +50,9 @@ func TestNewMessage(t *testing.T) {
 		pollOptions,
 		nil,
 	)
-	if err != nil {
-		t.Errorf("NewMessage should create a new message: %v", err)
-	}
-	if !message.HasPoll {
-		t.Errorf("NewMessage with poll options should create a poll")
-	}
-	if !cmp.Equal(message.Poll.Options, pollOptions) {
-		t.Errorf("NewMessage with poll options should create a poll with same options")
-	}
+	require.NoError(t, err, "NewMessage should create a new message")
+	require.True(t, message.HasPoll, "NewMessage with poll options should create a poll")
+	require.Equal(t, pollOptions, message.Poll.Options, "NewMessage with poll options should create a poll with same options")
 
 	// Prevent creating a message with an invalid content
 	bigContent := chat.MockRandomString(types.MessageContentMaxLength + 1)
@@ -77,7 +66,5 @@ func TestNewMessage(t *testing.T) {
 		[]string{},
 		nil,
 	)
-	if err == nil {
-		t.Errorf("NewMessage should prevent creating a message with an invalid content")
-	}
+	require.Error(t, err, "NewMessage should prevent creating a message with an invalid content")
 }
