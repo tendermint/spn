@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/cosmos/cosmos-sdk/codec"
 	types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -77,4 +78,31 @@ func checkTag(tag string) bool {
 // Alphanumeric or hyphen character
 func isTagAuthorizedChar(c rune) bool {
 	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '-'
+}
+
+// MarshalMessage encodes messages for the store
+func MarshalMessage(cdc codec.BinaryMarshaler, message Message) []byte {
+	return cdc.MustMarshalBinaryBare(&message)
+}
+
+// UnmarshalMessage decodes messages from the store
+func UnmarshalMessage(cdc codec.BinaryMarshaler, value []byte) (message Message) {
+	cdc.MustUnmarshalBinaryBare(value, &message)
+	return message
+}
+
+// MarshalTagReferences encodes messages for the store
+func MarshalTagReferences(cdc codec.BinaryMarshaler, tagReferences []string) []byte {
+	// The wrapper is used to encode the tag references with protobuf
+	var tagReferencesWrapper TagReferences
+	tagReferencesWrapper.References = tagReferences
+
+	return cdc.MustMarshalBinaryBare(&tagReferencesWrapper)
+}
+
+// UnmarshalTagReferences decodes messages from the store
+func UnmarshalTagReferences(cdc codec.BinaryMarshaler, value []byte) (tagReferences []string) {
+	var tagReferencesWrapper TagReferences
+	cdc.MustUnmarshalBinaryBare(value, &tagReferencesWrapper)
+	return tagReferencesWrapper.References
 }

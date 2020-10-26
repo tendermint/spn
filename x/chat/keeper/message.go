@@ -13,7 +13,7 @@ func (k Keeper) GetMessageFromIndex(ctx sdk.Context, channelID int32, index int3
 	return k.GetMessageFromID(ctx, messageID)
 }
 
-// GetMessageFromIndex returns a message from its index in a channel
+// GetAllMessagesFromChannel returns a message from its index in a channel
 func (k Keeper) GetAllMessagesFromChannel(ctx sdk.Context, channelID int32) (messages []types.Message, channelFound bool) {
 	// Get the number of message in the channel
 	channel, channelFound := k.GetChannel(ctx, channelID)
@@ -22,7 +22,7 @@ func (k Keeper) GetAllMessagesFromChannel(ctx sdk.Context, channelID int32) (mes
 	}
 	messageCount := channel.MessageCount
 
-	for i := 0; i < messageCount; i++ {
+	for i := int32(0); i < messageCount; i++ {
 		message, found := k.GetMessageFromIndex(ctx, channelID, i)
 		if !found {
 			// The message should exist: panic
@@ -46,11 +46,11 @@ func (k Keeper) GetMessageFromID(ctx sdk.Context, messageID string) (message typ
 	}
 
 	// Return the value
-	message = types.MustUnmarshalMessage(k.cdc, encodedMessage)
+	message = types.UnmarshalMessage(k.cdc, encodedMessage)
 	return message, true
 }
 
-// GetMessageFromIDs returns all messages from a list of IDs
+// GetMessagesFromIDs returns all messages from a list of IDs
 func (k Keeper) GetMessagesFromIDs(ctx sdk.Context, messageIDs []string) (messages []types.Message) {
 	for _, messageID := range messageIDs {
 		message, found := k.GetMessageFromID(ctx, messageID)
@@ -73,6 +73,8 @@ func (k Keeper) UpdateMessagePoll(ctx sdk.Context, messageID string, poll types.
 	message.Poll = &poll
 
 	// Store back the message
-	encodedMessage := types.MustMarshalMessage(k.cdc, message)
+	encodedMessage := types.MarshalMessage(k.cdc, message)
 	store.Set(types.GetMessageKey(messageID), encodedMessage)
+
+	return true
 }

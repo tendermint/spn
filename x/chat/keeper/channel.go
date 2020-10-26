@@ -20,7 +20,7 @@ func (k Keeper) GetChannel(ctx sdk.Context, channelID int32) (channel types.Chan
 	}
 
 	// Return the value
-	channel = types.MustUnmarshalChannel(k.cdc, encodedChannel)
+	channel = types.UnmarshalChannel(k.cdc, encodedChannel)
 	return channel, true
 }
 
@@ -37,11 +37,11 @@ func (k Keeper) AppendChannel(ctx sdk.Context, channel types.Channel) {
 
 	// Overwrite with the true ChannelID
 	channel.Id = channelCount
-	encodedChannel := types.MustMarshalChannel(k.cdc, channel)
+	encodedChannel := types.MarshalChannel(k.cdc, channel)
 	store.Set(types.GetChannelKey(channelCount), encodedChannel)
 
 	// Save incremented message count
-	encodedChannelCount := types.MustMarshalChannelCount(k.cdc, channelCount+1)
+	encodedChannelCount := types.MarshalChannelCount(k.cdc, channelCount+1)
 	store.Set(types.GetChannelCountKey(), encodedChannelCount)
 }
 
@@ -58,13 +58,13 @@ func (k Keeper) AppendMessageToChannel(ctx sdk.Context, message types.Message) (
 
 	// Append the message
 	message.MessageIndex = messageCount
-	encodedMessage := types.MustMarshalMessage(k.cdc, message)
-	messageID := getMessageIDFromChannelIDandIndex(message.ChannelID, message.MessageIndex)
+	encodedMessage := types.MarshalMessage(k.cdc, message)
+	messageID := GetMessageIDFromChannelIDandIndex(message.ChannelID, message.MessageIndex)
 	store.Set(types.GetMessageKey(messageID), encodedMessage)
 
 	// Update message count of the channel
 	channel.MessageCount = messageCount + 1
-	encodedChannel := types.MustMarshalChannel(k.cdc, channel)
+	encodedChannel := types.MarshalChannel(k.cdc, channel)
 	store.Set(types.GetChannelKey(message.ChannelID), encodedChannel)
 
 	// Store the tags references
@@ -72,11 +72,27 @@ func (k Keeper) AppendMessageToChannel(ctx sdk.Context, message types.Message) (
 		// Get the tag references and append the message ID to them
 		tagReferences := k.GetTagReferencesFromChannel(ctx, tag, message.ChannelID)
 		tagReferences = append(tagReferences, messageID)
-		encodedTagReferences = types.MustMarshalTagReferences(k.cdc, tagReferences)
+		encodedTagReferences := types.MarshalTagReferences(k.cdc, tagReferences)
 		store.Set(types.GetTagReferenceFromChannelKey(tag, message.ChannelID), encodedTagReferences)
 	}
 
 	return true
+}
+
+// GetMessageIDFromChannelIDandIndex computes the messageID from the channelID and the message index in this channel
+// We use a hash function in order to use a fixed length ID
+func GetMessageIDFromChannelIDandIndex(channelID int32, messageIndex int32) string {
+	chunk := struct {
+		ChannedID    int32
+		MessageIndex int32
+	}{channelID, messageIndex}
+
+	// Compute the hash
+	encodedChunk, _ := json.Marshal(chunk)
+	hash := sha256.Sum256(encodedChunk)
+
+	idBytes := hash[:32]
+	return hex.EncodeToString(idBytes)
 }
 
 func getChannelCount(k Keeper, ctx sdk.Context) (channelCount int32) {
@@ -90,20 +106,6 @@ func getChannelCount(k Keeper, ctx sdk.Context) (channelCount int32) {
 	}
 
 	// Return the value
-	channelCount = types.MustUnmarshalChannelCount(k.cdc, encodedChannelCount)
+	channelCount = types.UnmarshalChannelCount(k.cdc, encodedChannelCount)
 	return channelCount
-}
-
-func GetMessageIDFromChannelIDandIndex(channelID int32, messageIndex int32) string {
-	chunk := struct {
-		ChannedID    int32
-		MessageIndex int32
-	}{channelID, messageIndex}
-
-	// Compute the hash
-	encodedChunk, _ := json.Marshal(chunk)
-	hash := sha256.Sum256(encodedChunk)
-
-	idBytes := hash[:32]
-	return hex.EncodeToString(idBytes)
 }

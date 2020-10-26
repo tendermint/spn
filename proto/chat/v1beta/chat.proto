@@ -51,5 +51,6 @@ message AccountAddressUser {
   string name = 2;
 }
 
-
-
+message TagReferences {
+  repeated string references = 1;
+}
