@@ -101,6 +101,7 @@ github.com/coreos/go-systemd v0.0.0-20180511133405-39ca1b05acc7/go.mod h1:F5haX7
 github.com/coreos/go-systemd v0.0.0-20190321100706-95778dfbb74e/go.mod h1:F5haX7vjVVG0kc13fIWeqUViNPyEJxv/OmvnBo0Yme4=
 github.com/coreos/pkg v0.0.0-20160727233714-3ac0863d7acf/go.mod h1:E3G3o1h8I7cfcXa63jLwjI0eiQQMgzzUDFVpN/nH/eA=
 github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f/go.mod h1:E3G3o1h8I7cfcXa63jLwjI0eiQQMgzzUDFVpN/nH/eA=
+github.com/cosmos/cosmos-sdk v0.39.1 h1:vhjf9PZh9ph8btAj9aBpHoVITgVVjNBpM3x5Gl/Vwac=
 github.com/cosmos/cosmos-sdk v0.40.0-rc0 h1:GY+jzuVILZ7wlx5Zic2W0rWlo47fZgN048xV458sUAo=
 github.com/cosmos/cosmos-sdk v0.40.0-rc0/go.mod h1:YZcO00Tq/qqj4ncsfn+PobyTelsot7wEMGPpxEbEAT0=
 github.com/cosmos/go-bip39 v0.0.0-20180819234021-555e2067c45d h1:49RLWk1j44Xu4fjHb6JFYmeUnDORVwHNkDxaQ0ctCVU=
@@ -222,6 +223,7 @@ github.com/google/go-cmp v0.4.0 h1:xsAVV57WRhGj6kEIi8ReJzQlHHqcBYCElAvkovg3B/4=
 github.com/google/go-cmp v0.4.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.0 h1:/QaMHBdZ26BB3SSst0Iwl10Epc+xhTquomWX0oZEB6w=
 github.com/google/go-cmp v0.5.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
+github.com/google/go-cmp v0.5.2 h1:X2ev0eStA3AbceY54o37/0PQ/UWqKEiiO2dKL5OPaFM=
 github.com/google/gofuzz v0.0.0-20170612174753-24818f796faf/go.mod h1:HP5RmnzzSNb993RKQDq4+1A4ia9nllfqcQFTQJedwGI=
 github.com/google/gofuzz v1.0.0 h1:A8PeW59pxE9IoFRqBp37U+mSNaQoZ46F1f0f863XSXw=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
@@ -482,6 +484,7 @@ github.com/regen-network/cosmos-proto v0.3.0 h1:24dVpPrPi0GDoPVLesf2Ug98iK5QgVsc
 github.com/regen-network/cosmos-proto v0.3.0 h1:24dVpPrPi0GDoPVLesf2Ug98iK5QgVscPl0ga4Eoub0=
 github.com/regen-network/cosmos-proto v0.3.0/go.mod h1:zuP2jVPHab6+IIyOx3nXHFN+euFNeS3W8XQkcdd4s7A=
 github.com/regen-network/cosmos-proto v0.3.0/go.mod h1:zuP2jVPHab6+IIyOx3nXHFN+euFNeS3W8XQkcdd4s7A=
+github.com/regen-network/protobuf v1.3.1 h1:NqorqFbh0keWskTfR5D1oCvGdR/GjmD3PUpJcCIvcgE=
 github.com/regen-network/protobuf v1.3.2-alpha.regen.4 h1:c9jEnU+xm6vqyrQe3M94UFWqiXxRIKKnqBOh2EACmBE=
 github.com/regen-network/protobuf v1.3.2-alpha.regen.4 h1:c9jEnU+xm6vqyrQe3M94UFWqiXxRIKKnqBOh2EACmBE=
 github.com/regen-network/protobuf v1.3.2-alpha.regen.4/go.mod h1:/J8/bR1T/NXyIdQDLUaq15LjNE83nRzkyrLAMcPewig=
