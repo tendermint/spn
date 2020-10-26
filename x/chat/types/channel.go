@@ -18,22 +18,22 @@ func NewChannel(
 	subject string,
 	metadata *types.Any,
 ) (Channel, error) {
-	channel := new(Channel)
+	var channel Channel
 	channel.Creator = &creator
 
 	if !checkChannelName(name) {
-		return *channel, sdkerrors.Wrap(ErrInvalidChannel, "invalid name")
+		return channel, sdkerrors.Wrap(ErrInvalidChannel, "invalid name")
 	}
 	channel.Name = name
 
 	if len(subject) > ChannelSubjectMaxLength {
-		return *channel, sdkerrors.Wrap(ErrInvalidChannel, "subject too big")
+		return channel, sdkerrors.Wrap(ErrInvalidChannel, "subject too big")
 	}
 	channel.Subject = subject
 	channel.MessageCount = 0
 	channel.Metadata = metadata
 
-	return *channel, nil
+	return channel, nil
 }
 
 // IncrementMessageCount increments the message count inside the channel

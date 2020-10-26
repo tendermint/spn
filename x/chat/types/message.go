@@ -22,7 +22,7 @@ func NewMessage(
 	pollOptions []string,
 	metadata *types.Any,
 ) (Message, error) {
-	message := new(Message)
+	var message Message
 
 	message.ChannelID = channelID
 	message.MessageIndex = messageIndex
@@ -30,7 +30,7 @@ func NewMessage(
 
 	// Verify content
 	if len(content) > MessageContentMaxLength {
-		return *message, sdkerrors.Wrap(ErrInvalidMessage, "content too big")
+		return message, sdkerrors.Wrap(ErrInvalidMessage, "content too big")
 	}
 	message.Content = content
 
@@ -45,7 +45,7 @@ func NewMessage(
 
 		newPoll, err := NewPoll(pollOptions)
 		if err != nil {
-			return *message, sdkerrors.Wrap(ErrInvalidMessage, err.Error())
+			return message, sdkerrors.Wrap(ErrInvalidMessage, err.Error())
 		}
 
 		message.Poll = &newPoll
@@ -53,5 +53,5 @@ func NewMessage(
 
 	message.Metadata = metadata
 
-	return *message, nil
+	return message, nil
 }

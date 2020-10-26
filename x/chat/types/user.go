@@ -42,15 +42,15 @@ func NewAccountAddressUser(
 	address sdk.AccAddress,
 	username string,
 ) (AccountAddressUser, error) {
-	accountAddressUser := new(AccountAddressUser)
+	var accountAddressUser AccountAddressUser
 
 	if address.Empty() {
-		return *accountAddressUser, sdkerrors.Wrap(ErrInvalidPoll, "empty address")
+		return accountAddressUser, sdkerrors.Wrap(ErrInvalidPoll, "empty address")
 	}
 	accountAddressUser.AccountAddress = address
 	accountAddressUser.Name = username
 
-	return *accountAddressUser, nil
+	return accountAddressUser, nil
 }
 
 // Addresses returns the account addresses of the user
@@ -71,14 +71,14 @@ func (aaUser AccountAddressUser) Identifier() string {
 
 // ToProtobuf returns protobuf encoded user
 func (aaUser AccountAddressUser) ToProtobuf() (User, error) {
-	user := new(User)
+	var user User
 
 	encodedUser, err := types.NewAnyWithValue(&aaUser)
 	if err != nil {
-		return *user, sdkerrors.Wrap(ErrInvalidPoll, "user cannot be encoded")
+		return user, sdkerrors.Wrap(ErrInvalidPoll, "user cannot be encoded")
 	}
 	user.Data = encodedUser
 	user.Format = UserFormatAccountAddress
 
-	return *user, nil
+	return user, nil
 }

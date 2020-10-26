@@ -9,15 +9,15 @@ import (
 
 // NewPoll creates a new poll
 func NewPoll(options []string) (Poll, error) {
-	poll := new(Poll)
+	var poll Poll
 
 	if !checkOptions(options) {
-		return *poll, sdkerrors.Wrap(ErrInvalidPoll, "invalid options")
+		return poll, sdkerrors.Wrap(ErrInvalidPoll, "invalid options")
 	}
 	poll.Options = options
 	poll.Votes = make(map[string]*Vote)
 
-	return *poll, nil
+	return poll, nil
 }
 
 // HasUserVoted checks if a user voted for a poll
@@ -90,11 +90,11 @@ func NewVote(
 	value int32,
 	metadata *types.Any,
 ) (Vote, error) {
-	vote := new(Vote)
+	var vote Vote
 
 	vote.Creator = &creator
 	vote.Value = value
 	vote.Metadata = metadata
 
-	return *vote, nil
+	return vote, nil
 }
