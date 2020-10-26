@@ -20,14 +20,14 @@ func TestNewChannel(t *testing.T) {
 	require.NoError(t, err, "NewChannel should create a new channel")
 	require.Zero(t, channel.MessageCount, "NewChannel should create a channel with 0 message")
 
-	// Can create a channel with metadata
-	_, metadata := chat.MockMetadata()
+	// Can create a channel with payload
+	_, payload := chat.MockPayload()
 	channel, err = types.NewChannel(
 		0,
 		chat.MockUser(),
 		"foo",
 		"bar",
-		metadata,
+		payload,
 	)
 	require.NoError(t, err, "NewChannel should create a new channel")
 

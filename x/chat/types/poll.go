@@ -88,13 +88,13 @@ func checkOptions(options []string) bool {
 func NewVote(
 	creator User,
 	value int32,
-	metadata *types.Any,
+	payload *types.Any,
 ) (Vote, error) {
 	var vote Vote
 
 	vote.Creator = &creator
 	vote.Value = value
-	vote.Metadata = metadata
+	vote.Payload = payload
 
 	return vote, nil
 }

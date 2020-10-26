@@ -19,9 +19,9 @@ func TestNewPoll(t *testing.T) {
 func TestNewVote(t *testing.T) {
 	user := chat.MockUser()
 
-	// Can create a vote with metadata
-	_, metadata := chat.MockMetadata()
-	_, err := types.NewVote(user, 0, metadata)
+	// Can create a vote with payload
+	_, payload := chat.MockPayload()
+	_, err := types.NewVote(user, 0, payload)
 	require.NoError(t, err, "NewVote should create a new vote")
 }
 

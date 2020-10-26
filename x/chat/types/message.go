@@ -20,7 +20,7 @@ func NewMessage(
 	tags []string,
 	createdAt time.Time,
 	pollOptions []string,
-	metadata *types.Any,
+	payload *types.Any,
 ) (Message, error) {
 	var message Message
 
@@ -51,7 +51,7 @@ func NewMessage(
 		message.Poll = &newPoll
 	}
 
-	message.Metadata = metadata
+	message.Payload = payload
 
 	return message, nil
 }

@@ -28,14 +28,14 @@ func NewMsgCreateChannel(
 	creator User,
 	name string,
 	subject string,
-	metadata *proto.Message,
+	payload *proto.Message,
 	signAddress sdk.AccAddress,
 ) (*MsgCreateChannel, error) {
 	// Convert the proto message into any
-	var metadataAny *types.Any
+	var payloadAny *types.Any
 	var err error
-	if metadata != nil {
-		metadataAny, err = types.NewAnyWithValue(*metadata)
+	if payload != nil {
+		payloadAny, err = types.NewAnyWithValue(*payload)
 		if err != nil {
 			return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
 		}
@@ -45,7 +45,7 @@ func NewMsgCreateChannel(
 		Creator:     &creator,
 		Name:        name,
 		Subject:     subject,
-		Metadata:    metadataAny,
+		Payload:     payloadAny,
 		SignAddress: signAddress,
 	}, nil
 }
@@ -99,14 +99,14 @@ func NewMsgSendMessage(
 	content string,
 	tags []string,
 	pollOptions []string,
-	metadata *proto.Message,
+	payload *proto.Message,
 	signAddress sdk.AccAddress,
 ) (*MsgSendMessage, error) {
 	// Convert the proto message into any
-	var metadataAny *types.Any
+	var payloadAny *types.Any
 	var err error
-	if metadata != nil {
-		metadataAny, err = types.NewAnyWithValue(*metadata)
+	if payload != nil {
+		payloadAny, err = types.NewAnyWithValue(*payload)
 		if err != nil {
 			return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
 		}
@@ -118,7 +118,7 @@ func NewMsgSendMessage(
 		Content:     content,
 		Tags:        tags,
 		PollOptions: pollOptions,
-		Metadata:    metadataAny,
+		Payload:     payloadAny,
 		SignAddress: signAddress,
 	}, nil
 }
@@ -170,14 +170,14 @@ func NewMsgVotePoll(
 	messageID string,
 	creator User,
 	value int32,
-	metadata *proto.Message,
+	payload *proto.Message,
 	signAddress sdk.AccAddress,
 ) (*MsgVotePoll, error) {
 	// Convert the proto message into any
-	var metadataAny *types.Any
+	var payloadAny *types.Any
 	var err error
-	if metadata != nil {
-		metadataAny, err = types.NewAnyWithValue(*metadata)
+	if payload != nil {
+		payloadAny, err = types.NewAnyWithValue(*payload)
 		if err != nil {
 			return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
 		}
@@ -187,7 +187,7 @@ func NewMsgVotePoll(
 		MessageID:   messageID,
 		Creator:     &creator,
 		Value:       value,
-		Metadata:    metadataAny,
+		Payload:     payloadAny,
 		SignAddress: signAddress,
 	}, nil
 }

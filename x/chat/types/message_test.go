@@ -25,7 +25,7 @@ func TestNewMessage(t *testing.T) {
 	require.False(t, message.HasPoll, "NewMessage with no poll options should not create a poll")
 
 	// Can create a message
-	_, metadata := chat.MockMetadata()
+	_, payload := chat.MockPayload()
 	message, err = types.NewMessage(
 		0,
 		0,
@@ -34,7 +34,7 @@ func TestNewMessage(t *testing.T) {
 		[]string{"bar"},
 		time.Now(),
 		[]string{},
-		metadata,
+		payload,
 	)
 	require.NoError(t, err, "NewMessage should create a new message")
 

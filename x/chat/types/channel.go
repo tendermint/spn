@@ -16,7 +16,7 @@ func NewChannel(
 	creator User,
 	name string,
 	subject string,
-	metadata *types.Any,
+	payload *types.Any,
 ) (Channel, error) {
 	var channel Channel
 	channel.Creator = &creator
@@ -31,7 +31,7 @@ func NewChannel(
 	}
 	channel.Subject = subject
 	channel.MessageCount = 0
-	channel.Metadata = metadata
+	channel.Payload = payload
 
 	return channel, nil
 }

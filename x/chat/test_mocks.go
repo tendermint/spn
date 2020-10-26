@@ -25,9 +25,9 @@ func MockUser() types.User {
 	return user
 }
 
-// MockMetadata mocks a miscellaneous metadata
-func MockMetadata() (proto.Message, *cdc.Any) {
-	// User is a protobuf mesage and can be then used as a metadata
+// MockPayload mocks a miscellaneous payload data
+func MockPayload() (proto.Message, *cdc.Any) {
+	// User is a protobuf mesage and can be then used as a payloaddata
 	user := MockUser()
 	userAny, _ := cdc.NewAnyWithValue(&user)
 

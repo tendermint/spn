@@ -12,7 +12,7 @@ message Channel {
   string name = 3; 
   string subject = 4; 
   int32 messageCount = 5; 
-  google.protobuf.Any metadata = 6;
+  google.protobuf.Any payload = 6;
 }
 
 message Message {
@@ -24,7 +24,7 @@ message Message {
   int64 createdAt = 6;
   Poll poll = 7;
   bool hasPoll = 8;
-  google.protobuf.Any metadata = 9;
+  google.protobuf.Any payload = 9;
 }
 
 message Poll {
@@ -35,7 +35,7 @@ message Poll {
 message Vote {
     User creator = 1;
     int32 value = 2;
-    google.protobuf.Any metadata = 3;
+    google.protobuf.Any payload = 3;
 }
 
 message User {
