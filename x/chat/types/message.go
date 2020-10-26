@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"time"
 
 	types "github.com/cosmos/cosmos-sdk/codec/types"
@@ -34,7 +35,14 @@ func NewMessage(
 	}
 	message.Content = content
 
+	// Check tags format
+	for _, tag := range tags {
+		if !checkTag(tag) {
+			return message, sdkerrors.Wrap(ErrInvalidMessage, fmt.Sprintf("tag %v is unauthorized", tag))
+		}
+	}
 	message.Tags = tags
+
 	message.CreatedAt = createdAt.Unix()
 
 	// If poll options are present, we append a poll into the message
@@ -54,4 +62,19 @@ func NewMessage(
 	message.Payload = payload
 
 	return message, nil
+}
+
+// Check if the tag is a alphanumeric string
+func checkTag(tag string) bool {
+	for _, c := range tag {
+		if !isTagAuthorizedChar(c) {
+			return false
+		}
+	}
+	return true
+}
+
+// Alphanumeric or hyphen character
+func isTagAuthorizedChar(c rune) bool {
+	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '-'
 }
