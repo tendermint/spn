@@ -17,7 +17,7 @@ func TestAppendMessageToChannel(t *testing.T) {
 	require.False(t, channelFound, "AppendMessageToChannel should return false on a non existing channel")
 
 	// Create a channel
-	k.AppendChannel(ctx, chat.MockChannel())
+	k.CreateChannel(ctx, chat.MockChannel())
 	channel, _ := k.GetChannel(ctx, 0)
 	require.Zero(t, channel.MessageCount, "A new channel should have 0 message")
 

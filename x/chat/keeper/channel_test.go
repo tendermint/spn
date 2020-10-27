@@ -7,7 +7,7 @@ import (
 	"github.com/tendermint/spn/x/chat"
 )
 
-func TestAppendChannel(t *testing.T) {
+func TestCreateChannel(t *testing.T) {
 	ctx, k := chat.MockContext()
 
 	// Channel count is 0 at initialization
@@ -19,7 +19,7 @@ func TestAppendChannel(t *testing.T) {
 
 	// A channel can be appended and retrieved
 	newChannel := chat.MockChannel()
-	k.AppendChannel(ctx, newChannel)
+	k.CreateChannel(ctx, newChannel)
 	retrieved, found := k.GetChannel(ctx, 0)
 	require.True(t, found, "An appended channel should be retrieved")
 	require.Equal(t, newChannel.Name, retrieved.Name, "GetChannel should retrieve the appended channel")
@@ -27,7 +27,7 @@ func TestAppendChannel(t *testing.T) {
 
 	// A second channel can be appended an retrieved
 	newChannel = chat.MockChannel()
-	k.AppendChannel(ctx, newChannel)
+	k.CreateChannel(ctx, newChannel)
 	retrieved, found = k.GetChannel(ctx, 1)
 	require.True(t, found, "An appended channel should be retrieved")
 	require.Equal(t, newChannel.Name, retrieved.Name, "GetChannel should retrieve the appended channel")

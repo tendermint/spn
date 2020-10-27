@@ -25,8 +25,8 @@ func (k Keeper) GetChannelCount(ctx sdk.Context) (channelCount int32) {
 	return getChannelCount(k, ctx)
 }
 
-// AppendChannel appends a new channel, increments channel count
-func (k Keeper) AppendChannel(ctx sdk.Context, channel types.Channel) {
+// CreateChannel appends a new channel, increments channel count
+func (k Keeper) CreateChannel(ctx sdk.Context, channel types.Channel) {
 	store := ctx.KVStore(k.storeKey)
 
 	channelCount := getChannelCount(k, ctx)

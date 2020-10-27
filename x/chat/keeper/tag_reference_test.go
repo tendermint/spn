@@ -11,7 +11,7 @@ import (
 func TestGetTagReferencesFromChannel(t *testing.T) {
 	ctx, k := chat.MockContext()
 
-	k.AppendChannel(ctx, chat.MockChannel())
+	k.CreateChannel(ctx, chat.MockChannel())
 	message0ID := types.GetMessageIDFromChannelIDandIndex(0, 0)
 	message1ID := types.GetMessageIDFromChannelIDandIndex(0, 1)
 	message2ID := types.GetMessageIDFromChannelIDandIndex(0, 2)
@@ -52,8 +52,8 @@ func TestGetTagReferencesFromChannel(t *testing.T) {
 	require.Equal(t, 0, len(barfooReferences), "GetTagReferencesFromChannel should find 0 bar-foo reference")
 
 	// Can get all tag references in all channels
-	k.AppendChannel(ctx, chat.MockChannel())
-	k.AppendChannel(ctx, chat.MockChannel())
+	k.CreateChannel(ctx, chat.MockChannel())
+	k.CreateChannel(ctx, chat.MockChannel())
 	message = chat.MockMessage(1)
 	message.Tags = []string{"foo"}
 	k.AppendMessageToChannel(ctx, message)
