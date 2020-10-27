@@ -38,7 +38,7 @@ func TestAppendMessageToChannel(t *testing.T) {
 
 	// Can retrieve the message with its ID
 	messageID := types.GetMessageIDFromChannelIDandIndex(0, 0)
-	retrieved, messageFound = k.GetMessageFromID(ctx, messageID)
+	retrieved, messageFound = k.GetMessageByID(ctx, messageID)
 	require.True(t, messageFound, "GetMessageFromID should return true if the message exists")
 	require.Equal(t, message.Content, retrieved.Content, "The retrieved message should be the appended message")
 
@@ -55,7 +55,7 @@ func TestAppendMessageToChannel(t *testing.T) {
 	poll.AppendVote(chat.MockVote(4))
 	messageFound = k.UpdateMessagePoll(ctx, messageID, &poll)
 	require.True(t, messageFound, "UpdateMessagePoll should return true if the message exists")
-	retrieved, _ = k.GetMessageFromID(ctx, messageID)
+	retrieved, _ = k.GetMessageByID(ctx, messageID)
 	require.Equal(t, poll.Options, retrieved.Poll.Options, "UpdateMessagePoll should update the message poll")
 	require.Equal(t, len(poll.Votes), len(retrieved.Poll.Votes), "UpdateMessagePoll should update the message poll")
 
@@ -82,7 +82,7 @@ func TestAppendMessageToChannel(t *testing.T) {
 		messageIDs = append(messageIDs, types.GetMessageIDFromChannelIDandIndex(0, int32(i)))
 	}
 	messageIDs = append(messageIDs, types.GetMessageIDFromChannelIDandIndex(1, 0))
-	messages = k.GetMessagesFromIDs(ctx, messageIDs)
+	messages = k.GetMessagesByIDs(ctx, messageIDs)
 	require.Equal(t, 4, len(messages), "GetMessagesFromIDs should find the exact number of message")
 	require.Equal(t, int32(3), messages[0].MessageIndex, "GetMessagesFromIDs should return messages in the correct order")
 	require.Equal(t, int32(2), messages[1].MessageIndex, "GetMessagesFromIDs should return messages in the correct order")
