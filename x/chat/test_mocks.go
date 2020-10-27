@@ -74,7 +74,7 @@ func MockChannel() types.Channel {
 	return channel
 }
 
-// MockMessage mocks a messaeg for test purpose
+// MockMessage mocks a message for test purpose
 func MockMessage(channelID int32) types.Message {
 	message, _ := types.NewMessage(
 		channelID,
@@ -88,6 +88,12 @@ func MockMessage(channelID int32) types.Message {
 	)
 
 	return message
+}
+
+// MockVote mocks a vote for a poll for test purpose
+func MockVote(value int32) *types.Vote {
+	vote, _ := types.NewVote(MockUser(), value, nil)
+	return &vote
 }
 
 // MockPayload mocks a miscellaneous payload data

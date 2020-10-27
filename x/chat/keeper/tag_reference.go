@@ -30,7 +30,7 @@ func (k Keeper) GetAllTagReferences(ctx sdk.Context, tag string) (allReferences 
 	for ; iterator.Valid(); iterator.Next() {
 		// Get the references
 		references := types.UnmarshalTagReferences(k.cdc, iterator.Value())
-		allReferences = append(references, references...)
+		allReferences = append(allReferences, references...)
 	}
 
 	return allReferences

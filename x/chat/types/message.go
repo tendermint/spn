@@ -1,6 +1,9 @@
 package types
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -105,4 +108,20 @@ func UnmarshalTagReferences(cdc codec.BinaryMarshaler, value []byte) (tagReferen
 	var tagReferencesWrapper TagReferences
 	cdc.MustUnmarshalBinaryBare(value, &tagReferencesWrapper)
 	return tagReferencesWrapper.References
+}
+
+// GetMessageIDFromChannelIDandIndex computes the messageID from the channelID and the message index in this channel
+// We use a hash function in order to use a fixed length ID
+func GetMessageIDFromChannelIDandIndex(channelID int32, messageIndex int32) string {
+	chunk := struct {
+		ChannedID    int32
+		MessageIndex int32
+	}{channelID, messageIndex}
+
+	// Compute the hash
+	encodedChunk, _ := json.Marshal(chunk)
+	hash := sha256.Sum256(encodedChunk)
+
+	idBytes := hash[:32]
+	return hex.EncodeToString(idBytes)
 }

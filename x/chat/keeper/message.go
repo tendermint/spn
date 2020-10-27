@@ -1,9 +1,6 @@
 package keeper
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,7 +9,7 @@ import (
 
 // GetMessageFromIndex returns a message from its index in a channel
 func (k Keeper) GetMessageFromIndex(ctx sdk.Context, channelID int32, index int32) (message types.Message, found bool) {
-	messageID := GetMessageIDFromChannelIDandIndex(channelID, index)
+	messageID := types.GetMessageIDFromChannelIDandIndex(channelID, index)
 	return k.GetMessageFromID(ctx, messageID)
 }
 
@@ -65,7 +62,7 @@ func (k Keeper) GetMessagesFromIDs(ctx sdk.Context, messageIDs []string) (messag
 }
 
 // UpdateMessagePoll updates the poll of a message
-func (k Keeper) UpdateMessagePoll(ctx sdk.Context, messageID string, poll types.Poll) (found bool) {
+func (k Keeper) UpdateMessagePoll(ctx sdk.Context, messageID string, poll *types.Poll) (found bool) {
 	store := ctx.KVStore(k.storeKey)
 
 	message, found := k.GetMessageFromID(ctx, messageID)
@@ -73,7 +70,7 @@ func (k Keeper) UpdateMessagePoll(ctx sdk.Context, messageID string, poll types.
 		return false
 	}
 
-	message.Poll = &poll
+	message.Poll = poll
 
 	// Store back the message
 	encodedMessage := types.MarshalMessage(k.cdc, message)
@@ -96,7 +93,7 @@ func (k Keeper) AppendMessageToChannel(ctx sdk.Context, message types.Message) (
 	// Append the message
 	message.MessageIndex = messageCount
 	encodedMessage := types.MarshalMessage(k.cdc, message)
-	messageID := GetMessageIDFromChannelIDandIndex(message.ChannelID, message.MessageIndex)
+	messageID := types.GetMessageIDFromChannelIDandIndex(message.ChannelID, message.MessageIndex)
 	store.Set(types.GetMessageKey(messageID), encodedMessage)
 
 	// Update message count of the channel
@@ -114,20 +111,4 @@ func (k Keeper) AppendMessageToChannel(ctx sdk.Context, message types.Message) (
 	}
 
 	return true
-}
-
-// GetMessageIDFromChannelIDandIndex computes the messageID from the channelID and the message index in this channel
-// We use a hash function in order to use a fixed length ID
-func GetMessageIDFromChannelIDandIndex(channelID int32, messageIndex int32) string {
-	chunk := struct {
-		ChannedID    int32
-		MessageIndex int32
-	}{channelID, messageIndex}
-
-	// Compute the hash
-	encodedChunk, _ := json.Marshal(chunk)
-	hash := sha256.Sum256(encodedChunk)
-
-	idBytes := hash[:32]
-	return hex.EncodeToString(idBytes)
 }
