@@ -1,0 +1,8 @@
+syntax = "proto3";
+package spn.identity.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/identity/types";
+
+// GenesisState defines the identity module's genesis state.
+message GenesisState {
+}
