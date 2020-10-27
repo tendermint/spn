@@ -1,8 +1,10 @@
 package types
 
 import (
+	"github.com/cosmos/cosmos-sdk/codec"
 	types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"strconv"
 )
 
 const (
@@ -49,4 +51,31 @@ func checkChannelName(name string) bool {
 
 	// TODO: check format for a channel name, example: no space? forbidden characters?
 	return true
+}
+
+// MarshalChannel encodes channels for the store
+func MarshalChannel(cdc codec.BinaryMarshaler, channel Channel) []byte {
+	return cdc.MustMarshalBinaryBare(&channel)
+}
+
+// UnmarshalChannel decodes channels from the store
+func UnmarshalChannel(cdc codec.BinaryMarshaler, value []byte) (channel Channel) {
+	cdc.MustUnmarshalBinaryBare(value, &channel)
+	return channel
+}
+
+// MarshalChannelCount encodes channel count for the store
+func MarshalChannelCount(cdc codec.BinaryMarshaler, channelCount int32) []byte {
+	return []byte(strconv.Itoa(int(channelCount)))
+}
+
+// UnmarshalChannelCount decodes channel count from the store
+func UnmarshalChannelCount(cdc codec.BinaryMarshaler, value []byte) int32 {
+	channelCount, err := strconv.Atoi(string(value))
+	if err != nil {
+		// We should never have non numeric data as channel count
+		panic("The channel count store contains an invalid valid")
+	}
+
+	return int32(channelCount)
 }
