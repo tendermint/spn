@@ -29,3 +29,46 @@ func NewKeeper(cdc codec.Marshaler, storeKey, memKey sdk.StoreKey) *Keeper {
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
+
+// SetUsername set the username corresponding to the provided address
+func (k Keeper) SetUsername(ctx sdk.Context, address sdk.AccAddress, username string) error {
+	store := ctx.KVStore(k.storeKey)
+
+	if address.Empty() {
+		return types.ErrInvalidAddress
+	}
+
+	if !types.CheckUsername(username) {
+		return types.ErrInvalidUsername
+	}
+
+	store.Set(types.GetUsernameKey(address), []byte(username))
+
+	return nil
+}
+
+// GetUsername returns the username corresponding to the address
+func (k Keeper) GetUsername(ctx sdk.Context, address sdk.AccAddress) (string, error) {
+	store := ctx.KVStore(k.storeKey)
+
+	// Search the username
+	username := store.Get(types.GetUsernameKey(address))
+	if username == nil {
+		// In case the username is not set, the address is returned
+		return address.String(), nil
+	}
+
+	return string(username), nil
+}
+
+// GetIdentifier returns a string that uniquely identities the user of the corresponding address
+func (k Keeper) GetIdentifier(ctx sdk.Context, address sdk.AccAddress) (string, error) {
+	// We return the address since its the only data taht identifies the user
+	return address.String(), nil
+}
+
+// GetAddresses returns all the addresses of the user of the corresponding address
+func (k Keeper) GetAddresses(ctx sdk.Context, address sdk.AccAddress) ([]sdk.AccAddress, error) {
+	// This module doesn't allow a user to possess several addresses
+	return []sdk.AccAddress{address}, nil
+}

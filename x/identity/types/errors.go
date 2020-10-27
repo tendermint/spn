@@ -8,5 +8,6 @@ import (
 
 // x/identity module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrInvalidUsername = sdkerrors.Register(ModuleName, 0, "the username is invalid")
+	ErrInvalidAddress  = sdkerrors.Register(ModuleName, 1, "the address is invalid")
 )
