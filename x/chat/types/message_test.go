@@ -31,7 +31,7 @@ func TestNewMessage(t *testing.T) {
 		0,
 		chat.MockUser(),
 		"foo",
-		[]string{"bar"},
+		[]string{"bar42"},
 		time.Now(),
 		[]string{},
 		payload,
@@ -45,7 +45,7 @@ func TestNewMessage(t *testing.T) {
 		0,
 		chat.MockUser(),
 		"foo",
-		[]string{"bar"},
+		[]string{"bar-bar"},
 		time.Now(),
 		pollOptions,
 		nil,
@@ -67,4 +67,18 @@ func TestNewMessage(t *testing.T) {
 		nil,
 	)
 	require.Error(t, err, "NewMessage should prevent creating a message with an invalid content")
+
+	// Prevent creating a message with an invalid tag
+	message, err = types.NewMessage(
+		0,
+		0,
+		chat.MockUser(),
+		"foo",
+		[]string{"bar", "this_tag_is_not_authorized", "anothertag"},
+		time.Now(),
+		[]string{},
+		payload,
+	)
+	require.Error(t, err, "NewMessage should prevent creating a message with an invalid tag")
+
 }
