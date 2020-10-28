@@ -1,13 +1,13 @@
 package cli
 
 import (
+	"context"
 	"fmt"
-	// "strings"
 
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tendermint/spn/x/identity/types"
@@ -24,8 +24,40 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	// this line is used by starport scaffolding # 1
+	cmd.AddCommand(CmdGetUsername())
 
-	return cmd 
+	return cmd
 }
 
+// CmdGetUsername get the username associated with an address
+func CmdGetUsername() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "get-username [address]",
+		Short: "get the username associated with an address",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryGetUsernameRequest{
+				Address: args[0],
+			}
+
+			res, err := queryClient.GetUsername(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}

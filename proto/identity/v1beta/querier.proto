@@ -8,7 +8,13 @@ option go_package = "github.com/tendermint/spn/x/identity/types";
 
 // Query defines the gRPC querier service.
 service Query {
-    // this line is used by starport scaffolding # 2
+    rpc GetUsername(QueryGetUsernameRequest) returns (QueryGetUsernameResponse);
 }
 
-// this line is used by starport scaffolding # 3
+message QueryGetUsernameRequest {
+    string address = 1;
+}
+
+message QueryGetUsernameResponse {
+    string username = 1;
+}

@@ -2,7 +2,8 @@ package cli
 
 import (
 	"fmt"
-
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -20,7 +21,33 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	// this line is used by starport scaffolding # 1
+	cmd.AddCommand(CmdSetUsername())
 
-	return cmd 
+	return cmd
+}
+
+// CmdSetUsername returns the transaction command to set a new username
+func CmdSetUsername() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "set-username [name]",
+		Short: "Set a new username",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			msg, err := types.NewMsgSetUsername(clientCtx.GetFromAddress(), args[0])
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
 }

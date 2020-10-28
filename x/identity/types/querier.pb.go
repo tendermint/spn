@@ -10,7 +10,11 @@ import (
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -24,21 +28,120 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type QueryGetUsernameRequest struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryGetUsernameRequest) Reset()         { *m = QueryGetUsernameRequest{} }
+func (m *QueryGetUsernameRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetUsernameRequest) ProtoMessage()    {}
+func (*QueryGetUsernameRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_80c88d5f879027c4, []int{0}
+}
+func (m *QueryGetUsernameRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetUsernameRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetUsernameRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetUsernameRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetUsernameRequest.Merge(m, src)
+}
+func (m *QueryGetUsernameRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetUsernameRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetUsernameRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetUsernameRequest proto.InternalMessageInfo
+
+func (m *QueryGetUsernameRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryGetUsernameResponse struct {
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+}
+
+func (m *QueryGetUsernameResponse) Reset()         { *m = QueryGetUsernameResponse{} }
+func (m *QueryGetUsernameResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetUsernameResponse) ProtoMessage()    {}
+func (*QueryGetUsernameResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_80c88d5f879027c4, []int{1}
+}
+func (m *QueryGetUsernameResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetUsernameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetUsernameResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetUsernameResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetUsernameResponse.Merge(m, src)
+}
+func (m *QueryGetUsernameResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetUsernameResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetUsernameResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetUsernameResponse proto.InternalMessageInfo
+
+func (m *QueryGetUsernameResponse) GetUsername() string {
+	if m != nil {
+		return m.Username
+	}
+	return ""
+}
+
+func init() {
+	proto.RegisterType((*QueryGetUsernameRequest)(nil), "spn.identity.v1beta1.QueryGetUsernameRequest")
+	proto.RegisterType((*QueryGetUsernameResponse)(nil), "spn.identity.v1beta1.QueryGetUsernameResponse")
+}
+
 func init() { proto.RegisterFile("identity/v1beta/querier.proto", fileDescriptor_80c88d5f879027c4) }
 
 var fileDescriptor_80c88d5f879027c4 = []byte{
-	// 175 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0xcd, 0x4c, 0x49, 0xcd,
-	0x2b, 0xc9, 0x2c, 0xa9, 0xd4, 0x2f, 0x33, 0x4c, 0x4a, 0x2d, 0x49, 0xd4, 0x2f, 0x2c, 0x4d, 0x2d,
-	0xca, 0x4c, 0x2d, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x29, 0x2e, 0xc8, 0xd3, 0x83,
-	0x29, 0xd1, 0x83, 0x28, 0x31, 0x94, 0xd2, 0x4a, 0xce, 0x2f, 0xce, 0xcd, 0x2f, 0xd6, 0x4f, 0x4a,
-	0x2c, 0x4e, 0x05, 0x6b, 0x80, 0xe9, 0x36, 0xd4, 0x2f, 0x48, 0x4c, 0xcf, 0xcc, 0x4b, 0x2c, 0xc9,
-	0xcc, 0xcf, 0x83, 0x98, 0x60, 0xc4, 0xce, 0xc5, 0x1a, 0x08, 0x52, 0xe1, 0xe4, 0x72, 0xe2, 0x91,
-	0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1,
-	0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0x5a, 0xe9, 0x99, 0x25, 0x19, 0xa5, 0x49, 0x7a,
-	0xc9, 0xf9, 0xb9, 0xfa, 0x25, 0xa9, 0x79, 0x29, 0xa9, 0x45, 0xb9, 0x99, 0x79, 0x25, 0xfa, 0xc5,
-	0x05, 0x79, 0xfa, 0x15, 0xfa, 0x70, 0xf7, 0x95, 0x54, 0x16, 0xa4, 0x16, 0x27, 0xb1, 0x81, 0x4d,
-	0x35, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xb3, 0xc7, 0xc5, 0x35, 0xb8, 0x00, 0x00, 0x00,
+	// 258 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x90, 0xc1, 0x4a, 0xf4, 0x30,
+	0x14, 0x85, 0x9b, 0xc5, 0xff, 0xab, 0x71, 0x17, 0x04, 0x4b, 0xc1, 0x20, 0xb3, 0x92, 0x01, 0x13,
+	0xea, 0x80, 0x0f, 0x20, 0x82, 0x6b, 0x07, 0xdc, 0xb8, 0x4b, 0xa7, 0x97, 0x31, 0x60, 0x93, 0x4c,
+	0xee, 0x8d, 0x38, 0x6f, 0xe1, 0x63, 0xb9, 0x9c, 0xa5, 0x4b, 0x69, 0x5f, 0x44, 0x6c, 0xa7, 0x83,
+	0xa0, 0x82, 0xcb, 0x13, 0xbe, 0x2f, 0x9c, 0x7b, 0xf8, 0x89, 0xad, 0xc1, 0x91, 0xa5, 0xb5, 0x7e,
+	0x2a, 0x2b, 0x20, 0xa3, 0x57, 0x09, 0xa2, 0x85, 0xa8, 0x42, 0xf4, 0xe4, 0xc5, 0x11, 0x06, 0xa7,
+	0x46, 0x44, 0x0d, 0x48, 0x59, 0x4c, 0x17, 0x1e, 0x1b, 0x8f, 0xba, 0x32, 0x08, 0xbd, 0x30, 0xda,
+	0xa5, 0x0e, 0x66, 0x69, 0x9d, 0x21, 0xeb, 0xdd, 0xf0, 0xc3, 0x64, 0xc6, 0x8f, 0x6f, 0x3f, 0x89,
+	0x1b, 0xa0, 0x3b, 0x84, 0xe8, 0x4c, 0x03, 0x73, 0x58, 0x25, 0x40, 0x12, 0x39, 0xdf, 0x33, 0x75,
+	0x1d, 0x01, 0x31, 0x67, 0xa7, 0xec, 0xec, 0x60, 0x3e, 0xc6, 0xc9, 0x25, 0xcf, 0xbf, 0x4b, 0x18,
+	0xbc, 0x43, 0x10, 0x05, 0xdf, 0x4f, 0xdb, 0xb7, 0xad, 0xb6, 0xcb, 0x17, 0x89, 0xff, 0xeb, 0x3d,
+	0xf1, 0xc8, 0x0f, 0xbf, 0xb8, 0xe2, 0x5c, 0xfd, 0x74, 0x87, 0xfa, 0xa5, 0x58, 0xa1, 0xfe, 0x8a,
+	0x0f, 0x95, 0xae, 0xae, 0x5f, 0x5b, 0xc9, 0x36, 0xad, 0x64, 0xef, 0xad, 0x64, 0x2f, 0x9d, 0xcc,
+	0x36, 0x9d, 0xcc, 0xde, 0x3a, 0x99, 0xdd, 0x4f, 0x97, 0x96, 0x1e, 0x52, 0xa5, 0x16, 0xbe, 0xd1,
+	0x04, 0xae, 0x86, 0xd8, 0x58, 0x47, 0x1a, 0x83, 0xd3, 0xcf, 0x7a, 0x37, 0x3d, 0xad, 0x03, 0x60,
+	0xf5, 0xbf, 0x1f, 0x6c, 0xf6, 0x11, 0x00, 0x00, 0xff, 0xff, 0xf3, 0x56, 0xe8, 0x11, 0x93, 0x01,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -53,6 +156,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
+	GetUsername(ctx context.Context, in *QueryGetUsernameRequest, opts ...grpc.CallOption) (*QueryGetUsernameResponse, error)
 }
 
 type queryClient struct {
@@ -63,22 +167,417 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
 }
 
+func (c *queryClient) GetUsername(ctx context.Context, in *QueryGetUsernameRequest, opts ...grpc.CallOption) (*QueryGetUsernameResponse, error) {
+	out := new(QueryGetUsernameResponse)
+	err := c.cc.Invoke(ctx, "/spn.identity.v1beta1.Query/GetUsername", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
+	GetUsername(context.Context, *QueryGetUsernameRequest) (*QueryGetUsernameResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
 type UnimplementedQueryServer struct {
 }
 
+func (*UnimplementedQueryServer) GetUsername(ctx context.Context, req *QueryGetUsernameRequest) (*QueryGetUsernameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUsername not implemented")
+}
+
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 	s.RegisterService(&_Query_serviceDesc, srv)
+}
+
+func _Query_GetUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetUsernameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).GetUsername(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/spn.identity.v1beta1.Query/GetUsername",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).GetUsername(ctx, req.(*QueryGetUsernameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "spn.identity.v1beta1.Query",
 	HandlerType: (*QueryServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "identity/v1beta/querier.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetUsername",
+			Handler:    _Query_GetUsername_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "identity/v1beta/querier.proto",
 }
+
+func (m *QueryGetUsernameRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetUsernameRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetUsernameRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuerier(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetUsernameResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetUsernameResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetUsernameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Username) > 0 {
+		i -= len(m.Username)
+		copy(dAtA[i:], m.Username)
+		i = encodeVarintQuerier(dAtA, i, uint64(len(m.Username)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func encodeVarintQuerier(dAtA []byte, offset int, v uint64) int {
+	offset -= sovQuerier(v)
+	base := offset
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return base
+}
+func (m *QueryGetUsernameRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuerier(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetUsernameResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Username)
+	if l > 0 {
+		n += 1 + l + sovQuerier(uint64(l))
+	}
+	return n
+}
+
+func sovQuerier(x uint64) (n int) {
+	return (math_bits.Len64(x|1) + 6) / 7
+}
+func sozQuerier(x uint64) (n int) {
+	return sovQuerier(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *QueryGetUsernameRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetUsernameRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetUsernameRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetUsernameResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetUsernameResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetUsernameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Username", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Username = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipQuerier(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	depth := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+		case 1:
+			iNdEx += 8
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if length < 0 {
+				return 0, ErrInvalidLengthQuerier
+			}
+			iNdEx += length
+		case 3:
+			depth++
+		case 4:
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupQuerier
+			}
+			depth--
+		case 5:
+			iNdEx += 4
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthQuerier
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
+	}
+	return 0, io.ErrUnexpectedEOF
+}
+
+var (
+	ErrInvalidLengthQuerier        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowQuerier          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupQuerier = fmt.Errorf("proto: unexpected end of group")
+)
