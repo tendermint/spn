@@ -52,6 +52,10 @@ func (poll *Poll) AppendVote(vote *Vote) error {
 		return errors.New("The user already voted")
 	}
 
+	// Protobuf reset the map to nil if it has no value, therefore we must always check if it is initialized
+	if poll.Votes == nil {
+		poll.Votes = make(map[string]*Vote)
+	}
 	poll.Votes[vote.Creator] = vote
 
 	return nil

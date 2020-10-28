@@ -31,5 +31,10 @@ func TestCreateChannel(t *testing.T) {
 	retrieved, found = k.GetChannel(ctx, 1)
 	require.True(t, found, "An appended channel should be retrieved")
 	require.Equal(t, newChannel.Name, retrieved.Name, "GetChannel should retrieve the appended channel")
-	require.Equal(t, int32(2), k.GetChannelCount(ctx), "Channel count must be 2 after two channels have been appended")
+
+	// Prevent a invalid user to create a channel
+	newChannel = chat.MockChannel()
+	newChannel.Creator = "invalid_identifier"
+	err := k.CreateChannel(ctx, newChannel)
+	require.Error(t, err, "CreateChannel should prevent an invalid user to create a channel")
 }

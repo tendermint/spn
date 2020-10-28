@@ -94,6 +94,22 @@ func MockMessage(channelID int32) types.Message {
 	return message
 }
 
+// MockMessageWithPoll mocks a message with a poll for test purpose
+func MockMessageWithPoll(channelID int32, pollOptions []string) types.Message {
+	message, _ := types.NewMessage(
+		channelID,
+		0,
+		MockUser(),
+		MockRandomString(20),
+		[]string{MockRandomString(5)},
+		time.Now(),
+		pollOptions,
+		nil,
+	)
+
+	return message
+}
+
 // MockVote mocks a vote for a poll for test purpose
 func MockVote(value int32) *types.Vote {
 	vote, _ := types.NewVote(MockUser(), value, nil)

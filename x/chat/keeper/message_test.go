@@ -12,8 +12,8 @@ func TestAppendMessageToChannel(t *testing.T) {
 	ctx, k := chat.MockContext()
 
 	// Channel not found if the channel is not added yet
-	message := chat.MockMessage(0)
-	channelFound := k.AppendMessageToChannel(ctx, message)
+	message := chat.MockMessageWithPoll(0, []string{"chocolate", "cake", "cookie", "icecream", "oreo"})
+	channelFound, _ := k.AppendMessageToChannel(ctx, message)
 	require.False(t, channelFound, "AppendMessageToChannel should return false on a non existing channel")
 
 	// Create a channel
@@ -26,7 +26,7 @@ func TestAppendMessageToChannel(t *testing.T) {
 	require.False(t, messageFound, "GetMessageFromIndex should return false on a non existing message")
 
 	// Append a message to a channel
-	channelFound = k.AppendMessageToChannel(ctx, message)
+	channelFound, _ = k.AppendMessageToChannel(ctx, message)
 	require.True(t, channelFound, "AppendMessageToChannel should return true if the channel exists")
 	channel, _ = k.GetChannel(ctx, 0)
 	require.Equal(t, int32(1), channel.MessageCount, "The channel should have 1 message")
@@ -35,6 +35,7 @@ func TestAppendMessageToChannel(t *testing.T) {
 	retrieved, messageFound := k.GetMessageFromIndex(ctx, 0, 0)
 	require.True(t, messageFound, "GetMessageFromIndex should return true if the message exists")
 	require.Equal(t, message.Content, retrieved.Content, "The retrieved message should be the appended message")
+	require.Equal(t, 5, len(retrieved.Poll.Options), "The retrieved message should have a poll")
 
 	// Can retrieve the message with its ID
 	messageID := types.GetMessageIDFromChannelIDandIndex(0, 0)
@@ -42,22 +43,41 @@ func TestAppendMessageToChannel(t *testing.T) {
 	require.True(t, messageFound, "GetMessageFromID should return true if the message exists")
 	require.Equal(t, message.Content, retrieved.Content, "The retrieved message should be the appended message")
 
-	// Cannot update the poll of a non existing message
-	poll, _ := types.NewPoll([]string{"donut", "icecream", "chocolate", "coookie", "cake"})
-	messageFound = k.UpdateMessagePoll(ctx, types.GetMessageIDFromChannelIDandIndex(0, 1), &poll)
-	require.False(t, messageFound, "UpdateMessagePoll should return false on a non existing message")
+	// Prevent a invalid user to append a message
+	message = chat.MockMessage(0)
+	message.Creator = "invalid_identifier"
+	_, err := k.AppendMessageToChannel(ctx, message)
+	require.Error(t, err, "AppendMessageToChannel should prevent an invalid user to append a message")
 
-	// Can update the poll of a message
-	poll.AppendVote(chat.MockVote(0))
-	poll.AppendVote(chat.MockVote(1))
-	poll.AppendVote(chat.MockVote(2))
-	poll.AppendVote(chat.MockVote(3))
-	poll.AppendVote(chat.MockVote(4))
-	messageFound = k.UpdateMessagePoll(ctx, messageID, &poll)
+	// Cannot append a vote in a non existing message
+	messageFound, err = k.AppendVoteToPoll(ctx, types.GetMessageIDFromChannelIDandIndex(0, 1), chat.MockVote(0))
+	require.NoError(t, err, "AppendVoteToPoll non existing message shouldn't be an error")
+	require.False(t, messageFound, "AppendVoteToPoll should return false on a non existing message")
+
+	// Can append a vote to the poll of a message
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(0))
+	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (0)")
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(1))
+	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (1)")
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(2))
+	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (2)")
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(3))
+	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (3)")
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(4))
+	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (4)")
 	require.True(t, messageFound, "UpdateMessagePoll should return true if the message exists")
 	retrieved, _ = k.GetMessageByID(ctx, messageID)
-	require.Equal(t, poll.Options, retrieved.Poll.Options, "UpdateMessagePoll should update the message poll")
-	require.Equal(t, len(poll.Votes), len(retrieved.Poll.Votes), "UpdateMessagePoll should update the message poll")
+	require.Equal(t, 5, len(retrieved.Poll.Votes), "AppendVoteToPoll should append votes")
+
+	// AppendVoteToPoll fails if invalid vote
+	_, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(5))
+	require.Error(t, err, "AppendVoteToPoll should prevent invalid vote")
+
+	// AppendVoteToPoll prevents a invalid user to vote
+	vote := chat.MockVote(0)
+	vote.Creator = "invalid_identifier"
+	_, err = k.AppendVoteToPoll(ctx, messageID, vote)
+	require.Error(t, err, "AppendVoteToPoll should prevent invalid vote")
 
 	// Can retrieve all message in a poll
 	message = chat.MockMessage(0)
