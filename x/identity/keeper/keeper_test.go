@@ -90,7 +90,7 @@ func TestGetAddresses(t *testing.T) {
 	address := chat.MockAccAddress()
 
 	// Return only the address provided
-	addresses, _ := k.GetAddresses(ctx, address)
+	addresses, _ := k.GetAddresses(ctx, address.String())
 	require.Equal(t, 1, len(addresses), "GetAddresses shoudl only return the address provided")
 	require.True(t, address.Equals(addresses[0]), "GetAddresses shoudl only return the address provided")
 }

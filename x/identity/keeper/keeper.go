@@ -80,8 +80,13 @@ func (k Keeper) GetIdentifier(ctx sdk.Context, address sdk.AccAddress) (string, 
 	return address.String(), nil
 }
 
-// GetAddresses returns all the addresses of the user of the corresponding address
-func (k Keeper) GetAddresses(ctx sdk.Context, address sdk.AccAddress) ([]sdk.AccAddress, error) {
-	// This module doesn't allow a user to possess several addresses
+// GetAddresses returns all the addresses corresponding to a user identifier
+func (k Keeper) GetAddresses(ctx sdk.Context, identifier string) ([]sdk.AccAddress, error) {
+	address, err := sdk.AccAddressFromBech32(identifier)
+	if err != nil {
+		return []sdk.AccAddress{}, sdkerrors.Wrap(types.ErrInvalidAddress, err.Error())
+	}
+
+	// For this module, the only address of a user is the identifier itself
 	return []sdk.AccAddress{address}, nil
 }
