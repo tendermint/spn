@@ -48,7 +48,7 @@ func CmdGetUsername() *cobra.Command {
 				Address: args[0],
 			}
 
-			res, err := queryClient.GetUsername(context.Background(), params)
+			res, err := queryClient.Username(context.Background(), params)
 			if err != nil {
 				return err
 			}

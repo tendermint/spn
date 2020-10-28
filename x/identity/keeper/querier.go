@@ -18,11 +18,37 @@ func NewQuerier(k Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 		)
 
 		switch path[0] {
-		// this line is used by starport scaffolding # 1
+		case types.QueryGetUsername:
+			return getUsername(ctx, req, k, legacyQuerierCdc)
 		default:
 			err = sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unknown %s query endpoint: %s", types.ModuleName, path[0])
 		}
 
 		return res, err
 	}
+}
+
+func getUsername(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
+	var params types.QueryGetUsernameRequest
+
+	// Decode the request params
+	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
+	}
+	addr, err := sdk.AccAddressFromBech32(params.Address)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+	username, err := keeper.GetUsername(ctx, addr)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, username)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+	}
+
+	return bz, nil
 }
