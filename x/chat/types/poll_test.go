@@ -61,14 +61,14 @@ func TestHasUserVoted(t *testing.T) {
 	user := chat.MockUser()
 
 	// Should return false if no vote
-	voted, err := poll.HasUserVoted(&user)
+	voted, err := poll.HasUserVoted(user)
 	require.NoError(t, err, "HasUserVoted should return false")
 	require.False(t, voted, "HasUserVoted should return false")
 
 	// Should return true if voted
 	vote, _ := types.NewVote(user, 0, nil)
 	poll.AppendVote(&vote)
-	voted, err = poll.HasUserVoted(&user)
+	voted, err = poll.HasUserVoted(user)
 	require.NoError(t, err, "HasUserVoted with vote should return true")
 	require.True(t, voted, "HasUserVoted with vote should return true")
 
@@ -80,13 +80,13 @@ func TestGetUserVote(t *testing.T) {
 	user := chat.MockUser()
 
 	// Should return error if no vote
-	_, err := poll.GetUserVote(&user)
+	_, err := poll.GetUserVote(user)
 	require.Error(t, err, "GetUserVote with no vote should return an error")
 
 	// Should return the vote
 	vote, _ := types.NewVote(user, 0, nil)
 	poll.AppendVote(&vote)
-	retrieved, err := poll.GetUserVote(&user)
+	retrieved, err := poll.GetUserVote(user)
 	require.NoError(t, err, "GetUserVote should return the vote")
 	require.Equal(t, vote, *retrieved, "Not equal")
 

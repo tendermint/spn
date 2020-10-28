@@ -20,7 +20,7 @@ const (
 func NewMessage(
 	channelID int32,
 	messageIndex int32,
-	creator User,
+	creator string,
 	content string,
 	tags []string,
 	createdAt time.Time,
@@ -31,7 +31,7 @@ func NewMessage(
 
 	message.ChannelID = channelID
 	message.MessageIndex = messageIndex
-	message.Creator = &creator
+	message.Creator = creator
 
 	// Verify content
 	if len(content) > MessageContentMaxLength {

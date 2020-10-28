@@ -1,0 +1,11 @@
+syntax = "proto3";
+package spn.identity.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/identity/types";
+
+import "gogoproto/gogo.proto";
+
+message MsgSetUsername {
+  bytes address = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  string username = 2; 
+}

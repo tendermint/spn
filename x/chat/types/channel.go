@@ -15,13 +15,13 @@ const (
 // NewChannel creates a new channel
 func NewChannel(
 	id int32,
-	creator User,
+	creator string,
 	name string,
 	subject string,
 	payload *types.Any,
 ) (Channel, error) {
 	var channel Channel
-	channel.Creator = &creator
+	channel.Creator = creator
 
 	if !checkChannelName(name) {
 		return channel, sdkerrors.Wrap(ErrInvalidChannel, "invalid name")

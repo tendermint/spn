@@ -25,11 +25,10 @@ var (
 
 // NewMsgCreateChannel creates a new message to create a channel
 func NewMsgCreateChannel(
-	creator User,
+	creator sdk.AccAddress,
 	name string,
 	subject string,
 	payload *proto.Message,
-	signAddress sdk.AccAddress,
 ) (*MsgCreateChannel, error) {
 	// Convert the proto message into any
 	var payloadAny *types.Any
@@ -42,11 +41,10 @@ func NewMsgCreateChannel(
 	}
 
 	return &MsgCreateChannel{
-		Creator:     &creator,
-		Name:        name,
-		Subject:     subject,
-		Payload:     payloadAny,
-		SignAddress: signAddress,
+		Creator: creator,
+		Name:    name,
+		Subject: subject,
+		Payload: payloadAny,
 	}, nil
 }
 
@@ -59,7 +57,7 @@ func (msg MsgCreateChannel) Type() string { return TypeMsgCreateChannel }
 // GetSigners implements the sdk.Msg interface. It returns the address(es) that
 // must sign over msg.GetSignBytes().
 func (msg MsgCreateChannel) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.SignAddress}
+	return []sdk.AccAddress{msg.Creator}
 }
 
 // GetSignBytes returns the message bytes to sign over.
@@ -70,22 +68,6 @@ func (msg MsgCreateChannel) GetSignBytes() []byte {
 
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgCreateChannel) ValidateBasic() error {
-	// The user must possess the sign address
-	chatUser, err := msg.Creator.DecodeChatUser()
-	if err != nil {
-		return err
-	}
-	addressFound := false
-	for _, address := range chatUser.Addresses() {
-		if address.Equals(msg.SignAddress) {
-			addressFound = true
-			break
-		}
-	}
-	if !addressFound {
-		return sdkerrors.Wrap(ErrInvalidUser, "The user doesn't own the sign address")
-	}
-
 	// TODO: Message validate basics
 	return nil
 }
@@ -95,12 +77,11 @@ func (msg MsgCreateChannel) ValidateBasic() error {
 // NewMsgSendMessage creates a new message to send a message to a chanel
 func NewMsgSendMessage(
 	channelID int32,
-	creator User,
+	creator sdk.AccAddress,
 	content string,
 	tags []string,
 	pollOptions []string,
 	payload *proto.Message,
-	signAddress sdk.AccAddress,
 ) (*MsgSendMessage, error) {
 	// Convert the proto message into any
 	var payloadAny *types.Any
@@ -114,12 +95,11 @@ func NewMsgSendMessage(
 
 	return &MsgSendMessage{
 		ChannelID:   channelID,
-		Creator:     &creator,
+		Creator:     creator,
 		Content:     content,
 		Tags:        tags,
 		PollOptions: pollOptions,
 		Payload:     payloadAny,
-		SignAddress: signAddress,
 	}, nil
 }
 
@@ -132,7 +112,7 @@ func (msg MsgSendMessage) Type() string { return TypeMsgSendMessage }
 // GetSigners implements the sdk.Msg interface. It returns the address(es) that
 // must sign over msg.GetSignBytes().
 func (msg MsgSendMessage) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.SignAddress}
+	return []sdk.AccAddress{msg.Creator}
 }
 
 // GetSignBytes returns the message bytes to sign over.
@@ -143,22 +123,6 @@ func (msg MsgSendMessage) GetSignBytes() []byte {
 
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgSendMessage) ValidateBasic() error {
-	// The user must possess the sign address
-	chatUser, err := msg.Creator.DecodeChatUser()
-	if err != nil {
-		return err
-	}
-	addressFound := false
-	for _, address := range chatUser.Addresses() {
-		if address.Equals(msg.SignAddress) {
-			addressFound = true
-			break
-		}
-	}
-	if !addressFound {
-		return sdkerrors.Wrap(ErrInvalidUser, "The user doesn't own the sign address")
-	}
-
 	// TODO: Message validate basics
 	return nil
 }
@@ -168,10 +132,9 @@ func (msg MsgSendMessage) ValidateBasic() error {
 // NewMsgVotePoll creates a new message to vote to a poll
 func NewMsgVotePoll(
 	messageID string,
-	creator User,
+	creator sdk.AccAddress,
 	value int32,
 	payload *proto.Message,
-	signAddress sdk.AccAddress,
 ) (*MsgVotePoll, error) {
 	// Convert the proto message into any
 	var payloadAny *types.Any
@@ -184,11 +147,10 @@ func NewMsgVotePoll(
 	}
 
 	return &MsgVotePoll{
-		MessageID:   messageID,
-		Creator:     &creator,
-		Value:       value,
-		Payload:     payloadAny,
-		SignAddress: signAddress,
+		MessageID: messageID,
+		Creator:   creator,
+		Value:     value,
+		Payload:   payloadAny,
 	}, nil
 }
 
@@ -201,7 +163,7 @@ func (msg MsgVotePoll) Type() string { return TypeMsgVotePoll }
 // GetSigners implements the sdk.Msg interface. It returns the address(es) that
 // must sign over msg.GetSignBytes().
 func (msg MsgVotePoll) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.SignAddress}
+	return []sdk.AccAddress{msg.Creator}
 }
 
 // GetSignBytes returns the message bytes to sign over.
@@ -212,22 +174,6 @@ func (msg MsgVotePoll) GetSignBytes() []byte {
 
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgVotePoll) ValidateBasic() error {
-	// The user must possess the sign address
-	chatUser, err := msg.Creator.DecodeChatUser()
-	if err != nil {
-		return err
-	}
-	addressFound := false
-	for _, address := range chatUser.Addresses() {
-		if address.Equals(msg.SignAddress) {
-			addressFound = true
-			break
-		}
-	}
-	if !addressFound {
-		return sdkerrors.Wrap(ErrInvalidUser, "The user doesn't own the sign address")
-	}
-
 	// TODO: Message validate basics
 	return nil
 }

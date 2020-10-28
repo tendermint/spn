@@ -1,4 +1,4 @@
-package chat
+package identity
 
 import (
 	"encoding/json"
@@ -16,10 +16,10 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/tendermint/spn/x/chat/client/cli"
-	"github.com/tendermint/spn/x/chat/client/rest"
-	"github.com/tendermint/spn/x/chat/keeper"
-	"github.com/tendermint/spn/x/chat/types"
+	"github.com/tendermint/spn/x/identity/client/cli"
+	"github.com/tendermint/spn/x/identity/client/rest"
+	"github.com/tendermint/spn/x/identity/keeper"
+	"github.com/tendermint/spn/x/identity/types"
 )
 
 var (
