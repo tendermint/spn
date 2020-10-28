@@ -18,12 +18,6 @@ const (
 	MethodPost = "POST"
 )
 
-var (
-	UsernameRoute            = fmt.Sprintf("custom/%s/%s", types.QuerierRoute, types.QueryUsername)
-	UsernameFromAddressRoute = fmt.Sprintf("custom/%s/%s", types.QuerierRoute, types.QueryUsernameFromAddress)
-	SetUsernameRoute         = fmt.Sprintf("/%s/%s", types.QuerierRoute, "set-username")
-)
-
 // RegisterRoutes registers identity-related REST handlers to a router
 func RegisterRoutes(clientCtx client.Context, r *mux.Router) {
 	registerQueryRoutes(clientCtx, r)
@@ -31,17 +25,29 @@ func RegisterRoutes(clientCtx client.Context, r *mux.Router) {
 }
 
 func registerQueryRoutes(clientCtx client.Context, r *mux.Router) {
-	r.HandleFunc(UsernameRoute, usernameHandler(clientCtx)).Methods("GET")
-	r.HandleFunc(UsernameFromAddressRoute, usernameFromAddressHandler(clientCtx)).Methods("GET")
+	r.HandleFunc("/identity/username/{identifier}", usernameHandler(clientCtx)).Methods("GET")
+	r.HandleFunc("/identity/username_from_address/{address}", usernameFromAddressHandler(clientCtx)).Methods("GET")
 }
 
 func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
-	r.HandleFunc(SetUsernameRoute, setUsernameHandler(clientCtx)).Methods("POST")
+	r.HandleFunc(fmt.Sprintf("/identity/set_username"), setUsernameHandler(clientCtx)).Methods("POST")
 }
 
 func usernameHandler(clientCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		res, height, err := clientCtx.QueryWithData(UsernameRoute, nil)
+		// Get and encode the identifier param
+		var params types.QueryUsernameRequest
+		vars := mux.Vars(r)
+		identifier := vars["identifier"]
+		params.Identifier = identifier
+		data, err := clientCtx.LegacyAmino.MarshalJSON(params)
+
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		res, height, err := clientCtx.QueryWithData(fmt.Sprintf("/custom/%s/%s", types.QuerierRoute, types.QueryUsername), data)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusNotFound, err.Error())
 			return
@@ -54,7 +60,19 @@ func usernameHandler(clientCtx client.Context) http.HandlerFunc {
 
 func usernameFromAddressHandler(clientCtx client.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		res, height, err := clientCtx.QueryWithData(UsernameFromAddressRoute, nil)
+		// Get and encode the address param
+		var params types.QueryUsernameFromAddressRequest
+		vars := mux.Vars(r)
+		address := vars["address"]
+		params.Address = address
+		data, err := clientCtx.LegacyAmino.MarshalJSON(params)
+
+		if err != nil {
+			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
+			return
+		}
+
+		res, height, err := clientCtx.QueryWithData(fmt.Sprintf("/custom/%s/%s", types.QuerierRoute, types.QueryUsernameFromAddress), data)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusNotFound, err.Error())
 			return

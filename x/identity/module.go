@@ -16,10 +16,10 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/tendermint/spn/x/identity/keeper"
-	"github.com/tendermint/spn/x/identity/types"
 	"github.com/tendermint/spn/x/identity/client/cli"
 	"github.com/tendermint/spn/x/identity/client/rest"
+	"github.com/tendermint/spn/x/identity/keeper"
+	"github.com/tendermint/spn/x/identity/types"
 )
 
 var (
@@ -83,12 +83,12 @@ func (a AppModuleBasic) RegisterGRPCRoutes(_ client.Context, _ *runtime.ServeMux
 
 // GetTxCmd returns the capability module's root tx command.
 func (a AppModuleBasic) GetTxCmd() *cobra.Command {
-    return cli.GetTxCmd()
+	return cli.GetTxCmd()
 }
 
 // GetQueryCmd returns the capability module's root query command.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-    return cli.GetQueryCmd(types.StoreKey)
+	return cli.GetQueryCmd(types.StoreKey)
 }
 
 // ----------------------------------------------------------------------------
@@ -120,7 +120,7 @@ func (am AppModule) Route() sdk.Route {
 }
 
 // QuerierRoute returns the capability module's query routing key.
-func (AppModule) QuerierRoute() string { return "" }
+func (AppModule) QuerierRoute() string { return types.QuerierRoute }
 
 // LegacyQuerierHandler returns the capability module's Querier.
 func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
