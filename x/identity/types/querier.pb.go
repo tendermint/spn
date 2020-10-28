@@ -28,22 +28,22 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type QueryGetUsernameRequest struct {
+type QueryUsernameFromAddressRequest struct {
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 }
 
-func (m *QueryGetUsernameRequest) Reset()         { *m = QueryGetUsernameRequest{} }
-func (m *QueryGetUsernameRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryGetUsernameRequest) ProtoMessage()    {}
-func (*QueryGetUsernameRequest) Descriptor() ([]byte, []int) {
+func (m *QueryUsernameFromAddressRequest) Reset()         { *m = QueryUsernameFromAddressRequest{} }
+func (m *QueryUsernameFromAddressRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryUsernameFromAddressRequest) ProtoMessage()    {}
+func (*QueryUsernameFromAddressRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_80c88d5f879027c4, []int{0}
 }
-func (m *QueryGetUsernameRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryUsernameFromAddressRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetUsernameRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryUsernameFromAddressRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetUsernameRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryUsernameFromAddressRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -53,41 +53,41 @@ func (m *QueryGetUsernameRequest) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *QueryGetUsernameRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetUsernameRequest.Merge(m, src)
+func (m *QueryUsernameFromAddressRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryUsernameFromAddressRequest.Merge(m, src)
 }
-func (m *QueryGetUsernameRequest) XXX_Size() int {
+func (m *QueryUsernameFromAddressRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetUsernameRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetUsernameRequest.DiscardUnknown(m)
+func (m *QueryUsernameFromAddressRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryUsernameFromAddressRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetUsernameRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryUsernameFromAddressRequest proto.InternalMessageInfo
 
-func (m *QueryGetUsernameRequest) GetAddress() string {
+func (m *QueryUsernameFromAddressRequest) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-type QueryGetUsernameResponse struct {
+type QueryUsernameFromAddressResponse struct {
 	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 }
 
-func (m *QueryGetUsernameResponse) Reset()         { *m = QueryGetUsernameResponse{} }
-func (m *QueryGetUsernameResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryGetUsernameResponse) ProtoMessage()    {}
-func (*QueryGetUsernameResponse) Descriptor() ([]byte, []int) {
+func (m *QueryUsernameFromAddressResponse) Reset()         { *m = QueryUsernameFromAddressResponse{} }
+func (m *QueryUsernameFromAddressResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryUsernameFromAddressResponse) ProtoMessage()    {}
+func (*QueryUsernameFromAddressResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_80c88d5f879027c4, []int{1}
 }
-func (m *QueryGetUsernameResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryUsernameFromAddressResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetUsernameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryUsernameFromAddressResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetUsernameResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryUsernameFromAddressResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -97,19 +97,107 @@ func (m *QueryGetUsernameResponse) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *QueryGetUsernameResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetUsernameResponse.Merge(m, src)
+func (m *QueryUsernameFromAddressResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryUsernameFromAddressResponse.Merge(m, src)
 }
-func (m *QueryGetUsernameResponse) XXX_Size() int {
+func (m *QueryUsernameFromAddressResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetUsernameResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetUsernameResponse.DiscardUnknown(m)
+func (m *QueryUsernameFromAddressResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryUsernameFromAddressResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetUsernameResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryUsernameFromAddressResponse proto.InternalMessageInfo
 
-func (m *QueryGetUsernameResponse) GetUsername() string {
+func (m *QueryUsernameFromAddressResponse) GetUsername() string {
+	if m != nil {
+		return m.Username
+	}
+	return ""
+}
+
+type QueryUsernameRequest struct {
+	Identifier string `protobuf:"bytes,1,opt,name=identifier,proto3" json:"identifier,omitempty"`
+}
+
+func (m *QueryUsernameRequest) Reset()         { *m = QueryUsernameRequest{} }
+func (m *QueryUsernameRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryUsernameRequest) ProtoMessage()    {}
+func (*QueryUsernameRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_80c88d5f879027c4, []int{2}
+}
+func (m *QueryUsernameRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryUsernameRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryUsernameRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryUsernameRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryUsernameRequest.Merge(m, src)
+}
+func (m *QueryUsernameRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryUsernameRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryUsernameRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryUsernameRequest proto.InternalMessageInfo
+
+func (m *QueryUsernameRequest) GetIdentifier() string {
+	if m != nil {
+		return m.Identifier
+	}
+	return ""
+}
+
+type QueryUsernameResponse struct {
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+}
+
+func (m *QueryUsernameResponse) Reset()         { *m = QueryUsernameResponse{} }
+func (m *QueryUsernameResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryUsernameResponse) ProtoMessage()    {}
+func (*QueryUsernameResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_80c88d5f879027c4, []int{3}
+}
+func (m *QueryUsernameResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryUsernameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryUsernameResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryUsernameResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryUsernameResponse.Merge(m, src)
+}
+func (m *QueryUsernameResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryUsernameResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryUsernameResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryUsernameResponse proto.InternalMessageInfo
+
+func (m *QueryUsernameResponse) GetUsername() string {
 	if m != nil {
 		return m.Username
 	}
@@ -117,30 +205,36 @@ func (m *QueryGetUsernameResponse) GetUsername() string {
 }
 
 func init() {
-	proto.RegisterType((*QueryGetUsernameRequest)(nil), "spn.identity.v1beta1.QueryGetUsernameRequest")
-	proto.RegisterType((*QueryGetUsernameResponse)(nil), "spn.identity.v1beta1.QueryGetUsernameResponse")
+	proto.RegisterType((*QueryUsernameFromAddressRequest)(nil), "spn.identity.v1beta1.QueryUsernameFromAddressRequest")
+	proto.RegisterType((*QueryUsernameFromAddressResponse)(nil), "spn.identity.v1beta1.QueryUsernameFromAddressResponse")
+	proto.RegisterType((*QueryUsernameRequest)(nil), "spn.identity.v1beta1.QueryUsernameRequest")
+	proto.RegisterType((*QueryUsernameResponse)(nil), "spn.identity.v1beta1.QueryUsernameResponse")
 }
 
 func init() { proto.RegisterFile("identity/v1beta/querier.proto", fileDescriptor_80c88d5f879027c4) }
 
 var fileDescriptor_80c88d5f879027c4 = []byte{
-	// 256 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x90, 0xc1, 0x4a, 0xc3, 0x40,
-	0x10, 0x86, 0x93, 0x83, 0x5a, 0xf7, 0xb8, 0x08, 0x86, 0x80, 0x8b, 0xf4, 0x24, 0x05, 0x77, 0x89,
-	0x05, 0x1f, 0x40, 0x04, 0xcf, 0x16, 0xbc, 0x78, 0xdb, 0x34, 0x43, 0xdd, 0x43, 0x66, 0xb7, 0x3b,
-	0x13, 0xb1, 0x6f, 0xe1, 0x63, 0x79, 0xec, 0xd1, 0xa3, 0x24, 0x2f, 0x22, 0x26, 0x4d, 0x2f, 0x2a,
-	0xf4, 0xf8, 0x2f, 0xdf, 0xb7, 0xfc, 0xf3, 0x8b, 0x0b, 0x57, 0x01, 0xb2, 0xe3, 0x8d, 0x79, 0x2d,
-	0x4a, 0x60, 0x6b, 0xd6, 0x0d, 0x44, 0x07, 0x51, 0x87, 0xe8, 0xd9, 0xcb, 0x33, 0x0a, 0xa8, 0x47,
-	0x44, 0x0f, 0x48, 0x91, 0xcf, 0x96, 0x9e, 0x6a, 0x4f, 0xa6, 0xb4, 0x04, 0xbd, 0x30, 0xda, 0x85,
-	0x09, 0x76, 0xe5, 0xd0, 0xb2, 0xf3, 0x38, 0xfc, 0x30, 0x9d, 0x8b, 0xf3, 0xc7, 0x1f, 0xe2, 0x01,
-	0xf8, 0x89, 0x20, 0xa2, 0xad, 0x61, 0x01, 0xeb, 0x06, 0x88, 0x65, 0x26, 0x4e, 0x6c, 0x55, 0x45,
-	0x20, 0xca, 0xd2, 0xcb, 0xf4, 0xea, 0x74, 0x31, 0xc6, 0xe9, 0xad, 0xc8, 0x7e, 0x4b, 0x14, 0x3c,
-	0x12, 0xc8, 0x5c, 0x4c, 0x9a, 0xdd, 0xdb, 0x4e, 0xdb, 0xe7, 0x9b, 0x28, 0x8e, 0x7a, 0x4f, 0x3a,
-	0x31, 0x19, 0x45, 0x79, 0xad, 0xff, 0x3a, 0x42, 0xff, 0xd3, 0x2a, 0xd7, 0x87, 0xe2, 0x43, 0x9f,
-	0xbb, 0xfb, 0x8f, 0x56, 0xa5, 0xdb, 0x56, 0xa5, 0x5f, 0xad, 0x4a, 0xdf, 0x3b, 0x95, 0x6c, 0x3b,
-	0x95, 0x7c, 0x76, 0x2a, 0x79, 0x9e, 0xad, 0x1c, 0xbf, 0x34, 0xa5, 0x5e, 0xfa, 0xda, 0x30, 0x60,
-	0x05, 0xb1, 0x76, 0xc8, 0x86, 0x02, 0x9a, 0x37, 0xb3, 0xdf, 0x9d, 0x37, 0x01, 0xa8, 0x3c, 0xee,
-	0xd7, 0x9a, 0x7f, 0x07, 0x00, 0x00, 0xff, 0xff, 0x6f, 0x46, 0x39, 0x1a, 0x90, 0x01, 0x00, 0x00,
+	// 311 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x92, 0xb1, 0x4a, 0x03, 0x41,
+	0x10, 0x86, 0xb3, 0x85, 0x1a, 0xa7, 0x3c, 0x23, 0x84, 0x80, 0x6b, 0xb8, 0x4a, 0x22, 0xdc, 0x12,
+	0x83, 0x69, 0x04, 0x41, 0x11, 0x7b, 0x03, 0x36, 0x76, 0x7b, 0xb9, 0x31, 0x6e, 0x71, 0xbb, 0x9b,
+	0x9d, 0x3d, 0x31, 0xbd, 0x0f, 0xe0, 0x63, 0x59, 0xa6, 0xb4, 0x94, 0xe4, 0x11, 0x7c, 0x01, 0x31,
+	0x77, 0x1b, 0x54, 0x22, 0x89, 0xe5, 0xcc, 0xfc, 0xdf, 0xfc, 0x33, 0xc3, 0xc0, 0x81, 0xca, 0x50,
+	0x7b, 0xe5, 0x27, 0xe2, 0xb1, 0x9b, 0xa2, 0x97, 0x62, 0x5c, 0xa0, 0x53, 0xe8, 0x12, 0xeb, 0x8c,
+	0x37, 0x51, 0x83, 0xac, 0x4e, 0x82, 0x24, 0x29, 0x25, 0xdd, 0x56, 0x67, 0x68, 0x28, 0x37, 0x24,
+	0x52, 0x49, 0xb8, 0x00, 0x02, 0xdd, 0x15, 0x56, 0x8e, 0x94, 0x96, 0x5e, 0x19, 0x5d, 0x76, 0x88,
+	0xcf, 0xe0, 0xf0, 0xe6, 0x4b, 0x71, 0x4b, 0xe8, 0xb4, 0xcc, 0xf1, 0xda, 0x99, 0xfc, 0x22, 0xcb,
+	0x1c, 0x12, 0x0d, 0x70, 0x5c, 0x20, 0xf9, 0xa8, 0x09, 0x3b, 0xb2, 0xcc, 0x34, 0x59, 0x9b, 0x1d,
+	0xed, 0x0e, 0x42, 0x18, 0x9f, 0x43, 0xfb, 0x6f, 0x98, 0xac, 0xd1, 0x84, 0x51, 0x0b, 0xea, 0x45,
+	0x55, 0xae, 0xf0, 0x65, 0x1c, 0xf7, 0xa1, 0xf1, 0x83, 0x0f, 0x8e, 0x1c, 0xa0, 0x5c, 0xea, 0x5e,
+	0xa1, 0xab, 0xa8, 0x6f, 0x99, 0xb8, 0x07, 0xfb, 0xbf, 0xb8, 0xf5, 0x66, 0x27, 0x1f, 0x0c, 0xb6,
+	0x16, 0x54, 0xf4, 0xcc, 0x60, 0x6f, 0xc5, 0xc8, 0xd1, 0x69, 0xb2, 0xea, 0x9c, 0xc9, 0x9a, 0xfb,
+	0xb4, 0xfa, 0xff, 0xc5, 0xaa, 0x61, 0x87, 0x50, 0x0f, 0xe5, 0xa8, 0xb3, 0x41, 0x8f, 0xe0, 0x77,
+	0xbc, 0x91, 0xb6, 0x34, 0xb9, 0xbc, 0x7a, 0x9d, 0x71, 0x36, 0x9d, 0x71, 0xf6, 0x3e, 0xe3, 0xec,
+	0x65, 0xce, 0x6b, 0xd3, 0x39, 0xaf, 0xbd, 0xcd, 0x79, 0xed, 0xae, 0x33, 0x52, 0xfe, 0xa1, 0x48,
+	0x93, 0xa1, 0xc9, 0x85, 0x47, 0x9d, 0xa1, 0xcb, 0x95, 0xf6, 0x82, 0xac, 0x16, 0x4f, 0x62, 0xf9,
+	0x76, 0x7e, 0x62, 0x91, 0xd2, 0xed, 0xc5, 0xb3, 0xf4, 0x3e, 0x03, 0x00, 0x00, 0xff, 0xff, 0xad,
+	0x93, 0x23, 0x8c, 0x8f, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -155,7 +249,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	Username(ctx context.Context, in *QueryGetUsernameRequest, opts ...grpc.CallOption) (*QueryGetUsernameResponse, error)
+	UsernameFromAddress(ctx context.Context, in *QueryUsernameFromAddressRequest, opts ...grpc.CallOption) (*QueryUsernameFromAddressResponse, error)
+	Username(ctx context.Context, in *QueryUsernameRequest, opts ...grpc.CallOption) (*QueryUsernameResponse, error)
 }
 
 type queryClient struct {
@@ -166,8 +261,17 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
 }
 
-func (c *queryClient) Username(ctx context.Context, in *QueryGetUsernameRequest, opts ...grpc.CallOption) (*QueryGetUsernameResponse, error) {
-	out := new(QueryGetUsernameResponse)
+func (c *queryClient) UsernameFromAddress(ctx context.Context, in *QueryUsernameFromAddressRequest, opts ...grpc.CallOption) (*QueryUsernameFromAddressResponse, error) {
+	out := new(QueryUsernameFromAddressResponse)
+	err := c.cc.Invoke(ctx, "/spn.identity.v1beta1.Query/UsernameFromAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) Username(ctx context.Context, in *QueryUsernameRequest, opts ...grpc.CallOption) (*QueryUsernameResponse, error) {
+	out := new(QueryUsernameResponse)
 	err := c.cc.Invoke(ctx, "/spn.identity.v1beta1.Query/Username", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -177,14 +281,18 @@ func (c *queryClient) Username(ctx context.Context, in *QueryGetUsernameRequest,
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	Username(context.Context, *QueryGetUsernameRequest) (*QueryGetUsernameResponse, error)
+	UsernameFromAddress(context.Context, *QueryUsernameFromAddressRequest) (*QueryUsernameFromAddressResponse, error)
+	Username(context.Context, *QueryUsernameRequest) (*QueryUsernameResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
 type UnimplementedQueryServer struct {
 }
 
-func (*UnimplementedQueryServer) Username(ctx context.Context, req *QueryGetUsernameRequest) (*QueryGetUsernameResponse, error) {
+func (*UnimplementedQueryServer) UsernameFromAddress(ctx context.Context, req *QueryUsernameFromAddressRequest) (*QueryUsernameFromAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UsernameFromAddress not implemented")
+}
+func (*UnimplementedQueryServer) Username(ctx context.Context, req *QueryUsernameRequest) (*QueryUsernameResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Username not implemented")
 }
 
@@ -192,8 +300,26 @@ func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 	s.RegisterService(&_Query_serviceDesc, srv)
 }
 
+func _Query_UsernameFromAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryUsernameFromAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).UsernameFromAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/spn.identity.v1beta1.Query/UsernameFromAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).UsernameFromAddress(ctx, req.(*QueryUsernameFromAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_Username_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryGetUsernameRequest)
+	in := new(QueryUsernameRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -205,7 +331,7 @@ func _Query_Username_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: "/spn.identity.v1beta1.Query/Username",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Username(ctx, req.(*QueryGetUsernameRequest))
+		return srv.(QueryServer).Username(ctx, req.(*QueryUsernameRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -215,6 +341,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "UsernameFromAddress",
+			Handler:    _Query_UsernameFromAddress_Handler,
+		},
+		{
 			MethodName: "Username",
 			Handler:    _Query_Username_Handler,
 		},
@@ -223,7 +353,7 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	Metadata: "identity/v1beta/querier.proto",
 }
 
-func (m *QueryGetUsernameRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryUsernameFromAddressRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -233,12 +363,12 @@ func (m *QueryGetUsernameRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetUsernameRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryUsernameFromAddressRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetUsernameRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryUsernameFromAddressRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -253,7 +383,7 @@ func (m *QueryGetUsernameRequest) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetUsernameResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryUsernameFromAddressResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -263,12 +393,72 @@ func (m *QueryGetUsernameResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetUsernameResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryUsernameFromAddressResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetUsernameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryUsernameFromAddressResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Username) > 0 {
+		i -= len(m.Username)
+		copy(dAtA[i:], m.Username)
+		i = encodeVarintQuerier(dAtA, i, uint64(len(m.Username)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryUsernameRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryUsernameRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryUsernameRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Identifier) > 0 {
+		i -= len(m.Identifier)
+		copy(dAtA[i:], m.Identifier)
+		i = encodeVarintQuerier(dAtA, i, uint64(len(m.Identifier)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryUsernameResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryUsernameResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryUsernameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -294,7 +484,7 @@ func encodeVarintQuerier(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *QueryGetUsernameRequest) Size() (n int) {
+func (m *QueryUsernameFromAddressRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -307,7 +497,33 @@ func (m *QueryGetUsernameRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryGetUsernameResponse) Size() (n int) {
+func (m *QueryUsernameFromAddressResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Username)
+	if l > 0 {
+		n += 1 + l + sovQuerier(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryUsernameRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Identifier)
+	if l > 0 {
+		n += 1 + l + sovQuerier(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryUsernameResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -326,7 +542,7 @@ func sovQuerier(x uint64) (n int) {
 func sozQuerier(x uint64) (n int) {
 	return sovQuerier(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *QueryGetUsernameRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryUsernameFromAddressRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -349,10 +565,10 @@ func (m *QueryGetUsernameRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetUsernameRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryUsernameFromAddressRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetUsernameRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryUsernameFromAddressRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -411,7 +627,7 @@ func (m *QueryGetUsernameRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetUsernameResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryUsernameFromAddressResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -434,10 +650,180 @@ func (m *QueryGetUsernameResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetUsernameResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryUsernameFromAddressResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetUsernameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryUsernameFromAddressResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Username", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Username = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryUsernameRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryUsernameRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryUsernameRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Identifier", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Identifier = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryUsernameResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryUsernameResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryUsernameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

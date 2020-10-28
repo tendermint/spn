@@ -1,5 +1,6 @@
 package types
 
 const (
-	QueryGetUsername = "get-username"
+	QueryUsernameFromAddress = "get-username-from-address"
+	QueryUsername            = "get-username"
 )

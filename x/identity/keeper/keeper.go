@@ -7,6 +7,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/tendermint/spn/x/identity/types"
 )
 
@@ -47,8 +49,19 @@ func (k Keeper) SetUsername(ctx sdk.Context, address sdk.AccAddress, username st
 	return nil
 }
 
-// GetUsername returns the username corresponding to the address
-func (k Keeper) GetUsername(ctx sdk.Context, address sdk.AccAddress) (string, error) {
+// GetUsername returns the username corresponding to the identifier
+func (k Keeper) GetUsername(ctx sdk.Context, identifier string) (string, error) {
+	address, err := sdk.AccAddressFromBech32(identifier)
+	if err != nil {
+		return "", sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	// The identifier is similar to the account address for this module
+	return k.GetUsernameFromAddress(ctx, address)
+}
+
+// GetUsernameFromAddress returns the username corresponding to the address
+func (k Keeper) GetUsernameFromAddress(ctx sdk.Context, address sdk.AccAddress) (string, error) {
 	store := ctx.KVStore(k.storeKey)
 
 	// Search the username

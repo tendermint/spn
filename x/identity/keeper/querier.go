@@ -18,8 +18,10 @@ func NewQuerier(k Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 		)
 
 		switch path[0] {
-		case types.QueryGetUsername:
+		case types.QueryUsername:
 			return getUsername(ctx, req, k, legacyQuerierCdc)
+		case types.QueryUsernameFromAddress:
+			return getUsernameFromAddress(ctx, req, k, legacyQuerierCdc)
 		default:
 			err = sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unknown %s query endpoint: %s", types.ModuleName, path[0])
 		}
@@ -29,7 +31,28 @@ func NewQuerier(k Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 }
 
 func getUsername(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
-	var params types.QueryGetUsernameRequest
+	var params types.QueryUsernameRequest
+
+	// Decode the request params
+	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
+	}
+	username, err := keeper.GetUsername(ctx, params.Identifier)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, username)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+	}
+
+	return bz, nil
+}
+
+func getUsernameFromAddress(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
+	var params types.QueryUsernameFromAddressRequest
 
 	// Decode the request params
 	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
@@ -40,7 +63,7 @@ func getUsername(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQu
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
-	username, err := keeper.GetUsername(ctx, addr)
+	username, err := keeper.GetUsernameFromAddress(ctx, addr)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}

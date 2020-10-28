@@ -49,8 +49,8 @@ func TestSetUsername(t *testing.T) {
 	address := chat.MockAccAddress()
 
 	// The username should be the address if it is not set
-	username, _ := k.GetUsername(ctx, address)
-	require.Equal(t, address.String(), username, "GetUsername should return the address if no username")
+	username, _ := k.GetUsernameFromAddress(ctx, address)
+	require.Equal(t, address.String(), username, "GetUsernameFromAddress should return the address if no username")
 
 	// Prevent setting an invalid username
 	err := k.SetUsername(ctx, address, "foo!")
@@ -61,13 +61,18 @@ func TestSetUsername(t *testing.T) {
 	require.NoError(t, err, "SetUsername allows to set a valid username")
 
 	// Username can be retrieve
-	username, _ = k.GetUsername(ctx, address)
+	username, _ = k.GetUsernameFromAddress(ctx, address)
+	require.Equal(t, "foo", username, "GetUsernameFromAddress should return the new username")
+
+	// Username can be retrieved from the identifier
+	id, _ := k.GetIdentifier(ctx, address)
+	username, _ = k.GetUsername(ctx, id)
 	require.Equal(t, "foo", username, "GetUsername should return the new username")
 
 	// Can set a new username
 	err = k.SetUsername(ctx, address, "bar")
 	require.NoError(t, err, "SetUsername allows to set a valid username")
-	username, _ = k.GetUsername(ctx, address)
+	username, _ = k.GetUsernameFromAddress(ctx, address)
 	require.Equal(t, "bar", username, "GetUsername should return the new username")
 }
 

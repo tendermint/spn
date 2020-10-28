@@ -24,15 +24,51 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdGetUsername())
+	cmd.AddCommand(
+		CmdGetUsername(),
+		CmdGetUsernameFromAddress(),
+	)
 
 	return cmd
 }
 
-// CmdGetUsername get the username associated with an address
+// CmdGetUsername get the username associated with a user identifier
 func CmdGetUsername() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "get-username [address]",
+		Use:   "get-username [identifier]",
+		Short: "get the username associated with a user identifier",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryUsernameRequest{
+				Identifier: args[0],
+			}
+
+			res, err := queryClient.Username(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdGetUsernameFromAddress get the username associated with an address
+func CmdGetUsernameFromAddress() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "get-username-from-address [address]",
 		Short: "get the username associated with an address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -44,11 +80,11 @@ func CmdGetUsername() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryGetUsernameRequest{
+			params := &types.QueryUsernameFromAddressRequest{
 				Address: args[0],
 			}
 
-			res, err := queryClient.Username(context.Background(), params)
+			res, err := queryClient.UsernameFromAddress(context.Background(), params)
 			if err != nil {
 				return err
 			}

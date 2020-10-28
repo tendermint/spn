@@ -12,7 +12,25 @@ import (
 
 var _ types.QueryServer = Keeper{}
 
-func (k Keeper) Username(c context.Context, req *types.QueryGetUsernameRequest) (*types.QueryGetUsernameResponse, error) {
+func (k Keeper) Username(c context.Context, req *types.QueryUsernameRequest) (*types.QueryUsernameResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	if req.Identifier == "" {
+		return nil, status.Error(codes.InvalidArgument, "identifier cannot be empty")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+	username, err := k.GetUsername(ctx, req.Identifier)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryUsernameResponse{Username: username}, nil
+}
+
+func (k Keeper) UsernameFromAddress(c context.Context, req *types.QueryUsernameFromAddressRequest) (*types.QueryUsernameFromAddressResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
@@ -26,10 +44,10 @@ func (k Keeper) Username(c context.Context, req *types.QueryGetUsernameRequest) 
 		return nil, err
 	}
 	ctx := sdk.UnwrapSDKContext(c)
-	username, err := k.GetUsername(ctx, addr)
+	username, err := k.GetUsernameFromAddress(ctx, addr)
 	if err != nil {
 		return nil, err
 	}
 
-	return &types.QueryGetUsernameResponse{Username: username}, nil
+	return &types.QueryUsernameFromAddressResponse{Username: username}, nil
 }
