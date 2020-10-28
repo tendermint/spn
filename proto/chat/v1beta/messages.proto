@@ -9,27 +9,24 @@ import "gogoproto/gogo.proto";
 
 
 message MsgCreateChannel {
-  User creator = 1;
+  bytes creator = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
   string name = 2; 
   string subject = 3; 
   google.protobuf.Any payload = 4;
-  bytes signAddress = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
 }
 
 message MsgSendMessage {
   int32 channelID = 1;
-  User creator = 2;
+  bytes creator = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
   string content = 3; 
   repeated string tags = 4;
   repeated string pollOptions = 5;
   google.protobuf.Any payload = 6;
-  bytes signAddress = 7 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
 }
 
 message MsgVotePoll {
   string messageID = 1;
-  User creator = 2;
+  bytes creator = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
   int32 value = 3; 
   google.protobuf.Any payload = 4;
-  bytes signAddress = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
 }

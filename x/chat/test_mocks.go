@@ -16,6 +16,8 @@ import (
 	proto "github.com/gogo/protobuf/proto"
 	"github.com/tendermint/spn/x/chat/keeper"
 	"github.com/tendermint/spn/x/chat/types"
+	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
+	identitytypes "github.com/tendermint/spn/x/identity/types"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 	"math/rand"
 )
@@ -29,10 +31,13 @@ func MockContext() (sdk.Context, *keeper.Keeper) {
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 
 	// Store keys
-	keys := sdk.NewKVStoreKeys(types.StoreKey)
+	keys := sdk.NewKVStoreKeys(types.StoreKey, identitytypes.StoreKey)
+
+	// Create a identity keeper
+	identityKeeper := identitykeeper.NewKeeper(cdc, keys[identitytypes.StoreKey], keys[identitytypes.MemStoreKey])
 
 	// Create a chat keeper
-	chatKeeper := keeper.NewKeeper(cdc, keys[types.StoreKey], keys[types.MemStoreKey])
+	chatKeeper := keeper.NewKeeper(cdc, keys[types.StoreKey], keys[types.MemStoreKey], identityKeeper)
 
 	// Create multiStore in memory
 	db := dbm.NewMemDB()
@@ -56,10 +61,9 @@ func MockAccAddress() sdk.AccAddress {
 }
 
 // MockUser mocks a user for test purpose
-func MockUser() types.User {
-	aaUser, _ := types.NewAccountAddressUser(MockAccAddress(), MockRandomString(10))
-	user, _ := aaUser.ToProtobuf()
-	return user
+func MockUser() string {
+	address := MockAccAddress()
+	return address.String()
 }
 
 // MockChannel mocks a channel for test purpose
@@ -98,12 +102,12 @@ func MockVote(value int32) *types.Vote {
 
 // MockPayload mocks a miscellaneous payload data
 func MockPayload() (proto.Message, *codectypes.Any) {
-	// User is a protobuf mesage and can be then used as a payloaddata
-	user := MockUser()
-	userAny, _ := codectypes.NewAnyWithValue(&user)
+	// Message is a protobuf mesage and can be then used as a payloaddata
+	message := MockMessage(5)
+	messageAny, _ := codectypes.NewAnyWithValue(&message)
 
 	// TODO: Implement a better protobuf message generation with random data etc...
-	return &user, userAny
+	return &message, messageAny
 }
 
 // MockRandomString returns a random string of length n

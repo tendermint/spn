@@ -322,6 +322,7 @@ func New(
 		appCodec,
 		keys[chattypes.StoreKey],
 		keys[chattypes.MemStoreKey],
+		app.identityKeeper,
 	)
 
 	// NOTE: Any module instantiated in the module manager that is later modified

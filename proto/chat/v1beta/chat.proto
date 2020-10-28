@@ -8,7 +8,7 @@ import "gogoproto/gogo.proto";
 
 message Channel {
   int32 id = 1;
-  User creator = 2;
+  string creator = 2;
   string name = 3; 
   string subject = 4; 
   int32 messageCount = 5; 
@@ -18,7 +18,7 @@ message Channel {
 message Message {
   int32 channelID = 1;
   int32 messageIndex = 2;
-  User creator = 3;
+  string creator = 3;
   string content = 4; 
   repeated string tags = 5;
   int64 createdAt = 6;
@@ -33,22 +33,9 @@ message Poll {
 }
 
 message Vote {
-    User creator = 1;
+    string creator = 1;
     int32 value = 2;
     google.protobuf.Any payload = 3;
-}
-
-message User {
-  enum UserFormat {
-    ACCOUNT_ADDRESS_USER = 0;
-  }
-  UserFormat format = 1;
-  google.protobuf.Any data = 2;
-}
-
-message AccountAddressUser {
-  bytes accountAddress = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string name = 2;
 }
 
 message TagReferences {

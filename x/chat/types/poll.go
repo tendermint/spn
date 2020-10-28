@@ -21,26 +21,14 @@ func NewPoll(options []string) (Poll, error) {
 }
 
 // HasUserVoted checks if a user voted for a poll
-func (poll Poll) HasUserVoted(user *User) (bool, error) {
-	// Decode into an addressable user
-	chatUser, err := user.DecodeChatUser()
-	if err != nil {
-		return false, err
-	}
-
-	_, ok := poll.Votes[chatUser.Identifier()]
+func (poll Poll) HasUserVoted(user string) (bool, error) {
+	_, ok := poll.Votes[user]
 	return ok, nil
 }
 
 // GetUserVote retrieves the vote of a user
-func (poll Poll) GetUserVote(user *User) (*Vote, error) {
-	// Decode into an addressable user
-	chatUser, err := user.DecodeChatUser()
-	if err != nil {
-		return nil, err
-	}
-
-	vote, ok := poll.Votes[chatUser.Identifier()]
+func (poll Poll) GetUserVote(user string) (*Vote, error) {
+	vote, ok := poll.Votes[user]
 	if !ok {
 		return nil, errors.New("No vote found")
 	}
@@ -64,16 +52,7 @@ func (poll *Poll) AppendVote(vote *Vote) error {
 		return errors.New("The user already voted")
 	}
 
-	// Decode into an addressable user
-	chatUser, err := vote.Creator.DecodeChatUser()
-	if err != nil {
-		return err
-	}
-
-	// Get a string representation of the address
-	addressString := chatUser.Identifier()
-
-	poll.Votes[addressString] = vote
+	poll.Votes[vote.Creator] = vote
 
 	return nil
 }
@@ -86,13 +65,13 @@ func checkOptions(options []string) bool {
 
 // NewVote create a new vote
 func NewVote(
-	creator User,
+	creator string,
 	value int32,
 	payload *types.Any,
 ) (Vote, error) {
 	var vote Vote
 
-	vote.Creator = &creator
+	vote.Creator = creator
 	vote.Value = value
 	vote.Payload = payload
 

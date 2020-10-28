@@ -8,13 +8,22 @@ option go_package = "github.com/tendermint/spn/x/identity/types";
 
 // Query defines the gRPC querier service.
 service Query {
-    rpc Username(QueryGetUsernameRequest) returns (QueryGetUsernameResponse);
+    rpc UsernameFromAddress(QueryUsernameFromAddressRequest) returns (QueryUsernameFromAddressResponse);
+    rpc Username(QueryUsernameRequest) returns (QueryUsernameResponse);
 }
 
-message QueryGetUsernameRequest {
+message QueryUsernameFromAddressRequest {
     string address = 1;
 }
 
-message QueryGetUsernameResponse {
+message QueryUsernameFromAddressResponse {
+    string username = 1;
+}
+
+message QueryUsernameRequest {
+    string identifier = 1;
+}
+
+message QueryUsernameResponse {
     string username = 1;
 }
