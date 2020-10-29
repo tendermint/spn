@@ -1,14 +1,22 @@
 syntax = "proto3";
 package spn.chat.v1beta1;
 
-import "cosmos/base/query/v1beta1/pagination.proto";
-// this line is used by starport scaffolding # 1
-
 option go_package = "github.com/tendermint/spn/x/chat/types";
+
+import "google/protobuf/any.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "chat/v1beta/chat.proto";
 
 // Query defines the gRPC querier service.
 service Query {
-    // this line is used by starport scaffolding # 2
+    rpc DescribeChannel(QueryDescribeChannelRequest) returns (QueryDescribeChannelResponse);
 }
 
-// this line is used by starport scaffolding # 3
+message QueryDescribeChannelRequest {
+    int32 id = 1;
+}
+
+message QueryDescribeChannelResponse {
+    Channel channel = 1;
+}
