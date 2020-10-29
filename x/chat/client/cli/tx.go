@@ -3,16 +3,12 @@ package cli
 import (
 	"fmt"
 
-	proto "github.com/gogo/protobuf/proto"
-	"github.com/golang/protobuf/jsonpb"
-
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	"github.com/spf13/cobra"
-
-	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/tendermint/spn/x/chat/types"
+
+	"github.com/spf13/cobra"
 )
 
 // GetTxCmd returns the transaction commands for this module
@@ -44,23 +40,14 @@ func CmdCreateChannel() *cobra.Command {
 			}
 
 			// Get and decode payload if defined
-			var payload *proto.Message
-			payloadData, _ := cmd.Flags().GetString(FlagPayload)
-			if payloadData != "" {
-				err = jsonpb.UnmarshalString(payloadData, *payload)
-				if err != nil {
-					return err
-				}
-			} else {
-				payload = nil
-			}
+			payloadString, _ := cmd.Flags().GetString(FlagPayload)
 
 			// Create and send message
 			msg, err := types.NewMsgCreateChannel(
 				clientCtx.GetFromAddress(),
 				args[0],
 				args[1],
-				payload,
+				[]byte(payloadString),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

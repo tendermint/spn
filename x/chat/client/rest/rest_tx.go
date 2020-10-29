@@ -3,9 +3,6 @@ package rest
 import (
 	"net/http"
 
-	proto "github.com/gogo/protobuf/proto"
-	"github.com/golang/protobuf/jsonpb"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -41,23 +38,12 @@ func createChannelHandler(clientCtx client.Context) http.HandlerFunc {
 			return
 		}
 
-		// Get and decode payload if defined
-		var payload *proto.Message
-		if req.Payload != "" {
-			err = jsonpb.UnmarshalString(req.Payload, *payload)
-			if err != nil {
-				return
-			}
-		} else {
-			payload = nil
-		}
-
 		// Create and send the message
 		msg, err := types.NewMsgCreateChannel(
 			creator,
 			req.Name,
 			req.Subject,
-			payload,
+			[]byte(req.Payload),
 		)
 		if err != nil {
 			rest.WriteErrorResponse(w, http.StatusBadRequest, err.Error())
