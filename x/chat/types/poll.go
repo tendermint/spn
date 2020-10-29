@@ -3,7 +3,6 @@ package types
 import (
 	"errors"
 
-	types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
@@ -71,7 +70,7 @@ func checkOptions(options []string) bool {
 func NewVote(
 	creator string,
 	value int32,
-	payload *types.Any,
+	payload []byte,
 ) (Vote, error) {
 	var vote Vote
 

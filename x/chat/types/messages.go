@@ -1,10 +1,7 @@
 package types
 
 import (
-	types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	proto "github.com/gogo/protobuf/proto"
 )
 
 // Chat message types
@@ -28,23 +25,13 @@ func NewMsgCreateChannel(
 	creator sdk.AccAddress,
 	name string,
 	subject string,
-	payload *proto.Message,
+	payload []byte,
 ) (*MsgCreateChannel, error) {
-	// Convert the proto message into any
-	var payloadAny *types.Any
-	var err error
-	if payload != nil {
-		payloadAny, err = types.NewAnyWithValue(*payload)
-		if err != nil {
-			return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
-		}
-	}
-
 	return &MsgCreateChannel{
 		Creator: creator,
 		Name:    name,
 		Subject: subject,
-		Payload: payloadAny,
+		Payload: payload,
 	}, nil
 }
 
@@ -81,25 +68,15 @@ func NewMsgSendMessage(
 	content string,
 	tags []string,
 	pollOptions []string,
-	payload *proto.Message,
+	payload []byte,
 ) (*MsgSendMessage, error) {
-	// Convert the proto message into any
-	var payloadAny *types.Any
-	var err error
-	if payload != nil {
-		payloadAny, err = types.NewAnyWithValue(*payload)
-		if err != nil {
-			return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
-		}
-	}
-
 	return &MsgSendMessage{
 		ChannelID:   channelID,
 		Creator:     creator,
 		Content:     content,
 		Tags:        tags,
 		PollOptions: pollOptions,
-		Payload:     payloadAny,
+		Payload:     payload,
 	}, nil
 }
 
@@ -134,23 +111,13 @@ func NewMsgVotePoll(
 	messageID string,
 	creator sdk.AccAddress,
 	value int32,
-	payload *proto.Message,
+	payload []byte,
 ) (*MsgVotePoll, error) {
-	// Convert the proto message into any
-	var payloadAny *types.Any
-	var err error
-	if payload != nil {
-		payloadAny, err = types.NewAnyWithValue(*payload)
-		if err != nil {
-			return nil, sdkerrors.Wrap(ErrInvalidChannel, err.Error())
-		}
-	}
-
 	return &MsgVotePoll{
 		MessageID: messageID,
 		Creator:   creator,
 		Value:     value,
-		Payload:   payloadAny,
+		Payload:   payload,
 	}, nil
 }
 

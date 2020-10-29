@@ -2,7 +2,7 @@ package types
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
-	types "github.com/cosmos/cosmos-sdk/codec/types"
+	// types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"strconv"
 )
@@ -18,7 +18,7 @@ func NewChannel(
 	creator string,
 	name string,
 	subject string,
-	payload *types.Any,
+	payload []byte,
 ) (Channel, error) {
 	var channel Channel
 	channel.Creator = creator

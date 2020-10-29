@@ -3,15 +3,13 @@ package spn.chat.v1beta1;
 
 option go_package = "github.com/tendermint/spn/x/chat/types";
 
-import "google/protobuf/any.proto";
-
 message Channel {
   int32 id = 1;
   string creator = 2;
   string name = 3; 
   string subject = 4; 
   int32 messageCount = 5; 
-  google.protobuf.Any payload = 6;
+  bytes payload = 6;
 }
 
 message Message {
@@ -23,7 +21,7 @@ message Message {
   int64 createdAt = 6;
   Poll poll = 7;
   bool hasPoll = 8;
-  google.protobuf.Any payload = 9;
+  bytes payload = 9;
 }
 
 message Poll {
@@ -34,7 +32,7 @@ message Poll {
 message Vote {
     string creator = 1;
     int32 value = 2;
-    google.protobuf.Any payload = 3;
+    bytes payload = 3;
 }
 
 message TagReferences {

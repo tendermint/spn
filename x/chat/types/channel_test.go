@@ -21,7 +21,7 @@ func TestNewChannel(t *testing.T) {
 	require.Zero(t, channel.MessageCount, "NewChannel should create a channel with 0 message")
 
 	// Can create a channel with payload
-	_, payload := chat.MockPayload()
+	payload := chat.MockPayload()
 	channel, err = types.NewChannel(
 		0,
 		chat.MockUser(),
