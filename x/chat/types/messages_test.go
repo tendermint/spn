@@ -22,12 +22,12 @@ func TestMsgCreateChannel(t *testing.T) {
 	require.NoError(t, err, "NewMsgCreateChannel should create a valid MsgCreateChannel")
 
 	// Can create a MsgCreateChannel with payload
-	payload, _ := chat.MockPayload()
+	payload := chat.MockPayload()
 	msg, err = types.NewMsgCreateChannel(
 		user,
 		"foo",
 		"bar",
-		&payload,
+		payload,
 	)
 	require.NoError(t, err, "NewMsgCreateChannel should create a MsgCreateChannel")
 	err = msg.ValidateBasic()
@@ -51,14 +51,14 @@ func TestMsgSendMessage(t *testing.T) {
 	require.NoError(t, err, "MsgSendMessage should create a valid MsgSendMessage")
 
 	// Can create a MsgSendMessage with payload
-	payload, _ := chat.MockPayload()
+	payload := chat.MockPayload()
 	msg, err = types.NewMsgSendMessage(
 		0,
 		user,
 		"foo",
 		[]string{},
 		[]string{},
-		&payload,
+		payload,
 	)
 	require.NoError(t, err, "MsgSendMessage should create a MsgSendMessage")
 	err = msg.ValidateBasic()
@@ -80,12 +80,12 @@ func TestMsgVotePoll(t *testing.T) {
 	require.NoError(t, err, "MsgVotePoll should create a valid MsgVotePoll")
 
 	// Can create a MsgVotePoll
-	payload, _ := chat.MockPayload()
+	payload := chat.MockPayload()
 	msg, err = types.NewMsgVotePoll(
 		"0xaaa",
 		user,
 		0,
-		&payload,
+		payload,
 	)
 	require.NoError(t, err, "MsgVotePoll should create a MsgVotePoll")
 	err = msg.ValidateBasic()

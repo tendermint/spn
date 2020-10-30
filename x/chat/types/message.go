@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
@@ -25,7 +24,7 @@ func NewMessage(
 	tags []string,
 	createdAt time.Time,
 	pollOptions []string,
-	payload *types.Any,
+	payload []byte,
 ) (Message, error) {
 	var message Message
 

@@ -15,7 +15,7 @@ type (
 		cdc            codec.Marshaler
 		storeKey       sdk.StoreKey
 		memKey         sdk.StoreKey
-		identityKeeper types.IdentityKeeper
+		IdentityKeeper types.IdentityKeeper
 	}
 )
 
@@ -28,7 +28,7 @@ func NewKeeper(
 		cdc:            cdc,
 		storeKey:       storeKey,
 		memKey:         memKey,
-		identityKeeper: ik,
+		IdentityKeeper: ik,
 	}
 }
 

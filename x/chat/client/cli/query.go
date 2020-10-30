@@ -1,13 +1,14 @@
 package cli
 
 import (
+	"context"
 	"fmt"
-	// "strings"
+	"strconv"
 
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	// sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tendermint/spn/x/chat/types"
@@ -24,8 +25,88 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	// this line is used by starport scaffolding # 1
+	cmd.AddCommand(
+		CmdShowChannel(),
+		CmdListMessages(),
+	)
 
-	return cmd 
+	return cmd
 }
 
+// CmdShowChannel returns the command to show a channel
+func CmdShowChannel() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "show-channel [channel-id]",
+		Short: "show info concerning a channel",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			// Convert channel ID
+			channelID, err := strconv.Atoi(args[0])
+			if err != nil {
+				return err
+			}
+
+			params := &types.QueryShowChannelRequest{
+				Id: int32(channelID),
+			}
+
+			res, err := queryClient.ShowChannel(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdListMessages returns the command to list messages in a channel
+func CmdListMessages() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list-messages [channel-id]",
+		Short: "list the messages in a channel",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			// Convert channel ID
+			channelID, err := strconv.Atoi(args[0])
+			if err != nil {
+				return err
+			}
+
+			params := &types.QueryListMessagesRequest{
+				ChannelId: int32(channelID),
+			}
+
+			res, err := queryClient.ListMessages(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}

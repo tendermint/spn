@@ -2,6 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/chat/types"
 )
 
@@ -26,8 +27,17 @@ func (k Keeper) GetChannelCount(ctx sdk.Context) (channelCount int32) {
 }
 
 // CreateChannel appends a new channel, increments channel count
-func (k Keeper) CreateChannel(ctx sdk.Context, channel types.Channel) {
+func (k Keeper) CreateChannel(ctx sdk.Context, channel types.Channel) error {
 	store := ctx.KVStore(k.storeKey)
+
+	// Verify that the creator exists as an identity
+	exists, err := k.IdentityKeeper.IdentityExists(ctx, channel.Creator)
+	if err != nil {
+		return sdkerrors.Wrap(types.ErrInvalidUser, err.Error())
+	}
+	if !exists {
+		return sdkerrors.Wrap(types.ErrInvalidUser, "The user doesn't exist")
+	}
 
 	channelCount := getChannelCount(k, ctx)
 
@@ -39,6 +49,8 @@ func (k Keeper) CreateChannel(ctx sdk.Context, channel types.Channel) {
 	// Save incremented message count
 	encodedChannelCount := types.MarshalChannelCount(k.cdc, channelCount+1)
 	store.Set(types.GetChannelCountKey(), encodedChannelCount)
+
+	return nil
 }
 
 func getChannelCount(k Keeper, ctx sdk.Context) (channelCount int32) {

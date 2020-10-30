@@ -13,7 +13,6 @@ import (
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	proto "github.com/gogo/protobuf/proto"
 	"github.com/tendermint/spn/x/chat/keeper"
 	"github.com/tendermint/spn/x/chat/types"
 	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
@@ -94,6 +93,22 @@ func MockMessage(channelID int32) types.Message {
 	return message
 }
 
+// MockMessageWithPoll mocks a message with a poll for test purpose
+func MockMessageWithPoll(channelID int32, pollOptions []string) types.Message {
+	message, _ := types.NewMessage(
+		channelID,
+		0,
+		MockUser(),
+		MockRandomString(20),
+		[]string{MockRandomString(5)},
+		time.Now(),
+		pollOptions,
+		nil,
+	)
+
+	return message
+}
+
 // MockVote mocks a vote for a poll for test purpose
 func MockVote(value int32) *types.Vote {
 	vote, _ := types.NewVote(MockUser(), value, nil)
@@ -101,13 +116,8 @@ func MockVote(value int32) *types.Vote {
 }
 
 // MockPayload mocks a miscellaneous payload data
-func MockPayload() (proto.Message, *codectypes.Any) {
-	// Message is a protobuf mesage and can be then used as a payloaddata
-	message := MockMessage(5)
-	messageAny, _ := codectypes.NewAnyWithValue(&message)
-
-	// TODO: Implement a better protobuf message generation with random data etc...
-	return &message, messageAny
+func MockPayload() []byte {
+	return []byte(MockRandomString(200))
 }
 
 // MockRandomString returns a random string of length n

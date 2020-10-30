@@ -2,36 +2,36 @@ package types
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
-	types "github.com/cosmos/cosmos-sdk/codec/types"
+	// types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"strconv"
 )
 
 const (
-	ChannelNameMaxLength    = 50   // TODO: Decide this value or make it customizable through params
-	ChannelSubjectMaxLength = 1000 // TODO: Decide this value or make it customizable through params
+	ChannelTitleMaxLength       = 50   // TODO: Decide this value or make it customizable through params
+	ChannelDescriptionMaxLength = 1000 // TODO: Decide this value or make it customizable through params
 )
 
 // NewChannel creates a new channel
 func NewChannel(
 	id int32,
 	creator string,
-	name string,
-	subject string,
-	payload *types.Any,
+	title string,
+	description string,
+	payload []byte,
 ) (Channel, error) {
 	var channel Channel
 	channel.Creator = creator
 
-	if !checkChannelName(name) {
+	if !checkChannelTitle(title) {
 		return channel, sdkerrors.Wrap(ErrInvalidChannel, "invalid name")
 	}
-	channel.Name = name
+	channel.Title = title
 
-	if len(subject) > ChannelSubjectMaxLength {
+	if len(description) > ChannelDescriptionMaxLength {
 		return channel, sdkerrors.Wrap(ErrInvalidChannel, "subject too big")
 	}
-	channel.Subject = subject
+	channel.Description = description
 	channel.MessageCount = 0
 	channel.Payload = payload
 
@@ -44,8 +44,8 @@ func (channel *Channel) IncrementMessageCount() {
 }
 
 // Check the name of the channel has a valid format
-func checkChannelName(name string) bool {
-	if len(name) > ChannelNameMaxLength {
+func checkChannelTitle(title string) bool {
+	if len(title) > ChannelTitleMaxLength {
 		return false
 	}
 

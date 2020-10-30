@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/chat/types"
 )
 
@@ -61,32 +62,23 @@ func (k Keeper) GetMessagesByIDs(ctx sdk.Context, messageIDs []string) (messages
 	return messages
 }
 
-// UpdateMessagePoll updates the poll of a message
-func (k Keeper) UpdateMessagePoll(ctx sdk.Context, messageID string, poll *types.Poll) (found bool) {
-	store := ctx.KVStore(k.storeKey)
-
-	message, found := k.GetMessageByID(ctx, messageID)
-	if !found {
-		return false
-	}
-
-	message.Poll = poll
-
-	// Store back the message
-	encodedMessage := types.MarshalMessage(k.cdc, message)
-	store.Set(types.GetMessageKey(messageID), encodedMessage)
-
-	return true
-}
-
 // AppendMessageToChannel appends a new message in the channel, updates its message count and stores the tag references
-func (k Keeper) AppendMessageToChannel(ctx sdk.Context, message types.Message) (channelFound bool) {
+func (k Keeper) AppendMessageToChannel(ctx sdk.Context, message types.Message) (bool, error) {
 	store := ctx.KVStore(k.storeKey)
+
+	// Verify that the creator exists as an identity
+	exists, err := k.IdentityKeeper.IdentityExists(ctx, message.Creator)
+	if err != nil {
+		return false, sdkerrors.Wrap(types.ErrInvalidMessage, err.Error())
+	}
+	if !exists {
+		return false, sdkerrors.Wrap(types.ErrInvalidMessage, "The user doesn't exist")
+	}
 
 	// Get the current message count of the channel
 	channel, channelFound := k.GetChannel(ctx, message.ChannelID)
 	if !channelFound {
-		return channelFound
+		return false, nil
 	}
 	messageCount := channel.MessageCount
 
@@ -110,5 +102,41 @@ func (k Keeper) AppendMessageToChannel(ctx sdk.Context, message types.Message) (
 		store.Set(types.GetTagReferenceFromChannelKey(tag, message.ChannelID), encodedTagReferences)
 	}
 
-	return true
+	return true, nil
+}
+
+// AppendVoteToPoll appends a vote to the poll of a message
+func (k Keeper) AppendVoteToPoll(ctx sdk.Context, messageID string, vote *types.Vote) (bool, error) {
+	store := ctx.KVStore(k.storeKey)
+
+	// Verify that the creator exists as an identity
+	exists, err := k.IdentityKeeper.IdentityExists(ctx, vote.Creator)
+	if err != nil {
+		return false, sdkerrors.Wrap(types.ErrInvalidVote, err.Error())
+	}
+	if !exists {
+		return false, sdkerrors.Wrap(types.ErrInvalidVote, "The user doesn't exist")
+	}
+
+	message, found := k.GetMessageByID(ctx, messageID)
+	if !found {
+		return false, nil
+	}
+
+	if !message.HasPoll {
+		return false, sdkerrors.Wrap(types.ErrInvalidPoll, "The message has no poll")
+	}
+
+	poll := *message.Poll
+	err = poll.AppendVote(vote)
+	if err != nil {
+		return false, sdkerrors.Wrap(types.ErrInvalidVote, err.Error())
+	}
+	message.Poll = &poll
+
+	// Store back the message
+	encodedMessage := types.MarshalMessage(k.cdc, message)
+	store.Set(types.GetMessageKey(messageID), encodedMessage)
+
+	return true, nil
 }
