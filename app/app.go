@@ -73,9 +73,6 @@ import (
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	appparams "github.com/tendermint/spn/app/params"
-	"github.com/tendermint/spn/x/spn"
-	spnkeeper "github.com/tendermint/spn/x/spn/keeper"
-	spntypes "github.com/tendermint/spn/x/spn/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	"github.com/tendermint/spn/x/chat"
@@ -113,7 +110,6 @@ var (
 		upgrade.AppModuleBasic{},
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
-		spn.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		identity.AppModuleBasic{},
 		chat.AppModuleBasic{},
@@ -175,7 +171,6 @@ type App struct {
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
-	spnKeeper spnkeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	identityKeeper identitykeeper.Keeper
 	chatKeeper     chatkeeper.Keeper
@@ -206,7 +201,6 @@ func New(
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
-		spntypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 		identitytypes.StoreKey,
 		chattypes.StoreKey,
@@ -308,10 +302,6 @@ func New(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
-	app.spnKeeper = *spnkeeper.NewKeeper(
-		appCodec, keys[spntypes.StoreKey], keys[spntypes.MemStoreKey],
-	)
-
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	app.identityKeeper = *identitykeeper.NewKeeper(
 		appCodec,
@@ -348,7 +338,6 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
-		spn.NewAppModule(appCodec, app.spnKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
 		identity.NewAppModule(appCodec, app.identityKeeper),
 		chat.NewAppModule(appCodec, app.chatKeeper),
