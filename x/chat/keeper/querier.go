@@ -19,7 +19,7 @@ func NewQuerier(k Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 
 		switch path[0] {
 		case types.QueryDescribeChannel:
-			return describeChannel(ctx, req, k, legacyQuerierCdc)]
+			return describeChannel(ctx, req, k, legacyQuerierCdc)
 		case types.QueryListChannels:
 			return listChannel(ctx, req, k, legacyQuerierCdc)
 		default:
@@ -54,7 +54,7 @@ func describeChannel(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, lega
 }
 
 func listChannel(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
-	var params types.QueryListChannelsRequest
+	// var params types.QueryListChannelsRequest
 	var bz []byte
 
 	// TODO: implement

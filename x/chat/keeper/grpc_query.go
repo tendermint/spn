@@ -28,3 +28,9 @@ func (k Keeper) DescribeChannel(c context.Context, req *types.QueryDescribeChann
 
 	return &types.QueryDescribeChannelResponse{Channel: &channel}, nil
 }
+
+// ListChannels list all the channels
+func (k Keeper) ListChannels(c context.Context, req *types.QueryListChannelsRequest) (*types.QueryListChannelsResponse, error) {
+	// TODO: Implement
+	return nil, nil
+}
