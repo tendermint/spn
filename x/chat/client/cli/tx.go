@@ -29,9 +29,9 @@ func GetTxCmd() *cobra.Command {
 // CmdCreateChannel returns the transaction command to create a new channel
 func CmdCreateChannel() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-channel [name] [subject]",
+		Use:   "create-channel [name]",
 		Short: "Create a new channel",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
@@ -40,14 +40,15 @@ func CmdCreateChannel() *cobra.Command {
 			}
 
 			// Get and decode payload if defined
-			payloadString, _ := cmd.Flags().GetString(FlagPayload)
+			payload, _ := cmd.Flags().GetString(FlagPayload)
+			description, _ := cmd.Flags().GetString(FlagPayload)
 
 			// Create and send message
 			msg, err := types.NewMsgCreateChannel(
 				clientCtx.GetFromAddress(),
 				args[0],
-				args[1],
-				[]byte(payloadString),
+				description,
+				[]byte(payload),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -56,7 +57,8 @@ func CmdCreateChannel() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().AddFlagSet(FlagSetPaylaod())
+	cmd.Flags().AddFlagSet(FlagSetDescription())
+	cmd.Flags().AddFlagSet(FlagSetPayload())
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
