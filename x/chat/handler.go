@@ -17,6 +17,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		switch msg := msg.(type) {
 		case *types.MsgCreateChannel:
 			return handleMsgCreateChannel(ctx, k, msg)
+		case *types.MsgSendMessage:
+			return handleMsgSendMessage(ctx, k, msg)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
@@ -39,6 +41,40 @@ func handleMsgCreateChannel(ctx sdk.Context, k keeper.Keeper, msg *types.MsgCrea
 
 	// Append the channel
 	err = k.CreateChannel(ctx, channel)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+}
+
+func handleMsgSendMessage(ctx sdk.Context, k keeper.Keeper, msg *types.MsgSendMessage) (*sdk.Result, error) {
+	// Get the identity of the user
+	identity, err := k.IdentityKeeper.GetIdentifier(ctx, msg.Creator)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	// Create the message with the options provided and the block time
+	message, err := types.NewMessage(
+		msg.ChannelID,
+		0, // Modified by the keeper
+		identity,
+		msg.Content,
+		msg.Tags,
+		ctx.BlockTime(),
+		msg.PollOptions,
+		msg.Payload,
+	)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	// Append the message
+	found, err := k.AppendMessageToChannel(ctx, message)
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Channel not found")
+	}
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
