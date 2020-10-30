@@ -8,8 +8,8 @@ import "gogoproto/gogo.proto";
 
 message MsgCreateChannel {
   bytes creator = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  string name = 2; 
-  string subject = 3; 
+  string title = 2; 
+  string description = 3; 
   bytes payload = 4;
 }
 

@@ -32,7 +32,7 @@ func handleMsgCreateChannel(ctx sdk.Context, k keeper.Keeper, msg *types.MsgCrea
 	}
 
 	// Create the channel, the channel id will be modified by CreateChannel
-	channel, err := types.NewChannel(0, identity, msg.Name, msg.Subject, msg.Payload)
+	channel, err := types.NewChannel(0, identity, msg.Title, msg.Description, msg.Payload)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}

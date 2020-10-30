@@ -6,8 +6,8 @@ option go_package = "github.com/tendermint/spn/x/chat/types";
 message Channel {
   int32 id = 1;
   string creator = 2;
-  string name = 3; 
-  string subject = 4; 
+  string title = 3; 
+  string description = 4; 
   int32 messageCount = 5; 
   bytes payload = 6;
 }

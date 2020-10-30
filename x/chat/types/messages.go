@@ -23,15 +23,15 @@ var (
 // NewMsgCreateChannel creates a new message to create a channel
 func NewMsgCreateChannel(
 	creator sdk.AccAddress,
-	name string,
-	subject string,
+	title string,
+	description string,
 	payload []byte,
 ) (*MsgCreateChannel, error) {
 	return &MsgCreateChannel{
-		Creator: creator,
-		Name:    name,
-		Subject: subject,
-		Payload: payload,
+		Creator:     creator,
+		Title:       title,
+		Description: description,
+		Payload:     payload,
 	}, nil
 }
 

@@ -26,17 +26,17 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	}
 
 	cmd.AddCommand(
-		CmdDescribeChannel(),
+		CmdShowChannel(),
 	)
 
 	return cmd
 }
 
-// CmdDescribeChannel returns the command to describe a channel
-func CmdDescribeChannel() *cobra.Command {
+// CmdShowChannel returns the command to show a channel
+func CmdShowChannel() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "describe-channel [channel-id]",
-		Short: "describe info concerning a channel",
+		Use:   "show-channel [channel-id]",
+		Short: "show info concerning a channel",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -53,11 +53,11 @@ func CmdDescribeChannel() *cobra.Command {
 				return err
 			}
 
-			params := &types.QueryDescribeChannelRequest{
+			params := &types.QueryShowChannelRequest{
 				Id: int32(channelID),
 			}
 
-			res, err := queryClient.DescribeChannel(context.Background(), params)
+			res, err := queryClient.ShowChannel(context.Background(), params)
 			if err != nil {
 				return err
 			}
