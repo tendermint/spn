@@ -39,9 +39,9 @@ func CmdCreateChannel() *cobra.Command {
 				return err
 			}
 
-			// Get and decode payload if defined
+			// Flags
 			payload, _ := cmd.Flags().GetString(FlagPayload)
-			description, _ := cmd.Flags().GetString(FlagPayload)
+			description, _ := cmd.Flags().GetString(FlagDescription)
 
 			// Create and send message
 			msg, err := types.NewMsgCreateChannel(
