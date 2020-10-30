@@ -3,14 +3,13 @@ package spn.chat.v1beta1;
 
 option go_package = "github.com/tendermint/spn/x/chat/types";
 
-import "google/protobuf/any.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "gogoproto/gogo.proto";
 import "chat/v1beta/chat.proto";
 
 // Query defines the gRPC querier service.
 service Query {
     rpc DescribeChannel(QueryDescribeChannelRequest) returns (QueryDescribeChannelResponse);
+    rpc ListChannels(QueryListChannelsRequest) returns (QueryListChannelsResponse);
 }
 
 message QueryDescribeChannelRequest {
@@ -19,4 +18,14 @@ message QueryDescribeChannelRequest {
 
 message QueryDescribeChannelResponse {
     Channel channel = 1;
+}
+
+message QueryListChannelsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryListChannelsResponse {
+	int32 id = 1;
+    string name = 2; 
+	cosmos.base.query.v1beta1.PageResponse pagination = 3;
 }
