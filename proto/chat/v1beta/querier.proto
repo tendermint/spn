@@ -3,12 +3,33 @@ package spn.chat.v1beta1;
 
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "chat/v1beta/chat.proto";
+
 
 option go_package = "github.com/tendermint/spn/x/chat/types";
 
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+    rpc ListMessages(QueryListMessagesRequest) returns (QueryListMessagesResponse);
+    rpc SearchMessages(QuerySearchMessagesRequest) returns (QuerySearchMessagesResponse);
 }
 
 // this line is used by starport scaffolding # 3
+
+message QueryListMessagesRequest {
+	int32 channelId = 1;
+}
+
+message QueryListMessagesResponse {
+	repeated Message messages = 1;
+}
+
+message QuerySearchMessagesRequest {
+	int32 channelId = 1;
+    string tag = 2;
+}
+
+message QuerySearchMessagesResponse {
+	repeated Message messages = 1;
+}
