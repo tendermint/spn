@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"fmt"
 	"context"
 	"fmt"
 
@@ -37,7 +36,7 @@ func (k Keeper) ListChannels(c context.Context, req *types.QueryListChannelsRequ
 	return nil, nil
 }
 
-func (k Keeper) ListMessages(c context.Context, req *types.QueryListMessagesRequest) (*types.QueryListMessagesResponse, error) {\
+func (k Keeper) ListMessages(c context.Context, req *types.QueryListMessagesRequest) (*types.QueryListMessagesResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
@@ -61,5 +60,3 @@ func (k Keeper) SearchMessages(c context.Context, req *types.QuerySearchMessages
 
 	return nil, nil
 }
-
-
