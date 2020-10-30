@@ -14,8 +14,8 @@ import (
 
 var _ types.QueryServer = Keeper{}
 
-// DescribeChannel returns the channel data from its ID
-func (k Keeper) DescribeChannel(c context.Context, req *types.QueryDescribeChannelRequest) (*types.QueryDescribeChannelResponse, error) {
+// ShowChannel returns the channel data from its ID
+func (k Keeper) ShowChannel(c context.Context, req *types.QueryShowChannelRequest) (*types.QueryShowChannelResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
@@ -26,7 +26,7 @@ func (k Keeper) DescribeChannel(c context.Context, req *types.QueryDescribeChann
 		return nil, sdkerrors.Wrap(types.ErrInvalidChannel, fmt.Sprintf("channel not found"))
 	}
 
-	return &types.QueryDescribeChannelResponse{Channel: &channel}, nil
+	return &types.QueryShowChannelResponse{Channel: &channel}, nil
 }
 
 // ListChannels list all the channels

@@ -28,22 +28,22 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type QueryDescribeChannelRequest struct {
+type QueryShowChannelRequest struct {
 	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (m *QueryDescribeChannelRequest) Reset()         { *m = QueryDescribeChannelRequest{} }
-func (m *QueryDescribeChannelRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryDescribeChannelRequest) ProtoMessage()    {}
-func (*QueryDescribeChannelRequest) Descriptor() ([]byte, []int) {
+func (m *QueryShowChannelRequest) Reset()         { *m = QueryShowChannelRequest{} }
+func (m *QueryShowChannelRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryShowChannelRequest) ProtoMessage()    {}
+func (*QueryShowChannelRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_5566609b8564cf29, []int{0}
 }
-func (m *QueryDescribeChannelRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryShowChannelRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryDescribeChannelRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryShowChannelRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryDescribeChannelRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryShowChannelRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -53,41 +53,41 @@ func (m *QueryDescribeChannelRequest) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
-func (m *QueryDescribeChannelRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryDescribeChannelRequest.Merge(m, src)
+func (m *QueryShowChannelRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryShowChannelRequest.Merge(m, src)
 }
-func (m *QueryDescribeChannelRequest) XXX_Size() int {
+func (m *QueryShowChannelRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryDescribeChannelRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryDescribeChannelRequest.DiscardUnknown(m)
+func (m *QueryShowChannelRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryShowChannelRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryDescribeChannelRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryShowChannelRequest proto.InternalMessageInfo
 
-func (m *QueryDescribeChannelRequest) GetId() int32 {
+func (m *QueryShowChannelRequest) GetId() int32 {
 	if m != nil {
 		return m.Id
 	}
 	return 0
 }
 
-type QueryDescribeChannelResponse struct {
+type QueryShowChannelResponse struct {
 	Channel *Channel `protobuf:"bytes,1,opt,name=channel,proto3" json:"channel,omitempty"`
 }
 
-func (m *QueryDescribeChannelResponse) Reset()         { *m = QueryDescribeChannelResponse{} }
-func (m *QueryDescribeChannelResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryDescribeChannelResponse) ProtoMessage()    {}
-func (*QueryDescribeChannelResponse) Descriptor() ([]byte, []int) {
+func (m *QueryShowChannelResponse) Reset()         { *m = QueryShowChannelResponse{} }
+func (m *QueryShowChannelResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryShowChannelResponse) ProtoMessage()    {}
+func (*QueryShowChannelResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_5566609b8564cf29, []int{1}
 }
-func (m *QueryDescribeChannelResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryShowChannelResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryDescribeChannelResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryShowChannelResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryDescribeChannelResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryShowChannelResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -97,19 +97,19 @@ func (m *QueryDescribeChannelResponse) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
-func (m *QueryDescribeChannelResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryDescribeChannelResponse.Merge(m, src)
+func (m *QueryShowChannelResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryShowChannelResponse.Merge(m, src)
 }
-func (m *QueryDescribeChannelResponse) XXX_Size() int {
+func (m *QueryShowChannelResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryDescribeChannelResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryDescribeChannelResponse.DiscardUnknown(m)
+func (m *QueryShowChannelResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryShowChannelResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryDescribeChannelResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryShowChannelResponse proto.InternalMessageInfo
 
-func (m *QueryDescribeChannelResponse) GetChannel() *Channel {
+func (m *QueryShowChannelResponse) GetChannel() *Channel {
 	if m != nil {
 		return m.Channel
 	}
@@ -221,8 +221,8 @@ func (m *QueryListChannelsResponse) GetPagination() *query.PageResponse {
 }
 
 func init() {
-	proto.RegisterType((*QueryDescribeChannelRequest)(nil), "spn.chat.v1beta1.QueryDescribeChannelRequest")
-	proto.RegisterType((*QueryDescribeChannelResponse)(nil), "spn.chat.v1beta1.QueryDescribeChannelResponse")
+	proto.RegisterType((*QueryShowChannelRequest)(nil), "spn.chat.v1beta1.QueryShowChannelRequest")
+	proto.RegisterType((*QueryShowChannelResponse)(nil), "spn.chat.v1beta1.QueryShowChannelResponse")
 	proto.RegisterType((*QueryListChannelsRequest)(nil), "spn.chat.v1beta1.QueryListChannelsRequest")
 	proto.RegisterType((*QueryListChannelsResponse)(nil), "spn.chat.v1beta1.QueryListChannelsResponse")
 }
@@ -230,31 +230,30 @@ func init() {
 func init() { proto.RegisterFile("chat/v1beta/querier.proto", fileDescriptor_5566609b8564cf29) }
 
 var fileDescriptor_5566609b8564cf29 = []byte{
-	// 371 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x52, 0xc1, 0x4e, 0xc2, 0x40,
-	0x10, 0x65, 0x51, 0x34, 0xae, 0x46, 0xcd, 0x1e, 0x0c, 0x54, 0xd3, 0x90, 0x1e, 0x90, 0x60, 0xd8,
-	0x0d, 0xf0, 0x03, 0x46, 0x8d, 0x5e, 0x3c, 0x68, 0xbd, 0x79, 0xdb, 0x96, 0x49, 0xd9, 0xc4, 0x6e,
-	0x4b, 0x77, 0x31, 0xf2, 0x07, 0x1e, 0xfd, 0x2c, 0x8f, 0x1c, 0x3d, 0x9a, 0xf2, 0x23, 0x86, 0x6d,
-	0xd1, 0x8a, 0xa8, 0xdc, 0x36, 0x3b, 0xef, 0xbd, 0x79, 0x6f, 0x66, 0x70, 0xcd, 0x1f, 0x70, 0xcd,
-	0x1e, 0x3b, 0x1e, 0x68, 0xce, 0x86, 0x23, 0x48, 0x04, 0x24, 0x34, 0x4e, 0x22, 0x1d, 0x91, 0x7d,
-	0x15, 0x4b, 0x3a, 0x2b, 0xd3, 0xac, 0xdc, 0xb1, 0x5a, 0x7e, 0xa4, 0xc2, 0x48, 0x31, 0x8f, 0x2b,
-	0x30, 0xe0, 0x71, 0xce, 0xec, 0xb0, 0x98, 0x07, 0x42, 0x72, 0x2d, 0x22, 0x99, 0xb1, 0xad, 0x83,
-	0xa2, 0xb0, 0x51, 0x31, 0xff, 0x4e, 0x1b, 0x1f, 0xde, 0xce, 0x98, 0x17, 0xa0, 0xfc, 0x44, 0x78,
-	0x70, 0x3e, 0xe0, 0x52, 0xc2, 0x83, 0x0b, 0xc3, 0x11, 0x28, 0x4d, 0x76, 0x71, 0x59, 0xf4, 0xab,
-	0xa8, 0x8e, 0x9a, 0x15, 0xb7, 0x2c, 0xfa, 0xce, 0x1d, 0x3e, 0x5a, 0x0e, 0x57, 0x71, 0x24, 0x15,
-	0x90, 0x1e, 0xde, 0xf4, 0xb3, 0x2f, 0x43, 0xda, 0xee, 0xd6, 0xe8, 0xa2, 0x6d, 0x3a, 0xe7, 0xcc,
-	0x91, 0x8e, 0x87, 0xab, 0x46, 0xf4, 0x5a, 0x28, 0x9d, 0x17, 0xd5, 0xdc, 0xc0, 0x25, 0xc6, 0x5f,
-	0x59, 0x72, 0xcd, 0x06, 0xcd, 0x82, 0xd3, 0x59, 0x70, 0x6a, 0x82, 0x7f, 0x8a, 0xdf, 0xf0, 0x00,
-	0x72, 0xae, 0x5b, 0x60, 0x3a, 0xcf, 0x08, 0xd7, 0x96, 0x34, 0xc9, 0x6d, 0x2f, 0xc4, 0x24, 0x04,
-	0xaf, 0x4b, 0x1e, 0x42, 0xb5, 0x5c, 0x47, 0xcd, 0x2d, 0xd7, 0xbc, 0xc9, 0xd5, 0x37, 0x27, 0x6b,
-	0xc6, 0xc9, 0xf1, 0xbf, 0x4e, 0xb2, 0x06, 0x45, 0x2b, 0xdd, 0x14, 0xe1, 0x8a, 0xb1, 0x42, 0x62,
-	0xbc, 0xb7, 0x30, 0x48, 0xd2, 0xfe, 0x39, 0xaf, 0x3f, 0xf6, 0x63, 0xd1, 0x55, 0xe1, 0x79, 0xd0,
-	0x00, 0xef, 0x14, 0x07, 0x40, 0x5a, 0xbf, 0xf0, 0x97, 0xac, 0xc2, 0x3a, 0x59, 0x09, 0x9b, 0x35,
-	0x3a, 0x3b, 0x7d, 0x4d, 0x6d, 0x34, 0x49, 0x6d, 0xf4, 0x9e, 0xda, 0xe8, 0x65, 0x6a, 0x97, 0x26,
-	0x53, 0xbb, 0xf4, 0x36, 0xb5, 0x4b, 0xf7, 0x8d, 0x40, 0xe8, 0xc1, 0xc8, 0xa3, 0x7e, 0x14, 0x32,
-	0x0d, 0xb2, 0x0f, 0x49, 0x28, 0xa4, 0x66, 0x2a, 0x96, 0xec, 0xc9, 0x5c, 0x26, 0xd3, 0xe3, 0x18,
-	0x94, 0xb7, 0x61, 0x0e, 0xb4, 0xf7, 0x11, 0x00, 0x00, 0xff, 0xff, 0xd8, 0x87, 0xcb, 0x62, 0x13,
-	0x03, 0x00, 0x00,
+	// 365 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x52, 0xcf, 0x4e, 0xc2, 0x30,
+	0x18, 0xa7, 0x28, 0x1a, 0x8b, 0x31, 0xa6, 0x07, 0x85, 0x1d, 0x16, 0xb2, 0x03, 0x02, 0x26, 0x6d,
+	0x80, 0x17, 0x30, 0x9a, 0xe8, 0xc5, 0x44, 0x9d, 0x37, 0x6f, 0xdd, 0xd6, 0x6c, 0x4d, 0x5c, 0x3b,
+	0xd6, 0xa2, 0xf2, 0x06, 0x1e, 0x7d, 0x2c, 0x8f, 0x9c, 0x8c, 0x47, 0x03, 0x2f, 0x62, 0xe8, 0x86,
+	0x4e, 0xfe, 0x44, 0x6e, 0x4b, 0xbf, 0xdf, 0xdf, 0x6f, 0x1f, 0xac, 0xfb, 0x11, 0xd5, 0xe4, 0xa9,
+	0xeb, 0x31, 0x4d, 0xc9, 0x60, 0xc8, 0x52, 0xce, 0x52, 0x9c, 0xa4, 0x52, 0x4b, 0x74, 0xa8, 0x12,
+	0x81, 0x67, 0x63, 0x9c, 0x8d, 0xbb, 0x56, 0xc7, 0x97, 0x2a, 0x96, 0x8a, 0x78, 0x54, 0x31, 0x03,
+	0x1e, 0xe5, 0xcc, 0x2e, 0x49, 0x68, 0xc8, 0x05, 0xd5, 0x5c, 0x8a, 0x8c, 0x6d, 0x1d, 0x15, 0x85,
+	0x8d, 0x8a, 0x79, 0x77, 0xda, 0xf0, 0xf8, 0x6e, 0xc6, 0xbc, 0x8f, 0xe4, 0xf3, 0x45, 0x44, 0x85,
+	0x60, 0x8f, 0x2e, 0x1b, 0x0c, 0x99, 0xd2, 0xe8, 0x00, 0x96, 0x79, 0x50, 0x03, 0x0d, 0xd0, 0xaa,
+	0xb8, 0x65, 0x1e, 0x38, 0x37, 0xb0, 0xb6, 0x0c, 0x55, 0x89, 0x14, 0x8a, 0xa1, 0x3e, 0xdc, 0xf5,
+	0xb3, 0x27, 0x43, 0xa8, 0xf6, 0xea, 0x78, 0x31, 0x2e, 0x9e, 0x73, 0xe6, 0x48, 0xc7, 0xcb, 0x05,
+	0xaf, 0xb9, 0xd2, 0xf9, 0x50, 0xcd, 0xcd, 0x2f, 0x21, 0xfc, 0xed, 0x90, 0x6b, 0x36, 0x71, 0x56,
+	0x18, 0xcf, 0x0a, 0x63, 0x53, 0xf8, 0x47, 0xfc, 0x96, 0x86, 0x2c, 0xe7, 0xba, 0x05, 0xa6, 0xf3,
+	0x0a, 0x60, 0x7d, 0x85, 0x49, 0x1e, 0x7b, 0xa1, 0x22, 0x42, 0x70, 0x5b, 0xd0, 0x98, 0xd5, 0xca,
+	0x0d, 0xd0, 0xda, 0x73, 0xcd, 0x37, 0xba, 0xfa, 0x93, 0x64, 0xcb, 0x24, 0x39, 0xf9, 0x37, 0x49,
+	0x66, 0x50, 0x8c, 0xd2, 0xfb, 0x00, 0xb0, 0x62, 0xa2, 0xa0, 0x00, 0x56, 0x0b, 0x4b, 0x44, 0xed,
+	0xe5, 0x5d, 0xad, 0xf9, 0x27, 0x56, 0x67, 0x13, 0x68, 0x5e, 0x2e, 0x84, 0xfb, 0xc5, 0xd2, 0x68,
+	0x1d, 0x77, 0xc5, 0xfa, 0xad, 0xd3, 0x8d, 0xb0, 0x99, 0xd1, 0xf9, 0xd9, 0xfb, 0xc4, 0x06, 0xe3,
+	0x89, 0x0d, 0xbe, 0x26, 0x36, 0x78, 0x9b, 0xda, 0xa5, 0xf1, 0xd4, 0x2e, 0x7d, 0x4e, 0xed, 0xd2,
+	0x43, 0x33, 0xe4, 0x3a, 0x1a, 0x7a, 0xd8, 0x97, 0x31, 0xd1, 0x4c, 0x04, 0x2c, 0x8d, 0xb9, 0xd0,
+	0x44, 0x25, 0x82, 0xbc, 0x98, 0x2b, 0x24, 0x7a, 0x94, 0x30, 0xe5, 0xed, 0x98, 0x63, 0xec, 0x7f,
+	0x07, 0x00, 0x00, 0xff, 0xff, 0x4b, 0xbc, 0x7c, 0xf8, 0xff, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -269,7 +268,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	DescribeChannel(ctx context.Context, in *QueryDescribeChannelRequest, opts ...grpc.CallOption) (*QueryDescribeChannelResponse, error)
+	ShowChannel(ctx context.Context, in *QueryShowChannelRequest, opts ...grpc.CallOption) (*QueryShowChannelResponse, error)
 	ListChannels(ctx context.Context, in *QueryListChannelsRequest, opts ...grpc.CallOption) (*QueryListChannelsResponse, error)
 }
 
@@ -281,9 +280,9 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
 }
 
-func (c *queryClient) DescribeChannel(ctx context.Context, in *QueryDescribeChannelRequest, opts ...grpc.CallOption) (*QueryDescribeChannelResponse, error) {
-	out := new(QueryDescribeChannelResponse)
-	err := c.cc.Invoke(ctx, "/spn.chat.v1beta1.Query/DescribeChannel", in, out, opts...)
+func (c *queryClient) ShowChannel(ctx context.Context, in *QueryShowChannelRequest, opts ...grpc.CallOption) (*QueryShowChannelResponse, error) {
+	out := new(QueryShowChannelResponse)
+	err := c.cc.Invoke(ctx, "/spn.chat.v1beta1.Query/ShowChannel", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -301,7 +300,7 @@ func (c *queryClient) ListChannels(ctx context.Context, in *QueryListChannelsReq
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	DescribeChannel(context.Context, *QueryDescribeChannelRequest) (*QueryDescribeChannelResponse, error)
+	ShowChannel(context.Context, *QueryShowChannelRequest) (*QueryShowChannelResponse, error)
 	ListChannels(context.Context, *QueryListChannelsRequest) (*QueryListChannelsResponse, error)
 }
 
@@ -309,8 +308,8 @@ type QueryServer interface {
 type UnimplementedQueryServer struct {
 }
 
-func (*UnimplementedQueryServer) DescribeChannel(ctx context.Context, req *QueryDescribeChannelRequest) (*QueryDescribeChannelResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DescribeChannel not implemented")
+func (*UnimplementedQueryServer) ShowChannel(ctx context.Context, req *QueryShowChannelRequest) (*QueryShowChannelResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ShowChannel not implemented")
 }
 func (*UnimplementedQueryServer) ListChannels(ctx context.Context, req *QueryListChannelsRequest) (*QueryListChannelsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListChannels not implemented")
@@ -320,20 +319,20 @@ func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 	s.RegisterService(&_Query_serviceDesc, srv)
 }
 
-func _Query_DescribeChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryDescribeChannelRequest)
+func _Query_ShowChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryShowChannelRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).DescribeChannel(ctx, in)
+		return srv.(QueryServer).ShowChannel(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/spn.chat.v1beta1.Query/DescribeChannel",
+		FullMethod: "/spn.chat.v1beta1.Query/ShowChannel",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).DescribeChannel(ctx, req.(*QueryDescribeChannelRequest))
+		return srv.(QueryServer).ShowChannel(ctx, req.(*QueryShowChannelRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -361,8 +360,8 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "DescribeChannel",
-			Handler:    _Query_DescribeChannel_Handler,
+			MethodName: "ShowChannel",
+			Handler:    _Query_ShowChannel_Handler,
 		},
 		{
 			MethodName: "ListChannels",
@@ -373,7 +372,7 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	Metadata: "chat/v1beta/querier.proto",
 }
 
-func (m *QueryDescribeChannelRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryShowChannelRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -383,12 +382,12 @@ func (m *QueryDescribeChannelRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryDescribeChannelRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryShowChannelRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryDescribeChannelRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryShowChannelRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -401,7 +400,7 @@ func (m *QueryDescribeChannelRequest) MarshalToSizedBuffer(dAtA []byte) (int, er
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryDescribeChannelResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryShowChannelResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -411,12 +410,12 @@ func (m *QueryDescribeChannelResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryDescribeChannelResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryShowChannelResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryDescribeChannelResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryShowChannelResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -529,7 +528,7 @@ func encodeVarintQuerier(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *QueryDescribeChannelRequest) Size() (n int) {
+func (m *QueryShowChannelRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -541,7 +540,7 @@ func (m *QueryDescribeChannelRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryDescribeChannelResponse) Size() (n int) {
+func (m *QueryShowChannelResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -593,7 +592,7 @@ func sovQuerier(x uint64) (n int) {
 func sozQuerier(x uint64) (n int) {
 	return sovQuerier(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *QueryDescribeChannelRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryShowChannelRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -616,10 +615,10 @@ func (m *QueryDescribeChannelRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryDescribeChannelRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryShowChannelRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryDescribeChannelRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryShowChannelRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -665,7 +664,7 @@ func (m *QueryDescribeChannelRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryDescribeChannelResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryShowChannelResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -688,10 +687,10 @@ func (m *QueryDescribeChannelResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryDescribeChannelResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryShowChannelResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryDescribeChannelResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryShowChannelResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

@@ -8,15 +8,15 @@ import "chat/v1beta/chat.proto";
 
 // Query defines the gRPC querier service.
 service Query {
-    rpc DescribeChannel(QueryDescribeChannelRequest) returns (QueryDescribeChannelResponse);
+    rpc ShowChannel(QueryShowChannelRequest) returns (QueryShowChannelResponse);
     rpc ListChannels(QueryListChannelsRequest) returns (QueryListChannelsResponse);
 }
 
-message QueryDescribeChannelRequest {
+message QueryShowChannelRequest {
     int32 id = 1;
 }
 
-message QueryDescribeChannelResponse {
+message QueryShowChannelResponse {
     Channel channel = 1;
 }
 

@@ -1,6 +1,6 @@
 package types
 
 const (
-	QueryDescribeChannel = "describe-channel"
-	QueryListChannels    = "list-channels"
+	QueryShowChannel  = "show-channel"
+	QueryListChannels = "list-channels"
 )
