@@ -25,12 +25,12 @@ func RegisterRoutes(clientCtx client.Context, r *mux.Router) {
 }
 
 func registerQueryRoutes(clientCtx client.Context, r *mux.Router) {
-	r.HandleFunc("/identity/username/{identifier}", usernameHandler(clientCtx)).Methods("GET")
-	r.HandleFunc("/identity/username_from_address/{address}", usernameFromAddressHandler(clientCtx)).Methods("GET")
+	r.HandleFunc("/identity/username/{identifier}", usernameHandler(clientCtx)).Methods(MethodGet)
+	r.HandleFunc("/identity/username_from_address/{address}", usernameFromAddressHandler(clientCtx)).Methods(MethodGet)
 }
 
 func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
-	r.HandleFunc(fmt.Sprintf("/identity/set_username"), setUsernameHandler(clientCtx)).Methods("POST")
+	r.HandleFunc(fmt.Sprintf("/identity/set_username"), setUsernameHandler(clientCtx)).Methods(MethodPost)
 }
 
 func usernameHandler(clientCtx client.Context) http.HandlerFunc {

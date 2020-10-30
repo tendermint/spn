@@ -18,11 +18,45 @@ func NewQuerier(k Keeper, legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 		)
 
 		switch path[0] {
-		// this line is used by starport scaffolding # 1
+		case types.QueryShowChannel:
+			return showChannel(ctx, req, k, legacyQuerierCdc)
+		case types.QueryListChannels:
+			return listChannel(ctx, req, k, legacyQuerierCdc)
 		default:
 			err = sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "unknown %s query endpoint: %s", types.ModuleName, path[0])
 		}
 
 		return res, err
 	}
+}
+
+func showChannel(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
+	var params types.QueryShowChannelRequest
+
+	// Decode the request params
+	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
+	}
+
+	// Get the channel
+	channel, found := keeper.GetChannel(ctx, params.Id)
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "The channel doesn't exist")
+	}
+
+	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, channel)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+	}
+
+	return bz, nil
+}
+
+func listChannel(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
+	// var params types.QueryListChannelsRequest
+	var bz []byte
+
+	// TODO: implement
+	return bz, nil
 }

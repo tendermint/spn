@@ -21,7 +21,7 @@ func TestNewChannel(t *testing.T) {
 	require.Zero(t, channel.MessageCount, "NewChannel should create a channel with 0 message")
 
 	// Can create a channel with payload
-	_, payload := chat.MockPayload()
+	payload := chat.MockPayload()
 	channel, err = types.NewChannel(
 		0,
 		chat.MockUser(),
@@ -32,7 +32,7 @@ func TestNewChannel(t *testing.T) {
 	require.NoError(t, err, "NewChannel should create a new channel")
 
 	// Prevent creating a channel with an invalid name
-	bigName := chat.MockRandomString(types.ChannelNameMaxLength + 1)
+	bigName := chat.MockRandomString(types.ChannelTitleMaxLength + 1)
 	_, err = types.NewChannel(
 		0,
 		chat.MockUser(),
@@ -43,7 +43,7 @@ func TestNewChannel(t *testing.T) {
 	require.Error(t, err, "NewChannel should prevent creating a channel with an invalid name")
 
 	// Prevent creating a channel with an invalid subject
-	bigSubject := chat.MockRandomString(types.ChannelSubjectMaxLength + 1)
+	bigSubject := chat.MockRandomString(types.ChannelDescriptionMaxLength + 1)
 	_, err = types.NewChannel(
 		0,
 		chat.MockUser(),

@@ -94,3 +94,16 @@ func TestGetAddresses(t *testing.T) {
 	require.Equal(t, 1, len(addresses), "GetAddresses shoudl only return the address provided")
 	require.True(t, address.Equals(addresses[0]), "GetAddresses shoudl only return the address provided")
 }
+
+func TestIdentityExists(t *testing.T) {
+	ctx, k := MockContext()
+
+	// Return true if the identifier is an address
+	address := chat.MockAccAddress()
+	exists, _ := k.IdentityExists(ctx, address.String())
+	require.True(t, exists, "Any Bech32 address should be a valid identifier")
+
+	// Return false if not an address
+	exists, _ = k.IdentityExists(ctx, "foo")
+	require.False(t, exists, "A non Bech32 address should not be a valid identifier")
+}

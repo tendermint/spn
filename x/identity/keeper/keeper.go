@@ -90,3 +90,14 @@ func (k Keeper) GetAddresses(ctx sdk.Context, identifier string) ([]sdk.AccAddre
 	// For this module, the only address of a user is the identifier itself
 	return []sdk.AccAddress{address}, nil
 }
+
+// IdentityExists returns true if the provided identifier has a corresponding identity
+func (k Keeper) IdentityExists(ctx sdk.Context, identifier string) (bool, error) {
+	// For this module, every Bech32 address is an identity identifier
+	_, err := sdk.AccAddressFromBech32(identifier)
+	if err != nil {
+		return false, nil
+	}
+
+	return true, nil
+}

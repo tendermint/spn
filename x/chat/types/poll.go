@@ -3,7 +3,6 @@ package types
 import (
 	"errors"
 
-	types "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
@@ -52,6 +51,10 @@ func (poll *Poll) AppendVote(vote *Vote) error {
 		return errors.New("The user already voted")
 	}
 
+	// Protobuf reset the map to nil if it has no value, therefore we must always check if it is initialized
+	if poll.Votes == nil {
+		poll.Votes = make(map[string]*Vote)
+	}
 	poll.Votes[vote.Creator] = vote
 
 	return nil
@@ -67,7 +70,7 @@ func checkOptions(options []string) bool {
 func NewVote(
 	creator string,
 	value int32,
-	payload *types.Any,
+	payload []byte,
 ) (Vote, error) {
 	var vote Vote
 

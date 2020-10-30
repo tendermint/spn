@@ -25,7 +25,7 @@ func TestNewMessage(t *testing.T) {
 	require.False(t, message.HasPoll, "NewMessage with no poll options should not create a poll")
 
 	// Can create a message
-	_, payload := chat.MockPayload()
+	payload := chat.MockPayload()
 	message, err = types.NewMessage(
 		0,
 		0,
