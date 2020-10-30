@@ -36,6 +36,7 @@ func (k Keeper) ListChannels(c context.Context, req *types.QueryListChannelsRequ
 	return nil, nil
 }
 
+// ListMessages lists all the messages in a channel
 func (k Keeper) ListMessages(c context.Context, req *types.QueryListMessagesRequest) (*types.QueryListMessagesResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	if req == nil {
@@ -56,7 +57,28 @@ func (k Keeper) ListMessages(c context.Context, req *types.QueryListMessagesRequ
 	return &types.QueryListMessagesResponse{Messages: messagePtrs}, nil
 }
 
+// SearchMessages lists all the message in a channel containing a specific tag
 func (k Keeper) SearchMessages(c context.Context, req *types.QuerySearchMessagesRequest) (*types.QuerySearchMessagesResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
 
-	return nil, nil
+	var messagePtrs []*types.Message
+
+	// Get the tag references
+	tagReferences := k.GetTagReferencesFromChannel(ctx, req.Tag, req.ChannelId)
+	if len(tagReferences) == 0 {
+		return &types.QuerySearchMessagesResponse{Messages: messagePtrs}, nil
+	}
+
+	// Get the messages from the tag references
+	messages := k.GetMessagesByIDs(ctx, tagReferences)
+
+	// Get pointers on messages
+	for _, mes := range messages {
+		messagePtrs = append(messagePtrs, &mes)
+	}
+
+	return &types.QuerySearchMessagesResponse{Messages: messagePtrs}, nil
 }

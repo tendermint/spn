@@ -81,14 +81,38 @@ func listMessages(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQ
 	}
 
 	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, messages)
-
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
 	}
-
 	return bz, nil
 }
 
 func searchMessages(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
-	return []byte{}, nil
+	var params types.QuerySearchMessagesRequest
+	var messages []types.Message
+
+	// Decode the request params
+	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
+	}
+
+	// Get the tag references
+	tagReferences := keeper.GetTagReferencesFromChannel(ctx, params.Tag, params.ChannelId)
+	if len(tagReferences) == 0 {
+		bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, messages)
+		if err != nil {
+			return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+		}
+		return bz, nil
+	}
+
+	// Get the messages from the tag references
+	messages = keeper.GetMessagesByIDs(ctx, tagReferences)
+
+	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, messages)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+	}
+	return bz, nil
 }

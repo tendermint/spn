@@ -25,6 +25,7 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		CmdCreateChannel(),
+		CmdSendMessage(),
 	)
 
 	return cmd
