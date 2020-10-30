@@ -20,6 +20,7 @@ func RegisterRoutes(clientCtx client.Context, r *mux.Router) {
 }
 
 func registerQueryRoutes(clientCtx client.Context, r *mux.Router) {
+	r.HandleFunc("/chat/channel/{channel_id}", showChannelHandler(clientCtx)).Methods(MethodGet)
 }
 
 func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
