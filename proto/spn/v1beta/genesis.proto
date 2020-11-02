@@ -1,9 +1,0 @@
-syntax = "proto3";
-package spn.spn.v1beta1;
-
-option go_package = "github.com/tendermint/spn/x/spn/types";
-
-// GenesisState defines the capability module's genesis state.
-message GenesisState {
-}
-
