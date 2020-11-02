@@ -49,9 +49,10 @@ func (k Keeper) ListMessages(c context.Context, req *types.QueryListMessagesRequ
 	}
 
 	// Get pointers on messages
-	var messagePtrs []*types.Message
-	for _, mes := range messages {
-		messagePtrs = append(messagePtrs, &mes)
+	messagePtrs := make([]*types.Message, len(messages))
+
+	for i := range messages {
+		messagePtrs[i] = &messages[i]
 	}
 
 	return &types.QueryListMessagesResponse{Messages: messagePtrs}, nil
@@ -76,8 +77,10 @@ func (k Keeper) SearchMessages(c context.Context, req *types.QuerySearchMessages
 	messages := k.GetMessagesByIDs(ctx, tagReferences)
 
 	// Get pointers on messages
-	for _, mes := range messages {
-		messagePtrs = append(messagePtrs, &mes)
+	messagePtrs = make([]*types.Message, len(messages))
+
+	for i := range messages {
+		messagePtrs[i] = &messages[i]
 	}
 
 	return &types.QuerySearchMessagesResponse{Messages: messagePtrs}, nil

@@ -19,6 +19,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			return handleMsgCreateChannel(ctx, k, msg)
 		case *types.MsgSendMessage:
 			return handleMsgSendMessage(ctx, k, msg)
+		case *types.MsgVotePoll:
+			return handleMsgSendMessage(ctx, k, msg)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
@@ -74,6 +76,34 @@ func handleMsgSendMessage(ctx sdk.Context, k keeper.Keeper, msg *types.MsgSendMe
 	found, err := k.AppendMessageToChannel(ctx, message)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Channel not found")
+	}
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+}
+
+func handleMsgVotePoll(ctx sdk.Context, k keeper.Keeper, msg *types.MsgVotePoll) (*sdk.Result, error) {
+	// Get the identity of the user
+	identity, err := k.IdentityKeeper.GetIdentifier(ctx, msg.Creator)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	// Create a new vote
+	vote, err := types.NewVote(identity, msg.Value, msg.Payload)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
+
+	// Retrieve the message
+	messageID := types.GetMessageIDFromChannelIDandIndex(msg.ChannelID, msg.MessageIndex)
+
+	// Vote to the poll
+	found, err := k.AppendVoteToPoll(ctx, messageID, &vote)
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Message not found")
 	}
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())

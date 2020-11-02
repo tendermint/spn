@@ -23,8 +23,9 @@ message MsgSendMessage {
 }
 
 message MsgVotePoll {
-  string messageID = 1;
-  bytes creator = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-  int32 value = 3; 
-  bytes payload = 4;
+  int32 channelID = 1;
+  int32 messageIndex = 2;
+  bytes creator = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+  int32 value = 4; 
+  bytes payload = 5;
 }

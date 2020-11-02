@@ -26,6 +26,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(
 		CmdCreateChannel(),
 		CmdSendMessage(),
+		CmdVotePoll(),
 	)
 
 	return cmd
@@ -111,6 +112,63 @@ func CmdSendMessage() *cobra.Command {
 				args[1],
 				tags,
 				pollOptions,
+				[]byte(payload),
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	cmd.Flags().AddFlagSet(FlagSetPollOptions())
+	cmd.Flags().AddFlagSet(FlagSetTags())
+	cmd.Flags().AddFlagSet(FlagSetPayload())
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdVotePoll returns the transaction command to vote on a poll
+func CmdVotePoll() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "vote-poll [value] [channel-id] [message-index]",
+		Short: "Vote for a poll",
+		Args:  cobra.ExactArgs(3),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			// Convert value
+			voteValue, err := strconv.Atoi(args[0])
+			if err != nil {
+				return err
+			}
+
+			// Convert channel ID
+			channelID, err := strconv.Atoi(args[1])
+			if err != nil {
+				return err
+			}
+
+			// Convert message Index
+			messageIndex, err := strconv.Atoi(args[3])
+			if err != nil {
+				return err
+			}
+
+			// Flags
+			payload, _ := cmd.Flags().GetString(FlagPayload)
+
+			// Vote
+			msg, err := types.NewMsgVotePoll(
+				int32(channelID),
+				int32(messageIndex),
+				clientCtx.GetFromAddress(),
+				int32(voteValue),
 				[]byte(payload),
 			)
 			if err := msg.ValidateBasic(); err != nil {

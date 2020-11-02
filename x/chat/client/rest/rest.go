@@ -28,4 +28,5 @@ func registerQueryRoutes(clientCtx client.Context, r *mux.Router) {
 func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
 	r.HandleFunc(fmt.Sprintf("/chat/create_channel"), createChannelHandler(clientCtx)).Methods(MethodPost)
 	r.HandleFunc(fmt.Sprintf("/chat/send_message"), sendMessageHandler(clientCtx)).Methods(MethodPost)
+	r.HandleFunc(fmt.Sprintf("/chat/vote_poll"), votePollHandler(clientCtx)).Methods(MethodPost)
 }

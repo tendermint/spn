@@ -117,7 +117,7 @@ func CmdSearchMessages() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "search-messages [tag] [channel-id]",
 		Short: "search the messages in a channel that contain a specific tag",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
