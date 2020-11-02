@@ -155,7 +155,7 @@ func CmdVotePoll() *cobra.Command {
 			}
 
 			// Convert message Index
-			messageIndex, err := strconv.Atoi(args[3])
+			messageIndex, err := strconv.Atoi(args[2])
 			if err != nil {
 				return err
 			}
