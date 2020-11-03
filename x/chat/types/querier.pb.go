@@ -220,40 +220,235 @@ func (m *QueryListChannelsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+type QueryListMessagesRequest struct {
+	ChannelId int32 `protobuf:"varint,1,opt,name=channelId,proto3" json:"channelId,omitempty"`
+}
+
+func (m *QueryListMessagesRequest) Reset()         { *m = QueryListMessagesRequest{} }
+func (m *QueryListMessagesRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryListMessagesRequest) ProtoMessage()    {}
+func (*QueryListMessagesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5566609b8564cf29, []int{4}
+}
+func (m *QueryListMessagesRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryListMessagesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryListMessagesRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryListMessagesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryListMessagesRequest.Merge(m, src)
+}
+func (m *QueryListMessagesRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryListMessagesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryListMessagesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryListMessagesRequest proto.InternalMessageInfo
+
+func (m *QueryListMessagesRequest) GetChannelId() int32 {
+	if m != nil {
+		return m.ChannelId
+	}
+	return 0
+}
+
+type QueryListMessagesResponse struct {
+	Messages []*Message `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`
+}
+
+func (m *QueryListMessagesResponse) Reset()         { *m = QueryListMessagesResponse{} }
+func (m *QueryListMessagesResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryListMessagesResponse) ProtoMessage()    {}
+func (*QueryListMessagesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5566609b8564cf29, []int{5}
+}
+func (m *QueryListMessagesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryListMessagesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryListMessagesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryListMessagesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryListMessagesResponse.Merge(m, src)
+}
+func (m *QueryListMessagesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryListMessagesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryListMessagesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryListMessagesResponse proto.InternalMessageInfo
+
+func (m *QueryListMessagesResponse) GetMessages() []*Message {
+	if m != nil {
+		return m.Messages
+	}
+	return nil
+}
+
+type QuerySearchMessagesRequest struct {
+	ChannelId int32  `protobuf:"varint,1,opt,name=channelId,proto3" json:"channelId,omitempty"`
+	Tag       string `protobuf:"bytes,2,opt,name=tag,proto3" json:"tag,omitempty"`
+}
+
+func (m *QuerySearchMessagesRequest) Reset()         { *m = QuerySearchMessagesRequest{} }
+func (m *QuerySearchMessagesRequest) String() string { return proto.CompactTextString(m) }
+func (*QuerySearchMessagesRequest) ProtoMessage()    {}
+func (*QuerySearchMessagesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5566609b8564cf29, []int{6}
+}
+func (m *QuerySearchMessagesRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QuerySearchMessagesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QuerySearchMessagesRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QuerySearchMessagesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySearchMessagesRequest.Merge(m, src)
+}
+func (m *QuerySearchMessagesRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QuerySearchMessagesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySearchMessagesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QuerySearchMessagesRequest proto.InternalMessageInfo
+
+func (m *QuerySearchMessagesRequest) GetChannelId() int32 {
+	if m != nil {
+		return m.ChannelId
+	}
+	return 0
+}
+
+func (m *QuerySearchMessagesRequest) GetTag() string {
+	if m != nil {
+		return m.Tag
+	}
+	return ""
+}
+
+type QuerySearchMessagesResponse struct {
+	Messages []*Message `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`
+}
+
+func (m *QuerySearchMessagesResponse) Reset()         { *m = QuerySearchMessagesResponse{} }
+func (m *QuerySearchMessagesResponse) String() string { return proto.CompactTextString(m) }
+func (*QuerySearchMessagesResponse) ProtoMessage()    {}
+func (*QuerySearchMessagesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_5566609b8564cf29, []int{7}
+}
+func (m *QuerySearchMessagesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QuerySearchMessagesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QuerySearchMessagesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QuerySearchMessagesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySearchMessagesResponse.Merge(m, src)
+}
+func (m *QuerySearchMessagesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QuerySearchMessagesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySearchMessagesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QuerySearchMessagesResponse proto.InternalMessageInfo
+
+func (m *QuerySearchMessagesResponse) GetMessages() []*Message {
+	if m != nil {
+		return m.Messages
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryShowChannelRequest)(nil), "spn.chat.v1beta1.QueryShowChannelRequest")
 	proto.RegisterType((*QueryShowChannelResponse)(nil), "spn.chat.v1beta1.QueryShowChannelResponse")
 	proto.RegisterType((*QueryListChannelsRequest)(nil), "spn.chat.v1beta1.QueryListChannelsRequest")
 	proto.RegisterType((*QueryListChannelsResponse)(nil), "spn.chat.v1beta1.QueryListChannelsResponse")
+	proto.RegisterType((*QueryListMessagesRequest)(nil), "spn.chat.v1beta1.QueryListMessagesRequest")
+	proto.RegisterType((*QueryListMessagesResponse)(nil), "spn.chat.v1beta1.QueryListMessagesResponse")
+	proto.RegisterType((*QuerySearchMessagesRequest)(nil), "spn.chat.v1beta1.QuerySearchMessagesRequest")
+	proto.RegisterType((*QuerySearchMessagesResponse)(nil), "spn.chat.v1beta1.QuerySearchMessagesResponse")
 }
 
 func init() { proto.RegisterFile("chat/v1beta/querier.proto", fileDescriptor_5566609b8564cf29) }
 
 var fileDescriptor_5566609b8564cf29 = []byte{
-	// 365 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x52, 0xcf, 0x4e, 0xc2, 0x30,
-	0x18, 0xa7, 0x28, 0x1a, 0x8b, 0x31, 0xa6, 0x07, 0x85, 0x1d, 0x16, 0xb2, 0x03, 0x02, 0x26, 0x6d,
-	0x80, 0x17, 0x30, 0x9a, 0xe8, 0xc5, 0x44, 0x9d, 0x37, 0x6f, 0xdd, 0xd6, 0x6c, 0x4d, 0x5c, 0x3b,
-	0xd6, 0xa2, 0xf2, 0x06, 0x1e, 0x7d, 0x2c, 0x8f, 0x9c, 0x8c, 0x47, 0x03, 0x2f, 0x62, 0xe8, 0x86,
-	0x4e, 0xfe, 0x44, 0x6e, 0x4b, 0xbf, 0xdf, 0xdf, 0x6f, 0x1f, 0xac, 0xfb, 0x11, 0xd5, 0xe4, 0xa9,
-	0xeb, 0x31, 0x4d, 0xc9, 0x60, 0xc8, 0x52, 0xce, 0x52, 0x9c, 0xa4, 0x52, 0x4b, 0x74, 0xa8, 0x12,
-	0x81, 0x67, 0x63, 0x9c, 0x8d, 0xbb, 0x56, 0xc7, 0x97, 0x2a, 0x96, 0x8a, 0x78, 0x54, 0x31, 0x03,
-	0x1e, 0xe5, 0xcc, 0x2e, 0x49, 0x68, 0xc8, 0x05, 0xd5, 0x5c, 0x8a, 0x8c, 0x6d, 0x1d, 0x15, 0x85,
-	0x8d, 0x8a, 0x79, 0x77, 0xda, 0xf0, 0xf8, 0x6e, 0xc6, 0xbc, 0x8f, 0xe4, 0xf3, 0x45, 0x44, 0x85,
-	0x60, 0x8f, 0x2e, 0x1b, 0x0c, 0x99, 0xd2, 0xe8, 0x00, 0x96, 0x79, 0x50, 0x03, 0x0d, 0xd0, 0xaa,
-	0xb8, 0x65, 0x1e, 0x38, 0x37, 0xb0, 0xb6, 0x0c, 0x55, 0x89, 0x14, 0x8a, 0xa1, 0x3e, 0xdc, 0xf5,
-	0xb3, 0x27, 0x43, 0xa8, 0xf6, 0xea, 0x78, 0x31, 0x2e, 0x9e, 0x73, 0xe6, 0x48, 0xc7, 0xcb, 0x05,
-	0xaf, 0xb9, 0xd2, 0xf9, 0x50, 0xcd, 0xcd, 0x2f, 0x21, 0xfc, 0xed, 0x90, 0x6b, 0x36, 0x71, 0x56,
-	0x18, 0xcf, 0x0a, 0x63, 0x53, 0xf8, 0x47, 0xfc, 0x96, 0x86, 0x2c, 0xe7, 0xba, 0x05, 0xa6, 0xf3,
-	0x0a, 0x60, 0x7d, 0x85, 0x49, 0x1e, 0x7b, 0xa1, 0x22, 0x42, 0x70, 0x5b, 0xd0, 0x98, 0xd5, 0xca,
-	0x0d, 0xd0, 0xda, 0x73, 0xcd, 0x37, 0xba, 0xfa, 0x93, 0x64, 0xcb, 0x24, 0x39, 0xf9, 0x37, 0x49,
-	0x66, 0x50, 0x8c, 0xd2, 0xfb, 0x00, 0xb0, 0x62, 0xa2, 0xa0, 0x00, 0x56, 0x0b, 0x4b, 0x44, 0xed,
-	0xe5, 0x5d, 0xad, 0xf9, 0x27, 0x56, 0x67, 0x13, 0x68, 0x5e, 0x2e, 0x84, 0xfb, 0xc5, 0xd2, 0x68,
-	0x1d, 0x77, 0xc5, 0xfa, 0xad, 0xd3, 0x8d, 0xb0, 0x99, 0xd1, 0xf9, 0xd9, 0xfb, 0xc4, 0x06, 0xe3,
-	0x89, 0x0d, 0xbe, 0x26, 0x36, 0x78, 0x9b, 0xda, 0xa5, 0xf1, 0xd4, 0x2e, 0x7d, 0x4e, 0xed, 0xd2,
-	0x43, 0x33, 0xe4, 0x3a, 0x1a, 0x7a, 0xd8, 0x97, 0x31, 0xd1, 0x4c, 0x04, 0x2c, 0x8d, 0xb9, 0xd0,
-	0x44, 0x25, 0x82, 0xbc, 0x98, 0x2b, 0x24, 0x7a, 0x94, 0x30, 0xe5, 0xed, 0x98, 0x63, 0xec, 0x7f,
-	0x07, 0x00, 0x00, 0xff, 0xff, 0x4b, 0xbc, 0x7c, 0xf8, 0xff, 0x02, 0x00, 0x00,
+	// 478 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x54, 0x4f, 0x6f, 0xd3, 0x30,
+	0x14, 0x6f, 0x5a, 0x06, 0xec, 0x0d, 0x4d, 0x93, 0x0f, 0xd0, 0x06, 0x14, 0x55, 0x39, 0x8c, 0x6d,
+	0x80, 0xa3, 0x6e, 0x42, 0xe2, 0x88, 0x40, 0x02, 0x21, 0x0d, 0x01, 0x81, 0x13, 0x37, 0x27, 0x7d,
+	0x4a, 0x2c, 0x11, 0x3b, 0x8b, 0x5d, 0x60, 0xdf, 0x80, 0x23, 0x9f, 0x84, 0xcf, 0xc1, 0x71, 0x47,
+	0x8e, 0xa8, 0xfd, 0x22, 0xa8, 0x8e, 0xd3, 0xa6, 0x6d, 0x5a, 0x8a, 0xb8, 0x59, 0xcf, 0xef, 0xf7,
+	0xef, 0xf9, 0xc9, 0xd0, 0x8b, 0x53, 0xa6, 0x83, 0xcf, 0x83, 0x08, 0x35, 0x0b, 0x2e, 0x46, 0x58,
+	0x70, 0x2c, 0x68, 0x5e, 0x48, 0x2d, 0xc9, 0x81, 0xca, 0x05, 0x9d, 0x5e, 0xd3, 0xf2, 0x7a, 0xe0,
+	0x9e, 0xc4, 0x52, 0x65, 0x52, 0x05, 0x11, 0x53, 0x68, 0x9a, 0x2f, 0x2d, 0x72, 0x10, 0xe4, 0x2c,
+	0xe1, 0x82, 0x69, 0x2e, 0x45, 0x89, 0x76, 0x6f, 0xd7, 0x89, 0x0d, 0x8b, 0xa9, 0xfb, 0xc7, 0x70,
+	0xe7, 0xdd, 0x14, 0xf9, 0x3e, 0x95, 0x5f, 0x9e, 0xa7, 0x4c, 0x08, 0xfc, 0x14, 0xe2, 0xc5, 0x08,
+	0x95, 0x26, 0xfb, 0xd0, 0xe6, 0xc3, 0xae, 0xd3, 0x77, 0x8e, 0x76, 0xc2, 0x36, 0x1f, 0xfa, 0x6f,
+	0xa0, 0xbb, 0xda, 0xaa, 0x72, 0x29, 0x14, 0x92, 0x33, 0xb8, 0x11, 0x97, 0x25, 0x03, 0xd8, 0x3b,
+	0xed, 0xd1, 0x65, 0xbb, 0xb4, 0xc2, 0x54, 0x9d, 0x7e, 0x64, 0x09, 0xcf, 0xb9, 0xd2, 0xf6, 0x52,
+	0x55, 0xe2, 0x2f, 0x00, 0xe6, 0x19, 0x2c, 0xe7, 0x21, 0x2d, 0x03, 0xd3, 0x69, 0x60, 0x6a, 0x02,
+	0xcf, 0xc8, 0xdf, 0xb2, 0x04, 0x2d, 0x36, 0xac, 0x21, 0xfd, 0x6f, 0x0e, 0xf4, 0x1a, 0x44, 0xac,
+	0xed, 0xa5, 0x88, 0x84, 0xc0, 0x35, 0xc1, 0x32, 0xec, 0xb6, 0xfb, 0xce, 0xd1, 0x6e, 0x68, 0xce,
+	0xe4, 0xe5, 0x82, 0x93, 0x8e, 0x71, 0x72, 0xff, 0xaf, 0x4e, 0x4a, 0x81, 0x05, 0x2b, 0x4f, 0x6a,
+	0x71, 0x5f, 0xa3, 0x52, 0x2c, 0xc1, 0x59, 0xdc, 0x7b, 0xb0, 0x6b, 0xa7, 0xf2, 0xaa, 0xf2, 0x33,
+	0x2f, 0xf8, 0x61, 0x2d, 0xc3, 0x1c, 0x69, 0x33, 0x3c, 0x86, 0x9b, 0x99, 0xad, 0x75, 0x9d, 0x7e,
+	0xa7, 0x79, 0xf6, 0x16, 0x15, 0xce, 0x5a, 0xfd, 0x73, 0x70, 0xcb, 0xd7, 0x44, 0x56, 0xc4, 0xe9,
+	0x3f, 0xf9, 0x21, 0x07, 0xd0, 0xd1, 0x2c, 0xb1, 0x53, 0x9a, 0x1e, 0xfd, 0x0f, 0x70, 0xb7, 0x91,
+	0xed, 0xbf, 0x3c, 0x9e, 0xfe, 0xe8, 0xc0, 0x8e, 0xa1, 0x25, 0x43, 0xd8, 0xab, 0xad, 0x1d, 0x39,
+	0x5e, 0x45, 0xaf, 0xd9, 0x62, 0xf7, 0x64, 0x9b, 0x56, 0x6b, 0x33, 0x81, 0x5b, 0xf5, 0x35, 0x21,
+	0xeb, 0xb0, 0x0d, 0x0b, 0xeb, 0x3e, 0xd8, 0xaa, 0x77, 0x51, 0xa8, 0x9a, 0xd3, 0x46, 0xa1, 0xa5,
+	0xa7, 0xd9, 0x28, 0xb4, 0x32, 0xf8, 0x0c, 0xf6, 0x17, 0x9f, 0x84, 0x3c, 0x5c, 0x37, 0x8f, 0xa6,
+	0x3d, 0x70, 0x1f, 0x6d, 0xd9, 0x5d, 0xca, 0x3d, 0x7b, 0xfa, 0x73, 0xec, 0x39, 0x57, 0x63, 0xcf,
+	0xf9, 0x3d, 0xf6, 0x9c, 0xef, 0x13, 0xaf, 0x75, 0x35, 0xf1, 0x5a, 0xbf, 0x26, 0x5e, 0xeb, 0xe3,
+	0x61, 0xc2, 0x75, 0x3a, 0x8a, 0x68, 0x2c, 0xb3, 0x40, 0xa3, 0x18, 0x62, 0x91, 0x71, 0xa1, 0x03,
+	0x95, 0x8b, 0xe0, 0xab, 0xf9, 0x8f, 0x02, 0x7d, 0x99, 0xa3, 0x8a, 0xae, 0x9b, 0x6f, 0xe9, 0xec,
+	0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xba, 0x7f, 0x6a, 0x48, 0x09, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -270,6 +465,8 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	ShowChannel(ctx context.Context, in *QueryShowChannelRequest, opts ...grpc.CallOption) (*QueryShowChannelResponse, error)
 	ListChannels(ctx context.Context, in *QueryListChannelsRequest, opts ...grpc.CallOption) (*QueryListChannelsResponse, error)
+	ListMessages(ctx context.Context, in *QueryListMessagesRequest, opts ...grpc.CallOption) (*QueryListMessagesResponse, error)
+	SearchMessages(ctx context.Context, in *QuerySearchMessagesRequest, opts ...grpc.CallOption) (*QuerySearchMessagesResponse, error)
 }
 
 type queryClient struct {
@@ -298,10 +495,30 @@ func (c *queryClient) ListChannels(ctx context.Context, in *QueryListChannelsReq
 	return out, nil
 }
 
+func (c *queryClient) ListMessages(ctx context.Context, in *QueryListMessagesRequest, opts ...grpc.CallOption) (*QueryListMessagesResponse, error) {
+	out := new(QueryListMessagesResponse)
+	err := c.cc.Invoke(ctx, "/spn.chat.v1beta1.Query/ListMessages", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) SearchMessages(ctx context.Context, in *QuerySearchMessagesRequest, opts ...grpc.CallOption) (*QuerySearchMessagesResponse, error) {
+	out := new(QuerySearchMessagesResponse)
+	err := c.cc.Invoke(ctx, "/spn.chat.v1beta1.Query/SearchMessages", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	ShowChannel(context.Context, *QueryShowChannelRequest) (*QueryShowChannelResponse, error)
 	ListChannels(context.Context, *QueryListChannelsRequest) (*QueryListChannelsResponse, error)
+	ListMessages(context.Context, *QueryListMessagesRequest) (*QueryListMessagesResponse, error)
+	SearchMessages(context.Context, *QuerySearchMessagesRequest) (*QuerySearchMessagesResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -313,6 +530,12 @@ func (*UnimplementedQueryServer) ShowChannel(ctx context.Context, req *QueryShow
 }
 func (*UnimplementedQueryServer) ListChannels(ctx context.Context, req *QueryListChannelsRequest) (*QueryListChannelsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListChannels not implemented")
+}
+func (*UnimplementedQueryServer) ListMessages(ctx context.Context, req *QueryListMessagesRequest) (*QueryListMessagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMessages not implemented")
+}
+func (*UnimplementedQueryServer) SearchMessages(ctx context.Context, req *QuerySearchMessagesRequest) (*QuerySearchMessagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchMessages not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -355,6 +578,42 @@ func _Query_ListChannels_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_ListMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryListMessagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ListMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/spn.chat.v1beta1.Query/ListMessages",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ListMessages(ctx, req.(*QueryListMessagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_SearchMessages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuerySearchMessagesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).SearchMessages(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/spn.chat.v1beta1.Query/SearchMessages",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).SearchMessages(ctx, req.(*QuerySearchMessagesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "spn.chat.v1beta1.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -366,6 +625,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListChannels",
 			Handler:    _Query_ListChannels_Handler,
+		},
+		{
+			MethodName: "ListMessages",
+			Handler:    _Query_ListMessages_Handler,
+		},
+		{
+			MethodName: "SearchMessages",
+			Handler:    _Query_SearchMessages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -517,6 +784,143 @@ func (m *QueryListChannelsResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryListMessagesRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryListMessagesRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryListMessagesRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.ChannelId != 0 {
+		i = encodeVarintQuerier(dAtA, i, uint64(m.ChannelId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryListMessagesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryListMessagesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryListMessagesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Messages) > 0 {
+		for iNdEx := len(m.Messages) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Messages[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuerier(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QuerySearchMessagesRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QuerySearchMessagesRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QuerySearchMessagesRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Tag) > 0 {
+		i -= len(m.Tag)
+		copy(dAtA[i:], m.Tag)
+		i = encodeVarintQuerier(dAtA, i, uint64(len(m.Tag)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.ChannelId != 0 {
+		i = encodeVarintQuerier(dAtA, i, uint64(m.ChannelId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QuerySearchMessagesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QuerySearchMessagesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QuerySearchMessagesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Messages) > 0 {
+		for iNdEx := len(m.Messages) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Messages[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuerier(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuerier(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuerier(v)
 	base := offset
@@ -582,6 +986,64 @@ func (m *QueryListChannelsResponse) Size() (n int) {
 	if m.Pagination != nil {
 		l = m.Pagination.Size()
 		n += 1 + l + sovQuerier(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryListMessagesRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.ChannelId != 0 {
+		n += 1 + sovQuerier(uint64(m.ChannelId))
+	}
+	return n
+}
+
+func (m *QueryListMessagesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Messages) > 0 {
+		for _, e := range m.Messages {
+			l = e.Size()
+			n += 1 + l + sovQuerier(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QuerySearchMessagesRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.ChannelId != 0 {
+		n += 1 + sovQuerier(uint64(m.ChannelId))
+	}
+	l = len(m.Tag)
+	if l > 0 {
+		n += 1 + l + sovQuerier(uint64(l))
+	}
+	return n
+}
+
+func (m *QuerySearchMessagesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Messages) > 0 {
+		for _, e := range m.Messages {
+			l = e.Size()
+			n += 1 + l + sovQuerier(uint64(l))
+		}
 	}
 	return n
 }
@@ -955,6 +1417,356 @@ func (m *QueryListChannelsResponse) Unmarshal(dAtA []byte) error {
 				m.Pagination = &query.PageResponse{}
 			}
 			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryListMessagesRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryListMessagesRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryListMessagesRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+			}
+			m.ChannelId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ChannelId |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryListMessagesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryListMessagesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryListMessagesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Messages", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Messages = append(m.Messages, &Message{})
+			if err := m.Messages[len(m.Messages)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QuerySearchMessagesRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QuerySearchMessagesRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QuerySearchMessagesRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelId", wireType)
+			}
+			m.ChannelId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ChannelId |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Tag", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Tag = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QuerySearchMessagesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QuerySearchMessagesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QuerySearchMessagesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Messages", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Messages = append(m.Messages, &Message{})
+			if err := m.Messages[len(m.Messages)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

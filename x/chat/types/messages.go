@@ -108,16 +108,18 @@ func (msg MsgSendMessage) ValidateBasic() error {
 
 // NewMsgVotePoll creates a new message to vote to a poll
 func NewMsgVotePoll(
-	messageID string,
+	channelID int32,
+	messageIndex int32,
 	creator sdk.AccAddress,
 	value int32,
 	payload []byte,
 ) (*MsgVotePoll, error) {
 	return &MsgVotePoll{
-		MessageID: messageID,
-		Creator:   creator,
-		Value:     value,
-		Payload:   payload,
+		ChannelID:    channelID,
+		MessageIndex: messageIndex,
+		Creator:      creator,
+		Value:        value,
+		Payload:      payload,
 	}, nil
 }
 
