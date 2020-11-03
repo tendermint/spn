@@ -18,3 +18,22 @@ func TestNewProposalState(t *testing.T) {
 	// Prevent voting twice for the same identity
 
 }
+
+func TestNewProposalChange(t *testing.T) {
+	// Can create a proposal for a genesis change
+
+	// Prevent invalid change path
+}
+
+func TestNewProposalAddAccount(t *testing.T) {
+	// Can create a new proposal to add an account
+
+	// Prevent add account with invalid address
+
+	// Prevent invalid coins allocation
+}
+
+func TestNewProposalAddValidator(t *testing.T) {
+	// Can create a proposal to add a validator
+
+}
