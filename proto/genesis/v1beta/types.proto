@@ -71,18 +71,18 @@ message Vote {
 }
 
 message ProposalChangePayload {
-    string changePath = 2;
-    string newValue = 3;
+    string changePath = 1;
+    string newValue = 2;
 }
 
 message ProposalAddAccountPayload {
-    bytes address = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-    repeated Coin coins = 3;
+    bytes address = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+    repeated bytes coins = 2 [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 message ProposalAddValidatorPayload {
-    bytes operatorAddress = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
-    bytes consensusPubKey = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ConsAddress"];
+    bytes operatorAddress = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+    bytes consensusPubKey = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ConsAddress"];
     message Description {
         string moniker          = 1;
         string identity         = 2;
@@ -90,19 +90,14 @@ message ProposalAddValidatorPayload {
         string security_contact = 4;
         string details          = 5;
     }
-    Description description = 4;
+    Description description = 3;
     message Comission {
         string commissionMaxChangeRate = 1;
         string commissionMaxRate = 2;
         string commissionRate = 3;
     }
-    Comission commission = 5;
-    Coin selfDelegation = 6;
-    bytes genTx = 7;
-    string peer = 8;
-}
-
-message Coin {
-    string denom = 1;
-    string amount = 2;
+    Comission commission = 4;
+    bytes selfDelegation = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin"];
+    bytes genTx = 6;
+    string peer = 7;
 }
