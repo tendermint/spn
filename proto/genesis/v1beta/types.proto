@@ -83,20 +83,8 @@ message ProposalAddAccountPayload {
 message ProposalAddValidatorPayload {
     bytes operatorAddress = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
     bytes consensusPubKey = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ConsAddress"];
-    message Description {
-        string moniker          = 1;
-        string identity         = 2;
-        string website          = 3;
-        string security_contact = 4;
-        string details          = 5;
-    }
-    Description description = 3;
-    message Comission {
-        string commissionMaxChangeRate = 1;
-        string commissionMaxRate = 2;
-        string commissionRate = 3;
-    }
-    Comission commission = 4;
+    google.protobuf.Any description = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/x/staking/types.Description"];
+    google.protobuf.Any commissions = 4 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/x/staking/types.CommissionRates"];
     google.protobuf.Any selfDelegation = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin"];
     bytes genTx = 6;
     string peer = 7;
