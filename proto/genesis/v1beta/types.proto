@@ -77,7 +77,7 @@ message ProposalChangePayload {
 
 message ProposalAddAccountPayload {
     bytes address = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-    repeated bytes coins = 2 [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+    repeated google.protobuf.Any coins = 2 [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 message ProposalAddValidatorPayload {
@@ -97,7 +97,7 @@ message ProposalAddValidatorPayload {
         string commissionRate = 3;
     }
     Comission commission = 4;
-    bytes selfDelegation = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin"];
+    google.protobuf.Any selfDelegation = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin"];
     bytes genTx = 6;
     string peer = 7;
 }
