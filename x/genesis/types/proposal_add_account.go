@@ -1,6 +1,8 @@
 package types
 
 import (
+	"errors"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"time"
 )
 
@@ -23,8 +25,8 @@ func NewProposalAddAccount(
 	proposal.ProposalState = NewProposalState()
 
 	// Check payload validity
-	if !ValidateProposalPayloadAddAccount(payload) {
-		return nil, ErrInvalidProposalAddAccount
+	if err := ValidateProposalPayloadAddAccount(payload); err != nil {
+		return nil, sdkerrors.Wrap(ErrInvalidProposalAddAccount, err.Error())
 	}
 	proposal.ProposalPayload = &payload
 
@@ -32,19 +34,19 @@ func NewProposalAddAccount(
 }
 
 // ValidateProposalPayloadAddAccount returns false if the data of ProposalAddAccountPayload is invalid
-func ValidateProposalPayloadAddAccount(payload ProposalAddAccountPayload) bool {
+func ValidateProposalPayloadAddAccount(payload ProposalAddAccountPayload) error {
 	// Verify address is not empty
 	if payload.Address.Empty() {
-		return false
+		return errors.New("Account address empty")
 	}
 
 	// Check coin allocation validity
 	if !payload.Coins.IsValid() {
-		return false
+		return errors.New("Coins allocation is invalid")
 	}
 	if !payload.Coins.IsAllPositive() {
-		return false
+		return errors.New("Coins allocation is non all positive")
 	}
 
-	return true
+	return nil
 }

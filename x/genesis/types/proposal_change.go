@@ -1,6 +1,8 @@
 package types
 
 import (
+	"errors"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"time"
 )
 
@@ -23,8 +25,8 @@ func NewProposalChange(
 	proposal.ProposalState = NewProposalState()
 
 	// Check payload validity
-	if !ValidateProposalPayloadChange(payload) {
-		return nil, ErrInvalidProposalChange
+	if err := ValidateProposalPayloadChange(payload); err != nil {
+		return nil, sdkerrors.Wrap(ErrInvalidProposalChange, err.Error())
 	}
 	proposal.ProposalPayload = &payload
 
@@ -32,15 +34,15 @@ func NewProposalChange(
 }
 
 // ValidateProposalPayloadChange returns false if the data of ProposalChangePayload is invalid
-func ValidateProposalPayloadChange(payload ProposalChangePayload) bool {
+func ValidateProposalPayloadChange(payload ProposalChangePayload) error {
 	// Path must contain alphanumeric characters or periods
 	for _, c := range payload.ChangePath {
 		if !isChangePathAuthorizedChar(c) {
-			return false
+			return errors.New("Invalid change path")
 		}
 	}
 
-	return true
+	return nil
 }
 
 func isChangePathAuthorizedChar(c rune) bool {
