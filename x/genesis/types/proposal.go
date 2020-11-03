@@ -33,8 +33,8 @@ func NewProposalState() *ProposalState {
 	return &state
 }
 
-// ProposalAppendVote appends a new vote into the proposal
-func (ps *ProposalState) ProposalAppendVote(newVote *Vote) error {
+// AppendVote appends a new vote into the proposal
+func (ps *ProposalState) AppendVote(newVote *Vote) error {
 	// Check if the creator already voted
 	_, ok := ps.Votes[newVote.Creator]
 	if ok {
@@ -70,70 +70,4 @@ func NewVote(
 	vote.CreatedAt = createdAt.Unix()
 
 	return &vote, nil
-}
-
-// NewProposalChange creates a new proposal for a change in the genesis
-func NewProposalChange(
-	chainID string,
-	proposalID int32,
-	creator string,
-	createdAt time.Time,
-	payload ProposalChangePayload,
-) ProposalChange {
-	var proposal ProposalChange
-
-	proposal.ProposalInformation = NewProposalInformation(
-		chainID,
-		proposalID,
-		creator,
-		createdAt,
-	)
-	proposal.ProposalState = NewProposalState()
-	proposal.ProposalPayload = &payload
-
-	return proposal
-}
-
-// NewProposalAddAccount creates a new proposal to add a genesis account
-func NewProposalAddAccount(
-	chainID string,
-	proposalID int32,
-	creator string,
-	createdAt time.Time,
-	payload ProposalAddAccountPayload,
-) ProposalAddAccount {
-	var proposal ProposalAddAccount
-
-	proposal.ProposalInformation = NewProposalInformation(
-		chainID,
-		proposalID,
-		creator,
-		createdAt,
-	)
-	proposal.ProposalState = NewProposalState()
-	proposal.ProposalPayload = &payload
-
-	return proposal
-}
-
-// NewProposalAddValidator creates a new proposal to add a genesis validator
-func NewProposalAddValidator(
-	chainID string,
-	proposalID int32,
-	creator string,
-	createdAt time.Time,
-	payload ProposalAddValidatorPayload,
-) ProposalAddValidator {
-	var proposal ProposalAddValidator
-
-	proposal.ProposalInformation = NewProposalInformation(
-		chainID,
-		proposalID,
-		creator,
-		createdAt,
-	)
-	proposal.ProposalState = NewProposalState()
-	proposal.ProposalPayload = &payload
-
-	return proposal
 }
