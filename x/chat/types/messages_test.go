@@ -2,13 +2,14 @@ package types_test
 
 import (
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/x/chat"
+	spnmocks "github.com/tendermint/spn/internal/testing"
 	"github.com/tendermint/spn/x/chat/types"
+
 	"testing"
 )
 
 func TestMsgCreateChannel(t *testing.T) {
-	user := chat.MockAccAddress()
+	user := spnmocks.MockAccAddress()
 
 	// Can create a MsgCreateChannel
 	msg, err := types.NewMsgCreateChannel(
@@ -22,7 +23,7 @@ func TestMsgCreateChannel(t *testing.T) {
 	require.NoError(t, err, "NewMsgCreateChannel should create a valid MsgCreateChannel")
 
 	// Can create a MsgCreateChannel with payload
-	payload := chat.MockPayload()
+	payload := spnmocks.MockPayload()
 	msg, err = types.NewMsgCreateChannel(
 		user,
 		"foo",
@@ -35,7 +36,7 @@ func TestMsgCreateChannel(t *testing.T) {
 }
 
 func TestMsgSendMessage(t *testing.T) {
-	user := chat.MockAccAddress()
+	user := spnmocks.MockAccAddress()
 
 	// Can create a MsgSendMessage
 	msg, err := types.NewMsgSendMessage(
@@ -51,7 +52,7 @@ func TestMsgSendMessage(t *testing.T) {
 	require.NoError(t, err, "MsgSendMessage should create a valid MsgSendMessage")
 
 	// Can create a MsgSendMessage with payload
-	payload := chat.MockPayload()
+	payload := spnmocks.MockPayload()
 	msg, err = types.NewMsgSendMessage(
 		0,
 		user,
@@ -66,7 +67,7 @@ func TestMsgSendMessage(t *testing.T) {
 }
 
 func TestMsgVotePoll(t *testing.T) {
-	user := chat.MockAccAddress()
+	user := spnmocks.MockAccAddress()
 
 	// Can create a MsgVotePoll
 	msg, err := types.NewMsgVotePoll(
@@ -80,7 +81,7 @@ func TestMsgVotePoll(t *testing.T) {
 	require.NoError(t, err, "MsgVotePoll should create a valid MsgVotePoll")
 
 	// Can create a MsgVotePoll
-	payload := chat.MockPayload()
+	payload := spnmocks.MockPayload()
 	msg, err = types.NewMsgVotePoll(
 		"0xaaa",
 		user,

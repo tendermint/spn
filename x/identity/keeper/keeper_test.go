@@ -1,52 +1,14 @@
 package keeper_test
 
 import (
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-
-	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/store"
-	"github.com/tendermint/tendermint/libs/log"
-
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/x/chat"
-	"github.com/tendermint/spn/x/identity/keeper"
-	"github.com/tendermint/spn/x/identity/types"
-	dbm "github.com/tendermint/tm-db"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
+	spnmocks "github.com/tendermint/spn/internal/testing"
 	"testing"
 )
 
-func MockContext() (sdk.Context, *keeper.Keeper) {
-	// Codec
-	interfaceRegistry := codectypes.NewInterfaceRegistry()
-	cdc := codec.NewProtoCodec(interfaceRegistry)
-
-	// Store keys
-	keys := sdk.NewKVStoreKeys(types.StoreKey)
-
-	// Keeper
-	identityKeeper := keeper.NewKeeper(cdc, keys[types.StoreKey], keys[types.MemStoreKey])
-
-	// Create multiStore in memory
-	db := dbm.NewMemDB()
-	cms := store.NewCommitMultiStore(db)
-
-	// Mount stores
-	cms.MountStoreWithDB(keys[types.StoreKey], sdk.StoreTypeIAVL, db)
-	cms.LoadLatestVersion()
-
-	// Create context
-	ctx := sdk.NewContext(cms, tmproto.Header{}, false, log.NewNopLogger())
-
-	return ctx, identityKeeper
-}
-
 func TestSetUsername(t *testing.T) {
-	ctx, k := MockContext()
-	address := chat.MockAccAddress()
+	ctx, k := spnmocks.MockIdentityContext()
+	address := spnmocks.MockAccAddress()
 
 	// The username should be the address if it is not set
 	username, _ := k.GetUsernameFromAddress(ctx, address)
@@ -77,8 +39,8 @@ func TestSetUsername(t *testing.T) {
 }
 
 func TestGetIdentifier(t *testing.T) {
-	ctx, k := MockContext()
-	address := chat.MockAccAddress()
+	ctx, k := spnmocks.MockIdentityContext()
+	address := spnmocks.MockAccAddress()
 
 	// Return the address
 	identifier, _ := k.GetIdentifier(ctx, address)
@@ -86,8 +48,8 @@ func TestGetIdentifier(t *testing.T) {
 }
 
 func TestGetAddresses(t *testing.T) {
-	ctx, k := MockContext()
-	address := chat.MockAccAddress()
+	ctx, k := spnmocks.MockIdentityContext()
+	address := spnmocks.MockAccAddress()
 
 	// Return only the address provided
 	addresses, _ := k.GetAddresses(ctx, address.String())
@@ -96,10 +58,10 @@ func TestGetAddresses(t *testing.T) {
 }
 
 func TestIdentityExists(t *testing.T) {
-	ctx, k := MockContext()
+	ctx, k := spnmocks.MockIdentityContext()
 
 	// Return true if the identifier is an address
-	address := chat.MockAccAddress()
+	address := spnmocks.MockAccAddress()
 	exists, _ := k.IdentityExists(ctx, address.String())
 	require.True(t, exists, "Any Bech32 address should be a valid identifier")
 

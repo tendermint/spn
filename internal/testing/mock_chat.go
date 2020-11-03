@@ -1,4 +1,4 @@
-package chat
+package testing
 
 import (
 	"time"
@@ -17,14 +17,12 @@ import (
 	"github.com/tendermint/spn/x/chat/types"
 	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
 	identitytypes "github.com/tendermint/spn/x/identity/types"
-	"github.com/tendermint/tendermint/crypto/ed25519"
-	"math/rand"
 )
 
 // Implement mocking functions for test purpose
 
-// MockContext mocks the context and the keepers of the app for test purposes
-func MockContext() (sdk.Context, *keeper.Keeper) {
+// MockChatContext mocks the context and the keepers of the chat module for test purposes
+func MockChatContext() (sdk.Context, *keeper.Keeper) {
 	// Codec
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 	cdc := codec.NewProtoCodec(interfaceRegistry)
@@ -50,13 +48,6 @@ func MockContext() (sdk.Context, *keeper.Keeper) {
 	ctx := sdk.NewContext(cms, tmproto.Header{}, false, log.NewNopLogger())
 
 	return ctx, chatKeeper
-}
-
-// MockAccAddress mocks an account address for test purpose
-func MockAccAddress() sdk.AccAddress {
-	pk := ed25519.GenPrivKey().PubKey()
-	addr := pk.Address()
-	return sdk.AccAddress(addr)
 }
 
 // MockUser mocks a user for test purpose
@@ -118,15 +109,4 @@ func MockVote(value int32) *types.Vote {
 // MockPayload mocks a miscellaneous payload data
 func MockPayload() []byte {
 	return []byte(MockRandomString(200))
-}
-
-// MockRandomString returns a random string of length n
-func MockRandomString(n int) string {
-	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-
-	randomString := make([]rune, n)
-	for i := range randomString {
-		randomString[i] = letter[rand.Intn(len(letter))]
-	}
-	return string(randomString)
 }

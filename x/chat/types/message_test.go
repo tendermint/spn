@@ -2,8 +2,7 @@ package types_test
 
 import (
 	"github.com/stretchr/testify/require"
-
-	"github.com/tendermint/spn/x/chat"
+	spnmocks "github.com/tendermint/spn/internal/testing"
 	"github.com/tendermint/spn/x/chat/types"
 	"testing"
 	"time"
@@ -14,7 +13,7 @@ func TestNewMessage(t *testing.T) {
 	message, err := types.NewMessage(
 		0,
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		"foo",
 		[]string{"bar"},
 		time.Now(),
@@ -25,11 +24,11 @@ func TestNewMessage(t *testing.T) {
 	require.False(t, message.HasPoll, "NewMessage with no poll options should not create a poll")
 
 	// Can create a message
-	payload := chat.MockPayload()
+	payload := spnmocks.MockPayload()
 	message, err = types.NewMessage(
 		0,
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		"foo",
 		[]string{"bar42"},
 		time.Now(),
@@ -43,7 +42,7 @@ func TestNewMessage(t *testing.T) {
 	message, err = types.NewMessage(
 		0,
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		"foo",
 		[]string{"bar-bar"},
 		time.Now(),
@@ -55,11 +54,11 @@ func TestNewMessage(t *testing.T) {
 	require.Equal(t, pollOptions, message.Poll.Options, "NewMessage with poll options should create a poll with same options")
 
 	// Prevent creating a message with an invalid content
-	bigContent := chat.MockRandomString(types.MessageContentMaxLength + 1)
+	bigContent := spnmocks.MockRandomString(types.MessageContentMaxLength + 1)
 	_, err = types.NewMessage(
 		0,
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		bigContent,
 		[]string{"bar"},
 		time.Now(),
@@ -72,7 +71,7 @@ func TestNewMessage(t *testing.T) {
 	message, err = types.NewMessage(
 		0,
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		"foo",
 		[]string{"bar", "this_tag_is_not_authorized", "anothertag"},
 		time.Now(),
