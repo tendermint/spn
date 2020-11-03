@@ -43,14 +43,13 @@ func (c *Chain) AppendPeer(peer string) {
 func checkChainID(chainID string) bool {
 	// Iterate characters
 	for _, c := range chainID {
-		if !isTagAuthorizedChar(c) {
+		if !isChainAuthorizedChar(c) {
 			return false
 		}
 	}
 	return true
 }
 
-// isTagAuthorizedChar checks if alphanumeric or hyphen character
-func isTagAuthorizedChar(c rune) bool {
+func isChainAuthorizedChar(c rune) bool {
 	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '-'
 }
