@@ -14,39 +14,49 @@ message Chain {
   string sourceHash  = 5; 
   int64 createdAt = 6;
   bytes initialGenesis = 7;
+  bool final = 8;
 }
 
 message Proposal {
     ProposalInformation proposalInformation = 1;
-    google.protobuf.Any proposalPayload = 2;
+    ProposalState proposalState = 2;
+    google.protobuf.Any proposalPayload = 3;
 }
 
 message ProposalChange {
     ProposalInformation proposalInformation = 1;
-    ProposalChangePayload proposalPayload = 2;
+    ProposalState proposalState = 2;
+    ProposalChangePayload proposalPayload = 3;
 }
 
 message ProposalAddAccount {
     ProposalInformation proposalInformation = 1;
-    ProposalAddAccountPayload proposalPayload = 2;
+    ProposalState proposalState = 2;
+    ProposalAddAccountPayload proposalPayload = 3;
 }
 
 message ProposalAddValidator {
     ProposalInformation proposalInformation = 1;
-    ProposalAddValidatorPayload proposalPayload = 2;
+    ProposalState proposalState = 2;
+    ProposalAddValidatorPayload proposalPayload = 3;
 }
 
 message ProposalInformation {
-    int32 proposalID = 1;
-    string creator = 2;
-    int64 createdAt = 3;
+    string chainID = 1;
+    int32 proposalID = 2;
+    string creator = 3;
+    int64 createdAt = 4;
+    
+}
+
+message ProposalState {
     enum Status {
         APPROVED = 0;
         REJECTED = 1;
         PENDING = 2;
     }
-    Status status = 4;
-    repeated Vote votes = 5;
+    Status status = 1;
+    repeated Vote votes = 2;
 }
 
 message Vote {
@@ -89,6 +99,7 @@ message ProposalAddValidatorPayload {
     Comission commission = 5;
     Coin selfDelegation = 6;
     bytes genTx = 7;
+    string peer = 8;
 }
 
 message Coin {
