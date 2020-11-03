@@ -8,5 +8,5 @@ import (
 
 // x/genesis module sentinel errors
 var (
-	ErrInvalidChain = sdkerrors.Register(ModuleName, 1, "the chain is invalid)
+	ErrInvalidChain = sdkerrors.Register(ModuleName, 1, "the chain is invalid")
 )

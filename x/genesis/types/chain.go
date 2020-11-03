@@ -1,7 +1,9 @@
 package types
 
 import (
+	"fmt"
 	"time"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
@@ -13,11 +15,11 @@ func NewChain(
 	sourceHash string,
 	createdAt time.Time,
 	initialGenesis []byte,
-) (Chain, error) {
+) (*Chain, error) {
 	var chain Chain
 
 	if !checkChainID(chainID) {
-		chain, sdkerrors.Wrap(ErrInvalidChain, fmt.Sprintf("invalid chain ID %v", chainID))
+		return nil, sdkerrors.Wrap(ErrInvalidChain, fmt.Sprintf("invalid chain ID %v", chainID))
 	}
 	chain.ChainID = chainID
 	chain.Creator = creator
@@ -28,7 +30,7 @@ func NewChain(
 	chain.InitialGenesis = initialGenesis
 	chain.Final = false
 
-	return chain
+	return &chain, nil
 }
 
 // AppendPeer appends a new peer in the peer list of the chain
@@ -37,7 +39,7 @@ func (c *Chain) AppendPeer(peer string) {
 }
 
 // checkChainID performs stateless verification of the chainID
-// The chainID must contain only alphanumeric character or hyphen 
+// The chainID must contain only alphanumeric character or hyphen
 func checkChainID(chainID string) bool {
 	// Iterate characters
 	for _, c := range chainID {
