@@ -2,6 +2,7 @@ package types
 
 import (
 	"errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"time"
 )
@@ -31,6 +32,17 @@ func NewProposalAddAccount(
 	proposal.ProposalPayload = &payload
 
 	return &proposal, nil
+}
+
+// NewProposalAddAccountPayload creates a new payload for adding a genesis account
+func NewProposalAddAccountPayload(
+	address sdk.AccAddress,
+	coins sdk.Coins,
+) *ProposalAddAccountPayload {
+	var p ProposalAddAccountPayload
+	p.Address = address
+	p.Coins = coins
+	return &p
 }
 
 // ValidateProposalPayloadAddAccount returns false if the data of ProposalAddAccountPayload is invalid

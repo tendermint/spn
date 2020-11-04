@@ -2,7 +2,9 @@ package types
 
 import (
 	"errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"time"
 )
 
@@ -31,6 +33,27 @@ func NewProposalAddValidator(
 	proposal.ProposalPayload = &payload
 
 	return &proposal, nil
+}
+
+// NewProposalAddValidatorPayload creates a new payload for adding a validator
+func NewProposalAddValidatorPayload(
+	operatorAddress sdk.ValAddress,
+	consensusKey sdk.ConsAddress,
+	description staking.Description,
+	commissions staking.CommissionRates,
+	selfDelegation sdk.Coin,
+	genTx []byte,
+	peer string,
+) *ProposalAddValidatorPayload {
+	var p ProposalAddValidatorPayload
+	p.OperatorAddress = operatorAddress
+	p.ConsensusPubKey = consensusKey
+	p.Description = &description
+	p.Commissions = &commissions
+	p.SelfDelegation = &selfDelegation
+	p.GenTx = genTx
+	p.Peer = peer
+	return &p
 }
 
 // ValidateProposalPayloadAddValidator returns false if the data of ProposalAddValidator is invalid

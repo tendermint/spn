@@ -33,6 +33,17 @@ func NewProposalChange(
 	return &proposal, nil
 }
 
+// NewProposalChangePayload creates a new payload for a genesis change proposal
+func NewProposalChangePayload(
+	changePath string,
+	newValue string,
+) *ProposalChangePayload {
+	var p ProposalChangePayload
+	p.ChangePath = changePath
+	p.NewValue = newValue
+	return &p
+}
+
 // ValidateProposalPayloadChange returns false if the data of ProposalChangePayload is invalid
 func ValidateProposalPayloadChange(payload ProposalChangePayload) error {
 	// Path must contain alphanumeric characters or periods
