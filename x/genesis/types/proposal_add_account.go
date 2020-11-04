@@ -2,34 +2,26 @@ package types
 
 import (
 	"errors"
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"time"
 )
 
 // NewProposalAddAccount creates a new proposal to add a genesis account
 func NewProposalAddAccount(
-	chainID string,
-	proposalID int32,
-	creator string,
-	createdAt time.Time,
-	payload ProposalAddAccountPayload,
+	proposalInformation *ProposalInformation,
+	payload *ProposalAddAccountPayload,
 ) (*ProposalAddAccount, error) {
 	var proposal ProposalAddAccount
 
-	proposal.ProposalInformation = NewProposalInformation(
-		chainID,
-		proposalID,
-		creator,
-		createdAt,
-	)
+	proposal.ProposalInformation = proposalInformation
 	proposal.ProposalState = NewProposalState()
 
 	// Check payload validity
 	if err := ValidateProposalPayloadAddAccount(payload); err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidProposalAddAccount, err.Error())
 	}
-	proposal.ProposalPayload = &payload
+	proposal.ProposalPayload = payload
 
 	return &proposal, nil
 }
@@ -46,7 +38,7 @@ func NewProposalAddAccountPayload(
 }
 
 // ValidateProposalPayloadAddAccount returns false if the data of ProposalAddAccountPayload is invalid
-func ValidateProposalPayloadAddAccount(payload ProposalAddAccountPayload) error {
+func ValidateProposalPayloadAddAccount(payload *ProposalAddAccountPayload) error {
 	// Verify address is not empty
 	if payload.Address.Empty() {
 		return errors.New("Account address empty")
@@ -54,10 +46,10 @@ func ValidateProposalPayloadAddAccount(payload ProposalAddAccountPayload) error 
 
 	// Check coin allocation validity
 	if !payload.Coins.IsValid() {
-		return errors.New("Coins allocation is invalid")
+		return fmt.Errorf("Coins allocation is invalid: %v", payload.Coins)
 	}
 	if !payload.Coins.IsAllPositive() {
-		return errors.New("Coins allocation is non all positive")
+		return fmt.Errorf("Coins allocation is non all positive: %v", payload.Coins)
 	}
 
 	return nil

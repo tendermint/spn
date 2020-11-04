@@ -5,32 +5,23 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
-	"time"
 )
 
 // NewProposalAddValidator creates a new proposal to add a genesis validator
 func NewProposalAddValidator(
-	chainID string,
-	proposalID int32,
-	creator string,
-	createdAt time.Time,
-	payload ProposalAddValidatorPayload,
+	proposalInformation *ProposalInformation,
+	payload *ProposalAddValidatorPayload,
 ) (*ProposalAddValidator, error) {
 	var proposal ProposalAddValidator
 
-	proposal.ProposalInformation = NewProposalInformation(
-		chainID,
-		proposalID,
-		creator,
-		createdAt,
-	)
+	proposal.ProposalInformation = proposalInformation
 	proposal.ProposalState = NewProposalState()
 
 	// Check payload validity
 	if err := ValidateProposalPayloadAddValidator(payload); err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidProposalAddValidator, err.Error())
 	}
-	proposal.ProposalPayload = &payload
+	proposal.ProposalPayload = payload
 
 	return &proposal, nil
 }
@@ -57,7 +48,7 @@ func NewProposalAddValidatorPayload(
 }
 
 // ValidateProposalPayloadAddValidator returns false if the data of ProposalAddValidator is invalid
-func ValidateProposalPayloadAddValidator(payload ProposalAddValidatorPayload) error {
+func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) error {
 	// Check validator address
 	if payload.OperatorAddress.Empty() {
 		return errors.New("Operator address empty")

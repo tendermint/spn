@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -46,6 +47,17 @@ func (ps *ProposalState) AppendVote(newVote *Vote) error {
 		ps.Votes = make(map[string]*Vote)
 	}
 	ps.Votes[newVote.Creator] = newVote
+
+	return nil
+}
+
+// SetStatus modifies the status of the proposal
+func (ps *ProposalState) SetStatus(newStatus ProposalState_Status) error {
+	// Check and set value
+	if newStatus != ProposalState_PENDING && newStatus != ProposalState_APPROVED && newStatus != ProposalState_REJECTED {
+		return errors.New("Invalid proposal status")
+	}
+	ps.Status = newStatus
 
 	return nil
 }

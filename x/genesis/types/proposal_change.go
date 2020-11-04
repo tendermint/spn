@@ -3,32 +3,23 @@ package types
 import (
 	"errors"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"time"
 )
 
 // NewProposalChange creates a new proposal for a change in the genesis
 func NewProposalChange(
-	chainID string,
-	proposalID int32,
-	creator string,
-	createdAt time.Time,
-	payload ProposalChangePayload,
+	proposalInformation *ProposalInformation,
+	payload *ProposalChangePayload,
 ) (*ProposalChange, error) {
 	var proposal ProposalChange
 
-	proposal.ProposalInformation = NewProposalInformation(
-		chainID,
-		proposalID,
-		creator,
-		createdAt,
-	)
+	proposal.ProposalInformation = proposalInformation
 	proposal.ProposalState = NewProposalState()
 
 	// Check payload validity
 	if err := ValidateProposalPayloadChange(payload); err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidProposalChange, err.Error())
 	}
-	proposal.ProposalPayload = &payload
+	proposal.ProposalPayload = payload
 
 	return &proposal, nil
 }
@@ -45,7 +36,7 @@ func NewProposalChangePayload(
 }
 
 // ValidateProposalPayloadChange returns false if the data of ProposalChangePayload is invalid
-func ValidateProposalPayloadChange(payload ProposalChangePayload) error {
+func ValidateProposalPayloadChange(payload *ProposalChangePayload) error {
 	// Path must contain alphanumeric characters or periods
 	for _, c := range payload.ChangePath {
 		if !isChangePathAuthorizedChar(c) {
