@@ -26,8 +26,7 @@ message QueryListChannelsRequest {
 }
 
 message QueryListChannelsResponse {
-	int32 id = 1;
-    string name = 2; 
+	repeated Channel channels = 1;
 }
 
 

@@ -32,8 +32,18 @@ func (k Keeper) ShowChannel(c context.Context, req *types.QueryShowChannelReques
 
 // ListChannels list all the channels
 func (k Keeper) ListChannels(c context.Context, req *types.QueryListChannelsRequest) (*types.QueryListChannelsResponse, error) {
-	// TODO: Implement
-	return nil, nil
+	ctx := sdk.UnwrapSDKContext(c)
+
+	channels := k.GetAllChannels(ctx)
+
+	// Get pointers on channels
+	channelPtrs := make([]*types.Channel, len(channels))
+
+	for i := range channels {
+		channelPtrs[i] = &channels[i]
+	}
+
+	return &types.QueryListChannelsResponse{Channels: channelPtrs}, nil
 }
 
 // ListMessages lists all the messages in a channel

@@ -27,6 +27,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(
 		CmdShowChannel(),
+		CmdListChannels(),
 		CmdListMessages(),
 		CmdSearchMessages(),
 	)
@@ -60,6 +61,37 @@ func CmdShowChannel() *cobra.Command {
 			}
 
 			res, err := queryClient.ShowChannel(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdListChannels returns the command to list channels
+func CmdListChannels() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list-channels",
+		Short: "list channels",
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryListChannelsRequest{}
+
+			res, err := queryClient.ListChannels(context.Background(), params)
 			if err != nil {
 				return err
 			}
