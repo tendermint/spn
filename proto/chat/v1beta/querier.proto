@@ -1,7 +1,6 @@
 syntax = "proto3";
 package spn.chat.v1beta1;
 
-import "cosmos/base/query/v1beta1/pagination.proto";
 import "chat/v1beta/chat.proto";
 
 option go_package = "github.com/tendermint/spn/x/chat/types";
@@ -24,13 +23,11 @@ message QueryShowChannelResponse {
 }
 
 message QueryListChannelsRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
 message QueryListChannelsResponse {
 	int32 id = 1;
     string name = 2; 
-	cosmos.base.query.v1beta1.PageResponse pagination = 3;
 }
 
 
