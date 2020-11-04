@@ -22,7 +22,7 @@ const (
 	ChannelCountKey = "channel_count"
 
 	// ChannelKey is the key to store the channels
-	ChannelKey = "channel"
+	ChannelKey = "channel_store"
 
 	// MessageKey is the key to store the messages
 	MessageKey = "message"
@@ -39,6 +39,11 @@ func KeyPrefix(p string) []byte {
 // GetChannelCountKey returns the key for the channel count store
 func GetChannelCountKey() []byte {
 	return KeyPrefix(ChannelCountKey)
+}
+
+// GetChannelKeyPrefix returns the prefix for the key for the channel store
+func GetChannelKeyPrefix() []byte {
+	return KeyPrefix(ChannelKey)
 }
 
 // GetChannelKey returns the key for the channel store

@@ -26,6 +26,22 @@ func (k Keeper) GetChannelCount(ctx sdk.Context) (channelCount int32) {
 	return getChannelCount(k, ctx)
 }
 
+// GetAllChannels returns all the channels
+func (k Keeper) GetAllChannels(ctx sdk.Context) (allChannels []types.Channel) {
+	store := ctx.KVStore(k.storeKey)
+
+	iterator := sdk.KVStorePrefixIterator(store, types.GetChannelKeyPrefix())
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		// Get the channels
+		channel := types.UnmarshalChannel(k.cdc, iterator.Value())
+		allChannels = append(allChannels, channel)
+	}
+
+	return allChannels
+}
+
 // CreateChannel appends a new channel, increments channel count
 func (k Keeper) CreateChannel(ctx sdk.Context, channel types.Channel) error {
 	store := ctx.KVStore(k.storeKey)

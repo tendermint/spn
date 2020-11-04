@@ -14,7 +14,7 @@ func (k Keeper) GetMessageFromIndex(ctx sdk.Context, channelID int32, index int3
 	return k.GetMessageByID(ctx, messageID)
 }
 
-// GetAllMessagesFromChannel returns a message from its index in a channel
+// GetAllMessagesFromChannel returns all the messages of an index
 func (k Keeper) GetAllMessagesFromChannel(ctx sdk.Context, channelID int32) (messages []types.Message, channelFound bool) {
 	// Get the number of message in the channel
 	channel, channelFound := k.GetChannel(ctx, channelID)
