@@ -8,7 +8,7 @@ import "genesis/v1beta/types.proto";
 
 // Query defines the gRPC querier service.
 service Query {
-    rpc ListChain(QueryListChainsRequest) returns (QueryListChainsResponse);
+    rpc ListChains(QueryListChainsRequest) returns (QueryListChainsResponse);
     rpc ShowChain(QueryShowChainRequest) returns (QueryShowChainResponse);
     rpc ListProposals(QueryListProposalsRequest) returns (QueryListProposalsResponse);
     rpc ShowProposal(QueryShowProposalRequest) returns (QueryShowProposalResponse);
