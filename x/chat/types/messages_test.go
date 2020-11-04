@@ -71,7 +71,8 @@ func TestMsgVotePoll(t *testing.T) {
 
 	// Can create a MsgVotePoll
 	msg, err := types.NewMsgVotePoll(
-		"0xaaa",
+		0,
+		0,
 		user,
 		0,
 		nil,
@@ -83,7 +84,8 @@ func TestMsgVotePoll(t *testing.T) {
 	// Can create a MsgVotePoll
 	payload := spnmocks.MockPayload()
 	msg, err = types.NewMsgVotePoll(
-		"0xaaa",
+		0,
+		0,
 		user,
 		0,
 		payload,

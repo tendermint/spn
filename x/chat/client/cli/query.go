@@ -27,6 +27,8 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(
 		CmdShowChannel(),
+		CmdListMessages(),
+		CmdSearchMessages(),
 	)
 
 	return cmd
@@ -58,6 +60,85 @@ func CmdShowChannel() *cobra.Command {
 			}
 
 			res, err := queryClient.ShowChannel(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdListMessages returns the command to list messages in a channel
+func CmdListMessages() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list-messages [channel-id]",
+		Short: "list the messages in a channel",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			// Convert channel ID
+			channelID, err := strconv.Atoi(args[0])
+			if err != nil {
+				return err
+			}
+
+			params := &types.QueryListMessagesRequest{
+				ChannelId: int32(channelID),
+			}
+
+			res, err := queryClient.ListMessages(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdSearchMessages returns the command to search for tagged messages in a channel
+func CmdSearchMessages() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "search-messages [tag] [channel-id]",
+		Short: "search the messages in a channel that contain a specific tag",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			// Convert channel ID
+			channelID, err := strconv.Atoi(args[1])
+			if err != nil {
+				return err
+			}
+
+			params := &types.QuerySearchMessagesRequest{
+				ChannelId: int32(channelID),
+				Tag:       args[0],
+			}
+
+			res, err := queryClient.SearchMessages(context.Background(), params)
 			if err != nil {
 				return err
 			}
