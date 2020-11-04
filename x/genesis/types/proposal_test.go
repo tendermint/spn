@@ -8,6 +8,9 @@ import (
 
 func TestNewProposalState(t *testing.T) {
 	// Can create a proposal state
+	ps := types.NewProposalState()
+	require.Equal(t, types.ProposalState_PENDING, ps.Status, "NewProposalState should create a pending proposal")
+	require.Equal(t, 0, len(ps.Votes), "NewProposalState should create a proposal with no vote")
 
 	// Can create a new vote
 
