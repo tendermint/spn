@@ -46,7 +46,7 @@ func MockProposalInformation() *types.ProposalInformation {
 }
 
 // MockProposalVote mocks a vote for a genesis proposal
-func MockProposalVote() *types.Vote {
+func MockProposalVote(voter string) *types.Vote {
 	voteValue := types.Vote_REJECT
 
 	if r := rand.Intn(10); r > 5 {
@@ -55,7 +55,7 @@ func MockProposalVote() *types.Vote {
 
 	vote, _ := types.NewVote(
 		int32(rand.Intn(10)),
-		MockRandomString(10),
+		voter,
 		time.Now(),
 		voteValue,
 	)

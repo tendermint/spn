@@ -19,6 +19,17 @@ func MockRandomString(n int) string {
 	return string(randomString)
 }
 
+// MockRandomAlphaString returns a random string with lowercase alpha char of length n
+func MockRandomAlphaString(n int) string {
+	var letter = []rune("abcdefghijklmnopqrstuvwxyz")
+
+	randomString := make([]rune, n)
+	for i := range randomString {
+		randomString[i] = letter[rand.Intn(len(letter))]
+	}
+	return string(randomString)
+}
+
 // MockAccAddress mocks an account address for test purpose
 func MockAccAddress() sdk.AccAddress {
 	pk := ed25519.GenPrivKey().PubKey()
@@ -35,16 +46,20 @@ func MockValAddress() sdk.ValAddress {
 
 // MockCoin mocks a coin allocation structure
 func MockCoin() sdk.Coin {
-	return sdk.NewCoin(MockRandomString(5), sdk.NewInt(int64(rand.Intn(10000)+1)))
+	return sdk.NewCoin(MockRandomAlphaString(5), sdk.NewInt(int64(rand.Intn(10000)+1)))
 }
 
 // MockCoins mocks coins allocation structure
 func MockCoins() sdk.Coins {
 	var coins sdk.Coins
-	coins = append(coins, MockCoin())
-	coins = append(coins, MockCoin())
-	coins = append(coins, MockCoin())
-	return sdk.NewCoins()
+	// Coin denomination must be sorted
+	coin := sdk.NewCoin("a"+MockRandomAlphaString(5), sdk.NewInt(int64(rand.Intn(10000)+1)))
+	coins = append(coins, coin)
+	coin = sdk.NewCoin("b"+MockRandomAlphaString(5), sdk.NewInt(int64(rand.Intn(10000)+1)))
+	coins = append(coins, coin)
+	coin = sdk.NewCoin("c"+MockRandomAlphaString(5), sdk.NewInt(int64(rand.Intn(10000)+1)))
+	coins = append(coins, coin)
+	return coins
 }
 
 // MockDescription mocks a validator description structure
@@ -60,9 +75,5 @@ func MockDescription() staking.Description {
 
 // MockCommissionRates mocks a commissionRates structure
 func MockCommissionRates() staking.CommissionRates {
-	return staking.NewCommissionRates(
-		sdk.NewDec(int64(rand.Intn(10000)+1)),
-		sdk.NewDec(int64(rand.Intn(10000)+1)),
-		sdk.NewDec(int64(rand.Intn(10000)+1)),
-	)
+	return staking.NewCommissionRates(sdk.ZeroDec(), sdk.ZeroDec(), sdk.ZeroDec())
 }
