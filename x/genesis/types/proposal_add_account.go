@@ -37,7 +37,7 @@ func NewProposalAddAccountPayload(
 	return &p
 }
 
-// ValidateProposalPayloadAddAccount returns false if the data of ProposalAddAccountPayload is invalid
+// ValidateProposalPayloadAddAccount checks if the data of ProposalAddAccountPayload is valid
 func ValidateProposalPayloadAddAccount(payload *ProposalAddAccountPayload) error {
 	// Verify address is not empty
 	if payload.Address.Empty() {

@@ -14,7 +14,7 @@ func NewChain(
 	sourceURL string,
 	sourceHash string,
 	createdAt time.Time,
-	initialGenesis []byte,
+	genesis []byte,
 ) (*Chain, error) {
 	var chain Chain
 
@@ -27,7 +27,7 @@ func NewChain(
 	chain.SourceURL = sourceURL
 	chain.SourceHash = sourceHash
 	chain.CreatedAt = createdAt.Unix()
-	chain.InitialGenesis = initialGenesis
+	chain.Genesis = genesis
 	chain.Final = false
 
 	return &chain, nil

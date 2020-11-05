@@ -35,7 +35,7 @@ func NewProposalChangePayload(
 	return &p
 }
 
-// ValidateProposalPayloadChange returns false if the data of ProposalChangePayload is invalid
+// ValidateProposalPayloadChange checks if the data of ProposalChangePayload is valid
 func ValidateProposalPayloadChange(payload *ProposalChangePayload) error {
 	// Path must contain alphanumeric characters or periods
 	for _, c := range payload.ChangePath {
