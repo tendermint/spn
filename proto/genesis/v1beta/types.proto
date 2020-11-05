@@ -87,5 +87,5 @@ message ProposalAddValidatorPayload {
     google.protobuf.Any commissions = 4 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/x/staking/types.CommissionRates"];
     google.protobuf.Any selfDelegation = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin"];
     bytes genTx = 6;
-    string peer = 7;
+    string peerAddress = 7;
 }

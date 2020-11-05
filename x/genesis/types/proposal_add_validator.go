@@ -34,7 +34,7 @@ func NewProposalAddValidatorPayload(
 	commissions staking.CommissionRates,
 	selfDelegation sdk.Coin,
 	genTx []byte,
-	peer string,
+	peerAddress string,
 ) *ProposalAddValidatorPayload {
 	var p ProposalAddValidatorPayload
 	p.OperatorAddress = operatorAddress
@@ -43,7 +43,7 @@ func NewProposalAddValidatorPayload(
 	p.Commissions = &commissions
 	p.SelfDelegation = &selfDelegation
 	p.GenTx = genTx
-	p.Peer = peer
+	p.PeerAddress = peerAddress
 	return &p
 }
 

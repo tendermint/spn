@@ -28,7 +28,7 @@ message QueryShowChainRequest {
 }
 
 message QueryShowChainResponse {
-	Chain chains = 1;
+	Chain chain = 1;
 }
 
 message QueryListProposalsRequest {
