@@ -59,10 +59,21 @@ func showChannel(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQu
 }
 
 func listChannel(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQuerierCdc *codec.LegacyAmino) ([]byte, error) {
-	// var params types.QueryListChannelsRequest
-	var bz []byte
+	var params types.QueryListChannelsRequest
 
-	// TODO: implement
+	// Decode the request params
+	err := legacyQuerierCdc.UnmarshalJSON(req.Data, &params)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
+	}
+
+	channels := keeper.GetAllChannels(ctx)
+
+	bz, err := codec.MarshalJSONIndent(legacyQuerierCdc, channels)
+
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
+	}
 	return bz, nil
 }
 

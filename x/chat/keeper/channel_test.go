@@ -37,4 +37,8 @@ func TestCreateChannel(t *testing.T) {
 	newChannel.Creator = "invalid_identifier"
 	err := k.CreateChannel(ctx, newChannel)
 	require.Error(t, err, "CreateChannel should prevent an invalid user to create a channel")
+
+	// Can retrieve all the channels
+	channels := k.GetAllChannels(ctx)
+	require.Equal(t, 2, len(channels), "GetAllChannels should find the channels in the store")
 }
