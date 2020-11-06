@@ -52,7 +52,7 @@ func TestNewProposalChange(t *testing.T) {
 	require.NoError(t, err, "NewProposalChange should create a new proposal")
 
 	// Prevent invalid change path
-	payload.ChangePath = spnmocks.MockRandomString(5) + "_" + spnmocks.MockRandomString(5)
+	payload.ChangePath = []string{spnmocks.MockRandomString(5), "_"}
 	err = types.ValidateProposalPayloadChange(payload)
 	require.Error(t, err, "ValidateProposalPayloadChange should return error on invalid payload")
 
