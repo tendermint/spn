@@ -45,6 +45,10 @@ message ProposalState {
     map<string, Vote> votes = 3;
 }
 
+message ProposalList {
+    repeated int32 proposalIDs = 1;
+}
+
 message Vote {
     int32 voteID = 1;
     string creator = 2;

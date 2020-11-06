@@ -3,7 +3,7 @@ package types
 import (
 	"fmt"
 	"time"
-
+	"github.com/cosmos/cosmos-sdk/codec"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
@@ -52,4 +52,16 @@ func checkChainID(chainID string) bool {
 
 func isChainAuthorizedChar(c rune) bool {
 	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '-'
+}
+
+// MarshalChain encodes chains for the store
+func MarshalChain(cdc codec.BinaryMarshaler, chain Chain) []byte {
+	return cdc.MustMarshalBinaryBare(&chain)
+}
+
+// UnmarshalChain decodes chains from the store
+func UnmarshalChain(cdc codec.BinaryMarshaler, value []byte) Chain {
+	var chain Chain
+	cdc.MustUnmarshalBinaryBare(value, &chain)
+	return chain
 }

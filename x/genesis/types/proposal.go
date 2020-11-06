@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/codec"
 	"time"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -82,4 +83,28 @@ func NewVote(
 	vote.CreatedAt = createdAt.Unix()
 
 	return &vote, nil
+}
+
+// MarshalProposal encodes proposals for the store
+func MarshalProposal(cdc codec.BinaryMarshaler, proposal Proposal) []byte {
+	return cdc.MustMarshalBinaryBare(&proposal)
+}
+
+// UnmarshalProposal decodes proposals from the store
+func UnmarshalProposal(cdc codec.BinaryMarshaler, value []byte) Proposal {
+	var proposal Proposal
+	cdc.MustUnmarshalBinaryBare(value, &proposal)
+	return proposal
+}
+
+// MarshalProposalList encodes list of proposal IDs for the store
+func MarshalProposalList(cdc codec.BinaryMarshaler, proposalList ProposalList) []byte {
+	return cdc.MustMarshalBinaryBare(&proposalList)
+}
+
+// UnmarshalProposal decodes list of proposal IDs rom the store
+func UnmarshalProposalList(cdc codec.BinaryMarshaler, value []byte) ProposalList {
+	var proposalList ProposalList
+	cdc.MustUnmarshalBinaryBare(value, &proposalList)
+	return proposalList
 }
