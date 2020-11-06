@@ -4,7 +4,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
+
 	"math/rand"
 )
 
@@ -37,11 +40,17 @@ func MockAccAddress() sdk.AccAddress {
 	return sdk.AccAddress(addr)
 }
 
-// MockValAddress mocks an operator address for test purpose
-func MockValAddress() sdk.ValAddress {
-	pk := ed25519.GenPrivKey().PubKey()
+// MockValAddress mocks an operator address with associated private key for test purpose
+func MockValAddress() (crypto.PrivKey, sdk.ValAddress) {
+	privKey := secp256k1.GenPrivKey()
+	pk := privKey.PubKey()
 	addr := pk.Address()
-	return sdk.ValAddress(addr)
+	return privKey, sdk.ValAddress(addr)
+}
+
+// MockPubKey mocks a public key
+func MockPubKey() crypto.PubKey {
+	return ed25519.GenPrivKey().PubKey()
 }
 
 // MockCoin mocks a coin allocation structure
