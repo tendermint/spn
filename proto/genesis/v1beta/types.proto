@@ -82,4 +82,5 @@ message ProposalAddAccountPayload {
 
 message ProposalAddValidatorPayload {
     google.protobuf.Any genTx = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types/tx.Tx"];
+    string peer = 2;
 }

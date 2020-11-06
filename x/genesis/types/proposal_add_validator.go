@@ -30,9 +30,11 @@ func NewProposalAddValidator(
 // NewProposalAddValidatorPayload creates a new payload for adding a validator
 func NewProposalAddValidatorPayload(
 	genTx tx.Tx,
+	peer string,
 ) *ProposalAddValidatorPayload {
 	var p ProposalAddValidatorPayload
 	p.GenTx = &genTx
+	p.Peer = peer
 	return &p
 }
 
@@ -66,17 +68,6 @@ func (p ProposalAddValidatorPayload) GetCreateValidatorMessage() (message *staki
 	}
 }
 
-// GetPeer returns the peer information of the node
-func (p ProposalAddValidatorPayload) GetPeer() (string, error) {
-	// The peer is provided in the memo of the MsgCreateValidator message
-	if p.GenTx.Body.Memo == "" {
-		return "", errors.New("no peer")
-	}
-
-	// TODO: Check the format of the peer which must be: <nodeId>@<nodeIP>:<nodePort>
-	return p.GenTx.Body.Memo, nil
-}
-
 // ValidateProposalPayloadAddValidator checks if the data of ProposalAddValidator is valid
 func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) (err error) {
 	// We return error on panic since ValidateBasic may panic on invalid msg
@@ -98,8 +89,8 @@ func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) (
 	}
 
 	// Check peer is not empty
-	if _, err := payload.GetPeer(); err != nil {
-		return sdkerrors.Wrap(ErrInvalidProposalAddValidator, err.Error())
+	if payload.GetPeer() == "" {
+		return sdkerrors.Wrap(ErrInvalidProposalAddValidator, "no peer")
 	}
 
 	return nil

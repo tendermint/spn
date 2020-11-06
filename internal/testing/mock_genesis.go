@@ -34,7 +34,7 @@ func MockProposalAddAccountPayload() *types.ProposalAddAccountPayload {
 // MockProposalAddValidatorPayload mocks a valid payload
 func MockProposalAddValidatorPayload() *types.ProposalAddValidatorPayload {
 	genTx := MockGenTx()
-	return types.NewProposalAddValidatorPayload(genTx)
+	return types.NewProposalAddValidatorPayload(genTx, MockRandomString(20))
 }
 
 // MockProposalInformation mocks information for a proposal

@@ -105,12 +105,12 @@ func TestNewProposalAddValidator(t *testing.T) {
 	// Test valid payload
 	payload := spnmocks.MockProposalAddValidatorPayload()
 	peer := "aaa@0.0.0.0:443"
-	payload.GenTx.Body.Memo = peer
+	payload.Peer = peer
 	err := types.ValidateProposalPayloadAddValidator(payload)
 	require.NoError(t, err, fmt.Sprintf("ValidateProposalPayloadAddValidator should return no error: %v", err))
 
 	//Can get the peer
-	retrievedPeer, err := payload.GetPeer()
+	retrievedPeer := payload.GetPeer()
 	require.NoError(t, err, "GetPeer should get the validator peer")
 	require.Equal(t, peer, retrievedPeer, "GetPeer should get the validator peer")
 
@@ -149,7 +149,7 @@ func TestNewProposalAddValidator(t *testing.T) {
 
 	// No peer
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	payload.GenTx.Body.Memo = ""	// Peer is inside the memo
+	payload.Peer = ""	// Peer is inside the memo
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err, "ValidateProposalPayloadAddValidator should return error on invalid payload")
 
