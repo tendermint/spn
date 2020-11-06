@@ -3,8 +3,11 @@ package types_test
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
+
+	// staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 
 	"github.com/tendermint/spn/x/genesis/types"
 
@@ -101,8 +104,15 @@ func TestNewProposalAddAccount(t *testing.T) {
 func TestNewProposalAddValidator(t *testing.T) {
 	// Test valid payload
 	payload := spnmocks.MockProposalAddValidatorPayload()
+	peer := "aaa@0.0.0.0:443"
+	payload.GenTx.Body.Memo = peer
 	err := types.ValidateProposalPayloadAddValidator(payload)
 	require.NoError(t, err, fmt.Sprintf("ValidateProposalPayloadAddValidator should return no error: %v", err))
+
+	//Can get the peer
+	retrievedPeer, err := payload.GetPeer()
+	require.NoError(t, err, "GetPeer should get the validator peer")
+	require.Equal(t, peer, retrievedPeer, "GetPeer should get the validator peer")
 
 	// Can create a proposal for a genesis change
 	_, err = types.NewProposalAddValidator(
@@ -111,39 +121,35 @@ func TestNewProposalAddValidator(t *testing.T) {
 	)
 	require.NoError(t, err, "NewProposalAddValidator should create a new proposal")
 
-	// Invalid operator address
-	payload.OperatorAddress = sdk.ValAddress([]byte(""))
+	// Invalid tx
+	payload = spnmocks.MockProposalAddValidatorPayload()
+	payload.GenTx.Body = nil
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err, "ValidateProposalPayloadAddValidator should return error on invalid payload")
 
-	// Invalid consensus key
+	// No message
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	payload.ConsensusPubKey = []byte("")
+	payload.GenTx.Body.Messages = []*codectypes.Any{}
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err, "ValidateProposalPayloadAddValidator should return error on invalid payload")
 
-	// Invalid self delegation
+	// Invalid message
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	invalidCoin := sdk.NewCoin("atom", sdk.NewInt(10))
-	invalidCoin.Denom = ""
-	payload.SelfDelegation = &invalidCoin
-	err = types.ValidateProposalPayloadAddValidator(payload)
-	require.Error(t, err, "ValidateProposalPayloadAddValidator should return error on invalid payload")
-
-	// Empty gentx
-	payload = spnmocks.MockProposalAddValidatorPayload()
-	payload.GenTx = []byte("")
-	err = types.ValidateProposalPayloadAddValidator(payload)
-	require.Error(t, err, "ValidateProposalPayloadAddValidator should return error on invalid payload")
-
-	// Invalid commissions
-	payload = spnmocks.MockProposalAddValidatorPayload()
-	commissions := staking.NewCommissionRates(
-		sdk.ZeroDec(),
-		sdk.NewDec(10),
-		sdk.ZeroDec(),
+	message := staking.NewMsgCreateValidator(
+		sdk.ValAddress(""),
+		spnmocks.MockPubKey(),
+		spnmocks.MockCoin(),
+		spnmocks.MockDescription(),
+		spnmocks.MockCommissionRates(),
+		sdk.NewInt(1),
 	)
-	payload.Commissions = &commissions
+	payload.GenTx.Body.Messages[0], _ = codectypes.NewAnyWithValue(message)
+	err = types.ValidateProposalPayloadAddValidator(payload)
+	require.Error(t, err, "ValidateProposalPayloadAddValidator should return error on invalid payload")
+
+	// No peer
+	payload = spnmocks.MockProposalAddValidatorPayload()
+	payload.GenTx.Body.Memo = ""	// Peer is inside the memo
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err, "ValidateProposalPayloadAddValidator should return error on invalid payload")
 
