@@ -2,8 +2,9 @@ package types
 
 import (
 	"errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"fmt"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	tx "github.com/cosmos/cosmos-sdk/types/tx"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
@@ -28,53 +29,77 @@ func NewProposalAddValidator(
 
 // NewProposalAddValidatorPayload creates a new payload for adding a validator
 func NewProposalAddValidatorPayload(
-	operatorAddress sdk.ValAddress,
-	consensusKey sdk.ConsAddress,
-	description staking.Description,
-	commissions staking.CommissionRates,
-	selfDelegation sdk.Coin,
-	genTx []byte,
-	peerAddress string,
+	genTx tx.Tx,
 ) *ProposalAddValidatorPayload {
 	var p ProposalAddValidatorPayload
-	p.OperatorAddress = operatorAddress
-	p.ConsensusPubKey = consensusKey
-	p.Description = &description
-	p.Commissions = &commissions
-	p.SelfDelegation = &selfDelegation
-	p.GenTx = genTx
-	p.PeerAddress = peerAddress
+	p.GenTx = &genTx
 	return &p
 }
 
-// ValidateProposalPayloadAddValidator returns false if the data of ProposalAddValidator is invalid
-func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) error {
-	// Check validator address
-	if payload.OperatorAddress.Empty() {
-		return errors.New("Operator address empty")
+// GetCreateValidatorMessage get the staking module message to create a new validator
+func (p ProposalAddValidatorPayload) GetCreateValidatorMessage() (message *staking.MsgCreateValidator, err error) {
+	// We return error on panic since ValidateBasic may panic on invalid tx
+	defer func() {
+		if r := recover(); r!= nil {
+			err = fmt.Errorf("%v", r)
+		}
+	}()
+
+	// Check the gentx is valid
+	if err := p.GenTx.ValidateBasic(); err != nil {
+		return nil, err
 	}
 
-	// Check consensus key
-	if payload.ConsensusPubKey.Empty() {
-		return errors.New("Consensus public key empty")
+	// The gentx contain only one MsgCreateValidator message
+	messages := p.GenTx.GetMsgs()
+	if len(messages) != 1 {
+		return nil, errors.New("The gentx should contain only one message")
+	}
+	msg := messages[0]
+
+	// Check is the message is a MsgCreateValidator and return it
+	switch msg := msg.(type) {
+	case *staking.MsgCreateValidator:
+		return msg, nil
+	default:
+		return nil, errors.New("The gentx message is not MsgCreateValidator")
+	}
+}
+
+// GetPeer returns the peer information of the node
+func (p ProposalAddValidatorPayload) GetPeer() (string, error) {
+	// The peer is provided in the memo of the MsgCreateValidator message
+	if p.GenTx.Body.Memo == "" {
+		return "", errors.New("no peer")
 	}
 
-	// Check self-delegation
-	if !payload.SelfDelegation.IsValid() {
-		return errors.New("Invalid self delegation")
-	}
-	if !payload.SelfDelegation.IsPositive() {
-		return errors.New("Non posistive self delegation")
+	// TODO: Check the format of the peer which must be: <nodeId>@<nodeIP>:<nodePort>
+	return p.GenTx.Body.Memo, nil
+}
+
+// ValidateProposalPayloadAddValidator checks if the data of ProposalAddValidator is valid
+func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) (err error) {
+	// We return error on panic since ValidateBasic may panic on invalid msg
+	defer func() {
+		if r := recover(); r!= nil {
+			err = fmt.Errorf("%v", r)
+		}
+	}()
+
+	// Get the createValidator message
+	message, err := payload.GetCreateValidatorMessage()
+	if err != nil {
+		return sdkerrors.Wrap(ErrInvalidProposalAddValidator, err.Error())
 	}
 
-	// Check commission
-	if err := payload.Commissions.Validate(); err != nil {
-		return err
+	// Check validity of the message
+	if err = message.ValidateBasic(); err != nil {
+		return sdkerrors.Wrap(ErrInvalidProposalAddValidator, err.Error())
 	}
 
-	// GenTx
-	if len(payload.GenTx) == 0 {
-		return errors.New("Empty gentx")
+	// Check peer is not empty
+	if _, err := payload.GetPeer(); err != nil {
+		return sdkerrors.Wrap(ErrInvalidProposalAddValidator, err.Error())
 	}
 
 	return nil
