@@ -13,7 +13,7 @@ message Chain {
   string sourceURL = 4; 
   string sourceHash  = 5; 
   int64 createdAt = 6;
-  bytes initialGenesis = 7;
+  bytes genesis = 7;
   bool final = 8;
 }
 
@@ -81,11 +81,5 @@ message ProposalAddAccountPayload {
 }
 
 message ProposalAddValidatorPayload {
-    bytes operatorAddress = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
-    bytes consensusPubKey = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ConsAddress"];
-    google.protobuf.Any description = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/x/staking/types.Description"];
-    google.protobuf.Any commissions = 4 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/x/staking/types.CommissionRates"];
-    google.protobuf.Any selfDelegation = 5 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin"];
-    bytes genTx = 6;
-    string peerAddress = 7;
+    google.protobuf.Any genTx = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types/tx.Tx"];
 }
