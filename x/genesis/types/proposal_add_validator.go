@@ -12,8 +12,8 @@ import (
 func NewProposalAddValidator(
 	proposalInformation *ProposalInformation,
 	payload *ProposalAddValidatorPayload,
-) (*ProposalAddValidator, error) {
-	var proposal ProposalAddValidator
+) (*Proposal, error) {
+	var proposal Proposal
 
 	proposal.ProposalInformation = proposalInformation
 	proposal.ProposalState = NewProposalState()
@@ -22,7 +22,7 @@ func NewProposalAddValidator(
 	if err := ValidateProposalPayloadAddValidator(payload); err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidProposalAddValidator, err.Error())
 	}
-	proposal.ProposalPayload = payload
+	proposal.Payload = &Proposal_AddValidatorPayload{payload}
 
 	return &proposal, nil
 }

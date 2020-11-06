@@ -11,8 +11,8 @@ import (
 func NewProposalAddAccount(
 	proposalInformation *ProposalInformation,
 	payload *ProposalAddAccountPayload,
-) (*ProposalAddAccount, error) {
-	var proposal ProposalAddAccount
+) (*Proposal, error) {
+	var proposal Proposal
 
 	proposal.ProposalInformation = proposalInformation
 	proposal.ProposalState = NewProposalState()
@@ -21,7 +21,7 @@ func NewProposalAddAccount(
 	if err := ValidateProposalPayloadAddAccount(payload); err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidProposalAddAccount, err.Error())
 	}
-	proposal.ProposalPayload = payload
+	proposal.Payload = &Proposal_AddAccountPayload{payload}
 
 	return &proposal, nil
 }
