@@ -26,7 +26,7 @@ func NewProposalChange(
 
 // NewProposalChangePayload creates a new payload for a genesis change proposal
 func NewProposalChangePayload(
-	changePath string,
+	changePath []string,
 	newValue string,
 ) *ProposalChangePayload {
 	var p ProposalChangePayload
@@ -37,10 +37,12 @@ func NewProposalChangePayload(
 
 // ValidateProposalPayloadChange checks if the data of ProposalChangePayload is valid
 func ValidateProposalPayloadChange(payload *ProposalChangePayload) error {
-	// Path must contain alphanumeric characters or periods
-	for _, c := range payload.ChangePath {
-		if !isChangePathAuthorizedChar(c) {
-			return errors.New("Invalid change path")
+	for _, pathComponent := range payload.ChangePath {
+		// Path components must contain alphanumeric characters
+		for _, c := range pathComponent {
+			if !isChangePathAuthorizedChar(c) {
+				return errors.New("Invalid change path")
+			}
 		}
 	}
 
@@ -48,5 +50,5 @@ func ValidateProposalPayloadChange(payload *ProposalChangePayload) error {
 }
 
 func isChangePathAuthorizedChar(c rune) bool {
-	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '.'
+	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9')
 }

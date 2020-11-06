@@ -18,7 +18,7 @@ import (
 // MockProposalChangePayload mocks a valid payload
 func MockProposalChangePayload() *types.ProposalChangePayload {
 	return types.NewProposalChangePayload(
-		MockRandomString(5)+"."+MockRandomString(5)+"."+MockRandomString(5),
+		[]string{MockRandomString(5), MockRandomString(5), MockRandomString(5)},
 		MockRandomString(10),
 	)
 }

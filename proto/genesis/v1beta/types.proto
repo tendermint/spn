@@ -71,7 +71,7 @@ message Vote {
 }
 
 message ProposalChangePayload {
-    string changePath = 1;
+    repeated string changePath = 1;
     string newValue = 2;
 }
 
