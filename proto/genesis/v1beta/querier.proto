@@ -1,0 +1,51 @@
+syntax = "proto3";
+package spn.genesis.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/genesis/types";
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "genesis/v1beta/types.proto";
+
+// Query defines the gRPC querier service.
+service Query {
+    rpc ListChains(QueryListChainsRequest) returns (QueryListChainsResponse);
+    rpc ShowChain(QueryShowChainRequest) returns (QueryShowChainResponse);
+    rpc ListProposals(QueryListProposalsRequest) returns (QueryListProposalsResponse);
+    rpc ShowProposal(QueryShowProposalRequest) returns (QueryShowProposalResponse);
+}
+
+message QueryListChainsRequest {
+    cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryListChainsResponse {
+	cosmos.base.query.v1beta1.PageResponse pagination = 1;
+    repeated Chain chains = 2;
+}
+
+message QueryShowChainRequest {
+	string chainID = 1;
+}
+
+message QueryShowChainResponse {
+	Chain chain = 1;
+}
+
+message QueryListProposalsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+    string chainID = 2;
+}
+
+message QueryListProposalsResponse {
+	cosmos.base.query.v1beta1.PageResponse pagination = 1;
+    repeated Proposal proposals = 2;
+}
+
+message QueryShowProposalRequest {
+	string chainID = 1;
+    int32 proposalID = 2;
+}
+
+message QueryShowProposalResponse {
+	Proposal proposal = 1;
+}

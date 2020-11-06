@@ -2,16 +2,16 @@ package keeper_test
 
 import (
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/x/chat"
+	spnmocks "github.com/tendermint/spn/internal/testing"
 	"github.com/tendermint/spn/x/chat/types"
 
 	"testing"
 )
 
 func TestGetTagReferencesFromChannel(t *testing.T) {
-	ctx, k := chat.MockContext()
+	ctx, k := spnmocks.MockChatContext()
 
-	k.CreateChannel(ctx, chat.MockChannel())
+	k.CreateChannel(ctx, spnmocks.MockChannel())
 	message0ID := types.GetMessageIDFromChannelIDandIndex(0, 0)
 	message1ID := types.GetMessageIDFromChannelIDandIndex(0, 1)
 	message2ID := types.GetMessageIDFromChannelIDandIndex(0, 2)
@@ -20,7 +20,7 @@ func TestGetTagReferencesFromChannel(t *testing.T) {
 	message5ID := types.GetMessageIDFromChannelIDandIndex(2, 0)
 
 	// Cam retrieve references from tags in appended messages
-	message := chat.MockMessage(0)
+	message := spnmocks.MockMessage(0)
 	message.Tags = []string{"foo", "bar", "foo-bar"}
 	k.AppendMessageToChannel(ctx, message)
 	message.Tags = []string{"foo", "bar"}
@@ -52,12 +52,12 @@ func TestGetTagReferencesFromChannel(t *testing.T) {
 	require.Equal(t, 0, len(barfooReferences), "GetTagReferencesFromChannel should find 0 bar-foo reference")
 
 	// Can get all tag references in all channels
-	k.CreateChannel(ctx, chat.MockChannel())
-	k.CreateChannel(ctx, chat.MockChannel())
-	message = chat.MockMessage(1)
+	k.CreateChannel(ctx, spnmocks.MockChannel())
+	k.CreateChannel(ctx, spnmocks.MockChannel())
+	message = spnmocks.MockMessage(1)
 	message.Tags = []string{"foo"}
 	k.AppendMessageToChannel(ctx, message)
-	message = chat.MockMessage(2)
+	message = spnmocks.MockMessage(2)
 	message.Tags = []string{"foo"}
 	k.AppendMessageToChannel(ctx, message)
 

@@ -2,8 +2,9 @@ package types_test
 
 import (
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/x/chat"
+	spnmocks "github.com/tendermint/spn/internal/testing"
 	"github.com/tendermint/spn/x/chat/types"
+
 	"testing"
 )
 
@@ -17,10 +18,10 @@ func TestNewPoll(t *testing.T) {
 }
 
 func TestNewVote(t *testing.T) {
-	user := chat.MockUser()
+	user := spnmocks.MockUser()
 
 	// Can create a vote with payload
-	payload := chat.MockPayload()
+	payload := spnmocks.MockPayload()
 	_, err := types.NewVote(user, 0, payload)
 	require.NoError(t, err, "NewVote should create a new vote")
 }
@@ -28,7 +29,7 @@ func TestNewVote(t *testing.T) {
 func TestAppendVote(t *testing.T) {
 	pollOptions := []string{"coffee", "tea", "water", "beer"}
 	poll, _ := types.NewPoll(pollOptions)
-	user := chat.MockUser()
+	user := spnmocks.MockUser()
 
 	// Allow to append a vote
 	vote, _ := types.NewVote(user, 0, nil)
@@ -37,14 +38,14 @@ func TestAppendVote(t *testing.T) {
 	require.Equal(t, 1, len(poll.Votes), "AppendVote should append a vote")
 
 	// Allow to append a vote from another user
-	user2 := chat.MockUser()
+	user2 := spnmocks.MockUser()
 	vote2, _ := types.NewVote(user2, 2, nil)
 	err = poll.AppendVote(&vote2)
 	require.NoError(t, err, "AppendVote should append a second vote")
 	require.Equal(t, 2, len(poll.Votes), "AppendVote should append a second vote")
 
 	// Prevent appending invalid valid
-	user3 := chat.MockUser()
+	user3 := spnmocks.MockUser()
 	vote3, _ := types.NewVote(user3, int32(len(pollOptions)), nil)
 	err = poll.AppendVote(&vote3)
 	require.Error(t, err, "AppendVote should prevent append an invalid vote")
@@ -58,7 +59,7 @@ func TestAppendVote(t *testing.T) {
 func TestHasUserVoted(t *testing.T) {
 	pollOptions := []string{"coffee", "tea", "water", "beer"}
 	poll, _ := types.NewPoll(pollOptions)
-	user := chat.MockUser()
+	user := spnmocks.MockUser()
 
 	// Should return false if no vote
 	voted, err := poll.HasUserVoted(user)
@@ -77,7 +78,7 @@ func TestHasUserVoted(t *testing.T) {
 func TestGetUserVote(t *testing.T) {
 	pollOptions := []string{"coffee", "tea", "water", "beer"}
 	poll, _ := types.NewPoll(pollOptions)
-	user := chat.MockUser()
+	user := spnmocks.MockUser()
 
 	// Should return error if no vote
 	_, err := poll.GetUserVote(user)

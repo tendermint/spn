@@ -2,22 +2,22 @@ package keeper_test
 
 import (
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/x/chat"
+	spnmocks "github.com/tendermint/spn/internal/testing"
 	"github.com/tendermint/spn/x/chat/types"
 
 	"testing"
 )
 
 func TestAppendMessageToChannel(t *testing.T) {
-	ctx, k := chat.MockContext()
+	ctx, k := spnmocks.MockChatContext()
 
 	// Channel not found if the channel is not added yet
-	message := chat.MockMessageWithPoll(0, []string{"chocolate", "cake", "cookie", "icecream", "oreo"})
+	message := spnmocks.MockMessageWithPoll(0, []string{"chocolate", "cake", "cookie", "icecream", "oreo"})
 	channelFound, _ := k.AppendMessageToChannel(ctx, message)
 	require.False(t, channelFound, "AppendMessageToChannel should return false on a non existing channel")
 
 	// Create a channel
-	k.CreateChannel(ctx, chat.MockChannel())
+	k.CreateChannel(ctx, spnmocks.MockChannel())
 	channel, _ := k.GetChannel(ctx, 0)
 	require.Zero(t, channel.MessageCount, "A new channel should have 0 message")
 
@@ -44,47 +44,47 @@ func TestAppendMessageToChannel(t *testing.T) {
 	require.Equal(t, message.Content, retrieved.Content, "The retrieved message should be the appended message")
 
 	// Prevent a invalid user to append a message
-	message = chat.MockMessage(0)
+	message = spnmocks.MockMessage(0)
 	message.Creator = "invalid_identifier"
 	_, err := k.AppendMessageToChannel(ctx, message)
 	require.Error(t, err, "AppendMessageToChannel should prevent an invalid user to append a message")
 
 	// Cannot append a vote in a non existing message
-	messageFound, err = k.AppendVoteToPoll(ctx, types.GetMessageIDFromChannelIDandIndex(0, 1), chat.MockVote(0))
+	messageFound, err = k.AppendVoteToPoll(ctx, types.GetMessageIDFromChannelIDandIndex(0, 1), spnmocks.MockVote(0))
 	require.NoError(t, err, "AppendVoteToPoll non existing message shouldn't be an error")
 	require.False(t, messageFound, "AppendVoteToPoll should return false on a non existing message")
 
 	// Can append a vote to the poll of a message
-	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(0))
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, spnmocks.MockVote(0))
 	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (0)")
-	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(1))
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, spnmocks.MockVote(1))
 	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (1)")
-	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(2))
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, spnmocks.MockVote(2))
 	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (2)")
-	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(3))
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, spnmocks.MockVote(3))
 	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (3)")
-	messageFound, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(4))
+	messageFound, err = k.AppendVoteToPoll(ctx, messageID, spnmocks.MockVote(4))
 	require.NoError(t, err, "AppendVoteToPoll shouldn't return an error (4)")
 	require.True(t, messageFound, "UpdateMessagePoll should return true if the message exists")
 	retrieved, _ = k.GetMessageByID(ctx, messageID)
 	require.Equal(t, 5, len(retrieved.Poll.Votes), "AppendVoteToPoll should append votes")
 
 	// AppendVoteToPoll fails if invalid vote
-	_, err = k.AppendVoteToPoll(ctx, messageID, chat.MockVote(5))
+	_, err = k.AppendVoteToPoll(ctx, messageID, spnmocks.MockVote(5))
 	require.Error(t, err, "AppendVoteToPoll should prevent invalid vote")
 
 	// AppendVoteToPoll prevents a invalid user to vote
-	vote := chat.MockVote(0)
+	vote := spnmocks.MockVote(0)
 	vote.Creator = "invalid_identifier"
 	_, err = k.AppendVoteToPoll(ctx, messageID, vote)
 	require.Error(t, err, "AppendVoteToPoll should prevent invalid vote")
 
 	// Can retrieve all message in a poll
-	message = chat.MockMessage(0)
+	message = spnmocks.MockMessage(0)
 	k.AppendMessageToChannel(ctx, message)
-	message = chat.MockMessage(0)
+	message = spnmocks.MockMessage(0)
 	k.AppendMessageToChannel(ctx, message)
-	message = chat.MockMessage(0)
+	message = spnmocks.MockMessage(0)
 	k.AppendMessageToChannel(ctx, message)
 	_, channelFound = k.GetAllMessagesFromChannel(ctx, 1)
 	require.False(t, channelFound, "GetAllMessagesFromChannel should return false on non existing channel")

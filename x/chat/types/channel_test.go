@@ -2,7 +2,7 @@ package types_test
 
 import (
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/x/chat"
+	spnmocks "github.com/tendermint/spn/internal/testing"
 	"github.com/tendermint/spn/x/chat/types"
 	"math/rand"
 	"testing"
@@ -12,7 +12,7 @@ func TestNewChannel(t *testing.T) {
 	// Can create a channel
 	channel, err := types.NewChannel(
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		"foo",
 		"bar",
 		nil,
@@ -21,10 +21,10 @@ func TestNewChannel(t *testing.T) {
 	require.Zero(t, channel.MessageCount, "NewChannel should create a channel with 0 message")
 
 	// Can create a channel with payload
-	payload := chat.MockPayload()
+	payload := spnmocks.MockPayload()
 	channel, err = types.NewChannel(
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		"foo",
 		"bar",
 		payload,
@@ -32,10 +32,10 @@ func TestNewChannel(t *testing.T) {
 	require.NoError(t, err, "NewChannel should create a new channel")
 
 	// Prevent creating a channel with an invalid name
-	bigName := chat.MockRandomString(types.ChannelTitleMaxLength + 1)
+	bigName := spnmocks.MockRandomString(types.ChannelTitleMaxLength + 1)
 	_, err = types.NewChannel(
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		bigName,
 		"bar",
 		nil,
@@ -43,10 +43,10 @@ func TestNewChannel(t *testing.T) {
 	require.Error(t, err, "NewChannel should prevent creating a channel with an invalid name")
 
 	// Prevent creating a channel with an invalid subject
-	bigSubject := chat.MockRandomString(types.ChannelDescriptionMaxLength + 1)
+	bigSubject := spnmocks.MockRandomString(types.ChannelDescriptionMaxLength + 1)
 	_, err = types.NewChannel(
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		"foo",
 		bigSubject,
 		nil,
@@ -59,7 +59,7 @@ func TestIncrementMessageCount(t *testing.T) {
 	// Increment the count of the message
 	channel, _ := types.NewChannel(
 		0,
-		chat.MockUser(),
+		spnmocks.MockUser(),
 		"foo",
 		"bar",
 		nil,

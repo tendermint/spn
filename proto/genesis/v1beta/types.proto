@@ -1,0 +1,86 @@
+syntax = "proto3";
+package spn.genesis.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/genesis/types";
+
+import "google/protobuf/any.proto";
+import "gogoproto/gogo.proto";
+
+message Chain {
+  string chainID = 1;
+  string creator = 2;
+  repeated string peers = 3; 
+  string sourceURL = 4; 
+  string sourceHash  = 5; 
+  int64 createdAt = 6;
+  bytes genesis = 7;
+  bool final = 8;
+}
+
+message Proposal {
+    ProposalInformation proposalInformation = 1;
+    ProposalState proposalState = 2;
+    google.protobuf.Any proposalPayload = 3;
+}
+
+message ProposalChange {
+    ProposalInformation proposalInformation = 1;
+    ProposalState proposalState = 2;
+    ProposalChangePayload proposalPayload = 3;
+}
+
+message ProposalAddAccount {
+    ProposalInformation proposalInformation = 1;
+    ProposalState proposalState = 2;
+    ProposalAddAccountPayload proposalPayload = 3;
+}
+
+message ProposalAddValidator {
+    ProposalInformation proposalInformation = 1;
+    ProposalState proposalState = 2;
+    ProposalAddValidatorPayload proposalPayload = 3;
+}
+
+message ProposalInformation {
+    string chainID = 1;
+    int32 proposalID = 2;
+    string creator = 3;
+    int64 createdAt = 4;
+    
+}
+
+message ProposalState {
+    enum Status {
+        APPROVED = 0;
+        REJECTED = 1;
+        PENDING = 2;
+    }
+    Status status = 1;
+    map<string, Vote> votes = 3;
+}
+
+message Vote {
+    int32 voteID = 1;
+    string creator = 2;
+    int64 createdAt = 3;
+    enum Value {
+        APPROVE = 0;
+        REJECT = 1;
+    }
+    Value value = 4;
+}
+
+message ProposalChangePayload {
+    repeated string changePath = 1;
+    string newValue = 2;
+}
+
+message ProposalAddAccountPayload {
+    bytes address = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+    repeated google.protobuf.Any coins = 2 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}
+
+message ProposalAddValidatorPayload {
+    google.protobuf.Any genTx = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types/tx.Tx"];
+    string peer = 2;
+}
