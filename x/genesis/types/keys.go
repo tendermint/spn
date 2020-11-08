@@ -24,6 +24,9 @@ const (
 	// ProposalKey is the key to store the proposals
 	ProposalKey = "proposal-"
 
+	// ProposalCountKey is the keyu to retrieve the count of proposal
+	ProposalCountKey = "proposalcount-"
+
 	// ApprovedProposalKey is the key to store the approved proposal ids
 	ApprovedProposalKey = "approvedproposal-"
 
@@ -50,6 +53,11 @@ func GetProposalKey(chainID string, proposalID int32) []byte {
 	// We use "_" to separate chainID and proposalID to avoid prefix conflic since "-" is allowed in chainID
 	key = append(key, []byte("_")...)
 	return append(key, []byte(strconv.Itoa(int(proposalID)))...)
+}
+
+// GetProposalCountKey returns the key for the proposal count store
+func GetProposalCountKey(chainID string) []byte {
+	return append(KeyPrefix(ProposalCountKey), []byte(chainID)...)
 }
 
 // GetApprovedProposalKey returns the the key for the approved proposal id store

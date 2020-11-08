@@ -21,7 +21,8 @@ type (
 
 func NewKeeper(
 	cdc codec.Marshaler,
-	storeKey, memKey sdk.StoreKey,
+	storeKey,
+	memKey sdk.StoreKey,
 	ik types.IdentityKeeper,
 ) *Keeper {
 	return &Keeper{

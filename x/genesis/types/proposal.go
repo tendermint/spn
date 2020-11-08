@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/cosmos/cosmos-sdk/codec"
+	"strconv"
 	"time"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -107,4 +108,20 @@ func UnmarshalProposalList(cdc codec.BinaryMarshaler, value []byte) ProposalList
 	var proposalList ProposalList
 	cdc.MustUnmarshalBinaryBare(value, &proposalList)
 	return proposalList
+}
+
+// MarshalProposalCount encodes proposal count for the store
+func MarshalProposalCount(cdc codec.BinaryMarshaler, count int32) []byte {
+	return []byte(strconv.Itoa(int(count)))
+}
+
+// UnmarshalProposalCount decodes proposal count from the store
+func UnmarshalProposalCount(cdc codec.BinaryMarshaler, value []byte) int32 {
+	count, err := strconv.Atoi(string(value))
+	if err != nil {
+		// We should never have non numeric data as proposal count
+		panic("The proposal count store contains an invalid value")
+	}
+
+	return int32(count)
 }
