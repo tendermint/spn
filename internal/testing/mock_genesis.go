@@ -3,17 +3,97 @@ package testing
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	tx "github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
+	identitytypes "github.com/tendermint/spn/x/identity/types"
+	"github.com/tendermint/tendermint/libs/log"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	dbm "github.com/tendermint/tm-db"
 
+	"github.com/tendermint/spn/x/genesis/keeper"
 	"github.com/tendermint/spn/x/genesis/types"
 
 	"math/rand"
 	"time"
 )
+
+// MockChatContext mocks the context and the keepers of the chat module for test purposes
+func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
+	// Codec
+	interfaceRegistry := codectypes.NewInterfaceRegistry()
+	cdc := codec.NewProtoCodec(interfaceRegistry)
+
+	// Store keys
+	keys := sdk.NewKVStoreKeys(types.StoreKey, identitytypes.StoreKey)
+
+	// Create a identity keeper
+	identityKeeper := identitykeeper.NewKeeper(cdc, keys[identitytypes.StoreKey], keys[identitytypes.MemStoreKey])
+
+	// Create a chat keeper
+	genesisKeeper := keeper.NewKeeper(cdc, keys[types.StoreKey], keys[types.MemStoreKey], identityKeeper)
+
+	// Create multiStore in memory
+	db := dbm.NewMemDB()
+	cms := store.NewCommitMultiStore(db)
+
+	// Mount stores
+	cms.MountStoreWithDB(keys[types.StoreKey], sdk.StoreTypeIAVL, db)
+	cms.LoadLatestVersion()
+
+	// Create context
+	ctx := sdk.NewContext(cms, tmproto.Header{}, false, log.NewNopLogger())
+
+	return ctx, genesisKeeper
+}
+
+// MockGenesis mocks a genesis structure
+func MockGenesis() []byte {
+	return []byte(MockRandomString(2000))
+}
+
+// MockChain mocks a chain information structure
+func MockChain() *types.Chain {
+	chain, _ := types.NewChain(
+		MockRandomAlphaString(5)+"-"+MockRandomAlphaString(5),
+		MockRandomString(20),
+		MockRandomString(20),
+		MockRandomString(20),
+		time.Now(),
+		MockGenesis(),
+	)
+
+	chain.Peers = []string(nil)
+
+	return chain
+}
+
+// MockProposal mocks a proposal
+func MockProposal() *types.Proposal {
+	proposal, _ := types.NewProposalChange(
+		MockProposalInformation(),
+		MockProposalChangePayload(),
+	)
+	return proposal
+}
+
+// MockProposalList mocks a list of proposal ID
+func MockProposalList() *types.ProposalList {
+	return &types.ProposalList{
+		ProposalIDs: []int32{
+			int32(rand.Intn(10000)),
+			int32(rand.Intn(10000)),
+			int32(rand.Intn(10000)),
+			int32(rand.Intn(10000)),
+			int32(rand.Intn(10000)),
+			int32(rand.Intn(10000)),
+		},
+	}
+}
 
 // MockProposalChangePayload mocks a valid payload
 func MockProposalChangePayload() *types.ProposalChangePayload {

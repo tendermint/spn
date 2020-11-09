@@ -9,8 +9,8 @@ import (
 func NewProposalChange(
 	proposalInformation *ProposalInformation,
 	payload *ProposalChangePayload,
-) (*ProposalChange, error) {
-	var proposal ProposalChange
+) (*Proposal, error) {
+	var proposal Proposal
 
 	proposal.ProposalInformation = proposalInformation
 	proposal.ProposalState = NewProposalState()
@@ -19,7 +19,7 @@ func NewProposalChange(
 	if err := ValidateProposalPayloadChange(payload); err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidProposalChange, err.Error())
 	}
-	proposal.ProposalPayload = payload
+	proposal.Payload = &Proposal_ChangePayload{payload}
 
 	return &proposal, nil
 }

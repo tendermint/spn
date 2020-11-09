@@ -20,25 +20,11 @@ message Chain {
 message Proposal {
     ProposalInformation proposalInformation = 1;
     ProposalState proposalState = 2;
-    google.protobuf.Any proposalPayload = 3;
-}
-
-message ProposalChange {
-    ProposalInformation proposalInformation = 1;
-    ProposalState proposalState = 2;
-    ProposalChangePayload proposalPayload = 3;
-}
-
-message ProposalAddAccount {
-    ProposalInformation proposalInformation = 1;
-    ProposalState proposalState = 2;
-    ProposalAddAccountPayload proposalPayload = 3;
-}
-
-message ProposalAddValidator {
-    ProposalInformation proposalInformation = 1;
-    ProposalState proposalState = 2;
-    ProposalAddValidatorPayload proposalPayload = 3;
+    oneof payload {
+        ProposalChangePayload changePayload = 3;
+        ProposalAddAccountPayload addAccountPayload = 4;
+        ProposalAddValidatorPayload addValidatorPayload = 5;
+    }
 }
 
 message ProposalInformation {
@@ -57,6 +43,10 @@ message ProposalState {
     }
     Status status = 1;
     map<string, Vote> votes = 3;
+}
+
+message ProposalList {
+    repeated int32 proposalIDs = 1;
 }
 
 message Vote {

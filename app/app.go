@@ -75,12 +75,12 @@ import (
 	appparams "github.com/tendermint/spn/app/params"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-		"github.com/tendermint/spn/x/genesis"
-		genesiskeeper "github.com/tendermint/spn/x/genesis/keeper"
-		genesistypes "github.com/tendermint/spn/x/genesis/types"
 	"github.com/tendermint/spn/x/chat"
 	chatkeeper "github.com/tendermint/spn/x/chat/keeper"
 	chattypes "github.com/tendermint/spn/x/chat/types"
+	"github.com/tendermint/spn/x/genesis"
+	genesiskeeper "github.com/tendermint/spn/x/genesis/keeper"
+	genesistypes "github.com/tendermint/spn/x/genesis/types"
 	"github.com/tendermint/spn/x/identity"
 	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
 	identitytypes "github.com/tendermint/spn/x/identity/types"
@@ -176,7 +176,7 @@ type App struct {
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
-		genesisKeeper genesiskeeper.Keeper
+	genesisKeeper  genesiskeeper.Keeper
 	identityKeeper identitykeeper.Keeper
 	chatKeeper     chatkeeper.Keeper
 
@@ -309,11 +309,12 @@ func New(
 	app.EvidenceKeeper = *evidenceKeeper
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
-		app.genesisKeeper = *genesiskeeper.NewKeeper(
-			appCodec,
-			keys[genesistypes.StoreKey],
-			keys[genesistypes.MemStoreKey],
-		)
+	app.genesisKeeper = *genesiskeeper.NewKeeper(
+		appCodec,
+		keys[genesistypes.StoreKey],
+		keys[genesistypes.MemStoreKey],
+		app.identityKeeper,
+	)
 	app.identityKeeper = *identitykeeper.NewKeeper(
 		appCodec,
 		keys[identitytypes.StoreKey],
@@ -563,7 +564,7 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
-		paramsKeeper.Subspace(genesistypes.ModuleName)
+	paramsKeeper.Subspace(genesistypes.ModuleName)
 	paramsKeeper.Subspace(identitytypes.ModuleName)
 	paramsKeeper.Subspace(chattypes.ModuleName)
 
