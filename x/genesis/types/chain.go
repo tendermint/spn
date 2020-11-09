@@ -1,10 +1,12 @@
 package types
 
 import (
+	"encoding/json"
 	"fmt"
-	"time"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	tmtypes "github.com/tendermint/tendermint/types"
+	"time"
 )
 
 // NewChain creates a new chain information object
@@ -18,6 +20,7 @@ func NewChain(
 ) (*Chain, error) {
 	var chain Chain
 
+	// Check chainID validity
 	if !checkChainID(chainID) {
 		return nil, sdkerrors.Wrap(ErrInvalidChain, fmt.Sprintf("invalid chain ID %v", chainID))
 	}
@@ -27,8 +30,23 @@ func NewChain(
 	chain.SourceURL = sourceURL
 	chain.SourceHash = sourceHash
 	chain.CreatedAt = createdAt.Unix()
-	chain.Genesis = genesis
 	chain.Final = false
+
+	// Check genesis validity and complete eventual missing fields with default values
+	var genesisObject tmtypes.GenesisDoc
+	if err := json.Unmarshal(genesis, &genesisObject); err != nil {
+		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	}
+	genesisObject.ChainID = chainID
+	if err := genesisObject.ValidateAndComplete(); err != nil {
+		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	}
+	genesis, err := json.Marshal(genesisObject)
+	if err != nil {
+		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	}
+
+	chain.Genesis = genesis
 
 	return &chain, nil
 }
@@ -41,6 +59,11 @@ func (c *Chain) AppendPeer(peer string) {
 // checkChainID performs stateless verification of the chainID
 // The chainID must contain only alphanumeric character or hyphen
 func checkChainID(chainID string) bool {
+	// Check the chainID is not empty
+	if len(chainID) == 0 {
+		return false
+	}
+
 	// Iterate characters
 	for _, c := range chainID {
 		if !isChainAuthorizedChar(c) {

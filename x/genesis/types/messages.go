@@ -3,6 +3,8 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	tmtypes "github.com/tendermint/tendermint/types"
+	"encoding/json"
 )
 
 // Chat message types
@@ -31,14 +33,14 @@ func NewMsgChainCreate(
 	creator sdk.AccAddress,
 	sourceURL string,
 	sourceHash string,
-	initialGenesis []byte,
+	genesis []byte,
 ) *MsgChainCreate {
 	return &MsgChainCreate{
 		ChainID:        chainID,
 		Creator:        creator,
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
-		InitialGenesis: initialGenesis,
+		Genesis: genesis,
 	}
 }
 
@@ -63,14 +65,23 @@ func (msg MsgChainCreate) GetSignBytes() []byte {
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgChainCreate) ValidateBasic() error {
 	if !checkChainID(msg.ChainID) {
-		return ErrInvalidChain
+		return sdkerrors.Wrap(ErrInvalidChain, "Invalid chain ID")
 	}
-	if msg.SourceURL == "" || msg.SourceHash == "" {
-		return ErrInvalidChain
+	if msg.SourceURL == "" {
+		return sdkerrors.Wrap(ErrInvalidChain, "Missing source URL")
 	}
-	// TODO: More advanced way to check initial genesis validity
-	if msg.InitialGenesis == nil {
-		return ErrInvalidChain
+	if msg.SourceHash == "" {
+		return sdkerrors.Wrap(ErrInvalidChain, "Missing source hash")
+	}
+
+	// Check genesis validity
+	var genesisObject tmtypes.GenesisDoc
+	if err := json.Unmarshal(msg.Genesis, &genesisObject); err != nil {
+		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	}
+	genesisObject.ChainID = msg.ChainID
+	if err := genesisObject.ValidateAndComplete(); err != nil {
+		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
 	}
 
 	return nil
