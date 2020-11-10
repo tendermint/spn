@@ -34,7 +34,7 @@ func handleMsgChainCreate(ctx sdk.Context, k keeper.Keeper, msg *types.MsgChainC
 	// Check the chain doesn't already exist
 	_, found := k.GetChain(ctx, msg.ChainID)
 	if found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidChain, fmt.Sprint("Chain with chain ID %v already exists", msg.ChainID))
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, fmt.Sprintf("Chain with chain ID %v already exists", msg.ChainID))
 	}
 
 	// Create the chain
