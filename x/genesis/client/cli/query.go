@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/genesis/types"
+	"io/ioutil"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -63,6 +64,7 @@ func CmdListChains() *cobra.Command {
 		},
 	}
 
+	flags.AddPaginationFlagsToCmd(cmd, "chains")
 	flags.AddQueryFlagsToCmd(cmd)
 
 	return cmd
@@ -92,10 +94,18 @@ func CmdShowChain() *cobra.Command {
 				return err
 			}
 
+			// Check if the genesis must be save in a file
+			genesisFile, _ := cmd.Flags().GetString(FlagSaveGenesis)
+			if genesisFile != "" {
+				genesis := res.Chain.Genesis
+				ioutil.WriteFile(genesisFile, genesis, 0644)
+			}
+
 			return clientCtx.PrintOutput(res)
 		},
 	}
 
+	cmd.Flags().AddFlagSet(FlagSetSaveGenesis())
 	flags.AddQueryFlagsToCmd(cmd)
 
 	return cmd
