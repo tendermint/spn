@@ -1,8 +1,10 @@
 package types_test
 
 import (
+	tmtypes "github.com/tendermint/tendermint/types"
 	"testing"
 	"time"
+	"encoding/json"
 
 	spnmocks "github.com/tendermint/spn/internal/testing"
 
@@ -18,7 +20,7 @@ func TestNewChain(t *testing.T) {
 		spnmocks.MockRandomString(20),
 		spnmocks.MockRandomString(20),
 		time.Now(),
-		[]byte(spnmocks.MockRandomString(2000)),
+		spnmocks.MockGenesis(),
 	)
 	require.NoError(t, err, "NewChain should create a new chain")
 	require.Equal(t, 0, len(chain.Peers), "chain should have no peer when create")
@@ -38,7 +40,35 @@ func TestNewChain(t *testing.T) {
 		spnmocks.MockRandomString(20),
 		spnmocks.MockRandomString(20),
 		time.Now(),
-		[]byte(spnmocks.MockRandomString(2000)),
+		spnmocks.MockGenesis(),
 	)
 	require.Error(t, err, "NewChain should prevent creating chains with an invalid name")
+
+	// Prevent creating a chain with a invalid genesis
+	_, err = types.NewChain(
+		spnmocks.MockRandomString(5)+"_"+spnmocks.MockRandomString(5),
+		spnmocks.MockRandomString(20),
+		spnmocks.MockRandomString(20),
+		spnmocks.MockRandomString(20),
+		time.Now(),
+		[]byte(spnmocks.MockRandomString(500)),
+	)
+	require.Error(t, err, "NewChain should prevent creating chains with an invalid genesis")
+
+	var genesisObject tmtypes.GenesisDoc
+	genesisObject.ConsensusParams = tmtypes.DefaultConsensusParams()
+	genesisObject.ChainID = ""
+	genesis, err := json.Marshal(genesisObject)
+	if err != nil {
+		panic("Cannot marshal genesis")
+	}
+	_, err = types.NewChain(
+		spnmocks.MockRandomString(5)+"_"+spnmocks.MockRandomString(5),
+		spnmocks.MockRandomString(20),
+		spnmocks.MockRandomString(20),
+		spnmocks.MockRandomString(20),
+		time.Now(),
+		genesis,
+	)
+	require.Error(t, err, "NewChain should prevent creating chains with an invalid genesis")
 }
