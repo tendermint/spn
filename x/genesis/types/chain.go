@@ -1,10 +1,10 @@
 package types
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmtypes "github.com/tendermint/tendermint/types"
 	"time"
 )
@@ -34,14 +34,15 @@ func NewChain(
 
 	// Check genesis validity and complete eventual missing fields with default values
 	var genesisObject tmtypes.GenesisDoc
-	if err := json.Unmarshal(genesis, &genesisObject); err != nil {
+
+	if err := tmjson.Unmarshal(genesis, &genesisObject); err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
 	}
 	genesisObject.ChainID = chainID
 	if err := genesisObject.ValidateAndComplete(); err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
 	}
-	genesis, err := json.Marshal(genesisObject)
+	genesis, err := tmjson.Marshal(genesisObject)
 	if err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
 	}

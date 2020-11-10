@@ -10,12 +10,12 @@ import (
 )
 
 type chainCreateRequest struct {
-	BaseReq rest.BaseReq `json:"base_req"`
-	Creator string       `json:"creator"`
+	BaseReq    rest.BaseReq `json:"base_req"`
+	Creator    string       `json:"creator"`
 	ChainID    string       `json:"chain_id"`
-	SourceURL string       `json:"source_url"`
+	SourceURL  string       `json:"source_url"`
 	SourceHash string       `json:"source_hash"`
-	Genesis string		`json:"genesis"`
+	Genesis    string       `json:"genesis"`
 }
 
 func createChannelHandler(clientCtx client.Context) http.HandlerFunc {

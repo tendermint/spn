@@ -3,8 +3,8 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmtypes "github.com/tendermint/tendermint/types"
-	"encoding/json"
 )
 
 // Chat message types
@@ -76,7 +76,7 @@ func (msg MsgChainCreate) ValidateBasic() error {
 
 	// Check genesis validity
 	var genesisObject tmtypes.GenesisDoc
-	if err := json.Unmarshal(msg.Genesis, &genesisObject); err != nil {
+	if err := tmjson.Unmarshal(msg.Genesis, &genesisObject); err != nil {
 		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
 	}
 	genesisObject.ChainID = msg.ChainID

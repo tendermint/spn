@@ -11,6 +11,7 @@ import (
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
 	identitytypes "github.com/tendermint/spn/x/identity/types"
+	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtypes "github.com/tendermint/tendermint/types"
@@ -69,7 +70,7 @@ func MockGenesis() []byte {
 	genesisObject.AppState = appState
 
 	// JSON encode the genesis
-	genesis, err := json.Marshal(genesisObject)
+	genesis, err := tmjson.Marshal(genesisObject)
 	if err != nil {
 		panic("Cannot marshal genesis")
 	}

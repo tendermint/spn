@@ -1,10 +1,10 @@
 package cli
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmtypes "github.com/tendermint/tendermint/types"
 
 	"github.com/spf13/cobra"
@@ -28,7 +28,7 @@ func GetTxCmd() *cobra.Command {
 		CmdChainCreate(),
 	)
 
-	return cmd 
+	return cmd
 }
 
 // CmdChainCreate returns the transaction command to create a new chain
@@ -51,7 +51,7 @@ func CmdChainCreate() *cobra.Command {
 			}
 
 			// Convert genesis
-			genesis, err := json.Marshal(*genesisDoc)
+			genesis, err := tmjson.Marshal(*genesisDoc)
 			if err != nil {
 				return err
 			}
