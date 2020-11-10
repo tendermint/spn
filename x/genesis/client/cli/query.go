@@ -3,9 +3,8 @@ package cli
 import (
 	"context"
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/client/flags"
-
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/genesis/types"
 )
@@ -23,6 +22,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(
 		CmdListChains(),
+		CmdShowChain(),
 	)
 
 	return cmd
@@ -55,6 +55,39 @@ func CmdListChains() *cobra.Command {
 
 			// Perform the request
 			res, err := queryClient.ListChains(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdShowChain returns the command to show a chain
+func CmdShowChain() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "show-chain [chain-id]",
+		Short: "show info concerning a chain to launch",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryShowChainRequest{
+				ChainID: args[0],
+			}
+
+			res, err := queryClient.ShowChain(context.Background(), params)
 			if err != nil {
 				return err
 			}

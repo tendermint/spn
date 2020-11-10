@@ -1,9 +1,11 @@
 package keeper
 
 import (
+	"fmt"
 	"context"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/tendermint/spn/x/genesis/types"
 	"google.golang.org/grpc/codes"
@@ -45,10 +47,18 @@ func (k Keeper) ShowChain(
 	c context.Context,
 	req *types.QueryShowChainRequest,
 ) (*types.QueryShowChainResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
-	return nil, nil
+
+	chain, found := k.GetChain(ctx, req.ChainID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, fmt.Sprintf("chain not found"))
+	}
+
+	return &types.QueryShowChainResponse{Chain: &chain}, nil
 }
 
 // ListProposals lists the proposals for a chain
