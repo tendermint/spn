@@ -20,6 +20,7 @@ func RegisterRoutes(clientCtx client.Context, r *mux.Router) {
 }
 
 func registerQueryRoutes(clientCtx client.Context, r *mux.Router) {
+	r.HandleFunc("/genesis/chains", listChannelsHandler(clientCtx)).Methods(MethodGet)
 }
 
 func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
