@@ -25,7 +25,7 @@ func TestHandleMsgChainCreate(t *testing.T) {
 		sourceURL,
 		sourceHash,
 		genesis,
-		)
+	)
 	_, err := h(ctx, msg)
 	require.NoError(t, err, "NewMsgChainCreate with a correct chain should succeed")
 	retrieved, found := k.GetChain(ctx, chainID)

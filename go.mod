@@ -3,7 +3,6 @@ module github.com/tendermint/spn
 go 1.14
 
 require (
-	github.com/Workiva/go-datastructures v1.0.52
 	github.com/cenkalti/backoff v2.2.1+incompatible
 	github.com/cosmos/cosmos-sdk v0.40.0-rc0
 	github.com/gogo/protobuf v1.3.1
