@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmtypes "github.com/tendermint/tendermint/types"
 
@@ -26,6 +27,7 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		CmdChainCreate(),
+		CmdProposalAddAccount(),
 	)
 
 	return cmd
@@ -63,6 +65,49 @@ func CmdChainCreate() *cobra.Command {
 				args[1],
 				args[2],
 				genesis,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdProposalAddAccount returns the transaction command to add a new account into the genesis
+func CmdProposalAddAccount() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "proposal-add-account [chain-id] [coins]",
+		Short: "Add a proposal to add a genesis account, [coins] must be comma separated coin denominations: 1000atom,1000stake",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			// Parse coins
+			coins, err := sdk.ParseCoins(args[1])
+			if err != nil {
+				return err
+			}
+
+			// Construct payload
+			payload := types.NewProposalAddAccountPayload(
+				clientCtx.GetFromAddress(),
+				coins,
+			)
+
+			// Create and send message
+			msg := types.NewMsgProposalAddAccount(
+				args[0],
+				clientCtx.GetFromAddress(),
+				payload,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
