@@ -11,8 +11,10 @@ import (
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
 	identitytypes "github.com/tendermint/spn/x/identity/types"
+	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/tendermint/spn/x/genesis/keeper"
@@ -20,6 +22,7 @@ import (
 
 	"math/rand"
 	"time"
+	"encoding/json"
 )
 
 // MockChatContext mocks the context and the keepers of the chat module for test purposes
@@ -53,7 +56,26 @@ func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 
 // MockGenesis mocks a genesis structure
 func MockGenesis() []byte {
-	return []byte(MockRandomString(2000))
+	var genesisObject tmtypes.GenesisDoc
+
+	consensusParam := tmtypes.DefaultConsensusParams()
+	genesisObject.ChainID = MockRandomAlphaString(10)
+	genesisObject.ConsensusParams = consensusParam
+
+	// AppSate can be any json, let reuse consensus default param as a sample
+	appState, err := json.Marshal(*consensusParam)
+	if err != nil {
+		panic("Cannot unmarshal consensusParam")
+	}
+	genesisObject.AppState = appState
+
+	// JSON encode the genesis
+	genesis, err := tmjson.Marshal(genesisObject)
+	if err != nil {
+		panic("Cannot marshal genesis")
+	}
+
+	return genesis
 }
 
 // MockChain mocks a chain information structure
