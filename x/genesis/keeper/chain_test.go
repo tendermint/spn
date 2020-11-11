@@ -1,8 +1,12 @@
 package keeper_test
 
 import (
+	"context"
+	"github.com/cosmos/cosmos-sdk/baseapp"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
+	"github.com/tendermint/spn/x/genesis/types"
 	"testing"
 )
 
@@ -39,4 +43,20 @@ func TestGetChain(t *testing.T) {
 	require.Contains(t, allChains, *chain4, "GetAllChains should retrieve all chains")
 	require.Contains(t, allChains, *chain5, "GetAllChains should retrieve all chains")
 	require.Contains(t, allChains, *chain6, "GetAllChains should retrieve all chains")
+
+	// Get query all the chain
+	queryHelper := baseapp.NewQueryServerTestHelper(ctx,  codectypes.NewInterfaceRegistry())
+	types.RegisterQueryServer(queryHelper, k)
+	queryClient := types.NewQueryClient(queryHelper)
+
+	var query types.QueryListChainsRequest
+	listChainsRes, err := queryClient.ListChains(context.Background(), &query)
+	require.NoError(t, err, "ListChains should list chains")
+	require.Equal(t, 6, len( listChainsRes.ChainIDs), "ListChains should list chains")
+	require.Contains(t, listChainsRes.ChainIDs, chain.ChainID, "ListChains should list chains")
+	require.Contains(t, listChainsRes.ChainIDs, chain2.ChainID, "ListChains should list chains")
+	require.Contains(t, listChainsRes.ChainIDs, chain3.ChainID, "ListChains should list chains")
+	require.Contains(t, listChainsRes.ChainIDs, chain4.ChainID, "ListChains should list chains")
+	require.Contains(t, listChainsRes.ChainIDs, chain5.ChainID, "ListChains should list chains")
+	require.Contains(t, listChainsRes.ChainIDs, chain6.ChainID, "ListChains should list chains")
 }
