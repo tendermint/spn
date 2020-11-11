@@ -75,7 +75,7 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 		spnmocks.MockProposalAddAccountPayload(),
 	)
 	_, err = h(ctx, msg)
-	require.Error(t, err, "MsgProposalAddAccount should append a new proposal")
+	require.NoError(t, err, "MsgProposalAddAccount should append a new proposal")
 
 	// Can retrieve the proposal
 	proposal, found := k.GetProposal(ctx, chainID, 0)
@@ -86,7 +86,7 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 
 	// The proposal is added to the pending proposals
 	pending := k.GetPendingProposals(ctx, chainID)
-	require.Contains(t, pending, 0, "MsgProposalAddAccount should append the proposal to the pending pool")
+	require.Contains(t, pending.ProposalIDs, int32(0), "MsgProposalAddAccount should append the proposal to the pending pool")
 
 	// The proposal count is incremented
 	count := k.GetProposalCount(ctx, chainID)
@@ -138,7 +138,7 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 		spnmocks.MockProposalAddValidatorPayload(),
 	)
 	_, err = h(ctx, msg)
-	require.Error(t, err, "MsgProposalAddValidator should append a new proposal")
+	require.NoError(t, err, "MsgProposalAddValidator should append a new proposal")
 
 	// Can retrieve the proposal
 	proposal, found := k.GetProposal(ctx, chainID, 5)
@@ -149,7 +149,7 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 
 	// The proposal is added to the pending proposals
 	pending := k.GetPendingProposals(ctx, chainID)
-	require.Contains(t, pending, 5, "MsgProposalAddValidator should append the proposal to the pending pool")
+	require.Contains(t, pending.ProposalIDs, int32(5), "MsgProposalAddValidator should append the proposal to the pending pool")
 
 	// The proposal count is incremented
 	count := k.GetProposalCount(ctx, chainID)
