@@ -61,15 +61,34 @@ func (k Keeper) ShowChain(
 	return &types.QueryShowChainResponse{Chain: &chain}, nil
 }
 
-// ListProposals lists the proposals for a chain
-func (k Keeper) ListProposals(
+// PendingProposals lists the pending proposals for a chain
+func (k Keeper) PendingProposals(
 	c context.Context,
-	req *types.QueryListProposalsRequest,
-) (*types.QueryListProposalsResponse, error) {
+	req *types.QueryPendingProposalsRequest,
+) (*types.QueryPendingProposalsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
-	return nil, nil
+
+	// Get the pending proposal IDs
+	pendingProposals := k.GetPendingProposals(ctx, req.ChainID)
+
+	// Fetch all the proposals
+	proposals := make([]*types.Proposal, len(pendingProposals.ProposalIDs))
+	for _, pending := range pendingProposals.ProposalIDs {
+		proposal, found := k.GetProposal(ctx, req.ChainID, pending)
+
+		// Every proposals in the pending pool should exist
+		if !found {
+			panic(fmt.Sprintf("The proposal %v doesn't exist", pending))
+		}
+
+		proposals = append(proposals, &proposal)
+	}
+
+	return &types.QueryPendingProposalsResponse{Proposals: proposals}, nil
 }
 
 // ShowProposal describes a specific proposal
@@ -77,8 +96,16 @@ func (k Keeper) ShowProposal(
 	c context.Context,
 	req *types.QueryShowProposalRequest,
 ) (*types.QueryShowProposalResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
-	return nil, nil
+
+	proposal, found := k.GetProposal(ctx, req.ChainID, req.ProposalID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidProposal, fmt.Sprintf("proposal not found"))
+	}
+
+	return &types.QueryShowProposalResponse{Proposal: &proposal}, nil
 }

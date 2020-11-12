@@ -54,3 +54,11 @@ func createChannelHandler(clientCtx client.Context) http.HandlerFunc {
 		tx.WriteGeneratedTxResponse(clientCtx, w, req.BaseReq, msg)
 	}
 }
+
+type proposalAddAccountRequest struct {
+	BaseReq rest.BaseReq `json:"base_req"`
+	Creator string       `json:"creator"`
+	ChainID string       `json:"chain_id"`
+	Coins   string       `json:"coins"`
+}
+

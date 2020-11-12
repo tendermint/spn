@@ -1,17 +1,21 @@
 package cli
 
 import (
+	_ "encoding/json"
 	"fmt"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/spf13/cobra"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmtypes "github.com/tendermint/tendermint/types"
-
-	"github.com/spf13/cobra"
+	"io/ioutil"
+	_ "io/ioutil"
+	_ "os"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
+	txtypes "github.com/cosmos/cosmos-sdk/types/tx"
+
 	"github.com/tendermint/spn/x/genesis/types"
 )
 
@@ -28,6 +32,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(
 		CmdChainCreate(),
 		CmdProposalAddAccount(),
+		CmdProposalAddValidator(),
 	)
 
 	return cmd
@@ -94,7 +99,7 @@ func CmdProposalAddAccount() *cobra.Command {
 			// Parse coins
 			coins, err := sdk.ParseCoins(args[1])
 			if err != nil {
-				return err
+				return fmt.Errorf("failed to parse coins: %v", err.Error())
 			}
 
 			// Construct payload
@@ -105,6 +110,56 @@ func CmdProposalAddAccount() *cobra.Command {
 
 			// Create and send message
 			msg := types.NewMsgProposalAddAccount(
+				args[0],
+				clientCtx.GetFromAddress(),
+				payload,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdProposalAddValidator returns the transaction command to add a new validator into the genesis
+func CmdProposalAddValidator() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "proposal-add-validator [chain-id] [peer] [gentx-file]",
+		Short: "Add a proposal to add a gentx to add a validator during chain initialization",
+		Args:  cobra.ExactArgs(3),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			// Read gentxFile
+			gentxBytes, err := ioutil.ReadFile(args[2])
+			if err != nil {
+				return err
+			}
+
+			// Parse gentx
+			var gentx txtypes.Tx
+			err = clientCtx.JSONMarshaler.UnmarshalJSON(gentxBytes, &gentx)
+			if err != nil {
+				return err
+			}
+
+			// Construct payload
+			payload := types.NewProposalAddValidatorPayload(
+				gentx,
+				args[1],
+			)
+
+			// Create and send message
+			msg := types.NewMsgProposalAddValidator(
 				args[0],
 				clientCtx.GetFromAddress(),
 				payload,

@@ -1,4 +1,4 @@
-package cli
+ package cli
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/genesis/types"
 	"io/ioutil"
+	"strconv"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -24,6 +25,8 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(
 		CmdListChains(),
 		CmdShowChain(),
+		CmdShowProposal(),
+		CmdPendingProposals(),
 	)
 
 	return cmd
@@ -33,7 +36,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 func CmdListChains() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-chains",
-		Short: "show info concerning a channel",
+		Short: "list the chains to launch",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -110,3 +113,76 @@ func CmdShowChain() *cobra.Command {
 
 	return cmd
 }
+
+// CmdShowProposal returns the command to show a proposal
+func CmdShowProposal() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "show-proposal [chain-id] [proposal-id]",
+		Short: "show info concerning a proposal for a chain genesis",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			// Convert proposal ID
+			proposalID, err := strconv.Atoi(args[1])
+			if err != nil {
+				return err
+			}
+
+			params := &types.QueryShowProposalRequest{
+				ChainID: args[0],
+				ProposalID: int32(proposalID),
+			}
+
+			res, err := queryClient.ShowProposal(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+ // CmdPendingProposals returns the command to list pending proposals for a chain genesis
+ func CmdPendingProposals() *cobra.Command {
+	 cmd := &cobra.Command{
+		 Use:   "pending-proposals [chain-id]",
+		 Short: "list the pending proposals for a chain genesis",
+		 Args:  cobra.ExactArgs(1),
+		 RunE: func(cmd *cobra.Command, args []string) error {
+			 clientCtx := client.GetClientContextFromCmd(cmd)
+			 clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			 if err != nil {
+				 return err
+			 }
+
+			 queryClient := types.NewQueryClient(clientCtx)
+
+			 params := &types.QueryPendingProposalsRequest{
+				 ChainID: args[0],
+			 }
+
+			 // Perform the request
+			 res, err := queryClient.PendingProposals(context.Background(), params)
+			 if err != nil {
+				 return err
+			 }
+
+			 return clientCtx.PrintOutput(res)
+		 },
+	 }
+
+	 flags.AddQueryFlagsToCmd(cmd)
+
+	 return cmd
+ }
