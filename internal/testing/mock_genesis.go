@@ -149,23 +149,6 @@ func MockProposalInformation() *types.ProposalInformation {
 	)
 }
 
-// MockProposalVote mocks a vote for a genesis proposal
-func MockProposalVote(voter string) *types.Vote {
-	voteValue := types.Vote_REJECT
-
-	if r := rand.Intn(10); r > 5 {
-		voteValue = types.Vote_APPROVE
-	}
-
-	vote, _ := types.NewVote(
-		int32(rand.Intn(10)),
-		voter,
-		time.Now(),
-		voteValue,
-	)
-	return vote
-}
-
 // MockGenTx mocks a gentx transaction
 func MockGenTx() tx.Tx {
 	privKey, opAddress := MockValAddress()

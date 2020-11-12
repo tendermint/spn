@@ -32,13 +32,14 @@ message MsgProposalAddValidator {
     ProposalAddValidatorPayload payload = 3;
 }
 
-message MsgProposalVote {
+message MsgApprove {
     string chainID = 1;
     int32 proposalID = 2;
-    bytes creator = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-    enum Value {
-        APPROVE = 0;
-        REJECT = 1;
-    }
-    Value value = 4;
+    bytes approver = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+}
+
+message MsgReject {
+    string chainID = 1;
+    int32 proposalID = 2;
+    bytes rejector = 3 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
 }

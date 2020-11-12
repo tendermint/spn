@@ -19,21 +19,9 @@ func TestNewProposalState(t *testing.T) {
 	// Can create a proposal state
 	ps := types.NewProposalState()
 	require.Equal(t, types.ProposalState_PENDING, ps.Status, "NewProposalState should create a pending proposal")
-	require.Equal(t, 0, len(ps.Votes), "NewProposalState should create a proposal with no vote")
-
-	// Can append a vote in the proposal state
-	fooVote := spnmocks.MockProposalVote("foo")
-	ps.AppendVote(fooVote)
-	ps.AppendVote(spnmocks.MockProposalVote("bar"))
-	require.Equal(t, 2, len(ps.Votes), "AppendVote should append votes")
-	require.Equal(t, fooVote, ps.Votes["foo"], "AppendVote should append votes")
-
-	// Prevent voting twice for the same identity
-	err := ps.AppendVote(fooVote)
-	require.Error(t, err, "AppendVote shoud prevent voting twice")
 
 	// Can change the state of the proposal
-	err = ps.SetStatus(types.ProposalState_APPROVED)
+	err := ps.SetStatus(types.ProposalState_APPROVED)
 	require.NoError(t, err, "SetStatus should set status of the proposal")
 	require.Equal(t, types.ProposalState_APPROVED, ps.Status, "SetStatus should set status of the proposal")
 }

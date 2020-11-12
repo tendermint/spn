@@ -42,22 +42,10 @@ message ProposalState {
         PENDING = 2;
     }
     Status status = 1;
-    map<string, Vote> votes = 3;
 }
 
 message ProposalList {
     repeated int32 proposalIDs = 1;
-}
-
-message Vote {
-    int32 voteID = 1;
-    string creator = 2;
-    int64 createdAt = 3;
-    enum Value {
-        APPROVE = 0;
-        REJECT = 1;
-    }
-    Value value = 4;
 }
 
 message ProposalChangePayload {
