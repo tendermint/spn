@@ -1,6 +1,7 @@
 package testing
 
 import (
+	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store"
@@ -25,7 +26,7 @@ import (
 	"encoding/json"
 )
 
-// MockChatContext mocks the context and the keepers of the chat module for test purposes
+// MockGenesisContext mocks the context and the keepers of the genesis module for test purposes
 func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 	// Codec
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
@@ -52,6 +53,13 @@ func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 	ctx := sdk.NewContext(cms, tmproto.Header{}, false, log.NewNopLogger())
 
 	return ctx, genesisKeeper
+}
+
+// MockGenesisQueryClient mocks a query client for the genesis module
+func MockGenesisQueryClient(ctx sdk.Context, k *keeper.Keeper) types.QueryClient {
+	queryHelper := baseapp.NewQueryServerTestHelper(ctx, codectypes.NewInterfaceRegistry())
+	types.RegisterQueryServer(queryHelper, k)
+	return types.NewQueryClient(queryHelper)
 }
 
 // MockGenesis mocks a genesis structure

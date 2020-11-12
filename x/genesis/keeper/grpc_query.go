@@ -55,7 +55,7 @@ func (k Keeper) ShowChain(
 
 	chain, found := k.GetChain(ctx, req.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidChain, fmt.Sprintf("chain not found"))
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain,"chain not found")
 	}
 
 	return &types.QueryShowChainResponse{Chain: &chain}, nil
@@ -70,6 +70,12 @@ func (k Keeper) PendingProposals(
 
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	// Return error if the chain doesn't exist
+	_, found := k.GetChain(ctx, req.ChainID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain,"chain not found")
 	}
 
 	// Get the pending proposal IDs
@@ -102,9 +108,15 @@ func (k Keeper) ShowProposal(
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
+	// Return error if the chain doesn't exist
+	_, found := k.GetChain(ctx, req.ChainID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain,"chain not found")
+	}
+
 	proposal, found := k.GetProposal(ctx, req.ChainID, req.ProposalID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidProposal, fmt.Sprintf("proposal not found"))
+		return nil, sdkerrors.Wrap(types.ErrInvalidProposal,"proposal not found")
 	}
 
 	return &types.QueryShowProposalResponse{Proposal: &proposal}, nil
