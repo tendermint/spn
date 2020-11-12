@@ -117,7 +117,7 @@ func TestPendingProposals(t *testing.T) {
 	require.NoError(t, err)
 	retrievedPayload1, ok := showRes.Proposal.Payload.(*types.Proposal_AddAccountPayload)
 	require.True(t, ok)
-	require.Equal(t, proposal1, retrievedPayload1.AddAccountPayload)
+	require.True(t, proposal1.Address.Equals(retrievedPayload1.AddAccountPayload.Address))
 
 	// Test with the add validator query
 	showQuery = types.QueryShowProposalRequest{
@@ -128,7 +128,7 @@ func TestPendingProposals(t *testing.T) {
 	require.NoError(t, err)
 	retrievedPayload2, ok := showRes.Proposal.Payload.(*types.Proposal_AddValidatorPayload)
 	require.True(t, ok)
-	require.Equal(t, proposal2, retrievedPayload2.AddValidatorPayload)
+	require.Equal(t, proposal2.Peer, retrievedPayload2.AddValidatorPayload.Peer)
 
 	// ShowProposal fails if the proposal doesn't exist
 	showQuery = types.QueryShowProposalRequest{

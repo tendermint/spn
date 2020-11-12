@@ -83,7 +83,7 @@ func (k Keeper) PendingProposals(
 
 	// Fetch all the proposals
 	proposals := make([]*types.Proposal, len(pendingProposals.ProposalIDs))
-	for _, pending := range pendingProposals.ProposalIDs {
+	for i, pending := range pendingProposals.ProposalIDs {
 		proposal, found := k.GetProposal(ctx, req.ChainID, pending)
 
 		// Every proposals in the pending pool should exist
@@ -91,7 +91,7 @@ func (k Keeper) PendingProposals(
 			panic(fmt.Sprintf("The proposal %v doesn't exist", pending))
 		}
 
-		proposals = append(proposals, &proposal)
+		proposals[i] = &proposal
 	}
 
 	return &types.QueryPendingProposalsResponse{Proposals: proposals}, nil
