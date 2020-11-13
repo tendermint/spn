@@ -110,7 +110,7 @@ func TestPendingProposals(t *testing.T) {
 
 	// Can query a specific proposal
 	showQuery := types.QueryShowProposalRequest{
-		ChainID: chainID,
+		ChainID:    chainID,
 		ProposalID: 0,
 	}
 	showRes, err := q.ShowProposal(context.Background(), &showQuery)
@@ -121,7 +121,7 @@ func TestPendingProposals(t *testing.T) {
 
 	// Test with the add validator query
 	showQuery = types.QueryShowProposalRequest{
-		ChainID: chainID,
+		ChainID:    chainID,
 		ProposalID: 1,
 	}
 	showRes, err = q.ShowProposal(context.Background(), &showQuery)
@@ -132,7 +132,7 @@ func TestPendingProposals(t *testing.T) {
 
 	// ShowProposal fails if the proposal doesn't exist
 	showQuery = types.QueryShowProposalRequest{
-		ChainID: chainID,
+		ChainID:    chainID,
 		ProposalID: 1000,
 	}
 	_, err = q.ShowProposal(context.Background(), &showQuery)
@@ -140,7 +140,7 @@ func TestPendingProposals(t *testing.T) {
 
 	// ShowProposal fails if the chain doesn't exist
 	showQuery = types.QueryShowProposalRequest{
-		ChainID: spnmocks.MockRandomAlphaString(7),
+		ChainID:    spnmocks.MockRandomAlphaString(7),
 		ProposalID: 0,
 	}
 	_, err = q.ShowProposal(context.Background(), &showQuery)

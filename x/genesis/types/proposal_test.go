@@ -5,9 +5,9 @@ import (
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	// staking "github.com/cosmos/cosmos-sdk/x/staking/types"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 
 	"github.com/tendermint/spn/x/genesis/types"
 
@@ -137,7 +137,7 @@ func TestNewProposalAddValidator(t *testing.T) {
 
 	// No peer
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	payload.Peer = ""	// Peer is inside the memo
+	payload.Peer = "" // Peer is inside the memo
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err, "ValidateProposalPayloadAddValidator should return error on invalid payload")
 

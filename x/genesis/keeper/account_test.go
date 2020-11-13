@@ -21,7 +21,7 @@ func TestSetAccount(t *testing.T) {
 	require.True(t, isSet)
 
 	// The account is not set for a different chain
-	isSet = k.IsAccountSet(ctx,  spnmocks.MockRandomAlphaString(6), address)
+	isSet = k.IsAccountSet(ctx, spnmocks.MockRandomAlphaString(6), address)
 	require.False(t, isSet)
 
 	// RemoveAccount removes the account

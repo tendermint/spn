@@ -21,7 +21,7 @@ func TestSetValidator(t *testing.T) {
 	require.True(t, isSet)
 
 	// The IsValidatorSet is not set for a different chain
-	isSet = k.IsValidatorSet(ctx,  spnmocks.MockRandomAlphaString(6), address)
+	isSet = k.IsValidatorSet(ctx, spnmocks.MockRandomAlphaString(6), address)
 	require.False(t, isSet)
 
 	// RemoveValidator removes the validator

@@ -20,6 +20,7 @@ func (k Keeper) IsValidatorSet(ctx sdk.Context, chainID string, address sdk.ValA
 	store := ctx.KVStore(k.storeKey)
 	return store.Has(types.GetValidatorKey(chainID, address))
 }
+
 // RemoveValidator remove if a specific validator is set for a specific chain
 func (k Keeper) RemoveValidator(ctx sdk.Context, chainID string, address sdk.ValAddress) {
 	store := ctx.KVStore(k.storeKey)

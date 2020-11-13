@@ -23,7 +23,7 @@ func listChannelsHandler(clientCtx client.Context) http.HandlerFunc {
 
 		// Construct params
 		params := types.QueryListChainsParams{
-			Page: page,
+			Page:  page,
 			Limit: limit,
 		}
 

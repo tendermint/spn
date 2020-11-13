@@ -16,10 +16,10 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/tendermint/spn/x/genesis/keeper"
-	"github.com/tendermint/spn/x/genesis/types"
 	"github.com/tendermint/spn/x/genesis/client/cli"
 	"github.com/tendermint/spn/x/genesis/client/rest"
+	"github.com/tendermint/spn/x/genesis/keeper"
+	"github.com/tendermint/spn/x/genesis/types"
 )
 
 var (
@@ -83,12 +83,12 @@ func (a AppModuleBasic) RegisterGRPCRoutes(_ client.Context, _ *runtime.ServeMux
 
 // GetTxCmd returns the capability module's root tx command.
 func (a AppModuleBasic) GetTxCmd() *cobra.Command {
-    return cli.GetTxCmd()
+	return cli.GetTxCmd()
 }
 
 // GetQueryCmd returns the capability module's root query command.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-    return cli.GetQueryCmd(types.StoreKey)
+	return cli.GetQueryCmd(types.StoreKey)
 }
 
 // ----------------------------------------------------------------------------

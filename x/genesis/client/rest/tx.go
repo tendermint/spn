@@ -61,4 +61,3 @@ type proposalAddAccountRequest struct {
 	ChainID string       `json:"chain_id"`
 	Coins   string       `json:"coins"`
 }
-

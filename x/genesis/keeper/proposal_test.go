@@ -32,7 +32,7 @@ func TestGetProposal(t *testing.T) {
 		ctx,
 		proposal.GetProposalInformation().GetChainID(),
 		proposal.GetProposalInformation().GetProposalID(),
-		)
+	)
 	require.False(t, found, "GetProposal should not find a non existent proposal")
 
 	// Set and get a proposal

@@ -21,9 +21,9 @@ import (
 	"github.com/tendermint/spn/x/genesis/keeper"
 	"github.com/tendermint/spn/x/genesis/types"
 
+	"encoding/json"
 	"math/rand"
 	"time"
-	"encoding/json"
 )
 
 // MockGenesisContext mocks the context and the keepers of the genesis module for test purposes

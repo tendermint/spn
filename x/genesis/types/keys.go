@@ -15,8 +15,8 @@ const (
 	// RouterKey is the message route for slashing
 	RouterKey = ModuleName
 
-    // QuerierRoute defines the module's query routing key
-    QuerierRoute = ModuleName
+	// QuerierRoute defines the module's query routing key
+	QuerierRoute = ModuleName
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_capability"
@@ -47,7 +47,7 @@ const (
 )
 
 func KeyPrefix(p string) []byte {
-    return []byte(p)
+	return []byte(p)
 }
 
 // GetChainKey returns the key for the chain store
