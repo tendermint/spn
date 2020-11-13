@@ -10,7 +10,7 @@ import "genesis/v1beta/types.proto";
 service Query {
     rpc ListChains(QueryListChainsRequest) returns (QueryListChainsResponse);
     rpc ShowChain(QueryShowChainRequest) returns (QueryShowChainResponse);
-    rpc ListProposals(QueryListProposalsRequest) returns (QueryListProposalsResponse);
+    rpc PendingProposals(QueryPendingProposalsRequest) returns (QueryPendingProposalsResponse);
     rpc ShowProposal(QueryShowProposalRequest) returns (QueryShowProposalResponse);
 }
 
@@ -19,33 +19,31 @@ message QueryListChainsRequest {
 }
 
 message QueryListChainsResponse {
-	cosmos.base.query.v1beta1.PageResponse pagination = 1;
-    repeated string chainIDs = 2;
+	  cosmos.base.query.v1beta1.PageResponse pagination = 1;
+	  repeated string chainIDs = 2;
 }
 
 message QueryShowChainRequest {
-	string chainID = 1;
+	  string chainID = 1;
 }
 
 message QueryShowChainResponse {
-	Chain chain = 1;
+	  Chain chain = 1;
 }
 
-message QueryListProposalsRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+message QueryPendingProposalsRequest {
     string chainID = 2;
 }
 
-message QueryListProposalsResponse {
-	cosmos.base.query.v1beta1.PageResponse pagination = 1;
+message QueryPendingProposalsResponse {
     repeated Proposal proposals = 2;
 }
 
 message QueryShowProposalRequest {
-	string chainID = 1;
+	  string chainID = 1;
     int32 proposalID = 2;
 }
 
 message QueryShowProposalResponse {
-	Proposal proposal = 1;
+	  Proposal proposal = 1;
 }
