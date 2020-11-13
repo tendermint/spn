@@ -1,17 +1,15 @@
 package cli
 
 import (
-	_ "encoding/json"
 	"fmt"
+	"io/ioutil"
+
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmtypes "github.com/tendermint/tendermint/types"
-	"io/ioutil"
-	_ "io/ioutil"
-	_ "os"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	txtypes "github.com/cosmos/cosmos-sdk/types/tx"
