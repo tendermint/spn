@@ -3,6 +3,7 @@ package testing
 import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
+	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -30,6 +31,18 @@ import (
 func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 	// Codec
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
+
+	// Register basic message and cryto
+	interfaceRegistry.RegisterImplementations((*sdk.Msg)(nil),
+		&types.MsgProposalAddAccount{},
+		&types.MsgProposalAddValidator{},
+		&types.MsgChainCreate{},
+		&types.MsgApprove{},
+		&types.MsgReject{},
+		&staking.MsgCreateValidator{},
+	)
+	cryptocodec.RegisterInterfaces(interfaceRegistry)
+
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 
 	// Store keys
