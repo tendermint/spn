@@ -104,9 +104,9 @@ func MockChain() *types.Chain {
 
 // MockProposal mocks a proposal
 func MockProposal() *types.Proposal {
-	proposal, _ := types.NewProposalChange(
+	proposal, _ := types.NewProposalAddAccount(
 		MockProposalInformation(),
-		MockProposalChangePayload(),
+		MockProposalAddAccountPayload(),
 	)
 	return proposal
 }
