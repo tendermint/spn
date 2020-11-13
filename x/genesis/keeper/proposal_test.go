@@ -13,14 +13,14 @@ func TestGetProposalCount(t *testing.T) {
 
 	// If count not set: return 0
 	count := k.GetProposalCount(ctx, chainID)
-	require.Equal(t, int32(0), count, "GetProposalCount should return 0 if no value")
+	require.Equal(t, int32(0), count)
 
 	// Set new count
 	k.SetProposalCount(ctx, chainID, 5)
 	count = k.GetProposalCount(ctx, chainID)
-	require.Equal(t, int32(5), count, "GetProposalCount should return the set value")
+	require.Equal(t, int32(5), count)
 	count = k.GetProposalCount(ctx, "AnotherChain")
-	require.Equal(t, int32(0), count, "GetProposalCount should return 0 if no value")
+	require.Equal(t, int32(0), count)
 }
 
 func TestGetProposal(t *testing.T) {
@@ -33,7 +33,7 @@ func TestGetProposal(t *testing.T) {
 		proposal.GetProposalInformation().GetChainID(),
 		proposal.GetProposalInformation().GetProposalID(),
 	)
-	require.False(t, found, "GetProposal should not find a non existent proposal")
+	require.False(t, found)
 
 	// Set and get a proposal
 	k.SetProposal(ctx, *proposal)
@@ -42,8 +42,8 @@ func TestGetProposal(t *testing.T) {
 		proposal.GetProposalInformation().GetChainID(),
 		proposal.GetProposalInformation().GetProposalID(),
 	)
-	require.True(t, found, "GetProposal should find a proposal")
-	require.Equal(t, *proposal, retrieved, "GetProposal should find a proposal")
+	require.True(t, found)
+	require.Equal(t, *proposal, retrieved)
 
 	otherProposal := spnmocks.MockProposal()
 	_, found = k.GetProposal(
@@ -51,8 +51,69 @@ func TestGetProposal(t *testing.T) {
 		otherProposal.GetProposalInformation().GetChainID(),
 		otherProposal.GetProposalInformation().GetProposalID(),
 	)
-	require.False(t, found, "GetProposal should not find a non existent proposal")
+	require.False(t, found)
 }
+
+func TestGetProposalChange(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+
+	// The retrieved proposal contains a valid payload
+	proposal, _ := types.NewProposalChange(
+		spnmocks.MockProposalInformation(),
+		spnmocks.MockProposalChangePayload(),
+	)
+	k.SetProposal(ctx, *proposal)
+	retrieved, _ := k.GetProposal(
+		ctx,
+		proposal.GetProposalInformation().GetChainID(),
+		proposal.GetProposalInformation().GetProposalID(),
+	)
+	payload, ok := retrieved.Payload.(*types.Proposal_ChangePayload)
+	require.True(t, ok)
+	err := types.ValidateProposalPayloadChange(payload.ChangePayload)
+	require.NoError(t, err)
+}
+
+func TestGetProposalAddAccount(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+
+	// The retrieved proposal contains a valid payload
+	proposal, _ := types.NewProposalAddAccount(
+		spnmocks.MockProposalInformation(),
+		spnmocks.MockProposalAddAccountPayload(),
+		)
+	k.SetProposal(ctx, *proposal)
+	retrieved, _ := k.GetProposal(
+		ctx,
+		proposal.GetProposalInformation().GetChainID(),
+		proposal.GetProposalInformation().GetProposalID(),
+	)
+	payload, ok := retrieved.Payload.(*types.Proposal_AddAccountPayload)
+	require.True(t, ok)
+	err := types.ValidateProposalPayloadAddAccount(payload.AddAccountPayload)
+	require.NoError(t, err)
+}
+
+func TestGetProposalAddValidator(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+
+	// The retrieved proposal contains a valid payload
+	proposal, _ := types.NewProposalAddValidator(
+		spnmocks.MockProposalInformation(),
+		spnmocks.MockProposalAddValidatorPayload(),
+	)
+	k.SetProposal(ctx, *proposal)
+	retrieved, _ := k.GetProposal(
+		ctx,
+		proposal.GetProposalInformation().GetChainID(),
+		proposal.GetProposalInformation().GetProposalID(),
+	)
+	payload, ok := retrieved.Payload.(*types.Proposal_AddValidatorPayload)
+	require.True(t, ok)
+	err := types.ValidateProposalPayloadAddValidator(payload.AddValidatorPayload)
+	require.NoError(t, err)
+}
+
 
 func TestGetApprovedProposals(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
@@ -63,13 +124,13 @@ func TestGetApprovedProposals(t *testing.T) {
 	}
 
 	retrieved := k.GetApprovedProposals(ctx, chainID)
-	require.Equal(t, emptyList, retrieved, "GetApprovedProposals should return empty list if not set")
+	require.Equal(t, emptyList, retrieved)
 
 	k.SetApprovedProposals(ctx, chainID, *list)
 	retrieved = k.GetApprovedProposals(ctx, chainID)
-	require.Equal(t, *list, retrieved, "GetApprovedProposals should return the set value")
+	require.Equal(t, *list, retrieved,)
 	retrieved = k.GetApprovedProposals(ctx, "AnotherChain")
-	require.Equal(t, emptyList, retrieved, "GetApprovedProposals should return empty list if not set")
+	require.Equal(t, emptyList, retrieved)
 }
 
 func TestGetPendingProposals(t *testing.T) {
@@ -81,13 +142,13 @@ func TestGetPendingProposals(t *testing.T) {
 	}
 
 	retrieved := k.GetPendingProposals(ctx, chainID)
-	require.Equal(t, emptyList, retrieved, "GetPendingProposals should return empty list if not set")
+	require.Equal(t, emptyList, retrieved)
 
 	k.SetPendingProposals(ctx, chainID, *list)
 	retrieved = k.GetPendingProposals(ctx, chainID)
-	require.Equal(t, *list, retrieved, "GetPendingProposals should return the set value")
+	require.Equal(t, *list, retrieved)
 	retrieved = k.GetPendingProposals(ctx, "AnotherChain")
-	require.Equal(t, emptyList, retrieved, "GetPendingProposals should return empty list if not set")
+	require.Equal(t, emptyList, retrieved)
 }
 
 func TestGetRejectedProposals(t *testing.T) {
@@ -99,11 +160,11 @@ func TestGetRejectedProposals(t *testing.T) {
 	}
 
 	retrieved := k.GetRejectedProposals(ctx, chainID)
-	require.Equal(t, emptyList, retrieved, "GetRejectedProposals should return empty list if not set")
+	require.Equal(t, emptyList, retrieved)
 
 	k.SetRejectedProposals(ctx, chainID, *list)
 	retrieved = k.GetRejectedProposals(ctx, chainID)
-	require.Equal(t, *list, retrieved, "GetRejectedProposals should return the set value")
+	require.Equal(t, *list, retrieved)
 	retrieved = k.GetRejectedProposals(ctx, "AnotherChain")
-	require.Equal(t, emptyList, retrieved, "GetRejectedProposals should return empty list if not set")
+	require.Equal(t, emptyList, retrieved)
 }
