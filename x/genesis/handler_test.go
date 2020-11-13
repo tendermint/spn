@@ -1,6 +1,7 @@
 package genesis_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
 	"github.com/tendermint/spn/x/genesis"
@@ -53,7 +54,7 @@ func TestHandleMsgReject(t *testing.T) {
 	chainID := spnmocks.MockRandomAlphaString(5)
 	coordinator := spnmocks.MockAccAddress()
 
-	// Prevent rejecting in a new existing chain
+	// Prevent rejecting in a non existing chain
 	msg := types.NewMsgReject(
 		chainID,
 		0,
@@ -149,6 +150,150 @@ func TestHandleMsgReject(t *testing.T) {
 	require.NotContains(t, pending.ProposalIDs, int32(1))
 	rejected = k.GetRejectedProposals(ctx, chainID)
 	require.Contains(t, rejected.ProposalIDs, int32(1))
+}
+
+func TestHandleMsgApprove(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+	h := genesis.NewHandler(*k)
+	chainID := spnmocks.MockRandomAlphaString(5)
+	coordinator := spnmocks.MockAccAddress()
+
+	// Prevent approving in a non existing chain
+	msg := types.NewMsgApprove(
+		chainID,
+		0,
+		coordinator,
+	)
+	_, err := h(ctx, msg)
+	require.Error(t, err)
+
+	// Create a new chain
+	msgChainCreate := types.NewMsgChainCreate(
+		chainID,
+		coordinator,
+		spnmocks.MockRandomAlphaString(10),
+		spnmocks.MockRandomAlphaString(10),
+		spnmocks.MockGenesis(),
+	)
+	h(ctx, msgChainCreate)
+
+	// Prevent approving a non existing proposal
+	msg = types.NewMsgApprove(
+		chainID,
+		0,
+		coordinator,
+	)
+	_, err = h(ctx, msg)
+	require.Error(t, err)
+
+	// Create a proposal
+	proposalCreator := spnmocks.MockAccAddress()
+	addAccountPayload := spnmocks.MockProposalAddAccountPayload()
+	msgProposal := types.NewMsgProposalAddAccount(
+		chainID,
+		proposalCreator,
+		addAccountPayload,
+	)
+	h(ctx, msgProposal)
+
+	// Prevent an address other than the coordinator to approve the proposal
+	msg = types.NewMsgApprove(
+		chainID,
+		0,
+		spnmocks.MockAccAddress(),
+	)
+	_, err = h(ctx, msg)
+	require.Error(t, err)
+	msg = types.NewMsgApprove(
+		chainID,
+		0,
+		proposalCreator,
+	)
+	_, err = h(ctx, msg)
+	require.Error(t, err)
+
+	// The coordinator creator can approve the proposal
+	msg = types.NewMsgApprove(
+		chainID,
+		0,
+		coordinator,
+	)
+	_, err = h(ctx, msg)
+	require.NoError(t, err)
+
+	// The proposal is approved
+	proposal, _ := k.GetProposal(ctx, chainID, 0)
+	require.Equal(t, types.ProposalState_APPROVED, proposal.ProposalState.Status)
+
+	// The proposal is not in pending pool
+	pending := k.GetPendingProposals(ctx, chainID)
+	require.NotContains(t, pending.ProposalIDs, int32(0))
+
+	// The proposal is in approved pool
+	approved := k.GetApprovedProposals(ctx, chainID)
+	require.Contains(t, approved.ProposalIDs, int32(0))
+
+	// The account address is set in the store
+	accountAddressSet := k.IsAccountSet(ctx, chainID, addAccountPayload.Address)
+	require.True(t, accountAddressSet)
+
+	// Prevent approving an already approved proposal
+	msg = types.NewMsgApprove(
+		chainID,
+		0,
+		coordinator,
+	)
+	_, err = h(ctx, msg)
+	require.Error(t, err)
+
+	// Prevent approving a proposal with an account already in the genesis
+	h(ctx, msgProposal)
+	msg = types.NewMsgApprove(
+		chainID,
+		1,
+		coordinator,
+	)
+	_, err = h(ctx, msg)
+	require.Error(t, err)
+
+	// Create a add validator proposal
+	addValidatorPayload := spnmocks.MockProposalAddValidatorPayload()
+	createValidatorMessage, _ := addValidatorPayload.GetCreateValidatorMessage()
+	valAddress, _ := sdk.ValAddressFromBech32(createValidatorMessage.ValidatorAddress)
+	k.SetAccount(ctx, chainID, sdk.AccAddress(valAddress))	// Simulate account address already being provided
+	msgProposalValidator := types.NewMsgProposalAddValidator(
+		chainID,
+		proposalCreator,
+		addValidatorPayload,
+	)
+	h(ctx, msgProposalValidator)
+
+	// The coordinator creator can approve the proposal
+	msg = types.NewMsgApprove(
+		chainID,
+		2,
+		coordinator,
+	)
+	_, err = h(ctx, msg)
+	require.NoError(t, err)
+
+	// The proposal is approved
+	proposal, _ = k.GetProposal(ctx, chainID, 2)
+	require.Equal(t, types.ProposalState_APPROVED, proposal.ProposalState.Status)
+
+	// The validator address is set in the store
+	validatorAddressSet := k.IsValidatorSet(ctx, chainID, valAddress)
+	require.True(t, validatorAddressSet)
+
+	// Prevent approving a proposal with an validator already in the genesis
+	h(ctx, msgProposalValidator)
+	msg = types.NewMsgApprove(
+		chainID,
+		3,
+		coordinator,
+	)
+	_, err = h(ctx, msg)
+	require.Error(t, err)
 }
 
 func TestHandleMsgProposalAddAccount(t *testing.T) {
