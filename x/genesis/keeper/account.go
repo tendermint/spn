@@ -15,8 +15,14 @@ func (k Keeper) SetAccount(ctx sdk.Context, chainID string, address sdk.AccAddre
 	store.Set(types.GetAccountKey(chainID, address), accountSet)
 }
 
-// IsValidatorSet check if a specific validator is set for a specific chain
+// IsAccountSet check if a specific account is set for a specific chain
 func (k Keeper) IsAccountSet(ctx sdk.Context, chainID string, address sdk.AccAddress) bool {
 	store := ctx.KVStore(k.storeKey)
 	return store.Has(types.GetAccountKey(chainID, address))
+}
+
+// RemoveAccount remove if a specific account is set for a specific chain
+func (k Keeper) RemoveAccount(ctx sdk.Context, chainID string, address sdk.AccAddress) {
+	store := ctx.KVStore(k.storeKey)
+	store.Delete(types.GetAccountKey(chainID, address))
 }
