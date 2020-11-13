@@ -1,12 +1,8 @@
 package keeper_test
 
 import (
-	"context"
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
-	"github.com/tendermint/spn/x/genesis/types"
 	"testing"
 )
 
@@ -16,13 +12,13 @@ func TestGetChain(t *testing.T) {
 
 	// A non set chain should not exist
 	_, found := k.GetChain(ctx, chain.ChainID)
-	require.False(t, found, "GetChain should not find a non existent chain")
+	require.False(t, found)
 
 	// Set and get a chain
 	k.SetChain(ctx, *chain)
 	retrieved, found := k.GetChain(ctx, chain.ChainID)
-	require.True(t, found, "GetChain should find a chain")
-	require.Equal(t, *chain, retrieved, "GetChain should find a chain")
+	require.True(t, found)
+	require.Equal(t, *chain, retrieved)
 
 	// Can get all the chain
 	chain2 := spnmocks.MockChain()
@@ -36,27 +32,11 @@ func TestGetChain(t *testing.T) {
 	k.SetChain(ctx, *chain5)
 	k.SetChain(ctx, *chain6)
 	allChains := k.GetAllChains(ctx)
-	require.Equal(t, 6, len(allChains), "GetAllChains should retrieve all chains")
-	require.Contains(t, allChains, *chain, "GetAllChains should retrieve all chains")
-	require.Contains(t, allChains, *chain2, "GetAllChains should retrieve all chains")
-	require.Contains(t, allChains, *chain3, "GetAllChains should retrieve all chains")
-	require.Contains(t, allChains, *chain4, "GetAllChains should retrieve all chains")
-	require.Contains(t, allChains, *chain5, "GetAllChains should retrieve all chains")
-	require.Contains(t, allChains, *chain6, "GetAllChains should retrieve all chains")
-
-	// Get query all the chain
-	queryHelper := baseapp.NewQueryServerTestHelper(ctx,  codectypes.NewInterfaceRegistry())
-	types.RegisterQueryServer(queryHelper, k)
-	queryClient := types.NewQueryClient(queryHelper)
-
-	var query types.QueryListChainsRequest
-	listChainsRes, err := queryClient.ListChains(context.Background(), &query)
-	require.NoError(t, err, "ListChains should list chains")
-	require.Equal(t, 6, len( listChainsRes.ChainIDs), "ListChains should list chains")
-	require.Contains(t, listChainsRes.ChainIDs, chain.ChainID, "ListChains should list chains")
-	require.Contains(t, listChainsRes.ChainIDs, chain2.ChainID, "ListChains should list chains")
-	require.Contains(t, listChainsRes.ChainIDs, chain3.ChainID, "ListChains should list chains")
-	require.Contains(t, listChainsRes.ChainIDs, chain4.ChainID, "ListChains should list chains")
-	require.Contains(t, listChainsRes.ChainIDs, chain5.ChainID, "ListChains should list chains")
-	require.Contains(t, listChainsRes.ChainIDs, chain6.ChainID, "ListChains should list chains")
+	require.Equal(t, 6, len(allChains))
+	require.Contains(t, allChains, *chain)
+	require.Contains(t, allChains, *chain2)
+	require.Contains(t, allChains, *chain3)
+	require.Contains(t, allChains, *chain4)
+	require.Contains(t, allChains, *chain5)
+	require.Contains(t, allChains, *chain6)
 }
