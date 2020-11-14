@@ -11,6 +11,8 @@ service Query {
     rpc ListChains(QueryListChainsRequest) returns (QueryListChainsResponse);
     rpc ShowChain(QueryShowChainRequest) returns (QueryShowChainResponse);
     rpc PendingProposals(QueryPendingProposalsRequest) returns (QueryPendingProposalsResponse);
+    rpc ApprovedProposals(QueryApprovedProposalsRequest) returns (QueryApprovedProposalsResponse);
+    rpc RejectedProposals(QueryRejectedProposalsRequest) returns (QueryRejectedProposalsResponse);
     rpc ShowProposal(QueryShowProposalRequest) returns (QueryShowProposalResponse);
 }
 
@@ -37,6 +39,22 @@ message QueryPendingProposalsRequest {
 
 message QueryPendingProposalsResponse {
     repeated Proposal proposals = 2;
+}
+
+message QueryApprovedProposalsRequest {
+  string chainID = 2;
+}
+
+message QueryApprovedProposalsResponse {
+  repeated Proposal proposals = 2;
+}
+
+message QueryRejectedProposalsRequest {
+  string chainID = 2;
+}
+
+message QueryRejectedProposalsResponse {
+  repeated Proposal proposals = 2;
 }
 
 message QueryShowProposalRequest {

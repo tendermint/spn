@@ -300,6 +300,182 @@ func (m *QueryPendingProposalsResponse) GetProposals() []*Proposal {
 	return nil
 }
 
+type QueryApprovedProposalsRequest struct {
+	ChainID string `protobuf:"bytes,2,opt,name=chainID,proto3" json:"chainID,omitempty"`
+}
+
+func (m *QueryApprovedProposalsRequest) Reset()         { *m = QueryApprovedProposalsRequest{} }
+func (m *QueryApprovedProposalsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryApprovedProposalsRequest) ProtoMessage()    {}
+func (*QueryApprovedProposalsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47d58c42b8d05bcd, []int{6}
+}
+func (m *QueryApprovedProposalsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryApprovedProposalsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryApprovedProposalsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryApprovedProposalsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryApprovedProposalsRequest.Merge(m, src)
+}
+func (m *QueryApprovedProposalsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryApprovedProposalsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryApprovedProposalsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryApprovedProposalsRequest proto.InternalMessageInfo
+
+func (m *QueryApprovedProposalsRequest) GetChainID() string {
+	if m != nil {
+		return m.ChainID
+	}
+	return ""
+}
+
+type QueryApprovedProposalsResponse struct {
+	Proposals []*Proposal `protobuf:"bytes,2,rep,name=proposals,proto3" json:"proposals,omitempty"`
+}
+
+func (m *QueryApprovedProposalsResponse) Reset()         { *m = QueryApprovedProposalsResponse{} }
+func (m *QueryApprovedProposalsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryApprovedProposalsResponse) ProtoMessage()    {}
+func (*QueryApprovedProposalsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47d58c42b8d05bcd, []int{7}
+}
+func (m *QueryApprovedProposalsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryApprovedProposalsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryApprovedProposalsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryApprovedProposalsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryApprovedProposalsResponse.Merge(m, src)
+}
+func (m *QueryApprovedProposalsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryApprovedProposalsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryApprovedProposalsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryApprovedProposalsResponse proto.InternalMessageInfo
+
+func (m *QueryApprovedProposalsResponse) GetProposals() []*Proposal {
+	if m != nil {
+		return m.Proposals
+	}
+	return nil
+}
+
+type QueryRejectedProposalsRequest struct {
+	ChainID string `protobuf:"bytes,2,opt,name=chainID,proto3" json:"chainID,omitempty"`
+}
+
+func (m *QueryRejectedProposalsRequest) Reset()         { *m = QueryRejectedProposalsRequest{} }
+func (m *QueryRejectedProposalsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryRejectedProposalsRequest) ProtoMessage()    {}
+func (*QueryRejectedProposalsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47d58c42b8d05bcd, []int{8}
+}
+func (m *QueryRejectedProposalsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryRejectedProposalsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryRejectedProposalsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryRejectedProposalsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryRejectedProposalsRequest.Merge(m, src)
+}
+func (m *QueryRejectedProposalsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryRejectedProposalsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryRejectedProposalsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryRejectedProposalsRequest proto.InternalMessageInfo
+
+func (m *QueryRejectedProposalsRequest) GetChainID() string {
+	if m != nil {
+		return m.ChainID
+	}
+	return ""
+}
+
+type QueryRejectedProposalsResponse struct {
+	Proposals []*Proposal `protobuf:"bytes,2,rep,name=proposals,proto3" json:"proposals,omitempty"`
+}
+
+func (m *QueryRejectedProposalsResponse) Reset()         { *m = QueryRejectedProposalsResponse{} }
+func (m *QueryRejectedProposalsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryRejectedProposalsResponse) ProtoMessage()    {}
+func (*QueryRejectedProposalsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47d58c42b8d05bcd, []int{9}
+}
+func (m *QueryRejectedProposalsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryRejectedProposalsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryRejectedProposalsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryRejectedProposalsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryRejectedProposalsResponse.Merge(m, src)
+}
+func (m *QueryRejectedProposalsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryRejectedProposalsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryRejectedProposalsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryRejectedProposalsResponse proto.InternalMessageInfo
+
+func (m *QueryRejectedProposalsResponse) GetProposals() []*Proposal {
+	if m != nil {
+		return m.Proposals
+	}
+	return nil
+}
+
 type QueryShowProposalRequest struct {
 	ChainID    string `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
 	ProposalID int32  `protobuf:"varint,2,opt,name=proposalID,proto3" json:"proposalID,omitempty"`
@@ -309,7 +485,7 @@ func (m *QueryShowProposalRequest) Reset()         { *m = QueryShowProposalReque
 func (m *QueryShowProposalRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryShowProposalRequest) ProtoMessage()    {}
 func (*QueryShowProposalRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47d58c42b8d05bcd, []int{6}
+	return fileDescriptor_47d58c42b8d05bcd, []int{10}
 }
 func (m *QueryShowProposalRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -360,7 +536,7 @@ func (m *QueryShowProposalResponse) Reset()         { *m = QueryShowProposalResp
 func (m *QueryShowProposalResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryShowProposalResponse) ProtoMessage()    {}
 func (*QueryShowProposalResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47d58c42b8d05bcd, []int{7}
+	return fileDescriptor_47d58c42b8d05bcd, []int{11}
 }
 func (m *QueryShowProposalResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -403,6 +579,10 @@ func init() {
 	proto.RegisterType((*QueryShowChainResponse)(nil), "spn.genesis.v1beta1.QueryShowChainResponse")
 	proto.RegisterType((*QueryPendingProposalsRequest)(nil), "spn.genesis.v1beta1.QueryPendingProposalsRequest")
 	proto.RegisterType((*QueryPendingProposalsResponse)(nil), "spn.genesis.v1beta1.QueryPendingProposalsResponse")
+	proto.RegisterType((*QueryApprovedProposalsRequest)(nil), "spn.genesis.v1beta1.QueryApprovedProposalsRequest")
+	proto.RegisterType((*QueryApprovedProposalsResponse)(nil), "spn.genesis.v1beta1.QueryApprovedProposalsResponse")
+	proto.RegisterType((*QueryRejectedProposalsRequest)(nil), "spn.genesis.v1beta1.QueryRejectedProposalsRequest")
+	proto.RegisterType((*QueryRejectedProposalsResponse)(nil), "spn.genesis.v1beta1.QueryRejectedProposalsResponse")
 	proto.RegisterType((*QueryShowProposalRequest)(nil), "spn.genesis.v1beta1.QueryShowProposalRequest")
 	proto.RegisterType((*QueryShowProposalResponse)(nil), "spn.genesis.v1beta1.QueryShowProposalResponse")
 }
@@ -410,38 +590,42 @@ func init() {
 func init() { proto.RegisterFile("genesis/v1beta/querier.proto", fileDescriptor_47d58c42b8d05bcd) }
 
 var fileDescriptor_47d58c42b8d05bcd = []byte{
-	// 489 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x54, 0x3f, 0x8f, 0xd3, 0x30,
-	0x14, 0x6f, 0xee, 0x54, 0xb8, 0xbe, 0x63, 0x40, 0x46, 0x40, 0xb1, 0xee, 0xa2, 0x53, 0x06, 0x38,
-	0xee, 0xc0, 0x21, 0x65, 0x01, 0xb1, 0x71, 0x08, 0x04, 0x62, 0x28, 0x01, 0x31, 0x20, 0x06, 0xd2,
-	0xd6, 0x4a, 0x2d, 0x51, 0x3b, 0x97, 0xe7, 0x02, 0x5d, 0xf8, 0x0c, 0x7c, 0x24, 0x46, 0xc6, 0x8e,
-	0x8c, 0xa8, 0xfd, 0x22, 0xa8, 0x8e, 0x9d, 0x86, 0x92, 0xd2, 0x32, 0xda, 0xfe, 0xfd, 0xf3, 0x7b,
-	0x4f, 0x0f, 0x0e, 0x52, 0x2e, 0x39, 0x0a, 0x0c, 0x3f, 0x45, 0x3d, 0xae, 0x93, 0xf0, 0x7c, 0xcc,
-	0x73, 0xc1, 0x73, 0x96, 0xe5, 0x4a, 0x2b, 0x72, 0x05, 0x33, 0xc9, 0x2c, 0x82, 0x15, 0x88, 0x88,
-	0x9e, 0xf4, 0x15, 0x8e, 0x14, 0x86, 0xbd, 0x04, 0xb9, 0xc1, 0x4f, 0x2c, 0x39, 0x0a, 0xb3, 0x24,
-	0x15, 0x32, 0xd1, 0x42, 0xc9, 0x42, 0x80, 0xd2, 0x15, 0x79, 0x3d, 0xc9, 0x38, 0x16, 0x6f, 0xc1,
-	0x07, 0xb8, 0xf6, 0x6a, 0xc1, 0x7e, 0x29, 0x50, 0x9f, 0x0d, 0x13, 0x21, 0x31, 0xe6, 0xe7, 0x63,
-	0x8e, 0x9a, 0x3c, 0x05, 0x58, 0x2a, 0xb5, 0xbd, 0x23, 0xef, 0x78, 0xbf, 0x73, 0x93, 0x15, 0xb6,
-	0x6c, 0x61, 0xcb, 0x8c, 0xad, 0x4b, 0xc4, 0xba, 0x49, 0xca, 0x2d, 0x37, 0xae, 0x30, 0x83, 0xaf,
-	0x70, 0xfd, 0x2f, 0x07, 0xcc, 0x94, 0x44, 0x4e, 0x9e, 0xd5, 0x58, 0xdc, 0xda, 0x68, 0x51, 0x90,
-	0xab, 0x1e, 0x84, 0xc2, 0x5e, 0x7f, 0x21, 0xfd, 0xfc, 0x09, 0xb6, 0x77, 0x8e, 0x76, 0x8f, 0x5b,
-	0x71, 0x79, 0x0e, 0x22, 0xb8, 0x6a, 0xfc, 0x5f, 0x0f, 0xd5, 0x67, 0xe3, 0xef, 0x3e, 0xd8, 0x86,
-	0x8b, 0x16, 0x64, 0xac, 0x5b, 0xb1, 0x3b, 0x06, 0x2f, 0x6c, 0x51, 0x2a, 0x14, 0x9b, 0xf8, 0x1e,
-	0x34, 0x0d, 0xc8, 0x86, 0xa5, 0xac, 0xa6, 0x37, 0xac, 0xa0, 0x14, 0xc0, 0xe0, 0x01, 0x1c, 0x18,
-	0xad, 0x2e, 0x97, 0x03, 0x21, 0xd3, 0x6e, 0xae, 0x32, 0x85, 0xc9, 0x47, 0xac, 0x49, 0xb1, 0xf3,
-	0x67, 0x8a, 0xf7, 0x70, 0xb8, 0x86, 0x69, 0xc3, 0x3c, 0x82, 0x56, 0xe6, 0x2e, 0xcd, 0xb7, 0xf7,
-	0x3b, 0x87, 0xb5, 0x81, 0x1c, 0x35, 0x5e, 0xe2, 0x83, 0x37, 0xd0, 0x2e, 0xff, 0x58, 0xbe, 0x6f,
-	0xaa, 0x0c, 0xf1, 0x01, 0x9c, 0x84, 0x0d, 0xdc, 0x8c, 0x2b, 0x37, 0xc1, 0x5b, 0xb8, 0x51, 0xa3,
-	0x6a, 0xf3, 0x3e, 0x84, 0x3d, 0x07, 0xb5, 0xf5, 0xdb, 0x10, 0xb7, 0x84, 0x77, 0xbe, 0xef, 0x42,
-	0xd3, 0x08, 0x93, 0x14, 0x60, 0x39, 0x49, 0xe4, 0xb4, 0x56, 0xa0, 0x7e, 0xa2, 0xe9, 0x9d, 0xed,
-	0xc0, 0x36, 0xed, 0x00, 0x5a, 0x65, 0xff, 0xc9, 0xc9, 0x7a, 0xea, 0xea, 0x5c, 0xd1, 0xd3, 0xad,
-	0xb0, 0xd6, 0x65, 0x02, 0x97, 0x57, 0xfb, 0x4b, 0xa2, 0xf5, 0x02, 0x6b, 0xa6, 0x88, 0x76, 0xfe,
-	0x87, 0x62, 0xad, 0x47, 0x70, 0xa9, 0xda, 0x26, 0x72, 0xf7, 0xdf, 0xb9, 0x57, 0x86, 0x84, 0xb2,
-	0x6d, 0xe1, 0x85, 0xdd, 0xe3, 0xb3, 0x1f, 0x33, 0xdf, 0x9b, 0xce, 0x7c, 0xef, 0xd7, 0xcc, 0xf7,
-	0xbe, 0xcd, 0xfd, 0xc6, 0x74, 0xee, 0x37, 0x7e, 0xce, 0xfd, 0xc6, 0xbb, 0xdb, 0xa9, 0xd0, 0xc3,
-	0x71, 0x8f, 0xf5, 0xd5, 0x28, 0xd4, 0x5c, 0x0e, 0x78, 0x3e, 0x12, 0x52, 0x87, 0x98, 0xc9, 0xf0,
-	0x4b, 0xe8, 0x76, 0x97, 0x59, 0x5a, 0xbd, 0x0b, 0x66, 0x6b, 0xdd, 0xff, 0x1d, 0x00, 0x00, 0xff,
-	0xff, 0x3d, 0x5e, 0x38, 0x2b, 0x32, 0x05, 0x00, 0x00,
+	// 553 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0xcd, 0x6e, 0xd3, 0x30,
+	0x1c, 0x6f, 0x86, 0x0a, 0xeb, 0x7f, 0x1c, 0xc0, 0x08, 0x28, 0xd6, 0x16, 0x4d, 0x39, 0xc0, 0xd8,
+	0xc0, 0x21, 0xdd, 0x85, 0x89, 0x13, 0x0c, 0x81, 0x40, 0x1c, 0x4a, 0x40, 0x1c, 0x10, 0x48, 0xa4,
+	0xad, 0x95, 0x06, 0x51, 0xdb, 0x8b, 0xdd, 0x41, 0x25, 0xc4, 0x33, 0xf0, 0x40, 0x3c, 0x00, 0xc7,
+	0x1d, 0x39, 0xa2, 0xf6, 0x45, 0x50, 0x1d, 0x27, 0x0d, 0x6d, 0xd2, 0x8f, 0xa9, 0xc7, 0xd8, 0xbf,
+	0x2f, 0xd7, 0xff, 0x5f, 0x0d, 0xdb, 0x21, 0x65, 0x54, 0x46, 0xd2, 0x3d, 0xf5, 0x5a, 0x54, 0x05,
+	0xee, 0x49, 0x9f, 0xc6, 0x11, 0x8d, 0x89, 0x88, 0xb9, 0xe2, 0xe8, 0x9a, 0x14, 0x8c, 0x18, 0x04,
+	0x49, 0x10, 0x1e, 0xde, 0x6f, 0x73, 0xd9, 0xe3, 0xd2, 0x6d, 0x05, 0x92, 0x6a, 0xfc, 0xc0, 0x90,
+	0x3d, 0x57, 0x04, 0x61, 0xc4, 0x02, 0x15, 0x71, 0x96, 0x08, 0x60, 0x3c, 0x25, 0xaf, 0x06, 0x82,
+	0xca, 0x64, 0xcf, 0xf9, 0x04, 0x37, 0x5e, 0x8f, 0xd9, 0xaf, 0x22, 0xa9, 0x8e, 0xbb, 0x41, 0xc4,
+	0xa4, 0x4f, 0x4f, 0xfa, 0x54, 0x2a, 0xf4, 0x0c, 0x60, 0xa2, 0x54, 0xb7, 0x76, 0xad, 0xbd, 0xad,
+	0xc6, 0x6d, 0x92, 0xd8, 0x92, 0xb1, 0x2d, 0xd1, 0xb6, 0x69, 0x22, 0xd2, 0x0c, 0x42, 0x6a, 0xb8,
+	0x7e, 0x8e, 0xe9, 0xfc, 0x80, 0x9b, 0x33, 0x0e, 0x52, 0x70, 0x26, 0x29, 0x7a, 0x5e, 0x60, 0x71,
+	0x67, 0xa1, 0x45, 0x42, 0xce, 0x7b, 0x20, 0x0c, 0x9b, 0xed, 0xb1, 0xf4, 0x8b, 0xa7, 0xb2, 0xbe,
+	0xb1, 0x7b, 0x61, 0xaf, 0xe6, 0x67, 0xdf, 0x8e, 0x07, 0xd7, 0xb5, 0xff, 0x9b, 0x2e, 0xff, 0xaa,
+	0xfd, 0xd3, 0x03, 0xd6, 0xe1, 0x92, 0x01, 0x69, 0xeb, 0x9a, 0x9f, 0x7e, 0x3a, 0x2f, 0xcd, 0x8f,
+	0x92, 0xa3, 0x98, 0xc4, 0x0f, 0xa0, 0xaa, 0x41, 0x26, 0x2c, 0x26, 0x05, 0x77, 0x43, 0x12, 0x4a,
+	0x02, 0x74, 0x1e, 0xc2, 0xb6, 0xd6, 0x6a, 0x52, 0xd6, 0x89, 0x58, 0xd8, 0x8c, 0xb9, 0xe0, 0x32,
+	0xf8, 0x22, 0x0b, 0x52, 0x6c, 0xfc, 0x9f, 0xe2, 0x03, 0xec, 0x94, 0x30, 0x4d, 0x98, 0x47, 0x50,
+	0x13, 0xe9, 0xa2, 0x3e, 0xf6, 0x56, 0x63, 0xa7, 0x30, 0x50, 0x4a, 0xf5, 0x27, 0x78, 0xe7, 0xc8,
+	0xa8, 0x3f, 0x16, 0x22, 0xe6, 0xa7, 0xb4, 0xb3, 0x42, 0xb0, 0x8f, 0x60, 0x97, 0x51, 0xd7, 0x99,
+	0xcc, 0xa7, 0x9f, 0x69, 0x5b, 0x9d, 0x2b, 0x59, 0x01, 0x75, 0x1d, 0xc9, 0xde, 0x42, 0x3d, 0x9b,
+	0x8b, 0x6c, 0x7f, 0xd1, 0x34, 0x21, 0x1b, 0x20, 0x95, 0x30, 0x89, 0xab, 0x7e, 0x6e, 0xc5, 0x79,
+	0x07, 0xb7, 0x0a, 0x54, 0x4d, 0xde, 0x23, 0xd8, 0x4c, 0xa1, 0x66, 0xe6, 0x16, 0xc4, 0xcd, 0xe0,
+	0x8d, 0x5f, 0x55, 0xa8, 0x6a, 0x61, 0x14, 0x02, 0x4c, 0xda, 0x87, 0x0e, 0x0a, 0x05, 0x8a, 0xff,
+	0x05, 0xf0, 0xbd, 0xe5, 0xc0, 0x26, 0x6d, 0x07, 0x6a, 0x59, 0x67, 0xd0, 0x7e, 0x39, 0x75, 0xba,
+	0x8b, 0xf8, 0x60, 0x29, 0xac, 0x71, 0x19, 0xc0, 0x95, 0xe9, 0x4e, 0x20, 0xaf, 0x5c, 0xa0, 0xa4,
+	0x79, 0xb8, 0xb1, 0x0a, 0xc5, 0x58, 0x7f, 0x87, 0xab, 0x33, 0x53, 0x8f, 0xe6, 0x08, 0x95, 0xb5,
+	0x0b, 0x1f, 0xae, 0xc4, 0x99, 0xb8, 0xcf, 0x4c, 0xf6, 0x3c, 0xf7, 0xb2, 0x06, 0xcd, 0x73, 0x2f,
+	0xaf, 0x4e, 0x0f, 0x2e, 0xe7, 0x47, 0x14, 0xdd, 0x9f, 0x7f, 0x67, 0x53, 0x05, 0xc1, 0x64, 0x59,
+	0x78, 0x62, 0xf7, 0xe4, 0xf8, 0xf7, 0xd0, 0xb6, 0xce, 0x86, 0xb6, 0xf5, 0x77, 0x68, 0x5b, 0x3f,
+	0x47, 0x76, 0xe5, 0x6c, 0x64, 0x57, 0xfe, 0x8c, 0xec, 0xca, 0xfb, 0xbb, 0x61, 0xa4, 0xba, 0xfd,
+	0x16, 0x69, 0xf3, 0x9e, 0xab, 0x28, 0xeb, 0xd0, 0xb8, 0x17, 0x31, 0xe5, 0x4a, 0xc1, 0xdc, 0x6f,
+	0x6e, 0xfa, 0xd6, 0xe9, 0x47, 0xae, 0x75, 0x51, 0xbf, 0x72, 0x87, 0xff, 0x02, 0x00, 0x00, 0xff,
+	0xff, 0x63, 0xf0, 0x9d, 0xa5, 0x62, 0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -459,6 +643,8 @@ type QueryClient interface {
 	ListChains(ctx context.Context, in *QueryListChainsRequest, opts ...grpc.CallOption) (*QueryListChainsResponse, error)
 	ShowChain(ctx context.Context, in *QueryShowChainRequest, opts ...grpc.CallOption) (*QueryShowChainResponse, error)
 	PendingProposals(ctx context.Context, in *QueryPendingProposalsRequest, opts ...grpc.CallOption) (*QueryPendingProposalsResponse, error)
+	ApprovedProposals(ctx context.Context, in *QueryApprovedProposalsRequest, opts ...grpc.CallOption) (*QueryApprovedProposalsResponse, error)
+	RejectedProposals(ctx context.Context, in *QueryRejectedProposalsRequest, opts ...grpc.CallOption) (*QueryRejectedProposalsResponse, error)
 	ShowProposal(ctx context.Context, in *QueryShowProposalRequest, opts ...grpc.CallOption) (*QueryShowProposalResponse, error)
 }
 
@@ -497,6 +683,24 @@ func (c *queryClient) PendingProposals(ctx context.Context, in *QueryPendingProp
 	return out, nil
 }
 
+func (c *queryClient) ApprovedProposals(ctx context.Context, in *QueryApprovedProposalsRequest, opts ...grpc.CallOption) (*QueryApprovedProposalsResponse, error) {
+	out := new(QueryApprovedProposalsResponse)
+	err := c.cc.Invoke(ctx, "/spn.genesis.v1beta1.Query/ApprovedProposals", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) RejectedProposals(ctx context.Context, in *QueryRejectedProposalsRequest, opts ...grpc.CallOption) (*QueryRejectedProposalsResponse, error) {
+	out := new(QueryRejectedProposalsResponse)
+	err := c.cc.Invoke(ctx, "/spn.genesis.v1beta1.Query/RejectedProposals", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) ShowProposal(ctx context.Context, in *QueryShowProposalRequest, opts ...grpc.CallOption) (*QueryShowProposalResponse, error) {
 	out := new(QueryShowProposalResponse)
 	err := c.cc.Invoke(ctx, "/spn.genesis.v1beta1.Query/ShowProposal", in, out, opts...)
@@ -511,6 +715,8 @@ type QueryServer interface {
 	ListChains(context.Context, *QueryListChainsRequest) (*QueryListChainsResponse, error)
 	ShowChain(context.Context, *QueryShowChainRequest) (*QueryShowChainResponse, error)
 	PendingProposals(context.Context, *QueryPendingProposalsRequest) (*QueryPendingProposalsResponse, error)
+	ApprovedProposals(context.Context, *QueryApprovedProposalsRequest) (*QueryApprovedProposalsResponse, error)
+	RejectedProposals(context.Context, *QueryRejectedProposalsRequest) (*QueryRejectedProposalsResponse, error)
 	ShowProposal(context.Context, *QueryShowProposalRequest) (*QueryShowProposalResponse, error)
 }
 
@@ -526,6 +732,12 @@ func (*UnimplementedQueryServer) ShowChain(ctx context.Context, req *QueryShowCh
 }
 func (*UnimplementedQueryServer) PendingProposals(ctx context.Context, req *QueryPendingProposalsRequest) (*QueryPendingProposalsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PendingProposals not implemented")
+}
+func (*UnimplementedQueryServer) ApprovedProposals(ctx context.Context, req *QueryApprovedProposalsRequest) (*QueryApprovedProposalsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApprovedProposals not implemented")
+}
+func (*UnimplementedQueryServer) RejectedProposals(ctx context.Context, req *QueryRejectedProposalsRequest) (*QueryRejectedProposalsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RejectedProposals not implemented")
 }
 func (*UnimplementedQueryServer) ShowProposal(ctx context.Context, req *QueryShowProposalRequest) (*QueryShowProposalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ShowProposal not implemented")
@@ -589,6 +801,42 @@ func _Query_PendingProposals_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_ApprovedProposals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryApprovedProposalsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ApprovedProposals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/spn.genesis.v1beta1.Query/ApprovedProposals",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ApprovedProposals(ctx, req.(*QueryApprovedProposalsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_RejectedProposals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryRejectedProposalsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).RejectedProposals(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/spn.genesis.v1beta1.Query/RejectedProposals",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).RejectedProposals(ctx, req.(*QueryRejectedProposalsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_ShowProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryShowProposalRequest)
 	if err := dec(in); err != nil {
@@ -622,6 +870,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PendingProposals",
 			Handler:    _Query_PendingProposals_Handler,
+		},
+		{
+			MethodName: "ApprovedProposals",
+			Handler:    _Query_ApprovedProposals_Handler,
+		},
+		{
+			MethodName: "RejectedProposals",
+			Handler:    _Query_RejectedProposals_Handler,
 		},
 		{
 			MethodName: "ShowProposal",
@@ -843,6 +1099,140 @@ func (m *QueryPendingProposalsResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryApprovedProposalsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryApprovedProposalsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryApprovedProposalsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ChainID) > 0 {
+		i -= len(m.ChainID)
+		copy(dAtA[i:], m.ChainID)
+		i = encodeVarintQuerier(dAtA, i, uint64(len(m.ChainID)))
+		i--
+		dAtA[i] = 0x12
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryApprovedProposalsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryApprovedProposalsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryApprovedProposalsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Proposals) > 0 {
+		for iNdEx := len(m.Proposals) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Proposals[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuerier(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryRejectedProposalsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryRejectedProposalsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryRejectedProposalsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ChainID) > 0 {
+		i -= len(m.ChainID)
+		copy(dAtA[i:], m.ChainID)
+		i = encodeVarintQuerier(dAtA, i, uint64(len(m.ChainID)))
+		i--
+		dAtA[i] = 0x12
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryRejectedProposalsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryRejectedProposalsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryRejectedProposalsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Proposals) > 0 {
+		for iNdEx := len(m.Proposals) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Proposals[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuerier(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *QueryShowProposalRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -996,6 +1386,62 @@ func (m *QueryPendingProposalsRequest) Size() (n int) {
 }
 
 func (m *QueryPendingProposalsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Proposals) > 0 {
+		for _, e := range m.Proposals {
+			l = e.Size()
+			n += 1 + l + sovQuerier(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryApprovedProposalsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ChainID)
+	if l > 0 {
+		n += 1 + l + sovQuerier(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryApprovedProposalsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Proposals) > 0 {
+		for _, e := range m.Proposals {
+			l = e.Size()
+			n += 1 + l + sovQuerier(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryRejectedProposalsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ChainID)
+	if l > 0 {
+		n += 1 + l + sovQuerier(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryRejectedProposalsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1541,6 +1987,350 @@ func (m *QueryPendingProposalsResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: QueryPendingProposalsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Proposals", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Proposals = append(m.Proposals, &Proposal{})
+			if err := m.Proposals[len(m.Proposals)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryApprovedProposalsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryApprovedProposalsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryApprovedProposalsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryApprovedProposalsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryApprovedProposalsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryApprovedProposalsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Proposals", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Proposals = append(m.Proposals, &Proposal{})
+			if err := m.Proposals[len(m.Proposals)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryRejectedProposalsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryRejectedProposalsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryRejectedProposalsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuerier(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryRejectedProposalsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuerier
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryRejectedProposalsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryRejectedProposalsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 2:
