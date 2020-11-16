@@ -180,5 +180,29 @@ func applyProposalAddAccount(cdc codec.JSONMarshaler, genesisDoc *tmtypes.Genesi
 
 // applyProposalAddValidator updates the genesis state when a validator is added
 func applyProposalAddValidator(cdc codec.JSONMarshaler, genesisDoc *tmtypes.GenesisDoc, payload ProposalAddValidatorPayload) error {
+	// Get the state for the app
+	appGenesisState, err := genutiltypes.GenesisStateFromGenDoc(*genesisDoc)
+	if err != nil {
+		return fmt.Errorf("failed to get the application genesis state: %v", err)
+	}
+	genesisState := genutiltypes.GetGenesisStateFromAppState(cdc, appGenesisState)
+
+	// Encode the gentx
+	genTxBz, err := cdc.MarshalJSON(payload.GenTx)
+	if err != nil {
+		return fmt.Errorf("failed to encode gentx: %v", err)
+	}
+
+	// Append the new gentx
+	genesisState.GenTxs = append(genesisState.GenTxs, genTxBz)
+
+	// Register the new state of the genesis
+	appGenesisState = genutiltypes.SetGenesisStateInAppState(cdc, appGenesisState, genesisState)
+	appState, err := json.MarshalIndent(appGenesisState, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to encode app genesis state: %v", err)
+	}
+	genesisDoc.AppState = appState
+
 	return nil
 }
