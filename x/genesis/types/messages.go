@@ -10,10 +10,11 @@ import (
 // Chat message types
 const (
 	TypeMsgChainCreate          = "chain_create"
+	TypeMsgApprove              = "approve"
+	TypeMsgReject               = "reject"
 	TypeMsgProposalChange       = "proposal_change"
 	TypeMsgProposalAddAccount   = "proposal_add_account"
 	TypeMsgProposalAddValidator = "proposal_add_validator"
-	TypeMsgProposalVote         = "proposal_vote"
 )
 
 // Verify interface at compile time
@@ -22,7 +23,8 @@ var (
 	_ sdk.Msg = &MsgProposalChange{}
 	_ sdk.Msg = &MsgProposalAddAccount{}
 	_ sdk.Msg = &MsgProposalAddValidator{}
-	_ sdk.Msg = &MsgProposalVote{}
+	_ sdk.Msg = &MsgApprove{}
+	_ sdk.Msg = &MsgReject{}
 )
 
 // MsgChainCreate
@@ -36,11 +38,11 @@ func NewMsgChainCreate(
 	genesis []byte,
 ) *MsgChainCreate {
 	return &MsgChainCreate{
-		ChainID:        chainID,
-		Creator:        creator,
-		SourceURL:      sourceURL,
-		SourceHash:     sourceHash,
-		Genesis: genesis,
+		ChainID:    chainID,
+		Creator:    creator,
+		SourceURL:  sourceURL,
+		SourceHash: sourceHash,
+		Genesis:    genesis,
 	}
 }
 
@@ -84,6 +86,82 @@ func (msg MsgChainCreate) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
 	}
 
+	return nil
+}
+
+// MsgApprove
+
+// NewMsgApprove creates a message for approving a proposal
+func NewMsgApprove(
+	chainID string,
+	proposalID int32,
+	approver sdk.AccAddress,
+) *MsgApprove {
+	return &MsgApprove{
+		ChainID:    chainID,
+		ProposalID: proposalID,
+		Approver:   approver,
+	}
+}
+
+// Route implements the sdk.Msg interface.
+func (msg MsgApprove) Route() string { return RouterKey }
+
+// Type implements the sdk.Msg interface.
+func (msg MsgApprove) Type() string { return TypeMsgApprove }
+
+// GetSigners implements the sdk.Msg interface. It returns the address(es) that
+// must sign over msg.GetSignBytes().
+func (msg MsgApprove) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{msg.Approver}
+}
+
+// GetSignBytes returns the message bytes to sign over.
+func (msg MsgApprove) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// ValidateBasic implements the sdk.Msg interface.
+func (msg MsgApprove) ValidateBasic() error {
+	return nil
+}
+
+// MsgReject
+
+// NewMsgApprove creates a message for rejecting a proposal
+func NewMsgReject(
+	chainID string,
+	proposalID int32,
+	rejector sdk.AccAddress,
+) *MsgReject {
+	return &MsgReject{
+		ChainID:    chainID,
+		ProposalID: proposalID,
+		Rejector:   rejector,
+	}
+}
+
+// Route implements the sdk.Msg interface.
+func (msg MsgReject) Route() string { return RouterKey }
+
+// Type implements the sdk.Msg interface.
+func (msg MsgReject) Type() string { return TypeMsgReject }
+
+// GetSigners implements the sdk.Msg interface. It returns the address(es) that
+// must sign over msg.GetSignBytes().
+func (msg MsgReject) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{msg.Rejector}
+}
+
+// GetSignBytes returns the message bytes to sign over.
+func (msg MsgReject) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(&msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// ValidateBasic implements the sdk.Msg interface.
+func (msg MsgReject) ValidateBasic() error {
 	return nil
 }
 
@@ -217,50 +295,6 @@ func (msg MsgProposalAddValidator) ValidateBasic() error {
 	}
 	if err := ValidateProposalPayloadAddValidator(msg.Payload); err != nil {
 		return sdkerrors.Wrap(ErrInvalidProposalChange, err.Error())
-	}
-
-	return nil
-}
-
-// MsgProposalVote
-
-// NewMsgProposalVote creates a message to vote for a proposal
-func NewMsgProposalVote(
-	chainID string,
-	proposalID int32,
-	creator sdk.AccAddress,
-	voteValue MsgProposalVote_Value,
-) *MsgProposalVote {
-	return &MsgProposalVote{
-		ChainID:    chainID,
-		ProposalID: proposalID,
-		Creator:    creator,
-		Value:      voteValue,
-	}
-}
-
-// Route implements the sdk.Msg interface.
-func (msg MsgProposalVote) Route() string { return RouterKey }
-
-// Type implements the sdk.Msg interface.
-func (msg MsgProposalVote) Type() string { return TypeMsgProposalVote }
-
-// GetSigners implements the sdk.Msg interface. It returns the address(es) that
-// must sign over msg.GetSignBytes().
-func (msg MsgProposalVote) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.Creator}
-}
-
-// GetSignBytes returns the message bytes to sign over.
-func (msg MsgProposalVote) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(&msg)
-	return sdk.MustSortJSON(bz)
-}
-
-// ValidateBasic implements the sdk.Msg interface.
-func (msg MsgProposalVote) ValidateBasic() error {
-	if !checkChainID(msg.ChainID) {
-		return sdkerrors.Wrap(ErrInvalidProposalChange, "invalid chain ID")
 	}
 
 	return nil

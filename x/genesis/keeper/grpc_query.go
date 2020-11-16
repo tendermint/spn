@@ -1,8 +1,8 @@
 package keeper
 
 import (
-	"fmt"
 	"context"
+	"fmt"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -25,7 +25,7 @@ func (k Keeper) ListChains(
 	store := ctx.KVStore(k.storeKey)
 	chainStore := prefix.NewStore(store, types.KeyPrefix(types.ChainKey))
 
-	pageRes, err := query.Paginate(chainStore, req.Pagination,  func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(chainStore, req.Pagination, func(key []byte, value []byte) error {
 		chain := types.UnmarshalChain(k.cdc, value)
 		chainIDs = append(chainIDs, chain.ChainID)
 
@@ -38,7 +38,7 @@ func (k Keeper) ListChains(
 
 	return &types.QueryListChainsResponse{
 		Pagination: pageRes,
-		ChainIDs: chainIDs,
+		ChainIDs:   chainIDs,
 	}, nil
 }
 
@@ -55,7 +55,7 @@ func (k Keeper) ShowChain(
 
 	chain, found := k.GetChain(ctx, req.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidChain,"chain not found")
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
 	}
 
 	return &types.QueryShowChainResponse{Chain: &chain}, nil
@@ -75,7 +75,7 @@ func (k Keeper) PendingProposals(
 	// Return error if the chain doesn't exist
 	_, found := k.GetChain(ctx, req.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidChain,"chain not found")
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
 	}
 
 	// Get the pending proposal IDs
@@ -97,6 +97,78 @@ func (k Keeper) PendingProposals(
 	return &types.QueryPendingProposalsResponse{Proposals: proposals}, nil
 }
 
+// ApprovedProposals lists the approved proposals for a chain
+func (k Keeper) ApprovedProposals(
+	c context.Context,
+	req *types.QueryApprovedProposalsRequest,
+) (*types.QueryApprovedProposalsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	// Return error if the chain doesn't exist
+	_, found := k.GetChain(ctx, req.ChainID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
+	}
+
+	// Get the approved proposal IDs
+	approvedProposals := k.GetApprovedProposals(ctx, req.ChainID)
+
+	// Fetch all the proposals
+	proposals := make([]*types.Proposal, len(approvedProposals.ProposalIDs))
+	for i, approved := range approvedProposals.ProposalIDs {
+		proposal, found := k.GetProposal(ctx, req.ChainID, approved)
+
+		// Every proposals in the approved pool should exist
+		if !found {
+			panic(fmt.Sprintf("The proposal %v doesn't exist", approved))
+		}
+
+		proposals[i] = &proposal
+	}
+
+	return &types.QueryApprovedProposalsResponse{Proposals: proposals}, nil
+}
+
+// RejectedProposals lists the rejected proposals for a chain
+func (k Keeper) RejectedProposals(
+	c context.Context,
+	req *types.QueryRejectedProposalsRequest,
+) (*types.QueryRejectedProposalsResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	// Return error if the chain doesn't exist
+	_, found := k.GetChain(ctx, req.ChainID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
+	}
+
+	// Get the rejected proposal IDs
+	rejectedProposals := k.GetRejectedProposals(ctx, req.ChainID)
+
+	// Fetch all the proposals
+	proposals := make([]*types.Proposal, len(rejectedProposals.ProposalIDs))
+	for i, rejected := range rejectedProposals.ProposalIDs {
+		proposal, found := k.GetProposal(ctx, req.ChainID, rejected)
+
+		// Every proposals in the rejected pool should exist
+		if !found {
+			panic(fmt.Sprintf("The proposal %v doesn't exist", rejected))
+		}
+
+		proposals[i] = &proposal
+	}
+
+	return &types.QueryRejectedProposalsResponse{Proposals: proposals}, nil
+}
+
 // ShowProposal describes a specific proposal
 func (k Keeper) ShowProposal(
 	c context.Context,
@@ -111,12 +183,12 @@ func (k Keeper) ShowProposal(
 	// Return error if the chain doesn't exist
 	_, found := k.GetChain(ctx, req.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidChain,"chain not found")
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
 	}
 
 	proposal, found := k.GetProposal(ctx, req.ChainID, req.ProposalID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidProposal,"proposal not found")
+		return nil, sdkerrors.Wrap(types.ErrInvalidProposal, "proposal not found")
 	}
 
 	return &types.QueryShowProposalResponse{Proposal: &proposal}, nil

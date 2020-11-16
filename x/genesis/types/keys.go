@@ -1,6 +1,9 @@
 package types
 
-import "strconv"
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"strconv"
+)
 
 const (
 	// ModuleName defines the module name
@@ -12,8 +15,8 @@ const (
 	// RouterKey is the message route for slashing
 	RouterKey = ModuleName
 
-    // QuerierRoute defines the module's query routing key
-    QuerierRoute = ModuleName
+	// QuerierRoute defines the module's query routing key
+	QuerierRoute = ModuleName
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_capability"
@@ -35,10 +38,16 @@ const (
 
 	// RejectedProposalKey is the key to store the rejected proposal ids
 	RejectedProposalKey = "rejectedproposal-"
+
+	// AccountKey is the key to store retrieve existing accounts in the genesis
+	AccountKey = "account-"
+
+	// ValidatorKey is the key to store retrieve existing validators in the genesis
+	ValidatorKey = "validator-"
 )
 
 func KeyPrefix(p string) []byte {
-    return []byte(p)
+	return []byte(p)
 }
 
 // GetChainKey returns the key for the chain store
@@ -73,4 +82,22 @@ func GetPendingProposalKey(chainID string) []byte {
 // GetRejectedProposalKey returns the the key for the rejected proposal id store
 func GetRejectedProposalKey(chainID string) []byte {
 	return append(KeyPrefix(RejectedProposalKey), []byte(chainID)...)
+}
+
+// GetAccountKey returns the key for accounts store
+func GetAccountKey(chainID string, accountAddress sdk.AccAddress) []byte {
+	key := append(KeyPrefix(AccountKey), []byte(chainID)...)
+
+	// We use "_" to separate chainID and proposalID to avoid prefix conflic since "-" is allowed in chainID
+	key = append(key, []byte("_")...)
+	return append(key, accountAddress.Bytes()...)
+}
+
+// GetValidatorKey returns the key for validators store
+func GetValidatorKey(chainID string, valAddress sdk.ValAddress) []byte {
+	key := append(KeyPrefix(ValidatorKey), []byte(chainID)...)
+
+	// We use "_" to separate chainID and proposalID to avoid prefix conflic since "-" is allowed in chainID
+	key = append(key, []byte("_")...)
+	return append(key, valAddress.Bytes()...)
 }

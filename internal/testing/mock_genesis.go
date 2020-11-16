@@ -3,6 +3,7 @@ package testing
 import (
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
+	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -21,15 +22,27 @@ import (
 	"github.com/tendermint/spn/x/genesis/keeper"
 	"github.com/tendermint/spn/x/genesis/types"
 
+	"encoding/json"
 	"math/rand"
 	"time"
-	"encoding/json"
 )
 
 // MockGenesisContext mocks the context and the keepers of the genesis module for test purposes
 func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 	// Codec
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
+
+	// Register basic message and cryto
+	interfaceRegistry.RegisterImplementations((*sdk.Msg)(nil),
+		&types.MsgProposalAddAccount{},
+		&types.MsgProposalAddValidator{},
+		&types.MsgChainCreate{},
+		&types.MsgApprove{},
+		&types.MsgReject{},
+		&staking.MsgCreateValidator{},
+	)
+	cryptocodec.RegisterInterfaces(interfaceRegistry)
+
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 
 	// Store keys
@@ -104,9 +117,9 @@ func MockChain() *types.Chain {
 
 // MockProposal mocks a proposal
 func MockProposal() *types.Proposal {
-	proposal, _ := types.NewProposalChange(
+	proposal, _ := types.NewProposalAddAccount(
 		MockProposalInformation(),
-		MockProposalChangePayload(),
+		MockProposalAddAccountPayload(),
 	)
 	return proposal
 }
@@ -155,23 +168,6 @@ func MockProposalInformation() *types.ProposalInformation {
 		MockRandomString(10),
 		time.Now(),
 	)
-}
-
-// MockProposalVote mocks a vote for a genesis proposal
-func MockProposalVote(voter string) *types.Vote {
-	voteValue := types.Vote_REJECT
-
-	if r := rand.Intn(10); r > 5 {
-		voteValue = types.Vote_APPROVE
-	}
-
-	vote, _ := types.NewVote(
-		int32(rand.Intn(10)),
-		voter,
-		time.Now(),
-		voteValue,
-	)
-	return vote
 }
 
 // MockGenTx mocks a gentx transaction

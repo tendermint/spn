@@ -9,7 +9,7 @@ import (
 )
 
 const (
-    MethodGet = "GET"
+	MethodGet  = "GET"
 	MethodPost = "POST"
 )
 
@@ -27,4 +27,3 @@ func registerQueryRoutes(clientCtx client.Context, r *mux.Router) {
 func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
 	r.HandleFunc(fmt.Sprintf("/genesis/chain_create"), createChannelHandler(clientCtx)).Methods(MethodPost)
 }
-

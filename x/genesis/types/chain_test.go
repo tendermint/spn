@@ -1,10 +1,10 @@
 package types_test
 
 import (
+	"encoding/json"
 	tmtypes "github.com/tendermint/tendermint/types"
 	"testing"
 	"time"
-	"encoding/json"
 
 	spnmocks "github.com/tendermint/spn/internal/testing"
 

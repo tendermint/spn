@@ -8,8 +8,6 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(MsgChainCreate{}, "genesis/MsgChainCreate", nil)
-	cdc.RegisterConcrete(MsgProposalAddAccount{}, "genesis/MsgProposalAddAccount", nil)
-	cdc.RegisterConcrete(MsgProposalAddValidator{}, "genesis/MsgProposalAddValidator", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -17,6 +15,8 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgProposalAddAccount{},
 		&MsgProposalAddValidator{},
 		&MsgChainCreate{},
+		&MsgApprove{},
+		&MsgReject{},
 	)
 }
 

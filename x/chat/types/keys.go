@@ -1,6 +1,8 @@
 package types
 
-import "strconv"
+import (
+	"strconv"
+)
 
 const (
 	// ModuleName defines the module name
@@ -48,13 +50,11 @@ func GetChannelKeyPrefix() []byte {
 
 // GetChannelKey returns the key for the channel store
 func GetChannelKey(channelID int32) []byte {
-
 	return append(KeyPrefix(ChannelKey), []byte(strconv.Itoa(int(channelID)))...)
 }
 
 // GetMessageKey returns the key for the message store
 func GetMessageKey(messageID string) []byte {
-
 	return append(KeyPrefix(MessageKey), []byte(messageID)...)
 }
 

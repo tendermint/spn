@@ -42,7 +42,7 @@ func NewProposalAddValidatorPayload(
 func (p ProposalAddValidatorPayload) GetCreateValidatorMessage() (message *staking.MsgCreateValidator, err error) {
 	// We return error on panic since ValidateBasic may panic on invalid tx
 	defer func() {
-		if r := recover(); r!= nil {
+		if r := recover(); r != nil {
 			err = fmt.Errorf("%v", r)
 		}
 	}()
@@ -72,7 +72,7 @@ func (p ProposalAddValidatorPayload) GetCreateValidatorMessage() (message *staki
 func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) (err error) {
 	// We return error on panic since ValidateBasic may panic on invalid msg
 	defer func() {
-		if r := recover(); r!= nil {
+		if r := recover(); r != nil {
 			err = fmt.Errorf("%v", r)
 		}
 	}()

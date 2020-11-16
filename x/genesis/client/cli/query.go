@@ -1,4 +1,4 @@
- package cli
+package cli
 
 import (
 	"context"
@@ -136,7 +136,7 @@ func CmdShowProposal() *cobra.Command {
 			}
 
 			params := &types.QueryShowProposalRequest{
-				ChainID: args[0],
+				ChainID:    args[0],
 				ProposalID: int32(proposalID),
 			}
 
@@ -153,36 +153,36 @@ func CmdShowProposal() *cobra.Command {
 	return cmd
 }
 
- // CmdPendingProposals returns the command to list pending proposals for a chain genesis
- func CmdPendingProposals() *cobra.Command {
-	 cmd := &cobra.Command{
-		 Use:   "pending-proposals [chain-id]",
-		 Short: "list the pending proposals for a chain genesis",
-		 Args:  cobra.ExactArgs(1),
-		 RunE: func(cmd *cobra.Command, args []string) error {
-			 clientCtx := client.GetClientContextFromCmd(cmd)
-			 clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			 if err != nil {
-				 return err
-			 }
+// CmdPendingProposals returns the command to list pending proposals for a chain genesis
+func CmdPendingProposals() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "pending-proposals [chain-id]",
+		Short: "list the pending proposals for a chain genesis",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
 
-			 queryClient := types.NewQueryClient(clientCtx)
+			queryClient := types.NewQueryClient(clientCtx)
 
-			 params := &types.QueryPendingProposalsRequest{
-				 ChainID: args[0],
-			 }
+			params := &types.QueryPendingProposalsRequest{
+				ChainID: args[0],
+			}
 
-			 // Perform the request
-			 res, err := queryClient.PendingProposals(context.Background(), params)
-			 if err != nil {
-				 return err
-			 }
+			// Perform the request
+			res, err := queryClient.PendingProposals(context.Background(), params)
+			if err != nil {
+				return err
+			}
 
-			 return clientCtx.PrintOutput(res)
-		 },
-	 }
+			return clientCtx.PrintOutput(res)
+		},
+	}
 
-	 flags.AddQueryFlagsToCmd(cmd)
+	flags.AddQueryFlagsToCmd(cmd)
 
-	 return cmd
- }
+	return cmd
+}
