@@ -25,6 +25,12 @@ func TestNewChain(t *testing.T) {
 	require.NoError(t, err, "NewChain should create a new chain")
 	require.Equal(t, 0, len(chain.Peers), "chain should have no peer when create")
 
+	// The chain ID should be added to the genesis of the chain
+	chainID := chain.ChainID
+	genesisDoc, err := chain.Genesis.GetGenesisDoc()
+	require.NoError(t, err)
+	require.Equal(t, chainID, genesisDoc.ChainID)
+
 	// Can append peers to the chain
 	peer1 := spnmocks.MockRandomString(20)
 	peer2 := spnmocks.MockRandomString(20)

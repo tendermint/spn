@@ -13,30 +13,37 @@ func NewGenesisFile(genesisBytes []byte) GenesisFile {
 	return genesisBytes
 }
 
+// GetGenesisDoc returns the genesis in the tendermint/types.GenesisDoc format
+func (g GenesisFile) GetGenesisDoc() (genesisDoc tmtypes.GenesisDoc, err error) {
+	err = tmjson.Unmarshal(g, &genesisDoc)
+	return genesisDoc, err
+}
+
 // SetChainID set the chain ID for the genesis file
-func (g GenesisFile) SetChainID(chainID string) error {
+func (g *GenesisFile) SetChainID(chainID string) error {
 	// Unmarshal bytes
 	var genesisObject tmtypes.GenesisDoc
-	if err := tmjson.Unmarshal(g, &genesisObject); err != nil {
+	if err := tmjson.Unmarshal(*g, &genesisObject); err != nil {
 		return err
 	}
 
 	genesisObject.ChainID = chainID
 
 	// Marshal
-	g, err := tmjson.Marshal(genesisObject)
+	bz, err := tmjson.Marshal(genesisObject)
 	if err != nil {
 		return err
 	}
+	*g = bz
 
 	return nil
 }
 
 // ValidateAndComplete checks that all necessary fields are present and fills in defaults for optional fields left empty
-func (g GenesisFile) ValidateAndComplete() error {
+func (g *GenesisFile) ValidateAndComplete() error {
 	// Unmarshal bytes
 	var genesisObject tmtypes.GenesisDoc
-	if err := tmjson.Unmarshal(g, &genesisObject); err != nil {
+	if err := tmjson.Unmarshal(*g, &genesisObject); err != nil {
 		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
 	}
 
@@ -46,10 +53,11 @@ func (g GenesisFile) ValidateAndComplete() error {
 	}
 
 	// Marshal
-	g, err := tmjson.Marshal(genesisObject)
+	bz, err := tmjson.Marshal(genesisObject)
 	if err != nil {
 		return err
 	}
+	*g = bz
 
 	return nil
 }
