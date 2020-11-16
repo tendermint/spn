@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	tmjson "github.com/tendermint/tendermint/libs/json"
-	tmtypes "github.com/tendermint/tendermint/types"
 	"time"
 )
 
@@ -16,7 +14,7 @@ func NewChain(
 	sourceURL string,
 	sourceHash string,
 	createdAt time.Time,
-	genesis []byte,
+	genesis GenesisFile,
 ) (*Chain, error) {
 	var chain Chain
 
@@ -32,17 +30,14 @@ func NewChain(
 	chain.CreatedAt = createdAt.Unix()
 	chain.Final = false
 
-	// Check genesis validity and complete eventual missing fields with default values
-	var genesisObject tmtypes.GenesisDoc
+	// Append the chain id to the genesis
+	err := genesis.SetChainID(chainID)
+	if err != nil {
+		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	}
 
-	if err := tmjson.Unmarshal(genesis, &genesisObject); err != nil {
-		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
-	}
-	genesisObject.ChainID = chainID
-	if err := genesisObject.ValidateAndComplete(); err != nil {
-		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
-	}
-	genesis, err := tmjson.Marshal(genesisObject)
+	// Validate and complete the genesis
+	err = genesis.ValidateAndComplete()
 	if err != nil {
 		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
 	}

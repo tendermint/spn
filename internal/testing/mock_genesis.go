@@ -76,7 +76,7 @@ func MockGenesisQueryClient(ctx sdk.Context, k *keeper.Keeper) types.QueryClient
 }
 
 // MockGenesis mocks a genesis structure
-func MockGenesis() []byte {
+func MockGenesis() types.GenesisFile {
 	var genesisObject tmtypes.GenesisDoc
 
 	consensusParam := tmtypes.DefaultConsensusParams()
