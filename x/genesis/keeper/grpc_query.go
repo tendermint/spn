@@ -193,3 +193,17 @@ func (k Keeper) ShowProposal(
 
 	return &types.QueryShowProposalResponse{Proposal: &proposal}, nil
 }
+
+// CurrentGenesis generates the current genesis for the specific chain from the initial genesis and approved proposals
+func (k Keeper) CurrentGenesis(
+	c context.Context,
+	req *types.QueryCurrentGenesisRequest,
+) (*types.QueryCurrentGenesisResponse, error) {
+	//ctx := sdk.UnwrapSDKContext(c)
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	return nil, nil
+}

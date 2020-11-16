@@ -14,6 +14,7 @@ service Query {
     rpc ApprovedProposals(QueryApprovedProposalsRequest) returns (QueryApprovedProposalsResponse);
     rpc RejectedProposals(QueryRejectedProposalsRequest) returns (QueryRejectedProposalsResponse);
     rpc ShowProposal(QueryShowProposalRequest) returns (QueryShowProposalResponse);
+    rpc CurrentGenesis(QueryCurrentGenesisRequest) returns (QueryCurrentGenesisResponse);
 }
 
 message QueryListChainsRequest {
@@ -34,27 +35,27 @@ message QueryShowChainResponse {
 }
 
 message QueryPendingProposalsRequest {
-    string chainID = 2;
+    string chainID = 1;
 }
 
 message QueryPendingProposalsResponse {
-    repeated Proposal proposals = 2;
+    repeated Proposal proposals = 1;
 }
 
 message QueryApprovedProposalsRequest {
-  string chainID = 2;
+  string chainID = 1;
 }
 
 message QueryApprovedProposalsResponse {
-  repeated Proposal proposals = 2;
+  repeated Proposal proposals = 1;
 }
 
 message QueryRejectedProposalsRequest {
-  string chainID = 2;
+  string chainID = 1;
 }
 
 message QueryRejectedProposalsResponse {
-  repeated Proposal proposals = 2;
+  repeated Proposal proposals = 1;
 }
 
 message QueryShowProposalRequest {
@@ -65,3 +66,12 @@ message QueryShowProposalRequest {
 message QueryShowProposalResponse {
 	  Proposal proposal = 1;
 }
+
+message QueryCurrentGenesisRequest {
+    string chainID = 1;
+}
+
+message QueryCurrentGenesisResponse {
+    bytes genesis = 1;
+}
+
