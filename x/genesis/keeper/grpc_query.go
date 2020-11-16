@@ -2,7 +2,9 @@ package keeper
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -199,11 +201,44 @@ func (k Keeper) CurrentGenesis(
 	c context.Context,
 	req *types.QueryCurrentGenesisRequest,
 ) (*types.QueryCurrentGenesisResponse, error) {
-	//ctx := sdk.UnwrapSDKContext(c)
+	ctx := sdk.UnwrapSDKContext(c)
 
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	return nil, nil
+	// Return error if the chain doesn't exist
+	chain, found := k.GetChain(ctx, req.ChainID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
+	}
+
+	// Get the approved proposal IDs
+	approvedProposals := k.GetApprovedProposals(ctx, req.ChainID)
+
+	// Fetch all the proposals
+	var proposals []types.Proposal
+	for i, approved := range approvedProposals.ProposalIDs {
+		proposal, found := k.GetProposal(ctx, req.ChainID, approved)
+
+		// Every proposals in the approved pool should exist
+		if !found {
+			panic(fmt.Sprintf("The proposal %v doesn't exist", approved))
+		}
+
+		proposals[i] = proposal
+	}
+
+	// Apply the approved proposals to the initial genesis
+	genesis := chain.Genesis
+	jsonCodec, ok := k.cdc.(codec.JSONMarshaler)
+	if !ok {
+		return nil, errors.New("cannot get the JSON encoder")
+	}
+	err := genesis.ApplyProposals(jsonCodec, proposals)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.QueryCurrentGenesisResponse{Genesis: genesis}, nil
 }
