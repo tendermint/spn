@@ -319,7 +319,7 @@ func TestCurrentGenesis(t *testing.T) {
 	}
 
 	// Approve all proposals
-	for i:=0; i<20; i++ {
+	for i:=0; i<30; i++ {
 		msg := types.NewMsgApprove(
 			chainID,
 			int32(i),
