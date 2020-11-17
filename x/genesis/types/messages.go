@@ -1,8 +1,13 @@
 package types
 
 import (
+	"github.com/cosmos/cosmos-sdk/codec"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
+	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 // Chat message types
@@ -205,7 +210,7 @@ func (msg MsgProposalChange) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidProposalChange, "invalid chain ID")
 	}
 	if err := ValidateProposalPayloadChange(msg.Payload); err != nil {
-		return sdkerrors.Wrap(ErrInvalidProposalChange, err.Error())
+		return err
 	}
 
 	return nil
@@ -247,10 +252,10 @@ func (msg MsgProposalAddAccount) GetSignBytes() []byte {
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgProposalAddAccount) ValidateBasic() error {
 	if !checkChainID(msg.ChainID) {
-		return sdkerrors.Wrap(ErrInvalidProposalChange, "invalid chain ID")
+		return sdkerrors.Wrap(ErrInvalidProposalAddAccount, "invalid chain ID")
 	}
 	if err := ValidateProposalPayloadAddAccount(msg.Payload); err != nil {
-		return sdkerrors.Wrap(ErrInvalidProposalChange, err.Error())
+		return err
 	}
 
 	return nil
@@ -292,11 +297,30 @@ func (msg MsgProposalAddValidator) GetSignBytes() []byte {
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgProposalAddValidator) ValidateBasic() error {
 	if !checkChainID(msg.ChainID) {
-		return sdkerrors.Wrap(ErrInvalidProposalChange, "invalid chain ID")
+		return sdkerrors.Wrap(ErrInvalidProposalAddValidator, "invalid chain ID")
 	}
-	if err := ValidateProposalPayloadAddValidator(msg.Payload); err != nil {
-		return sdkerrors.Wrap(ErrInvalidProposalChange, err.Error())
+
+	// Unpack the payload
+	// This operation is necessary to parse the message
+	payload := msg.Payload
+	cdc := gentxCodec()
+	payload.GenTx.UnpackInterfaces(cdc)
+
+	if err := ValidateProposalPayloadAddValidator(payload); err != nil {
+		return err
 	}
 
 	return nil
+}
+
+// gentxCodec returns a simple codec marshaler to unpack the message inside gentx
+func gentxCodec() codec.Marshaler {
+	interfaceRegistry := codectypes.NewInterfaceRegistry()
+	staking.RegisterInterfaces(interfaceRegistry)
+	cryptocodec.RegisterInterfaces(interfaceRegistry)
+	authtypes.RegisterInterfaces(interfaceRegistry)
+
+	cdc := codec.NewProtoCodec(interfaceRegistry)
+
+	return cdc
 }
