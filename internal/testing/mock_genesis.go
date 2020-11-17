@@ -7,9 +7,11 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/module"
 	tx "github.com/cosmos/cosmos-sdk/types/tx"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
+	"github.com/cosmos/cosmos-sdk/x/genutil"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
 	identitytypes "github.com/tendermint/spn/x/identity/types"
@@ -27,9 +29,8 @@ import (
 	"time"
 )
 
-// MockGenesisContext mocks the context and the keepers of the genesis module for test purposes
-func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
-	// Codec
+// MockCodec mocks a codec for the app that contains the necessary types for proto enconding
+func MockCodec() codec.Marshaler {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 
 	// Register basic message and cryto
@@ -44,6 +45,13 @@ func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 	cryptocodec.RegisterInterfaces(interfaceRegistry)
 
 	cdc := codec.NewProtoCodec(interfaceRegistry)
+
+	return cdc
+}
+
+// MockGenesisContext mocks the context and the keepers of the genesis module for test purposes
+func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
+	cdc := MockCodec()
 
 	// Store keys
 	keys := sdk.NewKVStoreKeys(types.StoreKey, identitytypes.StoreKey)
@@ -83,10 +91,12 @@ func MockGenesis() types.GenesisFile {
 	genesisObject.ChainID = MockRandomAlphaString(10)
 	genesisObject.ConsensusParams = consensusParam
 
-	// AppSate can be any json, let reuse consensus default param as a sample
-	appState, err := json.Marshal(*consensusParam)
+	// Create a mock app state
+	testMbm := module.NewBasicManager(genutil.AppModuleBasic{})
+	cdc := MockCodec()
+	appState, err := json.MarshalIndent(testMbm.DefaultGenesis(cdc), "", " ")
 	if err != nil {
-		panic("Cannot unmarshal consensusParam")
+		panic("Cannot unmarshal marshal app state")
 	}
 	genesisObject.AppState = appState
 
