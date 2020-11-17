@@ -218,7 +218,7 @@ func (k Keeper) CurrentGenesis(
 
 	// Fetch all the proposals
 	var proposals []types.Proposal
-	for i, approved := range approvedProposals.ProposalIDs {
+	for _, approved := range approvedProposals.ProposalIDs {
 		proposal, found := k.GetProposal(ctx, req.ChainID, approved)
 
 		// Every proposals in the approved pool should exist
@@ -226,7 +226,7 @@ func (k Keeper) CurrentGenesis(
 			panic(fmt.Sprintf("The proposal %v doesn't exist", approved))
 		}
 
-		proposals[i] = proposal
+		proposals = append(proposals, proposal)
 	}
 
 	// Apply the approved proposals to the initial genesis
