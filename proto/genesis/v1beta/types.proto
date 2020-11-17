@@ -13,7 +13,7 @@ message Chain {
   string sourceURL = 4; 
   string sourceHash  = 5; 
   int64 createdAt = 6;
-  bytes genesis = 7;
+  bytes genesis = 7 [(gogoproto.casttype) = "GenesisFile"];
   bool final = 8;
 }
 
