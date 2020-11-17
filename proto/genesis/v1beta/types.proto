@@ -3,7 +3,8 @@ package spn.genesis.v1beta1;
 
 option go_package = "github.com/tendermint/spn/x/genesis/types";
 
-import "google/protobuf/struct.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "cosmos/tx/v1beta1/tx.proto";
 import "gogoproto/gogo.proto";
 
 message Chain {
@@ -55,10 +56,10 @@ message ProposalChangePayload {
 
 message ProposalAddAccountPayload {
     bytes address = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
-    repeated google.protobuf.Struct coins = 2 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+    repeated cosmos.base.v1beta1.Coin coins = 2 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 message ProposalAddValidatorPayload {
-    google.protobuf.Struct genTx = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types/tx.Tx"];
+    cosmos.tx.v1beta1.Tx genTx = 1;
     string peer = 2;
 }
