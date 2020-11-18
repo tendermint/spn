@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"io/ioutil"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -29,6 +30,8 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		CmdChainCreate(),
+		CmdApprove(),
+		CmdReject(),
 		CmdProposalAddAccount(),
 		CmdProposalAddValidator(),
 	)
@@ -68,6 +71,80 @@ func CmdChainCreate() *cobra.Command {
 				args[1],
 				args[2],
 				genesis,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdApprove returns the transaction command to approve a specific proposal
+func CmdApprove() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "proposal-approve [chain-id] [proposal-id]",
+		Short: "Approve a proposal",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			// Convert value for proposal ID
+			proposalID, err := strconv.Atoi(args[1])
+			if err != nil {
+				return err
+			}
+
+			// Create and send message
+			msg := types.NewMsgApprove(
+				args[0],
+				int32(proposalID),
+				clientCtx.GetFromAddress(),
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdApprove returns the transaction command to reject a specific proposal
+func CmdReject() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "proposal-reject [chain-id] [proposal-id]",
+		Short: "Reject a proposal",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			// Convert value for proposal ID
+			proposalID, err := strconv.Atoi(args[1])
+			if err != nil {
+				return err
+			}
+
+			// Create and send message
+			msg := types.NewMsgReject(
+				args[0],
+				int32(proposalID),
+				clientCtx.GetFromAddress(),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

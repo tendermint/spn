@@ -27,6 +27,9 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdShowChain(),
 		CmdShowProposal(),
 		CmdPendingProposals(),
+		CmdRejectedProposals(),
+		CmdApprovedProposals(),
+		CmdCurrentGenesis(),
 	)
 
 	return cmd
@@ -182,6 +185,115 @@ func CmdPendingProposals() *cobra.Command {
 		},
 	}
 
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdApprovedProposals returns the command to list approved proposals for a chain genesis
+func CmdApprovedProposals() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "approved-proposals [chain-id]",
+		Short: "list the approved proposals for a chain genesis",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryApprovedProposalsRequest{
+				ChainID: args[0],
+			}
+
+			// Perform the request
+			res, err := queryClient.ApprovedProposals(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdRejectedProposals returns the command to list rejected proposals for a chain genesis
+func CmdRejectedProposals() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "rejected-proposals [chain-id]",
+		Short: "list the rejected proposals for a chain genesis",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryRejectedProposalsRequest{
+				ChainID: args[0],
+			}
+
+			// Perform the request
+			res, err := queryClient.RejectedProposals(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdCurrentGenesis returns the command to show the current genesis for a chain
+func CmdCurrentGenesis() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "current-genesis [chain-id]",
+		Short: "show the current genesis for the chain from the initial genesis and approved proposals",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryCurrentGenesisRequest{
+				ChainID: args[0],
+			}
+
+			// Perform the request
+			res, err := queryClient.CurrentGenesis(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			// Check if the genesis must be save in a file
+			genesisFile, _ := cmd.Flags().GetString(FlagSaveGenesis)
+			if genesisFile != "" {
+				ioutil.WriteFile(genesisFile, res.Genesis, 0644)
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	cmd.Flags().AddFlagSet(FlagSetSaveGenesis())
 	flags.AddQueryFlagsToCmd(cmd)
 
 	return cmd
