@@ -41,8 +41,8 @@ func MockCodec() codec.Marshaler {
 		&types.MsgChainCreate{},
 		&types.MsgApprove{},
 		&types.MsgReject{},
-		&staking.MsgCreateValidator{},
 	)
+	staking.RegisterInterfaces(interfaceRegistry)
 	cryptocodec.RegisterInterfaces(interfaceRegistry)
 	authtypes.RegisterInterfaces(interfaceRegistry)
 
