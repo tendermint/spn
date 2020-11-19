@@ -158,7 +158,7 @@ func (e env) Serve(msg string, path string, options ...execOption) (ok bool) {
 // before ctx canceled.
 func (e env) IsAppServed(ctx context.Context) error {
 	checkAlive := func() error {
-		ok, err := httpstatuschecker.Check(ctx, xurl.HTTP("localhost:1318")+"/node_info")
+		ok, err := httpstatuschecker.Check(ctx, xurl.HTTP("localhost:1317")+"/node_info")
 		if err == nil && !ok {
 			err = errors.New("app is not online")
 		}
