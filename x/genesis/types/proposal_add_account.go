@@ -41,15 +41,19 @@ func NewProposalAddAccountPayload(
 func ValidateProposalPayloadAddAccount(payload *ProposalAddAccountPayload) error {
 	// Verify address is not empty
 	if payload.Address.Empty() {
-		return errors.New("Account address empty")
+		return errors.New("account address empty")
+	}
+
+	if _, err := sdk.AccAddressFromBech32(payload.Address.String()); err != nil {
+		return errors.New("invalid address")
 	}
 
 	// Check coin allocation validity
 	if !payload.Coins.IsValid() {
-		return fmt.Errorf("Coins allocation is invalid: %v", payload.Coins)
+		return fmt.Errorf("coins allocation is invalid: %v", payload.Coins)
 	}
 	if !payload.Coins.IsAllPositive() {
-		return fmt.Errorf("Coins allocation is non all positive: %v", payload.Coins)
+		return fmt.Errorf("coins allocation is non all positive: %v", payload.Coins)
 	}
 
 	return nil
