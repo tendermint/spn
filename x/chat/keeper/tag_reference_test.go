@@ -33,23 +33,23 @@ func TestGetTagReferencesFromChannel(t *testing.T) {
 	k.AppendMessageToChannel(ctx, message)
 
 	fooReferences := k.GetTagReferencesFromChannel(ctx, "foo", 0)
-	require.Equal(t, 3, len(fooReferences), "GetTagReferencesFromChannel should find 3 foo references")
-	require.Equal(t, message0ID, fooReferences[0], "GetTagReferencesFromChannel should return reference message ID")
-	require.Equal(t, message1ID, fooReferences[1], "GetTagReferencesFromChannel should return reference message ID")
-	require.Equal(t, message3ID, fooReferences[2], "GetTagReferencesFromChannel should return reference message ID")
+	require.Equal(t, 3, len(fooReferences))
+	require.Equal(t, message0ID, fooReferences[0])
+	require.Equal(t, message1ID, fooReferences[1])
+	require.Equal(t, message3ID, fooReferences[2])
 
 	barReferences := k.GetTagReferencesFromChannel(ctx, "bar", 0)
-	require.Equal(t, 3, len(barReferences), "GetTagReferencesFromChannel should find 3 bar references")
-	require.Equal(t, message0ID, barReferences[0], "GetTagReferencesFromChannel should return reference message ID")
-	require.Equal(t, message1ID, barReferences[1], "GetTagReferencesFromChannel should return reference message ID")
-	require.Equal(t, message2ID, barReferences[2], "GetTagReferencesFromChannel should return reference message ID")
+	require.Equal(t, 3, len(barReferences))
+	require.Equal(t, message0ID, barReferences[0])
+	require.Equal(t, message1ID, barReferences[1])
+	require.Equal(t, message2ID, barReferences[2])
 
 	foobarReferences := k.GetTagReferencesFromChannel(ctx, "foo-bar", 0)
-	require.Equal(t, 1, len(foobarReferences), "GetTagReferencesFromChannel should find 1 foo-bar reference")
-	require.Equal(t, message0ID, foobarReferences[0], "GetTagReferencesFromChannel should return reference message ID")
+	require.Equal(t, 1, len(foobarReferences))
+	require.Equal(t, message0ID, foobarReferences[0])
 
 	barfooReferences := k.GetTagReferencesFromChannel(ctx, "bar-foo", 0)
-	require.Equal(t, 0, len(barfooReferences), "GetTagReferencesFromChannel should find 0 bar-foo reference")
+	require.Equal(t, 0, len(barfooReferences))
 
 	// Can get all tag references in all channels
 	k.CreateChannel(ctx, spnmocks.MockChannel())
@@ -62,10 +62,10 @@ func TestGetTagReferencesFromChannel(t *testing.T) {
 	k.AppendMessageToChannel(ctx, message)
 
 	fooReferences = k.GetAllTagReferences(ctx, "foo")
-	require.Equal(t, 5, len(fooReferences), "GetAllTagReferences should find 5 foo references")
-	require.Equal(t, message0ID, fooReferences[0], "GetAllTagReferences should return reference message ID")
-	require.Equal(t, message1ID, fooReferences[1], "GetAllTagReferences should return reference message ID")
-	require.Equal(t, message3ID, fooReferences[2], "GetAllTagReferences should return reference message ID")
-	require.Equal(t, message4ID, fooReferences[3], "GetAllTagReferences should return reference message ID")
-	require.Equal(t, message5ID, fooReferences[4], "GetAllTagReferences should return reference message ID")
+	require.Equal(t, 5, len(fooReferences))
+	require.Equal(t, message0ID, fooReferences[0])
+	require.Equal(t, message1ID, fooReferences[1])
+	require.Equal(t, message3ID, fooReferences[2])
+	require.Equal(t, message4ID, fooReferences[3])
+	require.Equal(t, message5ID, fooReferences[4])
 }

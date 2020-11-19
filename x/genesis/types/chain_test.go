@@ -22,8 +22,8 @@ func TestNewChain(t *testing.T) {
 		time.Now(),
 		spnmocks.MockGenesis(),
 	)
-	require.NoError(t, err, "NewChain should create a new chain")
-	require.Equal(t, 0, len(chain.Peers), "chain should have no peer when create")
+	require.NoError(t, err)
+	require.Equal(t, 0, len(chain.Peers))
 
 	// The chain ID should be added to the genesis of the chain
 	chainID := chain.ChainID
@@ -36,8 +36,8 @@ func TestNewChain(t *testing.T) {
 	peer2 := spnmocks.MockRandomString(20)
 	chain.AppendPeer(peer1)
 	chain.AppendPeer(peer2)
-	require.Equal(t, 2, len(chain.Peers), "AppendPeer should append new peers to the chain")
-	require.Equal(t, []string{peer1, peer2}, chain.Peers, "AppendPeer should append new peers to the chain")
+	require.Equal(t, 2, len(chain.Peers))
+	require.Equal(t, []string{peer1, peer2}, chain.Peers)
 
 	// Prevent creating a chain with a invalid name
 	_, err = types.NewChain(
@@ -48,7 +48,7 @@ func TestNewChain(t *testing.T) {
 		time.Now(),
 		spnmocks.MockGenesis(),
 	)
-	require.Error(t, err, "NewChain should prevent creating chains with an invalid name")
+	require.Error(t, err)
 
 	// Prevent creating a chain with a invalid genesis
 	_, err = types.NewChain(
@@ -59,7 +59,7 @@ func TestNewChain(t *testing.T) {
 		time.Now(),
 		[]byte(spnmocks.MockRandomString(500)),
 	)
-	require.Error(t, err, "NewChain should prevent creating chains with an invalid genesis")
+	require.Error(t, err)
 
 	var genesisObject tmtypes.GenesisDoc
 	genesisObject.ConsensusParams = tmtypes.DefaultConsensusParams()
@@ -76,5 +76,5 @@ func TestNewChain(t *testing.T) {
 		time.Now(),
 		genesis,
 	)
-	require.Error(t, err, "NewChain should prevent creating chains with an invalid genesis")
+	require.Error(t, err)
 }

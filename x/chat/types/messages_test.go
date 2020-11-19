@@ -18,9 +18,9 @@ func TestMsgCreateChannel(t *testing.T) {
 		"bar",
 		nil,
 	)
-	require.NoError(t, err, "NewMsgCreateChannel should create a MsgCreateChannel")
+	require.NoError(t, err)
 	err = msg.ValidateBasic()
-	require.NoError(t, err, "NewMsgCreateChannel should create a valid MsgCreateChannel")
+	require.NoError(t, err)
 
 	// Can create a MsgCreateChannel with payload
 	payload := spnmocks.MockPayload()
@@ -30,9 +30,9 @@ func TestMsgCreateChannel(t *testing.T) {
 		"bar",
 		payload,
 	)
-	require.NoError(t, err, "NewMsgCreateChannel should create a MsgCreateChannel")
+	require.NoError(t, err)
 	err = msg.ValidateBasic()
-	require.NoError(t, err, "NewMsgCreateChannel should create a valid MsgCreateChannel")
+	require.NoError(t, err)
 }
 
 func TestMsgSendMessage(t *testing.T) {
@@ -47,9 +47,9 @@ func TestMsgSendMessage(t *testing.T) {
 		[]string{},
 		nil,
 	)
-	require.NoError(t, err, "MsgSendMessage should create a MsgSendMessage")
+	require.NoError(t, err)
 	err = msg.ValidateBasic()
-	require.NoError(t, err, "MsgSendMessage should create a valid MsgSendMessage")
+	require.NoError(t, err)
 
 	// Can create a MsgSendMessage with payload
 	payload := spnmocks.MockPayload()
@@ -61,9 +61,9 @@ func TestMsgSendMessage(t *testing.T) {
 		[]string{},
 		payload,
 	)
-	require.NoError(t, err, "MsgSendMessage should create a MsgSendMessage")
+	require.NoError(t, err)
 	err = msg.ValidateBasic()
-	require.NoError(t, err, "MsgSendMessage should create a valid MsgSendMessage")
+	require.NoError(t, err)
 }
 
 func TestMsgVotePoll(t *testing.T) {
@@ -77,9 +77,9 @@ func TestMsgVotePoll(t *testing.T) {
 		0,
 		nil,
 	)
-	require.NoError(t, err, "MsgVotePoll should create a MsgVotePoll")
+	require.NoError(t, err)
 	err = msg.ValidateBasic()
-	require.NoError(t, err, "MsgVotePoll should create a valid MsgVotePoll")
+	require.NoError(t, err)
 
 	// Can create a MsgVotePoll
 	payload := spnmocks.MockPayload()
@@ -90,7 +90,7 @@ func TestMsgVotePoll(t *testing.T) {
 		0,
 		payload,
 	)
-	require.NoError(t, err, "MsgVotePoll should create a MsgVotePoll")
+	require.NoError(t, err)
 	err = msg.ValidateBasic()
-	require.NoError(t, err, "MsgVotePoll should create a valid MsgVotePoll")
+	require.NoError(t, err)
 }
