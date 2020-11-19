@@ -345,7 +345,7 @@ func TestCurrentGenesis(t *testing.T) {
 
 	// Analyse accounts
 	authGenState := authtypes.GetGenesisStateFromAppState(cdc, appState)
-	accs, err := authtypes.UnpackAccounts(authGenState.Accounts)
+	accs, _ := authtypes.UnpackAccounts(authGenState.Accounts)
 	require.Equal(t, 20, len(accs))
 
 	// Analyse validators

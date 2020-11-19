@@ -54,6 +54,31 @@ func (g *GenesisFile) ValidateAndComplete() error {
 		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
 	}
 
+	// When created the genesis must hold no account
+	appState, err := genutiltypes.GenesisStateFromGenDoc(genesisObject)
+	if err != nil {
+		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	}
+	cdc := gentxCodec()
+	authGenState := authtypes.GetGenesisStateFromAppState(cdc, appState)
+	accs, err := authtypes.UnpackAccounts(authGenState.Accounts)
+	if err != nil {
+		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	}
+	if len(accs) > 0 {
+		return sdkerrors.Wrap(ErrInvalidChain, "the genesis already contains accounts")
+	}
+
+	// When created the genesis must hold no gentx
+	appGenesisState, err := genutiltypes.GenesisStateFromGenDoc(genesisObject)
+	if err != nil {
+		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	}
+	genesisState := genutiltypes.GetGenesisStateFromAppState(cdc, appGenesisState)
+	if len(genesisState.GenTxs) > 0 {
+		return sdkerrors.Wrap(ErrInvalidChain, "the genesis already contains gentx")
+	}
+
 	// Validate and complete
 	if err := genesisObject.ValidateAndComplete(); err != nil {
 		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
