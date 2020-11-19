@@ -128,6 +128,10 @@ func TestApplyProposalAddValidator(t  *testing.T) {
 	isValidatorSet := k.IsValidatorSet(ctx, chainID, valAddress)
 	require.True(t, isValidatorSet)
 
+	// The peer ids of the chain is updated upon validator approval
+	retrievedChain, _ := k.GetChain(ctx, chainID)
+	require.Contains(t, retrievedChain.Peers, payload.Peer)
+
 	// Prevent perform on non existent chain
 	err = k.ApplyProposalApproval(ctx, spnmocks.MockRandomAlphaString(5), *proposal)
 	require.Error(t, err)
