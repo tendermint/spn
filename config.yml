@@ -7,11 +7,3 @@ accounts:
 validator:
   name: user1
   staked: "100000000stake"
-servers:
-  rpc-address: "0.0.0.0:26651"
-  p2p-address: "0.0.0.0:26652"
-  prof-address: "0.0.0.0:6065"
-  grpc-address: "0.0.0.0:9098"
-  api-address: "0.0.0.0:1318"
-  frontend-address: "0.0.0.0:8082"
-  dev-ui-address: "0.0.0.0:12346"
