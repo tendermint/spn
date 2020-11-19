@@ -11,34 +11,34 @@ func TestCreateChannel(t *testing.T) {
 	ctx, k := spnmocks.MockChatContext()
 
 	// Channel count is 0 at initialization
-	require.Zero(t, k.GetChannelCount(ctx), "Channel count must be 0 at initialization")
+	require.Zero(t, k.GetChannelCount(ctx))
 
 	// Cannot find a non existing channel
 	_, found := k.GetChannel(ctx, 0)
-	require.False(t, found, "GetChannel should return found to as false if the channel doesn't exist")
+	require.False(t, found)
 
 	// A channel can be appended and retrieved
 	newChannel := spnmocks.MockChannel()
 	k.CreateChannel(ctx, newChannel)
 	retrieved, found := k.GetChannel(ctx, 0)
-	require.True(t, found, "An appended channel should be retrieved")
-	require.Equal(t, newChannel.Title, retrieved.Title, "GetChannel should retrieve the appended channel")
-	require.Equal(t, int32(1), k.GetChannelCount(ctx), "Channel count must be 1 after a channel has been appended")
+	require.True(t, found)
+	require.Equal(t, newChannel.Title, retrieved.Title)
+	require.Equal(t, int32(1), k.GetChannelCount(ctx))
 
 	// A second channel can be appended an retrieved
 	newChannel = spnmocks.MockChannel()
 	k.CreateChannel(ctx, newChannel)
 	retrieved, found = k.GetChannel(ctx, 1)
-	require.True(t, found, "An appended channel should be retrieved")
-	require.Equal(t, newChannel.Title, retrieved.Title, "GetChannel should retrieve the appended channel")
+	require.True(t, found)
+	require.Equal(t, newChannel.Title, retrieved.Title)
 
 	// Prevent a invalid user to create a channel
 	newChannel = spnmocks.MockChannel()
 	newChannel.Creator = "invalid_identifier"
 	err := k.CreateChannel(ctx, newChannel)
-	require.Error(t, err, "CreateChannel should prevent an invalid user to create a channel")
+	require.Error(t, err)
 
 	// Can retrieve all the channels
 	channels := k.GetAllChannels(ctx)
-	require.Equal(t, 2, len(channels), "GetAllChannels should find the channels in the store")
+	require.Equal(t, 2, len(channels))
 }

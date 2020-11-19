@@ -20,8 +20,8 @@ func TestNewMessage(t *testing.T) {
 		[]string{},
 		nil,
 	)
-	require.NoError(t, err, "NewMessage should create a new message")
-	require.False(t, message.HasPoll, "NewMessage with no poll options should not create a poll")
+	require.NoError(t, err)
+	require.False(t, message.HasPoll)
 
 	// Can create a message
 	payload := spnmocks.MockPayload()
@@ -35,7 +35,7 @@ func TestNewMessage(t *testing.T) {
 		[]string{},
 		payload,
 	)
-	require.NoError(t, err, "NewMessage should create a new message")
+	require.NoError(t, err)
 
 	// Create create a message with a poll
 	pollOptions := []string{"coffee", "tea", "water", "beer"}
@@ -49,9 +49,9 @@ func TestNewMessage(t *testing.T) {
 		pollOptions,
 		nil,
 	)
-	require.NoError(t, err, "NewMessage should create a new message")
-	require.True(t, message.HasPoll, "NewMessage with poll options should create a poll")
-	require.Equal(t, pollOptions, message.Poll.Options, "NewMessage with poll options should create a poll with same options")
+	require.NoError(t, err)
+	require.True(t, message.HasPoll)
+	require.Equal(t, pollOptions, message.Poll.Options)
 
 	// Prevent creating a message with an invalid content
 	bigContent := spnmocks.MockRandomString(types.MessageContentMaxLength + 1)
@@ -65,7 +65,7 @@ func TestNewMessage(t *testing.T) {
 		[]string{},
 		nil,
 	)
-	require.Error(t, err, "NewMessage should prevent creating a message with an invalid content")
+	require.Error(t, err)
 
 	// Prevent creating a message with an invalid tag
 	message, err = types.NewMessage(
@@ -78,6 +78,6 @@ func TestNewMessage(t *testing.T) {
 		[]string{},
 		payload,
 	)
-	require.Error(t, err, "NewMessage should prevent creating a message with an invalid tag")
+	require.Error(t, err)
 
 }

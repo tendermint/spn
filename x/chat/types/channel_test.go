@@ -17,8 +17,8 @@ func TestNewChannel(t *testing.T) {
 		"bar",
 		nil,
 	)
-	require.NoError(t, err, "NewChannel should create a new channel")
-	require.Zero(t, channel.MessageCount, "NewChannel should create a channel with 0 message")
+	require.NoError(t, err)
+	require.Zero(t, channel.MessageCount)
 
 	// Can create a channel with payload
 	payload := spnmocks.MockPayload()
@@ -29,7 +29,7 @@ func TestNewChannel(t *testing.T) {
 		"bar",
 		payload,
 	)
-	require.NoError(t, err, "NewChannel should create a new channel")
+	require.NoError(t, err)
 
 	// Prevent creating a channel with an invalid name
 	bigName := spnmocks.MockRandomString(types.ChannelTitleMaxLength + 1)
@@ -40,7 +40,7 @@ func TestNewChannel(t *testing.T) {
 		"bar",
 		nil,
 	)
-	require.Error(t, err, "NewChannel should prevent creating a channel with an invalid name")
+	require.Error(t, err)
 
 	// Prevent creating a channel with an invalid subject
 	bigSubject := spnmocks.MockRandomString(types.ChannelDescriptionMaxLength + 1)
@@ -51,7 +51,7 @@ func TestNewChannel(t *testing.T) {
 		bigSubject,
 		nil,
 	)
-	require.Error(t, err, "NewChannel should prevent creating a channel with an invalid subject")
+	require.Error(t, err)
 
 }
 
@@ -67,11 +67,11 @@ func TestIncrementMessageCount(t *testing.T) {
 
 	oldCount := channel.MessageCount
 	channel.IncrementMessageCount()
-	require.Equal(t, oldCount+1, channel.MessageCount, "IncrementMessageCount should increment the message count")
+	require.Equal(t, oldCount+1, channel.MessageCount)
 
 	// Test from a random number
 	channel.MessageCount = rand.Int31()
 	oldCount = channel.MessageCount
 	channel.IncrementMessageCount()
-	require.Equal(t, oldCount+1, channel.MessageCount, "IncrementMessageCount should increment the message count")
+	require.Equal(t, oldCount+1, channel.MessageCount)
 }
