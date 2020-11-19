@@ -7,7 +7,7 @@ import (
 
 // SetAccount set an account address that exists in the genesis of a chain
 // This allows us to retrieve in a constant time the current accounts of a genesis to perform verifications
-func (k Keeper) SetAccount(ctx sdk.Context, chainID string, address sdk.AccAddress, payload *types.ProposalAddValidatorPayload) {
+func (k Keeper) SetAccount(ctx sdk.Context, chainID string, address sdk.AccAddress, payload *types.ProposalAddAccountPayload) {
 	store := ctx.KVStore(k.storeKey)
 
 	bz := k.cdc.MustMarshalBinaryBare(payload)
@@ -15,9 +15,17 @@ func (k Keeper) SetAccount(ctx sdk.Context, chainID string, address sdk.AccAddre
 }
 
 // GetAccountCoins returns the coins allocated to an account in the genesis
-func (k Keeper) IsAccountSet(ctx sdk.Context, chainID string, address sdk.AccAddress) bool {
+func (k Keeper) GetAccountCoins(ctx sdk.Context, chainID string, address sdk.AccAddress) (sdk.Coins, bool) {
 	store := ctx.KVStore(k.storeKey)
-	return store.Has(types.GetAccountKey(chainID, address))
+
+	value := store.Get(types.GetAccountKey(chainID, address))
+	if value == nil {
+		return nil, false
+	}
+	var payload types.ProposalAddAccountPayload
+	k.cdc.MustUnmarshalBinaryBare(value, &payload)
+
+	return payload.Coins, true
 }
 
 // IsAccountSet check if a specific account is set for a specific chain
