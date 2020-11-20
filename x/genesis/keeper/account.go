@@ -5,14 +5,27 @@ import (
 	"github.com/tendermint/spn/x/genesis/types"
 )
 
-// We just need a value to store in the store
-var accountSet []byte = []byte("1")
-
 // SetAccount set an account address that exists in the genesis of a chain
 // This allows us to retrieve in a constant time the current accounts of a genesis to perform verifications
-func (k Keeper) SetAccount(ctx sdk.Context, chainID string, address sdk.AccAddress) {
+func (k Keeper) SetAccount(ctx sdk.Context, chainID string, address sdk.AccAddress, payload *types.ProposalAddAccountPayload) {
 	store := ctx.KVStore(k.storeKey)
-	store.Set(types.GetAccountKey(chainID, address), accountSet)
+
+	bz := k.cdc.MustMarshalBinaryBare(payload)
+	store.Set(types.GetAccountKey(chainID, address), bz)
+}
+
+// GetAccountCoins returns the coins allocated to an account in the genesis
+func (k Keeper) GetAccountCoins(ctx sdk.Context, chainID string, address sdk.AccAddress) (sdk.Coins, bool) {
+	store := ctx.KVStore(k.storeKey)
+
+	value := store.Get(types.GetAccountKey(chainID, address))
+	if value == nil {
+		return nil, false
+	}
+	var payload types.ProposalAddAccountPayload
+	k.cdc.MustUnmarshalBinaryBare(value, &payload)
+
+	return payload.Coins, true
 }
 
 // IsAccountSet check if a specific account is set for a specific chain

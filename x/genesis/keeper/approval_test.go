@@ -31,7 +31,7 @@ func CheckProposalAddAccount(t  *testing.T) {
 	require.Error(t, err)
 
 	// Error if account is already set
-	k.SetAccount(ctx, chainID, address)
+	k.SetAccount(ctx, chainID, address, payload)
 	payload = spnmocks.MockProposalAddAccountPayload()
 	payload.Address = address
 	proposal, _ = types.NewProposalAddAccount(
@@ -59,12 +59,29 @@ func CheckProposalAddValidator(t  *testing.T) {
 	err := k.CheckProposalApproval(ctx, chainID, *proposal)
 	require.Error(t, err)
 
-	// No error if corresponding account is set
-	payload = spnmocks.MockProposalAddValidatorPayload()
+	// Error if funds are not sufficient for self delegation
+	genTxHighSelfDelegation := spnmocks.MockGenTxWithDelegation(sdk.NewCoin("stake" , sdk.NewInt(1000000)))
+	payload.GenTx = &genTxHighSelfDelegation
+	addAccountPayload := spnmocks.MockProposalAddAccountPayload()
 	msg, _ := payload.GetCreateValidatorMessage()
 	valAddress, _ := sdk.ValAddressFromBech32(msg.ValidatorAddress)
 	accAddress := sdk.AccAddress(valAddress)
-	k.SetAccount(ctx, chainID, accAddress)
+	k.SetAccount(ctx, chainID, accAddress, addAccountPayload)
+	proposal, _ = types.NewProposalAddValidator(
+		spnmocks.MockProposalInformation(),
+		payload,
+	)
+	err = k.CheckProposalApproval(ctx, chainID, *proposal)
+	require.Error(t, err)
+
+	// No error if corresponding account is set with sufficient funds
+	genTxLowSelfDelegation := spnmocks.MockGenTx()
+	payload.GenTx = &genTxLowSelfDelegation
+	addAccountPayload = spnmocks.MockProposalAddAccountPayload()
+	msg, _ = payload.GetCreateValidatorMessage()
+	valAddress, _ = sdk.ValAddressFromBech32(msg.ValidatorAddress)
+	accAddress = sdk.AccAddress(valAddress)
+	k.SetAccount(ctx, chainID, accAddress, addAccountPayload)
 	proposal, _ = types.NewProposalAddValidator(
 		spnmocks.MockProposalInformation(),
 		payload,

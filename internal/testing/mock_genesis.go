@@ -160,9 +160,12 @@ func MockProposalChangePayload() *types.ProposalChangePayload {
 
 // MockProposalAddAccountPayload mocks a valid payload
 func MockProposalAddAccountPayload() *types.ProposalAddAccountPayload {
+	stake := sdk.NewCoin("stake", sdk.NewInt(100000))
+	token := sdk.NewCoin("token", sdk.NewInt(100000))
+
 	return types.NewProposalAddAccountPayload(
 		MockAccAddress(),
-		MockCoins(),
+		sdk.NewCoins(stake, token),
 	)
 }
 
@@ -184,13 +187,19 @@ func MockProposalInformation() *types.ProposalInformation {
 
 // MockGenTx mocks a gentx transaction
 func MockGenTx() tx.Tx {
+	selfDelegation := sdk.NewCoin("stake", sdk.NewInt(10000))
+	return MockGenTxWithDelegation(selfDelegation)
+}
+
+// MockGenTxWithDelegation mocks a gentx transaction with a custom self-delegation
+func MockGenTxWithDelegation(selfDelegation sdk.Coin) tx.Tx {
 	privKey, opAddress := MockValAddress()
 
 	// Create validator message
 	message := staking.NewMsgCreateValidator(
 		opAddress,
 		MockPubKey(),
-		MockCoin(),
+		selfDelegation,
 		MockDescription(),
 		MockCommissionRates(),
 		sdk.NewInt(1),

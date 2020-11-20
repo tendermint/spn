@@ -258,9 +258,11 @@ func TestHandleMsgApprove(t *testing.T) {
 
 	// Create a add validator proposal
 	addValidatorPayload := spnmocks.MockProposalAddValidatorPayload()
+	addAccountPayload = spnmocks.MockProposalAddAccountPayload()
 	createValidatorMessage, _ := addValidatorPayload.GetCreateValidatorMessage()
 	valAddress, _ := sdk.ValAddressFromBech32(createValidatorMessage.ValidatorAddress)
-	k.SetAccount(ctx, chainID, sdk.AccAddress(valAddress))	// Simulate account address already being provided
+	addAccountPayload.Address = sdk.AccAddress(valAddress)
+	k.SetAccount(ctx, chainID, addAccountPayload.Address, addAccountPayload)	// Simulate account address already being provided
 	msgProposalValidator := types.NewMsgProposalAddValidator(
 		chainID,
 		proposalCreator,

@@ -74,12 +74,20 @@ func (k Keeper) checkProposalAddValidator(ctx sdk.Context, chainID string, paylo
 		return fmt.Errorf("validator %v already exists in the genesis", valAddr.String())
 	}
 
+	// Cannot add a validator if the account doesn't contain enough funds for self-delegation
+	coins, _ := k.GetAccountCoins(ctx, chainID, sdk.AccAddress(valAddr))
+	msgCreateValidator, _ := payload.GetCreateValidatorMessage()
+	selfDelegation := sdk.NewCoins(msgCreateValidator.Value)
+	if !coins.IsAllGTE(selfDelegation) {
+		return errors.New("insufficient funds in account for self delegation")
+	}
+
 	return nil
 }
 
 // applyProposalAddAccount applies the changes to the keeper when a ProposalAddAccount is approved
 func (k Keeper) applyProposalAddAccount(ctx sdk.Context, chainID string, payload *types.ProposalAddAccountPayload) error {
-	k.SetAccount(ctx, chainID, payload.Address)
+	k.SetAccount(ctx, chainID, payload.Address, payload)
 
 	return nil
 }
