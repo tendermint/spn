@@ -95,7 +95,13 @@ func (k Keeper) applyProposalAddValidator(ctx sdk.Context, chainID string, paylo
 		panic(fmt.Errorf("A ProposalAddValidator contains a invalid payload %v", err.Error()))
 	}
 
+	// Set the new validator
 	k.SetValidator(ctx, chainID, valAddr)
+
+	// Add the peer inside the payload to the chain peer id
+	chain, _ := k.GetChain(ctx, chainID)
+	chain.Peers = append(chain.Peers, payload.Peer)
+	k.SetChain(ctx, chain)
 
 	return nil
 }
