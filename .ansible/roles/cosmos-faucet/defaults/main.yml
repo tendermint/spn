@@ -1,0 +1,8 @@
+faucet_version: master
+log_level: info
+key_name: faucet
+cli_name: gaiacli
+credit_amount: 10000000
+max_credit: 100000000
+denom: uatom
+faucet_mnemonic: ""

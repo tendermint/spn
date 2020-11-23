@@ -1,0 +1,253 @@
+---
+- name: install {{ app_name }}d service
+  template:
+    src: templates/appd.service.j2
+    dest: /etc/systemd/system/{{ app_name }}d.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: stop the {{ app_name }}d service
+  when: reset | bool
+  systemd:
+    name: "{{ app_name }}d"
+    state: stopped
+
+- name: reset node and genesis
+  when: reset | bool
+  shell: rm -rf /home/{{ app_name }}/.{{ data_dir | default('.' + app_name + 'd') }}/*
+
+- name: check if key exists
+  become_user: "{{ app_name }}"
+  stat:
+    path: ~/{{ data_dir }}/keyhash
+  register: keyhash
+  when: "'validators' in group_names"
+
+- name: create key
+  when: "'validators' in group_names and keyhash.stat.exists == false"
+  become_user: "{{ app_name }}"
+  no_log: true
+  args:
+    executable: /bin/bash
+  shell: 'echo -e "{{ key_password }}\n{{ key_password }}" | {{ app_name }}d keys add {{ ansible_hostname }} 2> ~/secret'
+
+- name: get key address
+  become_user: "{{ app_name }}"
+  shell: "echo '{{ key_password }}' | {{ app_name }}d keys show {{ ansible_hostname }} --address"
+  register: key_address
+  when: "'validators' in group_names"
+
+- name: check if genesis exist
+  become_user: "{{ app_name }}"
+  stat:
+    path: ~/{{ data_dir }}/config/genesis.json
+  register: genesis
+
+- name: initialize node and genesis
+  become_user: "{{ app_name }}"
+  shell: "{{ app_name }}d init {{ ansible_hostname }} --chain-id {{ chain_id }}"
+  when: genesis.stat.exists == false
+
+- name: adding validators keys to genesis
+  run_once: true
+  when: genesis.stat.exists == false and 'validators' in group_names
+  become_user: "{{ app_name }}"
+  with_items: "{{ groups['validators'] | map('extract', hostvars, ['key_address', 'stdout']) | list }}"
+  args:
+    executable: /bin/bash
+    chdir: ~/{{ data_dir }}/config
+  shell: "{{ app_name }}d add-genesis-account {{ item }} {{ validators_assets }} || true"
+
+- name: adding additional keys
+  run_once: true
+  when: genesis.stat.exists == false and keys is defined and 'validators' in group_names
+  become_user: "{{ app_name }}"
+  with_items: "{{ keys }}"
+  args:
+    executable: /bin/bash
+    chdir: ~/{{ data_dir }}/config
+  shell: "{{ app_name }}d add-genesis-account {{ item.address }} {{ item.assets }} || true"
+
+- name: generating faucet account
+  when: genesis.stat.exists == false and generate_faucet_account is defined and 'sentries' in group_names
+  become_user: "{{ app_name }}"
+  args:
+    executable: /bin/bash
+  shell: 'echo -e "{{ key_password }}\n{{ key_password }}" | {{ app_name }}d keys add faucet 2> ~/faucet-secret'
+
+- name: get faucet key address
+  when: genesis.stat.exists == false and generate_faucet_account is defined and 'sentries' in group_names
+  become_user: "{{ app_name }}"
+  shell: "echo '{{ key_password }}' | {{ app_name }}d keys show faucet --address"
+  register: faucet_key_address
+
+- name: adding faucet key to genesis
+  run_once: true
+  when: genesis.stat.exists == false and generate_faucet_account is defined and 'validators' in group_names
+  become_user: "{{ app_name }}"
+  with_items: "{{ groups['sentries'] | map('extract', hostvars, ['faucet_key_address', 'stdout']) | list }}"
+  args:
+    executable: /bin/bash
+  shell: "{{ app_name }}d add-genesis-account {{ item }} {{ generate_faucet_account }} || true"
+
+- name: grab genesis
+  run_once: true
+  when: genesis.stat.exists == false and 'validators' in group_names
+  become_user: "{{ app_name }}"
+  synchronize:
+    src: /home/{{ app_name }}/{{ data_dir }}/config/genesis.json
+    dest: /tmp
+    mode: pull
+    use_ssh_args: true
+
+- name: sync genesis file
+  when: genesis.stat.exists == false and 'validators' in group_names
+  become_user: "{{ app_name }}"
+  synchronize:
+    src: /tmp/genesis.json
+    dest: /home/{{ app_name }}//{{ data_dir }}/config/genesis.json
+    mode: push
+    use_ssh_args: true
+
+- name: Fix ownership and permissions
+  when: genesis.stat.exists == false and 'validators' in group_names
+  file:
+    path: /home/{{ app_name }}
+    state: directory
+    recurse: yes
+    owner: "{{ app_name }}"
+    group: "{{ app_name }}"
+
+- name: generate gentx
+  when: genesis.stat.exists == false and 'validators' in group_names
+  become_user: "{{ app_name }}"
+  args:
+    executable: /bin/bash
+    warn: no
+  shell: |
+    rm -rf /home/{{ app_name }}/{{ data_dir }}/config/gentx
+    echo -e "{{ key_password }}" | {{ app_name }}d gentx {{ ansible_hostname }} --chain-id {{ chain_id }}
+
+- name: grab gentx files
+  become_user: "{{ app_name }}"
+  when: genesis.stat.exists == false and 'validators' in group_names
+  synchronize:
+    src: /home/{{ app_name }}/{{ data_dir }}/config/gentx
+    dest: /tmp
+    mode: pull
+    use_ssh_args: true
+
+- name: add all gentxs
+  run_once: true
+  become_user: "{{ app_name }}"
+  when: genesis.stat.exists == false and 'validators' in group_names
+  synchronize:
+    src: /tmp/gentx
+    dest: /home/{{ app_name }}/{{ data_dir }}/config
+    mode: push
+    use_ssh_args: true
+
+- name: Fix ownership and permissions
+  run_once: true
+  when: genesis.stat.exists == false and 'validators' in group_names
+  file:
+    path: /home/{{ app_name }}
+    state: directory
+    recurse: yes
+    owner: "{{ app_name }}"
+    group: "{{ app_name }}"
+
+- name: collect all gentxs
+  when: genesis.stat.exists == false and 'validators' in group_names
+  run_once: true
+  become_user: "{{ app_name }}"
+  shell: "{{ app_name }}d collect-gentxs"
+
+- name: remove temporary gentx files
+  become: no
+  run_once: true
+  local_action: command rm -rf /tmp/gentx
+
+- name: grab genesis
+  run_once: true
+  when: "'validators' in group_names"
+  become_user: "{{ app_name }}"
+  synchronize:
+    src: /home/{{ app_name }}/{{ data_dir }}/config/genesis.json
+    dest: /tmp
+    mode: pull
+    use_ssh_args: true
+
+- name: sync genesis file
+  become_user: "{{ app_name }}"
+  synchronize:
+    src: /tmp/genesis.json
+    dest: /home/{{ app_name }}//{{ data_dir }}/config/genesis.json
+    mode: push
+    use_ssh_args: true
+
+- name: Fix ownership and permissions
+  file:
+    path: /home/{{ app_name }}
+    state: directory
+    recurse: yes
+    owner: "{{ app_name }}"
+    group: "{{ app_name }}"
+
+- name: get node id
+  become_user: "{{ app_name }}"
+  shell: "{{ app_name }}d tendermint show-node-id"
+  register: node_id
+
+- name: set persistent peers list
+  become_user: "{{ app_name }}"
+  args:
+    executable: /bin/bash
+    chdir: ~/{{ data_dir }}/config
+  shell: |
+    IFS=',' read -r -a IDS <<< "{{ groups['all'] | reject('equalto', inventory_hostname) | map('extract', hostvars, ['node_id', 'stdout']) | join(",") }}"
+    IFS=',' read -r -a IPS <<< "{{ groups['all'] | reject('equalto', inventory_hostname) | map('extract', hostvars, ['ansible_default_ipv4', 'address']) | join(",") }}"
+    for idx in "${!IDS[@]}"
+    do
+      peers="$peers,${IDS[idx]}@${IPS[idx]}:26656";
+    done
+    sed -i "s/persistent_peers =.*/persistent_peers = \"${peers:1}\"/g" config.toml
+
+- name: disable pruning
+  become_user: "{{ app_name }}"
+  args:
+    executable: /bin/bash
+    chdir: ~/{{ data_dir }}/config
+  shell: sed -i 's/pruning = "default"/pruning = "nothing"/g' app.toml
+
+- name: disable pex
+  when: "'validators' in group_names"
+  become_user: "{{ app_name }}"
+  args:
+    executable: /bin/bash
+    chdir: ~/{{ data_dir }}/config
+  shell: sed -i 's/pex = true/pex = false/g' config.toml
+
+- name: enable RPC
+  when: "'sentries' in group_names"
+  become_user: "{{ app_name }}"
+  args:
+    executable: /bin/bash
+    chdir: ~/{{ data_dir }}/config
+  shell: sed -i 's|laddr = "tcp://127.0.0.1:26657"|laddr = "tcp://0.0.0.0:26657"|g' config.toml
+
+- name: enable REST API
+  when: "'sentries' in group_names"
+  become_user: "{{ app_name }}"
+  args:
+    executable: /bin/bash
+    chdir: ~/{{ data_dir }}/config
+  shell: sed -i '/.*API server should be enabled.*/!b;n;cenable = true' app.toml
+
+- name: start the {{ app_name }}d service
+  systemd:
+    name: "{{ app_name }}d"
+    daemon_reload: yes
+    state: restarted
+    enabled: True

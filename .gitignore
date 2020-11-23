@@ -3,3 +3,5 @@ frontend/dist
 frontend/.cache
 secret.yml
 .idea
+.envrc
+ansible.cfg

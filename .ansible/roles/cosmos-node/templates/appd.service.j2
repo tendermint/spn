@@ -1,0 +1,17 @@
+[Unit]
+Description={{ app_name }}d
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=exec
+User={{ app_name }}
+Group={{ app_name }}
+Restart=on-failure
+PermissionsStartOnly=true
+ExecStart=/usr/local/bin/{{ app_name }}d start
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target
