@@ -41,7 +41,7 @@ func handleMsgChainCreate(ctx sdk.Context, k keeper.Keeper, msg *types.MsgChainC
 	// Check the chain doesn't already exist
 	_, found := k.GetChain(ctx, msg.ChainID)
 	if found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidChain, fmt.Sprintf("Chain with chain ID %v already exists", msg.ChainID))
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("Chain with chain ID %v already exists", msg.ChainID))
 	}
 
 	// Create the chain
@@ -54,7 +54,7 @@ func handleMsgChainCreate(ctx sdk.Context, k keeper.Keeper, msg *types.MsgChainC
 		msg.Genesis,
 	)
 	if err != nil {
-		return nil, sdkerrors.Wrap(types.ErrInvalidChain, err.Error())
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
 	// Set the new chain in the store
