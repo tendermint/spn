@@ -196,7 +196,7 @@ func MockGenTxWithDelegation(selfDelegation sdk.Coin) tx.Tx {
 	privKey, opAddress := MockValAddress()
 
 	// Create validator message
-	message := staking.NewMsgCreateValidator(
+	message, err := staking.NewMsgCreateValidator(
 		opAddress,
 		MockPubKey(),
 		selfDelegation,
@@ -204,6 +204,10 @@ func MockGenTxWithDelegation(selfDelegation sdk.Coin) tx.Tx {
 		MockCommissionRates(),
 		sdk.NewInt(1),
 	)
+
+	if err != nil {
+		panic(err)
+	}
 
 	// txConfig
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
