@@ -15,7 +15,7 @@ type Chain struct {
 	ChainID string // Alphanumeric, with "-" allowed
 	Creator string
 	Peers []string
-  SourceURL string // Source code URL
+    SourceURL string // Source code URL
 	SourceHash string
 	CreatedAt uint64 // Unix time
 	Genesis GenesisFile
