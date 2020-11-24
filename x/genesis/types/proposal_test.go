@@ -128,7 +128,7 @@ func TestNewProposalAddValidator(t *testing.T) {
 
 	// Invalid message
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	message := staking.NewMsgCreateValidator(
+	message, err := staking.NewMsgCreateValidator(
 		sdk.ValAddress(""),
 		spnmocks.MockPubKey(),
 		spnmocks.MockCoin(),
@@ -136,6 +136,7 @@ func TestNewProposalAddValidator(t *testing.T) {
 		spnmocks.MockCommissionRates(),
 		sdk.NewInt(1),
 	)
+	require.NoError(t, err)
 	payload.GenTx.Body.Messages[0], _ = codectypes.NewAnyWithValue(message)
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err)
