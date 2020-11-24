@@ -1,0 +1,28 @@
+[Unit]
+Description=faucet
+Requires=network-online.target
+After=network-online.target
+StartLimitInterval=200
+StartLimitBurst=5
+
+[Service]
+Type=exec
+User={{ app_name }}
+Group={{ app_name }}
+Restart=always
+RestartSec=30
+PermissionsStartOnly=true
+ExecStart=/usr/local/bin/faucet
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+Environment=LOG_LEVEL="{{ log_level }}"
+Environment=KEY_NAME={{ key_name }}
+Environment=MNEMONIC="{{ faucet_mnemonic }}"
+Environment=KEYRING_PASSWORD={{ key_password }}
+Environment=CLI_NAME={{ cli_name }}
+Environment=CREDIT_AMOUNT={{ credit_amount }}
+Environment=MAX_CREDIT={{ max_credit }}
+Environment=DENOM={{ denom }}
+
+[Install]
+WantedBy=multi-user.target

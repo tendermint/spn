@@ -1,0 +1,32 @@
+name: Ansible
+description: Ansible
+inputs:
+  ssh_key_b64:
+    description: SSH private key to be used by ansible to access remote hosts (in base64)
+    required: true
+  playbook:
+    description: Playbook to run
+    required: true
+  inventory:
+    description: Inventory
+    required: true
+  inventory_script:
+    description: Whether inventory is a script
+    required: false
+    default: "false"
+  extra_vars:
+    description: Extra variables
+    required: false
+  wait:
+    description: Seconds to wait before starting
+    required: false
+    default: "0"
+  ssh_common_args:
+    description: ssh_common_args
+    required: false
+  known_hosts:
+    description: Known SSH hosts to add before running ansible
+    required: false
+runs:
+  using: docker
+  image: 'Dockerfile'
