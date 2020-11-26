@@ -2,9 +2,7 @@ package keeper
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -231,14 +229,14 @@ func (k Keeper) CurrentGenesis(
 
 	// Apply the approved proposals to the initial genesis
 	genesis := chain.Genesis
-	jsonCodec, ok := k.cdc.(codec.JSONMarshaler)
-	if !ok {
-		return nil, errors.New("cannot get the JSON encoder")
-	}
-	err := genesis.ApplyProposals(jsonCodec, proposals)
-	if err != nil {
-		return nil, err
-	}
+	//jsonCodec, ok := k.cdc.(codec.JSONMarshaler)
+	//if !ok {
+	//	return nil, errors.New("cannot get the JSON encoder")
+	//}
+	//err := genesis.ApplyProposals(jsonCodec, proposals)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	return &types.QueryCurrentGenesisResponse{Genesis: genesis}, nil
 }
