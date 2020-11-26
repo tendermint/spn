@@ -1,6 +1,7 @@
 package testing
 
 import (
+	"fmt"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -108,7 +109,10 @@ func MockGenesis() []byte {
 		panic("Cannot marshal genesis")
 	}
 
-	genesisBytes, _ := json.Marshal(genesis)
+	genesisBytes, err := json.Marshal(genesis)
+	if err != nil {
+		panic(fmt.Sprintf("cannot marshal genesis: %v", err.Error()))
+	}
 
 	return genesisBytes
 }
@@ -175,7 +179,7 @@ func MockProposalAddAccountPayload() *types.ProposalAddAccountPayload {
 func MockProposalAddValidatorPayload() *types.ProposalAddValidatorPayload {
 	genTx := MockGenTx()
 	_, validatorAddress := MockValAddress()
-	selfDelegation := MockCoin()
+	selfDelegation := sdk.NewCoin("stake", sdk.NewInt(10000))
 
 	return types.NewProposalAddValidatorPayload(
 		genTx,
@@ -274,7 +278,16 @@ func MockGenTxWithDelegation(selfDelegation sdk.Coin) []byte {
 	}
 	genTx.AuthInfo.Fee.GasLimit = 1000000
 
-	gentxBytes, _ := json.Marshal(genTx)
+	// Marshal gentx
+	cdc := MockCodec()
+	jsonCodec, ok := cdc.(codec.JSONMarshaler)
+	if !ok {
+		panic("Can't get json codec")
+	}
+	gentxBytes, err := jsonCodec.MarshalJSON(&genTx)
+	if err != nil {
+		panic(fmt.Sprintf("cannot marshal gentx: %v", err.Error()))
+	}
 
 	return gentxBytes
 }

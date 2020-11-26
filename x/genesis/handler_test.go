@@ -71,7 +71,8 @@ func TestHandleMsgReject(t *testing.T) {
 		spnmocks.MockRandomAlphaString(10),
 		spnmocks.MockGenesis(),
 		)
-	h(ctx, msgChainCreate)
+	_, err = h(ctx, msgChainCreate)
+	require.NoError(t, err)
 
 	// Prevent rejecting a non existing proposal
 	msg = types.NewMsgReject(
@@ -89,7 +90,8 @@ func TestHandleMsgReject(t *testing.T) {
 		proposalCreator,
 		spnmocks.MockProposalAddAccountPayload(),
 	)
-	h(ctx, msgProposal)
+	_, err = h(ctx, msgProposal)
+	require.NoError(t, err)
 
 	// Prevent an address other than the coordinator or the proposal creator to reject the proposal
 	msg = types.NewMsgReject(
@@ -136,7 +138,8 @@ func TestHandleMsgReject(t *testing.T) {
 		spnmocks.MockAccAddress(),
 		spnmocks.MockProposalAddAccountPayload(),
 	)
-	h(ctx, msgProposal)
+	_, err = h(ctx, msgProposal)
+	require.NoError(t, err)
 	msg = types.NewMsgReject(
 		chainID,
 		1,
@@ -175,7 +178,8 @@ func TestHandleMsgApprove(t *testing.T) {
 		spnmocks.MockRandomAlphaString(10),
 		spnmocks.MockGenesis(),
 	)
-	h(ctx, msgChainCreate)
+	_, err = h(ctx, msgChainCreate)
+	require.NoError(t, err)
 
 	// Prevent approving a non existing proposal
 	msg = types.NewMsgApprove(
@@ -194,7 +198,8 @@ func TestHandleMsgApprove(t *testing.T) {
 		proposalCreator,
 		addAccountPayload,
 	)
-	h(ctx, msgProposal)
+	_, err = h(ctx, msgProposal)
+	require.NoError(t, err)
 
 	// Prevent an address other than the coordinator to approve the proposal
 	msg = types.NewMsgApprove(
@@ -247,7 +252,8 @@ func TestHandleMsgApprove(t *testing.T) {
 	require.Error(t, err)
 
 	// Prevent approving a proposal with an account already in the genesis
-	h(ctx, msgProposal)
+	_, err = h(ctx, msgProposal)
+	require.NoError(t, err)
 	msg = types.NewMsgApprove(
 		chainID,
 		1,
@@ -267,7 +273,8 @@ func TestHandleMsgApprove(t *testing.T) {
 		proposalCreator,
 		addValidatorPayload,
 	)
-	h(ctx, msgProposalValidator)
+	_, err = h(ctx, msgProposalValidator)
+	require.NoError(t, err)
 
 	// The coordinator creator can approve the proposal
 	msg = types.NewMsgApprove(
@@ -287,7 +294,8 @@ func TestHandleMsgApprove(t *testing.T) {
 	require.True(t, validatorAddressSet)
 
 	// Prevent approving a proposal with an validator already in the genesis
-	h(ctx, msgProposalValidator)
+	_, err = h(ctx, msgProposalValidator)
+	require.NoError(t, err)
 	msg = types.NewMsgApprove(
 		chainID,
 		3,
@@ -371,15 +379,20 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 		spnmocks.MockProposalAddValidatorPayload(),
 	)
 	_, err = h(ctx, msg)
+	require.NoError(t, err)
 	_, err = h(ctx, msg)
+	require.NoError(t, err)
 	_, err = h(ctx, msg)
+	require.NoError(t, err)
 	msgAccount := types.NewMsgProposalAddAccount(
 		chainID,
 		creator,
 		spnmocks.MockProposalAddAccountPayload(),
 	)
 	_, err = h(ctx, msgAccount)
+	require.NoError(t, err)
 	_, err = h(ctx, msgAccount)
+	require.NoError(t, err)
 
 	// Can add the new proposal n
 	msg = types.NewMsgProposalAddValidator(

@@ -44,12 +44,12 @@ func NewProposalAddValidatorPayload(
 func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) (err error) {
 	// Gentx not empty
 	if len(payload.GenTx) == 0 {
-		return errors.New("empty account address")
+		return errors.New("empty genesis")
 	}
 
 	// Verify validator address
 	if payload.ValidatorAddress.Empty() {
-		return errors.New("empty account address")
+		return errors.New("empty validator address")
 	}
 	if _, err := sdk.ValAddressFromBech32(payload.ValidatorAddress.String()); err != nil {
 		return errors.New("invalid address")
