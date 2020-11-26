@@ -53,7 +53,7 @@ func MarshalProposal(cdc codec.BinaryMarshaler, proposal Proposal) []byte {
 func UnmarshalProposal(cdc codec.BinaryMarshaler, value []byte) Proposal {
 	var proposal Proposal
 	cdc.MustUnmarshalBinaryBare(value, &proposal)
-	
+
 	return proposal
 }
 
