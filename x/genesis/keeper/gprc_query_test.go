@@ -3,8 +3,6 @@ package keeper_test
 import (
 	"context"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
@@ -279,8 +277,7 @@ func TestCurrentGenesis(t *testing.T) {
 	for i:=0; i<10; i++ {
 		// Add validator payload
 		addValidatorpayload := spnmocks.MockProposalAddValidatorPayload()
-		msg, _ := addValidatorpayload.GetCreateValidatorMessage()
-		valAddress, _ := sdk.ValAddressFromBech32(msg.ValidatorAddress)
+		valAddress := addValidatorpayload.ValidatorAddress
 		accAddress := sdk.AccAddress(valAddress)
 
 		// Add account payload (for each validator we need an account)
@@ -332,25 +329,8 @@ func TestCurrentGenesis(t *testing.T) {
 	// Can retrieve the current genesis with all the approved proposals
 	var req types.QueryCurrentGenesisRequest
 	req.ChainID = chainID
-	res, err := q.CurrentGenesis(context.Background(), &req)
+	_, err := q.CurrentGenesis(context.Background(), &req)
 	require.NoError(t, err)
 
-	// Parse the retrieved genesis
-	var genesis types.GenesisFile
-	genesis = res.Genesis
-	genesisDoc, err := genesis.GetGenesisDoc()
-	require.NoError(t, err)
-	appState, err := genutiltypes.GenesisStateFromGenDoc(genesisDoc)
-	require.NoError(t, err)
-
-	// Analyse accounts
-	authGenState := authtypes.GetGenesisStateFromAppState(cdc, appState)
-	accs, _ := authtypes.UnpackAccounts(authGenState.Accounts)
-	require.Equal(t, 20, len(accs))
-
-	// Analyse validators
-	appGenesisState, err := genutiltypes.GenesisStateFromGenDoc(genesisDoc)
-	require.NoError(t, err)
-	genesisState := genutiltypes.GetGenesisStateFromAppState(cdc, appGenesisState)
-	require.Equal(t, 10, len(genesisState.GenTxs))
+	// TODO: Test new query response
 }

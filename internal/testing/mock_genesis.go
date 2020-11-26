@@ -86,7 +86,7 @@ func MockGenesisQueryClient(ctx sdk.Context, k *keeper.Keeper) types.QueryClient
 }
 
 // MockGenesis mocks a genesis structure
-func MockGenesis() types.GenesisFile {
+func MockGenesis() []byte {
 	var genesisObject tmtypes.GenesisDoc
 
 	consensusParam := tmtypes.DefaultConsensusParams()
@@ -108,7 +108,9 @@ func MockGenesis() types.GenesisFile {
 		panic("Cannot marshal genesis")
 	}
 
-	return genesis
+	genesisBytes, _ := json.Marshal(genesis)
+
+	return genesisBytes
 }
 
 // MockChain mocks a chain information structure
@@ -172,7 +174,15 @@ func MockProposalAddAccountPayload() *types.ProposalAddAccountPayload {
 // MockProposalAddValidatorPayload mocks a valid payload
 func MockProposalAddValidatorPayload() *types.ProposalAddValidatorPayload {
 	genTx := MockGenTx()
-	return types.NewProposalAddValidatorPayload(genTx, MockRandomString(20))
+	_, validatorAddress := MockValAddress()
+	selfDelegation := MockCoin()
+
+	return types.NewProposalAddValidatorPayload(
+		genTx,
+		validatorAddress,
+		selfDelegation,
+		MockRandomString(20),
+	)
 }
 
 // MockProposalInformation mocks information for a proposal
@@ -186,13 +196,13 @@ func MockProposalInformation() *types.ProposalInformation {
 }
 
 // MockGenTx mocks a gentx transaction
-func MockGenTx() tx.Tx {
+func MockGenTx() []byte {
 	selfDelegation := sdk.NewCoin("stake", sdk.NewInt(10000))
 	return MockGenTxWithDelegation(selfDelegation)
 }
 
 // MockGenTxWithDelegation mocks a gentx transaction with a custom self-delegation
-func MockGenTxWithDelegation(selfDelegation sdk.Coin) tx.Tx {
+func MockGenTxWithDelegation(selfDelegation sdk.Coin) []byte {
 	privKey, opAddress := MockValAddress()
 
 	// Create validator message
@@ -264,34 +274,7 @@ func MockGenTxWithDelegation(selfDelegation sdk.Coin) tx.Tx {
 	}
 	genTx.AuthInfo.Fee.GasLimit = 1000000
 
-	// TODO: Add a correct signature in the mock
-	//// Sign with all info
-	//signerData := authsign.SignerData{
-	//	ChainID:       MockRandomAlphaString(5),
-	//	AccountNumber: 0,
-	//	Sequence:      0,
-	//}
-	//signBytes, err := txConfig.SignModeHandler().GetSignBytes(signMode, signerData, &genTx)
-	//if err != nil {
-	//	panic("Can't get sign bytes")
-	//}
-	//signature, err := privKey.Sign(signBytes)
-	//if err != nil {
-	//	panic("Can't sign transaction")
-	//}
-	//sig.Data.(*signing.SingleSignatureData).Signature = signature
-	//modeInfo, rawSigs[0] = authtx.SignatureDataToModeInfoAndSig(sig.Data)
-	//any, err = authtx.PubKeyToAny(sig.PubKey)
-	//if err != nil {
-	//	panic("Can't encode public key")
-	//}
-	//signerInfos[0] = &tx.SignerInfo{
-	//	PublicKey: any,
-	//	ModeInfo:  modeInfo,
-	//	Sequence:  sig.Sequence,
-	//}
-	//genTx.AuthInfo.SignerInfos = signerInfos
-	//genTx.Signatures = rawSigs
+	gentxBytes, _ := json.Marshal(genTx)
 
-	return genTx
+	return gentxBytes
 }

@@ -2,10 +2,7 @@ package types_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	// staking "github.com/cosmos/cosmos-sdk/x/staking/types"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
 
@@ -114,36 +111,33 @@ func TestNewProposalAddValidator(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	// Invalid tx
+	// Empty gentx
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	payload.GenTx.Body = nil
+	payload.GenTx = []byte{}
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err)
 
-	// No message
+	// Invalid self-delegation
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	payload.GenTx.Body.Messages = []*codectypes.Any{}
+	payload.SelfDelegation.Denom = ""
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err)
 
-	// Invalid message
+	// Empty address
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	message, err := staking.NewMsgCreateValidator(
-		sdk.ValAddress(""),
-		spnmocks.MockPubKey(),
-		spnmocks.MockCoin(),
-		spnmocks.MockDescription(),
-		spnmocks.MockCommissionRates(),
-		sdk.NewInt(1),
-	)
-	require.NoError(t, err)
-	payload.GenTx.Body.Messages[0], _ = codectypes.NewAnyWithValue(message)
+	payload.ValidatorAddress = []byte{}
+	err = types.ValidateProposalPayloadAddValidator(payload)
+	require.Error(t, err)
+
+	// Invalid address
+	payload = spnmocks.MockProposalAddValidatorPayload()
+	payload.ValidatorAddress = []byte("InvalidAddress")
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err)
 
 	// No peer
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	payload.Peer = "" // Peer is inside the memo
+	payload.Peer = ""
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err)
 
