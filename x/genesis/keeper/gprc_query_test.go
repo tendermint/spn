@@ -258,7 +258,7 @@ func TestCurrentGenesis(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
-	cdc := spnmocks.MockCodec()
+	_ = spnmocks.MockCodec()
 
 	chainID := spnmocks.MockRandomAlphaString(5)
 	coordinator := spnmocks.MockAccAddress()
