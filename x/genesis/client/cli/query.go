@@ -29,7 +29,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdPendingProposals(),
 		CmdRejectedProposals(),
 		CmdApprovedProposals(),
-		CmdCurrentGenesis(),
+		CmdLaunchInformation(),
 	)
 
 	return cmd
@@ -258,11 +258,11 @@ func CmdRejectedProposals() *cobra.Command {
 	return cmd
 }
 
-// CmdCurrentGenesis returns the command to show the current genesis for a chain
-func CmdCurrentGenesis() *cobra.Command {
+// CmdLaunchInformation returns the command to show the information to launch a chain
+func CmdLaunchInformation() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "current-genesis [chain-id]",
-		Short: "show the current genesis for the chain from the initial genesis and approved proposals",
+		Use:   "launch-information [chain-id]",
+		Short: "show the information to launch a chain (genesis information and peers)",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -273,27 +273,20 @@ func CmdCurrentGenesis() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryCurrentGenesisRequest{
+			params := &types.QueryLaunchInformationRequest{
 				ChainID: args[0],
 			}
 
 			// Perform the request
-			res, err := queryClient.CurrentGenesis(context.Background(), params)
+			res, err := queryClient.LaunchInformation(context.Background(), params)
 			if err != nil {
 				return err
-			}
-
-			// Check if the genesis must be save in a file
-			genesisFile, _ := cmd.Flags().GetString(FlagSaveGenesis)
-			if genesisFile != "" {
-				ioutil.WriteFile(genesisFile, res.Genesis, 0644)
 			}
 
 			return clientCtx.PrintOutput(res)
 		},
 	}
 
-	cmd.Flags().AddFlagSet(FlagSetSaveGenesis())
 	flags.AddQueryFlagsToCmd(cmd)
 
 	return cmd

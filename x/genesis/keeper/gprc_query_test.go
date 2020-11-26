@@ -253,8 +253,7 @@ func TestRejectedProposals(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TODO: This test could be considered as an integration test -> Move it to the integration test
-func TestCurrentGenesis(t *testing.T) {
+func TestLaunchInformation(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
@@ -327,10 +326,12 @@ func TestCurrentGenesis(t *testing.T) {
 	}
 
 	// Can retrieve the current genesis with all the approved proposals
-	var req types.QueryCurrentGenesisRequest
+	var req types.QueryLaunchInformationRequest
 	req.ChainID = chainID
-	_, err := q.CurrentGenesis(context.Background(), &req)
+	launchInformation, err := q.LaunchInformation(context.Background(), &req)
 	require.NoError(t, err)
-
-	// TODO: Test new query response
+	require.Equal(t, msgChainCreate.Genesis, launchInformation.InitialGenesis)
+	require.Equal(t, 20, len(launchInformation.Accounts))
+	require.Equal(t, 10, len(launchInformation.GenTxs))
+	require.Equal(t, 10, len(launchInformation.Peers))
 }
