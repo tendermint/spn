@@ -2,7 +2,6 @@ package types
 
 import (
 	"errors"
-	"fmt"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"strconv"
 	"time"
@@ -54,17 +53,6 @@ func MarshalProposal(cdc codec.BinaryMarshaler, proposal Proposal) []byte {
 func UnmarshalProposal(cdc codec.BinaryMarshaler, value []byte) Proposal {
 	var proposal Proposal
 	cdc.MustUnmarshalBinaryBare(value, &proposal)
-
-	// For a add validator payload we need to call UnpackInterfaces otherwise the message
-	// contained in gentx has no cached value (and it provokes an error when validating the gentx)
-	switch payload := proposal.Payload.(type) {
-	case *Proposal_AddValidatorPayload:
-		err := payload.AddValidatorPayload.GenTx.UnpackInterfaces(cdc)
-		if err != nil {
-			panic(fmt.Errorf("an invalid proposal has been set in the store: %v", err))
-		}
-		proposal.Payload = payload
-	}
 
 	return proposal
 }

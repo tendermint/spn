@@ -55,14 +55,7 @@ func (k Keeper) checkProposalAddAccount(ctx sdk.Context, chainID string, payload
 
 // checkProposalAddValidator checks if a ProposalAddValidator can be approved and applied to the genesis
 func (k Keeper) checkProposalAddValidator(ctx sdk.Context, chainID string, payload *types.ProposalAddValidatorPayload) error {
-	msg, err := payload.GetCreateValidatorMessage()
-	if err != nil {
-		panic(fmt.Errorf("A ProposalAddValidator contains a invalid payload %v", err.Error()))
-	}
-	valAddr, err := sdk.ValAddressFromBech32(msg.ValidatorAddress)
-	if err != nil {
-		panic(fmt.Errorf("A ProposalAddValidator contains a invalid payload %v", err.Error()))
-	}
+	valAddr := payload.ValidatorAddress
 
 	// Cannot add a validator if it doesn't have an account
 	if !k.IsAccountSet(ctx, chainID, sdk.AccAddress(valAddr)) {
@@ -76,8 +69,7 @@ func (k Keeper) checkProposalAddValidator(ctx sdk.Context, chainID string, paylo
 
 	// Cannot add a validator if the account doesn't contain enough funds for self-delegation
 	coins, _ := k.GetAccountCoins(ctx, chainID, sdk.AccAddress(valAddr))
-	msgCreateValidator, _ := payload.GetCreateValidatorMessage()
-	selfDelegation := sdk.NewCoins(msgCreateValidator.Value)
+	selfDelegation := sdk.NewCoins(*payload.SelfDelegation)
 	if !coins.IsAllGTE(selfDelegation) {
 		return errors.New("insufficient funds in account for self delegation")
 	}
@@ -94,14 +86,7 @@ func (k Keeper) applyProposalAddAccount(ctx sdk.Context, chainID string, payload
 
 // applyProposalAddValidator applies the changes to the keeper when a ProposalAddValidator is approved
 func (k Keeper) applyProposalAddValidator(ctx sdk.Context, chainID string, payload *types.ProposalAddValidatorPayload) error {
-	msg, err := payload.GetCreateValidatorMessage()
-	if err != nil {
-		panic(fmt.Errorf("A ProposalAddValidator contains a invalid payload %v", err.Error()))
-	}
-	valAddr, err := sdk.ValAddressFromBech32(msg.ValidatorAddress)
-	if err != nil {
-		panic(fmt.Errorf("A ProposalAddValidator contains a invalid payload %v", err.Error()))
-	}
+	valAddr := payload.ValidatorAddress
 
 	// Set the new validator
 	k.SetValidator(ctx, chainID, valAddr)

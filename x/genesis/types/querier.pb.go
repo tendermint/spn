@@ -572,22 +572,22 @@ func (m *QueryShowProposalResponse) GetProposal() *Proposal {
 	return nil
 }
 
-type QueryCurrentGenesisRequest struct {
+type QueryLaunchInformationRequest struct {
 	ChainID string `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
 }
 
-func (m *QueryCurrentGenesisRequest) Reset()         { *m = QueryCurrentGenesisRequest{} }
-func (m *QueryCurrentGenesisRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryCurrentGenesisRequest) ProtoMessage()    {}
-func (*QueryCurrentGenesisRequest) Descriptor() ([]byte, []int) {
+func (m *QueryLaunchInformationRequest) Reset()         { *m = QueryLaunchInformationRequest{} }
+func (m *QueryLaunchInformationRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryLaunchInformationRequest) ProtoMessage()    {}
+func (*QueryLaunchInformationRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_47d58c42b8d05bcd, []int{12}
 }
-func (m *QueryCurrentGenesisRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryLaunchInformationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryCurrentGenesisRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryLaunchInformationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryCurrentGenesisRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryLaunchInformationRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -597,41 +597,44 @@ func (m *QueryCurrentGenesisRequest) XXX_Marshal(b []byte, deterministic bool) (
 		return b[:n], nil
 	}
 }
-func (m *QueryCurrentGenesisRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryCurrentGenesisRequest.Merge(m, src)
+func (m *QueryLaunchInformationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryLaunchInformationRequest.Merge(m, src)
 }
-func (m *QueryCurrentGenesisRequest) XXX_Size() int {
+func (m *QueryLaunchInformationRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryCurrentGenesisRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryCurrentGenesisRequest.DiscardUnknown(m)
+func (m *QueryLaunchInformationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryLaunchInformationRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryCurrentGenesisRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryLaunchInformationRequest proto.InternalMessageInfo
 
-func (m *QueryCurrentGenesisRequest) GetChainID() string {
+func (m *QueryLaunchInformationRequest) GetChainID() string {
 	if m != nil {
 		return m.ChainID
 	}
 	return ""
 }
 
-type QueryCurrentGenesisResponse struct {
-	Genesis []byte `protobuf:"bytes,1,opt,name=genesis,proto3" json:"genesis,omitempty"`
+type QueryLaunchInformationResponse struct {
+	InitialGenesis []byte                       `protobuf:"bytes,1,opt,name=initialGenesis,proto3" json:"initialGenesis,omitempty"`
+	Accounts       []*ProposalAddAccountPayload `protobuf:"bytes,2,rep,name=accounts,proto3" json:"accounts,omitempty"`
+	GenTxs         [][]byte                     `protobuf:"bytes,3,rep,name=genTxs,proto3" json:"genTxs,omitempty"`
+	Peers          []string                     `protobuf:"bytes,4,rep,name=peers,proto3" json:"peers,omitempty"`
 }
 
-func (m *QueryCurrentGenesisResponse) Reset()         { *m = QueryCurrentGenesisResponse{} }
-func (m *QueryCurrentGenesisResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryCurrentGenesisResponse) ProtoMessage()    {}
-func (*QueryCurrentGenesisResponse) Descriptor() ([]byte, []int) {
+func (m *QueryLaunchInformationResponse) Reset()         { *m = QueryLaunchInformationResponse{} }
+func (m *QueryLaunchInformationResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryLaunchInformationResponse) ProtoMessage()    {}
+func (*QueryLaunchInformationResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_47d58c42b8d05bcd, []int{13}
 }
-func (m *QueryCurrentGenesisResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryLaunchInformationResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryCurrentGenesisResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryLaunchInformationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryCurrentGenesisResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryLaunchInformationResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -641,21 +644,42 @@ func (m *QueryCurrentGenesisResponse) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
-func (m *QueryCurrentGenesisResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryCurrentGenesisResponse.Merge(m, src)
+func (m *QueryLaunchInformationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryLaunchInformationResponse.Merge(m, src)
 }
-func (m *QueryCurrentGenesisResponse) XXX_Size() int {
+func (m *QueryLaunchInformationResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryCurrentGenesisResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryCurrentGenesisResponse.DiscardUnknown(m)
+func (m *QueryLaunchInformationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryLaunchInformationResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryCurrentGenesisResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryLaunchInformationResponse proto.InternalMessageInfo
 
-func (m *QueryCurrentGenesisResponse) GetGenesis() []byte {
+func (m *QueryLaunchInformationResponse) GetInitialGenesis() []byte {
 	if m != nil {
-		return m.Genesis
+		return m.InitialGenesis
+	}
+	return nil
+}
+
+func (m *QueryLaunchInformationResponse) GetAccounts() []*ProposalAddAccountPayload {
+	if m != nil {
+		return m.Accounts
+	}
+	return nil
+}
+
+func (m *QueryLaunchInformationResponse) GetGenTxs() [][]byte {
+	if m != nil {
+		return m.GenTxs
+	}
+	return nil
+}
+
+func (m *QueryLaunchInformationResponse) GetPeers() []string {
+	if m != nil {
+		return m.Peers
 	}
 	return nil
 }
@@ -673,52 +697,57 @@ func init() {
 	proto.RegisterType((*QueryRejectedProposalsResponse)(nil), "spn.genesis.v1beta1.QueryRejectedProposalsResponse")
 	proto.RegisterType((*QueryShowProposalRequest)(nil), "spn.genesis.v1beta1.QueryShowProposalRequest")
 	proto.RegisterType((*QueryShowProposalResponse)(nil), "spn.genesis.v1beta1.QueryShowProposalResponse")
-	proto.RegisterType((*QueryCurrentGenesisRequest)(nil), "spn.genesis.v1beta1.QueryCurrentGenesisRequest")
-	proto.RegisterType((*QueryCurrentGenesisResponse)(nil), "spn.genesis.v1beta1.QueryCurrentGenesisResponse")
+	proto.RegisterType((*QueryLaunchInformationRequest)(nil), "spn.genesis.v1beta1.QueryLaunchInformationRequest")
+	proto.RegisterType((*QueryLaunchInformationResponse)(nil), "spn.genesis.v1beta1.QueryLaunchInformationResponse")
 }
 
 func init() { proto.RegisterFile("genesis/v1beta/querier.proto", fileDescriptor_47d58c42b8d05bcd) }
 
 var fileDescriptor_47d58c42b8d05bcd = []byte{
-	// 607 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0xcd, 0x6e, 0xd3, 0x40,
-	0x1c, 0xc4, 0xe3, 0x56, 0x69, 0x9b, 0x7f, 0x2b, 0x04, 0x8b, 0x00, 0xb3, 0xb4, 0x56, 0xe4, 0x03,
-	0x84, 0x16, 0xd6, 0x4d, 0x2a, 0x01, 0x15, 0x27, 0x48, 0x45, 0x55, 0xc4, 0x21, 0x18, 0xc4, 0x01,
-	0x81, 0x84, 0x93, 0xac, 0x1c, 0x23, 0xb2, 0xeb, 0x7a, 0x37, 0x85, 0x48, 0x88, 0x67, 0xe0, 0x55,
-	0x78, 0x0b, 0x8e, 0x3d, 0x72, 0x44, 0xc9, 0x8b, 0xa0, 0xac, 0xd7, 0x49, 0x48, 0xec, 0x7c, 0x54,
-	0x3d, 0xda, 0x9e, 0xdf, 0xcc, 0xc4, 0xf6, 0xc4, 0xb0, 0xed, 0x53, 0x46, 0x45, 0x20, 0x9c, 0xb3,
-	0x72, 0x9d, 0x4a, 0xcf, 0x39, 0xed, 0xd0, 0x28, 0xa0, 0x11, 0x09, 0x23, 0x2e, 0x39, 0xba, 0x2e,
-	0x42, 0x46, 0xb4, 0x82, 0xc4, 0x8a, 0x32, 0xde, 0x6d, 0x70, 0xd1, 0xe6, 0xc2, 0xa9, 0x7b, 0x82,
-	0x2a, 0x7d, 0x57, 0xc3, 0x65, 0x27, 0xf4, 0xfc, 0x80, 0x79, 0x32, 0xe0, 0x2c, 0x36, 0xc0, 0x78,
-	0xc2, 0x5e, 0x76, 0x43, 0x2a, 0xe2, 0x6b, 0xf6, 0x27, 0xb8, 0xf9, 0x7a, 0x40, 0xbf, 0x0a, 0x84,
-	0xac, 0xb6, 0xbc, 0x80, 0x09, 0x97, 0x9e, 0x76, 0xa8, 0x90, 0xe8, 0x05, 0xc0, 0xc8, 0xc9, 0x34,
-	0x8a, 0x46, 0x69, 0xb3, 0x72, 0x97, 0xc4, 0xb1, 0x64, 0x10, 0x4b, 0x54, 0x6c, 0xd2, 0x88, 0xd4,
-	0x3c, 0x9f, 0x6a, 0xd6, 0x1d, 0x23, 0xed, 0x1f, 0x70, 0x6b, 0x2a, 0x41, 0x84, 0x9c, 0x09, 0x8a,
-	0x8e, 0x53, 0x22, 0xee, 0xcd, 0x8d, 0x88, 0xe1, 0xf1, 0x0c, 0x84, 0x61, 0xa3, 0x31, 0xb0, 0x3e,
-	0x39, 0x12, 0xe6, 0x4a, 0x71, 0xb5, 0x54, 0x70, 0x87, 0xc7, 0x76, 0x19, 0x6e, 0xa8, 0xfc, 0x37,
-	0x2d, 0xfe, 0x55, 0xe5, 0x27, 0x3f, 0xd0, 0x84, 0x75, 0x2d, 0x52, 0xd1, 0x05, 0x37, 0x39, 0xb4,
-	0x5f, 0xea, 0x9b, 0x32, 0x86, 0xe8, 0xc6, 0xfb, 0x90, 0x57, 0x22, 0x5d, 0x16, 0x93, 0x94, 0x67,
-	0x43, 0x62, 0x24, 0x16, 0xda, 0x4f, 0x60, 0x5b, 0x79, 0xd5, 0x28, 0x6b, 0x06, 0xcc, 0xaf, 0x45,
-	0x3c, 0xe4, 0xc2, 0xfb, 0x22, 0xe6, 0xb7, 0xf8, 0x00, 0x3b, 0x19, 0xa4, 0x2e, 0xf3, 0x14, 0x0a,
-	0x61, 0x72, 0xd2, 0x34, 0x8a, 0xab, 0xa5, 0xcd, 0xca, 0x4e, 0x6a, 0xa1, 0x04, 0x75, 0x47, 0x7a,
-	0xfb, 0x50, 0xbb, 0x3f, 0x0b, 0xc3, 0x88, 0x9f, 0xd1, 0xe6, 0x12, 0xc5, 0x3e, 0x82, 0x95, 0x85,
-	0x5e, 0x66, 0x33, 0x97, 0x7e, 0xa6, 0x0d, 0x79, 0xa1, 0x66, 0x29, 0xe8, 0x65, 0x34, 0x7b, 0x0b,
-	0xe6, 0xf0, 0xbd, 0x18, 0x5e, 0x9f, 0x57, 0x0a, 0x59, 0x00, 0x89, 0xc5, 0xc9, 0x91, 0xb9, 0x52,
-	0x34, 0x4a, 0x79, 0x77, 0xec, 0x8c, 0xfd, 0x0e, 0x6e, 0xa7, 0xb8, 0xea, 0xbe, 0x87, 0xb0, 0x91,
-	0x48, 0xf5, 0x3b, 0x37, 0xa7, 0xee, 0x50, 0x6e, 0x3f, 0x02, 0xac, 0x7c, 0xab, 0x9d, 0x28, 0xa2,
-	0x4c, 0x1e, 0xc7, 0xc4, 0xfc, 0x9b, 0xf8, 0x18, 0xee, 0xa4, 0x72, 0xba, 0x91, 0x09, 0xeb, 0x3a,
-	0x5c, 0x81, 0x5b, 0x6e, 0x72, 0x58, 0xf9, 0xb5, 0x06, 0x79, 0x45, 0x22, 0x1f, 0x60, 0x34, 0x77,
-	0xb4, 0x97, 0xda, 0x38, 0xfd, 0x6f, 0x07, 0x3f, 0x58, 0x4c, 0xac, 0xcb, 0x34, 0xa1, 0x30, 0x1c,
-	0x29, 0xda, 0xcd, 0x46, 0x27, 0xc7, 0x8f, 0xf7, 0x16, 0xd2, 0xea, 0x94, 0x2e, 0x5c, 0x9d, 0x1c,
-	0x21, 0x2a, 0x67, 0x1b, 0x64, 0x4c, 0x1d, 0x57, 0x96, 0x41, 0x74, 0xf4, 0x77, 0xb8, 0x36, 0x35,
-	0x33, 0x34, 0xc3, 0x28, 0x6b, 0xce, 0xf8, 0x60, 0x29, 0x66, 0x94, 0x3e, 0x35, 0xa5, 0x59, 0xe9,
-	0x59, 0x93, 0x9d, 0x95, 0x9e, 0xbd, 0xd5, 0x36, 0x6c, 0x8d, 0x6f, 0x02, 0x3d, 0x9c, 0xfd, 0xcc,
-	0x26, 0x16, 0x89, 0xc9, 0xa2, 0x72, 0x1d, 0x27, 0xe0, 0xca, 0xff, 0xaf, 0x3c, 0x72, 0xb2, 0x1d,
-	0x52, 0x47, 0x85, 0xf7, 0x17, 0x07, 0xe2, 0xd0, 0xe7, 0xd5, 0xdf, 0x3d, 0xcb, 0x38, 0xef, 0x59,
-	0xc6, 0xdf, 0x9e, 0x65, 0xfc, 0xec, 0x5b, 0xb9, 0xf3, 0xbe, 0x95, 0xfb, 0xd3, 0xb7, 0x72, 0xef,
-	0xef, 0xfb, 0x81, 0x6c, 0x75, 0xea, 0xa4, 0xc1, 0xdb, 0x8e, 0xa4, 0xac, 0x49, 0xa3, 0x76, 0xc0,
-	0xa4, 0x23, 0x42, 0xe6, 0x7c, 0x73, 0x92, 0x2f, 0xba, 0xfa, 0x94, 0xd7, 0xd7, 0xd4, 0xb7, 0xfc,
-	0xe0, 0x5f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x87, 0x45, 0x1c, 0x30, 0x48, 0x08, 0x00, 0x00,
+	// 674 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0xcf, 0x4f, 0xd4, 0x4e,
+	0x14, 0xa7, 0xec, 0x77, 0xf9, 0xb2, 0x0f, 0x62, 0x74, 0x54, 0xac, 0x0d, 0x34, 0x9b, 0x1e, 0x70,
+	0x05, 0x6d, 0xdd, 0xe5, 0x22, 0xf1, 0x84, 0x10, 0x09, 0x84, 0xc3, 0x5a, 0x89, 0x07, 0xa3, 0x89,
+	0xdd, 0x76, 0xec, 0x8e, 0x61, 0x67, 0x4a, 0x67, 0x16, 0xd9, 0xc4, 0xf8, 0x37, 0xf8, 0xf7, 0x78,
+	0xf4, 0xe4, 0x91, 0xa3, 0x47, 0x03, 0xff, 0x88, 0x61, 0x3a, 0xed, 0x6e, 0x76, 0xdb, 0x2e, 0x18,
+	0x8e, 0xd3, 0x7e, 0x7e, 0xbd, 0xd7, 0xbe, 0x97, 0x81, 0xe5, 0x10, 0x53, 0xcc, 0x09, 0x77, 0x4e,
+	0x9a, 0x1d, 0x2c, 0x3c, 0xe7, 0xb8, 0x8f, 0x63, 0x82, 0x63, 0x3b, 0x8a, 0x99, 0x60, 0xe8, 0x2e,
+	0x8f, 0xa8, 0xad, 0x10, 0x76, 0x82, 0x68, 0x1a, 0x6b, 0x3e, 0xe3, 0x3d, 0xc6, 0x9d, 0x8e, 0xc7,
+	0xb1, 0xc4, 0x0f, 0x14, 0xb9, 0xe9, 0x44, 0x5e, 0x48, 0xa8, 0x27, 0x08, 0xa3, 0x89, 0x80, 0x61,
+	0x8c, 0xc9, 0x8b, 0x41, 0x84, 0x79, 0xf2, 0xce, 0xfa, 0x08, 0x4b, 0xaf, 0x2f, 0xd9, 0x07, 0x84,
+	0x8b, 0xed, 0xae, 0x47, 0x28, 0x77, 0xf1, 0x71, 0x1f, 0x73, 0x81, 0x5e, 0x01, 0x0c, 0x95, 0x74,
+	0xad, 0xae, 0x35, 0x16, 0x5a, 0xab, 0x76, 0x62, 0x6b, 0x5f, 0xda, 0xda, 0xd2, 0x36, 0x4d, 0x64,
+	0xb7, 0xbd, 0x10, 0x2b, 0xae, 0x3b, 0xc2, 0xb4, 0xbe, 0xc1, 0x83, 0x09, 0x07, 0x1e, 0x31, 0xca,
+	0x31, 0xda, 0xcd, 0xb1, 0x78, 0x34, 0xd5, 0x22, 0x21, 0x8f, 0x7a, 0x20, 0x03, 0xe6, 0xfd, 0x4b,
+	0xe9, 0xbd, 0x1d, 0xae, 0xcf, 0xd6, 0x2b, 0x8d, 0x9a, 0x9b, 0x9d, 0xad, 0x26, 0xdc, 0x97, 0xfe,
+	0x6f, 0xba, 0xec, 0x8b, 0xf4, 0x4f, 0x0b, 0xd4, 0xe1, 0x7f, 0x05, 0x92, 0xd6, 0x35, 0x37, 0x3d,
+	0x5a, 0xfb, 0xaa, 0x29, 0x23, 0x14, 0x95, 0xf8, 0x19, 0x54, 0x25, 0x48, 0x85, 0x35, 0xec, 0x9c,
+	0x6f, 0x63, 0x27, 0x94, 0x04, 0x68, 0x3d, 0x87, 0x65, 0xa9, 0xd5, 0xc6, 0x34, 0x20, 0x34, 0x6c,
+	0xc7, 0x2c, 0x62, 0xdc, 0x3b, 0xe2, 0xd3, 0x53, 0xbc, 0x87, 0x95, 0x02, 0xa6, 0x0a, 0xf3, 0x02,
+	0x6a, 0x51, 0xfa, 0x50, 0xd7, 0xea, 0x95, 0xc6, 0x42, 0x6b, 0x25, 0x37, 0x50, 0x4a, 0x75, 0x87,
+	0x78, 0x6b, 0x53, 0xa9, 0x6f, 0x45, 0x51, 0xcc, 0x4e, 0x70, 0x70, 0x8d, 0x60, 0x1f, 0xc0, 0x2c,
+	0xa2, 0xde, 0x64, 0x32, 0x17, 0x7f, 0xc6, 0xbe, 0xf8, 0xa7, 0x64, 0x39, 0xd4, 0x9b, 0x48, 0x76,
+	0x08, 0x7a, 0xf6, 0x5f, 0x64, 0xef, 0xa7, 0x85, 0x42, 0x26, 0x40, 0x2a, 0xb1, 0xb7, 0xa3, 0xcf,
+	0xd6, 0xb5, 0x46, 0xd5, 0x1d, 0x79, 0x62, 0xbd, 0x85, 0x87, 0x39, 0xaa, 0x2a, 0xef, 0x26, 0xcc,
+	0xa7, 0x50, 0xf5, 0xcf, 0x4d, 0x89, 0x9b, 0xc1, 0xb3, 0x3e, 0x1e, 0x78, 0x7d, 0xea, 0x77, 0xf7,
+	0xe8, 0x27, 0x16, 0xf7, 0xe4, 0xb8, 0x4c, 0xef, 0xe3, 0x4f, 0x4d, 0x35, 0x32, 0x87, 0xab, 0x82,
+	0xad, 0xc2, 0x2d, 0x42, 0x89, 0x20, 0xde, 0xd1, 0x6e, 0x12, 0x45, 0x6a, 0x2c, 0xba, 0x63, 0x4f,
+	0xd1, 0x3e, 0xcc, 0x7b, 0xbe, 0xcf, 0xfa, 0x54, 0x24, 0xa3, 0xb9, 0xd0, 0xb2, 0x4b, 0x0b, 0xd8,
+	0x0a, 0x82, 0xad, 0x04, 0xdf, 0xf6, 0x06, 0x47, 0xcc, 0x0b, 0xdc, 0x8c, 0x8f, 0x96, 0x60, 0x2e,
+	0xc4, 0xf4, 0xf0, 0x94, 0xeb, 0x95, 0x7a, 0xa5, 0xb1, 0xe8, 0xaa, 0x13, 0xba, 0x07, 0xd5, 0x08,
+	0xe3, 0x98, 0xeb, 0xff, 0xc9, 0xd9, 0x4f, 0x0e, 0xad, 0x1f, 0x73, 0x50, 0x95, 0x45, 0xa0, 0x10,
+	0x60, 0xb8, 0x7d, 0xd0, 0x7a, 0xae, 0x7f, 0xfe, 0x16, 0x34, 0x9e, 0x5c, 0x0d, 0xac, 0x9a, 0x12,
+	0x40, 0x2d, 0xdb, 0x19, 0x68, 0xad, 0x98, 0x3a, 0xbe, 0x8b, 0x8c, 0xf5, 0x2b, 0x61, 0x95, 0xcb,
+	0x00, 0x6e, 0x8f, 0xef, 0x04, 0xd4, 0x2c, 0x16, 0x28, 0xd8, 0x3c, 0x46, 0xeb, 0x3a, 0x14, 0x65,
+	0xfd, 0x15, 0xee, 0x4c, 0x4c, 0x3d, 0x2a, 0x11, 0x2a, 0xda, 0x2e, 0xc6, 0xc6, 0xb5, 0x38, 0x43,
+	0xf7, 0x89, 0xc9, 0x2e, 0x73, 0x2f, 0xda, 0x20, 0x65, 0xee, 0xc5, 0xab, 0xa3, 0x07, 0x8b, 0xa3,
+	0x23, 0x8a, 0x9e, 0x96, 0x7f, 0xb3, 0xb1, 0x05, 0x61, 0xd8, 0x57, 0x85, 0x0f, 0x8b, 0x9d, 0x98,
+	0xbe, 0xb2, 0x62, 0x8b, 0xc6, 0xbc, 0xac, 0xd8, 0xc2, 0xf1, 0x7e, 0xb9, 0xfd, 0xeb, 0xdc, 0xd4,
+	0xce, 0xce, 0x4d, 0xed, 0xcf, 0xb9, 0xa9, 0x7d, 0xbf, 0x30, 0x67, 0xce, 0x2e, 0xcc, 0x99, 0xdf,
+	0x17, 0xe6, 0xcc, 0xbb, 0xc7, 0x21, 0x11, 0xdd, 0x7e, 0xc7, 0xf6, 0x59, 0xcf, 0x11, 0x98, 0x06,
+	0x38, 0xee, 0x11, 0x2a, 0x1c, 0x1e, 0x51, 0xe7, 0xd4, 0x49, 0x6f, 0x1a, 0xf2, 0x8a, 0xd1, 0x99,
+	0x93, 0x77, 0x8c, 0x8d, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x7a, 0x20, 0xc6, 0x21, 0xe0, 0x08,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -739,7 +768,7 @@ type QueryClient interface {
 	ApprovedProposals(ctx context.Context, in *QueryApprovedProposalsRequest, opts ...grpc.CallOption) (*QueryApprovedProposalsResponse, error)
 	RejectedProposals(ctx context.Context, in *QueryRejectedProposalsRequest, opts ...grpc.CallOption) (*QueryRejectedProposalsResponse, error)
 	ShowProposal(ctx context.Context, in *QueryShowProposalRequest, opts ...grpc.CallOption) (*QueryShowProposalResponse, error)
-	CurrentGenesis(ctx context.Context, in *QueryCurrentGenesisRequest, opts ...grpc.CallOption) (*QueryCurrentGenesisResponse, error)
+	LaunchInformation(ctx context.Context, in *QueryLaunchInformationRequest, opts ...grpc.CallOption) (*QueryLaunchInformationResponse, error)
 }
 
 type queryClient struct {
@@ -804,9 +833,9 @@ func (c *queryClient) ShowProposal(ctx context.Context, in *QueryShowProposalReq
 	return out, nil
 }
 
-func (c *queryClient) CurrentGenesis(ctx context.Context, in *QueryCurrentGenesisRequest, opts ...grpc.CallOption) (*QueryCurrentGenesisResponse, error) {
-	out := new(QueryCurrentGenesisResponse)
-	err := c.cc.Invoke(ctx, "/spn.genesis.v1beta1.Query/CurrentGenesis", in, out, opts...)
+func (c *queryClient) LaunchInformation(ctx context.Context, in *QueryLaunchInformationRequest, opts ...grpc.CallOption) (*QueryLaunchInformationResponse, error) {
+	out := new(QueryLaunchInformationResponse)
+	err := c.cc.Invoke(ctx, "/spn.genesis.v1beta1.Query/LaunchInformation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -821,7 +850,7 @@ type QueryServer interface {
 	ApprovedProposals(context.Context, *QueryApprovedProposalsRequest) (*QueryApprovedProposalsResponse, error)
 	RejectedProposals(context.Context, *QueryRejectedProposalsRequest) (*QueryRejectedProposalsResponse, error)
 	ShowProposal(context.Context, *QueryShowProposalRequest) (*QueryShowProposalResponse, error)
-	CurrentGenesis(context.Context, *QueryCurrentGenesisRequest) (*QueryCurrentGenesisResponse, error)
+	LaunchInformation(context.Context, *QueryLaunchInformationRequest) (*QueryLaunchInformationResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -846,8 +875,8 @@ func (*UnimplementedQueryServer) RejectedProposals(ctx context.Context, req *Que
 func (*UnimplementedQueryServer) ShowProposal(ctx context.Context, req *QueryShowProposalRequest) (*QueryShowProposalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ShowProposal not implemented")
 }
-func (*UnimplementedQueryServer) CurrentGenesis(ctx context.Context, req *QueryCurrentGenesisRequest) (*QueryCurrentGenesisResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CurrentGenesis not implemented")
+func (*UnimplementedQueryServer) LaunchInformation(ctx context.Context, req *QueryLaunchInformationRequest) (*QueryLaunchInformationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LaunchInformation not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -962,20 +991,20 @@ func _Query_ShowProposal_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_CurrentGenesis_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryCurrentGenesisRequest)
+func _Query_LaunchInformation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryLaunchInformationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).CurrentGenesis(ctx, in)
+		return srv.(QueryServer).LaunchInformation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/spn.genesis.v1beta1.Query/CurrentGenesis",
+		FullMethod: "/spn.genesis.v1beta1.Query/LaunchInformation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).CurrentGenesis(ctx, req.(*QueryCurrentGenesisRequest))
+		return srv.(QueryServer).LaunchInformation(ctx, req.(*QueryLaunchInformationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1009,8 +1038,8 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_ShowProposal_Handler,
 		},
 		{
-			MethodName: "CurrentGenesis",
-			Handler:    _Query_CurrentGenesis_Handler,
+			MethodName: "LaunchInformation",
+			Handler:    _Query_LaunchInformation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1432,7 +1461,7 @@ func (m *QueryShowProposalResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryCurrentGenesisRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryLaunchInformationRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1442,12 +1471,12 @@ func (m *QueryCurrentGenesisRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryCurrentGenesisRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryLaunchInformationRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryCurrentGenesisRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryLaunchInformationRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1462,7 +1491,7 @@ func (m *QueryCurrentGenesisRequest) MarshalToSizedBuffer(dAtA []byte) (int, err
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryCurrentGenesisResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryLaunchInformationResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1472,20 +1501,52 @@ func (m *QueryCurrentGenesisResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryCurrentGenesisResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryLaunchInformationResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryCurrentGenesisResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryLaunchInformationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Genesis) > 0 {
-		i -= len(m.Genesis)
-		copy(dAtA[i:], m.Genesis)
-		i = encodeVarintQuerier(dAtA, i, uint64(len(m.Genesis)))
+	if len(m.Peers) > 0 {
+		for iNdEx := len(m.Peers) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.Peers[iNdEx])
+			copy(dAtA[i:], m.Peers[iNdEx])
+			i = encodeVarintQuerier(dAtA, i, uint64(len(m.Peers[iNdEx])))
+			i--
+			dAtA[i] = 0x22
+		}
+	}
+	if len(m.GenTxs) > 0 {
+		for iNdEx := len(m.GenTxs) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.GenTxs[iNdEx])
+			copy(dAtA[i:], m.GenTxs[iNdEx])
+			i = encodeVarintQuerier(dAtA, i, uint64(len(m.GenTxs[iNdEx])))
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if len(m.Accounts) > 0 {
+		for iNdEx := len(m.Accounts) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Accounts[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuerier(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.InitialGenesis) > 0 {
+		i -= len(m.InitialGenesis)
+		copy(dAtA[i:], m.InitialGenesis)
+		i = encodeVarintQuerier(dAtA, i, uint64(len(m.InitialGenesis)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -1674,7 +1735,7 @@ func (m *QueryShowProposalResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryCurrentGenesisRequest) Size() (n int) {
+func (m *QueryLaunchInformationRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1687,15 +1748,33 @@ func (m *QueryCurrentGenesisRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryCurrentGenesisResponse) Size() (n int) {
+func (m *QueryLaunchInformationResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.Genesis)
+	l = len(m.InitialGenesis)
 	if l > 0 {
 		n += 1 + l + sovQuerier(uint64(l))
+	}
+	if len(m.Accounts) > 0 {
+		for _, e := range m.Accounts {
+			l = e.Size()
+			n += 1 + l + sovQuerier(uint64(l))
+		}
+	}
+	if len(m.GenTxs) > 0 {
+		for _, b := range m.GenTxs {
+			l = len(b)
+			n += 1 + l + sovQuerier(uint64(l))
+		}
+	}
+	if len(m.Peers) > 0 {
+		for _, s := range m.Peers {
+			l = len(s)
+			n += 1 + l + sovQuerier(uint64(l))
+		}
 	}
 	return n
 }
@@ -2799,7 +2878,7 @@ func (m *QueryShowProposalResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryCurrentGenesisRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryLaunchInformationRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2822,10 +2901,10 @@ func (m *QueryCurrentGenesisRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryCurrentGenesisRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryLaunchInformationRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryCurrentGenesisRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryLaunchInformationRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2884,7 +2963,7 @@ func (m *QueryCurrentGenesisRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryCurrentGenesisResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryLaunchInformationResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2907,15 +2986,15 @@ func (m *QueryCurrentGenesisResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryCurrentGenesisResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryLaunchInformationResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryCurrentGenesisResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryLaunchInformationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Genesis", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field InitialGenesis", wireType)
 			}
 			var byteLen int
 			for shift := uint(0); ; shift += 7 {
@@ -2942,10 +3021,108 @@ func (m *QueryCurrentGenesisResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Genesis = append(m.Genesis[:0], dAtA[iNdEx:postIndex]...)
-			if m.Genesis == nil {
-				m.Genesis = []byte{}
+			m.InitialGenesis = append(m.InitialGenesis[:0], dAtA[iNdEx:postIndex]...)
+			if m.InitialGenesis == nil {
+				m.InitialGenesis = []byte{}
 			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Accounts", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Accounts = append(m.Accounts, &ProposalAddAccountPayload{})
+			if err := m.Accounts[len(m.Accounts)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GenTxs", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GenTxs = append(m.GenTxs, make([]byte, postIndex-iNdEx))
+			copy(m.GenTxs[len(m.GenTxs)-1], dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Peers", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuerier
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuerier
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Peers = append(m.Peers, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

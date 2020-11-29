@@ -3,8 +3,6 @@ package keeper_test
 import (
 	"context"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
@@ -255,12 +253,11 @@ func TestRejectedProposals(t *testing.T) {
 	require.Error(t, err)
 }
 
-// TODO: This test could be considered as an integration test -> Move it to the integration test
-func TestCurrentGenesis(t *testing.T) {
+func TestLaunchInformation(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
-	cdc := spnmocks.MockCodec()
+	_ = spnmocks.MockCodec()
 
 	chainID := spnmocks.MockRandomAlphaString(5)
 	coordinator := spnmocks.MockAccAddress()
@@ -279,8 +276,7 @@ func TestCurrentGenesis(t *testing.T) {
 	for i:=0; i<10; i++ {
 		// Add validator payload
 		addValidatorpayload := spnmocks.MockProposalAddValidatorPayload()
-		msg, _ := addValidatorpayload.GetCreateValidatorMessage()
-		valAddress, _ := sdk.ValAddressFromBech32(msg.ValidatorAddress)
+		valAddress := addValidatorpayload.ValidatorAddress
 		accAddress := sdk.AccAddress(valAddress)
 
 		// Add account payload (for each validator we need an account)
@@ -330,27 +326,12 @@ func TestCurrentGenesis(t *testing.T) {
 	}
 
 	// Can retrieve the current genesis with all the approved proposals
-	var req types.QueryCurrentGenesisRequest
+	var req types.QueryLaunchInformationRequest
 	req.ChainID = chainID
-	res, err := q.CurrentGenesis(context.Background(), &req)
+	launchInformation, err := q.LaunchInformation(context.Background(), &req)
 	require.NoError(t, err)
-
-	// Parse the retrieved genesis
-	var genesis types.GenesisFile
-	genesis = res.Genesis
-	genesisDoc, err := genesis.GetGenesisDoc()
-	require.NoError(t, err)
-	appState, err := genutiltypes.GenesisStateFromGenDoc(genesisDoc)
-	require.NoError(t, err)
-
-	// Analyse accounts
-	authGenState := authtypes.GetGenesisStateFromAppState(cdc, appState)
-	accs, _ := authtypes.UnpackAccounts(authGenState.Accounts)
-	require.Equal(t, 20, len(accs))
-
-	// Analyse validators
-	appGenesisState, err := genutiltypes.GenesisStateFromGenDoc(genesisDoc)
-	require.NoError(t, err)
-	genesisState := genutiltypes.GetGenesisStateFromAppState(cdc, appGenesisState)
-	require.Equal(t, 10, len(genesisState.GenTxs))
+	require.Equal(t, msgChainCreate.Genesis, launchInformation.InitialGenesis)
+	require.Equal(t, 20, len(launchInformation.Accounts))
+	require.Equal(t, 10, len(launchInformation.GenTxs))
+	require.Equal(t, 10, len(launchInformation.Peers))
 }
