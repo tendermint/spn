@@ -13,8 +13,7 @@ message Chain {
   string sourceURL = 4; 
   string sourceHash  = 5; 
   int64 createdAt = 6;
-  bytes genesis = 7;
-  bool final = 8;
+  bool final = 7;
 }
 
 message Proposal {

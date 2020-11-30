@@ -72,7 +72,6 @@ message QueryLaunchInformationRequest {
 }
 
 message QueryLaunchInformationResponse {
-    bytes initialGenesis = 1;
     repeated ProposalAddAccountPayload accounts = 2;
     repeated bytes genTxs = 3;
     repeated string peers = 4;
