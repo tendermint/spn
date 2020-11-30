@@ -206,7 +206,7 @@ func (k Keeper) LaunchInformation(
 	}
 
 	// Return error if the chain doesn't exist
-	chain, found := k.GetChain(ctx, req.ChainID)
+	_, found := k.GetChain(ctx, req.ChainID)
 	if !found {
 		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
 	}
@@ -216,7 +216,6 @@ func (k Keeper) LaunchInformation(
 
 	// Construct the response
 	var launchInformation types.QueryLaunchInformationResponse
-	launchInformation.InitialGenesis = chain.Genesis
 
 	// Fill the launch information from the approved proposal
 	for _, approved := range approvedProposals.ProposalIDs {

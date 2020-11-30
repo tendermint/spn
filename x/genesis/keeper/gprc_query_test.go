@@ -330,7 +330,6 @@ func TestLaunchInformation(t *testing.T) {
 	req.ChainID = chainID
 	launchInformation, err := q.LaunchInformation(context.Background(), &req)
 	require.NoError(t, err)
-	require.Equal(t, msgChainCreate.Genesis, launchInformation.InitialGenesis)
 	require.Equal(t, 20, len(launchInformation.Accounts))
 	require.Equal(t, 10, len(launchInformation.GenTxs))
 	require.Equal(t, 10, len(launchInformation.Peers))

@@ -125,7 +125,6 @@ func MockChain() *types.Chain {
 		MockRandomString(20),
 		MockRandomString(20),
 		time.Now(),
-		MockGenesis(),
 	)
 
 	chain.Peers = []string(nil)

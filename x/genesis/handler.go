@@ -51,7 +51,6 @@ func handleMsgChainCreate(ctx sdk.Context, k keeper.Keeper, msg *types.MsgChainC
 		msg.SourceURL,
 		msg.SourceHash,
 		ctx.BlockTime(),
-		msg.Genesis,
 	)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())

@@ -18,7 +18,6 @@ func TestNewChain(t *testing.T) {
 		spnmocks.MockRandomString(20),
 		spnmocks.MockRandomString(20),
 		time.Now(),
-		spnmocks.MockGenesis(),
 	)
 	require.NoError(t, err)
 	require.Equal(t, 0, len(chain.Peers))
@@ -38,18 +37,6 @@ func TestNewChain(t *testing.T) {
 		spnmocks.MockRandomString(20),
 		spnmocks.MockRandomString(20),
 		time.Now(),
-		spnmocks.MockGenesis(),
-	)
-	require.Error(t, err)
-
-	// Prevent creating a chain with a empty genesis
-	_, err = types.NewChain(
-		spnmocks.MockRandomString(5)+"_"+spnmocks.MockRandomString(5),
-		spnmocks.MockRandomString(20),
-		spnmocks.MockRandomString(20),
-		spnmocks.MockRandomString(20),
-		time.Now(),
-		[]byte{},
 	)
 	require.Error(t, err)
 }
