@@ -14,7 +14,7 @@ func NewChain(
 	sourceURL string,
 	sourceHash string,
 	createdAt time.Time,
-	genesis GenesisFile,
+	genesis []byte,
 ) (*Chain, error) {
 	var chain Chain
 
@@ -28,20 +28,10 @@ func NewChain(
 	chain.SourceURL = sourceURL
 	chain.SourceHash = sourceHash
 	chain.CreatedAt = createdAt.Unix()
-	chain.Final = false
 
-	// Append the chain id to the genesis
-	err := genesis.SetChainID(chainID)
-	if err != nil {
-		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	if len(genesis) == 0 {
+		return nil, sdkerrors.Wrap(ErrInvalidChain, "empty genesis")
 	}
-
-	// Validate and complete the genesis
-	err = genesis.ValidateAndComplete()
-	if err != nil {
-		return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
-	}
-
 	chain.Genesis = genesis
 
 	return &chain, nil

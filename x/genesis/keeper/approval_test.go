@@ -60,12 +60,10 @@ func CheckProposalAddValidator(t  *testing.T) {
 	require.Error(t, err)
 
 	// Error if funds are not sufficient for self delegation
-	genTxHighSelfDelegation := spnmocks.MockGenTxWithDelegation(sdk.NewCoin("stake" , sdk.NewInt(1000000)))
-	payload.GenTx = &genTxHighSelfDelegation
+	selfDelefation := sdk.NewCoin("stake" , sdk.NewInt(1000000))
+	payload.SelfDelegation = &selfDelefation
 	addAccountPayload := spnmocks.MockProposalAddAccountPayload()
-	msg, _ := payload.GetCreateValidatorMessage()
-	valAddress, _ := sdk.ValAddressFromBech32(msg.ValidatorAddress)
-	accAddress := sdk.AccAddress(valAddress)
+	accAddress := sdk.AccAddress(payload.ValidatorAddress)
 	k.SetAccount(ctx, chainID, accAddress, addAccountPayload)
 	proposal, _ = types.NewProposalAddValidator(
 		spnmocks.MockProposalInformation(),
@@ -75,12 +73,10 @@ func CheckProposalAddValidator(t  *testing.T) {
 	require.Error(t, err)
 
 	// No error if corresponding account is set with sufficient funds
-	genTxLowSelfDelegation := spnmocks.MockGenTx()
-	payload.GenTx = &genTxLowSelfDelegation
+	selfDelefation = sdk.NewCoin("stake" , sdk.NewInt(10000))
+	payload.SelfDelegation = &selfDelefation
 	addAccountPayload = spnmocks.MockProposalAddAccountPayload()
-	msg, _ = payload.GetCreateValidatorMessage()
-	valAddress, _ = sdk.ValAddressFromBech32(msg.ValidatorAddress)
-	accAddress = sdk.AccAddress(valAddress)
+	accAddress = sdk.AccAddress(payload.ValidatorAddress)
 	k.SetAccount(ctx, chainID, accAddress, addAccountPayload)
 	proposal, _ = types.NewProposalAddValidator(
 		spnmocks.MockProposalInformation(),
@@ -94,7 +90,7 @@ func CheckProposalAddValidator(t  *testing.T) {
 	require.Error(t, err)
 
 	// Error if validator is already set
-	k.SetValidator(ctx, chainID, valAddress)
+	k.SetValidator(ctx, chainID, payload.ValidatorAddress)
 	err = k.CheckProposalApproval(ctx, chainID, *proposal)
 	require.Error(t, err)
 }
@@ -134,8 +130,7 @@ func TestApplyProposalAddValidator(t  *testing.T) {
 
 	// Can apply a new validator
 	payload := spnmocks.MockProposalAddValidatorPayload()
-	msg, _ := payload.GetCreateValidatorMessage()
-	valAddress, _ := sdk.ValAddressFromBech32(msg.ValidatorAddress)
+	valAddress := payload.ValidatorAddress
 	proposal, _ := types.NewProposalAddValidator(
 		spnmocks.MockProposalInformation(),
 		payload,

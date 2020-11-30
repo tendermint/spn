@@ -13,8 +13,6 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	txtypes "github.com/cosmos/cosmos-sdk/types/tx"
-
 	"github.com/tendermint/spn/x/genesis/types"
 )
 
@@ -204,9 +202,9 @@ func CmdProposalAddAccount() *cobra.Command {
 // CmdProposalAddValidator returns the transaction command to add a new validator into the genesis
 func CmdProposalAddValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "proposal-add-validator [chain-id] [peer] [gentx-file]",
+		Use:   "proposal-add-validator [chain-id] [peer] [self-delegation] [gentx-file]",
 		Short: "Add a proposal to add a gentx to add a validator during chain initialization",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
@@ -214,22 +212,23 @@ func CmdProposalAddValidator() *cobra.Command {
 				return err
 			}
 
-			// Read gentxFile
-			gentxBytes, err := ioutil.ReadFile(args[2])
+			// Read self-delegation
+			selfDelegation, err := sdk.ParseCoin(args[2])
 			if err != nil {
 				return err
 			}
 
-			// Parse gentx
-			var gentx txtypes.Tx
-			err = clientCtx.JSONMarshaler.UnmarshalJSON(gentxBytes, &gentx)
+			// Read gentxFile
+			gentxBytes, err := ioutil.ReadFile(args[3])
 			if err != nil {
 				return err
 			}
 
 			// Construct payload
 			payload := types.NewProposalAddValidatorPayload(
-				gentx,
+				gentxBytes,
+				sdk.ValAddress(clientCtx.GetFromAddress()),
+				selfDelegation,
 				args[1],
 			)
 

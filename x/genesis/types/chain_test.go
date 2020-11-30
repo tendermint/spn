@@ -1,8 +1,6 @@
 package types_test
 
 import (
-	"encoding/json"
-	tmtypes "github.com/tendermint/tendermint/types"
 	"testing"
 	"time"
 
@@ -25,12 +23,6 @@ func TestNewChain(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 0, len(chain.Peers))
 
-	// The chain ID should be added to the genesis of the chain
-	chainID := chain.ChainID
-	genesisDoc, err := chain.Genesis.GetGenesisDoc()
-	require.NoError(t, err)
-	require.Equal(t, chainID, genesisDoc.ChainID)
-
 	// Can append peers to the chain
 	peer1 := spnmocks.MockRandomString(20)
 	peer2 := spnmocks.MockRandomString(20)
@@ -50,31 +42,14 @@ func TestNewChain(t *testing.T) {
 	)
 	require.Error(t, err)
 
-	// Prevent creating a chain with a invalid genesis
+	// Prevent creating a chain with a empty genesis
 	_, err = types.NewChain(
 		spnmocks.MockRandomString(5)+"_"+spnmocks.MockRandomString(5),
 		spnmocks.MockRandomString(20),
 		spnmocks.MockRandomString(20),
 		spnmocks.MockRandomString(20),
 		time.Now(),
-		[]byte(spnmocks.MockRandomString(500)),
-	)
-	require.Error(t, err)
-
-	var genesisObject tmtypes.GenesisDoc
-	genesisObject.ConsensusParams = tmtypes.DefaultConsensusParams()
-	genesisObject.ChainID = ""
-	genesis, err := json.Marshal(genesisObject)
-	if err != nil {
-		panic("Cannot marshal genesis")
-	}
-	_, err = types.NewChain(
-		spnmocks.MockRandomString(5)+"_"+spnmocks.MockRandomString(5),
-		spnmocks.MockRandomString(20),
-		spnmocks.MockRandomString(20),
-		spnmocks.MockRandomString(20),
-		time.Now(),
-		genesis,
+		[]byte{},
 	)
 	require.Error(t, err)
 }

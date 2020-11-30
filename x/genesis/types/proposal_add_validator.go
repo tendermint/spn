@@ -2,10 +2,8 @@ package types
 
 import (
 	"errors"
-	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	tx "github.com/cosmos/cosmos-sdk/types/tx"
-	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 // NewProposalAddValidator creates a new proposal to add a genesis validator
@@ -29,63 +27,37 @@ func NewProposalAddValidator(
 
 // NewProposalAddValidatorPayload creates a new payload for adding a validator
 func NewProposalAddValidatorPayload(
-	genTx tx.Tx,
+	genTx []byte,
+	validatorAddress sdk.ValAddress,
+	selfDelegation sdk.Coin,
 	peer string,
 ) *ProposalAddValidatorPayload {
 	var p ProposalAddValidatorPayload
-	p.GenTx = &genTx
+	p.GenTx = genTx
+	p.ValidatorAddress = validatorAddress
+	p.SelfDelegation = &selfDelegation
 	p.Peer = peer
 	return &p
 }
 
-// GetCreateValidatorMessage get the staking module message to create a new validator
-func (p ProposalAddValidatorPayload) GetCreateValidatorMessage() (message *staking.MsgCreateValidator, err error) {
-	// We return error on panic since ValidateBasic may panic on invalid tx
-	defer func() {
-		if r := recover(); r != nil {
-			err = fmt.Errorf("%v", r)
-		}
-	}()
-
-	// Check the gentx is valid
-	if err := p.GenTx.ValidateBasic(); err != nil {
-		return nil, err
-	}
-
-	// The gentx contain only one MsgCreateValidator message
-	messages := p.GenTx.GetMsgs()
-	if len(messages) != 1 {
-		return nil, errors.New("The gentx should contain only one message")
-	}
-	msg := messages[0]
-
-	// Check is the message is a MsgCreateValidator and return it
-	switch msg := msg.(type) {
-	case *staking.MsgCreateValidator:
-		return msg, nil
-	default:
-		return nil, errors.New("The gentx message is not MsgCreateValidator")
-	}
-}
-
 // ValidateProposalPayloadAddValidator checks if the data of ProposalAddValidator is valid
 func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) (err error) {
-	// We return error on panic since ValidateBasic may panic on invalid msg
-	defer func() {
-		if r := recover(); r != nil {
-			err = fmt.Errorf("%v", r)
-		}
-	}()
-
-	// Get the createValidator message
-	message, err := payload.GetCreateValidatorMessage()
-	if err != nil {
-		return sdkerrors.Wrap(ErrInvalidProposalAddValidator, err.Error())
+	// Gentx not empty
+	if len(payload.GenTx) == 0 {
+		return errors.New("empty genesis")
 	}
 
-	// Check validity of the message
-	if err = message.ValidateBasic(); err != nil {
-		return sdkerrors.Wrap(ErrInvalidProposalAddValidator, err.Error())
+	// Verify validator address
+	if payload.ValidatorAddress.Empty() {
+		return errors.New("empty validator address")
+	}
+	if _, err := sdk.ValAddressFromBech32(payload.ValidatorAddress.String()); err != nil {
+		return errors.New("invalid address")
+	}
+
+	// Check self delegation
+	if !payload.SelfDelegation.IsValid() {
+		return errors.New("invalid self-delegation")
 	}
 
 	// Check peer is not empty

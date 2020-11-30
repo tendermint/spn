@@ -4,7 +4,6 @@ package spn.genesis.v1beta1;
 option go_package = "github.com/tendermint/spn/x/genesis/types";
 
 import "cosmos/base/v1beta1/coin.proto";
-import "cosmos/tx/v1beta1/tx.proto";
 import "gogoproto/gogo.proto";
 
 message Chain {
@@ -14,7 +13,7 @@ message Chain {
   string sourceURL = 4; 
   string sourceHash  = 5; 
   int64 createdAt = 6;
-  bytes genesis = 7 [(gogoproto.casttype) = "GenesisFile"];
+  bytes genesis = 7;
   bool final = 8;
 }
 
@@ -60,6 +59,8 @@ message ProposalAddAccountPayload {
 }
 
 message ProposalAddValidatorPayload {
-    cosmos.tx.v1beta1.Tx genTx = 1;
-    string peer = 2;
+    bytes genTx = 1;
+    bytes validatorAddress = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+    cosmos.base.v1beta1.Coin selfDelegation = 3;
+    string peer = 4;
 }

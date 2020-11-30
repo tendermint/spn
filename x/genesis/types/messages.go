@@ -38,7 +38,7 @@ func NewMsgChainCreate(
 	creator sdk.AccAddress,
 	sourceURL string,
 	sourceHash string,
-	genesis GenesisFile,
+	genesis []byte,
 ) *MsgChainCreate {
 	return &MsgChainCreate{
 		ChainID:    chainID,
@@ -70,26 +70,16 @@ func (msg MsgChainCreate) GetSignBytes() []byte {
 // ValidateBasic implements the sdk.Msg interface.
 func (msg MsgChainCreate) ValidateBasic() error {
 	if !checkChainID(msg.ChainID) {
-		return sdkerrors.Wrap(ErrInvalidChain, "Invalid chain ID")
+		return sdkerrors.Wrap(ErrInvalidChain, "invalid chain ID")
 	}
 	if msg.SourceURL == "" {
-		return sdkerrors.Wrap(ErrInvalidChain, "Missing source URL")
+		return sdkerrors.Wrap(ErrInvalidChain, "missing source URL")
 	}
 	if msg.SourceHash == "" {
-		return sdkerrors.Wrap(ErrInvalidChain, "Missing source hash")
+		return sdkerrors.Wrap(ErrInvalidChain, "missing source hash")
 	}
-
-	// Check genesis validity
-	genesis := msg.Genesis
-	err := genesis.SetChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
-	}
-
-	// Validate and complete the genesis
-	err = genesis.ValidateAndComplete()
-	if err != nil {
-		return sdkerrors.Wrap(ErrInvalidChain, err.Error())
+	if len(msg.Genesis) == 0 {
+		return sdkerrors.Wrap(ErrInvalidChain, "empty genesis")
 	}
 
 	return nil
@@ -299,14 +289,7 @@ func (msg MsgProposalAddValidator) ValidateBasic() error {
 	if !checkChainID(msg.ChainID) {
 		return sdkerrors.Wrap(ErrInvalidProposalAddValidator, "invalid chain ID")
 	}
-
-	// Unpack the payload
-	// This operation is necessary to parse the message
-	payload := msg.Payload
-	cdc := gentxCodec()
-	payload.GenTx.UnpackInterfaces(cdc)
-
-	if err := ValidateProposalPayloadAddValidator(payload); err != nil {
+	if err := ValidateProposalPayloadAddValidator(msg.Payload); err != nil {
 		return err
 	}
 

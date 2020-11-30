@@ -2,9 +2,7 @@ package keeper
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -197,10 +195,10 @@ func (k Keeper) ShowProposal(
 }
 
 // CurrentGenesis generates the current genesis for the specific chain from the initial genesis and approved proposals
-func (k Keeper) CurrentGenesis(
+func (k Keeper) LaunchInformation(
 	c context.Context,
-	req *types.QueryCurrentGenesisRequest,
-) (*types.QueryCurrentGenesisResponse, error) {
+	req *types.QueryLaunchInformationRequest,
+) (*types.QueryLaunchInformationResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
 	if req == nil {
@@ -216,8 +214,11 @@ func (k Keeper) CurrentGenesis(
 	// Get the approved proposal IDs
 	approvedProposals := k.GetApprovedProposals(ctx, req.ChainID)
 
-	// Fetch all the proposals
-	var proposals []types.Proposal
+	// Construct the response
+	var launchInformation types.QueryLaunchInformationResponse
+	launchInformation.InitialGenesis = chain.Genesis
+
+	// Fill the launch information from the approved proposal
 	for _, approved := range approvedProposals.ProposalIDs {
 		proposal, found := k.GetProposal(ctx, req.ChainID, approved)
 
@@ -226,19 +227,17 @@ func (k Keeper) CurrentGenesis(
 			panic(fmt.Sprintf("The proposal %v doesn't exist", approved))
 		}
 
-		proposals = append(proposals, proposal)
+		// Dispatch the proposal
+		switch payload := proposal.Payload.(type) {
+		case *types.Proposal_AddAccountPayload:
+			launchInformation.Accounts = append(launchInformation.Accounts, payload.AddAccountPayload)
+		case *types.Proposal_AddValidatorPayload:
+			launchInformation.GenTxs = append(launchInformation.GenTxs, payload.AddValidatorPayload.GenTx)
+			launchInformation.Peers = append(launchInformation.Peers, payload.AddValidatorPayload.Peer)
+		default:
+			panic("An invalid proposal has been approved")
+		}
 	}
 
-	// Apply the approved proposals to the initial genesis
-	genesis := chain.Genesis
-	jsonCodec, ok := k.cdc.(codec.JSONMarshaler)
-	if !ok {
-		return nil, errors.New("cannot get the JSON encoder")
-	}
-	err := genesis.ApplyProposals(jsonCodec, proposals)
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.QueryCurrentGenesisResponse{Genesis: genesis}, nil
+	return &launchInformation, nil
 }
