@@ -14,7 +14,6 @@ func NewChain(
 	sourceURL string,
 	sourceHash string,
 	createdAt time.Time,
-	genesis []byte,
 ) (*Chain, error) {
 	var chain Chain
 
@@ -28,11 +27,6 @@ func NewChain(
 	chain.SourceURL = sourceURL
 	chain.SourceHash = sourceHash
 	chain.CreatedAt = createdAt.Unix()
-
-	if len(genesis) == 0 {
-		return nil, sdkerrors.Wrap(ErrInvalidChain, "empty genesis")
-	}
-	chain.Genesis = genesis
 
 	return &chain, nil
 }

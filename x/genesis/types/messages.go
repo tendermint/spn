@@ -45,7 +45,6 @@ func NewMsgChainCreate(
 		Creator:    creator,
 		SourceURL:  sourceURL,
 		SourceHash: sourceHash,
-		Genesis:    genesis,
 	}
 }
 
@@ -77,9 +76,6 @@ func (msg MsgChainCreate) ValidateBasic() error {
 	}
 	if msg.SourceHash == "" {
 		return sdkerrors.Wrap(ErrInvalidChain, "missing source hash")
-	}
-	if len(msg.Genesis) == 0 {
-		return sdkerrors.Wrap(ErrInvalidChain, "empty genesis")
 	}
 
 	return nil
