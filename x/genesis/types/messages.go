@@ -38,7 +38,6 @@ func NewMsgChainCreate(
 	creator sdk.AccAddress,
 	sourceURL string,
 	sourceHash string,
-	genesis []byte,
 ) *MsgChainCreate {
 	return &MsgChainCreate{
 		ChainID:    chainID,
