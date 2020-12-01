@@ -5,14 +5,11 @@ import (
 	"io/ioutil"
 	"strconv"
 
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
-	tmjson "github.com/tendermint/tendermint/libs/json"
-	tmtypes "github.com/tendermint/tendermint/types"
-
-	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/tendermint/spn/x/genesis/types"
 )
 
@@ -40,24 +37,12 @@ func GetTxCmd() *cobra.Command {
 // CmdChainCreate returns the transaction command to create a new chain
 func CmdChainCreate() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-chain [chain-id] [source-URL] [source-hash] [genesis-file]",
+		Use:   "create-chain [chain-id] [source-URL] [source-hash]",
 		Short: "Create a new chain to launch",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			// Read genesis file
-			genesisDoc, err := tmtypes.GenesisDocFromFile(args[3])
-			if err != nil {
-				return err
-			}
-
-			// Convert genesis
-			genesis, err := tmjson.Marshal(*genesisDoc)
 			if err != nil {
 				return err
 			}
@@ -68,7 +53,6 @@ func CmdChainCreate() *cobra.Command {
 				clientCtx.GetFromAddress(),
 				args[1],
 				args[2],
-				genesis,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

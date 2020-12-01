@@ -29,7 +29,6 @@ func TestListChains(t *testing.T) {
 			spnmocks.MockAccAddress(),
 			sourceURLs[i],
 			spnmocks.MockRandomAlphaString(5),
-			spnmocks.MockGenesis(),
 		)
 		h(ctx, msg)
 	}
@@ -268,7 +267,6 @@ func TestLaunchInformation(t *testing.T) {
 		coordinator,
 		spnmocks.MockRandomAlphaString(10),
 		spnmocks.MockRandomAlphaString(10),
-		spnmocks.MockGenesis(),
 	)
 	h(ctx, msgChainCreate)
 
