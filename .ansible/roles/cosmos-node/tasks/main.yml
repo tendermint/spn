@@ -15,7 +15,7 @@
 
 - name: reset node and genesis
   when: reset | bool
-  shell: rm -rf /home/{{ app_name }}/.{{ data_dir | default('.' + app_name + 'd') }}/*
+  shell: rm -rf /home/{{ app_name }}/{{ data_dir | default('.' + app_name + 'd') }}/*
 
 - name: check if key exists
   become_user: "{{ app_name }}"
