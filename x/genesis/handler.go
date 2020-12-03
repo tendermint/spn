@@ -149,7 +149,7 @@ func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (
 
 func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.MsgProposalAddAccount) (*sdk.Result, error) {
 	// Check the chain exist
-	_, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "The chain doesn't exist")
 	}
@@ -176,8 +176,8 @@ func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.Ms
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	// Add the proposal ID to the pending proposal pool
-	if err := appendPendingProposal(ctx, k, proposal); err != nil {
+	// Check if creator is the coordinator
+	if err := appendNewProposal(ctx, k, chain, proposal); err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
@@ -190,7 +190,7 @@ func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.Ms
 
 func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.MsgProposalAddValidator) (*sdk.Result, error) {
 	// Check the chain exist
-	_, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "The chain doesn't exist")
 	}
@@ -217,8 +217,8 @@ func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	// Add the proposal ID to the pending proposal pool
-	if err := appendPendingProposal(ctx, k, proposal); err != nil {
+	// Append the new proposal
+	if err := appendNewProposal(ctx, k, chain, proposal); err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
@@ -227,6 +227,25 @@ func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.
 	k.SetProposalCount(ctx, msg.ChainID, count)
 
 	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+}
+
+// appendNewProposal appends the proposal in the approved pool if the creator is the cooredinator of the chain
+// or in the pending pool in any other case
+func appendNewProposal(ctx sdk.Context, k keeper.Keeper, chain types.Chain, proposal *types.Proposal) error {
+	// Check if creator is the coordinator
+	if chain.Creator == proposal.ProposalInformation.Creator {
+		// If the creator is the coordinator, we approve directly the proposal
+		if err := appendApprovedProposal(ctx, k, proposal); err != nil {
+			return err
+		}
+	} else {
+		// Append the proposal to the pending proposal pool
+		if err := appendPendingProposal(ctx, k, proposal); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func appendPendingProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Proposal) error {
