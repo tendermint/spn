@@ -19,7 +19,7 @@ func (k Keeper) ListChains(
 	c context.Context,
 	req *types.QueryListChainsRequest,
 ) (*types.QueryListChainsResponse, error) {
-	var chainIDs []string
+	var chains []*types.Chain
 
 	ctx := sdk.UnwrapSDKContext(c)
 	store := ctx.KVStore(k.storeKey)
@@ -27,7 +27,7 @@ func (k Keeper) ListChains(
 
 	pageRes, err := query.Paginate(chainStore, req.Pagination, func(key []byte, value []byte) error {
 		chain := types.UnmarshalChain(k.cdc, value)
-		chainIDs = append(chainIDs, chain.ChainID)
+		chains = append(chains, &chain)
 
 		return nil
 	})
@@ -38,7 +38,7 @@ func (k Keeper) ListChains(
 
 	return &types.QueryListChainsResponse{
 		Pagination: pageRes,
-		ChainIDs:   chainIDs,
+		Chains:   	chains,
 	}, nil
 }
 

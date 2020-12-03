@@ -37,9 +37,11 @@ func TestListChains(t *testing.T) {
 	var listQuery types.QueryListChainsRequest
 	listChainsRes, err := q.ListChains(context.Background(), &listQuery)
 	require.NoError(t, err)
-	require.Equal(t, 10, len(listChainsRes.ChainIDs))
+	require.Equal(t, 10, len(listChainsRes.Chains))
 	for _, chainID := range chainIDs {
-		require.Contains(t, listChainsRes.ChainIDs, chainID)
+		chain, found := k.GetChain(ctx, chainID)
+		require.True(t, found)
+		require.Contains(t, listChainsRes.Chains, &chain)
 	}
 
 	// Query a specific chain

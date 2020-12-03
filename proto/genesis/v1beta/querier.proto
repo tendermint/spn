@@ -24,7 +24,7 @@ message QueryListChainsRequest {
 
 message QueryListChainsResponse {
 	  cosmos.base.query.v1beta1.PageResponse pagination = 1;
-	  repeated string chainIDs = 2;
+	  repeated Chain chains = 2;
 }
 
 message QueryShowChainRequest {
