@@ -58,6 +58,67 @@ func TestListChains(t *testing.T) {
 	require.Error(t, err)
 }
 
+func TestProposalCount(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+	h := genesis.NewHandler(*k)
+	q := spnmocks.MockGenesisQueryClient(ctx, k)
+
+	// Fails if the chain doesn't exist
+	countQuery := types.QueryProposalCountRequest{
+		ChainID: spnmocks.MockRandomAlphaString(5),
+	}
+	_, err := q.ProposalCount(context.Background(), &countQuery)
+	require.Error(t, err)
+
+	// Create a chain
+	chainID := spnmocks.MockRandomAlphaString(5)
+	msg := types.NewMsgChainCreate(
+		chainID,
+		spnmocks.MockAccAddress(),
+		spnmocks.MockRandomAlphaString(5),
+		spnmocks.MockRandomAlphaString(5),
+	)
+	_, err = h(ctx, msg)
+	require.NoError(t, err)
+
+	// 0 proposal
+	countQuery = types.QueryProposalCountRequest{
+		ChainID: chainID,
+	}
+	count, err := q.ProposalCount(context.Background(), &countQuery)
+	require.NoError(t, err)
+	require.Equal(t, int32(0), count.Count)
+
+	// 3 proposals
+	msgAddAccount := types.NewMsgProposalAddAccount(
+		chainID,
+		spnmocks.MockAccAddress(),
+		spnmocks.MockProposalAddAccountPayload(),
+	)
+	_, err = h(ctx, msgAddAccount)
+	require.NoError(t, err)
+	msgAddAccount = types.NewMsgProposalAddAccount(
+		chainID,
+		spnmocks.MockAccAddress(),
+		spnmocks.MockProposalAddAccountPayload(),
+	)
+	_, err = h(ctx, msgAddAccount)
+	require.NoError(t, err)
+	msgAddAccount = types.NewMsgProposalAddAccount(
+		chainID,
+		spnmocks.MockAccAddress(),
+		spnmocks.MockProposalAddAccountPayload(),
+	)
+	_, err = h(ctx, msgAddAccount)
+	require.NoError(t, err)
+	countQuery = types.QueryProposalCountRequest{
+		ChainID: chainID,
+	}
+	count, err = q.ProposalCount(context.Background(), &countQuery)
+	require.NoError(t, err)
+	require.Equal(t, int32(3), count.Count)
+}
+
 func TestPendingProposals(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
