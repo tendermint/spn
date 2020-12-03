@@ -1,6 +1,7 @@
 package genesis
 
 import (
+	"errors"
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -91,32 +92,15 @@ func handleMsgReject(ctx sdk.Context, k keeper.Keeper, msg *types.MsgReject) (*s
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "The proposal is not in pending state")
 	}
 
-	// Set the proposal state
-	proposal.ProposalState.SetStatus(types.ProposalState_REJECTED)
-	k.SetProposal(ctx, proposal)
-
 	// Remove proposalID from pending pool
-	pending := k.GetPendingProposals(ctx, msg.ChainID)
-	proposalFound := false
-	for i, id := range pending.ProposalIDs {
-		if id == msg.ProposalID {
-			// Remove
-			pending.ProposalIDs[i] = pending.ProposalIDs[len(pending.ProposalIDs)-1]
-			pending.ProposalIDs = pending.ProposalIDs[:len(pending.ProposalIDs)-1]
-			proposalFound = true
-			break
-		}
+	if err := removePendingProposal(ctx, k, &proposal); err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
-	// The proposal must be in the pool
-	if !proposalFound {
-		panic(fmt.Sprintf("Proposal %v in pending state is not in the pending pool", msg.ProposalID))
-	}
-	k.SetPendingProposals(ctx, msg.ChainID, pending)
 
 	// Append proposalID in rejected pool
-	rejected := k.GetRejectedProposals(ctx, msg.ChainID)
-	rejected.ProposalIDs = append(rejected.ProposalIDs, msg.ProposalID)
-	k.SetRejectedProposals(ctx, msg.ChainID, rejected)
+	if err := appendRejectedProposal(ctx, k, &proposal); err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
 
 	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
 }
@@ -150,42 +134,13 @@ func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "The proposal is not in pending state")
 	}
 
-	// Check if the proposal can be approved depending on the type of proposal and current state of the genesis
-	err = k.CheckProposalApproval(ctx, msg.ChainID, proposal)
-	if err != nil {
+	// Remove proposalID from pending pool
+	if err := removePendingProposal(ctx, k, &proposal); err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	// Set the proposal state
-	proposal.ProposalState.SetStatus(types.ProposalState_APPROVED)
-	k.SetProposal(ctx, proposal)
-
-	// Remove proposalID from pending pool
-	pending := k.GetPendingProposals(ctx, msg.ChainID)
-	proposalFound := false
-	for i, id := range pending.ProposalIDs {
-		if id == msg.ProposalID {
-			// Remove
-			pending.ProposalIDs[i] = pending.ProposalIDs[len(pending.ProposalIDs)-1]
-			pending.ProposalIDs = pending.ProposalIDs[:len(pending.ProposalIDs)-1]
-			proposalFound = true
-			break
-		}
-	}
-	// The proposal must be in the pool
-	if !proposalFound {
-		panic(fmt.Sprintf("Proposal %v in pending state is not in the pending pool", msg.ProposalID))
-	}
-	k.SetPendingProposals(ctx, msg.ChainID, pending)
-
-	// Append proposalID in approved pool
-	approved := k.GetApprovedProposals(ctx, msg.ChainID)
-	approved.ProposalIDs = append(approved.ProposalIDs, msg.ProposalID)
-	k.SetApprovedProposals(ctx, msg.ChainID, approved)
-
-	// Perform the modification to the store relative to the changes in the genesis
-	err = k.ApplyProposalApproval(ctx, msg.ChainID, proposal)
-	if err != nil {
+	// Append the proposal the in approved pool
+	if err := appendApprovedProposal(ctx, k, &proposal); err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
@@ -194,7 +149,7 @@ func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (
 
 func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.MsgProposalAddAccount) (*sdk.Result, error) {
 	// Check the chain exist
-	_, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "The chain doesn't exist")
 	}
@@ -205,7 +160,7 @@ func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.Ms
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	// Append the proposal
+	// Create the proposal
 	proposalID := k.GetProposalCount(ctx, msg.ChainID)
 	information := types.NewProposalInformation(
 		msg.ChainID,
@@ -220,12 +175,11 @@ func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.Ms
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
-	k.SetProposal(ctx, *proposal)
 
-	// Add the proposal ID to the pending proposal pool
-	pending := k.GetPendingProposals(ctx, msg.ChainID)
-	pending.ProposalIDs = append(pending.ProposalIDs, proposalID)
-	k.SetPendingProposals(ctx, msg.ChainID, pending)
+	// Append the new proposal
+	if err := appendNewProposal(ctx, k, chain, proposal); err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
 
 	// Increment proposal count
 	count := proposalID + 1
@@ -236,7 +190,7 @@ func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.Ms
 
 func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.MsgProposalAddValidator) (*sdk.Result, error) {
 	// Check the chain exist
-	_, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "The chain doesn't exist")
 	}
@@ -247,7 +201,7 @@ func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	// Append the proposal
+	// Create the proposal
 	proposalID := k.GetProposalCount(ctx, msg.ChainID)
 	information := types.NewProposalInformation(
 		msg.ChainID,
@@ -262,16 +216,110 @@ func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
-	k.SetProposal(ctx, *proposal)
 
-	// Add the proposal ID to the pending proposal pool
-	pending := k.GetPendingProposals(ctx, msg.ChainID)
-	pending.ProposalIDs = append(pending.ProposalIDs, proposalID)
-	k.SetPendingProposals(ctx, msg.ChainID, pending)
+	// Append the new proposal
+	if err := appendNewProposal(ctx, k, chain, proposal); err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	}
 
 	// Increment proposal count
 	count := proposalID + 1
 	k.SetProposalCount(ctx, msg.ChainID, count)
 
 	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+}
+
+// appendNewProposal appends the proposal in the approved pool if the creator is the cooredinator of the chain
+// or in the pending pool in any other case
+func appendNewProposal(ctx sdk.Context, k keeper.Keeper, chain types.Chain, proposal *types.Proposal) error {
+	// Check if creator is the coordinator
+	if chain.Creator == proposal.ProposalInformation.Creator {
+		// If the creator is the coordinator, we approve directly the proposal
+		if err := appendApprovedProposal(ctx, k, proposal); err != nil {
+			return err
+		}
+	} else {
+		// Append the proposal to the pending proposal pool
+		if err := appendPendingProposal(ctx, k, proposal); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func appendPendingProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Proposal) error {
+	// Only newly created can be appended to the proposal pool
+	// And newly created proposals must have the pending state
+	if proposal.ProposalState.Status != types.ProposalState_PENDING {
+		return errors.New("a new proposal must have pending state")
+	}
+
+	// Set in the store
+	k.SetProposal(ctx, *proposal)
+
+	// Append in the pool
+	pending := k.GetPendingProposals(ctx, proposal.ProposalInformation.ChainID)
+	pending.ProposalIDs = append(pending.ProposalIDs, proposal.ProposalInformation.ProposalID)
+	k.SetPendingProposals(ctx, proposal.ProposalInformation.ChainID, pending)
+
+	return nil
+}
+
+func removePendingProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Proposal) error {
+	pending := k.GetPendingProposals(ctx, proposal.ProposalInformation.ChainID)
+	proposalFound := false
+	for i, id := range pending.ProposalIDs {
+		if id == proposal.ProposalInformation.ProposalID {
+			// Remove
+			pending.ProposalIDs[i] = pending.ProposalIDs[len(pending.ProposalIDs)-1]
+			pending.ProposalIDs = pending.ProposalIDs[:len(pending.ProposalIDs)-1]
+			proposalFound = true
+			break
+		}
+	}
+	// The proposal must be in the pool
+	if !proposalFound {
+		panic(fmt.Sprintf("Proposal %v in pending state is not in the pending pool", proposal.ProposalInformation.ProposalID))
+	}
+	k.SetPendingProposals(ctx, proposal.ProposalInformation.ChainID, pending)
+
+	return nil
+}
+
+func appendApprovedProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Proposal) error {
+	// Check if the proposal can be approved depending on the type of the proposal payload and current state of the genesis
+	err := k.CheckProposalApproval(ctx, proposal.ProposalInformation.ChainID, *proposal)
+	if err != nil {
+		return err
+	}
+
+	// Set the proposal new state
+	proposal.ProposalState.SetStatus(types.ProposalState_APPROVED)
+	k.SetProposal(ctx, *proposal)
+
+	// Append proposalID in approved pool
+	approved := k.GetApprovedProposals(ctx, proposal.ProposalInformation.ChainID)
+	approved.ProposalIDs = append(approved.ProposalIDs, proposal.ProposalInformation.ProposalID)
+	k.SetApprovedProposals(ctx, proposal.ProposalInformation.ChainID, approved)
+
+	// Perform the modification to the store relative to the changes in the genesis from the proposal payload
+	err = k.ApplyProposalApproval(ctx, proposal.ProposalInformation.ChainID, *proposal)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func appendRejectedProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Proposal) error {
+	rejected := k.GetRejectedProposals(ctx, proposal.ProposalInformation.ChainID)
+	rejected.ProposalIDs = append(rejected.ProposalIDs, proposal.ProposalInformation.ProposalID)
+	k.SetRejectedProposals(ctx, proposal.ProposalInformation.ChainID, rejected)
+
+	// Set the proposal new state
+	proposal.ProposalState.SetStatus(types.ProposalState_REJECTED)
+	k.SetProposal(ctx, *proposal)
+
+	return nil
 }

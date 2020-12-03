@@ -305,6 +305,9 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 	h := genesis.NewHandler(*k)
 	chainID := spnmocks.MockRandomAlphaString(5)
 
+	coordinator := spnmocks.MockAccAddress()
+	coordinatorIdentity, _ := k.IdentityKeeper.GetIdentifier(ctx, coordinator)
+
 	// Prevent creating a proposal for a non existing chain
 	msg := types.NewMsgProposalAddAccount(
 		chainID,
@@ -316,6 +319,7 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 
 	// Create a new chain
 	chain := spnmocks.MockChain()
+	chain.Creator = coordinatorIdentity
 	chain.ChainID = chainID
 	k.SetChain(ctx, *chain)
 
@@ -333,6 +337,7 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 	// Can retrieve the proposal
 	proposal, found := k.GetProposal(ctx, chainID, 0)
 	require.True(t, found)
+	require.Equal(t, types.ProposalState_PENDING, proposal.ProposalState.Status)
 	require.Equal(t, creatorIdentity, proposal.ProposalInformation.Creator)
 	_, ok := proposal.Payload.(*types.Proposal_AddAccountPayload)
 	require.True(t, ok)
@@ -344,12 +349,53 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 	// The proposal count is incremented
 	count := k.GetProposalCount(ctx, chainID)
 	require.Equal(t, int32(1), count)
+
+	// A proposal created by the coordinator is pre-approved
+	account := spnmocks.MockAccAddress()
+	msg = types.NewMsgProposalAddAccount(
+		chainID,
+		coordinator,
+		spnmocks.MockProposalAddAccountPayload(),
+	)
+	msg.Payload.Address = account
+	_, err = h(ctx, msg)
+	require.NoError(t, err)
+
+	// Can retrieve the proposal
+	proposal, found = k.GetProposal(ctx, chainID, 1)
+	require.True(t, found)
+	require.Equal(t, types.ProposalState_APPROVED, proposal.ProposalState.Status)
+	require.Equal(t, coordinatorIdentity, proposal.ProposalInformation.Creator)
+	_, ok = proposal.Payload.(*types.Proposal_AddAccountPayload)
+	require.True(t, ok)
+
+	// The proposal is added to the pending proposals
+	approved := k.GetApprovedProposals(ctx, chainID)
+	require.Contains(t, approved.ProposalIDs, int32(1))
+
+	// The proposal count is incremented
+	count = k.GetProposalCount(ctx, chainID)
+	require.Equal(t, int32(2), count)
+
+	// A proposal created by the coordinator is not appended if it is invalid
+	// (invalid here because the account already exists)
+	msg = types.NewMsgProposalAddAccount(
+		chainID,
+		coordinator,
+		spnmocks.MockProposalAddAccountPayload(),
+	)
+	msg.Payload.Address = account
+	_, err = h(ctx, msg)
+	require.Error(t, err)
 }
 
 func TestHandleMsgProposalAddValidator(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
 	chainID := spnmocks.MockRandomAlphaString(5)
+
+	coordinator := spnmocks.MockAccAddress()
+	coordinatorIdentity, _ := k.IdentityKeeper.GetIdentifier(ctx, coordinator)
 
 	// Prevent creating a proposal for a non existing chain
 	msg := types.NewMsgProposalAddValidator(
@@ -362,6 +408,7 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 
 	// Create a new chain
 	chain := spnmocks.MockChain()
+	chain.Creator = coordinatorIdentity
 	chain.ChainID = chainID
 	k.SetChain(ctx, *chain)
 
@@ -401,6 +448,7 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 	// Can retrieve the proposal
 	proposal, found := k.GetProposal(ctx, chainID, 5)
 	require.True(t, found)
+	require.Equal(t, types.ProposalState_PENDING, proposal.ProposalState.Status)
 	require.Equal(t, creatorIdentity, proposal.ProposalInformation.Creator)
 	_, ok := proposal.Payload.(*types.Proposal_AddValidatorPayload)
 	require.True(t, ok)
@@ -412,4 +460,50 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 	// The proposal count is incremented
 	count := k.GetProposalCount(ctx, chainID)
 	require.Equal(t, int32(6), count)
+
+	// A proposal created by the coordinator is pre-approved
+	// We need to first have an existing account for the validator proposal
+	account := spnmocks.MockAccAddress()
+	msgAccount = types.NewMsgProposalAddAccount(
+		chainID,
+		coordinator,
+		spnmocks.MockProposalAddAccountPayload(),
+	)
+	msgAccount.Payload.Address = account
+	_, err = h(ctx, msgAccount)
+	require.NoError(t, err)
+
+	msg = types.NewMsgProposalAddValidator(
+		chainID,
+		coordinator,
+		spnmocks.MockProposalAddValidatorPayload(),
+	)
+	msg.Payload.ValidatorAddress = sdk.ValAddress(account)
+	_, err = h(ctx, msg)
+	require.NoError(t, err)
+
+	// Can retrieve the proposal
+	proposal, found = k.GetProposal(ctx, chainID, 7)
+	require.True(t, found)
+	require.Equal(t, types.ProposalState_APPROVED, proposal.ProposalState.Status)
+	require.Equal(t, coordinatorIdentity, proposal.ProposalInformation.Creator)
+	_, ok = proposal.Payload.(*types.Proposal_AddValidatorPayload)
+	require.True(t, ok)
+
+	// The proposal is added to the pending proposals
+	approved := k.GetApprovedProposals(ctx, chainID)
+	require.Contains(t, approved.ProposalIDs, int32(7))
+
+	// The proposal count is incremented
+	count = k.GetProposalCount(ctx, chainID)
+	require.Equal(t, int32(8), count)
+
+	// A proposal created by the coordinator is not appended if it is invalid
+	msg = types.NewMsgProposalAddValidator(
+		chainID,
+		coordinator,
+		spnmocks.MockProposalAddValidatorPayload(),
+	)
+	_, err = h(ctx, msg)
+	require.Error(t, err)
 }
