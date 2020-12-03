@@ -176,7 +176,7 @@ func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.Ms
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	// Check if creator is the coordinator
+	// Append the new proposal
 	if err := appendNewProposal(ctx, k, chain, proposal); err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
