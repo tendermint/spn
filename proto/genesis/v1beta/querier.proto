@@ -16,6 +16,7 @@ service Query {
     rpc RejectedProposals(QueryRejectedProposalsRequest) returns (QueryRejectedProposalsResponse);
     rpc ShowProposal(QueryShowProposalRequest) returns (QueryShowProposalResponse);
     rpc LaunchInformation(QueryLaunchInformationRequest) returns (QueryLaunchInformationResponse);
+    rpc SimulatedLaunchInformation(QuerySimulatedLaunchInformationRequest) returns (QuerySimulatedLaunchInformationResponse);
 }
 
 message QueryListChainsRequest {
@@ -84,5 +85,16 @@ message QueryLaunchInformationResponse {
     repeated ProposalAddAccountPayload accounts = 2;
     repeated bytes genTxs = 3;
     repeated string peers = 4;
+}
+
+message QuerySimulatedLaunchInformationRequest {
+  string chainID = 1;
+  int32 proposalID = 2;
+}
+
+message QuerySimulatedLaunchInformationResponse {
+  repeated ProposalAddAccountPayload accounts = 2;
+  repeated bytes genTxs = 3;
+  repeated string peers = 4;
 }
 
