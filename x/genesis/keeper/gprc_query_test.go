@@ -186,13 +186,13 @@ func TestPendingProposals(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	proposals, err := k.PendingProposals(context.Background(), chainID)
+	proposals, err := k.PendingProposals(ctx, chainID)
 	require.NoError(t, err)
 	require.Equal(t, 10, len(proposals))
 	require.NotEqual(t, proposals[0].Payload, proposals[1].Payload)
 
 	// PendingProposals fails if the chain doesn't exist
-	_, err = k.PendingProposals(context.Background(), spnmocks.MockRandomAlphaString(6))
+	_, err = k.PendingProposals(ctx, spnmocks.MockRandomAlphaString(6))
 	require.Error(t, err)
 
 	// Can query a specific proposal
@@ -269,7 +269,7 @@ func TestApprovedProposals(t *testing.T) {
 	}
 
 	// Can query approved proposals
-	proposals, err := k.ApprovedProposals(context.Background(), chainID)
+	proposals, err := k.ApprovedProposals(ctx, chainID)
 	require.NoError(t, err)
 	require.Equal(t, 5, len(proposals))
 	require.NotEqual(t, proposals[0], proposals[1])
@@ -277,7 +277,7 @@ func TestApprovedProposals(t *testing.T) {
 	require.Equal(t, approvedProposal, proposals[0])
 
 	// ApprovedProposals fails if the chain doesn't exist
-	_, err = k.ApprovedProposals(context.Background(),  spnmocks.MockRandomAlphaString(6))
+	_, err = k.ApprovedProposals(ctx,  spnmocks.MockRandomAlphaString(6))
 	require.Error(t, err)
 }
 
@@ -317,7 +317,7 @@ func TestRejectedProposals(t *testing.T) {
 	}
 
 	// Can query approved proposals
-	proposals, err := k.RejectedProposals(context.Background(), chainID)
+	proposals, err := k.RejectedProposals(ctx, chainID)
 	require.NoError(t, err)
 	require.Equal(t, 5, len(proposals))
 	require.NotEqual(t, proposals[0], proposals[1])
@@ -325,6 +325,6 @@ func TestRejectedProposals(t *testing.T) {
 	require.Equal(t, rejectedProposal, proposals[0])
 
 	// PendingProposals fails if the chain doesn't exist
-	_, err = k.RejectedProposals(context.Background(), spnmocks.MockRandomAlphaString(6))
+	_, err = k.RejectedProposals(ctx, spnmocks.MockRandomAlphaString(6))
 	require.Error(t, err)
 }

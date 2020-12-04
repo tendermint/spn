@@ -84,33 +84,33 @@ func (k Keeper) ListProposals(
 	var err error
 	switch req.Status {
 	case types.ProposalStatus_ANY_STATUS:
-		approvedProposals, err := k.ApprovedProposals(c, req.ChainID)
+		approvedProposals, err := k.ApprovedProposals(ctx, req.ChainID)
 		if err != nil {
 			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
 		}
 		proposals = append(proposals, approvedProposals...)
-		pendingProposals, err := k.PendingProposals(c, req.ChainID)
+		pendingProposals, err := k.PendingProposals(ctx, req.ChainID)
 		if err != nil {
 			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
 		}
 		proposals = append(proposals, pendingProposals...)
-		rejectedProposals, err := k.RejectedProposals(c, req.ChainID)
+		rejectedProposals, err := k.RejectedProposals(ctx, req.ChainID)
 		if err != nil {
 			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
 		}
 		proposals = append(proposals, rejectedProposals...)
 	case types.ProposalStatus_APPROVED:
-		proposals, err = k.ApprovedProposals(c, req.ChainID)
+		proposals, err = k.ApprovedProposals(ctx, req.ChainID)
 		if err != nil {
 			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
 		}
 	case types.ProposalStatus_PENDING:
-		proposals, err = k.PendingProposals(c, req.ChainID)
+		proposals, err = k.PendingProposals(ctx, req.ChainID)
 		if err != nil {
 			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
 		}
 	case types.ProposalStatus_REJECTED:
-		proposals, err = k.RejectedProposals(c, req.ChainID)
+		proposals, err = k.RejectedProposals(ctx, req.ChainID)
 		if err != nil {
 			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
 		}
@@ -206,11 +206,9 @@ func (k Keeper) LaunchInformation(
 
 // PendingProposals lists the pending proposals for a chain
 func (k Keeper) PendingProposals(
-	c context.Context,
+	ctx sdk.Context,
 	chainID string,
 ) ([]types.Proposal, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-
 	// Return error if the chain doesn't exist
 	_, found := k.GetChain(ctx, chainID)
 	if !found {
@@ -222,7 +220,7 @@ func (k Keeper) PendingProposals(
 
 	// Fetch all the proposals
 	var proposals []types.Proposal
-	for i, pending := range pendingProposals.ProposalIDs {
+	for _, pending := range pendingProposals.ProposalIDs {
 		proposal, found := k.GetProposal(ctx, chainID, pending)
 
 		// Every proposals in the pending pool should exist
@@ -230,7 +228,7 @@ func (k Keeper) PendingProposals(
 			panic(fmt.Sprintf("The proposal %v doesn't exist", pending))
 		}
 
-		proposals[i] = proposal
+		proposals = append(proposals, proposal)
 	}
 
 	return proposals, nil
@@ -238,11 +236,9 @@ func (k Keeper) PendingProposals(
 
 // ApprovedProposals lists the approved proposals for a chain
 func (k Keeper) ApprovedProposals(
-	c context.Context,
+	ctx sdk.Context,
 	chainID string,
 ) ([]types.Proposal, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-
 	// Return error if the chain doesn't exist
 	_, found := k.GetChain(ctx, chainID)
 	if !found {
@@ -254,7 +250,7 @@ func (k Keeper) ApprovedProposals(
 
 	// Fetch all the proposals
 	var proposals []types.Proposal
-	for i, approved := range approvedProposals.ProposalIDs {
+	for _, approved := range approvedProposals.ProposalIDs {
 		proposal, found := k.GetProposal(ctx, chainID, approved)
 
 		// Every proposals in the approved pool should exist
@@ -262,7 +258,7 @@ func (k Keeper) ApprovedProposals(
 			panic(fmt.Sprintf("The proposal %v doesn't exist", approved))
 		}
 
-		proposals[i] = proposal
+		proposals = append(proposals, proposal)
 	}
 
 	return proposals, nil
@@ -270,11 +266,9 @@ func (k Keeper) ApprovedProposals(
 
 // RejectedProposals lists the rejected proposals for a chain
 func (k Keeper) RejectedProposals(
-	c context.Context,
+	ctx sdk.Context,
 	chainID string,
 ) ([]types.Proposal, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-
 	// Return error if the chain doesn't exist
 	_, found := k.GetChain(ctx, chainID)
 	if !found {
@@ -286,7 +280,7 @@ func (k Keeper) RejectedProposals(
 
 	// Fetch all the proposals
 	var proposals []types.Proposal
-	for i, rejected := range rejectedProposals.ProposalIDs {
+	for _, rejected := range rejectedProposals.ProposalIDs {
 		proposal, found := k.GetProposal(ctx, chainID, rejected)
 
 		// Every proposals in the rejected pool should exist
@@ -294,7 +288,7 @@ func (k Keeper) RejectedProposals(
 			panic(fmt.Sprintf("The proposal %v doesn't exist", rejected))
 		}
 
-		proposals[i] = proposal
+		proposals = append(proposals, proposal)
 	}
 
 	return proposals, nil
