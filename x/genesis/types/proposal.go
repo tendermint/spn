@@ -37,7 +37,7 @@ func NewProposalState() *ProposalState {
 func (ps *ProposalState) SetStatus(newStatus ProposalStatus) error {
 	// Check and set value
 	if newStatus != ProposalStatus_PENDING && newStatus != ProposalStatus_APPROVED && newStatus != ProposalStatus_REJECTED {
-		return errors.New("Invalid proposal status")
+		return errors.New("invalid proposal status")
 	}
 	ps.Status = newStatus
 

@@ -2,8 +2,8 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"errors"
+	"fmt"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -69,7 +69,6 @@ func (k Keeper) ListProposals(
 ) (*types.QueryListProposalsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	// TODO
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
@@ -80,23 +79,57 @@ func (k Keeper) ListProposals(
 		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
 	}
 
-	// Get the approved proposal IDs
-	approvedProposals := k.GetApprovedProposals(ctx, req.ChainID)
-
-	// Fetch all the proposals
-	proposals := make([]*types.Proposal, len(approvedProposals.ProposalIDs))
-	for i, approved := range approvedProposals.ProposalIDs {
-		proposal, found := k.GetProposal(ctx, req.ChainID, approved)
-
-		// Every proposals in the approved pool should exist
-		if !found {
-			panic(fmt.Sprintf("The proposal %v doesn't exist", approved))
+	// Get the proposals depending on the status provided
+	var proposals []types.Proposal
+	var err error
+	switch req.Status {
+	case types.ProposalStatus_ANY_STATUS:
+		approvedProposals, err := k.ApprovedProposals(c, req.ChainID)
+		if err != nil {
+			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
 		}
-
-		proposals[i] = &proposal
+		proposals = append(proposals, approvedProposals...)
+		pendingProposals, err := k.PendingProposals(c, req.ChainID)
+		if err != nil {
+			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
+		}
+		proposals = append(proposals, pendingProposals...)
+		rejectedProposals, err := k.RejectedProposals(c, req.ChainID)
+		if err != nil {
+			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
+		}
+		proposals = append(proposals, rejectedProposals...)
+	case types.ProposalStatus_APPROVED:
+		proposals, err = k.ApprovedProposals(c, req.ChainID)
+		if err != nil {
+			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
+		}
+	case types.ProposalStatus_PENDING:
+		proposals, err = k.PendingProposals(c, req.ChainID)
+		if err != nil {
+			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
+		}
+	case types.ProposalStatus_REJECTED:
+		proposals, err = k.RejectedProposals(c, req.ChainID)
+		if err != nil {
+			return nil, sdkerrors.Wrap(types.ErrInvalidProposal, err.Error())
+		}
 	}
 
-	return &types.QueryListProposalsResponse{Proposals: proposals}, nil
+	// Filter depending on the requested type
+	var filteredProposals []*types.Proposal
+	for _, proposal := range proposals {
+		foundType, err := proposal.GetType()
+		if err != nil {
+			panic(fmt.Sprintf("The proposal %v has a unknown type", proposal))
+		}
+
+		if req.Type == types.ProposalType_ANY_TYPE || req.Type == foundType {
+			filteredProposals = append(filteredProposals, &proposal)
+		}
+	}
+
+	return &types.QueryListProposalsResponse{Proposals: filteredProposals}, nil
 }
 
 // ShowProposal describes a specific proposal
