@@ -26,6 +26,12 @@ message Proposal {
     }
 }
 
+enum ProposalType {
+  ANY_TYPE = 0;
+  ADD_ACCOUNT = 1;
+  ADD_VALIDATOR = 2;
+}
+
 message ProposalInformation {
     string chainID = 1;
     int32 proposalID = 2;
@@ -35,12 +41,14 @@ message ProposalInformation {
 }
 
 message ProposalState {
-    enum Status {
-        APPROVED = 0;
-        REJECTED = 1;
-        PENDING = 2;
-    }
-    Status status = 1;
+  ProposalStatus status = 1;
+}
+
+enum ProposalStatus {
+  ANY_STATUS = 0;
+  APPROVED = 1;
+  PENDING = 2;
+  REJECTED = 3;
 }
 
 message ProposalList {
