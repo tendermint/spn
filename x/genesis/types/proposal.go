@@ -44,6 +44,18 @@ func (ps *ProposalState) SetStatus(newStatus ProposalStatus) error {
 	return nil
 }
 
+// GetType returns the type of a proposal
+func (p Proposal) GetType() (ProposalType, error) {
+	switch p.Payload.(type) {
+	case *Proposal_AddAccountPayload:
+		return ProposalType_ADD_ACCOUNT, nil
+	case *Proposal_AddValidatorPayload:
+		return ProposalType_ADD_VALIDATOR, nil
+	default:
+		return ProposalType_ANY_TYPE, errors.New("unknown proposal type")
+	}
+}
+
 // MarshalProposal encodes proposals for the store
 func MarshalProposal(cdc codec.BinaryMarshaler, proposal Proposal) []byte {
 	return cdc.MustMarshalBinaryBare(&proposal)
