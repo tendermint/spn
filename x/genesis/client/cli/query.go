@@ -162,6 +162,8 @@ func CmdListProposals() *cobra.Command {
 
 			params := &types.QueryListProposalsRequest{
 				ChainID: args[0],
+				Status: types.ProposalStatus_ANY_STATUS,
+				Type: types.ProposalType_ANY_TYPE,
 			}
 
 			// Perform the request
