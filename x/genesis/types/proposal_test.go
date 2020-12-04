@@ -14,12 +14,12 @@ import (
 func TestNewProposalState(t *testing.T) {
 	// Can create a proposal state
 	ps := types.NewProposalState()
-	require.Equal(t, types.ProposalState_PENDING, ps.Status)
+	require.Equal(t, types.ProposalStatus_PENDING, ps.Status)
 
 	// Can change the state of the proposal
-	err := ps.SetStatus(types.ProposalState_APPROVED)
+	err := ps.SetStatus(types.ProposalStatus_APPROVED)
 	require.NoError(t, err)
-	require.Equal(t, types.ProposalState_APPROVED, ps.Status)
+	require.Equal(t, types.ProposalStatus_APPROVED, ps.Status)
 }
 
 func TestNewProposalChange(t *testing.T) {

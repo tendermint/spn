@@ -28,15 +28,15 @@ func NewProposalInformation(
 func NewProposalState() *ProposalState {
 	var state ProposalState
 
-	state.Status = ProposalState_PENDING
+	state.Status = ProposalStatus_PENDING
 
 	return &state
 }
 
 // SetStatus modifies the status of the proposal
-func (ps *ProposalState) SetStatus(newStatus ProposalState_Status) error {
+func (ps *ProposalState) SetStatus(newStatus ProposalStatus) error {
 	// Check and set value
-	if newStatus != ProposalState_PENDING && newStatus != ProposalState_APPROVED && newStatus != ProposalState_REJECTED {
+	if newStatus != ProposalStatus_PENDING && newStatus != ProposalStatus_APPROVED && newStatus != ProposalStatus_REJECTED {
 		return errors.New("Invalid proposal status")
 	}
 	ps.Status = newStatus

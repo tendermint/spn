@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	"errors"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -61,49 +62,14 @@ func (k Keeper) ShowChain(
 	return &types.QueryShowChainResponse{Chain: &chain}, nil
 }
 
-// PendingProposals lists the pending proposals for a chain
-func (k Keeper) PendingProposals(
+// ListProposals lists the proposals of a chain
+func (k Keeper) ListProposals(
 	c context.Context,
-	req *types.QueryPendingProposalsRequest,
-) (*types.QueryPendingProposalsResponse, error) {
+	req *types.QueryListProposalsRequest,
+) (*types.QueryListProposalsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
-	}
-
-	// Return error if the chain doesn't exist
-	_, found := k.GetChain(ctx, req.ChainID)
-	if !found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
-	}
-
-	// Get the pending proposal IDs
-	pendingProposals := k.GetPendingProposals(ctx, req.ChainID)
-
-	// Fetch all the proposals
-	proposals := make([]*types.Proposal, len(pendingProposals.ProposalIDs))
-	for i, pending := range pendingProposals.ProposalIDs {
-		proposal, found := k.GetProposal(ctx, req.ChainID, pending)
-
-		// Every proposals in the pending pool should exist
-		if !found {
-			panic(fmt.Sprintf("The proposal %v doesn't exist", pending))
-		}
-
-		proposals[i] = &proposal
-	}
-
-	return &types.QueryPendingProposalsResponse{Proposals: proposals}, nil
-}
-
-// ApprovedProposals lists the approved proposals for a chain
-func (k Keeper) ApprovedProposals(
-	c context.Context,
-	req *types.QueryApprovedProposalsRequest,
-) (*types.QueryApprovedProposalsResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-
+	// TODO
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
@@ -130,43 +96,7 @@ func (k Keeper) ApprovedProposals(
 		proposals[i] = &proposal
 	}
 
-	return &types.QueryApprovedProposalsResponse{Proposals: proposals}, nil
-}
-
-// RejectedProposals lists the rejected proposals for a chain
-func (k Keeper) RejectedProposals(
-	c context.Context,
-	req *types.QueryRejectedProposalsRequest,
-) (*types.QueryRejectedProposalsResponse, error) {
-	ctx := sdk.UnwrapSDKContext(c)
-
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
-	}
-
-	// Return error if the chain doesn't exist
-	_, found := k.GetChain(ctx, req.ChainID)
-	if !found {
-		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
-	}
-
-	// Get the rejected proposal IDs
-	rejectedProposals := k.GetRejectedProposals(ctx, req.ChainID)
-
-	// Fetch all the proposals
-	proposals := make([]*types.Proposal, len(rejectedProposals.ProposalIDs))
-	for i, rejected := range rejectedProposals.ProposalIDs {
-		proposal, found := k.GetProposal(ctx, req.ChainID, rejected)
-
-		// Every proposals in the rejected pool should exist
-		if !found {
-			panic(fmt.Sprintf("The proposal %v doesn't exist", rejected))
-		}
-
-		proposals[i] = &proposal
-	}
-
-	return &types.QueryRejectedProposalsResponse{Proposals: proposals}, nil
+	return &types.QueryListProposalsResponse{Proposals: proposals}, nil
 }
 
 // ShowProposal describes a specific proposal
@@ -239,4 +169,100 @@ func (k Keeper) LaunchInformation(
 	}
 
 	return &launchInformation, nil
+}
+
+// PendingProposals lists the pending proposals for a chain
+func (k Keeper) PendingProposals(
+	c context.Context,
+	chainID string,
+) ([]types.Proposal, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	// Return error if the chain doesn't exist
+	_, found := k.GetChain(ctx, chainID)
+	if !found {
+		return nil, errors.New("chain not found")
+	}
+
+	// Get the pending proposal IDs
+	pendingProposals := k.GetPendingProposals(ctx, chainID)
+
+	// Fetch all the proposals
+	var proposals []types.Proposal
+	for i, pending := range pendingProposals.ProposalIDs {
+		proposal, found := k.GetProposal(ctx, chainID, pending)
+
+		// Every proposals in the pending pool should exist
+		if !found {
+			panic(fmt.Sprintf("The proposal %v doesn't exist", pending))
+		}
+
+		proposals[i] = proposal
+	}
+
+	return proposals, nil
+}
+
+// ApprovedProposals lists the approved proposals for a chain
+func (k Keeper) ApprovedProposals(
+	c context.Context,
+	chainID string,
+) ([]types.Proposal, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	// Return error if the chain doesn't exist
+	_, found := k.GetChain(ctx, chainID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
+	}
+
+	// Get the approved proposal IDs
+	approvedProposals := k.GetApprovedProposals(ctx, chainID)
+
+	// Fetch all the proposals
+	var proposals []types.Proposal
+	for i, approved := range approvedProposals.ProposalIDs {
+		proposal, found := k.GetProposal(ctx, chainID, approved)
+
+		// Every proposals in the approved pool should exist
+		if !found {
+			panic(fmt.Sprintf("The proposal %v doesn't exist", approved))
+		}
+
+		proposals[i] = proposal
+	}
+
+	return proposals, nil
+}
+
+// RejectedProposals lists the rejected proposals for a chain
+func (k Keeper) RejectedProposals(
+	c context.Context,
+	chainID string,
+) ([]types.Proposal, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	// Return error if the chain doesn't exist
+	_, found := k.GetChain(ctx, chainID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
+	}
+
+	// Get the rejected proposal IDs
+	rejectedProposals := k.GetRejectedProposals(ctx, chainID)
+
+	// Fetch all the proposals
+	var proposals []types.Proposal
+	for i, rejected := range rejectedProposals.ProposalIDs {
+		proposal, found := k.GetProposal(ctx, chainID, rejected)
+
+		// Every proposals in the rejected pool should exist
+		if !found {
+			panic(fmt.Sprintf("The proposal %v doesn't exist", rejected))
+		}
+
+		proposals[i] = proposal
+	}
+
+	return proposals, nil
 }

@@ -60,200 +60,6 @@ func TestListChains(t *testing.T) {
 	require.Error(t, err)
 }
 
-func TestPendingProposals(t *testing.T) {
-	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
-	q := spnmocks.MockGenesisQueryClient(ctx, k)
-
-	// Create a new chain
-	chainID := spnmocks.MockRandomAlphaString(5)
-	chain := spnmocks.MockChain()
-	chain.ChainID = chainID
-	k.SetChain(ctx, *chain)
-
-	// Create an add account proposal
-	proposal1 := spnmocks.MockProposalAddAccountPayload()
-	msg := types.NewMsgProposalAddAccount(
-		chainID,
-		spnmocks.MockAccAddress(),
-		proposal1,
-	)
-	h(ctx, msg)
-
-	// Create an add validator proposal
-	proposal2 := spnmocks.MockProposalAddValidatorPayload()
-	msg2 := types.NewMsgProposalAddValidator(
-		chainID,
-		spnmocks.MockAccAddress(),
-		proposal2,
-	)
-	h(ctx, msg2)
-
-	// Create other proposal to test pending proposal command
-	for i := 0; i < 8; i++ {
-		h(ctx, msg)
-	}
-
-	// Can query pending proposals
-	pendingQuery := types.QueryPendingProposalsRequest{
-		ChainID: chainID,
-	}
-	pendingRes, err := q.PendingProposals(context.Background(), &pendingQuery)
-	require.NoError(t, err)
-	require.Equal(t, 10, len(pendingRes.Proposals))
-	require.NotEqual(t, *pendingRes.Proposals[0], *pendingRes.Proposals[1]) // Simple check to ensure all elements are the same
-
-	// PendingProposals fails if the chain doesn't exist
-	pendingQuery = types.QueryPendingProposalsRequest{
-		ChainID: spnmocks.MockRandomAlphaString(6),
-	}
-	pendingRes, err = q.PendingProposals(context.Background(), &pendingQuery)
-	require.Error(t, err)
-
-	// Can query a specific proposal
-	showQuery := types.QueryShowProposalRequest{
-		ChainID:    chainID,
-		ProposalID: 0,
-	}
-	showRes, err := q.ShowProposal(context.Background(), &showQuery)
-	require.NoError(t, err)
-	retrievedPayload1, ok := showRes.Proposal.Payload.(*types.Proposal_AddAccountPayload)
-	require.True(t, ok)
-	require.True(t, proposal1.Address.Equals(retrievedPayload1.AddAccountPayload.Address))
-
-	// Test with the add validator query
-	showQuery = types.QueryShowProposalRequest{
-		ChainID:    chainID,
-		ProposalID: 1,
-	}
-	showRes, err = q.ShowProposal(context.Background(), &showQuery)
-	require.NoError(t, err)
-	retrievedPayload2, ok := showRes.Proposal.Payload.(*types.Proposal_AddValidatorPayload)
-	require.True(t, ok)
-	require.Equal(t, proposal2.Peer, retrievedPayload2.AddValidatorPayload.Peer)
-
-	// ShowProposal fails if the proposal doesn't exist
-	showQuery = types.QueryShowProposalRequest{
-		ChainID:    chainID,
-		ProposalID: 1000,
-	}
-	_, err = q.ShowProposal(context.Background(), &showQuery)
-	require.Error(t, err)
-
-	// ShowProposal fails if the chain doesn't exist
-	showQuery = types.QueryShowProposalRequest{
-		ChainID:    spnmocks.MockRandomAlphaString(7),
-		ProposalID: 0,
-	}
-	_, err = q.ShowProposal(context.Background(), &showQuery)
-	require.Error(t, err)
-}
-
-func TestApprovedProposals(t *testing.T) {
-	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
-	q := spnmocks.MockGenesisQueryClient(ctx, k)
-
-	// Create a new chain
-	coordinator := spnmocks.MockAccAddress()
-	chainID := spnmocks.MockRandomAlphaString(5)
-	chain := spnmocks.MockChain()
-	chain.ChainID = chainID
-	chain.Creator, _ = k.IdentityKeeper.GetIdentifier(ctx, coordinator)
-	k.SetChain(ctx, *chain)
-
-	// Create and send add account proposals
-	for i := 0; i < 10; i++ {
-		msg := types.NewMsgProposalAddAccount(
-			chainID,
-			spnmocks.MockAccAddress(),
-			spnmocks.MockProposalAddAccountPayload(),
-		)
-		h(ctx, msg)
-	}
-
-	// Approve half the proposals
-	for i := 0; i < 5; i++ {
-		msgApprove := types.NewMsgApprove(
-			chainID,
-			int32(i),
-			coordinator,
-		)
-		h(ctx, msgApprove)
-	}
-
-	// Can query approved proposals
-	approvedQuery := types.QueryApprovedProposalsRequest{
-		ChainID: chainID,
-	}
-	approvedRes, err := q.ApprovedProposals(context.Background(), &approvedQuery)
-	require.NoError(t, err)
-	require.Equal(t, 5, len(approvedRes.Proposals))
-	require.NotEqual(t, *approvedRes.Proposals[0], *approvedRes.Proposals[1]) // Simple check to ensure all elements are the same
-	approvedProposal, _ := k.GetProposal(ctx, chainID, 0)
-	require.Equal(t, *approvedRes.Proposals[0], approvedProposal)
-
-	// PendingProposals fails if the chain doesn't exist
-	approvedQuery = types.QueryApprovedProposalsRequest{
-		ChainID: spnmocks.MockRandomAlphaString(6),
-	}
-	approvedRes, err = q.ApprovedProposals(context.Background(), &approvedQuery)
-	require.Error(t, err)
-}
-
-func TestRejectedProposals(t *testing.T) {
-	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
-	q := spnmocks.MockGenesisQueryClient(ctx, k)
-
-	// Create a new chain
-	coordinator := spnmocks.MockAccAddress()
-	chainID := spnmocks.MockRandomAlphaString(5)
-	chain := spnmocks.MockChain()
-	chain.ChainID = chainID
-	chain.Creator, _ = k.IdentityKeeper.GetIdentifier(ctx, coordinator)
-	chain.Creator, _ = k.IdentityKeeper.GetIdentifier(ctx, coordinator)
-	k.SetChain(ctx, *chain)
-
-	// Create and send add account proposals
-	for i := 0; i < 10; i++ {
-		msg := types.NewMsgProposalAddAccount(
-			chainID,
-			spnmocks.MockAccAddress(),
-			spnmocks.MockProposalAddAccountPayload(),
-		)
-		h(ctx, msg)
-	}
-
-	// Reject half the proposals
-	for i := 0; i < 5; i++ {
-		msgReject := types.NewMsgReject(
-			chainID,
-			int32(i),
-			coordinator,
-		)
-		h(ctx, msgReject)
-	}
-
-	// Can query approved proposals
-	rejectQuery := types.QueryRejectedProposalsRequest{
-		ChainID: chainID,
-	}
-	rejectedRes, err := q.RejectedProposals(context.Background(), &rejectQuery)
-	require.NoError(t, err)
-	require.Equal(t, 5, len(rejectedRes.Proposals))
-	require.NotEqual(t, *rejectedRes.Proposals[0], *rejectedRes.Proposals[1]) // Simple check to ensure all elements are the same
-	rejectedProposal, _ := k.GetProposal(ctx, chainID, 0)
-	require.Equal(t, *rejectedRes.Proposals[0], rejectedProposal)
-
-	// PendingProposals fails if the chain doesn't exist
-	rejectQuery = types.QueryRejectedProposalsRequest{
-		ChainID: spnmocks.MockRandomAlphaString(6),
-	}
-	_, err = q.RejectedProposals(context.Background(), &rejectQuery)
-	require.Error(t, err)
-}
-
 func TestLaunchInformation(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
@@ -333,4 +139,184 @@ func TestLaunchInformation(t *testing.T) {
 	require.Equal(t, 20, len(launchInformation.Accounts))
 	require.Equal(t, 10, len(launchInformation.GenTxs))
 	require.Equal(t, 10, len(launchInformation.Peers))
+}
+
+func TestPendingProposals(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+	h := genesis.NewHandler(*k)
+	q := spnmocks.MockGenesisQueryClient(ctx, k)
+
+	// Create a new chain
+	chainID := spnmocks.MockRandomAlphaString(5)
+	chain := spnmocks.MockChain()
+	chain.ChainID = chainID
+	k.SetChain(ctx, *chain)
+
+	// Create an add account proposal
+	proposal1 := spnmocks.MockProposalAddAccountPayload()
+	msg := types.NewMsgProposalAddAccount(
+		chainID,
+		spnmocks.MockAccAddress(),
+		proposal1,
+	)
+	_, err := h(ctx, msg)
+	require.NoError(t, err)
+
+	// Create an add validator proposal
+	proposal2 := spnmocks.MockProposalAddValidatorPayload()
+	msg2 := types.NewMsgProposalAddValidator(
+		chainID,
+		spnmocks.MockAccAddress(),
+		proposal2,
+	)
+	_, err = h(ctx, msg2)
+	require.NoError(t, err)
+
+	// Create other proposal to test pending proposal command
+	for i := 0; i < 8; i++ {
+		_, err := h(ctx, msg)
+		require.NoError(t, err)
+	}
+
+	proposals, err := k.PendingProposals(context.Background(), chainID)
+	require.NoError(t, err)
+	require.Equal(t, 10, len(proposals))
+	require.NotEqual(t, proposals[0].Payload, proposals[1].Payload)
+
+	// PendingProposals fails if the chain doesn't exist
+	_, err = k.PendingProposals(context.Background(), spnmocks.MockRandomAlphaString(6))
+	require.Error(t, err)
+
+	// Can query a specific proposal
+	showQuery := types.QueryShowProposalRequest{
+		ChainID:    chainID,
+		ProposalID: 0,
+	}
+	showRes, err := q.ShowProposal(context.Background(), &showQuery)
+	require.NoError(t, err)
+	retrievedPayload1, ok := showRes.Proposal.Payload.(*types.Proposal_AddAccountPayload)
+	require.True(t, ok)
+	require.True(t, proposal1.Address.Equals(retrievedPayload1.AddAccountPayload.Address))
+
+	// Test with the add validator query
+	showQuery = types.QueryShowProposalRequest{
+		ChainID:    chainID,
+		ProposalID: 1,
+	}
+	showRes, err = q.ShowProposal(context.Background(), &showQuery)
+	require.NoError(t, err)
+	retrievedPayload2, ok := showRes.Proposal.Payload.(*types.Proposal_AddValidatorPayload)
+	require.True(t, ok)
+	require.Equal(t, proposal2.Peer, retrievedPayload2.AddValidatorPayload.Peer)
+
+	// ShowProposal fails if the proposal doesn't exist
+	showQuery = types.QueryShowProposalRequest{
+		ChainID:    chainID,
+		ProposalID: 1000,
+	}
+	_, err = q.ShowProposal(context.Background(), &showQuery)
+	require.Error(t, err)
+
+	// ShowProposal fails if the chain doesn't exist
+	showQuery = types.QueryShowProposalRequest{
+		ChainID:    spnmocks.MockRandomAlphaString(7),
+		ProposalID: 0,
+	}
+	_, err = q.ShowProposal(context.Background(), &showQuery)
+	require.Error(t, err)
+}
+
+func TestApprovedProposals(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+	h := genesis.NewHandler(*k)
+
+	// Create a new chain
+	coordinator := spnmocks.MockAccAddress()
+	chainID := spnmocks.MockRandomAlphaString(5)
+	chain := spnmocks.MockChain()
+	chain.ChainID = chainID
+	chain.Creator, _ = k.IdentityKeeper.GetIdentifier(ctx, coordinator)
+	k.SetChain(ctx, *chain)
+
+	// Create and send add account proposals
+	for i := 0; i < 10; i++ {
+		msg := types.NewMsgProposalAddAccount(
+			chainID,
+			spnmocks.MockAccAddress(),
+			spnmocks.MockProposalAddAccountPayload(),
+		)
+		_, err := h(ctx, msg)
+		require.NoError(t, err)
+	}
+
+	// Approve half the proposals
+	for i := 0; i < 5; i++ {
+		msgApprove := types.NewMsgApprove(
+			chainID,
+			int32(i),
+			coordinator,
+		)
+		_, err := h(ctx, msgApprove)
+		require.NoError(t, err)
+	}
+
+	// Can query approved proposals
+	proposals, err := k.ApprovedProposals(context.Background(), chainID)
+	require.NoError(t, err)
+	require.Equal(t, 5, len(proposals))
+	require.NotEqual(t, proposals[0], proposals[1])
+	approvedProposal, _ := k.GetProposal(ctx, chainID, 0)
+	require.Equal(t, approvedProposal, proposals[0])
+
+	// ApprovedProposals fails if the chain doesn't exist
+	_, err = k.ApprovedProposals(context.Background(),  spnmocks.MockRandomAlphaString(6))
+	require.Error(t, err)
+}
+
+func TestRejectedProposals(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+	h := genesis.NewHandler(*k)
+
+	// Create a new chain
+	coordinator := spnmocks.MockAccAddress()
+	chainID := spnmocks.MockRandomAlphaString(5)
+	chain := spnmocks.MockChain()
+	chain.ChainID = chainID
+	chain.Creator, _ = k.IdentityKeeper.GetIdentifier(ctx, coordinator)
+	chain.Creator, _ = k.IdentityKeeper.GetIdentifier(ctx, coordinator)
+	k.SetChain(ctx, *chain)
+
+	// Create and send add account proposals
+	for i := 0; i < 10; i++ {
+		msg := types.NewMsgProposalAddAccount(
+			chainID,
+			spnmocks.MockAccAddress(),
+			spnmocks.MockProposalAddAccountPayload(),
+		)
+		_, err := h(ctx, msg)
+		require.NoError(t, err)
+	}
+
+	// Reject half the proposals
+	for i := 0; i < 5; i++ {
+		msgReject := types.NewMsgReject(
+			chainID,
+			int32(i),
+			coordinator,
+		)
+		_, err := h(ctx, msgReject)
+		require.NoError(t, err)
+	}
+
+	// Can query approved proposals
+	proposals, err := k.RejectedProposals(context.Background(), chainID)
+	require.NoError(t, err)
+	require.Equal(t, 5, len(proposals))
+	require.NotEqual(t, proposals[0], proposals[1])
+	rejectedProposal, _ := k.GetProposal(ctx, chainID, 0)
+	require.Equal(t, rejectedProposal, proposals[0])
+
+	// PendingProposals fails if the chain doesn't exist
+	_, err = k.RejectedProposals(context.Background(), spnmocks.MockRandomAlphaString(6))
+	require.Error(t, err)
 }
