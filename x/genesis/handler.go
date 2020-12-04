@@ -105,7 +105,10 @@ func handleMsgReject(ctx sdk.Context, k keeper.Keeper, msg *types.MsgReject) (*s
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalProposal(k.GetCodec(), proposal),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (*sdk.Result, error) {
@@ -147,7 +150,10 @@ func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalProposal(k.GetCodec(), proposal),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.MsgProposalAddAccount) (*sdk.Result, error) {

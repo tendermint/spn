@@ -106,8 +106,10 @@ func TestHandleMsgReject(t *testing.T) {
 		0,
 		proposalCreator,
 	)
-	_, err = h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	rejectedProposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+	require.Equal(t, int32(0), rejectedProposal.ProposalInformation.ProposalID)
 
 	// The proposal is rejected
 	proposal, _ := k.GetProposal(ctx, chainID, 0)
@@ -220,8 +222,10 @@ func TestHandleMsgApprove(t *testing.T) {
 		0,
 		coordinator,
 	)
-	_, err = h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	approvedProposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+	require.Equal(t, int32(0), approvedProposal.ProposalInformation.ProposalID)
 
 	// The proposal is approved
 	proposal, _ := k.GetProposal(ctx, chainID, 0)
