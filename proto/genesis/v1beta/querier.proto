@@ -10,6 +10,7 @@ import "genesis/v1beta/types.proto";
 service Query {
     rpc ListChains(QueryListChainsRequest) returns (QueryListChainsResponse);
     rpc ShowChain(QueryShowChainRequest) returns (QueryShowChainResponse);
+    rpc ProposalCount(QueryProposalCountRequest) returns (QueryProposalCountResponse);
     rpc PendingProposals(QueryPendingProposalsRequest) returns (QueryPendingProposalsResponse);
     rpc ApprovedProposals(QueryApprovedProposalsRequest) returns (QueryApprovedProposalsResponse);
     rpc RejectedProposals(QueryRejectedProposalsRequest) returns (QueryRejectedProposalsResponse);
@@ -32,6 +33,14 @@ message QueryShowChainRequest {
 
 message QueryShowChainResponse {
 	  Chain chain = 1;
+}
+
+message QueryProposalCountRequest {
+  string chainID = 1;
+}
+
+message QueryProposalCountResponse {
+  int32 count = 1;
 }
 
 message QueryPendingProposalsRequest {
