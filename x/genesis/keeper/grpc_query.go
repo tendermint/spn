@@ -62,6 +62,27 @@ func (k Keeper) ShowChain(
 	return &types.QueryShowChainResponse{Chain: &chain}, nil
 }
 
+// ProposalCount returns the count of proposal for a chain
+func (k Keeper) ProposalCount(
+	c context.Context,
+	req *types.QueryProposalCountRequest,
+) (*types.QueryProposalCountResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	_, found := k.GetChain(ctx, req.ChainID)
+	if !found {
+		return nil, sdkerrors.Wrap(types.ErrInvalidChain, "chain not found")
+	}
+
+	count := k.GetProposalCount(ctx, req.ChainID)
+
+	return &types.QueryProposalCountResponse{Count: count}, nil
+}
+
 // ListProposals lists the proposals of a chain
 func (k Keeper) ListProposals(
 	c context.Context,

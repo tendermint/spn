@@ -24,6 +24,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(
 		CmdListChains(),
 		CmdShowChain(),
+		CmdProposal(),
 		CmdShowProposal(),
 		CmdListProposals(),
 		CmdLaunchInformation(),
@@ -93,6 +94,39 @@ func CmdShowChain() *cobra.Command {
 			}
 
 			res, err := queryClient.ShowChain(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdProposal returns the command to show the number of proposals
+func CmdProposal() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "proposal-count [chain-id]",
+		Short: "number of proposals for the chain",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryProposalCountRequest{
+				ChainID: args[0],
+			}
+
+			res, err := queryClient.ProposalCount(context.Background(), params)
 			if err != nil {
 				return err
 			}
