@@ -118,14 +118,15 @@ func (k Keeper) ListProposals(
 
 	// Filter depending on the requested type
 	var filteredProposals []*types.Proposal
-	for _, proposal := range proposals {
+	for i, proposal := range proposals {
 		foundType, err := proposal.GetType()
 		if err != nil {
 			panic(fmt.Sprintf("The proposal %v has a unknown type", proposal))
 		}
 
 		if req.Type == types.ProposalType_ANY_TYPE || req.Type == foundType {
-			filteredProposals = append(filteredProposals, &proposal)
+			p := proposals[i]
+			filteredProposals = append(filteredProposals, &p) // Using &proposal provokes a bug
 		}
 	}
 

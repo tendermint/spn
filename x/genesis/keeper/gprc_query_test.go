@@ -60,13 +60,283 @@ func TestListChains(t *testing.T) {
 	require.Error(t, err)
 }
 
-//func TestListProposals(t *testing.T) {
-//	ctx, k := spnmocks.MockGenesisContext()
-//	h := genesis.NewHandler(*k)
-//	q := spnmocks.MockGenesisQueryClient(ctx, k)
-//
-//
-//}
+func TestListProposals(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+	h := genesis.NewHandler(*k)
+	q := spnmocks.MockGenesisQueryClient(ctx, k)
+
+	coordinator := spnmocks.MockAccAddress()
+	coordinatorIdentity, _ := k.IdentityKeeper.GetIdentifier(ctx, coordinator)
+
+	// Create a new chain
+	chainID := spnmocks.MockRandomAlphaString(5)
+	chain := spnmocks.MockChain()
+	chain.Creator = coordinatorIdentity
+	chain.ChainID = chainID
+	k.SetChain(ctx, *chain)
+
+	// Array of pending add account
+	var pendingAddAccount []*types.Proposal
+	for i:=0; i<5; i++ {
+		payloadAddAccount := spnmocks.MockProposalAddAccountPayload()
+		msgAddAccount := types.NewMsgProposalAddAccount(
+			chainID,
+			spnmocks.MockAccAddress(),
+			payloadAddAccount,
+		)
+		res, err := h(ctx, msgAddAccount)
+		require.NoError(t, err)
+		proposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+		pendingAddAccount = append(pendingAddAccount, &proposal)
+	}
+
+	// Array of pending add validator
+	var pendingAddValidator []*types.Proposal
+	for i:=0; i<5; i++ {
+		payloadAddValidator := spnmocks.MockProposalAddValidatorPayload()
+		msgAddValidator := types.NewMsgProposalAddValidator(
+			chainID,
+			spnmocks.MockAccAddress(),
+			payloadAddValidator,
+		)
+		res, err := h(ctx, msgAddValidator)
+		require.NoError(t, err)
+		proposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+		pendingAddValidator = append(pendingAddValidator, &proposal)
+	}
+
+	// Array of rejected add account
+	var rejectedAddAccount []*types.Proposal
+	for i:=0; i<5; i++ {
+		payloadAddAccount := spnmocks.MockProposalAddAccountPayload()
+		msgAddAccount := types.NewMsgProposalAddAccount(
+			chainID,
+			spnmocks.MockAccAddress(),
+			payloadAddAccount,
+		)
+		res, err := h(ctx, msgAddAccount)
+		require.NoError(t, err)
+		proposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+		msgReject := types.NewMsgReject(
+			chainID,
+			proposal.ProposalInformation.ProposalID,
+			coordinator,
+		)
+		res, err = h(ctx, msgReject)
+		require.NoError(t, err)
+		proposal = types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+		rejectedAddAccount = append(rejectedAddAccount, &proposal)
+	}
+
+	// Array of rejected add validator
+	var rejectedAddValidator []*types.Proposal
+	for i:=0; i<5; i++ {
+		payloadAddValidator := spnmocks.MockProposalAddValidatorPayload()
+		msgAddValidator := types.NewMsgProposalAddValidator(
+			chainID,
+			spnmocks.MockAccAddress(),
+			payloadAddValidator,
+		)
+		res, err := h(ctx, msgAddValidator)
+		require.NoError(t, err)
+		proposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+		msgReject := types.NewMsgReject(
+			chainID,
+			proposal.ProposalInformation.ProposalID,
+			coordinator,
+		)
+		res, err = h(ctx, msgReject)
+		require.NoError(t, err)
+		proposal = types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+		rejectedAddValidator = append(rejectedAddValidator, &proposal)
+	}
+
+	// Array of approved add account
+	var approvedAddAccount []*types.Proposal
+	var approvedAddress []sdk.AccAddress
+	for i:=0; i<5; i++ {
+		accountAddress := spnmocks.MockAccAddress()
+		approvedAddress = append(approvedAddress, accountAddress)
+		payloadAddAccount := spnmocks.MockProposalAddAccountPayload()
+		payloadAddAccount.Address = accountAddress
+		msgAddAccount := types.NewMsgProposalAddAccount(
+			chainID,
+			spnmocks.MockAccAddress(),
+			payloadAddAccount,
+		)
+		res, err := h(ctx, msgAddAccount)
+		require.NoError(t, err)
+		proposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+		msgApprove := types.NewMsgApprove(
+			chainID,
+			proposal.ProposalInformation.ProposalID,
+			coordinator,
+		)
+		res, err = h(ctx, msgApprove)
+		require.NoError(t, err)
+		proposal = types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+		approvedAddAccount = append(approvedAddAccount, &proposal)
+	}
+
+	// Array of approved add validator
+	var approvedAddValidator []*types.Proposal
+	for i:=0; i<5; i++ {
+		payloadAddValidator := spnmocks.MockProposalAddValidatorPayload()
+		payloadAddValidator.ValidatorAddress = sdk.ValAddress(approvedAddress[i]) // Need an existing account to be approved
+		msgAddValidator := types.NewMsgProposalAddValidator(
+			chainID,
+			spnmocks.MockAccAddress(),
+			payloadAddValidator,
+		)
+		res, err := h(ctx, msgAddValidator)
+		require.NoError(t, err)
+		proposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+		msgApprove := types.NewMsgApprove(
+			chainID,
+			proposal.ProposalInformation.ProposalID,
+			coordinator,
+		)
+		res, err = h(ctx, msgApprove)
+		require.NoError(t, err)
+		proposal = types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+		approvedAddValidator = append(approvedAddValidator, &proposal)
+	}
+
+	// Can fetch all proposal
+	var req types.QueryListProposalsRequest
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ANY_TYPE
+	req.Status = types.ProposalStatus_ANY_STATUS
+	fetched, err := q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.Subset(t, fetched.Proposals, pendingAddAccount)
+	require.Subset(t, fetched.Proposals, pendingAddValidator)
+	require.Subset(t, fetched.Proposals, rejectedAddAccount)
+	require.Subset(t, fetched.Proposals, rejectedAddValidator)
+	require.Subset(t, fetched.Proposals, approvedAddAccount)
+	require.Subset(t, fetched.Proposals, approvedAddValidator)
+
+	// Can fetch pending proposals
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ANY_TYPE
+	req.Status = types.ProposalStatus_PENDING
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.Subset(t, fetched.Proposals, pendingAddAccount)
+	require.Subset(t, fetched.Proposals, pendingAddValidator)
+	require.NotSubset(t, fetched.Proposals, rejectedAddAccount)
+	require.NotSubset(t, fetched.Proposals, rejectedAddValidator)
+	require.NotSubset(t, fetched.Proposals, approvedAddAccount)
+	require.NotSubset(t, fetched.Proposals, approvedAddValidator)
+
+	// Can fetch rejected proposals
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ANY_TYPE
+	req.Status = types.ProposalStatus_REJECTED
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.NotSubset(t, fetched.Proposals, pendingAddAccount)
+	require.NotSubset(t, fetched.Proposals, pendingAddValidator)
+	require.Subset(t, fetched.Proposals, rejectedAddAccount)
+	require.Subset(t, fetched.Proposals, rejectedAddValidator)
+	require.NotSubset(t, fetched.Proposals, approvedAddAccount)
+	require.NotSubset(t, fetched.Proposals, approvedAddValidator)
+
+	// Can fetch approved proposals
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ANY_TYPE
+	req.Status = types.ProposalStatus_APPROVED
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.NotSubset(t, fetched.Proposals, pendingAddAccount)
+	require.NotSubset(t, fetched.Proposals, pendingAddValidator)
+	require.NotSubset(t, fetched.Proposals, rejectedAddAccount)
+	require.NotSubset(t, fetched.Proposals, rejectedAddValidator)
+	require.Subset(t, fetched.Proposals, approvedAddAccount)
+	require.Subset(t, fetched.Proposals, approvedAddValidator)
+
+	// Can fetch add account proposals
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ADD_ACCOUNT
+	req.Status = types.ProposalStatus_ANY_STATUS
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.Subset(t, fetched.Proposals, pendingAddAccount)
+	require.NotSubset(t, fetched.Proposals, pendingAddValidator)
+	require.Subset(t, fetched.Proposals, rejectedAddAccount)
+	require.NotSubset(t, fetched.Proposals, rejectedAddValidator)
+	require.Subset(t, fetched.Proposals, approvedAddAccount)
+	require.NotSubset(t, fetched.Proposals, approvedAddValidator)
+
+	// Can fetch add validator proposals
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ADD_VALIDATOR
+	req.Status = types.ProposalStatus_ANY_STATUS
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.NotSubset(t, fetched.Proposals, pendingAddAccount)
+	require.Subset(t, fetched.Proposals, pendingAddValidator)
+	require.NotSubset(t, fetched.Proposals, rejectedAddAccount)
+	require.Subset(t, fetched.Proposals, rejectedAddValidator)
+	require.NotSubset(t, fetched.Proposals, approvedAddAccount)
+	require.Subset(t, fetched.Proposals, approvedAddValidator)
+
+	// Can fetch pending add account
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ADD_ACCOUNT
+	req.Status = types.ProposalStatus_PENDING
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, pendingAddAccount, fetched.Proposals)
+
+	// Can fetch rejected add account
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ADD_ACCOUNT
+	req.Status = types.ProposalStatus_REJECTED
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, rejectedAddAccount, fetched.Proposals)
+
+	// Can fetch approved add account
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ADD_ACCOUNT
+	req.Status = types.ProposalStatus_APPROVED
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, approvedAddAccount, fetched.Proposals)
+
+	// Can fetch pending add validator
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ADD_VALIDATOR
+	req.Status = types.ProposalStatus_PENDING
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, pendingAddValidator, fetched.Proposals)
+
+	// Can fetch rejected add validator
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ADD_VALIDATOR
+	req.Status = types.ProposalStatus_REJECTED
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, rejectedAddValidator, fetched.Proposals)
+
+	// Can fetch approved add validator
+	req.ChainID = chainID
+	req.Type = types.ProposalType_ADD_VALIDATOR
+	req.Status = types.ProposalStatus_APPROVED
+	fetched, err = q.ListProposals(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, approvedAddValidator, fetched.Proposals)
+}
 
 func TestLaunchInformation(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
