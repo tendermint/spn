@@ -60,13 +60,13 @@ func TestListChains(t *testing.T) {
 	require.Error(t, err)
 }
 
-func TestListProposals(t *testing.T) {
-	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
-	q := spnmocks.MockGenesisQueryClient(ctx, k)
-
-
-}
+//func TestListProposals(t *testing.T) {
+//	ctx, k := spnmocks.MockGenesisContext()
+//	h := genesis.NewHandler(*k)
+//	q := spnmocks.MockGenesisQueryClient(ctx, k)
+//
+//
+//}
 
 func TestLaunchInformation(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()

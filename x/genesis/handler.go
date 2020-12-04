@@ -60,7 +60,10 @@ func handleMsgChainCreate(ctx sdk.Context, k keeper.Keeper, msg *types.MsgChainC
 	// Set the new chain in the store
 	k.SetChain(ctx, *chain)
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalChain(k.GetCodec(), *chain),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 func handleMsgReject(ctx sdk.Context, k keeper.Keeper, msg *types.MsgReject) (*sdk.Result, error) {
@@ -185,7 +188,10 @@ func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.Ms
 	count := proposalID + 1
 	k.SetProposalCount(ctx, msg.ChainID, count)
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalProposal(k.GetCodec(), *proposal),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.MsgProposalAddValidator) (*sdk.Result, error) {
@@ -226,7 +232,10 @@ func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.
 	count := proposalID + 1
 	k.SetProposalCount(ctx, msg.ChainID, count)
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalProposal(k.GetCodec(), *proposal),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 // appendNewProposal appends the proposal in the approved pool if the creator is the cooredinator of the chain

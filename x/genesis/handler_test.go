@@ -25,8 +25,10 @@ func TestHandleMsgChainCreate(t *testing.T) {
 		sourceURL,
 		sourceHash,
 	)
-	_, err := h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	chain := types.UnmarshalChain(k.GetCodec(), res.Data)
+	require.Equal(t, chainID, chain.ChainID)
 	retrieved, found := k.GetChain(ctx, chainID)
 	require.True(t, found)
 	creatorIdentity, _ := k.IdentityKeeper.GetIdentifier(ctx, creator)
@@ -331,12 +333,14 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 		creator,
 		spnmocks.MockProposalAddAccountPayload(),
 	)
-	_, err = h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	createdProposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
 
 	// Can retrieve the proposal
 	proposal, found := k.GetProposal(ctx, chainID, 0)
 	require.True(t, found)
+	require.Equal(t, createdProposal, proposal)
 	require.Equal(t, types.ProposalStatus_PENDING, proposal.ProposalState.Status)
 	require.Equal(t, creatorIdentity, proposal.ProposalInformation.Creator)
 	_, ok := proposal.Payload.(*types.Proposal_AddAccountPayload)
@@ -442,12 +446,14 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 		creator,
 		spnmocks.MockProposalAddValidatorPayload(),
 	)
-	_, err = h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	createdProposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
 
 	// Can retrieve the proposal
 	proposal, found := k.GetProposal(ctx, chainID, 5)
 	require.True(t, found)
+	require.Equal(t, createdProposal, proposal)
 	require.Equal(t, types.ProposalStatus_PENDING, proposal.ProposalState.Status)
 	require.Equal(t, creatorIdentity, proposal.ProposalInformation.Creator)
 	_, ok := proposal.Payload.(*types.Proposal_AddValidatorPayload)
