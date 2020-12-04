@@ -25,9 +25,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdListChains(),
 		CmdShowChain(),
 		CmdShowProposal(),
-		CmdPendingProposals(),
-		CmdRejectedProposals(),
-		CmdApprovedProposals(),
+		CmdListProposals(),
 		CmdLaunchInformation(),
 	)
 
@@ -147,11 +145,11 @@ func CmdShowProposal() *cobra.Command {
 	return cmd
 }
 
-// CmdPendingProposals returns the command to list pending proposals for a chain genesis
-func CmdPendingProposals() *cobra.Command {
+// CmdListProposals returns the command to list proposals for a chain genesis
+func CmdListProposals() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "pending-proposals [chain-id]",
-		Short: "list the pending proposals for a chain genesis",
+		Use:   "list-proposals [chain-id]",
+		Short: "list the  proposals for a chain genesis",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -162,80 +160,12 @@ func CmdPendingProposals() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryPendingProposalsRequest{
+			params := &types.QueryListProposalsRequest{
 				ChainID: args[0],
 			}
 
 			// Perform the request
-			res, err := queryClient.PendingProposals(context.Background(), params)
-			if err != nil {
-				return err
-			}
-
-			return clientCtx.PrintOutput(res)
-		},
-	}
-
-	flags.AddQueryFlagsToCmd(cmd)
-
-	return cmd
-}
-
-// CmdApprovedProposals returns the command to list approved proposals for a chain genesis
-func CmdApprovedProposals() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "approved-proposals [chain-id]",
-		Short: "list the approved proposals for a chain genesis",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			queryClient := types.NewQueryClient(clientCtx)
-
-			params := &types.QueryApprovedProposalsRequest{
-				ChainID: args[0],
-			}
-
-			// Perform the request
-			res, err := queryClient.ApprovedProposals(context.Background(), params)
-			if err != nil {
-				return err
-			}
-
-			return clientCtx.PrintOutput(res)
-		},
-	}
-
-	flags.AddQueryFlagsToCmd(cmd)
-
-	return cmd
-}
-
-// CmdRejectedProposals returns the command to list rejected proposals for a chain genesis
-func CmdRejectedProposals() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "rejected-proposals [chain-id]",
-		Short: "list the rejected proposals for a chain genesis",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			queryClient := types.NewQueryClient(clientCtx)
-
-			params := &types.QueryRejectedProposalsRequest{
-				ChainID: args[0],
-			}
-
-			// Perform the request
-			res, err := queryClient.RejectedProposals(context.Background(), params)
+			res, err := queryClient.ListProposals(context.Background(), params)
 			if err != nil {
 				return err
 			}
