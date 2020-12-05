@@ -28,20 +28,32 @@ func NewProposalInformation(
 func NewProposalState() *ProposalState {
 	var state ProposalState
 
-	state.Status = ProposalState_PENDING
+	state.Status = ProposalStatus_PENDING
 
 	return &state
 }
 
 // SetStatus modifies the status of the proposal
-func (ps *ProposalState) SetStatus(newStatus ProposalState_Status) error {
+func (ps *ProposalState) SetStatus(newStatus ProposalStatus) error {
 	// Check and set value
-	if newStatus != ProposalState_PENDING && newStatus != ProposalState_APPROVED && newStatus != ProposalState_REJECTED {
-		return errors.New("Invalid proposal status")
+	if newStatus != ProposalStatus_PENDING && newStatus != ProposalStatus_APPROVED && newStatus != ProposalStatus_REJECTED {
+		return errors.New("invalid proposal status")
 	}
 	ps.Status = newStatus
 
 	return nil
+}
+
+// GetType returns the type of a proposal
+func (p Proposal) GetType() (ProposalType, error) {
+	switch p.Payload.(type) {
+	case *Proposal_AddAccountPayload:
+		return ProposalType_ADD_ACCOUNT, nil
+	case *Proposal_AddValidatorPayload:
+		return ProposalType_ADD_VALIDATOR, nil
+	default:
+		return ProposalType_ANY_TYPE, errors.New("unknown proposal type")
+	}
 }
 
 // MarshalProposal encodes proposals for the store

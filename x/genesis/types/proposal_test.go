@@ -14,12 +14,44 @@ import (
 func TestNewProposalState(t *testing.T) {
 	// Can create a proposal state
 	ps := types.NewProposalState()
-	require.Equal(t, types.ProposalState_PENDING, ps.Status)
+	require.Equal(t, types.ProposalStatus_PENDING, ps.Status)
 
 	// Can change the state of the proposal
-	err := ps.SetStatus(types.ProposalState_APPROVED)
+	err := ps.SetStatus(types.ProposalStatus_APPROVED)
 	require.NoError(t, err)
-	require.Equal(t, types.ProposalState_APPROVED, ps.Status)
+	require.Equal(t, types.ProposalStatus_APPROVED, ps.Status)
+}
+
+func TestGetType(t *testing.T) {
+	// Can get the type of an add account proposal
+	addAccountPayload := spnmocks.MockProposalAddAccountPayload()
+	proposal, _ := types.NewProposalAddAccount(
+		spnmocks.MockProposalInformation(),
+		addAccountPayload,
+	)
+	pType, err := proposal.GetType()
+	require.NoError(t, err)
+	require.Equal(t, types.ProposalType_ADD_ACCOUNT, pType)
+
+	// Can get the type of an add validator proposal
+	addValidatorPayload := spnmocks.MockProposalAddValidatorPayload()
+	proposal, _ = types.NewProposalAddValidator(
+		spnmocks.MockProposalInformation(),
+		addValidatorPayload,
+	)
+	pType, err = proposal.GetType()
+	require.NoError(t, err)
+	require.Equal(t, types.ProposalType_ADD_VALIDATOR, pType)
+
+	// Error if unrecognized type
+	addValidatorPayload = spnmocks.MockProposalAddValidatorPayload()
+	proposal, _ = types.NewProposalAddValidator(
+		spnmocks.MockProposalInformation(),
+		addValidatorPayload,
+	)
+	proposal.Payload = nil
+	_, err = proposal.GetType()
+	require.Error(t, err)
 }
 
 func TestNewProposalChange(t *testing.T) {
