@@ -46,7 +46,7 @@ starport network proposal approve 1,4,5,6
 
 Replace comma-separated values with a list of `proposalID` being accepted. Replace `approve` with `reject` to reject proposals instead.
 
-### Staring a blockchain node
+### Starting a blockchain node
 
 Once validator proposals have been accepted, run the following command to start a blockchain node:
 
