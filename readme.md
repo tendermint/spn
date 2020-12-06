@@ -26,7 +26,7 @@ Run the following command from a server to propose yourself as a validator:
 starport network chain join [chainID]
 ```
 
-Follow the prompts to provide information about the validator. Starport will download the source code of the blockchain node, build, initialize and create and send to proposals to SPN: to add an account and to add a validator with self-delegation. By running a `join` command you act as a "validator".
+Follow the prompts to provide information about the validator. Starport will download the source code of the blockchain node, build, initialize and create and send two proposals to SPN: to add an account and to add a validator with self-delegation. By running a `join` command you act as a "validator".
 
 ### Listing pending proposals
 
