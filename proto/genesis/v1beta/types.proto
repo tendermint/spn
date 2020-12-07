@@ -16,6 +16,12 @@ message Chain {
   bool final = 7;
 }
 
+message LaunchInformation {
+  repeated ProposalAddAccountPayload accounts = 2;
+  repeated bytes genTxs = 3;
+  repeated string peers = 4;
+}
+
 message Proposal {
     ProposalInformation proposalInformation = 1;
     ProposalState proposalState = 2;

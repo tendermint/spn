@@ -82,19 +82,15 @@ message QueryLaunchInformationRequest {
 }
 
 message QueryLaunchInformationResponse {
-    repeated ProposalAddAccountPayload accounts = 2;
-    repeated bytes genTxs = 3;
-    repeated string peers = 4;
+    LaunchInformation launchInformation = 1;
 }
 
 message QuerySimulatedLaunchInformationRequest {
-  string chainID = 1;
-  int32 proposalID = 2;
+    string chainID = 1;
+    int32 proposalID = 2;
 }
 
 message QuerySimulatedLaunchInformationResponse {
-  repeated ProposalAddAccountPayload accounts = 2;
-  repeated bytes genTxs = 3;
-  repeated string peers = 4;
+    LaunchInformation launchInformation = 1;
 }
 
