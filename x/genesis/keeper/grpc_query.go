@@ -236,7 +236,7 @@ func (k Keeper) LaunchInformation(
 	approvedProposals := k.GetApprovedProposals(ctx, req.ChainID)
 
 	// Construct the response
-	var launchInformation types.QueryLaunchInformationResponse
+	var res types.QueryLaunchInformationResponse
 
 	// Fill the launch information from the approved proposal
 	for _, approved := range approvedProposals.ProposalIDs {
@@ -250,14 +250,14 @@ func (k Keeper) LaunchInformation(
 		// Dispatch the proposal
 		switch payload := proposal.Payload.(type) {
 		case *types.Proposal_AddAccountPayload:
-			launchInformation.Accounts = append(launchInformation.Accounts, payload.AddAccountPayload)
+			res.LaunchInformation.Accounts = append(res.LaunchInformation.Accounts, payload.AddAccountPayload)
 		case *types.Proposal_AddValidatorPayload:
-			launchInformation.GenTxs = append(launchInformation.GenTxs, payload.AddValidatorPayload.GenTx)
-			launchInformation.Peers = append(launchInformation.Peers, payload.AddValidatorPayload.Peer)
+			res.LaunchInformation.GenTxs = append(res.LaunchInformation.GenTxs, payload.AddValidatorPayload.GenTx)
+			res.LaunchInformation.Peers = append(res.LaunchInformation.Peers, payload.AddValidatorPayload.Peer)
 		default:
 			panic("An invalid proposal has been approved")
 		}
 	}
 
-	return &launchInformation, nil
+	return &res, nil
 }

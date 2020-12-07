@@ -389,9 +389,9 @@ func TestLaunchInformation(t *testing.T) {
 	// Can retrieve the current genesis with all the approved proposals
 	var req types.QueryLaunchInformationRequest
 	req.ChainID = chainID
-	launchInformation, err := q.LaunchInformation(context.Background(), &req)
+	res, err := q.LaunchInformation(context.Background(), &req)
 	require.NoError(t, err)
-	require.Equal(t, 20, len(launchInformation.Accounts))
-	require.Equal(t, 10, len(launchInformation.GenTxs))
-	require.Equal(t, 10, len(launchInformation.Peers))
+	require.Equal(t, 20, len(res.LaunchInformation.Accounts))
+	require.Equal(t, 10, len(res.LaunchInformation.GenTxs))
+	require.Equal(t, 10, len(res.LaunchInformation.Peers))
 }
