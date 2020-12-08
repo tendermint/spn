@@ -60,7 +60,7 @@ func TestListChains(t *testing.T) {
 	require.Error(t, err)
 }
 
-func TestListProposals(t *testing.T) {
+func TestProposalCount(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
@@ -121,7 +121,80 @@ func TestListProposals(t *testing.T) {
 	require.Equal(t, int32(3), count.Count)
 }
 
-func TestProposalCount(t *testing.T) {
+
+func TestShowProposal(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+	h := genesis.NewHandler(*k)
+	q := spnmocks.MockGenesisQueryClient(ctx, k)
+
+	// Create a new chain
+	chainID := spnmocks.MockRandomAlphaString(5)
+	chain := spnmocks.MockChain()
+	chain.ChainID = chainID
+	k.SetChain(ctx, *chain)
+
+	// Create an add account proposal
+	payload1 := spnmocks.MockProposalAddAccountPayload()
+	msg := types.NewMsgProposalAddAccount(
+		chainID,
+		spnmocks.MockAccAddress(),
+		payload1,
+	)
+	res, err := h(ctx, msg)
+	require.NoError(t, err)
+	proposal1 := types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+	// Create an add validator proposal
+	payload2 := spnmocks.MockProposalAddValidatorPayload()
+	msg2 := types.NewMsgProposalAddValidator(
+		chainID,
+		spnmocks.MockAccAddress(),
+		payload2,
+	)
+	res, err = h(ctx, msg2)
+	require.NoError(t, err)
+	proposal2 := types.UnmarshalProposal(k.GetCodec(), res.Data)
+
+	// Can query a specific proposal
+	showQuery := types.QueryShowProposalRequest{
+		ChainID:    chainID,
+		ProposalID: 0,
+	}
+	showRes, err := q.ShowProposal(context.Background(), &showQuery)
+	require.NoError(t, err)
+	_, ok := showRes.Proposal.Payload.(*types.Proposal_AddAccountPayload)
+	require.True(t, ok)
+	require.Equal(t, &proposal1, showRes.Proposal)
+
+	// Test with the add validator query
+	showQuery = types.QueryShowProposalRequest{
+		ChainID:    chainID,
+		ProposalID: 1,
+	}
+	showRes, err = q.ShowProposal(context.Background(), &showQuery)
+	require.NoError(t, err)
+	_, ok = showRes.Proposal.Payload.(*types.Proposal_AddValidatorPayload)
+	require.True(t, ok)
+	require.Equal(t, &proposal2, showRes.Proposal)
+
+	// ShowProposal fails if the proposal doesn't exist
+	showQuery = types.QueryShowProposalRequest{
+		ChainID:    chainID,
+		ProposalID: 1000,
+	}
+	_, err = q.ShowProposal(context.Background(), &showQuery)
+	require.Error(t, err)
+
+	// ShowProposal fails if the chain doesn't exist
+	showQuery = types.QueryShowProposalRequest{
+		ChainID:    spnmocks.MockRandomAlphaString(7),
+		ProposalID: 0,
+	}
+	_, err = q.ShowProposal(context.Background(), &showQuery)
+	require.Error(t, err)
+}
+
+func TestListProposals(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
@@ -483,7 +556,6 @@ func TestLaunchInformation(t *testing.T) {
 func TestPendingProposals(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
-	q := spnmocks.MockGenesisQueryClient(ctx, k)
 
 	// Create a new chain
 	chainID := spnmocks.MockRandomAlphaString(5)
@@ -524,44 +596,6 @@ func TestPendingProposals(t *testing.T) {
 
 	// PendingProposals fails if the chain doesn't exist
 	_, err = k.PendingProposals(ctx, spnmocks.MockRandomAlphaString(6))
-	require.Error(t, err)
-
-	// Can query a specific proposal
-	showQuery := types.QueryShowProposalRequest{
-		ChainID:    chainID,
-		ProposalID: 0,
-	}
-	showRes, err := q.ShowProposal(context.Background(), &showQuery)
-	require.NoError(t, err)
-	retrievedPayload1, ok := showRes.Proposal.Payload.(*types.Proposal_AddAccountPayload)
-	require.True(t, ok)
-	require.True(t, proposal1.Address.Equals(retrievedPayload1.AddAccountPayload.Address))
-
-	// Test with the add validator query
-	showQuery = types.QueryShowProposalRequest{
-		ChainID:    chainID,
-		ProposalID: 1,
-	}
-	showRes, err = q.ShowProposal(context.Background(), &showQuery)
-	require.NoError(t, err)
-	retrievedPayload2, ok := showRes.Proposal.Payload.(*types.Proposal_AddValidatorPayload)
-	require.True(t, ok)
-	require.Equal(t, proposal2.Peer, retrievedPayload2.AddValidatorPayload.Peer)
-
-	// ShowProposal fails if the proposal doesn't exist
-	showQuery = types.QueryShowProposalRequest{
-		ChainID:    chainID,
-		ProposalID: 1000,
-	}
-	_, err = q.ShowProposal(context.Background(), &showQuery)
-	require.Error(t, err)
-
-	// ShowProposal fails if the chain doesn't exist
-	showQuery = types.QueryShowProposalRequest{
-		ChainID:    spnmocks.MockRandomAlphaString(7),
-		ProposalID: 0,
-	}
-	_, err = q.ShowProposal(context.Background(), &showQuery)
 	require.Error(t, err)
 }
 
