@@ -16,5 +16,5 @@ COPY --from=builder /spn /spn
 RUN useradd --create-home spn && \
         echo "spn" > /etc/hostname && \
         echo "spn:spn" | chpasswd && \
-        usermod --append --groups wheel example_user 
+        usermod --append --groups wheel spn
 
