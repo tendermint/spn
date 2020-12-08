@@ -31,7 +31,7 @@ Follow the prompts to provide information about the validator. Starport will dow
 ### Listing pending proposals
 
 ```
-starport network proposal list
+starport network proposal list [chainID]
 ```
 
 This command lists all pending proposals. To see accepted and rejected proposals, use `--accepted` and `--rejected` flags. Each proposal has a `proposalID` (integer, unique to the chain), this ID is used to approve and reject a proposal.
