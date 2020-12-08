@@ -16,8 +16,6 @@ starport network chain create --chain [chainID] --source [sourceURL]
 
 `chainID` is a string that uniquely identifies your blockchain on SPN. `sourceURL` is a URL that can be used to clone the repository containing a Cosmos SDK blockchain node (for example, `https://github.com/tendermint/spn`). By running the `create` command you act as a "coordinator" and initiate the launch of a blockchain.
 
-By default, a coordinator does not propose themselves as a validator. To do so, run `join` command and your proposals will be automatically approved.
-
 ### Joining as a validator
 
 Run the following command from a server to propose yourself as a validator:
@@ -27,6 +25,8 @@ starport network chain join [chainID]
 ```
 
 Follow the prompts to provide information about the validator. Starport will download the source code of the blockchain node, build, initialize and create and send two proposals to SPN: to add an account and to add a validator with self-delegation. By running a `join` command you act as a "validator".
+
+By default, a coordinator does not propose themselves as a validator. To do so, run `join` command and your proposals will be automatically approved.
 
 ### Listing pending proposals
 
