@@ -9,9 +9,8 @@ on: [push, pull_request]
 
 jobs:
   pi:
-    name: Starport Pi
+    name: SPN Pi
     runs-on: ubuntu-latest
-    needs: arm64
     steps:
       - name: checkout
         uses: actions/checkout@v2
