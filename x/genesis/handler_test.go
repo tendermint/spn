@@ -25,8 +25,10 @@ func TestHandleMsgChainCreate(t *testing.T) {
 		sourceURL,
 		sourceHash,
 	)
-	_, err := h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	chain := types.UnmarshalChain(k.GetCodec(), res.Data)
+	require.Equal(t, chainID, chain.ChainID)
 	retrieved, found := k.GetChain(ctx, chainID)
 	require.True(t, found)
 	creatorIdentity, _ := k.IdentityKeeper.GetIdentifier(ctx, creator)
@@ -104,12 +106,14 @@ func TestHandleMsgReject(t *testing.T) {
 		0,
 		proposalCreator,
 	)
-	_, err = h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	rejectedProposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+	require.Equal(t, int32(0), rejectedProposal.ProposalInformation.ProposalID)
 
 	// The proposal is rejected
 	proposal, _ := k.GetProposal(ctx, chainID, 0)
-	require.Equal(t, types.ProposalState_REJECTED, proposal.ProposalState.Status)
+	require.Equal(t, types.ProposalStatus_REJECTED, proposal.ProposalState.Status)
 
 	// The proposal is not in pending pool
 	pending := k.GetPendingProposals(ctx, chainID)
@@ -144,7 +148,7 @@ func TestHandleMsgReject(t *testing.T) {
 	_, err = h(ctx, msg)
 	require.NoError(t, err)
 	proposal, _ = k.GetProposal(ctx, chainID, 1)
-	require.Equal(t, types.ProposalState_REJECTED, proposal.ProposalState.Status)
+	require.Equal(t, types.ProposalStatus_REJECTED, proposal.ProposalState.Status)
 	pending = k.GetPendingProposals(ctx, chainID)
 	require.NotContains(t, pending.ProposalIDs, int32(1))
 	rejected = k.GetRejectedProposals(ctx, chainID)
@@ -218,12 +222,14 @@ func TestHandleMsgApprove(t *testing.T) {
 		0,
 		coordinator,
 	)
-	_, err = h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	approvedProposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
+	require.Equal(t, int32(0), approvedProposal.ProposalInformation.ProposalID)
 
 	// The proposal is approved
 	proposal, _ := k.GetProposal(ctx, chainID, 0)
-	require.Equal(t, types.ProposalState_APPROVED, proposal.ProposalState.Status)
+	require.Equal(t, types.ProposalStatus_APPROVED, proposal.ProposalState.Status)
 
 	// The proposal is not in pending pool
 	pending := k.GetPendingProposals(ctx, chainID)
@@ -282,7 +288,7 @@ func TestHandleMsgApprove(t *testing.T) {
 
 	// The proposal is approved
 	proposal, _ = k.GetProposal(ctx, chainID, 2)
-	require.Equal(t, types.ProposalState_APPROVED, proposal.ProposalState.Status)
+	require.Equal(t, types.ProposalStatus_APPROVED, proposal.ProposalState.Status)
 
 	// The validator address is set in the store
 	validatorAddressSet := k.IsValidatorSet(ctx, chainID, valAddress)
@@ -331,13 +337,15 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 		creator,
 		spnmocks.MockProposalAddAccountPayload(),
 	)
-	_, err = h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	createdProposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
 
 	// Can retrieve the proposal
 	proposal, found := k.GetProposal(ctx, chainID, 0)
 	require.True(t, found)
-	require.Equal(t, types.ProposalState_PENDING, proposal.ProposalState.Status)
+	require.Equal(t, createdProposal, proposal)
+	require.Equal(t, types.ProposalStatus_PENDING, proposal.ProposalState.Status)
 	require.Equal(t, creatorIdentity, proposal.ProposalInformation.Creator)
 	_, ok := proposal.Payload.(*types.Proposal_AddAccountPayload)
 	require.True(t, ok)
@@ -364,7 +372,7 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 	// Can retrieve the proposal
 	proposal, found = k.GetProposal(ctx, chainID, 1)
 	require.True(t, found)
-	require.Equal(t, types.ProposalState_APPROVED, proposal.ProposalState.Status)
+	require.Equal(t, types.ProposalStatus_APPROVED, proposal.ProposalState.Status)
 	require.Equal(t, coordinatorIdentity, proposal.ProposalInformation.Creator)
 	_, ok = proposal.Payload.(*types.Proposal_AddAccountPayload)
 	require.True(t, ok)
@@ -442,13 +450,15 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 		creator,
 		spnmocks.MockProposalAddValidatorPayload(),
 	)
-	_, err = h(ctx, msg)
+	res, err := h(ctx, msg)
 	require.NoError(t, err)
+	createdProposal := types.UnmarshalProposal(k.GetCodec(), res.Data)
 
 	// Can retrieve the proposal
 	proposal, found := k.GetProposal(ctx, chainID, 5)
 	require.True(t, found)
-	require.Equal(t, types.ProposalState_PENDING, proposal.ProposalState.Status)
+	require.Equal(t, createdProposal, proposal)
+	require.Equal(t, types.ProposalStatus_PENDING, proposal.ProposalState.Status)
 	require.Equal(t, creatorIdentity, proposal.ProposalInformation.Creator)
 	_, ok := proposal.Payload.(*types.Proposal_AddValidatorPayload)
 	require.True(t, ok)
@@ -485,7 +495,7 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 	// Can retrieve the proposal
 	proposal, found = k.GetProposal(ctx, chainID, 7)
 	require.True(t, found)
-	require.Equal(t, types.ProposalState_APPROVED, proposal.ProposalState.Status)
+	require.Equal(t, types.ProposalStatus_APPROVED, proposal.ProposalState.Status)
 	require.Equal(t, coordinatorIdentity, proposal.ProposalInformation.Creator)
 	_, ok = proposal.Payload.(*types.Proposal_AddValidatorPayload)
 	require.True(t, ok)

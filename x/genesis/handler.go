@@ -60,7 +60,10 @@ func handleMsgChainCreate(ctx sdk.Context, k keeper.Keeper, msg *types.MsgChainC
 	// Set the new chain in the store
 	k.SetChain(ctx, *chain)
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalChain(k.GetCodec(), *chain),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 func handleMsgReject(ctx sdk.Context, k keeper.Keeper, msg *types.MsgReject) (*sdk.Result, error) {
@@ -88,7 +91,7 @@ func handleMsgReject(ctx sdk.Context, k keeper.Keeper, msg *types.MsgReject) (*s
 	}
 
 	// The proposal must be in pending state
-	if proposal.ProposalState.Status != types.ProposalState_PENDING {
+	if proposal.ProposalState.Status != types.ProposalStatus_PENDING {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "The proposal is not in pending state")
 	}
 
@@ -102,7 +105,10 @@ func handleMsgReject(ctx sdk.Context, k keeper.Keeper, msg *types.MsgReject) (*s
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalProposal(k.GetCodec(), proposal),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (*sdk.Result, error) {
@@ -130,7 +136,7 @@ func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (
 	}
 
 	// The proposal must be in pending state
-	if proposal.ProposalState.Status != types.ProposalState_PENDING {
+	if proposal.ProposalState.Status != types.ProposalStatus_PENDING {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "The proposal is not in pending state")
 	}
 
@@ -144,7 +150,10 @@ func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalProposal(k.GetCodec(), proposal),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.MsgProposalAddAccount) (*sdk.Result, error) {
@@ -185,7 +194,10 @@ func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.Ms
 	count := proposalID + 1
 	k.SetProposalCount(ctx, msg.ChainID, count)
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalProposal(k.GetCodec(), *proposal),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.MsgProposalAddValidator) (*sdk.Result, error) {
@@ -226,7 +238,10 @@ func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.
 	count := proposalID + 1
 	k.SetProposalCount(ctx, msg.ChainID, count)
 
-	return &sdk.Result{Events: ctx.EventManager().ABCIEvents()}, nil
+	return &sdk.Result{
+		Data: types.MarshalProposal(k.GetCodec(), *proposal),
+		Events: ctx.EventManager().ABCIEvents(),
+	}, nil
 }
 
 // appendNewProposal appends the proposal in the approved pool if the creator is the cooredinator of the chain
@@ -251,7 +266,7 @@ func appendNewProposal(ctx sdk.Context, k keeper.Keeper, chain types.Chain, prop
 func appendPendingProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Proposal) error {
 	// Only newly created can be appended to the proposal pool
 	// And newly created proposals must have the pending state
-	if proposal.ProposalState.Status != types.ProposalState_PENDING {
+	if proposal.ProposalState.Status != types.ProposalStatus_PENDING {
 		return errors.New("a new proposal must have pending state")
 	}
 
@@ -295,7 +310,7 @@ func appendApprovedProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Pr
 	}
 
 	// Set the proposal new state
-	proposal.ProposalState.SetStatus(types.ProposalState_APPROVED)
+	proposal.ProposalState.SetStatus(types.ProposalStatus_APPROVED)
 	k.SetProposal(ctx, *proposal)
 
 	// Append proposalID in approved pool
@@ -318,7 +333,7 @@ func appendRejectedProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Pr
 	k.SetRejectedProposals(ctx, proposal.ProposalInformation.ChainID, rejected)
 
 	// Set the proposal new state
-	proposal.ProposalState.SetStatus(types.ProposalState_REJECTED)
+	proposal.ProposalState.SetStatus(types.ProposalStatus_REJECTED)
 	k.SetProposal(ctx, *proposal)
 
 	return nil

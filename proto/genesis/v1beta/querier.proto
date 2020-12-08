@@ -10,10 +10,8 @@ import "genesis/v1beta/types.proto";
 service Query {
     rpc ListChains(QueryListChainsRequest) returns (QueryListChainsResponse);
     rpc ShowChain(QueryShowChainRequest) returns (QueryShowChainResponse);
+    rpc ListProposals(QueryListProposalsRequest) returns (QueryListProposalsResponse);
     rpc ProposalCount(QueryProposalCountRequest) returns (QueryProposalCountResponse);
-    rpc PendingProposals(QueryPendingProposalsRequest) returns (QueryPendingProposalsResponse);
-    rpc ApprovedProposals(QueryApprovedProposalsRequest) returns (QueryApprovedProposalsResponse);
-    rpc RejectedProposals(QueryRejectedProposalsRequest) returns (QueryRejectedProposalsResponse);
     rpc ShowProposal(QueryShowProposalRequest) returns (QueryShowProposalResponse);
     rpc LaunchInformation(QueryLaunchInformationRequest) returns (QueryLaunchInformationResponse);
     rpc SimulatedLaunchInformation(QuerySimulatedLaunchInformationRequest) returns (QuerySimulatedLaunchInformationResponse);
@@ -44,27 +42,13 @@ message QueryProposalCountResponse {
   int32 count = 1;
 }
 
-message QueryPendingProposalsRequest {
+message QueryListProposalsRequest {
     string chainID = 1;
+    ProposalStatus status = 2;
+    ProposalType type = 3;
 }
 
-message QueryPendingProposalsResponse {
-    repeated Proposal proposals = 1;
-}
-
-message QueryApprovedProposalsRequest {
-    string chainID = 1;
-}
-
-message QueryApprovedProposalsResponse {
-    repeated Proposal proposals = 1;
-}
-
-message QueryRejectedProposalsRequest {
-    string chainID = 1;
-}
-
-message QueryRejectedProposalsResponse {
+message QueryListProposalsResponse {
     repeated Proposal proposals = 1;
 }
 
