@@ -28,6 +28,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdShowProposal(),
 		CmdListProposals(),
 		CmdLaunchInformation(),
+		CmdSimulatedLaunchInformation(),
 	)
 
 	return cmd
@@ -236,6 +237,47 @@ func CmdLaunchInformation() *cobra.Command {
 
 			// Perform the request
 			res, err := queryClient.LaunchInformation(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintOutput(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
+// CmdSimulatedLaunchInformation returns the command to show the simulated information to launch a chain with a pending proposal
+func CmdSimulatedLaunchInformation() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "simulated-launch-information [chain-id] [proposal-id]",
+		Short: "show the simulated launch information with a proposal to test",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			// Convert proposal ID
+			proposalID, err := strconv.Atoi(args[1])
+			if err != nil {
+				return err
+			}
+
+			params := &types.QuerySimulatedLaunchInformationRequest{
+				ChainID: args[0],
+				ProposalID: int32(proposalID),
+			}
+
+			// Perform the request
+			res, err := queryClient.SimulatedLaunchInformation(context.Background(), params)
 			if err != nil {
 				return err
 			}
