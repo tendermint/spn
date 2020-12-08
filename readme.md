@@ -41,7 +41,7 @@ This command lists all pending proposals. To see accepted and rejected proposals
 As a coordinator run the following command to approve proposals:
 
 ```
-starport network proposal approve 1,4,5,6
+starport network proposal approve [chainID] 1,4,5,6
 ```
 
 Replace comma-separated values with a list of `proposalID` being accepted. Replace `approve` with `reject` to reject proposals instead.
