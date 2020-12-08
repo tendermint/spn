@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/genesis/types"
 	"strconv"
+	"strings"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -253,8 +254,8 @@ func CmdLaunchInformation() *cobra.Command {
 // CmdSimulatedLaunchInformation returns the command to show the simulated information to launch a chain with a pending proposal
 func CmdSimulatedLaunchInformation() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "simulated-launch-information [chain-id] [proposal-id]",
-		Short: "show the simulated launch information with a proposal to test",
+		Use:   "simulated-launch-information [chain-id] [proposal-ids]",
+		Short: "show the simulated launch information with comma-separated proposals to test",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -265,15 +266,21 @@ func CmdSimulatedLaunchInformation() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			// Convert proposal ID
-			proposalID, err := strconv.Atoi(args[1])
-			if err != nil {
-				return err
+			var proposalIDs []int32
+			proposalIDsArg := strings.Split(args[1], ",")
+			for _, proposalIDArg := range proposalIDsArg {
+				// Convert proposal ID
+				proposalID, err := strconv.Atoi(proposalIDArg)
+				if err != nil {
+					return err
+				}
+
+				proposalIDs = append(proposalIDs, int32(proposalID))
 			}
 
 			params := &types.QuerySimulatedLaunchInformationRequest{
 				ChainID: args[0],
-				ProposalID: int32(proposalID),
+				ProposalIDs: proposalIDs,
 			}
 
 			// Perform the request

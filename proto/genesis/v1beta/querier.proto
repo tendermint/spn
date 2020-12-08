@@ -71,7 +71,7 @@ message QueryLaunchInformationResponse {
 
 message QuerySimulatedLaunchInformationRequest {
     string chainID = 1;
-    int32 proposalID = 2;
+    repeated int32 proposalIDs = 2;
 }
 
 message QuerySimulatedLaunchInformationResponse {

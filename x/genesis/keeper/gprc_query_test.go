@@ -512,8 +512,8 @@ func TestSimulatedLaunchInformation(t *testing.T) {
 
 	var accounts []*types.ProposalAddAccountPayload
 
-	// Send 4 add account proposals
-	for i:=0; i<4; i++ {
+	// Send 6 add account proposals
+	for i:=0; i<6; i++ {
 		addAccountPayload := spnmocks.MockProposalAddAccountPayload()
 		msgAddAccount := types.NewMsgProposalAddAccount(
 			chainID,
@@ -534,31 +534,62 @@ func TestSimulatedLaunchInformation(t *testing.T) {
 		_, err := h(ctx, msg)
 		require.NoError(t, err)
 	}
+	// Send an add validator proposal
+	addValidatorPayload := spnmocks.MockProposalAddValidatorPayload()
+	msgAddValidator := types.NewMsgProposalAddValidator(
+		chainID,
+		spnmocks.MockAccAddress(),
+		addValidatorPayload,
+	)
+	_, err := h(ctx, msgAddValidator)
+	require.NoError(t, err)
 
 	// SimulatedLaunchInformation should contains the proposal to test
 	var req types.QuerySimulatedLaunchInformationRequest
 	req.ChainID = chainID
-	req.ProposalID = int32(3)
+	req.ProposalIDs = []int32{int32(3)}
 	res, err := q.SimulatedLaunchInformation(context.Background(), &req)
 	require.NoError(t, err)
 	require.Equal(t, 4, len(res.LaunchInformation.Accounts))
-	require.Equal(t, accounts, res.LaunchInformation.Accounts)
+	require.Equal(t, accounts[0:4], res.LaunchInformation.Accounts)
+
+	// SimulatedLaunchInformation can test a add validator proposal
+	req.ChainID = chainID
+	req.ProposalIDs = []int32{int32(6)}
+	res, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, addValidatorPayload.GenTx, res.LaunchInformation.GenTxs[0])
+	require.Equal(t, addValidatorPayload.Peer, res.LaunchInformation.Peers[0])
 
 	// Fails if the proposal to test doesn't exist
 	req.ChainID = chainID
-	req.ProposalID = int32(4)
+	req.ProposalIDs = []int32{int32(10)}
 	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
 	require.Error(t, err)
 
 	// Fails if the proposal to test is not pending
 	req.ChainID = chainID
-	req.ProposalID = int32(0)
+	req.ProposalIDs = []int32{int32(0)}
 	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
 	require.Error(t, err)
 
 	// Fails if the chain doesn't exist
 	req.ChainID = spnmocks.MockRandomAlphaString(5)
-	req.ProposalID = int32(3)
+	req.ProposalIDs = []int32{int32(3)}
+	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.Error(t, err)
+
+	// Allows to test several proposals
+	req.ChainID = chainID
+	req.ProposalIDs = []int32{int32(3), int32(4), int32(5)}
+	res, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, 6, len(res.LaunchInformation.Accounts))
+	require.Equal(t, accounts, res.LaunchInformation.Accounts)
+
+	// Fails if a proposal to test appears twice
+	req.ChainID = chainID
+	req.ProposalIDs = []int32{int32(3), int32(3)}
 	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
 	require.Error(t, err)
 }

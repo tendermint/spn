@@ -243,21 +243,32 @@ func (k Keeper) SimulatedLaunchInformation(
 	}
 	launchInformation := launchInformationRes.LaunchInformation
 
-	// Get the proposal to test
-	proposal, found := k.GetProposal(ctx, req.ChainID, req.ProposalID)
-	if !found {
-		return nil, errors.New("proposal not found")
+	// Apply the proposals
+	alreadyApplied := make(map[int32]bool)
+	for _, proposalID := range req.ProposalIDs {
+		_, ok := alreadyApplied[proposalID]
+		if ok {
+			return nil, errors.New("duplicated proposal")
+		}
+		alreadyApplied[proposalID] = true
+
+		// Get the proposal
+		proposal, found := k.GetProposal(ctx, req.ChainID, proposalID)
+		if !found {
+			return nil, errors.New("proposal not found")
+		}
+		if proposal.ProposalState.Status != types.ProposalStatus_PENDING {
+			return nil, errors.New("proposal not pending")
+		}
+
+		// Applying the proposal to test
+		err = launchInformation.ApplyProposal(proposal)
+		if err != nil {
+			return nil, errors.New("error applying the proposal")
+		}
 	}
-	if proposal.ProposalState.Status != types.ProposalStatus_PENDING {
-		return nil, errors.New("proposal not pending")
-	}
-	
-	// Applying the proposal to test
+
 	var res types.QuerySimulatedLaunchInformationResponse
-	err = launchInformation.ApplyProposal(proposal)
-	if err != nil {
-		return nil, errors.New("error applying the proposal")
-	}
 	res.LaunchInformation = launchInformation
 
 	return &res, nil
