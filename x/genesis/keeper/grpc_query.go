@@ -248,6 +248,9 @@ func (k Keeper) SimulatedLaunchInformation(
 	if !found {
 		return nil, errors.New("proposal not found")
 	}
+	if proposal.ProposalState.Status != types.ProposalStatus_PENDING {
+		return nil, errors.New("proposal not pending")
+	}
 
 	// Applying the proposal to test
 	var res types.QuerySimulatedLaunchInformationResponse
