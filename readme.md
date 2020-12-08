@@ -1,6 +1,6 @@
 # Starport Network
 
-Starport Network (SPN) is a network for launching [Cosmos](https://cosmos.network) blockchains by matching coordinators with validators. This repository contains an SPN node built with Cosmos SDK and generated with [Starport](https://github.com/tendermint/starport).
+Starport Network (SPN) is a network for launching [Cosmos](https://cosmos.network) blockchains by matching coordinators with validators. This repository contains the source code of SPN built with Cosmos SDK and generated with [Starport](https://github.com/tendermint/starport).
 
 ## Using SPN
 
