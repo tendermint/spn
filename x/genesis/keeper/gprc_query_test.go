@@ -561,6 +561,19 @@ func TestSimulatedLaunchInformation(t *testing.T) {
 	req.ProposalID = int32(3)
 	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
 	require.Error(t, err)
+
+	// Fails if the proposal to test is invalid from on-chain check (address already in accounts for example)
+	msgAddAccount := types.NewMsgProposalAddAccount(
+		chainID,
+		accounts[0].Address,
+		accounts[0],
+	)
+	_, err = h(ctx, msgAddAccount)
+	require.NoError(t, err)
+	req.ChainID = chainID
+	req.ProposalID = int32(4)
+	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.Error(t, err)
 }
 
 func TestPendingProposals(t *testing.T) {

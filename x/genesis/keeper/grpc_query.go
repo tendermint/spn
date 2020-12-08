@@ -252,6 +252,11 @@ func (k Keeper) SimulatedLaunchInformation(
 		return nil, errors.New("proposal not pending")
 	}
 
+	// Check if the proposal can be approved depending on the type of the proposal payload and current state of the genesis
+	if err := k.CheckProposalApproval(ctx, proposal.ProposalInformation.ChainID, proposal); err != nil {
+		return nil, err
+	}
+
 	// Applying the proposal to test
 	var res types.QuerySimulatedLaunchInformationResponse
 	err = launchInformation.ApplyProposal(proposal)
