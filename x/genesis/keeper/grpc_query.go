@@ -11,6 +11,7 @@ import (
 	"github.com/tendermint/spn/x/genesis/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"sort"
 )
 
 var _ types.QueryServer = Keeper{}
@@ -237,8 +238,13 @@ func (k Keeper) PendingProposals(
 		return nil, errors.New("chain not found")
 	}
 
-	// Get the pending proposal IDs
 	pendingProposals := k.GetPendingProposals(ctx, chainID)
+
+	// To have less on-chain operations, the pending proposal list is not automatically sorted in the store
+	// We sort the list here so the user can the see pending proposals in the order they have been created
+	sort.Slice(pendingProposals.ProposalIDs, func(i, j int) bool {
+		return pendingProposals.ProposalIDs[i] < pendingProposals.ProposalIDs[j]
+	})
 
 	// Fetch all the proposals
 	var proposals []types.Proposal
