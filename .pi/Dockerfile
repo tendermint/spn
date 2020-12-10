@@ -4,9 +4,11 @@ FROM faddat/sos
 RUN pacman -Syyu --noconfirm go && \
         git clone https://github.com/tendermint/spn && \
         cd spn && \
-        go build -mod=mod cmd/spnd -o . && \
+        go build -mod=mod -o . ./cmd/spnd && \
         mv spnd /usr/bin && \
-        pacman -R go go-ipfs
+        pacman -R go go-ipfs && \
+        cd .. && \
+        rm -rf spn
 
 # Make SPN user, spn hostname so we get spn.local via mdns
 RUN useradd --create-home spn && \
