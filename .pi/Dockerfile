@@ -4,7 +4,7 @@ FROM faddat/sos
 RUN pacman -Syyu --noconfirm go && \
         git clone https://github.com/tendermint/spn && \
         cd spn && \
-        go build -mod cmd/spnd -o . && \
+        go build -mod=mod cmd/spnd -o . && \
         mv spnd /usr/bin && \
         pacman -R go go-ipfs
 
