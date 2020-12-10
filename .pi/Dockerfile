@@ -5,10 +5,11 @@ RUN pacman -Syyu --noconfirm go && \
         git clone https://github.com/tendermint/spn && \
         cd spn && \
         go build -mod=mod -o . ./cmd/spnd && \
-        mv spnd /usr/bin && \
-        pacman -R --noconfirm go && \
-        cd .. && \
-        rm -rf spn
+        mv spnd /usr/bin
+# BEFORE THE CHAIN GOES LIVE, KEEP THE GIT REPO IN THE IMAGE AND KEEP GO TO ALLOW FOR UPDATES
+#        pacman -R --noconfirm go && \
+#        cd .. && \
+#        rm -rf spn
 
 # Make SPN user, spn hostname so we get spn.local via mdns
 RUN useradd --create-home spn && \
