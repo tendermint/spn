@@ -6,7 +6,7 @@ RUN pacman -Syyu --noconfirm go && \
         cd spn && \
         go build -mod=mod -o . ./cmd/spnd && \
         mv spnd /usr/bin && \
-        pacman -R go && \
+        pacman -R --noconfirm go && \
         cd .. && \
         rm -rf spn
 
