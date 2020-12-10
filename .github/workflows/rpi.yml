@@ -37,10 +37,10 @@ jobs:
         run: bash .pi/build.sh
 
       - name: Compress
-        run: xz -T $(nproc) images/starport.img
+        run: xz -T $(nproc) images/spn.img
 
       - name: Upload image
         uses: actions/upload-artifact@v2
         with:
           name: Starport Pi
-          path: images/starport.img.xz
+          path: images/spn.img.xz
