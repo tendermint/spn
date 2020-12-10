@@ -24,14 +24,8 @@ jobs:
         with:
           version: latest
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: Build Image in Docker
-        run: docker buildx build --tag spn --file .pi/Dockerfile --platform linux/arm64 --cache-from ${{ secrets.DOCKERHUB_USERNAME }}/spn:picache --cache-to ${{ secrets.DOCKERHUB_USERNAME }}/spn:picache --load --progress tty .
+        run: docker buildx build --tag spn --file .pi/Dockerfile --platform linux/arm64 --load --progress tty .
 
       - name: Build Image
         run: bash .pi/build.sh
