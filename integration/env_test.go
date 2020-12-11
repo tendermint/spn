@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	serveTimeout = time.Minute * 15
+	serveTimeout = time.Minute * 5
 )
 
 var isCI, _ = strconv.ParseBool(os.Getenv("CI"))

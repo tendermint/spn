@@ -29,7 +29,7 @@ jobs:
       - name: Install Starport
         working-directory: ${{ env.working-directory }}
         run: |
-          git clone https://github.com/tendermint/starport && cd starport && git checkout feat/test-proposals && make
+          git clone https://github.com/tendermint/starport && cd starport && make
 
       - name: Run Integration Tests
         working-directory: ${{ env.working-directory }}
