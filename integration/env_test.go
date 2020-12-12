@@ -148,6 +148,8 @@ func (e env) Serve(msg string, path string, options ...execOption) (ok bool) {
 				"serve",
 				"-v",
 			),
+			step.Stderr(os.Stderr),
+			step.Stdout(os.Stdout),
 			step.Workdir(path),
 		),
 		options...,
