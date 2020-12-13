@@ -23,9 +23,6 @@ jobs:
       - name: Install protoc
         uses: arduino/setup-protoc@v1
 
-#      - name: Install protoc-gen-gocosmos
-#        run: go get github.com/regen-network/cosmos-proto/protoc-gen-gocosmos
-
       - name: Set up packr2
         run: go get -u github.com/gobuffalo/packr/v2/packr2
 
