@@ -143,9 +143,9 @@ func CmdReject() *cobra.Command {
 // CmdProposalAddAccount returns the transaction command to add a new account into the genesis
 func CmdProposalAddAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "proposal-add-account [chain-id] [coins]",
+		Use:   "proposal-add-account [chain-id] [address] [coins]",
 		Short: "Add a proposal to add a genesis account, [coins] must be comma separated coin denominations: 1000atom,1000stake",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
@@ -153,15 +153,21 @@ func CmdProposalAddAccount() *cobra.Command {
 				return err
 			}
 
+			// Parse address
+			address, err := sdk.AccAddressFromBech32(args[1])
+			if err != nil {
+				return err
+			}
+
 			// Parse coins
-			coins, err := sdk.ParseCoins(args[1])
+			coins, err := sdk.ParseCoins(args[2])
 			if err != nil {
 				return fmt.Errorf("failed to parse coins: %v", err.Error())
 			}
 
 			// Construct payload
 			payload := types.NewProposalAddAccountPayload(
-				clientCtx.GetFromAddress(),
+				address,
 				coins,
 			)
 
@@ -186,9 +192,9 @@ func CmdProposalAddAccount() *cobra.Command {
 // CmdProposalAddValidator returns the transaction command to add a new validator into the genesis
 func CmdProposalAddValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "proposal-add-validator [chain-id] [peer] [self-delegation] [gentx-file]",
+		Use:   "proposal-add-validator [chain-id] [peer] [address] [self-delegation] [gentx-file]",
 		Short: "Add a proposal to add a gentx to add a validator during chain initialization",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
@@ -196,14 +202,20 @@ func CmdProposalAddValidator() *cobra.Command {
 				return err
 			}
 
+			// Parse address
+			address, err := sdk.AccAddressFromBech32(args[2])
+			if err != nil {
+				return err
+			}
+
 			// Read self-delegation
-			selfDelegation, err := sdk.ParseCoin(args[2])
+			selfDelegation, err := sdk.ParseCoin(args[3])
 			if err != nil {
 				return err
 			}
 
 			// Read gentxFile
-			gentxBytes, err := ioutil.ReadFile(args[3])
+			gentxBytes, err := ioutil.ReadFile(args[4])
 			if err != nil {
 				return err
 			}
@@ -211,7 +223,7 @@ func CmdProposalAddValidator() *cobra.Command {
 			// Construct payload
 			payload := types.NewProposalAddValidatorPayload(
 				gentxBytes,
-				sdk.ValAddress(clientCtx.GetFromAddress()),
+				sdk.ValAddress(address),
 				selfDelegation,
 				args[1],
 			)

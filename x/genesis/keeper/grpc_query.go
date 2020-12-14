@@ -180,7 +180,7 @@ func (k Keeper) ShowProposal(
 	return &types.QueryShowProposalResponse{Proposal: &proposal}, nil
 }
 
-// CurrentGenesis generates the current genesis for the specific chain from the initial genesis and approved proposals
+// LaunchInformation generates the current information to launch a specific chain from its initial genesis and approved proposals
 func (k Keeper) LaunchInformation(
 	c context.Context,
 	req *types.QueryLaunchInformationRequest,
@@ -201,7 +201,8 @@ func (k Keeper) LaunchInformation(
 	approvedProposals := k.GetApprovedProposals(ctx, req.ChainID)
 
 	// Construct the response
-	var launchInformation types.QueryLaunchInformationResponse
+	var res types.QueryLaunchInformationResponse
+	res.LaunchInformation = &types.LaunchInformation{}
 
 	// Fill the launch information from the approved proposal
 	for _, approved := range approvedProposals.ProposalIDs {
@@ -212,19 +213,66 @@ func (k Keeper) LaunchInformation(
 			panic(fmt.Sprintf("The proposal %v doesn't exist", approved))
 		}
 
-		// Dispatch the proposal
-		switch payload := proposal.Payload.(type) {
-		case *types.Proposal_AddAccountPayload:
-			launchInformation.Accounts = append(launchInformation.Accounts, payload.AddAccountPayload)
-		case *types.Proposal_AddValidatorPayload:
-			launchInformation.GenTxs = append(launchInformation.GenTxs, payload.AddValidatorPayload.GenTx)
-			launchInformation.Peers = append(launchInformation.Peers, payload.AddValidatorPayload.Peer)
-		default:
-			panic("An invalid proposal has been approved")
+		// Apply the proposal
+		err := res.LaunchInformation.ApplyProposal(proposal)
+		if err != nil {
+			return nil, errors.New("error applying the proposal")
 		}
 	}
 
-	return &launchInformation, nil
+	return &res, nil
+}
+
+// SimulatedLaunchInformation generates launch information for a chain from its current launch information and a proposal
+// This allows the user to test if a approved proposal would generate a correct genesis
+func (k Keeper) SimulatedLaunchInformation(
+	c context.Context,
+	req *types.QuerySimulatedLaunchInformationRequest,
+) (*types.QuerySimulatedLaunchInformationResponse, error) {
+	ctx := sdk.UnwrapSDKContext(c)
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	// Get the current launch information
+	var launchInformationReq types.QueryLaunchInformationRequest
+	launchInformationReq.ChainID = req.ChainID
+	launchInformationRes, err := k.LaunchInformation(c, &launchInformationReq)
+	if err != nil {
+		return nil, err
+	}
+	launchInformation := launchInformationRes.LaunchInformation
+
+	// Apply the proposals
+	alreadyApplied := make(map[int32]bool)
+	for _, proposalID := range req.ProposalIDs {
+		_, ok := alreadyApplied[proposalID]
+		if ok {
+			return nil, errors.New("duplicated proposal")
+		}
+		alreadyApplied[proposalID] = true
+
+		// Get the proposal
+		proposal, found := k.GetProposal(ctx, req.ChainID, proposalID)
+		if !found {
+			return nil, errors.New("proposal not found")
+		}
+		if proposal.ProposalState.Status != types.ProposalStatus_PENDING {
+			return nil, errors.New("proposal not pending")
+		}
+
+		// Applying the proposal to test
+		err = launchInformation.ApplyProposal(proposal)
+		if err != nil {
+			return nil, errors.New("error applying the proposal")
+		}
+	}
+
+	var res types.QuerySimulatedLaunchInformationResponse
+	res.LaunchInformation = launchInformation
+
+	return &res, nil
 }
 
 // PendingProposals lists the pending proposals for a chain

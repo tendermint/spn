@@ -477,7 +477,6 @@ func TestLaunchInformation(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := genesis.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
-	_ = spnmocks.MockCodec()
 
 	chainID := spnmocks.MockRandomAlphaString(5)
 	coordinator := spnmocks.MockAccAddress()
@@ -490,6 +489,10 @@ func TestLaunchInformation(t *testing.T) {
 		spnmocks.MockRandomAlphaString(10),
 	)
 	h(ctx, msgChainCreate)
+
+	var accounts []*types.ProposalAddAccountPayload
+	var gentxs [][]byte
+	var peers []string
 
 	// Test with 20 accounts and 10 validators
 	for i:=0; i<10; i++ {
@@ -511,6 +514,8 @@ func TestLaunchInformation(t *testing.T) {
 		_, err := h(ctx, msgAddAccount)
 		require.NoError(t, err)
 
+		accounts = append(accounts, addAccountPayload)
+
 		// Send add validator proposal
 		msgAddValidator := types.NewMsgProposalAddValidator(
 			chainID,
@@ -519,6 +524,9 @@ func TestLaunchInformation(t *testing.T) {
 		)
 		_, err = h(ctx, msgAddValidator)
 		require.NoError(t, err)
+
+		gentxs = append(gentxs, addValidatorpayload.GenTx)
+		peers = append(peers, addValidatorpayload.Peer)
 	}
 	for i:=0; i<10; i++ {
 		addAccountPayload := spnmocks.MockProposalAddAccountPayload()
@@ -531,6 +539,8 @@ func TestLaunchInformation(t *testing.T) {
 		)
 		_, err := h(ctx, msgAddAccount)
 		require.NoError(t, err)
+
+		accounts = append(accounts, addAccountPayload)
 	}
 
 	// Approve all proposals
@@ -547,11 +557,115 @@ func TestLaunchInformation(t *testing.T) {
 	// Can retrieve the current genesis with all the approved proposals
 	var req types.QueryLaunchInformationRequest
 	req.ChainID = chainID
-	launchInformation, err := q.LaunchInformation(context.Background(), &req)
+	res, err := q.LaunchInformation(context.Background(), &req)
 	require.NoError(t, err)
-	require.Equal(t, 20, len(launchInformation.Accounts))
-	require.Equal(t, 10, len(launchInformation.GenTxs))
-	require.Equal(t, 10, len(launchInformation.Peers))
+	require.Equal(t, 20, len(res.LaunchInformation.Accounts))
+	require.Equal(t, 10, len(res.LaunchInformation.GenTxs))
+	require.Equal(t, 10, len(res.LaunchInformation.Peers))
+	require.Equal(t, accounts, res.LaunchInformation.Accounts)
+	require.Equal(t, gentxs, res.LaunchInformation.GenTxs)
+	require.Equal(t, peers, res.LaunchInformation.Peers)
+}
+
+func TestSimulatedLaunchInformation(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+	h := genesis.NewHandler(*k)
+	q := spnmocks.MockGenesisQueryClient(ctx, k)
+
+	chainID := spnmocks.MockRandomAlphaString(5)
+	coordinator := spnmocks.MockAccAddress()
+
+	// Create a new chain
+	msgChainCreate := types.NewMsgChainCreate(
+		chainID,
+		coordinator,
+		spnmocks.MockRandomAlphaString(10),
+		spnmocks.MockRandomAlphaString(10),
+	)
+	h(ctx, msgChainCreate)
+
+	var accounts []*types.ProposalAddAccountPayload
+
+	// Send 6 add account proposals
+	for i:=0; i<6; i++ {
+		addAccountPayload := spnmocks.MockProposalAddAccountPayload()
+		msgAddAccount := types.NewMsgProposalAddAccount(
+			chainID,
+			addAccountPayload.Address,
+			addAccountPayload,
+		)
+		_, err := h(ctx, msgAddAccount)
+		require.NoError(t, err)
+		accounts = append(accounts, addAccountPayload)
+	}
+	// Approve 3 of them
+	for i:=0; i<3; i++ {
+		msg := types.NewMsgApprove(
+			chainID,
+			int32(i),
+			coordinator,
+		)
+		_, err := h(ctx, msg)
+		require.NoError(t, err)
+	}
+	// Send an add validator proposal
+	addValidatorPayload := spnmocks.MockProposalAddValidatorPayload()
+	msgAddValidator := types.NewMsgProposalAddValidator(
+		chainID,
+		spnmocks.MockAccAddress(),
+		addValidatorPayload,
+	)
+	_, err := h(ctx, msgAddValidator)
+	require.NoError(t, err)
+
+	// SimulatedLaunchInformation should contains the proposal to test
+	var req types.QuerySimulatedLaunchInformationRequest
+	req.ChainID = chainID
+	req.ProposalIDs = []int32{int32(3)}
+	res, err := q.SimulatedLaunchInformation(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, 4, len(res.LaunchInformation.Accounts))
+	require.Equal(t, accounts[0:4], res.LaunchInformation.Accounts)
+
+	// SimulatedLaunchInformation can test a add validator proposal
+	req.ChainID = chainID
+	req.ProposalIDs = []int32{int32(6)}
+	res, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, addValidatorPayload.GenTx, res.LaunchInformation.GenTxs[0])
+	require.Equal(t, addValidatorPayload.Peer, res.LaunchInformation.Peers[0])
+
+	// Fails if the proposal to test doesn't exist
+	req.ChainID = chainID
+	req.ProposalIDs = []int32{int32(10)}
+	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.Error(t, err)
+
+	// Fails if the proposal to test is not pending
+	req.ChainID = chainID
+	req.ProposalIDs = []int32{int32(0)}
+	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.Error(t, err)
+
+	// Fails if the chain doesn't exist
+	req.ChainID = spnmocks.MockRandomAlphaString(5)
+	req.ProposalIDs = []int32{int32(3)}
+	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.Error(t, err)
+
+	// Allows to test several proposals
+	req.ChainID = chainID
+	req.ProposalIDs = []int32{int32(3), int32(4), int32(5)}
+	res, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.NoError(t, err)
+	require.Equal(t, 6, len(res.LaunchInformation.Accounts))
+	require.Equal(t, accounts, res.LaunchInformation.Accounts)
+
+	// Fails if a proposal to test appears twice
+	req.ChainID = chainID
+	req.ProposalIDs = []int32{int32(3), int32(3)}
+	_, err = q.SimulatedLaunchInformation(context.Background(), &req)
+	require.Error(t, err)
 }
 
 func TestPendingProposals(t *testing.T) {

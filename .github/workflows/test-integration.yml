@@ -20,6 +20,15 @@ jobs:
         with:
           go-version: 1.15
 
+      - name: Install protoc
+        uses: arduino/setup-protoc@v1
+
+      - name: Set up packr2
+        run: go get -u github.com/gobuffalo/packr/v2/packr2
+
+      - name: Set up relayer
+        run: git clone https://github.com/ovrclk/relayer && cd relayer && git checkout 3080dab10e37e6db9e691c343b1c0cdb6d845753 && make install
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -29,7 +38,7 @@ jobs:
       - name: Install Starport
         working-directory: ${{ env.working-directory }}
         run: |
-          git clone https://github.com/tendermint/starport && cd starport && make
+          git clone https://github.com/tendermint/starport && cd starport && go install ./...
 
       - name: Run Integration Tests
         working-directory: ${{ env.working-directory }}

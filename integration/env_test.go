@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	serveTimeout = time.Minute * 15
+	serveTimeout = time.Minute * 5
 )
 
 var isCI, _ = strconv.ParseBool(os.Getenv("CI"))
@@ -148,6 +148,8 @@ func (e env) Serve(msg string, path string, options ...execOption) (ok bool) {
 				"serve",
 				"-v",
 			),
+			step.Stderr(os.Stderr),
+			step.Stdout(os.Stdout),
 			step.Workdir(path),
 		),
 		options...,
