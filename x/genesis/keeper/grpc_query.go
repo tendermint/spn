@@ -25,7 +25,9 @@ func (k Keeper) ListChains(
 
 	ctx := sdk.UnwrapSDKContext(c)
 	store := ctx.KVStore(k.storeKey)
-	chainStore := prefix.NewStore(store, types.KeyPrefix(types.ChainKey))
+
+	searchPrefix := append(types.KeyPrefix(types.ChainKey), []byte(req.Prefix)...)
+	chainStore := prefix.NewStore(store, searchPrefix)
 
 	pageRes, err := query.Paginate(chainStore, req.Pagination, func(key []byte, value []byte) error {
 		chain := types.UnmarshalChain(k.cdc, value)

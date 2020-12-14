@@ -19,39 +19,87 @@ func TestListChains(t *testing.T) {
 
 	// Create several chains through messages
 	var chainIDs []string
-	var sourceURLs []string
 	for i := 0; i < 10; i++ {
-		chainIDs = append(chainIDs, spnmocks.MockRandomAlphaString(5))
-		sourceURLs = append(sourceURLs, spnmocks.MockRandomAlphaString(5))
+		chainIDs = append(chainIDs, "AAA" + spnmocks.MockRandomAlphaString(5))
+	}
+	for i := 0; i < 10; i++ {
+		chainIDs = append(chainIDs, "BBB" + spnmocks.MockRandomAlphaString(5))
 	}
 	for i := range chainIDs {
 		msg := types.NewMsgChainCreate(
 			chainIDs[i],
 			spnmocks.MockAccAddress(),
-			sourceURLs[i],
+			spnmocks.MockRandomAlphaString(5),
 			spnmocks.MockRandomAlphaString(5),
 		)
-		h(ctx, msg)
+		_, err := h(ctx, msg)
+		require.NoError(t, err)
 	}
 
-	// Query the created chains
+	// ListChains lists the chains and can filter with a prefix
 	var listQuery types.QueryListChainsRequest
 	listChainsRes, err := q.ListChains(context.Background(), &listQuery)
 	require.NoError(t, err)
-	require.Equal(t, 10, len(listChainsRes.Chains))
-	for _, chainID := range chainIDs {
+
+	listQuery.Prefix = "AAA"
+	listChainsResAAA, err := q.ListChains(context.Background(), &listQuery)
+	require.NoError(t, err)
+
+	listQuery.Prefix = "BBB"
+	listChainsResBBB, err := q.ListChains(context.Background(), &listQuery)
+	require.NoError(t, err)
+
+	listQuery.Prefix = "CCC"
+	listChainsResCCC, err := q.ListChains(context.Background(), &listQuery)
+	require.NoError(t, err)
+
+	require.Equal(t, 20, len(listChainsRes.Chains))
+	require.Equal(t, 10, len(listChainsResAAA.Chains))
+	require.Equal(t, 10, len(listChainsResBBB.Chains))
+	require.Equal(t, 0, len(listChainsResCCC.Chains))
+
+	// Retrieve AAA prefixed chains
+	for _, chainID := range chainIDs[0:10] {
 		chain, found := k.GetChain(ctx, chainID)
 		require.True(t, found)
 		require.Contains(t, listChainsRes.Chains, &chain)
+		require.Contains(t, listChainsResAAA.Chains, &chain)
+		require.NotContains(t, listChainsResBBB.Chains, &chain)
 	}
+	// Retrieve BBB prefixed chains
+	for _, chainID := range chainIDs[10:20] {
+		chain, found := k.GetChain(ctx, chainID)
+		require.True(t, found)
+		require.Contains(t, listChainsRes.Chains, &chain)
+		require.NotContains(t, listChainsResAAA.Chains, &chain)
+		require.Contains(t, listChainsResBBB.Chains, &chain)
+	}
+}
+
+func TestShowChain(t *testing.T) {
+	ctx, k := spnmocks.MockGenesisContext()
+	h := genesis.NewHandler(*k)
+	q := spnmocks.MockGenesisQueryClient(ctx, k)
+
+	// Create a chain
+	chainID := spnmocks.MockRandomAlphaString(5)
+	msg := types.NewMsgChainCreate(
+		chainID,
+		spnmocks.MockAccAddress(),
+		spnmocks.MockRandomAlphaString(5),
+		spnmocks.MockRandomAlphaString(5),
+	)
+	res, err := h(ctx, msg)
+	require.NoError(t, err)
+	chain := types.UnmarshalChain(k.GetCodec(), res.Data)
 
 	// Query a specific chain
 	showQuery := types.QueryShowChainRequest{
-		ChainID: chainIDs[5],
+		ChainID: chainID,
 	}
 	showChainRes, err := q.ShowChain(context.Background(), &showQuery)
 	require.NoError(t, err)
-	require.Equal(t, sourceURLs[5], showChainRes.Chain.SourceURL)
+	require.Equal(t, chain, *showChainRes.Chain)
 
 	// Query on a non existing chain should fail
 	showQuery = types.QueryShowChainRequest{
@@ -59,6 +107,7 @@ func TestListChains(t *testing.T) {
 	}
 	_, err = q.ShowChain(context.Background(), &showQuery)
 	require.Error(t, err)
+
 }
 
 func TestProposalCount(t *testing.T) {
