@@ -39,7 +39,7 @@ func listChains(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQue
 	}
 
 	// Get the chains from the keeper
-	chains := keeper.GetAllChains(ctx)
+	chains := keeper.GetAllChains(ctx, "")
 
 	// Read chainID
 	var chainIDs []string

@@ -31,7 +31,7 @@ func TestGetChain(t *testing.T) {
 	k.SetChain(ctx, *chain4)
 	k.SetChain(ctx, *chain5)
 	k.SetChain(ctx, *chain6)
-	allChains := k.GetAllChains(ctx)
+	allChains := k.GetAllChains(ctx, "")
 	require.Equal(t, 6, len(allChains))
 	require.Contains(t, allChains, *chain)
 	require.Contains(t, allChains, *chain2)

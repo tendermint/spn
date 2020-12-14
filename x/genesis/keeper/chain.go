@@ -26,10 +26,11 @@ func (k Keeper) SetChain(ctx sdk.Context, chain types.Chain) {
 }
 
 // GetAllChains
-func (k Keeper) GetAllChains(ctx sdk.Context) (chains []types.Chain) {
+func (k Keeper) GetAllChains(ctx sdk.Context, prefix string) (chains []types.Chain) {
 	store := ctx.KVStore(k.storeKey)
 
-	iterator := sdk.KVStorePrefixIterator(store, types.KeyPrefix(types.ChainKey))
+	keyPrefix := append(types.KeyPrefix(types.ChainKey), []byte(prefix)...)
+	iterator := sdk.KVStorePrefixIterator(store, keyPrefix)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
