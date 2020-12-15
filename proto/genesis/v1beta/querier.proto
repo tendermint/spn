@@ -19,6 +19,7 @@ service Query {
 
 message QueryListChainsRequest {
     cosmos.base.query.v1beta1.PageRequest pagination = 1;
+    string prefix = 2;
 }
 
 message QueryListChainsResponse {
