@@ -11,7 +11,7 @@ To use SPN you will need [Starport](https://github.com/tendermint/starport) inst
 To initiate a blockchain launch run the following command:
 
 ```
-starport network chain create --chain [chainID] --source [sourceURL]
+starport network chain create [chainID] [sourceURL]
 ```
 
 `chainID` is a string that uniquely identifies your blockchain on SPN. `sourceURL` is a URL that can be used to clone the repository containing a Cosmos SDK blockchain node (for example, `https://github.com/tendermint/spn`). By running the `create` command you act as a "coordinator" and initiate the launch of a blockchain.
