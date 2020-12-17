@@ -41,7 +41,7 @@
   remote_user: ubuntu
   vars:
     app_name: spn
-    data_dir: spnd
+    data_dir: .spn
     reset: "true"
     chain_id: spn
     validators_assets: 100000000000000000000stake,100000000000000000000token
