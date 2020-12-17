@@ -7,8 +7,8 @@ on:
 
 env:
   BASTION_IP: 3.232.5.146
-  VALIDATORS_IPS: "10.0.6.176"
-  SENTRIES_IPS: "10.0.6.234,10.0.7.153"
+  VALIDATORS_IPS: "10.0.6.58"
+  SENTRIES_IPS: "10.0.6.250,10.0.7.105"
 
 jobs:
   ansible-deploy:
