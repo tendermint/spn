@@ -8,7 +8,6 @@ validator:
   name: user1
   staked: "100000000stake"
 faucet:
-  port: 8000
   name: user1
   coins:
     - "1000token"
