@@ -48,16 +48,3 @@
     generate_faucet_account: 100000000000000000000token
   roles:
     - cosmos-node
-
-- hosts: sentries
-  become: yes
-  remote_user: ubuntu
-  vars:
-    app_name: spn
-    faucet_version: stargate
-    cli_name: spnd
-    credit_amount: 100
-    max_credit: 10000
-    denom: token
-  roles:
-    - cosmos-faucet
