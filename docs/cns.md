@@ -4,7 +4,7 @@ The goal of this module is to be a simple registry with the ability to transfer 
 
 # State
 
-## Chain name
+## Chain Info
 
 Chain name contains information about the chain, most importantly, chain ID used to uniquely identify the chain and a list of peer nodes.
 
