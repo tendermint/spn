@@ -6,7 +6,7 @@ The goal of this module is to be a simple registry with the ability to transfer 
 
 ## Chain name
 
-Chain name contains information about the chain, most importantly, chain ID used to uniquly identify the chain and a list of peer nodes.
+Chain name contains information about the chain, most importantly, chain ID used to uniquely identify the chain and a list of peer nodes.
 
 Key: `chain-[chainID] -> Chain Name` 
 
