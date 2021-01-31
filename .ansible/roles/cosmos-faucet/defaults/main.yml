@@ -1,4 +1,4 @@
-faucet_version: master
+faucet_version: refactor/use-cosmosfaucet
 log_level: info
 key_name: faucet
 cli_name: gaiacli
