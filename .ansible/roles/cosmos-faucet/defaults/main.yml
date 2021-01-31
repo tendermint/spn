@@ -6,4 +6,3 @@ credit_amount: 10000000
 max_credit: 100000000
 denom: uatom
 faucet_mnemonic: ""
-keyring_backend: "test"
