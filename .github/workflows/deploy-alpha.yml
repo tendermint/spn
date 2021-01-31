@@ -1,6 +1,7 @@
 name: Deploy Alpha
 
 on:
+  pull_request:  
   push:
     branches:
       - develop
