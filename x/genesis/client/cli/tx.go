@@ -41,8 +41,7 @@ func CmdChainCreate() *cobra.Command {
 		Short: "Create a new chain to launch",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
@@ -73,8 +72,7 @@ func CmdApprove() *cobra.Command {
 		Short: "Approve a proposal",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
@@ -110,8 +108,7 @@ func CmdReject() *cobra.Command {
 		Short: "Reject a proposal",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
@@ -147,8 +144,7 @@ func CmdProposalAddAccount() *cobra.Command {
 		Short: "Add a proposal to add a genesis account, [coins] must be comma separated coin denominations: 1000atom,1000stake",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
@@ -160,7 +156,7 @@ func CmdProposalAddAccount() *cobra.Command {
 			}
 
 			// Parse coins
-			coins, err := sdk.ParseCoins(args[2])
+			coins, err := sdk.ParseCoinsNormalized(args[2])
 			if err != nil {
 				return fmt.Errorf("failed to parse coins: %v", err.Error())
 			}
@@ -196,8 +192,7 @@ func CmdProposalAddValidator() *cobra.Command {
 		Short: "Add a proposal to add a gentx to add a validator during chain initialization",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadTxCommandFlags(clientCtx, cmd.Flags())
+			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
@@ -209,7 +204,7 @@ func CmdProposalAddValidator() *cobra.Command {
 			}
 
 			// Read self-delegation
-			selfDelegation, err := sdk.ParseCoin(args[3])
+			selfDelegation, err := sdk.ParseCoinNormalized(args[3])
 			if err != nil {
 				return err
 			}

@@ -3,12 +3,13 @@ package cli
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/genesis/types"
-	"strconv"
-	"strings"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -43,11 +44,6 @@ func CmdListChains() *cobra.Command {
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			queryClient := types.NewQueryClient(clientCtx)
 
 			// Get page
@@ -66,7 +62,7 @@ func CmdListChains() *cobra.Command {
 				return err
 			}
 
-			return clientCtx.PrintOutput(res)
+			return clientCtx.PrintProto(res)
 		},
 	}
 
@@ -84,11 +80,6 @@ func CmdShowChain() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryShowChainRequest{
@@ -100,7 +91,7 @@ func CmdShowChain() *cobra.Command {
 				return err
 			}
 
-			return clientCtx.PrintOutput(res)
+			return clientCtx.PrintProto(res)
 		},
 	}
 
@@ -117,11 +108,6 @@ func CmdProposal() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryProposalCountRequest{
@@ -133,7 +119,7 @@ func CmdProposal() *cobra.Command {
 				return err
 			}
 
-			return clientCtx.PrintOutput(res)
+			return clientCtx.PrintProto(res)
 		},
 	}
 
@@ -150,11 +136,6 @@ func CmdShowProposal() *cobra.Command {
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			queryClient := types.NewQueryClient(clientCtx)
 
 			// Convert proposal ID
@@ -173,7 +154,7 @@ func CmdShowProposal() *cobra.Command {
 				return err
 			}
 
-			return clientCtx.PrintOutput(res)
+			return clientCtx.PrintProto(res)
 		},
 	}
 	flags.AddQueryFlagsToCmd(cmd)
@@ -189,17 +170,12 @@ func CmdListProposals() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryListProposalsRequest{
 				ChainID: args[0],
-				Status: types.ProposalStatus_ANY_STATUS,
-				Type: types.ProposalType_ANY_TYPE,
+				Status:  types.ProposalStatus_ANY_STATUS,
+				Type:    types.ProposalType_ANY_TYPE,
 			}
 
 			// Perform the request
@@ -208,7 +184,7 @@ func CmdListProposals() *cobra.Command {
 				return err
 			}
 
-			return clientCtx.PrintOutput(res)
+			return clientCtx.PrintProto(res)
 		},
 	}
 
@@ -225,11 +201,6 @@ func CmdLaunchInformation() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryLaunchInformationRequest{
@@ -242,7 +213,7 @@ func CmdLaunchInformation() *cobra.Command {
 				return err
 			}
 
-			return clientCtx.PrintOutput(res)
+			return clientCtx.PrintProto(res)
 		},
 	}
 
@@ -259,11 +230,6 @@ func CmdSimulatedLaunchInformation() *cobra.Command {
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-			clientCtx, err := client.ReadQueryCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			queryClient := types.NewQueryClient(clientCtx)
 
 			var proposalIDs []int32
@@ -279,7 +245,7 @@ func CmdSimulatedLaunchInformation() *cobra.Command {
 			}
 
 			params := &types.QuerySimulatedLaunchInformationRequest{
-				ChainID: args[0],
+				ChainID:     args[0],
 				ProposalIDs: proposalIDs,
 			}
 
@@ -289,7 +255,7 @@ func CmdSimulatedLaunchInformation() *cobra.Command {
 				return err
 			}
 
-			return clientCtx.PrintOutput(res)
+			return clientCtx.PrintProto(res)
 		},
 	}
 
