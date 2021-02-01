@@ -1,110 +1,113 @@
 # Chain Name Service Draft
 
-The goal of this module is to be a simple registry with the ability to transfer ownership. Auctions and other mechanisms are out of scope and can be implemented alongside or on top of this system (perhaps, in a custodial way).
+The goal of this module is to be a simple registry of Cosmos Blockchains with the ability to transfer ownership.
+
+The development of CNS is planned to be divided into 3 separate phases in order to ensure there's enough time for existing chains and prevent front running
+
+**Phase 0** - Here, we expect owners of existing chains to claim their chain names which are approved by a previously agreed upon multi-sig. Estimated: 6 months.
+
+Ideas:
+
+1) Have a fixed price for reserved names, which would be transfered to community pool.
+
+**Phase 1** - After an agreed-upon time is over, we would open CNS to general users to register chain names of their choice.
+
+From this phase, the name will have an expiry time.
+
+**Phase 2** - Finally, we add a way to transfer ownership of chain names. It's still to be determined if auction should be implemented as a module, or make CNS NFT compatible and let NFT handle the transfer or a CosmWasm smart contract which handles the auction utilizing the transfer ownership feature of CNS.
 
 # State
 
-## Chain Info
+Goal 1 (end-users): let users determine whether the tokens they got through IBC came from a chain they claim to come from. This will be possible through the mapping of chain names to IBC clients.
 
-Chain name contains information about the chain, most importantly, chain ID used to uniquely identify the chain and a list of peer nodes.
-
-Key: `chain-[chainID] -> Chain Name` 
+Goal 2 (validators): let nodes (validators, full-nodes, etc.) join networks.
 
 ```go
-type ChainName struct {
-	ChainID string
-	Owner sdk.AccAddress
-	Peers []peer
-	SourceURL string
-	SourceCommitHash string
+type ChainInfo struct {
+	ChainName     string
+	Owner         OwnerProps
+	Expiration    int64
+	Metadata      [][2]string
+
+	// Goal 1
+	CanonicalIBCClientId string
+
+	// Goal 2
+	Seed          []seed
+	SourceCodeURL string //how likely is the possibility of code url changing
+	Version       VersionInfo
 }
 ```
 
-## Offer
-
-Offers are used to transfer ownership of a chain name.
+```go
+type VersionInfo struct {
+	 Version          int64
+	 SourceCommitHash string
+	 GenesisHash      string
+}
+```
 
 ```go
-type Offer struct {
-	ID int32
-	From sdk.AccAddress
-	Amount sdk.Coins
-	Status status // pending | rejected | approved
+type OwnerProps interface {
+	String()  string
+}
+```
+
+```go
+type Claim struct {
+  ID        int64
+  ChainName string
+  Owner     OwnerProps
+  Proof     string
 }
 ```
 
 # Messages
 
-## MsgEditChainName
+### Phase - 0
 
-Chain owner can make edits to the chain name.
+Ideally, we would want the chains to approve via a gov proposal the owner (likely address) of the chain name. This makes it easy for approvers and also prevent collision for the same namespace.
+
+### MsgClaimChainName
+
+Claim is about mapping chain name to owner. Name, owner, IBC client, meta.
 
 ```go
-type MsgEditChainName struct {
-	
+type MsgClaimChainName struct {
+	ChainName     string
+	CanonicalIBCClientId string
+	Proof         string
+	Owner         OwnerProps
 }
 ```
 
-## MsgTransferChainName
-
-To transfer a name from one owner from another without creating an offer with a zero amount.
+### MsgApproveClaim
 
 ```go
-type MsgTransferChainName struct {
-	From string
-	To string
-	ChainID string
+type MsgApproveClaim struct {
+	ClaimID  int32
+	Approver sdk.AccAddress
 }
 ```
 
-## MsgCreateOffer
+### MsgRejectClaim
 
 ```go
-type MsgCreateOffer struct {
-	ChainID string
-	Amount sdk.Coins
+type MsgRejectClaim struct{
+	ClaimID int32
+	Approver sdk.AccAddress
 }
 ```
 
-## MsgRejectOffer
+### MsgUpdateInfo
 
 ```go
-type MsgRejectOffer struct {
-	ChainID string
+type MsgUpdateInfo struct{
+	ChainName     string
+	Owner         OwnerProps
+	Seed          []seed
+	CanonicalIBCClientId string
+	Version       VersionInfo
+	Metadata      [][2]string
 }
 ```
-
-## MsgApproveOffer
-
-```go
-type MsgApproveOffer struct {
-	ChainID string
-}
-```
-
-## MsgRemoveOffer
-
-```go
-type MsgRejectOffer struct {
-	ChainID string
-}
-```
-
-## MsgRegisterName
-
-To accuire a name that doesn't have an owner. By default each name has a price. When registering a name, amount equivalent to the price goes to the community pool.
-
-```go
-type MsgRejectOffer struct {
-	ChainID string
-}
-```
-
-# Ideas
-
-- Reserve names for existing chains
-- Names with a chain IDs that have `tesnet-` prefix are registered for free
-- Off-chain tool to check that nodes in peer list are part of a network with a given chain ID. Can loop through all the chain names and create a table.
-- If you're launching a chain and don't want a single entity to be responsible for managing a chain name, use a multisig
-- This should probably be an IBC module
-- Open question: how does relate to IBC, relayers. How can this module be used with IBC.
