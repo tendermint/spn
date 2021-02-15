@@ -53,6 +53,7 @@ func checkChainID(chainID string) bool {
 	return true
 }
 
+// isChainAuthorizedChar checks to ensure that all letters in the ChainID are valid
 func isChainAuthorizedChar(c rune) bool {
 	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '-'
 }
