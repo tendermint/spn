@@ -9,9 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/store"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	tx "github.com/cosmos/cosmos-sdk/types/tx"
-	"github.com/cosmos/cosmos-sdk/types/tx/signing"
-	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -199,94 +196,7 @@ func MockProposalInformation() *types.ProposalInformation {
 }
 
 // MockGenTx mocks a gentx transaction
+// A gentx is not interpreted on-chain and can be any data
 func MockGenTx() []byte {
-	selfDelegation := sdk.NewCoin("stake", sdk.NewInt(10000))
-	return MockGenTxWithDelegation(selfDelegation)
-}
-
-// MockGenTxWithDelegation mocks a gentx transaction with a custom self-delegation
-func MockGenTxWithDelegation(selfDelegation sdk.Coin) []byte {
-	privKey, opAddress := MockValAddress()
-
-	// Create validator message
-	message, err := staking.NewMsgCreateValidator(
-		opAddress,
-		MockPubKey(),
-		selfDelegation,
-		MockDescription(),
-		MockCommissionRates(),
-		sdk.NewInt(1),
-	)
-
-	if err != nil {
-		panic(err)
-	}
-
-	// txConfig
-	interfaceRegistry := codectypes.NewInterfaceRegistry()
-	marshaler := codec.NewProtoCodec(interfaceRegistry)
-	txConfig := authtx.NewTxConfig(marshaler, authtx.DefaultSignModes)
-
-	// Tx message
-	var genTx tx.Tx
-	any, err := codectypes.NewAnyWithValue(message)
-	if err != nil {
-		panic("Can't encode MsgCreateValidator")
-	}
-	if genTx.Body == nil {
-		genTx.Body = &tx.TxBody{}
-	}
-	genTx.Body.Messages = []*codectypes.Any{any}
-
-	// Signature
-	signMode := txConfig.SignModeHandler().DefaultMode()
-	sig := signing.SignatureV2{
-		PubKey: privKey.PubKey(),
-		Data: &signing.SingleSignatureData{
-			SignMode: signMode,
-		},
-		Sequence: 0,
-	}
-	signerInfos := make([]*tx.SignerInfo, 1)
-	rawSigs := make([][]byte, 1)
-	var modeInfo *tx.ModeInfo
-	modeInfo, rawSigs[0] = authtx.SignatureDataToModeInfoAndSig(sig.Data)
-	any, err = authtx.PubKeyToAny(sig.PubKey)
-	if err != nil {
-		panic("Can't encode PubKey")
-	}
-	signerInfos[0] = &tx.SignerInfo{
-		PublicKey: any,
-		ModeInfo:  modeInfo,
-		Sequence:  sig.Sequence,
-	}
-	if genTx.AuthInfo == nil {
-		genTx.AuthInfo = &tx.AuthInfo{}
-	}
-	genTx.AuthInfo.SignerInfos = signerInfos
-	genTx.Signatures = rawSigs
-
-	// Other info
-	genTx.Body.Memo = MockRandomAlphaString(20)
-	if genTx.AuthInfo.Fee == nil {
-		genTx.AuthInfo.Fee = &tx.Fee{}
-	}
-	genTx.AuthInfo.Fee.Amount = MockCoins()
-	if genTx.AuthInfo.Fee == nil {
-		genTx.AuthInfo.Fee = &tx.Fee{}
-	}
-	genTx.AuthInfo.Fee.GasLimit = 1000000
-
-	// Marshal gentx
-	cdc := MockCodec()
-	jsonCodec, ok := cdc.(codec.JSONMarshaler)
-	if !ok {
-		panic("Can't get json codec")
-	}
-	gentxBytes, err := jsonCodec.MarshalJSON(&genTx)
-	if err != nil {
-		panic(fmt.Sprintf("cannot marshal gentx: %v", err.Error()))
-	}
-
-	return gentxBytes
+	return []byte(MockRandomString(250))
 }

@@ -1,13 +1,12 @@
 package testing
 
 import (
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 
+	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
-	"github.com/tendermint/tendermint/crypto"
 
 	"math/rand"
 )
@@ -42,7 +41,7 @@ func MockAccAddress() sdk.AccAddress {
 }
 
 // MockValAddress mocks an operator address with associated private key for test purpose
-func MockValAddress() (crypto.PrivKey, sdk.ValAddress) {
+func MockValAddress() (*secp256k1.PrivKey, sdk.ValAddress) {
 	privKey := secp256k1.GenPrivKey()
 	pk := privKey.PubKey()
 	addr := pk.Address()
@@ -50,12 +49,8 @@ func MockValAddress() (crypto.PrivKey, sdk.ValAddress) {
 }
 
 // MockPubKey mocks a public key
-func MockPubKey() crypto.PubKey {
+func MockPubKey() cryptotypes.PubKey {
 	pubKey := ed25519.GenPrivKey().PubKey()
-	_, err := codectypes.PackAny(pubKey)
-	if err != nil {
-		panic(err)
-	}
 
 	return pubKey
 }
