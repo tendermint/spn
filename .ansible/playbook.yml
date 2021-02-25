@@ -44,6 +44,7 @@
     data_dir: .spn
     reset: "true"
     chain_id: spn
+    self_delegation: 10000000000000000000stake
     validators_assets: 100000000000000000000stake,100000000000000000000token
     generate_faucet_account: 100000000000000000000token
   roles:

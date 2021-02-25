@@ -127,7 +127,7 @@
     warn: no
   shell: |
     rm -rf /home/{{ app_name }}/{{ data_dir }}/config/gentx
-    echo -e "{{ key_password }}" | {{ app_name }}d gentx {{ ansible_hostname }} --chain-id {{ chain_id }}
+    echo -e "{{ key_password }}" | {{ app_name }}d gentx {{ ansible_hostname }} {{ self_delegation }} --chain-id {{ chain_id }}
 
 - name: grab gentx files
   become_user: "{{ app_name }}"
