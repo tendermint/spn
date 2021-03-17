@@ -1,5 +1,5 @@
 syntax = "proto3";
-package spn.genesis.v1beta1;
+package spn.launch.v1beta1;
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
