@@ -1,9 +1,9 @@
-package genesis
+package launch
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/x/genesis/keeper"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/keeper"
+	"github.com/tendermint/spn/x/launch/types"
 )
 
 // InitGenesis initializes the capability module's state from a provided genesis

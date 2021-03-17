@@ -1,4 +1,4 @@
-package genesis
+package launch
 
 import (
 	"encoding/json"
@@ -15,10 +15,10 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	"github.com/tendermint/spn/x/genesis/client/cli"
-	"github.com/tendermint/spn/x/genesis/client/rest"
-	"github.com/tendermint/spn/x/genesis/keeper"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/client/cli"
+	"github.com/tendermint/spn/x/launch/client/rest"
+	"github.com/tendermint/spn/x/launch/keeper"
+	"github.com/tendermint/spn/x/launch/types"
 )
 
 var (

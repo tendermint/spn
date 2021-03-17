@@ -1,17 +1,17 @@
-package genesis_test
+package launch_test
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
-	"github.com/tendermint/spn/x/genesis"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch"
+	"github.com/tendermint/spn/x/launch/types"
 	"testing"
 )
 
 func TestHandleMsgChainCreate(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 
 	chainID := spnmocks.MockRandomAlphaString(5)
 	creator := spnmocks.MockAccAddress()
@@ -49,7 +49,7 @@ func TestHandleMsgChainCreate(t *testing.T) {
 
 func TestHandleMsgReject(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	chainID := spnmocks.MockRandomAlphaString(5)
 	coordinator := spnmocks.MockAccAddress()
 
@@ -157,7 +157,7 @@ func TestHandleMsgReject(t *testing.T) {
 
 func TestHandleMsgApprove(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	chainID := spnmocks.MockRandomAlphaString(5)
 	coordinator := spnmocks.MockAccAddress()
 
@@ -252,7 +252,7 @@ func TestHandleMsgApprove(t *testing.T) {
 	_, err = h(ctx, msg)
 	require.Error(t, err)
 
-	// Prevent approving a proposal with an account already in the genesis
+	// Prevent approving a proposal with an account already in the launch
 	_, err = h(ctx, msgProposal)
 	require.NoError(t, err)
 	msg = types.NewMsgApprove(
@@ -294,7 +294,7 @@ func TestHandleMsgApprove(t *testing.T) {
 	validatorAddressSet := k.IsValidatorSet(ctx, chainID, valAddress)
 	require.True(t, validatorAddressSet)
 
-	// Prevent approving a proposal with an validator already in the genesis
+	// Prevent approving a proposal with an validator already in the launch
 	_, err = h(ctx, msgProposalValidator)
 	require.NoError(t, err)
 	msg = types.NewMsgApprove(
@@ -308,7 +308,7 @@ func TestHandleMsgApprove(t *testing.T) {
 
 func TestHandleMsgProposalAddAccount(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	chainID := spnmocks.MockRandomAlphaString(5)
 
 	coordinator := spnmocks.MockAccAddress()
@@ -399,7 +399,7 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 
 func TestHandleMsgProposalAddValidator(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	chainID := spnmocks.MockRandomAlphaString(5)
 
 	coordinator := spnmocks.MockAccAddress()
