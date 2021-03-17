@@ -2,7 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/types"
 )
 
 // GetChain retrieve a chain from the store

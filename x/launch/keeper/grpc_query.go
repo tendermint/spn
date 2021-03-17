@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"sort"
@@ -226,7 +226,7 @@ func (k Keeper) LaunchInformation(
 }
 
 // SimulatedLaunchInformation generates launch information for a chain from its current launch information and a proposal
-// This allows the user to test if a approved proposal would generate a correct genesis
+// This allows the user to test if a approved proposal would generate a correct launch information
 func (k Keeper) SimulatedLaunchInformation(
 	c context.Context,
 	req *types.QuerySimulatedLaunchInformationRequest,

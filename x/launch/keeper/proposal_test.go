@@ -3,7 +3,7 @@ package keeper_test
 import (
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/types"
 	"testing"
 )
 

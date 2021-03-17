@@ -7,14 +7,14 @@ import (
 
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
-	"github.com/tendermint/spn/x/genesis"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch"
+	"github.com/tendermint/spn/x/launch/types"
 	"testing"
 )
 
 func TestListChains(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
 
 	// Create several chains through messages
@@ -78,7 +78,7 @@ func TestListChains(t *testing.T) {
 
 func TestShowChain(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
 
 	// Create a chain
@@ -112,7 +112,7 @@ func TestShowChain(t *testing.T) {
 
 func TestProposalCount(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
 
 	// Fails if the chain doesn't exist
@@ -174,7 +174,7 @@ func TestProposalCount(t *testing.T) {
 
 func TestShowProposal(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
 
 	// Create a new chain
@@ -246,7 +246,7 @@ func TestShowProposal(t *testing.T) {
 
 func TestListProposals(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
 
 	coordinator := spnmocks.MockAccAddress()
@@ -524,7 +524,7 @@ func TestListProposals(t *testing.T) {
 
 func TestLaunchInformation(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
 
 	chainID := spnmocks.MockRandomAlphaString(5)
@@ -603,7 +603,7 @@ func TestLaunchInformation(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	// Can retrieve the current genesis with all the approved proposals
+	// Can retrieve the current launch with all the approved proposals
 	var req types.QueryLaunchInformationRequest
 	req.ChainID = chainID
 	res, err := q.LaunchInformation(context.Background(), &req)
@@ -618,7 +618,7 @@ func TestLaunchInformation(t *testing.T) {
 
 func TestSimulatedLaunchInformation(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 	q := spnmocks.MockGenesisQueryClient(ctx, k)
 
 	chainID := spnmocks.MockRandomAlphaString(5)
@@ -719,7 +719,7 @@ func TestSimulatedLaunchInformation(t *testing.T) {
 
 func TestPendingProposals(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 
 	coordinator := spnmocks.MockAccAddress()
 	coordinatorIdentity, _ := k.IdentityKeeper.GetIdentifier(ctx, coordinator)
@@ -797,7 +797,7 @@ func TestPendingProposals(t *testing.T) {
 
 func TestApprovedProposals(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 
 	// Create a new chain
 	coordinator := spnmocks.MockAccAddress()
@@ -844,7 +844,7 @@ func TestApprovedProposals(t *testing.T) {
 
 func TestRejectedProposals(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
-	h := genesis.NewHandler(*k)
+	h := launch.NewHandler(*k)
 
 	// Create a new chain
 	coordinator := spnmocks.MockAccAddress()

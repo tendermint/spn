@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/types"
 
 	abci "github.com/tendermint/tendermint/abci/types"
 )

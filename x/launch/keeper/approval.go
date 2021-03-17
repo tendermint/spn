@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/types"
 )
 
-// CheckProposalApproval checks if a proposal can be applied to the genesis and approved depending on the current state of the genesis
+// CheckProposalApproval checks if a proposal can be applied to the launch and approved depending on the current state of the launch information
 func (k Keeper) CheckProposalApproval(ctx sdk.Context, chainID string, proposal types.Proposal) error {
 	// Check if chain exists
 	_, found := k.GetChain(ctx, chainID)
@@ -43,17 +43,17 @@ func (k Keeper) ApplyProposalApproval(ctx sdk.Context, chainID string, proposal 
 	}
 }
 
-// checkProposalAddAccount checks if a ProposalAddAccount can be approved and applied to the genesis
+// checkProposalAddAccount checks if a ProposalAddAccount can be approved and applied to the launch information
 func (k Keeper) checkProposalAddAccount(ctx sdk.Context, chainID string, payload *types.ProposalAddAccountPayload) error {
 	// Cannot add an account that already exists in the keeper
 	if k.IsAccountSet(ctx, chainID, payload.Address) {
-		return fmt.Errorf("account %v already exists in the genesis", payload.Address.String())
+		return fmt.Errorf("account %v already exists in the launch", payload.Address.String())
 	}
 
 	return nil
 }
 
-// checkProposalAddValidator checks if a ProposalAddValidator can be approved and applied to the genesis
+// checkProposalAddValidator checks if a ProposalAddValidator can be approved and applied to the launch information
 func (k Keeper) checkProposalAddValidator(ctx sdk.Context, chainID string, payload *types.ProposalAddValidatorPayload) error {
 	valAddr := payload.ValidatorAddress
 
