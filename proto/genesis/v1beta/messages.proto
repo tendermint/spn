@@ -1,10 +1,10 @@
 syntax = "proto3";
 package spn.genesis.v1beta1;
 
-option go_package = "github.com/tendermint/spn/x/genesis/types";
+option go_package = "github.com/tendermint/spn/x/launch/types";
 
 import "gogoproto/gogo.proto";
-import "genesis/v1beta/types.proto";
+import "launch/v1beta/types.proto";
 
 message MsgChainCreate {
     string chainID = 1;

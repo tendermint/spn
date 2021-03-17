@@ -1,10 +1,10 @@
 syntax = "proto3";
 package spn.genesis.v1beta1;
 
-option go_package = "github.com/tendermint/spn/x/genesis/types";
+option go_package = "github.com/tendermint/spn/x/launch/types";
 
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "genesis/v1beta/types.proto";
+import "launch/v1beta/types.proto";
 
 // Query defines the gRPC querier service.
 service Query {
