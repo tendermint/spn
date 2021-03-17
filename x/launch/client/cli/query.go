@@ -9,12 +9,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd(queryRoute string) *cobra.Command {
-	// Group genesis queries under a subcommand
+	// Group launch queries under a subcommand
 	cmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      fmt.Sprintf("Querying commands for the %s module", types.ModuleName),
@@ -132,7 +132,7 @@ func CmdProposal() *cobra.Command {
 func CmdShowProposal() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-proposal [chain-id] [proposal-id]",
-		Short: "show info concerning a proposal for a chain genesis",
+		Short: "show info concerning a proposal for a chain launch",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -162,11 +162,11 @@ func CmdShowProposal() *cobra.Command {
 	return cmd
 }
 
-// CmdListProposals returns the command to list proposals for a chain genesis
+// CmdListProposals returns the command to list proposals for a chain launch
 func CmdListProposals() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-proposals [chain-id]",
-		Short: "list the  proposals for a chain genesis",
+		Short: "list the  proposals for a chain launch",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -197,7 +197,7 @@ func CmdListProposals() *cobra.Command {
 func CmdLaunchInformation() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "launch-information [chain-id]",
-		Short: "show the information to launch a chain (genesis information and peers)",
+		Short: "show the information to launch a chain",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
