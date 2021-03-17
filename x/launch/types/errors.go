@@ -6,7 +6,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// x/genesis module sentinel errors
+// x/launch module sentinel errors
 var (
 	ErrInvalidChain                = sdkerrors.Register(ModuleName, 1, "invalid chain")
 	ErrInvalidVote                 = sdkerrors.Register(ModuleName, 2, "invalid vote")

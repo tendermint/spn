@@ -7,7 +7,7 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(MsgChainCreate{}, "genesis/MsgChainCreate", nil)
+	cdc.RegisterConcrete(MsgChainCreate{}, "launch/MsgChainCreate", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {

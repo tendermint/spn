@@ -7,7 +7,7 @@ import (
 	spnmocks "github.com/tendermint/spn/internal/testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/types"
 )
 
 func TestNewChain(t *testing.T) {

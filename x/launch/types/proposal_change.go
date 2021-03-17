@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// NewProposalChange creates a new proposal for a change in the genesis
+// NewProposalChange creates a new proposal for a change in the launch
 func NewProposalChange(
 	proposalInformation *ProposalInformation,
 	payload *ProposalChangePayload,
@@ -24,7 +24,7 @@ func NewProposalChange(
 	return &proposal, nil
 }
 
-// NewProposalChangePayload creates a new payload for a genesis change proposal
+// NewProposalChangePayload creates a new payload for a launch change proposal
 func NewProposalChangePayload(
 	changePath []string,
 	newValue string,

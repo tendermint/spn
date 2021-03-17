@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
 
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/types"
 
 	"testing"
 )
@@ -60,7 +60,7 @@ func TestNewProposalChange(t *testing.T) {
 	err := types.ValidateProposalPayloadChange(payload)
 	require.NoError(t, err)
 
-	// Can create a proposal for a genesis change
+	// Can create a proposal for a launch change
 	_, err = types.NewProposalChange(
 		spnmocks.MockProposalInformation(),
 		payload,
@@ -86,7 +86,7 @@ func TestNewProposalAddAccount(t *testing.T) {
 	err := types.ValidateProposalPayloadAddAccount(payload)
 	require.NoError(t, err)
 
-	// Can create a proposal for a genesis change
+	// Can create a proposal for a launch change
 	_, err = types.NewProposalAddAccount(
 		spnmocks.MockProposalInformation(),
 		payload,
@@ -136,7 +136,7 @@ func TestNewProposalAddValidator(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, peer, retrievedPeer)
 
-	// Can create a proposal for a genesis change
+	// Can create a proposal for a launch change
 	_, err = types.NewProposalAddValidator(
 		spnmocks.MockProposalInformation(),
 		payload,

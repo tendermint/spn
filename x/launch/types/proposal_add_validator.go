@@ -44,7 +44,7 @@ func NewProposalAddValidatorPayload(
 func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) (err error) {
 	// Gentx not empty
 	if len(payload.GenTx) == 0 {
-		return errors.New("empty genesis")
+		return errors.New("empty gentx")
 	}
 
 	// Verify validator address

@@ -158,7 +158,7 @@ func (msg MsgReject) ValidateBasic() error {
 
 // MsgProposalChange
 
-// NewMsgProposalChange creates a message for a genesis change proposal
+// NewMsgProposalChange creates a message for a launch change proposal
 func NewMsgProposalChange(
 	chainID string,
 	creator sdk.AccAddress,
