@@ -2,14 +2,14 @@
 order: 0
 title: Genesis Overview
 parent:
-  title: "genesis"
+  title: "launch"
 -->
 
-# `genesis`
+# `launch`
 
 ## Abstract
 
-The module `genesis` allows a Cosmos SDK application to store and handle data related to the genesis of a Cosmos SDK blockchain.
+The `launch` module allows a Cosmos SDK application to store and handle data related to the launch information of a Cosmos SDK blockchain. Typically the genesis and the peers of the blockchain.
 This module is used by the `spn` blockchain and the `starport network` command line application to let blockchain creators to start and coordinate the launch of their blockchain.
 
 ## Contents
