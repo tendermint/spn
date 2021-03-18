@@ -30,6 +30,8 @@
       git:
         repo: https://github.com/tendermint/spn.git
         dest: /usr/local/src/spn
+        version: develop
+        force: yes
     - name: build spn
       args:
         chdir: /usr/local/src/spn
