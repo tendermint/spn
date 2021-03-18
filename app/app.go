@@ -84,9 +84,9 @@ import (
 	"github.com/tendermint/spn/x/chat"
 	chatkeeper "github.com/tendermint/spn/x/chat/keeper"
 	chattypes "github.com/tendermint/spn/x/chat/types"
-	"github.com/tendermint/spn/x/genesis"
-	genesiskeeper "github.com/tendermint/spn/x/genesis/keeper"
-	genesistypes "github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch"
+	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
+	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/identity"
 	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
 	identitytypes "github.com/tendermint/spn/x/identity/types"
@@ -100,7 +100,7 @@ var (
 
 	// ModuleBasics defines the module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
-	// and genesis verification.
+	// and launch verification.
 	ModuleBasics = module.NewBasicManager(
 		auth.AppModuleBasic{},
 		genutil.AppModuleBasic{},
@@ -121,7 +121,7 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
-		genesis.AppModuleBasic{},
+		launch.AppModuleBasic{},
 		identity.AppModuleBasic{},
 		chat.AppModuleBasic{},
 	)
@@ -183,7 +183,7 @@ type App struct {
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
-	genesisKeeper  genesiskeeper.Keeper
+	launchKeeper  launchkeeper.Keeper
 	identityKeeper identitykeeper.Keeper
 	chatKeeper     chatkeeper.Keeper
 
@@ -222,7 +222,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
-		genesistypes.StoreKey,
+		launchtypes.StoreKey,
 		identitytypes.StoreKey,
 		chattypes.StoreKey,
 	)
@@ -324,10 +324,10 @@ func New(
 	app.EvidenceKeeper = *evidenceKeeper
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
-	app.genesisKeeper = *genesiskeeper.NewKeeper(
+	app.launchKeeper = *launchkeeper.NewKeeper(
 		appCodec,
-		keys[genesistypes.StoreKey],
-		keys[genesistypes.MemStoreKey],
+		keys[launchtypes.StoreKey],
+		keys[launchtypes.MemStoreKey],
 		app.identityKeeper,
 	)
 	app.identityKeeper = *identitykeeper.NewKeeper(
@@ -370,7 +370,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
-		genesis.NewAppModule(appCodec, app.genesisKeeper),
+		launch.NewAppModule(appCodec, app.launchKeeper),
 		identity.NewAppModule(appCodec, app.identityKeeper),
 		chat.NewAppModule(appCodec, app.chatKeeper),
 	)
@@ -406,7 +406,7 @@ func New(
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
-		genesistypes.ModuleName,
+		launchtypes.ModuleName,
 		identitytypes.ModuleName,
 		chattypes.ModuleName,
 	)
@@ -592,7 +592,7 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
-	paramsKeeper.Subspace(genesistypes.ModuleName)
+	paramsKeeper.Subspace(launchtypes.ModuleName)
 	paramsKeeper.Subspace(identitytypes.ModuleName)
 	paramsKeeper.Subspace(chattypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)

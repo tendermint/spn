@@ -20,8 +20,8 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/spn/x/genesis/keeper"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/keeper"
+	"github.com/tendermint/spn/x/launch/types"
 
 	"encoding/json"
 	"math/rand"
@@ -49,7 +49,7 @@ func MockCodec() codec.Marshaler {
 	return cdc
 }
 
-// MockGenesisContext mocks the context and the keepers of the genesis module for test purposes
+// MockGenesisContext mocks the context and the keepers of the launch module for test purposes
 func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 	cdc := MockCodec()
 
@@ -76,7 +76,7 @@ func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 	return ctx, genesisKeeper
 }
 
-// MockGenesisQueryClient mocks a query client for the genesis module
+// MockGenesisQueryClient mocks a query client for the launch module
 func MockGenesisQueryClient(ctx sdk.Context, k *keeper.Keeper) types.QueryClient {
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, codectypes.NewInterfaceRegistry())
 	types.RegisterQueryServer(queryHelper, k)

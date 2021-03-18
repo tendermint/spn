@@ -1,0 +1,81 @@
+syntax = "proto3";
+package spn.launch.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "launch/v1beta/types.proto";
+
+// Query defines the gRPC querier service.
+service Query {
+    rpc ListChains(QueryListChainsRequest) returns (QueryListChainsResponse);
+    rpc ShowChain(QueryShowChainRequest) returns (QueryShowChainResponse);
+    rpc ListProposals(QueryListProposalsRequest) returns (QueryListProposalsResponse);
+    rpc ProposalCount(QueryProposalCountRequest) returns (QueryProposalCountResponse);
+    rpc ShowProposal(QueryShowProposalRequest) returns (QueryShowProposalResponse);
+    rpc LaunchInformation(QueryLaunchInformationRequest) returns (QueryLaunchInformationResponse);
+    rpc SimulatedLaunchInformation(QuerySimulatedLaunchInformationRequest) returns (QuerySimulatedLaunchInformationResponse);
+}
+
+message QueryListChainsRequest {
+    cosmos.base.query.v1beta1.PageRequest pagination = 1;
+    string prefix = 2;
+}
+
+message QueryListChainsResponse {
+	  cosmos.base.query.v1beta1.PageResponse pagination = 1;
+	  repeated Chain chains = 2;
+}
+
+message QueryShowChainRequest {
+	  string chainID = 1;
+}
+
+message QueryShowChainResponse {
+	  Chain chain = 1;
+}
+
+message QueryProposalCountRequest {
+  string chainID = 1;
+}
+
+message QueryProposalCountResponse {
+  int32 count = 1;
+}
+
+message QueryListProposalsRequest {
+    string chainID = 1;
+    ProposalStatus status = 2;
+    ProposalType type = 3;
+}
+
+message QueryListProposalsResponse {
+    repeated Proposal proposals = 1;
+}
+
+message QueryShowProposalRequest {
+	  string chainID = 1;
+    int32 proposalID = 2;
+}
+
+message QueryShowProposalResponse {
+	  Proposal proposal = 1;
+}
+
+message QueryLaunchInformationRequest {
+    string chainID = 1;
+}
+
+message QueryLaunchInformationResponse {
+    LaunchInformation launchInformation = 1;
+}
+
+message QuerySimulatedLaunchInformationRequest {
+    string chainID = 1;
+    repeated int32 proposalIDs = 2;
+}
+
+message QuerySimulatedLaunchInformationResponse {
+    LaunchInformation launchInformation = 1;
+}
+
