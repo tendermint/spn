@@ -81,9 +81,6 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-	"github.com/tendermint/spn/x/chat"
-	chatkeeper "github.com/tendermint/spn/x/chat/keeper"
-	chattypes "github.com/tendermint/spn/x/chat/types"
 	"github.com/tendermint/spn/x/genesis"
 	genesiskeeper "github.com/tendermint/spn/x/genesis/keeper"
 	genesistypes "github.com/tendermint/spn/x/genesis/types"
@@ -123,7 +120,6 @@ var (
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		genesis.AppModuleBasic{},
 		identity.AppModuleBasic{},
-		chat.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -185,7 +181,6 @@ type App struct {
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	genesisKeeper  genesiskeeper.Keeper
 	identityKeeper identitykeeper.Keeper
-	chatKeeper     chatkeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -224,7 +219,6 @@ func New(
 		// this line is used by starport scaffolding # stargate/app/storeKey
 		genesistypes.StoreKey,
 		identitytypes.StoreKey,
-		chattypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -335,12 +329,6 @@ func New(
 		keys[identitytypes.StoreKey],
 		keys[identitytypes.MemStoreKey],
 	)
-	app.chatKeeper = *chatkeeper.NewKeeper(
-		appCodec,
-		keys[chattypes.StoreKey],
-		keys[chattypes.MemStoreKey],
-		app.identityKeeper,
-	)
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
 	// we prefer to be more strict in what arguments the modules expect.
@@ -372,7 +360,6 @@ func New(
 		// this line is used by starport scaffolding # stargate/app/appModule
 		genesis.NewAppModule(appCodec, app.genesisKeeper),
 		identity.NewAppModule(appCodec, app.identityKeeper),
-		chat.NewAppModule(appCodec, app.chatKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -408,7 +395,6 @@ func New(
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 		genesistypes.ModuleName,
 		identitytypes.ModuleName,
-		chattypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(&app.CrisisKeeper)
@@ -594,7 +580,6 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 	paramsKeeper.Subspace(genesistypes.ModuleName)
 	paramsKeeper.Subspace(identitytypes.ModuleName)
-	paramsKeeper.Subspace(chattypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 
 	return paramsKeeper
