@@ -3,7 +3,7 @@ name: Deploy Alpha
 on:
   push:
     branches:
-      - develop
+      - master 
 
 env:
   BASTION_IP: 3.232.5.146
