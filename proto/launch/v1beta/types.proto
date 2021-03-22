@@ -17,14 +17,19 @@ message Chain {
   InitialGenesis initialGenesis = 8;
 }
 
+enum InitialGenesisType {
+  DEFAULT = 0;
+  URL = 1;
+}
+
 message InitialGenesis {
   oneof source {
-    DefaultGenesis defaultGenesis = 1;
+    DefaultInitialGenesis defaultGenesis = 1;
     GenesisURL genesisURL = 2;
   }
 }
 
-message DefaultGenesis {}
+message DefaultInitialGenesis {}
 
 message GenesisURL {
   string url = 1;
