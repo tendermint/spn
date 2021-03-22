@@ -14,6 +14,14 @@ message Chain {
   string sourceHash  = 5; 
   int64 createdAt = 6;
   bool final = 7;
+  oneof initialGenesis {
+    GenesisURL genesisURL = 8;
+  }
+}
+
+message GenesisURL {
+  string url = 1;
+  string hash = 2;
 }
 
 message LaunchInformation {
