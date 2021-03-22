@@ -14,10 +14,17 @@ message Chain {
   string sourceHash  = 5; 
   int64 createdAt = 6;
   bool final = 7;
-  oneof initialGenesis {
-    GenesisURL genesisURL = 8;
+  InitialGenesis initialGenesis = 8;
+}
+
+message InitialGenesis {
+  oneof source {
+    DefaultGenesis defaultGenesis = 1;
+    GenesisURL genesisURL = 2;
   }
 }
+
+message DefaultGenesis {}
 
 message GenesisURL {
   string url = 1;
