@@ -5,8 +5,24 @@ import (
 	"errors"
 )
 
-// NewGenesisURL returns a genesis URL from the URL, hash is automatically computed from the content
-func NewGenesisURL(url string, content string) (gu GenesisURL, err error) {
+// NewGenesisURL returns a genesis URL from the URL
+func NewGenesisURL(url string, hash string) (gu GenesisURL, err error) {
+	if len(url) == 0 {
+		return gu, errors.New("url cannot be empty")
+	}
+	if len(hash) != 32 {
+		return gu, errors.New("hash must be 32 bytes")
+	}
+
+	return GenesisURL{
+		Url: url,
+		Hash: hash,
+	}, nil
+}
+
+
+// NewGenesisURLFromContent returns a genesis URL from the URL, hash is automatically computed from the content
+func NewGenesisURLFromContent(url string, content string) (gu GenesisURL, err error) {
 	if len(url) == 0 {
 		return gu, errors.New("url cannot be empty")
 	}

@@ -11,7 +11,8 @@ message MsgChainCreate {
     bytes creator = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
     string sourceURL = 3; 
     string sourceHash  = 4;
-    InitialGenesis initialGenesis = 5;
+    string genesisURL = 5;
+    string genesisHash = 6;
 }
 
 message MsgProposalChange {

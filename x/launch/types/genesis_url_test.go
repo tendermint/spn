@@ -9,16 +9,31 @@ import (
 
 func TestNewGenesisURL(t *testing.T) {
 	url := spnmocks.MockRandomString(100)
+	hash := spnmocks.MockRandomString(32)
+
+	genesisURL, err := types.NewGenesisURL(url, hash)
+	require.NoError(t, err)
+	require.Equal(t, genesisURL.Url, url)
+	require.Equal(t, genesisURL.Hash, hash)
+
+	_, err = types.NewGenesisURL("", hash)
+	require.Error(t, err)
+	_, err = types.NewGenesisURL(url, spnmocks.MockRandomString(31))
+	require.Error(t, err)
+}
+
+func TestNewGenesisURLFromContent(t *testing.T) {
+	url := spnmocks.MockRandomString(100)
 	content := spnmocks.MockRandomString(100)
 
-	genesisURL, err := types.NewGenesisURL(url, content)
+	genesisURL, err := types.NewGenesisURLFromContent(url, content)
 	require.NoError(t, err)
 	require.Equal(t, genesisURL.Url, url)
 	require.Equal(t, genesisURL.Hash, types.GenesisURLHash(content))
 
-	_, err = types.NewGenesisURL("", content)
+	_, err = types.NewGenesisURLFromContent("", content)
 	require.Error(t, err)
-	_, err = types.NewGenesisURL(url, "")
+	_, err = types.NewGenesisURLFromContent(url, "")
 	require.Error(t, err)
 }
 
