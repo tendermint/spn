@@ -29,6 +29,8 @@
     - name: clone spn repo
       git:
         repo: https://github.com/tendermint/spn.git
+        version: master 
+        force: yes
         dest: /usr/local/src/spn
     - name: build spn
       args:
