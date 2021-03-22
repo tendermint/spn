@@ -9,7 +9,7 @@ import (
 
 func TestNewGenesisURL(t *testing.T) {
 	url := spnmocks.MockRandomString(100)
-	hash := spnmocks.MockRandomString(32)
+	hash := spnmocks.MockRandomString(types.HashLength)
 
 	genesisURL, err := types.NewGenesisURL(url, hash)
 	require.NoError(t, err)
@@ -18,7 +18,7 @@ func TestNewGenesisURL(t *testing.T) {
 
 	_, err = types.NewGenesisURL("", hash)
 	require.Error(t, err)
-	_, err = types.NewGenesisURL(url, spnmocks.MockRandomString(31))
+	_, err = types.NewGenesisURL(url, spnmocks.MockRandomString(types.HashLength+1))
 	require.Error(t, err)
 }
 
@@ -42,12 +42,12 @@ func TestGenesisURLHash(t *testing.T) {
 	content1 := spnmocks.MockRandomString(100)
 	hash1 := types.GenesisURLHash(content1)
 	hash2 := types.GenesisURLHash(content1)
-	require.Len(t, hash1, 32)
+	require.Len(t, hash1, types.HashLength)
 	require.Equal(t, hash1, hash2)
 
 	// Hash is unique
 	content2 := spnmocks.MockRandomString(100)
 	hash2 = types.GenesisURLHash(content2)
-	require.Len(t, hash2, 32)
+	require.Len(t, hash2, types.HashLength)
 	require.NotEqual(t, hash1, hash2)
 }

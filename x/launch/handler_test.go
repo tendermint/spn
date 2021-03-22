@@ -24,6 +24,8 @@ func TestHandleMsgChainCreate(t *testing.T) {
 		creator,
 		sourceURL,
 		sourceHash,
+		"",
+		"",
 	)
 	res, err := h(ctx, msg)
 	require.NoError(t, err)
@@ -42,6 +44,8 @@ func TestHandleMsgChainCreate(t *testing.T) {
 		creator,
 		sourceURL,
 		sourceHash,
+		"",
+		"",
 	)
 	_, err = h(ctx, msg)
 	require.Error(t, err)
@@ -68,6 +72,8 @@ func TestHandleMsgReject(t *testing.T) {
 		coordinator,
 		spnmocks.MockRandomAlphaString(10),
 		spnmocks.MockRandomAlphaString(10),
+		"",
+		"",
 		)
 	_, err = h(ctx, msgChainCreate)
 	require.NoError(t, err)
@@ -176,6 +182,8 @@ func TestHandleMsgApprove(t *testing.T) {
 		coordinator,
 		spnmocks.MockRandomAlphaString(10),
 		spnmocks.MockRandomAlphaString(10),
+		"",
+		"",
 	)
 	_, err = h(ctx, msgChainCreate)
 	require.NoError(t, err)

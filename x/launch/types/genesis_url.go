@@ -5,12 +5,14 @@ import (
 	"errors"
 )
 
+const HashLength = 32
+
 // NewGenesisURL returns a genesis URL from the URL
 func NewGenesisURL(url string, hash string) (gu GenesisURL, err error) {
 	if len(url) == 0 {
 		return gu, errors.New("url cannot be empty")
 	}
-	if len(hash) != 32 {
+	if len(hash) != HashLength {
 		return gu, errors.New("hash must be 32 bytes")
 	}
 

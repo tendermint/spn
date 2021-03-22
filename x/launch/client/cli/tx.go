@@ -52,6 +52,8 @@ func CmdChainCreate() *cobra.Command {
 				clientCtx.GetFromAddress(),
 				args[1],
 				args[2],
+				"",
+				"",
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

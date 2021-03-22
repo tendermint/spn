@@ -61,7 +61,7 @@ func TestNewChain(t *testing.T) {
 	// Can create a chain with a custom genesis
 	genesisURL, err := types.NewGenesisURL(
 		spnmocks.MockRandomString(100),
-		spnmocks.MockRandomString(32),
+		spnmocks.MockRandomString(types.HashLength),
 	)
 	require.NoError(t, err)
 	chain, err = types.NewChain(
