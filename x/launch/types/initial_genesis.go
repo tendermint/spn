@@ -7,7 +7,7 @@ func NewInitialGenesisDefault() *InitialGenesis {
 	var ig InitialGenesis
 
 	ig.Source = &InitialGenesis_DefaultGenesis{
-		DefaultGenesis: nil,
+		DefaultGenesis: &DefaultInitialGenesis{},
 	}
 
 	return &ig

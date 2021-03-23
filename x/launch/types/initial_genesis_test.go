@@ -20,8 +20,8 @@ func TestNewInitialGenesisDefault(t *testing.T) {
 
 func TestNewInitialGenesisURL(t *testing.T) {
 	url := spnmocks.MockRandomString(100)
-	content := spnmocks.MockRandomString(100)
-	genesisURL, err := types.NewGenesisURL(url, content)
+	hash := spnmocks.MockRandomString(types.HashLength)
+	genesisURL, err := types.NewGenesisURL(url, hash)
 	require.NoError(t, err)
 
 	initialGenesis := types.NewInitialGenesisURL(genesisURL)

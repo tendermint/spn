@@ -31,6 +31,8 @@ func TestListChains(t *testing.T) {
 			spnmocks.MockAccAddress(),
 			spnmocks.MockRandomAlphaString(5),
 			spnmocks.MockRandomAlphaString(5),
+			"",
+			"",
 		)
 		_, err := h(ctx, msg)
 		require.NoError(t, err)
@@ -88,6 +90,8 @@ func TestShowChain(t *testing.T) {
 		spnmocks.MockAccAddress(),
 		spnmocks.MockRandomAlphaString(5),
 		spnmocks.MockRandomAlphaString(5),
+		"",
+		"",
 	)
 	res, err := h(ctx, msg)
 	require.NoError(t, err)
@@ -129,6 +133,8 @@ func TestProposalCount(t *testing.T) {
 		spnmocks.MockAccAddress(),
 		spnmocks.MockRandomAlphaString(5),
 		spnmocks.MockRandomAlphaString(5),
+		"",
+		"",
 	)
 	_, err = h(ctx, msg)
 	require.NoError(t, err)
@@ -536,6 +542,8 @@ func TestLaunchInformation(t *testing.T) {
 		coordinator,
 		spnmocks.MockRandomAlphaString(10),
 		spnmocks.MockRandomAlphaString(10),
+		"",
+		"",
 	)
 	h(ctx, msgChainCreate)
 
@@ -630,6 +638,8 @@ func TestSimulatedLaunchInformation(t *testing.T) {
 		coordinator,
 		spnmocks.MockRandomAlphaString(10),
 		spnmocks.MockRandomAlphaString(10),
+		"",
+		"",
 	)
 	h(ctx, msgChainCreate)
 
