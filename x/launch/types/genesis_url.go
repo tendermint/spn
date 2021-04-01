@@ -2,10 +2,11 @@ package types
 
 import (
 	"crypto/sha256"
+	"encoding/base64"
 	"errors"
 )
 
-const HashLength = 32
+const HashLength = 44
 
 // NewGenesisURL returns a genesis URL from the URL
 func NewGenesisURL(url string, hash string) (gu GenesisURL, err error) {
@@ -43,5 +44,5 @@ func NewGenesisURLFromContent(url string, content string) (gu GenesisURL, err er
 // The hash function is sha256
 func GenesisURLHash(content string) string {
 	hash := sha256.Sum256([]byte(content))
-	return string(hash[:])
+	return base64.StdEncoding.EncodeToString(hash[:])
 }
