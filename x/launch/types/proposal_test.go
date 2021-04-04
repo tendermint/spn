@@ -103,7 +103,6 @@ func TestNewProposalAddAccount(t *testing.T) {
 	err = types.ValidateProposalPayloadAddAccount(payload)
 	require.Error(t, err)
 
-
 	// Prevent invalid coins allocation
 	payload = spnmocks.MockProposalAddAccountPayload()
 	payload.Coins = []sdk.Coin{}

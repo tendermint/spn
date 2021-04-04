@@ -62,7 +62,7 @@ func TestHandleMsgReject(t *testing.T) {
 		chainID,
 		0,
 		coordinator,
-		)
+	)
 	_, err := h(ctx, msg)
 	require.Error(t, err)
 
@@ -74,7 +74,7 @@ func TestHandleMsgReject(t *testing.T) {
 		spnmocks.MockRandomAlphaString(10),
 		"",
 		"",
-		)
+	)
 	_, err = h(ctx, msgChainCreate)
 	require.NoError(t, err)
 
@@ -276,7 +276,7 @@ func TestHandleMsgApprove(t *testing.T) {
 	addAccountPayload = spnmocks.MockProposalAddAccountPayload()
 	valAddress := addValidatorPayload.ValidatorAddress
 	addAccountPayload.Address = sdk.AccAddress(valAddress)
-	k.SetAccount(ctx, chainID, addAccountPayload.Address, addAccountPayload)	// Simulate account address already being provided
+	k.SetAccount(ctx, chainID, addAccountPayload.Address, addAccountPayload) // Simulate account address already being provided
 	msgProposalValidator := types.NewMsgProposalAddValidator(
 		chainID,
 		proposalCreator,

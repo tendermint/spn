@@ -67,7 +67,7 @@ func CmdChainCreate() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				genesisHash = types.GenesisURLHash(initialGenesis)
+				genesisHash = types.GenesisURLHash(string(initialGenesis))
 			}
 
 			// Create and send message

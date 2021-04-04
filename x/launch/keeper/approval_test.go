@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func CheckProposalAddAccount(t  *testing.T) {
+func CheckProposalAddAccount(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	chain := spnmocks.MockChain()
 	chainID := chain.ChainID
@@ -42,7 +42,7 @@ func CheckProposalAddAccount(t  *testing.T) {
 	require.Error(t, err)
 }
 
-func CheckProposalAddValidator(t  *testing.T) {
+func CheckProposalAddValidator(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	chain := spnmocks.MockChain()
 	chainID := chain.ChainID
@@ -60,7 +60,7 @@ func CheckProposalAddValidator(t  *testing.T) {
 	require.Error(t, err)
 
 	// Error if funds are not sufficient for self delegation
-	selfDelefation := sdk.NewCoin("stake" , sdk.NewInt(1000000))
+	selfDelefation := sdk.NewCoin("stake", sdk.NewInt(1000000))
 	payload.SelfDelegation = &selfDelefation
 	addAccountPayload := spnmocks.MockProposalAddAccountPayload()
 	accAddress := sdk.AccAddress(payload.ValidatorAddress)
@@ -73,7 +73,7 @@ func CheckProposalAddValidator(t  *testing.T) {
 	require.Error(t, err)
 
 	// No error if corresponding account is set with sufficient funds
-	selfDelefation = sdk.NewCoin("stake" , sdk.NewInt(10000))
+	selfDelefation = sdk.NewCoin("stake", sdk.NewInt(10000))
 	payload.SelfDelegation = &selfDelefation
 	addAccountPayload = spnmocks.MockProposalAddAccountPayload()
 	accAddress = sdk.AccAddress(payload.ValidatorAddress)
@@ -95,7 +95,7 @@ func CheckProposalAddValidator(t  *testing.T) {
 	require.Error(t, err)
 }
 
-func TestApplyProposalAddAccount(t  *testing.T) {
+func TestApplyProposalAddAccount(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	chain := spnmocks.MockChain()
 	chainID := chain.ChainID
@@ -120,7 +120,7 @@ func TestApplyProposalAddAccount(t  *testing.T) {
 	require.Error(t, err)
 }
 
-func TestApplyProposalAddValidator(t  *testing.T) {
+func TestApplyProposalAddValidator(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	chain := spnmocks.MockChain()
 	chainID := chain.ChainID

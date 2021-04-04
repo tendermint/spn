@@ -20,10 +20,10 @@ func TestListChains(t *testing.T) {
 	// Create several chains through messages
 	var chainIDs []string
 	for i := 0; i < 10; i++ {
-		chainIDs = append(chainIDs, "AAA" + spnmocks.MockRandomAlphaString(5))
+		chainIDs = append(chainIDs, "AAA"+spnmocks.MockRandomAlphaString(5))
 	}
 	for i := 0; i < 10; i++ {
-		chainIDs = append(chainIDs, "BBB" + spnmocks.MockRandomAlphaString(5))
+		chainIDs = append(chainIDs, "BBB"+spnmocks.MockRandomAlphaString(5))
 	}
 	for i := range chainIDs {
 		msg := types.NewMsgChainCreate(
@@ -177,7 +177,6 @@ func TestProposalCount(t *testing.T) {
 	require.Equal(t, int32(3), count.Count)
 }
 
-
 func TestShowProposal(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	h := launch.NewHandler(*k)
@@ -267,7 +266,7 @@ func TestListProposals(t *testing.T) {
 
 	// Array of pending add account
 	var pendingAddAccount []*types.Proposal
-	for i:=0; i<5; i++ {
+	for i := 0; i < 5; i++ {
 		payloadAddAccount := spnmocks.MockProposalAddAccountPayload()
 		msgAddAccount := types.NewMsgProposalAddAccount(
 			chainID,
@@ -282,7 +281,7 @@ func TestListProposals(t *testing.T) {
 
 	// Array of pending add validator
 	var pendingAddValidator []*types.Proposal
-	for i:=0; i<5; i++ {
+	for i := 0; i < 5; i++ {
 		payloadAddValidator := spnmocks.MockProposalAddValidatorPayload()
 		msgAddValidator := types.NewMsgProposalAddValidator(
 			chainID,
@@ -297,7 +296,7 @@ func TestListProposals(t *testing.T) {
 
 	// Array of rejected add account
 	var rejectedAddAccount []*types.Proposal
-	for i:=0; i<5; i++ {
+	for i := 0; i < 5; i++ {
 		payloadAddAccount := spnmocks.MockProposalAddAccountPayload()
 		msgAddAccount := types.NewMsgProposalAddAccount(
 			chainID,
@@ -322,7 +321,7 @@ func TestListProposals(t *testing.T) {
 
 	// Array of rejected add validator
 	var rejectedAddValidator []*types.Proposal
-	for i:=0; i<5; i++ {
+	for i := 0; i < 5; i++ {
 		payloadAddValidator := spnmocks.MockProposalAddValidatorPayload()
 		msgAddValidator := types.NewMsgProposalAddValidator(
 			chainID,
@@ -348,7 +347,7 @@ func TestListProposals(t *testing.T) {
 	// Array of approved add account
 	var approvedAddAccount []*types.Proposal
 	var approvedAddress []sdk.AccAddress
-	for i:=0; i<5; i++ {
+	for i := 0; i < 5; i++ {
 		accountAddress := spnmocks.MockAccAddress()
 		approvedAddress = append(approvedAddress, accountAddress)
 		payloadAddAccount := spnmocks.MockProposalAddAccountPayload()
@@ -376,7 +375,7 @@ func TestListProposals(t *testing.T) {
 
 	// Array of approved add validator
 	var approvedAddValidator []*types.Proposal
-	for i:=0; i<5; i++ {
+	for i := 0; i < 5; i++ {
 		payloadAddValidator := spnmocks.MockProposalAddValidatorPayload()
 		payloadAddValidator.ValidatorAddress = sdk.ValAddress(approvedAddress[i]) // Need an existing account to be approved
 		msgAddValidator := types.NewMsgProposalAddValidator(
@@ -552,7 +551,7 @@ func TestLaunchInformation(t *testing.T) {
 	var peers []string
 
 	// Test with 20 accounts and 10 validators
-	for i:=0; i<10; i++ {
+	for i := 0; i < 10; i++ {
 		// Add validator payload
 		addValidatorpayload := spnmocks.MockProposalAddValidatorPayload()
 		valAddress := addValidatorpayload.ValidatorAddress
@@ -585,7 +584,7 @@ func TestLaunchInformation(t *testing.T) {
 		gentxs = append(gentxs, addValidatorpayload.GenTx)
 		peers = append(peers, addValidatorpayload.Peer)
 	}
-	for i:=0; i<10; i++ {
+	for i := 0; i < 10; i++ {
 		addAccountPayload := spnmocks.MockProposalAddAccountPayload()
 
 		// Send add account proposal
@@ -601,7 +600,7 @@ func TestLaunchInformation(t *testing.T) {
 	}
 
 	// Approve all proposals
-	for i:=0; i<30; i++ {
+	for i := 0; i < 30; i++ {
 		msg := types.NewMsgApprove(
 			chainID,
 			int32(i),
@@ -646,7 +645,7 @@ func TestSimulatedLaunchInformation(t *testing.T) {
 	var accounts []*types.ProposalAddAccountPayload
 
 	// Send 6 add account proposals
-	for i:=0; i<6; i++ {
+	for i := 0; i < 6; i++ {
 		addAccountPayload := spnmocks.MockProposalAddAccountPayload()
 		msgAddAccount := types.NewMsgProposalAddAccount(
 			chainID,
@@ -658,7 +657,7 @@ func TestSimulatedLaunchInformation(t *testing.T) {
 		accounts = append(accounts, addAccountPayload)
 	}
 	// Approve 3 of them
-	for i:=0; i<3; i++ {
+	for i := 0; i < 3; i++ {
 		msg := types.NewMsgApprove(
 			chainID,
 			int32(i),
@@ -786,7 +785,7 @@ func TestPendingProposals(t *testing.T) {
 		chainID,
 		int32(2),
 		coordinator,
-		)
+	)
 	_, err = h(ctx, msgApprove)
 	require.NoError(t, err)
 	msgApprove = types.NewMsgApprove(
@@ -848,7 +847,7 @@ func TestApprovedProposals(t *testing.T) {
 	require.Equal(t, approvedProposal, proposals[0])
 
 	// ApprovedProposals fails if the chain doesn't exist
-	_, err = k.ApprovedProposals(ctx,  spnmocks.MockRandomAlphaString(6))
+	_, err = k.ApprovedProposals(ctx, spnmocks.MockRandomAlphaString(6))
 	require.Error(t, err)
 }
 

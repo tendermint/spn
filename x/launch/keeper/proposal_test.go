@@ -81,7 +81,7 @@ func TestGetProposalAddAccount(t *testing.T) {
 	proposal, _ := types.NewProposalAddAccount(
 		spnmocks.MockProposalInformation(),
 		spnmocks.MockProposalAddAccountPayload(),
-		)
+	)
 	k.SetProposal(ctx, *proposal)
 	retrieved, _ := k.GetProposal(
 		ctx,
@@ -114,7 +114,6 @@ func TestGetProposalAddValidator(t *testing.T) {
 	require.NoError(t, err)
 }
 
-
 func TestGetApprovedProposals(t *testing.T) {
 	ctx, k := spnmocks.MockGenesisContext()
 	chainID := spnmocks.MockRandomAlphaString(5)
@@ -128,7 +127,7 @@ func TestGetApprovedProposals(t *testing.T) {
 
 	k.SetApprovedProposals(ctx, chainID, *list)
 	retrieved = k.GetApprovedProposals(ctx, chainID)
-	require.Equal(t, *list, retrieved,)
+	require.Equal(t, *list, retrieved)
 	retrieved = k.GetApprovedProposals(ctx, "AnotherChain")
 	require.Equal(t, emptyList, retrieved)
 }

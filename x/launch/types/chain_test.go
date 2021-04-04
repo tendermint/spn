@@ -11,11 +11,11 @@ import (
 )
 
 func TestNewChain(t *testing.T) {
-	chainID := spnmocks.MockRandomString(5)+"-"+spnmocks.MockRandomString(5)
+	chainID := spnmocks.MockRandomString(5) + "-" + spnmocks.MockRandomString(5)
 	creator := spnmocks.MockRandomString(20)
 	sourceURL := spnmocks.MockRandomString(20)
-		sourceHash := spnmocks.MockRandomString(20)
-		creationTime := time.Now()
+	sourceHash := spnmocks.MockRandomString(20)
+	creationTime := time.Now()
 
 	// Can create a chain
 	chain, err := types.NewChain(

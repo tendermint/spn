@@ -46,4 +46,3 @@ func (ig InitialGenesis) GenesisURL() (gURL GenesisURL, err error) {
 
 	return *genesisURL.GenesisURL, nil
 }
-

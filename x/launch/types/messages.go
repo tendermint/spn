@@ -42,11 +42,11 @@ func NewMsgChainCreate(
 	genesisHash string,
 ) *MsgChainCreate {
 	return &MsgChainCreate{
-		ChainID:    chainID,
-		Creator:    creator,
-		SourceURL:  sourceURL,
-		SourceHash: sourceHash,
-		GenesisURL: genesisURL,
+		ChainID:     chainID,
+		Creator:     creator,
+		SourceURL:   sourceURL,
+		SourceHash:  sourceHash,
+		GenesisURL:  genesisURL,
 		GenesisHash: genesisHash,
 	}
 }

@@ -10,7 +10,7 @@ const HashLength = 64
 
 // NewGenesisURL returns a genesis URL from the URL
 func NewGenesisURL(url string, hash string) (gu GenesisURL, err error) {
-	if url == ""
+	if url == "" {
 		return gu, errors.New("url cannot be empty")
 	}
 	if len(hash) != HashLength {
@@ -18,15 +18,14 @@ func NewGenesisURL(url string, hash string) (gu GenesisURL, err error) {
 	}
 
 	return GenesisURL{
-		Url: url,
+		Url:  url,
 		Hash: hash,
 	}, nil
 }
 
-
 // NewGenesisURLFromContent returns a genesis URL from the URL, hash is automatically computed from the content
 func NewGenesisURLFromContent(url string, content string) (gu GenesisURL, err error) {
-	if if url == ""
+	if url == "" {
 		return gu, errors.New("url cannot be empty")
 	}
 	if content == "" {
@@ -34,11 +33,10 @@ func NewGenesisURLFromContent(url string, content string) (gu GenesisURL, err er
 	}
 
 	return GenesisURL{
-		Url: url,
+		Url:  url,
 		Hash: GenesisURLHash(content),
 	}, nil
 }
-
 
 // GenesisURLHash compute the hash of the URL from the resource content
 // The hash function is sha256

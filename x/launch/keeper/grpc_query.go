@@ -42,7 +42,7 @@ func (k Keeper) ListChains(
 
 	return &types.QueryListChainsResponse{
 		Pagination: pageRes,
-		Chains:   	chains,
+		Chains:     chains,
 	}, nil
 }
 
