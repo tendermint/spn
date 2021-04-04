@@ -35,7 +35,7 @@ func GetTxCmd() *cobra.Command {
 	return cmd
 }
 
-const genesisURLFlag = "genesis-url"
+const genesisURLFlag = "genesis"
 
 // CmdChainCreate returns the transaction command to create a new chain
 func CmdChainCreate() *cobra.Command {
@@ -67,7 +67,7 @@ func CmdChainCreate() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				genesisHash = types.GenesisURLHash(string(initialGenesis))
+				genesisHash = types.GenesisURLHash(initialGenesis)
 			}
 
 			// Create and send message
