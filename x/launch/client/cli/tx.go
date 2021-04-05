@@ -56,10 +56,16 @@ func CmdChainCreate() *cobra.Command {
 				return err
 			}
 			if genesisURL != "" {
-				res, err := http.Get(genesisURL)
+				req, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, genesisURL, nil)
 				if err != nil {
 					return err
 				}
+				res, err := http.DefaultClient.Do(req)
+				if err != nil {
+					return err
+				}
+				defer res.Body.Close()
+
 				if res.StatusCode != http.StatusOK {
 					return fmt.Errorf("genesis url fetch error %s", res.Status)
 				}
