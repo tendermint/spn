@@ -10,12 +10,11 @@ import (
 func TestNewInitialGenesisDefault(t *testing.T) {
 	initialGenesis := types.NewInitialGenesisDefault()
 
-	gt, err := initialGenesis.GetType()
-	require.NoError(t, err)
-	require.Equal(t, types.InitialGenesisType_DEFAULT, gt)
+	g := initialGenesis.GetDefaultGenesis()
+	require.NotNil(t, g)
 
-	_, err = initialGenesis.GenesisURL()
-	require.Error(t, err)
+	gu := initialGenesis.GetGenesisURL()
+	require.Nil(t, gu)
 }
 
 func TestNewInitialGenesisURL(t *testing.T) {
@@ -25,11 +24,7 @@ func TestNewInitialGenesisURL(t *testing.T) {
 	require.NoError(t, err)
 
 	initialGenesis := types.NewInitialGenesisURL(genesisURL)
-	gt, err := initialGenesis.GetType()
-	require.NoError(t, err)
-	require.Equal(t, types.InitialGenesisType_URL, gt)
-
-	gu, err := initialGenesis.GenesisURL()
-	require.NoError(t, err)
-	require.Equal(t, genesisURL, gu)
+	gu := initialGenesis.GetGenesisURL()
+	require.NotNil(t, gu)
+	require.Equal(t, genesisURL, *gu)
 }

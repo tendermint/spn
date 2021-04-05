@@ -34,9 +34,7 @@ func TestNewChain(t *testing.T) {
 	require.Equal(t, sourceHash, chain.SourceHash)
 	require.Equal(t, creationTime.Unix(), chain.CreatedAt)
 	require.Equal(t, 0, len(chain.Peers))
-	initialGenesisType, err := chain.InitialGenesis.GetType()
-	require.NoError(t, err)
-	require.Equal(t, types.InitialGenesisType_DEFAULT, initialGenesisType)
+	require.NotNil(t, chain.InitialGenesis.GetDefaultGenesis())
 
 	// Can append peers to the chain
 	peer1 := spnmocks.MockRandomString(20)
@@ -74,10 +72,7 @@ func TestNewChain(t *testing.T) {
 		genesisURL.Hash,
 	)
 	require.NoError(t, err)
-	initialGenesisType, err = chain.InitialGenesis.GetType()
-	require.NoError(t, err)
-	require.Equal(t, types.InitialGenesisType_URL, initialGenesisType)
-	chainGenesisURL, err := chain.InitialGenesis.GenesisURL()
-	require.NoError(t, err)
-	require.Equal(t, genesisURL, chainGenesisURL)
+	chainGenesisURL := chain.InitialGenesis.GetGenesisURL()
+	require.NotNil(t, chainGenesisURL)
+	require.Equal(t, genesisURL, *chainGenesisURL)
 }
