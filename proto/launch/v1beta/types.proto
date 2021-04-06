@@ -14,6 +14,26 @@ message Chain {
   string sourceHash  = 5; 
   int64 createdAt = 6;
   bool final = 7;
+  InitialGenesis initialGenesis = 8;
+}
+
+enum InitialGenesisType {
+  DEFAULT = 0;
+  URL = 1;
+}
+
+message InitialGenesis {
+  oneof source {
+    DefaultInitialGenesis defaultGenesis = 1;
+    GenesisURL genesisURL = 2;
+  }
+}
+
+message DefaultInitialGenesis {}
+
+message GenesisURL {
+  string url = 1;
+  string hash = 2;
 }
 
 message LaunchInformation {

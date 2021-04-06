@@ -52,6 +52,8 @@ func handleMsgChainCreate(ctx sdk.Context, k keeper.Keeper, msg *types.MsgChainC
 		msg.SourceURL,
 		msg.SourceHash,
 		ctx.BlockTime(),
+		msg.GenesisURL,
+		msg.GenesisHash,
 	)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
@@ -61,7 +63,7 @@ func handleMsgChainCreate(ctx sdk.Context, k keeper.Keeper, msg *types.MsgChainC
 	k.SetChain(ctx, *chain)
 
 	return &sdk.Result{
-		Data: types.MarshalChain(k.GetCodec(), *chain),
+		Data:   types.MarshalChain(k.GetCodec(), *chain),
 		Events: ctx.EventManager().ABCIEvents(),
 	}, nil
 }
@@ -106,7 +108,7 @@ func handleMsgReject(ctx sdk.Context, k keeper.Keeper, msg *types.MsgReject) (*s
 	}
 
 	return &sdk.Result{
-		Data: types.MarshalProposal(k.GetCodec(), proposal),
+		Data:   types.MarshalProposal(k.GetCodec(), proposal),
 		Events: ctx.EventManager().ABCIEvents(),
 	}, nil
 }
@@ -151,7 +153,7 @@ func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (
 	}
 
 	return &sdk.Result{
-		Data: types.MarshalProposal(k.GetCodec(), proposal),
+		Data:   types.MarshalProposal(k.GetCodec(), proposal),
 		Events: ctx.EventManager().ABCIEvents(),
 	}, nil
 }
@@ -195,7 +197,7 @@ func handleMsgProposalAddAccount(ctx sdk.Context, k keeper.Keeper, msg *types.Ms
 	k.SetProposalCount(ctx, msg.ChainID, count)
 
 	return &sdk.Result{
-		Data: types.MarshalProposal(k.GetCodec(), *proposal),
+		Data:   types.MarshalProposal(k.GetCodec(), *proposal),
 		Events: ctx.EventManager().ABCIEvents(),
 	}, nil
 }
@@ -239,7 +241,7 @@ func handleMsgProposalAddValidator(ctx sdk.Context, k keeper.Keeper, msg *types.
 	k.SetProposalCount(ctx, msg.ChainID, count)
 
 	return &sdk.Result{
-		Data: types.MarshalProposal(k.GetCodec(), *proposal),
+		Data:   types.MarshalProposal(k.GetCodec(), *proposal),
 		Events: ctx.EventManager().ABCIEvents(),
 	}, nil
 }

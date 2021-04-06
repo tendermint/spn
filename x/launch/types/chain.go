@@ -14,6 +14,8 @@ func NewChain(
 	sourceURL string,
 	sourceHash string,
 	createdAt time.Time,
+	genesisURL string,
+	genesisHash string,
 ) (*Chain, error) {
 	var chain Chain
 
@@ -27,6 +29,20 @@ func NewChain(
 	chain.SourceURL = sourceURL
 	chain.SourceHash = sourceHash
 	chain.CreatedAt = createdAt.Unix()
+
+	// Check if initial genesis is the default genesis or genesis from a URL
+	if genesisURL == "" {
+		// Default genesis
+		chain.InitialGenesis = NewInitialGenesisDefault()
+	} else {
+		// Genesis from url
+		genesisURL, err := NewGenesisURL(genesisURL, genesisHash)
+		if err != nil {
+			return nil, sdkerrors.Wrap(ErrInvalidChain, err.Error())
+		}
+
+		chain.InitialGenesis = NewInitialGenesisURL(genesisURL)
+	}
 
 	return &chain, nil
 }

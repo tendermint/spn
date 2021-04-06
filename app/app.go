@@ -81,12 +81,12 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-	"github.com/tendermint/spn/x/launch"
-	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
-	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/identity"
 	identitykeeper "github.com/tendermint/spn/x/identity/keeper"
 	identitytypes "github.com/tendermint/spn/x/identity/types"
+	"github.com/tendermint/spn/x/launch"
+	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
+	launchtypes "github.com/tendermint/spn/x/launch/types"
 )
 
 var (
@@ -179,7 +179,7 @@ type App struct {
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
-	launchKeeper  launchkeeper.Keeper
+	launchKeeper   launchkeeper.Keeper
 	identityKeeper identitykeeper.Keeper
 
 	// the module manager

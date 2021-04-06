@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -34,6 +35,8 @@ func GetTxCmd() *cobra.Command {
 	return cmd
 }
 
+const genesisURLFlag = "genesis"
+
 // CmdChainCreate returns the transaction command to create a new chain
 func CmdChainCreate() *cobra.Command {
 	cmd := &cobra.Command{
@@ -46,12 +49,41 @@ func CmdChainCreate() *cobra.Command {
 				return err
 			}
 
+			// If custom initial genesis, try out url and compute genesis hash
+			var genesisHash string
+			genesisURL, err := cmd.Flags().GetString(genesisURLFlag)
+			if err != nil {
+				return err
+			}
+			if genesisURL != "" {
+				req, err := http.NewRequestWithContext(cmd.Context(), http.MethodGet, genesisURL, nil)
+				if err != nil {
+					return err
+				}
+				res, err := http.DefaultClient.Do(req)
+				if err != nil {
+					return err
+				}
+				defer res.Body.Close()
+
+				if res.StatusCode != http.StatusOK {
+					return fmt.Errorf("genesis url fetch error %s", res.Status)
+				}
+				initialGenesis, err := ioutil.ReadAll(res.Body)
+				if err != nil {
+					return err
+				}
+				genesisHash = types.GenesisURLHash(string(initialGenesis))
+			}
+
 			// Create and send message
 			msg := types.NewMsgChainCreate(
 				args[0],
 				clientCtx.GetFromAddress(),
 				args[1],
 				args[2],
+				genesisURL,
+				genesisHash,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -59,6 +91,7 @@ func CmdChainCreate() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
+	cmd.Flags().String(genesisURLFlag, "", "URL to a custom initial genesis")
 
 	flags.AddTxFlagsToCmd(cmd)
 

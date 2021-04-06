@@ -16,10 +16,10 @@ func (k Keeper) CheckProposalApproval(ctx sdk.Context, chainID string, proposal 
 	}
 
 	switch payload := proposal.Payload.(type) {
-		case *types.Proposal_AddAccountPayload:
-			return k.checkProposalAddAccount(ctx, chainID, payload.AddAccountPayload)
-		case *types.Proposal_AddValidatorPayload:
-			return k.checkProposalAddValidator(ctx, chainID, payload.AddValidatorPayload)
+	case *types.Proposal_AddAccountPayload:
+		return k.checkProposalAddAccount(ctx, chainID, payload.AddAccountPayload)
+	case *types.Proposal_AddValidatorPayload:
+		return k.checkProposalAddValidator(ctx, chainID, payload.AddValidatorPayload)
 	default:
 		panic("Unimplemented proposal")
 	}
