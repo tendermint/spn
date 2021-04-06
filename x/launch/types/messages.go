@@ -35,7 +35,7 @@ var (
 // NewMsgChainCreate creates a new message to create a chain
 func NewMsgChainCreate(
 	chainID string,
-	creator sdk.AccAddress,
+	creator string,
 	sourceURL string,
 	sourceHash string,
 	genesisURL string,
@@ -60,7 +60,11 @@ func (msg MsgChainCreate) Type() string { return TypeMsgChainCreate }
 // GetSigners implements the sdk.Msg interface. It returns the address(es) that
 // must sign over msg.GetSignBytes().
 func (msg MsgChainCreate) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.Creator}
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
 }
 
 // GetSignBytes returns the message bytes to sign over.
@@ -90,7 +94,7 @@ func (msg MsgChainCreate) ValidateBasic() error {
 func NewMsgApprove(
 	chainID string,
 	proposalID int32,
-	approver sdk.AccAddress,
+	approver string,
 ) *MsgApprove {
 	return &MsgApprove{
 		ChainID:    chainID,
@@ -108,7 +112,11 @@ func (msg MsgApprove) Type() string { return TypeMsgApprove }
 // GetSigners implements the sdk.Msg interface. It returns the address(es) that
 // must sign over msg.GetSignBytes().
 func (msg MsgApprove) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.Approver}
+	approver, err := sdk.AccAddressFromBech32(msg.Approver)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{approver}
 }
 
 // GetSignBytes returns the message bytes to sign over.
@@ -128,7 +136,7 @@ func (msg MsgApprove) ValidateBasic() error {
 func NewMsgReject(
 	chainID string,
 	proposalID int32,
-	rejector sdk.AccAddress,
+	rejector string,
 ) *MsgReject {
 	return &MsgReject{
 		ChainID:    chainID,
@@ -146,7 +154,11 @@ func (msg MsgReject) Type() string { return TypeMsgReject }
 // GetSigners implements the sdk.Msg interface. It returns the address(es) that
 // must sign over msg.GetSignBytes().
 func (msg MsgReject) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.Rejector}
+	rejector, err := sdk.AccAddressFromBech32(msg.Rejector)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{rejector}
 }
 
 // GetSignBytes returns the message bytes to sign over.
@@ -165,7 +177,7 @@ func (msg MsgReject) ValidateBasic() error {
 // NewMsgProposalChange creates a message for a launch change proposal
 func NewMsgProposalChange(
 	chainID string,
-	creator sdk.AccAddress,
+	creator string,
 	payload *ProposalChangePayload,
 ) *MsgProposalChange {
 	return &MsgProposalChange{
@@ -184,7 +196,11 @@ func (msg MsgProposalChange) Type() string { return TypeMsgProposalChange }
 // GetSigners implements the sdk.Msg interface. It returns the address(es) that
 // must sign over msg.GetSignBytes().
 func (msg MsgProposalChange) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.Creator}
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
 }
 
 // GetSignBytes returns the message bytes to sign over.
@@ -210,7 +226,7 @@ func (msg MsgProposalChange) ValidateBasic() error {
 // NewMsgProposalAddAccount creates a message for adding an account proposal
 func NewMsgProposalAddAccount(
 	chainID string,
-	creator sdk.AccAddress,
+	creator string,
 	payload *ProposalAddAccountPayload,
 ) *MsgProposalAddAccount {
 	return &MsgProposalAddAccount{
@@ -229,7 +245,11 @@ func (msg MsgProposalAddAccount) Type() string { return TypeMsgProposalAddAccoun
 // GetSigners implements the sdk.Msg interface. It returns the address(es) that
 // must sign over msg.GetSignBytes().
 func (msg MsgProposalAddAccount) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.Creator}
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
 }
 
 // GetSignBytes returns the message bytes to sign over.
@@ -255,7 +275,7 @@ func (msg MsgProposalAddAccount) ValidateBasic() error {
 // NewMsgProposalAddValidator creates a message for adding a validator proposal
 func NewMsgProposalAddValidator(
 	chainID string,
-	creator sdk.AccAddress,
+	creator string,
 	payload *ProposalAddValidatorPayload,
 ) *MsgProposalAddValidator {
 	return &MsgProposalAddValidator{
@@ -274,7 +294,11 @@ func (msg MsgProposalAddValidator) Type() string { return TypeMsgProposalAddVali
 // GetSigners implements the sdk.Msg interface. It returns the address(es) that
 // must sign over msg.GetSignBytes().
 func (msg MsgProposalAddValidator) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{msg.Creator}
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
 }
 
 // GetSignBytes returns the message bytes to sign over.

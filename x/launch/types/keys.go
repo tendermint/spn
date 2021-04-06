@@ -1,7 +1,6 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strconv"
 )
 
@@ -85,19 +84,19 @@ func GetRejectedProposalKey(chainID string) []byte {
 }
 
 // GetAccountKey returns the key for accounts store
-func GetAccountKey(chainID string, accountAddress sdk.AccAddress) []byte {
+func GetAccountKey(chainID string, accountAddress string) []byte {
 	key := append(KeyPrefix(AccountKey), []byte(chainID)...)
 
 	// We use "_" to separate chainID and proposalID to avoid prefix conflic since "-" is allowed in chainID
 	key = append(key, []byte("_")...)
-	return append(key, accountAddress.Bytes()...)
+	return append(key, []byte(accountAddress)...)
 }
 
 // GetValidatorKey returns the key for validators store
-func GetValidatorKey(chainID string, valAddress sdk.ValAddress) []byte {
+func GetValidatorKey(chainID string, valAddress string) []byte {
 	key := append(KeyPrefix(ValidatorKey), []byte(chainID)...)
 
 	// We use "_" to separate chainID and proposalID to avoid prefix conflic since "-" is allowed in chainID
 	key = append(key, []byte("_")...)
-	return append(key, valAddress.Bytes()...)
+	return append(key, []byte(valAddress)...)
 }

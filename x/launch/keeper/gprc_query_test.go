@@ -2,7 +2,6 @@ package keeper_test
 
 import (
 	"context"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"sort"
 
 	"github.com/stretchr/testify/require"
@@ -346,7 +345,7 @@ func TestListProposals(t *testing.T) {
 
 	// Array of approved add account
 	var approvedAddAccount []*types.Proposal
-	var approvedAddress []sdk.AccAddress
+	var approvedAddress []string
 	for i := 0; i < 5; i++ {
 		accountAddress := spnmocks.MockAccAddress()
 		approvedAddress = append(approvedAddress, accountAddress)
@@ -377,7 +376,7 @@ func TestListProposals(t *testing.T) {
 	var approvedAddValidator []*types.Proposal
 	for i := 0; i < 5; i++ {
 		payloadAddValidator := spnmocks.MockProposalAddValidatorPayload()
-		payloadAddValidator.ValidatorAddress = sdk.ValAddress(approvedAddress[i]) // Need an existing account to be approved
+		payloadAddValidator.ValidatorAddress = approvedAddress[i] // Need an existing account to be approved
 		msgAddValidator := types.NewMsgProposalAddValidator(
 			chainID,
 			spnmocks.MockAccAddress(),
@@ -555,7 +554,7 @@ func TestLaunchInformation(t *testing.T) {
 		// Add validator payload
 		addValidatorpayload := spnmocks.MockProposalAddValidatorPayload()
 		valAddress := addValidatorpayload.ValidatorAddress
-		accAddress := sdk.AccAddress(valAddress)
+		accAddress := valAddress
 
 		// Add account payload (for each validator we need an account)
 		addAccountPayload := spnmocks.MockProposalAddAccountPayload()

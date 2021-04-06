@@ -87,13 +87,13 @@ message ProposalChangePayload {
 }
 
 message ProposalAddAccountPayload {
-    bytes address = 1 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.AccAddress"];
+    string address = 1;
     repeated cosmos.base.v1beta1.Coin coins = 2 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 message ProposalAddValidatorPayload {
     bytes genTx = 1;
-    bytes validatorAddress = 2 [(gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.ValAddress"];
+    string validatorAddress = 2;
     cosmos.base.v1beta1.Coin selfDelegation = 3;
     string peer = 4;
 }

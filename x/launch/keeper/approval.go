@@ -47,7 +47,7 @@ func (k Keeper) ApplyProposalApproval(ctx sdk.Context, chainID string, proposal 
 func (k Keeper) checkProposalAddAccount(ctx sdk.Context, chainID string, payload *types.ProposalAddAccountPayload) error {
 	// Cannot add an account that already exists in the keeper
 	if k.IsAccountSet(ctx, chainID, payload.Address) {
-		return fmt.Errorf("account %v already exists in the launch", payload.Address.String())
+		return fmt.Errorf("account %v already exists in the launch", payload.Address)
 	}
 
 	return nil
@@ -58,17 +58,17 @@ func (k Keeper) checkProposalAddValidator(ctx sdk.Context, chainID string, paylo
 	valAddr := payload.ValidatorAddress
 
 	// Cannot add a validator if it doesn't have an account
-	if !k.IsAccountSet(ctx, chainID, sdk.AccAddress(valAddr)) {
-		return fmt.Errorf("validator %v doesn't have account in the genesis", valAddr.String())
+	if !k.IsAccountSet(ctx, chainID, valAddr) {
+		return fmt.Errorf("validator %v doesn't have account in the genesis", valAddr)
 	}
 
 	// Cannot add a validator that already exists in the genesis
 	if k.IsValidatorSet(ctx, chainID, valAddr) {
-		return fmt.Errorf("validator %v already exists in the genesis", valAddr.String())
+		return fmt.Errorf("validator %v already exists in the genesis", valAddr)
 	}
 
 	// Cannot add a validator if the account doesn't contain enough funds for self-delegation
-	coins, _ := k.GetAccountCoins(ctx, chainID, sdk.AccAddress(valAddr))
+	coins, _ := k.GetAccountCoins(ctx, chainID, valAddr)
 	selfDelegation := sdk.NewCoins(*payload.SelfDelegation)
 	if !coins.IsAllGTE(selfDelegation) {
 		return errors.New("insufficient funds in account for self delegation")
