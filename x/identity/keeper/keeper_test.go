@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
 	"testing"
@@ -8,7 +9,7 @@ import (
 
 func TestSetUsername(t *testing.T) {
 	ctx, k := spnmocks.MockIdentityContext()
-	address := spnmocks.MockAccAddress()
+	address, _ := sdk.AccAddressFromBech32(spnmocks.MockAccAddress())
 
 	// The username should be the address if it is not set
 	username, _ := k.GetUsernameFromAddress(ctx, address)
@@ -27,7 +28,7 @@ func TestSetUsername(t *testing.T) {
 	require.Equal(t, "foo", username)
 
 	// Username can be retrieved from the identifier
-	id, _ := k.GetIdentifier(ctx, address)
+	id, _ := k.GetIdentifier(ctx, address.String())
 	username, _ = k.GetUsername(ctx, id)
 	require.Equal(t, "foo", username)
 
@@ -40,16 +41,16 @@ func TestSetUsername(t *testing.T) {
 
 func TestGetIdentifier(t *testing.T) {
 	ctx, k := spnmocks.MockIdentityContext()
-	address := spnmocks.MockAccAddress()
+	address, _ := sdk.AccAddressFromBech32(spnmocks.MockAccAddress())
 
 	// Return the address
-	identifier, _ := k.GetIdentifier(ctx, address)
+	identifier, _ := k.GetIdentifier(ctx, address.String())
 	require.Equal(t, address.String(), identifier)
 }
 
 func TestGetAddresses(t *testing.T) {
 	ctx, k := spnmocks.MockIdentityContext()
-	address := spnmocks.MockAccAddress()
+	address, _ := sdk.AccAddressFromBech32(spnmocks.MockAccAddress())
 
 	// Return only the address provided
 	addresses, _ := k.GetAddresses(ctx, address.String())
@@ -61,7 +62,7 @@ func TestIdentityExists(t *testing.T) {
 	ctx, k := spnmocks.MockIdentityContext()
 
 	// Return true if the identifier is an address
-	address := spnmocks.MockAccAddress()
+	address, _ := sdk.AccAddressFromBech32(spnmocks.MockAccAddress())
 	exists, _ := k.IdentityExists(ctx, address.String())
 	require.True(t, exists)
 

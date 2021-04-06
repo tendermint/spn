@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
 	"github.com/tendermint/spn/x/identity/types"
@@ -10,7 +11,8 @@ import (
 
 func TestMsgSetUsername(t *testing.T) {
 	// Can create a message with a valid username
-	addr := spnmocks.MockAccAddress()
+	addr, _ := sdk.AccAddressFromBech32(spnmocks.MockAccAddress())
+
 	_, err := types.NewMsgSetUsername(addr, "foo-bar_40foo_01")
 	require.NoError(t, err)
 	_, err = types.NewMsgSetUsername(addr, spnmocks.MockRandomString(types.UsernameMaxLength))

@@ -1,7 +1,6 @@
 package launch_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	spnmocks "github.com/tendermint/spn/internal/testing"
 	"github.com/tendermint/spn/x/launch"
@@ -275,7 +274,7 @@ func TestHandleMsgApprove(t *testing.T) {
 	addValidatorPayload := spnmocks.MockProposalAddValidatorPayload()
 	addAccountPayload = spnmocks.MockProposalAddAccountPayload()
 	valAddress := addValidatorPayload.ValidatorAddress
-	addAccountPayload.Address = sdk.AccAddress(valAddress)
+	addAccountPayload.Address = valAddress
 	k.SetAccount(ctx, chainID, addAccountPayload.Address, addAccountPayload) // Simulate account address already being provided
 	msgProposalValidator := types.NewMsgProposalAddValidator(
 		chainID,
@@ -496,7 +495,7 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 		coordinator,
 		spnmocks.MockProposalAddValidatorPayload(),
 	)
-	msg.Payload.ValidatorAddress = sdk.ValAddress(account)
+	msg.Payload.ValidatorAddress = account
 	_, err = h(ctx, msg)
 	require.NoError(t, err)
 
