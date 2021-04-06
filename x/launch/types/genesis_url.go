@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
+	"fmt"
 )
 
 const HashLength = 64
@@ -14,7 +15,7 @@ func NewGenesisURL(url string, hash string) (gu GenesisURL, err error) {
 		return gu, errors.New("url cannot be empty")
 	}
 	if len(hash) != HashLength {
-		return gu, errors.New("hash must be 32 bytes")
+		return gu, fmt.Errorf("hash must be %d characters long", HashLength)
 	}
 
 	return GenesisURL{
