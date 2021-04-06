@@ -94,12 +94,7 @@ func TestNewProposalAddAccount(t *testing.T) {
 	require.NoError(t, err)
 
 	// Prevent add account with invalid address
-	payload.Address = sdk.AccAddress([]byte(""))
-	err = types.ValidateProposalPayloadAddAccount(payload)
-	require.Error(t, err)
-
-	// Prevent add account with invalid address
-	payload.Address = sdk.AccAddress([]byte("InvalidAddress"))
+	payload.Address = ""
 	err = types.ValidateProposalPayloadAddAccount(payload)
 	require.Error(t, err)
 
@@ -156,13 +151,7 @@ func TestNewProposalAddValidator(t *testing.T) {
 
 	// Empty address
 	payload = spnmocks.MockProposalAddValidatorPayload()
-	payload.ValidatorAddress = []byte{}
-	err = types.ValidateProposalPayloadAddValidator(payload)
-	require.Error(t, err)
-
-	// Invalid address
-	payload = spnmocks.MockProposalAddValidatorPayload()
-	payload.ValidatorAddress = []byte("InvalidAddress")
+	payload.ValidatorAddress = ""
 	err = types.ValidateProposalPayloadAddValidator(payload)
 	require.Error(t, err)
 

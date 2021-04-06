@@ -28,7 +28,7 @@ func NewProposalAddValidator(
 // NewProposalAddValidatorPayload creates a new payload for adding a validator
 func NewProposalAddValidatorPayload(
 	genTx []byte,
-	validatorAddress sdk.ValAddress,
+	validatorAddress string,
 	selfDelegation sdk.Coin,
 	peer string,
 ) *ProposalAddValidatorPayload {
@@ -48,11 +48,8 @@ func ValidateProposalPayloadAddValidator(payload *ProposalAddValidatorPayload) (
 	}
 
 	// Verify validator address
-	if payload.ValidatorAddress.Empty() {
+	if payload.ValidatorAddress == "" {
 		return errors.New("empty validator address")
-	}
-	if _, err := sdk.ValAddressFromBech32(payload.ValidatorAddress.String()); err != nil {
-		return errors.New("invalid address")
 	}
 
 	// Check self delegation

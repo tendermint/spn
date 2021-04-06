@@ -79,7 +79,7 @@ func CmdChainCreate() *cobra.Command {
 			// Create and send message
 			msg := types.NewMsgChainCreate(
 				args[0],
-				clientCtx.GetFromAddress(),
+				clientCtx.GetFromAddress().String(),
 				args[1],
 				args[2],
 				genesisURL,
@@ -120,7 +120,7 @@ func CmdApprove() *cobra.Command {
 			msg := types.NewMsgApprove(
 				args[0],
 				int32(proposalID),
-				clientCtx.GetFromAddress(),
+				clientCtx.GetFromAddress().String(),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -156,7 +156,7 @@ func CmdReject() *cobra.Command {
 			msg := types.NewMsgReject(
 				args[0],
 				int32(proposalID),
-				clientCtx.GetFromAddress(),
+				clientCtx.GetFromAddress().String(),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -183,10 +183,7 @@ func CmdProposalAddAccount() *cobra.Command {
 			}
 
 			// Parse address
-			address, err := sdk.AccAddressFromBech32(args[1])
-			if err != nil {
-				return err
-			}
+			address := args[1]
 
 			// Parse coins
 			coins, err := sdk.ParseCoinsNormalized(args[2])
@@ -203,7 +200,7 @@ func CmdProposalAddAccount() *cobra.Command {
 			// Create and send message
 			msg := types.NewMsgProposalAddAccount(
 				args[0],
-				clientCtx.GetFromAddress(),
+				clientCtx.GetFromAddress().String(),
 				payload,
 			)
 			if err := msg.ValidateBasic(); err != nil {
@@ -231,10 +228,7 @@ func CmdProposalAddValidator() *cobra.Command {
 			}
 
 			// Parse address
-			address, err := sdk.AccAddressFromBech32(args[2])
-			if err != nil {
-				return err
-			}
+			address := args[2]
 
 			// Read self-delegation
 			selfDelegation, err := sdk.ParseCoinNormalized(args[3])
@@ -251,7 +245,7 @@ func CmdProposalAddValidator() *cobra.Command {
 			// Construct payload
 			payload := types.NewProposalAddValidatorPayload(
 				gentxBytes,
-				sdk.ValAddress(address),
+				address,
 				selfDelegation,
 				args[1],
 			)
@@ -259,7 +253,7 @@ func CmdProposalAddValidator() *cobra.Command {
 			// Create and send message
 			msg := types.NewMsgProposalAddValidator(
 				args[0],
-				clientCtx.GetFromAddress(),
+				clientCtx.GetFromAddress().String(),
 				payload,
 			)
 			if err := msg.ValidateBasic(); err != nil {

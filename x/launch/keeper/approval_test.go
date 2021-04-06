@@ -63,7 +63,7 @@ func CheckProposalAddValidator(t *testing.T) {
 	selfDelefation := sdk.NewCoin("stake", sdk.NewInt(1000000))
 	payload.SelfDelegation = &selfDelefation
 	addAccountPayload := spnmocks.MockProposalAddAccountPayload()
-	accAddress := sdk.AccAddress(payload.ValidatorAddress)
+	accAddress := payload.ValidatorAddress
 	k.SetAccount(ctx, chainID, accAddress, addAccountPayload)
 	proposal, _ = types.NewProposalAddValidator(
 		spnmocks.MockProposalInformation(),
@@ -76,7 +76,7 @@ func CheckProposalAddValidator(t *testing.T) {
 	selfDelefation = sdk.NewCoin("stake", sdk.NewInt(10000))
 	payload.SelfDelegation = &selfDelefation
 	addAccountPayload = spnmocks.MockProposalAddAccountPayload()
-	accAddress = sdk.AccAddress(payload.ValidatorAddress)
+	accAddress = payload.ValidatorAddress
 	k.SetAccount(ctx, chainID, accAddress, addAccountPayload)
 	proposal, _ = types.NewProposalAddValidator(
 		spnmocks.MockProposalInformation(),

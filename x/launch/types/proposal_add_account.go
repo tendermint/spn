@@ -28,7 +28,7 @@ func NewProposalAddAccount(
 
 // NewProposalAddAccountPayload creates a new payload for adding a genesis account
 func NewProposalAddAccountPayload(
-	address sdk.AccAddress,
+	address string,
 	coins sdk.Coins,
 ) *ProposalAddAccountPayload {
 	var p ProposalAddAccountPayload
@@ -40,12 +40,8 @@ func NewProposalAddAccountPayload(
 // ValidateProposalPayloadAddAccount checks if the data of ProposalAddAccountPayload is valid
 func ValidateProposalPayloadAddAccount(payload *ProposalAddAccountPayload) error {
 	// Verify address is not empty
-	if payload.Address.Empty() {
+	if payload.Address == "" {
 		return errors.New("account address empty")
-	}
-
-	if _, err := sdk.AccAddressFromBech32(payload.Address.String()); err != nil {
-		return errors.New("invalid address")
 	}
 
 	// Check coin allocation validity
