@@ -246,25 +246,10 @@ func TestHandleMsgApprove(t *testing.T) {
 	approved := k.GetApprovedProposals(ctx, chainID)
 	require.Contains(t, approved.ProposalIDs, int32(0))
 
-	// The account address is set in the store
-	accountAddressSet := k.IsAccountSet(ctx, chainID, addAccountPayload.Address)
-	require.True(t, accountAddressSet)
-
 	// Prevent approving an already approved proposal
 	msg = types.NewMsgApprove(
 		chainID,
 		0,
-		coordinator,
-	)
-	_, err = h(ctx, msg)
-	require.Error(t, err)
-
-	// Prevent approving a proposal with an account already in the launch
-	_, err = h(ctx, msgProposal)
-	require.NoError(t, err)
-	msg = types.NewMsgApprove(
-		chainID,
-		1,
 		coordinator,
 	)
 	_, err = h(ctx, msg)
@@ -275,7 +260,6 @@ func TestHandleMsgApprove(t *testing.T) {
 	addAccountPayload = spnmocks.MockProposalAddAccountPayload()
 	valAddress := addValidatorPayload.ValidatorAddress
 	addAccountPayload.Address = valAddress
-	k.SetAccount(ctx, chainID, addAccountPayload.Address, addAccountPayload) // Simulate account address already being provided
 	msgProposalValidator := types.NewMsgProposalAddValidator(
 		chainID,
 		proposalCreator,
@@ -287,30 +271,15 @@ func TestHandleMsgApprove(t *testing.T) {
 	// The coordinator creator can approve the proposal
 	msg = types.NewMsgApprove(
 		chainID,
-		2,
+		1,
 		coordinator,
 	)
 	_, err = h(ctx, msg)
 	require.NoError(t, err)
 
 	// The proposal is approved
-	proposal, _ = k.GetProposal(ctx, chainID, 2)
+	proposal, _ = k.GetProposal(ctx, chainID, 1)
 	require.Equal(t, types.ProposalStatus_APPROVED, proposal.ProposalState.Status)
-
-	// The validator address is set in the store
-	validatorAddressSet := k.IsValidatorSet(ctx, chainID, valAddress)
-	require.True(t, validatorAddressSet)
-
-	// Prevent approving a proposal with an validator already in the launch
-	_, err = h(ctx, msgProposalValidator)
-	require.NoError(t, err)
-	msg = types.NewMsgApprove(
-		chainID,
-		3,
-		coordinator,
-	)
-	_, err = h(ctx, msg)
-	require.Error(t, err)
 }
 
 func TestHandleMsgProposalAddAccount(t *testing.T) {
@@ -391,17 +360,6 @@ func TestHandleMsgProposalAddAccount(t *testing.T) {
 	// The proposal count is incremented
 	count = k.GetProposalCount(ctx, chainID)
 	require.Equal(t, int32(2), count)
-
-	// A proposal created by the coordinator is not appended if it is invalid
-	// (invalid here because the account already exists)
-	msg = types.NewMsgProposalAddAccount(
-		chainID,
-		coordinator,
-		spnmocks.MockProposalAddAccountPayload(),
-	)
-	msg.Payload.Address = account
-	_, err = h(ctx, msg)
-	require.Error(t, err)
 }
 
 func TestHandleMsgProposalAddValidator(t *testing.T) {
@@ -514,13 +472,4 @@ func TestHandleMsgProposalAddValidator(t *testing.T) {
 	// The proposal count is incremented
 	count = k.GetProposalCount(ctx, chainID)
 	require.Equal(t, int32(8), count)
-
-	// A proposal created by the coordinator is not appended if it is invalid
-	msg = types.NewMsgProposalAddValidator(
-		chainID,
-		coordinator,
-		spnmocks.MockProposalAddValidatorPayload(),
-	)
-	_, err = h(ctx, msg)
-	require.Error(t, err)
 }

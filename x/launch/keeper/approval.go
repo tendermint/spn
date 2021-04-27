@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"errors"
-	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -45,52 +44,21 @@ func (k Keeper) ApplyProposalApproval(ctx sdk.Context, chainID string, proposal 
 
 // checkProposalAddAccount checks if a ProposalAddAccount can be approved and applied to the launch information
 func (k Keeper) checkProposalAddAccount(ctx sdk.Context, chainID string, payload *types.ProposalAddAccountPayload) error {
-	// Cannot add an account that already exists in the keeper
-	if k.IsAccountSet(ctx, chainID, payload.Address) {
-		return fmt.Errorf("account %v already exists in the launch", payload.Address)
-	}
-
 	return nil
 }
 
 // checkProposalAddValidator checks if a ProposalAddValidator can be approved and applied to the launch information
 func (k Keeper) checkProposalAddValidator(ctx sdk.Context, chainID string, payload *types.ProposalAddValidatorPayload) error {
-	valAddr := payload.ValidatorAddress
-
-	// Cannot add a validator if it doesn't have an account
-	if !k.IsAccountSet(ctx, chainID, valAddr) {
-		return fmt.Errorf("validator %v doesn't have account in the genesis", valAddr)
-	}
-
-	// Cannot add a validator that already exists in the genesis
-	if k.IsValidatorSet(ctx, chainID, valAddr) {
-		return fmt.Errorf("validator %v already exists in the genesis", valAddr)
-	}
-
-	// Cannot add a validator if the account doesn't contain enough funds for self-delegation
-	coins, _ := k.GetAccountCoins(ctx, chainID, valAddr)
-	selfDelegation := sdk.NewCoins(*payload.SelfDelegation)
-	if !coins.IsAllGTE(selfDelegation) {
-		return errors.New("insufficient funds in account for self delegation")
-	}
-
 	return nil
 }
 
 // applyProposalAddAccount applies the changes to the keeper when a ProposalAddAccount is approved
 func (k Keeper) applyProposalAddAccount(ctx sdk.Context, chainID string, payload *types.ProposalAddAccountPayload) error {
-	k.SetAccount(ctx, chainID, payload.Address, payload)
-
 	return nil
 }
 
 // applyProposalAddValidator applies the changes to the keeper when a ProposalAddValidator is approved
 func (k Keeper) applyProposalAddValidator(ctx sdk.Context, chainID string, payload *types.ProposalAddValidatorPayload) error {
-	valAddr := payload.ValidatorAddress
-
-	// Set the new validator
-	k.SetValidator(ctx, chainID, valAddr)
-
 	// Add the peer inside the payload to the chain peer id
 	chain, _ := k.GetChain(ctx, chainID)
 	chain.Peers = append(chain.Peers, payload.Peer)
