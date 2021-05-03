@@ -1,7 +1,6 @@
-package utils
+package parseint
 
 import (
-	"fmt"
 	"math"
 	"strconv"
 	"testing"
@@ -14,7 +13,7 @@ func TestParseInt32(t *testing.T) {
 		description string
 		input       string
 		result      int32
-		err         string
+		err         error
 	}{
 		{
 			description: "regular",
@@ -24,12 +23,12 @@ func TestParseInt32(t *testing.T) {
 		{
 			description: "overflow",
 			input:       strconv.Itoa(math.MaxInt64),
-			err:         "strconv.ParseInt: parsing \"%s\": value out of range",
+			err:         strconv.ErrRange,
 		},
 		{
 			description: "not-integer",
 			input:       "teepot",
-			err:         "strconv.ParseInt: parsing \"%s\": invalid syntax",
+			err:         strconv.ErrSyntax,
 		},
 	} {
 		tc := tc
@@ -37,8 +36,8 @@ func TestParseInt32(t *testing.T) {
 			t.Parallel()
 			rst, err := ParseInt32(tc.input)
 			if err != nil {
-				if tc.err != "" {
-					require.EqualError(t, err, fmt.Sprintf(tc.err, tc.input))
+				if tc.err != nil {
+					require.ErrorIs(t, err, tc.err)
 				} else {
 					require.NoError(t, err)
 				}

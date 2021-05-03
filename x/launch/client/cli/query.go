@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
-	"github.com/tendermint/spn/internal/utils"
+	"github.com/tendermint/spn/internal/parseint"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -139,7 +139,7 @@ func CmdShowProposal() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			// Convert proposal ID
-			proposalID, err := utils.ParseInt32(args[1])
+			proposalID, err := parseint.ParseInt32(args[1])
 			if err != nil {
 				return err
 			}
@@ -236,7 +236,7 @@ func CmdSimulatedLaunchInformation() *cobra.Command {
 			proposalIDsArg := strings.Split(args[1], ",")
 			for _, proposalIDArg := range proposalIDsArg {
 				// Convert proposal ID
-				proposalID, err := utils.ParseInt32(proposalIDArg)
+				proposalID, err := parseint.ParseInt32(proposalIDArg)
 				if err != nil {
 					return err
 				}

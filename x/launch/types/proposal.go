@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	"github.com/tendermint/spn/internal/utils"
+	"github.com/tendermint/spn/internal/parseint"
 )
 
 // NewProposalInformation initializes a new proposal information structure
@@ -91,7 +91,7 @@ func MarshalProposalCount(cdc codec.BinaryMarshaler, count int32) []byte {
 
 // UnmarshalProposalCount decodes proposal count from the store
 func UnmarshalProposalCount(cdc codec.BinaryMarshaler, value []byte) int32 {
-	count, err := utils.ParseInt32(string(value))
+	count, err := parseint.ParseInt32(string(value))
 	if err != nil {
 		// We should never have non numeric data as proposal count
 		panic("The proposal count store contains an invalid value")
