@@ -2,6 +2,7 @@ package types
 
 import (
 	"errors"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
@@ -41,7 +42,7 @@ func ValidateProposalPayloadChange(payload *ProposalChangePayload) error {
 		// Path components must contain alphanumeric characters
 		for _, c := range pathComponent {
 			if !isChangePathAuthorizedChar(c) {
-				return errors.New("Invalid change path")
+				return errors.New("invalid change path")
 			}
 		}
 	}

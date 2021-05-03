@@ -33,7 +33,9 @@ func MockIdentityContext() (sdk.Context, *keeper.Keeper) {
 
 	// Mount stores
 	cms.MountStoreWithDB(keys[types.StoreKey], sdk.StoreTypeIAVL, db)
-	cms.LoadLatestVersion()
+	if err := cms.LoadLatestVersion(); err != nil {
+		panic(err.Error())
+	}
 
 	// Create context
 	ctx := sdk.NewContext(cms, tmproto.Header{}, false, log.NewNopLogger())

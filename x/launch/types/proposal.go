@@ -2,9 +2,11 @@ package types
 
 import (
 	"errors"
-	"github.com/cosmos/cosmos-sdk/codec"
 	"strconv"
 	"time"
+
+	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/tendermint/spn/internal/utils"
 )
 
 // NewProposalInformation initializes a new proposal information structure
@@ -83,16 +85,16 @@ func UnmarshalProposalList(cdc codec.BinaryMarshaler, value []byte) ProposalList
 
 // MarshalProposalCount encodes proposal count for the store
 func MarshalProposalCount(cdc codec.BinaryMarshaler, count int32) []byte {
+	// FIXME replace it with binary.LittleEndian.PutInt32
 	return []byte(strconv.Itoa(int(count)))
 }
 
 // UnmarshalProposalCount decodes proposal count from the store
 func UnmarshalProposalCount(cdc codec.BinaryMarshaler, value []byte) int32 {
-	count, err := strconv.Atoi(string(value))
+	count, err := utils.ParseInt32(string(value))
 	if err != nil {
 		// We should never have non numeric data as proposal count
 		panic("The proposal count store contains an invalid value")
 	}
-
-	return int32(count)
+	return count
 }

@@ -2,16 +2,19 @@ package keeper
 
 import (
 	"errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/launch/types"
 )
+
+var errChainDoesntExist = errors.New("chain doesn't exist")
 
 // CheckProposalApproval checks if a proposal can be applied to the launch and approved depending on the current state of the launch information
 func (k Keeper) CheckProposalApproval(ctx sdk.Context, chainID string, proposal types.Proposal) error {
 	// Check if chain exists
 	_, found := k.GetChain(ctx, chainID)
 	if !found {
-		return errors.New("Chain doesn't exist")
+		return errChainDoesntExist
 	}
 
 	switch payload := proposal.Payload.(type) {
@@ -29,7 +32,7 @@ func (k Keeper) ApplyProposalApproval(ctx sdk.Context, chainID string, proposal 
 	// Check if chain exists
 	_, found := k.GetChain(ctx, chainID)
 	if !found {
-		return errors.New("Chain doesn't exist")
+		return errChainDoesntExist
 	}
 
 	switch payload := proposal.Payload.(type) {

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
+	"github.com/tendermint/spn/internal/utils"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -111,7 +111,7 @@ func CmdApprove() *cobra.Command {
 			}
 
 			// Convert value for proposal ID
-			proposalID, err := strconv.Atoi(args[1])
+			proposalID, err := utils.ParseInt32(args[1])
 			if err != nil {
 				return err
 			}
@@ -119,7 +119,7 @@ func CmdApprove() *cobra.Command {
 			// Create and send message
 			msg := types.NewMsgApprove(
 				args[0],
-				int32(proposalID),
+				proposalID,
 				clientCtx.GetFromAddress().String(),
 			)
 			if err := msg.ValidateBasic(); err != nil {
@@ -147,7 +147,7 @@ func CmdReject() *cobra.Command {
 			}
 
 			// Convert value for proposal ID
-			proposalID, err := strconv.Atoi(args[1])
+			proposalID, err := utils.ParseInt32(args[1])
 			if err != nil {
 				return err
 			}
@@ -155,7 +155,7 @@ func CmdReject() *cobra.Command {
 			// Create and send message
 			msg := types.NewMsgReject(
 				args[0],
-				int32(proposalID),
+				proposalID,
 				clientCtx.GetFromAddress().String(),
 			)
 			if err := msg.ValidateBasic(); err != nil {

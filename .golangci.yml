@@ -1,7 +1,7 @@
 run:
   tests: false
 #   # timeout for analysis, e.g. 30s, 5m, default is 1m
-#   timeout: 5m
+  timeout: 5m
 
 linters:
   disable-all: true
@@ -10,7 +10,7 @@ linters:
     - deadcode
     - depguard
     - dogsled
-    # - errcheck
+    - errcheck
     - goconst
     - gocritic
     - gofmt
@@ -20,12 +20,12 @@ linters:
     - gosimple
     - govet
     - ineffassign
-    - interfacer
-    - maligned
+    # - interfacer
+    # - maligned
     - misspell
     - nakedret
     - prealloc
-    - scopelint
+    # - scopelint
     - staticcheck
     - structcheck
     - stylecheck
@@ -38,5 +38,7 @@ linters:
     - nolintlint
 
 issues:
+  exclude:
+    - G404
   max-issues-per-linter: 10000
   max-same-issues: 10000

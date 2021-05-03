@@ -3,12 +3,12 @@ package cli
 import (
 	"context"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
+	"github.com/tendermint/spn/internal/utils"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -139,14 +139,14 @@ func CmdShowProposal() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			// Convert proposal ID
-			proposalID, err := strconv.Atoi(args[1])
+			proposalID, err := utils.ParseInt32(args[1])
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryShowProposalRequest{
 				ChainID:    args[0],
-				ProposalID: int32(proposalID),
+				ProposalID: proposalID,
 			}
 
 			res, err := queryClient.ShowProposal(context.Background(), params)
@@ -236,12 +236,12 @@ func CmdSimulatedLaunchInformation() *cobra.Command {
 			proposalIDsArg := strings.Split(args[1], ",")
 			for _, proposalIDArg := range proposalIDsArg {
 				// Convert proposal ID
-				proposalID, err := strconv.Atoi(proposalIDArg)
+				proposalID, err := utils.ParseInt32(proposalIDArg)
 				if err != nil {
 					return err
 				}
 
-				proposalIDs = append(proposalIDs, int32(proposalID))
+				proposalIDs = append(proposalIDs, proposalID)
 			}
 
 			params := &types.QuerySimulatedLaunchInformationRequest{
