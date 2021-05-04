@@ -2,6 +2,7 @@ package testing
 
 import (
 	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -28,7 +29,7 @@ import (
 	"time"
 )
 
-// MockCodec mocks a codec for the app that contains the necessary types for proto enconding
+// MockCodec mocks a codec for the app that contains the necessary types for proto encoding
 func MockCodec() codec.Marshaler {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 
@@ -68,7 +69,9 @@ func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 
 	// Mount stores
 	cms.MountStoreWithDB(keys[types.StoreKey], sdk.StoreTypeIAVL, db)
-	cms.LoadLatestVersion()
+	if err := cms.LoadLatestVersion(); err != nil {
+		panic(err.Error())
+	}
 
 	// Create context
 	ctx := sdk.NewContext(cms, tmproto.Header{}, false, log.NewNopLogger())
@@ -144,12 +147,12 @@ func MockProposal() *types.Proposal {
 func MockProposalList() *types.ProposalList {
 	return &types.ProposalList{
 		ProposalIDs: []int32{
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
 		},
 	}
 }

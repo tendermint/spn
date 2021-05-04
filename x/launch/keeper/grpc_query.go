@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sort"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -11,7 +13,6 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"sort"
 )
 
 var _ types.QueryServer = Keeper{}
@@ -297,15 +298,13 @@ func (k Keeper) PendingProposals(
 	})
 
 	// Fetch all the proposals
-	var proposals []types.Proposal
+	proposals := make([]types.Proposal, 0, len(pendingProposals.ProposalIDs))
 	for _, pending := range pendingProposals.ProposalIDs {
 		proposal, found := k.GetProposal(ctx, chainID, pending)
-
 		// Every proposals in the pending pool should exist
 		if !found {
 			panic(fmt.Sprintf("The proposal %v doesn't exist", pending))
 		}
-
 		proposals = append(proposals, proposal)
 	}
 
@@ -327,15 +326,13 @@ func (k Keeper) ApprovedProposals(
 	approvedProposals := k.GetApprovedProposals(ctx, chainID)
 
 	// Fetch all the proposals
-	var proposals []types.Proposal
+	proposals := make([]types.Proposal, 0, len(approvedProposals.ProposalIDs))
 	for _, approved := range approvedProposals.ProposalIDs {
 		proposal, found := k.GetProposal(ctx, chainID, approved)
-
 		// Every proposals in the approved pool should exist
 		if !found {
 			panic(fmt.Sprintf("The proposal %v doesn't exist", approved))
 		}
-
 		proposals = append(proposals, proposal)
 	}
 
@@ -357,15 +354,13 @@ func (k Keeper) RejectedProposals(
 	rejectedProposals := k.GetRejectedProposals(ctx, chainID)
 
 	// Fetch all the proposals
-	var proposals []types.Proposal
+	proposals := make([]types.Proposal, 0, len(rejectedProposals.ProposalIDs))
 	for _, rejected := range rejectedProposals.ProposalIDs {
 		proposal, found := k.GetProposal(ctx, chainID, rejected)
-
 		// Every proposals in the rejected pool should exist
 		if !found {
 			panic(fmt.Sprintf("The proposal %v doesn't exist", rejected))
 		}
-
 		proposals = append(proposals, proposal)
 	}
 

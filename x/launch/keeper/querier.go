@@ -42,7 +42,7 @@ func listChains(ctx sdk.Context, req abci.RequestQuery, keeper Keeper, legacyQue
 	chains := keeper.GetAllChains(ctx, "")
 
 	// Read chainID
-	var chainIDs []string
+	chainIDs := make([]string, 0, len(chains))
 	for _, chain := range chains {
 		chainIDs = append(chainIDs, chain.ChainID)
 	}

@@ -30,7 +30,7 @@ func registerQueryRoutes(clientCtx client.Context, r *mux.Router) {
 }
 
 func registerTxHandlers(clientCtx client.Context, r *mux.Router) {
-	r.HandleFunc(fmt.Sprintf("/identity/set_username"), setUsernameHandler(clientCtx)).Methods(MethodPost)
+	r.HandleFunc("/identity/set_username", setUsernameHandler(clientCtx)).Methods(MethodPost)
 }
 
 func usernameHandler(clientCtx client.Context) http.HandlerFunc {

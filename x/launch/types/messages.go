@@ -1,13 +1,8 @@
 package types
 
 import (
-	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
 // Chat message types
@@ -317,16 +312,4 @@ func (msg MsgProposalAddValidator) ValidateBasic() error {
 	}
 
 	return nil
-}
-
-// gentxCodec returns a simple codec marshaler to unpack the message inside gentx
-func gentxCodec() codec.Marshaler {
-	interfaceRegistry := codectypes.NewInterfaceRegistry()
-	staking.RegisterInterfaces(interfaceRegistry)
-	cryptocodec.RegisterInterfaces(interfaceRegistry)
-	authtypes.RegisterInterfaces(interfaceRegistry)
-
-	cdc := codec.NewProtoCodec(interfaceRegistry)
-
-	return cdc
 }

@@ -3,6 +3,7 @@ package launch
 import (
 	"errors"
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/launch/keeper"
@@ -98,9 +99,7 @@ func handleMsgReject(ctx sdk.Context, k keeper.Keeper, msg *types.MsgReject) (*s
 	}
 
 	// Remove proposalID from pending pool
-	if err := removePendingProposal(ctx, k, &proposal); err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
-	}
+	removePendingProposal(ctx, k, &proposal)
 
 	// Append proposalID in rejected pool
 	if err := appendRejectedProposal(ctx, k, &proposal); err != nil {
@@ -143,9 +142,7 @@ func handleMsgApprove(ctx sdk.Context, k keeper.Keeper, msg *types.MsgApprove) (
 	}
 
 	// Remove proposalID from pending pool
-	if err := removePendingProposal(ctx, k, &proposal); err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
-	}
+	removePendingProposal(ctx, k, &proposal)
 
 	// Append the proposal the in approved pool
 	if err := appendApprovedProposal(ctx, k, &proposal); err != nil {
@@ -283,7 +280,7 @@ func appendPendingProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Pro
 	return nil
 }
 
-func removePendingProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Proposal) error {
+func removePendingProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Proposal) {
 	pending := k.GetPendingProposals(ctx, proposal.ProposalInformation.ChainID)
 	proposalFound := false
 	for i, id := range pending.ProposalIDs {
@@ -300,8 +297,6 @@ func removePendingProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Pro
 		panic(fmt.Sprintf("Proposal %v in pending state is not in the pending pool", proposal.ProposalInformation.ProposalID))
 	}
 	k.SetPendingProposals(ctx, proposal.ProposalInformation.ChainID, pending)
-
-	return nil
 }
 
 func appendApprovedProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Proposal) error {
@@ -312,7 +307,9 @@ func appendApprovedProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Pr
 	}
 
 	// Set the proposal new state
-	proposal.ProposalState.SetStatus(types.ProposalStatus_APPROVED)
+	if err := proposal.ProposalState.SetStatus(types.ProposalStatus_APPROVED); err != nil {
+		return err
+	}
 	k.SetProposal(ctx, *proposal)
 
 	// Append proposalID in approved pool
@@ -335,7 +332,9 @@ func appendRejectedProposal(ctx sdk.Context, k keeper.Keeper, proposal *types.Pr
 	k.SetRejectedProposals(ctx, proposal.ProposalInformation.ChainID, rejected)
 
 	// Set the proposal new state
-	proposal.ProposalState.SetStatus(types.ProposalStatus_REJECTED)
+	if err := proposal.ProposalState.SetStatus(types.ProposalStatus_REJECTED); err != nil {
+		return err
+	}
 	k.SetProposal(ctx, *proposal)
 
 	return nil

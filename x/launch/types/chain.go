@@ -2,9 +2,10 @@ package types
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"time"
 )
 
 // NewChain creates a new chain information object
