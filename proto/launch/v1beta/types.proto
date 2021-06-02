@@ -1,0 +1,99 @@
+syntax = "proto3";
+package spn.launch.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
+
+message Chain {
+  string chainID = 1;
+  string creator = 2;
+  repeated string peers = 3; 
+  string sourceURL = 4; 
+  string sourceHash  = 5; 
+  int64 createdAt = 6;
+  bool final = 7;
+  InitialGenesis initialGenesis = 8;
+}
+
+enum InitialGenesisType {
+  DEFAULT = 0;
+  URL = 1;
+}
+
+message InitialGenesis {
+  oneof source {
+    DefaultInitialGenesis defaultGenesis = 1;
+    GenesisURL genesisURL = 2;
+  }
+}
+
+message DefaultInitialGenesis {}
+
+message GenesisURL {
+  string url = 1;
+  string hash = 2;
+}
+
+message LaunchInformation {
+  repeated ProposalAddAccountPayload accounts = 2;
+  repeated bytes genTxs = 3;
+  repeated string peers = 4;
+}
+
+message Proposal {
+    ProposalInformation proposalInformation = 1;
+    ProposalState proposalState = 2;
+    oneof payload {
+        ProposalChangePayload changePayload = 3;
+        ProposalAddAccountPayload addAccountPayload = 4;
+        ProposalAddValidatorPayload addValidatorPayload = 5;
+    }
+}
+
+enum ProposalType {
+  ANY_TYPE = 0;
+  ADD_ACCOUNT = 1;
+  ADD_VALIDATOR = 2;
+}
+
+message ProposalInformation {
+    string chainID = 1;
+    int32 proposalID = 2;
+    string creator = 3;
+    int64 createdAt = 4;
+    
+}
+
+message ProposalState {
+  ProposalStatus status = 1;
+}
+
+enum ProposalStatus {
+  ANY_STATUS = 0;
+  APPROVED = 1;
+  PENDING = 2;
+  REJECTED = 3;
+}
+
+message ProposalList {
+    repeated int32 proposalIDs = 1;
+}
+
+message ProposalChangePayload {
+    repeated string changePath = 1;
+    string newValue = 2;
+}
+
+message ProposalAddAccountPayload {
+    string address = 1;
+    repeated cosmos.base.v1beta1.Coin coins = 2 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}
+
+message ProposalAddValidatorPayload {
+    bytes genTx = 1;
+    string validatorAddress = 2;
+    cosmos.base.v1beta1.Coin selfDelegation = 3;
+    string peer = 4;
+}

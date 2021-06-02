@@ -2,6 +2,7 @@ package testing
 
 import (
 	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -20,15 +21,15 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/spn/x/genesis/keeper"
-	"github.com/tendermint/spn/x/genesis/types"
+	"github.com/tendermint/spn/x/launch/keeper"
+	"github.com/tendermint/spn/x/launch/types"
 
 	"encoding/json"
 	"math/rand"
 	"time"
 )
 
-// MockCodec mocks a codec for the app that contains the necessary types for proto enconding
+// MockCodec mocks a codec for the app that contains the necessary types for proto encoding
 func MockCodec() codec.Marshaler {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 
@@ -49,7 +50,7 @@ func MockCodec() codec.Marshaler {
 	return cdc
 }
 
-// MockGenesisContext mocks the context and the keepers of the genesis module for test purposes
+// MockGenesisContext mocks the context and the keepers of the launch module for test purposes
 func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 	cdc := MockCodec()
 
@@ -68,7 +69,9 @@ func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 
 	// Mount stores
 	cms.MountStoreWithDB(keys[types.StoreKey], sdk.StoreTypeIAVL, db)
-	cms.LoadLatestVersion()
+	if err := cms.LoadLatestVersion(); err != nil {
+		panic(err.Error())
+	}
 
 	// Create context
 	ctx := sdk.NewContext(cms, tmproto.Header{}, false, log.NewNopLogger())
@@ -76,7 +79,7 @@ func MockGenesisContext() (sdk.Context, *keeper.Keeper) {
 	return ctx, genesisKeeper
 }
 
-// MockGenesisQueryClient mocks a query client for the genesis module
+// MockGenesisQueryClient mocks a query client for the launch module
 func MockGenesisQueryClient(ctx sdk.Context, k *keeper.Keeper) types.QueryClient {
 	queryHelper := baseapp.NewQueryServerTestHelper(ctx, codectypes.NewInterfaceRegistry())
 	types.RegisterQueryServer(queryHelper, k)
@@ -122,6 +125,8 @@ func MockChain() *types.Chain {
 		MockRandomString(20),
 		MockRandomString(20),
 		time.Now(),
+		"",
+		"",
 	)
 
 	chain.Peers = []string(nil)
@@ -142,12 +147,12 @@ func MockProposal() *types.Proposal {
 func MockProposalList() *types.ProposalList {
 	return &types.ProposalList{
 		ProposalIDs: []int32{
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
-			int32(rand.Intn(10000)),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
+			rand.Int31n(10000),
 		},
 	}
 }

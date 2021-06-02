@@ -1,0 +1,46 @@
+syntax = "proto3";
+package spn.launch.v1beta1;
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+import "gogoproto/gogo.proto";
+import "launch/v1beta/types.proto";
+
+message MsgChainCreate {
+    string chainID = 1;
+    string creator = 2;
+    string sourceURL = 3; 
+    string sourceHash  = 4;
+    string genesisURL = 5;
+    string genesisHash = 6;
+}
+
+message MsgProposalChange {
+    string chainID = 1;
+    string creator = 2;
+    ProposalChangePayload payload = 3;
+}
+
+message MsgProposalAddAccount {
+    string chainID = 1;
+    string creator = 2;
+    ProposalAddAccountPayload payload = 3;
+}
+
+message MsgProposalAddValidator {
+    string chainID = 1;
+    string creator = 2;
+    ProposalAddValidatorPayload payload = 3;
+}
+
+message MsgApprove {
+    string chainID = 1;
+    int32 proposalID = 2;
+    string approver = 3;
+}
+
+message MsgReject {
+    string chainID = 1;
+    int32 proposalID = 2;
+    string rejector = 3;
+}

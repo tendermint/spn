@@ -75,9 +75,8 @@ func (k Keeper) GetUsernameFromAddress(ctx sdk.Context, address sdk.AccAddress) 
 }
 
 // GetIdentifier returns a string that uniquely identities the user of the corresponding address
-func (k Keeper) GetIdentifier(ctx sdk.Context, address sdk.AccAddress) (string, error) {
-	// We return the address since its the only data taht identifies the user
-	return address.String(), nil
+func (k Keeper) GetIdentifier(ctx sdk.Context, address string) (string, error) {
+	return address, nil
 }
 
 // GetAddresses returns all the addresses corresponding to a user identifier

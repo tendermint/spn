@@ -4,9 +4,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 
-	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 
 	"math/rand"
 )
@@ -34,18 +34,18 @@ func MockRandomAlphaString(n int) string {
 }
 
 // MockAccAddress mocks an account address for test purpose
-func MockAccAddress() sdk.AccAddress {
+func MockAccAddress() string {
 	pk := ed25519.GenPrivKey().PubKey()
 	addr := pk.Address()
-	return sdk.AccAddress(addr)
+	return sdk.AccAddress(addr).String()
 }
 
 // MockValAddress mocks an operator address with associated private key for test purpose
-func MockValAddress() (*secp256k1.PrivKey, sdk.ValAddress) {
+func MockValAddress() (*secp256k1.PrivKey, string) {
 	privKey := secp256k1.GenPrivKey()
 	pk := privKey.PubKey()
 	addr := pk.Address()
-	return privKey, sdk.ValAddress(addr)
+	return privKey, sdk.ValAddress(addr).String()
 }
 
 // MockPubKey mocks a public key

@@ -40,6 +40,9 @@ func CmdSetUsername() *cobra.Command {
 			}
 
 			msg, err := types.NewMsgSetUsername(clientCtx.GetFromAddress(), args[0])
+			if err != nil {
+				return err
+			}
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
