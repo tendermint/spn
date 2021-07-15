@@ -87,6 +87,9 @@ import (
 	accountmodule "github.com/tendermint/spn/x/account"
 	accountmodulekeeper "github.com/tendermint/spn/x/account/keeper"
 	accountmoduletypes "github.com/tendermint/spn/x/account/types"
+	launchmodule "github.com/tendermint/spn/x/launch"
+	launchmodulekeeper "github.com/tendermint/spn/x/launch/keeper"
+	launchmoduletypes "github.com/tendermint/spn/x/launch/types"
 
 	"github.com/tendermint/spm/cosmoscmd"
 )
@@ -138,6 +141,7 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
+		launchmodule.AppModuleBasic{},
 		accountmodule.AppModuleBasic{},
 	)
 
@@ -207,6 +211,8 @@ type App struct {
 
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
+	LaunchKeeper launchmodulekeeper.Keeper
+
 	AccountKeeper accountmodulekeeper.Keeper
 
 	// the module manager
@@ -242,6 +248,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
+		launchmoduletypes.StoreKey,
 		accountmoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -345,6 +352,15 @@ func New(
 	)
 	accountModule := accountmodule.NewAppModule(appCodec, app.AccountKeeper)
 
+	app.LaunchKeeper = *launchmodulekeeper.NewKeeper(
+		appCodec,
+		keys[launchmoduletypes.StoreKey],
+		keys[launchmoduletypes.MemStoreKey],
+
+		app.AccountKeeper,
+	)
+	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -383,6 +399,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
+		launchModule,
 		accountModule,
 	)
 
@@ -417,6 +434,7 @@ func New(
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
+		launchmoduletypes.ModuleName,
 		accountmoduletypes.ModuleName,
 	)
 
@@ -605,6 +623,7 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
+	paramsKeeper.Subspace(launchmoduletypes.ModuleName)
 	paramsKeeper.Subspace(accountmoduletypes.ModuleName)
 
 	return paramsKeeper
