@@ -16,3 +16,9 @@ message CoordinatorDescription {
   string website = 2;
   string details = 3;
 }
+
+message CoordinatorByAddress {
+  string address = 1;
+  uint64 coordinatorId = 2;
+}
+

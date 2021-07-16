@@ -10,6 +10,11 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// this line is used by starport scaffolding # genesis/module/init
+	// Set all the coordinatorByAddress
+	for _, elem := range genState.CoordinatorByAddressList {
+		k.SetCoordinatorByAddress(ctx, *elem)
+	}
+
 	// Set all the coordinator
 	for _, elem := range genState.CoordinatorList {
 		k.SetCoordinator(ctx, *elem)
@@ -26,6 +31,13 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
 	// this line is used by starport scaffolding # genesis/module/export
+	// Get all coordinatorByAddress
+	coordinatorByAddressList := k.GetAllCoordinatorByAddress(ctx)
+	for _, elem := range coordinatorByAddressList {
+		elem := elem
+		genesis.CoordinatorByAddressList = append(genesis.CoordinatorByAddressList, &elem)
+	}
+
 	// Get all coordinator
 	coordinatorList := k.GetAllCoordinator(ctx)
 	for _, elem := range coordinatorList {

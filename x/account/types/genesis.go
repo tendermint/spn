@@ -13,7 +13,8 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
-		CoordinatorList: []*Coordinator{},
+		CoordinatorByAddressList: []*CoordinatorByAddress{},
+		CoordinatorList:          []*Coordinator{},
 	}
 }
 
@@ -23,6 +24,16 @@ func (gs GenesisState) Validate() error {
 	// this line is used by starport scaffolding # ibc/genesistype/validate
 
 	// this line is used by starport scaffolding # genesis/types/validate
+	// Check for duplicated index in coordinatorByAddress
+	coordinatorByAddressIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.CoordinatorByAddressList {
+		index := string(CoordinatorByAddressKey(elem.Address))
+		if _, ok := coordinatorByAddressIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for coordinatorByAddress")
+		}
+		coordinatorByAddressIndexMap[index] = struct{}{}
+	}
 	// Check for duplicated ID in coordinator
 	coordinatorIdMap := make(map[uint64]bool)
 

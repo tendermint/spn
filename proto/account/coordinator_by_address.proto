@@ -1,0 +1,5 @@
+syntax = "proto3";
+package tendermint.spn.account;
+
+option go_package = "github.com/tendermint/spn/x/account/types";
+

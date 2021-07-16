@@ -4,6 +4,7 @@ package tendermint.spn.account;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "account/coordinator_by_address.proto";
 import "account/coordinator.proto";
 
 option go_package = "github.com/tendermint/spn/x/account/types";
@@ -11,6 +12,17 @@ option go_package = "github.com/tendermint/spn/x/account/types";
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a coordinatorByAddress by index.
+	rpc CoordinatorByAddress(QueryGetCoordinatorByAddressRequest) returns (QueryGetCoordinatorByAddressResponse) {
+		option (google.api.http).get = "/tendermint/spn/account/coordinatorByAddress/{address}";
+	}
+
+	// Queries a list of coordinatorByAddress items.
+	rpc CoordinatorByAddressAll(QueryAllCoordinatorByAddressRequest) returns (QueryAllCoordinatorByAddressResponse) {
+		option (google.api.http).get = "/tendermint/spn/account/coordinatorByAddress";
+	}
+
 
 	// Queries a coordinator by id.
 	rpc Coordinator(QueryGetCoordinatorRequest) returns (QueryGetCoordinatorResponse) {
@@ -25,6 +37,23 @@ service Query {
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetCoordinatorByAddressRequest {
+	  string address = 1;
+
+}
+
+message QueryGetCoordinatorByAddressResponse {
+	CoordinatorByAddress coordinatorByAddress = 1;
+}
+
+message QueryAllCoordinatorByAddressRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllCoordinatorByAddressResponse {
+	repeated CoordinatorByAddress coordinatorByAddress = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
 message QueryGetCoordinatorRequest {
 	uint64 id = 1;
 }

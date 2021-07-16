@@ -30,6 +30,190 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // this line is used by starport scaffolding # 3
+type QueryGetCoordinatorByAddressRequest struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryGetCoordinatorByAddressRequest) Reset()         { *m = QueryGetCoordinatorByAddressRequest{} }
+func (m *QueryGetCoordinatorByAddressRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetCoordinatorByAddressRequest) ProtoMessage()    {}
+func (*QueryGetCoordinatorByAddressRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d27cba905da947, []int{0}
+}
+func (m *QueryGetCoordinatorByAddressRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetCoordinatorByAddressRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetCoordinatorByAddressRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetCoordinatorByAddressRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetCoordinatorByAddressRequest.Merge(m, src)
+}
+func (m *QueryGetCoordinatorByAddressRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetCoordinatorByAddressRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetCoordinatorByAddressRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetCoordinatorByAddressRequest proto.InternalMessageInfo
+
+func (m *QueryGetCoordinatorByAddressRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryGetCoordinatorByAddressResponse struct {
+	CoordinatorByAddress *CoordinatorByAddress `protobuf:"bytes,1,opt,name=coordinatorByAddress,proto3" json:"coordinatorByAddress,omitempty"`
+}
+
+func (m *QueryGetCoordinatorByAddressResponse) Reset()         { *m = QueryGetCoordinatorByAddressResponse{} }
+func (m *QueryGetCoordinatorByAddressResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetCoordinatorByAddressResponse) ProtoMessage()    {}
+func (*QueryGetCoordinatorByAddressResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d27cba905da947, []int{1}
+}
+func (m *QueryGetCoordinatorByAddressResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetCoordinatorByAddressResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetCoordinatorByAddressResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetCoordinatorByAddressResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetCoordinatorByAddressResponse.Merge(m, src)
+}
+func (m *QueryGetCoordinatorByAddressResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetCoordinatorByAddressResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetCoordinatorByAddressResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetCoordinatorByAddressResponse proto.InternalMessageInfo
+
+func (m *QueryGetCoordinatorByAddressResponse) GetCoordinatorByAddress() *CoordinatorByAddress {
+	if m != nil {
+		return m.CoordinatorByAddress
+	}
+	return nil
+}
+
+type QueryAllCoordinatorByAddressRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllCoordinatorByAddressRequest) Reset()         { *m = QueryAllCoordinatorByAddressRequest{} }
+func (m *QueryAllCoordinatorByAddressRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllCoordinatorByAddressRequest) ProtoMessage()    {}
+func (*QueryAllCoordinatorByAddressRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d27cba905da947, []int{2}
+}
+func (m *QueryAllCoordinatorByAddressRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllCoordinatorByAddressRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllCoordinatorByAddressRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllCoordinatorByAddressRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllCoordinatorByAddressRequest.Merge(m, src)
+}
+func (m *QueryAllCoordinatorByAddressRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllCoordinatorByAddressRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllCoordinatorByAddressRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllCoordinatorByAddressRequest proto.InternalMessageInfo
+
+func (m *QueryAllCoordinatorByAddressRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllCoordinatorByAddressResponse struct {
+	CoordinatorByAddress []*CoordinatorByAddress `protobuf:"bytes,1,rep,name=coordinatorByAddress,proto3" json:"coordinatorByAddress,omitempty"`
+	Pagination           *query.PageResponse     `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllCoordinatorByAddressResponse) Reset()         { *m = QueryAllCoordinatorByAddressResponse{} }
+func (m *QueryAllCoordinatorByAddressResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllCoordinatorByAddressResponse) ProtoMessage()    {}
+func (*QueryAllCoordinatorByAddressResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a9d27cba905da947, []int{3}
+}
+func (m *QueryAllCoordinatorByAddressResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllCoordinatorByAddressResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllCoordinatorByAddressResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllCoordinatorByAddressResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllCoordinatorByAddressResponse.Merge(m, src)
+}
+func (m *QueryAllCoordinatorByAddressResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllCoordinatorByAddressResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllCoordinatorByAddressResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllCoordinatorByAddressResponse proto.InternalMessageInfo
+
+func (m *QueryAllCoordinatorByAddressResponse) GetCoordinatorByAddress() []*CoordinatorByAddress {
+	if m != nil {
+		return m.CoordinatorByAddress
+	}
+	return nil
+}
+
+func (m *QueryAllCoordinatorByAddressResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 type QueryGetCoordinatorRequest struct {
 	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
 }
@@ -38,7 +222,7 @@ func (m *QueryGetCoordinatorRequest) Reset()         { *m = QueryGetCoordinatorR
 func (m *QueryGetCoordinatorRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryGetCoordinatorRequest) ProtoMessage()    {}
 func (*QueryGetCoordinatorRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a9d27cba905da947, []int{0}
+	return fileDescriptor_a9d27cba905da947, []int{4}
 }
 func (m *QueryGetCoordinatorRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -82,7 +266,7 @@ func (m *QueryGetCoordinatorResponse) Reset()         { *m = QueryGetCoordinator
 func (m *QueryGetCoordinatorResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryGetCoordinatorResponse) ProtoMessage()    {}
 func (*QueryGetCoordinatorResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a9d27cba905da947, []int{1}
+	return fileDescriptor_a9d27cba905da947, []int{5}
 }
 func (m *QueryGetCoordinatorResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -126,7 +310,7 @@ func (m *QueryAllCoordinatorRequest) Reset()         { *m = QueryAllCoordinatorR
 func (m *QueryAllCoordinatorRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryAllCoordinatorRequest) ProtoMessage()    {}
 func (*QueryAllCoordinatorRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a9d27cba905da947, []int{2}
+	return fileDescriptor_a9d27cba905da947, []int{6}
 }
 func (m *QueryAllCoordinatorRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -171,7 +355,7 @@ func (m *QueryAllCoordinatorResponse) Reset()         { *m = QueryAllCoordinator
 func (m *QueryAllCoordinatorResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryAllCoordinatorResponse) ProtoMessage()    {}
 func (*QueryAllCoordinatorResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a9d27cba905da947, []int{3}
+	return fileDescriptor_a9d27cba905da947, []int{7}
 }
 func (m *QueryAllCoordinatorResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -215,6 +399,10 @@ func (m *QueryAllCoordinatorResponse) GetPagination() *query.PageResponse {
 }
 
 func init() {
+	proto.RegisterType((*QueryGetCoordinatorByAddressRequest)(nil), "tendermint.spn.account.QueryGetCoordinatorByAddressRequest")
+	proto.RegisterType((*QueryGetCoordinatorByAddressResponse)(nil), "tendermint.spn.account.QueryGetCoordinatorByAddressResponse")
+	proto.RegisterType((*QueryAllCoordinatorByAddressRequest)(nil), "tendermint.spn.account.QueryAllCoordinatorByAddressRequest")
+	proto.RegisterType((*QueryAllCoordinatorByAddressResponse)(nil), "tendermint.spn.account.QueryAllCoordinatorByAddressResponse")
 	proto.RegisterType((*QueryGetCoordinatorRequest)(nil), "tendermint.spn.account.QueryGetCoordinatorRequest")
 	proto.RegisterType((*QueryGetCoordinatorResponse)(nil), "tendermint.spn.account.QueryGetCoordinatorResponse")
 	proto.RegisterType((*QueryAllCoordinatorRequest)(nil), "tendermint.spn.account.QueryAllCoordinatorRequest")
@@ -224,33 +412,42 @@ func init() {
 func init() { proto.RegisterFile("account/query.proto", fileDescriptor_a9d27cba905da947) }
 
 var fileDescriptor_a9d27cba905da947 = []byte{
-	// 408 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x93, 0xcf, 0x4a, 0xeb, 0x40,
-	0x14, 0xc6, 0x3b, 0xb9, 0x7f, 0x16, 0x53, 0xe8, 0x62, 0x2e, 0x5c, 0xee, 0xcd, 0xbd, 0x04, 0x49,
-	0x51, 0x6b, 0x95, 0x19, 0xdb, 0x3e, 0x41, 0x2d, 0xda, 0xad, 0x76, 0xe9, 0x6e, 0x92, 0x0c, 0x71,
-	0x20, 0x9d, 0x49, 0x33, 0x13, 0xb1, 0x88, 0x1b, 0x9f, 0x40, 0xf0, 0x1d, 0xc4, 0x8d, 0xef, 0xe1,
-	0xb2, 0xe0, 0x46, 0x70, 0x23, 0xad, 0x0f, 0x22, 0x4d, 0xa2, 0x4d, 0x4b, 0x4a, 0xd5, 0x6d, 0xce,
-	0xf9, 0xbe, 0xf3, 0xfb, 0xce, 0xc9, 0xc0, 0x5f, 0xd4, 0x75, 0x65, 0x2c, 0x34, 0x19, 0xc4, 0x2c,
-	0x1a, 0xe2, 0x30, 0x92, 0x5a, 0xa2, 0xdf, 0x9a, 0x09, 0x8f, 0x45, 0x7d, 0x2e, 0x34, 0x56, 0xa1,
-	0xc0, 0x59, 0x8f, 0xf9, 0xdf, 0x97, 0xd2, 0x0f, 0x18, 0xa1, 0x21, 0x27, 0x54, 0x08, 0xa9, 0xa9,
-	0xe6, 0x52, 0xa8, 0x54, 0x65, 0xd6, 0x5d, 0xa9, 0xfa, 0x52, 0x11, 0x87, 0x2a, 0x96, 0xda, 0x91,
-	0xd3, 0x86, 0xc3, 0x34, 0x6d, 0x90, 0x90, 0xfa, 0x5c, 0x24, 0xcd, 0x59, 0xef, 0xdf, 0xb7, 0xb1,
-	0xae, 0x94, 0x91, 0x37, 0xad, 0xc9, 0x28, 0x2d, 0xd9, 0x3b, 0xd0, 0x3c, 0x9a, 0x8a, 0xbb, 0x4c,
-	0x77, 0x66, 0xc5, 0x1e, 0x1b, 0xc4, 0x4c, 0x69, 0x54, 0x81, 0x06, 0xf7, 0xfe, 0x80, 0x35, 0x50,
-	0xfb, 0xde, 0x33, 0xb8, 0x67, 0x7b, 0xf0, 0x5f, 0x61, 0xb7, 0x0a, 0xa5, 0x50, 0x0c, 0xed, 0xc3,
-	0x72, 0xee, 0x73, 0xa2, 0x2b, 0x37, 0xab, 0xb8, 0x38, 0x1f, 0xce, 0x3b, 0xe4, 0x75, 0xb6, 0x97,
-	0x31, 0xb5, 0x83, 0xa0, 0x80, 0xe9, 0x00, 0xc2, 0x59, 0xc0, 0x6c, 0xc6, 0x06, 0x4e, 0xb7, 0x81,
-	0xa7, 0xdb, 0xc0, 0xe9, 0x72, 0xb3, 0x6d, 0xe0, 0x43, 0xea, 0xb3, 0x4c, 0xdb, 0xcb, 0x29, 0xed,
-	0x3b, 0x90, 0x85, 0x59, 0x1c, 0xb3, 0x2c, 0xcc, 0xb7, 0xaf, 0x84, 0x41, 0xdd, 0x39, 0x5c, 0x23,
-	0xc1, 0xdd, 0x5c, 0x89, 0x9b, 0x32, 0xe4, 0x79, 0x9b, 0x4f, 0x06, 0xfc, 0x91, 0xf0, 0xa2, 0x5b,
-	0x30, 0x87, 0x86, 0x9a, 0xcb, 0xa0, 0x96, 0x5f, 0xd6, 0x6c, 0x7d, 0x4a, 0x93, 0xe2, 0xd8, 0xbb,
-	0x97, 0x0f, 0x2f, 0xd7, 0x46, 0x1d, 0xd5, 0xc8, 0x4c, 0x4c, 0x54, 0x28, 0x48, 0xc1, 0xff, 0x45,
-	0xce, 0xb9, 0x77, 0x81, 0x6e, 0x00, 0xac, 0xe4, 0x9c, 0xda, 0x41, 0xb0, 0x82, 0xb6, 0xf0, 0xe6,
-	0x2b, 0x68, 0x8b, 0x0f, 0x68, 0x6f, 0x27, 0xb4, 0xeb, 0xa8, 0xfa, 0x01, 0xda, 0xbd, 0xce, 0xfd,
-	0xd8, 0x02, 0xa3, 0xb1, 0x05, 0x9e, 0xc7, 0x16, 0xb8, 0x9a, 0x58, 0xa5, 0xd1, 0xc4, 0x2a, 0x3d,
-	0x4e, 0xac, 0xd2, 0xf1, 0x96, 0xcf, 0xf5, 0x49, 0xec, 0x60, 0x57, 0xf6, 0x17, 0x8d, 0xce, 0xde,
-	0xad, 0xf4, 0x30, 0x64, 0xca, 0xf9, 0x99, 0xbc, 0xa9, 0xd6, 0x6b, 0x00, 0x00, 0x00, 0xff, 0xff,
-	0x51, 0x26, 0x8d, 0x62, 0xe7, 0x03, 0x00, 0x00,
+	// 558 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0x4f, 0x6f, 0xd3, 0x30,
+	0x18, 0xc6, 0xeb, 0x8e, 0x81, 0xf0, 0xa4, 0x1d, 0xcc, 0x04, 0xa3, 0xa0, 0x08, 0xa5, 0x03, 0xc6,
+	0xa8, 0x6c, 0xd6, 0x21, 0x84, 0x04, 0x02, 0x95, 0x09, 0x76, 0x85, 0x1c, 0xb9, 0x8c, 0xfc, 0xb1,
+	0x42, 0xa4, 0xd4, 0xce, 0x62, 0x17, 0x51, 0x4d, 0xbb, 0x70, 0xe2, 0x88, 0xc4, 0x77, 0x40, 0x5c,
+	0xf8, 0x1e, 0x88, 0xd3, 0x26, 0x2e, 0x1c, 0x51, 0xcb, 0xc7, 0xe0, 0x30, 0xd5, 0x71, 0xd6, 0x76,
+	0x72, 0x9b, 0xb4, 0xea, 0xb1, 0xf5, 0xfb, 0x3e, 0xef, 0xf3, 0x7b, 0x9c, 0x37, 0x81, 0x57, 0x5c,
+	0xdf, 0xe7, 0x1d, 0x26, 0xc9, 0x41, 0x87, 0xa6, 0x5d, 0x9c, 0xa4, 0x5c, 0x72, 0x74, 0x55, 0x52,
+	0x16, 0xd0, 0xb4, 0x1d, 0x31, 0x89, 0x45, 0xc2, 0xb0, 0xae, 0xa9, 0xdd, 0x0c, 0x39, 0x0f, 0x63,
+	0x4a, 0xdc, 0x24, 0x22, 0x2e, 0x63, 0x5c, 0xba, 0x32, 0xe2, 0x4c, 0x64, 0x5d, 0xb5, 0x2d, 0x9f,
+	0x8b, 0x36, 0x17, 0xc4, 0x73, 0x05, 0xcd, 0xe4, 0xc8, 0x87, 0x6d, 0x8f, 0x4a, 0x77, 0x9b, 0x24,
+	0x6e, 0x18, 0x31, 0x55, 0xac, 0x6b, 0x37, 0xf2, 0xb1, 0x3e, 0xe7, 0x69, 0x30, 0x38, 0xe3, 0xe9,
+	0xbe, 0xd7, 0xdd, 0x77, 0x83, 0x20, 0xa5, 0x22, 0x57, 0xbc, 0x6e, 0xa8, 0xca, 0x8e, 0xec, 0xe7,
+	0xb0, 0xfe, 0x66, 0x30, 0x62, 0x8f, 0xca, 0xdd, 0xe1, 0xe1, 0x8b, 0x6e, 0x2b, 0x13, 0x70, 0xe8,
+	0x41, 0x87, 0x0a, 0x89, 0xd6, 0xe1, 0x25, 0x2d, 0xb9, 0x0e, 0x6e, 0x81, 0xcd, 0xcb, 0x4e, 0xfe,
+	0xd3, 0xfe, 0x0c, 0xe0, 0xc6, 0x74, 0x05, 0x91, 0x70, 0x26, 0x28, 0x7a, 0x07, 0xd7, 0x7c, 0xc3,
+	0xb9, 0xd2, 0x5b, 0x69, 0x36, 0xb0, 0x39, 0x2b, 0x6c, 0xd4, 0x34, 0x2a, 0xd9, 0x6d, 0xcd, 0xd2,
+	0x8a, 0xe3, 0x69, 0x2c, 0xaf, 0x20, 0x1c, 0xe6, 0xa8, 0xc7, 0xdf, 0xc1, 0x59, 0xe8, 0x78, 0x10,
+	0x3a, 0xce, 0xee, 0x50, 0x87, 0x8e, 0x5f, 0xbb, 0x21, 0xd5, 0xbd, 0xce, 0x48, 0xa7, 0x7d, 0x92,
+	0x93, 0x4f, 0x9c, 0x57, 0x48, 0xbe, 0xb4, 0x18, 0x72, 0xb4, 0x37, 0x86, 0x54, 0x55, 0x48, 0x77,
+	0x0b, 0x91, 0x32, 0x7b, 0x63, 0x4c, 0x0d, 0x58, 0x33, 0x5c, 0x66, 0x9e, 0xdc, 0x2a, 0xac, 0x46,
+	0x81, 0x4a, 0xec, 0x82, 0x53, 0x8d, 0x02, 0x3b, 0x80, 0x37, 0x8c, 0xd5, 0x9a, 0xfb, 0x25, 0x5c,
+	0x19, 0xf9, 0x5b, 0x27, 0x5d, 0x2f, 0x81, 0xeb, 0x8c, 0xf6, 0xd9, 0x81, 0xf6, 0x34, 0x1e, 0xf3,
+	0xa2, 0x6f, 0xf3, 0x07, 0xd0, 0x30, 0xe7, 0xc7, 0x4c, 0x82, 0x59, 0x9a, 0x07, 0x66, 0x61, 0x37,
+	0xd5, 0xfc, 0xbf, 0x0c, 0x97, 0x95, 0x5f, 0x74, 0x02, 0xe0, 0x9a, 0xe9, 0x59, 0x41, 0x4f, 0x26,
+	0xb9, 0x2b, 0xb1, 0xf1, 0xb5, 0xa7, 0xf3, 0x35, 0x67, 0x4e, 0xed, 0x67, 0x9f, 0x7e, 0xff, 0xfb,
+	0x5a, 0x7d, 0x8c, 0x1e, 0x91, 0xa1, 0x0a, 0x11, 0x09, 0x23, 0x86, 0x37, 0xd1, 0x59, 0x37, 0x39,
+	0xd4, 0x2f, 0x95, 0x23, 0xf4, 0x0b, 0xc0, 0x6b, 0xa6, 0x01, 0xad, 0x38, 0x2e, 0xc0, 0x9a, 0xbe,
+	0xfc, 0x05, 0x58, 0x05, 0x9b, 0x6c, 0x3f, 0x54, 0x58, 0x18, 0x35, 0x66, 0xc1, 0x42, 0xdf, 0xc1,
+	0xd8, 0xb3, 0x83, 0x9a, 0x33, 0x44, 0x9b, 0xfb, 0xde, 0x99, 0xa9, 0x47, 0xdb, 0x7d, 0xa0, 0xec,
+	0x6e, 0xa1, 0xcd, 0x12, 0x76, 0xc9, 0x61, 0x14, 0x1c, 0xa1, 0x6f, 0x00, 0xae, 0x8e, 0x28, 0x0d,
+	0xe2, 0x6e, 0xce, 0x90, 0x58, 0x39, 0xb7, 0xe6, 0x0d, 0xb3, 0xef, 0x2b, 0xb7, 0xb7, 0x51, 0xbd,
+	0x4c, 0xb8, 0xbb, 0x3f, 0x7b, 0x16, 0x38, 0xee, 0x59, 0xe0, 0x6f, 0xcf, 0x02, 0x5f, 0xfa, 0x56,
+	0xe5, 0xb8, 0x6f, 0x55, 0xfe, 0xf4, 0xad, 0xca, 0xdb, 0x7b, 0x61, 0x24, 0xdf, 0x77, 0x3c, 0xec,
+	0xf3, 0xf6, 0x79, 0xa1, 0x8f, 0x67, 0x52, 0xb2, 0x9b, 0x50, 0xe1, 0x5d, 0x54, 0xdf, 0xc0, 0x9d,
+	0xd3, 0x00, 0x00, 0x00, 0xff, 0xff, 0x53, 0x2c, 0x85, 0x3c, 0xbd, 0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -265,6 +462,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
+	// Queries a coordinatorByAddress by index.
+	CoordinatorByAddress(ctx context.Context, in *QueryGetCoordinatorByAddressRequest, opts ...grpc.CallOption) (*QueryGetCoordinatorByAddressResponse, error)
+	// Queries a list of coordinatorByAddress items.
+	CoordinatorByAddressAll(ctx context.Context, in *QueryAllCoordinatorByAddressRequest, opts ...grpc.CallOption) (*QueryAllCoordinatorByAddressResponse, error)
 	// Queries a coordinator by id.
 	Coordinator(ctx context.Context, in *QueryGetCoordinatorRequest, opts ...grpc.CallOption) (*QueryGetCoordinatorResponse, error)
 	// Queries a list of coordinator items.
@@ -277,6 +478,24 @@ type queryClient struct {
 
 func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
+}
+
+func (c *queryClient) CoordinatorByAddress(ctx context.Context, in *QueryGetCoordinatorByAddressRequest, opts ...grpc.CallOption) (*QueryGetCoordinatorByAddressResponse, error) {
+	out := new(QueryGetCoordinatorByAddressResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.account.Query/CoordinatorByAddress", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) CoordinatorByAddressAll(ctx context.Context, in *QueryAllCoordinatorByAddressRequest, opts ...grpc.CallOption) (*QueryAllCoordinatorByAddressResponse, error) {
+	out := new(QueryAllCoordinatorByAddressResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.account.Query/CoordinatorByAddressAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *queryClient) Coordinator(ctx context.Context, in *QueryGetCoordinatorRequest, opts ...grpc.CallOption) (*QueryGetCoordinatorResponse, error) {
@@ -299,6 +518,10 @@ func (c *queryClient) CoordinatorAll(ctx context.Context, in *QueryAllCoordinato
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
+	// Queries a coordinatorByAddress by index.
+	CoordinatorByAddress(context.Context, *QueryGetCoordinatorByAddressRequest) (*QueryGetCoordinatorByAddressResponse, error)
+	// Queries a list of coordinatorByAddress items.
+	CoordinatorByAddressAll(context.Context, *QueryAllCoordinatorByAddressRequest) (*QueryAllCoordinatorByAddressResponse, error)
 	// Queries a coordinator by id.
 	Coordinator(context.Context, *QueryGetCoordinatorRequest) (*QueryGetCoordinatorResponse, error)
 	// Queries a list of coordinator items.
@@ -309,6 +532,12 @@ type QueryServer interface {
 type UnimplementedQueryServer struct {
 }
 
+func (*UnimplementedQueryServer) CoordinatorByAddress(ctx context.Context, req *QueryGetCoordinatorByAddressRequest) (*QueryGetCoordinatorByAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CoordinatorByAddress not implemented")
+}
+func (*UnimplementedQueryServer) CoordinatorByAddressAll(ctx context.Context, req *QueryAllCoordinatorByAddressRequest) (*QueryAllCoordinatorByAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CoordinatorByAddressAll not implemented")
+}
 func (*UnimplementedQueryServer) Coordinator(ctx context.Context, req *QueryGetCoordinatorRequest) (*QueryGetCoordinatorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Coordinator not implemented")
 }
@@ -318,6 +547,42 @@ func (*UnimplementedQueryServer) CoordinatorAll(ctx context.Context, req *QueryA
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 	s.RegisterService(&_Query_serviceDesc, srv)
+}
+
+func _Query_CoordinatorByAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetCoordinatorByAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).CoordinatorByAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.account.Query/CoordinatorByAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).CoordinatorByAddress(ctx, req.(*QueryGetCoordinatorByAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_CoordinatorByAddressAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllCoordinatorByAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).CoordinatorByAddressAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.account.Query/CoordinatorByAddressAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).CoordinatorByAddressAll(ctx, req.(*QueryAllCoordinatorByAddressRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_Coordinator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -361,6 +626,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "CoordinatorByAddress",
+			Handler:    _Query_CoordinatorByAddress_Handler,
+		},
+		{
+			MethodName: "CoordinatorByAddressAll",
+			Handler:    _Query_CoordinatorByAddressAll_Handler,
+		},
+		{
 			MethodName: "Coordinator",
 			Handler:    _Query_Coordinator_Handler,
 		},
@@ -371,6 +644,155 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "account/query.proto",
+}
+
+func (m *QueryGetCoordinatorByAddressRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetCoordinatorByAddressRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetCoordinatorByAddressRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetCoordinatorByAddressResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetCoordinatorByAddressResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetCoordinatorByAddressResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.CoordinatorByAddress != nil {
+		{
+			size, err := m.CoordinatorByAddress.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllCoordinatorByAddressRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllCoordinatorByAddressRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllCoordinatorByAddressRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllCoordinatorByAddressResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllCoordinatorByAddressResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllCoordinatorByAddressResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.CoordinatorByAddress) > 0 {
+		for iNdEx := len(m.CoordinatorByAddress) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.CoordinatorByAddress[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
 }
 
 func (m *QueryGetCoordinatorRequest) Marshal() (dAtA []byte, err error) {
@@ -531,6 +953,64 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *QueryGetCoordinatorByAddressRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetCoordinatorByAddressResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.CoordinatorByAddress != nil {
+		l = m.CoordinatorByAddress.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllCoordinatorByAddressRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllCoordinatorByAddressResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.CoordinatorByAddress) > 0 {
+		for _, e := range m.CoordinatorByAddress {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
 func (m *QueryGetCoordinatorRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -593,6 +1073,380 @@ func sovQuery(x uint64) (n int) {
 }
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *QueryGetCoordinatorByAddressRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetCoordinatorByAddressRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetCoordinatorByAddressRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetCoordinatorByAddressResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetCoordinatorByAddressResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetCoordinatorByAddressResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorByAddress", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CoordinatorByAddress == nil {
+				m.CoordinatorByAddress = &CoordinatorByAddress{}
+			}
+			if err := m.CoordinatorByAddress.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllCoordinatorByAddressRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllCoordinatorByAddressRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllCoordinatorByAddressRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllCoordinatorByAddressResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllCoordinatorByAddressResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllCoordinatorByAddressResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorByAddress", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CoordinatorByAddress = append(m.CoordinatorByAddress, &CoordinatorByAddress{})
+			if err := m.CoordinatorByAddress[len(m.CoordinatorByAddress)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *QueryGetCoordinatorRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
