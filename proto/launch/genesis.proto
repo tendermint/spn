@@ -2,11 +2,13 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 // this line is used by starport scaffolding # genesis/proto/import
+import "launch/chain.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 // GenesisState defines the launch module's genesis state.
 message GenesisState {
     // this line is used by starport scaffolding # genesis/proto/state
+		repeated Chain chainList = 1; // this line is used by starport scaffolding # genesis/proto/stateField
     // this line is used by starport scaffolding # ibc/genesis/proto
 }

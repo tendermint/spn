@@ -1,0 +1,29 @@
+syntax = "proto3";
+package tendermint.spn.launch;
+
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+message Chain {
+  string chainID = 1;
+  uint64 coordinatorID = 2;
+  int64 createdAt = 3;
+
+  string sourceURL = 4;
+  string sourceHash = 5;
+
+  google.protobuf.Any initialGenesis = 6;
+
+  bool launchTriggered = 7;
+  int64 launchTimestamp = 8;
+}
+
+// DefaultInitialGenesis specifies using the default CLI-generated genesis as an initial genesis
+message DefaultInitialGenesis {}
+
+// GenesisURL specifies using a custom genesis from a URL as the initial genesis
+message GenesisURL {
+  string url = 1;
+  string hash = 2;
+}

@@ -4,12 +4,41 @@ package tendermint.spn.launch;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "launch/chain.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a chain by index.
+	rpc Chain(QueryGetChainRequest) returns (QueryGetChainResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/chain/{chainID}";
+	}
+
+	// Queries a list of chain items.
+	rpc ChainAll(QueryAllChainRequest) returns (QueryAllChainResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/chain";
+	}
+
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetChainRequest {
+	  string chainID = 1;
+
+}
+
+message QueryGetChainResponse {
+	Chain chain = 1;
+}
+
+message QueryAllChainRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllChainResponse {
+	repeated Chain chain = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
