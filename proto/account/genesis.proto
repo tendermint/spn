@@ -2,11 +2,14 @@ syntax = "proto3";
 package tendermint.spn.account;
 
 // this line is used by starport scaffolding # genesis/proto/import
+import "account/coordinator.proto";
 
 option go_package = "github.com/tendermint/spn/x/account/types";
 
 // GenesisState defines the account module's genesis state.
 message GenesisState {
     // this line is used by starport scaffolding # genesis/proto/state
+		repeated Coordinator coordinatorList = 1; // this line is used by starport scaffolding # genesis/proto/stateField
+		uint64 coordinatorCount = 2; // this line is used by starport scaffolding # genesis/proto/stateField
     // this line is used by starport scaffolding # ibc/genesis/proto
 }

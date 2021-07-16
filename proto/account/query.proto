@@ -4,12 +4,40 @@ package tendermint.spn.account;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "account/coordinator.proto";
 
 option go_package = "github.com/tendermint/spn/x/account/types";
 
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a coordinator by id.
+	rpc Coordinator(QueryGetCoordinatorRequest) returns (QueryGetCoordinatorResponse) {
+		option (google.api.http).get = "/tendermint/spn/account/coordinator/{id}";
+	}
+
+	// Queries a list of coordinator items.
+	rpc CoordinatorAll(QueryAllCoordinatorRequest) returns (QueryAllCoordinatorResponse) {
+		option (google.api.http).get = "/tendermint/spn/account/coordinator";
+	}
+
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetCoordinatorRequest {
+	uint64 id = 1;
+}
+
+message QueryGetCoordinatorResponse {
+	Coordinator Coordinator = 1;
+}
+
+message QueryAllCoordinatorRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllCoordinatorResponse {
+	repeated Coordinator Coordinator = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
