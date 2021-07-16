@@ -1,4 +1,7 @@
-# spn
+# Starport Network
+
+> This branch contains the source code for the 1.0 version of Starport Network. To access the source code of the currently deployed proof of concept, visit the [`master-legacy`](https://github.com/tendermint/spn/tree/master-legacy) branch.
+
 **spn** is a blockchain built using Cosmos SDK and Tendermint and created with [Starport](https://github.com/tendermint/starport).
 
 ## Get started
