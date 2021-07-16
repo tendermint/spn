@@ -19,7 +19,6 @@ func (k Keeper) SetChain(ctx sdk.Context, chain types.Chain) {
 func (k Keeper) GetChain(
 	ctx sdk.Context,
 	chainID string,
-
 ) (val types.Chain, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetChain(
 func (k Keeper) RemoveChain(
 	ctx sdk.Context,
 	chainID string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
 	store.Delete(types.ChainKey(
