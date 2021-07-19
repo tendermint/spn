@@ -1,5 +1,5 @@
 ---
-name: Starport Network bug report
+name: Starport Network feature request
 about: Suggest an idea for this project
 title: ''
 labels: request
