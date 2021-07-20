@@ -7,6 +7,7 @@ export const protobufPackage = 'tendermint.spn.account'
 
 /** this line is used by starport scaffolding # proto/tx/message */
 export interface MsgCreateCoordinator {
+  address: string
   description: CoordinatorDescription | undefined
 }
 
@@ -14,12 +15,15 @@ export interface MsgCreateCoordinatorResponse {
   coordinatorId: number
 }
 
-const baseMsgCreateCoordinator: object = {}
+const baseMsgCreateCoordinator: object = { address: '' }
 
 export const MsgCreateCoordinator = {
   encode(message: MsgCreateCoordinator, writer: Writer = Writer.create()): Writer {
+    if (message.address !== '') {
+      writer.uint32(10).string(message.address)
+    }
     if (message.description !== undefined) {
-      CoordinatorDescription.encode(message.description, writer.uint32(10).fork()).ldelim()
+      CoordinatorDescription.encode(message.description, writer.uint32(18).fork()).ldelim()
     }
     return writer
   },
@@ -32,6 +36,9 @@ export const MsgCreateCoordinator = {
       const tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
+          message.address = reader.string()
+          break
+        case 2:
           message.description = CoordinatorDescription.decode(reader, reader.uint32())
           break
         default:
@@ -44,6 +51,11 @@ export const MsgCreateCoordinator = {
 
   fromJSON(object: any): MsgCreateCoordinator {
     const message = { ...baseMsgCreateCoordinator } as MsgCreateCoordinator
+    if (object.address !== undefined && object.address !== null) {
+      message.address = String(object.address)
+    } else {
+      message.address = ''
+    }
     if (object.description !== undefined && object.description !== null) {
       message.description = CoordinatorDescription.fromJSON(object.description)
     } else {
@@ -54,12 +66,18 @@ export const MsgCreateCoordinator = {
 
   toJSON(message: MsgCreateCoordinator): unknown {
     const obj: any = {}
+    message.address !== undefined && (obj.address = message.address)
     message.description !== undefined && (obj.description = message.description ? CoordinatorDescription.toJSON(message.description) : undefined)
     return obj
   },
 
   fromPartial(object: DeepPartial<MsgCreateCoordinator>): MsgCreateCoordinator {
     const message = { ...baseMsgCreateCoordinator } as MsgCreateCoordinator
+    if (object.address !== undefined && object.address !== null) {
+      message.address = object.address
+    } else {
+      message.address = ''
+    }
     if (object.description !== undefined && object.description !== null) {
       message.description = CoordinatorDescription.fromPartial(object.description)
     } else {

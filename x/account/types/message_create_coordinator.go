@@ -7,13 +7,14 @@ import (
 
 var _ sdk.Msg = &MsgCreateCoordinator{}
 
-func NewMsgCreateCoordinator(creator string, address string, identity string, website string, details string) *MsgCreateCoordinator {
+func NewMsgCreateCoordinator(address string, identity string, website string, details string) *MsgCreateCoordinator {
 	return &MsgCreateCoordinator{
-		Creator:  creator,
-		Address:  address,
-		Identity: identity,
-		Website:  website,
-		Details:  details,
+		Address: address,
+		Description: &CoordinatorDescription{
+			Identity: identity,
+			Website:  website,
+			Details:  details,
+		},
 	}
 }
 
@@ -26,7 +27,7 @@ func (msg *MsgCreateCoordinator) Type() string {
 }
 
 func (msg *MsgCreateCoordinator) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	creator, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		panic(err)
 	}
@@ -39,7 +40,7 @@ func (msg *MsgCreateCoordinator) GetSignBytes() []byte {
 }
 
 func (msg *MsgCreateCoordinator) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}

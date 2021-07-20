@@ -12,23 +12,44 @@ import (
 
 var _ = strconv.Itoa(0)
 
+const (
+	flagIdentity = "identity"
+	flagWebsite  = "website"
+	flagDetails  = "details"
+)
+
 func CmdCreateCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-coordinator [address] [identity] [website] [details]",
+		Use:   "create-coordinator",
 		Short: "Broadcast message create-coordinator",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			argsAddress := string(args[0])
-			argsIdentity := string(args[1])
-			argsWebsite := string(args[2])
-			argsDetails := string(args[3])
+			identity, err := cmd.Flags().GetString(flagIdentity)
+			if err != nil {
+				return err
+			}
+
+			website, err := cmd.Flags().GetString(flagWebsite)
+			if err != nil {
+				return err
+			}
+
+			details, err := cmd.Flags().GetString(flagDetails)
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgCreateCoordinator(clientCtx.GetFromAddress().String(), string(argsAddress), string(argsIdentity), string(argsWebsite), string(argsDetails))
+			msg := types.NewMsgCreateCoordinator(
+				clientCtx.GetFromAddress().String(),
+				identity,
+				website,
+				details,
+			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -36,6 +57,9 @@ func CmdCreateCoordinator() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagIdentity, "", "coordinator identity")
+	cmd.Flags().String(flagWebsite, "", "coordinator website url")
+	cmd.Flags().String(flagDetails, "", "coordinator details")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

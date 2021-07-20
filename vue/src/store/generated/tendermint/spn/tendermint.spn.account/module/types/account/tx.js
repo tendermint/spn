@@ -3,11 +3,14 @@ import { Reader, util, configure, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { CoordinatorDescription } from '../account/coordinator';
 export const protobufPackage = 'tendermint.spn.account';
-const baseMsgCreateCoordinator = {};
+const baseMsgCreateCoordinator = { address: '' };
 export const MsgCreateCoordinator = {
     encode(message, writer = Writer.create()) {
+        if (message.address !== '') {
+            writer.uint32(10).string(message.address);
+        }
         if (message.description !== undefined) {
-            CoordinatorDescription.encode(message.description, writer.uint32(10).fork()).ldelim();
+            CoordinatorDescription.encode(message.description, writer.uint32(18).fork()).ldelim();
         }
         return writer;
     },
@@ -19,6 +22,9 @@ export const MsgCreateCoordinator = {
             const tag = reader.uint32();
             switch (tag >>> 3) {
                 case 1:
+                    message.address = reader.string();
+                    break;
+                case 2:
                     message.description = CoordinatorDescription.decode(reader, reader.uint32());
                     break;
                 default:
@@ -30,6 +36,12 @@ export const MsgCreateCoordinator = {
     },
     fromJSON(object) {
         const message = { ...baseMsgCreateCoordinator };
+        if (object.address !== undefined && object.address !== null) {
+            message.address = String(object.address);
+        }
+        else {
+            message.address = '';
+        }
         if (object.description !== undefined && object.description !== null) {
             message.description = CoordinatorDescription.fromJSON(object.description);
         }
@@ -40,11 +52,18 @@ export const MsgCreateCoordinator = {
     },
     toJSON(message) {
         const obj = {};
+        message.address !== undefined && (obj.address = message.address);
         message.description !== undefined && (obj.description = message.description ? CoordinatorDescription.toJSON(message.description) : undefined);
         return obj;
     },
     fromPartial(object) {
         const message = { ...baseMsgCreateCoordinator };
+        if (object.address !== undefined && object.address !== null) {
+            message.address = object.address;
+        }
+        else {
+            message.address = '';
+        }
         if (object.description !== undefined && object.description !== null) {
             message.description = CoordinatorDescription.fromPartial(object.description);
         }

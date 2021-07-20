@@ -33,12 +33,8 @@ func (k msgServer) CreateCoordinator(
 	}
 
 	coordID := k.AppendCoordinator(ctx, types.Coordinator{
-		Address: msg.Address,
-		Description: &types.CoordinatorDescription{
-			Identity: msg.Identity,
-			Website:  msg.Website,
-			Details:  msg.Details,
-		},
+		Address:     msg.Address,
+		Description: msg.Description,
 	})
 	k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       msg.Address,

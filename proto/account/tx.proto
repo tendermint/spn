@@ -8,13 +8,14 @@ option go_package = "github.com/tendermint/spn/x/account/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+  // this line is used by starport scaffolding # proto/tx/rpc
   rpc CreateCoordinator(MsgCreateCoordinator) returns (MsgCreateCoordinatorResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
 message MsgCreateCoordinator {
-  CoordinatorDescription description = 1;
+  string address = 1;
+  CoordinatorDescription description = 2;
 }
 
 message MsgCreateCoordinatorResponse {
