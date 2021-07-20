@@ -17,12 +17,6 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/account/coordinatorByAddress/{address}";
 	}
 
-	// Queries a list of coordinatorByAddress items.
-	rpc CoordinatorByAddressAll(QueryAllCoordinatorByAddressRequest) returns (QueryAllCoordinatorByAddressResponse) {
-		option (google.api.http).get = "/tendermint/spn/account/coordinatorByAddress";
-	}
-
-
 	// Queries a coordinator by id.
 	rpc Coordinator(QueryGetCoordinatorRequest) returns (QueryGetCoordinatorResponse) {
 		option (google.api.http).get = "/tendermint/spn/account/coordinator/{id}";
