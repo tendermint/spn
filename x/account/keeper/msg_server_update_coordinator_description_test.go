@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func Test_msgServer_UpdateCoordinatorDescription(t *testing.T) {
+func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	tests := []struct {
 		name string
 		msg  types.MsgUpdateCoordinatorDescription
