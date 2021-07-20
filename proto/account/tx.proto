@@ -2,12 +2,22 @@ syntax = "proto3";
 package tendermint.spn.account;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "account/coordinator.proto";
 
 option go_package = "github.com/tendermint/spn/x/account/types";
 
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc UpdateCoordinatorDescription(MsgUpdateCoordinatorDescription) returns (MsgUpdateCoordinatorDescriptionResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgUpdateCoordinatorDescription {
+  string address = 1;
+  CoordinatorDescription description = 2;
+}
+
+message MsgUpdateCoordinatorDescriptionResponse {
+  uint64 coordinatorId = 1;
+}
