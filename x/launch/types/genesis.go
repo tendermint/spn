@@ -24,6 +24,18 @@ func (gs GenesisState) Validate() error {
 	// this line is used by starport scaffolding # ibc/genesistype/validate
 
 	// this line is used by starport scaffolding # genesis/types/validate
+
+	// Check for duplicated index in chain
+	chainIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.ChainList {
+		chainID := elem.ChainID
+		if _, ok := chainIndexMap[chainID]; ok {
+			return fmt.Errorf("duplicated index for chain")
+		}
+		chainIndexMap[chainID] = struct{}{}
+	}
+
 	// Check for duplicated index in genesisAccount
 	genesisAccountIndexMap := make(map[string]struct{})
 
@@ -33,16 +45,14 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for genesisAccount")
 		}
 		genesisAccountIndexMap[index] = struct{}{}
-	}
-	// Check for duplicated index in chain
-	chainIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.ChainList {
-		index := string(ChainKey(elem.ChainID))
-		if _, ok := chainIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for chain")
+		// Each genesis account must be associated with an existing chain
+		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+			return fmt.Errorf("account %s is associated to a non-existing chain: %s",
+				elem.Address,
+				elem.ChainID,
+			)
 		}
-		chainIndexMap[index] = struct{}{}
 	}
 
 	return nil
