@@ -16,20 +16,20 @@ func (k msgServer) CreateCoordinator(
 ) (*types.MsgCreateCoordinatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Check if the coordinator address is already in the store
-	coord, found := k.GetCoordinatorByAddress(ctx, msg.Address)
-	if found {
-		return &types.MsgCreateCoordinatorResponse{},
-			status.Error(codes.AlreadyExists,
-				fmt.Sprintf("coordinator address already exist: %d", coord.CoordinatorId))
-	}
-
 	// Validate the coordinator address
 	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return &types.MsgCreateCoordinatorResponse{},
 			status.Error(codes.InvalidArgument,
 				fmt.Sprintf("invalid coordinator address (%s): %s", msg.Address, err.Error()))
+	}
+
+	// Check if the coordinator address is already in the store
+	coord, found := k.GetCoordinatorByAddress(ctx, msg.Address)
+	if found {
+		return &types.MsgCreateCoordinatorResponse{},
+			status.Error(codes.AlreadyExists,
+				fmt.Sprintf("coordinator address already exist: %d", coord.CoordinatorId))
 	}
 
 	coordID := k.AppendCoordinator(ctx, types.Coordinator{

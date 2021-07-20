@@ -7,13 +7,12 @@ import (
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/x/account/client/cli"
 	"github.com/tendermint/spn/x/account/types"
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func networkWithCoordinatorByAddressObjects(t *testing.T, n int) (*network.Network, []*types.CoordinatorByAddress) {
