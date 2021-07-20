@@ -24,25 +24,33 @@ func (gs GenesisState) Validate() error {
 	// this line is used by starport scaffolding # ibc/genesistype/validate
 
 	// this line is used by starport scaffolding # genesis/types/validate
-	// Check for duplicated index in coordinatorByAddress
-	coordinatorByAddressIndexMap := make(map[string]struct{})
 
+	// Check for duplicated index in coordinatorByAddress
+	coordinatorByAddressIndexMap := make(map[string]uint64)
 	for _, elem := range gs.CoordinatorByAddressList {
 		index := string(CoordinatorByAddressKey(elem.Address))
 		if _, ok := coordinatorByAddressIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for coordinatorByAddress")
 		}
-		coordinatorByAddressIndexMap[index] = struct{}{}
+		coordinatorByAddressIndexMap[index] = elem.CoordinatorId
 	}
+
 	// Check for duplicated ID in coordinator
 	coordinatorIdMap := make(map[uint64]bool)
-
 	for _, elem := range gs.CoordinatorList {
 		if _, ok := coordinatorIdMap[elem.CoordinatorId]; ok {
 			return fmt.Errorf("duplicated id for coordinator")
 		}
-		coordinatorIdMap[elem.CoordinatorId] = true
-	}
 
+		index := string(CoordinatorByAddressKey(elem.Address))
+		if _, ok := coordinatorByAddressIndexMap[index]; !ok {
+			return fmt.Errorf("coordinator address not found for CoordinatorByAddress: %s", elem.Address)
+		}
+		coordinatorIdMap[elem.CoordinatorId] = true
+		delete(coordinatorByAddressIndexMap, index)
+	}
+	for _, coordinatorId := range coordinatorByAddressIndexMap {
+		return fmt.Errorf("coordinator address not found for coordinatorId: %d", coordinatorId)
+	}
 	return nil
 }

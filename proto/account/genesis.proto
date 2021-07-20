@@ -2,7 +2,6 @@ syntax = "proto3";
 package tendermint.spn.account;
 
 // this line is used by starport scaffolding # genesis/proto/import
-import "account/coordinator_by_address.proto";
 import "account/coordinator.proto";
 
 option go_package = "github.com/tendermint/spn/x/account/types";
