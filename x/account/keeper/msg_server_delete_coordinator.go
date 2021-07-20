@@ -10,7 +10,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k msgServer) DeleteCoordinator(goCtx context.Context, msg *types.MsgDeleteCoordinator) (*types.MsgDeleteCoordinatorResponse, error) {
+func (k msgServer) DeleteCoordinator(
+	goCtx context.Context,
+	msg *types.MsgDeleteCoordinator,
+) (*types.MsgDeleteCoordinatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Validate the coordinator address
