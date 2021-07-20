@@ -10,39 +10,6 @@ import (
 	"github.com/tendermint/spn/x/account/types"
 )
 
-func CmdListCoordinatorByAddress() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "list-coordinator-by-address",
-		Short: "list all coordinatorByAddress",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx := client.GetClientContextFromCmd(cmd)
-
-			pageReq, err := client.ReadPageRequest(cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			queryClient := types.NewQueryClient(clientCtx)
-
-			params := &types.QueryAllCoordinatorByAddressRequest{
-				Pagination: pageReq,
-			}
-
-			res, err := queryClient.CoordinatorByAddressAll(context.Background(), params)
-			if err != nil {
-				return err
-			}
-
-			return clientCtx.PrintProto(res)
-		},
-	}
-
-	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
-	flags.AddQueryFlagsToCmd(cmd)
-
-	return cmd
-}
-
 func CmdShowCoordinatorByAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-coordinator-by-address [address]",

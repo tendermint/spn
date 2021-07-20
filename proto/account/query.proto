@@ -4,7 +4,6 @@ package tendermint.spn.account;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
-import "account/coordinator_by_address.proto";
 import "account/coordinator.proto";
 
 option go_package = "github.com/tendermint/spn/x/account/types";
@@ -17,12 +16,6 @@ service Query {
 	rpc CoordinatorByAddress(QueryGetCoordinatorByAddressRequest) returns (QueryGetCoordinatorByAddressResponse) {
 		option (google.api.http).get = "/tendermint/spn/account/coordinatorByAddress/{address}";
 	}
-
-	// Queries a list of coordinatorByAddress items.
-	rpc CoordinatorByAddressAll(QueryAllCoordinatorByAddressRequest) returns (QueryAllCoordinatorByAddressResponse) {
-		option (google.api.http).get = "/tendermint/spn/account/coordinatorByAddress";
-	}
-
 
 	// Queries a coordinator by id.
 	rpc Coordinator(QueryGetCoordinatorRequest) returns (QueryGetCoordinatorResponse) {
