@@ -30,7 +30,7 @@ func (gs GenesisState) Validate() error {
 	for _, elem := range gs.CoordinatorByAddressList {
 		index := string(CoordinatorByAddressKey(elem.Address))
 		if _, ok := coordinatorByAddressIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for coordinatorByAddress")
+			return fmt.Errorf("duplicated index for coordinatorByAddress: %s", elem.Address)
 		}
 		coordinatorByAddressIndexMap[index] = elem.CoordinatorId
 	}
@@ -39,7 +39,7 @@ func (gs GenesisState) Validate() error {
 	coordinatorIdMap := make(map[uint64]bool)
 	for _, elem := range gs.CoordinatorList {
 		if _, ok := coordinatorIdMap[elem.CoordinatorId]; ok {
-			return fmt.Errorf("duplicated id for coordinator")
+			return fmt.Errorf("duplicated id for coordinator: %d", elem.CoordinatorId)
 		}
 
 		index := string(CoordinatorByAddressKey(elem.Address))
