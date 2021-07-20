@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-// GetCoordinatorCount get the total number of TypeName.LowerCamel
+// GetCoordinatorCount get the total number of Coordinators
 func (k Keeper) GetCoordinatorCount(ctx sdk.Context) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorCountKey))
 	byteKey := types.KeyPrefix(types.CoordinatorCountKey)
