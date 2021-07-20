@@ -7,6 +7,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
@@ -31,6 +32,7 @@ func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []
 		state.GenesisAccountList = append(state.GenesisAccountList, &types.GenesisAccount{
 			ChainID: strconv.Itoa(i),
 			Address: strconv.Itoa(i),
+			Coins:   sdk.NewCoins(),
 		})
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
