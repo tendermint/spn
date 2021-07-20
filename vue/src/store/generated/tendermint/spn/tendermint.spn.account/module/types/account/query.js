@@ -472,11 +472,6 @@ export class QueryClientImpl {
         const promise = this.rpc.request('tendermint.spn.account.Query', 'CoordinatorByAddress', data);
         return promise.then((data) => QueryGetCoordinatorByAddressResponse.decode(new Reader(data)));
     }
-    CoordinatorByAddressAll(request) {
-        const data = QueryAllCoordinatorByAddressRequest.encode(request).finish();
-        const promise = this.rpc.request('tendermint.spn.account.Query', 'CoordinatorByAddressAll', data);
-        return promise.then((data) => QueryAllCoordinatorByAddressResponse.decode(new Reader(data)));
-    }
     Coordinator(request) {
         const data = QueryGetCoordinatorRequest.encode(request).finish();
         const promise = this.rpc.request('tendermint.spn.account.Query', 'Coordinator', data);

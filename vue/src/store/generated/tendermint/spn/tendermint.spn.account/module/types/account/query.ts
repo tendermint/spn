@@ -534,8 +534,6 @@ export const QueryAllCoordinatorResponse = {
 export interface Query {
   /** Queries a coordinatorByAddress by index. */
   CoordinatorByAddress(request: QueryGetCoordinatorByAddressRequest): Promise<QueryGetCoordinatorByAddressResponse>
-  /** Queries a list of coordinatorByAddress items. */
-  CoordinatorByAddressAll(request: QueryAllCoordinatorByAddressRequest): Promise<QueryAllCoordinatorByAddressResponse>
   /** Queries a coordinator by id. */
   Coordinator(request: QueryGetCoordinatorRequest): Promise<QueryGetCoordinatorResponse>
   /** Queries a list of coordinator items. */
@@ -551,12 +549,6 @@ export class QueryClientImpl implements Query {
     const data = QueryGetCoordinatorByAddressRequest.encode(request).finish()
     const promise = this.rpc.request('tendermint.spn.account.Query', 'CoordinatorByAddress', data)
     return promise.then((data) => QueryGetCoordinatorByAddressResponse.decode(new Reader(data)))
-  }
-
-  CoordinatorByAddressAll(request: QueryAllCoordinatorByAddressRequest): Promise<QueryAllCoordinatorByAddressResponse> {
-    const data = QueryAllCoordinatorByAddressRequest.encode(request).finish()
-    const promise = this.rpc.request('tendermint.spn.account.Query', 'CoordinatorByAddressAll', data)
-    return promise.then((data) => QueryAllCoordinatorByAddressResponse.decode(new Reader(data)))
   }
 
   Coordinator(request: QueryGetCoordinatorRequest): Promise<QueryGetCoordinatorResponse> {

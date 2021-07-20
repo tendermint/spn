@@ -1,40 +1,25 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from 'protobufjs/minimal'
 import * as Long from 'long'
+import { CoordinatorDescription } from '../account/coordinator'
 
 export const protobufPackage = 'tendermint.spn.account'
 
 /** this line is used by starport scaffolding # proto/tx/message */
 export interface MsgCreateCoordinator {
-  creator: string
-  address: string
-  identity: string
-  website: string
-  details: string
+  description: CoordinatorDescription | undefined
 }
 
 export interface MsgCreateCoordinatorResponse {
   coordinatorId: number
 }
 
-const baseMsgCreateCoordinator: object = { creator: '', address: '', identity: '', website: '', details: '' }
+const baseMsgCreateCoordinator: object = {}
 
 export const MsgCreateCoordinator = {
   encode(message: MsgCreateCoordinator, writer: Writer = Writer.create()): Writer {
-    if (message.creator !== '') {
-      writer.uint32(10).string(message.creator)
-    }
-    if (message.address !== '') {
-      writer.uint32(18).string(message.address)
-    }
-    if (message.identity !== '') {
-      writer.uint32(26).string(message.identity)
-    }
-    if (message.website !== '') {
-      writer.uint32(34).string(message.website)
-    }
-    if (message.details !== '') {
-      writer.uint32(42).string(message.details)
+    if (message.description !== undefined) {
+      CoordinatorDescription.encode(message.description, writer.uint32(10).fork()).ldelim()
     }
     return writer
   },
@@ -47,19 +32,7 @@ export const MsgCreateCoordinator = {
       const tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
-          message.creator = reader.string()
-          break
-        case 2:
-          message.address = reader.string()
-          break
-        case 3:
-          message.identity = reader.string()
-          break
-        case 4:
-          message.website = reader.string()
-          break
-        case 5:
-          message.details = reader.string()
+          message.description = CoordinatorDescription.decode(reader, reader.uint32())
           break
         default:
           reader.skipType(tag & 7)
@@ -71,70 +44,26 @@ export const MsgCreateCoordinator = {
 
   fromJSON(object: any): MsgCreateCoordinator {
     const message = { ...baseMsgCreateCoordinator } as MsgCreateCoordinator
-    if (object.creator !== undefined && object.creator !== null) {
-      message.creator = String(object.creator)
+    if (object.description !== undefined && object.description !== null) {
+      message.description = CoordinatorDescription.fromJSON(object.description)
     } else {
-      message.creator = ''
-    }
-    if (object.address !== undefined && object.address !== null) {
-      message.address = String(object.address)
-    } else {
-      message.address = ''
-    }
-    if (object.identity !== undefined && object.identity !== null) {
-      message.identity = String(object.identity)
-    } else {
-      message.identity = ''
-    }
-    if (object.website !== undefined && object.website !== null) {
-      message.website = String(object.website)
-    } else {
-      message.website = ''
-    }
-    if (object.details !== undefined && object.details !== null) {
-      message.details = String(object.details)
-    } else {
-      message.details = ''
+      message.description = undefined
     }
     return message
   },
 
   toJSON(message: MsgCreateCoordinator): unknown {
     const obj: any = {}
-    message.creator !== undefined && (obj.creator = message.creator)
-    message.address !== undefined && (obj.address = message.address)
-    message.identity !== undefined && (obj.identity = message.identity)
-    message.website !== undefined && (obj.website = message.website)
-    message.details !== undefined && (obj.details = message.details)
+    message.description !== undefined && (obj.description = message.description ? CoordinatorDescription.toJSON(message.description) : undefined)
     return obj
   },
 
   fromPartial(object: DeepPartial<MsgCreateCoordinator>): MsgCreateCoordinator {
     const message = { ...baseMsgCreateCoordinator } as MsgCreateCoordinator
-    if (object.creator !== undefined && object.creator !== null) {
-      message.creator = object.creator
+    if (object.description !== undefined && object.description !== null) {
+      message.description = CoordinatorDescription.fromPartial(object.description)
     } else {
-      message.creator = ''
-    }
-    if (object.address !== undefined && object.address !== null) {
-      message.address = object.address
-    } else {
-      message.address = ''
-    }
-    if (object.identity !== undefined && object.identity !== null) {
-      message.identity = object.identity
-    } else {
-      message.identity = ''
-    }
-    if (object.website !== undefined && object.website !== null) {
-      message.website = object.website
-    } else {
-      message.website = ''
-    }
-    if (object.details !== undefined && object.details !== null) {
-      message.details = object.details
-    } else {
-      message.details = ''
+      message.description = undefined
     }
     return message
   }

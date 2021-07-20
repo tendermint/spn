@@ -169,21 +169,6 @@ export class Api extends HttpClient {
          * No description
          *
          * @tags Query
-         * @name QueryCoordinatorByAddressAll
-         * @summary Queries a list of coordinatorByAddress items.
-         * @request GET:/tendermint/spn/account/coordinatorByAddress
-         */
-        this.queryCoordinatorByAddressAll = (query, params = {}) => this.request({
-            path: `/tendermint/spn/account/coordinatorByAddress`,
-            method: "GET",
-            query: query,
-            format: "json",
-            ...params,
-        });
-        /**
-         * No description
-         *
-         * @tags Query
          * @name QueryCoordinatorByAddress
          * @summary Queries a coordinatorByAddress by index.
          * @request GET:/tendermint/spn/account/coordinatorByAddress/{address}

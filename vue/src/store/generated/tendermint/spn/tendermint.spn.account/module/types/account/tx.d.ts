@@ -1,12 +1,9 @@
 import { Reader, Writer } from 'protobufjs/minimal';
+import { CoordinatorDescription } from '../account/coordinator';
 export declare const protobufPackage = "tendermint.spn.account";
 /** this line is used by starport scaffolding # proto/tx/message */
 export interface MsgCreateCoordinator {
-    creator: string;
-    address: string;
-    identity: string;
-    website: string;
-    details: string;
+    description: CoordinatorDescription | undefined;
 }
 export interface MsgCreateCoordinatorResponse {
     coordinatorId: number;

@@ -4,7 +4,9 @@ import { SpVuexError } from '@starport/vuex';
 import { Coordinator } from "./module/types/account/coordinator";
 import { CoordinatorDescription } from "./module/types/account/coordinator";
 import { CoordinatorByAddress } from "./module/types/account/coordinator";
-export { Coordinator, CoordinatorDescription, CoordinatorByAddress };
+import { QueryAllCoordinatorByAddressRequest } from "./module/types/account/query";
+import { QueryAllCoordinatorByAddressResponse } from "./module/types/account/query";
+export { Coordinator, CoordinatorDescription, CoordinatorByAddress, QueryAllCoordinatorByAddressRequest, QueryAllCoordinatorByAddressResponse };
 async function initTxClient(vuexGetters) {
     return await txClient(vuexGetters['common/wallet/signer'], {
         addr: vuexGetters['common/env/apiTendermint']
@@ -39,13 +41,14 @@ function getStructure(template) {
 const getDefaultState = () => {
     return {
         CoordinatorByAddress: {},
-        CoordinatorByAddressAll: {},
         Coordinator: {},
         CoordinatorAll: {},
         _Structure: {
             Coordinator: getStructure(Coordinator.fromPartial({})),
             CoordinatorDescription: getStructure(CoordinatorDescription.fromPartial({})),
             CoordinatorByAddress: getStructure(CoordinatorByAddress.fromPartial({})),
+            QueryAllCoordinatorByAddressRequest: getStructure(QueryAllCoordinatorByAddressRequest.fromPartial({})),
+            QueryAllCoordinatorByAddressResponse: getStructure(QueryAllCoordinatorByAddressResponse.fromPartial({})),
         },
         _Subscriptions: new Set(),
     };
@@ -75,12 +78,6 @@ export default {
                 params.query = null;
             }
             return state.CoordinatorByAddress[JSON.stringify(params)] ?? {};
-        },
-        getCoordinatorByAddressAll: (state) => (params = { params: {} }) => {
-            if (!params.query) {
-                params.query = null;
-            }
-            return state.CoordinatorByAddressAll[JSON.stringify(params)] ?? {};
         },
         getCoordinator: (state) => (params = { params: {} }) => {
             if (!params.query) {
@@ -134,23 +131,6 @@ export default {
             }
             catch (e) {
                 throw new SpVuexError('QueryClient:QueryCoordinatorByAddress', 'API Node Unavailable. Could not perform query: ' + e.message);
-            }
-        },
-        async QueryCoordinatorByAddressAll({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params: { ...key }, query = null }) {
-            try {
-                const queryClient = await initQueryClient(rootGetters);
-                let value = (await queryClient.queryCoordinatorByAddressAll(query)).data;
-                while (all && value.pagination && value.pagination.nextKey != null) {
-                    let next_values = (await queryClient.queryCoordinatorByAddressAll({ ...query, 'pagination.key': value.pagination.nextKey })).data;
-                    value = mergeResults(value, next_values);
-                }
-                commit('QUERY', { query: 'CoordinatorByAddressAll', key: { params: { ...key }, query }, value });
-                if (subscribe)
-                    commit('SUBSCRIBE', { action: 'QueryCoordinatorByAddressAll', payload: { options: { all }, params: { ...key }, query } });
-                return getters['getCoordinatorByAddressAll']({ params: { ...key }, query }) ?? {};
-            }
-            catch (e) {
-                throw new SpVuexError('QueryClient:QueryCoordinatorByAddressAll', 'API Node Unavailable. Could not perform query: ' + e.message);
             }
         },
         async QueryCoordinator({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params: { ...key }, query = null }) {

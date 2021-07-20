@@ -89,8 +89,6 @@ export declare const QueryAllCoordinatorResponse: {
 export interface Query {
     /** Queries a coordinatorByAddress by index. */
     CoordinatorByAddress(request: QueryGetCoordinatorByAddressRequest): Promise<QueryGetCoordinatorByAddressResponse>;
-    /** Queries a list of coordinatorByAddress items. */
-    CoordinatorByAddressAll(request: QueryAllCoordinatorByAddressRequest): Promise<QueryAllCoordinatorByAddressResponse>;
     /** Queries a coordinator by id. */
     Coordinator(request: QueryGetCoordinatorRequest): Promise<QueryGetCoordinatorResponse>;
     /** Queries a list of coordinator items. */
@@ -100,7 +98,6 @@ export declare class QueryClientImpl implements Query {
     private readonly rpc;
     constructor(rpc: Rpc);
     CoordinatorByAddress(request: QueryGetCoordinatorByAddressRequest): Promise<QueryGetCoordinatorByAddressResponse>;
-    CoordinatorByAddressAll(request: QueryAllCoordinatorByAddressRequest): Promise<QueryAllCoordinatorByAddressResponse>;
     Coordinator(request: QueryGetCoordinatorRequest): Promise<QueryGetCoordinatorResponse>;
     CoordinatorAll(request: QueryAllCoordinatorRequest): Promise<QueryAllCoordinatorResponse>;
 }

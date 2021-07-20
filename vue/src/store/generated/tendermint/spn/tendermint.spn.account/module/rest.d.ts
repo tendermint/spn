@@ -18,19 +18,6 @@ export interface AccountMsgCreateCoordinatorResponse {
     /** @format uint64 */
     coordinatorId?: string;
 }
-export interface AccountQueryAllCoordinatorByAddressResponse {
-    coordinatorByAddress?: AccountCoordinatorByAddress[];
-    /**
-     * PageResponse is to be embedded in gRPC response messages where the
-     * corresponding request message has used PageRequest.
-     *
-     *  message SomeResponse {
-     *          repeated Bar results = 1;
-     *          PageResponse page = 2;
-     *  }
-     */
-    pagination?: V1Beta1PageResponse;
-}
 export interface AccountQueryAllCoordinatorResponse {
     Coordinator?: AccountCoordinator[];
     /**
@@ -192,20 +179,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * @request GET:/tendermint/spn/account/coordinator/{id}
      */
     queryCoordinator: (id: string, params?: RequestParams) => Promise<HttpResponse<AccountQueryGetCoordinatorResponse, RpcStatus>>;
-    /**
-     * No description
-     *
-     * @tags Query
-     * @name QueryCoordinatorByAddressAll
-     * @summary Queries a list of coordinatorByAddress items.
-     * @request GET:/tendermint/spn/account/coordinatorByAddress
-     */
-    queryCoordinatorByAddressAll: (query?: {
-        "pagination.key"?: string;
-        "pagination.offset"?: string;
-        "pagination.limit"?: string;
-        "pagination.countTotal"?: boolean;
-    }, params?: RequestParams) => Promise<HttpResponse<AccountQueryAllCoordinatorByAddressResponse, RpcStatus>>;
     /**
      * No description
      *
