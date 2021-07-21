@@ -75,6 +75,7 @@ func TestRequestQueryPaginated(t *testing.T) {
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllRequestRequest {
 		return &types.QueryAllRequestRequest{
+			ChainID: "foo",
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,

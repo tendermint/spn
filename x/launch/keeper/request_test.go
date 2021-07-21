@@ -17,7 +17,8 @@ func createNRequest(keeper *Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
 		items[i].ChainID = "foo"
-		keeper.AppendRequest(ctx, items[i])
+		id := keeper.AppendRequest(ctx, items[i])
+		items[i].RequestID = id
 	}
 	return items
 }
