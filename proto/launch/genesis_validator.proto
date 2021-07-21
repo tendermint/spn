@@ -3,10 +3,15 @@ package tendermint.spn.launch;
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
+import "gogoproto/gogo.proto";
+import "cosmos/coin.proto";
+
 message GenesisValidator {
-  string creator = 1;
-  string chainID = 2; 
-  string address = 3; 
-  string peer = 4; 
+  string chainID = 1;
+  string address = 2;
+  bytes genTx = 3;
+  bytes consPubKey = 4;
+  cosmos.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
+  string peer = 6;
 }
 

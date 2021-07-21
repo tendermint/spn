@@ -5,6 +5,8 @@ package types
 
 import (
 	fmt "fmt"
+	types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -23,10 +25,12 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type GenesisValidator struct {
-	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	ChainID string `protobuf:"bytes,2,opt,name=chainID,proto3" json:"chainID,omitempty"`
-	Address string `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
-	Peer    string `protobuf:"bytes,4,opt,name=peer,proto3" json:"peer,omitempty"`
+	ChainID        string     `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
+	Address        string     `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	GenTx          []byte     `protobuf:"bytes,3,opt,name=genTx,proto3" json:"genTx,omitempty"`
+	ConsPubKey     []byte     `protobuf:"bytes,4,opt,name=consPubKey,proto3" json:"consPubKey,omitempty"`
+	SelfDelegation types.Coin `protobuf:"bytes,5,opt,name=selfDelegation,proto3" json:"selfDelegation"`
+	Peer           string     `protobuf:"bytes,6,opt,name=peer,proto3" json:"peer,omitempty"`
 }
 
 func (m *GenesisValidator) Reset()         { *m = GenesisValidator{} }
@@ -62,13 +66,6 @@ func (m *GenesisValidator) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GenesisValidator proto.InternalMessageInfo
 
-func (m *GenesisValidator) GetCreator() string {
-	if m != nil {
-		return m.Creator
-	}
-	return ""
-}
-
 func (m *GenesisValidator) GetChainID() string {
 	if m != nil {
 		return m.ChainID
@@ -81,6 +78,27 @@ func (m *GenesisValidator) GetAddress() string {
 		return m.Address
 	}
 	return ""
+}
+
+func (m *GenesisValidator) GetGenTx() []byte {
+	if m != nil {
+		return m.GenTx
+	}
+	return nil
+}
+
+func (m *GenesisValidator) GetConsPubKey() []byte {
+	if m != nil {
+		return m.ConsPubKey
+	}
+	return nil
+}
+
+func (m *GenesisValidator) GetSelfDelegation() types.Coin {
+	if m != nil {
+		return m.SelfDelegation
+	}
+	return types.Coin{}
 }
 
 func (m *GenesisValidator) GetPeer() string {
@@ -97,20 +115,26 @@ func init() {
 func init() { proto.RegisterFile("launch/genesis_validator.proto", fileDescriptor_da7a6c7c23ebd0c1) }
 
 var fileDescriptor_da7a6c7c23ebd0c1 = []byte{
-	// 206 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0xcb, 0x49, 0x2c, 0xcd,
-	0x4b, 0xce, 0xd0, 0x4f, 0x4f, 0xcd, 0x4b, 0x2d, 0xce, 0x2c, 0x8e, 0x2f, 0x4b, 0xcc, 0xc9, 0x4c,
-	0x49, 0x2c, 0xc9, 0x2f, 0xd2, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x2d, 0x49, 0xcd, 0x4b,
-	0x49, 0x2d, 0xca, 0xcd, 0xcc, 0x2b, 0xd1, 0x2b, 0x2e, 0xc8, 0xd3, 0x83, 0x28, 0x57, 0x2a, 0xe1,
-	0x12, 0x70, 0x87, 0xe8, 0x08, 0x83, 0x69, 0x10, 0x92, 0xe0, 0x62, 0x4f, 0x2e, 0x4a, 0x05, 0x31,
-	0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x83, 0x60, 0x5c, 0xb0, 0x4c, 0x46, 0x62, 0x66, 0x9e, 0xa7,
-	0x8b, 0x04, 0x13, 0x54, 0x06, 0xc2, 0x05, 0xc9, 0x24, 0xa6, 0xa4, 0x14, 0xa5, 0x16, 0x17, 0x4b,
-	0x30, 0x43, 0x64, 0xa0, 0x5c, 0x21, 0x21, 0x2e, 0x96, 0x82, 0xd4, 0xd4, 0x22, 0x09, 0x16, 0xb0,
-	0x30, 0x98, 0xed, 0xe4, 0x74, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9,
-	0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0x1a,
-	0xe9, 0x99, 0x25, 0x19, 0xa5, 0x49, 0x7a, 0xc9, 0xf9, 0xb9, 0xfa, 0x08, 0x17, 0xeb, 0x17, 0x17,
-	0xe4, 0xe9, 0x57, 0xe8, 0x43, 0xbd, 0x58, 0x52, 0x59, 0x90, 0x5a, 0x9c, 0xc4, 0x06, 0xf6, 0x97,
-	0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0xee, 0xa1, 0xe0, 0xa3, 0xf9, 0x00, 0x00, 0x00,
+	// 296 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x5c, 0x90, 0x31, 0x4b, 0x03, 0x41,
+	0x10, 0x85, 0x6f, 0x35, 0x89, 0xb8, 0x06, 0xd1, 0x25, 0xc2, 0x92, 0x62, 0x0d, 0x56, 0x57, 0xdd,
+	0x82, 0x76, 0x96, 0x31, 0x20, 0x62, 0x23, 0x41, 0x2c, 0x6c, 0xe4, 0x72, 0x37, 0x6e, 0x16, 0x2e,
+	0x33, 0xc7, 0xed, 0x46, 0x92, 0x7f, 0xe1, 0xcf, 0x4a, 0x61, 0x91, 0xd2, 0x4a, 0x24, 0xf9, 0x23,
+	0x92, 0xdb, 0x04, 0xc5, 0x6e, 0xde, 0xbc, 0x8f, 0xc7, 0xe3, 0x71, 0x55, 0xa4, 0x53, 0xcc, 0xc6,
+	0xda, 0x00, 0x82, 0xb3, 0xee, 0xe5, 0x2d, 0x2d, 0x6c, 0x9e, 0x7a, 0xaa, 0x92, 0xb2, 0x22, 0x4f,
+	0xe2, 0xcc, 0x03, 0xe6, 0x50, 0x4d, 0x2c, 0xfa, 0xc4, 0x95, 0x98, 0x04, 0xbc, 0xdb, 0x31, 0x64,
+	0xa8, 0x26, 0xf4, 0xe6, 0x0a, 0x70, 0xf7, 0x34, 0x23, 0x37, 0x21, 0xa7, 0x33, 0xb2, 0x18, 0x5e,
+	0x17, 0x1f, 0x8c, 0x9f, 0xdc, 0x86, 0xec, 0xa7, 0x5d, 0xb4, 0x90, 0xfc, 0x20, 0x1b, 0xa7, 0x16,
+	0xef, 0x06, 0x92, 0xf5, 0x58, 0x7c, 0x38, 0xdc, 0xc9, 0x8d, 0x93, 0xe6, 0x79, 0x05, 0xce, 0xc9,
+	0xbd, 0xe0, 0x6c, 0xa5, 0xe8, 0xf0, 0xa6, 0x01, 0x7c, 0x9c, 0xc9, 0xfd, 0x1e, 0x8b, 0xdb, 0xc3,
+	0x20, 0x84, 0xe2, 0x3c, 0x23, 0x74, 0x0f, 0xd3, 0xd1, 0x3d, 0xcc, 0x65, 0xa3, 0xb6, 0xfe, 0x7c,
+	0xc4, 0x35, 0x3f, 0x76, 0x50, 0xbc, 0x0e, 0xa0, 0x00, 0x93, 0x7a, 0x4b, 0x28, 0x9b, 0x3d, 0x16,
+	0x1f, 0x5d, 0xb6, 0x93, 0x50, 0x35, 0xb9, 0x21, 0x8b, 0xfd, 0xc6, 0xe2, 0xeb, 0x3c, 0x1a, 0xfe,
+	0x23, 0x85, 0xe0, 0x8d, 0x12, 0xa0, 0x92, 0xad, 0xba, 0x48, 0x7d, 0xf7, 0xfb, 0x8b, 0x95, 0x62,
+	0xcb, 0x95, 0x62, 0xdf, 0x2b, 0xc5, 0xde, 0xd7, 0x2a, 0x5a, 0xae, 0x55, 0xf4, 0xb9, 0x56, 0xd1,
+	0x73, 0x6c, 0xac, 0x1f, 0x4f, 0x47, 0x49, 0x46, 0x13, 0xfd, 0xbb, 0x99, 0x76, 0x25, 0xea, 0x99,
+	0xde, 0x8e, 0xec, 0xe7, 0x25, 0xb8, 0x51, 0xab, 0x5e, 0xe6, 0xea, 0x27, 0x00, 0x00, 0xff, 0xff,
+	0x6c, 0x26, 0xb8, 0x3d, 0x7b, 0x01, 0x00, 0x00,
 }
 
 func (m *GenesisValidator) Marshal() (dAtA []byte, err error) {
@@ -138,26 +162,43 @@ func (m *GenesisValidator) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.Peer)
 		i = encodeVarintGenesisValidator(dAtA, i, uint64(len(m.Peer)))
 		i--
+		dAtA[i] = 0x32
+	}
+	{
+		size, err := m.SelfDelegation.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintGenesisValidator(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
+	if len(m.ConsPubKey) > 0 {
+		i -= len(m.ConsPubKey)
+		copy(dAtA[i:], m.ConsPubKey)
+		i = encodeVarintGenesisValidator(dAtA, i, uint64(len(m.ConsPubKey)))
+		i--
 		dAtA[i] = 0x22
+	}
+	if len(m.GenTx) > 0 {
+		i -= len(m.GenTx)
+		copy(dAtA[i:], m.GenTx)
+		i = encodeVarintGenesisValidator(dAtA, i, uint64(len(m.GenTx)))
+		i--
+		dAtA[i] = 0x1a
 	}
 	if len(m.Address) > 0 {
 		i -= len(m.Address)
 		copy(dAtA[i:], m.Address)
 		i = encodeVarintGenesisValidator(dAtA, i, uint64(len(m.Address)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x12
 	}
 	if len(m.ChainID) > 0 {
 		i -= len(m.ChainID)
 		copy(dAtA[i:], m.ChainID)
 		i = encodeVarintGenesisValidator(dAtA, i, uint64(len(m.ChainID)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintGenesisValidator(dAtA, i, uint64(len(m.Creator)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -181,10 +222,6 @@ func (m *GenesisValidator) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Creator)
-	if l > 0 {
-		n += 1 + l + sovGenesisValidator(uint64(l))
-	}
 	l = len(m.ChainID)
 	if l > 0 {
 		n += 1 + l + sovGenesisValidator(uint64(l))
@@ -193,6 +230,16 @@ func (m *GenesisValidator) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovGenesisValidator(uint64(l))
 	}
+	l = len(m.GenTx)
+	if l > 0 {
+		n += 1 + l + sovGenesisValidator(uint64(l))
+	}
+	l = len(m.ConsPubKey)
+	if l > 0 {
+		n += 1 + l + sovGenesisValidator(uint64(l))
+	}
+	l = m.SelfDelegation.Size()
+	n += 1 + l + sovGenesisValidator(uint64(l))
 	l = len(m.Peer)
 	if l > 0 {
 		n += 1 + l + sovGenesisValidator(uint64(l))
@@ -237,38 +284,6 @@ func (m *GenesisValidator) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenesisValidator
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthGenesisValidator
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenesisValidator
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ChainID", wireType)
 			}
 			var stringLen uint64
@@ -299,7 +314,7 @@ func (m *GenesisValidator) Unmarshal(dAtA []byte) error {
 			}
 			m.ChainID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
 			}
@@ -331,7 +346,108 @@ func (m *GenesisValidator) Unmarshal(dAtA []byte) error {
 			}
 			m.Address = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GenTx", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesisValidator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthGenesisValidator
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesisValidator
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GenTx = append(m.GenTx[:0], dAtA[iNdEx:postIndex]...)
+			if m.GenTx == nil {
+				m.GenTx = []byte{}
+			}
+			iNdEx = postIndex
 		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ConsPubKey", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesisValidator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthGenesisValidator
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesisValidator
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ConsPubKey = append(m.ConsPubKey[:0], dAtA[iNdEx:postIndex]...)
+			if m.ConsPubKey == nil {
+				m.ConsPubKey = []byte{}
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SelfDelegation", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesisValidator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesisValidator
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesisValidator
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.SelfDelegation.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Peer", wireType)
 			}
