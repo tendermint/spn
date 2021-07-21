@@ -5,6 +5,7 @@ package types
 
 import (
 	fmt "fmt"
+	types "github.com/cosmos/cosmos-sdk/codec/types"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -23,9 +24,11 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Request struct {
-	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	ChainID   string `protobuf:"bytes,2,opt,name=chainID,proto3" json:"chainID,omitempty"`
-	RequestID uint64 `protobuf:"varint,3,opt,name=requestID,proto3" json:"requestID,omitempty"`
+	ChainID   string     `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
+	RequestID uint64     `protobuf:"varint,2,opt,name=requestID,proto3" json:"requestID,omitempty"`
+	Creator   string     `protobuf:"bytes,3,opt,name=creator,proto3" json:"creator,omitempty"`
+	CreatedAt int64      `protobuf:"varint,4,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	Content   *types.Any `protobuf:"bytes,5,opt,name=content,proto3" json:"content,omitempty"`
 }
 
 func (m *Request) Reset()         { *m = Request{} }
@@ -61,13 +64,6 @@ func (m *Request) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Request proto.InternalMessageInfo
 
-func (m *Request) GetCreator() string {
-	if m != nil {
-		return m.Creator
-	}
-	return ""
-}
-
 func (m *Request) GetChainID() string {
 	if m != nil {
 		return m.ChainID
@@ -82,6 +78,27 @@ func (m *Request) GetRequestID() uint64 {
 	return 0
 }
 
+func (m *Request) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *Request) GetCreatedAt() int64 {
+	if m != nil {
+		return m.CreatedAt
+	}
+	return 0
+}
+
+func (m *Request) GetContent() *types.Any {
+	if m != nil {
+		return m.Content
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*Request)(nil), "tendermint.spn.launch.Request")
 }
@@ -89,19 +106,23 @@ func init() {
 func init() { proto.RegisterFile("launch/request.proto", fileDescriptor_028e4b0ce31bf039) }
 
 var fileDescriptor_028e4b0ce31bf039 = []byte{
-	// 185 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0xc9, 0x49, 0x2c, 0xcd,
-	0x4b, 0xce, 0xd0, 0x2f, 0x4a, 0x2d, 0x2c, 0x4d, 0x2d, 0x2e, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9,
-	0x17, 0x12, 0x2d, 0x49, 0xcd, 0x4b, 0x49, 0x2d, 0xca, 0xcd, 0xcc, 0x2b, 0xd1, 0x2b, 0x2e, 0xc8,
-	0xd3, 0x83, 0x28, 0x52, 0x8a, 0xe6, 0x62, 0x0f, 0x82, 0xa8, 0x13, 0x92, 0xe0, 0x62, 0x4f, 0x2e,
-	0x4a, 0x4d, 0x2c, 0xc9, 0x2f, 0x92, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x82, 0x71, 0xc1, 0x32,
-	0x19, 0x89, 0x99, 0x79, 0x9e, 0x2e, 0x12, 0x4c, 0x50, 0x19, 0x08, 0x57, 0x48, 0x86, 0x8b, 0x13,
-	0x6a, 0x8d, 0xa7, 0x8b, 0x04, 0xb3, 0x02, 0xa3, 0x06, 0x4b, 0x10, 0x42, 0xc0, 0xc9, 0xe9, 0xc4,
-	0x23, 0x39, 0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0xe1,
-	0xc2, 0x63, 0x39, 0x86, 0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0x34, 0xd2, 0x33, 0x4b, 0x32, 0x4a, 0x93,
-	0xf4, 0x92, 0xf3, 0x73, 0xf5, 0x11, 0x0e, 0xd3, 0x2f, 0x2e, 0xc8, 0xd3, 0xaf, 0xd0, 0x87, 0xba,
-	0xbf, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0xec, 0x7c, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff,
-	0xff, 0xcd, 0x9c, 0xac, 0x59, 0xd6, 0x00, 0x00, 0x00,
+	// 252 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x44, 0x90, 0x31, 0x4e, 0xc3, 0x30,
+	0x18, 0x85, 0x63, 0x5a, 0x88, 0x6a, 0xb6, 0xa8, 0x48, 0x06, 0x21, 0x2b, 0x62, 0xf2, 0x64, 0x4b,
+	0x70, 0x82, 0x56, 0x5d, 0xba, 0x7a, 0x64, 0x4b, 0x52, 0x93, 0x44, 0x6a, 0x7f, 0x07, 0xe7, 0x8f,
+	0x44, 0x6e, 0xc1, 0x35, 0xb8, 0x09, 0x63, 0x46, 0x46, 0x94, 0x5c, 0x04, 0x11, 0x27, 0xca, 0xe6,
+	0xff, 0xe9, 0x7d, 0xcf, 0x4f, 0x8f, 0x6e, 0xcf, 0x49, 0x03, 0x59, 0xa1, 0x9c, 0x79, 0x6f, 0x4c,
+	0x8d, 0xb2, 0x72, 0x16, 0x6d, 0x74, 0x87, 0x06, 0x4e, 0xc6, 0x5d, 0x4a, 0x40, 0x59, 0x57, 0x20,
+	0xbd, 0xe9, 0xe1, 0x3e, 0xb7, 0x36, 0x3f, 0x1b, 0x35, 0x9a, 0xd2, 0xe6, 0x4d, 0x25, 0xd0, 0x7a,
+	0xe2, 0xe9, 0x8b, 0xd0, 0x50, 0xfb, 0x8c, 0x88, 0xd1, 0x30, 0x2b, 0x92, 0x12, 0x8e, 0x07, 0x46,
+	0x62, 0x22, 0x36, 0x7a, 0x3e, 0xa3, 0x47, 0xba, 0x99, 0x3e, 0x3a, 0x1e, 0xd8, 0x55, 0x4c, 0xc4,
+	0x5a, 0x2f, 0xc2, 0xc8, 0x39, 0x93, 0xa0, 0x75, 0x6c, 0x35, 0x71, 0xfe, 0xfc, 0xe7, 0xc6, 0xa7,
+	0x39, 0xed, 0x90, 0xad, 0x63, 0x22, 0x56, 0x7a, 0x11, 0x22, 0x49, 0xc3, 0xcc, 0x02, 0x1a, 0x40,
+	0x76, 0x1d, 0x13, 0x71, 0xfb, 0xbc, 0x95, 0xbe, 0xa8, 0x9c, 0x8b, 0xca, 0x1d, 0xb4, 0x7a, 0x36,
+	0xed, 0xf7, 0xdf, 0x3d, 0x27, 0x5d, 0xcf, 0xc9, 0x6f, 0xcf, 0xc9, 0xe7, 0xc0, 0x83, 0x6e, 0xe0,
+	0xc1, 0xcf, 0xc0, 0x83, 0x57, 0x91, 0x97, 0x58, 0x34, 0xa9, 0xcc, 0xec, 0x45, 0x2d, 0x13, 0xa8,
+	0xba, 0x02, 0xf5, 0xa1, 0xa6, 0xa5, 0xb0, 0xad, 0x4c, 0x9d, 0xde, 0x8c, 0xd1, 0x2f, 0x7f, 0x01,
+	0x00, 0x00, 0xff, 0xff, 0x36, 0x32, 0x73, 0xdd, 0x40, 0x01, 0x00, 0x00,
 }
 
 func (m *Request) Marshal() (dAtA []byte, err error) {
@@ -124,22 +145,39 @@ func (m *Request) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.RequestID != 0 {
-		i = encodeVarintRequest(dAtA, i, uint64(m.RequestID))
+	if m.Content != nil {
+		{
+			size, err := m.Content.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintRequest(dAtA, i, uint64(size))
+		}
 		i--
-		dAtA[i] = 0x18
+		dAtA[i] = 0x2a
 	}
-	if len(m.ChainID) > 0 {
-		i -= len(m.ChainID)
-		copy(dAtA[i:], m.ChainID)
-		i = encodeVarintRequest(dAtA, i, uint64(len(m.ChainID)))
+	if m.CreatedAt != 0 {
+		i = encodeVarintRequest(dAtA, i, uint64(m.CreatedAt))
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x20
 	}
 	if len(m.Creator) > 0 {
 		i -= len(m.Creator)
 		copy(dAtA[i:], m.Creator)
 		i = encodeVarintRequest(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.RequestID != 0 {
+		i = encodeVarintRequest(dAtA, i, uint64(m.RequestID))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.ChainID) > 0 {
+		i -= len(m.ChainID)
+		copy(dAtA[i:], m.ChainID)
+		i = encodeVarintRequest(dAtA, i, uint64(len(m.ChainID)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -163,16 +201,23 @@ func (m *Request) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Creator)
-	if l > 0 {
-		n += 1 + l + sovRequest(uint64(l))
-	}
 	l = len(m.ChainID)
 	if l > 0 {
 		n += 1 + l + sovRequest(uint64(l))
 	}
 	if m.RequestID != 0 {
 		n += 1 + sovRequest(uint64(m.RequestID))
+	}
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovRequest(uint64(l))
+	}
+	if m.CreatedAt != 0 {
+		n += 1 + sovRequest(uint64(m.CreatedAt))
+	}
+	if m.Content != nil {
+		l = m.Content.Size()
+		n += 1 + l + sovRequest(uint64(l))
 	}
 	return n
 }
@@ -214,38 +259,6 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowRequest
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthRequest
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthRequest
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ChainID", wireType)
 			}
 			var stringLen uint64
@@ -276,7 +289,7 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 			}
 			m.ChainID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field RequestID", wireType)
 			}
@@ -295,6 +308,93 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRequest
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRequest
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthRequest
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
+			}
+			m.CreatedAt = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRequest
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CreatedAt |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Content", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRequest
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthRequest
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthRequest
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Content == nil {
+				m.Content = &types.Any{}
+			}
+			if err := m.Content.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipRequest(dAtA[iNdEx:])
