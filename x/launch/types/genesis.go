@@ -13,7 +13,8 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
-		ChainList: []*Chain{},
+		GenesisValidatorList: []*GenesisValidator{},
+		ChainList:            []*Chain{},
 	}
 }
 
@@ -23,6 +24,16 @@ func (gs GenesisState) Validate() error {
 	// this line is used by starport scaffolding # ibc/genesistype/validate
 
 	// this line is used by starport scaffolding # genesis/types/validate
+	// Check for duplicated index in genesisValidator
+	genesisValidatorIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.GenesisValidatorList {
+		index := string(GenesisValidatorKey(elem.ChainID, elem.Address))
+		if _, ok := genesisValidatorIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for genesisValidator")
+		}
+		genesisValidatorIndexMap[index] = struct{}{}
+	}
 	// Check for duplicated index in chain
 	chainIndexMap := make(map[string]struct{})
 
