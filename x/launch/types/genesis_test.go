@@ -2,11 +2,17 @@ package types_test
 
 import (
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 	"testing"
 )
 
 func TestGenesisState_Validate(t *testing.T) {
+	chainId1 := sample.SampleAlphaString(5)
+	chainId2 := sample.SampleAlphaString(5)
+	addr1 := sample.SampleAccAddress()
+	addr2 := sample.SampleAccAddress()
+
 	for _, tc := range []struct {
 		desc string
 		genState   *types.GenesisState
@@ -18,14 +24,46 @@ func TestGenesisState_Validate(t *testing.T) {
 			shouldBeValid: true,
 		},
 		{
+			desc: "valid genesis state",
+			genState: &types.GenesisState{
+				ChainList: []*types.Chain{
+					{
+						ChainID: chainId1,
+					},
+					{
+						ChainID: chainId2,
+					},
+				},
+				GenesisAccountList: []*types.GenesisAccount{
+					{
+						ChainID: chainId1,
+						Address: addr1,
+					},
+					{
+						ChainID: chainId1,
+						Address: addr2,
+					},
+					{
+						ChainID: chainId2,
+						Address: addr1,
+					},
+					{
+						ChainID: chainId2,
+						Address: addr2,
+					},
+				},
+			},
+			shouldBeValid: true,
+		},
+		{
 			desc: "duplicated chains",
 			genState: &types.GenesisState{
 				ChainList: []*types.Chain{
 					{
-						ChainID: "foo",
+						ChainID: chainId1,
 					},
 					{
-						ChainID: "foo",
+						ChainID: chainId1,
 					},
 				},
 			},
@@ -36,12 +74,12 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				GenesisAccountList: []*types.GenesisAccount{
 					{
-						ChainID: "foo",
-						Address: "bar",
+						ChainID: chainId1,
+						Address: addr1,
 					},
 					{
-						ChainID: "foo",
-						Address: "bar",
+						ChainID: chainId1,
+						Address: addr1,
 					},
 				},
 			},
@@ -52,13 +90,13 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				ChainList: []*types.Chain{
 					{
-						ChainID: "foo",
+						ChainID: chainId1,
 					},
 				},
 				GenesisAccountList: []*types.GenesisAccount{
 					{
-						ChainID: "foo",
-						Address: "bar",
+						ChainID: chainId1,
+						Address: addr1,
 					},
 				},
 			},
@@ -69,13 +107,13 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				ChainList: []*types.Chain{
 					{
-						ChainID: "foo",
+						ChainID: chainId1,
 					},
 				},
 				GenesisAccountList: []*types.GenesisAccount{
 					{
-						ChainID: "nonexistent",
-						Address: "bar",
+						ChainID: chainId2,
+						Address: addr1,
 					},
 				},
 			},

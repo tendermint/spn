@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
+	"github.com/tendermint/spn/testutil/sample"
 
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -15,7 +16,7 @@ func createNGenesisAccount(keeper *Keeper, ctx sdk.Context, n int) []types.Genes
 	for i := range items {
 		items[i].ChainID = strconv.Itoa(i)
 		items[i].Address = strconv.Itoa(i)
-		items[i].Coins = sdk.NewCoins()
+		items[i].Coins = sample.SampleCoins()
 
 		keeper.SetGenesisAccount(ctx, items[i])
 	}
