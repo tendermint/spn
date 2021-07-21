@@ -24,25 +24,47 @@ func (gs GenesisState) Validate() error {
 	// this line is used by starport scaffolding # ibc/genesistype/validate
 
 	// this line is used by starport scaffolding # genesis/types/validate
+	// Check for duplicated index in chain
+	chainIndexMap := make(map[string]struct{})
+	for _, elem := range gs.ChainList {
+		chainID := elem.ChainID
+		if _, ok := chainIndexMap[chainID]; ok {
+			return fmt.Errorf("duplicated index for chain")
+		}
+		chainIndexMap[chainID] = struct{}{}
+	}
+
+	// We checkout request counts to perform verification
+	requestCountMap := make(map[string]uint64)
+	for _, elem := range gs.RequestCountList {
+		requestCountMap[elem.ChainID] = elem.Count
+	}
+
 	// Check for duplicated index in request
 	requestIndexMap := make(map[string]struct{})
-
 	for _, elem := range gs.RequestList {
 		index := string(RequestKey(elem.ChainID, elem.RequestID))
 		if _, ok := requestIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for request")
 		}
 		requestIndexMap[index] = struct{}{}
-	}
-	// Check for duplicated index in chain
-	chainIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.ChainList {
-		index := string(ChainKey(elem.ChainID))
-		if _, ok := chainIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for chain")
+		// Each request pool must be associated with an existing chain
+		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+			return fmt.Errorf("a request pool is associated to a non-existing chain: %s",
+				elem.ChainID,
+			)
 		}
-		chainIndexMap[index] = struct{}{}
+
+		// Check the request count of the associated chain is not below the request ID
+		if elem.RequestID >= requestCountMap[elem.ChainID] {
+			return fmt.Errorf("chain %s contains a request with an ID above the request count: %v >= %v",
+				elem.ChainID,
+				elem.RequestID,
+				requestIndexMap[elem.ChainID],
+				requestCountMap,
+			)
+		}
 	}
 
 	return nil
