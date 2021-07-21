@@ -5,11 +5,11 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 
 import "gogoproto/gogo.proto";
 
-import "cosmos/coin.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 message GenesisAccount {
   string chainID = 1;
   string address = 2;
-  repeated cosmos.Coin Coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated cosmos.base.v1beta1.Coin Coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
