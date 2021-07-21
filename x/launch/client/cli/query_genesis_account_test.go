@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
@@ -15,6 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/client/cli"
 	"github.com/tendermint/spn/x/launch/types"
 )
