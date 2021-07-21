@@ -24,6 +24,10 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the account module's genesis state.
 type GenesisState struct {
+	// this line is used by starport scaffolding # genesis/proto/state
+	CoordinatorByAddressList []*CoordinatorByAddress `protobuf:"bytes,3,rep,name=coordinatorByAddressList,proto3" json:"coordinatorByAddressList,omitempty"`
+	CoordinatorList          []*Coordinator          `protobuf:"bytes,1,rep,name=coordinatorList,proto3" json:"coordinatorList,omitempty"`
+	CoordinatorCount         uint64                  `protobuf:"varint,2,opt,name=coordinatorCount,proto3" json:"coordinatorCount,omitempty"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -59,6 +63,27 @@ func (m *GenesisState) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GenesisState proto.InternalMessageInfo
 
+func (m *GenesisState) GetCoordinatorByAddressList() []*CoordinatorByAddress {
+	if m != nil {
+		return m.CoordinatorByAddressList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetCoordinatorList() []*Coordinator {
+	if m != nil {
+		return m.CoordinatorList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetCoordinatorCount() uint64 {
+	if m != nil {
+		return m.CoordinatorCount
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*GenesisState)(nil), "tendermint.spn.account.GenesisState")
 }
@@ -66,16 +91,22 @@ func init() {
 func init() { proto.RegisterFile("account/genesis.proto", fileDescriptor_6568e929f90e329c) }
 
 var fileDescriptor_6568e929f90e329c = []byte{
-	// 140 bytes of a gzipped FileDescriptorProto
+	// 233 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x4d, 0x4c, 0x4e, 0xce,
 	0x2f, 0xcd, 0x2b, 0xd1, 0x4f, 0x4f, 0xcd, 0x4b, 0x2d, 0xce, 0x2c, 0xd6, 0x2b, 0x28, 0xca, 0x2f,
 	0xc9, 0x17, 0x12, 0x2b, 0x49, 0xcd, 0x4b, 0x49, 0x2d, 0xca, 0xcd, 0xcc, 0x2b, 0xd1, 0x2b, 0x2e,
-	0xc8, 0xd3, 0x83, 0xaa, 0x52, 0xe2, 0xe3, 0xe2, 0x71, 0x87, 0x28, 0x0c, 0x2e, 0x49, 0x2c, 0x49,
-	0x75, 0x72, 0x3e, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39, 0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x27,
-	0x3c, 0x96, 0x63, 0xb8, 0xf0, 0x58, 0x8e, 0xe1, 0xc6, 0x63, 0x39, 0x86, 0x28, 0xcd, 0xf4, 0xcc,
-	0x92, 0x8c, 0xd2, 0x24, 0xbd, 0xe4, 0xfc, 0x5c, 0x7d, 0x84, 0x61, 0xfa, 0xc5, 0x05, 0x79, 0xfa,
-	0x15, 0xfa, 0x30, 0x4b, 0x4b, 0x2a, 0x0b, 0x52, 0x8b, 0x93, 0xd8, 0xc0, 0x76, 0x1a, 0x03, 0x02,
-	0x00, 0x00, 0xff, 0xff, 0x43, 0x87, 0xbf, 0x99, 0x8c, 0x00, 0x00, 0x00,
+	0xc8, 0xd3, 0x83, 0xaa, 0x92, 0x92, 0x84, 0x29, 0x4f, 0xce, 0xcf, 0x2f, 0x4a, 0xc9, 0xcc, 0x4b,
+	0x2c, 0xc9, 0x2f, 0x82, 0x68, 0x51, 0xfa, 0xcc, 0xc8, 0xc5, 0xe3, 0x0e, 0x31, 0x24, 0xb8, 0x24,
+	0xb1, 0x24, 0x55, 0x28, 0x83, 0x4b, 0x02, 0x49, 0x95, 0x53, 0xa5, 0x63, 0x4a, 0x4a, 0x51, 0x6a,
+	0x71, 0xb1, 0x4f, 0x66, 0x71, 0x89, 0x04, 0xb3, 0x02, 0xb3, 0x06, 0xb7, 0x91, 0x8e, 0x1e, 0x76,
+	0x6b, 0xf4, 0x9c, 0xb1, 0xe8, 0x0b, 0xc2, 0x69, 0x9a, 0x90, 0x2f, 0x17, 0x3f, 0x92, 0x1c, 0xd8,
+	0x02, 0x46, 0xb0, 0x05, 0xca, 0x44, 0x58, 0x10, 0x84, 0xae, 0x57, 0x48, 0x8b, 0x4b, 0x00, 0x49,
+	0xc8, 0x19, 0xa4, 0x41, 0x82, 0x49, 0x81, 0x51, 0x83, 0x25, 0x08, 0x43, 0xdc, 0xc9, 0xf9, 0xc4,
+	0x23, 0x39, 0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0xe1,
+	0xc2, 0x63, 0x39, 0x86, 0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0x34, 0xd3, 0x33, 0x4b, 0x32, 0x4a, 0x93,
+	0xf4, 0x92, 0xf3, 0x73, 0xf5, 0x11, 0xae, 0xd0, 0x2f, 0x2e, 0xc8, 0xd3, 0xaf, 0xd0, 0x87, 0x05,
+	0x63, 0x49, 0x65, 0x41, 0x6a, 0x71, 0x12, 0x1b, 0x38, 0x04, 0x8d, 0x01, 0x01, 0x00, 0x00, 0xff,
+	0xff, 0x84, 0xf0, 0x86, 0x04, 0x8d, 0x01, 0x00, 0x00,
 }
 
 func (m *GenesisState) Marshal() (dAtA []byte, err error) {
@@ -98,6 +129,39 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.CoordinatorByAddressList) > 0 {
+		for iNdEx := len(m.CoordinatorByAddressList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.CoordinatorByAddressList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if m.CoordinatorCount != 0 {
+		i = encodeVarintGenesis(dAtA, i, uint64(m.CoordinatorCount))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.CoordinatorList) > 0 {
+		for iNdEx := len(m.CoordinatorList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.CoordinatorList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -118,6 +182,21 @@ func (m *GenesisState) Size() (n int) {
 	}
 	var l int
 	_ = l
+	if len(m.CoordinatorList) > 0 {
+		for _, e := range m.CoordinatorList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if m.CoordinatorCount != 0 {
+		n += 1 + sovGenesis(uint64(m.CoordinatorCount))
+	}
+	if len(m.CoordinatorByAddressList) > 0 {
+		for _, e := range m.CoordinatorByAddressList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
 	return n
 }
 
@@ -156,6 +235,93 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: GenesisState: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CoordinatorList = append(m.CoordinatorList, &Coordinator{})
+			if err := m.CoordinatorList[len(m.CoordinatorList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorCount", wireType)
+			}
+			m.CoordinatorCount = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CoordinatorCount |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorByAddressList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CoordinatorByAddressList = append(m.CoordinatorByAddressList, &CoordinatorByAddress{})
+			if err := m.CoordinatorByAddressList[len(m.CoordinatorByAddressList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipGenesis(dAtA[iNdEx:])
