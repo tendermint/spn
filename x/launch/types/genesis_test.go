@@ -8,19 +8,19 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	chainId1 := sample.SampleAlphaString(5)
-	chainId2 := sample.SampleAlphaString(5)
-	addr1 := sample.SampleAccAddress()
-	addr2 := sample.SampleAccAddress()
+	chainId1 := sample.AlphaString(5)
+	chainId2 := sample.AlphaString(5)
+	addr1 := sample.AccAddress()
+	addr2 := sample.AccAddress()
 
 	for _, tc := range []struct {
-		desc string
-		genState   *types.GenesisState
+		desc          string
+		genState      *types.GenesisState
 		shouldBeValid bool
 	}{
 		{
-			desc: "default is valid",
-			genState: types.DefaultGenesis(),
+			desc:          "default is valid",
+			genState:      types.DefaultGenesis(),
 			shouldBeValid: true,
 		},
 		{

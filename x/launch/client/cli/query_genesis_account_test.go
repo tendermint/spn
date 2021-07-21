@@ -32,7 +32,7 @@ func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []
 		state.GenesisAccountList = append(state.GenesisAccountList, &types.GenesisAccount{
 			ChainID: strconv.Itoa(i),
 			Address: strconv.Itoa(i),
-			Coins:   sample.SampleCoins(),
+			Coins:   sample.Coins(),
 		})
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
