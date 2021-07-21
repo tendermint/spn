@@ -83,6 +83,7 @@ import (
 	"github.com/tendermint/spn/docs"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	accountmodule "github.com/tendermint/spn/x/account"
 	accountmodulekeeper "github.com/tendermint/spn/x/account/keeper"
