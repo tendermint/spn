@@ -7,6 +7,7 @@ var _ binary.ByteOrder
 const (
 	// RequestKeyPrefix is the prefix to retrieve all Request
 	RequestKeyPrefix = "Request/value/"
+	RequestCountKeyPrefix = "Request/count/"
 )
 
 // RequestKey returns the store key to retrieve a Request from the index fields
@@ -26,4 +27,9 @@ func RequestKey(
 	key = append(key, []byte("/")...)
 
 	return key
+}
+
+// RequestCountKey returns the store key to retrieve the count of request from a chain ID
+func RequestCountKey(chainID string) []byte {
+	return append([]byte(chainID), []byte("/")...)
 }
