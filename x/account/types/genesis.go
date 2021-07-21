@@ -30,27 +30,27 @@ func (gs GenesisState) Validate() error {
 	for _, elem := range gs.CoordinatorByAddressList {
 		index := string(CoordinatorByAddressKey(elem.Address))
 		if _, ok := coordinatorByAddressIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for coordinatorByAddress")
+			return fmt.Errorf("duplicated index for coordinatorByAddress: %s", elem.Address)
 		}
 		coordinatorByAddressIndexMap[index] = elem.CoordinatorId
 	}
 
 	// Check for duplicated ID in coordinator
-	coordinatorIdMap := make(map[uint64]bool)
+	coordinatorIDMap := make(map[uint64]bool)
 	for _, elem := range gs.CoordinatorList {
-		if _, ok := coordinatorIdMap[elem.CoordinatorId]; ok {
-			return fmt.Errorf("duplicated id for coordinator")
+		if _, ok := coordinatorIDMap[elem.CoordinatorId]; ok {
+			return fmt.Errorf("duplicated id for coordinator: %d", elem.CoordinatorId)
 		}
 
 		index := string(CoordinatorByAddressKey(elem.Address))
 		if _, ok := coordinatorByAddressIndexMap[index]; !ok {
 			return fmt.Errorf("coordinator address not found for CoordinatorByAddress: %s", elem.Address)
 		}
-		coordinatorIdMap[elem.CoordinatorId] = true
+		coordinatorIDMap[elem.CoordinatorId] = true
 		delete(coordinatorByAddressIndexMap, index)
 	}
-	for _, coordinatorId := range coordinatorByAddressIndexMap {
-		return fmt.Errorf("coordinator address not found for coordinatorId: %d", coordinatorId)
+	for _, coordinatorID := range coordinatorByAddressIndexMap {
+		return fmt.Errorf("coordinator address not found for coordinatorID: %d", coordinatorID)
 	}
 	return nil
 }
