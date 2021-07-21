@@ -21,7 +21,6 @@ func (k Keeper) GetGenesisAccount(
 	ctx sdk.Context,
 	chainID string,
 	address string,
-
 ) (val types.GenesisAccount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisAccountKeyPrefix))
 
