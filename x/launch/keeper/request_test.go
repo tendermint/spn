@@ -16,10 +16,8 @@ var _ = strconv.IntSize
 func createNRequest(keeper *Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
-		items[i].ChainID = strconv.Itoa(i)
-		items[i].RequestID = uint64(i)
-
-		keeper.SetRequest(ctx, items[i])
+		items[i].ChainID = "foo"
+		keeper.AppendRequest(ctx, items[i])
 	}
 	return items
 }
@@ -56,4 +54,12 @@ func TestRequestGetAll(t *testing.T) {
 	keeper, ctx := setupKeeper(t)
 	items := createNRequest(keeper, ctx, 10)
 	assert.Equal(t, items, keeper.GetAllRequest(ctx))
+}
+
+func TestRequestCount(t *testing.T) {
+	keeper, ctx := setupKeeper(t)
+	items := createNRequest(keeper, ctx, 10)
+	count := uint64(len(items))
+	assert.Equal(t, count, keeper.GetRequestCount(ctx, "foo"))
+	assert.Equal(t, uint64(0), keeper.GetRequestCount(ctx, "bar"))
 }
