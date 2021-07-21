@@ -13,4 +13,10 @@ message GenesisState {
 		repeated Request requestList = 2; // this line is used by starport scaffolding # genesis/proto/stateField
 		repeated Chain chainList = 1; // this line is used by starport scaffolding # genesis/proto/stateField
     // this line is used by starport scaffolding # ibc/genesis/proto
+		repeated RequestCount requestCountList = 3;
+}
+
+message RequestCount {
+		string chainID = 1;
+		uint64 count = 2;
 }

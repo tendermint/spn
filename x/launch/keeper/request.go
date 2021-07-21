@@ -34,6 +34,16 @@ func (k Keeper) SetRequestCount(ctx sdk.Context, chainID string, count uint64) {
 	store.Set(types.RequestCountKey(chainID), bz)
 }
 
+// SetRequest set a specific request in the store from its index
+func (k Keeper) SetRequest(ctx sdk.Context, request types.Request) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestKeyPrefix))
+	b := k.cdc.MustMarshalBinaryBare(&request)
+	store.Set(types.RequestKey(
+		request.ChainID,
+		request.RequestID,
+	), b)
+}
+
 // AppendRequest appends a request for a chain in the store with a new id and update the count
 func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestKeyPrefix))

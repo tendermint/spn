@@ -15,6 +15,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetRequest(ctx, *elem)
 	}
 
+	// Set all request count
+	for _, elem := range genState.RequestCountList {
+		k.SetRequestCount(ctx, elem.ChainID, elem.Count)
+	}
+
 	// Set all the chain
 	for _, elem := range genState.ChainList {
 		k.SetChain(ctx, *elem)
@@ -40,6 +45,13 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	for _, elem := range chainList {
 		elem := elem
 		genesis.ChainList = append(genesis.ChainList, &elem)
+
+		// Get request count
+		count := k.GetRequestCount(ctx, elem.ChainID)
+		genesis.RequestCountList = append(genesis.RequestCountList, &types.RequestCount{
+			ChainID: elem.ChainID,
+			Count: count,
+		})
 	}
 
 	// this line is used by starport scaffolding # ibc/genesis/export
