@@ -20,7 +20,8 @@ func (k Keeper) RequestAll(c context.Context, req *types.QueryAllRequestRequest)
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	requestStore := prefix.NewStore(store, types.KeyPrefix(types.RequestKeyPrefix))
+	keyPrefix := append(types.KeyPrefix(types.RequestKeyPrefix), types.RequestPoolKey(req.ChainID)...)
+	requestStore := prefix.NewStore(store, keyPrefix)
 
 	pageRes, err := query.Paginate(requestStore, req.Pagination, func(key []byte, value []byte) error {
 		var request types.Request

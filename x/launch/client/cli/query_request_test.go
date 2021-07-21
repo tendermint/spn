@@ -29,7 +29,7 @@ func networkWithRequestObjects(t *testing.T, n int) (*network.Network, []*types.
 
 	for i := 0; i < n; i++ {
 		state.RequestList = append(state.RequestList, &types.Request{
-			ChainID:   strconv.Itoa(i),
+			ChainID:   "foo",
 			RequestID: uint64(i),
 		})
 	}
@@ -99,8 +99,9 @@ func TestListRequest(t *testing.T) {
 	net, objs := networkWithRequestObjects(t, 5)
 
 	ctx := net.Validators[0].ClientCtx
-	request := func(next []byte, offset, limit uint64, total bool) []string {
+	request := func(chainID string, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
+			chainID,
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 		}
 		if next == nil {
@@ -117,7 +118,7 @@ func TestListRequest(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
-			args := request(nil, uint64(i), uint64(step), false)
+			args := request("foo", nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListRequest(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllRequestResponse
@@ -131,7 +132,7 @@ func TestListRequest(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
-			args := request(next, 0, uint64(step), false)
+			args := request("foo", next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListRequest(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllRequestResponse
@@ -143,7 +144,7 @@ func TestListRequest(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(objs)), true)
+		args := request("foo", nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListRequest(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllRequestResponse

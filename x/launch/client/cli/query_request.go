@@ -12,8 +12,9 @@ import (
 
 func CmdListRequest() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-request",
+		Use:   "list-request [chainID]",
 		Short: "list all request",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -24,7 +25,13 @@ func CmdListRequest() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
+			argsChainID, err := cast.ToStringE(args[0])
+			if err != nil {
+				return err
+			}
+
 			params := &types.QueryAllRequestRequest{
+				ChainID:   argsChainID,
 				Pagination: pageReq,
 			}
 
