@@ -89,7 +89,7 @@ import (
 	launchmodule "github.com/tendermint/spn/x/launch"
 	launchmodulekeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchmoduletypes "github.com/tendermint/spn/x/launch/types"
-	
+
 	profilemodule "github.com/tendermint/spn/x/profile"
 	profilemodulekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profilemoduletypes "github.com/tendermint/spn/x/profile/types"
