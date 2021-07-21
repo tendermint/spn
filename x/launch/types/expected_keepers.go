@@ -1,5 +1,5 @@
 package types
 
-type AccountKeeper interface {
-	// Methods imported from account should be defined here
+type ProfileKeeper interface {
+	// Methods imported from profile should be defined here
 }
