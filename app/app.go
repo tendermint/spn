@@ -85,12 +85,14 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-	profilemodule "github.com/tendermint/spn/x/profile"
-	profilemodulekeeper "github.com/tendermint/spn/x/profile/keeper"
-	profilemoduletypes "github.com/tendermint/spn/x/profile/types"
+
 	launchmodule "github.com/tendermint/spn/x/launch"
 	launchmodulekeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchmoduletypes "github.com/tendermint/spn/x/launch/types"
+	
+	profilemodule "github.com/tendermint/spn/x/profile"
+	profilemodulekeeper "github.com/tendermint/spn/x/profile/keeper"
+	profilemoduletypes "github.com/tendermint/spn/x/profile/types"
 
 	"github.com/tendermint/spm/cosmoscmd"
 )
@@ -214,7 +216,7 @@ type App struct {
 
 	LaunchKeeper launchmodulekeeper.Keeper
 
-	AccountKeeper profilemodulekeeper.Keeper
+	ProfileKeeper profilemodulekeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -346,19 +348,19 @@ func New(
 		&stakingKeeper, govRouter,
 	)
 
-	app.AccountKeeper = *profilemodulekeeper.NewKeeper(
+	app.ProfileKeeper = *profilemodulekeeper.NewKeeper(
 		appCodec,
 		keys[profilemoduletypes.StoreKey],
 		keys[profilemoduletypes.MemStoreKey],
 	)
-	accountModule := profilemodule.NewAppModule(appCodec, app.AccountKeeper)
+	profileModule := profilemodule.NewAppModule(appCodec, app.ProfileKeeper)
 
 	app.LaunchKeeper = *launchmodulekeeper.NewKeeper(
 		appCodec,
 		keys[launchmoduletypes.StoreKey],
 		keys[launchmoduletypes.MemStoreKey],
 
-		app.AccountKeeper,
+		app.ProfileKeeper,
 	)
 	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
 
@@ -401,7 +403,7 @@ func New(
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 		launchModule,
-		accountModule,
+		profileModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
