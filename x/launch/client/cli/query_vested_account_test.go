@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"fmt"
+	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
@@ -28,10 +29,10 @@ func networkWithVestedAccountObjects(t *testing.T, n int) (*network.Network, []*
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.VestedAccountList = append(state.VestedAccountList, &types.VestedAccount{
-			ChainID: strconv.Itoa(i),
-			Address: strconv.Itoa(i),
-		})
+		state.VestedAccountList = append(
+			state.VestedAccountList,
+			sample.VestedAccount(strconv.Itoa(i), strconv.Itoa(i)),
+		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)

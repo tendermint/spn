@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
@@ -16,9 +17,7 @@ var _ = strconv.IntSize
 func createNVestedAccount(keeper *Keeper, ctx sdk.Context, n int) []types.VestedAccount {
 	items := make([]types.VestedAccount, n)
 	for i := range items {
-		items[i].ChainID = strconv.Itoa(i)
-		items[i].Address = strconv.Itoa(i)
-
+		items[i] = *sample.VestedAccount(strconv.Itoa(i), strconv.Itoa(i))
 		keeper.SetVestedAccount(ctx, items[i])
 	}
 	return items
