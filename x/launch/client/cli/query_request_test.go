@@ -29,9 +29,11 @@ func networkWithRequestObjects(t *testing.T, n int) (*network.Network, []*types.
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
+		request := sample.Request("foo")
+		request.RequestID = uint64(i)
 		state.RequestList = append(
 			state.RequestList,
-			sample.Request("foo"),
+			request,
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
