@@ -5,7 +5,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -53,18 +52,9 @@ func CmdShowVestedAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsChainID, err := cast.ToStringE(args[0])
-			if err != nil {
-				return err
-			}
-			argsAddress, err := cast.ToStringE(args[1])
-			if err != nil {
-				return err
-			}
-
 			params := &types.QueryGetVestedAccountRequest{
-				ChainID: argsChainID,
-				Address: argsAddress,
+				ChainID: args[0],
+				Address: args[1],
 			}
 
 			res, err := queryClient.VestedAccount(context.Background(), params)
