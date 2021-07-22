@@ -35,7 +35,7 @@ func (gs GenesisState) Validate() error {
 		}
 		chainIndexMap[chainID] = struct{}{}
 	}
-	
+
 	// We checkout request counts to perform verification
 	requestCountMap := make(map[string]uint64)
 	for _, elem := range gs.RequestCountList {

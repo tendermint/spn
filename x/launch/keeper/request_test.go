@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
@@ -16,7 +17,7 @@ var _ = strconv.IntSize
 func createNRequest(keeper *Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
-		items[i].ChainID = "foo"
+		items[i] = *sample.Request("foo")
 		id := keeper.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
@@ -32,6 +33,10 @@ func TestRequestGet(t *testing.T) {
 			item.RequestID,
 		)
 		assert.True(t, found)
+
+		// Cached value is cleared when the any type is encoded into the store
+		item.Content.ClearCachedValue()
+
 		assert.Equal(t, item, rst)
 	}
 }
@@ -54,6 +59,12 @@ func TestRequestRemove(t *testing.T) {
 func TestRequestGetAll(t *testing.T) {
 	keeper, ctx := setupKeeper(t)
 	items := createNRequest(keeper, ctx, 10)
+
+	// Cached value is cleared when the any type is encoded into the store
+	for _, item := range items {
+		item.Content.ClearCachedValue()
+	}
+
 	assert.Equal(t, items, keeper.GetAllRequest(ctx))
 }
 

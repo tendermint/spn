@@ -62,6 +62,9 @@ func TestRequestQuerySingle(t *testing.T) {
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
+				// Cached value is cleared when the any type is encoded into the store
+				tc.response.Request.Content.ClearCachedValue()
+
 				require.Equal(t, tc.response, response)
 			}
 		})
