@@ -3,14 +3,17 @@ package keeper
 import (
 	"testing"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/account/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 func TestMsgUpdateCoordinatorDescription(t *testing.T) {
+	var (
+		addr1 = sample.AccAddress()
+	)
 	tests := []struct {
 		name string
 		msg  types.MsgUpdateCoordinatorDescription
@@ -18,29 +21,11 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
-			msg: types.MsgUpdateCoordinatorDescription{
-				Address: "invalid_address",
-				Description: &types.CoordinatorDescription{
-					Identity: "identity_invalid_address",
-					Website:  "website_invalid_address",
-					Details:  "details_invalid_address",
-				},
-			},
-			err: status.Error(codes.InvalidArgument,
-				"invalid coordinator address (invalid_address): decoding bech32 failed: invalid index of 1"),
-		}, {
 			name: "not found address",
 			msg: types.MsgUpdateCoordinatorDescription{
-				Address: "cosmos1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm",
-				Description: &types.CoordinatorDescription{
-					Identity: "identity_1",
-					Website:  "website_1",
-					Details:  "details_1",
-				},
+				Address: addr1,
 			},
-			err: status.Error(codes.NotFound,
-				"coordinator address not found: cosmos1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"),
+			err: sdkerrors.Wrap(types.ErrCoordAddressNotFound, addr1),
 		},
 		// TODO: valid tests cases
 	}

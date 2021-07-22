@@ -2,12 +2,10 @@ package keeper
 
 import (
 	"context"
-	"fmt"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/account/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 func (k msgServer) UpdateCoordinatorDescription(
@@ -16,20 +14,11 @@ func (k msgServer) UpdateCoordinatorDescription(
 ) (*types.MsgUpdateCoordinatorDescriptionResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Validate the coordinator address
-	_, err := sdk.AccAddressFromBech32(msg.Address)
-	if err != nil {
-		return &types.MsgUpdateCoordinatorDescriptionResponse{},
-			status.Error(codes.InvalidArgument,
-				fmt.Sprintf("invalid coordinator address (%s): %s", msg.Address, err.Error()))
-	}
-
 	// Check if the coordinator address is already in the store
 	coordByAddress, found := k.GetCoordinatorByAddress(ctx, msg.Address)
 	if !found {
 		return &types.MsgUpdateCoordinatorDescriptionResponse{},
-			status.Error(codes.NotFound,
-				fmt.Sprintf("coordinator address not found: %s", msg.Address))
+			sdkerrors.Wrap(types.ErrCoordAddressNotFound, msg.Address)
 	}
 
 	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
@@ -44,5 +33,7 @@ func (k msgServer) UpdateCoordinatorDescription(
 	}
 
 	k.SetCoordinator(ctx, coord)
-	return &types.MsgUpdateCoordinatorDescriptionResponse{}, nil
+	return &types.MsgUpdateCoordinatorDescriptionResponse{
+		CoordinatorId: coord.CoordinatorId,
+	}, nil
 }
