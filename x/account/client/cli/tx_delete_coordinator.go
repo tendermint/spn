@@ -16,7 +16,7 @@ func CmdDeleteCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-coordinator",
 		Short: "Broadcast message delete-coordinator",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
