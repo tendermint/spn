@@ -1,10 +1,11 @@
 package keeper
 
 import (
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/launch/types"
-	"strconv"
 )
 
 // GetRequestCount get the total number of request for a specific chain ID
