@@ -8,6 +8,6 @@ import (
 
 // x/account module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrCoordAddressNotFound = sdkerrors.Register(ModuleName, 2, "coordinator address not found")
 	// this line is used by starport scaffolding # ibc/errors
 )

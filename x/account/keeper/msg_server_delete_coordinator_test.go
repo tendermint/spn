@@ -3,32 +3,25 @@ package keeper
 import (
 	"testing"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/account/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 func TestMsgDeleteCoordinator(t *testing.T) {
+	var (
+		addr1 = sample.AccAddress()
+	)
 	tests := []struct {
 		name string
 		msg  types.MsgDeleteCoordinator
 		err  error
 	}{
 		{
-			name: "invalid address",
-			msg: types.MsgDeleteCoordinator{
-				Address: "invalid_address",
-			},
-			err: status.Error(codes.InvalidArgument,
-				"invalid coordinator address (invalid_address): decoding bech32 failed: invalid index of 1"),
-		}, {
 			name: "not found coordinator address",
-			msg: types.MsgDeleteCoordinator{
-				Address: "cosmos12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c",
-			},
-			err: status.Error(codes.NotFound,
-				"coordinator address not found: cosmos12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"),
+			msg:  types.MsgDeleteCoordinator{Address: addr1},
+			err:  sdkerrors.Wrap(types.ErrCoordAddressNotFound, addr1),
 		},
 		// TODO: Add more test cases.
 	}
