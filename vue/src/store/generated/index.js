@@ -13,7 +13,6 @@ import CosmosCosmosSdkIbcApplicationsTransferV1 from './cosmos/cosmos-sdk/ibc.ap
 import CosmosCosmosSdkIbcCoreChannelV1 from './cosmos/cosmos-sdk/ibc.core.channel.v1';
 import CosmosCosmosSdkIbcCoreClientV1 from './cosmos/cosmos-sdk/ibc.core.client.v1';
 import CosmosCosmosSdkIbcCoreConnectionV1 from './cosmos/cosmos-sdk/ibc.core.connection.v1';
-import TendermintSpnTendermintSpnAccount from './tendermint/spn/tendermint.spn.account';
 import TendermintSpnTendermintSpnProfile from './tendermint/spn/tendermint.spn.profile';
 export default {
     CosmosCosmosSdkCosmosBankV1Beta1: load(CosmosCosmosSdkCosmosBankV1Beta1, 'cosmos.bank.v1beta1'),
@@ -30,7 +29,6 @@ export default {
     CosmosCosmosSdkIbcCoreChannelV1: load(CosmosCosmosSdkIbcCoreChannelV1, 'ibc.core.channel.v1'),
     CosmosCosmosSdkIbcCoreClientV1: load(CosmosCosmosSdkIbcCoreClientV1, 'ibc.core.client.v1'),
     CosmosCosmosSdkIbcCoreConnectionV1: load(CosmosCosmosSdkIbcCoreConnectionV1, 'ibc.core.connection.v1'),
-    TendermintSpnTendermintSpnAccount: load(TendermintSpnTendermintSpnAccount, 'tendermint.spn.account'),
     TendermintSpnTendermintSpnProfile: load(TendermintSpnTendermintSpnProfile, 'tendermint.spn.profile'),
 };
 function load(mod, fullns) {
