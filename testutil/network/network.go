@@ -2,10 +2,12 @@ package network
 
 import (
 	"fmt"
+	launch "github.com/tendermint/spn/x/launch/types"
 	"testing"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -47,8 +49,15 @@ func New(t *testing.T, configs ...network.Config) *network.Network {
 // genesis and single validator. All other parameters are inherited from cosmos-sdk/testutil/network.DefaultConfig
 func DefaultConfig() network.Config {
 	encoding := cosmoscmd.MakeEncodingConfig(app.ModuleBasics)
+
+	encoding.InterfaceRegistry.RegisterInterface(
+		"tendermint.spn.launch.DelayedVesting",
+		(interface{})(nil),
+		&launch.DelayedVesting{},
+	)
+
 	return network.Config{
-		Codec:             encoding.Marshaler,
+		Codec:             codec.NewProtoCodec(encoding.InterfaceRegistry),
 		TxConfig:          encoding.TxConfig,
 		LegacyAmino:       encoding.Amino,
 		InterfaceRegistry: encoding.InterfaceRegistry,
