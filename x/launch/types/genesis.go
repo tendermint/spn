@@ -13,7 +13,8 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
-		RequestList: []*Request{},
+		RequestList:        []*Request{},
+		RequestCountList:   []*RequestCount{},
 		GenesisAccountList: []*GenesisAccount{},
 		ChainList:          []*Chain{},
 	}
@@ -59,12 +60,17 @@ func (gs GenesisState) Validate() error {
 		}
 
 		// Check the request count of the associated chain is not below the request ID
-		if elem.RequestID >= requestCountMap[elem.ChainID] {
+		requestCount, ok := requestCountMap[elem.ChainID]
+		if !ok {
+			return fmt.Errorf("chain %s has requests but no request count",
+				elem.ChainID,
+			)
+		}
+		if elem.RequestID >= requestCount {
 			return fmt.Errorf("chain %s contains a request with an ID above the request count: %v >= %v",
 				elem.ChainID,
 				elem.RequestID,
-				requestIndexMap[elem.ChainID],
-				requestCountMap,
+				requestCount,
 			)
 		}
 	}
