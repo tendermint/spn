@@ -8,6 +8,7 @@ import (
 
 // x/profile module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrCoordAlreadyExist    = sdkerrors.Register(ModuleName, 1, "coordinator address already exist")
+	ErrCoordAddressNotFound = sdkerrors.Register(ModuleName, 2, "coordinator address not found")
 	// this line is used by starport scaffolding # ibc/errors
 )
