@@ -3,9 +3,9 @@ package keeper
 import (
 	"context"
 	"fmt"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/account/types"
 )
 
