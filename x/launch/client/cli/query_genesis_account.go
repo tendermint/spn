@@ -9,10 +9,10 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func CmdListChain() *cobra.Command {
+func CmdListGenesisAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-chain",
-		Short: "list all chain",
+		Use:   "list-genesis-account",
+		Short: "list all genesisAccount",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -23,11 +23,11 @@ func CmdListChain() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllChainRequest{
+			params := &types.QueryAllGenesisAccountRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ChainAll(context.Background(), params)
+			res, err := queryClient.GenesisAccountAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -42,21 +42,22 @@ func CmdListChain() *cobra.Command {
 	return cmd
 }
 
-func CmdShowChain() *cobra.Command {
+func CmdShowGenesisAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-chain [chainID]",
-		Short: "shows a chain",
-		Args:  cobra.ExactArgs(1),
+		Use:   "show-genesis-account [chainID] [address]",
+		Short: "shows a genesisAccount",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryGetChainRequest{
+			params := &types.QueryGetGenesisAccountRequest{
 				ChainID: args[0],
+				Address: args[1],
 			}
 
-			res, err := queryClient.Chain(context.Background(), params)
+			res, err := queryClient.GenesisAccount(context.Background(), params)
 			if err != nil {
 				return err
 			}
