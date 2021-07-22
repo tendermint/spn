@@ -7,7 +7,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/x/launch/types"
+	"github.com/tendermint/spn/x/profile/types"
 	// this line is used by starport scaffolding # ibc/keeper/import
 )
 
@@ -18,7 +18,6 @@ type (
 		memKey   sdk.StoreKey
 		// this line is used by starport scaffolding # ibc/keeper/attribute
 
-		profileKeeper types.ProfileKeeper
 	}
 )
 
@@ -28,14 +27,13 @@ func NewKeeper(
 	memKey sdk.StoreKey,
 	// this line is used by starport scaffolding # ibc/keeper/parameter
 
-	profileKeeper types.ProfileKeeper,
 ) *Keeper {
 	return &Keeper{
 		cdc:      cdc,
 		storeKey: storeKey,
 		memKey:   memKey,
 		// this line is used by starport scaffolding # ibc/keeper/return
-		profileKeeper: profileKeeper,
+
 	}
 }
 
