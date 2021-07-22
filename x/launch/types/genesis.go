@@ -14,7 +14,8 @@ func DefaultGenesis() *GenesisState {
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
 		VestedAccountList: []*VestedAccount{},
-		ChainList:         []*Chain{},
+		GenesisAccountList: []*GenesisAccount{},
+		ChainList:          []*Chain{},
 	}
 }
 
@@ -34,6 +35,25 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for chain")
 		}
 		chainIndexMap[chainID] = struct{}{}
+	}
+
+	// Check for duplicated index in genesisAccount
+	genesisAccountIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.GenesisAccountList {
+		index := string(GenesisAccountKey(elem.ChainID, elem.Address))
+		if _, ok := genesisAccountIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for genesisAccount")
+		}
+		genesisAccountIndexMap[index] = struct{}{}
+
+		// Each genesis account must be associated with an existing chain
+		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+			return fmt.Errorf("account %s is associated to a non-existing chain: %s",
+				elem.Address,
+				elem.ChainID,
+			)
+		}
 	}
 
 	// Check for duplicated index in vestedAccount

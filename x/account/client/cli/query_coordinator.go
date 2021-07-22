@@ -2,17 +2,18 @@ package cli
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
-	"github.com/tendermint/spn/x/launch/types"
+	"github.com/tendermint/spn/x/account/types"
 )
 
-func CmdListChain() *cobra.Command {
+func CmdListCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-chain",
-		Short: "list all chain",
+		Use:   "list-coordinator",
+		Short: "list all coordinator",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -23,11 +24,11 @@ func CmdListChain() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllChainRequest{
+			params := &types.QueryAllCoordinatorRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ChainAll(context.Background(), params)
+			res, err := queryClient.CoordinatorAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -42,21 +43,26 @@ func CmdListChain() *cobra.Command {
 	return cmd
 }
 
-func CmdShowChain() *cobra.Command {
+func CmdShowCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-chain [chainID]",
-		Short: "shows a chain",
+		Use:   "show-coordinator [id]",
+		Short: "shows a coordinator",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryGetChainRequest{
-				ChainID: args[0],
+			id, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
 			}
 
-			res, err := queryClient.Chain(context.Background(), params)
+			params := &types.QueryGetCoordinatorRequest{
+				Id: id,
+			}
+
+			res, err := queryClient.Coordinator(context.Background(), params)
 			if err != nil {
 				return err
 			}
