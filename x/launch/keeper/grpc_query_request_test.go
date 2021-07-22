@@ -93,6 +93,9 @@ func TestRequestQueryPaginated(t *testing.T) {
 			resp, err := keeper.RequestAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
+				// Cached value is cleared when the any type is encoded into the store
+				msgs[j].Content.ClearCachedValue()
+
 				assert.Equal(t, &msgs[j], resp.Request[j-i])
 			}
 		}
