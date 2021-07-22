@@ -3,11 +3,10 @@ package keeper
 import (
 	"context"
 	"fmt"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/account/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 func (k msgServer) CreateCoordinator(
@@ -16,20 +15,12 @@ func (k msgServer) CreateCoordinator(
 ) (*types.MsgCreateCoordinatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Validate the coordinator address
-	_, err := sdk.AccAddressFromBech32(msg.Address)
-	if err != nil {
-		return &types.MsgCreateCoordinatorResponse{},
-			status.Error(codes.InvalidArgument,
-				fmt.Sprintf("invalid coordinator address (%s): %s", msg.Address, err.Error()))
-	}
-
 	// Check if the coordinator address is already in the store
 	coord, found := k.GetCoordinatorByAddress(ctx, msg.Address)
 	if found {
 		return &types.MsgCreateCoordinatorResponse{},
-			status.Error(codes.AlreadyExists,
-				fmt.Sprintf("coordinator address already exist: %d", coord.CoordinatorId))
+			sdkerrors.Wrap(types.ErrCoordAlreadyExist,
+				fmt.Sprintf("coordinatorId: %d", coord.CoordinatorId))
 	}
 
 	coordID := k.AppendCoordinator(ctx, types.Coordinator{

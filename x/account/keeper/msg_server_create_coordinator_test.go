@@ -1,13 +1,12 @@
 package keeper
 
 import (
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/account/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 func TestMsgCreateCoordinator(t *testing.T) {
@@ -18,18 +17,6 @@ func TestMsgCreateCoordinator(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
-			msg: types.MsgCreateCoordinator{
-				Address: "invalid_address",
-				Description: &types.CoordinatorDescription{
-					Identity: "identity_invalid_address",
-					Website:  "website_invalid_address",
-					Details:  "details_invalid_address",
-				},
-			},
-			err: status.Error(codes.InvalidArgument,
-				"invalid coordinator address (invalid_address): decoding bech32 failed: invalid index of 1"),
-		}, {
 			name: "valid coordinator 1",
 			msg: types.MsgCreateCoordinator{
 				Address: "cosmos1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm",
@@ -61,7 +48,7 @@ func TestMsgCreateCoordinator(t *testing.T) {
 					Details:  "details_2",
 				},
 			},
-			err: status.Error(codes.AlreadyExists, "coordinator address already exist: 1"),
+			err: sdkerrors.Wrap(types.ErrCoordAlreadyExist, "coordinatorId: 1"),
 		},
 	}
 	srv, ctx := setupMsgServer(t)
