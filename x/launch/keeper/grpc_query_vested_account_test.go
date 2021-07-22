@@ -62,6 +62,9 @@ func TestVestedAccountQuerySingle(t *testing.T) {
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
+				// Cached value is cleared when the any type is encoded into the store
+				tc.response.VestedAccount.VestingOptions.ClearCachedValue()
+
 				require.Equal(t, tc.response, response)
 			}
 		})
@@ -89,6 +92,9 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 			resp, err := keeper.VestedAccountAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
+				// Cached value is cleared when the any type is encoded into the store
+				msgs[j].VestingOptions.ClearCachedValue()
+				
 				assert.Equal(t, &msgs[j], resp.VestedAccount[j-i])
 			}
 		}

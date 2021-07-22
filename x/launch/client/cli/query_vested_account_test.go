@@ -91,7 +91,7 @@ func TestShowVestedAccount(t *testing.T) {
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.VestedAccount)
 
-				// Cached value is cleared when the type is stored
+				// Cached value is cleared when the any type is encoded into the store
 				tc.obj.VestingOptions.ClearCachedValue()
 
 				require.Equal(t, tc.obj, resp.VestedAccount)
