@@ -32,7 +32,7 @@ func networkWithRequestObjects(t *testing.T, n int) (*network.Network, []*types.
 		state.RequestList = append(
 			state.RequestList,
 			sample.Request("foo"),
-			)
+		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)

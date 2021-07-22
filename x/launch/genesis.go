@@ -64,7 +64,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		count := k.GetRequestCount(ctx, elem.ChainID)
 		genesis.RequestCountList = append(genesis.RequestCountList, &types.RequestCount{
 			ChainID: elem.ChainID,
-			Count: count,
+			Count:   count,
 		})
 	}
 

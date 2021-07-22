@@ -21,9 +21,9 @@ func Request(chainID string) *launch.Request {
 	}
 
 	return &launch.Request{
-		ChainID: chainID,
-		Creator: AccAddress(),
+		ChainID:   chainID,
+		Creator:   AccAddress(),
 		CreatedAt: time.Now().Unix(),
-		Content: content,
+		Content:   content,
 	}
 }

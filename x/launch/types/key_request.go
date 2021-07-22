@@ -6,7 +6,7 @@ var _ binary.ByteOrder
 
 const (
 	// RequestKeyPrefix is the prefix to retrieve all Request
-	RequestKeyPrefix = "Request/value/"
+	RequestKeyPrefix      = "Request/value/"
 	RequestCountKeyPrefix = "Request/count/"
 )
 

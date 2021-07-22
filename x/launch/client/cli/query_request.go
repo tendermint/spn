@@ -31,7 +31,7 @@ func CmdListRequest() *cobra.Command {
 			}
 
 			params := &types.QueryAllRequestRequest{
-				ChainID:   argsChainID,
+				ChainID:    argsChainID,
 				Pagination: pageReq,
 			}
 
