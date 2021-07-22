@@ -10,10 +10,22 @@ import (
 	"github.com/tendermint/spn/x/account/types"
 )
 
+func msgCreateCoordinator() types.MsgCreateCoordinator {
+	addr := sample.AccAddress()
+	return types.MsgCreateCoordinator{
+		Address: addr,
+		Description: &types.CoordinatorDescription{
+			Identity: addr,
+			Website:  "https://cosmos.network/" + addr,
+			Details:  addr + " details",
+		},
+	}
+}
+
 func TestMsgCreateCoordinator(t *testing.T) {
 	var (
-		addr1 = sample.AccAddress()
-		addr2 = sample.AccAddress()
+		msg1 = msgCreateCoordinator()
+		msg2 = msgCreateCoordinator()
 	)
 	tests := []struct {
 		name string
@@ -23,37 +35,16 @@ func TestMsgCreateCoordinator(t *testing.T) {
 	}{
 		{
 			name: "valid coordinator 1",
-			msg: types.MsgCreateCoordinator{
-				Address: addr1,
-				Description: &types.CoordinatorDescription{
-					Identity: "identity_1",
-					Website:  "website_1",
-					Details:  "details_1",
-				},
-			},
+			msg:  msg1,
 			want: 0,
 		}, {
 			name: "valid coordinator 2",
-			msg: types.MsgCreateCoordinator{
-				Address: addr2,
-				Description: &types.CoordinatorDescription{
-					Identity: "identity_2",
-					Website:  "website_2",
-					Details:  "details_2",
-				},
-			},
+			msg:  msg2,
 			want: 1,
 		}, {
 			name: "already exist address",
-			msg: types.MsgCreateCoordinator{
-				Address: addr2,
-				Description: &types.CoordinatorDescription{
-					Identity: "identity_2",
-					Website:  "website_2",
-					Details:  "details_2",
-				},
-			},
-			err: sdkerrors.Wrap(types.ErrCoordAlreadyExist, "coordinatorId: 1"),
+			msg:  msg2,
+			err:  sdkerrors.Wrap(types.ErrCoordAlreadyExist, "coordinatorId: 1"),
 		},
 	}
 	srv, ctx := setupMsgServer(t)
