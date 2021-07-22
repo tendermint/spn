@@ -5,6 +5,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
 import "launch/request.proto";
+import "launch/genesis_account.proto";
 import "launch/chain.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
@@ -23,6 +24,15 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}";
 	}
 
+	// Queries a genesisAccount by index.
+	rpc GenesisAccount(QueryGetGenesisAccountRequest) returns (QueryGetGenesisAccountResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/genesisAccount/{chainID}/{address}";
+	}
+
+	// Queries a list of genesisAccount items.
+	rpc GenesisAccountAll(QueryAllGenesisAccountRequest) returns (QueryAllGenesisAccountResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/genesisAccount";
+	}
 
 	// Queries a chain by index.
 	rpc Chain(QueryGetChainRequest) returns (QueryGetChainResponse) {
@@ -38,8 +48,8 @@ service Query {
 
 // this line is used by starport scaffolding # 3
 message QueryGetRequestRequest {
-	  string chainID = 1;
-	  uint64 requestID = 2;
+	string chainID = 1;
+	uint64 requestID = 2;
 }
 
 message QueryGetRequestResponse {
@@ -55,8 +65,27 @@ message QueryAllRequestResponse {
 	repeated Request request = 1;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
-message QueryGetChainRequest {
+
+message QueryGetGenesisAccountRequest {
 	  string chainID = 1;
+  string address = 2;
+}
+
+message QueryGetGenesisAccountResponse {
+	GenesisAccount genesisAccount = 1;
+}
+
+message QueryAllGenesisAccountRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllGenesisAccountResponse {
+	repeated GenesisAccount genesisAccount = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetChainRequest {
+	string chainID = 1;
 }
 
 message QueryGetChainResponse {

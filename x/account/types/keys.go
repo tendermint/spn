@@ -24,3 +24,8 @@ const (
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
+
+const (
+	CoordinatorKey      = "Coordinator-value-"
+	CoordinatorCountKey = "Coordinator-count-"
+)

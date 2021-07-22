@@ -10,6 +10,7 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// this line is used by starport scaffolding # genesis/module/init
+
 	// Set all the request
 	for _, elem := range genState.RequestList {
 		k.SetRequest(ctx, *elem)
@@ -18,6 +19,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// Set all request count
 	for _, elem := range genState.RequestCountList {
 		k.SetRequestCount(ctx, elem.ChainID, elem.Count)
+	}
+
+	// Set all the genesisAccount
+	for _, elem := range genState.GenesisAccountList {
+		k.SetGenesisAccount(ctx, *elem)
 	}
 
 	// Set all the chain
@@ -33,11 +39,19 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
 	// this line is used by starport scaffolding # genesis/module/export
+
 	// Get all request
 	requestList := k.GetAllRequest(ctx)
 	for _, elem := range requestList {
 		elem := elem
 		genesis.RequestList = append(genesis.RequestList, &elem)
+	}
+
+	// Get all genesisAccount
+	genesisAccountList := k.GetAllGenesisAccount(ctx)
+	for _, elem := range genesisAccountList {
+		elem := elem
+		genesis.GenesisAccountList = append(genesis.GenesisAccountList, &elem)
 	}
 
 	// Get all chain
