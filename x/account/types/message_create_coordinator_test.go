@@ -5,6 +5,7 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
 )
 
 func TestMsgCreateCoordinator_ValidateBasic(t *testing.T) {
@@ -20,8 +21,12 @@ func TestMsgCreateCoordinator_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress,
 				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
+		}, {
+			name: "valid address",
+			msg: MsgCreateCoordinator{
+				Address: sample.AccAddress(),
+			},
 		},
-		// TODO add valid test cases
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

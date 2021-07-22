@@ -1,15 +1,20 @@
 package keeper
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"testing"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/account/types"
 )
 
 func TestMsgCreateCoordinator(t *testing.T) {
+	var (
+		addr1 = sample.AccAddress()
+		addr2 = sample.AccAddress()
+	)
 	tests := []struct {
 		name string
 		msg  types.MsgCreateCoordinator
@@ -19,7 +24,7 @@ func TestMsgCreateCoordinator(t *testing.T) {
 		{
 			name: "valid coordinator 1",
 			msg: types.MsgCreateCoordinator{
-				Address: "cosmos1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm",
+				Address: addr1,
 				Description: &types.CoordinatorDescription{
 					Identity: "identity_1",
 					Website:  "website_1",
@@ -30,7 +35,7 @@ func TestMsgCreateCoordinator(t *testing.T) {
 		}, {
 			name: "valid coordinator 2",
 			msg: types.MsgCreateCoordinator{
-				Address: "cosmos12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c",
+				Address: addr2,
 				Description: &types.CoordinatorDescription{
 					Identity: "identity_2",
 					Website:  "website_2",
@@ -41,7 +46,7 @@ func TestMsgCreateCoordinator(t *testing.T) {
 		}, {
 			name: "already exist address",
 			msg: types.MsgCreateCoordinator{
-				Address: "cosmos12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c",
+				Address: addr2,
 				Description: &types.CoordinatorDescription{
 					Identity: "identity_2",
 					Website:  "website_2",
