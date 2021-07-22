@@ -12,6 +12,8 @@ message ValidatorByAddress {
 
 message ValidatorDescription {
   string identity = 1;
-  string website = 2;
-  string details = 3;
+  string moniker = 2;
+  string website = 3;
+  string securityContact = 4;
+  string details = 5;
 }
