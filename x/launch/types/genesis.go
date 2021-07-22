@@ -40,7 +40,17 @@ func (gs GenesisState) Validate() error {
 	// We checkout request counts to perform verification
 	requestCountMap := make(map[string]uint64)
 	for _, elem := range gs.RequestCountList {
+		if _, ok := requestCountMap[elem.ChainID]; ok {
+			return fmt.Errorf("duplicated request count")
+		}
 		requestCountMap[elem.ChainID] = elem.Count
+
+		// Each genesis account must be associated with an existing chain
+		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+			return fmt.Errorf("request count to a non-existing chain: %s",
+				elem.ChainID,
+			)
+		}
 	}
 
 	// Check for duplicated index in request
