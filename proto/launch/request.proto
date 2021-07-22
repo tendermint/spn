@@ -2,6 +2,7 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 import "google/protobuf/any.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -10,6 +11,6 @@ message Request {
   uint64 requestID = 2;
   string creator = 3;
   int64 createdAt = 4;
-  google.protobuf.Any content = 5;
+  google.protobuf.Any content = 5 [(cosmos_proto.accepts_interface) = "RequestContent"];
 }
 
