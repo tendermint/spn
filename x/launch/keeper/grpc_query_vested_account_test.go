@@ -94,7 +94,7 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 			for j := i; j < len(msgs) && j < i+step; j++ {
 				// Cached value is cleared when the any type is encoded into the store
 				msgs[j].VestingOptions.ClearCachedValue()
-				
+
 				assert.Equal(t, &msgs[j], resp.VestedAccount[j-i])
 			}
 		}
