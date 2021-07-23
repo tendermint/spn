@@ -1,8 +1,10 @@
 package keeper
 
 import (
-	"fmt"
+	"strconv"
 	"testing"
+
+	"github.com/tendermint/spn/testutil/sample"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
@@ -12,7 +14,7 @@ import (
 func createNChain(keeper *Keeper, ctx sdk.Context, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
-		items[i].ChainID = fmt.Sprintf("%d", i)
+		items[i] = *sample.Chain(strconv.Itoa(i), uint64(i))
 		keeper.SetChain(ctx, items[i])
 	}
 	return items
@@ -24,6 +26,10 @@ func TestGetChain(t *testing.T) {
 	for _, item := range items {
 		rst, found := keeper.GetChain(ctx, item.ChainID)
 		assert.True(t, found)
+
+		// Cached value is cleared when the any type is encoded into the store
+		item.InitialGenesis.ClearCachedValue()
+
 		assert.Equal(t, item, rst)
 	}
 }
@@ -41,5 +47,11 @@ func TestRemoveChain(t *testing.T) {
 func TestGetAllChain(t *testing.T) {
 	keeper, ctx := setupKeeper(t)
 	items := createNChain(keeper, ctx, 10)
+
+	// Cached value is cleared when the any type is encoded into the store
+	for _, item := range items {
+		item.InitialGenesis.ClearCachedValue()
+	}
+
 	assert.Equal(t, items, keeper.GetAllChain(ctx))
 }

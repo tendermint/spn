@@ -1,0 +1,12 @@
+import { Coordinator } from "./module/types/profile/coordinator";
+import { CoordinatorDescription } from "./module/types/profile/coordinator";
+import { CoordinatorByAddress } from "./module/types/profile/coordinator";
+import { QueryAllCoordinatorByAddressRequest } from "./module/types/profile/query";
+import { QueryAllCoordinatorByAddressResponse } from "./module/types/profile/query";
+import { ValidatorByAddress } from "./module/types/profile/validator";
+import { ValidatorDescription } from "./module/types/profile/validator";
+import { ValidatorByConsAddress } from "./module/types/profile/validator";
+import { ConsensusKeyNonce } from "./module/types/profile/validator";
+export { Coordinator, CoordinatorDescription, CoordinatorByAddress, QueryAllCoordinatorByAddressRequest, QueryAllCoordinatorByAddressResponse, ValidatorByAddress, ValidatorDescription, ValidatorByConsAddress, ConsensusKeyNonce };
+declare const _default;
+export default _default;

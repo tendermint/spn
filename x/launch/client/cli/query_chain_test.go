@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/tendermint/spn/testutil/sample"
+
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/assert"
@@ -24,7 +26,12 @@ func networkWithFooObjects(t *testing.T, n int) (*network.Network, []*types.Chai
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.ChainList = append(state.ChainList, &types.Chain{ChainID: strconv.Itoa(i)})
+		chain := sample.Chain(strconv.Itoa(i), uint64(i))
+		chain.InitialGenesis.Value = []byte{}
+		state.ChainList = append(
+			state.ChainList,
+			chain,
+		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
@@ -73,6 +80,10 @@ func TestShowChain(t *testing.T) {
 				var resp types.QueryGetChainResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.Chain)
+
+				// Cached value is cleared when the any type is encoded into the store
+				tc.obj.InitialGenesis.ClearCachedValue()
+
 				require.Equal(t, tc.obj, resp.Chain)
 			}
 		})
@@ -107,6 +118,9 @@ func TestListFoo(t *testing.T) {
 			var resp types.QueryAllChainResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
+				// Cached value is cleared when the any type is encoded into the store
+				objs[j].InitialGenesis.ClearCachedValue()
+
 				assert.Equal(t, objs[j], resp.Chain[j-i])
 			}
 		}
@@ -121,6 +135,9 @@ func TestListFoo(t *testing.T) {
 			var resp types.QueryAllChainResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
+				// Cached value is cleared when the any type is encoded into the store
+				objs[j].InitialGenesis.ClearCachedValue()
+
 				assert.Equal(t, objs[j], resp.Chain[j-i])
 			}
 			next = resp.Pagination.NextKey
@@ -134,6 +151,12 @@ func TestListFoo(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
+
+		// Cached value is cleared when the any type is encoded into the store
+		for _, obj := range objs {
+			obj.InitialGenesis.ClearCachedValue()
+		}
+
 		require.Equal(t, objs, resp.Chain)
 	})
 }
