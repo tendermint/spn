@@ -13,6 +13,7 @@ func CmdListVestedAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-vested-account",
 		Short: "list all vestedAccount",
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
