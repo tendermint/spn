@@ -21767,10 +21767,10 @@ paths:
           format: uint64
       tags:
         - Query
-  /tendermint/spn/account/coordinator:
+  /tendermint/spn/profile/coordinator:
     get:
       summary: Queries a list of coordinator items.
-      operationId: TendermintSpnAccountCoordinatorAll
+      operationId: TendermintSpnProfileCoordinatorAll
       responses:
         '200':
           description: A successful response.
@@ -21892,10 +21892,10 @@ paths:
           type: boolean
       tags:
         - Query
-  '/tendermint/spn/account/coordinator/{id}':
+  '/tendermint/spn/profile/coordinator/{id}':
     get:
       summary: Queries a coordinator by id.
-      operationId: TendermintSpnAccountCoordinator
+      operationId: TendermintSpnProfileCoordinator
       responses:
         '200':
           description: A successful response.
@@ -21947,10 +21947,10 @@ paths:
           format: uint64
       tags:
         - Query
-  '/tendermint/spn/account/coordinatorByAddress/{address}':
+  '/tendermint/spn/profile/coordinatorByAddress/{address}':
     get:
       summary: Queries a coordinatorByAddress by index.
-      operationId: TendermintSpnAccountCoordinatorByAddress
+      operationId: TendermintSpnProfileCoordinatorByAddress
       responses:
         '200':
           description: A successful response.
@@ -33115,7 +33115,7 @@ definitions:
     description: |-
       Version defines the versioning scheme used to negotiate the IBC verison in
       the connection handshake.
-  tendermint.spn.account.Coordinator:
+  tendermint.spn.profile.Coordinator:
     type: object
     properties:
       coordinatorId:
@@ -33132,7 +33132,7 @@ definitions:
             type: string
           details:
             type: string
-  tendermint.spn.account.CoordinatorByAddress:
+  tendermint.spn.profile.CoordinatorByAddress:
     type: object
     properties:
       address:
@@ -33140,7 +33140,7 @@ definitions:
       coordinatorId:
         type: string
         format: uint64
-  tendermint.spn.account.CoordinatorDescription:
+  tendermint.spn.profile.CoordinatorDescription:
     type: object
     properties:
       identity:
@@ -33149,13 +33149,13 @@ definitions:
         type: string
       details:
         type: string
-  tendermint.spn.account.MsgUpdateCoordinatorDescriptionResponse:
+  tendermint.spn.profile.MsgUpdateCoordinatorDescriptionResponse:
     type: object
     properties:
       coordinatorId:
         type: string
         format: uint64
-  tendermint.spn.account.QueryAllCoordinatorResponse:
+  tendermint.spn.profile.QueryAllCoordinatorResponse:
     type: object
     properties:
       Coordinator:
@@ -33202,7 +33202,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
-  tendermint.spn.account.QueryGetCoordinatorByAddressResponse:
+  tendermint.spn.profile.QueryGetCoordinatorByAddressResponse:
     type: object
     properties:
       coordinatorByAddress:
@@ -33213,7 +33213,7 @@ definitions:
           coordinatorId:
             type: string
             format: uint64
-  tendermint.spn.account.QueryGetCoordinatorResponse:
+  tendermint.spn.profile.QueryGetCoordinatorResponse:
     type: object
     properties:
       Coordinator:

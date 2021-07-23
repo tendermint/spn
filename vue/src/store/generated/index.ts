@@ -15,6 +15,7 @@ import CosmosCosmosSdkIbcCoreChannelV1 from './cosmos/cosmos-sdk/ibc.core.channe
 import CosmosCosmosSdkIbcCoreClientV1 from './cosmos/cosmos-sdk/ibc.core.client.v1'
 import CosmosCosmosSdkIbcCoreConnectionV1 from './cosmos/cosmos-sdk/ibc.core.connection.v1'
 import TendermintSpnTendermintSpnAccount from './tendermint/spn/tendermint.spn.account'
+import TendermintSpnTendermintSpnProfile from './tendermint/spn/tendermint.spn.profile'
 
 
 export default { 
@@ -33,6 +34,7 @@ export default {
   CosmosCosmosSdkIbcCoreClientV1: load(CosmosCosmosSdkIbcCoreClientV1, 'ibc.core.client.v1'),
   CosmosCosmosSdkIbcCoreConnectionV1: load(CosmosCosmosSdkIbcCoreConnectionV1, 'ibc.core.connection.v1'),
   TendermintSpnTendermintSpnAccount: load(TendermintSpnTendermintSpnAccount, 'tendermint.spn.account'),
+  TendermintSpnTendermintSpnProfile: load(TendermintSpnTendermintSpnProfile, 'tendermint.spn.profile'),
   
 }
 
