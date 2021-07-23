@@ -1,9 +1,239 @@
 /* eslint-disable */
 import { Reader, Writer } from 'protobufjs/minimal';
-import { GenesisAccount } from '../launch/genesis_account';
+import { ChainNameCount } from '../launch/chain_name_count';
 import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
+import { GenesisAccount } from '../launch/genesis_account';
 import { Chain } from '../launch/chain';
 export const protobufPackage = 'tendermint.spn.launch';
+const baseQueryGetChainNameCountRequest = { chainName: '' };
+export const QueryGetChainNameCountRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.chainName !== '') {
+            writer.uint32(10).string(message.chainName);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetChainNameCountRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.chainName = reader.string();
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetChainNameCountRequest };
+        if (object.chainName !== undefined && object.chainName !== null) {
+            message.chainName = String(object.chainName);
+        }
+        else {
+            message.chainName = '';
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.chainName !== undefined && (obj.chainName = message.chainName);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetChainNameCountRequest };
+        if (object.chainName !== undefined && object.chainName !== null) {
+            message.chainName = object.chainName;
+        }
+        else {
+            message.chainName = '';
+        }
+        return message;
+    }
+};
+const baseQueryGetChainNameCountResponse = {};
+export const QueryGetChainNameCountResponse = {
+    encode(message, writer = Writer.create()) {
+        if (message.chainNameCount !== undefined) {
+            ChainNameCount.encode(message.chainNameCount, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryGetChainNameCountResponse };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.chainNameCount = ChainNameCount.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryGetChainNameCountResponse };
+        if (object.chainNameCount !== undefined && object.chainNameCount !== null) {
+            message.chainNameCount = ChainNameCount.fromJSON(object.chainNameCount);
+        }
+        else {
+            message.chainNameCount = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.chainNameCount !== undefined && (obj.chainNameCount = message.chainNameCount ? ChainNameCount.toJSON(message.chainNameCount) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryGetChainNameCountResponse };
+        if (object.chainNameCount !== undefined && object.chainNameCount !== null) {
+            message.chainNameCount = ChainNameCount.fromPartial(object.chainNameCount);
+        }
+        else {
+            message.chainNameCount = undefined;
+        }
+        return message;
+    }
+};
+const baseQueryAllChainNameCountRequest = {};
+export const QueryAllChainNameCountRequest = {
+    encode(message, writer = Writer.create()) {
+        if (message.pagination !== undefined) {
+            PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllChainNameCountRequest };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.pagination = PageRequest.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllChainNameCountRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllChainNameCountRequest };
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageRequest.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    }
+};
+const baseQueryAllChainNameCountResponse = {};
+export const QueryAllChainNameCountResponse = {
+    encode(message, writer = Writer.create()) {
+        for (const v of message.chainNameCount) {
+            ChainNameCount.encode(v, writer.uint32(10).fork()).ldelim();
+        }
+        if (message.pagination !== undefined) {
+            PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseQueryAllChainNameCountResponse };
+        message.chainNameCount = [];
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.chainNameCount.push(ChainNameCount.decode(reader, reader.uint32()));
+                    break;
+                case 2:
+                    message.pagination = PageResponse.decode(reader, reader.uint32());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseQueryAllChainNameCountResponse };
+        message.chainNameCount = [];
+        if (object.chainNameCount !== undefined && object.chainNameCount !== null) {
+            for (const e of object.chainNameCount) {
+                message.chainNameCount.push(ChainNameCount.fromJSON(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromJSON(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.chainNameCount) {
+            obj.chainNameCount = message.chainNameCount.map((e) => (e ? ChainNameCount.toJSON(e) : undefined));
+        }
+        else {
+            obj.chainNameCount = [];
+        }
+        message.pagination !== undefined && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseQueryAllChainNameCountResponse };
+        message.chainNameCount = [];
+        if (object.chainNameCount !== undefined && object.chainNameCount !== null) {
+            for (const e of object.chainNameCount) {
+                message.chainNameCount.push(ChainNameCount.fromPartial(e));
+            }
+        }
+        if (object.pagination !== undefined && object.pagination !== null) {
+            message.pagination = PageResponse.fromPartial(object.pagination);
+        }
+        else {
+            message.pagination = undefined;
+        }
+        return message;
+    }
+};
 const baseQueryGetGenesisAccountRequest = { chainID: '', address: '' };
 export const QueryGetGenesisAccountRequest = {
     encode(message, writer = Writer.create()) {
@@ -484,6 +714,16 @@ export const QueryAllChainResponse = {
 export class QueryClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
+    }
+    ChainNameCount(request) {
+        const data = QueryGetChainNameCountRequest.encode(request).finish();
+        const promise = this.rpc.request('tendermint.spn.launch.Query', 'ChainNameCount', data);
+        return promise.then((data) => QueryGetChainNameCountResponse.decode(new Reader(data)));
+    }
+    ChainNameCountAll(request) {
+        const data = QueryAllChainNameCountRequest.encode(request).finish();
+        const promise = this.rpc.request('tendermint.spn.launch.Query', 'ChainNameCountAll', data);
+        return promise.then((data) => QueryAllChainNameCountResponse.decode(new Reader(data)));
     }
     GenesisAccount(request) {
         const data = QueryGetGenesisAccountRequest.encode(request).finish();

@@ -1,3 +1,4 @@
+import { ChainNameCount } from '../launch/chain_name_count';
 import { GenesisAccount } from '../launch/genesis_account';
 import { Chain } from '../launch/chain';
 import { Writer, Reader } from 'protobufjs/minimal';
@@ -5,6 +6,8 @@ export declare const protobufPackage = "tendermint.spn.launch";
 /** GenesisState defines the launch module's genesis state. */
 export interface GenesisState {
     /** this line is used by starport scaffolding # genesis/proto/state */
+    chainNameCountList: ChainNameCount[];
+    /** this line is used by starport scaffolding # genesis/proto/stateField */
     genesisAccountList: GenesisAccount[];
     /** this line is used by starport scaffolding # genesis/proto/stateField */
     chainList: Chain[];

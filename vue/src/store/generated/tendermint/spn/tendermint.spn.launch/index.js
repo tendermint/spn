@@ -4,8 +4,9 @@ import { SpVuexError } from '@starport/vuex';
 import { Chain } from "./module/types/launch/chain";
 import { DefaultInitialGenesis } from "./module/types/launch/chain";
 import { GenesisURL } from "./module/types/launch/chain";
+import { ChainNameCount } from "./module/types/launch/chain_name_count";
 import { GenesisAccount } from "./module/types/launch/genesis_account";
-export { Chain, DefaultInitialGenesis, GenesisURL, GenesisAccount };
+export { Chain, DefaultInitialGenesis, GenesisURL, ChainNameCount, GenesisAccount };
 async function initTxClient(vuexGetters) {
     return await txClient(vuexGetters['common/wallet/signer'], {
         addr: vuexGetters['common/env/apiTendermint']
@@ -39,6 +40,8 @@ function getStructure(template) {
 }
 const getDefaultState = () => {
     return {
+        ChainNameCount: {},
+        ChainNameCountAll: {},
         GenesisAccount: {},
         GenesisAccountAll: {},
         Chain: {},
@@ -47,6 +50,7 @@ const getDefaultState = () => {
             Chain: getStructure(Chain.fromPartial({})),
             DefaultInitialGenesis: getStructure(DefaultInitialGenesis.fromPartial({})),
             GenesisURL: getStructure(GenesisURL.fromPartial({})),
+            ChainNameCount: getStructure(ChainNameCount.fromPartial({})),
             GenesisAccount: getStructure(GenesisAccount.fromPartial({})),
         },
         _Subscriptions: new Set(),
@@ -72,6 +76,18 @@ export default {
         }
     },
     getters: {
+        getChainNameCount: (state) => (params = { params: {} }) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.ChainNameCount[JSON.stringify(params)] ?? {};
+        },
+        getChainNameCountAll: (state) => (params = { params: {} }) => {
+            if (!params.query) {
+                params.query = null;
+            }
+            return state.ChainNameCountAll[JSON.stringify(params)] ?? {};
+        },
         getGenesisAccount: (state) => (params = { params: {} }) => {
             if (!params.query) {
                 params.query = null;
@@ -124,6 +140,36 @@ export default {
                     throw new SpVuexError('Subscriptions: ' + e.message);
                 }
             });
+        },
+        async QueryChainNameCount({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params: { ...key }, query = null }) {
+            try {
+                const queryClient = await initQueryClient(rootGetters);
+                let value = (await queryClient.queryChainNameCount(key.chainName)).data;
+                commit('QUERY', { query: 'ChainNameCount', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryChainNameCount', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getChainNameCount']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                throw new SpVuexError('QueryClient:QueryChainNameCount', 'API Node Unavailable. Could not perform query: ' + e.message);
+            }
+        },
+        async QueryChainNameCountAll({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params: { ...key }, query = null }) {
+            try {
+                const queryClient = await initQueryClient(rootGetters);
+                let value = (await queryClient.queryChainNameCountAll(query)).data;
+                while (all && value.pagination && value.pagination.nextKey != null) {
+                    let next_values = (await queryClient.queryChainNameCountAll({ ...query, 'pagination.key': value.pagination.nextKey })).data;
+                    value = mergeResults(value, next_values);
+                }
+                commit('QUERY', { query: 'ChainNameCountAll', key: { params: { ...key }, query }, value });
+                if (subscribe)
+                    commit('SUBSCRIBE', { action: 'QueryChainNameCountAll', payload: { options: { all }, params: { ...key }, query } });
+                return getters['getChainNameCountAll']({ params: { ...key }, query }) ?? {};
+            }
+            catch (e) {
+                throw new SpVuexError('QueryClient:QueryChainNameCountAll', 'API Node Unavailable. Could not perform query: ' + e.message);
+            }
         },
         async QueryGenesisAccount({ commit, rootGetters, getters }, { options: { subscribe, all } = { subscribe: false, all: false }, params: { ...key }, query = null }) {
             try {

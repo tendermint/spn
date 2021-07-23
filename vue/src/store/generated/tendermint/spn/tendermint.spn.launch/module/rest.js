@@ -169,6 +169,35 @@ export class Api extends HttpClient {
          * No description
          *
          * @tags Query
+         * @name QueryChainNameCountAll
+         * @summary Queries a list of chainNameCount items.
+         * @request GET:/tendermint/spn/launch/chainNameCount
+         */
+        this.queryChainNameCountAll = (query, params = {}) => this.request({
+            path: `/tendermint/spn/launch/chainNameCount`,
+            method: "GET",
+            query: query,
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
+         * @name QueryChainNameCount
+         * @summary Queries a chainNameCount by index.
+         * @request GET:/tendermint/spn/launch/chainNameCount/{chainName}
+         */
+        this.queryChainNameCount = (chainName, params = {}) => this.request({
+            path: `/tendermint/spn/launch/chainNameCount/${chainName}`,
+            method: "GET",
+            format: "json",
+            ...params,
+        });
+        /**
+         * No description
+         *
+         * @tags Query
          * @name QueryGenesisAccountAll
          * @summary Queries a list of genesisAccount items.
          * @request GET:/tendermint/spn/launch/genesisAccount
