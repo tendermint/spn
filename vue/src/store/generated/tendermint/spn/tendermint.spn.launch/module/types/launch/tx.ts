@@ -5,7 +5,7 @@ export const protobufPackage = 'tendermint.spn.launch'
 
 /** this line is used by starport scaffolding # proto/tx/message */
 export interface MsgCreateChain {
-  creator: string
+  coordinator: string
   chainName: string
   sourceURL: string
   sourceHash: string
@@ -17,12 +17,12 @@ export interface MsgCreateChainResponse {
   chainID: string
 }
 
-const baseMsgCreateChain: object = { creator: '', chainName: '', sourceURL: '', sourceHash: '', genesisURL: '', genesisHash: '' }
+const baseMsgCreateChain: object = { coordinator: '', chainName: '', sourceURL: '', sourceHash: '', genesisURL: '', genesisHash: '' }
 
 export const MsgCreateChain = {
   encode(message: MsgCreateChain, writer: Writer = Writer.create()): Writer {
-    if (message.creator !== '') {
-      writer.uint32(10).string(message.creator)
+    if (message.coordinator !== '') {
+      writer.uint32(10).string(message.coordinator)
     }
     if (message.chainName !== '') {
       writer.uint32(18).string(message.chainName)
@@ -50,7 +50,7 @@ export const MsgCreateChain = {
       const tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
-          message.creator = reader.string()
+          message.coordinator = reader.string()
           break
         case 2:
           message.chainName = reader.string()
@@ -77,10 +77,10 @@ export const MsgCreateChain = {
 
   fromJSON(object: any): MsgCreateChain {
     const message = { ...baseMsgCreateChain } as MsgCreateChain
-    if (object.creator !== undefined && object.creator !== null) {
-      message.creator = String(object.creator)
+    if (object.coordinator !== undefined && object.coordinator !== null) {
+      message.coordinator = String(object.coordinator)
     } else {
-      message.creator = ''
+      message.coordinator = ''
     }
     if (object.chainName !== undefined && object.chainName !== null) {
       message.chainName = String(object.chainName)
@@ -112,7 +112,7 @@ export const MsgCreateChain = {
 
   toJSON(message: MsgCreateChain): unknown {
     const obj: any = {}
-    message.creator !== undefined && (obj.creator = message.creator)
+    message.coordinator !== undefined && (obj.coordinator = message.coordinator)
     message.chainName !== undefined && (obj.chainName = message.chainName)
     message.sourceURL !== undefined && (obj.sourceURL = message.sourceURL)
     message.sourceHash !== undefined && (obj.sourceHash = message.sourceHash)
@@ -123,10 +123,10 @@ export const MsgCreateChain = {
 
   fromPartial(object: DeepPartial<MsgCreateChain>): MsgCreateChain {
     const message = { ...baseMsgCreateChain } as MsgCreateChain
-    if (object.creator !== undefined && object.creator !== null) {
-      message.creator = object.creator
+    if (object.coordinator !== undefined && object.coordinator !== null) {
+      message.coordinator = object.coordinator
     } else {
-      message.creator = ''
+      message.coordinator = ''
     }
     if (object.chainName !== undefined && object.chainName !== null) {
       message.chainName = object.chainName

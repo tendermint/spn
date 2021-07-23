@@ -15,7 +15,7 @@ var _ = strconv.Itoa(0)
 func CmdCreateChain() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-chain [chainName] [sourceURL] [sourceHash] [genesisURL] [genesisHash]",
-		Short: "Broadcast message create-chain",
+		Short: "Create a new chain for launch",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			argsChainName := string(args[0])

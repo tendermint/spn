@@ -10,8 +10,10 @@ import (
 func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain) (*types.MsgCreateChainResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Handling the message
+	// Get the coordinator ID associated to the sender address
 	_ = ctx
+
+	//
 
 	return &types.MsgCreateChainResponse{}, nil
 }

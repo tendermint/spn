@@ -13,7 +13,7 @@ service Msg {
 
 // this line is used by starport scaffolding # proto/tx/message
 message MsgCreateChain {
-  string creator = 1;
+  string coordinator = 1;
   string chainName = 2;
   string sourceURL = 3;
   string sourceHash = 4;

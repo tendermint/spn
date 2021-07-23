@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { Reader, Writer } from 'protobufjs/minimal';
 export const protobufPackage = 'tendermint.spn.launch';
-const baseMsgCreateChain = { creator: '', chainName: '', sourceURL: '', sourceHash: '', genesisURL: '', genesisHash: '' };
+const baseMsgCreateChain = { coordinator: '', chainName: '', sourceURL: '', sourceHash: '', genesisURL: '', genesisHash: '' };
 export const MsgCreateChain = {
     encode(message, writer = Writer.create()) {
-        if (message.creator !== '') {
-            writer.uint32(10).string(message.creator);
+        if (message.coordinator !== '') {
+            writer.uint32(10).string(message.coordinator);
         }
         if (message.chainName !== '') {
             writer.uint32(18).string(message.chainName);
@@ -32,7 +32,7 @@ export const MsgCreateChain = {
             const tag = reader.uint32();
             switch (tag >>> 3) {
                 case 1:
-                    message.creator = reader.string();
+                    message.coordinator = reader.string();
                     break;
                 case 2:
                     message.chainName = reader.string();
@@ -58,11 +58,11 @@ export const MsgCreateChain = {
     },
     fromJSON(object) {
         const message = { ...baseMsgCreateChain };
-        if (object.creator !== undefined && object.creator !== null) {
-            message.creator = String(object.creator);
+        if (object.coordinator !== undefined && object.coordinator !== null) {
+            message.coordinator = String(object.coordinator);
         }
         else {
-            message.creator = '';
+            message.coordinator = '';
         }
         if (object.chainName !== undefined && object.chainName !== null) {
             message.chainName = String(object.chainName);
@@ -98,7 +98,7 @@ export const MsgCreateChain = {
     },
     toJSON(message) {
         const obj = {};
-        message.creator !== undefined && (obj.creator = message.creator);
+        message.coordinator !== undefined && (obj.coordinator = message.coordinator);
         message.chainName !== undefined && (obj.chainName = message.chainName);
         message.sourceURL !== undefined && (obj.sourceURL = message.sourceURL);
         message.sourceHash !== undefined && (obj.sourceHash = message.sourceHash);
@@ -108,11 +108,11 @@ export const MsgCreateChain = {
     },
     fromPartial(object) {
         const message = { ...baseMsgCreateChain };
-        if (object.creator !== undefined && object.creator !== null) {
-            message.creator = object.creator;
+        if (object.coordinator !== undefined && object.coordinator !== null) {
+            message.coordinator = object.coordinator;
         }
         else {
-            message.creator = '';
+            message.coordinator = '';
         }
         if (object.chainName !== undefined && object.chainName !== null) {
             message.chainName = object.chainName;

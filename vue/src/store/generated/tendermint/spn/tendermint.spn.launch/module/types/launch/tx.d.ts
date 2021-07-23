@@ -2,7 +2,7 @@ import { Reader, Writer } from 'protobufjs/minimal';
 export declare const protobufPackage = "tendermint.spn.launch";
 /** this line is used by starport scaffolding # proto/tx/message */
 export interface MsgCreateChain {
-    creator: string;
+    coordinator: string;
     chainName: string;
     sourceURL: string;
     sourceHash: string;
