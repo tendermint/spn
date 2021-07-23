@@ -26,9 +26,11 @@ func networkWithFooObjects(t *testing.T, n int) (*network.Network, []*types.Chai
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
+		chain := sample.Chain(strconv.Itoa(i), uint64(i))
+		chain.InitialGenesis.Value = []byte{}
 		state.ChainList = append(
 			state.ChainList,
-			sample.Chain(strconv.Itoa(i), uint64(i)),
+			chain,
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
