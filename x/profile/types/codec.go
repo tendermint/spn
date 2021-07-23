@@ -11,7 +11,7 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
-	cdc.RegisterConcrete(&MsgUpdateCoordinatorDescription{}, "account/UpdateCoordinatorDescription", nil)
+	cdc.RegisterConcrete(&MsgUpdateCoordinatorDescription{}, "profile/UpdateCoordinatorDescription", nil)
 
 }
 
