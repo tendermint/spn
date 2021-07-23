@@ -18,7 +18,7 @@ func validatorDescription(desc string) *types.ValidatorDescription {
 	}
 }
 
-func Test_msgServer_UpdateValidatorDescription(t *testing.T) {
+func TestMsgUpdateValidatorDescription(t *testing.T) {
 	var (
 		addr1 = sample.AccAddress()
 		addr2 = sample.AccAddress()
