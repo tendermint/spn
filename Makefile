@@ -1,34 +1,5 @@
 #! /usr/bin/make -f
 
-# Project variables.
-PROJECT_NAME = spn
-DATE := $(shell date '+%Y-%m-%dT%H:%M:%S')
-VERSION = development
-HEAD = $(shell git rev-parse HEAD)
-LD_FLAGS = -X github.com/tendermint/spn/internal/version.Version='$(VERSION)' \
-	-X github.com/tendermint/spn/internal/version.Head='$(HEAD)' \
-	-X github.com/tendermint/spn/internal/version.Date='$(DATE)'
-BUILD_FLAGS = -mod=readonly -ldflags='$(LD_FLAGS)'
-BUILD_FOLDER = ./dist
-
-## install: Install de binary.
-install:
-	@echo Installing Starport Network...
-	@go install $(BUILD_FLAGS) ./...
-	@spn version
-
-## build: Build the binary.
-build:
-	@echo Building Starport Network...
-	@-mkdir -p $(BUILD_FOLDER) 2> /dev/null
-	@go build $(BUILD_FLAGS) -o $(BUILD_FOLDER) ./...
-
-## clean: Clean build files. Also runs `go clean` internally.
-clean:
-	@echo Cleaning build cache...
-	@-rm -rf $(BUILD_FOLDER) 2> /dev/null
-	@go clean ./...
-
 ## govet: Run go vet.
 govet:
 	@echo Running go vet...
