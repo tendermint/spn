@@ -1,9 +1,10 @@
 package sample
 
 import (
+	"time"
+
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	launch "github.com/tendermint/spn/x/launch/types"
-	"time"
 )
 
 func Chain(chainID string, coordinatorID uint64) *launch.Chain {
