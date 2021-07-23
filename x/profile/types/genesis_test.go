@@ -51,11 +51,31 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 				},
 			},
 		}, {
+			name: "validator address without consensus key",
+			genState: &GenesisState{
+				ValidatorByAddressList: []*ValidatorByAddress{
+					{Address: addr1, ConsensusAddress: consAddr1},
+					{Address: addr2, ConsensusAddress: consAddr2},
+					{Address: addr3, ConsensusAddress: consAddr3},
+					{Address: addr4, ConsensusAddress: consAddr4},
+				},
+				ValidatorByConsAddressList: []*ValidatorByConsAddress{
+					{ConsAddress: consAddr1, Address: addr1},
+					{ConsAddress: consAddr2, Address: addr2},
+					{ConsAddress: consAddr3, Address: addr3},
+					{ConsAddress: consAddr4, Address: addr4},
+				},
+			},
+		}, {
 			name: "duplicated consensus key",
 			genState: &GenesisState{
 				ConsensusKeyNonceList: []*ConsensusKeyNonce{
 					{ConsAddress: consAddr1, Nonce: 1},
 					{ConsAddress: consAddr1, Nonce: 1},
+				},
+				ValidatorByConsAddressList: []*ValidatorByConsAddress{
+					{ConsAddress: consAddr1, Address: addr1},
+					{ConsAddress: consAddr2, Address: addr2},
 				},
 			},
 			err: fmt.Errorf("duplicated index for consensusKeyNonce: %s", consAddr1),
@@ -68,19 +88,6 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 				},
 			},
 			err: fmt.Errorf("duplicated index for validatorByAddress: %s", addr1),
-		}, {
-			name: "consensus key not found",
-			genState: &GenesisState{
-				ConsensusKeyNonceList: []*ConsensusKeyNonce{
-					{ConsAddress: consAddr1, Nonce: 1},
-					{ConsAddress: consAddr2, Nonce: 2},
-				},
-				ValidatorByAddressList: []*ValidatorByAddress{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr1, ConsensusAddress: consAddr2},
-				},
-			},
-			err: fmt.Errorf("consensus key not found for address: %s", consAddr1),
 		}, {
 			name: "duplicated validator by consensus address",
 			genState: &GenesisState{
