@@ -1,14 +1,13 @@
 import { Reader, Writer } from 'protobufjs/minimal';
+import { ValidatorDescription } from '../profile/validator';
 import { CoordinatorDescription } from '../profile/coordinator';
 export declare const protobufPackage = "tendermint.spn.profile";
 /** this line is used by starport scaffolding # proto/tx/message */
 export interface MsgUpdateValidatorDescription {
-    creator: string;
     address: string;
-    description: string;
+    description: ValidatorDescription | undefined;
 }
 export interface MsgUpdateValidatorDescriptionResponse {
-    coordinatorId: number;
 }
 export interface MsgCreateCoordinator {
     address: string;
@@ -25,11 +24,11 @@ export declare const MsgUpdateValidatorDescription: {
     fromPartial(object: DeepPartial<MsgUpdateValidatorDescription>): MsgUpdateValidatorDescription;
 };
 export declare const MsgUpdateValidatorDescriptionResponse: {
-    encode(message: MsgUpdateValidatorDescriptionResponse, writer?: Writer): Writer;
+    encode(_: MsgUpdateValidatorDescriptionResponse, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgUpdateValidatorDescriptionResponse;
-    fromJSON(object: any): MsgUpdateValidatorDescriptionResponse;
-    toJSON(message: MsgUpdateValidatorDescriptionResponse): unknown;
-    fromPartial(object: DeepPartial<MsgUpdateValidatorDescriptionResponse>): MsgUpdateValidatorDescriptionResponse;
+    fromJSON(_: any): MsgUpdateValidatorDescriptionResponse;
+    toJSON(_: MsgUpdateValidatorDescriptionResponse): unknown;
+    fromPartial(_: DeepPartial<MsgUpdateValidatorDescriptionResponse>): MsgUpdateValidatorDescriptionResponse;
 };
 export declare const MsgCreateCoordinator: {
     encode(message: MsgCreateCoordinator, writer?: Writer): Writer;

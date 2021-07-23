@@ -1,20 +1,18 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from 'protobufjs/minimal'
 import * as Long from 'long'
+import { ValidatorDescription } from '../profile/validator'
 import { CoordinatorDescription } from '../profile/coordinator'
 
 export const protobufPackage = 'tendermint.spn.profile'
 
 /** this line is used by starport scaffolding # proto/tx/message */
 export interface MsgUpdateValidatorDescription {
-  creator: string
   address: string
-  description: string
+  description: ValidatorDescription | undefined
 }
 
-export interface MsgUpdateValidatorDescriptionResponse {
-  coordinatorId: number
-}
+export interface MsgUpdateValidatorDescriptionResponse {}
 
 export interface MsgCreateCoordinator {
   address: string
@@ -25,18 +23,15 @@ export interface MsgCreateCoordinatorResponse {
   coordinatorId: number
 }
 
-const baseMsgUpdateValidatorDescription: object = { creator: '', address: '', description: '' }
+const baseMsgUpdateValidatorDescription: object = { address: '' }
 
 export const MsgUpdateValidatorDescription = {
   encode(message: MsgUpdateValidatorDescription, writer: Writer = Writer.create()): Writer {
-    if (message.creator !== '') {
-      writer.uint32(10).string(message.creator)
-    }
     if (message.address !== '') {
-      writer.uint32(18).string(message.address)
+      writer.uint32(10).string(message.address)
     }
-    if (message.description !== '') {
-      writer.uint32(26).string(message.description)
+    if (message.description !== undefined) {
+      ValidatorDescription.encode(message.description, writer.uint32(18).fork()).ldelim()
     }
     return writer
   },
@@ -49,13 +44,10 @@ export const MsgUpdateValidatorDescription = {
       const tag = reader.uint32()
       switch (tag >>> 3) {
         case 1:
-          message.creator = reader.string()
-          break
-        case 2:
           message.address = reader.string()
           break
-        case 3:
-          message.description = reader.string()
+        case 2:
+          message.description = ValidatorDescription.decode(reader, reader.uint32())
           break
         default:
           reader.skipType(tag & 7)
@@ -67,60 +59,46 @@ export const MsgUpdateValidatorDescription = {
 
   fromJSON(object: any): MsgUpdateValidatorDescription {
     const message = { ...baseMsgUpdateValidatorDescription } as MsgUpdateValidatorDescription
-    if (object.creator !== undefined && object.creator !== null) {
-      message.creator = String(object.creator)
-    } else {
-      message.creator = ''
-    }
     if (object.address !== undefined && object.address !== null) {
       message.address = String(object.address)
     } else {
       message.address = ''
     }
     if (object.description !== undefined && object.description !== null) {
-      message.description = String(object.description)
+      message.description = ValidatorDescription.fromJSON(object.description)
     } else {
-      message.description = ''
+      message.description = undefined
     }
     return message
   },
 
   toJSON(message: MsgUpdateValidatorDescription): unknown {
     const obj: any = {}
-    message.creator !== undefined && (obj.creator = message.creator)
     message.address !== undefined && (obj.address = message.address)
-    message.description !== undefined && (obj.description = message.description)
+    message.description !== undefined && (obj.description = message.description ? ValidatorDescription.toJSON(message.description) : undefined)
     return obj
   },
 
   fromPartial(object: DeepPartial<MsgUpdateValidatorDescription>): MsgUpdateValidatorDescription {
     const message = { ...baseMsgUpdateValidatorDescription } as MsgUpdateValidatorDescription
-    if (object.creator !== undefined && object.creator !== null) {
-      message.creator = object.creator
-    } else {
-      message.creator = ''
-    }
     if (object.address !== undefined && object.address !== null) {
       message.address = object.address
     } else {
       message.address = ''
     }
     if (object.description !== undefined && object.description !== null) {
-      message.description = object.description
+      message.description = ValidatorDescription.fromPartial(object.description)
     } else {
-      message.description = ''
+      message.description = undefined
     }
     return message
   }
 }
 
-const baseMsgUpdateValidatorDescriptionResponse: object = { coordinatorId: 0 }
+const baseMsgUpdateValidatorDescriptionResponse: object = {}
 
 export const MsgUpdateValidatorDescriptionResponse = {
-  encode(message: MsgUpdateValidatorDescriptionResponse, writer: Writer = Writer.create()): Writer {
-    if (message.coordinatorId !== 0) {
-      writer.uint32(8).uint64(message.coordinatorId)
-    }
+  encode(_: MsgUpdateValidatorDescriptionResponse, writer: Writer = Writer.create()): Writer {
     return writer
   },
 
@@ -131,9 +109,6 @@ export const MsgUpdateValidatorDescriptionResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
-          message.coordinatorId = longToNumber(reader.uint64() as Long)
-          break
         default:
           reader.skipType(tag & 7)
           break
@@ -142,29 +117,18 @@ export const MsgUpdateValidatorDescriptionResponse = {
     return message
   },
 
-  fromJSON(object: any): MsgUpdateValidatorDescriptionResponse {
+  fromJSON(_: any): MsgUpdateValidatorDescriptionResponse {
     const message = { ...baseMsgUpdateValidatorDescriptionResponse } as MsgUpdateValidatorDescriptionResponse
-    if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-      message.coordinatorId = Number(object.coordinatorId)
-    } else {
-      message.coordinatorId = 0
-    }
     return message
   },
 
-  toJSON(message: MsgUpdateValidatorDescriptionResponse): unknown {
+  toJSON(_: MsgUpdateValidatorDescriptionResponse): unknown {
     const obj: any = {}
-    message.coordinatorId !== undefined && (obj.coordinatorId = message.coordinatorId)
     return obj
   },
 
-  fromPartial(object: DeepPartial<MsgUpdateValidatorDescriptionResponse>): MsgUpdateValidatorDescriptionResponse {
+  fromPartial(_: DeepPartial<MsgUpdateValidatorDescriptionResponse>): MsgUpdateValidatorDescriptionResponse {
     const message = { ...baseMsgUpdateValidatorDescriptionResponse } as MsgUpdateValidatorDescriptionResponse
-    if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-      message.coordinatorId = object.coordinatorId
-    } else {
-      message.coordinatorId = 0
-    }
     return message
   }
 }

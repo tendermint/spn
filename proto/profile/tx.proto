@@ -21,7 +21,6 @@ message MsgUpdateValidatorDescription {
 }
 
 message MsgUpdateValidatorDescriptionResponse {
-  uint64 coordinatorId = 1;
 }
 
 message MsgCreateCoordinator {
