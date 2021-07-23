@@ -74,7 +74,7 @@ func (gs GenesisState) Validate() error {
 			)
 		}
 
-		// An address cannot be defined as a genesis acocunt and a vested account for the same chain
+		// An address cannot be defined as a genesis account and a vested account for the same chain
 		accountIndex := GenesisAccountKey(elem.ChainID, elem.Address)
 		if _, ok := genesisAccountIndexMap[string(accountIndex)]; ok {
 			return fmt.Errorf("account %s can't be a genesis account and a vested account at the same time for the chain: %s",
