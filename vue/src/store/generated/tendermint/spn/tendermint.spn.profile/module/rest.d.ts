@@ -23,6 +23,10 @@ export interface ProfileMsgCreateCoordinatorResponse {
     /** @format uint64 */
     coordinatorId?: string;
 }
+export interface ProfileMsgUpdateValidatorDescriptionResponse {
+    /** @format uint64 */
+    coordinatorId?: string;
+}
 export interface ProfileQueryAllCoordinatorResponse {
     Coordinator?: ProfileCoordinator[];
     /**
