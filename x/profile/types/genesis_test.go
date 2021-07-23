@@ -80,7 +80,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{Address: addr1, ConsensusAddress: consAddr2},
 				},
 			},
-			err: fmt.Errorf("consesus key not found for address: %s", consAddr1),
+			err: fmt.Errorf("consensus key not found for address: %s", consAddr1),
 		}, {
 			name: "duplicated validator by consensus address",
 			genState: &GenesisState{
@@ -121,7 +121,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
-				err := tt.genState.validateValidator()
+				err := tt.genState.validateValidators()
 				if tt.err != nil {
 					require.Error(t, err)
 					assert.Equal(t, tt.err.Error(), err.Error())
@@ -215,7 +215,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
-				err := tt.genState.validateCoordinator()
+				err := tt.genState.validateCoordinators()
 				if tt.err != nil {
 					require.Error(t, err)
 					assert.Equal(t, tt.err.Error(), err.Error())

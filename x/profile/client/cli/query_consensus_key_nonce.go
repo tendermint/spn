@@ -13,7 +13,7 @@ import (
 func CmdShowConsensusKeyNonce() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-consensus-key-nonce [consAddress]",
-		Short: "shows a ConsensusKeyNonce",
+		Short: "shows the currently required nonce to sign a consensus key proof of ownership",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)

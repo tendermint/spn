@@ -28,14 +28,14 @@ func (gs GenesisState) Validate() error {
 
 	// this line is used by starport scaffolding # genesis/types/validate
 
-	if err := gs.validateValidator(); err != nil {
+	if err := gs.validateValidators(); err != nil {
 		return err
 	}
 
-	return gs.validateCoordinator()
+	return gs.validateCoordinators()
 }
 
-func (gs GenesisState) validateValidator() error {
+func (gs GenesisState) validateValidators() error {
 	// Check for duplicated index in consensusKeyNonce
 	consensusKeyNonceIndexMap := make(map[string]string)
 	for _, elem := range gs.ConsensusKeyNonceList {
@@ -60,7 +60,7 @@ func (gs GenesisState) validateValidator() error {
 	}
 	// Check if all consensus key exist
 	for _, address := range consensusKeyNonceIndexMap {
-		return fmt.Errorf("consesus key not found for address: %s", address)
+		return fmt.Errorf("consensus key not found for address: %s", address)
 	}
 
 	// Check for duplicated index in validatorByAddress
@@ -83,7 +83,7 @@ func (gs GenesisState) validateValidator() error {
 	return nil
 }
 
-func (gs GenesisState) validateCoordinator() error {
+func (gs GenesisState) validateCoordinators() error {
 	// Check for duplicated index in coordinatorByAddress
 	coordinatorByAddressIndexMap := make(map[string]uint64)
 	for _, elem := range gs.CoordinatorByAddressList {

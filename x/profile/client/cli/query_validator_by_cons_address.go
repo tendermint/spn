@@ -13,7 +13,7 @@ import (
 func CmdShowValidatorByConsAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-validator-by-cons-address [consAddress]",
-		Short: "shows a validatorByConsAddress",
+		Short: "shows a validator from the consensus address used in the chain to launch",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
