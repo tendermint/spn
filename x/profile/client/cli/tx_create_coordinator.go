@@ -21,7 +21,7 @@ const (
 func CmdCreateCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-coordinator",
-		Short: "Broadcast message create-coordinator",
+		Short: "Create a new coordinator profile",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			identity, err := cmd.Flags().GetString(flagIdentity)
