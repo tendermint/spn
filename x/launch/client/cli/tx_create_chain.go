@@ -1,8 +1,9 @@
 package cli
 
 import (
-	"github.com/spf13/cobra"
 	"strconv"
+
+	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -18,18 +19,19 @@ func CmdCreateChain() *cobra.Command {
 		Short: "Create a new chain for launch",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			argsChainName := string(args[0])
-			argsSourceURL := string(args[1])
-			argsSourceHash := string(args[2])
-			argsGenesisURL := string(args[3])
-			argsGenesisHash := string(args[4])
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgCreateChain(clientCtx.GetFromAddress().String(), string(argsChainName), string(argsSourceURL), string(argsSourceHash), string(argsGenesisURL), string(argsGenesisHash))
+			msg := types.NewMsgCreateChain(
+				clientCtx.GetFromAddress().String(),
+				args[0],
+				args[1],
+				args[2],
+				args[3],
+				args[4],
+			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

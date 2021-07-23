@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,7 +14,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Get the coordinator ID associated to the sender address
-	coordId, found := k.profileKeeper.CoordinatorIdFromAddress(ctx, msg.Coordinator)
+	coordID, found := k.profileKeeper.CoordinatorIdFromAddress(ctx, msg.Coordinator)
 	if !found {
 		return nil, sdkerrors.Wrap(types.ErrCoordinatorNotExist, msg.Coordinator)
 	}
@@ -22,11 +23,11 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	chainNameCount, found := k.GetChainNameCount(ctx, msg.ChainName)
 	if !found {
 		chainNameCount = types.ChainNameCount{
-			msg.ChainName,
-			0,
+			ChainName: msg.ChainName,
+			Count:     0,
 		}
 	}
-	chainID := types.ChainIdFromChainName(msg.ChainName, chainNameCount.Count)
+	chainID := types.ChainIDFromChainName(msg.ChainName, chainNameCount.Count)
 	chainNameCount.Count++
 
 	// chainID must always be unique by design
@@ -38,11 +39,11 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 
 	// Initialize the chain
 	chain := types.Chain{
-		ChainID: chainID,
-		CoordinatorID: coordId,
-		CreatedAt: ctx.BlockTime().Unix(),
-		SourceURL: msg.SourceURL,
-		SourceHash: msg.SourceHash,
+		ChainID:         chainID,
+		CoordinatorID:   coordID,
+		CreatedAt:       ctx.BlockTime().Unix(),
+		SourceURL:       msg.SourceURL,
+		SourceHash:      msg.SourceHash,
 		LaunchTriggered: false,
 		LaunchTimestamp: 0,
 	}

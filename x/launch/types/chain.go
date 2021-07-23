@@ -5,8 +5,8 @@ import (
 	"fmt"
 )
 
-// ChainIdFromChainName returns the chain id from the chain name and the count
-func ChainIdFromChainName(chainName string, chainNameCount uint64) string {
+// ChainIDFromChainName returns the chain id from the chain name and the count
+func ChainIDFromChainName(chainName string, chainNameCount uint64) string {
 	return fmt.Sprintf("%v-%v", chainName, chainNameCount)
 }
 

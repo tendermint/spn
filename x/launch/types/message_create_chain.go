@@ -9,7 +9,7 @@ var _ sdk.Msg = &MsgCreateChain{}
 
 func NewMsgCreateChain(coordinator string, chainName string, sourceURL string, sourceHash string, genesisURL string, genesisHash string) *MsgCreateChain {
 	return &MsgCreateChain{
-		Coordinator:     coordinator,
+		Coordinator: coordinator,
 		ChainName:   chainName,
 		SourceURL:   sourceURL,
 		SourceHash:  sourceHash,
