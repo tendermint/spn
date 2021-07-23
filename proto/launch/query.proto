@@ -4,7 +4,6 @@ package tendermint.spn.launch;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
-import "launch/chain_name_count.proto";
 import "launch/genesis_account.proto";
 import "launch/chain.proto";
 
@@ -13,17 +12,6 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
-
-	// Queries a chainNameCount by index.
-	rpc ChainNameCount(QueryGetChainNameCountRequest) returns (QueryGetChainNameCountResponse) {
-		option (google.api.http).get = "/tendermint/spn/launch/chainNameCount/{chainName}";
-	}
-
-	// Queries a list of chainNameCount items.
-	rpc ChainNameCountAll(QueryAllChainNameCountRequest) returns (QueryAllChainNameCountResponse) {
-		option (google.api.http).get = "/tendermint/spn/launch/chainNameCount";
-	}
-
 
 	// Queries a genesisAccount by index.
 	rpc GenesisAccount(QueryGetGenesisAccountRequest) returns (QueryGetGenesisAccountResponse) {
@@ -49,23 +37,6 @@ service Query {
 }
 
 // this line is used by starport scaffolding # 3
-message QueryGetChainNameCountRequest {
-	  string chainName = 1;
-
-}
-
-message QueryGetChainNameCountResponse {
-	ChainNameCount chainNameCount = 1;
-}
-
-message QueryAllChainNameCountRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
-}
-
-message QueryAllChainNameCountResponse {
-	repeated ChainNameCount chainNameCount = 1;
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
 message QueryGetGenesisAccountRequest {
 	  string chainID = 1;
   string address = 2;

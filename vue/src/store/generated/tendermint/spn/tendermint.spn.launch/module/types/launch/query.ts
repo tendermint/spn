@@ -1,30 +1,12 @@
 /* eslint-disable */
 import { Reader, Writer } from 'protobufjs/minimal'
-import { ChainNameCount } from '../launch/chain_name_count'
-import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination'
 import { GenesisAccount } from '../launch/genesis_account'
+import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination'
 import { Chain } from '../launch/chain'
 
 export const protobufPackage = 'tendermint.spn.launch'
 
 /** this line is used by starport scaffolding # 3 */
-export interface QueryGetChainNameCountRequest {
-  chainName: string
-}
-
-export interface QueryGetChainNameCountResponse {
-  chainNameCount: ChainNameCount | undefined
-}
-
-export interface QueryAllChainNameCountRequest {
-  pagination: PageRequest | undefined
-}
-
-export interface QueryAllChainNameCountResponse {
-  chainNameCount: ChainNameCount[]
-  pagination: PageResponse | undefined
-}
-
 export interface QueryGetGenesisAccountRequest {
   chainID: string
   address: string
@@ -58,250 +40,6 @@ export interface QueryAllChainRequest {
 export interface QueryAllChainResponse {
   chain: Chain[]
   pagination: PageResponse | undefined
-}
-
-const baseQueryGetChainNameCountRequest: object = { chainName: '' }
-
-export const QueryGetChainNameCountRequest = {
-  encode(message: QueryGetChainNameCountRequest, writer: Writer = Writer.create()): Writer {
-    if (message.chainName !== '') {
-      writer.uint32(10).string(message.chainName)
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): QueryGetChainNameCountRequest {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseQueryGetChainNameCountRequest } as QueryGetChainNameCountRequest
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.chainName = reader.string()
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): QueryGetChainNameCountRequest {
-    const message = { ...baseQueryGetChainNameCountRequest } as QueryGetChainNameCountRequest
-    if (object.chainName !== undefined && object.chainName !== null) {
-      message.chainName = String(object.chainName)
-    } else {
-      message.chainName = ''
-    }
-    return message
-  },
-
-  toJSON(message: QueryGetChainNameCountRequest): unknown {
-    const obj: any = {}
-    message.chainName !== undefined && (obj.chainName = message.chainName)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<QueryGetChainNameCountRequest>): QueryGetChainNameCountRequest {
-    const message = { ...baseQueryGetChainNameCountRequest } as QueryGetChainNameCountRequest
-    if (object.chainName !== undefined && object.chainName !== null) {
-      message.chainName = object.chainName
-    } else {
-      message.chainName = ''
-    }
-    return message
-  }
-}
-
-const baseQueryGetChainNameCountResponse: object = {}
-
-export const QueryGetChainNameCountResponse = {
-  encode(message: QueryGetChainNameCountResponse, writer: Writer = Writer.create()): Writer {
-    if (message.chainNameCount !== undefined) {
-      ChainNameCount.encode(message.chainNameCount, writer.uint32(10).fork()).ldelim()
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): QueryGetChainNameCountResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseQueryGetChainNameCountResponse } as QueryGetChainNameCountResponse
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.chainNameCount = ChainNameCount.decode(reader, reader.uint32())
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): QueryGetChainNameCountResponse {
-    const message = { ...baseQueryGetChainNameCountResponse } as QueryGetChainNameCountResponse
-    if (object.chainNameCount !== undefined && object.chainNameCount !== null) {
-      message.chainNameCount = ChainNameCount.fromJSON(object.chainNameCount)
-    } else {
-      message.chainNameCount = undefined
-    }
-    return message
-  },
-
-  toJSON(message: QueryGetChainNameCountResponse): unknown {
-    const obj: any = {}
-    message.chainNameCount !== undefined && (obj.chainNameCount = message.chainNameCount ? ChainNameCount.toJSON(message.chainNameCount) : undefined)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<QueryGetChainNameCountResponse>): QueryGetChainNameCountResponse {
-    const message = { ...baseQueryGetChainNameCountResponse } as QueryGetChainNameCountResponse
-    if (object.chainNameCount !== undefined && object.chainNameCount !== null) {
-      message.chainNameCount = ChainNameCount.fromPartial(object.chainNameCount)
-    } else {
-      message.chainNameCount = undefined
-    }
-    return message
-  }
-}
-
-const baseQueryAllChainNameCountRequest: object = {}
-
-export const QueryAllChainNameCountRequest = {
-  encode(message: QueryAllChainNameCountRequest, writer: Writer = Writer.create()): Writer {
-    if (message.pagination !== undefined) {
-      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim()
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): QueryAllChainNameCountRequest {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseQueryAllChainNameCountRequest } as QueryAllChainNameCountRequest
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.pagination = PageRequest.decode(reader, reader.uint32())
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): QueryAllChainNameCountRequest {
-    const message = { ...baseQueryAllChainNameCountRequest } as QueryAllChainNameCountRequest
-    if (object.pagination !== undefined && object.pagination !== null) {
-      message.pagination = PageRequest.fromJSON(object.pagination)
-    } else {
-      message.pagination = undefined
-    }
-    return message
-  },
-
-  toJSON(message: QueryAllChainNameCountRequest): unknown {
-    const obj: any = {}
-    message.pagination !== undefined && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<QueryAllChainNameCountRequest>): QueryAllChainNameCountRequest {
-    const message = { ...baseQueryAllChainNameCountRequest } as QueryAllChainNameCountRequest
-    if (object.pagination !== undefined && object.pagination !== null) {
-      message.pagination = PageRequest.fromPartial(object.pagination)
-    } else {
-      message.pagination = undefined
-    }
-    return message
-  }
-}
-
-const baseQueryAllChainNameCountResponse: object = {}
-
-export const QueryAllChainNameCountResponse = {
-  encode(message: QueryAllChainNameCountResponse, writer: Writer = Writer.create()): Writer {
-    for (const v of message.chainNameCount) {
-      ChainNameCount.encode(v!, writer.uint32(10).fork()).ldelim()
-    }
-    if (message.pagination !== undefined) {
-      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim()
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): QueryAllChainNameCountResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseQueryAllChainNameCountResponse } as QueryAllChainNameCountResponse
-    message.chainNameCount = []
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.chainNameCount.push(ChainNameCount.decode(reader, reader.uint32()))
-          break
-        case 2:
-          message.pagination = PageResponse.decode(reader, reader.uint32())
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): QueryAllChainNameCountResponse {
-    const message = { ...baseQueryAllChainNameCountResponse } as QueryAllChainNameCountResponse
-    message.chainNameCount = []
-    if (object.chainNameCount !== undefined && object.chainNameCount !== null) {
-      for (const e of object.chainNameCount) {
-        message.chainNameCount.push(ChainNameCount.fromJSON(e))
-      }
-    }
-    if (object.pagination !== undefined && object.pagination !== null) {
-      message.pagination = PageResponse.fromJSON(object.pagination)
-    } else {
-      message.pagination = undefined
-    }
-    return message
-  },
-
-  toJSON(message: QueryAllChainNameCountResponse): unknown {
-    const obj: any = {}
-    if (message.chainNameCount) {
-      obj.chainNameCount = message.chainNameCount.map((e) => (e ? ChainNameCount.toJSON(e) : undefined))
-    } else {
-      obj.chainNameCount = []
-    }
-    message.pagination !== undefined && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<QueryAllChainNameCountResponse>): QueryAllChainNameCountResponse {
-    const message = { ...baseQueryAllChainNameCountResponse } as QueryAllChainNameCountResponse
-    message.chainNameCount = []
-    if (object.chainNameCount !== undefined && object.chainNameCount !== null) {
-      for (const e of object.chainNameCount) {
-        message.chainNameCount.push(ChainNameCount.fromPartial(e))
-      }
-    }
-    if (object.pagination !== undefined && object.pagination !== null) {
-      message.pagination = PageResponse.fromPartial(object.pagination)
-    } else {
-      message.pagination = undefined
-    }
-    return message
-  }
 }
 
 const baseQueryGetGenesisAccountRequest: object = { chainID: '', address: '' }
@@ -811,10 +549,6 @@ export const QueryAllChainResponse = {
 
 /** Query defines the gRPC querier service. */
 export interface Query {
-  /** Queries a chainNameCount by index. */
-  ChainNameCount(request: QueryGetChainNameCountRequest): Promise<QueryGetChainNameCountResponse>
-  /** Queries a list of chainNameCount items. */
-  ChainNameCountAll(request: QueryAllChainNameCountRequest): Promise<QueryAllChainNameCountResponse>
   /** Queries a genesisAccount by index. */
   GenesisAccount(request: QueryGetGenesisAccountRequest): Promise<QueryGetGenesisAccountResponse>
   /** Queries a list of genesisAccount items. */
@@ -830,18 +564,6 @@ export class QueryClientImpl implements Query {
   constructor(rpc: Rpc) {
     this.rpc = rpc
   }
-  ChainNameCount(request: QueryGetChainNameCountRequest): Promise<QueryGetChainNameCountResponse> {
-    const data = QueryGetChainNameCountRequest.encode(request).finish()
-    const promise = this.rpc.request('tendermint.spn.launch.Query', 'ChainNameCount', data)
-    return promise.then((data) => QueryGetChainNameCountResponse.decode(new Reader(data)))
-  }
-
-  ChainNameCountAll(request: QueryAllChainNameCountRequest): Promise<QueryAllChainNameCountResponse> {
-    const data = QueryAllChainNameCountRequest.encode(request).finish()
-    const promise = this.rpc.request('tendermint.spn.launch.Query', 'ChainNameCountAll', data)
-    return promise.then((data) => QueryAllChainNameCountResponse.decode(new Reader(data)))
-  }
-
   GenesisAccount(request: QueryGetGenesisAccountRequest): Promise<QueryGetGenesisAccountResponse> {
     const data = QueryGetGenesisAccountRequest.encode(request).finish()
     const promise = this.rpc.request('tendermint.spn.launch.Query', 'GenesisAccount', data)

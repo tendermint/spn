@@ -1,23 +1,9 @@
 import { Reader, Writer } from 'protobufjs/minimal';
-import { ChainNameCount } from '../launch/chain_name_count';
-import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
 import { GenesisAccount } from '../launch/genesis_account';
+import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
 import { Chain } from '../launch/chain';
 export declare const protobufPackage = "tendermint.spn.launch";
 /** this line is used by starport scaffolding # 3 */
-export interface QueryGetChainNameCountRequest {
-    chainName: string;
-}
-export interface QueryGetChainNameCountResponse {
-    chainNameCount: ChainNameCount | undefined;
-}
-export interface QueryAllChainNameCountRequest {
-    pagination: PageRequest | undefined;
-}
-export interface QueryAllChainNameCountResponse {
-    chainNameCount: ChainNameCount[];
-    pagination: PageResponse | undefined;
-}
 export interface QueryGetGenesisAccountRequest {
     chainID: string;
     address: string;
@@ -45,34 +31,6 @@ export interface QueryAllChainResponse {
     chain: Chain[];
     pagination: PageResponse | undefined;
 }
-export declare const QueryGetChainNameCountRequest: {
-    encode(message: QueryGetChainNameCountRequest, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryGetChainNameCountRequest;
-    fromJSON(object: any): QueryGetChainNameCountRequest;
-    toJSON(message: QueryGetChainNameCountRequest): unknown;
-    fromPartial(object: DeepPartial<QueryGetChainNameCountRequest>): QueryGetChainNameCountRequest;
-};
-export declare const QueryGetChainNameCountResponse: {
-    encode(message: QueryGetChainNameCountResponse, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryGetChainNameCountResponse;
-    fromJSON(object: any): QueryGetChainNameCountResponse;
-    toJSON(message: QueryGetChainNameCountResponse): unknown;
-    fromPartial(object: DeepPartial<QueryGetChainNameCountResponse>): QueryGetChainNameCountResponse;
-};
-export declare const QueryAllChainNameCountRequest: {
-    encode(message: QueryAllChainNameCountRequest, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryAllChainNameCountRequest;
-    fromJSON(object: any): QueryAllChainNameCountRequest;
-    toJSON(message: QueryAllChainNameCountRequest): unknown;
-    fromPartial(object: DeepPartial<QueryAllChainNameCountRequest>): QueryAllChainNameCountRequest;
-};
-export declare const QueryAllChainNameCountResponse: {
-    encode(message: QueryAllChainNameCountResponse, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryAllChainNameCountResponse;
-    fromJSON(object: any): QueryAllChainNameCountResponse;
-    toJSON(message: QueryAllChainNameCountResponse): unknown;
-    fromPartial(object: DeepPartial<QueryAllChainNameCountResponse>): QueryAllChainNameCountResponse;
-};
 export declare const QueryGetGenesisAccountRequest: {
     encode(message: QueryGetGenesisAccountRequest, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): QueryGetGenesisAccountRequest;
@@ -131,10 +89,6 @@ export declare const QueryAllChainResponse: {
 };
 /** Query defines the gRPC querier service. */
 export interface Query {
-    /** Queries a chainNameCount by index. */
-    ChainNameCount(request: QueryGetChainNameCountRequest): Promise<QueryGetChainNameCountResponse>;
-    /** Queries a list of chainNameCount items. */
-    ChainNameCountAll(request: QueryAllChainNameCountRequest): Promise<QueryAllChainNameCountResponse>;
     /** Queries a genesisAccount by index. */
     GenesisAccount(request: QueryGetGenesisAccountRequest): Promise<QueryGetGenesisAccountResponse>;
     /** Queries a list of genesisAccount items. */
@@ -147,8 +101,6 @@ export interface Query {
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
     constructor(rpc: Rpc);
-    ChainNameCount(request: QueryGetChainNameCountRequest): Promise<QueryGetChainNameCountResponse>;
-    ChainNameCountAll(request: QueryAllChainNameCountRequest): Promise<QueryAllChainNameCountResponse>;
     GenesisAccount(request: QueryGetGenesisAccountRequest): Promise<QueryGetGenesisAccountResponse>;
     GenesisAccountAll(request: QueryAllGenesisAccountRequest): Promise<QueryAllGenesisAccountResponse>;
     Chain(request: QueryGetChainRequest): Promise<QueryGetChainResponse>;

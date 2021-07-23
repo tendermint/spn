@@ -1,6 +1,10 @@
 import { Writer, Reader } from 'protobufjs/minimal';
 import { Any } from '../google/protobuf/any';
 export declare const protobufPackage = "tendermint.spn.launch";
+export interface ChainNameCount {
+    chainName: string;
+    count: number;
+}
 export interface Chain {
     chainID: string;
     coordinatorID: number;
@@ -19,6 +23,13 @@ export interface GenesisURL {
     url: string;
     hash: string;
 }
+export declare const ChainNameCount: {
+    encode(message: ChainNameCount, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): ChainNameCount;
+    fromJSON(object: any): ChainNameCount;
+    toJSON(message: ChainNameCount): unknown;
+    fromPartial(object: DeepPartial<ChainNameCount>): ChainNameCount;
+};
 export declare const Chain: {
     encode(message: Chain, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): Chain;

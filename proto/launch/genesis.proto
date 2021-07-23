@@ -2,7 +2,6 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 // this line is used by starport scaffolding # genesis/proto/import
-import "launch/chain_name_count.proto";
 import "launch/genesis_account.proto";
 import "launch/chain.proto";
 

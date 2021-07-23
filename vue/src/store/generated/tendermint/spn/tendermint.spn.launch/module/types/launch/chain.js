@@ -3,6 +3,76 @@ import * as Long from 'long';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import { Any } from '../google/protobuf/any';
 export const protobufPackage = 'tendermint.spn.launch';
+const baseChainNameCount = { chainName: '', count: 0 };
+export const ChainNameCount = {
+    encode(message, writer = Writer.create()) {
+        if (message.chainName !== '') {
+            writer.uint32(10).string(message.chainName);
+        }
+        if (message.count !== 0) {
+            writer.uint32(16).uint64(message.count);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof Uint8Array ? new Reader(input) : input;
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = { ...baseChainNameCount };
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    message.chainName = reader.string();
+                    break;
+                case 2:
+                    message.count = longToNumber(reader.uint64());
+                    break;
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+        return message;
+    },
+    fromJSON(object) {
+        const message = { ...baseChainNameCount };
+        if (object.chainName !== undefined && object.chainName !== null) {
+            message.chainName = String(object.chainName);
+        }
+        else {
+            message.chainName = '';
+        }
+        if (object.count !== undefined && object.count !== null) {
+            message.count = Number(object.count);
+        }
+        else {
+            message.count = 0;
+        }
+        return message;
+    },
+    toJSON(message) {
+        const obj = {};
+        message.chainName !== undefined && (obj.chainName = message.chainName);
+        message.count !== undefined && (obj.count = message.count);
+        return obj;
+    },
+    fromPartial(object) {
+        const message = { ...baseChainNameCount };
+        if (object.chainName !== undefined && object.chainName !== null) {
+            message.chainName = object.chainName;
+        }
+        else {
+            message.chainName = '';
+        }
+        if (object.count !== undefined && object.count !== null) {
+            message.count = object.count;
+        }
+        else {
+            message.count = 0;
+        }
+        return message;
+    }
+};
 const baseChain = { chainID: '', coordinatorID: 0, createdAt: 0, sourceURL: '', sourceHash: '', launchTriggered: false, launchTimestamp: 0 };
 export const Chain = {
     encode(message, writer = Writer.create()) {

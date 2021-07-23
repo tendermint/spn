@@ -1,7 +1,6 @@
 /* eslint-disable */
-import { ChainNameCount } from '../launch/chain_name_count';
+import { ChainNameCount, Chain } from '../launch/chain';
 import { GenesisAccount } from '../launch/genesis_account';
-import { Chain } from '../launch/chain';
 import { Writer, Reader } from 'protobufjs/minimal';
 export const protobufPackage = 'tendermint.spn.launch';
 const baseGenesisState = {};

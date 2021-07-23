@@ -95,12 +95,6 @@ export interface LaunchChain {
     /** @format int64 */
     launchTimestamp?: string;
 }
-export interface LaunchChainNameCount {
-    creator?: string;
-    chainName?: string;
-    /** @format uint64 */
-    count?: string;
-}
 export interface LaunchGenesisAccount {
     chainID?: string;
     address?: string;
@@ -108,19 +102,6 @@ export interface LaunchGenesisAccount {
 }
 export interface LaunchMsgCreateChainResponse {
     chainID?: string;
-}
-export interface LaunchQueryAllChainNameCountResponse {
-    chainNameCount?: LaunchChainNameCount[];
-    /**
-     * PageResponse is to be embedded in gRPC response messages where the
-     * corresponding request message has used PageRequest.
-     *
-     *  message SomeResponse {
-     *          repeated Bar results = 1;
-     *          PageResponse page = 2;
-     *  }
-     */
-    pagination?: V1Beta1PageResponse;
 }
 export interface LaunchQueryAllChainResponse {
     chain?: LaunchChain[];
@@ -147,9 +128,6 @@ export interface LaunchQueryAllGenesisAccountResponse {
      *  }
      */
     pagination?: V1Beta1PageResponse;
-}
-export interface LaunchQueryGetChainNameCountResponse {
-    chainNameCount?: LaunchChainNameCount;
 }
 export interface LaunchQueryGetChainResponse {
     chain?: LaunchChain;
@@ -425,29 +403,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * @request GET:/tendermint/spn/launch/chain/{chainID}
      */
     queryChain: (chainID: string, params?: RequestParams) => Promise<HttpResponse<LaunchQueryGetChainResponse, RpcStatus>>;
-    /**
-     * No description
-     *
-     * @tags Query
-     * @name QueryChainNameCountAll
-     * @summary Queries a list of chainNameCount items.
-     * @request GET:/tendermint/spn/launch/chainNameCount
-     */
-    queryChainNameCountAll: (query?: {
-        "pagination.key"?: string;
-        "pagination.offset"?: string;
-        "pagination.limit"?: string;
-        "pagination.countTotal"?: boolean;
-    }, params?: RequestParams) => Promise<HttpResponse<LaunchQueryAllChainNameCountResponse, RpcStatus>>;
-    /**
-     * No description
-     *
-     * @tags Query
-     * @name QueryChainNameCount
-     * @summary Queries a chainNameCount by index.
-     * @request GET:/tendermint/spn/launch/chainNameCount/{chainName}
-     */
-    queryChainNameCount: (chainName: string, params?: RequestParams) => Promise<HttpResponse<LaunchQueryGetChainNameCountResponse, RpcStatus>>;
     /**
      * No description
      *
