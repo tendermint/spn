@@ -13,5 +13,6 @@ declare const _default: {
     CosmosCosmosSdkIbcCoreChannelV1: (store: any) => void;
     CosmosCosmosSdkIbcCoreClientV1: (store: any) => void;
     CosmosCosmosSdkIbcCoreConnectionV1: (store: any) => void;
+    TendermintSpnTendermintSpnLaunch: (store: any) => void;
 };
 export default _default;

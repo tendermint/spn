@@ -27,7 +27,7 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	// this line is used by starport scaffolding # ibc/keeper/parameter
-	
+
 	profileKeeper types.ProfileKeeper,
 ) *Keeper {
 	return &Keeper{
