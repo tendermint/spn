@@ -11,7 +11,7 @@ import (
 func CmdUpdateCoordinatorDescription() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-coordinator-description",
-		Short: "Broadcast message update-coordinator-description",
+		Short: "Update a coordinator description",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			identity, err := cmd.Flags().GetString(flagIdentity)
