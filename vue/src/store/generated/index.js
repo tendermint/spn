@@ -30,7 +30,6 @@ export default {
     CosmosCosmosSdkIbcCoreChannelV1: load(CosmosCosmosSdkIbcCoreChannelV1, 'ibc.core.channel.v1'),
     CosmosCosmosSdkIbcCoreClientV1: load(CosmosCosmosSdkIbcCoreClientV1, 'ibc.core.client.v1'),
     CosmosCosmosSdkIbcCoreConnectionV1: load(CosmosCosmosSdkIbcCoreConnectionV1, 'ibc.core.connection.v1'),
-    TendermintSpnTendermintSpnAccount: load(TendermintSpnTendermintSpnAccount, 'tendermint.spn.account'),
     TendermintSpnTendermintSpnProfile: load(TendermintSpnTendermintSpnProfile, 'tendermint.spn.profile'),
 };
 function load(mod, fullns) {
