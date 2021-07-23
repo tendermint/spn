@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ValidatorByAddressAll(c context.Context, req *types.QueryAllValidatorByAddressRequest) (*types.QueryAllValidatorByAddressResponse, error) {
+func (k Keeper) ValidatorByAddressAll(c context.Context, req *types.QueryAllValidatorRequest) (*types.QueryAllValidatorResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -36,7 +36,7 @@ func (k Keeper) ValidatorByAddressAll(c context.Context, req *types.QueryAllVali
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllValidatorByAddressResponse{ValidatorByAddress: validatorByAddresss, Pagination: pageRes}, nil
+	return &types.QueryAllValidatorResponse{ValidatorByAddress: validatorByAddresss, Pagination: pageRes}, nil
 }
 
 func (k Keeper) ValidatorByAddress(c context.Context, req *types.QueryGetValidatorByAddressRequest) (*types.QueryGetValidatorByAddressResponse, error) {

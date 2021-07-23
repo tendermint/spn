@@ -115,7 +115,7 @@ func TestListValidatorByAddress(t *testing.T) {
 			args := request(nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListValidatorByAddress(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllValidatorByAddressResponse
+			var resp types.QueryAllValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
 				assert.Equal(t, objs[j], resp.ValidatorByAddress[j-i])
@@ -129,7 +129,7 @@ func TestListValidatorByAddress(t *testing.T) {
 			args := request(next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListValidatorByAddress(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllValidatorByAddressResponse
+			var resp types.QueryAllValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
 				assert.Equal(t, objs[j], resp.ValidatorByAddress[j-i])
@@ -141,7 +141,7 @@ func TestListValidatorByAddress(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListValidatorByAddress(), args)
 		require.NoError(t, err)
-		var resp types.QueryAllValidatorByAddressResponse
+		var resp types.QueryAllValidatorResponse
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))

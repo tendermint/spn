@@ -24,7 +24,7 @@ func CmdListValidatorByAddress() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllValidatorByAddressRequest{
+			params := &types.QueryAllValidatorRequest{
 				Pagination: pageReq,
 			}
 

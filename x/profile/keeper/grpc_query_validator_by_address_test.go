@@ -70,8 +70,8 @@ func TestValidatorByAddressQueryPaginated(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNValidatorByAddress(keeper, ctx, 5)
 
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllValidatorByAddressRequest {
-		return &types.QueryAllValidatorByAddressRequest{
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllValidatorRequest {
+		return &types.QueryAllValidatorRequest{
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,

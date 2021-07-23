@@ -13,10 +13,10 @@ option go_package = "github.com/tendermint/spn/x/profile/types";
 service Query {
   // this line is used by starport scaffolding # 2
 
-	// Queries a consensusKeyNonce by index.
-	rpc ConsensusKeyNonce(QueryGetConsensusKeyNonceRequest) returns (QueryGetConsensusKeyNonceResponse) {
-		option (google.api.http).get = "/tendermint/spn/profile/consensusKeyNonce/{consAddress}";
-	}
+  // Queries a consensusKeyNonce by index.
+  rpc ConsensusKeyNonce(QueryGetConsensusKeyNonceRequest) returns (QueryGetConsensusKeyNonceResponse) {
+    option (google.api.http).get = "/tendermint/spn/profile/consensusKeyNonce/{consAddress}";
+  }
 
   // Queries a validatorByConsAddress by index.
   rpc ValidatorByConsAddress(QueryGetValidatorByConsAddressRequest) returns (QueryGetValidatorByConsAddressResponse) {
@@ -29,7 +29,7 @@ service Query {
   }
 
   // Queries a list of validatorByAddress items.
-  rpc ValidatorByAddressAll(QueryAllValidatorByAddressRequest) returns (QueryAllValidatorByAddressResponse) {
+  rpc ValidatorByAddressAll(QueryAllValidatorRequest) returns (QueryAllValidatorResponse) {
     option (google.api.http).get = "/tendermint/spn/profile/validatorByAddress";
   }
 
@@ -53,12 +53,12 @@ service Query {
 
 // this line is used by starport scaffolding # 3
 message QueryGetConsensusKeyNonceRequest {
-	  string consAddress = 1;
+  string consAddress = 1;
 
 }
 
 message QueryGetConsensusKeyNonceResponse {
-	ConsensusKeyNonce consensusKeyNonce = 1;
+  ConsensusKeyNonce consensusKeyNonce = 1;
 }
 
 message QueryGetValidatorByConsAddressRequest {
@@ -79,14 +79,15 @@ message QueryGetValidatorByAddressResponse {
   ValidatorByAddress validatorByAddress = 1;
 }
 
-message QueryAllValidatorByAddressRequest {
+message QueryAllValidatorRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryAllValidatorByAddressResponse {
+message QueryAllValidatorResponse {
   repeated ValidatorByAddress validatorByAddress = 1;
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
+
 message QueryGetCoordinatorByAddressRequest {
   string address = 1;
 
