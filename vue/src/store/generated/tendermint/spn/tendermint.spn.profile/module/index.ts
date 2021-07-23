@@ -4,10 +4,12 @@ import { StdFee } from "@cosmjs/launchpad";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgCreateCoordinator } from "./types/profile/tx";
 import { MsgUpdateCoordinatorDescription } from "./types/profile/tx";
 
 
 const types = [
+  ["/tendermint.spn.profile.MsgCreateCoordinator", MsgCreateCoordinator],
   ["/tendermint.spn.profile.MsgUpdateCoordinatorDescription", MsgUpdateCoordinatorDescription],
   
 ];
@@ -37,6 +39,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
 
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
+    msgCreateCoordinator: (data: MsgCreateCoordinator): EncodeObject => ({ typeUrl: "/tendermint.spn.profile.MsgCreateCoordinator", value: data }),
     msgUpdateCoordinatorDescription: (data: MsgUpdateCoordinatorDescription): EncodeObject => ({ typeUrl: "/tendermint.spn.profile.MsgUpdateCoordinatorDescription", value: data }),
     
   };
