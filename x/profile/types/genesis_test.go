@@ -2,11 +2,11 @@ package types
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
 )
 
 func TestGenesisStateValidateValidator(t *testing.T) {
