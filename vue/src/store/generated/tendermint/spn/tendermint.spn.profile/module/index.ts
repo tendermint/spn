@@ -11,7 +11,7 @@ import { MsgUpdateCoordinatorDescription } from "./types/profile/tx";
 const types = [
   ["/tendermint.spn.profile.MsgCreateCoordinator", MsgCreateCoordinator],
   ["/tendermint.spn.profile.MsgUpdateCoordinatorDescription", MsgUpdateCoordinatorDescription],
-
+  
 ];
 export const MissingWalletError = new Error("wallet is required");
 
@@ -41,7 +41,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
     msgCreateCoordinator: (data: MsgCreateCoordinator): EncodeObject => ({ typeUrl: "/tendermint.spn.profile.MsgCreateCoordinator", value: data }),
     msgUpdateCoordinatorDescription: (data: MsgUpdateCoordinatorDescription): EncodeObject => ({ typeUrl: "/tendermint.spn.profile.MsgUpdateCoordinatorDescription", value: data }),
-
+    
   };
 };
 
