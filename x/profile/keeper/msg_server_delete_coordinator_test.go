@@ -11,8 +11,13 @@ import (
 
 func TestMsgDeleteCoordinator(t *testing.T) {
 	var (
-		addr1 = sample.AccAddress()
+		addr  = sample.AccAddress()
+		coord = msgCreateCoordinator()
 	)
+	srv, ctx := setupMsgServer(t)
+	if _, err := srv.CreateCoordinator(ctx, &coord); err != nil {
+		t.Fatal(err)
+	}
 	tests := []struct {
 		name string
 		msg  types.MsgDeleteCoordinator
@@ -20,12 +25,14 @@ func TestMsgDeleteCoordinator(t *testing.T) {
 	}{
 		{
 			name: "not found coordinator address",
-			msg:  types.MsgDeleteCoordinator{Address: addr1},
-			err:  sdkerrors.Wrap(types.ErrCoordAddressNotFound, addr1),
+			msg:  types.MsgDeleteCoordinator{Address: addr},
+			err:  sdkerrors.Wrap(types.ErrCoordAddressNotFound, addr),
 		},
-		// TODO: Add more test cases.
+		{
+			name: "delete coordinator",
+			msg:  types.MsgDeleteCoordinator{Address: coord.Address},
+		},
 	}
-	srv, ctx := setupMsgServer(t)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := srv.DeleteCoordinator(ctx, &tt.msg)
