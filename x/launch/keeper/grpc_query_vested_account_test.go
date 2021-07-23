@@ -62,6 +62,8 @@ func TestVestedAccountQuerySingle(t *testing.T) {
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
+				require.NoError(t, err)
+
 				// Cached value is cleared when the any type is encoded into the store
 				tc.response.VestedAccount.VestingOptions.ClearCachedValue()
 
