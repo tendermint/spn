@@ -7,10 +7,13 @@ import (
 )
 
 func Chain(chainID string, coordinatorID uint64) *launch.Chain {
-	defaultGenesis, err := types.NewAnyWithValue(&launch.DefaultInitialGenesis{})
+	defaultGenesis, err := types.NewAnyWithValue((*launch.DefaultInitialGenesis)(nil))
 	if err != nil {
 		panic(err)
 	}
+
+	// Byte array is nullified in the store if empty
+	defaultGenesis.Value = []byte(nil)
 
 	return &launch.Chain{
 		ChainID:         chainID,
