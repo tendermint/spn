@@ -13,6 +13,7 @@ func CmdListValidatorByAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-validator-by-address",
 		Short: "list all validatorByAddress",
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 

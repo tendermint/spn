@@ -23,10 +23,9 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type ValidatorByAddress struct {
-	Creator          string                `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Address          string                `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	ConsensusAddress string                `protobuf:"bytes,3,opt,name=consensusAddress,proto3" json:"consensusAddress,omitempty"`
-	Description      *ValidatorDescription `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Address          string                `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	ConsensusAddress string                `protobuf:"bytes,2,opt,name=consensusAddress,proto3" json:"consensusAddress,omitempty"`
+	Description      *ValidatorDescription `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 }
 
 func (m *ValidatorByAddress) Reset()         { *m = ValidatorByAddress{} }
@@ -61,13 +60,6 @@ func (m *ValidatorByAddress) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_ValidatorByAddress proto.InternalMessageInfo
-
-func (m *ValidatorByAddress) GetCreator() string {
-	if m != nil {
-		return m.Creator
-	}
-	return ""
-}
 
 func (m *ValidatorByAddress) GetAddress() string {
 	if m != nil {
@@ -166,35 +158,89 @@ func (m *ValidatorDescription) GetDetails() string {
 	return ""
 }
 
+type ValidatorByConsAddress struct {
+	ConsAddress string `protobuf:"bytes,1,opt,name=consAddress,proto3" json:"consAddress,omitempty"`
+	Address     string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *ValidatorByConsAddress) Reset()         { *m = ValidatorByConsAddress{} }
+func (m *ValidatorByConsAddress) String() string { return proto.CompactTextString(m) }
+func (*ValidatorByConsAddress) ProtoMessage()    {}
+func (*ValidatorByConsAddress) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8e2276f43ab77aa3, []int{2}
+}
+func (m *ValidatorByConsAddress) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ValidatorByConsAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ValidatorByConsAddress.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ValidatorByConsAddress) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ValidatorByConsAddress.Merge(m, src)
+}
+func (m *ValidatorByConsAddress) XXX_Size() int {
+	return m.Size()
+}
+func (m *ValidatorByConsAddress) XXX_DiscardUnknown() {
+	xxx_messageInfo_ValidatorByConsAddress.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ValidatorByConsAddress proto.InternalMessageInfo
+
+func (m *ValidatorByConsAddress) GetConsAddress() string {
+	if m != nil {
+		return m.ConsAddress
+	}
+	return ""
+}
+
+func (m *ValidatorByConsAddress) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*ValidatorByAddress)(nil), "tendermint.spn.profile.ValidatorByAddress")
 	proto.RegisterType((*ValidatorDescription)(nil), "tendermint.spn.profile.ValidatorDescription")
+	proto.RegisterType((*ValidatorByConsAddress)(nil), "tendermint.spn.profile.ValidatorByConsAddress")
 }
 
 func init() { proto.RegisterFile("profile/validator.proto", fileDescriptor_8e2276f43ab77aa3) }
 
 var fileDescriptor_8e2276f43ab77aa3 = []byte{
-	// 310 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x91, 0x3d, 0x4e, 0x03, 0x31,
-	0x10, 0x85, 0x63, 0xfe, 0xe3, 0x14, 0x20, 0x0b, 0xc1, 0x8a, 0x62, 0x15, 0xa5, 0x0a, 0x08, 0xed,
-	0x4a, 0x70, 0x02, 0x12, 0x6a, 0x8a, 0x14, 0x14, 0x74, 0x9b, 0xf5, 0x00, 0x23, 0x12, 0xdb, 0xf2,
-	0x4c, 0x80, 0xbd, 0x05, 0xe7, 0xe0, 0x1c, 0x14, 0x94, 0x29, 0x29, 0x51, 0x72, 0x11, 0xb4, 0x59,
-	0x6f, 0x82, 0x20, 0xe5, 0x37, 0xf3, 0xfc, 0xf4, 0x9e, 0x47, 0x1e, 0x3b, 0x6f, 0xef, 0x71, 0x04,
-	0xe9, 0x73, 0x36, 0x42, 0x9d, 0xb1, 0xf5, 0x89, 0xf3, 0x96, 0xad, 0x3a, 0x62, 0x30, 0x1a, 0xfc,
-	0x18, 0x0d, 0x27, 0xe4, 0x4c, 0x12, 0x74, 0x9d, 0x0f, 0x21, 0xd5, 0x6d, 0xad, 0xed, 0x15, 0x57,
-	0x5a, 0x7b, 0x20, 0x52, 0x91, 0xdc, 0xcd, 0x3d, 0x94, 0xb3, 0x48, 0xb4, 0x45, 0xb7, 0x39, 0xa8,
-	0xb1, 0xdc, 0x64, 0x95, 0x28, 0xda, 0xa8, 0x36, 0x01, 0xd5, 0x99, 0x3c, 0xc8, 0xad, 0x21, 0x30,
-	0x34, 0xa1, 0xe0, 0x13, 0x6d, 0x2e, 0x24, 0xff, 0xe6, 0xea, 0x46, 0xb6, 0x34, 0x50, 0xee, 0xd1,
-	0x31, 0x5a, 0x13, 0x6d, 0xb5, 0x45, 0xb7, 0x75, 0x71, 0x9e, 0xac, 0x0f, 0x99, 0x2c, 0x03, 0x5e,
-	0xaf, 0xde, 0x0c, 0x7e, 0x1b, 0x74, 0xde, 0x85, 0x3c, 0x5c, 0xa7, 0x52, 0x27, 0x72, 0x0f, 0x35,
-	0x18, 0x46, 0x2e, 0x42, 0x93, 0x25, 0x97, 0x55, 0xc6, 0xd6, 0xe0, 0x13, 0xf8, 0xba, 0x4a, 0xc0,
-	0x72, 0xf3, 0x02, 0x43, 0x42, 0x86, 0xd0, 0xa0, 0x46, 0xd5, 0x95, 0xfb, 0x04, 0xf9, 0xc4, 0x23,
-	0x17, 0x7d, 0x6b, 0x38, 0xcb, 0x79, 0x11, 0xbe, 0x39, 0xf8, 0x3b, 0x2e, 0x3d, 0x34, 0x70, 0x86,
-	0x23, 0x8a, 0xb6, 0x2b, 0x8f, 0x80, 0xbd, 0xfe, 0xe7, 0x2c, 0x16, 0xd3, 0x59, 0x2c, 0xbe, 0x67,
-	0xb1, 0x78, 0x9b, 0xc7, 0x8d, 0xe9, 0x3c, 0x6e, 0x7c, 0xcd, 0xe3, 0xc6, 0xdd, 0xe9, 0x03, 0xf2,
-	0xe3, 0x64, 0x98, 0xe4, 0x76, 0x9c, 0xae, 0xfe, 0x22, 0x25, 0x67, 0xd2, 0xd7, 0xb4, 0x3e, 0x2d,
-	0x17, 0x0e, 0x68, 0xb8, 0xb3, 0xb8, 0xeb, 0xe5, 0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xf7, 0x61,
-	0x08, 0xea, 0xf2, 0x01, 0x00, 0x00,
+	// 325 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x92, 0xbf, 0x4e, 0xc3, 0x30,
+	0x10, 0xc6, 0xeb, 0xf2, 0xb7, 0xee, 0x00, 0xb2, 0x50, 0x89, 0x18, 0xa2, 0xaa, 0x53, 0x41, 0x28,
+	0x91, 0xe0, 0x09, 0x68, 0x99, 0x19, 0x2a, 0xc4, 0xc0, 0x96, 0xc6, 0x07, 0x9c, 0x68, 0xed, 0xc8,
+	0x77, 0x05, 0xf2, 0x16, 0x3c, 0x07, 0x4f, 0xc2, 0xd8, 0x91, 0x11, 0xb5, 0x2f, 0x82, 0x92, 0x26,
+	0x4d, 0x80, 0x6e, 0xfe, 0xce, 0x9f, 0x3f, 0xfd, 0xfc, 0xe9, 0xe4, 0x71, 0xe2, 0xec, 0x03, 0x4e,
+	0x20, 0x7c, 0x89, 0x26, 0xa8, 0x23, 0xb6, 0x2e, 0x48, 0x9c, 0x65, 0xab, 0x3a, 0x0c, 0x46, 0x83,
+	0x9b, 0xa2, 0xe1, 0x80, 0x12, 0x13, 0x14, 0xbe, 0xde, 0x87, 0x90, 0xea, 0xae, 0xf4, 0x0e, 0xd2,
+	0x2b, 0xad, 0x1d, 0x10, 0x29, 0x4f, 0xee, 0x45, 0xab, 0xa3, 0x27, 0xba, 0xa2, 0xdf, 0x1a, 0x95,
+	0x52, 0x9d, 0xc9, 0xc3, 0xd8, 0x1a, 0x02, 0x43, 0x33, 0x2a, 0xdc, 0x5e, 0x33, 0xb7, 0xfc, 0x9b,
+	0xab, 0x1b, 0xd9, 0xd6, 0x40, 0xb1, 0xc3, 0x84, 0xd1, 0x1a, 0x6f, 0xab, 0x2b, 0xfa, 0xed, 0x8b,
+	0xf3, 0x60, 0x33, 0x4a, 0xb0, 0xc6, 0xb8, 0xae, 0xde, 0x8c, 0xea, 0x01, 0x19, 0xec, 0xd1, 0x26,
+	0x97, 0x3a, 0x91, 0xfb, 0xa8, 0xc1, 0x30, 0x72, 0x5a, 0xf0, 0xae, 0x75, 0xf6, 0x95, 0xa9, 0x35,
+	0xf8, 0x0c, 0xae, 0xe0, 0x2c, 0x65, 0x76, 0xf3, 0x0a, 0x63, 0x42, 0x86, 0x1c, 0xad, 0x35, 0x2a,
+	0xa5, 0xea, 0xcb, 0x03, 0x82, 0x78, 0xe6, 0x90, 0xd3, 0xa1, 0x35, 0x1c, 0xc5, 0xec, 0x6d, 0xe7,
+	0x8e, 0xbf, 0xe3, 0x2c, 0x43, 0x03, 0x47, 0x38, 0x21, 0x6f, 0x67, 0x95, 0x51, 0xc8, 0xde, 0xad,
+	0xec, 0xd4, 0x8a, 0x1d, 0x5a, 0xb3, 0xae, 0xa5, 0x2b, 0xdb, 0x71, 0x25, 0x0b, 0xe0, 0xfa, 0xa8,
+	0x5e, 0x7f, 0xf3, 0x57, 0xfd, 0x83, 0xe1, 0xe7, 0xc2, 0x17, 0xf3, 0x85, 0x2f, 0xbe, 0x17, 0xbe,
+	0x78, 0x5f, 0xfa, 0x8d, 0xf9, 0xd2, 0x6f, 0x7c, 0x2d, 0xfd, 0xc6, 0xfd, 0xe9, 0x23, 0xf2, 0xd3,
+	0x6c, 0x1c, 0xc4, 0x76, 0x1a, 0x56, 0x0d, 0x87, 0x94, 0x98, 0xf0, 0x2d, 0x2c, 0xd7, 0x82, 0xd3,
+	0x04, 0x68, 0xbc, 0x9b, 0xef, 0xc4, 0xe5, 0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x15, 0x13, 0x6c,
+	0x06, 0x2e, 0x02, 0x00, 0x00,
 }
 
 func (m *ValidatorByAddress) Marshal() (dAtA []byte, err error) {
@@ -227,26 +273,19 @@ func (m *ValidatorByAddress) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i = encodeVarintValidator(dAtA, i, uint64(size))
 		}
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x1a
 	}
 	if len(m.ConsensusAddress) > 0 {
 		i -= len(m.ConsensusAddress)
 		copy(dAtA[i:], m.ConsensusAddress)
 		i = encodeVarintValidator(dAtA, i, uint64(len(m.ConsensusAddress)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x12
 	}
 	if len(m.Address) > 0 {
 		i -= len(m.Address)
 		copy(dAtA[i:], m.Address)
 		i = encodeVarintValidator(dAtA, i, uint64(len(m.Address)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintValidator(dAtA, i, uint64(len(m.Creator)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -311,6 +350,43 @@ func (m *ValidatorDescription) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *ValidatorByConsAddress) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ValidatorByConsAddress) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ValidatorByConsAddress) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintValidator(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ConsAddress) > 0 {
+		i -= len(m.ConsAddress)
+		copy(dAtA[i:], m.ConsAddress)
+		i = encodeVarintValidator(dAtA, i, uint64(len(m.ConsAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintValidator(dAtA []byte, offset int, v uint64) int {
 	offset -= sovValidator(v)
 	base := offset
@@ -328,10 +404,6 @@ func (m *ValidatorByAddress) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.Creator)
-	if l > 0 {
-		n += 1 + l + sovValidator(uint64(l))
-	}
 	l = len(m.Address)
 	if l > 0 {
 		n += 1 + l + sovValidator(uint64(l))
@@ -376,6 +448,23 @@ func (m *ValidatorDescription) Size() (n int) {
 	return n
 }
 
+func (m *ValidatorByConsAddress) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ConsAddress)
+	if l > 0 {
+		n += 1 + l + sovValidator(uint64(l))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovValidator(uint64(l))
+	}
+	return n
+}
+
 func sovValidator(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
@@ -413,38 +502,6 @@ func (m *ValidatorByAddress) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowValidator
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthValidator
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthValidator
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
 			}
 			var stringLen uint64
@@ -475,7 +532,7 @@ func (m *ValidatorByAddress) Unmarshal(dAtA []byte) error {
 			}
 			m.Address = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ConsensusAddress", wireType)
 			}
@@ -507,7 +564,7 @@ func (m *ValidatorByAddress) Unmarshal(dAtA []byte) error {
 			}
 			m.ConsensusAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 4:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
 			}
@@ -752,6 +809,120 @@ func (m *ValidatorDescription) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Details = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipValidator(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthValidator
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ValidatorByConsAddress) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowValidator
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ValidatorByConsAddress: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ValidatorByConsAddress: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ConsAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowValidator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthValidator
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthValidator
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ConsAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowValidator
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthValidator
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthValidator
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

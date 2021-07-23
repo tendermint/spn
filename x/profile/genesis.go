@@ -10,6 +10,11 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// this line is used by starport scaffolding # genesis/module/init
+	// Set all the validatorByConsAddress
+	for _, elem := range genState.ValidatorByConsAddressList {
+		k.SetValidatorByConsAddress(ctx, *elem)
+	}
+
 	// Set all the validatorByAddress
 	for _, elem := range genState.ValidatorByAddressList {
 		k.SetValidatorByAddress(ctx, *elem)
@@ -36,6 +41,13 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
 	// this line is used by starport scaffolding # genesis/module/export
+	// Get all validatorByConsAddress
+	validatorByConsAddressList := k.GetAllValidatorByConsAddress(ctx)
+	for _, elem := range validatorByConsAddressList {
+		elem := elem
+		genesis.ValidatorByConsAddressList = append(genesis.ValidatorByConsAddressList, &elem)
+	}
+
 	// Get all validatorByAddress
 	validatorByAddressList := k.GetAllValidatorByAddress(ctx)
 	for _, elem := range validatorByAddressList {
