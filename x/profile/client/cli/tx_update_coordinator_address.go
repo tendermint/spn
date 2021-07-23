@@ -15,7 +15,7 @@ var _ = strconv.Itoa(0)
 func CmdUpdateCoordinatorAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-coordinator-address [newAddress]",
-		Short: "Broadcast message update-coordinator-address",
+		Short: "Update a coordinator address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)

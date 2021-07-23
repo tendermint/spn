@@ -9,6 +9,13 @@ export interface MsgCreateCoordinator {
 export interface MsgCreateCoordinatorResponse {
     coordinatorId: number;
 }
+export interface MsgUpdateCoordinatorAddress {
+    address: string;
+    newAddress: string;
+}
+export interface MsgUpdateCoordinatorAddressResponse {
+    coordinatorId: number;
+}
 export declare const MsgCreateCoordinator: {
     encode(message: MsgCreateCoordinator, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreateCoordinator;
@@ -23,15 +30,31 @@ export declare const MsgCreateCoordinatorResponse: {
     toJSON(message: MsgCreateCoordinatorResponse): unknown;
     fromPartial(object: DeepPartial<MsgCreateCoordinatorResponse>): MsgCreateCoordinatorResponse;
 };
+export declare const MsgUpdateCoordinatorAddress: {
+    encode(message: MsgUpdateCoordinatorAddress, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdateCoordinatorAddress;
+    fromJSON(object: any): MsgUpdateCoordinatorAddress;
+    toJSON(message: MsgUpdateCoordinatorAddress): unknown;
+    fromPartial(object: DeepPartial<MsgUpdateCoordinatorAddress>): MsgUpdateCoordinatorAddress;
+};
+export declare const MsgUpdateCoordinatorAddressResponse: {
+    encode(message: MsgUpdateCoordinatorAddressResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgUpdateCoordinatorAddressResponse;
+    fromJSON(object: any): MsgUpdateCoordinatorAddressResponse;
+    toJSON(message: MsgUpdateCoordinatorAddressResponse): unknown;
+    fromPartial(object: DeepPartial<MsgUpdateCoordinatorAddressResponse>): MsgUpdateCoordinatorAddressResponse;
+};
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
     CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>;
+    UpdateCoordinatorAddress(request: MsgUpdateCoordinatorAddress): Promise<MsgUpdateCoordinatorAddressResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
     CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>;
+    UpdateCoordinatorAddress(request: MsgUpdateCoordinatorAddress): Promise<MsgUpdateCoordinatorAddressResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
