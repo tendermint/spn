@@ -78,7 +78,7 @@ func (gs GenesisState) validateValidator() error {
 	}
 	// Check if all coordinator by address exist
 	for _, address := range validatorByConsAddressIndexMap {
-		return fmt.Errorf("validator not found for address: %s", address)
+		return fmt.Errorf("validator not found for consensus address: %s", address)
 	}
 	return nil
 }
