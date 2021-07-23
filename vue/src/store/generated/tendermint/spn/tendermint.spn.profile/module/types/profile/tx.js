@@ -1,22 +1,23 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { CoordinatorDescription } from '../profile/coordinator';
 export const protobufPackage = 'tendermint.spn.profile';
-const baseMsgUpdateCoordinatorAddress = { address: '', newAddress: '' };
-export const MsgUpdateCoordinatorAddress = {
+const baseMsgCreateCoordinator = { address: '' };
+export const MsgCreateCoordinator = {
     encode(message, writer = Writer.create()) {
         if (message.address !== '') {
             writer.uint32(10).string(message.address);
         }
-        if (message.newAddress !== '') {
-            writer.uint32(18).string(message.newAddress);
+        if (message.description !== undefined) {
+            CoordinatorDescription.encode(message.description, writer.uint32(18).fork()).ldelim();
         }
         return writer;
     },
     decode(input, length) {
         const reader = input instanceof Uint8Array ? new Reader(input) : input;
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMsgUpdateCoordinatorAddress };
+        const message = { ...baseMsgCreateCoordinator };
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -24,7 +25,7 @@ export const MsgUpdateCoordinatorAddress = {
                     message.address = reader.string();
                     break;
                 case 2:
-                    message.newAddress = reader.string();
+                    message.description = CoordinatorDescription.decode(reader, reader.uint32());
                     break;
                 default:
                     reader.skipType(tag & 7);
@@ -34,46 +35,46 @@ export const MsgUpdateCoordinatorAddress = {
         return message;
     },
     fromJSON(object) {
-        const message = { ...baseMsgUpdateCoordinatorAddress };
+        const message = { ...baseMsgCreateCoordinator };
         if (object.address !== undefined && object.address !== null) {
             message.address = String(object.address);
         }
         else {
             message.address = '';
         }
-        if (object.newAddress !== undefined && object.newAddress !== null) {
-            message.newAddress = String(object.newAddress);
+        if (object.description !== undefined && object.description !== null) {
+            message.description = CoordinatorDescription.fromJSON(object.description);
         }
         else {
-            message.newAddress = '';
+            message.description = undefined;
         }
         return message;
     },
     toJSON(message) {
         const obj = {};
         message.address !== undefined && (obj.address = message.address);
-        message.newAddress !== undefined && (obj.newAddress = message.newAddress);
+        message.description !== undefined && (obj.description = message.description ? CoordinatorDescription.toJSON(message.description) : undefined);
         return obj;
     },
     fromPartial(object) {
-        const message = { ...baseMsgUpdateCoordinatorAddress };
+        const message = { ...baseMsgCreateCoordinator };
         if (object.address !== undefined && object.address !== null) {
             message.address = object.address;
         }
         else {
             message.address = '';
         }
-        if (object.newAddress !== undefined && object.newAddress !== null) {
-            message.newAddress = object.newAddress;
+        if (object.description !== undefined && object.description !== null) {
+            message.description = CoordinatorDescription.fromPartial(object.description);
         }
         else {
-            message.newAddress = '';
+            message.description = undefined;
         }
         return message;
     }
 };
-const baseMsgUpdateCoordinatorAddressResponse = { coordinatorId: 0 };
-export const MsgUpdateCoordinatorAddressResponse = {
+const baseMsgCreateCoordinatorResponse = { coordinatorId: 0 };
+export const MsgCreateCoordinatorResponse = {
     encode(message, writer = Writer.create()) {
         if (message.coordinatorId !== 0) {
             writer.uint32(8).uint64(message.coordinatorId);
@@ -83,7 +84,7 @@ export const MsgUpdateCoordinatorAddressResponse = {
     decode(input, length) {
         const reader = input instanceof Uint8Array ? new Reader(input) : input;
         let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMsgUpdateCoordinatorAddressResponse };
+        const message = { ...baseMsgCreateCoordinatorResponse };
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -98,7 +99,7 @@ export const MsgUpdateCoordinatorAddressResponse = {
         return message;
     },
     fromJSON(object) {
-        const message = { ...baseMsgUpdateCoordinatorAddressResponse };
+        const message = { ...baseMsgCreateCoordinatorResponse };
         if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
             message.coordinatorId = Number(object.coordinatorId);
         }
@@ -113,7 +114,7 @@ export const MsgUpdateCoordinatorAddressResponse = {
         return obj;
     },
     fromPartial(object) {
-        const message = { ...baseMsgUpdateCoordinatorAddressResponse };
+        const message = { ...baseMsgCreateCoordinatorResponse };
         if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
             message.coordinatorId = object.coordinatorId;
         }
@@ -127,10 +128,10 @@ export class MsgClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
     }
-    UpdateCoordinatorAddress(request) {
-        const data = MsgUpdateCoordinatorAddress.encode(request).finish();
-        const promise = this.rpc.request('tendermint.spn.profile.Msg', 'UpdateCoordinatorAddress', data);
-        return promise.then((data) => MsgUpdateCoordinatorAddressResponse.decode(new Reader(data)));
+    CreateCoordinator(request) {
+        const data = MsgCreateCoordinator.encode(request).finish();
+        const promise = this.rpc.request('tendermint.spn.profile.Msg', 'CreateCoordinator', data);
+        return promise.then((data) => MsgCreateCoordinatorResponse.decode(new Reader(data)));
     }
 }
 var globalThis = (() => {

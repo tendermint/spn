@@ -1,36 +1,37 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from 'protobufjs/minimal'
 import * as Long from 'long'
+import { CoordinatorDescription } from '../profile/coordinator'
 
 export const protobufPackage = 'tendermint.spn.profile'
 
 /** this line is used by starport scaffolding # proto/tx/message */
-export interface MsgUpdateCoordinatorAddress {
+export interface MsgCreateCoordinator {
   address: string
-  newAddress: string
+  description: CoordinatorDescription | undefined
 }
 
-export interface MsgUpdateCoordinatorAddressResponse {
+export interface MsgCreateCoordinatorResponse {
   coordinatorId: number
 }
 
-const baseMsgUpdateCoordinatorAddress: object = { address: '', newAddress: '' }
+const baseMsgCreateCoordinator: object = { address: '' }
 
-export const MsgUpdateCoordinatorAddress = {
-  encode(message: MsgUpdateCoordinatorAddress, writer: Writer = Writer.create()): Writer {
+export const MsgCreateCoordinator = {
+  encode(message: MsgCreateCoordinator, writer: Writer = Writer.create()): Writer {
     if (message.address !== '') {
       writer.uint32(10).string(message.address)
     }
-    if (message.newAddress !== '') {
-      writer.uint32(18).string(message.newAddress)
+    if (message.description !== undefined) {
+      CoordinatorDescription.encode(message.description, writer.uint32(18).fork()).ldelim()
     }
     return writer
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MsgUpdateCoordinatorAddress {
+  decode(input: Reader | Uint8Array, length?: number): MsgCreateCoordinator {
     const reader = input instanceof Uint8Array ? new Reader(input) : input
     let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseMsgUpdateCoordinatorAddress } as MsgUpdateCoordinatorAddress
+    const message = { ...baseMsgCreateCoordinator } as MsgCreateCoordinator
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
@@ -38,7 +39,7 @@ export const MsgUpdateCoordinatorAddress = {
           message.address = reader.string()
           break
         case 2:
-          message.newAddress = reader.string()
+          message.description = CoordinatorDescription.decode(reader, reader.uint32())
           break
         default:
           reader.skipType(tag & 7)
@@ -48,58 +49,58 @@ export const MsgUpdateCoordinatorAddress = {
     return message
   },
 
-  fromJSON(object: any): MsgUpdateCoordinatorAddress {
-    const message = { ...baseMsgUpdateCoordinatorAddress } as MsgUpdateCoordinatorAddress
+  fromJSON(object: any): MsgCreateCoordinator {
+    const message = { ...baseMsgCreateCoordinator } as MsgCreateCoordinator
     if (object.address !== undefined && object.address !== null) {
       message.address = String(object.address)
     } else {
       message.address = ''
     }
-    if (object.newAddress !== undefined && object.newAddress !== null) {
-      message.newAddress = String(object.newAddress)
+    if (object.description !== undefined && object.description !== null) {
+      message.description = CoordinatorDescription.fromJSON(object.description)
     } else {
-      message.newAddress = ''
+      message.description = undefined
     }
     return message
   },
 
-  toJSON(message: MsgUpdateCoordinatorAddress): unknown {
+  toJSON(message: MsgCreateCoordinator): unknown {
     const obj: any = {}
     message.address !== undefined && (obj.address = message.address)
-    message.newAddress !== undefined && (obj.newAddress = message.newAddress)
+    message.description !== undefined && (obj.description = message.description ? CoordinatorDescription.toJSON(message.description) : undefined)
     return obj
   },
 
-  fromPartial(object: DeepPartial<MsgUpdateCoordinatorAddress>): MsgUpdateCoordinatorAddress {
-    const message = { ...baseMsgUpdateCoordinatorAddress } as MsgUpdateCoordinatorAddress
+  fromPartial(object: DeepPartial<MsgCreateCoordinator>): MsgCreateCoordinator {
+    const message = { ...baseMsgCreateCoordinator } as MsgCreateCoordinator
     if (object.address !== undefined && object.address !== null) {
       message.address = object.address
     } else {
       message.address = ''
     }
-    if (object.newAddress !== undefined && object.newAddress !== null) {
-      message.newAddress = object.newAddress
+    if (object.description !== undefined && object.description !== null) {
+      message.description = CoordinatorDescription.fromPartial(object.description)
     } else {
-      message.newAddress = ''
+      message.description = undefined
     }
     return message
   }
 }
 
-const baseMsgUpdateCoordinatorAddressResponse: object = { coordinatorId: 0 }
+const baseMsgCreateCoordinatorResponse: object = { coordinatorId: 0 }
 
-export const MsgUpdateCoordinatorAddressResponse = {
-  encode(message: MsgUpdateCoordinatorAddressResponse, writer: Writer = Writer.create()): Writer {
+export const MsgCreateCoordinatorResponse = {
+  encode(message: MsgCreateCoordinatorResponse, writer: Writer = Writer.create()): Writer {
     if (message.coordinatorId !== 0) {
       writer.uint32(8).uint64(message.coordinatorId)
     }
     return writer
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MsgUpdateCoordinatorAddressResponse {
+  decode(input: Reader | Uint8Array, length?: number): MsgCreateCoordinatorResponse {
     const reader = input instanceof Uint8Array ? new Reader(input) : input
     let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseMsgUpdateCoordinatorAddressResponse } as MsgUpdateCoordinatorAddressResponse
+    const message = { ...baseMsgCreateCoordinatorResponse } as MsgCreateCoordinatorResponse
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
@@ -114,8 +115,8 @@ export const MsgUpdateCoordinatorAddressResponse = {
     return message
   },
 
-  fromJSON(object: any): MsgUpdateCoordinatorAddressResponse {
-    const message = { ...baseMsgUpdateCoordinatorAddressResponse } as MsgUpdateCoordinatorAddressResponse
+  fromJSON(object: any): MsgCreateCoordinatorResponse {
+    const message = { ...baseMsgCreateCoordinatorResponse } as MsgCreateCoordinatorResponse
     if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
       message.coordinatorId = Number(object.coordinatorId)
     } else {
@@ -124,14 +125,14 @@ export const MsgUpdateCoordinatorAddressResponse = {
     return message
   },
 
-  toJSON(message: MsgUpdateCoordinatorAddressResponse): unknown {
+  toJSON(message: MsgCreateCoordinatorResponse): unknown {
     const obj: any = {}
     message.coordinatorId !== undefined && (obj.coordinatorId = message.coordinatorId)
     return obj
   },
 
-  fromPartial(object: DeepPartial<MsgUpdateCoordinatorAddressResponse>): MsgUpdateCoordinatorAddressResponse {
-    const message = { ...baseMsgUpdateCoordinatorAddressResponse } as MsgUpdateCoordinatorAddressResponse
+  fromPartial(object: DeepPartial<MsgCreateCoordinatorResponse>): MsgCreateCoordinatorResponse {
+    const message = { ...baseMsgCreateCoordinatorResponse } as MsgCreateCoordinatorResponse
     if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
       message.coordinatorId = object.coordinatorId
     } else {
@@ -144,7 +145,7 @@ export const MsgUpdateCoordinatorAddressResponse = {
 /** Msg defines the Msg service. */
 export interface Msg {
   /** this line is used by starport scaffolding # proto/tx/rpc */
-  UpdateCoordinatorAddress(request: MsgUpdateCoordinatorAddress): Promise<MsgUpdateCoordinatorAddressResponse>
+  CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>
 }
 
 export class MsgClientImpl implements Msg {
@@ -152,10 +153,10 @@ export class MsgClientImpl implements Msg {
   constructor(rpc: Rpc) {
     this.rpc = rpc
   }
-  UpdateCoordinatorAddress(request: MsgUpdateCoordinatorAddress): Promise<MsgUpdateCoordinatorAddressResponse> {
-    const data = MsgUpdateCoordinatorAddress.encode(request).finish()
-    const promise = this.rpc.request('tendermint.spn.profile.Msg', 'UpdateCoordinatorAddress', data)
-    return promise.then((data) => MsgUpdateCoordinatorAddressResponse.decode(new Reader(data)))
+  CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse> {
+    const data = MsgCreateCoordinator.encode(request).finish()
+    const promise = this.rpc.request('tendermint.spn.profile.Msg', 'CreateCoordinator', data)
+    return promise.then((data) => MsgCreateCoordinatorResponse.decode(new Reader(data)))
   }
 }
 

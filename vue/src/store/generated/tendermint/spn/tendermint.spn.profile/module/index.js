@@ -2,10 +2,11 @@
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
+import { MsgCreateCoordinator } from "./types/profile/tx";
 import { MsgUpdateCoordinatorAddress } from "./types/profile/tx";
 const types = [
+    ["/tendermint.spn.profile.MsgCreateCoordinator", MsgCreateCoordinator],
     ["/tendermint.spn.profile.MsgUpdateCoordinatorAddress", MsgUpdateCoordinatorAddress],
-];
 export const MissingWalletError = new Error("wallet is required");
 const registry = new Registry(types);
 const defaultFee = {
@@ -19,6 +20,7 @@ const txClient = async (wallet, { addr: addr } = { addr: "http://localhost:26657
     const { address } = (await wallet.getAccounts())[0];
     return {
         signAndBroadcast: (msgs, { fee, memo } = { fee: defaultFee, memo: "" }) => client.signAndBroadcast(address, msgs, fee, memo),
+        msgCreateCoordinator: (data) => ({ typeUrl: "/tendermint.spn.profile.MsgCreateCoordinator", value: data }),
         msgUpdateCoordinatorAddress: (data) => ({ typeUrl: "/tendermint.spn.profile.MsgUpdateCoordinatorAddress", value: data }),
     };
 };

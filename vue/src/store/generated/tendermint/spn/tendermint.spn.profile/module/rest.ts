@@ -29,7 +29,7 @@ export interface ProfileCoordinatorDescription {
   details?: string;
 }
 
-export interface ProfileMsgUpdateCoordinatorAddressResponse {
+export interface ProfileMsgCreateCoordinatorResponse {
   /** @format uint64 */
   coordinatorId?: string;
 }

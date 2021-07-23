@@ -1,36 +1,37 @@
 import { Reader, Writer } from 'protobufjs/minimal';
+import { CoordinatorDescription } from '../profile/coordinator';
 export declare const protobufPackage = "tendermint.spn.profile";
 /** this line is used by starport scaffolding # proto/tx/message */
-export interface MsgUpdateCoordinatorAddress {
+export interface MsgCreateCoordinator {
     address: string;
-    newAddress: string;
+    description: CoordinatorDescription | undefined;
 }
-export interface MsgUpdateCoordinatorAddressResponse {
+export interface MsgCreateCoordinatorResponse {
     coordinatorId: number;
 }
-export declare const MsgUpdateCoordinatorAddress: {
-    encode(message: MsgUpdateCoordinatorAddress, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): MsgUpdateCoordinatorAddress;
-    fromJSON(object: any): MsgUpdateCoordinatorAddress;
-    toJSON(message: MsgUpdateCoordinatorAddress): unknown;
-    fromPartial(object: DeepPartial<MsgUpdateCoordinatorAddress>): MsgUpdateCoordinatorAddress;
+export declare const MsgCreateCoordinator: {
+    encode(message: MsgCreateCoordinator, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateCoordinator;
+    fromJSON(object: any): MsgCreateCoordinator;
+    toJSON(message: MsgCreateCoordinator): unknown;
+    fromPartial(object: DeepPartial<MsgCreateCoordinator>): MsgCreateCoordinator;
 };
-export declare const MsgUpdateCoordinatorAddressResponse: {
-    encode(message: MsgUpdateCoordinatorAddressResponse, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): MsgUpdateCoordinatorAddressResponse;
-    fromJSON(object: any): MsgUpdateCoordinatorAddressResponse;
-    toJSON(message: MsgUpdateCoordinatorAddressResponse): unknown;
-    fromPartial(object: DeepPartial<MsgUpdateCoordinatorAddressResponse>): MsgUpdateCoordinatorAddressResponse;
+export declare const MsgCreateCoordinatorResponse: {
+    encode(message: MsgCreateCoordinatorResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCreateCoordinatorResponse;
+    fromJSON(object: any): MsgCreateCoordinatorResponse;
+    toJSON(message: MsgCreateCoordinatorResponse): unknown;
+    fromPartial(object: DeepPartial<MsgCreateCoordinatorResponse>): MsgCreateCoordinatorResponse;
 };
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
-    UpdateCoordinatorAddress(request: MsgUpdateCoordinatorAddress): Promise<MsgUpdateCoordinatorAddressResponse>;
+    CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
-    UpdateCoordinatorAddress(request: MsgUpdateCoordinatorAddress): Promise<MsgUpdateCoordinatorAddressResponse>;
+    CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;

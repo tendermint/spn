@@ -14,7 +14,7 @@ export interface ProfileCoordinatorDescription {
     website?: string;
     details?: string;
 }
-export interface ProfileMsgUpdateCoordinatorAddressResponse {
+export interface ProfileMsgCreateCoordinatorResponse {
     /** @format uint64 */
     coordinatorId?: string;
 }

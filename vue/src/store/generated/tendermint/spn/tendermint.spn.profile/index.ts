@@ -50,14 +50,14 @@ const getDefaultState = () => {
 				CoordinatorByAddress: {},
 				Coordinator: {},
 				CoordinatorAll: {},
-				
+
 				_Structure: {
 						Coordinator: getStructure(Coordinator.fromPartial({})),
 						CoordinatorDescription: getStructure(CoordinatorDescription.fromPartial({})),
 						CoordinatorByAddress: getStructure(CoordinatorByAddress.fromPartial({})),
 						QueryAllCoordinatorByAddressRequest: getStructure(QueryAllCoordinatorByAddressRequest.fromPartial({})),
 						QueryAllCoordinatorByAddressResponse: getStructure(QueryAllCoordinatorByAddressResponse.fromPartial({})),
-						
+
 		},
 		_Subscriptions: new Set(),
 	}
@@ -102,7 +102,7 @@ export default {
 					}
 			return state.CoordinatorAll[JSON.stringify(params)] ?? {}
 		},
-				
+
 		getTypeStructure: (state) => (type) => {
 			return state._Structure[type].fields
 		}
@@ -131,60 +131,60 @@ export default {
 				}
 			})
 		},
-		
-		
-		
-		 		
-		
-		
+
+
+
+
+
+
 		async QueryCoordinatorByAddress({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params: {...key}, query=null }) {
 			try {
 				const queryClient=await initQueryClient(rootGetters)
 				let value= (await queryClient.queryCoordinatorByAddress( key.address)).data
-				
-					
+
+
 				commit('QUERY', { query: 'CoordinatorByAddress', key: { params: {...key}, query}, value })
 				if (subscribe) commit('SUBSCRIBE', { action: 'QueryCoordinatorByAddress', payload: { options: { all }, params: {...key},query }})
 				return getters['getCoordinatorByAddress']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new SpVuexError('QueryClient:QueryCoordinatorByAddress', 'API Node Unavailable. Could not perform query: ' + e.message)
-				
+
 			}
 		},
-		
-		
-		
-		
-		 		
-		
-		
+
+
+
+
+
+
+
 		async QueryCoordinator({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params: {...key}, query=null }) {
 			try {
 				const queryClient=await initQueryClient(rootGetters)
 				let value= (await queryClient.queryCoordinator( key.id)).data
-				
-					
+
+
 				commit('QUERY', { query: 'Coordinator', key: { params: {...key}, query}, value })
 				if (subscribe) commit('SUBSCRIBE', { action: 'QueryCoordinator', payload: { options: { all }, params: {...key},query }})
 				return getters['getCoordinator']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new SpVuexError('QueryClient:QueryCoordinator', 'API Node Unavailable. Could not perform query: ' + e.message)
-				
+
 			}
 		},
-		
-		
-		
-		
-		 		
-		
-		
+
+
+
+
+
+
+
 		async QueryCoordinatorAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params: {...key}, query=null }) {
 			try {
 				const queryClient=await initQueryClient(rootGetters)
 				let value= (await queryClient.queryCoordinatorAll(query)).data
-				
-					
+
+
 				while (all && (<any> value).pagination && (<any> value).pagination.nextKey!=null) {
 					let next_values=(await queryClient.queryCoordinatorAll({...query, 'pagination.key':(<any> value).pagination.nextKey})).data
 					value = mergeResults(value, next_values);
@@ -194,17 +194,47 @@ export default {
 				return getters['getCoordinatorAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new SpVuexError('QueryClient:QueryCoordinatorAll', 'API Node Unavailable. Could not perform query: ' + e.message)
-				
+
 			}
 		},
-		
-		
+
+
+		async sendMsgCreateCoordinator({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateCoordinator(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee,
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new SpVuexError('TxClient:MsgCreateCoordinator:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgCreateCoordinator:Send', 'Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+
+		async MsgCreateCoordinator({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgCreateCoordinator(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new SpVuexError('TxClient:MsgCreateCoordinator:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgCreateCoordinator:Create', 'Could not create message: ' + e.message)
+
+				}
+			}
+		},
 		async sendMsgUpdateCoordinatorAddress({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
 				const msg = await txClient.msgUpdateCoordinatorAddress(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee,
+						gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
@@ -214,7 +244,7 @@ export default {
 				}
 			}
 		},
-		
+
 		async MsgUpdateCoordinatorAddress({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -225,10 +255,9 @@ export default {
 					throw new SpVuexError('TxClient:MsgUpdateCoordinatorAddress:Init', 'Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new SpVuexError('TxClient:MsgUpdateCoordinatorAddress:Create', 'Could not create message: ' + e.message)
-					
+
 				}
 			}
 		},
-		
 	}
 }
