@@ -1,0 +1,11 @@
+syntax = "proto3";
+package tendermint.spn.launch;
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+message ChainNameCount {
+  string creator = 1;
+  string chainName = 2; 
+  uint64 count = 3; 
+}
+
