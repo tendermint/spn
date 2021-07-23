@@ -18,6 +18,7 @@ export interface ProfileMsgCreateCoordinatorResponse {
     /** @format uint64 */
     coordinatorId?: string;
 }
+export declare type ProfileMsgDeleteCoordinatorResponse = object;
 export interface ProfileQueryAllCoordinatorResponse {
     Coordinator?: ProfileCoordinator[];
     /**

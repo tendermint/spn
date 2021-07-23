@@ -34,6 +34,8 @@ export interface ProfileMsgCreateCoordinatorResponse {
   coordinatorId?: string;
 }
 
+export type ProfileMsgDeleteCoordinatorResponse = object;
+
 export interface ProfileQueryAllCoordinatorResponse {
   Coordinator?: ProfileCoordinator[];
 

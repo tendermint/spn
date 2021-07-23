@@ -9,6 +9,11 @@ export interface MsgCreateCoordinator {
 export interface MsgCreateCoordinatorResponse {
     coordinatorId: number;
 }
+export interface MsgDeleteCoordinator {
+    address: string;
+}
+export interface MsgDeleteCoordinatorResponse {
+}
 export declare const MsgCreateCoordinator: {
     encode(message: MsgCreateCoordinator, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreateCoordinator;
@@ -23,15 +28,31 @@ export declare const MsgCreateCoordinatorResponse: {
     toJSON(message: MsgCreateCoordinatorResponse): unknown;
     fromPartial(object: DeepPartial<MsgCreateCoordinatorResponse>): MsgCreateCoordinatorResponse;
 };
+export declare const MsgDeleteCoordinator: {
+    encode(message: MsgDeleteCoordinator, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeleteCoordinator;
+    fromJSON(object: any): MsgDeleteCoordinator;
+    toJSON(message: MsgDeleteCoordinator): unknown;
+    fromPartial(object: DeepPartial<MsgDeleteCoordinator>): MsgDeleteCoordinator;
+};
+export declare const MsgDeleteCoordinatorResponse: {
+    encode(_: MsgDeleteCoordinatorResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgDeleteCoordinatorResponse;
+    fromJSON(_: any): MsgDeleteCoordinatorResponse;
+    toJSON(_: MsgDeleteCoordinatorResponse): unknown;
+    fromPartial(_: DeepPartial<MsgDeleteCoordinatorResponse>): MsgDeleteCoordinatorResponse;
+};
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
     CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>;
+    DeleteCoordinator(request: MsgDeleteCoordinator): Promise<MsgDeleteCoordinatorResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
     CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>;
+    DeleteCoordinator(request: MsgDeleteCoordinator): Promise<MsgDeleteCoordinatorResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
