@@ -1,9 +1,10 @@
 package keeper
 
 import (
-	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
+
+	"github.com/tendermint/spn/testutil/sample"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
