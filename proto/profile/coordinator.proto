@@ -22,3 +22,8 @@ message CoordinatorByAddress {
   uint64 coordinatorId = 2;
 }
 
+message ConsensusKeyNonce {
+  string consAddress = 1;
+  uint64 nonce = 2;
+}
+

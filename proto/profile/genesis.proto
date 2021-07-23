@@ -10,6 +10,7 @@ option go_package = "github.com/tendermint/spn/x/profile/types";
 // GenesisState defines the profile module's genesis state.
 message GenesisState {
     // this line is used by starport scaffolding # genesis/proto/state
+		repeated ConsensusKeyNonce consensusKeyNonceList = 6; // this line is used by starport scaffolding # genesis/proto/stateField
 		repeated ValidatorByConsAddress validatorByConsAddressList = 5; // this line is used by starport scaffolding # genesis/proto/stateField
 		repeated ValidatorByAddress validatorByAddressList = 4; // this line is used by starport scaffolding # genesis/proto/stateField
 		repeated CoordinatorByAddress coordinatorByAddressList = 3; // this line is used by starport scaffolding # genesis/proto/stateField

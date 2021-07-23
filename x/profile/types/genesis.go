@@ -13,6 +13,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
+		ConsensusKeyNonceList:      []*ConsensusKeyNonce{},
 		ValidatorByConsAddressList: []*ValidatorByConsAddress{},
 		ValidatorByAddressList:     []*ValidatorByAddress{},
 		CoordinatorByAddressList:   []*CoordinatorByAddress{},
@@ -26,6 +27,16 @@ func (gs GenesisState) Validate() error {
 	// this line is used by starport scaffolding # ibc/genesistype/validate
 
 	// this line is used by starport scaffolding # genesis/types/validate
+	// Check for duplicated index in consensusKeyNonce
+	consensusKeyNonceIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.ConsensusKeyNonceList {
+		index := string(ConsensusKeyNonceKey(elem.ConsAddress))
+		if _, ok := consensusKeyNonceIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for consensusKeyNonce")
+		}
+		consensusKeyNonceIndexMap[index] = struct{}{}
+	}
 	// Check for duplicated index in validatorByConsAddress
 	validatorByConsAddressIndexMap := make(map[string]struct{})
 

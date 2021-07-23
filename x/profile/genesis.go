@@ -10,6 +10,11 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// this line is used by starport scaffolding # genesis/module/init
+	// Set all the consensusKeyNonce
+	for _, elem := range genState.ConsensusKeyNonceList {
+		k.SetConsensusKeyNonce(ctx, *elem)
+	}
+
 	// Set all the validatorByConsAddress
 	for _, elem := range genState.ValidatorByConsAddressList {
 		k.SetValidatorByConsAddress(ctx, *elem)
@@ -41,6 +46,13 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
 	// this line is used by starport scaffolding # genesis/module/export
+	// Get all consensusKeyNonce
+	consensusKeyNonceList := k.GetAllConsensusKeyNonce(ctx)
+	for _, elem := range consensusKeyNonceList {
+		elem := elem
+		genesis.ConsensusKeyNonceList = append(genesis.ConsensusKeyNonceList, &elem)
+	}
+
 	// Get all validatorByConsAddress
 	validatorByConsAddressList := k.GetAllValidatorByConsAddress(ctx)
 	for _, elem := range validatorByConsAddressList {
