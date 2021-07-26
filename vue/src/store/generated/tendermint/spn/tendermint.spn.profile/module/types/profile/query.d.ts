@@ -1,34 +1,8 @@
 import { Reader, Writer } from 'protobufjs/minimal';
-import { ConsensusKeyNonce, ValidatorByConsAddress, ValidatorByAddress } from '../profile/validator';
-import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
 import { CoordinatorByAddress, Coordinator } from '../profile/coordinator';
+import { PageRequest, PageResponse } from '../cosmos/base/query/v1beta1/pagination';
 export declare const protobufPackage = "tendermint.spn.profile";
 /** this line is used by starport scaffolding # 3 */
-export interface QueryGetConsensusKeyNonceRequest {
-    consAddress: string;
-}
-export interface QueryGetConsensusKeyNonceResponse {
-    consensusKeyNonce: ConsensusKeyNonce | undefined;
-}
-export interface QueryGetValidatorByConsAddressRequest {
-    consAddress: string;
-}
-export interface QueryGetValidatorByConsAddressResponse {
-    validatorByConsAddress: ValidatorByConsAddress | undefined;
-}
-export interface QueryGetValidatorByAddressRequest {
-    address: string;
-}
-export interface QueryGetValidatorByAddressResponse {
-    validatorByAddress: ValidatorByAddress | undefined;
-}
-export interface QueryAllValidatorRequest {
-    pagination: PageRequest | undefined;
-}
-export interface QueryAllValidatorResponse {
-    validatorByAddress: ValidatorByAddress[];
-    pagination: PageResponse | undefined;
-}
 export interface QueryGetCoordinatorByAddressRequest {
     address: string;
 }
@@ -55,62 +29,6 @@ export interface QueryAllCoordinatorResponse {
     Coordinator: Coordinator[];
     pagination: PageResponse | undefined;
 }
-export declare const QueryGetConsensusKeyNonceRequest: {
-    encode(message: QueryGetConsensusKeyNonceRequest, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryGetConsensusKeyNonceRequest;
-    fromJSON(object: any): QueryGetConsensusKeyNonceRequest;
-    toJSON(message: QueryGetConsensusKeyNonceRequest): unknown;
-    fromPartial(object: DeepPartial<QueryGetConsensusKeyNonceRequest>): QueryGetConsensusKeyNonceRequest;
-};
-export declare const QueryGetConsensusKeyNonceResponse: {
-    encode(message: QueryGetConsensusKeyNonceResponse, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryGetConsensusKeyNonceResponse;
-    fromJSON(object: any): QueryGetConsensusKeyNonceResponse;
-    toJSON(message: QueryGetConsensusKeyNonceResponse): unknown;
-    fromPartial(object: DeepPartial<QueryGetConsensusKeyNonceResponse>): QueryGetConsensusKeyNonceResponse;
-};
-export declare const QueryGetValidatorByConsAddressRequest: {
-    encode(message: QueryGetValidatorByConsAddressRequest, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryGetValidatorByConsAddressRequest;
-    fromJSON(object: any): QueryGetValidatorByConsAddressRequest;
-    toJSON(message: QueryGetValidatorByConsAddressRequest): unknown;
-    fromPartial(object: DeepPartial<QueryGetValidatorByConsAddressRequest>): QueryGetValidatorByConsAddressRequest;
-};
-export declare const QueryGetValidatorByConsAddressResponse: {
-    encode(message: QueryGetValidatorByConsAddressResponse, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryGetValidatorByConsAddressResponse;
-    fromJSON(object: any): QueryGetValidatorByConsAddressResponse;
-    toJSON(message: QueryGetValidatorByConsAddressResponse): unknown;
-    fromPartial(object: DeepPartial<QueryGetValidatorByConsAddressResponse>): QueryGetValidatorByConsAddressResponse;
-};
-export declare const QueryGetValidatorByAddressRequest: {
-    encode(message: QueryGetValidatorByAddressRequest, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryGetValidatorByAddressRequest;
-    fromJSON(object: any): QueryGetValidatorByAddressRequest;
-    toJSON(message: QueryGetValidatorByAddressRequest): unknown;
-    fromPartial(object: DeepPartial<QueryGetValidatorByAddressRequest>): QueryGetValidatorByAddressRequest;
-};
-export declare const QueryGetValidatorByAddressResponse: {
-    encode(message: QueryGetValidatorByAddressResponse, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryGetValidatorByAddressResponse;
-    fromJSON(object: any): QueryGetValidatorByAddressResponse;
-    toJSON(message: QueryGetValidatorByAddressResponse): unknown;
-    fromPartial(object: DeepPartial<QueryGetValidatorByAddressResponse>): QueryGetValidatorByAddressResponse;
-};
-export declare const QueryAllValidatorRequest: {
-    encode(message: QueryAllValidatorRequest, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryAllValidatorRequest;
-    fromJSON(object: any): QueryAllValidatorRequest;
-    toJSON(message: QueryAllValidatorRequest): unknown;
-    fromPartial(object: DeepPartial<QueryAllValidatorRequest>): QueryAllValidatorRequest;
-};
-export declare const QueryAllValidatorResponse: {
-    encode(message: QueryAllValidatorResponse, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): QueryAllValidatorResponse;
-    fromJSON(object: any): QueryAllValidatorResponse;
-    toJSON(message: QueryAllValidatorResponse): unknown;
-    fromPartial(object: DeepPartial<QueryAllValidatorResponse>): QueryAllValidatorResponse;
-};
 export declare const QueryGetCoordinatorByAddressRequest: {
     encode(message: QueryGetCoordinatorByAddressRequest, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): QueryGetCoordinatorByAddressRequest;
@@ -169,14 +87,6 @@ export declare const QueryAllCoordinatorResponse: {
 };
 /** Query defines the gRPC querier service. */
 export interface Query {
-    /** Queries a consensusKeyNonce by index. */
-    ConsensusKeyNonce(request: QueryGetConsensusKeyNonceRequest): Promise<QueryGetConsensusKeyNonceResponse>;
-    /** Queries a validatorByConsAddress by index. */
-    ValidatorByConsAddress(request: QueryGetValidatorByConsAddressRequest): Promise<QueryGetValidatorByConsAddressResponse>;
-    /** Queries a validatorByAddress by index. */
-    ValidatorByAddress(request: QueryGetValidatorByAddressRequest): Promise<QueryGetValidatorByAddressResponse>;
-    /** Queries a list of validatorByAddress items. */
-    ValidatorByAddressAll(request: QueryAllValidatorRequest): Promise<QueryAllValidatorResponse>;
     /** Queries a coordinatorByAddress by index. */
     CoordinatorByAddress(request: QueryGetCoordinatorByAddressRequest): Promise<QueryGetCoordinatorByAddressResponse>;
     /** Queries a coordinator by id. */
@@ -187,10 +97,6 @@ export interface Query {
 export declare class QueryClientImpl implements Query {
     private readonly rpc;
     constructor(rpc: Rpc);
-    ConsensusKeyNonce(request: QueryGetConsensusKeyNonceRequest): Promise<QueryGetConsensusKeyNonceResponse>;
-    ValidatorByConsAddress(request: QueryGetValidatorByConsAddressRequest): Promise<QueryGetValidatorByConsAddressResponse>;
-    ValidatorByAddress(request: QueryGetValidatorByAddressRequest): Promise<QueryGetValidatorByAddressResponse>;
-    ValidatorByAddressAll(request: QueryAllValidatorRequest): Promise<QueryAllValidatorResponse>;
     CoordinatorByAddress(request: QueryGetCoordinatorByAddressRequest): Promise<QueryGetCoordinatorByAddressResponse>;
     Coordinator(request: QueryGetCoordinatorRequest): Promise<QueryGetCoordinatorResponse>;
     CoordinatorAll(request: QueryAllCoordinatorRequest): Promise<QueryAllCoordinatorResponse>;

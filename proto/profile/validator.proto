@@ -16,13 +16,3 @@ message ValidatorDescription {
   string securityContact = 4;
   string details = 5;
 }
-
-message ValidatorByConsAddress {
-  string consAddress = 1;
-  string address = 2;
-}
-
-message ConsensusKeyNonce {
-  string consAddress = 1;
-  uint64 nonce = 2;
-}

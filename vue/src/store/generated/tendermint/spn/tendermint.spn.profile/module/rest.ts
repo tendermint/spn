@@ -9,13 +9,6 @@
  * ---------------------------------------------------------------
  */
 
-export interface ProfileConsensusKeyNonce {
-  consAddress?: string;
-
-  /** @format uint64 */
-  nonce?: string;
-}
-
 export interface ProfileCoordinator {
   /** @format uint64 */
   coordinatorId?: string;
@@ -58,58 +51,12 @@ export interface ProfileQueryAllCoordinatorResponse {
   pagination?: V1Beta1PageResponse;
 }
 
-export interface ProfileQueryAllValidatorResponse {
-  validatorByAddress?: ProfileValidatorByAddress[];
-
-  /**
-   * PageResponse is to be embedded in gRPC response messages where the
-   * corresponding request message has used PageRequest.
-   *
-   *  message SomeResponse {
-   *          repeated Bar results = 1;
-   *          PageResponse page = 2;
-   *  }
-   */
-  pagination?: V1Beta1PageResponse;
-}
-
-export interface ProfileQueryGetConsensusKeyNonceResponse {
-  consensusKeyNonce?: ProfileConsensusKeyNonce;
-}
-
 export interface ProfileQueryGetCoordinatorByAddressResponse {
   coordinatorByAddress?: ProfileCoordinatorByAddress;
 }
 
 export interface ProfileQueryGetCoordinatorResponse {
   Coordinator?: ProfileCoordinator;
-}
-
-export interface ProfileQueryGetValidatorByAddressResponse {
-  validatorByAddress?: ProfileValidatorByAddress;
-}
-
-export interface ProfileQueryGetValidatorByConsAddressResponse {
-  validatorByConsAddress?: ProfileValidatorByConsAddress;
-}
-
-export interface ProfileValidatorByAddress {
-  address?: string;
-  consensusAddress?: string;
-  description?: ProfileValidatorDescription;
-}
-
-export interface ProfileValidatorByConsAddress {
-  consAddress?: string;
-  address?: string;
-}
-
-export interface ProfileValidatorDescription {
-  identity?: string;
-  moniker?: string;
-  website?: string;
-  securityContact?: string;
-  details?: string;
 }
 
 export interface ProtobufAny {
@@ -382,22 +329,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
    * No description
    *
    * @tags Query
-   * @name QueryConsensusKeyNonce
-   * @summary Queries a consensusKeyNonce by index.
-   * @request GET:/tendermint/spn/profile/consensusKeyNonce/{consAddress}
-   */
-  queryConsensusKeyNonce = (consAddress: string, params: RequestParams = {}) =>
-    this.request<ProfileQueryGetConsensusKeyNonceResponse, RpcStatus>({
-      path: `/tendermint/spn/profile/consensusKeyNonce/${consAddress}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-
-  /**
-   * No description
-   *
-   * @tags Query
    * @name QueryCoordinatorAll
    * @summary Queries a list of coordinator items.
    * @request GET:/tendermint/spn/profile/coordinator
@@ -446,63 +377,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryCoordinatorByAddress = (address: string, params: RequestParams = {}) =>
     this.request<ProfileQueryGetCoordinatorByAddressResponse, RpcStatus>({
       path: `/tendermint/spn/profile/coordinatorByAddress/${address}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-
-  /**
-   * No description
-   *
-   * @tags Query
-   * @name QueryValidatorByAddressAll
-   * @summary Queries a list of validatorByAddress items.
-   * @request GET:/tendermint/spn/profile/validatorByAddress
-   */
-  queryValidatorByAddressAll = (
-    query?: {
-      "pagination.key"?: string;
-      "pagination.offset"?: string;
-      "pagination.limit"?: string;
-      "pagination.countTotal"?: boolean;
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<ProfileQueryAllValidatorResponse, RpcStatus>({
-      path: `/tendermint/spn/profile/validatorByAddress`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    });
-
-  /**
-   * No description
-   *
-   * @tags Query
-   * @name QueryValidatorByAddress
-   * @summary Queries a validatorByAddress by index.
-   * @request GET:/tendermint/spn/profile/validatorByAddress/{address}
-   */
-  queryValidatorByAddress = (address: string, params: RequestParams = {}) =>
-    this.request<ProfileQueryGetValidatorByAddressResponse, RpcStatus>({
-      path: `/tendermint/spn/profile/validatorByAddress/${address}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-
-  /**
-   * No description
-   *
-   * @tags Query
-   * @name QueryValidatorByConsAddress
-   * @summary Queries a validatorByConsAddress by index.
-   * @request GET:/tendermint/spn/profile/validatorByConsAddress/{consAddress}
-   */
-  queryValidatorByConsAddress = (consAddress: string, params: RequestParams = {}) =>
-    this.request<ProfileQueryGetValidatorByConsAddressResponse, RpcStatus>({
-      path: `/tendermint/spn/profile/validatorByConsAddress/${consAddress}`,
       method: "GET",
       format: "json",
       ...params,

@@ -1,8 +1,3 @@
-export interface ProfileConsensusKeyNonce {
-    consAddress?: string;
-    /** @format uint64 */
-    nonce?: string;
-}
 export interface ProfileCoordinator {
     /** @format uint64 */
     coordinatorId?: string;
@@ -37,49 +32,11 @@ export interface ProfileQueryAllCoordinatorResponse {
      */
     pagination?: V1Beta1PageResponse;
 }
-export interface ProfileQueryAllValidatorResponse {
-    validatorByAddress?: ProfileValidatorByAddress[];
-    /**
-     * PageResponse is to be embedded in gRPC response messages where the
-     * corresponding request message has used PageRequest.
-     *
-     *  message SomeResponse {
-     *          repeated Bar results = 1;
-     *          PageResponse page = 2;
-     *  }
-     */
-    pagination?: V1Beta1PageResponse;
-}
-export interface ProfileQueryGetConsensusKeyNonceResponse {
-    consensusKeyNonce?: ProfileConsensusKeyNonce;
-}
 export interface ProfileQueryGetCoordinatorByAddressResponse {
     coordinatorByAddress?: ProfileCoordinatorByAddress;
 }
 export interface ProfileQueryGetCoordinatorResponse {
     Coordinator?: ProfileCoordinator;
-}
-export interface ProfileQueryGetValidatorByAddressResponse {
-    validatorByAddress?: ProfileValidatorByAddress;
-}
-export interface ProfileQueryGetValidatorByConsAddressResponse {
-    validatorByConsAddress?: ProfileValidatorByConsAddress;
-}
-export interface ProfileValidatorByAddress {
-    address?: string;
-    consensusAddress?: string;
-    description?: ProfileValidatorDescription;
-}
-export interface ProfileValidatorByConsAddress {
-    consAddress?: string;
-    address?: string;
-}
-export interface ProfileValidatorDescription {
-    identity?: string;
-    moniker?: string;
-    website?: string;
-    securityContact?: string;
-    details?: string;
 }
 export interface ProtobufAny {
     typeUrl?: string;
@@ -204,15 +161,6 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * No description
      *
      * @tags Query
-     * @name QueryConsensusKeyNonce
-     * @summary Queries a consensusKeyNonce by index.
-     * @request GET:/tendermint/spn/profile/consensusKeyNonce/{consAddress}
-     */
-    queryConsensusKeyNonce: (consAddress: string, params?: RequestParams) => Promise<HttpResponse<ProfileQueryGetConsensusKeyNonceResponse, RpcStatus>>;
-    /**
-     * No description
-     *
-     * @tags Query
      * @name QueryCoordinatorAll
      * @summary Queries a list of coordinator items.
      * @request GET:/tendermint/spn/profile/coordinator
@@ -241,37 +189,5 @@ export declare class Api<SecurityDataType extends unknown> extends HttpClient<Se
      * @request GET:/tendermint/spn/profile/coordinatorByAddress/{address}
      */
     queryCoordinatorByAddress: (address: string, params?: RequestParams) => Promise<HttpResponse<ProfileQueryGetCoordinatorByAddressResponse, RpcStatus>>;
-    /**
-     * No description
-     *
-     * @tags Query
-     * @name QueryValidatorByAddressAll
-     * @summary Queries a list of validatorByAddress items.
-     * @request GET:/tendermint/spn/profile/validatorByAddress
-     */
-    queryValidatorByAddressAll: (query?: {
-        "pagination.key"?: string;
-        "pagination.offset"?: string;
-        "pagination.limit"?: string;
-        "pagination.countTotal"?: boolean;
-    }, params?: RequestParams) => Promise<HttpResponse<ProfileQueryAllValidatorResponse, RpcStatus>>;
-    /**
-     * No description
-     *
-     * @tags Query
-     * @name QueryValidatorByAddress
-     * @summary Queries a validatorByAddress by index.
-     * @request GET:/tendermint/spn/profile/validatorByAddress/{address}
-     */
-    queryValidatorByAddress: (address: string, params?: RequestParams) => Promise<HttpResponse<ProfileQueryGetValidatorByAddressResponse, RpcStatus>>;
-    /**
-     * No description
-     *
-     * @tags Query
-     * @name QueryValidatorByConsAddress
-     * @summary Queries a validatorByConsAddress by index.
-     * @request GET:/tendermint/spn/profile/validatorByConsAddress/{consAddress}
-     */
-    queryValidatorByConsAddress: (consAddress: string, params?: RequestParams) => Promise<HttpResponse<ProfileQueryGetValidatorByConsAddressResponse, RpcStatus>>;
 }
 export {};
