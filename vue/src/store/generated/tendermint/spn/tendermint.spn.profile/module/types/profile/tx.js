@@ -124,108 +124,6 @@ export const MsgCreateCoordinatorResponse = {
         return message;
     }
 };
-const baseMsgUpdateCoordinatorAddress = { address: '', newAddress: '' };
-export const MsgUpdateCoordinatorAddress = {
-    encode(message, writer = Writer.create()) {
-        if (message.address !== '') {
-            writer.uint32(10).string(message.address);
-        }
-        if (message.newAddress !== '') {
-            writer.uint32(18).string(message.newAddress);
-        }
-        return writer;
-    },
-    decode(input, length) {
-        const reader = input instanceof Uint8Array ? new Reader(input) : input;
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMsgUpdateCoordinatorAddress };
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                case 1:
-                    message.address = reader.string();
-                    break;
-                case 2:
-                    message.newAddress = reader.string();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-            }
-        }
-        return message;
-    },
-    fromJSON(object) {
-        const message = { ...baseMsgUpdateCoordinatorAddress };
-        if (object.address !== undefined && object.address !== null) {
-            message.address = String(object.address);
-        }
-        else {
-            message.address = '';
-        }
-        if (object.newAddress !== undefined && object.newAddress !== null) {
-            message.newAddress = String(object.newAddress);
-        }
-        else {
-            message.newAddress = '';
-        }
-        return message;
-    },
-    toJSON(message) {
-        const obj = {};
-        message.address !== undefined && (obj.address = message.address);
-        message.newAddress !== undefined && (obj.newAddress = message.newAddress);
-        return obj;
-    },
-    fromPartial(object) {
-        const message = { ...baseMsgUpdateCoordinatorAddress };
-        if (object.address !== undefined && object.address !== null) {
-            message.address = object.address;
-        }
-        else {
-            message.address = '';
-        }
-        if (object.newAddress !== undefined && object.newAddress !== null) {
-            message.newAddress = object.newAddress;
-        }
-        else {
-            message.newAddress = '';
-        }
-        return message;
-    }
-};
-const baseMsgUpdateCoordinatorAddressResponse = {};
-export const MsgUpdateCoordinatorAddressResponse = {
-    encode(_, writer = Writer.create()) {
-        return writer;
-    },
-    decode(input, length) {
-        const reader = input instanceof Uint8Array ? new Reader(input) : input;
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMsgUpdateCoordinatorAddressResponse };
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-            }
-        }
-        return message;
-    },
-    fromJSON(_) {
-        const message = { ...baseMsgUpdateCoordinatorAddressResponse };
-        return message;
-    },
-    toJSON(_) {
-        const obj = {};
-        return obj;
-    },
-    fromPartial(_) {
-        const message = { ...baseMsgUpdateCoordinatorAddressResponse };
-        return message;
-    }
-};
 export class MsgClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
@@ -234,11 +132,6 @@ export class MsgClientImpl {
         const data = MsgCreateCoordinator.encode(request).finish();
         const promise = this.rpc.request('tendermint.spn.profile.Msg', 'CreateCoordinator', data);
         return promise.then((data) => MsgCreateCoordinatorResponse.decode(new Reader(data)));
-    }
-    UpdateCoordinatorAddress(request) {
-        const data = MsgUpdateCoordinatorAddress.encode(request).finish();
-        const promise = this.rpc.request('tendermint.spn.profile.Msg', 'UpdateCoordinatorAddress', data);
-        return promise.then((data) => MsgUpdateCoordinatorAddressResponse.decode(new Reader(data)));
     }
 }
 var globalThis = (() => {

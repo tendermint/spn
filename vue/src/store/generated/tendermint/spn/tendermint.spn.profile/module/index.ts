@@ -5,12 +5,10 @@ import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
 import { MsgCreateCoordinator } from "./types/profile/tx";
-import { MsgUpdateCoordinatorAddress } from "./types/profile/tx";
 
 
 const types = [
   ["/tendermint.spn.profile.MsgCreateCoordinator", MsgCreateCoordinator],
-  ["/tendermint.spn.profile.MsgUpdateCoordinatorAddress", MsgUpdateCoordinatorAddress],
   
 ];
 export const MissingWalletError = new Error("wallet is required");
@@ -40,7 +38,6 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
   return {
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
     msgCreateCoordinator: (data: MsgCreateCoordinator): EncodeObject => ({ typeUrl: "/tendermint.spn.profile.MsgCreateCoordinator", value: data }),
-    msgUpdateCoordinatorAddress: (data: MsgUpdateCoordinatorAddress): EncodeObject => ({ typeUrl: "/tendermint.spn.profile.MsgUpdateCoordinatorAddress", value: data }),
     
   };
 };
