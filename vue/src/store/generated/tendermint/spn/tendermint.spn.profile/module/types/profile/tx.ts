@@ -19,7 +19,9 @@ export interface MsgDeleteCoordinator {
   address: string
 }
 
-export interface MsgDeleteCoordinatorResponse {}
+export interface MsgDeleteCoordinatorResponse {
+  coordinatorId: number
+}
 
 const baseMsgCreateCoordinator: object = { address: '' }
 
@@ -203,10 +205,13 @@ export const MsgDeleteCoordinator = {
   }
 }
 
-const baseMsgDeleteCoordinatorResponse: object = {}
+const baseMsgDeleteCoordinatorResponse: object = { coordinatorId: 0 }
 
 export const MsgDeleteCoordinatorResponse = {
-  encode(_: MsgDeleteCoordinatorResponse, writer: Writer = Writer.create()): Writer {
+  encode(message: MsgDeleteCoordinatorResponse, writer: Writer = Writer.create()): Writer {
+    if (message.coordinatorId !== 0) {
+      writer.uint32(8).uint64(message.coordinatorId)
+    }
     return writer
   },
 
@@ -217,6 +222,9 @@ export const MsgDeleteCoordinatorResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
+        case 1:
+          message.coordinatorId = longToNumber(reader.uint64() as Long)
+          break
         default:
           reader.skipType(tag & 7)
           break
@@ -225,18 +233,29 @@ export const MsgDeleteCoordinatorResponse = {
     return message
   },
 
-  fromJSON(_: any): MsgDeleteCoordinatorResponse {
+  fromJSON(object: any): MsgDeleteCoordinatorResponse {
     const message = { ...baseMsgDeleteCoordinatorResponse } as MsgDeleteCoordinatorResponse
+    if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
+      message.coordinatorId = Number(object.coordinatorId)
+    } else {
+      message.coordinatorId = 0
+    }
     return message
   },
 
-  toJSON(_: MsgDeleteCoordinatorResponse): unknown {
+  toJSON(message: MsgDeleteCoordinatorResponse): unknown {
     const obj: any = {}
+    message.coordinatorId !== undefined && (obj.coordinatorId = message.coordinatorId)
     return obj
   },
 
-  fromPartial(_: DeepPartial<MsgDeleteCoordinatorResponse>): MsgDeleteCoordinatorResponse {
+  fromPartial(object: DeepPartial<MsgDeleteCoordinatorResponse>): MsgDeleteCoordinatorResponse {
     const message = { ...baseMsgDeleteCoordinatorResponse } as MsgDeleteCoordinatorResponse
+    if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
+      message.coordinatorId = object.coordinatorId
+    } else {
+      message.coordinatorId = 0
+    }
     return message
   }
 }

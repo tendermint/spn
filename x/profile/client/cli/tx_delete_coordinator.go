@@ -15,7 +15,7 @@ var _ = strconv.Itoa(0)
 func CmdDeleteCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "delete-coordinator",
-		Short: "Delete a coordinator associate to the sender address",
+		Short: "Delete the coordinator profile associated to the sender address",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)

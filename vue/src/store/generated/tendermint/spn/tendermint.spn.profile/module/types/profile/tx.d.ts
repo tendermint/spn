@@ -13,6 +13,7 @@ export interface MsgDeleteCoordinator {
     address: string;
 }
 export interface MsgDeleteCoordinatorResponse {
+    coordinatorId: number;
 }
 export declare const MsgCreateCoordinator: {
     encode(message: MsgCreateCoordinator, writer?: Writer): Writer;
@@ -36,11 +37,11 @@ export declare const MsgDeleteCoordinator: {
     fromPartial(object: DeepPartial<MsgDeleteCoordinator>): MsgDeleteCoordinator;
 };
 export declare const MsgDeleteCoordinatorResponse: {
-    encode(_: MsgDeleteCoordinatorResponse, writer?: Writer): Writer;
+    encode(message: MsgDeleteCoordinatorResponse, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgDeleteCoordinatorResponse;
-    fromJSON(_: any): MsgDeleteCoordinatorResponse;
-    toJSON(_: MsgDeleteCoordinatorResponse): unknown;
-    fromPartial(_: DeepPartial<MsgDeleteCoordinatorResponse>): MsgDeleteCoordinatorResponse;
+    fromJSON(object: any): MsgDeleteCoordinatorResponse;
+    toJSON(message: MsgDeleteCoordinatorResponse): unknown;
+    fromPartial(object: DeepPartial<MsgDeleteCoordinatorResponse>): MsgDeleteCoordinatorResponse;
 };
 /** Msg defines the Msg service. */
 export interface Msg {

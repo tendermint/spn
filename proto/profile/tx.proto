@@ -29,4 +29,5 @@ message MsgDeleteCoordinator {
 }
 
 message MsgDeleteCoordinatorResponse {
+  uint64 coordinatorId = 1;
 }

@@ -22,7 +22,12 @@ func (k msgServer) DeleteCoordinator(
 	}
 
 	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
+	if (coord == types.Coordinator{}) {
+		panic("Inconsistency error: coordinator id not exist into the keeper")
+	}
 	k.RemoveCoordinatorByAddress(ctx, msg.Address)
 	k.RemoveCoordinator(ctx, coord.CoordinatorId)
-	return &types.MsgDeleteCoordinatorResponse{}, nil
+	return &types.MsgDeleteCoordinatorResponse{
+		CoordinatorId: coord.CoordinatorId,
+	}, nil
 }
