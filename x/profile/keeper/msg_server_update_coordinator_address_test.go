@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -68,13 +67,12 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := srv.UpdateCoordinatorAddress(ctx, &tt.msg)
+			_, err := srv.UpdateCoordinatorAddress(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
-			assert.EqualValues(t, tt.want, got.CoordinatorId)
 		})
 	}
 }
