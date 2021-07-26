@@ -20,9 +20,7 @@ export interface MsgUpdateCoordinatorDescription {
   description: CoordinatorDescription | undefined
 }
 
-export interface MsgUpdateCoordinatorDescriptionResponse {
-  coordinatorId: number
-}
+export interface MsgUpdateCoordinatorDescriptionResponse {}
 
 const baseMsgCreateCoordinator: object = { address: '' }
 
@@ -223,13 +221,10 @@ export const MsgUpdateCoordinatorDescription = {
   }
 }
 
-const baseMsgUpdateCoordinatorDescriptionResponse: object = { coordinatorId: 0 }
+const baseMsgUpdateCoordinatorDescriptionResponse: object = {}
 
 export const MsgUpdateCoordinatorDescriptionResponse = {
-  encode(message: MsgUpdateCoordinatorDescriptionResponse, writer: Writer = Writer.create()): Writer {
-    if (message.coordinatorId !== 0) {
-      writer.uint32(8).uint64(message.coordinatorId)
-    }
+  encode(_: MsgUpdateCoordinatorDescriptionResponse, writer: Writer = Writer.create()): Writer {
     return writer
   },
 
@@ -240,9 +235,6 @@ export const MsgUpdateCoordinatorDescriptionResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32()
       switch (tag >>> 3) {
-        case 1:
-          message.coordinatorId = longToNumber(reader.uint64() as Long)
-          break
         default:
           reader.skipType(tag & 7)
           break
@@ -251,29 +243,18 @@ export const MsgUpdateCoordinatorDescriptionResponse = {
     return message
   },
 
-  fromJSON(object: any): MsgUpdateCoordinatorDescriptionResponse {
+  fromJSON(_: any): MsgUpdateCoordinatorDescriptionResponse {
     const message = { ...baseMsgUpdateCoordinatorDescriptionResponse } as MsgUpdateCoordinatorDescriptionResponse
-    if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-      message.coordinatorId = Number(object.coordinatorId)
-    } else {
-      message.coordinatorId = 0
-    }
     return message
   },
 
-  toJSON(message: MsgUpdateCoordinatorDescriptionResponse): unknown {
+  toJSON(_: MsgUpdateCoordinatorDescriptionResponse): unknown {
     const obj: any = {}
-    message.coordinatorId !== undefined && (obj.coordinatorId = message.coordinatorId)
     return obj
   },
 
-  fromPartial(object: DeepPartial<MsgUpdateCoordinatorDescriptionResponse>): MsgUpdateCoordinatorDescriptionResponse {
+  fromPartial(_: DeepPartial<MsgUpdateCoordinatorDescriptionResponse>): MsgUpdateCoordinatorDescriptionResponse {
     const message = { ...baseMsgUpdateCoordinatorDescriptionResponse } as MsgUpdateCoordinatorDescriptionResponse
-    if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-      message.coordinatorId = object.coordinatorId
-    } else {
-      message.coordinatorId = 0
-    }
     return message
   }
 }
