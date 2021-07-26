@@ -1,3 +1,6 @@
 package internal
 
-import _ "github.com/regen-network/cosmos-proto"
+import (
+	// Used in generated proto
+	_ "github.com/regen-network/cosmos-proto"
+)
