@@ -8,6 +8,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/launch/types"
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 )
 
 func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain) (*types.MsgCreateChainResponse, error) {
@@ -46,6 +47,24 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		SourceHash:      msg.SourceHash,
 		LaunchTriggered: false,
 		LaunchTimestamp: 0,
+	}
+
+	// Initialize initial genesis
+	if msg.GenesisURL == "" {
+		defaultGenesis, err := codec.NewAnyWithValue(&types.DefaultInitialGenesis{})
+		if err != nil {
+			panic("DefaultInitialGenesis can't be used as initial genesis")
+		}
+		chain.InitialGenesis = defaultGenesis
+	} else {
+		genesisURL, err := codec.NewAnyWithValue(&types.GenesisURL{
+			Url: msg.GenesisURL,
+			Hash: msg.GenesisHash,
+		})
+		if err != nil {
+			panic("GenesisURL can't be used as initial genesis")
+		}
+		chain.InitialGenesis = genesisURL
 	}
 
 	// Store values
