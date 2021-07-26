@@ -19,7 +19,7 @@ func (k Keeper) SetVestedAccount(ctx sdk.Context, vestedAccount types.VestedAcco
 // GetVestedAccount returns a vestedAccount from its index
 func (k Keeper) GetVestedAccount(
 	ctx sdk.Context,
-	chainID string,
+	chainID,
 	address string,
 
 ) (val types.VestedAccount, found bool) {
