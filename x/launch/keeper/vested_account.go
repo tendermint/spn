@@ -40,7 +40,7 @@ func (k Keeper) GetVestedAccount(
 // RemoveVestedAccount removes a vestedAccount from the store
 func (k Keeper) RemoveVestedAccount(
 	ctx sdk.Context,
-	chainID string,
+	chainID,
 	address string,
 
 ) {

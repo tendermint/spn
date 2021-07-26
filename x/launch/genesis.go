@@ -37,7 +37,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 
 	// Get all chain
 	chainList := k.GetAllChain(ctx)
-	for _, elem := range chainList {
+	for _, elem := range k.GetAllChain(ctx) {
 		elem := elem
 		genesis.ChainList = append(genesis.ChainList, &elem)
 	}
