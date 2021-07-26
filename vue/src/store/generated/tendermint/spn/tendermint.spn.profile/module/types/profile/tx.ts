@@ -15,13 +15,6 @@ export interface MsgCreateCoordinatorResponse {
   coordinatorId: number
 }
 
-export interface MsgUpdateCoordinatorDescription {
-  address: string
-  description: CoordinatorDescription | undefined
-}
-
-export interface MsgUpdateCoordinatorDescriptionResponse {}
-
 const baseMsgCreateCoordinator: object = { address: '' }
 
 export const MsgCreateCoordinator = {
@@ -149,121 +142,10 @@ export const MsgCreateCoordinatorResponse = {
   }
 }
 
-const baseMsgUpdateCoordinatorDescription: object = { address: '' }
-
-export const MsgUpdateCoordinatorDescription = {
-  encode(message: MsgUpdateCoordinatorDescription, writer: Writer = Writer.create()): Writer {
-    if (message.address !== '') {
-      writer.uint32(10).string(message.address)
-    }
-    if (message.description !== undefined) {
-      CoordinatorDescription.encode(message.description, writer.uint32(18).fork()).ldelim()
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): MsgUpdateCoordinatorDescription {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseMsgUpdateCoordinatorDescription } as MsgUpdateCoordinatorDescription
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.address = reader.string()
-          break
-        case 2:
-          message.description = CoordinatorDescription.decode(reader, reader.uint32())
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): MsgUpdateCoordinatorDescription {
-    const message = { ...baseMsgUpdateCoordinatorDescription } as MsgUpdateCoordinatorDescription
-    if (object.address !== undefined && object.address !== null) {
-      message.address = String(object.address)
-    } else {
-      message.address = ''
-    }
-    if (object.description !== undefined && object.description !== null) {
-      message.description = CoordinatorDescription.fromJSON(object.description)
-    } else {
-      message.description = undefined
-    }
-    return message
-  },
-
-  toJSON(message: MsgUpdateCoordinatorDescription): unknown {
-    const obj: any = {}
-    message.address !== undefined && (obj.address = message.address)
-    message.description !== undefined && (obj.description = message.description ? CoordinatorDescription.toJSON(message.description) : undefined)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<MsgUpdateCoordinatorDescription>): MsgUpdateCoordinatorDescription {
-    const message = { ...baseMsgUpdateCoordinatorDescription } as MsgUpdateCoordinatorDescription
-    if (object.address !== undefined && object.address !== null) {
-      message.address = object.address
-    } else {
-      message.address = ''
-    }
-    if (object.description !== undefined && object.description !== null) {
-      message.description = CoordinatorDescription.fromPartial(object.description)
-    } else {
-      message.description = undefined
-    }
-    return message
-  }
-}
-
-const baseMsgUpdateCoordinatorDescriptionResponse: object = {}
-
-export const MsgUpdateCoordinatorDescriptionResponse = {
-  encode(_: MsgUpdateCoordinatorDescriptionResponse, writer: Writer = Writer.create()): Writer {
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): MsgUpdateCoordinatorDescriptionResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseMsgUpdateCoordinatorDescriptionResponse } as MsgUpdateCoordinatorDescriptionResponse
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(_: any): MsgUpdateCoordinatorDescriptionResponse {
-    const message = { ...baseMsgUpdateCoordinatorDescriptionResponse } as MsgUpdateCoordinatorDescriptionResponse
-    return message
-  },
-
-  toJSON(_: MsgUpdateCoordinatorDescriptionResponse): unknown {
-    const obj: any = {}
-    return obj
-  },
-
-  fromPartial(_: DeepPartial<MsgUpdateCoordinatorDescriptionResponse>): MsgUpdateCoordinatorDescriptionResponse {
-    const message = { ...baseMsgUpdateCoordinatorDescriptionResponse } as MsgUpdateCoordinatorDescriptionResponse
-    return message
-  }
-}
-
 /** Msg defines the Msg service. */
 export interface Msg {
   /** this line is used by starport scaffolding # proto/tx/rpc */
   CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>
-  UpdateCoordinatorDescription(request: MsgUpdateCoordinatorDescription): Promise<MsgUpdateCoordinatorDescriptionResponse>
 }
 
 export class MsgClientImpl implements Msg {
@@ -275,12 +157,6 @@ export class MsgClientImpl implements Msg {
     const data = MsgCreateCoordinator.encode(request).finish()
     const promise = this.rpc.request('tendermint.spn.profile.Msg', 'CreateCoordinator', data)
     return promise.then((data) => MsgCreateCoordinatorResponse.decode(new Reader(data)))
-  }
-
-  UpdateCoordinatorDescription(request: MsgUpdateCoordinatorDescription): Promise<MsgUpdateCoordinatorDescriptionResponse> {
-    const data = MsgUpdateCoordinatorDescription.encode(request).finish()
-    const promise = this.rpc.request('tendermint.spn.profile.Msg', 'UpdateCoordinatorDescription', data)
-    return promise.then((data) => MsgUpdateCoordinatorDescriptionResponse.decode(new Reader(data)))
   }
 }
 
