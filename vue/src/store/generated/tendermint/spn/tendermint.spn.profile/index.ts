@@ -214,21 +214,6 @@ export default {
 				}
 			}
 		},
-		async sendMsgDeleteCoordinator({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDeleteCoordinator(value)
-				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
-	gas: "200000" }, memo})
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgDeleteCoordinator:Init', 'Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new SpVuexError('TxClient:MsgDeleteCoordinator:Send', 'Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		
 		async MsgCreateCoordinator({ rootGetters }, { value }) {
 			try {
@@ -240,20 +225,6 @@ export default {
 					throw new SpVuexError('TxClient:MsgCreateCoordinator:Init', 'Could not initialize signing client. Wallet is required.')
 				}else{
 					throw new SpVuexError('TxClient:MsgCreateCoordinator:Create', 'Could not create message: ' + e.message)
-					
-				}
-			}
-		},
-		async MsgDeleteCoordinator({ rootGetters }, { value }) {
-			try {
-				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgDeleteCoordinator(value)
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgDeleteCoordinator:Init', 'Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new SpVuexError('TxClient:MsgDeleteCoordinator:Create', 'Could not create message: ' + e.message)
 					
 				}
 			}

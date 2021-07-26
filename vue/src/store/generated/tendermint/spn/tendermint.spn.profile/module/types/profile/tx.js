@@ -124,108 +124,6 @@ export const MsgCreateCoordinatorResponse = {
         return message;
     }
 };
-const baseMsgDeleteCoordinator = { address: '' };
-export const MsgDeleteCoordinator = {
-    encode(message, writer = Writer.create()) {
-        if (message.address !== '') {
-            writer.uint32(10).string(message.address);
-        }
-        return writer;
-    },
-    decode(input, length) {
-        const reader = input instanceof Uint8Array ? new Reader(input) : input;
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMsgDeleteCoordinator };
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                case 1:
-                    message.address = reader.string();
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-            }
-        }
-        return message;
-    },
-    fromJSON(object) {
-        const message = { ...baseMsgDeleteCoordinator };
-        if (object.address !== undefined && object.address !== null) {
-            message.address = String(object.address);
-        }
-        else {
-            message.address = '';
-        }
-        return message;
-    },
-    toJSON(message) {
-        const obj = {};
-        message.address !== undefined && (obj.address = message.address);
-        return obj;
-    },
-    fromPartial(object) {
-        const message = { ...baseMsgDeleteCoordinator };
-        if (object.address !== undefined && object.address !== null) {
-            message.address = object.address;
-        }
-        else {
-            message.address = '';
-        }
-        return message;
-    }
-};
-const baseMsgDeleteCoordinatorResponse = { coordinatorId: 0 };
-export const MsgDeleteCoordinatorResponse = {
-    encode(message, writer = Writer.create()) {
-        if (message.coordinatorId !== 0) {
-            writer.uint32(8).uint64(message.coordinatorId);
-        }
-        return writer;
-    },
-    decode(input, length) {
-        const reader = input instanceof Uint8Array ? new Reader(input) : input;
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMsgDeleteCoordinatorResponse };
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                case 1:
-                    message.coordinatorId = longToNumber(reader.uint64());
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-            }
-        }
-        return message;
-    },
-    fromJSON(object) {
-        const message = { ...baseMsgDeleteCoordinatorResponse };
-        if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-            message.coordinatorId = Number(object.coordinatorId);
-        }
-        else {
-            message.coordinatorId = 0;
-        }
-        return message;
-    },
-    toJSON(message) {
-        const obj = {};
-        message.coordinatorId !== undefined && (obj.coordinatorId = message.coordinatorId);
-        return obj;
-    },
-    fromPartial(object) {
-        const message = { ...baseMsgDeleteCoordinatorResponse };
-        if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-            message.coordinatorId = object.coordinatorId;
-        }
-        else {
-            message.coordinatorId = 0;
-        }
-        return message;
-    }
-};
 export class MsgClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
@@ -234,11 +132,6 @@ export class MsgClientImpl {
         const data = MsgCreateCoordinator.encode(request).finish();
         const promise = this.rpc.request('tendermint.spn.profile.Msg', 'CreateCoordinator', data);
         return promise.then((data) => MsgCreateCoordinatorResponse.decode(new Reader(data)));
-    }
-    DeleteCoordinator(request) {
-        const data = MsgDeleteCoordinator.encode(request).finish();
-        const promise = this.rpc.request('tendermint.spn.profile.Msg', 'DeleteCoordinator', data);
-        return promise.then((data) => MsgDeleteCoordinatorResponse.decode(new Reader(data)));
     }
 }
 var globalThis = (() => {

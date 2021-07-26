@@ -15,14 +15,6 @@ export interface MsgCreateCoordinatorResponse {
   coordinatorId: number
 }
 
-export interface MsgDeleteCoordinator {
-  address: string
-}
-
-export interface MsgDeleteCoordinatorResponse {
-  coordinatorId: number
-}
-
 const baseMsgCreateCoordinator: object = { address: '' }
 
 export const MsgCreateCoordinator = {
@@ -150,121 +142,10 @@ export const MsgCreateCoordinatorResponse = {
   }
 }
 
-const baseMsgDeleteCoordinator: object = { address: '' }
-
-export const MsgDeleteCoordinator = {
-  encode(message: MsgDeleteCoordinator, writer: Writer = Writer.create()): Writer {
-    if (message.address !== '') {
-      writer.uint32(10).string(message.address)
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): MsgDeleteCoordinator {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseMsgDeleteCoordinator } as MsgDeleteCoordinator
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.address = reader.string()
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): MsgDeleteCoordinator {
-    const message = { ...baseMsgDeleteCoordinator } as MsgDeleteCoordinator
-    if (object.address !== undefined && object.address !== null) {
-      message.address = String(object.address)
-    } else {
-      message.address = ''
-    }
-    return message
-  },
-
-  toJSON(message: MsgDeleteCoordinator): unknown {
-    const obj: any = {}
-    message.address !== undefined && (obj.address = message.address)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<MsgDeleteCoordinator>): MsgDeleteCoordinator {
-    const message = { ...baseMsgDeleteCoordinator } as MsgDeleteCoordinator
-    if (object.address !== undefined && object.address !== null) {
-      message.address = object.address
-    } else {
-      message.address = ''
-    }
-    return message
-  }
-}
-
-const baseMsgDeleteCoordinatorResponse: object = { coordinatorId: 0 }
-
-export const MsgDeleteCoordinatorResponse = {
-  encode(message: MsgDeleteCoordinatorResponse, writer: Writer = Writer.create()): Writer {
-    if (message.coordinatorId !== 0) {
-      writer.uint32(8).uint64(message.coordinatorId)
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): MsgDeleteCoordinatorResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseMsgDeleteCoordinatorResponse } as MsgDeleteCoordinatorResponse
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.coordinatorId = longToNumber(reader.uint64() as Long)
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): MsgDeleteCoordinatorResponse {
-    const message = { ...baseMsgDeleteCoordinatorResponse } as MsgDeleteCoordinatorResponse
-    if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-      message.coordinatorId = Number(object.coordinatorId)
-    } else {
-      message.coordinatorId = 0
-    }
-    return message
-  },
-
-  toJSON(message: MsgDeleteCoordinatorResponse): unknown {
-    const obj: any = {}
-    message.coordinatorId !== undefined && (obj.coordinatorId = message.coordinatorId)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<MsgDeleteCoordinatorResponse>): MsgDeleteCoordinatorResponse {
-    const message = { ...baseMsgDeleteCoordinatorResponse } as MsgDeleteCoordinatorResponse
-    if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-      message.coordinatorId = object.coordinatorId
-    } else {
-      message.coordinatorId = 0
-    }
-    return message
-  }
-}
-
 /** Msg defines the Msg service. */
 export interface Msg {
   /** this line is used by starport scaffolding # proto/tx/rpc */
   CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>
-  DeleteCoordinator(request: MsgDeleteCoordinator): Promise<MsgDeleteCoordinatorResponse>
 }
 
 export class MsgClientImpl implements Msg {
@@ -276,12 +157,6 @@ export class MsgClientImpl implements Msg {
     const data = MsgCreateCoordinator.encode(request).finish()
     const promise = this.rpc.request('tendermint.spn.profile.Msg', 'CreateCoordinator', data)
     return promise.then((data) => MsgCreateCoordinatorResponse.decode(new Reader(data)))
-  }
-
-  DeleteCoordinator(request: MsgDeleteCoordinator): Promise<MsgDeleteCoordinatorResponse> {
-    const data = MsgDeleteCoordinator.encode(request).finish()
-    const promise = this.rpc.request('tendermint.spn.profile.Msg', 'DeleteCoordinator', data)
-    return promise.then((data) => MsgDeleteCoordinatorResponse.decode(new Reader(data)))
   }
 }
 
