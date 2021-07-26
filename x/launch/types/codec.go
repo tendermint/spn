@@ -12,6 +12,10 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
 	cdc.RegisterInterface((*VestingOptions)(nil), nil)
 	cdc.RegisterConcrete(&DelayedVesting{}, "spn/launch/DelayedVesting", nil)
+
+	cdc.RegisterInterface((*InitialGenesis)(nil), nil)
+	cdc.RegisterConcrete(&DefaultInitialGenesis{}, "spn/launch/DefaultInitialGenesis", nil)
+	cdc.RegisterConcrete(&GenesisURL{}, "spn/launch/GenesisURL", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -23,6 +27,13 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		"tendermint.spn.launch.VestingOptions",
 		(*VestingOptions)(nil),
 		&DelayedVesting{},
+	)
+
+	registry.RegisterInterface(
+		"tendermint.spn.launch.InitialGenesis",
+		(*InitialGenesis)(nil),
+		&DefaultInitialGenesis{},
+		&GenesisURL{},
 	)
 }
 
