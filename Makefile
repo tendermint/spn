@@ -13,7 +13,7 @@ format:
 ## lint: Run Golang CI Lint.
 lint:
 	@echo Running gocilint...
-	@golangci-lint run --out-format=tab --issues-exit-code=0 -e SA1019 -e unused
+	@golangci-lint run --out-format=tab --issues-exit-code=0
 
 ## test-unit: Run the unit tests.
 test-unit:
