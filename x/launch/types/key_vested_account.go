@@ -11,7 +11,7 @@ const (
 
 // VestedAccountKey returns the store key to retrieve a VestedAccount from the index fields
 func VestedAccountKey(
-	chainID string,
+	chainID,
 	address string,
 ) []byte {
 	var key []byte
