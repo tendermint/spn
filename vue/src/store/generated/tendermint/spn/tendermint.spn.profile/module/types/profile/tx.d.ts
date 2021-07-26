@@ -1,14 +1,7 @@
 import { Reader, Writer } from 'protobufjs/minimal';
-import { ValidatorDescription } from '../profile/validator';
 import { CoordinatorDescription } from '../profile/coordinator';
 export declare const protobufPackage = "tendermint.spn.profile";
 /** this line is used by starport scaffolding # proto/tx/message */
-export interface MsgUpdateValidatorDescription {
-    address: string;
-    description: ValidatorDescription | undefined;
-}
-export interface MsgUpdateValidatorDescriptionResponse {
-}
 export interface MsgCreateCoordinator {
     address: string;
     description: CoordinatorDescription | undefined;
@@ -16,20 +9,6 @@ export interface MsgCreateCoordinator {
 export interface MsgCreateCoordinatorResponse {
     coordinatorId: number;
 }
-export declare const MsgUpdateValidatorDescription: {
-    encode(message: MsgUpdateValidatorDescription, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): MsgUpdateValidatorDescription;
-    fromJSON(object: any): MsgUpdateValidatorDescription;
-    toJSON(message: MsgUpdateValidatorDescription): unknown;
-    fromPartial(object: DeepPartial<MsgUpdateValidatorDescription>): MsgUpdateValidatorDescription;
-};
-export declare const MsgUpdateValidatorDescriptionResponse: {
-    encode(_: MsgUpdateValidatorDescriptionResponse, writer?: Writer): Writer;
-    decode(input: Reader | Uint8Array, length?: number): MsgUpdateValidatorDescriptionResponse;
-    fromJSON(_: any): MsgUpdateValidatorDescriptionResponse;
-    toJSON(_: MsgUpdateValidatorDescriptionResponse): unknown;
-    fromPartial(_: DeepPartial<MsgUpdateValidatorDescriptionResponse>): MsgUpdateValidatorDescriptionResponse;
-};
 export declare const MsgCreateCoordinator: {
     encode(message: MsgCreateCoordinator, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgCreateCoordinator;
@@ -47,13 +26,11 @@ export declare const MsgCreateCoordinatorResponse: {
 /** Msg defines the Msg service. */
 export interface Msg {
     /** this line is used by starport scaffolding # proto/tx/rpc */
-    UpdateValidatorDescription(request: MsgUpdateValidatorDescription): Promise<MsgUpdateValidatorDescriptionResponse>;
     CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
-    UpdateValidatorDescription(request: MsgUpdateValidatorDescription): Promise<MsgUpdateValidatorDescriptionResponse>;
     CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>;
 }
 interface Rpc {

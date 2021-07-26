@@ -1,111 +1,8 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
-import { ValidatorDescription } from '../profile/validator';
 import { CoordinatorDescription } from '../profile/coordinator';
 export const protobufPackage = 'tendermint.spn.profile';
-const baseMsgUpdateValidatorDescription = { address: '' };
-export const MsgUpdateValidatorDescription = {
-    encode(message, writer = Writer.create()) {
-        if (message.address !== '') {
-            writer.uint32(10).string(message.address);
-        }
-        if (message.description !== undefined) {
-            ValidatorDescription.encode(message.description, writer.uint32(18).fork()).ldelim();
-        }
-        return writer;
-    },
-    decode(input, length) {
-        const reader = input instanceof Uint8Array ? new Reader(input) : input;
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMsgUpdateValidatorDescription };
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                case 1:
-                    message.address = reader.string();
-                    break;
-                case 2:
-                    message.description = ValidatorDescription.decode(reader, reader.uint32());
-                    break;
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-            }
-        }
-        return message;
-    },
-    fromJSON(object) {
-        const message = { ...baseMsgUpdateValidatorDescription };
-        if (object.address !== undefined && object.address !== null) {
-            message.address = String(object.address);
-        }
-        else {
-            message.address = '';
-        }
-        if (object.description !== undefined && object.description !== null) {
-            message.description = ValidatorDescription.fromJSON(object.description);
-        }
-        else {
-            message.description = undefined;
-        }
-        return message;
-    },
-    toJSON(message) {
-        const obj = {};
-        message.address !== undefined && (obj.address = message.address);
-        message.description !== undefined && (obj.description = message.description ? ValidatorDescription.toJSON(message.description) : undefined);
-        return obj;
-    },
-    fromPartial(object) {
-        const message = { ...baseMsgUpdateValidatorDescription };
-        if (object.address !== undefined && object.address !== null) {
-            message.address = object.address;
-        }
-        else {
-            message.address = '';
-        }
-        if (object.description !== undefined && object.description !== null) {
-            message.description = ValidatorDescription.fromPartial(object.description);
-        }
-        else {
-            message.description = undefined;
-        }
-        return message;
-    }
-};
-const baseMsgUpdateValidatorDescriptionResponse = {};
-export const MsgUpdateValidatorDescriptionResponse = {
-    encode(_, writer = Writer.create()) {
-        return writer;
-    },
-    decode(input, length) {
-        const reader = input instanceof Uint8Array ? new Reader(input) : input;
-        let end = length === undefined ? reader.len : reader.pos + length;
-        const message = { ...baseMsgUpdateValidatorDescriptionResponse };
-        while (reader.pos < end) {
-            const tag = reader.uint32();
-            switch (tag >>> 3) {
-                default:
-                    reader.skipType(tag & 7);
-                    break;
-            }
-        }
-        return message;
-    },
-    fromJSON(_) {
-        const message = { ...baseMsgUpdateValidatorDescriptionResponse };
-        return message;
-    },
-    toJSON(_) {
-        const obj = {};
-        return obj;
-    },
-    fromPartial(_) {
-        const message = { ...baseMsgUpdateValidatorDescriptionResponse };
-        return message;
-    }
-};
 const baseMsgCreateCoordinator = { address: '' };
 export const MsgCreateCoordinator = {
     encode(message, writer = Writer.create()) {
@@ -230,11 +127,6 @@ export const MsgCreateCoordinatorResponse = {
 export class MsgClientImpl {
     constructor(rpc) {
         this.rpc = rpc;
-    }
-    UpdateValidatorDescription(request) {
-        const data = MsgUpdateValidatorDescription.encode(request).finish();
-        const promise = this.rpc.request('tendermint.spn.profile.Msg', 'UpdateValidatorDescription', data);
-        return promise.then((data) => MsgUpdateValidatorDescriptionResponse.decode(new Reader(data)));
     }
     CreateCoordinator(request) {
         const data = MsgCreateCoordinator.encode(request).finish();

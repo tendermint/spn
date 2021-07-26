@@ -1,19 +1,11 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from 'protobufjs/minimal'
 import * as Long from 'long'
-import { ValidatorDescription } from '../profile/validator'
 import { CoordinatorDescription } from '../profile/coordinator'
 
 export const protobufPackage = 'tendermint.spn.profile'
 
 /** this line is used by starport scaffolding # proto/tx/message */
-export interface MsgUpdateValidatorDescription {
-  address: string
-  description: ValidatorDescription | undefined
-}
-
-export interface MsgUpdateValidatorDescriptionResponse {}
-
 export interface MsgCreateCoordinator {
   address: string
   description: CoordinatorDescription | undefined
@@ -21,116 +13,6 @@ export interface MsgCreateCoordinator {
 
 export interface MsgCreateCoordinatorResponse {
   coordinatorId: number
-}
-
-const baseMsgUpdateValidatorDescription: object = { address: '' }
-
-export const MsgUpdateValidatorDescription = {
-  encode(message: MsgUpdateValidatorDescription, writer: Writer = Writer.create()): Writer {
-    if (message.address !== '') {
-      writer.uint32(10).string(message.address)
-    }
-    if (message.description !== undefined) {
-      ValidatorDescription.encode(message.description, writer.uint32(18).fork()).ldelim()
-    }
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): MsgUpdateValidatorDescription {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseMsgUpdateValidatorDescription } as MsgUpdateValidatorDescription
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        case 1:
-          message.address = reader.string()
-          break
-        case 2:
-          message.description = ValidatorDescription.decode(reader, reader.uint32())
-          break
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(object: any): MsgUpdateValidatorDescription {
-    const message = { ...baseMsgUpdateValidatorDescription } as MsgUpdateValidatorDescription
-    if (object.address !== undefined && object.address !== null) {
-      message.address = String(object.address)
-    } else {
-      message.address = ''
-    }
-    if (object.description !== undefined && object.description !== null) {
-      message.description = ValidatorDescription.fromJSON(object.description)
-    } else {
-      message.description = undefined
-    }
-    return message
-  },
-
-  toJSON(message: MsgUpdateValidatorDescription): unknown {
-    const obj: any = {}
-    message.address !== undefined && (obj.address = message.address)
-    message.description !== undefined && (obj.description = message.description ? ValidatorDescription.toJSON(message.description) : undefined)
-    return obj
-  },
-
-  fromPartial(object: DeepPartial<MsgUpdateValidatorDescription>): MsgUpdateValidatorDescription {
-    const message = { ...baseMsgUpdateValidatorDescription } as MsgUpdateValidatorDescription
-    if (object.address !== undefined && object.address !== null) {
-      message.address = object.address
-    } else {
-      message.address = ''
-    }
-    if (object.description !== undefined && object.description !== null) {
-      message.description = ValidatorDescription.fromPartial(object.description)
-    } else {
-      message.description = undefined
-    }
-    return message
-  }
-}
-
-const baseMsgUpdateValidatorDescriptionResponse: object = {}
-
-export const MsgUpdateValidatorDescriptionResponse = {
-  encode(_: MsgUpdateValidatorDescriptionResponse, writer: Writer = Writer.create()): Writer {
-    return writer
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): MsgUpdateValidatorDescriptionResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input
-    let end = length === undefined ? reader.len : reader.pos + length
-    const message = { ...baseMsgUpdateValidatorDescriptionResponse } as MsgUpdateValidatorDescriptionResponse
-    while (reader.pos < end) {
-      const tag = reader.uint32()
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7)
-          break
-      }
-    }
-    return message
-  },
-
-  fromJSON(_: any): MsgUpdateValidatorDescriptionResponse {
-    const message = { ...baseMsgUpdateValidatorDescriptionResponse } as MsgUpdateValidatorDescriptionResponse
-    return message
-  },
-
-  toJSON(_: MsgUpdateValidatorDescriptionResponse): unknown {
-    const obj: any = {}
-    return obj
-  },
-
-  fromPartial(_: DeepPartial<MsgUpdateValidatorDescriptionResponse>): MsgUpdateValidatorDescriptionResponse {
-    const message = { ...baseMsgUpdateValidatorDescriptionResponse } as MsgUpdateValidatorDescriptionResponse
-    return message
-  }
 }
 
 const baseMsgCreateCoordinator: object = { address: '' }
@@ -263,7 +145,6 @@ export const MsgCreateCoordinatorResponse = {
 /** Msg defines the Msg service. */
 export interface Msg {
   /** this line is used by starport scaffolding # proto/tx/rpc */
-  UpdateValidatorDescription(request: MsgUpdateValidatorDescription): Promise<MsgUpdateValidatorDescriptionResponse>
   CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse>
 }
 
@@ -272,12 +153,6 @@ export class MsgClientImpl implements Msg {
   constructor(rpc: Rpc) {
     this.rpc = rpc
   }
-  UpdateValidatorDescription(request: MsgUpdateValidatorDescription): Promise<MsgUpdateValidatorDescriptionResponse> {
-    const data = MsgUpdateValidatorDescription.encode(request).finish()
-    const promise = this.rpc.request('tendermint.spn.profile.Msg', 'UpdateValidatorDescription', data)
-    return promise.then((data) => MsgUpdateValidatorDescriptionResponse.decode(new Reader(data)))
-  }
-
   CreateCoordinator(request: MsgCreateCoordinator): Promise<MsgCreateCoordinatorResponse> {
     const data = MsgCreateCoordinator.encode(request).finish()
     const promise = this.rpc.request('tendermint.spn.profile.Msg', 'CreateCoordinator', data)
