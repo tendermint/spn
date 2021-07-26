@@ -12,12 +12,22 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 
+	cdc.RegisterInterface((*InitialGenesis)(nil), nil)
+	cdc.RegisterConcrete(&DefaultInitialGenesis{}, "spn/launch/DefaultInitialGenesis", nil)
+	cdc.RegisterConcrete(&GenesisURL{}, "spn/launch/GenesisURL", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateChain{},
+	)
+
+	registry.RegisterInterface(
+		"tendermint.spn.launch.InitialGenesis",
+		(*InitialGenesis)(nil),
+		&DefaultInitialGenesis{},
+		&GenesisURL{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
