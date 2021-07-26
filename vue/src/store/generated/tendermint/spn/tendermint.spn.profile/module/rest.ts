@@ -34,10 +34,7 @@ export interface ProfileMsgCreateCoordinatorResponse {
   coordinatorId?: string;
 }
 
-export interface ProfileMsgUpdateCoordinatorAddressResponse {
-  /** @format uint64 */
-  coordinatorId?: string;
-}
+export type ProfileMsgUpdateCoordinatorAddressResponse = object;
 
 export interface ProfileQueryAllCoordinatorResponse {
   Coordinator?: ProfileCoordinator[];

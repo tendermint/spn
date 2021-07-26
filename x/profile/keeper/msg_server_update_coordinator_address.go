@@ -30,6 +30,9 @@ func (k msgServer) UpdateCoordinatorAddress(
 	}
 
 	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
+	if (coord == types.Coordinator{}) {
+		panic("Inconsistency error: coordinator id not exist into the keeper")
+	}
 	coord.Address = msg.NewAddress
 
 	// Remove the old coordinator by address and create a new one
@@ -40,5 +43,5 @@ func (k msgServer) UpdateCoordinatorAddress(
 	})
 	k.SetCoordinator(ctx, coord)
 
-	return &types.MsgUpdateCoordinatorAddressResponse{CoordinatorId: coord.CoordinatorId}, nil
+	return &types.MsgUpdateCoordinatorAddressResponse{}, nil
 }

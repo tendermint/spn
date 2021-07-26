@@ -194,12 +194,9 @@ export const MsgUpdateCoordinatorAddress = {
         return message;
     }
 };
-const baseMsgUpdateCoordinatorAddressResponse = { coordinatorId: 0 };
+const baseMsgUpdateCoordinatorAddressResponse = {};
 export const MsgUpdateCoordinatorAddressResponse = {
-    encode(message, writer = Writer.create()) {
-        if (message.coordinatorId !== 0) {
-            writer.uint32(8).uint64(message.coordinatorId);
-        }
+    encode(_, writer = Writer.create()) {
         return writer;
     },
     decode(input, length) {
@@ -209,9 +206,6 @@ export const MsgUpdateCoordinatorAddressResponse = {
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
-                case 1:
-                    message.coordinatorId = longToNumber(reader.uint64());
-                    break;
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -219,29 +213,16 @@ export const MsgUpdateCoordinatorAddressResponse = {
         }
         return message;
     },
-    fromJSON(object) {
+    fromJSON(_) {
         const message = { ...baseMsgUpdateCoordinatorAddressResponse };
-        if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-            message.coordinatorId = Number(object.coordinatorId);
-        }
-        else {
-            message.coordinatorId = 0;
-        }
         return message;
     },
-    toJSON(message) {
+    toJSON(_) {
         const obj = {};
-        message.coordinatorId !== undefined && (obj.coordinatorId = message.coordinatorId);
         return obj;
     },
-    fromPartial(object) {
+    fromPartial(_) {
         const message = { ...baseMsgUpdateCoordinatorAddressResponse };
-        if (object.coordinatorId !== undefined && object.coordinatorId !== null) {
-            message.coordinatorId = object.coordinatorId;
-        }
-        else {
-            message.coordinatorId = 0;
-        }
         return message;
     }
 };

@@ -14,7 +14,6 @@ export interface MsgUpdateCoordinatorAddress {
     newAddress: string;
 }
 export interface MsgUpdateCoordinatorAddressResponse {
-    coordinatorId: number;
 }
 export declare const MsgCreateCoordinator: {
     encode(message: MsgCreateCoordinator, writer?: Writer): Writer;
@@ -38,11 +37,11 @@ export declare const MsgUpdateCoordinatorAddress: {
     fromPartial(object: DeepPartial<MsgUpdateCoordinatorAddress>): MsgUpdateCoordinatorAddress;
 };
 export declare const MsgUpdateCoordinatorAddressResponse: {
-    encode(message: MsgUpdateCoordinatorAddressResponse, writer?: Writer): Writer;
+    encode(_: MsgUpdateCoordinatorAddressResponse, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgUpdateCoordinatorAddressResponse;
-    fromJSON(object: any): MsgUpdateCoordinatorAddressResponse;
-    toJSON(message: MsgUpdateCoordinatorAddressResponse): unknown;
-    fromPartial(object: DeepPartial<MsgUpdateCoordinatorAddressResponse>): MsgUpdateCoordinatorAddressResponse;
+    fromJSON(_: any): MsgUpdateCoordinatorAddressResponse;
+    toJSON(_: MsgUpdateCoordinatorAddressResponse): unknown;
+    fromPartial(_: DeepPartial<MsgUpdateCoordinatorAddressResponse>): MsgUpdateCoordinatorAddressResponse;
 };
 /** Msg defines the Msg service. */
 export interface Msg {

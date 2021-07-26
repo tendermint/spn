@@ -30,5 +30,4 @@ message MsgUpdateCoordinatorAddress {
 }
 
 message MsgUpdateCoordinatorAddressResponse {
-  uint64 coordinatorId = 1;
 }
