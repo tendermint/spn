@@ -11,14 +11,7 @@ import (
 
 func TestGenesisStateValidateValidator(t *testing.T) {
 	var (
-		consAddr1 = sample.AccAddress()
-		consAddr2 = sample.AccAddress()
-		consAddr3 = sample.AccAddress()
-		consAddr4 = sample.AccAddress()
-		addr1     = sample.AccAddress()
-		addr2     = sample.AccAddress()
-		addr3     = sample.AccAddress()
-		addr4     = sample.AccAddress()
+		addr = sample.AccAddress()
 	)
 	tests := []struct {
 		name     string
@@ -31,98 +24,21 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		}, {
 			name: "valid custom genesis",
 			genState: &GenesisState{
-				ConsensusKeyNonceList: []*ConsensusKeyNonce{
-					{ConsAddress: consAddr1, Nonce: 1},
-					{ConsAddress: consAddr2, Nonce: 2},
-					{ConsAddress: consAddr3, Nonce: 3},
-					{ConsAddress: consAddr4, Nonce: 4},
-				},
 				ValidatorByAddressList: []*ValidatorByAddress{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr2, ConsensusAddress: consAddr2},
-					{Address: addr3, ConsensusAddress: consAddr3},
-					{Address: addr4, ConsensusAddress: consAddr4},
-				},
-				ValidatorByConsAddressList: []*ValidatorByConsAddress{
-					{ConsAddress: consAddr1, Address: addr1},
-					{ConsAddress: consAddr2, Address: addr2},
-					{ConsAddress: consAddr3, Address: addr3},
-					{ConsAddress: consAddr4, Address: addr4},
+					{Address: sample.AccAddress()},
+					{Address: sample.AccAddress()},
+					{Address: sample.AccAddress()},
 				},
 			},
-		}, {
-			name: "validator address without consensus key",
-			genState: &GenesisState{
-				ValidatorByAddressList: []*ValidatorByAddress{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr2, ConsensusAddress: consAddr2},
-					{Address: addr3, ConsensusAddress: consAddr3},
-					{Address: addr4, ConsensusAddress: consAddr4},
-				},
-				ValidatorByConsAddressList: []*ValidatorByConsAddress{
-					{ConsAddress: consAddr1, Address: addr1},
-					{ConsAddress: consAddr2, Address: addr2},
-					{ConsAddress: consAddr3, Address: addr3},
-					{ConsAddress: consAddr4, Address: addr4},
-				},
-			},
-		}, {
-			name: "duplicated consensus key",
-			genState: &GenesisState{
-				ConsensusKeyNonceList: []*ConsensusKeyNonce{
-					{ConsAddress: consAddr1, Nonce: 1},
-					{ConsAddress: consAddr1, Nonce: 1},
-				},
-				ValidatorByConsAddressList: []*ValidatorByConsAddress{
-					{ConsAddress: consAddr1, Address: addr1},
-					{ConsAddress: consAddr2, Address: addr2},
-				},
-			},
-			err: fmt.Errorf("duplicated index for consensusKeyNonce: %s", consAddr1),
 		}, {
 			name: "duplicated validator by address",
 			genState: &GenesisState{
 				ValidatorByAddressList: []*ValidatorByAddress{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr1, ConsensusAddress: consAddr1},
+					{Address: addr},
+					{Address: addr},
 				},
 			},
-			err: fmt.Errorf("duplicated index for validatorByAddress: %s", addr1),
-		}, {
-			name: "duplicated validator by consensus address",
-			genState: &GenesisState{
-				ConsensusKeyNonceList: []*ConsensusKeyNonce{
-					{ConsAddress: consAddr1, Nonce: 1},
-					{ConsAddress: consAddr2, Nonce: 2},
-				},
-				ValidatorByAddressList: []*ValidatorByAddress{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr2, ConsensusAddress: consAddr2},
-				},
-				ValidatorByConsAddressList: []*ValidatorByConsAddress{
-					{ConsAddress: consAddr1, Address: addr1},
-					{ConsAddress: consAddr1, Address: addr1},
-				},
-			},
-			err: fmt.Errorf("duplicated index for validatorByConsAddress: %s", consAddr1),
-		}, {
-			name: "validator by consensus address not found",
-			genState: &GenesisState{
-				ConsensusKeyNonceList: []*ConsensusKeyNonce{
-					{ConsAddress: consAddr1, Nonce: 1},
-					{ConsAddress: consAddr2, Nonce: 2},
-				},
-				ValidatorByAddressList: []*ValidatorByAddress{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr2, ConsensusAddress: consAddr2},
-				},
-				ValidatorByConsAddressList: []*ValidatorByConsAddress{
-					{ConsAddress: consAddr1, Address: addr1},
-					{ConsAddress: consAddr2, Address: addr2},
-					{ConsAddress: consAddr3, Address: addr3},
-				},
-			},
-			err: fmt.Errorf("validator not found for consensus address: %s", consAddr3),
+			err: fmt.Errorf("duplicated index for validatorByAddress: %s", addr),
 		},
 	}
 	for _, tt := range tests {

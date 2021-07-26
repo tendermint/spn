@@ -13,11 +13,9 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
-		ConsensusKeyNonceList:      []*ConsensusKeyNonce{},
-		ValidatorByConsAddressList: []*ValidatorByConsAddress{},
-		ValidatorByAddressList:     []*ValidatorByAddress{},
-		CoordinatorByAddressList:   []*CoordinatorByAddress{},
-		CoordinatorList:            []*Coordinator{},
+		ValidatorByAddressList:   []*ValidatorByAddress{},
+		CoordinatorByAddressList: []*CoordinatorByAddress{},
+		CoordinatorList:          []*Coordinator{},
 	}
 }
 
@@ -36,29 +34,6 @@ func (gs GenesisState) Validate() error {
 }
 
 func (gs GenesisState) validateValidators() error {
-	// Check for duplicated index in validatorByConsAddress
-	validatorByConsAddressIndexMap := make(map[string]string)
-	for _, elem := range gs.ValidatorByConsAddressList {
-		index := string(ValidatorByConsAddressKey(elem.ConsAddress))
-		if _, ok := validatorByConsAddressIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for validatorByConsAddress: %s", elem.ConsAddress)
-		}
-		validatorByConsAddressIndexMap[index] = elem.ConsAddress
-	}
-
-	// Check for duplicated index in consensusKeyNonce
-	consensusKeyNonceIndexMap := make(map[string]struct{})
-	for _, elem := range gs.ConsensusKeyNonceList {
-		index := string(ConsensusKeyNonceKey(elem.ConsAddress))
-		if _, ok := consensusKeyNonceIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for consensusKeyNonce: %s", elem.ConsAddress)
-		}
-		if _, ok := validatorByConsAddressIndexMap[index]; !ok {
-			return fmt.Errorf("validator not exist for the consensus key: %s", elem.ConsAddress)
-		}
-		consensusKeyNonceIndexMap[index] = struct{}{}
-	}
-
 	// Check for duplicated index in validatorByAddress
 	validatorByAddressIndexMap := make(map[string]struct{})
 	for _, elem := range gs.ValidatorByAddressList {
@@ -67,14 +42,6 @@ func (gs GenesisState) validateValidators() error {
 			return fmt.Errorf("duplicated index for validatorByAddress: %s", elem.Address)
 		}
 		validatorByAddressIndexMap[index] = struct{}{}
-
-		// Remove to check if all validator by address exist
-		indexCons := string(ValidatorByAddressKey(elem.ConsensusAddress))
-		delete(validatorByConsAddressIndexMap, indexCons)
-	}
-	// Check if all coordinator by address exist
-	for _, address := range validatorByConsAddressIndexMap {
-		return fmt.Errorf("validator not found for consensus address: %s", address)
 	}
 	return nil
 }
