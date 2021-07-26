@@ -7,13 +7,9 @@ import { CoordinatorDescription } from "./module/types/profile/coordinator"
 import { CoordinatorByAddress } from "./module/types/profile/coordinator"
 import { QueryAllCoordinatorByAddressRequest } from "./module/types/profile/query"
 import { QueryAllCoordinatorByAddressResponse } from "./module/types/profile/query"
-import { ValidatorByAddress } from "./module/types/profile/validator"
-import { ValidatorDescription } from "./module/types/profile/validator"
-import { ValidatorByConsAddress } from "./module/types/profile/validator"
-import { ConsensusKeyNonce } from "./module/types/profile/validator"
 
 
-export { Coordinator, CoordinatorDescription, CoordinatorByAddress, QueryAllCoordinatorByAddressRequest, QueryAllCoordinatorByAddressResponse, ValidatorByAddress, ValidatorDescription, ValidatorByConsAddress, ConsensusKeyNonce };
+export { Coordinator, CoordinatorDescription, CoordinatorByAddress, QueryAllCoordinatorByAddressRequest, QueryAllCoordinatorByAddressResponse };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -51,10 +47,6 @@ function getStructure(template) {
 
 const getDefaultState = () => {
 	return {
-				ConsensusKeyNonce: {},
-				ValidatorByConsAddress: {},
-				ValidatorByAddress: {},
-				ValidatorByAddressAll: {},
 				CoordinatorByAddress: {},
 				Coordinator: {},
 				CoordinatorAll: {},
@@ -65,10 +57,6 @@ const getDefaultState = () => {
 						CoordinatorByAddress: getStructure(CoordinatorByAddress.fromPartial({})),
 						QueryAllCoordinatorByAddressRequest: getStructure(QueryAllCoordinatorByAddressRequest.fromPartial({})),
 						QueryAllCoordinatorByAddressResponse: getStructure(QueryAllCoordinatorByAddressResponse.fromPartial({})),
-						ValidatorByAddress: getStructure(ValidatorByAddress.fromPartial({})),
-						ValidatorDescription: getStructure(ValidatorDescription.fromPartial({})),
-						ValidatorByConsAddress: getStructure(ValidatorByConsAddress.fromPartial({})),
-						ConsensusKeyNonce: getStructure(ConsensusKeyNonce.fromPartial({})),
 						
 		},
 		_Subscriptions: new Set(),
@@ -96,30 +84,6 @@ export default {
 		}
 	},
 	getters: {
-				getConsensusKeyNonce: (state) => (params = { params: {}}) => {
-					if (!(<any> params).query) {
-						(<any> params).query=null
-					}
-			return state.ConsensusKeyNonce[JSON.stringify(params)] ?? {}
-		},
-				getValidatorByConsAddress: (state) => (params = { params: {}}) => {
-					if (!(<any> params).query) {
-						(<any> params).query=null
-					}
-			return state.ValidatorByConsAddress[JSON.stringify(params)] ?? {}
-		},
-				getValidatorByAddress: (state) => (params = { params: {}}) => {
-					if (!(<any> params).query) {
-						(<any> params).query=null
-					}
-			return state.ValidatorByAddress[JSON.stringify(params)] ?? {}
-		},
-				getValidatorByAddressAll: (state) => (params = { params: {}}) => {
-					if (!(<any> params).query) {
-						(<any> params).query=null
-					}
-			return state.ValidatorByAddressAll[JSON.stringify(params)] ?? {}
-		},
 				getCoordinatorByAddress: (state) => (params = { params: {}}) => {
 					if (!(<any> params).query) {
 						(<any> params).query=null
@@ -167,94 +131,6 @@ export default {
 				}
 			})
 		},
-		
-		
-		
-		 		
-		
-		
-		async QueryConsensusKeyNonce({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params: {...key}, query=null }) {
-			try {
-				const queryClient=await initQueryClient(rootGetters)
-				let value= (await queryClient.queryConsensusKeyNonce( key.consAddress)).data
-				
-					
-				commit('QUERY', { query: 'ConsensusKeyNonce', key: { params: {...key}, query}, value })
-				if (subscribe) commit('SUBSCRIBE', { action: 'QueryConsensusKeyNonce', payload: { options: { all }, params: {...key},query }})
-				return getters['getConsensusKeyNonce']( { params: {...key}, query}) ?? {}
-			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryConsensusKeyNonce', 'API Node Unavailable. Could not perform query: ' + e.message)
-				
-			}
-		},
-		
-		
-		
-		
-		 		
-		
-		
-		async QueryValidatorByConsAddress({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params: {...key}, query=null }) {
-			try {
-				const queryClient=await initQueryClient(rootGetters)
-				let value= (await queryClient.queryValidatorByConsAddress( key.consAddress)).data
-				
-					
-				commit('QUERY', { query: 'ValidatorByConsAddress', key: { params: {...key}, query}, value })
-				if (subscribe) commit('SUBSCRIBE', { action: 'QueryValidatorByConsAddress', payload: { options: { all }, params: {...key},query }})
-				return getters['getValidatorByConsAddress']( { params: {...key}, query}) ?? {}
-			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryValidatorByConsAddress', 'API Node Unavailable. Could not perform query: ' + e.message)
-				
-			}
-		},
-		
-		
-		
-		
-		 		
-		
-		
-		async QueryValidatorByAddress({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params: {...key}, query=null }) {
-			try {
-				const queryClient=await initQueryClient(rootGetters)
-				let value= (await queryClient.queryValidatorByAddress( key.address)).data
-				
-					
-				commit('QUERY', { query: 'ValidatorByAddress', key: { params: {...key}, query}, value })
-				if (subscribe) commit('SUBSCRIBE', { action: 'QueryValidatorByAddress', payload: { options: { all }, params: {...key},query }})
-				return getters['getValidatorByAddress']( { params: {...key}, query}) ?? {}
-			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryValidatorByAddress', 'API Node Unavailable. Could not perform query: ' + e.message)
-				
-			}
-		},
-		
-		
-		
-		
-		 		
-		
-		
-		async QueryValidatorByAddressAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params: {...key}, query=null }) {
-			try {
-				const queryClient=await initQueryClient(rootGetters)
-				let value= (await queryClient.queryValidatorByAddressAll(query)).data
-				
-					
-				while (all && (<any> value).pagination && (<any> value).pagination.nextKey!=null) {
-					let next_values=(await queryClient.queryValidatorByAddressAll({...query, 'pagination.key':(<any> value).pagination.nextKey})).data
-					value = mergeResults(value, next_values);
-				}
-				commit('QUERY', { query: 'ValidatorByAddressAll', key: { params: {...key}, query}, value })
-				if (subscribe) commit('SUBSCRIBE', { action: 'QueryValidatorByAddressAll', payload: { options: { all }, params: {...key},query }})
-				return getters['getValidatorByAddressAll']( { params: {...key}, query}) ?? {}
-			} catch (e) {
-				throw new SpVuexError('QueryClient:QueryValidatorByAddressAll', 'API Node Unavailable. Could not perform query: ' + e.message)
-				
-			}
-		},
-		
 		
 		
 		

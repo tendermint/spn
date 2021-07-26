@@ -140,20 +140,6 @@ export class Api extends HttpClient {
          * No description
          *
          * @tags Query
-         * @name QueryConsensusKeyNonce
-         * @summary Queries a consensusKeyNonce by index.
-         * @request GET:/tendermint/spn/profile/consensusKeyNonce/{consAddress}
-         */
-        this.queryConsensusKeyNonce = (consAddress, params = {}) => this.request({
-            path: `/tendermint/spn/profile/consensusKeyNonce/${consAddress}`,
-            method: "GET",
-            format: "json",
-            ...params,
-        });
-        /**
-         * No description
-         *
-         * @tags Query
          * @name QueryCoordinatorAll
          * @summary Queries a list of coordinator items.
          * @request GET:/tendermint/spn/profile/coordinator
@@ -189,49 +175,6 @@ export class Api extends HttpClient {
          */
         this.queryCoordinatorByAddress = (address, params = {}) => this.request({
             path: `/tendermint/spn/profile/coordinatorByAddress/${address}`,
-            method: "GET",
-            format: "json",
-            ...params,
-        });
-        /**
-         * No description
-         *
-         * @tags Query
-         * @name QueryValidatorByAddressAll
-         * @summary Queries a list of validatorByAddress items.
-         * @request GET:/tendermint/spn/profile/validatorByAddress
-         */
-        this.queryValidatorByAddressAll = (query, params = {}) => this.request({
-            path: `/tendermint/spn/profile/validatorByAddress`,
-            method: "GET",
-            query: query,
-            format: "json",
-            ...params,
-        });
-        /**
-         * No description
-         *
-         * @tags Query
-         * @name QueryValidatorByAddress
-         * @summary Queries a validatorByAddress by index.
-         * @request GET:/tendermint/spn/profile/validatorByAddress/{address}
-         */
-        this.queryValidatorByAddress = (address, params = {}) => this.request({
-            path: `/tendermint/spn/profile/validatorByAddress/${address}`,
-            method: "GET",
-            format: "json",
-            ...params,
-        });
-        /**
-         * No description
-         *
-         * @tags Query
-         * @name QueryValidatorByConsAddress
-         * @summary Queries a validatorByConsAddress by index.
-         * @request GET:/tendermint/spn/profile/validatorByConsAddress/{consAddress}
-         */
-        this.queryValidatorByConsAddress = (consAddress, params = {}) => this.request({
-            path: `/tendermint/spn/profile/validatorByConsAddress/${consAddress}`,
             method: "GET",
             format: "json",
             ...params,
