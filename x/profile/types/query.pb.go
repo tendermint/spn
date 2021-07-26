@@ -655,6 +655,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
+	// this line is used by starport scaffolding # 2
 	// Queries a validatorByAddress by index.
 	ValidatorByAddress(ctx context.Context, in *QueryGetValidatorByAddressRequest, opts ...grpc.CallOption) (*QueryGetValidatorByAddressResponse, error)
 	// Queries a list of validatorByAddress items.
@@ -722,6 +723,7 @@ func (c *queryClient) CoordinatorAll(ctx context.Context, in *QueryAllCoordinato
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
+	// this line is used by starport scaffolding # 2
 	// Queries a validatorByAddress by index.
 	ValidatorByAddress(context.Context, *QueryGetValidatorByAddressRequest) (*QueryGetValidatorByAddressResponse, error)
 	// Queries a list of validatorByAddress items.
