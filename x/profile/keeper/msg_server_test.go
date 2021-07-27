@@ -9,6 +9,6 @@ import (
 )
 
 func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := SetupTestKeeper(t)
 	return NewMsgServerImpl(*keeper), sdk.WrapSDKContext(ctx)
 }

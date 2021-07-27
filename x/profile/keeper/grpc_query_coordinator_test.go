@@ -14,7 +14,7 @@ import (
 )
 
 func TestCoordinatorQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := SetupTestKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCoordinator(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -56,7 +56,7 @@ func TestCoordinatorQuerySingle(t *testing.T) {
 }
 
 func TestCoordinatorQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := SetupTestKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCoordinator(keeper, ctx, 5)
 

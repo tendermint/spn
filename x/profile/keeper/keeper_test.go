@@ -15,7 +15,8 @@ import (
 	tmdb "github.com/tendermint/tm-db"
 )
 
-func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
+// SetupTestKeeper returns a profile keeper with a in-memory storage for testing purpose
+func SetupTestKeeper(t testing.TB) (*Keeper, sdk.Context) {
 	storeKey := sdk.NewKVStoreKey(types.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 
