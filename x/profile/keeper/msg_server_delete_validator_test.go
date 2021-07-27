@@ -1,17 +1,21 @@
 package keeper
 
 import (
+	"fmt"
 	"testing"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgDeleteValidator(t *testing.T) {
-	var addr = sample.AccAddress()
+	var (
+		addr1 = sample.AccAddress()
+		//addr2 = sample.AccAddress()
+	)
 	srv, ctx := setupMsgServer(t)
-	// TODO create a default validator to be deleted
 	tests := []struct {
 		name string
 		msg  types.MsgDeleteValidator
@@ -20,13 +24,16 @@ func TestMsgDeleteValidator(t *testing.T) {
 		{
 			name: "delete a non-existing validator",
 			msg: types.MsgDeleteValidator{
-				Address: sample.AccAddress(),
+				Address: addr1,
 			},
-		}, {
-			name: "delete an existing validator",
-			msg: types.MsgDeleteValidator{
-				Address: addr,
-			},
+			err: sdkerrors.Wrap(types.ErrValidatorNotFound,
+				fmt.Sprintf("validator: %s", addr1)),
+			//	TODO create a default validator to be deleted
+			//}, {
+			//name: "delete an existing validator",
+			//msg: types.MsgDeleteValidator{
+			//	Address: addr2,
+			//},
 		},
 	}
 	for _, tt := range tests {
