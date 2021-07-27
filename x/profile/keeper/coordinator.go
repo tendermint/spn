@@ -2,13 +2,14 @@ package keeper
 
 import (
 	"encoding/binary"
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/profile/types"
-	"strconv"
 )
 
-// GetCoordinatorCount get the total number of TypeName.LowerCamel
+// GetCoordinatorCount get the total number of Coordinators
 func (k Keeper) GetCoordinatorCount(ctx sdk.Context) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorCountKey))
 	byteKey := types.KeyPrefix(types.CoordinatorCountKey)

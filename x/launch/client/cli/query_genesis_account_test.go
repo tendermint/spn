@@ -29,11 +29,10 @@ func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.GenesisAccountList = append(state.GenesisAccountList, &types.GenesisAccount{
-			ChainID: strconv.Itoa(i),
-			Address: strconv.Itoa(i),
-			Coins:   sample.Coins(),
-		})
+		state.GenesisAccountList = append(
+			state.GenesisAccountList,
+			sample.GenesisAccount(strconv.Itoa(i), strconv.Itoa(i)),
+		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)

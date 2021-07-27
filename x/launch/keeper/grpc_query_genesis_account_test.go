@@ -59,6 +59,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
+				require.NoError(t, err)
 				require.Equal(t, tc.response, response)
 			}
 		})
