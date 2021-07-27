@@ -32,8 +32,8 @@ func TestGenesisStateValidate(t *testing.T) {
 					{CoordinatorId: 2, Address: "spn1d6pd5nk08mu789q4msfpynsuha7yf4wcsvvspr"},
 					{CoordinatorId: 3, Address: "spn1ktzsme3g0ag0236ngvkw62vy9tqrr3xysnhp3g"},
 				},
+				CoordinatorCount: 4,
 			},
-			err: nil,
 		}, {
 			name: "duplicated coordinator",
 			genState: &GenesisState{
@@ -41,6 +41,7 @@ func TestGenesisStateValidate(t *testing.T) {
 					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
 					{CoordinatorId: 1, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
 				},
+				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("duplicated index for coordinatorByAddress: spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"),
 		}, {
@@ -54,6 +55,7 @@ func TestGenesisStateValidate(t *testing.T) {
 					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
 					{CoordinatorId: 0, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
 				},
+				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("duplicated id for coordinator: 0"),
 		}, {
@@ -66,6 +68,7 @@ func TestGenesisStateValidate(t *testing.T) {
 					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
 					{CoordinatorId: 1, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
 				},
+				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("coordinator address not found for CoordinatorByAddress: spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"),
 		}, {
@@ -78,6 +81,7 @@ func TestGenesisStateValidate(t *testing.T) {
 				CoordinatorList: []*Coordinator{
 					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
 				},
+				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("coordinator address not found for coordinatorID: 1"),
 		}, {
@@ -91,6 +95,7 @@ func TestGenesisStateValidate(t *testing.T) {
 					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
 					{CoordinatorId: 133, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
 				},
+				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("coordinator id 133 should be lower or equal than the last id 2"),
 		},

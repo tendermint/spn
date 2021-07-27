@@ -37,12 +37,12 @@ func (gs GenesisState) Validate() error {
 
 	// Check for duplicated ID in coordinator
 	coordinatorIDMap := make(map[uint64]bool)
-	count := len(gs.CoordinatorList)
+	count := gs.GetCoordinatorCount()
 	for _, elem := range gs.CoordinatorList {
 		if _, ok := coordinatorIDMap[elem.CoordinatorId]; ok {
 			return fmt.Errorf("duplicated id for coordinator: %d", elem.CoordinatorId)
 		}
-		if elem.CoordinatorId > uint64(count) {
+		if elem.CoordinatorId >= count {
 			return fmt.Errorf("coordinator id %d should be lower or equal than the last id %d",
 				elem.CoordinatorId, count)
 		}
