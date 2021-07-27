@@ -2,9 +2,43 @@ package types_test
 
 import (
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 	"testing"
 )
+
+func TestChain_GetDefaultInitialGenesis(t *testing.T) {
+	chain := sample.Chain("foo", 0)
+
+	// Should return the default genesis
+	chain.InitialGenesis = types.AnyFromDefaultInitialGenesis()
+	defaultGen, err := chain.GetDefaultInitialGenesis()
+	require.NoError(t, err)
+	require.Equal(t, &types.DefaultInitialGenesis{}, defaultGen)
+
+	// Should return an error
+	url, hash := sample.String(10), sample.String(10)
+	chain.InitialGenesis = types.AnyFromGenesisURL(url, hash)
+	_, err = chain.GetDefaultInitialGenesis()
+	require.Error(t, err)
+}
+
+func TestChain_GetInitialGenesis(t *testing.T) {
+	chain := sample.Chain("foo", 0)
+
+	url, hash := sample.String(10), sample.String(10)
+	chain.InitialGenesis = types.AnyFromGenesisURL(url, hash)
+	genUrl, err := chain.GetGenesisURL()
+	require.NoError(t, err)
+	require.Equal(t, &types.GenesisURL{
+		Url: url,
+		Hash: hash,
+	}, genUrl)
+
+	chain.InitialGenesis = types.AnyFromDefaultInitialGenesis()
+	_, err = chain.GetGenesisURL()
+	require.Error(t, err)
+}
 
 func TestChainIDFromChainName(t *testing.T) {
 	require.Equal(t, "foo-1", types.ChainIDFromChainName("foo", 1))

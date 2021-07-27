@@ -3,7 +3,45 @@ package types
 import (
 	"errors"
 	"fmt"
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 )
+
+// GetDefaultInitialGenesis returns the DefaultInitialGenesis structure if the initial genesis for the chain is default genesis
+// If the initial genesis is not default genesis, nil is returned
+func (c Chain) GetDefaultInitialGenesis() (*DefaultInitialGenesis, error) {
+	var defaultInitialGenesis *DefaultInitialGenesis
+	err := ModuleCdc.UnpackAny(c.InitialGenesis, &defaultInitialGenesis)
+	return defaultInitialGenesis, err
+}
+
+// GetGenesisURL returns the GenesisURL structure if the initial genesis for the chain is a genesis URL
+// If the initial genesis is not a genesis url, nil is returned
+func (c Chain) GetGenesisURL() (*GenesisURL, error) {
+	var genesisURL *GenesisURL
+	err := ModuleCdc.UnpackAny(c.InitialGenesis, &genesisURL)
+	return genesisURL, err
+}
+
+// AnyFromDefaultInitialGenesis the proto any type for a DefaultInitialGenesis
+func AnyFromDefaultInitialGenesis() *codec.Any {
+	defaultGenesis, err := codec.NewAnyWithValue(&DefaultInitialGenesis{})
+	if err != nil {
+		panic("DefaultInitialGenesis can't be used as initial genesis")
+	}
+	return defaultGenesis
+}
+
+// AnyFromGenesisURL the proto any type for a GenesisURL
+func AnyFromGenesisURL(url, hash string) *codec.Any {
+	genesisURL, err := codec.NewAnyWithValue(&GenesisURL{
+		Url: url,
+		Hash: hash,
+	})
+	if err != nil {
+		panic("GenesisURL can't be used as initial genesis")
+	}
+	return genesisURL
+}
 
 // ChainIDFromChainName returns the chain id from the chain name and the count
 func ChainIDFromChainName(chainName string, chainNameCount uint64) string {
