@@ -12,6 +12,8 @@ service Msg {
   rpc CreateCoordinator(MsgCreateCoordinator) returns (MsgCreateCoordinatorResponse);
 
   rpc DeleteCoordinator(MsgDeleteCoordinator) returns (MsgDeleteCoordinatorResponse);
+
+  rpc UpdateCoordinatorAddress(MsgUpdateCoordinatorAddress) returns (MsgUpdateCoordinatorAddressResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
@@ -30,4 +32,12 @@ message MsgDeleteCoordinator {
 
 message MsgDeleteCoordinatorResponse {
   uint64 coordinatorId = 1;
+}
+
+message MsgUpdateCoordinatorAddress {
+  string address = 1;
+  string newAddress = 2;
+}
+
+message MsgUpdateCoordinatorAddressResponse {
 }

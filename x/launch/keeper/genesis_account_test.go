@@ -14,10 +14,7 @@ import (
 func createNGenesisAccount(keeper *Keeper, ctx sdk.Context, n int) []types.GenesisAccount {
 	items := make([]types.GenesisAccount, n)
 	for i := range items {
-		items[i].ChainID = strconv.Itoa(i)
-		items[i].Address = strconv.Itoa(i)
-		items[i].Coins = sample.Coins()
-
+		items[i] = *sample.GenesisAccount(strconv.Itoa(i), strconv.Itoa(i))
 		keeper.SetGenesisAccount(ctx, items[i])
 	}
 	return items

@@ -13,6 +13,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
+		VestedAccountList:  []*VestedAccount{},
 		GenesisAccountList: []*GenesisAccount{},
 		ChainList:          []*Chain{},
 	}
@@ -49,6 +50,34 @@ func (gs GenesisState) Validate() error {
 		// Each genesis account must be associated with an existing chain
 		if _, ok := chainIndexMap[elem.ChainID]; !ok {
 			return fmt.Errorf("account %s is associated to a non-existing chain: %s",
+				elem.Address,
+				elem.ChainID,
+			)
+		}
+	}
+
+	// Check for duplicated index in vestedAccount
+	vestedAccountIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.VestedAccountList {
+		index := string(VestedAccountKey(elem.ChainID, elem.Address))
+		if _, ok := vestedAccountIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for vestedAccount")
+		}
+		vestedAccountIndexMap[index] = struct{}{}
+
+		// Each vested account must be associated with an existing chain
+		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+			return fmt.Errorf("account %s is associated to a non-existing chain: %s",
+				elem.Address,
+				elem.ChainID,
+			)
+		}
+
+		// An address cannot be defined as a genesis account and a vested account for the same chain
+		accountIndex := GenesisAccountKey(elem.ChainID, elem.Address)
+		if _, ok := genesisAccountIndexMap[string(accountIndex)]; ok {
+			return fmt.Errorf("account %s can't be a genesis account and a vested account at the same time for the chain: %s",
 				elem.Address,
 				elem.ChainID,
 			)

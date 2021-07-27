@@ -30026,12 +30026,8 @@ definitions:
       coordinatorId:
         type: string
         format: uint64
-  tendermint.spn.profile.MsgDeleteCoordinatorResponse:
+  tendermint.spn.profile.MsgUpdateCoordinatorAddressResponse:
     type: object
-    properties:
-      coordinatorId:
-        type: string
-        format: uint64
   tendermint.spn.profile.QueryAllCoordinatorResponse:
     type: object
     properties:
