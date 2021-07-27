@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/tendermint/spn/testutil/sample"
+
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/assert"
@@ -14,7 +16,6 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/client/cli"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -22,26 +23,26 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []*types.GenesisAccount) {
+func networkWithVestedAccountObjects(t *testing.T, n int) (*network.Network, []*types.VestedAccount) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.GenesisAccountList = append(
-			state.GenesisAccountList,
-			sample.GenesisAccount(strconv.Itoa(i), strconv.Itoa(i)),
+		state.VestedAccountList = append(
+			state.VestedAccountList,
+			sample.VestedAccount(strconv.Itoa(i), strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.GenesisAccountList
+	return network.New(t, cfg), state.VestedAccountList
 }
 
-func TestShowGenesisAccount(t *testing.T) {
-	net, objs := networkWithGenesisAccountObjects(t, 2)
+func TestShowVestedAccount(t *testing.T) {
+	net, objs := networkWithVestedAccountObjects(t, 2)
 
 	ctx := net.Validators[0].ClientCtx
 	common := []string{
@@ -54,7 +55,7 @@ func TestShowGenesisAccount(t *testing.T) {
 
 		args []string
 		err  error
-		obj  *types.GenesisAccount
+		obj  *types.VestedAccount
 	}{
 		{
 			desc:      "found",
@@ -80,24 +81,28 @@ func TestShowGenesisAccount(t *testing.T) {
 				tc.idAddress,
 			}
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowGenesisAccount(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowVestedAccount(), args)
 			if tc.err != nil {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
 				require.ErrorIs(t, stat.Err(), tc.err)
 			} else {
 				require.NoError(t, err)
-				var resp types.QueryGetGenesisAccountResponse
+				var resp types.QueryGetVestedAccountResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				require.NotNil(t, resp.GenesisAccount)
-				require.Equal(t, tc.obj, resp.GenesisAccount)
+				require.NotNil(t, resp.VestedAccount)
+
+				// Cached value is cleared when the any type is encoded into the store
+				tc.obj.VestingOptions.ClearCachedValue()
+
+				require.Equal(t, tc.obj, resp.VestedAccount)
 			}
 		})
 	}
 }
 
-func TestListGenesisAccount(t *testing.T) {
-	net, objs := networkWithGenesisAccountObjects(t, 5)
+func TestListVestedAccount(t *testing.T) {
+	net, objs := networkWithVestedAccountObjects(t, 5)
 
 	ctx := net.Validators[0].ClientCtx
 	request := func(next []byte, offset, limit uint64, total bool) []string {
@@ -119,12 +124,15 @@ func TestListGenesisAccount(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestedAccount(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllGenesisAccountResponse
+			var resp types.QueryAllVestedAccountResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.GenesisAccount[j-i])
+				// Cached value is cleared when the any type is encoded into the store
+				objs[j].VestingOptions.ClearCachedValue()
+
+				assert.Equal(t, objs[j], resp.VestedAccount[j-i])
 			}
 		}
 	})
@@ -133,24 +141,33 @@ func TestListGenesisAccount(t *testing.T) {
 		var next []byte
 		for i := 0; i < len(objs); i += step {
 			args := request(next, 0, uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestedAccount(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllGenesisAccountResponse
+			var resp types.QueryAllVestedAccountResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.GenesisAccount[j-i])
+				// Cached value is cleared when the any type is encoded into the store
+				objs[j].VestingOptions.ClearCachedValue()
+
+				assert.Equal(t, objs[j], resp.VestedAccount[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
-		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
+		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestedAccount(), args)
 		require.NoError(t, err)
-		var resp types.QueryAllGenesisAccountResponse
+		var resp types.QueryAllVestedAccountResponse
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.Equal(t, objs, resp.GenesisAccount)
+
+		// Cached value is cleared when the any type is encoded into the store
+		for _, obj := range objs {
+			obj.VestingOptions.ClearCachedValue()
+		}
+
+		require.Equal(t, objs, resp.VestedAccount)
 	})
 }
