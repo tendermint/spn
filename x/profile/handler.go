@@ -22,6 +22,10 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err := msgServer.CreateCoordinator(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 
+		case *types.MsgUpdateCoordinatorAddress:
+			res, err := msgServer.UpdateCoordinatorAddress(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
+
 		case *types.MsgUpdateCoordinatorDescription:
 			res, err := msgServer.UpdateCoordinatorDescription(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)

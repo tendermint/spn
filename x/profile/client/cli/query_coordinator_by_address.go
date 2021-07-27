@@ -5,7 +5,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -17,16 +16,10 @@ func CmdShowCoordinatorByAddress() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
-
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsAddress, err := cast.ToStringE(args[0])
-			if err != nil {
-				return err
-			}
-
 			params := &types.QueryGetCoordinatorByAddressRequest{
-				Address: argsAddress,
+				Address: args[0],
 			}
 
 			res, err := queryClient.CoordinatorByAddress(context.Background(), params)

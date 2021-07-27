@@ -12,6 +12,7 @@ func TestGenesisState_Validate(t *testing.T) {
 	chainId2 := sample.AlphaString(5)
 	addr1 := sample.AccAddress()
 	addr2 := sample.AccAddress()
+	vestedAddress := sample.AccAddress()
 
 	for _, tc := range []struct {
 		desc          string
@@ -52,6 +53,16 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: addr2,
 					},
 				},
+				VestedAccountList: []*types.VestedAccount{
+					{
+						ChainID: chainId1,
+						Address: vestedAddress,
+					},
+					{
+						ChainID: chainId2,
+						Address: vestedAddress,
+					},
+				},
 			},
 			shouldBeValid: true,
 		},
@@ -86,7 +97,57 @@ func TestGenesisState_Validate(t *testing.T) {
 			shouldBeValid: false,
 		},
 		{
-			desc: "account associated with chain",
+			desc: "account not associated with chain",
+			genState: &types.GenesisState{
+				ChainList: []*types.Chain{
+					{
+						ChainID: chainId1,
+					},
+				},
+				GenesisAccountList: []*types.GenesisAccount{
+					{
+						ChainID: chainId2,
+						Address: addr1,
+					},
+				},
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "duplicated vested accounts",
+			genState: &types.GenesisState{
+				VestedAccountList: []*types.VestedAccount{
+					{
+						ChainID: chainId1,
+						Address: vestedAddress,
+					},
+					{
+						ChainID: chainId1,
+						Address: vestedAddress,
+					},
+				},
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "vested account not associated with chain",
+			genState: &types.GenesisState{
+				ChainList: []*types.Chain{
+					{
+						ChainID: chainId1,
+					},
+				},
+				VestedAccountList: []*types.VestedAccount{
+					{
+						ChainID: chainId2,
+						Address: vestedAddress,
+					},
+				},
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "address as genesis account and vested account",
 			genState: &types.GenesisState{
 				ChainList: []*types.Chain{
 					{
@@ -99,20 +160,9 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: addr1,
 					},
 				},
-			},
-			shouldBeValid: true,
-		},
-		{
-			desc: "account not associated with chain",
-			genState: &types.GenesisState{
-				ChainList: []*types.Chain{
+				VestedAccountList: []*types.VestedAccount{
 					{
 						ChainID: chainId1,
-					},
-				},
-				GenesisAccountList: []*types.GenesisAccount{
-					{
-						ChainID: chainId2,
 						Address: addr1,
 					},
 				},
