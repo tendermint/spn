@@ -68,7 +68,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						ChainID: chainId1,
 						Count: 2,
 						},
-				}
+				},
 				VestedAccountList: []*types.VestedAccount{
 					{
 						ChainID: chainId1,
