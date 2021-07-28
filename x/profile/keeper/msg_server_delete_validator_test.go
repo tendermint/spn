@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -14,8 +16,9 @@ func TestMsgDeleteValidator(t *testing.T) {
 	var (
 		addr1 = sample.AccAddress()
 		//addr2 = sample.AccAddress()
+		ctx, k, srv = setupMsgServerAndKeeper(t)
+		wCtx        = sdk.WrapSDKContext(ctx)
 	)
-	srv, ctx := setupMsgServer(t)
 	tests := []struct {
 		name string
 		msg  types.MsgDeleteValidator
@@ -38,12 +41,14 @@ func TestMsgDeleteValidator(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.DeleteValidator(ctx, &tt.msg)
+			_, err := srv.DeleteValidator(wCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
+			_, found := k.GetValidatorByAddress(ctx, tt.msg.Address)
+			assert.False(t, found, "validator was not removed")
 		})
 	}
 }
