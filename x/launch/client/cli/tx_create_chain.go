@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	flagGenesisURL = "genesis-url"
-	flagGenesisHash  = "genesis-hash"
+	flagGenesisURL  = "genesis-url"
+	flagGenesisHash = "genesis-hash"
 )
 
 func CmdCreateChain() *cobra.Command {
