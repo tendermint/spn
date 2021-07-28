@@ -33,6 +33,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdDeleteValidator())
 
 	cmd.AddCommand(CmdCreateCoordinator())
+	cmd.AddCommand(CmdUpdateCoordinatorAddress())
 
 	return cmd
 }
