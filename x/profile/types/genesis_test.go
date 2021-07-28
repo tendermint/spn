@@ -75,64 +75,83 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 			name: "valid custom genesis",
 			genState: &GenesisState{
 				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 10, Address: addr1},
-					{CoordinatorId: 11, Address: addr2},
-					{CoordinatorId: 12, Address: addr3},
-					{CoordinatorId: 13, Address: addr4},
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr2},
+					{CoordinatorId: 2, Address: addr3},
+					{CoordinatorId: 3, Address: addr4},
 				},
 				CoordinatorList: []*Coordinator{
-					{CoordinatorId: 10, Address: addr1},
-					{CoordinatorId: 11, Address: addr2},
-					{CoordinatorId: 12, Address: addr3},
-					{CoordinatorId: 13, Address: addr4},
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr2},
+					{CoordinatorId: 2, Address: addr3},
+					{CoordinatorId: 3, Address: addr4},
 				},
+				CoordinatorCount: 4,
 			},
 		}, {
 			name: "duplicated coordinator",
 			genState: &GenesisState{
 				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 10, Address: addr1},
-					{CoordinatorId: 10, Address: addr1},
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr1},
 				},
+				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("duplicated index for coordinatorByAddress: %s", addr1),
 		}, {
-			name: "profile associated with chain",
+			name: "duplicated coordinator id",
 			genState: &GenesisState{
 				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 10, Address: addr1},
-					{CoordinatorId: 10, Address: addr2},
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 0, Address: addr2},
 				},
 				CoordinatorList: []*Coordinator{
-					{CoordinatorId: 10, Address: addr1},
-					{CoordinatorId: 10, Address: addr2},
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 0, Address: addr2},
 				},
+				CoordinatorCount: 2,
 			},
-			err: fmt.Errorf("duplicated id for coordinator: 10"),
+			err: fmt.Errorf("duplicated id for coordinator: 0"),
 		}, {
 			name: "profile not associated with chain",
 			genState: &GenesisState{
 				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 10, Address: addr1},
+					{CoordinatorId: 0, Address: addr1},
 				},
 				CoordinatorList: []*Coordinator{
-					{CoordinatorId: 10, Address: addr1},
-					{CoordinatorId: 11, Address: addr2},
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr2},
 				},
+				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("coordinator address not found for CoordinatorByAddress: %s", addr2),
 		}, {
 			name: "profile not associated with chain",
 			genState: &GenesisState{
 				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 10, Address: addr1},
-					{CoordinatorId: 11, Address: addr2},
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr2},
 				},
 				CoordinatorList: []*Coordinator{
-					{CoordinatorId: 10, Address: addr1},
+					{CoordinatorId: 0, Address: addr1},
 				},
+				CoordinatorCount: 2,
 			},
-			err: fmt.Errorf("coordinator address not found for coordinatorID: 11"),
+			err: fmt.Errorf("coordinator address not found for coordinatorID: 1"),
+		}, {
+			name: "invalid coordinator id",
+			genState: &GenesisState{
+				CoordinatorByAddressList: []*CoordinatorByAddress{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 133, Address: addr2},
+				},
+				CoordinatorList: []*Coordinator{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 133, Address: addr2},
+				},
+				CoordinatorCount: 2,
+			},
+			err: fmt.Errorf("coordinator id 133 should be lower or equal than the last id 2"),
 		},
 	}
 	for _, tt := range tests {
