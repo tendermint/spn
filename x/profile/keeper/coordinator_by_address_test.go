@@ -20,7 +20,7 @@ func createNCoordinatorByAddress(keeper *Keeper, ctx sdk.Context, n int) []types
 }
 
 func TestCoordinatorByAddressGet(t *testing.T) {
-	keeper, ctx := SetupTestKeeper(t)
+	keeper, ctx := setupKeeper(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetCoordinatorByAddress(ctx, item.Address)
@@ -29,7 +29,7 @@ func TestCoordinatorByAddressGet(t *testing.T) {
 	}
 }
 func TestCoordinatorByAddressRemove(t *testing.T) {
-	keeper, ctx := SetupTestKeeper(t)
+	keeper, ctx := setupKeeper(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveCoordinatorByAddress(ctx, item.Address)
@@ -39,7 +39,7 @@ func TestCoordinatorByAddressRemove(t *testing.T) {
 }
 
 func TestCoordinatorByAddressGetAll(t *testing.T) {
-	keeper, ctx := SetupTestKeeper(t)
+	keeper, ctx := setupKeeper(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	assert.Equal(t, items, keeper.GetAllCoordinatorByAddress(ctx))
 }

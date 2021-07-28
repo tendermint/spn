@@ -24,7 +24,7 @@ func createNChainNameCount(keeper *Keeper, ctx sdk.Context, n int) []types.Chain
 }
 
 func TestChainNameCountGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNChainNameCount(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetChainNameCount(ctx,
@@ -35,7 +35,7 @@ func TestChainNameCountGet(t *testing.T) {
 	}
 }
 func TestChainNameCountRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNChainNameCount(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveChainNameCount(ctx,
@@ -49,7 +49,7 @@ func TestChainNameCountRemove(t *testing.T) {
 }
 
 func TestChainNameCountGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNChainNameCount(keeper, ctx, 10)
 	assert.Equal(t, items, keeper.GetAllChainNameCount(ctx))
 }

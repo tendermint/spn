@@ -13,8 +13,8 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 
 	cdc.RegisterInterface((*InitialGenesis)(nil), nil)
-	cdc.RegisterConcrete(&DefaultInitialGenesis{}, "spn/launch/DefaultInitialGenesis", nil)
-	cdc.RegisterConcrete(&GenesisURL{}, "spn/launch/GenesisURL", nil)
+	cdc.RegisterConcrete(&DefaultInitialGenesis{}, "launch/DefaultInitialGenesis", nil)
+	cdc.RegisterConcrete(&GenesisURL{}, "launch/GenesisURL", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -24,7 +24,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 
 	registry.RegisterInterface(
-		"tendermint.spn.launch.InitialGenesis",
+		"launch.InitialGenesis",
 		(*InitialGenesis)(nil),
 		&DefaultInitialGenesis{},
 		&GenesisURL{},

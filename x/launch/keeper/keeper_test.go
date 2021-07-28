@@ -1,38 +1,50 @@
 package keeper
 
 import (
+	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/tendermint/spn/testutil/sample"
+	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	"testing"
 
-	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
 )
 
-func setupKeeper(t testing.TB) (*Keeper, sdk.Context) {
-	storeKey := sdk.NewKVStoreKey(types.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
+func setupKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, codec.Marshaler) {
+	cdc := sample.Codec()
+
+	storeKeys := sdk.NewKVStoreKeys(types.StoreKey, profiletypes.StoreKey)
+	memStoreKeyLaunch := storetypes.NewMemoryStoreKey(types.MemStoreKey)
+	memStoreKeyProfile := storetypes.NewMemoryStoreKey(profiletypes.MemStoreKey)
+
+	profileKeeper := profilekeeper.NewKeeper(
+		cdc,
+		storeKeys[profiletypes.StoreKey],
+		memStoreKeyProfile,
+	)
+
+	launchKeeper := NewKeeper(
+		cdc,
+		storeKeys[types.StoreKey],
+		memStoreKeyLaunch,
+		profileKeeper,
+	)
 
 	db := tmdb.NewMemDB()
 	stateStore := store.NewCommitMultiStore(db)
-	stateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, db)
-	stateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
+	stateStore.MountStoreWithDB(storeKeys[profiletypes.StoreKey], sdk.StoreTypeIAVL, db)
+	stateStore.MountStoreWithDB(storeKeys[types.StoreKey], sdk.StoreTypeIAVL, db)
+	stateStore.MountStoreWithDB(memStoreKeyProfile, sdk.StoreTypeMemory, nil)
+	stateStore.MountStoreWithDB(memStoreKeyLaunch, sdk.StoreTypeMemory, nil)
 	require.NoError(t, stateStore.LoadLatestVersion())
 
-	registry := codectypes.NewInterfaceRegistry()
-	keeper := NewKeeper(
-		codec.NewProtoCodec(registry),
-		storeKey,
-		memStoreKey,
-		nil,
-	)
-
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
-	return keeper, ctx
+	return launchKeeper, profileKeeper, ctx, cdc
 }

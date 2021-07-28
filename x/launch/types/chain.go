@@ -8,17 +8,18 @@ import (
 
 // GetDefaultInitialGenesis returns the DefaultInitialGenesis structure if the initial genesis for the chain is default genesis
 // If the initial genesis is not default genesis, nil is returned
-func (c Chain) GetDefaultInitialGenesis() (*DefaultInitialGenesis, error) {
+func (c Chain) GetDefaultInitialGenesis(unpacker codec.AnyUnpacker) (*DefaultInitialGenesis, error) {
 	var defaultInitialGenesis *DefaultInitialGenesis
-	err := ModuleCdc.UnpackAny(c.InitialGenesis, &defaultInitialGenesis)
+	err := unpacker.UnpackAny(c.InitialGenesis, &defaultInitialGenesis)
+
 	return defaultInitialGenesis, err
 }
 
 // GetGenesisURL returns the GenesisURL structure if the initial genesis for the chain is a genesis URL
 // If the initial genesis is not a genesis url, nil is returned
-func (c Chain) GetGenesisURL() (*GenesisURL, error) {
+func (c Chain) GetGenesisURL(unpacker codec.AnyUnpacker) (*GenesisURL, error) {
 	var genesisURL *GenesisURL
-	err := ModuleCdc.UnpackAny(c.InitialGenesis, &genesisURL)
+	err := unpacker.UnpackAny(c.InitialGenesis, &genesisURL)
 	return genesisURL, err
 }
 
@@ -34,7 +35,7 @@ func AnyFromDefaultInitialGenesis() *codec.Any {
 // AnyFromGenesisURL the proto any type for a GenesisURL
 func AnyFromGenesisURL(url, hash string) *codec.Any {
 	genesisURL, err := codec.NewAnyWithValue(&GenesisURL{
-		Url: url,
+		Url:  url,
 		Hash: hash,
 	})
 	if err != nil {

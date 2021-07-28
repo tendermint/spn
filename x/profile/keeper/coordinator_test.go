@@ -17,7 +17,7 @@ func createNCoordinator(keeper *Keeper, ctx sdk.Context, n int) []types.Coordina
 }
 
 func TestCoordinatorGet(t *testing.T) {
-	keeper, ctx := SetupTestKeeper(t)
+	keeper, ctx := setupKeeper(t)
 	items := createNCoordinator(keeper, ctx, 10)
 	for _, item := range items {
 		assert.Equal(t, item, keeper.GetCoordinator(ctx, item.CoordinatorId))
@@ -25,7 +25,7 @@ func TestCoordinatorGet(t *testing.T) {
 }
 
 func TestCoordinatorExist(t *testing.T) {
-	keeper, ctx := SetupTestKeeper(t)
+	keeper, ctx := setupKeeper(t)
 	items := createNCoordinator(keeper, ctx, 10)
 	for _, item := range items {
 		assert.True(t, keeper.HasCoordinator(ctx, item.CoordinatorId))
@@ -33,7 +33,7 @@ func TestCoordinatorExist(t *testing.T) {
 }
 
 func TestCoordinatorRemove(t *testing.T) {
-	keeper, ctx := SetupTestKeeper(t)
+	keeper, ctx := setupKeeper(t)
 	items := createNCoordinator(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveCoordinator(ctx, item.CoordinatorId)
@@ -42,13 +42,13 @@ func TestCoordinatorRemove(t *testing.T) {
 }
 
 func TestCoordinatorGetAll(t *testing.T) {
-	keeper, ctx := SetupTestKeeper(t)
+	keeper, ctx := setupKeeper(t)
 	items := createNCoordinator(keeper, ctx, 10)
 	assert.Equal(t, items, keeper.GetAllCoordinator(ctx))
 }
 
 func TestCoordinatorCount(t *testing.T) {
-	keeper, ctx := SetupTestKeeper(t)
+	keeper, ctx := setupKeeper(t)
 	items := createNCoordinator(keeper, ctx, 10)
 	count := uint64(len(items))
 	assert.Equal(t, count, keeper.GetCoordinatorCount(ctx))

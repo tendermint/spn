@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -16,7 +17,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	// Get the coordinator ID associated to the sender address
 	coordID, found := k.profileKeeper.CoordinatorIdFromAddress(ctx, msg.Coordinator)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrCoordinatorNotExist, msg.Coordinator)
+		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
 	}
 
 	// Compute the chain id

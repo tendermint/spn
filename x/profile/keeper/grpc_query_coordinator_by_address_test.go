@@ -11,7 +11,7 @@ import (
 )
 
 func TestCoordinatorByAddressQuerySingle(t *testing.T) {
-	keeper, ctx := SetupTestKeeper(t)
+	keeper, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCoordinatorByAddress(keeper, ctx, 2)
 	for _, tc := range []struct {

@@ -8,35 +8,37 @@ import (
 )
 
 func TestChain_GetDefaultInitialGenesis(t *testing.T) {
+	cdc := sample.Codec()
 	chain := sample.Chain("foo", 0)
 
 	// Should return the default genesis
 	chain.InitialGenesis = types.AnyFromDefaultInitialGenesis()
-	defaultGen, err := chain.GetDefaultInitialGenesis()
+	defaultGen, err := chain.GetDefaultInitialGenesis(cdc)
 	require.NoError(t, err)
 	require.Equal(t, &types.DefaultInitialGenesis{}, defaultGen)
 
 	// Should return an error
 	url, hash := sample.String(10), sample.String(10)
 	chain.InitialGenesis = types.AnyFromGenesisURL(url, hash)
-	_, err = chain.GetDefaultInitialGenesis()
+	_, err = chain.GetDefaultInitialGenesis(cdc)
 	require.Error(t, err)
 }
 
 func TestChain_GetInitialGenesis(t *testing.T) {
+	cdc := sample.Codec()
 	chain := sample.Chain("foo", 0)
 
 	url, hash := sample.String(10), sample.String(10)
 	chain.InitialGenesis = types.AnyFromGenesisURL(url, hash)
-	genUrl, err := chain.GetGenesisURL()
+	genUrl, err := chain.GetGenesisURL(cdc)
 	require.NoError(t, err)
 	require.Equal(t, &types.GenesisURL{
-		Url: url,
+		Url:  url,
 		Hash: hash,
 	}, genUrl)
 
 	chain.InitialGenesis = types.AnyFromDefaultInitialGenesis()
-	_, err = chain.GetGenesisURL()
+	_, err = chain.GetGenesisURL(cdc)
 	require.Error(t, err)
 }
 
@@ -46,8 +48,8 @@ func TestChainIDFromChainName(t *testing.T) {
 
 func TestCheckChainName(t *testing.T) {
 	for _, tc := range []struct {
-		desc     string
-		name string
+		desc  string
+		name  string
 		valid bool
 	}{
 		{

@@ -15,7 +15,7 @@ import (
 )
 
 func TestGenesisAccountQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNGenesisAccount(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -66,7 +66,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 }
 
 func TestGenesisAccountQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNGenesisAccount(keeper, ctx, 5)
 
