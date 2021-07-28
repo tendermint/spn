@@ -21,10 +21,11 @@ func (k msgServer) DeleteCoordinator(
 			sdkerrors.Wrap(types.ErrCoordAddressNotFound, msg.Address)
 	}
 
-	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
-	if (coord == types.Coordinator{}) {
+	if !k.HasCoordinator(ctx, coordByAddress.CoordinatorId) {
 		panic("a coordinator address is associated to a non-existent coordinator ID")
 	}
+	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
+
 	k.RemoveCoordinatorByAddress(ctx, msg.Address)
 	k.RemoveCoordinator(ctx, coord.CoordinatorId)
 	return &types.MsgDeleteCoordinatorResponse{
