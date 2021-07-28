@@ -38,7 +38,7 @@ func TestMsgDeleteCoordinator(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.DeleteCoordinator(wCtx, &tt.msg)
+			got, err := srv.DeleteCoordinator(wCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
@@ -46,6 +46,9 @@ func TestMsgDeleteCoordinator(t *testing.T) {
 			require.NoError(t, err)
 			_, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
 			assert.False(t, found, "coordinator by address was not removed")
+
+			found = k.HasCoordinator(ctx, got.CoordinatorId)
+			assert.False(t, found, "coordinator id not removed")
 		})
 	}
 }
