@@ -29,8 +29,6 @@ message Chain {
 // DefaultInitialGenesis specifies using the default CLI-generated genesis as an initial genesis
 message DefaultInitialGenesis {
   option (cosmos_proto.implements_interface) = "InitialGenesis";
-
-  option (gogoproto.equal) = true;
 }
 
 // GenesisURL specifies using a custom genesis from a URL as the initial genesis
