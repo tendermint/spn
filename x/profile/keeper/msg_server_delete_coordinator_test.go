@@ -3,7 +3,9 @@ package keeper
 import (
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -11,11 +13,12 @@ import (
 
 func TestMsgDeleteCoordinator(t *testing.T) {
 	var (
-		addr  = sample.AccAddress()
-		coord = msgCreateCoordinator()
+		addr        = sample.AccAddress()
+		msgCoord    = msgCreateCoordinator()
+		ctx, k, srv = setupMsgServerAndKeeper(t)
+		wCtx        = sdk.WrapSDKContext(ctx)
 	)
-	srv, ctx := setupMsgServer(t)
-	if _, err := srv.CreateCoordinator(ctx, &coord); err != nil {
+	if _, err := srv.CreateCoordinator(wCtx, &msgCoord); err != nil {
 		t.Fatal(err)
 	}
 	tests := []struct {
@@ -30,17 +33,19 @@ func TestMsgDeleteCoordinator(t *testing.T) {
 		},
 		{
 			name: "delete coordinator",
-			msg:  types.MsgDeleteCoordinator{Address: coord.Address},
+			msg:  types.MsgDeleteCoordinator{Address: msgCoord.Address},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.DeleteCoordinator(ctx, &tt.msg)
+			_, err := srv.DeleteCoordinator(wCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
+			_, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			assert.False(t, found, "coordinator by address was not removed")
 		})
 	}
 }
