@@ -4,6 +4,9 @@ package tendermint.spn.launch;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "launch/request.proto";
+import "launch/vested_account.proto";
+import "launch/genesis_account.proto";
 import "launch/genesis_validator.proto";
 import "launch/chain.proto";
 
@@ -12,6 +15,33 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a request by index.
+	rpc Request(QueryGetRequestRequest) returns (QueryGetRequestResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}/{requestID}";
+	}
+	// Queries a list of request for a chain.
+	rpc RequestAll(QueryAllRequestRequest) returns (QueryAllRequestResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}";
+	}
+
+	// Queries a vestedAccount by index.
+	rpc VestedAccount(QueryGetVestedAccountRequest) returns (QueryGetVestedAccountResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/vestedAccount/{chainID}/{address}";
+	}
+	// Queries a list of vestedAccount items.
+	rpc VestedAccountAll(QueryAllVestedAccountRequest) returns (QueryAllVestedAccountResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/vestedAccount";
+	}
+
+	// Queries a genesisAccount by index.
+	rpc GenesisAccount(QueryGetGenesisAccountRequest) returns (QueryGetGenesisAccountResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/genesisAccount/{chainID}/{address}";
+	}
+	// Queries a list of genesisAccount items.
+	rpc GenesisAccountAll(QueryAllGenesisAccountRequest) returns (QueryAllGenesisAccountResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/genesisAccount";
+	}
 
 	// Queries a genesisValidator by index.
 	rpc GenesisValidator(QueryGetGenesisValidatorRequest) returns (QueryGetGenesisValidatorResponse) {
@@ -23,12 +53,10 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/launch/genesisValidator";
 	}
 
-
 	// Queries a chain by index.
 	rpc Chain(QueryGetChainRequest) returns (QueryGetChainResponse) {
 		option (google.api.http).get = "/tendermint/spn/launch/chain/{chainID}";
 	}
-
 	// Queries a list of chain items.
 	rpc ChainAll(QueryAllChainRequest) returns (QueryAllChainResponse) {
 		option (google.api.http).get = "/tendermint/spn/launch/chain";
@@ -37,10 +65,28 @@ service Query {
 }
 
 // this line is used by starport scaffolding # 3
-message QueryGetGenesisValidatorRequest {
-	  string chainID = 1;
-  string address = 2;
+message QueryGetRequestRequest {
+	string chainID = 1;
+	uint64 requestID = 2;
+}
 
+message QueryGetRequestResponse {
+	Request request = 1;
+}
+
+message QueryAllRequestRequest {
+	string chainID = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllRequestResponse {
+	repeated Request request = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetGenesisValidatorRequest {
+	string chainID = 1;
+	string address = 2;
 }
 
 message QueryGetGenesisValidatorResponse {
@@ -55,9 +101,45 @@ message QueryAllGenesisValidatorResponse {
 	repeated GenesisValidator genesisValidator = 1;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
-message QueryGetChainRequest {
-	  string chainID = 1;
 
+message QueryGetVestedAccountRequest {
+	string chainID = 1;
+	string address = 2;
+}
+
+message QueryGetVestedAccountResponse {
+	VestedAccount vestedAccount = 1;
+}
+
+message QueryAllVestedAccountRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllVestedAccountResponse {
+	repeated VestedAccount vestedAccount = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetGenesisAccountRequest {
+	string chainID = 1;
+	string address = 2;
+}
+
+message QueryGetGenesisAccountResponse {
+	GenesisAccount genesisAccount = 1;
+}
+
+message QueryAllGenesisAccountRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllGenesisAccountResponse {
+	repeated GenesisAccount genesisAccount = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetChainRequest {
+	string chainID = 1;
 }
 
 message QueryGetChainResponse {

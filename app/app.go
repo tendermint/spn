@@ -85,12 +85,14 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-	accountmodule "github.com/tendermint/spn/x/account"
-	accountmodulekeeper "github.com/tendermint/spn/x/account/keeper"
-	accountmoduletypes "github.com/tendermint/spn/x/account/types"
+
 	launchmodule "github.com/tendermint/spn/x/launch"
 	launchmodulekeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchmoduletypes "github.com/tendermint/spn/x/launch/types"
+
+	profilemodule "github.com/tendermint/spn/x/profile"
+	profilemodulekeeper "github.com/tendermint/spn/x/profile/keeper"
+	profilemoduletypes "github.com/tendermint/spn/x/profile/types"
 
 	"github.com/tendermint/spm/cosmoscmd"
 )
@@ -143,7 +145,7 @@ var (
 		vesting.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		launchmodule.AppModuleBasic{},
-		accountmodule.AppModuleBasic{},
+		profilemodule.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -214,7 +216,7 @@ type App struct {
 
 	LaunchKeeper launchmodulekeeper.Keeper
 
-	AccountKeeper accountmodulekeeper.Keeper
+	ProfileKeeper profilemodulekeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -250,7 +252,7 @@ func New(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 		launchmoduletypes.StoreKey,
-		accountmoduletypes.StoreKey,
+		profilemoduletypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -346,19 +348,19 @@ func New(
 		&stakingKeeper, govRouter,
 	)
 
-	app.AccountKeeper = *accountmodulekeeper.NewKeeper(
+	app.ProfileKeeper = *profilemodulekeeper.NewKeeper(
 		appCodec,
-		keys[accountmoduletypes.StoreKey],
-		keys[accountmoduletypes.MemStoreKey],
+		keys[profilemoduletypes.StoreKey],
+		keys[profilemoduletypes.MemStoreKey],
 	)
-	accountModule := accountmodule.NewAppModule(appCodec, app.AccountKeeper)
+	profileModule := profilemodule.NewAppModule(appCodec, app.ProfileKeeper)
 
 	app.LaunchKeeper = *launchmodulekeeper.NewKeeper(
 		appCodec,
 		keys[launchmoduletypes.StoreKey],
 		keys[launchmoduletypes.MemStoreKey],
 
-		app.AccountKeeper,
+		app.ProfileKeeper,
 	)
 	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
 
@@ -401,7 +403,7 @@ func New(
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 		launchModule,
-		accountModule,
+		profileModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -436,7 +438,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 		launchmoduletypes.ModuleName,
-		accountmoduletypes.ModuleName,
+		profilemoduletypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(&app.CrisisKeeper)
@@ -625,7 +627,7 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 	paramsKeeper.Subspace(launchmoduletypes.ModuleName)
-	paramsKeeper.Subspace(accountmoduletypes.ModuleName)
+	paramsKeeper.Subspace(profilemoduletypes.ModuleName)
 
 	return paramsKeeper
 }

@@ -5,7 +5,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -53,13 +52,8 @@ func CmdShowChain() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsChainID, err := cast.ToStringE(args[0])
-			if err != nil {
-				return err
-			}
-
 			params := &types.QueryGetChainRequest{
-				ChainID: argsChainID,
+				ChainID: args[0],
 			}
 
 			res, err := queryClient.Chain(context.Background(), params)
