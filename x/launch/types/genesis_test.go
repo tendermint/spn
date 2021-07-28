@@ -1,10 +1,11 @@
 package types_test
 
 import (
+	"testing"
+	
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
-	"testing"
 )
 
 func TestGenesisState_Validate(t *testing.T) {
@@ -55,19 +56,19 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				RequestList: []*types.Request{
 					{
-						ChainID: chainId1,
+						ChainID:   chainId1,
 						RequestID: 0,
 					},
 					{
-						ChainID: chainId1,
+						ChainID:   chainId1,
 						RequestID: 1,
 					},
 				},
 				RequestCountList: []*types.RequestCount{
 					{
 						ChainID: chainId1,
-						Count: 2,
-						},
+						Count:   2,
+					},
 				},
 				VestedAccountList: []*types.VestedAccount{
 					{
@@ -196,16 +197,16 @@ func TestGenesisState_Validate(t *testing.T) {
 				RequestCountList: []*types.RequestCount{
 					{
 						ChainID: chainId1,
-						Count: 2,
+						Count:   2,
 					},
 				},
 				RequestList: []*types.Request{
 					{
-						ChainID: chainId1,
+						ChainID:   chainId1,
 						RequestID: 0,
 					},
 					{
-						ChainID: chainId1,
+						ChainID:   chainId1,
 						RequestID: 0,
 					},
 				},
@@ -223,12 +224,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				RequestCountList: []*types.RequestCount{
 					{
 						ChainID: chainId1,
-						Count: 1,
+						Count:   1,
 					},
 				},
 				RequestList: []*types.Request{
 					{
-						ChainID: chainId2,
+						ChainID:   chainId2,
 						RequestID: 0,
 					},
 				},
@@ -249,12 +250,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				RequestCountList: []*types.RequestCount{
 					{
 						ChainID: chainId2,
-						Count: 1,
+						Count:   1,
 					},
 				},
 				RequestList: []*types.Request{
 					{
-						ChainID: chainId1,
+						ChainID:   chainId1,
 						RequestID: 0,
 					},
 				},
@@ -272,11 +273,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				RequestCountList: []*types.RequestCount{
 					{
 						ChainID: chainId1,
-						Count: 0,
+						Count:   0,
 					},
 					{
 						ChainID: chainId1,
-						Count: 1,
+						Count:   1,
 					},
 				},
 			},
@@ -293,7 +294,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				RequestCountList: []*types.RequestCount{
 					{
 						ChainID: chainId2,
-						Count: 0,
+						Count:   0,
 					},
 				},
 			},
@@ -310,12 +311,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				RequestCountList: []*types.RequestCount{
 					{
 						ChainID: chainId2,
-						Count: 5,
+						Count:   5,
 					},
 				},
 				RequestList: []*types.Request{
 					{
-						ChainID: chainId1,
+						ChainID:   chainId1,
 						RequestID: 10,
 					},
 				},
