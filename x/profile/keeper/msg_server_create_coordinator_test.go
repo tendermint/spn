@@ -52,7 +52,7 @@ func TestMsgCreateCoordinator(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.CreateCoordinator(wCtx, &tt.msg)
+			got, err := srv.CreateCoordinator(wCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
@@ -61,6 +61,7 @@ func TestMsgCreateCoordinator(t *testing.T) {
 			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
 			assert.True(t, found, "coordinator by address not found")
 			assert.EqualValues(t, tt.wantId, coordByAddr.CoordinatorId)
+			assert.EqualValues(t, tt.wantId, got.CoordinatorId)
 
 			coord := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
 			assert.True(t, found, "coordinator id not found")
