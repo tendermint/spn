@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -30,7 +31,8 @@ func (k msgServer) UpdateCoordinatorAddress(
 	}
 
 	if !k.HasCoordinator(ctx, coordByAddress.CoordinatorId) {
-		panic("a coordinator address is associated to a non-existent coordinator ID")
+		return &types.MsgUpdateCoordinatorAddressResponse{},
+			spnerrors.Critical("a coordinator address is associated to a non-existent coordinator ID")
 	}
 	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
 	coord.Address = msg.NewAddress
