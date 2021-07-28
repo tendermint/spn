@@ -50,3 +50,17 @@ func Chain(chainID string, coordinatorID uint64) *launch.Chain {
 		InitialGenesis:  defaultGenesis,
 	}
 }
+
+func Request(chainID string) *launch.Request {
+	content, err := types.NewAnyWithValue(GenesisAccount(chainID, AccAddress()))
+	if err != nil {
+		panic(err)
+	}
+
+	return &launch.Request{
+		ChainID:   chainID,
+		Creator:   AccAddress(),
+		CreatedAt: time.Now().Unix(),
+		Content:   content,
+	}
+}
