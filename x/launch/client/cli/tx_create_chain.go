@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"strconv"
-
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -11,7 +9,10 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-var _ = strconv.Itoa(0)
+const (
+	flagGenesisURL = "genesis-url"
+	flagGenesisHash  = "genesis-hash"
+)
 
 func CmdCreateChain() *cobra.Command {
 	cmd := &cobra.Command{
@@ -24,13 +25,24 @@ func CmdCreateChain() *cobra.Command {
 				return err
 			}
 
+			genesisURL, err := cmd.Flags().GetString(flagGenesisURL)
+			if err != nil {
+				return err
+			}
+
+			// TODO: automatically determine this value by fetching the resource (need to determine the hash before)
+			genesisHash, err := cmd.Flags().GetString(flagGenesisHash)
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgCreateChain(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 				args[1],
 				args[2],
-				args[3],
-				args[4],
+				genesisURL,
+				genesisHash,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -39,6 +51,8 @@ func CmdCreateChain() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
+	cmd.Flags().String(flagGenesisHash, "", "hash of the content of the custom genesis")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
