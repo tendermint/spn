@@ -21,25 +21,25 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithValidatorByAddressObjects(t *testing.T, n int) (*network.Network, []*types.ValidatorByAddress) {
+func networkWithValidatorObjects(t *testing.T, n int) (*network.Network, []*types.Validator) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.ValidatorByAddressList = append(state.ValidatorByAddressList, &types.ValidatorByAddress{
+		state.ValidatorList = append(state.ValidatorList, &types.Validator{
 			Address: strconv.Itoa(i),
 		})
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.ValidatorByAddressList
+	return network.New(t, cfg), state.ValidatorList
 }
 
-func TestShowValidatorByAddress(t *testing.T) {
-	net, objs := networkWithValidatorByAddressObjects(t, 2)
+func TestShowValidator(t *testing.T) {
+	net, objs := networkWithValidatorObjects(t, 2)
 
 	ctx := net.Validators[0].ClientCtx
 	common := []string{
@@ -51,7 +51,7 @@ func TestShowValidatorByAddress(t *testing.T) {
 
 		args []string
 		err  error
-		obj  *types.ValidatorByAddress
+		obj  *types.Validator
 	}{
 		{
 			desc:      "found",
@@ -74,24 +74,24 @@ func TestShowValidatorByAddress(t *testing.T) {
 				tc.idAddress,
 			}
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowValidatorByAddress(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowValidator(), args)
 			if tc.err != nil {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
 				require.ErrorIs(t, stat.Err(), tc.err)
 			} else {
 				require.NoError(t, err)
-				var resp types.QueryGetValidatorByAddressResponse
+				var resp types.QueryGetValidatorResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				require.NotNil(t, resp.ValidatorByAddress)
-				require.Equal(t, tc.obj, resp.ValidatorByAddress)
+				require.NotNil(t, resp.Validator)
+				require.Equal(t, tc.obj, resp.Validator)
 			}
 		})
 	}
 }
 
-func TestListValidatorByAddress(t *testing.T) {
-	net, objs := networkWithValidatorByAddressObjects(t, 5)
+func TestListValidator(t *testing.T) {
+	net, objs := networkWithValidatorObjects(t, 5)
 
 	ctx := net.Validators[0].ClientCtx
 	request := func(next []byte, offset, limit uint64, total bool) []string {
@@ -113,12 +113,12 @@ func TestListValidatorByAddress(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListValidatorByAddress(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListValidator(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.ValidatorByAddress[j-i])
+				assert.Equal(t, objs[j], resp.Validator[j-i])
 			}
 		}
 	})
@@ -127,24 +127,24 @@ func TestListValidatorByAddress(t *testing.T) {
 		var next []byte
 		for i := 0; i < len(objs); i += step {
 			args := request(next, 0, uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListValidatorByAddress(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListValidator(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.ValidatorByAddress[j-i])
+				assert.Equal(t, objs[j], resp.Validator[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
-		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListValidatorByAddress(), args)
+		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListValidator(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllValidatorResponse
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.Equal(t, objs, resp.ValidatorByAddress)
+		require.Equal(t, objs, resp.Validator)
 	})
 }

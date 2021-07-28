@@ -5,12 +5,12 @@ import "encoding/binary"
 var _ binary.ByteOrder
 
 const (
-	// ValidatorByAddressKeyPrefix is the prefix to retrieve all ValidatorByAddress
-	ValidatorByAddressKeyPrefix = "ValidatorByAddress/value/"
+	// ValidatorKeyPrefix is the prefix to retrieve all Validator
+	ValidatorKeyPrefix = "Validator/value/"
 )
 
-// ValidatorByAddressKey returns the store key to retrieve a ValidatorByAddress from the index fields
-func ValidatorByAddressKey(
+// ValidatorKey returns the store key to retrieve a Validator from the index fields
+func ValidatorKey(
 	address string,
 ) []byte {
 	var key []byte

@@ -29,22 +29,22 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type QueryGetValidatorByAddressRequest struct {
+type QueryGetValidatorRequest struct {
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 }
 
-func (m *QueryGetValidatorByAddressRequest) Reset()         { *m = QueryGetValidatorByAddressRequest{} }
-func (m *QueryGetValidatorByAddressRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryGetValidatorByAddressRequest) ProtoMessage()    {}
-func (*QueryGetValidatorByAddressRequest) Descriptor() ([]byte, []int) {
+func (m *QueryGetValidatorRequest) Reset()         { *m = QueryGetValidatorRequest{} }
+func (m *QueryGetValidatorRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetValidatorRequest) ProtoMessage()    {}
+func (*QueryGetValidatorRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_882bdd73bbc62204, []int{0}
 }
-func (m *QueryGetValidatorByAddressRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryGetValidatorRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetValidatorByAddressRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryGetValidatorRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetValidatorByAddressRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryGetValidatorRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -54,41 +54,41 @@ func (m *QueryGetValidatorByAddressRequest) XXX_Marshal(b []byte, deterministic 
 		return b[:n], nil
 	}
 }
-func (m *QueryGetValidatorByAddressRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetValidatorByAddressRequest.Merge(m, src)
+func (m *QueryGetValidatorRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetValidatorRequest.Merge(m, src)
 }
-func (m *QueryGetValidatorByAddressRequest) XXX_Size() int {
+func (m *QueryGetValidatorRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetValidatorByAddressRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetValidatorByAddressRequest.DiscardUnknown(m)
+func (m *QueryGetValidatorRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetValidatorRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetValidatorByAddressRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryGetValidatorRequest proto.InternalMessageInfo
 
-func (m *QueryGetValidatorByAddressRequest) GetAddress() string {
+func (m *QueryGetValidatorRequest) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-type QueryGetValidatorByAddressResponse struct {
-	ValidatorByAddress *ValidatorByAddress `protobuf:"bytes,1,opt,name=validatorByAddress,proto3" json:"validatorByAddress,omitempty"`
+type QueryGetValidatorResponse struct {
+	Validator *Validator `protobuf:"bytes,1,opt,name=validator,proto3" json:"validator,omitempty"`
 }
 
-func (m *QueryGetValidatorByAddressResponse) Reset()         { *m = QueryGetValidatorByAddressResponse{} }
-func (m *QueryGetValidatorByAddressResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryGetValidatorByAddressResponse) ProtoMessage()    {}
-func (*QueryGetValidatorByAddressResponse) Descriptor() ([]byte, []int) {
+func (m *QueryGetValidatorResponse) Reset()         { *m = QueryGetValidatorResponse{} }
+func (m *QueryGetValidatorResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetValidatorResponse) ProtoMessage()    {}
+func (*QueryGetValidatorResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_882bdd73bbc62204, []int{1}
 }
-func (m *QueryGetValidatorByAddressResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryGetValidatorResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetValidatorByAddressResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryGetValidatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetValidatorByAddressResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryGetValidatorResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -98,21 +98,21 @@ func (m *QueryGetValidatorByAddressResponse) XXX_Marshal(b []byte, deterministic
 		return b[:n], nil
 	}
 }
-func (m *QueryGetValidatorByAddressResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetValidatorByAddressResponse.Merge(m, src)
+func (m *QueryGetValidatorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetValidatorResponse.Merge(m, src)
 }
-func (m *QueryGetValidatorByAddressResponse) XXX_Size() int {
+func (m *QueryGetValidatorResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetValidatorByAddressResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetValidatorByAddressResponse.DiscardUnknown(m)
+func (m *QueryGetValidatorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetValidatorResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetValidatorByAddressResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryGetValidatorResponse proto.InternalMessageInfo
 
-func (m *QueryGetValidatorByAddressResponse) GetValidatorByAddress() *ValidatorByAddress {
+func (m *QueryGetValidatorResponse) GetValidator() *Validator {
 	if m != nil {
-		return m.ValidatorByAddress
+		return m.Validator
 	}
 	return nil
 }
@@ -162,8 +162,8 @@ func (m *QueryAllValidatorRequest) GetPagination() *query.PageRequest {
 }
 
 type QueryAllValidatorResponse struct {
-	ValidatorByAddress []*ValidatorByAddress `protobuf:"bytes,1,rep,name=validatorByAddress,proto3" json:"validatorByAddress,omitempty"`
-	Pagination         *query.PageResponse   `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Validator  []*Validator        `protobuf:"bytes,1,rep,name=validator,proto3" json:"validator,omitempty"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
 func (m *QueryAllValidatorResponse) Reset()         { *m = QueryAllValidatorResponse{} }
@@ -199,9 +199,9 @@ func (m *QueryAllValidatorResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryAllValidatorResponse proto.InternalMessageInfo
 
-func (m *QueryAllValidatorResponse) GetValidatorByAddress() []*ValidatorByAddress {
+func (m *QueryAllValidatorResponse) GetValidator() []*Validator {
 	if m != nil {
-		return m.ValidatorByAddress
+		return m.Validator
 	}
 	return nil
 }
@@ -582,8 +582,8 @@ func (m *QueryAllCoordinatorResponse) GetPagination() *query.PageResponse {
 }
 
 func init() {
-	proto.RegisterType((*QueryGetValidatorByAddressRequest)(nil), "tendermint.spn.profile.QueryGetValidatorByAddressRequest")
-	proto.RegisterType((*QueryGetValidatorByAddressResponse)(nil), "tendermint.spn.profile.QueryGetValidatorByAddressResponse")
+	proto.RegisterType((*QueryGetValidatorRequest)(nil), "tendermint.spn.profile.QueryGetValidatorRequest")
+	proto.RegisterType((*QueryGetValidatorResponse)(nil), "tendermint.spn.profile.QueryGetValidatorResponse")
 	proto.RegisterType((*QueryAllValidatorRequest)(nil), "tendermint.spn.profile.QueryAllValidatorRequest")
 	proto.RegisterType((*QueryAllValidatorResponse)(nil), "tendermint.spn.profile.QueryAllValidatorResponse")
 	proto.RegisterType((*QueryGetCoordinatorByAddressRequest)(nil), "tendermint.spn.profile.QueryGetCoordinatorByAddressRequest")
@@ -599,48 +599,48 @@ func init() {
 func init() { proto.RegisterFile("profile/query.proto", fileDescriptor_882bdd73bbc62204) }
 
 var fileDescriptor_882bdd73bbc62204 = []byte{
-	// 656 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x4f, 0x6f, 0x12, 0x4f,
-	0x18, 0x66, 0xe0, 0xf7, 0xb3, 0x71, 0x9a, 0xf4, 0x30, 0x56, 0xa5, 0xab, 0xd9, 0xe8, 0xe2, 0x9f,
-	0x8a, 0x64, 0xa7, 0x50, 0xd3, 0xf8, 0xa7, 0x6a, 0xb0, 0xd1, 0x5e, 0x95, 0x83, 0x87, 0x9e, 0x5c,
-	0xd8, 0x11, 0x37, 0x59, 0x76, 0xb6, 0x3b, 0x03, 0x91, 0x34, 0x4d, 0x8c, 0x27, 0x8f, 0x26, 0x7e,
-	0x07, 0xe3, 0x45, 0xe3, 0x47, 0xf0, 0xa8, 0xb7, 0x36, 0x5e, 0x3c, 0x1a, 0xf0, 0x83, 0x18, 0x66,
-	0x67, 0xf9, 0x53, 0x06, 0x16, 0x70, 0x8f, 0xcc, 0x3b, 0xcf, 0xf3, 0x3e, 0xcf, 0xf3, 0x0e, 0x2f,
-	0xc0, 0x33, 0x7e, 0x40, 0x5f, 0x3a, 0x2e, 0xc1, 0xfb, 0x4d, 0x12, 0xb4, 0x4d, 0x3f, 0xa0, 0x9c,
-	0xa2, 0x73, 0x9c, 0x78, 0x36, 0x09, 0x1a, 0x8e, 0xc7, 0x4d, 0xe6, 0x7b, 0xa6, 0xbc, 0xa3, 0x5d,
-	0xac, 0x53, 0x5a, 0x77, 0x09, 0xb6, 0x7c, 0x07, 0x5b, 0x9e, 0x47, 0xb9, 0xc5, 0x1d, 0xea, 0xb1,
-	0x10, 0xa5, 0xe5, 0x6b, 0x94, 0x35, 0x28, 0xc3, 0x55, 0x8b, 0x49, 0x3a, 0xdc, 0x2a, 0x56, 0x09,
-	0xb7, 0x8a, 0xd8, 0xb7, 0xea, 0x8e, 0x27, 0x2e, 0xcb, 0xbb, 0xe7, 0xa3, 0xb6, 0x2d, 0xcb, 0x75,
-	0x6c, 0x8b, 0xd3, 0x40, 0x16, 0xd6, 0xa2, 0x42, 0x8d, 0xd2, 0xc0, 0xee, 0x81, 0xa2, 0x92, 0x71,
-	0x1f, 0x5e, 0x7e, 0xd6, 0x63, 0xdd, 0x25, 0xfc, 0x79, 0x84, 0x7a, 0xd4, 0x2e, 0xdb, 0x76, 0x40,
-	0x18, 0xab, 0x90, 0xfd, 0x26, 0x61, 0x1c, 0x65, 0xe1, 0x92, 0x15, 0x9e, 0x64, 0xc1, 0x25, 0xb0,
-	0x7e, 0xba, 0x12, 0x7d, 0x34, 0xde, 0x00, 0x68, 0x4c, 0xc3, 0x33, 0x9f, 0x7a, 0x8c, 0xa0, 0x3d,
-	0x88, 0x5a, 0x63, 0x55, 0xc1, 0xb5, 0x5c, 0xca, 0x9b, 0xea, 0x60, 0x4c, 0x05, 0x9f, 0x82, 0xc5,
-	0xa8, 0xc2, 0xac, 0x50, 0x50, 0x76, 0xdd, 0x3e, 0x22, 0x12, 0xfe, 0x04, 0xc2, 0x41, 0x4a, 0xb2,
-	0xdf, 0x35, 0x33, 0x8c, 0xd4, 0xec, 0x45, 0x6a, 0x86, 0x13, 0x92, 0x91, 0x9a, 0x4f, 0xad, 0x3a,
-	0x91, 0xd8, 0xca, 0x10, 0xd2, 0xf8, 0x06, 0xe0, 0x9a, 0xa2, 0x49, 0x8c, 0xbb, 0xcc, 0xbf, 0xbb,
-	0x43, 0xbb, 0x23, 0x0e, 0xd2, 0xc2, 0xc1, 0xf5, 0x58, 0x07, 0xa1, 0xb0, 0x11, 0x0b, 0x0f, 0x61,
-	0x2e, 0x1a, 0xd4, 0xce, 0xe0, 0x15, 0xcc, 0x31, 0xea, 0x77, 0x00, 0x5e, 0x99, 0xce, 0x20, 0xe3,
-	0x78, 0x01, 0x57, 0x6b, 0x8a, 0xba, 0x8c, 0xbf, 0x30, 0x29, 0x10, 0x25, 0xa7, 0x92, 0xc9, 0x68,
-	0x48, 0x2f, 0x65, 0xd7, 0x9d, 0xe6, 0x25, 0xa9, 0xe9, 0x1f, 0x47, 0xce, 0x27, 0xf6, 0x8b, 0x75,
-	0x9e, 0x49, 0xc6, 0x79, 0x72, 0xcf, 0xa1, 0x00, 0x35, 0xc5, 0x30, 0xa3, 0xe4, 0x56, 0x60, 0xda,
-	0xb1, 0x45, 0x62, 0xff, 0x55, 0xd2, 0x8e, 0x6d, 0xd8, 0xf0, 0x82, 0xf2, 0xb6, 0xf4, 0xfd, 0x18,
-	0x2e, 0x0f, 0x1d, 0xcb, 0xa4, 0x73, 0x33, 0xd8, 0xad, 0x0c, 0xe3, 0x0c, 0x5b, 0x6a, 0x1a, 0x8d,
-	0x39, 0xe9, 0x69, 0x7e, 0x06, 0xd2, 0xcc, 0xc9, 0x36, 0x93, 0xcc, 0x64, 0x16, 0x31, 0x93, 0xd8,
-	0xa4, 0x4a, 0x5f, 0x96, 0xe0, 0xff, 0x42, 0x2f, 0xfa, 0x01, 0x20, 0x1a, 0x5f, 0x1b, 0xe8, 0xce,
-	0x24, 0x6d, 0xb1, 0x8b, 0x5d, 0xbb, 0xbb, 0x08, 0x34, 0xd4, 0x68, 0x6c, 0xbf, 0xfd, 0xf9, 0xe7,
-	0x43, 0x7a, 0x0b, 0xdd, 0xc2, 0x03, 0x0e, 0xcc, 0x7c, 0x0f, 0x8f, 0xfd, 0x0a, 0xf5, 0xb1, 0xf8,
-	0x40, 0x2e, 0x93, 0x43, 0xf4, 0x15, 0xc0, 0xb3, 0xe3, 0xe4, 0x65, 0xd7, 0x45, 0x1b, 0x53, 0x35,
-	0x29, 0xb6, 0xbc, 0x56, 0x9c, 0x03, 0x21, 0xc5, 0x97, 0x84, 0xf8, 0x02, 0xca, 0xcf, 0x2e, 0x1e,
-	0x1d, 0x03, 0xb8, 0xaa, 0xfa, 0xaa, 0xa2, 0x7b, 0x71, 0x29, 0x4e, 0x59, 0x52, 0xda, 0xf6, 0x62,
-	0x60, 0xe9, 0xe3, 0x81, 0xf0, 0x71, 0x1b, 0x6d, 0x4d, 0xf2, 0xa1, 0xda, 0x22, 0x43, 0x63, 0xf8,
-	0x04, 0x46, 0x5e, 0x3b, 0x2a, 0xcd, 0xa1, 0x26, 0x72, 0xb0, 0x39, 0x17, 0x46, 0x0a, 0xdf, 0x10,
-	0xc2, 0xf3, 0x68, 0x7d, 0x06, 0xe1, 0xf8, 0xc0, 0xb1, 0x0f, 0xd1, 0x47, 0x00, 0x57, 0x86, 0x98,
-	0x7a, 0x4f, 0xa5, 0x14, 0x37, 0xf8, 0xb9, 0xd5, 0xaa, 0x77, 0x82, 0x71, 0x53, 0xa8, 0xbd, 0x8a,
-	0x72, 0xb3, 0xc4, 0xbc, 0xf3, 0xbd, 0xa3, 0x83, 0xa3, 0x8e, 0x0e, 0x7e, 0x77, 0x74, 0xf0, 0xbe,
-	0xab, 0xa7, 0x8e, 0xba, 0x7a, 0xea, 0x57, 0x57, 0x4f, 0xed, 0xdd, 0xa8, 0x3b, 0xfc, 0x55, 0xb3,
-	0x6a, 0xd6, 0x68, 0xe3, 0x24, 0xd1, 0xeb, 0x3e, 0x15, 0x6f, 0xfb, 0x84, 0x55, 0x4f, 0x89, 0xbf,
-	0x67, 0x9b, 0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x59, 0x2a, 0xd4, 0xb6, 0x4b, 0x0a, 0x00, 0x00,
+	// 643 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x96, 0xbd, 0x6f, 0xd3, 0x40,
+	0x18, 0xc6, 0x7b, 0x09, 0x14, 0xe5, 0x8a, 0x3a, 0x1c, 0x15, 0xa4, 0x01, 0x59, 0xd4, 0xe1, 0xa3,
+	0x5f, 0xf8, 0x9a, 0x04, 0x21, 0x24, 0x10, 0x55, 0xa8, 0xa0, 0x2b, 0x64, 0x60, 0x40, 0x0c, 0x38,
+	0xf1, 0x11, 0x4e, 0x72, 0x7c, 0xae, 0xef, 0x52, 0x11, 0x55, 0x5d, 0x98, 0x18, 0x91, 0xd8, 0xd9,
+	0x8a, 0x58, 0xf8, 0x3f, 0x18, 0x5b, 0xb1, 0x30, 0xa2, 0x84, 0x3f, 0x82, 0x11, 0xe5, 0x7c, 0xce,
+	0x47, 0x7b, 0x8e, 0x93, 0xca, 0x63, 0x72, 0xf7, 0xbc, 0xef, 0xef, 0x79, 0x5e, 0xfb, 0x4d, 0xe0,
+	0x15, 0x3f, 0x60, 0xef, 0xa8, 0x4b, 0xf0, 0x5e, 0x9b, 0x04, 0x1d, 0xcb, 0x0f, 0x98, 0x60, 0xe8,
+	0xaa, 0x20, 0x9e, 0x43, 0x82, 0x16, 0xf5, 0x84, 0xc5, 0x7d, 0xcf, 0x52, 0x77, 0x0a, 0x37, 0x9a,
+	0x8c, 0x35, 0x5d, 0x82, 0x6d, 0x9f, 0x62, 0xdb, 0xf3, 0x98, 0xb0, 0x05, 0x65, 0x1e, 0x0f, 0x55,
+	0x85, 0xf5, 0x06, 0xe3, 0x2d, 0xc6, 0x71, 0xdd, 0xe6, 0xaa, 0x1c, 0xde, 0x2f, 0xd5, 0x89, 0xb0,
+	0x4b, 0xd8, 0xb7, 0x9b, 0xd4, 0x93, 0x97, 0xd5, 0xdd, 0x6b, 0x51, 0xdb, 0x7d, 0xdb, 0xa5, 0x8e,
+	0x2d, 0x58, 0xa0, 0x0e, 0x96, 0xa3, 0x83, 0x06, 0x63, 0x81, 0xd3, 0x17, 0x45, 0x47, 0xe6, 0x7d,
+	0x98, 0x7f, 0xd9, 0xaf, 0xba, 0x4b, 0xc4, 0xab, 0x48, 0x55, 0x23, 0x7b, 0x6d, 0xc2, 0x05, 0xca,
+	0xc3, 0x4b, 0xb6, 0xe3, 0x04, 0x84, 0xf3, 0x3c, 0xb8, 0x09, 0x56, 0x73, 0xb5, 0xe8, 0xa3, 0xf9,
+	0x06, 0x2e, 0x6b, 0x54, 0xdc, 0x67, 0x1e, 0x27, 0x68, 0x1b, 0xe6, 0x06, 0x00, 0x52, 0xb8, 0x50,
+	0x5e, 0xb1, 0xf4, 0xe6, 0xad, 0xa1, 0x7a, 0xa8, 0x31, 0xeb, 0x8a, 0xa9, 0xea, 0xba, 0x67, 0x98,
+	0x9e, 0x43, 0x38, 0xf4, 0xad, 0xaa, 0xdf, 0xb1, 0xc2, 0x90, 0xac, 0x7e, 0x48, 0x56, 0x98, 0xb9,
+	0x0a, 0xc9, 0x7a, 0x61, 0x37, 0x89, 0xd2, 0xd6, 0x46, 0x94, 0xe6, 0x11, 0x50, 0x16, 0xc6, 0x9b,
+	0xe8, 0x2d, 0x64, 0x67, 0xb5, 0x80, 0x76, 0xc7, 0x30, 0x33, 0x12, 0xf3, 0x6e, 0x22, 0x66, 0xd8,
+	0x7d, 0x8c, 0x73, 0x1b, 0x16, 0xa3, 0xa4, 0x77, 0x86, 0xc3, 0x7b, 0xda, 0xa9, 0x86, 0x93, 0x48,
+	0x1e, 0xd5, 0x27, 0x00, 0x6f, 0x4d, 0xae, 0xa0, 0x3c, 0xbf, 0x85, 0x4b, 0x0d, 0xcd, 0xb9, 0xca,
+	0x78, 0x33, 0xce, 0xbe, 0xb6, 0xa6, 0xb6, 0x92, 0xd9, 0x52, 0x5e, 0xaa, 0xae, 0x3b, 0xc9, 0x4b,
+	0x5a, 0x23, 0x3e, 0x89, 0x9c, 0xc7, 0xf6, 0x4b, 0x74, 0x9e, 0x4d, 0xc7, 0x79, 0x7a, 0x8f, 0xc3,
+	0x26, 0x2c, 0x68, 0x86, 0x19, 0x25, 0xb7, 0x08, 0x33, 0xd4, 0x91, 0x89, 0x5d, 0xa8, 0x65, 0xa8,
+	0x63, 0x3a, 0xf0, 0xba, 0xf6, 0xb6, 0xf2, 0xfd, 0x0c, 0x2e, 0x8c, 0x7c, 0xad, 0x92, 0x2e, 0x4e,
+	0x61, 0xb7, 0x36, 0xaa, 0x33, 0x1d, 0xc5, 0x34, 0x1e, 0x73, 0xda, 0xd3, 0xfc, 0x01, 0x94, 0x99,
+	0xd3, 0x6d, 0xe2, 0xcc, 0x64, 0xcf, 0x63, 0x26, 0xb5, 0x49, 0x95, 0xff, 0xcd, 0xc3, 0x8b, 0x92,
+	0x17, 0x1d, 0x01, 0x98, 0x1b, 0x2c, 0x09, 0xb4, 0x15, 0x87, 0x14, 0xb7, 0x86, 0x0b, 0xa5, 0x19,
+	0x14, 0x21, 0x88, 0x59, 0xf9, 0xf8, 0xeb, 0xef, 0x97, 0xcc, 0x3d, 0xb4, 0x81, 0x87, 0x52, 0xcc,
+	0x7d, 0x0f, 0x9f, 0xf9, 0x85, 0xc0, 0x07, 0x6a, 0x51, 0x1c, 0xa2, 0xaf, 0x00, 0x5e, 0x1e, 0x94,
+	0xaa, 0xba, 0x6e, 0x02, 0xaa, 0x66, 0x3b, 0x27, 0xa0, 0xea, 0x56, 0xad, 0xb9, 0x26, 0x51, 0x8b,
+	0x68, 0x25, 0x11, 0x15, 0x9d, 0x00, 0xb8, 0xa4, 0x7b, 0xe9, 0xd0, 0xa3, 0xa4, 0x84, 0x26, 0xac,
+	0x9b, 0xc2, 0xe3, 0xf3, 0x89, 0x15, 0xfe, 0x13, 0x89, 0xff, 0x10, 0x3d, 0x88, 0xc3, 0xd7, 0xed,
+	0x83, 0x91, 0xd0, 0xbf, 0x83, 0xb1, 0xe7, 0x16, 0x95, 0x67, 0xa0, 0x89, 0x1c, 0x54, 0x66, 0xd2,
+	0x28, 0xf0, 0x2d, 0x09, 0xbe, 0x8e, 0x56, 0xa7, 0x00, 0xc7, 0x07, 0xd4, 0x39, 0x44, 0xdf, 0x00,
+	0x5c, 0x1c, 0xa9, 0xd4, 0x7f, 0x42, 0xca, 0x49, 0xf3, 0x9e, 0x99, 0x56, 0xff, 0x76, 0x9b, 0x1b,
+	0x92, 0xf6, 0x36, 0x2a, 0x4e, 0x13, 0xf3, 0xce, 0xcf, 0xae, 0x01, 0x8e, 0xbb, 0x06, 0xf8, 0xd3,
+	0x35, 0xc0, 0xe7, 0x9e, 0x31, 0x77, 0xdc, 0x33, 0xe6, 0x7e, 0xf7, 0x8c, 0xb9, 0xd7, 0x6b, 0x4d,
+	0x2a, 0xde, 0xb7, 0xeb, 0x56, 0x83, 0xb5, 0x4e, 0x17, 0xfa, 0x30, 0x28, 0x25, 0x3a, 0x3e, 0xe1,
+	0xf5, 0x79, 0xf9, 0xff, 0xa8, 0xf2, 0x3f, 0x00, 0x00, 0xff, 0xff, 0xf8, 0x73, 0xdd, 0x11, 0xcc,
+	0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -656,10 +656,10 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
 	// this line is used by starport scaffolding # 2
-	// Queries a validatorByAddress by index.
-	ValidatorByAddress(ctx context.Context, in *QueryGetValidatorByAddressRequest, opts ...grpc.CallOption) (*QueryGetValidatorByAddressResponse, error)
-	// Queries a list of validatorByAddress items.
-	ValidatorByAddressAll(ctx context.Context, in *QueryAllValidatorRequest, opts ...grpc.CallOption) (*QueryAllValidatorResponse, error)
+	// Queries a validator by index.
+	Validator(ctx context.Context, in *QueryGetValidatorRequest, opts ...grpc.CallOption) (*QueryGetValidatorResponse, error)
+	// Queries a list of validator items.
+	ValidatorAll(ctx context.Context, in *QueryAllValidatorRequest, opts ...grpc.CallOption) (*QueryAllValidatorResponse, error)
 	// Queries a coordinatorByAddress by index.
 	CoordinatorByAddress(ctx context.Context, in *QueryGetCoordinatorByAddressRequest, opts ...grpc.CallOption) (*QueryGetCoordinatorByAddressResponse, error)
 	// Queries a coordinator by id.
@@ -676,18 +676,18 @@ func NewQueryClient(cc grpc1.ClientConn) QueryClient {
 	return &queryClient{cc}
 }
 
-func (c *queryClient) ValidatorByAddress(ctx context.Context, in *QueryGetValidatorByAddressRequest, opts ...grpc.CallOption) (*QueryGetValidatorByAddressResponse, error) {
-	out := new(QueryGetValidatorByAddressResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Query/ValidatorByAddress", in, out, opts...)
+func (c *queryClient) Validator(ctx context.Context, in *QueryGetValidatorRequest, opts ...grpc.CallOption) (*QueryGetValidatorResponse, error) {
+	out := new(QueryGetValidatorResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Query/Validator", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) ValidatorByAddressAll(ctx context.Context, in *QueryAllValidatorRequest, opts ...grpc.CallOption) (*QueryAllValidatorResponse, error) {
+func (c *queryClient) ValidatorAll(ctx context.Context, in *QueryAllValidatorRequest, opts ...grpc.CallOption) (*QueryAllValidatorResponse, error) {
 	out := new(QueryAllValidatorResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Query/ValidatorByAddressAll", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Query/ValidatorAll", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -724,10 +724,10 @@ func (c *queryClient) CoordinatorAll(ctx context.Context, in *QueryAllCoordinato
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// this line is used by starport scaffolding # 2
-	// Queries a validatorByAddress by index.
-	ValidatorByAddress(context.Context, *QueryGetValidatorByAddressRequest) (*QueryGetValidatorByAddressResponse, error)
-	// Queries a list of validatorByAddress items.
-	ValidatorByAddressAll(context.Context, *QueryAllValidatorRequest) (*QueryAllValidatorResponse, error)
+	// Queries a validator by index.
+	Validator(context.Context, *QueryGetValidatorRequest) (*QueryGetValidatorResponse, error)
+	// Queries a list of validator items.
+	ValidatorAll(context.Context, *QueryAllValidatorRequest) (*QueryAllValidatorResponse, error)
 	// Queries a coordinatorByAddress by index.
 	CoordinatorByAddress(context.Context, *QueryGetCoordinatorByAddressRequest) (*QueryGetCoordinatorByAddressResponse, error)
 	// Queries a coordinator by id.
@@ -740,11 +740,11 @@ type QueryServer interface {
 type UnimplementedQueryServer struct {
 }
 
-func (*UnimplementedQueryServer) ValidatorByAddress(ctx context.Context, req *QueryGetValidatorByAddressRequest) (*QueryGetValidatorByAddressResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidatorByAddress not implemented")
+func (*UnimplementedQueryServer) Validator(ctx context.Context, req *QueryGetValidatorRequest) (*QueryGetValidatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Validator not implemented")
 }
-func (*UnimplementedQueryServer) ValidatorByAddressAll(ctx context.Context, req *QueryAllValidatorRequest) (*QueryAllValidatorResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ValidatorByAddressAll not implemented")
+func (*UnimplementedQueryServer) ValidatorAll(ctx context.Context, req *QueryAllValidatorRequest) (*QueryAllValidatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorAll not implemented")
 }
 func (*UnimplementedQueryServer) CoordinatorByAddress(ctx context.Context, req *QueryGetCoordinatorByAddressRequest) (*QueryGetCoordinatorByAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CoordinatorByAddress not implemented")
@@ -760,38 +760,38 @@ func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
 	s.RegisterService(&_Query_serviceDesc, srv)
 }
 
-func _Query_ValidatorByAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryGetValidatorByAddressRequest)
+func _Query_Validator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetValidatorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).ValidatorByAddress(ctx, in)
+		return srv.(QueryServer).Validator(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.profile.Query/ValidatorByAddress",
+		FullMethod: "/tendermint.spn.profile.Query/Validator",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ValidatorByAddress(ctx, req.(*QueryGetValidatorByAddressRequest))
+		return srv.(QueryServer).Validator(ctx, req.(*QueryGetValidatorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_ValidatorByAddressAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Query_ValidatorAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryAllValidatorRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).ValidatorByAddressAll(ctx, in)
+		return srv.(QueryServer).ValidatorAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.profile.Query/ValidatorByAddressAll",
+		FullMethod: "/tendermint.spn.profile.Query/ValidatorAll",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ValidatorByAddressAll(ctx, req.(*QueryAllValidatorRequest))
+		return srv.(QueryServer).ValidatorAll(ctx, req.(*QueryAllValidatorRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -855,12 +855,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*QueryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ValidatorByAddress",
-			Handler:    _Query_ValidatorByAddress_Handler,
+			MethodName: "Validator",
+			Handler:    _Query_Validator_Handler,
 		},
 		{
-			MethodName: "ValidatorByAddressAll",
-			Handler:    _Query_ValidatorByAddressAll_Handler,
+			MethodName: "ValidatorAll",
+			Handler:    _Query_ValidatorAll_Handler,
 		},
 		{
 			MethodName: "CoordinatorByAddress",
@@ -879,7 +879,7 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 	Metadata: "profile/query.proto",
 }
 
-func (m *QueryGetValidatorByAddressRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryGetValidatorRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -889,12 +889,12 @@ func (m *QueryGetValidatorByAddressRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetValidatorByAddressRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryGetValidatorRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetValidatorByAddressRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryGetValidatorRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -909,7 +909,7 @@ func (m *QueryGetValidatorByAddressRequest) MarshalToSizedBuffer(dAtA []byte) (i
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetValidatorByAddressResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryGetValidatorResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -919,19 +919,19 @@ func (m *QueryGetValidatorByAddressResponse) Marshal() (dAtA []byte, err error) 
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetValidatorByAddressResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryGetValidatorResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetValidatorByAddressResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryGetValidatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.ValidatorByAddress != nil {
+	if m.Validator != nil {
 		{
-			size, err := m.ValidatorByAddress.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Validator.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -1011,10 +1011,10 @@ func (m *QueryAllValidatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ValidatorByAddress) > 0 {
-		for iNdEx := len(m.ValidatorByAddress) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.Validator) > 0 {
+		for iNdEx := len(m.Validator) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.ValidatorByAddress[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.Validator[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1335,7 +1335,7 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *QueryGetValidatorByAddressRequest) Size() (n int) {
+func (m *QueryGetValidatorRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1348,14 +1348,14 @@ func (m *QueryGetValidatorByAddressRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryGetValidatorByAddressResponse) Size() (n int) {
+func (m *QueryGetValidatorResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.ValidatorByAddress != nil {
-		l = m.ValidatorByAddress.Size()
+	if m.Validator != nil {
+		l = m.Validator.Size()
 		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
@@ -1380,8 +1380,8 @@ func (m *QueryAllValidatorResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.ValidatorByAddress) > 0 {
-		for _, e := range m.ValidatorByAddress {
+	if len(m.Validator) > 0 {
+		for _, e := range m.Validator {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -1514,7 +1514,7 @@ func sovQuery(x uint64) (n int) {
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *QueryGetValidatorByAddressRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryGetValidatorRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1537,10 +1537,10 @@ func (m *QueryGetValidatorByAddressRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetValidatorByAddressRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryGetValidatorRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetValidatorByAddressRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryGetValidatorRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1596,7 +1596,7 @@ func (m *QueryGetValidatorByAddressRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetValidatorByAddressResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryGetValidatorResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1619,15 +1619,15 @@ func (m *QueryGetValidatorByAddressResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetValidatorByAddressResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryGetValidatorResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetValidatorByAddressResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryGetValidatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorByAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Validator", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1654,10 +1654,10 @@ func (m *QueryGetValidatorByAddressResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.ValidatorByAddress == nil {
-				m.ValidatorByAddress = &ValidatorByAddress{}
+			if m.Validator == nil {
+				m.Validator = &Validator{}
 			}
-			if err := m.ValidatorByAddress.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Validator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -1799,7 +1799,7 @@ func (m *QueryAllValidatorResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorByAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Validator", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1826,8 +1826,8 @@ func (m *QueryAllValidatorResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ValidatorByAddress = append(m.ValidatorByAddress, &ValidatorByAddress{})
-			if err := m.ValidatorByAddress[len(m.ValidatorByAddress)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Validator = append(m.Validator, &Validator{})
+			if err := m.Validator[len(m.Validator)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

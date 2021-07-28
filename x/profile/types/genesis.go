@@ -13,7 +13,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
-		ValidatorByAddressList:   []*ValidatorByAddress{},
+		ValidatorList:            []*Validator{},
 		CoordinatorByAddressList: []*CoordinatorByAddress{},
 		CoordinatorList:          []*Coordinator{},
 	}
@@ -34,14 +34,14 @@ func (gs GenesisState) Validate() error {
 }
 
 func (gs GenesisState) validateValidators() error {
-	// Check for duplicated index in validatorByAddress
-	validatorByAddressIndexMap := make(map[string]struct{})
-	for _, elem := range gs.ValidatorByAddressList {
-		index := string(ValidatorByAddressKey(elem.Address))
-		if _, ok := validatorByAddressIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for validatorByAddress: %s", elem.Address)
+	// Check for duplicated index in validator
+	validatorIndexMap := make(map[string]struct{})
+	for _, elem := range gs.ValidatorList {
+		index := string(ValidatorKey(elem.Address))
+		if _, ok := validatorIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for validator: %s", elem.Address)
 		}
-		validatorByAddressIndexMap[index] = struct{}{}
+		validatorIndexMap[index] = struct{}{}
 	}
 	return nil
 }

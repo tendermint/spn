@@ -24,7 +24,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		}, {
 			name: "valid custom genesis",
 			genState: &GenesisState{
-				ValidatorByAddressList: []*ValidatorByAddress{
+				ValidatorList: []*Validator{
 					{Address: sample.AccAddress()},
 					{Address: sample.AccAddress()},
 					{Address: sample.AccAddress()},
@@ -33,12 +33,12 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		}, {
 			name: "duplicated validator by address",
 			genState: &GenesisState{
-				ValidatorByAddressList: []*ValidatorByAddress{
+				ValidatorList: []*Validator{
 					{Address: addr},
 					{Address: addr},
 				},
 			},
-			err: fmt.Errorf("duplicated index for validatorByAddress: %s", addr),
+			err: fmt.Errorf("duplicated index for validator: %s", addr),
 		},
 	}
 	for _, tt := range tests {

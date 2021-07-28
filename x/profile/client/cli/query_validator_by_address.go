@@ -9,7 +9,7 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func CmdListValidatorByAddress() *cobra.Command {
+func CmdListValidator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-validator",
 		Short: "list all validator",
@@ -28,7 +28,7 @@ func CmdListValidatorByAddress() *cobra.Command {
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ValidatorByAddressAll(context.Background(), params)
+			res, err := queryClient.ValidatorAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -43,7 +43,7 @@ func CmdListValidatorByAddress() *cobra.Command {
 	return cmd
 }
 
-func CmdShowValidatorByAddress() *cobra.Command {
+func CmdShowValidator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-validator-by-address [address]",
 		Short: "shows a validator",
@@ -51,9 +51,9 @@ func CmdShowValidatorByAddress() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 			queryClient := types.NewQueryClient(clientCtx)
-			params := &types.QueryGetValidatorByAddressRequest{Address: args[0]}
+			params := &types.QueryGetValidatorRequest{Address: args[0]}
 
-			res, err := queryClient.ValidatorByAddress(context.Background(), params)
+			res, err := queryClient.Validator(context.Background(), params)
 			if err != nil {
 				return err
 			}

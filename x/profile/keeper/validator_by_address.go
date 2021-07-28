@@ -6,24 +6,24 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// SetValidatorByAddress set a specific validatorByAddress in the store from its index
-func (k Keeper) SetValidatorByAddress(ctx sdk.Context, validatorByAddress types.ValidatorByAddress) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByAddressKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&validatorByAddress)
-	store.Set(types.ValidatorByAddressKey(
-		validatorByAddress.Address,
+// SetValidator set a specific validator in the store from its index
+func (k Keeper) SetValidator(ctx sdk.Context, validator types.Validator) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorKeyPrefix))
+	b := k.cdc.MustMarshalBinaryBare(&validator)
+	store.Set(types.ValidatorKey(
+		validator.Address,
 	), b)
 }
 
-// GetValidatorByAddress returns a validatorByAddress from its index
-func (k Keeper) GetValidatorByAddress(
+// GetValidator returns a validator from its index
+func (k Keeper) GetValidator(
 	ctx sdk.Context,
 	address string,
 
-) (val types.ValidatorByAddress, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByAddressKeyPrefix))
+) (val types.Validator, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorKeyPrefix))
 
-	b := store.Get(types.ValidatorByAddressKey(
+	b := store.Get(types.ValidatorKey(
 		address,
 	))
 	if b == nil {
@@ -34,27 +34,27 @@ func (k Keeper) GetValidatorByAddress(
 	return val, true
 }
 
-// RemoveValidatorByAddress removes a validatorByAddress from the store
-func (k Keeper) RemoveValidatorByAddress(
+// RemoveValidator removes a validator from the store
+func (k Keeper) RemoveValidator(
 	ctx sdk.Context,
 	address string,
 
 ) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByAddressKeyPrefix))
-	store.Delete(types.ValidatorByAddressKey(
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorKeyPrefix))
+	store.Delete(types.ValidatorKey(
 		address,
 	))
 }
 
-// GetAllValidatorByAddress returns all validatorByAddress
-func (k Keeper) GetAllValidatorByAddress(ctx sdk.Context) (list []types.ValidatorByAddress) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByAddressKeyPrefix))
+// GetAllValidator returns all validator
+func (k Keeper) GetAllValidator(ctx sdk.Context) (list []types.Validator) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.ValidatorByAddress
+		var val types.Validator
 		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
 		list = append(list, val)
 	}

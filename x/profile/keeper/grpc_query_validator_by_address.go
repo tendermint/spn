@@ -11,24 +11,24 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) ValidatorByAddressAll(c context.Context, req *types.QueryAllValidatorRequest) (*types.QueryAllValidatorResponse, error) {
+func (k Keeper) ValidatorAll(c context.Context, req *types.QueryAllValidatorRequest) (*types.QueryAllValidatorResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var validatorByAddresss []*types.ValidatorByAddress
+	var validators []*types.Validator
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	validatorByAddressStore := prefix.NewStore(store, types.KeyPrefix(types.ValidatorByAddressKeyPrefix))
+	validatorStore := prefix.NewStore(store, types.KeyPrefix(types.ValidatorKeyPrefix))
 
-	pageRes, err := query.Paginate(validatorByAddressStore, req.Pagination, func(key []byte, value []byte) error {
-		var validatorByAddress types.ValidatorByAddress
-		if err := k.cdc.UnmarshalBinaryBare(value, &validatorByAddress); err != nil {
+	pageRes, err := query.Paginate(validatorStore, req.Pagination, func(key []byte, value []byte) error {
+		var validator types.Validator
+		if err := k.cdc.UnmarshalBinaryBare(value, &validator); err != nil {
 			return err
 		}
 
-		validatorByAddresss = append(validatorByAddresss, &validatorByAddress)
+		validators = append(validators, &validator)
 		return nil
 	})
 
@@ -36,16 +36,16 @@ func (k Keeper) ValidatorByAddressAll(c context.Context, req *types.QueryAllVali
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllValidatorResponse{ValidatorByAddress: validatorByAddresss, Pagination: pageRes}, nil
+	return &types.QueryAllValidatorResponse{Validator: validators, Pagination: pageRes}, nil
 }
 
-func (k Keeper) ValidatorByAddress(c context.Context, req *types.QueryGetValidatorByAddressRequest) (*types.QueryGetValidatorByAddressResponse, error) {
+func (k Keeper) Validator(c context.Context, req *types.QueryGetValidatorRequest) (*types.QueryGetValidatorResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetValidatorByAddress(
+	val, found := k.GetValidator(
 		ctx,
 		req.Address,
 	)
@@ -53,5 +53,5 @@ func (k Keeper) ValidatorByAddress(c context.Context, req *types.QueryGetValidat
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
-	return &types.QueryGetValidatorByAddressResponse{ValidatorByAddress: &val}, nil
+	return &types.QueryGetValidatorResponse{Validator: &val}, nil
 }
