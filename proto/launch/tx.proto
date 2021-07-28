@@ -8,6 +8,14 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgRequestRemoveValidator {
+  string chainID = 1;
+  string validatorAddress = 2;
+}
+
+message MsgRequestRemoveValidatorResponse {
+}
