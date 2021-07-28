@@ -3,10 +3,10 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"github.com/tendermint/spn/pkg/critical"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/tendermint/spn/pkg/critical"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
