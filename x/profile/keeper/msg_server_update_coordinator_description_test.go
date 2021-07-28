@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/assert"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -11,11 +13,12 @@ import (
 
 func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	var (
-		addr  = sample.AccAddress()
-		coord = msgCreateCoordinator()
+		addr        = sample.AccAddress()
+		msgCoord    = msgCreateCoordinator()
+		ctx, k, srv = setupMsgServerAndKeeper(t)
+		wCtx        = sdk.WrapSDKContext(ctx)
 	)
-	srv, ctx := setupMsgServer(t)
-	if _, err := srv.CreateCoordinator(ctx, &coord); err != nil {
+	if _, err := srv.CreateCoordinator(wCtx, &msgCoord); err != nil {
 		t.Fatal(err)
 	}
 	tests := []struct {
@@ -32,7 +35,7 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 		}, {
 			name: "update one value",
 			msg: types.MsgUpdateCoordinatorDescription{
-				Address: coord.Address,
+				Address: msgCoord.Address,
 				Description: &types.CoordinatorDescription{
 					Identity: "update",
 				},
@@ -40,7 +43,7 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 		}, {
 			name: "update all values",
 			msg: types.MsgUpdateCoordinatorDescription{
-				Address: coord.Address,
+				Address: msgCoord.Address,
 				Description: &types.CoordinatorDescription{
 					Identity: "update",
 					Website:  "update",
@@ -51,12 +54,30 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.UpdateCoordinatorDescription(ctx, &tt.msg)
+			_, err := srv.UpdateCoordinatorDescription(wCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
+			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			assert.True(t, found, "coordinator by address not found")
+
+			coord := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
+			assert.True(t, found, "coordinator id not found")
+			assert.EqualValues(t, tt.msg.Address, coord.Address)
+			assert.EqualValues(t, coordByAddr.CoordinatorId, coord.CoordinatorId)
+
+			if len(tt.msg.Description.Identity) > 0 {
+				assert.EqualValues(t, tt.msg.Description.Identity, coord.Description.Identity)
+			}
+			if len(tt.msg.Description.Website) > 0 {
+				assert.EqualValues(t, tt.msg.Description.Website, coord.Description.Website)
+			}
+			if len(tt.msg.Description.Details) > 0 {
+				assert.EqualValues(t, tt.msg.Description.Details, coord.Description.Details)
+			}
+
 		})
 	}
 }
