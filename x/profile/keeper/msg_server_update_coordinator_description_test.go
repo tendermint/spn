@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -61,21 +60,21 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			}
 			require.NoError(t, err)
 			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			assert.True(t, found, "coordinator by address not found")
+			require.True(t, found, "coordinator by address not found")
 
 			coord := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
-			assert.True(t, found, "coordinator id not found")
-			assert.EqualValues(t, tt.msg.Address, coord.Address)
-			assert.EqualValues(t, coordByAddr.CoordinatorId, coord.CoordinatorId)
+			require.True(t, found, "coordinator id not found")
+			require.EqualValues(t, tt.msg.Address, coord.Address)
+			require.EqualValues(t, coordByAddr.CoordinatorId, coord.CoordinatorId)
 
 			if len(tt.msg.Description.Identity) > 0 {
-				assert.EqualValues(t, tt.msg.Description.Identity, coord.Description.Identity)
+				require.EqualValues(t, tt.msg.Description.Identity, coord.Description.Identity)
 			}
 			if len(tt.msg.Description.Website) > 0 {
-				assert.EqualValues(t, tt.msg.Description.Website, coord.Description.Website)
+				require.EqualValues(t, tt.msg.Description.Website, coord.Description.Website)
 			}
 			if len(tt.msg.Description.Details) > 0 {
-				assert.EqualValues(t, tt.msg.Description.Details, coord.Description.Details)
+				require.EqualValues(t, tt.msg.Description.Details, coord.Description.Details)
 			}
 
 		})
