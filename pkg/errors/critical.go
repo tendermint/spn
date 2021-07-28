@@ -1,4 +1,4 @@
-package critical
+package errors
 
 import (
 	"errors"
@@ -11,6 +11,6 @@ var ErrCritical = errors.New("CRITICAL: the state of the blockchain is inconsist
 // Error handles and/or returns an error in case a critical error has been encountered:
 // - Inconsistent state
 // - Broken invariant
-func Error(description string) error {
+func Critical(description string) error {
 	return sdkerrors.Wrap(ErrCritical, description)
 }
