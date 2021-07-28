@@ -10,9 +10,7 @@ const (
 )
 
 // ValidatorKey returns the store key to retrieve a Validator from the index fields
-func ValidatorKey(
-	address string,
-) []byte {
+func ValidatorKey(address string) []byte {
 	var key []byte
 
 	addressBytes := []byte(address)
