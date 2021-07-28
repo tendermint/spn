@@ -16,9 +16,9 @@ const (
 
 func CmdCreateChain() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-chain [chainName] [sourceURL] [sourceHash] [genesisURL] [genesisHash]",
+		Use:   "create-chain [chainName] [sourceURL] [sourceHash]",
 		Short: "Create a new chain for launch",
-		Args:  cobra.ExactArgs(5),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
