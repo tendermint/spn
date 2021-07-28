@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -22,7 +23,8 @@ func (k msgServer) DeleteCoordinator(
 	}
 
 	if !k.HasCoordinator(ctx, coordByAddress.CoordinatorId) {
-		panic("a coordinator address is associated to a non-existent coordinator ID")
+		return &types.MsgDeleteCoordinatorResponse{},
+			spnerrors.Critical("a coordinator address is associated to a non-existent coordinator ID")
 	}
 	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
 
