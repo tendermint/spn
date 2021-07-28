@@ -53,15 +53,21 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			var oldCoord types.Coordinator
+			if tt.err == nil {
+				coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+				require.True(t, found, "coordinator by address not found")
+				oldCoord = k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
+			}
+
 			_, err := srv.UpdateCoordinatorDescription(wCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
-			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			require.True(t, found, "coordinator by address not found")
 
+			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
 			coord := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
 			require.True(t, found, "coordinator id not found")
 			require.EqualValues(t, tt.msg.Address, coord.Address)
@@ -69,14 +75,21 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 
 			if len(tt.msg.Description.Identity) > 0 {
 				require.EqualValues(t, tt.msg.Description.Identity, coord.Description.Identity)
-			}
-			if len(tt.msg.Description.Website) > 0 {
-				require.EqualValues(t, tt.msg.Description.Website, coord.Description.Website)
-			}
-			if len(tt.msg.Description.Details) > 0 {
-				require.EqualValues(t, tt.msg.Description.Details, coord.Description.Details)
+			} else {
+				require.EqualValues(t, oldCoord.Description.Identity, coord.Description.Identity)
 			}
 
+			if len(tt.msg.Description.Website) > 0 {
+				require.EqualValues(t, tt.msg.Description.Website, coord.Description.Website)
+			} else {
+				require.EqualValues(t, oldCoord.Description.Website, coord.Description.Website)
+			}
+
+			if len(tt.msg.Description.Details) > 0 {
+				require.EqualValues(t, tt.msg.Description.Details, coord.Description.Details)
+			} else {
+				require.EqualValues(t, oldCoord.Description.Details, coord.Description.Details)
+			}
 		})
 	}
 }
