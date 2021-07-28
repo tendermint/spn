@@ -13,12 +13,12 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
-		RequestList:        []*Request{},
-		RequestCountList:   []*RequestCount{},
+		RequestList:          []*Request{},
+		RequestCountList:     []*RequestCount{},
 		GenesisValidatorList: []*GenesisValidator{},
-		VestedAccountList:  []*VestedAccount{},
-		GenesisAccountList: []*GenesisAccount{},
-		ChainList:          []*Chain{},
+		VestedAccountList:    []*VestedAccount{},
+		GenesisAccountList:   []*GenesisAccount{},
+		ChainList:            []*Chain{},
 	}
 }
 
