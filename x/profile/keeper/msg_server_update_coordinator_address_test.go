@@ -12,8 +12,8 @@ import (
 func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 	var (
 		addr   = sample.AccAddress()
-		coord1 = msgCreateCoordinator()
-		coord2 = msgCreateCoordinator()
+		coord1 = sample.MsgCreateCoordinator(sample.AccAddress())
+		coord2 = sample.MsgCreateCoordinator(sample.AccAddress())
 	)
 	srv, ctx := setupMsgServer(t)
 	if _, err := srv.CreateCoordinator(ctx, &coord1); err != nil {
