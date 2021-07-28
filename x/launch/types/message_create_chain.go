@@ -44,5 +44,10 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if err := CheckChainName(msg.ChainName); err != nil {
+		return sdkerrors.Wrapf(ErrInvalidChainName, err.Error())
+	}
+
 	return nil
 }

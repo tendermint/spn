@@ -8,5 +8,5 @@ import (
 
 // x/launch module sentinel errors
 var (
-	ErrCoordinatorNotExist = sdkerrors.Register(ModuleName, 1, "the coordinator doesn't exist")
+	ErrInvalidChainName = sdkerrors.Register(ModuleName, 1, "the chain name is invalid")
 )
