@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
 )
 

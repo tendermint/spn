@@ -1,14 +1,14 @@
 package sample
 
 import (
-	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	launch "github.com/tendermint/spn/x/launch/types"
-	profile "github.com/tendermint/spn/x/profile/types"
 	"math/rand"
 
+	"github.com/cosmos/cosmos-sdk/codec"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	launch "github.com/tendermint/spn/x/launch/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 const accountAddressPrefix = "spn"
