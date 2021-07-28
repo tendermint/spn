@@ -27,14 +27,13 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 
 	registry.RegisterInterface(
-		"launch.InitialGenesis",
-		"tendermint.spn.launch.VestingOptions",
+		"launch.VestingOptions",
 		(*VestingOptions)(nil),
 		&DelayedVesting{},
 	)
 
 	registry.RegisterInterface(
-		"tendermint.spn.launch.InitialGenesis",
+		"launch.InitialGenesis",
 		(*InitialGenesis)(nil),
 		&DefaultInitialGenesis{},
 		&GenesisURL{},
