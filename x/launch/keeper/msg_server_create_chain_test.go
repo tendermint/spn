@@ -2,7 +2,6 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
@@ -60,7 +59,7 @@ func TestMsgCreateChain(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			assert.EqualValues(t, tc.wantedChainID, got.ChainID)
+			require.EqualValues(t, tc.wantedChainID, got.ChainID)
 
 			// The chain must exist in the store
 			chain, found := k.GetChain(sdkCtx, got.ChainID)
