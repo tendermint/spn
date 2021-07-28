@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 )
@@ -47,7 +46,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 				err := tt.genState.validateValidators()
 				if tt.err != nil {
 					require.Error(t, err)
-					assert.Equal(t, tt.err.Error(), err.Error())
+					require.Equal(t, tt.err.Error(), err.Error())
 					return
 				}
 				require.NoError(t, err)
@@ -160,7 +159,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 				err := tt.genState.validateCoordinators()
 				if tt.err != nil {
 					require.Error(t, err)
-					assert.Equal(t, tt.err.Error(), err.Error())
+					require.Equal(t, tt.err.Error(), err.Error())
 					return
 				}
 				require.NoError(t, err)
