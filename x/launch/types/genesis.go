@@ -13,6 +13,8 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
+		RequestList:        []*Request{},
+		RequestCountList:   []*RequestCount{},
 		VestedAccountList:  []*VestedAccount{},
 		GenesisAccountList: []*GenesisAccount{},
 		ChainList:          []*Chain{},
@@ -28,13 +30,60 @@ func (gs GenesisState) Validate() error {
 
 	// Check for duplicated index in chain
 	chainIndexMap := make(map[string]struct{})
-
 	for _, elem := range gs.ChainList {
 		chainID := elem.ChainID
 		if _, ok := chainIndexMap[chainID]; ok {
 			return fmt.Errorf("duplicated index for chain")
 		}
 		chainIndexMap[chainID] = struct{}{}
+	}
+
+	// We checkout request counts to perform verification
+	requestCountMap := make(map[string]uint64)
+	for _, elem := range gs.RequestCountList {
+		if _, ok := requestCountMap[elem.ChainID]; ok {
+			return fmt.Errorf("duplicated request count")
+		}
+		requestCountMap[elem.ChainID] = elem.Count
+
+		// Each genesis account must be associated with an existing chain
+		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+			return fmt.Errorf("request count to a non-existing chain: %s",
+				elem.ChainID,
+			)
+		}
+	}
+
+	// Check for duplicated index in request
+	requestIndexMap := make(map[string]struct{})
+	for _, elem := range gs.RequestList {
+		index := string(RequestKey(elem.ChainID, elem.RequestID))
+		if _, ok := requestIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for request")
+		}
+		requestIndexMap[index] = struct{}{}
+
+		// Each request pool must be associated with an existing chain
+		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+			return fmt.Errorf("a request pool is associated to a non-existing chain: %s",
+				elem.ChainID,
+			)
+		}
+
+		// Check the request count of the associated chain is not below the request ID
+		requestCount, ok := requestCountMap[elem.ChainID]
+		if !ok {
+			return fmt.Errorf("chain %s has requests but no request count",
+				elem.ChainID,
+			)
+		}
+		if elem.RequestID >= requestCount {
+			return fmt.Errorf("chain %s contains a request with an ID above the request count: %v >= %v",
+				elem.ChainID,
+				elem.RequestID,
+				requestCount,
+			)
+		}
 	}
 
 	// Check for duplicated index in genesisAccount

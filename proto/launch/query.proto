@@ -4,6 +4,7 @@ package tendermint.spn.launch;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "launch/request.proto";
 import "launch/vested_account.proto";
 import "launch/genesis_account.proto";
 import "launch/chain.proto";
@@ -13,6 +14,15 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a request by index.
+	rpc Request(QueryGetRequestRequest) returns (QueryGetRequestResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}/{requestID}";
+	}
+	// Queries a list of request for a chain.
+	rpc RequestAll(QueryAllRequestRequest) returns (QueryAllRequestResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}";
+	}
 
 	// Queries a vestedAccount by index.
 	rpc VestedAccount(QueryGetVestedAccountRequest) returns (QueryGetVestedAccountResponse) {
@@ -44,6 +54,25 @@ service Query {
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetRequestRequest {
+	string chainID = 1;
+	uint64 requestID = 2;
+}
+
+message QueryGetRequestResponse {
+	Request request = 1;
+}
+
+message QueryAllRequestRequest {
+	string chainID = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllRequestResponse {
+	repeated Request request = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
 message QueryGetVestedAccountRequest {
 	string chainID = 1;
 	string address = 2;
@@ -81,7 +110,7 @@ message QueryAllGenesisAccountResponse {
 }
 
 message QueryGetChainRequest {
-	  string chainID = 1;
+	string chainID = 1;
 }
 
 message QueryGetChainResponse {
