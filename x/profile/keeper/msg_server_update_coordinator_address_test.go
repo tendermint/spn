@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -75,16 +74,16 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 			require.NoError(t, err)
 
 			_, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			assert.False(t, found, "old coordinator address was not removed")
+			require.False(t, found, "old coordinator address was not removed")
 
 			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.NewAddress)
-			assert.True(t, found, "coordinator by address not found")
-			assert.EqualValues(t, tt.msg.NewAddress, coordByAddr.Address)
+			require.True(t, found, "coordinator by address not found")
+			require.EqualValues(t, tt.msg.NewAddress, coordByAddr.Address)
 
 			coord := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
-			assert.True(t, found, "coordinator id not found")
-			assert.EqualValues(t, tt.msg.NewAddress, coord.Address)
-			assert.EqualValues(t, coordByAddr.CoordinatorId, coord.CoordinatorId)
+			require.True(t, found, "coordinator id not found")
+			require.EqualValues(t, tt.msg.NewAddress, coord.Address)
+			require.EqualValues(t, coordByAddr.CoordinatorId, coord.CoordinatorId)
 		})
 	}
 }
