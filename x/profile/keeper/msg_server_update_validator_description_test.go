@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/assert"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -20,8 +22,10 @@ func validatorDescription(desc string) *types.ValidatorDescription {
 
 func TestMsgUpdateValidatorDescription(t *testing.T) {
 	var (
-		addr1 = sample.AccAddress()
-		addr2 = sample.AccAddress()
+		addr1       = sample.AccAddress()
+		addr2       = sample.AccAddress()
+		ctx, k, srv = setupMsgServerAndKeeper(t)
+		wCtx        = sdk.WrapSDKContext(ctx)
 	)
 	tests := []struct {
 		name string
@@ -48,15 +52,33 @@ func TestMsgUpdateValidatorDescription(t *testing.T) {
 			},
 		},
 	}
-	srv, ctx := setupMsgServer(t)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.UpdateValidatorDescription(ctx, &tt.msg)
+			_, err := srv.UpdateValidatorDescription(wCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
+			validator, found := k.GetValidatorByAddress(ctx, tt.msg.Address)
+			assert.True(t, found, "validator not found")
+			assert.EqualValues(t, tt.msg.Address, validator.Address)
+
+			if len(tt.msg.Description.Identity) > 0 {
+				assert.EqualValues(t, tt.msg.Description.Identity, validator.Description.Identity)
+			}
+			if len(tt.msg.Description.Website) > 0 {
+				assert.EqualValues(t, tt.msg.Description.Website, validator.Description.Website)
+			}
+			if len(tt.msg.Description.Details) > 0 {
+				assert.EqualValues(t, tt.msg.Description.Details, validator.Description.Details)
+			}
+			if len(tt.msg.Description.Moniker) > 0 {
+				assert.EqualValues(t, tt.msg.Description.Moniker, validator.Description.Moniker)
+			}
+			if len(tt.msg.Description.SecurityContact) > 0 {
+				assert.EqualValues(t, tt.msg.Description.SecurityContact, validator.Description.SecurityContact)
+			}
 		})
 	}
 }
