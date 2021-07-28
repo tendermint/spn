@@ -21,10 +21,11 @@ func (k msgServer) UpdateCoordinatorDescription(
 			sdkerrors.Wrap(types.ErrCoordAddressNotFound, msg.Address)
 	}
 
-	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
-	if (coord == types.Coordinator{}) {
+	if !k.HasCoordinator(ctx, coordByAddress.CoordinatorId) {
 		panic("a coordinator address is associated to a non-existent coordinator ID")
 	}
+	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
+
 	if len(msg.Description.Identity) > 0 {
 		coord.Description.Identity = msg.Description.Identity
 	}
