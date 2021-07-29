@@ -14,7 +14,6 @@ func CmdDeleteValidator() *cobra.Command {
 		Short: "Delete a validator",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
