@@ -33,12 +33,12 @@ func VestedAccount(chainID, address string) *launch.VestedAccount {
 
 func GenesisValidator(chainID, address string) *launch.GenesisValidator {
 	return &launch.GenesisValidator{
-		ChainID: chainID,
-		Address: address,
-		GenTx: Bytes(200),
-		ConsPubKey: Bytes(10),
+		ChainID:        chainID,
+		Address:        address,
+		GenTx:          Bytes(200),
+		ConsPubKey:     Bytes(10),
 		SelfDelegation: Coin(),
-		Peer: String(10),
+		Peer:           String(10),
 	}
 }
 
