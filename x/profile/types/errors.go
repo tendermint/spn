@@ -10,5 +10,6 @@ import (
 var (
 	ErrCoordAlreadyExist    = sdkerrors.Register(ModuleName, 1, "coordinator address already exist")
 	ErrCoordAddressNotFound = sdkerrors.Register(ModuleName, 2, "coordinator address not found")
+	ErrCoordInvalid         = sdkerrors.Register(ModuleName, 3, "invalid coordinator")
 	// this line is used by starport scaffolding # ibc/errors
 )
