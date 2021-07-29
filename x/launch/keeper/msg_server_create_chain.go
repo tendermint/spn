@@ -3,11 +3,11 @@ package keeper
 import (
 	"context"
 	"fmt"
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -61,7 +61,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		}
 	} else {
 		chain.InitialGenesis, err = codec.NewAnyWithValue(&types.GenesisURL{
-			Url: msg.GenesisURL,
+			Url:  msg.GenesisURL,
 			Hash: msg.GenesisHash,
 		})
 		if err != nil {
