@@ -46,12 +46,12 @@ func (gs GenesisState) Validate() error {
 
 func validateChains(gs GenesisState) (map[string]struct{}, error) {
 	// Check for duplicated index in chainNameCount
-	chainNameCountMap := make(map[string]struct{})
+	chainNameCountMap := make(map[string]uint64)
 	for _, elem := range gs.ChainNameCountList {
 		if _, ok := chainNameCountMap[elem.ChainName]; ok {
-			return nil, fmt.Errorf("duplicated index for chainNameCount")
+			return nil, fmt.Errorf("duplicated chain name for chainNameCount")
 		}
-		chainNameCountMap[elem.ChainName] = struct{}{}
+		chainNameCountMap[elem.ChainName] = elem.Count
 	}
 
 	// Check for duplicated index in chain
@@ -59,9 +59,22 @@ func validateChains(gs GenesisState) (map[string]struct{}, error) {
 	for _, elem := range gs.ChainList {
 		chainID := elem.ChainID
 		if _, ok := chainIDMap[chainID]; ok {
-			return nil, fmt.Errorf("duplicated index for chain")
+			return nil, fmt.Errorf("duplicated chain ID for chain")
 		}
 		chainIDMap[chainID] = struct{}{}
+
+		// Verify the chain ID is valid and the number is below the count for the chain name
+		name, number, err := ParseChainID(chainID)
+		if err != nil {
+			return nil, fmt.Errorf("invalid chain ID %s: %s", chainID, err.Error())
+		}
+		count, ok := chainNameCountMap[name]
+		if !ok {
+			return nil, fmt.Errorf("no chain name count for chain name %s", name)
+		}
+		if number >= count {
+			return nil, fmt.Errorf("number of chain id %s is above or equal to chain name count %v", chainID, count)
+		}
 	}
 
 	return chainIDMap, nil

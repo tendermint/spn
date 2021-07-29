@@ -8,13 +8,79 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestGenesisState_Validate(t *testing.T) {
-	chainId1 := sample.AlphaString(5)
-	chainId2 := sample.AlphaString(5)
-	addr1 := sample.AccAddress()
-	addr2 := sample.AccAddress()
-	vestedAddress := sample.AccAddress()
+var (
+	chainId1, chainName1 = sample.ChainID(0)
+	chainId2, chainName2 = sample.ChainID(0)
+	addr1                = sample.AccAddress()
+	addr2                = sample.AccAddress()
+	vestedAddress        = sample.AccAddress()
 
+	// Those are samples we can use for each fields when they are not the one to test
+	sampleChainList = []*types.Chain{
+		{
+			ChainID: chainId1,
+		},
+		{
+			ChainID: chainId2,
+		},
+	}
+	sampleChainNameCountList = []*types.ChainNameCount{
+		{
+			ChainName: chainName1,
+			Count:     10,
+		},
+		{
+			ChainName: chainName2,
+			Count:     10,
+		},
+	}
+	sampleGenesisAccountList = []*types.GenesisAccount{
+		{
+			ChainID: chainId1,
+			Address: addr1,
+		},
+		{
+			ChainID: chainId1,
+			Address: addr2,
+		},
+		{
+			ChainID: chainId2,
+			Address: addr1,
+		},
+		{
+			ChainID: chainId2,
+			Address: addr2,
+		},
+	}
+	sampleVestedAccountList = []*types.VestedAccount{
+		{
+			ChainID: chainId1,
+			Address: vestedAddress,
+		},
+		{
+			ChainID: chainId2,
+			Address: vestedAddress,
+		},
+	}
+	sampleRequestList = []*types.Request{
+		{
+			ChainID:   chainId1,
+			RequestID: 0,
+		},
+		{
+			ChainID:   chainId1,
+			RequestID: 1,
+		},
+	}
+	sampleRequestCountList = []*types.RequestCount{
+		{
+			ChainID: chainId1,
+			Count:   10,
+		},
+	}
+)
+
+func TestGenesisState_Validate(t *testing.T) {
 	for _, tc := range []struct {
 		desc          string
 		genState      *types.GenesisState
@@ -28,58 +94,12 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-				ChainList: []*types.Chain{
-					{
-						ChainID: chainId1,
-					},
-					{
-						ChainID: chainId2,
-					},
-				},
-				GenesisAccountList: []*types.GenesisAccount{
-					{
-						ChainID: chainId1,
-						Address: addr1,
-					},
-					{
-						ChainID: chainId1,
-						Address: addr2,
-					},
-					{
-						ChainID: chainId2,
-						Address: addr1,
-					},
-					{
-						ChainID: chainId2,
-						Address: addr2,
-					},
-				},
-				RequestList: []*types.Request{
-					{
-						ChainID:   chainId1,
-						RequestID: 0,
-					},
-					{
-						ChainID:   chainId1,
-						RequestID: 1,
-					},
-				},
-				RequestCountList: []*types.RequestCount{
-					{
-						ChainID: chainId1,
-						Count:   2,
-					},
-				},
-				VestedAccountList: []*types.VestedAccount{
-					{
-						ChainID: chainId1,
-						Address: vestedAddress,
-					},
-					{
-						ChainID: chainId2,
-						Address: vestedAddress,
-					},
-				},
+				ChainList:          sampleChainList,
+				ChainNameCountList: sampleChainNameCountList,
+				GenesisAccountList: sampleGenesisAccountList,
+				VestedAccountList:  sampleVestedAccountList,
+				RequestList:        sampleRequestList,
+				RequestCountList:   sampleRequestCountList,
 			},
 			shouldBeValid: true,
 		},
@@ -92,6 +112,12 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						ChainID: chainId1,
+					},
+				},
+				ChainNameCountList: []*types.ChainNameCount{
+					{
+						ChainName: chainName1,
+						Count:     10,
 					},
 				},
 			},

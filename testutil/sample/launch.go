@@ -7,6 +7,12 @@ import (
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
+// ChainID returns a sample chain id with the associated chain name
+func ChainID(number uint64) (string, string) {
+	chainName := AlphaString(5)
+	return launch.ChainIDFromChainName(chainName, number), chainName
+}
+
 // Chain returns a sample Chain
 func Chain(chainID string, coordinatorID uint64) *launch.Chain {
 	defaultGenesis, err := types.NewAnyWithValue((*launch.DefaultInitialGenesis)(nil))

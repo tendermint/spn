@@ -50,48 +50,48 @@ func TestChainIDFromChainName(t *testing.T) {
 
 func TestParseChainID(t *testing.T) {
 	for _, tc := range []struct {
-		desc  string
-		chainID string
-		expectedName string
+		desc           string
+		chainID        string
+		expectedName   string
 		expectedNumber uint64
-		valid bool
+		valid          bool
 	}{
 		{
-			desc:  "Valid chainID",
-			chainID:  "foo-42",
-			expectedName: "foo",
+			desc:           "Valid chainID",
+			chainID:        "foo-42",
+			expectedName:   "foo",
 			expectedNumber: 42,
-			valid: true,
+			valid:          true,
 		},
 		{
-			desc:  "No separator",
-			chainID:  "foo42",
-			valid: false,
+			desc:    "No separator",
+			chainID: "foo42",
+			valid:   false,
 		},
 		{
-			desc:  "Too many separators",
-			chainID:  "foo-42-32",
-			valid: false,
+			desc:    "Too many separators",
+			chainID: "foo-42-32",
+			valid:   false,
 		},
 		{
-			desc:  "No number",
-			chainID:  "foo-",
-			valid: false,
+			desc:    "No number",
+			chainID: "foo-",
+			valid:   false,
 		},
 		{
-			desc:  "Invalid number",
-			chainID:  "foo-fortytwo",
-			valid: false,
+			desc:    "Invalid number",
+			chainID: "foo-fortytwo",
+			valid:   false,
 		},
 		{
-			desc:  "No chain name",
-			chainID:  "-42",
-			valid: false,
+			desc:    "No chain name",
+			chainID: "-42",
+			valid:   false,
 		},
 		{
-			desc:  "Invalid chain name",
-			chainID:  "foo/bar-42",
-			valid: false,
+			desc:    "Invalid chain name",
+			chainID: "foo/bar-42",
+			valid:   false,
 		},
 	} {
 		tc := tc
@@ -108,7 +108,6 @@ func TestParseChainID(t *testing.T) {
 		})
 	}
 }
-
 
 func TestCheckChainName(t *testing.T) {
 	for _, tc := range []struct {
