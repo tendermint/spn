@@ -45,7 +45,7 @@ func CmdListValidator() *cobra.Command {
 
 func CmdShowValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-validator-by-address [address]",
+		Use:   "show-validator [address]",
 		Short: "shows a validator",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

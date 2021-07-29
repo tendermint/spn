@@ -11,11 +11,5 @@ const (
 
 // ValidatorKey returns the store key to retrieve a Validator from the index fields
 func ValidatorKey(address string) []byte {
-	var key []byte
-
-	addressBytes := []byte(address)
-	key = append(key, addressBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+	return []byte(address + "/")
 }
