@@ -14,9 +14,9 @@ func (k msgServer) UpdateValidatorDescription(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the validator address is already in the store
-	validator, found := k.GetValidatorByAddress(ctx, msg.Address)
+	validator, found := k.GetValidator(ctx, msg.Address)
 	if !found {
-		validator = types.ValidatorByAddress{
+		validator = types.Validator{
 			Address:     msg.Address,
 			Description: &types.ValidatorDescription{},
 		}
@@ -38,7 +38,7 @@ func (k msgServer) UpdateValidatorDescription(
 		validator.Description.SecurityContact = msg.Description.SecurityContact
 	}
 
-	k.SetValidatorByAddress(ctx, validator)
+	k.SetValidator(ctx, validator)
 
 	return &types.MsgUpdateValidatorDescriptionResponse{}, nil
 }

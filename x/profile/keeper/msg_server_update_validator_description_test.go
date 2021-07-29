@@ -1,10 +1,10 @@
 package keeper
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -60,7 +60,7 @@ func TestMsgUpdateValidatorDescription(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			validator, found := k.GetValidatorByAddress(ctx, tt.msg.Address)
+			validator, found := k.GetValidator(ctx, tt.msg.Address)
 			assert.True(t, found, "validator not found")
 			assert.EqualValues(t, tt.msg.Address, validator.Address)
 
