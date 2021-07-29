@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	profile "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/spn/testutil/sample"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestGenesisStateValidateValidator(t *testing.T) {

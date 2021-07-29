@@ -11,5 +11,5 @@ const (
 
 // ChainNameCountKey returns the store key to retrieve a ChainNameCount from the index fields
 func ChainNameCountKey(chainName string) []byte {
-	return []byte(chainName+"/")}
+	return []byte(chainName + "/")
 }

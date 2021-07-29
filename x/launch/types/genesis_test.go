@@ -9,12 +9,12 @@ import (
 )
 
 var (
-	chainID1, chainName1 = sample.ChainID(0)
-	chainID2, chainName2 = sample.ChainID(0)
+	chainID1, chainName1             = sample.ChainID(0)
+	chainID2, chainName2             = sample.ChainID(0)
 	noExistChainID, noExistChainName = sample.ChainID(0)
-	addr1                = sample.AccAddress()
-	addr2                = sample.AccAddress()
-	vestedAddress        = sample.AccAddress()
+	addr1                            = sample.AccAddress()
+	addr2                            = sample.AccAddress()
+	vestedAddress                    = sample.AccAddress()
 
 	// Those are samples we can use for each fields when they are not the one to test
 	sampleChainList = []*types.Chain{
@@ -270,7 +270,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				ChainList:          sampleChainList,
 				ChainNameCountList: sampleChainNameCountList,
-				RequestCountList: sampleRequestCountList,
+				RequestCountList:   sampleRequestCountList,
 				RequestList: []*types.Request{
 					{
 						ChainID:   chainID1,
@@ -289,7 +289,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				ChainList:          sampleChainList,
 				ChainNameCountList: sampleChainNameCountList,
-				RequestCountList: sampleRequestCountList,
+				RequestCountList:   sampleRequestCountList,
 				RequestList: []*types.Request{
 					{
 						ChainID:   noExistChainID,
