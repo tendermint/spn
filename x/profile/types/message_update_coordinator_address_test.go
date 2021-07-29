@@ -1,4 +1,4 @@
-package types
+package types_test
 
 import (
 	"testing"
@@ -6,18 +6,19 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 	addr := sample.AccAddress()
 	tests := []struct {
 		name string
-		msg  MsgUpdateCoordinatorAddress
+		msg  profile.MsgUpdateCoordinatorAddress
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgUpdateCoordinatorAddress{
+			msg: profile.MsgUpdateCoordinatorAddress{
 				Address:    "invalid address",
 				NewAddress: sample.AccAddress(),
 			},
@@ -25,7 +26,7 @@ func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
 		}, {
 			name: "invalid new address",
-			msg: MsgUpdateCoordinatorAddress{
+			msg: profile.MsgUpdateCoordinatorAddress{
 				Address:    sample.AccAddress(),
 				NewAddress: "invalid address",
 			},
@@ -33,14 +34,14 @@ func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 				"invalid new address (invalid_address): decoding bech32 failed: invalid index of 1"),
 		}, {
 			name: "equal addresses",
-			msg: MsgUpdateCoordinatorAddress{
+			msg: profile.MsgUpdateCoordinatorAddress{
 				Address:    addr,
 				NewAddress: addr,
 			},
 			err: sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "address are equal of new address (%s)", addr),
 		}, {
 			name: "valid addresses",
-			msg: MsgUpdateCoordinatorAddress{
+			msg: profile.MsgUpdateCoordinatorAddress{
 				Address:    sample.AccAddress(),
 				NewAddress: sample.AccAddress(),
 			},
