@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/client/cli"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -28,10 +29,11 @@ func networkWithGenesisValidatorObjects(t *testing.T, n int) (*network.Network, 
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.GenesisValidatorList = append(state.GenesisValidatorList, &types.GenesisValidator{
-			ChainID: strconv.Itoa(i),
-			Address: strconv.Itoa(i),
-		})
+
+		state.GenesisValidatorList = append(
+			state.GenesisValidatorList,
+			sample.GenesisValidator(strconv.Itoa(i), strconv.Itoa(i)),
+		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)

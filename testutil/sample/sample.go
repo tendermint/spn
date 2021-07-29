@@ -31,6 +31,11 @@ func setAddressPrefixes() {
 	}
 }
 
+// Bytes returns a random array of bytes
+func Bytes(n int) []byte {
+	return []byte(String(n))
+}
+
 // SampleString returns a random string of length n
 func String(n int) string {
 	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")

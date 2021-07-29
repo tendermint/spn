@@ -6,7 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
-
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -16,9 +16,7 @@ var _ = strconv.IntSize
 func createNGenesisValidator(keeper *Keeper, ctx sdk.Context, n int) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, n)
 	for i := range items {
-		items[i].ChainID = strconv.Itoa(i)
-		items[i].Address = strconv.Itoa(i)
-
+		items[i] = *sample.GenesisValidator(strconv.Itoa(i), strconv.Itoa(i))
 		keeper.SetGenesisValidator(ctx, items[i])
 	}
 	return items
