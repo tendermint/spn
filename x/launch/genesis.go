@@ -26,6 +26,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetChain(ctx, *elem)
 	}
 
+	// Set all the chainNameCount
+	for _, elem := range genState.ChainNameCountList {
+		k.SetChainNameCount(ctx, *elem)
+	}
+
 	// Set all the genesisAccount
 	for _, elem := range genState.GenesisAccountList {
 		k.SetGenesisAccount(ctx, *elem)
@@ -45,12 +50,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 
 	// this line is used by starport scaffolding # genesis/module/export
 
-	// Get all request
-	requestList := k.GetAllRequest(ctx)
-	for _, elem := range requestList {
-		elem := elem
-		genesis.RequestList = append(genesis.RequestList, &elem)
-	}
 	// Get all chain
 	for _, elem := range k.GetAllChain(ctx) {
 		elem := elem
@@ -62,6 +61,13 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 			ChainID: elem.ChainID,
 			Count:   count,
 		})
+	}
+
+	// Get all chainNameCount
+	chainNameCountList := k.GetAllChainNameCount(ctx)
+	for _, elem := range chainNameCountList {
+		elem := elem
+		genesis.ChainNameCountList = append(genesis.ChainNameCountList, &elem)
 	}
 
 	// Get all genesisAccount
@@ -76,6 +82,13 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	for _, elem := range vestedAccountList {
 		elem := elem
 		genesis.VestedAccountList = append(genesis.VestedAccountList, &elem)
+	}
+
+	// Get all request
+	requestList := k.GetAllRequest(ctx)
+	for _, elem := range requestList {
+		elem := elem
+		genesis.RequestList = append(genesis.RequestList, &elem)
 	}
 
 	// this line is used by starport scaffolding # ibc/genesis/export

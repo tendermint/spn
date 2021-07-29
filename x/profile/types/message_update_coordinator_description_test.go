@@ -1,4 +1,4 @@
-package types
+package types_test
 
 import (
 	"testing"
@@ -6,24 +6,25 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgUpdateCoordinatorDescription_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgUpdateCoordinatorDescription
+		msg  profile.MsgUpdateCoordinatorDescription
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgUpdateCoordinatorDescription{
+			msg: profile.MsgUpdateCoordinatorDescription{
 				Address: "invalid address",
 			},
 			err: sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress,
 				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
 		}, {
 			name: "valid address",
-			msg: MsgUpdateCoordinatorDescription{
+			msg: profile.MsgUpdateCoordinatorDescription{
 				Address: sample.AccAddress(),
 			},
 		},

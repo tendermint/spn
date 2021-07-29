@@ -3,8 +3,12 @@ package sample
 import (
 	"math/rand"
 
+	"github.com/cosmos/cosmos-sdk/codec"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	launch "github.com/tendermint/spn/x/launch/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 const accountAddressPrefix = "spn"
@@ -31,7 +35,17 @@ func setAddressPrefixes() {
 	}
 }
 
-// SampleString returns a random string of length n
+// Codec returns a codec with preregistered interfaces
+func Codec() codec.Marshaler {
+	interfaceRegistry := codectypes.NewInterfaceRegistry()
+
+	launch.RegisterInterfaces(interfaceRegistry)
+	profile.RegisterInterfaces(interfaceRegistry)
+
+	return codec.NewProtoCodec(interfaceRegistry)
+}
+
+// String returns a random string of length n
 func String(n int) string {
 	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
@@ -42,7 +56,7 @@ func String(n int) string {
 	return string(randomString)
 }
 
-// SampleAlphaString returns a random string with lowercase alpha char of length n
+// AlphaString returns a random string with lowercase alpha char of length n
 func AlphaString(n int) string {
 	var letter = []rune("abcdefghijklmnopqrstuvwxyz")
 
@@ -53,7 +67,7 @@ func AlphaString(n int) string {
 	return string(randomString)
 }
 
-// SampleAccAddress returns a sample account address
+// AccAddress returns a sample account address
 func AccAddress() string {
 	setAddressPrefixes()
 
@@ -62,12 +76,12 @@ func AccAddress() string {
 	return sdk.AccAddress(addr).String()
 }
 
-// SampleCoin returns a sample coin structure
+// Coin returns a sample coin structure
 func Coin() sdk.Coin {
 	return sdk.NewCoin(AlphaString(5), sdk.NewInt(int64(rand.Intn(10000)+1)))
 }
 
-// SampleCoin returns a sample coins structure
+// Coins returns a sample coins structure
 func Coins() sdk.Coins {
 	return sdk.NewCoins(Coin(), Coin(), Coin())
 }

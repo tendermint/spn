@@ -1,4 +1,4 @@
-package types
+package types_test
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestGenesisStateValidateValidator(t *testing.T) {
@@ -14,16 +15,16 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 	)
 	tests := []struct {
 		name     string
-		genState *GenesisState
+		genState *profile.GenesisState
 		err      error
 	}{
 		{
 			name:     "default is valid",
-			genState: DefaultGenesis(),
+			genState: profile.DefaultGenesis(),
 		}, {
 			name: "valid custom genesis",
-			genState: &GenesisState{
-				ValidatorList: []*Validator{
+			genState: &profile.GenesisState{
+				ValidatorList: []*profile.Validator{
 					{Address: sample.AccAddress()},
 					{Address: sample.AccAddress()},
 					{Address: sample.AccAddress()},
@@ -31,8 +32,8 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			},
 		}, {
 			name: "duplicated validator by address",
-			genState: &GenesisState{
-				ValidatorList: []*Validator{
+			genState: &profile.GenesisState{
+				ValidatorList: []*profile.Validator{
 					{Address: addr},
 					{Address: addr},
 				},
@@ -43,7 +44,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
-				err := tt.genState.validateValidators()
+				err := tt.genState.ValidateValidators()
 				if tt.err != nil {
 					require.Error(t, err)
 					require.Equal(t, tt.err.Error(), err.Error())
@@ -64,22 +65,22 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 	)
 	tests := []struct {
 		name     string
-		genState *GenesisState
+		genState *profile.GenesisState
 		err      error
 	}{
 		{
 			name:     "default is valid",
-			genState: DefaultGenesis(),
+			genState: profile.DefaultGenesis(),
 		}, {
 			name: "valid custom genesis",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 					{CoordinatorId: 2, Address: addr3},
 					{CoordinatorId: 3, Address: addr4},
 				},
-				CoordinatorList: []*Coordinator{
+				CoordinatorList: []*profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 					{CoordinatorId: 2, Address: addr3},
@@ -89,8 +90,8 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 			},
 		}, {
 			name: "duplicated coordinator",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr1},
 				},
@@ -99,12 +100,12 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 			err: fmt.Errorf("duplicated index for coordinatorByAddress: %s", addr1),
 		}, {
 			name: "duplicated coordinator id",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 0, Address: addr2},
 				},
-				CoordinatorList: []*Coordinator{
+				CoordinatorList: []*profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 0, Address: addr2},
 				},
@@ -113,11 +114,11 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 			err: fmt.Errorf("duplicated id for coordinator: 0"),
 		}, {
 			name: "profile not associated with chain",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 				},
-				CoordinatorList: []*Coordinator{
+				CoordinatorList: []*profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 				},
@@ -126,12 +127,12 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 			err: fmt.Errorf("coordinator address not found for CoordinatorByAddress: %s", addr2),
 		}, {
 			name: "profile not associated with chain",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 				},
-				CoordinatorList: []*Coordinator{
+				CoordinatorList: []*profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 				},
 				CoordinatorCount: 2,
@@ -139,12 +140,12 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 			err: fmt.Errorf("coordinator address not found for coordinatorID: 1"),
 		}, {
 			name: "invalid coordinator id",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 133, Address: addr2},
 				},
-				CoordinatorList: []*Coordinator{
+				CoordinatorList: []*profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 133, Address: addr2},
 				},
@@ -156,7 +157,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
-				err := tt.genState.validateCoordinators()
+				err := tt.genState.ValidateCoordinators()
 				if tt.err != nil {
 					require.Error(t, err)
 					require.Equal(t, tt.err.Error(), err.Error())

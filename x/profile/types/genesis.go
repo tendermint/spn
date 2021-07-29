@@ -26,14 +26,14 @@ func (gs GenesisState) Validate() error {
 
 	// this line is used by starport scaffolding # genesis/types/validate
 
-	if err := gs.validateValidators(); err != nil {
+	if err := gs.ValidateValidators(); err != nil {
 		return err
 	}
 
-	return gs.validateCoordinators()
+	return gs.ValidateCoordinators()
 }
 
-func (gs GenesisState) validateValidators() error {
+func (gs GenesisState) ValidateValidators() error {
 	// Check for duplicated index in validator
 	validatorIndexMap := make(map[string]struct{})
 	for _, elem := range gs.ValidatorList {
@@ -46,7 +46,7 @@ func (gs GenesisState) validateValidators() error {
 	return nil
 }
 
-func (gs GenesisState) validateCoordinators() error {
+func (gs GenesisState) ValidateCoordinators() error {
 	// Check for duplicated index in coordinatorByAddress
 	coordinatorByAddressIndexMap := make(map[string]uint64)
 	for _, elem := range gs.CoordinatorByAddressList {

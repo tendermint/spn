@@ -26,7 +26,7 @@ func createNRequest(keeper *Keeper, ctx sdk.Context, n int) []types.Request {
 }
 
 func TestRequestGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetRequest(ctx,
@@ -42,7 +42,7 @@ func TestRequestGet(t *testing.T) {
 	}
 }
 func TestRequestRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveRequest(ctx,
@@ -58,7 +58,7 @@ func TestRequestRemove(t *testing.T) {
 }
 
 func TestRequestGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNRequest(keeper, ctx, 10)
 
 	// Cached value is cleared when the any type is encoded into the store
@@ -70,7 +70,7 @@ func TestRequestGetAll(t *testing.T) {
 }
 
 func TestRequestCount(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNRequest(keeper, ctx, 10)
 	count := uint64(len(items))
 	assert.Equal(t, count, keeper.GetRequestCount(ctx, "foo"))
