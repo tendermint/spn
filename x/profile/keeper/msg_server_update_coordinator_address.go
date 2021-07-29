@@ -34,7 +34,6 @@ func (k msgServer) UpdateCoordinatorAddress(
 		return &types.MsgUpdateCoordinatorAddressResponse{},
 			spnerrors.Critical("a coordinator address is associated to a non-existent coordinator ID")
 	}
-
 	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
 	coord.Address = msg.NewAddress
 
