@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -42,5 +43,15 @@ func (msg *MsgEditChain) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	// TODO: Check chain ID
+
+	// A new source must be accompanied with a new hash
+	if msg.SourceURL != "" && msg.SourceHash == "" {
+		return errors.New("SourceURL must be associated to a SourceHash")
+	}
+
+	// TODO: Check initial genesis
+
 	return nil
 }
