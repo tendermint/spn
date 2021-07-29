@@ -17,11 +17,12 @@ jobs:
         with:
           args: g openapi 
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
-        with:
-          title: "feat(generate): add generated code"
-          commit-message: "feat(generate): add generated code"
-          body: ""
-          branch: feat/generated
-          draft: true
+      # TODO: fix file perm issue
+      #- name: Create Pull Request
+      #  uses: peter-evans/create-pull-request@v3
+      #  with:
+      #    title: "feat(generate): add generated code"
+      #    commit-message: "feat(generate): add generated code"
+      #    body: ""
+      #    branch: feat/generated
+      #    draft: true
