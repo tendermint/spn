@@ -164,4 +164,6 @@ func validateAccounts(gs GenesisState, chainIDMap map[string]struct{}) error {
 			)
 		}
 	}
+
+	return nil
 }

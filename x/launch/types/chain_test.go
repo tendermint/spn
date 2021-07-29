@@ -48,6 +48,68 @@ func TestChainIDFromChainName(t *testing.T) {
 	require.Equal(t, "foo-1", types.ChainIDFromChainName("foo", 1))
 }
 
+func TestParseChainID(t *testing.T) {
+	for _, tc := range []struct {
+		desc  string
+		chainID string
+		expectedName string
+		expectedNumber uint64
+		valid bool
+	}{
+		{
+			desc:  "Valid chainID",
+			chainID:  "foo-42",
+			expectedName: "foo",
+			expectedNumber: 42,
+			valid: true,
+		},
+		{
+			desc:  "No separator",
+			chainID:  "foo42",
+			valid: false,
+		},
+		{
+			desc:  "Too many separators",
+			chainID:  "foo-42-32",
+			valid: false,
+		},
+		{
+			desc:  "No number",
+			chainID:  "foo-",
+			valid: false,
+		},
+		{
+			desc:  "Invalid number",
+			chainID:  "foo-fortytwo",
+			valid: false,
+		},
+		{
+			desc:  "No chain name",
+			chainID:  "-42",
+			valid: false,
+		},
+		{
+			desc:  "Invalid chain name",
+			chainID:  "foo/bar-42",
+			valid: false,
+		},
+	} {
+		tc := tc
+		t.Run(tc.desc, func(t *testing.T) {
+			if tc.valid {
+				name, number, err := types.ParseChainID(tc.chainID)
+				require.NoError(t, err)
+				require.EqualValues(t, tc.expectedName, name)
+				require.EqualValues(t, tc.expectedNumber, number)
+			} else {
+				_, _, err := types.ParseChainID(tc.chainID)
+				require.Error(t, err)
+			}
+		})
+	}
+}
+
+
 func TestCheckChainName(t *testing.T) {
 	for _, tc := range []struct {
 		desc  string
