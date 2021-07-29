@@ -10,16 +10,6 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func validatorDescription(desc string) *types.ValidatorDescription {
-	return &types.ValidatorDescription{
-		Identity:        desc,
-		Moniker:         "moniker " + desc,
-		Website:         "https://cosmos.network/" + desc,
-		SecurityContact: "foo",
-		Details:         desc + " details",
-	}
-}
-
 func TestMsgUpdateValidatorDescription(t *testing.T) {
 	var (
 		addr1       = sample.AccAddress()
@@ -36,19 +26,19 @@ func TestMsgUpdateValidatorDescription(t *testing.T) {
 			name: "update and create a new validator",
 			msg: types.MsgUpdateValidatorDescription{
 				Address:     addr1,
-				Description: validatorDescription(addr1),
+				Description: sample.ValidatorDescription(addr1),
 			},
 		}, {
 			name: "update a existing validator",
 			msg: types.MsgUpdateValidatorDescription{
 				Address:     addr1,
-				Description: validatorDescription(addr2),
+				Description: sample.ValidatorDescription(addr2),
 			},
 		}, {
 			name: "update and create anotherw validator",
 			msg: types.MsgUpdateValidatorDescription{
 				Address:     addr2,
-				Description: validatorDescription(addr2),
+				Description: sample.ValidatorDescription(addr2),
 			},
 		},
 	}
