@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -72,12 +73,15 @@ func TestMsgCreateChain(t *testing.T) {
 			// Compare initial genesis
 			if tc.msg.GenesisURL == "" {
 				// Empty structure are nullified for Any type when encoded
-				expectedDefault := types.AnyFromDefaultInitialGenesis()
+				expectedDefault, _ := codec.NewAnyWithValue(&types.DefaultInitialGenesis{})
 				expectedDefault.Value = nil
 				expectedDefault.ClearCachedValue()
 				require.Equal(t, expectedDefault, chain.InitialGenesis)
 			} else {
-				expectedGenesisURL := types.AnyFromGenesisURL(tc.msg.GenesisURL, tc.msg.GenesisHash)
+				expectedGenesisURL, _ := codec.NewAnyWithValue(&types.GenesisURL{
+					Url: tc.msg.GenesisURL,
+					Hash: tc.msg.GenesisHash,
+				})
 				expectedGenesisURL.ClearCachedValue()
 				require.Equal(
 					t,

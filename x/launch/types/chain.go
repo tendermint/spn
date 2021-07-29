@@ -24,27 +24,6 @@ func (c Chain) GetGenesisURL(unpacker codec.AnyUnpacker) (*GenesisURL, error) {
 	return genesisURL, err
 }
 
-// AnyFromDefaultInitialGenesis the proto any type for a DefaultInitialGenesis
-func AnyFromDefaultInitialGenesis() *codec.Any {
-	defaultGenesis, err := codec.NewAnyWithValue(&DefaultInitialGenesis{})
-	if err != nil {
-		panic("DefaultInitialGenesis can't be used as initial genesis")
-	}
-	return defaultGenesis
-}
-
-// AnyFromGenesisURL the proto any type for a GenesisURL
-func AnyFromGenesisURL(url, hash string) *codec.Any {
-	genesisURL, err := codec.NewAnyWithValue(&GenesisURL{
-		Url:  url,
-		Hash: hash,
-	})
-	if err != nil {
-		panic("GenesisURL can't be used as initial genesis")
-	}
-	return genesisURL
-}
-
 // ChainIDFromChainName returns the chain id from the chain name and the count
 func ChainIDFromChainName(chainName string, chainNameCount uint64) string {
 	return fmt.Sprintf("%v-%v", chainName, chainNameCount)
