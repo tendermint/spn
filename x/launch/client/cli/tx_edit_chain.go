@@ -15,7 +15,7 @@ var _ = strconv.Itoa(0)
 func CmdEditChain() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "edit-chain [chainID] [sourceURL] [sourceHash]",
-		Short: "Edit a chain&#39;s information",
+		Short: "Edit chain information",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			argsChainID := string(args[0])

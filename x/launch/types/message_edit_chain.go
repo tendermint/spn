@@ -7,9 +7,9 @@ import (
 
 var _ sdk.Msg = &MsgEditChain{}
 
-func NewMsgEditChain(creator string, chainID string, sourceURL string, sourceHash string) *MsgEditChain {
+func NewMsgEditChain(coordinator, chainID, sourceURL, sourceHash string) *MsgEditChain {
 	return &MsgEditChain{
-		Creator:    creator,
+		Coordinator:    coordinator,
 		ChainID:    chainID,
 		SourceURL:  sourceURL,
 		SourceHash: sourceHash,
@@ -25,11 +25,11 @@ func (msg *MsgEditChain) Type() string {
 }
 
 func (msg *MsgEditChain) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	coordinator, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{creator}
+	return []sdk.AccAddress{coordinator}
 }
 
 func (msg *MsgEditChain) GetSignBytes() []byte {
@@ -38,7 +38,7 @@ func (msg *MsgEditChain) GetSignBytes() []byte {
 }
 
 func (msg *MsgEditChain) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
