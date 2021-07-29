@@ -13,6 +13,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
+		ValidatorList:            []*Validator{},
 		CoordinatorByAddressList: []*CoordinatorByAddress{},
 		CoordinatorList:          []*Coordinator{},
 	}
@@ -25,6 +26,27 @@ func (gs GenesisState) Validate() error {
 
 	// this line is used by starport scaffolding # genesis/types/validate
 
+	if err := gs.validateValidators(); err != nil {
+		return err
+	}
+
+	return gs.validateCoordinators()
+}
+
+func (gs GenesisState) validateValidators() error {
+	// Check for duplicated index in validator
+	validatorIndexMap := make(map[string]struct{})
+	for _, elem := range gs.ValidatorList {
+		index := string(ValidatorKey(elem.Address))
+		if _, ok := validatorIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for validator: %s", elem.Address)
+		}
+		validatorIndexMap[index] = struct{}{}
+	}
+	return nil
+}
+
+func (gs GenesisState) validateCoordinators() error {
 	// Check for duplicated index in coordinatorByAddress
 	coordinatorByAddressIndexMap := make(map[string]uint64)
 	for _, elem := range gs.CoordinatorByAddressList {
@@ -52,8 +74,11 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("coordinator address not found for CoordinatorByAddress: %s", elem.Address)
 		}
 		coordinatorIDMap[elem.CoordinatorId] = true
+
+		// Remove to check if all coordinator by address exist
 		delete(coordinatorByAddressIndexMap, index)
 	}
+	// Check if all coordinator by address exist
 	for _, coordinatorID := range coordinatorByAddressIndexMap {
 		return fmt.Errorf("coordinator address not found for coordinatorID: %d", coordinatorID)
 	}
