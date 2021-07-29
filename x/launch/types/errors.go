@@ -8,7 +8,7 @@ import (
 
 // x/launch module sentinel errors
 var (
-	ErrSample          = sdkerrors.Register(ModuleName, 1100, "sample error")
-	ErrChainIdNotFound = sdkerrors.Register(ModuleName, 1, "chain id not found")
+	ErrInvalidChainName = sdkerrors.Register(ModuleName, 1, "the chain name is invalid")
+	ErrChainIdNotFound  = sdkerrors.Register(ModuleName, 2, "chain id not found")
 	// this line is used by starport scaffolding # ibc/errors
 )
