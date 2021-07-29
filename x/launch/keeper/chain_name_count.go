@@ -19,7 +19,6 @@ func (k Keeper) SetChainNameCount(ctx sdk.Context, chainNameCount types.ChainNam
 func (k Keeper) GetChainNameCount(
 	ctx sdk.Context,
 	chainName string,
-
 ) (val types.ChainNameCount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainNameCountKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetChainNameCount(
 func (k Keeper) RemoveChainNameCount(
 	ctx sdk.Context,
 	chainName string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainNameCountKeyPrefix))
 	store.Delete(types.ChainNameCountKey(

@@ -10,9 +10,7 @@ const (
 )
 
 // ChainNameCountKey returns the store key to retrieve a ChainNameCount from the index fields
-func ChainNameCountKey(
-	chainName string,
-) []byte {
+func ChainNameCountKey(chainName string) []byte {
 	var key []byte
 
 	chainNameBytes := []byte(chainName)

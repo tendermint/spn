@@ -1,10 +1,11 @@
 package types_test
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
-	"testing"
 )
 
 func TestChain_GetDefaultInitialGenesis(t *testing.T) {
