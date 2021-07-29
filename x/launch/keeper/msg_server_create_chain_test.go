@@ -1,12 +1,13 @@
 package keeper
 
 import (
+	"testing"
+
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
-	"testing"
 )
 
 func TestMsgCreateChain(t *testing.T) {
@@ -79,7 +80,7 @@ func TestMsgCreateChain(t *testing.T) {
 				require.Equal(t, expectedDefault, chain.InitialGenesis)
 			} else {
 				expectedGenesisURL, _ := codec.NewAnyWithValue(&types.GenesisURL{
-					Url: tc.msg.GenesisURL,
+					Url:  tc.msg.GenesisURL,
 					Hash: tc.msg.GenesisHash,
 				})
 				expectedGenesisURL.ClearCachedValue()
