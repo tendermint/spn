@@ -15,7 +15,7 @@ func TestMsgDeleteCoordinator(t *testing.T) {
 	var (
 		addr        = sample.AccAddress()
 		msgCoord    = msgCreateCoordinator()
-		ctx, k, srv = setupMsgServerAndKeeper(t)
+		ctx, k, srv = setupMsgServer(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 	)
 	if _, err := srv.CreateCoordinator(wCtx, &msgCoord); err != nil {

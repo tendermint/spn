@@ -8,16 +8,10 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-const (
-	flagIdentity = "identity"
-	flagWebsite  = "website"
-	flagDetails  = "details"
-)
-
-func CmdCreateCoordinator() *cobra.Command {
+func CmdUpdateCoordinatorDescription() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-coordinator",
-		Short: "Create a new coordinator profile",
+		Use:   "update-coordinator-description",
+		Short: "Update a coordinator description",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			identity, err := cmd.Flags().GetString(flagIdentity)
@@ -40,7 +34,7 @@ func CmdCreateCoordinator() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgCreateCoordinator(
+			msg := types.NewMsgUpdateCoordinatorDescription(
 				clientCtx.GetFromAddress().String(),
 				identity,
 				website,
