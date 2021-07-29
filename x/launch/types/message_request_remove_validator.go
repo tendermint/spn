@@ -29,11 +29,11 @@ func (msg *MsgRequestRemoveValidator) Type() string {
 }
 
 func (msg *MsgRequestRemoveValidator) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.ValidatorAddress)
+	validator, err := sdk.AccAddressFromBech32(msg.ValidatorAddress)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{creator}
+	return []sdk.AccAddress{validator}
 }
 
 func (msg *MsgRequestRemoveValidator) GetSignBytes() []byte {
@@ -46,9 +46,13 @@ func (msg *MsgRequestRemoveValidator) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
-	// TODO fix me after merge PR#195
-	//if err := CheckChainName(msg.ChainName); err != nil {
-	//	return sdkerrors.Wrapf(ErrInvalidChainName, err.Error())
-	//}
+
+	chainName, _, err := ParseChainID(msg.ChainID)
+	if err != nil {
+		return sdkerrors.Wrapf(ErrInvalidChainID, err.Error())
+	}
+	if err := CheckChainName(chainName); err != nil {
+		return sdkerrors.Wrapf(ErrInvalidChainName, err.Error())
+	}
 	return nil
 }
