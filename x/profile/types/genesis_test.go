@@ -1,99 +1,153 @@
-package types
+package types_test
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestGenesisStateValidate(t *testing.T) {
+func TestGenesisStateValidateValidator(t *testing.T) {
+	var (
+		addr = sample.AccAddress()
+	)
 	tests := []struct {
 		name     string
-		genState *GenesisState
+		genState *profile.GenesisState
 		err      error
 	}{
 		{
 			name:     "default is valid",
-			genState: DefaultGenesis(),
+			genState: profile.DefaultGenesis(),
 		}, {
 			name: "valid custom genesis",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
-					{CoordinatorId: 1, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
-					{CoordinatorId: 2, Address: "spn1d6pd5nk08mu789q4msfpynsuha7yf4wcsvvspr"},
-					{CoordinatorId: 3, Address: "spn1ktzsme3g0ag0236ngvkw62vy9tqrr3xysnhp3g"},
+			genState: &profile.GenesisState{
+				ValidatorList: []*profile.Validator{
+					{Address: sample.AccAddress()},
+					{Address: sample.AccAddress()},
+					{Address: sample.AccAddress()},
 				},
-				CoordinatorList: []*Coordinator{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
-					{CoordinatorId: 1, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
-					{CoordinatorId: 2, Address: "spn1d6pd5nk08mu789q4msfpynsuha7yf4wcsvvspr"},
-					{CoordinatorId: 3, Address: "spn1ktzsme3g0ag0236ngvkw62vy9tqrr3xysnhp3g"},
+			},
+		}, {
+			name: "duplicated validator by address",
+			genState: &profile.GenesisState{
+				ValidatorList: []*profile.Validator{
+					{Address: addr},
+					{Address: addr},
+				},
+			},
+			err: fmt.Errorf("duplicated index for validator: %s", addr),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Run(tt.name, func(t *testing.T) {
+				err := tt.genState.ValidateValidators()
+				if tt.err != nil {
+					require.Error(t, err)
+					require.Equal(t, tt.err.Error(), err.Error())
+					return
+				}
+				require.NoError(t, err)
+			})
+		})
+	}
+}
+
+func TestGenesisStateValidateCoordinator(t *testing.T) {
+	var (
+		addr1 = sample.AccAddress()
+		addr2 = sample.AccAddress()
+		addr3 = sample.AccAddress()
+		addr4 = sample.AccAddress()
+	)
+	tests := []struct {
+		name     string
+		genState *profile.GenesisState
+		err      error
+	}{
+		{
+			name:     "default is valid",
+			genState: profile.DefaultGenesis(),
+		}, {
+			name: "valid custom genesis",
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr2},
+					{CoordinatorId: 2, Address: addr3},
+					{CoordinatorId: 3, Address: addr4},
+				},
+				CoordinatorList: []*profile.Coordinator{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr2},
+					{CoordinatorId: 2, Address: addr3},
+					{CoordinatorId: 3, Address: addr4},
 				},
 				CoordinatorCount: 4,
 			},
 		}, {
 			name: "duplicated coordinator",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
-					{CoordinatorId: 1, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr1},
 				},
 				CoordinatorCount: 2,
 			},
-			err: fmt.Errorf("duplicated index for coordinatorByAddress: spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"),
+			err: fmt.Errorf("duplicated index for coordinatorByAddress: %s", addr1),
 		}, {
 			name: "duplicated coordinator id",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
-					{CoordinatorId: 0, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 0, Address: addr2},
 				},
-				CoordinatorList: []*Coordinator{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
-					{CoordinatorId: 0, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
+				CoordinatorList: []*profile.Coordinator{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 0, Address: addr2},
 				},
 				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("duplicated id for coordinator: 0"),
 		}, {
 			name: "profile not associated with chain",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+					{CoordinatorId: 0, Address: addr1},
 				},
-				CoordinatorList: []*Coordinator{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
-					{CoordinatorId: 1, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
+				CoordinatorList: []*profile.Coordinator{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr2},
 				},
 				CoordinatorCount: 2,
 			},
-			err: fmt.Errorf("coordinator address not found for CoordinatorByAddress: spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"),
+			err: fmt.Errorf("coordinator address not found for CoordinatorByAddress: %s", addr2),
 		}, {
 			name: "profile not associated with chain",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
-					{CoordinatorId: 1, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 1, Address: addr2},
 				},
-				CoordinatorList: []*Coordinator{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
+				CoordinatorList: []*profile.Coordinator{
+					{CoordinatorId: 0, Address: addr1},
 				},
 				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("coordinator address not found for coordinatorID: 1"),
 		}, {
 			name: "invalid coordinator id",
-			genState: &GenesisState{
-				CoordinatorByAddressList: []*CoordinatorByAddress{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
-					{CoordinatorId: 133, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
+			genState: &profile.GenesisState{
+				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 133, Address: addr2},
 				},
-				CoordinatorList: []*Coordinator{
-					{CoordinatorId: 0, Address: "spn1c7gh3kejxm3pzl8fwe65665xncs24x5rl7a8sm"},
-					{CoordinatorId: 133, Address: "spn12330zcy9yez37lzrkm6d7fedcu7hc279sgkh3c"},
+				CoordinatorList: []*profile.Coordinator{
+					{CoordinatorId: 0, Address: addr1},
+					{CoordinatorId: 133, Address: addr2},
 				},
 				CoordinatorCount: 2,
 			},
@@ -103,10 +157,10 @@ func TestGenesisStateValidate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Run(tt.name, func(t *testing.T) {
-				err := tt.genState.Validate()
+				err := tt.genState.ValidateCoordinators()
 				if tt.err != nil {
 					require.Error(t, err)
-					assert.Equal(t, tt.err.Error(), err.Error())
+					require.Equal(t, tt.err.Error(), err.Error())
 					return
 				}
 				require.NoError(t, err)

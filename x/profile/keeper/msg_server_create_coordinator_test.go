@@ -10,22 +10,10 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func msgCreateCoordinator() types.MsgCreateCoordinator {
-	addr := sample.AccAddress()
-	return types.MsgCreateCoordinator{
-		Address: addr,
-		Description: &types.CoordinatorDescription{
-			Identity: addr,
-			Website:  "https://cosmos.network/" + addr,
-			Details:  addr + " details",
-		},
-	}
-}
-
 func TestMsgCreateCoordinator(t *testing.T) {
 	var (
-		msg1        = msgCreateCoordinator()
-		msg2        = msgCreateCoordinator()
+		msg1        = sample.MsgCreateCoordinator(sample.AccAddress())
+		msg2        = sample.MsgCreateCoordinator(sample.AccAddress())
 		ctx, k, srv = setupMsgServer(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 	)

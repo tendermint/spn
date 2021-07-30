@@ -6,6 +6,11 @@ import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
+message ChainNameCount {
+  string chainName = 1;
+  uint64 count = 2;
+}
+
 message Chain {
   string chainID = 1;
   uint64 coordinatorID = 2;

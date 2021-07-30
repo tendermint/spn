@@ -19,7 +19,6 @@ func (k Keeper) SetCoordinatorByAddress(ctx sdk.Context, coordinatorByAddress ty
 func (k Keeper) GetCoordinatorByAddress(
 	ctx sdk.Context,
 	address string,
-
 ) (val types.CoordinatorByAddress, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorByAddressKeyPrefix))
 
@@ -38,7 +37,6 @@ func (k Keeper) GetCoordinatorByAddress(
 func (k Keeper) RemoveCoordinatorByAddress(
 	ctx sdk.Context,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorByAddressKeyPrefix))
 	store.Delete(types.CoordinatorByAddressKey(

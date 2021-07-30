@@ -21,4 +21,3 @@ message CoordinatorByAddress {
   string address = 1;
   uint64 coordinatorId = 2;
 }
-

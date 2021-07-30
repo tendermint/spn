@@ -359,7 +359,6 @@ func New(
 		appCodec,
 		keys[launchmoduletypes.StoreKey],
 		keys[launchmoduletypes.MemStoreKey],
-
 		app.ProfileKeeper,
 	)
 	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
