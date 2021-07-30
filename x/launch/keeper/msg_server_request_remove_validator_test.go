@@ -3,12 +3,27 @@ package keeper
 import (
 	"testing"
 
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
+
+func TestContentRemoveValidatorCodec(t *testing.T) {
+	var err error
+	cdc := sample.Codec()
+	request := sample.Request("foo")
+	content := &types.ContentRemoveValidator{
+		ValAddress: sample.AccAddress(),
+	}
+	request.Content, err = codec.NewAnyWithValue(content)
+	require.NoError(t, err)
+	result, err := request.UnpackRequestRemoveValidator(cdc)
+	require.NoError(t, err)
+	require.EqualValues(t, content, result)
+}
 
 func TestMsgRequestRemoveValidator(t *testing.T) {
 	var (

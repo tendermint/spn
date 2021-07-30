@@ -1,7 +1,6 @@
 package types
 
 import (
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -13,17 +12,6 @@ func NewMsgRequestRemoveValidator(chainID string, validatorAddress string) *MsgR
 		ChainID:          chainID,
 		ValidatorAddress: validatorAddress,
 	}
-}
-
-// AnyFromRequest the proto any type for a Request
-func AnyFromRequest(creator, chainID string) (*codec.Any, error) {
-	return codec.NewAnyWithValue(&Request{
-		ChainID:   "",
-		RequestID: 0,
-		Creator:   "",
-		CreatedAt: 0,
-		Content:   nil,
-	})
 }
 
 func (msg *MsgRequestRemoveValidator) Route() string {
@@ -53,12 +41,9 @@ func (msg *MsgRequestRemoveValidator) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 
-	chainName, _, err := ParseChainID(msg.ChainID)
+	_, _, err = ParseChainID(msg.ChainID)
 	if err != nil {
-		return sdkerrors.Wrapf(ErrInvalidChainID, err.Error())
-	}
-	if err := CheckChainName(chainName); err != nil {
-		return sdkerrors.Wrapf(ErrInvalidChainName, err.Error())
+		return sdkerrors.Wrapf(ErrInvalidChainID, msg.ChainID)
 	}
 	return nil
 }
