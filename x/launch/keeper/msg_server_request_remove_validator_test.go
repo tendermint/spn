@@ -12,12 +12,12 @@ import (
 
 func TestMsgRequestRemoveValidator(t *testing.T) {
 	var (
-		addr1                   = sample.AccAddress()
-		addr2                   = sample.AccAddress()
-		addr3                   = sample.AccAddress()
-		k, _, srv, _, sdkCtx, _ = setupMsgServer(t)
-		ctx                     = sdk.WrapSDKContext(sdkCtx)
-		chains                  = createNChain(k, sdkCtx, 4)
+		addr1                     = sample.AccAddress()
+		addr2                     = sample.AccAddress()
+		addr3                     = sample.AccAddress()
+		k, _, srv, _, sdkCtx, cdc = setupMsgServer(t)
+		ctx                       = sdk.WrapSDKContext(sdkCtx)
+		chains                    = createNChain(k, sdkCtx, 4)
 	)
 	tests := []struct {
 		name string
@@ -79,7 +79,11 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 
 			request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, got.RequestID)
 			require.True(t, found, "request not found")
-			require.EqualValues(t, tt.want, request.RequestID)
+			require.Equal(t, tt.want, request.RequestID)
+
+			content, err := request.UnpackRequestRemoveValidator(cdc)
+			require.NoError(t, err)
+			require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
 		})
 	}
 }

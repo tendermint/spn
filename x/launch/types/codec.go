@@ -15,10 +15,11 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgRequestRemoveValidator{}, "launch/RequestRemoveValidator", nil)
 
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
-	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
+	cdc.RegisterConcrete(&GenesisAccount{}, "launch/GenesisAccount", nil)
+	cdc.RegisterConcrete(&ContentRemoveValidator{}, "launch/ContentRemoveValidator", nil)
 
 	cdc.RegisterInterface((*VestingOptions)(nil), nil)
-	cdc.RegisterConcrete(&DelayedVesting{}, "spn/launch/DelayedVesting", nil)
+	cdc.RegisterConcrete(&DelayedVesting{}, "launch/DelayedVesting", nil)
 
 	cdc.RegisterInterface((*InitialGenesis)(nil), nil)
 	cdc.RegisterConcrete(&DefaultInitialGenesis{}, "launch/DefaultInitialGenesis", nil)
@@ -35,7 +36,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterInterface(
 		"launch.RequestContent",
 		(*RequestContent)(nil),
-		&GenesisAccount{},
+		&ContentRemoveValidator{},
 	)
 
 	registry.RegisterInterface(
