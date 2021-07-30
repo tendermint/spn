@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -13,81 +12,140 @@ func TestMsgEditChain(t *testing.T) {
 	k, _, srv, profileSrv, sdkCtx, _ := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
+	coordAddress2 := sample.AccAddress()
+	coordNoExist := sample.AccAddress()
+	chainIDNoExist, _ := sample.ChainID(0)
 
-	// Create a coordinator
+	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	if err != nil {
 		t.Fatal(err)
 	}
-	coordID := res.CoordinatorId
+	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
+	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Create a chain
+	msgCreateChain := sample.MsgCreateChain(coordAddress, "foo", "")
+	res, err := srv.CreateChain(ctx, &msgCreateChain)
+	if err != nil {
+		t.Fatal(err)
+	}
+	chainID := res.ChainID
+
 
 	for _, tc := range []struct {
 		name          string
-		msg           types.MsgCreateChain
-		wantedChainID string
+		msg           types.MsgEditChain
 		valid         bool
 	}{
 		{
-			name:          "valid message",
-			msg:           sample.MsgCreateChain(coordAddress, "foo", ""),
-			wantedChainID: "foo-0",
+			name:          "edit source",
+			msg:           sample.MsgEditChain(coordAddress, chainID,
+				true,
+				false,
+				false,
+				),
 			valid:         true,
 		},
 		{
-			name:          "an existing chain name creates a unique chain ID",
-			msg:           sample.MsgCreateChain(coordAddress, "foo", ""),
-			wantedChainID: "foo-1",
+			name:          "edit initial genesis with default genesis",
+			msg:           sample.MsgEditChain(coordAddress, chainID,
+				false,
+				true,
+				false,
+				),
 			valid:         true,
 		},
 		{
-			name:          "valid message with genesis url",
-			msg:           sample.MsgCreateChain(coordAddress, "bar", "foo.com"),
-			wantedChainID: "bar-0",
+			name:          "edit initial genesis with genesis url",
+			msg:           sample.MsgEditChain(coordAddress, chainID,
+				false,
+				true,
+				true,
+			),
 			valid:         true,
 		},
 		{
-			name:          "coordinator doesn't exist for the chain",
-			msg:           sample.MsgCreateChain(sample.AccAddress(), "foo", ""),
-			wantedChainID: "",
+			name:          "edit source and initial genesis",
+			msg:           sample.MsgEditChain(coordAddress, chainID,
+				true,
+				true,
+				true,
+			),
+			valid:         true,
+		},
+		{
+			name:          "non existent chain id",
+			msg:           sample.MsgEditChain(coordAddress, chainIDNoExist,
+				true,
+				false,
+				false,
+			),
+			valid:         false,
+		},
+		{
+			name:          "non existent coordinator",
+			msg:           sample.MsgEditChain(coordNoExist, chainID,
+				true,
+				false,
+				false,
+			),
+			valid:         false,
+		},
+		{
+			name:          "invalid coordinator",
+			msg:           sample.MsgEditChain(coordAddress2, chainID,
+				true,
+				false,
+				false,
+			),
 			valid:         false,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			got, err := srv.CreateChain(ctx, &tc.msg)
+			// Fetch the previous state of the chain to perform checks
+			var previousChain types.Chain
+			var found bool
+			if tc.valid {
+				previousChain, found = k.GetChain(sdkCtx, tc.msg.ChainID)
+				require.True(t, found)
+			}
+
+			// Send the message
+			_, err := srv.EditChain(ctx, &tc.msg)
 			if !tc.valid {
 				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
-			require.EqualValues(t, tc.wantedChainID, got.ChainID)
 
-			// The chain must exist in the store
-			chain, found := k.GetChain(sdkCtx, got.ChainID)
+			// The chain must continue to exist in the store
+			chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
 			require.True(t, found)
-			require.EqualValues(t, coordID, chain.CoordinatorID)
-			require.EqualValues(t, got.ChainID, chain.ChainID)
-			require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
-			require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)
 
-			// Compare initial genesis
-			if tc.msg.GenesisURL == "" {
-				// Empty structure are nullified for Any type when encoded
-				expectedDefault, _ := codec.NewAnyWithValue(&types.DefaultInitialGenesis{})
-				expectedDefault.Value = nil
-				expectedDefault.ClearCachedValue()
-				require.Equal(t, expectedDefault, chain.InitialGenesis)
+			// Unchanged values
+			require.EqualValues(t, previousChain.CoordinatorID, chain.CoordinatorID)
+			require.EqualValues(t, previousChain.CreatedAt, chain.CreatedAt)
+			require.EqualValues(t, previousChain.LaunchTimestamp, chain.LaunchTimestamp)
+			require.EqualValues(t, previousChain.LaunchTriggered, chain.LaunchTriggered)
+
+			// Compare changed values
+			if tc.msg.SourceURL != "" {
+				require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
+				require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)
 			} else {
-				expectedGenesisURL, _ := codec.NewAnyWithValue(&types.GenesisURL{
-					Url:  tc.msg.GenesisURL,
-					Hash: tc.msg.GenesisHash,
-				})
-				expectedGenesisURL.ClearCachedValue()
-				require.Equal(
-					t,
-					expectedGenesisURL,
-					chain.InitialGenesis,
-				)
+				require.EqualValues(t, previousChain.SourceURL, chain.SourceURL)
+				require.EqualValues(t, previousChain.SourceHash, chain.SourceHash)
+			}
+
+			if tc.msg.InitialGenesis != nil {
+				require.EqualValues(t, tc.msg.InitialGenesis, chain.InitialGenesis)
+			} else {
+				require.EqualValues(t, previousChain.InitialGenesis, chain.InitialGenesis)
 			}
 		})
 	}

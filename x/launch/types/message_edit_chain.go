@@ -1,19 +1,20 @@
 package types
 
 import (
-	"errors"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 var _ sdk.Msg = &MsgEditChain{}
 
-func NewMsgEditChain(coordinator, chainID, sourceURL, sourceHash string) *MsgEditChain {
+func NewMsgEditChain(coordinator, chainID, sourceURL, sourceHash string, initialGenesis *codectypes.Any) *MsgEditChain {
 	return &MsgEditChain{
 		Coordinator: coordinator,
 		ChainID:     chainID,
 		SourceURL:   sourceURL,
 		SourceHash:  sourceHash,
+		InitialGenesis: initialGenesis,
 	}
 }
 
@@ -46,10 +47,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 
 	// TODO: Check chain ID
 
-	// A new source must be accompanied with a new hash
-	if msg.SourceURL != "" && msg.SourceHash == "" {
-		return errors.New("SourceURL must be associated to a SourceHash")
-	}
+	// TODO: Check no value to edit
 
 	// TODO: Check initial genesis
 
