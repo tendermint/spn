@@ -19,6 +19,7 @@ message MsgRequestRemoveValidator {
 }
 
 message MsgRequestRemoveValidatorResponse {
+  uint64 requestID = 1;
 }
 
 message MsgCreateChain {

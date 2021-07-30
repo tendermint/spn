@@ -3,12 +3,16 @@ package keeper
 import (
 	"context"
 
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func (k msgServer) RequestRemoveValidator(goCtx context.Context, msg *types.MsgRequestRemoveValidator) (*types.MsgRequestRemoveValidatorResponse, error) {
+func (k msgServer) RequestRemoveValidator(
+	goCtx context.Context,
+	msg *types.MsgRequestRemoveValidator,
+) (*types.MsgRequestRemoveValidatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	_, found := k.GetChain(ctx, msg.ChainID)
@@ -16,19 +20,21 @@ func (k msgServer) RequestRemoveValidator(goCtx context.Context, msg *types.MsgR
 		return nil, sdkerrors.Wrap(types.ErrChainIdNotFound, msg.ChainID)
 	}
 
-	content, err := types.AnyFromRequest()
+	content, err := codec.NewAnyWithValue(&types.RequestRemoveValidator{
+		ValAddress: msg.ValidatorAddress,
+	})
 	if err != nil {
-		// TODO better error handler
-		return nil, sdkerrors.Wrap(err, msg.ChainID)
+		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())
 	}
 
-	request := types.Request{
+	requestID := k.AppendRequest(ctx, types.Request{
 		ChainID:   msg.ChainID,
 		Creator:   msg.ValidatorAddress,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
-	}
-	k.AppendRequest(ctx, request)
+	})
 
-	return &types.MsgRequestRemoveValidatorResponse{}, nil
+	return &types.MsgRequestRemoveValidatorResponse{
+		RequestID: requestID,
+	}, nil
 }

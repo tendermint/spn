@@ -16,8 +16,14 @@ func NewMsgRequestRemoveValidator(chainID string, validatorAddress string) *MsgR
 }
 
 // AnyFromRequest the proto any type for a Request
-func AnyFromRequest() (*codec.Any, error) {
-	return codec.NewAnyWithValue(&Request{})
+func AnyFromRequest(creator, chainID string) (*codec.Any, error) {
+	return codec.NewAnyWithValue(&Request{
+		ChainID:   "",
+		RequestID: 0,
+		Creator:   "",
+		CreatedAt: 0,
+		Content:   nil,
+	})
 }
 
 func (msg *MsgRequestRemoveValidator) Route() string {
