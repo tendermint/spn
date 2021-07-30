@@ -17,7 +17,7 @@ func (k msgServer) RequestRemoveValidator(
 
 	_, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrChainIdNotFound, msg.ChainID)
+		return nil, sdkerrors.Wrap(types.ErrChainIDNotFound, msg.ChainID)
 	}
 
 	content, err := codec.NewAnyWithValue(&types.ContentRemoveValidator{
