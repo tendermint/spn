@@ -45,11 +45,15 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
-	// TODO: Check chain ID
+	// Check chain ID is well formatted
+	_, _, err = ParseChainID(msg.ChainID)
+	if err != nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, msg.ChainID)
+	}
 
-	// TODO: Check no value to edit
-
-	// TODO: Check initial genesis
+	if msg.SourceURL == "" && msg.InitialGenesis == nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
+	}
 
 	return nil
 }
