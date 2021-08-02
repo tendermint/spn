@@ -64,6 +64,11 @@ func CmdUpdateValidatorDescription() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagIdentity, "", "validator identity")
+	cmd.Flags().String(flagWebsite, "", "validator website url")
+	cmd.Flags().String(flagDetails, "", "validator details")
+	cmd.Flags().String(flagMoniker, "", "validator moniker")
+	cmd.Flags().String(flagSecurityContact, "", "validator security contact")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
