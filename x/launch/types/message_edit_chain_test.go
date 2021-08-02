@@ -1,10 +1,11 @@
 package types_test
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
-	"testing"
 )
 
 func TestMsgEditChain_ValidateBasic(t *testing.T) {
@@ -16,78 +17,78 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc:  "valid message woth new source and genesis",
-			msg:   sample.MsgEditChain(
+			desc: "valid message woth new source and genesis",
+			msg: sample.MsgEditChain(
 				sample.AccAddress(),
 				chainID,
 				true,
 				true,
-				false,
-				),
-			valid: true,
-		},
-		{
-			desc:  "valid message with new source",
-			msg:   sample.MsgEditChain(
-				sample.AccAddress(),
-				chainID,
-				true,
-				false ,
 				false,
 			),
 			valid: true,
 		},
 		{
-			desc:  "valid message with new genesis",
-			msg:   sample.MsgEditChain(
+			desc: "valid message with new source",
+			msg: sample.MsgEditChain(
 				sample.AccAddress(),
 				chainID,
+				true,
 				false,
-				true ,
 				false,
 			),
 			valid: true,
 		},
 		{
-			desc:  "valid message with new genesis with a custom genesis url",
-			msg:   sample.MsgEditChain(
+			desc: "valid message with new genesis",
+			msg: sample.MsgEditChain(
 				sample.AccAddress(),
 				chainID,
 				false,
-				true ,
+				true,
+				false,
+			),
+			valid: true,
+		},
+		{
+			desc: "valid message with new genesis with a custom genesis url",
+			msg: sample.MsgEditChain(
+				sample.AccAddress(),
+				chainID,
+				false,
+				true,
 				true,
 			),
 			valid: true,
 		},
 		{
-			desc:  "invalid coordinator address",
-			msg:   sample.MsgEditChain(
+			desc: "invalid coordinator address",
+			msg: sample.MsgEditChain(
 				"invalid",
 				chainID,
 				true,
-				true ,
+				true,
 				false,
 			),
 			valid: false,
 		},
 		{
-			desc:  "invalid chain id",
-			msg:   sample.MsgEditChain(
+			desc: "invalid chain id",
+			msg: sample.MsgEditChain(
 				sample.AccAddress(),
 				"invalid",
 				true,
-				true ,
+				true,
 				false,
 			),
 			valid: false,
 		},
 		{
-			desc:  "no value to edit",
-			msg:   sample.MsgEditChain(
+			desc: "no value to edit",
+			msg: sample.MsgEditChain(
 				sample.AccAddress(),
 				chainID,
 				false,
-				false ,
+				false,
 				false,
 			),
 			valid: false,
