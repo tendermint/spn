@@ -18,7 +18,7 @@ import (
 var _ = strconv.IntSize
 
 func TestGenesisValidatorQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNGenesisValidator(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -69,7 +69,7 @@ func TestGenesisValidatorQuerySingle(t *testing.T) {
 }
 
 func TestGenesisValidatorQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNGenesisValidator(keeper, ctx, 5)
 
