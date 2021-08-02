@@ -4,12 +4,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 
-	// this line is used by starport scaffolding # 1
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
+	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
+
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
 	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
 
@@ -17,33 +19,36 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&DelayedVesting{}, "spn/launch/DelayedVesting", nil)
 
 	cdc.RegisterInterface((*InitialGenesis)(nil), nil)
-	cdc.RegisterConcrete(&DefaultInitialGenesis{}, "spn/launch/DefaultInitialGenesis", nil)
-	cdc.RegisterConcrete(&GenesisURL{}, "spn/launch/GenesisURL", nil)
+	cdc.RegisterConcrete(&DefaultInitialGenesis{}, "launch/DefaultInitialGenesis", nil)
+	cdc.RegisterConcrete(&GenesisURL{}, "launch/GenesisURL", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// this line is used by starport scaffolding # 3
-
-	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgCreateChain{},
+	)
 
 	registry.RegisterInterface(
-		"tendermint.spn.launch.RequestContent",
+		"launch.RequestContent",
 		(*RequestContent)(nil),
 		&GenesisAccount{},
 	)
 
 	registry.RegisterInterface(
-		"tendermint.spn.launch.VestingOptions",
+		"launch.VestingOptions",
 		(*VestingOptions)(nil),
 		&DelayedVesting{},
 	)
 
 	registry.RegisterInterface(
-		"tendermint.spn.launch.InitialGenesis",
+		"launch.InitialGenesis",
 		(*InitialGenesis)(nil),
 		&DefaultInitialGenesis{},
 		&GenesisURL{},
 	)
+
+	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 
 var (

@@ -18,7 +18,7 @@ import (
 var _ = strconv.IntSize
 
 func TestVestedAccountQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNVestedAccount(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -74,7 +74,7 @@ func TestVestedAccountQuerySingle(t *testing.T) {
 }
 
 func TestVestedAccountQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, _, ctx, _ := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNVestedAccount(keeper, ctx, 5)
 

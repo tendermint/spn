@@ -13,12 +13,13 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # ibc/genesistype/default
 		// this line is used by starport scaffolding # genesis/types/default
-		RequestList:          []*Request{},
-		RequestCountList:     []*RequestCount{},
+		RequestList:        []*Request{},
+		RequestCountList:   []*RequestCount{},
+		VestedAccountList:  []*VestedAccount{},
+		GenesisAccountList: []*GenesisAccount{},
 		GenesisValidatorList: []*GenesisValidator{},
-		VestedAccountList:    []*VestedAccount{},
-		GenesisAccountList:   []*GenesisAccount{},
-		ChainList:            []*Chain{},
+		ChainList:          []*Chain{},
+		ChainNameCountList: []*ChainNameCount{},
 	}
 }
 
@@ -28,17 +29,59 @@ func (gs GenesisState) Validate() error {
 	// this line is used by starport scaffolding # ibc/genesistype/validate
 
 	// this line is used by starport scaffolding # genesis/types/validate
-
-	// Check for duplicated index in chain
-	chainIndexMap := make(map[string]struct{})
-	for _, elem := range gs.ChainList {
-		chainID := elem.ChainID
-		if _, ok := chainIndexMap[chainID]; ok {
-			return fmt.Errorf("duplicated index for chain")
-		}
-		chainIndexMap[chainID] = struct{}{}
+	chainIDMap, err := validateChains(gs)
+	if err != nil {
+		return err
 	}
 
+	if err := validateRequests(gs, chainIDMap); err != nil {
+		return err
+	}
+
+	if err := validateAccounts(gs, chainIDMap); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func validateChains(gs GenesisState) (map[string]struct{}, error) {
+	// Check for duplicated index in chainNameCount
+	chainNameCountMap := make(map[string]uint64)
+	for _, elem := range gs.ChainNameCountList {
+		if _, ok := chainNameCountMap[elem.ChainName]; ok {
+			return nil, fmt.Errorf("duplicated chain name for chainNameCount")
+		}
+		chainNameCountMap[elem.ChainName] = elem.Count
+	}
+
+	// Check for duplicated index in chain
+	chainIDMap := make(map[string]struct{})
+	for _, elem := range gs.ChainList {
+		chainID := elem.ChainID
+		if _, ok := chainIDMap[chainID]; ok {
+			return nil, fmt.Errorf("duplicated chain ID for chain")
+		}
+		chainIDMap[chainID] = struct{}{}
+
+		// Verify the chain ID is valid and the number is below the count for the chain name
+		name, number, err := ParseChainID(chainID)
+		if err != nil {
+			return nil, fmt.Errorf("invalid chain ID %s: %s", chainID, err.Error())
+		}
+		count, ok := chainNameCountMap[name]
+		if !ok {
+			return nil, fmt.Errorf("no chain name count for chain name %s", name)
+		}
+		if number >= count {
+			return nil, fmt.Errorf("number of chain id %s is above or equal to chain name count %v", chainID, count)
+		}
+	}
+
+	return chainIDMap, nil
+}
+
+func validateRequests(gs GenesisState, chainIDMap map[string]struct{}) error {
 	// We checkout request counts to perform verification
 	requestCountMap := make(map[string]uint64)
 	for _, elem := range gs.RequestCountList {
@@ -48,7 +91,7 @@ func (gs GenesisState) Validate() error {
 		requestCountMap[elem.ChainID] = elem.Count
 
 		// Each genesis account must be associated with an existing chain
-		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+		if _, ok := chainIDMap[elem.ChainID]; !ok {
 			return fmt.Errorf("request count to a non-existing chain: %s",
 				elem.ChainID,
 			)
@@ -65,7 +108,7 @@ func (gs GenesisState) Validate() error {
 		requestIndexMap[index] = struct{}{}
 
 		// Each request pool must be associated with an existing chain
-		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+		if _, ok := chainIDMap[elem.ChainID]; !ok {
 			return fmt.Errorf("a request pool is associated to a non-existing chain: %s",
 				elem.ChainID,
 			)
@@ -104,7 +147,10 @@ func (gs GenesisState) Validate() error {
 			)
 		}
 	}
+	return nil
+}
 
+func validateAccounts(gs GenesisState, chainIDMap map[string]struct{}) error {
 	// Check for duplicated index in genesisAccount
 	genesisAccountIndexMap := make(map[string]struct{})
 	for _, elem := range gs.GenesisAccountList {
@@ -115,7 +161,7 @@ func (gs GenesisState) Validate() error {
 		genesisAccountIndexMap[index] = struct{}{}
 
 		// Each genesis account must be associated with an existing chain
-		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+		if _, ok := chainIDMap[elem.ChainID]; !ok {
 			return fmt.Errorf("account %s is associated to a non-existing chain: %s",
 				elem.Address,
 				elem.ChainID,
@@ -133,7 +179,7 @@ func (gs GenesisState) Validate() error {
 		vestedAccountIndexMap[index] = struct{}{}
 
 		// Each vested account must be associated with an existing chain
-		if _, ok := chainIndexMap[elem.ChainID]; !ok {
+		if _, ok := chainIDMap[elem.ChainID]; !ok {
 			return fmt.Errorf("account %s is associated to a non-existing chain: %s",
 				elem.Address,
 				elem.ChainID,
