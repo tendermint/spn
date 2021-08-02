@@ -21,7 +21,7 @@ func CmdEditChain() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "edit-chain [chainID]",
 		Short: "Edit chain information",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
