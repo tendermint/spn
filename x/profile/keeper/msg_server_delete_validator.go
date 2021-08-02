@@ -2,8 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/profile/types"
@@ -16,8 +14,7 @@ func (k msgServer) DeleteValidator(goCtx context.Context, msg *types.MsgDeleteVa
 	_, found := k.GetValidator(ctx, msg.Address)
 	if !found {
 		return &types.MsgDeleteValidatorResponse{},
-			sdkerrors.Wrap(types.ErrValidatorNotFound,
-				fmt.Sprintf("validator: %s", msg.Address))
+			sdkerrors.Wrap(types.ErrValidatorNotFound, msg.Address)
 	}
 	k.RemoveValidator(ctx, msg.Address)
 

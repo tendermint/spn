@@ -37,7 +37,7 @@ func (msg *MsgDeleteValidator) GetSignBytes() []byte {
 func (msg *MsgDeleteValidator) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 	return nil
 }
