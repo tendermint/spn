@@ -101,7 +101,7 @@ func MsgEditChain(
 ) launch.MsgEditChain {
 	var sourceURL, sourceHash string
 	if modifySource {
-		sourceURL, sourceHash = String(30), string(10)
+		sourceURL, sourceHash = String(30), String(10)
 	}
 	var initialGenesis *types.Any
 	if modifyInitialGenesis {
