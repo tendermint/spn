@@ -10,7 +10,7 @@ import (
 
 const (
 	flagMoniker         = "moniker"
-	flagSecurityContact = "securityContact"
+	flagSecurityContact = "security-contact"
 )
 
 func CmdUpdateValidatorDescription() *cobra.Command {

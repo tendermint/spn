@@ -53,5 +53,16 @@ func (msg *MsgUpdateValidatorDescription) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
+	if msg.Description == nil {
+		return sdkerrors.Wrapf(ErrEmptyDescription, msg.Address)
+	}
+	desc := []byte(msg.Description.Details)
+	desc = append(desc, []byte(msg.Description.Moniker)...)
+	desc = append(desc, []byte(msg.Description.Identity)...)
+	desc = append(desc, []byte(msg.Description.Website)...)
+	desc = append(desc, []byte(msg.Description.SecurityContact)...)
+	if len(desc) == 0 {
+		return sdkerrors.Wrapf(ErrEmptyDescription, msg.Address)
+	}
 	return nil
 }

@@ -35,7 +35,7 @@ func TestMsgUpdateValidatorDescription(t *testing.T) {
 				Description: sample.ValidatorDescription(addr2),
 			},
 		}, {
-			name: "update and create anotherw validator",
+			name: "update and create another validator",
 			msg: types.MsgUpdateValidatorDescription{
 				Address:     addr2,
 				Description: sample.ValidatorDescription(addr2),

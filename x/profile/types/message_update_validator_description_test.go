@@ -10,22 +10,44 @@ import (
 )
 
 func TestMsgUpdateValidatorDescription_ValidateBasic(t *testing.T) {
+	addr := sample.AccAddress()
 	tests := []struct {
 		name string
-		msg  profile.MsgUpdateCoordinatorDescription
+		msg  profile.MsgUpdateValidatorDescription
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: profile.MsgUpdateCoordinatorDescription{
+			msg: profile.MsgUpdateValidatorDescription{
 				Address: "invalid address",
 			},
 			err: sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress,
 				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
 		}, {
-			name: "valid address",
-			msg: profile.MsgUpdateCoordinatorDescription{
+			name: "valid address and empty description",
+			msg: profile.MsgUpdateValidatorDescription{
+				Address:     addr,
+				Description: &profile.ValidatorDescription{},
+			},
+			err: sdkerrors.Wrapf(profile.ErrEmptyDescription, addr),
+		}, {
+			name: "valid address and nil description",
+			msg: profile.MsgUpdateValidatorDescription{
+				Address:     addr,
+				Description: nil,
+			},
+			err: sdkerrors.Wrapf(profile.ErrEmptyDescription, addr),
+		}, {
+			name: "valid address and description",
+			msg: profile.MsgUpdateValidatorDescription{
 				Address: sample.AccAddress(),
+				Description: &profile.ValidatorDescription{
+					Identity:        "identity",
+					Moniker:         "moniker",
+					Website:         "website",
+					SecurityContact: "security-contact",
+					Details:         "details",
+				},
 			},
 		},
 	}
