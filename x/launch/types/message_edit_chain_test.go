@@ -1,9 +1,9 @@
 package types_test
 
 import (
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	"testing"
 
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
@@ -108,8 +108,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "invalid initial genesis",
-			msg: msgInvalidInitialGenesis,
+			desc:  "invalid initial genesis",
+			msg:   msgInvalidInitialGenesis,
 			valid: false,
 		},
 	} {
