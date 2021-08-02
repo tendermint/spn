@@ -11,7 +11,7 @@ const (
 
 // GenesisValidatorKey returns the store key to retrieve a GenesisValidator from the index fields
 func GenesisValidatorKey(
-	chainID string,
+	chainID,
 	address string,
 ) []byte {
 	var key []byte
