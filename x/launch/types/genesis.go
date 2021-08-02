@@ -130,23 +130,6 @@ func validateRequests(gs GenesisState, chainIDMap map[string]struct{}) error {
 		}
 	}
 
-	// Check for duplicated index in genesisValidator
-	genesisValidatorIndexMap := make(map[string]struct{})
-	for _, elem := range gs.GenesisValidatorList {
-		index := string(GenesisValidatorKey(elem.ChainID, elem.Address))
-		if _, ok := genesisValidatorIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for genesisValidator")
-		}
-		genesisValidatorIndexMap[index] = struct{}{}
-
-		// Each genesis validator must be associated with an existing chain
-		if _, ok := chainIndexMap[elem.ChainID]; !ok {
-			return fmt.Errorf("validator %s is associated to a non-existing chain: %s",
-				elem.Address,
-				elem.ChainID,
-			)
-		}
-	}
 	return nil
 }
 
@@ -190,6 +173,24 @@ func validateAccounts(gs GenesisState, chainIDMap map[string]struct{}) error {
 		accountIndex := GenesisAccountKey(elem.ChainID, elem.Address)
 		if _, ok := genesisAccountIndexMap[string(accountIndex)]; ok {
 			return fmt.Errorf("account %s can't be a genesis account and a vested account at the same time for the chain: %s",
+				elem.Address,
+				elem.ChainID,
+			)
+		}
+	}
+
+	// Check for duplicated index in genesisValidator
+	genesisValidatorIndexMap := make(map[string]struct{})
+	for _, elem := range gs.GenesisValidatorList {
+		index := string(GenesisValidatorKey(elem.ChainID, elem.Address))
+		if _, ok := genesisValidatorIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for genesisValidator")
+		}
+		genesisValidatorIndexMap[index] = struct{}{}
+
+		// Each genesis validator must be associated with an existing chain
+		if _, ok := chainIDMap[elem.ChainID]; !ok {
+			return fmt.Errorf("validator %s is associated to a non-existing chain: %s",
 				elem.Address,
 				elem.ChainID,
 			)
