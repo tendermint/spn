@@ -12,19 +12,26 @@ import (
 const chainIDSeparator = "-"
 
 // GetDefaultInitialGenesis returns the DefaultInitialGenesis structure if the initial genesis for the chain is default genesis
-// If the initial genesis is not default genesis, nil is returned
 func (c Chain) GetDefaultInitialGenesis(unpacker codec.AnyUnpacker) (*DefaultInitialGenesis, error) {
-	var defaultInitialGenesis *DefaultInitialGenesis
-	err := unpacker.UnpackAny(c.InitialGenesis, &defaultInitialGenesis)
+	var initialGenesis InitialGenesis
+	err := unpacker.UnpackAny(c.InitialGenesis, &initialGenesis)
+	defaultGenesis, ok := initialGenesis.(*DefaultInitialGenesis)
+	if !ok {
+		return nil, errors.New("not a default initial genesis")
+	}
 
-	return defaultInitialGenesis, err
+	return defaultGenesis, err
 }
 
 // GetGenesisURL returns the GenesisURL structure if the initial genesis for the chain is a genesis URL
-// If the initial genesis is not a genesis url, nil is returned
 func (c Chain) GetGenesisURL(unpacker codec.AnyUnpacker) (*GenesisURL, error) {
-	var genesisURL *GenesisURL
-	err := unpacker.UnpackAny(c.InitialGenesis, &genesisURL)
+	var initialGenesis InitialGenesis
+	err := unpacker.UnpackAny(c.InitialGenesis, &initialGenesis)
+	genesisURL, ok := initialGenesis.(*GenesisURL)
+	if !ok {
+		return nil, errors.New("not a genesis url")
+	}
+
 	return genesisURL, err
 }
 

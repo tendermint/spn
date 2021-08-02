@@ -55,5 +55,22 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
 	}
 
+	if msg.InitialGenesis != nil {
+		cdc := codectypes.NewInterfaceRegistry()
+		RegisterInterfaces(cdc)
+
+		var initialGenesis InitialGenesis
+		if err := cdc.UnpackAny(msg.InitialGenesis, &initialGenesis); err != nil {
+			return sdkerrors.Wrap(ErrInvalidInitialGenesis, err.Error())
+		}
+		// Check if the initial genesis is neither a DefaultInitialGenesis nor a GenesisURL
+		switch initialGenesis.(type) {
+		case *DefaultInitialGenesis:
+		case *GenesisURL:
+		default:
+			return sdkerrors.Wrap(ErrInvalidInitialGenesis, "unknown initial genesis types")
+		}
+	}
+
 	return nil
 }

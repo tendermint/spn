@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -9,7 +10,20 @@ import (
 )
 
 func TestMsgEditChain_ValidateBasic(t *testing.T) {
+	var err error
 	chainID, _ := sample.ChainID(0)
+
+	msgInvalidInitialGenesis := sample.MsgEditChain(
+		sample.AccAddress(),
+		chainID,
+		true,
+		false,
+		false,
+	)
+	msgInvalidInitialGenesis.InitialGenesis, err = codec.NewAnyWithValue(&types.Chain{})
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	for _, tc := range []struct {
 		desc  string
@@ -17,7 +31,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc: "valid message woth new source and genesis",
+			desc: "valid message with new source and genesis",
 			msg: sample.MsgEditChain(
 				sample.AccAddress(),
 				chainID,
@@ -91,6 +105,11 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				false,
 			),
+			valid: false,
+		},
+		{
+			desc: "invalid initial genesis",
+			msg: msgInvalidInitialGenesis,
 			valid: false,
 		},
 	} {
