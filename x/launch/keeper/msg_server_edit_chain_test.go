@@ -36,74 +36,73 @@ func TestMsgEditChain(t *testing.T) {
 	}
 	chainID := res.ChainID
 
-
 	for _, tc := range []struct {
-		name          string
-		msg           types.MsgEditChain
-		valid         bool
+		name  string
+		msg   types.MsgEditChain
+		valid bool
 	}{
 		{
-			name:          "edit source",
-			msg:           sample.MsgEditChain(coordAddress, chainID,
-				true,
-				false,
-				false,
-				),
-			valid:         true,
-		},
-		{
-			name:          "edit initial genesis with default genesis",
-			msg:           sample.MsgEditChain(coordAddress, chainID,
-				false,
-				true,
-				false,
-				),
-			valid:         true,
-		},
-		{
-			name:          "edit initial genesis with genesis url",
-			msg:           sample.MsgEditChain(coordAddress, chainID,
-				false,
-				true,
-				true,
-			),
-			valid:         true,
-		},
-		{
-			name:          "edit source and initial genesis",
-			msg:           sample.MsgEditChain(coordAddress, chainID,
-				true,
-				true,
-				true,
-			),
-			valid:         true,
-		},
-		{
-			name:          "non existent chain id",
-			msg:           sample.MsgEditChain(coordAddress, chainIDNoExist,
+			name: "edit source",
+			msg: sample.MsgEditChain(coordAddress, chainID,
 				true,
 				false,
 				false,
 			),
-			valid:         false,
+			valid: true,
 		},
 		{
-			name:          "non existent coordinator",
-			msg:           sample.MsgEditChain(coordNoExist, chainID,
+			name: "edit initial genesis with default genesis",
+			msg: sample.MsgEditChain(coordAddress, chainID,
+				false,
+				true,
+				false,
+			),
+			valid: true,
+		},
+		{
+			name: "edit initial genesis with genesis url",
+			msg: sample.MsgEditChain(coordAddress, chainID,
+				false,
+				true,
+				true,
+			),
+			valid: true,
+		},
+		{
+			name: "edit source and initial genesis",
+			msg: sample.MsgEditChain(coordAddress, chainID,
+				true,
+				true,
+				true,
+			),
+			valid: true,
+		},
+		{
+			name: "non existent chain id",
+			msg: sample.MsgEditChain(coordAddress, chainIDNoExist,
 				true,
 				false,
 				false,
 			),
-			valid:         false,
+			valid: false,
 		},
 		{
-			name:          "invalid coordinator",
-			msg:           sample.MsgEditChain(coordAddress2, chainID,
+			name: "non existent coordinator",
+			msg: sample.MsgEditChain(coordNoExist, chainID,
 				true,
 				false,
 				false,
 			),
-			valid:         false,
+			valid: false,
+		},
+		{
+			name: "invalid coordinator",
+			msg: sample.MsgEditChain(coordAddress2, chainID,
+				true,
+				false,
+				false,
+			),
+			valid: false,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

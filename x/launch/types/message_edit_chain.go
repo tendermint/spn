@@ -10,10 +10,10 @@ var _ sdk.Msg = &MsgEditChain{}
 
 func NewMsgEditChain(coordinator, chainID, sourceURL, sourceHash string, initialGenesis *codectypes.Any) *MsgEditChain {
 	return &MsgEditChain{
-		Coordinator: coordinator,
-		ChainID:     chainID,
-		SourceURL:   sourceURL,
-		SourceHash:  sourceHash,
+		Coordinator:    coordinator,
+		ChainID:        chainID,
+		SourceURL:      sourceURL,
+		SourceHash:     sourceHash,
 		InitialGenesis: initialGenesis,
 	}
 }
