@@ -21,7 +21,7 @@ func (r Request) UnpackVestedAccount(cdc codec.AnyUnpacker) (*VestedAccount, err
 	}
 	result, ok := content.(*VestedAccount)
 	if !ok {
-		return nil, ErrFailedCodecCast
+		return nil, fmt.Errorf("not a vestedAccount request")
 	}
 	return result, nil
 }

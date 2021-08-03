@@ -10,6 +10,7 @@ import (
 )
 
 func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
+	addr := sample.AccAddress()
 	chainID, _ := sample.ChainID(10)
 	tests := []struct {
 		name string
@@ -21,7 +22,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 			msg: types.MsgRequestAddVestedAccount{
 				Address: "invalid_address",
 			},
-			err: sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress,
+			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
 				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
 		}, {
 			name: "invalid chain id",
@@ -29,19 +30,27 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Address: sample.AccAddress(),
 				ChainID: "invalid_chain",
 			},
-			err: sdkerrors.Wrapf(types.ErrInvalidChainID, "invalid_chain"),
+			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
 		}, {
 			name: "invalid chain name",
 			msg: types.MsgRequestAddVestedAccount{
 				Address: sample.AccAddress(),
 				ChainID: "wh.thc-10",
 			},
-			err: sdkerrors.Wrapf(types.ErrInvalidChainID, "invalid_chain"),
+			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
+		}, {
+			name: "message without coins",
+			msg: types.MsgRequestAddVestedAccount{
+				Address: addr,
+				ChainID: chainID,
+			},
+			err: sdkerrors.Wrap(types.ErrEmptyCoins, addr),
 		}, {
 			name: "valid message",
 			msg: types.MsgRequestAddVestedAccount{
 				Address: sample.AccAddress(),
 				ChainID: chainID,
+				Coins:   sample.Coins(),
 			},
 		},
 	}

@@ -47,7 +47,11 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 
 	_, _, err = ParseChainID(msg.ChainID)
 	if err != nil {
-		return sdkerrors.Wrapf(ErrInvalidChainID, msg.ChainID)
+		return sdkerrors.Wrap(ErrInvalidChainID, msg.ChainID)
+	}
+
+	if len(msg.Coins) == 0 {
+		return sdkerrors.Wrap(ErrEmptyCoins, msg.Address)
 	}
 	return nil
 }

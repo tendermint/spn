@@ -37,6 +37,8 @@ func CmdRequestAddVestedAccount() *cobra.Command {
 				return err
 			}
 
+			// TODO: return an error if the launch is triggered for the chain
+
 			msg := types.NewMsgRequestAddVestedAccount(
 				clientCtx.GetFromAddress().String(),
 				args[0],
