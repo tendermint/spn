@@ -2,7 +2,7 @@ package types
 
 import (
 	"fmt"
-	
+
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
 )
 
