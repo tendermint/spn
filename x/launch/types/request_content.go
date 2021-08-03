@@ -19,9 +19,9 @@ func (r Request) UnpackAccountRemoval(cdc codec.AnyUnpacker) (*AccountRemoval, e
 	if err != nil {
 		return nil, err
 	}
-	removeValidator, ok := content.(*AccountRemoval)
+	result, ok := content.(*AccountRemoval)
 	if !ok {
 		return nil, ErrFailedCodecCast
 	}
-	return removeValidator, nil
+	return result, nil
 }
