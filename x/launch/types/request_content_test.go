@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"fmt"
 	"testing"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
@@ -9,7 +10,7 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestValidatorRemovalCodec(t *testing.T) {
+func TestGenesisAccountCodec(t *testing.T) {
 	var err error
 	cdc := sample.Codec()
 	request := sample.Request("foo")
@@ -28,6 +29,6 @@ func TestValidatorRemovalCodec(t *testing.T) {
 	request.Content, err = codec.NewAnyWithValue(invalidContent)
 	require.NoError(t, err)
 	content, err = request.UnpackGenesisAccount(cdc)
-	require.ErrorIs(t, err, types.ErrFailedCodecCast)
+	require.ErrorIs(t, err, fmt.Errorf("not a genesisAccount request"))
 	require.Nil(t, content)
 }

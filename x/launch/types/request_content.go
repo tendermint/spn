@@ -21,7 +21,7 @@ func (r Request) UnpackGenesisAccount(cdc codec.AnyUnpacker) (*GenesisAccount, e
 	}
 	result, ok := content.(*GenesisAccount)
 	if !ok {
-		return nil, ErrFailedCodecCast
+		return nil, fmt.Errorf("not a genesisAccount request")
 	}
 	return result, nil
 }
