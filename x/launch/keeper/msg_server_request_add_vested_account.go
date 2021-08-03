@@ -24,7 +24,7 @@ func (k msgServer) RequestAddVestedAccount(
 		ChainID:         msg.ChainID,
 		Address:         msg.Address,
 		StartingBalance: msg.Coins,
-		Options:         msg.Options,
+		VestingOptions:  msg.Options,
 	})
 	if err != nil {
 		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())

@@ -86,7 +86,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			require.Equal(t, tt.msg.Address, content.Address)
 			require.Equal(t, tt.msg.ChainID, content.ChainID)
 			require.Equal(t, tt.msg.Coins, content.StartingBalance)
-			require.Equal(t, tt.msg.Options, content.Options)
+			require.Equal(t, tt.msg.Options, content.VestingOptions)
 		})
 	}
 }

@@ -1,13 +1,15 @@
 package types
 
 import (
+	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 var _ sdk.Msg = &MsgRequestAddVestedAccount{}
 
-func NewMsgRequestAddVestedAccount(address, chainID string, coins sdk.Coins, options string) *MsgRequestAddVestedAccount {
+func NewMsgRequestAddVestedAccount(address, chainID string,
+	coins sdk.Coins, options *types.Any) *MsgRequestAddVestedAccount {
 	return &MsgRequestAddVestedAccount{
 		ChainID: chainID,
 		Address: address,

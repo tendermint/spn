@@ -2,10 +2,12 @@ package cli
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/launch/types"
@@ -27,11 +29,19 @@ func CmdRequestAddVestedAccount() *cobra.Command {
 				return fmt.Errorf("failed to parse coins: %w", err)
 			}
 
+			delayedVesting, err := codec.NewAnyWithValue(&types.DelayedVesting{
+				Vesting: coins,
+				EndTime: time.Now().Unix(),
+			})
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgRequestAddVestedAccount(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 				coins,
-				args[3],
+				delayedVesting,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
