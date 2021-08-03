@@ -8,5 +8,7 @@ import (
 
 // x/launch module sentinel errors
 var (
-	ErrInvalidChainName = sdkerrors.Register(ModuleName, 1, "the chain name is invalid")
+	ErrChainNotFound         = sdkerrors.Register(ModuleName, 1, "chain not found")
+	ErrInvalidChainName = sdkerrors.Register(ModuleName, 2, "the chain name is invalid")
+	ErrLaunchTriggered = sdkerrors.Register(ModuleName, 10, "the chain launch is already triggered")
 )
