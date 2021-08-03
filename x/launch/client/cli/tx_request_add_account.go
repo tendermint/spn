@@ -28,7 +28,7 @@ func CmdRequestAddAccount() *cobra.Command {
 			}
 
 			// TODO: return an error if the launch is triggered for the chain
-			
+
 			if err != nil {
 				return err
 			}
