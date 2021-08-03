@@ -40,5 +40,10 @@ func (msg *MsgRequestRemoveAccount) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
+
+	_, _, err = ParseChainID(msg.ChainID)
+	if err != nil {
+		return sdkerrors.Wrapf(ErrInvalidChainID, msg.ChainID)
+	}
 	return nil
 }
