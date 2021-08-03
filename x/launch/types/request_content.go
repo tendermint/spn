@@ -19,9 +19,9 @@ func (r Request) UnpackGenesisAccount(cdc codec.AnyUnpacker) (*GenesisAccount, e
 	if err != nil {
 		return nil, err
 	}
-	removeValidator, ok := content.(*GenesisAccount)
+	result, ok := content.(*GenesisAccount)
 	if !ok {
 		return nil, ErrFailedCodecCast
 	}
-	return removeValidator, nil
+	return result, nil
 }
