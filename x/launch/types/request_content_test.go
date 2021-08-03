@@ -26,6 +26,7 @@ func TestValidatorRemovalCodec(t *testing.T) {
 	request.Content, err = codec.NewAnyWithValue(invalidContent)
 	require.NoError(t, err)
 	content, err = request.UnpackValidatorRemoval(cdc)
-	require.ErrorIs(t, err, types.ErrFailedCodecCast)
+	require.Error(t, err)
+	require.Equal(t, err.Error(), "not a validatorRemoval request")
 	require.Nil(t, content)
 }
