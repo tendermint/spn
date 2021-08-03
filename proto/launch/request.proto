@@ -16,7 +16,7 @@ message Request {
   google.protobuf.Any content = 5 [(cosmos_proto.accepts_interface) = "RequestContent"];
 }
 
-message ContentRemoveValidator {
+message ValidatorRemoval {
   option (cosmos_proto.implements_interface) = "RequestContent";
   string valAddress = 1;
 }
