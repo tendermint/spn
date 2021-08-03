@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"testing"
 	"time"
 
@@ -23,9 +25,19 @@ var sampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
 func setupKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, codec.Marshaler) {
 	cdc := sample.Codec()
 
-	storeKeys := sdk.NewKVStoreKeys(types.StoreKey, profiletypes.StoreKey)
+	storeKeys := sdk.NewKVStoreKeys(types.StoreKey, profiletypes.StoreKey, paramstypes.StoreKey)
+	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memStoreKeyLaunch := storetypes.NewMemoryStoreKey(types.MemStoreKey)
 	memStoreKeyProfile := storetypes.NewMemoryStoreKey(profiletypes.MemStoreKey)
+
+	// Initial param keeper
+	paramsKeeper := paramskeeper.NewKeeper(
+		cdc,
+		types.Amino,
+		storeKeys[paramstypes.StoreKey],
+		tkeys[paramstypes.StoreKey],
+		)
+	paramsKeeper.Subspace(types.ModuleName)
 
 	profileKeeper := profilekeeper.NewKeeper(
 		cdc,
@@ -33,10 +45,15 @@ func setupKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, cod
 		memStoreKeyProfile,
 	)
 
+	launchSubspace, found := paramsKeeper.GetSubspace(types.ModuleName)
+	if !found {
+		t.Fatal("no param subspace for launch")
+	}
 	launchKeeper := NewKeeper(
 		cdc,
 		storeKeys[types.StoreKey],
 		memStoreKeyLaunch,
+		launchSubspace,
 		profileKeeper,
 	)
 

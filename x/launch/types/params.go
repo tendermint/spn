@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/codec"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"time"
 )
@@ -20,6 +21,11 @@ var (
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
+// ParamTable for launch module
+func ParamKeyTable() paramtypes.KeyTable {
+	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
+}
+
 // NewParams creates a new Params instance
 func NewParams(minLaunchTime, maxLaunchTime uint64) Params {
 	return Params{
@@ -28,12 +34,27 @@ func NewParams(minLaunchTime, maxLaunchTime uint64) Params {
 	}
 }
 
+// DefaultParams returns a default set of parameters
+func DefaultParams() Params {
+	return NewParams(
+		DefaultMinLaunchTime,
+		DefaultMaxLaunchTime,
+	)
+}
+
+
 // Implements params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyMinLaunchTime, &p.MinLaunchTime, validateLaunchTime),
 		paramtypes.NewParamSetPair(KeyMaxLaunchTime, &p.MaxLaunchTime, validateLaunchTime),
 	}
+}
+
+// UnmarshalParams unmarshal the params value
+func UnmarshalParams(cdc *codec.LegacyAmino, value []byte) (params Params, err error) {
+	err = cdc.UnmarshalBinaryBare(value, &params)
+	return
 }
 
 func validateLaunchTime(i interface{}) error {
