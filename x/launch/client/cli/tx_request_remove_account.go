@@ -19,6 +19,8 @@ func CmdRequestRemoveAccount() *cobra.Command {
 				return err
 			}
 
+			// TODO: return an error if the launch is triggered for the chain
+
 			msg := types.NewMsgRequestRemoveAccount(args[0], clientCtx.GetFromAddress().String())
 			if err := msg.ValidateBasic(); err != nil {
 				return err

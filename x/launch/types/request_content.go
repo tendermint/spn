@@ -21,7 +21,7 @@ func (r Request) UnpackAccountRemoval(cdc codec.AnyUnpacker) (*AccountRemoval, e
 	}
 	result, ok := content.(*AccountRemoval)
 	if !ok {
-		return nil, ErrFailedCodecCast
+		return nil, fmt.Errorf("not a accountRemoval request")
 	}
 	return result, nil
 }

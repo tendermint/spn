@@ -9,7 +9,7 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestValidatorRemovalCodec(t *testing.T) {
+func TestAccountRemovalCodec(t *testing.T) {
 	var err error
 	cdc := sample.Codec()
 	request := sample.Request("foo")
@@ -26,6 +26,7 @@ func TestValidatorRemovalCodec(t *testing.T) {
 	request.Content, err = codec.NewAnyWithValue(invalidContent)
 	require.NoError(t, err)
 	content, err = request.UnpackAccountRemoval(cdc)
-	require.ErrorIs(t, err, types.ErrFailedCodecCast)
+	require.Error(t, err)
+	require.Equal(t, err.Error(), "not a accountRemoval request")
 	require.Nil(t, content)
 }
