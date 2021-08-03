@@ -21,7 +21,7 @@ func (r Request) UnpackValidatorRemoval(cdc codec.AnyUnpacker) (*ValidatorRemova
 	}
 	removeValidator, ok := content.(*ValidatorRemoval)
 	if !ok {
-		return nil, ErrFailedCodecCast
+		return nil, fmt.Errorf("not a validatorRemoval request")
 	}
 	return removeValidator, nil
 }
