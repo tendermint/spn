@@ -27,6 +27,8 @@ func (k msgServer) RequestRemoveValidator(
 		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())
 	}
 
+	// TODO: return an error if the launch is triggered for the chain
+
 	requestID := k.AppendRequest(ctx, types.Request{
 		ChainID:   msg.ChainID,
 		Creator:   msg.ValidatorAddress,
