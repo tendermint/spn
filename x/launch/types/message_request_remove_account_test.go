@@ -2,7 +2,7 @@ package types_test
 
 import (
 	"testing"
-	
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"

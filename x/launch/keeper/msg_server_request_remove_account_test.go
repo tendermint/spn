@@ -3,27 +3,12 @@ package keeper
 import (
 	"testing"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
-
-func TestContentRemoveAccountCodec(t *testing.T) {
-	var err error
-	cdc := sample.Codec()
-	request := sample.Request("foo")
-	content := &types.ContentRemoveAccount{
-		Address: sample.AccAddress(),
-	}
-	request.Content, err = codec.NewAnyWithValue(content)
-	require.NoError(t, err)
-	result, err := request.UnpackRequestRemoveAccount(cdc)
-	require.NoError(t, err)
-	require.EqualValues(t, content, result)
-}
 
 func TestMsgRequestRemoveAccount(t *testing.T) {
 	var (
@@ -96,7 +81,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			require.True(t, found, "request not found")
 			require.Equal(t, tt.want, request.RequestID)
 
-			content, err := request.UnpackRequestRemoveAccount(cdc)
+			content, err := request.UnpackAccountRemoval(cdc)
 			require.NoError(t, err)
 			require.Equal(t, tt.msg.Address, content.Address)
 		})

@@ -12,4 +12,5 @@ var (
 	ErrChainIDNotFound  = sdkerrors.Register(ModuleName, 2, "chain id not found")
 	ErrInvalidChainID   = sdkerrors.Register(ModuleName, 3, "the chain id is invalid")
 	ErrCodecNotPacked   = sdkerrors.Register(ModuleName, 4, "codec value couldn't be packed")
+	ErrFailedCodecCast  = sdkerrors.Register(ModuleName, 5, "codec cannot be cast to the current type")
 )

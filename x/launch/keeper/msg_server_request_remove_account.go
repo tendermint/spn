@@ -20,7 +20,7 @@ func (k msgServer) RequestRemoveAccount(
 		return nil, sdkerrors.Wrap(types.ErrChainIDNotFound, msg.ChainID)
 	}
 
-	content, err := codec.NewAnyWithValue(&types.ContentRemoveAccount{
+	content, err := codec.NewAnyWithValue(&types.AccountRemoval{
 		Address: msg.Address,
 	})
 	if err != nil {

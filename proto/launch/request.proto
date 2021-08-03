@@ -14,7 +14,7 @@ message Request {
   google.protobuf.Any content = 5 [(cosmos_proto.accepts_interface) = "RequestContent"];
 }
 
-message ContentRemoveAccount {
+message AccountRemoval {
   option (cosmos_proto.implements_interface) = "RequestContent";
   string address = 1;
 }
