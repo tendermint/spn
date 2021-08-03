@@ -15,7 +15,7 @@ func CmdRequestAddVestedAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "request-add-vested-account [chainID] [coins] [options]",
 		Short: "Request to add a vested account",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
