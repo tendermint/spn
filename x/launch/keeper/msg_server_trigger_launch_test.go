@@ -18,8 +18,9 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	coordNoExist := sample.AccAddress()
 	chainIDNoExist, _ := sample.ChainID(0)
 
-	// TODO check params
-	launchRemainingTime := uint64(1000)
+	launchTime := types.DefaultMinLaunchTime
+	launchTimeTooLow := types.DefaultMinLaunchTime - 1
+	launchTimeTooHigh := types.DefaultMaxLaunchTime + 1
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
@@ -61,27 +62,37 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	} {
 		{
 			name: "launch chain not launched",
-			msg: *types.NewMsgTriggerLaunch(coordAddress, chainID, launchRemainingTime),
+			msg: *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTime),
 			valid: true,
 		},
 		{
 			name: "non existent chain id",
-			msg: *types.NewMsgTriggerLaunch(coordAddress, chainIDNoExist, launchRemainingTime),
+			msg: *types.NewMsgTriggerLaunch(coordAddress, chainIDNoExist, launchTime),
 			valid: false,
 		},
 		{
 			name: "non existent coordinator",
-			msg: *types.NewMsgTriggerLaunch(coordNoExist, chainID, launchRemainingTime),
+			msg: *types.NewMsgTriggerLaunch(coordNoExist, chainID, launchTime),
 			valid: false,
 		},
 		{
 			name: "invalid coordinator",
-			msg: *types.NewMsgTriggerLaunch(coordAddress2, chainID, launchRemainingTime),
+			msg: *types.NewMsgTriggerLaunch(coordAddress2, chainID, launchTime),
 			valid: false,
 		},
 		{
 			name: "chain launch already triggered",
-			msg: *types.NewMsgTriggerLaunch(coordAddress, alreadyLaunched, launchRemainingTime),
+			msg: *types.NewMsgTriggerLaunch(coordAddress, alreadyLaunched, launchTime),
+			valid: false,
+		},
+		{
+			name: "launch time too low",
+			msg: *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTimeTooLow),
+			valid: false,
+		},
+		{
+			name: "launch time too high",
+			msg: *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTimeTooHigh),
 			valid: false,
 		},
 	} {

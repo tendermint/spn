@@ -34,7 +34,12 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 		return nil, sdkerrors.Wrap(types.ErrLaunchTriggered, msg.ChainID)
 	}
 
-	// TODO: Check remaining time
+	if msg.RemainingTime < k.MinLaunchTime(ctx) {
+		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooLow, "%v", msg.RemainingTime)
+	}
+	if msg.RemainingTime > k.MaxLaunchTime(ctx) {
+		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeToohigh, "%v", msg.RemainingTime)
+	}
 
 	chain.LaunchTriggered = true
 	toast := ctx.BlockTime().Unix()

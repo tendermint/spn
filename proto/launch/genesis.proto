@@ -2,10 +2,12 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 // this line is used by starport scaffolding # genesis/proto/import
+import "gogoproto/gogo.proto";
 import "launch/request.proto";
 import "launch/vested_account.proto";
 import "launch/genesis_account.proto";
 import "launch/chain.proto";
+import "launch/params.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -19,6 +21,8 @@ message GenesisState {
 	repeated Request requestList = 10; // this line is used by starport scaffolding # genesis/proto/stateField
 	repeated RequestCount requestCountList = 11; // this line is used by starport scaffolding # genesis/proto/stateField
 	// this line is used by starport scaffolding # ibc/genesis/proto
+
+	Params params = 20 [(gogoproto.nullable) = false];
 }
 
 message RequestCount {
