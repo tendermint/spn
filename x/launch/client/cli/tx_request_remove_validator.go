@@ -12,7 +12,7 @@ func CmdRequestRemoveValidator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "request-remove-validator [chainID]",
 		Short: "Request to remove a genesis validator",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {

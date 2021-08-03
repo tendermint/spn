@@ -81,7 +81,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			require.True(t, found, "request not found")
 			require.Equal(t, tt.want, request.RequestID)
 
-			content, err := request.UnpackRequestRemoveValidator(cdc)
+			content, err := request.UnpackValidatorRemoval(cdc)
 			require.NoError(t, err)
 			require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
 		})

@@ -18,14 +18,14 @@ func TestValidatorRemovalCodec(t *testing.T) {
 	}
 	request.Content, err = codec.NewAnyWithValue(content)
 	require.NoError(t, err)
-	result, err := request.UnpackRequestRemoveValidator(cdc)
+	result, err := request.UnpackValidatorRemoval(cdc)
 	require.NoError(t, err)
 	require.EqualValues(t, content, result)
 
 	invalidContent := &types.Request{}
 	request.Content, err = codec.NewAnyWithValue(invalidContent)
 	require.NoError(t, err)
-	content, err = request.UnpackRequestRemoveValidator(cdc)
+	content, err = request.UnpackValidatorRemoval(cdc)
 	require.ErrorIs(t, err, types.ErrFailedCodecCast)
 	require.Nil(t, content)
 }

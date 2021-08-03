@@ -9,9 +9,8 @@ import (
 // RequestContent defines the interface for a request content
 type RequestContent interface{}
 
-// UnpackRequestRemoveValidator returns the RequestRemoveValidator
-// structure from the codec unpack
-func (r Request) UnpackRequestRemoveValidator(cdc codec.AnyUnpacker) (*ValidatorRemoval, error) {
+// UnpackValidatorRemoval returns the ValidatorRemoval structure from the codec unpack
+func (r Request) UnpackValidatorRemoval(cdc codec.AnyUnpacker) (*ValidatorRemoval, error) {
 	if r.Content == nil {
 		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
 	}
