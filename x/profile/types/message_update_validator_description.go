@@ -54,14 +54,14 @@ func (msg *MsgUpdateValidatorDescription) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 	if msg.Description == nil {
-		return sdkerrors.Wrapf(ErrEmptyDescription, msg.Address)
+		return sdkerrors.Wrap(ErrEmptyDescription, msg.Address)
 	}
 	if msg.Description.Details == "" &&
 		msg.Description.Moniker == "" &&
 		msg.Description.Identity == "" &&
 		msg.Description.Website == "" &&
 		msg.Description.SecurityContact == "" {
-		return sdkerrors.Wrapf(ErrEmptyDescription, msg.Address)
+		return sdkerrors.Wrap(ErrEmptyDescription, msg.Address)
 	}
 	return nil
 }
