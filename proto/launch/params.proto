@@ -5,6 +5,6 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 
 // Params defines the parameters for the staking module.
 message Params {
-  uint64 minLaunchTriggeringTime = 1;
-  uint64 maxLaunchTriggeringTime = 2;
+  uint64 minLaunchTime = 1;
+  uint64 maxLaunchTime = 2;
 }
