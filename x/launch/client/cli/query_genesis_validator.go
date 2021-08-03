@@ -53,18 +53,9 @@ func CmdShowGenesisValidator() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsChainID, err := cast.ToStringE(args[0])
-			if err != nil {
-				return err
-			}
-			argsAddress, err := cast.ToStringE(args[1])
-			if err != nil {
-				return err
-			}
-
 			params := &types.QueryGetGenesisValidatorRequest{
-				ChainID: argsChainID,
-				Address: argsAddress,
+				ChainID: args[0],
+				Address: args[1],
 			}
 
 			res, err := queryClient.GenesisValidator(context.Background(), params)
