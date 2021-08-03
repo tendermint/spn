@@ -24,7 +24,13 @@ func CmdListVestedAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
+			chainID, err := cmd.Flags().GetString(flagChainID)
+			if err != nil {
+				return err
+			}
+
 			params := &types.QueryAllVestedAccountRequest{
+				ChainID:    chainID,
 				Pagination: pageReq,
 			}
 
@@ -37,6 +43,7 @@ func CmdListVestedAccount() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagChainID, "", "filter by chain id")
 	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
 	flags.AddQueryFlagsToCmd(cmd)
 

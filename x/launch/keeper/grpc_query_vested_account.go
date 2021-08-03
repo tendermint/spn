@@ -28,7 +28,9 @@ func (k Keeper) VestedAccountAll(c context.Context, req *types.QueryAllVestedAcc
 			return err
 		}
 
-		vestedAccounts = append(vestedAccounts, &vestedAccount)
+		if req.ChainID == "" || vestedAccount.ChainID == req.ChainID {
+			vestedAccounts = append(vestedAccounts, &vestedAccount)
+		}
 		return nil
 	})
 

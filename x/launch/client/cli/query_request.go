@@ -25,13 +25,8 @@ func CmdListRequest() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsChainID, err := cast.ToStringE(args[0])
-			if err != nil {
-				return err
-			}
-
 			params := &types.QueryAllRequestRequest{
-				ChainID:    argsChainID,
+				ChainID:    args[0],
 				Pagination: pageReq,
 			}
 
@@ -60,17 +55,13 @@ func CmdShowRequest() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsChainID, err := cast.ToStringE(args[0])
-			if err != nil {
-				return err
-			}
 			argsRequestID, err := cast.ToUint64E(args[1])
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryGetRequestRequest{
-				ChainID:   argsChainID,
+				ChainID:   args[0],
 				RequestID: argsRequestID,
 			}
 

@@ -28,7 +28,9 @@ func (k Keeper) GenesisAccountAll(c context.Context, req *types.QueryAllGenesisA
 			return err
 		}
 
-		genesisAccounts = append(genesisAccounts, &genesisAccount)
+		if req.ChainID == "" || genesisAccount.ChainID == req.ChainID {
+			genesisAccounts = append(genesisAccounts, &genesisAccount)
+		}
 		return nil
 	})
 

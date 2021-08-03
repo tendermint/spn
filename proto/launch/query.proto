@@ -83,12 +83,14 @@ message QueryGetVestedAccountResponse {
 }
 
 message QueryAllVestedAccountRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+	string chainID = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryAllVestedAccountResponse {
-	repeated VestedAccount vestedAccount = 1;
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+	string chainID = 1;
+	repeated VestedAccount vestedAccount = 2;
+	cosmos.base.query.v1beta1.PageResponse pagination = 3;
 }
 
 message QueryGetGenesisAccountRequest {
@@ -101,7 +103,8 @@ message QueryGetGenesisAccountResponse {
 }
 
 message QueryAllGenesisAccountRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+	string chainID = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryAllGenesisAccountResponse {
