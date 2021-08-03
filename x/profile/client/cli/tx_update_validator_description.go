@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	flagMoniker         = "moniker"
+	flagMoniker         = "validator-moniker"
 	flagSecurityContact = "security-contact"
 )
 
