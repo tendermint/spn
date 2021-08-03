@@ -10,10 +10,13 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
+	cdc.RegisterConcrete(&MsgRequestAddVestedAccount{}, "launch/RequestAddVestedAccount", nil)
+
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
 	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
+	cdc.RegisterConcrete(&VestedAccount{}, "spn/launch/VestedAccount", nil)
 
 	cdc.RegisterInterface((*VestingOptions)(nil), nil)
 	cdc.RegisterConcrete(&DelayedVesting{}, "spn/launch/DelayedVesting", nil)
@@ -27,12 +30,14 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateChain{},
+		&MsgRequestAddVestedAccount{},
 	)
 
 	registry.RegisterInterface(
 		"launch.RequestContent",
 		(*RequestContent)(nil),
 		&GenesisAccount{},
+		&VestedAccount{},
 	)
 
 	registry.RegisterInterface(

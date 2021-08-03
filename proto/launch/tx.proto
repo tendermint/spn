@@ -2,16 +2,32 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "google/protobuf/any.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc RequestAddVestedAccount(MsgRequestAddVestedAccount) returns (MsgRequestAddVestedAccountResponse);
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgRequestAddVestedAccount {
+  string chainID = 1;
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin Coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  google.protobuf.Any options = 4 [(cosmos_proto.accepts_interface) = "VestingOptions"];
+}
+
+message MsgRequestAddVestedAccountResponse {
+  uint64 requestID = 1;
+}
+
 message MsgCreateChain {
   string coordinator = 1;
   string chainName = 2;

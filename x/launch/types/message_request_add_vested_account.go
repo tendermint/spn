@@ -1,0 +1,51 @@
+package types
+
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+)
+
+var _ sdk.Msg = &MsgRequestAddVestedAccount{}
+
+func NewMsgRequestAddVestedAccount(address, chainID string, coins sdk.Coins, options string) *MsgRequestAddVestedAccount {
+	return &MsgRequestAddVestedAccount{
+		ChainID: chainID,
+		Address: address,
+		Coins:   coins,
+		Options: options,
+	}
+}
+
+func (msg *MsgRequestAddVestedAccount) Route() string {
+	return RouterKey
+}
+
+func (msg *MsgRequestAddVestedAccount) Type() string {
+	return "RequestAddVestedAccount"
+}
+
+func (msg *MsgRequestAddVestedAccount) GetSigners() []sdk.AccAddress {
+	addres, err := sdk.AccAddressFromBech32(msg.Address)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{addres}
+}
+
+func (msg *MsgRequestAddVestedAccount) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
+	_, err := sdk.AccAddressFromBech32(msg.Address)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address (%s)", err)
+	}
+
+	_, _, err = ParseChainID(msg.ChainID)
+	if err != nil {
+		return sdkerrors.Wrapf(ErrInvalidChainID, msg.ChainID)
+	}
+	return nil
+}
