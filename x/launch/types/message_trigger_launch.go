@@ -41,5 +41,12 @@ func (msg *MsgTriggerLaunch) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
+
+	// Check chain ID is well formatted
+	_, _, err = ParseChainID(msg.ChainID)
+	if err != nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, msg.ChainID)
+	}
+
 	return nil
 }
