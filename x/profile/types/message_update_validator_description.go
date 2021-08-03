@@ -56,12 +56,11 @@ func (msg *MsgUpdateValidatorDescription) ValidateBasic() error {
 	if msg.Description == nil {
 		return sdkerrors.Wrapf(ErrEmptyDescription, msg.Address)
 	}
-	desc := []byte(msg.Description.Details)
-	desc = append(desc, []byte(msg.Description.Moniker)...)
-	desc = append(desc, []byte(msg.Description.Identity)...)
-	desc = append(desc, []byte(msg.Description.Website)...)
-	desc = append(desc, []byte(msg.Description.SecurityContact)...)
-	if len(desc) == 0 {
+	if msg.Description.Details == "" &&
+		msg.Description.Moniker == "" &&
+		msg.Description.Identity == "" &&
+		msg.Description.Website == "" &&
+		msg.Description.SecurityContact == "" {
 		return sdkerrors.Wrapf(ErrEmptyDescription, msg.Address)
 	}
 	return nil

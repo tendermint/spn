@@ -47,10 +47,9 @@ func (msg *MsgUpdateCoordinatorDescription) ValidateBasic() error {
 	if msg.Description == nil {
 		return sdkerrors.Wrapf(ErrEmptyDescription, msg.Address)
 	}
-	desc := []byte(msg.Description.Details)
-	desc = append(desc, []byte(msg.Description.Identity)...)
-	desc = append(desc, []byte(msg.Description.Website)...)
-	if len(desc) == 0 {
+	if msg.Description.Details == "" &&
+		msg.Description.Identity == "" &&
+		msg.Description.Website == "" {
 		return sdkerrors.Wrapf(ErrEmptyDescription, msg.Address)
 	}
 	return nil
