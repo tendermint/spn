@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"testing"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/store"
@@ -16,6 +17,8 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
 )
+
+var sampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
 
 func setupKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, codec.Marshaler) {
 	cdc := sample.Codec()
@@ -45,6 +48,8 @@ func setupKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, cod
 	stateStore.MountStoreWithDB(memStoreKeyLaunch, sdk.StoreTypeMemory, nil)
 	require.NoError(t, stateStore.LoadLatestVersion())
 
-	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
+	ctx := sdk.NewContext(stateStore, tmproto.Header{
+		Time: sampleTimestamp,
+	}, false, log.NewNopLogger())
 	return launchKeeper, profileKeeper, ctx, cdc
 }
