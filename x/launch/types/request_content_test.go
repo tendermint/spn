@@ -1,7 +1,6 @@
 package types_test
 
 import (
-	"fmt"
 	"testing"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
@@ -29,6 +28,7 @@ func TestGenesisAccountCodec(t *testing.T) {
 	request.Content, err = codec.NewAnyWithValue(invalidContent)
 	require.NoError(t, err)
 	content, err = request.UnpackGenesisAccount(cdc)
-	require.ErrorIs(t, err, fmt.Errorf("not a genesisAccount request"))
+	require.Error(t, err)
+	require.Equal(t, err.Error(), "not a genesisAccount request")
 	require.Nil(t, content)
 }

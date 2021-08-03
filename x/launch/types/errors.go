@@ -12,5 +12,5 @@ var (
 	ErrChainIDNotFound  = sdkerrors.Register(ModuleName, 2, "chain id not found")
 	ErrInvalidChainID   = sdkerrors.Register(ModuleName, 3, "the chain id is invalid")
 	ErrCodecNotPacked   = sdkerrors.Register(ModuleName, 4, "codec value couldn't be packed")
-	ErrEmptyCoins       = sdkerrors.Register(ModuleName, 3, "the coin list is empty")
+	ErrEmptyCoins       = sdkerrors.Register(ModuleName, 5, "the coin list is empty")
 )
