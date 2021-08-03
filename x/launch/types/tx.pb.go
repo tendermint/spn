@@ -6,6 +6,9 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	_ "github.com/cosmos/cosmos-sdk/types"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
@@ -28,6 +31,110 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // this line is used by starport scaffolding # proto/tx/message
+type MsgRequestAddAccount struct {
+	ChainID string                                   `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
+	Address string                                   `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	Coins   github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,3,rep,name=Coins,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"Coins"`
+}
+
+func (m *MsgRequestAddAccount) Reset()         { *m = MsgRequestAddAccount{} }
+func (m *MsgRequestAddAccount) String() string { return proto.CompactTextString(m) }
+func (*MsgRequestAddAccount) ProtoMessage()    {}
+func (*MsgRequestAddAccount) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6adab5ffa522f022, []int{0}
+}
+func (m *MsgRequestAddAccount) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRequestAddAccount) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRequestAddAccount.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRequestAddAccount) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRequestAddAccount.Merge(m, src)
+}
+func (m *MsgRequestAddAccount) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRequestAddAccount) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRequestAddAccount.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRequestAddAccount proto.InternalMessageInfo
+
+func (m *MsgRequestAddAccount) GetChainID() string {
+	if m != nil {
+		return m.ChainID
+	}
+	return ""
+}
+
+func (m *MsgRequestAddAccount) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+func (m *MsgRequestAddAccount) GetCoins() github_com_cosmos_cosmos_sdk_types.Coins {
+	if m != nil {
+		return m.Coins
+	}
+	return nil
+}
+
+type MsgRequestAddAccountResponse struct {
+	RequestID uint64 `protobuf:"varint,1,opt,name=requestID,proto3" json:"requestID,omitempty"`
+}
+
+func (m *MsgRequestAddAccountResponse) Reset()         { *m = MsgRequestAddAccountResponse{} }
+func (m *MsgRequestAddAccountResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRequestAddAccountResponse) ProtoMessage()    {}
+func (*MsgRequestAddAccountResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6adab5ffa522f022, []int{1}
+}
+func (m *MsgRequestAddAccountResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRequestAddAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRequestAddAccountResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRequestAddAccountResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRequestAddAccountResponse.Merge(m, src)
+}
+func (m *MsgRequestAddAccountResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRequestAddAccountResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRequestAddAccountResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRequestAddAccountResponse proto.InternalMessageInfo
+
+func (m *MsgRequestAddAccountResponse) GetRequestID() uint64 {
+	if m != nil {
+		return m.RequestID
+	}
+	return 0
+}
+
 type MsgCreateChain struct {
 	Coordinator string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
 	ChainName   string `protobuf:"bytes,2,opt,name=chainName,proto3" json:"chainName,omitempty"`
@@ -41,7 +148,7 @@ func (m *MsgCreateChain) Reset()         { *m = MsgCreateChain{} }
 func (m *MsgCreateChain) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateChain) ProtoMessage()    {}
 func (*MsgCreateChain) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{0}
+	return fileDescriptor_6adab5ffa522f022, []int{2}
 }
 func (m *MsgCreateChain) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -120,7 +227,7 @@ func (m *MsgCreateChainResponse) Reset()         { *m = MsgCreateChainResponse{}
 func (m *MsgCreateChainResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateChainResponse) ProtoMessage()    {}
 func (*MsgCreateChainResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{1}
+	return fileDescriptor_6adab5ffa522f022, []int{3}
 }
 func (m *MsgCreateChainResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -157,6 +264,8 @@ func (m *MsgCreateChainResponse) GetChainID() string {
 }
 
 func init() {
+	proto.RegisterType((*MsgRequestAddAccount)(nil), "tendermint.spn.launch.MsgRequestAddAccount")
+	proto.RegisterType((*MsgRequestAddAccountResponse)(nil), "tendermint.spn.launch.MsgRequestAddAccountResponse")
 	proto.RegisterType((*MsgCreateChain)(nil), "tendermint.spn.launch.MsgCreateChain")
 	proto.RegisterType((*MsgCreateChainResponse)(nil), "tendermint.spn.launch.MsgCreateChainResponse")
 }
@@ -164,26 +273,36 @@ func init() {
 func init() { proto.RegisterFile("launch/tx.proto", fileDescriptor_6adab5ffa522f022) }
 
 var fileDescriptor_6adab5ffa522f022 = []byte{
-	// 294 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x91, 0xc1, 0x4a, 0xf3, 0x40,
-	0x10, 0xc7, 0xbb, 0x5f, 0x3f, 0x2b, 0xdd, 0x82, 0xc2, 0x82, 0x12, 0x44, 0x96, 0x52, 0x10, 0x7a,
-	0x71, 0x03, 0xf5, 0x0d, 0x5a, 0x0f, 0x0a, 0xd6, 0x43, 0xc0, 0x8b, 0xb7, 0xed, 0x76, 0x48, 0x22,
-	0x66, 0x37, 0xec, 0x6c, 0xa0, 0xbe, 0x85, 0x8f, 0xe5, 0x31, 0x47, 0x8f, 0x92, 0xbc, 0x88, 0x24,
-	0x69, 0x4c, 0x0a, 0x1e, 0x3c, 0xce, 0xef, 0xb7, 0x3b, 0xfc, 0x67, 0x86, 0x9e, 0xbe, 0xca, 0x4c,
-	0xab, 0xc8, 0x77, 0x3b, 0x91, 0x5a, 0xe3, 0x0c, 0x3b, 0x73, 0xa0, 0xb7, 0x60, 0x93, 0x58, 0x3b,
-	0x81, 0xa9, 0x16, 0x8d, 0x9f, 0xe5, 0x84, 0x9e, 0xac, 0x31, 0x5c, 0x59, 0x90, 0x0e, 0x56, 0x91,
-	0x8c, 0x35, 0x9b, 0xd2, 0x89, 0x32, 0xc6, 0x6e, 0x63, 0x2d, 0x9d, 0xb1, 0x1e, 0x99, 0x92, 0xf9,
-	0x38, 0xe8, 0x23, 0x76, 0x49, 0xc7, 0xaa, 0x7a, 0xfa, 0x28, 0x13, 0xf0, 0xfe, 0xd5, 0xbe, 0x03,
-	0x95, 0x45, 0x93, 0x59, 0x05, 0x4f, 0xc1, 0x83, 0x37, 0x6c, 0xec, 0x0f, 0x60, 0x9c, 0xd2, 0xa6,
-	0xb8, 0x93, 0x18, 0x79, 0xff, 0x6b, 0xdd, 0x23, 0x95, 0x0f, 0x41, 0x03, 0xc6, 0x58, 0x7d, 0x3f,
-	0x6a, 0x7c, 0x47, 0xaa, 0x74, 0xfb, 0xaa, 0x6e, 0x30, 0x6a, 0xd2, 0xf5, 0xd0, 0x6c, 0x41, 0xcf,
-	0x0f, 0x27, 0x0a, 0x00, 0x53, 0xa3, 0x11, 0x98, 0x47, 0x8f, 0xeb, 0x98, 0xf7, 0xb7, 0xfb, 0xa9,
-	0xda, 0x72, 0xf1, 0x42, 0x87, 0x6b, 0x0c, 0x99, 0xa2, 0x93, 0xfe, 0x26, 0xae, 0xc4, 0xaf, 0x4b,
-	0x13, 0x87, 0xed, 0x2f, 0xae, 0xff, 0xf4, 0xac, 0x4d, 0xb1, 0x5c, 0x7e, 0x14, 0x9c, 0xe4, 0x05,
-	0x27, 0x5f, 0x05, 0x27, 0xef, 0x25, 0x1f, 0xe4, 0x25, 0x1f, 0x7c, 0x96, 0x7c, 0xf0, 0x3c, 0x0f,
-	0x63, 0x17, 0x65, 0x1b, 0xa1, 0x4c, 0xe2, 0x77, 0x2d, 0x7d, 0x4c, 0xb5, 0xbf, 0xf3, 0xdb, 0x83,
-	0xbe, 0xa5, 0x80, 0x9b, 0x51, 0x7d, 0xd4, 0x9b, 0xef, 0x00, 0x00, 0x00, 0xff, 0xff, 0xed, 0x17,
-	0xd2, 0x75, 0xe7, 0x01, 0x00, 0x00,
+	// 463 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x53, 0x4f, 0x6f, 0xd3, 0x30,
+	0x14, 0xaf, 0xe9, 0x36, 0x34, 0x57, 0x02, 0x11, 0x0d, 0x14, 0xaa, 0x29, 0xad, 0x2a, 0x21, 0x2a,
+	0xa1, 0xd9, 0x5a, 0x77, 0xe5, 0xb2, 0x96, 0x03, 0x48, 0x94, 0x43, 0x24, 0x2e, 0x70, 0x72, 0x9d,
+	0xa7, 0x34, 0x82, 0xda, 0xc1, 0xcf, 0x41, 0xe3, 0x3b, 0x70, 0xe0, 0x73, 0xf0, 0x49, 0x76, 0xec,
+	0x11, 0x2e, 0x03, 0xda, 0x6f, 0xc1, 0x09, 0x39, 0x4e, 0x9b, 0x20, 0x3a, 0x69, 0x9c, 0x92, 0xf7,
+	0xfb, 0xfd, 0xfc, 0xfe, 0xfc, 0xfc, 0x4c, 0xef, 0xbe, 0x17, 0x85, 0x92, 0x73, 0x6e, 0x2f, 0x58,
+	0x6e, 0xb4, 0xd5, 0xc1, 0x7d, 0x0b, 0x2a, 0x01, 0xb3, 0xc8, 0x94, 0x65, 0x98, 0x2b, 0xe6, 0xf9,
+	0xee, 0x51, 0xaa, 0x53, 0x5d, 0x2a, 0xb8, 0xfb, 0xf3, 0xe2, 0x6e, 0x24, 0x35, 0x2e, 0x34, 0xf2,
+	0x99, 0x40, 0xe0, 0x1f, 0x4f, 0x67, 0x60, 0xc5, 0x29, 0x97, 0x3a, 0x53, 0x9e, 0x1f, 0x7c, 0x27,
+	0xf4, 0x68, 0x8a, 0x69, 0x0c, 0x1f, 0x0a, 0x40, 0x7b, 0x9e, 0x24, 0xe7, 0x52, 0xea, 0x42, 0xd9,
+	0x20, 0xa4, 0xb7, 0xe5, 0x5c, 0x64, 0xea, 0xc5, 0xb3, 0x90, 0xf4, 0xc9, 0xf0, 0x30, 0xde, 0x84,
+	0x8e, 0x11, 0x49, 0x62, 0x00, 0x31, 0xbc, 0xe5, 0x99, 0x2a, 0x0c, 0x3e, 0x13, 0xba, 0x3f, 0xd1,
+	0x99, 0xc2, 0xb0, 0xdd, 0x6f, 0x0f, 0x3b, 0xa3, 0x87, 0xcc, 0x57, 0x67, 0xae, 0x3a, 0xab, 0xaa,
+	0x33, 0xa7, 0x18, 0xbf, 0xbd, 0xbc, 0xea, 0xb5, 0x7e, 0x5f, 0xf5, 0x1e, 0xa7, 0x99, 0x9d, 0x17,
+	0x33, 0x26, 0xf5, 0x82, 0x57, 0xad, 0xfa, 0xcf, 0x09, 0x26, 0xef, 0xb8, 0xfd, 0x94, 0x03, 0x96,
+	0x07, 0xbe, 0xfe, 0xe8, 0x0d, 0x6f, 0x28, 0xc5, 0xd8, 0x37, 0x31, 0x78, 0x4a, 0x8f, 0x77, 0x8d,
+	0x16, 0x03, 0xe6, 0x5a, 0x21, 0x04, 0xc7, 0xf4, 0xd0, 0x78, 0xb2, 0x1a, 0x72, 0x2f, 0xae, 0x81,
+	0xc1, 0x92, 0xd0, 0x3b, 0x53, 0x4c, 0x27, 0x06, 0x84, 0x85, 0x89, 0x9b, 0x3d, 0xe8, 0xd3, 0x8e,
+	0xd4, 0xda, 0x24, 0x99, 0x12, 0x56, 0x9b, 0xca, 0x97, 0x26, 0xe4, 0x52, 0x96, 0x36, 0xbd, 0x12,
+	0x0b, 0xa8, 0xdc, 0xa9, 0x01, 0xc7, 0xa2, 0x2e, 0x8c, 0x84, 0xd7, 0xf1, 0xcb, 0xb0, 0xed, 0xd9,
+	0x2d, 0x10, 0x44, 0x94, 0xfa, 0xe0, 0xb9, 0xc0, 0x79, 0xb8, 0x57, 0xd2, 0x0d, 0xc4, 0xf1, 0x29,
+	0x28, 0xc0, 0x0c, 0xdd, 0xf1, 0x7d, 0xcf, 0xd7, 0x88, 0xeb, 0xae, 0x8a, 0xca, 0x04, 0x07, 0xbe,
+	0xbb, 0x06, 0x34, 0x18, 0xd1, 0x07, 0x7f, 0x4f, 0xb4, 0xb5, 0xe2, 0xda, 0xdb, 0x1e, 0xfd, 0x22,
+	0xb4, 0x3d, 0xc5, 0x34, 0x28, 0xe8, 0xbd, 0x7f, 0x97, 0xe4, 0x09, 0xdb, 0xb9, 0x8b, 0x6c, 0x97,
+	0xed, 0xdd, 0xb3, 0xff, 0x10, 0x6f, 0x1b, 0x93, 0xb4, 0xd3, 0xbc, 0x81, 0x47, 0xd7, 0xe7, 0x68,
+	0xc8, 0xba, 0x27, 0x37, 0x92, 0x6d, 0x8a, 0x8c, 0xc7, 0x97, 0xab, 0x88, 0x2c, 0x57, 0x11, 0xf9,
+	0xb9, 0x8a, 0xc8, 0x97, 0x75, 0xd4, 0x5a, 0xae, 0xa3, 0xd6, 0xb7, 0x75, 0xd4, 0x7a, 0xd3, 0xdc,
+	0xb9, 0x3a, 0x25, 0xc7, 0x5c, 0xf1, 0x0b, 0xbe, 0x79, 0x98, 0x6e, 0xf3, 0x66, 0x07, 0xe5, 0x7b,
+	0x3a, 0xfb, 0x13, 0x00, 0x00, 0xff, 0xff, 0x23, 0x7e, 0xbe, 0xaa, 0xaf, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -199,6 +318,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
 	// this line is used by starport scaffolding # proto/tx/rpc
+	RequestAddAccount(ctx context.Context, in *MsgRequestAddAccount, opts ...grpc.CallOption) (*MsgRequestAddAccountResponse, error)
 	CreateChain(ctx context.Context, in *MsgCreateChain, opts ...grpc.CallOption) (*MsgCreateChainResponse, error)
 }
 
@@ -208,6 +328,15 @@ type msgClient struct {
 
 func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
+}
+
+func (c *msgClient) RequestAddAccount(ctx context.Context, in *MsgRequestAddAccount, opts ...grpc.CallOption) (*MsgRequestAddAccountResponse, error) {
+	out := new(MsgRequestAddAccountResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Msg/RequestAddAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *msgClient) CreateChain(ctx context.Context, in *MsgCreateChain, opts ...grpc.CallOption) (*MsgCreateChainResponse, error) {
@@ -222,6 +351,7 @@ func (c *msgClient) CreateChain(ctx context.Context, in *MsgCreateChain, opts ..
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// this line is used by starport scaffolding # proto/tx/rpc
+	RequestAddAccount(context.Context, *MsgRequestAddAccount) (*MsgRequestAddAccountResponse, error)
 	CreateChain(context.Context, *MsgCreateChain) (*MsgCreateChainResponse, error)
 }
 
@@ -229,12 +359,33 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) RequestAddAccount(ctx context.Context, req *MsgRequestAddAccount) (*MsgRequestAddAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestAddAccount not implemented")
+}
 func (*UnimplementedMsgServer) CreateChain(ctx context.Context, req *MsgCreateChain) (*MsgCreateChainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateChain not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_RequestAddAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRequestAddAccount)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RequestAddAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.launch.Msg/RequestAddAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RequestAddAccount(ctx, req.(*MsgRequestAddAccount))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_CreateChain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -260,12 +411,95 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "RequestAddAccount",
+			Handler:    _Msg_RequestAddAccount_Handler,
+		},
+		{
 			MethodName: "CreateChain",
 			Handler:    _Msg_CreateChain_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "launch/tx.proto",
+}
+
+func (m *MsgRequestAddAccount) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRequestAddAccount) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRequestAddAccount) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Coins) > 0 {
+		for iNdEx := len(m.Coins) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Coins[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTx(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ChainID) > 0 {
+		i -= len(m.ChainID)
+		copy(dAtA[i:], m.ChainID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChainID)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRequestAddAccountResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRequestAddAccountResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRequestAddAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.RequestID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.RequestID))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
 }
 
 func (m *MsgCreateChain) Marshal() (dAtA []byte, err error) {
@@ -374,6 +608,41 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *MsgRequestAddAccount) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ChainID)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if len(m.Coins) > 0 {
+		for _, e := range m.Coins {
+			l = e.Size()
+			n += 1 + l + sovTx(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *MsgRequestAddAccountResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.RequestID != 0 {
+		n += 1 + sovTx(uint64(m.RequestID))
+	}
+	return n
+}
+
 func (m *MsgCreateChain) Size() (n int) {
 	if m == nil {
 		return 0
@@ -425,6 +694,223 @@ func sovTx(x uint64) (n int) {
 }
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgRequestAddAccount) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRequestAddAccount: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRequestAddAccount: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coins", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Coins = append(m.Coins, github_com_cosmos_cosmos_sdk_types.Coin{})
+			if err := m.Coins[len(m.Coins)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRequestAddAccountResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRequestAddAccountResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRequestAddAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RequestID", wireType)
+			}
+			m.RequestID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.RequestID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *MsgCreateChain) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
