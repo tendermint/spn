@@ -3,7 +3,6 @@ package types
 import (
 	"errors"
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/codec"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"time"
 )
@@ -51,10 +50,15 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	}
 }
 
-// UnmarshalParams unmarshal the params value
-func UnmarshalParams(cdc *codec.LegacyAmino, value []byte) (params Params, err error) {
-	err = cdc.UnmarshalBinaryBare(value, &params)
-	return
+// Validate validates the set of params
+func (p Params) Validate() error {
+	if p.MinLaunchTime > p.MaxLaunchTime {
+		return errors.New("MinLaunchTime can't be higher than MaxLaunchTime")
+	}
+	if err := validateLaunchTime(p.MinLaunchTime); err != nil {
+		return err
+	}
+	return validateLaunchTime(p.MaxLaunchTime)
 }
 
 func validateLaunchTime(i interface{}) error {

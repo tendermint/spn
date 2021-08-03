@@ -19,6 +19,7 @@ func DefaultGenesis() *GenesisState {
 		GenesisAccountList: []*GenesisAccount{},
 		ChainList:          []*Chain{},
 		ChainNameCountList: []*ChainNameCount{},
+		Params: DefaultParams(),
 	}
 }
 
@@ -41,7 +42,7 @@ func (gs GenesisState) Validate() error {
 		return err
 	}
 
-	return nil
+	return gs.Params.Validate()
 }
 
 func validateChains(gs GenesisState) (map[string]struct{}, error) {
