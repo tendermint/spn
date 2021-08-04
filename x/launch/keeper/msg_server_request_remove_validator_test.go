@@ -33,7 +33,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			msg: types.MsgRequestRemoveValidator{
 				ChainID: invalidChain,
 			},
-			err: sdkerrors.Wrap(types.ErrChainNotFound, "invalid_chain"),
+			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveValidator{
