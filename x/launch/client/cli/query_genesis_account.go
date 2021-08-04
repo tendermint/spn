@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	flagChainID = "chain-id"
+	flagChainID = "filter-chain-id"
 )
 
 func CmdListGenesisAccount() *cobra.Command {
@@ -27,7 +27,10 @@ func CmdListGenesisAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, _ := cmd.Flags().GetString(flagChainID)
+			chainID, err := cmd.Flags().GetString(flagChainID)
+			if err != nil {
+				return err
+			}
 
 			params := &types.QueryAllGenesisAccountRequest{
 				ChainID:    chainID,

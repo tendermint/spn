@@ -24,7 +24,10 @@ func CmdListVestedAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, _ := cmd.Flags().GetString(flagChainID)
+			chainID, err := cmd.Flags().GetString(flagChainID)
+			if err != nil {
+				return err
+			}
 
 			params := &types.QueryAllVestedAccountRequest{
 				ChainID:    chainID,
