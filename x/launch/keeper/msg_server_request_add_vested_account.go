@@ -15,9 +15,13 @@ func (k msgServer) RequestAddVestedAccount(
 ) (*types.MsgRequestAddVestedAccountResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	_, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrChainIDNotFound, msg.ChainID)
+		return nil, sdkerrors.Wrap(types.ErrChainNotFound, msg.ChainID)
+	}
+
+	if chain.LaunchTriggered {
+		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
 	}
 
 	content, err := codec.NewAnyWithValue(&types.VestedAccount{
