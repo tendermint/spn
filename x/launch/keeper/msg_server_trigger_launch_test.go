@@ -25,33 +25,26 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
 	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
+
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
 	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
+
 
 	// Create chains
 	msgCreateChain := sample.MsgCreateChain(coordAddress, "foo", "")
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
+
 	chainID := res.ChainID
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 	alreadyLaunched := res.ChainID
 
 	// Set a chain as already launched
 	chain, found := k.GetChain(sdkCtx, alreadyLaunched)
-	if !found {
-		t.Fatal(err)
-	}
+	require.True(t, found)
 	chain.LaunchTriggered = true
 	k.SetChain(sdkCtx, chain)
 
