@@ -13,6 +13,7 @@ var (
 	ErrInvalidChainID        = sdkerrors.Register(ModuleName, 3, "the chain id is invalid")
 	ErrInvalidInitialGenesis = sdkerrors.Register(ModuleName, 4, "the initial genesis is invalid")
 	ErrCodecNotPacked        = sdkerrors.Register(ModuleName, 5, "codec value couldn't be packed")
+	ErrTriggeredLaunch       = sdkerrors.Register(ModuleName, 6, "launch is triggered for the chain")
 
 	// this line is used by starport scaffolding # ibc/errors
 )

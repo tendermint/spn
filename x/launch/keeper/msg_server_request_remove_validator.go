@@ -15,9 +15,13 @@ func (k msgServer) RequestRemoveValidator(
 ) (*types.MsgRequestRemoveValidatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	_, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
 		return nil, sdkerrors.Wrap(types.ErrChainNotFound, msg.ChainID)
+	}
+
+	if chain.LaunchTriggered {
+		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
 	}
 
 	content, err := codec.NewAnyWithValue(&types.ValidatorRemoval{
@@ -26,8 +30,6 @@ func (k msgServer) RequestRemoveValidator(
 	if err != nil {
 		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())
 	}
-
-	// TODO: return an error if the launch is triggered for the chain
 
 	requestID := k.AppendRequest(ctx, types.Request{
 		ChainID:   msg.ChainID,
