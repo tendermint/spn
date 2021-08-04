@@ -2,6 +2,8 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "google/protobuf/any.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -9,6 +11,7 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
+  rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
   rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
 }
 
@@ -34,3 +37,13 @@ message MsgCreateChain {
 message MsgCreateChainResponse {
   string chainID = 1;
 }
+
+message MsgEditChain {
+  string coordinator = 1;
+  string chainID = 2;
+  string sourceURL = 3;
+  string sourceHash = 4;
+  google.protobuf.Any initialGenesis = 5 [(cosmos_proto.accepts_interface) = "InitialGenesis"];
+}
+
+message MsgEditChainResponse {}
