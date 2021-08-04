@@ -28,12 +28,10 @@ func VestedAccountKey(chainID, address string) []byte {
 func VestedAccountAllKey(chainID string) []byte {
 	var key []byte
 
-	chainIDBytes := []byte(VestedAccountKeyPrefix)
+	keyBytes := []byte(VestedAccountKeyPrefix)
+	chainIDBytes := []byte(chainID)
+	key = append(key, keyBytes...)
 	key = append(key, chainIDBytes...)
-	key = append(key, []byte("/")...)
-
-	addressBytes := []byte(chainID)
-	key = append(key, addressBytes...)
 	key = append(key, []byte("/")...)
 
 	return key

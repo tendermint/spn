@@ -31,7 +31,7 @@ func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []
 	for i := 0; i < n; i++ {
 		state.GenesisAccountList = append(
 			state.GenesisAccountList,
-			sample.GenesisAccount(strconv.Itoa(i), strconv.Itoa(i)),
+			sample.GenesisAccount("foo", strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
@@ -100,8 +100,9 @@ func TestListGenesisAccount(t *testing.T) {
 	net, objs := networkWithGenesisAccountObjects(t, 5)
 
 	ctx := net.Validators[0].ClientCtx
-	request := func(next []byte, offset, limit uint64, total bool) []string {
+	request := func(chainID string, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
+			chainID,
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 		}
 		if next == nil {
@@ -118,7 +119,7 @@ func TestListGenesisAccount(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
-			args := request(nil, uint64(i), uint64(step), false)
+			args := request("foo", nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllGenesisAccountResponse
@@ -132,7 +133,7 @@ func TestListGenesisAccount(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
-			args := request(next, 0, uint64(step), false)
+			args := request("foo", next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllGenesisAccountResponse
@@ -144,7 +145,7 @@ func TestListGenesisAccount(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(objs)), true)
+		args := request("foo", nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllGenesisAccountResponse

@@ -28,12 +28,10 @@ func GenesisAccountKey(chainID, address string) []byte {
 func GenesisAccountAllKey(chainID string) []byte {
 	var key []byte
 
-	chainIDBytes := []byte(GenesisAccountKeyPrefix)
+	keyBytes := []byte(GenesisAccountKeyPrefix)
+	chainIDBytes := []byte(chainID)
+	key = append(key, keyBytes...)
 	key = append(key, chainIDBytes...)
-	key = append(key, []byte("/")...)
-
-	addressBytes := []byte(chainID)
-	key = append(key, addressBytes...)
 	key = append(key, []byte("/")...)
 
 	return key
