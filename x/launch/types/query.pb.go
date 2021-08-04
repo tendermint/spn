@@ -230,6 +230,198 @@ func (m *QueryAllRequestResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+type QueryGetGenesisValidatorRequest struct {
+	ChainID string `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
+	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryGetGenesisValidatorRequest) Reset()         { *m = QueryGetGenesisValidatorRequest{} }
+func (m *QueryGetGenesisValidatorRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetGenesisValidatorRequest) ProtoMessage()    {}
+func (*QueryGetGenesisValidatorRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_16d1d5d3029eb866, []int{4}
+}
+func (m *QueryGetGenesisValidatorRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetGenesisValidatorRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetGenesisValidatorRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetGenesisValidatorRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetGenesisValidatorRequest.Merge(m, src)
+}
+func (m *QueryGetGenesisValidatorRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetGenesisValidatorRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetGenesisValidatorRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetGenesisValidatorRequest proto.InternalMessageInfo
+
+func (m *QueryGetGenesisValidatorRequest) GetChainID() string {
+	if m != nil {
+		return m.ChainID
+	}
+	return ""
+}
+
+func (m *QueryGetGenesisValidatorRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryGetGenesisValidatorResponse struct {
+	GenesisValidator *GenesisValidator `protobuf:"bytes,1,opt,name=genesisValidator,proto3" json:"genesisValidator,omitempty"`
+}
+
+func (m *QueryGetGenesisValidatorResponse) Reset()         { *m = QueryGetGenesisValidatorResponse{} }
+func (m *QueryGetGenesisValidatorResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetGenesisValidatorResponse) ProtoMessage()    {}
+func (*QueryGetGenesisValidatorResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_16d1d5d3029eb866, []int{5}
+}
+func (m *QueryGetGenesisValidatorResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetGenesisValidatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetGenesisValidatorResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetGenesisValidatorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetGenesisValidatorResponse.Merge(m, src)
+}
+func (m *QueryGetGenesisValidatorResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetGenesisValidatorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetGenesisValidatorResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetGenesisValidatorResponse proto.InternalMessageInfo
+
+func (m *QueryGetGenesisValidatorResponse) GetGenesisValidator() *GenesisValidator {
+	if m != nil {
+		return m.GenesisValidator
+	}
+	return nil
+}
+
+type QueryAllGenesisValidatorRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllGenesisValidatorRequest) Reset()         { *m = QueryAllGenesisValidatorRequest{} }
+func (m *QueryAllGenesisValidatorRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllGenesisValidatorRequest) ProtoMessage()    {}
+func (*QueryAllGenesisValidatorRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_16d1d5d3029eb866, []int{6}
+}
+func (m *QueryAllGenesisValidatorRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllGenesisValidatorRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllGenesisValidatorRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllGenesisValidatorRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllGenesisValidatorRequest.Merge(m, src)
+}
+func (m *QueryAllGenesisValidatorRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllGenesisValidatorRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllGenesisValidatorRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllGenesisValidatorRequest proto.InternalMessageInfo
+
+func (m *QueryAllGenesisValidatorRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllGenesisValidatorResponse struct {
+	GenesisValidator []*GenesisValidator `protobuf:"bytes,1,rep,name=genesisValidator,proto3" json:"genesisValidator,omitempty"`
+	Pagination       *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllGenesisValidatorResponse) Reset()         { *m = QueryAllGenesisValidatorResponse{} }
+func (m *QueryAllGenesisValidatorResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllGenesisValidatorResponse) ProtoMessage()    {}
+func (*QueryAllGenesisValidatorResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_16d1d5d3029eb866, []int{7}
+}
+func (m *QueryAllGenesisValidatorResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllGenesisValidatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllGenesisValidatorResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllGenesisValidatorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllGenesisValidatorResponse.Merge(m, src)
+}
+func (m *QueryAllGenesisValidatorResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllGenesisValidatorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllGenesisValidatorResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllGenesisValidatorResponse proto.InternalMessageInfo
+
+func (m *QueryAllGenesisValidatorResponse) GetGenesisValidator() []*GenesisValidator {
+	if m != nil {
+		return m.GenesisValidator
+	}
+	return nil
+}
+
+func (m *QueryAllGenesisValidatorResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 type QueryGetVestedAccountRequest struct {
 	ChainID string `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
 	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
@@ -239,7 +431,7 @@ func (m *QueryGetVestedAccountRequest) Reset()         { *m = QueryGetVestedAcco
 func (m *QueryGetVestedAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryGetVestedAccountRequest) ProtoMessage()    {}
 func (*QueryGetVestedAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{4}
+	return fileDescriptor_16d1d5d3029eb866, []int{8}
 }
 func (m *QueryGetVestedAccountRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -290,7 +482,7 @@ func (m *QueryGetVestedAccountResponse) Reset()         { *m = QueryGetVestedAcc
 func (m *QueryGetVestedAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryGetVestedAccountResponse) ProtoMessage()    {}
 func (*QueryGetVestedAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{5}
+	return fileDescriptor_16d1d5d3029eb866, []int{9}
 }
 func (m *QueryGetVestedAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -335,7 +527,7 @@ func (m *QueryAllVestedAccountRequest) Reset()         { *m = QueryAllVestedAcco
 func (m *QueryAllVestedAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryAllVestedAccountRequest) ProtoMessage()    {}
 func (*QueryAllVestedAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{6}
+	return fileDescriptor_16d1d5d3029eb866, []int{10}
 }
 func (m *QueryAllVestedAccountRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -388,7 +580,7 @@ func (m *QueryAllVestedAccountResponse) Reset()         { *m = QueryAllVestedAcc
 func (m *QueryAllVestedAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryAllVestedAccountResponse) ProtoMessage()    {}
 func (*QueryAllVestedAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{7}
+	return fileDescriptor_16d1d5d3029eb866, []int{11}
 }
 func (m *QueryAllVestedAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -447,7 +639,7 @@ func (m *QueryGetGenesisAccountRequest) Reset()         { *m = QueryGetGenesisAc
 func (m *QueryGetGenesisAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryGetGenesisAccountRequest) ProtoMessage()    {}
 func (*QueryGetGenesisAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{8}
+	return fileDescriptor_16d1d5d3029eb866, []int{12}
 }
 func (m *QueryGetGenesisAccountRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -498,7 +690,7 @@ func (m *QueryGetGenesisAccountResponse) Reset()         { *m = QueryGetGenesisA
 func (m *QueryGetGenesisAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryGetGenesisAccountResponse) ProtoMessage()    {}
 func (*QueryGetGenesisAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{9}
+	return fileDescriptor_16d1d5d3029eb866, []int{13}
 }
 func (m *QueryGetGenesisAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -543,7 +735,7 @@ func (m *QueryAllGenesisAccountRequest) Reset()         { *m = QueryAllGenesisAc
 func (m *QueryAllGenesisAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryAllGenesisAccountRequest) ProtoMessage()    {}
 func (*QueryAllGenesisAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{10}
+	return fileDescriptor_16d1d5d3029eb866, []int{14}
 }
 func (m *QueryAllGenesisAccountRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -595,7 +787,7 @@ func (m *QueryAllGenesisAccountResponse) Reset()         { *m = QueryAllGenesisA
 func (m *QueryAllGenesisAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryAllGenesisAccountResponse) ProtoMessage()    {}
 func (*QueryAllGenesisAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{11}
+	return fileDescriptor_16d1d5d3029eb866, []int{15}
 }
 func (m *QueryAllGenesisAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -646,7 +838,7 @@ func (m *QueryGetChainRequest) Reset()         { *m = QueryGetChainRequest{} }
 func (m *QueryGetChainRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryGetChainRequest) ProtoMessage()    {}
 func (*QueryGetChainRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{12}
+	return fileDescriptor_16d1d5d3029eb866, []int{16}
 }
 func (m *QueryGetChainRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -690,7 +882,7 @@ func (m *QueryGetChainResponse) Reset()         { *m = QueryGetChainResponse{} }
 func (m *QueryGetChainResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryGetChainResponse) ProtoMessage()    {}
 func (*QueryGetChainResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{13}
+	return fileDescriptor_16d1d5d3029eb866, []int{17}
 }
 func (m *QueryGetChainResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -734,7 +926,7 @@ func (m *QueryAllChainRequest) Reset()         { *m = QueryAllChainRequest{} }
 func (m *QueryAllChainRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryAllChainRequest) ProtoMessage()    {}
 func (*QueryAllChainRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{14}
+	return fileDescriptor_16d1d5d3029eb866, []int{18}
 }
 func (m *QueryAllChainRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -779,7 +971,7 @@ func (m *QueryAllChainResponse) Reset()         { *m = QueryAllChainResponse{} }
 func (m *QueryAllChainResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryAllChainResponse) ProtoMessage()    {}
 func (*QueryAllChainResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_16d1d5d3029eb866, []int{15}
+	return fileDescriptor_16d1d5d3029eb866, []int{19}
 }
 func (m *QueryAllChainResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -827,6 +1019,10 @@ func init() {
 	proto.RegisterType((*QueryGetRequestResponse)(nil), "tendermint.spn.launch.QueryGetRequestResponse")
 	proto.RegisterType((*QueryAllRequestRequest)(nil), "tendermint.spn.launch.QueryAllRequestRequest")
 	proto.RegisterType((*QueryAllRequestResponse)(nil), "tendermint.spn.launch.QueryAllRequestResponse")
+	proto.RegisterType((*QueryGetGenesisValidatorRequest)(nil), "tendermint.spn.launch.QueryGetGenesisValidatorRequest")
+	proto.RegisterType((*QueryGetGenesisValidatorResponse)(nil), "tendermint.spn.launch.QueryGetGenesisValidatorResponse")
+	proto.RegisterType((*QueryAllGenesisValidatorRequest)(nil), "tendermint.spn.launch.QueryAllGenesisValidatorRequest")
+	proto.RegisterType((*QueryAllGenesisValidatorResponse)(nil), "tendermint.spn.launch.QueryAllGenesisValidatorResponse")
 	proto.RegisterType((*QueryGetVestedAccountRequest)(nil), "tendermint.spn.launch.QueryGetVestedAccountRequest")
 	proto.RegisterType((*QueryGetVestedAccountResponse)(nil), "tendermint.spn.launch.QueryGetVestedAccountResponse")
 	proto.RegisterType((*QueryAllVestedAccountRequest)(nil), "tendermint.spn.launch.QueryAllVestedAccountRequest")
@@ -844,60 +1040,69 @@ func init() {
 func init() { proto.RegisterFile("launch/query.proto", fileDescriptor_16d1d5d3029eb866) }
 
 var fileDescriptor_16d1d5d3029eb866 = []byte{
-	// 843 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x97, 0xcb, 0x4f, 0x13, 0x51,
-	0x14, 0xc6, 0xb9, 0x54, 0xac, 0x1c, 0x02, 0xd1, 0x1b, 0xd0, 0xa6, 0xd6, 0x09, 0x99, 0xf0, 0x68,
-	0x78, 0xcc, 0x40, 0x41, 0x83, 0x8f, 0x85, 0x45, 0x22, 0x41, 0x63, 0x82, 0x25, 0x71, 0xe1, 0x42,
-	0x33, 0x6d, 0x6f, 0x4a, 0xe3, 0x30, 0x53, 0x7a, 0xa7, 0x44, 0x24, 0x24, 0xea, 0xd6, 0x8d, 0x51,
-	0x97, 0xba, 0x75, 0xe3, 0xc2, 0xad, 0x0b, 0x17, 0x2e, 0x5d, 0x19, 0x12, 0x63, 0xe2, 0xd2, 0x80,
-	0x7f, 0x88, 0xe9, 0x9d, 0x33, 0xb6, 0x33, 0x9d, 0xe9, 0x4c, 0x9b, 0xae, 0x48, 0x7b, 0xcf, 0xe3,
-	0xf7, 0x7d, 0xe7, 0x72, 0x2e, 0x00, 0xd5, 0xb5, 0x9a, 0x51, 0xd8, 0x56, 0x77, 0x6b, 0xac, 0xba,
-	0xaf, 0x54, 0xaa, 0xa6, 0x65, 0xd2, 0x31, 0x8b, 0x19, 0x45, 0x56, 0xdd, 0x29, 0x1b, 0x96, 0xc2,
-	0x2b, 0x86, 0x62, 0x87, 0x24, 0x53, 0x25, 0xd3, 0x2c, 0xe9, 0x4c, 0xd5, 0x2a, 0x65, 0x55, 0x33,
-	0x0c, 0xd3, 0xd2, 0xac, 0xb2, 0x69, 0x70, 0x3b, 0x29, 0x39, 0x53, 0x30, 0xf9, 0x8e, 0xc9, 0xd5,
-	0xbc, 0xc6, 0x99, 0x5d, 0x4d, 0xdd, 0x5b, 0xcc, 0x33, 0x4b, 0x5b, 0x54, 0x2b, 0x5a, 0xa9, 0x6c,
-	0x88, 0x60, 0x8c, 0x1d, 0xc5, 0xa6, 0x55, 0xb6, 0x5b, 0x63, 0xdc, 0xc2, 0x6f, 0x2f, 0xe2, 0xb7,
-	0x7b, 0x8c, 0x5b, 0xac, 0xf8, 0x58, 0x2b, 0x14, 0xcc, 0x9a, 0xe1, 0x1c, 0xa6, 0xf0, 0xb0, 0xc4,
-	0x0c, 0xc6, 0xcb, 0xdc, 0x73, 0xea, 0xa8, 0x28, 0x6c, 0x6b, 0x65, 0x6c, 0x22, 0x6f, 0xc2, 0xf9,
-	0xfb, 0x75, 0x8c, 0x75, 0x66, 0xe5, 0xec, 0x3e, 0xf8, 0x83, 0x26, 0x20, 0x2e, 0x02, 0x37, 0xd6,
-	0x12, 0x64, 0x9c, 0xa4, 0x07, 0x73, 0xce, 0x47, 0x9a, 0x82, 0x41, 0x64, 0xda, 0x58, 0x4b, 0xf4,
-	0x8f, 0x93, 0xf4, 0xa9, 0x5c, 0xe3, 0x0b, 0x79, 0x0b, 0x2e, 0xb4, 0x54, 0xe4, 0x15, 0xd3, 0xe0,
-	0x8c, 0xae, 0x40, 0x1c, 0xe3, 0x44, 0xc9, 0xa1, 0x8c, 0xa4, 0xf8, 0x9a, 0xa8, 0x38, 0x89, 0x4e,
-	0xb8, 0xfc, 0x0c, 0x31, 0xb3, 0xba, 0x1e, 0x19, 0xf3, 0x36, 0x40, 0xc3, 0x53, 0xc1, 0x39, 0x94,
-	0x99, 0x52, 0xec, 0x01, 0x28, 0xf5, 0x01, 0x28, 0xf6, 0x38, 0x71, 0x00, 0xca, 0xa6, 0x56, 0x62,
-	0x4e, 0xf1, 0xa6, 0x4c, 0xf9, 0x3d, 0x41, 0x45, 0xcd, 0xcd, 0xfd, 0x14, 0xc5, 0x3a, 0x50, 0x44,
-	0xd7, 0x7d, 0xe8, 0xa6, 0x43, 0xe9, 0xec, 0xb6, 0x2e, 0xbc, 0x1c, 0xa4, 0x1c, 0xbf, 0x1f, 0x88,
-	0x3b, 0x91, 0xb5, 0x87, 0x1e, 0x6e, 0x50, 0x02, 0xe2, 0x5a, 0xb1, 0x58, 0x65, 0x9c, 0x8b, 0xfe,
-	0x83, 0x39, 0xe7, 0xa3, 0xfc, 0x04, 0x2e, 0x05, 0xd4, 0x44, 0xdd, 0x77, 0x60, 0x78, 0xaf, 0xf9,
-	0x00, 0xe7, 0x39, 0x11, 0xa0, 0xde, 0x5d, 0xc4, 0x9d, 0x2a, 0x3f, 0x27, 0xa8, 0x20, 0xab, 0xeb,
-	0x1d, 0x2a, 0xe8, 0xd5, 0x88, 0x7f, 0x10, 0x14, 0xdc, 0x8a, 0x80, 0x82, 0x83, 0x19, 0x5a, 0xac,
-	0xe8, 0x17, 0x17, 0xa1, 0x1b, 0x2b, 0x3c, 0x97, 0x22, 0xd6, 0xfd, 0xa5, 0xd8, 0x6a, 0x0c, 0x70,
-	0xdd, 0xde, 0x05, 0x3d, 0xb8, 0x15, 0x26, 0x48, 0x41, 0x45, 0xd1, 0xa5, 0x7b, 0x30, 0x52, 0x72,
-	0x9d, 0xe0, 0xbd, 0x98, 0x0c, 0x30, 0xc3, 0x53, 0xc6, 0x93, 0x2c, 0xbf, 0x68, 0x1a, 0x4b, 0xa7,
-	0x32, 0x7a, 0x75, 0x35, 0xbe, 0x10, 0x54, 0xed, 0xc3, 0xd0, 0x46, 0x75, 0xac, 0x6b, 0xd5, 0xbd,
-	0xdb, 0x0c, 0x0b, 0x30, 0xea, 0xcc, 0xeb, 0x56, 0xdd, 0x95, 0x50, 0xd3, 0xe4, 0xbb, 0x30, 0xe6,
-	0xc9, 0x40, 0x89, 0x19, 0x18, 0x10, 0x31, 0x38, 0xcf, 0x54, 0x80, 0x32, 0x3b, 0xc9, 0x0e, 0x95,
-	0x1f, 0x61, 0xfb, 0xac, 0xae, 0xbb, 0xda, 0xbb, 0x27, 0x43, 0xba, 0x9e, 0xcc, 0x3b, 0x82, 0xb4,
-	0x8d, 0x06, 0xad, 0xb4, 0xb1, 0x88, 0xb4, 0x3d, 0x73, 0x3d, 0xf3, 0x0b, 0x60, 0x40, 0x60, 0xd1,
-	0x8f, 0x04, 0xe2, 0x8e, 0xe8, 0xf9, 0x00, 0x06, 0xff, 0xc7, 0x37, 0xa9, 0x44, 0x0d, 0xb7, 0x01,
-	0xe4, 0x1b, 0x2f, 0x7f, 0xfe, 0x7d, 0xdb, 0x7f, 0x85, 0x2e, 0xab, 0x8d, 0x3c, 0x95, 0x57, 0x0c,
-	0xd5, 0xfd, 0x37, 0x84, 0x7a, 0x80, 0x93, 0x3e, 0x54, 0x0f, 0xfe, 0xbf, 0xd8, 0x87, 0xf4, 0x03,
-	0x01, 0xc0, 0x8a, 0x59, 0x5d, 0x6f, 0xcf, 0xda, 0xf2, 0x02, 0xb7, 0x67, 0x6d, 0x7d, 0x33, 0xe5,
-	0x05, 0xc1, 0x3a, 0x43, 0xd3, 0x51, 0x59, 0xe9, 0x57, 0x02, 0xc3, 0xae, 0xbd, 0x49, 0x97, 0x42,
-	0xfc, 0xf1, 0x7b, 0x47, 0x92, 0xcb, 0x9d, 0x25, 0x21, 0xee, 0x4d, 0x81, 0x7b, 0x8d, 0xae, 0x04,
-	0xe0, 0xba, 0x36, 0x78, 0xb3, 0xc1, 0xb8, 0x36, 0x0f, 0xe9, 0x27, 0x02, 0x67, 0x5d, 0xb5, 0xeb,
-	0x26, 0x2f, 0x85, 0xb8, 0xd6, 0xb9, 0x82, 0xa0, 0xb7, 0x4b, 0x9e, 0x13, 0x0a, 0xa6, 0xe8, 0x44,
-	0x14, 0x05, 0xf4, 0x1b, 0x81, 0x11, 0xf7, 0x86, 0xa2, 0x61, 0xc6, 0xf9, 0xee, 0xe6, 0xe4, 0xe5,
-	0x0e, 0xb3, 0x90, 0x36, 0x2b, 0x68, 0xaf, 0xd3, 0xab, 0x01, 0xb4, 0xee, 0x6d, 0xe9, 0x6b, 0xf8,
-	0x67, 0x02, 0xe7, 0xdc, 0xd5, 0xeb, 0x8e, 0x87, 0x99, 0xd7, 0x85, 0x8a, 0xc0, 0x37, 0x41, 0x9e,
-	0x17, 0x2a, 0xa6, 0xe9, 0x64, 0x24, 0x15, 0xf4, 0x0d, 0x81, 0x01, 0xb1, 0x8e, 0xe8, 0x6c, 0x88,
-	0x6b, 0xcd, 0xab, 0x34, 0x39, 0x17, 0x2d, 0x18, 0x99, 0x14, 0xc1, 0x94, 0xa6, 0x53, 0x01, 0x4c,
-	0xc2, 0xc9, 0xa6, 0x5f, 0xbb, 0x57, 0x04, 0xce, 0x88, 0x0a, 0x75, 0xf7, 0x66, 0x43, 0x7c, 0x88,
-	0xce, 0xe5, 0x5d, 0xd7, 0xf2, 0x84, 0xe0, 0x92, 0x68, 0xaa, 0x1d, 0xd7, 0xea, 0xea, 0xf7, 0x63,
-	0x89, 0x1c, 0x1d, 0x4b, 0xe4, 0xcf, 0xb1, 0x44, 0x5e, 0x9f, 0x48, 0x7d, 0x47, 0x27, 0x52, 0xdf,
-	0xef, 0x13, 0xa9, 0xef, 0x61, 0xba, 0x54, 0xb6, 0xb6, 0x6b, 0x79, 0xa5, 0x60, 0xee, 0x78, 0x2b,
-	0x3c, 0x75, 0x6a, 0x58, 0xfb, 0x15, 0xc6, 0xf3, 0xa7, 0xc5, 0x3f, 0x3d, 0x4b, 0xff, 0x02, 0x00,
-	0x00, 0xff, 0xff, 0x73, 0xb0, 0x53, 0x25, 0xd0, 0x0d, 0x00, 0x00,
+	// 979 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x98, 0xbf, 0x6f, 0x23, 0x45,
+	0x14, 0xc7, 0x33, 0x31, 0xc1, 0xe4, 0x9d, 0x72, 0x0a, 0xc3, 0x1d, 0x58, 0xc6, 0x2c, 0xd1, 0x28,
+	0x17, 0x9b, 0xfb, 0xb1, 0x7b, 0xe7, 0x1c, 0xe1, 0xe0, 0x40, 0xc2, 0x97, 0x88, 0x28, 0x20, 0xa4,
+	0xe0, 0x88, 0x14, 0x14, 0xa0, 0xb5, 0x3d, 0xda, 0xac, 0xd8, 0xec, 0x3a, 0xde, 0xb5, 0x21, 0x44,
+	0x91, 0x80, 0x96, 0x06, 0x01, 0x25, 0xb4, 0x34, 0x14, 0x94, 0x50, 0x50, 0xa4, 0x4c, 0x85, 0x22,
+	0xd1, 0x20, 0x2a, 0x94, 0xf0, 0x87, 0x20, 0xcf, 0xbe, 0x8d, 0xbd, 0xbf, 0x77, 0x1d, 0x57, 0x91,
+	0x3d, 0xef, 0xbd, 0xf9, 0x7c, 0xbf, 0x6f, 0xfc, 0x66, 0x14, 0xa0, 0x86, 0xda, 0x37, 0xdb, 0x7b,
+	0xca, 0x41, 0x9f, 0xf7, 0x0e, 0xe5, 0x6e, 0xcf, 0x72, 0x2c, 0x7a, 0xd3, 0xe1, 0x66, 0x87, 0xf7,
+	0xf6, 0x75, 0xd3, 0x91, 0xed, 0xae, 0x29, 0xbb, 0x21, 0xe5, 0x8a, 0x66, 0x59, 0x9a, 0xc1, 0x15,
+	0xb5, 0xab, 0x2b, 0xaa, 0x69, 0x5a, 0x8e, 0xea, 0xe8, 0x96, 0x69, 0xbb, 0x49, 0xe5, 0xdb, 0x6d,
+	0xcb, 0xde, 0xb7, 0x6c, 0xa5, 0xa5, 0xda, 0xdc, 0xad, 0xa6, 0x0c, 0x1e, 0xb4, 0xb8, 0xa3, 0x3e,
+	0x50, 0xba, 0xaa, 0xa6, 0x9b, 0x22, 0x18, 0x63, 0x6f, 0xe0, 0xa6, 0x3d, 0x7e, 0xd0, 0xe7, 0xb6,
+	0x83, 0xdf, 0xbe, 0x88, 0xdf, 0x0e, 0xb8, 0xed, 0xf0, 0xce, 0x27, 0x6a, 0xbb, 0x6d, 0xf5, 0x4d,
+	0x6f, 0xb1, 0x82, 0x8b, 0x1a, 0x37, 0xb9, 0xad, 0xdb, 0x81, 0x55, 0x29, 0xb0, 0x3a, 0x50, 0x0d,
+	0xbd, 0xa3, 0x3a, 0x56, 0x0f, 0xd7, 0x3d, 0x95, 0xed, 0x3d, 0x55, 0x47, 0x08, 0xb6, 0x0d, 0xcf,
+	0x7f, 0x30, 0xc4, 0xdc, 0xe4, 0x4e, 0xd3, 0xe5, 0xc0, 0x3f, 0xb4, 0x04, 0x45, 0x11, 0xb8, 0xb5,
+	0x51, 0x22, 0x4b, 0xa4, 0x36, 0xdf, 0xf4, 0x3e, 0xd2, 0x0a, 0xcc, 0x23, 0xf3, 0xd6, 0x46, 0x69,
+	0x76, 0x89, 0xd4, 0x9e, 0x6a, 0x8e, 0xbe, 0x60, 0x3b, 0xf0, 0x42, 0xa8, 0xa2, 0xdd, 0xb5, 0x4c,
+	0x9b, 0xd3, 0x47, 0x50, 0xc4, 0x38, 0x51, 0xf2, 0x5a, 0x5d, 0x92, 0x23, 0x4d, 0x96, 0xbd, 0x44,
+	0x2f, 0x9c, 0x7d, 0x81, 0x98, 0x0d, 0xc3, 0xc8, 0x8c, 0xf9, 0x0e, 0xc0, 0xc8, 0x73, 0xc1, 0x79,
+	0xad, 0xbe, 0x22, 0xbb, 0x0d, 0x92, 0x87, 0x0d, 0x92, 0xdd, 0x76, 0x63, 0x83, 0xe4, 0x6d, 0x55,
+	0xe3, 0x5e, 0xf1, 0xb1, 0x4c, 0xf6, 0x23, 0x41, 0x45, 0xe3, 0x9b, 0x47, 0x29, 0x2a, 0xe4, 0x50,
+	0x44, 0x37, 0x23, 0xe8, 0xaa, 0xa9, 0x74, 0xee, 0xb6, 0x3e, 0xbc, 0x0f, 0xe1, 0x65, 0xcf, 0xef,
+	0x4d, 0xb7, 0xf1, 0xbb, 0x5e, 0xdf, 0xd3, 0x3d, 0x2a, 0x41, 0x51, 0xed, 0x74, 0x7a, 0xdc, 0xb6,
+	0x05, 0xc2, 0x7c, 0xd3, 0xfb, 0xc8, 0x3e, 0x83, 0xa5, 0xf8, 0xb2, 0xa8, 0x7e, 0x07, 0x16, 0xb5,
+	0xc0, 0x1a, 0x36, 0xb6, 0x1a, 0x63, 0x43, 0xa8, 0x54, 0xa8, 0x00, 0xd3, 0x51, 0x4f, 0xc3, 0x30,
+	0xe2, 0xf4, 0xf8, 0x3b, 0x4b, 0x26, 0xee, 0xec, 0x09, 0x41, 0x91, 0x91, 0x7b, 0x25, 0x8a, 0x2c,
+	0x5c, 0x49, 0xe4, 0xf4, 0xba, 0xdf, 0x84, 0x8a, 0xd7, 0xa6, 0x5d, 0x31, 0x31, 0x1a, 0xee, 0x48,
+	0xb8, 0x4a, 0xeb, 0x3f, 0x85, 0x97, 0x62, 0x6a, 0xa2, 0x25, 0xef, 0xc2, 0xc2, 0x60, 0x7c, 0x01,
+	0x5b, 0xb0, 0x1c, 0xe3, 0x87, 0xbf, 0x88, 0x3f, 0x95, 0x7d, 0x49, 0x50, 0x41, 0xc3, 0x30, 0x72,
+	0x2a, 0x98, 0xd6, 0x0f, 0xfc, 0x4f, 0x82, 0x82, 0xc3, 0x08, 0x28, 0x38, 0x9e, 0x21, 0x64, 0xc5,
+	0xac, 0x38, 0x1a, 0x93, 0x58, 0x11, 0x38, 0x14, 0x85, 0xc9, 0x0f, 0xc5, 0xce, 0xa8, 0x81, 0x78,
+	0x16, 0xa7, 0x70, 0x2a, 0x2c, 0x90, 0xe2, 0x8a, 0xa2, 0x4b, 0xef, 0xc3, 0x75, 0xcd, 0xb7, 0x82,
+	0xe7, 0xe2, 0x56, 0xf2, 0xef, 0xc4, 0x2b, 0x13, 0x48, 0x66, 0x5f, 0x8d, 0xb5, 0x25, 0xaf, 0x8c,
+	0x69, 0x1d, 0x8d, 0xdf, 0x09, 0xaa, 0x8e, 0x60, 0x48, 0x50, 0x5d, 0x98, 0x58, 0xf5, 0xf4, 0x26,
+	0xc3, 0x7d, 0xb8, 0xe1, 0xf5, 0x6b, 0x7d, 0xe8, 0x4a, 0xaa, 0x69, 0xec, 0x3d, 0xb8, 0x19, 0xc8,
+	0x40, 0x89, 0x75, 0x98, 0x13, 0x31, 0xd8, 0xcf, 0x4a, 0x8c, 0x32, 0x37, 0xc9, 0x0d, 0x65, 0x1f,
+	0xe3, 0xf6, 0x0d, 0xc3, 0xf0, 0x6d, 0x3f, 0xad, 0xd9, 0xfd, 0x03, 0x41, 0xda, 0xd1, 0x06, 0x61,
+	0xda, 0x42, 0x46, 0xda, 0xa9, 0xb9, 0x5e, 0xff, 0x67, 0x01, 0xe6, 0x04, 0x16, 0xfd, 0x99, 0x40,
+	0xd1, 0x13, 0x7d, 0x2f, 0x86, 0x21, 0xfa, 0xe9, 0x55, 0x96, 0xb3, 0x86, 0xbb, 0x00, 0xec, 0xcd,
+	0xaf, 0xff, 0xfa, 0xef, 0xfb, 0xd9, 0x35, 0xfa, 0x50, 0x19, 0xe5, 0x29, 0x76, 0xd7, 0x54, 0xfc,
+	0x2f, 0x4c, 0xe5, 0x08, 0x3b, 0x7d, 0xac, 0x1c, 0x5d, 0xbe, 0xd7, 0x8e, 0xe9, 0x4f, 0x04, 0x00,
+	0x2b, 0x36, 0x0c, 0x23, 0x99, 0x35, 0xf4, 0xfe, 0x4a, 0x66, 0x0d, 0xbf, 0x98, 0xd8, 0x7d, 0xc1,
+	0x7a, 0x9b, 0xd6, 0xb2, 0xb2, 0xd2, 0x3f, 0x08, 0x2c, 0xf8, 0xe6, 0x26, 0x5d, 0x4d, 0xf1, 0x27,
+	0xea, 0x1e, 0x29, 0x3f, 0xcc, 0x97, 0x84, 0xb8, 0x6f, 0x0b, 0xdc, 0x37, 0xe8, 0xa3, 0x18, 0x5c,
+	0xdf, 0x04, 0x1f, 0x37, 0x18, 0xc7, 0xe6, 0x31, 0xfd, 0x85, 0xc0, 0xa2, 0xaf, 0xf6, 0xd0, 0xe4,
+	0xd5, 0x14, 0xd7, 0xf2, 0x2b, 0x88, 0xbb, 0xbb, 0xd8, 0x5d, 0xa1, 0x60, 0x85, 0x2e, 0x67, 0x51,
+	0x40, 0x4f, 0x08, 0x5c, 0xf7, 0x4f, 0x28, 0x9a, 0x66, 0x5c, 0xe4, 0x6c, 0x2e, 0xbf, 0x9a, 0x33,
+	0x0b, 0x69, 0x1b, 0x82, 0xf6, 0x31, 0x7d, 0x3d, 0x86, 0xd6, 0x3f, 0x2d, 0x23, 0x0d, 0xff, 0x95,
+	0xc0, 0xb3, 0xfe, 0xea, 0x43, 0xc7, 0xd3, 0xcc, 0x9b, 0x40, 0x45, 0xec, 0x9d, 0xc0, 0xee, 0x09,
+	0x15, 0x55, 0x7a, 0x2b, 0x93, 0x0a, 0x7a, 0x4a, 0x60, 0x31, 0xf8, 0x68, 0xa4, 0x6b, 0xd9, 0x0c,
+	0x0c, 0x3e, 0x8e, 0xcb, 0xaf, 0xe5, 0xce, 0x43, 0xe8, 0x75, 0x01, 0xfd, 0x16, 0x7d, 0x9c, 0x0c,
+	0x7d, 0x99, 0x18, 0x69, 0xfe, 0x6f, 0x04, 0x9e, 0x0b, 0xee, 0x30, 0xb4, 0x7f, 0x2d, 0x9b, 0x91,
+	0xf9, 0xd4, 0x24, 0x3c, 0xdb, 0x99, 0x22, 0xd4, 0xbc, 0x42, 0xab, 0x19, 0xd5, 0xd0, 0xef, 0x08,
+	0xcc, 0x89, 0x3b, 0x81, 0xde, 0x49, 0x71, 0x70, 0xfc, 0x3e, 0x2b, 0xdf, 0xcd, 0x16, 0x8c, 0x54,
+	0xb2, 0xa0, 0xaa, 0xd1, 0x95, 0x18, 0x2a, 0xe1, 0xe8, 0xd8, 0xec, 0xfb, 0x86, 0xc0, 0x33, 0xa2,
+	0xc2, 0xd0, 0xc3, 0x3b, 0x29, 0x5e, 0x64, 0xe7, 0x0a, 0xde, 0x99, 0x6c, 0x59, 0x70, 0x49, 0xb4,
+	0x92, 0xc4, 0xf5, 0xe4, 0xc9, 0xe9, 0xb9, 0x44, 0xce, 0xce, 0x25, 0xf2, 0xef, 0xb9, 0x44, 0xbe,
+	0xbd, 0x90, 0x66, 0xce, 0x2e, 0xa4, 0x99, 0xbf, 0x2f, 0xa4, 0x99, 0x8f, 0x6a, 0x9a, 0xee, 0xec,
+	0xf5, 0x5b, 0x72, 0xdb, 0xda, 0x0f, 0x56, 0xf8, 0xdc, 0xab, 0xe1, 0x1c, 0x76, 0xb9, 0xdd, 0x7a,
+	0x5a, 0xfc, 0xdf, 0x61, 0xf5, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0xd7, 0xcc, 0x4b, 0x2e, 0x73,
+	0x11, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -924,6 +1129,10 @@ type QueryClient interface {
 	GenesisAccount(ctx context.Context, in *QueryGetGenesisAccountRequest, opts ...grpc.CallOption) (*QueryGetGenesisAccountResponse, error)
 	// Queries a list of genesisAccount items.
 	GenesisAccountAll(ctx context.Context, in *QueryAllGenesisAccountRequest, opts ...grpc.CallOption) (*QueryAllGenesisAccountResponse, error)
+	// Queries a genesisValidator by index.
+	GenesisValidator(ctx context.Context, in *QueryGetGenesisValidatorRequest, opts ...grpc.CallOption) (*QueryGetGenesisValidatorResponse, error)
+	// Queries a list of genesisValidator items.
+	GenesisValidatorAll(ctx context.Context, in *QueryAllGenesisValidatorRequest, opts ...grpc.CallOption) (*QueryAllGenesisValidatorResponse, error)
 	// Queries a chain by index.
 	Chain(ctx context.Context, in *QueryGetChainRequest, opts ...grpc.CallOption) (*QueryGetChainResponse, error)
 	// Queries a list of chain items.
@@ -992,6 +1201,24 @@ func (c *queryClient) GenesisAccountAll(ctx context.Context, in *QueryAllGenesis
 	return out, nil
 }
 
+func (c *queryClient) GenesisValidator(ctx context.Context, in *QueryGetGenesisValidatorRequest, opts ...grpc.CallOption) (*QueryGetGenesisValidatorResponse, error) {
+	out := new(QueryGetGenesisValidatorResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Query/GenesisValidator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) GenesisValidatorAll(ctx context.Context, in *QueryAllGenesisValidatorRequest, opts ...grpc.CallOption) (*QueryAllGenesisValidatorResponse, error) {
+	out := new(QueryAllGenesisValidatorResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Query/GenesisValidatorAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) Chain(ctx context.Context, in *QueryGetChainRequest, opts ...grpc.CallOption) (*QueryGetChainResponse, error) {
 	out := new(QueryGetChainResponse)
 	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Query/Chain", in, out, opts...)
@@ -1024,6 +1251,10 @@ type QueryServer interface {
 	GenesisAccount(context.Context, *QueryGetGenesisAccountRequest) (*QueryGetGenesisAccountResponse, error)
 	// Queries a list of genesisAccount items.
 	GenesisAccountAll(context.Context, *QueryAllGenesisAccountRequest) (*QueryAllGenesisAccountResponse, error)
+	// Queries a genesisValidator by index.
+	GenesisValidator(context.Context, *QueryGetGenesisValidatorRequest) (*QueryGetGenesisValidatorResponse, error)
+	// Queries a list of genesisValidator items.
+	GenesisValidatorAll(context.Context, *QueryAllGenesisValidatorRequest) (*QueryAllGenesisValidatorResponse, error)
 	// Queries a chain by index.
 	Chain(context.Context, *QueryGetChainRequest) (*QueryGetChainResponse, error)
 	// Queries a list of chain items.
@@ -1051,6 +1282,12 @@ func (*UnimplementedQueryServer) GenesisAccount(ctx context.Context, req *QueryG
 }
 func (*UnimplementedQueryServer) GenesisAccountAll(ctx context.Context, req *QueryAllGenesisAccountRequest) (*QueryAllGenesisAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenesisAccountAll not implemented")
+}
+func (*UnimplementedQueryServer) GenesisValidator(ctx context.Context, req *QueryGetGenesisValidatorRequest) (*QueryGetGenesisValidatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenesisValidator not implemented")
+}
+func (*UnimplementedQueryServer) GenesisValidatorAll(ctx context.Context, req *QueryAllGenesisValidatorRequest) (*QueryAllGenesisValidatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GenesisValidatorAll not implemented")
 }
 func (*UnimplementedQueryServer) Chain(ctx context.Context, req *QueryGetChainRequest) (*QueryGetChainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Chain not implemented")
@@ -1171,6 +1408,42 @@ func _Query_GenesisAccountAll_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_GenesisValidator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetGenesisValidatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).GenesisValidator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.launch.Query/GenesisValidator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).GenesisValidator(ctx, req.(*QueryGetGenesisValidatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_GenesisValidatorAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllGenesisValidatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).GenesisValidatorAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.launch.Query/GenesisValidatorAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).GenesisValidatorAll(ctx, req.(*QueryAllGenesisValidatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_Chain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryGetChainRequest)
 	if err := dec(in); err != nil {
@@ -1234,6 +1507,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GenesisAccountAll",
 			Handler:    _Query_GenesisAccountAll_Handler,
+		},
+		{
+			MethodName: "GenesisValidator",
+			Handler:    _Query_GenesisValidator_Handler,
+		},
+		{
+			MethodName: "GenesisValidatorAll",
+			Handler:    _Query_GenesisValidatorAll_Handler,
 		},
 		{
 			MethodName: "Chain",
@@ -1396,6 +1677,162 @@ func (m *QueryAllRequestResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 		for iNdEx := len(m.Request) - 1; iNdEx >= 0; iNdEx-- {
 			{
 				size, err := m.Request[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetGenesisValidatorRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetGenesisValidatorRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetGenesisValidatorRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ChainID) > 0 {
+		i -= len(m.ChainID)
+		copy(dAtA[i:], m.ChainID)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChainID)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetGenesisValidatorResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetGenesisValidatorResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetGenesisValidatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.GenesisValidator != nil {
+		{
+			size, err := m.GenesisValidator.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllGenesisValidatorRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllGenesisValidatorRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllGenesisValidatorRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllGenesisValidatorResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllGenesisValidatorResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllGenesisValidatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.GenesisValidator) > 0 {
+		for iNdEx := len(m.GenesisValidator) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.GenesisValidator[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1956,6 +2393,68 @@ func (m *QueryAllRequestResponse) Size() (n int) {
 	_ = l
 	if len(m.Request) > 0 {
 		for _, e := range m.Request {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetGenesisValidatorRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ChainID)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetGenesisValidatorResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.GenesisValidator != nil {
+		l = m.GenesisValidator.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllGenesisValidatorRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllGenesisValidatorResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.GenesisValidator) > 0 {
+		for _, e := range m.GenesisValidator {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -2532,6 +3031,412 @@ func (m *QueryAllRequestResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.Request = append(m.Request, &Request{})
 			if err := m.Request[len(m.Request)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetGenesisValidatorRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetGenesisValidatorRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetGenesisValidatorRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetGenesisValidatorResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetGenesisValidatorResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetGenesisValidatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GenesisValidator", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.GenesisValidator == nil {
+				m.GenesisValidator = &GenesisValidator{}
+			}
+			if err := m.GenesisValidator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllGenesisValidatorRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllGenesisValidatorRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllGenesisValidatorRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllGenesisValidatorResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllGenesisValidatorResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllGenesisValidatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GenesisValidator", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GenesisValidator = append(m.GenesisValidator, &GenesisValidator{})
+			if err := m.GenesisValidator[len(m.GenesisValidator)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
