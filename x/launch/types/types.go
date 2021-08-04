@@ -4,4 +4,4 @@ package types
 // Chain launch can be reverted on-chain when the actual chain launch failed (incorrect gentx, etc...)
 // This delay must be small be big enough to ensure nodes had the time to bootstrap\
 // This currently corresponds to 1 hour
-const REVERT_DELAY int64 = 60*60
+const RevertDelay int64 = 60 * 60

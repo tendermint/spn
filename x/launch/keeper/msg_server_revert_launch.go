@@ -3,12 +3,12 @@ package keeper
 import (
 	"context"
 	"fmt"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunch) (*types.MsgRevertLaunchResponse, error) {
@@ -41,7 +41,7 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 	}
 
 	// We must wait for a specific delay once the chain is launched before being able to revert it
-	if ctx.BlockTime().Unix() < chain.LaunchTimestamp + types.REVERT_DELAY {
+	if ctx.BlockTime().Unix() < chain.LaunchTimestamp+types.RevertDelay {
 		return nil, sdkerrors.Wrap(types.ErrRevertDelayNotReached, msg.ChainID)
 	}
 

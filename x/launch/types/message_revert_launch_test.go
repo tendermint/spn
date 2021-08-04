@@ -1,11 +1,11 @@
 package types_test
 
 import (
-"testing"
+	"testing"
 
-"github.com/stretchr/testify/require"
-"github.com/tendermint/spn/testutil/sample"
-"github.com/tendermint/spn/x/launch/types"
+	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/types"
 )
 
 func TestMsgEditChain_ValidateBasic(t *testing.T) {

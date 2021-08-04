@@ -10,7 +10,7 @@ var _ sdk.Msg = &MsgRevertLaunch{}
 func NewMsgRevertLaunch(coordinator string, chainID string) *MsgRevertLaunch {
 	return &MsgRevertLaunch{
 		Coordinator: coordinator,
-		ChainID: chainID,
+		ChainID:     chainID,
 	}
 }
 

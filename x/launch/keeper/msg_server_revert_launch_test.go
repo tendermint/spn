@@ -37,7 +37,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	chain, found := k.GetChain(sdkCtx, delayNotReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
-	chain.LaunchTimestamp = sampleTimestamp.Unix() - types.REVERT_DELAY + 1
+	chain.LaunchTimestamp = sampleTimestamp.Unix() - types.RevertDelay + 1
 	k.SetChain(sdkCtx, chain)
 
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
@@ -46,14 +46,14 @@ func TestMsgRevertLaunch(t *testing.T) {
 	chain, found = k.GetChain(sdkCtx, delayReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
-	chain.LaunchTimestamp = sampleTimestamp.Unix() - types.REVERT_DELAY
+	chain.LaunchTimestamp = sampleTimestamp.Unix() - types.RevertDelay
 	k.SetChain(sdkCtx, chain)
 
 	for _, tc := range []struct {
 		name  string
 		msg   types.MsgRevertLaunch
 		valid bool
-	} {
+	}{
 		{
 			name:  "revert delay reached",
 			msg:   *types.NewMsgRevertLaunch(coordAddress, delayReached),
