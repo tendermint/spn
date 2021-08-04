@@ -12,6 +12,7 @@ import (
 
 func TestMsgRequestRemoveValidator(t *testing.T) {
 	var (
+		invalidChain, _           = sample.ChainID(0)
 		addr1                     = sample.AccAddress()
 		addr2                     = sample.AccAddress()
 		addr3                     = sample.AccAddress()
@@ -28,9 +29,9 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID: "invalid_chain",
+				ChainID: invalidChain,
 			},
-			err: sdkerrors.Wrap(types.ErrChainIDNotFound, "invalid_chain"),
+			err: sdkerrors.Wrap(types.ErrChainNotFound, "invalid_chain"),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestRemoveValidator{

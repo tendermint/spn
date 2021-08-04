@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
@@ -21,7 +22,7 @@ func (r Request) UnpackValidatorRemoval(cdc codec.AnyUnpacker) (*ValidatorRemova
 	}
 	removeValidator, ok := content.(*ValidatorRemoval)
 	if !ok {
-		return nil, fmt.Errorf("not a validatorRemoval request")
+		return nil, errors.New("not a validatorRemoval request")
 	}
 	return removeValidator, nil
 }

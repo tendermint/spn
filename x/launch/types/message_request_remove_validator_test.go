@@ -31,13 +31,6 @@ func TestMsgRequestRemoveValidator_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.Wrapf(types.ErrInvalidChainID, "invalid_chain"),
 		}, {
-			name: "invalid chain name",
-			msg: types.MsgRequestRemoveValidator{
-				ValidatorAddress: sample.AccAddress(),
-				ChainID:          "wh.thc-10",
-			},
-			err: sdkerrors.Wrapf(types.ErrInvalidChainID, "invalid_chain"),
-		}, {
 			name: "valid message",
 			msg: types.MsgRequestRemoveValidator{
 				ValidatorAddress: sample.AccAddress(),
