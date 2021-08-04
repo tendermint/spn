@@ -8,7 +8,7 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestMsgEditChain_ValidateBasic(t *testing.T) {
+func TestMsgRevertLaunch_ValidateBasic(t *testing.T) {
 	addr := sample.AccAddress()
 	chainID, _ := sample.ChainID(0)
 
