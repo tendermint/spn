@@ -45,5 +45,9 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 		return nil, sdkerrors.Wrap(types.ErrRevertDelayNotReached, msg.ChainID)
 	}
 
+	chain.LaunchTriggered = false
+	chain.LaunchTimestamp = 0
+	k.SetChain(ctx, chain)
+
 	return &types.MsgRevertLaunchResponse{}, nil
 }
