@@ -14,7 +14,7 @@ service Msg {
 
 // this line is used by starport scaffolding # proto/tx/message
 message MsgRevertLaunch {
-  string creator = 1;
+  string coordinator = 1;
   string chainID = 2;
 }
 

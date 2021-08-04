@@ -7,9 +7,9 @@ import (
 
 var _ sdk.Msg = &MsgRevertLaunch{}
 
-func NewMsgRevertLaunch(creator string, chainID string) *MsgRevertLaunch {
+func NewMsgRevertLaunch(coordinator string, chainID string) *MsgRevertLaunch {
 	return &MsgRevertLaunch{
-		Creator: creator,
+		Coordinator: coordinator,
 		ChainID: chainID,
 	}
 }
@@ -23,7 +23,7 @@ func (msg *MsgRevertLaunch) Type() string {
 }
 
 func (msg *MsgRevertLaunch) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	creator, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +36,7 @@ func (msg *MsgRevertLaunch) GetSignBytes() []byte {
 }
 
 func (msg *MsgRevertLaunch) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
