@@ -35,8 +35,8 @@ func setupKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, cod
 		cdc,
 		types.Amino,
 		storeKeys[paramstypes.StoreKey],
-		tkeys[paramstypes.StoreKey],
-		)
+		tkeys[paramstypes.TStoreKey],
+	)
 	paramsKeeper.Subspace(types.ModuleName)
 
 	profileKeeper := profilekeeper.NewKeeper(
@@ -59,8 +59,10 @@ func setupKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, cod
 
 	db := tmdb.NewMemDB()
 	stateStore := store.NewCommitMultiStore(db)
+	stateStore.MountStoreWithDB(storeKeys[paramstypes.StoreKey], sdk.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(storeKeys[profiletypes.StoreKey], sdk.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(storeKeys[types.StoreKey], sdk.StoreTypeIAVL, db)
+	stateStore.MountStoreWithDB(tkeys[paramstypes.TStoreKey], sdk.StoreTypeTransient, db)
 	stateStore.MountStoreWithDB(memStoreKeyProfile, sdk.StoreTypeMemory, nil)
 	stateStore.MountStoreWithDB(memStoreKeyLaunch, sdk.StoreTypeMemory, nil)
 	require.NoError(t, stateStore.LoadLatestVersion())
