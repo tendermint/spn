@@ -37,8 +37,8 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:                 chains[3].ChainID,
-				AddValidatorAddressress: addr1,
+				ChainID:          chains[3].ChainID,
+				ValidatorAddress: addr1,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
 		}, {
