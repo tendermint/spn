@@ -7,6 +7,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "launch/request.proto";
 import "launch/vested_account.proto";
 import "launch/genesis_account.proto";
+import "launch/genesis_validator.proto";
 import "launch/chain.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
@@ -42,6 +43,16 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/launch/genesisAccount";
 	}
 
+	// Queries a genesisValidator by index.
+	rpc GenesisValidator(QueryGetGenesisValidatorRequest) returns (QueryGetGenesisValidatorResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/genesisValidator/{chainID}/{address}";
+	}
+
+	// Queries a list of genesisValidator items.
+	rpc GenesisValidatorAll(QueryAllGenesisValidatorRequest) returns (QueryAllGenesisValidatorResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/genesisValidator";
+	}
+
 	// Queries a chain by index.
 	rpc Chain(QueryGetChainRequest) returns (QueryGetChainResponse) {
 		option (google.api.http).get = "/tendermint/spn/launch/chain/{chainID}";
@@ -70,6 +81,24 @@ message QueryAllRequestRequest {
 
 message QueryAllRequestResponse {
 	repeated Request request = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetGenesisValidatorRequest {
+	string chainID = 1;
+	string address = 2;
+}
+
+message QueryGetGenesisValidatorResponse {
+	GenesisValidator genesisValidator = 1;
+}
+
+message QueryAllGenesisValidatorRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllGenesisValidatorResponse {
+	repeated GenesisValidator genesisValidator = 1;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

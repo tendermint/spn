@@ -6,6 +6,7 @@ import "gogoproto/gogo.proto";
 import "launch/request.proto";
 import "launch/vested_account.proto";
 import "launch/genesis_account.proto";
+import "launch/genesis_validator.proto";
 import "launch/chain.proto";
 import "launch/params.proto";
 
@@ -18,6 +19,7 @@ message GenesisState {
 	repeated ChainNameCount chainNameCountList = 2; // this line is used by starport scaffolding # genesis/proto/stateField
 	repeated GenesisAccount genesisAccountList = 3; // this line is used by starport scaffolding # genesis/proto/stateField
 	repeated VestedAccount vestedAccountList = 4; // this line is used by starport scaffolding # genesis/proto/stateField
+	repeated GenesisValidator genesisValidatorList = 5; // this line is used by starport scaffolding # genesis/proto/stateField
 	repeated Request requestList = 10; // this line is used by starport scaffolding # genesis/proto/stateField
 	repeated RequestCount requestCountList = 11; // this line is used by starport scaffolding # genesis/proto/stateField
 	// this line is used by starport scaffolding # ibc/genesis/proto

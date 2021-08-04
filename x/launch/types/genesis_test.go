@@ -15,6 +15,7 @@ var (
 	addr1                            = sample.AccAddress()
 	addr2                            = sample.AccAddress()
 	vestedAddress                    = sample.AccAddress()
+	genesisValidator = sample.GenesisValidator(chainID1, addr1)
 
 	// Those are samples we can use for each fields when they are not the one to test
 	sampleChainList = []*types.Chain{
@@ -63,6 +64,7 @@ var (
 			Address: vestedAddress,
 		},
 	}
+	sampleGenesisValidatorList = []*types.GenesisValidator{genesisValidator}
 	sampleRequestList = []*types.Request{
 		{
 			ChainID:   chainID1,
@@ -99,6 +101,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainNameCountList: sampleChainNameCountList,
 				GenesisAccountList: sampleGenesisAccountList,
 				VestedAccountList:  sampleVestedAccountList,
+				GenesisValidatorList:  sampleGenesisValidatorList,
 				RequestList:        sampleRequestList,
 				RequestCountList:   sampleRequestCountList,
 			},
@@ -261,6 +264,40 @@ func TestGenesisState_Validate(t *testing.T) {
 						ChainID: chainID1,
 						Address: addr1,
 					},
+				},
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "genesis validator not associated to a chain",
+			genState: &types.GenesisState{
+				ChainList:          sampleChainList,
+				ChainNameCountList: sampleChainNameCountList,
+				GenesisValidatorList: []*types.GenesisValidator{
+					sample.GenesisValidator(noExistChainID, addr1),
+				},
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "duplicated genesis validator",
+			genState: &types.GenesisState{
+				ChainList:          sampleChainList,
+				ChainNameCountList: sampleChainNameCountList,
+				GenesisValidatorList: []*types.GenesisValidator{
+					sample.GenesisValidator(chainID1, addr1),
+					sample.GenesisValidator(chainID1, addr1),
+				},
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "validator address not associated to a chain",
+			genState: &types.GenesisState{
+				ChainList:          sampleChainList,
+				ChainNameCountList: sampleChainNameCountList,
+				GenesisValidatorList: []*types.GenesisValidator{
+					sample.GenesisValidator(noExistChainID, addr1),
 				},
 			},
 			shouldBeValid: false,

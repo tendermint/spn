@@ -45,6 +45,11 @@ func Codec() codec.Marshaler {
 	return codec.NewProtoCodec(interfaceRegistry)
 }
 
+// Bytes returns a random array of bytes
+func Bytes(n int) []byte {
+	return []byte(String(n))
+}
+
 // String returns a random string of length n
 func String(n int) string {
 	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
