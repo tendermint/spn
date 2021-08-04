@@ -9,42 +9,44 @@ import (
 	profile "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgUpdateCoordinatorDescription_ValidateBasic(t *testing.T) {
+func TestMsgUpdateValidatorDescription_ValidateBasic(t *testing.T) {
 	addr := sample.AccAddress()
 	tests := []struct {
 		name string
-		msg  profile.MsgUpdateCoordinatorDescription
+		msg  profile.MsgUpdateValidatorDescription
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: profile.MsgUpdateCoordinatorDescription{
+			msg: profile.MsgUpdateValidatorDescription{
 				Address: "invalid address",
 			},
 			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
 				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
 		}, {
 			name: "valid address and empty description",
-			msg: profile.MsgUpdateCoordinatorDescription{
+			msg: profile.MsgUpdateValidatorDescription{
 				Address:     addr,
-				Description: &profile.CoordinatorDescription{},
+				Description: &profile.ValidatorDescription{},
 			},
 			err: sdkerrors.Wrap(profile.ErrEmptyDescription, addr),
 		}, {
 			name: "valid address and nil description",
-			msg: profile.MsgUpdateCoordinatorDescription{
+			msg: profile.MsgUpdateValidatorDescription{
 				Address:     addr,
 				Description: nil,
 			},
 			err: sdkerrors.Wrap(profile.ErrEmptyDescription, addr),
 		}, {
 			name: "valid address and description",
-			msg: profile.MsgUpdateCoordinatorDescription{
+			msg: profile.MsgUpdateValidatorDescription{
 				Address: sample.AccAddress(),
-				Description: &profile.CoordinatorDescription{
-					Identity: "identity",
-					Website:  "website",
-					Details:  "details",
+				Description: &profile.ValidatorDescription{
+					Identity:        "identity",
+					Moniker:         "moniker",
+					Website:         "website",
+					SecurityContact: "security-contact",
+					Details:         "details",
 				},
 			},
 		},

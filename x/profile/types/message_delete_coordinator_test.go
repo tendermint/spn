@@ -20,7 +20,7 @@ func TestMsgDeleteCoordinator_ValidateBasic(t *testing.T) {
 			msg: profile.MsgDeleteCoordinator{
 				Address: "invalid address",
 			},
-			err: sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress,
+			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
 				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
 		}, {
 			name: "valid address",
