@@ -12,6 +12,7 @@ import (
 
 func TestMsgRequestRemoveAccount(t *testing.T) {
 	var (
+		invalidChain, _           = sample.ChainID(0)
 		addr1                     = sample.AccAddress()
 		addr2                     = sample.AccAddress()
 		addr3                     = sample.AccAddress()
@@ -30,9 +31,9 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: "invalid_chain",
+				ChainID: invalidChain,
 			},
-			err: sdkerrors.Wrap(types.ErrChainNotFound, "invalid_chain"),
+			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveAccount{
