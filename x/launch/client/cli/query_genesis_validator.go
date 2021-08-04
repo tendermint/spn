@@ -5,16 +5,14 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func CmdListRequest() *cobra.Command {
+func CmdListGenesisValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-request [chainID]",
-		Short: "list all request",
-		Args:  cobra.ExactArgs(1),
+		Use:   "list-genesis-validator",
+		Short: "list all genesisValidator",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -25,17 +23,11 @@ func CmdListRequest() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsChainID, err := cast.ToStringE(args[0])
-			if err != nil {
-				return err
-			}
-
-			params := &types.QueryAllRequestRequest{
-				ChainID:    argsChainID,
+			params := &types.QueryAllGenesisValidatorRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.RequestAll(context.Background(), params)
+			res, err := queryClient.GenesisValidatorAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -50,27 +42,22 @@ func CmdListRequest() *cobra.Command {
 	return cmd
 }
 
-func CmdShowRequest() *cobra.Command {
+func CmdShowGenesisValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-request [chainID] [requestID]",
-		Short: "shows a request",
+		Use:   "show-genesis-validator [chainID] [address]",
+		Short: "shows a genesisValidator",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsRequestID, err := cast.ToUint64E(args[1])
-			if err != nil {
-				return err
+			params := &types.QueryGetGenesisValidatorRequest{
+				ChainID: args[0],
+				Address: args[1],
 			}
 
-			params := &types.QueryGetRequestRequest{
-				ChainID:   args[0],
-				RequestID: argsRequestID,
-			}
-
-			res, err := queryClient.Request(context.Background(), params)
+			res, err := queryClient.GenesisValidator(context.Background(), params)
 			if err != nil {
 				return err
 			}

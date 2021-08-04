@@ -24,8 +24,7 @@ func TestVestedAccountCodec(t *testing.T) {
 	invalidContent := &types.Request{}
 	request.Content, err = codec.NewAnyWithValue(invalidContent)
 	require.NoError(t, err)
-	content, err = request.UnpackVestedAccount(cdc)
+	_, err = request.UnpackVestedAccount(cdc)
 	require.Error(t, err)
 	require.Equal(t, "not a vestedAccount request", err.Error())
-	require.Nil(t, content)
 }
