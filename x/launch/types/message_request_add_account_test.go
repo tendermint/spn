@@ -32,13 +32,6 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
 		}, {
-			name: "invalid chain name",
-			msg: types.MsgRequestAddAccount{
-				Address: sample.AccAddress(),
-				ChainID: "wh.thc-10",
-			},
-			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
-		}, {
 			name: "message without coins",
 			msg: types.MsgRequestAddAccount{
 				Address: addr,

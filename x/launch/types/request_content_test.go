@@ -27,8 +27,7 @@ func TestGenesisAccountCodec(t *testing.T) {
 	invalidContent := &types.Request{}
 	request.Content, err = codec.NewAnyWithValue(invalidContent)
 	require.NoError(t, err)
-	content, err = request.UnpackGenesisAccount(cdc)
+	_, err = request.UnpackGenesisAccount(cdc)
 	require.Error(t, err)
 	require.Equal(t, "not a genesisAccount request", err.Error())
-	require.Nil(t, content)
 }

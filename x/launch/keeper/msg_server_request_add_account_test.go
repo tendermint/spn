@@ -12,6 +12,7 @@ import (
 
 func TestMsgRequestAddAccount(t *testing.T) {
 	var (
+		invalidChain, _           = sample.ChainID(0)
 		addr1                     = sample.AccAddress()
 		addr2                     = sample.AccAddress()
 		addr3                     = sample.AccAddress()
@@ -19,6 +20,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		ctx                       = sdk.WrapSDKContext(sdkCtx)
 		chains                    = createNChain(k, sdkCtx, 4)
 	)
+	chains[3].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[3])
 	tests := []struct {
 		name string
 		msg  types.MsgRequestAddAccount
@@ -28,9 +31,16 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgRequestAddAccount{
-				ChainID: "invalid_chain",
+				ChainID: invalidChain,
 			},
-			err: sdkerrors.Wrap(types.ErrChainIDNotFound, "invalid_chain"),
+			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
+		}, {
+			name: "launch triggered chain",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[3].ChainID,
+				Address: addr1,
+			},
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestAddAccount{

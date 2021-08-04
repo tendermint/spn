@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
@@ -21,7 +22,7 @@ func (r Request) UnpackGenesisAccount(cdc codec.AnyUnpacker) (*GenesisAccount, e
 	}
 	result, ok := content.(*GenesisAccount)
 	if !ok {
-		return nil, fmt.Errorf("not a genesisAccount request")
+		return nil, errors.New("not a genesisAccount request")
 	}
 	return result, nil
 }

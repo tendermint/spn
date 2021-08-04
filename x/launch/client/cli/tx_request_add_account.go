@@ -26,9 +26,7 @@ func CmdRequestAddAccount() *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to parse coins: %w", err)
 			}
-
-			// TODO: return an error if the launch is triggered for the chain
-
+			
 			if err != nil {
 				return err
 			}
