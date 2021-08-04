@@ -19,6 +19,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		ctx                       = sdk.WrapSDKContext(sdkCtx)
 		chains                    = createNChain(k, sdkCtx, 4)
 	)
+	chains[3].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[3])
 	tests := []struct {
 		name string
 		msg  types.MsgRequestRemoveAccount
@@ -30,7 +32,14 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: "invalid_chain",
 			},
-			err: sdkerrors.Wrap(types.ErrChainIDNotFound, "invalid_chain"),
+			err: sdkerrors.Wrap(types.ErrChainNotFound, "invalid_chain"),
+		}, {
+			name: "launch triggered chain",
+			msg: types.MsgRequestRemoveAccount{
+				ChainID: chains[3].ChainID,
+				Address: addr1,
+			},
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestRemoveAccount{

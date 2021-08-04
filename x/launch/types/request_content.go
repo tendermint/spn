@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
@@ -21,7 +22,7 @@ func (r Request) UnpackAccountRemoval(cdc codec.AnyUnpacker) (*AccountRemoval, e
 	}
 	result, ok := content.(*AccountRemoval)
 	if !ok {
-		return nil, fmt.Errorf("not a accountRemoval request")
+		return nil, errors.New("not a accountRemoval request")
 	}
 	return result, nil
 }

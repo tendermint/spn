@@ -10,7 +10,10 @@ import (
 )
 
 func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
-	chainID, _ := sample.ChainID(10)
+	var (
+		invalidChain, _ = sample.ChainID(0)
+		chainID, _      = sample.ChainID(10)
+	)
 	tests := []struct {
 		name string
 		msg  types.MsgRequestRemoveAccount
@@ -27,14 +30,7 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 			name: "invalid chain id",
 			msg: types.MsgRequestRemoveAccount{
 				Address: sample.AccAddress(),
-				ChainID: "invalid_chain",
-			},
-			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
-		}, {
-			name: "invalid chain name",
-			msg: types.MsgRequestRemoveAccount{
-				Address: sample.AccAddress(),
-				ChainID: "wh.thc-10",
+				ChainID: invalidChain,
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
 		}, {

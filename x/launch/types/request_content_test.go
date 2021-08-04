@@ -25,8 +25,7 @@ func TestAccountRemovalCodec(t *testing.T) {
 	invalidContent := &types.Request{}
 	request.Content, err = codec.NewAnyWithValue(invalidContent)
 	require.NoError(t, err)
-	content, err = request.UnpackAccountRemoval(cdc)
+	_, err = request.UnpackAccountRemoval(cdc)
 	require.Error(t, err)
 	require.Equal(t, "not a accountRemoval request", err.Error())
-	require.Nil(t, content)
 }
