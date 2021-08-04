@@ -27,10 +27,7 @@ func CmdListGenesisAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, err := cmd.Flags().GetString(flagChainID)
-			if err != nil {
-				return err
-			}
+			chainID, _ := cmd.Flags().GetString(flagChainID)
 
 			params := &types.QueryAllGenesisAccountRequest{
 				ChainID:    chainID,
