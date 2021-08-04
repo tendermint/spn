@@ -10,11 +10,13 @@ import (
 )
 
 func TestChain_GetDefaultInitialGenesis(t *testing.T) {
+	var err error
 	cdc := sample.Codec()
 	chain := sample.Chain("foo", 0)
 
 	// Should return the default genesis
 	chain.InitialGenesis, _ = codec.NewAnyWithValue(&types.DefaultInitialGenesis{})
+	chain.InitialGenesis.ClearCachedValue()
 	defaultGen, err := chain.GetDefaultInitialGenesis(cdc)
 	require.NoError(t, err)
 	require.Equal(t, &types.DefaultInitialGenesis{}, defaultGen)
@@ -24,14 +26,19 @@ func TestChain_GetDefaultInitialGenesis(t *testing.T) {
 	chain.InitialGenesis, _ = codec.NewAnyWithValue(&types.GenesisURL{url, hash})
 	_, err = chain.GetDefaultInitialGenesis(cdc)
 	require.Error(t, err)
+
+	chain.InitialGenesis = nil
+	_, err = chain.GetGenesisURL(cdc)
+	require.Error(t, err)
 }
 
-func TestChain_GetInitialGenesis(t *testing.T) {
+func TestChain_GetGenesisURL(t *testing.T) {
 	cdc := sample.Codec()
 	chain := sample.Chain("foo", 0)
 
 	url, hash := sample.String(10), sample.String(10)
 	chain.InitialGenesis, _ = codec.NewAnyWithValue(&types.GenesisURL{url, hash})
+	chain.InitialGenesis.ClearCachedValue()
 	genUrl, err := chain.GetGenesisURL(cdc)
 	require.NoError(t, err)
 	require.Equal(t, &types.GenesisURL{
@@ -40,6 +47,10 @@ func TestChain_GetInitialGenesis(t *testing.T) {
 	}, genUrl)
 
 	chain.InitialGenesis, _ = codec.NewAnyWithValue(&types.DefaultInitialGenesis{})
+	_, err = chain.GetGenesisURL(cdc)
+	require.Error(t, err)
+
+	chain.InitialGenesis = nil
 	_, err = chain.GetGenesisURL(cdc)
 	require.Error(t, err)
 }

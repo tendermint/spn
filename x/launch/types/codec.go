@@ -3,16 +3,15 @@ package types
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
-	cdc.RegisterConcrete(&MsgRevertLaunch{}, "launch/RevertLaunch", nil)
-
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
+	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
+	cdc.RegisterConcrete(&MsgRevertLaunch{}, "launch/RevertLaunch", nil)
 
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
 	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
@@ -28,11 +27,12 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgCreateChain{},
+		&MsgEditChain{},
 		&MsgRevertLaunch{},
 	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateChain{},
-	)
+
+	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 
 	registry.RegisterInterface(
 		"launch.RequestContent",
