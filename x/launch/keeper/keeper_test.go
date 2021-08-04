@@ -68,5 +68,9 @@ func setupKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, cod
 	ctx := sdk.NewContext(stateStore, tmproto.Header{
 		Time: sampleTimestamp,
 	}, false, log.NewNopLogger())
+
+	// Initialize params
+	launchKeeper.SetParams(ctx, types.DefaultParams())
+
 	return launchKeeper, profileKeeper, ctx, cdc
 }
