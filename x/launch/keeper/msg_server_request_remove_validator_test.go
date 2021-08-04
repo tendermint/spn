@@ -20,6 +20,8 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		ctx                       = sdk.WrapSDKContext(sdkCtx)
 		chains                    = createNChain(k, sdkCtx, 4)
 	)
+	chains[3].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[3])
 	tests := []struct {
 		name string
 		msg  types.MsgRequestRemoveValidator
@@ -32,6 +34,13 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				ChainID: invalidChain,
 			},
 			err: sdkerrors.Wrap(types.ErrChainNotFound, "invalid_chain"),
+		}, {
+			name: "launch triggered chain",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:                 chains[3].ChainID,
+				AddValidatorAddressress: addr1,
+			},
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestRemoveValidator{
