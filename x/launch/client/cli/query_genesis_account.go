@@ -9,14 +9,11 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-const (
-	flagChainID = "filter-chain-id"
-)
-
 func CmdListGenesisAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-genesis-account",
+		Use:   "list-genesis-account [chainID]",
 		Short: "list all genesisAccount",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -27,13 +24,8 @@ func CmdListGenesisAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, err := cmd.Flags().GetString(flagChainID)
-			if err != nil {
-				return err
-			}
-
 			params := &types.QueryAllGenesisAccountRequest{
-				ChainID:    chainID,
+				ChainID:    args[0],
 				Pagination: pageReq,
 			}
 
@@ -46,7 +38,6 @@ func CmdListGenesisAccount() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagChainID, "", "filter by chain id")
 	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
 	flags.AddQueryFlagsToCmd(cmd)
 

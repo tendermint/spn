@@ -12,8 +12,8 @@ import (
 func CmdListVestedAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-vested-account",
-		Short: "list all vestedAccount",
-		Args:  cobra.NoArgs,
+		Short: "list all vestedAccount [chainID]",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -24,13 +24,8 @@ func CmdListVestedAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, err := cmd.Flags().GetString(flagChainID)
-			if err != nil {
-				return err
-			}
-
 			params := &types.QueryAllVestedAccountRequest{
-				ChainID:    chainID,
+				ChainID:    args[0],
 				Pagination: pageReq,
 			}
 
@@ -43,7 +38,6 @@ func CmdListVestedAccount() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagChainID, "", "filter by chain id")
 	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
 	flags.AddQueryFlagsToCmd(cmd)
 
