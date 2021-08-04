@@ -10,6 +10,8 @@ import (
 var (
 	ErrCoordAlreadyExist    = sdkerrors.Register(ModuleName, 1, "coordinator address already exist")
 	ErrCoordAddressNotFound = sdkerrors.Register(ModuleName, 2, "coordinator address not found")
-	ErrValidatorNotFound    = sdkerrors.Register(ModuleName, 3, "validator address not found")
+	ErrCoordInvalid         = sdkerrors.Register(ModuleName, 3, "invalid coordinator")
+	ErrEmptyDescription     = sdkerrors.Register(ModuleName, 4, "you must provide at least one description parameter")
+	ErrValidatorNotFound    = sdkerrors.Register(ModuleName, 5, "validator address not found")
 	// this line is used by starport scaffolding # ibc/errors
 )

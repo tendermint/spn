@@ -44,5 +44,13 @@ func (msg *MsgUpdateCoordinatorDescription) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+	if msg.Description == nil {
+		return sdkerrors.Wrap(ErrEmptyDescription, msg.Address)
+	}
+	if msg.Description.Details == "" &&
+		msg.Description.Identity == "" &&
+		msg.Description.Website == "" {
+		return sdkerrors.Wrap(ErrEmptyDescription, msg.Address)
+	}
 	return nil
 }

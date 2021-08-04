@@ -3,6 +3,7 @@ package tendermint.spn.profile;
 
 // this line is used by starport scaffolding # proto/tx/import
 import "profile/coordinator.proto";
+import "profile/validator.proto";
 
 option go_package = "github.com/tendermint/spn/x/profile/types";
 
@@ -10,6 +11,9 @@ option go_package = "github.com/tendermint/spn/x/profile/types";
 service Msg {
   // this line is used by starport scaffolding # proto/tx/rpc
   rpc DeleteValidator(MsgDeleteValidator) returns (MsgDeleteValidatorResponse);
+
+  rpc UpdateValidatorDescription(MsgUpdateValidatorDescription) returns (MsgUpdateValidatorDescriptionResponse);
+
   rpc CreateCoordinator(MsgCreateCoordinator) returns (MsgCreateCoordinatorResponse);
 
   rpc DeleteCoordinator(MsgDeleteCoordinator) returns (MsgDeleteCoordinatorResponse);
@@ -25,6 +29,14 @@ message MsgDeleteValidator {
 }
 
 message MsgDeleteValidatorResponse {
+}
+
+message MsgUpdateValidatorDescription {
+  string address = 1;
+  ValidatorDescription description = 2;
+}
+
+message MsgUpdateValidatorDescriptionResponse {
 }
 
 message MsgCreateCoordinator {

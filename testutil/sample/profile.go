@@ -11,3 +11,14 @@ func MsgCreateCoordinator(coordAddress string) profile.MsgCreateCoordinator {
 		coordAddress+" details",
 	)
 }
+
+// ValidatorDescription returns a sample ValidatorDescription
+func ValidatorDescription(desc string) *profile.ValidatorDescription {
+	return &profile.ValidatorDescription{
+		Identity:        desc,
+		Moniker:         "moniker " + desc,
+		Website:         "https://cosmos.network/" + desc,
+		SecurityContact: "foo",
+		Details:         desc + " details",
+	}
+}
