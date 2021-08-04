@@ -3,8 +3,9 @@ package types
 import (
 	"errors"
 	"fmt"
-	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"time"
+
+	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
 // TODO: Determine default values
@@ -40,7 +41,6 @@ func DefaultParams() Params {
 		DefaultMaxLaunchTime,
 	)
 }
-
 
 // Implements params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {

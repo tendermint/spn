@@ -55,44 +55,44 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	chain.LaunchTriggered = true
 	k.SetChain(sdkCtx, chain)
 
-	for _, tc := range []struct{
+	for _, tc := range []struct {
 		name  string
 		msg   types.MsgTriggerLaunch
 		valid bool
-	} {
+	}{
 		{
-			name: "launch chain not launched",
-			msg: *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTime),
+			name:  "launch chain not launched",
+			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTime),
 			valid: true,
 		},
 		{
-			name: "non existent chain id",
-			msg: *types.NewMsgTriggerLaunch(coordAddress, chainIDNoExist, launchTime),
+			name:  "non existent chain id",
+			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainIDNoExist, launchTime),
 			valid: false,
 		},
 		{
-			name: "non existent coordinator",
-			msg: *types.NewMsgTriggerLaunch(coordNoExist, chainID, launchTime),
+			name:  "non existent coordinator",
+			msg:   *types.NewMsgTriggerLaunch(coordNoExist, chainID, launchTime),
 			valid: false,
 		},
 		{
-			name: "invalid coordinator",
-			msg: *types.NewMsgTriggerLaunch(coordAddress2, chainID, launchTime),
+			name:  "invalid coordinator",
+			msg:   *types.NewMsgTriggerLaunch(coordAddress2, chainID, launchTime),
 			valid: false,
 		},
 		{
-			name: "chain launch already triggered",
-			msg: *types.NewMsgTriggerLaunch(coordAddress, alreadyLaunched, launchTime),
+			name:  "chain launch already triggered",
+			msg:   *types.NewMsgTriggerLaunch(coordAddress, alreadyLaunched, launchTime),
 			valid: false,
 		},
 		{
-			name: "launch time too low",
-			msg: *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTimeTooLow),
+			name:  "launch time too low",
+			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTimeTooLow),
 			valid: false,
 		},
 		{
-			name: "launch time too high",
-			msg: *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTimeTooHigh),
+			name:  "launch time too high",
+			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTimeTooHigh),
 			valid: false,
 		},
 	} {
@@ -108,6 +108,6 @@ func TestMsgTriggerLaunch(t *testing.T) {
 		chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
 		require.True(t, found)
 		require.True(t, chain.LaunchTriggered)
-		require.EqualValues(t, sampleTimestamp.Unix() + int64(tc.msg.RemainingTime), chain.LaunchTimestamp)
+		require.EqualValues(t, sampleTimestamp.Unix()+int64(tc.msg.RemainingTime), chain.LaunchTimestamp)
 	}
 }
