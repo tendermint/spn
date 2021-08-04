@@ -14,5 +14,6 @@ var (
 	ErrInvalidInitialGenesis = sdkerrors.Register(ModuleName, 4, "the initial genesis is invalid")
 	ErrLaunchNotTriggered    = sdkerrors.Register(ModuleName, 13, "the chain launch has not been triggered")
 	ErrRevertDelayNotReached = sdkerrors.Register(ModuleName, 14, "the revert delay has not been reached")
-	// this line is used by starport scaffolding # ibc/errors
- )
+
+// this line is used by starport scaffolding # ibc/errors
+)
