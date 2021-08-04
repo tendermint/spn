@@ -34,23 +34,6 @@ func Chain(chainID string, coordinatorID uint64) *launch.Chain {
 	}
 }
 
-// MsgCreateChain returns a sample MsgCreateChain
-func MsgCreateChain(coordAddress, chainName, genesisURL string) launch.MsgCreateChain {
-	var genesisHash string
-	if len(genesisURL) > 0 {
-		genesisHash = String(10)
-	}
-
-	return *launch.NewMsgCreateChain(
-		coordAddress,
-		chainName,
-		String(10),
-		String(10),
-		genesisURL,
-		genesisHash,
-	)
-}
-
 // GenesisAccount returns a sample GenesisAccount
 func GenesisAccount(chainID, address string) *launch.GenesisAccount {
 	return &launch.GenesisAccount{
@@ -100,4 +83,56 @@ func Request(chainID string) *launch.Request {
 		CreatedAt: time.Now().Unix(),
 		Content:   content,
 	}
+}
+
+// MsgCreateChain returns a sample MsgCreateChain
+func MsgCreateChain(coordAddress, chainName, genesisURL string) launch.MsgCreateChain {
+	var genesisHash string
+	if len(genesisURL) > 0 {
+		genesisHash = String(10)
+	}
+
+	return *launch.NewMsgCreateChain(
+		coordAddress,
+		chainName,
+		String(10),
+		String(10),
+		genesisURL,
+		genesisHash,
+	)
+}
+
+// MsgEditChain returns a sample MsgEditChain
+func MsgEditChain(
+	coordAddress,
+	chainID string,
+	modifySource,
+	modifyInitialGenesis,
+	genesisURL bool,
+) launch.MsgEditChain {
+	var sourceURL, sourceHash string
+	if modifySource {
+		sourceURL, sourceHash = String(30), String(10)
+	}
+	var initialGenesis *types.Any
+	if modifyInitialGenesis {
+		if genesisURL {
+			initialGenesis, _ = types.NewAnyWithValue(&launch.GenesisURL{
+				Url:  String(30),
+				Hash: String(30),
+			})
+		} else {
+			initialGenesis, _ = types.NewAnyWithValue(&launch.DefaultInitialGenesis{})
+			initialGenesis.Value = nil
+		}
+		initialGenesis.ClearCachedValue()
+	}
+
+	return *launch.NewMsgEditChain(
+		coordAddress,
+		chainID,
+		sourceURL,
+		sourceHash,
+		initialGenesis,
+	)
 }
