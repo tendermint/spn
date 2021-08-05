@@ -3,18 +3,18 @@ package cli
 import (
 	"context"
 	"fmt"
-	"github.com/spf13/cobra"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
 const (
-	flagGenesisURL  = "genesis-url"
+	flagGenesisURL = "genesis-url"
 )
 
 func CmdCreateChain() *cobra.Command {
