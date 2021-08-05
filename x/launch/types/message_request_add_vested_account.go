@@ -2,7 +2,6 @@ package types
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec/types"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -59,7 +58,7 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidAccountOption, msg.Address)
 	}
 
-	cdc := codectypes.NewInterfaceRegistry()
+	cdc := types.NewInterfaceRegistry()
 	RegisterInterfaces(cdc)
 
 	var option VestingOptions
