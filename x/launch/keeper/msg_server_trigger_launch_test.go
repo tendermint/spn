@@ -1,12 +1,12 @@
 package keeper
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMsgTriggerLaunch(t *testing.T) {
