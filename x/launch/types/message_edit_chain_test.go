@@ -21,9 +21,20 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		false,
 	)
 	msgInvalidInitialGenesis.InitialGenesis, err = codec.NewAnyWithValue(&types.Chain{})
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
+
+	msgInvalidGenesisHash := sample.MsgEditChain(
+		sample.AccAddress(),
+		chainID,
+		true,
+		false,
+		false,
+	)
+	msgInvalidGenesisHash.InitialGenesis, err = codec.NewAnyWithValue(&types.GenesisURL{
+		Url: "foo.com",
+		Hash: "NoHash",
+	})
+	require.NoError(t, err)
 
 	for _, tc := range []struct {
 		desc  string
@@ -110,6 +121,11 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc:  "invalid initial genesis",
 			msg:   msgInvalidInitialGenesis,
+			valid: false,
+		},
+		{
+			desc:  "invalid initial genesis hash",
+			msg:   msgInvalidGenesisHash,
 			valid: false,
 		},
 	} {
