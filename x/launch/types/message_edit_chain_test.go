@@ -31,7 +31,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		false,
 	)
 	msgInvalidGenesisHash.InitialGenesis, err = codec.NewAnyWithValue(&types.GenesisURL{
-		Url: "foo.com",
+		Url:  "foo.com",
 		Hash: "NoHash",
 	})
 	require.NoError(t, err)

@@ -3,14 +3,14 @@ package types
 import "errors"
 
 // InitialGenesis defines the interface for initial genesis types
-type InitialGenesis interface{
+type InitialGenesis interface {
 	Validate() error
 }
 
 var _ InitialGenesis = &DefaultInitialGenesis{}
 
 // Validate implements InitialGenesis
-func (DefaultInitialGenesis) Validate() error {return nil}
+func (DefaultInitialGenesis) Validate() error { return nil }
 
 var _ InitialGenesis = &GenesisURL{}
 
