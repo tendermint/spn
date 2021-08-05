@@ -25,6 +25,14 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			err: sdkerrors.Wrap(types.ErrEmptyCoins,
 				"no vesting coins for DelayedVesting"),
 		}, {
+			name: "vesting without coins",
+			option: types.DelayedVesting{
+				Vesting: sample.Coins(),
+				EndTime: 0,
+			},
+			err: sdkerrors.Wrap(types.ErrInvalidTimestamp,
+				"invalid end time for DelayedVesting"),
+		}, {
 			name: "valid account vesting",
 			option: types.DelayedVesting{
 				Vesting: sample.Coins(),
