@@ -50,7 +50,7 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidChainID, msg.ChainID)
 	}
 
-	if len(msg.Coins) == 0 {
+	if msg.Coins.Empty() {
 		return sdkerrors.Wrap(ErrEmptyCoins, msg.Address)
 	}
 	return nil
