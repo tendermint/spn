@@ -55,8 +55,7 @@ func CmdEditChain() *cobra.Command {
 					return err
 				}
 			} else if genesisURL != "" {
-				// TODO: automatically determine this value by fetching the resource (need to determine the hash before)
-				genesisHash, err := cmd.Flags().GetString(flagGenesisHash)
+				genesisHash, err := getHashFromURL(cmd.Context(), genesisURL)
 				if err != nil {
 					return err
 				}
@@ -88,7 +87,6 @@ func CmdEditChain() *cobra.Command {
 	cmd.Flags().String(flagSourceHash, "", "Hash from the new source URL for the chain")
 	cmd.Flags().Bool(flagDefaultGenesis, false, "Set the initial genesis to the default genesis of the chain")
 	cmd.Flags().String(flagGenesisURL, "", "Set the initial genesis from a URL containing a custom genesis")
-	cmd.Flags().String(flagGenesisHash, "", "hash of the content of the custom genesis from URL")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

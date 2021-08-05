@@ -1,7 +1,11 @@
 package cli
 
 import (
+	"context"
+	"fmt"
 	"github.com/spf13/cobra"
+	"io/ioutil"
+	"net/http"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -11,7 +15,6 @@ import (
 
 const (
 	flagGenesisURL  = "genesis-url"
-	flagGenesisHash = "genesis-hash"
 )
 
 func CmdCreateChain() *cobra.Command {
@@ -29,11 +32,12 @@ func CmdCreateChain() *cobra.Command {
 			if err != nil {
 				return err
 			}
-
-			// TODO: automatically determine this value by fetching the resource (need to determine the hash before)
-			genesisHash, err := cmd.Flags().GetString(flagGenesisHash)
-			if err != nil {
-				return err
+			var genesisHash string
+			if genesisURL != "" {
+				genesisHash, err = getHashFromURL(cmd.Context(), genesisURL)
+				if err != nil {
+					return err
+				}
 			}
 
 			msg := types.NewMsgCreateChain(
@@ -52,8 +56,29 @@ func CmdCreateChain() *cobra.Command {
 	}
 
 	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
-	cmd.Flags().String(flagGenesisHash, "", "hash of the content of the custom genesis")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
+}
+
+// getHashFromURL fetches content from url and returns the hash based on the genesis hash method
+func getHashFromURL(ctx context.Context, url string) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		return "", err
+	}
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("genesis url fetch error %s", res.Status)
+	}
+	initialGenesis, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+	return types.GenesisURLHash(string(initialGenesis)), nil
 }
