@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -26,8 +25,8 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 	}
 	if chain.CoordinatorID != coordinatorID {
 		return nil, sdkerrors.Wrapf(
-			profiletypes.ErrCoordInvalid, 
-			"coordinator of the chain is %v", 
+			profiletypes.ErrCoordInvalid,
+			"coordinator of the chain is %v",
 			chain.CoordinatorID,
 		)
 	}
