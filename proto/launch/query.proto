@@ -117,9 +117,8 @@ message QueryAllVestedAccountRequest {
 }
 
 message QueryAllVestedAccountResponse {
-	string chainID = 1;
-	repeated VestedAccount vestedAccount = 2;
-	cosmos.base.query.v1beta1.PageResponse pagination = 3;
+	repeated VestedAccount vestedAccount = 1;
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetGenesisAccountRequest {
