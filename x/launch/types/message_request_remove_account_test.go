@@ -17,15 +17,27 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "invalid creator address",
 			msg: types.MsgRequestRemoveAccount{
-				Address: "invalid_address",
+				Creator: "invalid_address",
+				Address: sample.AccAddress(),
+				ChainID: chainID1,
 			},
 			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
-				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
+				"invalid creator address (invalid_address): decoding bech32 failed: invalid index of 1"),
+		}, {
+			name: "invalid address",
+			msg: types.MsgRequestRemoveAccount{
+				Creator: sample.AccAddress(),
+				Address: "invalid_address",
+				ChainID: chainID1,
+			},
+			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
+				"invalid account address (invalid_address): decoding bech32 failed: invalid index of 1"),
 		}, {
 			name: "invalid chain id",
 			msg: types.MsgRequestRemoveAccount{
+				Creator: sample.AccAddress(),
 				Address: sample.AccAddress(),
 				ChainID: "invalid_chain",
 			},
@@ -33,6 +45,7 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid message",
 			msg: types.MsgRequestRemoveAccount{
+				Creator: sample.AccAddress(),
 				Address: sample.AccAddress(),
 				ChainID: chainID,
 			},

@@ -18,7 +18,8 @@ service Msg {
 // this line is used by starport scaffolding # proto/tx/message
 message MsgRequestRemoveAccount {
   string chainID = 1;
-  string address = 2;
+  string creator = 2;
+  string address = 3;
 }
 
 message MsgRequestRemoveAccountResponse {

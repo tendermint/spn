@@ -32,19 +32,31 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			name: "invalid chain",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: invalidChain,
+				Creator: addr1,
+				Address: addr1,
 			},
 			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[3].ChainID,
+				Creator: addr1,
 				Address: addr1,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
 		}, {
+			name: "no permission error",
+			msg: types.MsgRequestRemoveAccount{
+				ChainID: chains[0].ChainID,
+				Creator: addr1,
+				Address: addr3,
+			},
+			err: sdkerrors.Wrap(types.ErrNoAddressPermission, addr1),
+		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[0].ChainID,
+				Creator: addr1,
 				Address: addr1,
 			},
 			want: 0,
@@ -52,6 +64,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			name: "add chain 1 request 2",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[1].ChainID,
+				Creator: addr2,
 				Address: addr2,
 			},
 			want: 0,
@@ -59,6 +72,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			name: "add chain 1 request 3",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[1].ChainID,
+				Creator: addr2,
 				Address: addr2,
 			},
 			want: 1,
@@ -66,13 +80,15 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			name: "add chain 2 request 1",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[2].ChainID,
+				Creator: addr3,
 				Address: addr3,
 			},
 			want: 0,
 		}, {
-			name: "add chain 2 request 2",
+			name: "remove chain 2 request 2",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[2].ChainID,
+				Creator: addr3,
 				Address: addr3,
 			},
 			want: 1,

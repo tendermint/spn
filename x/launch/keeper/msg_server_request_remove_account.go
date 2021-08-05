@@ -24,6 +24,11 @@ func (k msgServer) RequestRemoveAccount(
 		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
 	}
 
+	coordAddress := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	if msg.Creator != msg.Address && msg.Creator != coordAddress {
+		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)
+	}
+
 	content, err := codec.NewAnyWithValue(&types.AccountRemoval{
 		Address: msg.Address,
 	})
