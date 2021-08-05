@@ -28,10 +28,11 @@ func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
+	chainID, _ := sample.ChainID(0)
 	for i := 0; i < n; i++ {
 		state.GenesisAccountList = append(
 			state.GenesisAccountList,
-			sample.GenesisAccount("foo", strconv.Itoa(i)),
+			sample.GenesisAccount(chainID, strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
@@ -99,6 +100,7 @@ func TestShowGenesisAccount(t *testing.T) {
 func TestListGenesisAccount(t *testing.T) {
 	net, objs := networkWithGenesisAccountObjects(t, 5)
 
+	chainID := objs[0].ChainID
 	ctx := net.Validators[0].ClientCtx
 	request := func(chainID string, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
@@ -119,7 +121,7 @@ func TestListGenesisAccount(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
-			args := request("foo", nil, uint64(i), uint64(step), false)
+			args := request(chainID, nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllGenesisAccountResponse
@@ -133,7 +135,7 @@ func TestListGenesisAccount(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
-			args := request("foo", next, 0, uint64(step), false)
+			args := request(chainID, next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllGenesisAccountResponse
@@ -145,7 +147,7 @@ func TestListGenesisAccount(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		args := request("foo", nil, 0, uint64(len(objs)), true)
+		args := request(chainID, nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllGenesisAccountResponse

@@ -84,9 +84,12 @@ func TestVestedAccountQuerySingle(t *testing.T) {
 }
 
 func TestVestedAccountQueryPaginated(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNVestedAccountForChainID(keeper, ctx, 5, "foo")
+	var (
+		keeper, _, ctx, _ = setupKeeper(t)
+		wctx              = sdk.WrapSDKContext(ctx)
+		chainID, _        = sample.ChainID(0)
+		msgs              = createNVestedAccountForChainID(keeper, ctx, 5, chainID)
+	)
 
 	request := func(chainID string, next []byte, offset, limit uint64, total bool) *types.QueryAllVestedAccountRequest {
 		return &types.QueryAllVestedAccountRequest{
@@ -102,7 +105,7 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.VestedAccountAll(wctx, request("foo", nil, uint64(i), uint64(step), false))
+			resp, err := keeper.VestedAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
 				// Cached value is cleared when the any type is encoded into the store
@@ -116,7 +119,7 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.VestedAccountAll(wctx, request("foo", next, 0, uint64(step), false))
+			resp, err := keeper.VestedAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
 				assert.Equal(t, &msgs[j], resp.VestedAccount[j-i])
@@ -125,7 +128,7 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.VestedAccountAll(wctx, request("foo", nil, 0, 0, true))
+		resp, err := keeper.VestedAccountAll(wctx, request(chainID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 	})
