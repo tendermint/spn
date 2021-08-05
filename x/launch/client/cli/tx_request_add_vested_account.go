@@ -1,10 +1,8 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
-	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -34,11 +32,6 @@ func CmdRequestAddVestedAccount() *cobra.Command {
 			}
 
 			endTime, _ := strconv.ParseInt(args[2], 10, 64)
-			if endTime == 0 {
-				endTime = time.Now().Unix()
-			} else if endTime < time.Now().Unix() {
-				return errors.New("the end time is below the current time")
-			}
 
 			delayedVesting, err := codec.NewAnyWithValue(&types.DelayedVesting{
 				Vesting: coins,

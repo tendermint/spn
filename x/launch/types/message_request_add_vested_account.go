@@ -72,5 +72,5 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 	default:
 		return sdkerrors.Wrap(ErrInvalidAccountOption, "unknown vested account option type")
 	}
-	return nil
+	return option.Validate()
 }
