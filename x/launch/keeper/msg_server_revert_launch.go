@@ -25,10 +25,11 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
 	}
 	if chain.CoordinatorID != coordinatorID {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the chain is %v",
+		return nil, sdkerrors.Wrapf(
+			profiletypes.ErrCoordInvalid, 
+			"coordinator of the chain is %v", 
 			chain.CoordinatorID,
-		))
+		)
 	}
 
 	if !chain.LaunchTriggered {
