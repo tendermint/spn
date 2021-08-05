@@ -26,7 +26,7 @@ func CmdRequestAddAccount() *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("failed to parse coins: %w", err)
 			}
-			
+
 			if err != nil {
 				return err
 			}

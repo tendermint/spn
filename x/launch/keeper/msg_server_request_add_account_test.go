@@ -32,6 +32,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			name: "invalid chain",
 			msg: types.MsgRequestAddAccount{
 				ChainID: invalidChain,
+				Address: sample.AccAddress(),
+				Coins:   sample.Coins(),
 			},
 			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
 		}, {
@@ -39,6 +41,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[3].ChainID,
 				Address: addr1,
+				Coins:   sample.Coins(),
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
 		}, {
@@ -46,6 +49,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[0].ChainID,
 				Address: addr1,
+				Coins:   sample.Coins(),
 			},
 			want: 0,
 		}, {
@@ -53,6 +57,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[1].ChainID,
 				Address: addr2,
+				Coins:   sample.Coins(),
 			},
 			want: 0,
 		}, {
@@ -60,6 +65,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[1].ChainID,
 				Address: addr2,
+				Coins:   sample.Coins(),
 			},
 			want: 1,
 		}, {
@@ -67,6 +73,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[2].ChainID,
 				Address: addr3,
+				Coins:   sample.Coins(),
 			},
 			want: 0,
 		}, {
@@ -74,6 +81,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[2].ChainID,
 				Address: addr3,
+				Coins:   sample.Coins(),
 			},
 			want: 1,
 		},
