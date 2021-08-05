@@ -1,7 +1,9 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -13,9 +15,11 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+var _ = strconv.Itoa(0)
+
 func CmdRequestAddVestedAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-vested-account [chainID] [coins] [options]",
+		Use:   "request-add-vested-account [chainID] [vestingCoins] [vestingEndTime]",
 		Short: "Request to add a vested account",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -29,9 +33,16 @@ func CmdRequestAddVestedAccount() *cobra.Command {
 				return fmt.Errorf("failed to parse coins: %w", err)
 			}
 
+			endTime, _ := strconv.ParseInt(args[2], 10, 64)
+			if endTime == 0 {
+				endTime = time.Now().Unix()
+			} else if endTime < time.Now().Unix() {
+				return errors.New("the end time is below the current time")
+			}
+
 			delayedVesting, err := codec.NewAnyWithValue(&types.DelayedVesting{
 				Vesting: coins,
-				EndTime: time.Now().Unix(),
+				EndTime: endTime,
 			})
 			if err != nil {
 				return err
