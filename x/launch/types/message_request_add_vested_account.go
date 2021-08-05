@@ -2,6 +2,7 @@ package types
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec/types"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -56,6 +57,20 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 
 	if msg.Options == nil {
 		return sdkerrors.Wrap(ErrInvalidAccountOption, msg.Address)
+	}
+
+	cdc := codectypes.NewInterfaceRegistry()
+	RegisterInterfaces(cdc)
+
+	var option VestingOptions
+	if err := cdc.UnpackAny(msg.Options, &option); err != nil {
+		return sdkerrors.Wrap(ErrInvalidAccountOption, err.Error())
+	}
+
+	switch option.(type) {
+	case *DelayedVesting:
+	default:
+		return sdkerrors.Wrap(ErrInvalidAccountOption, "unknown vested account option type")
 	}
 	return nil
 }

@@ -13,14 +13,19 @@ import (
 
 func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 	var (
-		addr        = sample.AccAddress()
-		chainID, _  = sample.ChainID(10)
-		option, err = codec.NewAnyWithValue(&types.DelayedVesting{
-			Vesting: sample.Coins(),
-			EndTime: time.Now().Unix(),
-		})
+		addr       = sample.AccAddress()
+		chainID, _ = sample.ChainID(10)
 	)
+
+	option, err := codec.NewAnyWithValue(&types.DelayedVesting{
+		Vesting: sample.Coins(),
+		EndTime: time.Now().Unix(),
+	})
 	require.NoError(t, err)
+
+	invalidOption, err := codec.NewAnyWithValue(&types.Request{})
+	require.NoError(t, err)
+
 	tests := []struct {
 		name string
 		msg  types.MsgRequestAddVestedAccount
@@ -55,7 +60,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.Wrap(types.ErrEmptyCoins, addr),
 		}, {
-			name: "invalid message option",
+			name: "nil message option",
 			msg: types.MsgRequestAddVestedAccount{
 				Address: addr,
 				ChainID: chainID,
@@ -63,6 +68,16 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options: nil,
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidAccountOption, addr),
+		}, {
+			name: "invalid message option",
+			msg: types.MsgRequestAddVestedAccount{
+				Address: addr,
+				ChainID: chainID,
+				Coins:   sample.Coins(),
+				Options: invalidOption,
+			},
+			err: sdkerrors.Wrap(types.ErrInvalidAccountOption,
+				"unknown vested account option type"),
 		}, {
 			name: "valid message",
 			msg: types.MsgRequestAddVestedAccount{
