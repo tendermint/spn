@@ -11,8 +11,8 @@ import (
 
 func CmdListVestedAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-vested-account",
-		Short: "list all vestedAccount [chainID]",
+		Use:   "list-vested-account [chainID]",
+		Short: "list all vestedAccount",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
