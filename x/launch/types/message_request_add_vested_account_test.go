@@ -5,6 +5,7 @@ import (
 	"time"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -55,7 +56,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 			msg: types.MsgRequestAddVestedAccount{
 				Address: addr,
 				ChainID: chainID,
-				Coins:   nil,
+				Coins:   sdk.NewCoins(),
 				Options: option,
 			},
 			err: sdkerrors.Wrap(types.ErrEmptyCoins, addr),
