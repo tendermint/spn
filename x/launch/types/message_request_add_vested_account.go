@@ -53,5 +53,9 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 	if msg.Coins.Empty() {
 		return sdkerrors.Wrap(ErrEmptyCoins, msg.Address)
 	}
+
+	if msg.Options == nil {
+		return sdkerrors.Wrap(ErrInvalidAccountOption, msg.Address)
+	}
 	return nil
 }

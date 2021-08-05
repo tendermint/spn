@@ -2,7 +2,9 @@ package types_test
 
 import (
 	"testing"
+	"time"
 
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -10,8 +12,15 @@ import (
 )
 
 func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
-	addr := sample.AccAddress()
-	chainID, _ := sample.ChainID(10)
+	var (
+		addr        = sample.AccAddress()
+		chainID, _  = sample.ChainID(10)
+		option, err = codec.NewAnyWithValue(&types.DelayedVesting{
+			Vesting: sample.Coins(),
+			EndTime: time.Now().Unix(),
+		})
+	)
+	require.NoError(t, err)
 	tests := []struct {
 		name string
 		msg  types.MsgRequestAddVestedAccount
@@ -23,6 +32,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Address: "invalid_address",
 				ChainID: chainID,
 				Coins:   sample.Coins(),
+				Options: option,
 			},
 			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
 				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
@@ -32,6 +42,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Address: sample.AccAddress(),
 				ChainID: "invalid_chain",
 				Coins:   sample.Coins(),
+				Options: option,
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
 		}, {
@@ -40,14 +51,25 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Address: addr,
 				ChainID: chainID,
 				Coins:   nil,
+				Options: option,
 			},
 			err: sdkerrors.Wrap(types.ErrEmptyCoins, addr),
+		}, {
+			name: "invalid message option",
+			msg: types.MsgRequestAddVestedAccount{
+				Address: addr,
+				ChainID: chainID,
+				Coins:   sample.Coins(),
+				Options: nil,
+			},
+			err: sdkerrors.Wrap(types.ErrInvalidAccountOption, addr),
 		}, {
 			name: "valid message",
 			msg: types.MsgRequestAddVestedAccount{
 				Address: sample.AccAddress(),
 				ChainID: chainID,
 				Coins:   sample.Coins(),
+				Options: option,
 			},
 		},
 	}

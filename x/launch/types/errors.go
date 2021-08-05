@@ -15,4 +15,5 @@ var (
 	ErrCodecNotPacked        = sdkerrors.Register(ModuleName, 5, "codec value couldn't be packed")
 	ErrTriggeredLaunch       = sdkerrors.Register(ModuleName, 6, "launch is triggered for the chain")
 	ErrEmptyCoins            = sdkerrors.Register(ModuleName, 7, "the coin list is empty")
+	ErrInvalidAccountOption  = sdkerrors.Register(ModuleName, 8, "invalid account option")
 )
