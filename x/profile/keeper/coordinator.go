@@ -9,10 +9,6 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func (k Keeper) GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) string {
-	return k.GetCoordinator(ctx, id).Address
-}
-
 // GetCoordinatorCount get the total number of Coordinators
 func (k Keeper) GetCoordinatorCount(ctx sdk.Context) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorCountKey))
@@ -104,6 +100,11 @@ func (k Keeper) GetAllCoordinator(ctx sdk.Context) (list []types.Coordinator) {
 	}
 
 	return
+}
+
+// GetCoordinatorAddressFromID returns a coordinator address from its id
+func (k Keeper) GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) string {
+	return k.GetCoordinator(ctx, id).Address
 }
 
 // GetCoordinatorIDBytes returns the byte representation of the ID
