@@ -24,6 +24,11 @@ func (k msgServer) RequestRemoveValidator(
 		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
 	}
 
+	coordAddress := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	if msg.Creator != msg.ValidatorAddress && msg.Creator != coordAddress {
+		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)
+	}
+
 	content, err := codec.NewAnyWithValue(&types.ValidatorRemoval{
 		ValAddress: msg.ValidatorAddress,
 	})

@@ -31,20 +31,32 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID: invalidChain,
+				ChainID:          invalidChain,
+				Creator:          addr1,
+				ValidatorAddress: addr1,
 			},
 			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveValidator{
 				ChainID:          chains[3].ChainID,
+				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
 		}, {
+			name: "no permission error",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:          chains[0].ChainID,
+				Creator:          addr1,
+				ValidatorAddress: addr3,
+			},
+			err: sdkerrors.Wrap(types.ErrNoAddressPermission, addr1),
+		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestRemoveValidator{
 				ChainID:          chains[0].ChainID,
+				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
 			want: 0,
@@ -52,6 +64,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			name: "add chain 1 request 2",
 			msg: types.MsgRequestRemoveValidator{
 				ChainID:          chains[1].ChainID,
+				Creator:          addr2,
 				ValidatorAddress: addr2,
 			},
 			want: 0,
@@ -59,6 +72,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			name: "add chain 1 request 3",
 			msg: types.MsgRequestRemoveValidator{
 				ChainID:          chains[1].ChainID,
+				Creator:          addr2,
 				ValidatorAddress: addr2,
 			},
 			want: 1,
@@ -66,6 +80,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			name: "add chain 2 request 1",
 			msg: types.MsgRequestRemoveValidator{
 				ChainID:          chains[2].ChainID,
+				Creator:          addr3,
 				ValidatorAddress: addr3,
 			},
 			want: 0,
@@ -73,6 +88,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			name: "add chain 2 request 2",
 			msg: types.MsgRequestRemoveValidator{
 				ChainID:          chains[2].ChainID,
+				Creator:          addr3,
 				ValidatorAddress: addr3,
 			},
 			want: 1,

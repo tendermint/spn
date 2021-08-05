@@ -17,22 +17,35 @@ func TestMsgRequestRemoveValidator_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "invalid creator address",
 			msg: types.MsgRequestRemoveValidator{
-				ValidatorAddress: "invalid_address",
+				Creator:          "invalid_address",
+				ValidatorAddress: sample.AccAddress(),
+				ChainID:          chainID,
 			},
-			err: sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress,
-				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
+			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
+				"invalid creator address (invalid_address): decoding bech32 failed: invalid index of 1"),
+		}, {
+			name: "invalid validator address",
+			msg: types.MsgRequestRemoveValidator{
+				Creator:          sample.AccAddress(),
+				ValidatorAddress: "invalid_address",
+				ChainID:          chainID,
+			},
+			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
+				"invalid validator address (invalid_address): decoding bech32 failed: invalid index of 1"),
 		}, {
 			name: "invalid chain id",
 			msg: types.MsgRequestRemoveValidator{
+				Creator:          sample.AccAddress(),
 				ValidatorAddress: sample.AccAddress(),
 				ChainID:          "invalid_chain",
 			},
-			err: sdkerrors.Wrapf(types.ErrInvalidChainID, "invalid_chain"),
+			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
 		}, {
 			name: "valid message",
 			msg: types.MsgRequestRemoveValidator{
+				Creator:          sample.AccAddress(),
 				ValidatorAddress: sample.AccAddress(),
 				ChainID:          chainID,
 			},

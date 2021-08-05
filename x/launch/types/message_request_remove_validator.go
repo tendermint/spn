@@ -7,9 +7,10 @@ import (
 
 var _ sdk.Msg = &MsgRequestRemoveValidator{}
 
-func NewMsgRequestRemoveValidator(chainID string, validatorAddress string) *MsgRequestRemoveValidator {
+func NewMsgRequestRemoveValidator(chainID, creator, validatorAddress string) *MsgRequestRemoveValidator {
 	return &MsgRequestRemoveValidator{
 		ChainID:          chainID,
+		Creator:          creator,
 		ValidatorAddress: validatorAddress,
 	}
 }
@@ -23,11 +24,11 @@ func (msg *MsgRequestRemoveValidator) Type() string {
 }
 
 func (msg *MsgRequestRemoveValidator) GetSigners() []sdk.AccAddress {
-	validator, err := sdk.AccAddressFromBech32(msg.ValidatorAddress)
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{validator}
+	return []sdk.AccAddress{creator}
 }
 
 func (msg *MsgRequestRemoveValidator) GetSignBytes() []byte {
@@ -36,7 +37,11 @@ func (msg *MsgRequestRemoveValidator) GetSignBytes() []byte {
 }
 
 func (msg *MsgRequestRemoveValidator) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.ValidatorAddress)
+	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+	_, err = sdk.AccAddressFromBech32(msg.ValidatorAddress)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
