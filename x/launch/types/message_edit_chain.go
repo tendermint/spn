@@ -70,6 +70,10 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		default:
 			return sdkerrors.Wrap(ErrInvalidInitialGenesis, "unknown initial genesis types")
 		}
+
+		if err := initialGenesis.Validate(); err != nil {
+			return sdkerrors.Wrap(ErrInvalidInitialGenesis, err.Error())
+		}
 	}
 
 	return nil

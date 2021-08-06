@@ -27,6 +27,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err = msgServer.EditChain(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRevertLaunch:
 			res, err = msgServer.RevertLaunch(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgTriggerLaunch:
+			res, err = msgServer.TriggerLaunch(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestRemoveAccount:
 			res, err = msgServer.RequestRemoveAccount(sdk.WrapSDKContext(ctx), msg)
 		default:

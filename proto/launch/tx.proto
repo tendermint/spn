@@ -13,11 +13,11 @@ service Msg {
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
   rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
+  rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
   rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
-
 message MsgCreateChain {
   string coordinator = 1;
   string chainName = 2;
@@ -47,6 +47,14 @@ message MsgRevertLaunch {
 }
 
 message MsgRevertLaunchResponse {}
+
+message MsgTriggerLaunch {
+  string coordinator = 1;
+  string chainID = 2;
+  uint64 remainingTime = 3;
+}
+
+message MsgTriggerLaunchResponse {}
 
 message MsgRequestRemoveAccount {
   string chainID = 1;

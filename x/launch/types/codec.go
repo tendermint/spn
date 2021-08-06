@@ -13,6 +13,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
 	cdc.RegisterConcrete(&MsgRevertLaunch{}, "launch/RevertLaunch", nil)
+	cdc.RegisterConcrete(&MsgTriggerLaunch{}, "launch/TriggerLaunch", nil)
 	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
 
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
@@ -33,6 +34,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgCreateChain{},
 		&MsgEditChain{},
 		&MsgRevertLaunch{},
+		&MsgTriggerLaunch{},
 		&MsgRequestRemoveAccount{},
 	)
 
@@ -60,6 +62,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 }
 
 var (
-	amino     = codec.NewLegacyAmino()
+	Amino     = codec.NewLegacyAmino()
 	ModuleCdc = codec.NewProtoCodec(cdctypes.NewInterfaceRegistry())
 )
