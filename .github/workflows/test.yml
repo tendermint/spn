@@ -14,4 +14,7 @@ jobs:
       - uses: actions/setup-go@v2
         with:
           go-version: 1.16
-      - run: go test -v ./...
+      - name: Run unit tests
+        run: go test -v -coverprofile=coverage.out -covermode=atomic ./...
+      - name: Upload coverage to Codecov
+        run: bash <(curl -s https://codecov.io/bash)
