@@ -8,13 +8,17 @@ import (
 
 var _ sdk.Msg = &MsgRequestAddVestedAccount{}
 
-func NewMsgRequestAddVestedAccount(address, chainID string,
-	coins sdk.Coins, options *types.Any) *MsgRequestAddVestedAccount {
+func NewMsgRequestAddVestedAccount(
+	address string,
+	chainID string,
+	coins sdk.Coins,
+	options *types.Any,
+) *MsgRequestAddVestedAccount {
 	return &MsgRequestAddVestedAccount{
-		ChainID: chainID,
-		Address: address,
-		Coins:   coins,
-		Options: options,
+		ChainID:         chainID,
+		Address:         address,
+		StartingBalance: coins,
+		Options:         options,
 	}
 }
 
@@ -48,10 +52,6 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 	_, _, err = ParseChainID(msg.ChainID)
 	if err != nil {
 		return sdkerrors.Wrap(ErrInvalidChainID, msg.ChainID)
-	}
-
-	if msg.Coins.Empty() {
-		return sdkerrors.Wrap(ErrEmptyCoins, msg.Address)
 	}
 
 	if msg.Options == nil {

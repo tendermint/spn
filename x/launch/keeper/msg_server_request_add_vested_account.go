@@ -27,7 +27,7 @@ func (k msgServer) RequestAddVestedAccount(
 	content, err := codec.NewAnyWithValue(&types.VestedAccount{
 		ChainID:         msg.ChainID,
 		Address:         msg.Address,
-		StartingBalance: msg.Coins,
+		StartingBalance: msg.StartingBalance,
 		VestingOptions:  msg.Options,
 	})
 	if err != nil {
