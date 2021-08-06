@@ -11,8 +11,9 @@ import (
 
 func CmdListGenesisValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-genesis-validator",
+		Use:   "list-genesis-validator [chainID]",
 		Short: "list all genesisValidator",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -24,6 +25,7 @@ func CmdListGenesisValidator() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryAllGenesisValidatorRequest{
+				ChainID:    args[0],
 				Pagination: pageReq,
 			}
 
