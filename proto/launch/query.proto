@@ -1,6 +1,7 @@
 syntax = "proto3";
 package tendermint.spn.launch;
 
+import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
@@ -9,6 +10,7 @@ import "launch/vested_account.proto";
 import "launch/genesis_account.proto";
 import "launch/genesis_validator.proto";
 import "launch/chain.proto";
+import "launch/params.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -62,6 +64,10 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/launch/chain";
 	}
 
+	// Parameters queries the parameters of the module.
+	rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+		option (google.api.http).get = "/tendermint/spn/launch/params";
+	}
 }
 
 // this line is used by starport scaffolding # 3
@@ -156,4 +162,13 @@ message QueryAllChainRequest {
 message QueryAllChainResponse {
 	repeated Chain chain = 1;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+	// params holds all the parameters of this module.
+	Params params = 1 [(gogoproto.nullable) = false];
 }
