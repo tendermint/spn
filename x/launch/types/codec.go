@@ -9,14 +9,17 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
-	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
+	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
 
 	cdc.RegisterConcrete(&MsgRequestAddVestedAccount{}, "launch/RequestAddVestedAccount", nil)
+
+	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
 
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
 	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
+	cdc.RegisterConcrete(&AccountRemoval{}, "spn/launch/AccountRemoval", nil)
 	cdc.RegisterConcrete(&VestedAccount{}, "spn/launch/VestedAccount", nil)
 
 	cdc.RegisterInterface((*VestingOptions)(nil), nil)
@@ -32,6 +35,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgEditChain{},
 		&MsgCreateChain{},
+		&MsgRequestRemoveAccount{},
 		&MsgRequestAddVestedAccount{},
 	)
 
@@ -40,6 +44,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		(*RequestContent)(nil),
 		&GenesisAccount{},
 		&VestedAccount{},
+		&AccountRemoval{},
 	)
 
 	registry.RegisterInterface(

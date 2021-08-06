@@ -11,10 +11,7 @@ const (
 )
 
 // RequestKey returns the store key to retrieve a Request from the index fields
-func RequestKey(
-	chainID string,
-	requestID uint64,
-) []byte {
+func RequestKey(chainID string, requestID uint64) []byte {
 	key := RequestPoolKey(chainID)
 
 	requestIDBytes := make([]byte, 8)
@@ -27,19 +24,11 @@ func RequestKey(
 
 // RequestPoolKey returns the store key to retrieve a Request Pool
 // This is the entry with all the requests of a specific chain
-func RequestPoolKey(
-	chainID string,
-) []byte {
-	var key []byte
-
-	chainIDBytes := []byte(chainID)
-	key = append(key, chainIDBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+func RequestPoolKey(chainID string) []byte {
+	return []byte(chainID + "/")
 }
 
 // RequestCountKey returns the store key to retrieve the count of request from a chain ID
 func RequestCountKey(chainID string) []byte {
-	return append([]byte(chainID), []byte("/")...)
+	return []byte(chainID + "/")
 }
