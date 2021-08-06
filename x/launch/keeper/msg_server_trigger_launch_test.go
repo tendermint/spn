@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgTriggerLaunch(t *testing.T) {
@@ -30,7 +30,6 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
 	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
-
 
 	// Create chains
 	msgCreateChain := sample.MsgCreateChain(coordAddress, "foo", "")

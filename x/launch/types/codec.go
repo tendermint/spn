@@ -42,9 +42,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterInterface(
 		"launch.RequestContent",
 		(*RequestContent)(nil),
-		&ValidatorRemoval{},
 		&GenesisAccount{},
 		&AccountRemoval{},
+		&ValidatorRemoval{},
 	)
 
 	registry.RegisterInterface(
