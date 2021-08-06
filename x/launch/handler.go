@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	proto "github.com/gogo/protobuf/proto"
+	"github.com/gogo/protobuf/proto"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -23,6 +23,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		// this line is used by starport scaffolding # 1
 		case *types.MsgEditChain:
 			res, err = msgServer.EditChain(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgRequestRemoveAccount:
+			res, err = msgServer.RequestRemoveAccount(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgCreateChain:
 			res, err = msgServer.CreateChain(sdk.WrapSDKContext(ctx), msg)
 		default:

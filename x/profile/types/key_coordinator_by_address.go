@@ -10,14 +10,6 @@ const (
 )
 
 // CoordinatorByAddressKey returns the store key to retrieve a CoordinatorByAddress from the index fields
-func CoordinatorByAddressKey(
-	address string,
-) []byte {
-	var key []byte
-
-	addressBytes := []byte(address)
-	key = append(key, addressBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+func CoordinatorByAddressKey(address string) []byte {
+	return []byte(address + "/")
 }

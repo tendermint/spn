@@ -30,5 +30,5 @@ func RequestPoolKey(chainID string) []byte {
 
 // RequestCountKey returns the store key to retrieve the count of request from a chain ID
 func RequestCountKey(chainID string) []byte {
-	return append([]byte(chainID), []byte("/")...)
+	return []byte(chainID + "/")
 }
