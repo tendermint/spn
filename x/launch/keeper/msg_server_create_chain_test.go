@@ -18,9 +18,7 @@ func TestMsgCreateChain(t *testing.T) {
 	// Create a coordinator
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
 	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 	coordID := res.CoordinatorId
 
 	for _, tc := range []struct {
