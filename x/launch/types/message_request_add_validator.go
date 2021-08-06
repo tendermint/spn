@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgRequestAddValidator{}
 
-func NewMsgRequestAddValidator(valAddress string, chainID string, consPubKey string, peer string) *MsgRequestAddValidator {
+func NewMsgRequestAddValidator(valAddress string, chainID string, consPubKey []byte, peer string) *MsgRequestAddValidator {
 	return &MsgRequestAddValidator{
 		ValAddress:    valAddress,
 		ChainID:    chainID,

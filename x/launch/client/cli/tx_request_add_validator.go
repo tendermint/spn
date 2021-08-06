@@ -18,16 +18,12 @@ func CmdRequestAddValidator() *cobra.Command {
 		Short: "Send a request for a genesis validator",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			argsChainID := string(args[0])
-			argsConsPubKey := string(args[1])
-			argsPeer := string(args[2])
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgRequestAddValidator(clientCtx.GetFromAddress().String(), string(argsChainID), string(argsConsPubKey), string(argsPeer))
+			msg := types.NewMsgRequestAddValidator(clientCtx.GetFromAddress().String(), args[0], []byte(args[1]), args[2])
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
