@@ -20,21 +20,16 @@ func TestMsgEditChain(t *testing.T) {
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
 	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
+
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
 	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
 	// Create a chain
 	msgCreateChain := sample.MsgCreateChain(coordAddress, "foo", "")
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 	chainID := res.ChainID
 
 	for _, tc := range []struct {

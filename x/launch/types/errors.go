@@ -16,4 +16,7 @@ var (
 	ErrTriggeredLaunch       = sdkerrors.Register(ModuleName, 6, "launch is triggered for the chain")
 	ErrNoAddressPermission   = sdkerrors.Register(ModuleName, 7, "you must be the coordinator or address owner to perform this action")
 	ErrEmptyCoins            = sdkerrors.Register(ModuleName, 8, "the coin list is empty")
+	ErrLaunchTimeTooLow      = sdkerrors.Register(ModuleName, 11, "the remaining time is below authorized launch time")
+	ErrLaunchTimeToohigh     = sdkerrors.Register(ModuleName, 12, "the remaining time is above authorized launch time")
+	// this line is used by starport scaffolding # ibc/errors
 )

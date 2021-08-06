@@ -359,6 +359,7 @@ func New(
 		appCodec,
 		keys[launchmoduletypes.StoreKey],
 		keys[launchmoduletypes.MemStoreKey],
+		app.GetSubspace(launchmoduletypes.ModuleName),
 		app.ProfileKeeper,
 	)
 	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)

@@ -9,11 +9,12 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
+
+	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
+	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
+	cdc.RegisterConcrete(&MsgTriggerLaunch{}, "launch/TriggerLaunch", nil)
 	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
 	cdc.RegisterConcrete(&MsgRequestAddAccount{}, "launch/RequestAddAccount", nil)
-
-	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
-	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
 	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
@@ -32,8 +33,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateChain{},
 		&MsgEditChain{},
-		&MsgRequestAddAccount{},
+		&MsgTriggerLaunch{},
 		&MsgRequestRemoveAccount{},
+		&MsgRequestAddAccount{},
 	)
 
 	registry.RegisterInterface(
@@ -60,6 +62,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 }
 
 var (
-	amino     = codec.NewLegacyAmino()
+	Amino     = codec.NewLegacyAmino()
 	ModuleCdc = codec.NewProtoCodec(cdctypes.NewInterfaceRegistry())
 )

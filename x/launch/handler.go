@@ -21,14 +21,16 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		var err error
 		switch msg := msg.(type) {
 		// this line is used by starport scaffolding # 1
+		case *types.MsgCreateChain:
+			res, err = msgServer.CreateChain(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgEditChain:
 			res, err = msgServer.EditChain(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgTriggerLaunch:
+			res, err = msgServer.TriggerLaunch(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestRemoveAccount:
 			res, err = msgServer.RequestRemoveAccount(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestAddAccount:
 			res, err = msgServer.RequestAddAccount(sdk.WrapSDKContext(ctx), msg)
-		case *types.MsgCreateChain:
-			res, err = msgServer.CreateChain(sdk.WrapSDKContext(ctx), msg)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			err = sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
