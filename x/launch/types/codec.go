@@ -9,13 +9,17 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
-	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
-	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
+	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
 
 	cdc.RegisterConcrete(&MsgRequestRemoveValidator{}, "launch/RequestRemoveValidator", nil)
 
+	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
+
+	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
+
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
 	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
+	cdc.RegisterConcrete(&AccountRemoval{}, "spn/launch/AccountRemoval", nil)
 	cdc.RegisterConcrete(&ValidatorRemoval{}, "spn/launch/ValidatorRemoval", nil)
 
 	cdc.RegisterInterface((*VestingOptions)(nil), nil)
@@ -31,16 +35,16 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgEditChain{},
 		&MsgCreateChain{},
+		&MsgRequestRemoveAccount{},
 		&MsgRequestRemoveValidator{},
 	)
-
-	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 
 	registry.RegisterInterface(
 		"launch.RequestContent",
 		(*RequestContent)(nil),
 		&ValidatorRemoval{},
 		&GenesisAccount{},
+		&AccountRemoval{},
 	)
 
 	registry.RegisterInterface(
