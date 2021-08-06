@@ -7,9 +7,9 @@ import (
 
 var _ sdk.Msg = &MsgRequestAddValidator{}
 
-func NewMsgRequestAddValidator(creator string, chainID string, consPubKey string, peer string) *MsgRequestAddValidator {
+func NewMsgRequestAddValidator(valAddress string, chainID string, consPubKey string, peer string) *MsgRequestAddValidator {
 	return &MsgRequestAddValidator{
-		Creator:    creator,
+		ValAddress:    valAddress,
 		ChainID:    chainID,
 		ConsPubKey: consPubKey,
 		Peer:       peer,
@@ -25,11 +25,11 @@ func (msg *MsgRequestAddValidator) Type() string {
 }
 
 func (msg *MsgRequestAddValidator) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	valAddress, err := sdk.AccAddressFromBech32(msg.ValAddress)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{creator}
+	return []sdk.AccAddress{valAddress}
 }
 
 func (msg *MsgRequestAddValidator) GetSignBytes() []byte {
@@ -38,7 +38,7 @@ func (msg *MsgRequestAddValidator) GetSignBytes() []byte {
 }
 
 func (msg *MsgRequestAddValidator) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	_, err := sdk.AccAddressFromBech32(msg.ValAddress)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}

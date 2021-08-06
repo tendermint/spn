@@ -2,8 +2,10 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
 import "cosmos_proto/cosmos.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -18,10 +20,12 @@ service Msg {
 
 // this line is used by starport scaffolding # proto/tx/message
 message MsgRequestAddValidator {
-  string creator = 1;
-  string chainID = 2;
-  string consPubKey = 3;
-  string peer = 4;
+  string chainID = 1;
+  string valAddress = 2;
+  bytes genTx = 3;
+  string consPubKey = 4;
+  cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
+  string peer = 6;
 }
 
 message MsgRequestAddValidatorResponse {
