@@ -31,7 +31,7 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrap(types.ErrLaunchTriggered, msg.ChainID)
+		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
 	}
 
 	if msg.RemainingTime < k.MinLaunchTime(ctx) {
