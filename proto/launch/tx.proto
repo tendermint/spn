@@ -13,6 +13,7 @@ service Msg {
   rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
+  rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
   rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
   rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
 }
@@ -50,6 +51,13 @@ message MsgEditChain {
 }
 
 message MsgEditChainResponse {}
+
+message MsgRevertLaunch {
+  string coordinator = 1;
+  string chainID = 2;
+}
+
+message MsgRevertLaunchResponse {}
 
 message MsgTriggerLaunch {
   string coordinator = 1;
