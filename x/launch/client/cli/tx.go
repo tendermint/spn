@@ -33,6 +33,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdCreateChain())
 	cmd.AddCommand(CmdEditChain())
 	cmd.AddCommand(CmdRequestAddAccount())
+	cmd.AddCommand(CmdRequestRemoveAccount())
 
 	return cmd
 }
