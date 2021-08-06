@@ -20,9 +20,9 @@ func CmdRequestRemoveAccount() *cobra.Command {
 			}
 
 			creator := clientCtx.GetFromAddress().String()
-			address := args[1]
-			if address == "" {
-				address = creator
+			address := creator
+			if len(args) > 1 {
+				address = args[1]
 			}
 
 			msg := types.NewMsgRequestRemoveAccount(
