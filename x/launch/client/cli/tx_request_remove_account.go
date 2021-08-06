@@ -12,7 +12,7 @@ func CmdRequestRemoveAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "request-remove-account [chainID] [address]",
 		Short: "Request to remove an account",
-		Args:  cobra.MinimumNArgs(1),
+		Args:  cobra.RangeArgs(1, 2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
