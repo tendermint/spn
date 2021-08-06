@@ -18,4 +18,7 @@ var (
 	ErrEmptyCoins            = sdkerrors.Register(ModuleName, 8, "the coin list is empty")
 	ErrInvalidAccountOption  = sdkerrors.Register(ModuleName, 9, "invalid account option")
 	ErrInvalidTimestamp      = sdkerrors.Register(ModuleName, 10, "timestamp must be greater than zero")
+	ErrLaunchTimeTooLow      = sdkerrors.Register(ModuleName, 11, "the remaining time is below authorized launch time")
+	ErrLaunchTimeToohigh     = sdkerrors.Register(ModuleName, 12, "the remaining time is above authorized launch time")
+	// this line is used by starport scaffolding # ibc/errors
 )
