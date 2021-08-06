@@ -20,9 +20,9 @@ func CmdRequestRemoveValidator() *cobra.Command {
 			}
 
 			creator := clientCtx.GetFromAddress().String()
-			validator := args[1]
-			if validator == "" {
-				validator = creator
+			validator := creator
+			if len(args) > 1 {
+				validator = args[1]
 			}
 
 			msg := types.NewMsgRequestRemoveValidator(
