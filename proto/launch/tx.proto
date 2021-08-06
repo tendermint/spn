@@ -10,12 +10,24 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestAddValidatorResponse);
   rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgRequestAddValidator {
+  string creator = 1;
+  string chainID = 2;
+  string consPubKey = 3;
+  string peer = 4;
+}
+
+message MsgRequestAddValidatorResponse {
+  uint64 requestID = 1;
+}
+
 message MsgRequestRemoveAccount {
   string chainID = 1;
   string creator = 2;
