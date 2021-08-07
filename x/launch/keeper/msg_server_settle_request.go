@@ -32,7 +32,7 @@ func (k msgServer) SettleRequest(
 	request, found := k.GetRequest(ctx, msg.ChainID, msg.RequestID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrRequestNotFound,
-			"request %s for chain %s not found",
+			"request %d for chain %s not found",
 			msg.RequestID,
 			msg.ChainID,
 		)
@@ -42,14 +42,16 @@ func (k msgServer) SettleRequest(
 
 	if msg.Approve {
 		cdc := codectypes.NewInterfaceRegistry()
+		types.RegisterInterfaces(cdc)
 
 		var content types.RequestContent
 		if err := cdc.UnpackAny(request.Content, &content); err != nil {
 			return nil, sdkerrors.Wrap(types.ErrInvalidRequestContent, err.Error())
 		}
-		switch content.(type) {
+		switch c := content.(type) {
 		case *types.AccountRemoval:
-			// TODO: handle account removal
+			k.RemoveGenesisAccount(ctx, msg.ChainID, c.Address)
+		// TODO handle other requests
 		default:
 			return nil, sdkerrors.Wrap(types.ErrInvalidRequestContent,
 				"unknown request content type")

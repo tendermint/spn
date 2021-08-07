@@ -88,19 +88,15 @@ func TestMsgSettleRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := srv.SettleRequest(ctx, &tt.msg)
+			_, err := srv.SettleRequest(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
 
-			request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, tt.msg.RequestID)
-			require.True(t, found, "request not found")
-
-			// TODO handle tests
-			require.Equal(t, tt.want, request.RequestID)
-			require.Equal(t, tt.want, got)
+			_, found := k.GetRequest(sdkCtx, tt.msg.ChainID, tt.msg.RequestID)
+			require.False(t, found, "request not removed")
 		})
 	}
 }
