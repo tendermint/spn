@@ -12,16 +12,17 @@ import (
 
 func TestMsgSettleRequest(t *testing.T) {
 	var (
-		invalidChain, _         = sample.ChainID(0)
-		addr1                   = sample.AccAddress()
-		addr2                   = sample.AccAddress()
-		addr3                   = sample.AccAddress()
-		k, _, srv, _, sdkCtx, _ = setupMsgServer(t)
-		ctx                     = sdk.WrapSDKContext(sdkCtx)
-		chains                  = createNChain(k, sdkCtx, 4)
+		invalidChain, _          = sample.ChainID(0)
+		addr1                    = sample.AccAddress()
+		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
+		ctx                      = sdk.WrapSDKContext(sdkCtx)
+		chains                   = createNChain(k, sdkCtx, 2)
+		requests                 = createNRequest(k, sdkCtx, 6)
 	)
-	chains[3].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[3])
+	chains[0].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[0])
+	chains[1].ChainID = "foo"
+	k.SetChain(sdkCtx, chains[1])
 	tests := []struct {
 		name string
 		msg  types.MsgSettleRequest
@@ -33,55 +34,63 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     invalidChain,
 				Coordinator: addr1,
+				RequestID:   requests[0].RequestID,
 			},
 			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[3].ChainID,
+				ChainID:     chains[0].ChainID,
 				Coordinator: addr1,
+				RequestID:   requests[0].RequestID,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
 		}, {
 			name: "no permission error",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[0].ChainID,
+				ChainID:     chains[1].ChainID,
 				Coordinator: addr1,
+				RequestID:   requests[0].RequestID,
 			},
 			err: sdkerrors.Wrap(types.ErrNoAddressPermission, addr1),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[0].ChainID,
-				Coordinator: addr1,
+				ChainID:     chains[1].ChainID,
+				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				RequestID:   requests[0].RequestID,
 			},
 			want: 0,
 		}, {
 			name: "add chain 1 request 2",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: addr2,
+				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				RequestID:   requests[1].RequestID,
 			},
 			want: 0,
 		}, {
 			name: "add chain 1 request 3",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: addr2,
+				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				RequestID:   requests[2].RequestID,
 			},
 			want: 1,
 		}, {
 			name: "add chain 2 request 1",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
-				Coordinator: addr3,
+				ChainID:     chains[1].ChainID,
+				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				RequestID:   requests[4].RequestID,
 			},
 			want: 0,
 		}, {
-			name: "remove chain 2 request 2",
+			name: "add chain 2 request 2",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
-				Coordinator: addr3,
+				ChainID:     chains[1].ChainID,
+				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				RequestID:   requests[5].RequestID,
 			},
 			want: 1,
 		},

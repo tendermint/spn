@@ -85,7 +85,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			},
 			want: 0,
 		}, {
-			name: "remove chain 2 request 2",
+			name: "add chain 2 request 2",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[2].ChainID,
 				Creator: addr3,
