@@ -19,5 +19,7 @@ var (
 	ErrLaunchTimeToohigh     = sdkerrors.Register(ModuleName, 12, "the remaining time is above authorized launch time")
 	ErrNotTriggeredLaunch    = sdkerrors.Register(ModuleName, 13, "the chain launch has not been triggered")
 	ErrRevertDelayNotReached = sdkerrors.Register(ModuleName, 14, "the revert delay has not been reached")
+	ErrRequestNotFound       = sdkerrors.Register(ModuleName, 15, "request not found")
+	ErrInvalidRequestContent = sdkerrors.Register(ModuleName, 16, "invalid request content type")
 	// this line is used by starport scaffolding # ibc/errors
 )
