@@ -10,10 +10,7 @@ const (
 )
 
 // GenesisValidatorKey returns the store key to retrieve a GenesisValidator from the index fields
-func GenesisValidatorKey(
-	chainID,
-	address string,
-) []byte {
+func GenesisValidatorKey(chainID, address string) []byte {
 	var key []byte
 
 	chainIDBytes := []byte(chainID)
@@ -22,6 +19,19 @@ func GenesisValidatorKey(
 
 	addressBytes := []byte(address)
 	key = append(key, addressBytes...)
+	key = append(key, []byte("/")...)
+
+	return key
+}
+
+// GenesisValidatorAllKey returns the store key to retrieve all GenesisValidator by chainID
+func GenesisValidatorAllKey(chainID string) []byte {
+	var key []byte
+
+	keyBytes := []byte(GenesisValidatorKeyPrefix)
+	chainIDBytes := []byte(chainID)
+	key = append(key, keyBytes...)
+	key = append(key, chainIDBytes...)
 	key = append(key, []byte("/")...)
 
 	return key

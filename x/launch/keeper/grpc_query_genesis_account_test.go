@@ -11,8 +11,18 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
+
+func createNGenesisAccountForChainID(keeper *Keeper, ctx sdk.Context, n int, chainID string) []types.GenesisAccount {
+	items := make([]types.GenesisAccount, n)
+	for i := range items {
+		items[i] = *sample.GenesisAccount(chainID, strconv.Itoa(i))
+		keeper.SetGenesisAccount(ctx, items[i])
+	}
+	return items
+}
 
 func TestGenesisAccountQuerySingle(t *testing.T) {
 	keeper, _, ctx, _ := setupKeeper(t)
@@ -67,12 +77,16 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 }
 
 func TestGenesisAccountQueryPaginated(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNGenesisAccount(keeper, ctx, 5)
+	var (
+		keeper, _, ctx, _ = setupKeeper(t)
+		wctx              = sdk.WrapSDKContext(ctx)
+		chainID, _        = sample.ChainID(0)
+		msgs              = createNGenesisAccountForChainID(keeper, ctx, 5, chainID)
+	)
 
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisAccountRequest {
+	request := func(chainID string, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisAccountRequest {
 		return &types.QueryAllGenesisAccountRequest{
+			ChainID: chainID,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
@@ -84,7 +98,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.GenesisAccountAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
 				assert.Equal(t, &msgs[j], resp.GenesisAccount[j-i])
@@ -95,7 +109,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.GenesisAccountAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
 				assert.Equal(t, &msgs[j], resp.GenesisAccount[j-i])
@@ -104,7 +118,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.GenesisAccountAll(wctx, request(nil, 0, 0, true))
+		resp, err := keeper.GenesisAccountAll(wctx, request(chainID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 	})
