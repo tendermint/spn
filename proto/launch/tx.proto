@@ -13,6 +13,7 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
   rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestAddValidatorResponse);
+  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
   rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
@@ -31,6 +32,16 @@ message MsgRequestAddValidator {
 }
 
 message MsgRequestAddValidatorResponse {
+  uint64 requestID = 1;
+}
+
+message MsgRequestRemoveValidator {
+  string chainID = 1;
+  string creator = 2;
+  string validatorAddress = 3;
+}
+
+message MsgRequestRemoveValidatorResponse {
   uint64 requestID = 1;
 }
 

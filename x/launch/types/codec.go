@@ -15,11 +15,13 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgRevertLaunch{}, "launch/RevertLaunch", nil)
 	cdc.RegisterConcrete(&MsgTriggerLaunch{}, "launch/TriggerLaunch", nil)
 	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
+	cdc.RegisterConcrete(&MsgRequestRemoveValidator{}, "launch/RequestRemoveValidator", nil)
 
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
 	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
 	cdc.RegisterConcrete(&GenesisValidator{}, "spn/launch/GenesisValidator", nil)
 	cdc.RegisterConcrete(&AccountRemoval{}, "spn/launch/AccountRemoval", nil)
+	cdc.RegisterConcrete(&ValidatorRemoval{}, "spn/launch/ValidatorRemoval", nil)
 
 	cdc.RegisterInterface((*VestingOptions)(nil), nil)
 	cdc.RegisterConcrete(&DelayedVesting{}, "spn/launch/DelayedVesting", nil)
@@ -39,6 +41,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgRevertLaunch{},
 		&MsgTriggerLaunch{},
 		&MsgRequestRemoveAccount{},
+		&MsgRequestRemoveValidator{},
 	)
 
 	registry.RegisterInterface(
@@ -47,6 +50,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&GenesisAccount{},
 		&GenesisValidator{},
 		&AccountRemoval{},
+		&ValidatorRemoval{},
 	)
 
 	registry.RegisterInterface(
