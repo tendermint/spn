@@ -51,5 +51,31 @@ func (msg *MsgRequestAddValidator) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	_, _, err = ParseChainID(msg.ChainID)
+	if err != nil {
+		return sdkerrors.Wrap(ErrInvalidChainID, msg.ChainID)
+	}
+
+	if len(msg.GenTx) == 0 {
+		return sdkerrors.Wrap(ErrInvalidGenTx, "empty gentx")
+	}
+
+	if len(msg.ConsPubKey) == 0 {
+		return sdkerrors.Wrap(ErrInvalidConsPubKey, "empty consensus public key")
+	}
+
+	if !msg.SelfDelegation.IsValid() {
+		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "")
+	}
+
+	if msg.SelfDelegation.IsZero() {
+		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "self delegation is zero")
+	}
+
+	if msg.Peer == "" {
+		return sdkerrors.Wrap(ErrInvalidPeer, "empty peer")
+	}
+
 	return nil
 }

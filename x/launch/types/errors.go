@@ -15,4 +15,8 @@ var (
 	ErrCodecNotPacked        = sdkerrors.Register(ModuleName, 5, "codec value couldn't be packed")
 	ErrTriggeredLaunch       = sdkerrors.Register(ModuleName, 6, "launch is triggered for the chain")
 	ErrNoAddressPermission   = sdkerrors.Register(ModuleName, 7, "you must be the coordinator or address owner to perform this action")
+	ErrInvalidConsPubKey = sdkerrors.Register(ModuleName, 20, "the consensus public key is invalid")
+	ErrInvalidGenTx = sdkerrors.Register(ModuleName, 21, "the gentx is invalid")
+	ErrInvalidSelfDelegation = sdkerrors.Register(ModuleName, 22, "the self delegation is invalid")
+	ErrInvalidPeer = sdkerrors.Register(ModuleName, 23, "the peer is invalid")
 )
