@@ -25,6 +25,8 @@ func TestParseList(t *testing.T) {
 		{"10/", []uint64{10}},
 		{"/10", []uint64{10}},
 		{"10/10", []uint64{10}},
+		{"12/8", []uint64{8, 9, 10, 11, 12}},
+		{"12/8,4/1", []uint64{8, 9, 10, 11, 12, 1, 2, 3, 4}},
 	}
 	for _, tt := range cases {
 		t.Run("list "+tt.list, func(t *testing.T) {
