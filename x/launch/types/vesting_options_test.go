@@ -22,7 +22,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 				Vesting: nil,
 				EndTime: time.Now().Unix(),
 			},
-			err: sdkerrors.Wrap(types.ErrEmptyCoins,
+			err: sdkerrors.Wrap(types.ErrInvalidCoins,
 				"no vesting coins for DelayedVesting"),
 		}, {
 			name: "vesting without coins",
