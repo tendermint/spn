@@ -47,8 +47,8 @@ func (msg *MsgRequestAddAccount) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidChainID, msg.ChainID)
 	}
 
-	if msg.Coins.Empty() {
-		return sdkerrors.Wrap(ErrEmptyCoins, msg.Address)
+	if !msg.Coins.IsValid() || msg.Coins.Empty() {
+		return sdkerrors.Wrap(ErrInvalidCoins, msg.Address)
 	}
 	return nil
 }
