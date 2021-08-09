@@ -21,7 +21,6 @@ func (DefaultInitialGenesis) Validate() error { return nil }
 
 var _ InitialGenesis = &GenesisURL{}
 
-
 // Validate implements InitialGenesis
 func (g GenesisURL) Validate() error {
 	if g.Url == "" {
