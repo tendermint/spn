@@ -10,10 +10,9 @@ import (
 )
 
 const (
-	chainIDSeparator = "-"
+	chainIDSeparator   = "-"
 	chainNameMaxLength = 30
 )
-
 
 // GetDefaultInitialGenesis returns the DefaultInitialGenesis structure if the initial genesis for the chain is default genesis
 func (c Chain) GetDefaultInitialGenesis(unpacker codec.AnyUnpacker) (*DefaultInitialGenesis, error) {
