@@ -29,22 +29,25 @@ func (k msgServer) SettleRequest(
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Coordinator)
 	}
 
-	request, found := k.GetRequest(ctx, msg.ChainID, msg.RequestID)
-	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrRequestNotFound,
-			"request %d for chain %s not found",
-			msg.RequestID,
-			msg.ChainID,
-		)
-	}
+	for _, requestID := range msg.RequestIDs {
+		request, found := k.GetRequest(ctx, msg.ChainID, requestID)
+		if !found {
+			return nil, sdkerrors.Wrapf(types.ErrRequestNotFound,
+				"request %d for chain %s not found",
+				requestID,
+				msg.ChainID,
+			)
+		}
 
-	k.RemoveRequest(ctx, msg.ChainID, msg.RequestID)
-
-	var err error
-	if msg.Approve {
-		err = applyRequest(ctx, k.Keeper, msg, request)
+		k.RemoveRequest(ctx, msg.ChainID, requestID)
+		if msg.Approve {
+			err := applyRequest(ctx, k.Keeper, msg, request)
+			if err != nil {
+				return nil, err
+			}
+		}
 	}
-	return &types.MsgSettleRequestResponse{}, err
+	return &types.MsgSettleRequestResponse{}, nil
 }
 
 func applyRequest(

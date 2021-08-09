@@ -7,11 +7,11 @@ import (
 
 var _ sdk.Msg = &MsgSettleRequest{}
 
-func NewMsgSettleRequest(coordinator, chainID string, requestID uint64, approve bool) *MsgSettleRequest {
+func NewMsgSettleRequest(coordinator, chainID string, requestID []uint64, approve bool) *MsgSettleRequest {
 	return &MsgSettleRequest{
 		Coordinator: coordinator,
 		ChainID:     chainID,
-		RequestID:   requestID,
+		RequestIDs:  requestID,
 		Approve:     approve,
 	}
 }

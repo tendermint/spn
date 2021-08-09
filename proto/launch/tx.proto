@@ -33,7 +33,7 @@ message MsgRequestRemoveValidatorResponse {
 message MsgSettleRequest {
   string coordinator = 1;
   string chainID = 2;
-  uint64 requestID = 3;
+  repeated uint64 requestIDs = 3;
   bool approve = 4;
 }
 
