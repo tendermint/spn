@@ -22,15 +22,17 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		switch msg := msg.(type) {
 		// this line is used by starport scaffolding # 1
 		case *types.MsgRequestAddValidator:
-			res, err := msgServer.RequestAddValidator(sdk.WrapSDKContext(ctx), msg)
-			return sdk.WrapServiceResult(ctx, res, err)
-
-		case *types.MsgEditChain:
-			res, err = msgServer.EditChain(sdk.WrapSDKContext(ctx), msg)
-		case *types.MsgRequestRemoveAccount:
-			res, err = msgServer.RequestRemoveAccount(sdk.WrapSDKContext(ctx), msg)
+			res, err = msgServer.RequestAddValidator(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgCreateChain:
 			res, err = msgServer.CreateChain(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgEditChain:
+			res, err = msgServer.EditChain(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgRevertLaunch:
+			res, err = msgServer.RevertLaunch(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgTriggerLaunch:
+			res, err = msgServer.TriggerLaunch(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgRequestRemoveAccount:
+			res, err = msgServer.RequestRemoveAccount(sdk.WrapSDKContext(ctx), msg)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			err = sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)

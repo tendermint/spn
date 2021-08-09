@@ -1,6 +1,8 @@
 package sample
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec/types"
@@ -89,7 +91,7 @@ func Request(chainID string) *launch.Request {
 func MsgCreateChain(coordAddress, chainName, genesisURL string) launch.MsgCreateChain {
 	var genesisHash string
 	if len(genesisURL) > 0 {
-		genesisHash = String(10)
+		genesisHash = GenesisHash()
 	}
 
 	return *launch.NewMsgCreateChain(
@@ -119,7 +121,7 @@ func MsgEditChain(
 		if genesisURL {
 			initialGenesis, _ = types.NewAnyWithValue(&launch.GenesisURL{
 				Url:  String(30),
-				Hash: String(30),
+				Hash: GenesisHash(),
 			})
 		} else {
 			initialGenesis, _ = types.NewAnyWithValue(&launch.DefaultInitialGenesis{})
@@ -147,4 +149,10 @@ func MsgRequestAddValidator(address, chainID string) launch.MsgRequestAddValidat
 		Coin(),
 		String(30),
 	)
+}
+
+// GenesisHash returns a sample sha256 hash of custom genesis for GenesisURL
+func GenesisHash() string {
+	hash := sha256.Sum256([]byte(String(50)))
+	return hex.EncodeToString(hash[:])
 }
