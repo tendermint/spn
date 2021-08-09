@@ -2,10 +2,10 @@ package keeper
 
 import (
 	"context"
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -22,12 +22,12 @@ func (k msgServer) RequestAddValidator(goCtx context.Context, msg *types.MsgRequ
 	}
 
 	content, err := codec.NewAnyWithValue(&types.GenesisValidator{
-		ChainID: msg.ChainID,
-		Address: msg.ValAddress,
-		GenTx:   msg.GenTx,
-		ConsPubKey: msg.ConsPubKey,
+		ChainID:        msg.ChainID,
+		Address:        msg.ValAddress,
+		GenTx:          msg.GenTx,
+		ConsPubKey:     msg.ConsPubKey,
 		SelfDelegation: msg.SelfDelegation,
-		Peer: msg.Peer,
+		Peer:           msg.Peer,
 	})
 	if err != nil {
 		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())

@@ -1,10 +1,10 @@
 package types_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/require"
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -24,50 +24,49 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 	zeroDelegation := validMsg
 	zeroDelegation.SelfDelegation.Amount = sdk.NewInt(0)
 
-
 	for _, tc := range []struct {
-		name string
-		msg  types.MsgRequestAddValidator
-		valid  bool
+		name  string
+		msg   types.MsgRequestAddValidator
+		valid bool
 	}{
 		{
-			name: "valid message",
-			msg: validMsg,
+			name:  "valid message",
+			msg:   validMsg,
 			valid: true,
 		},
 		{
-			name: "invalid address",
-			msg: sample.MsgRequestAddValidator("invalid", chainID),
+			name:  "invalid address",
+			msg:   sample.MsgRequestAddValidator("invalid", chainID),
 			valid: false,
 		},
 		{
-			name: "invalid chain ID",
-			msg: sample.MsgRequestAddValidator(sample.AccAddress(), "invalid"),
+			name:  "invalid chain ID",
+			msg:   sample.MsgRequestAddValidator(sample.AccAddress(), "invalid"),
 			valid: false,
 		},
 		{
-			name: "empty consensus public key",
-			msg: emptyConsPubKey,
+			name:  "empty consensus public key",
+			msg:   emptyConsPubKey,
 			valid: false,
 		},
 		{
-			name: "empty gentx",
-			msg: emptyGentx,
+			name:  "empty gentx",
+			msg:   emptyGentx,
 			valid: false,
 		},
 		{
-			name: "empty peer",
-			msg: emptyPeer,
+			name:  "empty peer",
+			msg:   emptyPeer,
 			valid: false,
 		},
 		{
-			name: "invalid self delegation",
-			msg: invalidSelfDelegation,
+			name:  "invalid self delegation",
+			msg:   invalidSelfDelegation,
 			valid: false,
 		},
 		{
-			name: "zero self delegation",
-			msg: zeroDelegation,
+			name:  "zero self delegation",
+			msg:   zeroDelegation,
 			valid: false,
 		},
 	} {

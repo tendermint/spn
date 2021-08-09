@@ -1,10 +1,10 @@
 package keeper
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -22,38 +22,38 @@ func TestMsgRequestAddValidator(t *testing.T) {
 	k.SetChain(sdkCtx, chains[2])
 
 	for _, tc := range []struct {
-		name string
-		msg  types.MsgRequestAddValidator
-		want uint64
-		valid  bool
-	} {
+		name  string
+		msg   types.MsgRequestAddValidator
+		want  uint64
+		valid bool
+	}{
 		{
-			name: "invalid chain",
-			msg: sample.MsgRequestAddValidator(addr1, invalidChain),
+			name:  "invalid chain",
+			msg:   sample.MsgRequestAddValidator(addr1, invalidChain),
 			valid: false,
 		},
 		{
-			name: "chain with triggered launch",
-			msg: sample.MsgRequestAddValidator(addr1, chains[2].ChainID),
+			name:  "chain with triggered launch",
+			msg:   sample.MsgRequestAddValidator(addr1, chains[2].ChainID),
 			valid: false,
 		},
 		{
-			name: "request to a chain 1",
-			msg: sample.MsgRequestAddValidator(addr1, chains[0].ChainID),
+			name:  "request to a chain 1",
+			msg:   sample.MsgRequestAddValidator(addr1, chains[0].ChainID),
 			valid: true,
-			want: uint64(0),
+			want:  uint64(0),
 		},
 		{
-			name: "second request to a chain 1",
-			msg: sample.MsgRequestAddValidator(addr2, chains[0].ChainID),
+			name:  "second request to a chain 1",
+			msg:   sample.MsgRequestAddValidator(addr2, chains[0].ChainID),
 			valid: true,
-			want: uint64(1),
+			want:  uint64(1),
 		},
 		{
-			name: "request to a chain 2",
-			msg: sample.MsgRequestAddValidator(addr1, chains[1].ChainID),
+			name:  "request to a chain 2",
+			msg:   sample.MsgRequestAddValidator(addr1, chains[1].ChainID),
 			valid: true,
-			want: uint64(0),
+			want:  uint64(0),
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
