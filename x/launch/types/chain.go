@@ -9,7 +9,11 @@ import (
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
 )
 
-const chainIDSeparator = "-"
+const (
+	chainIDSeparator = "-"
+	chainNameMaxLength = 30
+)
+
 
 // GetDefaultInitialGenesis returns the DefaultInitialGenesis structure if the initial genesis for the chain is default genesis
 func (c Chain) GetDefaultInitialGenesis(unpacker codec.AnyUnpacker) (*DefaultInitialGenesis, error) {
@@ -61,11 +65,12 @@ func ParseChainID(chainID string) (string, uint64, error) {
 
 // CheckChainName verifies the name is valid as a chain name
 func CheckChainName(chainName string) error {
-	// TODO: Determine final check: https://github.com/tendermint/spn/issues/194
-
-	// No empty
 	if len(chainName) == 0 {
 		return errors.New("chain name can't be empty")
+	}
+
+	if len(chainName) > chainNameMaxLength {
+		return fmt.Errorf("chain name is too big, max length is %v", chainNameMaxLength)
 	}
 
 	// Iterate characters
@@ -80,5 +85,5 @@ func CheckChainName(chainName string) error {
 
 // isChainAuthorizedChar checks to ensure that all letters in the chain name are valid
 func isChainAuthorizedChar(c rune) bool {
-	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9')
+	return 'a' <= c && c <= 'z'
 }
