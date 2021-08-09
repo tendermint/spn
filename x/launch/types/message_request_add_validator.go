@@ -7,12 +7,21 @@ import (
 
 var _ sdk.Msg = &MsgRequestAddValidator{}
 
-func NewMsgRequestAddValidator(valAddress string, chainID string, consPubKey []byte, peer string) *MsgRequestAddValidator {
+func NewMsgRequestAddValidator(
+	valAddress,
+	chainID string,
+	genTx,
+	consPubKey []byte,
+	selfDelegation sdk.Coin,
+	peer string,
+) *MsgRequestAddValidator {
 	return &MsgRequestAddValidator{
-		ValAddress:    valAddress,
-		ChainID:    chainID,
-		ConsPubKey: consPubKey,
-		Peer:       peer,
+		ValAddress:     valAddress,
+		ChainID:        chainID,
+		GenTx:          genTx,
+		ConsPubKey:     consPubKey,
+		SelfDelegation: selfDelegation,
+		Peer:           peer,
 	}
 }
 

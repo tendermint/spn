@@ -136,3 +136,15 @@ func MsgEditChain(
 		initialGenesis,
 	)
 }
+
+// MsgRequestAddValidator returns a sample MsgRequestAddValidator
+func MsgRequestAddValidator(address, chainID string) launch.MsgRequestAddValidator {
+	return *launch.NewMsgRequestAddValidator(
+		address,
+		chainID,
+		Bytes(500),
+		Bytes(30),
+		Coin(),
+		String(30),
+	)
+}
