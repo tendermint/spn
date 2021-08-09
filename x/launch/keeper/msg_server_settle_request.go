@@ -40,23 +40,42 @@ func (k msgServer) SettleRequest(
 
 	k.RemoveRequest(ctx, msg.ChainID, msg.RequestID)
 
+	var err error
 	if msg.Approve {
-		cdc := codectypes.NewInterfaceRegistry()
-		types.RegisterInterfaces(cdc)
+		err = applyRequest(ctx, k.Keeper, msg, request)
+	}
+	return &types.MsgSettleRequestResponse{}, err
+}
 
-		var content types.RequestContent
-		if err := cdc.UnpackAny(request.Content, &content); err != nil {
-			return nil, sdkerrors.Wrap(types.ErrInvalidRequestContent, err.Error())
-		}
-		switch c := content.(type) {
-		case *types.AccountRemoval:
-			k.RemoveGenesisAccount(ctx, msg.ChainID, c.Address)
-		// TODO handle other requests
-		default:
-			return nil, sdkerrors.Wrap(types.ErrInvalidRequestContent,
-				"unknown request content type")
-		}
+func applyRequest(
+	ctx sdk.Context,
+	k Keeper,
+	msg *types.MsgSettleRequest,
+	request types.Request,
+) error {
+	cdc := codectypes.NewInterfaceRegistry()
+	types.RegisterInterfaces(cdc)
+
+	var content types.RequestContent
+	if err := cdc.UnpackAny(request.Content, &content); err != nil {
+		return sdkerrors.Wrap(types.ErrInvalidRequestContent, err.Error())
 	}
 
-	return &types.MsgSettleRequestResponse{}, nil
+	switch c := content.(type) {
+	case *types.GenesisAccount:
+		k.SetGenesisAccount(ctx, *c)
+	case *types.VestedAccount:
+		k.SetVestedAccount(ctx, *c)
+	case *types.AccountRemoval:
+		k.RemoveVestedAccount(ctx, msg.ChainID, c.Address)
+		k.RemoveGenesisAccount(ctx, msg.ChainID, c.Address)
+	case *types.GenesisValidator:
+		k.SetGenesisValidator(ctx, *c)
+	case *types.ValidatorRemoval:
+		k.RemoveGenesisValidator(ctx, msg.ChainID, c.ValAddress)
+	default:
+		return sdkerrors.Wrap(types.ErrInvalidRequestContent,
+			"unknown request content type")
+	}
+	return nil
 }
