@@ -26,3 +26,20 @@ func (r Request) UnpackAccountRemoval(cdc codec.AnyUnpacker) (*AccountRemoval, e
 	}
 	return result, nil
 }
+
+// UnpackGenesisValidator returns the GenesisValidator structure from the codec unpack
+func (r Request) UnpackGenesisValidator(cdc codec.AnyUnpacker) (*GenesisValidator, error) {
+	if r.Content == nil {
+		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
+	}
+	var content RequestContent
+	err := cdc.UnpackAny(r.Content, &content)
+	if err != nil {
+		return nil, err
+	}
+	result, ok := content.(*GenesisValidator)
+	if !ok {
+		return nil, errors.New("not a genesisValidator request")
+	}
+	return result, nil
+}

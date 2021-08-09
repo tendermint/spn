@@ -10,15 +10,13 @@ import (
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
 	cdc.RegisterConcrete(&MsgRequestAddValidator{}, "launch/RequestAddValidator", nil)
-
 	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
-
 	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
-
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 
 	cdc.RegisterInterface((*RequestContent)(nil), nil)
 	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
+	cdc.RegisterConcrete(&GenesisValidator{}, "spn/launch/GenesisValidator", nil)
 	cdc.RegisterConcrete(&AccountRemoval{}, "spn/launch/AccountRemoval", nil)
 
 	cdc.RegisterInterface((*VestingOptions)(nil), nil)
@@ -44,6 +42,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		"launch.RequestContent",
 		(*RequestContent)(nil),
 		&GenesisAccount{},
+		&GenesisValidator{},
 		&AccountRemoval{},
 	)
 
