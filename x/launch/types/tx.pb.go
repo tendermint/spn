@@ -33,6 +33,110 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // this line is used by starport scaffolding # proto/tx/message
+type MsgRequestRemoveValidator struct {
+	ChainID          string `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
+	Creator          string `protobuf:"bytes,2,opt,name=creator,proto3" json:"creator,omitempty"`
+	ValidatorAddress string `protobuf:"bytes,3,opt,name=validatorAddress,proto3" json:"validatorAddress,omitempty"`
+}
+
+func (m *MsgRequestRemoveValidator) Reset()         { *m = MsgRequestRemoveValidator{} }
+func (m *MsgRequestRemoveValidator) String() string { return proto.CompactTextString(m) }
+func (*MsgRequestRemoveValidator) ProtoMessage()    {}
+func (*MsgRequestRemoveValidator) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6adab5ffa522f022, []int{0}
+}
+func (m *MsgRequestRemoveValidator) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRequestRemoveValidator) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRequestRemoveValidator.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRequestRemoveValidator) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRequestRemoveValidator.Merge(m, src)
+}
+func (m *MsgRequestRemoveValidator) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRequestRemoveValidator) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRequestRemoveValidator.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRequestRemoveValidator proto.InternalMessageInfo
+
+func (m *MsgRequestRemoveValidator) GetChainID() string {
+	if m != nil {
+		return m.ChainID
+	}
+	return ""
+}
+
+func (m *MsgRequestRemoveValidator) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgRequestRemoveValidator) GetValidatorAddress() string {
+	if m != nil {
+		return m.ValidatorAddress
+	}
+	return ""
+}
+
+type MsgRequestRemoveValidatorResponse struct {
+	RequestID uint64 `protobuf:"varint,1,opt,name=requestID,proto3" json:"requestID,omitempty"`
+}
+
+func (m *MsgRequestRemoveValidatorResponse) Reset()         { *m = MsgRequestRemoveValidatorResponse{} }
+func (m *MsgRequestRemoveValidatorResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgRequestRemoveValidatorResponse) ProtoMessage()    {}
+func (*MsgRequestRemoveValidatorResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_6adab5ffa522f022, []int{1}
+}
+func (m *MsgRequestRemoveValidatorResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRequestRemoveValidatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRequestRemoveValidatorResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRequestRemoveValidatorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRequestRemoveValidatorResponse.Merge(m, src)
+}
+func (m *MsgRequestRemoveValidatorResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRequestRemoveValidatorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRequestRemoveValidatorResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRequestRemoveValidatorResponse proto.InternalMessageInfo
+
+func (m *MsgRequestRemoveValidatorResponse) GetRequestID() uint64 {
+	if m != nil {
+		return m.RequestID
+	}
+	return 0
+}
+
 type MsgRequestAddVestedAccount struct {
 	ChainID         string                                   `protobuf:"bytes,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
 	Address         string                                   `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
@@ -44,7 +148,7 @@ func (m *MsgRequestAddVestedAccount) Reset()         { *m = MsgRequestAddVestedA
 func (m *MsgRequestAddVestedAccount) String() string { return proto.CompactTextString(m) }
 func (*MsgRequestAddVestedAccount) ProtoMessage()    {}
 func (*MsgRequestAddVestedAccount) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{0}
+	return fileDescriptor_6adab5ffa522f022, []int{2}
 }
 func (m *MsgRequestAddVestedAccount) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -109,7 +213,7 @@ func (m *MsgRequestAddVestedAccountResponse) Reset()         { *m = MsgRequestAd
 func (m *MsgRequestAddVestedAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgRequestAddVestedAccountResponse) ProtoMessage()    {}
 func (*MsgRequestAddVestedAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{1}
+	return fileDescriptor_6adab5ffa522f022, []int{3}
 }
 func (m *MsgRequestAddVestedAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -158,7 +262,7 @@ func (m *MsgCreateChain) Reset()         { *m = MsgCreateChain{} }
 func (m *MsgCreateChain) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateChain) ProtoMessage()    {}
 func (*MsgCreateChain) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{2}
+	return fileDescriptor_6adab5ffa522f022, []int{4}
 }
 func (m *MsgCreateChain) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -237,7 +341,7 @@ func (m *MsgCreateChainResponse) Reset()         { *m = MsgCreateChainResponse{}
 func (m *MsgCreateChainResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateChainResponse) ProtoMessage()    {}
 func (*MsgCreateChainResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{3}
+	return fileDescriptor_6adab5ffa522f022, []int{5}
 }
 func (m *MsgCreateChainResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -285,7 +389,7 @@ func (m *MsgEditChain) Reset()         { *m = MsgEditChain{} }
 func (m *MsgEditChain) String() string { return proto.CompactTextString(m) }
 func (*MsgEditChain) ProtoMessage()    {}
 func (*MsgEditChain) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{4}
+	return fileDescriptor_6adab5ffa522f022, []int{6}
 }
 func (m *MsgEditChain) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -356,7 +460,7 @@ func (m *MsgEditChainResponse) Reset()         { *m = MsgEditChainResponse{} }
 func (m *MsgEditChainResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgEditChainResponse) ProtoMessage()    {}
 func (*MsgEditChainResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{5}
+	return fileDescriptor_6adab5ffa522f022, []int{7}
 }
 func (m *MsgEditChainResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -394,7 +498,7 @@ func (m *MsgRevertLaunch) Reset()         { *m = MsgRevertLaunch{} }
 func (m *MsgRevertLaunch) String() string { return proto.CompactTextString(m) }
 func (*MsgRevertLaunch) ProtoMessage()    {}
 func (*MsgRevertLaunch) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{6}
+	return fileDescriptor_6adab5ffa522f022, []int{8}
 }
 func (m *MsgRevertLaunch) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -444,7 +548,7 @@ func (m *MsgRevertLaunchResponse) Reset()         { *m = MsgRevertLaunchResponse
 func (m *MsgRevertLaunchResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgRevertLaunchResponse) ProtoMessage()    {}
 func (*MsgRevertLaunchResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{7}
+	return fileDescriptor_6adab5ffa522f022, []int{9}
 }
 func (m *MsgRevertLaunchResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -483,7 +587,7 @@ func (m *MsgTriggerLaunch) Reset()         { *m = MsgTriggerLaunch{} }
 func (m *MsgTriggerLaunch) String() string { return proto.CompactTextString(m) }
 func (*MsgTriggerLaunch) ProtoMessage()    {}
 func (*MsgTriggerLaunch) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{8}
+	return fileDescriptor_6adab5ffa522f022, []int{10}
 }
 func (m *MsgTriggerLaunch) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -540,7 +644,7 @@ func (m *MsgTriggerLaunchResponse) Reset()         { *m = MsgTriggerLaunchRespon
 func (m *MsgTriggerLaunchResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgTriggerLaunchResponse) ProtoMessage()    {}
 func (*MsgTriggerLaunchResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{9}
+	return fileDescriptor_6adab5ffa522f022, []int{11}
 }
 func (m *MsgTriggerLaunchResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -579,7 +683,7 @@ func (m *MsgRequestRemoveAccount) Reset()         { *m = MsgRequestRemoveAccount
 func (m *MsgRequestRemoveAccount) String() string { return proto.CompactTextString(m) }
 func (*MsgRequestRemoveAccount) ProtoMessage()    {}
 func (*MsgRequestRemoveAccount) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{10}
+	return fileDescriptor_6adab5ffa522f022, []int{12}
 }
 func (m *MsgRequestRemoveAccount) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -637,7 +741,7 @@ func (m *MsgRequestRemoveAccountResponse) Reset()         { *m = MsgRequestRemov
 func (m *MsgRequestRemoveAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgRequestRemoveAccountResponse) ProtoMessage()    {}
 func (*MsgRequestRemoveAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_6adab5ffa522f022, []int{11}
+	return fileDescriptor_6adab5ffa522f022, []int{13}
 }
 func (m *MsgRequestRemoveAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -674,6 +778,8 @@ func (m *MsgRequestRemoveAccountResponse) GetRequestID() uint64 {
 }
 
 func init() {
+	proto.RegisterType((*MsgRequestRemoveValidator)(nil), "tendermint.spn.launch.MsgRequestRemoveValidator")
+	proto.RegisterType((*MsgRequestRemoveValidatorResponse)(nil), "tendermint.spn.launch.MsgRequestRemoveValidatorResponse")
 	proto.RegisterType((*MsgRequestAddVestedAccount)(nil), "tendermint.spn.launch.MsgRequestAddVestedAccount")
 	proto.RegisterType((*MsgRequestAddVestedAccountResponse)(nil), "tendermint.spn.launch.MsgRequestAddVestedAccountResponse")
 	proto.RegisterType((*MsgCreateChain)(nil), "tendermint.spn.launch.MsgCreateChain")
@@ -691,55 +797,59 @@ func init() {
 func init() { proto.RegisterFile("launch/tx.proto", fileDescriptor_6adab5ffa522f022) }
 
 var fileDescriptor_6adab5ffa522f022 = []byte{
-	// 768 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x56, 0x4f, 0x6f, 0xd3, 0x4a,
-	0x10, 0x8f, 0x9b, 0xfe, 0x51, 0x36, 0xfd, 0xf3, 0x64, 0xe5, 0xb5, 0x89, 0xf5, 0xe4, 0x44, 0x7e,
-	0xef, 0xd1, 0x48, 0xa8, 0xb6, 0x1a, 0x24, 0x24, 0x4e, 0xa8, 0x29, 0x08, 0x2a, 0x35, 0x80, 0xac,
-	0xc2, 0x01, 0x84, 0xd0, 0xc6, 0xde, 0x6e, 0x56, 0x24, 0xbb, 0x61, 0x77, 0x53, 0xb5, 0x17, 0xae,
-	0x5c, 0xf9, 0x08, 0x9c, 0x38, 0x70, 0x46, 0xe2, 0x2b, 0x54, 0x9c, 0x7a, 0x44, 0x1c, 0x0a, 0x6a,
-	0xbf, 0x05, 0x27, 0x64, 0xaf, 0xe3, 0xd8, 0x51, 0x5d, 0x5c, 0xf5, 0x94, 0xcc, 0xcc, 0x6f, 0x66,
-	0x7e, 0xfb, 0xf3, 0xec, 0xd8, 0x60, 0xa5, 0x0f, 0x47, 0xd4, 0xeb, 0x39, 0xf2, 0xd0, 0x1e, 0x72,
-	0x26, 0x99, 0xfe, 0xb7, 0x44, 0xd4, 0x47, 0x7c, 0x40, 0xa8, 0xb4, 0xc5, 0x90, 0xda, 0x2a, 0x6e,
-	0xd4, 0x30, 0x63, 0xb8, 0x8f, 0x9c, 0x10, 0xd4, 0x1d, 0xed, 0x3b, 0x90, 0x1e, 0xa9, 0x0c, 0xa3,
-	0xe6, 0x31, 0x31, 0x60, 0xe2, 0x55, 0x68, 0x39, 0xca, 0x88, 0x42, 0x15, 0xcc, 0x30, 0x53, 0xfe,
-	0xe0, 0x5f, 0xe4, 0x35, 0x15, 0xc6, 0xe9, 0x42, 0x81, 0x9c, 0x83, 0xcd, 0x2e, 0x92, 0x70, 0xd3,
-	0xf1, 0x18, 0xa1, 0x2a, 0x6e, 0x7d, 0x99, 0x01, 0x46, 0x47, 0x60, 0x17, 0xbd, 0x19, 0x21, 0x21,
-	0xb7, 0x7c, 0xff, 0x19, 0x12, 0x12, 0xf9, 0x5b, 0x9e, 0xc7, 0x46, 0x54, 0xea, 0x55, 0xb0, 0xe0,
-	0xf5, 0x20, 0xa1, 0x3b, 0xf7, 0xaa, 0x5a, 0x43, 0x6b, 0x96, 0xdc, 0xb1, 0x19, 0x44, 0xa0, 0xef,
-	0x73, 0x24, 0x44, 0x75, 0x46, 0x45, 0x22, 0x53, 0xff, 0xa0, 0x81, 0x15, 0x21, 0x21, 0x97, 0x84,
-	0xe2, 0x36, 0xec, 0x43, 0xea, 0xa1, 0x6a, 0xb1, 0x51, 0x6c, 0x96, 0x5b, 0x35, 0x3b, 0x62, 0x1c,
-	0xb0, 0xb1, 0x23, 0x36, 0xf6, 0x36, 0x23, 0xb4, 0xfd, 0xe2, 0xf8, 0xb4, 0x5e, 0xf8, 0x75, 0x5a,
-	0x5f, 0xc7, 0x44, 0xf6, 0x46, 0x5d, 0xdb, 0x63, 0x83, 0xe8, 0x78, 0xd1, 0xcf, 0x86, 0xf0, 0x5f,
-	0x3b, 0xf2, 0x68, 0x88, 0x44, 0x98, 0xf0, 0xe9, 0x47, 0xbd, 0x99, 0x13, 0x2a, 0xdc, 0x69, 0x3a,
-	0x7a, 0x1b, 0x2c, 0xb0, 0xa1, 0x24, 0x8c, 0x8a, 0xea, 0x6c, 0x43, 0x6b, 0x96, 0x5b, 0x15, 0x5b,
-	0x69, 0x6e, 0x8f, 0x35, 0xb7, 0xb7, 0xe8, 0x51, 0x5b, 0xff, 0xfa, 0x79, 0x63, 0x39, 0x10, 0x84,
-	0x50, 0xfc, 0x58, 0xe1, 0xdd, 0x71, 0xa2, 0xd5, 0x06, 0x56, 0xb6, 0x70, 0x2e, 0x12, 0x43, 0x46,
-	0x05, 0xd2, 0xff, 0x01, 0x25, 0xae, 0x20, 0x91, 0x84, 0xb3, 0xee, 0xc4, 0x61, 0x9d, 0x68, 0x60,
-	0xb9, 0x23, 0xf0, 0x36, 0x47, 0x50, 0xa2, 0xed, 0x40, 0x59, 0xbd, 0x01, 0xca, 0x1e, 0x63, 0xdc,
-	0x27, 0x14, 0x4a, 0xc6, 0x23, 0xd5, 0x93, 0xae, 0xa0, 0x64, 0xf8, 0x10, 0x1e, 0xc1, 0x01, 0x8a,
-	0xb4, 0x9f, 0x38, 0x82, 0xa8, 0x60, 0x23, 0xee, 0xa1, 0xa7, 0xee, 0x6e, 0xb5, 0xa8, 0xa2, 0xb1,
-	0x43, 0x37, 0x01, 0x50, 0xc6, 0x43, 0x28, 0x7a, 0xe1, 0xd9, 0x4b, 0x6e, 0xc2, 0x13, 0xc4, 0x31,
-	0xa2, 0x48, 0x10, 0x11, 0xa4, 0xcf, 0xa9, 0xf8, 0xc4, 0x13, 0xb0, 0x8b, 0xac, 0xb0, 0xc0, 0xbc,
-	0x62, 0x97, 0x70, 0x59, 0x2d, 0xb0, 0x9a, 0x3e, 0x51, 0x2c, 0x45, 0xe6, 0x2c, 0x59, 0xdf, 0x35,
-	0xb0, 0xd8, 0x11, 0xf8, 0xbe, 0x4f, 0x64, 0x5e, 0x11, 0x12, 0xc5, 0x66, 0xd2, 0x83, 0x79, 0x3d,
-	0x01, 0x9e, 0x80, 0x65, 0x42, 0x89, 0x24, 0xb0, 0xff, 0x40, 0x1d, 0x2a, 0x14, 0xe1, 0xd2, 0x01,
-	0xd9, 0x49, 0xe1, 0xdd, 0xa9, 0x7c, 0x6b, 0x15, 0x54, 0x92, 0x67, 0x1b, 0xcb, 0x61, 0x75, 0xc0,
-	0x4a, 0x38, 0x3f, 0x07, 0x88, 0xcb, 0xdd, 0xf0, 0xe2, 0x5f, 0xe7, 0xd8, 0x56, 0x0d, 0xac, 0x4d,
-	0x95, 0x8b, 0x3b, 0x49, 0xf0, 0x57, 0x47, 0xe0, 0x3d, 0x4e, 0x30, 0x46, 0xfc, 0xfa, 0xad, 0xf4,
-	0xff, 0xc0, 0x12, 0x47, 0x03, 0x48, 0x28, 0xa1, 0x78, 0x8f, 0x0c, 0x50, 0xa8, 0xf2, 0xac, 0x9b,
-	0x76, 0x5a, 0x06, 0xa8, 0x4e, 0x77, 0x8d, 0x19, 0xe1, 0x88, 0x6c, 0x78, 0x0f, 0x5c, 0x34, 0x60,
-	0x07, 0x28, 0xd7, 0xc6, 0xf1, 0x82, 0xb1, 0x62, 0x3c, 0x26, 0xa4, 0xcc, 0xe4, 0x2e, 0x2a, 0xa6,
-	0x76, 0x91, 0x75, 0x17, 0xd4, 0x33, 0x1a, 0xe5, 0xbb, 0xa1, 0xad, 0x8f, 0x73, 0xa0, 0xd8, 0x11,
-	0x58, 0x7f, 0xa7, 0x81, 0xb5, 0xac, 0x25, 0xb9, 0x69, 0x5f, 0xb8, 0xc7, 0xed, 0xec, 0xf5, 0x60,
-	0xdc, 0xb9, 0x72, 0x4a, 0xcc, 0xd7, 0x03, 0xe5, 0xe4, 0xbe, 0xf8, 0x3f, 0xbb, 0x52, 0x02, 0x66,
-	0x6c, 0xe4, 0x82, 0xc5, 0x4d, 0x5e, 0x82, 0xd2, 0xe4, 0x36, 0xfe, 0x9b, 0x9d, 0x1b, 0x83, 0x8c,
-	0x9b, 0x39, 0x40, 0x71, 0xf9, 0x7d, 0xb0, 0x98, 0x1a, 0xfc, 0x1b, 0x97, 0xc9, 0x31, 0xc1, 0x19,
-	0x76, 0x3e, 0x5c, 0xdc, 0x87, 0x80, 0xa5, 0xf4, 0xd8, 0xaf, 0x67, 0x17, 0x48, 0x01, 0x0d, 0x27,
-	0x27, 0x30, 0x6e, 0xf5, 0x16, 0x54, 0x2e, 0x9c, 0x67, 0xfb, 0x8f, 0x4f, 0x3a, 0x85, 0x37, 0x6e,
-	0x5f, 0x0d, 0x3f, 0xee, 0xdf, 0x6e, 0x1f, 0x9f, 0x99, 0xda, 0xc9, 0x99, 0xa9, 0xfd, 0x3c, 0x33,
-	0xb5, 0xf7, 0xe7, 0x66, 0xe1, 0xe4, 0xdc, 0x2c, 0x7c, 0x3b, 0x37, 0x0b, 0xcf, 0x93, 0xef, 0xc9,
-	0x49, 0x6d, 0x47, 0x0c, 0xa9, 0x73, 0xe8, 0x8c, 0x3f, 0x49, 0x82, 0xb7, 0x65, 0x77, 0x3e, 0x5c,
-	0x6e, 0xb7, 0x7e, 0x07, 0x00, 0x00, 0xff, 0xff, 0x95, 0xd1, 0x19, 0xff, 0xa9, 0x08, 0x00, 0x00,
+	// 825 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x56, 0xcd, 0x6b, 0x1b, 0x47,
+	0x14, 0xd7, 0x5a, 0xae, 0x8d, 0x9e, 0xfc, 0xc5, 0xa2, 0xda, 0xd2, 0x52, 0x56, 0xea, 0xf6, 0xc3,
+	0xa2, 0xc5, 0xbb, 0xb5, 0x0a, 0xa5, 0x3d, 0x15, 0xc9, 0x2d, 0xad, 0xc1, 0x6a, 0xcb, 0xe2, 0xfa,
+	0xd0, 0x52, 0xca, 0x6a, 0x77, 0x3c, 0x1a, 0x2a, 0xcd, 0xa8, 0x3b, 0x23, 0x61, 0x13, 0xc8, 0x29,
+	0x90, 0x6b, 0xfe, 0x84, 0x9c, 0x03, 0xb9, 0x05, 0xf2, 0x2f, 0x98, 0x9c, 0x7c, 0x0c, 0x39, 0x38,
+	0xc1, 0xfe, 0x2f, 0x72, 0x0a, 0xfb, 0xbd, 0xab, 0x78, 0x9d, 0x35, 0x3e, 0x49, 0xef, 0xbd, 0xdf,
+	0xfb, 0xfa, 0xcd, 0x9b, 0x37, 0x0b, 0xeb, 0x23, 0x6b, 0x4a, 0xed, 0xa1, 0x21, 0x4e, 0xf4, 0x89,
+	0xcb, 0x04, 0x93, 0x3f, 0x16, 0x88, 0x3a, 0xc8, 0x1d, 0x13, 0x2a, 0x74, 0x3e, 0xa1, 0x7a, 0x60,
+	0x57, 0x1a, 0x98, 0x31, 0x3c, 0x42, 0x86, 0x0f, 0x1a, 0x4c, 0x8f, 0x0d, 0x8b, 0x9e, 0x06, 0x1e,
+	0x4a, 0xc3, 0x66, 0x7c, 0xcc, 0xf8, 0xbf, 0xbe, 0x64, 0x04, 0x42, 0x68, 0xaa, 0x61, 0x86, 0x59,
+	0xa0, 0xf7, 0xfe, 0x85, 0x5a, 0x35, 0xc0, 0x18, 0x03, 0x8b, 0x23, 0x63, 0xb6, 0x3b, 0x40, 0xc2,
+	0xda, 0x35, 0x6c, 0x46, 0x68, 0x60, 0xd7, 0xee, 0x41, 0xa3, 0xcf, 0xb1, 0x89, 0xfe, 0x9f, 0x22,
+	0x2e, 0x4c, 0x34, 0x66, 0x33, 0x74, 0x64, 0x8d, 0x88, 0x63, 0x09, 0xe6, 0xca, 0x75, 0x58, 0xb6,
+	0x87, 0x16, 0xa1, 0xfb, 0x3f, 0xd5, 0xa5, 0x96, 0xd4, 0xae, 0x98, 0x91, 0xe8, 0x5b, 0x5c, 0xe4,
+	0x81, 0xea, 0x0b, 0xa1, 0x25, 0x10, 0xe5, 0xaf, 0x60, 0x63, 0x16, 0x05, 0xe8, 0x3a, 0x8e, 0x8b,
+	0x38, 0xaf, 0x97, 0x7d, 0xc8, 0x7b, 0x7a, 0xad, 0x0b, 0x9f, 0xe6, 0x26, 0x37, 0x11, 0x9f, 0x30,
+	0xca, 0x91, 0xfc, 0x09, 0x54, 0xdc, 0x00, 0x11, 0x96, 0xb1, 0x68, 0x26, 0x0a, 0xed, 0xf9, 0x02,
+	0x28, 0x49, 0x8c, 0xae, 0xe3, 0x1c, 0x21, 0x2e, 0x90, 0xd3, 0xb5, 0x6d, 0x36, 0xa5, 0xe2, 0xe6,
+	0x0e, 0xac, 0xb0, 0xbc, 0xb0, 0x83, 0x50, 0x94, 0x1f, 0x4b, 0xb0, 0xce, 0x85, 0xe5, 0x0a, 0x42,
+	0x71, 0xcf, 0x1a, 0x59, 0xd4, 0x46, 0xf5, 0x72, 0xab, 0xdc, 0xae, 0x76, 0x1a, 0x7a, 0xc8, 0xb8,
+	0xc7, 0xa6, 0x1e, 0xb2, 0xa9, 0xef, 0x31, 0x42, 0x7b, 0x7f, 0x9f, 0x5d, 0x34, 0x4b, 0x6f, 0x2f,
+	0x9a, 0xdb, 0x98, 0x88, 0xe1, 0x74, 0xa0, 0xdb, 0x6c, 0x1c, 0x1e, 0x4f, 0xf8, 0xb3, 0xc3, 0x9d,
+	0xff, 0x0c, 0x71, 0x3a, 0x41, 0xdc, 0x77, 0x78, 0xf2, 0xba, 0xd9, 0x2e, 0x08, 0xe5, 0xe6, 0x7c,
+	0x39, 0x72, 0x0f, 0x96, 0xd9, 0x44, 0x10, 0x46, 0x79, 0x7d, 0xb1, 0x25, 0xb5, 0xab, 0x9d, 0x9a,
+	0x1e, 0xcc, 0x8c, 0x1e, 0xcd, 0x8c, 0xde, 0xa5, 0xa7, 0x3d, 0xf9, 0xc5, 0xb3, 0x9d, 0x35, 0x8f,
+	0x10, 0x42, 0xf1, 0xef, 0x01, 0xde, 0x8c, 0x1c, 0xb5, 0x1e, 0x68, 0xf9, 0xc4, 0x15, 0x64, 0xff,
+	0x5c, 0x82, 0xb5, 0x3e, 0xc7, 0x7b, 0xde, 0xd9, 0xa3, 0x3d, 0x8f, 0x59, 0xb9, 0x05, 0x55, 0x9b,
+	0x31, 0xd7, 0x21, 0xd4, 0x9f, 0x8e, 0x80, 0xf5, 0xb4, 0xca, 0x0b, 0xe9, 0x1f, 0xc2, 0x6f, 0xd6,
+	0x18, 0x85, 0xdc, 0x27, 0x0a, 0xcf, 0xca, 0xd9, 0xd4, 0xb5, 0xd1, 0x9f, 0xe6, 0x41, 0x38, 0x38,
+	0x89, 0x42, 0x56, 0x01, 0x02, 0xe1, 0x57, 0x8b, 0x0f, 0xfd, 0xde, 0x2b, 0x66, 0x4a, 0xe3, 0xd9,
+	0x31, 0xa2, 0x88, 0x13, 0xee, 0xb9, 0x7f, 0x14, 0xd8, 0x13, 0x8d, 0x57, 0x5d, 0x28, 0xf9, 0x01,
+	0x96, 0x82, 0xea, 0x52, 0x2a, 0xad, 0x03, 0x9b, 0xd9, 0x8e, 0x62, 0x2a, 0x72, 0x67, 0x49, 0x7b,
+	0x25, 0xc1, 0x4a, 0x9f, 0xe3, 0x9f, 0x1d, 0x22, 0x8a, 0x92, 0x90, 0x0a, 0xb6, 0x90, 0x1d, 0xcc,
+	0xbb, 0x11, 0xf0, 0x07, 0xac, 0x11, 0x4a, 0x04, 0xb1, 0x46, 0xbf, 0x04, 0x4d, 0xf9, 0x24, 0xdc,
+	0x38, 0x20, 0xfb, 0x19, 0xbc, 0x39, 0xe7, 0xaf, 0x6d, 0x42, 0x2d, 0xdd, 0x5b, 0x44, 0x87, 0xd6,
+	0x87, 0x75, 0x7f, 0x7e, 0x66, 0xc8, 0x15, 0x07, 0xfe, 0xe2, 0xba, 0x4b, 0xdb, 0x5a, 0x03, 0xb6,
+	0xe6, 0xc2, 0xc5, 0x99, 0x04, 0x6c, 0xf4, 0x39, 0x3e, 0x74, 0x09, 0xc6, 0xc8, 0xbd, 0x7b, 0x2a,
+	0xf9, 0x73, 0x58, 0x75, 0xd1, 0xd8, 0x22, 0x94, 0x50, 0x7c, 0x48, 0xc6, 0xc8, 0x67, 0x79, 0xd1,
+	0xcc, 0x2a, 0x35, 0x05, 0xea, 0xf3, 0x59, 0xe3, 0x8a, 0x70, 0x58, 0x6c, 0x6a, 0x71, 0x15, 0xda,
+	0x38, 0x39, 0x3b, 0x33, 0xb5, 0x8b, 0xca, 0x99, 0x5d, 0xa4, 0xfd, 0x08, 0xcd, 0x9c, 0x44, 0xc5,
+	0x6e, 0x68, 0xe7, 0xe9, 0x12, 0x94, 0xfb, 0x1c, 0xcb, 0x0f, 0x24, 0xd8, 0xcc, 0xd9, 0xf2, 0xdf,
+	0xe8, 0xd7, 0x3e, 0x43, 0x7a, 0xee, 0x6a, 0x56, 0xbe, 0xbf, 0xad, 0x47, 0x5c, 0xac, 0x0d, 0xd5,
+	0xf4, 0xb2, 0xf8, 0x22, 0x3f, 0x50, 0x0a, 0xa6, 0xec, 0x14, 0x82, 0xc5, 0x49, 0xfe, 0x81, 0x4a,
+	0x72, 0x15, 0x3f, 0xcb, 0xf7, 0x8d, 0x41, 0xca, 0xd7, 0x05, 0x40, 0x71, 0xf8, 0x63, 0x58, 0xc9,
+	0x4c, 0xfd, 0x97, 0x37, 0xb1, 0x91, 0xe0, 0x14, 0xbd, 0x18, 0x2e, 0xce, 0x43, 0x60, 0x35, 0x3b,
+	0xf3, 0xdb, 0xf9, 0x01, 0x32, 0x40, 0xc5, 0x28, 0x08, 0x8c, 0x53, 0x3d, 0x94, 0x60, 0x2b, 0xef,
+	0x09, 0xdd, 0xfd, 0xe0, 0x61, 0xcf, 0xbb, 0x28, 0x3f, 0xdc, 0xda, 0x25, 0xae, 0xe4, 0x3e, 0xd4,
+	0xae, 0xbd, 0x56, 0x7a, 0xc1, 0x91, 0x8b, 0x4a, 0xf8, 0xee, 0x76, 0xf8, 0x28, 0x7f, 0xaf, 0x77,
+	0x76, 0xa9, 0x4a, 0xe7, 0x97, 0xaa, 0xf4, 0xe6, 0x52, 0x95, 0x1e, 0x5d, 0xa9, 0xa5, 0xf3, 0x2b,
+	0xb5, 0xf4, 0xf2, 0x4a, 0x2d, 0xfd, 0x95, 0x7e, 0xae, 0x93, 0xd8, 0x06, 0x9f, 0x50, 0xe3, 0xc4,
+	0x88, 0xbe, 0xec, 0xbc, 0x47, 0x7b, 0xb0, 0xe4, 0xef, 0xd8, 0x6f, 0xdf, 0x05, 0x00, 0x00, 0xff,
+	0xff, 0x35, 0x1f, 0x05, 0xe1, 0xf0, 0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -755,11 +865,12 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
 	// this line is used by starport scaffolding # proto/tx/rpc
-	RequestAddVestedAccount(ctx context.Context, in *MsgRequestAddVestedAccount, opts ...grpc.CallOption) (*MsgRequestAddVestedAccountResponse, error)
+	RequestRemoveValidator(ctx context.Context, in *MsgRequestRemoveValidator, opts ...grpc.CallOption) (*MsgRequestRemoveValidatorResponse, error)
 	CreateChain(ctx context.Context, in *MsgCreateChain, opts ...grpc.CallOption) (*MsgCreateChainResponse, error)
 	EditChain(ctx context.Context, in *MsgEditChain, opts ...grpc.CallOption) (*MsgEditChainResponse, error)
 	RevertLaunch(ctx context.Context, in *MsgRevertLaunch, opts ...grpc.CallOption) (*MsgRevertLaunchResponse, error)
 	TriggerLaunch(ctx context.Context, in *MsgTriggerLaunch, opts ...grpc.CallOption) (*MsgTriggerLaunchResponse, error)
+	RequestAddVestedAccount(ctx context.Context, in *MsgRequestAddVestedAccount, opts ...grpc.CallOption) (*MsgRequestAddVestedAccountResponse, error)
 	RequestRemoveAccount(ctx context.Context, in *MsgRequestRemoveAccount, opts ...grpc.CallOption) (*MsgRequestRemoveAccountResponse, error)
 }
 
@@ -771,9 +882,9 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) RequestAddVestedAccount(ctx context.Context, in *MsgRequestAddVestedAccount, opts ...grpc.CallOption) (*MsgRequestAddVestedAccountResponse, error) {
-	out := new(MsgRequestAddVestedAccountResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Msg/RequestAddVestedAccount", in, out, opts...)
+func (c *msgClient) RequestRemoveValidator(ctx context.Context, in *MsgRequestRemoveValidator, opts ...grpc.CallOption) (*MsgRequestRemoveValidatorResponse, error) {
+	out := new(MsgRequestRemoveValidatorResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Msg/RequestRemoveValidator", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -816,6 +927,15 @@ func (c *msgClient) TriggerLaunch(ctx context.Context, in *MsgTriggerLaunch, opt
 	return out, nil
 }
 
+func (c *msgClient) RequestAddVestedAccount(ctx context.Context, in *MsgRequestAddVestedAccount, opts ...grpc.CallOption) (*MsgRequestAddVestedAccountResponse, error) {
+	out := new(MsgRequestAddVestedAccountResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Msg/RequestAddVestedAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *msgClient) RequestRemoveAccount(ctx context.Context, in *MsgRequestRemoveAccount, opts ...grpc.CallOption) (*MsgRequestRemoveAccountResponse, error) {
 	out := new(MsgRequestRemoveAccountResponse)
 	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Msg/RequestRemoveAccount", in, out, opts...)
@@ -828,11 +948,12 @@ func (c *msgClient) RequestRemoveAccount(ctx context.Context, in *MsgRequestRemo
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// this line is used by starport scaffolding # proto/tx/rpc
-	RequestAddVestedAccount(context.Context, *MsgRequestAddVestedAccount) (*MsgRequestAddVestedAccountResponse, error)
+	RequestRemoveValidator(context.Context, *MsgRequestRemoveValidator) (*MsgRequestRemoveValidatorResponse, error)
 	CreateChain(context.Context, *MsgCreateChain) (*MsgCreateChainResponse, error)
 	EditChain(context.Context, *MsgEditChain) (*MsgEditChainResponse, error)
 	RevertLaunch(context.Context, *MsgRevertLaunch) (*MsgRevertLaunchResponse, error)
 	TriggerLaunch(context.Context, *MsgTriggerLaunch) (*MsgTriggerLaunchResponse, error)
+	RequestAddVestedAccount(context.Context, *MsgRequestAddVestedAccount) (*MsgRequestAddVestedAccountResponse, error)
 	RequestRemoveAccount(context.Context, *MsgRequestRemoveAccount) (*MsgRequestRemoveAccountResponse, error)
 }
 
@@ -840,8 +961,8 @@ type MsgServer interface {
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) RequestAddVestedAccount(ctx context.Context, req *MsgRequestAddVestedAccount) (*MsgRequestAddVestedAccountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RequestAddVestedAccount not implemented")
+func (*UnimplementedMsgServer) RequestRemoveValidator(ctx context.Context, req *MsgRequestRemoveValidator) (*MsgRequestRemoveValidatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestRemoveValidator not implemented")
 }
 func (*UnimplementedMsgServer) CreateChain(ctx context.Context, req *MsgCreateChain) (*MsgCreateChainResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateChain not implemented")
@@ -855,6 +976,9 @@ func (*UnimplementedMsgServer) RevertLaunch(ctx context.Context, req *MsgRevertL
 func (*UnimplementedMsgServer) TriggerLaunch(ctx context.Context, req *MsgTriggerLaunch) (*MsgTriggerLaunchResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TriggerLaunch not implemented")
 }
+func (*UnimplementedMsgServer) RequestAddVestedAccount(ctx context.Context, req *MsgRequestAddVestedAccount) (*MsgRequestAddVestedAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestAddVestedAccount not implemented")
+}
 func (*UnimplementedMsgServer) RequestRemoveAccount(ctx context.Context, req *MsgRequestRemoveAccount) (*MsgRequestRemoveAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestRemoveAccount not implemented")
 }
@@ -863,20 +987,20 @@ func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_RequestAddVestedAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgRequestAddVestedAccount)
+func _Msg_RequestRemoveValidator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRequestRemoveValidator)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).RequestAddVestedAccount(ctx, in)
+		return srv.(MsgServer).RequestRemoveValidator(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.launch.Msg/RequestAddVestedAccount",
+		FullMethod: "/tendermint.spn.launch.Msg/RequestRemoveValidator",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).RequestAddVestedAccount(ctx, req.(*MsgRequestAddVestedAccount))
+		return srv.(MsgServer).RequestRemoveValidator(ctx, req.(*MsgRequestRemoveValidator))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -953,6 +1077,24 @@ func _Msg_TriggerLaunch_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_RequestAddVestedAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRequestAddVestedAccount)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RequestAddVestedAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.launch.Msg/RequestAddVestedAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RequestAddVestedAccount(ctx, req.(*MsgRequestAddVestedAccount))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Msg_RequestRemoveAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgRequestRemoveAccount)
 	if err := dec(in); err != nil {
@@ -976,8 +1118,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "RequestAddVestedAccount",
-			Handler:    _Msg_RequestAddVestedAccount_Handler,
+			MethodName: "RequestRemoveValidator",
+			Handler:    _Msg_RequestRemoveValidator_Handler,
 		},
 		{
 			MethodName: "CreateChain",
@@ -996,12 +1138,88 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_TriggerLaunch_Handler,
 		},
 		{
+			MethodName: "RequestAddVestedAccount",
+			Handler:    _Msg_RequestAddVestedAccount_Handler,
+		},
+		{
 			MethodName: "RequestRemoveAccount",
 			Handler:    _Msg_RequestRemoveAccount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "launch/tx.proto",
+}
+
+func (m *MsgRequestRemoveValidator) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRequestRemoveValidator) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRequestRemoveValidator) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ValidatorAddress) > 0 {
+		i -= len(m.ValidatorAddress)
+		copy(dAtA[i:], m.ValidatorAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ValidatorAddress)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ChainID) > 0 {
+		i -= len(m.ChainID)
+		copy(dAtA[i:], m.ChainID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ChainID)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRequestRemoveValidatorResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRequestRemoveValidatorResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRequestRemoveValidatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.RequestID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.RequestID))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
 }
 
 func (m *MsgRequestAddVestedAccount) Marshal() (dAtA []byte, err error) {
@@ -1484,6 +1702,39 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *MsgRequestRemoveValidator) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ChainID)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ValidatorAddress)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgRequestRemoveValidatorResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.RequestID != 0 {
+		n += 1 + sovTx(uint64(m.RequestID))
+	}
+	return n
+}
+
 func (m *MsgRequestAddVestedAccount) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1700,6 +1951,221 @@ func sovTx(x uint64) (n int) {
 }
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgRequestRemoveValidator) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRequestRemoveValidator: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRequestRemoveValidator: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChainID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChainID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValidatorAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRequestRemoveValidatorResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRequestRemoveValidatorResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRequestRemoveValidatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RequestID", wireType)
+			}
+			m.RequestID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.RequestID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *MsgRequestAddVestedAccount) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)

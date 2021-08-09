@@ -35,3 +35,10 @@ func TestGenesisURL_Validate(t *testing.T) {
 		" GenesisURL must contain a valid sha256 hash",
 	)
 }
+
+func TestGenesisURLHash(t *testing.T) {
+	require.EqualValues(t,
+		"2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
+		types.GenesisURLHash("foo"),
+	)
+}
