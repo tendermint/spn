@@ -124,7 +124,7 @@ func TestApplyRequest(t *testing.T) {
 		contents              = sample.CreateAllRequestContents(chainID, genesis, vested, validator)
 		requests              = createRequests(k, sdkCtx, chainID, contents)
 		invalidContent, _     = codec.NewAnyWithValue(&types.Request{})
-		invalidContentId      = k.AppendRequest(sdkCtx, *sample.RequestWithContent(chainID, invalidContent))
+		invalidContentID      = k.AppendRequest(sdkCtx, *sample.RequestWithContent(chainID, invalidContent))
 	)
 	tests := []struct {
 		name string
@@ -243,7 +243,7 @@ func TestApplyRequest(t *testing.T) {
 			name: "invalid request",
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
-				RequestID:   invalidContentId,
+				RequestID:   invalidContentID,
 				Coordinator: sample.AccAddress(),
 				Approve:     true,
 			},
