@@ -114,7 +114,7 @@ func applyRequest(
 	case *types.ValidatorRemoval:
 		if _, found := k.GetGenesisValidator(ctx, msg.ChainID, c.ValAddress); !found {
 			return spnerrors.Critical(fmt.Sprintf(
-				"genesis validator %s for chain %s not exist",
+				"genesis validator %s for chain %s not found",
 				c.ValAddress, msg.ChainID),
 			)
 		}
