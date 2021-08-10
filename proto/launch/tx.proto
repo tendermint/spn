@@ -2,9 +2,9 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
 import "cosmos_proto/cosmos.proto";
-import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
@@ -12,6 +12,7 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestAddValidatorResponse);
   rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
@@ -22,6 +23,19 @@ service Msg {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgRequestAddValidator {
+  string chainID = 1;
+  string valAddress = 2;
+  bytes genTx = 3;
+  bytes consPubKey = 4;
+  cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
+  string peer = 6;
+}
+
+message MsgRequestAddValidatorResponse {
+  uint64 requestID = 1;
+}
+
 message MsgRequestRemoveValidator {
   string chainID = 1;
   string creator = 2;
