@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/gogo/protobuf/proto"
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
@@ -45,6 +46,20 @@ func GenesisAccount(chainID, address string) *launch.GenesisAccount {
 	}
 }
 
+// AccountRemoval returns a sample AccountRemoval
+func AccountRemoval(address string) *launch.AccountRemoval {
+	return &launch.AccountRemoval{
+		Address: address,
+	}
+}
+
+// ValidatorRemoval returns a sample ValidatorRemoval
+func ValidatorRemoval(address string) *launch.ValidatorRemoval {
+	return &launch.ValidatorRemoval{
+		ValAddress: address,
+	}
+}
+
 // VestedAccount returns a sample VestedAccount
 func VestedAccount(chainID, address string) *launch.VestedAccount {
 	delayedVesting, err := types.NewAnyWithValue(&launch.DelayedVesting{
@@ -73,18 +88,43 @@ func GenesisValidator(chainID, address string) *launch.GenesisValidator {
 	}
 }
 
-func Request(chainID string) *launch.Request {
-	content, err := types.NewAnyWithValue(GenesisAccount(chainID, AccAddress()))
-	if err != nil {
-		panic(err)
-	}
-
+func RequestWithContent(chainID string, content *types.Any) *launch.Request {
 	return &launch.Request{
 		ChainID:   chainID,
 		Creator:   AccAddress(),
 		CreatedAt: time.Now().Unix(),
 		Content:   content,
 	}
+}
+
+func CreateAllRequestContents(chainID, genesis, vested, validator string) []*types.Any {
+	contents := make([]proto.Message, 0)
+	contents = append(contents, GenesisAccount(chainID, genesis))
+	contents = append(contents, AccountRemoval(genesis))
+
+	contents = append(contents, VestedAccount(chainID, vested))
+	contents = append(contents, AccountRemoval(vested))
+
+	contents = append(contents, GenesisValidator(chainID, validator))
+	contents = append(contents, ValidatorRemoval(validator))
+
+	result := make([]*types.Any, 0)
+	for _, content := range contents {
+		msg, err := types.NewAnyWithValue(content)
+		if err != nil {
+			panic(err)
+		}
+		result = append(result, msg)
+	}
+	return result
+}
+
+func Request(chainID string) *launch.Request {
+	content, err := types.NewAnyWithValue(GenesisAccount(chainID, AccAddress()))
+	if err != nil {
+		panic(err)
+	}
+	return RequestWithContent(chainID, content)
 }
 
 // MsgCreateChain returns a sample MsgCreateChain

@@ -4,16 +4,30 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
-
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
-
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
+
+func createRequests(
+	keeper *Keeper,
+	ctx sdk.Context,
+	chainID string,
+	contents []*codectypes.Any,
+) []types.Request {
+	items := make([]types.Request, len(contents))
+	for i, content := range contents {
+		items[i] = *sample.RequestWithContent(chainID, content)
+		id := keeper.AppendRequest(ctx, items[i])
+		items[i].RequestID = id
+	}
+	return items
+}
 
 func createNRequest(keeper *Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)

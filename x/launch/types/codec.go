@@ -50,8 +50,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		"launch.RequestContent",
 		(*RequestContent)(nil),
 		&GenesisAccount{},
-		&GenesisValidator{},
+		&VestedAccount{},
 		&AccountRemoval{},
+		&GenesisValidator{},
 		&ValidatorRemoval{},
 	)
 

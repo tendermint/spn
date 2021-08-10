@@ -66,7 +66,7 @@ func applyRequest(
 
 	var content types.RequestContent
 	if err := cdc.UnpackAny(request.Content, &content); err != nil {
-		return sdkerrors.Wrap(types.ErrInvalidRequestContent, err.Error())
+		return spnerrors.Critical(err.Error())
 	}
 
 	switch c := content.(type) {
