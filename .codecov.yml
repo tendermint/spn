@@ -22,7 +22,7 @@ coverage:
 comment:
   layout: "reach, diff, files"
   behavior: default
-  require_changes: true
+  require_changes: false
 
 flags:
   app:
