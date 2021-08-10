@@ -5,6 +5,7 @@ import (
 	"time"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -59,6 +60,16 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         nil,
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidAccountOption, addr),
+		}, {
+			name: "invalid coins",
+			msg: types.MsgRequestAddVestedAccount{
+				Address:         sample.AccAddress(),
+				ChainID:         chainID,
+				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
+				Options:         option,
+			},
+			err: sdkerrors.Wrap(types.ErrInvalidCoins,
+				"invalid starting balance: 10: the coin list is invalid"),
 		}, {
 			name: "invalid message option",
 			msg: types.MsgRequestAddVestedAccount{

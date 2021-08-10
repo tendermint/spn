@@ -14,7 +14,7 @@ var _ VestingOptions = &DelayedVesting{}
 // Validate check the DelayedVesting object
 func (g DelayedVesting) Validate() error {
 	if g.Vesting.Empty() || !g.Vesting.IsValid() {
-		return sdkerrors.Wrap(ErrInvalidCoins, "invalid vesting coins for DelayedVesting")
+		return sdkerrors.Wrapf(ErrInvalidCoins, "invalid vesting coins for DelayedVesting: %s", g.Vesting.String())
 	}
 	if g.EndTime == 0 {
 		return sdkerrors.Wrap(ErrInvalidTimestamp, "invalid end time for DelayedVesting")

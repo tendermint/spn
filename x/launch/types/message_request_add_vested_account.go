@@ -54,6 +54,10 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidChainID, msg.ChainID)
 	}
 
+	if !msg.StartingBalance.IsValid() {
+		return sdkerrors.Wrapf(ErrInvalidCoins, "invalid starting balance: %s", msg.StartingBalance.String())
+	}
+
 	if msg.Options == nil {
 		return sdkerrors.Wrap(ErrInvalidAccountOption, msg.Address)
 	}

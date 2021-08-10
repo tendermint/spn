@@ -32,7 +32,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 				EndTime: 0,
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidCoins,
-				"invalid vesting coins for DelayedVesting"),
+				"invalid vesting coins for DelayedVesting: 10: the coin list is invalid"),
 		}, {
 			name: "vesting with invalid timestamp",
 			option: types.DelayedVesting{
