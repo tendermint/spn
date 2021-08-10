@@ -95,9 +95,11 @@ func applyRequest(
 		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
 		if foundGenesis {
 			k.RemoveGenesisAccount(ctx, msg.ChainID, c.Address)
-		} else if foundVested {
+		}
+		if foundVested {
 			k.RemoveVestedAccount(ctx, msg.ChainID, c.Address)
-		} else {
+		}
+		if !foundGenesis && !foundVested {
 			return spnerrors.Critical(fmt.Sprintf(
 				"account %s for chain %s not found",
 				c.Address, msg.ChainID),
