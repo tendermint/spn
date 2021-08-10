@@ -114,7 +114,7 @@ func TestMsgSettleRequest(t *testing.T) {
 	}
 }
 
-func Test_applyRequest(t *testing.T) {
+func TestApplyRequest(t *testing.T) {
 	var (
 		genesis               = sample.AccAddress()
 		vested                = sample.AccAddress()
@@ -253,7 +253,6 @@ func Test_applyRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
 			request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, tt.msg.RequestID)
 			require.True(t, found)
 
