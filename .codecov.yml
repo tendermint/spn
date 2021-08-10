@@ -40,6 +40,8 @@ flags:
 
 ignore:
   - "docs"
+  - "proto/"
+  - "*.proto"
   - "*.md"
   - "*.rst"
   - "**/*.pb.go"
@@ -48,5 +50,9 @@ ignore:
   - "tests/**/*"
   - "x/**/*.pb.go"
   - "x/**/test_common.go"
+  - "vue/"
+  - "cmd/"
+  - "testutil/"
+  - ".github/"
   - "scripts/"
   - "contrib"
