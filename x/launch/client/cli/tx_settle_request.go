@@ -101,7 +101,7 @@ func parseList(arg string) ([]uint64, error) {
 				list = append(list, start)
 			}
 		default:
-			return nil, fmt.Errorf("cannot parse the number range: %s", numberRange)
+			return nil, fmt.Errorf("cannot parse the number range: %s", trimmedRange)
 		}
 	}
 	return list, nil
