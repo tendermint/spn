@@ -21,7 +21,7 @@ var (
 	ErrRevertDelayNotReached = sdkerrors.Register(ModuleName, 14, "the revert delay has not been reached")
 	ErrRequestNotFound       = sdkerrors.Register(ModuleName, 15, "request not found")
 	ErrInvalidRequestContent = sdkerrors.Register(ModuleName, 16, "invalid request content type")
-	ErrEmptyRequestList      = sdkerrors.Register(ModuleName, 17, "request id list is empty")
+	ErrRequestAlreadyExist   = sdkerrors.Register(ModuleName, 17, "request already exists in the launch information")
 	ErrInvalidConsPubKey     = sdkerrors.Register(ModuleName, 20, "the consensus public key is invalid")
 	ErrInvalidGenTx          = sdkerrors.Register(ModuleName, 21, "the gentx is invalid")
 	ErrInvalidSelfDelegation = sdkerrors.Register(ModuleName, 22, "the self delegation is invalid")

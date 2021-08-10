@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -69,15 +68,43 @@ func applyRequest(
 
 	switch c := content.(type) {
 	case *types.GenesisAccount:
+		_, foundGenesis := k.GetGenesisAccount(ctx, msg.ChainID, c.Address)
+		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
+		if foundVested || foundGenesis {
+			return sdkerrors.Wrapf(types.ErrRequestAlreadyExist,
+				"account %s for chain %s already exist", c.Address, msg.ChainID)
+		}
 		k.SetGenesisAccount(ctx, *c)
 	case *types.VestedAccount:
+		_, foundGenesis := k.GetGenesisAccount(ctx, msg.ChainID, c.Address)
+		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
+		if foundVested || foundGenesis {
+			return sdkerrors.Wrapf(types.ErrRequestAlreadyExist,
+				"account %s for chain %s already exist", c.Address, msg.ChainID)
+		}
 		k.SetVestedAccount(ctx, *c)
 	case *types.AccountRemoval:
-		k.RemoveVestedAccount(ctx, msg.ChainID, c.Address)
-		k.RemoveGenesisAccount(ctx, msg.ChainID, c.Address)
+		_, foundGenesis := k.GetGenesisAccount(ctx, msg.ChainID, c.Address)
+		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
+		if foundGenesis {
+			k.RemoveGenesisAccount(ctx, msg.ChainID, c.Address)
+		} else if foundVested {
+			k.RemoveVestedAccount(ctx, msg.ChainID, c.Address)
+		} else {
+			return sdkerrors.Wrapf(types.ErrRequestNotFound,
+				"account %s for chain %s not found", c.Address, msg.ChainID)
+		}
 	case *types.GenesisValidator:
+		if _, found := k.GetGenesisValidator(ctx, msg.ChainID, c.Address); found {
+			return sdkerrors.Wrapf(types.ErrRequestAlreadyExist,
+				"genesis validator %s for chain %s already exist", c.Address, msg.ChainID)
+		}
 		k.SetGenesisValidator(ctx, *c)
 	case *types.ValidatorRemoval:
+		if _, found := k.GetGenesisValidator(ctx, msg.ChainID, c.ValAddress); !found {
+			return sdkerrors.Wrapf(types.ErrRequestNotFound,
+				"genesis validator %s for chain %s not exist", c.ValAddress, msg.ChainID)
+		}
 		k.RemoveGenesisValidator(ctx, msg.ChainID, c.ValAddress)
 	default:
 		return sdkerrors.Wrap(types.ErrInvalidRequestContent,
