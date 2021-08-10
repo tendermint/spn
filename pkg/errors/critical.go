@@ -8,7 +8,7 @@ import (
 
 var ErrCritical = errors.New("CRITICAL: the state of the blockchain is inconsistent or an invariant is broken")
 
-// Error handles and/or returns an error in case a critical error has been encountered:
+// Critical handles and/or returns an error in case a critical error has been encountered:
 // - Inconsistent state
 // - Broken invariant
 func Critical(description string) error {
