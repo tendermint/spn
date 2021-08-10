@@ -139,6 +139,18 @@ func MsgEditChain(
 	)
 }
 
+// MsgRequestAddValidator returns a sample MsgRequestAddValidator
+func MsgRequestAddValidator(address, chainID string) launch.MsgRequestAddValidator {
+	return *launch.NewMsgRequestAddValidator(
+		address,
+		chainID,
+		Bytes(500),
+		Bytes(30),
+		Coin(),
+		String(30),
+	)
+}
+
 // GenesisHash returns a sample sha256 hash of custom genesis for GenesisURL
 func GenesisHash() string {
 	hash := sha256.Sum256([]byte(String(50)))
