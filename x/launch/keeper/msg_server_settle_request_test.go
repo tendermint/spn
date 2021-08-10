@@ -34,7 +34,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     invalidChain,
 				Coordinator: addr1,
-				RequestIDs:  []uint64{requests[0].RequestID},
+				RequestID:   requests[0].RequestID,
 			},
 			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
 		}, {
@@ -42,7 +42,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[0].ChainID,
 				Coordinator: addr1,
-				RequestIDs:  []uint64{requests[0].RequestID},
+				RequestID:   requests[0].RequestID,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
 		}, {
@@ -50,15 +50,15 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: addr1,
-				RequestIDs:  []uint64{requests[0].RequestID},
+				RequestID:   requests[0].RequestID,
 			},
 			err: sdkerrors.Wrap(types.ErrNoAddressPermission, addr1),
 		}, {
-			name: "settle with one invalid request",
+			name: "settle a invalid request",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
-				RequestIDs:  []uint64{requests[4].RequestID, requests[5].RequestID, 999999},
+				RequestID:   99999999,
 			},
 			err: sdkerrors.Wrap(types.ErrRequestNotFound,
 				"request 999999 for chain %s not found"),
@@ -67,7 +67,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
-				RequestIDs:  []uint64{requests[0].RequestID},
+				RequestID:   requests[0].RequestID,
 			},
 			want: 0,
 		}, {
@@ -75,7 +75,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
-				RequestIDs:  []uint64{requests[1].RequestID},
+				RequestID:   requests[1].RequestID,
 			},
 			want: 0,
 		}, {
@@ -83,15 +83,15 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
-				RequestIDs:  []uint64{requests[2].RequestID},
+				RequestID:   requests[2].RequestID,
 			},
 			want: 1,
 		}, {
-			name: "add chain 2 request 4 and 5",
+			name: "add chain 2 request 5",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
-				RequestIDs:  []uint64{requests[4].RequestID, requests[5].RequestID},
+				RequestID:   requests[5].RequestID,
 			},
 			want: 0,
 		},
@@ -105,10 +105,8 @@ func TestMsgSettleRequest(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			for _, requestID := range tt.msg.RequestIDs {
-				_, found := k.GetRequest(sdkCtx, tt.msg.ChainID, requestID)
-				require.False(t, found, "request not removed")
-			}
+			_, found := k.GetRequest(sdkCtx, tt.msg.ChainID, tt.msg.RequestID)
+			require.False(t, found, "request not removed")
 		})
 	}
 }

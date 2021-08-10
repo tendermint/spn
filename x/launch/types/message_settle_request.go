@@ -7,11 +7,11 @@ import (
 
 var _ sdk.Msg = &MsgSettleRequest{}
 
-func NewMsgSettleRequest(coordinator, chainID string, requestID []uint64, approve bool) *MsgSettleRequest {
+func NewMsgSettleRequest(coordinator, chainID string, requestID uint64, approve bool) *MsgSettleRequest {
 	return &MsgSettleRequest{
 		Coordinator: coordinator,
 		ChainID:     chainID,
-		RequestIDs:  requestID,
+		RequestID:   requestID,
 		Approve:     approve,
 	}
 }
@@ -45,9 +45,6 @@ func (msg *MsgSettleRequest) ValidateBasic() error {
 	_, _, err = ParseChainID(msg.ChainID)
 	if err != nil {
 		return sdkerrors.Wrapf(ErrInvalidChainID, msg.ChainID)
-	}
-	if len(msg.RequestIDs) == 0 {
-		return sdkerrors.Wrapf(ErrEmptyRequestList, msg.ChainID)
 	}
 	return nil
 }
