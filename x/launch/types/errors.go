@@ -21,5 +21,7 @@ var (
 	ErrRevertDelayNotReached = sdkerrors.Register(ModuleName, 14, "the revert delay has not been reached")
 	ErrRequestNotFound       = sdkerrors.Register(ModuleName, 15, "request not found")
 	ErrInvalidRequestContent = sdkerrors.Register(ModuleName, 16, "invalid request content type")
+	ErrEmptyRequestList      = sdkerrors.Register(ModuleName, 17, "request id list is empty")
+
 	// this line is used by starport scaffolding # ibc/errors
 )

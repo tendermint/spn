@@ -29,6 +29,8 @@ func (k msgServer) SettleRequest(
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Coordinator)
 	}
 
+	// first check if all requests exist
+	requests := make([]types.Request, len(msg.RequestIDs))
 	for _, requestID := range msg.RequestIDs {
 		request, found := k.GetRequest(ctx, msg.ChainID, requestID)
 		if !found {
@@ -38,8 +40,12 @@ func (k msgServer) SettleRequest(
 				msg.ChainID,
 			)
 		}
+		requests = append(requests, request)
+	}
 
-		k.RemoveRequest(ctx, msg.ChainID, requestID)
+	// perform request action
+	for _, request := range requests {
+		k.RemoveRequest(ctx, msg.ChainID, request.RequestID)
 		if msg.Approve {
 			err := applyRequest(ctx, k.Keeper, msg, request)
 			if err != nil {
@@ -50,6 +56,8 @@ func (k msgServer) SettleRequest(
 	return &types.MsgSettleRequestResponse{}, nil
 }
 
+// applyRequest approve the request and perform
+// the launch information changes
 func applyRequest(
 	ctx sdk.Context,
 	k Keeper,

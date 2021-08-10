@@ -54,7 +54,7 @@ func CmdSettleRequest() *cobra.Command {
 	return cmd
 }
 
-// parseList parses comma separated numbers to []uint64.
+// parseList parses comma separated numbers and range to []uint64.
 func parseList(arg string) ([]uint64, error) {
 	list := make([]uint64, 0)
 	for _, numberRange := range strings.Split(arg, ",") {

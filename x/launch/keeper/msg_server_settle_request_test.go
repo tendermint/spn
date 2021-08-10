@@ -54,6 +54,15 @@ func TestMsgSettleRequest(t *testing.T) {
 			},
 			err: sdkerrors.Wrap(types.ErrNoAddressPermission, addr1),
 		}, {
+			name: "settle with one invalid request",
+			msg: types.MsgSettleRequest{
+				ChainID:     chains[1].ChainID,
+				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				RequestIDs:  []uint64{requests[4].RequestID, requests[5].RequestID, 999999},
+			},
+			err: sdkerrors.Wrap(types.ErrRequestNotFound,
+				"request 999999 for chain %s not found"),
+		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,

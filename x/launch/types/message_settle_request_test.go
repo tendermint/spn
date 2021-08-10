@@ -21,7 +21,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				Coordinator: "invalid_address",
 				ChainID:     chainID1,
-				RequestID:   10,
+				RequestIDs:  []uint64{10},
 				Approve:     true,
 			},
 			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
@@ -31,16 +31,25 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				Coordinator: sample.AccAddress(),
 				ChainID:     "invalid_chain",
-				RequestID:   10,
+				RequestIDs:  []uint64{10},
 				Approve:     true,
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
+		}, {
+			name: "empty request list",
+			msg: types.MsgSettleRequest{
+				Coordinator: sample.AccAddress(),
+				ChainID:     chainID,
+				RequestIDs:  []uint64{},
+				Approve:     true,
+			},
+			err: sdkerrors.Wrap(types.ErrEmptyRequestList, chainID),
 		}, {
 			name: "valid message",
 			msg: types.MsgSettleRequest{
 				Coordinator: sample.AccAddress(),
 				ChainID:     chainID,
-				RequestID:   10,
+				RequestIDs:  []uint64{10},
 				Approve:     true,
 			},
 		},

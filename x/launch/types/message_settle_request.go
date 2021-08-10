@@ -46,5 +46,8 @@ func (msg *MsgSettleRequest) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(ErrInvalidChainID, msg.ChainID)
 	}
+	if len(msg.RequestIDs) == 0 {
+		return sdkerrors.Wrapf(ErrEmptyRequestList, msg.ChainID)
+	}
 	return nil
 }
