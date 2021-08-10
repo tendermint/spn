@@ -21,14 +21,14 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithValidatorObjects(t *testing.T, n int) (*network.Network, []*types.Validator) {
+func networkWithValidatorObjects(t *testing.T, n int) (*network.Network, []types.Validator) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.ValidatorList = append(state.ValidatorList, &types.Validator{
+		state.ValidatorList = append(state.ValidatorList, types.Validator{
 			Address: strconv.Itoa(i),
 		})
 	}
@@ -51,7 +51,7 @@ func TestShowValidator(t *testing.T) {
 
 		args []string
 		err  error
-		obj  *types.Validator
+		obj  types.Validator
 	}{
 		{
 			desc:      "found",

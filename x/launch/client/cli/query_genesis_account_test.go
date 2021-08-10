@@ -22,7 +22,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []*types.GenesisAccount) {
+func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []types.GenesisAccount) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
@@ -32,7 +32,7 @@ func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []
 	for i := 0; i < n; i++ {
 		state.GenesisAccountList = append(
 			state.GenesisAccountList,
-			sample.GenesisAccount(chainID, strconv.Itoa(i)),
+			*sample.GenesisAccount(chainID, strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
@@ -55,7 +55,7 @@ func TestShowGenesisAccount(t *testing.T) {
 
 		args []string
 		err  error
-		obj  *types.GenesisAccount
+		obj  types.GenesisAccount
 	}{
 		{
 			desc:      "found",
