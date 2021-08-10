@@ -19,5 +19,9 @@ var (
 	ErrLaunchTimeToohigh     = sdkerrors.Register(ModuleName, 12, "the remaining time is above authorized launch time")
 	ErrNotTriggeredLaunch    = sdkerrors.Register(ModuleName, 13, "the chain launch has not been triggered")
 	ErrRevertDelayNotReached = sdkerrors.Register(ModuleName, 14, "the revert delay has not been reached")
+	ErrInvalidConsPubKey     = sdkerrors.Register(ModuleName, 20, "the consensus public key is invalid")
+	ErrInvalidGenTx          = sdkerrors.Register(ModuleName, 21, "the gentx is invalid")
+	ErrInvalidSelfDelegation = sdkerrors.Register(ModuleName, 22, "the self delegation is invalid")
+	ErrInvalidPeer           = sdkerrors.Register(ModuleName, 23, "the peer is invalid")
 	// this line is used by starport scaffolding # ibc/errors
 )
