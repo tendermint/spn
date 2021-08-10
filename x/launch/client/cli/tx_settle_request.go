@@ -10,21 +10,19 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdSettleRequest() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "settle-request [chainID] [requestID] [approve]",
+		Use:   "settle-request [approve/reject] [chainID] [requestID] ",
 		Short: "Approve or reject a pending request",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			requestID, err := strconv.ParseUint(args[1], 10, 64)
+			approve, err := strconv.ParseBool(args[0])
 			if err != nil {
 				return err
 			}
 
-			approve, err := strconv.ParseBool(args[2])
+			requestID, err := strconv.ParseUint(args[2], 10, 64)
 			if err != nil {
 				return err
 			}
@@ -36,7 +34,7 @@ func CmdSettleRequest() *cobra.Command {
 
 			msg := types.NewMsgSettleRequest(
 				clientCtx.GetFromAddress().String(),
-				args[0],
+				args[1],
 				requestID,
 				approve,
 			)
