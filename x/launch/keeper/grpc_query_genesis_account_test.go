@@ -101,7 +101,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, &msgs[j], resp.GenesisAccount[j-i])
+				assert.Equal(t, msgs[j], resp.GenesisAccount[j-i])
 			}
 		}
 	})
@@ -112,7 +112,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, &msgs[j], resp.GenesisAccount[j-i])
+				assert.Equal(t, msgs[j], resp.GenesisAccount[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}
