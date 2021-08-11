@@ -77,6 +77,7 @@ func VestedAccount(chainID, address string) *launch.VestedAccount {
 	}
 }
 
+// GenesisValidator returns a sample GenesisValidator
 func GenesisValidator(chainID, address string) *launch.GenesisValidator {
 	return &launch.GenesisValidator{
 		ChainID:        chainID,
@@ -88,6 +89,7 @@ func GenesisValidator(chainID, address string) *launch.GenesisValidator {
 	}
 }
 
+// RequestWithContent creates a launch request object with chain id and content
 func RequestWithContent(chainID string, content *types.Any) *launch.Request {
 	return &launch.Request{
 		ChainID:   chainID,
@@ -97,7 +99,9 @@ func RequestWithContent(chainID string, content *types.Any) *launch.Request {
 	}
 }
 
-func CreateAllRequestContents(chainID, genesis, vested, validator string) []*types.Any {
+// AllRequestContents creates all contents types for request and
+// returns a list of all pack contents converted to `types.Any` object
+func AllRequestContents(chainID, genesis, vested, validator string) []*types.Any {
 	contents := make([]proto.Message, 0)
 	contents = append(contents, GenesisAccount(chainID, genesis))
 	contents = append(contents, AccountRemoval(genesis))
@@ -119,6 +123,7 @@ func CreateAllRequestContents(chainID, genesis, vested, validator string) []*typ
 	return result
 }
 
+// Request returns a sample Request
 func Request(chainID string) *launch.Request {
 	content, err := types.NewAnyWithValue(GenesisAccount(chainID, AccAddress()))
 	if err != nil {

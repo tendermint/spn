@@ -12,7 +12,7 @@ import (
 
 func CmdSettleRequest() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "settle-request [approve/reject] [chainID] [requestID]",
+		Use:   "settle-request [approve|reject] [chainID] [requestID]",
 		Short: "Approve or reject a pending request",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {

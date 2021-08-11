@@ -121,7 +121,7 @@ func TestApplyRequest(t *testing.T) {
 		validator             = sample.AccAddress()
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
 		chainID, _            = sample.ChainID(10)
-		contents              = sample.CreateAllRequestContents(chainID, genesis, vested, validator)
+		contents              = sample.AllRequestContents(chainID, genesis, vested, validator)
 		requests              = createRequests(k, sdkCtx, chainID, contents)
 		invalidContent, _     = codec.NewAnyWithValue(&types.Request{})
 		invalidContentID      = k.AppendRequest(sdkCtx, *sample.RequestWithContent(chainID, invalidContent))
