@@ -18,6 +18,7 @@ service Msg {
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
   rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
   rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
+  rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestAddAccountResponse);
   rpc RequestAddVestedAccount(MsgRequestAddVestedAccount) returns (MsgRequestAddVestedAccountResponse);
   rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
 }
@@ -43,6 +44,16 @@ message MsgRequestRemoveValidator {
 }
 
 message MsgRequestRemoveValidatorResponse {
+  uint64 requestID = 1;
+}
+
+message MsgRequestAddAccount {
+  string chainID = 1;
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin Coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}
+
+message MsgRequestAddAccountResponse {
   uint64 requestID = 1;
 }
 
