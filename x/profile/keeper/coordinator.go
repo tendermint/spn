@@ -11,7 +11,7 @@ import (
 
 // GetCoordinatorCount get the total number of Coordinators
 func (k Keeper) GetCoordinatorCount(ctx sdk.Context) uint64 {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorCountKey))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
 	byteKey := types.KeyPrefix(types.CoordinatorCountKey)
 	bz := store.Get(byteKey)
 
@@ -32,7 +32,7 @@ func (k Keeper) GetCoordinatorCount(ctx sdk.Context) uint64 {
 
 // SetCoordinatorCount set the total number of coordinator
 func (k Keeper) SetCoordinatorCount(ctx sdk.Context, count uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorCountKey))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
 	byteKey := types.KeyPrefix(types.CoordinatorCountKey)
 	bz := []byte(strconv.FormatUint(count, 10))
 	store.Set(byteKey, bz)
