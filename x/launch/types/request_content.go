@@ -81,3 +81,20 @@ func (r Request) UnpackValidatorRemoval(cdc codec.AnyUnpacker) (*ValidatorRemova
 	}
 	return removeValidator, nil
 }
+
+// UnpackVestedAccount returns the VestedAccount structure from the codec unpack
+func (r Request) UnpackVestedAccount(cdc codec.AnyUnpacker) (*VestedAccount, error) {
+	if r.Content == nil {
+		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
+	}
+	var content RequestContent
+	err := cdc.UnpackAny(r.Content, &content)
+	if err != nil {
+		return nil, err
+	}
+	result, ok := content.(*VestedAccount)
+	if !ok {
+		return nil, errors.New("not a vestedAccount request")
+	}
+	return result, nil
+}

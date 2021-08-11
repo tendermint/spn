@@ -19,6 +19,7 @@ service Msg {
   rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
   rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
   rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestAddAccountResponse);
+  rpc RequestAddVestedAccount(MsgRequestAddVestedAccount) returns (MsgRequestAddVestedAccountResponse);
   rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
 }
 
@@ -53,6 +54,17 @@ message MsgRequestAddAccount {
 }
 
 message MsgRequestAddAccountResponse {
+  uint64 requestID = 1;
+}
+
+message MsgRequestAddVestedAccount {
+  string chainID = 1;
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin startingBalance = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  google.protobuf.Any options = 4 [(cosmos_proto.accepts_interface) = "VestingOptions"];
+}
+
+message MsgRequestAddVestedAccountResponse {
   uint64 requestID = 1;
 }
 
