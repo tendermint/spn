@@ -84,3 +84,26 @@ func TestValidatorRemovalCodec(t *testing.T) {
 	require.Error(t, err)
 	require.Equal(t, err.Error(), "not a validatorRemoval request")
 }
+
+func TestGenesisAccountCodec(t *testing.T) {
+	var err error
+	cdc := sample.Codec()
+	request := sample.Request("foo")
+	chainID, _ := sample.ChainID(1)
+	content := &types.GenesisAccount{
+		Address: sample.AccAddress(),
+		ChainID: chainID,
+	}
+	request.Content, err = codec.NewAnyWithValue(content)
+	require.NoError(t, err)
+	result, err := request.UnpackGenesisAccount(cdc)
+	require.NoError(t, err)
+	require.EqualValues(t, content, result)
+
+	invalidContent := &types.Request{}
+	request.Content, err = codec.NewAnyWithValue(invalidContent)
+	require.NoError(t, err)
+	_, err = request.UnpackGenesisAccount(cdc)
+	require.Error(t, err)
+	require.Equal(t, "not a genesisAccount request", err.Error())
+}
