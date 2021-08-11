@@ -53,10 +53,16 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
-	// Get all chain
-	for _, elem := range k.GetAllChain(ctx) {
-		genesis.ChainList = append(genesis.ChainList, elem)
+	genesis.ChainList = k.GetAllChain(ctx)
+	genesis.ChainNameCountList = k.GetAllChainNameCount(ctx)
+	genesis.GenesisAccountList = k.GetAllGenesisAccount(ctx)
+	genesis.VestedAccountList = k.GetAllVestedAccount(ctx)
+	genesis.GenesisValidatorList = k.GetAllGenesisValidator(ctx)
+	genesis.RequestList = k.GetAllRequest(ctx)
+	genesis.Params = k.GetParams(ctx)
 
+	// Get request counts
+	for _, elem := range genesis.ChainList {
 		// Get request count
 		count := k.GetRequestCount(ctx, elem.ChainID)
 		genesis.RequestCountList = append(genesis.RequestCountList, types.RequestCount{
@@ -65,38 +71,8 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		})
 	}
 
-	// Get all chainNameCount
-	chainNameCountList := k.GetAllChainNameCount(ctx)
-	for _, elem := range chainNameCountList {
-		genesis.ChainNameCountList = append(genesis.ChainNameCountList, elem)
-	}
-
-	// Get all genesisAccount
-	genesisAccountList := k.GetAllGenesisAccount(ctx)
-	for _, elem := range genesisAccountList {
-		genesis.GenesisAccountList = append(genesis.GenesisAccountList, elem)
-	}
-
-	// Get all vestedAccount
-	vestedAccountList := k.GetAllVestedAccount(ctx)
-	for _, elem := range vestedAccountList {
-		genesis.VestedAccountList = append(genesis.VestedAccountList, elem)
-	}
-
-	// Get all genesisValidator
-	genesisValidatorList := k.GetAllGenesisValidator(ctx)
-	for _, elem := range genesisValidatorList {
-		genesis.GenesisValidatorList = append(genesis.GenesisValidatorList, elem)
-	}
-
-	// Get all request
-	requestList := k.GetAllRequest(ctx)
-	for _, elem := range requestList {
-		genesis.RequestList = append(genesis.RequestList, elem)
-	}
-
+	// this line is used by starport scaffolding # genesis/module/export
 	// this line is used by starport scaffolding # ibc/genesis/export
 
-	genesis.Params = k.GetParams(ctx)
 	return genesis
 }
