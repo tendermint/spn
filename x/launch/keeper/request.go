@@ -7,6 +7,7 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -137,9 +138,9 @@ func applyRequest(
 		_, foundGenesis := k.GetGenesisAccount(ctx, msg.ChainID, c.Address)
 		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
 		if foundVested || foundGenesis {
-			return spnerrors.Critical(fmt.Sprintf(
+			return sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
 				"account %s for chain %s already exist",
-				c.Address, msg.ChainID),
+				c.Address, msg.ChainID,
 			)
 		}
 		k.SetGenesisAccount(ctx, *c)
@@ -147,40 +148,44 @@ func applyRequest(
 		_, foundGenesis := k.GetGenesisAccount(ctx, msg.ChainID, c.Address)
 		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
 		if foundVested || foundGenesis {
-			return spnerrors.Critical(fmt.Sprintf(
+			return sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
 				"account %s for chain %s already exist",
-				c.Address, msg.ChainID),
+				c.Address, msg.ChainID,
 			)
 		}
 		k.SetVestedAccount(ctx, *c)
 	case *types.AccountRemoval:
 		_, foundGenesis := k.GetGenesisAccount(ctx, msg.ChainID, c.Address)
 		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
+		if !foundGenesis && !foundVested {
+			return sdkerrors.Wrapf(types.ErrAccountNotFound,
+				"account %s for chain %s not found",
+				c.Address, msg.ChainID,
+			)
+		} else if foundGenesis && foundVested {
+			return spnerrors.Critical(
+				fmt.Sprintf("account %s for chain %s found in vested and genesis accounts",
+					c.Address, msg.ChainID),
+			)
+		}
 		if foundGenesis {
 			k.RemoveGenesisAccount(ctx, msg.ChainID, c.Address)
-		}
-		if foundVested {
+		} else if foundVested {
 			k.RemoveVestedAccount(ctx, msg.ChainID, c.Address)
-		}
-		if !foundGenesis && !foundVested {
-			return spnerrors.Critical(fmt.Sprintf(
-				"account %s for chain %s not found",
-				c.Address, msg.ChainID),
-			)
 		}
 	case *types.GenesisValidator:
 		if _, found := k.GetGenesisValidator(ctx, msg.ChainID, c.Address); found {
-			return spnerrors.Critical(fmt.Sprintf(
+			return sdkerrors.Wrapf(types.ErrValidatorAlreadyExist,
 				"genesis validator %s for chain %s already exist",
-				c.Address, msg.ChainID),
+				c.Address, msg.ChainID,
 			)
 		}
 		k.SetGenesisValidator(ctx, *c)
 	case *types.ValidatorRemoval:
 		if _, found := k.GetGenesisValidator(ctx, msg.ChainID, c.ValAddress); !found {
-			return spnerrors.Critical(fmt.Sprintf(
+			return sdkerrors.Wrapf(types.ErrValidatorNotFound,
 				"genesis validator %s for chain %s not found",
-				c.ValAddress, msg.ChainID),
+				c.ValAddress, msg.ChainID,
 			)
 		}
 		k.RemoveGenesisValidator(ctx, msg.ChainID, c.ValAddress)

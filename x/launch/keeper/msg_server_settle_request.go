@@ -2,8 +2,11 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -20,6 +23,11 @@ func (k msgServer) SettleRequest(
 
 	if chain.LaunchTriggered {
 		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
+	}
+
+	if found := k.profileKeeper.HasCoordinator(ctx, chain.CoordinatorID); !found {
+		return nil, spnerrors.Critical(
+			fmt.Sprintf("Coordinator id not found: %d", chain.CoordinatorID))
 	}
 
 	coordAddress := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)

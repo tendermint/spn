@@ -29,6 +29,10 @@ var (
 	ErrInvalidGenTx          = sdkerrors.Register(ModuleName, 21, "the gentx is invalid")
 	ErrInvalidSelfDelegation = sdkerrors.Register(ModuleName, 22, "the self delegation is invalid")
 	ErrInvalidPeer           = sdkerrors.Register(ModuleName, 23, "the peer is invalid")
+	ErrAccountAlreadyExist   = sdkerrors.Register(ModuleName, 24, "account already exists")
+	ErrAccountNotFound       = sdkerrors.Register(ModuleName, 25, "account not found")
+	ErrValidatorAlreadyExist = sdkerrors.Register(ModuleName, 26, "validator already exists")
+	ErrValidatorNotFound     = sdkerrors.Register(ModuleName, 27, "validator not found")
 
 	// this line is used by starport scaffolding # ibc/errors
 )
