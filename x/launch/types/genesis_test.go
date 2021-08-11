@@ -15,7 +15,7 @@ var (
 	addr1                            = sample.AccAddress()
 	addr2                            = sample.AccAddress()
 	vestedAddress                    = sample.AccAddress()
-	genesisValidator = sample.GenesisValidator(chainID1, addr1)
+	genesisValidator                 = sample.GenesisValidator(chainID1, addr1)
 
 	// Those are samples we can use for each fields when they are not the one to test
 	sampleChainList = []*types.Chain{
@@ -65,7 +65,7 @@ var (
 		},
 	}
 	sampleGenesisValidatorList = []*types.GenesisValidator{genesisValidator}
-	sampleRequestList = []*types.Request{
+	sampleRequestList          = []*types.Request{
 		{
 			ChainID:   chainID1,
 			RequestID: 0,
@@ -97,13 +97,13 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
-				ChainNameCountList: sampleChainNameCountList,
-				GenesisAccountList: sampleGenesisAccountList,
-				VestedAccountList:  sampleVestedAccountList,
-				GenesisValidatorList:  sampleGenesisValidatorList,
-				RequestList:        sampleRequestList,
-				RequestCountList:   sampleRequestCountList,
+				ChainList:            sampleChainList,
+				ChainNameCountList:   sampleChainNameCountList,
+				GenesisAccountList:   sampleGenesisAccountList,
+				VestedAccountList:    sampleVestedAccountList,
+				GenesisValidatorList: sampleGenesisValidatorList,
+				RequestList:          sampleRequestList,
+				RequestCountList:     sampleRequestCountList,
 			},
 			shouldBeValid: true,
 		},
@@ -405,6 +405,39 @@ func TestGenesisState_Validate(t *testing.T) {
 						RequestID: 10,
 					},
 				},
+			},
+			shouldBeValid: false,
+		},
+	} {
+		tc := tc
+		t.Run(tc.desc, func(t *testing.T) {
+			err := tc.genState.Validate()
+			if tc.shouldBeValid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
+			}
+		})
+	}
+}
+
+func TestGenesisState_ValidateParams(t *testing.T) {
+	for _, tc := range []struct {
+		desc          string
+		genState      *types.GenesisState
+		shouldBeValid bool
+	}{
+		{
+			desc: "max launch time above the max parametrable launch time",
+			genState: &types.GenesisState{
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1),
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "min launch time above max launch time",
+			genState: &types.GenesisState{
+				Params: types.NewParams(types.DefaultMinLaunchTime+1, types.DefaultMinLaunchTime),
 			},
 			shouldBeValid: false,
 		},

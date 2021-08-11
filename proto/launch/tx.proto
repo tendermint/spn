@@ -2,19 +2,49 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "gogoproto/gogo.proto";
 import "google/protobuf/any.proto";
 import "cosmos_proto/cosmos.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestAddValidatorResponse);
+  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
+  rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
+  rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
+  rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgRequestAddValidator {
+  string chainID = 1;
+  string valAddress = 2;
+  bytes genTx = 3;
+  bytes consPubKey = 4;
+  cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
+  string peer = 6;
+}
+
+message MsgRequestAddValidatorResponse {
+  uint64 requestID = 1;
+}
+
+message MsgRequestRemoveValidator {
+  string chainID = 1;
+  string creator = 2;
+  string validatorAddress = 3;
+}
+
+message MsgRequestRemoveValidatorResponse {
+  uint64 requestID = 1;
+}
+
 message MsgCreateChain {
   string coordinator = 1;
   string chainName = 2;
@@ -37,3 +67,28 @@ message MsgEditChain {
 }
 
 message MsgEditChainResponse {}
+
+message MsgRevertLaunch {
+  string coordinator = 1;
+  string chainID = 2;
+}
+
+message MsgRevertLaunchResponse {}
+
+message MsgTriggerLaunch {
+  string coordinator = 1;
+  string chainID = 2;
+  uint64 remainingTime = 3;
+}
+
+message MsgTriggerLaunchResponse {}
+
+message MsgRequestRemoveAccount {
+  string chainID = 1;
+  string creator = 2;
+  string address = 3;
+}
+
+message MsgRequestRemoveAccountResponse {
+  uint64 requestID = 1;
+}

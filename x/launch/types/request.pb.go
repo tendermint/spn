@@ -6,6 +6,8 @@ package types
 import (
 	fmt "fmt"
 	types "github.com/cosmos/cosmos-sdk/codec/types"
+	_ "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	_ "github.com/regen-network/cosmos-proto"
 	io "io"
@@ -100,32 +102,127 @@ func (m *Request) GetContent() *types.Any {
 	return nil
 }
 
+type AccountRemoval struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *AccountRemoval) Reset()         { *m = AccountRemoval{} }
+func (m *AccountRemoval) String() string { return proto.CompactTextString(m) }
+func (*AccountRemoval) ProtoMessage()    {}
+func (*AccountRemoval) Descriptor() ([]byte, []int) {
+	return fileDescriptor_028e4b0ce31bf039, []int{1}
+}
+func (m *AccountRemoval) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *AccountRemoval) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_AccountRemoval.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *AccountRemoval) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AccountRemoval.Merge(m, src)
+}
+func (m *AccountRemoval) XXX_Size() int {
+	return m.Size()
+}
+func (m *AccountRemoval) XXX_DiscardUnknown() {
+	xxx_messageInfo_AccountRemoval.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AccountRemoval proto.InternalMessageInfo
+
+func (m *AccountRemoval) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type ValidatorRemoval struct {
+	ValAddress string `protobuf:"bytes,1,opt,name=valAddress,proto3" json:"valAddress,omitempty"`
+}
+
+func (m *ValidatorRemoval) Reset()         { *m = ValidatorRemoval{} }
+func (m *ValidatorRemoval) String() string { return proto.CompactTextString(m) }
+func (*ValidatorRemoval) ProtoMessage()    {}
+func (*ValidatorRemoval) Descriptor() ([]byte, []int) {
+	return fileDescriptor_028e4b0ce31bf039, []int{2}
+}
+func (m *ValidatorRemoval) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ValidatorRemoval) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ValidatorRemoval.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ValidatorRemoval) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ValidatorRemoval.Merge(m, src)
+}
+func (m *ValidatorRemoval) XXX_Size() int {
+	return m.Size()
+}
+func (m *ValidatorRemoval) XXX_DiscardUnknown() {
+	xxx_messageInfo_ValidatorRemoval.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ValidatorRemoval proto.InternalMessageInfo
+
+func (m *ValidatorRemoval) GetValAddress() string {
+	if m != nil {
+		return m.ValAddress
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Request)(nil), "tendermint.spn.launch.Request")
+	proto.RegisterType((*AccountRemoval)(nil), "tendermint.spn.launch.AccountRemoval")
+	proto.RegisterType((*ValidatorRemoval)(nil), "tendermint.spn.launch.ValidatorRemoval")
 }
 
 func init() { proto.RegisterFile("launch/request.proto", fileDescriptor_028e4b0ce31bf039) }
 
 var fileDescriptor_028e4b0ce31bf039 = []byte{
-	// 278 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x44, 0x90, 0xb1, 0x4e, 0xc3, 0x30,
-	0x10, 0x86, 0x6b, 0x5a, 0x88, 0x1a, 0x24, 0x86, 0xa8, 0x48, 0x6e, 0x85, 0xac, 0x88, 0x29, 0x0b,
-	0xb6, 0x04, 0x4f, 0xd0, 0xd0, 0xa5, 0x6b, 0x46, 0x16, 0x94, 0xa4, 0x26, 0x89, 0xd4, 0x9c, 0x43,
-	0x7c, 0x91, 0xc8, 0x5b, 0xf0, 0x30, 0xac, 0xec, 0x88, 0xa9, 0x23, 0x23, 0x4a, 0x5e, 0x04, 0x61,
-	0x27, 0xca, 0xe6, 0xef, 0xfc, 0x7f, 0xf6, 0xdd, 0xb9, 0xab, 0x63, 0xdc, 0x40, 0x9a, 0x8b, 0x5a,
-	0xbe, 0x36, 0x52, 0x23, 0xaf, 0x6a, 0x85, 0xca, 0xbb, 0x46, 0x09, 0x07, 0x59, 0x97, 0x05, 0x20,
-	0xd7, 0x15, 0x70, 0x1b, 0xda, 0xac, 0x33, 0xa5, 0xb2, 0xa3, 0x14, 0x26, 0x94, 0x34, 0x2f, 0x22,
-	0x86, 0xd6, 0x1a, 0x9b, 0x75, 0xaa, 0x74, 0xa9, 0xf4, 0xb3, 0x21, 0x61, 0xc1, 0x5e, 0xdd, 0x7e,
-	0x12, 0xd7, 0x89, 0xec, 0xf3, 0x1e, 0x75, 0x9d, 0x34, 0x8f, 0x0b, 0xd8, 0xef, 0x28, 0xf1, 0x49,
-	0xb0, 0x8c, 0x46, 0xf4, 0x6e, 0xdc, 0xe5, 0xd0, 0xc3, 0x7e, 0x47, 0xcf, 0x7c, 0x12, 0x2c, 0xa2,
-	0xa9, 0x60, 0xbc, 0x5a, 0xc6, 0xa8, 0x6a, 0x3a, 0x1f, 0x3c, 0x8b, 0xff, 0x9e, 0x39, 0xca, 0xc3,
-	0x16, 0xe9, 0xc2, 0x27, 0xc1, 0x3c, 0x9a, 0x0a, 0x5e, 0xe8, 0x3a, 0xa9, 0x02, 0x94, 0x80, 0xf4,
-	0xdc, 0x27, 0xc1, 0xe5, 0xfd, 0x8a, 0xdb, 0x19, 0xf8, 0x38, 0x03, 0xdf, 0x42, 0x1b, 0x7a, 0xdf,
-	0x1f, 0x77, 0x57, 0x43, 0x8f, 0x8f, 0x36, 0x1f, 0x8d, 0x62, 0x18, 0x7e, 0x75, 0x8c, 0x9c, 0x3a,
-	0x46, 0x7e, 0x3b, 0x46, 0xde, 0x7b, 0x36, 0x3b, 0xf5, 0x6c, 0xf6, 0xd3, 0xb3, 0xd9, 0x53, 0x90,
-	0x15, 0x98, 0x37, 0x09, 0x4f, 0x55, 0x29, 0xa6, 0x8d, 0x09, 0x5d, 0x81, 0x78, 0x13, 0xc3, 0x62,
-	0xb1, 0xad, 0xa4, 0x4e, 0x2e, 0xcc, 0x77, 0x0f, 0x7f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x76, 0x62,
-	0x48, 0x71, 0x6f, 0x01, 0x00, 0x00,
+	// 362 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x52, 0x41, 0x4b, 0xfb, 0x30,
+	0x1c, 0x5d, 0xfe, 0xdb, 0xdf, 0xb1, 0x08, 0x43, 0xca, 0x84, 0x6e, 0x48, 0x28, 0x3b, 0xf5, 0x62,
+	0xc3, 0xf4, 0xe6, 0x41, 0x68, 0x1d, 0xc2, 0xae, 0x3d, 0x78, 0xf0, 0x22, 0x69, 0x1a, 0xbb, 0x42,
+	0x9b, 0xd4, 0x26, 0x1d, 0xee, 0x5b, 0xf8, 0x61, 0xbc, 0x7a, 0x17, 0x4f, 0xc3, 0x93, 0x47, 0xd9,
+	0xbe, 0x88, 0xb4, 0x49, 0x99, 0xa2, 0xb7, 0xdf, 0x7b, 0xbf, 0xdf, 0x7b, 0xbc, 0x47, 0x02, 0x47,
+	0x19, 0xa9, 0x38, 0x5d, 0xe2, 0x92, 0x3d, 0x54, 0x4c, 0x2a, 0xaf, 0x28, 0x85, 0x12, 0xd6, 0xb1,
+	0x62, 0x3c, 0x66, 0x65, 0x9e, 0x72, 0xe5, 0xc9, 0x82, 0x7b, 0xfa, 0x68, 0x32, 0x4e, 0x84, 0x48,
+	0x32, 0x86, 0x9b, 0xa3, 0xa8, 0xba, 0xc7, 0x84, 0xaf, 0xb5, 0x62, 0x32, 0x4a, 0x44, 0x22, 0x9a,
+	0x11, 0xd7, 0x93, 0x61, 0x11, 0x15, 0x32, 0x17, 0x12, 0x47, 0x44, 0x32, 0xbc, 0x9a, 0x45, 0x4c,
+	0x91, 0x19, 0xa6, 0x22, 0xe5, 0x66, 0x3f, 0xd6, 0xfb, 0x3b, 0x2d, 0xd4, 0x40, 0xaf, 0xa6, 0x2f,
+	0x00, 0xf6, 0x43, 0x1d, 0xca, 0xb2, 0x61, 0x9f, 0x2e, 0x49, 0xca, 0x17, 0x73, 0x1b, 0x38, 0xc0,
+	0x1d, 0x84, 0x2d, 0xb4, 0x4e, 0xe0, 0xc0, 0x24, 0x5f, 0xcc, 0xed, 0x7f, 0x0e, 0x70, 0x7b, 0xe1,
+	0x9e, 0x68, 0x74, 0x25, 0x23, 0x4a, 0x94, 0x76, 0xd7, 0xe8, 0x34, 0xac, 0x75, 0xcd, 0xc8, 0x62,
+	0x5f, 0xd9, 0x3d, 0x07, 0xb8, 0xdd, 0x70, 0x4f, 0x58, 0x01, 0xec, 0x53, 0xc1, 0x15, 0xe3, 0xca,
+	0xfe, 0xef, 0x00, 0xf7, 0xf0, 0x6c, 0xe4, 0xe9, 0xe6, 0x5e, 0xdb, 0xdc, 0xf3, 0xf9, 0x3a, 0xb0,
+	0xde, 0x9e, 0x4f, 0x87, 0x26, 0xe3, 0x95, 0xbe, 0x0f, 0x5b, 0xe1, 0xf4, 0x12, 0x0e, 0x7d, 0x4a,
+	0x45, 0xc5, 0x55, 0xc8, 0x72, 0xb1, 0x22, 0x59, 0x9d, 0x86, 0xc4, 0x71, 0xc9, 0xa4, 0x6c, 0x5b,
+	0x18, 0x78, 0x61, 0xbd, 0xff, 0x32, 0x9a, 0x5e, 0xc3, 0xa3, 0x1b, 0x92, 0xa5, 0x71, 0x1d, 0xb7,
+	0x75, 0x40, 0x10, 0xae, 0x48, 0xe6, 0xff, 0x30, 0xf9, 0xc6, 0xfc, 0xe5, 0x13, 0x04, 0xaf, 0x5b,
+	0x04, 0x36, 0x5b, 0x04, 0x3e, 0xb7, 0x08, 0x3c, 0xed, 0x50, 0x67, 0xb3, 0x43, 0x9d, 0x8f, 0x1d,
+	0xea, 0xdc, 0xba, 0x49, 0xaa, 0x96, 0x55, 0xe4, 0x51, 0x91, 0xe3, 0xfd, 0x7b, 0x63, 0x59, 0x70,
+	0xfc, 0x88, 0xcd, 0xb7, 0x50, 0xeb, 0x82, 0xc9, 0xe8, 0xa0, 0xa9, 0x7d, 0xfe, 0x15, 0x00, 0x00,
+	0xff, 0xff, 0x55, 0x93, 0xe1, 0x14, 0x2d, 0x02, 0x00, 0x00,
 }
 
 func (m *Request) Marshal() (dAtA []byte, err error) {
@@ -187,6 +284,66 @@ func (m *Request) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *AccountRemoval) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *AccountRemoval) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *AccountRemoval) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintRequest(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ValidatorRemoval) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ValidatorRemoval) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ValidatorRemoval) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ValAddress) > 0 {
+		i -= len(m.ValAddress)
+		copy(dAtA[i:], m.ValAddress)
+		i = encodeVarintRequest(dAtA, i, uint64(len(m.ValAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintRequest(dAtA []byte, offset int, v uint64) int {
 	offset -= sovRequest(v)
 	base := offset
@@ -220,6 +377,32 @@ func (m *Request) Size() (n int) {
 	}
 	if m.Content != nil {
 		l = m.Content.Size()
+		n += 1 + l + sovRequest(uint64(l))
+	}
+	return n
+}
+
+func (m *AccountRemoval) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovRequest(uint64(l))
+	}
+	return n
+}
+
+func (m *ValidatorRemoval) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ValAddress)
+	if l > 0 {
 		n += 1 + l + sovRequest(uint64(l))
 	}
 	return n
@@ -397,6 +580,170 @@ func (m *Request) Unmarshal(dAtA []byte) error {
 			if err := m.Content.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRequest(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthRequest
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *AccountRemoval) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRequest
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: AccountRemoval: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: AccountRemoval: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRequest
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRequest
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthRequest
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipRequest(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthRequest
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ValidatorRemoval) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowRequest
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ValidatorRemoval: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ValidatorRemoval: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowRequest
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthRequest
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthRequest
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

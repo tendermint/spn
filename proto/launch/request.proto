@@ -2,6 +2,8 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 import "google/protobuf/any.proto";
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
@@ -14,3 +16,12 @@ message Request {
   google.protobuf.Any content = 5 [(cosmos_proto.accepts_interface) = "RequestContent"];
 }
 
+message AccountRemoval {
+  option (cosmos_proto.implements_interface) = "RequestContent";
+  string address = 1;
+}
+
+message ValidatorRemoval {
+  option (cosmos_proto.implements_interface) = "RequestContent";
+  string valAddress = 1;
+}

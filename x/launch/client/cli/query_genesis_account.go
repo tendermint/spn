@@ -11,8 +11,9 @@ import (
 
 func CmdListGenesisAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-genesis-account",
+		Use:   "list-genesis-account [chainID]",
 		Short: "list all genesisAccount",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -24,6 +25,7 @@ func CmdListGenesisAccount() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryAllGenesisAccountRequest{
+				ChainID:    args[0],
 				Pagination: pageReq,
 			}
 
