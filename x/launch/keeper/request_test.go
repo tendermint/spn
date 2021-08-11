@@ -96,156 +96,85 @@ func TestRequestCount(t *testing.T) {
 
 func TestApplyRequest(t *testing.T) {
 	var (
-		coordinatorAcc        = sample.AccAddress()
 		genesisAcc            = sample.AccAddress()
 		vestedAcc             = sample.AccAddress()
 		validatorAcc          = sample.AccAddress()
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
 		chainID, _            = sample.ChainID(10)
 		contents              = sample.AllRequestContents(chainID, genesisAcc, vestedAcc, validatorAcc)
-		requests              = createRequests(k, sdkCtx, chainID, contents)
 		invalidContent, _     = codectypes.NewAnyWithValue(&types.Request{})
-		invalidContentID      = k.AppendRequest(sdkCtx, *sample.RequestWithContent(chainID, invalidContent))
 	)
 	tests := []struct {
-		name string
-		msg  types.MsgSettleRequest
-		err  error
+		name    string
+		request types.Request
+		err     error
 	}{
 		{
-			name: "test GenesisAccount content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[0].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test GenesisAccount content",
+			request: *sample.RequestWithContent(chainID, contents[0]),
 		}, {
-			name: "test duplicated GenesisAccount content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[0].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test duplicated GenesisAccount content",
+			request: *sample.RequestWithContent(chainID, contents[0]),
 			err: sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
 				"account %s for chain %s already exist", genesisAcc, chainID),
 		}, {
-			name: "test genesis AccountRemoval content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[1].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test genesis AccountRemoval content",
+			request: *sample.RequestWithContent(chainID, contents[1]),
 		}, {
-			name: "test not found genesis AccountRemoval content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[1].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test not found genesis AccountRemoval content",
+			request: *sample.RequestWithContent(chainID, contents[1]),
 			err: sdkerrors.Wrapf(types.ErrAccountNotFound,
 				"account %s for chain %s not found", genesisAcc, chainID),
 		}, {
-			name: "test VestedAccount content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[2].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test VestedAccount content",
+			request: *sample.RequestWithContent(chainID, contents[2]),
 		}, {
-			name: "test duplicated VestedAccount content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[2].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test duplicated VestedAccount content",
+			request: *sample.RequestWithContent(chainID, contents[2]),
 			err: sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
 				"account %s for chain %s already exist", vestedAcc, chainID),
 		}, {
-			name: "test vested AccountRemoval content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[3].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test vested AccountRemoval content",
+			request: *sample.RequestWithContent(chainID, contents[3]),
 		}, {
-			name: "test not found vested AccountRemoval content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[3].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test not found vested AccountRemoval content",
+			request: *sample.RequestWithContent(chainID, contents[3]),
 			err: sdkerrors.Wrapf(types.ErrAccountNotFound,
 				"account %s for chain %s not found", vestedAcc, chainID),
 		}, {
-			name: "test GenesisValidator content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[4].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test GenesisValidator content",
+			request: *sample.RequestWithContent(chainID, contents[4]),
 		}, {
-			name: "test duplicated GenesisValidator content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[4].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test duplicated GenesisValidator content",
+			request: *sample.RequestWithContent(chainID, contents[4]),
 			err: sdkerrors.Wrapf(types.ErrValidatorAlreadyExist,
 				"genesis validator %s for chain %s already exist", validatorAcc, chainID),
 		}, {
-			name: "test ValidatorRemoval content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[5].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test ValidatorRemoval content",
+			request: *sample.RequestWithContent(chainID, contents[5]),
 		}, {
-			name: "test not found ValidatorRemoval content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   requests[5].RequestID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "test not found ValidatorRemoval content",
+			request: *sample.RequestWithContent(chainID, contents[5]),
 			err: sdkerrors.Wrapf(types.ErrValidatorNotFound,
 				"genesis validator %s for chain %s not found", validatorAcc, chainID),
 		}, {
-			name: "invalid request",
-			msg: types.MsgSettleRequest{
-				ChainID:     chainID,
-				RequestID:   invalidContentID,
-				Coordinator: coordinatorAcc,
-				Approve:     true,
-			},
+			name:    "invalid request",
+			request: *sample.RequestWithContent(chainID, invalidContent),
 			err: spnerrors.Critical(
-				"no concrete type registered for type URL /tendermint.spn.launch.Request against interface *types.RequestContent"),
+				"unknown request content type"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, tt.msg.RequestID)
-			require.True(t, found)
-
 			var content types.RequestContent
 			if tt.err == nil {
 				cdc := codectypes.NewInterfaceRegistry()
 				types.RegisterInterfaces(cdc)
-				err := cdc.UnpackAny(request.Content, &content)
+				err := cdc.UnpackAny(tt.request.Content, &content)
 				require.NoError(t, err)
 			}
 
-			err := applyRequest(sdkCtx, *k, &tt.msg, request)
+			err := applyRequest(sdkCtx, *k, chainID, tt.request)
 			if tt.err != nil {
 				require.Error(t, err)
 				require.Equal(t, tt.err.Error(), err.Error())
@@ -255,20 +184,20 @@ func TestApplyRequest(t *testing.T) {
 
 			switch c := content.(type) {
 			case *types.GenesisAccount:
-				_, found := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, c.Address)
+				_, found := k.GetGenesisAccount(sdkCtx, chainID, c.Address)
 				require.True(t, found, "genesis account not found")
 			case *types.VestedAccount:
-				_, found := k.GetVestedAccount(sdkCtx, tt.msg.ChainID, c.Address)
+				_, found := k.GetVestedAccount(sdkCtx, chainID, c.Address)
 				require.True(t, found, "vested account not found")
 			case *types.AccountRemoval:
-				_, foundGenesis := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, c.Address)
-				_, foundVested := k.GetVestedAccount(sdkCtx, tt.msg.ChainID, c.Address)
+				_, foundGenesis := k.GetGenesisAccount(sdkCtx, chainID, c.Address)
+				_, foundVested := k.GetVestedAccount(sdkCtx, chainID, c.Address)
 				require.False(t, foundGenesis && foundVested, "account not removed")
 			case *types.GenesisValidator:
-				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.ChainID, c.Address)
+				_, found := k.GetGenesisValidator(sdkCtx, chainID, c.Address)
 				require.True(t, found, "genesis validator not found")
 			case *types.ValidatorRemoval:
-				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.ChainID, c.ValAddress)
+				_, found := k.GetGenesisValidator(sdkCtx, chainID, c.ValAddress)
 				require.False(t, found, "genesis validator not removed")
 			}
 		})

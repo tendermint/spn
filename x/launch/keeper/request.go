@@ -122,7 +122,7 @@ func (k Keeper) GetAllRequest(ctx sdk.Context) (list []types.Request) {
 func applyRequest(
 	ctx sdk.Context,
 	k Keeper,
-	msg *types.MsgSettleRequest,
+	chainID string,
 	request types.Request,
 ) error {
 	cdc := codectypes.NewInterfaceRegistry()
@@ -135,60 +135,60 @@ func applyRequest(
 
 	switch c := content.(type) {
 	case *types.GenesisAccount:
-		_, foundGenesis := k.GetGenesisAccount(ctx, msg.ChainID, c.Address)
-		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
+		_, foundGenesis := k.GetGenesisAccount(ctx, chainID, c.Address)
+		_, foundVested := k.GetVestedAccount(ctx, chainID, c.Address)
 		if foundVested || foundGenesis {
 			return sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
 				"account %s for chain %s already exist",
-				c.Address, msg.ChainID,
+				c.Address, chainID,
 			)
 		}
 		k.SetGenesisAccount(ctx, *c)
 	case *types.VestedAccount:
-		_, foundGenesis := k.GetGenesisAccount(ctx, msg.ChainID, c.Address)
-		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
+		_, foundGenesis := k.GetGenesisAccount(ctx, chainID, c.Address)
+		_, foundVested := k.GetVestedAccount(ctx, chainID, c.Address)
 		if foundVested || foundGenesis {
 			return sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
 				"account %s for chain %s already exist",
-				c.Address, msg.ChainID,
+				c.Address, chainID,
 			)
 		}
 		k.SetVestedAccount(ctx, *c)
 	case *types.AccountRemoval:
-		_, foundGenesis := k.GetGenesisAccount(ctx, msg.ChainID, c.Address)
-		_, foundVested := k.GetVestedAccount(ctx, msg.ChainID, c.Address)
+		_, foundGenesis := k.GetGenesisAccount(ctx, chainID, c.Address)
+		_, foundVested := k.GetVestedAccount(ctx, chainID, c.Address)
 		if !foundGenesis && !foundVested {
 			return sdkerrors.Wrapf(types.ErrAccountNotFound,
 				"account %s for chain %s not found",
-				c.Address, msg.ChainID,
+				c.Address, chainID,
 			)
 		} else if foundGenesis && foundVested {
 			return spnerrors.Critical(
 				fmt.Sprintf("account %s for chain %s found in vested and genesis accounts",
-					c.Address, msg.ChainID),
+					c.Address, chainID),
 			)
 		}
 		if foundGenesis {
-			k.RemoveGenesisAccount(ctx, msg.ChainID, c.Address)
+			k.RemoveGenesisAccount(ctx, chainID, c.Address)
 		} else if foundVested {
-			k.RemoveVestedAccount(ctx, msg.ChainID, c.Address)
+			k.RemoveVestedAccount(ctx, chainID, c.Address)
 		}
 	case *types.GenesisValidator:
-		if _, found := k.GetGenesisValidator(ctx, msg.ChainID, c.Address); found {
+		if _, found := k.GetGenesisValidator(ctx, chainID, c.Address); found {
 			return sdkerrors.Wrapf(types.ErrValidatorAlreadyExist,
 				"genesis validator %s for chain %s already exist",
-				c.Address, msg.ChainID,
+				c.Address, chainID,
 			)
 		}
 		k.SetGenesisValidator(ctx, *c)
 	case *types.ValidatorRemoval:
-		if _, found := k.GetGenesisValidator(ctx, msg.ChainID, c.ValAddress); !found {
+		if _, found := k.GetGenesisValidator(ctx, chainID, c.ValAddress); !found {
 			return sdkerrors.Wrapf(types.ErrValidatorNotFound,
 				"genesis validator %s for chain %s not found",
-				c.ValAddress, msg.ChainID,
+				c.ValAddress, chainID,
 			)
 		}
-		k.RemoveGenesisValidator(ctx, msg.ChainID, c.ValAddress)
+		k.RemoveGenesisValidator(ctx, chainID, c.ValAddress)
 	default:
 		return spnerrors.Critical("unknown request content type")
 	}
