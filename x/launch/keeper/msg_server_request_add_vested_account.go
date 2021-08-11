@@ -34,13 +34,30 @@ func (k msgServer) RequestAddVestedAccount(
 		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())
 	}
 
-	requestID := k.AppendRequest(ctx, types.Request{
-		ChainID:   msg.ChainID,
-		Creator:   msg.Address,
-		CreatedAt: ctx.BlockTime().Unix(),
-		Content:   content,
-	})
+	var (
+		requestID uint64
+
+		approved = false
+		request  = types.Request{
+			ChainID:   msg.ChainID,
+			Creator:   msg.Address,
+			CreatedAt: ctx.BlockTime().Unix(),
+			Content:   content,
+		}
+	)
+	coordAddress := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	if msg.Address == coordAddress {
+		err := applyRequest(ctx, k.Keeper, msg.ChainID, request)
+		if err != nil {
+			return nil, err
+		}
+		approved = true
+	} else {
+		requestID = k.AppendRequest(ctx, request)
+	}
+
 	return &types.MsgRequestAddVestedAccountResponse{
-		RequestID: requestID,
+		RequestID:    requestID,
+		AutoApproved: approved,
 	}, nil
 }

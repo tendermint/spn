@@ -11,49 +11,54 @@ import (
 
 func TestMsgRequestAddValidator(t *testing.T) {
 	var (
-		invalidChain, _           = sample.ChainID(0)
-		addr1                     = sample.AccAddress()
-		addr2                     = sample.AccAddress()
-		k, _, srv, _, sdkCtx, cdc = setupMsgServer(t)
-		ctx                       = sdk.WrapSDKContext(sdkCtx)
-		chains                    = createNChain(k, sdkCtx, 3)
+		invalidChain, _            = sample.ChainID(0)
+		addr1                      = sample.AccAddress()
+		addr2                      = sample.AccAddress()
+		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
+		ctx                        = sdk.WrapSDKContext(sdkCtx)
+		chains                     = createNChain(k, sdkCtx, 3)
 	)
 	chains[2].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[2])
 
 	for _, tc := range []struct {
-		name  string
-		msg   types.MsgRequestAddValidator
-		want  uint64
-		valid bool
+		name        string
+		msg         types.MsgRequestAddValidator
+		wantID      uint64
+		wantApprove bool
+		valid       bool
 	}{
 		{
 			name:  "invalid chain",
 			msg:   sample.MsgRequestAddValidator(addr1, invalidChain),
 			valid: false,
-		},
-		{
+		}, {
 			name:  "chain with triggered launch",
 			msg:   sample.MsgRequestAddValidator(addr1, chains[2].ChainID),
 			valid: false,
-		},
-		{
-			name:  "request to a chain 1",
-			msg:   sample.MsgRequestAddValidator(addr1, chains[0].ChainID),
-			valid: true,
-			want:  uint64(0),
-		},
-		{
-			name:  "second request to a chain 1",
-			msg:   sample.MsgRequestAddValidator(addr2, chains[0].ChainID),
-			valid: true,
-			want:  uint64(1),
-		},
-		{
-			name:  "request to a chain 2",
-			msg:   sample.MsgRequestAddValidator(addr1, chains[1].ChainID),
-			valid: true,
-			want:  uint64(0),
+		}, {
+			name:   "request to a chain 1",
+			msg:    sample.MsgRequestAddValidator(addr1, chains[0].ChainID),
+			valid:  true,
+			wantID: 0,
+		}, {
+			name:   "second request to a chain 1",
+			msg:    sample.MsgRequestAddValidator(addr2, chains[0].ChainID),
+			valid:  true,
+			wantID: 1,
+		}, {
+			name:   "request to a chain 2",
+			msg:    sample.MsgRequestAddValidator(addr1, chains[1].ChainID),
+			valid:  true,
+			wantID: 0,
+		}, {
+			name: "add coordinator to a chain",
+			msg: sample.MsgRequestAddValidator(
+				pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				chains[1].ChainID,
+			),
+			valid:       true,
+			wantApprove: true,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -63,19 +68,26 @@ func TestMsgRequestAddValidator(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			require.Equal(t, tc.wantID, got.RequestID)
+			require.Equal(t, tc.wantApprove, got.AutoApproved)
 
-			request, found := k.GetRequest(sdkCtx, tc.msg.ChainID, got.RequestID)
-			require.True(t, found, "request not found")
-			require.Equal(t, tc.want, request.RequestID)
+			if !tc.wantApprove {
+				request, found := k.GetRequest(sdkCtx, tc.msg.ChainID, got.RequestID)
+				require.True(t, found, "request not found")
+				require.Equal(t, tc.wantID, request.RequestID)
 
-			content, err := request.UnpackGenesisValidator(cdc)
-			require.NoError(t, err)
-			require.Equal(t, tc.msg.ValAddress, content.Address)
-			require.Equal(t, tc.msg.ChainID, content.ChainID)
-			require.True(t, tc.msg.SelfDelegation.Equal(content.SelfDelegation))
-			require.Equal(t, tc.msg.GenTx, content.GenTx)
-			require.Equal(t, tc.msg.Peer, content.Peer)
-			require.Equal(t, tc.msg.ConsPubKey, content.ConsPubKey)
+				content, err := request.UnpackGenesisValidator(cdc)
+				require.NoError(t, err)
+				require.Equal(t, tc.msg.ValAddress, content.Address)
+				require.Equal(t, tc.msg.ChainID, content.ChainID)
+				require.True(t, tc.msg.SelfDelegation.Equal(content.SelfDelegation))
+				require.Equal(t, tc.msg.GenTx, content.GenTx)
+				require.Equal(t, tc.msg.Peer, content.Peer)
+				require.Equal(t, tc.msg.ConsPubKey, content.ConsPubKey)
+			} else {
+				_, found := k.GetGenesisValidator(sdkCtx, tc.msg.ChainID, tc.msg.ValAddress)
+				require.True(t, found, "genesis validator not found")
+			}
 		})
 	}
 }

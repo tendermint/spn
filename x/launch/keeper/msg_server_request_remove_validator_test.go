@@ -12,21 +12,27 @@ import (
 
 func TestMsgRequestRemoveValidator(t *testing.T) {
 	var (
-		invalidChain, _           = sample.ChainID(0)
-		addr1                     = sample.AccAddress()
-		addr2                     = sample.AccAddress()
-		addr3                     = sample.AccAddress()
-		k, _, srv, _, sdkCtx, cdc = setupMsgServer(t)
-		ctx                       = sdk.WrapSDKContext(sdkCtx)
-		chains                    = createNChain(k, sdkCtx, 4)
+		invalidChain, _            = sample.ChainID(0)
+		addr1                      = sample.AccAddress()
+		addr2                      = sample.AccAddress()
+		addr3                      = sample.AccAddress()
+		addr4                      = sample.AccAddress()
+		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
+		ctx                        = sdk.WrapSDKContext(sdkCtx)
+		chains                     = createNChain(k, sdkCtx, 4)
 	)
 	chains[3].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[3])
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{
+		ChainID: chains[2].ChainID,
+		Address: addr4,
+	})
 	tests := []struct {
-		name string
-		msg  types.MsgRequestRemoveValidator
-		want uint64
-		err  error
+		name        string
+		msg         types.MsgRequestRemoveValidator
+		wantID      uint64
+		wantApprove bool
+		err         error
 	}{
 		{
 			name: "invalid chain",
@@ -59,7 +65,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
-			want: 0,
+			wantID: 0,
 		}, {
 			name: "add chain 1 request 2",
 			msg: types.MsgRequestRemoveValidator{
@@ -67,7 +73,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr2,
 				ValidatorAddress: addr2,
 			},
-			want: 0,
+			wantID: 0,
 		}, {
 			name: "add chain 1 request 3",
 			msg: types.MsgRequestRemoveValidator{
@@ -75,7 +81,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr2,
 				ValidatorAddress: addr2,
 			},
-			want: 1,
+			wantID: 1,
 		}, {
 			name: "add chain 2 request 1",
 			msg: types.MsgRequestRemoveValidator{
@@ -83,7 +89,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr3,
 				ValidatorAddress: addr3,
 			},
-			want: 0,
+			wantID: 0,
 		}, {
 			name: "add chain 2 request 2",
 			msg: types.MsgRequestRemoveValidator{
@@ -91,7 +97,15 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr3,
 				ValidatorAddress: addr3,
 			},
-			want: 1,
+			wantID: 1,
+		}, {
+			name: "add coordinator validator",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:          chains[2].ChainID,
+				Creator:          pk.GetCoordinatorAddressFromID(sdkCtx, chains[2].CoordinatorID),
+				ValidatorAddress: addr4,
+			},
+			wantApprove: true,
 		},
 	}
 	for _, tt := range tests {
@@ -102,14 +116,21 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
+			require.Equal(t, tt.wantID, got.RequestID)
+			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
-			request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, got.RequestID)
-			require.True(t, found, "request not found")
-			require.Equal(t, tt.want, request.RequestID)
+			if !tt.wantApprove {
+				request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, got.RequestID)
+				require.True(t, found, "request not found")
+				require.Equal(t, tt.wantID, request.RequestID)
 
-			content, err := request.UnpackValidatorRemoval(cdc)
-			require.NoError(t, err)
-			require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
+				content, err := request.UnpackValidatorRemoval(cdc)
+				require.NoError(t, err)
+				require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
+			} else {
+				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.ChainID, tt.msg.ValidatorAddress)
+				require.False(t, found, "genesis validator not removed")
+			}
 		})
 	}
 }
