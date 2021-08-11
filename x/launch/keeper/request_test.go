@@ -237,14 +237,40 @@ func TestApplyRequest(t *testing.T) {
 			request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, tt.msg.RequestID)
 			require.True(t, found)
 
+			var content types.RequestContent
+			if tt.err == nil {
+				cdc := codectypes.NewInterfaceRegistry()
+				types.RegisterInterfaces(cdc)
+				err := cdc.UnpackAny(request.Content, &content)
+				require.NoError(t, err)
+			}
+
 			err := applyRequest(sdkCtx, *k, &tt.msg, request)
 			if tt.err != nil {
 				require.Error(t, err)
-				require.ErrorIs(t, tt.err, err)
 				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)
+
+			switch c := content.(type) {
+			case *types.GenesisAccount:
+				_, found := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, c.Address)
+				require.True(t, found, "genesis account not found")
+			case *types.VestedAccount:
+				_, found := k.GetVestedAccount(sdkCtx, tt.msg.ChainID, c.Address)
+				require.True(t, found, "vested account not found")
+			case *types.AccountRemoval:
+				_, foundGenesis := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, c.Address)
+				_, foundVested := k.GetVestedAccount(sdkCtx, tt.msg.ChainID, c.Address)
+				require.False(t, foundGenesis && foundVested, "account not removed")
+			case *types.GenesisValidator:
+				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.ChainID, c.Address)
+				require.True(t, found, "genesis validator not found")
+			case *types.ValidatorRemoval:
+				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.ChainID, c.ValAddress)
+				require.False(t, found, "genesis validator not removed")
+			}
 		})
 	}
 }
