@@ -76,7 +76,7 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 			resp, err := keeper.CoordinatorAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, &msgs[j], resp.Coordinator[j-i])
+				assert.Equal(t, msgs[j], resp.Coordinator[j-i])
 			}
 		}
 	})
@@ -87,7 +87,7 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 			resp, err := keeper.CoordinatorAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, &msgs[j], resp.Coordinator[j-i])
+				assert.Equal(t, msgs[j], resp.Coordinator[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}
