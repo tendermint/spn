@@ -16,7 +16,7 @@ func (k Keeper) ChainAll(c context.Context, req *types.QueryAllChainRequest) (*t
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var chains []*types.Chain
+	var chains []types.Chain
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
@@ -28,7 +28,7 @@ func (k Keeper) ChainAll(c context.Context, req *types.QueryAllChainRequest) (*t
 			return err
 		}
 
-		chains = append(chains, &chain)
+		chains = append(chains, chain)
 		return nil
 	})
 
@@ -53,5 +53,5 @@ func (k Keeper) Chain(c context.Context, req *types.QueryGetChainRequest) (*type
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
-	return &types.QueryGetChainResponse{Chain: &val}, nil
+	return &types.QueryGetChainResponse{Chain: val}, nil
 }

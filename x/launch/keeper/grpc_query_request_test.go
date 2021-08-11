@@ -33,7 +33,7 @@ func TestRequestQuerySingle(t *testing.T) {
 				ChainID:   msgs[0].ChainID,
 				RequestID: msgs[0].RequestID,
 			},
-			response: &types.QueryGetRequestResponse{Request: &msgs[0]},
+			response: &types.QueryGetRequestResponse{Request: msgs[0]},
 		},
 		{
 			desc: "Second",
@@ -41,7 +41,7 @@ func TestRequestQuerySingle(t *testing.T) {
 				ChainID:   msgs[1].ChainID,
 				RequestID: msgs[1].RequestID,
 			},
-			response: &types.QueryGetRequestResponse{Request: &msgs[1]},
+			response: &types.QueryGetRequestResponse{Request: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",

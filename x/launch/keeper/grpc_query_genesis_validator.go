@@ -16,7 +16,7 @@ func (k Keeper) GenesisValidatorAll(c context.Context, req *types.QueryAllGenesi
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var genesisValidators []*types.GenesisValidator
+	var genesisValidators []types.GenesisValidator
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
@@ -28,7 +28,7 @@ func (k Keeper) GenesisValidatorAll(c context.Context, req *types.QueryAllGenesi
 			return err
 		}
 
-		genesisValidators = append(genesisValidators, &genesisValidator)
+		genesisValidators = append(genesisValidators, genesisValidator)
 		return nil
 	})
 
@@ -54,5 +54,5 @@ func (k Keeper) GenesisValidator(c context.Context, req *types.QueryGetGenesisVa
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
-	return &types.QueryGetGenesisValidatorResponse{GenesisValidator: &val}, nil
+	return &types.QueryGetGenesisValidatorResponse{GenesisValidator: val}, nil
 }

@@ -32,14 +32,14 @@ func TestValidatorQuerySingle(t *testing.T) {
 			request: &types.QueryGetValidatorRequest{
 				Address: msgs[0].Address,
 			},
-			response: &types.QueryGetValidatorResponse{Validator: &msgs[0]},
+			response: &types.QueryGetValidatorResponse{Validator: msgs[0]},
 		},
 		{
 			desc: "Second",
 			request: &types.QueryGetValidatorRequest{
 				Address: msgs[1].Address,
 			},
-			response: &types.QueryGetValidatorResponse{Validator: &msgs[1]},
+			response: &types.QueryGetValidatorResponse{Validator: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",

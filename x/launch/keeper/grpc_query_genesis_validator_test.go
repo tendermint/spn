@@ -43,7 +43,7 @@ func TestGenesisValidatorQuerySingle(t *testing.T) {
 				ChainID: msgs[0].ChainID,
 				Address: msgs[0].Address,
 			},
-			response: &types.QueryGetGenesisValidatorResponse{GenesisValidator: &msgs[0]},
+			response: &types.QueryGetGenesisValidatorResponse{GenesisValidator: msgs[0]},
 		},
 		{
 			desc: "Second",
@@ -51,7 +51,7 @@ func TestGenesisValidatorQuerySingle(t *testing.T) {
 				ChainID: msgs[1].ChainID,
 				Address: msgs[1].Address,
 			},
-			response: &types.QueryGetGenesisValidatorResponse{GenesisValidator: &msgs[1]},
+			response: &types.QueryGetGenesisValidatorResponse{GenesisValidator: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
