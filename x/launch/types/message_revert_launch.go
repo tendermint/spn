@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgRevertLaunch{}
 
-func NewMsgRevertLaunch(coordinator string, chainID string) *MsgRevertLaunch {
+func NewMsgRevertLaunch(coordinator, chainID string) *MsgRevertLaunch {
 	return &MsgRevertLaunch{
 		Coordinator: coordinator,
 		ChainID:     chainID,

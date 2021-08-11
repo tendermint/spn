@@ -10,14 +10,6 @@ const (
 )
 
 // ChainKey returns the store key to retrieve a Chain from the index fields
-func ChainKey(
-	chainID string,
-) []byte {
-	var key []byte
-
-	chainIDBytes := []byte(chainID)
-	key = append(key, chainIDBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+func ChainKey(chainID string) []byte {
+	return []byte(chainID + "/")
 }
