@@ -44,7 +44,7 @@ func CmdListChain() *cobra.Command {
 
 func CmdShowChain() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-chain [chainID]",
+		Use:   "show-chain [chain-id]",
 		Short: "shows a chain",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

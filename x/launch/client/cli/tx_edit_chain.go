@@ -19,7 +19,7 @@ const (
 
 func CmdEditChain() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "edit-chain [chainID]",
+		Use:   "edit-chain [chain-id]",
 		Short: "Edit chain information",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
