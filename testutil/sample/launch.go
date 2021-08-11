@@ -123,12 +123,18 @@ func AllRequestContents(chainID, genesis, vested, validator string) []*types.Any
 	return result
 }
 
-// Request returns a sample Request
-func Request(chainID string) *launch.Request {
-	content, err := types.NewAnyWithValue(GenesisAccount(chainID, AccAddress()))
+// GenesisAccountContent returns a sample GenesisAccount request content packed into an *Any object
+func GenesisAccountContent(chainID, address string) *types.Any {
+	content, err := types.NewAnyWithValue(GenesisAccount(chainID, address))
 	if err != nil {
 		panic(err)
 	}
+	return content
+}
+
+// Request returns a sample Request
+func Request(chainID string) *launch.Request {
+	content := GenesisAccountContent(chainID, AccAddress())
 	return RequestWithContent(chainID, content)
 }
 

@@ -3,6 +3,7 @@ package keeper
 import (
 	"testing"
 
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
@@ -12,12 +13,15 @@ import (
 
 func TestMsgSettleRequest(t *testing.T) {
 	var (
+		addr1                    = sample.AccAddress()
+		addr2                    = sample.AccAddress()
+		addr3                    = sample.AccAddress()
+		addr4                    = sample.AccAddress()
 		coordinator1             = sample.Coordinator()
 		coordinator2             = sample.Coordinator()
 		invalidChain, _          = sample.ChainID(0)
 		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
 		ctx                      = sdk.WrapSDKContext(sdkCtx)
-		requests                 = createNRequest(k, sdkCtx, 6)
 	)
 
 	coordinator1.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator1)
@@ -29,10 +33,18 @@ func TestMsgSettleRequest(t *testing.T) {
 	chains[1].ChainID = "foo"
 	k.SetChain(sdkCtx, chains[1])
 
+	requests := createRequests(k, sdkCtx, chains[1].ChainID, []*codectypes.Any{
+		sample.GenesisAccountContent(chains[1].ChainID, addr1),
+		sample.GenesisAccountContent(chains[1].ChainID, addr2),
+		sample.GenesisAccountContent(chains[1].ChainID, addr3),
+		sample.GenesisAccountContent(chains[1].ChainID, addr4),
+	})
+
 	tests := []struct {
-		name string
-		msg  types.MsgSettleRequest
-		err  error
+		name      string
+		msg       types.MsgSettleRequest
+		checkAddr string
+		err       error
 	}{
 		{
 			name: "invalid chain",
@@ -40,6 +52,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				ChainID:     invalidChain,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
+				Approve:     true,
 			},
 			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
 		}, {
@@ -48,6 +61,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				ChainID:     chains[0].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
+				Approve:     true,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[0].ChainID),
 		}, {
@@ -56,6 +70,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				ChainID:     chains[1].ChainID,
 				Coordinator: coordinator2.Address,
 				RequestID:   requests[0].RequestID,
+				Approve:     true,
 			},
 			err: sdkerrors.Wrap(types.ErrNoAddressPermission, coordinator2.Address),
 		}, {
@@ -64,6 +79,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   99999999,
+				Approve:     true,
 			},
 			err: sdkerrors.Wrapf(types.ErrRequestNotFound,
 				"request 99999999 for chain %s not found", chains[1].ChainID),
@@ -73,28 +89,36 @@ func TestMsgSettleRequest(t *testing.T) {
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   requests[0].RequestID,
+				Approve:     true,
 			},
+			checkAddr: addr1,
 		}, {
 			name: "add chain 1 request 2",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   requests[1].RequestID,
+				Approve:     true,
 			},
+			checkAddr: addr2,
 		}, {
 			name: "add chain 1 request 3",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   requests[2].RequestID,
+				Approve:     true,
 			},
+			checkAddr: addr3,
 		}, {
-			name: "add chain 2 request 5",
+			name: "add chain 2 request 4",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
-				RequestID:   requests[5].RequestID,
+				RequestID:   requests[3].RequestID,
+				Approve:     true,
 			},
+			checkAddr: addr4,
 		},
 	}
 	for _, tt := range tests {
@@ -108,6 +132,9 @@ func TestMsgSettleRequest(t *testing.T) {
 
 			_, found := k.GetRequest(sdkCtx, tt.msg.ChainID, tt.msg.RequestID)
 			require.False(t, found, "request not removed")
+
+			_, found = k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, tt.checkAddr)
+			require.True(t, found, "request apply not found")
 		})
 	}
 }
