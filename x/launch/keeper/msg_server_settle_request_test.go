@@ -26,7 +26,6 @@ func TestMsgSettleRequest(t *testing.T) {
 	tests := []struct {
 		name string
 		msg  types.MsgSettleRequest
-		want uint64
 		err  error
 	}{
 		{
@@ -69,7 +68,6 @@ func TestMsgSettleRequest(t *testing.T) {
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   requests[0].RequestID,
 			},
-			want: 0,
 		}, {
 			name: "add chain 1 request 2",
 			msg: types.MsgSettleRequest{
@@ -77,7 +75,6 @@ func TestMsgSettleRequest(t *testing.T) {
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   requests[1].RequestID,
 			},
-			want: 0,
 		}, {
 			name: "add chain 1 request 3",
 			msg: types.MsgSettleRequest{
@@ -85,7 +82,6 @@ func TestMsgSettleRequest(t *testing.T) {
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   requests[2].RequestID,
 			},
-			want: 1,
 		}, {
 			name: "add chain 2 request 5",
 			msg: types.MsgSettleRequest{
@@ -93,7 +89,6 @@ func TestMsgSettleRequest(t *testing.T) {
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   requests[5].RequestID,
 			},
-			want: 0,
 		},
 	}
 	for _, tt := range tests {

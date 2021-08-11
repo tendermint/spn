@@ -96,12 +96,13 @@ func TestRequestCount(t *testing.T) {
 
 func TestApplyRequest(t *testing.T) {
 	var (
-		genesis               = sample.AccAddress()
-		vested                = sample.AccAddress()
-		validator             = sample.AccAddress()
+		coordinatorAcc        = sample.AccAddress()
+		genesisAcc            = sample.AccAddress()
+		vestedAcc             = sample.AccAddress()
+		validatorAcc          = sample.AccAddress()
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
 		chainID, _            = sample.ChainID(10)
-		contents              = sample.AllRequestContents(chainID, genesis, vested, validator)
+		contents              = sample.AllRequestContents(chainID, genesisAcc, vestedAcc, validatorAcc)
 		requests              = createRequests(k, sdkCtx, chainID, contents)
 		invalidContent, _     = codectypes.NewAnyWithValue(&types.Request{})
 		invalidContentID      = k.AppendRequest(sdkCtx, *sample.RequestWithContent(chainID, invalidContent))
@@ -116,7 +117,7 @@ func TestApplyRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[0].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 		}, {
@@ -124,17 +125,17 @@ func TestApplyRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[0].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 			err: sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
-				"account %s for chain %s already exist", genesis, chainID),
+				"account %s for chain %s already exist", genesisAcc, chainID),
 		}, {
 			name: "test genesis AccountRemoval content",
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[1].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 		}, {
@@ -142,17 +143,17 @@ func TestApplyRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[1].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 			err: sdkerrors.Wrapf(types.ErrAccountNotFound,
-				"account %s for chain %s not found", genesis, chainID),
+				"account %s for chain %s not found", genesisAcc, chainID),
 		}, {
 			name: "test VestedAccount content",
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[2].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 		}, {
@@ -160,17 +161,17 @@ func TestApplyRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[2].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 			err: sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
-				"account %s for chain %s already exist", vested, chainID),
+				"account %s for chain %s already exist", vestedAcc, chainID),
 		}, {
 			name: "test vested AccountRemoval content",
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[3].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 		}, {
@@ -178,17 +179,17 @@ func TestApplyRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[3].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 			err: sdkerrors.Wrapf(types.ErrAccountNotFound,
-				"account %s for chain %s not found", vested, chainID),
+				"account %s for chain %s not found", vestedAcc, chainID),
 		}, {
 			name: "test GenesisValidator content",
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[4].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 		}, {
@@ -196,17 +197,17 @@ func TestApplyRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[4].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 			err: sdkerrors.Wrapf(types.ErrValidatorAlreadyExist,
-				"genesis validator %s for chain %s already exist", validator, chainID),
+				"genesis validator %s for chain %s already exist", validatorAcc, chainID),
 		}, {
 			name: "test ValidatorRemoval content",
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[5].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 		}, {
@@ -214,17 +215,17 @@ func TestApplyRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   requests[5].RequestID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 			err: sdkerrors.Wrapf(types.ErrValidatorNotFound,
-				"genesis validator %s for chain %s not found", validator, chainID),
+				"genesis validator %s for chain %s not found", validatorAcc, chainID),
 		}, {
 			name: "invalid request",
 			msg: types.MsgSettleRequest{
 				ChainID:     chainID,
 				RequestID:   invalidContentID,
-				Coordinator: sample.AccAddress(),
+				Coordinator: coordinatorAcc,
 				Approve:     true,
 			},
 			err: spnerrors.Critical(
