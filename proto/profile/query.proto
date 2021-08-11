@@ -46,7 +46,7 @@ message QueryGetValidatorRequest {
 }
 
 message QueryGetValidatorResponse {
-	Validator validator = 1;
+	Validator validator = 1 [(gogoproto.nullable) = false];;
 }
 
 message QueryAllValidatorRequest {
@@ -54,7 +54,7 @@ message QueryAllValidatorRequest {
 }
 
 message QueryAllValidatorResponse {
-	repeated Validator validator = 1;
+	repeated Validator validator = 1 [(gogoproto.nullable) = false];;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -63,7 +63,7 @@ message QueryGetCoordinatorByAddressRequest {
 }
 
 message QueryGetCoordinatorByAddressResponse {
-	CoordinatorByAddress coordinatorByAddress = 1;
+	CoordinatorByAddress coordinatorByAddress = 1 [(gogoproto.nullable) = false];;
 }
 
 message QueryAllCoordinatorByAddressRequest {
@@ -71,7 +71,7 @@ message QueryAllCoordinatorByAddressRequest {
 }
 
 message QueryAllCoordinatorByAddressResponse {
-	repeated CoordinatorByAddress coordinatorByAddress = 1;
+	repeated CoordinatorByAddress coordinatorByAddress = 1 [(gogoproto.nullable) = false];;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 message QueryGetCoordinatorRequest {
@@ -79,7 +79,7 @@ message QueryGetCoordinatorRequest {
 }
 
 message QueryGetCoordinatorResponse {
-	Coordinator Coordinator = 1;
+	Coordinator Coordinator = 1 [(gogoproto.nullable) = false];;
 }
 
 message QueryAllCoordinatorRequest {
@@ -87,6 +87,6 @@ message QueryAllCoordinatorRequest {
 }
 
 message QueryAllCoordinatorResponse {
-	repeated Coordinator Coordinator = 1;
+	repeated Coordinator Coordinator = 1 [(gogoproto.nullable) = false];;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
