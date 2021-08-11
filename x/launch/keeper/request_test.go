@@ -166,20 +166,18 @@ func TestApplyRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var content types.RequestContent
-			if tt.err == nil {
-				cdc := codectypes.NewInterfaceRegistry()
-				types.RegisterInterfaces(cdc)
-				err := cdc.UnpackAny(tt.request.Content, &content)
-				require.NoError(t, err)
-			}
-
 			err := applyRequest(sdkCtx, *k, chainID, tt.request)
 			if tt.err != nil {
 				require.Error(t, err)
 				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
+			require.NoError(t, err)
+
+			var content types.RequestContent
+			cdc := codectypes.NewInterfaceRegistry()
+			types.RegisterInterfaces(cdc)
+			err = cdc.UnpackAny(tt.request.Content, &content)
 			require.NoError(t, err)
 
 			switch c := content.(type) {
