@@ -12,17 +12,23 @@ import (
 
 func TestMsgSettleRequest(t *testing.T) {
 	var (
+		coordinator1             = sample.Coordinator()
+		coordinator2             = sample.Coordinator()
 		invalidChain, _          = sample.ChainID(0)
-		addr1                    = sample.AccAddress()
 		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
 		ctx                      = sdk.WrapSDKContext(sdkCtx)
-		chains                   = createNChain(k, sdkCtx, 2)
 		requests                 = createNRequest(k, sdkCtx, 6)
 	)
+
+	coordinator1.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator1)
+	coordinator2.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator2)
+
+	chains := createNChainForCoordinator(k, sdkCtx, coordinator1.CoordinatorId, 2)
 	chains[0].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[0])
 	chains[1].ChainID = "foo"
 	k.SetChain(sdkCtx, chains[1])
+
 	tests := []struct {
 		name string
 		msg  types.MsgSettleRequest
@@ -32,7 +38,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			name: "invalid chain",
 			msg: types.MsgSettleRequest{
 				ChainID:     invalidChain,
-				Coordinator: addr1,
+				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 			},
 			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
@@ -40,18 +46,18 @@ func TestMsgSettleRequest(t *testing.T) {
 			name: "launch triggered chain",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[0].ChainID,
-				Coordinator: addr1,
+				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[0].ChainID),
 		}, {
 			name: "no permission error",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: addr1,
+				Coordinator: coordinator2.Address,
 				RequestID:   requests[0].RequestID,
 			},
-			err: sdkerrors.Wrap(types.ErrNoAddressPermission, addr1),
+			err: sdkerrors.Wrap(types.ErrNoAddressPermission, coordinator2.Address),
 		}, {
 			name: "settle a invalid request",
 			msg: types.MsgSettleRequest{
@@ -59,8 +65,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   99999999,
 			},
-			err: sdkerrors.Wrap(types.ErrRequestNotFound,
-				"request 999999 for chain %s not found"),
+			err: sdkerrors.Wrapf(types.ErrRequestNotFound,
+				"request 99999999 for chain %s not found", chains[1].ChainID),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgSettleRequest{
