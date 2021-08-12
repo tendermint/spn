@@ -45,7 +45,7 @@ func CmdListCoordinator() *cobra.Command {
 
 func CmdShowCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-coordinator [id]",
+		Use:   "show-coordinator [coordinator-id]",
 		Short: "shows a coordinator",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
