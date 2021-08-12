@@ -3,23 +3,36 @@ coverage:
   round: down
   precision: 2
   status:
+    changes: false
     project:
       default:
+        threshold: 1% # allow this much decrease on project
+      modules:
         if_ci_failed: error
         target: 70%
-        paths:
-          - "x/"
-          - "!x/**/client/"
+        flags:
+          - modules
       client:
         if_ci_failed: error
         target: 35%
-        paths:
-          - "x/**/client/"
+        flags:
+          - client
 
 comment:
   layout: "reach, diff, files"
   behavior: default
   require_changes: false
+
+flags:
+  modules:
+    carryforward: true
+    paths:
+      - "x/"
+      - "!x/**/client/"
+  client:
+    carryforward: true
+    paths:
+      - "x/**/client/"
 
 ignore:
   - "x/**/types/codec.go"
