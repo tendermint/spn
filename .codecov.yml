@@ -6,15 +6,12 @@ coverage:
     project:
       default:
         threshold: 1%
-      app:
-        target: 70%
-        flags:
-          - app
       modules:
         target: 70%
         flags:
           - modules
       client:
+        target: 35%
         flags:
           - client
     changes: false
@@ -25,34 +22,27 @@ comment:
   require_changes: false
 
 flags:
-  app:
-    paths:
-      - "app/"
-      - "baseapp/"
   modules:
     paths:
       - "x/"
       - "!x/**/client/" # ignore client package
   client:
     paths:
-      - "client/"
       - "x/**/client/"
 
 ignore:
-  - "docs"
-  - "proto/"
   - "*.proto"
   - "*.md"
-  - "*.rst"
-  - "**/*.pb.go"
-  - "types/*.pb.go"
+  - "*.yml"
+  - "*.pb.go"
   - "tests/*"
   - "tests/**/*"
-  - "x/**/*.pb.go"
-  - "x/**/test_common.go"
-  - "vue/"
-  - "cmd/"
-  - "testutil/"
   - ".github/"
+  - "app/"
+  - "cmd/"
+  - "docs/"
+  - "pkg/errors/"
+  - "proto/"
   - "scripts/"
-  - "contrib"
+  - "testutil/"
+  - "vue/"
