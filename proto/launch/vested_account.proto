@@ -9,6 +9,8 @@ import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 
 message VestedAccount {
+  option (cosmos_proto.implements_interface) = "RequestContent";
+
   string chainID = 1;
   string address = 2;
   repeated cosmos.base.v1beta1.Coin startingBalance = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];

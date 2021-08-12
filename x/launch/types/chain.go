@@ -9,7 +9,10 @@ import (
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
 )
 
-const chainIDSeparator = "-"
+const (
+	ChainIDSeparator   = "-"
+	ChainNameMaxLength = 30
+)
 
 // GetDefaultInitialGenesis returns the DefaultInitialGenesis structure if the initial genesis for the chain is default genesis
 func (c Chain) GetDefaultInitialGenesis(unpacker codec.AnyUnpacker) (*DefaultInitialGenesis, error) {
@@ -37,14 +40,14 @@ func (c Chain) GetGenesisURL(unpacker codec.AnyUnpacker) (*GenesisURL, error) {
 
 // ChainIDFromChainName returns the chain id from the chain name and the count
 func ChainIDFromChainName(chainName string, chainNameCount uint64) string {
-	return fmt.Sprintf("%v%v%v", chainName, chainIDSeparator, chainNameCount)
+	return fmt.Sprintf("%v%v%v", chainName, ChainIDSeparator, chainNameCount)
 }
 
 // ParseChainID returns the chain name and the number from the chain ID
 // The chain ID follows the format <ChainName>-<Number>
 // The function returns an error if the chain ID is invalid
 func ParseChainID(chainID string) (string, uint64, error) {
-	parsed := strings.Split(chainID, chainIDSeparator)
+	parsed := strings.Split(chainID, ChainIDSeparator)
 	if len(parsed) != 2 {
 		return "", 0, errors.New("incorrect chain ID format")
 	}
@@ -61,11 +64,12 @@ func ParseChainID(chainID string) (string, uint64, error) {
 
 // CheckChainName verifies the name is valid as a chain name
 func CheckChainName(chainName string) error {
-	// TODO: Determine final check: https://github.com/tendermint/spn/issues/194
-
-	// No empty
 	if len(chainName) == 0 {
 		return errors.New("chain name can't be empty")
+	}
+
+	if len(chainName) > ChainNameMaxLength {
+		return fmt.Errorf("chain name is too big, max length is %v", ChainNameMaxLength)
 	}
 
 	// Iterate characters
@@ -80,5 +84,5 @@ func CheckChainName(chainName string) error {
 
 // isChainAuthorizedChar checks to ensure that all letters in the chain name are valid
 func isChainAuthorizedChar(c rune) bool {
-	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9')
+	return 'a' <= c && c <= 'z'
 }

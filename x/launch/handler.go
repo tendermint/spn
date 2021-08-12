@@ -33,8 +33,12 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err = msgServer.TriggerLaunch(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestRemoveAccount:
 			res, err = msgServer.RequestRemoveAccount(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgRequestAddAccount:
+			res, err = msgServer.RequestAddAccount(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestRemoveValidator:
 			res, err = msgServer.RequestRemoveValidator(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgRequestAddVestedAccount:
+			res, err = msgServer.RequestAddVestedAccount(sdk.WrapSDKContext(ctx), msg)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			err = sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)

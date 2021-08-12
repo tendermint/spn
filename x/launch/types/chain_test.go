@@ -75,6 +75,11 @@ func TestParseChainID(t *testing.T) {
 			valid:          true,
 		},
 		{
+			desc:    "Empty",
+			chainID: "",
+			valid:   false,
+		},
+		{
 			desc:    "No separator",
 			chainID: "foo42",
 			valid:   false,
@@ -128,12 +133,27 @@ func TestCheckChainName(t *testing.T) {
 	}{
 		{
 			desc:  "Valid name",
-			name:  "FooBar999",
+			name:  "foobar",
 			valid: true,
+		},
+		{
+			desc:  "No uppercase",
+			name:  "FooBar",
+			valid: false,
+		},
+		{
+			desc:  "No uppercase",
+			name:  "FooBar",
+			valid: false,
 		},
 		{
 			desc:  "No empty",
 			name:  "",
+			valid: false,
+		},
+		{
+			desc:  "Too big",
+			name:  sample.AlphaString(types.ChainNameMaxLength + 1),
 			valid: false,
 		},
 		{
