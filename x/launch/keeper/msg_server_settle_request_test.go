@@ -82,7 +82,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			name: "settle a invalid request",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				Coordinator: coordinator1.Address,
 				RequestID:   99999999,
 				Approve:     true,
 			},
@@ -92,7 +92,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			name: "add chain 1 request 1",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
@@ -101,7 +101,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			name: "add chain 1 request 2",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				Coordinator: coordinator1.Address,
 				RequestID:   requests[1].RequestID,
 				Approve:     true,
 			},
@@ -110,7 +110,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			name: "add chain 1 request 3",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				Coordinator: coordinator1.Address,
 				RequestID:   requests[2].RequestID,
 				Approve:     true,
 			},
@@ -119,7 +119,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			name: "add chain 2 request 4",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				Coordinator: coordinator1.Address,
 				RequestID:   requests[3].RequestID,
 				Approve:     true,
 			},
@@ -128,7 +128,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			name: "remove chain 2 request 5",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				Coordinator: coordinator1.Address,
 				RequestID:   requests[4].RequestID,
 				Approve:     false,
 			},
@@ -137,7 +137,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			name: "invalid request content",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
-				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				Coordinator: coordinator1.Address,
 				RequestID:   requests[5].RequestID,
 				Approve:     true,
 			},

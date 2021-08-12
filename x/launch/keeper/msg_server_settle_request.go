@@ -25,12 +25,11 @@ func (k msgServer) SettleRequest(
 		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
 	}
 
-	if found := k.profileKeeper.HasCoordinator(ctx, chain.CoordinatorID); !found {
+	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	if !found {
 		return nil, spnerrors.Critical(
 			fmt.Sprintf("Coordinator id not found: %d", chain.CoordinatorID))
 	}
-
-	coordAddress := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if msg.Coordinator != coordAddress {
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Coordinator)
 	}
