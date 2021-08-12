@@ -18,6 +18,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		addr2                    = sample.AccAddress()
 		addr3                    = sample.AccAddress()
 		addr4                    = sample.AccAddress()
+		addr5                    = sample.AccAddress()
 		coordinator1             = sample.Coordinator()
 		coordinator2             = sample.Coordinator()
 		invalidChain, _          = sample.ChainID(0)
@@ -40,6 +41,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		sample.GenesisAccountContent(chains[1].ChainID, addr2),
 		sample.GenesisAccountContent(chains[1].ChainID, addr3),
 		sample.GenesisAccountContent(chains[1].ChainID, addr4),
+		sample.GenesisAccountContent(chains[1].ChainID, addr5),
 		invalidContent,
 	})
 
@@ -123,11 +125,20 @@ func TestMsgSettleRequest(t *testing.T) {
 			},
 			checkAddr: addr4,
 		}, {
-			name: "invalid request content",
+			name: "remove chain 2 request 5",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
 				RequestID:   requests[4].RequestID,
+				Approve:     false,
+			},
+			checkAddr: addr5,
+		}, {
+			name: "invalid request content",
+			msg: types.MsgSettleRequest{
+				ChainID:     chains[1].ChainID,
+				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				RequestID:   requests[5].RequestID,
 				Approve:     true,
 			},
 			err: spnerrors.Critical(
@@ -148,7 +159,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			require.False(t, found, "request not removed")
 
 			_, found = k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, tt.checkAddr)
-			require.True(t, found, "request apply not found")
+			require.Equal(t, tt.msg.Approve, found, "request apply not performed")
 		})
 	}
 }
