@@ -53,37 +53,45 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			},
 			want: 0,
 		}, {
-			name: "add chain 1 request 2",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[1].ChainID,
-				Address: addr2,
-				Coins:   sample.Coins(),
-			},
-			want: 0,
-		}, {
-			name: "add chain 1 request 3",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[1].ChainID,
-				Address: addr2,
-				Coins:   sample.Coins(),
-			},
-			want: 1,
-		}, {
 			name: "add chain 2 request 1",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[2].ChainID,
-				Address: addr3,
+				ChainID: chains[1].ChainID,
+				Address: addr1,
 				Coins:   sample.Coins(),
 			},
 			want: 0,
 		}, {
 			name: "add chain 2 request 2",
 			msg: types.MsgRequestAddAccount{
+				ChainID: chains[1].ChainID,
+				Address: addr2,
+				Coins:   sample.Coins(),
+			},
+			want: 1,
+		}, {
+			name: "add chain 3 request 1",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[2].ChainID,
+				Address: addr1,
+				Coins:   sample.Coins(),
+			},
+			want: 0,
+		}, {
+			name: "add chain 3 request 2",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[2].ChainID,
+				Address: addr2,
+				Coins:   sample.Coins(),
+			},
+			want: 1,
+		}, {
+			name: "add chain 3 request 3",
+			msg: types.MsgRequestAddAccount{
 				ChainID: chains[2].ChainID,
 				Address: addr3,
 				Coins:   sample.Coins(),
 			},
-			want: 1,
+			want: 2,
 		},
 	}
 	for _, tt := range tests {

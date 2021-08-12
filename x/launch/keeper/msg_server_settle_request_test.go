@@ -79,7 +79,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			},
 			err: sdkerrors.Wrap(types.ErrNoAddressPermission, coordinator2.Address),
 		}, {
-			name: "settle a invalid request",
+			name: "approve an invalid request",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: coordinator1.Address,
@@ -89,7 +89,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: sdkerrors.Wrapf(types.ErrRequestNotFound,
 				"request 99999999 for chain %s not found", chains[1].ChainID),
 		}, {
-			name: "add chain 1 request 1",
+			name: "approve chain request 1",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: coordinator1.Address,
@@ -98,7 +98,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			},
 			checkAddr: addr1,
 		}, {
-			name: "add chain 1 request 2",
+			name: "approve chain request 2",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: coordinator1.Address,
@@ -107,7 +107,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			},
 			checkAddr: addr2,
 		}, {
-			name: "add chain 1 request 3",
+			name: "approve chain request 3",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: coordinator1.Address,
@@ -116,7 +116,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			},
 			checkAddr: addr3,
 		}, {
-			name: "add chain 2 request 4",
+			name: "approve chain request 4",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: coordinator1.Address,
@@ -125,7 +125,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			},
 			checkAddr: addr4,
 		}, {
-			name: "remove chain 2 request 5",
+			name: "reject chain request 5",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
 				Coordinator: coordinator1.Address,
