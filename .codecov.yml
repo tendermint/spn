@@ -5,11 +5,13 @@ coverage:
   status:
     project:
       default:
+        if_ci_failed: error
         target: 70%
         paths:
           - "x/"
           - "!x/**/client/"
       client:
+        if_ci_failed: error
         target: 35%
         paths:
           - "x/**/client/"
