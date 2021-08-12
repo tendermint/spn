@@ -5,36 +5,29 @@ coverage:
   status:
     project:
       default:
-        threshold: 1%
-      modules:
         target: 70%
-        flags:
-          - modules
+        paths:
+          - "x/"
+          - "!x/**/client/"
       client:
         target: 35%
-        flags:
-          - client
-    changes: false
+        paths:
+          - "x/**/client/"
 
 comment:
   layout: "reach, diff, files"
   behavior: default
   require_changes: false
 
-flags:
-  modules:
-    paths:
-      - "x/"
-      - "!x/**/client/" # ignore client package
-  client:
-    paths:
-      - "x/**/client/"
-
 ignore:
+  - "x/**/types/codec.go"
+  - "x/**/types/errors.go"
+  - "x/**/types/keys.go"
   - "*.proto"
   - "*.md"
   - "*.yml"
   - "*.pb.go"
+  - "x/**/types/key_*.go"
   - "tests/*"
   - "tests/**/*"
   - ".github/"
