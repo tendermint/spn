@@ -43,7 +43,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Address: addr1,
 				Coins:   sample.Coins(),
 			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestAddAccount{
@@ -90,7 +90,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := srv.RequestAddAccount(ctx, &tt.msg)
 			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+				require.Error(t, err)
+				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)

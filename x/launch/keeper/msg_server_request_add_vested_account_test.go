@@ -92,7 +92,8 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := srv.RequestAddVestedAccount(ctx, &tt.msg)
 			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+				require.Error(t, err)
+				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)
