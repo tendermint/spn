@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -22,6 +23,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		invalidChain, _          = sample.ChainID(0)
 		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
 		ctx                      = sdk.WrapSDKContext(sdkCtx)
+		invalidContent, _        = codectypes.NewAnyWithValue(&types.Request{})
 	)
 
 	coordinator1.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator1)
@@ -38,6 +40,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		sample.GenesisAccountContent(chains[1].ChainID, addr2),
 		sample.GenesisAccountContent(chains[1].ChainID, addr3),
 		sample.GenesisAccountContent(chains[1].ChainID, addr4),
+		invalidContent,
 	})
 
 	tests := []struct {
@@ -119,13 +122,24 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			checkAddr: addr4,
+		}, {
+			name: "invalid request content",
+			msg: types.MsgSettleRequest{
+				ChainID:     chains[1].ChainID,
+				Coordinator: pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
+				RequestID:   requests[4].RequestID,
+				Approve:     true,
+			},
+			err: spnerrors.Critical(
+				"no concrete type registered for type URL /tendermint.spn.launch.Request against interface *types.RequestContent"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := srv.SettleRequest(ctx, &tt.msg)
 			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+				require.Error(t, err)
+				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)
