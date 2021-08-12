@@ -189,8 +189,9 @@ func TestApplyRequest(t *testing.T) {
 				require.True(t, found, "vested account not found")
 			case *types.AccountRemoval:
 				_, foundGenesis := k.GetGenesisAccount(sdkCtx, chainID, c.Address)
+				require.False(t, foundGenesis, "genesis account not removed")
 				_, foundVested := k.GetVestedAccount(sdkCtx, chainID, c.Address)
-				require.False(t, foundGenesis && foundVested, "account not removed")
+				require.False(t, foundVested, "vested account not removed")
 			case *types.GenesisValidator:
 				_, found := k.GetGenesisValidator(sdkCtx, chainID, c.Address)
 				require.True(t, found, "genesis validator not found")
