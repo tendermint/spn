@@ -12,7 +12,7 @@ import (
 
 func CmdListRequest() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-request [chainID]",
+		Use:   "list-request [chain-id]",
 		Short: "list all request",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -47,7 +47,7 @@ func CmdListRequest() *cobra.Command {
 
 func CmdShowRequest() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-request [chainID] [requestID]",
+		Use:   "show-request [chain-id] [request-id]",
 		Short: "shows a request",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
