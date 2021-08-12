@@ -29,7 +29,7 @@ func (k msgServer) RequestRemoveValidator(
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, spnerrors.Critical(
-			fmt.Sprintf("Coordinator id not found: %d", chain.CoordinatorID))
+			fmt.Sprintf("coordinator %d not found for chain %s", chain.CoordinatorID, chain.ChainID))
 	}
 	if msg.Creator != msg.ValidatorAddress && msg.Creator != coordAddress {
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)
