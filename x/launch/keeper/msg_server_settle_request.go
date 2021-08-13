@@ -4,17 +4,16 @@ import (
 	"context"
 	"fmt"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func (k msgServer) RequestAddAccount(
+func (k msgServer) SettleRequest(
 	goCtx context.Context,
-	msg *types.MsgRequestAddAccount,
-) (*types.MsgRequestAddAccountResponse, error) {
+	msg *types.MsgSettleRequest,
+) (*types.MsgSettleRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
@@ -26,43 +25,33 @@ func (k msgServer) RequestAddAccount(
 		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
 	}
 
-	content, err := codec.NewAnyWithValue(&types.GenesisAccount{
-		ChainID: msg.ChainID,
-		Address: msg.Address,
-		Coins:   msg.Coins,
-	})
-	if err != nil {
-		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())
-	}
-
-	var (
-		requestID uint64
-
-		approved = false
-		request  = types.Request{
-			ChainID:   msg.ChainID,
-			Creator:   msg.Address,
-			CreatedAt: ctx.BlockTime().Unix(),
-			Content:   content,
-		}
-	)
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, spnerrors.Critical(
 			fmt.Sprintf("coordinator %d not found for chain %s", chain.CoordinatorID, chain.ChainID))
 	}
-	if msg.Address == coordAddress {
+	if msg.Coordinator != coordAddress {
+		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Coordinator)
+	}
+
+	// first check if the request exists
+	request, found := k.GetRequest(ctx, msg.ChainID, msg.RequestID)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrRequestNotFound,
+			"request %d for chain %s not found",
+			msg.RequestID,
+			msg.ChainID,
+		)
+	}
+
+	// perform request action
+	k.RemoveRequest(ctx, msg.ChainID, request.RequestID)
+	if msg.Approve {
 		err := applyRequest(ctx, k.Keeper, msg.ChainID, request)
 		if err != nil {
 			return nil, err
 		}
-		approved = true
-	} else {
-		requestID = k.AppendRequest(ctx, request)
 	}
 
-	return &types.MsgRequestAddAccountResponse{
-		RequestID:    requestID,
-		AutoApproved: approved,
-	}, nil
+	return &types.MsgSettleRequestResponse{}, nil
 }

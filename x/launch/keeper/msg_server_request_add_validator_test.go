@@ -7,17 +7,23 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgRequestAddValidator(t *testing.T) {
 	var (
 		invalidChain, _            = sample.ChainID(0)
+		coordAddr                  = sample.AccAddress()
 		addr1                      = sample.AccAddress()
 		addr2                      = sample.AccAddress()
 		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
 		ctx                        = sdk.WrapSDKContext(sdkCtx)
-		chains                     = createNChain(k, sdkCtx, 3)
 	)
+
+	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+		Address: coordAddr,
+	})
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 3)
 	chains[2].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[2])
 
@@ -52,11 +58,8 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			valid:  true,
 			wantID: 0,
 		}, {
-			name: "add coordinator to a chain",
-			msg: sample.MsgRequestAddValidator(
-				pk.GetCoordinatorAddressFromID(sdkCtx, chains[1].CoordinatorID),
-				chains[1].ChainID,
-			),
+			name:        "add coordinator to a chain",
+			msg:         sample.MsgRequestAddValidator(coordAddr, chains[1].ChainID),
 			valid:       true,
 			wantApprove: true,
 		},

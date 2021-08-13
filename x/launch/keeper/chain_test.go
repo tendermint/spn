@@ -20,6 +20,15 @@ func createNChain(keeper *Keeper, ctx sdk.Context, n int) []types.Chain {
 	return items
 }
 
+func createNChainForCoordinator(keeper *Keeper, ctx sdk.Context, coordinatorID uint64, n int) []types.Chain {
+	items := make([]types.Chain, n)
+	for i := range items {
+		items[i] = *sample.Chain(strconv.Itoa(i), coordinatorID)
+		keeper.SetChain(ctx, items[i])
+	}
+	return items
+}
+
 func TestGetChain(t *testing.T) {
 	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNChain(keeper, ctx, 10)

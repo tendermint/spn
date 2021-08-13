@@ -16,7 +16,7 @@ func (k Keeper) VestedAccountAll(c context.Context, req *types.QueryAllVestedAcc
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var vestedAccounts []*types.VestedAccount
+	var vestedAccounts []types.VestedAccount
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
@@ -28,7 +28,7 @@ func (k Keeper) VestedAccountAll(c context.Context, req *types.QueryAllVestedAcc
 			return err
 		}
 
-		vestedAccounts = append(vestedAccounts, &vestedAccount)
+		vestedAccounts = append(vestedAccounts, vestedAccount)
 		return nil
 	})
 
@@ -54,5 +54,5 @@ func (k Keeper) VestedAccount(c context.Context, req *types.QueryGetVestedAccoun
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
-	return &types.QueryGetVestedAccountResponse{VestedAccount: &val}, nil
+	return &types.QueryGetVestedAccountResponse{VestedAccount: val}, nil
 }

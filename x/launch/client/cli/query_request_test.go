@@ -23,14 +23,14 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithRequestObjects(t *testing.T, n int) (*network.Network, []*types.Request) {
+func networkWithRequestObjects(t *testing.T, n int) (*network.Network, []types.Request) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		request := sample.Request("foo")
+		request := *sample.Request("foo")
 		request.RequestID = uint64(i)
 		state.RequestList = append(
 			state.RequestList,
@@ -57,7 +57,7 @@ func TestShowRequest(t *testing.T) {
 
 		args []string
 		err  error
-		obj  *types.Request
+		obj  types.Request
 	}{
 		{
 			desc:        "found",

@@ -17,7 +17,7 @@ func (k Keeper) CoordinatorAll(c context.Context, req *types.QueryAllCoordinator
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var coordinators []*types.Coordinator
+	var coordinators []types.Coordinator
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
@@ -29,7 +29,7 @@ func (k Keeper) CoordinatorAll(c context.Context, req *types.QueryAllCoordinator
 			return err
 		}
 
-		coordinators = append(coordinators, &coordinator)
+		coordinators = append(coordinators, coordinator)
 		return nil
 	})
 
@@ -55,5 +55,5 @@ func (k Keeper) Coordinator(c context.Context, req *types.QueryGetCoordinatorReq
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
 	k.cdc.MustUnmarshalBinaryBare(store.Get(GetCoordinatorIDBytes(req.Id)), &coordinator)
 
-	return &types.QueryGetCoordinatorResponse{Coordinator: &coordinator}, nil
+	return &types.QueryGetCoordinatorResponse{Coordinator: coordinator}, nil
 }

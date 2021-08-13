@@ -9,22 +9,31 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgRequestAddVestedAccount(t *testing.T) {
 	var (
 		invalidChain, _            = sample.ChainID(0)
+		coordAddr                  = sample.AccAddress()
 		addr1                      = sample.AccAddress()
 		addr2                      = sample.AccAddress()
 		addr3                      = sample.AccAddress()
 		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
 		ctx                        = sdk.WrapSDKContext(sdkCtx)
-		chains                     = createNChain(k, sdkCtx, 4)
 	)
+
+	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+		Address: coordAddr,
+	})
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
+	chains[3].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[3])
 	delayedVesting, err := codec.NewAnyWithValue(&types.DelayedVesting{
 		Vesting: sample.Coins(),
 		EndTime: 10000,
 	})
+
 	require.NoError(t, err)
 	tests := []struct {
 		name        string
@@ -43,6 +52,15 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			},
 			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
 		}, {
+			name: "launch triggered chain",
+			msg: types.MsgRequestAddVestedAccount{
+				ChainID:         chains[3].ChainID,
+				Address:         addr1,
+				StartingBalance: sample.Coins(),
+				Options:         delayedVesting,
+			},
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
+		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[0].ChainID,
@@ -52,16 +70,16 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			},
 			wantID: 0,
 		}, {
-			name: "add chain 1 request 2",
+			name: "add chain 2 request 1",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[1].ChainID,
-				Address:         addr2,
+				Address:         addr1,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
 			wantID: 0,
 		}, {
-			name: "add chain 1 request 3",
+			name: "add chain 2 request 2",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[1].ChainID,
 				Address:         addr2,
@@ -70,10 +88,10 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			},
 			wantID: 1,
 		}, {
-			name: "add chain 2 request 1",
+			name: "add chain 3 request 1",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[2].ChainID,
-				Address:         addr3,
+				Address:         addr1,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
@@ -82,16 +100,25 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			name: "add chain 2 request 2",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[2].ChainID,
-				Address:         addr3,
+				Address:         addr2,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
 			wantID: 1,
 		}, {
+			name: "add chain 2 request 3",
+			msg: types.MsgRequestAddVestedAccount{
+				ChainID:         chains[2].ChainID,
+				Address:         addr3,
+				StartingBalance: sample.Coins(),
+				Options:         delayedVesting,
+			},
+			wantID: 2,
+		}, {
 			name: "add coordinator account",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[2].ChainID,
-				Address:         pk.GetCoordinatorAddressFromID(sdkCtx, chains[2].CoordinatorID),
+				Address:         coordAddr,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
@@ -102,7 +129,8 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := srv.RequestAddVestedAccount(ctx, &tt.msg)
 			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+				require.Error(t, err)
+				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)

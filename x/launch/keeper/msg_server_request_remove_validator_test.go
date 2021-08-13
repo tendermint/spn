@@ -8,25 +8,31 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgRequestRemoveValidator(t *testing.T) {
 	var (
 		invalidChain, _            = sample.ChainID(0)
+		coordAddr                  = sample.AccAddress()
 		addr1                      = sample.AccAddress()
 		addr2                      = sample.AccAddress()
 		addr3                      = sample.AccAddress()
 		addr4                      = sample.AccAddress()
 		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
 		ctx                        = sdk.WrapSDKContext(sdkCtx)
-		chains                     = createNChain(k, sdkCtx, 4)
 	)
+
+	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+		Address: coordAddr,
+	})
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
 	chains[3].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[3])
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{
-		ChainID: chains[2].ChainID,
-		Address: addr4,
-	})
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[1].ChainID, Address: addr1})
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[2].ChainID, Address: addr2})
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[2].ChainID, Address: addr4})
+
 	tests := []struct {
 		name        string
 		msg         types.MsgRequestRemoveValidator
@@ -49,7 +55,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
 		}, {
 			name: "no permission error",
 			msg: types.MsgRequestRemoveValidator{
@@ -67,31 +73,39 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			},
 			wantID: 0,
 		}, {
-			name: "add chain 1 request 2",
-			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[1].ChainID,
-				Creator:          addr2,
-				ValidatorAddress: addr2,
-			},
-			wantID: 0,
-		}, {
-			name: "add chain 1 request 3",
-			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[1].ChainID,
-				Creator:          addr2,
-				ValidatorAddress: addr2,
-			},
-			wantID: 1,
-		}, {
 			name: "add chain 2 request 1",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[2].ChainID,
-				Creator:          addr3,
-				ValidatorAddress: addr3,
+				ChainID:          chains[1].ChainID,
+				Creator:          coordAddr,
+				ValidatorAddress: addr1,
+			},
+			wantApprove: true,
+		}, {
+			name: "add chain 2 request 2",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:          chains[1].ChainID,
+				Creator:          addr2,
+				ValidatorAddress: addr2,
 			},
 			wantID: 0,
 		}, {
-			name: "add chain 2 request 2",
+			name: "add chain 3 request 1",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:          chains[2].ChainID,
+				Creator:          addr1,
+				ValidatorAddress: addr1,
+			},
+			wantID: 0,
+		}, {
+			name: "add chain 3 request 2",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:          chains[2].ChainID,
+				Creator:          coordAddr,
+				ValidatorAddress: addr2,
+			},
+			wantApprove: true,
+		}, {
+			name: "add chain 3 request 3",
 			msg: types.MsgRequestRemoveValidator{
 				ChainID:          chains[2].ChainID,
 				Creator:          addr3,
@@ -102,7 +116,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			name: "add coordinator validator",
 			msg: types.MsgRequestRemoveValidator{
 				ChainID:          chains[2].ChainID,
-				Creator:          pk.GetCoordinatorAddressFromID(sdkCtx, chains[2].CoordinatorID),
+				Creator:          coordAddr,
 				ValidatorAddress: addr4,
 			},
 			wantApprove: true,
@@ -112,7 +126,8 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := srv.RequestRemoveValidator(ctx, &tt.msg)
 			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+				require.Error(t, err)
+				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)
