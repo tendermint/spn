@@ -16,7 +16,7 @@ func (k Keeper) GenesisAccountAll(c context.Context, req *types.QueryAllGenesisA
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var genesisAccounts []*types.GenesisAccount
+	var genesisAccounts []types.GenesisAccount
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
@@ -28,7 +28,7 @@ func (k Keeper) GenesisAccountAll(c context.Context, req *types.QueryAllGenesisA
 			return err
 		}
 
-		genesisAccounts = append(genesisAccounts, &genesisAccount)
+		genesisAccounts = append(genesisAccounts, genesisAccount)
 		return nil
 	})
 
@@ -54,5 +54,5 @@ func (k Keeper) GenesisAccount(c context.Context, req *types.QueryGetGenesisAcco
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
-	return &types.QueryGetGenesisAccountResponse{GenesisAccount: &val}, nil
+	return &types.QueryGetGenesisAccountResponse{GenesisAccount: val}, nil
 }

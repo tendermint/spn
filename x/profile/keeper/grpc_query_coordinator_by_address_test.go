@@ -23,12 +23,12 @@ func TestCoordinatorByAddressQuerySingle(t *testing.T) {
 		{
 			desc:     "First",
 			request:  &types.QueryGetCoordinatorByAddressRequest{Address: msgs[0].Address},
-			response: &types.QueryGetCoordinatorByAddressResponse{CoordinatorByAddress: &msgs[0]},
+			response: &types.QueryGetCoordinatorByAddressResponse{CoordinatorByAddress: msgs[0]},
 		},
 		{
 			desc:     "Second",
 			request:  &types.QueryGetCoordinatorByAddressRequest{Address: msgs[1].Address},
-			response: &types.QueryGetCoordinatorByAddressResponse{CoordinatorByAddress: &msgs[1]},
+			response: &types.QueryGetCoordinatorByAddressResponse{CoordinatorByAddress: msgs[1]},
 		},
 		{
 			desc:    "KeyNotFound",

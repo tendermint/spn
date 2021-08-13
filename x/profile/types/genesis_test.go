@@ -24,7 +24,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		}, {
 			name: "valid custom genesis",
 			genState: &profile.GenesisState{
-				ValidatorList: []*profile.Validator{
+				ValidatorList: []profile.Validator{
 					{Address: sample.AccAddress()},
 					{Address: sample.AccAddress()},
 					{Address: sample.AccAddress()},
@@ -33,7 +33,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		}, {
 			name: "duplicated validator by address",
 			genState: &profile.GenesisState{
-				ValidatorList: []*profile.Validator{
+				ValidatorList: []profile.Validator{
 					{Address: addr},
 					{Address: addr},
 				},
@@ -74,13 +74,13 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 		}, {
 			name: "valid custom genesis",
 			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+				CoordinatorByAddressList: []profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 					{CoordinatorId: 2, Address: addr3},
 					{CoordinatorId: 3, Address: addr4},
 				},
-				CoordinatorList: []*profile.Coordinator{
+				CoordinatorList: []profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 					{CoordinatorId: 2, Address: addr3},
@@ -91,7 +91,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 		}, {
 			name: "duplicated coordinator",
 			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+				CoordinatorByAddressList: []profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr1},
 				},
@@ -101,11 +101,11 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 		}, {
 			name: "duplicated coordinator id",
 			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+				CoordinatorByAddressList: []profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 0, Address: addr2},
 				},
-				CoordinatorList: []*profile.Coordinator{
+				CoordinatorList: []profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 0, Address: addr2},
 				},
@@ -115,10 +115,10 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 		}, {
 			name: "profile not associated with chain",
 			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+				CoordinatorByAddressList: []profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 				},
-				CoordinatorList: []*profile.Coordinator{
+				CoordinatorList: []profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 				},
@@ -128,11 +128,11 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 		}, {
 			name: "profile not associated with chain",
 			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+				CoordinatorByAddressList: []profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 				},
-				CoordinatorList: []*profile.Coordinator{
+				CoordinatorList: []profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 				},
 				CoordinatorCount: 2,
@@ -141,11 +141,11 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 		}, {
 			name: "invalid coordinator id",
 			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []*profile.CoordinatorByAddress{
+				CoordinatorByAddressList: []profile.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 133, Address: addr2},
 				},
-				CoordinatorList: []*profile.Coordinator{
+				CoordinatorList: []profile.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 133, Address: addr2},
 				},
