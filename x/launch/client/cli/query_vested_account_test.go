@@ -23,7 +23,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithVestedAccountObjects(t *testing.T, n int) (*network.Network, []*types.VestedAccount) {
+func networkWithVestedAccountObjects(t *testing.T, n int) (*network.Network, []types.VestedAccount) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
@@ -33,7 +33,7 @@ func networkWithVestedAccountObjects(t *testing.T, n int) (*network.Network, []*
 	for i := 0; i < n; i++ {
 		state.VestedAccountList = append(
 			state.VestedAccountList,
-			sample.VestedAccount(chainID, strconv.Itoa(i)),
+			*sample.VestedAccount(chainID, strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
@@ -56,7 +56,7 @@ func TestShowVestedAccount(t *testing.T) {
 
 		args []string
 		err  error
-		obj  *types.VestedAccount
+		obj  types.VestedAccount
 	}{
 		{
 			desc:      "found",

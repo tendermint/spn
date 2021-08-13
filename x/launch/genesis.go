@@ -12,32 +12,32 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// this line is used by starport scaffolding # genesis/module/init
 	// Set all the chain
 	for _, elem := range genState.ChainList {
-		k.SetChain(ctx, *elem)
+		k.SetChain(ctx, elem)
 	}
 
 	// Set all the chainNameCount
 	for _, elem := range genState.ChainNameCountList {
-		k.SetChainNameCount(ctx, *elem)
+		k.SetChainNameCount(ctx, elem)
 	}
 
 	// Set all the genesisAccount
 	for _, elem := range genState.GenesisAccountList {
-		k.SetGenesisAccount(ctx, *elem)
+		k.SetGenesisAccount(ctx, elem)
 	}
 
 	// Set all the vestedAccount
 	for _, elem := range genState.VestedAccountList {
-		k.SetVestedAccount(ctx, *elem)
+		k.SetVestedAccount(ctx, elem)
 	}
 
 	// Set all the genesisValidator
 	for _, elem := range genState.GenesisValidatorList {
-		k.SetGenesisValidator(ctx, *elem)
+		k.SetGenesisValidator(ctx, elem)
 	}
 
 	// Set all the request
 	for _, elem := range genState.RequestList {
-		k.SetRequest(ctx, *elem)
+		k.SetRequest(ctx, elem)
 	}
 
 	// Set all request count
@@ -53,56 +53,26 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
-	// Get all chain
-	for _, elem := range k.GetAllChain(ctx) {
-		elem := elem
-		genesis.ChainList = append(genesis.ChainList, &elem)
+	genesis.ChainList = k.GetAllChain(ctx)
+	genesis.ChainNameCountList = k.GetAllChainNameCount(ctx)
+	genesis.GenesisAccountList = k.GetAllGenesisAccount(ctx)
+	genesis.VestedAccountList = k.GetAllVestedAccount(ctx)
+	genesis.GenesisValidatorList = k.GetAllGenesisValidator(ctx)
+	genesis.RequestList = k.GetAllRequest(ctx)
+	genesis.Params = k.GetParams(ctx)
 
+	// Get request counts
+	for _, elem := range genesis.ChainList {
 		// Get request count
 		count := k.GetRequestCount(ctx, elem.ChainID)
-		genesis.RequestCountList = append(genesis.RequestCountList, &types.RequestCount{
+		genesis.RequestCountList = append(genesis.RequestCountList, types.RequestCount{
 			ChainID: elem.ChainID,
 			Count:   count,
 		})
 	}
 
-	// Get all chainNameCount
-	chainNameCountList := k.GetAllChainNameCount(ctx)
-	for _, elem := range chainNameCountList {
-		elem := elem
-		genesis.ChainNameCountList = append(genesis.ChainNameCountList, &elem)
-	}
-
-	// Get all genesisAccount
-	genesisAccountList := k.GetAllGenesisAccount(ctx)
-	for _, elem := range genesisAccountList {
-		elem := elem
-		genesis.GenesisAccountList = append(genesis.GenesisAccountList, &elem)
-	}
-
-	// Get all vestedAccount
-	vestedAccountList := k.GetAllVestedAccount(ctx)
-	for _, elem := range vestedAccountList {
-		elem := elem
-		genesis.VestedAccountList = append(genesis.VestedAccountList, &elem)
-	}
-
-	// Get all genesisValidator
-	genesisValidatorList := k.GetAllGenesisValidator(ctx)
-	for _, elem := range genesisValidatorList {
-		elem := elem
-		genesis.GenesisValidatorList = append(genesis.GenesisValidatorList, &elem)
-	}
-
-	// Get all request
-	requestList := k.GetAllRequest(ctx)
-	for _, elem := range requestList {
-		elem := elem
-		genesis.RequestList = append(genesis.RequestList, &elem)
-	}
-
+	// this line is used by starport scaffolding # genesis/module/export
 	// this line is used by starport scaffolding # ibc/genesis/export
 
-	genesis.Params = k.GetParams(ctx)
 	return genesis
 }

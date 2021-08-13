@@ -15,14 +15,14 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func networkWithCoordinatorByAddressObjects(t *testing.T, n int) (*network.Network, []*types.CoordinatorByAddress) {
+func networkWithCoordinatorByAddressObjects(t *testing.T, n int) (*network.Network, []types.CoordinatorByAddress) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.CoordinatorByAddressList = append(state.CoordinatorByAddressList, &types.CoordinatorByAddress{Address: "cosmos" + strconv.Itoa(i)})
+		state.CoordinatorByAddressList = append(state.CoordinatorByAddressList, types.CoordinatorByAddress{Address: "cosmos" + strconv.Itoa(i)})
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
@@ -42,7 +42,7 @@ func TestShowCoordinatorByAddress(t *testing.T) {
 		id   string
 		args []string
 		err  error
-		obj  *types.CoordinatorByAddress
+		obj  types.CoordinatorByAddress
 	}{
 		{
 			desc: "found",

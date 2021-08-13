@@ -22,7 +22,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithGenesisValidatorObjects(t *testing.T, n int) (*network.Network, []*types.GenesisValidator) {
+func networkWithGenesisValidatorObjects(t *testing.T, n int) (*network.Network, []types.GenesisValidator) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
@@ -32,7 +32,7 @@ func networkWithGenesisValidatorObjects(t *testing.T, n int) (*network.Network, 
 	for i := 0; i < n; i++ {
 		state.GenesisValidatorList = append(
 			state.GenesisValidatorList,
-			sample.GenesisValidator(chainID, strconv.Itoa(i)),
+			*sample.GenesisValidator(chainID, strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
@@ -55,7 +55,7 @@ func TestShowGenesisValidator(t *testing.T) {
 
 		args []string
 		err  error
-		obj  *types.GenesisValidator
+		obj  types.GenesisValidator
 	}{
 		{
 			desc:      "found",

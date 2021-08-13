@@ -15,13 +15,13 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 // GenesisState defines the launch module's genesis state.
 message GenesisState {
 	// this line is used by starport scaffolding # genesis/proto/state
-	repeated Chain chainList = 1; // this line is used by starport scaffolding # genesis/proto/stateField
-	repeated ChainNameCount chainNameCountList = 2; // this line is used by starport scaffolding # genesis/proto/stateField
-	repeated GenesisAccount genesisAccountList = 3; // this line is used by starport scaffolding # genesis/proto/stateField
-	repeated VestedAccount vestedAccountList = 4; // this line is used by starport scaffolding # genesis/proto/stateField
-	repeated GenesisValidator genesisValidatorList = 5; // this line is used by starport scaffolding # genesis/proto/stateField
-	repeated Request requestList = 10; // this line is used by starport scaffolding # genesis/proto/stateField
-	repeated RequestCount requestCountList = 11; // this line is used by starport scaffolding # genesis/proto/stateField
+	repeated Chain chainList = 1 [(gogoproto.nullable) = false];
+	repeated ChainNameCount chainNameCountList = 2 [(gogoproto.nullable) = false];
+	repeated GenesisAccount genesisAccountList = 3 [(gogoproto.nullable) = false];
+	repeated VestedAccount vestedAccountList = 4 [(gogoproto.nullable) = false];
+	repeated GenesisValidator genesisValidatorList = 5 [(gogoproto.nullable) = false];
+	repeated Request requestList = 10 [(gogoproto.nullable) = false];
+	repeated RequestCount requestCountList = 11 [(gogoproto.nullable) = false];
 	// this line is used by starport scaffolding # ibc/genesis/proto
 
 	Params params = 20 [(gogoproto.nullable) = false];

@@ -16,14 +16,14 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func networkWithCoordinatorObjects(t *testing.T, n int) (*network.Network, []*types.Coordinator) {
+func networkWithCoordinatorObjects(t *testing.T, n int) (*network.Network, []types.Coordinator) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.CoordinatorList = append(state.CoordinatorList, &types.Coordinator{CoordinatorId: uint64(i)})
+		state.CoordinatorList = append(state.CoordinatorList, types.Coordinator{CoordinatorId: uint64(i)})
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
@@ -43,7 +43,7 @@ func TestShowCoordinator(t *testing.T) {
 		id   string
 		args []string
 		err  error
-		obj  *types.Coordinator
+		obj  types.Coordinator
 	}{
 		{
 			desc: "found",
