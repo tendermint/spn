@@ -103,14 +103,14 @@ func RequestWithContent(chainID string, content *types.Any) *launch.Request {
 // returns a list of all pack contents converted to `types.Any` object
 func AllRequestContents(chainID, genesis, vested, validator string) []*types.Any {
 	contents := make([]proto.Message, 0)
-	contents = append(contents, GenesisAccount(chainID, genesis))
-	contents = append(contents, AccountRemoval(genesis))
-
-	contents = append(contents, VestedAccount(chainID, vested))
-	contents = append(contents, AccountRemoval(vested))
-
-	contents = append(contents, GenesisValidator(chainID, validator))
-	contents = append(contents, ValidatorRemoval(validator))
+	contents = append(contents,
+		GenesisAccount(chainID, genesis),
+		AccountRemoval(genesis),
+		VestedAccount(chainID, vested),
+		AccountRemoval(vested),
+		GenesisValidator(chainID, validator),
+		ValidatorRemoval(validator),
+	)
 
 	result := make([]*types.Any, 0)
 	for _, content := range contents {
