@@ -43,7 +43,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Address: addr1,
 				Coins:   sample.Coins(),
 			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, addr1),
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestAddAccount{
@@ -53,44 +53,53 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			},
 			want: 0,
 		}, {
-			name: "add chain 1 request 2",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[1].ChainID,
-				Address: addr2,
-				Coins:   sample.Coins(),
-			},
-			want: 0,
-		}, {
-			name: "add chain 1 request 3",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[1].ChainID,
-				Address: addr2,
-				Coins:   sample.Coins(),
-			},
-			want: 1,
-		}, {
 			name: "add chain 2 request 1",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[2].ChainID,
-				Address: addr3,
+				ChainID: chains[1].ChainID,
+				Address: addr1,
 				Coins:   sample.Coins(),
 			},
 			want: 0,
 		}, {
 			name: "add chain 2 request 2",
 			msg: types.MsgRequestAddAccount{
+				ChainID: chains[1].ChainID,
+				Address: addr2,
+				Coins:   sample.Coins(),
+			},
+			want: 1,
+		}, {
+			name: "add chain 3 request 1",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[2].ChainID,
+				Address: addr1,
+				Coins:   sample.Coins(),
+			},
+			want: 0,
+		}, {
+			name: "add chain 3 request 2",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[2].ChainID,
+				Address: addr2,
+				Coins:   sample.Coins(),
+			},
+			want: 1,
+		}, {
+			name: "add chain 3 request 3",
+			msg: types.MsgRequestAddAccount{
 				ChainID: chains[2].ChainID,
 				Address: addr3,
 				Coins:   sample.Coins(),
 			},
-			want: 1,
+			want: 2,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := srv.RequestAddAccount(ctx, &tt.msg)
 			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+				require.Error(t, err)
+				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)

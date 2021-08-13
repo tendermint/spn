@@ -40,7 +40,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 				ChainID: msgs[0].ChainID,
 				Address: msgs[0].Address,
 			},
-			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: &msgs[0]},
+			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: msgs[0]},
 		},
 		{
 			desc: "Second",
@@ -48,7 +48,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 				ChainID: msgs[1].ChainID,
 				Address: msgs[1].Address,
 			},
-			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: &msgs[1]},
+			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
@@ -101,7 +101,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, &msgs[j], resp.GenesisAccount[j-i])
+				assert.Equal(t, msgs[j], resp.GenesisAccount[j-i])
 			}
 		}
 	})
@@ -112,7 +112,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, &msgs[j], resp.GenesisAccount[j-i])
+				assert.Equal(t, msgs[j], resp.GenesisAccount[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

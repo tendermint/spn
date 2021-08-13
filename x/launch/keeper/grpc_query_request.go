@@ -16,7 +16,7 @@ func (k Keeper) RequestAll(c context.Context, req *types.QueryAllRequestRequest)
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var requests []*types.Request
+	var requests []types.Request
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
@@ -29,7 +29,7 @@ func (k Keeper) RequestAll(c context.Context, req *types.QueryAllRequestRequest)
 			return err
 		}
 
-		requests = append(requests, &request)
+		requests = append(requests, request)
 		return nil
 	})
 
@@ -55,5 +55,5 @@ func (k Keeper) Request(c context.Context, req *types.QueryGetRequestRequest) (*
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
-	return &types.QueryGetRequestResponse{Request: &val}, nil
+	return &types.QueryGetRequestResponse{Request: val}, nil
 }
