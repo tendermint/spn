@@ -51,16 +51,16 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			},
 			want: 0,
 		}, {
-			name: "add chain 1 request 2",
+			name: "add chain 2 request 1",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[1].ChainID,
-				Address:         addr2,
+				Address:         addr1,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
 			want: 0,
 		}, {
-			name: "add chain 1 request 3",
+			name: "add chain 2 request 2",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[1].ChainID,
 				Address:         addr2,
@@ -69,10 +69,10 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			},
 			want: 1,
 		}, {
-			name: "add chain 2 request 1",
+			name: "add chain 3 request 1",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[2].ChainID,
-				Address:         addr3,
+				Address:         addr1,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
@@ -81,18 +81,28 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			name: "add chain 2 request 2",
 			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[2].ChainID,
-				Address:         addr3,
+				Address:         addr2,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
 			want: 1,
+		}, {
+			name: "add chain 2 request 3",
+			msg: types.MsgRequestAddVestedAccount{
+				ChainID:         chains[2].ChainID,
+				Address:         addr3,
+				StartingBalance: sample.Coins(),
+				Options:         delayedVesting,
+			},
+			want: 2,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := srv.RequestAddVestedAccount(ctx, &tt.msg)
 			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
+				require.Error(t, err)
+				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)

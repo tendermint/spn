@@ -103,8 +103,11 @@ func (k Keeper) GetAllCoordinator(ctx sdk.Context) (list []types.Coordinator) {
 }
 
 // GetCoordinatorAddressFromID returns a coordinator address from its id
-func (k Keeper) GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) string {
-	return k.GetCoordinator(ctx, id).Address
+func (k Keeper) GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) (string, bool) {
+	if !k.HasCoordinator(ctx, id) {
+		return "", false
+	}
+	return k.GetCoordinator(ctx, id).Address, true
 }
 
 // GetCoordinatorIDBytes returns the byte representation of the ID

@@ -23,6 +23,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		// this line is used by starport scaffolding # 1
 		case *types.MsgRequestAddValidator:
 			res, err = msgServer.RequestAddValidator(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgSettleRequest:
+			res, err = msgServer.SettleRequest(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgCreateChain:
 			res, err = msgServer.CreateChain(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgEditChain:
