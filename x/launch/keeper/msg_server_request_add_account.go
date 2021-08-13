@@ -35,22 +35,21 @@ func (k msgServer) RequestAddAccount(
 		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())
 	}
 
-	var (
-		requestID uint64
-
-		approved = false
-		request  = types.Request{
-			ChainID:   msg.ChainID,
-			Creator:   msg.Address,
-			CreatedAt: ctx.BlockTime().Unix(),
-			Content:   content,
-		}
-	)
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, spnerrors.Critical(
 			fmt.Sprintf("coordinator %d not found for chain %s", chain.CoordinatorID, chain.ChainID))
 	}
+
+	request := types.Request{
+		ChainID:   msg.ChainID,
+		Creator:   msg.Address,
+		CreatedAt: ctx.BlockTime().Unix(),
+		Content:   content,
+	}
+
+	var requestID uint64
+	approved := false
 	if msg.Address == coordAddress {
 		err := applyRequest(ctx, k.Keeper, msg.ChainID, request)
 		if err != nil {
