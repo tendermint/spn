@@ -15,5 +15,4 @@ message GenesisState {
   uint64 coordinatorCount = 2;
   repeated CoordinatorByAddress coordinatorByAddressList = 3 [(gogoproto.nullable) = false];
   repeated Validator validatorList = 4 [(gogoproto.nullable) = false];
-  // this line is used by starport scaffolding # ibc/genesis/proto
 }

@@ -31,6 +31,4 @@ var (
 	ErrAccountNotFound       = sdkerrors.Register(ModuleName, 21, "account not found")
 	ErrValidatorAlreadyExist = sdkerrors.Register(ModuleName, 22, "validator already exists")
 	ErrValidatorNotFound     = sdkerrors.Register(ModuleName, 23, "validator not found")
-
-	// this line is used by starport scaffolding # ibc/errors
 )

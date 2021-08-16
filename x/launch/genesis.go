@@ -45,7 +45,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetRequestCount(ctx, elem.ChainID, elem.Count)
 	}
 
-	// this line is used by starport scaffolding # ibc/genesis/init
 	k.SetParams(ctx, genState.Params)
 }
 
@@ -72,7 +71,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	}
 
 	// this line is used by starport scaffolding # genesis/module/export
-	// this line is used by starport scaffolding # ibc/genesis/export
 
 	return genesis
 }

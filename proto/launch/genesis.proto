@@ -22,7 +22,6 @@ message GenesisState {
   repeated GenesisValidator genesisValidatorList = 5 [(gogoproto.nullable) = false];
   repeated Request requestList = 6 [(gogoproto.nullable) = false];
   repeated RequestCount requestCountList = 7 [(gogoproto.nullable) = false];
-  // this line is used by starport scaffolding # ibc/genesis/proto
 
   Params params = 8 [(gogoproto.nullable) = false];
 }
