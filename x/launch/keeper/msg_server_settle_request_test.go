@@ -30,11 +30,13 @@ func TestMsgSettleRequest(t *testing.T) {
 	coordinator1.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator1)
 	coordinator2.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator2)
 
-	chains := createNChainForCoordinator(k, sdkCtx, coordinator1.CoordinatorId, 2)
+	chains := createNChainForCoordinator(k, sdkCtx, coordinator1.CoordinatorId, 3)
 	chains[0].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[0])
 	chains[1].ChainID = "foo"
 	k.SetChain(sdkCtx, chains[1])
+	chains[2].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[2])
 
 	requests := createRequests(k, sdkCtx, chains[1].ChainID, []*codectypes.Any{
 		sample.GenesisAccountContent(chains[1].ChainID, addr1),
@@ -69,6 +71,16 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[0].ChainID),
+		}, {
+			name: "coordinator not found",
+			msg: types.MsgSettleRequest{
+				ChainID:     chains[2].ChainID,
+				Coordinator: coordinator1.Address,
+				RequestID:   requests[0].RequestID,
+				Approve:     true,
+			},
+			err: sdkerrors.Wrapf(types.ErrChainInactive,
+				"the chain %s coordinator has been deleted", chains[2].ChainID),
 		}, {
 			name: "no permission error",
 			msg: types.MsgSettleRequest{

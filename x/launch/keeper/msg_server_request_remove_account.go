@@ -2,12 +2,10 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -28,8 +26,8 @@ func (k msgServer) RequestRemoveAccount(
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
-		return nil, spnerrors.Critical(
-			fmt.Sprintf("coordinator %d not found for chain %s", chain.CoordinatorID, chain.ChainID))
+		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
+			"the chain %s coordinator has been deleted", chain.ChainID)
 	}
 	if msg.Creator != msg.Address && msg.Creator != coordAddress {
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)

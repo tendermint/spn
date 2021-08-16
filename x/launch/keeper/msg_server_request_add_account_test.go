@@ -25,9 +25,11 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
 	chains[3].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[3])
+	chains[4].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[4])
 
 	tests := []struct {
 		name        string
@@ -52,6 +54,15 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
+		}, {
+			name: "coordinator not found",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[4].ChainID,
+				Address: addr1,
+				Coins:   sample.Coins(),
+			},
+			err: sdkerrors.Wrapf(types.ErrChainInactive,
+				"the chain %s coordinator has been deleted", chains[4].ChainID),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestAddAccount{

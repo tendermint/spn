@@ -26,13 +26,15 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
 	chains[3].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[3])
 	delayedVesting, err := codec.NewAnyWithValue(&types.DelayedVesting{
 		Vesting: sample.Coins(),
 		EndTime: 10000,
 	})
+	chains[4].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[4])
 
 	require.NoError(t, err)
 	tests := []struct {
@@ -60,6 +62,16 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
+		}, {
+			name: "coordinator not found",
+			msg: types.MsgRequestAddVestedAccount{
+				ChainID:         chains[4].ChainID,
+				Address:         addr1,
+				StartingBalance: sample.Coins(),
+				Options:         delayedVesting,
+			},
+			err: sdkerrors.Wrapf(types.ErrChainInactive,
+				"the chain %s coordinator has been deleted", chains[4].ChainID),
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestAddVestedAccount{

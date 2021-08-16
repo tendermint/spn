@@ -26,12 +26,14 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
 	chains[3].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[3])
 	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[1].ChainID, Address: addr1})
 	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[2].ChainID, Address: addr2})
 	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[2].ChainID, Address: addr4})
+	chains[4].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[4])
 
 	tests := []struct {
 		name        string
@@ -56,6 +58,15 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr1,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
+		}, {
+			name: "coordinator not found",
+			msg: types.MsgRequestRemoveAccount{
+				ChainID: chains[4].ChainID,
+				Creator: addr1,
+				Address: addr1,
+			},
+			err: sdkerrors.Wrapf(types.ErrChainInactive,
+				"the chain %s coordinator has been deleted", chains[4].ChainID),
 		}, {
 			name: "no permission error",
 			msg: types.MsgRequestRemoveAccount{

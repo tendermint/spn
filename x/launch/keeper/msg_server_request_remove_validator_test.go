@@ -26,12 +26,14 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
 	chains[3].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[3])
 	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[1].ChainID, Address: addr1})
 	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[2].ChainID, Address: addr2})
 	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[2].ChainID, Address: addr4})
+	chains[4].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[4])
 
 	tests := []struct {
 		name        string
@@ -56,6 +58,15 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				ValidatorAddress: addr1,
 			},
 			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
+		}, {
+			name: "coordinator not found",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:          chains[4].ChainID,
+				Creator:          addr1,
+				ValidatorAddress: addr1,
+			},
+			err: sdkerrors.Wrapf(types.ErrChainInactive,
+				"the chain %s coordinator has been deleted", chains[4].ChainID),
 		}, {
 			name: "no permission error",
 			msg: types.MsgRequestRemoveValidator{

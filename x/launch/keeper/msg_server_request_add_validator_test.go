@@ -23,9 +23,11 @@ func TestMsgRequestAddValidator(t *testing.T) {
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 3)
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
 	chains[2].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[2])
+	chains[3].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[3])
 
 	for _, tc := range []struct {
 		name        string
@@ -57,6 +59,10 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			msg:    sample.MsgRequestAddValidator(addr1, chains[1].ChainID),
 			valid:  true,
 			wantID: 0,
+		}, {
+			name:  "coordinator not found",
+			msg:   sample.MsgRequestAddValidator(coordAddr, chains[3].ChainID),
+			valid: false,
 		}, {
 			name:        "add coordinator to a chain",
 			msg:         sample.MsgRequestAddValidator(coordAddr, chains[1].ChainID),
