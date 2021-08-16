@@ -22,6 +22,6 @@ message VestedAccount {
 message DelayedVesting {
   option (cosmos_proto.implements_interface) = "VestingOptions";
 
-  repeated cosmos.base.v1beta1.Coin vesting = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
-  int64 endTime = 1;
+  repeated cosmos.base.v1beta1.Coin vesting = 1 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  int64 endTime = 2;
 }
