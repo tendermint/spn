@@ -12,10 +12,10 @@ import (
 
 type (
 	Keeper struct {
-		cdc        codec.Marshaler
-		storeKey   sdk.StoreKey
-		memKey     sdk.StoreKey
-		paramstore paramtypes.Subspace
+		cdc           codec.Marshaler
+		storeKey      sdk.StoreKey
+		memKey        sdk.StoreKey
+		paramstore    paramtypes.Subspace
 		profileKeeper types.ProfileKeeper
 	}
 )
@@ -33,10 +33,10 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:        cdc,
-		storeKey:   storeKey,
-		memKey:     memKey,
-		paramstore: ps,
+		cdc:           cdc,
+		storeKey:      storeKey,
+		memKey:        memKey,
+		paramstore:    ps,
 		profileKeeper: profileKeeper,
 	}
 }

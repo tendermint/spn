@@ -15,7 +15,6 @@ type (
 		cdc      codec.Marshaler
 		storeKey sdk.StoreKey
 		memKey   sdk.StoreKey
-
 	}
 )
 
