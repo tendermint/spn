@@ -14,7 +14,7 @@ import (
 func (k msgServer) RequestRemoveValidator(
 	goCtx context.Context,
 	msg *types.MsgRequestRemoveValidator,
-) (*types.MsgRequestRemoveValidatorResponse, error) {
+) (*types.MsgRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
@@ -61,7 +61,7 @@ func (k msgServer) RequestRemoveValidator(
 		requestID = k.AppendRequest(ctx, request)
 	}
 
-	return &types.MsgRequestRemoveValidatorResponse{
+	return &types.MsgRequestResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
 	}, nil

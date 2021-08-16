@@ -14,7 +14,7 @@ import (
 func (k msgServer) RequestRemoveAccount(
 	goCtx context.Context,
 	msg *types.MsgRequestRemoveAccount,
-) (*types.MsgRequestRemoveAccountResponse, error) {
+) (*types.MsgRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
@@ -61,7 +61,7 @@ func (k msgServer) RequestRemoveAccount(
 		requestID = k.AppendRequest(ctx, request)
 	}
 
-	return &types.MsgRequestRemoveAccountResponse{
+	return &types.MsgRequestResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
 	}, nil

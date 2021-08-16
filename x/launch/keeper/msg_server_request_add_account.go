@@ -14,7 +14,7 @@ import (
 func (k msgServer) RequestAddAccount(
 	goCtx context.Context,
 	msg *types.MsgRequestAddAccount,
-) (*types.MsgRequestAddAccountResponse, error) {
+) (*types.MsgRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
@@ -60,7 +60,7 @@ func (k msgServer) RequestAddAccount(
 		requestID = k.AppendRequest(ctx, request)
 	}
 
-	return &types.MsgRequestAddAccountResponse{
+	return &types.MsgRequestResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
 	}, nil

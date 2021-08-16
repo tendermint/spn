@@ -11,7 +11,10 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func (k msgServer) RequestAddValidator(goCtx context.Context, msg *types.MsgRequestAddValidator) (*types.MsgRequestAddValidatorResponse, error) {
+func (k msgServer) RequestAddValidator(
+	goCtx context.Context,
+	msg *types.MsgRequestAddValidator,
+) (*types.MsgRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
@@ -60,7 +63,7 @@ func (k msgServer) RequestAddValidator(goCtx context.Context, msg *types.MsgRequ
 		requestID = k.AppendRequest(ctx, request)
 	}
 
-	return &types.MsgRequestAddValidatorResponse{
+	return &types.MsgRequestResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
 	}, nil
