@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -13,8 +14,7 @@ import (
 func createNChain(keeper *Keeper, ctx sdk.Context, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
-		chainID, _ := sample.ChainID(uint64(i))
-		items[i] = *sample.Chain(chainID, uint64(i))
+		items[i] = *sample.Chain(strconv.Itoa(i), uint64(i))
 		keeper.SetChain(ctx, items[i])
 	}
 	return items
@@ -62,5 +62,5 @@ func TestGetAllChain(t *testing.T) {
 		item.InitialGenesis.ClearCachedValue()
 	}
 
-	assert.Equal(t, items, keeper.GetAllChain(ctx))
+	assert.EqualValues(t, items, keeper.GetAllChain(ctx))
 }
