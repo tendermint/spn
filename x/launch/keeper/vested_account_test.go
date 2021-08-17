@@ -25,7 +25,7 @@ func createNVestedAccount(keeper *Keeper, ctx sdk.Context, n int) []types.Vested
 }
 
 func TestVestedAccountGet(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := TestingKeeper(t)
 	items := createNVestedAccount(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetVestedAccount(ctx,
@@ -41,7 +41,7 @@ func TestVestedAccountGet(t *testing.T) {
 	}
 }
 func TestVestedAccountRemove(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := TestingKeeper(t)
 	items := createNVestedAccount(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveVestedAccount(ctx,
@@ -57,7 +57,7 @@ func TestVestedAccountRemove(t *testing.T) {
 }
 
 func TestVestedAccountGetAll(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := TestingKeeper(t)
 	items := createNVestedAccount(keeper, ctx, 10)
 
 	// Cached value is cleared when the any type is encoded into the store

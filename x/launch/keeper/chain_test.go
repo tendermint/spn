@@ -30,7 +30,7 @@ func createNChainForCoordinator(keeper *Keeper, ctx sdk.Context, coordinatorID u
 }
 
 func TestGetChain(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := TestingKeeper(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetChain(ctx, item.ChainID)
@@ -43,7 +43,7 @@ func TestGetChain(t *testing.T) {
 }
 
 func TestRemoveChain(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := TestingKeeper(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveChain(ctx, item.ChainID)
@@ -53,7 +53,7 @@ func TestRemoveChain(t *testing.T) {
 }
 
 func TestGetAllChain(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := TestingKeeper(t)
 	items := createNChain(keeper, ctx, 10)
 
 	// Cached value is cleared when the any type is encoded into the store

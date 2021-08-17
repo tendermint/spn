@@ -22,7 +22,8 @@ import (
 
 var sampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
 
-func setupKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, codec.Marshaler) {
+// TestingKeeper returns a launch keeper for testing purpose
+func TestingKeeper(t testing.TB) (*Keeper, *profilekeeper.Keeper, sdk.Context, codec.Marshaler) {
 	cdc := sample.Codec()
 
 	storeKeys := sdk.NewKVStoreKeys(types.StoreKey, profiletypes.StoreKey, paramstypes.StoreKey)

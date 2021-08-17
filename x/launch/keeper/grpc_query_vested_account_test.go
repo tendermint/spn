@@ -28,7 +28,7 @@ func createNVestedAccountForChainID(keeper *Keeper, ctx sdk.Context, n int, chai
 }
 
 func TestVestedAccountQuerySingle(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := TestingKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNVestedAccount(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -85,7 +85,7 @@ func TestVestedAccountQuerySingle(t *testing.T) {
 
 func TestVestedAccountQueryPaginated(t *testing.T) {
 	var (
-		keeper, _, ctx, _ = setupKeeper(t)
+		keeper, _, ctx, _ = TestingKeeper(t)
 		wctx              = sdk.WrapSDKContext(ctx)
 		chainID, _        = sample.ChainID(0)
 		msgs              = createNVestedAccountForChainID(keeper, ctx, 5, chainID)
