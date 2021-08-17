@@ -4,12 +4,12 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
-	"github.com/tendermint/spn/x/launch/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
+	"github.com/tendermint/spn/x/launch/types"
 )
 
 // Prevent strconv unused error
