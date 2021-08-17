@@ -49,33 +49,33 @@ func ProfileGenesisState() profile.GenesisState {
 	return profile.GenesisState{
 		ValidatorList: []profile.Validator{
 			{
-				Address: AccAddress(),
+				Address:     AccAddress(),
 				Description: ValidatorDescription(String(10)),
 			},
 			{
-				Address: AccAddress(),
+				Address:     AccAddress(),
 				Description: ValidatorDescription(String(10)),
 			},
 		},
 		CoordinatorList: []profile.Coordinator{
 			{
 				CoordinatorId: 0,
-				Address: coordAddr1,
-				Description: CoordinatorDescription(),
+				Address:       coordAddr1,
+				Description:   CoordinatorDescription(),
 			},
 			{
 				CoordinatorId: 1,
-				Address: coordAddr2,
-				Description: CoordinatorDescription(),
+				Address:       coordAddr2,
+				Description:   CoordinatorDescription(),
 			},
 		},
 		CoordinatorByAddressList: []profile.CoordinatorByAddress{
 			{
-				Address: coordAddr1,
+				Address:       coordAddr1,
 				CoordinatorId: 0,
 			},
 			{
-				Address: coordAddr2,
+				Address:       coordAddr2,
 				CoordinatorId: 1,
 			},
 		},

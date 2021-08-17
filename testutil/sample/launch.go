@@ -241,11 +241,11 @@ func LaunchGenesisState() launch.GenesisState {
 		ChainNameCountList: []launch.ChainNameCount{
 			{
 				ChainName: chainID1,
-				Count: Uint64(),
+				Count:     Uint64(),
 			},
 			{
 				ChainName: chainID2,
-				Count: Uint64(),
+				Count:     Uint64(),
 			},
 		},
 		GenesisAccountList: []launch.GenesisAccount{
@@ -270,11 +270,11 @@ func LaunchGenesisState() launch.GenesisState {
 		RequestCountList: []launch.RequestCount{
 			{
 				ChainID: chainID1,
-				Count: 1,
+				Count:   1,
 			},
 			{
 				ChainID: chainID2,
-				Count: 1,
+				Count:   1,
 			},
 		},
 		Params: Params(),
