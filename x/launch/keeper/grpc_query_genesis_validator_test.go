@@ -1,6 +1,7 @@
-package keeper
+package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"strconv"
 	"testing"
 
@@ -13,12 +14,13 @@ import (
 
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	"github.com/tendermint/spn/x/launch/keeper"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNGenesisValidatorForChainID(keeper *Keeper, ctx sdk.Context, n int, chainID string) []types.GenesisValidator {
+func createNGenesisValidatorForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID string) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, n)
 	for i := range items {
 		items[i] = *sample.GenesisValidator(chainID, strconv.Itoa(i))
@@ -28,7 +30,7 @@ func createNGenesisValidatorForChainID(keeper *Keeper, ctx sdk.Context, n int, c
 }
 
 func TestGenesisValidatorQuerySingle(t *testing.T) {
-	keeper, _, ctx, _ := TestingKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNGenesisValidator(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -80,7 +82,7 @@ func TestGenesisValidatorQuerySingle(t *testing.T) {
 
 func TestGenesisValidatorQueryPaginated(t *testing.T) {
 	var (
-		keeper, _, ctx, _ = TestingKeeper(t)
+		keeper, _, ctx, _ = testkeeper.Launch(t)
 		wctx              = sdk.WrapSDKContext(ctx)
 		chainID, _        = sample.ChainID(0)
 		msgs              = createNGenesisValidatorForChainID(keeper, ctx, 5, chainID)

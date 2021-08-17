@@ -1,6 +1,7 @@
-package keeper
+package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"strconv"
 	"testing"
 
@@ -8,12 +9,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	"github.com/tendermint/spn/x/launch/keeper"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNGenesisValidator(keeper *Keeper, ctx sdk.Context, n int) []types.GenesisValidator {
+func createNGenesisValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, n)
 	for i := range items {
 		items[i] = *sample.GenesisValidator(strconv.Itoa(i), strconv.Itoa(i))
@@ -23,7 +25,7 @@ func createNGenesisValidator(keeper *Keeper, ctx sdk.Context, n int) []types.Gen
 }
 
 func TestGenesisValidatorGet(t *testing.T) {
-	keeper, _, ctx, _ := TestingKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNGenesisValidator(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetGenesisValidator(ctx,
@@ -35,7 +37,7 @@ func TestGenesisValidatorGet(t *testing.T) {
 	}
 }
 func TestGenesisValidatorRemove(t *testing.T) {
-	keeper, _, ctx, _ := TestingKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNGenesisValidator(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveGenesisValidator(ctx,
@@ -51,7 +53,7 @@ func TestGenesisValidatorRemove(t *testing.T) {
 }
 
 func TestGenesisValidatorGetAll(t *testing.T) {
-	keeper, _, ctx, _ := TestingKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNGenesisValidator(keeper, ctx, 10)
 	assert.Equal(t, items, keeper.GetAllGenesisValidator(ctx))
 }

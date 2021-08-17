@@ -1,9 +1,9 @@
 package sample
 
 import (
-	"math/rand"
 	"crypto/sha256"
 	"encoding/hex"
+	"math/rand"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec/types"

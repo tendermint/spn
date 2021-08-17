@@ -1,17 +1,18 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
 	"testing"
 
 	"github.com/tendermint/spn/testutil/sample"
-
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/tendermint/spn/x/launch/types"
+	"github.com/tendermint/spn/x/launch/keeper"
 )
 
-func createNChain(keeper *Keeper, ctx sdk.Context, n int) []types.Chain {
+func createNChain(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
 		items[i] = *sample.Chain(strconv.Itoa(i), uint64(i))
@@ -20,7 +21,7 @@ func createNChain(keeper *Keeper, ctx sdk.Context, n int) []types.Chain {
 	return items
 }
 
-func createNChainForCoordinator(keeper *Keeper, ctx sdk.Context, coordinatorID uint64, n int) []types.Chain {
+func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordinatorID uint64, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
 		items[i] = *sample.Chain(strconv.Itoa(i), coordinatorID)
@@ -30,7 +31,7 @@ func createNChainForCoordinator(keeper *Keeper, ctx sdk.Context, coordinatorID u
 }
 
 func TestGetChain(t *testing.T) {
-	keeper, _, ctx, _ := TestingKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetChain(ctx, item.ChainID)
@@ -43,7 +44,7 @@ func TestGetChain(t *testing.T) {
 }
 
 func TestRemoveChain(t *testing.T) {
-	keeper, _, ctx, _ := TestingKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveChain(ctx, item.ChainID)
@@ -53,7 +54,7 @@ func TestRemoveChain(t *testing.T) {
 }
 
 func TestGetAllChain(t *testing.T) {
-	keeper, _, ctx, _ := TestingKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 
 	// Cached value is cleared when the any type is encoded into the store
