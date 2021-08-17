@@ -26,10 +26,10 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		Address: coordAddr,
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
-	chains[3].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[3])
-	chains[4].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[4])
+	chains[0].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[0])
+	chains[1].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[1])
 
 	tests := []struct {
 		name        string
@@ -49,44 +49,20 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[3].ChainID,
-				Address: addr1,
-				Coins:   sample.Coins(),
-			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
-		}, {
-			name: "coordinator not found",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].ChainID,
-				Address: addr1,
-				Coins:   sample.Coins(),
-			},
-			err: sdkerrors.Wrapf(types.ErrChainInactive,
-				"the chain %s coordinator has been deleted", chains[4].ChainID),
-		}, {
-			name: "add chain 1 request 1",
-			msg: types.MsgRequestAddAccount{
 				ChainID: chains[0].ChainID,
 				Address: addr1,
 				Coins:   sample.Coins(),
 			},
-			wantID: 0,
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[0].ChainID),
 		}, {
-			name: "add chain 2 request 1",
+			name: "coordinator not found",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[1].ChainID,
 				Address: addr1,
 				Coins:   sample.Coins(),
 			},
-			wantID: 0,
-		}, {
-			name: "add chain 2 request 2",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[1].ChainID,
-				Address: addr2,
-				Coins:   sample.Coins(),
-			},
-			wantID: 1,
+			err: sdkerrors.Wrapf(types.ErrChainInactive,
+				"the chain %s coordinator has been deleted", chains[1].ChainID),
 		}, {
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestAddAccount{
@@ -96,17 +72,41 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			},
 			wantID: 0,
 		}, {
-			name: "add chain 3 request 2",
+			name: "add chain 4 request 1",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[2].ChainID,
+				ChainID: chains[3].ChainID,
+				Address: addr1,
+				Coins:   sample.Coins(),
+			},
+			wantID: 0,
+		}, {
+			name: "add chain 4 request 2",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[3].ChainID,
 				Address: addr2,
 				Coins:   sample.Coins(),
 			},
 			wantID: 1,
 		}, {
-			name: "add chain 3 request 3",
+			name: "add chain 5 request 1",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[2].ChainID,
+				ChainID: chains[4].ChainID,
+				Address: addr1,
+				Coins:   sample.Coins(),
+			},
+			wantID: 0,
+		}, {
+			name: "add chain 5 request 2",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[4].ChainID,
+				Address: addr2,
+				Coins:   sample.Coins(),
+			},
+			wantID: 1,
+		}, {
+			name: "add chain 5 request 3",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[4].ChainID,
 				Address: addr3,
 				Coins:   sample.Coins(),
 			},
@@ -114,7 +114,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "add coordinator account",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[2].ChainID,
+				ChainID: chains[4].ChainID,
 				Address: coordAddr,
 				Coins:   sample.Coins(),
 			},

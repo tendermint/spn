@@ -33,17 +33,17 @@ func TestMsgSettleRequest(t *testing.T) {
 	chains := createNChainForCoordinator(k, sdkCtx, coordinator1.CoordinatorId, 3)
 	chains[0].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[0])
-	chains[1].ChainID = "foo"
+	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
-	chains[2].CoordinatorID = 99999
+	chains[2].ChainID = "foo"
 	k.SetChain(sdkCtx, chains[2])
 
-	requests := createRequests(k, sdkCtx, chains[1].ChainID, []*codectypes.Any{
-		sample.GenesisAccountContent(chains[1].ChainID, addr1),
-		sample.GenesisAccountContent(chains[1].ChainID, addr2),
-		sample.GenesisAccountContent(chains[1].ChainID, addr3),
-		sample.GenesisAccountContent(chains[1].ChainID, addr4),
-		sample.GenesisAccountContent(chains[1].ChainID, addr5),
+	requests := createRequests(k, sdkCtx, chains[2].ChainID, []*codectypes.Any{
+		sample.GenesisAccountContent(chains[2].ChainID, addr1),
+		sample.GenesisAccountContent(chains[2].ChainID, addr2),
+		sample.GenesisAccountContent(chains[2].ChainID, addr3),
+		sample.GenesisAccountContent(chains[2].ChainID, addr4),
+		sample.GenesisAccountContent(chains[2].ChainID, addr5),
 		invalidContent,
 	})
 
@@ -74,17 +74,17 @@ func TestMsgSettleRequest(t *testing.T) {
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
+				ChainID:     chains[1].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
 			err: sdkerrors.Wrapf(types.ErrChainInactive,
-				"the chain %s coordinator has been deleted", chains[2].ChainID),
+				"the chain %s coordinator has been deleted", chains[1].ChainID),
 		}, {
 			name: "no permission error",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].ChainID,
+				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator2.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -93,17 +93,27 @@ func TestMsgSettleRequest(t *testing.T) {
 		}, {
 			name: "approve an invalid request",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].ChainID,
+				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   99999999,
 				Approve:     true,
 			},
 			err: sdkerrors.Wrapf(types.ErrRequestNotFound,
-				"request 99999999 for chain %s not found", chains[1].ChainID),
+				"request 99999999 for chain %s not found", chains[2].ChainID),
+		}, {
+			name: "invalid request content",
+			msg: types.MsgSettleRequest{
+				ChainID:     chains[2].ChainID,
+				Coordinator: coordinator1.Address,
+				RequestID:   requests[5].RequestID,
+				Approve:     true,
+			},
+			err: spnerrors.Critical(
+				"no concrete type registered for type URL /tendermint.spn.launch.Request against interface *types.RequestContent"),
 		}, {
 			name: "approve chain request 1",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].ChainID,
+				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -112,7 +122,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		}, {
 			name: "approve chain request 2",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].ChainID,
+				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[1].RequestID,
 				Approve:     true,
@@ -121,7 +131,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		}, {
 			name: "approve chain request 3",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].ChainID,
+				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[2].RequestID,
 				Approve:     true,
@@ -130,7 +140,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		}, {
 			name: "approve chain request 4",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].ChainID,
+				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[3].RequestID,
 				Approve:     true,
@@ -139,22 +149,12 @@ func TestMsgSettleRequest(t *testing.T) {
 		}, {
 			name: "reject chain request 5",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].ChainID,
+				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[4].RequestID,
 				Approve:     false,
 			},
 			checkAddr: addr5,
-		}, {
-			name: "invalid request content",
-			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].ChainID,
-				Coordinator: coordinator1.Address,
-				RequestID:   requests[5].RequestID,
-				Approve:     true,
-			},
-			err: spnerrors.Critical(
-				"no concrete type registered for type URL /tendermint.spn.launch.Request against interface *types.RequestContent"),
 		},
 	}
 	for _, tt := range tests {

@@ -27,13 +27,14 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		Address: coordAddr,
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
-	chains[3].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[3])
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[1].ChainID, Address: addr1})
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[2].ChainID, Address: addr2})
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[2].ChainID, Address: addr4})
-	chains[4].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[4])
+	chains[0].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[0])
+	chains[1].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[1])
+
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[3].ChainID, Address: addr1})
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[4].ChainID, Address: addr2})
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[4].ChainID, Address: addr4})
 
 	tests := []struct {
 		name        string
@@ -53,52 +54,28 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[3].ChainID,
+				ChainID:          chains[0].ChainID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
+			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[0].ChainID),
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[4].ChainID,
+				ChainID:          chains[1].ChainID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
 			err: sdkerrors.Wrapf(types.ErrChainInactive,
-				"the chain %s coordinator has been deleted", chains[4].ChainID),
+				"the chain %s coordinator has been deleted", chains[1].ChainID),
 		}, {
 			name: "no permission error",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[0].ChainID,
+				ChainID:          chains[2].ChainID,
 				Creator:          addr1,
 				ValidatorAddress: addr3,
 			},
 			err: sdkerrors.Wrap(types.ErrNoAddressPermission, addr1),
-		}, {
-			name: "add chain 1 request 1",
-			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[0].ChainID,
-				Creator:          addr1,
-				ValidatorAddress: addr1,
-			},
-			wantID: 0,
-		}, {
-			name: "add chain 2 request 1",
-			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[1].ChainID,
-				Creator:          coordAddr,
-				ValidatorAddress: addr1,
-			},
-			wantApprove: true,
-		}, {
-			name: "add chain 2 request 2",
-			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[1].ChainID,
-				Creator:          addr2,
-				ValidatorAddress: addr2,
-			},
-			wantID: 0,
 		}, {
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveValidator{
@@ -108,17 +85,41 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			},
 			wantID: 0,
 		}, {
-			name: "add chain 3 request 2",
+			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[2].ChainID,
+				ChainID:          chains[3].ChainID,
+				Creator:          coordAddr,
+				ValidatorAddress: addr1,
+			},
+			wantApprove: true,
+		}, {
+			name: "add chain 4 request 2",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:          chains[3].ChainID,
+				Creator:          addr2,
+				ValidatorAddress: addr2,
+			},
+			wantID: 0,
+		}, {
+			name: "add chain 5 request 1",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:          chains[4].ChainID,
+				Creator:          addr1,
+				ValidatorAddress: addr1,
+			},
+			wantID: 0,
+		}, {
+			name: "add chain 5 request 2",
+			msg: types.MsgRequestRemoveValidator{
+				ChainID:          chains[4].ChainID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr2,
 			},
 			wantApprove: true,
 		}, {
-			name: "add chain 3 request 3",
+			name: "add chain 5 request 3",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[2].ChainID,
+				ChainID:          chains[4].ChainID,
 				Creator:          addr3,
 				ValidatorAddress: addr3,
 			},
@@ -126,7 +127,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		}, {
 			name: "add coordinator validator",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[2].ChainID,
+				ChainID:          chains[4].ChainID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr4,
 			},
