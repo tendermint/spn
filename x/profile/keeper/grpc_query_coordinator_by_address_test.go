@@ -1,6 +1,7 @@
-package keeper
+package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,7 +12,7 @@ import (
 )
 
 func TestCoordinatorByAddressQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCoordinatorByAddress(keeper, ctx, 2)
 	for _, tc := range []struct {

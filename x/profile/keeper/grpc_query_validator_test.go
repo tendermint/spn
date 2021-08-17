@@ -1,6 +1,7 @@
-package keeper
+package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"strconv"
 	"testing"
 
@@ -18,7 +19,7 @@ import (
 var _ = strconv.IntSize
 
 func TestValidatorQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNValidator(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -66,7 +67,7 @@ func TestValidatorQuerySingle(t *testing.T) {
 }
 
 func TestValidatorQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNValidator(keeper, ctx, 5)
 
