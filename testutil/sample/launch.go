@@ -1,6 +1,7 @@
 package sample
 
 import (
+	"math/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"time"
@@ -206,4 +207,69 @@ func MsgRequestAddValidator(address, chainID string) launch.MsgRequestAddValidat
 func GenesisHash() string {
 	hash := sha256.Sum256([]byte(String(50)))
 	return hex.EncodeToString(hash[:])
+}
+
+// Params returns a sample of params for the launch module
+func Params() launch.Params {
+	maxLaunchTime := rand.Intn(int(launch.MaxParametrableLaunchTime))
+	minLaunchTime := rand.Intn(maxLaunchTime)
+
+	return launch.Params{
+		MinLaunchTime: uint64(minLaunchTime),
+		MaxLaunchTime: uint64(maxLaunchTime),
+	}
+}
+
+// GenesisState returns a sample genesis state
+func GenesisState() launch.GenesisState {
+	chainId1, _ := ChainID(0)
+	chainId2, _ := ChainID(0)
+
+	return launch.GenesisState{
+		ChainList: []launch.Chain{
+			*Chain(chainId1, Uint64()),
+			*Chain(chainId2, Uint64()),
+		},
+		ChainNameCountList: []launch.ChainNameCount{
+			{
+				chainId1,
+				Uint64(),
+			},
+			{
+				chainId2,
+				Uint64(),
+			},
+		},
+		GenesisAccountList: []launch.GenesisAccount{
+			*GenesisAccount(chainId1, AccAddress()),
+			*GenesisAccount(chainId1, AccAddress()),
+			*GenesisAccount(chainId2, AccAddress()),
+		},
+		VestedAccountList: []launch.VestedAccount{
+			*VestedAccount(chainId1, AccAddress()),
+			*VestedAccount(chainId1, AccAddress()),
+			*VestedAccount(chainId2, AccAddress()),
+		},
+		GenesisValidatorList: []launch.GenesisValidator{
+			*GenesisValidator(chainId1, AccAddress()),
+			*GenesisValidator(chainId1, AccAddress()),
+			*GenesisValidator(chainId2, AccAddress()),
+		},
+		RequestList: []launch.Request{
+			*Request(chainId1),
+			*Request(chainId1),
+			*Request(chainId2),
+		},
+		RequestCountList: []launch.RequestCount{
+			{
+				chainId1,
+				2,
+			},
+			{
+				chainId2,
+				1,
+			},
+		},
+		Params: Params(),
+	}
 }
