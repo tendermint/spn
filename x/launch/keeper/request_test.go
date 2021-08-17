@@ -6,10 +6,8 @@ import (
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -107,7 +105,7 @@ func TestApplyRequest(t *testing.T) {
 	tests := []struct {
 		name    string
 		request types.Request
-		err     error
+		wantErr bool
 	}{
 		{
 			name:    "test GenesisAccount content",
@@ -115,61 +113,53 @@ func TestApplyRequest(t *testing.T) {
 		}, {
 			name:    "test duplicated GenesisAccount content",
 			request: *sample.RequestWithContent(chainID, contents[0]),
-			err: sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
-				"account %s for chain %s already exist", genesisAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test genesis AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[1]),
 		}, {
 			name:    "test not found genesis AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[1]),
-			err: sdkerrors.Wrapf(types.ErrAccountNotFound,
-				"account %s for chain %s not found", genesisAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test VestedAccount content",
 			request: *sample.RequestWithContent(chainID, contents[2]),
 		}, {
 			name:    "test duplicated VestedAccount content",
 			request: *sample.RequestWithContent(chainID, contents[2]),
-			err: sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
-				"account %s for chain %s already exist", vestedAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test vested AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[3]),
 		}, {
 			name:    "test not found vested AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[3]),
-			err: sdkerrors.Wrapf(types.ErrAccountNotFound,
-				"account %s for chain %s not found", vestedAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test GenesisValidator content",
 			request: *sample.RequestWithContent(chainID, contents[4]),
 		}, {
 			name:    "test duplicated GenesisValidator content",
 			request: *sample.RequestWithContent(chainID, contents[4]),
-			err: sdkerrors.Wrapf(types.ErrValidatorAlreadyExist,
-				"genesis validator %s for chain %s already exist", validatorAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test ValidatorRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[5]),
 		}, {
 			name:    "test not found ValidatorRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[5]),
-			err: sdkerrors.Wrapf(types.ErrValidatorNotFound,
-				"genesis validator %s for chain %s not found", validatorAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "invalid request",
 			request: *sample.RequestWithContent(chainID, invalidContent),
-			err: spnerrors.Critical(
-				"unknown request content type"),
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := applyRequest(sdkCtx, *k, chainID, tt.request)
-			if tt.err != nil {
+			if tt.wantErr {
 				require.Error(t, err)
-				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)

@@ -147,6 +147,10 @@ func applyRequest(
 		return spnerrors.Critical(err.Error())
 	}
 
+	if err := content.Validate(); err != nil {
+		return spnerrors.Critical(err.Error())
+	}
+
 	switch c := content.(type) {
 	case *types.GenesisAccount:
 		found, err := checkAccount(ctx, k, chainID, c.Address)
