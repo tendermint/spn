@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"strconv"
 	"testing"
 
@@ -9,10 +8,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/x/profile/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/tendermint/spn/x/profile/types"
 )
 
 // Prevent strconv unused error

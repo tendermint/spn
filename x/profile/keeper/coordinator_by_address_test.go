@@ -6,9 +6,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
-	"github.com/tendermint/spn/x/profile/types"
-	"github.com/tendermint/spn/x/profile/keeper"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/x/profile/keeper"
+	"github.com/tendermint/spn/x/profile/types"
 )
 
 func createNCoordinatorByAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.CoordinatorByAddress {

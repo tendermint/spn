@@ -1,14 +1,14 @@
 package keeper_test
 
 import (
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
-	"github.com/tendermint/spn/x/profile/types"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/x/profile/keeper"
+	"github.com/tendermint/spn/x/profile/types"
 )
 
 // Prevent strconv unused error
