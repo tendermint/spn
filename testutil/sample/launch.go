@@ -230,51 +230,51 @@ func Params() launch.Params {
 
 // LaunchGenesisState returns a sample genesis state for the launch module
 func LaunchGenesisState() launch.GenesisState {
-	chainId1, _ := ChainID(0)
-	chainId2, _ := ChainID(0)
+	chainID1, _ := ChainID(0)
+	chainID2, _ := ChainID(0)
 
 	return launch.GenesisState{
 		ChainList: []launch.Chain{
-			*Chain(chainId1, Uint64()),
-			*Chain(chainId2, Uint64()),
+			*Chain(chainID1, Uint64()),
+			*Chain(chainID2, Uint64()),
 		},
 		ChainNameCountList: []launch.ChainNameCount{
 			{
-				chainId1,
-				Uint64(),
+				ChainName: chainID1,
+				Count: Uint64(),
 			},
 			{
-				chainId2,
-				Uint64(),
+				ChainName: chainID2,
+				Count: Uint64(),
 			},
 		},
 		GenesisAccountList: []launch.GenesisAccount{
-			*GenesisAccount(chainId1, AccAddress()),
-			*GenesisAccount(chainId1, AccAddress()),
-			*GenesisAccount(chainId2, AccAddress()),
+			*GenesisAccount(chainID1, AccAddress()),
+			*GenesisAccount(chainID1, AccAddress()),
+			*GenesisAccount(chainID2, AccAddress()),
 		},
 		VestedAccountList: []launch.VestedAccount{
-			*VestedAccount(chainId1, AccAddress()),
-			*VestedAccount(chainId1, AccAddress()),
-			*VestedAccount(chainId2, AccAddress()),
+			*VestedAccount(chainID1, AccAddress()),
+			*VestedAccount(chainID1, AccAddress()),
+			*VestedAccount(chainID2, AccAddress()),
 		},
 		GenesisValidatorList: []launch.GenesisValidator{
-			*GenesisValidator(chainId1, AccAddress()),
-			*GenesisValidator(chainId1, AccAddress()),
-			*GenesisValidator(chainId2, AccAddress()),
+			*GenesisValidator(chainID1, AccAddress()),
+			*GenesisValidator(chainID1, AccAddress()),
+			*GenesisValidator(chainID2, AccAddress()),
 		},
 		RequestList: []launch.Request{
-			*Request(chainId1),
-			*Request(chainId2),
+			*Request(chainID1),
+			*Request(chainID2),
 		},
 		RequestCountList: []launch.RequestCount{
 			{
-				chainId1,
-				1,
+				ChainID: chainID1,
+				Count: 1,
 			},
 			{
-				chainId2,
-				1,
+				ChainID: chainID2,
+				Count: 1,
 			},
 		},
 		Params: Params(),
