@@ -26,6 +26,7 @@ func Chain(chainID string, coordinatorID uint64) *launch.Chain {
 
 	// Byte array is nullified in the store if empty
 	defaultGenesis.Value = []byte(nil)
+	defaultGenesis.ClearCachedValue()
 
 	return &launch.Chain{
 		ChainID:         chainID,
@@ -70,6 +71,9 @@ func VestedAccount(chainID, address string) *launch.VestedAccount {
 	if err != nil {
 		panic(err)
 	}
+
+	delayedVesting.ClearCachedValue()
+
 	return &launch.VestedAccount{
 		ChainID:         chainID,
 		Address:         address,
@@ -119,6 +123,9 @@ func AllRequestContents(chainID, genesis, vested, validator string) []*types.Any
 		if err != nil {
 			panic(err)
 		}
+
+		msg.ClearCachedValue()
+
 		result = append(result, msg)
 	}
 	return result
@@ -130,6 +137,7 @@ func GenesisAccountContent(chainID, address string) *types.Any {
 	if err != nil {
 		panic(err)
 	}
+	content.ClearCachedValue()
 	return content
 }
 
@@ -220,8 +228,8 @@ func Params() launch.Params {
 	}
 }
 
-// GenesisState returns a sample genesis state
-func GenesisState() launch.GenesisState {
+// LaunchGenesisState returns a sample genesis state for the launch module
+func LaunchGenesisState() launch.GenesisState {
 	chainId1, _ := ChainID(0)
 	chainId2, _ := ChainID(0)
 
@@ -257,13 +265,12 @@ func GenesisState() launch.GenesisState {
 		},
 		RequestList: []launch.Request{
 			*Request(chainId1),
-			*Request(chainId1),
 			*Request(chainId2),
 		},
 		RequestCountList: []launch.RequestCount{
 			{
 				chainId1,
-				2,
+				1,
 			},
 			{
 				chainId2,
