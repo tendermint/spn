@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/store"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/capability/types"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/stretchr/testify/require"
@@ -42,7 +41,7 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Cont
 		storeKeys[paramstypes.StoreKey],
 		tkeys[paramstypes.TStoreKey],
 	)
-	paramsKeeper.Subspace(types.ModuleName)
+	paramsKeeper.Subspace(launchtypes.ModuleName)
 
 	profileKeeper := profilekeeper.NewKeeper(
 		cdc,
@@ -50,13 +49,13 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Cont
 		memStoreKeyProfile,
 	)
 
-	launchSubspace, found := paramsKeeper.GetSubspace(types.ModuleName)
+	launchSubspace, found := paramsKeeper.GetSubspace(launchtypes.ModuleName)
 	if !found {
 		t.Fatal("no param subspace for launch")
 	}
 	launchKeeper := launchkeeper.NewKeeper(
 		cdc,
-		storeKeys[types.StoreKey],
+		storeKeys[launchtypes.StoreKey],
 		memStoreKeyLaunch,
 		launchSubspace,
 		profileKeeper,
@@ -66,7 +65,7 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Cont
 	stateStore := store.NewCommitMultiStore(db)
 	stateStore.MountStoreWithDB(storeKeys[paramstypes.StoreKey], sdk.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(storeKeys[profiletypes.StoreKey], sdk.StoreTypeIAVL, db)
-	stateStore.MountStoreWithDB(storeKeys[types.StoreKey], sdk.StoreTypeIAVL, db)
+	stateStore.MountStoreWithDB(storeKeys[launchtypes.StoreKey], sdk.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(tkeys[paramstypes.TStoreKey], sdk.StoreTypeTransient, db)
 	stateStore.MountStoreWithDB(memStoreKeyProfile, sdk.StoreTypeMemory, nil)
 	stateStore.MountStoreWithDB(memStoreKeyLaunch, sdk.StoreTypeMemory, nil)
@@ -84,8 +83,8 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Cont
 
 // Profile returns a keeper of the profile module for testing purpose
 func Profile(t testing.TB) (*profilekeeper.Keeper, sdk.Context) {
-	storeKey := sdk.NewKVStoreKey(types.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
+	storeKey := sdk.NewKVStoreKey(profiletypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(profiletypes.MemStoreKey)
 
 	db := tmdb.NewMemDB()
 	stateStore := store.NewCommitMultiStore(db)

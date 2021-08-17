@@ -36,9 +36,6 @@ func TestGetChain(t *testing.T) {
 	for _, item := range items {
 		rst, found := keeper.GetChain(ctx, item.ChainID)
 		assert.True(t, found)
-
-		// Cached value is cleared when the any type is encoded into the store
-		item.InitialGenesis.ClearCachedValue()
 		assert.Equal(t, item, rst)
 	}
 }
@@ -56,11 +53,5 @@ func TestRemoveChain(t *testing.T) {
 func TestGetAllChain(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
-
-	// Cached value is cleared when the any type is encoded into the store
-	for _, item := range items {
-		item.InitialGenesis.ClearCachedValue()
-	}
-
 	assert.Equal(t, items, keeper.GetAllChain(ctx))
 }
