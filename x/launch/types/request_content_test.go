@@ -12,7 +12,8 @@ import (
 func TestAccountRemovalCodec(t *testing.T) {
 	var err error
 	cdc := sample.Codec()
-	request := sample.Request("foo")
+	chainID, _ := sample.ChainID(1)
+	request := sample.Request(chainID)
 	content := &types.AccountRemoval{
 		Address: sample.AccAddress(),
 	}
@@ -27,14 +28,13 @@ func TestAccountRemovalCodec(t *testing.T) {
 	require.NoError(t, err)
 	_, err = request.UnpackAccountRemoval(cdc)
 	require.Error(t, err)
-	require.Equal(t, "not a accountRemoval request", err.Error())
 }
 
 func TestGenesisValidatorCodec(t *testing.T) {
 	var err error
 	cdc := sample.Codec()
-	request := sample.Request("foo")
 	chainID, _ := sample.ChainID(1)
+	request := sample.Request(chainID)
 	content := &types.GenesisValidator{
 		Address: sample.AccAddress(),
 		ChainID: chainID,
@@ -52,13 +52,13 @@ func TestGenesisValidatorCodec(t *testing.T) {
 
 	_, err = request.UnpackGenesisValidator(cdc)
 	require.Error(t, err)
-	require.Equal(t, "not a genesisValidator request", err.Error())
 }
 
 func TestValidatorRemovalCodec(t *testing.T) {
 	var err error
 	cdc := sample.Codec()
-	request := sample.Request("foo")
+	chainID, _ := sample.ChainID(1)
+	request := sample.Request(chainID)
 	content := &types.ValidatorRemoval{
 		ValAddress: sample.AccAddress(),
 	}
@@ -75,21 +75,19 @@ func TestValidatorRemovalCodec(t *testing.T) {
 
 	_, err = request.UnpackValidatorRemoval(cdc)
 	require.Error(t, err)
-	require.Equal(t, err.Error(), "not a validatorRemoval request")
 
 	_, err = request.UnpackGenesisValidator(cdc)
 	require.Error(t, err)
-	require.Equal(t, "not a genesisValidator request", err.Error())
+
 	_, err = request.UnpackValidatorRemoval(cdc)
 	require.Error(t, err)
-	require.Equal(t, err.Error(), "not a validatorRemoval request")
 }
 
 func TestGenesisAccountCodec(t *testing.T) {
 	var err error
 	cdc := sample.Codec()
-	request := sample.Request("foo")
 	chainID, _ := sample.ChainID(1)
+	request := sample.Request(chainID)
 	content := &types.GenesisAccount{
 		Address: sample.AccAddress(),
 		ChainID: chainID,
@@ -105,13 +103,13 @@ func TestGenesisAccountCodec(t *testing.T) {
 	require.NoError(t, err)
 	_, err = request.UnpackGenesisAccount(cdc)
 	require.Error(t, err)
-	require.Equal(t, "not a genesisAccount request", err.Error())
 }
 
 func TestVestedAccountCodec(t *testing.T) {
 	var err error
 	cdc := sample.Codec()
-	request := sample.Request("foo")
+	chainID, _ := sample.ChainID(1)
+	request := sample.Request(chainID)
 	content := &types.VestedAccount{
 		Address: sample.AccAddress(),
 	}
@@ -125,5 +123,4 @@ func TestVestedAccountCodec(t *testing.T) {
 	require.NoError(t, err)
 	_, err = request.UnpackVestedAccount(cdc)
 	require.Error(t, err)
-	require.Equal(t, "not a vestedAccount request", err.Error())
 }

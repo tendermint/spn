@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"strconv"
 	"testing"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -14,7 +13,8 @@ import (
 func createNChain(keeper *Keeper, ctx sdk.Context, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
-		items[i] = *sample.Chain(strconv.Itoa(i), uint64(i))
+		chainID, _ := sample.ChainID(uint64(i))
+		items[i] = *sample.Chain(chainID, uint64(i))
 		keeper.SetChain(ctx, items[i])
 	}
 	return items
