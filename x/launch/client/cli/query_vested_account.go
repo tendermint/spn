@@ -11,7 +11,7 @@ import (
 
 func CmdListVestedAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-vested-account [chainID]",
+		Use:   "list-vested-account [chain-id]",
 		Short: "list all vestedAccount",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -46,7 +46,7 @@ func CmdListVestedAccount() *cobra.Command {
 
 func CmdShowVestedAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-vested-account [chainID] [address]",
+		Use:   "show-vested-account [chain-id] [address]",
 		Short: "shows a vestedAccount",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {

@@ -23,5 +23,5 @@ func (k Keeper) CoordinatorByAddress(c context.Context, req *types.QueryGetCoord
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
-	return &types.QueryGetCoordinatorByAddressResponse{CoordinatorByAddress: &val}, nil
+	return &types.QueryGetCoordinatorByAddressResponse{CoordinatorByAddress: val}, nil
 }

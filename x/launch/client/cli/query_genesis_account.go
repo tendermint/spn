@@ -11,7 +11,7 @@ import (
 
 func CmdListGenesisAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-genesis-account [chainID]",
+		Use:   "list-genesis-account [chain-id]",
 		Short: "list all genesisAccount",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -46,7 +46,7 @@ func CmdListGenesisAccount() *cobra.Command {
 
 func CmdShowGenesisAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-genesis-account [chainID] [address]",
+		Use:   "show-genesis-account [chain-id] [address]",
 		Short: "shows a genesisAccount",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {

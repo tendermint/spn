@@ -19,14 +19,14 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func networkWithFooObjects(t *testing.T, n int) (*network.Network, []*types.Chain) {
+func networkWithFooObjects(t *testing.T, n int) (*network.Network, []types.Chain) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		chain := sample.Chain(strconv.Itoa(i), uint64(i))
+		chain := *sample.Chain(strconv.Itoa(i), uint64(i))
 		chain.InitialGenesis.Value = []byte{}
 		state.ChainList = append(
 			state.ChainList,
@@ -51,7 +51,7 @@ func TestShowChain(t *testing.T) {
 		id   string
 		args []string
 		err  error
-		obj  *types.Chain
+		obj  types.Chain
 	}{
 		{
 			desc: "found",

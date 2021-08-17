@@ -24,7 +24,8 @@ func (k msgServer) UpdateCoordinatorDescription(
 
 	if !k.HasCoordinator(ctx, coordByAddress.CoordinatorId) {
 		return &types.MsgUpdateCoordinatorDescriptionResponse{},
-			spnerrors.Critical("a coordinator address is associated to a non-existent coordinator ID")
+			spnerrors.Criticalf("a coordinator address is associated to a non-existent coordinator ID: %d",
+				coordByAddress.CoordinatorId)
 	}
 	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
 

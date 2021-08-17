@@ -14,7 +14,7 @@ var _ = strconv.Itoa(0)
 
 func CmdTriggerLaunch() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "trigger-launch [chainID] [remainingTime]",
+		Use:   "trigger-launch [chain-id] [remaining-time]",
 		Short: "Trigger the launch of a chain",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {

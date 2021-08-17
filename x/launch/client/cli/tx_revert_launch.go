@@ -14,7 +14,7 @@ var _ = strconv.Itoa(0)
 
 func CmdRevertLaunch() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "revert-launch [chainID]",
+		Use:   "revert-launch [chain-id]",
 		Short: "Revert the launch of a chain",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {

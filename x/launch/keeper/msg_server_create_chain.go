@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -36,7 +35,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	// if it already exists then something is wrong in the protocol
 	_, found = k.GetChain(ctx, chainID)
 	if found {
-		return nil, spnerrors.Critical(fmt.Sprintf("chain id %s already exists while it must be unique", chainID))
+		return nil, spnerrors.Criticalf("chain id %s already exists while it must be unique", chainID)
 	}
 
 	// Initialize the chain
@@ -57,7 +56,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 
 		// DefaultInitialGenesis must always be able to be encoded into Any therefore this is a critical error
 		if err != nil {
-			return nil, spnerrors.Critical("DefaultInitialGenesis can't be used as initial genesis" + err.Error())
+			return nil, spnerrors.Criticalf("DefaultInitialGenesis can't be used as initial genesis %s", err.Error())
 		}
 	} else {
 		chain.InitialGenesis, err = codec.NewAnyWithValue(&types.GenesisURL{

@@ -16,7 +16,7 @@ var _ = strconv.Itoa(0)
 
 func CmdRequestAddValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-validator [chainID] [gentx-file] [consensus-public-key] [self-delegation] [peer]",
+		Use:   "request-add-validator [chain-id] [gentx-file] [consensus-public-key] [self-delegation] [peer]",
 		Short: "Send a request for a genesis validator",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {

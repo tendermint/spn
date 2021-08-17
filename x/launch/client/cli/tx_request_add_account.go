@@ -13,7 +13,7 @@ import (
 
 func CmdRequestAddAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-account [chainID] [coins]",
+		Use:   "request-add-account [chain-id] [coins]",
 		Short: "Request to add an account",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {

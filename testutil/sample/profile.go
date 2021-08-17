@@ -22,3 +22,15 @@ func ValidatorDescription(desc string) *profile.ValidatorDescription {
 		Details:         desc + " details",
 	}
 }
+
+// Coordinator returns a sample Coordinator
+func Coordinator() profile.Coordinator {
+	return profile.Coordinator{
+		Address: AccAddress(),
+		Description: &profile.CoordinatorDescription{
+			Identity: String(10),
+			Website:  String(10),
+			Details:  String(30),
+		},
+	}
+}

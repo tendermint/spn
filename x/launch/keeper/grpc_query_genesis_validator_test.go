@@ -43,7 +43,7 @@ func TestGenesisValidatorQuerySingle(t *testing.T) {
 				ChainID: msgs[0].ChainID,
 				Address: msgs[0].Address,
 			},
-			response: &types.QueryGetGenesisValidatorResponse{GenesisValidator: &msgs[0]},
+			response: &types.QueryGetGenesisValidatorResponse{GenesisValidator: msgs[0]},
 		},
 		{
 			desc: "Second",
@@ -51,7 +51,7 @@ func TestGenesisValidatorQuerySingle(t *testing.T) {
 				ChainID: msgs[1].ChainID,
 				Address: msgs[1].Address,
 			},
-			response: &types.QueryGetGenesisValidatorResponse{GenesisValidator: &msgs[1]},
+			response: &types.QueryGetGenesisValidatorResponse{GenesisValidator: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
@@ -102,7 +102,7 @@ func TestGenesisValidatorQueryPaginated(t *testing.T) {
 			resp, err := keeper.GenesisValidatorAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, &msgs[j], resp.GenesisValidator[j-i])
+				assert.Equal(t, msgs[j], resp.GenesisValidator[j-i])
 			}
 		}
 	})
@@ -113,7 +113,7 @@ func TestGenesisValidatorQueryPaginated(t *testing.T) {
 			resp, err := keeper.GenesisValidatorAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, &msgs[j], resp.GenesisValidator[j-i])
+				assert.Equal(t, msgs[j], resp.GenesisValidator[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

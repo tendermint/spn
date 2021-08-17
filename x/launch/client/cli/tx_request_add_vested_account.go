@@ -17,7 +17,7 @@ var _ = strconv.Itoa(0)
 
 func CmdRequestAddVestedAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-vested-account [chainID] [startingBalance] [vestingCoins] [vestingEndTime]",
+		Use:   "request-add-vested-account [chain-id] [starting-balance] [vesting-coins] [vesting-end-time]",
 		Short: "Request to add a vested account",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {

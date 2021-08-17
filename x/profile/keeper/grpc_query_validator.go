@@ -16,7 +16,7 @@ func (k Keeper) ValidatorAll(c context.Context, req *types.QueryAllValidatorRequ
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var validators []*types.Validator
+	var validators []types.Validator
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
@@ -28,7 +28,7 @@ func (k Keeper) ValidatorAll(c context.Context, req *types.QueryAllValidatorRequ
 			return err
 		}
 
-		validators = append(validators, &validator)
+		validators = append(validators, validator)
 		return nil
 	})
 
@@ -53,5 +53,5 @@ func (k Keeper) Validator(c context.Context, req *types.QueryGetValidatorRequest
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
-	return &types.QueryGetValidatorResponse{Validator: &val}, nil
+	return &types.QueryGetValidatorResponse{Validator: val}, nil
 }
