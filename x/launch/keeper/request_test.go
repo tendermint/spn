@@ -100,6 +100,7 @@ func TestApplyRequest(t *testing.T) {
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
 		chainID, _            = sample.ChainID(10)
 		contents              = sample.AllRequestContents(chainID, genesisAcc, vestedAcc, validatorAcc)
+		missingContent, _     = codectypes.NewAnyWithValue(&types.GenesisAccount{ChainID: chainID})
 		invalidContent, _     = codectypes.NewAnyWithValue(&types.Request{})
 	)
 	tests := []struct {
@@ -148,6 +149,10 @@ func TestApplyRequest(t *testing.T) {
 		}, {
 			name:    "test not found ValidatorRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[5]),
+			wantErr: true,
+		}, {
+			name:    "test request with invalid parameters",
+			request: *sample.RequestWithContent(chainID, missingContent),
 			wantErr: true,
 		}, {
 			name:    "invalid request",
