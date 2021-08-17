@@ -7,7 +7,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -127,7 +126,7 @@ func TestListGenesisValidator(t *testing.T) {
 			var resp types.QueryAllGenesisValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.GenesisValidator[j-i])
+				require.Equal(t, objs[j], resp.GenesisValidator[j-i])
 			}
 		}
 	})
@@ -141,7 +140,7 @@ func TestListGenesisValidator(t *testing.T) {
 			var resp types.QueryAllGenesisValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.GenesisValidator[j-i])
+				require.Equal(t, objs[j], resp.GenesisValidator[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

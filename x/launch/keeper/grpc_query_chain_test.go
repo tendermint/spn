@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/launch/types"
 	"google.golang.org/grpc/codes"
@@ -83,7 +82,7 @@ func TestFooQueryPaginated(t *testing.T) {
 				// Cached value is cleared when the any type is encoded into the store
 				msgs[j].InitialGenesis.ClearCachedValue()
 
-				assert.Equal(t, msgs[j], resp.Chain[j-i])
+				require.Equal(t, msgs[j], resp.Chain[j-i])
 			}
 		}
 	})
@@ -94,7 +93,7 @@ func TestFooQueryPaginated(t *testing.T) {
 			resp, err := keeper.ChainAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, msgs[j], resp.Chain[j-i])
+				require.Equal(t, msgs[j], resp.Chain[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

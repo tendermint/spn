@@ -6,7 +6,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/profile/types"
 	"google.golang.org/grpc/codes"
@@ -76,7 +75,7 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 			resp, err := keeper.CoordinatorAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, msgs[j], resp.Coordinator[j-i])
+				require.Equal(t, msgs[j], resp.Coordinator[j-i])
 			}
 		}
 	})
@@ -87,7 +86,7 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 			resp, err := keeper.CoordinatorAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, msgs[j], resp.Coordinator[j-i])
+				require.Equal(t, msgs[j], resp.Coordinator[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

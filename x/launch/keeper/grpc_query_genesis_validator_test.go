@@ -6,7 +6,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -102,7 +101,7 @@ func TestGenesisValidatorQueryPaginated(t *testing.T) {
 			resp, err := keeper.GenesisValidatorAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, msgs[j], resp.GenesisValidator[j-i])
+				require.Equal(t, msgs[j], resp.GenesisValidator[j-i])
 			}
 		}
 	})
@@ -113,7 +112,7 @@ func TestGenesisValidatorQueryPaginated(t *testing.T) {
 			resp, err := keeper.GenesisValidatorAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, msgs[j], resp.GenesisValidator[j-i])
+				require.Equal(t, msgs[j], resp.GenesisValidator[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

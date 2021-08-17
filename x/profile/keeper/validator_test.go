@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -29,8 +29,8 @@ func TestValidatorGet(t *testing.T) {
 		rst, found := keeper.GetValidator(ctx,
 			item.Address,
 		)
-		assert.True(t, found)
-		assert.Equal(t, item, rst)
+		require.True(t, found)
+		require.Equal(t, item, rst)
 	}
 }
 func TestValidatorRemove(t *testing.T) {
@@ -43,12 +43,12 @@ func TestValidatorRemove(t *testing.T) {
 		_, found := keeper.GetValidator(ctx,
 			item.Address,
 		)
-		assert.False(t, found)
+		require.False(t, found)
 	}
 }
 
 func TestValidatorGetAll(t *testing.T) {
 	keeper, ctx := setupKeeper(t)
 	items := createNValidator(keeper, ctx, 10)
-	assert.Equal(t, items, keeper.GetAllValidator(ctx))
+	require.Equal(t, items, keeper.GetAllValidator(ctx))
 }

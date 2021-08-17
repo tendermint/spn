@@ -7,7 +7,6 @@ import (
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/testutil/sample"
@@ -50,12 +49,12 @@ func TestRequestGet(t *testing.T) {
 			item.ChainID,
 			item.RequestID,
 		)
-		assert.True(t, found)
+		require.True(t, found)
 
 		// Cached value is cleared when the any type is encoded into the store
 		item.Content.ClearCachedValue()
 
-		assert.Equal(t, item, rst)
+		require.Equal(t, item, rst)
 	}
 }
 func TestRequestRemove(t *testing.T) {
@@ -70,7 +69,7 @@ func TestRequestRemove(t *testing.T) {
 			item.ChainID,
 			item.RequestID,
 		)
-		assert.False(t, found)
+		require.False(t, found)
 	}
 }
 
@@ -83,15 +82,15 @@ func TestRequestGetAll(t *testing.T) {
 		item.Content.ClearCachedValue()
 	}
 
-	assert.Equal(t, items, keeper.GetAllRequest(ctx))
+	require.Equal(t, items, keeper.GetAllRequest(ctx))
 }
 
 func TestRequestCount(t *testing.T) {
 	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNRequest(keeper, ctx, 10)
 	count := uint64(len(items))
-	assert.Equal(t, count, keeper.GetRequestCount(ctx, "foo"))
-	assert.Equal(t, uint64(0), keeper.GetRequestCount(ctx, "bar"))
+	require.Equal(t, count, keeper.GetRequestCount(ctx, "foo"))
+	require.Equal(t, uint64(0), keeper.GetRequestCount(ctx, "bar"))
 }
 
 func TestApplyRequest(t *testing.T) {

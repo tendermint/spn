@@ -5,8 +5,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
-
+	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -30,8 +29,8 @@ func TestChainNameCountGet(t *testing.T) {
 		rst, found := keeper.GetChainNameCount(ctx,
 			item.ChainName,
 		)
-		assert.True(t, found)
-		assert.Equal(t, item, rst)
+		require.True(t, found)
+		require.Equal(t, item, rst)
 	}
 }
 func TestChainNameCountRemove(t *testing.T) {
@@ -44,12 +43,12 @@ func TestChainNameCountRemove(t *testing.T) {
 		_, found := keeper.GetChainNameCount(ctx,
 			item.ChainName,
 		)
-		assert.False(t, found)
+		require.False(t, found)
 	}
 }
 
 func TestChainNameCountGetAll(t *testing.T) {
 	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNChainNameCount(keeper, ctx, 10)
-	assert.Equal(t, items, keeper.GetAllChainNameCount(ctx))
+	require.Equal(t, items, keeper.GetAllChainNameCount(ctx))
 }

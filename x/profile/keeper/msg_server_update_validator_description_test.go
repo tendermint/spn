@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -54,35 +53,35 @@ func TestMsgUpdateValidatorDescription(t *testing.T) {
 			require.NoError(t, err)
 
 			validator, found := k.GetValidator(ctx, tt.msg.Address)
-			assert.True(t, found, "validator not found")
-			assert.EqualValues(t, tt.msg.Address, validator.Address)
+			require.True(t, found, "validator not found")
+			require.EqualValues(t, tt.msg.Address, validator.Address)
 
 			if len(tt.msg.Description.Identity) > 0 {
-				assert.EqualValues(t, tt.msg.Description.Identity, validator.Description.Identity)
+				require.EqualValues(t, tt.msg.Description.Identity, validator.Description.Identity)
 			} else if oldFound {
 				require.EqualValues(t, oldValidator.Description.Identity, oldValidator.Description.Identity)
 			}
 
 			if len(tt.msg.Description.Website) > 0 {
-				assert.EqualValues(t, tt.msg.Description.Website, validator.Description.Website)
+				require.EqualValues(t, tt.msg.Description.Website, validator.Description.Website)
 			} else if oldFound {
 				require.EqualValues(t, oldValidator.Description.Website, oldValidator.Description.Website)
 			}
 
 			if len(tt.msg.Description.Details) > 0 {
-				assert.EqualValues(t, tt.msg.Description.Details, validator.Description.Details)
+				require.EqualValues(t, tt.msg.Description.Details, validator.Description.Details)
 			} else if oldFound {
 				require.EqualValues(t, oldValidator.Description.Details, oldValidator.Description.Details)
 			}
 
 			if len(tt.msg.Description.Moniker) > 0 {
-				assert.EqualValues(t, tt.msg.Description.Moniker, validator.Description.Moniker)
+				require.EqualValues(t, tt.msg.Description.Moniker, validator.Description.Moniker)
 			} else if oldFound {
 				require.EqualValues(t, oldValidator.Description.Moniker, oldValidator.Description.Moniker)
 			}
 
 			if len(tt.msg.Description.SecurityContact) > 0 {
-				assert.EqualValues(t, tt.msg.Description.SecurityContact, validator.Description.SecurityContact)
+				require.EqualValues(t, tt.msg.Description.SecurityContact, validator.Description.SecurityContact)
 			} else if oldFound {
 				require.EqualValues(t, oldValidator.Description.SecurityContact, oldValidator.Description.SecurityContact)
 			}

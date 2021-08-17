@@ -9,7 +9,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/x/launch/client/cli"
@@ -121,7 +120,7 @@ func TestListFoo(t *testing.T) {
 				// Cached value is cleared when the any type is encoded into the store
 				objs[j].InitialGenesis.ClearCachedValue()
 
-				assert.Equal(t, objs[j], resp.Chain[j-i])
+				require.Equal(t, objs[j], resp.Chain[j-i])
 			}
 		}
 	})
@@ -138,7 +137,7 @@ func TestListFoo(t *testing.T) {
 				// Cached value is cleared when the any type is encoded into the store
 				objs[j].InitialGenesis.ClearCachedValue()
 
-				assert.Equal(t, objs[j], resp.Chain[j-i])
+				require.Equal(t, objs[j], resp.Chain[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}
