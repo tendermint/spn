@@ -23,7 +23,8 @@ func createNChain(keeper *Keeper, ctx sdk.Context, n int) []types.Chain {
 func createNChainForCoordinator(keeper *Keeper, ctx sdk.Context, coordinatorID uint64, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
-		items[i] = *sample.Chain(strconv.Itoa(i), coordinatorID)
+		chainID, _ := sample.ChainID(uint64(i))
+		items[i] = *sample.Chain(chainID, coordinatorID)
 		keeper.SetChain(ctx, items[i])
 	}
 	return items
