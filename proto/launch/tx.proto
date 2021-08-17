@@ -12,19 +12,24 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 // Msg defines the Msg service.
 service Msg {
   // this line is used by starport scaffolding # proto/tx/rpc
-  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestAddValidatorResponse);
-  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
+  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestResponse);
+  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestResponse);
   rpc SettleRequest(MsgSettleRequest) returns (MsgSettleRequestResponse);
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
   rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
   rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
-  rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestAddAccountResponse);
-  rpc RequestAddVestedAccount(MsgRequestAddVestedAccount) returns (MsgRequestAddVestedAccountResponse);
-  rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
+  rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestResponse);
+  rpc RequestAddVestedAccount(MsgRequestAddVestedAccount) returns (MsgRequestResponse);
+  rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgRequestResponse {
+  uint64 requestID = 1;
+  bool autoApproved = 2;
+}
+
 message MsgRequestAddValidator {
   string chainID = 1;
   string valAddress = 2;
@@ -34,18 +39,10 @@ message MsgRequestAddValidator {
   string peer = 6;
 }
 
-message MsgRequestAddValidatorResponse {
-  uint64 requestID = 1;
-}
-
 message MsgRequestRemoveValidator {
   string chainID = 1;
   string creator = 2;
   string validatorAddress = 3;
-}
-
-message MsgRequestRemoveValidatorResponse {
-  uint64 requestID = 1;
 }
 
 message MsgRequestAddAccount {
@@ -54,19 +51,11 @@ message MsgRequestAddAccount {
   repeated cosmos.base.v1beta1.Coin Coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
-message MsgRequestAddAccountResponse {
-  uint64 requestID = 1;
-}
-
 message MsgRequestAddVestedAccount {
   string chainID = 1;
   string address = 2;
   repeated cosmos.base.v1beta1.Coin startingBalance = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
   google.protobuf.Any options = 4 [(cosmos_proto.accepts_interface) = "VestingOptions"];
-}
-
-message MsgRequestAddVestedAccountResponse {
-  uint64 requestID = 1;
 }
 
 message MsgSettleRequest {
@@ -121,8 +110,4 @@ message MsgRequestRemoveAccount {
   string chainID = 1;
   string creator = 2;
   string address = 3;
-}
-
-message MsgRequestRemoveAccountResponse {
-  uint64 requestID = 1;
 }
