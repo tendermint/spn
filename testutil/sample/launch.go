@@ -54,18 +54,11 @@ func ValidatorRemoval(address string) *launch.ValidatorRemoval {
 
 // VestedAccount returns a sample VestedAccount
 func VestedAccount(chainID, address string) *launch.VestedAccount {
-	delayedVesting, err := types.NewAnyWithValue(&launch.DelayedVesting{
-		Vesting: Coins(),
-		EndTime: time.Now().Unix(),
-	})
-	if err != nil {
-		panic(err)
-	}
 	return &launch.VestedAccount{
 		ChainID:         chainID,
 		Address:         address,
 		StartingBalance: Coins(),
-		VestingOptions:  delayedVesting,
+		VestingOptions:  *launch.NewDelayedVesting(Coins(), time.Now().Unix()),
 	}
 }
 

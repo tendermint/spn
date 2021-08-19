@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
@@ -14,18 +13,10 @@ import (
 
 func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 	var (
-		addr       = sample.AccAddress()
 		chainID, _ = sample.ChainID(10)
 	)
 
-	option, err := codec.NewAnyWithValue(&types.DelayedVesting{
-		Vesting: sample.Coins(),
-		EndTime: time.Now().Unix(),
-	})
-	require.NoError(t, err)
-
-	invalidOption, err := codec.NewAnyWithValue(&types.Request{})
-	require.NoError(t, err)
+	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
 
 	tests := []struct {
 		name string
@@ -42,7 +33,8 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
 				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
-		}, {
+		},
+		{
 			name: "invalid chain id",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),
@@ -51,16 +43,8 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         option,
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
-		}, {
-			name: "nil message option",
-			msg: types.MsgRequestAddVestedAccount{
-				Address:         addr,
-				ChainID:         chainID,
-				StartingBalance: sample.Coins(),
-				Options:         nil,
-			},
-			err: sdkerrors.Wrap(types.ErrInvalidAccountOption, addr),
-		}, {
+		},
+		{
 			name: "invalid coins",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),
@@ -70,17 +54,18 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidCoins,
 				"invalid starting balance: 10: the coin list is invalid"),
-		}, {
-			name: "invalid message option",
+		},
+		{
+			name: "invalid vesting options",
 			msg: types.MsgRequestAddVestedAccount{
-				Address:         addr,
+				Address:         sample.AccAddress(),
 				ChainID:         chainID,
 				StartingBalance: sample.Coins(),
-				Options:         invalidOption,
+				Options:         *types.NewDelayedVesting(sample.Coins(), 0),
 			},
-			err: sdkerrors.Wrap(types.ErrInvalidAccountOption,
-				"unknown vested account option type"),
-		}, {
+			err: sdkerrors.Wrapf(types.ErrInvalidVestingOption, ""),
+		},
+		{
 			name: "valid message",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),

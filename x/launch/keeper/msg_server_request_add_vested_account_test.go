@@ -3,7 +3,6 @@ package keeper
 import (
 	"testing"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
@@ -29,14 +28,10 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
 	chains[3].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[3])
-	delayedVesting, err := codec.NewAnyWithValue(&types.DelayedVesting{
-		Vesting: sample.Coins(),
-		EndTime: 10000,
-	})
+	delayedVesting := *types.NewDelayedVesting(sample.Coins(), 10000)
 	chains[4].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[4])
 
-	require.NoError(t, err)
 	tests := []struct {
 		name        string
 		msg         types.MsgRequestAddVestedAccount

@@ -1,52 +1,61 @@
 package types_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+func TestNewDelayedVesting(t *testing.T) {
+	vesting := sample.Coins()
+	endTime := time.Now().Unix()
+
+	vestingOptions := types.NewDelayedVesting(vesting, endTime)
+
+	delayedVesting := vestingOptions.GetDelayedVesting()
+	require.NotNil(t, delayedVesting)
+	require.True(t, vesting.IsEqual(delayedVesting.Vesting))
+	require.EqualValues(t, endTime, delayedVesting.EndTime)
+}
+
 func TestDelayedVesting_Validate(t *testing.T) {
 	tests := []struct {
 		name   string
-		option types.DelayedVesting
+		option types.VestingOptions
 		err    error
 	}{
 		{
 			name: "vesting without coins",
-			option: types.DelayedVesting{
-				Vesting: nil,
-				EndTime: time.Now().Unix(),
-			},
-			err: sdkerrors.Wrap(types.ErrInvalidCoins,
-				"invalid vesting coins for DelayedVesting"),
+			option: *types.NewDelayedVesting(
+				nil,
+				time.Now().Unix(),
+			),
+			err: errors.New("invalid vesting coins for DelayedVesting"),
 		}, {
 			name: "vesting with invalid coins",
-			option: types.DelayedVesting{
-				Vesting: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
-				EndTime: 0,
-			},
-			err: sdkerrors.Wrap(types.ErrInvalidCoins,
-				"invalid vesting coins for DelayedVesting: 10: the coin list is invalid"),
+			option: *types.NewDelayedVesting(
+				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
+				time.Now().Unix(),
+			),
+			err: errors.New("invalid vesting coins for DelayedVesting: 10: the coin list is invalid"),
 		}, {
 			name: "vesting with invalid timestamp",
-			option: types.DelayedVesting{
-				Vesting: sample.Coins(),
-				EndTime: 0,
-			},
-			err: sdkerrors.Wrap(types.ErrInvalidTimestamp,
-				"invalid end time for DelayedVesting"),
+			option: *types.NewDelayedVesting(
+				sample.Coins(),
+				0,
+			),
+			err: errors.New("end time for DelayedVesting cannot be 0"),
 		}, {
 			name: "valid account vesting",
-			option: types.DelayedVesting{
-				Vesting: sample.Coins(),
-				EndTime: time.Now().Unix(),
-			},
+			option: *types.NewDelayedVesting(
+				sample.Coins(),
+				time.Now().Unix(),
+			),
 		},
 	}
 	for _, tt := range tests {

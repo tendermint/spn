@@ -34,8 +34,6 @@ func TestVestedAccountGet(t *testing.T) {
 		)
 		assert.True(t, found)
 
-		// Cached value is cleared when the any type is encoded into the store
-		item.VestingOptions.ClearCachedValue()
 
 		assert.Equal(t, item, rst)
 	}
@@ -59,11 +57,6 @@ func TestVestedAccountRemove(t *testing.T) {
 func TestVestedAccountGetAll(t *testing.T) {
 	keeper, _, ctx, _ := setupKeeper(t)
 	items := createNVestedAccount(keeper, ctx, 10)
-
-	// Cached value is cleared when the any type is encoded into the store
-	for _, item := range items {
-		item.VestingOptions.ClearCachedValue()
-	}
 
 	assert.Equal(t, items, keeper.GetAllVestedAccount(ctx))
 }
