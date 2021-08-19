@@ -160,16 +160,14 @@ func TestApplyRequest(t *testing.T) {
 		}, {
 			name:    "invalid request",
 			request: *sample.RequestWithContent(chainID, invalidContent),
-			err: spnerrors.Critical(
-				"unknown request content type"),
+			err:     spnerrors.ErrCritical,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := applyRequest(sdkCtx, *k, chainID, tt.request)
 			if tt.err != nil {
-				require.Error(t, err)
-				require.Equal(t, tt.err.Error(), err.Error())
+				require.ErrorIs(t, tt.err, err)
 				return
 			}
 			require.NoError(t, err)

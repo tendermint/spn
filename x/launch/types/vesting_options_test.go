@@ -5,7 +5,6 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
@@ -23,24 +22,21 @@ func TestDelayedVesting_Validate(t *testing.T) {
 				Vesting: nil,
 				EndTime: time.Now().Unix(),
 			},
-			err: sdkerrors.Wrap(types.ErrInvalidCoins,
-				"invalid vesting coins for DelayedVesting"),
+			err: types.ErrInvalidCoins,
 		}, {
 			name: "vesting with invalid coins",
 			option: types.DelayedVesting{
 				Vesting: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				EndTime: 0,
 			},
-			err: sdkerrors.Wrap(types.ErrInvalidCoins,
-				"invalid vesting coins for DelayedVesting: 10: the coin list is invalid"),
+			err: types.ErrInvalidCoins,
 		}, {
 			name: "vesting with invalid timestamp",
 			option: types.DelayedVesting{
 				Vesting: sample.Coins(),
 				EndTime: 0,
 			},
-			err: sdkerrors.Wrap(types.ErrInvalidTimestamp,
-				"invalid end time for DelayedVesting"),
+			err: types.ErrInvalidTimestamp,
 		}, {
 			name: "valid account vesting",
 			option: types.DelayedVesting{
