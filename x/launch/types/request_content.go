@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -179,7 +180,24 @@ func (c VestedAccount) Validate() error {
 		return sdkerrors.Wrap(ErrInvalidSelfDelegation, c.StartingBalance.String())
 	}
 
-	return nil
+	if c.VestingOptions == nil {
+		return sdkerrors.Wrap(ErrInvalidAccountOption, c.Address)
+	}
+
+	cdc := codectypes.NewInterfaceRegistry()
+	RegisterInterfaces(cdc)
+
+	var option VestingOptions
+	if err := cdc.UnpackAny(c.VestingOptions, &option); err != nil {
+		return sdkerrors.Wrap(ErrInvalidAccountOption, err.Error())
+	}
+
+	switch option.(type) {
+	case *DelayedVesting:
+	default:
+		return sdkerrors.Wrap(ErrInvalidAccountOption, "unknown vested account option type")
+	}
+	return option.Validate()
 }
 
 // UnpackVestedAccount returns the VestedAccount structure from the codec unpack
