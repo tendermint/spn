@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/tendermint/spn/testutil/sample"
