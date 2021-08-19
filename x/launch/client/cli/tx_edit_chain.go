@@ -6,7 +6,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -45,28 +44,18 @@ func CmdEditChain() *cobra.Command {
 				return err
 			}
 
-			var initialGenesis *codec.Any
+			var initialGenesis *types.InitialGenesis
 			if defaultGenesis && genesisURL != "" {
 				return errors.New("the initial genesis can't be the default genesis and a custom genesis from URL at the same time")
 			}
 			if defaultGenesis {
-				initialGenesis, err = codec.NewAnyWithValue(&types.DefaultInitialGenesis{})
-				if err != nil {
-					return err
-				}
+				initialGenesis = types.NewDefaultInitialGenesis()
 			} else if genesisURL != "" {
 				genesisHash, err := getHashFromURL(cmd.Context(), genesisURL)
 				if err != nil {
 					return err
 				}
-
-				initialGenesis, err = codec.NewAnyWithValue(&types.GenesisURL{
-					Url:  genesisURL,
-					Hash: genesisHash,
-				})
-				if err != nil {
-					return err
-				}
+				initialGenesis = types.NewGenesisURL(genesisURL, genesisHash)
 			}
 
 			msg := types.NewMsgEditChain(
