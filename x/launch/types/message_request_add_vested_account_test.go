@@ -52,7 +52,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 			},
 			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
 		}, {
-			name: "nil message option",
+			name: "nil vesting option",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         addr,
 				ChainID:         chainID,

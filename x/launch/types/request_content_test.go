@@ -185,7 +185,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		}, {
-			name: "message without coins",
+			name: "request content without coins",
 			content: types.GenesisAccount{
 				Address: addr,
 				ChainID: chainID,
@@ -193,7 +193,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		}, {
-			name: "message with invalid coins",
+			name: "request content with invalid coins",
 			content: types.GenesisAccount{
 				Address: addr,
 				ChainID: chainID,
@@ -201,7 +201,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		}, {
-			name: "valid message",
+			name: "valid request content",
 			content: types.GenesisAccount{
 				Address: sample.AccAddress(),
 				ChainID: chainID,
@@ -232,7 +232,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "valid message",
+			name: "valid request content",
 			content: types.GenesisValidator{
 				ChainID:        chainID,
 				Address:        addr,
@@ -351,7 +351,7 @@ func TestValidatorRemoval_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		}, {
-			name: "valid message",
+			name: "valid request content",
 			content: types.ValidatorRemoval{
 				ValAddress: sample.AccAddress(),
 			},
@@ -408,7 +408,7 @@ func TestVestedAccount_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		}, {
-			name: "nil message option",
+			name: "nil vesting option",
 			content: types.VestedAccount{
 				Address:         addr,
 				ChainID:         chainID,
@@ -426,7 +426,7 @@ func TestVestedAccount_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		}, {
-			name: "invalid message option",
+			name: "invalid request content option",
 			content: types.VestedAccount{
 				Address:         addr,
 				ChainID:         chainID,
@@ -435,7 +435,7 @@ func TestVestedAccount_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		}, {
-			name: "valid message",
+			name: "valid request content",
 			content: types.VestedAccount{
 				Address:         sample.AccAddress(),
 				ChainID:         chainID,
