@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
@@ -50,22 +49,10 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	}
 
 	// Initialize initial genesis
-	var err error
 	if msg.GenesisURL == "" {
-		chain.InitialGenesis, err = codec.NewAnyWithValue(&types.DefaultInitialGenesis{})
-
-		// DefaultInitialGenesis must always be able to be encoded into Any therefore this is a critical error
-		if err != nil {
-			return nil, spnerrors.Criticalf("DefaultInitialGenesis can't be used as initial genesis %s", err.Error())
-		}
+		chain.InitialGenesis = types.NewDefaultInitialGenesis()
 	} else {
-		chain.InitialGenesis, err = codec.NewAnyWithValue(&types.GenesisURL{
-			Url:  msg.GenesisURL,
-			Hash: msg.GenesisHash,
-		})
-		if err != nil {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
-		}
+		chain.InitialGenesis = types.NewGenesisURL(msg.GenesisURL, msg.GenesisHash)
 	}
 
 	// Store values

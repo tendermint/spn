@@ -18,14 +18,6 @@ func ChainID(number uint64) (string, string) {
 
 // Chain returns a sample Chain
 func Chain(chainID string, coordinatorID uint64) *launch.Chain {
-	defaultGenesis, err := types.NewAnyWithValue((*launch.DefaultInitialGenesis)(nil))
-	if err != nil {
-		panic(err)
-	}
-
-	// Byte array is nullified in the store if empty
-	defaultGenesis.Value = []byte(nil)
-
 	return &launch.Chain{
 		ChainID:         chainID,
 		CoordinatorID:   coordinatorID,
@@ -33,7 +25,7 @@ func Chain(chainID string, coordinatorID uint64) *launch.Chain {
 		SourceURL:       String(10),
 		SourceHash:      String(10),
 		LaunchTriggered: false,
-		InitialGenesis:  defaultGenesis,
+		InitialGenesis:  launch.NewDefaultInitialGenesis(),
 	}
 }
 
@@ -167,18 +159,13 @@ func MsgEditChain(
 	if modifySource {
 		sourceURL, sourceHash = String(30), String(10)
 	}
-	var initialGenesis *types.Any
+	var initialGenesis *launch.InitialGenesis
 	if modifyInitialGenesis {
 		if genesisURL {
-			initialGenesis, _ = types.NewAnyWithValue(&launch.GenesisURL{
-				Url:  String(30),
-				Hash: GenesisHash(),
-			})
+			initialGenesis = launch.NewGenesisURL(String(30), GenesisHash())
 		} else {
-			initialGenesis, _ = types.NewAnyWithValue(&launch.DefaultInitialGenesis{})
-			initialGenesis.Value = nil
+			initialGenesis = launch.NewDefaultInitialGenesis()
 		}
-		initialGenesis.ClearCachedValue()
 	}
 
 	return *launch.NewMsgEditChain(

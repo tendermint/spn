@@ -29,10 +29,6 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 
 	cdc.RegisterInterface((*VestingOptions)(nil), nil)
 	cdc.RegisterConcrete(&DelayedVesting{}, "spn/launch/DelayedVesting", nil)
-
-	cdc.RegisterInterface((*InitialGenesis)(nil), nil)
-	cdc.RegisterConcrete(&DefaultInitialGenesis{}, "launch/DefaultInitialGenesis", nil)
-	cdc.RegisterConcrete(&GenesisURL{}, "launch/GenesisURL", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -66,13 +62,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		"launch.VestingOptions",
 		(*VestingOptions)(nil),
 		&DelayedVesting{},
-	)
-
-	registry.RegisterInterface(
-		"launch.InitialGenesis",
-		(*InitialGenesis)(nil),
-		&DefaultInitialGenesis{},
-		&GenesisURL{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

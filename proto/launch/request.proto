@@ -2,8 +2,6 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 import "google/protobuf/any.proto";
-import "gogoproto/gogo.proto";
-import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
