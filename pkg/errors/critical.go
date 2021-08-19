@@ -6,9 +6,9 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const codespace = "critical"
+const codespace = "CRITICAL"
 
-var ErrCritical = sdkerrors.Register(codespace, 0, "CRITICAL: the state of the blockchain is inconsistent or an invariant is broken")
+var ErrCritical = sdkerrors.Register(codespace, 0, "the state of the blockchain is inconsistent or an invariant is broken")
 
 // Critical handles and/or returns an error in case a critical error has been encountered:
 // - Inconsistent state
