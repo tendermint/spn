@@ -27,7 +27,6 @@ func networkWithFooObjects(t *testing.T, n int) (*network.Network, []types.Chain
 
 	for i := 0; i < n; i++ {
 		chain := *sample.Chain(strconv.Itoa(i), uint64(i))
-		chain.InitialGenesis.Value = []byte{}
 		state.ChainList = append(
 			state.ChainList,
 			chain,
@@ -80,10 +79,6 @@ func TestShowChain(t *testing.T) {
 				var resp types.QueryGetChainResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.Chain)
-
-				// Cached value is cleared when the any type is encoded into the store
-				tc.obj.InitialGenesis.ClearCachedValue()
-
 				require.Equal(t, tc.obj, resp.Chain)
 			}
 		})
@@ -118,9 +113,6 @@ func TestListFoo(t *testing.T) {
 			var resp types.QueryAllChainResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				// Cached value is cleared when the any type is encoded into the store
-				objs[j].InitialGenesis.ClearCachedValue()
-
 				assert.Equal(t, objs[j], resp.Chain[j-i])
 			}
 		}
@@ -135,9 +127,6 @@ func TestListFoo(t *testing.T) {
 			var resp types.QueryAllChainResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				// Cached value is cleared when the any type is encoded into the store
-				objs[j].InitialGenesis.ClearCachedValue()
-
 				assert.Equal(t, objs[j], resp.Chain[j-i])
 			}
 			next = resp.Pagination.NextKey
@@ -151,12 +140,6 @@ func TestListFoo(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-
-		// Cached value is cleared when the any type is encoded into the store
-		for _, obj := range objs {
-			obj.InitialGenesis.ClearCachedValue()
-		}
-
 		require.Equal(t, objs, resp.Chain)
 	})
 }
