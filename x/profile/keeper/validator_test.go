@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
@@ -6,13 +6,15 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNValidator(keeper *Keeper, ctx sdk.Context, n int) []types.Validator {
+func createNValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Validator {
 	items := make([]types.Validator, n)
 	for i := range items {
 		items[i].Address = strconv.Itoa(i)
@@ -23,7 +25,7 @@ func createNValidator(keeper *Keeper, ctx sdk.Context, n int) []types.Validator 
 }
 
 func TestValidatorGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	items := createNValidator(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetValidator(ctx,
@@ -34,7 +36,7 @@ func TestValidatorGet(t *testing.T) {
 	}
 }
 func TestValidatorRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	items := createNValidator(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveValidator(ctx,
@@ -48,7 +50,7 @@ func TestValidatorRemove(t *testing.T) {
 }
 
 func TestValidatorGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	items := createNValidator(keeper, ctx, 10)
 	assert.Equal(t, items, keeper.GetAllValidator(ctx))
 }

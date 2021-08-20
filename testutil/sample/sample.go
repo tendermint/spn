@@ -50,6 +50,11 @@ func Bytes(n int) []byte {
 	return []byte(String(n))
 }
 
+// Uint64 returns a random uint64
+func Uint64() uint64 {
+	return uint64(rand.Intn(10000))
+}
+
 // String returns a random string of length n
 func String(n int) string {
 	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
