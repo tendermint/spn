@@ -11,8 +11,10 @@ import (
 )
 
 func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
-	addr := sample.AccAddress()
-	chainID, _ := sample.ChainID(10)
+	var (
+		addr       = sample.AccAddress()
+		chainID, _ = sample.ChainID(10)
+	)
 	tests := []struct {
 		name string
 		msg  types.MsgRequestAddAccount
