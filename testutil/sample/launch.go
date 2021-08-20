@@ -6,8 +6,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/gogo/protobuf/proto"
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
@@ -81,7 +79,7 @@ func GenesisValidator(chainID, address string) *launch.GenesisValidator {
 }
 
 // RequestWithContent creates a launch request object with chain id and content
-func RequestWithContent(chainID string, content *types.Any) *launch.Request {
+func RequestWithContent(chainID string, content launch.RequestContent) *launch.Request {
 	return &launch.Request{
 		ChainID:   chainID,
 		Creator:   AccAddress(),
@@ -90,41 +88,21 @@ func RequestWithContent(chainID string, content *types.Any) *launch.Request {
 	}
 }
 
-// AllRequestContents creates all contents types for request and
-// returns a list of all pack contents converted to `types.Any` object
-func AllRequestContents(chainID, genesis, vested, validator string) []*types.Any {
-	contents := make([]proto.Message, 0)
-	contents = append(contents,
-		GenesisAccount(chainID, genesis),
-		AccountRemoval(genesis),
-		VestedAccount(chainID, vested),
-		AccountRemoval(vested),
-		GenesisValidator(chainID, validator),
-		ValidatorRemoval(validator),
-	)
-
-	result := make([]*types.Any, 0)
-	for _, content := range contents {
-		msg, err := types.NewAnyWithValue(content)
-		if err != nil {
-			panic(err)
-		}
-
-		msg.ClearCachedValue()
-
-		result = append(result, msg)
+// AllRequestContents creates all contents types for request
+func AllRequestContents(chainID, genesis, vested, validator string) []launch.RequestContent {
+	return []launch.RequestContent{
+		launch.NewGenesisAccount(chainID, genesis, Coins()),
+		launch.NewAccountRemoval(genesis),
+		launch.NewVestedAccount(chainID, vested, Coins(), VestingOptions()),
+		launch.NewAccountRemoval(vested),
+		launch.NewGenesisValidator(chainID, validator, Bytes(300), Bytes(30), Coin(), String(30)),
+		launch.NewValidatorRemoval(validator),
 	}
-	return result
 }
 
-// GenesisAccountContent returns a sample GenesisAccount request content packed into an *Any object
-func GenesisAccountContent(chainID, address string) *types.Any {
-	content, err := types.NewAnyWithValue(GenesisAccount(chainID, address))
-	if err != nil {
-		panic(err)
-	}
-	content.ClearCachedValue()
-	return content
+// GenesisAccountContent returns a sample GenesisAccount request content
+func GenesisAccountContent(chainID, address string) launch.RequestContent {
+	return launch.NewGenesisAccount(chainID, address, Coins())
 }
 
 // Request returns a sample Request
