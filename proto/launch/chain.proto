@@ -1,7 +1,7 @@
 syntax = "proto3";
 package tendermint.spn.launch;
 
-import "google/protobuf/any.proto";
+import "gogoproto/gogo.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -18,7 +18,7 @@ message Chain {
   string sourceURL = 4;
   string sourceHash = 5;
 
-  InitialGenesis initialGenesis = 6;
+  InitialGenesis initialGenesis = 6 [(gogoproto.nullable) = false];
 
   bool launchTriggered = 7;
   int64 launchTimestamp = 8;

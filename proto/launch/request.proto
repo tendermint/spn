@@ -1,6 +1,7 @@
 syntax = "proto3";
 package tendermint.spn.launch;
 
+import "gogoproto/gogo.proto";
 import "launch/genesis_account.proto";
 import "launch/vested_account.proto";
 import "launch/genesis_validator.proto";
@@ -12,7 +13,7 @@ message Request {
   uint64 requestID = 2;
   string creator = 3;
   int64 createdAt = 4;
-  RequestContent content = 5;
+  RequestContent content = 5 [(gogoproto.nullable) = false];
 }
 
 message RequestContent {

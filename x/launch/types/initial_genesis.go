@@ -10,8 +10,8 @@ import (
 const HashLength = 64
 
 // NewDefaultInitialGenesis returns a InitialGenesis containing a DefaultInitialGenesis
-func NewDefaultInitialGenesis() *InitialGenesis {
-	return &InitialGenesis{
+func NewDefaultInitialGenesis() InitialGenesis {
+	return InitialGenesis{
 		Source: &InitialGenesis_DefaultInitialGenesis{
 			DefaultInitialGenesis: &DefaultInitialGenesis{},
 		},
@@ -19,8 +19,8 @@ func NewDefaultInitialGenesis() *InitialGenesis {
 }
 
 // NewGenesisURL returns a InitialGenesis containing a GenesisURL
-func NewGenesisURL(url, hash string) *InitialGenesis {
-	return &InitialGenesis{
+func NewGenesisURL(url, hash string) InitialGenesis {
+	return InitialGenesis{
 		Source: &InitialGenesis_GenesisURL{
 			GenesisURL: &GenesisURL{
 				Url:  url,
