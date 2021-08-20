@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	codec "github.com/cosmos/cosmos-sdk/codec/types"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -184,7 +183,7 @@ func (c VestedAccount) Validate() error {
 		return sdkerrors.Wrap(ErrInvalidAccountOption, c.Address)
 	}
 
-	cdc := codectypes.NewInterfaceRegistry()
+	cdc := codec.NewInterfaceRegistry()
 	RegisterInterfaces(cdc)
 
 	var option VestingOptions
