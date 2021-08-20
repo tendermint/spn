@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"testing"
@@ -8,13 +8,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/x/profile/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func TestCoordinatorQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCoordinator(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -56,7 +57,7 @@ func TestCoordinatorQuerySingle(t *testing.T) {
 }
 
 func TestCoordinatorQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCoordinator(keeper, ctx, 5)
 

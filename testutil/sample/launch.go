@@ -3,6 +3,7 @@ package sample
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"math/rand"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec/types"
@@ -25,6 +26,7 @@ func Chain(chainID string, coordinatorID uint64) *launch.Chain {
 
 	// Byte array is nullified in the store if empty
 	defaultGenesis.Value = []byte(nil)
+	defaultGenesis.ClearCachedValue()
 
 	return &launch.Chain{
 		ChainID:         chainID,
@@ -69,6 +71,9 @@ func VestedAccount(chainID, address string) *launch.VestedAccount {
 	if err != nil {
 		panic(err)
 	}
+
+	delayedVesting.ClearCachedValue()
+
 	return &launch.VestedAccount{
 		ChainID:         chainID,
 		Address:         address,
@@ -118,6 +123,9 @@ func AllRequestContents(chainID, genesis, vested, validator string) []*types.Any
 		if err != nil {
 			panic(err)
 		}
+
+		msg.ClearCachedValue()
+
 		result = append(result, msg)
 	}
 	return result
@@ -129,6 +137,7 @@ func GenesisAccountContent(chainID, address string) *types.Any {
 	if err != nil {
 		panic(err)
 	}
+	content.ClearCachedValue()
 	return content
 }
 
@@ -206,4 +215,68 @@ func MsgRequestAddValidator(address, chainID string) launch.MsgRequestAddValidat
 func GenesisHash() string {
 	hash := sha256.Sum256([]byte(String(50)))
 	return hex.EncodeToString(hash[:])
+}
+
+// Params returns a sample of params for the launch module
+func Params() launch.Params {
+	maxLaunchTime := rand.Intn(int(launch.MaxParametrableLaunchTime))
+	minLaunchTime := rand.Intn(maxLaunchTime)
+
+	return launch.Params{
+		MinLaunchTime: uint64(minLaunchTime),
+		MaxLaunchTime: uint64(maxLaunchTime),
+	}
+}
+
+// LaunchGenesisState returns a sample genesis state for the launch module
+func LaunchGenesisState() launch.GenesisState {
+	chainID1, _ := ChainID(0)
+	chainID2, _ := ChainID(0)
+
+	return launch.GenesisState{
+		ChainList: []launch.Chain{
+			*Chain(chainID1, Uint64()),
+			*Chain(chainID2, Uint64()),
+		},
+		ChainNameCountList: []launch.ChainNameCount{
+			{
+				ChainName: chainID1,
+				Count:     Uint64(),
+			},
+			{
+				ChainName: chainID2,
+				Count:     Uint64(),
+			},
+		},
+		GenesisAccountList: []launch.GenesisAccount{
+			*GenesisAccount(chainID1, AccAddress()),
+			*GenesisAccount(chainID1, AccAddress()),
+			*GenesisAccount(chainID2, AccAddress()),
+		},
+		VestedAccountList: []launch.VestedAccount{
+			*VestedAccount(chainID1, AccAddress()),
+			*VestedAccount(chainID1, AccAddress()),
+			*VestedAccount(chainID2, AccAddress()),
+		},
+		GenesisValidatorList: []launch.GenesisValidator{
+			*GenesisValidator(chainID1, AccAddress()),
+			*GenesisValidator(chainID1, AccAddress()),
+			*GenesisValidator(chainID2, AccAddress()),
+		},
+		RequestList: []launch.Request{
+			*Request(chainID1),
+			*Request(chainID2),
+		},
+		RequestCountList: []launch.RequestCount{
+			{
+				ChainID: chainID1,
+				Count:   1,
+			},
+			{
+				ChainID: chainID2,
+				Count:   1,
+			},
+		},
+		Params: Params(),
+	}
 }

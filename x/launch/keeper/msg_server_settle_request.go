@@ -45,7 +45,7 @@ func (k msgServer) SettleRequest(
 	// perform request action
 	k.RemoveRequest(ctx, msg.ChainID, request.RequestID)
 	if msg.Approve {
-		err := applyRequest(ctx, k.Keeper, msg.ChainID, request)
+		err := ApplyRequest(ctx, k.Keeper, msg.ChainID, request)
 		if err != nil {
 			return nil, err
 		}

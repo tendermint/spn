@@ -1,10 +1,11 @@
-package keeper
+package keeper_test
 
 import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -100,6 +101,6 @@ func TestMsgTriggerLaunch(t *testing.T) {
 		chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
 		require.True(t, found)
 		require.True(t, chain.LaunchTriggered)
-		require.EqualValues(t, sampleTimestamp.Unix()+int64(tc.msg.RemainingTime), chain.LaunchTimestamp)
+		require.EqualValues(t, testkeeper.ExampleTimestamp.Unix()+int64(tc.msg.RemainingTime), chain.LaunchTimestamp)
 	}
 }

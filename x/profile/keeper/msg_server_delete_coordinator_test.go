@@ -1,10 +1,9 @@
-package keeper
+package keeper_test
 
 import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -29,7 +28,7 @@ func TestMsgDeleteCoordinator(t *testing.T) {
 		{
 			name: "not found coordinator address",
 			msg:  types.MsgDeleteCoordinator{Address: addr},
-			err:  sdkerrors.Wrap(types.ErrCoordAddressNotFound, addr),
+			err:  types.ErrCoordAddressNotFound,
 		},
 		{
 			name: "delete coordinator",
