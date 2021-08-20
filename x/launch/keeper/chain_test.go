@@ -1,17 +1,18 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func createNChain(keeper *Keeper, ctx sdk.Context, n int) []types.Chain {
+func createNChain(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
 		items[i] = *sample.Chain(strconv.Itoa(i), uint64(i))
@@ -20,30 +21,28 @@ func createNChain(keeper *Keeper, ctx sdk.Context, n int) []types.Chain {
 	return items
 }
 
-func createNChainForCoordinator(keeper *Keeper, ctx sdk.Context, coordinatorID uint64, n int) []types.Chain {
+func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordinatorID uint64, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
-		items[i] = *sample.Chain(strconv.Itoa(i), coordinatorID)
+		chainID, _ := sample.ChainID(uint64(i))
+		items[i] = *sample.Chain(chainID, coordinatorID)
 		keeper.SetChain(ctx, items[i])
 	}
 	return items
 }
 
 func TestGetChain(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetChain(ctx, item.ChainID)
 		require.True(t, found)
-
-		// Cached value is cleared when the any type is encoded into the store
-		item.InitialGenesis.ClearCachedValue()
 		require.Equal(t, item, rst)
 	}
 }
 
 func TestRemoveChain(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveChain(ctx, item.ChainID)
@@ -53,13 +52,8 @@ func TestRemoveChain(t *testing.T) {
 }
 
 func TestGetAllChain(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
-
-	// Cached value is cleared when the any type is encoded into the store
-	for _, item := range items {
-		item.InitialGenesis.ClearCachedValue()
-	}
 
 	require.Equal(t, items, keeper.GetAllChain(ctx))
 }

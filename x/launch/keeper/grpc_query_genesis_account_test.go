@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
@@ -7,14 +7,15 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/keeper"
+	"github.com/tendermint/spn/x/launch/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/launch/types"
 )
 
-func createNGenesisAccountForChainID(keeper *Keeper, ctx sdk.Context, n int, chainID string) []types.GenesisAccount {
+func createNGenesisAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID string) []types.GenesisAccount {
 	items := make([]types.GenesisAccount, n)
 	for i := range items {
 		items[i] = *sample.GenesisAccount(chainID, strconv.Itoa(i))
@@ -24,7 +25,7 @@ func createNGenesisAccountForChainID(keeper *Keeper, ctx sdk.Context, n int, cha
 }
 
 func TestGenesisAccountQuerySingle(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNGenesisAccount(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -77,7 +78,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 
 func TestGenesisAccountQueryPaginated(t *testing.T) {
 	var (
-		keeper, _, ctx, _ = setupKeeper(t)
+		keeper, _, ctx, _ = testkeeper.Launch(t)
 		wctx              = sdk.WrapSDKContext(ctx)
 		chainID, _        = sample.ChainID(0)
 		msgs              = createNGenesisAccountForChainID(keeper, ctx, 5, chainID)

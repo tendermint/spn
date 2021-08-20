@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"fmt"
@@ -6,10 +6,12 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func createNCoordinatorByAddress(keeper *Keeper, ctx sdk.Context, n int) []types.CoordinatorByAddress {
+func createNCoordinatorByAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.CoordinatorByAddress {
 	items := make([]types.CoordinatorByAddress, n)
 	for i := range items {
 		items[i].Address = fmt.Sprintf("%d", i)
@@ -19,7 +21,7 @@ func createNCoordinatorByAddress(keeper *Keeper, ctx sdk.Context, n int) []types
 }
 
 func TestCoordinatorByAddressGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetCoordinatorByAddress(ctx, item.Address)
@@ -28,7 +30,7 @@ func TestCoordinatorByAddressGet(t *testing.T) {
 	}
 }
 func TestCoordinatorByAddressRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveCoordinatorByAddress(ctx, item.Address)
@@ -38,7 +40,7 @@ func TestCoordinatorByAddressRemove(t *testing.T) {
 }
 
 func TestCoordinatorByAddressGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	require.Equal(t, items, keeper.GetAllCoordinatorByAddress(ctx))
 }

@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
@@ -7,17 +7,18 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/keeper"
+	"github.com/tendermint/spn/x/launch/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/launch/types"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNVestedAccountForChainID(keeper *Keeper, ctx sdk.Context, n int, chainID string) []types.VestedAccount {
+func createNVestedAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID string) []types.VestedAccount {
 	items := make([]types.VestedAccount, n)
 	for i := range items {
 		items[i] = *sample.VestedAccount(chainID, strconv.Itoa(i))
@@ -27,7 +28,7 @@ func createNVestedAccountForChainID(keeper *Keeper, ctx sdk.Context, n int, chai
 }
 
 func TestVestedAccountQuerySingle(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNVestedAccount(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -84,7 +85,7 @@ func TestVestedAccountQuerySingle(t *testing.T) {
 
 func TestVestedAccountQueryPaginated(t *testing.T) {
 	var (
-		keeper, _, ctx, _ = setupKeeper(t)
+		keeper, _, ctx, _ = testkeeper.Launch(t)
 		wctx              = sdk.WrapSDKContext(ctx)
 		chainID, _        = sample.ChainID(0)
 		msgs              = createNVestedAccountForChainID(keeper, ctx, 5, chainID)

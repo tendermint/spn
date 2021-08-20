@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
@@ -7,17 +7,17 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/x/profile/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/tendermint/spn/x/profile/types"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
 func TestValidatorQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNValidator(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -65,7 +65,7 @@ func TestValidatorQuerySingle(t *testing.T) {
 }
 
 func TestValidatorQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNValidator(keeper, ctx, 5)
 

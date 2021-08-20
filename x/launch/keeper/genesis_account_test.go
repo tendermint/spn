@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
@@ -6,12 +6,13 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-
+	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func createNGenesisAccount(keeper *Keeper, ctx sdk.Context, n int) []types.GenesisAccount {
+func createNGenesisAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.GenesisAccount {
 	items := make([]types.GenesisAccount, n)
 	for i := range items {
 		items[i] = *sample.GenesisAccount(strconv.Itoa(i), strconv.Itoa(i))
@@ -21,7 +22,7 @@ func createNGenesisAccount(keeper *Keeper, ctx sdk.Context, n int) []types.Genes
 }
 
 func TestGenesisAccountGet(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNGenesisAccount(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetGenesisAccount(ctx,
@@ -33,7 +34,7 @@ func TestGenesisAccountGet(t *testing.T) {
 	}
 }
 func TestGenesisAccountRemove(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNGenesisAccount(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveGenesisAccount(ctx,
@@ -49,7 +50,7 @@ func TestGenesisAccountRemove(t *testing.T) {
 }
 
 func TestGenesisAccountGetAll(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNGenesisAccount(keeper, ctx, 10)
 	require.Equal(t, items, keeper.GetAllGenesisAccount(ctx))
 }

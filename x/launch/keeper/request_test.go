@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
@@ -6,10 +6,10 @@ import (
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -17,7 +17,7 @@ import (
 var _ = strconv.IntSize
 
 func createRequests(
-	keeper *Keeper,
+	keeper *keeper.Keeper,
 	ctx sdk.Context,
 	chainID string,
 	contents []*codectypes.Any,
@@ -31,7 +31,7 @@ func createRequests(
 	return items
 }
 
-func createNRequest(keeper *Keeper, ctx sdk.Context, n int) []types.Request {
+func createNRequest(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
 		items[i] = *sample.Request("foo")
@@ -42,7 +42,7 @@ func createNRequest(keeper *Keeper, ctx sdk.Context, n int) []types.Request {
 }
 
 func TestRequestGet(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetRequest(ctx,
@@ -58,7 +58,7 @@ func TestRequestGet(t *testing.T) {
 	}
 }
 func TestRequestRemove(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveRequest(ctx,
@@ -74,7 +74,7 @@ func TestRequestRemove(t *testing.T) {
 }
 
 func TestRequestGetAll(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 
 	// Cached value is cleared when the any type is encoded into the store
@@ -86,7 +86,7 @@ func TestRequestGetAll(t *testing.T) {
 }
 
 func TestRequestCount(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	count := uint64(len(items))
 	require.Equal(t, count, keeper.GetRequestCount(ctx, "foo"))
@@ -101,12 +101,13 @@ func TestApplyRequest(t *testing.T) {
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
 		chainID, _            = sample.ChainID(10)
 		contents              = sample.AllRequestContents(chainID, genesisAcc, vestedAcc, validatorAcc)
+		missingContent, _     = codectypes.NewAnyWithValue(&types.GenesisAccount{ChainID: chainID})
 		invalidContent, _     = codectypes.NewAnyWithValue(&types.Request{})
 	)
 	tests := []struct {
 		name    string
 		request types.Request
-		err     error
+		wantErr bool
 	}{
 		{
 			name:    "test GenesisAccount content",
@@ -114,61 +115,57 @@ func TestApplyRequest(t *testing.T) {
 		}, {
 			name:    "test duplicated GenesisAccount content",
 			request: *sample.RequestWithContent(chainID, contents[0]),
-			err: sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
-				"account %s for chain %s already exist", genesisAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test genesis AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[1]),
 		}, {
 			name:    "test not found genesis AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[1]),
-			err: sdkerrors.Wrapf(types.ErrAccountNotFound,
-				"account %s for chain %s not found", genesisAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test VestedAccount content",
 			request: *sample.RequestWithContent(chainID, contents[2]),
 		}, {
 			name:    "test duplicated VestedAccount content",
 			request: *sample.RequestWithContent(chainID, contents[2]),
-			err: sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
-				"account %s for chain %s already exist", vestedAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test vested AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[3]),
 		}, {
 			name:    "test not found vested AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[3]),
-			err: sdkerrors.Wrapf(types.ErrAccountNotFound,
-				"account %s for chain %s not found", vestedAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test GenesisValidator content",
 			request: *sample.RequestWithContent(chainID, contents[4]),
 		}, {
 			name:    "test duplicated GenesisValidator content",
 			request: *sample.RequestWithContent(chainID, contents[4]),
-			err: sdkerrors.Wrapf(types.ErrValidatorAlreadyExist,
-				"genesis validator %s for chain %s already exist", validatorAcc, chainID),
+			wantErr: true,
 		}, {
 			name:    "test ValidatorRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[5]),
 		}, {
 			name:    "test not found ValidatorRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[5]),
-			err: sdkerrors.Wrapf(types.ErrValidatorNotFound,
-				"genesis validator %s for chain %s not found", validatorAcc, chainID),
+			wantErr: true,
+		}, {
+			name:    "test request with invalid parameters",
+			request: *sample.RequestWithContent(chainID, missingContent),
+			wantErr: true,
 		}, {
 			name:    "invalid request",
 			request: *sample.RequestWithContent(chainID, invalidContent),
-			err: spnerrors.Critical(
-				"unknown request content type"),
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := applyRequest(sdkCtx, *k, chainID, tt.request)
-			if tt.err != nil {
+			err := keeper.ApplyRequest(sdkCtx, *k, chainID, tt.request)
+			if tt.wantErr {
 				require.Error(t, err)
-				require.Equal(t, tt.err.Error(), err.Error())
 				return
 			}
 			require.NoError(t, err)
