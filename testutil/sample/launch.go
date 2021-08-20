@@ -140,12 +140,14 @@ func MsgEditChain(
 	if modifySource {
 		sourceURL, sourceHash = String(30), String(10)
 	}
-	var initialGenesis launch.InitialGenesis
+	var initialGenesis *launch.InitialGenesis
 	if modifyInitialGenesis {
 		if genesisURL {
-			initialGenesis = launch.NewGenesisURL(String(30), GenesisHash())
+			newGenesisURL := launch.NewGenesisURL(String(30), GenesisHash())
+			initialGenesis = &newGenesisURL
 		} else {
-			initialGenesis = launch.NewDefaultInitialGenesis()
+			newDefault := launch.NewDefaultInitialGenesis()
+			initialGenesis = &newDefault
 		}
 	}
 
@@ -154,7 +156,7 @@ func MsgEditChain(
 		chainID,
 		sourceURL,
 		sourceHash,
-		&initialGenesis,
+		initialGenesis,
 	)
 }
 
