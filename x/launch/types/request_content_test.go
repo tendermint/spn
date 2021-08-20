@@ -370,10 +370,7 @@ func TestValidatorRemoval_Validate(t *testing.T) {
 }
 
 func TestVestedAccount_Validate(t *testing.T) {
-	var (
-		addr       = sample.AccAddress()
-		chainID, _ = sample.ChainID(10)
-	)
+	chainID, _ := sample.ChainID(10)
 
 	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
 
@@ -388,7 +385,7 @@ func TestVestedAccount_Validate(t *testing.T) {
 				ChainID:         chainID,
 				Address:         "invalid_address",
 				StartingBalance: sample.Coins(),
-				VestingOptions:  nil,
+				VestingOptions:  option,
 			},
 			wantErr: true,
 		},
@@ -399,16 +396,6 @@ func TestVestedAccount_Validate(t *testing.T) {
 				ChainID:         "invalid_chain",
 				StartingBalance: sample.Coins(),
 				VestingOptions:  option,
-			},
-			wantErr: true,
-		},
-		{
-			name: "nil vesting option",
-			content: types.VestedAccount{
-				Address:         addr,
-				ChainID:         chainID,
-				StartingBalance: sample.Coins(),
-				VestingOptions:  nil,
 			},
 			wantErr: true,
 		},
