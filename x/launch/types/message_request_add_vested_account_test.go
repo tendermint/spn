@@ -40,8 +40,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				StartingBalance: sample.Coins(),
 				Options:         option,
 			},
-			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
-				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
+			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "invalid chain id",
 			msg: types.MsgRequestAddVestedAccount{
@@ -50,7 +49,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				StartingBalance: sample.Coins(),
 				Options:         option,
 			},
-			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
+			err: types.ErrInvalidChainID,
 		}, {
 			name: "nil message option",
 			msg: types.MsgRequestAddVestedAccount{
@@ -59,7 +58,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				StartingBalance: sample.Coins(),
 				Options:         nil,
 			},
-			err: sdkerrors.Wrap(types.ErrInvalidAccountOption, addr),
+			err: types.ErrInvalidAccountOption,
 		}, {
 			name: "invalid coins",
 			msg: types.MsgRequestAddVestedAccount{
@@ -68,8 +67,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				Options:         option,
 			},
-			err: sdkerrors.Wrap(types.ErrInvalidCoins,
-				"invalid starting balance: 10: the coin list is invalid"),
+			err: types.ErrInvalidCoins,
 		}, {
 			name: "invalid message option",
 			msg: types.MsgRequestAddVestedAccount{
@@ -78,8 +76,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				StartingBalance: sample.Coins(),
 				Options:         invalidOption,
 			},
-			err: sdkerrors.Wrap(types.ErrInvalidAccountOption,
-				"unknown vested account option type"),
+			err: types.ErrInvalidAccountOption,
 		}, {
 			name: "valid message",
 			msg: types.MsgRequestAddVestedAccount{

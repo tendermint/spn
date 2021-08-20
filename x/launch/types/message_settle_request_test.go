@@ -24,8 +24,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 				RequestID:   10,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
-				"invalid creator address (invalid_address): decoding bech32 failed: invalid index of 1"),
+			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "invalid chain id",
 			msg: types.MsgSettleRequest{
@@ -34,7 +33,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 				RequestID:   10,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrap(types.ErrInvalidChainID, "invalid_chain"),
+			err: types.ErrInvalidChainID,
 		}, {
 			name: "valid message",
 			msg: types.MsgSettleRequest{

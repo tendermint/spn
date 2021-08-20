@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -35,14 +34,14 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 				Address:    addr,
 				NewAddress: addr,
 			},
-			err: sdkerrors.Wrap(types.ErrCoordAddressNotFound, addr),
+			err: types.ErrCoordAddressNotFound,
 		}, {
 			name: "new address already exist",
 			msg: types.MsgUpdateCoordinatorAddress{
 				Address:    coord1.Address,
 				NewAddress: coord2.Address,
 			},
-			err: sdkerrors.Wrap(types.ErrCoordAlreadyExist, "new address already have a coordinator: 1"),
+			err: types.ErrCoordAlreadyExist,
 		}, {
 			name: "update first coordinator address update",
 			msg: types.MsgUpdateCoordinatorAddress{
@@ -61,7 +60,7 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 				Address:    addr,
 				NewAddress: coord1.Address,
 			},
-			err: sdkerrors.Wrap(types.ErrCoordAlreadyExist, "new address already have a coordinator: 0"),
+			err: types.ErrCoordAlreadyExist,
 		},
 	}
 	for _, tt := range tests {

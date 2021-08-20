@@ -61,7 +61,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
+			err: types.ErrChainNotFound,
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgSettleRequest{
@@ -70,7 +70,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[0].ChainID),
+			err: types.ErrTriggeredLaunch,
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgSettleRequest{
@@ -89,7 +89,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrap(types.ErrNoAddressPermission, coordinator2.Address),
+			err: types.ErrNoAddressPermission,
 		}, {
 			name: "approve an invalid request",
 			msg: types.MsgSettleRequest{
@@ -161,8 +161,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := srv.SettleRequest(ctx, &tt.msg)
 			if tt.err != nil {
-				require.Error(t, err)
-				require.Equal(t, tt.err.Error(), err.Error())
+				require.ErrorIs(t, tt.err, err)
 				return
 			}
 			require.NoError(t, err)

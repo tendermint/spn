@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -34,7 +33,7 @@ func TestMsgCreateCoordinator(t *testing.T) {
 		}, {
 			name: "already exist address",
 			msg:  msg2,
-			err:  sdkerrors.Wrap(types.ErrCoordAlreadyExist, "coordinatorId: 1"),
+			err:  types.ErrCoordAlreadyExist,
 		},
 	}
 	for _, tt := range tests {

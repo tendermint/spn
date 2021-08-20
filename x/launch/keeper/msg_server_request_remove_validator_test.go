@@ -49,7 +49,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
-			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
+			err: types.ErrChainNotFound,
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveValidator{
@@ -57,7 +57,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
+			err: types.ErrTriggeredLaunch,
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgRequestRemoveValidator{
@@ -74,7 +74,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr1,
 				ValidatorAddress: addr3,
 			},
-			err: sdkerrors.Wrap(types.ErrNoAddressPermission, addr1),
+			err: types.ErrNoAddressPermission,
 		}, {
 			name: "add chain 1 request 1",
 			msg: types.MsgRequestRemoveValidator{
@@ -137,8 +137,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := srv.RequestRemoveValidator(ctx, &tt.msg)
 			if tt.err != nil {
-				require.Error(t, err)
-				require.Equal(t, tt.err.Error(), err.Error())
+				require.ErrorIs(t, tt.err, err)
 				return
 			}
 			require.NoError(t, err)
