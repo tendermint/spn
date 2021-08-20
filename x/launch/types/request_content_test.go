@@ -375,14 +375,7 @@ func TestVestedAccount_Validate(t *testing.T) {
 		chainID, _ = sample.ChainID(10)
 	)
 
-	option, err := codec.NewAnyWithValue(&types.DelayedVesting{
-		Vesting: sample.Coins(),
-		EndTime: time.Now().Unix(),
-	})
-	require.NoError(t, err)
-
-	invalidOption, err := codec.NewAnyWithValue(&types.Request{})
-	require.NoError(t, err)
+	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
 
 	tests := []struct {
 		name    string
@@ -398,7 +391,8 @@ func TestVestedAccount_Validate(t *testing.T) {
 				VestingOptions:  nil,
 			},
 			wantErr: true,
-		}, {
+		},
+		{
 			name: "invalid chain id",
 			content: types.VestedAccount{
 				Address:         sample.AccAddress(),
@@ -407,7 +401,8 @@ func TestVestedAccount_Validate(t *testing.T) {
 				VestingOptions:  option,
 			},
 			wantErr: true,
-		}, {
+		},
+		{
 			name: "nil vesting option",
 			content: types.VestedAccount{
 				Address:         addr,
@@ -416,7 +411,8 @@ func TestVestedAccount_Validate(t *testing.T) {
 				VestingOptions:  nil,
 			},
 			wantErr: true,
-		}, {
+		},
+		{
 			name: "invalid coins",
 			content: types.VestedAccount{
 				Address:         sample.AccAddress(),
@@ -425,16 +421,8 @@ func TestVestedAccount_Validate(t *testing.T) {
 				VestingOptions:  option,
 			},
 			wantErr: true,
-		}, {
-			name: "invalid request content option",
-			content: types.VestedAccount{
-				Address:         addr,
-				ChainID:         chainID,
-				StartingBalance: sample.Coins(),
-				VestingOptions:  invalidOption,
-			},
-			wantErr: true,
-		}, {
+		},
+		{
 			name: "valid request content",
 			content: types.VestedAccount{
 				Address:         sample.AccAddress(),
