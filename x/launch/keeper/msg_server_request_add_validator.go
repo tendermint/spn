@@ -36,7 +36,7 @@ func (k msgServer) RequestAddValidator(
 		msg.ConsPubKey,
 		msg.SelfDelegation,
 		msg.Peer,
-		)
+	)
 	request := types.Request{
 		ChainID:   msg.ChainID,
 		Creator:   msg.ValAddress,

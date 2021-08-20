@@ -91,7 +91,7 @@ func TestApplyRequest(t *testing.T) {
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
 		chainID, _            = sample.ChainID(10)
 		contents              = sample.AllRequestContents(chainID, genesisAcc, vestedAcc, validatorAcc)
-		invalidContent    = types.NewGenesisAccount(chainID, "", sdk.NewCoins())
+		invalidContent        = types.NewGenesisAccount(chainID, "", sdk.NewCoins())
 	)
 	tests := []struct {
 		name    string

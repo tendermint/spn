@@ -2,6 +2,7 @@ package types
 
 import (
 	"errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -30,7 +31,7 @@ func NewGenesisAccount(chainID, address string, coins sdk.Coins) RequestContent 
 			GenesisAccount: &GenesisAccount{
 				ChainID: chainID,
 				Address: address,
-				Coins: coins,
+				Coins:   coins,
 			},
 		},
 	}
@@ -58,10 +59,10 @@ func NewVestedAccount(chainID, address string, startingBalance sdk.Coins, vestin
 	return RequestContent{
 		Content: &RequestContent_VestedAccount{
 			VestedAccount: &VestedAccount{
-				ChainID: chainID,
-				Address: address,
+				ChainID:         chainID,
+				Address:         address,
 				StartingBalance: startingBalance,
-				VestingOptions: vestingOptions,
+				VestingOptions:  vestingOptions,
 			},
 		},
 	}
@@ -96,16 +97,16 @@ func NewGenesisValidator(
 	consPubKey []byte,
 	selfDelegation sdk.Coin,
 	peer string,
-	) RequestContent {
+) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_GenesisValidator{
 			GenesisValidator: &GenesisValidator{
-				ChainID:         chainID,
-				Address:         address,
-				GenTx: genTx,
-				ConsPubKey: consPubKey,
+				ChainID:        chainID,
+				Address:        address,
+				GenTx:          genTx,
+				ConsPubKey:     consPubKey,
 				SelfDelegation: selfDelegation,
-				Peer: peer,
+				Peer:           peer,
 			},
 		},
 	}
@@ -183,4 +184,3 @@ func (m ValidatorRemoval) Validate() error {
 	}
 	return nil
 }
-

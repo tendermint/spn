@@ -13,14 +13,14 @@ import (
 
 func TestMsgRequestRemoveAccount(t *testing.T) {
 	var (
-		invalidChain, _            = sample.ChainID(0)
-		coordAddr                  = sample.AccAddress()
-		addr1                      = sample.AccAddress()
-		addr2                      = sample.AccAddress()
-		addr3                      = sample.AccAddress()
-		addr4                      = sample.AccAddress()
+		invalidChain, _          = sample.ChainID(0)
+		coordAddr                = sample.AccAddress()
+		addr1                    = sample.AccAddress()
+		addr2                    = sample.AccAddress()
+		addr3                    = sample.AccAddress()
+		addr4                    = sample.AccAddress()
 		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
-		ctx                        = sdk.WrapSDKContext(sdkCtx)
+		ctx                      = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
