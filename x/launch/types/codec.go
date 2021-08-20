@@ -19,13 +19,6 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
 	cdc.RegisterConcrete(&MsgRequestRemoveValidator{}, "launch/RequestRemoveValidator", nil)
 	cdc.RegisterConcrete(&MsgRequestAddVestedAccount{}, "launch/RequestAddVestedAccount", nil)
-
-	cdc.RegisterInterface((*RequestContent)(nil), nil)
-	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
-	cdc.RegisterConcrete(&GenesisValidator{}, "spn/launch/GenesisValidator", nil)
-	cdc.RegisterConcrete(&AccountRemoval{}, "spn/launch/AccountRemoval", nil)
-	cdc.RegisterConcrete(&ValidatorRemoval{}, "spn/launch/ValidatorRemoval", nil)
-	cdc.RegisterConcrete(&VestedAccount{}, "spn/launch/VestedAccount", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -42,17 +35,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgRequestRemoveAccount{},
 		&MsgRequestRemoveValidator{},
 		&MsgRequestAddVestedAccount{},
-	)
-
-	registry.RegisterInterface(
-		"launch.RequestContent",
-		(*RequestContent)(nil),
-		&GenesisAccount{},
-		&VestedAccount{},
-		&AccountRemoval{},
-		&GenesisValidator{},
-		&ValidatorRemoval{},
-		&VestedAccount{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
