@@ -49,13 +49,15 @@ func CmdEditChain() *cobra.Command {
 				return errors.New("the initial genesis can't be the default genesis and a custom genesis from URL at the same time")
 			}
 			if defaultGenesis {
-				initialGenesis = types.NewDefaultInitialGenesis()
+				defaultInitialGenesis := types.NewDefaultInitialGenesis()
+				initialGenesis = &defaultInitialGenesis
 			} else if genesisURL != "" {
 				genesisHash, err := getHashFromURL(cmd.Context(), genesisURL)
 				if err != nil {
 					return err
 				}
-				initialGenesis = types.NewGenesisURL(genesisURL, genesisHash)
+				genesisURL := types.NewGenesisURL(genesisURL, genesisHash)
+				initialGenesis = &genesisURL
 			}
 
 			msg := types.NewMsgEditChain(

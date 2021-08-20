@@ -19,7 +19,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		addr2                      = sample.AccAddress()
 		addr3                      = sample.AccAddress()
 		addr4                      = sample.AccAddress()
-		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
+		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
 		ctx                        = sdk.WrapSDKContext(sdkCtx)
 	)
 
@@ -149,8 +149,8 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
-				content, err := request.UnpackValidatorRemoval(cdc)
-				require.NoError(t, err)
+				content := request.Content.GetValidatorRemoval()
+				require.NotNil(t, content)
 				require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
 			} else {
 				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.ChainID, tt.msg.ValidatorAddress)

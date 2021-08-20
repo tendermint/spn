@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/launch/types"
@@ -24,22 +23,13 @@ func (k msgServer) RequestAddVestedAccount(
 		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
 	}
 
-	content, err := codec.NewAnyWithValue(&types.VestedAccount{
-		ChainID:         msg.ChainID,
-		Address:         msg.Address,
-		StartingBalance: msg.StartingBalance,
-		VestingOptions:  msg.Options,
-	})
-	if err != nil {
-		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())
-	}
-
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
 			"the chain %s coordinator has been deleted", chain.ChainID)
 	}
 
+	content := types.NewVestedAccount(msg.ChainID, msg.Address, msg.StartingBalance, msg.Options)
 	request := types.Request{
 		ChainID:   msg.ChainID,
 		Creator:   msg.Address,

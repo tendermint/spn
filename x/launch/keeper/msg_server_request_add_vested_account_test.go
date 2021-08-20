@@ -18,7 +18,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 		addr1                      = sample.AccAddress()
 		addr2                      = sample.AccAddress()
 		addr3                      = sample.AccAddress()
-		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
+		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
 		ctx                        = sdk.WrapSDKContext(sdkCtx)
 	)
 
@@ -148,8 +148,8 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
-				content, err := request.UnpackVestedAccount(cdc)
-				require.NoError(t, err)
+				content := request.Content.GetVestedAccount()
+				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
 				require.Equal(t, tt.msg.ChainID, content.ChainID)
 				require.Equal(t, tt.msg.StartingBalance, content.StartingBalance)

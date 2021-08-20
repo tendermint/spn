@@ -19,7 +19,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		addr2                      = sample.AccAddress()
 		addr3                      = sample.AccAddress()
 		addr4                      = sample.AccAddress()
-		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
+		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
 		ctx                        = sdk.WrapSDKContext(sdkCtx)
 	)
 
@@ -149,8 +149,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
-				content, err := request.UnpackAccountRemoval(cdc)
-				require.NoError(t, err)
+				content := request.Content.GetAccountRemoval()
+				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
 			} else {
 				_, foundGenesis := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
