@@ -22,7 +22,10 @@ func NewDelayedVesting(vesting sdk.Coins, endTime int64) *VestingOptions {
 func (m VestingOptions) Validate() error {
 	switch vestionOptions := m.Options.(type) {
 	case *VestingOptions_DelayedVesting:
-		if vestionOptions.DelayedVesting.Vesting.Empty() || !vestionOptions.DelayedVesting.Vesting.IsValid() {
+		if vestionOptions.DelayedVesting.Vesting.Empty() {
+			return errors.New("empty vesting coins for DelayedVesting")
+		}
+		if !vestionOptions.DelayedVesting.Vesting.IsValid() {
 			return fmt.Errorf("invalid vesting coins for DelayedVesting: %s", vestionOptions.DelayedVesting.Vesting.String())
 		}
 		if vestionOptions.DelayedVesting.EndTime == 0 {

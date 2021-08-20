@@ -35,14 +35,14 @@ func TestDelayedVesting_Validate(t *testing.T) {
 				nil,
 				time.Now().Unix(),
 			),
-			err: errors.New("invalid vesting coins for DelayedVesting"),
+			err: errors.New("empty vesting coins for DelayedVesting"),
 		}, {
 			name: "vesting with invalid coins",
 			option: *types.NewDelayedVesting(
 				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				time.Now().Unix(),
 			),
-			err: errors.New("invalid vesting coins for DelayedVesting: 10: the coin list is invalid"),
+			err: errors.New("invalid vesting coins for DelayedVesting: 10"),
 		}, {
 			name: "vesting with invalid timestamp",
 			option: *types.NewDelayedVesting(
