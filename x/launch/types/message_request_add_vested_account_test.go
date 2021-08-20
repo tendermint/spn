@@ -51,7 +51,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 			},
 			err: types.ErrInvalidChainID,
 		}, {
-			name: "nil message option",
+			name: "nil vesting option",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         addr,
 				ChainID:         chainID,
