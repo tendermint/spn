@@ -32,7 +32,8 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         option,
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
+		},
+		{
 			name: "invalid chain id",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),
@@ -41,16 +42,8 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         option,
 			},
 			err: types.ErrInvalidChainID,
-		}, {
-			name: "nil message option",
-			msg: types.MsgRequestAddVestedAccount{
-				Address:         sample.AccAddress(),
-				ChainID:         chainID,
-				StartingBalance: sample.Coins(),
-				Options:         nil,
-			},
-			err: types.ErrInvalidVestingOption,
-		}, {
+		},
+		{
 			name: "invalid coins",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),
@@ -59,7 +52,8 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         option,
 			},
 			err: types.ErrInvalidCoins,
-		}, {
+		},
+		{
 			name: "invalid message option",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),
@@ -68,7 +62,8 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         *types.NewDelayedVesting(sample.Coins(), 0),
 			},
 			err: types.ErrInvalidVestingOption,
-		}, {
+		},
+		{
 			name: "valid message",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),

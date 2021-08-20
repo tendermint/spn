@@ -1,7 +1,6 @@
 package types_test
 
 import (
-	"errors"
 	"testing"
 	"time"
 
@@ -27,7 +26,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 	tests := []struct {
 		name   string
 		option types.VestingOptions
-		err    error
+		valid    bool
 	}{
 		{
 			name: "vesting without coins",
@@ -35,37 +34,38 @@ func TestDelayedVesting_Validate(t *testing.T) {
 				nil,
 				time.Now().Unix(),
 			),
-			err: errors.New("empty vesting coins for DelayedVesting"),
+			valid: false,
 		}, {
 			name: "vesting with invalid coins",
 			option: *types.NewDelayedVesting(
 				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				time.Now().Unix(),
 			),
-			err: errors.New("invalid vesting coins for DelayedVesting: 10"),
+			valid: false,
 		}, {
 			name: "vesting with invalid timestamp",
 			option: *types.NewDelayedVesting(
 				sample.Coins(),
 				0,
 			),
-			err: errors.New("end time for DelayedVesting cannot be 0"),
+			valid: false,
 		}, {
 			name: "valid account vesting",
 			option: *types.NewDelayedVesting(
 				sample.Coins(),
 				time.Now().Unix(),
 			),
+			valid: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.option.Validate()
-			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
-				return
+			if tt.valid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
 			}
-			require.NoError(t, err)
 		})
 	}
 }
