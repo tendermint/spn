@@ -23,7 +23,7 @@ func NewGenesisURL(url, hash string) *InitialGenesis {
 	return &InitialGenesis{
 		Source: &InitialGenesis_GenesisURL{
 			GenesisURL: &GenesisURL{
-				Url: url,
+				Url:  url,
 				Hash: hash,
 			},
 		},

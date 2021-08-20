@@ -34,7 +34,6 @@ func TestVestedAccountGet(t *testing.T) {
 		)
 		assert.True(t, found)
 
-
 		assert.Equal(t, item, rst)
 	}
 }

@@ -26,7 +26,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 	tests := []struct {
 		name   string
 		option types.VestingOptions
-		valid    bool
+		valid  bool
 	}{
 		{
 			name: "vesting without coins",

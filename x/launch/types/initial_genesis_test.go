@@ -46,7 +46,7 @@ func TestGenesisURL_Validate(t *testing.T) {
 		" GenesisURL must contain a url",
 	)
 
-	require.Error(t, types.NewGenesisURL(sample.String(30), sample.String(types.HashLength - 1)).Validate(),
+	require.Error(t, types.NewGenesisURL(sample.String(30), sample.String(types.HashLength-1)).Validate(),
 		" GenesisURL must contain a valid sha256 hash",
 	)
 }
