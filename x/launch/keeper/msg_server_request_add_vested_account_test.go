@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"testing"
@@ -47,7 +47,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
-			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
+			err: types.ErrChainNotFound,
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestAddVestedAccount{
@@ -56,7 +56,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[3].ChainID),
+			err: types.ErrTriggeredLaunch,
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgRequestAddVestedAccount{
@@ -136,8 +136,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := srv.RequestAddVestedAccount(ctx, &tt.msg)
 			if tt.err != nil {
-				require.Error(t, err)
-				require.Equal(t, tt.err.Error(), err.Error())
+				require.ErrorIs(t, tt.err, err)
 				return
 			}
 			require.NoError(t, err)

@@ -10,9 +10,7 @@ import (
 )
 
 func TestGenesisStateValidateValidator(t *testing.T) {
-	var (
-		addr = sample.AccAddress()
-	)
+	addr := sample.AccAddress()
 	tests := []struct {
 		name     string
 		genState *profile.GenesisState

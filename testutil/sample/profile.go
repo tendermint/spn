@@ -1,6 +1,8 @@
 package sample
 
-import profile "github.com/tendermint/spn/x/profile/types"
+import (
+	profile "github.com/tendermint/spn/x/profile/types"
+)
 
 // MsgCreateCoordinator returns a sample MsgCreateCoordinator
 func MsgCreateCoordinator(coordAddress string) profile.MsgCreateCoordinator {
@@ -26,11 +28,57 @@ func ValidatorDescription(desc string) *profile.ValidatorDescription {
 // Coordinator returns a sample Coordinator
 func Coordinator() profile.Coordinator {
 	return profile.Coordinator{
-		Address: AccAddress(),
-		Description: &profile.CoordinatorDescription{
-			Identity: String(10),
-			Website:  String(10),
-			Details:  String(30),
+		Address:     AccAddress(),
+		Description: CoordinatorDescription(),
+	}
+}
+
+// CoordinatorDescription returns a sample CoordinatorDescription
+func CoordinatorDescription() *profile.CoordinatorDescription {
+	return &profile.CoordinatorDescription{
+		Identity: String(10),
+		Website:  String(10),
+		Details:  String(30),
+	}
+}
+
+// ProfileGenesisState returns a sample genesis state for the profile module
+func ProfileGenesisState() profile.GenesisState {
+	coordAddr1, coordAddr2 := AccAddress(), AccAddress()
+
+	return profile.GenesisState{
+		ValidatorList: []profile.Validator{
+			{
+				Address:     AccAddress(),
+				Description: ValidatorDescription(String(10)),
+			},
+			{
+				Address:     AccAddress(),
+				Description: ValidatorDescription(String(10)),
+			},
 		},
+		CoordinatorList: []profile.Coordinator{
+			{
+				CoordinatorId: 0,
+				Address:       coordAddr1,
+				Description:   CoordinatorDescription(),
+			},
+			{
+				CoordinatorId: 1,
+				Address:       coordAddr2,
+				Description:   CoordinatorDescription(),
+			},
+		},
+		CoordinatorByAddressList: []profile.CoordinatorByAddress{
+			{
+				Address:       coordAddr1,
+				CoordinatorId: 0,
+			},
+			{
+				Address:       coordAddr2,
+				CoordinatorId: 1,
+			},
+		},
+		CoordinatorCount: 2,
 	}
 }

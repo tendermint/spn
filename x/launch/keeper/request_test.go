@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
@@ -10,7 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -18,7 +20,7 @@ import (
 var _ = strconv.IntSize
 
 func createRequests(
-	keeper *Keeper,
+	keeper *keeper.Keeper,
 	ctx sdk.Context,
 	chainID string,
 	contents []*codectypes.Any,
@@ -32,7 +34,7 @@ func createRequests(
 	return items
 }
 
-func createNRequest(keeper *Keeper, ctx sdk.Context, n int) []types.Request {
+func createNRequest(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
 		items[i] = *sample.Request("foo")
@@ -43,7 +45,7 @@ func createNRequest(keeper *Keeper, ctx sdk.Context, n int) []types.Request {
 }
 
 func TestRequestGet(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetRequest(ctx,
@@ -59,7 +61,7 @@ func TestRequestGet(t *testing.T) {
 	}
 }
 func TestRequestRemove(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveRequest(ctx,
@@ -75,7 +77,7 @@ func TestRequestRemove(t *testing.T) {
 }
 
 func TestRequestGetAll(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 
 	// Cached value is cleared when the any type is encoded into the store
@@ -87,7 +89,7 @@ func TestRequestGetAll(t *testing.T) {
 }
 
 func TestRequestCount(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	count := uint64(len(items))
 	assert.Equal(t, count, keeper.GetRequestCount(ctx, "foo"))
@@ -160,16 +162,14 @@ func TestApplyRequest(t *testing.T) {
 		}, {
 			name:    "invalid request",
 			request: *sample.RequestWithContent(chainID, invalidContent),
-			err: spnerrors.Critical(
-				"unknown request content type"),
+			err:     spnerrors.ErrCritical,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := applyRequest(sdkCtx, *k, chainID, tt.request)
+			err := keeper.ApplyRequest(sdkCtx, *k, chainID, tt.request)
 			if tt.err != nil {
-				require.Error(t, err)
-				require.Equal(t, tt.err.Error(), err.Error())
+				require.ErrorIs(t, tt.err, err)
 				return
 			}
 			require.NoError(t, err)

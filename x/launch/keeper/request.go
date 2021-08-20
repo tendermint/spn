@@ -131,9 +131,9 @@ func checkAccount(ctx sdk.Context, k Keeper, chainID, address string) (bool, err
 	return foundGenesis || foundVested, nil
 }
 
-// applyRequest approves the request and performs
+// ApplyRequest approves the request and performs
 // the launch information changes
-func applyRequest(
+func ApplyRequest(
 	ctx sdk.Context,
 	k Keeper,
 	chainID string,

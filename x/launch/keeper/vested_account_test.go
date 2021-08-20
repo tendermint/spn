@@ -1,21 +1,21 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/assert"
-
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNVestedAccount(keeper *Keeper, ctx sdk.Context, n int) []types.VestedAccount {
+func createNVestedAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.VestedAccount {
 	items := make([]types.VestedAccount, n)
 	for i := range items {
 		items[i] = *sample.VestedAccount(strconv.Itoa(i), strconv.Itoa(i))
@@ -25,7 +25,7 @@ func createNVestedAccount(keeper *Keeper, ctx sdk.Context, n int) []types.Vested
 }
 
 func TestVestedAccountGet(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNVestedAccount(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetVestedAccount(ctx,
@@ -39,7 +39,7 @@ func TestVestedAccountGet(t *testing.T) {
 	}
 }
 func TestVestedAccountRemove(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNVestedAccount(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveVestedAccount(ctx,
@@ -55,7 +55,7 @@ func TestVestedAccountRemove(t *testing.T) {
 }
 
 func TestVestedAccountGetAll(t *testing.T) {
-	keeper, _, ctx, _ := setupKeeper(t)
+	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNVestedAccount(keeper, ctx, 10)
 
 	assert.Equal(t, items, keeper.GetAllVestedAccount(ctx))

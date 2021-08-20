@@ -1,10 +1,11 @@
-package keeper
+package keeper_test
 
 import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -38,7 +39,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	chain, found := k.GetChain(sdkCtx, delayNotReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
-	chain.LaunchTimestamp = sampleTimestamp.Unix() - types.RevertDelay + 1
+	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - types.RevertDelay + 1
 	k.SetChain(sdkCtx, chain)
 
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
@@ -47,7 +48,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	chain, found = k.GetChain(sdkCtx, delayReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
-	chain.LaunchTimestamp = sampleTimestamp.Unix() - types.RevertDelay
+	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - types.RevertDelay
 	k.SetChain(sdkCtx, chain)
 
 	for _, tc := range []struct {
