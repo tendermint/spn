@@ -53,6 +53,11 @@ func ValidatorRemoval(address string) *launch.ValidatorRemoval {
 	}
 }
 
+// VestingOptions returns a sample VestingOptions
+func VestingOptions() launch.VestingOptions {
+	return *launch.NewDelayedVesting(Coins(), time.Now().Unix())
+}
+
 // VestedAccount returns a sample VestedAccount
 func VestedAccount(chainID, address string) *launch.VestedAccount {
 	return &launch.VestedAccount{
@@ -157,7 +162,7 @@ func MsgEditChain(
 	if modifySource {
 		sourceURL, sourceHash = String(30), String(10)
 	}
-	var initialGenesis *launch.InitialGenesis
+	var initialGenesis launch.InitialGenesis
 	if modifyInitialGenesis {
 		if genesisURL {
 			initialGenesis = launch.NewGenesisURL(String(30), GenesisHash())
@@ -171,7 +176,7 @@ func MsgEditChain(
 		chainID,
 		sourceURL,
 		sourceHash,
-		initialGenesis,
+		&initialGenesis,
 	)
 }
 

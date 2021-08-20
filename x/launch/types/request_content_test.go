@@ -10,6 +10,96 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+func TestNewGenesisAccount(t *testing.T) {
+	chainID, _ := sample.ChainID(0)
+	address := sample.AccAddress()
+	coins := sample.Coins()
+	requestContent := types.NewGenesisAccount(chainID, address, coins)
+
+	genesisAccount := requestContent.GetGenesisAccount()
+	require.NotNil(t, genesisAccount)
+	require.EqualValues(t, chainID, genesisAccount.ChainID)
+	require.EqualValues(t, address, genesisAccount.Address)
+	require.True(t, coins.IsEqual(genesisAccount.Coins))
+
+	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetValidatorRemoval())
+	require.Nil(t, requestContent.GetAccountRemoval())
+	require.Nil(t, requestContent.GetValidatorRemoval())
+}
+
+func TestNewVestedAccount(t *testing.T) {
+	chainID, _ := sample.ChainID(0)
+	address := sample.AccAddress()
+	startingBalance := sample.Coins()
+	vestingOptions := sample.VestingOptions()
+	requestContent := types.NewVestedAccount(chainID, address, startingBalance, vestingOptions)
+
+	vestedAccount := requestContent.GetVestedAccount()
+	require.NotNil(t, vestedAccount)
+	require.EqualValues(t, chainID, vestedAccount.ChainID)
+	require.EqualValues(t, address, vestedAccount.Address)
+	require.True(t, startingBalance.IsEqual(vestedAccount.StartingBalance))
+	require.Equal(t, vestingOptions, vestedAccount.VestingOptions)
+
+	require.Nil(t, requestContent.GetGenesisAccount())
+	require.Nil(t, requestContent.GetValidatorRemoval())
+	require.Nil(t, requestContent.GetAccountRemoval())
+	require.Nil(t, requestContent.GetValidatorRemoval())
+}
+
+func TestNewGenesisValidator(t *testing.T) {
+	chainID, _ := sample.ChainID(0)
+	address := sample.AccAddress()
+	gentTx := sample.Bytes(300)
+	consPubKey := sample.Bytes(30)
+	selfDelegation := sample.Coin()
+	peer := sample.String(30)
+	requestContent := types.NewGenesisValidator(chainID, address, gentTx, consPubKey, selfDelegation, peer)
+
+	genesisValidator := requestContent.GetGenesisValidator()
+	require.NotNil(t, genesisValidator)
+	require.EqualValues(t, chainID, genesisValidator.ChainID)
+	require.EqualValues(t, address, genesisValidator.Address)
+	require.EqualValues(t, gentTx, genesisValidator.GenTx)
+	require.EqualValues(t, consPubKey, genesisValidator.ConsPubKey)
+	require.True(t, selfDelegation.IsEqual(genesisValidator.SelfDelegation))
+	require.EqualValues(t, peer, genesisValidator.Peer)
+
+	require.Nil(t, requestContent.GetGenesisAccount())
+	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetAccountRemoval())
+	require.Nil(t, requestContent.GetValidatorRemoval())
+}
+
+func TestNewAccountRemoval(t *testing.T) {
+	address := sample.AccAddress()
+	requestContent := types.NewAccountRemoval(address)
+
+	accountRemoval := requestContent.GetAccountRemoval()
+	require.NotNil(t, accountRemoval)
+	require.EqualValues(t, address, accountRemoval.Address)
+
+	require.Nil(t, requestContent.GetGenesisAccount())
+	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetGenesisValidator())
+	require.Nil(t, requestContent.GetValidatorRemoval())
+}
+
+func TestNewValidatorRemoval(t *testing.T) {
+	address := sample.AccAddress()
+	requestContent := types.NewValidatorRemoval(address)
+
+	validatorRemoval := requestContent.GetValidatorRemoval()
+	require.NotNil(t, validatorRemoval)
+	require.EqualValues(t, address, validatorRemoval.ValAddress)
+
+	require.Nil(t, requestContent.GetGenesisAccount())
+	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetGenesisValidator())
+	require.Nil(t, requestContent.GetAccountRemoval())
+}
+
 func TestAccountRemoval_Validate(t *testing.T) {
 	tests := []struct {
 		name    string
