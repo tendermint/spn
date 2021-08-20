@@ -1,8 +1,9 @@
 syntax = "proto3";
 package tendermint.spn.launch;
 
-import "google/protobuf/any.proto";
-import "cosmos_proto/cosmos.proto";
+import "launch/genesis_account.proto";
+import "launch/vested_account.proto";
+import "launch/genesis_validator.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -11,15 +12,23 @@ message Request {
   uint64 requestID = 2;
   string creator = 3;
   int64 createdAt = 4;
-  google.protobuf.Any content = 5 [(cosmos_proto.accepts_interface) = "RequestContent"];
+  RequestContent content = 5;
+}
+
+message RequestContent {
+  oneof content {
+    GenesisAccount genesisAccount = 1;
+    VestedAccount vestedAccount = 2;
+    GenesisValidator genesisValidator = 3;
+    AccountRemoval accountRemoval = 4;
+    ValidatorRemoval validatorRemoval = 5;
+  }
 }
 
 message AccountRemoval {
-  option (cosmos_proto.implements_interface) = "RequestContent";
   string address = 1;
 }
 
 message ValidatorRemoval {
-  option (cosmos_proto.implements_interface) = "RequestContent";
   string valAddress = 1;
 }

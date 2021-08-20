@@ -1,20 +1,27 @@
 package types
 
 import (
-	"errors"
-	"fmt"
-
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// RequestContent defines the interface for a request content
-type RequestContent interface {
+// Validatable defines the interface for a type that can be validated
+type Validatable interface {
 	Validate() error
 }
 
-var _ RequestContent = &AccountRemoval{}
+// NewAccountRemoval returns an InitialGenesis containing a DefaultInitialGenesis
+func NewAccountRemoval(address string) RequestContent {
+	return RequestContent{
+		Content: &RequestContent_AccountRemoval{
+			AccountRemoval: &AccountRemoval{
+				Address: address,
+			},
+		},
+	}
+}
+
+var _ Validatable = &AccountRemoval{}
 
 // Validate implements AccountRemoval validation
 func (c AccountRemoval) Validate() error {
@@ -25,25 +32,7 @@ func (c AccountRemoval) Validate() error {
 	return nil
 }
 
-// UnpackAccountRemoval returns the AccountRemoval structure from the codec unpack
-func (r Request) UnpackAccountRemoval(cdc codec.AnyUnpacker) (*AccountRemoval, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
-	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
-
-	result, ok := content.(*AccountRemoval)
-	if !ok {
-		return nil, errors.New("not a accountRemoval request")
-	}
-	return result, nil
-}
-
-var _ RequestContent = &GenesisValidator{}
+var _ Validatable = &GenesisValidator{}
 
 // Validate implements GenesisValidator validation
 func (c GenesisValidator) Validate() error {
@@ -78,25 +67,7 @@ func (c GenesisValidator) Validate() error {
 	return nil
 }
 
-// UnpackGenesisValidator returns the GenesisValidator structure from the codec unpack
-func (r Request) UnpackGenesisValidator(cdc codec.AnyUnpacker) (*GenesisValidator, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
-	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
-
-	result, ok := content.(*GenesisValidator)
-	if !ok {
-		return nil, errors.New("not a genesisValidator request")
-	}
-	return result, nil
-}
-
-var _ RequestContent = &GenesisAccount{}
+var _ Validatable = &GenesisAccount{}
 
 // Validate implements GenesisAccount validation
 func (c GenesisAccount) Validate() error {
@@ -115,25 +86,7 @@ func (c GenesisAccount) Validate() error {
 	return nil
 }
 
-// UnpackGenesisAccount returns the GenesisAccount structure from the codec unpack
-func (r Request) UnpackGenesisAccount(cdc codec.AnyUnpacker) (*GenesisAccount, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
-	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
-
-	result, ok := content.(*GenesisAccount)
-	if !ok {
-		return nil, errors.New("not a genesisAccount request")
-	}
-	return result, nil
-}
-
-var _ RequestContent = &ValidatorRemoval{}
+var _ Validatable = &ValidatorRemoval{}
 
 // Validate implements ValidatorRemoval validation
 func (c ValidatorRemoval) Validate() error {
@@ -144,25 +97,8 @@ func (c ValidatorRemoval) Validate() error {
 	return nil
 }
 
-// UnpackValidatorRemoval returns the ValidatorRemoval structure from the codec unpack
-func (r Request) UnpackValidatorRemoval(cdc codec.AnyUnpacker) (*ValidatorRemoval, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
-	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
 
-	removeValidator, ok := content.(*ValidatorRemoval)
-	if !ok {
-		return nil, errors.New("not a validatorRemoval request")
-	}
-	return removeValidator, nil
-}
-
-var _ RequestContent = &VestedAccount{}
+var _ Validatable = &VestedAccount{}
 
 // Validate implements VestedAccount validation
 func (c VestedAccount) Validate() error {
@@ -183,21 +119,4 @@ func (c VestedAccount) Validate() error {
 		return sdkerrors.Wrapf(ErrInvalidVestingOption, err.Error())
 	}
 	return nil
-}
-
-// UnpackVestedAccount returns the VestedAccount structure from the codec unpack
-func (r Request) UnpackVestedAccount(cdc codec.AnyUnpacker) (*VestedAccount, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
-	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
-	result, ok := content.(*VestedAccount)
-	if !ok {
-		return nil, errors.New("not a vestedAccount request")
-	}
-	return result, nil
 }
