@@ -1,11 +1,10 @@
-package keeper
+package keeper_test
 
 import (
 	"testing"
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/testutil/sample"
@@ -35,16 +34,14 @@ func TestMsgSettleRequest(t *testing.T) {
 	k.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
-	chains[2].ChainID = "foo"
-	k.SetChain(sdkCtx, chains[2])
 
 	requests := createRequests(k, sdkCtx, chains[2].ChainID, []*codectypes.Any{
+		invalidContent,
 		sample.GenesisAccountContent(chains[2].ChainID, addr1),
 		sample.GenesisAccountContent(chains[2].ChainID, addr2),
 		sample.GenesisAccountContent(chains[2].ChainID, addr3),
 		sample.GenesisAccountContent(chains[2].ChainID, addr4),
 		sample.GenesisAccountContent(chains[2].ChainID, addr5),
-		invalidContent,
 	})
 
 	tests := []struct {
@@ -61,7 +58,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrap(types.ErrChainNotFound, invalidChain),
+			err: types.ErrChainNotFound,
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgSettleRequest{
@@ -70,7 +67,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrap(types.ErrTriggeredLaunch, chains[0].ChainID),
+			err: types.ErrTriggeredLaunch,
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgSettleRequest{
@@ -79,8 +76,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrapf(types.ErrChainInactive,
-				"the chain %s coordinator has been deleted", chains[1].ChainID),
+			err: types.ErrChainInactive,
 		}, {
 			name: "no permission error",
 			msg: types.MsgSettleRequest{
@@ -89,7 +85,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrap(types.ErrNoAddressPermission, coordinator2.Address),
+			err: types.ErrNoAddressPermission,
 		}, {
 			name: "approve an invalid request",
 			msg: types.MsgSettleRequest{
@@ -98,24 +94,22 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   99999999,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrapf(types.ErrRequestNotFound,
-				"request 99999999 for chain %s not found", chains[2].ChainID),
+			err: types.ErrRequestNotFound,
 		}, {
 			name: "invalid request content",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
-				RequestID:   requests[5].RequestID,
+				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: spnerrors.Critical(
-				"no concrete type registered for type URL /tendermint.spn.launch.Request against interface *types.RequestContent"),
+			err: spnerrors.ErrCritical,
 		}, {
 			name: "approve chain request 1",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
-				RequestID:   requests[0].RequestID,
+				RequestID:   requests[1].RequestID,
 				Approve:     true,
 			},
 			checkAddr: addr1,
@@ -124,7 +118,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
-				RequestID:   requests[1].RequestID,
+				RequestID:   requests[2].RequestID,
 				Approve:     true,
 			},
 			checkAddr: addr2,
@@ -133,7 +127,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
-				RequestID:   requests[2].RequestID,
+				RequestID:   requests[3].RequestID,
 				Approve:     true,
 			},
 			checkAddr: addr3,
@@ -142,7 +136,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
-				RequestID:   requests[3].RequestID,
+				RequestID:   requests[4].RequestID,
 				Approve:     true,
 			},
 			checkAddr: addr4,
@@ -151,7 +145,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
-				RequestID:   requests[4].RequestID,
+				RequestID:   requests[5].RequestID,
 				Approve:     false,
 			},
 			checkAddr: addr5,
@@ -161,8 +155,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := srv.SettleRequest(ctx, &tt.msg)
 			if tt.err != nil {
-				require.Error(t, err)
-				require.Equal(t, tt.err.Error(), err.Error())
+				require.ErrorIs(t, tt.err, err)
 				return
 			}
 			require.NoError(t, err)

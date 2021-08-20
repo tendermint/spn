@@ -1,10 +1,9 @@
-package keeper
+package keeper_test
 
 import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -30,7 +29,7 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			msg: types.MsgUpdateCoordinatorDescription{
 				Address: addr,
 			},
-			err: sdkerrors.Wrap(types.ErrCoordAddressNotFound, addr),
+			err: types.ErrCoordAddressNotFound,
 		}, {
 			name: "update one value",
 			msg: types.MsgUpdateCoordinatorDescription{

@@ -21,22 +21,21 @@ func TestMsgUpdateValidatorDescription_ValidateBasic(t *testing.T) {
 			msg: profile.MsgUpdateValidatorDescription{
 				Address: "invalid address",
 			},
-			err: sdkerrors.Wrap(sdkerrors.ErrInvalidAddress,
-				"invalid address (invalid_address): decoding bech32 failed: invalid index of 1"),
+			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address and empty description",
 			msg: profile.MsgUpdateValidatorDescription{
 				Address:     addr,
 				Description: &profile.ValidatorDescription{},
 			},
-			err: sdkerrors.Wrap(profile.ErrEmptyDescription, addr),
+			err: profile.ErrEmptyDescription,
 		}, {
 			name: "valid address and nil description",
 			msg: profile.MsgUpdateValidatorDescription{
 				Address:     addr,
 				Description: nil,
 			},
-			err: sdkerrors.Wrap(profile.ErrEmptyDescription, addr),
+			err: profile.ErrEmptyDescription,
 		}, {
 			name: "valid address and description",
 			msg: profile.MsgUpdateValidatorDescription{
