@@ -1,7 +1,6 @@
 package types
 
 import (
-	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -12,7 +11,7 @@ func NewMsgRequestAddVestedAccount(
 	address string,
 	chainID string,
 	coins sdk.Coins,
-	options *types.Any,
+	options VestingOptions,
 ) *MsgRequestAddVestedAccount {
 	return &MsgRequestAddVestedAccount{
 		ChainID:         chainID,
@@ -58,22 +57,8 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 		return sdkerrors.Wrapf(ErrInvalidCoins, "invalid starting balance: %s", msg.StartingBalance.String())
 	}
 
-	if msg.Options == nil {
-		return sdkerrors.Wrap(ErrInvalidAccountOption, msg.Address)
+	if err := msg.Options.Validate(); err != nil {
+		return sdkerrors.Wrapf(ErrInvalidVestingOption, err.Error())
 	}
-
-	cdc := types.NewInterfaceRegistry()
-	RegisterInterfaces(cdc)
-
-	var option VestingOptions
-	if err := cdc.UnpackAny(msg.Options, &option); err != nil {
-		return sdkerrors.Wrap(ErrInvalidAccountOption, err.Error())
-	}
-
-	switch option.(type) {
-	case *DelayedVesting:
-	default:
-		return sdkerrors.Wrap(ErrInvalidAccountOption, "unknown vested account option type")
-	}
-	return option.Validate()
+	return nil
 }

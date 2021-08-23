@@ -1,8 +1,7 @@
 syntax = "proto3";
 package tendermint.spn.launch;
 
-import "google/protobuf/any.proto";
-import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -19,21 +18,24 @@ message Chain {
   string sourceURL = 4;
   string sourceHash = 5;
 
-  google.protobuf.Any initialGenesis = 6 [(cosmos_proto.accepts_interface) = "InitialGenesis"];
+  InitialGenesis initialGenesis = 6 [(gogoproto.nullable) = false];
 
   bool launchTriggered = 7;
   int64 launchTimestamp = 8;
 }
 
-// DefaultInitialGenesis specifies using the default CLI-generated genesis as an initial genesis
-message DefaultInitialGenesis {
-  option (cosmos_proto.implements_interface) = "InitialGenesis";
+message InitialGenesis {
+  oneof source {
+    DefaultInitialGenesis defaultInitialGenesis = 1;
+    GenesisURL genesisURL = 2;
+  }
 }
+
+// DefaultInitialGenesis specifies using the default CLI-generated genesis as an initial genesis
+message DefaultInitialGenesis {}
 
 // GenesisURL specifies using a custom genesis from a URL as the initial genesis
 message GenesisURL {
-  option (cosmos_proto.implements_interface) = "InitialGenesis";
-
   string url = 1;
   string hash = 2;
 }

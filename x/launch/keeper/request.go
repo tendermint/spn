@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -139,72 +138,69 @@ func ApplyRequest(
 	chainID string,
 	request types.Request,
 ) error {
-	cdc := codectypes.NewInterfaceRegistry()
-	types.RegisterInterfaces(cdc)
-
-	var content types.RequestContent
-	if err := cdc.UnpackAny(request.Content, &content); err != nil {
+	if err := request.Content.Validate(); err != nil {
 		return spnerrors.Critical(err.Error())
 	}
 
-	if err := content.Validate(); err != nil {
-		return spnerrors.Critical(err.Error())
-	}
-
-	switch c := content.(type) {
-	case *types.GenesisAccount:
-		found, err := checkAccount(ctx, k, chainID, c.Address)
+	switch requestContent := request.Content.Content.(type) {
+	case *types.RequestContent_GenesisAccount:
+		ga := requestContent.GenesisAccount
+		found, err := checkAccount(ctx, k, chainID, ga.Address)
 		if err != nil {
 			return err
 		}
 		if found {
 			return sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
 				"account %s for chain %s already exist",
-				c.Address, chainID,
+				ga.Address, chainID,
 			)
 		}
-		k.SetGenesisAccount(ctx, *c)
-	case *types.VestedAccount:
-		found, err := checkAccount(ctx, k, chainID, c.Address)
+		k.SetGenesisAccount(ctx, *ga)
+	case *types.RequestContent_VestedAccount:
+		va := requestContent.VestedAccount
+		found, err := checkAccount(ctx, k, chainID, va.Address)
 		if err != nil {
 			return err
 		}
 		if found {
 			return sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
 				"account %s for chain %s already exist",
-				c.Address, chainID,
+				va.Address, chainID,
 			)
 		}
-		k.SetVestedAccount(ctx, *c)
-	case *types.AccountRemoval:
-		found, err := checkAccount(ctx, k, chainID, c.Address)
+		k.SetVestedAccount(ctx, *va)
+	case *types.RequestContent_AccountRemoval:
+		ar := requestContent.AccountRemoval
+		found, err := checkAccount(ctx, k, chainID, ar.Address)
 		if err != nil {
 			return err
 		}
 		if !found {
 			return sdkerrors.Wrapf(types.ErrAccountNotFound,
 				"account %s for chain %s not found",
-				c.Address, chainID,
+				ar.Address, chainID,
 			)
 		}
-		k.RemoveGenesisAccount(ctx, chainID, c.Address)
-		k.RemoveVestedAccount(ctx, chainID, c.Address)
-	case *types.GenesisValidator:
-		if _, found := k.GetGenesisValidator(ctx, chainID, c.Address); found {
+		k.RemoveGenesisAccount(ctx, chainID, ar.Address)
+		k.RemoveVestedAccount(ctx, chainID, ar.Address)
+	case *types.RequestContent_GenesisValidator:
+		ga := requestContent.GenesisValidator
+		if _, found := k.GetGenesisValidator(ctx, chainID, ga.Address); found {
 			return sdkerrors.Wrapf(types.ErrValidatorAlreadyExist,
 				"genesis validator %s for chain %s already exist",
-				c.Address, chainID,
+				ga.Address, chainID,
 			)
 		}
-		k.SetGenesisValidator(ctx, *c)
-	case *types.ValidatorRemoval:
-		if _, found := k.GetGenesisValidator(ctx, chainID, c.ValAddress); !found {
+		k.SetGenesisValidator(ctx, *ga)
+	case *types.RequestContent_ValidatorRemoval:
+		vr := requestContent.ValidatorRemoval
+		if _, found := k.GetGenesisValidator(ctx, chainID, vr.ValAddress); !found {
 			return sdkerrors.Wrapf(types.ErrValidatorNotFound,
 				"genesis validator %s for chain %s not found",
-				c.ValAddress, chainID,
+				vr.ValAddress, chainID,
 			)
 		}
-		k.RemoveGenesisValidator(ctx, chainID, c.ValAddress)
+		k.RemoveGenesisValidator(ctx, chainID, vr.ValAddress)
 	default:
 		return spnerrors.Critical("unknown request content type")
 	}

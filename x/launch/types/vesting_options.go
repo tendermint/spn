@@ -1,23 +1,38 @@
 package types
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"errors"
+	"fmt"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// VestingOptions defines the interface for vesting options
-type VestingOptions interface {
-	Validate() error
+func NewDelayedVesting(vesting sdk.Coins, endTime int64) *VestingOptions {
+	return &VestingOptions{
+		Options: &VestingOptions_DelayedVesting{
+			DelayedVesting: &DelayedVesting{
+				Vesting: vesting,
+				EndTime: endTime,
+			},
+		},
+	}
 }
 
-var _ VestingOptions = &DelayedVesting{}
-
 // Validate check the DelayedVesting object
-func (g DelayedVesting) Validate() error {
-	if g.Vesting.Empty() || !g.Vesting.IsValid() {
-		return sdkerrors.Wrapf(ErrInvalidCoins, "invalid vesting coins for DelayedVesting: %s", g.Vesting.String())
-	}
-	if g.EndTime == 0 {
-		return sdkerrors.Wrap(ErrInvalidTimestamp, "invalid end time for DelayedVesting")
+func (m VestingOptions) Validate() error {
+	switch vestionOptions := m.Options.(type) {
+	case *VestingOptions_DelayedVesting:
+		if vestionOptions.DelayedVesting.Vesting.Empty() {
+			return errors.New("empty vesting coins for DelayedVesting")
+		}
+		if !vestionOptions.DelayedVesting.Vesting.IsValid() {
+			return fmt.Errorf("invalid vesting coins for DelayedVesting: %s", vestionOptions.DelayedVesting.Vesting.String())
+		}
+		if vestionOptions.DelayedVesting.EndTime == 0 {
+			return errors.New("end time for DelayedVesting cannot be 0")
+		}
+	default:
+		return errors.New("unrecognized vesting options")
 	}
 	return nil
 }

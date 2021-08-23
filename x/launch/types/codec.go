@@ -19,20 +19,6 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
 	cdc.RegisterConcrete(&MsgRequestRemoveValidator{}, "launch/RequestRemoveValidator", nil)
 	cdc.RegisterConcrete(&MsgRequestAddVestedAccount{}, "launch/RequestAddVestedAccount", nil)
-
-	cdc.RegisterInterface((*RequestContent)(nil), nil)
-	cdc.RegisterConcrete(&GenesisAccount{}, "spn/launch/GenesisAccount", nil)
-	cdc.RegisterConcrete(&GenesisValidator{}, "spn/launch/GenesisValidator", nil)
-	cdc.RegisterConcrete(&AccountRemoval{}, "spn/launch/AccountRemoval", nil)
-	cdc.RegisterConcrete(&ValidatorRemoval{}, "spn/launch/ValidatorRemoval", nil)
-	cdc.RegisterConcrete(&VestedAccount{}, "spn/launch/VestedAccount", nil)
-
-	cdc.RegisterInterface((*VestingOptions)(nil), nil)
-	cdc.RegisterConcrete(&DelayedVesting{}, "spn/launch/DelayedVesting", nil)
-
-	cdc.RegisterInterface((*InitialGenesis)(nil), nil)
-	cdc.RegisterConcrete(&DefaultInitialGenesis{}, "launch/DefaultInitialGenesis", nil)
-	cdc.RegisterConcrete(&GenesisURL{}, "launch/GenesisURL", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -49,30 +35,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgRequestRemoveAccount{},
 		&MsgRequestRemoveValidator{},
 		&MsgRequestAddVestedAccount{},
-	)
-
-	registry.RegisterInterface(
-		"launch.RequestContent",
-		(*RequestContent)(nil),
-		&GenesisAccount{},
-		&VestedAccount{},
-		&AccountRemoval{},
-		&GenesisValidator{},
-		&ValidatorRemoval{},
-		&VestedAccount{},
-	)
-
-	registry.RegisterInterface(
-		"launch.VestingOptions",
-		(*VestingOptions)(nil),
-		&DelayedVesting{},
-	)
-
-	registry.RegisterInterface(
-		"launch.InitialGenesis",
-		(*InitialGenesis)(nil),
-		&DefaultInitialGenesis{},
-		&GenesisURL{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

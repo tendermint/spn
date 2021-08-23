@@ -1,14 +1,13 @@
 package types
 
 import (
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 var _ sdk.Msg = &MsgEditChain{}
 
-func NewMsgEditChain(coordinator, chainID, sourceURL, sourceHash string, initialGenesis *codectypes.Any) *MsgEditChain {
+func NewMsgEditChain(coordinator, chainID, sourceURL, sourceHash string, initialGenesis *InitialGenesis) *MsgEditChain {
 	return &MsgEditChain{
 		Coordinator:    coordinator,
 		ChainID:        chainID,
@@ -56,22 +55,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 	}
 
 	if msg.InitialGenesis != nil {
-		cdc := codectypes.NewInterfaceRegistry()
-		RegisterInterfaces(cdc)
-
-		var initialGenesis InitialGenesis
-		if err := cdc.UnpackAny(msg.InitialGenesis, &initialGenesis); err != nil {
-			return sdkerrors.Wrap(ErrInvalidInitialGenesis, err.Error())
-		}
-		// Check if the initial genesis is neither a DefaultInitialGenesis nor a GenesisURL
-		switch initialGenesis.(type) {
-		case *DefaultInitialGenesis:
-		case *GenesisURL:
-		default:
-			return sdkerrors.Wrap(ErrInvalidInitialGenesis, "unknown initial genesis types")
-		}
-
-		if err := initialGenesis.Validate(); err != nil {
+		if err := msg.InitialGenesis.Validate(); err != nil {
 			return sdkerrors.Wrap(ErrInvalidInitialGenesis, err.Error())
 		}
 	}

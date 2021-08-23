@@ -5,38 +5,12 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 )
 
 const (
 	ChainIDSeparator   = "-"
 	ChainNameMaxLength = 30
 )
-
-// GetDefaultInitialGenesis returns the DefaultInitialGenesis structure if the initial genesis for the chain is default genesis
-func (c Chain) GetDefaultInitialGenesis(unpacker codec.AnyUnpacker) (*DefaultInitialGenesis, error) {
-	var initialGenesis InitialGenesis
-	err := unpacker.UnpackAny(c.InitialGenesis, &initialGenesis)
-	defaultGenesis, ok := initialGenesis.(*DefaultInitialGenesis)
-	if !ok {
-		return nil, errors.New("not a default initial genesis")
-	}
-
-	return defaultGenesis, err
-}
-
-// GetGenesisURL returns the GenesisURL structure if the initial genesis for the chain is a genesis URL
-func (c Chain) GetGenesisURL(unpacker codec.AnyUnpacker) (*GenesisURL, error) {
-	var initialGenesis InitialGenesis
-	err := unpacker.UnpackAny(c.InitialGenesis, &initialGenesis)
-	genesisURL, ok := initialGenesis.(*GenesisURL)
-	if !ok {
-		return nil, errors.New("not a genesis url")
-	}
-
-	return genesisURL, err
-}
 
 // ChainIDFromChainName returns the chain id from the chain name and the count
 func ChainIDFromChainName(chainName string, chainNameCount uint64) string {

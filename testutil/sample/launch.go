@@ -6,8 +6,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/gogo/protobuf/proto"
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
@@ -19,15 +17,6 @@ func ChainID(number uint64) (string, string) {
 
 // Chain returns a sample Chain
 func Chain(chainID string, coordinatorID uint64) *launch.Chain {
-	defaultGenesis, err := types.NewAnyWithValue((*launch.DefaultInitialGenesis)(nil))
-	if err != nil {
-		panic(err)
-	}
-
-	// Byte array is nullified in the store if empty
-	defaultGenesis.Value = []byte(nil)
-	defaultGenesis.ClearCachedValue()
-
 	return &launch.Chain{
 		ChainID:         chainID,
 		CoordinatorID:   coordinatorID,
@@ -35,7 +24,7 @@ func Chain(chainID string, coordinatorID uint64) *launch.Chain {
 		SourceURL:       String(10),
 		SourceHash:      String(10),
 		LaunchTriggered: false,
-		InitialGenesis:  defaultGenesis,
+		InitialGenesis:  launch.NewDefaultInitialGenesis(),
 	}
 }
 
@@ -62,23 +51,18 @@ func ValidatorRemoval(address string) *launch.ValidatorRemoval {
 	}
 }
 
+// VestingOptions returns a sample VestingOptions
+func VestingOptions() launch.VestingOptions {
+	return *launch.NewDelayedVesting(Coins(), time.Now().Unix())
+}
+
 // VestedAccount returns a sample VestedAccount
 func VestedAccount(chainID, address string) *launch.VestedAccount {
-	delayedVesting, err := types.NewAnyWithValue(&launch.DelayedVesting{
-		Vesting: Coins(),
-		EndTime: time.Now().Unix(),
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	delayedVesting.ClearCachedValue()
-
 	return &launch.VestedAccount{
 		ChainID:         chainID,
 		Address:         address,
 		StartingBalance: Coins(),
-		VestingOptions:  delayedVesting,
+		VestingOptions:  *launch.NewDelayedVesting(Coins(), time.Now().Unix()),
 	}
 }
 
@@ -95,7 +79,7 @@ func GenesisValidator(chainID, address string) *launch.GenesisValidator {
 }
 
 // RequestWithContent creates a launch request object with chain id and content
-func RequestWithContent(chainID string, content *types.Any) *launch.Request {
+func RequestWithContent(chainID string, content launch.RequestContent) *launch.Request {
 	return &launch.Request{
 		ChainID:   chainID,
 		Creator:   AccAddress(),
@@ -104,41 +88,21 @@ func RequestWithContent(chainID string, content *types.Any) *launch.Request {
 	}
 }
 
-// AllRequestContents creates all contents types for request and
-// returns a list of all pack contents converted to `types.Any` object
-func AllRequestContents(chainID, genesis, vested, validator string) []*types.Any {
-	contents := make([]proto.Message, 0)
-	contents = append(contents,
-		GenesisAccount(chainID, genesis),
-		AccountRemoval(genesis),
-		VestedAccount(chainID, vested),
-		AccountRemoval(vested),
-		GenesisValidator(chainID, validator),
-		ValidatorRemoval(validator),
-	)
-
-	result := make([]*types.Any, 0)
-	for _, content := range contents {
-		msg, err := types.NewAnyWithValue(content)
-		if err != nil {
-			panic(err)
-		}
-
-		msg.ClearCachedValue()
-
-		result = append(result, msg)
+// AllRequestContents creates all contents types for request
+func AllRequestContents(chainID, genesis, vested, validator string) []launch.RequestContent {
+	return []launch.RequestContent{
+		launch.NewGenesisAccount(chainID, genesis, Coins()),
+		launch.NewAccountRemoval(genesis),
+		launch.NewVestedAccount(chainID, vested, Coins(), VestingOptions()),
+		launch.NewAccountRemoval(vested),
+		launch.NewGenesisValidator(chainID, validator, Bytes(300), Bytes(30), Coin(), String(30)),
+		launch.NewValidatorRemoval(validator),
 	}
-	return result
 }
 
-// GenesisAccountContent returns a sample GenesisAccount request content packed into an *Any object
-func GenesisAccountContent(chainID, address string) *types.Any {
-	content, err := types.NewAnyWithValue(GenesisAccount(chainID, address))
-	if err != nil {
-		panic(err)
-	}
-	content.ClearCachedValue()
-	return content
+// GenesisAccountContent returns a sample GenesisAccount request content
+func GenesisAccountContent(chainID, address string) launch.RequestContent {
+	return launch.NewGenesisAccount(chainID, address, Coins())
 }
 
 // Request returns a sample Request
@@ -176,18 +140,15 @@ func MsgEditChain(
 	if modifySource {
 		sourceURL, sourceHash = String(30), String(10)
 	}
-	var initialGenesis *types.Any
+	var initialGenesis *launch.InitialGenesis
 	if modifyInitialGenesis {
 		if genesisURL {
-			initialGenesis, _ = types.NewAnyWithValue(&launch.GenesisURL{
-				Url:  String(30),
-				Hash: GenesisHash(),
-			})
+			newGenesisURL := launch.NewGenesisURL(String(30), GenesisHash())
+			initialGenesis = &newGenesisURL
 		} else {
-			initialGenesis, _ = types.NewAnyWithValue(&launch.DefaultInitialGenesis{})
-			initialGenesis.Value = nil
+			newDefault := launch.NewDefaultInitialGenesis()
+			initialGenesis = &newDefault
 		}
-		initialGenesis.ClearCachedValue()
 	}
 
 	return *launch.NewMsgEditChain(

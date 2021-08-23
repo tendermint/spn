@@ -3,25 +3,25 @@ package tendermint.spn.launch;
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
-import "google/protobuf/any.proto";
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
-import "cosmos_proto/cosmos.proto";
 
 message VestedAccount {
-  option (cosmos_proto.implements_interface) = "RequestContent";
-
   string chainID = 1;
   string address = 2;
   repeated cosmos.base.v1beta1.Coin startingBalance = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
-  google.protobuf.Any vestingOptions = 4 [(cosmos_proto.accepts_interface) = "VestingOptions"];
+  VestingOptions vestingOptions = 4 [(gogoproto.nullable) = false];
+}
+
+message VestingOptions {
+  oneof options {
+    DelayedVesting delayedVesting = 1;
+  }
 }
 
 // DelayedVesting represents options for delayed vesting
 // Delayed vesting is the type of vesting where all vesting coins are vested once end time is reached
 message DelayedVesting {
-  option (cosmos_proto.implements_interface) = "VestingOptions";
-
-  repeated cosmos.base.v1beta1.Coin vesting = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
-  int64 endTime = 1;
+  repeated cosmos.base.v1beta1.Coin vesting = 1 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  int64 endTime = 2;
 }

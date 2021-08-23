@@ -33,10 +33,6 @@ func TestVestedAccountGet(t *testing.T) {
 			item.Address,
 		)
 		require.True(t, found)
-
-		// Cached value is cleared when the any type is encoded into the store
-		item.VestingOptions.ClearCachedValue()
-
 		require.Equal(t, item, rst)
 	}
 }
@@ -59,11 +55,6 @@ func TestVestedAccountRemove(t *testing.T) {
 func TestVestedAccountGetAll(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNVestedAccount(keeper, ctx, 10)
-
-	// Cached value is cleared when the any type is encoded into the store
-	for _, item := range items {
-		item.VestingOptions.ClearCachedValue()
-	}
 
 	require.Equal(t, items, keeper.GetAllVestedAccount(ctx))
 }

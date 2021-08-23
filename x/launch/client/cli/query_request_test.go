@@ -5,18 +5,16 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
-
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/client/cli"
+	"github.com/tendermint/spn/x/launch/types"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/x/launch/client/cli"
-	"github.com/tendermint/spn/x/launch/types"
 )
 
 // Prevent strconv unused error
@@ -92,10 +90,6 @@ func TestShowRequest(t *testing.T) {
 				var resp types.QueryGetRequestResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.Request)
-
-				// Cached value is cleared when the any type is encoded into the store
-				tc.obj.Content.ClearCachedValue()
-
 				require.Equal(t, tc.obj, resp.Request)
 			}
 		})
@@ -131,9 +125,6 @@ func TestListRequest(t *testing.T) {
 			var resp types.QueryAllRequestResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				// Cached value is cleared when the any type is encoded into the store
-				objs[j].Content.ClearCachedValue()
-
 				require.Equal(t, objs[j], resp.Request[j-i])
 			}
 		}
@@ -148,9 +139,6 @@ func TestListRequest(t *testing.T) {
 			var resp types.QueryAllRequestResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				// Cached value is cleared when the any type is encoded into the store
-				objs[j].Content.ClearCachedValue()
-
 				require.Equal(t, objs[j], resp.Request[j-i])
 			}
 			next = resp.Pagination.NextKey
@@ -164,12 +152,6 @@ func TestListRequest(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-
-		// Cached value is cleared when the any type is encoded into the store
-		for _, obj := range objs {
-			obj.Content.ClearCachedValue()
-		}
-
 		require.Equal(t, objs, resp.Request)
 	})
 }
