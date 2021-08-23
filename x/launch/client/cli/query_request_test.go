@@ -5,19 +5,16 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
-
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/client/cli"
+	"github.com/tendermint/spn/x/launch/types"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/x/launch/client/cli"
-	"github.com/tendermint/spn/x/launch/types"
 )
 
 // Prevent strconv unused error
@@ -128,7 +125,7 @@ func TestListRequest(t *testing.T) {
 			var resp types.QueryAllRequestResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.Request[j-i])
+				require.Equal(t, objs[j], resp.Request[j-i])
 			}
 		}
 	})
@@ -142,7 +139,7 @@ func TestListRequest(t *testing.T) {
 			var resp types.QueryAllRequestResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.Request[j-i])
+				require.Equal(t, objs[j], resp.Request[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

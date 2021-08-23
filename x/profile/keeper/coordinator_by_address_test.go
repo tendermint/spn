@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
@@ -25,8 +25,8 @@ func TestCoordinatorByAddressGet(t *testing.T) {
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetCoordinatorByAddress(ctx, item.Address)
-		assert.True(t, found)
-		assert.Equal(t, item, rst)
+		require.True(t, found)
+		require.Equal(t, item, rst)
 	}
 }
 func TestCoordinatorByAddressRemove(t *testing.T) {
@@ -35,12 +35,12 @@ func TestCoordinatorByAddressRemove(t *testing.T) {
 	for _, item := range items {
 		keeper.RemoveCoordinatorByAddress(ctx, item.Address)
 		_, found := keeper.GetCoordinatorByAddress(ctx, item.Address)
-		assert.False(t, found)
+		require.False(t, found)
 	}
 }
 
 func TestCoordinatorByAddressGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
-	assert.Equal(t, items, keeper.GetAllCoordinatorByAddress(ctx))
+	require.Equal(t, items, keeper.GetAllCoordinatorByAddress(ctx))
 }

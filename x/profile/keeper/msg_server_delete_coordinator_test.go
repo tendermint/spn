@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
@@ -44,10 +43,10 @@ func TestMsgDeleteCoordinator(t *testing.T) {
 			}
 			require.NoError(t, err)
 			_, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			assert.False(t, found, "coordinator by address was not removed")
+			require.False(t, found, "coordinator by address was not removed")
 
 			found = k.HasCoordinator(ctx, got.CoordinatorId)
-			assert.False(t, found, "coordinator id not removed")
+			require.False(t, found, "coordinator id not removed")
 		})
 	}
 }

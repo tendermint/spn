@@ -6,7 +6,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/x/launch/types"
@@ -90,7 +89,7 @@ func TestRequestQueryPaginated(t *testing.T) {
 			resp, err := keeper.RequestAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, msgs[j], resp.Request[j-i])
+				require.Equal(t, msgs[j], resp.Request[j-i])
 			}
 		}
 	})
@@ -101,7 +100,7 @@ func TestRequestQueryPaginated(t *testing.T) {
 			resp, err := keeper.RequestAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, msgs[j], resp.Request[j-i])
+				require.Equal(t, msgs[j], resp.Request[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

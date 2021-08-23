@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
@@ -32,9 +32,8 @@ func TestVestedAccountGet(t *testing.T) {
 			item.ChainID,
 			item.Address,
 		)
-		assert.True(t, found)
-
-		assert.Equal(t, item, rst)
+		require.True(t, found)
+		require.Equal(t, item, rst)
 	}
 }
 func TestVestedAccountRemove(t *testing.T) {
@@ -49,7 +48,7 @@ func TestVestedAccountRemove(t *testing.T) {
 			item.ChainID,
 			item.Address,
 		)
-		assert.False(t, found)
+		require.False(t, found)
 	}
 }
 
@@ -57,5 +56,5 @@ func TestVestedAccountGetAll(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNVestedAccount(keeper, ctx, 10)
 
-	assert.Equal(t, items, keeper.GetAllVestedAccount(ctx))
+	require.Equal(t, items, keeper.GetAllVestedAccount(ctx))
 }

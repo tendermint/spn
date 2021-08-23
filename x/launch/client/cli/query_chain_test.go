@@ -5,13 +5,11 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
-
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/client/cli"
 	"github.com/tendermint/spn/x/launch/types"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
@@ -113,7 +111,7 @@ func TestListFoo(t *testing.T) {
 			var resp types.QueryAllChainResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.Chain[j-i])
+				require.Equal(t, objs[j], resp.Chain[j-i])
 			}
 		}
 	})
@@ -127,7 +125,7 @@ func TestListFoo(t *testing.T) {
 			var resp types.QueryAllChainResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.Chain[j-i])
+				require.Equal(t, objs[j], resp.Chain[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}
