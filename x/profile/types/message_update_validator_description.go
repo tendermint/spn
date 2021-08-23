@@ -17,7 +17,7 @@ func NewMsgUpdateValidatorDescription(
 ) *MsgUpdateValidatorDescription {
 	return &MsgUpdateValidatorDescription{
 		Address: address,
-		Description: &ValidatorDescription{
+		Description: ValidatorDescription{
 			Identity:        identity,
 			Moniker:         moniker,
 			Website:         website,
@@ -52,9 +52,6 @@ func (msg *MsgUpdateValidatorDescription) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
-	}
-	if msg.Description == nil {
-		return sdkerrors.Wrap(ErrEmptyDescription, msg.Address)
 	}
 	if msg.Description.Details == "" &&
 		msg.Description.Moniker == "" &&

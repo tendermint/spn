@@ -26,7 +26,7 @@ func TestMsgUpdateValidatorDescription_ValidateBasic(t *testing.T) {
 			name: "valid address and empty description",
 			msg: profile.MsgUpdateValidatorDescription{
 				Address:     addr,
-				Description: &profile.ValidatorDescription{},
+				Description: profile.ValidatorDescription{},
 			},
 			err: profile.ErrEmptyDescription,
 		}, {
@@ -40,7 +40,7 @@ func TestMsgUpdateValidatorDescription_ValidateBasic(t *testing.T) {
 			name: "valid address and description",
 			msg: profile.MsgUpdateValidatorDescription{
 				Address: sample.AccAddress(),
-				Description: &profile.ValidatorDescription{
+				Description: profile.ValidatorDescription{
 					Identity:        "identity",
 					Moniker:         "moniker",
 					Website:         "website",
