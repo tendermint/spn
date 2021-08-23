@@ -8,7 +8,7 @@ import "gogoproto/gogo.proto";
 message Coordinator {
   uint64 coordinatorId = 1;
   string address = 2;
-  CoordinatorDescription description = 3;
+  CoordinatorDescription description = 3 [(gogoproto.nullable) = false];
 }
 
 message CoordinatorDescription {

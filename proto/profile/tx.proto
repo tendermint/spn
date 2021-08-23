@@ -2,6 +2,7 @@ syntax = "proto3";
 package tendermint.spn.profile;
 
 // this line is used by starport scaffolding # proto/tx/import
+import "gogoproto/gogo.proto";
 import "profile/coordinator.proto";
 import "profile/validator.proto";
 
@@ -33,7 +34,7 @@ message MsgDeleteValidatorResponse {
 
 message MsgUpdateValidatorDescription {
   string address = 1;
-  ValidatorDescription description = 2;
+  ValidatorDescription description = 2 [(gogoproto.nullable) = false];
 }
 
 message MsgUpdateValidatorDescriptionResponse {
@@ -41,7 +42,7 @@ message MsgUpdateValidatorDescriptionResponse {
 
 message MsgCreateCoordinator {
   string address = 1;
-  CoordinatorDescription description = 2;
+  CoordinatorDescription description = 2 [(gogoproto.nullable) = false];
 }
 
 message MsgCreateCoordinatorResponse {
@@ -66,7 +67,7 @@ message MsgUpdateCoordinatorAddressResponse {
 
 message MsgUpdateCoordinatorDescription {
   string address = 1;
-  CoordinatorDescription description = 2;
+  CoordinatorDescription description = 2 [(gogoproto.nullable) = false];
 }
 
 message MsgUpdateCoordinatorDescriptionResponse {
