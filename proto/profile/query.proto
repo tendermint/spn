@@ -12,7 +12,7 @@ option go_package = "github.com/tendermint/spn/x/profile/types";
 
 // Query defines the gRPC querier service.
 service Query {
-    // this line is used by starport scaffolding # 2
+	// this line is used by starport scaffolding # 2
   // Queries a validator by index.
   rpc Validator(QueryGetValidatorRequest) returns (QueryGetValidatorResponse) {
     option (google.api.http).get = "/tendermint/spn/profile/validator/{address}";
@@ -22,11 +22,6 @@ service Query {
   rpc ValidatorAll(QueryAllValidatorRequest) returns (QueryAllValidatorResponse) {
     option (google.api.http).get = "/tendermint/spn/profile/validator";
   }
-
-	// Queries a coordinatorByAddress by index.
-	rpc CoordinatorByAddress(QueryGetCoordinatorByAddressRequest) returns (QueryGetCoordinatorByAddressResponse) {
-		option (google.api.http).get = "/tendermint/spn/profile/coordinatorByAddress/{address}";
-	}
 
 	// Queries a coordinator by id.
 	rpc Coordinator(QueryGetCoordinatorRequest) returns (QueryGetCoordinatorResponse) {
@@ -38,6 +33,10 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/profile/coordinator";
 	}
 
+	// Queries a coordinatorByAddress by index.
+	rpc CoordinatorByAddress(QueryGetCoordinatorByAddressRequest) returns (QueryGetCoordinatorByAddressResponse) {
+		option (google.api.http).get = "/tendermint/spn/profile/coordinatorByAddress/{address}";
+	}
 }
 
 // this line is used by starport scaffolding # 3
@@ -59,22 +58,6 @@ message QueryAllValidatorResponse {
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetCoordinatorByAddressRequest {
-	string address = 1;
-}
-
-message QueryGetCoordinatorByAddressResponse {
-	CoordinatorByAddress coordinatorByAddress = 1 [(gogoproto.nullable) = false];;
-}
-
-message QueryAllCoordinatorByAddressRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
-}
-
-message QueryAllCoordinatorByAddressResponse {
-	repeated CoordinatorByAddress coordinatorByAddress = 1 [(gogoproto.nullable) = false];;
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
 message QueryGetCoordinatorRequest {
 	uint64 id = 1;
 }
@@ -90,4 +73,12 @@ message QueryAllCoordinatorRequest {
 message QueryAllCoordinatorResponse {
 	repeated Coordinator Coordinator = 1 [(gogoproto.nullable) = false];;
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetCoordinatorByAddressRequest {
+	string address = 1;
+}
+
+message QueryGetCoordinatorByAddressResponse {
+	CoordinatorByAddress coordinatorByAddress = 1 [(gogoproto.nullable) = false];;
 }

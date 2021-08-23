@@ -27,87 +27,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// this line is used by starport scaffolding # proto/tx/message
-type MsgDeleteValidator struct {
-	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-}
-
-func (m *MsgDeleteValidator) Reset()         { *m = MsgDeleteValidator{} }
-func (m *MsgDeleteValidator) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteValidator) ProtoMessage()    {}
-func (*MsgDeleteValidator) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a471fea62152592e, []int{0}
-}
-func (m *MsgDeleteValidator) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgDeleteValidator) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgDeleteValidator.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgDeleteValidator) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteValidator.Merge(m, src)
-}
-func (m *MsgDeleteValidator) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgDeleteValidator) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteValidator.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgDeleteValidator proto.InternalMessageInfo
-
-func (m *MsgDeleteValidator) GetAddress() string {
-	if m != nil {
-		return m.Address
-	}
-	return ""
-}
-
-type MsgDeleteValidatorResponse struct {
-}
-
-func (m *MsgDeleteValidatorResponse) Reset()         { *m = MsgDeleteValidatorResponse{} }
-func (m *MsgDeleteValidatorResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteValidatorResponse) ProtoMessage()    {}
-func (*MsgDeleteValidatorResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a471fea62152592e, []int{1}
-}
-func (m *MsgDeleteValidatorResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgDeleteValidatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgDeleteValidatorResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgDeleteValidatorResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteValidatorResponse.Merge(m, src)
-}
-func (m *MsgDeleteValidatorResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgDeleteValidatorResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteValidatorResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgDeleteValidatorResponse proto.InternalMessageInfo
-
 type MsgUpdateValidatorDescription struct {
 	Address     string                `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	Description *ValidatorDescription `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
@@ -117,7 +36,7 @@ func (m *MsgUpdateValidatorDescription) Reset()         { *m = MsgUpdateValidato
 func (m *MsgUpdateValidatorDescription) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateValidatorDescription) ProtoMessage()    {}
 func (*MsgUpdateValidatorDescription) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a471fea62152592e, []int{2}
+	return fileDescriptor_a471fea62152592e, []int{0}
 }
 func (m *MsgUpdateValidatorDescription) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -167,7 +86,7 @@ func (m *MsgUpdateValidatorDescriptionResponse) Reset()         { *m = MsgUpdate
 func (m *MsgUpdateValidatorDescriptionResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateValidatorDescriptionResponse) ProtoMessage()    {}
 func (*MsgUpdateValidatorDescriptionResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_a471fea62152592e, []int{3}
+	return fileDescriptor_a471fea62152592e, []int{1}
 }
 func (m *MsgUpdateValidatorDescriptionResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -195,6 +114,86 @@ func (m *MsgUpdateValidatorDescriptionResponse) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_MsgUpdateValidatorDescriptionResponse proto.InternalMessageInfo
+
+type MsgDeleteValidator struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *MsgDeleteValidator) Reset()         { *m = MsgDeleteValidator{} }
+func (m *MsgDeleteValidator) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteValidator) ProtoMessage()    {}
+func (*MsgDeleteValidator) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a471fea62152592e, []int{2}
+}
+func (m *MsgDeleteValidator) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDeleteValidator) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDeleteValidator.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDeleteValidator) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteValidator.Merge(m, src)
+}
+func (m *MsgDeleteValidator) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDeleteValidator) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteValidator.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDeleteValidator proto.InternalMessageInfo
+
+func (m *MsgDeleteValidator) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type MsgDeleteValidatorResponse struct {
+}
+
+func (m *MsgDeleteValidatorResponse) Reset()         { *m = MsgDeleteValidatorResponse{} }
+func (m *MsgDeleteValidatorResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteValidatorResponse) ProtoMessage()    {}
+func (*MsgDeleteValidatorResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a471fea62152592e, []int{3}
+}
+func (m *MsgDeleteValidatorResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgDeleteValidatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgDeleteValidatorResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgDeleteValidatorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteValidatorResponse.Merge(m, src)
+}
+func (m *MsgDeleteValidatorResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgDeleteValidatorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteValidatorResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgDeleteValidatorResponse proto.InternalMessageInfo
 
 type MsgCreateCoordinator struct {
 	Address     string                  `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
@@ -292,22 +291,23 @@ func (m *MsgCreateCoordinatorResponse) GetCoordinatorId() uint64 {
 	return 0
 }
 
-type MsgDeleteCoordinator struct {
-	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+type MsgUpdateCoordinatorDescription struct {
+	Address     string                  `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	Description *CoordinatorDescription `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 }
 
-func (m *MsgDeleteCoordinator) Reset()         { *m = MsgDeleteCoordinator{} }
-func (m *MsgDeleteCoordinator) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteCoordinator) ProtoMessage()    {}
-func (*MsgDeleteCoordinator) Descriptor() ([]byte, []int) {
+func (m *MsgUpdateCoordinatorDescription) Reset()         { *m = MsgUpdateCoordinatorDescription{} }
+func (m *MsgUpdateCoordinatorDescription) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateCoordinatorDescription) ProtoMessage()    {}
+func (*MsgUpdateCoordinatorDescription) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a471fea62152592e, []int{6}
 }
-func (m *MsgDeleteCoordinator) XXX_Unmarshal(b []byte) error {
+func (m *MsgUpdateCoordinatorDescription) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgDeleteCoordinator) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgUpdateCoordinatorDescription) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgDeleteCoordinator.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgUpdateCoordinatorDescription.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -317,41 +317,49 @@ func (m *MsgDeleteCoordinator) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *MsgDeleteCoordinator) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteCoordinator.Merge(m, src)
+func (m *MsgUpdateCoordinatorDescription) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateCoordinatorDescription.Merge(m, src)
 }
-func (m *MsgDeleteCoordinator) XXX_Size() int {
+func (m *MsgUpdateCoordinatorDescription) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgDeleteCoordinator) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteCoordinator.DiscardUnknown(m)
+func (m *MsgUpdateCoordinatorDescription) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateCoordinatorDescription.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgDeleteCoordinator proto.InternalMessageInfo
+var xxx_messageInfo_MsgUpdateCoordinatorDescription proto.InternalMessageInfo
 
-func (m *MsgDeleteCoordinator) GetAddress() string {
+func (m *MsgUpdateCoordinatorDescription) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-type MsgDeleteCoordinatorResponse struct {
-	CoordinatorId uint64 `protobuf:"varint,1,opt,name=coordinatorId,proto3" json:"coordinatorId,omitempty"`
+func (m *MsgUpdateCoordinatorDescription) GetDescription() *CoordinatorDescription {
+	if m != nil {
+		return m.Description
+	}
+	return nil
 }
 
-func (m *MsgDeleteCoordinatorResponse) Reset()         { *m = MsgDeleteCoordinatorResponse{} }
-func (m *MsgDeleteCoordinatorResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteCoordinatorResponse) ProtoMessage()    {}
-func (*MsgDeleteCoordinatorResponse) Descriptor() ([]byte, []int) {
+type MsgUpdateCoordinatorDescriptionResponse struct {
+}
+
+func (m *MsgUpdateCoordinatorDescriptionResponse) Reset() {
+	*m = MsgUpdateCoordinatorDescriptionResponse{}
+}
+func (m *MsgUpdateCoordinatorDescriptionResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateCoordinatorDescriptionResponse) ProtoMessage()    {}
+func (*MsgUpdateCoordinatorDescriptionResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a471fea62152592e, []int{7}
 }
-func (m *MsgDeleteCoordinatorResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgDeleteCoordinatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgDeleteCoordinatorResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgUpdateCoordinatorDescriptionResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -361,24 +369,17 @@ func (m *MsgDeleteCoordinatorResponse) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
-func (m *MsgDeleteCoordinatorResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteCoordinatorResponse.Merge(m, src)
+func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateCoordinatorDescriptionResponse.Merge(m, src)
 }
-func (m *MsgDeleteCoordinatorResponse) XXX_Size() int {
+func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgDeleteCoordinatorResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteCoordinatorResponse.DiscardUnknown(m)
+func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateCoordinatorDescriptionResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgDeleteCoordinatorResponse proto.InternalMessageInfo
-
-func (m *MsgDeleteCoordinatorResponse) GetCoordinatorId() uint64 {
-	if m != nil {
-		return m.CoordinatorId
-	}
-	return 0
-}
+var xxx_messageInfo_MsgUpdateCoordinatorDescriptionResponse proto.InternalMessageInfo
 
 type MsgUpdateCoordinatorAddress struct {
 	Address    string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
@@ -468,23 +469,22 @@ func (m *MsgUpdateCoordinatorAddressResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateCoordinatorAddressResponse proto.InternalMessageInfo
 
-type MsgUpdateCoordinatorDescription struct {
-	Address     string                  `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	Description *CoordinatorDescription `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+type MsgDeleteCoordinator struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 }
 
-func (m *MsgUpdateCoordinatorDescription) Reset()         { *m = MsgUpdateCoordinatorDescription{} }
-func (m *MsgUpdateCoordinatorDescription) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateCoordinatorDescription) ProtoMessage()    {}
-func (*MsgUpdateCoordinatorDescription) Descriptor() ([]byte, []int) {
+func (m *MsgDeleteCoordinator) Reset()         { *m = MsgDeleteCoordinator{} }
+func (m *MsgDeleteCoordinator) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteCoordinator) ProtoMessage()    {}
+func (*MsgDeleteCoordinator) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a471fea62152592e, []int{10}
 }
-func (m *MsgUpdateCoordinatorDescription) XXX_Unmarshal(b []byte) error {
+func (m *MsgDeleteCoordinator) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateCoordinatorDescription) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgDeleteCoordinator) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateCoordinatorDescription.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgDeleteCoordinator.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -494,49 +494,41 @@ func (m *MsgUpdateCoordinatorDescription) XXX_Marshal(b []byte, deterministic bo
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateCoordinatorDescription) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateCoordinatorDescription.Merge(m, src)
+func (m *MsgDeleteCoordinator) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteCoordinator.Merge(m, src)
 }
-func (m *MsgUpdateCoordinatorDescription) XXX_Size() int {
+func (m *MsgDeleteCoordinator) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateCoordinatorDescription) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateCoordinatorDescription.DiscardUnknown(m)
+func (m *MsgDeleteCoordinator) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteCoordinator.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateCoordinatorDescription proto.InternalMessageInfo
+var xxx_messageInfo_MsgDeleteCoordinator proto.InternalMessageInfo
 
-func (m *MsgUpdateCoordinatorDescription) GetAddress() string {
+func (m *MsgDeleteCoordinator) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-func (m *MsgUpdateCoordinatorDescription) GetDescription() *CoordinatorDescription {
-	if m != nil {
-		return m.Description
-	}
-	return nil
+type MsgDeleteCoordinatorResponse struct {
+	CoordinatorId uint64 `protobuf:"varint,1,opt,name=coordinatorId,proto3" json:"coordinatorId,omitempty"`
 }
 
-type MsgUpdateCoordinatorDescriptionResponse struct {
-}
-
-func (m *MsgUpdateCoordinatorDescriptionResponse) Reset() {
-	*m = MsgUpdateCoordinatorDescriptionResponse{}
-}
-func (m *MsgUpdateCoordinatorDescriptionResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateCoordinatorDescriptionResponse) ProtoMessage()    {}
-func (*MsgUpdateCoordinatorDescriptionResponse) Descriptor() ([]byte, []int) {
+func (m *MsgDeleteCoordinatorResponse) Reset()         { *m = MsgDeleteCoordinatorResponse{} }
+func (m *MsgDeleteCoordinatorResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgDeleteCoordinatorResponse) ProtoMessage()    {}
+func (*MsgDeleteCoordinatorResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a471fea62152592e, []int{11}
 }
-func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgDeleteCoordinatorResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgDeleteCoordinatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateCoordinatorDescriptionResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgDeleteCoordinatorResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -546,69 +538,75 @@ func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_Marshal(b []byte, determin
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateCoordinatorDescriptionResponse.Merge(m, src)
+func (m *MsgDeleteCoordinatorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgDeleteCoordinatorResponse.Merge(m, src)
 }
-func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_Size() int {
+func (m *MsgDeleteCoordinatorResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateCoordinatorDescriptionResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateCoordinatorDescriptionResponse.DiscardUnknown(m)
+func (m *MsgDeleteCoordinatorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgDeleteCoordinatorResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateCoordinatorDescriptionResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgDeleteCoordinatorResponse proto.InternalMessageInfo
+
+func (m *MsgDeleteCoordinatorResponse) GetCoordinatorId() uint64 {
+	if m != nil {
+		return m.CoordinatorId
+	}
+	return 0
+}
 
 func init() {
-	proto.RegisterType((*MsgDeleteValidator)(nil), "tendermint.spn.profile.MsgDeleteValidator")
-	proto.RegisterType((*MsgDeleteValidatorResponse)(nil), "tendermint.spn.profile.MsgDeleteValidatorResponse")
 	proto.RegisterType((*MsgUpdateValidatorDescription)(nil), "tendermint.spn.profile.MsgUpdateValidatorDescription")
 	proto.RegisterType((*MsgUpdateValidatorDescriptionResponse)(nil), "tendermint.spn.profile.MsgUpdateValidatorDescriptionResponse")
+	proto.RegisterType((*MsgDeleteValidator)(nil), "tendermint.spn.profile.MsgDeleteValidator")
+	proto.RegisterType((*MsgDeleteValidatorResponse)(nil), "tendermint.spn.profile.MsgDeleteValidatorResponse")
 	proto.RegisterType((*MsgCreateCoordinator)(nil), "tendermint.spn.profile.MsgCreateCoordinator")
 	proto.RegisterType((*MsgCreateCoordinatorResponse)(nil), "tendermint.spn.profile.MsgCreateCoordinatorResponse")
-	proto.RegisterType((*MsgDeleteCoordinator)(nil), "tendermint.spn.profile.MsgDeleteCoordinator")
-	proto.RegisterType((*MsgDeleteCoordinatorResponse)(nil), "tendermint.spn.profile.MsgDeleteCoordinatorResponse")
-	proto.RegisterType((*MsgUpdateCoordinatorAddress)(nil), "tendermint.spn.profile.MsgUpdateCoordinatorAddress")
-	proto.RegisterType((*MsgUpdateCoordinatorAddressResponse)(nil), "tendermint.spn.profile.MsgUpdateCoordinatorAddressResponse")
 	proto.RegisterType((*MsgUpdateCoordinatorDescription)(nil), "tendermint.spn.profile.MsgUpdateCoordinatorDescription")
 	proto.RegisterType((*MsgUpdateCoordinatorDescriptionResponse)(nil), "tendermint.spn.profile.MsgUpdateCoordinatorDescriptionResponse")
+	proto.RegisterType((*MsgUpdateCoordinatorAddress)(nil), "tendermint.spn.profile.MsgUpdateCoordinatorAddress")
+	proto.RegisterType((*MsgUpdateCoordinatorAddressResponse)(nil), "tendermint.spn.profile.MsgUpdateCoordinatorAddressResponse")
+	proto.RegisterType((*MsgDeleteCoordinator)(nil), "tendermint.spn.profile.MsgDeleteCoordinator")
+	proto.RegisterType((*MsgDeleteCoordinatorResponse)(nil), "tendermint.spn.profile.MsgDeleteCoordinatorResponse")
 }
 
 func init() { proto.RegisterFile("profile/tx.proto", fileDescriptor_a471fea62152592e) }
 
 var fileDescriptor_a471fea62152592e = []byte{
-	// 497 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0x41, 0x8b, 0xd3, 0x40,
-	0x14, 0xc7, 0x3b, 0x2a, 0x2b, 0xfb, 0x16, 0x51, 0x83, 0x68, 0x1d, 0x6b, 0x5c, 0xa2, 0xcb, 0xee,
-	0x4a, 0x99, 0x48, 0x57, 0xf1, 0x20, 0x22, 0xda, 0x5e, 0x3c, 0x54, 0x24, 0xa0, 0x82, 0xb7, 0x6c,
-	0x67, 0x8c, 0x81, 0xee, 0xcc, 0x38, 0x33, 0xba, 0xeb, 0xd5, 0x9b, 0xa0, 0x20, 0x9e, 0xfc, 0x0a,
-	0x7e, 0x13, 0x8f, 0x7b, 0xf4, 0x28, 0xed, 0x17, 0x11, 0xda, 0x26, 0x1d, 0x4d, 0x26, 0x4d, 0xcb,
-	0x1e, 0x93, 0xf9, 0xbf, 0xff, 0xfb, 0xcd, 0x7b, 0xf9, 0x13, 0xb8, 0x20, 0x95, 0x78, 0x93, 0x0e,
-	0x59, 0x68, 0x8e, 0x88, 0x54, 0xc2, 0x08, 0xef, 0xb2, 0x61, 0x9c, 0x32, 0x75, 0x90, 0x72, 0x43,
-	0xb4, 0xe4, 0x64, 0x26, 0xc0, 0x57, 0x33, 0xe5, 0x40, 0x08, 0x45, 0x53, 0x1e, 0x1b, 0xa1, 0xa6,
-	0x25, 0xf8, 0x4a, 0x76, 0xf4, 0x21, 0x1e, 0xa6, 0x74, 0x7e, 0x10, 0x10, 0xf0, 0xfa, 0x3a, 0xe9,
-	0xb1, 0x21, 0x33, 0xec, 0x65, 0x76, 0xe6, 0x35, 0xe1, 0x6c, 0x4c, 0xa9, 0x62, 0x5a, 0x37, 0xd1,
-	0x26, 0xda, 0x59, 0x8f, 0xb2, 0xc7, 0xa0, 0x05, 0xb8, 0xa8, 0x8f, 0x98, 0x96, 0x82, 0x6b, 0x16,
-	0x7c, 0x46, 0x70, 0xbd, 0xaf, 0x93, 0x17, 0x92, 0xc6, 0xd6, 0x71, 0x8f, 0xe9, 0x81, 0x4a, 0xa5,
-	0x49, 0x05, 0x77, 0x3b, 0x7b, 0xcf, 0x60, 0x83, 0xce, 0x85, 0xcd, 0x53, 0x9b, 0x68, 0x67, 0xa3,
-	0xd3, 0x26, 0xe5, 0x77, 0x25, 0x65, 0xe6, 0x91, 0x6d, 0x10, 0x6c, 0xc3, 0x56, 0x25, 0x4a, 0x0e,
-	0xfd, 0x09, 0xc1, 0xa5, 0xbe, 0x4e, 0xba, 0x8a, 0xc5, 0x86, 0x75, 0xe7, 0xa3, 0xab, 0x60, 0x7d,
-	0x5e, 0xc6, 0x4a, 0x5c, 0xac, 0x96, 0xa7, 0x93, 0xb6, 0x07, 0xad, 0x32, 0x86, 0x0c, 0xd2, 0xbb,
-	0x05, 0xe7, 0xac, 0xad, 0x3e, 0xa5, 0x13, 0xa2, 0x33, 0xd1, 0xbf, 0x2f, 0x83, 0x3b, 0x93, 0x9b,
-	0x4c, 0xb7, 0x53, 0xeb, 0x26, 0xb3, 0xbe, 0x85, 0x8a, 0x25, 0xfb, 0xbe, 0x82, 0x6b, 0xf9, 0xac,
-	0x2d, 0x97, 0xc7, 0xb3, 0x71, 0xb9, 0x07, 0xe9, 0x03, 0x70, 0x76, 0x38, 0xd3, 0x4d, 0xe6, 0xb8,
-	0x1e, 0x59, 0x6f, 0x82, 0x2d, 0xb8, 0x59, 0x61, 0x9c, 0xaf, 0xf0, 0x2b, 0x82, 0x1b, 0x65, 0xba,
-	0x7a, 0x5f, 0xde, 0xc9, 0x6f, 0x73, 0x17, 0xb6, 0x17, 0xe0, 0x64, 0xe8, 0x9d, 0x9f, 0x6b, 0x70,
-	0xba, 0xaf, 0x13, 0xef, 0x1d, 0x9c, 0xff, 0x3f, 0x85, 0xb7, 0x5d, 0x08, 0xc5, 0x04, 0xe2, 0x4e,
-	0x7d, 0x6d, 0xbe, 0xdb, 0xef, 0x08, 0x70, 0x45, 0x54, 0xef, 0x55, 0x58, 0xba, 0xcb, 0xf0, 0xc3,
-	0x95, 0xca, 0x72, 0xa8, 0x43, 0xb8, 0x58, 0x4c, 0x62, 0xbb, 0xc2, 0xb3, 0xa0, 0xc6, 0x77, 0x97,
-	0x51, 0xdb, 0x8d, 0x8b, 0xc1, 0x69, 0x2f, 0x1c, 0x6b, 0xdd, 0xc6, 0xee, 0x88, 0x7d, 0x41, 0xd0,
-	0x74, 0x46, 0x67, 0x6f, 0xe1, 0x34, 0x8b, 0x45, 0xf8, 0xc1, 0x0a, 0x45, 0x39, 0xce, 0x0f, 0x04,
-	0xad, 0xca, 0x20, 0xdd, 0x5f, 0xc6, 0xdd, 0xfe, 0x32, 0x1e, 0xad, 0x58, 0x98, 0xa1, 0x3d, 0xe9,
-	0xfe, 0x1a, 0xf9, 0xe8, 0x78, 0xe4, 0xa3, 0x3f, 0x23, 0x1f, 0x7d, 0x1b, 0xfb, 0x8d, 0xe3, 0xb1,
-	0xdf, 0xf8, 0x3d, 0xf6, 0x1b, 0xaf, 0x77, 0x93, 0xd4, 0xbc, 0x7d, 0xbf, 0x4f, 0x06, 0xe2, 0x20,
-	0x9c, 0x37, 0x09, 0xb5, 0xe4, 0xe1, 0x51, 0x98, 0xff, 0x40, 0x3f, 0x4a, 0xa6, 0xf7, 0xd7, 0x26,
-	0x3f, 0xbe, 0xbd, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x46, 0xb1, 0x4a, 0xbe, 0x58, 0x07, 0x00,
-	0x00,
+	// 495 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x55, 0x4f, 0x8b, 0x13, 0x31,
+	0x1c, 0x6d, 0x54, 0x56, 0xf6, 0xb7, 0x88, 0x3a, 0x88, 0xd6, 0x58, 0xc7, 0x65, 0x74, 0xd9, 0x5d,
+	0x29, 0x19, 0xe9, 0x2a, 0x1e, 0x44, 0x44, 0xdb, 0x8b, 0x87, 0x8a, 0x0c, 0xa8, 0xe0, 0x6d, 0xb6,
+	0x89, 0xe3, 0x40, 0x37, 0x89, 0x49, 0x74, 0xd7, 0xab, 0x37, 0x41, 0x41, 0x3c, 0xf9, 0x15, 0xfc,
+	0x26, 0x1e, 0xf7, 0xe8, 0x51, 0xda, 0x2f, 0x22, 0x74, 0x67, 0xd2, 0xb1, 0x33, 0x93, 0xfe, 0x39,
+	0x78, 0x9c, 0xc9, 0x7b, 0x2f, 0xef, 0x97, 0x97, 0x47, 0xe0, 0x82, 0x54, 0xe2, 0x4d, 0x3a, 0x64,
+	0xa1, 0x39, 0x22, 0x52, 0x09, 0x23, 0xbc, 0xcb, 0x86, 0x71, 0xca, 0xd4, 0x41, 0xca, 0x0d, 0xd1,
+	0x92, 0x93, 0x0c, 0x80, 0xaf, 0xe6, 0xc8, 0x81, 0x10, 0x8a, 0xa6, 0x3c, 0x36, 0x42, 0x9d, 0x50,
+	0xf0, 0x95, 0x7c, 0xe9, 0x43, 0x3c, 0x4c, 0xe9, 0x74, 0x21, 0xf8, 0x8c, 0xe0, 0x7a, 0x5f, 0x27,
+	0x2f, 0x24, 0x8d, 0x0d, 0x7b, 0x99, 0x2f, 0xf6, 0x98, 0x1e, 0xa8, 0x54, 0x9a, 0x54, 0x70, 0xaf,
+	0x09, 0x67, 0x63, 0x4a, 0x15, 0xd3, 0xba, 0x89, 0x36, 0xd1, 0xce, 0x7a, 0x94, 0x7f, 0x7a, 0xcf,
+	0x60, 0x83, 0x4e, 0x81, 0xcd, 0x53, 0x9b, 0x68, 0x67, 0xa3, 0xd3, 0x26, 0xd5, 0xee, 0x48, 0x95,
+	0x78, 0x54, 0x14, 0x08, 0xb6, 0x61, 0xcb, 0x69, 0x25, 0x62, 0x5a, 0x0a, 0xae, 0x59, 0x40, 0xc0,
+	0xeb, 0xeb, 0xa4, 0xc7, 0x86, 0xac, 0x00, 0xac, 0x37, 0x1a, 0xb4, 0x00, 0x97, 0xf1, 0x56, 0xed,
+	0x13, 0x82, 0x4b, 0x7d, 0x9d, 0x74, 0x15, 0x8b, 0x0d, 0xeb, 0x4e, 0x8f, 0xce, 0x31, 0xf9, 0xf3,
+	0xaa, 0xc9, 0x49, 0xdd, 0xe4, 0x05, 0xcd, 0xda, 0xd9, 0x7b, 0xd0, 0xaa, 0xf2, 0x90, 0x9b, 0xf4,
+	0x6e, 0xc1, 0xb9, 0x42, 0xaa, 0x4f, 0xe9, 0xc4, 0xd1, 0x99, 0xe8, 0xdf, 0x9f, 0xc1, 0x57, 0x04,
+	0x37, 0xec, 0x11, 0x56, 0x6f, 0xfb, 0x5f, 0xa7, 0xda, 0x85, 0xed, 0x39, 0x76, 0x6c, 0x0a, 0xaf,
+	0xe0, 0x5a, 0x15, 0xf4, 0x71, 0xe6, 0xad, 0xde, 0xb5, 0x0f, 0xc0, 0xd9, 0x61, 0x86, 0x9b, 0x98,
+	0x5e, 0x8f, 0x0a, 0x7f, 0x82, 0x2d, 0xb8, 0xe9, 0x10, 0xb6, 0xfb, 0xdf, 0x99, 0x5c, 0x82, 0x93,
+	0x3b, 0xb2, 0xd0, 0x25, 0xc8, 0x22, 0x2b, 0x31, 0x96, 0x8b, 0xac, 0xf3, 0x73, 0x0d, 0x4e, 0xf7,
+	0x75, 0xe2, 0x7d, 0x47, 0x80, 0x1d, 0x2d, 0xbc, 0x57, 0x17, 0x83, 0xb3, 0x31, 0xf8, 0xe1, 0x4a,
+	0x34, 0x3b, 0xc2, 0x3b, 0x38, 0x3f, 0xdb, 0xb2, 0xdb, 0x0e, 0xc5, 0x19, 0x2c, 0xee, 0x2c, 0x8e,
+	0xb5, 0x5b, 0x1e, 0xc2, 0xc5, 0x72, 0x13, 0xdb, 0x0e, 0xa1, 0x12, 0x1a, 0xdf, 0x5d, 0x06, 0x6d,
+	0x37, 0xfe, 0x81, 0xa0, 0xe5, 0x2c, 0xce, 0xfd, 0xb9, 0x67, 0x59, 0x4d, 0xc4, 0x8f, 0x56, 0x24,
+	0x5a, 0x6b, 0x5f, 0x10, 0x34, 0x6b, 0x9b, 0xb1, 0xb7, 0x8c, 0x7a, 0x46, 0xc2, 0x0f, 0x56, 0x20,
+	0x15, 0x23, 0x2a, 0xf7, 0xa4, 0x3d, 0x37, 0xeb, 0x45, 0x23, 0xaa, 0x6d, 0xd4, 0x93, 0xee, 0xaf,
+	0x91, 0x8f, 0x8e, 0x47, 0x3e, 0xfa, 0x33, 0xf2, 0xd1, 0xb7, 0xb1, 0xdf, 0x38, 0x1e, 0xfb, 0x8d,
+	0xdf, 0x63, 0xbf, 0xf1, 0x7a, 0x37, 0x49, 0xcd, 0xdb, 0xf7, 0xfb, 0x64, 0x20, 0x0e, 0xc2, 0xa9,
+	0x72, 0xa8, 0x25, 0x0f, 0x8f, 0x42, 0xfb, 0x80, 0x7e, 0x94, 0x4c, 0xef, 0xaf, 0x4d, 0x1e, 0xbe,
+	0xbd, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0xed, 0xc7, 0x97, 0xd8, 0x58, 0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -623,13 +621,12 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// this line is used by starport scaffolding # proto/tx/rpc
-	DeleteValidator(ctx context.Context, in *MsgDeleteValidator, opts ...grpc.CallOption) (*MsgDeleteValidatorResponse, error)
 	UpdateValidatorDescription(ctx context.Context, in *MsgUpdateValidatorDescription, opts ...grpc.CallOption) (*MsgUpdateValidatorDescriptionResponse, error)
+	DeleteValidator(ctx context.Context, in *MsgDeleteValidator, opts ...grpc.CallOption) (*MsgDeleteValidatorResponse, error)
 	CreateCoordinator(ctx context.Context, in *MsgCreateCoordinator, opts ...grpc.CallOption) (*MsgCreateCoordinatorResponse, error)
-	DeleteCoordinator(ctx context.Context, in *MsgDeleteCoordinator, opts ...grpc.CallOption) (*MsgDeleteCoordinatorResponse, error)
-	UpdateCoordinatorAddress(ctx context.Context, in *MsgUpdateCoordinatorAddress, opts ...grpc.CallOption) (*MsgUpdateCoordinatorAddressResponse, error)
 	UpdateCoordinatorDescription(ctx context.Context, in *MsgUpdateCoordinatorDescription, opts ...grpc.CallOption) (*MsgUpdateCoordinatorDescriptionResponse, error)
+	UpdateCoordinatorAddress(ctx context.Context, in *MsgUpdateCoordinatorAddress, opts ...grpc.CallOption) (*MsgUpdateCoordinatorAddressResponse, error)
+	DeleteCoordinator(ctx context.Context, in *MsgDeleteCoordinator, opts ...grpc.CallOption) (*MsgDeleteCoordinatorResponse, error)
 }
 
 type msgClient struct {
@@ -640,18 +637,18 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) DeleteValidator(ctx context.Context, in *MsgDeleteValidator, opts ...grpc.CallOption) (*MsgDeleteValidatorResponse, error) {
-	out := new(MsgDeleteValidatorResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Msg/DeleteValidator", in, out, opts...)
+func (c *msgClient) UpdateValidatorDescription(ctx context.Context, in *MsgUpdateValidatorDescription, opts ...grpc.CallOption) (*MsgUpdateValidatorDescriptionResponse, error) {
+	out := new(MsgUpdateValidatorDescriptionResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Msg/UpdateValidatorDescription", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) UpdateValidatorDescription(ctx context.Context, in *MsgUpdateValidatorDescription, opts ...grpc.CallOption) (*MsgUpdateValidatorDescriptionResponse, error) {
-	out := new(MsgUpdateValidatorDescriptionResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Msg/UpdateValidatorDescription", in, out, opts...)
+func (c *msgClient) DeleteValidator(ctx context.Context, in *MsgDeleteValidator, opts ...grpc.CallOption) (*MsgDeleteValidatorResponse, error) {
+	out := new(MsgDeleteValidatorResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Msg/DeleteValidator", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -667,9 +664,9 @@ func (c *msgClient) CreateCoordinator(ctx context.Context, in *MsgCreateCoordina
 	return out, nil
 }
 
-func (c *msgClient) DeleteCoordinator(ctx context.Context, in *MsgDeleteCoordinator, opts ...grpc.CallOption) (*MsgDeleteCoordinatorResponse, error) {
-	out := new(MsgDeleteCoordinatorResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Msg/DeleteCoordinator", in, out, opts...)
+func (c *msgClient) UpdateCoordinatorDescription(ctx context.Context, in *MsgUpdateCoordinatorDescription, opts ...grpc.CallOption) (*MsgUpdateCoordinatorDescriptionResponse, error) {
+	out := new(MsgUpdateCoordinatorDescriptionResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Msg/UpdateCoordinatorDescription", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -685,9 +682,9 @@ func (c *msgClient) UpdateCoordinatorAddress(ctx context.Context, in *MsgUpdateC
 	return out, nil
 }
 
-func (c *msgClient) UpdateCoordinatorDescription(ctx context.Context, in *MsgUpdateCoordinatorDescription, opts ...grpc.CallOption) (*MsgUpdateCoordinatorDescriptionResponse, error) {
-	out := new(MsgUpdateCoordinatorDescriptionResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Msg/UpdateCoordinatorDescription", in, out, opts...)
+func (c *msgClient) DeleteCoordinator(ctx context.Context, in *MsgDeleteCoordinator, opts ...grpc.CallOption) (*MsgDeleteCoordinatorResponse, error) {
+	out := new(MsgDeleteCoordinatorResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Msg/DeleteCoordinator", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -696,58 +693,39 @@ func (c *msgClient) UpdateCoordinatorDescription(ctx context.Context, in *MsgUpd
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// this line is used by starport scaffolding # proto/tx/rpc
-	DeleteValidator(context.Context, *MsgDeleteValidator) (*MsgDeleteValidatorResponse, error)
 	UpdateValidatorDescription(context.Context, *MsgUpdateValidatorDescription) (*MsgUpdateValidatorDescriptionResponse, error)
+	DeleteValidator(context.Context, *MsgDeleteValidator) (*MsgDeleteValidatorResponse, error)
 	CreateCoordinator(context.Context, *MsgCreateCoordinator) (*MsgCreateCoordinatorResponse, error)
-	DeleteCoordinator(context.Context, *MsgDeleteCoordinator) (*MsgDeleteCoordinatorResponse, error)
-	UpdateCoordinatorAddress(context.Context, *MsgUpdateCoordinatorAddress) (*MsgUpdateCoordinatorAddressResponse, error)
 	UpdateCoordinatorDescription(context.Context, *MsgUpdateCoordinatorDescription) (*MsgUpdateCoordinatorDescriptionResponse, error)
+	UpdateCoordinatorAddress(context.Context, *MsgUpdateCoordinatorAddress) (*MsgUpdateCoordinatorAddressResponse, error)
+	DeleteCoordinator(context.Context, *MsgDeleteCoordinator) (*MsgDeleteCoordinatorResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) DeleteValidator(ctx context.Context, req *MsgDeleteValidator) (*MsgDeleteValidatorResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteValidator not implemented")
-}
 func (*UnimplementedMsgServer) UpdateValidatorDescription(ctx context.Context, req *MsgUpdateValidatorDescription) (*MsgUpdateValidatorDescriptionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateValidatorDescription not implemented")
+}
+func (*UnimplementedMsgServer) DeleteValidator(ctx context.Context, req *MsgDeleteValidator) (*MsgDeleteValidatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteValidator not implemented")
 }
 func (*UnimplementedMsgServer) CreateCoordinator(ctx context.Context, req *MsgCreateCoordinator) (*MsgCreateCoordinatorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCoordinator not implemented")
 }
-func (*UnimplementedMsgServer) DeleteCoordinator(ctx context.Context, req *MsgDeleteCoordinator) (*MsgDeleteCoordinatorResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteCoordinator not implemented")
+func (*UnimplementedMsgServer) UpdateCoordinatorDescription(ctx context.Context, req *MsgUpdateCoordinatorDescription) (*MsgUpdateCoordinatorDescriptionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCoordinatorDescription not implemented")
 }
 func (*UnimplementedMsgServer) UpdateCoordinatorAddress(ctx context.Context, req *MsgUpdateCoordinatorAddress) (*MsgUpdateCoordinatorAddressResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCoordinatorAddress not implemented")
 }
-func (*UnimplementedMsgServer) UpdateCoordinatorDescription(ctx context.Context, req *MsgUpdateCoordinatorDescription) (*MsgUpdateCoordinatorDescriptionResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateCoordinatorDescription not implemented")
+func (*UnimplementedMsgServer) DeleteCoordinator(ctx context.Context, req *MsgDeleteCoordinator) (*MsgDeleteCoordinatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCoordinator not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
-}
-
-func _Msg_DeleteValidator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgDeleteValidator)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).DeleteValidator(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/tendermint.spn.profile.Msg/DeleteValidator",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).DeleteValidator(ctx, req.(*MsgDeleteValidator))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_UpdateValidatorDescription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -764,6 +742,24 @@ func _Msg_UpdateValidatorDescription_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).UpdateValidatorDescription(ctx, req.(*MsgUpdateValidatorDescription))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_DeleteValidator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDeleteValidator)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).DeleteValidator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.profile.Msg/DeleteValidator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).DeleteValidator(ctx, req.(*MsgDeleteValidator))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -786,20 +782,20 @@ func _Msg_CreateCoordinator_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_DeleteCoordinator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgDeleteCoordinator)
+func _Msg_UpdateCoordinatorDescription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateCoordinatorDescription)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).DeleteCoordinator(ctx, in)
+		return srv.(MsgServer).UpdateCoordinatorDescription(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.profile.Msg/DeleteCoordinator",
+		FullMethod: "/tendermint.spn.profile.Msg/UpdateCoordinatorDescription",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).DeleteCoordinator(ctx, req.(*MsgDeleteCoordinator))
+		return srv.(MsgServer).UpdateCoordinatorDescription(ctx, req.(*MsgUpdateCoordinatorDescription))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -822,20 +818,20 @@ func _Msg_UpdateCoordinatorAddress_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_UpdateCoordinatorDescription_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgUpdateCoordinatorDescription)
+func _Msg_DeleteCoordinator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgDeleteCoordinator)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).UpdateCoordinatorDescription(ctx, in)
+		return srv.(MsgServer).DeleteCoordinator(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.profile.Msg/UpdateCoordinatorDescription",
+		FullMethod: "/tendermint.spn.profile.Msg/DeleteCoordinator",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UpdateCoordinatorDescription(ctx, req.(*MsgUpdateCoordinatorDescription))
+		return srv.(MsgServer).DeleteCoordinator(ctx, req.(*MsgDeleteCoordinator))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -845,85 +841,32 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "DeleteValidator",
-			Handler:    _Msg_DeleteValidator_Handler,
-		},
-		{
 			MethodName: "UpdateValidatorDescription",
 			Handler:    _Msg_UpdateValidatorDescription_Handler,
+		},
+		{
+			MethodName: "DeleteValidator",
+			Handler:    _Msg_DeleteValidator_Handler,
 		},
 		{
 			MethodName: "CreateCoordinator",
 			Handler:    _Msg_CreateCoordinator_Handler,
 		},
 		{
-			MethodName: "DeleteCoordinator",
-			Handler:    _Msg_DeleteCoordinator_Handler,
+			MethodName: "UpdateCoordinatorDescription",
+			Handler:    _Msg_UpdateCoordinatorDescription_Handler,
 		},
 		{
 			MethodName: "UpdateCoordinatorAddress",
 			Handler:    _Msg_UpdateCoordinatorAddress_Handler,
 		},
 		{
-			MethodName: "UpdateCoordinatorDescription",
-			Handler:    _Msg_UpdateCoordinatorDescription_Handler,
+			MethodName: "DeleteCoordinator",
+			Handler:    _Msg_DeleteCoordinator_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "profile/tx.proto",
-}
-
-func (m *MsgDeleteValidator) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteValidator) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteValidator) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgDeleteValidatorResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteValidatorResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteValidatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
 }
 
 func (m *MsgUpdateValidatorDescription) Marshal() (dAtA []byte, err error) {
@@ -984,6 +927,59 @@ func (m *MsgUpdateValidatorDescriptionResponse) MarshalTo(dAtA []byte) (int, err
 }
 
 func (m *MsgUpdateValidatorDescriptionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDeleteValidator) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDeleteValidator) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDeleteValidator) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDeleteValidatorResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDeleteValidatorResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDeleteValidatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1061,124 +1057,6 @@ func (m *MsgCreateCoordinatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, e
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgDeleteCoordinator) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteCoordinator) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteCoordinator) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgDeleteCoordinatorResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteCoordinatorResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteCoordinatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.CoordinatorId != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.CoordinatorId))
-		i--
-		dAtA[i] = 0x8
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgUpdateCoordinatorAddress) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUpdateCoordinatorAddress) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUpdateCoordinatorAddress) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.NewAddress) > 0 {
-		i -= len(m.NewAddress)
-		copy(dAtA[i:], m.NewAddress)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.NewAddress)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Address) > 0 {
-		i -= len(m.Address)
-		copy(dAtA[i:], m.Address)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgUpdateCoordinatorAddressResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUpdateCoordinatorAddressResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUpdateCoordinatorAddressResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
 func (m *MsgUpdateCoordinatorDescription) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1244,6 +1122,124 @@ func (m *MsgUpdateCoordinatorDescriptionResponse) MarshalToSizedBuffer(dAtA []by
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgUpdateCoordinatorAddress) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateCoordinatorAddress) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateCoordinatorAddress) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.NewAddress) > 0 {
+		i -= len(m.NewAddress)
+		copy(dAtA[i:], m.NewAddress)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.NewAddress)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateCoordinatorAddressResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateCoordinatorAddressResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateCoordinatorAddressResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDeleteCoordinator) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDeleteCoordinator) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDeleteCoordinator) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgDeleteCoordinatorResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgDeleteCoordinatorResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgDeleteCoordinatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.CoordinatorId != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.CoordinatorId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -1255,28 +1251,6 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgDeleteValidator) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Address)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	return n
-}
-
-func (m *MsgDeleteValidatorResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	return n
-}
-
 func (m *MsgUpdateValidatorDescription) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1295,6 +1269,28 @@ func (m *MsgUpdateValidatorDescription) Size() (n int) {
 }
 
 func (m *MsgUpdateValidatorDescriptionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *MsgDeleteValidator) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgDeleteValidatorResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1332,7 +1328,7 @@ func (m *MsgCreateCoordinatorResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgDeleteCoordinator) Size() (n int) {
+func (m *MsgUpdateCoordinatorDescription) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1342,18 +1338,19 @@ func (m *MsgDeleteCoordinator) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
+	if m.Description != nil {
+		l = m.Description.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
 	return n
 }
 
-func (m *MsgDeleteCoordinatorResponse) Size() (n int) {
+func (m *MsgUpdateCoordinatorDescriptionResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.CoordinatorId != 0 {
-		n += 1 + sovTx(uint64(m.CoordinatorId))
-	}
 	return n
 }
 
@@ -1383,7 +1380,7 @@ func (m *MsgUpdateCoordinatorAddressResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgUpdateCoordinatorDescription) Size() (n int) {
+func (m *MsgDeleteCoordinator) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1393,19 +1390,18 @@ func (m *MsgUpdateCoordinatorDescription) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if m.Description != nil {
-		l = m.Description.Size()
-		n += 1 + l + sovTx(uint64(l))
-	}
 	return n
 }
 
-func (m *MsgUpdateCoordinatorDescriptionResponse) Size() (n int) {
+func (m *MsgDeleteCoordinatorResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
+	if m.CoordinatorId != 0 {
+		n += 1 + sovTx(uint64(m.CoordinatorId))
+	}
 	return n
 }
 
@@ -1414,138 +1410,6 @@ func sovTx(x uint64) (n int) {
 }
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
-}
-func (m *MsgDeleteValidator) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteValidator: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteValidator: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Address = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgDeleteValidatorResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteValidatorResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteValidatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
 }
 func (m *MsgUpdateValidatorDescription) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -1692,6 +1556,138 @@ func (m *MsgUpdateValidatorDescriptionResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgUpdateValidatorDescriptionResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDeleteValidator) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDeleteValidator: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDeleteValidator: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgDeleteValidatorResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgDeleteValidatorResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgDeleteValidatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
@@ -1902,7 +1898,7 @@ func (m *MsgCreateCoordinatorResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgDeleteCoordinator) Unmarshal(dAtA []byte) error {
+func (m *MsgUpdateCoordinatorDescription) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1925,10 +1921,10 @@ func (m *MsgDeleteCoordinator) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteCoordinator: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgUpdateCoordinatorDescription: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteCoordinator: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgUpdateCoordinatorDescription: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1963,6 +1959,42 @@ func (m *MsgDeleteCoordinator) Unmarshal(dAtA []byte) error {
 			}
 			m.Address = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Description == nil {
+				m.Description = &CoordinatorDescription{}
+			}
+			if err := m.Description.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -1984,7 +2016,7 @@ func (m *MsgDeleteCoordinator) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgDeleteCoordinatorResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgUpdateCoordinatorDescriptionResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2007,31 +2039,12 @@ func (m *MsgDeleteCoordinatorResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteCoordinatorResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgUpdateCoordinatorDescriptionResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteCoordinatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgUpdateCoordinatorDescriptionResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorId", wireType)
-			}
-			m.CoordinatorId = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.CoordinatorId |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -2217,7 +2230,7 @@ func (m *MsgUpdateCoordinatorAddressResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateCoordinatorDescription) Unmarshal(dAtA []byte) error {
+func (m *MsgDeleteCoordinator) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2240,10 +2253,10 @@ func (m *MsgUpdateCoordinatorDescription) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateCoordinatorDescription: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgDeleteCoordinator: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateCoordinatorDescription: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgDeleteCoordinator: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2278,42 +2291,6 @@ func (m *MsgUpdateCoordinatorDescription) Unmarshal(dAtA []byte) error {
 			}
 			m.Address = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Description == nil {
-				m.Description = &CoordinatorDescription{}
-			}
-			if err := m.Description.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -2335,7 +2312,7 @@ func (m *MsgUpdateCoordinatorDescription) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateCoordinatorDescriptionResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgDeleteCoordinatorResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2358,12 +2335,31 @@ func (m *MsgUpdateCoordinatorDescriptionResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateCoordinatorDescriptionResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgDeleteCoordinatorResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateCoordinatorDescriptionResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgDeleteCoordinatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorId", wireType)
+			}
+			m.CoordinatorId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CoordinatorId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
