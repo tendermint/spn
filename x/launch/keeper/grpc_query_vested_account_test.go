@@ -6,7 +6,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -111,7 +110,7 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 				// Cached value is cleared when the any type is encoded into the store
 				msgs[j].VestingOptions.ClearCachedValue()
 
-				assert.Equal(t, msgs[j], resp.VestedAccount[j-i])
+				require.Equal(t, msgs[j], resp.VestedAccount[j-i])
 			}
 		}
 	})
@@ -122,7 +121,7 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 			resp, err := keeper.VestedAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				assert.Equal(t, msgs[j], resp.VestedAccount[j-i])
+				require.Equal(t, msgs[j], resp.VestedAccount[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

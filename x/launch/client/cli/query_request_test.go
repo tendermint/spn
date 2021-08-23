@@ -9,7 +9,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -135,7 +134,7 @@ func TestListRequest(t *testing.T) {
 				// Cached value is cleared when the any type is encoded into the store
 				objs[j].Content.ClearCachedValue()
 
-				assert.Equal(t, objs[j], resp.Request[j-i])
+				require.Equal(t, objs[j], resp.Request[j-i])
 			}
 		}
 	})
@@ -152,7 +151,7 @@ func TestListRequest(t *testing.T) {
 				// Cached value is cleared when the any type is encoded into the store
 				objs[j].Content.ClearCachedValue()
 
-				assert.Equal(t, objs[j], resp.Request[j-i])
+				require.Equal(t, objs[j], resp.Request[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

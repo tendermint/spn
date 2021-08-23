@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
@@ -32,12 +32,12 @@ func TestVestedAccountGet(t *testing.T) {
 			item.ChainID,
 			item.Address,
 		)
-		assert.True(t, found)
+		require.True(t, found)
 
 		// Cached value is cleared when the any type is encoded into the store
 		item.VestingOptions.ClearCachedValue()
 
-		assert.Equal(t, item, rst)
+		require.Equal(t, item, rst)
 	}
 }
 func TestVestedAccountRemove(t *testing.T) {
@@ -52,7 +52,7 @@ func TestVestedAccountRemove(t *testing.T) {
 			item.ChainID,
 			item.Address,
 		)
-		assert.False(t, found)
+		require.False(t, found)
 	}
 }
 
@@ -65,5 +65,5 @@ func TestVestedAccountGetAll(t *testing.T) {
 		item.VestingOptions.ClearCachedValue()
 	}
 
-	assert.Equal(t, items, keeper.GetAllVestedAccount(ctx))
+	require.Equal(t, items, keeper.GetAllVestedAccount(ctx))
 }

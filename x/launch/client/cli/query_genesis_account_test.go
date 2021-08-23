@@ -7,7 +7,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -127,7 +126,7 @@ func TestListGenesisAccount(t *testing.T) {
 			var resp types.QueryAllGenesisAccountResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.GenesisAccount[j-i])
+				require.Equal(t, objs[j], resp.GenesisAccount[j-i])
 			}
 		}
 	})
@@ -141,7 +140,7 @@ func TestListGenesisAccount(t *testing.T) {
 			var resp types.QueryAllGenesisAccountResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				assert.Equal(t, objs[j], resp.GenesisAccount[j-i])
+				require.Equal(t, objs[j], resp.GenesisAccount[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}

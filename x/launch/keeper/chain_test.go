@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
@@ -36,8 +36,8 @@ func TestGetChain(t *testing.T) {
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetChain(ctx, item.ChainID)
-		assert.True(t, found)
-		assert.Equal(t, item, rst)
+		require.True(t, found)
+		require.Equal(t, item, rst)
 	}
 }
 
@@ -47,7 +47,7 @@ func TestRemoveChain(t *testing.T) {
 	for _, item := range items {
 		keeper.RemoveChain(ctx, item.ChainID)
 		_, found := keeper.GetChain(ctx, item.ChainID)
-		assert.False(t, found)
+		require.False(t, found)
 	}
 }
 
@@ -55,5 +55,5 @@ func TestGetAllChain(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 
-	assert.Equal(t, items, keeper.GetAllChain(ctx))
+	require.Equal(t, items, keeper.GetAllChain(ctx))
 }
