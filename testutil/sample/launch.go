@@ -198,6 +198,7 @@ func LaunchGenesisState() launch.GenesisState {
 			*Chain(chainID1, Uint64()),
 			*Chain(chainID2, Uint64()),
 		},
+		ChainCount: 10,
 		GenesisAccountList: []launch.GenesisAccount{
 			*GenesisAccount(chainID1, AccAddress()),
 			*GenesisAccount(chainID1, AccAddress()),

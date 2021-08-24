@@ -16,13 +16,12 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 message GenesisState {
   // this line is used by starport scaffolding # genesis/proto/state
   repeated Chain chainList = 1 [(gogoproto.nullable) = false];
-  repeated ChainNameCount chainNameCountList = 2 [(gogoproto.nullable) = false];
+  uint64 ChainCount = 2;
   repeated GenesisAccount genesisAccountList = 3 [(gogoproto.nullable) = false];
   repeated VestedAccount vestedAccountList = 4 [(gogoproto.nullable) = false];
   repeated GenesisValidator genesisValidatorList = 5 [(gogoproto.nullable) = false];
   repeated Request requestList = 6 [(gogoproto.nullable) = false];
   repeated RequestCount requestCountList = 7 [(gogoproto.nullable) = false];
-
   Params params = 8 [(gogoproto.nullable) = false];
 }
 

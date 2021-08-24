@@ -20,8 +20,7 @@ func TestGenesis(t *testing.T) {
 	require.Len(t, got.ChainList, len(original.ChainList))
 	require.Subset(t, original.ChainList, got.ChainList)
 
-	require.Len(t, got.ChainNameCountList, len(original.ChainNameCountList))
-	require.Subset(t, original.ChainNameCountList, got.ChainNameCountList)
+	require.Equal(t, original.ChainCount, got.ChainCount)
 
 	require.Len(t, got.GenesisAccountList, len(original.GenesisAccountList))
 	require.Subset(t, original.GenesisAccountList, got.GenesisAccountList)

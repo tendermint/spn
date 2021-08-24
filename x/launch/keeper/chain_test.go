@@ -6,7 +6,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -22,9 +21,8 @@ func createNChain(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Chain {
 func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordinatorID uint64, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
-		chainID, _ := sample.ChainID(uint64(i))
-		items[i] = *sample.Chain(chainID, coordinatorID)
-		keeper.SetChain(ctx, items[i])
+		items[i].CoordinatorID = coordinatorID
+		keeper.AppendChain(ctx, items[i])
 	}
 	return items
 }
