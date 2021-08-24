@@ -184,4 +184,3 @@ func (m ValidatorRemoval) Validate() error {
 	}
 	return nil
 }
-
