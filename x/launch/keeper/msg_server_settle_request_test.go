@@ -76,7 +76,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			},
 			err: types.ErrChainInactive,
 		},
-    {
+		{
 			name: "no permission error",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
@@ -96,62 +96,52 @@ func TestMsgSettleRequest(t *testing.T) {
 			},
 			err: types.ErrRequestNotFound,
 		},
-    {
-			name: "invalid request content",
+		{
+			name: "approve chain request 1",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: spnerrors.ErrCritical,
+			checkAddr: addr1,
 		},
-    {
-			name: "approve chain request 1",
+		{
+			name: "approve chain request 2",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[1].RequestID,
 				Approve:     true,
 			},
-			checkAddr: addr1,
+			checkAddr: addr2,
 		},
-    {
-			name: "approve chain request 2",
+		{
+			name: "approve chain request 3",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[2].RequestID,
 				Approve:     true,
 			},
-			checkAddr: addr2,
+			checkAddr: addr3,
 		},
-    {
-			name: "approve chain request 3",
+		{
+			name: "approve chain request 4",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[3].RequestID,
 				Approve:     true,
 			},
-			checkAddr: addr3,
-		},
-    {
-			name: "approve chain request 4",
-			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
-				Coordinator: coordinator1.Address,
-				RequestID:   requests[4].RequestID,
-				Approve:     true,
-			},
 			checkAddr: addr4,
 		},
-    {
+		{
 			name: "reject chain request 5",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
 				Coordinator: coordinator1.Address,
-				RequestID:   requests[5].RequestID,
+				RequestID:   requests[4].RequestID,
 				Approve:     false,
 			},
 			checkAddr: addr5,
