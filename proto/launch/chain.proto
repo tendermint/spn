@@ -11,7 +11,7 @@ message ChainNameCount {
 }
 
 message Chain {
-  string chainID = 1;
+  uint64 chainID = 1;
   uint64 coordinatorID = 2;
   int64 createdAt = 3;
 

@@ -28,6 +28,6 @@ message GenesisState {
 }
 
 message RequestCount {
-		string chainID = 1;
+		uint64 chainID = 1;
 		uint64 count = 2;
 }
