@@ -27,7 +27,7 @@ func networkWithRequestObjects(t *testing.T, n int) (*network.Network, []types.R
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		request := *sample.Request("foo")
+		request := *sample.Request(0)
 		request.RequestID = uint64(i)
 		state.RequestList = append(
 			state.RequestList,
@@ -58,7 +58,7 @@ func TestShowRequest(t *testing.T) {
 	}{
 		{
 			desc:        "found",
-			idChainID:   objs[0].ChainID,
+			idChainID:   strconv.Itoa(int(objs[0].ChainID)),
 			idRequestID: objs[0].RequestID,
 
 			args: common,
