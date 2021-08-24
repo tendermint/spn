@@ -16,7 +16,7 @@ var (
 	ErrTriggeredLaunch       = sdkerrors.Register(ModuleName, 6, "launch is triggered for the chain")
 	ErrNoAddressPermission   = sdkerrors.Register(ModuleName, 7, "you must be the coordinator or address owner to perform this action")
 	ErrInvalidCoins          = sdkerrors.Register(ModuleName, 8, "the coin list is invalid")
-	ErrInvalidAccountOption  = sdkerrors.Register(ModuleName, 9, "invalid account option")
+	ErrInvalidVestingOption  = sdkerrors.Register(ModuleName, 9, "invalid vesting option")
 	ErrInvalidTimestamp      = sdkerrors.Register(ModuleName, 10, "timestamp must be greater than zero")
 	ErrLaunchTimeTooLow      = sdkerrors.Register(ModuleName, 11, "the remaining time is below authorized launch time")
 	ErrLaunchTimeTooHigh     = sdkerrors.Register(ModuleName, 12, "the remaining time is above authorized launch time")

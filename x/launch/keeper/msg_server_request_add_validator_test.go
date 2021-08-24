@@ -12,12 +12,12 @@ import (
 
 func TestMsgRequestAddValidator(t *testing.T) {
 	var (
-		invalidChain, _            = sample.ChainID(0)
-		coordAddr                  = sample.AccAddress()
-		addr1                      = sample.AccAddress()
-		addr2                      = sample.AccAddress()
-		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
-		ctx                        = sdk.WrapSDKContext(sdkCtx)
+		invalidChain, _          = sample.ChainID(0)
+		coordAddr                = sample.AccAddress()
+		addr1                    = sample.AccAddress()
+		addr2                    = sample.AccAddress()
+		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
+		ctx                      = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
@@ -85,8 +85,8 @@ func TestMsgRequestAddValidator(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tc.wantID, request.RequestID)
 
-				content, err := request.UnpackGenesisValidator(cdc)
-				require.NoError(t, err)
+				content := request.Content.GetGenesisValidator()
+				require.NotNil(t, content)
 				require.Equal(t, tc.msg.ValAddress, content.Address)
 				require.Equal(t, tc.msg.ChainID, content.ChainID)
 				require.True(t, tc.msg.SelfDelegation.Equal(content.SelfDelegation))

@@ -10,49 +10,62 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+func TestNewDelayedVesting(t *testing.T) {
+	vesting := sample.Coins()
+	endTime := time.Now().Unix()
+
+	vestingOptions := types.NewDelayedVesting(vesting, endTime)
+
+	delayedVesting := vestingOptions.GetDelayedVesting()
+	require.NotNil(t, delayedVesting)
+	require.True(t, vesting.IsEqual(delayedVesting.Vesting))
+	require.EqualValues(t, endTime, delayedVesting.EndTime)
+}
+
 func TestDelayedVesting_Validate(t *testing.T) {
 	tests := []struct {
 		name   string
-		option types.DelayedVesting
-		err    error
+		option types.VestingOptions
+		valid  bool
 	}{
 		{
 			name: "vesting without coins",
-			option: types.DelayedVesting{
-				Vesting: nil,
-				EndTime: time.Now().Unix(),
-			},
-			err: types.ErrInvalidCoins,
+			option: *types.NewDelayedVesting(
+				nil,
+				time.Now().Unix(),
+			),
+			valid: false,
 		}, {
 			name: "vesting with invalid coins",
-			option: types.DelayedVesting{
-				Vesting: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
-				EndTime: 0,
-			},
-			err: types.ErrInvalidCoins,
+			option: *types.NewDelayedVesting(
+				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
+				time.Now().Unix(),
+			),
+			valid: false,
 		}, {
 			name: "vesting with invalid timestamp",
-			option: types.DelayedVesting{
-				Vesting: sample.Coins(),
-				EndTime: 0,
-			},
-			err: types.ErrInvalidTimestamp,
+			option: *types.NewDelayedVesting(
+				sample.Coins(),
+				0,
+			),
+			valid: false,
 		}, {
 			name: "valid account vesting",
-			option: types.DelayedVesting{
-				Vesting: sample.Coins(),
-				EndTime: time.Now().Unix(),
-			},
+			option: *types.NewDelayedVesting(
+				sample.Coins(),
+				time.Now().Unix(),
+			),
+			valid: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.option.Validate()
-			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
-				return
+			if tt.valid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
 			}
-			require.NoError(t, err)
 		})
 	}
 }

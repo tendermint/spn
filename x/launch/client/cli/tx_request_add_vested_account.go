@@ -7,7 +7,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/launch/types"
@@ -38,13 +37,7 @@ func CmdRequestAddVestedAccount() *cobra.Command {
 
 			endTime, _ := strconv.ParseUint(args[3], 10, 64)
 
-			delayedVesting, err := codec.NewAnyWithValue(&types.DelayedVesting{
-				Vesting: vestingCoins,
-				EndTime: int64(endTime),
-			})
-			if err != nil {
-				return err
-			}
+			delayedVesting := *types.NewDelayedVesting(vestingCoins, int64(endTime))
 
 			msg := types.NewMsgRequestAddVestedAccount(
 				clientCtx.GetFromAddress().String(),

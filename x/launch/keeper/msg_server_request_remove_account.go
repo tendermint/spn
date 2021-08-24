@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/launch/types"
@@ -33,15 +32,10 @@ func (k msgServer) RequestRemoveAccount(
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)
 	}
 
-	content, err := codec.NewAnyWithValue(&types.AccountRemoval{
-		Address: msg.Address,
-	})
-	if err != nil {
-		return nil, sdkerrors.Wrap(types.ErrCodecNotPacked, msg.String())
-	}
-
 	var requestID uint64
 	approved := false
+
+	content := types.NewAccountRemoval(msg.Address)
 	request := types.Request{
 		ChainID:   msg.ChainID,
 		Creator:   msg.Address,
