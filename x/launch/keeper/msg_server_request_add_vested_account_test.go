@@ -26,10 +26,10 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
 	chains[0].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[3])
+	k.SetChain(sdkCtx, chains[0])
 	delayedVesting := *types.NewDelayedVesting(sample.Coins(), 10000)
 	chains[1].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[4])
+	k.SetChain(sdkCtx, chains[1])
 
 	tests := []struct {
 		name        string
