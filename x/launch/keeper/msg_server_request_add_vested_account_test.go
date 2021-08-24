@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
@@ -26,11 +25,11 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 		Address: coordAddr,
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
-	chains[3].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[3])
+	chains[0].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[0])
 	delayedVesting := *types.NewDelayedVesting(sample.Coins(), 10000)
-	chains[4].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[4])
+	chains[1].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[1])
 
 	tests := []struct {
 		name        string
@@ -51,7 +50,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestAddVestedAccount{
-				ChainID:         chains[3].ChainID,
+				ChainID:         chains[0].ChainID,
 				Address:         addr1,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
@@ -60,40 +59,12 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgRequestAddVestedAccount{
-				ChainID:         chains[4].ChainID,
-				Address:         addr1,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
-			err: sdkerrors.Wrapf(types.ErrChainInactive,
-				"the chain %s coordinator has been deleted", chains[4].ChainID),
-		}, {
-			name: "add chain 1 request 1",
-			msg: types.MsgRequestAddVestedAccount{
-				ChainID:         chains[0].ChainID,
-				Address:         addr1,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
-			wantID: 0,
-		}, {
-			name: "add chain 2 request 1",
-			msg: types.MsgRequestAddVestedAccount{
 				ChainID:         chains[1].ChainID,
 				Address:         addr1,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
-			wantID: 0,
-		}, {
-			name: "add chain 2 request 2",
-			msg: types.MsgRequestAddVestedAccount{
-				ChainID:         chains[1].ChainID,
-				Address:         addr2,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
-			wantID: 1,
+			err: types.ErrChainInactive,
 		}, {
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestAddVestedAccount{
@@ -104,18 +75,45 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			},
 			wantID: 0,
 		}, {
-			name: "add chain 2 request 2",
+			name: "add chain 4 request 1",
 			msg: types.MsgRequestAddVestedAccount{
-				ChainID:         chains[2].ChainID,
+				ChainID:         chains[3].ChainID,
+				Address:         addr1,
+				StartingBalance: sample.Coins(),
+				Options:         delayedVesting,
+			},
+			wantID: 0,
+		}, {
+			name: "add chain 4 request 2",
+			msg: types.MsgRequestAddVestedAccount{
+				ChainID:         chains[3].ChainID,
 				Address:         addr2,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
 			wantID: 1,
 		}, {
-			name: "add chain 2 request 3",
+			name: "add chain 5 request 1",
 			msg: types.MsgRequestAddVestedAccount{
-				ChainID:         chains[2].ChainID,
+				ChainID:         chains[4].ChainID,
+				Address:         addr1,
+				StartingBalance: sample.Coins(),
+				Options:         delayedVesting,
+			},
+			wantID: 0,
+		}, {
+			name: "add chain 5 request 2",
+			msg: types.MsgRequestAddVestedAccount{
+				ChainID:         chains[4].ChainID,
+				Address:         addr2,
+				StartingBalance: sample.Coins(),
+				Options:         delayedVesting,
+			},
+			wantID: 1,
+		}, {
+			name: "add chain 5 request 3",
+			msg: types.MsgRequestAddVestedAccount{
+				ChainID:         chains[4].ChainID,
 				Address:         addr3,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
@@ -124,7 +122,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 		}, {
 			name: "add coordinator account",
 			msg: types.MsgRequestAddVestedAccount{
-				ChainID:         chains[2].ChainID,
+				ChainID:         chains[4].ChainID,
 				Address:         coordAddr,
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,

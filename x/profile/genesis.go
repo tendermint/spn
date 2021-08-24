@@ -27,8 +27,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 
 	// Set coordinator count
 	k.SetCoordinatorCount(ctx, genState.CoordinatorCount)
-
-	// this line is used by starport scaffolding # ibc/genesis/init
 }
 
 // ExportGenesis returns the capability module's exported genesis.
@@ -41,7 +39,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.CoordinatorCount = k.GetCoordinatorCount(ctx)
 
 	// this line is used by starport scaffolding # genesis/module/export
-	// this line is used by starport scaffolding # ibc/genesis/export
 
 	return genesis
 }

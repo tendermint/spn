@@ -12,14 +12,11 @@ const (
 
 // RequestKey returns the store key to retrieve a Request from the index fields
 func RequestKey(chainID string, requestID uint64) []byte {
-	key := RequestPoolKey(chainID)
-
 	requestIDBytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(requestIDBytes, requestID)
-	key = append(key, requestIDBytes...)
-	key = append(key, []byte("/")...)
 
-	return key
+	suffix := append(requestIDBytes, byte('/'))
+	return append(RequestPoolKey(chainID), suffix...)
 }
 
 // RequestPoolKey returns the store key to retrieve a Request Pool

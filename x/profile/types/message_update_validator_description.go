@@ -8,11 +8,11 @@ import (
 var _ sdk.Msg = &MsgUpdateValidatorDescription{}
 
 func NewMsgUpdateValidatorDescription(
-	address string,
-	identity string,
-	moniker string,
-	website string,
-	securityContact string,
+	address,
+	identity,
+	moniker,
+	website,
+	securityContact,
 	details string,
 ) *MsgUpdateValidatorDescription {
 	return &MsgUpdateValidatorDescription{

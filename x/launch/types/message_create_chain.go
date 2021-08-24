@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgCreateChain{}
 
-func NewMsgCreateChain(coordinator string, chainName string, sourceURL string, sourceHash string, genesisURL string, genesisHash string) *MsgCreateChain {
+func NewMsgCreateChain(coordinator, chainName, sourceURL, sourceHash, genesisURL, genesisHash string) *MsgCreateChain {
 	return &MsgCreateChain{
 		Coordinator: coordinator,
 		ChainName:   chainName,
