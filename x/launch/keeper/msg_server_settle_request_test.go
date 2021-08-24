@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
@@ -75,8 +74,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrapf(types.ErrChainInactive,
-				"the chain %s coordinator has been deleted", chains[1].ChainID),
+			err: types.ErrChainInactive,
 		},
 		{
 			name: "no permission error",
@@ -96,8 +94,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID:   99999999,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrapf(types.ErrRequestNotFound,
-				"request 99999999 for chain %s not found", chains[2].ChainID),
+			err: types.ErrRequestNotFound,
 		},
 		{
 			name: "approve chain request 1",

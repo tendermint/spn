@@ -11,28 +11,10 @@ const (
 
 // VestedAccountKey returns the store key to retrieve a VestedAccount from the index fields
 func VestedAccountKey(chainID, address string) []byte {
-	var key []byte
-
-	chainIDBytes := []byte(chainID)
-	key = append(key, chainIDBytes...)
-	key = append(key, []byte("/")...)
-
-	addressBytes := []byte(address)
-	key = append(key, addressBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+	return []byte(chainID + "/" + address + "/")
 }
 
 // VestedAccountAllKey returns the store key to retrieve all VestedAccount by chainID
 func VestedAccountAllKey(chainID string) []byte {
-	var key []byte
-
-	keyBytes := []byte(VestedAccountKeyPrefix)
-	chainIDBytes := []byte(chainID)
-	key = append(key, keyBytes...)
-	key = append(key, chainIDBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+	return []byte(VestedAccountKeyPrefix + chainID + "/")
 }

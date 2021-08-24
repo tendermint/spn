@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgTriggerLaunch{}
 
-func NewMsgTriggerLaunch(coordinator string, chainID string, remainingTime uint64) *MsgTriggerLaunch {
+func NewMsgTriggerLaunch(coordinator, chainID string, remainingTime uint64) *MsgTriggerLaunch {
 	return &MsgTriggerLaunch{
 		Coordinator:   coordinator,
 		ChainID:       chainID,
