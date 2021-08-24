@@ -36,7 +36,7 @@ func (k msgServer) SettleRequest(
 	request, found := k.GetRequest(ctx, msg.ChainID, msg.RequestID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrRequestNotFound,
-			"request %d for chain %s not found",
+			"request %d for chain %v not found",
 			msg.RequestID,
 			msg.ChainID,
 		)

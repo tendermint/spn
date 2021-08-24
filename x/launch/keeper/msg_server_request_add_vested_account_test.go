@@ -12,7 +12,7 @@ import (
 
 func TestMsgRequestAddVestedAccount(t *testing.T) {
 	var (
-		invalidChain          = uint64(1000)
+		invalidChain             = uint64(1000)
 		coordAddr                = sample.AccAddress()
 		addr1                    = sample.AccAddress()
 		addr2                    = sample.AccAddress()

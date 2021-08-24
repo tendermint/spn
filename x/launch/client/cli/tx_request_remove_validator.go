@@ -1,12 +1,13 @@
 package cli
 
 import (
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/launch/types"
-	"strconv"
 )
 
 func CmdRequestRemoveValidator() *cobra.Command {

@@ -82,7 +82,7 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 	var (
 		keeper, _, ctx, _ = testkeeper.Launch(t)
 		wctx              = sdk.WrapSDKContext(ctx)
-		chainID        = uint64(0)
+		chainID           = uint64(0)
 		msgs              = createNVestedAccountForChainID(keeper, ctx, 5, chainID)
 	)
 

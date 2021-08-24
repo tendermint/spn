@@ -1,11 +1,11 @@
 package keeper
 
 import (
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
-	"strconv"
 )
 
 // GetChainCount get the total number of chains
@@ -22,8 +22,7 @@ func (k Keeper) GetChainCount(ctx sdk.Context) uint64 {
 	// Parse bytes
 	count, err := strconv.ParseUint(string(bz), 10, 64)
 	if err != nil {
-		// Panic because the count should be always formattable to uint64
-		spnerrors.Critical("cannot decode count")
+		panic("cannot decode chain count")
 	}
 
 	return count

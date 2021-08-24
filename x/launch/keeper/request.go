@@ -123,7 +123,7 @@ func checkAccount(ctx sdk.Context, k Keeper, chainID uint64, address string) (bo
 	_, foundVested := k.GetVestedAccount(ctx, chainID, address)
 	if foundGenesis && foundVested {
 		return false, spnerrors.Critical(
-			fmt.Sprintf("account %s for chain %s found in vested and genesis accounts",
+			fmt.Sprintf("account %s for chain %v found in vested and genesis accounts",
 				address, chainID),
 		)
 	}
@@ -151,7 +151,7 @@ func ApplyRequest(
 		}
 		if found {
 			return sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
-				"account %s for chain %s already exist",
+				"account %s for chain %v already exist",
 				ga.Address, chainID,
 			)
 		}
@@ -164,7 +164,7 @@ func ApplyRequest(
 		}
 		if found {
 			return sdkerrors.Wrapf(types.ErrAccountAlreadyExist,
-				"account %s for chain %s already exist",
+				"account %s for chain %v already exist",
 				va.Address, chainID,
 			)
 		}
@@ -177,7 +177,7 @@ func ApplyRequest(
 		}
 		if !found {
 			return sdkerrors.Wrapf(types.ErrAccountNotFound,
-				"account %s for chain %s not found",
+				"account %s for chain %v not found",
 				ar.Address, chainID,
 			)
 		}
@@ -187,7 +187,7 @@ func ApplyRequest(
 		ga := requestContent.GenesisValidator
 		if _, found := k.GetGenesisValidator(ctx, chainID, ga.Address); found {
 			return sdkerrors.Wrapf(types.ErrValidatorAlreadyExist,
-				"genesis validator %s for chain %s already exist",
+				"genesis validator %s for chain %v already exist",
 				ga.Address, chainID,
 			)
 		}
@@ -196,7 +196,7 @@ func ApplyRequest(
 		vr := requestContent.ValidatorRemoval
 		if _, found := k.GetGenesisValidator(ctx, chainID, vr.ValAddress); !found {
 			return sdkerrors.Wrapf(types.ErrValidatorNotFound,
-				"genesis validator %s for chain %s not found",
+				"genesis validator %s for chain %v not found",
 				vr.ValAddress, chainID,
 			)
 		}

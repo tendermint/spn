@@ -45,9 +45,9 @@ func TestMsgCreateChain(t *testing.T) {
 			valid:         true,
 		},
 		{
-			name:          "coordinator doesn't exist for the chain",
-			msg:           sample.MsgCreateChain(sample.AccAddress(), ""),
-			valid:         false,
+			name:  "coordinator doesn't exist for the chain",
+			msg:   sample.MsgCreateChain(sample.AccAddress(), ""),
+			valid: false,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

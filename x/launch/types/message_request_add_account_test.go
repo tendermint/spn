@@ -12,7 +12,7 @@ import (
 
 func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 	var (
-		addr       = sample.AccAddress()
+		addr    = sample.AccAddress()
 		chainID = uint64(10)
 	)
 	tests := []struct {

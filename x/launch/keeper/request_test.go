@@ -88,7 +88,7 @@ func TestApplyRequest(t *testing.T) {
 		vestedAcc             = sample.AccAddress()
 		validatorAcc          = sample.AccAddress()
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
-		chainID            = uint64(10)
+		chainID               = uint64(10)
 		contents              = sample.AllRequestContents(chainID, genesisAcc, vestedAcc, validatorAcc)
 		invalidContent        = types.NewGenesisAccount(chainID, "", sdk.NewCoins())
 	)

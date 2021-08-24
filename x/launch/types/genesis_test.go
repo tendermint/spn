@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	chainID1 = uint64(0)
-	chainID2 = uint64(1)
-	noExistChainID = uint64(2)
-	addr1                            = sample.AccAddress()
-	addr2                            = sample.AccAddress()
-	vestedAddress                    = sample.AccAddress()
-	genesisValidator                 = *sample.GenesisValidator(chainID1, addr1)
+	chainID1         = uint64(0)
+	chainID2         = uint64(1)
+	noExistChainID   = uint64(2)
+	addr1            = sample.AccAddress()
+	addr2            = sample.AccAddress()
+	vestedAddress    = sample.AccAddress()
+	genesisValidator = *sample.GenesisValidator(chainID1, addr1)
 
 	// Those are samples we can use for each fields when they are not the one to test
 	sampleChainList = []types.Chain{
@@ -88,7 +88,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				ChainList:            sampleChainList,
-				ChainCount:   10,
+				ChainCount:           10,
 				GenesisAccountList:   sampleGenesisAccountList,
 				VestedAccountList:    sampleVestedAccountList,
 				GenesisValidatorList: sampleGenesisValidatorList,
@@ -127,7 +127,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated accounts",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				GenesisAccountList: []types.GenesisAccount{
 					{
@@ -145,7 +145,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "account not associated with chain",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				GenesisAccountList: []types.GenesisAccount{
 					{
@@ -159,7 +159,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated vested accounts",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				VestedAccountList: []types.VestedAccount{
 					{
@@ -177,7 +177,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "vested account not associated with chain",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				VestedAccountList: []types.VestedAccount{
 					{
@@ -191,7 +191,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "address as genesis account and vested account",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				GenesisAccountList: []types.GenesisAccount{
 					{
@@ -211,7 +211,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "genesis validator not associated to a chain",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				GenesisValidatorList: []types.GenesisValidator{
 					*sample.GenesisValidator(noExistChainID, addr1),
@@ -222,7 +222,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated genesis validator",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				GenesisValidatorList: []types.GenesisValidator{
 					*sample.GenesisValidator(chainID1, addr1),
@@ -234,7 +234,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "validator address not associated to a chain",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				GenesisValidatorList: []types.GenesisValidator{
 					*sample.GenesisValidator(noExistChainID, addr1),
@@ -245,9 +245,9 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated requests",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
-				ChainCount: 10,
-				RequestCountList:   sampleRequestCountList,
+				ChainList:        sampleChainList,
+				ChainCount:       10,
+				RequestCountList: sampleRequestCountList,
 				RequestList: []types.Request{
 					{
 						ChainID:   chainID1,
@@ -264,9 +264,9 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "request not associated with chain",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
-				ChainCount: 10,
-				RequestCountList:   sampleRequestCountList,
+				ChainList:        sampleChainList,
+				ChainCount:       10,
+				RequestCountList: sampleRequestCountList,
 				RequestList: []types.Request{
 					{
 						ChainID:   noExistChainID,
@@ -279,7 +279,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "request while no request count for the chain",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				RequestCountList: []types.RequestCount{
 					{
@@ -299,7 +299,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated request count",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				RequestCountList: []types.RequestCount{
 					{
@@ -317,7 +317,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "request count not associated with chain",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				RequestCountList: []types.RequestCount{
 					{
@@ -331,7 +331,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "request count below a request id",
 			genState: &types.GenesisState{
-				ChainList:          sampleChainList,
+				ChainList:  sampleChainList,
 				ChainCount: 10,
 				RequestCountList: []types.RequestCount{
 					{

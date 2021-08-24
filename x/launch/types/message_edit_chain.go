@@ -13,7 +13,7 @@ func NewMsgEditChain(
 	sourceURL,
 	sourceHash string,
 	initialGenesis *InitialGenesis,
-	) *MsgEditChain {
+) *MsgEditChain {
 	return &MsgEditChain{
 		Coordinator:    coordinator,
 		ChainID:        chainID,

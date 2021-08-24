@@ -51,7 +51,7 @@ func TestShowChain(t *testing.T) {
 	}{
 		{
 			desc: "found",
-			id: fmt.Sprintf("%d",  objs[0].Id),
+			id:   fmt.Sprintf("%d", objs[0].Id),
 			args: common,
 			obj:  objs[0],
 		},

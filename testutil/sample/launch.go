@@ -16,9 +16,9 @@ func ChainID(number uint64) (string, string) {
 }
 
 // Chain returns a sample Chain
-func Chain(ID uint64, coordinatorID uint64) *launch.Chain {
+func Chain(id uint64, coordinatorID uint64) *launch.Chain {
 	return &launch.Chain{
-		Id:         ID,
+		Id:              id,
 		CoordinatorID:   coordinatorID,
 		CreatedAt:       time.Now().Unix(),
 		SourceURL:       String(10),

@@ -134,7 +134,7 @@ func TestAccountRemoval_Validate(t *testing.T) {
 
 func TestGenesisAccount_Validate(t *testing.T) {
 	var (
-		addr       = sample.AccAddress()
+		addr    = sample.AccAddress()
 		chainID = uint64(0)
 	)
 	tests := []struct {
@@ -192,7 +192,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 
 func TestGenesisValidator_Validate(t *testing.T) {
 	var (
-		addr       = sample.AccAddress()
+		addr    = sample.AccAddress()
 		chainID = uint64(0)
 	)
 	tests := []struct {
