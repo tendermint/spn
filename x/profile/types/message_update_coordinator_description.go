@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgUpdateCoordinatorDescription{}
 
-func NewMsgUpdateCoordinatorDescription(address string, identity, website, details string) *MsgUpdateCoordinatorDescription {
+func NewMsgUpdateCoordinatorDescription(address, identity, website, details string) *MsgUpdateCoordinatorDescription {
 	return &MsgUpdateCoordinatorDescription{
 		Address: address,
 		Description: &CoordinatorDescription{

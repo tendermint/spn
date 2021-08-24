@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
@@ -27,13 +26,14 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		Address: coordAddr,
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
-	chains[3].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[3])
-	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[1].ChainID, Address: addr1})
-	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[2].ChainID, Address: addr2})
-	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[2].ChainID, Address: addr4})
-	chains[4].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[4])
+	chains[0].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[0])
+	chains[1].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[1])
+
+	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[3].ChainID, Address: addr1})
+	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[4].ChainID, Address: addr2})
+	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[4].ChainID, Address: addr4})
 
 	tests := []struct {
 		name        string
@@ -53,7 +53,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[3].ChainID,
+				ChainID: chains[0].ChainID,
 				Creator: addr1,
 				Address: addr1,
 			},
@@ -61,44 +61,19 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].ChainID,
+				ChainID: chains[1].ChainID,
 				Creator: addr1,
 				Address: addr1,
 			},
-			err: sdkerrors.Wrapf(types.ErrChainInactive,
-				"the chain %s coordinator has been deleted", chains[4].ChainID),
+			err: types.ErrChainInactive,
 		}, {
 			name: "no permission error",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[0].ChainID,
+				ChainID: chains[2].ChainID,
 				Creator: addr1,
 				Address: addr3,
 			},
 			err: types.ErrNoAddressPermission,
-		}, {
-			name: "add chain 1 request 1",
-			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[0].ChainID,
-				Creator: addr1,
-				Address: addr1,
-			},
-			wantID: 0,
-		}, {
-			name: "add chain 2 request 2",
-			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[1].ChainID,
-				Creator: coordAddr,
-				Address: addr1,
-			},
-			wantApprove: true,
-		}, {
-			name: "add chain 2 request 3",
-			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[1].ChainID,
-				Creator: addr2,
-				Address: addr2,
-			},
-			wantID: 0,
 		}, {
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveAccount{
@@ -108,17 +83,41 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			},
 			wantID: 0,
 		}, {
-			name: "add chain 3 request 2",
+			name: "add chain 4 request 2",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[2].ChainID,
+				ChainID: chains[3].ChainID,
+				Creator: coordAddr,
+				Address: addr1,
+			},
+			wantApprove: true,
+		}, {
+			name: "add chain 4 request 3",
+			msg: types.MsgRequestRemoveAccount{
+				ChainID: chains[3].ChainID,
+				Creator: addr2,
+				Address: addr2,
+			},
+			wantID: 0,
+		}, {
+			name: "add chain 5 request 1",
+			msg: types.MsgRequestRemoveAccount{
+				ChainID: chains[4].ChainID,
+				Creator: addr1,
+				Address: addr1,
+			},
+			wantID: 0,
+		}, {
+			name: "add chain 5 request 2",
+			msg: types.MsgRequestRemoveAccount{
+				ChainID: chains[4].ChainID,
 				Creator: coordAddr,
 				Address: addr2,
 			},
 			wantApprove: true,
 		}, {
-			name: "add chain 3 request 3",
+			name: "add chain 5 request 3",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[2].ChainID,
+				ChainID: chains[4].ChainID,
 				Creator: addr3,
 				Address: addr3,
 			},
@@ -126,7 +125,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "remove coordinator account",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[2].ChainID,
+				ChainID: chains[4].ChainID,
 				Creator: coordAddr,
 				Address: addr4,
 			},

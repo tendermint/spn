@@ -112,7 +112,7 @@ message QueryGetVestedAccountRequest {
 }
 
 message QueryGetVestedAccountResponse {
-	VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];;
+  VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];;
 }
 
 message QueryAllVestedAccountRequest {
@@ -121,8 +121,8 @@ message QueryAllVestedAccountRequest {
 }
 
 message QueryAllVestedAccountResponse {
-	repeated VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];;
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetGenesisValidatorRequest {
@@ -173,3 +173,4 @@ message QueryParamsResponse {
 }
 
 // this line is used by starport scaffolding # 3
+

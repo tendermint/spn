@@ -20,6 +20,5 @@ func GenesisAccountKey(chainID uint64, address string) []byte {
 func GenesisAccountAllKey(chainID uint64) []byte {
 	prefixBytes := []byte(GenesisAccountKeyPrefix)
 	chainIDBytes := append(uintBytes(chainID), byte('/'))
-
 	return append(prefixBytes, chainIDBytes...)
 }

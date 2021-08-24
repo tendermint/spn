@@ -41,6 +41,7 @@ func (msg *MsgRequestRemoveValidator) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
 	_, err = sdk.AccAddressFromBech32(msg.ValidatorAddress)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
