@@ -42,9 +42,14 @@ func CmdSettleRequest() *cobra.Command {
 				return err
 			}
 
+			chainID, err := strconv.ParseUint(args[1], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgSettleRequest(
 				clientCtx.GetFromAddress().String(),
-				args[1],
+				chainID,
 				requestID,
 				approve,
 			)

@@ -23,7 +23,12 @@ func CmdRevertLaunch() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgRevertLaunch(clientCtx.GetFromAddress().String(), args[0])
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgRevertLaunch(clientCtx.GetFromAddress().String(), chainID)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

@@ -112,7 +112,7 @@ func Request(chainID string) *launch.Request {
 }
 
 // MsgCreateChain returns a sample MsgCreateChain
-func MsgCreateChain(coordAddress, chainName, genesisURL string) launch.MsgCreateChain {
+func MsgCreateChain(coordAddress, genesisURL string) launch.MsgCreateChain {
 	var genesisHash string
 	if len(genesisURL) > 0 {
 		genesisHash = GenesisHash()
@@ -120,7 +120,6 @@ func MsgCreateChain(coordAddress, chainName, genesisURL string) launch.MsgCreate
 
 	return *launch.NewMsgCreateChain(
 		coordAddress,
-		chainName,
 		String(10),
 		String(10),
 		genesisURL,
@@ -130,8 +129,8 @@ func MsgCreateChain(coordAddress, chainName, genesisURL string) launch.MsgCreate
 
 // MsgEditChain returns a sample MsgEditChain
 func MsgEditChain(
-	coordAddress,
-	chainID string,
+	coordAddress string,
+	chainID uint64,
 	modifySource,
 	modifyInitialGenesis,
 	genesisURL bool,
@@ -161,7 +160,7 @@ func MsgEditChain(
 }
 
 // MsgRequestAddValidator returns a sample MsgRequestAddValidator
-func MsgRequestAddValidator(address, chainID string) launch.MsgRequestAddValidator {
+func MsgRequestAddValidator(address string, chainID uint64) launch.MsgRequestAddValidator {
 	return *launch.NewMsgRequestAddValidator(
 		address,
 		chainID,

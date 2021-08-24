@@ -9,7 +9,7 @@ import (
 )
 
 func TestMsgCreateChain_ValidateBasic(t *testing.T) {
-	invalidGenesisHash := sample.MsgCreateChain(sample.AccAddress(), "valid", "foo.com")
+	invalidGenesisHash := sample.MsgCreateChain(sample.AccAddress(), "foo.com")
 	invalidGenesisHash.GenesisHash = "NoHash"
 
 	for _, tc := range []struct {
@@ -19,22 +19,17 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 	}{
 		{
 			desc:  "valid message",
-			msg:   sample.MsgCreateChain(sample.AccAddress(), "valid", ""),
+			msg:   sample.MsgCreateChain(sample.AccAddress(), ""),
 			valid: true,
 		},
 		{
 			desc:  "valid message with genesis URL",
-			msg:   sample.MsgCreateChain(sample.AccAddress(), "valid", "foo.com"),
+			msg:   sample.MsgCreateChain(sample.AccAddress(), "foo.com"),
 			valid: true,
 		},
 		{
 			desc:  "invalid address",
-			msg:   sample.MsgCreateChain("invalid", "valid", ""),
-			valid: false,
-		},
-		{
-			desc:  "invalid chain name",
-			msg:   sample.MsgCreateChain(sample.AccAddress(), "invalid-name", ""),
+			msg:   sample.MsgCreateChain("invalid", ""),
 			valid: false,
 		},
 		{

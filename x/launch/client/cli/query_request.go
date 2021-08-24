@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -25,8 +26,13 @@ func CmdListRequest() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			params := &types.QueryAllRequestRequest{
-				ChainID:    args[0],
+				ChainID:    chainID,
 				Pagination: pageReq,
 			}
 
@@ -60,8 +66,13 @@ func CmdShowRequest() *cobra.Command {
 				return err
 			}
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			params := &types.QueryGetRequestRequest{
-				ChainID:   args[0],
+				ChainID:   chainID,
 				RequestID: argsRequestID,
 			}
 

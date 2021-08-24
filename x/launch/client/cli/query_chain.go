@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -52,8 +53,13 @@ func CmdShowChain() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
+			id, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			params := &types.QueryGetChainRequest{
-				ChainID: args[0],
+				Id: id,
 			}
 
 			res, err := queryClient.Chain(context.Background(), params)

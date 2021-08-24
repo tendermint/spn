@@ -10,7 +10,7 @@ import (
 
 func TestMsgRevertLaunch_ValidateBasic(t *testing.T) {
 	addr := sample.AccAddress()
-	chainID, _ := sample.ChainID(0)
+	chainID := uint64(0)
 
 	for _, tc := range []struct {
 		desc  string
@@ -25,11 +25,6 @@ func TestMsgRevertLaunch_ValidateBasic(t *testing.T) {
 		{
 			desc:  "invalid coordinator address",
 			msg:   *types.NewMsgRevertLaunch("invalid", chainID),
-			valid: false,
-		},
-		{
-			desc:  "invalid chain id",
-			msg:   *types.NewMsgRevertLaunch(addr, "invalid"),
 			valid: false,
 		},
 	} {

@@ -46,7 +46,7 @@ func (gs GenesisState) Validate() error {
 	return gs.Params.Validate()
 }
 
-func validateChains(gs GenesisState) (map[string]struct{}, error) {
+func validateChains(gs GenesisState) (map[uint64]struct{}, error) {
 	// Check for duplicated index in chainNameCount
 	chainNameCountMap := make(map[string]uint64)
 	for _, elem := range gs.ChainNameCountList {
@@ -57,9 +57,9 @@ func validateChains(gs GenesisState) (map[string]struct{}, error) {
 	}
 
 	// Check for duplicated index in chain
-	chainIDMap := make(map[string]struct{})
+	chainIDMap := make(map[uint64]struct{})
 	for _, elem := range gs.ChainList {
-		chainID := elem.ChainID
+		chainID := elem.Id
 		if _, ok := chainIDMap[chainID]; ok {
 			return nil, fmt.Errorf("duplicated chain ID for chain")
 		}
@@ -82,9 +82,9 @@ func validateChains(gs GenesisState) (map[string]struct{}, error) {
 	return chainIDMap, nil
 }
 
-func validateRequests(gs GenesisState, chainIDMap map[string]struct{}) error {
+func validateRequests(gs GenesisState, chainIDMap map[uint64]struct{}) error {
 	// We checkout request counts to perform verification
-	requestCountMap := make(map[string]uint64)
+	requestCountMap := make(map[uint64]uint64)
 	for _, elem := range gs.RequestCountList {
 		if _, ok := requestCountMap[elem.ChainID]; ok {
 			return fmt.Errorf("duplicated request count")
@@ -134,7 +134,7 @@ func validateRequests(gs GenesisState, chainIDMap map[string]struct{}) error {
 	return nil
 }
 
-func validateAccounts(gs GenesisState, chainIDMap map[string]struct{}) error {
+func validateAccounts(gs GenesisState, chainIDMap map[uint64]struct{}) error {
 	// Check for duplicated index in genesisAccount
 	genesisAccountIndexMap := make(map[string]struct{})
 	for _, elem := range gs.GenesisAccountList {

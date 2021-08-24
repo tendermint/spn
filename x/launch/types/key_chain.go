@@ -11,13 +11,7 @@ const (
 
 // ChainKey returns the store key to retrieve a Chain from the index fields
 func ChainKey(
-	chainID string,
+	chainID uint64,
 ) []byte {
-	var key []byte
-
-	chainIDBytes := []byte(chainID)
-	key = append(key, chainIDBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+	return append(uintBytes(chainID), byte('/'))
 }

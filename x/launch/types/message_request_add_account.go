@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgRequestAddAccount{}
 
-func NewMsgRequestAddAccount(address, chainID string, coins sdk.Coins) *MsgRequestAddAccount {
+func NewMsgRequestAddAccount(address string, chainID uint64, coins sdk.Coins) *MsgRequestAddAccount {
 	return &MsgRequestAddAccount{
 		Address: address,
 		ChainID: chainID,
@@ -40,11 +40,6 @@ func (msg *MsgRequestAddAccount) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address (%s)", err)
-	}
-
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(ErrInvalidChainID, msg.ChainID)
 	}
 
 	if !msg.Coins.IsValid() || msg.Coins.Empty() {

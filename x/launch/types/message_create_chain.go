@@ -7,10 +7,15 @@ import (
 
 var _ sdk.Msg = &MsgCreateChain{}
 
-func NewMsgCreateChain(coordinator string, chainName string, sourceURL string, sourceHash string, genesisURL string, genesisHash string) *MsgCreateChain {
+func NewMsgCreateChain(
+	coordinator,
+	sourceURL,
+	sourceHash,
+	genesisURL,
+	genesisHash string,
+) *MsgCreateChain {
 	return &MsgCreateChain{
 		Coordinator: coordinator,
-		ChainName:   chainName,
 		SourceURL:   sourceURL,
 		SourceHash:  sourceHash,
 		GenesisURL:  genesisURL,
@@ -43,10 +48,6 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
-	}
-
-	if err := CheckChainName(msg.ChainName); err != nil {
-		return sdkerrors.Wrapf(ErrInvalidChainName, err.Error())
 	}
 
 	// If a genesis URL is provided, the hash must be sha256, which is 32 bytes

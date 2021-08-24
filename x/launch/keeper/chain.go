@@ -11,7 +11,7 @@ func (k Keeper) SetChain(ctx sdk.Context, chain types.Chain) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
 	b := k.cdc.MustMarshalBinaryBare(&chain)
 	store.Set(types.ChainKey(
-		chain.ChainID,
+		chain.Id,
 	), b)
 }
 

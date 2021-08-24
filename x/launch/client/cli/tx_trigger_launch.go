@@ -25,7 +25,12 @@ func CmdTriggerLaunch() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgTriggerLaunch(clientCtx.GetFromAddress().String(), args[0], argsRemainingTime)
+			chainID, err := strconv.ParseUint(args[1], 10, 64)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgTriggerLaunch(clientCtx.GetFromAddress().String(), chainID, argsRemainingTime)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

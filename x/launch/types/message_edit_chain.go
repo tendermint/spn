@@ -7,7 +7,13 @@ import (
 
 var _ sdk.Msg = &MsgEditChain{}
 
-func NewMsgEditChain(coordinator, chainID, sourceURL, sourceHash string, initialGenesis *InitialGenesis) *MsgEditChain {
+func NewMsgEditChain(
+	coordinator string,
+	chainID uint64,
+	sourceURL,
+	sourceHash string,
+	initialGenesis *InitialGenesis,
+	) *MsgEditChain {
 	return &MsgEditChain{
 		Coordinator:    coordinator,
 		ChainID:        chainID,
@@ -42,12 +48,6 @@ func (msg *MsgEditChain) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-
-	// Check chain ID is well formatted
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, msg.ChainID)
 	}
 
 	if msg.SourceURL == "" && msg.InitialGenesis == nil {

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -60,9 +61,14 @@ func CmdEditChain() *cobra.Command {
 				initialGenesis = &genesisURL
 			}
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgEditChain(
 				clientCtx.GetFromAddress().String(),
-				args[0],
+				chainID,
 				sourceURL,
 				sourceHash,
 				initialGenesis,

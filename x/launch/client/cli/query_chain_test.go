@@ -52,13 +52,13 @@ func TestShowChain(t *testing.T) {
 	}{
 		{
 			desc: "found",
-			id:   objs[0].ChainID,
+			id: fmt.Sprintf("%d",  objs[0].Id),
 			args: common,
 			obj:  objs[0],
 		},
 		{
 			desc: "not found",
-			id:   "not_found",
+			id:   "10",
 			args: common,
 			err:  status.Error(codes.InvalidArgument, "not found"),
 		},

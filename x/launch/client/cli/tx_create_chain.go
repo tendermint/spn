@@ -19,7 +19,7 @@ const (
 
 func CmdCreateChain() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-chain [chain-name] [source-url] [source-hash]",
+		Use:   "create-chain [source-url] [source-hash]",
 		Short: "Create a new chain for launch",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -44,7 +44,6 @@ func CmdCreateChain() *cobra.Command {
 				clientCtx.GetFromAddress().String(),
 				args[0],
 				args[1],
-				args[2],
 				genesisURL,
 				genesisHash,
 			)

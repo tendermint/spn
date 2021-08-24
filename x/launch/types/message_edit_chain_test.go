@@ -9,7 +9,7 @@ import (
 )
 
 func TestMsgEditChain_ValidateBasic(t *testing.T) {
-	chainID, _ := sample.ChainID(0)
+	chainID := uint64(0)
 
 	msgInvalidGenesisHash := sample.MsgEditChain(
 		sample.AccAddress(),
@@ -75,17 +75,6 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			msg: sample.MsgEditChain(
 				"invalid",
 				chainID,
-				true,
-				true,
-				false,
-			),
-			valid: false,
-		},
-		{
-			desc: "invalid chain id",
-			msg: sample.MsgEditChain(
-				sample.AccAddress(),
-				"invalid",
 				true,
 				true,
 				false,
