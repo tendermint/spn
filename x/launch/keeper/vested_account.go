@@ -19,16 +19,12 @@ func (k Keeper) SetVestedAccount(ctx sdk.Context, vestedAccount types.VestedAcco
 // GetVestedAccount returns a vestedAccount from its index
 func (k Keeper) GetVestedAccount(
 	ctx sdk.Context,
-	chainID,
+	chainID uint64,
 	address string,
-
 ) (val types.VestedAccount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VestedAccountKeyPrefix))
 
-	b := store.Get(types.VestedAccountKey(
-		chainID,
-		address,
-	))
+	b := store.Get(types.VestedAccountKey(chainID, address))
 	if b == nil {
 		return val, false
 	}
@@ -40,15 +36,12 @@ func (k Keeper) GetVestedAccount(
 // RemoveVestedAccount removes a vestedAccount from the store
 func (k Keeper) RemoveVestedAccount(
 	ctx sdk.Context,
-	chainID,
+	chainID uint64,
 	address string,
 
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VestedAccountKeyPrefix))
-	store.Delete(types.VestedAccountKey(
-		chainID,
-		address,
-	))
+	store.Delete(types.VestedAccountKey(chainID, address))
 }
 
 // GetAllVestedAccount returns all vestedAccount

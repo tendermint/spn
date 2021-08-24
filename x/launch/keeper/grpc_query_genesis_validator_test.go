@@ -18,7 +18,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNGenesisValidatorForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID string) []types.GenesisValidator {
+func createNGenesisValidatorForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, n)
 	for i := range items {
 		items[i] = *sample.GenesisValidator(chainID, strconv.Itoa(i))
@@ -56,7 +56,7 @@ func TestGenesisValidatorQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetGenesisValidatorRequest{
-				ChainID: strconv.Itoa(100000),
+				ChainID: uint64(100000),
 				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
@@ -82,10 +82,10 @@ func TestGenesisValidatorQueryPaginated(t *testing.T) {
 	var (
 		keeper, _, ctx, _ = testkeeper.Launch(t)
 		wctx              = sdk.WrapSDKContext(ctx)
-		chainID, _        = sample.ChainID(0)
+		chainID        = uint64(0)
 		msgs              = createNGenesisValidatorForChainID(keeper, ctx, 5, chainID)
 	)
-	request := func(chainID string, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisValidatorRequest {
+	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisValidatorRequest {
 		return &types.QueryAllGenesisValidatorRequest{
 			ChainID: chainID,
 			Pagination: &query.PageRequest{

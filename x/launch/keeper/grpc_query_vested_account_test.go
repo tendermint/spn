@@ -18,7 +18,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNVestedAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID string) []types.VestedAccount {
+func createNVestedAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.VestedAccount {
 	items := make([]types.VestedAccount, n)
 	for i := range items {
 		items[i] = *sample.VestedAccount(chainID, strconv.Itoa(i))
@@ -56,7 +56,7 @@ func TestVestedAccountQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetVestedAccountRequest{
-				ChainID: strconv.Itoa(100000),
+				ChainID: uint64(100000),
 				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
@@ -82,11 +82,11 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 	var (
 		keeper, _, ctx, _ = testkeeper.Launch(t)
 		wctx              = sdk.WrapSDKContext(ctx)
-		chainID, _        = sample.ChainID(0)
+		chainID        = uint64(0)
 		msgs              = createNVestedAccountForChainID(keeper, ctx, 5, chainID)
 	)
 
-	request := func(chainID string, next []byte, offset, limit uint64, total bool) *types.QueryAllVestedAccountRequest {
+	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllVestedAccountRequest {
 		return &types.QueryAllVestedAccountRequest{
 			ChainID: chainID,
 			Pagination: &query.PageRequest{

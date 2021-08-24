@@ -12,7 +12,7 @@ import (
 )
 
 // GetRequestCount get the total number of request for a specific chain ID
-func (k Keeper) GetRequestCount(ctx sdk.Context, chainID string) uint64 {
+func (k Keeper) GetRequestCount(ctx sdk.Context, chainID uint64) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestCountKeyPrefix))
 	bz := store.Get(types.RequestCountKey(chainID))
 
@@ -32,7 +32,7 @@ func (k Keeper) GetRequestCount(ctx sdk.Context, chainID string) uint64 {
 }
 
 // SetRequestCount set the total number of request for a chain
-func (k Keeper) SetRequestCount(ctx sdk.Context, chainID string, count uint64) {
+func (k Keeper) SetRequestCount(ctx sdk.Context, chainID, count uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestCountKeyPrefix))
 	bz := []byte(strconv.FormatUint(count, 10))
 	store.Set(types.RequestCountKey(chainID), bz)
@@ -70,7 +70,7 @@ func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 // GetRequest returns a request from its index
 func (k Keeper) GetRequest(
 	ctx sdk.Context,
-	chainID string,
+	chainID,
 	requestID uint64,
 ) (val types.Request, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestKeyPrefix))
@@ -90,7 +90,7 @@ func (k Keeper) GetRequest(
 // RemoveRequest removes a request from the store
 func (k Keeper) RemoveRequest(
 	ctx sdk.Context,
-	chainID string,
+	chainID,
 	requestID uint64,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestKeyPrefix))
@@ -118,7 +118,7 @@ func (k Keeper) GetAllRequest(ctx sdk.Context) (list []types.Request) {
 
 // checkAccount check account inconsistency and return
 // if an account exists for genesis or vested accounts
-func checkAccount(ctx sdk.Context, k Keeper, chainID, address string) (bool, error) {
+func checkAccount(ctx sdk.Context, k Keeper, chainID uint64, address string) (bool, error) {
 	_, foundGenesis := k.GetGenesisAccount(ctx, chainID, address)
 	_, foundVested := k.GetVestedAccount(ctx, chainID, address)
 	if foundGenesis && foundVested {
@@ -135,7 +135,7 @@ func checkAccount(ctx sdk.Context, k Keeper, chainID, address string) (bool, err
 func ApplyRequest(
 	ctx sdk.Context,
 	k Keeper,
-	chainID string,
+	chainID uint64,
 	request types.Request,
 ) error {
 	if err := request.Content.Validate(); err != nil {
