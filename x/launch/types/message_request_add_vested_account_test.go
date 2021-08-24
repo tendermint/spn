@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
@@ -14,18 +13,10 @@ import (
 
 func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 	var (
-		addr       = sample.AccAddress()
 		chainID, _ = sample.ChainID(10)
 	)
 
-	option, err := codec.NewAnyWithValue(&types.DelayedVesting{
-		Vesting: sample.Coins(),
-		EndTime: time.Now().Unix(),
-	})
-	require.NoError(t, err)
-
-	invalidOption, err := codec.NewAnyWithValue(&types.Request{})
-	require.NoError(t, err)
+	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
 
 	tests := []struct {
 		name string
@@ -41,7 +32,8 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         option,
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
+		},
+		{
 			name: "invalid chain id",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),
@@ -50,16 +42,8 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         option,
 			},
 			err: types.ErrInvalidChainID,
-		}, {
-			name: "nil vesting option",
-			msg: types.MsgRequestAddVestedAccount{
-				Address:         addr,
-				ChainID:         chainID,
-				StartingBalance: sample.Coins(),
-				Options:         nil,
-			},
-			err: types.ErrInvalidAccountOption,
-		}, {
+		},
+		{
 			name: "invalid coins",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),
@@ -68,16 +52,18 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         option,
 			},
 			err: types.ErrInvalidCoins,
-		}, {
+		},
+		{
 			name: "invalid message option",
 			msg: types.MsgRequestAddVestedAccount{
-				Address:         addr,
+				Address:         sample.AccAddress(),
 				ChainID:         chainID,
 				StartingBalance: sample.Coins(),
-				Options:         invalidOption,
+				Options:         *types.NewDelayedVesting(sample.Coins(), 0),
 			},
-			err: types.ErrInvalidAccountOption,
-		}, {
+			err: types.ErrInvalidVestingOption,
+		},
+		{
 			name: "valid message",
 			msg: types.MsgRequestAddVestedAccount{
 				Address:         sample.AccAddress(),

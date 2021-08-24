@@ -4,127 +4,100 @@ import (
 	"testing"
 	"time"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestAccountRemovalCodec(t *testing.T) {
-	var err error
-	cdc := sample.Codec()
-	chainID, _ := sample.ChainID(1)
-	request := sample.Request(chainID)
-	content := &types.AccountRemoval{
-		Address: sample.AccAddress(),
-	}
-	request.Content, err = codec.NewAnyWithValue(content)
-	require.NoError(t, err)
-	result, err := request.UnpackAccountRemoval(cdc)
-	require.NoError(t, err)
-	require.EqualValues(t, content, result)
+func TestNewGenesisAccount(t *testing.T) {
+	chainID, _ := sample.ChainID(0)
+	address := sample.AccAddress()
+	coins := sample.Coins()
+	requestContent := types.NewGenesisAccount(chainID, address, coins)
 
-	invalidContent := &types.Request{}
-	request.Content, err = codec.NewAnyWithValue(invalidContent)
-	require.NoError(t, err)
-	_, err = request.UnpackAccountRemoval(cdc)
-	require.Error(t, err)
+	genesisAccount := requestContent.GetGenesisAccount()
+	require.NotNil(t, genesisAccount)
+	require.EqualValues(t, chainID, genesisAccount.ChainID)
+	require.EqualValues(t, address, genesisAccount.Address)
+	require.True(t, coins.IsEqual(genesisAccount.Coins))
+
+	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetValidatorRemoval())
+	require.Nil(t, requestContent.GetAccountRemoval())
+	require.Nil(t, requestContent.GetValidatorRemoval())
 }
 
-func TestGenesisValidatorCodec(t *testing.T) {
-	var err error
-	cdc := sample.Codec()
-	chainID, _ := sample.ChainID(1)
-	request := sample.Request(chainID)
-	content := &types.GenesisValidator{
-		Address: sample.AccAddress(),
-		ChainID: chainID,
-	}
-	request.Content, err = codec.NewAnyWithValue(content)
-	require.NoError(t, err)
-	result, err := request.UnpackGenesisValidator(cdc)
+func TestNewVestedAccount(t *testing.T) {
+	chainID, _ := sample.ChainID(0)
+	address := sample.AccAddress()
+	startingBalance := sample.Coins()
+	vestingOptions := sample.VestingOptions()
+	requestContent := types.NewVestedAccount(chainID, address, startingBalance, vestingOptions)
 
-	require.NoError(t, err)
-	require.EqualValues(t, content, result)
+	vestedAccount := requestContent.GetVestedAccount()
+	require.NotNil(t, vestedAccount)
+	require.EqualValues(t, chainID, vestedAccount.ChainID)
+	require.EqualValues(t, address, vestedAccount.Address)
+	require.True(t, startingBalance.IsEqual(vestedAccount.StartingBalance))
+	require.Equal(t, vestingOptions, vestedAccount.VestingOptions)
 
-	invalidContent := &types.Request{}
-	request.Content, err = codec.NewAnyWithValue(invalidContent)
-	require.NoError(t, err)
-
-	_, err = request.UnpackGenesisValidator(cdc)
-	require.Error(t, err)
+	require.Nil(t, requestContent.GetGenesisAccount())
+	require.Nil(t, requestContent.GetValidatorRemoval())
+	require.Nil(t, requestContent.GetAccountRemoval())
+	require.Nil(t, requestContent.GetValidatorRemoval())
 }
 
-func TestValidatorRemovalCodec(t *testing.T) {
-	var err error
-	cdc := sample.Codec()
-	chainID, _ := sample.ChainID(1)
-	request := sample.Request(chainID)
-	content := &types.ValidatorRemoval{
-		ValAddress: sample.AccAddress(),
-	}
-	request.Content, err = codec.NewAnyWithValue(content)
-	require.NoError(t, err)
-	result, err := request.UnpackValidatorRemoval(cdc)
+func TestNewGenesisValidator(t *testing.T) {
+	chainID, _ := sample.ChainID(0)
+	address := sample.AccAddress()
+	gentTx := sample.Bytes(300)
+	consPubKey := sample.Bytes(30)
+	selfDelegation := sample.Coin()
+	peer := sample.String(30)
+	requestContent := types.NewGenesisValidator(chainID, address, gentTx, consPubKey, selfDelegation, peer)
 
-	require.NoError(t, err)
-	require.EqualValues(t, content, result)
+	genesisValidator := requestContent.GetGenesisValidator()
+	require.NotNil(t, genesisValidator)
+	require.EqualValues(t, chainID, genesisValidator.ChainID)
+	require.EqualValues(t, address, genesisValidator.Address)
+	require.EqualValues(t, gentTx, genesisValidator.GenTx)
+	require.EqualValues(t, consPubKey, genesisValidator.ConsPubKey)
+	require.True(t, selfDelegation.IsEqual(genesisValidator.SelfDelegation))
+	require.EqualValues(t, peer, genesisValidator.Peer)
 
-	invalidContent := &types.Request{}
-	request.Content, err = codec.NewAnyWithValue(invalidContent)
-	require.NoError(t, err)
-
-	_, err = request.UnpackValidatorRemoval(cdc)
-	require.Error(t, err)
-
-	_, err = request.UnpackGenesisValidator(cdc)
-	require.Error(t, err)
-
-	_, err = request.UnpackValidatorRemoval(cdc)
-	require.Error(t, err)
+	require.Nil(t, requestContent.GetGenesisAccount())
+	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetAccountRemoval())
+	require.Nil(t, requestContent.GetValidatorRemoval())
 }
 
-func TestGenesisAccountCodec(t *testing.T) {
-	var err error
-	cdc := sample.Codec()
-	chainID, _ := sample.ChainID(1)
-	request := sample.Request(chainID)
-	content := &types.GenesisAccount{
-		Address: sample.AccAddress(),
-		ChainID: chainID,
-	}
-	request.Content, err = codec.NewAnyWithValue(content)
-	require.NoError(t, err)
-	result, err := request.UnpackGenesisAccount(cdc)
-	require.NoError(t, err)
-	require.EqualValues(t, content, result)
+func TestNewAccountRemoval(t *testing.T) {
+	address := sample.AccAddress()
+	requestContent := types.NewAccountRemoval(address)
 
-	invalidContent := &types.Request{}
-	request.Content, err = codec.NewAnyWithValue(invalidContent)
-	require.NoError(t, err)
-	_, err = request.UnpackGenesisAccount(cdc)
-	require.Error(t, err)
+	accountRemoval := requestContent.GetAccountRemoval()
+	require.NotNil(t, accountRemoval)
+	require.EqualValues(t, address, accountRemoval.Address)
+
+	require.Nil(t, requestContent.GetGenesisAccount())
+	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetGenesisValidator())
+	require.Nil(t, requestContent.GetValidatorRemoval())
 }
 
-func TestVestedAccountCodec(t *testing.T) {
-	var err error
-	cdc := sample.Codec()
-	chainID, _ := sample.ChainID(1)
-	request := sample.Request(chainID)
-	content := &types.VestedAccount{
-		Address: sample.AccAddress(),
-	}
-	request.Content, err = codec.NewAnyWithValue(content)
-	require.NoError(t, err)
-	result, err := request.UnpackVestedAccount(cdc)
-	require.NoError(t, err)
-	require.EqualValues(t, content, result)
-	invalidContent := &types.Request{}
-	request.Content, err = codec.NewAnyWithValue(invalidContent)
-	require.NoError(t, err)
-	_, err = request.UnpackVestedAccount(cdc)
-	require.Error(t, err)
+func TestNewValidatorRemoval(t *testing.T) {
+	address := sample.AccAddress()
+	requestContent := types.NewValidatorRemoval(address)
+
+	validatorRemoval := requestContent.GetValidatorRemoval()
+	require.NotNil(t, validatorRemoval)
+	require.EqualValues(t, address, validatorRemoval.ValAddress)
+
+	require.Nil(t, requestContent.GetGenesisAccount())
+	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetGenesisValidator())
+	require.Nil(t, requestContent.GetAccountRemoval())
 }
 
 func TestAccountRemoval_Validate(t *testing.T) {
@@ -370,19 +343,9 @@ func TestValidatorRemoval_Validate(t *testing.T) {
 }
 
 func TestVestedAccount_Validate(t *testing.T) {
-	var (
-		addr       = sample.AccAddress()
-		chainID, _ = sample.ChainID(10)
-	)
+	chainID, _ := sample.ChainID(10)
 
-	option, err := codec.NewAnyWithValue(&types.DelayedVesting{
-		Vesting: sample.Coins(),
-		EndTime: time.Now().Unix(),
-	})
-	require.NoError(t, err)
-
-	invalidOption, err := codec.NewAnyWithValue(&types.Request{})
-	require.NoError(t, err)
+	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
 
 	tests := []struct {
 		name    string
@@ -395,10 +358,11 @@ func TestVestedAccount_Validate(t *testing.T) {
 				ChainID:         chainID,
 				Address:         "invalid_address",
 				StartingBalance: sample.Coins(),
-				VestingOptions:  nil,
+				VestingOptions:  option,
 			},
 			wantErr: true,
-		}, {
+		},
+		{
 			name: "invalid chain id",
 			content: types.VestedAccount{
 				Address:         sample.AccAddress(),
@@ -407,16 +371,8 @@ func TestVestedAccount_Validate(t *testing.T) {
 				VestingOptions:  option,
 			},
 			wantErr: true,
-		}, {
-			name: "nil vesting option",
-			content: types.VestedAccount{
-				Address:         addr,
-				ChainID:         chainID,
-				StartingBalance: sample.Coins(),
-				VestingOptions:  nil,
-			},
-			wantErr: true,
-		}, {
+		},
+		{
 			name: "invalid coins",
 			content: types.VestedAccount{
 				Address:         sample.AccAddress(),
@@ -425,16 +381,8 @@ func TestVestedAccount_Validate(t *testing.T) {
 				VestingOptions:  option,
 			},
 			wantErr: true,
-		}, {
-			name: "invalid request content option",
-			content: types.VestedAccount{
-				Address:         addr,
-				ChainID:         chainID,
-				StartingBalance: sample.Coins(),
-				VestingOptions:  invalidOption,
-			},
-			wantErr: true,
-		}, {
+		},
+		{
 			name: "valid request content",
 			content: types.VestedAccount{
 				Address:         sample.AccAddress(),

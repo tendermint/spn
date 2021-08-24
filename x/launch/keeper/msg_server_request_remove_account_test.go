@@ -13,14 +13,14 @@ import (
 
 func TestMsgRequestRemoveAccount(t *testing.T) {
 	var (
-		invalidChain, _            = sample.ChainID(0)
-		coordAddr                  = sample.AccAddress()
-		addr1                      = sample.AccAddress()
-		addr2                      = sample.AccAddress()
-		addr3                      = sample.AccAddress()
-		addr4                      = sample.AccAddress()
-		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
-		ctx                        = sdk.WrapSDKContext(sdkCtx)
+		invalidChain, _          = sample.ChainID(0)
+		coordAddr                = sample.AccAddress()
+		addr1                    = sample.AccAddress()
+		addr2                    = sample.AccAddress()
+		addr3                    = sample.AccAddress()
+		addr4                    = sample.AccAddress()
+		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
+		ctx                      = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
@@ -149,8 +149,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
-				content, err := request.UnpackAccountRemoval(cdc)
-				require.NoError(t, err)
+				content := request.Content.GetAccountRemoval()
+				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
 			} else {
 				_, foundGenesis := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)

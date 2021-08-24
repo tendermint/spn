@@ -49,10 +49,6 @@ func TestChainQuerySingle(t *testing.T) {
 				require.ErrorIs(t, err, tc.err)
 			} else {
 				require.NoError(t, err)
-
-				// Cached value is cleared when the any type is encoded into the store
-				tc.response.Chain.InitialGenesis.ClearCachedValue()
-
 				require.Equal(t, tc.response, response)
 			}
 		})
@@ -80,9 +76,6 @@ func TestFooQueryPaginated(t *testing.T) {
 			resp, err := keeper.ChainAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				// Cached value is cleared when the any type is encoded into the store
-				msgs[j].InitialGenesis.ClearCachedValue()
-
 				require.Equal(t, msgs[j], resp.Chain[j-i])
 			}
 		}

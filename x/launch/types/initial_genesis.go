@@ -9,26 +9,42 @@ import (
 
 const HashLength = 64
 
-// InitialGenesis defines the interface for initial genesis types
-type InitialGenesis interface {
-	Validate() error
+// NewDefaultInitialGenesis returns a InitialGenesis containing a DefaultInitialGenesis
+func NewDefaultInitialGenesis() InitialGenesis {
+	return InitialGenesis{
+		Source: &InitialGenesis_DefaultInitialGenesis{
+			DefaultInitialGenesis: &DefaultInitialGenesis{},
+		},
+	}
 }
 
-var _ InitialGenesis = &DefaultInitialGenesis{}
-
-// Validate implements InitialGenesis
-func (DefaultInitialGenesis) Validate() error { return nil }
-
-var _ InitialGenesis = &GenesisURL{}
-
-// Validate implements InitialGenesis
-func (g GenesisURL) Validate() error {
-	if g.Url == "" {
-		return errors.New("no url provided")
+// NewGenesisURL returns a InitialGenesis containing a GenesisURL
+func NewGenesisURL(url, hash string) InitialGenesis {
+	return InitialGenesis{
+		Source: &InitialGenesis_GenesisURL{
+			GenesisURL: &GenesisURL{
+				Url:  url,
+				Hash: hash,
+			},
+		},
 	}
-	if len(g.Hash) != HashLength {
-		return errors.New("hash must be sha256")
+}
+
+// Validate verifies the initial genesis is valid
+func (m InitialGenesis) Validate() error {
+	switch initialGenesis := m.Source.(type) {
+	case *InitialGenesis_DefaultInitialGenesis:
+	case *InitialGenesis_GenesisURL:
+		if initialGenesis.GenesisURL.Url == "" {
+			return errors.New("no url provided")
+		}
+		if len(initialGenesis.GenesisURL.Hash) != HashLength {
+			return errors.New("hash must be sha256")
+		}
+	default:
+		return errors.New("unrecognized initial genesis")
 	}
+
 	return nil
 }
 

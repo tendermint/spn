@@ -38,7 +38,7 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		chain.SourceHash = msg.SourceHash
 	}
 	if msg.InitialGenesis != nil {
-		chain.InitialGenesis = msg.InitialGenesis
+		chain.InitialGenesis = *msg.InitialGenesis
 	}
 
 	k.SetChain(ctx, chain)

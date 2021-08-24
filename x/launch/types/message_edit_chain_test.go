@@ -3,25 +3,13 @@ package types_test
 import (
 	"testing"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
 func TestMsgEditChain_ValidateBasic(t *testing.T) {
-	var err error
 	chainID, _ := sample.ChainID(0)
-
-	msgInvalidInitialGenesis := sample.MsgEditChain(
-		sample.AccAddress(),
-		chainID,
-		true,
-		false,
-		false,
-	)
-	msgInvalidInitialGenesis.InitialGenesis, err = codec.NewAnyWithValue(&types.Chain{})
-	require.NoError(t, err)
 
 	msgInvalidGenesisHash := sample.MsgEditChain(
 		sample.AccAddress(),
@@ -30,11 +18,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		false,
 		false,
 	)
-	msgInvalidGenesisHash.InitialGenesis, err = codec.NewAnyWithValue(&types.GenesisURL{
-		Url:  "foo.com",
-		Hash: "NoHash",
-	})
-	require.NoError(t, err)
+	genesisURL := types.NewGenesisURL("foo.com", "NoHash")
+	msgInvalidGenesisHash.InitialGenesis = &genesisURL
 
 	for _, tc := range []struct {
 		desc  string
@@ -116,11 +101,6 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				false,
 			),
-			valid: false,
-		},
-		{
-			desc:  "invalid initial genesis",
-			msg:   msgInvalidInitialGenesis,
 			valid: false,
 		},
 		{

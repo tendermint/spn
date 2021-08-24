@@ -2,216 +2,185 @@ package types
 
 import (
 	"errors"
-	"fmt"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// RequestContent defines the interface for a request content
-type RequestContent interface {
-	Validate() error
+func (m RequestContent) Validate() error {
+	switch requestContent := m.Content.(type) {
+	case *RequestContent_GenesisAccount:
+		return requestContent.GenesisAccount.Validate()
+	case *RequestContent_VestedAccount:
+		return requestContent.VestedAccount.Validate()
+	case *RequestContent_GenesisValidator:
+		return requestContent.GenesisValidator.Validate()
+	case *RequestContent_AccountRemoval:
+		return requestContent.AccountRemoval.Validate()
+	case *RequestContent_ValidatorRemoval:
+		return requestContent.ValidatorRemoval.Validate()
+	default:
+		return errors.New("unrecognized request content")
+	}
 }
 
-var _ RequestContent = &AccountRemoval{}
+// NewGenesisAccount returns a RequestContent containing an GenesisAccount
+func NewGenesisAccount(chainID, address string, coins sdk.Coins) RequestContent {
+	return RequestContent{
+		Content: &RequestContent_GenesisAccount{
+			GenesisAccount: &GenesisAccount{
+				ChainID: chainID,
+				Address: address,
+				Coins:   coins,
+			},
+		},
+	}
+}
 
-// Validate implements AccountRemoval validation
-func (c AccountRemoval) Validate() error {
-	_, err := sdk.AccAddressFromBech32(c.Address)
+// Validate implements GenesisAccount validation
+func (m GenesisAccount) Validate() error {
+	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
+	}
+	_, _, err = ParseChainID(m.ChainID)
+	if err != nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, m.ChainID)
+	}
+
+	if !m.Coins.IsValid() || m.Coins.Empty() {
+		return sdkerrors.Wrap(ErrInvalidCoins, m.Address)
 	}
 	return nil
 }
 
-// UnpackAccountRemoval returns the AccountRemoval structure from the codec unpack
-func (r Request) UnpackAccountRemoval(cdc codec.AnyUnpacker) (*AccountRemoval, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
+// NewVestedAccount returns a RequestContent containing a VestedAccount
+func NewVestedAccount(chainID, address string, startingBalance sdk.Coins, vestingOptions VestingOptions) RequestContent {
+	return RequestContent{
+		Content: &RequestContent_VestedAccount{
+			VestedAccount: &VestedAccount{
+				ChainID:         chainID,
+				Address:         address,
+				StartingBalance: startingBalance,
+				VestingOptions:  vestingOptions,
+			},
+		},
 	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
-
-	result, ok := content.(*AccountRemoval)
-	if !ok {
-		return nil, errors.New("not a accountRemoval request")
-	}
-	return result, nil
 }
 
-var _ RequestContent = &GenesisValidator{}
+// Validate implements VestedAccount validation
+func (m VestedAccount) Validate() error {
+	_, err := sdk.AccAddressFromBech32(m.Address)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
+	}
+	_, _, err = ParseChainID(m.ChainID)
+	if err != nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, m.ChainID)
+	}
+
+	if !m.StartingBalance.IsValid() {
+		return sdkerrors.Wrap(ErrInvalidSelfDelegation, m.StartingBalance.String())
+	}
+
+	if err := m.VestingOptions.Validate(); err != nil {
+		return sdkerrors.Wrapf(ErrInvalidVestingOption, err.Error())
+	}
+	return nil
+}
+
+// NewGenesisValidator returns a RequestContent containing a GenesisValidator
+func NewGenesisValidator(
+	chainID,
+	address string,
+	genTx,
+	consPubKey []byte,
+	selfDelegation sdk.Coin,
+	peer string,
+) RequestContent {
+	return RequestContent{
+		Content: &RequestContent_GenesisValidator{
+			GenesisValidator: &GenesisValidator{
+				ChainID:        chainID,
+				Address:        address,
+				GenTx:          genTx,
+				ConsPubKey:     consPubKey,
+				SelfDelegation: selfDelegation,
+				Peer:           peer,
+			},
+		},
+	}
+}
 
 // Validate implements GenesisValidator validation
-func (c GenesisValidator) Validate() error {
-	_, err := sdk.AccAddressFromBech32(c.Address)
+func (m GenesisValidator) Validate() error {
+	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
-	_, _, err = ParseChainID(c.ChainID)
+	_, _, err = ParseChainID(m.ChainID)
 	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, c.ChainID)
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, m.ChainID)
 	}
 
-	if len(c.GenTx) == 0 {
+	if len(m.GenTx) == 0 {
 		return sdkerrors.Wrap(ErrInvalidGenTx, "empty gentx")
 	}
 
-	if len(c.ConsPubKey) == 0 {
+	if len(m.ConsPubKey) == 0 {
 		return sdkerrors.Wrap(ErrInvalidConsPubKey, "empty consensus public key")
 	}
 
-	if !c.SelfDelegation.IsValid() {
+	if !m.SelfDelegation.IsValid() {
 		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "")
 	}
 
-	if c.SelfDelegation.IsZero() {
+	if m.SelfDelegation.IsZero() {
 		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "self delegation is zero")
 	}
 
-	if c.Peer == "" {
+	if m.Peer == "" {
 		return sdkerrors.Wrap(ErrInvalidPeer, "empty peer")
 	}
 	return nil
 }
 
-// UnpackGenesisValidator returns the GenesisValidator structure from the codec unpack
-func (r Request) UnpackGenesisValidator(cdc codec.AnyUnpacker) (*GenesisValidator, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
+// NewAccountRemoval returns a RequestContent containing an AccountRemoval
+func NewAccountRemoval(address string) RequestContent {
+	return RequestContent{
+		Content: &RequestContent_AccountRemoval{
+			AccountRemoval: &AccountRemoval{
+				Address: address,
+			},
+		},
 	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
-
-	result, ok := content.(*GenesisValidator)
-	if !ok {
-		return nil, errors.New("not a genesisValidator request")
-	}
-	return result, nil
 }
 
-var _ RequestContent = &GenesisAccount{}
-
-// Validate implements GenesisAccount validation
-func (c GenesisAccount) Validate() error {
-	_, err := sdk.AccAddressFromBech32(c.Address)
+// Validate implements AccountRemoval validation
+func (m AccountRemoval) Validate() error {
+	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
-	_, _, err = ParseChainID(c.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, c.ChainID)
-	}
-
-	if !c.Coins.IsValid() || c.Coins.Empty() {
-		return sdkerrors.Wrap(ErrInvalidCoins, c.Address)
-	}
 	return nil
 }
 
-// UnpackGenesisAccount returns the GenesisAccount structure from the codec unpack
-func (r Request) UnpackGenesisAccount(cdc codec.AnyUnpacker) (*GenesisAccount, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
+// NewValidatorRemoval returns a RequestContent containing a ValidatorRemoval
+func NewValidatorRemoval(address string) RequestContent {
+	return RequestContent{
+		Content: &RequestContent_ValidatorRemoval{
+			ValidatorRemoval: &ValidatorRemoval{
+				ValAddress: address,
+			},
+		},
 	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
-
-	result, ok := content.(*GenesisAccount)
-	if !ok {
-		return nil, errors.New("not a genesisAccount request")
-	}
-	return result, nil
 }
-
-var _ RequestContent = &ValidatorRemoval{}
 
 // Validate implements ValidatorRemoval validation
-func (c ValidatorRemoval) Validate() error {
-	_, err := sdk.AccAddressFromBech32(c.ValAddress)
+func (m ValidatorRemoval) Validate() error {
+	_, err := sdk.AccAddressFromBech32(m.ValAddress)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 	return nil
-}
-
-// UnpackValidatorRemoval returns the ValidatorRemoval structure from the codec unpack
-func (r Request) UnpackValidatorRemoval(cdc codec.AnyUnpacker) (*ValidatorRemoval, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
-	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
-
-	removeValidator, ok := content.(*ValidatorRemoval)
-	if !ok {
-		return nil, errors.New("not a validatorRemoval request")
-	}
-	return removeValidator, nil
-}
-
-var _ RequestContent = &VestedAccount{}
-
-// Validate implements VestedAccount validation
-func (c VestedAccount) Validate() error {
-	_, err := sdk.AccAddressFromBech32(c.Address)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
-	}
-	_, _, err = ParseChainID(c.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, c.ChainID)
-	}
-
-	if !c.StartingBalance.IsValid() {
-		return sdkerrors.Wrap(ErrInvalidSelfDelegation, c.StartingBalance.String())
-	}
-
-	if c.VestingOptions == nil {
-		return sdkerrors.Wrap(ErrInvalidAccountOption, c.Address)
-	}
-
-	cdc := codec.NewInterfaceRegistry()
-	RegisterInterfaces(cdc)
-
-	var option VestingOptions
-	if err := cdc.UnpackAny(c.VestingOptions, &option); err != nil {
-		return sdkerrors.Wrap(ErrInvalidAccountOption, err.Error())
-	}
-
-	switch option.(type) {
-	case *DelayedVesting:
-	default:
-		return sdkerrors.Wrap(ErrInvalidAccountOption, "unknown vested account option type")
-	}
-	return option.Validate()
-}
-
-// UnpackVestedAccount returns the VestedAccount structure from the codec unpack
-func (r Request) UnpackVestedAccount(cdc codec.AnyUnpacker) (*VestedAccount, error) {
-	if r.Content == nil {
-		return nil, fmt.Errorf("empty request content for request %d", r.RequestID)
-	}
-	var content RequestContent
-	err := cdc.UnpackAny(r.Content, &content)
-	if err != nil {
-		return nil, err
-	}
-	result, ok := content.(*VestedAccount)
-	if !ok {
-		return nil, errors.New("not a vestedAccount request")
-	}
-	return result, nil
 }

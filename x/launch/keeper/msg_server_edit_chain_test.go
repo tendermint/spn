@@ -138,7 +138,7 @@ func TestMsgEditChain(t *testing.T) {
 			}
 
 			if tc.msg.InitialGenesis != nil {
-				require.EqualValues(t, tc.msg.InitialGenesis, chain.InitialGenesis)
+				require.EqualValues(t, *tc.msg.InitialGenesis, chain.InitialGenesis)
 			} else {
 				require.EqualValues(t, previousChain.InitialGenesis, chain.InitialGenesis)
 			}
