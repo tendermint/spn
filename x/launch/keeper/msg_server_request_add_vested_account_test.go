@@ -3,7 +3,6 @@ package keeper_test
 import (
 	"testing"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -13,13 +12,13 @@ import (
 
 func TestMsgRequestAddVestedAccount(t *testing.T) {
 	var (
-		invalidChain, _            = sample.ChainID(0)
-		coordAddr                  = sample.AccAddress()
-		addr1                      = sample.AccAddress()
-		addr2                      = sample.AccAddress()
-		addr3                      = sample.AccAddress()
-		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
-		ctx                        = sdk.WrapSDKContext(sdkCtx)
+		invalidChain, _          = sample.ChainID(0)
+		coordAddr                = sample.AccAddress()
+		addr1                    = sample.AccAddress()
+		addr2                    = sample.AccAddress()
+		addr3                    = sample.AccAddress()
+		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
+		ctx                      = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
@@ -27,15 +26,10 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
 	chains[0].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[0])
+	k.SetChain(sdkCtx, chains[3])
+	delayedVesting := *types.NewDelayedVesting(sample.Coins(), 10000)
 	chains[1].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[1])
-
-	delayedVesting, err := codec.NewAnyWithValue(&types.DelayedVesting{
-		Vesting: sample.Coins(),
-		EndTime: 10000,
-	})
-	require.NoError(t, err)
+	k.SetChain(sdkCtx, chains[4])
 
 	tests := []struct {
 		name        string
@@ -152,8 +146,8 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
-				content, err := request.UnpackVestedAccount(cdc)
-				require.NoError(t, err)
+				content := request.Content.GetVestedAccount()
+				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
 				require.Equal(t, tt.msg.ChainID, content.ChainID)
 				require.Equal(t, tt.msg.StartingBalance, content.StartingBalance)

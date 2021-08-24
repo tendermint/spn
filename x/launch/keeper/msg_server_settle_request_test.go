@@ -3,10 +3,8 @@ package keeper_test
 import (
 	"testing"
 
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -23,7 +21,6 @@ func TestMsgSettleRequest(t *testing.T) {
 		invalidChain, _          = sample.ChainID(0)
 		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
 		ctx                      = sdk.WrapSDKContext(sdkCtx)
-		invalidContent, _        = codectypes.NewAnyWithValue(&types.Request{})
 	)
 
 	coordinator1.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator1)
@@ -35,8 +32,7 @@ func TestMsgSettleRequest(t *testing.T) {
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 
-	requests := createRequests(k, sdkCtx, chains[2].ChainID, []*codectypes.Any{
-		invalidContent,
+	requests := createRequests(k, sdkCtx, chains[2].ChainID, []types.RequestContent{
 		sample.GenesisAccountContent(chains[2].ChainID, addr1),
 		sample.GenesisAccountContent(chains[2].ChainID, addr2),
 		sample.GenesisAccountContent(chains[2].ChainID, addr3),
@@ -59,7 +55,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			err: types.ErrChainNotFound,
-		}, {
+		},
+		{
 			name: "launch triggered chain",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[0].ChainID,
@@ -68,7 +65,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			err: types.ErrTriggeredLaunch,
-		}, {
+		},
+		{
 			name: "coordinator not found",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[1].ChainID,
@@ -77,7 +75,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			err: types.ErrChainInactive,
-		}, {
+		},
+    {
 			name: "no permission error",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
@@ -86,7 +85,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			err: types.ErrNoAddressPermission,
-		}, {
+		},
+		{
 			name: "approve an invalid request",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
@@ -95,7 +95,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			err: types.ErrRequestNotFound,
-		}, {
+		},
+    {
 			name: "invalid request content",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
@@ -104,7 +105,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			err: spnerrors.ErrCritical,
-		}, {
+		},
+    {
 			name: "approve chain request 1",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
@@ -113,7 +115,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			checkAddr: addr1,
-		}, {
+		},
+    {
 			name: "approve chain request 2",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
@@ -122,7 +125,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			checkAddr: addr2,
-		}, {
+		},
+    {
 			name: "approve chain request 3",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
@@ -131,7 +135,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			checkAddr: addr3,
-		}, {
+		},
+    {
 			name: "approve chain request 4",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,
@@ -140,7 +145,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:     true,
 			},
 			checkAddr: addr4,
-		}, {
+		},
+    {
 			name: "reject chain request 5",
 			msg: types.MsgSettleRequest{
 				ChainID:     chains[2].ChainID,

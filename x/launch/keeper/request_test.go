@@ -4,7 +4,6 @@ import (
 	"strconv"
 	"testing"
 
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -20,7 +19,7 @@ func createRequests(
 	keeper *keeper.Keeper,
 	ctx sdk.Context,
 	chainID string,
-	contents []*codectypes.Any,
+	contents []types.RequestContent,
 ) []types.Request {
 	items := make([]types.Request, len(contents))
 	for i, content := range contents {
@@ -50,10 +49,6 @@ func TestRequestGet(t *testing.T) {
 			item.RequestID,
 		)
 		require.True(t, found)
-
-		// Cached value is cleared when the any type is encoded into the store
-		item.Content.ClearCachedValue()
-
 		require.Equal(t, item, rst)
 	}
 }
@@ -76,12 +71,6 @@ func TestRequestRemove(t *testing.T) {
 func TestRequestGetAll(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
-
-	// Cached value is cleared when the any type is encoded into the store
-	for _, item := range items {
-		item.Content.ClearCachedValue()
-	}
-
 	require.Equal(t, items, keeper.GetAllRequest(ctx))
 }
 
@@ -101,8 +90,7 @@ func TestApplyRequest(t *testing.T) {
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
 		chainID, _            = sample.ChainID(10)
 		contents              = sample.AllRequestContents(chainID, genesisAcc, vestedAcc, validatorAcc)
-		missingContent, _     = codectypes.NewAnyWithValue(&types.GenesisAccount{ChainID: chainID})
-		invalidContent, _     = codectypes.NewAnyWithValue(&types.Request{})
+		invalidContent        = types.NewGenesisAccount(chainID, "", sdk.NewCoins())
 	)
 	tests := []struct {
 		name    string
@@ -153,10 +141,6 @@ func TestApplyRequest(t *testing.T) {
 			wantErr: true,
 		}, {
 			name:    "test request with invalid parameters",
-			request: *sample.RequestWithContent(chainID, missingContent),
-			wantErr: true,
-		}, {
-			name:    "invalid request",
 			request: *sample.RequestWithContent(chainID, invalidContent),
 			wantErr: true,
 		},
@@ -170,29 +154,28 @@ func TestApplyRequest(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			var content types.RequestContent
-			cdc := codectypes.NewInterfaceRegistry()
-			types.RegisterInterfaces(cdc)
-			err = cdc.UnpackAny(tt.request.Content, &content)
-			require.NoError(t, err)
-
-			switch c := content.(type) {
-			case *types.GenesisAccount:
-				_, found := k.GetGenesisAccount(sdkCtx, chainID, c.Address)
+			switch requestContent := tt.request.Content.Content.(type) {
+			case *types.RequestContent_GenesisAccount:
+				ga := requestContent.GenesisAccount
+				_, found := k.GetGenesisAccount(sdkCtx, chainID, ga.Address)
 				require.True(t, found, "genesis account not found")
-			case *types.VestedAccount:
-				_, found := k.GetVestedAccount(sdkCtx, chainID, c.Address)
+			case *types.RequestContent_VestedAccount:
+				va := requestContent.VestedAccount
+				_, found := k.GetVestedAccount(sdkCtx, chainID, va.Address)
 				require.True(t, found, "vested account not found")
-			case *types.AccountRemoval:
-				_, foundGenesis := k.GetGenesisAccount(sdkCtx, chainID, c.Address)
+			case *types.RequestContent_AccountRemoval:
+				ar := requestContent.AccountRemoval
+				_, foundGenesis := k.GetGenesisAccount(sdkCtx, chainID, ar.Address)
 				require.False(t, foundGenesis, "genesis account not removed")
-				_, foundVested := k.GetVestedAccount(sdkCtx, chainID, c.Address)
+				_, foundVested := k.GetVestedAccount(sdkCtx, chainID, ar.Address)
 				require.False(t, foundVested, "vested account not removed")
-			case *types.GenesisValidator:
-				_, found := k.GetGenesisValidator(sdkCtx, chainID, c.Address)
+			case *types.RequestContent_GenesisValidator:
+				ga := requestContent.GenesisValidator
+				_, found := k.GetGenesisValidator(sdkCtx, chainID, ga.Address)
 				require.True(t, found, "genesis validator not found")
-			case *types.ValidatorRemoval:
-				_, found := k.GetGenesisValidator(sdkCtx, chainID, c.ValAddress)
+			case *types.RequestContent_ValidatorRemoval:
+				vr := requestContent.ValidatorRemoval
+				_, found := k.GetGenesisValidator(sdkCtx, chainID, vr.ValAddress)
 				require.False(t, found, "genesis validator not removed")
 			}
 		})

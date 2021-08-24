@@ -12,14 +12,14 @@ import (
 
 func TestMsgRequestRemoveValidator(t *testing.T) {
 	var (
-		invalidChain, _            = sample.ChainID(0)
-		coordAddr                  = sample.AccAddress()
-		addr1                      = sample.AccAddress()
-		addr2                      = sample.AccAddress()
-		addr3                      = sample.AccAddress()
-		addr4                      = sample.AccAddress()
-		k, pk, srv, _, sdkCtx, cdc = setupMsgServer(t)
-		ctx                        = sdk.WrapSDKContext(sdkCtx)
+		invalidChain, _          = sample.ChainID(0)
+		coordAddr                = sample.AccAddress()
+		addr1                    = sample.AccAddress()
+		addr2                    = sample.AccAddress()
+		addr3                    = sample.AccAddress()
+		addr4                    = sample.AccAddress()
+		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
+		ctx                      = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
@@ -148,8 +148,8 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
-				content, err := request.UnpackValidatorRemoval(cdc)
-				require.NoError(t, err)
+				content := request.Content.GetValidatorRemoval()
+				require.NotNil(t, content)
 				require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
 			} else {
 				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.ChainID, tt.msg.ValidatorAddress)

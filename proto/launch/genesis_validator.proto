@@ -3,12 +3,10 @@ package tendermint.spn.launch;
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
-import "cosmos_proto/cosmos.proto";
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 message GenesisValidator {
-  option (cosmos_proto.implements_interface) = "RequestContent";
   string chainID = 1;
   string address = 2;
   bytes genTx = 3;

@@ -3,57 +3,10 @@ package types_test
 import (
 	"testing"
 
-	codec "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
-
-func TestChain_GetDefaultInitialGenesis(t *testing.T) {
-	var err error
-	cdc := sample.Codec()
-	chain := sample.Chain("foo", 0)
-
-	// Should return the default genesis
-	chain.InitialGenesis, _ = codec.NewAnyWithValue(&types.DefaultInitialGenesis{})
-	chain.InitialGenesis.ClearCachedValue()
-	defaultGen, err := chain.GetDefaultInitialGenesis(cdc)
-	require.NoError(t, err)
-	require.Equal(t, &types.DefaultInitialGenesis{}, defaultGen)
-
-	// Should return an error
-	url, hash := sample.String(10), sample.String(10)
-	chain.InitialGenesis, _ = codec.NewAnyWithValue(&types.GenesisURL{url, hash})
-	_, err = chain.GetDefaultInitialGenesis(cdc)
-	require.Error(t, err)
-
-	chain.InitialGenesis = nil
-	_, err = chain.GetGenesisURL(cdc)
-	require.Error(t, err)
-}
-
-func TestChain_GetGenesisURL(t *testing.T) {
-	cdc := sample.Codec()
-	chain := sample.Chain("foo", 0)
-
-	url, hash := sample.String(10), sample.String(10)
-	chain.InitialGenesis, _ = codec.NewAnyWithValue(&types.GenesisURL{url, hash})
-	chain.InitialGenesis.ClearCachedValue()
-	genUrl, err := chain.GetGenesisURL(cdc)
-	require.NoError(t, err)
-	require.Equal(t, &types.GenesisURL{
-		Url:  url,
-		Hash: hash,
-	}, genUrl)
-
-	chain.InitialGenesis, _ = codec.NewAnyWithValue(&types.DefaultInitialGenesis{})
-	_, err = chain.GetGenesisURL(cdc)
-	require.Error(t, err)
-
-	chain.InitialGenesis = nil
-	_, err = chain.GetGenesisURL(cdc)
-	require.Error(t, err)
-}
 
 func TestChainIDFromChainName(t *testing.T) {
 	require.Equal(t, "foo-1", types.ChainIDFromChainName("foo", 1))
