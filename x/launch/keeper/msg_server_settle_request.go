@@ -16,17 +16,17 @@ func (k msgServer) SettleRequest(
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrChainNotFound, msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%v", msg.ChainID)
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%v", msg.ChainID)
 	}
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
-			"the chain %s coordinator has been deleted", chain.ChainID)
+			"the chain %d coordinator has been deleted", chain.Id)
 	}
 	if msg.Coordinator != coordAddress {
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Coordinator)

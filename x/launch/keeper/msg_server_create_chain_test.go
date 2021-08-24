@@ -23,31 +23,30 @@ func TestMsgCreateChain(t *testing.T) {
 	for _, tc := range []struct {
 		name          string
 		msg           types.MsgCreateChain
-		wantedChainID string
+		wantedChainID uint64
 		valid         bool
 	}{
 		{
 			name:          "valid message",
-			msg:           sample.MsgCreateChain(coordAddress, "foo", ""),
-			wantedChainID: "foo-0",
+			msg:           sample.MsgCreateChain(coordAddress, ""),
+			wantedChainID: 0,
 			valid:         true,
 		},
 		{
-			name:          "an existing chain name creates a unique chain ID",
-			msg:           sample.MsgCreateChain(coordAddress, "foo", ""),
-			wantedChainID: "foo-1",
+			name:          "creates a unique chain ID",
+			msg:           sample.MsgCreateChain(coordAddress, ""),
+			wantedChainID: 1,
 			valid:         true,
 		},
 		{
 			name:          "valid message with genesis url",
-			msg:           sample.MsgCreateChain(coordAddress, "bar", "foo.com"),
-			wantedChainID: "bar-0",
+			msg:           sample.MsgCreateChain(coordAddress, "foo.com"),
+			wantedChainID: 2,
 			valid:         true,
 		},
 		{
 			name:          "coordinator doesn't exist for the chain",
-			msg:           sample.MsgCreateChain(sample.AccAddress(), "foo", ""),
-			wantedChainID: "",
+			msg:           sample.MsgCreateChain(sample.AccAddress(), ""),
 			valid:         false,
 		},
 	} {
@@ -58,13 +57,13 @@ func TestMsgCreateChain(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			require.EqualValues(t, tc.wantedChainID, got.ChainID)
+			require.EqualValues(t, tc.wantedChainID, got.Id)
 
 			// The chain must exist in the store
-			chain, found := k.GetChain(sdkCtx, got.ChainID)
+			chain, found := k.GetChain(sdkCtx, got.Id)
 			require.True(t, found)
 			require.EqualValues(t, coordID, chain.CoordinatorID)
-			require.EqualValues(t, got.ChainID, chain.ChainID)
+			require.EqualValues(t, got.Id, chain.Id)
 			require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
 			require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)
 

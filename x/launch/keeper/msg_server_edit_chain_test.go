@@ -15,7 +15,7 @@ func TestMsgEditChain(t *testing.T) {
 	coordAddress := sample.AccAddress()
 	coordAddress2 := sample.AccAddress()
 	coordNoExist := sample.AccAddress()
-	chainIDNoExist, _ := sample.ChainID(0)
+	chainIDNoExist := uint64(1000)
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
@@ -27,10 +27,10 @@ func TestMsgEditChain(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create a chain
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "foo", "")
+	msgCreateChain := sample.MsgCreateChain(coordAddress, "")
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	chainID := res.ChainID
+	chainID := res.Id
 
 	for _, tc := range []struct {
 		name  string

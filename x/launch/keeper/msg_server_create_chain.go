@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -19,27 +18,8 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
 	}
 
-	// Compute the chain id
-	chainNameCount, found := k.GetChainNameCount(ctx, msg.ChainName)
-	if !found {
-		chainNameCount = types.ChainNameCount{
-			ChainName: msg.ChainName,
-			Count:     0,
-		}
-	}
-	chainID := types.ChainIDFromChainName(msg.ChainName, chainNameCount.Count)
-	chainNameCount.Count++
-
-	// chainID must always be unique by design
-	// if it already exists then something is wrong in the protocol
-	_, found = k.GetChain(ctx, chainID)
-	if found {
-		return nil, spnerrors.Criticalf("chain id %s already exists while it must be unique", chainID)
-	}
-
 	// Initialize the chain
 	chain := types.Chain{
-		ChainID:         chainID,
 		CoordinatorID:   coordID,
 		CreatedAt:       ctx.BlockTime().Unix(),
 		SourceURL:       msg.SourceURL,
@@ -55,11 +35,9 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		chain.InitialGenesis = types.NewGenesisURL(msg.GenesisURL, msg.GenesisHash)
 	}
 
-	// Store values
-	k.SetChain(ctx, chain)
-	k.SetChainNameCount(ctx, chainNameCount)
+	id := k.AppendChain(ctx, chain)
 
 	return &types.MsgCreateChainResponse{
-		ChainID: chainID,
+		Id: id,
 	}, nil
 }

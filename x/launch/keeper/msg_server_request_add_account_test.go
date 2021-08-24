@@ -12,7 +12,7 @@ import (
 
 func TestMsgRequestAddAccount(t *testing.T) {
 	var (
-		invalidChain, _          = sample.ChainID(0)
+		invalidChain           = uint64(1000)
 		coordAddr                = sample.AccAddress()
 		addr1                    = sample.AccAddress()
 		addr2                    = sample.AccAddress()
@@ -48,7 +48,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[0].ChainID,
+				ChainID: chains[0].Id,
 				Address: addr1,
 				Coins:   sample.Coins(),
 			},
@@ -56,7 +56,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[1].ChainID,
+				ChainID: chains[1].Id,
 				Address: addr1,
 				Coins:   sample.Coins(),
 			},
@@ -64,7 +64,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[2].ChainID,
+				ChainID: chains[2].Id,
 				Address: addr1,
 				Coins:   sample.Coins(),
 			},
@@ -72,7 +72,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "add chain 4 request 1",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[3].ChainID,
+				ChainID: chains[3].Id,
 				Address: addr1,
 				Coins:   sample.Coins(),
 			},
@@ -80,7 +80,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "add chain 4 request 2",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[3].ChainID,
+				ChainID: chains[3].Id,
 				Address: addr2,
 				Coins:   sample.Coins(),
 			},
@@ -88,7 +88,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "add chain 5 request 1",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].ChainID,
+				ChainID: chains[4].Id,
 				Address: addr1,
 				Coins:   sample.Coins(),
 			},
@@ -96,7 +96,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "add chain 5 request 2",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].ChainID,
+				ChainID: chains[4].Id,
 				Address: addr2,
 				Coins:   sample.Coins(),
 			},
@@ -104,7 +104,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "add chain 5 request 3",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].ChainID,
+				ChainID: chains[4].Id,
 				Address: addr3,
 				Coins:   sample.Coins(),
 			},
@@ -112,7 +112,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		}, {
 			name: "add coordinator account",
 			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].ChainID,
+				ChainID: chains[4].Id,
 				Address: coordAddr,
 				Coins:   sample.Coins(),
 			},
