@@ -25,7 +25,7 @@ func CmdTriggerLaunch() *cobra.Command {
 				return err
 			}
 
-			chainID, err := strconv.ParseUint(args[1], 10, 64)
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
