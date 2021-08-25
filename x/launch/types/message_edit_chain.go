@@ -52,11 +52,13 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
-	if _, _, err := ParseGenesisChainID(msg.GenesisChainID); err != nil {
-		return sdkerrors.Wrapf(ErrInvalidGenesisChainID, msg.GenesisChainID)
+	if msg.GenesisChainID != "" {
+		if _, _, err := ParseGenesisChainID(msg.GenesisChainID); err != nil {
+			return sdkerrors.Wrapf(ErrInvalidGenesisChainID, msg.GenesisChainID)
+		}
 	}
 
-	if msg.SourceURL == "" && msg.InitialGenesis == nil {
+	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
 	}
 

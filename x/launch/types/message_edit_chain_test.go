@@ -14,6 +14,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 	msgInvalidGenesisHash := sample.MsgEditChain(
 		sample.AccAddress(),
 		chainID,
+		false,
 		true,
 		false,
 		false,
@@ -24,6 +25,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 	msgInvalidGenesisChainID := sample.MsgEditChain(
 		sample.AccAddress(),
 		chainID,
+		false,
 		true,
 		false,
 		false,
@@ -36,12 +38,25 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc: "valid message with new source and genesis",
+			desc: "valid message",
 			msg: sample.MsgEditChain(
 				sample.AccAddress(),
 				chainID,
 				true,
 				true,
+				true,
+				false,
+			),
+			valid: true,
+		},
+		{
+			desc: "valid message with new genesis chain ID",
+			msg: sample.MsgEditChain(
+				sample.AccAddress(),
+				chainID,
+				true,
+				false,
+				false,
 				false,
 			),
 			valid: true,
@@ -51,6 +66,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			msg: sample.MsgEditChain(
 				sample.AccAddress(),
 				chainID,
+				false,
 				true,
 				false,
 				false,
@@ -63,6 +79,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				sample.AccAddress(),
 				chainID,
 				false,
+				false,
 				true,
 				false,
 			),
@@ -74,6 +91,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				sample.AccAddress(),
 				chainID,
 				false,
+				false,
 				true,
 				true,
 			),
@@ -84,6 +102,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			msg: sample.MsgEditChain(
 				"invalid",
 				chainID,
+				false,
 				true,
 				true,
 				false,
@@ -95,6 +114,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			msg: sample.MsgEditChain(
 				sample.AccAddress(),
 				chainID,
+				false,
 				false,
 				false,
 				false,

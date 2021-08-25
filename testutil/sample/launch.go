@@ -134,11 +134,16 @@ func MsgCreateChain(coordAddress, genesisURL string) launch.MsgCreateChain {
 func MsgEditChain(
 	coordAddress string,
 	chainID uint64,
+	modifyGenesisChainID,
 	modifySource,
 	modifyInitialGenesis,
 	genesisURL bool,
 ) launch.MsgEditChain {
-	var sourceURL, sourceHash string
+	var genesisChainID, sourceURL, sourceHash string
+
+	if modifyGenesisChainID {
+		genesisChainID = GenesisChainID()
+	}
 	if modifySource {
 		sourceURL, sourceHash = String(30), String(10)
 	}
@@ -156,7 +161,7 @@ func MsgEditChain(
 	return *launch.NewMsgEditChain(
 		coordAddress,
 		chainID,
-		GenesisChainID(),
+		genesisChainID,
 		sourceURL,
 		sourceHash,
 		initialGenesis,
