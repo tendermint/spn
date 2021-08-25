@@ -18,7 +18,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		addr5                    = sample.AccAddress()
 		coordinator1             = sample.Coordinator()
 		coordinator2             = sample.Coordinator()
-		invalidChain             = uint64(0)
+		invalidChain             = uint64(1000)
 		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
 		ctx                      = sdk.WrapSDKContext(sdkCtx)
 	)
