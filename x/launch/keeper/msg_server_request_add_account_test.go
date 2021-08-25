@@ -123,7 +123,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := srv.RequestAddAccount(ctx, &tt.msg)
 			if tt.err != nil {
-				require.ErrorIs(t, tt.err, err)
+				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)

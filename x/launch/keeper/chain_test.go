@@ -22,7 +22,7 @@ func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordina
 	items := make([]types.Chain, n)
 	for i := range items {
 		items[i].CoordinatorID = coordinatorID
-		keeper.AppendChain(ctx, items[i])
+		items[i].Id = keeper.AppendChain(ctx, items[i])
 	}
 	return items
 }
