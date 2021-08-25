@@ -38,8 +38,19 @@ func TestMsgEditChain(t *testing.T) {
 		valid bool
 	}{
 		{
+			name: "edit genesis chain ID",
+			msg: sample.MsgEditChain(coordAddress, chainID,
+				true,
+				false,
+				false,
+				false,
+			),
+			valid: true,
+		},
+		{
 			name: "edit source",
 			msg: sample.MsgEditChain(coordAddress, chainID,
+				false,
 				true,
 				false,
 				false,
@@ -50,6 +61,7 @@ func TestMsgEditChain(t *testing.T) {
 			name: "edit initial genesis with default genesis",
 			msg: sample.MsgEditChain(coordAddress, chainID,
 				false,
+				false,
 				true,
 				false,
 			),
@@ -59,6 +71,7 @@ func TestMsgEditChain(t *testing.T) {
 			name: "edit initial genesis with genesis url",
 			msg: sample.MsgEditChain(coordAddress, chainID,
 				false,
+				false,
 				true,
 				true,
 			),
@@ -67,6 +80,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "edit source and initial genesis",
 			msg: sample.MsgEditChain(coordAddress, chainID,
+				false,
 				true,
 				true,
 				true,
@@ -76,6 +90,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "non existent chain id",
 			msg: sample.MsgEditChain(coordAddress, chainIDNoExist,
+				false,
 				true,
 				false,
 				false,
@@ -85,6 +100,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "non existent coordinator",
 			msg: sample.MsgEditChain(coordNoExist, chainID,
+				false,
 				true,
 				false,
 				false,
@@ -94,6 +110,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "invalid coordinator",
 			msg: sample.MsgEditChain(coordAddress2, chainID,
+				false,
 				true,
 				false,
 				false,
