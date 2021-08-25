@@ -12,6 +12,9 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 	invalidGenesisHash := sample.MsgCreateChain(sample.AccAddress(), "foo.com")
 	invalidGenesisHash.GenesisHash = "NoHash"
 
+	invalidGenesisChainID := sample.MsgCreateChain(sample.AccAddress(), "")
+	invalidGenesisChainID.GenesisChainID = "invalid"
+
 	for _, tc := range []struct {
 		desc  string
 		msg   types.MsgCreateChain
@@ -35,6 +38,11 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 		{
 			desc:  "invalid genesis hash for custom genesis",
 			msg:   invalidGenesisHash,
+			valid: false,
+		},
+		{
+			desc:  "invalid genesis chain ID",
+			msg:   invalidGenesisChainID,
 			valid: false,
 		},
 	} {

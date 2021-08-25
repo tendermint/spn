@@ -21,6 +21,15 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 	genesisURL := types.NewGenesisURL("foo.com", "NoHash")
 	msgInvalidGenesisHash.InitialGenesis = &genesisURL
 
+	msgInvalidGenesisChainID := sample.MsgEditChain(
+		sample.AccAddress(),
+		chainID,
+		true,
+		false,
+		false,
+	)
+	msgInvalidGenesisChainID.GenesisChainID = "invalid"
+
 	for _, tc := range []struct {
 		desc  string
 		msg   types.MsgEditChain
@@ -95,6 +104,11 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc:  "invalid initial genesis hash",
 			msg:   msgInvalidGenesisHash,
+			valid: false,
+		},
+		{
+			desc:  "invalid initial genesis chain ID",
+			msg:   msgInvalidGenesisChainID,
 			valid: false,
 		},
 	} {

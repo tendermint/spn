@@ -26,10 +26,11 @@ service Msg {
 
 message MsgCreateChain {
   string coordinator = 1;
-  string sourceURL = 2;
-  string sourceHash = 3;
-  string genesisURL = 4;
-  string genesisHash = 5;
+  string genesisChainID = 2;
+  string sourceURL = 3;
+  string sourceHash = 4;
+  string genesisURL = 5;
+  string genesisHash = 6;
 }
 
 message MsgCreateChainResponse {
@@ -39,9 +40,10 @@ message MsgCreateChainResponse {
 message MsgEditChain {
   string coordinator = 1;
   uint64 chainID = 2;
-  string sourceURL = 3;
-  string sourceHash = 4;
-  InitialGenesis initialGenesis = 5;
+  string genesisChainID = 3;
+  string sourceURL = 4;
+  string sourceHash = 5;
+  InitialGenesis initialGenesis = 6;
 }
 
 message MsgEditChainResponse {}

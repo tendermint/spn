@@ -9,10 +9,11 @@ import (
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
-// ChainID returns a sample chain id with the associated chain name
-func ChainID(number uint64) (string, string) {
+// GenesisChainID returns a sample chain id
+func GenesisChainID() string {
 	chainName := AlphaString(5)
-	return launch.ChainIDFromChainName(chainName, number), chainName
+	number := Uint64()
+	return launch.NewGenesisChainID(chainName, number)
 }
 
 // Chain returns a sample Chain
@@ -20,6 +21,7 @@ func Chain(id uint64, coordinatorID uint64) *launch.Chain {
 	return &launch.Chain{
 		Id:              id,
 		CoordinatorID:   coordinatorID,
+		GenesisChainID: GenesisChainID(),
 		CreatedAt:       time.Now().Unix(),
 		SourceURL:       String(10),
 		SourceHash:      String(10),
@@ -120,6 +122,7 @@ func MsgCreateChain(coordAddress, genesisURL string) launch.MsgCreateChain {
 
 	return *launch.NewMsgCreateChain(
 		coordAddress,
+		GenesisChainID(),
 		String(10),
 		String(10),
 		genesisURL,
@@ -153,6 +156,7 @@ func MsgEditChain(
 	return *launch.NewMsgEditChain(
 		coordAddress,
 		chainID,
+		GenesisChainID(),
 		sourceURL,
 		sourceHash,
 		initialGenesis,

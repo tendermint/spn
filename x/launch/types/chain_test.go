@@ -8,11 +8,11 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestChainIDFromChainName(t *testing.T) {
-	require.Equal(t, "foo-1", types.ChainIDFromChainName("foo", 1))
+func TestNewGenesisChainID(t *testing.T) {
+	require.Equal(t, "foo-1", types.NewGenesisChainID("foo", 1))
 }
 
-func TestParseChainID(t *testing.T) {
+func TestParseGenesisChainID(t *testing.T) {
 	for _, tc := range []struct {
 		desc           string
 		chainID        string
@@ -66,12 +66,12 @@ func TestParseChainID(t *testing.T) {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			if tc.valid {
-				name, number, err := types.ParseChainID(tc.chainID)
+				name, number, err := types.ParseGenesisChainID(tc.chainID)
 				require.NoError(t, err)
 				require.EqualValues(t, tc.expectedName, name)
 				require.EqualValues(t, tc.expectedNumber, number)
 			} else {
-				_, _, err := types.ParseChainID(tc.chainID)
+				_, _, err := types.ParseGenesisChainID(tc.chainID)
 				require.Error(t, err)
 			}
 		})
