@@ -42,8 +42,7 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 	}
 
 	chain.LaunchTriggered = true
-	toast := ctx.BlockTime().Unix()
-	chain.LaunchTimestamp = toast + int64(msg.RemainingTime)
+	chain.LaunchTimestamp = ctx.BlockTime().Unix() + int64(msg.RemainingTime)
 	k.SetChain(ctx, chain)
 
 	return &types.MsgTriggerLaunchResponse{}, nil

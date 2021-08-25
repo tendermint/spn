@@ -12,6 +12,20 @@ const (
 	ChainNameMaxLength = 30
 )
 
+// Validate checks the chain has valid data
+func (m Chain) Validate() error {
+	if _, _, err := ParseGenesisChainID(m.GenesisChainID); err != nil {
+		return err
+	}
+
+	// LaunchTriggered means a non zera launch timestamp is defined
+	if m.LaunchTriggered && m.LaunchTimestamp == 0 {
+		return errors.New("launch timestamp must be defined when launch is triggered")
+	}
+
+	return nil
+}
+
 // NewGenesisChainID returns the genesis chain id from the chain name and the number
 func NewGenesisChainID(chainName string, networkNumber uint64) string {
 	return fmt.Sprintf("%v%v%v", chainName, ChainIDSeparator, networkNumber)

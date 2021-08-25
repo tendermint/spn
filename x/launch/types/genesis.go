@@ -47,6 +47,10 @@ func validateChains(gs GenesisState) (map[uint64]struct{}, error) {
 	count := gs.GetChainCount()
 	chainIDMap := make(map[uint64]struct{})
 	for _, elem := range gs.ChainList {
+		if err := elem.Validate(); err != nil {
+			return nil, fmt.Errorf("invalid chain %v: %v", elem.Id, err.Error())
+		}
+
 		chainID := elem.Id
 		if _, ok := chainIDMap[chainID]; ok {
 			return nil, fmt.Errorf("duplicated chain ID for chain")

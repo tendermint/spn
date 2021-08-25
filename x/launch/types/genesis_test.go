@@ -16,14 +16,17 @@ var (
 	addr2            = sample.AccAddress()
 	vestedAddress    = sample.AccAddress()
 	genesisValidator = *sample.GenesisValidator(chainID1, addr1)
+	genesisChainID   = sample.GenesisChainID()
 
 	// Those are samples we can use for each fields when they are not the one to test
 	sampleChainList = []types.Chain{
 		{
-			Id: chainID1,
+			Id:             chainID1,
+			GenesisChainID: genesisChainID,
 		},
 		{
-			Id: chainID2,
+			Id:             chainID2,
+			GenesisChainID: genesisChainID,
 		},
 	}
 	sampleGenesisAccountList = []types.GenesisAccount{
@@ -98,14 +101,29 @@ func TestGenesisState_Validate(t *testing.T) {
 			shouldBeValid: true,
 		},
 		{
+			desc: "invalid chain",
+			genState: &types.GenesisState{
+				ChainList: []types.Chain{
+					{
+						Id:             chainID1,
+						GenesisChainID: "invalid_chain_id",
+					},
+				},
+				ChainCount: 10,
+			},
+			shouldBeValid: false,
+		},
+		{
 			desc: "duplicated chains",
 			genState: &types.GenesisState{
 				ChainList: []types.Chain{
 					{
-						Id: chainID1,
+						Id:             chainID1,
+						GenesisChainID: genesisChainID,
 					},
 					{
-						Id: chainID1,
+						Id:             chainID1,
+						GenesisChainID: genesisChainID,
 					},
 				},
 				ChainCount: 10,
@@ -117,7 +135,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				ChainList: []types.Chain{
 					{
-						Id: 12,
+						Id:             12,
+						GenesisChainID: genesisChainID,
 					},
 				},
 				ChainCount: 10,
