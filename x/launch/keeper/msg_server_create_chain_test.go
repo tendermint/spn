@@ -64,6 +64,7 @@ func TestMsgCreateChain(t *testing.T) {
 			require.True(t, found)
 			require.EqualValues(t, coordID, chain.CoordinatorID)
 			require.EqualValues(t, got.Id, chain.Id)
+			require.EqualValues(t, tc.msg.GenesisChainID, chain.GenesisChainID)
 			require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
 			require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)
 

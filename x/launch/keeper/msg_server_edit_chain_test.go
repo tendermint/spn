@@ -129,6 +129,11 @@ func TestMsgEditChain(t *testing.T) {
 			require.EqualValues(t, previousChain.LaunchTriggered, chain.LaunchTriggered)
 
 			// Compare changed values
+			if tc.msg.GenesisChainID != "" {
+				require.EqualValues(t, tc.msg.GenesisChainID, chain.GenesisChainID)
+			} else {
+				require.EqualValues(t, previousChain.GenesisChainID, chain.GenesisChainID)
+			}
 			if tc.msg.SourceURL != "" {
 				require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
 				require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)
