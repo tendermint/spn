@@ -26,11 +26,10 @@ func CmdEditChain() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var (
 				genesisChainID, _ = cmd.Flags().GetString(flagGenesisChainID)
-				sourceURL, _ = cmd.Flags().GetString(flagSourceURL)
-				sourceHash, _ = cmd.Flags().GetString(flagSourceHash)
+				sourceURL, _      = cmd.Flags().GetString(flagSourceURL)
+				sourceHash, _     = cmd.Flags().GetString(flagSourceHash)
 				defaultGenesis, _ = cmd.Flags().GetBool(flagDefaultGenesis)
-				genesisURL, _ = cmd.Flags().GetString(flagGenesisURL)
-
+				genesisURL, _     = cmd.Flags().GetString(flagGenesisURL)
 			)
 
 			clientCtx, err := client.GetClientTxContext(cmd)

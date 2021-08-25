@@ -16,12 +16,12 @@ func NewMsgCreateChain(
 	genesisHash string,
 ) *MsgCreateChain {
 	return &MsgCreateChain{
-		Coordinator: coordinator,
+		Coordinator:    coordinator,
 		GenesisChainID: genesisChainID,
-		SourceURL:   sourceURL,
-		SourceHash:  sourceHash,
-		GenesisURL:  genesisURL,
-		GenesisHash: genesisHash,
+		SourceURL:      sourceURL,
+		SourceHash:     sourceHash,
+		GenesisURL:     genesisURL,
+		GenesisHash:    genesisHash,
 	}
 }
 

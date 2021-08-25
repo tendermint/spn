@@ -21,7 +21,7 @@ func Chain(id uint64, coordinatorID uint64) *launch.Chain {
 	return &launch.Chain{
 		Id:              id,
 		CoordinatorID:   coordinatorID,
-		GenesisChainID: GenesisChainID(),
+		GenesisChainID:  GenesisChainID(),
 		CreatedAt:       time.Now().Unix(),
 		SourceURL:       String(10),
 		SourceHash:      String(10),

@@ -21,7 +21,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	// Initialize the chain
 	chain := types.Chain{
 		CoordinatorID:   coordID,
-		GenesisChainID: msg.GenesisChainID,
+		GenesisChainID:  msg.GenesisChainID,
 		CreatedAt:       ctx.BlockTime().Unix(),
 		SourceURL:       msg.SourceURL,
 		SourceHash:      msg.SourceHash,
