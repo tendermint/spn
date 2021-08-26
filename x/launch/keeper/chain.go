@@ -20,12 +20,7 @@ func (k Keeper) GetChainCount(ctx sdk.Context) uint64 {
 	}
 
 	// Parse bytes
-	count, err := strconv.ParseUint(string(bz), 10, 64)
-	if err != nil {
-		panic("cannot decode chain count")
-	}
-
-	return count
+	return binary.BigEndian.Uint64(bz)
 }
 
 // SetChainCount set the total number of chains
