@@ -1,9 +1,9 @@
 package keeper
 
 import (
+	"encoding/binary"
 	"fmt"
-	"strconv"
-
+	
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -22,19 +22,14 @@ func (k Keeper) GetRequestCount(ctx sdk.Context, chainID string) uint64 {
 	}
 
 	// Parse bytes
-	count, err := strconv.ParseUint(string(bz), 10, 64)
-	if err != nil {
-		// Panic because the count should be always formattable to uint64
-		panic("cannot decode count")
-	}
-
-	return count
+	return binary.BigEndian.Uint64(bz)
 }
 
 // SetRequestCount set the total number of request for a chain
 func (k Keeper) SetRequestCount(ctx sdk.Context, chainID string, count uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestCountKeyPrefix))
-	bz := []byte(strconv.FormatUint(count, 10))
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, count)
 	store.Set(types.RequestCountKey(chainID), bz)
 }
 
