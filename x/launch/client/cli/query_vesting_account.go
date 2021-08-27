@@ -10,10 +10,10 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func CmdListVestedAccount() *cobra.Command {
+func CmdListVestingAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-vested-account [chain-id]",
-		Short: "list all vestedAccount",
+		Use:   "list-vesting-account [chain-id]",
+		Short: "list all vestingAccount",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -30,12 +30,12 @@ func CmdListVestedAccount() *cobra.Command {
 				return err
 			}
 
-			params := &types.QueryAllVestedAccountRequest{
+			params := &types.QueryAllVestingAccountRequest{
 				ChainID:    chainID,
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.VestedAccountAll(context.Background(), params)
+			res, err := queryClient.VestingAccountAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -50,10 +50,10 @@ func CmdListVestedAccount() *cobra.Command {
 	return cmd
 }
 
-func CmdShowVestedAccount() *cobra.Command {
+func CmdShowVestingAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-vested-account [chain-id] [address]",
-		Short: "shows a vestedAccount",
+		Use:   "show-vesting-account [chain-id] [address]",
+		Short: "shows a vestingAccount",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -65,12 +65,12 @@ func CmdShowVestedAccount() *cobra.Command {
 				return err
 			}
 
-			params := &types.QueryGetVestedAccountRequest{
+			params := &types.QueryGetVestingAccountRequest{
 				ChainID: chainID,
 				Address: args[1],
 			}
 
-			res, err := queryClient.VestedAccount(context.Background(), params)
+			res, err := queryClient.VestingAccount(context.Background(), params)
 			if err != nil {
 				return err
 			}
