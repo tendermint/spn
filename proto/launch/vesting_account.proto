@@ -6,7 +6,7 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
-message VestedAccount {
+message VestingAccount {
   uint64 chainID = 1;
   string address = 2;
   repeated cosmos.base.v1beta1.Coin startingBalance = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
