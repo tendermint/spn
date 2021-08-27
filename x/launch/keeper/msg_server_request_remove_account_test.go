@@ -12,7 +12,7 @@ import (
 
 func TestMsgRequestRemoveAccount(t *testing.T) {
 	var (
-		invalidChain, _          = sample.ChainID(0)
+		invalidChain             = uint64(1000)
 		coordAddr                = sample.AccAddress()
 		addr1                    = sample.AccAddress()
 		addr2                    = sample.AccAddress()
@@ -31,9 +31,9 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 
-	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[3].ChainID, Address: addr1})
-	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[4].ChainID, Address: addr2})
-	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[4].ChainID, Address: addr4})
+	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[3].Id, Address: addr1})
+	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[4].Id, Address: addr2})
+	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[4].Id, Address: addr4})
 
 	tests := []struct {
 		name        string
@@ -53,7 +53,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[0].ChainID,
+				ChainID: chains[0].Id,
 				Creator: addr1,
 				Address: addr1,
 			},
@@ -61,7 +61,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "coordinator not found",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[1].ChainID,
+				ChainID: chains[1].Id,
 				Creator: addr1,
 				Address: addr1,
 			},
@@ -69,7 +69,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "no permission error",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[2].ChainID,
+				ChainID: chains[2].Id,
 				Creator: addr1,
 				Address: addr3,
 			},
@@ -77,7 +77,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[2].ChainID,
+				ChainID: chains[2].Id,
 				Creator: addr1,
 				Address: addr1,
 			},
@@ -85,7 +85,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "add chain 4 request 2",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[3].ChainID,
+				ChainID: chains[3].Id,
 				Creator: coordAddr,
 				Address: addr1,
 			},
@@ -93,7 +93,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "add chain 4 request 3",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[3].ChainID,
+				ChainID: chains[3].Id,
 				Creator: addr2,
 				Address: addr2,
 			},
@@ -101,7 +101,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "add chain 5 request 1",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].ChainID,
+				ChainID: chains[4].Id,
 				Creator: addr1,
 				Address: addr1,
 			},
@@ -109,7 +109,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "add chain 5 request 2",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].ChainID,
+				ChainID: chains[4].Id,
 				Creator: coordAddr,
 				Address: addr2,
 			},
@@ -117,7 +117,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "add chain 5 request 3",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].ChainID,
+				ChainID: chains[4].Id,
 				Creator: addr3,
 				Address: addr3,
 			},
@@ -125,7 +125,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		}, {
 			name: "remove coordinator account",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].ChainID,
+				ChainID: chains[4].Id,
 				Creator: coordAddr,
 				Address: addr4,
 			},

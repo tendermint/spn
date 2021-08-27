@@ -18,7 +18,7 @@ var _ = strconv.IntSize
 func createRequests(
 	keeper *keeper.Keeper,
 	ctx sdk.Context,
-	chainID string,
+	chainID uint64,
 	contents []types.RequestContent,
 ) []types.Request {
 	items := make([]types.Request, len(contents))
@@ -33,7 +33,7 @@ func createRequests(
 func createNRequest(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
-		items[i] = *sample.Request("foo")
+		items[i] = *sample.Request(0)
 		id := keeper.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
@@ -78,8 +78,8 @@ func TestRequestCount(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	count := uint64(len(items))
-	require.Equal(t, count, keeper.GetRequestCount(ctx, "foo"))
-	require.Equal(t, uint64(0), keeper.GetRequestCount(ctx, "bar"))
+	require.Equal(t, count, keeper.GetRequestCount(ctx, 0))
+	require.Equal(t, uint64(0), keeper.GetRequestCount(ctx, 1))
 }
 
 func TestApplyRequest(t *testing.T) {
@@ -88,7 +88,7 @@ func TestApplyRequest(t *testing.T) {
 		vestedAcc             = sample.AccAddress()
 		validatorAcc          = sample.AccAddress()
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
-		chainID, _            = sample.ChainID(10)
+		chainID               = uint64(10)
 		contents              = sample.AllRequestContents(chainID, genesisAcc, vestedAcc, validatorAcc)
 		invalidContent        = types.NewGenesisAccount(chainID, "", sdk.NewCoins())
 	)

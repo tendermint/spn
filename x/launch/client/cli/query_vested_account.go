@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -24,8 +25,13 @@ func CmdListVestedAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			params := &types.QueryAllVestedAccountRequest{
-				ChainID:    args[0],
+				ChainID:    chainID,
 				Pagination: pageReq,
 			}
 
@@ -54,8 +60,13 @@ func CmdShowVestedAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			params := &types.QueryGetVestedAccountRequest{
-				ChainID: args[0],
+				ChainID: chainID,
 				Address: args[1],
 			}
 

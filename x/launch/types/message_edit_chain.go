@@ -7,10 +7,18 @@ import (
 
 var _ sdk.Msg = &MsgEditChain{}
 
-func NewMsgEditChain(coordinator, chainID, sourceURL, sourceHash string, initialGenesis *InitialGenesis) *MsgEditChain {
+func NewMsgEditChain(
+	coordinator string,
+	chainID uint64,
+	genesisChainID,
+	sourceURL,
+	sourceHash string,
+	initialGenesis *InitialGenesis,
+) *MsgEditChain {
 	return &MsgEditChain{
 		Coordinator:    coordinator,
 		ChainID:        chainID,
+		GenesisChainID: genesisChainID,
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
 		InitialGenesis: initialGenesis,
@@ -44,13 +52,13 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
-	// Check chain ID is well formatted
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, msg.ChainID)
+	if msg.GenesisChainID != "" {
+		if _, _, err := ParseGenesisChainID(msg.GenesisChainID); err != nil {
+			return sdkerrors.Wrapf(ErrInvalidGenesisChainID, msg.GenesisChainID)
+		}
 	}
 
-	if msg.SourceURL == "" && msg.InitialGenesis == nil {
+	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
 	}
 

@@ -13,7 +13,7 @@ import (
 
 func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 	var (
-		chainID, _ = sample.ChainID(10)
+		chainID = uint64(10)
 	)
 
 	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
@@ -32,16 +32,6 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 				Options:         option,
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		},
-		{
-			name: "invalid chain id",
-			msg: types.MsgRequestAddVestedAccount{
-				Address:         sample.AccAddress(),
-				ChainID:         "invalid_chain",
-				StartingBalance: sample.Coins(),
-				Options:         option,
-			},
-			err: types.ErrInvalidChainID,
 		},
 		{
 			name: "invalid coins",

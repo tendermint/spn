@@ -18,22 +18,13 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 service Query {
   // this line is used by starport scaffolding # 2
 
-  // Queries a request by index.
-  rpc Request(QueryGetRequestRequest) returns (QueryGetRequestResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}/{requestID}";
+  // Queries a chain by index.
+  rpc Chain(QueryGetChainRequest) returns (QueryGetChainResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/chain/{id}";
   }
-  // Queries a list of request for a chain.
-  rpc RequestAll(QueryAllRequestRequest) returns (QueryAllRequestResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}";
-  }
-
-  // Queries a vestedAccount by index.
-  rpc VestedAccount(QueryGetVestedAccountRequest) returns (QueryGetVestedAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/vestedAccount/{chainID}/{address}";
-  }
-  // Queries a list of vestedAccount items.
-  rpc VestedAccountAll(QueryAllVestedAccountRequest) returns (QueryAllVestedAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/vestedAccount";
+  // Queries a list of chain items.
+  rpc ChainAll(QueryAllChainRequest) returns (QueryAllChainResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/chain";
   }
 
   // Queries a genesisAccount by index.
@@ -43,6 +34,15 @@ service Query {
   // Queries a list of genesisAccount items.
   rpc GenesisAccountAll(QueryAllGenesisAccountRequest) returns (QueryAllGenesisAccountResponse) {
     option (google.api.http).get = "/tendermint/spn/launch/genesisAccount";
+  }
+
+  // Queries a vestedAccount by index.
+  rpc VestedAccount(QueryGetVestedAccountRequest) returns (QueryGetVestedAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/vestedAccount/{chainID}/{address}";
+  }
+  // Queries a list of vestedAccount items.
+  rpc VestedAccountAll(QueryAllVestedAccountRequest) returns (QueryAllVestedAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/vestedAccount";
   }
 
   // Queries a genesisValidator by index.
@@ -55,13 +55,13 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/launch/genesisValidator";
   }
 
-  // Queries a chain by index.
-  rpc Chain(QueryGetChainRequest) returns (QueryGetChainResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/chain/{chainID}";
+  // Queries a request by index.
+  rpc Request(QueryGetRequestRequest) returns (QueryGetRequestResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}/{requestID}";
   }
-  // Queries a list of chain items.
-  rpc ChainAll(QueryAllChainRequest) returns (QueryAllChainResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/chain";
+  // Queries a list of request for a chain.
+  rpc RequestAll(QueryAllRequestRequest) returns (QueryAllRequestResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}";
   }
 
   // Parameters queries the parameters of the module.
@@ -70,89 +70,12 @@ service Query {
   }
 }
 
-// this line is used by starport scaffolding # 3
-message QueryGetRequestRequest {
-  string chainID = 1;
-  uint64 requestID = 2;
-}
-
-message QueryGetRequestResponse {
-  Request request = 1 [(gogoproto.nullable) = false];;
-}
-
-message QueryAllRequestRequest {
-  string chainID = 1;
-  cosmos.base.query.v1beta1.PageRequest pagination = 2;
-}
-
-message QueryAllRequestResponse {
-  repeated Request request = 1 [(gogoproto.nullable) = false];;
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
-
-message QueryGetGenesisValidatorRequest {
-  string chainID = 1;
-  string address = 2;
-}
-
-message QueryGetGenesisValidatorResponse {
-  GenesisValidator genesisValidator = 1 [(gogoproto.nullable) = false];;
-}
-
-message QueryAllGenesisValidatorRequest {
-  string chainID = 1;
-  cosmos.base.query.v1beta1.PageRequest pagination = 2;
-}
-
-message QueryAllGenesisValidatorResponse {
-  repeated GenesisValidator genesisValidator = 1 [(gogoproto.nullable) = false];;
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
-
-message QueryGetVestedAccountRequest {
-  string chainID = 1;
-  string address = 2;
-}
-
-message QueryGetVestedAccountResponse {
-  VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];;
-}
-
-message QueryAllVestedAccountRequest {
-  string chainID = 1;
-  cosmos.base.query.v1beta1.PageRequest pagination = 2;
-}
-
-message QueryAllVestedAccountResponse {
-  repeated VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];;
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
-
-message QueryGetGenesisAccountRequest {
-  string chainID = 1;
-  string address = 2;
-}
-
-message QueryGetGenesisAccountResponse {
-  GenesisAccount genesisAccount = 1 [(gogoproto.nullable) = false];;
-}
-
-message QueryAllGenesisAccountRequest {
-  string chainID = 1;
-  cosmos.base.query.v1beta1.PageRequest pagination = 2;
-}
-
-message QueryAllGenesisAccountResponse {
-  repeated GenesisAccount genesisAccount = 1 [(gogoproto.nullable) = false];;
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
-
 message QueryGetChainRequest {
-  string chainID = 1;
+  uint64 id = 1;
 }
 
 message QueryGetChainResponse {
-  Chain chain = 1 [(gogoproto.nullable) = false];;
+  Chain chain = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllChainRequest {
@@ -160,7 +83,83 @@ message QueryAllChainRequest {
 }
 
 message QueryAllChainResponse {
-  repeated Chain chain = 1 [(gogoproto.nullable) = false];;
+  repeated Chain chain = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetGenesisAccountRequest {
+  uint64 chainID = 1;
+  string address = 2;
+}
+
+message QueryGetGenesisAccountResponse {
+  GenesisAccount genesisAccount = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllGenesisAccountRequest {
+  uint64 chainID = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllGenesisAccountResponse {
+  repeated GenesisAccount genesisAccount = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetVestedAccountRequest {
+  uint64 chainID = 1;
+  string address = 2;
+}
+
+message QueryGetVestedAccountResponse {
+  VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllVestedAccountRequest {
+  uint64 chainID = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllVestedAccountResponse {
+  repeated VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetGenesisValidatorRequest {
+  uint64 chainID = 1;
+  string address = 2;
+}
+
+message QueryGetGenesisValidatorResponse {
+  GenesisValidator genesisValidator = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllGenesisValidatorRequest {
+  uint64 chainID = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllGenesisValidatorResponse {
+  repeated GenesisValidator genesisValidator = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetRequestRequest {
+  uint64 chainID = 1;
+  uint64 requestID = 2;
+}
+
+message QueryGetRequestResponse {
+  Request request = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllRequestRequest {
+  uint64 chainID = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllRequestResponse {
+  repeated Request request = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -172,3 +171,6 @@ message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
 }
+
+// this line is used by starport scaffolding # 3
+

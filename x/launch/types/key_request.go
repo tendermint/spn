@@ -11,21 +11,20 @@ const (
 )
 
 // RequestKey returns the store key to retrieve a Request from the index fields
-func RequestKey(chainID string, requestID uint64) []byte {
-	requestIDBytes := make([]byte, 8)
-	binary.BigEndian.PutUint64(requestIDBytes, requestID)
+func RequestKey(chainID, requestID uint64) []byte {
+	prefix := RequestPoolKey(chainID)
+	requestIDBytes := append(uintBytes(requestID), byte('/'))
 
-	suffix := append(requestIDBytes, byte('/'))
-	return append(RequestPoolKey(chainID), suffix...)
+	return append(prefix, requestIDBytes...)
 }
 
 // RequestPoolKey returns the store key to retrieve a Request Pool
 // This is the entry with all the requests of a specific chain
-func RequestPoolKey(chainID string) []byte {
-	return []byte(chainID + "/")
+func RequestPoolKey(chainID uint64) []byte {
+	return append(uintBytes(chainID), byte('/'))
 }
 
 // RequestCountKey returns the store key to retrieve the count of request from a chain ID
-func RequestCountKey(chainID string) []byte {
-	return []byte(chainID + "/")
+func RequestCountKey(chainID uint64) []byte {
+	return append(uintBytes(chainID), byte('/'))
 }
