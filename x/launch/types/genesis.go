@@ -13,7 +13,7 @@ func DefaultGenesis() *GenesisState {
 		// this line is used by starport scaffolding # genesis/types/default
 		RequestList:          []Request{},
 		RequestCountList:     []RequestCount{},
-		VestingAccountList:    []VestingAccount{},
+		VestingAccountList:   []VestingAccount{},
 		GenesisAccountList:   []GenesisAccount{},
 		GenesisValidatorList: []GenesisValidator{},
 		ChainList:            []Chain{},

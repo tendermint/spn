@@ -85,7 +85,7 @@ func TestRequestCount(t *testing.T) {
 func TestApplyRequest(t *testing.T) {
 	var (
 		genesisAcc            = sample.AccAddress()
-		vestingAcc             = sample.AccAddress()
+		vestingAcc            = sample.AccAddress()
 		validatorAcc          = sample.AccAddress()
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
 		chainID               = uint64(10)

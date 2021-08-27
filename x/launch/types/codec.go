@@ -18,7 +18,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgRequestAddAccount{}, "launch/RequestAddAccount", nil)
 	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
 	cdc.RegisterConcrete(&MsgRequestRemoveValidator{}, "launch/RequestRemoveValidator", nil)
-	cdc.RegisterConcrete(&MsgRequestAddVestingAccount{}, "launch/RequestAddVestedAccount", nil)
+	cdc.RegisterConcrete(&MsgRequestAddVestingAccount{}, "launch/RequestAddVestingdAccount", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {

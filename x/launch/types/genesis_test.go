@@ -14,7 +14,7 @@ var (
 	noExistChainID   = uint64(2)
 	addr1            = sample.AccAddress()
 	addr2            = sample.AccAddress()
-	vestingAddress    = sample.AccAddress()
+	vestingAddress   = sample.AccAddress()
 	genesisValidator = *sample.GenesisValidator(chainID1, addr1)
 	genesisChainID   = sample.GenesisChainID()
 
@@ -93,7 +93,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:            sampleChainList,
 				ChainCount:           10,
 				GenesisAccountList:   sampleGenesisAccountList,
-				VestingAccountList:    sampleVestingAccountList,
+				VestingAccountList:   sampleVestingAccountList,
 				GenesisValidatorList: sampleGenesisValidatorList,
 				RequestList:          sampleRequestList,
 				RequestCountList:     sampleRequestCountList,
