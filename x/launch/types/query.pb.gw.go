@@ -44,15 +44,15 @@ func request_Query_Chain_0(ctx context.Context, marshaler runtime.Marshaler, cli
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.Id, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := client.Chain(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -71,15 +71,15 @@ func local_request_Query_Chain_0(ctx context.Context, marshaler runtime.Marshale
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.Id, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := server.Chain(ctx, &protoReq)
@@ -139,7 +139,7 @@ func request_Query_GenesisAccount_0(ctx context.Context, marshaler runtime.Marsh
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -177,7 +177,7 @@ func local_request_Query_GenesisAccount_0(ctx context.Context, marshaler runtime
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -251,7 +251,7 @@ func request_Query_VestedAccount_0(ctx context.Context, marshaler runtime.Marsha
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -289,7 +289,7 @@ func local_request_Query_VestedAccount_0(ctx context.Context, marshaler runtime.
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -363,7 +363,7 @@ func request_Query_GenesisValidator_0(ctx context.Context, marshaler runtime.Mar
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -401,7 +401,7 @@ func local_request_Query_GenesisValidator_0(ctx context.Context, marshaler runti
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -475,7 +475,7 @@ func request_Query_Request_0(ctx context.Context, marshaler runtime.Marshaler, c
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -513,7 +513,7 @@ func local_request_Query_Request_0(ctx context.Context, marshaler runtime.Marsha
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -555,7 +555,7 @@ func request_Query_RequestAll_0(ctx context.Context, marshaler runtime.Marshaler
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -589,7 +589,7 @@ func local_request_Query_RequestAll_0(ctx context.Context, marshaler runtime.Mar
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
 	}
 
-	protoReq.ChainID, err = runtime.String(val)
+	protoReq.ChainID, err = runtime.Uint64(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
@@ -1149,7 +1149,7 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Chain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "chain", "chainID"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Chain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "chain", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_ChainAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "chain"}, "", runtime.AssumeColonVerbOpt(true)))
 

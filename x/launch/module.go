@@ -19,13 +19,11 @@ import (
 	"github.com/tendermint/spn/x/launch/client/cli"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
-	// this line is used by starport scaffolding # ibc/module/import
 )
 
 var (
 	_ module.AppModule      = AppModule{}
 	_ module.AppModuleBasic = AppModuleBasic{}
-	// this line is used by starport scaffolding # ibc/module/interface
 )
 
 // ----------------------------------------------------------------------------

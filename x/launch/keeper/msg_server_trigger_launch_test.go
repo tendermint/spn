@@ -17,7 +17,7 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	coordAddress := sample.AccAddress()
 	coordAddress2 := sample.AccAddress()
 	coordNoExist := sample.AccAddress()
-	chainIDNoExist, _ := sample.ChainID(0)
+	chainIDNoExist := uint64(1000)
 
 	launchTime := types.DefaultMinLaunchTime
 	launchTimeTooLow := types.DefaultMinLaunchTime - 1
@@ -33,14 +33,14 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create chains
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "foo", "")
+	msgCreateChain := sample.MsgCreateChain(coordAddress, "")
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 
-	chainID := res.ChainID
+	chainID := res.Id
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	alreadyLaunched := res.ChainID
+	alreadyLaunched := res.Id
 
 	// Set a chain as already launched
 	chain, found := k.GetChain(sdkCtx, alreadyLaunched)

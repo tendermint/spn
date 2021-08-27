@@ -8,8 +8,8 @@ import (
 var _ sdk.Msg = &MsgRequestAddValidator{}
 
 func NewMsgRequestAddValidator(
-	valAddress,
-	chainID string,
+	valAddress string,
+	chainID uint64,
 	genTx,
 	consPubKey []byte,
 	selfDelegation sdk.Coin,
@@ -50,11 +50,6 @@ func (msg *MsgRequestAddValidator) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.ValAddress)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(ErrInvalidChainID, msg.ChainID)
 	}
 
 	if len(msg.GenTx) == 0 {

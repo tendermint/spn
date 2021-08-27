@@ -9,7 +9,7 @@ var _ sdk.Msg = &MsgRequestAddVestedAccount{}
 
 func NewMsgRequestAddVestedAccount(
 	address string,
-	chainID string,
+	chainID uint64,
 	coins sdk.Coins,
 	options VestingOptions,
 ) *MsgRequestAddVestedAccount {
@@ -46,11 +46,6 @@ func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address (%s)", err)
-	}
-
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(ErrInvalidChainID, msg.ChainID)
 	}
 
 	if !msg.StartingBalance.IsValid() {

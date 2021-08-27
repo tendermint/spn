@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgRevertLaunch{}
 
-func NewMsgRevertLaunch(coordinator string, chainID string) *MsgRevertLaunch {
+func NewMsgRevertLaunch(coordinator string, chainID uint64) *MsgRevertLaunch {
 	return &MsgRevertLaunch{
 		Coordinator: coordinator,
 		ChainID:     chainID,
@@ -39,12 +39,6 @@ func (msg *MsgRevertLaunch) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-
-	// Check chain ID is well formatted
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, msg.ChainID)
 	}
 
 	return nil

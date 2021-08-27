@@ -12,8 +12,8 @@ import (
 
 func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 	var (
-		addr       = sample.AccAddress()
-		chainID, _ = sample.ChainID(10)
+		addr    = sample.AccAddress()
+		chainID = uint64(10)
 	)
 	tests := []struct {
 		name string
@@ -28,15 +28,8 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "invalid chain id",
-			msg: types.MsgRequestAddAccount{
-				Address: sample.AccAddress(),
-				ChainID: "invalid_chain",
-				Coins:   sample.Coins(),
-			},
-			err: types.ErrInvalidChainID,
-		}, {
+		},
+		{
 			name: "message without coins",
 			msg: types.MsgRequestAddAccount{
 				Address: addr,
@@ -44,7 +37,8 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 				Coins:   sdk.NewCoins(),
 			},
 			err: types.ErrInvalidCoins,
-		}, {
+		},
+		{
 			name: "message with invalid coins",
 			msg: types.MsgRequestAddAccount{
 				Address: addr,
@@ -52,7 +46,8 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 				Coins:   sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 			},
 			err: types.ErrInvalidCoins,
-		}, {
+		},
+		{
 			name: "valid message",
 			msg: types.MsgRequestAddAccount{
 				Address: sample.AccAddress(),

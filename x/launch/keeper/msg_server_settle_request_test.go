@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
@@ -19,7 +18,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		addr5                    = sample.AccAddress()
 		coordinator1             = sample.Coordinator()
 		coordinator2             = sample.Coordinator()
-		invalidChain, _          = sample.ChainID(0)
+		invalidChain             = uint64(1000)
 		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
 		ctx                      = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -33,12 +32,12 @@ func TestMsgSettleRequest(t *testing.T) {
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 
-	requests := createRequests(k, sdkCtx, chains[2].ChainID, []types.RequestContent{
-		sample.GenesisAccountContent(chains[2].ChainID, addr1),
-		sample.GenesisAccountContent(chains[2].ChainID, addr2),
-		sample.GenesisAccountContent(chains[2].ChainID, addr3),
-		sample.GenesisAccountContent(chains[2].ChainID, addr4),
-		sample.GenesisAccountContent(chains[2].ChainID, addr5),
+	requests := createRequests(k, sdkCtx, chains[2].Id, []types.RequestContent{
+		sample.GenesisAccountContent(chains[2].Id, addr1),
+		sample.GenesisAccountContent(chains[2].Id, addr2),
+		sample.GenesisAccountContent(chains[2].Id, addr3),
+		sample.GenesisAccountContent(chains[2].Id, addr4),
+		sample.GenesisAccountContent(chains[2].Id, addr5),
 	})
 
 	tests := []struct {
@@ -60,7 +59,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "launch triggered chain",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[0].ChainID,
+				ChainID:     chains[0].Id,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -70,18 +69,17 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "coordinator not found",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].ChainID,
+				ChainID:     chains[1].Id,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrapf(types.ErrChainInactive,
-				"the chain %s coordinator has been deleted", chains[1].ChainID),
+			err: types.ErrChainInactive,
 		},
 		{
 			name: "no permission error",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
+				ChainID:     chains[2].Id,
 				Coordinator: coordinator2.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -91,18 +89,17 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve an invalid request",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
+				ChainID:     chains[2].Id,
 				Coordinator: coordinator1.Address,
 				RequestID:   99999999,
 				Approve:     true,
 			},
-			err: sdkerrors.Wrapf(types.ErrRequestNotFound,
-				"request 99999999 for chain %s not found", chains[2].ChainID),
+			err: types.ErrRequestNotFound,
 		},
 		{
 			name: "approve chain request 1",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
+				ChainID:     chains[2].Id,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -112,7 +109,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 2",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
+				ChainID:     chains[2].Id,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[1].RequestID,
 				Approve:     true,
@@ -122,7 +119,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 3",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
+				ChainID:     chains[2].Id,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[2].RequestID,
 				Approve:     true,
@@ -132,7 +129,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 4",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
+				ChainID:     chains[2].Id,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[3].RequestID,
 				Approve:     true,
@@ -142,7 +139,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "reject chain request 5",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].ChainID,
+				ChainID:     chains[2].Id,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[4].RequestID,
 				Approve:     false,

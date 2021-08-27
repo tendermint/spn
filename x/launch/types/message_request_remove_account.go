@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgRequestRemoveAccount{}
 
-func NewMsgRequestRemoveAccount(chainID, creator, address string) *MsgRequestRemoveAccount {
+func NewMsgRequestRemoveAccount(chainID uint64, creator, address string) *MsgRequestRemoveAccount {
 	return &MsgRequestRemoveAccount{
 		ChainID: chainID,
 		Creator: creator,
@@ -47,9 +47,5 @@ func (msg *MsgRequestRemoveAccount) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
 
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrapf(ErrInvalidChainID, msg.ChainID)
-	}
 	return nil
 }

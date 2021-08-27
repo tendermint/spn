@@ -1,5 +1,7 @@
 package types
 
+import "encoding/binary"
+
 const (
 	// ModuleName defines the module name
 	ModuleName = "launch"
@@ -15,12 +17,14 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_launch"
-
-	// this line is used by starport scaffolding # ibc/keys/name
 )
-
-// this line is used by starport scaffolding # ibc/keys/port
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
+}
+
+func uintBytes(v uint64) []byte {
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, v)
+	return b
 }

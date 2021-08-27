@@ -12,7 +12,7 @@ import (
 
 func TestMsgRequestAddValidator(t *testing.T) {
 	var (
-		invalidChain, _          = sample.ChainID(0)
+		invalidChain             = uint64(1000)
 		coordAddr                = sample.AccAddress()
 		addr1                    = sample.AccAddress()
 		addr2                    = sample.AccAddress()
@@ -24,10 +24,10 @@ func TestMsgRequestAddValidator(t *testing.T) {
 		Address: coordAddr,
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
-	chains[2].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[2])
-	chains[3].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[3])
+	chains[0].LaunchTriggered = true
+	k.SetChain(sdkCtx, chains[0])
+	chains[1].CoordinatorID = 99999
+	k.SetChain(sdkCtx, chains[1])
 
 	for _, tc := range []struct {
 		name        string
@@ -42,30 +42,30 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			valid: false,
 		}, {
 			name:  "chain with triggered launch",
-			msg:   sample.MsgRequestAddValidator(addr1, chains[2].ChainID),
+			msg:   sample.MsgRequestAddValidator(addr1, chains[0].Id),
 			valid: false,
 		}, {
-			name:   "request to a chain 1",
-			msg:    sample.MsgRequestAddValidator(addr1, chains[0].ChainID),
+			name:  "chain without coordinator",
+			msg:   sample.MsgRequestAddValidator(addr1, chains[1].Id),
+			valid: false,
+		}, {
+			name:   "request to a chain 3",
+			msg:    sample.MsgRequestAddValidator(addr1, chains[2].Id),
 			valid:  true,
 			wantID: 0,
 		}, {
-			name:   "second request to a chain 1",
-			msg:    sample.MsgRequestAddValidator(addr2, chains[0].ChainID),
+			name:   "second request to a chain 3",
+			msg:    sample.MsgRequestAddValidator(addr2, chains[2].Id),
 			valid:  true,
 			wantID: 1,
 		}, {
-			name:   "request to a chain 2",
-			msg:    sample.MsgRequestAddValidator(addr1, chains[1].ChainID),
+			name:   "request to a chain 4",
+			msg:    sample.MsgRequestAddValidator(addr1, chains[3].Id),
 			valid:  true,
 			wantID: 0,
 		}, {
-			name:  "coordinator not found",
-			msg:   sample.MsgRequestAddValidator(coordAddr, chains[3].ChainID),
-			valid: false,
-		}, {
 			name:        "add coordinator to a chain",
-			msg:         sample.MsgRequestAddValidator(coordAddr, chains[1].ChainID),
+			msg:         sample.MsgRequestAddValidator(coordAddr, chains[3].Id),
 			valid:       true,
 			wantApprove: true,
 		},

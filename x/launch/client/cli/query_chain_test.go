@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"strconv"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -24,7 +23,7 @@ func networkWithFooObjects(t *testing.T, n int) (*network.Network, []types.Chain
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		chain := *sample.Chain(strconv.Itoa(i), uint64(i))
+		chain := *sample.Chain(uint64(i), uint64(i))
 		state.ChainList = append(
 			state.ChainList,
 			chain,
@@ -52,13 +51,13 @@ func TestShowChain(t *testing.T) {
 	}{
 		{
 			desc: "found",
-			id:   objs[0].ChainID,
+			id:   fmt.Sprintf("%d", objs[0].Id),
 			args: common,
 			obj:  objs[0],
 		},
 		{
 			desc: "not found",
-			id:   "not_found",
+			id:   "10",
 			args: common,
 			err:  status.Error(codes.InvalidArgument, "not found"),
 		},
