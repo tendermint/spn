@@ -9,17 +9,19 @@ import (
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
-// ChainID returns a sample chain id with the associated chain name
-func ChainID(number uint64) (string, string) {
+// GenesisChainID returns a sample chain id
+func GenesisChainID() string {
 	chainName := AlphaString(5)
-	return launch.ChainIDFromChainName(chainName, number), chainName
+	number := Uint64()
+	return launch.NewGenesisChainID(chainName, number)
 }
 
 // Chain returns a sample Chain
-func Chain(chainID string, coordinatorID uint64) *launch.Chain {
+func Chain(id uint64, coordinatorID uint64) *launch.Chain {
 	return &launch.Chain{
-		ChainID:         chainID,
+		Id:              id,
 		CoordinatorID:   coordinatorID,
+		GenesisChainID:  GenesisChainID(),
 		CreatedAt:       time.Now().Unix(),
 		SourceURL:       String(10),
 		SourceHash:      String(10),
@@ -29,11 +31,26 @@ func Chain(chainID string, coordinatorID uint64) *launch.Chain {
 }
 
 // GenesisAccount returns a sample GenesisAccount
-func GenesisAccount(chainID, address string) *launch.GenesisAccount {
+func GenesisAccount(chainID uint64, address string) *launch.GenesisAccount {
 	return &launch.GenesisAccount{
 		ChainID: chainID,
 		Address: address,
 		Coins:   Coins(),
+	}
+}
+
+// VestingOptions returns a sample VestingOptions
+func VestingOptions() launch.VestingOptions {
+	return *launch.NewDelayedVesting(Coins(), time.Now().Unix())
+}
+
+// VestedAccount returns a sample VestedAccount
+func VestedAccount(chainID uint64, address string) *launch.VestedAccount {
+	return &launch.VestedAccount{
+		ChainID:         chainID,
+		Address:         address,
+		StartingBalance: Coins(),
+		VestingOptions:  *launch.NewDelayedVesting(Coins(), time.Now().Unix()),
 	}
 }
 
@@ -44,30 +61,8 @@ func AccountRemoval(address string) *launch.AccountRemoval {
 	}
 }
 
-// ValidatorRemoval returns a sample ValidatorRemoval
-func ValidatorRemoval(address string) *launch.ValidatorRemoval {
-	return &launch.ValidatorRemoval{
-		ValAddress: address,
-	}
-}
-
-// VestingOptions returns a sample VestingOptions
-func VestingOptions() launch.VestingOptions {
-	return *launch.NewDelayedVesting(Coins(), time.Now().Unix())
-}
-
-// VestedAccount returns a sample VestedAccount
-func VestedAccount(chainID, address string) *launch.VestedAccount {
-	return &launch.VestedAccount{
-		ChainID:         chainID,
-		Address:         address,
-		StartingBalance: Coins(),
-		VestingOptions:  *launch.NewDelayedVesting(Coins(), time.Now().Unix()),
-	}
-}
-
 // GenesisValidator returns a sample GenesisValidator
-func GenesisValidator(chainID, address string) *launch.GenesisValidator {
+func GenesisValidator(chainID uint64, address string) *launch.GenesisValidator {
 	return &launch.GenesisValidator{
 		ChainID:        chainID,
 		Address:        address,
@@ -78,8 +73,15 @@ func GenesisValidator(chainID, address string) *launch.GenesisValidator {
 	}
 }
 
+// ValidatorRemoval returns a sample ValidatorRemoval
+func ValidatorRemoval(address string) *launch.ValidatorRemoval {
+	return &launch.ValidatorRemoval{
+		ValAddress: address,
+	}
+}
+
 // RequestWithContent creates a launch request object with chain id and content
-func RequestWithContent(chainID string, content launch.RequestContent) *launch.Request {
+func RequestWithContent(chainID uint64, content launch.RequestContent) *launch.Request {
 	return &launch.Request{
 		ChainID:   chainID,
 		Creator:   AccAddress(),
@@ -89,7 +91,7 @@ func RequestWithContent(chainID string, content launch.RequestContent) *launch.R
 }
 
 // AllRequestContents creates all contents types for request
-func AllRequestContents(chainID, genesis, vested, validator string) []launch.RequestContent {
+func AllRequestContents(chainID uint64, genesis, vested, validator string) []launch.RequestContent {
 	return []launch.RequestContent{
 		launch.NewGenesisAccount(chainID, genesis, Coins()),
 		launch.NewAccountRemoval(genesis),
@@ -101,18 +103,18 @@ func AllRequestContents(chainID, genesis, vested, validator string) []launch.Req
 }
 
 // GenesisAccountContent returns a sample GenesisAccount request content
-func GenesisAccountContent(chainID, address string) launch.RequestContent {
+func GenesisAccountContent(chainID uint64, address string) launch.RequestContent {
 	return launch.NewGenesisAccount(chainID, address, Coins())
 }
 
 // Request returns a sample Request
-func Request(chainID string) *launch.Request {
+func Request(chainID uint64) *launch.Request {
 	content := GenesisAccountContent(chainID, AccAddress())
 	return RequestWithContent(chainID, content)
 }
 
 // MsgCreateChain returns a sample MsgCreateChain
-func MsgCreateChain(coordAddress, chainName, genesisURL string) launch.MsgCreateChain {
+func MsgCreateChain(coordAddress, genesisURL string) launch.MsgCreateChain {
 	var genesisHash string
 	if len(genesisURL) > 0 {
 		genesisHash = GenesisHash()
@@ -120,7 +122,7 @@ func MsgCreateChain(coordAddress, chainName, genesisURL string) launch.MsgCreate
 
 	return *launch.NewMsgCreateChain(
 		coordAddress,
-		chainName,
+		GenesisChainID(),
 		String(10),
 		String(10),
 		genesisURL,
@@ -130,13 +132,18 @@ func MsgCreateChain(coordAddress, chainName, genesisURL string) launch.MsgCreate
 
 // MsgEditChain returns a sample MsgEditChain
 func MsgEditChain(
-	coordAddress,
-	chainID string,
+	coordAddress string,
+	chainID uint64,
+	modifyGenesisChainID,
 	modifySource,
 	modifyInitialGenesis,
 	genesisURL bool,
 ) launch.MsgEditChain {
-	var sourceURL, sourceHash string
+	var genesisChainID, sourceURL, sourceHash string
+
+	if modifyGenesisChainID {
+		genesisChainID = GenesisChainID()
+	}
 	if modifySource {
 		sourceURL, sourceHash = String(30), String(10)
 	}
@@ -154,6 +161,7 @@ func MsgEditChain(
 	return *launch.NewMsgEditChain(
 		coordAddress,
 		chainID,
+		genesisChainID,
 		sourceURL,
 		sourceHash,
 		initialGenesis,
@@ -161,7 +169,7 @@ func MsgEditChain(
 }
 
 // MsgRequestAddValidator returns a sample MsgRequestAddValidator
-func MsgRequestAddValidator(address, chainID string) launch.MsgRequestAddValidator {
+func MsgRequestAddValidator(address string, chainID uint64) launch.MsgRequestAddValidator {
 	return *launch.NewMsgRequestAddValidator(
 		address,
 		chainID,
@@ -191,24 +199,15 @@ func Params() launch.Params {
 
 // LaunchGenesisState returns a sample genesis state for the launch module
 func LaunchGenesisState() launch.GenesisState {
-	chainID1, _ := ChainID(0)
-	chainID2, _ := ChainID(0)
+	chainID1 := uint64(0)
+	chainID2 := uint64(1)
 
 	return launch.GenesisState{
 		ChainList: []launch.Chain{
 			*Chain(chainID1, Uint64()),
 			*Chain(chainID2, Uint64()),
 		},
-		ChainNameCountList: []launch.ChainNameCount{
-			{
-				ChainName: chainID1,
-				Count:     Uint64(),
-			},
-			{
-				ChainName: chainID2,
-				Count:     Uint64(),
-			},
-		},
+		ChainCount: 10,
 		GenesisAccountList: []launch.GenesisAccount{
 			*GenesisAccount(chainID1, AccAddress()),
 			*GenesisAccount(chainID1, AccAddress()),

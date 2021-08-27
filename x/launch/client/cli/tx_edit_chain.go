@@ -2,6 +2,7 @@ package cli
 
 import (
 	"errors"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -11,6 +12,7 @@ import (
 )
 
 const (
+	flagGenesisChainID = "genesis-chain-id"
 	flagSourceURL      = "source-url"
 	flagSourceHash     = "source-hash"
 	flagDefaultGenesis = "default-genesis"
@@ -18,28 +20,19 @@ const (
 
 func CmdEditChain() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "edit-chain [chain-id]",
+		Use:   "edit-chain [id]",
 		Short: "Edit chain information",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
+			var (
+				genesisChainID, _ = cmd.Flags().GetString(flagGenesisChainID)
+				sourceURL, _      = cmd.Flags().GetString(flagSourceURL)
+				sourceHash, _     = cmd.Flags().GetString(flagSourceHash)
+				defaultGenesis, _ = cmd.Flags().GetBool(flagDefaultGenesis)
+				genesisURL, _     = cmd.Flags().GetString(flagGenesisURL)
+			)
 
-			sourceURL, err := cmd.Flags().GetString(flagSourceURL)
-			if err != nil {
-				return err
-			}
-			sourceHash, err := cmd.Flags().GetString(flagSourceHash)
-			if err != nil {
-				return err
-			}
-			defaultGenesis, err := cmd.Flags().GetBool(flagDefaultGenesis)
-			if err != nil {
-				return err
-			}
-			genesisURL, err := cmd.Flags().GetString(flagGenesisURL)
+			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
@@ -60,9 +53,15 @@ func CmdEditChain() *cobra.Command {
 				initialGenesis = &genesisURL
 			}
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgEditChain(
 				clientCtx.GetFromAddress().String(),
-				args[0],
+				chainID,
+				genesisChainID,
 				sourceURL,
 				sourceHash,
 				initialGenesis,
@@ -74,6 +73,7 @@ func CmdEditChain() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagGenesisChainID, "", "Chain ID for the genesis of the chain")
 	cmd.Flags().String(flagSourceURL, "", "Set a new source URL for the chain")
 	cmd.Flags().String(flagSourceHash, "", "Hash from the new source URL for the chain")
 	cmd.Flags().Bool(flagDefaultGenesis, false, "Set the initial genesis to the default genesis of the chain")

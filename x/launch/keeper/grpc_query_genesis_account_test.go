@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func createNGenesisAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID string) []types.GenesisAccount {
+func createNGenesisAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.GenesisAccount {
 	items := make([]types.GenesisAccount, n)
 	for i := range items {
 		items[i] = *sample.GenesisAccount(chainID, strconv.Itoa(i))
@@ -53,7 +53,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetGenesisAccountRequest{
-				ChainID: strconv.Itoa(100000),
+				ChainID: uint64(100000),
 				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
@@ -80,11 +80,11 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 	var (
 		keeper, _, ctx, _ = testkeeper.Launch(t)
 		wctx              = sdk.WrapSDKContext(ctx)
-		chainID, _        = sample.ChainID(0)
+		chainID           = uint64(0)
 		msgs              = createNGenesisAccountForChainID(keeper, ctx, 5, chainID)
 	)
 
-	request := func(chainID string, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisAccountRequest {
+	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisAccountRequest {
 		return &types.QueryAllGenesisAccountRequest{
 			ChainID: chainID,
 			Pagination: &query.PageRequest{

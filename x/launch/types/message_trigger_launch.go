@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgTriggerLaunch{}
 
-func NewMsgTriggerLaunch(coordinator, chainID string, remainingTime uint64) *MsgTriggerLaunch {
+func NewMsgTriggerLaunch(coordinator string, chainID, remainingTime uint64) *MsgTriggerLaunch {
 	return &MsgTriggerLaunch{
 		Coordinator:   coordinator,
 		ChainID:       chainID,
@@ -40,12 +40,6 @@ func (msg *MsgTriggerLaunch) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
-	}
-
-	// Check chain ID is well formatted
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, msg.ChainID)
 	}
 
 	return nil

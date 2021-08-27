@@ -45,7 +45,7 @@ func TestRequestQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetRequestRequest{
-				ChainID:   strconv.Itoa(100000),
+				ChainID:   uint64(100000),
 				RequestID: 100000,
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
@@ -74,7 +74,7 @@ func TestRequestQueryPaginated(t *testing.T) {
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllRequestRequest {
 		return &types.QueryAllRequestRequest{
-			ChainID: "foo",
+			ChainID: uint64(0),
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,

@@ -19,15 +19,12 @@ func (k Keeper) SetGenesisAccount(ctx sdk.Context, genesisAccount types.GenesisA
 // GetGenesisAccount returns a genesisAccount from its index
 func (k Keeper) GetGenesisAccount(
 	ctx sdk.Context,
-	chainID string,
+	chainID uint64,
 	address string,
 ) (val types.GenesisAccount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisAccountKeyPrefix))
 
-	b := store.Get(types.GenesisAccountKey(
-		chainID,
-		address,
-	))
+	b := store.Get(types.GenesisAccountKey(chainID, address))
 	if b == nil {
 		return val, false
 	}
@@ -39,15 +36,11 @@ func (k Keeper) GetGenesisAccount(
 // RemoveGenesisAccount removes a genesisAccount from the store
 func (k Keeper) RemoveGenesisAccount(
 	ctx sdk.Context,
-	chainID string,
+	chainID uint64,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisAccountKeyPrefix))
-	store.Delete(types.GenesisAccountKey(
-		chainID,
-		address,
-	))
+	store.Delete(types.GenesisAccountKey(chainID, address))
 }
 
 // GetAllGenesisAccount returns all genesisAccount

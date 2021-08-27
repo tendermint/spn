@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgRequestRemoveValidator{}
 
-func NewMsgRequestRemoveValidator(chainID, creator, validatorAddress string) *MsgRequestRemoveValidator {
+func NewMsgRequestRemoveValidator(chainID uint64, creator, validatorAddress string) *MsgRequestRemoveValidator {
 	return &MsgRequestRemoveValidator{
 		ChainID:          chainID,
 		Creator:          creator,
@@ -47,9 +47,5 @@ func (msg *MsgRequestRemoveValidator) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrapf(ErrInvalidChainID, msg.ChainID)
-	}
 	return nil
 }

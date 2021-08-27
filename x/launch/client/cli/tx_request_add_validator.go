@@ -37,9 +37,14 @@ func CmdRequestAddValidator() *cobra.Command {
 				return err
 			}
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgRequestAddValidator(
 				clientCtx.GetFromAddress().String(),
-				args[0],
+				chainID,
 				gentxBytes,
 				[]byte(args[2]),
 				selfDelegation,

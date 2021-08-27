@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -27,12 +28,14 @@ func CmdRequestAddAccount() *cobra.Command {
 				return fmt.Errorf("failed to parse coins: %w", err)
 			}
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
+
 			msg := types.NewMsgRequestAddAccount(
 				clientCtx.GetFromAddress().String(),
-				args[0],
+				chainID,
 				coins,
 			)
 			if err := msg.ValidateBasic(); err != nil {

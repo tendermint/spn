@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -25,8 +27,13 @@ func CmdRequestRemoveAccount() *cobra.Command {
 				address = args[1]
 			}
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgRequestRemoveAccount(
-				args[0], creator, address,
+				chainID, creator, address,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
