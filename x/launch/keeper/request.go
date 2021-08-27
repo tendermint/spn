@@ -117,17 +117,17 @@ func (k Keeper) GetAllRequest(ctx sdk.Context) (list []types.Request) {
 }
 
 // checkAccount check account inconsistency and return
-// if an account exists for genesis or vested accounts
+// if an account exists for genesis or vesting accounts
 func checkAccount(ctx sdk.Context, k Keeper, chainID uint64, address string) (bool, error) {
 	_, foundGenesis := k.GetGenesisAccount(ctx, chainID, address)
-	_, foundVested := k.GetVestedAccount(ctx, chainID, address)
-	if foundGenesis && foundVested {
+	_, foundVesting := k.GetVestingAccount(ctx, chainID, address)
+	if foundGenesis && foundVesting {
 		return false, spnerrors.Critical(
-			fmt.Sprintf("account %s for chain %v found in vested and genesis accounts",
+			fmt.Sprintf("account %s for chain %v found in vesting and genesis accounts",
 				address, chainID),
 		)
 	}
-	return foundGenesis || foundVested, nil
+	return foundGenesis || foundVesting, nil
 }
 
 // ApplyRequest approves the request and performs
@@ -156,8 +156,8 @@ func ApplyRequest(
 			)
 		}
 		k.SetGenesisAccount(ctx, *ga)
-	case *types.RequestContent_VestedAccount:
-		va := requestContent.VestedAccount
+	case *types.RequestContent_VestingAccount:
+		va := requestContent.VestingAccount
 		found, err := checkAccount(ctx, k, chainID, va.Address)
 		if err != nil {
 			return err
@@ -168,7 +168,7 @@ func ApplyRequest(
 				va.Address, chainID,
 			)
 		}
-		k.SetVestedAccount(ctx, *va)
+		k.SetVestingAccount(ctx, *va)
 	case *types.RequestContent_AccountRemoval:
 		ar := requestContent.AccountRemoval
 		found, err := checkAccount(ctx, k, chainID, ar.Address)
@@ -182,7 +182,7 @@ func ApplyRequest(
 			)
 		}
 		k.RemoveGenesisAccount(ctx, chainID, ar.Address)
-		k.RemoveVestedAccount(ctx, chainID, ar.Address)
+		k.RemoveVestingAccount(ctx, chainID, ar.Address)
 	case *types.RequestContent_GenesisValidator:
 		ga := requestContent.GenesisValidator
 		if _, found := k.GetGenesisValidator(ctx, chainID, ga.Address); found {

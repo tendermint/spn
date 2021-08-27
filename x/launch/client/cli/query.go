@@ -30,7 +30,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(CmdListGenesisValidator())
 	cmd.AddCommand(CmdShowGenesisValidator())
 	cmd.AddCommand(CmdListVestingAccount())
-	cmd.AddCommand(CmdShowVestedAccount())
+	cmd.AddCommand(CmdShowVestingAccount())
 	cmd.AddCommand(CmdListGenesisAccount())
 	cmd.AddCommand(CmdShowGenesisAccount())
 	cmd.AddCommand(CmdListChain())
