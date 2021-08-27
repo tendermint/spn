@@ -13,7 +13,7 @@ func DefaultGenesis() *GenesisState {
 		// this line is used by starport scaffolding # genesis/types/default
 		RequestList:          []Request{},
 		RequestCountList:     []RequestCount{},
-		VestedAccountList:    []VestedAccount{},
+		VestingAccountList:    []VestingAccount{},
 		GenesisAccountList:   []GenesisAccount{},
 		GenesisValidatorList: []GenesisValidator{},
 		ChainList:            []Chain{},
@@ -137,16 +137,16 @@ func validateAccounts(gs GenesisState, chainIDMap map[uint64]struct{}) error {
 		}
 	}
 
-	// Check for duplicated index in vestedAccount
-	vestedAccountIndexMap := make(map[string]struct{})
-	for _, elem := range gs.VestedAccountList {
-		index := string(VestedAccountKey(elem.ChainID, elem.Address))
-		if _, ok := vestedAccountIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for vestedAccount")
+	// Check for duplicated index in vestingAccount
+	vestingAccountIndexMap := make(map[string]struct{})
+	for _, elem := range gs.VestingAccountList {
+		index := string(VestingAccountKey(elem.ChainID, elem.Address))
+		if _, ok := vestingAccountIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for vestingAccount")
 		}
-		vestedAccountIndexMap[index] = struct{}{}
+		vestingAccountIndexMap[index] = struct{}{}
 
-		// Each vested account must be associated with an existing chain
+		// Each vesting account must be associated with an existing chain
 		if _, ok := chainIDMap[elem.ChainID]; !ok {
 			return fmt.Errorf("account %s is associated to a non-existing chain: %v",
 				elem.Address,
@@ -154,10 +154,10 @@ func validateAccounts(gs GenesisState, chainIDMap map[uint64]struct{}) error {
 			)
 		}
 
-		// An address cannot be defined as a genesis account and a vested account for the same chain
+		// An address cannot be defined as a genesis account and a vesting account for the same chain
 		accountIndex := GenesisAccountKey(elem.ChainID, elem.Address)
 		if _, ok := genesisAccountIndexMap[string(accountIndex)]; ok {
-			return fmt.Errorf("account %s can't be a genesis account and a vested account at the same time for the chain: %v",
+			return fmt.Errorf("account %s can't be a genesis account and a vesting account at the same time for the chain: %v",
 				elem.Address,
 				elem.ChainID,
 			)

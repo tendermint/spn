@@ -22,25 +22,25 @@ func TestNewGenesisAccount(t *testing.T) {
 	require.EqualValues(t, address, genesisAccount.Address)
 	require.True(t, coins.IsEqual(genesisAccount.Coins))
 
-	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetVestingAccount())
 	require.Nil(t, requestContent.GetValidatorRemoval())
 	require.Nil(t, requestContent.GetAccountRemoval())
 	require.Nil(t, requestContent.GetValidatorRemoval())
 }
 
-func TestNewVestedAccount(t *testing.T) {
+func TestNewVestingAccount(t *testing.T) {
 	chainID := uint64(0)
 	address := sample.AccAddress()
 	startingBalance := sample.Coins()
 	vestingOptions := sample.VestingOptions()
-	requestContent := types.NewVestedAccount(chainID, address, startingBalance, vestingOptions)
+	requestContent := types.NewVestingAccount(chainID, address, startingBalance, vestingOptions)
 
-	vestedAccount := requestContent.GetVestedAccount()
-	require.NotNil(t, vestedAccount)
-	require.EqualValues(t, chainID, vestedAccount.ChainID)
-	require.EqualValues(t, address, vestedAccount.Address)
-	require.True(t, startingBalance.IsEqual(vestedAccount.StartingBalance))
-	require.Equal(t, vestingOptions, vestedAccount.VestingOptions)
+	vestingAccount := requestContent.GetVestingAccount()
+	require.NotNil(t, vestingAccount)
+	require.EqualValues(t, chainID, vestingAccount.ChainID)
+	require.EqualValues(t, address, vestingAccount.Address)
+	require.True(t, startingBalance.IsEqual(vestingAccount.StartingBalance))
+	require.Equal(t, vestingOptions, vestingAccount.VestingOptions)
 
 	require.Nil(t, requestContent.GetGenesisAccount())
 	require.Nil(t, requestContent.GetValidatorRemoval())
@@ -67,7 +67,7 @@ func TestNewGenesisValidator(t *testing.T) {
 	require.EqualValues(t, peer, genesisValidator.Peer)
 
 	require.Nil(t, requestContent.GetGenesisAccount())
-	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetVestingAccount())
 	require.Nil(t, requestContent.GetAccountRemoval())
 	require.Nil(t, requestContent.GetValidatorRemoval())
 }
@@ -81,7 +81,7 @@ func TestNewAccountRemoval(t *testing.T) {
 	require.EqualValues(t, address, accountRemoval.Address)
 
 	require.Nil(t, requestContent.GetGenesisAccount())
-	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetVestingAccount())
 	require.Nil(t, requestContent.GetGenesisValidator())
 	require.Nil(t, requestContent.GetValidatorRemoval())
 }
@@ -95,7 +95,7 @@ func TestNewValidatorRemoval(t *testing.T) {
 	require.EqualValues(t, address, validatorRemoval.ValAddress)
 
 	require.Nil(t, requestContent.GetGenesisAccount())
-	require.Nil(t, requestContent.GetVestedAccount())
+	require.Nil(t, requestContent.GetVestingAccount())
 	require.Nil(t, requestContent.GetGenesisValidator())
 	require.Nil(t, requestContent.GetAccountRemoval())
 }
@@ -334,19 +334,19 @@ func TestValidatorRemoval_Validate(t *testing.T) {
 	}
 }
 
-func TestVestedAccount_Validate(t *testing.T) {
+func TestVestingAccount_Validate(t *testing.T) {
 	chainID := uint64(0)
 
 	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
 
 	tests := []struct {
 		name    string
-		content types.VestedAccount
+		content types.VestingAccount
 		wantErr bool
 	}{
 		{
 			name: "invalid address",
-			content: types.VestedAccount{
+			content: types.VestingAccount{
 				ChainID:         chainID,
 				Address:         "invalid_address",
 				StartingBalance: sample.Coins(),
@@ -356,7 +356,7 @@ func TestVestedAccount_Validate(t *testing.T) {
 		},
 		{
 			name: "invalid coins",
-			content: types.VestedAccount{
+			content: types.VestingAccount{
 				Address:         sample.AccAddress(),
 				ChainID:         chainID,
 				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
@@ -366,7 +366,7 @@ func TestVestedAccount_Validate(t *testing.T) {
 		},
 		{
 			name: "valid request content",
-			content: types.VestedAccount{
+			content: types.VestingAccount{
 				Address:         sample.AccAddress(),
 				ChainID:         chainID,
 				StartingBalance: sample.Coins(),

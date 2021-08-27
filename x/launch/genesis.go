@@ -22,9 +22,9 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetGenesisAccount(ctx, elem)
 	}
 
-	// Set all the vestedAccount
-	for _, elem := range genState.VestedAccountList {
-		k.SetVestedAccount(ctx, elem)
+	// Set all the vestingAccount
+	for _, elem := range genState.VestingAccountList {
+		k.SetVestingAccount(ctx, elem)
 	}
 
 	// Set all the genesisValidator
@@ -52,7 +52,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.ChainList = k.GetAllChain(ctx)
 	genesis.ChainCount = k.GetChainCount(ctx)
 	genesis.GenesisAccountList = k.GetAllGenesisAccount(ctx)
-	genesis.VestedAccountList = k.GetAllVestedAccount(ctx)
+	genesis.VestingAccountList = k.GetAllVestingAccount(ctx)
 	genesis.GenesisValidatorList = k.GetAllGenesisValidator(ctx)
 	genesis.RequestList = k.GetAllRequest(ctx)
 	genesis.Params = k.GetParams(ctx)
