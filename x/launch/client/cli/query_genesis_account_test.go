@@ -27,11 +27,10 @@ func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-	chainID, _ := sample.ChainID(0)
 	for i := 0; i < n; i++ {
 		state.GenesisAccountList = append(
 			state.GenesisAccountList,
-			*sample.GenesisAccount(chainID, strconv.Itoa(i)),
+			*sample.GenesisAccount(uint64(0), strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
@@ -58,7 +57,7 @@ func TestShowGenesisAccount(t *testing.T) {
 	}{
 		{
 			desc:      "found",
-			idChainID: objs[0].ChainID,
+			idChainID: strconv.Itoa(int(objs[0].ChainID)),
 			idAddress: objs[0].Address,
 
 			args: common,
@@ -101,9 +100,9 @@ func TestListGenesisAccount(t *testing.T) {
 
 	chainID := objs[0].ChainID
 	ctx := net.Validators[0].ClientCtx
-	request := func(chainID string, next []byte, offset, limit uint64, total bool) []string {
+	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
-			chainID,
+			strconv.Itoa(int(chainID)),
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 		}
 		if next == nil {

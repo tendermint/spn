@@ -26,11 +26,10 @@ func networkWithVestedAccountObjects(t *testing.T, n int) (*network.Network, []t
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-	chainID, _ := sample.ChainID(0)
 	for i := 0; i < n; i++ {
 		state.VestedAccountList = append(
 			state.VestedAccountList,
-			*sample.VestedAccount(chainID, strconv.Itoa(i)),
+			*sample.VestedAccount(0, strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
@@ -57,7 +56,7 @@ func TestShowVestedAccount(t *testing.T) {
 	}{
 		{
 			desc:      "found",
-			idChainID: objs[0].ChainID,
+			idChainID: strconv.Itoa(int(objs[0].ChainID)),
 			idAddress: objs[0].Address,
 
 			args: common,
@@ -98,7 +97,7 @@ func TestShowVestedAccount(t *testing.T) {
 func TestListVestedAccount(t *testing.T) {
 	net, objs := networkWithVestedAccountObjects(t, 5)
 
-	chainID := objs[0].ChainID
+	chainID := strconv.Itoa(int(objs[0].ChainID))
 	ctx := net.Validators[0].ClientCtx
 	request := func(chainID string, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{

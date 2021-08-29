@@ -17,7 +17,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	coordAddress := sample.AccAddress()
 	coordAddress2 := sample.AccAddress()
 	coordNoExist := sample.AccAddress()
-	chainIDNoExist, _ := sample.ChainID(0)
+	chainIDNoExist := uint64(1000)
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
@@ -28,14 +28,14 @@ func TestMsgRevertLaunch(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create chains
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "foo", "")
+	msgCreateChain := sample.MsgCreateChain(coordAddress, "")
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	notLaunched := res.ChainID
+	notLaunched := res.Id
 
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	delayNotReached := res.ChainID
+	delayNotReached := res.Id
 	chain, found := k.GetChain(sdkCtx, delayNotReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
@@ -44,7 +44,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	delayReached := res.ChainID
+	delayReached := res.Id
 	chain, found = k.GetChain(sdkCtx, delayReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true

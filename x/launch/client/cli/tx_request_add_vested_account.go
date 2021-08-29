@@ -39,9 +39,14 @@ func CmdRequestAddVestedAccount() *cobra.Command {
 
 			delayedVesting := *types.NewDelayedVesting(vestingCoins, int64(endTime))
 
+			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgRequestAddVestedAccount(
 				clientCtx.GetFromAddress().String(),
-				args[0],
+				chainID,
 				startingBalance,
 				delayedVesting,
 			)

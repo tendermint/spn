@@ -15,7 +15,7 @@ func TestMsgEditChain(t *testing.T) {
 	coordAddress := sample.AccAddress()
 	coordAddress2 := sample.AccAddress()
 	coordNoExist := sample.AccAddress()
-	chainIDNoExist, _ := sample.ChainID(0)
+	chainIDNoExist := uint64(1000)
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
@@ -27,10 +27,10 @@ func TestMsgEditChain(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create a chain
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "foo", "")
+	msgCreateChain := sample.MsgCreateChain(coordAddress, "")
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	chainID := res.ChainID
+	chainID := res.Id
 
 	for _, tc := range []struct {
 		name  string
@@ -38,8 +38,19 @@ func TestMsgEditChain(t *testing.T) {
 		valid bool
 	}{
 		{
+			name: "edit genesis chain ID",
+			msg: sample.MsgEditChain(coordAddress, chainID,
+				true,
+				false,
+				false,
+				false,
+			),
+			valid: true,
+		},
+		{
 			name: "edit source",
 			msg: sample.MsgEditChain(coordAddress, chainID,
+				false,
 				true,
 				false,
 				false,
@@ -50,6 +61,7 @@ func TestMsgEditChain(t *testing.T) {
 			name: "edit initial genesis with default genesis",
 			msg: sample.MsgEditChain(coordAddress, chainID,
 				false,
+				false,
 				true,
 				false,
 			),
@@ -59,6 +71,7 @@ func TestMsgEditChain(t *testing.T) {
 			name: "edit initial genesis with genesis url",
 			msg: sample.MsgEditChain(coordAddress, chainID,
 				false,
+				false,
 				true,
 				true,
 			),
@@ -67,6 +80,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "edit source and initial genesis",
 			msg: sample.MsgEditChain(coordAddress, chainID,
+				false,
 				true,
 				true,
 				true,
@@ -76,6 +90,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "non existent chain id",
 			msg: sample.MsgEditChain(coordAddress, chainIDNoExist,
+				false,
 				true,
 				false,
 				false,
@@ -85,6 +100,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "non existent coordinator",
 			msg: sample.MsgEditChain(coordNoExist, chainID,
+				false,
 				true,
 				false,
 				false,
@@ -94,6 +110,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "invalid coordinator",
 			msg: sample.MsgEditChain(coordAddress2, chainID,
+				false,
 				true,
 				false,
 				false,
@@ -129,6 +146,11 @@ func TestMsgEditChain(t *testing.T) {
 			require.EqualValues(t, previousChain.LaunchTriggered, chain.LaunchTriggered)
 
 			// Compare changed values
+			if tc.msg.GenesisChainID != "" {
+				require.EqualValues(t, tc.msg.GenesisChainID, chain.GenesisChainID)
+			} else {
+				require.EqualValues(t, previousChain.GenesisChainID, chain.GenesisChainID)
+			}
 			if tc.msg.SourceURL != "" {
 				require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
 				require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)

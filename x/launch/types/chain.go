@@ -12,16 +12,30 @@ const (
 	ChainNameMaxLength = 30
 )
 
-// ChainIDFromChainName returns the chain id from the chain name and the count
-func ChainIDFromChainName(chainName string, chainNameCount uint64) string {
-	return fmt.Sprintf("%v%v%v", chainName, ChainIDSeparator, chainNameCount)
+// Validate checks the chain has valid data
+func (m Chain) Validate() error {
+	if _, _, err := ParseGenesisChainID(m.GenesisChainID); err != nil {
+		return err
+	}
+
+	// LaunchTriggered means a non zera launch timestamp is defined
+	if m.LaunchTriggered && m.LaunchTimestamp == 0 {
+		return errors.New("launch timestamp must be defined when launch is triggered")
+	}
+
+	return nil
 }
 
-// ParseChainID returns the chain name and the number from the chain ID
+// NewGenesisChainID returns the genesis chain id from the chain name and the number
+func NewGenesisChainID(chainName string, networkNumber uint64) string {
+	return fmt.Sprintf("%v%v%v", chainName, ChainIDSeparator, networkNumber)
+}
+
+// ParseGenesisChainID returns the chain name and the number from the chain ID
 // The chain ID follows the format <ChainName>-<Number>
 // The function returns an error if the chain ID is invalid
-func ParseChainID(chainID string) (string, uint64, error) {
-	parsed := strings.Split(chainID, ChainIDSeparator)
+func ParseGenesisChainID(genesisChainID string) (string, uint64, error) {
+	parsed := strings.Split(genesisChainID, ChainIDSeparator)
 	if len(parsed) != 2 {
 		return "", 0, errors.New("incorrect chain ID format")
 	}

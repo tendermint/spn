@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgSettleRequest{}
 
-func NewMsgSettleRequest(coordinator, chainID string, requestID uint64, approve bool) *MsgSettleRequest {
+func NewMsgSettleRequest(coordinator string, chainID uint64, requestID uint64, approve bool) *MsgSettleRequest {
 	return &MsgSettleRequest{
 		Coordinator: coordinator,
 		ChainID:     chainID,
@@ -42,9 +42,6 @@ func (msg *MsgSettleRequest) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
-	_, _, err = ParseChainID(msg.ChainID)
-	if err != nil {
-		return sdkerrors.Wrapf(ErrInvalidChainID, msg.ChainID)
-	}
+
 	return nil
 }

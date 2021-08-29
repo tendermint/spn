@@ -25,7 +25,7 @@ func (m RequestContent) Validate() error {
 }
 
 // NewGenesisAccount returns a RequestContent containing an GenesisAccount
-func NewGenesisAccount(chainID, address string, coins sdk.Coins) RequestContent {
+func NewGenesisAccount(chainID uint64, address string, coins sdk.Coins) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_GenesisAccount{
 			GenesisAccount: &GenesisAccount{
@@ -43,10 +43,6 @@ func (m GenesisAccount) Validate() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
-	_, _, err = ParseChainID(m.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, m.ChainID)
-	}
 
 	if !m.Coins.IsValid() || m.Coins.Empty() {
 		return sdkerrors.Wrap(ErrInvalidCoins, m.Address)
@@ -55,7 +51,7 @@ func (m GenesisAccount) Validate() error {
 }
 
 // NewVestedAccount returns a RequestContent containing a VestedAccount
-func NewVestedAccount(chainID, address string, startingBalance sdk.Coins, vestingOptions VestingOptions) RequestContent {
+func NewVestedAccount(chainID uint64, address string, startingBalance sdk.Coins, vestingOptions VestingOptions) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_VestedAccount{
 			VestedAccount: &VestedAccount{
@@ -74,10 +70,6 @@ func (m VestedAccount) Validate() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
-	_, _, err = ParseChainID(m.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, m.ChainID)
-	}
 
 	if !m.StartingBalance.IsValid() {
 		return sdkerrors.Wrap(ErrInvalidSelfDelegation, m.StartingBalance.String())
@@ -91,7 +83,7 @@ func (m VestedAccount) Validate() error {
 
 // NewGenesisValidator returns a RequestContent containing a GenesisValidator
 func NewGenesisValidator(
-	chainID,
+	chainID uint64,
 	address string,
 	genTx,
 	consPubKey []byte,
@@ -117,10 +109,6 @@ func (m GenesisValidator) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
-	}
-	_, _, err = ParseChainID(m.ChainID)
-	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidChainID, m.ChainID)
 	}
 
 	if len(m.GenTx) == 0 {

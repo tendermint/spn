@@ -16,17 +16,17 @@ func (k msgServer) RequestAddAccount(
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrChainNotFound, msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%v", msg.ChainID)
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrap(types.ErrTriggeredLaunch, msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%v", msg.ChainID)
 	}
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
-			"the chain %s coordinator has been deleted", chain.ChainID)
+			"the chain %v coordinator has been deleted", chain.Id)
 	}
 
 	content := types.NewGenesisAccount(msg.ChainID, msg.Address, msg.Coins)
