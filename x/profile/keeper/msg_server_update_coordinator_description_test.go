@@ -34,7 +34,7 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			name: "update one value",
 			msg: types.MsgUpdateCoordinatorDescription{
 				Address: msgCoord.Address,
-				Description: &types.CoordinatorDescription{
+				Description: types.CoordinatorDescription{
 					Identity: "update",
 				},
 			},
@@ -42,7 +42,7 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			name: "update all values",
 			msg: types.MsgUpdateCoordinatorDescription{
 				Address: msgCoord.Address,
-				Description: &types.CoordinatorDescription{
+				Description: types.CoordinatorDescription{
 					Identity: "update",
 					Website:  "update",
 					Details:  "update",
