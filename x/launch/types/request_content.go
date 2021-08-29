@@ -11,8 +11,8 @@ func (m RequestContent) Validate() error {
 	switch requestContent := m.Content.(type) {
 	case *RequestContent_GenesisAccount:
 		return requestContent.GenesisAccount.Validate()
-	case *RequestContent_VestedAccount:
-		return requestContent.VestedAccount.Validate()
+	case *RequestContent_VestingAccount:
+		return requestContent.VestingAccount.Validate()
 	case *RequestContent_GenesisValidator:
 		return requestContent.GenesisValidator.Validate()
 	case *RequestContent_AccountRemoval:
@@ -50,11 +50,11 @@ func (m GenesisAccount) Validate() error {
 	return nil
 }
 
-// NewVestedAccount returns a RequestContent containing a VestedAccount
-func NewVestedAccount(chainID uint64, address string, startingBalance sdk.Coins, vestingOptions VestingOptions) RequestContent {
+// NewVestingAccount returns a RequestContent containing a VestingAccount
+func NewVestingAccount(chainID uint64, address string, startingBalance sdk.Coins, vestingOptions VestingOptions) RequestContent {
 	return RequestContent{
-		Content: &RequestContent_VestedAccount{
-			VestedAccount: &VestedAccount{
+		Content: &RequestContent_VestingAccount{
+			VestingAccount: &VestingAccount{
 				ChainID:         chainID,
 				Address:         address,
 				StartingBalance: startingBalance,
@@ -64,8 +64,8 @@ func NewVestedAccount(chainID uint64, address string, startingBalance sdk.Coins,
 	}
 }
 
-// Validate implements VestedAccount validation
-func (m VestedAccount) Validate() error {
+// Validate implements VestingAccount validation
+func (m VestingAccount) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)

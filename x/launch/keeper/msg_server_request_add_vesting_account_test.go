@@ -10,7 +10,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgRequestAddVestedAccount(t *testing.T) {
+func TestMsgRequestAddVestingAccount(t *testing.T) {
 	var (
 		invalidChain             = uint64(1000)
 		coordAddr                = sample.AccAddress()
@@ -33,14 +33,14 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		msg         types.MsgRequestAddVestedAccount
+		msg         types.MsgRequestAddVestingAccount
 		wantID      uint64
 		wantApprove bool
 		err         error
 	}{
 		{
 			name: "invalid chain",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         invalidChain,
 				Address:         addr1,
 				StartingBalance: sample.Coins(),
@@ -49,7 +49,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			err: types.ErrChainNotFound,
 		}, {
 			name: "launch triggered chain",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[0].Id,
 				Address:         addr1,
 				StartingBalance: sample.Coins(),
@@ -58,7 +58,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			err: types.ErrTriggeredLaunch,
 		}, {
 			name: "coordinator not found",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[1].Id,
 				Address:         addr1,
 				StartingBalance: sample.Coins(),
@@ -67,7 +67,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			err: types.ErrChainInactive,
 		}, {
 			name: "add chain 3 request 1",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[2].Id,
 				Address:         addr1,
 				StartingBalance: sample.Coins(),
@@ -76,7 +76,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			wantID: 0,
 		}, {
 			name: "add chain 4 request 1",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[3].Id,
 				Address:         addr1,
 				StartingBalance: sample.Coins(),
@@ -85,7 +85,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			wantID: 0,
 		}, {
 			name: "add chain 4 request 2",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[3].Id,
 				Address:         addr2,
 				StartingBalance: sample.Coins(),
@@ -94,7 +94,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			wantID: 1,
 		}, {
 			name: "add chain 5 request 1",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[4].Id,
 				Address:         addr1,
 				StartingBalance: sample.Coins(),
@@ -103,7 +103,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			wantID: 0,
 		}, {
 			name: "add chain 5 request 2",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[4].Id,
 				Address:         addr2,
 				StartingBalance: sample.Coins(),
@@ -112,7 +112,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			wantID: 1,
 		}, {
 			name: "add chain 5 request 3",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[4].Id,
 				Address:         addr3,
 				StartingBalance: sample.Coins(),
@@ -121,7 +121,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 			wantID: 2,
 		}, {
 			name: "add coordinator account",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[4].Id,
 				Address:         coordAddr,
 				StartingBalance: sample.Coins(),
@@ -132,7 +132,7 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := srv.RequestAddVestedAccount(ctx, &tt.msg)
+			got, err := srv.RequestAddVestingAccount(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
 				return
@@ -146,15 +146,15 @@ func TestMsgRequestAddVestedAccount(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
-				content := request.Content.GetVestedAccount()
+				content := request.Content.GetVestingAccount()
 				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
 				require.Equal(t, tt.msg.ChainID, content.ChainID)
 				require.Equal(t, tt.msg.StartingBalance, content.StartingBalance)
 				require.Equal(t, tt.msg.Options.String(), content.VestingOptions.String())
 			} else {
-				_, found := k.GetVestedAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
-				require.True(t, found, "vested account not found")
+				_, found := k.GetVestingAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
+				require.True(t, found, "vesting account not found")
 			}
 		})
 	}

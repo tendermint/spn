@@ -85,11 +85,11 @@ func TestRequestCount(t *testing.T) {
 func TestApplyRequest(t *testing.T) {
 	var (
 		genesisAcc            = sample.AccAddress()
-		vestedAcc             = sample.AccAddress()
+		vestingAcc            = sample.AccAddress()
 		validatorAcc          = sample.AccAddress()
 		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
 		chainID               = uint64(10)
-		contents              = sample.AllRequestContents(chainID, genesisAcc, vestedAcc, validatorAcc)
+		contents              = sample.AllRequestContents(chainID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent        = types.NewGenesisAccount(chainID, "", sdk.NewCoins())
 	)
 	tests := []struct {
@@ -112,17 +112,17 @@ func TestApplyRequest(t *testing.T) {
 			request: *sample.RequestWithContent(chainID, contents[1]),
 			wantErr: true,
 		}, {
-			name:    "test VestedAccount content",
+			name:    "test VestingAccount content",
 			request: *sample.RequestWithContent(chainID, contents[2]),
 		}, {
-			name:    "test duplicated VestedAccount content",
+			name:    "test duplicated VestingAccount content",
 			request: *sample.RequestWithContent(chainID, contents[2]),
 			wantErr: true,
 		}, {
-			name:    "test vested AccountRemoval content",
+			name:    "test vesting AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[3]),
 		}, {
-			name:    "test not found vested AccountRemoval content",
+			name:    "test not found vesting AccountRemoval content",
 			request: *sample.RequestWithContent(chainID, contents[3]),
 			wantErr: true,
 		}, {
@@ -159,16 +159,16 @@ func TestApplyRequest(t *testing.T) {
 				ga := requestContent.GenesisAccount
 				_, found := k.GetGenesisAccount(sdkCtx, chainID, ga.Address)
 				require.True(t, found, "genesis account not found")
-			case *types.RequestContent_VestedAccount:
-				va := requestContent.VestedAccount
-				_, found := k.GetVestedAccount(sdkCtx, chainID, va.Address)
-				require.True(t, found, "vested account not found")
+			case *types.RequestContent_VestingAccount:
+				va := requestContent.VestingAccount
+				_, found := k.GetVestingAccount(sdkCtx, chainID, va.Address)
+				require.True(t, found, "vesting account not found")
 			case *types.RequestContent_AccountRemoval:
 				ar := requestContent.AccountRemoval
 				_, foundGenesis := k.GetGenesisAccount(sdkCtx, chainID, ar.Address)
 				require.False(t, foundGenesis, "genesis account not removed")
-				_, foundVested := k.GetVestedAccount(sdkCtx, chainID, ar.Address)
-				require.False(t, foundVested, "vested account not removed")
+				_, foundVesting := k.GetVestingAccount(sdkCtx, chainID, ar.Address)
+				require.False(t, foundVesting, "vesting account not removed")
 			case *types.RequestContent_GenesisValidator:
 				ga := requestContent.GenesisValidator
 				_, found := k.GetGenesisValidator(sdkCtx, chainID, ga.Address)

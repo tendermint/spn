@@ -15,20 +15,20 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNVestedAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.VestedAccount {
-	items := make([]types.VestedAccount, n)
+func createNVestingAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.VestingAccount {
+	items := make([]types.VestingAccount, n)
 	for i := range items {
-		items[i] = *sample.VestedAccount(uint64(i), strconv.Itoa(i))
-		keeper.SetVestedAccount(ctx, items[i])
+		items[i] = *sample.VestingAccount(uint64(i), strconv.Itoa(i))
+		keeper.SetVestingAccount(ctx, items[i])
 	}
 	return items
 }
 
-func TestVestedAccountGet(t *testing.T) {
+func TestVestingAccountGet(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
-	items := createNVestedAccount(keeper, ctx, 10)
+	items := createNVestingAccount(keeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetVestedAccount(ctx,
+		rst, found := keeper.GetVestingAccount(ctx,
 			item.ChainID,
 			item.Address,
 		)
@@ -36,15 +36,15 @@ func TestVestedAccountGet(t *testing.T) {
 		require.Equal(t, item, rst)
 	}
 }
-func TestVestedAccountRemove(t *testing.T) {
+func TestVestingAccountRemove(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
-	items := createNVestedAccount(keeper, ctx, 10)
+	items := createNVestingAccount(keeper, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveVestedAccount(ctx,
+		keeper.RemoveVestingAccount(ctx,
 			item.ChainID,
 			item.Address,
 		)
-		_, found := keeper.GetVestedAccount(ctx,
+		_, found := keeper.GetVestingAccount(ctx,
 			item.ChainID,
 			item.Address,
 		)
@@ -52,9 +52,9 @@ func TestVestedAccountRemove(t *testing.T) {
 	}
 }
 
-func TestVestedAccountGetAll(t *testing.T) {
+func TestVestingAccountGetAll(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
-	items := createNVestedAccount(keeper, ctx, 10)
+	items := createNVestingAccount(keeper, ctx, 10)
 
-	require.Equal(t, items, keeper.GetAllVestedAccount(ctx))
+	require.Equal(t, items, keeper.GetAllVestingAccount(ctx))
 }

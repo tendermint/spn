@@ -414,23 +414,23 @@ func (m *QueryAllGenesisAccountResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-type QueryGetVestedAccountRequest struct {
+type QueryGetVestingAccountRequest struct {
 	ChainID uint64 `protobuf:"varint,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
 	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 }
 
-func (m *QueryGetVestedAccountRequest) Reset()         { *m = QueryGetVestedAccountRequest{} }
-func (m *QueryGetVestedAccountRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryGetVestedAccountRequest) ProtoMessage()    {}
-func (*QueryGetVestedAccountRequest) Descriptor() ([]byte, []int) {
+func (m *QueryGetVestingAccountRequest) Reset()         { *m = QueryGetVestingAccountRequest{} }
+func (m *QueryGetVestingAccountRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetVestingAccountRequest) ProtoMessage()    {}
+func (*QueryGetVestingAccountRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_16d1d5d3029eb866, []int{8}
 }
-func (m *QueryGetVestedAccountRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryGetVestingAccountRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetVestedAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryGetVestingAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetVestedAccountRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryGetVestingAccountRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -440,48 +440,48 @@ func (m *QueryGetVestedAccountRequest) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
-func (m *QueryGetVestedAccountRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetVestedAccountRequest.Merge(m, src)
+func (m *QueryGetVestingAccountRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetVestingAccountRequest.Merge(m, src)
 }
-func (m *QueryGetVestedAccountRequest) XXX_Size() int {
+func (m *QueryGetVestingAccountRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetVestedAccountRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetVestedAccountRequest.DiscardUnknown(m)
+func (m *QueryGetVestingAccountRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetVestingAccountRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetVestedAccountRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryGetVestingAccountRequest proto.InternalMessageInfo
 
-func (m *QueryGetVestedAccountRequest) GetChainID() uint64 {
+func (m *QueryGetVestingAccountRequest) GetChainID() uint64 {
 	if m != nil {
 		return m.ChainID
 	}
 	return 0
 }
 
-func (m *QueryGetVestedAccountRequest) GetAddress() string {
+func (m *QueryGetVestingAccountRequest) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-type QueryGetVestedAccountResponse struct {
-	VestedAccount VestedAccount `protobuf:"bytes,1,opt,name=vestedAccount,proto3" json:"vestedAccount"`
+type QueryGetVestingAccountResponse struct {
+	VestingAccount VestingAccount `protobuf:"bytes,1,opt,name=vestingAccount,proto3" json:"vestingAccount"`
 }
 
-func (m *QueryGetVestedAccountResponse) Reset()         { *m = QueryGetVestedAccountResponse{} }
-func (m *QueryGetVestedAccountResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryGetVestedAccountResponse) ProtoMessage()    {}
-func (*QueryGetVestedAccountResponse) Descriptor() ([]byte, []int) {
+func (m *QueryGetVestingAccountResponse) Reset()         { *m = QueryGetVestingAccountResponse{} }
+func (m *QueryGetVestingAccountResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetVestingAccountResponse) ProtoMessage()    {}
+func (*QueryGetVestingAccountResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_16d1d5d3029eb866, []int{9}
 }
-func (m *QueryGetVestedAccountResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryGetVestingAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetVestedAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryGetVestingAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetVestedAccountResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryGetVestingAccountResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -491,42 +491,42 @@ func (m *QueryGetVestedAccountResponse) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-func (m *QueryGetVestedAccountResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetVestedAccountResponse.Merge(m, src)
+func (m *QueryGetVestingAccountResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetVestingAccountResponse.Merge(m, src)
 }
-func (m *QueryGetVestedAccountResponse) XXX_Size() int {
+func (m *QueryGetVestingAccountResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetVestedAccountResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetVestedAccountResponse.DiscardUnknown(m)
+func (m *QueryGetVestingAccountResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetVestingAccountResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetVestedAccountResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryGetVestingAccountResponse proto.InternalMessageInfo
 
-func (m *QueryGetVestedAccountResponse) GetVestedAccount() VestedAccount {
+func (m *QueryGetVestingAccountResponse) GetVestingAccount() VestingAccount {
 	if m != nil {
-		return m.VestedAccount
+		return m.VestingAccount
 	}
-	return VestedAccount{}
+	return VestingAccount{}
 }
 
-type QueryAllVestedAccountRequest struct {
+type QueryAllVestingAccountRequest struct {
 	ChainID    uint64             `protobuf:"varint,1,opt,name=chainID,proto3" json:"chainID,omitempty"`
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryAllVestedAccountRequest) Reset()         { *m = QueryAllVestedAccountRequest{} }
-func (m *QueryAllVestedAccountRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryAllVestedAccountRequest) ProtoMessage()    {}
-func (*QueryAllVestedAccountRequest) Descriptor() ([]byte, []int) {
+func (m *QueryAllVestingAccountRequest) Reset()         { *m = QueryAllVestingAccountRequest{} }
+func (m *QueryAllVestingAccountRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllVestingAccountRequest) ProtoMessage()    {}
+func (*QueryAllVestingAccountRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_16d1d5d3029eb866, []int{10}
 }
-func (m *QueryAllVestedAccountRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryAllVestingAccountRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAllVestedAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryAllVestingAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAllVestedAccountRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryAllVestingAccountRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -536,49 +536,49 @@ func (m *QueryAllVestedAccountRequest) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
-func (m *QueryAllVestedAccountRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllVestedAccountRequest.Merge(m, src)
+func (m *QueryAllVestingAccountRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllVestingAccountRequest.Merge(m, src)
 }
-func (m *QueryAllVestedAccountRequest) XXX_Size() int {
+func (m *QueryAllVestingAccountRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAllVestedAccountRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllVestedAccountRequest.DiscardUnknown(m)
+func (m *QueryAllVestingAccountRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllVestingAccountRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAllVestedAccountRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryAllVestingAccountRequest proto.InternalMessageInfo
 
-func (m *QueryAllVestedAccountRequest) GetChainID() uint64 {
+func (m *QueryAllVestingAccountRequest) GetChainID() uint64 {
 	if m != nil {
 		return m.ChainID
 	}
 	return 0
 }
 
-func (m *QueryAllVestedAccountRequest) GetPagination() *query.PageRequest {
+func (m *QueryAllVestingAccountRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-type QueryAllVestedAccountResponse struct {
-	VestedAccount []VestedAccount     `protobuf:"bytes,1,rep,name=vestedAccount,proto3" json:"vestedAccount"`
-	Pagination    *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+type QueryAllVestingAccountResponse struct {
+	VestingAccount []VestingAccount    `protobuf:"bytes,1,rep,name=vestingAccount,proto3" json:"vestingAccount"`
+	Pagination     *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryAllVestedAccountResponse) Reset()         { *m = QueryAllVestedAccountResponse{} }
-func (m *QueryAllVestedAccountResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryAllVestedAccountResponse) ProtoMessage()    {}
-func (*QueryAllVestedAccountResponse) Descriptor() ([]byte, []int) {
+func (m *QueryAllVestingAccountResponse) Reset()         { *m = QueryAllVestingAccountResponse{} }
+func (m *QueryAllVestingAccountResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllVestingAccountResponse) ProtoMessage()    {}
+func (*QueryAllVestingAccountResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_16d1d5d3029eb866, []int{11}
 }
-func (m *QueryAllVestedAccountResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryAllVestingAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAllVestedAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryAllVestingAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAllVestedAccountResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryAllVestingAccountResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -588,26 +588,26 @@ func (m *QueryAllVestedAccountResponse) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-func (m *QueryAllVestedAccountResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllVestedAccountResponse.Merge(m, src)
+func (m *QueryAllVestingAccountResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllVestingAccountResponse.Merge(m, src)
 }
-func (m *QueryAllVestedAccountResponse) XXX_Size() int {
+func (m *QueryAllVestingAccountResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAllVestedAccountResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllVestedAccountResponse.DiscardUnknown(m)
+func (m *QueryAllVestingAccountResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllVestingAccountResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAllVestedAccountResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryAllVestingAccountResponse proto.InternalMessageInfo
 
-func (m *QueryAllVestedAccountResponse) GetVestedAccount() []VestedAccount {
+func (m *QueryAllVestingAccountResponse) GetVestingAccount() []VestingAccount {
 	if m != nil {
-		return m.VestedAccount
+		return m.VestingAccount
 	}
 	return nil
 }
 
-func (m *QueryAllVestedAccountResponse) GetPagination() *query.PageResponse {
+func (m *QueryAllVestingAccountResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
@@ -1106,10 +1106,10 @@ func init() {
 	proto.RegisterType((*QueryGetGenesisAccountResponse)(nil), "tendermint.spn.launch.QueryGetGenesisAccountResponse")
 	proto.RegisterType((*QueryAllGenesisAccountRequest)(nil), "tendermint.spn.launch.QueryAllGenesisAccountRequest")
 	proto.RegisterType((*QueryAllGenesisAccountResponse)(nil), "tendermint.spn.launch.QueryAllGenesisAccountResponse")
-	proto.RegisterType((*QueryGetVestedAccountRequest)(nil), "tendermint.spn.launch.QueryGetVestedAccountRequest")
-	proto.RegisterType((*QueryGetVestedAccountResponse)(nil), "tendermint.spn.launch.QueryGetVestedAccountResponse")
-	proto.RegisterType((*QueryAllVestedAccountRequest)(nil), "tendermint.spn.launch.QueryAllVestedAccountRequest")
-	proto.RegisterType((*QueryAllVestedAccountResponse)(nil), "tendermint.spn.launch.QueryAllVestedAccountResponse")
+	proto.RegisterType((*QueryGetVestingAccountRequest)(nil), "tendermint.spn.launch.QueryGetVestingAccountRequest")
+	proto.RegisterType((*QueryGetVestingAccountResponse)(nil), "tendermint.spn.launch.QueryGetVestingAccountResponse")
+	proto.RegisterType((*QueryAllVestingAccountRequest)(nil), "tendermint.spn.launch.QueryAllVestingAccountRequest")
+	proto.RegisterType((*QueryAllVestingAccountResponse)(nil), "tendermint.spn.launch.QueryAllVestingAccountResponse")
 	proto.RegisterType((*QueryGetGenesisValidatorRequest)(nil), "tendermint.spn.launch.QueryGetGenesisValidatorRequest")
 	proto.RegisterType((*QueryGetGenesisValidatorResponse)(nil), "tendermint.spn.launch.QueryGetGenesisValidatorResponse")
 	proto.RegisterType((*QueryAllGenesisValidatorRequest)(nil), "tendermint.spn.launch.QueryAllGenesisValidatorRequest")
@@ -1125,75 +1125,72 @@ func init() {
 func init() { proto.RegisterFile("launch/query.proto", fileDescriptor_16d1d5d3029eb866) }
 
 var fileDescriptor_16d1d5d3029eb866 = []byte{
-	// 1078 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x58, 0x4b, 0x6f, 0xdc, 0x54,
-	0x14, 0xce, 0xcd, 0xe4, 0x41, 0x0f, 0x6a, 0x14, 0x6e, 0x52, 0xa8, 0x86, 0x89, 0x53, 0x2e, 0x79,
-	0xd3, 0xd8, 0xb4, 0x09, 0xa1, 0x10, 0x40, 0x4c, 0x5a, 0x35, 0xea, 0x2e, 0x9d, 0x8a, 0x4a, 0x65,
-	0x01, 0x72, 0x66, 0xae, 0x1c, 0x4b, 0x8e, 0x3d, 0x19, 0x7b, 0x22, 0x4a, 0x34, 0x12, 0x0f, 0x89,
-	0x0d, 0x42, 0x42, 0x62, 0x87, 0xc4, 0x86, 0x05, 0x1b, 0x16, 0x2c, 0x91, 0x10, 0x42, 0xac, 0x50,
-	0x96, 0x95, 0xd8, 0xb0, 0xaa, 0x50, 0xc2, 0x0f, 0x41, 0xbe, 0x3e, 0xce, 0xcc, 0x75, 0xfc, 0x6c,
-	0xbc, 0xcb, 0xf8, 0xbc, 0xbe, 0xef, 0x3b, 0xc7, 0x3e, 0x47, 0x01, 0x6a, 0xe9, 0x5d, 0xbb, 0xb9,
-	0xa7, 0x1d, 0x74, 0x79, 0xe7, 0xb1, 0xda, 0xee, 0x38, 0x9e, 0x43, 0xaf, 0x78, 0xdc, 0x6e, 0xf1,
-	0xce, 0xbe, 0x69, 0x7b, 0xaa, 0xdb, 0xb6, 0xd5, 0xc0, 0xa5, 0x3a, 0x6d, 0x38, 0x86, 0x23, 0x3c,
-	0x34, 0xff, 0xaf, 0xc0, 0xb9, 0x5a, 0x33, 0x1c, 0xc7, 0xb0, 0xb8, 0xa6, 0xb7, 0x4d, 0x4d, 0xb7,
-	0x6d, 0xc7, 0xd3, 0x3d, 0xd3, 0xb1, 0x5d, 0xb4, 0xae, 0x34, 0x1d, 0x77, 0xdf, 0x71, 0xb5, 0x5d,
-	0xdd, 0xe5, 0x41, 0x0d, 0xed, 0xf0, 0xc6, 0x2e, 0xf7, 0xf4, 0x1b, 0x5a, 0x5b, 0x37, 0x4c, 0x5b,
-	0x38, 0xa3, 0xef, 0x34, 0x42, 0xe9, 0xf0, 0x83, 0x2e, 0x77, 0x3d, 0x7c, 0xfa, 0x32, 0x3e, 0x3d,
-	0xe4, 0xae, 0xc7, 0x5b, 0x1f, 0xeb, 0xcd, 0xa6, 0xd3, 0xb5, 0x43, 0x63, 0x0d, 0x8d, 0x06, 0xb7,
-	0xb9, 0x6b, 0xba, 0x11, 0xab, 0x12, 0xb1, 0x1e, 0xea, 0x96, 0xd9, 0xd2, 0x3d, 0xa7, 0x83, 0xf6,
-	0x90, 0x7b, 0x73, 0x4f, 0x37, 0x43, 0x10, 0x53, 0xf8, 0xac, 0xad, 0x77, 0xf4, 0x7d, 0x64, 0xc1,
-	0x16, 0x60, 0xfa, 0xbe, 0x8f, 0x7d, 0x9b, 0x7b, 0xb7, 0x7d, 0xdf, 0x46, 0x80, 0x90, 0x4e, 0xc0,
-	0xb0, 0xd9, 0xba, 0x4a, 0xae, 0x91, 0xa5, 0x91, 0xc6, 0xb0, 0xd9, 0x62, 0xf7, 0xe1, 0x4a, 0xc4,
-	0xcf, 0x6d, 0x3b, 0xb6, 0xcb, 0xe9, 0x2d, 0x18, 0x15, 0x45, 0x84, 0xef, 0xf3, 0x37, 0x6b, 0x6a,
-	0xac, 0xc2, 0xaa, 0x08, 0xda, 0x1a, 0x39, 0x7e, 0x3a, 0x3b, 0xd4, 0x08, 0x02, 0xd8, 0x47, 0x58,
-	0xba, 0x6e, 0x59, 0x52, 0xe9, 0xbb, 0x00, 0x7d, 0x01, 0x31, 0xed, 0x82, 0x1a, 0xa8, 0xad, 0xfa,
-	0x6a, 0xab, 0x41, 0x47, 0x51, 0x6d, 0x75, 0x47, 0x37, 0x38, 0xc6, 0x36, 0x06, 0x22, 0xd9, 0xf7,
-	0x04, 0x31, 0xf7, 0x0b, 0x9c, 0xc7, 0x5c, 0x29, 0x84, 0x99, 0x6e, 0x4b, 0xd8, 0x86, 0x05, 0xb6,
-	0xc5, 0x4c, 0x6c, 0x41, 0x59, 0x09, 0xdc, 0x03, 0x98, 0x09, 0xf5, 0xdc, 0x0e, 0x7a, 0x58, 0x0f,
-	0x1a, 0x1c, 0xaa, 0x70, 0x15, 0xc6, 0x45, 0xc9, 0x7b, 0x77, 0xb0, 0x0b, 0xe1, 0x4f, 0xdf, 0xa2,
-	0xb7, 0x5a, 0x1d, 0xee, 0xba, 0x02, 0xc0, 0xa5, 0x46, 0xf8, 0x93, 0x75, 0x41, 0x49, 0x4a, 0x8a,
-	0xcc, 0x1f, 0xc0, 0x84, 0x21, 0x59, 0x50, 0xdf, 0xf9, 0x04, 0x09, 0xe4, 0x34, 0xa8, 0x45, 0x24,
-	0x05, 0xfb, 0x9c, 0x20, 0x99, 0xba, 0x65, 0x15, 0x25, 0x73, 0x37, 0x46, 0xd0, 0x67, 0x69, 0xf6,
-	0x1f, 0x04, 0xb9, 0xc7, 0x60, 0x48, 0xe1, 0x5e, 0xb9, 0x20, 0xf7, 0xf2, 0x06, 0xa2, 0x01, 0xb5,
-	0xb0, 0x77, 0x0f, 0xc5, 0xf7, 0xa0, 0x84, 0x79, 0x38, 0xe8, 0x0f, 0x59, 0x24, 0x27, 0x4a, 0xb2,
-	0x03, 0x97, 0x0f, 0x07, 0x0d, 0x38, 0x0d, 0x73, 0x09, 0x8a, 0x48, 0x49, 0x50, 0x10, 0x39, 0x01,
-	0xfb, 0x8c, 0x20, 0x8f, 0xba, 0x65, 0x15, 0xe4, 0x51, 0xd6, 0x28, 0xfc, 0x36, 0x30, 0x8e, 0xb9,
-	0x69, 0x57, 0x2e, 0x44, 0xbb, 0xbc, 0x31, 0xf8, 0x00, 0x66, 0x23, 0xaf, 0xf0, 0xc3, 0xf0, 0xd3,
-	0x7e, 0x91, 0x49, 0xe8, 0xc1, 0xb5, 0xe4, 0xb4, 0xa8, 0xca, 0x23, 0x98, 0x34, 0x22, 0x36, 0x9c,
-	0x87, 0xc5, 0xf4, 0x37, 0xe4, 0xcc, 0x1d, 0xb5, 0x39, 0x97, 0x86, 0x7d, 0x49, 0x90, 0x56, 0xff,
-	0xed, 0x2c, 0x40, 0xab, 0xac, 0xc1, 0xf8, 0x8b, 0xa0, 0x0a, 0xb1, 0x28, 0x52, 0x55, 0xa8, 0x94,
-	0xa0, 0x42, 0x79, 0x43, 0xb2, 0x03, 0x2f, 0x86, 0xdd, 0x0c, 0x79, 0x66, 0x8a, 0x58, 0x83, 0x4b,
-	0x78, 0x7d, 0xdc, 0xbb, 0x23, 0x6a, 0x8f, 0x34, 0xfa, 0x0f, 0xd8, 0x23, 0x78, 0xe9, 0x5c, 0x46,
-	0x14, 0xe4, 0x3d, 0x18, 0x47, 0x3f, 0x9c, 0x06, 0x25, 0x41, 0x07, 0x0c, 0x44, 0xfa, 0x61, 0x10,
-	0xfb, 0x14, 0xc1, 0xd6, 0x2d, 0x2b, 0x37, 0xd8, 0xb2, 0x3a, 0xfe, 0x23, 0x41, 0x5e, 0x83, 0xc5,
-	0xe3, 0x78, 0x55, 0x0a, 0xf3, 0x2a, 0xaf, 0x9b, 0xd3, 0x40, 0x05, 0xc6, 0x1d, 0x71, 0x97, 0x61,
-	0x35, 0xd6, 0x80, 0x29, 0xe9, 0x29, 0xa2, 0xde, 0x84, 0xb1, 0xe0, 0x7e, 0xc3, 0x66, 0xcc, 0x24,
-	0x80, 0x0e, 0xc2, 0x10, 0x33, 0x86, 0xdc, 0x7c, 0x3a, 0x01, 0xa3, 0x22, 0x29, 0xfd, 0x86, 0xc0,
-	0xa8, 0x38, 0x6f, 0xe8, 0x6b, 0x09, 0x09, 0xe2, 0xae, 0xc2, 0xea, 0xf5, 0x7c, 0xce, 0x01, 0x56,
-	0xb6, 0xfc, 0xc5, 0xdf, 0xff, 0x7d, 0x37, 0xfc, 0x2a, 0x7d, 0x45, 0xeb, 0x47, 0x69, 0x6e, 0xdb,
-	0xd6, 0x06, 0x8f, 0x53, 0xed, 0xc8, 0x6c, 0xf5, 0xe8, 0xd7, 0x04, 0x9e, 0x13, 0xc1, 0x75, 0xcb,
-	0x4a, 0x87, 0x14, 0xb9, 0x16, 0xd3, 0x21, 0x45, 0x2f, 0x3f, 0x36, 0x27, 0x20, 0x29, 0xb4, 0x96,
-	0x06, 0x89, 0xfe, 0x49, 0x60, 0x42, 0xde, 0xfe, 0x74, 0x3d, 0x83, 0x79, 0xec, 0xdd, 0x53, 0x7d,
-	0xa3, 0x60, 0x14, 0xa2, 0xac, 0x0b, 0x94, 0x9b, 0xf4, 0xad, 0x04, 0x94, 0xf2, 0x0d, 0xa2, 0x1d,
-	0xe1, 0x6b, 0xd3, 0xd3, 0x8e, 0xf0, 0x7b, 0xdf, 0xa3, 0xbf, 0x10, 0x78, 0x41, 0xce, 0xee, 0x2b,
-	0xbb, 0x9e, 0x21, 0xd6, 0x33, 0xb0, 0x48, 0xbc, 0xb7, 0xd8, 0xaa, 0x60, 0xb1, 0x48, 0xe7, 0x73,
-	0xb1, 0xa0, 0xbf, 0x13, 0xb8, 0x2c, 0x6d, 0x5a, 0xba, 0x96, 0xa1, 0x5e, 0xdc, 0x7d, 0x51, 0x5d,
-	0x2f, 0x16, 0x84, 0x58, 0xdf, 0x17, 0x58, 0xdf, 0xa6, 0xb7, 0x12, 0xb0, 0x4a, 0xdb, 0x3e, 0x56,
-	0xf0, 0x9f, 0x09, 0x4c, 0x4a, 0xb9, 0x7d, 0xbd, 0xd7, 0x32, 0x94, 0x2b, 0xce, 0x20, 0xe9, 0xa6,
-	0x61, 0xd7, 0x05, 0x83, 0x05, 0x3a, 0x97, 0x87, 0x01, 0x3d, 0x26, 0x30, 0x19, 0xdd, 0x5b, 0x74,
-	0x23, 0xdf, 0xb4, 0x46, 0x37, 0x77, 0xf5, 0xcd, 0xc2, 0x71, 0x88, 0xf9, 0xb6, 0xc0, 0xfc, 0x2e,
-	0xdd, 0x4c, 0x9f, 0x90, 0xb3, 0xc0, 0x58, 0xe1, 0x7f, 0x25, 0x30, 0x15, 0xad, 0xe0, 0x6b, 0xbf,
-	0x91, 0x6f, 0x6a, 0x8b, 0xb1, 0x49, 0xb9, 0x1c, 0x98, 0x26, 0xd8, 0x2c, 0xd3, 0xc5, 0x9c, 0x6c,
-	0xe8, 0x4f, 0x04, 0xc6, 0xc3, 0x5d, 0xb8, 0x9a, 0xa1, 0xa1, 0xbc, 0x3a, 0xab, 0x6a, 0x5e, 0x77,
-	0xc4, 0xf6, 0x8e, 0xc0, 0xb6, 0x41, 0xd7, 0x13, 0xb0, 0xe1, 0x52, 0x1b, 0x14, 0xf8, 0xec, 0x38,
-	0xe8, 0xd1, 0x1f, 0x08, 0x00, 0x66, 0xf4, 0x95, 0x5d, 0xcd, 0x50, 0xa8, 0x08, 0xd6, 0xf3, 0x8b,
-	0x99, 0xbd, 0x2e, 0xb0, 0xae, 0xd0, 0xa5, 0xbc, 0x58, 0xe9, 0x57, 0x04, 0xc6, 0x82, 0x85, 0x47,
-	0x97, 0xd3, 0x8a, 0x49, 0x1b, 0xb6, 0xba, 0x92, 0xc7, 0x15, 0x31, 0xcd, 0x0b, 0x4c, 0xb3, 0x74,
-	0x26, 0x01, 0x53, 0xb0, 0x60, 0xb7, 0xb6, 0x8e, 0x4f, 0x14, 0xf2, 0xe4, 0x44, 0x21, 0xff, 0x9e,
-	0x28, 0xe4, 0xdb, 0x53, 0x65, 0xe8, 0xc9, 0xa9, 0x32, 0xf4, 0xcf, 0xa9, 0x32, 0xf4, 0xe1, 0x92,
-	0x61, 0x7a, 0x7b, 0xdd, 0x5d, 0xb5, 0xe9, 0xec, 0x47, 0x53, 0x7c, 0x12, 0x26, 0xf1, 0x1e, 0xb7,
-	0xb9, 0xbb, 0x3b, 0x26, 0xfe, 0x31, 0xb3, 0xf6, 0x7f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x80, 0x20,
-	0x25, 0x5d, 0xbf, 0x12, 0x00, 0x00,
+	// 1035 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x58, 0xcf, 0x6f, 0xdc, 0x44,
+	0x14, 0xce, 0x64, 0xf3, 0x83, 0x3e, 0xa4, 0xa8, 0x4c, 0x52, 0xa8, 0x56, 0x89, 0x53, 0x0c, 0xe9,
+	0x26, 0x81, 0xd8, 0xb4, 0x84, 0x00, 0x0a, 0x20, 0x6d, 0x5a, 0x35, 0xea, 0x2d, 0xdd, 0x8a, 0x4a,
+	0xe5, 0x00, 0xf2, 0xee, 0x8e, 0x1c, 0x4b, 0x5e, 0xdb, 0x5d, 0x7b, 0x57, 0x94, 0x68, 0x0f, 0x80,
+	0xc4, 0x05, 0x21, 0x21, 0x71, 0x43, 0xe2, 0xc2, 0x81, 0x2b, 0x47, 0x6e, 0x88, 0x13, 0xca, 0xb1,
+	0x12, 0x17, 0x4e, 0x08, 0x25, 0x88, 0xbf, 0xa3, 0xf2, 0xcc, 0x73, 0x76, 0xc7, 0xeb, 0x9f, 0xc9,
+	0xe6, 0x96, 0xf5, 0xbc, 0x1f, 0xdf, 0xf7, 0xcd, 0xb3, 0xdf, 0xa7, 0x00, 0xb5, 0x8d, 0x9e, 0xd3,
+	0x3a, 0xd4, 0x9f, 0xf4, 0x58, 0xf7, 0xa9, 0xe6, 0x75, 0xdd, 0xc0, 0xa5, 0xd7, 0x02, 0xe6, 0xb4,
+	0x59, 0xb7, 0x63, 0x39, 0x81, 0xe6, 0x7b, 0x8e, 0x26, 0x42, 0xaa, 0x4b, 0xa6, 0x6b, 0xba, 0x3c,
+	0x42, 0x0f, 0xff, 0x12, 0xc1, 0xd5, 0x65, 0xd3, 0x75, 0x4d, 0x9b, 0xe9, 0x86, 0x67, 0xe9, 0x86,
+	0xe3, 0xb8, 0x81, 0x11, 0x58, 0xae, 0xe3, 0xe3, 0xe9, 0x66, 0xcb, 0xf5, 0x3b, 0xae, 0xaf, 0x37,
+	0x0d, 0x9f, 0x89, 0x1e, 0x7a, 0xff, 0x56, 0x93, 0x05, 0xc6, 0x2d, 0xdd, 0x33, 0x4c, 0xcb, 0xe1,
+	0xc1, 0x18, 0xbb, 0x84, 0x50, 0xba, 0xec, 0x49, 0x8f, 0xf9, 0x41, 0x54, 0x1f, 0x9f, 0xf6, 0x99,
+	0x1f, 0x58, 0x8e, 0xf9, 0x99, 0xd1, 0x6a, 0xb9, 0x3d, 0x27, 0x7e, 0x6a, 0x32, 0x87, 0xf9, 0x96,
+	0x1f, 0x3b, 0x55, 0x62, 0xa7, 0x7d, 0xc3, 0xb6, 0xda, 0x46, 0xe0, 0x76, 0xf1, 0x3c, 0x22, 0xdf,
+	0x3a, 0x34, 0xac, 0x08, 0xc5, 0x22, 0x3e, 0xf3, 0x8c, 0xae, 0xd1, 0x41, 0x1a, 0xea, 0x4d, 0x58,
+	0x7a, 0x10, 0x82, 0xdf, 0x67, 0xc1, 0x9d, 0x30, 0xb6, 0x21, 0x20, 0xd2, 0x05, 0x98, 0xb6, 0xda,
+	0xd7, 0xc9, 0x0d, 0xb2, 0x3e, 0xd3, 0x98, 0xb6, 0xda, 0xea, 0x03, 0xb8, 0x16, 0x8b, 0xf3, 0x3d,
+	0xd7, 0xf1, 0x19, 0x7d, 0x0f, 0x66, 0x79, 0x13, 0x1e, 0xfb, 0xe2, 0xed, 0x65, 0x2d, 0x51, 0x62,
+	0x8d, 0x27, 0xed, 0xcd, 0x1c, 0xff, 0xb3, 0x3a, 0xd5, 0x10, 0x09, 0xea, 0xa7, 0xd8, 0xba, 0x6e,
+	0xdb, 0x52, 0xeb, 0x7b, 0x00, 0x43, 0x05, 0xb1, 0xec, 0x4d, 0x4d, 0xc8, 0xad, 0x85, 0x72, 0x6b,
+	0xe2, 0x4a, 0x51, 0x6e, 0xed, 0xc0, 0x30, 0x19, 0xe6, 0x36, 0x46, 0x32, 0xd5, 0x1f, 0x09, 0x62,
+	0x1e, 0x36, 0x18, 0xc7, 0x5c, 0x29, 0x85, 0x99, 0xee, 0x4b, 0xd8, 0xa6, 0x39, 0xb6, 0x5a, 0x2e,
+	0x36, 0xd1, 0x56, 0x02, 0xf7, 0x10, 0x56, 0x22, 0x3d, 0xf7, 0xc5, 0x1d, 0xd6, 0xc5, 0x05, 0x47,
+	0x2a, 0x5c, 0x87, 0x79, 0xde, 0xf2, 0xfe, 0x5d, 0xbc, 0x85, 0xe8, 0x67, 0x78, 0x62, 0xb4, 0xdb,
+	0x5d, 0xe6, 0xfb, 0x1c, 0xc0, 0x95, 0x46, 0xf4, 0x53, 0xed, 0x81, 0x92, 0x56, 0x14, 0x99, 0x3f,
+	0x84, 0x05, 0x53, 0x3a, 0x41, 0x7d, 0xd7, 0x52, 0x24, 0x90, 0xcb, 0xa0, 0x16, 0xb1, 0x12, 0xea,
+	0x97, 0x04, 0xc9, 0xd4, 0x6d, 0xbb, 0x2c, 0x99, 0x7b, 0x09, 0x82, 0x9e, 0xe7, 0xb2, 0x7f, 0x27,
+	0xc8, 0x3d, 0x01, 0x43, 0x06, 0xf7, 0xca, 0x05, 0xb9, 0x5f, 0xca, 0x40, 0x3c, 0x12, 0x1f, 0x84,
+	0xc9, 0x0e, 0x44, 0xbc, 0xe8, 0x50, 0x94, 0xbe, 0x74, 0x92, 0x33, 0x10, 0x72, 0x99, 0x48, 0x14,
+	0xb9, 0x84, 0x34, 0x10, 0x65, 0xc9, 0x5c, 0xc6, 0x40, 0x94, 0xe0, 0x5e, 0xb9, 0x20, 0xf7, 0xc9,
+	0x0d, 0xc4, 0xc7, 0xb0, 0x1a, 0x7b, 0x99, 0x1f, 0x45, 0x1f, 0xf9, 0x8b, 0x8c, 0xc4, 0x00, 0x6e,
+	0xa4, 0x97, 0x45, 0x61, 0x1e, 0xc3, 0x55, 0x33, 0x76, 0x86, 0x63, 0x51, 0xcb, 0x7e, 0x57, 0xce,
+	0xc2, 0x51, 0x9c, 0xb1, 0x32, 0xea, 0xd7, 0x04, 0x69, 0x0d, 0xdf, 0xd3, 0x12, 0xb4, 0x26, 0x35,
+	0x1c, 0x7f, 0x12, 0x54, 0x21, 0x11, 0x45, 0xa6, 0x0a, 0x95, 0x09, 0xa8, 0x30, 0xb9, 0x21, 0x39,
+	0x80, 0x97, 0xa3, 0xdb, 0x8c, 0x78, 0xe6, 0x8a, 0xb8, 0x0c, 0x57, 0xd0, 0x88, 0xdc, 0xbf, 0xcb,
+	0x7b, 0xcf, 0x34, 0x86, 0x0f, 0xd4, 0xc7, 0xf0, 0xca, 0x58, 0x45, 0x14, 0xe4, 0x23, 0x98, 0xc7,
+	0x38, 0x9c, 0x06, 0x25, 0x45, 0x07, 0x4c, 0x44, 0xfa, 0x51, 0x92, 0xfa, 0x05, 0x82, 0xad, 0xdb,
+	0x76, 0x61, 0xb0, 0x93, 0xba, 0xf1, 0x9f, 0x09, 0xf2, 0x1a, 0x6d, 0x9e, 0xc4, 0xab, 0x52, 0x9a,
+	0xd7, 0xe4, 0x6e, 0x73, 0x09, 0x28, 0xc7, 0x78, 0xc0, 0x1d, 0x1a, 0x76, 0x53, 0x1b, 0xb0, 0x28,
+	0x3d, 0x45, 0xd4, 0xbb, 0x30, 0x27, 0x9c, 0x1c, 0x5e, 0xc6, 0x4a, 0x0a, 0x68, 0x91, 0x86, 0x98,
+	0x31, 0xe5, 0xf6, 0xff, 0x0b, 0x30, 0xcb, 0x8b, 0xd2, 0xef, 0x08, 0xcc, 0x72, 0xa3, 0x43, 0xdf,
+	0x48, 0x29, 0x90, 0xe4, 0x0f, 0xab, 0x6f, 0x16, 0x0b, 0x16, 0x58, 0xd5, 0x8d, 0xaf, 0xfe, 0xfa,
+	0xef, 0x87, 0xe9, 0xd7, 0xe8, 0xab, 0xfa, 0x30, 0x4b, 0xf7, 0x3d, 0x47, 0x1f, 0xb5, 0xa9, 0xfa,
+	0x91, 0xd5, 0x1e, 0xd0, 0x6f, 0x09, 0xbc, 0xc0, 0x93, 0xeb, 0xb6, 0x9d, 0x0d, 0x29, 0xe6, 0x1b,
+	0xb3, 0x21, 0xc5, 0x3d, 0xa0, 0xfa, 0x3a, 0x87, 0xa4, 0xd0, 0xe5, 0x2c, 0x48, 0xf4, 0x0f, 0x02,
+	0x0b, 0xb2, 0x0f, 0xa0, 0xdb, 0x39, 0xcc, 0x13, 0x1d, 0x50, 0xf5, 0x9d, 0x92, 0x59, 0x88, 0xb2,
+	0xce, 0x51, 0xee, 0xd2, 0xf7, 0x53, 0x50, 0xca, 0x6e, 0x44, 0x3f, 0xc2, 0xd7, 0x66, 0xa0, 0x1f,
+	0xe1, 0xf7, 0x7e, 0x40, 0x7f, 0x25, 0xf0, 0x92, 0x5c, 0x3d, 0x54, 0x76, 0x3b, 0x47, 0xac, 0x73,
+	0xb0, 0x48, 0x75, 0x5e, 0xea, 0x16, 0x67, 0x51, 0xa3, 0x6b, 0x85, 0x58, 0x70, 0xd1, 0xe5, 0x5d,
+	0x9b, 0x2b, 0x7a, 0xa2, 0xcb, 0xc8, 0x15, 0x3d, 0xd9, 0x17, 0xe4, 0x8a, 0x2e, 0x6f, 0xfc, 0x54,
+	0xd1, 0xe5, 0xea, 0x45, 0x44, 0x3f, 0x07, 0x8b, 0x54, 0x77, 0x93, 0x2b, 0x7a, 0xcc, 0xb7, 0x1c,
+	0x13, 0xb8, 0x1a, 0xdf, 0x5f, 0x74, 0xa7, 0xd8, 0xd4, 0xc6, 0x37, 0x78, 0xf5, 0xdd, 0xd2, 0x79,
+	0x08, 0xfa, 0x0e, 0x07, 0xfd, 0x21, 0xdd, 0xcd, 0x9e, 0x94, 0xb3, 0xc4, 0x44, 0xf1, 0x7f, 0x23,
+	0xb0, 0x18, 0xef, 0x10, 0xca, 0xbf, 0x53, 0x6c, 0x7a, 0xcb, 0xb1, 0xc9, 0x70, 0x10, 0xaa, 0xce,
+	0xd9, 0x6c, 0xd0, 0x5a, 0x41, 0x36, 0xf4, 0x17, 0x02, 0xf3, 0xd1, 0x4e, 0xdc, 0xca, 0xd1, 0x50,
+	0x5e, 0xa1, 0x55, 0xad, 0x68, 0x38, 0x62, 0xfb, 0x80, 0x63, 0xdb, 0xa1, 0xdb, 0x29, 0xd8, 0x70,
+	0xb9, 0x8d, 0x0a, 0x7c, 0x66, 0x12, 0x06, 0xf4, 0x27, 0x02, 0x80, 0x15, 0x43, 0x65, 0xb7, 0x72,
+	0x14, 0x2a, 0x83, 0x75, 0x7c, 0x41, 0xab, 0x6f, 0x71, 0xac, 0x9b, 0x74, 0xbd, 0x28, 0x56, 0xfa,
+	0x0d, 0x81, 0x39, 0xb1, 0xf8, 0xe8, 0x46, 0x56, 0x33, 0x69, 0xd3, 0x56, 0x37, 0x8b, 0x84, 0x22,
+	0xa6, 0x35, 0x8e, 0x69, 0x95, 0xae, 0xa4, 0x60, 0x12, 0x8b, 0x76, 0x6f, 0xef, 0xf8, 0x44, 0x21,
+	0xcf, 0x4e, 0x14, 0xf2, 0xef, 0x89, 0x42, 0xbe, 0x3f, 0x55, 0xa6, 0x9e, 0x9d, 0x2a, 0x53, 0x7f,
+	0x9f, 0x2a, 0x53, 0x9f, 0xac, 0x9b, 0x56, 0x70, 0xd8, 0x6b, 0x6a, 0x2d, 0xb7, 0x13, 0x2f, 0xf1,
+	0x79, 0x54, 0x24, 0x78, 0xea, 0x31, 0xbf, 0x39, 0xc7, 0xff, 0x55, 0xf3, 0xf6, 0xf3, 0x00, 0x00,
+	0x00, 0xff, 0xff, 0xfd, 0x3f, 0x00, 0xaa, 0xd2, 0x12, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1216,10 +1213,10 @@ type QueryClient interface {
 	GenesisAccount(ctx context.Context, in *QueryGetGenesisAccountRequest, opts ...grpc.CallOption) (*QueryGetGenesisAccountResponse, error)
 	// Queries a list of genesisAccount items.
 	GenesisAccountAll(ctx context.Context, in *QueryAllGenesisAccountRequest, opts ...grpc.CallOption) (*QueryAllGenesisAccountResponse, error)
-	// Queries a vestedAccount by index.
-	VestedAccount(ctx context.Context, in *QueryGetVestedAccountRequest, opts ...grpc.CallOption) (*QueryGetVestedAccountResponse, error)
-	// Queries a list of vestedAccount items.
-	VestedAccountAll(ctx context.Context, in *QueryAllVestedAccountRequest, opts ...grpc.CallOption) (*QueryAllVestedAccountResponse, error)
+	// Queries a vestingAccount by index.
+	VestingAccount(ctx context.Context, in *QueryGetVestingAccountRequest, opts ...grpc.CallOption) (*QueryGetVestingAccountResponse, error)
+	// Queries a list of vestingAccount items.
+	VestingAccountAll(ctx context.Context, in *QueryAllVestingAccountRequest, opts ...grpc.CallOption) (*QueryAllVestingAccountResponse, error)
 	// Queries a genesisValidator by index.
 	GenesisValidator(ctx context.Context, in *QueryGetGenesisValidatorRequest, opts ...grpc.CallOption) (*QueryGetGenesisValidatorResponse, error)
 	// Queries a list of genesisValidator items.
@@ -1276,18 +1273,18 @@ func (c *queryClient) GenesisAccountAll(ctx context.Context, in *QueryAllGenesis
 	return out, nil
 }
 
-func (c *queryClient) VestedAccount(ctx context.Context, in *QueryGetVestedAccountRequest, opts ...grpc.CallOption) (*QueryGetVestedAccountResponse, error) {
-	out := new(QueryGetVestedAccountResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Query/VestedAccount", in, out, opts...)
+func (c *queryClient) VestingAccount(ctx context.Context, in *QueryGetVestingAccountRequest, opts ...grpc.CallOption) (*QueryGetVestingAccountResponse, error) {
+	out := new(QueryGetVestingAccountResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Query/VestingAccount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) VestedAccountAll(ctx context.Context, in *QueryAllVestedAccountRequest, opts ...grpc.CallOption) (*QueryAllVestedAccountResponse, error) {
-	out := new(QueryAllVestedAccountResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Query/VestedAccountAll", in, out, opts...)
+func (c *queryClient) VestingAccountAll(ctx context.Context, in *QueryAllVestingAccountRequest, opts ...grpc.CallOption) (*QueryAllVestingAccountResponse, error) {
+	out := new(QueryAllVestingAccountResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.launch.Query/VestingAccountAll", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1349,10 +1346,10 @@ type QueryServer interface {
 	GenesisAccount(context.Context, *QueryGetGenesisAccountRequest) (*QueryGetGenesisAccountResponse, error)
 	// Queries a list of genesisAccount items.
 	GenesisAccountAll(context.Context, *QueryAllGenesisAccountRequest) (*QueryAllGenesisAccountResponse, error)
-	// Queries a vestedAccount by index.
-	VestedAccount(context.Context, *QueryGetVestedAccountRequest) (*QueryGetVestedAccountResponse, error)
-	// Queries a list of vestedAccount items.
-	VestedAccountAll(context.Context, *QueryAllVestedAccountRequest) (*QueryAllVestedAccountResponse, error)
+	// Queries a vestingAccount by index.
+	VestingAccount(context.Context, *QueryGetVestingAccountRequest) (*QueryGetVestingAccountResponse, error)
+	// Queries a list of vestingAccount items.
+	VestingAccountAll(context.Context, *QueryAllVestingAccountRequest) (*QueryAllVestingAccountResponse, error)
 	// Queries a genesisValidator by index.
 	GenesisValidator(context.Context, *QueryGetGenesisValidatorRequest) (*QueryGetGenesisValidatorResponse, error)
 	// Queries a list of genesisValidator items.
@@ -1381,11 +1378,11 @@ func (*UnimplementedQueryServer) GenesisAccount(ctx context.Context, req *QueryG
 func (*UnimplementedQueryServer) GenesisAccountAll(ctx context.Context, req *QueryAllGenesisAccountRequest) (*QueryAllGenesisAccountResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenesisAccountAll not implemented")
 }
-func (*UnimplementedQueryServer) VestedAccount(ctx context.Context, req *QueryGetVestedAccountRequest) (*QueryGetVestedAccountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method VestedAccount not implemented")
+func (*UnimplementedQueryServer) VestingAccount(ctx context.Context, req *QueryGetVestingAccountRequest) (*QueryGetVestingAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VestingAccount not implemented")
 }
-func (*UnimplementedQueryServer) VestedAccountAll(ctx context.Context, req *QueryAllVestedAccountRequest) (*QueryAllVestedAccountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method VestedAccountAll not implemented")
+func (*UnimplementedQueryServer) VestingAccountAll(ctx context.Context, req *QueryAllVestingAccountRequest) (*QueryAllVestingAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VestingAccountAll not implemented")
 }
 func (*UnimplementedQueryServer) GenesisValidator(ctx context.Context, req *QueryGetGenesisValidatorRequest) (*QueryGetGenesisValidatorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GenesisValidator not implemented")
@@ -1479,38 +1476,38 @@ func _Query_GenesisAccountAll_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_VestedAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryGetVestedAccountRequest)
+func _Query_VestingAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetVestingAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).VestedAccount(ctx, in)
+		return srv.(QueryServer).VestingAccount(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.launch.Query/VestedAccount",
+		FullMethod: "/tendermint.spn.launch.Query/VestingAccount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).VestedAccount(ctx, req.(*QueryGetVestedAccountRequest))
+		return srv.(QueryServer).VestingAccount(ctx, req.(*QueryGetVestingAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_VestedAccountAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAllVestedAccountRequest)
+func _Query_VestingAccountAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllVestingAccountRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).VestedAccountAll(ctx, in)
+		return srv.(QueryServer).VestingAccountAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.launch.Query/VestedAccountAll",
+		FullMethod: "/tendermint.spn.launch.Query/VestingAccountAll",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).VestedAccountAll(ctx, req.(*QueryAllVestedAccountRequest))
+		return srv.(QueryServer).VestingAccountAll(ctx, req.(*QueryAllVestingAccountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1626,12 +1623,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_GenesisAccountAll_Handler,
 		},
 		{
-			MethodName: "VestedAccount",
-			Handler:    _Query_VestedAccount_Handler,
+			MethodName: "VestingAccount",
+			Handler:    _Query_VestingAccount_Handler,
 		},
 		{
-			MethodName: "VestedAccountAll",
-			Handler:    _Query_VestedAccountAll_Handler,
+			MethodName: "VestingAccountAll",
+			Handler:    _Query_VestingAccountAll_Handler,
 		},
 		{
 			MethodName: "GenesisValidator",
@@ -1960,7 +1957,7 @@ func (m *QueryAllGenesisAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetVestedAccountRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryGetVestingAccountRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1970,12 +1967,12 @@ func (m *QueryGetVestedAccountRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetVestedAccountRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryGetVestingAccountRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetVestedAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryGetVestingAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1995,7 +1992,7 @@ func (m *QueryGetVestedAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, e
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetVestedAccountResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryGetVestingAccountResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2005,18 +2002,18 @@ func (m *QueryGetVestedAccountResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetVestedAccountResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryGetVestingAccountResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetVestedAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryGetVestingAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	{
-		size, err := m.VestedAccount.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.VestingAccount.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -2028,7 +2025,7 @@ func (m *QueryGetVestedAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAllVestedAccountRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryAllVestingAccountRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2038,12 +2035,12 @@ func (m *QueryAllVestedAccountRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAllVestedAccountRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryAllVestingAccountRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAllVestedAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryAllVestingAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2068,7 +2065,7 @@ func (m *QueryAllVestedAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, e
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAllVestedAccountResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryAllVestingAccountResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2078,12 +2075,12 @@ func (m *QueryAllVestedAccountResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAllVestedAccountResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryAllVestingAccountResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAllVestedAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryAllVestingAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2100,10 +2097,10 @@ func (m *QueryAllVestedAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.VestedAccount) > 0 {
-		for iNdEx := len(m.VestedAccount) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.VestingAccount) > 0 {
+		for iNdEx := len(m.VestingAccount) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.VestedAccount[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.VestingAccount[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -2613,7 +2610,7 @@ func (m *QueryAllGenesisAccountResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryGetVestedAccountRequest) Size() (n int) {
+func (m *QueryGetVestingAccountRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2629,18 +2626,18 @@ func (m *QueryGetVestedAccountRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryGetVestedAccountResponse) Size() (n int) {
+func (m *QueryGetVestingAccountResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.VestedAccount.Size()
+	l = m.VestingAccount.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
 
-func (m *QueryAllVestedAccountRequest) Size() (n int) {
+func (m *QueryAllVestingAccountRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2656,14 +2653,14 @@ func (m *QueryAllVestedAccountRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryAllVestedAccountResponse) Size() (n int) {
+func (m *QueryAllVestingAccountResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.VestedAccount) > 0 {
-		for _, e := range m.VestedAccount {
+	if len(m.VestingAccount) > 0 {
+		for _, e := range m.VestingAccount {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -3591,7 +3588,7 @@ func (m *QueryAllGenesisAccountResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetVestedAccountRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryGetVestingAccountRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3614,10 +3611,10 @@ func (m *QueryGetVestedAccountRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetVestedAccountRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryGetVestingAccountRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetVestedAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryGetVestingAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3692,7 +3689,7 @@ func (m *QueryGetVestedAccountRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetVestedAccountResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryGetVestingAccountResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3715,15 +3712,15 @@ func (m *QueryGetVestedAccountResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetVestedAccountResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryGetVestingAccountResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetVestedAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryGetVestingAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VestedAccount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field VestingAccount", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3750,7 +3747,7 @@ func (m *QueryGetVestedAccountResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.VestedAccount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.VestingAccount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -3775,7 +3772,7 @@ func (m *QueryGetVestedAccountResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllVestedAccountRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryAllVestingAccountRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3798,10 +3795,10 @@ func (m *QueryAllVestedAccountRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllVestedAccountRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAllVestingAccountRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllVestedAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAllVestingAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3880,7 +3877,7 @@ func (m *QueryAllVestedAccountRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllVestedAccountResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryAllVestingAccountResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3903,15 +3900,15 @@ func (m *QueryAllVestedAccountResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllVestedAccountResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryAllVestingAccountResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllVestedAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryAllVestingAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VestedAccount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field VestingAccount", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3938,8 +3935,8 @@ func (m *QueryAllVestedAccountResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.VestedAccount = append(m.VestedAccount, VestedAccount{})
-			if err := m.VestedAccount[len(m.VestedAccount)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.VestingAccount = append(m.VestingAccount, VestingAccount{})
+			if err := m.VestingAccount[len(m.VestingAccount)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

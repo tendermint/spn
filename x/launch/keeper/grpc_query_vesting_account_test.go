@@ -18,44 +18,44 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNVestedAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.VestedAccount {
-	items := make([]types.VestedAccount, n)
+func createNVestingAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.VestingAccount {
+	items := make([]types.VestingAccount, n)
 	for i := range items {
-		items[i] = *sample.VestedAccount(chainID, strconv.Itoa(i))
-		keeper.SetVestedAccount(ctx, items[i])
+		items[i] = *sample.VestingAccount(chainID, strconv.Itoa(i))
+		keeper.SetVestingAccount(ctx, items[i])
 	}
 	return items
 }
 
-func TestVestedAccountQuerySingle(t *testing.T) {
+func TestVestingAccountQuerySingle(t *testing.T) {
 	keeper, _, ctx, _ := testkeeper.Launch(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNVestedAccount(keeper, ctx, 2)
+	msgs := createNVestingAccount(keeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
-		request  *types.QueryGetVestedAccountRequest
-		response *types.QueryGetVestedAccountResponse
+		request  *types.QueryGetVestingAccountRequest
+		response *types.QueryGetVestingAccountResponse
 		err      error
 	}{
 		{
 			desc: "First",
-			request: &types.QueryGetVestedAccountRequest{
+			request: &types.QueryGetVestingAccountRequest{
 				ChainID: msgs[0].ChainID,
 				Address: msgs[0].Address,
 			},
-			response: &types.QueryGetVestedAccountResponse{VestedAccount: msgs[0]},
+			response: &types.QueryGetVestingAccountResponse{VestingAccount: msgs[0]},
 		},
 		{
 			desc: "Second",
-			request: &types.QueryGetVestedAccountRequest{
+			request: &types.QueryGetVestingAccountRequest{
 				ChainID: msgs[1].ChainID,
 				Address: msgs[1].Address,
 			},
-			response: &types.QueryGetVestedAccountResponse{VestedAccount: msgs[1]},
+			response: &types.QueryGetVestingAccountResponse{VestingAccount: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.QueryGetVestedAccountRequest{
+			request: &types.QueryGetVestingAccountRequest{
 				ChainID: uint64(100000),
 				Address: strconv.Itoa(100000),
 			},
@@ -67,7 +67,7 @@ func TestVestedAccountQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.VestedAccount(wctx, tc.request)
+			response, err := keeper.VestingAccount(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -78,16 +78,16 @@ func TestVestedAccountQuerySingle(t *testing.T) {
 	}
 }
 
-func TestVestedAccountQueryPaginated(t *testing.T) {
+func TestVestingAccountQueryPaginated(t *testing.T) {
 	var (
 		keeper, _, ctx, _ = testkeeper.Launch(t)
 		wctx              = sdk.WrapSDKContext(ctx)
 		chainID           = uint64(0)
-		msgs              = createNVestedAccountForChainID(keeper, ctx, 5, chainID)
+		msgs              = createNVestingAccountForChainID(keeper, ctx, 5, chainID)
 	)
 
-	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllVestedAccountRequest {
-		return &types.QueryAllVestedAccountRequest{
+	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllVestingAccountRequest {
+		return &types.QueryAllVestingAccountRequest{
 			ChainID: chainID,
 			Pagination: &query.PageRequest{
 				Key:        next,
@@ -100,10 +100,10 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.VestedAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
+			resp, err := keeper.VestingAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				require.Equal(t, msgs[j], resp.VestedAccount[j-i])
+				require.Equal(t, msgs[j], resp.VestingAccount[j-i])
 			}
 		}
 	})
@@ -111,21 +111,21 @@ func TestVestedAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.VestedAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
+			resp, err := keeper.VestingAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			for j := i; j < len(msgs) && j < i+step; j++ {
-				require.Equal(t, msgs[j], resp.VestedAccount[j-i])
+				require.Equal(t, msgs[j], resp.VestingAccount[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.VestedAccountAll(wctx, request(chainID, nil, 0, 0, true))
+		resp, err := keeper.VestingAccountAll(wctx, request(chainID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.VestedAccountAll(wctx, nil)
+		_, err := keeper.VestingAccountAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

@@ -14,7 +14,7 @@ var (
 	noExistChainID   = uint64(2)
 	addr1            = sample.AccAddress()
 	addr2            = sample.AccAddress()
-	vestedAddress    = sample.AccAddress()
+	vestingAddress   = sample.AccAddress()
 	genesisValidator = *sample.GenesisValidator(chainID1, addr1)
 	genesisChainID   = sample.GenesisChainID()
 
@@ -47,14 +47,14 @@ var (
 			Address: addr2,
 		},
 	}
-	sampleVestedAccountList = []types.VestedAccount{
+	sampleVestingAccountList = []types.VestingAccount{
 		{
 			ChainID: chainID1,
-			Address: vestedAddress,
+			Address: vestingAddress,
 		},
 		{
 			ChainID: chainID2,
-			Address: vestedAddress,
+			Address: vestingAddress,
 		},
 	}
 	sampleGenesisValidatorList = []types.GenesisValidator{genesisValidator}
@@ -93,7 +93,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:            sampleChainList,
 				ChainCount:           10,
 				GenesisAccountList:   sampleGenesisAccountList,
-				VestedAccountList:    sampleVestedAccountList,
+				VestingAccountList:   sampleVestingAccountList,
 				GenesisValidatorList: sampleGenesisValidatorList,
 				RequestList:          sampleRequestList,
 				RequestCountList:     sampleRequestCountList,
@@ -176,39 +176,39 @@ func TestGenesisState_Validate(t *testing.T) {
 			shouldBeValid: false,
 		},
 		{
-			desc: "duplicated vested accounts",
+			desc: "duplicated vesting accounts",
 			genState: &types.GenesisState{
 				ChainList:  sampleChainList,
 				ChainCount: 10,
-				VestedAccountList: []types.VestedAccount{
+				VestingAccountList: []types.VestingAccount{
 					{
 						ChainID: chainID1,
-						Address: vestedAddress,
+						Address: vestingAddress,
 					},
 					{
 						ChainID: chainID1,
-						Address: vestedAddress,
+						Address: vestingAddress,
 					},
 				},
 			},
 			shouldBeValid: false,
 		},
 		{
-			desc: "vested account not associated with chain",
+			desc: "vesting account not associated with chain",
 			genState: &types.GenesisState{
 				ChainList:  sampleChainList,
 				ChainCount: 10,
-				VestedAccountList: []types.VestedAccount{
+				VestingAccountList: []types.VestingAccount{
 					{
 						ChainID: noExistChainID,
-						Address: vestedAddress,
+						Address: vestingAddress,
 					},
 				},
 			},
 			shouldBeValid: false,
 		},
 		{
-			desc: "address as genesis account and vested account",
+			desc: "address as genesis account and vesting account",
 			genState: &types.GenesisState{
 				ChainList:  sampleChainList,
 				ChainCount: 10,
@@ -218,7 +218,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address: addr1,
 					},
 				},
-				VestedAccountList: []types.VestedAccount{
+				VestingAccountList: []types.VestingAccount{
 					{
 						ChainID: chainID1,
 						Address: addr1,

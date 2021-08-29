@@ -31,9 +31,9 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 
-	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[3].Id, Address: addr1})
-	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[4].Id, Address: addr2})
-	k.SetVestedAccount(sdkCtx, types.VestedAccount{ChainID: chains[4].Id, Address: addr4})
+	k.SetVestingAccount(sdkCtx, types.VestingAccount{ChainID: chains[3].Id, Address: addr1})
+	k.SetVestingAccount(sdkCtx, types.VestingAccount{ChainID: chains[4].Id, Address: addr2})
+	k.SetVestingAccount(sdkCtx, types.VestingAccount{ChainID: chains[4].Id, Address: addr4})
 
 	tests := []struct {
 		name        string
@@ -154,8 +154,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			} else {
 				_, foundGenesis := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
 				require.False(t, foundGenesis, "genesis account not removed")
-				_, foundVested := k.GetVestedAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
-				require.False(t, foundVested, "vested account not removed")
+				_, foundVesting := k.GetVestingAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
+				require.False(t, foundVesting, "vesting account not removed")
 			}
 		})
 	}

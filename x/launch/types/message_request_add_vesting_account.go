@@ -5,15 +5,15 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-var _ sdk.Msg = &MsgRequestAddVestedAccount{}
+var _ sdk.Msg = &MsgRequestAddVestingAccount{}
 
-func NewMsgRequestAddVestedAccount(
+func NewMsgRequestAddVestingAccount(
 	address string,
 	chainID uint64,
 	coins sdk.Coins,
 	options VestingOptions,
-) *MsgRequestAddVestedAccount {
-	return &MsgRequestAddVestedAccount{
+) *MsgRequestAddVestingAccount {
+	return &MsgRequestAddVestingAccount{
 		ChainID:         chainID,
 		Address:         address,
 		StartingBalance: coins,
@@ -21,15 +21,15 @@ func NewMsgRequestAddVestedAccount(
 	}
 }
 
-func (msg *MsgRequestAddVestedAccount) Route() string {
+func (msg *MsgRequestAddVestingAccount) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgRequestAddVestedAccount) Type() string {
-	return "RequestAddVestedAccount"
+func (msg *MsgRequestAddVestingAccount) Type() string {
+	return "RequestAddVestingAccount"
 }
 
-func (msg *MsgRequestAddVestedAccount) GetSigners() []sdk.AccAddress {
+func (msg *MsgRequestAddVestingAccount) GetSigners() []sdk.AccAddress {
 	address, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		panic(err)
@@ -37,12 +37,12 @@ func (msg *MsgRequestAddVestedAccount) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{address}
 }
 
-func (msg *MsgRequestAddVestedAccount) GetSignBytes() []byte {
+func (msg *MsgRequestAddVestingAccount) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgRequestAddVestedAccount) ValidateBasic() error {
+func (msg *MsgRequestAddVestingAccount) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address (%s)", err)
