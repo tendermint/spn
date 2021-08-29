@@ -18,7 +18,7 @@ func TestMsgDeleteValidator(t *testing.T) {
 	)
 	k.SetValidator(ctx, types.Validator{
 		Address:     addr2,
-		Description: &types.ValidatorDescription{},
+		Description: types.ValidatorDescription{},
 	})
 	tests := []struct {
 		name string

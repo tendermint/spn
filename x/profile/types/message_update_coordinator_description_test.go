@@ -26,21 +26,14 @@ func TestMsgUpdateCoordinatorDescription_ValidateBasic(t *testing.T) {
 			name: "valid address and empty description",
 			msg: profile.MsgUpdateCoordinatorDescription{
 				Address:     addr,
-				Description: &profile.CoordinatorDescription{},
-			},
-			err: profile.ErrEmptyDescription,
-		}, {
-			name: "valid address and nil description",
-			msg: profile.MsgUpdateCoordinatorDescription{
-				Address:     addr,
-				Description: nil,
+				Description: profile.CoordinatorDescription{},
 			},
 			err: profile.ErrEmptyDescription,
 		}, {
 			name: "valid address and description",
 			msg: profile.MsgUpdateCoordinatorDescription{
 				Address: sample.AccAddress(),
-				Description: &profile.CoordinatorDescription{
+				Description: profile.CoordinatorDescription{
 					Identity: "identity",
 					Website:  "website",
 					Details:  "details",
