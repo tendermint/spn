@@ -29,7 +29,7 @@ func networkWithVestingAccountObjects(t *testing.T, n int) (*network.Network, []
 	for i := 0; i < n; i++ {
 		state.VestingAccountList = append(
 			state.VestingAccountList,
-			*sample.VestingAccount(0, strconv.Itoa(i)),
+			sample.VestingAccount(0, strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
