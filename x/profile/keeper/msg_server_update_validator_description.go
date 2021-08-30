@@ -18,7 +18,7 @@ func (k msgServer) UpdateValidatorDescription(
 	if !found {
 		validator = types.Validator{
 			Address:     msg.Address,
-			Description: &types.ValidatorDescription{},
+			Description: types.ValidatorDescription{},
 		}
 	}
 

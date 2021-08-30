@@ -8,9 +8,9 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func (k msgServer) RequestAddVestedAccount(
+func (k msgServer) RequestAddVestingAccount(
 	goCtx context.Context,
-	msg *types.MsgRequestAddVestedAccount,
+	msg *types.MsgRequestAddVestingAccount,
 ) (*types.MsgRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -29,7 +29,7 @@ func (k msgServer) RequestAddVestedAccount(
 			"the chain %v coordinator has been deleted", chain.Id)
 	}
 
-	content := types.NewVestedAccount(msg.ChainID, msg.Address, msg.StartingBalance, msg.Options)
+	content := types.NewVestingAccount(msg.ChainID, msg.Address, msg.StartingBalance, msg.Options)
 	request := types.Request{
 		ChainID:   msg.ChainID,
 		Creator:   msg.Address,

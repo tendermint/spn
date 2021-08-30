@@ -44,9 +44,9 @@ func VestingOptions() launch.VestingOptions {
 	return *launch.NewDelayedVesting(Coins(), time.Now().Unix())
 }
 
-// VestedAccount returns a sample VestedAccount
-func VestedAccount(chainID uint64, address string) *launch.VestedAccount {
-	return &launch.VestedAccount{
+// VestingAccount returns a sample VestingAccount
+func VestingAccount(chainID uint64, address string) *launch.VestingAccount {
+	return &launch.VestingAccount{
 		ChainID:         chainID,
 		Address:         address,
 		StartingBalance: Coins(),
@@ -91,12 +91,12 @@ func RequestWithContent(chainID uint64, content launch.RequestContent) *launch.R
 }
 
 // AllRequestContents creates all contents types for request
-func AllRequestContents(chainID uint64, genesis, vested, validator string) []launch.RequestContent {
+func AllRequestContents(chainID uint64, genesis, vesting, validator string) []launch.RequestContent {
 	return []launch.RequestContent{
 		launch.NewGenesisAccount(chainID, genesis, Coins()),
 		launch.NewAccountRemoval(genesis),
-		launch.NewVestedAccount(chainID, vested, Coins(), VestingOptions()),
-		launch.NewAccountRemoval(vested),
+		launch.NewVestingAccount(chainID, vesting, Coins(), VestingOptions()),
+		launch.NewAccountRemoval(vesting),
 		launch.NewGenesisValidator(chainID, validator, Bytes(300), Bytes(30), Coin(), String(30)),
 		launch.NewValidatorRemoval(validator),
 	}
@@ -213,10 +213,10 @@ func LaunchGenesisState() launch.GenesisState {
 			*GenesisAccount(chainID1, AccAddress()),
 			*GenesisAccount(chainID2, AccAddress()),
 		},
-		VestedAccountList: []launch.VestedAccount{
-			*VestedAccount(chainID1, AccAddress()),
-			*VestedAccount(chainID1, AccAddress()),
-			*VestedAccount(chainID2, AccAddress()),
+		VestingAccountList: []launch.VestingAccount{
+			*VestingAccount(chainID1, AccAddress()),
+			*VestingAccount(chainID1, AccAddress()),
+			*VestingAccount(chainID2, AccAddress()),
 		},
 		GenesisValidatorList: []launch.GenesisValidator{
 			*GenesisValidator(chainID1, AccAddress()),

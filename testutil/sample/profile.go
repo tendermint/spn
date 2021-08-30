@@ -15,8 +15,8 @@ func MsgCreateCoordinator(coordAddress string) profile.MsgCreateCoordinator {
 }
 
 // ValidatorDescription returns a sample ValidatorDescription
-func ValidatorDescription(desc string) *profile.ValidatorDescription {
-	return &profile.ValidatorDescription{
+func ValidatorDescription(desc string) profile.ValidatorDescription {
+	return profile.ValidatorDescription{
 		Identity:        desc,
 		Moniker:         "moniker " + desc,
 		Website:         "https://cosmos.network/" + desc,
@@ -34,8 +34,8 @@ func Coordinator() profile.Coordinator {
 }
 
 // CoordinatorDescription returns a sample CoordinatorDescription
-func CoordinatorDescription() *profile.CoordinatorDescription {
-	return &profile.CoordinatorDescription{
+func CoordinatorDescription() profile.CoordinatorDescription {
+	return profile.CoordinatorDescription{
 		Identity: String(10),
 		Website:  String(10),
 		Details:  String(30),

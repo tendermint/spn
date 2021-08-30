@@ -25,8 +25,8 @@ func TestGenesis(t *testing.T) {
 	require.Len(t, got.GenesisAccountList, len(original.GenesisAccountList))
 	require.Subset(t, original.GenesisAccountList, got.GenesisAccountList)
 
-	require.Len(t, got.VestedAccountList, len(original.VestedAccountList))
-	require.Subset(t, original.VestedAccountList, got.VestedAccountList)
+	require.Len(t, got.VestingAccountList, len(original.VestingAccountList))
+	require.Subset(t, original.VestingAccountList, got.VestingAccountList)
 
 	require.Len(t, got.GenesisValidatorList, len(original.GenesisValidatorList))
 	require.Subset(t, original.GenesisValidatorList, got.GenesisValidatorList)

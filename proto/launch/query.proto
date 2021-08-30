@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
 import "launch/request.proto";
-import "launch/vested_account.proto";
+import "launch/vesting_account.proto";
 import "launch/genesis_account.proto";
 import "launch/genesis_validator.proto";
 import "launch/chain.proto";
@@ -36,13 +36,13 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/launch/genesisAccount";
   }
 
-  // Queries a vestedAccount by index.
-  rpc VestedAccount(QueryGetVestedAccountRequest) returns (QueryGetVestedAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/vestedAccount/{chainID}/{address}";
+  // Queries a vestingAccount by index.
+  rpc VestingAccount(QueryGetVestingAccountRequest) returns (QueryGetVestingAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/vestingAccount/{chainID}/{address}";
   }
-  // Queries a list of vestedAccount items.
-  rpc VestedAccountAll(QueryAllVestedAccountRequest) returns (QueryAllVestedAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/vestedAccount";
+  // Queries a list of vestingAccount items.
+  rpc VestingAccountAll(QueryAllVestingAccountRequest) returns (QueryAllVestingAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/vestingAccount";
   }
 
   // Queries a genesisValidator by index.
@@ -106,22 +106,22 @@ message QueryAllGenesisAccountResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetVestedAccountRequest {
+message QueryGetVestingAccountRequest {
   uint64 chainID = 1;
   string address = 2;
 }
 
-message QueryGetVestedAccountResponse {
-  VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];
+message QueryGetVestingAccountResponse {
+  VestingAccount vestingAccount = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryAllVestedAccountRequest {
+message QueryAllVestingAccountRequest {
   uint64 chainID = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
-message QueryAllVestedAccountResponse {
-  repeated VestedAccount vestedAccount = 1 [(gogoproto.nullable) = false];
+message QueryAllVestingAccountResponse {
+  repeated VestingAccount vestingAccount = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

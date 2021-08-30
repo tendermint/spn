@@ -10,7 +10,7 @@ var _ sdk.Msg = &MsgCreateCoordinator{}
 func NewMsgCreateCoordinator(address, identity, website, details string) *MsgCreateCoordinator {
 	return &MsgCreateCoordinator{
 		Address: address,
-		Description: &CoordinatorDescription{
+		Description: CoordinatorDescription{
 			Identity: identity,
 			Website:  website,
 			Details:  details,

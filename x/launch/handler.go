@@ -27,8 +27,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err = msgServer.EditChain(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestAddAccount:
 			res, err = msgServer.RequestAddAccount(sdk.WrapSDKContext(ctx), msg)
-		case *types.MsgRequestAddVestedAccount:
-			res, err = msgServer.RequestAddVestedAccount(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgRequestAddVestingAccount:
+			res, err = msgServer.RequestAddVestingAccount(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestRemoveAccount:
 			res, err = msgServer.RequestRemoveAccount(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestAddValidator:

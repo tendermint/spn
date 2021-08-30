@@ -3,7 +3,7 @@ package tendermint.spn.launch;
 
 import "gogoproto/gogo.proto";
 import "launch/genesis_account.proto";
-import "launch/vested_account.proto";
+import "launch/vesting_account.proto";
 import "launch/genesis_validator.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
@@ -19,7 +19,7 @@ message Request {
 message RequestContent {
   oneof content {
     GenesisAccount genesisAccount = 1;
-    VestedAccount vestedAccount = 2;
+    VestingAccount vestingAccount = 2;
     GenesisValidator genesisValidator = 3;
     AccountRemoval accountRemoval = 4;
     ValidatorRemoval validatorRemoval = 5;

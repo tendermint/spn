@@ -11,7 +11,7 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
+func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 	var (
 		chainID = uint64(10)
 	)
@@ -20,12 +20,12 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 
 	tests := []struct {
 		name string
-		msg  types.MsgRequestAddVestedAccount
+		msg  types.MsgRequestAddVestingAccount
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				Address:         "invalid_address",
 				ChainID:         chainID,
 				StartingBalance: sample.Coins(),
@@ -35,7 +35,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid coins",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				Address:         sample.AccAddress(),
 				ChainID:         chainID,
 				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
@@ -45,7 +45,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid message option",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				Address:         sample.AccAddress(),
 				ChainID:         chainID,
 				StartingBalance: sample.Coins(),
@@ -55,7 +55,7 @@ func TestMsgRequestAddVestedAccount_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "valid message",
-			msg: types.MsgRequestAddVestedAccount{
+			msg: types.MsgRequestAddVestingAccount{
 				Address:         sample.AccAddress(),
 				ChainID:         chainID,
 				StartingBalance: sample.Coins(),

@@ -29,7 +29,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdCreateChain())
 	cmd.AddCommand(CmdEditChain())
 	cmd.AddCommand(CmdRequestAddAccount())
-	cmd.AddCommand(CmdRequestAddVestedAccount())
+	cmd.AddCommand(CmdRequestAddVestingAccount())
 	cmd.AddCommand(CmdRequestRemoveAccount())
 	cmd.AddCommand(CmdRequestAddValidator())
 	cmd.AddCommand(CmdRequestRemoveValidator())

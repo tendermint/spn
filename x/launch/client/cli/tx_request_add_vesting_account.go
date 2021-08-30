@@ -14,10 +14,10 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdRequestAddVestedAccount() *cobra.Command {
+func CmdRequestAddVestingAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-vested-account [chain-id] [starting-balance] [vesting-coins] [vesting-end-time]",
-		Short: "Request to add a vested account",
+		Use:   "request-add-vesting-account [chain-id] [starting-balance] [vesting-coins] [vesting-end-time]",
+		Short: "Request to add a vesting account",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -44,7 +44,7 @@ func CmdRequestAddVestedAccount() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgRequestAddVestedAccount(
+			msg := types.NewMsgRequestAddVestingAccount(
 				clientCtx.GetFromAddress().String(),
 				chainID,
 				startingBalance,

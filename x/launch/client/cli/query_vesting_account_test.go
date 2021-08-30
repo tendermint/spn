@@ -20,26 +20,26 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithVestedAccountObjects(t *testing.T, n int) (*network.Network, []types.VestedAccount) {
+func networkWithVestingAccountObjects(t *testing.T, n int) (*network.Network, []types.VestingAccount) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.VestedAccountList = append(
-			state.VestedAccountList,
-			*sample.VestedAccount(0, strconv.Itoa(i)),
+		state.VestingAccountList = append(
+			state.VestingAccountList,
+			*sample.VestingAccount(0, strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.VestedAccountList
+	return network.New(t, cfg), state.VestingAccountList
 }
 
-func TestShowVestedAccount(t *testing.T) {
-	net, objs := networkWithVestedAccountObjects(t, 2)
+func TestShowVestingAccount(t *testing.T) {
+	net, objs := networkWithVestingAccountObjects(t, 2)
 
 	ctx := net.Validators[0].ClientCtx
 	common := []string{
@@ -52,7 +52,7 @@ func TestShowVestedAccount(t *testing.T) {
 
 		args []string
 		err  error
-		obj  types.VestedAccount
+		obj  types.VestingAccount
 	}{
 		{
 			desc:      "found",
@@ -78,24 +78,24 @@ func TestShowVestedAccount(t *testing.T) {
 				tc.idAddress,
 			}
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowVestedAccount(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowVestingAccount(), args)
 			if tc.err != nil {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
 				require.ErrorIs(t, stat.Err(), tc.err)
 			} else {
 				require.NoError(t, err)
-				var resp types.QueryGetVestedAccountResponse
+				var resp types.QueryGetVestingAccountResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				require.NotNil(t, resp.VestedAccount)
-				require.Equal(t, tc.obj, resp.VestedAccount)
+				require.NotNil(t, resp.VestingAccount)
+				require.Equal(t, tc.obj, resp.VestingAccount)
 			}
 		})
 	}
 }
 
-func TestListVestedAccount(t *testing.T) {
-	net, objs := networkWithVestedAccountObjects(t, 5)
+func TestListVestingAccount(t *testing.T) {
+	net, objs := networkWithVestingAccountObjects(t, 5)
 
 	chainID := strconv.Itoa(int(objs[0].ChainID))
 	ctx := net.Validators[0].ClientCtx
@@ -119,12 +119,12 @@ func TestListVestedAccount(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(chainID, nil, uint64(i), uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestedAccount(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestingAccount(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllVestedAccountResponse
+			var resp types.QueryAllVestingAccountResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.VestedAccount[j-i])
+				require.Equal(t, objs[j], resp.VestingAccount[j-i])
 			}
 		}
 	})
@@ -133,24 +133,24 @@ func TestListVestedAccount(t *testing.T) {
 		var next []byte
 		for i := 0; i < len(objs); i += step {
 			args := request(chainID, next, 0, uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestedAccount(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestingAccount(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllVestedAccountResponse
+			var resp types.QueryAllVestingAccountResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.VestedAccount[j-i])
+				require.Equal(t, objs[j], resp.VestingAccount[j-i])
 			}
 			next = resp.Pagination.NextKey
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
 		args := request(chainID, nil, 0, uint64(len(objs)), true)
-		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestedAccount(), args)
+		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestingAccount(), args)
 		require.NoError(t, err)
-		var resp types.QueryAllVestedAccountResponse
+		var resp types.QueryAllVestingAccountResponse
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.Equal(t, objs, resp.VestedAccount)
+		require.Equal(t, objs, resp.VestingAccount)
 	})
 }
