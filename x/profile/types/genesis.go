@@ -12,8 +12,8 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # genesis/types/default
 		ValidatorList:            []Validator{},
-		CoordinatorByAddressList: []CoordinatorByAddress{},
 		CoordinatorList:          []Coordinator{},
+		CoordinatorByAddressList: []CoordinatorByAddress{},
 	}
 }
 

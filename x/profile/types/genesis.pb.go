@@ -25,11 +25,10 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the profile module's genesis state.
 type GenesisState struct {
-	// this line is used by starport scaffolding # genesis/proto/state
-	CoordinatorList          []Coordinator          `protobuf:"bytes,1,rep,name=coordinatorList,proto3" json:"coordinatorList"`
-	CoordinatorCount         uint64                 `protobuf:"varint,2,opt,name=coordinatorCount,proto3" json:"coordinatorCount,omitempty"`
-	CoordinatorByAddressList []CoordinatorByAddress `protobuf:"bytes,3,rep,name=coordinatorByAddressList,proto3" json:"coordinatorByAddressList"`
-	ValidatorList            []Validator            `protobuf:"bytes,4,rep,name=validatorList,proto3" json:"validatorList"`
+	ValidatorList            []Validator            `protobuf:"bytes,1,rep,name=validatorList,proto3" json:"validatorList"`
+	CoordinatorList          []Coordinator          `protobuf:"bytes,2,rep,name=coordinatorList,proto3" json:"coordinatorList"`
+	CoordinatorCount         uint64                 `protobuf:"varint,3,opt,name=coordinatorCount,proto3" json:"coordinatorCount,omitempty"`
+	CoordinatorByAddressList []CoordinatorByAddress `protobuf:"bytes,4,rep,name=coordinatorByAddressList,proto3" json:"coordinatorByAddressList"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -65,6 +64,13 @@ func (m *GenesisState) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GenesisState proto.InternalMessageInfo
 
+func (m *GenesisState) GetValidatorList() []Validator {
+	if m != nil {
+		return m.ValidatorList
+	}
+	return nil
+}
+
 func (m *GenesisState) GetCoordinatorList() []Coordinator {
 	if m != nil {
 		return m.CoordinatorList
@@ -86,13 +92,6 @@ func (m *GenesisState) GetCoordinatorByAddressList() []CoordinatorByAddress {
 	return nil
 }
 
-func (m *GenesisState) GetValidatorList() []Validator {
-	if m != nil {
-		return m.ValidatorList
-	}
-	return nil
-}
-
 func init() {
 	proto.RegisterType((*GenesisState)(nil), "tendermint.spn.profile.GenesisState")
 }
@@ -107,18 +106,18 @@ var fileDescriptor_db4bc1562021cf42 = []byte{
 	0xc8, 0xd3, 0x83, 0xaa, 0x92, 0x12, 0x49, 0xcf, 0x4f, 0xcf, 0x07, 0x2b, 0xd1, 0x07, 0xb1, 0x20,
 	0xaa, 0xa5, 0xc4, 0x61, 0x86, 0x94, 0x25, 0xe6, 0x64, 0xa6, 0x24, 0x96, 0xe4, 0x17, 0x41, 0x25,
 	0x24, 0x61, 0x12, 0xc9, 0xf9, 0xf9, 0x45, 0x29, 0x99, 0x79, 0x08, 0x29, 0xa5, 0x73, 0x4c, 0x5c,
-	0x3c, 0xee, 0x10, 0x3b, 0x83, 0x4b, 0x12, 0x4b, 0x52, 0x85, 0x82, 0xb9, 0xf8, 0x91, 0x54, 0xf9,
-	0x64, 0x16, 0x97, 0x48, 0x30, 0x2a, 0x30, 0x6b, 0x70, 0x1b, 0x29, 0xeb, 0x61, 0x77, 0x8c, 0x9e,
-	0x33, 0x42, 0xb9, 0x13, 0xcb, 0x89, 0x7b, 0xf2, 0x0c, 0x41, 0xe8, 0x26, 0x08, 0x69, 0x71, 0x09,
-	0x20, 0x09, 0x39, 0xe7, 0x97, 0xe6, 0x95, 0x48, 0x30, 0x29, 0x30, 0x6a, 0xb0, 0x04, 0x61, 0x88,
-	0x0b, 0xe5, 0x71, 0x49, 0x20, 0x89, 0x39, 0x55, 0x3a, 0xa6, 0xa4, 0x14, 0xa5, 0x16, 0x17, 0x83,
-	0x5d, 0xc2, 0x0c, 0x76, 0x89, 0x0e, 0x31, 0x2e, 0x81, 0xe9, 0x83, 0x3a, 0x09, 0xa7, 0x99, 0x42,
-	0xbe, 0x5c, 0xbc, 0xf0, 0xf0, 0x02, 0x5b, 0xc2, 0x02, 0xb6, 0x44, 0x11, 0x97, 0x25, 0x61, 0x30,
-	0xc5, 0x50, 0x93, 0x51, 0x75, 0x3b, 0x39, 0x9f, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3,
-	0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c,
-	0x43, 0x94, 0x66, 0x7a, 0x66, 0x49, 0x46, 0x69, 0x92, 0x5e, 0x72, 0x7e, 0xae, 0x3e, 0xc2, 0x6c,
-	0xfd, 0xe2, 0x82, 0x3c, 0xfd, 0x0a, 0x7d, 0x58, 0x0c, 0x95, 0x54, 0x16, 0xa4, 0x16, 0x27, 0xb1,
-	0x81, 0x23, 0xc7, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0xfc, 0xd8, 0x62, 0x34, 0x17, 0x02, 0x00,
+	0x3c, 0xee, 0x10, 0x3b, 0x83, 0x4b, 0x12, 0x4b, 0x52, 0x85, 0x7c, 0xb9, 0x78, 0xe1, 0xda, 0x7d,
+	0x32, 0x8b, 0x4b, 0x24, 0x18, 0x15, 0x98, 0x35, 0xb8, 0x8d, 0x14, 0xf5, 0xb0, 0x3b, 0x45, 0x2f,
+	0x0c, 0xa6, 0xd8, 0x89, 0xe5, 0xc4, 0x3d, 0x79, 0x86, 0x20, 0x54, 0xdd, 0x42, 0xc1, 0x5c, 0xfc,
+	0x48, 0x96, 0x82, 0x0d, 0x64, 0x02, 0x1b, 0xa8, 0x8c, 0xcb, 0x40, 0x67, 0x84, 0x72, 0xa8, 0x91,
+	0xe8, 0x26, 0x08, 0x69, 0x71, 0x09, 0x20, 0x09, 0x39, 0xe7, 0x97, 0xe6, 0x95, 0x48, 0x30, 0x2b,
+	0x30, 0x6a, 0xb0, 0x04, 0x61, 0x88, 0x0b, 0xe5, 0x71, 0x49, 0x20, 0x89, 0x39, 0x55, 0x3a, 0xa6,
+	0xa4, 0x14, 0xa5, 0x16, 0x17, 0x83, 0x5d, 0xc2, 0x02, 0x76, 0x89, 0x0e, 0x31, 0x2e, 0x81, 0xe9,
+	0x83, 0x3a, 0x09, 0xa7, 0x99, 0x4e, 0xce, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8,
+	0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7,
+	0x10, 0xa5, 0x99, 0x9e, 0x59, 0x92, 0x51, 0x9a, 0xa4, 0x97, 0x9c, 0x9f, 0xab, 0x8f, 0xb0, 0x51,
+	0xbf, 0xb8, 0x20, 0x4f, 0xbf, 0x42, 0x1f, 0x16, 0x43, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c,
+	0xe0, 0xc8, 0x31, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x29, 0x7b, 0xac, 0x5c, 0x17, 0x02, 0x00,
 	0x00,
 }
 
@@ -142,20 +141,6 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.ValidatorList) > 0 {
-		for iNdEx := len(m.ValidatorList) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.ValidatorList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintGenesis(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x22
-		}
-	}
 	if len(m.CoordinatorByAddressList) > 0 {
 		for iNdEx := len(m.CoordinatorByAddressList) - 1; iNdEx >= 0; iNdEx-- {
 			{
@@ -167,18 +152,32 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 				i = encodeVarintGenesis(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x1a
+			dAtA[i] = 0x22
 		}
 	}
 	if m.CoordinatorCount != 0 {
 		i = encodeVarintGenesis(dAtA, i, uint64(m.CoordinatorCount))
 		i--
-		dAtA[i] = 0x10
+		dAtA[i] = 0x18
 	}
 	if len(m.CoordinatorList) > 0 {
 		for iNdEx := len(m.CoordinatorList) - 1; iNdEx >= 0; iNdEx-- {
 			{
 				size, err := m.CoordinatorList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.ValidatorList) > 0 {
+		for iNdEx := len(m.ValidatorList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.ValidatorList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -209,6 +208,12 @@ func (m *GenesisState) Size() (n int) {
 	}
 	var l int
 	_ = l
+	if len(m.ValidatorList) > 0 {
+		for _, e := range m.ValidatorList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
 	if len(m.CoordinatorList) > 0 {
 		for _, e := range m.CoordinatorList {
 			l = e.Size()
@@ -220,12 +225,6 @@ func (m *GenesisState) Size() (n int) {
 	}
 	if len(m.CoordinatorByAddressList) > 0 {
 		for _, e := range m.CoordinatorByAddressList {
-			l = e.Size()
-			n += 1 + l + sovGenesis(uint64(l))
-		}
-	}
-	if len(m.ValidatorList) > 0 {
-		for _, e := range m.ValidatorList {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
@@ -270,6 +269,40 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ValidatorList = append(m.ValidatorList, Validator{})
+			if err := m.ValidatorList[len(m.ValidatorList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorList", wireType)
 			}
 			var msglen int
@@ -302,7 +335,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 2:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorCount", wireType)
 			}
@@ -321,7 +354,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 3:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorByAddressList", wireType)
 			}
@@ -352,40 +385,6 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			}
 			m.CoordinatorByAddressList = append(m.CoordinatorByAddressList, CoordinatorByAddress{})
 			if err := m.CoordinatorByAddressList[len(m.CoordinatorByAddressList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorList", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowGenesis
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthGenesis
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ValidatorList = append(m.ValidatorList, Validator{})
-			if err := m.ValidatorList[len(m.ValidatorList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

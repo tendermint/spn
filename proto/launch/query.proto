@@ -173,4 +173,3 @@ message QueryParamsResponse {
 }
 
 // this line is used by starport scaffolding # 3
-

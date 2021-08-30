@@ -11,13 +11,13 @@ const DefaultIndex uint64 = 1
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # genesis/types/default
-		RequestList:          []Request{},
-		RequestCountList:     []RequestCount{},
-		VestingAccountList:   []VestingAccount{},
-		GenesisAccountList:   []GenesisAccount{},
-		GenesisValidatorList: []GenesisValidator{},
 		ChainList:            []Chain{},
 		ChainCount:           0,
+		GenesisAccountList:   []GenesisAccount{},
+		VestingAccountList:    []VestingAccount{},
+		GenesisValidatorList: []GenesisValidator{},
+		RequestList:          []Request{},
+		RequestCountList:     []RequestCount{},
 		Params:               DefaultParams(),
 	}
 }

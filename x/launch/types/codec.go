@@ -9,32 +9,31 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	// this line is used by starport scaffolding # 2
-	cdc.RegisterConcrete(&MsgRequestAddValidator{}, "launch/RequestAddValidator", nil)
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
-	cdc.RegisterConcrete(&MsgRevertLaunch{}, "launch/RevertLaunch", nil)
-	cdc.RegisterConcrete(&MsgTriggerLaunch{}, "launch/TriggerLaunch", nil)
-	cdc.RegisterConcrete(&MsgSettleRequest{}, "launch/SettleRequest", nil)
 	cdc.RegisterConcrete(&MsgRequestAddAccount{}, "launch/RequestAddAccount", nil)
-	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
-	cdc.RegisterConcrete(&MsgRequestRemoveValidator{}, "launch/RequestRemoveValidator", nil)
 	cdc.RegisterConcrete(&MsgRequestAddVestingAccount{}, "launch/RequestAddVestingdAccount", nil)
+	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
+	cdc.RegisterConcrete(&MsgRequestAddValidator{}, "launch/RequestAddValidator", nil)
+	cdc.RegisterConcrete(&MsgRequestRemoveValidator{}, "launch/RequestRemoveValidator", nil)
+	cdc.RegisterConcrete(&MsgSettleRequest{}, "launch/SettleRequest", nil)
+	cdc.RegisterConcrete(&MsgTriggerLaunch{}, "launch/TriggerLaunch", nil)
+	cdc.RegisterConcrete(&MsgRevertLaunch{}, "launch/RevertLaunch", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgRequestAddValidator{},
-		&MsgEditChain{},
 		&MsgCreateChain{},
 		&MsgEditChain{},
-		&MsgRevertLaunch{},
-		&MsgTriggerLaunch{},
-		&MsgSettleRequest{},
 		&MsgRequestAddAccount{},
-		&MsgRequestRemoveAccount{},
-		&MsgRequestRemoveValidator{},
 		&MsgRequestAddVestingAccount{},
+		&MsgRequestRemoveAccount{},
+		&MsgRequestAddValidator{},
+		&MsgRequestRemoveValidator{},
+		&MsgSettleRequest{},
+		&MsgTriggerLaunch{},
+		&MsgRevertLaunch{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
