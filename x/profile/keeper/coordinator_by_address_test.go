@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"fmt"
+	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -43,4 +44,20 @@ func TestCoordinatorByAddressGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	require.Equal(t, items, keeper.GetAllCoordinatorByAddress(ctx))
+}
+
+func TestCoordinatorIDFromAddress(t *testing.T) {
+	keeper, ctx := testkeeper.Profile(t)
+	address := sample.AccAddress()
+	keeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
+		Address: address,
+		CoordinatorId: 10,
+	})
+
+	id, found := keeper.CoordinatorIDFromAddress(ctx, address)
+	require.True(t, found)
+	require.Equal(t, uint64(10), id)
+
+	_, found = keeper.CoordinatorIDFromAddress(ctx, sample.AccAddress())
+	require.False(t, found)
 }
