@@ -40,33 +40,45 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			name:  "invalid chain",
 			msg:   sample.MsgRequestAddValidator(addr1, invalidChain),
 			valid: false,
-		}, {
+		},
+		{
 			name:  "chain with triggered launch",
 			msg:   sample.MsgRequestAddValidator(addr1, chains[0].Id),
 			valid: false,
-		}, {
+		},
+		{
 			name:  "chain without coordinator",
 			msg:   sample.MsgRequestAddValidator(addr1, chains[1].Id),
 			valid: false,
-		}, {
+		},
+		{
 			name:   "request to a chain 3",
 			msg:    sample.MsgRequestAddValidator(addr1, chains[2].Id),
 			valid:  true,
 			wantID: 0,
-		}, {
+		},
+		{
 			name:   "second request to a chain 3",
 			msg:    sample.MsgRequestAddValidator(addr2, chains[2].Id),
 			valid:  true,
 			wantID: 1,
-		}, {
+		},
+		{
 			name:   "request to a chain 4",
 			msg:    sample.MsgRequestAddValidator(addr1, chains[3].Id),
 			valid:  true,
 			wantID: 0,
-		}, {
-			name:        "add coordinator to a chain",
+		},
+		{
+			name:        "request from coordinator is pre-approved",
 			msg:         sample.MsgRequestAddValidator(coordAddr, chains[3].Id),
 			valid:       true,
+			wantApprove: true,
+		},
+		{
+			name:        "failing request from coordinator",
+			msg:         sample.MsgRequestAddValidator(coordAddr, chains[3].Id),
+			valid:       false,
 			wantApprove: true,
 		},
 	} {
