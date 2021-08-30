@@ -87,18 +87,20 @@ func TestMsgRevertLaunch(t *testing.T) {
 			valid: false,
 		},
 	} {
-		// Send the message
-		_, err := srv.RevertLaunch(ctx, &tc.msg)
-		if !tc.valid {
-			require.Error(t, err)
-			return
-		}
-		require.NoError(t, err)
+		t.Run(tc.name, func(t *testing.T) {
+			// Send the message
+			_, err := srv.RevertLaunch(ctx, &tc.msg)
+			if !tc.valid {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
 
-		// Check value
-		chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
-		require.True(t, found)
-		require.False(t, chain.LaunchTriggered)
-		require.EqualValues(t, int64(0), chain.LaunchTimestamp)
+			// Check value
+			chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
+			require.True(t, found)
+			require.False(t, chain.LaunchTriggered)
+			require.EqualValues(t, int64(0), chain.LaunchTimestamp)
+		})
 	}
 }

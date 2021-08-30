@@ -89,18 +89,20 @@ func TestMsgTriggerLaunch(t *testing.T) {
 			valid: false,
 		},
 	} {
-		// Send the message
-		_, err := srv.TriggerLaunch(ctx, &tc.msg)
-		if !tc.valid {
-			require.Error(t, err)
-			return
-		}
-		require.NoError(t, err)
+		t.Run(tc.name, func(t *testing.T) {
+			// Send the message
+			_, err := srv.TriggerLaunch(ctx, &tc.msg)
+			if !tc.valid {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
 
-		// Check value
-		chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
-		require.True(t, found)
-		require.True(t, chain.LaunchTriggered)
-		require.EqualValues(t, testkeeper.ExampleTimestamp.Unix()+int64(tc.msg.RemainingTime), chain.LaunchTimestamp)
+			// Check value
+			chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
+			require.True(t, found)
+			require.True(t, chain.LaunchTriggered)
+			require.EqualValues(t, testkeeper.ExampleTimestamp.Unix()+int64(tc.msg.RemainingTime), chain.LaunchTimestamp)
+		})
 	}
 }
