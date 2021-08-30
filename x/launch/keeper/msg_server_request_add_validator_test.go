@@ -34,22 +34,22 @@ func TestMsgRequestAddValidator(t *testing.T) {
 		msg         types.MsgRequestAddValidator
 		wantID      uint64
 		wantApprove bool
-		err       error
+		err         error
 	}{
 		{
-			name:  "invalid chain",
-			msg:   sample.MsgRequestAddValidator(addr1, invalidChain),
-			err: types.ErrChainNotFound,
+			name: "invalid chain",
+			msg:  sample.MsgRequestAddValidator(addr1, invalidChain),
+			err:  types.ErrChainNotFound,
 		},
 		{
-			name:  "chain with triggered launch",
-			msg:   sample.MsgRequestAddValidator(addr1, chains[0].Id),
-			err: types.ErrTriggeredLaunch,
+			name: "chain with triggered launch",
+			msg:  sample.MsgRequestAddValidator(addr1, chains[0].Id),
+			err:  types.ErrTriggeredLaunch,
 		},
 		{
-			name:  "chain without coordinator",
-			msg:   sample.MsgRequestAddValidator(addr1, chains[1].Id),
-			err: types.ErrChainInactive,
+			name: "chain without coordinator",
+			msg:  sample.MsgRequestAddValidator(addr1, chains[1].Id),
+			err:  types.ErrChainInactive,
 		},
 		{
 			name:   "request to a chain 3",
@@ -74,7 +74,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 		{
 			name:        "failing request from coordinator",
 			msg:         sample.MsgRequestAddValidator(coordAddr, chains[3].Id),
-			err: types.ErrValidatorAlreadyExist,
+			err:         types.ErrValidatorAlreadyExist,
 			wantApprove: true,
 		},
 	} {

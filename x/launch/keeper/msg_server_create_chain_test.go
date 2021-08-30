@@ -25,7 +25,7 @@ func TestMsgCreateChain(t *testing.T) {
 		name          string
 		msg           types.MsgCreateChain
 		wantedChainID uint64
-		err       error
+		err           error
 	}{
 		{
 			name:          "valid message",
@@ -43,9 +43,9 @@ func TestMsgCreateChain(t *testing.T) {
 			wantedChainID: 2,
 		},
 		{
-			name:  "coordinator doesn't exist for the chain",
-			msg:   sample.MsgCreateChain(sample.AccAddress(), ""),
-			err: profiletypes.ErrCoordAddressNotFound,
+			name: "coordinator doesn't exist for the chain",
+			msg:  sample.MsgCreateChain(sample.AccAddress(), ""),
+			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

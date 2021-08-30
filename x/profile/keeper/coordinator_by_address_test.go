@@ -50,7 +50,7 @@ func TestCoordinatorIDFromAddress(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
 	address := sample.AccAddress()
 	keeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
-		Address: address,
+		Address:       address,
 		CoordinatorId: 10,
 	})
 

@@ -53,38 +53,38 @@ func TestMsgRevertLaunch(t *testing.T) {
 	k.SetChain(sdkCtx, chain)
 
 	for _, tc := range []struct {
-		name  string
-		msg   types.MsgRevertLaunch
-		err error
+		name string
+		msg  types.MsgRevertLaunch
+		err  error
 	}{
 		{
-			name:  "revert delay reached",
-			msg:   *types.NewMsgRevertLaunch(coordAddress, delayReached),
+			name: "revert delay reached",
+			msg:  *types.NewMsgRevertLaunch(coordAddress, delayReached),
 		},
 		{
-			name:  "revert delay not reached",
-			msg:   *types.NewMsgRevertLaunch(coordAddress, delayNotReached),
-			err: types.ErrRevertDelayNotReached,
+			name: "revert delay not reached",
+			msg:  *types.NewMsgRevertLaunch(coordAddress, delayNotReached),
+			err:  types.ErrRevertDelayNotReached,
 		},
 		{
-			name:  "launch chain not launched",
-			msg:   *types.NewMsgRevertLaunch(coordAddress, notLaunched),
-			err: types.ErrNotTriggeredLaunch,
+			name: "launch chain not launched",
+			msg:  *types.NewMsgRevertLaunch(coordAddress, notLaunched),
+			err:  types.ErrNotTriggeredLaunch,
 		},
 		{
-			name:  "non existent coordinator",
-			msg:   *types.NewMsgRevertLaunch(coordNoExist, delayReached),
-			err: profiletypes.ErrCoordAddressNotFound,
+			name: "non existent coordinator",
+			msg:  *types.NewMsgRevertLaunch(coordNoExist, delayReached),
+			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name:  "invalid coordinator",
-			msg:   *types.NewMsgRevertLaunch(coordAddress2, delayReached),
-			err: profiletypes.ErrCoordInvalid,
+			name: "invalid coordinator",
+			msg:  *types.NewMsgRevertLaunch(coordAddress2, delayReached),
+			err:  profiletypes.ErrCoordInvalid,
 		},
 		{
-			name:  "non existent chain id",
-			msg:   *types.NewMsgRevertLaunch(coordAddress, chainIDNoExist),
-			err: types.ErrChainNotFound,
+			name: "non existent chain id",
+			msg:  *types.NewMsgRevertLaunch(coordAddress, chainIDNoExist),
+			err:  types.ErrChainNotFound,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

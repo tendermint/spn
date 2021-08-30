@@ -34,9 +34,9 @@ func TestMsgEditChain(t *testing.T) {
 	chainID := res.Id
 
 	for _, tc := range []struct {
-		name  string
-		msg   types.MsgEditChain
-		err error
+		name string
+		msg  types.MsgEditChain
+		err  error
 	}{
 		{
 			name: "edit genesis chain ID",
