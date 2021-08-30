@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -54,44 +55,43 @@ func TestMsgRevertLaunch(t *testing.T) {
 	for _, tc := range []struct {
 		name  string
 		msg   types.MsgRevertLaunch
-		valid bool
+		err error
 	}{
 		{
 			name:  "revert delay reached",
 			msg:   *types.NewMsgRevertLaunch(coordAddress, delayReached),
-			valid: true,
 		},
 		{
 			name:  "revert delay not reached",
 			msg:   *types.NewMsgRevertLaunch(coordAddress, delayNotReached),
-			valid: false,
+			err: types.ErrRevertDelayNotReached,
 		},
 		{
 			name:  "launch chain not launched",
 			msg:   *types.NewMsgRevertLaunch(coordAddress, notLaunched),
-			valid: false,
+			err: types.ErrNotTriggeredLaunch,
 		},
 		{
 			name:  "non existent coordinator",
 			msg:   *types.NewMsgRevertLaunch(coordNoExist, delayReached),
-			valid: false,
+			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
 			name:  "invalid coordinator",
 			msg:   *types.NewMsgRevertLaunch(coordAddress2, delayReached),
-			valid: false,
+			err: profiletypes.ErrCoordInvalid,
 		},
 		{
 			name:  "non existent chain id",
 			msg:   *types.NewMsgRevertLaunch(coordAddress, chainIDNoExist),
-			valid: false,
+			err: types.ErrChainNotFound,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			// Send the message
 			_, err := srv.RevertLaunch(ctx, &tc.msg)
-			if !tc.valid {
-				require.Error(t, err)
+			if tc.err != nil {
+				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)

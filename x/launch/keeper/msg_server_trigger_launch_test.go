@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -36,8 +37,12 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	msgCreateChain := sample.MsgCreateChain(coordAddress, "")
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-
 	chainID := res.Id
+
+	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	require.NoError(t, err)
+	chainID2 := res.Id
+
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	alreadyLaunched := res.Id
@@ -51,49 +56,48 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	for _, tc := range []struct {
 		name  string
 		msg   types.MsgTriggerLaunch
-		valid bool
+		err error
 	}{
 		{
 			name:  "launch chain not launched",
 			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTime),
-			valid: true,
 		},
 		{
 			name:  "non existent chain id",
 			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainIDNoExist, launchTime),
-			valid: false,
+			err: types.ErrChainNotFound,
 		},
 		{
 			name:  "non existent coordinator",
-			msg:   *types.NewMsgTriggerLaunch(coordNoExist, chainID, launchTime),
-			valid: false,
+			msg:   *types.NewMsgTriggerLaunch(coordNoExist, chainID2, launchTime),
+			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
 			name:  "invalid coordinator",
-			msg:   *types.NewMsgTriggerLaunch(coordAddress2, chainID, launchTime),
-			valid: false,
+			msg:   *types.NewMsgTriggerLaunch(coordAddress2, chainID2, launchTime),
+			err: profiletypes.ErrCoordInvalid,
 		},
 		{
 			name:  "chain launch already triggered",
 			msg:   *types.NewMsgTriggerLaunch(coordAddress, alreadyLaunched, launchTime),
-			valid: false,
+			err: types.ErrTriggeredLaunch,
 		},
 		{
 			name:  "launch time too low",
-			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTimeTooLow),
-			valid: false,
+			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainID2, launchTimeTooLow),
+			err: types.ErrLaunchTimeTooLow,
 		},
 		{
 			name:  "launch time too high",
-			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTimeTooHigh),
-			valid: false,
+			msg:   *types.NewMsgTriggerLaunch(coordAddress, chainID2, launchTimeTooHigh),
+			err: types.ErrLaunchTimeTooHigh,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			// Send the message
 			_, err := srv.TriggerLaunch(ctx, &tc.msg)
-			if !tc.valid {
-				require.Error(t, err)
+			if tc.err != nil {
+				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
