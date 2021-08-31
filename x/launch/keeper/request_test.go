@@ -41,7 +41,7 @@ func createNRequest(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Reque
 }
 
 func TestRequestGet(t *testing.T) {
-	keeper, _, ctx := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetRequest(ctx,
@@ -53,7 +53,7 @@ func TestRequestGet(t *testing.T) {
 	}
 }
 func TestRequestRemove(t *testing.T) {
-	keeper, _, ctx := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveRequest(ctx,
@@ -69,13 +69,13 @@ func TestRequestRemove(t *testing.T) {
 }
 
 func TestRequestGetAll(t *testing.T) {
-	keeper, _, ctx := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	require.Equal(t, items, keeper.GetAllRequest(ctx))
 }
 
 func TestRequestCount(t *testing.T) {
-	keeper, _, ctx := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	count := uint64(len(items))
 	require.Equal(t, count, keeper.GetRequestCount(ctx, 0))
@@ -84,13 +84,13 @@ func TestRequestCount(t *testing.T) {
 
 func TestApplyRequest(t *testing.T) {
 	var (
-		genesisAcc            = sample.AccAddress()
-		vestingAcc            = sample.AccAddress()
-		validatorAcc          = sample.AccAddress()
-		k, _, _, _, sdkCtx, _ = setupMsgServer(t)
-		chainID               = uint64(10)
-		contents              = sample.AllRequestContents(chainID, genesisAcc, vestingAcc, validatorAcc)
-		invalidContent        = types.NewGenesisAccount(chainID, "", sdk.NewCoins())
+		genesisAcc     = sample.AccAddress()
+		vestingAcc     = sample.AccAddress()
+		validatorAcc   = sample.AccAddress()
+		k, ctx         = testkeeper.Launch(t)
+		chainID        = uint64(10)
+		contents       = sample.AllRequestContents(chainID, genesisAcc, vestingAcc, validatorAcc)
+		invalidContent = types.NewGenesisAccount(chainID, "", sdk.NewCoins())
 	)
 	tests := []struct {
 		name    string
@@ -147,7 +147,7 @@ func TestApplyRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := keeper.ApplyRequest(sdkCtx, *k, chainID, tt.request)
+			err := keeper.ApplyRequest(ctx, *k, chainID, tt.request)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -157,25 +157,25 @@ func TestApplyRequest(t *testing.T) {
 			switch requestContent := tt.request.Content.Content.(type) {
 			case *types.RequestContent_GenesisAccount:
 				ga := requestContent.GenesisAccount
-				_, found := k.GetGenesisAccount(sdkCtx, chainID, ga.Address)
+				_, found := k.GetGenesisAccount(ctx, chainID, ga.Address)
 				require.True(t, found, "genesis account not found")
 			case *types.RequestContent_VestingAccount:
 				va := requestContent.VestingAccount
-				_, found := k.GetVestingAccount(sdkCtx, chainID, va.Address)
+				_, found := k.GetVestingAccount(ctx, chainID, va.Address)
 				require.True(t, found, "vesting account not found")
 			case *types.RequestContent_AccountRemoval:
 				ar := requestContent.AccountRemoval
-				_, foundGenesis := k.GetGenesisAccount(sdkCtx, chainID, ar.Address)
+				_, foundGenesis := k.GetGenesisAccount(ctx, chainID, ar.Address)
 				require.False(t, foundGenesis, "genesis account not removed")
-				_, foundVesting := k.GetVestingAccount(sdkCtx, chainID, ar.Address)
+				_, foundVesting := k.GetVestingAccount(ctx, chainID, ar.Address)
 				require.False(t, foundVesting, "vesting account not removed")
 			case *types.RequestContent_GenesisValidator:
 				ga := requestContent.GenesisValidator
-				_, found := k.GetGenesisValidator(sdkCtx, chainID, ga.Address)
+				_, found := k.GetGenesisValidator(ctx, chainID, ga.Address)
 				require.True(t, found, "genesis validator not found")
 			case *types.RequestContent_ValidatorRemoval:
 				vr := requestContent.ValidatorRemoval
-				_, found := k.GetGenesisValidator(sdkCtx, chainID, vr.ValAddress)
+				_, found := k.GetGenesisValidator(ctx, chainID, vr.ValAddress)
 				require.False(t, found, "genesis validator not removed")
 			}
 		})

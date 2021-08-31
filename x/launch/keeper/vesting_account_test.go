@@ -25,7 +25,7 @@ func createNVestingAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 }
 
 func TestVestingAccountGet(t *testing.T) {
-	keeper, _, ctx := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNVestingAccount(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetVestingAccount(ctx,
@@ -37,7 +37,7 @@ func TestVestingAccountGet(t *testing.T) {
 	}
 }
 func TestVestingAccountRemove(t *testing.T) {
-	keeper, _, ctx := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNVestingAccount(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveVestingAccount(ctx,
@@ -53,7 +53,7 @@ func TestVestingAccountRemove(t *testing.T) {
 }
 
 func TestVestingAccountGetAll(t *testing.T) {
-	keeper, _, ctx := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNVestingAccount(keeper, ctx, 10)
 
 	require.Equal(t, items, keeper.GetAllVestingAccount(ctx))

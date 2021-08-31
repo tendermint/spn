@@ -10,7 +10,7 @@ import (
 )
 
 func TestGenesis(t *testing.T) {
-	keeper, _, ctx := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 
 	original := sample.LaunchGenesisState()
 	launch.InitGenesis(ctx, *keeper, original)

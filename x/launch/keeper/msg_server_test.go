@@ -13,14 +13,16 @@ import (
 
 func setupMsgServer(t testing.TB) (
 	*keeper.Keeper,
+	*profilekeeper.Keeper,
 	types.MsgServer,
 	profiletypes.MsgServer,
 	sdk.Context,
 ) {
-	k, ctx := testkeeper.Launch(t)
+	launchLKeeper, profileKeeper, ctx := testkeeper.AllKeepers(t)
 
-	return k,
-		keeper.NewMsgServerImpl(*k),
+	return launchLKeeper,
+		profileKeeper,
+		keeper.NewMsgServerImpl(*launchLKeeper),
 		profilekeeper.NewMsgServerImpl(*profileKeeper),
 		ctx
 }
