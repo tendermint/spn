@@ -41,7 +41,7 @@ func createNRequest(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Reque
 }
 
 func TestRequestGet(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, _, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetRequest(ctx,
@@ -53,7 +53,7 @@ func TestRequestGet(t *testing.T) {
 	}
 }
 func TestRequestRemove(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, _, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveRequest(ctx,
@@ -69,13 +69,13 @@ func TestRequestRemove(t *testing.T) {
 }
 
 func TestRequestGetAll(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, _, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	require.Equal(t, items, keeper.GetAllRequest(ctx))
 }
 
 func TestRequestCount(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, _, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
 	count := uint64(len(items))
 	require.Equal(t, count, keeper.GetRequestCount(ctx, 0))

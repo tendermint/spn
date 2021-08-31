@@ -17,7 +17,7 @@ import (
 var _ = strconv.IntSize
 
 func TestRequestQuerySingle(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNRequest(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -68,7 +68,7 @@ func TestRequestQuerySingle(t *testing.T) {
 }
 
 func TestRequestQueryPaginated(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNRequest(keeper, ctx, 5)
 

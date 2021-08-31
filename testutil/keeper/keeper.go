@@ -26,7 +26,7 @@ import (
 var ExampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
 
 // Launch returns a keeper of the launch module for testing purpose
-func Launch(t testing.TB) (*launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Context, codec.Marshaler) {
+func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
 	cdc := sample.Codec()
 
 	storeKeys := sdk.NewKVStoreKeys(launchtypes.StoreKey, profiletypes.StoreKey, paramstypes.StoreKey)
@@ -78,7 +78,7 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Cont
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 
-	return launchKeeper, profileKeeper, ctx, cdc
+	return launchKeeper, ctx
 }
 
 // Profile returns a keeper of the profile module for testing purpose

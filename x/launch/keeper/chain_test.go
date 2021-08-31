@@ -28,7 +28,7 @@ func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordina
 }
 
 func TestGetChain(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetChain(ctx, item.Id)
@@ -38,7 +38,7 @@ func TestGetChain(t *testing.T) {
 }
 
 func TestRemoveChain(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveChain(ctx, item.Id)
@@ -48,14 +48,14 @@ func TestRemoveChain(t *testing.T) {
 }
 
 func TestGetAllChain(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 
 	require.Equal(t, items, keeper.GetAllChain(ctx))
 }
 
 func TestChainCount(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 	count := uint64(len(items))
 	require.Equal(t, count, keeper.GetChainCount(ctx))
