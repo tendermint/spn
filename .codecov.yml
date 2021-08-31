@@ -15,7 +15,7 @@ coverage:
           - modules
       client:
         if_ci_failed: error
-        target: 35%
+        target: 70%
         flags:
           - client
 
@@ -48,7 +48,6 @@ ignore:
   - "x/**/types/keys.go"
   - "x/**/types/key_*.go"
   - "x/**/types/types.go"
-  - "x/**/types/genesis.go"
   - "x/**/module.go"
   - "x/**/handler.go"
   - "*.proto"

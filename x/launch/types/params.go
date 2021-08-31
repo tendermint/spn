@@ -21,7 +21,7 @@ var (
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
-// ParamTable for launch module
+// ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
@@ -42,7 +42,7 @@ func DefaultParams() Params {
 	)
 }
 
-// Implements params.ParamSet
+// ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyMinLaunchTime, &p.MinLaunchTime, validateLaunchTime),
