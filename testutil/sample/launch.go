@@ -17,8 +17,8 @@ func GenesisChainID() string {
 }
 
 // Chain returns a sample Chain
-func Chain(id uint64, coordinatorID uint64) *launch.Chain {
-	return &launch.Chain{
+func Chain(id uint64, coordinatorID uint64) launch.Chain {
+	return launch.Chain{
 		Id:              id,
 		CoordinatorID:   coordinatorID,
 		GenesisChainID:  GenesisChainID(),
@@ -31,8 +31,8 @@ func Chain(id uint64, coordinatorID uint64) *launch.Chain {
 }
 
 // GenesisAccount returns a sample GenesisAccount
-func GenesisAccount(chainID uint64, address string) *launch.GenesisAccount {
-	return &launch.GenesisAccount{
+func GenesisAccount(chainID uint64, address string) launch.GenesisAccount {
+	return launch.GenesisAccount{
 		ChainID: chainID,
 		Address: address,
 		Coins:   Coins(),
@@ -45,8 +45,8 @@ func VestingOptions() launch.VestingOptions {
 }
 
 // VestingAccount returns a sample VestingAccount
-func VestingAccount(chainID uint64, address string) *launch.VestingAccount {
-	return &launch.VestingAccount{
+func VestingAccount(chainID uint64, address string) launch.VestingAccount {
+	return launch.VestingAccount{
 		ChainID:         chainID,
 		Address:         address,
 		StartingBalance: Coins(),
@@ -62,8 +62,8 @@ func AccountRemoval(address string) *launch.AccountRemoval {
 }
 
 // GenesisValidator returns a sample GenesisValidator
-func GenesisValidator(chainID uint64, address string) *launch.GenesisValidator {
-	return &launch.GenesisValidator{
+func GenesisValidator(chainID uint64, address string) launch.GenesisValidator {
+	return launch.GenesisValidator{
 		ChainID:        chainID,
 		Address:        address,
 		GenTx:          Bytes(200),
@@ -74,15 +74,15 @@ func GenesisValidator(chainID uint64, address string) *launch.GenesisValidator {
 }
 
 // ValidatorRemoval returns a sample ValidatorRemoval
-func ValidatorRemoval(address string) *launch.ValidatorRemoval {
-	return &launch.ValidatorRemoval{
+func ValidatorRemoval(address string) launch.ValidatorRemoval {
+	return launch.ValidatorRemoval{
 		ValAddress: address,
 	}
 }
 
 // RequestWithContent creates a launch request object with chain id and content
-func RequestWithContent(chainID uint64, content launch.RequestContent) *launch.Request {
-	return &launch.Request{
+func RequestWithContent(chainID uint64, content launch.RequestContent) launch.Request {
+	return launch.Request{
 		ChainID:   chainID,
 		Creator:   AccAddress(),
 		CreatedAt: time.Now().Unix(),
@@ -108,7 +108,7 @@ func GenesisAccountContent(chainID uint64, address string) launch.RequestContent
 }
 
 // Request returns a sample Request
-func Request(chainID uint64) *launch.Request {
+func Request(chainID uint64) launch.Request {
 	content := GenesisAccountContent(chainID, AccAddress())
 	return RequestWithContent(chainID, content)
 }
@@ -204,28 +204,28 @@ func LaunchGenesisState() launch.GenesisState {
 
 	return launch.GenesisState{
 		ChainList: []launch.Chain{
-			*Chain(chainID1, Uint64()),
-			*Chain(chainID2, Uint64()),
+			Chain(chainID1, Uint64()),
+			Chain(chainID2, Uint64()),
 		},
 		ChainCount: 10,
 		GenesisAccountList: []launch.GenesisAccount{
-			*GenesisAccount(chainID1, AccAddress()),
-			*GenesisAccount(chainID1, AccAddress()),
-			*GenesisAccount(chainID2, AccAddress()),
+			GenesisAccount(chainID1, AccAddress()),
+			GenesisAccount(chainID1, AccAddress()),
+			GenesisAccount(chainID2, AccAddress()),
 		},
 		VestingAccountList: []launch.VestingAccount{
-			*VestingAccount(chainID1, AccAddress()),
-			*VestingAccount(chainID1, AccAddress()),
-			*VestingAccount(chainID2, AccAddress()),
+			VestingAccount(chainID1, AccAddress()),
+			VestingAccount(chainID1, AccAddress()),
+			VestingAccount(chainID2, AccAddress()),
 		},
 		GenesisValidatorList: []launch.GenesisValidator{
-			*GenesisValidator(chainID1, AccAddress()),
-			*GenesisValidator(chainID1, AccAddress()),
-			*GenesisValidator(chainID2, AccAddress()),
+			GenesisValidator(chainID1, AccAddress()),
+			GenesisValidator(chainID1, AccAddress()),
+			GenesisValidator(chainID2, AccAddress()),
 		},
 		RequestList: []launch.Request{
-			*Request(chainID1),
-			*Request(chainID2),
+			Request(chainID1),
+			Request(chainID2),
 		},
 		RequestCountList: []launch.RequestCount{
 			{

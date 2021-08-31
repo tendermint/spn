@@ -18,7 +18,7 @@ var _ = strconv.IntSize
 func createNVestingAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.VestingAccount {
 	items := make([]types.VestingAccount, n)
 	for i := range items {
-		items[i] = *sample.VestingAccount(uint64(i), strconv.Itoa(i))
+		items[i] = sample.VestingAccount(uint64(i), strconv.Itoa(i))
 		keeper.SetVestingAccount(ctx, items[i])
 	}
 	return items

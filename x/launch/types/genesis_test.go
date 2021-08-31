@@ -15,7 +15,7 @@ var (
 	addr1            = sample.AccAddress()
 	addr2            = sample.AccAddress()
 	vestingAddress   = sample.AccAddress()
-	genesisValidator = *sample.GenesisValidator(chainID1, addr1)
+	genesisValidator = sample.GenesisValidator(chainID1, addr1)
 	genesisChainID   = sample.GenesisChainID()
 
 	// Those are samples we can use for each fields when they are not the one to test
@@ -233,7 +233,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:  sampleChainList,
 				ChainCount: 10,
 				GenesisValidatorList: []types.GenesisValidator{
-					*sample.GenesisValidator(noExistChainID, addr1),
+					sample.GenesisValidator(noExistChainID, addr1),
 				},
 			},
 			shouldBeValid: false,
@@ -244,8 +244,8 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:  sampleChainList,
 				ChainCount: 10,
 				GenesisValidatorList: []types.GenesisValidator{
-					*sample.GenesisValidator(chainID1, addr1),
-					*sample.GenesisValidator(chainID1, addr1),
+					sample.GenesisValidator(chainID1, addr1),
+					sample.GenesisValidator(chainID1, addr1),
 				},
 			},
 			shouldBeValid: false,
@@ -256,7 +256,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:  sampleChainList,
 				ChainCount: 10,
 				GenesisValidatorList: []types.GenesisValidator{
-					*sample.GenesisValidator(noExistChainID, addr1),
+					sample.GenesisValidator(noExistChainID, addr1),
 				},
 			},
 			shouldBeValid: false,

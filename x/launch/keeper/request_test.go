@@ -23,7 +23,7 @@ func createRequests(
 ) []types.Request {
 	items := make([]types.Request, len(contents))
 	for i, content := range contents {
-		items[i] = *sample.RequestWithContent(chainID, content)
+		items[i] = sample.RequestWithContent(chainID, content)
 		id := keeper.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
@@ -33,7 +33,7 @@ func createRequests(
 func createNRequest(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
-		items[i] = *sample.Request(0)
+		items[i] = sample.Request(0)
 		id := keeper.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
@@ -99,49 +99,49 @@ func TestApplyRequest(t *testing.T) {
 	}{
 		{
 			name:    "test GenesisAccount content",
-			request: *sample.RequestWithContent(chainID, contents[0]),
+			request: sample.RequestWithContent(chainID, contents[0]),
 		}, {
 			name:    "test duplicated GenesisAccount content",
-			request: *sample.RequestWithContent(chainID, contents[0]),
+			request: sample.RequestWithContent(chainID, contents[0]),
 			wantErr: true,
 		}, {
 			name:    "test genesis AccountRemoval content",
-			request: *sample.RequestWithContent(chainID, contents[1]),
+			request: sample.RequestWithContent(chainID, contents[1]),
 		}, {
 			name:    "test not found genesis AccountRemoval content",
-			request: *sample.RequestWithContent(chainID, contents[1]),
+			request: sample.RequestWithContent(chainID, contents[1]),
 			wantErr: true,
 		}, {
 			name:    "test VestingAccount content",
-			request: *sample.RequestWithContent(chainID, contents[2]),
+			request: sample.RequestWithContent(chainID, contents[2]),
 		}, {
 			name:    "test duplicated VestingAccount content",
-			request: *sample.RequestWithContent(chainID, contents[2]),
+			request: sample.RequestWithContent(chainID, contents[2]),
 			wantErr: true,
 		}, {
 			name:    "test vesting AccountRemoval content",
-			request: *sample.RequestWithContent(chainID, contents[3]),
+			request: sample.RequestWithContent(chainID, contents[3]),
 		}, {
 			name:    "test not found vesting AccountRemoval content",
-			request: *sample.RequestWithContent(chainID, contents[3]),
+			request: sample.RequestWithContent(chainID, contents[3]),
 			wantErr: true,
 		}, {
 			name:    "test GenesisValidator content",
-			request: *sample.RequestWithContent(chainID, contents[4]),
+			request: sample.RequestWithContent(chainID, contents[4]),
 		}, {
 			name:    "test duplicated GenesisValidator content",
-			request: *sample.RequestWithContent(chainID, contents[4]),
+			request: sample.RequestWithContent(chainID, contents[4]),
 			wantErr: true,
 		}, {
 			name:    "test ValidatorRemoval content",
-			request: *sample.RequestWithContent(chainID, contents[5]),
+			request: sample.RequestWithContent(chainID, contents[5]),
 		}, {
 			name:    "test not found ValidatorRemoval content",
-			request: *sample.RequestWithContent(chainID, contents[5]),
+			request: sample.RequestWithContent(chainID, contents[5]),
 			wantErr: true,
 		}, {
 			name:    "test request with invalid parameters",
-			request: *sample.RequestWithContent(chainID, invalidContent),
+			request: sample.RequestWithContent(chainID, invalidContent),
 			wantErr: true,
 		},
 	}
