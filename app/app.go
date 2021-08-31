@@ -162,7 +162,7 @@ var (
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
-		campaignmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
+		campaignmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 	}
 )
 
@@ -376,7 +376,6 @@ func New(
 		appCodec,
 		keys[campaignmoduletypes.StoreKey],
 		keys[campaignmoduletypes.MemStoreKey],
-
 		app.LaunchKeeper,
 		app.BankKeeper,
 		app.ProfileKeeper,
