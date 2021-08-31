@@ -81,9 +81,9 @@ func TestGenesisValidatorQuerySingle(t *testing.T) {
 func TestGenesisValidatorQueryPaginated(t *testing.T) {
 	var (
 		keeper, ctx = testkeeper.Launch(t)
-		wctx              = sdk.WrapSDKContext(ctx)
-		chainID           = uint64(0)
-		msgs              = createNGenesisValidatorForChainID(keeper, ctx, 5, chainID)
+		wctx        = sdk.WrapSDKContext(ctx)
+		chainID     = uint64(0)
+		msgs        = createNGenesisValidatorForChainID(keeper, ctx, 5, chainID)
 	)
 	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisValidatorRequest {
 		return &types.QueryAllGenesisValidatorRequest{
