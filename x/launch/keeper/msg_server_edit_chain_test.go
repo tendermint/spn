@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgEditChain(t *testing.T) {
@@ -33,9 +34,9 @@ func TestMsgEditChain(t *testing.T) {
 	chainID := res.Id
 
 	for _, tc := range []struct {
-		name  string
-		msg   types.MsgEditChain
-		valid bool
+		name string
+		msg  types.MsgEditChain
+		err  error
 	}{
 		{
 			name: "edit genesis chain ID",
@@ -45,7 +46,6 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 			),
-			valid: true,
 		},
 		{
 			name: "edit source",
@@ -55,7 +55,6 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 			),
-			valid: true,
 		},
 		{
 			name: "edit initial genesis with default genesis",
@@ -65,7 +64,6 @@ func TestMsgEditChain(t *testing.T) {
 				true,
 				false,
 			),
-			valid: true,
 		},
 		{
 			name: "edit initial genesis with genesis url",
@@ -75,7 +73,6 @@ func TestMsgEditChain(t *testing.T) {
 				true,
 				true,
 			),
-			valid: true,
 		},
 		{
 			name: "edit source and initial genesis",
@@ -85,7 +82,6 @@ func TestMsgEditChain(t *testing.T) {
 				true,
 				true,
 			),
-			valid: true,
 		},
 		{
 			name: "non existent chain id",
@@ -95,7 +91,7 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 			),
-			valid: false,
+			err: types.ErrChainNotFound,
 		},
 		{
 			name: "non existent coordinator",
@@ -105,7 +101,7 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 			),
-			valid: false,
+			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
 			name: "invalid coordinator",
@@ -115,22 +111,22 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 			),
-			valid: false,
+			err: profiletypes.ErrCoordInvalid,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			// Fetch the previous state of the chain to perform checks
 			var previousChain types.Chain
 			var found bool
-			if tc.valid {
+			if tc.err == nil {
 				previousChain, found = k.GetChain(sdkCtx, tc.msg.ChainID)
 				require.True(t, found)
 			}
 
 			// Send the message
 			_, err := srv.EditChain(ctx, &tc.msg)
-			if !tc.valid {
-				require.Error(t, err)
+			if tc.err != nil {
+				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
