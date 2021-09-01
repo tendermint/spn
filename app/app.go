@@ -370,9 +370,9 @@ func New(
 		app.GetSubspace(launchmoduletypes.ModuleName),
 		app.ProfileKeeper,
 	)
-	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
 
-	app.CampaignKeeper = *campaignmodulekeeper.NewKeeper(
+
+	campaignKeeper := campaignmodulekeeper.NewKeeper(
 		appCodec,
 		keys[campaignmoduletypes.StoreKey],
 		keys[campaignmoduletypes.MemStoreKey],
@@ -380,7 +380,11 @@ func New(
 		app.BankKeeper,
 		app.ProfileKeeper,
 	)
+	app.CampaignKeeper = *campaignKeeper
 	campaignModule := campaignmodule.NewAppModule(appCodec, app.CampaignKeeper)
+
+	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
+	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
