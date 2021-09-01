@@ -45,7 +45,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			err: types.ErrChainNotFound,
-		}, {
+		},
+		{
 			name: "launch triggered chain",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[0].Id,
@@ -53,7 +54,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			err: types.ErrTriggeredLaunch,
-		}, {
+		},
+		{
 			name: "coordinator not found",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[1].Id,
@@ -61,7 +63,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			err: types.ErrChainInactive,
-		}, {
+		},
+		{
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[2].Id,
@@ -69,7 +72,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			wantID: 0,
-		}, {
+		},
+		{
 			name: "add chain 4 request 1",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[3].Id,
@@ -77,7 +81,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			wantID: 0,
-		}, {
+		},
+		{
 			name: "add chain 4 request 2",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[3].Id,
@@ -85,7 +90,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			wantID: 1,
-		}, {
+		},
+		{
 			name: "add chain 5 request 1",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[4].Id,
@@ -93,7 +99,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			wantID: 0,
-		}, {
+		},
+		{
 			name: "add chain 5 request 2",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[4].Id,
@@ -101,7 +108,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			wantID: 1,
-		}, {
+		},
+		{
 			name: "add chain 5 request 3",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[4].Id,
@@ -109,14 +117,24 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			wantID: 2,
-		}, {
-			name: "add coordinator account",
+		},
+		{
+			name: "request from coordinator is pre-approved",
 			msg: types.MsgRequestAddAccount{
 				ChainID: chains[4].Id,
 				Address: coordAddr,
 				Coins:   sample.Coins(),
 			},
 			wantApprove: true,
+		},
+		{
+			name: "failing request from coordinator",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[4].Id,
+				Address: coordAddr,
+				Coins:   sample.Coins(),
+			},
+			err: types.ErrAccountAlreadyExist,
 		},
 	}
 	for _, tt := range tests {
