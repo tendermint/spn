@@ -30,7 +30,7 @@ func networkWithGenesisValidatorObjects(t *testing.T, n int) (*network.Network, 
 	for i := 0; i < n; i++ {
 		state.GenesisValidatorList = append(
 			state.GenesisValidatorList,
-			*sample.GenesisValidator(uint64(0), strconv.Itoa(i)),
+			sample.GenesisValidator(uint64(0), strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)

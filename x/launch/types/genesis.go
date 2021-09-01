@@ -14,7 +14,7 @@ func DefaultGenesis() *GenesisState {
 		ChainList:            []Chain{},
 		ChainCount:           0,
 		GenesisAccountList:   []GenesisAccount{},
-		VestingAccountList:    []VestingAccount{},
+		VestingAccountList:   []VestingAccount{},
 		GenesisValidatorList: []GenesisValidator{},
 		RequestList:          []Request{},
 		RequestCountList:     []RequestCount{},

@@ -18,7 +18,7 @@ var _ = strconv.IntSize
 func createNGenesisValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, n)
 	for i := range items {
-		items[i] = *sample.GenesisValidator(uint64(i), strconv.Itoa(i))
+		items[i] = sample.GenesisValidator(uint64(i), strconv.Itoa(i))
 		keeper.SetGenesisValidator(ctx, items[i])
 	}
 	return items
