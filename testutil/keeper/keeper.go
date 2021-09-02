@@ -19,7 +19,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
-	campaignmoduletypes "github.com/tendermint/spn/x/campaign/types"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
@@ -37,7 +37,7 @@ var (
 		authtypes.FeeCollectorName:     nil,
 		minttypes.ModuleName:           {authtypes.Minter},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		campaignmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
+		campaigntypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 	}
 )
 
@@ -192,8 +192,8 @@ func initCampaign(
 	profileKeeper *profilekeeper.Keeper,
 	bankKeeper bankkeeper.Keeper,
 ) *campaignkeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(launchtypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(launchtypes.MemStoreKey)
+	storeKey := sdk.NewKVStoreKey(campaigntypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(campaigntypes.MemStoreKey)
 
 	stateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)

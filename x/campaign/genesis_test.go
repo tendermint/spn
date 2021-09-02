@@ -14,7 +14,7 @@ func TestGenesis(t *testing.T) {
 
 	original := sample.CampaignGenesisState()
 	campaign.InitGenesis(ctx, *keeper, original)
-	got := campaign.ExportGenesis(ctx, *keeper)
+	got := *campaign.ExportGenesis(ctx, *keeper)
 
 	require.Equal(t, original, got)
 }
