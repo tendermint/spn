@@ -25,7 +25,7 @@ func createNGenesisValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 }
 
 func TestGenesisValidatorGet(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNGenesisValidator(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetGenesisValidator(ctx,
@@ -37,7 +37,7 @@ func TestGenesisValidatorGet(t *testing.T) {
 	}
 }
 func TestGenesisValidatorRemove(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNGenesisValidator(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveGenesisValidator(ctx,
@@ -53,7 +53,7 @@ func TestGenesisValidatorRemove(t *testing.T) {
 }
 
 func TestGenesisValidatorGetAll(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	items := createNGenesisValidator(keeper, ctx, 10)
 	require.Equal(t, items, keeper.GetAllGenesisValidator(ctx))
 }

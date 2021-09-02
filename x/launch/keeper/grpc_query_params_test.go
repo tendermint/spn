@@ -11,7 +11,7 @@ import (
 )
 
 func TestParamsQuery(t *testing.T) {
-	keeper, _, ctx, _ := testkeeper.Launch(t)
+	keeper, ctx := testkeeper.Launch(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	params := sample.LaunchParams()
 	keeper.SetParams(ctx, params)

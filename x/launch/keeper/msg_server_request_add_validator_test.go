@@ -12,12 +12,12 @@ import (
 
 func TestMsgRequestAddValidator(t *testing.T) {
 	var (
-		invalidChain             = uint64(1000)
-		coordAddr                = sample.AccAddress()
-		addr1                    = sample.AccAddress()
-		addr2                    = sample.AccAddress()
-		k, pk, srv, _, sdkCtx, _ = setupMsgServer(t)
-		ctx                      = sdk.WrapSDKContext(sdkCtx)
+		invalidChain          = uint64(1000)
+		coordAddr             = sample.AccAddress()
+		addr1                 = sample.AccAddress()
+		addr2                 = sample.AccAddress()
+		k, pk, srv, _, sdkCtx = setupMsgServer(t)
+		ctx                   = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{

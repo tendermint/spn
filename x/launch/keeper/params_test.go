@@ -9,7 +9,7 @@ import (
 )
 
 func Test_GetParams(t *testing.T) {
-	k, _, ctx, _ := testkeeper.Launch(t)
+	k, ctx := testkeeper.Launch(t)
 	params := sample.LaunchParams()
 
 	k.SetParams(ctx, params)

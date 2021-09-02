@@ -12,7 +12,7 @@ import (
 )
 
 func TestMsgRevertLaunch(t *testing.T) {
-	k, _, srv, profileSrv, sdkCtx, _ := setupMsgServer(t)
+	k, _, srv, profileSrv, sdkCtx := setupMsgServer(t)
 
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()

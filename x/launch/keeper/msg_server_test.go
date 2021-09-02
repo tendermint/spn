@@ -3,7 +3,6 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/x/launch/keeper"
@@ -18,14 +17,12 @@ func setupMsgServer(t testing.TB) (
 	types.MsgServer,
 	profiletypes.MsgServer,
 	sdk.Context,
-	codec.Marshaler,
 ) {
-	k, profileKeeper, ctx, cdc := testkeeper.Launch(t)
+	launchLKeeper, profileKeeper, ctx := testkeeper.AllKeepers(t)
 
-	return k,
+	return launchLKeeper,
 		profileKeeper,
-		keeper.NewMsgServerImpl(*k),
+		keeper.NewMsgServerImpl(*launchLKeeper),
 		profilekeeper.NewMsgServerImpl(*profileKeeper),
-		ctx,
-		cdc
+		ctx
 }

@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/store"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -25,52 +24,19 @@ import (
 // ExampleTimestamp is a timestamp used as the current time for the context of the keepers returned from the package
 var ExampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
 
-// Launch returns a keeper of the launch module for testing purpose
-func Launch(t testing.TB) (*launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Context, codec.Marshaler) {
+// AllKeepers returns initialized instances of all the keepers of the module
+func AllKeepers(t testing.TB) (*launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Context) {
 	cdc := sample.Codec()
-
-	storeKeys := sdk.NewKVStoreKeys(launchtypes.StoreKey, profiletypes.StoreKey, paramstypes.StoreKey)
-	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
-	memStoreKeyLaunch := storetypes.NewMemoryStoreKey(launchtypes.MemStoreKey)
-	memStoreKeyProfile := storetypes.NewMemoryStoreKey(profiletypes.MemStoreKey)
-
-	// Initial param keeper
-	paramsKeeper := paramskeeper.NewKeeper(
-		cdc,
-		launchtypes.Amino,
-		storeKeys[paramstypes.StoreKey],
-		tkeys[paramstypes.TStoreKey],
-	)
-	paramsKeeper.Subspace(launchtypes.ModuleName)
-
-	profileKeeper := profilekeeper.NewKeeper(
-		cdc,
-		storeKeys[profiletypes.StoreKey],
-		memStoreKeyProfile,
-	)
-
-	launchSubspace, found := paramsKeeper.GetSubspace(launchtypes.ModuleName)
-	if !found {
-		t.Fatal("no param subspace for launch")
-	}
-	launchKeeper := launchkeeper.NewKeeper(
-		cdc,
-		storeKeys[launchtypes.StoreKey],
-		memStoreKeyLaunch,
-		launchSubspace,
-		profileKeeper,
-	)
-
 	db := tmdb.NewMemDB()
 	stateStore := store.NewCommitMultiStore(db)
-	stateStore.MountStoreWithDB(storeKeys[paramstypes.StoreKey], sdk.StoreTypeIAVL, db)
-	stateStore.MountStoreWithDB(storeKeys[profiletypes.StoreKey], sdk.StoreTypeIAVL, db)
-	stateStore.MountStoreWithDB(storeKeys[launchtypes.StoreKey], sdk.StoreTypeIAVL, db)
-	stateStore.MountStoreWithDB(tkeys[paramstypes.TStoreKey], sdk.StoreTypeTransient, db)
-	stateStore.MountStoreWithDB(memStoreKeyProfile, sdk.StoreTypeMemory, nil)
-	stateStore.MountStoreWithDB(memStoreKeyLaunch, sdk.StoreTypeMemory, nil)
+
+	paramKeeper := initParam(cdc, db, stateStore)
+	profileKeeper := initProfile(cdc, db, stateStore)
+	launchKeeper := initLaunch(cdc, db, stateStore, profileKeeper, paramKeeper)
+
 	require.NoError(t, stateStore.LoadLatestVersion())
 
+	// Create a context using a custom timestamp
 	ctx := sdk.NewContext(stateStore, tmproto.Header{
 		Time: ExampleTimestamp,
 	}, false, log.NewNopLogger())
@@ -78,27 +44,70 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Cont
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 
-	return launchKeeper, profileKeeper, ctx, cdc
+	return launchKeeper, profileKeeper, ctx
+}
+
+// Launch returns a keeper of the launch module for testing purpose
+func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
+	launchKeeper, _, ctx := AllKeepers(t)
+	return launchKeeper, ctx
 }
 
 // Profile returns a keeper of the profile module for testing purpose
 func Profile(t testing.TB) (*profilekeeper.Keeper, sdk.Context) {
+	cdc := sample.Codec()
+	db := tmdb.NewMemDB()
+	stateStore := store.NewCommitMultiStore(db)
+
+	keeper := initProfile(cdc, db, stateStore)
+	require.NoError(t, stateStore.LoadLatestVersion())
+
+	return keeper, sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
+}
+
+func initParam(
+	cdc codec.Marshaler,
+	db *tmdb.MemDB,
+	stateStore store.CommitMultiStore,
+) paramskeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(paramstypes.StoreKey)
+	tkeys := sdk.NewTransientStoreKey(paramstypes.TStoreKey)
+
+	stateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, db)
+	stateStore.MountStoreWithDB(tkeys, sdk.StoreTypeTransient, db)
+
+	return paramskeeper.NewKeeper(cdc, launchtypes.Amino, storeKey, tkeys)
+}
+
+func initProfile(
+	cdc codec.Marshaler,
+	db *tmdb.MemDB,
+	stateStore store.CommitMultiStore,
+) *profilekeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(profiletypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(profiletypes.MemStoreKey)
 
-	db := tmdb.NewMemDB()
-	stateStore := store.NewCommitMultiStore(db)
 	stateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, db)
 	stateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
-	require.NoError(t, stateStore.LoadLatestVersion())
 
-	registry := codectypes.NewInterfaceRegistry()
-	keeper := profilekeeper.NewKeeper(
-		codec.NewProtoCodec(registry),
-		storeKey,
-		memStoreKey,
-	)
+	return profilekeeper.NewKeeper(cdc, storeKey, memStoreKey)
+}
 
-	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, log.NewNopLogger())
-	return keeper, ctx
+func initLaunch(
+	cdc codec.Marshaler,
+	db *tmdb.MemDB,
+	stateStore store.CommitMultiStore,
+	profileKeeper *profilekeeper.Keeper,
+	paramKeeper paramskeeper.Keeper,
+) *launchkeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(launchtypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(launchtypes.MemStoreKey)
+
+	stateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, db)
+	stateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
+
+	paramKeeper.Subspace(launchtypes.ModuleName)
+	launchSubspace, _ := paramKeeper.GetSubspace(launchtypes.ModuleName)
+
+	return launchkeeper.NewKeeper(cdc, storeKey, memStoreKey, launchSubspace, profileKeeper)
 }
