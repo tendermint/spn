@@ -17,13 +17,11 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 	// this line is used by starport scaffolding # 1
-	// this line is used by starport scaffolding # ibc/module/import
 )
 
 var (
 	_ module.AppModule      = AppModule{}
 	_ module.AppModuleBasic = AppModuleBasic{}
-	// this line is used by starport scaffolding # ibc/module/interface
 )
 
 // ----------------------------------------------------------------------------
