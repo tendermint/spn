@@ -7,10 +7,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgCreateChain(t *testing.T) {
-	k, _, srv, profileSrv, sdkCtx, _ := setupMsgServer(t)
+	k, _, srv, profileSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
 
@@ -24,36 +25,33 @@ func TestMsgCreateChain(t *testing.T) {
 		name          string
 		msg           types.MsgCreateChain
 		wantedChainID uint64
-		valid         bool
+		err           error
 	}{
 		{
 			name:          "valid message",
 			msg:           sample.MsgCreateChain(coordAddress, ""),
 			wantedChainID: 0,
-			valid:         true,
 		},
 		{
 			name:          "creates a unique chain ID",
 			msg:           sample.MsgCreateChain(coordAddress, ""),
 			wantedChainID: 1,
-			valid:         true,
 		},
 		{
 			name:          "valid message with genesis url",
 			msg:           sample.MsgCreateChain(coordAddress, "foo.com"),
 			wantedChainID: 2,
-			valid:         true,
 		},
 		{
-			name:  "coordinator doesn't exist for the chain",
-			msg:   sample.MsgCreateChain(sample.AccAddress(), ""),
-			valid: false,
+			name: "coordinator doesn't exist for the chain",
+			msg:  sample.MsgCreateChain(sample.AccAddress(), ""),
+			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := srv.CreateChain(ctx, &tc.msg)
-			if !tc.valid {
-				require.Error(t, err)
+			if tc.err != nil {
+				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)

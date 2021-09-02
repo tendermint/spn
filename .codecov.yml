@@ -15,7 +15,7 @@ coverage:
           - modules
       client:
         if_ci_failed: error
-        target: 35%
+        target: 70%
         flags:
           - client
 
@@ -29,21 +29,32 @@ flags:
     carryforward: true
     paths:
       - "x/"
-      - "!x/**/client/"
+      - "!x/**/client/**/*"
   client:
     carryforward: true
     paths:
-      - "x/**/client/"
+      - "x/**/client/**/*"
 
 ignore:
+  - "x/**/client/cli/query.go"
+  - "x/**/client/cli/query_params.go"
+  - "x/**/client/cli/tx.go"
+  - "x/**/client/cli/tx_*.go"
+  - "x/**/keeper/keeper.go"
+  - "x/**/keeper/msg_server.go"
+  - "x/**/keeper/grpc_query_params.go"
   - "x/**/types/codec.go"
   - "x/**/types/errors.go"
   - "x/**/types/keys.go"
+  - "x/**/types/key_*.go"
+  - "x/**/types/types.go"
+  - "x/**/module.go"
+  - "x/**/handler.go"
   - "*.proto"
   - "*.md"
   - "*.yml"
+  - "*.yaml"
   - "*.pb.go"
-  - "x/**/types/key_*.go"
   - ".github/"
   - "app/"
   - "cmd/"
@@ -53,4 +64,5 @@ ignore:
   - "scripts/"
   - "tests/"
   - "testutil/"
+  - "dart/"
   - "vue/"

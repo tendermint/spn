@@ -8,10 +8,11 @@ import (
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgRevertLaunch(t *testing.T) {
-	k, _, srv, profileSrv, sdkCtx, _ := setupMsgServer(t)
+	k, _, srv, profileSrv, sdkCtx := setupMsgServer(t)
 
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
@@ -52,53 +53,54 @@ func TestMsgRevertLaunch(t *testing.T) {
 	k.SetChain(sdkCtx, chain)
 
 	for _, tc := range []struct {
-		name  string
-		msg   types.MsgRevertLaunch
-		valid bool
+		name string
+		msg  types.MsgRevertLaunch
+		err  error
 	}{
 		{
-			name:  "revert delay reached",
-			msg:   *types.NewMsgRevertLaunch(coordAddress, delayReached),
-			valid: true,
+			name: "revert delay reached",
+			msg:  *types.NewMsgRevertLaunch(coordAddress, delayReached),
 		},
 		{
-			name:  "revert delay not reached",
-			msg:   *types.NewMsgRevertLaunch(coordAddress, delayNotReached),
-			valid: false,
+			name: "revert delay not reached",
+			msg:  *types.NewMsgRevertLaunch(coordAddress, delayNotReached),
+			err:  types.ErrRevertDelayNotReached,
 		},
 		{
-			name:  "launch chain not launched",
-			msg:   *types.NewMsgRevertLaunch(coordAddress, notLaunched),
-			valid: false,
+			name: "launch chain not launched",
+			msg:  *types.NewMsgRevertLaunch(coordAddress, notLaunched),
+			err:  types.ErrNotTriggeredLaunch,
 		},
 		{
-			name:  "non existent coordinator",
-			msg:   *types.NewMsgRevertLaunch(coordNoExist, delayReached),
-			valid: false,
+			name: "non existent coordinator",
+			msg:  *types.NewMsgRevertLaunch(coordNoExist, delayReached),
+			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name:  "invalid coordinator",
-			msg:   *types.NewMsgRevertLaunch(coordAddress2, delayReached),
-			valid: false,
+			name: "invalid coordinator",
+			msg:  *types.NewMsgRevertLaunch(coordAddress2, delayReached),
+			err:  profiletypes.ErrCoordInvalid,
 		},
 		{
-			name:  "non existent chain id",
-			msg:   *types.NewMsgRevertLaunch(coordAddress, chainIDNoExist),
-			valid: false,
+			name: "non existent chain id",
+			msg:  *types.NewMsgRevertLaunch(coordAddress, chainIDNoExist),
+			err:  types.ErrChainNotFound,
 		},
 	} {
-		// Send the message
-		_, err := srv.RevertLaunch(ctx, &tc.msg)
-		if !tc.valid {
-			require.Error(t, err)
-			return
-		}
-		require.NoError(t, err)
+		t.Run(tc.name, func(t *testing.T) {
+			// Send the message
+			_, err := srv.RevertLaunch(ctx, &tc.msg)
+			if tc.err != nil {
+				require.ErrorIs(t, err, tc.err)
+				return
+			}
+			require.NoError(t, err)
 
-		// Check value
-		chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
-		require.True(t, found)
-		require.False(t, chain.LaunchTriggered)
-		require.EqualValues(t, int64(0), chain.LaunchTimestamp)
+			// Check value
+			chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
+			require.True(t, found)
+			require.False(t, chain.LaunchTriggered)
+			require.EqualValues(t, int64(0), chain.LaunchTimestamp)
+		})
 	}
 }
