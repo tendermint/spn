@@ -50,7 +50,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr1,
 			},
 			err: types.ErrChainNotFound,
-		}, {
+		},
+		{
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[0].Id,
@@ -58,7 +59,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr1,
 			},
 			err: types.ErrTriggeredLaunch,
-		}, {
+		},
+		{
 			name: "coordinator not found",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[1].Id,
@@ -66,7 +68,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr1,
 			},
 			err: types.ErrChainInactive,
-		}, {
+		},
+		{
 			name: "no permission error",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[2].Id,
@@ -74,7 +77,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr3,
 			},
 			err: types.ErrNoAddressPermission,
-		}, {
+		},
+		{
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[2].Id,
@@ -82,7 +86,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr1,
 			},
 			wantID: 0,
-		}, {
+		},
+		{
 			name: "add chain 4 request 2",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[3].Id,
@@ -90,7 +95,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr1,
 			},
 			wantApprove: true,
-		}, {
+		},
+		{
 			name: "add chain 4 request 3",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[3].Id,
@@ -98,7 +104,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr2,
 			},
 			wantID: 0,
-		}, {
+		},
+		{
 			name: "add chain 5 request 1",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[4].Id,
@@ -106,7 +113,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr1,
 			},
 			wantID: 0,
-		}, {
+		},
+		{
 			name: "add chain 5 request 2",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[4].Id,
@@ -114,7 +122,8 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr2,
 			},
 			wantApprove: true,
-		}, {
+		},
+		{
 			name: "add chain 5 request 3",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[4].Id,
@@ -122,14 +131,24 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address: addr3,
 			},
 			wantID: 1,
-		}, {
-			name: "remove coordinator account",
+		},
+		{
+			name: "request from coordinator is pre-approved",
 			msg: types.MsgRequestRemoveAccount{
 				ChainID: chains[4].Id,
 				Creator: coordAddr,
 				Address: addr4,
 			},
 			wantApprove: true,
+		},
+		{
+			name: "failing request from coordinator",
+			msg: types.MsgRequestRemoveAccount{
+				ChainID: chains[4].Id,
+				Creator: coordAddr,
+				Address: addr4,
+			},
+			err: types.ErrAccountNotFound,
 		},
 	}
 	for _, tt := range tests {

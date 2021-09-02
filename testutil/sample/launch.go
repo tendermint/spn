@@ -186,8 +186,8 @@ func GenesisHash() string {
 	return hex.EncodeToString(hash[:])
 }
 
-// Params returns a sample of params for the launch module
-func Params() launch.Params {
+// LaunchParams returns a sample of params for the launch module
+func LaunchParams() launch.Params {
 	maxLaunchTime := rand.Intn(int(launch.MaxParametrableLaunchTime))
 	minLaunchTime := rand.Intn(maxLaunchTime)
 
@@ -237,6 +237,6 @@ func LaunchGenesisState() launch.GenesisState {
 				Count:   1,
 			},
 		},
-		Params: Params(),
+		Params: LaunchParams(),
 	}
 }

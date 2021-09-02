@@ -47,7 +47,8 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			err: types.ErrChainNotFound,
-		}, {
+		},
+		{
 			name: "launch triggered chain",
 			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[0].Id,
@@ -56,7 +57,8 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			err: types.ErrTriggeredLaunch,
-		}, {
+		},
+		{
 			name: "coordinator not found",
 			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[1].Id,
@@ -65,7 +67,8 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			err: types.ErrChainInactive,
-		}, {
+		},
+		{
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[2].Id,
@@ -74,7 +77,8 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			wantID: 0,
-		}, {
+		},
+		{
 			name: "add chain 4 request 1",
 			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[3].Id,
@@ -83,7 +87,8 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			wantID: 0,
-		}, {
+		},
+		{
 			name: "add chain 4 request 2",
 			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[3].Id,
@@ -92,7 +97,8 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			wantID: 1,
-		}, {
+		},
+		{
 			name: "add chain 5 request 1",
 			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[4].Id,
@@ -101,7 +107,8 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			wantID: 0,
-		}, {
+		},
+		{
 			name: "add chain 5 request 2",
 			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[4].Id,
@@ -110,7 +117,8 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			wantID: 1,
-		}, {
+		},
+		{
 			name: "add chain 5 request 3",
 			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[4].Id,
@@ -119,8 +127,9 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			wantID: 2,
-		}, {
-			name: "add coordinator account",
+		},
+		{
+			name: "request from coordinator is pre-approved",
 			msg: types.MsgRequestAddVestingAccount{
 				ChainID:         chains[4].Id,
 				Address:         coordAddr,
@@ -128,6 +137,16 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			wantApprove: true,
+		},
+		{
+			name: "failing request from coordinator",
+			msg: types.MsgRequestAddVestingAccount{
+				ChainID:         chains[4].Id,
+				Address:         coordAddr,
+				StartingBalance: sample.Coins(),
+				Options:         delayedVesting,
+			},
+			err: types.ErrAccountAlreadyExist,
 		},
 	}
 	for _, tt := range tests {

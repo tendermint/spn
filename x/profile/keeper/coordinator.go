@@ -110,8 +110,3 @@ func GetCoordinatorIDBytes(id uint64) []byte {
 	binary.BigEndian.PutUint64(bz, id)
 	return bz
 }
-
-// GetCoordinatorIDFromBytes returns ID in uint64 format from a byte array
-func GetCoordinatorIDFromBytes(bz []byte) uint64 {
-	return binary.BigEndian.Uint64(bz)
-}

@@ -17,7 +17,7 @@ func (k Keeper) MaxLaunchTime(ctx sdk.Context) (res uint64) {
 	return
 }
 
-// Get all parameteras as types.Params
+// GetParams get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
 		k.MinLaunchTime(ctx),
@@ -25,7 +25,7 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	)
 }
 
-// set the params
+// SetParams set the params
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramstore.SetParamSet(ctx, &params)
 }

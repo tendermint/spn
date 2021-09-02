@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -13,6 +14,7 @@ import (
 func createNCoordinator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Coordinator {
 	items := make([]types.Coordinator, n)
 	for i := range items {
+		items[i] = sample.Coordinator()
 		items[i].CoordinatorId = keeper.AppendCoordinator(ctx, items[i])
 	}
 	return items
@@ -54,4 +56,17 @@ func TestCoordinatorCount(t *testing.T) {
 	items := createNCoordinator(keeper, ctx, 10)
 	count := uint64(len(items))
 	require.Equal(t, count, keeper.GetCoordinatorCount(ctx))
+}
+
+func TestGetCoordinatorAddressFromID(t *testing.T) {
+	keeper, ctx := testkeeper.Profile(t)
+	coordinator := sample.Coordinator()
+	coordinator.CoordinatorId = keeper.AppendCoordinator(ctx, coordinator)
+
+	address, found := keeper.GetCoordinatorAddressFromID(ctx, coordinator.CoordinatorId)
+	require.True(t, found)
+	require.Equal(t, coordinator.Address, address)
+
+	_, found = keeper.GetCoordinatorAddressFromID(ctx, 100)
+	require.False(t, found)
 }
