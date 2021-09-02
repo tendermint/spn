@@ -1,7 +1,8 @@
-frontend/node_modules
-frontend/dist
-frontend/.cache
-secret.yml
+# Code generation
+vue/node_modules
+vue/dist
+release/
+
+# IDE
 .idea
 .envrc
-ansible.cfg

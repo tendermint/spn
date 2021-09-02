@@ -1,0 +1,42 @@
+syntax = "proto3";
+package tendermint.spn.launch;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+message ChainNameCount {
+  string chainName = 1;
+  uint64 count = 2;
+}
+
+message Chain {
+  uint64 id = 1;
+  uint64 coordinatorID = 2;
+  string genesisChainID = 3;
+  int64 createdAt = 4;
+
+  string sourceURL = 5;
+  string sourceHash = 6;
+
+  InitialGenesis initialGenesis = 7 [(gogoproto.nullable) = false];
+
+  bool launchTriggered = 8;
+  int64 launchTimestamp = 9;
+}
+
+message InitialGenesis {
+  oneof source {
+    DefaultInitialGenesis defaultInitialGenesis = 1;
+    GenesisURL genesisURL = 2;
+  }
+}
+
+// DefaultInitialGenesis specifies using the default CLI-generated genesis as an initial genesis
+message DefaultInitialGenesis {}
+
+// GenesisURL specifies using a custom genesis from a URL as the initial genesis
+message GenesisURL {
+  string url = 1;
+  string hash = 2;
+}

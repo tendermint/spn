@@ -1,0 +1,66 @@
+syntax = "proto3";
+package tendermint.spn.profile;
+
+// this line is used by starport scaffolding # proto/tx/import
+import "gogoproto/gogo.proto";
+import "profile/coordinator.proto";
+import "profile/validator.proto";
+
+option go_package = "github.com/tendermint/spn/x/profile/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc UpdateValidatorDescription(MsgUpdateValidatorDescription) returns (MsgUpdateValidatorDescriptionResponse);
+  rpc DeleteValidator(MsgDeleteValidator) returns (MsgDeleteValidatorResponse);
+  rpc CreateCoordinator(MsgCreateCoordinator) returns (MsgCreateCoordinatorResponse);
+  rpc UpdateCoordinatorDescription(MsgUpdateCoordinatorDescription) returns (MsgUpdateCoordinatorDescriptionResponse);
+  rpc UpdateCoordinatorAddress(MsgUpdateCoordinatorAddress) returns (MsgUpdateCoordinatorAddressResponse);
+  rpc DeleteCoordinator(MsgDeleteCoordinator) returns (MsgDeleteCoordinatorResponse);
+  // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgUpdateValidatorDescription {
+  string address = 1;
+  ValidatorDescription description = 2 [(gogoproto.nullable) = false];
+}
+
+message MsgUpdateValidatorDescriptionResponse {}
+
+message MsgDeleteValidator {
+  string address = 1;
+}
+
+message MsgDeleteValidatorResponse {}
+
+message MsgCreateCoordinator {
+  string address = 1;
+  CoordinatorDescription description = 2 [(gogoproto.nullable) = false];
+}
+
+message MsgCreateCoordinatorResponse {
+  uint64 coordinatorId = 1;
+}
+
+message MsgUpdateCoordinatorDescription {
+  string address = 1;
+  CoordinatorDescription description = 2 [(gogoproto.nullable) = false];
+}
+
+message MsgUpdateCoordinatorDescriptionResponse {}
+
+message MsgUpdateCoordinatorAddress {
+  string address = 1;
+  string newAddress = 2;
+}
+
+message MsgUpdateCoordinatorAddressResponse {}
+
+message MsgDeleteCoordinator {
+  string address = 1;
+}
+
+message MsgDeleteCoordinatorResponse {
+  uint64 coordinatorId = 1;
+}
+
+// this line is used by starport scaffolding # proto/tx/message

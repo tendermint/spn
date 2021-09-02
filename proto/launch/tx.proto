@@ -1,0 +1,114 @@
+syntax = "proto3";
+package tendermint.spn.launch;
+
+// this line is used by starport scaffolding # proto/tx/import
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "launch/chain.proto";
+import "launch/vesting_account.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+// Msg defines the Msg service.
+service Msg {
+  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
+  rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
+  rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestResponse);
+  rpc RequestAddVestingAccount(MsgRequestAddVestingAccount) returns (MsgRequestResponse);
+  rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestResponse);
+  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestResponse);
+  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestResponse);
+  rpc SettleRequest(MsgSettleRequest) returns (MsgSettleRequestResponse);
+  rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
+  rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
+}
+
+message MsgCreateChain {
+  string coordinator = 1;
+  string genesisChainID = 2;
+  string sourceURL = 3;
+  string sourceHash = 4;
+  string genesisURL = 5;
+  string genesisHash = 6;
+}
+
+message MsgCreateChainResponse {
+  uint64 id = 1;
+}
+
+message MsgEditChain {
+  string coordinator = 1;
+  uint64 chainID = 2;
+  string genesisChainID = 3;
+  string sourceURL = 4;
+  string sourceHash = 5;
+  InitialGenesis initialGenesis = 6;
+}
+
+message MsgEditChainResponse {}
+
+message MsgRequestAddAccount {
+  uint64 chainID = 1;
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin Coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}
+
+message MsgRequestAddVestingAccount {
+  uint64 chainID = 1;
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin startingBalance = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  VestingOptions options = 4 [(gogoproto.nullable) = false];
+}
+
+message MsgRequestRemoveAccount {
+  uint64 chainID = 1;
+  string creator = 2;
+  string address = 3;
+}
+
+message MsgRequestAddValidator {
+  uint64 chainID = 1;
+  string valAddress = 2;
+  bytes genTx = 3;
+  bytes consPubKey = 4;
+  cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
+  string peer = 6;
+}
+
+message MsgRequestRemoveValidator {
+  uint64 chainID = 1;
+  string creator = 2;
+  string validatorAddress = 3;
+}
+
+message MsgRequestResponse {
+  uint64 requestID = 1;
+  bool autoApproved = 2;
+}
+
+message MsgSettleRequest {
+  string coordinator = 1;
+  uint64 chainID = 2;
+  uint64 requestID = 3;
+  bool approve = 4;
+}
+
+message MsgSettleRequestResponse {}
+
+message MsgTriggerLaunch {
+  string coordinator = 1;
+  uint64 chainID = 2;
+  uint64 remainingTime = 3;
+}
+
+message MsgTriggerLaunchResponse {}
+
+message MsgRevertLaunch {
+  string coordinator = 1;
+  uint64 chainID = 2;
+}
+
+message MsgRevertLaunchResponse {}
+
+// this line is used by starport scaffolding # proto/tx/message
