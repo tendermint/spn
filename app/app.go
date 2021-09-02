@@ -371,7 +371,6 @@ func New(
 		app.ProfileKeeper,
 	)
 
-
 	campaignKeeper := campaignmodulekeeper.NewKeeper(
 		appCodec,
 		keys[campaignmoduletypes.StoreKey],

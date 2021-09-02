@@ -34,10 +34,10 @@ var (
 	ExampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
 
 	moduleAccountPerms = map[string][]string{
-		authtypes.FeeCollectorName:     nil,
-		minttypes.ModuleName:           {authtypes.Minter},
-		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		campaigntypes.ModuleName: {authtypes.Minter, authtypes.Burner},
+		authtypes.FeeCollectorName:  nil,
+		minttypes.ModuleName:        {authtypes.Minter},
+		ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
+		campaigntypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 	}
 )
 

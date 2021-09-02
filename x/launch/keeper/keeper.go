@@ -12,11 +12,11 @@ import (
 
 type (
 	Keeper struct {
-		cdc           codec.Marshaler
-		storeKey      sdk.StoreKey
-		memKey        sdk.StoreKey
-		paramstore    paramtypes.Subspace
-		profileKeeper types.ProfileKeeper
+		cdc            codec.Marshaler
+		storeKey       sdk.StoreKey
+		memKey         sdk.StoreKey
+		paramstore     paramtypes.Subspace
+		profileKeeper  types.ProfileKeeper
 		campaignKeeper types.CampaignKeeper
 	}
 )
