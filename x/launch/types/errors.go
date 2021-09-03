@@ -31,6 +31,4 @@ var (
 	ErrValidatorAlreadyExist = sdkerrors.Register(ModuleName, 21, "validator already exists")
 	ErrValidatorNotFound     = sdkerrors.Register(ModuleName, 22, "validator not found")
 	ErrChainInactive         = sdkerrors.Register(ModuleName, 23, "the chain is inactive")
-
-	// this line is used by starport scaffolding # ibc/errors
 )

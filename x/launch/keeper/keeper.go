@@ -12,11 +12,12 @@ import (
 
 type (
 	Keeper struct {
-		cdc           codec.Marshaler
-		storeKey      sdk.StoreKey
-		memKey        sdk.StoreKey
-		paramstore    paramtypes.Subspace
-		profileKeeper types.ProfileKeeper
+		cdc            codec.Marshaler
+		storeKey       sdk.StoreKey
+		memKey         sdk.StoreKey
+		paramstore     paramtypes.Subspace
+		profileKeeper  types.ProfileKeeper
+		campaignKeeper types.CampaignKeeper
 	}
 )
 
@@ -43,4 +44,12 @@ func NewKeeper(
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+// SetCampaignKeeper set the campaign keeper interface of the module
+func (k Keeper) SetCampaignKeeper(campaignKeeper types.CampaignKeeper) {
+	if k.campaignKeeper != nil {
+		panic("campaign keeper already set for launch module")
+	}
+	k.campaignKeeper = campaignKeeper
 }

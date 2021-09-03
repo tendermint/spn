@@ -27,8 +27,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.CoordinatorByAddressList {
 		k.SetCoordinatorByAddress(ctx, elem)
 	}
-
-	// this line is used by starport scaffolding # ibc/genesis/init
 }
 
 // ExportGenesis returns the capability module's exported genesis.
