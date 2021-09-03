@@ -29,9 +29,9 @@ func NewKeeper(
 	launchKeeper types.LaunchKeeper, bankKeeper types.BankKeeper, profileKeeper types.ProfileKeeper,
 ) *Keeper {
 	return &Keeper{
-		cdc:      cdc,
-		storeKey: storeKey,
-		memKey:   memKey,
+		cdc:          cdc,
+		storeKey:     storeKey,
+		memKey:       memKey,
 		launchKeeper: launchKeeper, bankKeeper: bankKeeper, profileKeeper: profileKeeper,
 	}
 }
