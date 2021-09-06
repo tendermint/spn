@@ -1,15 +1,16 @@
 package types_test
 
 import (
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	campaign "github.com/tendermint/spn/x/campaign/types"
-	"testing"
 )
 
 var (
-	prefixedFoo = campaign.SharePrefix + "foo"
-	prefixedBar = campaign.SharePrefix + "bar"
+	prefixedFoo    = campaign.SharePrefix + "foo"
+	prefixedBar    = campaign.SharePrefix + "bar"
 	prefixedFoobar = campaign.SharePrefix + "foobar"
 )
 
@@ -46,7 +47,7 @@ func TestCheckShares(t *testing.T) {
 		sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
 		sdk.NewCoin(prefixedBar, sdk.NewInt(200)),
 	))))
-	require.NoError(t, campaign.CheckShares(campaign.Shares(sdk.NewCoins(
+	require.Error(t, campaign.CheckShares(campaign.Shares(sdk.NewCoins(
 		sdk.NewCoin("foo", sdk.NewInt(100)),
 		sdk.NewCoin(prefixedBar, sdk.NewInt(200)),
 	))))
@@ -54,13 +55,13 @@ func TestCheckShares(t *testing.T) {
 
 func TestIncreaseShares(t *testing.T) {
 	for _, tc := range []struct {
-		desc     string
-		shares campaign.Shares
+		desc      string
+		shares    campaign.Shares
 		newShares campaign.Shares
-		expected    campaign.Shares
-	} {
+		expected  campaign.Shares
+	}{
 		{
-			desc: "increase empty set",
+			desc:   "increase empty set",
 			shares: campaign.EmptyShares(),
 			newShares: campaign.NewSharesFromCoins(sdk.NewCoins(
 				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
@@ -109,14 +110,14 @@ func TestIncreaseShares(t *testing.T) {
 
 func TestDecreaseShares(t *testing.T) {
 	for _, tc := range []struct {
-		desc     string
-		shares campaign.Shares
+		desc       string
+		shares     campaign.Shares
 		toDecrease campaign.Shares
-		expected    campaign.Shares
-		isError bool
-	} {
+		expected   campaign.Shares
+		isError    bool
+	}{
 		{
-			desc: "decrease empty set",
+			desc:   "decrease empty set",
 			shares: campaign.EmptyShares(),
 			toDecrease: campaign.NewSharesFromCoins(sdk.NewCoins(
 				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
@@ -178,28 +179,28 @@ func TestDecreaseShares(t *testing.T) {
 
 func TestIsTotalReached(t *testing.T) {
 	for _, tc := range []struct {
-		desc     string
-		shares campaign.Shares
+		desc        string
+		shares      campaign.Shares
 		totalShares campaign.Shares
-		reached    bool
+		reached     bool
 	}{
 		{
-			desc:     "empty is false",
-			shares: campaign.EmptyShares(),
+			desc:        "empty is false",
+			shares:      campaign.EmptyShares(),
 			totalShares: campaign.EmptyShares(),
-			reached: false,
+			reached:     false,
 		},
 		{
-			desc:     "no default total is reached",
+			desc: "no default total is reached",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
 				sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
 				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
-				)),
+			)),
 			totalShares: campaign.EmptyShares(),
-			reached: false,
+			reached:     false,
 		},
 		{
-			desc:     "no custom total is reached",
+			desc: "no custom total is reached",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
 				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
 				sdk.NewCoin(prefixedBar, sdk.NewInt(50)),
@@ -212,16 +213,16 @@ func TestIsTotalReached(t *testing.T) {
 			reached: false,
 		},
 		{
-			desc:     "a default total is reached",
+			desc: "a default total is reached",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
 				sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber+1)),
 				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
 			)),
 			totalShares: campaign.EmptyShares(),
-			reached: true,
+			reached:     true,
 		},
 		{
-			desc:     "a custom total is reached",
+			desc: "a custom total is reached",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
 				sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
 				sdk.NewCoin(prefixedBar, sdk.NewInt(101)),

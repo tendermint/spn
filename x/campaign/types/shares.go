@@ -3,8 +3,9 @@ package types
 import (
 	"errors"
 	"fmt"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strings"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // Shares represents the portion of a supply
@@ -46,7 +47,7 @@ func NewSharesFromCoins(coins sdk.Coins) Shares {
 func CheckShares(shares Shares) error {
 	for _, coin := range shares {
 		if !strings.HasPrefix(coin.Denom, SharePrefix) {
-			fmt.Errorf("%s doesn't contain the share prefix %s", coin.Denom, SharePrefix)
+			return fmt.Errorf("%s doesn't contain the share prefix %s", coin.Denom, SharePrefix)
 		}
 	}
 
@@ -81,7 +82,7 @@ func IsTotalReached(shares, totalShares Shares) bool {
 		// If the denom is not specifed in total share, we compare the default total share number
 		total, ok := totalMap[coin.Denom]
 		if ok {
-			if coin.Amount.Uint64() > total{
+			if coin.Amount.Uint64() > total {
 				return true
 			}
 		} else {
