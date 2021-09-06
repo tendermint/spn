@@ -10,17 +10,22 @@ import (
 type Shares sdk.Coins
 
 const (
-	// DefaultTotalShare is the default value of total share for an underlying supply asset
-	DefaultTotalShare = 100000
+	// DefaultTotalShareNumber is the default number of total share for an underlying supply asset
+	DefaultTotalShareNumber = 100000
 
 	// SharePrefix is the prefix used to represent a share denomination
 	// A sdk.Coin containing this prefix must never be represented in a balance in the bank module
 	SharePrefix = "s/"
 )
 
-// NewShares returns new shares from comma-separated value (100atom,200iris...)
-func NewShares(shareStr string) (Shares, error) {
-	coins, err := sdk.ParseCoinsNormalized(shareStr)
+// EmptyShares returns shares object that contains no share
+func EmptyShares() Shares {
+	return Shares(sdk.Coins{})
+}
+
+// NewShares returns new shares from comma-separated coins (100atom,200iris...)
+func NewShares(str string) (Shares, error) {
+	coins, err := sdk.ParseCoinsNormalized(str)
 	if err != nil {
 		return nil, err
 	}
@@ -45,4 +50,32 @@ func CheckShares(shares Shares) error {
 	}
 
 	return nil
+}
+
+// IsTotalReached checks if the provided shares overflow the total number of shares
+// Denoms not specified in totalShares uses DefaultTotalShareNumber as the default number of total shares
+func IsTotalReached(shares, totalShares Shares) bool {
+	// Check the explicitely defined total shares
+	totalMap := make(map[string]uint64)
+	for _, coin := range totalShares {
+		totalMap[coin.Denom] = coin.Amount.Uint64()
+	}
+
+	for _, coin := range shares {
+		// If the denom is not specifed in total share, we compare the default total share number
+		total, ok := totalMap[coin.Denom]
+		if ok {
+			if coin.Amount.Uint64() > total{
+				return true
+			}
+		} else {
+			if coin.Amount.Uint64() > DefaultTotalShareNumber {
+				return true
+			}
+		}
+	}
+
+	// denoms defined in totalShares but not in shares are not checked
+	// the number if shares for an undefined denom is 0 by default therefore the total is never reached
+	return false
 }
