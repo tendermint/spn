@@ -72,14 +72,14 @@ func DecreaseShares(shares, toDecrease Shares) (Shares, error) {
 // IsTotalReached checks if the provided shares overflow the total number of shares
 // Denoms not specified in totalShares uses DefaultTotalShareNumber as the default number of total shares
 func IsTotalReached(shares, totalShares Shares) bool {
-	// Check the explicitely defined total shares
+	// Check the explicitly defined total shares
 	totalMap := make(map[string]uint64)
 	for _, coin := range totalShares {
 		totalMap[coin.Denom] = coin.Amount.Uint64()
 	}
 
 	for _, coin := range shares {
-		// If the denom is not specifed in total share, we compare the default total share number
+		// If the denom is not specified in total share, we compare the default total share number
 		total, ok := totalMap[coin.Denom]
 		if ok {
 			if coin.Amount.Uint64() > total {
