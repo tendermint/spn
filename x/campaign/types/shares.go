@@ -29,8 +29,8 @@ func NewShares(shareStr string) (Shares, error) {
 
 // NewSharesFromCoins returns new shares from the coins representation
 func NewSharesFromCoins(coins sdk.Coins) Shares {
-	for _, coin := range coins {
-		coin.Denom = SharePrefix + coin.Denom
+	for i := range coins {
+		coins[i].Denom = SharePrefix + coins[i].Denom
 	}
 
 	return Shares(coins)
