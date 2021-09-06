@@ -52,6 +52,11 @@ func CheckShares(shares Shares) error {
 	return nil
 }
 
+// IncreaseShares return increases the value of shares
+func IncreaseShares(shares, newShares Shares) Shares {
+	return Shares(sdk.Coins(shares).Add(sdk.Coins(newShares)...))
+}
+
 // IsTotalReached checks if the provided shares overflow the total number of shares
 // Denoms not specified in totalShares uses DefaultTotalShareNumber as the default number of total shares
 func IsTotalReached(shares, totalShares Shares) bool {
