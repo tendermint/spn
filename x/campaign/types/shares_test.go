@@ -107,6 +107,75 @@ func TestIncreaseShares(t *testing.T) {
 	}
 }
 
+func TestDecreaseShares(t *testing.T) {
+	for _, tc := range []struct {
+		desc     string
+		shares campaign.Shares
+		toDecrease campaign.Shares
+		expected    campaign.Shares
+		isError bool
+	} {
+		{
+			desc: "decrease empty set",
+			shares: campaign.EmptyShares(),
+			toDecrease: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+			)),
+			isError: true,
+		},
+		{
+			desc: "decrease from empty set",
+			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+			)),
+			toDecrease: campaign.EmptyShares(),
+			expected: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+			)),
+		},
+		{
+			desc: "decrease to negative",
+			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedBar, sdk.NewInt(50)),
+			)),
+			toDecrease: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+			)),
+			isError: true,
+		},
+		{
+			desc: "decrease normal set",
+			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedFoobar, sdk.NewInt(50)),
+			)),
+			toDecrease: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedFoo, sdk.NewInt(30)),
+				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+			)),
+			expected: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedFoo, sdk.NewInt(70)),
+				sdk.NewCoin(prefixedBar, sdk.NewInt(0)),
+				sdk.NewCoin(prefixedFoobar, sdk.NewInt(50)),
+			)),
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			decreased, err := campaign.DecreaseShares(tc.shares, tc.toDecrease)
+			require.Equal(t, tc.isError, err != nil)
+			if !tc.isError {
+				require.Equal(t, tc.expected, decreased)
+			}
+		})
+	}
+}
+
 func TestIsTotalReached(t *testing.T) {
 	for _, tc := range []struct {
 		desc     string

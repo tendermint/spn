@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strings"
@@ -52,9 +53,19 @@ func CheckShares(shares Shares) error {
 	return nil
 }
 
-// IncreaseShares return increases the value of shares
+// IncreaseShares increases the number of shares
 func IncreaseShares(shares, newShares Shares) Shares {
 	return Shares(sdk.Coins(shares).Add(sdk.Coins(newShares)...))
+}
+
+// DecreaseShares decreases the number of shares or returns a error if shares can't be decreased
+func DecreaseShares(shares, toDecrease Shares) (Shares, error) {
+	decreasedCoins, negative := sdk.Coins(shares).SafeSub(sdk.Coins(toDecrease))
+	if negative {
+		return nil, errors.New("shares cannot be decreased to negative")
+	}
+
+	return Shares(decreasedCoins), nil
 }
 
 // IsTotalReached checks if the provided shares overflow the total number of shares
@@ -81,6 +92,6 @@ func IsTotalReached(shares, totalShares Shares) bool {
 	}
 
 	// denoms defined in totalShares but not in shares are not checked
-	// the number if shares for an undefined denom is 0 by default therefore the total is never reached
+	// the number of shares for an undefined denom is 0 by default therefore the total is never reached
 	return false
 }
