@@ -4,13 +4,17 @@ package tendermint.spn.campaign;
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 message Campaign {
   uint64 id = 1;
-  string campaignName = 2; 
-  uint64 coordinatorID = 3; 
-  uint64 mainnetID = 4; 
-  bool mainnetInitialized = 5; 
-  bool dynamicShares = 6; 
-  
+  string campaignName = 2;
+  uint64 coordinatorID = 3;
+  uint64 mainnetID = 4;
+  bool mainnetInitialized = 5;
+  repeated cosmos.base.v1beta1.Coin TotalSupply = 6 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated cosmos.base.v1beta1.Coin AllocatedShares = 7 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+
+  bool dynamicShares = 8;
+  repeated cosmos.base.v1beta1.Coin TotalShares = 9 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
 }
