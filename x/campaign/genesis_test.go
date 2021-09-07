@@ -9,12 +9,19 @@ import (
 	"github.com/tendermint/spn/x/campaign"
 )
 
+/*
+// We use a genesis template from sample package, therefore this placeholder is not used
+// this line is used by starport scaffolding # genesis/test/state
+*/
+
 func TestGenesis(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)
 
-	original := sample.CampaignGenesisState()
-	campaign.InitGenesis(ctx, *keeper, original)
+	genesisState := sample.CampaignGenesisState()
+	campaign.InitGenesis(ctx, *keeper, genesisState)
 	got := *campaign.ExportGenesis(ctx, *keeper)
 
-	require.Equal(t, original, got)
+	require.Equal(t, genesisState, got)
+
+	// this line is used by starport scaffolding # genesis/test/assert
 }
