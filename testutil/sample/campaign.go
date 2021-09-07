@@ -2,6 +2,11 @@ package sample
 
 import campaign "github.com/tendermint/spn/x/campaign/types"
 
+// Shares returns a sample shares
+func Shares() campaign.Shares {
+	return campaign.NewSharesFromCoins(Coins())
+}
+
 // CampaignName returns a sample campaign name
 func CampaignName() string {
 	return String(20)

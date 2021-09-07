@@ -69,9 +69,9 @@ func DecreaseShares(shares, toDecrease Shares) (Shares, error) {
 	return Shares(decreasedCoins), nil
 }
 
-// IsTotalReached checks if the provided shares overflow the total number of shares
+// IsTotalSharesReached checks if the provided shares overflow the total number of shares
 // Denoms not specified in totalShares uses DefaultTotalShareNumber as the default number of total shares
-func IsTotalReached(shares, totalShares Shares) bool {
+func IsTotalSharesReached(shares, totalShares Shares) bool {
 	// Check the explicitly defined total shares
 	totalMap := make(map[string]uint64)
 	for _, coin := range totalShares {

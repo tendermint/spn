@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/google/go-cmp/cmp"
 )
 
 const (
@@ -21,6 +22,34 @@ func NewCampaign(campaignName string, coordinatorID uint64, totalSupply sdk.Coin
 		DynamicShares: dynamicShares,
 		TotalShares: EmptyShares(),
 	}
+}
+
+// Validate checks the campaign is valid
+func (m Campaign) Validate() error {
+	if err := CheckCampaignName(m.CampaignName); err != nil {
+		return err
+	}
+
+	if !m.TotalSupply.IsValid() {
+		return errors.New("invalid total supply")
+	}
+	if !sdk.Coins(m.AllocatedShares).IsValid() {
+		return errors.New("invalid allocated shares")
+	}
+	if !sdk.Coins(m.TotalShares).IsValid() {
+		return errors.New("invalid total shares")
+	}
+
+	// TotalShares can only be customized if dynamicShares is set
+	if !m.DynamicShares && !cmp.Equal(m.TotalShares, EmptyShares()) {
+		return errors.New("custom total shares with dynamic shares set to false")
+	}
+
+	if IsTotalSharesReached(m.AllocatedShares, m.TotalShares) {
+		return errors.New("more allocated shares than total shares")
+	}
+
+	return nil
 }
 
 // CheckCampaignName verifies the name is valid as a campaign name
