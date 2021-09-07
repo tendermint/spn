@@ -20,10 +20,10 @@ func DefaultGenesis() *GenesisState {
 func (gs GenesisState) Validate() error {
 	// this line is used by starport scaffolding # genesis/types/validate
 	// Check for duplicated ID in campaign
-	campaignIdMap := make(map[uint64]bool)
+	campaignIDMap := make(map[uint64]bool)
 	campaignCount := gs.GetCampaignCount()
 	for _, elem := range gs.CampaignList {
-		if _, ok := campaignIdMap[elem.Id]; ok {
+		if _, ok := campaignIDMap[elem.Id]; ok {
 			return fmt.Errorf("duplicated id for campaign")
 		}
 		if elem.Id >= campaignCount {
@@ -32,7 +32,7 @@ func (gs GenesisState) Validate() error {
 		if err := elem.Validate(); err != nil {
 			return fmt.Errorf("invalid campaign %v: %v", elem.Id, err.Error())
 		}
-		campaignIdMap[elem.Id] = true
+		campaignIDMap[elem.Id] = true
 	}
 
 	return nil

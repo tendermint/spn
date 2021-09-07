@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/go-cmp/cmp"
 )
@@ -14,14 +15,14 @@ const (
 // NewCampaign returns a new initialized campaign
 func NewCampaign(id uint64, campaignName string, coordinatorID uint64, totalSupply sdk.Coins, dynamicShares bool) Campaign {
 	return Campaign{
-		Id: id,
-		CampaignName: campaignName,
-		CoordinatorID: coordinatorID,
+		Id:                 id,
+		CampaignName:       campaignName,
+		CoordinatorID:      coordinatorID,
 		MainnetInitialized: false,
-		TotalSupply: totalSupply,
-		AllocatedShares: EmptyShares(),
-		DynamicShares: dynamicShares,
-		TotalShares: EmptyShares(),
+		TotalSupply:        totalSupply,
+		AllocatedShares:    EmptyShares(),
+		DynamicShares:      dynamicShares,
+		TotalShares:        EmptyShares(),
 	}
 }
 
