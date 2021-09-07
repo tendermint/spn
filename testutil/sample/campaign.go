@@ -14,5 +14,15 @@ func Campaign() campaign.Campaign {
 
 // CampaignGenesisState returns a sample genesis state for the campaign module
 func CampaignGenesisState() campaign.GenesisState {
-	return campaign.GenesisState{}
+	campaign1, campaign2 := Campaign(), Campaign()
+	campaign1.Id = 0
+	campaign2.Id = 1
+
+	return campaign.GenesisState{
+		CampaignList: []campaign.Campaign{
+			campaign1,
+			campaign2,
+		},
+		CampaignCount: 2,
+	}
 }
