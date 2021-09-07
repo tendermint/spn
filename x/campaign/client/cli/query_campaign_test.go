@@ -2,19 +2,18 @@ package cli_test
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/campaign/client/cli"
+	"github.com/tendermint/spn/x/campaign/types"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/x/campaign/client/cli"
-	"github.com/tendermint/spn/x/campaign/types"
 )
 
 func networkWithCampaignObjects(t *testing.T, n int) (*network.Network, []types.Campaign) {
