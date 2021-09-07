@@ -11,12 +11,14 @@ import (
 const invalidCampaignName = "not_valid"
 
 func TestNewCampaign(t *testing.T) {
+	campaignID := sample.Uint64()
 	campaignName := sample.CampaignName()
 	coordinator := sample.Uint64()
 	totalSupply := sample.Coins()
 	dynamicShares := sample.Bool()
 
-	cmpn := campaign.NewCampaign(campaignName, coordinator, totalSupply, dynamicShares)
+	cmpn := campaign.NewCampaign(campaignID, campaignName, coordinator, totalSupply, dynamicShares)
+	require.EqualValues(t, campaignID, cmpn.Id)
 	require.EqualValues(t, campaignName, cmpn.CampaignName)
 	require.EqualValues(t, coordinator, cmpn.CoordinatorID)
 	require.False(t, cmpn.MainnetInitialized)
@@ -30,18 +32,18 @@ func TestCampaign_Validate(t *testing.T) {
 	invalidCoins := sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
 	require.False(t, invalidCoins.IsValid())
 
-	invalidAllocatedShares := sample.Campaign()
+	invalidAllocatedShares := sample.Campaign(0)
 	invalidAllocatedShares.AllocatedShares = campaign.NewSharesFromCoins(invalidCoins)
 
-	invalidTotalShares := sample.Campaign()
+	invalidTotalShares := sample.Campaign(0)
 	invalidTotalShares.DynamicShares = true
 	invalidTotalShares.TotalShares = campaign.NewSharesFromCoins(invalidCoins)
 
-	noDynamicShares := sample.Campaign()
+	noDynamicShares := sample.Campaign(0)
 	noDynamicShares.DynamicShares = false
 	noDynamicShares.TotalShares = sample.Shares()
 
-	totalSharesReached := sample.Campaign()
+	totalSharesReached := sample.Campaign(0)
 	totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
 		sdk.NewCoin("foo", sdk.NewInt(campaign.DefaultTotalShareNumber+1)),
 	))
@@ -54,12 +56,13 @@ func TestCampaign_Validate(t *testing.T) {
 	}{
 		{
 			desc:     "valid campaign",
-			campaign: sample.Campaign(),
+			campaign: sample.Campaign(0),
 			valid:    true,
 		},
 		{
 			desc: "invalid campaign name",
 			campaign: campaign.NewCampaign(
+				0,
 				invalidCampaignName,
 				sample.Uint64(),
 				sample.Coins(),
@@ -70,6 +73,7 @@ func TestCampaign_Validate(t *testing.T) {
 		{
 			desc: "invalid total supply",
 			campaign: campaign.NewCampaign(
+				0,
 				sample.CampaignName(),
 				sample.Uint64(),
 				invalidCoins,

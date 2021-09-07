@@ -13,15 +13,14 @@ func CampaignName() string {
 }
 
 // Campaign returns a sample campaign
-func Campaign() campaign.Campaign {
-	return campaign.NewCampaign(CampaignName(), Uint64(), Coins(), Bool())
+func Campaign(id uint64) campaign.Campaign {
+	c := campaign.NewCampaign(id, CampaignName(), Uint64(), Coins(), Bool())
+	return c
 }
 
 // CampaignGenesisState returns a sample genesis state for the campaign module
 func CampaignGenesisState() campaign.GenesisState {
-	campaign1, campaign2 := Campaign(), Campaign()
-	campaign1.Id = 0
-	campaign2.Id = 1
+	campaign1, campaign2 := Campaign(0), Campaign(1)
 
 	return campaign.GenesisState{
 		CampaignList: []campaign.Campaign{

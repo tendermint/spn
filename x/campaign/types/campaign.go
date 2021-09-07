@@ -12,8 +12,9 @@ const (
 )
 
 // NewCampaign returns a new initialized campaign
-func NewCampaign(campaignName string, coordinatorID uint64, totalSupply sdk.Coins, dynamicShares bool) Campaign {
+func NewCampaign(id uint64, campaignName string, coordinatorID uint64, totalSupply sdk.Coins, dynamicShares bool) Campaign {
 	return Campaign{
+		Id: id,
 		CampaignName: campaignName,
 		CoordinatorID: coordinatorID,
 		MainnetInitialized: false,

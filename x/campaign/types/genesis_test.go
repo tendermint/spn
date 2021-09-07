@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -23,12 +24,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				// this line is used by starport scaffolding # types/genesis/validField
 				CampaignList: []types.Campaign{
-					{
-						Id: 0,
-					},
-					{
-						Id: 1,
-					},
+					sample.Campaign(0),
+					sample.Campaign(1),
 				},
 				CampaignCount: 2,
 			},
@@ -39,13 +36,10 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated campaign",
 			genState: &types.GenesisState{
 				CampaignList: []types.Campaign{
-					{
-						Id: 0,
-					},
-					{
-						Id: 0,
-					},
+					sample.Campaign(0),
+					sample.Campaign(0),
 				},
+				CampaignCount: 2,
 			},
 			valid: false,
 		},
@@ -53,11 +47,19 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "invalid campaign count",
 			genState: &types.GenesisState{
 				CampaignList: []types.Campaign{
-					{
-						Id: 1,
-					},
+					sample.Campaign(1),
 				},
 				CampaignCount: 0,
+			},
+			valid: false,
+		},
+		{
+			desc: "invalid campaign",
+			genState: &types.GenesisState{
+				CampaignList: []types.Campaign{
+					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.Coins(), false),
+				},
+				CampaignCount: 1,
 			},
 			valid: false,
 		},
