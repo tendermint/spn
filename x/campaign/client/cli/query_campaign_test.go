@@ -72,6 +72,12 @@ func TestShowCampaign(t *testing.T) {
 				require.NoError(t, err)
 				var resp types.QueryGetCampaignResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+
+				// EmptyShares should be Shares(nil) however UnmarshalJSON returns Shares{}
+				// Both are empty shares, this allows to fix the tests
+				resp.Campaign.AllocatedShares = types.EmptyShares()
+				resp.Campaign.TotalShares = types.EmptyShares()
+
 				require.EqualValues(t, tc.obj, resp.Campaign)
 			}
 		})
@@ -106,6 +112,8 @@ func TestListCampaign(t *testing.T) {
 			var resp types.QueryAllCampaignResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
+				resp.Campaign[j-i].AllocatedShares = types.EmptyShares()
+				resp.Campaign[j-i].TotalShares = types.EmptyShares()
 				require.Equal(t, objs[j], resp.Campaign[j-i])
 			}
 		}
@@ -120,6 +128,8 @@ func TestListCampaign(t *testing.T) {
 			var resp types.QueryAllCampaignResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			for j := i; j < len(objs) && j < i+step; j++ {
+				resp.Campaign[j-i].AllocatedShares = types.EmptyShares()
+				resp.Campaign[j-i].TotalShares = types.EmptyShares()
 				require.Equal(t, objs[j], resp.Campaign[j-i])
 			}
 			next = resp.Pagination.NextKey
@@ -133,6 +143,11 @@ func TestListCampaign(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
+
+		for i := range resp.Campaign {
+			resp.Campaign[i].AllocatedShares = types.EmptyShares()
+			resp.Campaign[i].TotalShares = types.EmptyShares()
+		}
 		require.Equal(t, objs, resp.Campaign)
 	})
 }

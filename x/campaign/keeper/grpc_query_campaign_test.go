@@ -1,6 +1,7 @@
-package keeper
+package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -14,7 +15,7 @@ import (
 )
 
 func TestCampaignQuerySingle(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Campaign(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCampaign(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -57,7 +58,7 @@ func TestCampaignQuerySingle(t *testing.T) {
 }
 
 func TestCampaignQueryPaginated(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Campaign(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCampaign(keeper, ctx, 5)
 

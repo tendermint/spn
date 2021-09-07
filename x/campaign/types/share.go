@@ -22,7 +22,7 @@ const (
 
 // EmptyShares returns shares object that contains no share
 func EmptyShares() Shares {
-	return Shares{}
+	return Shares(nil)
 }
 
 // NewShares returns new shares from comma-separated coins (100atom,200iris...)
