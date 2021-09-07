@@ -1,0 +1,16 @@
+syntax = "proto3";
+package tendermint.spn.campaign;
+
+option go_package = "github.com/tendermint/spn/x/campaign/types";
+
+import "gogoproto/gogo.proto";
+
+message Campaign {
+  uint64 id = 1;
+  string campaignName = 2; 
+  uint64 coordinatorID = 3; 
+  uint64 mainnetID = 4; 
+  bool mainnetInitialized = 5; 
+  bool dynamicShares = 6; 
+  
+}
