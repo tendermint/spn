@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"fmt"
+	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -23,9 +24,7 @@ func networkWithCampaignObjects(t *testing.T, n int) (*network.Network, []types.
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.CampaignList = append(state.CampaignList, types.Campaign{
-			Id: uint64(i),
-		})
+		state.CampaignList = append(state.CampaignList, sample.Campaign(uint64(i)))
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
@@ -73,8 +72,7 @@ func TestShowCampaign(t *testing.T) {
 				require.NoError(t, err)
 				var resp types.QueryGetCampaignResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				require.NotNil(t, resp.Campaign)
-				require.Equal(t, tc.obj, resp.Campaign)
+				require.EqualValues(t, tc.obj, resp.Campaign)
 			}
 		})
 	}
