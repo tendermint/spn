@@ -9,7 +9,7 @@ func CampaignName() string {
 
 // Campaign returns a sample campaign
 func Campaign() campaign.Campaign {
-	return campaign.NewCampaign(CampaignName(), Uint64(), Coins(), false)
+	return campaign.NewCampaign(CampaignName(), Uint64(), Coins(), Bool())
 }
 
 // CampaignGenesisState returns a sample genesis state for the campaign module

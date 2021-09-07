@@ -45,5 +45,5 @@ func CheckCampaignName(campaignName string) error {
 
 // isCampaignAuthorizedChar checks to ensure that all characters in the campaign name are valid
 func isCampaignAuthorizedChar(c rune) bool {
-	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || c == '-'
+	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '-'
 }
