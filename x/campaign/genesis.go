@@ -10,6 +10,11 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// this line is used by starport scaffolding # genesis/module/init
+	// Set all the mainnetVestingAccount
+	for _, elem := range genState.MainnetVestingAccountList {
+		k.SetMainnetVestingAccount(ctx, elem)
+	}
+
 }
 
 // ExportGenesis returns the capability module's exported genesis.
@@ -17,6 +22,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
 	// this line is used by starport scaffolding # genesis/module/export
+	genesis.MainnetVestingAccountList = k.GetAllMainnetVestingAccount(ctx)
 
 	return genesis
 }

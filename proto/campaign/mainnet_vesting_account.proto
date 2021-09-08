@@ -1,0 +1,11 @@
+syntax = "proto3";
+package tendermint.spn.campaign;
+
+option go_package = "github.com/tendermint/spn/x/campaign/types";
+
+message MainnetVestingAccount {
+  uint64 campaignID = 1; 
+  string address = 2; 
+  
+}
+
