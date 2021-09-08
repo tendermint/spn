@@ -26,9 +26,10 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type MainnetVestingAccount struct {
-	CampaignID uint64 `protobuf:"varint,1,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
-	Address    string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	Shares     Shares `protobuf:"bytes,3,rep,name=Shares,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=Shares" json:"Shares"`
+	CampaignID     uint64              `protobuf:"varint,1,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	Address        string              `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	Shares         Shares              `protobuf:"bytes,3,rep,name=shares,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=Shares" json:"shares"`
+	VestingOptions ShareVestingOptions `protobuf:"bytes,4,opt,name=vestingOptions,proto3" json:"vestingOptions"`
 }
 
 func (m *MainnetVestingAccount) Reset()         { *m = MainnetVestingAccount{} }
@@ -85,8 +86,143 @@ func (m *MainnetVestingAccount) GetShares() Shares {
 	return nil
 }
 
+func (m *MainnetVestingAccount) GetVestingOptions() ShareVestingOptions {
+	if m != nil {
+		return m.VestingOptions
+	}
+	return ShareVestingOptions{}
+}
+
+type ShareVestingOptions struct {
+	// Types that are valid to be assigned to Options:
+	//	*ShareVestingOptions_DelayedVesting
+	Options isShareVestingOptions_Options `protobuf_oneof:"options"`
+}
+
+func (m *ShareVestingOptions) Reset()         { *m = ShareVestingOptions{} }
+func (m *ShareVestingOptions) String() string { return proto.CompactTextString(m) }
+func (*ShareVestingOptions) ProtoMessage()    {}
+func (*ShareVestingOptions) Descriptor() ([]byte, []int) {
+	return fileDescriptor_90d9b25b318c41d6, []int{1}
+}
+func (m *ShareVestingOptions) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ShareVestingOptions) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ShareVestingOptions.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ShareVestingOptions) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ShareVestingOptions.Merge(m, src)
+}
+func (m *ShareVestingOptions) XXX_Size() int {
+	return m.Size()
+}
+func (m *ShareVestingOptions) XXX_DiscardUnknown() {
+	xxx_messageInfo_ShareVestingOptions.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ShareVestingOptions proto.InternalMessageInfo
+
+type isShareVestingOptions_Options interface {
+	isShareVestingOptions_Options()
+	MarshalTo([]byte) (int, error)
+	Size() int
+}
+
+type ShareVestingOptions_DelayedVesting struct {
+	DelayedVesting *ShareDelayedVesting `protobuf:"bytes,1,opt,name=delayedVesting,proto3,oneof" json:"delayedVesting,omitempty"`
+}
+
+func (*ShareVestingOptions_DelayedVesting) isShareVestingOptions_Options() {}
+
+func (m *ShareVestingOptions) GetOptions() isShareVestingOptions_Options {
+	if m != nil {
+		return m.Options
+	}
+	return nil
+}
+
+func (m *ShareVestingOptions) GetDelayedVesting() *ShareDelayedVesting {
+	if x, ok := m.GetOptions().(*ShareVestingOptions_DelayedVesting); ok {
+		return x.DelayedVesting
+	}
+	return nil
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*ShareVestingOptions) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*ShareVestingOptions_DelayedVesting)(nil),
+	}
+}
+
+// ShareDelayedVesting represents options for share delayed vesting
+// Delayed vesting is the type of vesting where all vesting coins are vested once end time is reached
+type ShareDelayedVesting struct {
+	Vesting Shares `protobuf:"bytes,1,rep,name=vesting,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=Shares" json:"vesting"`
+	EndTime int64  `protobuf:"varint,2,opt,name=endTime,proto3" json:"endTime,omitempty"`
+}
+
+func (m *ShareDelayedVesting) Reset()         { *m = ShareDelayedVesting{} }
+func (m *ShareDelayedVesting) String() string { return proto.CompactTextString(m) }
+func (*ShareDelayedVesting) ProtoMessage()    {}
+func (*ShareDelayedVesting) Descriptor() ([]byte, []int) {
+	return fileDescriptor_90d9b25b318c41d6, []int{2}
+}
+func (m *ShareDelayedVesting) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ShareDelayedVesting) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ShareDelayedVesting.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ShareDelayedVesting) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ShareDelayedVesting.Merge(m, src)
+}
+func (m *ShareDelayedVesting) XXX_Size() int {
+	return m.Size()
+}
+func (m *ShareDelayedVesting) XXX_DiscardUnknown() {
+	xxx_messageInfo_ShareDelayedVesting.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ShareDelayedVesting proto.InternalMessageInfo
+
+func (m *ShareDelayedVesting) GetVesting() Shares {
+	if m != nil {
+		return m.Vesting
+	}
+	return nil
+}
+
+func (m *ShareDelayedVesting) GetEndTime() int64 {
+	if m != nil {
+		return m.EndTime
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*MainnetVestingAccount)(nil), "tendermint.spn.campaign.MainnetVestingAccount")
+	proto.RegisterType((*ShareVestingOptions)(nil), "tendermint.spn.campaign.ShareVestingOptions")
+	proto.RegisterType((*ShareDelayedVesting)(nil), "tendermint.spn.campaign.ShareDelayedVesting")
 }
 
 func init() {
@@ -94,26 +230,33 @@ func init() {
 }
 
 var fileDescriptor_90d9b25b318c41d6 = []byte{
-	// 301 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x4c, 0x90, 0xbd, 0x4e, 0xc3, 0x30,
-	0x14, 0x85, 0x63, 0x8a, 0x8a, 0x30, 0x5b, 0x04, 0x22, 0x74, 0x70, 0x2b, 0x06, 0x88, 0x90, 0xb0,
-	0x55, 0x98, 0x18, 0x29, 0x5d, 0x18, 0x58, 0x82, 0xc4, 0xc0, 0x52, 0x39, 0x8e, 0x95, 0x5a, 0x10,
-	0x3b, 0xca, 0x75, 0x2b, 0x78, 0x0b, 0x9e, 0x83, 0x97, 0x60, 0xed, 0xd8, 0x91, 0xa9, 0xa0, 0xe4,
-	0x2d, 0x98, 0x50, 0xe3, 0x04, 0x3a, 0x5d, 0xff, 0xdc, 0x73, 0xce, 0xa7, 0x83, 0x4f, 0x04, 0xcf,
-	0x72, 0xae, 0x52, 0xcd, 0x32, 0xae, 0xb4, 0x96, 0x76, 0x32, 0x97, 0x60, 0x95, 0x4e, 0x27, 0x5c,
-	0x08, 0x33, 0xd3, 0x96, 0xe6, 0x85, 0xb1, 0xc6, 0x3f, 0xb4, 0x52, 0x27, 0xb2, 0xc8, 0x94, 0xb6,
-	0x14, 0x72, 0x4d, 0x5b, 0x59, 0x6f, 0x3f, 0x35, 0xa9, 0xa9, 0x77, 0xd8, 0xfa, 0xe4, 0xd6, 0x7b,
-	0x44, 0x18, 0xc8, 0x0c, 0xb0, 0x98, 0x83, 0x64, 0xf3, 0x61, 0x2c, 0x2d, 0x1f, 0x32, 0x61, 0x94,
-	0x76, 0xff, 0xc7, 0x1f, 0x08, 0x1f, 0xdc, 0xb9, 0xc0, 0x07, 0x97, 0x77, 0xed, 0xe2, 0x7c, 0x82,
-	0x71, 0xeb, 0x7d, 0x3b, 0x0e, 0xd0, 0x00, 0x85, 0xdb, 0xd1, 0xc6, 0x8b, 0x1f, 0xe0, 0x1d, 0x9e,
-	0x24, 0x85, 0x04, 0x08, 0xb6, 0x06, 0x28, 0xdc, 0x8d, 0xda, 0xab, 0xff, 0x8c, 0xbb, 0xf7, 0x53,
-	0x5e, 0x48, 0x08, 0x3a, 0x83, 0x4e, 0xb8, 0x77, 0x71, 0x44, 0x1d, 0x04, 0x5d, 0x43, 0xd0, 0x06,
-	0x82, 0xde, 0x18, 0xa5, 0x47, 0x57, 0x8b, 0x55, 0xdf, 0xfb, 0x59, 0xf5, 0x4f, 0x53, 0x65, 0xa7,
-	0xb3, 0x98, 0x0a, 0x93, 0xb1, 0x86, 0xd8, 0x8d, 0x73, 0x48, 0x9e, 0x98, 0x7d, 0xcd, 0x25, 0xd4,
-	0x82, 0xf7, 0xaf, 0x7e, 0xe3, 0x1d, 0x35, 0x73, 0x34, 0x5e, 0x94, 0x04, 0x2d, 0x4b, 0x82, 0xbe,
-	0x4b, 0x82, 0xde, 0x2a, 0xe2, 0x2d, 0x2b, 0xe2, 0x7d, 0x56, 0xc4, 0x7b, 0x3c, 0xdb, 0x30, 0xfd,
-	0x6f, 0x8d, 0x41, 0xae, 0xd9, 0x0b, 0xfb, 0xab, 0xbb, 0x36, 0x8f, 0xbb, 0x75, 0x1d, 0x97, 0xbf,
-	0x01, 0x00, 0x00, 0xff, 0xff, 0xbc, 0x8e, 0xf5, 0x8d, 0x87, 0x01, 0x00, 0x00,
+	// 408 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x92, 0x31, 0xcf, 0xd2, 0x40,
+	0x1c, 0xc6, 0x7b, 0x2f, 0x04, 0xf2, 0x1e, 0x09, 0x43, 0xd5, 0x58, 0x19, 0x8e, 0x86, 0x41, 0x1b,
+	0xa3, 0x77, 0x01, 0x27, 0x47, 0x2b, 0x83, 0x0e, 0xc6, 0xa4, 0x1a, 0x06, 0x16, 0x72, 0x6d, 0x2f,
+	0xe5, 0x22, 0xbd, 0x6b, 0x7a, 0x07, 0x81, 0x6f, 0xe1, 0xee, 0xe0, 0xee, 0x27, 0x61, 0x64, 0x74,
+	0x42, 0x03, 0xdf, 0xc2, 0xc9, 0xf4, 0xda, 0x22, 0x10, 0x8d, 0xd3, 0x3b, 0xb5, 0x77, 0xf7, 0x7f,
+	0x9e, 0xdf, 0x93, 0xe7, 0x0e, 0x3e, 0x8e, 0x68, 0x9a, 0x51, 0x9e, 0x08, 0x92, 0x52, 0x2e, 0x04,
+	0xd3, 0xb3, 0x15, 0x53, 0x9a, 0x8b, 0x64, 0x46, 0xa3, 0x48, 0x2e, 0x85, 0xc6, 0x59, 0x2e, 0xb5,
+	0xb4, 0x1f, 0x6a, 0x26, 0x62, 0x96, 0xa7, 0x5c, 0x68, 0xac, 0x32, 0x81, 0x6b, 0x59, 0xef, 0x7e,
+	0x22, 0x13, 0x69, 0x66, 0x48, 0xf1, 0x57, 0x8e, 0xf7, 0x50, 0x24, 0x55, 0x2a, 0x15, 0x09, 0xa9,
+	0x62, 0x64, 0x35, 0x0c, 0x99, 0xa6, 0x43, 0x12, 0x49, 0x2e, 0xca, 0xf3, 0xc1, 0x97, 0x1b, 0xf8,
+	0xe0, 0x5d, 0x09, 0x9c, 0x94, 0xbc, 0x57, 0x25, 0xce, 0x46, 0x10, 0xd6, 0xde, 0x6f, 0xc7, 0x0e,
+	0x70, 0x81, 0xd7, 0x0c, 0xce, 0x76, 0x6c, 0x07, 0xb6, 0x69, 0x1c, 0xe7, 0x4c, 0x29, 0xe7, 0xc6,
+	0x05, 0xde, 0x6d, 0x50, 0x2f, 0xed, 0x05, 0x6c, 0xa9, 0x39, 0xcd, 0x99, 0x72, 0x1a, 0x6e, 0xc3,
+	0xeb, 0x8c, 0x1e, 0xe1, 0x32, 0x04, 0x2e, 0x42, 0xe0, 0x2a, 0x04, 0x7e, 0x2d, 0xb9, 0xf0, 0x5f,
+	0x6e, 0xf7, 0x7d, 0xeb, 0xd7, 0xbe, 0xff, 0x24, 0xe1, 0x7a, 0xbe, 0x0c, 0x71, 0x24, 0x53, 0x52,
+	0x25, 0x2e, 0x3f, 0xcf, 0x55, 0xfc, 0x89, 0xe8, 0x4d, 0xc6, 0x94, 0x11, 0x7c, 0xfb, 0xd1, 0x6f,
+	0x7d, 0x30, 0xde, 0x41, 0xc5, 0xb0, 0xa7, 0xb0, 0x5b, 0x35, 0xf5, 0x3e, 0xd3, 0x5c, 0x0a, 0xe5,
+	0x34, 0x5d, 0xe0, 0x75, 0x46, 0xcf, 0xf0, 0x3f, 0x9a, 0xc2, 0xc6, 0x60, 0x72, 0xa1, 0xf1, 0x9b,
+	0x45, 0x90, 0xe0, 0xca, 0x69, 0xb0, 0x86, 0xf7, 0xfe, 0x32, 0x6c, 0x4f, 0x60, 0x37, 0x66, 0x0b,
+	0xba, 0x61, 0x71, 0x75, 0x60, 0xea, 0xf9, 0x2f, 0x72, 0x7c, 0xa1, 0x79, 0x63, 0x05, 0x57, 0x2e,
+	0xfe, 0x2d, 0x6c, 0xcb, 0x8a, 0xfc, 0x15, 0x54, 0xe8, 0x4b, 0x91, 0x2d, 0x60, 0x7b, 0x75, 0x62,
+	0xde, 0x5d, 0xb9, 0x35, 0xa4, 0xb8, 0x65, 0x26, 0xe2, 0x8f, 0x3c, 0x65, 0xe6, 0x96, 0x1b, 0x41,
+	0xbd, 0xf4, 0xc7, 0xdb, 0x03, 0x02, 0xbb, 0x03, 0x02, 0x3f, 0x0f, 0x08, 0x7c, 0x3e, 0x22, 0x6b,
+	0x77, 0x44, 0xd6, 0xf7, 0x23, 0xb2, 0xa6, 0x4f, 0xcf, 0x78, 0x7f, 0x0a, 0x21, 0x2a, 0x13, 0x64,
+	0x4d, 0x4e, 0xcf, 0xdc, 0x70, 0xc3, 0x96, 0x79, 0x86, 0x2f, 0x7e, 0x07, 0x00, 0x00, 0xff, 0xff,
+	0xab, 0x80, 0x36, 0xff, 0xff, 0x02, 0x00, 0x00,
 }
 
 func (m *MainnetVestingAccount) Marshal() (dAtA []byte, err error) {
@@ -136,6 +279,16 @@ func (m *MainnetVestingAccount) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	{
+		size, err := m.VestingOptions.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintMainnetVestingAccount(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
 	if len(m.Shares) > 0 {
 		for iNdEx := len(m.Shares) - 1; iNdEx >= 0; iNdEx-- {
 			{
@@ -161,6 +314,101 @@ func (m *MainnetVestingAccount) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintMainnetVestingAccount(dAtA, i, uint64(m.CampaignID))
 		i--
 		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ShareVestingOptions) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ShareVestingOptions) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ShareVestingOptions) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Options != nil {
+		{
+			size := m.Options.Size()
+			i -= size
+			if _, err := m.Options.MarshalTo(dAtA[i:]); err != nil {
+				return 0, err
+			}
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ShareVestingOptions_DelayedVesting) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ShareVestingOptions_DelayedVesting) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	if m.DelayedVesting != nil {
+		{
+			size, err := m.DelayedVesting.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintMainnetVestingAccount(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+func (m *ShareDelayedVesting) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ShareDelayedVesting) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ShareDelayedVesting) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.EndTime != 0 {
+		i = encodeVarintMainnetVestingAccount(dAtA, i, uint64(m.EndTime))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Vesting) > 0 {
+		for iNdEx := len(m.Vesting) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Vesting[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintMainnetVestingAccount(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
 	}
 	return len(dAtA) - i, nil
 }
@@ -194,6 +442,50 @@ func (m *MainnetVestingAccount) Size() (n int) {
 			l = e.Size()
 			n += 1 + l + sovMainnetVestingAccount(uint64(l))
 		}
+	}
+	l = m.VestingOptions.Size()
+	n += 1 + l + sovMainnetVestingAccount(uint64(l))
+	return n
+}
+
+func (m *ShareVestingOptions) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Options != nil {
+		n += m.Options.Size()
+	}
+	return n
+}
+
+func (m *ShareVestingOptions_DelayedVesting) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.DelayedVesting != nil {
+		l = m.DelayedVesting.Size()
+		n += 1 + l + sovMainnetVestingAccount(uint64(l))
+	}
+	return n
+}
+func (m *ShareDelayedVesting) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Vesting) > 0 {
+		for _, e := range m.Vesting {
+			l = e.Size()
+			n += 1 + l + sovMainnetVestingAccount(uint64(l))
+		}
+	}
+	if m.EndTime != 0 {
+		n += 1 + sovMainnetVestingAccount(uint64(m.EndTime))
 	}
 	return n
 }
@@ -318,6 +610,227 @@ func (m *MainnetVestingAccount) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VestingOptions", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMainnetVestingAccount
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMainnetVestingAccount
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMainnetVestingAccount
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.VestingOptions.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMainnetVestingAccount(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMainnetVestingAccount
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ShareVestingOptions) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMainnetVestingAccount
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ShareVestingOptions: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ShareVestingOptions: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DelayedVesting", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMainnetVestingAccount
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMainnetVestingAccount
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMainnetVestingAccount
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &ShareDelayedVesting{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.Options = &ShareVestingOptions_DelayedVesting{v}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMainnetVestingAccount(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMainnetVestingAccount
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ShareDelayedVesting) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMainnetVestingAccount
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ShareDelayedVesting: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ShareDelayedVesting: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Vesting", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMainnetVestingAccount
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthMainnetVestingAccount
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthMainnetVestingAccount
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Vesting = append(m.Vesting, github_com_cosmos_cosmos_sdk_types.Coin{})
+			if err := m.Vesting[len(m.Vesting)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field EndTime", wireType)
+			}
+			m.EndTime = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMainnetVestingAccount
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.EndTime |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipMainnetVestingAccount(dAtA[iNdEx:])
