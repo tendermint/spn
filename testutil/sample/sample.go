@@ -45,6 +45,12 @@ func Codec() codec.Marshaler {
 	return codec.NewProtoCodec(interfaceRegistry)
 }
 
+// Bool returns randomly true or false
+func Bool() bool {
+	r := rand.Intn(100)
+	return r < 50
+}
+
 // Bytes returns a random array of bytes
 func Bytes(n int) []byte {
 	return []byte(String(n))

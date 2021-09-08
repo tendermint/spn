@@ -63,7 +63,7 @@ func CheckChainName(chainName string) error {
 	// Iterate characters
 	for _, c := range chainName {
 		if !isChainAuthorizedChar(c) {
-			return errors.New("chain name must be alphanumerical")
+			return errors.New("chain name must be lowercase alpha character")
 		}
 	}
 
