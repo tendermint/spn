@@ -56,5 +56,6 @@ func TestMainnetVestingAccountRemove(t *testing.T) {
 func TestMainnetVestingAccountGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)
 	items := createNMainnetVestingAccount(keeper, ctx, 10)
-	require.Equal(t, items, keeper.GetAllMainnetVestingAccount(ctx))
+	require.Len(t, keeper.GetAllMainnetVestingAccount(ctx), len(items))
+	require.Subset(t, items, keeper.GetAllMainnetVestingAccount(ctx))
 }
