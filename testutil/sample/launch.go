@@ -50,7 +50,7 @@ func VestingAccount(chainID uint64, address string) launch.VestingAccount {
 		ChainID:         chainID,
 		Address:         address,
 		StartingBalance: Coins(),
-		VestingOptions:  *launch.NewDelayedVesting(Coins(), time.Now().Unix()),
+		VestingOptions:  VestingOptions(),
 	}
 }
 

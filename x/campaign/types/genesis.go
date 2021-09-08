@@ -27,6 +27,7 @@ func (gs GenesisState) Validate() error {
 		if _, ok := mainnetVestingAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for mainnetVestingAccount")
 		}
+
 		mainnetVestingAccountIndexMap[index] = struct{}{}
 	}
 
