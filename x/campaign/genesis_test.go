@@ -32,10 +32,13 @@ func TestGenesis(t *testing.T) {
 	campaign.InitGenesis(ctx, *keeper, genesisState)
 	got := *campaign.ExportGenesis(ctx, *keeper)
 
+	// this line is used by starport scaffolding # genesis/test/assert
+	require.Len(t, got.CampaignList, len(genesisState.CampaignList))
+	require.Subset(t, genesisState.CampaignList, got.CampaignList)
+
+	require.Equal(t, genesisState.CampaignCount, got.CampaignCount)
 	require.Equal(t, genesisState, got)
 
-	// this line is used by starport scaffolding # genesis/test/assert
 	require.Len(t, got.MainnetAccountList, len(genesisState.MainnetAccountList))
 	require.Subset(t, genesisState.MainnetAccountList, got.MainnetAccountList)
-
 }
