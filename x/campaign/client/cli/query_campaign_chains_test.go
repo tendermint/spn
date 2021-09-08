@@ -27,7 +27,7 @@ func networkWithCampaignChainsObjects(t *testing.T, n int) (*network.Network, []
 	for i := 0; i < n; i++ {
 		state.CampaignChainsList = append(state.CampaignChainsList, types.CampaignChains{
 			CampaignID: uint64(i),
-			Chains: []uint64{uint64(i)},
+			Chains:     []uint64{uint64(i)},
 		})
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)

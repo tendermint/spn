@@ -13,7 +13,7 @@ func CampaignGenesisState() campaign.GenesisState {
 		CampaignChainsList: []campaign.CampaignChains{
 			{
 				CampaignID: 0,
-				Chains: []uint64{0,1},
+				Chains:     []uint64{0, 1},
 			},
 		},
 	}
