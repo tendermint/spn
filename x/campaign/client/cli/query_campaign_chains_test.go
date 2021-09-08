@@ -5,16 +5,14 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/x/campaign/client/cli"
 	"github.com/tendermint/spn/x/campaign/types"
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // Prevent strconv unused error
@@ -29,6 +27,7 @@ func networkWithCampaignChainsObjects(t *testing.T, n int) (*network.Network, []
 	for i := 0; i < n; i++ {
 		state.CampaignChainsList = append(state.CampaignChainsList, types.CampaignChains{
 			CampaignID: uint64(i),
+			Chains: []uint64{uint64(i)},
 		})
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
@@ -87,63 +86,4 @@ func TestShowCampaignChains(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestListCampaignChains(t *testing.T) {
-	net, objs := networkWithCampaignChainsObjects(t, 5)
-
-	ctx := net.Validators[0].ClientCtx
-	request := func(next []byte, offset, limit uint64, total bool) []string {
-		args := []string{
-			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
-		}
-		if next == nil {
-			args = append(args, fmt.Sprintf("--%s=%d", flags.FlagOffset, offset))
-		} else {
-			args = append(args, fmt.Sprintf("--%s=%s", flags.FlagPageKey, next))
-		}
-		args = append(args, fmt.Sprintf("--%s=%d", flags.FlagLimit, limit))
-		if total {
-			args = append(args, fmt.Sprintf("--%s", flags.FlagCountTotal))
-		}
-		return args
-	}
-	t.Run("ByOffset", func(t *testing.T) {
-		step := 2
-		for i := 0; i < len(objs); i += step {
-			args := request(nil, uint64(i), uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaignChains(), args)
-			require.NoError(t, err)
-			var resp types.QueryAllCampaignChainsResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.CampaignChains[j-i])
-			}
-		}
-	})
-	t.Run("ByKey", func(t *testing.T) {
-		step := 2
-		var next []byte
-		for i := 0; i < len(objs); i += step {
-			args := request(next, 0, uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaignChains(), args)
-			require.NoError(t, err)
-			var resp types.QueryAllCampaignChainsResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.CampaignChains[j-i])
-			}
-			next = resp.Pagination.NextKey
-		}
-	})
-	t.Run("Total", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(objs)), true)
-		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaignChains(), args)
-		require.NoError(t, err)
-		var resp types.QueryAllCampaignChainsResponse
-		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-		require.NoError(t, err)
-		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.Equal(t, objs, resp.CampaignChains)
-	})
 }

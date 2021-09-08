@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
@@ -6,14 +6,15 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNCampaignChains(keeper *Keeper, ctx sdk.Context, n int) []types.CampaignChains {
+func createNCampaignChains(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.CampaignChains {
 	items := make([]types.CampaignChains, n)
 	for i := range items {
 		items[i].CampaignID = uint64(i)
@@ -24,7 +25,7 @@ func createNCampaignChains(keeper *Keeper, ctx sdk.Context, n int) []types.Campa
 }
 
 func TestCampaignChainsGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaignChains(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetCampaignChains(ctx,
@@ -35,7 +36,7 @@ func TestCampaignChainsGet(t *testing.T) {
 	}
 }
 func TestCampaignChainsRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaignChains(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveCampaignChains(ctx,
@@ -49,7 +50,7 @@ func TestCampaignChainsRemove(t *testing.T) {
 }
 
 func TestCampaignChainsGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaignChains(keeper, ctx, 10)
 	require.Equal(t, items, keeper.GetAllCampaignChains(ctx))
 }
