@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
@@ -17,8 +18,7 @@ var _ = strconv.IntSize
 func createNMainnetVestingAccount(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.MainnetVestingAccount {
 	items := make([]types.MainnetVestingAccount, n)
 	for i := range items {
-		items[i].CampaignID = uint64(i)
-		items[i].Address = strconv.Itoa(i)
+		items[i] = sample.MainnetVestingAccount(0, sample.AccAddress())
 
 		keeper.SetMainnetVestingAccount(ctx, items[i])
 	}

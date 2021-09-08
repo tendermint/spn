@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"fmt"
+	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
@@ -29,7 +30,9 @@ func networkWithMainnetVestingAccountObjects(t *testing.T, n int) (*network.Netw
 	for i := 0; i < n; i++ {
 		state.MainnetVestingAccountList = append(state.MainnetVestingAccountList, types.MainnetVestingAccount{
 			CampaignID: uint64(i),
-			Address:    strconv.Itoa(i),
+			Address:    sample.AccAddress(),
+			Shares: sample.Shares(),
+			VestingOptions: sample.ShareVestingOptions(),
 		})
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
