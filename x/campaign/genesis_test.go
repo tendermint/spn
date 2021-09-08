@@ -12,6 +12,17 @@ import (
 /*
 // We use a genesis template from sample package, therefore this placeholder is not used
 // this line is used by starport scaffolding # genesis/test/state
+MainnetAccountList: []types.MainnetAccount{
+	{
+		CampaignID: 0,
+Address: "0",
+},
+	{
+		CampaignID: 1,
+Address: "1",
+},
+},
+
 */
 
 func TestGenesis(t *testing.T) {
@@ -24,4 +35,7 @@ func TestGenesis(t *testing.T) {
 	require.Equal(t, genesisState, got)
 
 	// this line is used by starport scaffolding # genesis/test/assert
+	require.Len(t, got.MainnetAccountList, len(genesisState.MainnetAccountList))
+	require.Subset(t, genesisState.MainnetAccountList, got.MainnetAccountList)
+
 }

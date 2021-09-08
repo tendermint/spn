@@ -4,12 +4,42 @@ package tendermint.spn.campaign;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "gogoproto/gogo.proto";
+import "campaign/mainnet_account.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 // Query defines the gRPC querier service.
 service Query {
-    // this line is used by starport scaffolding # 2
+  // this line is used by starport scaffolding # 2
+
+  // Queries a mainnetAccount by index.
+  rpc MainnetAccount(QueryGetMainnetAccountRequest) returns (QueryGetMainnetAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnetAccount/{campaignID}/{address}";
+  }
+
+  // Queries a list of mainnetAccount items.
+  rpc MainnetAccountAll(QueryAllMainnetAccountRequest) returns (QueryAllMainnetAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnetAccount";
+  }
+
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetMainnetAccountRequest {
+  uint64 campaignID = 1;
+  string address = 2;
+}
+
+message QueryGetMainnetAccountResponse {
+  MainnetAccount mainnetAccount = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMainnetAccountRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMainnetAccountResponse {
+  repeated MainnetAccount mainnetAccount = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

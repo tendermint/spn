@@ -19,13 +19,39 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid:    true,
 		},
 		{
-			desc:     "valid genesis state",
+			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				// this line is used by starport scaffolding # types/genesis/validField
+				MainnetAccountList: []types.MainnetAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+					{
+						CampaignID: 1,
+						Address:    "1",
+					},
+				},
 			},
 			valid: true,
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
+		{
+			desc: "duplicated mainnetAccount",
+			genState: &types.GenesisState{
+				MainnetAccountList: []types.MainnetAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+				},
+			},
+			valid: false,
+		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()
