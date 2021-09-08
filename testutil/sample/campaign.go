@@ -9,5 +9,12 @@ func Shares() campaign.Shares {
 
 // CampaignGenesisState returns a sample genesis state for the campaign module
 func CampaignGenesisState() campaign.GenesisState {
-	return campaign.GenesisState{}
+	return campaign.GenesisState{
+		CampaignChainsList: []campaign.CampaignChains{
+			{
+				CampaignID: 0,
+				Chains: []uint64{0,1},
+			},
+		},
+	}
 }

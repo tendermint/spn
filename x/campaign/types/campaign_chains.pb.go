@@ -23,7 +23,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type CampaignChains struct {
-	CampaignID uint64 `protobuf:"varint,1,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	CampaignID uint64   `protobuf:"varint,1,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	Chains     []uint64 `protobuf:"varint,2,rep,packed,name=chains,proto3" json:"chains,omitempty"`
 }
 
 func (m *CampaignChains) Reset()         { *m = CampaignChains{} }
@@ -66,6 +67,13 @@ func (m *CampaignChains) GetCampaignID() uint64 {
 	return 0
 }
 
+func (m *CampaignChains) GetChains() []uint64 {
+	if m != nil {
+		return m.Chains
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*CampaignChains)(nil), "tendermint.spn.campaign.CampaignChains")
 }
@@ -73,17 +81,18 @@ func init() {
 func init() { proto.RegisterFile("campaign/campaign_chains.proto", fileDescriptor_f2754f11458fa700) }
 
 var fileDescriptor_f2754f11458fa700 = []byte{
-	// 158 bytes of a gzipped FileDescriptorProto
+	// 173 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0x4b, 0x4e, 0xcc, 0x2d,
 	0x48, 0xcc, 0x4c, 0xcf, 0xd3, 0x87, 0x31, 0xe2, 0x93, 0x33, 0x12, 0x33, 0xf3, 0x8a, 0xf5, 0x0a,
 	0x8a, 0xf2, 0x4b, 0xf2, 0x85, 0xc4, 0x4b, 0x52, 0xf3, 0x52, 0x52, 0x8b, 0x72, 0x33, 0xf3, 0x4a,
-	0xf4, 0x8a, 0x0b, 0xf2, 0xf4, 0x60, 0xaa, 0x94, 0x0c, 0xb8, 0xf8, 0x9c, 0xa1, 0x6c, 0x67, 0xb0,
+	0xf4, 0x8a, 0x0b, 0xf2, 0xf4, 0x60, 0xaa, 0x94, 0x3c, 0xb8, 0xf8, 0x9c, 0xa1, 0x6c, 0x67, 0xb0,
 	0x06, 0x21, 0x39, 0x2e, 0x2e, 0x98, 0xac, 0xa7, 0x8b, 0x04, 0xa3, 0x02, 0xa3, 0x06, 0x4b, 0x10,
-	0x92, 0x88, 0x93, 0xcb, 0x89, 0x47, 0x72, 0x8c, 0x17, 0x1e, 0xc9, 0x31, 0x3e, 0x78, 0x24, 0xc7,
-	0x38, 0xe1, 0xb1, 0x1c, 0xc3, 0x85, 0xc7, 0x72, 0x0c, 0x37, 0x1e, 0xcb, 0x31, 0x44, 0x69, 0xa5,
-	0x67, 0x96, 0x64, 0x94, 0x26, 0xe9, 0x25, 0xe7, 0xe7, 0xea, 0x23, 0xec, 0xd3, 0x2f, 0x2e, 0xc8,
-	0xd3, 0xaf, 0x80, 0xbb, 0x4b, 0xbf, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0xec, 0x2e, 0x63,
-	0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0xc3, 0x28, 0xb4, 0x27, 0xb9, 0x00, 0x00, 0x00,
+	0x92, 0x88, 0x90, 0x18, 0x17, 0x1b, 0xc4, 0x68, 0x09, 0x26, 0x05, 0x66, 0x0d, 0x96, 0x20, 0x28,
+	0xcf, 0xc9, 0xe5, 0xc4, 0x23, 0x39, 0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c,
+	0xf0, 0x58, 0x8e, 0xe1, 0xc2, 0x63, 0x39, 0x86, 0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0xb4, 0xd2, 0x33,
+	0x4b, 0x32, 0x4a, 0x93, 0xf4, 0x92, 0xf3, 0x73, 0xf5, 0x11, 0xee, 0xd0, 0x2f, 0x2e, 0xc8, 0xd3,
+	0xaf, 0x80, 0xbb, 0x57, 0xbf, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0xec, 0x5e, 0x63, 0x40,
+	0x00, 0x00, 0x00, 0xff, 0xff, 0xac, 0x83, 0xda, 0xb7, 0xd1, 0x00, 0x00, 0x00,
 }
 
 func (m *CampaignChains) Marshal() (dAtA []byte, err error) {
@@ -106,6 +115,24 @@ func (m *CampaignChains) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.Chains) > 0 {
+		dAtA2 := make([]byte, len(m.Chains)*10)
+		var j1 int
+		for _, num := range m.Chains {
+			for num >= 1<<7 {
+				dAtA2[j1] = uint8(uint64(num)&0x7f | 0x80)
+				num >>= 7
+				j1++
+			}
+			dAtA2[j1] = uint8(num)
+			j1++
+		}
+		i -= j1
+		copy(dAtA[i:], dAtA2[:j1])
+		i = encodeVarintCampaignChains(dAtA, i, uint64(j1))
+		i--
+		dAtA[i] = 0x12
+	}
 	if m.CampaignID != 0 {
 		i = encodeVarintCampaignChains(dAtA, i, uint64(m.CampaignID))
 		i--
@@ -133,6 +160,13 @@ func (m *CampaignChains) Size() (n int) {
 	_ = l
 	if m.CampaignID != 0 {
 		n += 1 + sovCampaignChains(uint64(m.CampaignID))
+	}
+	if len(m.Chains) > 0 {
+		l = 0
+		for _, e := range m.Chains {
+			l += sovCampaignChains(uint64(e))
+		}
+		n += 1 + sovCampaignChains(uint64(l)) + l
 	}
 	return n
 }
@@ -190,6 +224,82 @@ func (m *CampaignChains) Unmarshal(dAtA []byte) error {
 				if b < 0x80 {
 					break
 				}
+			}
+		case 2:
+			if wireType == 0 {
+				var v uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowCampaignChains
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.Chains = append(m.Chains, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowCampaignChains
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return ErrInvalidLengthCampaignChains
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex < 0 {
+					return ErrInvalidLengthCampaignChains
+				}
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				var count int
+				for _, integer := range dAtA[iNdEx:postIndex] {
+					if integer < 128 {
+						count++
+					}
+				}
+				elementCount = count
+				if elementCount != 0 && len(m.Chains) == 0 {
+					m.Chains = make([]uint64, 0, elementCount)
+				}
+				for iNdEx < postIndex {
+					var v uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowCampaignChains
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.Chains = append(m.Chains, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field Chains", wireType)
 			}
 		default:
 			iNdEx = preIndex
