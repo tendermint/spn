@@ -1,4 +1,4 @@
-package keeper
+package keeper_test
 
 import (
 	"strconv"
@@ -6,14 +6,15 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNMainnetVestingAccount(keeper *Keeper, ctx sdk.Context, n int) []types.MainnetVestingAccount {
+func createNMainnetVestingAccount(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.MainnetVestingAccount {
 	items := make([]types.MainnetVestingAccount, n)
 	for i := range items {
 		items[i].CampaignID = uint64(i)
@@ -25,7 +26,7 @@ func createNMainnetVestingAccount(keeper *Keeper, ctx sdk.Context, n int) []type
 }
 
 func TestMainnetVestingAccountGet(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Campaign(t)
 	items := createNMainnetVestingAccount(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetMainnetVestingAccount(ctx,
@@ -37,7 +38,7 @@ func TestMainnetVestingAccountGet(t *testing.T) {
 	}
 }
 func TestMainnetVestingAccountRemove(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Campaign(t)
 	items := createNMainnetVestingAccount(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveMainnetVestingAccount(ctx,
@@ -53,7 +54,7 @@ func TestMainnetVestingAccountRemove(t *testing.T) {
 }
 
 func TestMainnetVestingAccountGetAll(t *testing.T) {
-	keeper, ctx := setupKeeper(t)
+	keeper, ctx := testkeeper.Campaign(t)
 	items := createNMainnetVestingAccount(keeper, ctx, 10)
 	require.Equal(t, items, keeper.GetAllMainnetVestingAccount(ctx))
 }
