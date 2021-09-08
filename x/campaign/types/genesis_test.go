@@ -19,13 +19,35 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid:    true,
 		},
 		{
-			desc:     "valid genesis state",
+			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				// this line is used by starport scaffolding # types/genesis/validField
+				CampaignChainsList: []types.CampaignChains{
+					{
+						CampaignID: 0,
+					},
+					{
+						CampaignID: 1,
+					},
+				},
 			},
 			valid: true,
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
+		{
+			desc: "duplicated campaignChains",
+			genState: &types.GenesisState{
+				CampaignChainsList: []types.CampaignChains{
+					{
+						CampaignID: 0,
+					},
+					{
+						CampaignID: 0,
+					},
+				},
+			},
+			valid: false,
+		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()

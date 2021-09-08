@@ -4,12 +4,42 @@ package tendermint.spn.campaign;
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 // this line is used by starport scaffolding # 1
+import "gogoproto/gogo.proto";
+import "campaign/campaign_chains.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 // Query defines the gRPC querier service.
 service Query {
     // this line is used by starport scaffolding # 2
+
+	// Queries a campaignChains by index.
+	rpc CampaignChains(QueryGetCampaignChainsRequest) returns (QueryGetCampaignChainsResponse) {
+		option (google.api.http).get = "/tendermint/spn/campaign/campaignChains/{campaignID}";
+	}
+
+	// Queries a list of campaignChains items.
+	rpc CampaignChainsAll(QueryAllCampaignChainsRequest) returns (QueryAllCampaignChainsResponse) {
+		option (google.api.http).get = "/tendermint/spn/campaign/campaignChains";
+	}
+
 }
 
 // this line is used by starport scaffolding # 3
+message QueryGetCampaignChainsRequest {
+	  uint64 campaignID = 1;
+
+}
+
+message QueryGetCampaignChainsResponse {
+	CampaignChains campaignChains = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllCampaignChainsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllCampaignChainsResponse {
+	repeated CampaignChains campaignChains = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
