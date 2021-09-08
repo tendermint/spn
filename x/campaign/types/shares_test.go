@@ -16,7 +16,7 @@ var (
 
 func TestEmptyShares(t *testing.T) {
 	shares := campaign.EmptyShares()
-	require.Equal(t, shares, campaign.Shares(sdk.NewCoins()))
+	require.Equal(t, shares, campaign.Shares(nil))
 }
 
 func TestNewShares(t *testing.T) {
@@ -234,7 +234,7 @@ func TestIsTotalReached(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			require.Equal(t, tc.reached, campaign.IsTotalReached(tc.shares, tc.totalShares))
+			require.Equal(t, tc.reached, campaign.IsTotalSharesReached(tc.shares, tc.totalShares))
 		})
 	}
 }
