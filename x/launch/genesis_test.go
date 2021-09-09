@@ -9,33 +9,40 @@ import (
 	"github.com/tendermint/spn/x/launch"
 )
 
+/*
+// We use a genesis template from sample package, therefore this placeholder is not used
+// this line is used by starport scaffolding # genesis/test/state
+*/
+
 func TestGenesis(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 
-	original := sample.LaunchGenesisState()
-	launch.InitGenesis(ctx, *keeper, original)
+	genesisState := sample.LaunchGenesisState()
+	launch.InitGenesis(ctx, *keeper, genesisState)
 	got := launch.ExportGenesis(ctx, *keeper)
 
 	// Compare lists
-	require.Len(t, got.ChainList, len(original.ChainList))
-	require.Subset(t, original.ChainList, got.ChainList)
+	require.Len(t, got.ChainList, len(genesisState.ChainList))
+	require.Subset(t, genesisState.ChainList, got.ChainList)
 
-	require.Equal(t, original.ChainCount, got.ChainCount)
+	require.Equal(t, genesisState.ChainCount, got.ChainCount)
 
-	require.Len(t, got.GenesisAccountList, len(original.GenesisAccountList))
-	require.Subset(t, original.GenesisAccountList, got.GenesisAccountList)
+	require.Len(t, got.GenesisAccountList, len(genesisState.GenesisAccountList))
+	require.Subset(t, genesisState.GenesisAccountList, got.GenesisAccountList)
 
-	require.Len(t, got.VestingAccountList, len(original.VestingAccountList))
-	require.Subset(t, original.VestingAccountList, got.VestingAccountList)
+	require.Len(t, got.VestingAccountList, len(genesisState.VestingAccountList))
+	require.Subset(t, genesisState.VestingAccountList, got.VestingAccountList)
 
-	require.Len(t, got.GenesisValidatorList, len(original.GenesisValidatorList))
-	require.Subset(t, original.GenesisValidatorList, got.GenesisValidatorList)
+	require.Len(t, got.GenesisValidatorList, len(genesisState.GenesisValidatorList))
+	require.Subset(t, genesisState.GenesisValidatorList, got.GenesisValidatorList)
 
-	require.Len(t, got.RequestList, len(original.RequestList))
-	require.Subset(t, original.RequestList, got.RequestList)
+	require.Len(t, got.RequestList, len(genesisState.RequestList))
+	require.Subset(t, genesisState.RequestList, got.RequestList)
 
-	require.Len(t, got.RequestCountList, len(original.RequestCountList))
-	require.Subset(t, original.RequestCountList, got.RequestCountList)
+	require.Len(t, got.RequestCountList, len(genesisState.RequestCountList))
+	require.Subset(t, genesisState.RequestCountList, got.RequestCountList)
 
-	require.Equal(t, original.Params, got.Params)
+	require.Equal(t, genesisState.Params, got.Params)
+
+	// this line is used by starport scaffolding # genesis/test/assert
 }

@@ -9,22 +9,29 @@ import (
 	"github.com/tendermint/spn/x/profile"
 )
 
+/*
+// We use a genesis template from sample package, therefore this placeholder is not used
+// this line is used by starport scaffolding # genesis/test/state
+*/
+
 func TestGenesis(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
 
-	original := sample.ProfileGenesisState()
-	profile.InitGenesis(ctx, *keeper, original)
+	genesisState := sample.ProfileGenesisState()
+	profile.InitGenesis(ctx, *keeper, genesisState)
 	got := profile.ExportGenesis(ctx, *keeper)
 
 	// Compare lists
-	require.Len(t, got.ValidatorList, len(original.ValidatorList))
-	require.Subset(t, original.ValidatorList, got.ValidatorList)
+	require.Len(t, got.ValidatorList, len(genesisState.ValidatorList))
+	require.Subset(t, genesisState.ValidatorList, got.ValidatorList)
 
-	require.Len(t, got.CoordinatorList, len(original.CoordinatorList))
-	require.Subset(t, original.CoordinatorList, got.CoordinatorList)
+	require.Len(t, got.CoordinatorList, len(genesisState.CoordinatorList))
+	require.Subset(t, genesisState.CoordinatorList, got.CoordinatorList)
 
-	require.Len(t, got.CoordinatorByAddressList, len(original.CoordinatorByAddressList))
-	require.Subset(t, original.CoordinatorByAddressList, got.CoordinatorByAddressList)
+	require.Len(t, got.CoordinatorByAddressList, len(genesisState.CoordinatorByAddressList))
+	require.Subset(t, genesisState.CoordinatorByAddressList, got.CoordinatorByAddressList)
 
-	require.Equal(t, original.CoordinatorCount, got.CoordinatorCount)
+	require.Equal(t, genesisState.CoordinatorCount, got.CoordinatorCount)
+
+	// this line is used by starport scaffolding # genesis/test/assert
 }
