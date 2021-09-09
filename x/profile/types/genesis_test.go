@@ -6,32 +6,65 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
-	profile "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/profile/types"
 )
+
+func TestGenesisState_Validate(t *testing.T) {
+	for _, tc := range []struct {
+		desc     string
+		genState *types.GenesisState
+		valid    bool
+	} {
+		{
+			desc:     "default is valid",
+			genState: types.DefaultGenesis(),
+			valid:    true,
+		},
+		{
+			desc: "valid genesis state",
+			genState: &types.GenesisState{
+				// this line is used by starport scaffolding # types/genesis/validField
+			},
+			valid: true,
+		},
+		// this line is used by starport scaffolding # types/genesis/testcase
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			err := tc.genState.Validate()
+			if tc.valid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
+			}
+		})
+	}
+}
 
 func TestGenesisStateValidateValidator(t *testing.T) {
 	addr := sample.AccAddress()
 	tests := []struct {
 		name     string
-		genState *profile.GenesisState
+		genState *types.GenesisState
 		err      error
 	}{
 		{
 			name:     "default is valid",
-			genState: profile.DefaultGenesis(),
-		}, {
+			genState: types.DefaultGenesis(),
+		},
+		{
 			name: "valid custom genesis",
-			genState: &profile.GenesisState{
-				ValidatorList: []profile.Validator{
+			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
 					{Address: sample.AccAddress()},
 					{Address: sample.AccAddress()},
 					{Address: sample.AccAddress()},
 				},
 			},
-		}, {
+		},
+		{
 			name: "duplicated validator by address",
-			genState: &profile.GenesisState{
-				ValidatorList: []profile.Validator{
+			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
 					{Address: addr},
 					{Address: addr},
 				},
@@ -63,22 +96,23 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 	)
 	tests := []struct {
 		name     string
-		genState *profile.GenesisState
+		genState *types.GenesisState
 		err      error
 	}{
 		{
 			name:     "default is valid",
-			genState: profile.DefaultGenesis(),
-		}, {
+			genState: types.DefaultGenesis(),
+		},
+		{
 			name: "valid custom genesis",
-			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []profile.CoordinatorByAddress{
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 					{CoordinatorId: 2, Address: addr3},
 					{CoordinatorId: 3, Address: addr4},
 				},
-				CoordinatorList: []profile.Coordinator{
+				CoordinatorList: []types.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 					{CoordinatorId: 2, Address: addr3},
@@ -86,64 +120,69 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 				},
 				CoordinatorCount: 4,
 			},
-		}, {
+		},
+		{
 			name: "duplicated coordinator",
-			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []profile.CoordinatorByAddress{
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr1},
 				},
 				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("duplicated index for coordinatorByAddress: %s", addr1),
-		}, {
+		},
+		{
 			name: "duplicated coordinator id",
-			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []profile.CoordinatorByAddress{
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 0, Address: addr2},
 				},
-				CoordinatorList: []profile.Coordinator{
+				CoordinatorList: []types.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 0, Address: addr2},
 				},
 				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("duplicated id for coordinator: 0"),
-		}, {
+		},
+		{
 			name: "profile not associated with chain",
-			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []profile.CoordinatorByAddress{
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 				},
-				CoordinatorList: []profile.Coordinator{
+				CoordinatorList: []types.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 				},
 				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("coordinator address not found for CoordinatorByAddress: %s", addr2),
-		}, {
+		},
+		{
 			name: "profile not associated with chain",
-			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []profile.CoordinatorByAddress{
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 1, Address: addr2},
 				},
-				CoordinatorList: []profile.Coordinator{
+				CoordinatorList: []types.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 				},
 				CoordinatorCount: 2,
 			},
 			err: fmt.Errorf("coordinator address not found for coordinatorID: 1"),
-		}, {
+		},
+		{
 			name: "invalid coordinator id",
-			genState: &profile.GenesisState{
-				CoordinatorByAddressList: []profile.CoordinatorByAddress{
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 133, Address: addr2},
 				},
-				CoordinatorList: []profile.Coordinator{
+				CoordinatorList: []types.Coordinator{
 					{CoordinatorId: 0, Address: addr1},
 					{CoordinatorId: 133, Address: addr2},
 				},

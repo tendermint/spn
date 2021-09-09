@@ -97,9 +97,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				GenesisValidatorList: sampleGenesisValidatorList,
 				RequestList:          sampleRequestList,
 				RequestCountList:     sampleRequestCountList,
+				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			shouldBeValid: true,
 		},
+		// this line is used by starport scaffolding # types/genesis/testcase
 		{
 			desc: "invalid chain",
 			genState: &types.GenesisState{
