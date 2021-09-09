@@ -56,5 +56,5 @@ func TestMainnetAccountRemove(t *testing.T) {
 func TestMainnetAccountGetAll(t *testing.T) {
 	k, ctx := keepertest.Campaign(t)
 	items := createNMainnetAccount(k, ctx, 10)
-	require.Equal(t, items, k.GetAllMainnetAccount(ctx))
+	require.ElementsMatch(t, items, k.GetAllMainnetAccount(ctx))
 }
