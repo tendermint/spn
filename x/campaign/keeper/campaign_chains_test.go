@@ -18,7 +18,6 @@ func createNCampaignChains(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int
 	items := make([]types.CampaignChains, n)
 	for i := range items {
 		items[i].CampaignID = uint64(i)
-
 		keeper.SetCampaignChains(ctx, items[i])
 	}
 	return items

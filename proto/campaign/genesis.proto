@@ -10,5 +10,5 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 // GenesisState defines the campaign module's genesis state.
 message GenesisState {
     // this line is used by starport scaffolding # genesis/proto/state
-		repeated CampaignChains campaignChainsList = 1 [(gogoproto.nullable) = false]; // this line is used by starport scaffolding # genesis/proto/stateField
+    repeated CampaignChains campaignChainsList = 1 [(gogoproto.nullable) = false]; // this line is used by starport scaffolding # genesis/proto/stateField
 }

@@ -13,18 +13,18 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 service Query {
     // this line is used by starport scaffolding # 2
 
-	// Queries a campaignChains by index.
-	rpc CampaignChains(QueryGetCampaignChainsRequest) returns (QueryGetCampaignChainsResponse) {
-		option (google.api.http).get = "/tendermint/spn/campaign/campaignChains/{campaignID}";
-	}
+    // Queries a campaignChains by index.
+    rpc CampaignChains(QueryGetCampaignChainsRequest) returns (QueryGetCampaignChainsResponse) {
+        option (google.api.http).get = "/tendermint/spn/campaign/campaignChains/{campaignID}";
+    }
 }
 
 // this line is used by starport scaffolding # 3
 message QueryGetCampaignChainsRequest {
-	  uint64 campaignID = 1;
+    uint64 campaignID = 1;
 
 }
 
 message QueryGetCampaignChainsResponse {
-	CampaignChains campaignChains = 1 [(gogoproto.nullable) = false];
+    CampaignChains campaignChains = 1 [(gogoproto.nullable) = false];
 }

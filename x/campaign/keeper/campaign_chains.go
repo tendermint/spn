@@ -19,7 +19,6 @@ func (k Keeper) SetCampaignChains(ctx sdk.Context, campaignChains types.Campaign
 func (k Keeper) GetCampaignChains(
 	ctx sdk.Context,
 	campaignID uint64,
-
 ) (val types.CampaignChains, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignChainsKeyPrefix))
 
