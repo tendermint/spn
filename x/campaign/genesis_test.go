@@ -20,7 +20,7 @@ func TestGenesis(t *testing.T) {
 	genesisState := sample.CampaignGenesisState()
 	campaign.InitGenesis(ctx, *keeper, genesisState)
 	got := *campaign.ExportGenesis(ctx, *keeper)
-	
+
 	require.Len(t, got.CampaignChainsList, len(genesisState.CampaignChainsList))
 	require.Subset(t, genesisState.CampaignChainsList, got.CampaignChainsList)
 
