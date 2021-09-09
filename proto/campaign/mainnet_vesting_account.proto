@@ -7,7 +7,7 @@ import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 message MainnetVestingAccount {
-  uint64 campaignID = 1; 
+  uint64 campaignID = 1;
   string address = 2;
   repeated cosmos.base.v1beta1.Coin shares = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
   ShareVestingOptions vestingOptions = 4 [(gogoproto.nullable) = false];
