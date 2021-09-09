@@ -3,28 +3,57 @@ package tendermint.spn.campaign;
 
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-// this line is used by starport scaffolding # 1
 import "gogoproto/gogo.proto";
 import "campaign/campaign_chains.proto";
+import "campaign/campaign.proto";
+// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 // Query defines the gRPC querier service.
 service Query {
-    // this line is used by starport scaffolding # 2
+	// Queries a campaign by id.
+	rpc Campaign(QueryGetCampaignRequest) returns (QueryGetCampaignResponse) {
+		option (google.api.http).get = "/tendermint/spn/campaign/campaign/{id}";
+	}
 
-    // Queries a campaignChains by index.
-    rpc CampaignChains(QueryGetCampaignChainsRequest) returns (QueryGetCampaignChainsResponse) {
-        option (google.api.http).get = "/tendermint/spn/campaign/campaignChains/{campaignID}";
-    }
+	// Queries a list of campaign items.
+	rpc CampaignAll(QueryAllCampaignRequest) returns (QueryAllCampaignResponse) {
+		option (google.api.http).get = "/tendermint/spn/campaign/campaign";
+	}
+
+	// Queries a campaignChains by index.
+	rpc CampaignChains(QueryGetCampaignChainsRequest) returns (QueryGetCampaignChainsResponse) {
+		option (google.api.http).get = "/tendermint/spn/campaign/campaignChains/{campaignID}";
+	}
+
+	// this line is used by starport scaffolding # 2
 }
 
-// this line is used by starport scaffolding # 3
+message QueryGetCampaignRequest {
+	uint64 id = 1;
+}
+
+message QueryGetCampaignResponse {
+	Campaign Campaign = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllCampaignRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllCampaignResponse {
+	repeated Campaign Campaign = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
 message QueryGetCampaignChainsRequest {
-    uint64 campaignID = 1;
+	uint64 campaignID = 1;
 
 }
 
 message QueryGetCampaignChainsResponse {
-    CampaignChains campaignChains = 1 [(gogoproto.nullable) = false];
+	CampaignChains campaignChains = 1 [(gogoproto.nullable) = false];
 }
+
+// this line is used by starport scaffolding # 3
