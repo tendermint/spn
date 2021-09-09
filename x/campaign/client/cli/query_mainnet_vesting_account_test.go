@@ -13,7 +13,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/testutil/sample"	
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/client/cli"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -31,8 +31,6 @@ func networkWithMainnetVestingAccountObjects(t *testing.T, n int) (*network.Netw
 		state.MainnetVestingAccountList = append(state.MainnetVestingAccountList, sample.MainnetVestingAccount(
 			uint64(i),
 			sample.AccAddress(),
-			sample.Shares(),
-			sample.ShareVestingOptions(),
 		))
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
