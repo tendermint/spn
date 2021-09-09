@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
@@ -14,6 +13,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/sample"	
 	"github.com/tendermint/spn/x/campaign/client/cli"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -28,12 +28,12 @@ func networkWithMainnetVestingAccountObjects(t *testing.T, n int) (*network.Netw
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.MainnetVestingAccountList = append(state.MainnetVestingAccountList, types.MainnetVestingAccount{
-			CampaignID: uint64(i),
-			Address:    sample.AccAddress(),
-			Shares: sample.Shares(),
-			VestingOptions: sample.ShareVestingOptions(),
-		})
+		state.MainnetVestingAccountList = append(state.MainnetVestingAccountList, sample.MainnetVestingAccount(
+			uint64(i),
+			sample.AccAddress(),
+			sample.Shares(),
+			sample.ShareVestingOptions(),
+		))
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)

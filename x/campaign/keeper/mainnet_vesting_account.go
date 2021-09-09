@@ -21,14 +21,10 @@ func (k Keeper) GetMainnetVestingAccount(
 	ctx sdk.Context,
 	campaignID uint64,
 	address string,
-
 ) (val types.MainnetVestingAccount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetVestingAccountKeyPrefix))
 
-	b := store.Get(types.MainnetVestingAccountKey(
-		campaignID,
-		address,
-	))
+	b := store.Get(types.MainnetVestingAccountKey(campaignID, address))
 	if b == nil {
 		return val, false
 	}
@@ -42,13 +38,9 @@ func (k Keeper) RemoveMainnetVestingAccount(
 	ctx sdk.Context,
 	campaignID uint64,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetVestingAccountKeyPrefix))
-	store.Delete(types.MainnetVestingAccountKey(
-		campaignID,
-		address,
-	))
+	store.Delete(types.MainnetVestingAccountKey(campaignID, address))
 }
 
 // GetAllMainnetVestingAccount returns all mainnetVestingAccount

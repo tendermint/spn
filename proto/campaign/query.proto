@@ -27,9 +27,8 @@ service Query {
 
 // this line is used by starport scaffolding # 3
 message QueryGetMainnetVestingAccountRequest {
-	  uint64 campaignID = 1;
+  uint64 campaignID = 1;
   string address = 2;
-
 }
 
 message QueryGetMainnetVestingAccountResponse {

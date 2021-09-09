@@ -10,10 +10,7 @@ const (
 )
 
 // MainnetVestingAccountKey returns the store key to retrieve a MainnetVestingAccount from the index fields
-func MainnetVestingAccountKey(
-	campaignID uint64,
-	address string,
-) []byte {
+func MainnetVestingAccountKey(campaignID uint64, address string) []byte {
 	var key []byte
 
 	campaignIDBytes := make([]byte, 8)

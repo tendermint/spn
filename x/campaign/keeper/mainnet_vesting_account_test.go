@@ -1,13 +1,13 @@
 package keeper_test
 
 import (
-	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -19,7 +19,6 @@ func createNMainnetVestingAccount(keeper *campaignkeeper.Keeper, ctx sdk.Context
 	items := make([]types.MainnetVestingAccount, n)
 	for i := range items {
 		items[i] = sample.MainnetVestingAccount(0, sample.AccAddress())
-
 		keeper.SetMainnetVestingAccount(ctx, items[i])
 	}
 	return items
