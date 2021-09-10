@@ -1,30 +1,55 @@
-package types
+package types_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/campaign/types"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/testutil/sample"
 )
 
 func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgUpdateTotalSupply
+		msg  types.MsgUpdateTotalSupply
 		err  error
 	}{
 		{
+			name: "valid address",
+			msg: types.MsgUpdateTotalSupply{
+				Coordinator: sample.AccAddress(),
+				CampaignID: 0,
+				TotalSupply: sample.Coins(),
+			},
+		},
+		{
 			name: "invalid address",
-			msg: MsgUpdateTotalSupply{
+			msg: types.MsgUpdateTotalSupply{
 				Coordinator: "invalid_address",
+				CampaignID: 0,
+				TotalSupply: sample.Coins(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg: MsgUpdateTotalSupply{
-				Coordinator: sample.AccAddress(),
+		},
+		{
+			name: "invalid total supply",
+			msg: types.MsgUpdateTotalSupply{
+				Coordinator:   sample.AccAddress(),
+				CampaignID: 0,
+				TotalSupply:   invalidCoins,
 			},
+			err: types.ErrInvalidTotalSupply,
+		},
+		{
+			name: "empty total supply",
+			msg: types.MsgUpdateTotalSupply{
+				Coordinator:   sample.AccAddress(),
+				CampaignID: 0,
+				TotalSupply:   sdk.NewCoins(),
+			},
+			err: types.ErrInvalidTotalSupply,
 		},
 	}
 	for _, tt := range tests {
