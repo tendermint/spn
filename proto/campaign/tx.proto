@@ -17,8 +17,8 @@ service Msg {
 message MsgCreateCampaign {
   string coordinator = 1;
   string campaignName = 2;
-  repeated cosmos.base.v1beta1.Coin TotalSupply = 6 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
-  bool dynamicShares = 3;
+  repeated cosmos.base.v1beta1.Coin TotalSupply = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  bool dynamicShares = 4;
 }
 
 message MsgCreateCampaignResponse {
