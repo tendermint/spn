@@ -7,6 +7,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
 import "campaign/mainnet_vesting_account.proto";
 import "campaign/campaign.proto";
+import "campaign/mainnet_account.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
@@ -22,6 +23,16 @@ service Query {
   // Queries a list of campaign items.
   rpc CampaignAll(QueryAllCampaignRequest) returns (QueryAllCampaignResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/campaign";
+  }
+
+  // Queries a mainnetAccount by index.
+  rpc MainnetAccount(QueryGetMainnetAccountRequest) returns (QueryGetMainnetAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnetAccount/{campaignID}/{address}";
+  }
+
+  // Queries a list of mainnetAccount items.
+  rpc MainnetAccountAll(QueryAllMainnetAccountRequest) returns (QueryAllMainnetAccountResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnetAccount";
   }
 
   // Queries a mainnetVestingAccount by index.
@@ -49,6 +60,24 @@ message QueryAllCampaignRequest {
 
 message QueryAllCampaignResponse {
   repeated Campaign Campaign = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetMainnetAccountRequest {
+  uint64 campaignID = 1;
+  string address = 2;
+}
+
+message QueryGetMainnetAccountResponse {
+  MainnetAccount mainnetAccount = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMainnetAccountRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMainnetAccountResponse {
+  repeated MainnetAccount mainnetAccount = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

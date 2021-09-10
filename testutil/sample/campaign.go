@@ -54,3 +54,12 @@ func CampaignGenesisState() campaign.GenesisState {
 		},
 	}
 }
+
+// MainnetAccount returns a sample MainnetAccount
+func MainnetAccount(campaignID uint64, address string) campaign.MainnetAccount {
+	return campaign.MainnetAccount{
+		CampaignID: campaignID,
+		Address:    address,
+		Shares:     Shares(),
+	}
+}

@@ -25,6 +25,9 @@ func TestGenesis(t *testing.T) {
 	require.Subset(t, genesisState.CampaignList, got.CampaignList)
 	require.Equal(t, genesisState.CampaignCount, got.CampaignCount)
 
+	require.Len(t, got.MainnetAccountList, len(genesisState.MainnetAccountList))
+	require.Subset(t, genesisState.MainnetAccountList, got.MainnetAccountList)
+
 	require.Len(t, got.MainnetVestingAccountList, len(genesisState.MainnetVestingAccountList))
 	require.Subset(t, genesisState.MainnetVestingAccountList, got.MainnetVestingAccountList)
 
