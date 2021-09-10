@@ -22,12 +22,22 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-				// this line is used by starport scaffolding # types/genesis/validField
 				CampaignList: []types.Campaign{
 					sample.Campaign(0),
 					sample.Campaign(1),
 				},
 				CampaignCount: 2,
+				MainnetVestingAccountList: []types.MainnetVestingAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+					{
+						CampaignID: 1,
+						Address:    "1",
+					},
+				},
+				// this line is used by starport scaffolding # types/genesis/validField
 				MainnetAccountList: []types.MainnetAccount{
 					sample.MainnetAccount(0, sample.AccAddress()),
 					sample.MainnetAccount(1, sample.AccAddress()),
@@ -35,7 +45,22 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 			valid: true,
 		},
-		// this line is used by starport scaffolding # types/genesis/testcase
+		{
+			desc: "duplicated mainnetVestingAccount",
+			genState: &types.GenesisState{
+				MainnetVestingAccountList: []types.MainnetVestingAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+				},
+			},
+			valid: false,
+		},
 		{
 			desc: "duplicated campaign",
 			genState: &types.GenesisState{
@@ -83,6 +108,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 			valid: false,
 		},
+		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()

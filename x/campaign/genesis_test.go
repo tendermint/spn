@@ -28,5 +28,8 @@ func TestGenesis(t *testing.T) {
 	require.Len(t, got.MainnetAccountList, len(genesisState.MainnetAccountList))
 	require.Subset(t, genesisState.MainnetAccountList, got.MainnetAccountList)
 
+	require.Len(t, got.MainnetVestingAccountList, len(genesisState.MainnetVestingAccountList))
+	require.Subset(t, genesisState.MainnetVestingAccountList, got.MainnetVestingAccountList)
+
 	// this line is used by starport scaffolding # genesis/test/assert
 }
