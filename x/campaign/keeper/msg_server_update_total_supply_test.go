@@ -47,7 +47,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "update total shares",
+			name: "update total supply",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
 				Coordinator: coordAddr1,
@@ -55,7 +55,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			},
 		},
 		{
-			name: "can update total shares again",
+			name: "can update total supply again",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
 				Coordinator: coordAddr1,
@@ -90,7 +90,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "cannot update total shares when mainnet is initialized",
+			name: "cannot update total supply when mainnet is initialized",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  1,
 				Coordinator: coordAddr1,
