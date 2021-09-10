@@ -3,18 +3,17 @@ package tendermint.spn.campaign;
 
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-// this line is used by starport scaffolding # 1
 import "gogoproto/gogo.proto";
-import "campaign/mainnet_vesting_account.proto";
+import "campaign/campaign_chains.proto";
 import "campaign/campaign.proto";
+import "campaign/mainnet_vesting_account.proto";
 import "campaign/mainnet_account.proto";
+// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // this line is used by starport scaffolding # 2
-
   // Queries a campaign by id.
   rpc Campaign(QueryGetCampaignRequest) returns (QueryGetCampaignResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/campaign/{id}";
@@ -23,6 +22,11 @@ service Query {
   // Queries a list of campaign items.
   rpc CampaignAll(QueryAllCampaignRequest) returns (QueryAllCampaignResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/campaign";
+  }
+
+  // Queries a campaignChains by index.
+  rpc CampaignChains(QueryGetCampaignChainsRequest) returns (QueryGetCampaignChainsResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/campaignChains/{campaignID}";
   }
 
   // Queries a mainnetAccount by index.
@@ -44,6 +48,8 @@ service Query {
   rpc MainnetVestingAccountAll(QueryAllMainnetVestingAccountRequest) returns (QueryAllMainnetVestingAccountResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/mainnetVestingAccount";
   }
+
+  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetCampaignRequest {
@@ -61,6 +67,15 @@ message QueryAllCampaignRequest {
 message QueryAllCampaignResponse {
   repeated Campaign Campaign = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetCampaignChainsRequest {
+  uint64 campaignID = 1;
+
+}
+
+message QueryGetCampaignChainsResponse {
+  CampaignChains campaignChains = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryGetMainnetAccountRequest {

@@ -21,6 +21,9 @@ func TestGenesis(t *testing.T) {
 	campaign.InitGenesis(ctx, *keeper, genesisState)
 	got := *campaign.ExportGenesis(ctx, *keeper)
 
+	require.Len(t, got.CampaignChainsList, len(genesisState.CampaignChainsList))
+	require.Subset(t, genesisState.CampaignChainsList, got.CampaignChainsList)
+
 	require.Len(t, got.CampaignList, len(genesisState.CampaignList))
 	require.Subset(t, genesisState.CampaignList, got.CampaignList)
 	require.Equal(t, genesisState.CampaignCount, got.CampaignCount)

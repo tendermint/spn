@@ -22,11 +22,24 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
+				// this line is used by starport scaffolding # types/genesis/validField
+				CampaignChainsList: []types.CampaignChains{
+					{
+						CampaignID: 0,
+					},
+					{
+						CampaignID: 1,
+					},
+				},
 				CampaignList: []types.Campaign{
 					sample.Campaign(0),
 					sample.Campaign(1),
 				},
 				CampaignCount: 2,
+				MainnetAccountList: []types.MainnetAccount{
+					sample.MainnetAccount(0, sample.AccAddress()),
+					sample.MainnetAccount(1, sample.AccAddress()),
+				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
 						CampaignID: 0,
@@ -37,13 +50,21 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:    "1",
 					},
 				},
-				// this line is used by starport scaffolding # types/genesis/validField
-				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(0, sample.AccAddress()),
-					sample.MainnetAccount(1, sample.AccAddress()),
-				},
 			},
 			valid: true,
+		},
+		{
+			desc: "duplicated campaignChains",
+			genState: &types.GenesisState{
+				CampaignChainsList: []types.CampaignChains{
+					{
+						CampaignID: 0,
+					},
+					{
+						CampaignID: 0,
+					},
+				},
+			},
 		},
 		{
 			desc: "duplicated mainnetVestingAccount",

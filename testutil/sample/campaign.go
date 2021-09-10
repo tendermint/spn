@@ -37,6 +37,15 @@ func Campaign(id uint64) campaign.Campaign {
 	return c
 }
 
+// MainnetAccount returns a sample MainnetAccount
+func MainnetAccount(campaignID uint64, address string) campaign.MainnetAccount {
+	return campaign.MainnetAccount{
+		CampaignID: campaignID,
+		Address:    address,
+		Shares:     Shares(),
+	}
+}
+
 // CampaignGenesisState returns a sample genesis state for the campaign module
 func CampaignGenesisState() campaign.GenesisState {
 	campaign1, campaign2 := Campaign(0), Campaign(1)
@@ -47,19 +56,16 @@ func CampaignGenesisState() campaign.GenesisState {
 			campaign2,
 		},
 		CampaignCount: 2,
+		CampaignChainsList: []campaign.CampaignChains{
+			{
+				CampaignID: 0,
+				Chains:     []uint64{0, 1},
+			},
+		},
 		MainnetVestingAccountList: []campaign.MainnetVestingAccount{
 			MainnetVestingAccount(0, AccAddress()),
 			MainnetVestingAccount(0, AccAddress()),
 			MainnetVestingAccount(1, AccAddress()),
 		},
-	}
-}
-
-// MainnetAccount returns a sample MainnetAccount
-func MainnetAccount(campaignID uint64, address string) campaign.MainnetAccount {
-	return campaign.MainnetAccount{
-		CampaignID: campaignID,
-		Address:    address,
-		Shares:     Shares(),
 	}
 }
