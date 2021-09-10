@@ -8,5 +8,5 @@ import (
 
 // x/campaign module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrInvalidShares = sdkerrors.Register(ModuleName, 5, "invalid shares")
 )
