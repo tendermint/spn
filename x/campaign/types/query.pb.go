@@ -215,44 +215,251 @@ func (m *QueryAllCampaignResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+type QueryGetMainnetAccountRequest struct {
+	CampaignID uint64 `protobuf:"varint,1,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	Address    string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryGetMainnetAccountRequest) Reset()         { *m = QueryGetMainnetAccountRequest{} }
+func (m *QueryGetMainnetAccountRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetMainnetAccountRequest) ProtoMessage()    {}
+func (*QueryGetMainnetAccountRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_7a55190e2afa5f29, []int{4}
+}
+func (m *QueryGetMainnetAccountRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetMainnetAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetMainnetAccountRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetMainnetAccountRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetMainnetAccountRequest.Merge(m, src)
+}
+func (m *QueryGetMainnetAccountRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetMainnetAccountRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetMainnetAccountRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetMainnetAccountRequest proto.InternalMessageInfo
+
+func (m *QueryGetMainnetAccountRequest) GetCampaignID() uint64 {
+	if m != nil {
+		return m.CampaignID
+	}
+	return 0
+}
+
+func (m *QueryGetMainnetAccountRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryGetMainnetAccountResponse struct {
+	MainnetAccount MainnetAccount `protobuf:"bytes,1,opt,name=mainnetAccount,proto3" json:"mainnetAccount"`
+}
+
+func (m *QueryGetMainnetAccountResponse) Reset()         { *m = QueryGetMainnetAccountResponse{} }
+func (m *QueryGetMainnetAccountResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetMainnetAccountResponse) ProtoMessage()    {}
+func (*QueryGetMainnetAccountResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_7a55190e2afa5f29, []int{5}
+}
+func (m *QueryGetMainnetAccountResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetMainnetAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetMainnetAccountResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetMainnetAccountResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetMainnetAccountResponse.Merge(m, src)
+}
+func (m *QueryGetMainnetAccountResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetMainnetAccountResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetMainnetAccountResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetMainnetAccountResponse proto.InternalMessageInfo
+
+func (m *QueryGetMainnetAccountResponse) GetMainnetAccount() MainnetAccount {
+	if m != nil {
+		return m.MainnetAccount
+	}
+	return MainnetAccount{}
+}
+
+type QueryAllMainnetAccountRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllMainnetAccountRequest) Reset()         { *m = QueryAllMainnetAccountRequest{} }
+func (m *QueryAllMainnetAccountRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllMainnetAccountRequest) ProtoMessage()    {}
+func (*QueryAllMainnetAccountRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_7a55190e2afa5f29, []int{6}
+}
+func (m *QueryAllMainnetAccountRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllMainnetAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllMainnetAccountRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllMainnetAccountRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllMainnetAccountRequest.Merge(m, src)
+}
+func (m *QueryAllMainnetAccountRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllMainnetAccountRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllMainnetAccountRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllMainnetAccountRequest proto.InternalMessageInfo
+
+func (m *QueryAllMainnetAccountRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllMainnetAccountResponse struct {
+	MainnetAccount []MainnetAccount    `protobuf:"bytes,1,rep,name=mainnetAccount,proto3" json:"mainnetAccount"`
+	Pagination     *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllMainnetAccountResponse) Reset()         { *m = QueryAllMainnetAccountResponse{} }
+func (m *QueryAllMainnetAccountResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllMainnetAccountResponse) ProtoMessage()    {}
+func (*QueryAllMainnetAccountResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_7a55190e2afa5f29, []int{7}
+}
+func (m *QueryAllMainnetAccountResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllMainnetAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllMainnetAccountResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllMainnetAccountResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllMainnetAccountResponse.Merge(m, src)
+}
+func (m *QueryAllMainnetAccountResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllMainnetAccountResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllMainnetAccountResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllMainnetAccountResponse proto.InternalMessageInfo
+
+func (m *QueryAllMainnetAccountResponse) GetMainnetAccount() []MainnetAccount {
+	if m != nil {
+		return m.MainnetAccount
+	}
+	return nil
+}
+
+func (m *QueryAllMainnetAccountResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryGetCampaignRequest)(nil), "tendermint.spn.campaign.QueryGetCampaignRequest")
 	proto.RegisterType((*QueryGetCampaignResponse)(nil), "tendermint.spn.campaign.QueryGetCampaignResponse")
 	proto.RegisterType((*QueryAllCampaignRequest)(nil), "tendermint.spn.campaign.QueryAllCampaignRequest")
 	proto.RegisterType((*QueryAllCampaignResponse)(nil), "tendermint.spn.campaign.QueryAllCampaignResponse")
+	proto.RegisterType((*QueryGetMainnetAccountRequest)(nil), "tendermint.spn.campaign.QueryGetMainnetAccountRequest")
+	proto.RegisterType((*QueryGetMainnetAccountResponse)(nil), "tendermint.spn.campaign.QueryGetMainnetAccountResponse")
+	proto.RegisterType((*QueryAllMainnetAccountRequest)(nil), "tendermint.spn.campaign.QueryAllMainnetAccountRequest")
+	proto.RegisterType((*QueryAllMainnetAccountResponse)(nil), "tendermint.spn.campaign.QueryAllMainnetAccountResponse")
 }
 
 func init() { proto.RegisterFile("campaign/query.proto", fileDescriptor_7a55190e2afa5f29) }
 
 var fileDescriptor_7a55190e2afa5f29 = []byte{
-	// 418 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x93, 0xcf, 0xaa, 0x13, 0x31,
-	0x14, 0xc6, 0x27, 0xe3, 0x55, 0x24, 0x17, 0x5c, 0x84, 0x0b, 0xbd, 0x14, 0x19, 0xbd, 0x23, 0x5c,
-	0x6f, 0xbb, 0x48, 0x6c, 0x7d, 0x82, 0xb6, 0x62, 0xb7, 0x3a, 0x4b, 0x37, 0x92, 0xe9, 0x84, 0x18,
-	0x98, 0x49, 0xd2, 0x26, 0x15, 0x8b, 0xb8, 0xf1, 0x09, 0x04, 0xd7, 0xe2, 0xd6, 0x47, 0xa9, 0xbb,
-	0x82, 0x1b, 0x57, 0x22, 0xad, 0x0f, 0x22, 0x9d, 0xc9, 0x74, 0xfa, 0x97, 0x41, 0x77, 0x87, 0xe4,
-	0x7c, 0x5f, 0x7e, 0xdf, 0x39, 0x33, 0xf0, 0x62, 0x44, 0x33, 0x4d, 0x05, 0x97, 0x64, 0x3c, 0x65,
-	0x93, 0x19, 0xd6, 0x13, 0x65, 0x15, 0x6a, 0x58, 0x26, 0x13, 0x36, 0xc9, 0x84, 0xb4, 0xd8, 0x68,
-	0x89, 0xcb, 0xa6, 0xe6, 0x7d, 0xae, 0x14, 0x4f, 0x19, 0xa1, 0x5a, 0x10, 0x2a, 0xa5, 0xb2, 0xd4,
-	0x0a, 0x25, 0x4d, 0x21, 0x6b, 0xb6, 0x47, 0xca, 0x64, 0xca, 0x90, 0x98, 0x1a, 0x56, 0xf8, 0x91,
-	0xb7, 0x9d, 0x98, 0x59, 0xda, 0x21, 0x9a, 0x72, 0x21, 0xf3, 0x66, 0xd7, 0x7b, 0xc1, 0x15, 0x57,
-	0x79, 0x49, 0xd6, 0x95, 0x3b, 0x6d, 0x6c, 0x70, 0xca, 0xa2, 0xb8, 0x08, 0x5b, 0xb0, 0xf1, 0x72,
-	0x6d, 0x38, 0x64, 0x76, 0xe0, 0x6e, 0x22, 0x36, 0x9e, 0x32, 0x63, 0xd1, 0x3d, 0xe8, 0x8b, 0xe4,
-	0x12, 0x3c, 0x04, 0x37, 0x67, 0x91, 0x2f, 0x92, 0xf0, 0x35, 0xbc, 0x3c, 0x6c, 0x35, 0x5a, 0x49,
-	0xc3, 0xd0, 0x00, 0xde, 0x2d, 0xcf, 0x72, 0xc5, 0x79, 0xf7, 0x0a, 0x9f, 0xc8, 0x8a, 0xcb, 0xc6,
-	0xfe, 0xd9, 0xfc, 0xd7, 0x03, 0x2f, 0xda, 0x08, 0x43, 0xea, 0x58, 0x7a, 0x69, 0xba, 0xcf, 0xf2,
-	0x1c, 0xc2, 0x2a, 0xa9, 0x7b, 0xe1, 0x1a, 0x17, 0x63, 0xc1, 0xeb, 0xb1, 0xe0, 0x62, 0xcc, 0x6e,
-	0x2c, 0xf8, 0x05, 0xe5, 0xcc, 0x69, 0xa3, 0x2d, 0x65, 0xf8, 0x0d, 0xb8, 0x10, 0x3b, 0x6f, 0x1c,
-	0x0d, 0x71, 0xeb, 0xbf, 0x42, 0xa0, 0xe1, 0x0e, 0xa9, 0x9f, 0x93, 0x3e, 0xae, 0x25, 0x2d, 0x08,
-	0xb6, 0x51, 0xbb, 0xdf, 0x7d, 0x78, 0x3b, 0x47, 0x45, 0x5f, 0x41, 0x05, 0x86, 0x9e, 0x9c, 0x44,
-	0x3a, 0xb1, 0xc7, 0x66, 0xe7, 0x1f, 0x14, 0x05, 0x47, 0x88, 0x3f, 0xfe, 0xf8, 0xf3, 0xd9, 0xbf,
-	0x41, 0xd7, 0xa4, 0x92, 0x12, 0xa3, 0xab, 0xaf, 0xa7, 0x2a, 0xde, 0x8b, 0xe4, 0x03, 0xfa, 0x02,
-	0xe0, 0x79, 0x69, 0xd2, 0x4b, 0xd3, 0x3a, 0xc8, 0xc3, 0x05, 0xd7, 0x41, 0x1e, 0x59, 0x57, 0xd8,
-	0xca, 0x21, 0x1f, 0xa1, 0xab, 0x5a, 0xc8, 0xfe, 0xb3, 0xf9, 0x32, 0x00, 0x8b, 0x65, 0x00, 0x7e,
-	0x2f, 0x03, 0xf0, 0x69, 0x15, 0x78, 0x8b, 0x55, 0xe0, 0xfd, 0x5c, 0x05, 0xde, 0xab, 0x36, 0x17,
-	0xf6, 0xcd, 0x34, 0xc6, 0x23, 0x95, 0xed, 0xdb, 0xbc, 0xab, 0x8c, 0xec, 0x4c, 0x33, 0x13, 0xdf,
-	0xc9, 0x7f, 0x99, 0xa7, 0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x30, 0x05, 0xd7, 0x85, 0xdc, 0x03,
-	0x00, 0x00,
+	// 601 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0xc1, 0x6b, 0x13, 0x4f,
+	0x14, 0xc7, 0x33, 0x69, 0xfb, 0xfb, 0xe9, 0x14, 0x02, 0x0e, 0x85, 0x84, 0xa0, 0xab, 0x5d, 0xa1,
+	0x69, 0x7a, 0x98, 0x31, 0x15, 0xea, 0x4d, 0x4c, 0x5b, 0x5a, 0x3c, 0x08, 0x1a, 0xf0, 0xa0, 0x97,
+	0x32, 0xc9, 0x0e, 0xeb, 0xc2, 0xee, 0xcc, 0x36, 0x33, 0x51, 0x4b, 0xc8, 0xc5, 0xbf, 0x40, 0xf0,
+	0x2c, 0x5e, 0xfd, 0x07, 0xbc, 0x7b, 0xac, 0x07, 0xa1, 0xe0, 0xc5, 0x93, 0x48, 0xe2, 0x1f, 0x22,
+	0x99, 0x9d, 0xcd, 0x76, 0xd3, 0x5d, 0xd7, 0xd6, 0xde, 0x26, 0x33, 0xef, 0xbd, 0xf9, 0x7c, 0xbf,
+	0x6f, 0x5e, 0x16, 0xae, 0xf4, 0x68, 0x10, 0x52, 0xcf, 0xe5, 0xe4, 0x70, 0xc0, 0xfa, 0x47, 0x38,
+	0xec, 0x0b, 0x25, 0x50, 0x55, 0x31, 0xee, 0xb0, 0x7e, 0xe0, 0x71, 0x85, 0x65, 0xc8, 0x71, 0x1c,
+	0x54, 0xbf, 0xee, 0x0a, 0xe1, 0xfa, 0x8c, 0xd0, 0xd0, 0x23, 0x94, 0x73, 0xa1, 0xa8, 0xf2, 0x04,
+	0x97, 0x51, 0x5a, 0x7d, 0xa3, 0x27, 0x64, 0x20, 0x24, 0xe9, 0x52, 0xc9, 0xa2, 0x7a, 0xe4, 0x65,
+	0xab, 0xcb, 0x14, 0x6d, 0x91, 0x90, 0xba, 0x1e, 0xd7, 0xc1, 0x26, 0x76, 0xc5, 0x15, 0xae, 0xd0,
+	0x4b, 0x32, 0x5d, 0x99, 0xdd, 0xea, 0x0c, 0x27, 0x5e, 0x98, 0x03, 0x6b, 0x76, 0x10, 0x50, 0x8f,
+	0x73, 0xa6, 0x0e, 0x68, 0xaf, 0x27, 0x06, 0x5c, 0x45, 0xe7, 0x76, 0x13, 0x56, 0x9f, 0x4c, 0x2f,
+	0xdc, 0x67, 0x6a, 0xc7, 0x44, 0x76, 0xd8, 0xe1, 0x80, 0x49, 0x85, 0x2a, 0xb0, 0xec, 0x39, 0x35,
+	0x70, 0x0b, 0xac, 0x2f, 0x76, 0xca, 0x9e, 0x63, 0x1f, 0xc0, 0xda, 0xd9, 0x50, 0x19, 0x0a, 0x2e,
+	0x19, 0xda, 0x81, 0x57, 0xe2, 0x3d, 0x9d, 0xb1, 0xbc, 0xb9, 0x8a, 0x73, 0xbc, 0xc0, 0x71, 0xe0,
+	0xf6, 0xe2, 0xf1, 0x8f, 0x9b, 0xa5, 0xce, 0x2c, 0xd1, 0xa6, 0x86, 0xa5, 0xed, 0xfb, 0xf3, 0x2c,
+	0x7b, 0x10, 0x26, 0x4e, 0x98, 0x1b, 0xd6, 0x70, 0x64, 0x1b, 0x9e, 0xda, 0x86, 0xa3, 0x36, 0x18,
+	0xdb, 0xf0, 0x63, 0xea, 0x32, 0x93, 0xdb, 0x39, 0x95, 0x69, 0x7f, 0x04, 0x46, 0x44, 0xea, 0x8e,
+	0x4c, 0x11, 0x0b, 0x17, 0x12, 0x81, 0xf6, 0x53, 0xa4, 0x65, 0x4d, 0xda, 0x28, 0x24, 0x8d, 0x08,
+	0x52, 0xa8, 0xcf, 0xe0, 0x8d, 0xd8, 0xee, 0x47, 0x51, 0xeb, 0xda, 0x51, 0xe7, 0x62, 0x4f, 0x2c,
+	0x08, 0x63, 0x9c, 0x87, 0xbb, 0xa6, 0x4f, 0xa7, 0x76, 0x50, 0x0d, 0xfe, 0x4f, 0x1d, 0xa7, 0xcf,
+	0xa4, 0xd4, 0x18, 0x57, 0x3b, 0xf1, 0x4f, 0xfb, 0x15, 0xb4, 0xf2, 0x4a, 0x1b, 0x2b, 0x9e, 0xc2,
+	0x4a, 0x90, 0x3a, 0x31, 0x9e, 0x37, 0x72, 0x0d, 0x49, 0x17, 0x32, 0xb6, 0xcc, 0x15, 0xb1, 0x5d,
+	0xa3, 0xa9, 0xed, 0xfb, 0xd9, 0x9a, 0x2e, 0xab, 0xcf, 0x9f, 0x81, 0x91, 0x98, 0x71, 0xd3, 0x1f,
+	0x24, 0x2e, 0xfc, 0xb3, 0xc4, 0x4b, 0xeb, 0xff, 0xe6, 0xd7, 0x25, 0xb8, 0xa4, 0x25, 0xa0, 0x0f,
+	0x20, 0x79, 0x98, 0xe8, 0x4e, 0x2e, 0x5e, 0xce, 0x1c, 0xd7, 0x5b, 0xe7, 0xc8, 0x88, 0x38, 0x6c,
+	0xfc, 0xe6, 0xdb, 0xaf, 0x77, 0xe5, 0x75, 0xb4, 0x46, 0x92, 0x54, 0x22, 0xc3, 0xe4, 0xdf, 0x25,
+	0x59, 0x0c, 0x3d, 0x67, 0x84, 0xde, 0x03, 0xb8, 0x1c, 0x17, 0x69, 0xfb, 0x7e, 0x11, 0xe4, 0xd9,
+	0x01, 0x2f, 0x82, 0xcc, 0x18, 0x57, 0xbb, 0xa9, 0x21, 0x6f, 0xa3, 0xd5, 0x42, 0x48, 0xf4, 0x05,
+	0xc0, 0x4a, 0xba, 0x7b, 0x68, 0xab, 0xd0, 0x95, 0xcc, 0x17, 0x5a, 0xbf, 0x77, 0xee, 0x3c, 0x83,
+	0xbb, 0xa7, 0x71, 0x1f, 0xa0, 0xfb, 0xb9, 0xb8, 0xe9, 0x97, 0x44, 0x86, 0xc9, 0x2c, 0x8f, 0xc8,
+	0xd0, 0xcc, 0xee, 0x08, 0x7d, 0x02, 0xf0, 0x5a, 0xfa, 0x8a, 0xa9, 0xe3, 0x5b, 0x85, 0xfe, 0x5d,
+	0x48, 0x4e, 0xee, 0xf8, 0xd8, 0x44, 0xcb, 0x69, 0xa2, 0xc6, 0x5f, 0xca, 0xd9, 0xde, 0x3d, 0x1e,
+	0x5b, 0xe0, 0x64, 0x6c, 0x81, 0x9f, 0x63, 0x0b, 0xbc, 0x9d, 0x58, 0xa5, 0x93, 0x89, 0x55, 0xfa,
+	0x3e, 0xb1, 0x4a, 0xcf, 0x37, 0x5c, 0x4f, 0xbd, 0x18, 0x74, 0x71, 0x4f, 0x04, 0xf3, 0xc5, 0x5e,
+	0x27, 0xe5, 0xd4, 0x51, 0xc8, 0x64, 0xf7, 0x3f, 0xfd, 0xd9, 0xba, 0xfb, 0x3b, 0x00, 0x00, 0xff,
+	0xff, 0x2f, 0xce, 0xe1, 0x2f, 0x80, 0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -271,6 +478,10 @@ type QueryClient interface {
 	Campaign(ctx context.Context, in *QueryGetCampaignRequest, opts ...grpc.CallOption) (*QueryGetCampaignResponse, error)
 	// Queries a list of campaign items.
 	CampaignAll(ctx context.Context, in *QueryAllCampaignRequest, opts ...grpc.CallOption) (*QueryAllCampaignResponse, error)
+	// Queries a mainnetAccount by index.
+	MainnetAccount(ctx context.Context, in *QueryGetMainnetAccountRequest, opts ...grpc.CallOption) (*QueryGetMainnetAccountResponse, error)
+	// Queries a list of mainnetAccount items.
+	MainnetAccountAll(ctx context.Context, in *QueryAllMainnetAccountRequest, opts ...grpc.CallOption) (*QueryAllMainnetAccountResponse, error)
 }
 
 type queryClient struct {
@@ -299,12 +510,34 @@ func (c *queryClient) CampaignAll(ctx context.Context, in *QueryAllCampaignReque
 	return out, nil
 }
 
+func (c *queryClient) MainnetAccount(ctx context.Context, in *QueryGetMainnetAccountRequest, opts ...grpc.CallOption) (*QueryGetMainnetAccountResponse, error) {
+	out := new(QueryGetMainnetAccountResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Query/MainnetAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) MainnetAccountAll(ctx context.Context, in *QueryAllMainnetAccountRequest, opts ...grpc.CallOption) (*QueryAllMainnetAccountResponse, error) {
+	out := new(QueryAllMainnetAccountResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Query/MainnetAccountAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Queries a campaign by id.
 	Campaign(context.Context, *QueryGetCampaignRequest) (*QueryGetCampaignResponse, error)
 	// Queries a list of campaign items.
 	CampaignAll(context.Context, *QueryAllCampaignRequest) (*QueryAllCampaignResponse, error)
+	// Queries a mainnetAccount by index.
+	MainnetAccount(context.Context, *QueryGetMainnetAccountRequest) (*QueryGetMainnetAccountResponse, error)
+	// Queries a list of mainnetAccount items.
+	MainnetAccountAll(context.Context, *QueryAllMainnetAccountRequest) (*QueryAllMainnetAccountResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -316,6 +549,12 @@ func (*UnimplementedQueryServer) Campaign(ctx context.Context, req *QueryGetCamp
 }
 func (*UnimplementedQueryServer) CampaignAll(ctx context.Context, req *QueryAllCampaignRequest) (*QueryAllCampaignResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CampaignAll not implemented")
+}
+func (*UnimplementedQueryServer) MainnetAccount(ctx context.Context, req *QueryGetMainnetAccountRequest) (*QueryGetMainnetAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MainnetAccount not implemented")
+}
+func (*UnimplementedQueryServer) MainnetAccountAll(ctx context.Context, req *QueryAllMainnetAccountRequest) (*QueryAllMainnetAccountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MainnetAccountAll not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -358,6 +597,42 @@ func _Query_CampaignAll_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_MainnetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetMainnetAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).MainnetAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.campaign.Query/MainnetAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).MainnetAccount(ctx, req.(*QueryGetMainnetAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_MainnetAccountAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllMainnetAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).MainnetAccountAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.campaign.Query/MainnetAccountAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).MainnetAccountAll(ctx, req.(*QueryAllMainnetAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "tendermint.spn.campaign.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -369,6 +644,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CampaignAll",
 			Handler:    _Query_CampaignAll_Handler,
+		},
+		{
+			MethodName: "MainnetAccount",
+			Handler:    _Query_MainnetAccount_Handler,
+		},
+		{
+			MethodName: "MainnetAccountAll",
+			Handler:    _Query_MainnetAccountAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -520,6 +803,158 @@ func (m *QueryAllCampaignResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryGetMainnetAccountRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetMainnetAccountRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetMainnetAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.CampaignID != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.CampaignID))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetMainnetAccountResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetMainnetAccountResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetMainnetAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.MainnetAccount.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllMainnetAccountRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllMainnetAccountRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllMainnetAccountRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllMainnetAccountResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllMainnetAccountResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllMainnetAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.MainnetAccount) > 0 {
+		for iNdEx := len(m.MainnetAccount) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.MainnetAccount[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -575,6 +1010,65 @@ func (m *QueryAllCampaignResponse) Size() (n int) {
 	_ = l
 	if len(m.Campaign) > 0 {
 		for _, e := range m.Campaign {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetMainnetAccountRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.CampaignID != 0 {
+		n += 1 + sovQuery(uint64(m.CampaignID))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetMainnetAccountResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.MainnetAccount.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryAllMainnetAccountRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllMainnetAccountResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.MainnetAccount) > 0 {
+		for _, e := range m.MainnetAccount {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -890,6 +1384,396 @@ func (m *QueryAllCampaignResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.Campaign = append(m.Campaign, Campaign{})
 			if err := m.Campaign[len(m.Campaign)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetMainnetAccountRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetMainnetAccountRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetMainnetAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
+			}
+			m.CampaignID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CampaignID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetMainnetAccountResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetMainnetAccountResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetMainnetAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MainnetAccount", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MainnetAccount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllMainnetAccountRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllMainnetAccountRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllMainnetAccountRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllMainnetAccountResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllMainnetAccountResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllMainnetAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MainnetAccount", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MainnetAccount = append(m.MainnetAccount, MainnetAccount{})
+			if err := m.MainnetAccount[len(m.MainnetAccount)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

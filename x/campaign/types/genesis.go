@@ -11,7 +11,8 @@ const DefaultIndex uint64 = 1
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # genesis/types/default
-		CampaignList: []Campaign{},
+		CampaignList:       []Campaign{},
+		MainnetAccountList: []MainnetAccount{},
 	}
 }
 
@@ -19,6 +20,7 @@ func DefaultGenesis() *GenesisState {
 // failure.
 func (gs GenesisState) Validate() error {
 	// this line is used by starport scaffolding # genesis/types/validate
+
 	// Check for duplicated ID in campaign
 	campaignIDMap := make(map[uint64]bool)
 	campaignCount := gs.GetCampaignCount()
@@ -33,6 +35,17 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("invalid campaign %v: %v", elem.Id, err.Error())
 		}
 		campaignIDMap[elem.Id] = true
+	}
+
+	// Check for duplicated index in mainnetAccount
+	mainnetAccountIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.MainnetAccountList {
+		index := string(MainnetAccountKey(elem.CampaignID, elem.Address))
+		if _, ok := mainnetAccountIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for mainnetAccount")
+		}
+		mainnetAccountIndexMap[index] = struct{}{}
 	}
 
 	return nil
