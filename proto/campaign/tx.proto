@@ -8,6 +8,14 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 // Msg defines the Msg service.
 service Msg {
     // this line is used by starport scaffolding # proto/tx/rpc
+  rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgUpdateTotalSupply {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+}
+
+message MsgUpdateTotalSupplyResponse {
+}
