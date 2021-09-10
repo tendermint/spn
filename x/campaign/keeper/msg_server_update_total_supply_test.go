@@ -42,32 +42,32 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	campaignKeeper.SetCampaign(sdkCtx, campaign)
 
 	for _, tc := range []struct {
-		name       string
-		msg        types.MsgUpdateTotalSupply
-		err        error
+		name string
+		msg  types.MsgUpdateTotalSupply
+		err  error
 	}{
 		{
 			name: "update total shares",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
-				Coordinator:   coordAddr1,
-				TotalSupply:   sample.Coins(),
+				Coordinator: coordAddr1,
+				TotalSupply: sample.Coins(),
 			},
 		},
 		{
 			name: "can update total shares again",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
-				Coordinator:   coordAddr1,
-				TotalSupply:   sample.Coins(),
+				Coordinator: coordAddr1,
+				TotalSupply: sample.Coins(),
 			},
 		},
 		{
 			name: "campaign not found",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  100,
-				Coordinator:   coordAddr1,
-				TotalSupply:   sample.Coins(),
+				Coordinator: coordAddr1,
+				TotalSupply: sample.Coins(),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -75,8 +75,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			name: "non existing coordinator",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
-				Coordinator:   sample.AccAddress(),
-				TotalSupply:   sample.Coins(),
+				Coordinator: sample.AccAddress(),
+				TotalSupply: sample.Coins(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -84,8 +84,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			name: "not the coordinator of the campaign",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
-				Coordinator:  coordAddr2,
-				TotalSupply:   sample.Coins(),
+				Coordinator: coordAddr2,
+				TotalSupply: sample.Coins(),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
@@ -93,8 +93,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			name: "cannot update total shares when mainnet is initialized",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  1,
-				Coordinator:  coordAddr1,
-				TotalSupply:   sample.Coins(),
+				Coordinator: coordAddr1,
+				TotalSupply: sample.Coins(),
 			},
 			err: types.ErrMainnetInitialized,
 		},
