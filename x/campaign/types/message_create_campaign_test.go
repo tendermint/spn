@@ -1,30 +1,69 @@
-package types
+package types_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/campaign/types"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/testutil/sample"
 )
 
 func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgCreateCampaign
+		msg  types.MsgCreateCampaign
 		err  error
 	}{
 		{
+			name: "valid message",
+			msg: types.MsgCreateCampaign{
+				Coordinator: sample.AccAddress(),
+				CampaignName: sample.CampaignName(),
+				TotalSupply: sample.Coins(),
+				DynamicShares: sample.Bool(),
+			},
+		},
+		{
 			name: "invalid address",
-			msg: MsgCreateCampaign{
+			msg: types.MsgCreateCampaign{
 				Coordinator: "invalid_address",
+				CampaignName: sample.CampaignName(),
+				TotalSupply: sample.Coins(),
+				DynamicShares: sample.Bool(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg: MsgCreateCampaign{
+		},
+		{
+			name: "invalid campaign name",
+			msg: types.MsgCreateCampaign{
 				Coordinator: sample.AccAddress(),
+				CampaignName: invalidCampaignName,
+				TotalSupply: sample.Coins(),
+				DynamicShares: sample.Bool(),
 			},
+			err: types.ErrInvalidCampaignName,
+		},
+		{
+			name: "invalid total supply",
+			msg: types.MsgCreateCampaign{
+				Coordinator: sample.AccAddress(),
+				CampaignName: sample.CampaignName(),
+				TotalSupply: invalidCoins,
+				DynamicShares: sample.Bool(),
+			},
+			err: types.ErrInvalidTotalSupply,
+		},
+		{
+			name: "empty total supply",
+			msg: types.MsgCreateCampaign{
+				Coordinator: sample.AccAddress(),
+				CampaignName: sample.CampaignName(),
+				TotalSupply: sdk.NewCoins(),
+				DynamicShares: sample.Bool(),
+			},
+			err: types.ErrInvalidTotalSupply,
 		},
 	}
 	for _, tt := range tests {
