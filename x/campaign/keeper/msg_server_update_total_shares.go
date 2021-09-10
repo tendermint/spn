@@ -19,7 +19,7 @@ func (k msgServer) UpdateTotalShares(goCtx context.Context, msg *types.MsgUpdate
 	}
 
 	if !campaign.DynamicShares {
-		return nil, sdkerrors.Wrap(types.ErrInvalidShares, "campaign doesn't has dynamic shares option set")
+		return nil, sdkerrors.Wrap(types.ErrNoDynamicShares, "campaign doesn't has dynamic shares option set")
 	}
 
 	// Get the coordinator ID
