@@ -8,5 +8,5 @@ import (
 
 // x/campaign module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrInvalidTotalSupply  = sdkerrors.Register(ModuleName, 2, "invalid total supply")
 )
