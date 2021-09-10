@@ -11,7 +11,7 @@ const DefaultIndex uint64 = 1
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		CampaignList:              []Campaign{},
-		MainnetAccountList: []MainnetAccount{},
+		MainnetAccountList:        []MainnetAccount{},
 		MainnetVestingAccountList: []MainnetVestingAccount{},
 		// this line is used by starport scaffolding # genesis/types/default
 	}
