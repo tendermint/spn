@@ -23,15 +23,65 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				// this line is used by starport scaffolding # types/genesis/validField
+				CampaignChainsList: []types.CampaignChains{
+					{
+						CampaignID: 0,
+					},
+					{
+						CampaignID: 1,
+					},
+				},
 				CampaignList: []types.Campaign{
 					sample.Campaign(0),
 					sample.Campaign(1),
 				},
 				CampaignCount: 2,
+				MainnetAccountList: []types.MainnetAccount{
+					sample.MainnetAccount(0, sample.AccAddress()),
+					sample.MainnetAccount(1, sample.AccAddress()),
+				},
+				MainnetVestingAccountList: []types.MainnetVestingAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+					{
+						CampaignID: 1,
+						Address:    "1",
+					},
+				},
 			},
 			valid: true,
 		},
-		// this line is used by starport scaffolding # types/genesis/testcase
+		{
+			desc: "duplicated campaignChains",
+			genState: &types.GenesisState{
+				CampaignChainsList: []types.CampaignChains{
+					{
+						CampaignID: 0,
+					},
+					{
+						CampaignID: 0,
+					},
+				},
+			},
+		},
+		{
+			desc: "duplicated mainnetVestingAccount",
+			genState: &types.GenesisState{
+				MainnetVestingAccountList: []types.MainnetVestingAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+				},
+			},
+			valid: false,
+		},
 		{
 			desc: "duplicated campaign",
 			genState: &types.GenesisState{
@@ -63,6 +113,23 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 			valid: false,
 		},
+		{
+			desc: "duplicated mainnetAccount",
+			genState: &types.GenesisState{
+				MainnetAccountList: []types.MainnetAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()

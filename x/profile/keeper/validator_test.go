@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -17,8 +18,7 @@ var _ = strconv.IntSize
 func createNValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Validator {
 	items := make([]types.Validator, n)
 	for i := range items {
-		items[i].Address = strconv.Itoa(i)
-
+		items[i].Address = sample.AccAddress()
 		keeper.SetValidator(ctx, items[i])
 	}
 	return items
@@ -52,5 +52,5 @@ func TestValidatorRemove(t *testing.T) {
 func TestValidatorGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
 	items := createNValidator(keeper, ctx, 10)
-	require.Equal(t, items, keeper.GetAllValidator(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllValidator(ctx))
 }
