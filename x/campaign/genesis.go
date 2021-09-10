@@ -18,6 +18,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// Set campaign count
 	k.SetCampaignCount(ctx, genState.CampaignCount)
 
+	// Set all the mainnetAccount
+	for _, elem := range genState.MainnetAccountList {
+		k.SetMainnetAccount(ctx, elem)
+	}
+
 }
 
 // ExportGenesis returns the capability module's exported genesis.
@@ -27,6 +32,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	// this line is used by starport scaffolding # genesis/module/export
 	genesis.CampaignList = k.GetAllCampaign(ctx)
 	genesis.CampaignCount = k.GetCampaignCount(ctx)
+	genesis.MainnetAccountList = k.GetAllMainnetAccount(ctx)
 
 	return genesis
 }

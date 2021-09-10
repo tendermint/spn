@@ -28,6 +28,10 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(1),
 				},
 				CampaignCount: 2,
+				MainnetAccountList: []types.MainnetAccount{
+					sample.MainnetAccount(0, sample.AccAddress()),
+					sample.MainnetAccount(1, sample.AccAddress()),
+				},
 			},
 			valid: true,
 		},
@@ -60,6 +64,22 @@ func TestGenesisState_Validate(t *testing.T) {
 					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.Coins(), false),
 				},
 				CampaignCount: 1,
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated mainnetAccount",
+			genState: &types.GenesisState{
+				MainnetAccountList: []types.MainnetAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+				},
 			},
 			valid: false,
 		},
