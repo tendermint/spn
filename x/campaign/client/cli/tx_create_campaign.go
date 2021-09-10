@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"strconv"
-
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 
@@ -12,15 +10,18 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-var _ = strconv.Itoa(0)
+const (
+	flagDynamicShares = "dynamic-shares"
+)
 
 func CmdCreateCampaign() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-campaign [campaign-name] [dynamic-shares]",
+		Use:   "create-campaign [campaign-name] [total-supply]",
 		Short: "Create a new campaign",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			argCampaignName := args[0]
+
 			argDynamicShares, err := cast.ToBoolE(args[1])
 			if err != nil {
 				return err
