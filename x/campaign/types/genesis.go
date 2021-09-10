@@ -12,6 +12,8 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		CampaignList:       []Campaign{},
 		CampaignChainsList: []CampaignChains{},
+		MainnetAccountList:        []MainnetAccount{},
+		MainnetVestingAccountList: []MainnetVestingAccount{},
 		// this line is used by starport scaffolding # genesis/types/default
 	}
 }
@@ -19,17 +21,6 @@ func DefaultGenesis() *GenesisState {
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
-	// this line is used by starport scaffolding # genesis/types/validate
-	// Check for duplicated index in campaignChains
-	campaignChainsIndexMap := make(map[string]struct{})
-
-	for _, elem := range gs.CampaignChainsList {
-		index := string(CampaignChainsKey(elem.CampaignID))
-		if _, ok := campaignChainsIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for campaignChains")
-		}
-		campaignChainsIndexMap[index] = struct{}{}
-	}
 	// Check for duplicated ID in campaign
 	campaignIDMap := make(map[uint64]bool)
 	campaignCount := gs.GetCampaignCount()
@@ -45,6 +36,39 @@ func (gs GenesisState) Validate() error {
 		}
 		campaignIDMap[elem.Id] = true
 	}
+
+	// Check for duplicated index in campaignChains
+	campaignChainsIndexMap := make(map[string]struct{})
+	for _, elem := range gs.CampaignChainsList {
+		index := string(CampaignChainsKey(elem.CampaignID))
+		if _, ok := campaignChainsIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for campaignChains")
+		}
+		campaignChainsIndexMap[index] = struct{}{}
+	}
+
+	// Check for duplicated index in mainnetAccount
+	mainnetAccountIndexMap := make(map[string]struct{})
+	for _, elem := range gs.MainnetAccountList {
+		index := string(MainnetAccountKey(elem.CampaignID, elem.Address))
+		if _, ok := mainnetAccountIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for mainnetAccount")
+		}
+		mainnetAccountIndexMap[index] = struct{}{}
+	}
+
+	// Check for duplicated index in mainnetVestingAccount
+	mainnetVestingAccountIndexMap := make(map[string]struct{})
+	for _, elem := range gs.MainnetVestingAccountList {
+		index := string(MainnetVestingAccountKey(elem.CampaignID, elem.Address))
+		if _, ok := mainnetVestingAccountIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for mainnetVestingAccount")
+		}
+
+		mainnetVestingAccountIndexMap[index] = struct{}{}
+	}
+
+	// this line is used by starport scaffolding # genesis/types/validate
 
 	return nil
 }
