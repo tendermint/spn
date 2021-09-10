@@ -30,6 +30,10 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 		))
 	}
 
+	if campaign.MainnetInitialized {
+		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%v", msg.CampaignID)
+	}
+
 	campaign.TotalSupply = msg.TotalSupply
 	k.SetCampaign(ctx, campaign)
 

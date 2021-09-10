@@ -18,7 +18,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		ctx                                                = sdk.WrapSDKContext(sdkCtx)
 	)
 
-	// Create coordinators and set a campaign in the store with the first coordinator
+	// Create coordinators
 	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
 		Description: sample.CoordinatorDescription(),
@@ -31,8 +31,14 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	})
 	require.NoError(t, err)
 
+	// Set a regular campaign and a campaign with an already initialized mainnet
 	campaign := sample.Campaign(0)
 	campaign.CoordinatorID = coordID
+	campaignKeeper.SetCampaign(sdkCtx, campaign)
+
+	campaign = sample.Campaign(1)
+	campaign.CoordinatorID = coordID
+	campaign.MainnetInitialized = true
 	campaignKeeper.SetCampaign(sdkCtx, campaign)
 
 	for _, tc := range []struct {
@@ -82,6 +88,15 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				TotalSupply:   sample.Coins(),
 			},
 			err: profiletypes.ErrCoordInvalid,
+		},
+		{
+			name: "cannot update total shares when mainnet is initialized",
+			msg: types.MsgUpdateTotalSupply{
+				CampaignID:  1,
+				Coordinator:  coordAddr1,
+				TotalSupply:   sample.Coins(),
+			},
+			err: types.ErrMainnetInitialized,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
