@@ -11,7 +11,7 @@ import (
 
 var (
 	invalidCampaignName = "not_valid"
-	invalidCoins = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
+	invalidCoins        = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
 )
 
 func TestNewCampaign(t *testing.T) {

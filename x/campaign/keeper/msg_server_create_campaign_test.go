@@ -12,38 +12,38 @@ import (
 
 func TestMsgRequestAddAccount(t *testing.T) {
 	var (
-		coordAddr1             = sample.AccAddress()
-		coordAddr2            = sample.AccAddress()
+		coordAddr1                                         = sample.AccAddress()
+		coordAddr2                                         = sample.AccAddress()
 		campaignKeeper, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                   = sdk.WrapSDKContext(sdkCtx)
+		ctx                                                = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
 	coordMap := make(map[string]uint64)
 	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address: coordAddr1,
+		Address:     coordAddr1,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
 	coordMap[coordAddr1] = res.CoordinatorId
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address: coordAddr2,
+		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
 	coordMap[coordAddr2] = res.CoordinatorId
 
 	for _, tc := range []struct {
-		name          string
-		msg           types.MsgCreateCampaign
+		name       string
+		msg        types.MsgCreateCampaign
 		expectedID uint64
-		err           error
-	} {
+		err        error
+	}{
 		{
 			name: "create a campaign 1",
 			msg: types.MsgCreateCampaign{
-				CampaignName: sample.CampaignName(),
-				Coordinator: coordAddr1,
+				CampaignName:  sample.CampaignName(),
+				Coordinator:   coordAddr1,
 				TotalSupply:   sample.Coins(),
 				DynamicShares: false,
 			},
@@ -52,8 +52,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		{
 			name: "create a campaign 2 with dynamic shares",
 			msg: types.MsgCreateCampaign{
-				CampaignName: sample.CampaignName(),
-				Coordinator: coordAddr1,
+				CampaignName:  sample.CampaignName(),
+				Coordinator:   coordAddr1,
 				TotalSupply:   sample.Coins(),
 				DynamicShares: true,
 			},
@@ -62,8 +62,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		{
 			name: "create a campaign from a different coordinator",
 			msg: types.MsgCreateCampaign{
-				CampaignName: sample.CampaignName(),
-				Coordinator: coordAddr2,
+				CampaignName:  sample.CampaignName(),
+				Coordinator:   coordAddr2,
 				TotalSupply:   sample.Coins(),
 				DynamicShares: false,
 			},
@@ -72,8 +72,8 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		{
 			name: "create a campaign from a non existing coordinator",
 			msg: types.MsgCreateCampaign{
-				CampaignName: sample.CampaignName(),
-				Coordinator: sample.AccAddress(),
+				CampaignName:  sample.CampaignName(),
+				Coordinator:   sample.AccAddress(),
 				TotalSupply:   sample.Coins(),
 				DynamicShares: false,
 			},

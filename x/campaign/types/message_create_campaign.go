@@ -12,11 +12,11 @@ func NewMsgCreateCampaign(
 	campaignName string,
 	totalSupply sdk.Coins,
 	dynamicShares bool,
-	) *MsgCreateCampaign {
+) *MsgCreateCampaign {
 	return &MsgCreateCampaign{
 		Coordinator:   coordinator,
 		CampaignName:  campaignName,
-		TotalSupply: totalSupply,
+		TotalSupply:   totalSupply,
 		DynamicShares: dynamicShares,
 	}
 }

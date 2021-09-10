@@ -1,13 +1,13 @@
 package types_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/campaign/types"
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/campaign/types"
 )
 
 func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
@@ -19,18 +19,18 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgCreateCampaign{
-				Coordinator: sample.AccAddress(),
-				CampaignName: sample.CampaignName(),
-				TotalSupply: sample.Coins(),
+				Coordinator:   sample.AccAddress(),
+				CampaignName:  sample.CampaignName(),
+				TotalSupply:   sample.Coins(),
 				DynamicShares: sample.Bool(),
 			},
 		},
 		{
 			name: "invalid address",
 			msg: types.MsgCreateCampaign{
-				Coordinator: "invalid_address",
-				CampaignName: sample.CampaignName(),
-				TotalSupply: sample.Coins(),
+				Coordinator:   "invalid_address",
+				CampaignName:  sample.CampaignName(),
+				TotalSupply:   sample.Coins(),
 				DynamicShares: sample.Bool(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -38,9 +38,9 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid campaign name",
 			msg: types.MsgCreateCampaign{
-				Coordinator: sample.AccAddress(),
-				CampaignName: invalidCampaignName,
-				TotalSupply: sample.Coins(),
+				Coordinator:   sample.AccAddress(),
+				CampaignName:  invalidCampaignName,
+				TotalSupply:   sample.Coins(),
 				DynamicShares: sample.Bool(),
 			},
 			err: types.ErrInvalidCampaignName,
@@ -48,9 +48,9 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid total supply",
 			msg: types.MsgCreateCampaign{
-				Coordinator: sample.AccAddress(),
-				CampaignName: sample.CampaignName(),
-				TotalSupply: invalidCoins,
+				Coordinator:   sample.AccAddress(),
+				CampaignName:  sample.CampaignName(),
+				TotalSupply:   invalidCoins,
 				DynamicShares: sample.Bool(),
 			},
 			err: types.ErrInvalidTotalSupply,
@@ -58,9 +58,9 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "empty total supply",
 			msg: types.MsgCreateCampaign{
-				Coordinator: sample.AccAddress(),
-				CampaignName: sample.CampaignName(),
-				TotalSupply: sdk.NewCoins(),
+				Coordinator:   sample.AccAddress(),
+				CampaignName:  sample.CampaignName(),
+				TotalSupply:   sdk.NewCoins(),
 				DynamicShares: sample.Bool(),
 			},
 			err: types.ErrInvalidTotalSupply,
