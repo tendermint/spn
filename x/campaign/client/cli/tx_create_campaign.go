@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"github.com/spf13/cast"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -20,9 +20,11 @@ func CmdCreateCampaign() *cobra.Command {
 		Short: "Create a new campaign",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			argCampaignName := args[0]
+			var (
+				dynamicShares, _ = cmd.Flags().GetBool(flagDynamicShares)
+			)
 
-			argDynamicShares, err := cast.ToBoolE(args[1])
+			totalSupply, err := sdk.ParseCoinsNormalized(args[1])
 			if err != nil {
 				return err
 			}
@@ -34,8 +36,9 @@ func CmdCreateCampaign() *cobra.Command {
 
 			msg := types.NewMsgCreateCampaign(
 				clientCtx.GetFromAddress().String(),
-				argCampaignName,
-				argDynamicShares,
+				args[0],
+				totalSupply,
+				dynamicShares,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -44,6 +47,7 @@ func CmdCreateCampaign() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().Bool(flagDynamicShares, false, "Allows to update the shares supply for the mainnet coins supply")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
