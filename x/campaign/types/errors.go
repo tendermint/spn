@@ -8,5 +8,8 @@ import (
 
 // x/campaign module sentinel errors
 var (
+	ErrCampaignNotFound   = sdkerrors.Register(ModuleName, 3, "campaign not found")
+	ErrMainnetInitialized = sdkerrors.Register(ModuleName, 4, "mainnet initialized")
 	ErrInvalidShares = sdkerrors.Register(ModuleName, 5, "invalid shares")
+	ErrNoDynamicShares = sdkerrors.Register(ModuleName, 6, "no dynamic shares")
 )
