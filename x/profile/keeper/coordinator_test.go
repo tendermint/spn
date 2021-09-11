@@ -48,7 +48,7 @@ func TestCoordinatorRemove(t *testing.T) {
 func TestCoordinatorGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
 	items := createNCoordinator(keeper, ctx, 10)
-	require.Equal(t, items, keeper.GetAllCoordinator(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllCoordinator(ctx))
 }
 
 func TestCoordinatorCount(t *testing.T) {

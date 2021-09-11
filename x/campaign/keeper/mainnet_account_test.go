@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	keepertest "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -18,8 +19,7 @@ func createNMainnetAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 	items := make([]types.MainnetAccount, n)
 	for i := range items {
 		items[i].CampaignID = uint64(i)
-		items[i].Address = strconv.Itoa(i)
-
+		items[i].Address = sample.AccAddress()
 		keeper.SetMainnetAccount(ctx, items[i])
 	}
 	return items
