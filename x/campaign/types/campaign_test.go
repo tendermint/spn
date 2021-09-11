@@ -11,6 +11,10 @@ import (
 
 const invalidCampaignName = "not_valid"
 
+var (
+	invalidShares = campaign.Shares{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
+)
+
 func TestNewCampaign(t *testing.T) {
 	campaignID := sample.Uint64()
 	campaignName := sample.CampaignName()

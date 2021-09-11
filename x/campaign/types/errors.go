@@ -8,5 +8,8 @@ import (
 
 // x/campaign module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrCampaignNotFound    = sdkerrors.Register(ModuleName, 3, "campaign not found")
+	ErrMainnetInitialized  = sdkerrors.Register(ModuleName, 4, "mainnet initialized")
+	ErrInvalidAccountShare = sdkerrors.Register(ModuleName, 5, "invalid account share")
+	ErrTotalShareLimit     = sdkerrors.Register(ModuleName, 6, "allocated share greater the total share")
 )
