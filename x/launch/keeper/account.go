@@ -10,7 +10,7 @@ import (
 func (k Keeper) SetAccount(ctx sdk.Context, chainID string, address string, payload *types.ProposalAddAccountPayload) {
 	store := ctx.KVStore(k.storeKey)
 
-	bz := k.cdc.MustMarshalBinaryBare(payload)
+	bz := k.cdc.MustMarshal(payload)
 	store.Set(types.GetAccountKey(chainID, address), bz)
 }
 
@@ -23,7 +23,7 @@ func (k Keeper) GetAccountCoins(ctx sdk.Context, chainID string, address string)
 		return nil, false
 	}
 	var payload types.ProposalAddAccountPayload
-	k.cdc.MustUnmarshalBinaryBare(value, &payload)
+	k.cdc.MustUnmarshal(value, &payload)
 
 	return payload.Coins, true
 }

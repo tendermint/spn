@@ -14,13 +14,13 @@ import (
 
 type (
 	Keeper struct {
-		cdc      codec.Marshaler
+		cdc      codec.Codec
 		storeKey sdk.StoreKey
 		memKey   sdk.StoreKey
 	}
 )
 
-func NewKeeper(cdc codec.Marshaler, storeKey, memKey sdk.StoreKey) *Keeper {
+func NewKeeper(cdc codec.Codec, storeKey, memKey sdk.StoreKey) *Keeper {
 	return &Keeper{
 		cdc:      cdc,
 		storeKey: storeKey,

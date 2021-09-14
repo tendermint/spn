@@ -76,13 +76,13 @@ func isChainAuthorizedChar(c rune) bool {
 }
 
 // MarshalChain encodes chains for the store
-func MarshalChain(cdc codec.BinaryMarshaler, chain Chain) []byte {
-	return cdc.MustMarshalBinaryBare(&chain)
+func MarshalChain(cdc codec.BinaryCodec, chain Chain) []byte {
+	return cdc.MustMarshal(&chain)
 }
 
 // UnmarshalChain decodes chains from the store
-func UnmarshalChain(cdc codec.BinaryMarshaler, value []byte) Chain {
+func UnmarshalChain(cdc codec.BinaryCodec, value []byte) Chain {
 	var chain Chain
-	cdc.MustUnmarshalBinaryBare(value, &chain)
+	cdc.MustUnmarshal(value, &chain)
 	return chain
 }

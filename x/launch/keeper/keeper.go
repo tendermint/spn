@@ -12,7 +12,7 @@ import (
 
 type (
 	Keeper struct {
-		cdc            codec.Marshaler
+		cdc            codec.Codec
 		storeKey       sdk.StoreKey
 		memKey         sdk.StoreKey
 		IdentityKeeper types.IdentityKeeper
@@ -20,7 +20,7 @@ type (
 )
 
 func NewKeeper(
-	cdc codec.Marshaler,
+	cdc codec.Codec,
 	storeKey,
 	memKey sdk.StoreKey,
 	ik types.IdentityKeeper,
@@ -33,7 +33,7 @@ func NewKeeper(
 	}
 }
 
-func (k Keeper) GetCodec() codec.Marshaler {
+func (k Keeper) GetCodec() codec.Codec {
 	return k.cdc
 }
 
