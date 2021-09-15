@@ -127,7 +127,7 @@ func (msg MsgApprove) ValidateBasic() error {
 
 // MsgReject
 
-// NewMsgApprove creates a message for rejecting a proposal
+// NewMsgReject creates a message for rejecting a proposal
 func NewMsgReject(
 	chainID string,
 	proposalID int32,

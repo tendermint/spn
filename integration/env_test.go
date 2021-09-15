@@ -145,6 +145,7 @@ func (e env) Serve(msg string, path string, options ...execOption) (ok bool) {
 		step.New(
 			step.Exec(
 				"starport",
+				"chain",
 				"serve",
 				"-v",
 			),
