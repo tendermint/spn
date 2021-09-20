@@ -1,5 +1,7 @@
 package types
 
+import sdk "github.com/cosmos/cosmos-sdk/types"
+
 type LaunchKeeper interface {
 	// Methods imported from launch should be defined here
 }
@@ -9,5 +11,5 @@ type BankKeeper interface {
 }
 
 type ProfileKeeper interface {
-	// Methods imported from profile should be defined here
+	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, found bool)
 }
