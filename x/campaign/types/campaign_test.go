@@ -9,7 +9,10 @@ import (
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 
-const invalidCampaignName = "not_valid"
+var (
+	invalidCampaignName = "not_valid"
+	invalidCoins        = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
+)
 
 func TestNewCampaign(t *testing.T) {
 	campaignID := sample.Uint64()
@@ -30,7 +33,6 @@ func TestNewCampaign(t *testing.T) {
 }
 
 func TestCampaign_Validate(t *testing.T) {
-	invalidCoins := sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
 	require.False(t, invalidCoins.IsValid())
 
 	invalidAllocatedShares := sample.Campaign(0)
