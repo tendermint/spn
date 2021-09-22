@@ -25,7 +25,7 @@ func (k Keeper) CampaignAll(c context.Context, req *types.QueryAllCampaignReques
 
 	pageRes, err := query.Paginate(campaignStore, req.Pagination, func(key []byte, value []byte) error {
 		var campaign types.Campaign
-		if err := k.cdc.UnmarshalBinaryBare(value, &campaign); err != nil {
+		if err := k.cdc.Unmarshal(value, &campaign); err != nil {
 			return err
 		}
 

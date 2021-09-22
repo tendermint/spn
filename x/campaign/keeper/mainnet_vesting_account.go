@@ -9,7 +9,7 @@ import (
 // SetMainnetVestingAccount set a specific mainnetVestingAccount in the store from its index
 func (k Keeper) SetMainnetVestingAccount(ctx sdk.Context, mainnetVestingAccount types.MainnetVestingAccount) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetVestingAccountKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&mainnetVestingAccount)
+	b := k.cdc.MustMarshal(&mainnetVestingAccount)
 	store.Set(types.MainnetVestingAccountKey(
 		mainnetVestingAccount.CampaignID,
 		mainnetVestingAccount.Address,
@@ -29,7 +29,7 @@ func (k Keeper) GetMainnetVestingAccount(
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -52,7 +52,7 @@ func (k Keeper) GetAllMainnetVestingAccount(ctx sdk.Context) (list []types.Mainn
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.MainnetVestingAccount
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

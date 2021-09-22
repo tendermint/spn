@@ -36,7 +36,7 @@ func setAddressPrefixes() {
 }
 
 // Codec returns a codec with preregistered interfaces
-func Codec() codec.Marshaler {
+func Codec() codec.Codec {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 
 	launch.RegisterInterfaces(interfaceRegistry)

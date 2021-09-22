@@ -24,7 +24,7 @@ func (k Keeper) MainnetVestingAccountAll(c context.Context, req *types.QueryAllM
 
 	pageRes, err := query.Paginate(mainnetVestingAccountStore, req.Pagination, func(key []byte, value []byte) error {
 		var mainnetVestingAccount types.MainnetVestingAccount
-		if err := k.cdc.UnmarshalBinaryBare(value, &mainnetVestingAccount); err != nil {
+		if err := k.cdc.Unmarshal(value, &mainnetVestingAccount); err != nil {
 			return err
 		}
 
