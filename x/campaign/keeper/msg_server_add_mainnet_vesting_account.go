@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -35,8 +36,8 @@ func (k msgServer) AddMainnetVestingAccount(goCtx context.Context, msg *types.Ms
 	}
 
 	// check if the account already exists
-	account, found := k.GetMainnetVestingAccount(ctx, campaign.Id, msg.Address)
-	if !found {
+	account, foundAcc := k.GetMainnetVestingAccount(ctx, campaign.Id, msg.Address)
+	if !foundAcc {
 		// if not, create the account
 		account = types.MainnetVestingAccount{
 			CampaignID:     campaign.Id,
@@ -46,9 +47,30 @@ func (k msgServer) AddMainnetVestingAccount(goCtx context.Context, msg *types.Ms
 	}
 	// increase the account shares
 	account.Shares = types.IncreaseShares(account.Shares, msg.Shares)
+	totalShares := msg.Shares
+
+	// get the VestingOption shares
+	switch vestionOptions := msg.VestingOptions.Options.(type) {
+	case *types.ShareVestingOptions_DelayedVesting:
+		vestingShares := vestionOptions.DelayedVesting.Vesting
+
+		// sum the vesting options shares to the total shares
+		// to be decreased from the campaign
+		totalShares = types.IncreaseShares(msg.Shares, vestingShares)
+
+		// if an account already exists, we should sum the
+		// vesting option shares
+		if foundAcc {
+			vestionOptions.DelayedVesting.Vesting = types.IncreaseShares(
+				vestingShares, msg.Shares,
+			)
+		}
+	default:
+		return nil, spnerrors.Criticalf("invalid vesting options type")
+	}
 
 	// increase the campaign shares
-	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
+	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, totalShares)
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
 		return nil, sdkerrors.Wrapf(types.ErrTotalShareLimit, "%v", msg.CampaignID)
 	}
