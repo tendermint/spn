@@ -12,7 +12,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	ibctransfertypes "github.com/cosmos/cosmos-sdk/x/ibc/applications/transfer/types"
+	ibctransfertypes "github.com/cosmos/ibc-go/modules/apps/transfer/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -106,7 +106,7 @@ func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
 	return campaignKeeper, ctx
 }
 
-func initParam(cdc codec.Marshaler, db *tmdb.MemDB, stateStore store.CommitMultiStore) paramskeeper.Keeper {
+func initParam(cdc codec.Codec, db *tmdb.MemDB, stateStore store.CommitMultiStore) paramskeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(paramstypes.StoreKey)
 	tkeys := sdk.NewTransientStoreKey(paramstypes.TStoreKey)
 
@@ -117,7 +117,7 @@ func initParam(cdc codec.Marshaler, db *tmdb.MemDB, stateStore store.CommitMulti
 }
 
 func initAuth(
-	cdc codec.Marshaler,
+	cdc codec.Codec,
 	db *tmdb.MemDB,
 	stateStore store.CommitMultiStore,
 	paramKeeper paramskeeper.Keeper,
@@ -133,7 +133,7 @@ func initAuth(
 }
 
 func initBank(
-	cdc codec.Marshaler,
+	cdc codec.Codec,
 	db *tmdb.MemDB,
 	stateStore store.CommitMultiStore,
 	paramKeeper paramskeeper.Keeper,
@@ -155,7 +155,7 @@ func initBank(
 	return bankkeeper.NewBaseKeeper(cdc, storeKey, authKeeper, bankSubspace, modAccAddrs)
 }
 
-func initProfile(cdc codec.Marshaler, db *tmdb.MemDB, stateStore store.CommitMultiStore) *profilekeeper.Keeper {
+func initProfile(cdc codec.Codec, db *tmdb.MemDB, stateStore store.CommitMultiStore) *profilekeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(profiletypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(profiletypes.MemStoreKey)
 
@@ -166,7 +166,7 @@ func initProfile(cdc codec.Marshaler, db *tmdb.MemDB, stateStore store.CommitMul
 }
 
 func initLaunch(
-	cdc codec.Marshaler,
+	cdc codec.Codec,
 	db *tmdb.MemDB,
 	stateStore store.CommitMultiStore,
 	profileKeeper *profilekeeper.Keeper,
@@ -185,7 +185,7 @@ func initLaunch(
 }
 
 func initCampaign(
-	cdc codec.Marshaler,
+	cdc codec.Codec,
 	db *tmdb.MemDB,
 	stateStore store.CommitMultiStore,
 	launchKeeper *launchkeeper.Keeper,
