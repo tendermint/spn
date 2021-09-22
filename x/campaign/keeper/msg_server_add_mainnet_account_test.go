@@ -82,7 +82,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 			err: types.ErrCampaignNotFound,
 		},
 		{
-			name: "invalid coordinator address",
+			name: "coordinator address not found",
 			msg: types.MsgAddMainnetAccount{
 				Coordinator: addr,
 				CampaignID:  campaign1.Id,
@@ -112,7 +112,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 			err: types.ErrMainnetInitialized,
 		},
 		{
-			name: "allocated shares greater them total shares",
+			name: "allocated shares greater than total shares",
 			msg: types.MsgAddMainnetAccount{
 				Coordinator: coordAddr3,
 				CampaignID:  campaign3.Id,
