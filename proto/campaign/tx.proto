@@ -2,18 +2,30 @@ syntax = "proto3";
 package tendermint.spn.campaign;
 
 // this line is used by starport scaffolding # proto/tx/import
-
-option go_package = "github.com/tendermint/spn/x/campaign/types";
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
+option go_package = "github.com/tendermint/spn/x/campaign/types";
+
 // Msg defines the Msg service.
 service Msg {
-  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   rpc AddMainnetAccount(MsgAddMainnetAccount) returns (MsgAddMainnetAccountResponse);
+  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgCreateCampaign {
+  string coordinator = 1;
+  string campaignName = 2;
+  repeated cosmos.base.v1beta1.Coin TotalSupply = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  bool dynamicShares = 4;
+}
+
+message MsgCreateCampaignResponse {
+  uint64 campaignID = 1;
+}
+
 message MsgAddMainnetAccount {
   string coordinator = 1;
   uint64 campaignID = 2;
