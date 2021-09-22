@@ -12,15 +12,19 @@ import (
 
 func TestMsgAddMainnetAccount(t *testing.T) {
 	var (
-		addr                                               = sample.AccAddress()
-		coordAddr1                                         = sample.AccAddress()
-		coordAddr2                                         = sample.AccAddress()
-		coordAddr3                                         = sample.AccAddress()
+		addr1 = sample.AccAddress()
+		addr2 = sample.AccAddress()
+
+		coordAddr1 = sample.AccAddress()
+		coordAddr2 = sample.AccAddress()
+		coordAddr3 = sample.AccAddress()
+
+		campaign1 = sample.Campaign(0)
+		campaign2 = sample.Campaign(1)
+		campaign3 = sample.Campaign(2)
+
 		campaignKeeper, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
 		ctx                                                = sdk.WrapSDKContext(sdkCtx)
-		campaign1                                          = sample.Campaign(0)
-		campaign2                                          = sample.Campaign(1)
-		campaign3                                          = sample.Campaign(2)
 	)
 
 	// create shares
@@ -44,6 +48,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 	campaign1.AllocatedShares = allocatedShares
 	campaign1.TotalShares = totalShares
 
+	campaignKeeper.SetMainnetAccount(sdkCtx, sample.MainnetAccount(campaign1.Id, addr2))
 	res2, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
@@ -76,7 +81,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 			msg: types.MsgAddMainnetAccount{
 				Coordinator: coordAddr1,
 				CampaignID:  100,
-				Address:     addr,
+				Address:     addr1,
 				Shares:      sample.Shares(),
 			},
 			err: types.ErrCampaignNotFound,
@@ -84,9 +89,9 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 		{
 			name: "coordinator address not found",
 			msg: types.MsgAddMainnetAccount{
-				Coordinator: addr,
+				Coordinator: addr1,
 				CampaignID:  campaign1.Id,
-				Address:     addr,
+				Address:     addr1,
 				Shares:      sample.Shares(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
@@ -96,7 +101,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 			msg: types.MsgAddMainnetAccount{
 				Coordinator: coordAddr2,
 				CampaignID:  campaign1.Id,
-				Address:     addr,
+				Address:     addr1,
 				Shares:      sample.Shares(),
 			},
 			err: profiletypes.ErrCoordInvalid,
@@ -106,7 +111,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 			msg: types.MsgAddMainnetAccount{
 				Coordinator: coordAddr2,
 				CampaignID:  campaign2.Id,
-				Address:     addr,
+				Address:     addr1,
 				Shares:      sample.Shares(),
 			},
 			err: types.ErrMainnetInitialized,
@@ -116,27 +121,46 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 			msg: types.MsgAddMainnetAccount{
 				Coordinator: coordAddr3,
 				CampaignID:  campaign3.Id,
-				Address:     addr,
+				Address:     addr1,
 				Shares:      share1,
 			},
 			err: types.ErrTotalShareLimit,
 		},
 		{
-			name: "valid message",
+			name: "create new account with shares",
 			msg: types.MsgAddMainnetAccount{
 				Coordinator: coordAddr1,
 				CampaignID:  campaign1.Id,
-				Address:     addr,
+				Address:     addr1,
 				Shares:      share2,
+			},
+		},
+		{
+			name: "update existing account shares",
+			msg: types.MsgAddMainnetAccount{
+				Coordinator: coordAddr1,
+				CampaignID:  campaign1.Id,
+				Address:     addr2,
+				Shares:      share1,
 			},
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			var tmpCampaign types.Campaign
+			var (
+				accountExists bool
+				tmpAccount    types.MainnetAccount
+				tmpCampaign   types.Campaign
+			)
 			if tc.err == nil {
 				var found bool
 				tmpCampaign, found = campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
+
+				tmpAccount, accountExists = campaignKeeper.GetMainnetAccount(
+					sdkCtx,
+					tc.msg.CampaignID,
+					tc.msg.Address,
+				)
 			}
 			_, err := campaignSrv.AddMainnetAccount(ctx, &tc.msg)
 			if tc.err != nil {
@@ -151,11 +175,17 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 
-			tmpShare, err := types.DecreaseShares(campaign.AllocatedShares, account.Shares)
-			require.NoError(t, err)
-
-			equal := types.IsEqualShares(tmpCampaign.AllocatedShares, tmpShare)
-			require.True(t, equal)
+			if accountExists {
+				shares, err := types.DecreaseShares(account.Shares, tmpAccount.Shares)
+				require.NoError(t, err)
+				equal := types.IsEqualShares(shares, tc.msg.Shares)
+				require.True(t, equal)
+			} else {
+				tmpShare, err := types.DecreaseShares(campaign.AllocatedShares, account.Shares)
+				require.NoError(t, err)
+				equal := types.IsEqualShares(tmpCampaign.AllocatedShares, tmpShare)
+				require.True(t, equal)
+			}
 		})
 	}
 }
