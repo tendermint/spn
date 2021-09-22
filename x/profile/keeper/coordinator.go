@@ -44,7 +44,7 @@ func (k Keeper) AppendCoordinator(
 	coordinator.CoordinatorId = count
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
-	appendedValue := k.cdc.MustMarshalBinaryBare(&coordinator)
+	appendedValue := k.cdc.MustMarshal(&coordinator)
 	store.Set(GetCoordinatorIDBytes(coordinator.CoordinatorId), appendedValue)
 
 	// Update coordinator count
@@ -56,7 +56,7 @@ func (k Keeper) AppendCoordinator(
 // SetCoordinator set a specific coordinator in the store
 func (k Keeper) SetCoordinator(ctx sdk.Context, coordinator types.Coordinator) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
-	b := k.cdc.MustMarshalBinaryBare(&coordinator)
+	b := k.cdc.MustMarshal(&coordinator)
 	store.Set(GetCoordinatorIDBytes(coordinator.CoordinatorId), b)
 }
 
@@ -64,7 +64,7 @@ func (k Keeper) SetCoordinator(ctx sdk.Context, coordinator types.Coordinator) {
 func (k Keeper) GetCoordinator(ctx sdk.Context, id uint64) types.Coordinator {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
 	var coordinator types.Coordinator
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetCoordinatorIDBytes(id)), &coordinator)
+	k.cdc.MustUnmarshal(store.Get(GetCoordinatorIDBytes(id)), &coordinator)
 	return coordinator
 }
 
@@ -89,7 +89,7 @@ func (k Keeper) GetAllCoordinator(ctx sdk.Context) (list []types.Coordinator) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.Coordinator
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

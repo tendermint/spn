@@ -24,7 +24,7 @@ func (k Keeper) ValidatorAll(c context.Context, req *types.QueryAllValidatorRequ
 
 	pageRes, err := query.Paginate(validatorStore, req.Pagination, func(key []byte, value []byte) error {
 		var validator types.Validator
-		if err := k.cdc.UnmarshalBinaryBare(value, &validator); err != nil {
+		if err := k.cdc.Unmarshal(value, &validator); err != nil {
 			return err
 		}
 
