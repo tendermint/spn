@@ -34,19 +34,26 @@ func (k msgServer) AddMainnetAccount(goCtx context.Context, msg *types.MsgAddMai
 		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%v", msg.CampaignID)
 	}
 
-	account := types.MainnetAccount{
-		CampaignID: campaign.Id,
-		Address:    msg.Address,
-		Shares:     msg.Shares,
+	// check if the account already exists
+	account, found := k.GetMainnetAccount(ctx, campaign.Id, msg.Address)
+	if !found {
+		// if not, create the account
+		account = types.MainnetAccount{
+			CampaignID: campaign.Id,
+			Address:    msg.Address,
+		}
 	}
+	// increase the account shares
+	account.Shares = types.IncreaseShares(account.Shares, msg.Shares)
 
+	// increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
 		return nil, sdkerrors.Wrapf(types.ErrTotalShareLimit, "%v", msg.CampaignID)
 	}
 
-	k.SetMainnetAccount(ctx, account)
 	k.SetCampaign(ctx, campaign)
+	k.SetMainnetAccount(ctx, account)
 
 	return &types.MsgAddMainnetAccountResponse{}, nil
 }
