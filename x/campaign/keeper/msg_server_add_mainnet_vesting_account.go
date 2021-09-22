@@ -36,37 +36,30 @@ func (k msgServer) AddMainnetVestingAccount(goCtx context.Context, msg *types.Ms
 	}
 
 	// check if the account already exists
-	account, foundAcc := k.GetMainnetVestingAccount(ctx, campaign.Id, msg.Address)
-	if !foundAcc {
-		// if not, create the account
-		account = types.MainnetVestingAccount{
-			CampaignID:     campaign.Id,
-			Address:        msg.Address,
-			VestingOptions: msg.VestingOptions,
+	oldAccount, foundAcc := k.GetMainnetVestingAccount(ctx, campaign.Id, msg.Address)
+	if foundAcc {
+		// if yes, remove the allocated share
+		totalShares, err := oldAccount.GetTotalShares()
+		if err != nil {
+			return nil, spnerrors.Critical(err.Error())
+		}
+		campaign.AllocatedShares, err = types.DecreaseShares(campaign.AllocatedShares, totalShares)
+		if err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrTotalShareLimit, "%v", err.Error())
 		}
 	}
-	// increase the account shares
-	account.Shares = types.IncreaseShares(account.Shares, msg.Shares)
-	totalShares := msg.Shares
 
-	// get the VestingOption shares
-	switch vestionOptions := msg.VestingOptions.Options.(type) {
-	case *types.ShareVestingOptions_DelayedVesting:
-		vestingShares := vestionOptions.DelayedVesting.Vesting
+	account := types.MainnetVestingAccount{
+		CampaignID:     campaign.Id,
+		Address:        msg.Address,
+		Shares:         msg.Shares,
+		VestingOptions: msg.VestingOptions,
+	}
 
-		// sum the vesting options shares to the total shares
-		// to be decreased from the campaign
-		totalShares = types.IncreaseShares(msg.Shares, vestingShares)
-
-		// if an account already exists, we should sum the
-		// vesting option shares
-		if foundAcc {
-			vestionOptions.DelayedVesting.Vesting = types.IncreaseShares(
-				vestingShares, msg.Shares,
-			)
-		}
-	default:
-		return nil, spnerrors.Criticalf("invalid vesting options type")
+	// get the VestingOption and account shares
+	totalShares, err := account.GetTotalShares()
+	if err != nil {
+		return nil, spnerrors.Critical(err.Error())
 	}
 
 	// increase the campaign shares

@@ -28,11 +28,11 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 	)
 
 	// create shares
-	allocatedShares, err := types.NewShares("91token")
+	allocatedShares, err := types.NewShares("999token")
 	require.NoError(t, err)
-	totalShares, err := types.NewShares("100token")
+	totalShares, err := types.NewShares("9999token")
 	require.NoError(t, err)
-	share1, err := types.NewShares("10token")
+	share1, err := types.NewShares("9999token")
 	require.NoError(t, err)
 	share2, err := types.NewShares("8token")
 	require.NoError(t, err)
@@ -44,14 +44,12 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 	})
 	require.NoError(t, err)
 	campaign1.CoordinatorID = res1.CoordinatorId
-	campaign1.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign1)
 	campaign1.AllocatedShares = allocatedShares
 	campaign1.TotalShares = totalShares
+	campaign1.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign1)
 
-	campaignKeeper.SetMainnetVestingAccount(
-		sdkCtx,
-		sample.MainnetVestingAccount(campaign1.Id, addr2),
-	)
+	accShare := sample.MainnetVestingAccountWithShares(campaign1.Id, addr2, share2)
+	campaignKeeper.SetMainnetVestingAccount(sdkCtx, accShare)
 	res2, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
@@ -150,7 +148,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 				Coordinator:    coordAddr1,
 				CampaignID:     campaign1.Id,
 				Address:        addr2,
-				Shares:         share1,
+				Shares:         share2,
 				VestingOptions: sample.ShareVestingOptions(),
 			},
 		},
@@ -185,27 +183,19 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 
+			totalShares, err := account.GetTotalShares()
+			require.NoError(t, err)
+			tmpShare := types.IncreaseShares(tmpCampaign.AllocatedShares, totalShares)
+
 			if accountExists {
-				shares, err := types.DecreaseShares(account.Shares, tmpAccount.Shares)
+				tmpAccShares, err := tmpAccount.GetTotalShares()
 				require.NoError(t, err)
-				equal := types.IsEqualShares(shares, tc.msg.Shares)
-				require.True(t, equal)
-			} else {
-				tmpShare, err := types.DecreaseShares(campaign.AllocatedShares, account.Shares)
+				tmpShare, err = types.DecreaseShares(tmpShare, tmpAccShares)
 				require.NoError(t, err)
-
-				switch vestionOptions := tc.msg.VestingOptions.Options.(type) {
-				case *types.ShareVestingOptions_DelayedVesting:
-					vestingShares := vestionOptions.DelayedVesting.Vesting
-					tmpShare, err = types.DecreaseShares(tmpShare, vestingShares)
-					require.NoError(t, err)
-				default:
-					t.Fatal("invalid vesting options type")
-				}
-
-				equal := types.IsEqualShares(tmpCampaign.AllocatedShares, tmpShare)
-				require.True(t, equal)
 			}
+
+			equal := types.IsEqualShares(campaign.AllocatedShares, tmpShare)
+			require.True(t, equal)
 		})
 	}
 }
