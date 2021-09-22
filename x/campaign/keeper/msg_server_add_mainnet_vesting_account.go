@@ -34,20 +34,27 @@ func (k msgServer) AddMainnetVestingAccount(goCtx context.Context, msg *types.Ms
 		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%v", msg.CampaignID)
 	}
 
-	account := types.MainnetVestingAccount{
-		CampaignID:     campaign.Id,
-		Address:        msg.Address,
-		Shares:         msg.Shares,
-		VestingOptions: msg.VestingOptions,
+	// check if the account already exists
+	account, found := k.GetMainnetVestingAccount(ctx, campaign.Id, msg.Address)
+	if !found {
+		// if not, create the account
+		account = types.MainnetVestingAccount{
+			CampaignID:     campaign.Id,
+			Address:        msg.Address,
+			VestingOptions: msg.VestingOptions,
+		}
 	}
+	// increase the account shares
+	account.Shares = types.IncreaseShares(account.Shares, msg.Shares)
 
+	// increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
 		return nil, sdkerrors.Wrapf(types.ErrTotalShareLimit, "%v", msg.CampaignID)
 	}
 
-	k.SetMainnetVestingAccount(ctx, account)
 	k.SetCampaign(ctx, campaign)
+	k.SetMainnetVestingAccount(ctx, account)
 
 	return &types.MsgAddMainnetVestingAccountResponse{}, nil
 }
