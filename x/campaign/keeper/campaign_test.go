@@ -43,7 +43,7 @@ func TestCampaignRemove(t *testing.T) {
 func TestCampaignGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaign(keeper, ctx, 10)
-	require.Equal(t, items, keeper.GetAllCampaign(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllCampaign(ctx))
 }
 
 func TestCampaignCount(t *testing.T) {

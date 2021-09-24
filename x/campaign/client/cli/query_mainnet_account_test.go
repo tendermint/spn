@@ -121,9 +121,8 @@ func TestListMainnetAccount(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllMainnetAccountResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.MainnetAccount[j-i])
-			}
+			require.LessOrEqual(t, len(resp.MainnetAccount), step)
+			require.Subset(t, objs, resp.MainnetAccount)
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -135,9 +134,8 @@ func TestListMainnetAccount(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllMainnetAccountResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.MainnetAccount[j-i])
-			}
+			require.LessOrEqual(t, len(resp.MainnetAccount), step)
+			require.Subset(t, objs, resp.MainnetAccount)
 			next = resp.Pagination.NextKey
 		}
 	})

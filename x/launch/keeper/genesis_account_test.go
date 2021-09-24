@@ -52,5 +52,5 @@ func TestGenesisAccountRemove(t *testing.T) {
 func TestGenesisAccountGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNGenesisAccount(keeper, ctx, 10)
-	require.Equal(t, items, keeper.GetAllGenesisAccount(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllGenesisAccount(ctx))
 }
