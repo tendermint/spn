@@ -30,7 +30,7 @@ import (
 )
 
 // MockCodec mocks a codec for the app that contains the necessary types for proto encoding
-func MockCodec() codec.Marshaler {
+func MockCodec() codec.Codec {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 
 	// Register basic message and cryto

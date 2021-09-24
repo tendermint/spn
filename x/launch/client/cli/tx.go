@@ -134,7 +134,7 @@ func CmdApprove() *cobra.Command {
 	return cmd
 }
 
-// CmdApprove returns the transaction command to reject a specific proposal
+// CmdReject returns the transaction command to reject a specific proposal
 func CmdReject() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "proposal-reject [chain-id] [proposal-id]",

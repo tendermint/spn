@@ -59,38 +59,38 @@ func (p Proposal) GetType() (ProposalType, error) {
 }
 
 // MarshalProposal encodes proposals for the store
-func MarshalProposal(cdc codec.BinaryMarshaler, proposal Proposal) []byte {
-	return cdc.MustMarshalBinaryBare(&proposal)
+func MarshalProposal(cdc codec.BinaryCodec, proposal Proposal) []byte {
+	return cdc.MustMarshal(&proposal)
 }
 
 // UnmarshalProposal decodes proposals from the store
-func UnmarshalProposal(cdc codec.BinaryMarshaler, value []byte) Proposal {
+func UnmarshalProposal(cdc codec.BinaryCodec, value []byte) Proposal {
 	var proposal Proposal
-	cdc.MustUnmarshalBinaryBare(value, &proposal)
+	cdc.MustUnmarshal(value, &proposal)
 
 	return proposal
 }
 
 // MarshalProposalList encodes list of proposal IDs for the store
-func MarshalProposalList(cdc codec.BinaryMarshaler, proposalList ProposalList) []byte {
-	return cdc.MustMarshalBinaryBare(&proposalList)
+func MarshalProposalList(cdc codec.BinaryCodec, proposalList ProposalList) []byte {
+	return cdc.MustMarshal(&proposalList)
 }
 
-// UnmarshalProposal decodes list of proposal IDs rom the store
-func UnmarshalProposalList(cdc codec.BinaryMarshaler, value []byte) ProposalList {
+// UnmarshalProposalList decodes list of proposal IDs rom the store
+func UnmarshalProposalList(cdc codec.BinaryCodec, value []byte) ProposalList {
 	var proposalList ProposalList
-	cdc.MustUnmarshalBinaryBare(value, &proposalList)
+	cdc.MustUnmarshal(value, &proposalList)
 	return proposalList
 }
 
 // MarshalProposalCount encodes proposal count for the store
-func MarshalProposalCount(cdc codec.BinaryMarshaler, count int32) []byte {
+func MarshalProposalCount(cdc codec.BinaryCodec, count int32) []byte {
 	// FIXME replace it with binary.LittleEndian.PutInt32
 	return []byte(strconv.Itoa(int(count)))
 }
 
 // UnmarshalProposalCount decodes proposal count from the store
-func UnmarshalProposalCount(cdc codec.BinaryMarshaler, value []byte) int32 {
+func UnmarshalProposalCount(cdc codec.BinaryCodec, value []byte) int32 {
 	count, err := parseint.ParseInt32(string(value))
 	if err != nil {
 		// We should never have non numeric data as proposal count
