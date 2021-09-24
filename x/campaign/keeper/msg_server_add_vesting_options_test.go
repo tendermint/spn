@@ -192,6 +192,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				require.NoError(t, err)
 			}
 
+			require.Equal(t, tc.msg.VestingOptions, account.VestingOptions)
 			equal := types.IsEqualShares(campaign.AllocatedShares, tmpShare)
 			require.True(t, equal)
 		})
