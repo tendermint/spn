@@ -39,7 +39,7 @@ func TestMsgAddMainnetAccount_ValidateBasic(t *testing.T) {
 				CampaignID:  0,
 				Shares:      invalidShares,
 			},
-			err: types.ErrInvalidAccountShare,
+			err: types.ErrInvalidAccountShares,
 		},
 		{
 			name: "empty total supply",
@@ -48,7 +48,7 @@ func TestMsgAddMainnetAccount_ValidateBasic(t *testing.T) {
 				CampaignID:  0,
 				Shares:      types.Shares{},
 			},
-			err: types.ErrInvalidAccountShare,
+			err: types.ErrInvalidAccountShares,
 		},
 	}
 	for _, tt := range tests {

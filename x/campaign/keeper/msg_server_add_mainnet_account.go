@@ -41,6 +41,7 @@ func (k msgServer) AddMainnetAccount(goCtx context.Context, msg *types.MsgAddMai
 		account = types.MainnetAccount{
 			CampaignID: campaign.Id,
 			Address:    msg.Address,
+			Shares:     types.EmptyShares(),
 		}
 	}
 	// increase the account shares
@@ -49,7 +50,7 @@ func (k msgServer) AddMainnetAccount(goCtx context.Context, msg *types.MsgAddMai
 	// increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
-		return nil, sdkerrors.Wrapf(types.ErrTotalShareLimit, "%v", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%v", msg.CampaignID)
 	}
 
 	k.SetCampaign(ctx, campaign)
