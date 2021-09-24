@@ -14,7 +14,7 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdAddMainnetVestingAccount() *cobra.Command {
+func CmdAddVestingOptions() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add-mainnet-vesting-account [campaign-id] [address] [shares] [vesting-shares] [vesting-end-time]",
 		Short: "Add a mainnet vesting account",
@@ -44,7 +44,7 @@ func CmdAddMainnetVestingAccount() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgAddMainnetVestingAccount(
+			msg := types.NewMsgAddVestingOptions(
 				argCampaignID,
 				clientCtx.GetFromAddress().String(),
 				argAddress,

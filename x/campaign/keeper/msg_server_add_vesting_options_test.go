@@ -10,7 +10,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgAddMainnetVestingAccount(t *testing.T) {
+func TestMsgAddVestingOptions(t *testing.T) {
 	var (
 		addr1                       = sample.AccAddress()
 		addr2                       = sample.AccAddress()
@@ -71,13 +71,13 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 
 	for _, tc := range []struct {
 		name       string
-		msg        types.MsgAddMainnetVestingAccount
+		msg        types.MsgAddVestingOptions
 		expectedID uint64
 		err        error
 	}{
 		{
 			name: "invalid campaign id",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr1,
 				CampaignID:     100,
 				Address:        addr1,
@@ -88,7 +88,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 		},
 		{
 			name: "invalid coordinator address",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    addr1,
 				CampaignID:     campaign1.Id,
 				Address:        addr1,
@@ -99,7 +99,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 		},
 		{
 			name: "invalid coordinator id",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddrMainnetInitialized,
 				CampaignID:     campaign1.Id,
 				Address:        addr1,
@@ -110,7 +110,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 		},
 		{
 			name: "campaign already in mainnet",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddrMainnetInitialized,
 				CampaignID:     campaignMainnetInitialized.Id,
 				Address:        addr1,
@@ -121,7 +121,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 		},
 		{
 			name: "allocated shares greater them total shares",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr2,
 				CampaignID:     campaign2.Id,
 				Address:        addr1,
@@ -132,7 +132,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 		},
 		{
 			name: "create new account with shares",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr1,
 				CampaignID:     campaign1.Id,
 				Address:        addr1,
@@ -142,7 +142,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 		},
 		{
 			name: "update existing account shares",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr1,
 				CampaignID:     campaign1.Id,
 				Address:        addr2,
@@ -168,7 +168,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 					tc.msg.Address,
 				)
 			}
-			_, err := campaignSrv.AddMainnetVestingAccount(ctx, &tc.msg)
+			_, err := campaignSrv.AddVestingOptions(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

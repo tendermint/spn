@@ -11,7 +11,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func (k msgServer) AddMainnetVestingAccount(goCtx context.Context, msg *types.MsgAddMainnetVestingAccount) (*types.MsgAddMainnetVestingAccountResponse, error) {
+func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVestingOptions) (*types.MsgAddVestingOptionsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
@@ -71,5 +71,5 @@ func (k msgServer) AddMainnetVestingAccount(goCtx context.Context, msg *types.Ms
 	k.SetCampaign(ctx, campaign)
 	k.SetMainnetVestingAccount(ctx, account)
 
-	return &types.MsgAddMainnetVestingAccountResponse{}, nil
+	return &types.MsgAddVestingOptionsResponse{}, nil
 }

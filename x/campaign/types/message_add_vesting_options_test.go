@@ -9,15 +9,15 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func TestMsgAddMainnetVestingAccount_ValidateBasic(t *testing.T) {
+func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgAddMainnetVestingAccount
+		msg  types.MsgAddVestingOptions
 		err  error
 	}{
 		{
 			name: "valid message",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     0,
 				Shares:         sample.Shares(),
@@ -26,7 +26,7 @@ func TestMsgAddMainnetVestingAccount_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid address",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    "invalid_address",
 				CampaignID:     0,
 				Shares:         sample.Shares(),
@@ -36,7 +36,7 @@ func TestMsgAddMainnetVestingAccount_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid total supply",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     0,
 				Shares:         invalidShares,
@@ -46,7 +46,7 @@ func TestMsgAddMainnetVestingAccount_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "empty total supply",
-			msg: types.MsgAddMainnetVestingAccount{
+			msg: types.MsgAddVestingOptions{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     0,
 				Shares:         types.Shares{},

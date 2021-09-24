@@ -143,7 +143,7 @@ func (m *MsgCreateCampaignResponse) GetCampaignID() uint64 {
 	return 0
 }
 
-type MsgAddMainnetVestingAccount struct {
+type MsgAddVestingOptions struct {
 	Coordinator    string              `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
 	CampaignID     uint64              `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
 	Address        string              `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
@@ -151,18 +151,18 @@ type MsgAddMainnetVestingAccount struct {
 	VestingOptions ShareVestingOptions `protobuf:"bytes,5,opt,name=vestingOptions,proto3" json:"vestingOptions"`
 }
 
-func (m *MsgAddMainnetVestingAccount) Reset()         { *m = MsgAddMainnetVestingAccount{} }
-func (m *MsgAddMainnetVestingAccount) String() string { return proto.CompactTextString(m) }
-func (*MsgAddMainnetVestingAccount) ProtoMessage()    {}
-func (*MsgAddMainnetVestingAccount) Descriptor() ([]byte, []int) {
+func (m *MsgAddVestingOptions) Reset()         { *m = MsgAddVestingOptions{} }
+func (m *MsgAddVestingOptions) String() string { return proto.CompactTextString(m) }
+func (*MsgAddVestingOptions) ProtoMessage()    {}
+func (*MsgAddVestingOptions) Descriptor() ([]byte, []int) {
 	return fileDescriptor_fb6bf904ffc53c1f, []int{2}
 }
-func (m *MsgAddMainnetVestingAccount) XXX_Unmarshal(b []byte) error {
+func (m *MsgAddVestingOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgAddMainnetVestingAccount) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgAddVestingOptions) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgAddMainnetVestingAccount.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgAddVestingOptions.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -172,68 +172,68 @@ func (m *MsgAddMainnetVestingAccount) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
-func (m *MsgAddMainnetVestingAccount) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddMainnetVestingAccount.Merge(m, src)
+func (m *MsgAddVestingOptions) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddVestingOptions.Merge(m, src)
 }
-func (m *MsgAddMainnetVestingAccount) XXX_Size() int {
+func (m *MsgAddVestingOptions) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgAddMainnetVestingAccount) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddMainnetVestingAccount.DiscardUnknown(m)
+func (m *MsgAddVestingOptions) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddVestingOptions.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgAddMainnetVestingAccount proto.InternalMessageInfo
+var xxx_messageInfo_MsgAddVestingOptions proto.InternalMessageInfo
 
-func (m *MsgAddMainnetVestingAccount) GetCoordinator() string {
+func (m *MsgAddVestingOptions) GetCoordinator() string {
 	if m != nil {
 		return m.Coordinator
 	}
 	return ""
 }
 
-func (m *MsgAddMainnetVestingAccount) GetCampaignID() uint64 {
+func (m *MsgAddVestingOptions) GetCampaignID() uint64 {
 	if m != nil {
 		return m.CampaignID
 	}
 	return 0
 }
 
-func (m *MsgAddMainnetVestingAccount) GetAddress() string {
+func (m *MsgAddVestingOptions) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-func (m *MsgAddMainnetVestingAccount) GetShares() Shares {
+func (m *MsgAddVestingOptions) GetShares() Shares {
 	if m != nil {
 		return m.Shares
 	}
 	return nil
 }
 
-func (m *MsgAddMainnetVestingAccount) GetVestingOptions() ShareVestingOptions {
+func (m *MsgAddVestingOptions) GetVestingOptions() ShareVestingOptions {
 	if m != nil {
 		return m.VestingOptions
 	}
 	return ShareVestingOptions{}
 }
 
-type MsgAddMainnetVestingAccountResponse struct {
+type MsgAddVestingOptionsResponse struct {
 }
 
-func (m *MsgAddMainnetVestingAccountResponse) Reset()         { *m = MsgAddMainnetVestingAccountResponse{} }
-func (m *MsgAddMainnetVestingAccountResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgAddMainnetVestingAccountResponse) ProtoMessage()    {}
-func (*MsgAddMainnetVestingAccountResponse) Descriptor() ([]byte, []int) {
+func (m *MsgAddVestingOptionsResponse) Reset()         { *m = MsgAddVestingOptionsResponse{} }
+func (m *MsgAddVestingOptionsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAddVestingOptionsResponse) ProtoMessage()    {}
+func (*MsgAddVestingOptionsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_fb6bf904ffc53c1f, []int{3}
 }
-func (m *MsgAddMainnetVestingAccountResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgAddVestingOptionsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgAddMainnetVestingAccountResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgAddVestingOptionsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgAddMainnetVestingAccountResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgAddVestingOptionsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -243,62 +243,62 @@ func (m *MsgAddMainnetVestingAccountResponse) XXX_Marshal(b []byte, deterministi
 		return b[:n], nil
 	}
 }
-func (m *MsgAddMainnetVestingAccountResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddMainnetVestingAccountResponse.Merge(m, src)
+func (m *MsgAddVestingOptionsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddVestingOptionsResponse.Merge(m, src)
 }
-func (m *MsgAddMainnetVestingAccountResponse) XXX_Size() int {
+func (m *MsgAddVestingOptionsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgAddMainnetVestingAccountResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddMainnetVestingAccountResponse.DiscardUnknown(m)
+func (m *MsgAddVestingOptionsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddVestingOptionsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgAddMainnetVestingAccountResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgAddVestingOptionsResponse proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*MsgCreateCampaign)(nil), "tendermint.spn.campaign.MsgCreateCampaign")
 	proto.RegisterType((*MsgCreateCampaignResponse)(nil), "tendermint.spn.campaign.MsgCreateCampaignResponse")
-	proto.RegisterType((*MsgAddMainnetVestingAccount)(nil), "tendermint.spn.campaign.MsgAddMainnetVestingAccount")
-	proto.RegisterType((*MsgAddMainnetVestingAccountResponse)(nil), "tendermint.spn.campaign.MsgAddMainnetVestingAccountResponse")
+	proto.RegisterType((*MsgAddVestingOptions)(nil), "tendermint.spn.campaign.MsgAddVestingOptions")
+	proto.RegisterType((*MsgAddVestingOptionsResponse)(nil), "tendermint.spn.campaign.MsgAddVestingOptionsResponse")
 }
 
 func init() { proto.RegisterFile("campaign/tx.proto", fileDescriptor_fb6bf904ffc53c1f) }
 
 var fileDescriptor_fb6bf904ffc53c1f = []byte{
-	// 525 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x54, 0xcb, 0x6e, 0xd3, 0x40,
-	0x14, 0x8d, 0x93, 0x10, 0x60, 0x02, 0x95, 0x3a, 0x42, 0xc2, 0x0d, 0x92, 0x13, 0x99, 0x97, 0x55,
-	0xc1, 0x8c, 0x1a, 0xd8, 0x20, 0xd8, 0x34, 0xe9, 0x86, 0x45, 0x40, 0x72, 0x51, 0x17, 0x65, 0x51,
-	0x4d, 0xec, 0x91, 0x3b, 0x22, 0x9e, 0x19, 0xf9, 0x4e, 0xaa, 0xe6, 0x0f, 0x58, 0x21, 0x96, 0x88,
-	0x4f, 0xe0, 0x37, 0xd8, 0x74, 0xd9, 0x25, 0xab, 0x82, 0x92, 0xbf, 0x60, 0x85, 0xe2, 0x47, 0x9b,
-	0xa4, 0x4a, 0x09, 0xac, 0x6c, 0x5f, 0x9f, 0x3b, 0xe7, 0xdc, 0x73, 0xae, 0x06, 0xad, 0x07, 0x2c,
-	0xd6, 0x4c, 0x44, 0x92, 0x9a, 0x63, 0xa2, 0x13, 0x65, 0x14, 0xbe, 0x6b, 0xb8, 0x0c, 0x79, 0x12,
-	0x0b, 0x69, 0x08, 0x68, 0x49, 0x0a, 0x44, 0xe3, 0x4e, 0xa4, 0x22, 0x95, 0x62, 0xe8, 0xf4, 0x2d,
-	0x83, 0x37, 0x9c, 0x40, 0x41, 0xac, 0x80, 0xf6, 0x19, 0x70, 0x7a, 0xb4, 0xd5, 0xe7, 0x86, 0x6d,
-	0xd1, 0x40, 0x09, 0x99, 0xff, 0x7f, 0x74, 0xce, 0x10, 0x33, 0x21, 0x25, 0x37, 0x07, 0x47, 0x1c,
-	0x8c, 0x90, 0xd1, 0x01, 0x0b, 0x02, 0x35, 0x94, 0x26, 0xc3, 0xb9, 0x5f, 0xcb, 0x68, 0xbd, 0x07,
-	0x51, 0x37, 0xe1, 0xcc, 0xf0, 0x6e, 0xde, 0x83, 0x5b, 0xa8, 0x1e, 0x28, 0x95, 0x84, 0x42, 0x32,
-	0xa3, 0x12, 0xdb, 0x6a, 0x59, 0xde, 0x4d, 0x7f, 0xb6, 0x84, 0x5d, 0x74, 0xab, 0x60, 0x78, 0xc3,
-	0x62, 0x6e, 0x97, 0x53, 0xc8, 0x5c, 0x0d, 0x7f, 0xb1, 0x50, 0xfd, 0x9d, 0x32, 0x6c, 0xb0, 0x3b,
-	0xd4, 0x7a, 0x30, 0xb2, 0x2b, 0xad, 0x8a, 0x57, 0x6f, 0x6f, 0x90, 0x4c, 0x3a, 0x99, 0x4a, 0x27,
-	0xb9, 0x74, 0xd2, 0x55, 0x42, 0x76, 0xde, 0x9f, 0x9c, 0x35, 0x4b, 0xbf, 0xcf, 0x9a, 0x8f, 0x23,
-	0x61, 0x0e, 0x87, 0x7d, 0x12, 0xa8, 0x98, 0xe6, 0x73, 0x66, 0x8f, 0xa7, 0x10, 0x7e, 0xa0, 0x66,
-	0xa4, 0x39, 0xa4, 0x0d, 0xdf, 0x7e, 0x36, 0xbd, 0x15, 0xa1, 0xe0, 0xcf, 0x4a, 0xc1, 0x0f, 0xd0,
-	0xed, 0x70, 0x24, 0x59, 0x2c, 0x82, 0xdd, 0x43, 0x96, 0x70, 0xb0, 0xab, 0x2d, 0xcb, 0xbb, 0xe1,
-	0xcf, 0x17, 0xdd, 0x97, 0x68, 0xe3, 0x92, 0x37, 0x3e, 0x07, 0xad, 0x24, 0x70, 0xec, 0x20, 0x54,
-	0x4c, 0xfb, 0x7a, 0x27, 0xb5, 0xa8, 0xea, 0xcf, 0x54, 0xdc, 0xef, 0x65, 0x74, 0xaf, 0x07, 0xd1,
-	0x76, 0x18, 0xf6, 0xb2, 0x04, 0xf6, 0xb2, 0x00, 0xb6, 0x33, 0xff, 0x57, 0xf0, 0x78, 0x9e, 0xa1,
-	0xbc, 0xc8, 0x80, 0x6d, 0x74, 0x9d, 0x85, 0x61, 0xc2, 0x01, 0xec, 0x4a, 0xda, 0x5d, 0x7c, 0xe2,
-	0x01, 0xaa, 0x41, 0x31, 0xd7, 0x5f, 0x3c, 0x7f, 0xf1, 0xef, 0x9e, 0xd7, 0x32, 0x7b, 0xfc, 0x9c,
-	0x03, 0xef, 0xa3, 0xb5, 0x7c, 0xb9, 0xde, 0x6a, 0x23, 0x94, 0x04, 0xfb, 0x5a, 0xcb, 0xf2, 0xea,
-	0xed, 0x27, 0x64, 0xc9, 0x4e, 0x93, 0xf4, 0x80, 0xbd, 0xb9, 0x9e, 0x4e, 0x75, 0x2a, 0xc4, 0x5f,
-	0x38, 0xc9, 0x7d, 0x88, 0xee, 0x5f, 0x61, 0x62, 0x11, 0x46, 0xfb, 0x63, 0x19, 0x55, 0x7a, 0x10,
-	0x61, 0x8d, 0xd6, 0x16, 0x56, 0x79, 0x73, 0xa9, 0x88, 0x4b, 0xd1, 0x36, 0xda, 0xab, 0x63, 0xcf,
-	0xd7, 0xe0, 0x93, 0x85, 0xec, 0xa5, 0x19, 0x3f, 0xbf, 0xea, 0xc0, 0x65, 0x5d, 0x8d, 0x57, 0xff,
-	0xd3, 0x55, 0x08, 0xea, 0xec, 0x9c, 0x8c, 0x1d, 0xeb, 0x74, 0xec, 0x58, 0xbf, 0xc6, 0x8e, 0xf5,
-	0x79, 0xe2, 0x94, 0x4e, 0x27, 0x4e, 0xe9, 0xc7, 0xc4, 0x29, 0xed, 0x6f, 0xce, 0x44, 0x7c, 0xc1,
-	0x40, 0x41, 0x4b, 0x7a, 0x4c, 0x2f, 0x6e, 0xa4, 0x69, 0xd4, 0xfd, 0x5a, 0x7a, 0x3d, 0x3c, 0xfb,
-	0x13, 0x00, 0x00, 0xff, 0xff, 0x3f, 0xfa, 0xc0, 0x1e, 0xaa, 0x04, 0x00, 0x00,
+	// 517 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x94, 0xcf, 0x6e, 0xd3, 0x40,
+	0x10, 0xc6, 0xe3, 0x24, 0x04, 0xd8, 0x40, 0xa5, 0xac, 0x2a, 0xe1, 0x46, 0xc8, 0x89, 0x22, 0x04,
+	0x56, 0x45, 0x77, 0xd5, 0x20, 0x0e, 0x88, 0x13, 0x49, 0x2f, 0x1c, 0x02, 0x92, 0x8b, 0x38, 0x94,
+	0x43, 0xb5, 0xb1, 0x57, 0xee, 0x8a, 0x78, 0x77, 0xe5, 0xd9, 0x44, 0xcd, 0x5b, 0x70, 0x44, 0x3c,
+	0x02, 0xcf, 0xc0, 0x03, 0xf4, 0xd8, 0x23, 0xa7, 0x82, 0x92, 0x37, 0xe0, 0xc8, 0x09, 0xc5, 0x7f,
+	0xda, 0x38, 0xa1, 0x90, 0x9e, 0x6c, 0x8f, 0xbf, 0xf9, 0x66, 0xe6, 0x37, 0x6b, 0xa3, 0x86, 0xcf,
+	0x22, 0xcd, 0x44, 0x28, 0xa9, 0x39, 0x25, 0x3a, 0x56, 0x46, 0xe1, 0x07, 0x86, 0xcb, 0x80, 0xc7,
+	0x91, 0x90, 0x86, 0x80, 0x96, 0x24, 0x57, 0x34, 0xb7, 0x43, 0x15, 0xaa, 0x44, 0x43, 0x17, 0x77,
+	0xa9, 0xbc, 0xe9, 0xf8, 0x0a, 0x22, 0x05, 0x74, 0xc8, 0x80, 0xd3, 0xc9, 0xfe, 0x90, 0x1b, 0xb6,
+	0x4f, 0x7d, 0x25, 0x64, 0xf6, 0xfe, 0xf1, 0x65, 0x85, 0x88, 0x09, 0x29, 0xb9, 0x39, 0x9e, 0x70,
+	0x30, 0x42, 0x86, 0xc7, 0xcc, 0xf7, 0xd5, 0x58, 0x9a, 0x54, 0xd7, 0xf9, 0x52, 0x46, 0x8d, 0x01,
+	0x84, 0xfd, 0x98, 0x33, 0xc3, 0xfb, 0x59, 0x0e, 0x6e, 0xa3, 0xba, 0xaf, 0x54, 0x1c, 0x08, 0xc9,
+	0x8c, 0x8a, 0x6d, 0xab, 0x6d, 0xb9, 0x77, 0xbd, 0xe5, 0x10, 0xee, 0xa0, 0x7b, 0x79, 0x85, 0x37,
+	0x2c, 0xe2, 0x76, 0x39, 0x91, 0x14, 0x62, 0xf8, 0xb3, 0x85, 0xea, 0xef, 0x94, 0x61, 0xa3, 0xc3,
+	0xb1, 0xd6, 0xa3, 0xa9, 0x5d, 0x69, 0x57, 0xdc, 0x7a, 0x77, 0x87, 0xa4, 0xad, 0x93, 0x45, 0xeb,
+	0x24, 0x6b, 0x9d, 0xf4, 0x95, 0x90, 0xbd, 0x0f, 0x67, 0x17, 0xad, 0xd2, 0xef, 0x8b, 0xd6, 0x93,
+	0x50, 0x98, 0x93, 0xf1, 0x90, 0xf8, 0x2a, 0xa2, 0xd9, 0x9c, 0xe9, 0x65, 0x0f, 0x82, 0x8f, 0xd4,
+	0x4c, 0x35, 0x87, 0x24, 0xe1, 0xeb, 0x8f, 0x96, 0xbb, 0xa1, 0x14, 0xbc, 0xe5, 0x56, 0xf0, 0x23,
+	0x74, 0x3f, 0x98, 0x4a, 0x16, 0x09, 0xff, 0xf0, 0x84, 0xc5, 0x1c, 0xec, 0x6a, 0xdb, 0x72, 0xef,
+	0x78, 0xc5, 0x60, 0xe7, 0x25, 0xda, 0x59, 0x63, 0xe3, 0x71, 0xd0, 0x4a, 0x02, 0xc7, 0x0e, 0x42,
+	0xf9, 0xb4, 0xaf, 0x0f, 0x12, 0x44, 0x55, 0x6f, 0x29, 0xd2, 0xf9, 0x56, 0x46, 0xdb, 0x03, 0x08,
+	0x5f, 0x05, 0xc1, 0xfb, 0x94, 0xfc, 0x5b, 0x6d, 0x84, 0x92, 0xb0, 0x01, 0xdc, 0xa2, 0x75, 0x79,
+	0xd5, 0x1a, 0xdb, 0xe8, 0x36, 0x0b, 0x82, 0x98, 0x03, 0xd8, 0x95, 0x24, 0x3b, 0x7f, 0xc4, 0x23,
+	0x54, 0x83, 0x7c, 0xa0, 0xff, 0xc0, 0x7e, 0x71, 0x73, 0xd8, 0xb5, 0x94, 0x8b, 0x97, 0xd5, 0xc0,
+	0x47, 0x68, 0x6b, 0x52, 0x98, 0xcd, 0xbe, 0xd5, 0xb6, 0xdc, 0x7a, 0xf7, 0x29, 0xb9, 0xe6, 0x30,
+	0x93, 0xc4, 0xa0, 0xc8, 0xa3, 0x57, 0x5d, 0x34, 0xe2, 0xad, 0x38, 0x75, 0x1c, 0xf4, 0xf0, 0x6f,
+	0xf4, 0x72, 0xfc, 0xdd, 0x5f, 0x16, 0xaa, 0x0c, 0x20, 0xc4, 0x1a, 0x6d, 0xad, 0x1c, 0xde, 0xdd,
+	0x6b, 0xab, 0xaf, 0x2d, 0xb3, 0xd9, 0xdd, 0x5c, 0x7b, 0xb9, 0xf8, 0x29, 0x6a, 0xac, 0x2f, 0x75,
+	0xef, 0x5f, 0x46, 0x6b, 0xf2, 0xe6, 0xf3, 0x1b, 0xc9, 0xf3, 0xd2, 0xbd, 0x83, 0xb3, 0x99, 0x63,
+	0x9d, 0xcf, 0x1c, 0xeb, 0xe7, 0xcc, 0xb1, 0x3e, 0xcd, 0x9d, 0xd2, 0xf9, 0xdc, 0x29, 0x7d, 0x9f,
+	0x3b, 0xa5, 0xa3, 0xdd, 0xa5, 0x2d, 0x5e, 0x59, 0x53, 0xd0, 0x92, 0x9e, 0xd2, 0xab, 0xbf, 0xcd,
+	0x62, 0x9b, 0xc3, 0x5a, 0xf2, 0xe9, 0x3f, 0xfb, 0x13, 0x00, 0x00, 0xff, 0xff, 0xd0, 0x97, 0x1e,
+	0x2c, 0x86, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -314,7 +314,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
 	CreateCampaign(ctx context.Context, in *MsgCreateCampaign, opts ...grpc.CallOption) (*MsgCreateCampaignResponse, error)
-	AddMainnetVestingAccount(ctx context.Context, in *MsgAddMainnetVestingAccount, opts ...grpc.CallOption) (*MsgAddMainnetVestingAccountResponse, error)
+	AddVestingOptions(ctx context.Context, in *MsgAddVestingOptions, opts ...grpc.CallOption) (*MsgAddVestingOptionsResponse, error)
 }
 
 type msgClient struct {
@@ -334,9 +334,9 @@ func (c *msgClient) CreateCampaign(ctx context.Context, in *MsgCreateCampaign, o
 	return out, nil
 }
 
-func (c *msgClient) AddMainnetVestingAccount(ctx context.Context, in *MsgAddMainnetVestingAccount, opts ...grpc.CallOption) (*MsgAddMainnetVestingAccountResponse, error) {
-	out := new(MsgAddMainnetVestingAccountResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/AddMainnetVestingAccount", in, out, opts...)
+func (c *msgClient) AddVestingOptions(ctx context.Context, in *MsgAddVestingOptions, opts ...grpc.CallOption) (*MsgAddVestingOptionsResponse, error) {
+	out := new(MsgAddVestingOptionsResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/AddVestingOptions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -346,7 +346,7 @@ func (c *msgClient) AddMainnetVestingAccount(ctx context.Context, in *MsgAddMain
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	CreateCampaign(context.Context, *MsgCreateCampaign) (*MsgCreateCampaignResponse, error)
-	AddMainnetVestingAccount(context.Context, *MsgAddMainnetVestingAccount) (*MsgAddMainnetVestingAccountResponse, error)
+	AddVestingOptions(context.Context, *MsgAddVestingOptions) (*MsgAddVestingOptionsResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -356,8 +356,8 @@ type UnimplementedMsgServer struct {
 func (*UnimplementedMsgServer) CreateCampaign(ctx context.Context, req *MsgCreateCampaign) (*MsgCreateCampaignResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCampaign not implemented")
 }
-func (*UnimplementedMsgServer) AddMainnetVestingAccount(ctx context.Context, req *MsgAddMainnetVestingAccount) (*MsgAddMainnetVestingAccountResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddMainnetVestingAccount not implemented")
+func (*UnimplementedMsgServer) AddVestingOptions(ctx context.Context, req *MsgAddVestingOptions) (*MsgAddVestingOptionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddVestingOptions not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -382,20 +382,20 @@ func _Msg_CreateCampaign_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_AddMainnetVestingAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgAddMainnetVestingAccount)
+func _Msg_AddVestingOptions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAddVestingOptions)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).AddMainnetVestingAccount(ctx, in)
+		return srv.(MsgServer).AddVestingOptions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.campaign.Msg/AddMainnetVestingAccount",
+		FullMethod: "/tendermint.spn.campaign.Msg/AddVestingOptions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).AddMainnetVestingAccount(ctx, req.(*MsgAddMainnetVestingAccount))
+		return srv.(MsgServer).AddVestingOptions(ctx, req.(*MsgAddVestingOptions))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -409,8 +409,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_CreateCampaign_Handler,
 		},
 		{
-			MethodName: "AddMainnetVestingAccount",
-			Handler:    _Msg_AddMainnetVestingAccount_Handler,
+			MethodName: "AddVestingOptions",
+			Handler:    _Msg_AddVestingOptions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -506,7 +506,7 @@ func (m *MsgCreateCampaignResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgAddMainnetVestingAccount) Marshal() (dAtA []byte, err error) {
+func (m *MsgAddVestingOptions) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -516,12 +516,12 @@ func (m *MsgAddMainnetVestingAccount) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgAddMainnetVestingAccount) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgAddVestingOptions) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgAddMainnetVestingAccount) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgAddVestingOptions) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -572,7 +572,7 @@ func (m *MsgAddMainnetVestingAccount) MarshalToSizedBuffer(dAtA []byte) (int, er
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgAddMainnetVestingAccountResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgAddVestingOptionsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -582,12 +582,12 @@ func (m *MsgAddMainnetVestingAccountResponse) Marshal() (dAtA []byte, err error)
 	return dAtA[:n], nil
 }
 
-func (m *MsgAddMainnetVestingAccountResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgAddVestingOptionsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgAddMainnetVestingAccountResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgAddVestingOptionsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -644,7 +644,7 @@ func (m *MsgCreateCampaignResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgAddMainnetVestingAccount) Size() (n int) {
+func (m *MsgAddVestingOptions) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -672,7 +672,7 @@ func (m *MsgAddMainnetVestingAccount) Size() (n int) {
 	return n
 }
 
-func (m *MsgAddMainnetVestingAccountResponse) Size() (n int) {
+func (m *MsgAddVestingOptionsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -924,7 +924,7 @@ func (m *MsgCreateCampaignResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgAddMainnetVestingAccount) Unmarshal(dAtA []byte) error {
+func (m *MsgAddVestingOptions) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -947,10 +947,10 @@ func (m *MsgAddMainnetVestingAccount) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddMainnetVestingAccount: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgAddVestingOptions: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddMainnetVestingAccount: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgAddVestingOptions: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1124,7 +1124,7 @@ func (m *MsgAddMainnetVestingAccount) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgAddMainnetVestingAccountResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgAddVestingOptionsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1147,10 +1147,10 @@ func (m *MsgAddMainnetVestingAccountResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddMainnetVestingAccountResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgAddVestingOptionsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddMainnetVestingAccountResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgAddVestingOptionsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

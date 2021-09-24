@@ -22,8 +22,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err := msgServer.CreateCampaign(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 
-		case *types.MsgAddMainnetVestingAccount:
-			res, err := msgServer.AddMainnetVestingAccount(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgAddVestingOptions:
+			res, err := msgServer.AddVestingOptions(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 
 		default:

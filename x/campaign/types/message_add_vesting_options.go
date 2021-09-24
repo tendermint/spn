@@ -5,16 +5,16 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-var _ sdk.Msg = &MsgAddMainnetVestingAccount{}
+var _ sdk.Msg = &MsgAddVestingOptions{}
 
-func NewMsgAddMainnetVestingAccount(
+func NewMsgAddVestingOptions(
 	campaignID uint64,
 	coordinator,
 	address string,
 	shares Shares,
 	options ShareVestingOptions,
-) *MsgAddMainnetVestingAccount {
-	return &MsgAddMainnetVestingAccount{
+) *MsgAddVestingOptions {
+	return &MsgAddVestingOptions{
 		CampaignID:     campaignID,
 		Coordinator:    coordinator,
 		Address:        address,
@@ -23,15 +23,15 @@ func NewMsgAddMainnetVestingAccount(
 	}
 }
 
-func (msg *MsgAddMainnetVestingAccount) Route() string {
+func (msg *MsgAddVestingOptions) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgAddMainnetVestingAccount) Type() string {
-	return "AddMainnetVestingAccount"
+func (msg *MsgAddVestingOptions) Type() string {
+	return "AddVestingOptions"
 }
 
-func (msg *MsgAddMainnetVestingAccount) GetSigners() []sdk.AccAddress {
+func (msg *MsgAddVestingOptions) GetSigners() []sdk.AccAddress {
 	coordinator, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		panic(err)
@@ -39,12 +39,12 @@ func (msg *MsgAddMainnetVestingAccount) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{coordinator}
 }
 
-func (msg *MsgAddMainnetVestingAccount) GetSignBytes() []byte {
+func (msg *MsgAddVestingOptions) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgAddMainnetVestingAccount) ValidateBasic() error {
+func (msg *MsgAddVestingOptions) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
