@@ -12,16 +12,14 @@ import (
 
 func TestMsgAddMainnetVestingAccount(t *testing.T) {
 	var (
-		addr1 = sample.AccAddress()
-		addr2 = sample.AccAddress()
-
-		coordAddr1 = sample.AccAddress()
-		coordAddr2 = sample.AccAddress()
-		coordAddr3 = sample.AccAddress()
-
-		campaign1 = sample.Campaign(0)
-		campaign2 = sample.Campaign(1)
-		campaign3 = sample.Campaign(2)
+		addr1                       = sample.AccAddress()
+		addr2                       = sample.AccAddress()
+		coordAddr1                  = sample.AccAddress()
+		coordAddr2                  = sample.AccAddress()
+		coordAddrMainnetInitialized = sample.AccAddress()
+		campaign1                   = sample.Campaign(0)
+		campaign2                   = sample.Campaign(2)
+		campaignMainnetInitialized  = sample.Campaign(1)
 
 		campaignKeeper, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
 		ctx                                                = sdk.WrapSDKContext(sdkCtx)
@@ -32,44 +30,44 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 	require.NoError(t, err)
 	totalShares, err := types.NewShares("9999token")
 	require.NoError(t, err)
-	share1, err := types.NewShares("9999token")
+	highShare, err := types.NewShares("9999token")
 	require.NoError(t, err)
-	share2, err := types.NewShares("8token")
+	lowShare, err := types.NewShares("8token")
 	require.NoError(t, err)
 
-	// Create a campaign with coordinator
-	res1, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	// Create a campaigns
+	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+		Address:     coordAddrMainnetInitialized,
+		Description: sample.CoordinatorDescription(),
+	})
+	require.NoError(t, err)
+	campaignMainnetInitialized.CoordinatorID = res.CoordinatorId
+	campaignMainnetInitialized.MainnetInitialized = true
+	campaignMainnetInitialized.AllocatedShares = allocatedShares
+	campaignMainnetInitialized.TotalShares = totalShares
+	campaignMainnetInitialized.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
+
+	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaign1.CoordinatorID = res1.CoordinatorId
+	campaign1.CoordinatorID = res.CoordinatorId
 	campaign1.AllocatedShares = allocatedShares
 	campaign1.TotalShares = totalShares
 	campaign1.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign1)
-
-	accShare := sample.MainnetVestingAccountWithShares(campaign1.Id, addr2, share2)
+	accShare := sample.MainnetVestingAccountWithShares(campaign1.Id, addr2, lowShare)
 	campaignKeeper.SetMainnetVestingAccount(sdkCtx, accShare)
-	res2, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+
+	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaign2.CoordinatorID = res2.CoordinatorId
-	campaign2.MainnetInitialized = true
+	campaign2.CoordinatorID = res.CoordinatorId
 	campaign2.AllocatedShares = allocatedShares
 	campaign2.TotalShares = totalShares
 	campaign2.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign2)
-
-	res3, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     coordAddr3,
-		Description: sample.CoordinatorDescription(),
-	})
-	require.NoError(t, err)
-	campaign3.CoordinatorID = res3.CoordinatorId
-	campaign3.AllocatedShares = allocatedShares
-	campaign3.TotalShares = totalShares
-	campaign3.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign3)
 
 	for _, tc := range []struct {
 		name       string
@@ -102,7 +100,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 		{
 			name: "invalid coordinator id",
 			msg: types.MsgAddMainnetVestingAccount{
-				Coordinator:    coordAddr2,
+				Coordinator:    coordAddrMainnetInitialized,
 				CampaignID:     campaign1.Id,
 				Address:        addr1,
 				Shares:         sample.Shares(),
@@ -113,8 +111,8 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 		{
 			name: "campaign already in mainnet",
 			msg: types.MsgAddMainnetVestingAccount{
-				Coordinator:    coordAddr2,
-				CampaignID:     campaign2.Id,
+				Coordinator:    coordAddrMainnetInitialized,
+				CampaignID:     campaignMainnetInitialized.Id,
 				Address:        addr1,
 				Shares:         sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
@@ -124,13 +122,13 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 		{
 			name: "allocated shares greater them total shares",
 			msg: types.MsgAddMainnetVestingAccount{
-				Coordinator:    coordAddr3,
-				CampaignID:     campaign3.Id,
+				Coordinator:    coordAddr2,
+				CampaignID:     campaign2.Id,
 				Address:        addr1,
-				Shares:         share1,
+				Shares:         highShare,
 				VestingOptions: sample.ShareVestingOptions(),
 			},
-			err: types.ErrTotalShareLimit,
+			err: types.ErrTotalSharesLimit,
 		},
 		{
 			name: "create new account with shares",
@@ -138,7 +136,7 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 				Coordinator:    coordAddr1,
 				CampaignID:     campaign1.Id,
 				Address:        addr1,
-				Shares:         share2,
+				Shares:         lowShare,
 				VestingOptions: sample.ShareVestingOptions(),
 			},
 		},
@@ -148,23 +146,23 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 				Coordinator:    coordAddr1,
 				CampaignID:     campaign1.Id,
 				Address:        addr2,
-				Shares:         share2,
+				Shares:         lowShare,
 				VestingOptions: sample.ShareVestingOptions(),
 			},
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			var (
-				accountExists bool
-				tmpAccount    types.MainnetVestingAccount
-				tmpCampaign   types.Campaign
+				accountExists    bool
+				previousAccount  types.MainnetVestingAccount
+				previousCampaign types.Campaign
 			)
 			if tc.err == nil {
 				var found bool
-				tmpCampaign, found = campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				previousCampaign, found = campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 
-				tmpAccount, accountExists = campaignKeeper.GetMainnetVestingAccount(
+				previousAccount, accountExists = campaignKeeper.GetMainnetVestingAccount(
 					sdkCtx,
 					tc.msg.CampaignID,
 					tc.msg.Address,
@@ -185,10 +183,10 @@ func TestMsgAddMainnetVestingAccount(t *testing.T) {
 
 			totalShares, err := account.GetTotalShares()
 			require.NoError(t, err)
-			tmpShare := types.IncreaseShares(tmpCampaign.AllocatedShares, totalShares)
+			tmpShare := types.IncreaseShares(previousCampaign.AllocatedShares, totalShares)
 
 			if accountExists {
-				tmpAccShares, err := tmpAccount.GetTotalShares()
+				tmpAccShares, err := previousAccount.GetTotalShares()
 				require.NoError(t, err)
 				tmpShare, err = types.DecreaseShares(tmpShare, tmpAccShares)
 				require.NoError(t, err)

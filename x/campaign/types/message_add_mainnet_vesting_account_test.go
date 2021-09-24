@@ -16,7 +16,7 @@ func TestMsgAddMainnetVestingAccount_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "valid address",
+			name: "valid message",
 			msg: types.MsgAddMainnetVestingAccount{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     0,
@@ -42,7 +42,7 @@ func TestMsgAddMainnetVestingAccount_ValidateBasic(t *testing.T) {
 				Shares:         invalidShares,
 				VestingOptions: sample.ShareVestingOptions(),
 			},
-			err: types.ErrInvalidAccountShare,
+			err: types.ErrInvalidAccountShares,
 		},
 		{
 			name: "empty total supply",
@@ -52,7 +52,7 @@ func TestMsgAddMainnetVestingAccount_ValidateBasic(t *testing.T) {
 				Shares:         types.Shares{},
 				VestingOptions: sample.ShareVestingOptions(),
 			},
-			err: types.ErrInvalidAccountShare,
+			err: types.ErrInvalidAccountShares,
 		},
 	}
 	for _, tt := range tests {

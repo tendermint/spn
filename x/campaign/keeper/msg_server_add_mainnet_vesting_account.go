@@ -45,7 +45,7 @@ func (k msgServer) AddMainnetVestingAccount(goCtx context.Context, msg *types.Ms
 		}
 		campaign.AllocatedShares, err = types.DecreaseShares(campaign.AllocatedShares, totalShares)
 		if err != nil {
-			return nil, sdkerrors.Wrapf(types.ErrTotalShareLimit, "%v", err.Error())
+			return nil, spnerrors.Critical("campaign allocated shares is lower than all shares")
 		}
 	}
 
@@ -65,7 +65,7 @@ func (k msgServer) AddMainnetVestingAccount(goCtx context.Context, msg *types.Ms
 	// increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, totalShares)
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
-		return nil, sdkerrors.Wrapf(types.ErrTotalShareLimit, "%v", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%v", msg.CampaignID)
 	}
 
 	k.SetCampaign(ctx, campaign)

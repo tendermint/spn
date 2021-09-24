@@ -51,11 +51,11 @@ func (msg *MsgAddMainnetVestingAccount) ValidateBasic() error {
 	}
 
 	if !sdk.Coins(msg.Shares).IsValid() {
-		return sdkerrors.Wrap(ErrInvalidAccountShare, "account share is not a valid Coins object")
+		return sdkerrors.Wrap(ErrInvalidAccountShares, "account share is not a valid Coins object")
 	}
 
 	if sdk.Coins(msg.Shares).Empty() {
-		return sdkerrors.Wrap(ErrInvalidAccountShare, "account share is empty")
+		return sdkerrors.Wrap(ErrInvalidAccountShares, "account share is empty")
 	}
 
 	if err := msg.VestingOptions.Validate(); err != nil {
