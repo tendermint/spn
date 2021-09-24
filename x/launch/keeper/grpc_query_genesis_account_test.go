@@ -100,9 +100,8 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 		for i := 0; i < len(msgs); i += step {
 			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
-			for j := i; j < len(msgs) && j < i+step; j++ {
-				require.Equal(t, msgs[j], resp.GenesisAccount[j-i])
-			}
+			require.LessOrEqual(t, len(resp.GenesisAccount), step)
+			require.Subset(t, msgs, resp.GenesisAccount)
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -111,9 +110,8 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 		for i := 0; i < len(msgs); i += step {
 			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
-			for j := i; j < len(msgs) && j < i+step; j++ {
-				require.Equal(t, msgs[j], resp.GenesisAccount[j-i])
-			}
+			require.LessOrEqual(t, len(resp.GenesisAccount), step)
+			require.Subset(t, msgs, resp.GenesisAccount)
 			next = resp.Pagination.NextKey
 		}
 	})

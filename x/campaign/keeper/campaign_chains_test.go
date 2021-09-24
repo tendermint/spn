@@ -51,5 +51,5 @@ func TestCampaignChainsRemove(t *testing.T) {
 func TestCampaignChainsGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaignChains(keeper, ctx, 10)
-	require.Equal(t, items, keeper.GetAllCampaignChains(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllCampaignChains(ctx))
 }

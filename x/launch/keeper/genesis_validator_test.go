@@ -55,5 +55,5 @@ func TestGenesisValidatorRemove(t *testing.T) {
 func TestGenesisValidatorGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNGenesisValidator(keeper, ctx, 10)
-	require.Equal(t, items, keeper.GetAllGenesisValidator(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllGenesisValidator(ctx))
 }
