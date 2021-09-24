@@ -10,7 +10,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgAddMainnetAccount(t *testing.T) {
+func TestMsgAddShares(t *testing.T) {
 	var (
 		addr1                       = sample.AccAddress()
 		addr2                       = sample.AccAddress()
@@ -70,13 +70,13 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 
 	for _, tc := range []struct {
 		name       string
-		msg        types.MsgAddMainnetAccount
+		msg        types.MsgAddShares
 		expectedID uint64
 		err        error
 	}{
 		{
 			name: "invalid campaign id",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: coordAddr1,
 				CampaignID:  100,
 				Address:     addr1,
@@ -86,7 +86,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 		},
 		{
 			name: "coordinator address not found",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: addr1,
 				CampaignID:  campaign1.Id,
 				Address:     addr1,
@@ -96,7 +96,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 		},
 		{
 			name: "invalid coordinator id",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: coordAddrMainnetInitialized,
 				CampaignID:  campaign1.Id,
 				Address:     addr1,
@@ -106,7 +106,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 		},
 		{
 			name: "campaign already in mainnet",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: coordAddrMainnetInitialized,
 				CampaignID:  campaignMainnetInitialized.Id,
 				Address:     addr1,
@@ -116,7 +116,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 		},
 		{
 			name: "allocated shares greater than total shares",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: coordAddr2,
 				CampaignID:  campaign2.Id,
 				Address:     addr1,
@@ -126,7 +126,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 		},
 		{
 			name: "create new account with shares",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: coordAddr1,
 				CampaignID:  campaign1.Id,
 				Address:     addr1,
@@ -135,7 +135,7 @@ func TestMsgAddMainnetAccount(t *testing.T) {
 		},
 		{
 			name: "update existing account shares",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: coordAddr1,
 				CampaignID:  campaign1.Id,
 				Address:     addr2,

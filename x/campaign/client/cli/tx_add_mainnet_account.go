@@ -36,7 +36,7 @@ func CmdAddMainnetAccount() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgAddMainnetAccount(
+			msg := types.NewMsgAddShares(
 				argCampaignID,
 				clientCtx.GetFromAddress().String(),
 				argAddress,

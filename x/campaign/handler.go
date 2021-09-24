@@ -22,7 +22,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err := msgServer.CreateCampaign(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 
-		case *types.MsgAddMainnetAccount:
+		case *types.MsgAddShares:
 			res, err := msgServer.AddMainnetAccount(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 

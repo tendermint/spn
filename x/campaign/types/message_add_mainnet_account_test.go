@@ -9,15 +9,15 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func TestMsgAddMainnetAccount_ValidateBasic(t *testing.T) {
+func TestMsgAddShares_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgAddMainnetAccount
+		msg  types.MsgAddShares
 		err  error
 	}{
 		{
 			name: "valid address",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: sample.AccAddress(),
 				CampaignID:  0,
 				Shares:      sample.Shares(),
@@ -25,7 +25,7 @@ func TestMsgAddMainnetAccount_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid address",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: "invalid_address",
 				CampaignID:  0,
 				Shares:      sample.Shares(),
@@ -34,7 +34,7 @@ func TestMsgAddMainnetAccount_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid total supply",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: sample.AccAddress(),
 				CampaignID:  0,
 				Shares:      invalidShares,
@@ -43,7 +43,7 @@ func TestMsgAddMainnetAccount_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "empty total supply",
-			msg: types.MsgAddMainnetAccount{
+			msg: types.MsgAddShares{
 				Coordinator: sample.AccAddress(),
 				CampaignID:  0,
 				Shares:      types.Shares{},

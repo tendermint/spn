@@ -10,7 +10,7 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 // Msg defines the Msg service.
 service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
-  rpc AddMainnetAccount(MsgAddMainnetAccount) returns (MsgAddMainnetAccountResponse);
+  rpc AddMainnetAccount(MsgAddShares) returns (MsgAddSharesResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -26,12 +26,12 @@ message MsgCreateCampaignResponse {
   uint64 campaignID = 1;
 }
 
-message MsgAddMainnetAccount {
+message MsgAddShares {
   string coordinator = 1;
   uint64 campaignID = 2;
   string address = 3;
   repeated cosmos.base.v1beta1.Coin shares = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
 }
 
-message MsgAddMainnetAccountResponse {
+message MsgAddSharesResponse {
 }

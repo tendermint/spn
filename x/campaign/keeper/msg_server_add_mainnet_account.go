@@ -10,7 +10,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func (k msgServer) AddMainnetAccount(goCtx context.Context, msg *types.MsgAddMainnetAccount) (*types.MsgAddMainnetAccountResponse, error) {
+func (k msgServer) AddMainnetAccount(goCtx context.Context, msg *types.MsgAddShares) (*types.MsgAddSharesResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
@@ -56,5 +56,5 @@ func (k msgServer) AddMainnetAccount(goCtx context.Context, msg *types.MsgAddMai
 	k.SetCampaign(ctx, campaign)
 	k.SetMainnetAccount(ctx, account)
 
-	return &types.MsgAddMainnetAccountResponse{}, nil
+	return &types.MsgAddSharesResponse{}, nil
 }
