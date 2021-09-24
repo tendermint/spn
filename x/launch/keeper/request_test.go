@@ -71,7 +71,7 @@ func TestRequestRemove(t *testing.T) {
 func TestRequestGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
-	require.Equal(t, items, keeper.GetAllRequest(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllRequest(ctx))
 }
 
 func TestRequestCount(t *testing.T) {

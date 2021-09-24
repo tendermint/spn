@@ -55,6 +55,5 @@ func TestVestingAccountRemove(t *testing.T) {
 func TestVestingAccountGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNVestingAccount(keeper, ctx, 10)
-
-	require.Equal(t, items, keeper.GetAllVestingAccount(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllVestingAccount(ctx))
 }
