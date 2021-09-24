@@ -39,6 +39,7 @@ func networkWithMainnetAccountObjects(t *testing.T, n int) (*network.Network, []
 }
 
 func TestShowMainnetAccount(t *testing.T) {
+	t.Skip()
 	net, objs := networkWithMainnetAccountObjects(t, 2)
 
 	ctx := net.Validators[0].ClientCtx
@@ -95,6 +96,7 @@ func TestShowMainnetAccount(t *testing.T) {
 }
 
 func TestListMainnetAccount(t *testing.T) {
+	t.Skip()
 	net, objs := networkWithMainnetAccountObjects(t, 5)
 
 	ctx := net.Validators[0].ClientCtx
