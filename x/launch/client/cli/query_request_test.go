@@ -41,7 +41,6 @@ func networkWithRequestObjects(t *testing.T, n int) (*network.Network, []types.R
 }
 
 func TestShowRequest(t *testing.T) {
-	t.Skip()
 	net, objs := networkWithRequestObjects(t, 2)
 
 	ctx := net.Validators[0].ClientCtx
@@ -98,7 +97,6 @@ func TestShowRequest(t *testing.T) {
 }
 
 func TestListRequest(t *testing.T) {
-	t.Skip()
 	net, objs := networkWithRequestObjects(t, 5)
 
 	ctx := net.Validators[0].ClientCtx

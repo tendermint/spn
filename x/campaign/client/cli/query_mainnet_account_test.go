@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"fmt"
+	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
@@ -9,7 +10,6 @@ import (
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/client/cli"
 	"github.com/tendermint/spn/x/campaign/types"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
@@ -27,10 +27,13 @@ func networkWithMainnetAccountObjects(t *testing.T, n int) (*network.Network, []
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.MainnetAccountList = append(state.MainnetAccountList, sample.MainnetAccount(
-			uint64(i),
-			sample.AccAddress(),
-		))
+		state.MainnetAccountList = append(
+			state.MainnetAccountList,
+			sample.MainnetAccount(
+				uint64(i),
+				sample.AccAddress(),
+			),
+		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
@@ -39,7 +42,6 @@ func networkWithMainnetAccountObjects(t *testing.T, n int) (*network.Network, []
 }
 
 func TestShowMainnetAccount(t *testing.T) {
-	t.Skip()
 	net, objs := networkWithMainnetAccountObjects(t, 2)
 
 	ctx := net.Validators[0].ClientCtx
@@ -96,7 +98,6 @@ func TestShowMainnetAccount(t *testing.T) {
 }
 
 func TestListMainnetAccount(t *testing.T) {
-	t.Skip()
 	net, objs := networkWithMainnetAccountObjects(t, 5)
 
 	ctx := net.Validators[0].ClientCtx
