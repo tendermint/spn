@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"fmt"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -15,7 +14,7 @@ import (
 func createNCoordinatorByAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.CoordinatorByAddress {
 	items := make([]types.CoordinatorByAddress, n)
 	for i := range items {
-		items[i].Address = fmt.Sprintf("%d", i)
+		items[i].Address = sample.AccAddress()
 		keeper.SetCoordinatorByAddress(ctx, items[i])
 	}
 	return items
@@ -43,7 +42,7 @@ func TestCoordinatorByAddressRemove(t *testing.T) {
 func TestCoordinatorByAddressGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
-	require.Equal(t, items, keeper.GetAllCoordinatorByAddress(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllCoordinatorByAddress(ctx))
 }
 
 func TestCoordinatorIDFromAddress(t *testing.T) {

@@ -116,9 +116,8 @@ func TestListValidator(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.Validator[j-i])
-			}
+			require.LessOrEqual(t, len(resp.Validator), step)
+			require.Subset(t, objs, resp.Validator)
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -130,9 +129,8 @@ func TestListValidator(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.Validator[j-i])
-			}
+			require.LessOrEqual(t, len(resp.Validator), step)
+			require.Subset(t, objs, resp.Validator)
 			next = resp.Pagination.NextKey
 		}
 	})

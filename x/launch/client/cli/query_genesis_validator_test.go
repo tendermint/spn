@@ -124,9 +124,8 @@ func TestListGenesisValidator(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllGenesisValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.GenesisValidator[j-i])
-			}
+			require.LessOrEqual(t, len(resp.GenesisValidator), step)
+			require.Subset(t, objs, resp.GenesisValidator)
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -138,9 +137,8 @@ func TestListGenesisValidator(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllGenesisValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.GenesisValidator[j-i])
-			}
+			require.LessOrEqual(t, len(resp.GenesisValidator), step)
+			require.Subset(t, objs, resp.GenesisValidator)
 			next = resp.Pagination.NextKey
 		}
 	})
