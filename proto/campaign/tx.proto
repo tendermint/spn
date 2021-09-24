@@ -10,7 +10,7 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 // Msg defines the Msg service.
 service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
-  rpc AddMainnetAccount(MsgAddShares) returns (MsgAddSharesResponse);
+  rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 

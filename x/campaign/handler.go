@@ -23,7 +23,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			return sdk.WrapServiceResult(ctx, res, err)
 
 		case *types.MsgAddShares:
-			res, err := msgServer.AddMainnetAccount(sdk.WrapSDKContext(ctx), msg)
+			res, err := msgServer.AddShares(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 
 		default:

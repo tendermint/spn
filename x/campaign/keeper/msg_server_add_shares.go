@@ -10,7 +10,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func (k msgServer) AddMainnetAccount(goCtx context.Context, msg *types.MsgAddShares) (*types.MsgAddSharesResponse, error) {
+func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*types.MsgAddSharesResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)

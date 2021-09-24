@@ -160,7 +160,7 @@ func TestMsgAddShares(t *testing.T) {
 					tc.msg.Address,
 				)
 			}
-			_, err := campaignSrv.AddMainnetAccount(ctx, &tc.msg)
+			_, err := campaignSrv.AddShares(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

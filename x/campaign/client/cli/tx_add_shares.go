@@ -14,10 +14,10 @@ import (
 
 var _ = strconv.Itoa(0)
 
-func CmdAddMainnetAccount() *cobra.Command {
+func CmdAddShares() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-mainnet-account [campaign-id] [address] [shares]",
-		Short: "Add a mainnet account",
+		Use:   "add-shares [campaign-id] [address] [shares]",
+		Short: "Add a shares for an account",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			argCampaignID, err := cast.ToUint64E(args[0])

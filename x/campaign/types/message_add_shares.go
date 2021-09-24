@@ -21,7 +21,7 @@ func (msg *MsgAddShares) Route() string {
 }
 
 func (msg *MsgAddShares) Type() string {
-	return "AddMainnetAccount"
+	return "AddShares"
 }
 
 func (msg *MsgAddShares) GetSigners() []sdk.AccAddress {
