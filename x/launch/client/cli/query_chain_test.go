@@ -109,9 +109,8 @@ func TestListFoo(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllChainResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.Chain[j-i])
-			}
+			require.LessOrEqual(t, len(resp.Chain), step)
+			require.Subset(t, objs, resp.Chain)
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -123,9 +122,8 @@ func TestListFoo(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllChainResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				require.Equal(t, objs[j], resp.Chain[j-i])
-			}
+			require.LessOrEqual(t, len(resp.Chain), step)
+			require.Subset(t, objs, resp.Chain)
 			next = resp.Pagination.NextKey
 		}
 	})
