@@ -12,14 +12,14 @@ import (
 
 func TestMsgAddShares(t *testing.T) {
 	var (
-		addr1                        = sample.AccAddress()
-		addr2                        = sample.AccAddress()
-		coordAddr1                   = sample.AccAddress()
-		coordAddr2                   = sample.AccAddress()
-		coordAddrMainnetInitialized  = sample.AccAddress()
-		campaign                     = sample.Campaign(0)
-		campaignInvalidAllocateShare = sample.Campaign(2)
-		campaignMainnetInitialized   = sample.Campaign(1)
+		addr1                          = sample.AccAddress()
+		addr2                          = sample.AccAddress()
+		coordAddr1                     = sample.AccAddress()
+		coordAddr2                     = sample.AccAddress()
+		coordAddrMainnetInitialized    = sample.AccAddress()
+		campaign                       = sample.Campaign(0)
+		campaignInvalidAllocatedShares = sample.Campaign(2)
+		campaignMainnetInitialized     = sample.Campaign(1)
 
 		campaignKeeper, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
 		ctx                                                = sdk.WrapSDKContext(sdkCtx)
@@ -48,14 +48,24 @@ func TestMsgAddShares(t *testing.T) {
 	campaignMainnetInitialized.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+		Address:     coordAddr1,
+		Description: sample.CoordinatorDescription(),
+	})
+	require.NoError(t, err)
+	campaign.CoordinatorID = res.CoordinatorId
+	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.AllocatedShares = allocatedShares
+	campaign.TotalShares = totalShares
+
+	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaignInvalidAllocateShare.CoordinatorID = res.CoordinatorId
-	campaignInvalidAllocateShare.AllocatedShares = allocatedShares
-	campaignInvalidAllocateShare.TotalShares = totalShares
-	campaignInvalidAllocateShare.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocateShare)
+	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorId
+	campaignInvalidAllocatedShares.AllocatedShares = allocatedShares
+	campaignInvalidAllocatedShares.TotalShares = totalShares
+	campaignInvalidAllocatedShares.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
 
 	for _, tc := range []struct {
 		name       string
@@ -107,7 +117,7 @@ func TestMsgAddShares(t *testing.T) {
 			name: "allocated shares greater than total shares",
 			msg: types.MsgAddShares{
 				Coordinator: coordAddr2,
-				CampaignID:  campaignInvalidAllocateShare.Id,
+				CampaignID:  campaignInvalidAllocatedShares.Id,
 				Address:     addr1,
 				Shares:      highShare,
 			},
