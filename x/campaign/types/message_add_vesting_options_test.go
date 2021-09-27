@@ -44,16 +44,6 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 			},
 			err: types.ErrInvalidAccountShares,
 		},
-		{
-			name: "empty total supply",
-			msg: types.MsgAddVestingOptions{
-				Coordinator:    sample.AccAddress(),
-				CampaignID:     0,
-				StartingShares: types.Shares{},
-				VestingOptions: sample.ShareVestingOptions(),
-			},
-			err: types.ErrInvalidAccountShares,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
