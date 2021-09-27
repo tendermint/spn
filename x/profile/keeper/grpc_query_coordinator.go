@@ -25,7 +25,7 @@ func (k Keeper) CoordinatorAll(c context.Context, req *types.QueryAllCoordinator
 
 	pageRes, err := query.Paginate(coordinatorStore, req.Pagination, func(key []byte, value []byte) error {
 		var coordinator types.Coordinator
-		if err := k.cdc.UnmarshalBinaryBare(value, &coordinator); err != nil {
+		if err := k.cdc.Unmarshal(value, &coordinator); err != nil {
 			return err
 		}
 
@@ -53,7 +53,7 @@ func (k Keeper) Coordinator(c context.Context, req *types.QueryGetCoordinatorReq
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
-	k.cdc.MustUnmarshalBinaryBare(store.Get(GetCoordinatorIDBytes(req.Id)), &coordinator)
+	k.cdc.MustUnmarshal(store.Get(GetCoordinatorIDBytes(req.Id)), &coordinator)
 
 	return &types.QueryGetCoordinatorResponse{Coordinator: coordinator}, nil
 }

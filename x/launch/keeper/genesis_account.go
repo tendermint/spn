@@ -9,7 +9,7 @@ import (
 // SetGenesisAccount set a specific genesisAccount in the store from its index
 func (k Keeper) SetGenesisAccount(ctx sdk.Context, genesisAccount types.GenesisAccount) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisAccountKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&genesisAccount)
+	b := k.cdc.MustMarshal(&genesisAccount)
 	store.Set(types.GenesisAccountKey(
 		genesisAccount.ChainID,
 		genesisAccount.Address,
@@ -29,7 +29,7 @@ func (k Keeper) GetGenesisAccount(
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -52,7 +52,7 @@ func (k Keeper) GetAllGenesisAccount(ctx sdk.Context) (list []types.GenesisAccou
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.GenesisAccount
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

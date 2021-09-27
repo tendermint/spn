@@ -9,7 +9,7 @@ import (
 // SetCampaignChains set a specific campaignChains in the store from its index
 func (k Keeper) SetCampaignChains(ctx sdk.Context, campaignChains types.CampaignChains) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignChainsKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&campaignChains)
+	b := k.cdc.MustMarshal(&campaignChains)
 	store.Set(types.CampaignChainsKey(
 		campaignChains.CampaignID,
 	), b)
@@ -29,7 +29,7 @@ func (k Keeper) GetCampaignChains(
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -54,7 +54,7 @@ func (k Keeper) GetAllCampaignChains(ctx sdk.Context) (list []types.CampaignChai
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.CampaignChains
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

@@ -40,7 +40,7 @@ func (k Keeper) AppendChain(ctx sdk.Context, chain types.Chain) uint64 {
 	chain.Id = count
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
-	appendedValue := k.cdc.MustMarshalBinaryBare(&chain)
+	appendedValue := k.cdc.MustMarshal(&chain)
 	store.Set(types.ChainKey(chain.Id), appendedValue)
 
 	// Update chain count
@@ -52,7 +52,7 @@ func (k Keeper) AppendChain(ctx sdk.Context, chain types.Chain) uint64 {
 // SetChain set a specific chain in the store from its index
 func (k Keeper) SetChain(ctx sdk.Context, chain types.Chain) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&chain)
+	b := k.cdc.MustMarshal(&chain)
 	store.Set(types.ChainKey(chain.Id), b)
 }
 
@@ -65,7 +65,7 @@ func (k Keeper) GetChain(ctx sdk.Context, id uint64) (val types.Chain, found boo
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -84,7 +84,7 @@ func (k Keeper) GetAllChain(ctx sdk.Context) (list []types.Chain) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.Chain
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 
