@@ -26,6 +26,8 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	// this line is used by starport scaffolding # 1
+	cmd.AddCommand(CmdUpdateTotalShares())
+	cmd.AddCommand(CmdUpdateTotalSupply())
 	cmd.AddCommand(CmdCreateCampaign())
 	cmd.AddCommand(CmdAddShares())
 

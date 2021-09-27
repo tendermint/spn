@@ -9,7 +9,7 @@ import (
 // SetVestingAccount set a specific vestingAccount in the store from its index
 func (k Keeper) SetVestingAccount(ctx sdk.Context, vestingAccount types.VestingAccount) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VestingAccountKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&vestingAccount)
+	b := k.cdc.MustMarshal(&vestingAccount)
 	store.Set(types.VestingAccountKey(
 		vestingAccount.ChainID,
 		vestingAccount.Address,
@@ -29,7 +29,7 @@ func (k Keeper) GetVestingAccount(
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -53,7 +53,7 @@ func (k Keeper) GetAllVestingAccount(ctx sdk.Context) (list []types.VestingAccou
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.VestingAccount
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

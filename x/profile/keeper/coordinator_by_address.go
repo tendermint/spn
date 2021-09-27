@@ -9,7 +9,7 @@ import (
 // SetCoordinatorByAddress set a specific coordinatorByAddress in the store from its index
 func (k Keeper) SetCoordinatorByAddress(ctx sdk.Context, coordinatorByAddress types.CoordinatorByAddress) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorByAddressKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&coordinatorByAddress)
+	b := k.cdc.MustMarshal(&coordinatorByAddress)
 	store.Set(types.CoordinatorByAddressKey(
 		coordinatorByAddress.Address,
 	), b)
@@ -29,7 +29,7 @@ func (k Keeper) GetCoordinatorByAddress(
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -53,7 +53,7 @@ func (k Keeper) GetAllCoordinatorByAddress(ctx sdk.Context) (list []types.Coordi
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.CoordinatorByAddress
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

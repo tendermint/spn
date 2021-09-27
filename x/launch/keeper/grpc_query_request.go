@@ -25,7 +25,7 @@ func (k Keeper) RequestAll(c context.Context, req *types.QueryAllRequestRequest)
 
 	pageRes, err := query.Paginate(requestStore, req.Pagination, func(key []byte, value []byte) error {
 		var request types.Request
-		if err := k.cdc.UnmarshalBinaryBare(value, &request); err != nil {
+		if err := k.cdc.Unmarshal(value, &request); err != nil {
 			return err
 		}
 

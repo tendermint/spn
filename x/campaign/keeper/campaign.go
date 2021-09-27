@@ -44,7 +44,7 @@ func (k Keeper) AppendCampaign(
 	campaign.Id = count
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
-	appendedValue := k.cdc.MustMarshalBinaryBare(&campaign)
+	appendedValue := k.cdc.MustMarshal(&campaign)
 	store.Set(GetCampaignIDBytes(campaign.Id), appendedValue)
 
 	// Update campaign count
@@ -56,7 +56,7 @@ func (k Keeper) AppendCampaign(
 // SetCampaign set a specific campaign in the store
 func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
-	b := k.cdc.MustMarshalBinaryBare(&campaign)
+	b := k.cdc.MustMarshal(&campaign)
 	store.Set(GetCampaignIDBytes(campaign.Id), b)
 }
 
@@ -67,7 +67,7 @@ func (k Keeper) GetCampaign(ctx sdk.Context, id uint64) (val types.Campaign, fou
 	if b == nil {
 		return val, false
 	}
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -86,7 +86,7 @@ func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.Campaign
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

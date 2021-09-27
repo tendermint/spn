@@ -9,7 +9,7 @@ import (
 // SetValidator set a specific validator in the store from its index
 func (k Keeper) SetValidator(ctx sdk.Context, validator types.Validator) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&validator)
+	b := k.cdc.MustMarshal(&validator)
 	store.Set(types.ValidatorKey(
 		validator.Address,
 	), b)
@@ -26,7 +26,7 @@ func (k Keeper) GetValidator(ctx sdk.Context, address string) (val types.Validat
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -47,7 +47,7 @@ func (k Keeper) GetAllValidator(ctx sdk.Context) (list []types.Validator) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.Validator
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

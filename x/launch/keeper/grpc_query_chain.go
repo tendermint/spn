@@ -24,7 +24,7 @@ func (k Keeper) ChainAll(c context.Context, req *types.QueryAllChainRequest) (*t
 
 	pageRes, err := query.Paginate(chainStore, req.Pagination, func(key []byte, value []byte) error {
 		var chain types.Chain
-		if err := k.cdc.UnmarshalBinaryBare(value, &chain); err != nil {
+		if err := k.cdc.Unmarshal(value, &chain); err != nil {
 			return err
 		}
 
