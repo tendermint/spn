@@ -11,9 +11,19 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
+  rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
 }
 
 // this line is used by starport scaffolding # proto/tx/message
+message MsgUpdateTotalSupply {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  repeated cosmos.base.v1beta1.Coin TotalSupply = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}
+
+message MsgUpdateTotalSupplyResponse {
+}
+
 message MsgCreateCampaign {
   string coordinator = 1;
   string campaignName = 2;
