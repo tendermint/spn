@@ -49,7 +49,7 @@ func (k Keeper) CreateNewChain(
 	// If the chain is associated to a campaign, campaign existence and coordinator is checked
 	if hasCampaign {
 		campaign, found := k.campaignKeeper.GetCampaign(ctx, campaignID)
-		if !found{
+		if !found {
 			return 0, fmt.Errorf("campaign %v doesn't exist", campaignID)
 		}
 		if campaign.CoordinatorID != coordinatorID {
@@ -57,7 +57,7 @@ func (k Keeper) CreateNewChain(
 				"chain coordinator %v and campaign coordinator %v don't match",
 				coordinatorID,
 				campaign.CoordinatorID,
-				)
+			)
 		}
 	}
 

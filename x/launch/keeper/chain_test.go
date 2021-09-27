@@ -35,104 +35,104 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 	campaignID := resCampaign.CampaignID
 
 	for _, tc := range []struct {
-		name string
-		coordinatorID uint64
+		name           string
+		coordinatorID  uint64
 		genesisChainID string
-		sourceURL string
-		sourceHash string
-		genesisURL string
-		genesisHash string
-		hasCampaign bool
-		campaignID uint64
-		isMainnet bool
-		wantedID uint64
-		valid bool
-	} {
+		sourceURL      string
+		sourceHash     string
+		genesisURL     string
+		genesisHash    string
+		hasCampaign    bool
+		campaignID     uint64
+		isMainnet      bool
+		wantedID       uint64
+		valid          bool
+	}{
 		{
-			name: "creating a new chain",
-			coordinatorID: coordID,
+			name:           "creating a new chain",
+			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(),
-			sourceURL: sample.String(30),
-			sourceHash: sample.String(20),
-			genesisURL: "",
-			hasCampaign: false,
-			wantedID: 0,
-			valid: true,
+			sourceURL:      sample.String(30),
+			sourceHash:     sample.String(20),
+			genesisURL:     "",
+			hasCampaign:    false,
+			wantedID:       0,
+			valid:          true,
 		},
 		{
-			name: "creating a chain associated to a campaign",
-			coordinatorID: coordID,
+			name:           "creating a chain associated to a campaign",
+			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(),
-			sourceURL: sample.String(30),
-			sourceHash: sample.String(20),
-			genesisURL: "",
-			hasCampaign: true,
-			campaignID: campaignID,
-			isMainnet: false,
-			wantedID: 1,
-			valid: true,
+			sourceURL:      sample.String(30),
+			sourceHash:     sample.String(20),
+			genesisURL:     "",
+			hasCampaign:    true,
+			campaignID:     campaignID,
+			isMainnet:      false,
+			wantedID:       1,
+			valid:          true,
 		},
 		{
-			name: "creating a mainnet chain",
-			coordinatorID: coordID,
+			name:           "creating a mainnet chain",
+			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(),
-			sourceURL: sample.String(30),
-			sourceHash: sample.String(20),
-			genesisURL: "",
-			hasCampaign: true,
-			campaignID: 0,
-			isMainnet: true,
-			wantedID: 2,
-			valid: true,
+			sourceURL:      sample.String(30),
+			sourceHash:     sample.String(20),
+			genesisURL:     "",
+			hasCampaign:    true,
+			campaignID:     0,
+			isMainnet:      true,
+			wantedID:       2,
+			valid:          true,
 		},
 		{
-			name: "creating a chain with a custom genesis",
-			coordinatorID: coordID,
+			name:           "creating a chain with a custom genesis",
+			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(),
-			sourceURL: sample.String(30),
-			sourceHash: sample.String(20),
-			genesisURL: sample.String(30),
-			genesisHash: sample.GenesisHash(),
-			hasCampaign: false,
-			wantedID: 3,
-			valid: true,
+			sourceURL:      sample.String(30),
+			sourceHash:     sample.String(20),
+			genesisURL:     sample.String(30),
+			genesisHash:    sample.GenesisHash(),
+			hasCampaign:    false,
+			wantedID:       3,
+			valid:          true,
 		},
 		{
-			name: "non-existent campaign ID",
-			coordinatorID: coordID,
+			name:           "non-existent campaign ID",
+			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(),
-			sourceURL: sample.String(30),
-			sourceHash: sample.String(20),
-			genesisURL: "",
-			hasCampaign: true,
-			campaignID: 1000,
-			isMainnet: false,
-			valid: false,
+			sourceURL:      sample.String(30),
+			sourceHash:     sample.String(20),
+			genesisURL:     "",
+			hasCampaign:    true,
+			campaignID:     1000,
+			isMainnet:      false,
+			valid:          false,
 		},
 		{
-			name: "invalid campaign coordinator",
-			coordinatorID: coordNoCampaignID,
+			name:           "invalid campaign coordinator",
+			coordinatorID:  coordNoCampaignID,
 			genesisChainID: sample.GenesisChainID(),
-			sourceURL: sample.String(30),
-			sourceHash: sample.String(20),
-			genesisURL: "",
-			hasCampaign: true,
-			campaignID: campaignID,
-			isMainnet: false,
-			wantedID: 1,
-			valid: false,
+			sourceURL:      sample.String(30),
+			sourceHash:     sample.String(20),
+			genesisURL:     "",
+			hasCampaign:    true,
+			campaignID:     campaignID,
+			isMainnet:      false,
+			wantedID:       1,
+			valid:          false,
 		},
 		{
-			name: "invalid chain data (mainnet with campaign)",
-			coordinatorID: coordID,
+			name:           "invalid chain data (mainnet with campaign)",
+			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(),
-			sourceURL: sample.String(30),
-			sourceHash: sample.String(20),
-			genesisURL: "",
-			hasCampaign: false,
-			campaignID: 0,
-			isMainnet: true,
-			valid: false,
+			sourceURL:      sample.String(30),
+			sourceHash:     sample.String(20),
+			genesisURL:     "",
+			hasCampaign:    false,
+			campaignID:     0,
+			isMainnet:      true,
+			valid:          false,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

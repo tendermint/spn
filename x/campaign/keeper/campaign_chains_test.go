@@ -31,7 +31,7 @@ func TestKeeper_AddChainToCampaign(t *testing.T) {
 	require.True(t, found)
 	require.EqualValues(t, campainChains.CampaignID, uint64(0))
 	require.Len(t, campainChains.Chains, 3)
-	require.EqualValues(t, []uint64{0,1,2}, campainChains.Chains)
+	require.EqualValues(t, []uint64{0, 1, 2}, campainChains.Chains)
 
 	// Can't add an existing chain
 	err = k.AddChainToCampaign(ctx, 0, 0)

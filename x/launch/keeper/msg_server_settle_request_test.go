@@ -11,16 +11,16 @@ import (
 
 func TestMsgSettleRequest(t *testing.T) {
 	var (
-		addr1                 = sample.AccAddress()
-		addr2                 = sample.AccAddress()
-		addr3                 = sample.AccAddress()
-		addr4                 = sample.AccAddress()
-		addr5                 = sample.AccAddress()
-		coordinator1          = sample.Coordinator()
-		coordinator2          = sample.Coordinator()
-		invalidChain          = uint64(1000)
+		addr1                    = sample.AccAddress()
+		addr2                    = sample.AccAddress()
+		addr3                    = sample.AccAddress()
+		addr4                    = sample.AccAddress()
+		addr5                    = sample.AccAddress()
+		coordinator1             = sample.Coordinator()
+		coordinator2             = sample.Coordinator()
+		invalidChain             = uint64(1000)
 		k, pk, srv, _, _, sdkCtx = setupMsgServer(t)
-		ctx                   = sdk.WrapSDKContext(sdkCtx)
+		ctx                      = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	coordinator1.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator1)

@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/campaign/types"
@@ -18,7 +19,7 @@ func (k Keeper) AddChainToCampaign(ctx sdk.Context, campaignID, chainID uint64) 
 	if !found {
 		campaignChains = types.CampaignChains{
 			CampaignID: campaignID,
-			Chains: []uint64{chainID},
+			Chains:     []uint64{chainID},
 		}
 	} else {
 		// Ensure no duplicated chain ID
