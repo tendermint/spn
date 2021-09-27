@@ -22,27 +22,33 @@ func EmptyVoucher() Voucher {
 }
 
 // NewVoucher returns new Voucher from coin (100atom,200iris...)
-func NewVoucher(str string) (Voucher, error) {
+func NewVoucher(campaignID uint64, str string) (Voucher, error) {
 	coin, err := sdk.ParseCoinNormalized(str)
 	if err != nil {
 		return Voucher{}, err
 	}
-	return NewVoucherFromCoin(coin), nil
+	return NewVoucherFromCoin(campaignID, coin), nil
+}
+
+// VoucherName returns the Voucher name with prefix
+func VoucherName(campaignID uint64, coin string) string {
+	return fmt.Sprintf("%s%d/%s", VoucherPrefix, campaignID, coin)
 }
 
 // NewVoucherFromCoin returns new Voucher from the coin representation
-func NewVoucherFromCoin(coin sdk.Coin) Voucher {
-	coin.Denom = VoucherPrefix + coin.Denom
+func NewVoucherFromCoin(campaignID uint64, coin sdk.Coin) Voucher {
+	coin.Denom = VoucherName(campaignID, coin.Denom)
 	return Voucher(coin)
 }
 
 // CheckVoucher checks if given Voucher are valid Voucher
-func CheckVoucher(voucher Voucher) error {
-	if !strings.HasPrefix(voucher.Denom, VoucherPrefix) {
+func CheckVoucher(campaignID uint64, voucher Voucher) error {
+	prefix := VoucherName(campaignID, "")
+	if !strings.HasPrefix(voucher.Denom, prefix) {
 		return fmt.Errorf(
 			"%s doesn't contain the voucher prefix %s",
 			voucher.Denom,
-			VoucherPrefix,
+			prefix,
 		)
 	}
 	return nil

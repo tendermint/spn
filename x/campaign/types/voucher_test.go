@@ -9,36 +9,50 @@ import (
 )
 
 var (
-	prefixedVoucherFoo = campaign.VoucherPrefix + "foo"
-	prefixedVoucherBar = campaign.VoucherPrefix + "bar"
+	prefixedVoucherFoo = campaign.VoucherPrefix + "10/foo"
+	prefixedVoucherBar = campaign.VoucherPrefix + "10/bar"
 )
+
+func TestVoucherName(t *testing.T) {
+	require.Equal(t,
+		campaign.VoucherPrefix+"10/",
+		campaign.VoucherName(10, ""),
+	)
+	require.Equal(t,
+		campaign.VoucherPrefix+"10/token",
+		campaign.VoucherName(10, "token"),
+	)
+}
 
 func TestEmptyVoucher(t *testing.T) {
 	voucher := campaign.EmptyVoucher()
-	require.Equal(t, voucher, campaign.Voucher{})
+	require.Equal(t, campaign.Voucher{}, voucher)
 }
 
 func TestNewVoucher(t *testing.T) {
-	_, err := campaign.NewVoucher("invalid")
+	_, err := campaign.NewVoucher(10, "invalid")
 	require.Error(t, err)
 
-	voucher, err := campaign.NewVoucher("100foo")
+	voucher, err := campaign.NewVoucher(10, "100foo")
 	require.NoError(t, err)
 	require.Equal(t, voucher, campaign.Voucher(sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100))))
 }
 
 func TestNewVoucherFromCoin(t *testing.T) {
-	voucher := campaign.NewVoucherFromCoin(sdk.NewCoin("bar", sdk.NewInt(200)))
+	voucher := campaign.NewVoucherFromCoin(10, sdk.NewCoin("bar", sdk.NewInt(200)))
 	require.Equal(t, voucher, campaign.Voucher(
 		sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(200)),
 	))
 }
 
 func TestCheckVoucher(t *testing.T) {
-	require.NoError(t, campaign.CheckVoucher(campaign.Voucher(
+	require.NoError(t, campaign.CheckVoucher(10, campaign.Voucher(
 		sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(200)),
 	)))
-	require.Error(t, campaign.CheckVoucher(campaign.Voucher(
+	require.Error(t, campaign.CheckVoucher(20, campaign.Voucher(
+		sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(200)),
+	)))
+	require.Error(t, campaign.CheckVoucher(10, campaign.Voucher(
 		sdk.NewCoin("foo", sdk.NewInt(100)),
 	)))
 }
@@ -54,14 +68,14 @@ func TestAddVoucher(t *testing.T) {
 		{
 			desc:    "increase empty set",
 			voucher: campaign.EmptyVoucher(),
-			newVoucher: campaign.NewVoucherFromCoin(
+			newVoucher: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
 			),
 			isError: true,
 		},
 		{
 			desc: "no new voucher",
-			voucher: campaign.NewVoucherFromCoin(
+			voucher: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(100)),
 			),
 			newVoucher: campaign.EmptyVoucher(),
@@ -69,24 +83,24 @@ func TestAddVoucher(t *testing.T) {
 		},
 		{
 			desc: "invalid coin denom",
-			voucher: campaign.NewVoucherFromCoin(
+			voucher: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
 			),
 			newVoucher: campaign.EmptyVoucher(),
-			expected: campaign.NewVoucherFromCoin(
+			expected: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(100)),
 			),
 			isError: true,
 		},
 		{
 			desc: "increase voucher",
-			voucher: campaign.NewVoucherFromCoin(
+			voucher: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
 			),
-			newVoucher: campaign.NewVoucherFromCoin(
+			newVoucher: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(50)),
 			),
-			expected: campaign.NewVoucherFromCoin(
+			expected: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(150)),
 			),
 		},
@@ -114,14 +128,14 @@ func TestDecreaseVoucher(t *testing.T) {
 		{
 			desc:    "decrease empty set",
 			voucher: campaign.EmptyVoucher(),
-			toDecrease: campaign.NewVoucherFromCoin(
+			toDecrease: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
 			),
 			isError: true,
 		},
 		{
 			desc: "decrease from empty set",
-			voucher: campaign.NewVoucherFromCoin(
+			voucher: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(100)),
 			),
 			toDecrease: campaign.EmptyVoucher(),
@@ -129,23 +143,23 @@ func TestDecreaseVoucher(t *testing.T) {
 		},
 		{
 			desc: "decrease to negative",
-			voucher: campaign.NewVoucherFromCoin(
+			voucher: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
 			),
-			toDecrease: campaign.NewVoucherFromCoin(
+			toDecrease: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(100)),
 			),
 			isError: true,
 		},
 		{
 			desc: "decrease normal set",
-			voucher: campaign.NewVoucherFromCoin(
+			voucher: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
 			),
-			toDecrease: campaign.NewVoucherFromCoin(
+			toDecrease: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(30)),
 			),
-			expected: campaign.NewVoucherFromCoin(
+			expected: campaign.NewVoucherFromCoin(10,
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(70)),
 			),
 		},
@@ -175,10 +189,10 @@ func TestIsEqualVoucher(t *testing.T) {
 		{
 			name: "equal voucher",
 			args: args{
-				voucher1: campaign.NewVoucherFromCoin(
+				voucher1: campaign.NewVoucherFromCoin(10,
 					sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(1000)),
 				),
-				voucher2: campaign.NewVoucherFromCoin(
+				voucher2: campaign.NewVoucherFromCoin(10,
 					sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(1000)),
 				),
 			},
@@ -187,10 +201,10 @@ func TestIsEqualVoucher(t *testing.T) {
 		{
 			name: "not equal values",
 			args: args{
-				voucher1: campaign.NewVoucherFromCoin(
+				voucher1: campaign.NewVoucherFromCoin(10,
 					sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(10)),
 				),
-				voucher2: campaign.NewVoucherFromCoin(
+				voucher2: campaign.NewVoucherFromCoin(10,
 					sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(101)),
 				),
 			},
@@ -199,10 +213,10 @@ func TestIsEqualVoucher(t *testing.T) {
 		{
 			name: "not equal denom",
 			args: args{
-				voucher1: campaign.NewVoucherFromCoin(
+				voucher1: campaign.NewVoucherFromCoin(10,
 					sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
 				),
-				voucher2: campaign.NewVoucherFromCoin(
+				voucher2: campaign.NewVoucherFromCoin(10,
 					sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(101)),
 				),
 			},

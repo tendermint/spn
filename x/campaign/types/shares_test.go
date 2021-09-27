@@ -16,7 +16,7 @@ var (
 
 func TestEmptyShares(t *testing.T) {
 	shares := campaign.EmptyShares()
-	require.Equal(t, shares, campaign.Shares(nil))
+	require.Equal(t, campaign.Shares(nil), shares)
 }
 
 func TestNewShares(t *testing.T) {
