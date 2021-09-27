@@ -8,6 +8,14 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+//// CreateChain creates a new chain in the store from the provided information
+//func (k Keeper) CreateChain(
+//	ctx sdk.Context,
+//	campaign types.Campaign,
+//) uint64 {
+//
+//}
+
 // GetChainCount get the total number of chains
 func (k Keeper) GetChainCount(ctx sdk.Context) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})

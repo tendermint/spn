@@ -76,6 +76,9 @@ func TestMsgCreateChain(t *testing.T) {
 					chain.InitialGenesis,
 				)
 			}
+
+			// Chain created from MsgCreateChain is never a mainnet
+			require.False(t, chain.IsMainnet)
 		})
 	}
 }
