@@ -12,14 +12,14 @@ import (
 
 func TestMsgAddVestingOptions(t *testing.T) {
 	var (
-		addr1                       = sample.AccAddress()
-		addr2                       = sample.AccAddress()
-		coordAddr1                  = sample.AccAddress()
-		coordAddr2                  = sample.AccAddress()
-		coordAddrMainnetInitialized = sample.AccAddress()
-		campaign1                   = sample.Campaign(0)
-		campaign2                   = sample.Campaign(2)
-		campaignMainnetInitialized  = sample.Campaign(1)
+		addr1                          = sample.AccAddress()
+		addr2                          = sample.AccAddress()
+		coordAddr1                     = sample.AccAddress()
+		coordAddr2                     = sample.AccAddress()
+		coordAddrMainnetInitialized    = sample.AccAddress()
+		campaign                       = sample.Campaign(0)
+		campaignInvalidAllocatedShares = sample.Campaign(2)
+		campaignMainnetInitialized     = sample.Campaign(1)
 
 		campaignKeeper, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
 		ctx                                                = sdk.WrapSDKContext(sdkCtx)
@@ -52,11 +52,11 @@ func TestMsgAddVestingOptions(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaign1.CoordinatorID = res.CoordinatorId
-	campaign1.AllocatedShares = allocatedShares
-	campaign1.TotalShares = totalShares
-	campaign1.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign1)
-	accShare := sample.MainnetVestingAccountWithShares(campaign1.Id, addr2, lowShare)
+	campaign.CoordinatorID = res.CoordinatorId
+	campaign.AllocatedShares = allocatedShares
+	campaign.TotalShares = totalShares
+	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	accShare := sample.MainnetVestingAccountWithShares(campaign.Id, addr2, lowShare)
 	campaignKeeper.SetMainnetVestingAccount(sdkCtx, accShare)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
@@ -64,10 +64,10 @@ func TestMsgAddVestingOptions(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaign2.CoordinatorID = res.CoordinatorId
-	campaign2.AllocatedShares = allocatedShares
-	campaign2.TotalShares = totalShares
-	campaign2.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign2)
+	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorId
+	campaignInvalidAllocatedShares.AllocatedShares = allocatedShares
+	campaignInvalidAllocatedShares.TotalShares = totalShares
+	campaignInvalidAllocatedShares.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
 
 	for _, tc := range []struct {
 		name       string
@@ -90,7 +90,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "invalid coordinator address",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    addr1,
-				CampaignID:     campaign1.Id,
+				CampaignID:     campaign.Id,
 				Address:        addr1,
 				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
@@ -101,7 +101,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "invalid coordinator id",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddrMainnetInitialized,
-				CampaignID:     campaign1.Id,
+				CampaignID:     campaign.Id,
 				Address:        addr1,
 				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
@@ -123,7 +123,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "allocated shares greater them total shares",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr2,
-				CampaignID:     campaign2.Id,
+				CampaignID:     campaignInvalidAllocatedShares.Id,
 				Address:        addr1,
 				StartingShares: highShare,
 				VestingOptions: sample.ShareVestingOptions(),
@@ -134,7 +134,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "create new account with shares",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr1,
-				CampaignID:     campaign1.Id,
+				CampaignID:     campaign.Id,
 				Address:        addr1,
 				StartingShares: lowShare,
 				VestingOptions: sample.ShareVestingOptions(),
@@ -144,7 +144,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "update existing account shares",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr1,
-				CampaignID:     campaign1.Id,
+				CampaignID:     campaign.Id,
 				Address:        addr2,
 				StartingShares: lowShare,
 				VestingOptions: sample.ShareVestingOptions(),
