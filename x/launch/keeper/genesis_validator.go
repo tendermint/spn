@@ -9,7 +9,7 @@ import (
 // SetGenesisValidator set a specific genesisValidator in the store from its index
 func (k Keeper) SetGenesisValidator(ctx sdk.Context, genesisValidator types.GenesisValidator) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisValidatorKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&genesisValidator)
+	b := k.cdc.MustMarshal(&genesisValidator)
 	store.Set(types.GenesisValidatorKey(
 		genesisValidator.ChainID,
 		genesisValidator.Address,
@@ -30,7 +30,7 @@ func (k Keeper) GetGenesisValidator(
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -54,7 +54,7 @@ func (k Keeper) GetAllGenesisValidator(ctx sdk.Context) (list []types.GenesisVal
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.GenesisValidator
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

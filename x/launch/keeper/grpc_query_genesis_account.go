@@ -24,7 +24,7 @@ func (k Keeper) GenesisAccountAll(c context.Context, req *types.QueryAllGenesisA
 
 	pageRes, err := query.Paginate(genesisAccountStore, req.Pagination, func(key []byte, value []byte) error {
 		var genesisAccount types.GenesisAccount
-		if err := k.cdc.UnmarshalBinaryBare(value, &genesisAccount); err != nil {
+		if err := k.cdc.Unmarshal(value, &genesisAccount); err != nil {
 			return err
 		}
 

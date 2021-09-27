@@ -101,9 +101,8 @@ func TestGenesisValidatorQueryPaginated(t *testing.T) {
 		for i := 0; i < len(msgs); i += step {
 			resp, err := keeper.GenesisValidatorAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
-			for j := i; j < len(msgs) && j < i+step; j++ {
-				require.Equal(t, msgs[j], resp.GenesisValidator[j-i])
-			}
+			require.LessOrEqual(t, len(resp.GenesisValidator), step)
+			require.Subset(t, msgs, resp.GenesisValidator)
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -112,9 +111,8 @@ func TestGenesisValidatorQueryPaginated(t *testing.T) {
 		for i := 0; i < len(msgs); i += step {
 			resp, err := keeper.GenesisValidatorAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
-			for j := i; j < len(msgs) && j < i+step; j++ {
-				require.Equal(t, msgs[j], resp.GenesisValidator[j-i])
-			}
+			require.LessOrEqual(t, len(resp.GenesisValidator), step)
+			require.Subset(t, msgs, resp.GenesisValidator)
 			next = resp.Pagination.NextKey
 		}
 	})
