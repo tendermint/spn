@@ -10,7 +10,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgRequestAddAccount(t *testing.T) {
+func TestMsgCreateCampaign(t *testing.T) {
 	var (
 		coordAddr1                                         = sample.AccAddress()
 		coordAddr2                                         = sample.AccAddress()

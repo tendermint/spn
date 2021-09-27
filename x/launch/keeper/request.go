@@ -36,7 +36,7 @@ func (k Keeper) SetRequestCount(ctx sdk.Context, chainID, count uint64) {
 // SetRequest set a specific request in the store from its index
 func (k Keeper) SetRequest(ctx sdk.Context, request types.Request) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestKeyPrefix))
-	b := k.cdc.MustMarshalBinaryBare(&request)
+	b := k.cdc.MustMarshal(&request)
 	store.Set(types.RequestKey(
 		request.ChainID,
 		request.RequestID,
@@ -50,7 +50,7 @@ func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 	count := k.GetRequestCount(ctx, request.ChainID)
 	request.RequestID = count
 
-	b := k.cdc.MustMarshalBinaryBare(&request)
+	b := k.cdc.MustMarshal(&request)
 	store.Set(types.RequestKey(
 		request.ChainID,
 		request.RequestID,
@@ -78,7 +78,7 @@ func (k Keeper) GetRequest(
 		return val, false
 	}
 
-	k.cdc.MustUnmarshalBinaryBare(b, &val)
+	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
 
@@ -104,7 +104,7 @@ func (k Keeper) GetAllRequest(ctx sdk.Context) (list []types.Request) {
 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.Request
-		k.cdc.MustUnmarshalBinaryBare(iterator.Value(), &val)
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 

@@ -11,32 +11,8 @@ import (
 	profile "github.com/tendermint/spn/x/profile/types"
 )
 
-const accountAddressPrefix = "spn"
-
-var configSet = false
-
-func setAddressPrefixes() {
-	if !configSet {
-		// Set prefixes
-		accountPubKeyPrefix := accountAddressPrefix + "pub"
-		validatorAddressPrefix := accountAddressPrefix + "valoper"
-		validatorPubKeyPrefix := accountAddressPrefix + "valoperpub"
-		consNodeAddressPrefix := accountAddressPrefix + "valcons"
-		consNodePubKeyPrefix := accountAddressPrefix + "valconspub"
-
-		// Set and seal config
-		config := sdk.GetConfig()
-		config.SetBech32PrefixForAccount(accountAddressPrefix, accountPubKeyPrefix)
-		config.SetBech32PrefixForValidator(validatorAddressPrefix, validatorPubKeyPrefix)
-		config.SetBech32PrefixForConsensusNode(consNodeAddressPrefix, consNodePubKeyPrefix)
-		config.Seal()
-
-		configSet = true
-	}
-}
-
 // Codec returns a codec with preregistered interfaces
-func Codec() codec.Marshaler {
+func Codec() codec.Codec {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 
 	launch.RegisterInterfaces(interfaceRegistry)
@@ -85,8 +61,6 @@ func AlphaString(n int) string {
 
 // AccAddress returns a sample account address
 func AccAddress() string {
-	setAddressPrefixes()
-
 	pk := ed25519.GenPrivKey().PubKey()
 	addr := pk.Address()
 	return sdk.AccAddress(addr).String()

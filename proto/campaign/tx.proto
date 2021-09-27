@@ -11,11 +11,30 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 // Msg defines the Msg service.
 service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
+  rpc UpdateTotalShares(MsgUpdateTotalShares) returns (MsgUpdateTotalSharesResponse);
+  rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
   rpc AddVestingOptions(MsgAddVestingOptions) returns (MsgAddVestingOptionsResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
-// this line is used by starport scaffolding # proto/tx/message
+message MsgUpdateTotalShares {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  repeated cosmos.base.v1beta1.Coin totalShares = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+}
+
+message MsgUpdateTotalSharesResponse {
+}
+
+message MsgUpdateTotalSupply {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  repeated cosmos.base.v1beta1.Coin totalSupply = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}
+
+message MsgUpdateTotalSupplyResponse {
+}
+
 message MsgCreateCampaign {
   string coordinator = 1;
   string campaignName = 2;
@@ -37,3 +56,5 @@ message MsgAddVestingOptions {
 
 message MsgAddVestingOptionsResponse {
 }
+
+// this line is used by starport scaffolding # proto/tx/message
