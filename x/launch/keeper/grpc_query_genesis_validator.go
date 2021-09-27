@@ -24,7 +24,7 @@ func (k Keeper) GenesisValidatorAll(c context.Context, req *types.QueryAllGenesi
 
 	pageRes, err := query.Paginate(genesisValidatorStore, req.Pagination, func(key []byte, value []byte) error {
 		var genesisValidator types.GenesisValidator
-		if err := k.cdc.UnmarshalBinaryBare(value, &genesisValidator); err != nil {
+		if err := k.cdc.Unmarshal(value, &genesisValidator); err != nil {
 			return err
 		}
 
