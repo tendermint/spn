@@ -59,7 +59,10 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	// get the VestingOption and account shares
 	totalShares, err := account.GetTotalShares()
 	if err != nil {
-		return nil, spnerrors.Critical(err.Error())
+		return nil, spnerrors.Criticalf(
+			"fail to get the account and vesting option shares: %s",
+			err.Error(),
+		)
 	}
 
 	// increase the campaign shares
