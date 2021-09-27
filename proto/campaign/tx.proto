@@ -25,17 +25,6 @@ message MsgUpdateTotalShares {
 message MsgUpdateTotalSharesResponse {
 }
 
-message MsgInitializeMainnet {
-  string coordinator = 1;
-  uint64 campaignID = 2;
-  string mainnetChainID = 3;
-}
-
-message MsgInitializeMainnetResponse {
-  uint64 mainnetID = 1;
-}
-
-// this line is used by starport scaffolding # proto/tx/message
 message MsgUpdateTotalSupply {
   string coordinator = 1;
   uint64 campaignID = 2;
@@ -54,6 +43,18 @@ message MsgCreateCampaign {
 
 message MsgCreateCampaignResponse {
   uint64 campaignID = 1;
+}
+
+message MsgInitializeMainnet {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  string sourceURL = 3;
+  string sourceHash = 4;
+  string mainnetChainID = 5;
+}
+
+message MsgInitializeMainnetResponse {
+  uint64 mainnetID = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message

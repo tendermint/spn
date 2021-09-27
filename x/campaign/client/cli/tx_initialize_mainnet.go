@@ -16,15 +16,14 @@ var _ = strconv.Itoa(0)
 
 func CmdInitializeMainnet() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "initialize-mainnet [campaign-id] [mainnet-chain-id]",
+		Use:   "initialize-mainnet [campaign-id] [source-url] [source-hash] [mainnet-chain-id]",
 		Short: "Initialize the mainnet of the campaign to open gentxs submissions and fix total supply",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argCampaignID, err := cast.ToUint64E(args[0])
+			campaignID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
-			argMainnetChainID := args[1]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -33,8 +32,10 @@ func CmdInitializeMainnet() *cobra.Command {
 
 			msg := types.NewMsgInitializeMainnet(
 				clientCtx.GetFromAddress().String(),
-				argCampaignID,
-				argMainnetChainID,
+				campaignID,
+				args[1],
+				args[2],
+				args[3],
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

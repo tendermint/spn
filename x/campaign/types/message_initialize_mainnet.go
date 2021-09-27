@@ -7,10 +7,18 @@ import (
 
 var _ sdk.Msg = &MsgInitializeMainnet{}
 
-func NewMsgInitializeMainnet(coordinator string, campaignID uint64, mainnetChainID string) *MsgInitializeMainnet {
+func NewMsgInitializeMainnet(
+	coordinator string,
+	campaignID uint64,
+	sourceURL string,
+	sourceHash string,
+	mainnetChainID string,
+	) *MsgInitializeMainnet {
 	return &MsgInitializeMainnet{
 		Coordinator:    coordinator,
 		CampaignID:     campaignID,
+		SourceURL: sourceURL,
+		SourceHash: sourceHash,
 		MainnetChainID: mainnetChainID,
 	}
 }
