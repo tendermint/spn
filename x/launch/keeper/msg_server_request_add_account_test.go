@@ -17,7 +17,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		addr1                 = sample.AccAddress()
 		addr2                 = sample.AccAddress()
 		addr3                 = sample.AccAddress()
-		k, pk, srv, _, sdkCtx = setupMsgServer(t)
+		k, pk, srv, _, _, sdkCtx = setupMsgServer(t)
 		ctx                   = sdk.WrapSDKContext(sdkCtx)
 	)
 

@@ -19,7 +19,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		coordinator1          = sample.Coordinator()
 		coordinator2          = sample.Coordinator()
 		invalidChain          = uint64(1000)
-		k, pk, srv, _, sdkCtx = setupMsgServer(t)
+		k, pk, srv, _, _, sdkCtx = setupMsgServer(t)
 		ctx                   = sdk.WrapSDKContext(sdkCtx)
 	)
 

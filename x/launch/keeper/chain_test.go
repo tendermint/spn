@@ -12,15 +12,27 @@ import (
 )
 
 func TestKeeper_CreateNewChain(t *testing.T) {
-	k, _, _, profileSrv, sdkCtx := setupMsgServer(t)
+	k, _, _, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
+	coordNoCampaignAddress := sample.AccAddress()
 
-	// Create a coordinator
+	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
 	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	coordID := res.CoordinatorId
+
+	msgCreateCoordinator = sample.MsgCreateCoordinator(coordNoCampaignAddress)
+	res, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	require.NoError(t, err)
+	coordNoCampaignID := res.CoordinatorId
+
+	// Create a campaign
+	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
+	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campaignID := resCampaign.CampaignID
 
 	for _, tc := range []struct {
 		name string
@@ -55,7 +67,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceHash: sample.String(20),
 			genesisURL: "",
 			hasCampaign: true,
-			campaignID: 0,
+			campaignID: campaignID,
 			isMainnet: false,
 			wantedID: 1,
 			valid: true,
@@ -87,14 +99,14 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 		},
 		{
 			name: "non-existent coordinator",
-			coordinatorID: coordID+1,
+			coordinatorID: 1000,
 			genesisChainID: sample.GenesisChainID(),
 			sourceURL: sample.String(30),
 			sourceHash: sample.String(20),
 			genesisURL: sample.String(30),
 			genesisHash: sample.GenesisHash(),
 			hasCampaign: false,
-			valid: true,
+			valid: false,
 		},
 		{
 			name: "non-existent campaign ID",
@@ -104,23 +116,22 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceHash: sample.String(20),
 			genesisURL: "",
 			hasCampaign: true,
-			campaignID: 1,
+			campaignID: 1000,
 			isMainnet: false,
-			wantedID: 1,
-			valid: true,
+			valid: false,
 		},
 		{
 			name: "invalid campaign coordinator",
-			coordinatorID: coordID,
+			coordinatorID: coordNoCampaignID,
 			genesisChainID: sample.GenesisChainID(),
 			sourceURL: sample.String(30),
 			sourceHash: sample.String(20),
 			genesisURL: "",
 			hasCampaign: true,
-			campaignID: 0,
+			campaignID: campaignID,
 			isMainnet: false,
 			wantedID: 1,
-			valid: true,
+			valid: false,
 		},
 		{
 			name: "invalid chain data (mainnet with campaign)",
@@ -132,8 +143,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			hasCampaign: true,
 			campaignID: 0,
 			isMainnet: false,
-			wantedID: 1,
-			valid: true,
+			valid: false,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

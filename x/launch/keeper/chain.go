@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"encoding/binary"
+	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,7 +13,7 @@ import (
 func (k Keeper) CreateNewChain(
 	ctx sdk.Context,
 	coordinatorID uint64,
-	chainID,
+	genesisChainID,
 	sourceURL,
 	sourceHash,
 	genesisURL,
@@ -23,7 +24,7 @@ func (k Keeper) CreateNewChain(
 ) (uint64, error) {
 	chain := types.Chain{
 		CoordinatorID:   coordinatorID,
-		GenesisChainID:  chainID,
+		GenesisChainID:  genesisChainID,
 		CreatedAt:       ctx.BlockTime().Unix(),
 		SourceURL:       sourceURL,
 		SourceHash:      sourceHash,
@@ -45,7 +46,32 @@ func (k Keeper) CreateNewChain(
 		return 0, err
 	}
 
-	return k.AppendChain(ctx, chain), nil
+	// If the chain is associated to a campaign, campaign existence and coordinator is checked
+	if hasCampaign {
+		campaign, found := k.campaignKeeper.GetCampaign(ctx, campaignID)
+		if !found{
+			return 0, fmt.Errorf("campaign %v doesn't exist", campaignID)
+		}
+		if campaign.CoordinatorID != coordinatorID {
+			return 0, fmt.Errorf(
+				"chain coordinator %v and campaign coordinator %v don't match",
+				coordinatorID,
+				campaign.CoordinatorID,
+				)
+		}
+	}
+
+	// Append the chain to the store
+	chainID := k.AppendChain(ctx, chain)
+
+	// Register the chain to the campaign
+	if hasCampaign {
+		if err := k.campaignKeeper.AddChainToCampaign(ctx, campaignID, chainID); err != nil {
+			return 0, err
+		}
+	}
+
+	return chainID, nil
 
 }
 

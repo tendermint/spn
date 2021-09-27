@@ -18,7 +18,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		addr2                 = sample.AccAddress()
 		addr3                 = sample.AccAddress()
 		addr4                 = sample.AccAddress()
-		k, pk, srv, _, sdkCtx = setupMsgServer(t)
+		k, pk, srv, _, _, sdkCtx = setupMsgServer(t)
 		ctx                   = sdk.WrapSDKContext(sdkCtx)
 	)
 
