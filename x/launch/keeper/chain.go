@@ -8,13 +8,46 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-//// CreateChain creates a new chain in the store from the provided information
-//func (k Keeper) CreateChain(
-//	ctx sdk.Context,
-//	campaign types.Campaign,
-//) uint64 {
-//
-//}
+// CreateNewChain creates a new chain in the store from the provided information
+func (k Keeper) CreateNewChain(
+	ctx sdk.Context,
+	coordinatorID uint64,
+	chainID,
+	sourceURL,
+	sourceHash,
+	genesisURL,
+	genesisHash string,
+	hasCampaign bool,
+	campaignID uint64,
+	isMainnet bool,
+) (uint64, error) {
+	chain := types.Chain{
+		CoordinatorID:   coordinatorID,
+		GenesisChainID:  chainID,
+		CreatedAt:       ctx.BlockTime().Unix(),
+		SourceURL:       sourceURL,
+		SourceHash:      sourceHash,
+		HasCampaign:     hasCampaign,
+		CampaignID:      campaignID,
+		IsMainnet:       isMainnet,
+		LaunchTriggered: false,
+		LaunchTimestamp: 0,
+	}
+
+	// Initialize initial genesis
+	if genesisURL == "" {
+		chain.InitialGenesis = types.NewDefaultInitialGenesis()
+	} else {
+		chain.InitialGenesis = types.NewGenesisURL(genesisURL, genesisHash)
+	}
+
+	if err := chain.Validate(); err != nil {
+		return 0, err
+	}
+
+	return k.AppendChain(ctx, chain), nil
+
+}
 
 // GetChainCount get the total number of chains
 func (k Keeper) GetChainCount(ctx sdk.Context) uint64 {

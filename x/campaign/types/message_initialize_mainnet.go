@@ -13,12 +13,12 @@ func NewMsgInitializeMainnet(
 	sourceURL string,
 	sourceHash string,
 	mainnetChainID string,
-	) *MsgInitializeMainnet {
+) *MsgInitializeMainnet {
 	return &MsgInitializeMainnet{
 		Coordinator:    coordinator,
 		CampaignID:     campaignID,
-		SourceURL: sourceURL,
-		SourceHash: sourceHash,
+		SourceURL:      sourceURL,
+		SourceHash:     sourceHash,
 		MainnetChainID: mainnetChainID,
 	}
 }
