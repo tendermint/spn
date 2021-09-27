@@ -20,7 +20,7 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     0,
-				Shares:         sample.Shares(),
+				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
 			},
 		},
@@ -29,7 +29,7 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    "invalid_address",
 				CampaignID:     0,
-				Shares:         sample.Shares(),
+				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -39,7 +39,7 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     0,
-				Shares:         invalidShares,
+				StartingShares: invalidShares,
 				VestingOptions: sample.ShareVestingOptions(),
 			},
 			err: types.ErrInvalidAccountShares,
@@ -49,7 +49,7 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     0,
-				Shares:         types.Shares{},
+				StartingShares: types.Shares{},
 				VestingOptions: sample.ShareVestingOptions(),
 			},
 			err: types.ErrInvalidAccountShares,
