@@ -12,7 +12,8 @@ service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   rpc UpdateTotalShares(MsgUpdateTotalShares) returns (MsgUpdateTotalSharesResponse);
   rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
+    rpc InitializeMainnet(MsgInitializeMainnet) returns (MsgInitializeMainnetResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgUpdateTotalShares {
@@ -22,6 +23,16 @@ message MsgUpdateTotalShares {
 }
 
 message MsgUpdateTotalSharesResponse {
+}
+
+message MsgInitializeMainnet {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  string mainnetChainID = 3;
+}
+
+message MsgInitializeMainnetResponse {
+  uint64 mainnetID = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message
