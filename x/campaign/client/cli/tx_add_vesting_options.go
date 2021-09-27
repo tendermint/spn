@@ -16,7 +16,7 @@ var _ = strconv.Itoa(0)
 
 func CmdAddVestingOptions() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-mainnet-vesting-account [campaign-id] [address] [shares] [vesting-shares] [vesting-end-time]",
+		Use:   "add-vesting-options [campaign-id] [address] [starting-shares] [vesting-shares] [vesting-end-time]",
 		Short: "Add a mainnet vesting account",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -27,7 +27,7 @@ func CmdAddVestingOptions() *cobra.Command {
 
 			argAddress := args[1]
 
-			shares, err := types.NewShares(args[2])
+			startingShares, err := types.NewShares(args[2])
 			if err != nil {
 				return err
 			}
@@ -48,7 +48,7 @@ func CmdAddVestingOptions() *cobra.Command {
 				argCampaignID,
 				clientCtx.GetFromAddress().String(),
 				argAddress,
-				shares,
+				startingShares,
 				delayedVesting,
 			)
 			if err := msg.ValidateBasic(); err != nil {

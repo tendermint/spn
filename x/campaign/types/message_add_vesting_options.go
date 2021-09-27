@@ -11,14 +11,14 @@ func NewMsgAddVestingOptions(
 	campaignID uint64,
 	coordinator,
 	address string,
-	shares Shares,
+	startingShares Shares,
 	options ShareVestingOptions,
 ) *MsgAddVestingOptions {
 	return &MsgAddVestingOptions{
 		CampaignID:     campaignID,
 		Coordinator:    coordinator,
 		Address:        address,
-		Shares:         shares,
+		StartingShares: startingShares,
 		VestingOptions: options,
 	}
 }
@@ -50,12 +50,8 @@ func (msg *MsgAddVestingOptions) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
-	if !sdk.Coins(msg.Shares).IsValid() {
+	if !sdk.Coins(msg.StartingShares).IsValid() {
 		return sdkerrors.Wrap(ErrInvalidAccountShares, "account share is not a valid Coins object")
-	}
-
-	if sdk.Coins(msg.Shares).Empty() {
-		return sdkerrors.Wrap(ErrInvalidAccountShares, "account share is empty")
 	}
 
 	if err := msg.VestingOptions.Validate(); err != nil {
