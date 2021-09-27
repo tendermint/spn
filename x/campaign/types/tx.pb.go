@@ -30,18 +30,114 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type MsgUpdateTotalShares struct {
+	Coordinator string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
+	CampaignID  uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	TotalShares Shares `protobuf:"bytes,3,rep,name=totalShares,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=Shares" json:"totalShares"`
+}
+
+func (m *MsgUpdateTotalShares) Reset()         { *m = MsgUpdateTotalShares{} }
+func (m *MsgUpdateTotalShares) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateTotalShares) ProtoMessage()    {}
+func (*MsgUpdateTotalShares) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{0}
+}
+func (m *MsgUpdateTotalShares) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateTotalShares) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateTotalShares.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateTotalShares) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateTotalShares.Merge(m, src)
+}
+func (m *MsgUpdateTotalShares) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateTotalShares) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateTotalShares.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateTotalShares proto.InternalMessageInfo
+
+func (m *MsgUpdateTotalShares) GetCoordinator() string {
+	if m != nil {
+		return m.Coordinator
+	}
+	return ""
+}
+
+func (m *MsgUpdateTotalShares) GetCampaignID() uint64 {
+	if m != nil {
+		return m.CampaignID
+	}
+	return 0
+}
+
+func (m *MsgUpdateTotalShares) GetTotalShares() Shares {
+	if m != nil {
+		return m.TotalShares
+	}
+	return nil
+}
+
+type MsgUpdateTotalSharesResponse struct {
+}
+
+func (m *MsgUpdateTotalSharesResponse) Reset()         { *m = MsgUpdateTotalSharesResponse{} }
+func (m *MsgUpdateTotalSharesResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateTotalSharesResponse) ProtoMessage()    {}
+func (*MsgUpdateTotalSharesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{1}
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateTotalSharesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateTotalSharesResponse.Merge(m, src)
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateTotalSharesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateTotalSharesResponse proto.InternalMessageInfo
+
 // this line is used by starport scaffolding # proto/tx/message
 type MsgUpdateTotalSupply struct {
 	Coordinator string                                   `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
 	CampaignID  uint64                                   `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
-	TotalSupply github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,3,rep,name=TotalSupply,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"TotalSupply"`
+	TotalSupply github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,3,rep,name=totalSupply,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"totalSupply"`
 }
 
 func (m *MsgUpdateTotalSupply) Reset()         { *m = MsgUpdateTotalSupply{} }
 func (m *MsgUpdateTotalSupply) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateTotalSupply) ProtoMessage()    {}
 func (*MsgUpdateTotalSupply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{0}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{2}
 }
 func (m *MsgUpdateTotalSupply) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -98,7 +194,7 @@ func (m *MsgUpdateTotalSupplyResponse) Reset()         { *m = MsgUpdateTotalSupp
 func (m *MsgUpdateTotalSupplyResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateTotalSupplyResponse) ProtoMessage()    {}
 func (*MsgUpdateTotalSupplyResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{1}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{3}
 }
 func (m *MsgUpdateTotalSupplyResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -138,7 +234,7 @@ func (m *MsgCreateCampaign) Reset()         { *m = MsgCreateCampaign{} }
 func (m *MsgCreateCampaign) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateCampaign) ProtoMessage()    {}
 func (*MsgCreateCampaign) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{2}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{4}
 }
 func (m *MsgCreateCampaign) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -203,7 +299,7 @@ func (m *MsgCreateCampaignResponse) Reset()         { *m = MsgCreateCampaignResp
 func (m *MsgCreateCampaignResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateCampaignResponse) ProtoMessage()    {}
 func (*MsgCreateCampaignResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{3}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{5}
 }
 func (m *MsgCreateCampaignResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -240,6 +336,8 @@ func (m *MsgCreateCampaignResponse) GetCampaignID() uint64 {
 }
 
 func init() {
+	proto.RegisterType((*MsgUpdateTotalShares)(nil), "tendermint.spn.campaign.MsgUpdateTotalShares")
+	proto.RegisterType((*MsgUpdateTotalSharesResponse)(nil), "tendermint.spn.campaign.MsgUpdateTotalSharesResponse")
 	proto.RegisterType((*MsgUpdateTotalSupply)(nil), "tendermint.spn.campaign.MsgUpdateTotalSupply")
 	proto.RegisterType((*MsgUpdateTotalSupplyResponse)(nil), "tendermint.spn.campaign.MsgUpdateTotalSupplyResponse")
 	proto.RegisterType((*MsgCreateCampaign)(nil), "tendermint.spn.campaign.MsgCreateCampaign")
@@ -249,35 +347,38 @@ func init() {
 func init() { proto.RegisterFile("campaign/tx.proto", fileDescriptor_fb6bf904ffc53c1f) }
 
 var fileDescriptor_fb6bf904ffc53c1f = []byte{
-	// 433 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x53, 0xb1, 0x8e, 0xd3, 0x40,
-	0x10, 0xf5, 0x5e, 0x4e, 0x88, 0xdb, 0x00, 0x52, 0xac, 0x93, 0xf0, 0x59, 0x68, 0x63, 0x59, 0x48,
-	0x58, 0x27, 0xdd, 0xae, 0x2e, 0x88, 0x8a, 0xee, 0x92, 0x86, 0x22, 0x14, 0x0e, 0x34, 0x50, 0xad,
-	0xed, 0x95, 0x63, 0x11, 0xef, 0xae, 0xbc, 0x1b, 0x14, 0xff, 0x05, 0x25, 0xe2, 0x13, 0xf8, 0x92,
-	0x94, 0x29, 0xa9, 0x02, 0x4a, 0xfe, 0x00, 0x3a, 0x2a, 0x14, 0x3b, 0x26, 0x4e, 0x0c, 0x28, 0x74,
-	0x57, 0xd9, 0x7a, 0x7e, 0x9e, 0x79, 0xf3, 0xe6, 0x0d, 0xec, 0x84, 0x34, 0x95, 0x34, 0x89, 0x39,
-	0xd1, 0x33, 0x2c, 0x33, 0xa1, 0x85, 0xf9, 0x50, 0x33, 0x1e, 0xb1, 0x2c, 0x4d, 0xb8, 0xc6, 0x4a,
-	0x72, 0x5c, 0x31, 0xec, 0xf3, 0x58, 0xc4, 0xa2, 0xe0, 0x90, 0xcd, 0x5b, 0x49, 0xb7, 0x51, 0x28,
-	0x54, 0x2a, 0x14, 0x09, 0xa8, 0x62, 0xe4, 0xfd, 0x75, 0xc0, 0x34, 0xbd, 0x26, 0xa1, 0x48, 0x78,
-	0xf9, 0xdd, 0xfd, 0x01, 0xe0, 0xf9, 0x50, 0xc5, 0xaf, 0x65, 0x44, 0x35, 0x7b, 0x25, 0x34, 0x9d,
-	0x8c, 0xa6, 0x52, 0x4e, 0x72, 0xd3, 0x81, 0xed, 0x50, 0x88, 0x2c, 0x4a, 0x38, 0xd5, 0x22, 0xb3,
-	0x80, 0x03, 0xbc, 0x33, 0xbf, 0x0e, 0x99, 0x08, 0xc2, 0xaa, 0xf9, 0x8b, 0x81, 0x75, 0xe2, 0x00,
-	0xef, 0xd4, 0xaf, 0x21, 0xe6, 0x47, 0x00, 0xdb, 0xb5, 0x8a, 0x56, 0xcb, 0x69, 0x79, 0xed, 0xde,
-	0x05, 0x2e, 0x15, 0xe1, 0x8d, 0x22, 0xbc, 0x55, 0x84, 0xfb, 0x22, 0xe1, 0x37, 0x6f, 0xe7, 0xcb,
-	0xae, 0xf1, 0x73, 0xd9, 0x7d, 0x12, 0x27, 0x7a, 0x3c, 0x0d, 0x70, 0x28, 0x52, 0xb2, 0x95, 0x5f,
-	0x3e, 0xae, 0x54, 0xf4, 0x8e, 0xe8, 0x5c, 0x32, 0x55, 0xfc, 0xf0, 0xf9, 0x6b, 0xd7, 0x3b, 0x92,
-	0xaa, 0xfc, 0xba, 0x14, 0x17, 0xc1, 0x47, 0x7f, 0x1a, 0xda, 0x67, 0x4a, 0x0a, 0xae, 0x98, 0xfb,
-	0xe9, 0x04, 0x76, 0x86, 0x2a, 0xee, 0x67, 0x8c, 0x6a, 0xd6, 0xdf, 0x8e, 0x74, 0x84, 0x25, 0x2e,
-	0xbc, 0x57, 0x19, 0xf0, 0x92, 0xa6, 0xac, 0x30, 0xe5, 0xcc, 0xdf, 0xc3, 0x6e, 0xb1, 0x2d, 0xe6,
-	0x63, 0x78, 0x3f, 0xca, 0x39, 0x4d, 0x93, 0x70, 0x34, 0xa6, 0x19, 0x53, 0xd6, 0xa9, 0x03, 0xbc,
-	0xbb, 0xfe, 0x3e, 0xe8, 0x3e, 0x87, 0x17, 0x0d, 0x6f, 0x2a, 0xe7, 0x0e, 0x42, 0x01, 0x0e, 0x43,
-	0xd1, 0xfb, 0x0e, 0x60, 0x6b, 0xa8, 0x62, 0x53, 0xc2, 0x07, 0x07, 0xee, 0x5e, 0xe2, 0xbf, 0x24,
-	0x1b, 0x37, 0xba, 0xd9, 0xbd, 0xe3, 0xb9, 0xbf, 0x95, 0xe5, 0xb0, 0xd3, 0x4c, 0xf9, 0xd5, 0xbf,
-	0x0a, 0x35, 0xe8, 0xf6, 0xb3, 0xff, 0xa2, 0x57, 0xad, 0x6f, 0x06, 0xf3, 0x15, 0x02, 0x8b, 0x15,
-	0x02, 0xdf, 0x56, 0x08, 0x7c, 0x58, 0x23, 0x63, 0xb1, 0x46, 0xc6, 0x97, 0x35, 0x32, 0xde, 0x5c,
-	0xd6, 0x16, 0xb5, 0x2b, 0x4d, 0x94, 0xe4, 0x64, 0x46, 0x76, 0xc7, 0xbf, 0x59, 0x58, 0x70, 0xa7,
-	0xb8, 0xd8, 0xa7, 0xbf, 0x02, 0x00, 0x00, 0xff, 0xff, 0x29, 0xf4, 0x25, 0xa1, 0x15, 0x04, 0x00,
-	0x00,
+	// 484 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x94, 0x31, 0x6f, 0xd3, 0x40,
+	0x14, 0xc7, 0x73, 0x49, 0x55, 0xd1, 0x0b, 0x20, 0xc5, 0xaa, 0x44, 0x1a, 0xa1, 0x8b, 0x65, 0x21,
+	0x61, 0x55, 0xea, 0x9d, 0x1a, 0xc4, 0x80, 0xd8, 0x9a, 0x2e, 0x0c, 0x61, 0x30, 0x65, 0x81, 0xe9,
+	0x6c, 0x9f, 0x5c, 0x8b, 0xfa, 0xee, 0xe4, 0xbb, 0x56, 0xf5, 0xb7, 0x60, 0x44, 0x7c, 0x04, 0x3e,
+	0x49, 0xc7, 0x8c, 0x4c, 0x05, 0x25, 0x33, 0x13, 0x1b, 0x13, 0xca, 0xd9, 0x4e, 0x9c, 0xb8, 0x05,
+	0x57, 0x62, 0x60, 0x4a, 0xf4, 0xfc, 0xf7, 0x7b, 0xef, 0xff, 0xf3, 0xff, 0x0e, 0xf6, 0x02, 0x9a,
+	0x48, 0x1a, 0x47, 0x9c, 0xe8, 0x4b, 0x2c, 0x53, 0xa1, 0x85, 0xf5, 0x48, 0x33, 0x1e, 0xb2, 0x34,
+	0x89, 0xb9, 0xc6, 0x4a, 0x72, 0x5c, 0x2a, 0x06, 0xbb, 0x91, 0x88, 0x84, 0xd1, 0x90, 0xc5, 0xbf,
+	0x5c, 0x3e, 0x40, 0x81, 0x50, 0x89, 0x50, 0xc4, 0xa7, 0x8a, 0x91, 0x8b, 0x43, 0x9f, 0x69, 0x7a,
+	0x48, 0x02, 0x11, 0xf3, 0xfc, 0xb9, 0x33, 0x05, 0x70, 0x77, 0xa2, 0xa2, 0xb7, 0x32, 0xa4, 0x9a,
+	0x9d, 0x08, 0x4d, 0xcf, 0xde, 0x9c, 0xd2, 0x94, 0x29, 0xcb, 0x86, 0xdd, 0x40, 0x88, 0x34, 0x8c,
+	0x39, 0xd5, 0x22, 0xed, 0x03, 0x1b, 0xb8, 0x3b, 0x5e, 0xb5, 0x64, 0x21, 0x08, 0xcb, 0xe1, 0xaf,
+	0x8e, 0xfb, 0x6d, 0x1b, 0xb8, 0x5b, 0x5e, 0xa5, 0x62, 0x5d, 0xc0, 0xae, 0x5e, 0x35, 0xec, 0x77,
+	0xec, 0x8e, 0xdb, 0x1d, 0xed, 0xe1, 0x7c, 0x21, 0xbc, 0x58, 0x08, 0x17, 0x0b, 0xe1, 0xb1, 0x88,
+	0xf9, 0xd1, 0x8b, 0xab, 0xeb, 0x61, 0xeb, 0xd7, 0xf5, 0xf0, 0x69, 0x14, 0xeb, 0xd3, 0x73, 0x1f,
+	0x07, 0x22, 0x21, 0xc5, 0xf6, 0xf9, 0xcf, 0x81, 0x0a, 0x3f, 0x10, 0x9d, 0x49, 0xa6, 0xcc, 0x0b,
+	0x5f, 0xbe, 0x0d, 0xb7, 0xf3, 0xde, 0x5e, 0x75, 0x90, 0x83, 0xe0, 0xe3, 0x9b, 0x1c, 0x79, 0x4c,
+	0x49, 0xc1, 0x15, 0x73, 0x7e, 0xd6, 0x2d, 0x9f, 0x4b, 0x79, 0x96, 0xfd, 0x03, 0xcb, 0x9f, 0x40,
+	0xe9, 0xd9, 0x74, 0xfc, 0xbb, 0xe7, 0xf7, 0x77, 0xf7, 0xec, 0x36, 0x94, 0x2e, 0xa9, 0x98, 0x55,
+	0x6e, 0xa0, 0x62, 0xea, 0x4b, 0x2a, 0x9f, 0xdb, 0xb0, 0x37, 0x51, 0xd1, 0x38, 0x65, 0x54, 0xb3,
+	0x71, 0x61, 0xa9, 0x01, 0x12, 0x07, 0xde, 0x2f, 0x01, 0xbc, 0xa6, 0x09, 0x33, 0x50, 0x76, 0xbc,
+	0xb5, 0x9a, 0xc1, 0x72, 0xf2, 0xff, 0x60, 0xa9, 0x7e, 0xf3, 0x27, 0xf0, 0x41, 0x98, 0x71, 0x9a,
+	0xc4, 0x41, 0x11, 0xd3, 0x2d, 0x1b, 0xb8, 0xf7, 0xbc, 0xf5, 0xa2, 0xf3, 0x12, 0xee, 0xd5, 0xd8,
+	0x94, 0xe4, 0x36, 0x42, 0x01, 0x36, 0x43, 0x31, 0xfa, 0xd1, 0x86, 0x9d, 0x89, 0x8a, 0x2c, 0x09,
+	0x1f, 0x6e, 0xd0, 0xdd, 0xc7, 0xb7, 0x1c, 0x66, 0x5c, 0x9b, 0x36, 0x18, 0x35, 0xd7, 0x2e, 0x37,
+	0xcb, 0x60, 0xaf, 0x7e, 0xb0, 0x0f, 0xfe, 0xd4, 0xa8, 0x26, 0x1f, 0x3c, 0xbf, 0x93, 0xfc, 0xb6,
+	0xd1, 0x39, 0xec, 0xc6, 0xa3, 0x8d, 0xbc, 0xf9, 0xe8, 0xb5, 0x24, 0x1f, 0x1d, 0x5f, 0xcd, 0x10,
+	0x98, 0xce, 0x10, 0xf8, 0x3e, 0x43, 0xe0, 0xe3, 0x1c, 0xb5, 0xa6, 0x73, 0xd4, 0xfa, 0x3a, 0x47,
+	0xad, 0x77, 0xfb, 0x95, 0x8c, 0xac, 0x5a, 0x13, 0x25, 0x39, 0xb9, 0x24, 0xab, 0xab, 0x76, 0x91,
+	0x15, 0x7f, 0xdb, 0xdc, 0x8f, 0xcf, 0x7e, 0x07, 0x00, 0x00, 0xff, 0xff, 0x6b, 0x13, 0xd3, 0xff,
+	0x83, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -293,7 +394,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
 	CreateCampaign(ctx context.Context, in *MsgCreateCampaign, opts ...grpc.CallOption) (*MsgCreateCampaignResponse, error)
-	// this line is used by starport scaffolding # proto/tx/rpc
+	UpdateTotalShares(ctx context.Context, in *MsgUpdateTotalShares, opts ...grpc.CallOption) (*MsgUpdateTotalSharesResponse, error)
 	UpdateTotalSupply(ctx context.Context, in *MsgUpdateTotalSupply, opts ...grpc.CallOption) (*MsgUpdateTotalSupplyResponse, error)
 }
 
@@ -314,6 +415,15 @@ func (c *msgClient) CreateCampaign(ctx context.Context, in *MsgCreateCampaign, o
 	return out, nil
 }
 
+func (c *msgClient) UpdateTotalShares(ctx context.Context, in *MsgUpdateTotalShares, opts ...grpc.CallOption) (*MsgUpdateTotalSharesResponse, error) {
+	out := new(MsgUpdateTotalSharesResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/UpdateTotalShares", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *msgClient) UpdateTotalSupply(ctx context.Context, in *MsgUpdateTotalSupply, opts ...grpc.CallOption) (*MsgUpdateTotalSupplyResponse, error) {
 	out := new(MsgUpdateTotalSupplyResponse)
 	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/UpdateTotalSupply", in, out, opts...)
@@ -326,7 +436,7 @@ func (c *msgClient) UpdateTotalSupply(ctx context.Context, in *MsgUpdateTotalSup
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	CreateCampaign(context.Context, *MsgCreateCampaign) (*MsgCreateCampaignResponse, error)
-	// this line is used by starport scaffolding # proto/tx/rpc
+	UpdateTotalShares(context.Context, *MsgUpdateTotalShares) (*MsgUpdateTotalSharesResponse, error)
 	UpdateTotalSupply(context.Context, *MsgUpdateTotalSupply) (*MsgUpdateTotalSupplyResponse, error)
 }
 
@@ -336,6 +446,9 @@ type UnimplementedMsgServer struct {
 
 func (*UnimplementedMsgServer) CreateCampaign(ctx context.Context, req *MsgCreateCampaign) (*MsgCreateCampaignResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCampaign not implemented")
+}
+func (*UnimplementedMsgServer) UpdateTotalShares(ctx context.Context, req *MsgUpdateTotalShares) (*MsgUpdateTotalSharesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTotalShares not implemented")
 }
 func (*UnimplementedMsgServer) UpdateTotalSupply(ctx context.Context, req *MsgUpdateTotalSupply) (*MsgUpdateTotalSupplyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTotalSupply not implemented")
@@ -359,6 +472,24 @@ func _Msg_CreateCampaign_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).CreateCampaign(ctx, req.(*MsgCreateCampaign))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_UpdateTotalShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateTotalShares)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateTotalShares(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.campaign.Msg/UpdateTotalShares",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateTotalShares(ctx, req.(*MsgUpdateTotalShares))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -390,12 +521,88 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_CreateCampaign_Handler,
 		},
 		{
+			MethodName: "UpdateTotalShares",
+			Handler:    _Msg_UpdateTotalShares_Handler,
+		},
+		{
 			MethodName: "UpdateTotalSupply",
 			Handler:    _Msg_UpdateTotalSupply_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "campaign/tx.proto",
+}
+
+func (m *MsgUpdateTotalShares) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateTotalShares) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateTotalShares) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.TotalShares) > 0 {
+		for iNdEx := len(m.TotalShares) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.TotalShares[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTx(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if m.CampaignID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Coordinator) > 0 {
+		i -= len(m.Coordinator)
+		copy(dAtA[i:], m.Coordinator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Coordinator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateTotalSharesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateTotalSharesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateTotalSharesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
 }
 
 func (m *MsgUpdateTotalSupply) Marshal() (dAtA []byte, err error) {
@@ -570,6 +777,37 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *MsgUpdateTotalShares) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Coordinator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.CampaignID != 0 {
+		n += 1 + sovTx(uint64(m.CampaignID))
+	}
+	if len(m.TotalShares) > 0 {
+		for _, e := range m.TotalShares {
+			l = e.Size()
+			n += 1 + l + sovTx(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *MsgUpdateTotalSharesResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
 func (m *MsgUpdateTotalSupply) Size() (n int) {
 	if m == nil {
 		return 0
@@ -644,6 +882,191 @@ func sovTx(x uint64) (n int) {
 }
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgUpdateTotalShares) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateTotalShares: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateTotalShares: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Coordinator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
+			}
+			m.CampaignID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CampaignID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TotalShares", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TotalShares = append(m.TotalShares, github_com_cosmos_cosmos_sdk_types.Coin{})
+			if err := m.TotalShares[len(m.TotalShares)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateTotalSharesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateTotalSharesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateTotalSharesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *MsgUpdateTotalSupply) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
