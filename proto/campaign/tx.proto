@@ -12,6 +12,7 @@ service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   rpc UpdateTotalShares(MsgUpdateTotalShares) returns (MsgUpdateTotalSharesResponse);
   rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
+  rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -24,7 +25,6 @@ message MsgUpdateTotalShares {
 message MsgUpdateTotalSharesResponse {
 }
 
-// this line is used by starport scaffolding # proto/tx/message
 message MsgUpdateTotalSupply {
   string coordinator = 1;
   uint64 campaignID = 2;
@@ -43,6 +43,16 @@ message MsgCreateCampaign {
 
 message MsgCreateCampaignResponse {
   uint64 campaignID = 1;
+}
+
+message MsgAddShares {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  string address = 3;
+  repeated cosmos.base.v1beta1.Coin shares = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+}
+
+message MsgAddSharesResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

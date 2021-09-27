@@ -14,6 +14,10 @@ var (
 	invalidCoins        = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
 )
 
+var (
+	invalidShares = campaign.Shares{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
+)
+
 func TestNewCampaign(t *testing.T) {
 	campaignID := sample.Uint64()
 	campaignName := sample.CampaignName()
