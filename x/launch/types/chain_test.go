@@ -15,6 +15,9 @@ func TestChain_Validate(t *testing.T) {
 	invalidLaunchTimestamp := sample.Chain(0, 0)
 	invalidLaunchTimestamp.LaunchTriggered = true
 
+	mainnetWithoutCampaign := sample.Chain(0, 0)
+	mainnetWithoutCampaign.IsMainnet = true
+
 	for _, tc := range []struct {
 		desc  string
 		chain types.Chain
@@ -33,6 +36,11 @@ func TestChain_Validate(t *testing.T) {
 		{
 			desc:  "invalid launch timestamp",
 			chain: invalidLaunchTimestamp,
+			valid: false,
+		},
+		{
+			desc:  "mainnet without campaign",
+			chain: mainnetWithoutCampaign,
 			valid: false,
 		},
 	} {
