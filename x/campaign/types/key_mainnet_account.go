@@ -24,3 +24,19 @@ func MainnetAccountKey(campaignID uint64, address string) []byte {
 
 	return key
 }
+
+// MainnetAccountAllKey returns the store key to retrieve all MainnetAccount by campaign id
+func MainnetAccountAllKey(campaignID uint64) []byte {
+	var key []byte
+
+	keyBytes := []byte(MainnetAccountKeyPrefix)
+	key = append(key, keyBytes...)
+
+	campaignIDBytes := make([]byte, 8)
+	binary.BigEndian.PutUint64(campaignIDBytes, campaignID)
+	key = append(key, campaignIDBytes...)
+
+	key = append(key, []byte("/")...)
+
+	return key
+}

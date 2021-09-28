@@ -88,7 +88,8 @@ message QueryGetMainnetAccountResponse {
 }
 
 message QueryAllMainnetAccountRequest {
-  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  uint64 campaignID = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryAllMainnetAccountResponse {
@@ -106,7 +107,8 @@ message QueryGetMainnetVestingAccountResponse {
 }
 
 message QueryAllMainnetVestingAccountRequest {
-  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  uint64 campaignID = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryAllMainnetVestingAccountResponse {
