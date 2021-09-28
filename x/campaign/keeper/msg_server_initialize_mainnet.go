@@ -3,12 +3,12 @@ package keeper
 import (
 	"context"
 	"fmt"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitializeMainnet) (*types.MsgInitializeMainnetResponse, error) {
@@ -47,9 +47,9 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		true,
 		msg.CampaignID,
 		true,
-		)
+	)
 	if err != nil {
-		spnerrors.Criticalf("cannot create the mainnet: %v", err.Error())
+		return nil, spnerrors.Criticalf("cannot create the mainnet: %v", err.Error())
 	}
 
 	// Set mainnet as initialized and save the change

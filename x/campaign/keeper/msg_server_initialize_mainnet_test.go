@@ -1,24 +1,24 @@
 package keeper_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/x/campaign/types"
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/campaign/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgInitializeMainnet(t *testing.T) {
 	var (
-		campaignID uint64 = 0
-		campaignMainnetInitializedID uint64 = 1
-		campaignIncorrectCoordID uint64 = 2
-		coordAddr                                         = sample.AccAddress()
-		coordAddrNoCampaign                               = sample.AccAddress()
-		campaignKeeper, _, launchKeeper, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                = sdk.WrapSDKContext(sdkCtx)
+		campaignID                                                       uint64 = 0
+		campaignMainnetInitializedID                                     uint64 = 1
+		campaignIncorrectCoordID                                         uint64 = 2
+		coordAddr                                                               = sample.AccAddress()
+		coordAddrNoCampaign                                                     = sample.AccAddress()
+		campaignKeeper, _, launchKeeper, campaignSrv, profileSrv, sdkCtx        = setupMsgServer(t)
+		ctx                                                                     = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
@@ -52,24 +52,24 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		name string
 		msg  types.MsgInitializeMainnet
 		err  error
-	} {
+	}{
 		{
 			name: "initialize mainnet",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:  campaignID,
-				Coordinator: coordAddr,
-				SourceHash: sample.String(30),
-				SourceURL: sample.String(20),
+				CampaignID:     campaignID,
+				Coordinator:    coordAddr,
+				SourceHash:     sample.String(30),
+				SourceURL:      sample.String(20),
 				MainnetChainID: sample.GenesisChainID(),
 			},
 		},
 		{
 			name: "campaign not found",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:  1000,
-				Coordinator: coordAddr,
-				SourceHash: sample.String(30),
-				SourceURL: sample.String(20),
+				CampaignID:     1000,
+				Coordinator:    coordAddr,
+				SourceHash:     sample.String(30),
+				SourceURL:      sample.String(20),
 				MainnetChainID: sample.GenesisChainID(),
 			},
 			err: types.ErrCampaignNotFound,
@@ -77,10 +77,10 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "mainnet already initialized",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:  campaignMainnetInitializedID,
-				Coordinator: coordAddr,
-				SourceHash: sample.String(30),
-				SourceURL: sample.String(20),
+				CampaignID:     campaignMainnetInitializedID,
+				Coordinator:    coordAddr,
+				SourceHash:     sample.String(30),
+				SourceURL:      sample.String(20),
 				MainnetChainID: sample.GenesisChainID(),
 			},
 			err: types.ErrMainnetInitialized,
@@ -88,10 +88,10 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "non-existent coordinator",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:  campaignIncorrectCoordID,
-				Coordinator: sample.AccAddress(),
-				SourceHash: sample.String(30),
-				SourceURL: sample.String(20),
+				CampaignID:     campaignIncorrectCoordID,
+				Coordinator:    sample.AccAddress(),
+				SourceHash:     sample.String(30),
+				SourceURL:      sample.String(20),
 				MainnetChainID: sample.GenesisChainID(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
@@ -99,10 +99,10 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "invalid coordinator",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:  campaignIncorrectCoordID,
-				Coordinator: coordAddrNoCampaign,
-				SourceHash: sample.String(30),
-				SourceURL: sample.String(20),
+				CampaignID:     campaignIncorrectCoordID,
+				Coordinator:    coordAddrNoCampaign,
+				SourceHash:     sample.String(30),
+				SourceURL:      sample.String(20),
 				MainnetChainID: sample.GenesisChainID(),
 			},
 			err: profiletypes.ErrCoordInvalid,
