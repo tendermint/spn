@@ -1,6 +1,8 @@
 package types_test
 
 import (
+	"errors"
+	"fmt"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -9,224 +11,189 @@ import (
 )
 
 var (
-	prefixedVoucherFoo = campaign.VoucherPrefix + "10/foo"
-	prefixedVoucherBar = campaign.VoucherPrefix + "10/bar"
+	campaignID         = uint64(10)
+	prefixedVoucherFoo = fmt.Sprintf("%s%d/foo", campaign.VoucherPrefix, campaignID)
+	prefixedVoucherBar = fmt.Sprintf("%s%d/bar", campaign.VoucherPrefix, campaignID)
 )
 
-func TestVoucherName(t *testing.T) {
-	require.Equal(t,
-		campaign.VoucherPrefix+"10/",
-		campaign.VoucherName(10, ""),
-	)
-	require.Equal(t,
-		campaign.VoucherPrefix+"10/token",
-		campaign.VoucherName(10, "token"),
-	)
-}
-
-func TestEmptyVoucher(t *testing.T) {
-	voucher := campaign.EmptyVoucher()
-	require.Equal(t, campaign.Voucher{}, voucher)
-}
-
-func TestNewVoucher(t *testing.T) {
-	_, err := campaign.NewVoucher(10, "invalid")
-	require.Error(t, err)
-
-	voucher, err := campaign.NewVoucher(10, "100foo")
-	require.NoError(t, err)
-	require.Equal(t, voucher, campaign.Voucher(sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100))))
-}
-
-func TestNewVoucherFromCoin(t *testing.T) {
-	voucher := campaign.NewVoucherFromCoin(10, sdk.NewCoin("bar", sdk.NewInt(200)))
-	require.Equal(t, voucher, campaign.Voucher(
-		sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(200)),
-	))
-}
-
 func TestCheckVoucher(t *testing.T) {
-	require.NoError(t, campaign.CheckVoucher(10, campaign.Voucher(
-		sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(200)),
-	)))
-	require.Error(t, campaign.CheckVoucher(20, campaign.Voucher(
-		sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(200)),
-	)))
-	require.Error(t, campaign.CheckVoucher(10, campaign.Voucher(
-		sdk.NewCoin("foo", sdk.NewInt(100)),
-	)))
-}
-
-func TestAddVoucher(t *testing.T) {
-	for _, tc := range []struct {
-		desc       string
-		voucher    campaign.Voucher
-		newVoucher campaign.Voucher
-		expected   campaign.Voucher
-		isError    bool
-	}{
-		{
-			desc:    "increase empty set",
-			voucher: campaign.EmptyVoucher(),
-			newVoucher: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
-			),
-			isError: true,
-		},
-		{
-			desc: "no new voucher",
-			voucher: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(100)),
-			),
-			newVoucher: campaign.EmptyVoucher(),
-			isError:    true,
-		},
-		{
-			desc: "invalid coin denom",
-			voucher: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
-			),
-			newVoucher: campaign.EmptyVoucher(),
-			expected: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(100)),
-			),
-			isError: true,
-		},
-		{
-			desc: "increase voucher",
-			voucher: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
-			),
-			newVoucher: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(50)),
-			),
-			expected: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(150)),
-			),
-		},
-	} {
-		t.Run(tc.desc, func(t *testing.T) {
-			got, err := campaign.AddVoucher(tc.voucher, tc.newVoucher)
-			if tc.isError {
-				require.Error(t, err)
-				return
-			}
-			require.NoError(t, err)
-			require.Equal(t, tc.expected, got)
-		})
-	}
-}
-
-func TestDecreaseVoucher(t *testing.T) {
-	for _, tc := range []struct {
-		desc       string
-		voucher    campaign.Voucher
-		toDecrease campaign.Voucher
-		expected   campaign.Voucher
-		isError    bool
-	}{
-		{
-			desc:    "decrease empty set",
-			voucher: campaign.EmptyVoucher(),
-			toDecrease: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
-			),
-			isError: true,
-		},
-		{
-			desc: "decrease from empty set",
-			voucher: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(100)),
-			),
-			toDecrease: campaign.EmptyVoucher(),
-			isError:    true,
-		},
-		{
-			desc: "decrease to negative",
-			voucher: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
-			),
-			toDecrease: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(100)),
-			),
-			isError: true,
-		},
-		{
-			desc: "decrease normal set",
-			voucher: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
-			),
-			toDecrease: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(30)),
-			),
-			expected: campaign.NewVoucherFromCoin(10,
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(70)),
-			),
-		},
-	} {
-		t.Run(tc.desc, func(t *testing.T) {
-			got, err := campaign.DecreaseVoucher(tc.voucher, tc.toDecrease)
-			if tc.isError {
-				require.Error(t, err)
-				return
-			}
-			require.NoError(t, err)
-			require.Equal(t, tc.expected, got)
-		})
-	}
-}
-
-func TestIsEqualVoucher(t *testing.T) {
-	type args struct {
-		voucher1 campaign.Voucher
-		voucher2 campaign.Voucher
-	}
 	tests := []struct {
-		name string
-		args args
-		want bool
+		name       string
+		campaignID uint64
+		vouchers   sdk.Coins
+		err        error
 	}{
 		{
-			name: "equal voucher",
-			args: args{
-				voucher1: campaign.NewVoucherFromCoin(10,
-					sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(1000)),
-				),
-				voucher2: campaign.NewVoucherFromCoin(10,
-					sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(1000)),
-				),
-			},
-			want: true,
+			name:       "one valid coin",
+			campaignID: campaignID,
+			vouchers: sdk.NewCoins(
+				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
+			),
 		},
 		{
-			name: "not equal values",
-			args: args{
-				voucher1: campaign.NewVoucherFromCoin(10,
-					sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(10)),
-				),
-				voucher2: campaign.NewVoucherFromCoin(10,
-					sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(101)),
-				),
-			},
-			want: false,
+			name:       "two valid coins",
+			campaignID: campaignID,
+			vouchers: sdk.NewCoins(
+				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(200)),
+			),
 		},
 		{
-			name: "not equal denom",
-			args: args{
-				voucher1: campaign.NewVoucherFromCoin(10,
-					sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
-				),
-				voucher2: campaign.NewVoucherFromCoin(10,
-					sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(101)),
-				),
-			},
-			want: false,
+			name:       "one valid and one invalid coins",
+			campaignID: campaignID,
+			vouchers: sdk.NewCoins(
+				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
+				sdk.NewCoin("foo", sdk.NewInt(200)),
+			),
+			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
+		},
+		{
+			name:       "one invalid coin",
+			campaignID: campaignID,
+			vouchers: sdk.NewCoins(
+				sdk.NewCoin("foo", sdk.NewInt(200)),
+			),
+			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
+		},
+		{
+			name:       "invalid campaign id",
+			campaignID: 1000,
+			vouchers: sdk.NewCoins(
+				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(200)),
+			),
+			err: fmt.Errorf("v/10/foo doesn't contain the voucher prefix v/1000/"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := campaign.IsEqualVoucher(tt.args.voucher1, tt.args.voucher2)
-			require.True(t, got == tt.want)
+			err := campaign.CheckVoucher(tt.campaignID, tt.vouchers)
+			if tt.err != nil {
+				require.Error(t, err)
+				require.Equal(t, tt.err, err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestSharesToVouchers(t *testing.T) {
+	tests := []struct {
+		name       string
+		campaignID uint64
+		shares     campaign.Shares
+		want       sdk.Coins
+	}{
+		{
+			name:       "test one share",
+			campaignID: campaignID,
+			shares: campaign.Shares(sdk.NewCoins(
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
+			)),
+			want: sdk.NewCoins(
+				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
+			),
+		},
+		{
+			name:       "test two shares",
+			campaignID: campaignID,
+			shares: campaign.Shares(sdk.NewCoins(
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(11)),
+			)),
+			want: sdk.NewCoins(
+				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
+				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(11)),
+			),
+		},
+		{
+			name:       "invalid campaign id",
+			campaignID: 1000,
+			shares: campaign.Shares(sdk.NewCoins(
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(11)),
+				sdk.NewCoin(prefixedShareFoobar, sdk.NewInt(12)),
+			)),
+			want: sdk.NewCoins(
+				sdk.NewCoin("v/1000/foo", sdk.NewInt(10)),
+				sdk.NewCoin("v/1000/bar", sdk.NewInt(11)),
+				sdk.NewCoin("v/1000/foobar", sdk.NewInt(12)),
+			),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := campaign.SharesToVouchers(tt.campaignID, tt.shares)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestVoucherName(t *testing.T) {
+	tests := []struct {
+		name       string
+		campaignID uint64
+		coin       string
+		want       string
+	}{
+		{
+			name:       "test 10/foo",
+			campaignID: 10,
+			coin:       "foo",
+			want:       "v/10/foo",
+		},
+		{
+			name:       "test 0/foo",
+			campaignID: 0,
+			coin:       "foo",
+			want:       "v/0/foo",
+		},
+		{
+			name:       "test empty denom",
+			campaignID: 10,
+			coin:       "",
+			want:       "v/10/",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := campaign.VoucherName(tt.campaignID, tt.coin)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestVouchersToShares(t *testing.T) {
+	tests := []struct {
+		name     string
+		vouchers sdk.Coins
+		want     campaign.Shares
+	}{
+		{
+			name: "test one voucher",
+			vouchers: sdk.NewCoins(
+				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
+			),
+			want: campaign.Shares(sdk.NewCoins(
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
+			)),
+		},
+		{
+			name: "test two vouchers",
+			vouchers: sdk.NewCoins(
+				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
+				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(11)),
+			),
+			want: campaign.Shares(sdk.NewCoins(
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(11)),
+			)),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := campaign.VouchersToShares(tt.vouchers)
+			require.Equal(t, tt.want, got)
 		})
 	}
 }
