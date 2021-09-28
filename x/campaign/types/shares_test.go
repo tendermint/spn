@@ -238,3 +238,63 @@ func TestIsTotalReached(t *testing.T) {
 		})
 	}
 }
+
+func TestIsEqualShares(t *testing.T) {
+	type args struct {
+		share1 campaign.Shares
+		share2 campaign.Shares
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "equal shares",
+			args: args{
+				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedBar, sdk.NewInt(101)),
+				)),
+				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedBar, sdk.NewInt(101)),
+				)),
+			},
+			want: true,
+		},
+		{
+			name: "not equal values",
+			args: args{
+				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedBar, sdk.NewInt(10)),
+				)),
+				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedBar, sdk.NewInt(101)),
+				)),
+			},
+			want: false,
+		},
+		{
+			name: "invalid coin number",
+			args: args{
+				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedBar, sdk.NewInt(10)),
+				)),
+				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+				)),
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := campaign.IsEqualShares(tt.args.share1, tt.args.share2)
+			require.True(t, got == tt.want)
+		})
+	}
+}
