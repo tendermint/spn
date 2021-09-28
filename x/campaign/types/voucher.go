@@ -9,7 +9,6 @@ import (
 
 const (
 	// VoucherPrefix is the prefix used to represent a voucher denomination
-	// A sdk.Coin containing this prefix must never be represented in a balance in the bank module
 	VoucherPrefix = "v/"
 )
 
