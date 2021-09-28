@@ -1,8 +1,10 @@
 package app
 
 import (
+	"github.com/tendermint/spm/cosmoscmd"
 	"io"
 	"os"
+	"path/filepath"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -80,7 +82,6 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/modules/core/keeper"
-	appparams "github.com/tendermint/spn/app/params"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	"github.com/tendermint/spn/x/identity"
@@ -91,11 +92,13 @@ import (
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 )
 
+const (
+	AccountAddressPrefix = "cosmos"
+	Name                 = "spn"
+)
+
 var (
-	// DefaultNodeHome default home directories for the application daemon
-	DefaultNodeHome = func(appName string) string {
-		return os.ExpandEnv("$HOME/.spn")
-	}
+	DefaultNodeHome string
 
 	// ModuleBasics defines the module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
@@ -141,6 +144,15 @@ var (
 		distrtypes.ModuleName: true,
 	}
 )
+
+func init() {
+	userHomeDir, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+}
 
 // App extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
@@ -193,7 +205,6 @@ type App struct {
 // New returns a reference to an initialized Gaia.
 // NewSimApp returns a reference to an initialized SimApp.
 func New(
-	appName string,
 	logger log.Logger,
 	db dbm.DB,
 	traceStore io.Writer,
@@ -201,16 +212,16 @@ func New(
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 	invCheckPeriod uint,
-	encodingConfig appparams.EncodingConfig,
+	encodingConfig cosmoscmd.EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) *App {
+) cosmoscmd.App {
 
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
 
-	bApp := baseapp.NewBaseApp(appName, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
+	bApp := baseapp.NewBaseApp(Name, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetVersion(version.Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
@@ -230,7 +241,7 @@ func New(
 
 	app := &App{
 		BaseApp:           bApp,
-		appName:           appName,
+		appName:           Name,
 		cdc:               cdc,
 		appCodec:          appCodec,
 		interfaceRegistry: interfaceRegistry,
