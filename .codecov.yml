@@ -48,6 +48,7 @@ ignore:
   - "x/**/types/keys.go"
   - "x/**/types/key_*.go"
   - "x/**/types/types.go"
+  - "x/**/invariants.go"
   - "x/**/module.go"
   - "x/**/handler.go"
   - "*.proto"
