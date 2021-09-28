@@ -16,6 +16,7 @@ import (
 func setupMsgServer(t testing.TB) (
 	*keeper.Keeper,
 	*profilekeeper.Keeper,
+	*campaignkeeper.Keeper,
 	types.MsgServer,
 	profiletypes.MsgServer,
 	campaigntypes.MsgServer,
@@ -25,6 +26,7 @@ func setupMsgServer(t testing.TB) (
 
 	return launchLKeeper,
 		profileKeeper,
+		campaignKeeper,
 		keeper.NewMsgServerImpl(*launchLKeeper),
 		profilekeeper.NewMsgServerImpl(*profileKeeper),
 		campaignkeeper.NewMsgServerImpl(*campaignKeeper),

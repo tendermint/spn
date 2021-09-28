@@ -12,7 +12,7 @@ import (
 )
 
 func TestKeeper_CreateNewChain(t *testing.T) {
-	k, _, _, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	k, _, campaignKeeper, _, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
 	coordNoCampaignAddress := sample.AccAddress()
@@ -174,6 +174,13 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 					types.NewGenesisURL(tc.genesisURL, tc.genesisHash),
 					chain.InitialGenesis,
 				)
+			}
+
+			// Check chain has been appended in the campaign
+			if tc.hasCampaign {
+				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.campaignID)
+				require.True(t, found)
+				require.Contains(t, campaignChains.Chains, id)
 			}
 		})
 	}
