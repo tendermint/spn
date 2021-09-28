@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/tendermint/spn/pkg/chainid"
 )
 
 var _ sdk.Msg = &MsgCreateChain{}
@@ -52,7 +53,7 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
-	if _, _, err := ParseGenesisChainID(msg.GenesisChainID); err != nil {
+	if _, _, err := chainid.ParseGenesisChainID(msg.GenesisChainID); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidGenesisChainID, msg.GenesisChainID)
 	}
 

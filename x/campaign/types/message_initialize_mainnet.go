@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	launchtypes "github.com/tendermint/spn/x/launch/types"
+	"github.com/tendermint/spn/pkg/chainid"
 )
 
 var _ sdk.Msg = &MsgInitializeMainnet{}
@@ -57,7 +57,7 @@ func (msg *MsgInitializeMainnet) ValidateBasic() error {
 	if msg.SourceHash == "" {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "empty source hash")
 	}
-	if _, _, err := launchtypes.ParseGenesisChainID(msg.MainnetChainID); err != nil {
+	if _, _, err := chainid.ParseGenesisChainID(msg.MainnetChainID); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid chain ID: %s", err.Error())
 	}
 
