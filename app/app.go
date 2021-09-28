@@ -1,7 +1,6 @@
 package app
 
 import (
-	"github.com/tendermint/spm/cosmoscmd"
 	"io"
 	"os"
 	"path/filepath"
@@ -82,6 +81,7 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/modules/core/keeper"
+	"github.com/tendermint/spm/cosmoscmd"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	"github.com/tendermint/spn/x/identity"
