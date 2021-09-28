@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -14,14 +15,16 @@ import (
 func setupMsgServer(t testing.TB) (
 	*keeper.Keeper,
 	*profilekeeper.Keeper,
+	*launchkeeper.Keeper,
 	types.MsgServer,
 	profiletypes.MsgServer,
 	sdk.Context,
 ) {
-	campaignKeeper, _, profileKeeper, ctx := testkeeper.AllKeepers(t)
+	campaignKeeper, launchKeeper, profileKeeper, ctx := testkeeper.AllKeepers(t)
 
 	return campaignKeeper,
 		profileKeeper,
+		launchKeeper,
 		keeper.NewMsgServerImpl(*campaignKeeper),
 		profilekeeper.NewMsgServerImpl(*profileKeeper),
 		ctx
