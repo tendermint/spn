@@ -11,7 +11,7 @@ import (
 )
 
 func TestMsgEditChain(t *testing.T) {
-	k, _, srv, profileSrv, sdkCtx := setupMsgServer(t)
+	k, _, _, srv, profileSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
 	coordAddress2 := sample.AccAddress()
@@ -28,7 +28,7 @@ func TestMsgEditChain(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create a chain
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "")
+	msgCreateChain := sample.MsgCreateChain(coordAddress, "", 0)
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	chainID := res.Id

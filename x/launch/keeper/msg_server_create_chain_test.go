@@ -11,7 +11,7 @@ import (
 )
 
 func TestMsgCreateChain(t *testing.T) {
-	k, _, srv, profileSrv, sdkCtx := setupMsgServer(t)
+	k, campaignKeeper, _, srv, _, profileSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
 
@@ -29,22 +29,27 @@ func TestMsgCreateChain(t *testing.T) {
 	}{
 		{
 			name:          "valid message",
-			msg:           sample.MsgCreateChain(coordAddress, ""),
+			msg:           sample.MsgCreateChain(coordAddress, "", 0),
 			wantedChainID: 0,
 		},
 		{
 			name:          "creates a unique chain ID",
-			msg:           sample.MsgCreateChain(coordAddress, ""),
+			msg:           sample.MsgCreateChain(coordAddress, "", 0),
 			wantedChainID: 1,
 		},
 		{
 			name:          "valid message with genesis url",
-			msg:           sample.MsgCreateChain(coordAddress, "foo.com"),
+			msg:           sample.MsgCreateChain(coordAddress, "foo.com", 0),
 			wantedChainID: 2,
 		},
 		{
+			name:          "creates message with campaign",
+			msg:           sample.MsgCreateChain(coordAddress, "", 1),
+			wantedChainID: 3,
+		},
+		{
 			name: "coordinator doesn't exist for the chain",
-			msg:  sample.MsgCreateChain(sample.AccAddress(), ""),
+			msg:  sample.MsgCreateChain(sample.AccAddress(), "", 0),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 	} {
@@ -75,6 +80,12 @@ func TestMsgCreateChain(t *testing.T) {
 					types.NewGenesisURL(tc.msg.GenesisURL, tc.msg.GenesisHash),
 					chain.InitialGenesis,
 				)
+			}
+
+			if tc.msg.CampaignID > 0 {
+				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
+				require.True(t, found)
+				require.Contains(t, campaignChains.Chains, chain.Id)
 			}
 		})
 	}

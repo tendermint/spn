@@ -2,9 +2,9 @@ package keeper
 
 import (
 	"context"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -37,6 +37,18 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	}
 
 	id := k.AppendChain(ctx, chain)
+
+	if msg.CampaignID > 0 {
+		campaign, found := k.campaignKeeper.GetCampaignChains(ctx, msg.CampaignID)
+		if !found {
+			campaign = campaigntypes.CampaignChains{
+				CampaignID: msg.CampaignID,
+				Chains:     []uint64{},
+			}
+		}
+		campaign.Chains = append(campaign.Chains, id)
+		k.campaignKeeper.SetCampaignChains(ctx, campaign)
+	}
 
 	return &types.MsgCreateChainResponse{
 		Id: id,

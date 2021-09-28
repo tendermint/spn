@@ -40,8 +40,8 @@ func (k Keeper) AppendCampaign(
 	// Create the campaign
 	count := k.GetCampaignCount(ctx)
 
-	// Set the ID of the appended value
-	campaign.Id = count
+	// Set the ID of the appended value (avoid zero values)
+	campaign.Id = count + 1
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
 	appendedValue := k.cdc.MustMarshal(&campaign)

@@ -31,6 +31,7 @@ message MsgCreateChain {
   string sourceHash = 4;
   string genesisURL = 5;
   string genesisHash = 6;
+  uint64 campaignID = 7;
 }
 
 message MsgCreateChainResponse {
