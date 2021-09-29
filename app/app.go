@@ -395,10 +395,12 @@ func New(
 		app.ProfileKeeper,
 	)
 	app.CampaignKeeper = *campaignKeeper
-	campaignModule := campaignmodule.NewAppModule(appCodec, app.CampaignKeeper)
 
 	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
+	app.CampaignKeeper.SetLaunchKeeper(app.LaunchKeeper)
+
 	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
+	campaignModule := campaignmodule.NewAppModule(appCodec, app.CampaignKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
