@@ -53,6 +53,7 @@ func AllKeepers(t testing.TB) (*campaignkeeper.Keeper, *launchkeeper.Keeper, *pr
 	profileKeeper := initProfile(cdc, db, stateStore)
 	launchKeeper := initLaunch(cdc, db, stateStore, profileKeeper, paramKeeper)
 	campaignKeeper := initCampaign(cdc, db, stateStore, launchKeeper, profileKeeper, bankKeeper)
+	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	require.NoError(t, stateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp

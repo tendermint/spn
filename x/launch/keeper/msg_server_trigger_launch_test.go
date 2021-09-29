@@ -12,7 +12,7 @@ import (
 )
 
 func TestMsgTriggerLaunch(t *testing.T) {
-	k, _, srv, profileSrv, sdkCtx := setupMsgServer(t)
+	k, _, _, srv, profileSrv, _, sdkCtx := setupMsgServer(t)
 
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
