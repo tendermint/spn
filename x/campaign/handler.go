@@ -27,11 +27,12 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgCreateCampaign:
 			res, err := msgServer.CreateCampaign(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-
 		case *types.MsgAddShares:
 			res, err := msgServer.AddShares(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-
+		case *types.MsgAddVestingOptions:
+			res, err := msgServer.AddVestingOptions(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
