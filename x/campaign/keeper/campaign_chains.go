@@ -1,10 +1,38 @@
 package keeper
 
 import (
+	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/campaign/types"
 )
+
+// AddChainToCampaign adds a new chain into an existing campaign
+func (k Keeper) AddChainToCampaign(ctx sdk.Context, campaignID, chainID uint64) error {
+	// Check campaign exist
+	if _, found := k.GetCampaign(ctx, campaignID); !found {
+		return fmt.Errorf("campaign %v not found", campaignID)
+	}
+
+	campaignChains, found := k.GetCampaignChains(ctx, campaignID)
+	if !found {
+		campaignChains = types.CampaignChains{
+			CampaignID: campaignID,
+			Chains:     []uint64{chainID},
+		}
+	} else {
+		// Ensure no duplicated chain ID
+		for _, existingChainID := range campaignChains.Chains {
+			if existingChainID == chainID {
+				return fmt.Errorf("chain %v already associated to campaign %v", chainID, campaignID)
+			}
+		}
+		campaignChains.Chains = append(campaignChains.Chains, chainID)
+	}
+	k.SetCampaignChains(ctx, campaignChains)
+	return nil
+}
 
 // SetCampaignChains set a specific campaignChains in the store from its index
 func (k Keeper) SetCampaignChains(ctx sdk.Context, campaignChains types.CampaignChains) {

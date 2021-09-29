@@ -39,3 +39,8 @@ func NewKeeper(
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
+
+// SetLaunchKeeper set the launch keeper interface of the module
+func (k *Keeper) SetLaunchKeeper(launchKeeper types.LaunchKeeper) {
+	k.launchKeeper = launchKeeper
+}

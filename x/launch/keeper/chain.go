@@ -2,11 +2,78 @@ package keeper
 
 import (
 	"encoding/binary"
+	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/launch/types"
 )
+
+// CreateNewChain creates a new chain in the store from the provided information
+func (k Keeper) CreateNewChain(
+	ctx sdk.Context,
+	coordinatorID uint64,
+	genesisChainID,
+	sourceURL,
+	sourceHash,
+	genesisURL,
+	genesisHash string,
+	hasCampaign bool,
+	campaignID uint64,
+	isMainnet bool,
+) (uint64, error) {
+	chain := types.Chain{
+		CoordinatorID:   coordinatorID,
+		GenesisChainID:  genesisChainID,
+		CreatedAt:       ctx.BlockTime().Unix(),
+		SourceURL:       sourceURL,
+		SourceHash:      sourceHash,
+		HasCampaign:     hasCampaign,
+		CampaignID:      campaignID,
+		IsMainnet:       isMainnet,
+		LaunchTriggered: false,
+		LaunchTimestamp: 0,
+	}
+
+	// Initialize initial genesis
+	if genesisURL == "" {
+		chain.InitialGenesis = types.NewDefaultInitialGenesis()
+	} else {
+		chain.InitialGenesis = types.NewGenesisURL(genesisURL, genesisHash)
+	}
+
+	if err := chain.Validate(); err != nil {
+		return 0, err
+	}
+
+	// If the chain is associated to a campaign, campaign existence and coordinator is checked
+	if hasCampaign {
+		campaign, found := k.campaignKeeper.GetCampaign(ctx, campaignID)
+		if !found {
+			return 0, fmt.Errorf("campaign %v doesn't exist", campaignID)
+		}
+		if campaign.CoordinatorID != coordinatorID {
+			return 0, fmt.Errorf(
+				"chain coordinator %v and campaign coordinator %v don't match",
+				coordinatorID,
+				campaign.CoordinatorID,
+			)
+		}
+	}
+
+	// Append the chain to the store
+	chainID := k.AppendChain(ctx, chain)
+
+	// Register the chain to the campaign
+	if hasCampaign {
+		if err := k.campaignKeeper.AddChainToCampaign(ctx, campaignID, chainID); err != nil {
+			return 0, err
+		}
+	}
+
+	return chainID, nil
+
+}
 
 // GetChainCount get the total number of chains
 func (k Keeper) GetChainCount(ctx sdk.Context) uint64 {
