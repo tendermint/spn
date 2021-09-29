@@ -18,6 +18,16 @@ func NewShareDelayedVesting(vesting Shares, endTime int64) *ShareVestingOptions 
 	}
 }
 
+// GetDelayedVestingShare return the vesting share for delayed vesting options
+func (m ShareVestingOptions) GetDelayedVestingShare() (Shares, error) {
+	switch vestionOptions := m.Options.(type) {
+	case *ShareVestingOptions_DelayedVesting:
+		return vestionOptions.DelayedVesting.Vesting, nil
+	default:
+		return nil, errors.New("invalid vesting options type")
+	}
+}
+
 // Validate check the ShareDelayedVesting object
 func (m ShareVestingOptions) Validate() error {
 	switch vestionOptions := m.Options.(type) {
