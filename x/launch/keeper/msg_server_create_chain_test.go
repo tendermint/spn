@@ -11,7 +11,7 @@ import (
 )
 
 func TestMsgCreateChain(t *testing.T) {
-	k, _, srv, profileSrv, sdkCtx := setupMsgServer(t)
+	k, _, _, srv, profileSrv, _, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
 
@@ -76,6 +76,9 @@ func TestMsgCreateChain(t *testing.T) {
 					chain.InitialGenesis,
 				)
 			}
+
+			// Chain created from MsgCreateChain is never a mainnet
+			require.False(t, chain.IsMainnet)
 		})
 	}
 }
