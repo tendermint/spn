@@ -31,6 +31,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdUpdateTotalSupply())
 	cmd.AddCommand(CmdCreateCampaign())
 	cmd.AddCommand(CmdAddShares())
+	cmd.AddCommand(CmdAddVestingOptions())
 
 	return cmd
 }

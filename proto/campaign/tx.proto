@@ -4,6 +4,7 @@ package tendermint.spn.campaign;
 // this line is used by starport scaffolding # proto/tx/import
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
+import "campaign/mainnet_vesting_account.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
@@ -14,6 +15,7 @@ service Msg {
   rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
   rpc InitializeMainnet(MsgInitializeMainnet) returns (MsgInitializeMainnetResponse);
   rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
+  rpc AddVestingOptions(MsgAddVestingOptions) returns (MsgAddVestingOptionsResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -65,6 +67,17 @@ message MsgAddShares {
 }
 
 message MsgAddSharesResponse {
+}
+
+message MsgAddVestingOptions {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  string address = 3;
+  repeated cosmos.base.v1beta1.Coin startingShares = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+  ShareVestingOptions vestingOptions = 5 [(gogoproto.nullable) = false];
+}
+
+message MsgAddVestingOptionsResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

@@ -16,13 +16,27 @@ func ShareVestingOptions() campaign.ShareVestingOptions {
 	return *campaign.NewShareDelayedVesting(Shares(), time.Now().Unix())
 }
 
+// CustomShareVestingOptions returns a sample ShareVestingOptions with shares
+func CustomShareVestingOptions(shares campaign.Shares) campaign.ShareVestingOptions {
+	return *campaign.NewShareDelayedVesting(shares, time.Now().Unix())
+}
+
 // MainnetVestingAccount returns a sample MainnetVestingAccount
 func MainnetVestingAccount(campaignID uint64, address string) campaign.MainnetVestingAccount {
+	return MainnetVestingAccountWithShares(campaignID, address, Shares())
+}
+
+// MainnetVestingAccountWithShares returns a sample MainnetVestingAccount with custom shares
+func MainnetVestingAccountWithShares(
+	campaignID uint64,
+	address string,
+	shares campaign.Shares,
+) campaign.MainnetVestingAccount {
 	return campaign.MainnetVestingAccount{
 		CampaignID:     campaignID,
 		Address:        address,
-		Shares:         Shares(),
-		VestingOptions: ShareVestingOptions(),
+		Shares:         shares,
+		VestingOptions: CustomShareVestingOptions(shares),
 	}
 }
 
