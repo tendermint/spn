@@ -25,7 +25,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	// Initialize the list of campaign chains
 	k.SetCampaignChains(ctx, types.CampaignChains{
 		CampaignID: campaignID,
-		Chains: []uint64{},
+		Chains:     []uint64{},
 	})
 
 	return &types.MsgCreateCampaignResponse{CampaignID: campaignID}, nil

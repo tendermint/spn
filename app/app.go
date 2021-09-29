@@ -402,7 +402,6 @@ func New(
 	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
 	campaignModule := campaignmodule.NewAppModule(appCodec, app.CampaignKeeper)
 
-
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it

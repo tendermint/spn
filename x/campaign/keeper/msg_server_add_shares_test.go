@@ -22,7 +22,7 @@ func TestMsgAddShares(t *testing.T) {
 		campaignMainnetInitialized     = sample.Campaign(1)
 
 		campaignKeeper, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                = sdk.WrapSDKContext(sdkCtx)
+		ctx                                                   = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// create shares
