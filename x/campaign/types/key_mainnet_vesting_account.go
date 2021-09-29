@@ -11,32 +11,14 @@ const (
 
 // MainnetVestingAccountKey returns the store key to retrieve a MainnetVestingAccount from the index fields
 func MainnetVestingAccountKey(campaignID uint64, address string) []byte {
-	var key []byte
-
-	campaignIDBytes := make([]byte, 8)
-	binary.BigEndian.PutUint64(campaignIDBytes, campaignID)
-	key = append(key, campaignIDBytes...)
-	key = append(key, []byte("/")...)
-
-	addressBytes := []byte(address)
-	key = append(key, addressBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
+	campaignIDBytes := append(uintBytes(campaignID), byte('/'))
+	addressBytes := append([]byte(address), byte('/'))
+	return append(campaignIDBytes, addressBytes...)
 }
 
 // MainnetVestingAccountAllKey returns the store key to retrieve all MainnetVestingAccount by campaign id
 func MainnetVestingAccountAllKey(campaignID uint64) []byte {
-	var key []byte
-
-	keyBytes := []byte(MainnetVestingAccountKeyPrefix)
-	key = append(key, keyBytes...)
-
-	campaignIDBytes := make([]byte, 8)
-	binary.BigEndian.PutUint64(campaignIDBytes, campaignID)
-	key = append(key, campaignIDBytes...)
-
-	key = append(key, []byte("/")...)
-
-	return key
+	prefixBytes := []byte(MainnetVestingAccountKeyPrefix)
+	campaignIDBytes := append(uintBytes(campaignID), byte('/'))
+	return append(prefixBytes, campaignIDBytes...)
 }
