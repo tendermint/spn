@@ -2,7 +2,6 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 )
 

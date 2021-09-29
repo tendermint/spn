@@ -16,7 +16,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "valid address",
+			name: "valid message",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     sample.Uint64(),
@@ -59,7 +59,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
-			name: "empty source URL",
+			name: "invalid chain id",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     sample.Uint64(),

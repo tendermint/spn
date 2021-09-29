@@ -11,8 +11,8 @@ var _ sdk.Msg = &MsgInitializeMainnet{}
 func NewMsgInitializeMainnet(
 	coordinator string,
 	campaignID uint64,
-	sourceURL string,
-	sourceHash string,
+	sourceURL,
+	sourceHash,
 	mainnetChainID string,
 ) *MsgInitializeMainnet {
 	return &MsgInitializeMainnet{
