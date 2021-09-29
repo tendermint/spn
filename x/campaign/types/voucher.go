@@ -16,7 +16,7 @@ const (
 func SharesToVouchers(campaignID uint64, shares Shares) (sdk.Coins, error) {
 	err := CheckShares(shares)
 	if err != nil {
-
+		return nil, err
 	}
 	vouchers := make(sdk.Coins, len(shares))
 	for i, coin := range shares {
@@ -31,7 +31,7 @@ func SharesToVouchers(campaignID uint64, shares Shares) (sdk.Coins, error) {
 func VouchersToShares(campaignID uint64, vouchers sdk.Coins) (Shares, error) {
 	err := CheckVouchers(campaignID, vouchers)
 	if err != nil {
-
+		return nil, err
 	}
 	shares := make(Shares, len(vouchers))
 	for i, coin := range vouchers {

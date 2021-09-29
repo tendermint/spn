@@ -2,7 +2,6 @@ package types_test
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -61,7 +60,7 @@ func TestCheckVouchers(t *testing.T) {
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(200)),
 			),
-			err: fmt.Errorf("v/10/foo doesn't contain the voucher prefix v/1000/"),
+			err: errors.New("v/10/foo doesn't contain the voucher prefix v/1000/"),
 		},
 	}
 	for _, tt := range tests {
@@ -108,7 +107,7 @@ func TestSharesToVouchers(t *testing.T) {
 			),
 		},
 		{
-			name:       "invalid campaign id",
+			name:       "another campaign id",
 			campaignID: 1000,
 			shares: campaign.Shares(sdk.NewCoins(
 				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
@@ -120,6 +119,14 @@ func TestSharesToVouchers(t *testing.T) {
 				sdk.NewCoin("v/1000/bar", sdk.NewInt(11)),
 				sdk.NewCoin("v/1000/foobar", sdk.NewInt(12)),
 			),
+		},
+		{
+			name:       "invalid share prefix",
+			campaignID: 1000,
+			shares: campaign.Shares(sdk.NewCoins(
+				sdk.NewCoin("t/foo", sdk.NewInt(10)),
+			)),
+			err: errors.New("t/foo doesn't contain the share prefix s/"),
 		},
 	}
 	for _, tt := range tests {
@@ -179,7 +186,8 @@ func TestVouchersToShares(t *testing.T) {
 		err        error
 	}{
 		{
-			name: "test one voucher",
+			name:       "test one voucher",
+			campaignID: campaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
 			),
@@ -188,7 +196,8 @@ func TestVouchersToShares(t *testing.T) {
 			)),
 		},
 		{
-			name: "test two vouchers",
+			name:       "test two vouchers",
+			campaignID: campaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
 				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(11)),
@@ -197,6 +206,15 @@ func TestVouchersToShares(t *testing.T) {
 				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
 				sdk.NewCoin(prefixedShareBar, sdk.NewInt(11)),
 			)),
+		},
+		{
+			name:       "wrong campaign id",
+			campaignID: 1000,
+			vouchers: sdk.NewCoins(
+				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
+				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(11)),
+			),
+			err: errors.New("v/10/bar doesn't contain the voucher prefix v/1000/"),
 		},
 	}
 	for _, tt := range tests {
