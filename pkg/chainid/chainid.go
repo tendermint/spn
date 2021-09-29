@@ -15,7 +15,7 @@ const (
 
 // NewGenesisChainID returns the genesis chain id from the chain name and the number
 func NewGenesisChainID(chainName string, networkNumber uint64) string {
-	return fmt.Sprintf("%v%v%v", chainName, ChainIDSeparator, networkNumber)
+	return fmt.Sprintf("%s%s%d", chainName, ChainIDSeparator, networkNumber)
 }
 
 // ParseGenesisChainID returns the chain name and the number from the chain ID
