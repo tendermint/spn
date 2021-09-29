@@ -7,13 +7,19 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+const (
+	zeroLaunchTimestamp = "zero-launch-timestamp"
+	duplicatedAccount   = "duplicated-account"
+	unknownRequestType  = "unknown-request-type"
+)
+
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
-	ir.RegisterRoute(types.ModuleName, "zero-launch-timestamp",
+	ir.RegisterRoute(types.ModuleName, zeroLaunchTimestamp,
 		ZeroLaunchTimestampInvariant(k))
-	ir.RegisterRoute(types.ModuleName, "duplicated-account",
+	ir.RegisterRoute(types.ModuleName, duplicatedAccount,
 		DuplicatedAccountInvariant(k))
-	ir.RegisterRoute(types.ModuleName, "unknown-request-type",
+	ir.RegisterRoute(types.ModuleName, unknownRequestType,
 		UnknownRequestTypeInvariant(k))
 }
 
@@ -40,7 +46,7 @@ func ZeroLaunchTimestampInvariant(k Keeper) sdk.Invariant {
 		for _, chain := range all {
 			if chain.LaunchTimestamp == 0 {
 				return sdk.FormatInvariant(
-					types.ModuleName, "zero-launch-timestamp",
+					types.ModuleName, zeroLaunchTimestamp,
 					"LaunchTimestamp is not set while LaunchTriggered is set",
 				), true
 			}
@@ -58,7 +64,7 @@ func DuplicatedAccountInvariant(k Keeper) sdk.Invariant {
 			_, found := k.GetVestingAccount(ctx, account.ChainID, account.Address)
 			if found {
 				return sdk.FormatInvariant(
-					types.ModuleName, "duplicated-account",
+					types.ModuleName, duplicatedAccount,
 					fmt.Sprintf(
 						"account %s for chain %v found in vesting and genesis accounts",
 						account.Address,
@@ -79,7 +85,7 @@ func UnknownRequestTypeInvariant(k Keeper) sdk.Invariant {
 		for _, request := range all {
 			if err := request.Content.Validate(); err != nil {
 				return sdk.FormatInvariant(
-					types.ModuleName, "unknown-request-type",
+					types.ModuleName, unknownRequestType,
 					"invalid request",
 				), true
 			}
@@ -92,7 +98,7 @@ func UnknownRequestTypeInvariant(k Keeper) sdk.Invariant {
 				*types.RequestContent_ValidatorRemoval:
 			default:
 				return sdk.FormatInvariant(
-					types.ModuleName, "unknown-request-type",
+					types.ModuleName, unknownRequestType,
 					"unknown request content type",
 				), true
 			}

@@ -7,9 +7,13 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
+const (
+	coordinatorIDNotFound = "coordinator-id-not-found"
+)
+
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
-	ir.RegisterRoute(types.ModuleName, "coordinator-id-not-found",
+	ir.RegisterRoute(types.ModuleName, coordinatorIDNotFound,
 		CoordinatorAddrNotFoundInvariant(k))
 }
 
@@ -28,7 +32,7 @@ func CoordinatorAddrNotFoundInvariant(k Keeper) sdk.Invariant {
 		for _, coord := range all {
 			if !k.HasCoordinator(ctx, coord.CoordinatorId) {
 				return sdk.FormatInvariant(
-					types.ModuleName, "coordinator-id-not-found",
+					types.ModuleName, coordinatorIDNotFound,
 					fmt.Sprintf("%s: %d", types.ErrCoordAddressNotFound, coord.CoordinatorId),
 				), true
 			}
