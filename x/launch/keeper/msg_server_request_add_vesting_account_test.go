@@ -12,13 +12,13 @@ import (
 
 func TestMsgRequestAddVestingAccount(t *testing.T) {
 	var (
-		invalidChain             = uint64(1000)
-		coordAddr                = sample.AccAddress()
-		addr1                    = sample.AccAddress()
-		addr2                    = sample.AccAddress()
-		addr3                    = sample.AccAddress()
-		k, _, pk, srv, _, sdkCtx = setupMsgServer(t)
-		ctx                      = sdk.WrapSDKContext(sdkCtx)
+		invalidChain                = uint64(1000)
+		coordAddr                   = sample.AccAddress()
+		addr1                       = sample.AccAddress()
+		addr2                       = sample.AccAddress()
+		addr3                       = sample.AccAddress()
+		k, _, pk, srv, _, _, sdkCtx = setupMsgServer(t)
+		ctx                         = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{

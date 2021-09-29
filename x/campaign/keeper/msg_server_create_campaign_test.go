@@ -47,7 +47,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 				TotalSupply:   sample.Coins(),
 				DynamicShares: false,
 			},
-			expectedID: uint64(0),
+			expectedID: uint64(1),
 		},
 		{
 			name: "create a campaign 2 with dynamic shares",
@@ -57,7 +57,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 				TotalSupply:   sample.Coins(),
 				DynamicShares: true,
 			},
-			expectedID: uint64(1),
+			expectedID: uint64(2),
 		},
 		{
 			name: "create a campaign from a different coordinator",
@@ -67,7 +67,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 				TotalSupply:   sample.Coins(),
 				DynamicShares: false,
 			},
-			expectedID: uint64(2),
+			expectedID: uint64(3),
 		},
 		{
 			name: "create a campaign from a non existing coordinator",
