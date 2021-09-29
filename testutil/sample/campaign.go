@@ -69,3 +69,13 @@ func CampaignGenesisState() campaign.GenesisState {
 		},
 	}
 }
+
+// MsgCreateCampaign returns a sample MsgCreateCampaign
+func MsgCreateCampaign(coordAddress string) campaign.MsgCreateCampaign {
+	return *campaign.NewMsgCreateCampaign(
+		coordAddress,
+		String(10),
+		Coins(),
+		true,
+	)
+}

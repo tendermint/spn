@@ -11,15 +11,21 @@ import (
 )
 
 func TestMsgCreateChain(t *testing.T) {
-	k, campaignKeeper, _, srv, _, profileSrv, sdkCtx := setupMsgServer(t)
+	k, campaignKeeper, _, srv, campaignSrv, profileSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
 
 	// Create a coordinator
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	resCoord, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
-	coordID := res.CoordinatorId
+	coordID := resCoord.CoordinatorId
+
+	// Create a campaign
+	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
+	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campaignID := resCampaign.CampaignID
 
 	for _, tc := range []struct {
 		name          string
@@ -44,7 +50,7 @@ func TestMsgCreateChain(t *testing.T) {
 		},
 		{
 			name:          "creates message with campaign",
-			msg:           sample.MsgCreateChain(coordAddress, "", 1),
+			msg:           sample.MsgCreateChain(coordAddress, "", campaignID),
 			wantedChainID: 3,
 		},
 		{

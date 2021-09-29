@@ -47,7 +47,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 }
 
 // SetCampaignKeeper set the campaign keeper interface of the module
-func (k Keeper) SetCampaignKeeper(campaignKeeper types.CampaignKeeper) {
+func (k *Keeper) SetCampaignKeeper(campaignKeeper types.CampaignKeeper) {
 	if k.campaignKeeper != nil {
 		panic("campaign keeper already set for launch module")
 	}
