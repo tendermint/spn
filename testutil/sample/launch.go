@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/tendermint/spn/pkg/chainid"
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
@@ -13,7 +14,7 @@ import (
 func GenesisChainID() string {
 	chainName := AlphaString(5)
 	number := Uint64()
-	return launch.NewGenesisChainID(chainName, number)
+	return chainid.NewGenesisChainID(chainName, number)
 }
 
 // Chain returns a sample Chain

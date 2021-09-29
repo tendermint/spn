@@ -1,18 +1,42 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
+func TestKeeper_AddChainToCampaign(t *testing.T) {
+	k, ctx := testkeeper.Campaign(t)
+
+	// Fail if campaign doesn't exist
+	err := k.AddChainToCampaign(ctx, 0, 0)
+	require.Error(t, err)
+
+	// Chains can be added
+	k.SetCampaign(ctx, sample.Campaign(0))
+	err = k.AddChainToCampaign(ctx, 0, 0)
+	require.NoError(t, err)
+	err = k.AddChainToCampaign(ctx, 0, 1)
+	require.NoError(t, err)
+	err = k.AddChainToCampaign(ctx, 0, 2)
+	require.NoError(t, err)
+
+	campainChains, found := k.GetCampaignChains(ctx, 0)
+	require.True(t, found)
+	require.EqualValues(t, campainChains.CampaignID, uint64(0))
+	require.Len(t, campainChains.Chains, 3)
+	require.EqualValues(t, []uint64{0, 1, 2}, campainChains.Chains)
+
+	// Can't add an existing chain
+	err = k.AddChainToCampaign(ctx, 0, 0)
+	require.Error(t, err)
+}
 
 func createNCampaignChains(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.CampaignChains {
 	items := make([]types.CampaignChains, n)

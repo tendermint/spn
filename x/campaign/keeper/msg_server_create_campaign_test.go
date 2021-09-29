@@ -12,10 +12,10 @@ import (
 
 func TestMsgCreateCampaign(t *testing.T) {
 	var (
-		coordAddr1                                         = sample.AccAddress()
-		coordAddr2                                         = sample.AccAddress()
-		campaignKeeper, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                = sdk.WrapSDKContext(sdkCtx)
+		coordAddr1                                            = sample.AccAddress()
+		coordAddr2                                            = sample.AccAddress()
+		campaignKeeper, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
+		ctx                                                   = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
@@ -98,6 +98,12 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.EqualValues(t, tc.msg.DynamicShares, campaign.DynamicShares)
 			require.EqualValues(t, types.EmptyShares(), campaign.AllocatedShares)
 			require.EqualValues(t, types.EmptyShares(), campaign.TotalShares)
+
+			// Empty list of campaign chains
+			campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)
+			require.True(t, found)
+			require.EqualValues(t, got.CampaignID, campaignChains.CampaignID)
+			require.Empty(t, campaignChains.Chains)
 		})
 	}
 }

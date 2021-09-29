@@ -334,6 +334,126 @@ func (m *MsgCreateCampaignResponse) GetCampaignID() uint64 {
 	return 0
 }
 
+type MsgInitializeMainnet struct {
+	Coordinator    string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
+	CampaignID     uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	SourceURL      string `protobuf:"bytes,3,opt,name=sourceURL,proto3" json:"sourceURL,omitempty"`
+	SourceHash     string `protobuf:"bytes,4,opt,name=sourceHash,proto3" json:"sourceHash,omitempty"`
+	MainnetChainID string `protobuf:"bytes,5,opt,name=mainnetChainID,proto3" json:"mainnetChainID,omitempty"`
+}
+
+func (m *MsgInitializeMainnet) Reset()         { *m = MsgInitializeMainnet{} }
+func (m *MsgInitializeMainnet) String() string { return proto.CompactTextString(m) }
+func (*MsgInitializeMainnet) ProtoMessage()    {}
+func (*MsgInitializeMainnet) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{6}
+}
+func (m *MsgInitializeMainnet) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgInitializeMainnet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgInitializeMainnet.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgInitializeMainnet) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgInitializeMainnet.Merge(m, src)
+}
+func (m *MsgInitializeMainnet) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgInitializeMainnet) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgInitializeMainnet.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgInitializeMainnet proto.InternalMessageInfo
+
+func (m *MsgInitializeMainnet) GetCoordinator() string {
+	if m != nil {
+		return m.Coordinator
+	}
+	return ""
+}
+
+func (m *MsgInitializeMainnet) GetCampaignID() uint64 {
+	if m != nil {
+		return m.CampaignID
+	}
+	return 0
+}
+
+func (m *MsgInitializeMainnet) GetSourceURL() string {
+	if m != nil {
+		return m.SourceURL
+	}
+	return ""
+}
+
+func (m *MsgInitializeMainnet) GetSourceHash() string {
+	if m != nil {
+		return m.SourceHash
+	}
+	return ""
+}
+
+func (m *MsgInitializeMainnet) GetMainnetChainID() string {
+	if m != nil {
+		return m.MainnetChainID
+	}
+	return ""
+}
+
+type MsgInitializeMainnetResponse struct {
+	MainnetID uint64 `protobuf:"varint,1,opt,name=mainnetID,proto3" json:"mainnetID,omitempty"`
+}
+
+func (m *MsgInitializeMainnetResponse) Reset()         { *m = MsgInitializeMainnetResponse{} }
+func (m *MsgInitializeMainnetResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgInitializeMainnetResponse) ProtoMessage()    {}
+func (*MsgInitializeMainnetResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{7}
+}
+func (m *MsgInitializeMainnetResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgInitializeMainnetResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgInitializeMainnetResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgInitializeMainnetResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgInitializeMainnetResponse.Merge(m, src)
+}
+func (m *MsgInitializeMainnetResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgInitializeMainnetResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgInitializeMainnetResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgInitializeMainnetResponse proto.InternalMessageInfo
+
+func (m *MsgInitializeMainnetResponse) GetMainnetID() uint64 {
+	if m != nil {
+		return m.MainnetID
+	}
+	return 0
+}
+
 type MsgAddShares struct {
 	Coordinator string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
 	CampaignID  uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
@@ -345,7 +465,7 @@ func (m *MsgAddShares) Reset()         { *m = MsgAddShares{} }
 func (m *MsgAddShares) String() string { return proto.CompactTextString(m) }
 func (*MsgAddShares) ProtoMessage()    {}
 func (*MsgAddShares) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{6}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{8}
 }
 func (m *MsgAddShares) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -409,7 +529,7 @@ func (m *MsgAddSharesResponse) Reset()         { *m = MsgAddSharesResponse{} }
 func (m *MsgAddSharesResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgAddSharesResponse) ProtoMessage()    {}
 func (*MsgAddSharesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{7}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{9}
 }
 func (m *MsgAddSharesResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -450,7 +570,7 @@ func (m *MsgAddVestingOptions) Reset()         { *m = MsgAddVestingOptions{} }
 func (m *MsgAddVestingOptions) String() string { return proto.CompactTextString(m) }
 func (*MsgAddVestingOptions) ProtoMessage()    {}
 func (*MsgAddVestingOptions) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{8}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{10}
 }
 func (m *MsgAddVestingOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -521,7 +641,7 @@ func (m *MsgAddVestingOptionsResponse) Reset()         { *m = MsgAddVestingOptio
 func (m *MsgAddVestingOptionsResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgAddVestingOptionsResponse) ProtoMessage()    {}
 func (*MsgAddVestingOptionsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{9}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{11}
 }
 func (m *MsgAddVestingOptionsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -557,6 +677,8 @@ func init() {
 	proto.RegisterType((*MsgUpdateTotalSupplyResponse)(nil), "tendermint.spn.campaign.MsgUpdateTotalSupplyResponse")
 	proto.RegisterType((*MsgCreateCampaign)(nil), "tendermint.spn.campaign.MsgCreateCampaign")
 	proto.RegisterType((*MsgCreateCampaignResponse)(nil), "tendermint.spn.campaign.MsgCreateCampaignResponse")
+	proto.RegisterType((*MsgInitializeMainnet)(nil), "tendermint.spn.campaign.MsgInitializeMainnet")
+	proto.RegisterType((*MsgInitializeMainnetResponse)(nil), "tendermint.spn.campaign.MsgInitializeMainnetResponse")
 	proto.RegisterType((*MsgAddShares)(nil), "tendermint.spn.campaign.MsgAddShares")
 	proto.RegisterType((*MsgAddSharesResponse)(nil), "tendermint.spn.campaign.MsgAddSharesResponse")
 	proto.RegisterType((*MsgAddVestingOptions)(nil), "tendermint.spn.campaign.MsgAddVestingOptions")
@@ -566,48 +688,54 @@ func init() {
 func init() { proto.RegisterFile("campaign/tx.proto", fileDescriptor_fb6bf904ffc53c1f) }
 
 var fileDescriptor_fb6bf904ffc53c1f = []byte{
-	// 646 bytes of a gzipped FileDescriptorProto
+	// 738 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x56, 0xcd, 0x6e, 0xd3, 0x4c,
-	0x14, 0xcd, 0xb4, 0xf9, 0xfa, 0xd1, 0x49, 0xa9, 0x14, 0xab, 0x82, 0x34, 0x42, 0x8e, 0x65, 0xf1,
-	0x63, 0x55, 0xc4, 0x56, 0x83, 0x58, 0x20, 0x56, 0x24, 0xdd, 0xb0, 0x08, 0x48, 0x6e, 0x61, 0x51,
-	0x16, 0xd5, 0xc4, 0x1e, 0xb9, 0x16, 0xf1, 0x8c, 0xe5, 0x99, 0x44, 0x8d, 0xc4, 0x43, 0xb0, 0x44,
-	0x3c, 0x02, 0x4f, 0x52, 0x09, 0x16, 0x59, 0x76, 0x55, 0x50, 0xf2, 0x08, 0xec, 0x58, 0x21, 0xff,
-	0xc6, 0x8e, 0x9b, 0xd4, 0x95, 0x1a, 0x89, 0x55, 0x9b, 0xeb, 0x33, 0xf7, 0xdc, 0x73, 0x72, 0xcf,
-	0xc4, 0xb0, 0x6a, 0x20, 0xc7, 0x45, 0xb6, 0x45, 0x34, 0x7e, 0xa6, 0xba, 0x1e, 0xe5, 0x54, 0xb8,
-	0xcf, 0x31, 0x31, 0xb1, 0xe7, 0xd8, 0x84, 0xab, 0xcc, 0x25, 0x6a, 0x8c, 0xa8, 0xef, 0x58, 0xd4,
-	0xa2, 0x01, 0x46, 0xf3, 0xff, 0x0b, 0xe1, 0x75, 0xd1, 0xa0, 0xcc, 0xa1, 0x4c, 0xeb, 0x21, 0x86,
-	0xb5, 0xe1, 0x7e, 0x0f, 0x73, 0xb4, 0xaf, 0x19, 0xd4, 0x26, 0xd1, 0xf3, 0xc7, 0x09, 0x83, 0x83,
-	0x6c, 0x42, 0x30, 0x3f, 0x19, 0x62, 0xc6, 0x6d, 0x62, 0x9d, 0x20, 0xc3, 0xa0, 0x03, 0xc2, 0x43,
-	0x9c, 0x3c, 0x06, 0x70, 0xa7, 0xcb, 0xac, 0x77, 0xae, 0x89, 0x38, 0x3e, 0xa2, 0x1c, 0xf5, 0x0f,
-	0x4f, 0x91, 0x87, 0x99, 0x20, 0xc1, 0x8a, 0x41, 0xa9, 0x67, 0xda, 0x04, 0x71, 0xea, 0xd5, 0x80,
-	0x04, 0x94, 0x4d, 0x3d, 0x5d, 0x12, 0x44, 0x08, 0x63, 0x92, 0xd7, 0x07, 0xb5, 0x35, 0x09, 0x28,
-	0x65, 0x3d, 0x55, 0x11, 0x86, 0xb0, 0xc2, 0x67, 0x0d, 0x6b, 0xeb, 0xd2, 0xba, 0x52, 0x69, 0xed,
-	0xaa, 0xe1, 0xe0, 0xaa, 0x3f, 0xb8, 0x1a, 0x0d, 0xae, 0x76, 0xa8, 0x4d, 0xda, 0x2f, 0xce, 0x2f,
-	0x1b, 0xa5, 0x3f, 0x97, 0x8d, 0x27, 0x96, 0xcd, 0x4f, 0x07, 0x3d, 0xd5, 0xa0, 0x8e, 0x16, 0xa9,
-	0x0c, 0xff, 0x34, 0x99, 0xf9, 0x51, 0xe3, 0x23, 0x17, 0xb3, 0xe0, 0xc0, 0xb7, 0x9f, 0x8d, 0x8d,
-	0xb0, 0xb7, 0x9e, 0x26, 0x92, 0x45, 0xf8, 0xe0, 0x2a, 0x45, 0x3a, 0x66, 0x2e, 0x25, 0x0c, 0xcb,
-	0xbf, 0xf3, 0x92, 0x07, 0xae, 0xdb, 0x1f, 0xdd, 0x82, 0xe4, 0x2f, 0x20, 0xd6, 0x1c, 0x74, 0xbc,
-	0x5e, 0xf3, 0x87, 0x9b, 0x6b, 0x56, 0x0a, 0x42, 0x13, 0x57, 0x82, 0x51, 0xae, 0x70, 0x25, 0xa8,
-	0x27, 0xae, 0x7c, 0x5d, 0x83, 0xd5, 0x2e, 0xb3, 0x3a, 0x1e, 0x46, 0x1c, 0x77, 0x22, 0x49, 0x05,
-	0x2c, 0x91, 0xe1, 0x56, 0x6c, 0xc0, 0x1b, 0xe4, 0xe0, 0xc0, 0x94, 0x4d, 0x3d, 0x53, 0x0b, 0x6c,
-	0x39, 0xfa, 0x77, 0x6c, 0x49, 0x7f, 0xe7, 0x0f, 0xe1, 0x5d, 0x73, 0x44, 0x90, 0x63, 0x1b, 0xd1,
-	0x9a, 0x96, 0x25, 0xa0, 0xdc, 0xd1, 0xb3, 0x45, 0xf9, 0x25, 0xdc, 0xcd, 0x79, 0x13, 0x3b, 0x37,
-	0xb7, 0x14, 0x60, 0x7e, 0x29, 0xe4, 0x0b, 0x00, 0xb7, 0xba, 0xcc, 0x7a, 0x65, 0x9a, 0xb7, 0x16,
-	0xad, 0x1a, 0xfc, 0x1f, 0x99, 0xa6, 0x87, 0x99, 0x1f, 0x2b, 0xff, 0x74, 0xfc, 0x51, 0xe8, 0xc3,
-	0x0d, 0x16, 0x0b, 0x59, 0x5d, 0xde, 0x22, 0x0e, 0xf9, 0x5e, 0x90, 0xa4, 0x44, 0x59, 0xb2, 0x4c,
-	0x3f, 0xd6, 0xe2, 0x07, 0xef, 0xc3, 0x5b, 0xe7, 0xad, 0xcb, 0x6d, 0x4a, 0x56, 0x2b, 0xfd, 0x13,
-	0xdc, 0x66, 0x1c, 0x79, 0x3e, 0xdd, 0xe1, 0xea, 0x2d, 0x98, 0xe3, 0x12, 0x8e, 0xe1, 0xf6, 0x30,
-	0xa3, 0xb5, 0xf6, 0x9f, 0x04, 0x94, 0x4a, 0xeb, 0xa9, 0xba, 0xe0, 0x62, 0x57, 0x83, 0x83, 0x59,
-	0x7f, 0xda, 0x65, 0x7f, 0x20, 0x7d, 0xae, 0x53, 0x94, 0xdd, 0x9c, 0x9b, 0xb1, 0xdd, 0xad, 0xef,
-	0x65, 0xb8, 0xde, 0x65, 0x96, 0xe0, 0xc2, 0xed, 0xb9, 0xfc, 0xee, 0x2d, 0x64, 0xcf, 0xed, 0x73,
-	0xbd, 0x55, 0x1c, 0x9b, 0xec, 0xfe, 0x08, 0x56, 0xf3, 0x3f, 0x1d, 0xcd, 0x65, 0x8d, 0x72, 0xf0,
-	0xfa, 0xf3, 0x1b, 0xc1, 0x17, 0x51, 0x87, 0x71, 0x2e, 0x4c, 0x1d, 0xc0, 0x8b, 0x53, 0x67, 0xee,
-	0x4a, 0x01, 0xc1, 0xcd, 0x59, 0x9a, 0x1f, 0x2d, 0xeb, 0x91, 0xc0, 0xea, 0xcd, 0x42, 0xb0, 0xb4,
-	0xba, 0x7c, 0x7a, 0xae, 0xeb, 0x91, 0x85, 0x2f, 0x57, 0xb7, 0x70, 0x9b, 0xda, 0x07, 0xe7, 0x13,
-	0x11, 0x8c, 0x27, 0x22, 0xf8, 0x35, 0x11, 0xc1, 0xe7, 0xa9, 0x58, 0x1a, 0x4f, 0xc5, 0xd2, 0xc5,
-	0x54, 0x2c, 0x1d, 0xef, 0xa5, 0x62, 0x32, 0x6b, 0xad, 0x31, 0x97, 0x68, 0x67, 0xda, 0xec, 0x95,
-	0xc6, 0x8f, 0x4b, 0x6f, 0x23, 0x78, 0xbf, 0x78, 0xf6, 0x37, 0x00, 0x00, 0xff, 0xff, 0x2e, 0xdf,
-	0x58, 0xab, 0xeb, 0x08, 0x00, 0x00,
+	0x14, 0x8d, 0x9b, 0xb6, 0xdf, 0x97, 0x49, 0x89, 0x54, 0xab, 0x82, 0x34, 0xaa, 0xdc, 0xc8, 0x82,
+	0x12, 0x55, 0xd4, 0x56, 0x83, 0x58, 0x20, 0xd8, 0xd0, 0x74, 0x41, 0x25, 0x02, 0x92, 0xdb, 0xb2,
+	0x28, 0x8b, 0x6a, 0x62, 0x8f, 0x9c, 0x11, 0xf1, 0x8c, 0xe5, 0x99, 0x44, 0x0d, 0xe2, 0x21, 0x58,
+	0x22, 0x1e, 0x81, 0x87, 0x60, 0x89, 0xba, 0x60, 0xd1, 0x65, 0x57, 0x05, 0xb5, 0x8f, 0xc0, 0x8e,
+	0x15, 0xf2, 0xf8, 0x27, 0x8e, 0xdd, 0xa4, 0xae, 0xd4, 0x4a, 0xac, 0x12, 0x5f, 0x9f, 0xb9, 0xe7,
+	0x9e, 0xe3, 0x7b, 0xaf, 0x0d, 0x16, 0x4d, 0xe8, 0xb8, 0x10, 0xdb, 0x44, 0xe7, 0x47, 0x9a, 0xeb,
+	0x51, 0x4e, 0xe5, 0x7b, 0x1c, 0x11, 0x0b, 0x79, 0x0e, 0x26, 0x5c, 0x63, 0x2e, 0xd1, 0x22, 0x44,
+	0x6d, 0xc9, 0xa6, 0x36, 0x15, 0x18, 0xdd, 0xff, 0x17, 0xc0, 0x6b, 0x8a, 0x49, 0x99, 0x43, 0x99,
+	0xde, 0x81, 0x0c, 0xe9, 0x83, 0xcd, 0x0e, 0xe2, 0x70, 0x53, 0x37, 0x29, 0x26, 0xe1, 0xfd, 0xb5,
+	0x98, 0xc1, 0x81, 0x98, 0x10, 0xc4, 0x0f, 0x07, 0x88, 0x71, 0x4c, 0xec, 0x43, 0x68, 0x9a, 0xb4,
+	0x4f, 0x78, 0x80, 0x53, 0x4f, 0x24, 0xb0, 0xd4, 0x66, 0xf6, 0xbe, 0x6b, 0x41, 0x8e, 0xf6, 0x28,
+	0x87, 0xbd, 0xdd, 0x2e, 0xf4, 0x10, 0x93, 0xeb, 0xa0, 0x6c, 0x52, 0xea, 0x59, 0x98, 0x40, 0x4e,
+	0xbd, 0xaa, 0x54, 0x97, 0x1a, 0x25, 0x23, 0x19, 0x92, 0x15, 0x00, 0x22, 0x92, 0x9d, 0xed, 0xea,
+	0x4c, 0x5d, 0x6a, 0xcc, 0x1a, 0x89, 0x88, 0x3c, 0x00, 0x65, 0x3e, 0x4a, 0x58, 0x2d, 0xd6, 0x8b,
+	0x8d, 0x72, 0x73, 0x59, 0x0b, 0x0a, 0xd7, 0xfc, 0xc2, 0xb5, 0xb0, 0x70, 0xad, 0x45, 0x31, 0xd9,
+	0x7a, 0x7a, 0x7c, 0xb6, 0x5a, 0xf8, 0x73, 0xb6, 0xfa, 0xd0, 0xc6, 0xbc, 0xdb, 0xef, 0x68, 0x26,
+	0x75, 0xf4, 0x50, 0x65, 0xf0, 0xb3, 0xc1, 0xac, 0xf7, 0x3a, 0x1f, 0xba, 0x88, 0x89, 0x03, 0x5f,
+	0x7f, 0xae, 0xce, 0x07, 0xb9, 0x8d, 0x24, 0x91, 0xaa, 0x80, 0x95, 0xcb, 0x14, 0x19, 0x88, 0xb9,
+	0x94, 0x30, 0xa4, 0xfe, 0xce, 0x4a, 0xee, 0xbb, 0x6e, 0x6f, 0x78, 0x03, 0x92, 0x3f, 0x4b, 0x91,
+	0x66, 0x91, 0xf1, 0x6a, 0xcd, 0xef, 0xae, 0xaf, 0xb9, 0x91, 0x13, 0x1a, 0xbb, 0x22, 0x4a, 0xb9,
+	0xc4, 0x15, 0x11, 0x8f, 0x5d, 0xf9, 0x32, 0x03, 0x16, 0xdb, 0xcc, 0x6e, 0x79, 0x08, 0x72, 0xd4,
+	0x0a, 0x25, 0xe5, 0xb0, 0x44, 0x05, 0x0b, 0x91, 0x01, 0xaf, 0xa1, 0x83, 0x84, 0x29, 0x25, 0x63,
+	0x2c, 0x26, 0x6c, 0xd9, 0xfb, 0x77, 0x6c, 0x49, 0x3e, 0xf3, 0xfb, 0xe0, 0x8e, 0x35, 0x24, 0xd0,
+	0xc1, 0x66, 0xd8, 0xa6, 0xb3, 0x75, 0xa9, 0xf1, 0xbf, 0x31, 0x1e, 0x54, 0x9f, 0x81, 0xe5, 0x8c,
+	0x37, 0x91, 0x73, 0xa9, 0xa6, 0x90, 0xd2, 0x4d, 0xa1, 0x7e, 0x0b, 0xfa, 0x6d, 0x87, 0x60, 0x8e,
+	0x61, 0x0f, 0x7f, 0x40, 0xed, 0x60, 0x22, 0x6f, 0xa0, 0xdf, 0x56, 0x40, 0x89, 0xd1, 0xbe, 0x67,
+	0xa2, 0x7d, 0xe3, 0x55, 0xb5, 0x28, 0xce, 0x8f, 0x02, 0xfe, 0xe9, 0xe0, 0xe2, 0x25, 0x64, 0x5d,
+	0x21, 0xac, 0x64, 0x24, 0x22, 0xf2, 0x1a, 0xa8, 0x84, 0xcb, 0xa1, 0xd5, 0x85, 0xd8, 0x67, 0x98,
+	0x13, 0x98, 0x54, 0x54, 0x7d, 0x2e, 0x5a, 0x27, 0x53, 0x7f, 0x6c, 0xc0, 0x0a, 0x28, 0x85, 0x27,
+	0x62, 0xfd, 0xa3, 0x80, 0x7a, 0x2a, 0x81, 0x85, 0x36, 0xb3, 0x5f, 0x58, 0xd6, 0x8d, 0x6d, 0x96,
+	0x2a, 0xf8, 0x0f, 0x5a, 0x96, 0x87, 0x18, 0x0b, 0x45, 0x47, 0x97, 0x72, 0x0f, 0xcc, 0xb3, 0xe8,
+	0x39, 0xde, 0xde, 0xba, 0x09, 0x39, 0xd4, 0xbb, 0xe2, 0xc1, 0xc6, 0xca, 0xe2, 0x59, 0xfa, 0x31,
+	0x13, 0xdd, 0x78, 0x1b, 0x2c, 0xdd, 0x37, 0x2e, 0xc7, 0x94, 0xdc, 0xae, 0xf4, 0x8f, 0xa0, 0xc2,
+	0x38, 0xf4, 0x7c, 0xba, 0xdd, 0xdb, 0xb7, 0x20, 0xc5, 0x25, 0x1f, 0x80, 0xca, 0x60, 0x4c, 0xab,
+	0xe8, 0xa5, 0x72, 0xf3, 0x91, 0x36, 0xe1, 0xbd, 0xa6, 0x89, 0x83, 0xe3, 0xfe, 0x6c, 0xcd, 0xfa,
+	0x05, 0x19, 0xa9, 0x4c, 0xe1, 0xea, 0xca, 0xb8, 0x19, 0xd9, 0xdd, 0xfc, 0x3e, 0x07, 0x8a, 0x6d,
+	0x66, 0xcb, 0x2e, 0xa8, 0xa4, 0xd6, 0xd7, 0xfa, 0x44, 0xf6, 0xcc, 0x38, 0xd7, 0x9a, 0xf9, 0xb1,
+	0x71, 0xe7, 0x0f, 0xc1, 0x62, 0xf6, 0xcd, 0xb9, 0x31, 0x2d, 0x51, 0x06, 0x5e, 0x7b, 0x72, 0x2d,
+	0xf8, 0x24, 0xea, 0x60, 0x9b, 0xe5, 0xa6, 0x16, 0xf0, 0xfc, 0xd4, 0x63, 0xaf, 0x0a, 0x9f, 0x3a,
+	0xbb, 0xcc, 0xa6, 0x52, 0x67, 0xe0, 0xd3, 0xa9, 0x27, 0xaf, 0x1a, 0x08, 0x4a, 0xa3, 0x45, 0xf2,
+	0x60, 0x5a, 0x8e, 0x18, 0x56, 0xdb, 0xc8, 0x05, 0x4b, 0xaa, 0xcb, 0x0e, 0xee, 0x55, 0x39, 0xc6,
+	0xe1, 0xd3, 0xd5, 0x4d, 0x6c, 0xe4, 0xad, 0xed, 0xe3, 0x73, 0x45, 0x3a, 0x39, 0x57, 0xa4, 0x5f,
+	0xe7, 0x8a, 0xf4, 0xe9, 0x42, 0x29, 0x9c, 0x5c, 0x28, 0x85, 0xd3, 0x0b, 0xa5, 0x70, 0xb0, 0x9e,
+	0x98, 0xd0, 0x51, 0x6a, 0x9d, 0xb9, 0x44, 0x3f, 0xd2, 0x47, 0x1f, 0x93, 0xfe, 0xa4, 0x76, 0xe6,
+	0xc5, 0x97, 0xdd, 0xe3, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x44, 0xec, 0x7d, 0x5a, 0x65, 0x0a,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -625,6 +753,7 @@ type MsgClient interface {
 	CreateCampaign(ctx context.Context, in *MsgCreateCampaign, opts ...grpc.CallOption) (*MsgCreateCampaignResponse, error)
 	UpdateTotalShares(ctx context.Context, in *MsgUpdateTotalShares, opts ...grpc.CallOption) (*MsgUpdateTotalSharesResponse, error)
 	UpdateTotalSupply(ctx context.Context, in *MsgUpdateTotalSupply, opts ...grpc.CallOption) (*MsgUpdateTotalSupplyResponse, error)
+	InitializeMainnet(ctx context.Context, in *MsgInitializeMainnet, opts ...grpc.CallOption) (*MsgInitializeMainnetResponse, error)
 	AddShares(ctx context.Context, in *MsgAddShares, opts ...grpc.CallOption) (*MsgAddSharesResponse, error)
 	AddVestingOptions(ctx context.Context, in *MsgAddVestingOptions, opts ...grpc.CallOption) (*MsgAddVestingOptionsResponse, error)
 }
@@ -664,6 +793,15 @@ func (c *msgClient) UpdateTotalSupply(ctx context.Context, in *MsgUpdateTotalSup
 	return out, nil
 }
 
+func (c *msgClient) InitializeMainnet(ctx context.Context, in *MsgInitializeMainnet, opts ...grpc.CallOption) (*MsgInitializeMainnetResponse, error) {
+	out := new(MsgInitializeMainnetResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/InitializeMainnet", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *msgClient) AddShares(ctx context.Context, in *MsgAddShares, opts ...grpc.CallOption) (*MsgAddSharesResponse, error) {
 	out := new(MsgAddSharesResponse)
 	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/AddShares", in, out, opts...)
@@ -687,6 +825,7 @@ type MsgServer interface {
 	CreateCampaign(context.Context, *MsgCreateCampaign) (*MsgCreateCampaignResponse, error)
 	UpdateTotalShares(context.Context, *MsgUpdateTotalShares) (*MsgUpdateTotalSharesResponse, error)
 	UpdateTotalSupply(context.Context, *MsgUpdateTotalSupply) (*MsgUpdateTotalSupplyResponse, error)
+	InitializeMainnet(context.Context, *MsgInitializeMainnet) (*MsgInitializeMainnetResponse, error)
 	AddShares(context.Context, *MsgAddShares) (*MsgAddSharesResponse, error)
 	AddVestingOptions(context.Context, *MsgAddVestingOptions) (*MsgAddVestingOptionsResponse, error)
 }
@@ -703,6 +842,9 @@ func (*UnimplementedMsgServer) UpdateTotalShares(ctx context.Context, req *MsgUp
 }
 func (*UnimplementedMsgServer) UpdateTotalSupply(ctx context.Context, req *MsgUpdateTotalSupply) (*MsgUpdateTotalSupplyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTotalSupply not implemented")
+}
+func (*UnimplementedMsgServer) InitializeMainnet(ctx context.Context, req *MsgInitializeMainnet) (*MsgInitializeMainnetResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InitializeMainnet not implemented")
 }
 func (*UnimplementedMsgServer) AddShares(ctx context.Context, req *MsgAddShares) (*MsgAddSharesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddShares not implemented")
@@ -769,6 +911,24 @@ func _Msg_UpdateTotalSupply_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_InitializeMainnet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgInitializeMainnet)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).InitializeMainnet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.campaign.Msg/InitializeMainnet",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).InitializeMainnet(ctx, req.(*MsgInitializeMainnet))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Msg_AddShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgAddShares)
 	if err := dec(in); err != nil {
@@ -820,6 +980,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateTotalSupply",
 			Handler:    _Msg_UpdateTotalSupply_Handler,
+		},
+		{
+			MethodName: "InitializeMainnet",
+			Handler:    _Msg_InitializeMainnet_Handler,
 		},
 		{
 			MethodName: "AddShares",
@@ -1061,6 +1225,90 @@ func (m *MsgCreateCampaignResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	_ = l
 	if m.CampaignID != 0 {
 		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgInitializeMainnet) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgInitializeMainnet) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgInitializeMainnet) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.MainnetChainID) > 0 {
+		i -= len(m.MainnetChainID)
+		copy(dAtA[i:], m.MainnetChainID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.MainnetChainID)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.SourceHash) > 0 {
+		i -= len(m.SourceHash)
+		copy(dAtA[i:], m.SourceHash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.SourceHash)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.SourceURL) > 0 {
+		i -= len(m.SourceURL)
+		copy(dAtA[i:], m.SourceURL)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.SourceURL)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.CampaignID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Coordinator) > 0 {
+		i -= len(m.Coordinator)
+		copy(dAtA[i:], m.Coordinator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Coordinator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgInitializeMainnetResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgInitializeMainnetResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgInitializeMainnetResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.MainnetID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.MainnetID))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -1342,6 +1590,46 @@ func (m *MsgCreateCampaignResponse) Size() (n int) {
 	_ = l
 	if m.CampaignID != 0 {
 		n += 1 + sovTx(uint64(m.CampaignID))
+	}
+	return n
+}
+
+func (m *MsgInitializeMainnet) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Coordinator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.CampaignID != 0 {
+		n += 1 + sovTx(uint64(m.CampaignID))
+	}
+	l = len(m.SourceURL)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.SourceHash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.MainnetChainID)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgInitializeMainnetResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.MainnetID != 0 {
+		n += 1 + sovTx(uint64(m.MainnetID))
 	}
 	return n
 }
@@ -2006,6 +2294,272 @@ func (m *MsgCreateCampaignResponse) Unmarshal(dAtA []byte) error {
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.CampaignID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgInitializeMainnet) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgInitializeMainnet: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgInitializeMainnet: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Coordinator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
+			}
+			m.CampaignID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CampaignID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SourceURL", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SourceURL = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SourceHash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SourceHash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MainnetChainID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MainnetChainID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgInitializeMainnetResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgInitializeMainnetResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgInitializeMainnetResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MainnetID", wireType)
+			}
+			m.MainnetID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.MainnetID |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

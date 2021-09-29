@@ -60,6 +60,16 @@ func MainnetAccount(campaignID uint64, address string) campaign.MainnetAccount {
 	}
 }
 
+// MsgCreateCampaign returns a sample MsgCreateCampaign
+func MsgCreateCampaign(coordAddr string) campaign.MsgCreateCampaign {
+	return campaign.MsgCreateCampaign{
+		Coordinator:   coordAddr,
+		CampaignName:  CampaignName(),
+		TotalSupply:   Coins(),
+		DynamicShares: false,
+	}
+}
+
 // CampaignGenesisState returns a sample genesis state for the campaign module
 func CampaignGenesisState() campaign.GenesisState {
 	campaign1, campaign2 := Campaign(0), Campaign(1)
@@ -82,14 +92,4 @@ func CampaignGenesisState() campaign.GenesisState {
 			MainnetVestingAccount(1, AccAddress()),
 		},
 	}
-}
-
-// MsgCreateCampaign returns a sample MsgCreateCampaign
-func MsgCreateCampaign(coordAddress string) campaign.MsgCreateCampaign {
-	return *campaign.NewMsgCreateCampaign(
-		coordAddress,
-		String(10),
-		Coins(),
-		true,
-	)
 }

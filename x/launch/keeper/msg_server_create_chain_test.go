@@ -11,7 +11,7 @@ import (
 )
 
 func TestMsgCreateChain(t *testing.T) {
-	k, campaignKeeper, _, srv, campaignSrv, profileSrv, sdkCtx := setupMsgServer(t)
+	k, _, campaignKeeper, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.AccAddress()
 
@@ -87,6 +87,9 @@ func TestMsgCreateChain(t *testing.T) {
 					chain.InitialGenesis,
 				)
 			}
+
+			// Chain created from MsgCreateChain is never a mainnet
+			require.False(t, chain.IsMainnet)
 
 			if tc.msg.CampaignID > 0 {
 				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
