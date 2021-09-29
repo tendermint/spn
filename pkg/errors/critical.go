@@ -1,3 +1,4 @@
+// Package errors defines methods to handle specific error in spn blockchain like critical errors
 package errors
 
 import (

@@ -3,7 +3,18 @@ package types
 import sdk "github.com/cosmos/cosmos-sdk/types"
 
 type LaunchKeeper interface {
-	// Methods imported from launch should be defined here
+	CreateNewChain(
+		ctx sdk.Context,
+		coordinatorID uint64,
+		genesisChainID,
+		sourceURL,
+		sourceHash,
+		genesisURL,
+		genesisHash string,
+		hasCampaign bool,
+		campaignID uint64,
+		isMainnet bool,
+	) (uint64, error)
 }
 
 type BankKeeper interface {
