@@ -54,6 +54,81 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
+			desc: "not exist campaign for mainnet vesting account",
+			genState: &types.GenesisState{
+				CampaignChainsList: []types.CampaignChains{
+					{
+						CampaignID: 0,
+					},
+					{
+						CampaignID: 1,
+					},
+				},
+				CampaignList: []types.Campaign{
+					sample.Campaign(0),
+					sample.Campaign(1),
+				},
+				CampaignCount: 2,
+				MainnetAccountList: []types.MainnetAccount{
+					sample.MainnetAccount(0, sample.AccAddress()),
+					sample.MainnetAccount(1, sample.AccAddress()),
+				},
+				MainnetVestingAccountList: []types.MainnetVestingAccount{
+					{
+						CampaignID: 33333,
+						Address:    "33333",
+					},
+					{
+						CampaignID: 9999,
+						Address:    "9999",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "not exist campaign for mainnet account",
+			genState: &types.GenesisState{
+				CampaignChainsList: []types.CampaignChains{
+					{
+						CampaignID: 0,
+					},
+					{
+						CampaignID: 1,
+					},
+				},
+				CampaignList: []types.Campaign{
+					sample.Campaign(0),
+					sample.Campaign(1),
+				},
+				CampaignCount: 2,
+				MainnetAccountList: []types.MainnetAccount{
+					sample.MainnetAccount(330, sample.AccAddress()),
+					sample.MainnetAccount(434, sample.AccAddress()),
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "not exist campaign for chains",
+			genState: &types.GenesisState{
+				CampaignChainsList: []types.CampaignChains{
+					{
+						CampaignID: 2,
+					},
+					{
+						CampaignID: 4,
+					},
+				},
+				CampaignList: []types.Campaign{
+					sample.Campaign(99),
+					sample.Campaign(88),
+				},
+				CampaignCount: 2,
+			},
+			valid: false,
+		},
+		{
 			desc: "duplicated campaignChains",
 			genState: &types.GenesisState{
 				CampaignChainsList: []types.CampaignChains{
