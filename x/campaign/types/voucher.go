@@ -13,37 +13,50 @@ const (
 )
 
 // SharesToVouchers returns new Coins vouchers from the Shares representation
-func SharesToVouchers(campaignID uint64, shares Shares) sdk.Coins {
+func SharesToVouchers(campaignID uint64, shares Shares) (sdk.Coins, error) {
+	err := CheckShares(shares)
+	if err != nil {
+
+	}
 	vouchers := make(sdk.Coins, len(shares))
 	for i, coin := range shares {
 		denom := strings.TrimPrefix(coin.Denom, SharePrefix)
-		coin.Denom = VoucherName(campaignID, denom)
+		coin.Denom = VoucherDenom(campaignID, denom)
 		vouchers[i] = coin
 	}
-	return vouchers
+	return vouchers, nil
 }
 
 // VouchersToShares returns new Shares from the Coins vouchers representation
-func VouchersToShares(vouchers sdk.Coins) Shares {
+func VouchersToShares(campaignID uint64, vouchers sdk.Coins) (Shares, error) {
+	err := CheckVouchers(campaignID, vouchers)
+	if err != nil {
+
+	}
 	shares := make(Shares, len(vouchers))
 	for i, coin := range vouchers {
-		splitDenom := strings.Split(coin.Denom, "/")
-		coinName := splitDenom[len(splitDenom)-1]
-		coin.Denom = SharePrefix + coinName
+		coin.Denom = VoucherToShareDenom(campaignID, coin.Denom)
 		shares[i] = coin
 	}
-	return shares
+	return shares, nil
 }
 
-// VoucherName returns the Voucher name with prefix
-func VoucherName(campaignID uint64, denom string) string {
+// VoucherDenom returns the Voucher name with prefix
+func VoucherDenom(campaignID uint64, denom string) string {
 	return fmt.Sprintf("%s%d/%s", VoucherPrefix, campaignID, denom)
+}
+
+// VoucherToShareDenom remove the voucher prefix and add the share prefix
+func VoucherToShareDenom(campaignID uint64, denom string) string {
+	prefix := VoucherDenom(campaignID, "")
+	shareDenom := strings.TrimPrefix(denom, prefix)
+	return SharePrefix + shareDenom
 }
 
 // CheckVouchers checks if given Vouchers are valid
 func CheckVouchers(campaignID uint64, vouchers sdk.Coins) error {
 	for _, voucher := range vouchers {
-		prefix := VoucherName(campaignID, "")
+		prefix := VoucherDenom(campaignID, "")
 		if !strings.HasPrefix(voucher.Denom, prefix) {
 			return fmt.Errorf(
 				"%s doesn't contain the voucher prefix %s",

@@ -12,8 +12,8 @@ import (
 
 var (
 	campaignID         = uint64(10)
-	prefixedVoucherFoo = campaign.VoucherName(campaignID, "foo")
-	prefixedVoucherBar = campaign.VoucherName(campaignID, "bar")
+	prefixedVoucherFoo = campaign.VoucherDenom(campaignID, "foo")
+	prefixedVoucherBar = campaign.VoucherDenom(campaignID, "bar")
 )
 
 func TestCheckVouchers(t *testing.T) {
@@ -83,6 +83,7 @@ func TestSharesToVouchers(t *testing.T) {
 		campaignID uint64
 		shares     campaign.Shares
 		want       sdk.Coins
+		err        error
 	}{
 		{
 			name:       "test one share",
@@ -123,7 +124,13 @@ func TestSharesToVouchers(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := campaign.SharesToVouchers(tt.campaignID, tt.shares)
+			got, err := campaign.SharesToVouchers(tt.campaignID, tt.shares)
+			if tt.err != nil {
+				require.Error(t, err)
+				require.Equal(t, tt.err, err)
+				return
+			}
+			require.NoError(t, err)
 			require.Equal(t, tt.want, got)
 		})
 	}
@@ -157,7 +164,7 @@ func TestVoucherName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := campaign.VoucherName(tt.campaignID, tt.coin)
+			got := campaign.VoucherDenom(tt.campaignID, tt.coin)
 			require.Equal(t, tt.want, got)
 		})
 	}
@@ -165,9 +172,11 @@ func TestVoucherName(t *testing.T) {
 
 func TestVouchersToShares(t *testing.T) {
 	tests := []struct {
-		name     string
-		vouchers sdk.Coins
-		want     campaign.Shares
+		name       string
+		campaignID uint64
+		vouchers   sdk.Coins
+		want       campaign.Shares
+		err        error
 	}{
 		{
 			name: "test one voucher",
@@ -192,7 +201,47 @@ func TestVouchersToShares(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := campaign.VouchersToShares(tt.vouchers)
+			got, err := campaign.VouchersToShares(tt.campaignID, tt.vouchers)
+			if tt.err != nil {
+				require.Error(t, err)
+				require.Equal(t, tt.err, err)
+				return
+			}
+			require.NoError(t, err)
+			require.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestVoucherToShareDenom(t *testing.T) {
+	tests := []struct {
+		name       string
+		campaignID uint64
+		denom      string
+		want       string
+	}{
+		{
+			name:       "foo voucher",
+			campaignID: 10,
+			denom:      prefixedVoucherFoo,
+			want:       prefixedShareFoo,
+		},
+		{
+			name:       "bar voucher",
+			campaignID: 10,
+			denom:      prefixedVoucherBar,
+			want:       prefixedShareBar,
+		},
+		{
+			name:       "invalid voucher",
+			campaignID: 10,
+			denom:      "t/bar",
+			want:       "s/t/bar",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := campaign.VoucherToShareDenom(tt.campaignID, tt.denom)
 			require.Equal(t, tt.want, got)
 		})
 	}
