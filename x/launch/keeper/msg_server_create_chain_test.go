@@ -35,27 +35,27 @@ func TestMsgCreateChain(t *testing.T) {
 	}{
 		{
 			name:          "valid message",
-			msg:           sample.MsgCreateChain(coordAddress, "", 0),
+			msg:           sample.MsgCreateChain(coordAddress, "", false, 0),
 			wantedChainID: 0,
 		},
 		{
 			name:          "creates a unique chain ID",
-			msg:           sample.MsgCreateChain(coordAddress, "", 0),
+			msg:           sample.MsgCreateChain(coordAddress, "", false, 0),
 			wantedChainID: 1,
 		},
 		{
 			name:          "valid message with genesis url",
-			msg:           sample.MsgCreateChain(coordAddress, "foo.com", 0),
+			msg:           sample.MsgCreateChain(coordAddress, "foo.com", false, 0),
 			wantedChainID: 2,
 		},
 		{
 			name:          "creates message with campaign",
-			msg:           sample.MsgCreateChain(coordAddress, "", campaignID),
+			msg:           sample.MsgCreateChain(coordAddress, "", true, campaignID),
 			wantedChainID: 3,
 		},
 		{
 			name: "coordinator doesn't exist for the chain",
-			msg:  sample.MsgCreateChain(sample.AccAddress(), "", 0),
+			msg:  sample.MsgCreateChain(sample.AccAddress(), "", false, 0),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 	} {
@@ -91,7 +91,7 @@ func TestMsgCreateChain(t *testing.T) {
 			// Chain created from MsgCreateChain is never a mainnet
 			require.False(t, chain.IsMainnet)
 
-			if tc.msg.CampaignID > 0 {
+			if tc.msg.HasCampaign {
 				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 				require.Contains(t, campaignChains.Chains, chain.Id)

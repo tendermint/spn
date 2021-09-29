@@ -34,7 +34,7 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create chains
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "", 0)
+	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	chainID := res.Id

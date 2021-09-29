@@ -28,7 +28,7 @@ func TestMsgEditChain(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create a chain
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "", 0)
+	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	chainID := res.Id

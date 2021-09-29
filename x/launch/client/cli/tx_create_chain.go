@@ -29,9 +29,16 @@ func CmdCreateChain() *cobra.Command {
 				return err
 			}
 
-			campaignID, err := cmd.Flags().GetUint64(flagCampaignID)
+			argCampaignID, err := cmd.Flags().GetInt64(flagCampaignID)
 			if err != nil {
 				return err
+			}
+
+			hasCampaign := false
+			campaignID := uint64(0)
+			if argCampaignID >= 0 {
+				hasCampaign = true
+				campaignID = uint64(argCampaignID)
 			}
 
 			genesisURL, err := cmd.Flags().GetString(flagGenesisURL)
@@ -53,6 +60,7 @@ func CmdCreateChain() *cobra.Command {
 				args[2],
 				genesisURL,
 				genesisHash,
+				hasCampaign,
 				campaignID,
 			)
 			if err := msg.ValidateBasic(); err != nil {
@@ -63,7 +71,7 @@ func CmdCreateChain() *cobra.Command {
 	}
 
 	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
-	cmd.Flags().Uint64(flagCampaignID, 0, "The campaign id")
+	cmd.Flags().Int64(flagCampaignID, -1, "The campaign id")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

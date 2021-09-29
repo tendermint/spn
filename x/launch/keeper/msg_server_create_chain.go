@@ -36,7 +36,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		return nil, spnerrors.Criticalf("cannot create the chain: %v", err.Error())
 	}
 
-	if msg.CampaignID > 0 {
+	if msg.HasCampaign {
 		campaign, found := k.campaignKeeper.GetCampaignChains(ctx, msg.CampaignID)
 		if !found {
 			campaign = campaigntypes.CampaignChains{

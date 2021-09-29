@@ -115,7 +115,7 @@ func Request(chainID uint64) launch.Request {
 }
 
 // MsgCreateChain returns a sample MsgCreateChain
-func MsgCreateChain(coordAddress, genesisURL string, campaignID uint64) launch.MsgCreateChain {
+func MsgCreateChain(coordAddress, genesisURL string, hasCampaign bool, campaignID uint64) launch.MsgCreateChain {
 	var genesisHash string
 	if len(genesisURL) > 0 {
 		genesisHash = GenesisHash()
@@ -128,6 +128,7 @@ func MsgCreateChain(coordAddress, genesisURL string, campaignID uint64) launch.M
 		String(10),
 		genesisURL,
 		genesisHash,
+		hasCampaign,
 		campaignID,
 	)
 }
