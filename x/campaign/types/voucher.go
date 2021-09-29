@@ -36,12 +36,12 @@ func VouchersToShares(vouchers sdk.Coins) Shares {
 }
 
 // VoucherName returns the Voucher name with prefix
-func VoucherName(campaignID uint64, coin string) string {
-	return fmt.Sprintf("%s%d/%s", VoucherPrefix, campaignID, coin)
+func VoucherName(campaignID uint64, denom string) string {
+	return fmt.Sprintf("%s%d/%s", VoucherPrefix, campaignID, denom)
 }
 
-// CheckVoucher checks if given Voucher are valid Voucher
-func CheckVoucher(campaignID uint64, vouchers sdk.Coins) error {
+// CheckVouchers checks if given Vouchers are valid
+func CheckVouchers(campaignID uint64, vouchers sdk.Coins) error {
 	for _, voucher := range vouchers {
 		prefix := VoucherName(campaignID, "")
 		if !strings.HasPrefix(voucher.Denom, prefix) {

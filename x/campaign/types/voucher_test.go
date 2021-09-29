@@ -12,11 +12,11 @@ import (
 
 var (
 	campaignID         = uint64(10)
-	prefixedVoucherFoo = fmt.Sprintf("%s%d/foo", campaign.VoucherPrefix, campaignID)
-	prefixedVoucherBar = fmt.Sprintf("%s%d/bar", campaign.VoucherPrefix, campaignID)
+	prefixedVoucherFoo = campaign.VoucherName(campaignID, "foo")
+	prefixedVoucherBar = campaign.VoucherName(campaignID, "bar")
 )
 
-func TestCheckVoucher(t *testing.T) {
+func TestCheckVouchers(t *testing.T) {
 	tests := []struct {
 		name       string
 		campaignID uint64
@@ -66,7 +66,7 @@ func TestCheckVoucher(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := campaign.CheckVoucher(tt.campaignID, tt.vouchers)
+			err := campaign.CheckVouchers(tt.campaignID, tt.vouchers)
 			if tt.err != nil {
 				require.Error(t, err)
 				require.Equal(t, tt.err, err)
