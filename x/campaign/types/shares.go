@@ -36,11 +36,12 @@ func NewShares(str string) (Shares, error) {
 
 // NewSharesFromCoins returns new shares from the coins representation
 func NewSharesFromCoins(coins sdk.Coins) Shares {
-	for i := range coins {
-		coins[i].Denom = SharePrefix + coins[i].Denom
+	shares := make(Shares, len(coins))
+	for i, coin := range coins {
+		coin.Denom = SharePrefix + coins[i].Denom
+		shares[i] = coin
 	}
-
-	return Shares(coins)
+	return shares
 }
 
 // CheckShares checks if given shares are valid shares

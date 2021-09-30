@@ -7,6 +7,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/campaign/keeper"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -17,10 +19,26 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
+func createNMainnetAccountForCampaignID(
+	keeper *keeper.Keeper,
+	ctx sdk.Context,
+	n int,
+	campaignID uint64,
+) []types.MainnetAccount {
+	items := make([]types.MainnetAccount, n)
+	for i := range items {
+		items[i] = sample.MainnetAccount(campaignID, strconv.Itoa(i))
+		keeper.SetMainnetAccount(ctx, items[i])
+	}
+	return items
+}
+
 func TestMainnetAccountQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.Campaign(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNMainnetAccount(keeper, ctx, 2)
+	var (
+		k, ctx = keepertest.Campaign(t)
+		wctx   = sdk.WrapSDKContext(ctx)
+		msgs   = createNMainnetAccount(k, ctx, 2)
+	)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetMainnetAccountRequest
@@ -57,7 +75,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.MainnetAccount(wctx, tc.request)
+			response, err := k.MainnetAccount(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -68,12 +86,15 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 }
 
 func TestMainnetAccountQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.Campaign(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNMainnetAccount(keeper, ctx, 5)
-
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllMainnetAccountRequest {
+	var (
+		campaignID = uint64(5)
+		k, ctx     = keepertest.Campaign(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		msgs       = createNMainnetAccountForCampaignID(k, ctx, 5, campaignID)
+	)
+	request := func(campaignID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllMainnetAccountRequest {
 		return &types.QueryAllMainnetAccountRequest{
+			CampaignID: campaignID,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
@@ -85,7 +106,7 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.MainnetAccountAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := k.MainnetAccountAll(wctx, request(campaignID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetAccount), step)
 			require.Subset(t, msgs, resp.MainnetAccount)
@@ -95,7 +116,7 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.MainnetAccountAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := k.MainnetAccountAll(wctx, request(campaignID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetAccount), step)
 			require.Subset(t, msgs, resp.MainnetAccount)
@@ -103,13 +124,13 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.MainnetAccountAll(wctx, request(nil, 0, 0, true))
+		resp, err := k.MainnetAccountAll(wctx, request(campaignID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.MainnetAccount)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.MainnetAccountAll(wctx, nil)
+		_, err := k.MainnetAccountAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

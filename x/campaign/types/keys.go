@@ -1,5 +1,7 @@
 package types
 
+import "encoding/binary"
+
 const (
 	// ModuleName defines the module name
 	ModuleName = "campaign"
@@ -17,11 +19,17 @@ const (
 	MemStoreKey = "mem_campaign"
 )
 
-func KeyPrefix(p string) []byte {
-	return []byte(p)
-}
-
 const (
 	CampaignKey      = "Campaign-value-"
 	CampaignCountKey = "Campaign-count-"
 )
+
+func KeyPrefix(p string) []byte {
+	return []byte(p)
+}
+
+func uintBytes(v uint64) []byte {
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, v)
+	return b
+}

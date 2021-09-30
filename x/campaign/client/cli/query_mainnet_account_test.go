@@ -26,11 +26,12 @@ func networkWithMainnetAccountObjects(t *testing.T, n int) (*network.Network, []
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
+	campaignID := uint64(5)
 	for i := 0; i < n; i++ {
 		state.MainnetAccountList = append(
 			state.MainnetAccountList,
 			sample.MainnetAccount(
-				uint64(i),
+				campaignID,
 				sample.AccAddress(),
 			),
 		)
@@ -74,7 +75,6 @@ func TestShowMainnetAccount(t *testing.T) {
 			err:  status.Error(codes.InvalidArgument, "not found"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
 				strconv.Itoa(int(tc.idCampaignID)),
@@ -100,9 +100,11 @@ func TestShowMainnetAccount(t *testing.T) {
 func TestListMainnetAccount(t *testing.T) {
 	net, objs := networkWithMainnetAccountObjects(t, 5)
 
+	campaignID := objs[0].CampaignID
 	ctx := net.Validators[0].ClientCtx
-	request := func(next []byte, offset, limit uint64, total bool) []string {
+	request := func(campaignID uint64, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
+			strconv.FormatUint(campaignID, 10),
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 		}
 		if next == nil {
@@ -119,7 +121,7 @@ func TestListMainnetAccount(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
-			args := request(nil, uint64(i), uint64(step), false)
+			args := request(campaignID, nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllMainnetAccountResponse
@@ -132,7 +134,7 @@ func TestListMainnetAccount(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
-			args := request(next, 0, uint64(step), false)
+			args := request(campaignID, next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllMainnetAccountResponse
@@ -143,7 +145,7 @@ func TestListMainnetAccount(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(objs)), true)
+		args := request(campaignID, nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllMainnetAccountResponse
