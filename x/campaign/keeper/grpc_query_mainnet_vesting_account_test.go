@@ -106,7 +106,7 @@ func TestMainnetVestingAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.MainnetVestingAccountAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := k.MainnetVestingAccountAll(wctx, request(campaignID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetVestingAccount), step)
 			require.Subset(t, msgs, resp.MainnetVestingAccount)
@@ -116,7 +116,7 @@ func TestMainnetVestingAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.MainnetVestingAccountAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := k.MainnetVestingAccountAll(wctx, request(campaignID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetVestingAccount), step)
 			require.Subset(t, msgs, resp.MainnetVestingAccount)
