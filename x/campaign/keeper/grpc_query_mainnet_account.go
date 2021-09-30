@@ -20,7 +20,7 @@ func (k Keeper) MainnetAccountAll(c context.Context, req *types.QueryAllMainnetA
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	mainnetAccountStore := prefix.NewStore(store, types.KeyPrefix(types.MainnetAccountKeyPrefix))
+	mainnetAccountStore := prefix.NewStore(store, types.MainnetAccountAllKey(req.CampaignID))
 
 	pageRes, err := query.Paginate(mainnetAccountStore, req.Pagination, func(key []byte, value []byte) error {
 		var mainnetAccount types.MainnetAccount
