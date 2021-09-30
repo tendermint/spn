@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
@@ -13,9 +14,15 @@ import (
 
 func CmdListMainnetAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-mainnet-account",
+		Use:   "list-mainnet-account [campaign-id]",
 		Short: "list all MainnetAccount",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			campaignID, err := strconv.ParseUint(args[0], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
@@ -26,6 +33,7 @@ func CmdListMainnetAccount() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryAllMainnetAccountRequest{
+				CampaignID: campaignID,
 				Pagination: pageReq,
 			}
 
