@@ -41,7 +41,7 @@ func (gs GenesisState) Validate() error {
 	campaignChainsIndexMap := make(map[string]struct{})
 	for _, elem := range gs.CampaignChainsList {
 		if _, ok := campaignIDMap[elem.CampaignID]; !ok {
-			return fmt.Errorf("campaign id %d not exist for chains", elem.CampaignID)
+			return fmt.Errorf("campaign id %d doesn't exist for chains", elem.CampaignID)
 		}
 		index := string(CampaignChainsKey(elem.CampaignID))
 		if _, ok := campaignChainsIndexMap[index]; ok {
@@ -54,7 +54,7 @@ func (gs GenesisState) Validate() error {
 	mainnetAccountIndexMap := make(map[string]struct{})
 	for _, elem := range gs.MainnetAccountList {
 		if _, ok := campaignIDMap[elem.CampaignID]; !ok {
-			return fmt.Errorf("campaign id %d not exist for mainnet account %s",
+			return fmt.Errorf("campaign id %d doesn't exist for mainnet account %s",
 				elem.CampaignID, elem.Address)
 		}
 		index := string(MainnetAccountKey(elem.CampaignID, elem.Address))
@@ -68,7 +68,7 @@ func (gs GenesisState) Validate() error {
 	mainnetVestingAccountIndexMap := make(map[string]struct{})
 	for _, elem := range gs.MainnetVestingAccountList {
 		if _, ok := campaignIDMap[elem.CampaignID]; !ok {
-			return fmt.Errorf("campaign id %d not exist for mainnet vesting account %s",
+			return fmt.Errorf("campaign id %d doesn't exist for mainnet vesting account %s",
 				elem.CampaignID, elem.Address)
 		}
 		index := string(MainnetVestingAccountKey(elem.CampaignID, elem.Address))

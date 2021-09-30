@@ -54,7 +54,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "not exist campaign for mainnet vesting account",
+			desc: "non existing campaign for mainnet vesting account",
 			genState: &types.GenesisState{
 				CampaignChainsList: []types.CampaignChains{
 					{
@@ -87,7 +87,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "not exist campaign for mainnet account",
+			desc: "non existing campaign for mainnet account",
 			genState: &types.GenesisState{
 				CampaignChainsList: []types.CampaignChains{
 					{
@@ -110,7 +110,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "not exist campaign for chains",
+			desc: "non existing campaign for chains",
 			genState: &types.GenesisState{
 				CampaignChainsList: []types.CampaignChains{
 					{
@@ -124,7 +124,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(99),
 					sample.Campaign(88),
 				},
-				CampaignCount: 2,
+				CampaignCount: 100,
 			},
 			valid: false,
 		},
