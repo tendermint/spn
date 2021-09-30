@@ -51,7 +51,7 @@ func (msg *MsgAddVestingOptions) ValidateBasic() error {
 	}
 
 	if !sdk.Coins(msg.StartingShares).IsValid() {
-		return sdkerrors.Wrap(ErrInvalidAccountShares, "account share is not a valid Coins object")
+		return sdkerrors.Wrap(ErrInvalidShares, sdk.Coins(msg.StartingShares).String())
 	}
 
 	if err := msg.VestingOptions.Validate(); err != nil {

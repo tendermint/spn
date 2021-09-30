@@ -33,22 +33,22 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid total supply",
+			name: "invalid shates",
 			msg: types.MsgAddShares{
 				Coordinator: sample.AccAddress(),
 				CampaignID:  0,
 				Shares:      invalidShares,
 			},
-			err: types.ErrInvalidAccountShares,
+			err: types.ErrInvalidShares,
 		},
 		{
-			name: "empty total supply",
+			name: "empty shares",
 			msg: types.MsgAddShares{
 				Coordinator: sample.AccAddress(),
 				CampaignID:  0,
 				Shares:      types.Shares{},
 			},
-			err: types.ErrInvalidAccountShares,
+			err: types.ErrInvalidShares,
 		},
 	}
 	for _, tt := range tests {

@@ -1,6 +1,7 @@
-package types
+package types_test
 
 import (
+	"github.com/tendermint/spn/x/campaign/types"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -11,20 +12,43 @@ import (
 func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgUnredeemVouchers
+		msg  types.MsgUnredeemVouchers
 		err  error
 	}{
 		{
+			name: "valid message",
+			msg: types.MsgUnredeemVouchers{
+				Sender:     sample.AccAddress(),
+				CampaignID: 0,
+				Shares:     sample.Shares(),
+			},
+		},
+		{
 			name: "invalid address",
-			msg: MsgUnredeemVouchers{
-				Sender: "invalid_address",
+			msg: types.MsgUnredeemVouchers{
+				Sender:     "invalid_address",
+				CampaignID: 0,
+				Shares:     sample.Shares(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg: MsgUnredeemVouchers{
-				Sender: sample.AccAddress(),
+		},
+		{
+			name: "invalid shares",
+			msg: types.MsgUnredeemVouchers{
+				Sender:     sample.AccAddress(),
+				CampaignID: 0,
+				Shares:     invalidShares,
 			},
+			err: types.ErrInvalidShares,
+		},
+		{
+			name: "empty shares",
+			msg: types.MsgUnredeemVouchers{
+				Sender:     sample.AccAddress(),
+				CampaignID: 0,
+				Shares:     types.EmptyShares(),
+			},
+			err: types.ErrInvalidShares,
 		},
 	}
 	for _, tt := range tests {
