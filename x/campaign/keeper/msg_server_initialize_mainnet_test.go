@@ -17,7 +17,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		campaignIncorrectCoordID                                         uint64 = 2
 		coordAddr                                                               = sample.AccAddress()
 		coordAddrNoCampaign                                                     = sample.AccAddress()
-		campaignKeeper, _, launchKeeper, campaignSrv, profileSrv, sdkCtx        = setupMsgServer(t)
+		campaignKeeper, _, launchKeeper, _, campaignSrv, profileSrv, sdkCtx        = setupMsgServer(t)
 		ctx                                                                     = sdk.WrapSDKContext(sdkCtx)
 	)
 
