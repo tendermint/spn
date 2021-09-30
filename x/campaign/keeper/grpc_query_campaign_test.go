@@ -35,7 +35,7 @@ func TestCampaignQuerySingle(t *testing.T) {
 		},
 		{
 			desc:    "KeyNotFound",
-			request: &types.QueryGetCampaignRequest{Id: uint64(len(msgs) + 1)},
+			request: &types.QueryGetCampaignRequest{Id: uint64(len(msgs))},
 			err:     sdkerrors.ErrKeyNotFound,
 		},
 		{

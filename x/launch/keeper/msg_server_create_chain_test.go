@@ -91,7 +91,10 @@ func TestMsgCreateChain(t *testing.T) {
 			// Chain created from MsgCreateChain is never a mainnet
 			require.False(t, chain.IsMainnet)
 
+			require.Equal(t, tc.msg.HasCampaign, chain.HasCampaign)
+
 			if tc.msg.HasCampaign {
+				require.Equal(t, tc.msg.CampaignID, chain.CampaignID)
 				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 				require.Contains(t, campaignChains.Chains, chain.Id)
