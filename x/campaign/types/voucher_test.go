@@ -65,7 +65,7 @@ func TestCheckVouchers(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := campaign.CheckVouchers(tt.campaignID, tt.vouchers)
+			err := campaign.CheckVouchers(tt.vouchers, tt.campaignID)
 			if tt.err != nil {
 				require.Error(t, err)
 				require.Equal(t, tt.err, err)
@@ -131,7 +131,7 @@ func TestSharesToVouchers(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := campaign.SharesToVouchers(tt.campaignID, tt.shares)
+			got, err := campaign.SharesToVouchers(tt.shares, tt.campaignID)
 			if tt.err != nil {
 				require.Error(t, err)
 				require.Equal(t, tt.err, err)
@@ -219,7 +219,7 @@ func TestVouchersToShares(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := campaign.VouchersToShares(tt.campaignID, tt.vouchers)
+			got, err := campaign.VouchersToShares(tt.vouchers, tt.campaignID)
 			if tt.err != nil {
 				require.Error(t, err)
 				require.Equal(t, tt.err, err)

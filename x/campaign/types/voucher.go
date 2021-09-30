@@ -13,9 +13,8 @@ const (
 )
 
 // SharesToVouchers returns new Coins vouchers from the Shares representation
-func SharesToVouchers(campaignID uint64, shares Shares) (sdk.Coins, error) {
-	err := CheckShares(shares)
-	if err != nil {
+func SharesToVouchers(shares Shares, campaignID uint64) (sdk.Coins, error) {
+	if err := CheckShares(shares); err != nil {
 		return nil, err
 	}
 	vouchers := make(sdk.Coins, len(shares))
@@ -27,10 +26,24 @@ func SharesToVouchers(campaignID uint64, shares Shares) (sdk.Coins, error) {
 	return vouchers, nil
 }
 
+// CheckVouchers checks if given Vouchers are valid
+func CheckVouchers(vouchers sdk.Coins, campaignID uint64) error {
+	for _, voucher := range vouchers {
+		prefix := VoucherDenom(campaignID, "")
+		if !strings.HasPrefix(voucher.Denom, prefix) {
+			return fmt.Errorf(
+				"%s doesn't contain the voucher prefix %s",
+				voucher.Denom,
+				prefix,
+			)
+		}
+	}
+	return nil
+}
+
 // VouchersToShares returns new Shares from the Coins vouchers representation
-func VouchersToShares(campaignID uint64, vouchers sdk.Coins) (Shares, error) {
-	err := CheckVouchers(campaignID, vouchers)
-	if err != nil {
+func VouchersToShares(vouchers sdk.Coins, campaignID uint64) (Shares, error) {
+	if err := CheckVouchers(vouchers, campaignID); err != nil {
 		return nil, err
 	}
 	shares := make(Shares, len(vouchers))
@@ -51,19 +64,4 @@ func VoucherToShareDenom(campaignID uint64, denom string) string {
 	prefix := VoucherDenom(campaignID, "")
 	shareDenom := strings.TrimPrefix(denom, prefix)
 	return SharePrefix + shareDenom
-}
-
-// CheckVouchers checks if given Vouchers are valid
-func CheckVouchers(campaignID uint64, vouchers sdk.Coins) error {
-	for _, voucher := range vouchers {
-		prefix := VoucherDenom(campaignID, "")
-		if !strings.HasPrefix(voucher.Denom, prefix) {
-			return fmt.Errorf(
-				"%s doesn't contain the voucher prefix %s",
-				voucher.Denom,
-				prefix,
-			)
-		}
-	}
-	return nil
 }
