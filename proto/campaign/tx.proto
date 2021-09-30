@@ -84,6 +84,7 @@ message MsgAddVestingOptionsResponse {
 message MsgUnredeemVouchers {
   string sender = 1;
   uint64 campaignID = 2;
+  repeated cosmos.base.v1beta1.Coin shares = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
 }
 
 message MsgUnredeemVouchersResponse {

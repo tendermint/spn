@@ -16,11 +16,16 @@ var _ = strconv.Itoa(0)
 
 func CmdUnredeemVouchers() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "unredeem-vouchers [campaign-id]",
+		Use:   "unredeem-vouchers [campaign-id] [shares]",
 		Short: "Unredeem vouchers that has been redeemed into an account and get vouchers back",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argCampaignID, err := cast.ToUint64E(args[0])
+			if err != nil {
+				return err
+			}
+
+			shares, err := types.NewShares(args[1])
 			if err != nil {
 				return err
 			}
@@ -33,6 +38,7 @@ func CmdUnredeemVouchers() *cobra.Command {
 			msg := types.NewMsgUnredeemVouchers(
 				clientCtx.GetFromAddress().String(),
 				argCampaignID,
+				shares,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

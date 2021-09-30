@@ -7,10 +7,11 @@ import (
 
 var _ sdk.Msg = &MsgUnredeemVouchers{}
 
-func NewMsgUnredeemVouchers(sender string, campaignID uint64) *MsgUnredeemVouchers {
+func NewMsgUnredeemVouchers(sender string, campaignID uint64, shares Shares) *MsgUnredeemVouchers {
 	return &MsgUnredeemVouchers{
 		Sender:     sender,
 		CampaignID: campaignID,
+		Shares:     shares,
 	}
 }
 
