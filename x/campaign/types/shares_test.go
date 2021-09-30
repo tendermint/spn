@@ -9,14 +9,14 @@ import (
 )
 
 var (
-	prefixedFoo    = campaign.SharePrefix + "foo"
-	prefixedBar    = campaign.SharePrefix + "bar"
-	prefixedFoobar = campaign.SharePrefix + "foobar"
+	prefixedShareFoo    = campaign.SharePrefix + "foo"
+	prefixedShareBar    = campaign.SharePrefix + "bar"
+	prefixedShareFoobar = campaign.SharePrefix + "foobar"
 )
 
 func TestEmptyShares(t *testing.T) {
 	shares := campaign.EmptyShares()
-	require.Equal(t, shares, campaign.Shares(nil))
+	require.Equal(t, campaign.Shares(nil), shares)
 }
 
 func TestNewShares(t *testing.T) {
@@ -26,8 +26,8 @@ func TestNewShares(t *testing.T) {
 	shares, err := campaign.NewShares("100foo,200bar")
 	require.NoError(t, err)
 	require.Equal(t, shares, campaign.Shares(sdk.NewCoins(
-		sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-		sdk.NewCoin(prefixedBar, sdk.NewInt(200)),
+		sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+		sdk.NewCoin(prefixedShareBar, sdk.NewInt(200)),
 	)))
 }
 
@@ -37,19 +37,19 @@ func TestNewSharesFromCoins(t *testing.T) {
 		sdk.NewCoin("bar", sdk.NewInt(200)),
 	))
 	require.Equal(t, shares, campaign.Shares(sdk.NewCoins(
-		sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-		sdk.NewCoin(prefixedBar, sdk.NewInt(200)),
+		sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+		sdk.NewCoin(prefixedShareBar, sdk.NewInt(200)),
 	)))
 }
 
 func TestCheckShares(t *testing.T) {
 	require.NoError(t, campaign.CheckShares(campaign.Shares(sdk.NewCoins(
-		sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-		sdk.NewCoin(prefixedBar, sdk.NewInt(200)),
+		sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+		sdk.NewCoin(prefixedShareBar, sdk.NewInt(200)),
 	))))
 	require.Error(t, campaign.CheckShares(campaign.Shares(sdk.NewCoins(
 		sdk.NewCoin("foo", sdk.NewInt(100)),
-		sdk.NewCoin(prefixedBar, sdk.NewInt(200)),
+		sdk.NewCoin(prefixedShareBar, sdk.NewInt(200)),
 	))))
 }
 
@@ -64,41 +64,41 @@ func TestIncreaseShares(t *testing.T) {
 			desc:   "increase empty set",
 			shares: campaign.EmptyShares(),
 			newShares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			expected: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 		},
 		{
 			desc: "no new shares",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			newShares: campaign.EmptyShares(),
 			expected: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 		},
 		{
 			desc: "increase shares",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			newShares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(50)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(50)),
-				sdk.NewCoin(prefixedFoobar, sdk.NewInt(50)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(50)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(50)),
+				sdk.NewCoin(prefixedShareFoobar, sdk.NewInt(50)),
 			)),
 			expected: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(150)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(150)),
-				sdk.NewCoin(prefixedFoobar, sdk.NewInt(50)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(150)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(150)),
+				sdk.NewCoin(prefixedShareFoobar, sdk.NewInt(50)),
 			)),
 		},
 	} {
@@ -120,50 +120,50 @@ func TestDecreaseShares(t *testing.T) {
 			desc:   "decrease empty set",
 			shares: campaign.EmptyShares(),
 			toDecrease: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			isError: true,
 		},
 		{
 			desc: "decrease from empty set",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			toDecrease: campaign.EmptyShares(),
 			expected: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 		},
 		{
 			desc: "decrease to negative",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(50)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(50)),
 			)),
 			toDecrease: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			isError: true,
 		},
 		{
 			desc: "decrease normal set",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedFoobar, sdk.NewInt(50)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoobar, sdk.NewInt(50)),
 			)),
 			toDecrease: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(30)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(30)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			expected: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(70)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(0)),
-				sdk.NewCoin(prefixedFoobar, sdk.NewInt(50)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(70)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(0)),
+				sdk.NewCoin(prefixedShareFoobar, sdk.NewInt(50)),
 			)),
 		},
 	} {
@@ -177,7 +177,7 @@ func TestDecreaseShares(t *testing.T) {
 	}
 }
 
-func TestIsTotalReached(t *testing.T) {
+func TestShareIsTotalReached(t *testing.T) {
 	for _, tc := range []struct {
 		desc        string
 		shares      campaign.Shares
@@ -193,8 +193,8 @@ func TestIsTotalReached(t *testing.T) {
 		{
 			desc: "no default total is reached",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			totalShares: campaign.EmptyShares(),
 			reached:     false,
@@ -202,21 +202,21 @@ func TestIsTotalReached(t *testing.T) {
 		{
 			desc: "no custom total is reached",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(50)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(50)),
 			)),
 			totalShares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedFoobar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoobar, sdk.NewInt(100)),
 			)),
 			reached: false,
 		},
 		{
 			desc: "a default total is reached",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber+1)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(campaign.DefaultTotalShareNumber+1)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			totalShares: campaign.EmptyShares(),
 			reached:     true,
@@ -224,11 +224,11 @@ func TestIsTotalReached(t *testing.T) {
 		{
 			desc: "a custom total is reached",
 			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
-				sdk.NewCoin(prefixedBar, sdk.NewInt(101)),
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(101)),
 			)),
 			totalShares: campaign.NewSharesFromCoins(sdk.NewCoins(
-				sdk.NewCoin(prefixedBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
 			)),
 			reached: true,
 		},
@@ -253,12 +253,12 @@ func TestIsEqualShares(t *testing.T) {
 			name: "equal shares",
 			args: args{
 				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
-					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
-					sdk.NewCoin(prefixedBar, sdk.NewInt(101)),
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(101)),
 				)),
 				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
-					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
-					sdk.NewCoin(prefixedBar, sdk.NewInt(101)),
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(101)),
 				)),
 			},
 			want: true,
@@ -267,12 +267,12 @@ func TestIsEqualShares(t *testing.T) {
 			name: "not equal values",
 			args: args{
 				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
-					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
-					sdk.NewCoin(prefixedBar, sdk.NewInt(10)),
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(10)),
 				)),
 				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
-					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
-					sdk.NewCoin(prefixedBar, sdk.NewInt(101)),
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(101)),
 				)),
 			},
 			want: false,
@@ -281,11 +281,11 @@ func TestIsEqualShares(t *testing.T) {
 			name: "invalid coin number",
 			args: args{
 				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
-					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
-					sdk.NewCoin(prefixedBar, sdk.NewInt(10)),
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(10)),
 				)),
 				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
-					sdk.NewCoin(prefixedFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(campaign.DefaultTotalShareNumber)),
 				)),
 			},
 			want: false,
