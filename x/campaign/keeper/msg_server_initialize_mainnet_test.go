@@ -12,13 +12,13 @@ import (
 
 func TestMsgInitializeMainnet(t *testing.T) {
 	var (
-		campaignID                                                       uint64 = 0
-		campaignMainnetInitializedID                                     uint64 = 1
-		campaignIncorrectCoordID                                         uint64 = 2
-		coordAddr                                                               = sample.AccAddress()
-		coordAddrNoCampaign                                                     = sample.AccAddress()
+		campaignID                                                          uint64 = 0
+		campaignMainnetInitializedID                                        uint64 = 1
+		campaignIncorrectCoordID                                            uint64 = 2
+		coordAddr                                                                  = sample.AccAddress()
+		coordAddrNoCampaign                                                        = sample.AccAddress()
 		campaignKeeper, _, launchKeeper, _, campaignSrv, profileSrv, sdkCtx        = setupMsgServer(t)
-		ctx                                                                     = sdk.WrapSDKContext(sdkCtx)
+		ctx                                                                        = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
