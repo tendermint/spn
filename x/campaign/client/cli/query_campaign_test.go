@@ -86,6 +86,13 @@ func TestShowCampaign(t *testing.T) {
 func TestListCampaign(t *testing.T) {
 	net, objs := networkWithCampaignObjects(t, 5)
 
+	nullify := func (campaigns []types.Campaign) {
+		for i := range campaigns {
+			campaigns[i].AllocatedShares = types.EmptyShares()
+			campaigns[i].TotalShares = types.EmptyShares()
+		}
+	}
+
 	ctx := net.Validators[0].ClientCtx
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
@@ -110,11 +117,9 @@ func TestListCampaign(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllCampaignResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				resp.Campaign[j-i].AllocatedShares = types.EmptyShares()
-				resp.Campaign[j-i].TotalShares = types.EmptyShares()
-				require.Equal(t, objs[j], resp.Campaign[j-i])
-			}
+			nullify(resp.Campaign)
+			require.LessOrEqual(t, len(resp.Campaign), step)
+			require.Subset(t, objs, resp.Campaign)
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -126,11 +131,9 @@ func TestListCampaign(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllCampaignResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			for j := i; j < len(objs) && j < i+step; j++ {
-				resp.Campaign[j-i].AllocatedShares = types.EmptyShares()
-				resp.Campaign[j-i].TotalShares = types.EmptyShares()
-				require.Equal(t, objs[j], resp.Campaign[j-i])
-			}
+			nullify(resp.Campaign)
+			require.LessOrEqual(t, len(resp.Campaign), step)
+			require.Subset(t, objs, resp.Campaign)
 			next = resp.Pagination.NextKey
 		}
 	})
@@ -142,11 +145,8 @@ func TestListCampaign(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-
-		for i := range resp.Campaign {
-			resp.Campaign[i].AllocatedShares = types.EmptyShares()
-			resp.Campaign[i].TotalShares = types.EmptyShares()
-		}
+		
+		nullify(resp.Campaign)
 		require.ElementsMatch(t, objs, resp.Campaign)
 	})
 }
