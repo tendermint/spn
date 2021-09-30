@@ -82,10 +82,31 @@ func TestMainnetVestingAccountQueryPaginated(t *testing.T) {
 			},
 		}
 	}
+	t.Run("ByOffset", func(t *testing.T) {
+		step := 2
+		for i := 0; i < len(msgs); i += step {
+			resp, err := keeper.MainnetVestingAccountAll(wctx, request(nil, uint64(i), uint64(step), false))
+			require.NoError(t, err)
+			require.LessOrEqual(t, len(resp.MainnetVestingAccount), step)
+			require.Subset(t, msgs, resp.MainnetVestingAccount)
+		}
+	})
+	t.Run("ByKey", func(t *testing.T) {
+		step := 2
+		var next []byte
+		for i := 0; i < len(msgs); i += step {
+			resp, err := keeper.MainnetVestingAccountAll(wctx, request(next, 0, uint64(step), false))
+			require.NoError(t, err)
+			require.LessOrEqual(t, len(resp.MainnetVestingAccount), step)
+			require.Subset(t, msgs, resp.MainnetVestingAccount)
+			next = resp.Pagination.NextKey
+		}
+	})
 	t.Run("Total", func(t *testing.T) {
 		resp, err := keeper.MainnetVestingAccountAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.ElementsMatch(t, msgs, resp.MainnetVestingAccount)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
 		_, err := keeper.MainnetVestingAccountAll(wctx, nil)

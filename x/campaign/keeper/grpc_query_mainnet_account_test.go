@@ -106,6 +106,7 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 		resp, err := keeper.MainnetAccountAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.ElementsMatch(t, msgs, resp.MainnetAccount)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
 		_, err := keeper.MainnetAccountAll(wctx, nil)

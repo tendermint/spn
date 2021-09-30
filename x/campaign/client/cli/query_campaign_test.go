@@ -147,6 +147,6 @@ func TestListCampaign(t *testing.T) {
 			resp.Campaign[i].AllocatedShares = types.EmptyShares()
 			resp.Campaign[i].TotalShares = types.EmptyShares()
 		}
-		require.Equal(t, objs, resp.Campaign)
+		require.ElementsMatch(t, objs, resp.Campaign)
 	})
 }
