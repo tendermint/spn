@@ -22,15 +22,9 @@ func TestGenesis(t *testing.T) {
 	got := profile.ExportGenesis(ctx, *keeper)
 
 	// Compare lists
-	require.Len(t, got.ValidatorList, len(genesisState.ValidatorList))
-	require.Subset(t, genesisState.ValidatorList, got.ValidatorList)
-
-	require.Len(t, got.CoordinatorList, len(genesisState.CoordinatorList))
-	require.Subset(t, genesisState.CoordinatorList, got.CoordinatorList)
-
-	require.Len(t, got.CoordinatorByAddressList, len(genesisState.CoordinatorByAddressList))
-	require.Subset(t, genesisState.CoordinatorByAddressList, got.CoordinatorByAddressList)
-
+	require.ElementsMatch(t, genesisState.ValidatorList, got.ValidatorList)
+	require.ElementsMatch(t, genesisState.CoordinatorList, got.CoordinatorList)
+	require.ElementsMatch(t, genesisState.CoordinatorByAddressList, got.CoordinatorByAddressList)
 	require.Equal(t, genesisState.CoordinatorCount, got.CoordinatorCount)
 
 	// this line is used by starport scaffolding # genesis/test/assert

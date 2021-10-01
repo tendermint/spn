@@ -103,6 +103,7 @@ func TestValidatorQueryPaginated(t *testing.T) {
 		resp, err := keeper.ValidatorAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.ElementsMatch(t, msgs, resp.Validator)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
 		_, err := keeper.ValidatorAll(wctx, nil)

@@ -22,25 +22,14 @@ func TestGenesis(t *testing.T) {
 	got := launch.ExportGenesis(ctx, *keeper)
 
 	// Compare lists
-	require.Len(t, got.ChainList, len(genesisState.ChainList))
-	require.Subset(t, genesisState.ChainList, got.ChainList)
-
+	require.ElementsMatch(t, genesisState.ChainList, got.ChainList)
 	require.Equal(t, genesisState.ChainCount, got.ChainCount)
 
-	require.Len(t, got.GenesisAccountList, len(genesisState.GenesisAccountList))
-	require.Subset(t, genesisState.GenesisAccountList, got.GenesisAccountList)
-
-	require.Len(t, got.VestingAccountList, len(genesisState.VestingAccountList))
-	require.Subset(t, genesisState.VestingAccountList, got.VestingAccountList)
-
-	require.Len(t, got.GenesisValidatorList, len(genesisState.GenesisValidatorList))
-	require.Subset(t, genesisState.GenesisValidatorList, got.GenesisValidatorList)
-
-	require.Len(t, got.RequestList, len(genesisState.RequestList))
-	require.Subset(t, genesisState.RequestList, got.RequestList)
-
-	require.Len(t, got.RequestCountList, len(genesisState.RequestCountList))
-	require.Subset(t, genesisState.RequestCountList, got.RequestCountList)
+	require.ElementsMatch(t, genesisState.GenesisAccountList, got.GenesisAccountList)
+	require.ElementsMatch(t, genesisState.VestingAccountList, got.VestingAccountList)
+	require.ElementsMatch(t, genesisState.GenesisValidatorList, got.GenesisValidatorList)
+	require.ElementsMatch(t, genesisState.RequestList, got.RequestList)
+	require.ElementsMatch(t, genesisState.RequestCountList, got.RequestCountList)
 
 	require.Equal(t, genesisState.Params, got.Params)
 

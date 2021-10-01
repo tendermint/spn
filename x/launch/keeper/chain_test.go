@@ -227,7 +227,7 @@ func TestGetAllChain(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 
-	require.Equal(t, items, keeper.GetAllChain(ctx))
+	require.ElementsMatch(t, items, keeper.GetAllChain(ctx))
 }
 
 func TestChainCount(t *testing.T) {
