@@ -30,6 +30,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 	chains[5].IsMainnet = true
+	chains[5].HasCampaign = true
 	k.SetChain(sdkCtx, chains[5])
 
 	tests := []struct {
@@ -145,7 +146,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Address: coordAddr,
 				Coins:   sample.Coins(),
 			},
-			err: types.ErrChainIsMainnet,
+			err: types.ErrAddMainnetAccount,
 		},
 	}
 	for _, tt := range tests {

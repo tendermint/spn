@@ -31,6 +31,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 	chains[5].IsMainnet = true
+	chains[5].HasCampaign = true
 	k.SetChain(sdkCtx, chains[5])
 
 	k.SetVestingAccount(sdkCtx, types.VestingAccount{ChainID: chains[3].Id, Address: addr1})
@@ -159,7 +160,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Creator: coordAddr,
 				Address: addr1,
 			},
-			err: types.ErrChainIsMainnet,
+			err: types.ErrRemoveMainnetAccount,
 		},
 	}
 	for _, tt := range tests {

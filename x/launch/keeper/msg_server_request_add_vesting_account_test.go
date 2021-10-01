@@ -31,6 +31,7 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 	chains[5].IsMainnet = true
+	chains[5].HasCampaign = true
 	k.SetChain(sdkCtx, chains[5])
 
 	tests := []struct {
@@ -158,7 +159,7 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				StartingBalance: sample.Coins(),
 				Options:         delayedVesting,
 			},
-			err: types.ErrChainIsMainnet,
+			err: types.ErrAddMainnetVestingAccount,
 		},
 	}
 	for _, tt := range tests {
