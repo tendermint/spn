@@ -95,6 +95,7 @@ func TestCampaignQueryPaginated(t *testing.T) {
 		resp, err := keeper.CampaignAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.ElementsMatch(t, msgs, resp.Campaign)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
 		_, err := keeper.CampaignAll(wctx, nil)

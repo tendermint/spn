@@ -119,6 +119,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 		resp, err := keeper.GenesisAccountAll(wctx, request(chainID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.ElementsMatch(t, msgs, resp.GenesisAccount)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
 		_, err := keeper.GenesisAccountAll(wctx, nil)
