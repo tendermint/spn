@@ -20,7 +20,11 @@ func (k msgServer) RequestAddVestingAccount(
 	}
 
 	if chain.IsMainnet {
-		return nil, sdkerrors.Wrapf(types.ErrChainIsMainnet, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(
+			types.ErrChainIsMainnet,
+			"request add vesting account fail, the chain %d is already in mainnet",
+			msg.ChainID,
+		)
 	}
 
 	if chain.LaunchTriggered {

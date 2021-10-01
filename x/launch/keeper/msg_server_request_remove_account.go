@@ -20,7 +20,11 @@ func (k msgServer) RequestRemoveAccount(
 	}
 
 	if chain.IsMainnet {
-		return nil, sdkerrors.Wrapf(types.ErrChainIsMainnet, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(
+			types.ErrChainIsMainnet,
+			"request remove account fail, the chain %d is already in mainnet",
+			msg.ChainID,
+		)
 	}
 
 	if chain.LaunchTriggered {
