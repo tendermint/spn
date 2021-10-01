@@ -17,7 +17,7 @@ var _ = strconv.Itoa(0)
 func CmdUnredeemVouchers() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "unredeem-vouchers [campaign-id] [shares]",
-		Short: "Unredeem vouchers that has been redeemed into an account and get vouchers back",
+		Short: "Unredeem vouchers that have been redeemed into an account and get vouchers back",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argCampaignID, err := cast.ToUint64E(args[0])
