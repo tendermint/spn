@@ -138,6 +138,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 
 			// Compare balance
 			unredeemed, err := types.SharesToVouchers(tc.msg.Shares, tc.msg.CampaignID)
+			require.NoError(t, err)
 			balance := bankKeeper.GetAllBalances(sdkCtx, accountAddr)
 			require.True(t, balance.IsEqual(previousBalance.Add(unredeemed...)))
 		})
