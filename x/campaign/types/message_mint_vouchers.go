@@ -41,5 +41,14 @@ func (msg *MsgMintVouchers) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
+
+	if !sdk.Coins(msg.Shares).IsValid() {
+		return sdkerrors.Wrap(ErrInvalidShares, sdk.Coins(msg.Shares).String())
+	}
+
+	if sdk.Coins(msg.Shares).Empty() {
+		return sdkerrors.Wrap(ErrInvalidShares, "shares is empty")
+	}
+
 	return nil
 }
