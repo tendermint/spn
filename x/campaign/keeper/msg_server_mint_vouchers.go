@@ -36,6 +36,7 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
 		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%v", msg.CampaignID)
 	}
+	k.SetCampaign(ctx, campaign)
 
 	// Mint vouchers to the coordinator account
 	vouchers, err := types.SharesToVouchers(msg.Shares, msg.CampaignID)

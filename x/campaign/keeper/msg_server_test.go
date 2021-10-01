@@ -18,7 +18,7 @@ func setupMsgServer(t testing.TB) (
 	*profilekeeper.Keeper,
 	*launchkeeper.Keeper,
 	bankkeeper.Keeper,
-types.MsgServer,
+	types.MsgServer,
 	profiletypes.MsgServer,
 	sdk.Context,
 ) {

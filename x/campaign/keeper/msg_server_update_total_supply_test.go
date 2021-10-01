@@ -12,10 +12,10 @@ import (
 
 func TestMsgUpdateTotalSupply(t *testing.T) {
 	var (
-		coordAddr1                                            = sample.AccAddress()
-		coordAddr2                                            = sample.AccAddress()
+		coordAddr1                                               = sample.AccAddress()
+		coordAddr2                                               = sample.AccAddress()
 		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                   = sdk.WrapSDKContext(sdkCtx)
+		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
