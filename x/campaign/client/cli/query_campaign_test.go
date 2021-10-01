@@ -86,7 +86,7 @@ func TestShowCampaign(t *testing.T) {
 func TestListCampaign(t *testing.T) {
 	net, objs := networkWithCampaignObjects(t, 5)
 
-	nullify := func (campaigns []types.Campaign) {
+	nullify := func(campaigns []types.Campaign) {
 		for i := range campaigns {
 			campaigns[i].AllocatedShares = types.EmptyShares()
 			campaigns[i].TotalShares = types.EmptyShares()
@@ -145,7 +145,7 @@ func TestListCampaign(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		
+
 		nullify(resp.Campaign)
 		require.ElementsMatch(t, objs, resp.Campaign)
 	})

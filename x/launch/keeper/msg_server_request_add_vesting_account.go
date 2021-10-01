@@ -16,21 +16,21 @@ func (k msgServer) RequestAddVestingAccount(
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%v", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
 	}
 
 	if chain.IsMainnet {
-		return nil, sdkerrors.Wrapf(types.ErrChainIsMainnet, "%v", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainIsMainnet, "%d", msg.ChainID)
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%v", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.ChainID)
 	}
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
-			"the chain %v coordinator has been deleted", chain.Id)
+			"the chain %d coordinator has been deleted", chain.Id)
 	}
 
 	content := types.NewVestingAccount(msg.ChainID, msg.Address, msg.StartingBalance, msg.Options)
