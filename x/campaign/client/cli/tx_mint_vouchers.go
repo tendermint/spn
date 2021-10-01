@@ -16,11 +16,16 @@ var _ = strconv.Itoa(0)
 
 func CmdMintVouchers() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "mint-vouchers [campaign-id]",
+		Use:   "mint-vouchers [campaign-id] [shares]",
 		Short: "Mint vouchers from campaign shares",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argCampaignID, err := cast.ToUint64E(args[0])
+			campaignID, err := cast.ToUint64E(args[0])
+			if err != nil {
+				return err
+			}
+
+			shares, err := types.NewShares(args[1])
 			if err != nil {
 				return err
 			}
@@ -32,7 +37,8 @@ func CmdMintVouchers() *cobra.Command {
 
 			msg := types.NewMsgMintVouchers(
 				clientCtx.GetFromAddress().String(),
-				argCampaignID,
+				campaignID,
+				shares,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

@@ -7,10 +7,11 @@ import (
 
 var _ sdk.Msg = &MsgMintVouchers{}
 
-func NewMsgMintVouchers(coordinator string, campaignID uint64) *MsgMintVouchers {
+func NewMsgMintVouchers(coordinator string, campaignID uint64, shares Shares) *MsgMintVouchers {
 	return &MsgMintVouchers{
 		Coordinator: coordinator,
 		CampaignID:  campaignID,
+		Shares:      shares,
 	}
 }
 
