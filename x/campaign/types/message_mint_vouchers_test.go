@@ -1,12 +1,12 @@
 package types_test
 
 import (
-	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/campaign/types"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/campaign/types"
 )
 
 func TestMsgMintVouchers_ValidateBasic(t *testing.T) {

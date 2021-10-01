@@ -111,13 +111,13 @@ func TestMsgMintVouchers(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			var previousCampaign types.Campaign
 			var previousBalance sdk.Coins
-			var found bool
 
 			coordAddr, err := sdk.AccAddressFromBech32(tc.msg.Coordinator)
 			require.NoError(t, err)
 
 			// Get values before message execution
 			if tc.err == nil {
+				var found bool
 				previousCampaign, found = campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 
