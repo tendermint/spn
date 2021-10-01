@@ -94,6 +94,7 @@ func TestFooQueryPaginated(t *testing.T) {
 		resp, err := keeper.ChainAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.ElementsMatch(t, msgs, resp.Chain)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
 		_, err := keeper.ChainAll(wctx, nil)

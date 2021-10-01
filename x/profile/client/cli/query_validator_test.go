@@ -142,6 +142,6 @@ func TestListValidator(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.Equal(t, objs, resp.Validator)
+		require.ElementsMatch(t, objs, resp.Validator)
 	})
 }
