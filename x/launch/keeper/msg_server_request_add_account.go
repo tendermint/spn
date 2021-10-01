@@ -19,6 +19,10 @@ func (k msgServer) RequestAddAccount(
 		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%v", msg.ChainID)
 	}
 
+	if chain.IsMainnet {
+		return nil, sdkerrors.Wrapf(types.ErrChainIsMainnet, "%v", msg.ChainID)
+	}
+
 	if chain.LaunchTriggered {
 		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%v", msg.ChainID)
 	}
