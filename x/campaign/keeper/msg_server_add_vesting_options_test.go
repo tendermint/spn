@@ -21,7 +21,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 		campaignInvalidAllocatedShares = sample.Campaign(2)
 		campaignMainnetInitialized     = sample.Campaign(1)
 
-		campaignKeeper, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
+		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
 		ctx                                                   = sdk.WrapSDKContext(sdkCtx)
 	)
 

@@ -14,7 +14,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 	var (
 		coordAddr1                                            = sample.AccAddress()
 		coordAddr2                                            = sample.AccAddress()
-		campaignKeeper, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
+		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
 		ctx                                                   = sdk.WrapSDKContext(sdkCtx)
 	)
 
