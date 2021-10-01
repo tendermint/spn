@@ -16,8 +16,8 @@ service Msg {
   rpc InitializeMainnet(MsgInitializeMainnet) returns (MsgInitializeMainnetResponse);
   rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
   rpc AddVestingOptions(MsgAddVestingOptions) returns (MsgAddVestingOptionsResponse);
-    rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
-// this line is used by starport scaffolding # proto/tx/rpc
+  rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
+  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgUpdateTotalShares {
