@@ -31,4 +31,5 @@ var (
 	ErrValidatorAlreadyExist = sdkerrors.Register(ModuleName, 21, "validator already exists")
 	ErrValidatorNotFound     = sdkerrors.Register(ModuleName, 22, "validator not found")
 	ErrChainInactive         = sdkerrors.Register(ModuleName, 23, "the chain is inactive")
+	ErrCreateChainFail       = sdkerrors.Register(ModuleName, 24, "fail to create a new chain")
 )
