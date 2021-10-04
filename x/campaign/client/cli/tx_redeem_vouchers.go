@@ -35,7 +35,7 @@ func CmdRedeemVouchers() *cobra.Command {
 				return err
 			}
 
-			argAccount, err := cmd.Flags().GetString(flagDynamicShares)
+			argAccount, err := cmd.Flags().GetString(flagAccount)
 			if err != nil {
 				return err
 			}
