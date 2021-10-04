@@ -13,9 +13,15 @@ import (
 func TestMsgCreateChain(t *testing.T) {
 	k, _, campaignKeeper, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.AccAddress()
+
+	// Create an invalid coordinator
+	invalidCoordAddress := sample.AccAddress()
+	msgCreateInvalidCoordinator := sample.MsgCreateCoordinator(invalidCoordAddress)
+	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
+	require.NoError(t, err)
 
 	// Create a coordinator
+	coordAddress := sample.AccAddress()
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
 	resCoord, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
@@ -35,17 +41,17 @@ func TestMsgCreateChain(t *testing.T) {
 	}{
 		{
 			name:          "valid message",
-			msg:           sample.MsgCreateChain(coordAddress, "", false, 0),
+			msg:           sample.MsgCreateChain(coordAddress, "", false, campaignID),
 			wantedChainID: 0,
 		},
 		{
 			name:          "creates a unique chain ID",
-			msg:           sample.MsgCreateChain(coordAddress, "", false, 0),
+			msg:           sample.MsgCreateChain(coordAddress, "", false, campaignID),
 			wantedChainID: 1,
 		},
 		{
 			name:          "valid message with genesis url",
-			msg:           sample.MsgCreateChain(coordAddress, "foo.com", false, 0),
+			msg:           sample.MsgCreateChain(coordAddress, "foo.com", false, campaignID),
 			wantedChainID: 2,
 		},
 		{
@@ -57,6 +63,16 @@ func TestMsgCreateChain(t *testing.T) {
 			name: "coordinator doesn't exist for the chain",
 			msg:  sample.MsgCreateChain(sample.AccAddress(), "", false, 0),
 			err:  profiletypes.ErrCoordAddressNotFound,
+		},
+		{
+			name: "invalid campaign id",
+			msg:  sample.MsgCreateChain(coordAddress, "", true, 1000),
+			err:  types.ErrCreateChainFail,
+		},
+		{
+			name: "invalid coordinator address",
+			msg:  sample.MsgCreateChain(invalidCoordAddress, "", true, 1000),
+			err:  types.ErrCreateChainFail,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
