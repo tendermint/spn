@@ -31,11 +31,11 @@ func NewKeeper(
 	profileKeeper types.ProfileKeeper,
 ) *Keeper {
 	return &Keeper{
-		cdc:          cdc,
-		storeKey:     storeKey,
-		memKey:       memKey,
-		launchKeeper: launchKeeper,
-		bankKeeper: bankKeeper,
+		cdc:           cdc,
+		storeKey:      storeKey,
+		memKey:        memKey,
+		launchKeeper:  launchKeeper,
+		bankKeeper:    bankKeeper,
 		profileKeeper: profileKeeper,
 	}
 }
