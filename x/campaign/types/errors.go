@@ -16,4 +16,5 @@ var (
 	ErrNoDynamicShares      = sdkerrors.Register(ModuleName, 6, "no dynamic shares")
 	ErrInvalidAccountShares = sdkerrors.Register(ModuleName, 7, "invalid account shares")
 	ErrTotalSharesLimit     = sdkerrors.Register(ModuleName, 8, "allocated shares greater than total shares")
+	ErrVouchersMinting      = sdkerrors.Register(ModuleName, 10, "vouchers can't be minted")
 )
