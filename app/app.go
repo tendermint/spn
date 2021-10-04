@@ -390,14 +390,13 @@ func New(
 		appCodec,
 		keys[campaignmoduletypes.StoreKey],
 		keys[campaignmoduletypes.MemStoreKey],
-		app.LaunchKeeper,
+		&app.LaunchKeeper,
 		app.BankKeeper,
 		app.ProfileKeeper,
 	)
 	app.CampaignKeeper = *campaignKeeper
 
 	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
-	app.CampaignKeeper.SetLaunchKeeper(app.LaunchKeeper)
 
 	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
 	campaignModule := campaignmodule.NewAppModule(appCodec, app.CampaignKeeper)
