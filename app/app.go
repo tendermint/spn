@@ -233,8 +233,7 @@ type App struct {
 	mm *module.Manager
 
 	// simulation manager
-	sm           *module.SimulationManager
-	configurator module.Configurator
+	sm *module.SimulationManager
 }
 
 // New returns a reference to an initialized Gaia.
@@ -516,27 +515,6 @@ func New(
 		campaignModule,
 	)
 	app.sm.RegisterStoreDecoders()
-
-		bank.NewAppModule(appCodec, app.BankKeeper, app.AuthKeeper),
-		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
-		feegrantmodule.NewAppModule(appCodec, app.AuthKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
-		crisis.NewAppModule(&app.CrisisKeeper, skipGenesisInvariants),
-		gov.NewAppModule(appCodec, app.GovKeeper, app.AuthKeeper, app.BankKeeper),
-		mint.NewAppModule(appCodec, app.MintKeeper, app.AuthKeeper),
-		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AuthKeeper, app.BankKeeper, app.StakingKeeper),
-		distr.NewAppModule(appCodec, app.DistrKeeper, app.AuthKeeper, app.BankKeeper, app.StakingKeeper),
-		staking.NewAppModule(appCodec, app.StakingKeeper, app.AuthKeeper, app.BankKeeper),
-		upgrade.NewAppModule(app.UpgradeKeeper),
-		evidence.NewAppModule(app.EvidenceKeeper),
-		ibc.NewAppModule(app.IBCKeeper),
-		params.NewAppModule(app.ParamsKeeper),
-		transferModule,
-	// this line is used by starport scaffolding # stargate/app/appModule
-		profileModule,
-		launchModule,
-		campaignModule,
-
-
 
 	// initialize stores
 	app.MountKVStores(keys)
