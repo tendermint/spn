@@ -24,11 +24,14 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 6)
 	chains[0].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
+	chains[5].IsMainnet = true
+	chains[5].HasCampaign = true
+	k.SetChain(sdkCtx, chains[5])
 
 	tests := []struct {
 		name        string
@@ -135,6 +138,15 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				Coins:   sample.Coins(),
 			},
 			err: types.ErrAccountAlreadyExist,
+		},
+		{
+			name: "is mainnet chain",
+			msg: types.MsgRequestAddAccount{
+				ChainID: chains[5].Id,
+				Address: coordAddr,
+				Coins:   sample.Coins(),
+			},
+			err: types.ErrAddMainnetAccount,
 		},
 	}
 	for _, tt := range tests {
