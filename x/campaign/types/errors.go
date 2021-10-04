@@ -18,4 +18,5 @@ var (
 	ErrAccountNotFound     = sdkerrors.Register(ModuleName, 8, "account not found")
 	ErrSharesDecrease      = sdkerrors.Register(ModuleName, 9, "shares can't be decreased")
 	ErrVouchersMinting     = sdkerrors.Register(ModuleName, 10, "vouchers can't be minted")
+	ErrInvalidVouchers     = sdkerrors.Register(ModuleName, 11, "invalid vouchers")
 )
