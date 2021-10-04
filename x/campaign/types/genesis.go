@@ -40,6 +40,9 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated index in campaignChains
 	campaignChainsIndexMap := make(map[string]struct{})
 	for _, elem := range gs.CampaignChainsList {
+		if _, ok := campaignIDMap[elem.CampaignID]; !ok {
+			return fmt.Errorf("campaign id %d doesn't exist for chains", elem.CampaignID)
+		}
 		index := string(CampaignChainsKey(elem.CampaignID))
 		if _, ok := campaignChainsIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for campaignChains")
@@ -50,6 +53,10 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated index in mainnetAccount
 	mainnetAccountIndexMap := make(map[string]struct{})
 	for _, elem := range gs.MainnetAccountList {
+		if _, ok := campaignIDMap[elem.CampaignID]; !ok {
+			return fmt.Errorf("campaign id %d doesn't exist for mainnet account %s",
+				elem.CampaignID, elem.Address)
+		}
 		index := string(MainnetAccountKey(elem.CampaignID, elem.Address))
 		if _, ok := mainnetAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for mainnetAccount")
@@ -60,6 +67,10 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated index in mainnetVestingAccount
 	mainnetVestingAccountIndexMap := make(map[string]struct{})
 	for _, elem := range gs.MainnetVestingAccountList {
+		if _, ok := campaignIDMap[elem.CampaignID]; !ok {
+			return fmt.Errorf("campaign id %d doesn't exist for mainnet vesting account %s",
+				elem.CampaignID, elem.Address)
+		}
 		index := string(MainnetVestingAccountKey(elem.CampaignID, elem.Address))
 		if _, ok := mainnetVestingAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for mainnetVestingAccount")
