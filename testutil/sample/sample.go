@@ -5,8 +5,12 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
+	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	profile "github.com/tendermint/spn/x/profile/types"
 )
@@ -15,6 +19,10 @@ import (
 func Codec() codec.Codec {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 
+	cryptocodec.RegisterInterfaces(interfaceRegistry)
+	authtypes.RegisterInterfaces(interfaceRegistry)
+	stakingtypes.RegisterInterfaces(interfaceRegistry)
+	banktypes.RegisterInterfaces(interfaceRegistry)
 	launch.RegisterInterfaces(interfaceRegistry)
 	profile.RegisterInterfaces(interfaceRegistry)
 
