@@ -22,7 +22,7 @@ func (k msgServer) RequestRemoveAccount(
 	if chain.IsMainnet {
 		return nil, sdkerrors.Wrapf(
 			types.ErrRemoveMainnetAccount,
-			"the chain %d is in mainnet",
+			"the chain %d is a mainnet",
 			msg.ChainID,
 		)
 	}
