@@ -67,6 +67,13 @@ func AlphaString(n int) string {
 	return string(randomString)
 }
 
+// Address returns a sample account address
+func Address() sdk.AccAddress {
+	pk := ed25519.GenPrivKey().PubKey()
+	addr := pk.Address()
+	return sdk.AccAddress(addr)
+}
+
 // AccAddress returns a sample account address
 func AccAddress() string {
 	pk := ed25519.GenPrivKey().PubKey()

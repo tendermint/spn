@@ -1,0 +1,54 @@
+package types
+
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+)
+
+var _ sdk.Msg = &MsgBurnVouchers{}
+
+func NewMsgBurnVouchers(creator string, campaignID uint64, vouchers sdk.Coins) *MsgBurnVouchers {
+	return &MsgBurnVouchers{
+		Creator:    creator,
+		CampaignID: campaignID,
+		Vouchers:   vouchers,
+	}
+}
+
+func (msg *MsgBurnVouchers) Route() string {
+	return RouterKey
+}
+
+func (msg *MsgBurnVouchers) Type() string {
+	return "BurnVouchers"
+}
+
+func (msg *MsgBurnVouchers) GetSigners() []sdk.AccAddress {
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
+}
+
+func (msg *MsgBurnVouchers) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+func (msg *MsgBurnVouchers) ValidateBasic() error {
+	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+
+	if !msg.Vouchers.IsValid() {
+		return sdkerrors.Wrap(ErrInvalidVouchers, msg.Vouchers.String())
+	}
+
+	if msg.Vouchers.Empty() {
+		return sdkerrors.Wrap(ErrInvalidVouchers, "vouchers is empty")
+	}
+
+	return nil
+}
