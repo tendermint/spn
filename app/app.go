@@ -103,6 +103,19 @@ import (
 	"github.com/tendermint/spm/cosmoscmd"
 )
 
+type SPNApp interface {
+	cosmoscmd.App
+	GetBaseApp() *baseapp.BaseApp
+	AppCodec() codec.Codec
+	SimulationManager() *module.SimulationManager
+	ModuleAccountAddrs() map[string]bool
+	Name() string
+	LegacyAmino() *codec.LegacyAmino
+	BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock
+	EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
+	InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
+}
+
 const (
 	AccountAddressPrefix = "spn"
 	Name                 = "spn"
@@ -171,9 +184,9 @@ var (
 )
 
 var (
-	_ simapp.App              = (*App)(nil)
-	_ cosmoscmd.CosmosApp     = (*App)(nil)
+	_ SPNApp                  = (*App)(nil)
 	_ servertypes.Application = (*App)(nil)
+	_ simapp.App              = (*App)(nil)
 )
 
 func init() {
@@ -248,7 +261,7 @@ func New(
 	encodingConfig cosmoscmd.EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) cosmoscmd.App {
+) SPNApp {
 
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
@@ -557,6 +570,9 @@ func New(
 
 // Name returns the name of the App
 func (app *App) Name() string { return app.BaseApp.Name() }
+
+// GetBaseApp returns the base app of the application
+func (app App) GetBaseApp() *baseapp.BaseApp { return app.BaseApp }
 
 // BeginBlocker application updates every begin block
 func (app *App) BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock {
