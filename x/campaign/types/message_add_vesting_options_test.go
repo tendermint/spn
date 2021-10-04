@@ -35,14 +35,14 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid total supply",
+			name: "invalid starting shares",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    sample.AccAddress(),
 				CampaignID:     0,
 				StartingShares: invalidShares,
 				VestingOptions: sample.ShareVestingOptions(),
 			},
-			err: types.ErrInvalidAccountShares,
+			err: types.ErrInvalidShares,
 		},
 	}
 	for _, tt := range tests {

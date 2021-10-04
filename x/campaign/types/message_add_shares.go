@@ -44,11 +44,11 @@ func (msg *MsgAddShares) ValidateBasic() error {
 	}
 
 	if !sdk.Coins(msg.Shares).IsValid() {
-		return sdkerrors.Wrap(ErrInvalidAccountShares, "account share is not a valid Coins object")
+		return sdkerrors.Wrap(ErrInvalidShares, sdk.Coins(msg.Shares).String())
 	}
 
 	if sdk.Coins(msg.Shares).Empty() {
-		return sdkerrors.Wrap(ErrInvalidAccountShares, "account share is empty")
+		return sdkerrors.Wrap(ErrInvalidShares, "shares is empty")
 	}
 
 	return nil

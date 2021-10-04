@@ -26,13 +26,14 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdInitializeMainnet())
+	cmd.AddCommand(CmdUnredeemVouchers())
 	cmd.AddCommand(CmdMintVouchers())
-	// this line is used by starport scaffolding # 1
 	cmd.AddCommand(CmdUpdateTotalShares())
 	cmd.AddCommand(CmdUpdateTotalSupply())
 	cmd.AddCommand(CmdCreateCampaign())
 	cmd.AddCommand(CmdAddShares())
 	cmd.AddCommand(CmdAddVestingOptions())
+	// this line is used by starport scaffolding # 1
 
 	return cmd
 }
