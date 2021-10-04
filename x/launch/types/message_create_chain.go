@@ -16,6 +16,8 @@ func NewMsgCreateChain(
 	sourceHash,
 	genesisURL,
 	genesisHash string,
+	hasCampaign bool,
+	campaignID uint64,
 ) *MsgCreateChain {
 	return &MsgCreateChain{
 		Coordinator:    coordinator,
@@ -24,6 +26,8 @@ func NewMsgCreateChain(
 		SourceHash:     sourceHash,
 		GenesisURL:     genesisURL,
 		GenesisHash:    genesisHash,
+		HasCampaign:    hasCampaign,
+		CampaignID:     campaignID,
 	}
 }
 

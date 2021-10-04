@@ -32,4 +32,5 @@ var (
 	ErrAddMainnetAccount        = sdkerrors.Register(ModuleName, 22, "accounts can't be added for mainnet")
 	ErrAddMainnetVestingAccount = sdkerrors.Register(ModuleName, 23, "vesting accounts can't be added for mainnet")
 	ErrRemoveMainnetAccount     = sdkerrors.Register(ModuleName, 24, "accounts can't be removed for mainnet")
+	ErrCreateChainFail          = sdkerrors.Register(ModuleName, 25, "fail to create a new chain")
 )
