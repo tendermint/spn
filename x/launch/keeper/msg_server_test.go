@@ -22,7 +22,7 @@ func setupMsgServer(t testing.TB) (
 	campaigntypes.MsgServer,
 	sdk.Context,
 ) {
-	campaignKeeper, launchLKeeper, profileKeeper, ctx := testkeeper.AllKeepers(t)
+	campaignKeeper, launchLKeeper, profileKeeper, _, ctx := testkeeper.AllKeepers(t)
 
 	return launchLKeeper,
 		profileKeeper,
