@@ -17,6 +17,7 @@ service Msg {
   rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
   rpc AddVestingOptions(MsgAddVestingOptions) returns (MsgAddVestingOptionsResponse);
   rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
+  rpc MintVouchers(MsgMintVouchers) returns (MsgMintVouchersResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -88,6 +89,15 @@ message MsgUnredeemVouchers {
 }
 
 message MsgUnredeemVouchersResponse {
+}
+
+message MsgMintVouchers {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  repeated cosmos.base.v1beta1.Coin shares = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+}
+
+message MsgMintVouchersResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
