@@ -43,7 +43,7 @@ func (msg *MsgUpdateTotalShares) ValidateBasic() error {
 	}
 
 	if !sdk.Coins(msg.TotalShares).IsValid() {
-		return sdkerrors.Wrap(ErrInvalidShares, "total shares doesn't contain a valid Coins object")
+		return sdkerrors.Wrap(ErrInvalidShares, sdk.Coins(msg.TotalShares).String())
 	}
 
 	if sdk.Coins(msg.TotalShares).Empty() {
