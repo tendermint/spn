@@ -42,7 +42,7 @@ var (
 )
 
 // AllKeepers returns initialized instances of all the keepers of the module
-func AllKeepers(t testing.TB) (*campaignkeeper.Keeper, *launchkeeper.Keeper, *profilekeeper.Keeper, sdk.Context) {
+func AllKeepers(t testing.TB) (*campaignkeeper.Keeper, *launchkeeper.Keeper, *profilekeeper.Keeper, bankkeeper.Keeper, sdk.Context) {
 	cdc := sample.Codec()
 	db := tmdb.NewMemDB()
 	stateStore := store.NewCommitMultiStore(db)
@@ -64,7 +64,7 @@ func AllKeepers(t testing.TB) (*campaignkeeper.Keeper, *launchkeeper.Keeper, *pr
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 
-	return campaignKeeper, launchKeeper, profileKeeper, ctx
+	return campaignKeeper, launchKeeper, profileKeeper, bankKeeper, ctx
 }
 
 // Profile returns a keeper of the profile module for testing purpose
@@ -103,7 +103,7 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
 
 // Campaign returns a keeper of the campaign module for testing purpose
 func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
-	campaignKeeper, _, _, ctx := AllKeepers(t)
+	campaignKeeper, _, _, _, ctx := AllKeepers(t)
 	return campaignKeeper, ctx
 }
 
