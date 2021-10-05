@@ -18,14 +18,14 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		addr           = sample.Address()
 		existAddr      = sample.Address()
 		campaign       = sample.Campaign(0)
-		shareFoo       = sdk.NewCoin("foo", sdk.NewInt(1000))
-		shareBar       = sdk.NewCoin("bar", sdk.NewInt(500))
-		shareFooBar    = sdk.NewCoin("foobar", sdk.NewInt(300))
-		shares         = types.NewSharesFromCoins(sdk.NewCoins(shareFoo, shareBar, shareFooBar))
 		vouchersTooBig = sdk.NewCoins(
 			sdk.NewCoin("v/0/foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
 		)
 	)
+
+	// Create shares
+	shares, err := types.NewShares("1000foo,500bar,300foobar")
+	require.NoError(t, err)
 
 	// Set campaign
 	campaign.AllocatedShares = shares
