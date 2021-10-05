@@ -21,12 +21,12 @@ func CmdBurnVouchers() *cobra.Command {
 		Short: "Burn vouchers and decrease allocated shares of the campaign",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argCampaignID, err := cast.ToUint64E(args[0])
+			campaignID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
 
-			argVouchers, err := sdk.ParseCoinsNormalized(args[1])
+			vouchers, err := sdk.ParseCoinsNormalized(args[1])
 			if err != nil {
 				return err
 			}
@@ -38,8 +38,8 @@ func CmdBurnVouchers() *cobra.Command {
 
 			msg := types.NewMsgBurnVouchers(
 				clientCtx.GetFromAddress().String(),
-				argCampaignID,
-				argVouchers,
+				campaignID,
+				vouchers,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
