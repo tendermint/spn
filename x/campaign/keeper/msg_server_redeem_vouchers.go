@@ -23,11 +23,11 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 	}
 
 	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAddr, types.ModuleName, msg.Vouchers); err != nil {
-		return nil, spnerrors.Criticalf("can't send burned coins %s", err.Error())
+		return nil, spnerrors.Criticalf("can't send coins %s", err.Error())
 	}
 
 	if err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, msg.Vouchers); err != nil {
-		return nil, sdkerrors.Wrap(types.ErrVouchersBurn, err.Error())
+		return nil, spnerrors.Criticalf("can't burn coins %s", err.Error())
 	}
 
 	shares, err := types.VouchersToShares(msg.Vouchers, msg.CampaignID)
