@@ -7,9 +7,9 @@ import (
 
 var _ sdk.Msg = &MsgBurnVouchers{}
 
-func NewMsgBurnVouchers(creator string, campaignID uint64, vouchers sdk.Coins) *MsgBurnVouchers {
+func NewMsgBurnVouchers(sender string, campaignID uint64, vouchers sdk.Coins) *MsgBurnVouchers {
 	return &MsgBurnVouchers{
-		Creator:    creator,
+		Sender:     sender,
 		CampaignID: campaignID,
 		Vouchers:   vouchers,
 	}
@@ -24,11 +24,11 @@ func (msg *MsgBurnVouchers) Type() string {
 }
 
 func (msg *MsgBurnVouchers) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{creator}
+	return []sdk.AccAddress{sender}
 }
 
 func (msg *MsgBurnVouchers) GetSignBytes() []byte {
@@ -37,9 +37,9 @@ func (msg *MsgBurnVouchers) GetSignBytes() []byte {
 }
 
 func (msg *MsgBurnVouchers) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	_, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
 	}
 
 	if !msg.Vouchers.IsValid() {

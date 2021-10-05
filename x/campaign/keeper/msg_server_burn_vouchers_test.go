@@ -48,7 +48,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 		{
 			name: "non existing campaign",
 			msg: types.MsgBurnVouchers{
-				Creator:    addr.String(),
+				Sender:     addr.String(),
 				CampaignID: 1000,
 				Vouchers:   sample.Coins(),
 			},
@@ -57,7 +57,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 		{
 			name: "invalid creator address",
 			msg: types.MsgBurnVouchers{
-				Creator:    "invalid_address",
+				Sender:     "invalid_address",
 				CampaignID: campaign.Id,
 				Vouchers:   sample.Coins(),
 			},
@@ -66,7 +66,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 		{
 			name: "should not burn more than allocated shares",
 			msg: types.MsgBurnVouchers{
-				Creator:    addr.String(),
+				Sender:     addr.String(),
 				CampaignID: campaign.Id,
 				Vouchers:   vouchersTooBig,
 			},
@@ -75,7 +75,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 		{
 			name: "burn vouchers",
 			msg: types.MsgBurnVouchers{
-				Creator:    addr.String(),
+				Sender:     addr.String(),
 				CampaignID: campaign.Id,
 				Vouchers:   vouchers,
 			},
@@ -83,7 +83,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 		{
 			name: "insufficient funds",
 			msg: types.MsgBurnVouchers{
-				Creator:    addr.String(),
+				Sender:     addr.String(),
 				CampaignID: campaign.Id,
 				Vouchers:   vouchers,
 			},
@@ -101,7 +101,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 				previousCampaign, found = campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 
-				creatorAddr, err = sdk.AccAddressFromBech32(tc.msg.Creator)
+				creatorAddr, err = sdk.AccAddressFromBech32(tc.msg.Sender)
 				require.NoError(t, err)
 				previousBalance = bankKeeper.GetAllBalances(sdkCtx, creatorAddr)
 			}

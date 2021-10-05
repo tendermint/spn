@@ -18,7 +18,7 @@ var _ = strconv.Itoa(0)
 func CmdBurnVouchers() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "burn-vouchers [campaign-id] [vouchers]",
-		Short: "Burn vouchers",
+		Short: "Burn vouchers and decrease allocated shares of the campaign",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argCampaignID, err := cast.ToUint64E(args[0])
