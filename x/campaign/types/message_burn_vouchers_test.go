@@ -34,7 +34,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid shares",
+			name: "invalid vouchers",
 			msg: types.MsgBurnVouchers{
 				Sender:     sample.AccAddress(),
 				CampaignID: 0,
@@ -43,7 +43,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidVouchers,
 		},
 		{
-			name: "empty shares",
+			name: "empty vouchers",
 			msg: types.MsgBurnVouchers{
 				Sender:     sample.AccAddress(),
 				CampaignID: 0,
@@ -52,7 +52,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidVouchers,
 		},
 		{
-			name: "invalid vouchers",
+			name: "vouchers not from the associated campaign",
 			msg: types.MsgBurnVouchers{
 				Sender:     sample.AccAddress(),
 				CampaignID: 0,
