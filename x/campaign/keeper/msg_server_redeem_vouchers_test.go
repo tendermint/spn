@@ -14,18 +14,18 @@ func TestMsgRedeemVouchers(t *testing.T) {
 	var (
 		campaignKeeper, _, _, bankKeeper, campaignSrv, _, sdkCtx = setupMsgServer(t)
 
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 		addr           = sample.Address()
 		existAddr      = sample.Address()
 		campaign       = sample.Campaign(0)
-		ctx            = sdk.WrapSDKContext(sdkCtx)
+		shareFoo       = sdk.NewCoin("foo", sdk.NewInt(1000))
+		shareBar       = sdk.NewCoin("bar", sdk.NewInt(500))
+		shareFooBar    = sdk.NewCoin("foobar", sdk.NewInt(300))
+		shares         = types.NewSharesFromCoins(sdk.NewCoins(shareFoo, shareBar, shareFooBar))
 		vouchersTooBig = sdk.NewCoins(
 			sdk.NewCoin("v/0/foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
 		)
 	)
-
-	// Create shares
-	shares, err := types.NewShares("1000foo,500bar,300foobar")
-	require.NoError(t, err)
 
 	// Set campaign
 	campaign.AllocatedShares = shares
@@ -94,10 +94,10 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				CampaignID: campaign.Id,
 				Vouchers:   vouchersTooBig,
 			},
-			err: spnerrors.ErrCritical,
+			err: types.ErrInsufficientFunds,
 		},
 		{
-			name: "new account redeem",
+			name: "new account redeem all",
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    sample.AccAddress(),
@@ -106,13 +106,51 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			},
 		},
 		{
-			name: "already exist account redeem",
+			name: "exist account redeem voucher one",
+			msg: types.MsgRedeemVouchers{
+				Sender:     existAddr.String(),
+				Account:    existAddr.String(),
+				CampaignID: campaign.Id,
+				Vouchers:   sdk.NewCoins(vouchers[0]),
+			},
+		},
+		{
+			name: "exist account redeem voucher two",
+			msg: types.MsgRedeemVouchers{
+				Sender:     existAddr.String(),
+				Account:    existAddr.String(),
+				CampaignID: campaign.Id,
+				Vouchers:   sdk.NewCoins(vouchers[1]),
+			},
+		},
+		{
+			name: "exist account redeem voucher three",
+			msg: types.MsgRedeemVouchers{
+				Sender:     existAddr.String(),
+				Account:    existAddr.String(),
+				CampaignID: campaign.Id,
+				Vouchers:   sdk.NewCoins(vouchers[2]),
+			},
+		},
+		{
+			name: "account without funds for vouchers",
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
 				CampaignID: campaign.Id,
 				Vouchers:   vouchers,
 			},
+			err: types.ErrInsufficientFunds,
+		},
+		{
+			name: "account without funds for voucher one",
+			msg: types.MsgRedeemVouchers{
+				Sender:     existAddr.String(),
+				Account:    existAddr.String(),
+				CampaignID: campaign.Id,
+				Vouchers:   sdk.NewCoins(vouchers[0]),
+			},
+			err: types.ErrInsufficientFunds,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
