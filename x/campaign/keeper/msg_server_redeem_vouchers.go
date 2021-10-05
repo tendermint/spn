@@ -23,7 +23,7 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 	}
 
 	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAddr, types.ModuleName, msg.Vouchers); err != nil {
-		return nil, spnerrors.Criticalf("can't send coins %s", err.Error())
+		return nil, sdkerrors.Wrapf(types.ErrInsufficientFunds, "%s", creatorAddr.String())
 	}
 
 	if err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, msg.Vouchers); err != nil {

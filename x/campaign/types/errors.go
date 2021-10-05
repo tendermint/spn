@@ -19,5 +19,5 @@ var (
 	ErrSharesDecrease      = sdkerrors.Register(ModuleName, 9, "shares can't be decreased")
 	ErrVouchersMinting     = sdkerrors.Register(ModuleName, 10, "vouchers can't be minted")
 	ErrInvalidVouchers     = sdkerrors.Register(ModuleName, 11, "invalid vouchers")
-	ErrVouchersBurn        = sdkerrors.Register(ModuleName, 12, "vouchers can't be burned")
+	ErrInsufficientFunds   = sdkerrors.Register(ModuleName, 12, "account with insufficient funds")
 )
