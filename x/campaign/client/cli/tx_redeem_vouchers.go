@@ -22,20 +22,20 @@ const (
 func CmdRedeemVouchers() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "redeem-vouchers [campaign-id] [vouchers]",
-		Short: "Redeem vouchers",
+		Short: "Redeem vouchers and allocate shares for an account in the mainnet of the campaign",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argCampaignID, err := cast.ToUint64E(args[0])
+			campaignID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
 
-			argVouchers, err := sdk.ParseCoinsNormalized(args[1])
+			vouchers, err := sdk.ParseCoinsNormalized(args[1])
 			if err != nil {
 				return err
 			}
 
-			argAccount, err := cmd.Flags().GetString(flagAccount)
+			account, err := cmd.Flags().GetString(flagAccount)
 			if err != nil {
 				return err
 			}
@@ -45,15 +45,15 @@ func CmdRedeemVouchers() *cobra.Command {
 				return err
 			}
 
-			if argAccount == "" {
-				argAccount = clientCtx.GetFromAddress().String()
+			if account == "" {
+				account = clientCtx.GetFromAddress().String()
 			}
 
 			msg := types.NewMsgRedeemVouchers(
 				clientCtx.GetFromAddress().String(),
-				argCampaignID,
-				argAccount,
-				argVouchers,
+				campaignID,
+				account,
+				vouchers,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -62,7 +62,7 @@ func CmdRedeemVouchers() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagAccount, "", "Account to redeem the vouchers")
+	cmd.Flags().String(flagAccount, "", "Account address that receives shares allocation from redeemed vouchers")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

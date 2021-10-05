@@ -7,9 +7,9 @@ import (
 
 var _ sdk.Msg = &MsgRedeemVouchers{}
 
-func NewMsgRedeemVouchers(creator string, campaignID uint64, account string, vouchers sdk.Coins) *MsgRedeemVouchers {
+func NewMsgRedeemVouchers(sender string, campaignID uint64, account string, vouchers sdk.Coins) *MsgRedeemVouchers {
 	return &MsgRedeemVouchers{
-		Creator:    creator,
+		Sender:     sender,
 		CampaignID: campaignID,
 		Account:    account,
 		Vouchers:   vouchers,
@@ -25,11 +25,11 @@ func (msg *MsgRedeemVouchers) Type() string {
 }
 
 func (msg *MsgRedeemVouchers) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{creator}
+	return []sdk.AccAddress{sender}
 }
 
 func (msg *MsgRedeemVouchers) GetSignBytes() []byte {
@@ -38,9 +38,9 @@ func (msg *MsgRedeemVouchers) GetSignBytes() []byte {
 }
 
 func (msg *MsgRedeemVouchers) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	_, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
 	}
 
 	_, err = sdk.AccAddressFromBech32(msg.Account)

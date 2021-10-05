@@ -102,7 +102,7 @@ message MsgMintVouchersResponse {
 }
 
 message MsgRedeemVouchers {
-  string creator = 1;
+  string sender = 1;
   uint64 campaignID = 2;
   string account = 3;
   repeated cosmos.base.v1beta1.Coin vouchers = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];

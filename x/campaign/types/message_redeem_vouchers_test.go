@@ -19,7 +19,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid creator address",
 			msg: types.MsgRedeemVouchers{
-				Creator:    "invalid_address",
+				Sender:     "invalid_address",
 				Account:    sample.AccAddress(),
 				Vouchers:   sample.Coins(),
 				CampaignID: 0,
@@ -29,7 +29,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid account address",
 			msg: types.MsgRedeemVouchers{
-				Creator:    sample.AccAddress(),
+				Sender:     sample.AccAddress(),
 				Account:    "invalid_address",
 				Vouchers:   sample.Coins(),
 				CampaignID: 0,
@@ -39,7 +39,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid vouchers",
 			msg: types.MsgRedeemVouchers{
-				Creator:    sample.AccAddress(),
+				Sender:     sample.AccAddress(),
 				Account:    sample.AccAddress(),
 				Vouchers:   invalidCoins,
 				CampaignID: 0,
@@ -49,7 +49,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "empty vouchers",
 			msg: types.MsgRedeemVouchers{
-				Creator:    sample.AccAddress(),
+				Sender:     sample.AccAddress(),
 				Account:    sample.AccAddress(),
 				Vouchers:   sdk.Coins{},
 				CampaignID: 0,
@@ -59,7 +59,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgRedeemVouchers{
-				Creator:    sample.AccAddress(),
+				Sender:     sample.AccAddress(),
 				Account:    sample.AccAddress(),
 				Vouchers:   sample.Coins(),
 				CampaignID: 0,

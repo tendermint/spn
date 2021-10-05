@@ -17,6 +17,19 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
+	creatorAddr, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return nil, spnerrors.Criticalf("can't parse sender address %s", err.Error())
+	}
+
+	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAddr, types.ModuleName, msg.Vouchers); err != nil {
+		return nil, spnerrors.Criticalf("can't send burned coins %s", err.Error())
+	}
+
+	if err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, msg.Vouchers); err != nil {
+		return nil, sdkerrors.Wrap(types.ErrVouchersBurn, err.Error())
+	}
+
 	shares, err := types.VouchersToShares(msg.Vouchers, msg.CampaignID)
 	if err != nil {
 		return nil, spnerrors.Criticalf("verified voucher are invalid %s", err.Error())
@@ -35,19 +48,6 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 	// increase the account shares
 	account.Shares = types.IncreaseShares(account.Shares, shares)
 	k.SetMainnetAccount(ctx, account)
-
-	creatorAddr, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return nil, spnerrors.Criticalf("can't parse sender address %s", err.Error())
-	}
-
-	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creatorAddr, types.ModuleName, msg.Vouchers); err != nil {
-		return nil, spnerrors.Criticalf("can't send burned coins %s", err.Error())
-	}
-
-	if err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, msg.Vouchers); err != nil {
-		return nil, sdkerrors.Wrap(types.ErrVouchersBurn, err.Error())
-	}
 
 	return &types.MsgRedeemVouchersResponse{}, nil
 }

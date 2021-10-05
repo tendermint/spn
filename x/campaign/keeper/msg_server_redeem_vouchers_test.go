@@ -59,7 +59,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		{
 			name: "non existing campaign",
 			msg: types.MsgRedeemVouchers{
-				Creator:    addr.String(),
+				Sender:     addr.String(),
 				Account:    addr.String(),
 				CampaignID: 10000,
 				Vouchers:   sample.Coins(),
@@ -69,7 +69,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		{
 			name: "invalid vouchers",
 			msg: types.MsgRedeemVouchers{
-				Creator:    addr.String(),
+				Sender:     addr.String(),
 				Account:    addr.String(),
 				CampaignID: campaign.Id,
 				Vouchers:   sample.Coins(),
@@ -77,9 +77,9 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			err: spnerrors.ErrCritical,
 		},
 		{
-			name: "invalid creatpr address",
+			name: "invalid sender address",
 			msg: types.MsgRedeemVouchers{
-				Creator:    "invalid_address",
+				Sender:     "invalid_address",
 				Account:    addr.String(),
 				CampaignID: campaign.Id,
 				Vouchers:   vouchers,
@@ -89,7 +89,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		{
 			name: "insufficient funds",
 			msg: types.MsgRedeemVouchers{
-				Creator:    addr.String(),
+				Sender:     addr.String(),
 				Account:    addr.String(),
 				CampaignID: campaign.Id,
 				Vouchers:   vouchersTooBig,
@@ -99,7 +99,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		{
 			name: "new account redeem",
 			msg: types.MsgRedeemVouchers{
-				Creator:    addr.String(),
+				Sender:     addr.String(),
 				Account:    sample.AccAddress(),
 				CampaignID: campaign.Id,
 				Vouchers:   vouchers,
@@ -108,7 +108,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		{
 			name: "already exist account redeem",
 			msg: types.MsgRedeemVouchers{
-				Creator:    existAddr.String(),
+				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
 				CampaignID: campaign.Id,
 				Vouchers:   vouchers,
