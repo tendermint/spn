@@ -17,19 +17,19 @@ func (k msgServer) BurnVouchers(goCtx context.Context, msg *types.MsgBurnVoucher
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
-	creator, err := sdk.AccAddressFromBech32(msg.Sender)
+	sender, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		return nil, spnerrors.Criticalf("can't parse creator address %s", err.Error())
 	}
 
 	// transfer vouchers
-	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, creator, types.ModuleName, msg.Vouchers); err != nil {
-		return nil, spnerrors.Criticalf("can't send burned coins %s", err.Error())
+	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, msg.Vouchers); err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInsufficientFunds, "%s", sender.String())
 	}
 
 	// Burn vouchers
 	if err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, msg.Vouchers); err != nil {
-		return nil, sdkerrors.Wrap(types.ErrVouchersBurn, err.Error())
+		return nil, spnerrors.Criticalf("can't burn coins %s", err.Error())
 	}
 
 	shares, err := types.VouchersToShares(msg.Vouchers, msg.CampaignID)
@@ -40,7 +40,7 @@ func (k msgServer) BurnVouchers(goCtx context.Context, msg *types.MsgBurnVoucher
 	// Decrease the campaign shares
 	campaign.AllocatedShares, err = types.DecreaseShares(campaign.AllocatedShares, shares)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidShares, "%d", msg.CampaignID)
+		return nil, spnerrors.Criticalf("invalid allocated share amount %s", err.Error())
 	}
 	k.SetCampaign(ctx, campaign)
 

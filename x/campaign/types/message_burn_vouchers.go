@@ -50,5 +50,9 @@ func (msg *MsgBurnVouchers) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidVouchers, "vouchers is empty")
 	}
 
+	if err := CheckVouchers(msg.Vouchers, msg.CampaignID); err != nil {
+		return sdkerrors.Wrap(ErrInvalidVouchers, err.Error())
+	}
+
 	return nil
 }
