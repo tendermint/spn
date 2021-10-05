@@ -11,6 +11,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	profile "github.com/tendermint/spn/x/profile/types"
 )
@@ -89,4 +90,15 @@ func Coin() sdk.Coin {
 // Coins returns a sample coins structure
 func Coins() sdk.Coins {
 	return sdk.NewCoins(Coin(), Coin(), Coin())
+}
+
+// Voucher returns a sample voucher structure
+func Voucher(campaignID uint64) sdk.Coin {
+	denom := campaigntypes.VoucherDenom(campaignID, AlphaString(5))
+	return sdk.NewCoin(denom, sdk.NewInt(int64(rand.Intn(10000)+1)))
+}
+
+// Vouchers returns a sample vouchers structure
+func Vouchers(campaignID uint64) sdk.Coins {
+	return sdk.NewCoins(Voucher(campaignID), Voucher(campaignID), Voucher(campaignID))
 }
