@@ -9,6 +9,19 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
+	var (
+		campaign1 = sample.Campaign(0)
+		campaign2 = sample.Campaign(1)
+		shares1   = sample.Shares()
+		shares2   = sample.Shares()
+		shares3   = sample.Shares()
+		shares4   = sample.Shares()
+	)
+	campaign1.AllocatedShares = types.IncreaseShares(shares1, shares2)
+	campaign1.TotalShares = campaign1.AllocatedShares
+	campaign2.AllocatedShares = types.IncreaseShares(shares3, shares4)
+	campaign2.TotalShares = campaign2.AllocatedShares
+
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState
@@ -25,29 +38,39 @@ func TestGenesisState_Validate(t *testing.T) {
 				// this line is used by starport scaffolding # types/genesis/validField
 				CampaignChainsList: []types.CampaignChains{
 					{
-						CampaignID: 0,
+						CampaignID: campaign1.Id,
 					},
 					{
-						CampaignID: 1,
+						CampaignID: campaign2.Id,
 					},
 				},
 				CampaignList: []types.Campaign{
-					sample.Campaign(0),
-					sample.Campaign(1),
+					campaign1,
+					campaign2,
 				},
 				CampaignCount: 2,
 				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(0, sample.AccAddress()),
-					sample.MainnetAccount(1, sample.AccAddress()),
+					{
+						CampaignID: campaign1.Id,
+						Address:    sample.AccAddress(),
+						Shares:     shares1,
+					},
+					{
+						CampaignID: campaign2.Id,
+						Address:    sample.AccAddress(),
+						Shares:     shares3,
+					},
 				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
-						CampaignID: 0,
-						Address:    "0",
+						CampaignID: campaign1.Id,
+						Address:    sample.AccAddress(),
+						Shares:     shares2,
 					},
 					{
-						CampaignID: 1,
-						Address:    "1",
+						CampaignID: campaign2.Id,
+						Address:    sample.AccAddress(),
+						Shares:     shares4,
 					},
 				},
 			},
@@ -208,10 +231,38 @@ func TestGenesisState_Validate(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()
-			if tc.valid {
-				require.NoError(t, err)
-			} else {
+			if !tc.valid {
 				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+
+			campaignIDMap := make(map[uint64]types.Shares)
+			for _, elem := range tc.genState.CampaignList {
+				campaignIDMap[elem.Id] = elem.AllocatedShares
+			}
+			shares := make(map[uint64]types.Shares)
+
+			for _, acc := range tc.genState.MainnetAccountList {
+				// check if the campaign exist for mainnet accounts
+				_, ok := campaignIDMap[acc.CampaignID]
+				require.True(t, ok)
+
+				// sum mainnet account shares
+				if _, ok := shares[acc.CampaignID]; !ok {
+					shares[acc.CampaignID] = types.EmptyShares()
+				}
+				shares[acc.CampaignID] = types.IncreaseShares(
+					shares[acc.CampaignID],
+					acc.Shares,
+				)
+			}
+			for campaignID, share := range campaignIDMap {
+				// check if the campaign shares is equal all accounts shares
+				accShares, ok := shares[campaignID]
+				require.True(t, ok)
+				isEqualShares := types.IsEqualShares(accShares, share)
+				require.True(t, isEqualShares)
 			}
 		})
 	}
