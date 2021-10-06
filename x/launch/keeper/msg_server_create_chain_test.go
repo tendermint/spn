@@ -11,15 +11,27 @@ import (
 )
 
 func TestMsgCreateChain(t *testing.T) {
-	k, _, _, srv, profileSrv, _, sdkCtx := setupMsgServer(t)
+	k, _, campaignKeeper, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.AccAddress()
+
+	// Create an invalid coordinator
+	invalidCoordAddress := sample.AccAddress()
+	msgCreateInvalidCoordinator := sample.MsgCreateCoordinator(invalidCoordAddress)
+	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
+	require.NoError(t, err)
 
 	// Create a coordinator
+	coordAddress := sample.AccAddress()
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	resCoord, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
-	coordID := res.CoordinatorId
+	coordID := resCoord.CoordinatorId
+
+	// Create a campaign
+	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
+	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campaignID := resCampaign.CampaignID
 
 	for _, tc := range []struct {
 		name          string
@@ -29,23 +41,38 @@ func TestMsgCreateChain(t *testing.T) {
 	}{
 		{
 			name:          "valid message",
-			msg:           sample.MsgCreateChain(coordAddress, ""),
+			msg:           sample.MsgCreateChain(coordAddress, "", false, campaignID),
 			wantedChainID: 0,
 		},
 		{
 			name:          "creates a unique chain ID",
-			msg:           sample.MsgCreateChain(coordAddress, ""),
+			msg:           sample.MsgCreateChain(coordAddress, "", false, campaignID),
 			wantedChainID: 1,
 		},
 		{
 			name:          "valid message with genesis url",
-			msg:           sample.MsgCreateChain(coordAddress, "foo.com"),
+			msg:           sample.MsgCreateChain(coordAddress, "foo.com", false, campaignID),
 			wantedChainID: 2,
 		},
 		{
+			name:          "creates message with campaign",
+			msg:           sample.MsgCreateChain(coordAddress, "", true, campaignID),
+			wantedChainID: 3,
+		},
+		{
 			name: "coordinator doesn't exist for the chain",
-			msg:  sample.MsgCreateChain(sample.AccAddress(), ""),
+			msg:  sample.MsgCreateChain(sample.AccAddress(), "", false, 0),
 			err:  profiletypes.ErrCoordAddressNotFound,
+		},
+		{
+			name: "invalid campaign id",
+			msg:  sample.MsgCreateChain(coordAddress, "", true, 1000),
+			err:  types.ErrCreateChainFail,
+		},
+		{
+			name: "invalid coordinator address",
+			msg:  sample.MsgCreateChain(invalidCoordAddress, "", true, 1000),
+			err:  types.ErrCreateChainFail,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -79,6 +106,15 @@ func TestMsgCreateChain(t *testing.T) {
 
 			// Chain created from MsgCreateChain is never a mainnet
 			require.False(t, chain.IsMainnet)
+
+			require.Equal(t, tc.msg.HasCampaign, chain.HasCampaign)
+
+			if tc.msg.HasCampaign {
+				require.Equal(t, tc.msg.CampaignID, chain.CampaignID)
+				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
+				require.True(t, found)
+				require.Contains(t, campaignChains.Chains, chain.Id)
+			}
 		})
 	}
 }

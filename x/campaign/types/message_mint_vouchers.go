@@ -5,26 +5,25 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-var _ sdk.Msg = &MsgAddShares{}
+var _ sdk.Msg = &MsgMintVouchers{}
 
-func NewMsgAddShares(campaignID uint64, coordinator, address string, shares Shares) *MsgAddShares {
-	return &MsgAddShares{
-		CampaignID:  campaignID,
+func NewMsgMintVouchers(coordinator string, campaignID uint64, shares Shares) *MsgMintVouchers {
+	return &MsgMintVouchers{
 		Coordinator: coordinator,
-		Address:     address,
+		CampaignID:  campaignID,
 		Shares:      shares,
 	}
 }
 
-func (msg *MsgAddShares) Route() string {
+func (msg *MsgMintVouchers) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgAddShares) Type() string {
-	return "AddShares"
+func (msg *MsgMintVouchers) Type() string {
+	return "MintVouchers"
 }
 
-func (msg *MsgAddShares) GetSigners() []sdk.AccAddress {
+func (msg *MsgMintVouchers) GetSigners() []sdk.AccAddress {
 	coordinator, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		panic(err)
@@ -32,12 +31,12 @@ func (msg *MsgAddShares) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{coordinator}
 }
 
-func (msg *MsgAddShares) GetSignBytes() []byte {
+func (msg *MsgMintVouchers) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgAddShares) ValidateBasic() error {
+func (msg *MsgMintVouchers) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)

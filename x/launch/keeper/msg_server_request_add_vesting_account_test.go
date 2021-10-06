@@ -24,12 +24,15 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
+	chains := createNChainForCoordinator(k, sdkCtx, coordID, 6)
 	chains[0].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[0])
 	delayedVesting := *types.NewDelayedVesting(sample.Coins(), 10000)
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
+	chains[5].IsMainnet = true
+	chains[5].HasCampaign = true
+	k.SetChain(sdkCtx, chains[5])
 
 	tests := []struct {
 		name        string
@@ -147,6 +150,16 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				Options:         delayedVesting,
 			},
 			err: types.ErrAccountAlreadyExist,
+		},
+		{
+			name: "is mainnet chain",
+			msg: types.MsgRequestAddVestingAccount{
+				ChainID:         chains[5].Id,
+				Address:         coordAddr,
+				StartingBalance: sample.Coins(),
+				Options:         delayedVesting,
+			},
+			err: types.ErrAddMainnetVestingAccount,
 		},
 	}
 	for _, tt := range tests {

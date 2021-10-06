@@ -26,21 +26,20 @@ func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey,
 	memKey sdk.StoreKey,
-	launchKeeper types.LaunchKeeper, bankKeeper types.BankKeeper, profileKeeper types.ProfileKeeper,
+	launchKeeper types.LaunchKeeper,
+	bankKeeper types.BankKeeper,
+	profileKeeper types.ProfileKeeper,
 ) *Keeper {
 	return &Keeper{
-		cdc:          cdc,
-		storeKey:     storeKey,
-		memKey:       memKey,
-		launchKeeper: launchKeeper, bankKeeper: bankKeeper, profileKeeper: profileKeeper,
+		cdc:           cdc,
+		storeKey:      storeKey,
+		memKey:        memKey,
+		launchKeeper:  launchKeeper,
+		bankKeeper:    bankKeeper,
+		profileKeeper: profileKeeper,
 	}
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
-}
-
-// SetLaunchKeeper set the launch keeper interface of the module
-func (k *Keeper) SetLaunchKeeper(launchKeeper types.LaunchKeeper) {
-	k.launchKeeper = launchKeeper
 }

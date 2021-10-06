@@ -9,15 +9,15 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func TestMsgAddShares_ValidateBasic(t *testing.T) {
+func TestMsgMintVouchers_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgAddShares
+		msg  types.MsgMintVouchers
 		err  error
 	}{
 		{
-			name: "valid address",
-			msg: types.MsgAddShares{
+			name: "valid message",
+			msg: types.MsgMintVouchers{
 				Coordinator: sample.AccAddress(),
 				CampaignID:  0,
 				Shares:      sample.Shares(),
@@ -25,7 +25,7 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid address",
-			msg: types.MsgAddShares{
+			msg: types.MsgMintVouchers{
 				Coordinator: "invalid_address",
 				CampaignID:  0,
 				Shares:      sample.Shares(),
@@ -33,8 +33,8 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid shates",
-			msg: types.MsgAddShares{
+			name: "invalid shares",
+			msg: types.MsgMintVouchers{
 				Coordinator: sample.AccAddress(),
 				CampaignID:  0,
 				Shares:      invalidShares,
@@ -43,10 +43,10 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "empty shares",
-			msg: types.MsgAddShares{
+			msg: types.MsgMintVouchers{
 				Coordinator: sample.AccAddress(),
 				CampaignID:  0,
-				Shares:      types.Shares{},
+				Shares:      types.EmptyShares(),
 			},
 			err: types.ErrInvalidShares,
 		},
