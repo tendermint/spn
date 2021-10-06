@@ -21,7 +21,7 @@ func New(db tmdb.DB, dir string, logger log.Logger) app.SPNApp {
 		logger,
 		db,
 		nil,
-		true,
+		false,
 		map[int64]bool{},
 		dir,
 		0,
@@ -29,11 +29,17 @@ func New(db tmdb.DB, dir string, logger log.Logger) app.SPNApp {
 		simapp.EmptyAppOptions{},
 	)
 	// InitChain updates deliverState which is required when app.NewContext is called
-	a.InitChain(abci.RequestInitChain{
-		ConsensusParams: defaultConsensusParams,
-		AppStateBytes:   []byte("{}"),
-	})
-	return a
+	//a.InitChain(abci.RequestInitChain{
+	//	ConsensusParams: defaultConsensusParams,
+	//	AppStateBytes:   []byte("{}"),
+	//})
+
+	spnApp, ok := a.(app.SPNApp)
+	if !ok {
+		panic("AAHHH")
+	}
+
+	return spnApp
 }
 
 var defaultConsensusParams = &abci.ConsensusParams{
