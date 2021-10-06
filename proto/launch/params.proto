@@ -1,10 +1,14 @@
 syntax = "proto3";
 package tendermint.spn.launch;
 
+import "gogoproto/gogo.proto";
+
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 // Params defines the parameters for the staking module.
 message Params {
-  uint64 minLaunchTime = 1;
-  uint64 maxLaunchTime = 2;
+  option (gogoproto.goproto_stringer) = false;
+
+  uint64 minLaunchTime = 1 [(gogoproto.moretags) = "yaml:\"min_launch_time,omitempty\""];
+  uint64 maxLaunchTime = 2 [(gogoproto.moretags) = "yaml:\"max_launch_time,omitempty\""];
 }

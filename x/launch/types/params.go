@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"gopkg.in/yaml.v2"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
@@ -60,6 +61,13 @@ func (p Params) Validate() error {
 	}
 	return validateLaunchTime(p.MaxLaunchTime)
 }
+
+// String implements the Stringer interface.
+func (p Params) String() string {
+	out, _ := yaml.Marshal(p)
+	return string(out)
+}
+
 
 func validateLaunchTime(i interface{}) error {
 	v, ok := i.(uint64)
