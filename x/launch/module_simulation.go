@@ -1,8 +1,8 @@
 package launch
 
 import (
+	"fmt"
 	"math/rand"
-	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -29,10 +29,11 @@ func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMinLaunchTime), func(r *rand.Rand) string {
-			return strconv.FormatUint(launchParams.MinLaunchTime, 10)
+			return fmt.Sprintf("\"%d\"", launchParams.MinLaunchTime)
 		}),
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMaxLaunchTime), func(r *rand.Rand) string {
-			return strconv.FormatUint(launchParams.MaxLaunchTime, 10)
+			return fmt.Sprintf("\"%d\"", launchParams.MaxLaunchTime)
+
 		}),
 	}
 }
