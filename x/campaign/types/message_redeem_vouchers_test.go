@@ -47,7 +47,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidVouchers,
 		},
 		{
-			name: "invalid vouchers",
+			name: "vouchers don't match to campaign",
 			msg: types.MsgRedeemVouchers{
 				Sender:  sample.AccAddress(),
 				Account: sample.AccAddress(),
@@ -56,7 +56,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 				),
 				CampaignID: 0,
 			},
-			err: types.ErrInvalidVouchers,
+			err: types.ErrNoMatchVouchers,
 		},
 		{
 			name: "empty vouchers",

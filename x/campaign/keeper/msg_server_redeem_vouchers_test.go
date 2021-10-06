@@ -94,7 +94,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				CampaignID: campaign.Id,
 				Vouchers:   vouchersTooBig,
 			},
-			err: types.ErrInsufficientFunds,
+			err: types.ErrInsufficientVouchers,
 		},
 		{
 			name: "new account redeem all",
@@ -140,7 +140,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				CampaignID: campaign.Id,
 				Vouchers:   vouchers,
 			},
-			err: types.ErrInsufficientFunds,
+			err: types.ErrInsufficientVouchers,
 		},
 		{
 			name: "account without funds for voucher one",
@@ -150,7 +150,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				CampaignID: campaign.Id,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
-			err: types.ErrInsufficientFunds,
+			err: types.ErrInsufficientVouchers,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
