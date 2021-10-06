@@ -1,15 +1,10 @@
 package simapp
 
 import (
-	"time"
-
 	"github.com/cosmos/cosmos-sdk/simapp"
 	"github.com/tendermint/spm/cosmoscmd"
 	"github.com/tendermint/spn/app"
-	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	tmtypes "github.com/tendermint/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
 )
 
@@ -42,19 +37,19 @@ func New(db tmdb.DB, dir string, logger log.Logger) app.SPNApp {
 	return spnApp
 }
 
-var defaultConsensusParams = &abci.ConsensusParams{
-	Block: &abci.BlockParams{
-		MaxBytes: 200000,
-		MaxGas:   2000000,
-	},
-	Evidence: &tmproto.EvidenceParams{
-		MaxAgeNumBlocks: 302400,
-		MaxAgeDuration:  504 * time.Hour, // 3 weeks is the max duration
-		MaxBytes:        10000,
-	},
-	Validator: &tmproto.ValidatorParams{
-		PubKeyTypes: []string{
-			tmtypes.ABCIPubKeyTypeEd25519,
-		},
-	},
-}
+//var defaultConsensusParams = &abci.ConsensusParams{
+//	Block: &abci.BlockParams{
+//		MaxBytes: 200000,
+//		MaxGas:   2000000,
+//	},
+//	Evidence: &tmproto.EvidenceParams{
+//		MaxAgeNumBlocks: 302400,
+//		MaxAgeDuration:  504 * time.Hour, // 3 weeks is the max duration
+//		MaxBytes:        10000,
+//	},
+//	Validator: &tmproto.ValidatorParams{
+//		PubKeyTypes: []string{
+//			tmtypes.ABCIPubKeyTypeEd25519,
+//		},
+//	},
+//}
