@@ -102,20 +102,6 @@ import (
 
 	"github.com/tendermint/spm/cosmoscmd"
 )
-
-type SPNApp interface {
-	cosmoscmd.App
-	GetBaseApp() *baseapp.BaseApp
-	AppCodec() codec.Codec
-	SimulationManager() *module.SimulationManager
-	ModuleAccountAddrs() map[string]bool
-	Name() string
-	LegacyAmino() *codec.LegacyAmino
-	BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock
-	EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
-	InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
-}
-
 const (
 	AccountAddressPrefix = "spn"
 	Name                 = "spn"
@@ -184,7 +170,7 @@ var (
 )
 
 var (
-	_ SPNApp                  = (*App)(nil)
+	_ cosmoscmd.App           = (*App)(nil)
 	_ servertypes.Application = (*App)(nil)
 	_ simapp.App              = (*App)(nil)
 )
