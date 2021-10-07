@@ -11,6 +11,7 @@ import (
 )
 
 func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
+	addr := sample.AccAddress()
 	tests := []struct {
 		name string
 		msg  types.MsgRedeemVouchers
@@ -21,7 +22,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     "invalid_address",
 				Account:    sample.AccAddress(),
-				Vouchers:   sample.Coins(),
+				Vouchers:   sample.Vouchers(0),
 				CampaignID: 0,
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -31,7 +32,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     sample.AccAddress(),
 				Account:    "invalid_address",
-				Vouchers:   sample.Coins(),
+				Vouchers:   sample.Vouchers(0),
 				CampaignID: 0,
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -48,6 +49,16 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "vouchers don't match to campaign",
+			msg: types.MsgRedeemVouchers{
+				Sender:     sample.AccAddress(),
+				Account:    sample.AccAddress(),
+				Vouchers:   sample.Vouchers(10),
+				CampaignID: 0,
+			},
+			err: types.ErrNoMatchVouchers,
+		},
+		{
+			name: "invalid voucher prefix",
 			msg: types.MsgRedeemVouchers{
 				Sender:  sample.AccAddress(),
 				Account: sample.AccAddress(),
@@ -73,6 +84,15 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     sample.AccAddress(),
 				Account:    sample.AccAddress(),
+				Vouchers:   sample.Vouchers(0),
+				CampaignID: 0,
+			},
+		},
+		{
+			name: "valid for same account and sender",
+			msg: types.MsgRedeemVouchers{
+				Sender:     addr,
+				Account:    addr,
 				Vouchers:   sample.Vouchers(0),
 				CampaignID: 0,
 			},
