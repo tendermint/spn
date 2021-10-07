@@ -113,9 +113,19 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 			if _, ok := shares[acc.CampaignID]; !ok {
 				shares[acc.CampaignID] = types.EmptyShares()
 			}
+			totalShare, err := acc.GetTotalShares()
+			if err != nil {
+				return sdk.FormatInvariant(
+					types.ModuleName, campaignShares,
+					fmt.Sprintf(
+						"invalid total share for vesting account: %s",
+						acc.Address,
+					),
+				), true
+			}
 			shares[acc.CampaignID] = types.IncreaseShares(
 				shares[acc.CampaignID],
-				acc.Shares,
+				totalShare,
 			)
 		}
 		for campaignID, share := range shares {
