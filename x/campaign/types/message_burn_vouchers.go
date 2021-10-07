@@ -51,8 +51,7 @@ func (msg *MsgBurnVouchers) ValidateBasic() error {
 	}
 
 	if err := CheckVouchers(msg.Vouchers, msg.CampaignID); err != nil {
-		return sdkerrors.Wrap(ErrInvalidVouchers, err.Error())
+		return sdkerrors.Wrap(ErrNoMatchVouchers, err.Error())
 	}
-
 	return nil
 }

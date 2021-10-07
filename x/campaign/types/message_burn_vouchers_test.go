@@ -52,7 +52,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidVouchers,
 		},
 		{
-			name: "vouchers not from the associated campaign",
+			name: "vouchers don't match to campaign",
 			msg: types.MsgBurnVouchers{
 				Sender:     sample.AccAddress(),
 				CampaignID: 0,
@@ -60,7 +60,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 					sdk.NewCoin("invalid/foo", sdk.NewInt(100)),
 				),
 			},
-			err: types.ErrInvalidVouchers,
+			err: types.ErrNoMatchVouchers,
 		},
 	}
 	for _, tt := range tests {

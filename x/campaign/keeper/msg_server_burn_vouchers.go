@@ -29,7 +29,7 @@ func (k msgServer) BurnVouchers(goCtx context.Context, msg *types.MsgBurnVoucher
 		return nil, spnerrors.Criticalf("can't parse sender address %s", err.Error())
 	}
 	if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, sender, types.ModuleName, msg.Vouchers); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInsufficientVouchersBalance, "%s", sender.String())
+		return nil, sdkerrors.Wrapf(types.ErrInsufficientVouchers, "%s", sender.String())
 	}
 	if err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, msg.Vouchers); err != nil {
 		return nil, spnerrors.Criticalf("can't burn coins %s", err.Error())

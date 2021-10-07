@@ -70,7 +70,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 				CampaignID: campaign.Id,
 				Vouchers:   vouchersTooBig,
 			},
-			err: types.ErrInsufficientVouchersBalance,
+			err: types.ErrInsufficientVouchers,
 		},
 		{
 			name: "burn voucher one",
@@ -87,7 +87,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 				CampaignID: campaign.Id,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
-			err: types.ErrInsufficientVouchersBalance,
+			err: types.ErrInsufficientVouchers,
 		},
 		{
 			name: "burn voucher two",
@@ -104,7 +104,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 				CampaignID: campaign.Id,
 				Vouchers:   sdk.NewCoins(vouchers[1]),
 			},
-			err: types.ErrInsufficientVouchersBalance,
+			err: types.ErrInsufficientVouchers,
 		},
 		{
 			name: "burn voucher three",
@@ -121,7 +121,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 				CampaignID: campaign.Id,
 				Vouchers:   sdk.NewCoins(vouchers[2]),
 			},
-			err: types.ErrInsufficientVouchersBalance,
+			err: types.ErrInsufficientVouchers,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
