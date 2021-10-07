@@ -1,9 +1,11 @@
 package profile
 
 import (
+	"github.com/tendermint/spn/x/profile/keeper"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -45,21 +47,53 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateCoordinator,
-			SimulateMsgCreateCoordinator(),
+			SimulateMsgCreateCoordinator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }
 
-// SimulateMsgCreateCoordinator returns a MsgCreateCoordinator operation for simulation
-func SimulateMsgCreateCoordinator() simtypes.Operation {
+// SimulateMsgCreateCoordinator simulates a MsgCreateCoordinator message
+func SimulateMsgCreateCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
-		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context,
-		accs []simtypes.Account, chainID string,
+		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		var simAccount simtypes.Account
 
-		// If no op
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCoordinator, "skip coordinator creation"), nil, nil
+		// Find an account with no coordinator
+		allCreated := true
+		for _, acc := range accs {
+			_, found := k.GetCoordinatorByAddress(ctx, acc.Address.String())
+			if !found {
+				simAccount, allCreated = acc, false
+				break
+			}
+		}
+		if allCreated {
+			// No message if all coordinator created
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCoordinator, "skip coordinator creation"), nil, nil
+		}
 
-		//return simtypes.NewOperationMsg(nil, true, "", nil), nil, nil
+		msg := types.NewMsgCreateCoordinator(
+			simAccount.Address.String(),
+			sample.String(30),
+			sample.String(30),
+			sample.String(30),
+		)
+
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      simAccount,
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      types.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
