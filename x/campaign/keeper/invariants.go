@@ -142,14 +142,33 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 				), true
 			}
 
-			// get total supply for the circulating vouchers
-			totalShares := campaign.AllocatedShares
-			for _, share := range campaignShares {
-				supply := k.bankKeeper.GetSupply(ctx, share.Denom)
-				types.IncreaseShares(totalShares, types.Shares{supply})
+			// convert all shares to find all vouchers denom
+			allVouchers, err := types.SharesToVouchers(campaign.GetTotalShares(), campaignID)
+			if err != nil {
+				return sdk.FormatInvariant(
+					types.ModuleName, campaignSharesRoute,
+					"fail to convert shares to vouchers",
+				), true
 			}
 
-			if !types.IsEqualShares(campaignShares, totalShares) {
+			// get the supply for the circulating vouchers
+			vouchers := sdk.NewCoins()
+			for _, voucher := range allVouchers {
+				supply := k.bankKeeper.GetSupply(ctx, voucher.Denom)
+				vouchers.Add(supply)
+			}
+
+			// convert to shares and add to the campaign shares
+			vShares, err := types.VouchersToShares(vouchers, campaignID)
+			if err != nil {
+				return sdk.FormatInvariant(
+					types.ModuleName, campaignSharesRoute,
+					"fail to convert vouchers to shares",
+				), true
+			}
+			campaignShares = types.IncreaseShares(campaignShares, vShares)
+
+			if !types.IsEqualShares(campaignShares, campaign.AllocatedShares) {
 				return sdk.FormatInvariant(
 					types.ModuleName, campaignSharesRoute,
 					fmt.Sprintf("%s: %d", types.ErrInvalidShares, campaignID),
