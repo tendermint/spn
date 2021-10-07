@@ -19,6 +19,6 @@ var (
 	ErrSharesDecrease       = sdkerrors.Register(ModuleName, 9, "shares can't be decreased")
 	ErrVouchersMinting      = sdkerrors.Register(ModuleName, 10, "vouchers can't be minted")
 	ErrInvalidVouchers      = sdkerrors.Register(ModuleName, 11, "invalid vouchers")
-	ErrNoMatchVouchers      = sdkerrors.Register(ModuleName, 12, "vouchers don't match to campaign ")
+	ErrNoMatchVouchers      = sdkerrors.Register(ModuleName, 12, "vouchers don't match to campaign")
 	ErrInsufficientVouchers = sdkerrors.Register(ModuleName, 13, "account with insufficient vouchers")
 )
