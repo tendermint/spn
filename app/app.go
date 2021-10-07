@@ -380,7 +380,6 @@ func New(
 		keys[profilemoduletypes.StoreKey],
 		keys[profilemoduletypes.MemStoreKey],
 	)
-	profileModule := profilemodule.NewAppModule(appCodec, app.ProfileKeeper)
 
 	app.LaunchKeeper = *launchmodulekeeper.NewKeeper(
 		appCodec,
@@ -399,11 +398,7 @@ func New(
 		app.ProfileKeeper,
 	)
 	app.CampaignKeeper = *campaignKeeper
-
 	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
-
-	launchModule := launchmodule.NewAppModule(appCodec, app.LaunchKeeper)
-	campaignModule := campaignmodule.NewAppModule(appCodec, app.CampaignKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -444,9 +439,9 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
-		profileModule,
-		launchModule,
-		campaignModule,
+		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
+		launchmodule.NewAppModule(appCodec, app.LaunchKeeper),
+		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
