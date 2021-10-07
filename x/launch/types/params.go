@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"gopkg.in/yaml.v2"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"gopkg.in/yaml.v2"
 )
 
 // TODO: Determine default values
@@ -67,7 +67,6 @@ func (p Params) String() string {
 	out, _ := yaml.Marshal(p)
 	return string(out)
 }
-
 
 func validateLaunchTime(i interface{}) error {
 	v, ok := i.(uint64)

@@ -102,6 +102,7 @@ import (
 
 	"github.com/tendermint/spm/cosmoscmd"
 )
+
 const (
 	AccountAddressPrefix = "spn"
 	Name                 = "spn"
