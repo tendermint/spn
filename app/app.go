@@ -504,9 +504,9 @@ func New(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
-		profileModule,
-		launchModule,
-		campaignModule,
+		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
+		launchmodule.NewAppModule(appCodec, app.LaunchKeeper),
+		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper),
 	)
 	app.sm.RegisterStoreDecoders()
 
