@@ -103,7 +103,7 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
 
 // Campaign returns a keeper of the campaign module for testing purpose
 func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
-	campaignKeeper, _, _, _, ctx := AllKeepers(t)
+	campaignKeeper, _, _, _, ctx := AllKeepers(t) // nolint
 	return campaignKeeper, ctx
 }
 
