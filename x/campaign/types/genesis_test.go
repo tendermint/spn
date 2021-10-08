@@ -256,7 +256,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			shares := make(map[uint64]types.Shares)
 
 			for _, acc := range tc.genState.MainnetAccountList {
-				// check if the campaign exist for mainnet accounts
+				// check if the campaign exists for mainnet accounts
 				_, ok := campaignIDMap[acc.CampaignID]
 				require.True(t, ok)
 
@@ -271,7 +271,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			}
 
 			for _, acc := range tc.genState.MainnetVestingAccountList {
-				// check if the campaign exist for mainnet accounts
+				// check if the campaign exists for mainnet accounts
 				_, ok := campaignIDMap[acc.CampaignID]
 				require.True(t, ok)
 
@@ -292,8 +292,8 @@ func TestGenesisState_Validate(t *testing.T) {
 				// check if the campaign shares is equal all accounts shares
 				accShares, ok := shares[campaignID]
 				require.True(t, ok)
-				isEqualShares := types.IsEqualShares(accShares, share)
-				require.True(t, isEqualShares)
+				isLowerEqual := accShares.IsAllLTE(share)
+				require.True(t, isLowerEqual)
 			}
 		})
 	}
