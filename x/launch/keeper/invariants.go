@@ -83,13 +83,6 @@ func UnknownRequestTypeInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
 		all := k.GetAllRequest(ctx)
 		for _, request := range all {
-			if err := request.Content.Validate(); err != nil {
-				return sdk.FormatInvariant(
-					types.ModuleName, unknownRequestType,
-					"invalid request",
-				), true
-			}
-
 			switch request.Content.Content.(type) {
 			case *types.RequestContent_GenesisAccount,
 				*types.RequestContent_VestingAccount,
@@ -102,7 +95,12 @@ func UnknownRequestTypeInvariant(k Keeper) sdk.Invariant {
 					"unknown request content type",
 				), true
 			}
-
+			if err := request.Content.Validate(); err != nil {
+				return sdk.FormatInvariant(
+					types.ModuleName, unknownRequestType,
+					"invalid request",
+				), true
+			}
 		}
 		return "", false
 	}
