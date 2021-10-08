@@ -65,13 +65,11 @@ func BenchmarkSimulation(b *testing.B) {
 	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
 	require.NoError(b, err, "simulation setup failed")
 
-	defer func() {
+	b.Cleanup(func() {
 		db.Close()
 		err = os.RemoveAll(dir)
-		if err != nil {
-			b.Fatal(err)
-		}
-	}()
+		require.NoError(b, err)
+	})
 
 	encoding := cosmoscmd.MakeEncodingConfig(app.ModuleBasics)
 
@@ -88,9 +86,7 @@ func BenchmarkSimulation(b *testing.B) {
 	)
 
 	simApp, ok := app.(SimApp)
-	if !ok {
-		panic("can't use simapp")
-	}
+	require.True(b, ok, "can't use simapp")
 
 	// Run randomized simulations
 	_, simParams, simErr := simulation.SimulateFromSeed(
@@ -106,13 +102,9 @@ func BenchmarkSimulation(b *testing.B) {
 	)
 
 	// export state and simParams before the simulation error is checked
-	if err = simapp.CheckExportSimulation(simApp, config, simParams); err != nil {
-		b.Fatal(err)
-	}
-
-	if simErr != nil {
-		b.Fatal(simErr)
-	}
+	err = simapp.CheckExportSimulation(simApp, config, simParams)
+	require.NoError(b, err)
+	require.NoError(b, simErr)
 
 	if config.Commit {
 		simapp.PrintStats(db)
