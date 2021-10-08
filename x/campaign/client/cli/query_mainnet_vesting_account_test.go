@@ -31,7 +31,7 @@ func networkWithMainnetVestingAccountObjects(t *testing.T, n int) (*network.Netw
 	for i := 0; i < n; i++ {
 		state.MainnetVestingAccountList = append(state.MainnetVestingAccountList, sample.MainnetVestingAccount(
 			campaignID,
-			sample.AccAddress(),
+			sample.Address(),
 		))
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)

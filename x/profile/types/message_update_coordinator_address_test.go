@@ -10,7 +10,7 @@ import (
 )
 
 func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
-	addr := sample.AccAddress()
+	addr := sample.Address()
 	tests := []struct {
 		name string
 		msg  profile.MsgUpdateCoordinatorAddress
@@ -20,13 +20,13 @@ func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: profile.MsgUpdateCoordinatorAddress{
 				Address:    "invalid address",
-				NewAddress: sample.AccAddress(),
+				NewAddress: sample.Address(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "invalid new address",
 			msg: profile.MsgUpdateCoordinatorAddress{
-				Address:    sample.AccAddress(),
+				Address:    sample.Address(),
 				NewAddress: "invalid address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -40,8 +40,8 @@ func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid addresses",
 			msg: profile.MsgUpdateCoordinatorAddress{
-				Address:    sample.AccAddress(),
-				NewAddress: sample.AccAddress(),
+				Address:    sample.Address(),
+				NewAddress: sample.Address(),
 			},
 		},
 	}

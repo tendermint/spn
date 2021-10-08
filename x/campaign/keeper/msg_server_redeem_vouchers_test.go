@@ -15,8 +15,8 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		campaignKeeper, _, _, bankKeeper, campaignSrv, _, sdkCtx = setupMsgServer(t)
 
 		ctx            = sdk.WrapSDKContext(sdkCtx)
-		addr           = sample.Address()
-		existAddr      = sample.Address()
+		addr           = sample.AccAddress()
+		existAddr      = sample.AccAddress()
 		campaign       = sample.Campaign(0)
 		vouchersTooBig = sdk.NewCoins(
 			sdk.NewCoin("v/0/foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
@@ -100,7 +100,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			name: "new account redeem all",
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
-				Account:    sample.AccAddress(),
+				Account:    sample.Address(),
 				CampaignID: campaign.Id,
 				Vouchers:   vouchers,
 			},

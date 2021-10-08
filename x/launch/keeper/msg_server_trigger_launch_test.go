@@ -15,9 +15,9 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	k, _, _, srv, profileSrv, _, sdkCtx := setupMsgServer(t)
 
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.AccAddress()
-	coordAddress2 := sample.AccAddress()
-	coordNoExist := sample.AccAddress()
+	coordAddress := sample.Address()
+	coordAddress2 := sample.Address()
+	coordNoExist := sample.Address()
 	chainIDNoExist := uint64(1000)
 
 	launchTime := types.DefaultMinLaunchTime

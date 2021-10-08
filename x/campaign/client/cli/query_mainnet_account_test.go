@@ -32,7 +32,7 @@ func networkWithMainnetAccountObjects(t *testing.T, n int) (*network.Network, []
 			state.MainnetAccountList,
 			sample.MainnetAccount(
 				campaignID,
-				sample.AccAddress(),
+				sample.Address(),
 			),
 		)
 	}

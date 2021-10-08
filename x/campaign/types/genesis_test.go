@@ -37,8 +37,8 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				CampaignCount: 2,
 				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(0, sample.AccAddress()),
-					sample.MainnetAccount(1, sample.AccAddress()),
+					sample.MainnetAccount(0, sample.Address()),
+					sample.MainnetAccount(1, sample.Address()),
 				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
@@ -70,8 +70,8 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				CampaignCount: 2,
 				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(0, sample.AccAddress()),
-					sample.MainnetAccount(1, sample.AccAddress()),
+					sample.MainnetAccount(0, sample.Address()),
+					sample.MainnetAccount(1, sample.Address()),
 				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
@@ -103,8 +103,8 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				CampaignCount: 2,
 				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(330, sample.AccAddress()),
-					sample.MainnetAccount(434, sample.AccAddress()),
+					sample.MainnetAccount(330, sample.Address()),
+					sample.MainnetAccount(434, sample.Address()),
 				},
 			},
 			valid: false,

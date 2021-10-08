@@ -12,9 +12,9 @@ var (
 	chainID1         = uint64(0)
 	chainID2         = uint64(1)
 	noExistChainID   = uint64(2)
-	addr1            = sample.AccAddress()
-	addr2            = sample.AccAddress()
-	vestingAddress   = sample.AccAddress()
+	addr1            = sample.Address()
+	addr2            = sample.Address()
+	vestingAddress   = sample.Address()
 	genesisValidator = sample.GenesisValidator(chainID1, addr1)
 	genesisChainID   = sample.GenesisChainID()
 
