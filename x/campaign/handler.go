@@ -26,6 +26,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgMintVouchers:
 			res, err := msgServer.MintVouchers(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgBurnVouchers:
+			res, err := msgServer.BurnVouchers(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgUpdateTotalShares:
 			res, err := msgServer.UpdateTotalShares(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)

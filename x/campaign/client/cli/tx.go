@@ -28,6 +28,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdInitializeMainnet())
 	cmd.AddCommand(CmdUnredeemVouchers())
 	cmd.AddCommand(CmdMintVouchers())
+	cmd.AddCommand(CmdBurnVouchers())
 	cmd.AddCommand(CmdUpdateTotalShares())
 	cmd.AddCommand(CmdUpdateTotalSupply())
 	cmd.AddCommand(CmdCreateCampaign())

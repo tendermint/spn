@@ -11,6 +11,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgInitializeMainnet{}, "campaign/InitializeMainnet", nil)
 	cdc.RegisterConcrete(&MsgUnredeemVouchers{}, "campaign/UnredeemVouchers", nil)
 	cdc.RegisterConcrete(&MsgMintVouchers{}, "campaign/MintVouchers", nil)
+	cdc.RegisterConcrete(&MsgBurnVouchers{}, "campaign/BurnVouchers", nil)
 	cdc.RegisterConcrete(&MsgUpdateTotalShares{}, "campaign/UpdateTotalShares", nil)
 	cdc.RegisterConcrete(&MsgUpdateTotalSupply{}, "campaign/UpdateTotalSupply", nil)
 	cdc.RegisterConcrete(&MsgCreateCampaign{}, "campaign/CreateCampaign", nil)
@@ -34,6 +35,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgAddShares{},
 		&MsgAddVestingOptions{},
 		&MsgMintVouchers{},
+		&MsgBurnVouchers{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
