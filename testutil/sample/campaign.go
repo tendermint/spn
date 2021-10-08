@@ -30,13 +30,13 @@ func MainnetVestingAccount(campaignID uint64, address string) campaign.MainnetVe
 func MainnetVestingAccountWithShares(
 	campaignID uint64,
 	address string,
-	shares campaign.Shares,
+	startingShares campaign.Shares,
 ) campaign.MainnetVestingAccount {
 	return campaign.MainnetVestingAccount{
 		CampaignID:     campaignID,
 		Address:        address,
-		Shares:         shares,
-		VestingOptions: CustomShareVestingOptions(shares),
+		StartingShares: startingShares,
+		VestingOptions: CustomShareVestingOptions(startingShares),
 	}
 }
 
