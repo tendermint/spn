@@ -64,7 +64,8 @@ func SimulateMsgCreateCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 		for _, acc := range accs {
 			_, found := k.GetCoordinatorByAddress(ctx, acc.Address.String())
 			if !found {
-				simAccount, allCreated = acc, false
+				simAccount = acc
+				allCreated = false
 				break
 			}
 		}
