@@ -19,7 +19,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgCreateCampaign{
-				Coordinator:   sample.AccAddress(),
+				Coordinator:   sample.Address(),
 				CampaignName:  sample.CampaignName(),
 				TotalSupply:   sample.Coins(),
 				DynamicShares: sample.Bool(),
@@ -38,7 +38,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid campaign name",
 			msg: types.MsgCreateCampaign{
-				Coordinator:   sample.AccAddress(),
+				Coordinator:   sample.Address(),
 				CampaignName:  invalidCampaignName,
 				TotalSupply:   sample.Coins(),
 				DynamicShares: sample.Bool(),
@@ -48,7 +48,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid total supply",
 			msg: types.MsgCreateCampaign{
-				Coordinator:   sample.AccAddress(),
+				Coordinator:   sample.Address(),
 				CampaignName:  sample.CampaignName(),
 				TotalSupply:   invalidCoins,
 				DynamicShares: sample.Bool(),
@@ -58,7 +58,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "empty total supply",
 			msg: types.MsgCreateCampaign{
-				Coordinator:   sample.AccAddress(),
+				Coordinator:   sample.Address(),
 				CampaignName:  sample.CampaignName(),
 				TotalSupply:   sdk.NewCoins(),
 				DynamicShares: sample.Bool(),

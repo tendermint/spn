@@ -28,7 +28,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgBurnVouchers{
-				Sender:     sample.AccAddress(),
+				Sender:     sample.Address(),
 				CampaignID: 0,
 				Vouchers:   sample.Vouchers(0),
 			},
@@ -36,7 +36,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid vouchers",
 			msg: types.MsgBurnVouchers{
-				Sender:     sample.AccAddress(),
+				Sender:     sample.Address(),
 				CampaignID: 0,
 				Vouchers:   invalidCoins,
 			},
@@ -45,7 +45,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "empty vouchers",
 			msg: types.MsgBurnVouchers{
-				Sender:     sample.AccAddress(),
+				Sender:     sample.Address(),
 				CampaignID: 0,
 				Vouchers:   sdk.Coins{},
 			},
@@ -54,7 +54,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "vouchers don't match to campaign",
 			msg: types.MsgBurnVouchers{
-				Sender:     sample.AccAddress(),
+				Sender:     sample.Address(),
 				CampaignID: 0,
 				Vouchers: sdk.NewCoins(
 					sdk.NewCoin("invalid/foo", sdk.NewInt(100)),

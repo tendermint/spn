@@ -41,7 +41,7 @@ func TestGenesisState_Validate(t *testing.T) {
 }
 
 func TestGenesisStateValidateValidator(t *testing.T) {
-	addr := sample.AccAddress()
+	addr := sample.Address()
 	tests := []struct {
 		name     string
 		genState *types.GenesisState
@@ -55,9 +55,9 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			name: "valid custom genesis",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: sample.AccAddress()},
-					{Address: sample.AccAddress()},
-					{Address: sample.AccAddress()},
+					{Address: sample.Address()},
+					{Address: sample.Address()},
+					{Address: sample.Address()},
 				},
 			},
 		},
@@ -89,10 +89,10 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 
 func TestGenesisStateValidateCoordinator(t *testing.T) {
 	var (
-		addr1 = sample.AccAddress()
-		addr2 = sample.AccAddress()
-		addr3 = sample.AccAddress()
-		addr4 = sample.AccAddress()
+		addr1 = sample.Address()
+		addr2 = sample.Address()
+		addr3 = sample.Address()
+		addr4 = sample.Address()
 	)
 	tests := []struct {
 		name     string

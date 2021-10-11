@@ -87,9 +87,9 @@ func CampaignGenesisState() campaign.GenesisState {
 			},
 		},
 		MainnetVestingAccountList: []campaign.MainnetVestingAccount{
-			MainnetVestingAccount(0, AccAddress()),
-			MainnetVestingAccount(0, AccAddress()),
-			MainnetVestingAccount(1, AccAddress()),
+			MainnetVestingAccount(0, Address()),
+			MainnetVestingAccount(0, Address()),
+			MainnetVestingAccount(1, Address()),
 		},
 	}
 }

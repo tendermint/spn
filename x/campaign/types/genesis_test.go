@@ -62,25 +62,25 @@ func TestGenesisState_Validate(t *testing.T) {
 				MainnetAccountList: []types.MainnetAccount{
 					{
 						CampaignID: campaign1.Id,
-						Address:    sample.AccAddress(),
+						Address:    sample.Address(),
 						Shares:     shares1,
 					},
 					{
 						CampaignID: campaign2.Id,
-						Address:    sample.AccAddress(),
+						Address:    sample.Address(),
 						Shares:     shares3,
 					},
 				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
 						CampaignID:     campaign1.Id,
-						Address:        sample.AccAddress(),
+						Address:        sample.Address(),
 						StartingShares: shares2,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting1, time.Now().Unix()),
 					},
 					{
 						CampaignID:     campaign2.Id,
-						Address:        sample.AccAddress(),
+						Address:        sample.Address(),
 						StartingShares: shares4,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting2, time.Now().Unix()),
 					},
@@ -105,8 +105,8 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				CampaignCount: 2,
 				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(0, sample.AccAddress()),
-					sample.MainnetAccount(1, sample.AccAddress()),
+					sample.MainnetAccount(0, sample.Address()),
+					sample.MainnetAccount(1, sample.Address()),
 				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
@@ -138,8 +138,8 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				CampaignCount: 2,
 				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(330, sample.AccAddress()),
-					sample.MainnetAccount(434, sample.AccAddress()),
+					sample.MainnetAccount(330, sample.Address()),
+					sample.MainnetAccount(434, sample.Address()),
 				},
 			},
 			valid: false,

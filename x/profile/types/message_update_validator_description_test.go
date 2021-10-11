@@ -10,7 +10,7 @@ import (
 )
 
 func TestMsgUpdateValidatorDescription_ValidateBasic(t *testing.T) {
-	addr := sample.AccAddress()
+	addr := sample.Address()
 	tests := []struct {
 		name string
 		msg  profile.MsgUpdateValidatorDescription
@@ -32,7 +32,7 @@ func TestMsgUpdateValidatorDescription_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address and description",
 			msg: profile.MsgUpdateValidatorDescription{
-				Address: sample.AccAddress(),
+				Address: sample.Address(),
 				Description: profile.ValidatorDescription{
 					Identity:        "identity",
 					Moniker:         "moniker",

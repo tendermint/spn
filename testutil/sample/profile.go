@@ -28,7 +28,7 @@ func ValidatorDescription(desc string) profile.ValidatorDescription {
 // Coordinator returns a sample Coordinator
 func Coordinator() profile.Coordinator {
 	return profile.Coordinator{
-		Address:     AccAddress(),
+		Address:     Address(),
 		Description: CoordinatorDescription(),
 	}
 }
@@ -44,16 +44,16 @@ func CoordinatorDescription() profile.CoordinatorDescription {
 
 // ProfileGenesisState returns a sample genesis state for the profile module
 func ProfileGenesisState() profile.GenesisState {
-	coordAddr1, coordAddr2 := AccAddress(), AccAddress()
+	coordAddr1, coordAddr2 := Address(), Address()
 
 	return profile.GenesisState{
 		ValidatorList: []profile.Validator{
 			{
-				Address:     AccAddress(),
+				Address:     Address(),
 				Description: ValidatorDescription(String(10)),
 			},
 			{
-				Address:     AccAddress(),
+				Address:     Address(),
 				Description: ValidatorDescription(String(10)),
 			},
 		},

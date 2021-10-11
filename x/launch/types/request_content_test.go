@@ -12,7 +12,7 @@ import (
 
 func TestNewGenesisAccount(t *testing.T) {
 	chainID := uint64(0)
-	address := sample.AccAddress()
+	address := sample.Address()
 	coins := sample.Coins()
 	requestContent := types.NewGenesisAccount(chainID, address, coins)
 
@@ -30,7 +30,7 @@ func TestNewGenesisAccount(t *testing.T) {
 
 func TestNewVestingAccount(t *testing.T) {
 	chainID := uint64(0)
-	address := sample.AccAddress()
+	address := sample.Address()
 	startingBalance := sample.Coins()
 	vestingOptions := sample.VestingOptions()
 	requestContent := types.NewVestingAccount(chainID, address, startingBalance, vestingOptions)
@@ -50,7 +50,7 @@ func TestNewVestingAccount(t *testing.T) {
 
 func TestNewGenesisValidator(t *testing.T) {
 	chainID := uint64(0)
-	address := sample.AccAddress()
+	address := sample.Address()
 	gentTx := sample.Bytes(300)
 	consPubKey := sample.Bytes(30)
 	selfDelegation := sample.Coin()
@@ -73,7 +73,7 @@ func TestNewGenesisValidator(t *testing.T) {
 }
 
 func TestNewAccountRemoval(t *testing.T) {
-	address := sample.AccAddress()
+	address := sample.Address()
 	requestContent := types.NewAccountRemoval(address)
 
 	accountRemoval := requestContent.GetAccountRemoval()
@@ -87,7 +87,7 @@ func TestNewAccountRemoval(t *testing.T) {
 }
 
 func TestNewValidatorRemoval(t *testing.T) {
-	address := sample.AccAddress()
+	address := sample.Address()
 	requestContent := types.NewValidatorRemoval(address)
 
 	validatorRemoval := requestContent.GetValidatorRemoval()
@@ -116,7 +116,7 @@ func TestAccountRemoval_Validate(t *testing.T) {
 		{
 			name: "valid content",
 			content: types.AccountRemoval{
-				Address: sample.AccAddress(),
+				Address: sample.Address(),
 			},
 		},
 	}
@@ -134,7 +134,7 @@ func TestAccountRemoval_Validate(t *testing.T) {
 
 func TestGenesisAccount_Validate(t *testing.T) {
 	var (
-		addr    = sample.AccAddress()
+		addr    = sample.Address()
 		chainID = uint64(0)
 	)
 	tests := []struct {
@@ -172,7 +172,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 		{
 			name: "valid request content",
 			content: types.GenesisAccount{
-				Address: sample.AccAddress(),
+				Address: sample.Address(),
 				ChainID: chainID,
 				Coins:   sample.Coins(),
 			},
@@ -192,7 +192,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 
 func TestGenesisValidator_Validate(t *testing.T) {
 	var (
-		addr    = sample.AccAddress()
+		addr    = sample.Address()
 		chainID = uint64(0)
 	)
 	tests := []struct {
@@ -318,7 +318,7 @@ func TestValidatorRemoval_Validate(t *testing.T) {
 		{
 			name: "valid request content",
 			content: types.ValidatorRemoval{
-				ValAddress: sample.AccAddress(),
+				ValAddress: sample.Address(),
 			},
 		},
 	}
@@ -357,7 +357,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 		{
 			name: "invalid coins",
 			content: types.VestingAccount{
-				Address:         sample.AccAddress(),
+				Address:         sample.Address(),
 				ChainID:         chainID,
 				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				VestingOptions:  option,
@@ -367,7 +367,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 		{
 			name: "valid request content",
 			content: types.VestingAccount{
-				Address:         sample.AccAddress(),
+				Address:         sample.Address(),
 				ChainID:         chainID,
 				StartingBalance: sample.Coins(),
 				VestingOptions:  option,

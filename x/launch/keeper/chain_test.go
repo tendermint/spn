@@ -14,8 +14,8 @@ import (
 func TestKeeper_CreateNewChain(t *testing.T) {
 	k, _, campaignKeeper, _, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.AccAddress()
-	coordNoCampaignAddress := sample.AccAddress()
+	coordAddress := sample.Address()
+	coordNoCampaignAddress := sample.Address()
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)

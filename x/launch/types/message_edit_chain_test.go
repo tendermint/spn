@@ -12,7 +12,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 	chainID := uint64(0)
 
 	msgInvalidGenesisHash := sample.MsgEditChain(
-		sample.AccAddress(),
+		sample.Address(),
 		chainID,
 		false,
 		true,
@@ -23,7 +23,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 	msgInvalidGenesisHash.InitialGenesis = &genesisURL
 
 	msgInvalidGenesisChainID := sample.MsgEditChain(
-		sample.AccAddress(),
+		sample.Address(),
 		chainID,
 		false,
 		true,
@@ -40,7 +40,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc: "valid message",
 			msg: sample.MsgEditChain(
-				sample.AccAddress(),
+				sample.Address(),
 				chainID,
 				true,
 				true,
@@ -52,7 +52,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc: "valid message with new genesis chain ID",
 			msg: sample.MsgEditChain(
-				sample.AccAddress(),
+				sample.Address(),
 				chainID,
 				true,
 				false,
@@ -64,7 +64,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc: "valid message with new source",
 			msg: sample.MsgEditChain(
-				sample.AccAddress(),
+				sample.Address(),
 				chainID,
 				false,
 				true,
@@ -76,7 +76,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc: "valid message with new genesis",
 			msg: sample.MsgEditChain(
-				sample.AccAddress(),
+				sample.Address(),
 				chainID,
 				false,
 				false,
@@ -88,7 +88,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc: "valid message with new genesis with a custom genesis url",
 			msg: sample.MsgEditChain(
-				sample.AccAddress(),
+				sample.Address(),
 				chainID,
 				false,
 				false,
@@ -112,7 +112,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc: "no value to edit",
 			msg: sample.MsgEditChain(
-				sample.AccAddress(),
+				sample.Address(),
 				chainID,
 				false,
 				false,
