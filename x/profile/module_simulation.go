@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	weightMsgUpdateValidatorDescription   = 10
+	weightMsgUpdateValidatorDescription   = 50
 	weightMsgDeleteValidator              = 10
 	weightMsgCreateCoordinator            = 10
 	weightMsgUpdateCoordinatorDescription = 10
@@ -46,9 +46,85 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
+			weightMsgUpdateValidatorDescription,
+			SimulateMsgUpdateValidatorDescription(am.accountKeeper, am.bankKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
 			weightMsgCreateCoordinator,
 			SimulateMsgCreateCoordinator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
+	}
+}
+
+// SimulateMsgUpdateValidatorDescription simulates a MsgUpdateValidatorDescription message
+func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+	return func(
+		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		// Select a random account
+		accountNb := r.Intn(len(accs))
+
+		desc := sample.ValidatorDescription(sample.String(50))
+		msg := types.NewMsgUpdateValidatorDescription(
+			accs[accountNb].Address.String(),
+			desc.Identity,
+			desc.Moniker,
+			desc.Website,
+			desc.SecurityContact,
+			desc.Details,
+		)
+
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      accs[accountNb],
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      types.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+	}
+}
+
+// SimulateMsgDeleteValidator simulates a MsgUpdateValidatorDescription message
+func SimulateMsgDeleteValidator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+	return func(
+		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		// Select a random account
+		accountNb := r.Intn(len(accs))
+
+		desc := sample.ValidatorDescription(sample.String(50))
+		msg := types.NewMsgUpdateValidatorDescription(
+			accs[accountNb].Address.String(),
+			desc.Identity,
+			desc.Moniker,
+			desc.Website,
+			desc.SecurityContact,
+			desc.Details,
+		)
+
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      accs[accountNb],
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      types.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
 
