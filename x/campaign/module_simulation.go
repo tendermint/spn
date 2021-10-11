@@ -4,6 +4,7 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -50,58 +51,96 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateCampaign,
-			SimulateMsgCreateCampaign(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgCreateCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUpdateTotalSupply,
-			SimulateMsgUpdateTotalSupply(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgUpdateTotalSupply(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUpdateTotalShares,
-			SimulateMsgUpdateTotalShares(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgUpdateTotalShares(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgInitializeMainnet,
-			SimulateMsgInitializeMainnet(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgInitializeMainnet(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgAddShares,
-			SimulateMsgAddShares(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgAddShares(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgAddVestingOptions,
-			SimulateMsgAddVestingOptions(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgAddVestingOptions(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgMintVouchers,
-			SimulateMsgMintVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgMintVouchers(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgBurnVouchers,
-			SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRedeemVouchers,
-			SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUnredeemVouchers,
-			SimulateMsgUnredeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgUnredeemVouchers(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 	}
 }
 
+// getCoordinatorSimAccount finds an account associated with a coordinator profile from simulation accounts
+func getCoordinatorSimAccount(ctx sdk.Context, pk types.ProfileKeeper, accs []simtypes.Account) (simtypes.Account, bool) {
+	for _, acc := range accs {
+		_, found := pk.CoordinatorIDFromAddress(ctx, acc.Address.String())
+		if found {
+			return acc, true
+		}
+	}
+	return simtypes.Account{}, false
+}
+
 // SimulateMsgCreateCampaign simulates a MsgCreateCampaign message
-func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
+		simAccount, found := getCoordinatorSimAccount(ctx, pk, accs)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
+		}
+
+		dynamicShares := r.Intn(100) > 80
+
+		msg := types.NewMsgCreateCampaign(
+			simAccount.Address.String(),
+			sample.CampaignName(),
+			sample.Coins(),
+			dynamicShares,
+		)
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      simAccount,
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      types.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
 
 // SimulateMsgUpdateTotalSupply simulates a MsgUpdateTotalSupply message
-func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -110,7 +149,7 @@ func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, k
 }
 
 // SimulateMsgUpdateTotalShares simulates a MsgUpdateTotalShares message
-func SimulateMsgUpdateTotalShares(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgUpdateTotalShares(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -119,7 +158,7 @@ func SimulateMsgUpdateTotalShares(ak types.AccountKeeper, bk types.BankKeeper, k
 }
 
 // SimulateMsgInitializeMainnet simulates a MsgInitializeMainnet message
-func SimulateMsgInitializeMainnet(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgInitializeMainnet(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -128,7 +167,7 @@ func SimulateMsgInitializeMainnet(ak types.AccountKeeper, bk types.BankKeeper, k
 }
 
 // SimulateMsgAddShares simulates a MsgAddShares message
-func SimulateMsgAddShares(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgAddShares(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -137,7 +176,7 @@ func SimulateMsgAddShares(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 }
 
 // SimulateMsgAddVestingOptions simulates a MsgAddVestingOptions message
-func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -146,7 +185,7 @@ func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, k
 }
 
 // SimulateMsgMintVouchers simulates a MsgMintVouchers message
-func SimulateMsgMintVouchers(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgMintVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -155,7 +194,7 @@ func SimulateMsgMintVouchers(ak types.AccountKeeper, bk types.BankKeeper, k keep
 }
 
 // SimulateMsgBurnVouchers simulates a MsgBurnVouchers message
-func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -164,7 +203,7 @@ func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper, k keep
 }
 
 // SimulateMsgRedeemVouchers simulates a MsgRedeemVouchers message
-func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -173,7 +212,7 @@ func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, k ke
 }
 
 // SimulateMsgUnredeemVouchers simulates a MsgUnredeemVouchers message
-func SimulateMsgUnredeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgUnredeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
