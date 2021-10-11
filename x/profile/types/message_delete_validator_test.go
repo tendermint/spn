@@ -24,7 +24,7 @@ func TestMsgDeleteValidator_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg: profile.MsgDeleteValidator{
-				Address: sample.AccAddress(),
+				Address: sample.Address(),
 			},
 		},
 	}

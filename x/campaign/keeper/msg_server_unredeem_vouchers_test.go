@@ -14,10 +14,10 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 		campaignKeeper, _, _, bankKeeper, campaignSrv, _, sdkCtx = setupMsgServer(t)
 		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
 
-		accountAddr              = sample.AccAddress()
+		accountAddr              = sample.Address()
 		account                  = sample.MainnetAccount(0, accountAddr)
 		accountShare, _          = types.NewShares("30foo,30bar")
-		accountFewSharesAddr     = sample.AccAddress()
+		accountFewSharesAddr     = sample.Address()
 		accountFewShares         = sample.MainnetAccount(0, accountFewSharesAddr)
 		accountFewSharesShare, _ = types.NewShares("30foo,15bar")
 
@@ -91,7 +91,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 		{
 			name: "non existent account",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     sample.AccAddress(),
+				Sender:     sample.Address(),
 				CampaignID: 0,
 				Shares:     shares,
 			},

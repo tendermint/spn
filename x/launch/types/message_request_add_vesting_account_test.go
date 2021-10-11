@@ -36,7 +36,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid coins",
 			msg: types.MsgRequestAddVestingAccount{
-				Address:         sample.AccAddress(),
+				Address:         sample.Address(),
 				ChainID:         chainID,
 				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				Options:         option,
@@ -46,7 +46,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid message option",
 			msg: types.MsgRequestAddVestingAccount{
-				Address:         sample.AccAddress(),
+				Address:         sample.Address(),
 				ChainID:         chainID,
 				StartingBalance: sample.Coins(),
 				Options:         *types.NewDelayedVesting(sample.Coins(), 0),
@@ -56,7 +56,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgRequestAddVestingAccount{
-				Address:         sample.AccAddress(),
+				Address:         sample.Address(),
 				ChainID:         chainID,
 				StartingBalance: sample.Coins(),
 				Options:         option,
