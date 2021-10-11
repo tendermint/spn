@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgMintVouchers = "mint_vouchers"
+
 var _ sdk.Msg = &MsgMintVouchers{}
 
 func NewMsgMintVouchers(coordinator string, campaignID uint64, shares Shares) *MsgMintVouchers {
@@ -20,7 +22,7 @@ func (msg *MsgMintVouchers) Route() string {
 }
 
 func (msg *MsgMintVouchers) Type() string {
-	return "MintVouchers"
+	return TypeMsgMintVouchers
 }
 
 func (msg *MsgMintVouchers) GetSigners() []sdk.AccAddress {

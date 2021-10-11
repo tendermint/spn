@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgUpdateTotalSupply = "update_total_supply"
+
 var _ sdk.Msg = &MsgUpdateTotalSupply{}
 
 func NewMsgUpdateTotalSupply(coordinator string, campaignID uint64, totalSupply sdk.Coins) *MsgUpdateTotalSupply {
@@ -20,7 +22,7 @@ func (msg *MsgUpdateTotalSupply) Route() string {
 }
 
 func (msg *MsgUpdateTotalSupply) Type() string {
-	return "UpdateTotalSupply"
+	return TypeMsgUpdateTotalSupply
 }
 
 func (msg *MsgUpdateTotalSupply) GetSigners() []sdk.AccAddress {

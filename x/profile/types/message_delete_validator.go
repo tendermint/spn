@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgDeleteValidator = "delete_validator"
+
 var _ sdk.Msg = &MsgDeleteValidator{}
 
 func NewMsgDeleteValidator(address string) *MsgDeleteValidator {
@@ -18,7 +20,7 @@ func (msg *MsgDeleteValidator) Route() string {
 }
 
 func (msg *MsgDeleteValidator) Type() string {
-	return "DeleteValidator"
+	return TypeMsgDeleteValidator
 }
 
 func (msg *MsgDeleteValidator) GetSigners() []sdk.AccAddress {

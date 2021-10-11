@@ -6,6 +6,8 @@ import (
 	"github.com/tendermint/spn/pkg/chainid"
 )
 
+const TypeMsgInitializeMainnet = "initialize_mainnet"
+
 var _ sdk.Msg = &MsgInitializeMainnet{}
 
 func NewMsgInitializeMainnet(
@@ -29,7 +31,7 @@ func (msg *MsgInitializeMainnet) Route() string {
 }
 
 func (msg *MsgInitializeMainnet) Type() string {
-	return "InitializeMainnet"
+	return TypeMsgInitializeMainnet
 }
 
 func (msg *MsgInitializeMainnet) GetSigners() []sdk.AccAddress {
