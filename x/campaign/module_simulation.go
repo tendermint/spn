@@ -14,6 +14,12 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
+// TypedMsg extends sdk.Msg with Type method
+type TypedMsg interface {
+	sdk.Msg
+	Type() string
+}
+
 const (
 	weightMsgCreateCampaign    = 50
 	weightMsgUpdateTotalSupply = 20
@@ -92,6 +98,33 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	}
 }
 
+// deliverSimTx delivers the tx for simulation from the provided message
+func deliverSimTx(
+	r *rand.Rand,
+	app *baseapp.BaseApp,
+	ctx sdk.Context,
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	simAccount simtypes.Account,
+	msg TypedMsg,
+) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+	txCtx := simulation.OperationInput{
+		R:               r,
+		App:             app,
+		TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+		Cdc:             nil,
+		Msg:             msg,
+		MsgType:         msg.Type(),
+		Context:         ctx,
+		SimAccount:      simAccount,
+		AccountKeeper:   ak,
+		Bankkeeper:      bk,
+		ModuleName:      types.ModuleName,
+		CoinsSpentInMsg: sdk.NewCoins(),
+	}
+	return simulation.GenAndDeliverTxWithRandFees(txCtx)
+}
+
 // getCoordSimAccount finds an account associated with a coordinator profile from simulation accounts
 func getCoordSimAccount(ctx sdk.Context, pk types.ProfileKeeper, accs []simtypes.Account) (simtypes.Account, uint64, bool) {
 	for _, acc := range accs {
@@ -104,7 +137,13 @@ func getCoordSimAccount(ctx sdk.Context, pk types.ProfileKeeper, accs []simtypes
 }
 
 // getCoordSimAccountWithCampaignID finds an account associated with a coordinator profile from simulation accounts and a campaign created by this coordinator
-func getCoordSimAccountWithCampaignID(ctx sdk.Context, pk types.ProfileKeeper, k keeper.Keeper, accs []simtypes.Account) (simtypes.Account, uint64, bool) {
+func getCoordSimAccountWithCampaignID(
+	ctx sdk.Context,
+	pk types.ProfileKeeper,
+	k keeper.Keeper,
+	accs []simtypes.Account,
+	requireDynamicShares bool,
+) (simtypes.Account, uint64, bool) {
 	coord, coordID, found := getCoordSimAccount(ctx, pk, accs)
 	if !found {
 		return coord, 0, false
@@ -112,7 +151,7 @@ func getCoordSimAccountWithCampaignID(ctx sdk.Context, pk types.ProfileKeeper, k
 
 	// Find a campaign associated to this account
 	for _, camp := range k.GetAllCampaign(ctx) {
-		if camp.CoordinatorID == coordID {
+		if camp.CoordinatorID == coordID && (!requireDynamicShares || camp.DynamicShares) {
 			return coord, camp.Id, true
 		}
 	}
@@ -138,21 +177,7 @@ func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk t
 			sample.Coins(),
 			dynamicShares,
 		)
-		txCtx := simulation.OperationInput{
-			R:               r,
-			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
-			Cdc:             nil,
-			Msg:             msg,
-			MsgType:         msg.Type(),
-			Context:         ctx,
-			SimAccount:      simAccount,
-			AccountKeeper:   ak,
-			Bankkeeper:      bk,
-			ModuleName:      types.ModuleName,
-			CoinsSpentInMsg: sdk.NewCoins(),
-		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
 	}
 }
 
@@ -161,7 +186,7 @@ func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, p
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := getCoordSimAccountWithCampaignID(ctx, pk, k, accs)
+		simAccount, campID, found := getCoordSimAccountWithCampaignID(ctx, pk, k, accs, false)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateTotalSupply, "skip update total supply"), nil, nil
 		}
@@ -171,21 +196,7 @@ func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, p
 			campID,
 			sample.Coins(),
 		)
-		txCtx := simulation.OperationInput{
-			R:               r,
-			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
-			Cdc:             nil,
-			Msg:             msg,
-			MsgType:         msg.Type(),
-			Context:         ctx,
-			SimAccount:      simAccount,
-			AccountKeeper:   ak,
-			Bankkeeper:      bk,
-			ModuleName:      types.ModuleName,
-			CoinsSpentInMsg: sdk.NewCoins(),
-		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
 	}
 }
 
