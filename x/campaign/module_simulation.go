@@ -92,15 +92,32 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	}
 }
 
-// getCoordinatorSimAccount finds an account associated with a coordinator profile from simulation accounts
-func getCoordinatorSimAccount(ctx sdk.Context, pk types.ProfileKeeper, accs []simtypes.Account) (simtypes.Account, bool) {
+// getCoordSimAccount finds an account associated with a coordinator profile from simulation accounts
+func getCoordSimAccount(ctx sdk.Context, pk types.ProfileKeeper, accs []simtypes.Account) (simtypes.Account, uint64, bool) {
 	for _, acc := range accs {
-		_, found := pk.CoordinatorIDFromAddress(ctx, acc.Address.String())
+		coordID, found := pk.CoordinatorIDFromAddress(ctx, acc.Address.String())
 		if found {
-			return acc, true
+			return acc, coordID, true
 		}
 	}
-	return simtypes.Account{}, false
+	return simtypes.Account{}, 0, false
+}
+
+// getCoordSimAccountWithCampaignID finds an account associated with a coordinator profile from simulation accounts and a campaign created by this coordinator
+func getCoordSimAccountWithCampaignID(ctx sdk.Context, pk types.ProfileKeeper, k keeper.Keeper, accs []simtypes.Account) (simtypes.Account, uint64, bool) {
+	coord, coordID, found := getCoordSimAccount(ctx, pk, accs)
+	if !found {
+		return coord, 0, false
+	}
+
+	// Find a campaign associated to this account
+	for _, camp := range k.GetAllCampaign(ctx) {
+		if camp.CoordinatorID == coordID {
+			return coord, camp.Id, true
+		}
+	}
+
+	return coord, 0, false
 }
 
 // SimulateMsgCreateCampaign simulates a MsgCreateCampaign message
@@ -108,7 +125,7 @@ func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk t
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, found := getCoordinatorSimAccount(ctx, pk, accs)
+		simAccount, _, found := getCoordSimAccount(ctx, pk, accs)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
 		}
@@ -144,7 +161,31 @@ func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, p
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateTotalSupply, "skip update total supply"), nil, nil
+		simAccount, campID, found := getCoordSimAccountWithCampaignID(ctx, pk, k, accs)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateTotalSupply, "skip update total supply"), nil, nil
+		}
+
+		msg := types.NewMsgUpdateTotalSupply(
+			simAccount.Address.String(),
+			campID,
+			sample.Coins(),
+		)
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      simAccount,
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      types.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
 
