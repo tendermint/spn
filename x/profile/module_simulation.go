@@ -50,6 +50,10 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			SimulateMsgUpdateValidatorDescription(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
+			weightMsgDeleteValidator,
+			SimulateMsgDeleteValidator(am.accountKeeper, am.bankKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
 			weightMsgCreateCoordinator,
 			SimulateMsgCreateCoordinator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
@@ -97,19 +101,23 @@ func SimulateMsgDeleteValidator(ak types.AccountKeeper, bk types.BankKeeper, k k
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		accountNb := r.Intn(len(accs))
+		var simAccount simtypes.Account
 
-		desc := sample.ValidatorDescription(sample.String(50))
-		msg := types.NewMsgUpdateValidatorDescription(
-			accs[accountNb].Address.String(),
-			desc.Identity,
-			desc.Moniker,
-			desc.Website,
-			desc.SecurityContact,
-			desc.Details,
-		)
+		// Find an account with validator description
+		var found bool
+		for _, acc := range accs {
+			_, found = k.GetValidator(ctx, acc.Address.String())
+			if found {
+				simAccount = acc
+				break
+			}
+		}
+		if !found {
+			// No message if no validator description
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDeleteValidator, "skip validator delete"), nil, nil
+		}
 
+		msg := types.NewMsgDeleteValidator(simAccount.Address.String())
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -118,7 +126,7 @@ func SimulateMsgDeleteValidator(ak types.AccountKeeper, bk types.BankKeeper, k k
 			Msg:             msg,
 			MsgType:         msg.Type(),
 			Context:         ctx,
-			SimAccount:      accs[accountNb],
+			SimAccount:      simAccount,
 			AccountKeeper:   ak,
 			Bankkeeper:      bk,
 			ModuleName:      types.ModuleName,
