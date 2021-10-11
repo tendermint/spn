@@ -74,13 +74,13 @@ func TestGenesisState_Validate(t *testing.T) {
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
 						CampaignID:     campaign1.Id,
-						Address:        sample.AccAddress(),
+						Address:        sample.Address(),
 						Shares:         shares2,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting1, time.Now().Unix()),
 					},
 					{
 						CampaignID:     campaign2.Id,
-						Address:        sample.AccAddress(),
+						Address:        sample.Address(),
 						Shares:         shares4,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting2, time.Now().Unix()),
 					},
