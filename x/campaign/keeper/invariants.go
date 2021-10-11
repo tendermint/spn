@@ -8,19 +8,22 @@ import (
 )
 
 const (
-	campaignChainsWithoutCampaign = "campaign-chains-without-campaign"
-	accountWithoutCampaign        = "account-without-campaign"
-	vestingAccountWithoutCampaign = "vesting-account-without-campaign"
+	campaignChainsWithoutCampaignRoute = "campaign-chains-without-campaign"
+	accountWithoutCampaignRoute        = "account-without-campaign"
+	vestingAccountWithoutCampaignRoute = "vesting-account-without-campaign"
+	campaignSharesRoute                = "campaign-shares"
 )
 
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
-	ir.RegisterRoute(types.ModuleName, campaignChainsWithoutCampaign,
+	ir.RegisterRoute(types.ModuleName, campaignChainsWithoutCampaignRoute,
 		CampaignChainsWithoutCampaignInvariant(k))
-	ir.RegisterRoute(types.ModuleName, accountWithoutCampaign,
+	ir.RegisterRoute(types.ModuleName, accountWithoutCampaignRoute,
 		AccountWithoutCampaignInvariant(k))
-	ir.RegisterRoute(types.ModuleName, vestingAccountWithoutCampaign,
+	ir.RegisterRoute(types.ModuleName, vestingAccountWithoutCampaignRoute,
 		VestingAccountWithoutCampaignInvariant(k))
+	ir.RegisterRoute(types.ModuleName, campaignSharesRoute,
+		CampaignSharesInvariant(k))
 }
 
 // AllInvariants runs all invariants of the module.
@@ -46,7 +49,7 @@ func CampaignChainsWithoutCampaignInvariant(k Keeper) sdk.Invariant {
 		for _, chains := range all {
 			if _, found := k.GetCampaign(ctx, chains.CampaignID); !found {
 				return sdk.FormatInvariant(
-					types.ModuleName, campaignChainsWithoutCampaign,
+					types.ModuleName, campaignChainsWithoutCampaignRoute,
 					fmt.Sprintf("%s: %d", types.ErrCampaignNotFound, chains.CampaignID),
 				), true
 			}
@@ -63,7 +66,7 @@ func AccountWithoutCampaignInvariant(k Keeper) sdk.Invariant {
 		for _, acc := range all {
 			if _, found := k.GetCampaign(ctx, acc.CampaignID); !found {
 				return sdk.FormatInvariant(
-					types.ModuleName, accountWithoutCampaign,
+					types.ModuleName, accountWithoutCampaignRoute,
 					fmt.Sprintf("%s: %d", types.ErrCampaignNotFound, acc.CampaignID),
 				), true
 			}
@@ -80,8 +83,95 @@ func VestingAccountWithoutCampaignInvariant(k Keeper) sdk.Invariant {
 		for _, acc := range all {
 			if _, found := k.GetCampaign(ctx, acc.CampaignID); !found {
 				return sdk.FormatInvariant(
-					types.ModuleName, vestingAccountWithoutCampaign,
+					types.ModuleName, vestingAccountWithoutCampaignRoute,
 					fmt.Sprintf("%s: %d", types.ErrCampaignNotFound, acc.CampaignID),
+				), true
+			}
+		}
+		return "", false
+	}
+}
+
+// CampaignSharesInvariant invariant that checks if
+// the `MainnetVestingAccount` and `MainnetAccount` shares
+// sum is equal to existing campaign shares.
+func CampaignSharesInvariant(k Keeper) sdk.Invariant {
+	return func(ctx sdk.Context) (string, bool) {
+		shares := make(map[uint64]types.Shares)
+
+		// get all mainnet account shares
+		accounts := k.GetAllMainnetAccount(ctx)
+		for _, acc := range accounts {
+			if _, ok := shares[acc.CampaignID]; !ok {
+				shares[acc.CampaignID] = types.EmptyShares()
+			}
+			shares[acc.CampaignID] = types.IncreaseShares(
+				shares[acc.CampaignID],
+				acc.Shares,
+			)
+		}
+
+		// get all mainnet vesting account shares
+		vestingAccounts := k.GetAllMainnetVestingAccount(ctx)
+		for _, acc := range vestingAccounts {
+			if _, ok := shares[acc.CampaignID]; !ok {
+				shares[acc.CampaignID] = types.EmptyShares()
+			}
+			totalShare, err := acc.GetTotalShares()
+			if err != nil {
+				return sdk.FormatInvariant(
+					types.ModuleName, campaignSharesRoute,
+					fmt.Sprintf(
+						"invalid total share for vesting account: %s",
+						acc.Address,
+					),
+				), true
+			}
+			shares[acc.CampaignID] = types.IncreaseShares(
+				shares[acc.CampaignID],
+				totalShare,
+			)
+		}
+
+		for campaignID, campaignShares := range shares {
+			campaign, found := k.GetCampaign(ctx, campaignID)
+			if !found {
+				return sdk.FormatInvariant(
+					types.ModuleName, campaignSharesRoute,
+					fmt.Sprintf("%s: %d", types.ErrCampaignNotFound, campaignID),
+				), true
+			}
+
+			// convert all shares to find all vouchers denom
+			allVouchers, err := types.SharesToVouchers(campaign.GetTotalShares(), campaignID)
+			if err != nil {
+				return sdk.FormatInvariant(
+					types.ModuleName, campaignSharesRoute,
+					"fail to convert shares to vouchers",
+				), true
+			}
+
+			// get the supply for the circulating vouchers
+			vouchers := sdk.NewCoins()
+			for _, voucher := range allVouchers {
+				supply := k.bankKeeper.GetSupply(ctx, voucher.Denom)
+				vouchers.Add(supply)
+			}
+
+			// convert to shares and add to the campaign shares
+			vShares, err := types.VouchersToShares(vouchers, campaignID)
+			if err != nil {
+				return sdk.FormatInvariant(
+					types.ModuleName, campaignSharesRoute,
+					"fail to convert vouchers to shares",
+				), true
+			}
+			campaignShares = types.IncreaseShares(campaignShares, vShares)
+
+			if !types.IsEqualShares(campaignShares, campaign.AllocatedShares) {
+				return sdk.FormatInvariant(
+					types.ModuleName, campaignSharesRoute,
+					fmt.Sprintf("%s: %d", types.ErrInvalidShares, campaignID),
 				), true
 			}
 		}
