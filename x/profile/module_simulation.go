@@ -263,7 +263,7 @@ func SimulateMsgUpdateCoordinatorAddress(ak types.AccountKeeper, bk types.BankKe
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorAddress, "skip update coordinator address"), nil, nil
 		}
 
-		msg := types.NewMsgUpdateCoordinatorAddress(simAccount.Address.String(), sample.AccAddress())
+		msg := types.NewMsgUpdateCoordinatorAddress(simAccount.Address.String(), sample.Address())
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
