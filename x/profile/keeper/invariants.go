@@ -8,12 +8,12 @@ import (
 )
 
 const (
-	coordinatorIDNotFound = "coordinator-id-not-found"
+	coordinatorIDNotFoundRoute = "coordinator-id-not-found"
 )
 
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
-	ir.RegisterRoute(types.ModuleName, coordinatorIDNotFound,
+	ir.RegisterRoute(types.ModuleName, coordinatorIDNotFoundRoute,
 		CoordinatorAddrNotFoundInvariant(k))
 }
 
@@ -32,7 +32,7 @@ func CoordinatorAddrNotFoundInvariant(k Keeper) sdk.Invariant {
 		for _, coord := range all {
 			if !k.HasCoordinator(ctx, coord.CoordinatorId) {
 				return sdk.FormatInvariant(
-					types.ModuleName, coordinatorIDNotFound,
+					types.ModuleName, coordinatorIDNotFoundRoute,
 					fmt.Sprintf("%s: %d", types.ErrCoordAddressNotFound, coord.CoordinatorId),
 				), true
 			}

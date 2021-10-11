@@ -8,18 +8,18 @@ import (
 )
 
 const (
-	zeroLaunchTimestamp = "zero-launch-timestamp"
-	duplicatedAccount   = "duplicated-account"
-	unknownRequestType  = "unknown-request-type"
+	zeroLaunchTimestampRoute = "zero-launch-timestamp"
+	duplicatedAccountRoute   = "duplicated-account"
+	unknownRequestTypeRoute  = "unknown-request-type"
 )
 
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
-	ir.RegisterRoute(types.ModuleName, zeroLaunchTimestamp,
+	ir.RegisterRoute(types.ModuleName, zeroLaunchTimestampRoute,
 		ZeroLaunchTimestampInvariant(k))
-	ir.RegisterRoute(types.ModuleName, duplicatedAccount,
+	ir.RegisterRoute(types.ModuleName, duplicatedAccountRoute,
 		DuplicatedAccountInvariant(k))
-	ir.RegisterRoute(types.ModuleName, unknownRequestType,
+	ir.RegisterRoute(types.ModuleName, unknownRequestTypeRoute,
 		UnknownRequestTypeInvariant(k))
 }
 
@@ -46,7 +46,7 @@ func ZeroLaunchTimestampInvariant(k Keeper) sdk.Invariant {
 		for _, chain := range all {
 			if chain.LaunchTimestamp == 0 {
 				return sdk.FormatInvariant(
-					types.ModuleName, zeroLaunchTimestamp,
+					types.ModuleName, zeroLaunchTimestampRoute,
 					"LaunchTimestamp is not set while LaunchTriggered is set",
 				), true
 			}
@@ -64,7 +64,7 @@ func DuplicatedAccountInvariant(k Keeper) sdk.Invariant {
 			_, found := k.GetVestingAccount(ctx, account.ChainID, account.Address)
 			if found {
 				return sdk.FormatInvariant(
-					types.ModuleName, duplicatedAccount,
+					types.ModuleName, duplicatedAccountRoute,
 					fmt.Sprintf(
 						"account %s for chain %v found in vesting and genesis accounts",
 						account.Address,
@@ -85,7 +85,7 @@ func UnknownRequestTypeInvariant(k Keeper) sdk.Invariant {
 		for _, request := range all {
 			if err := request.Content.Validate(); err != nil {
 				return sdk.FormatInvariant(
-					types.ModuleName, unknownRequestType,
+					types.ModuleName, unknownRequestTypeRoute,
 					"invalid request",
 				), true
 			}
@@ -98,7 +98,7 @@ func UnknownRequestTypeInvariant(k Keeper) sdk.Invariant {
 				*types.RequestContent_ValidatorRemoval:
 			default:
 				return sdk.FormatInvariant(
-					types.ModuleName, unknownRequestType,
+					types.ModuleName, unknownRequestTypeRoute,
 					"unknown request content type",
 				), true
 			}
