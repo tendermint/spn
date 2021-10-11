@@ -15,7 +15,7 @@ func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 		coord := sample.Coordinator()
 		coord.CoordinatorId = k.AppendCoordinator(ctx, coord)
 		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
-			Address:       sample.AccAddress(),
+			Address:       sample.Address(),
 			CoordinatorId: coord.CoordinatorId,
 		})
 		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*k)(ctx)
@@ -24,7 +24,7 @@ func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 
 	t.Run("invalid case", func(t *testing.T) {
 		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
-			Address:       sample.AccAddress(),
+			Address:       sample.Address(),
 			CoordinatorId: 10,
 		})
 		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*k)(ctx)

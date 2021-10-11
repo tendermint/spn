@@ -75,13 +75,13 @@ func TestGenesisState_Validate(t *testing.T) {
 					{
 						CampaignID:     campaign1.Id,
 						Address:        sample.Address(),
-						StartingShares: shares2,
+						Shares:         shares2,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting1, time.Now().Unix()),
 					},
 					{
 						CampaignID:     campaign2.Id,
 						Address:        sample.Address(),
-						StartingShares: shares4,
+						Shares:         shares4,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting2, time.Now().Unix()),
 					},
 				},

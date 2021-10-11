@@ -14,13 +14,13 @@ func TestAccountWithoutCampaignInvariant(t *testing.T) {
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
 		campaign.Id = k.AppendCampaign(ctx, campaign)
-		k.SetMainnetAccount(ctx, sample.MainnetAccount(campaign.Id, sample.AccAddress()))
+		k.SetMainnetAccount(ctx, sample.MainnetAccount(campaign.Id, sample.Address()))
 		_, isValid := keeper.AccountWithoutCampaignInvariant(*k)(ctx)
 		require.Equal(t, false, isValid)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		k.SetMainnetAccount(ctx, sample.MainnetAccount(100, sample.AccAddress()))
+		k.SetMainnetAccount(ctx, sample.MainnetAccount(100, sample.Address()))
 		_, isValid := keeper.AccountWithoutCampaignInvariant(*k)(ctx)
 		require.Equal(t, true, isValid)
 	})
@@ -31,13 +31,13 @@ func TestVestingAccountWithoutCampaignInvariant(t *testing.T) {
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
 		campaign.Id = k.AppendCampaign(ctx, campaign)
-		k.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(campaign.Id, sample.AccAddress()))
+		k.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(campaign.Id, sample.Address()))
 		_, isValid := keeper.VestingAccountWithoutCampaignInvariant(*k)(ctx)
 		require.Equal(t, false, isValid)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		k.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(10000, sample.AccAddress()))
+		k.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(10000, sample.Address()))
 		_, isValid := keeper.VestingAccountWithoutCampaignInvariant(*k)(ctx)
 		require.Equal(t, true, isValid)
 	})

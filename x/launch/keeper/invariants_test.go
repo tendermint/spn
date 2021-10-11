@@ -11,14 +11,14 @@ import (
 func TestDuplicatedAccountInvariant(t *testing.T) {
 	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
 	t.Run("valid case", func(t *testing.T) {
-		k.SetVestingAccount(ctx, sample.VestingAccount(0, sample.AccAddress()))
-		k.SetGenesisAccount(ctx, sample.GenesisAccount(0, sample.AccAddress()))
+		k.SetVestingAccount(ctx, sample.VestingAccount(0, sample.Address()))
+		k.SetGenesisAccount(ctx, sample.GenesisAccount(0, sample.Address()))
 		_, isValid := keeper.DuplicatedAccountInvariant(*k)(ctx)
 		require.Equal(t, false, isValid)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		addr := sample.AccAddress()
+		addr := sample.Address()
 		k.SetVestingAccount(ctx, sample.VestingAccount(0, addr))
 		k.SetGenesisAccount(ctx, sample.GenesisAccount(0, addr))
 		_, isValid := keeper.DuplicatedAccountInvariant(*k)(ctx)
