@@ -102,3 +102,9 @@ func IsTotalSharesReached(shares, totalShares Shares) bool {
 	// the number of shares for an undefined denom is 0 by default therefore the total is never reached
 	return false
 }
+
+// IsAllLTE returns true iff for every denom in shares, the denom is present at
+// a smaller or equal amount in sharesB.
+func (shares Shares) IsAllLTE(cmpShares Shares) bool {
+	return sdk.Coins(shares).IsAllLTE(sdk.Coins(cmpShares))
+}

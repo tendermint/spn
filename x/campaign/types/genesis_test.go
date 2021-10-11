@@ -2,6 +2,7 @@ package types_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -9,6 +10,28 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
+	var (
+		campaign1      = sample.Campaign(0)
+		campaign2      = sample.Campaign(1)
+		sharesVesting1 = sample.Shares()
+		sharesVesting2 = sample.Shares()
+		shares1        = sample.Shares()
+		shares2        = sample.Shares()
+		shares3        = sample.Shares()
+		shares4        = sample.Shares()
+	)
+	sharesCampaign1 := types.IncreaseShares(shares1, shares2)
+	sharesCampaign1 = types.IncreaseShares(sharesCampaign1, sharesVesting1)
+	campaign1.AllocatedShares = sharesCampaign1
+	campaign1.TotalShares = sharesCampaign1
+	campaign1.DynamicShares = true
+
+	sharesCampaign2 := types.IncreaseShares(shares3, shares4)
+	sharesCampaign2 = types.IncreaseShares(sharesCampaign2, sharesVesting2)
+	campaign2.AllocatedShares = sharesCampaign2
+	campaign2.TotalShares = sharesCampaign2
+	campaign2.DynamicShares = true
+
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState
@@ -25,29 +48,41 @@ func TestGenesisState_Validate(t *testing.T) {
 				// this line is used by starport scaffolding # types/genesis/validField
 				CampaignChainsList: []types.CampaignChains{
 					{
-						CampaignID: 0,
+						CampaignID: campaign1.Id,
 					},
 					{
-						CampaignID: 1,
+						CampaignID: campaign2.Id,
 					},
 				},
 				CampaignList: []types.Campaign{
-					sample.Campaign(0),
-					sample.Campaign(1),
+					campaign1,
+					campaign2,
 				},
 				CampaignCount: 2,
 				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(0, sample.AccAddress()),
-					sample.MainnetAccount(1, sample.AccAddress()),
+					{
+						CampaignID: campaign1.Id,
+						Address:    sample.AccAddress(),
+						Shares:     shares1,
+					},
+					{
+						CampaignID: campaign2.Id,
+						Address:    sample.AccAddress(),
+						Shares:     shares3,
+					},
 				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
-						CampaignID: 0,
-						Address:    "0",
+						CampaignID:     campaign1.Id,
+						Address:        sample.AccAddress(),
+						Shares:         shares2,
+						VestingOptions: *types.NewShareDelayedVesting(sharesVesting1, time.Now().Unix()),
 					},
 					{
-						CampaignID: 1,
-						Address:    "1",
+						CampaignID:     campaign2.Id,
+						Address:        sample.AccAddress(),
+						Shares:         shares4,
+						VestingOptions: *types.NewShareDelayedVesting(sharesVesting2, time.Now().Unix()),
 					},
 				},
 			},
@@ -208,10 +243,57 @@ func TestGenesisState_Validate(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()
-			if tc.valid {
-				require.NoError(t, err)
-			} else {
+			if !tc.valid {
 				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+
+			campaignIDMap := make(map[uint64]types.Shares)
+			for _, elem := range tc.genState.CampaignList {
+				campaignIDMap[elem.Id] = elem.AllocatedShares
+			}
+			shares := make(map[uint64]types.Shares)
+
+			for _, acc := range tc.genState.MainnetAccountList {
+				// check if the campaign exists for mainnet accounts
+				_, ok := campaignIDMap[acc.CampaignID]
+				require.True(t, ok)
+
+				// sum mainnet account shares
+				if _, ok := shares[acc.CampaignID]; !ok {
+					shares[acc.CampaignID] = types.EmptyShares()
+				}
+				shares[acc.CampaignID] = types.IncreaseShares(
+					shares[acc.CampaignID],
+					acc.Shares,
+				)
+			}
+
+			for _, acc := range tc.genState.MainnetVestingAccountList {
+				// check if the campaign exists for mainnet accounts
+				_, ok := campaignIDMap[acc.CampaignID]
+				require.True(t, ok)
+
+				// sum mainnet account shares
+				if _, ok := shares[acc.CampaignID]; !ok {
+					shares[acc.CampaignID] = types.EmptyShares()
+				}
+				totalShares, err := acc.GetTotalShares()
+				require.NoError(t, err)
+
+				shares[acc.CampaignID] = types.IncreaseShares(
+					shares[acc.CampaignID],
+					totalShares,
+				)
+			}
+
+			for campaignID, share := range campaignIDMap {
+				// check if the campaign shares is equal all accounts shares
+				accShares, ok := shares[campaignID]
+				require.True(t, ok)
+				isLowerEqual := accShares.IsAllLTE(share)
+				require.True(t, isLowerEqual)
 			}
 		})
 	}
