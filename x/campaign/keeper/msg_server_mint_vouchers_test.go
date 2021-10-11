@@ -15,8 +15,8 @@ func TestMsgMintVouchers(t *testing.T) {
 		campaignKeeper, _, _, bankKeeper, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
 		ctx                                                               = sdk.WrapSDKContext(sdkCtx)
 
-		coord           = sample.AccAddress()
-		coordNoCampaign = sample.AccAddress()
+		coord           = sample.Address()
+		coordNoCampaign = sample.Address()
 
 		shares, _    = types.NewShares("1000foo,500bar,300foobar")
 		sharesTooBig = types.NewSharesFromCoins(sdk.NewCoins(
@@ -92,7 +92,7 @@ func TestMsgMintVouchers(t *testing.T) {
 		{
 			name: "non existing coordinator",
 			msg: types.MsgMintVouchers{
-				Coordinator: sample.AccAddress(),
+				Coordinator: sample.Address(),
 				CampaignID:  0,
 				Shares:      shares,
 			},

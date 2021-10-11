@@ -12,8 +12,8 @@ import (
 
 func TestMsgCreateCampaign(t *testing.T) {
 	var (
-		coordAddr1                                               = sample.AccAddress()
-		coordAddr2                                               = sample.AccAddress()
+		coordAddr1                                               = sample.Address()
+		coordAddr2                                               = sample.Address()
 		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
 		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -73,7 +73,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			name: "create a campaign from a non existing coordinator",
 			msg: types.MsgCreateCampaign{
 				CampaignName:  sample.CampaignName(),
-				Coordinator:   sample.AccAddress(),
+				Coordinator:   sample.Address(),
 				TotalSupply:   sample.Coins(),
 				DynamicShares: false,
 			},

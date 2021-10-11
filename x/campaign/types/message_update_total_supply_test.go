@@ -19,7 +19,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 		{
 			name: "valid address",
 			msg: types.MsgUpdateTotalSupply{
-				Coordinator: sample.AccAddress(),
+				Coordinator: sample.Address(),
 				CampaignID:  0,
 				TotalSupply: sample.Coins(),
 			},
@@ -36,7 +36,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid total supply",
 			msg: types.MsgUpdateTotalSupply{
-				Coordinator: sample.AccAddress(),
+				Coordinator: sample.Address(),
 				CampaignID:  0,
 				TotalSupply: invalidCoins,
 			},
@@ -45,7 +45,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 		{
 			name: "empty total supply",
 			msg: types.MsgUpdateTotalSupply{
-				Coordinator: sample.AccAddress(),
+				Coordinator: sample.Address(),
 				CampaignID:  0,
 				TotalSupply: sdk.NewCoins(),
 			},

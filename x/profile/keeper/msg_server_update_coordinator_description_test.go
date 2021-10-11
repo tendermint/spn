@@ -11,8 +11,8 @@ import (
 
 func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	var (
-		addr        = sample.AccAddress()
-		msgCoord    = sample.MsgCreateCoordinator(sample.AccAddress())
+		addr        = sample.Address()
+		msgCoord    = sample.MsgCreateCoordinator(sample.Address())
 		ctx, k, srv = setupMsgServer(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 	)

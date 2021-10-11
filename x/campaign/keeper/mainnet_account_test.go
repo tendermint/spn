@@ -19,7 +19,7 @@ func createNMainnetAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 	items := make([]types.MainnetAccount, n)
 	for i := range items {
 		items[i].CampaignID = uint64(i)
-		items[i].Address = sample.AccAddress()
+		items[i].Address = sample.Address()
 		keeper.SetMainnetAccount(ctx, items[i])
 	}
 	return items

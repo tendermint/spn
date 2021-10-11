@@ -18,7 +18,7 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 		{
 			name: "valid address",
 			msg: types.MsgAddShares{
-				Coordinator: sample.AccAddress(),
+				Coordinator: sample.Address(),
 				CampaignID:  0,
 				Shares:      sample.Shares(),
 			},
@@ -35,7 +35,7 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid shates",
 			msg: types.MsgAddShares{
-				Coordinator: sample.AccAddress(),
+				Coordinator: sample.Address(),
 				CampaignID:  0,
 				Shares:      invalidShares,
 			},
@@ -44,7 +44,7 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 		{
 			name: "empty shares",
 			msg: types.MsgAddShares{
-				Coordinator: sample.AccAddress(),
+				Coordinator: sample.Address(),
 				CampaignID:  0,
 				Shares:      types.Shares{},
 			},

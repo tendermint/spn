@@ -24,7 +24,7 @@ func TestMsgCreateCoordinator_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg: profile.MsgCreateCoordinator{
-				Address: sample.AccAddress(),
+				Address: sample.Address(),
 			},
 		},
 	}

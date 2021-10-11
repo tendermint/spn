@@ -85,7 +85,7 @@ func ValidatorRemoval(address string) launch.ValidatorRemoval {
 func RequestWithContent(chainID uint64, content launch.RequestContent) launch.Request {
 	return launch.Request{
 		ChainID:   chainID,
-		Creator:   AccAddress(),
+		Creator:   Address(),
 		CreatedAt: time.Now().Unix(),
 		Content:   content,
 	}
@@ -110,7 +110,7 @@ func GenesisAccountContent(chainID uint64, address string) launch.RequestContent
 
 // Request returns a sample Request
 func Request(chainID uint64) launch.Request {
-	content := GenesisAccountContent(chainID, AccAddress())
+	content := GenesisAccountContent(chainID, Address())
 	return RequestWithContent(chainID, content)
 }
 
@@ -212,19 +212,19 @@ func LaunchGenesisState() launch.GenesisState {
 		},
 		ChainCount: 10,
 		GenesisAccountList: []launch.GenesisAccount{
-			GenesisAccount(chainID1, AccAddress()),
-			GenesisAccount(chainID1, AccAddress()),
-			GenesisAccount(chainID2, AccAddress()),
+			GenesisAccount(chainID1, Address()),
+			GenesisAccount(chainID1, Address()),
+			GenesisAccount(chainID2, Address()),
 		},
 		VestingAccountList: []launch.VestingAccount{
-			VestingAccount(chainID1, AccAddress()),
-			VestingAccount(chainID1, AccAddress()),
-			VestingAccount(chainID2, AccAddress()),
+			VestingAccount(chainID1, Address()),
+			VestingAccount(chainID1, Address()),
+			VestingAccount(chainID2, Address()),
 		},
 		GenesisValidatorList: []launch.GenesisValidator{
-			GenesisValidator(chainID1, AccAddress()),
-			GenesisValidator(chainID1, AccAddress()),
-			GenesisValidator(chainID2, AccAddress()),
+			GenesisValidator(chainID1, Address()),
+			GenesisValidator(chainID1, Address()),
+			GenesisValidator(chainID2, Address()),
 		},
 		RequestList: []launch.Request{
 			Request(chainID1),
