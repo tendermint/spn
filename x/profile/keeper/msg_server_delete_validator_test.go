@@ -11,8 +11,8 @@ import (
 
 func TestMsgDeleteValidator(t *testing.T) {
 	var (
-		addr1       = sample.AccAddress()
-		addr2       = sample.AccAddress()
+		addr1       = sample.Address()
+		addr2       = sample.Address()
 		ctx, k, srv = setupMsgServer(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 	)

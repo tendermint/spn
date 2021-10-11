@@ -12,11 +12,11 @@ import (
 
 func TestMsgAddVestingOptions(t *testing.T) {
 	var (
-		addr1                          = sample.AccAddress()
-		addr2                          = sample.AccAddress()
-		coordAddr1                     = sample.AccAddress()
-		coordAddr2                     = sample.AccAddress()
-		coordAddrMainnetInitialized    = sample.AccAddress()
+		addr1                          = sample.Address()
+		addr2                          = sample.Address()
+		coordAddr1                     = sample.Address()
+		coordAddr2                     = sample.Address()
+		coordAddrMainnetInitialized    = sample.Address()
 		campaign                       = sample.Campaign(0)
 		campaignInvalidAllocatedShares = sample.Campaign(2)
 		campaignMainnetInitialized     = sample.Campaign(1)

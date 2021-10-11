@@ -18,7 +18,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgInitializeMainnet{
-				Coordinator:    sample.AccAddress(),
+				Coordinator:    sample.Address(),
 				CampaignID:     sample.Uint64(),
 				SourceURL:      sample.String(30),
 				SourceHash:     sample.String(20),
@@ -39,7 +39,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 		{
 			name: "empty source URL",
 			msg: types.MsgInitializeMainnet{
-				Coordinator:    sample.AccAddress(),
+				Coordinator:    sample.Address(),
 				CampaignID:     sample.Uint64(),
 				SourceURL:      "",
 				SourceHash:     sample.String(20),
@@ -50,7 +50,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 		{
 			name: "empty source hash",
 			msg: types.MsgInitializeMainnet{
-				Coordinator:    sample.AccAddress(),
+				Coordinator:    sample.Address(),
 				CampaignID:     sample.Uint64(),
 				SourceURL:      sample.String(30),
 				SourceHash:     "",
@@ -61,7 +61,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid chain id",
 			msg: types.MsgInitializeMainnet{
-				Coordinator:    sample.AccAddress(),
+				Coordinator:    sample.Address(),
 				CampaignID:     sample.Uint64(),
 				SourceURL:      sample.String(30),
 				SourceHash:     sample.String(20),

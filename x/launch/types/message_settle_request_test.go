@@ -29,7 +29,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgSettleRequest{
-				Coordinator: sample.AccAddress(),
+				Coordinator: sample.Address(),
 				ChainID:     chainID,
 				RequestID:   10,
 				Approve:     true,

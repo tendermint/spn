@@ -12,7 +12,7 @@ import (
 
 func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 	var (
-		addr    = sample.AccAddress()
+		addr    = sample.Address()
 		chainID = uint64(10)
 	)
 	tests := []struct {
@@ -50,7 +50,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgRequestAddAccount{
-				Address: sample.AccAddress(),
+				Address: sample.Address(),
 				ChainID: chainID,
 				Coins:   sample.Coins(),
 			},

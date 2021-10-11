@@ -16,7 +16,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		campaign       = sample.Campaign(0)
-		addr           = sample.Address()
+		addr           = sample.AccAddress()
 		vouchersTooBig = sdk.NewCoins(
 			sdk.NewCoin("v/0/foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
 		)

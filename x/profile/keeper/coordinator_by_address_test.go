@@ -14,7 +14,7 @@ import (
 func createNCoordinatorByAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.CoordinatorByAddress {
 	items := make([]types.CoordinatorByAddress, n)
 	for i := range items {
-		items[i].Address = sample.AccAddress()
+		items[i].Address = sample.Address()
 		keeper.SetCoordinatorByAddress(ctx, items[i])
 	}
 	return items
@@ -47,7 +47,7 @@ func TestCoordinatorByAddressGetAll(t *testing.T) {
 
 func TestCoordinatorIDFromAddress(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
-	address := sample.AccAddress()
+	address := sample.Address()
 	keeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       address,
 		CoordinatorId: 10,
@@ -57,6 +57,6 @@ func TestCoordinatorIDFromAddress(t *testing.T) {
 	require.True(t, found)
 	require.Equal(t, uint64(10), id)
 
-	_, found = keeper.CoordinatorIDFromAddress(ctx, sample.AccAddress())
+	_, found = keeper.CoordinatorIDFromAddress(ctx, sample.Address())
 	require.False(t, found)
 }

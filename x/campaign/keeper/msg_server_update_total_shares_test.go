@@ -12,8 +12,8 @@ import (
 
 func TestMsgUpdateTotalShares(t *testing.T) {
 	var (
-		coordAddr1                                               = sample.AccAddress()
-		coordAddr2                                               = sample.AccAddress()
+		coordAddr1                                               = sample.Address()
+		coordAddr2                                               = sample.Address()
 		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
 		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -89,7 +89,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 			name: "non existing coordinator",
 			msg: types.MsgUpdateTotalShares{
 				CampaignID:  campaign.Id,
-				Coordinator: sample.AccAddress(),
+				Coordinator: sample.Address(),
 				TotalShares: sample.Shares(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,

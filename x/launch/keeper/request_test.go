@@ -84,9 +84,9 @@ func TestRequestCount(t *testing.T) {
 
 func TestApplyRequest(t *testing.T) {
 	var (
-		genesisAcc     = sample.AccAddress()
-		vestingAcc     = sample.AccAddress()
-		validatorAcc   = sample.AccAddress()
+		genesisAcc     = sample.Address()
+		vestingAcc     = sample.Address()
+		validatorAcc   = sample.Address()
 		k, ctx         = testkeeper.Launch(t)
 		chainID        = uint64(10)
 		contents       = sample.AllRequestContents(chainID, genesisAcc, vestingAcc, validatorAcc)

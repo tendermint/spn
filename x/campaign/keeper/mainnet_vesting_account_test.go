@@ -18,7 +18,7 @@ var _ = strconv.IntSize
 func createNMainnetVestingAccount(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.MainnetVestingAccount {
 	items := make([]types.MainnetVestingAccount, n)
 	for i := range items {
-		items[i] = sample.MainnetVestingAccount(0, sample.AccAddress())
+		items[i] = sample.MainnetVestingAccount(0, sample.Address())
 		keeper.SetMainnetVestingAccount(ctx, items[i])
 	}
 	return items

@@ -12,7 +12,7 @@ import (
 func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 	chainID := uint64(0)
 
-	validMsg := sample.MsgRequestAddValidator(sample.AccAddress(), chainID)
+	validMsg := sample.MsgRequestAddValidator(sample.Address(), chainID)
 	emptyConsPubKey := validMsg
 	emptyConsPubKey.ConsPubKey = []byte{}
 	emptyGentx := validMsg
