@@ -155,7 +155,8 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 		coordAddr, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 		if !found {
 			// No message if no coordinator address
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, "coordinator address not found"), nil, nil
+			err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, err.Error()), nil, err
 		}
 
 		var simAccount simtypes.Account
@@ -166,7 +167,9 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			}
 		}
 		if len(simAccount.Address.Bytes()) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, "coordinator address not found in the sim accounts"), nil, nil
+			// No message if no coordinator address
+			err := fmt.Errorf("coordinator %d not found in the sim accounts", chain.CoordinatorID)
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, err.Error()), nil, err
 		}
 
 		msg := sample.MsgEditChain(
@@ -218,7 +221,8 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 			if !found {
 				// No message if no coordinator address
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "coordinator address not found"), nil, nil
+				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, err.Error()), nil, err
 			}
 		}
 
@@ -275,7 +279,8 @@ func SimulateMsgRequestRemoveGenesisAccount(ak types.AccountKeeper, bk types.Ban
 			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 			if !found {
 				// No message if no coordinator address
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, "coordinator address not found"), nil, nil
+				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, err.Error()), nil, err
 			}
 		}
 
@@ -325,7 +330,8 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 			if !found {
 				// No message if no coordinator address
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddValidator, "coordinator address not found"), nil, nil
+				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddValidator, err.Error()), nil, err
 			}
 		}
 
@@ -382,7 +388,8 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 			if !found {
 				// No message if no coordinator address
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "coordinator address not found"), nil, nil
+				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, err.Error()), nil, err
 			}
 		}
 
@@ -432,7 +439,8 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 			if !found {
 				// No message if no coordinator address
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddVestingAccount, "coordinator address not found"), nil, nil
+				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddVestingAccount, err.Error()), nil, err
 			}
 		}
 
@@ -489,7 +497,8 @@ func SimulateMsgRequestRemoveVestingAccount(ak types.AccountKeeper, bk types.Ban
 			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 			if !found {
 				// No message if no coordinator address
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, "coordinator address not found"), nil, nil
+				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, err.Error()), nil, err
 			}
 		}
 
@@ -544,7 +553,8 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		coordinator, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 		if !found {
 			// No message if no coordinator address
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, "coordinator address not found"), nil, nil
+			err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, err.Error()), nil, err
 		}
 
 		msg := sample.MsgTriggerLaunch(coordinator, chain.Id)
@@ -592,7 +602,8 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		coordinator, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 		if !found {
 			// No message if no coordinator address
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, "coordinator address not found"), nil, nil
+			err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, err.Error()), nil, err
 		}
 
 		approve := rand.Intn(2) == 1
@@ -648,7 +659,8 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 		coordinator, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 		if !found {
 			// No message if no coordinator address
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, "coordinator address not found"), nil, nil
+			err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, err.Error()), nil, err
 		}
 
 		msg := sample.MsgRevertLaunch(coordinator, chain.Id)
