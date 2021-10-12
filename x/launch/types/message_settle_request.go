@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgSettleRequest = "settle_request"
+
 var _ sdk.Msg = &MsgSettleRequest{}
 
 func NewMsgSettleRequest(coordinator string, chainID uint64, requestID uint64, approve bool) *MsgSettleRequest {

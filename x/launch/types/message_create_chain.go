@@ -7,6 +7,8 @@ import (
 	"github.com/tendermint/spn/pkg/chainid"
 )
 
+const TypeMsgCreateChain = "create_chain"
+
 var _ sdk.Msg = &MsgCreateChain{}
 
 func NewMsgCreateChain(

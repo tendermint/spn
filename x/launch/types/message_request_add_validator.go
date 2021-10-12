@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgRequestAddValidator = "request_add_validator"
+
 var _ sdk.Msg = &MsgRequestAddValidator{}
 
 func NewMsgRequestAddValidator(

@@ -171,6 +171,43 @@ func MsgEditChain(
 	)
 }
 
+// MsgRequestAddAccount returns a sample MsgRequestAddAccount
+func MsgRequestAddAccount(address string, chainID uint64) launch.MsgRequestAddAccount {
+	return *launch.NewMsgRequestAddAccount(
+		address,
+		chainID,
+		Coins(),
+	)
+}
+
+// MsgRequestAddVestingAccount returns a sample MsgRequestAddVestingAccount
+func MsgRequestAddVestingAccount(address string, chainID uint64) launch.MsgRequestAddVestingAccount {
+	return *launch.NewMsgRequestAddVestingAccount(
+		address,
+		chainID,
+		Coins(),
+		VestingOptions(),
+	)
+}
+
+// MsgRequestRemoveAccount returns a sample MsgRequestRemoveAccount
+func MsgRequestRemoveAccount(creator, address string, chainID uint64) launch.MsgRequestRemoveAccount {
+	return *launch.NewMsgRequestRemoveAccount(
+		chainID,
+		creator,
+		address,
+	)
+}
+
+// MsgRequestRemoveValidator returns a sample MsgRequestRemoveValidator
+func MsgRequestRemoveValidator(creator, validatorAddr string, chainID uint64) launch.MsgRequestRemoveValidator {
+	return *launch.NewMsgRequestRemoveValidator(
+		chainID,
+		creator,
+		validatorAddr,
+	)
+}
+
 // MsgRequestAddValidator returns a sample MsgRequestAddValidator
 func MsgRequestAddValidator(address string, chainID uint64) launch.MsgRequestAddValidator {
 	return *launch.NewMsgRequestAddValidator(
@@ -180,6 +217,33 @@ func MsgRequestAddValidator(address string, chainID uint64) launch.MsgRequestAdd
 		Bytes(30),
 		Coin(),
 		String(30),
+	)
+}
+
+// MsgRevertLaunch returns a sample MsgRevertLaunch
+func MsgRevertLaunch(coordinator string, chainID uint64) launch.MsgRevertLaunch {
+	return *launch.NewMsgRevertLaunch(
+		coordinator,
+		chainID,
+	)
+}
+
+// MsgTriggerLaunch returns a sample MsgTriggerLaunch
+func MsgTriggerLaunch(coordinator string, chainID uint64) launch.MsgTriggerLaunch {
+	return *launch.NewMsgTriggerLaunch(
+		coordinator,
+		chainID,
+		launch.DefaultMinLaunchTime,
+	)
+}
+
+// MsgSettleRequest returns a sample MsgSettleRequest
+func MsgSettleRequest(coordinator string, chainID, requestID uint64, approve bool) launch.MsgSettleRequest {
+	return *launch.NewMsgSettleRequest(
+		coordinator,
+		chainID,
+		requestID,
+		approve,
 	)
 }
 

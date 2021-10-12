@@ -42,111 +42,63 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	}{
 		{
 			name: "invalid chain",
-			msg: types.MsgRequestAddAccount{
-				ChainID: invalidChain,
-				Address: sample.Address(),
-				Coins:   sample.Coins(),
-			},
-			err: types.ErrChainNotFound,
+			msg:  sample.MsgRequestAddAccount(sample.Address(), invalidChain),
+			err:  types.ErrChainNotFound,
 		},
 		{
 			name: "launch triggered chain",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[0].Id,
-				Address: addr1,
-				Coins:   sample.Coins(),
-			},
-			err: types.ErrTriggeredLaunch,
+			msg:  sample.MsgRequestAddAccount(addr1, chains[0].Id),
+			err:  types.ErrTriggeredLaunch,
 		},
 		{
 			name: "coordinator not found",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[1].Id,
-				Address: addr1,
-				Coins:   sample.Coins(),
-			},
-			err: types.ErrChainInactive,
+			msg:  sample.MsgRequestAddAccount(addr1, chains[1].Id),
+			err:  types.ErrChainInactive,
 		},
 		{
-			name: "add chain 3 request 1",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[2].Id,
-				Address: addr1,
-				Coins:   sample.Coins(),
-			},
+			name:   "add chain 3 request 1",
+			msg:    sample.MsgRequestAddAccount(addr1, chains[2].Id),
 			wantID: 0,
 		},
 		{
-			name: "add chain 4 request 1",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[3].Id,
-				Address: addr1,
-				Coins:   sample.Coins(),
-			},
+			name:   "add chain 4 request 1",
+			msg:    sample.MsgRequestAddAccount(addr1, chains[3].Id),
 			wantID: 0,
 		},
 		{
-			name: "add chain 4 request 2",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[3].Id,
-				Address: addr2,
-				Coins:   sample.Coins(),
-			},
+			name:   "add chain 4 request 2",
+			msg:    sample.MsgRequestAddAccount(addr2, chains[3].Id),
 			wantID: 1,
 		},
 		{
-			name: "add chain 5 request 1",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].Id,
-				Address: addr1,
-				Coins:   sample.Coins(),
-			},
+			name:   "add chain 5 request 1",
+			msg:    sample.MsgRequestAddAccount(addr1, chains[4].Id),
 			wantID: 0,
 		},
 		{
-			name: "add chain 5 request 2",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].Id,
-				Address: addr2,
-				Coins:   sample.Coins(),
-			},
+			name:   "add chain 5 request 2",
+			msg:    sample.MsgRequestAddAccount(addr2, chains[4].Id),
 			wantID: 1,
 		},
 		{
-			name: "add chain 5 request 3",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].Id,
-				Address: addr3,
-				Coins:   sample.Coins(),
-			},
+			name:   "add chain 5 request 3",
+			msg:    sample.MsgRequestAddAccount(addr3, chains[4].Id),
 			wantID: 2,
 		},
 		{
-			name: "request from coordinator is pre-approved",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].Id,
-				Address: coordAddr,
-				Coins:   sample.Coins(),
-			},
+			name:        "request from coordinator is pre-approved",
+			msg:         sample.MsgRequestAddAccount(coordAddr, chains[4].Id),
 			wantApprove: true,
 		},
 		{
 			name: "failing request from coordinator",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[4].Id,
-				Address: coordAddr,
-				Coins:   sample.Coins(),
-			},
-			err: types.ErrAccountAlreadyExist,
+			msg:  sample.MsgRequestAddAccount(coordAddr, chains[4].Id),
+			err:  types.ErrAccountAlreadyExist,
 		},
 		{
 			name: "is mainnet chain",
-			msg: types.MsgRequestAddAccount{
-				ChainID: chains[5].Id,
-				Address: coordAddr,
-				Coins:   sample.Coins(),
-			},
-			err: types.ErrAddMainnetAccount,
+			msg:  sample.MsgRequestAddAccount(coordAddr, chains[5].Id),
+			err:  types.ErrAddMainnetAccount,
 		},
 	}
 	for _, tt := range tests {

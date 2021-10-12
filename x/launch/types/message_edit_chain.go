@@ -7,6 +7,8 @@ import (
 	"github.com/tendermint/spn/pkg/chainid"
 )
 
+const TypeMsgEditChain = "edit_chain"
+
 var _ sdk.Msg = &MsgEditChain{}
 
 func NewMsgEditChain(

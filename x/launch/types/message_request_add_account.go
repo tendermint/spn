@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgRequestAddAccount = "request_add_account"
+
 var _ sdk.Msg = &MsgRequestAddAccount{}
 
 func NewMsgRequestAddAccount(address string, chainID uint64, coins sdk.Coins) *MsgRequestAddAccount {

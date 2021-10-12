@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgRevertLaunch = "revert_launch"
+
 var _ sdk.Msg = &MsgRevertLaunch{}
 
 func NewMsgRevertLaunch(coordinator string, chainID uint64) *MsgRevertLaunch {
