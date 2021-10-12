@@ -24,13 +24,18 @@ const (
 	weightMsgCreateCampaign    = 50
 	weightMsgUpdateTotalSupply = 20
 	weightMsgUpdateTotalShares = 20
-	weightMsgInitializeMainnet = 20
+	weightMsgInitializeMainnet = 5
 	weightMsgAddShares         = 20
 	weightMsgAddVestingOptions = 20
 	weightMsgMintVouchers      = 20
 	weightMsgBurnVouchers      = 20
 	weightMsgRedeemVouchers    = 20
 	weightMsgUnredeemVouchers  = 20
+)
+
+var (
+	// shareDenoms are the denom used for the shares in the simulation
+	shareDenoms = []string{"s/foo", "s/bar", "s/foobar"}
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -142,7 +147,8 @@ func getCoordSimAccountWithCampaignID(
 	pk types.ProfileKeeper,
 	k keeper.Keeper,
 	accs []simtypes.Account,
-	requireDynamicShares bool,
+	requireDynamicShares,
+	requireNoMainnetInitialized bool,
 ) (simtypes.Account, uint64, bool) {
 	coord, coordID, found := getCoordSimAccount(ctx, pk, accs)
 	if !found {
@@ -151,7 +157,9 @@ func getCoordSimAccountWithCampaignID(
 
 	// Find a campaign associated to this account
 	for _, camp := range k.GetAllCampaign(ctx) {
-		if camp.CoordinatorID == coordID && (!requireDynamicShares || camp.DynamicShares) {
+		if camp.CoordinatorID == coordID &&
+			(!requireDynamicShares || camp.DynamicShares) &&
+			(!requireNoMainnetInitialized || !camp.MainnetInitialized) {
 			return coord, camp.Id, true
 		}
 	}
@@ -186,7 +194,7 @@ func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, p
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := getCoordSimAccountWithCampaignID(ctx, pk, k, accs, false)
+		simAccount, campID, found := getCoordSimAccountWithCampaignID(ctx, pk, k, accs, false, true)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateTotalSupply, "skip update total supply"), nil, nil
 		}
@@ -205,7 +213,41 @@ func SimulateMsgUpdateTotalShares(ak types.AccountKeeper, bk types.BankKeeper, p
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateTotalShares, "skip update total shares"), nil, nil
+		simAccount, campID, found := getCoordSimAccountWithCampaignID(ctx, pk, k, accs, true, true)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateTotalShares, "skip update total shares"), nil, nil
+		}
+
+		camp, _ := k.GetCampaign(ctx, campID)
+
+		// Update all total shares to a number between allocated and current+100000
+		totalShares := make(map[string]int64)
+		allocatedShares := make(map[string]int64)
+		for _, total := range camp.TotalShares {
+			totalShares[total.Denom] = total.Amount.Int64()
+		}
+		for _, allocated := range camp.AllocatedShares {
+			allocatedShares[allocated.Denom] = allocated.Amount.Int64()
+		}
+
+		// Defined the value to update
+		var newTotalShares sdk.Coins
+		for _, share := range shareDenoms {
+			currentTotal := totalShares[share]
+			if currentTotal == 0 {
+				currentTotal = types.DefaultTotalShareNumber
+			}
+			newTotal := r.Int63n(currentTotal+types.DefaultTotalShareNumber) + allocatedShares[share]
+			newTotalShares = append(newTotalShares, sdk.NewCoin(share, sdk.NewInt(newTotal)))
+		}
+		newTotalShares = newTotalShares.Sort()
+
+		msg := types.NewMsgUpdateTotalShares(
+			simAccount.Address.String(),
+			campID,
+			types.Shares(newTotalShares),
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
 	}
 }
 
@@ -214,7 +256,19 @@ func SimulateMsgInitializeMainnet(ak types.AccountKeeper, bk types.BankKeeper, p
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitializeMainnet, "skip initliaze mainnet"), nil, nil
+		simAccount, campID, found := getCoordSimAccountWithCampaignID(ctx, pk, k, accs, true, true)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitializeMainnet, "skip initliaze mainnet"), nil, nil
+		}
+
+		msg := types.NewMsgInitializeMainnet(
+			simAccount.Address.String(),
+			campID,
+			sample.String(50),
+			sample.String(32),
+			sample.GenesisChainID(),
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
 	}
 }
 
