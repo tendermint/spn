@@ -26,9 +26,9 @@ func ValidatorDescription(desc string) profile.ValidatorDescription {
 }
 
 // Coordinator returns a sample Coordinator
-func Coordinator() profile.Coordinator {
+func Coordinator(address string) profile.Coordinator {
 	return profile.Coordinator{
-		Address:     Address(),
+		Address:     address,
 		Description: CoordinatorDescription(),
 	}
 }
