@@ -44,8 +44,11 @@ func CoordinatorDescription() profile.CoordinatorDescription {
 
 // ProfileGenesisState returns a sample genesis state for the profile module
 func ProfileGenesisState() profile.GenesisState {
-	coordAddr1, coordAddr2 := Address(), Address()
-
+	var (
+		coordAddr1 = Address()
+		coordAddr2 = Address()
+		coordAddr3 = Address()
+	)
 	return profile.GenesisState{
 		ValidatorList: []profile.Validator{
 			{
@@ -68,6 +71,11 @@ func ProfileGenesisState() profile.GenesisState {
 				Address:       coordAddr2,
 				Description:   CoordinatorDescription(),
 			},
+			{
+				CoordinatorId: 2,
+				Address:       coordAddr3,
+				Description:   CoordinatorDescription(),
+			},
 		},
 		CoordinatorByAddressList: []profile.CoordinatorByAddress{
 			{
@@ -78,7 +86,11 @@ func ProfileGenesisState() profile.GenesisState {
 				Address:       coordAddr2,
 				CoordinatorId: 1,
 			},
+			{
+				Address:       coordAddr3,
+				CoordinatorId: 1,
+			},
 		},
-		CoordinatorCount: 2,
+		CoordinatorCount: 3,
 	}
 }

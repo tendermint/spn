@@ -2,7 +2,6 @@ package launch
 
 import (
 	"fmt"
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -14,20 +13,21 @@ import (
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 const (
-	defaultWeightMsgCreateChain                 int = 100
+	defaultWeightMsgCreateChain                 int = 50
 	defaultWeightMsgEditChain                   int = 10
-	defaultWeightMsgRequestAddGenesisAccount    int = 30
-	defaultWeightMsgRequestRemoveGenesisAccount int = 30
-	defaultWeightMsgRequestAddVestingAccount    int = 30
-	defaultWeightMsgRequestRemoveVestingAccount int = 15
-	defaultWeightMsgRequestAddValidator         int = 30
-	defaultWeightMsgRequestRemoveValidator      int = 15
-	defaultWeightMsgTriggerLaunch               int = 10
-	defaultWeightMsgRevertLaunch                int = 10
-	defaultWeightMsgSettleRequest               int = 40
+	defaultWeightMsgRequestAddGenesisAccount    int = 50
+	defaultWeightMsgRequestRemoveGenesisAccount int = 50
+	defaultWeightMsgRequestAddVestingAccount    int = 50
+	defaultWeightMsgRequestRemoveVestingAccount int = 25
+	defaultWeightMsgRequestAddValidator         int = 50
+	defaultWeightMsgRequestRemoveValidator      int = 25
+	defaultWeightMsgTriggerLaunch               int = 15
+	defaultWeightMsgRevertLaunch                int = 15
+	defaultWeightMsgSettleRequest               int = 50
 
 	opWeightMsgCreateChain                 = "op_weight_msg_create_chain"
 	opWeightMsgEditChain                   = "op_weight_msg_edit_chain"
@@ -44,7 +44,9 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	launchGenesis := sample.LaunchGenesisState()
+	profileGenesis := sample.ProfileGenesisState()
+	simState.GenState[profiletypes.ModuleName] = simState.Cdc.MustMarshalJSON(&profileGenesis)
+	launchGenesis := sample.LaunchGenesisState(profileGenesis.CoordinatorList...)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&launchGenesis)
 }
 
