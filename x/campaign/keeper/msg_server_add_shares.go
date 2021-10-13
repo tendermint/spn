@@ -30,10 +30,6 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 		))
 	}
 
-	if campaign.MainnetInitialized {
-		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%v", msg.CampaignID)
-	}
-
 	// check if the account already exists
 	account, found := k.GetMainnetAccount(ctx, campaign.Id, msg.Address)
 	if !found {

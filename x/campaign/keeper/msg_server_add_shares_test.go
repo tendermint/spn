@@ -104,14 +104,13 @@ func TestMsgAddShares(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "campaign already in mainnet",
+			name: "campaign with initialized mainnet",
 			msg: types.MsgAddShares{
 				Coordinator: coordAddrMainnetInitialized,
 				CampaignID:  campaignMainnetInitialized.Id,
 				Address:     addr1,
 				Shares:      sample.Shares(),
 			},
-			err: types.ErrMainnetInitialized,
 		},
 		{
 			name: "allocated shares greater than total shares",
