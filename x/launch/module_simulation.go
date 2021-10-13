@@ -372,8 +372,7 @@ func SimulateMsgRequestRemoveGenesisAccount(ak types.AccountKeeper, bk types.Ban
 		if len(genAccs) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, "genesis account not found"), nil, nil
 		}
-		genAccNb := r.Intn(len(genAccs))
-		genAcc := genAccs[genAccNb]
+		genAcc := genAccs[len(genAccs)-1]
 
 		// Find coordinator account
 		simAccount, err := findAccount(accs, genAcc.Address)
@@ -449,8 +448,7 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 		if len(valAccs) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "validator not found"), nil, nil
 		}
-		valAccNb := r.Intn(len(valAccs))
-		valAcc := valAccs[valAccNb]
+		valAcc := valAccs[len(valAccs)-1]
 
 		// Find coordinator account
 		simAccount, err := findAccount(accs, valAcc.Address)
@@ -527,8 +525,7 @@ func SimulateMsgRequestRemoveVestingAccount(ak types.AccountKeeper, bk types.Ban
 		if len(vestAccs) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, "vesting account not found"), nil, nil
 		}
-		vestAccNb := r.Intn(len(vestAccs))
-		vestAcc := vestAccs[vestAccNb]
+		vestAcc := vestAccs[len(vestAccs)-1]
 
 		// Find coordinator account
 		simAccount, err := findAccount(accs, vestAcc.Address)
