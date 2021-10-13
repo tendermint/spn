@@ -43,52 +43,52 @@ func CoordinatorDescription() profile.CoordinatorDescription {
 }
 
 // ProfileGenesisState returns a sample genesis state for the profile module
-func ProfileGenesisState(coordinators ...string) profile.GenesisState {
-	for len(coordinators) < 3 {
-		coordinators = append(coordinators, Address())
+func ProfileGenesisState(addresses ...string) profile.GenesisState {
+	for len(addresses) < 5 {
+		addresses = append(addresses, Address())
 	}
 	return profile.GenesisState{
-		ValidatorList: []profile.Validator{
-			{
-				Address:     Address(),
-				Description: ValidatorDescription(String(10)),
-			},
-			{
-				Address:     Address(),
-				Description: ValidatorDescription(String(10)),
-			},
-		},
 		CoordinatorList: []profile.Coordinator{
 			{
 				CoordinatorId: 0,
-				Address:       coordinators[0],
+				Address:       addresses[0],
 				Description:   CoordinatorDescription(),
 			},
 			{
 				CoordinatorId: 1,
-				Address:       coordinators[1],
+				Address:       addresses[1],
 				Description:   CoordinatorDescription(),
 			},
 			{
 				CoordinatorId: 2,
-				Address:       coordinators[2],
+				Address:       addresses[2],
 				Description:   CoordinatorDescription(),
 			},
 		},
 		CoordinatorByAddressList: []profile.CoordinatorByAddress{
 			{
-				Address:       coordinators[0],
+				Address:       addresses[0],
 				CoordinatorId: 0,
 			},
 			{
-				Address:       coordinators[1],
+				Address:       addresses[1],
 				CoordinatorId: 1,
 			},
 			{
-				Address:       coordinators[2],
+				Address:       addresses[2],
 				CoordinatorId: 2,
 			},
 		},
 		CoordinatorCount: 3,
+		ValidatorList: []profile.Validator{
+			{
+				Address:     addresses[3],
+				Description: ValidatorDescription(String(10)),
+			},
+			{
+				Address:     addresses[4],
+				Description: ValidatorDescription(String(10)),
+			},
+		},
 	}
 }

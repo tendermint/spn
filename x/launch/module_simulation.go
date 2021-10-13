@@ -362,12 +362,12 @@ func SimulateMsgRequestRemoveGenesisAccount(ak types.AccountKeeper, bk types.Ban
 		genAcc := genAccs[genAccNb]
 
 		// Find coordinator account
-		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, genAcc.ChainID)
+		simAccount, err := findAccount(accs, genAcc.Address)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, err.Error()), nil, err
 		}
 		msg := sample.MsgRequestRemoveAccount(
-			simAccount.Address.String(),
+			genAcc.Address,
 			genAcc.Address,
 			genAcc.ChainID,
 		)
@@ -442,12 +442,12 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 		valAcc := valAccs[valAccNb]
 
 		// Find coordinator account
-		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, valAcc.ChainID)
+		simAccount, err := findAccount(accs, valAcc.Address)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, err.Error()), nil, err
 		}
 		msg := sample.MsgRequestRemoveValidator(
-			simAccount.Address.String(),
+			valAcc.Address,
 			valAcc.Address,
 			valAcc.ChainID,
 		)
@@ -521,12 +521,12 @@ func SimulateMsgRequestRemoveVestingAccount(ak types.AccountKeeper, bk types.Ban
 		vestAcc := vestAccs[vestAccNb]
 
 		// Find coordinator account
-		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, vestAcc.ChainID)
+		simAccount, err := findAccount(accs, vestAcc.Address)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, err.Error()), nil, err
 		}
 		msg := sample.MsgRequestRemoveAccount(
-			simAccount.Address.String(),
+			vestAcc.Address,
 			vestAcc.Address,
 			vestAcc.ChainID,
 		)
@@ -561,7 +561,8 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		chains := k.GetAllChain(ctx)
 		for _, c := range chains {
 			if !c.LaunchTriggered {
-				chain, found = c, true
+				chain = c
+				found = true
 				break
 			}
 		}
@@ -600,28 +601,31 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a random request
+		chainFound := false
 		requests := k.GetAllRequest(ctx)
-		if len(requests) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, "request not found"), nil, nil
+		var request types.Request
+		for _, r := range requests {
+			chain, found := k.GetChain(ctx, r.ChainID)
+			if found && !chain.LaunchTriggered {
+				request = r
+				chainFound = true
+				break
+			}
 		}
-		requestNb := r.Intn(len(requests))
-		request := requests[requestNb]
-
-		chain, found := k.GetChain(ctx, request.ChainID)
-		if !found {
-			// No message if the chain not found
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, "chain not found"), nil, nil
+		if !chainFound {
+			// No message if no non-triggered chain
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, "request for non-triggered chain not found"), nil, nil
 		}
 
 		// Find coordinator account
-		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, chain.Id)
+		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, request.ChainID)
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, err.Error()), nil, err
 		}
 		approve := r.Intn(2) == 1
 		msg := sample.MsgSettleRequest(
 			simAccount.Address.String(),
-			chain.Id,
+			request.ChainID,
 			request.RequestID,
 			approve,
 		)
@@ -649,14 +653,13 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a random chain
-		var (
-			found bool
-			chain types.Chain
-		)
+		found := false
 		chains := k.GetAllChain(ctx)
+		var chain types.Chain
 		for _, c := range chains {
 			if c.LaunchTriggered {
-				chain, found = c, true
+				chain = c
+				found = true
 				break
 			}
 		}
