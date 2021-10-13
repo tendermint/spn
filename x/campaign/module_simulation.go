@@ -28,7 +28,7 @@ const (
 	weightMsgInitializeMainnet = 5
 	weightMsgAddShares         = 20
 	weightMsgAddVestingOptions = 20
-	weightMsgMintVouchers      = 20
+	weightMsgMintVouchers      = 40
 	weightMsgBurnVouchers      = 20
 	weightMsgRedeemVouchers    = 20
 	weightMsgUnredeemVouchers  = 20
@@ -209,6 +209,51 @@ func getSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 	}
 	shares = shares.Sort()
 	return types.Shares(shares), true
+}
+
+// getAccountWithVouchers returns an account that has vouchers for a campaign
+func getAccountWithVouchers(
+	ctx sdk.Context,
+	bk types.BankKeeper,
+	accs []simtypes.Account,
+) (campID uint64, account simtypes.Account, coins sdk.Coins, found bool) {
+	var err error
+	var accountAddr sdk.AccAddress
+
+	// Parse all account balances and find one with vouchers
+	bk.IterateAllBalances(ctx, func(addr sdk.AccAddress, coin sdk.Coin) bool {
+		campID, err = types.VoucherCampaign(coin.Denom)
+		if err != nil {
+			return true
+		}
+		found = true
+		accountAddr = addr
+		return false
+	})
+
+	// No account has vouchers
+	if !found {
+		return
+	}
+
+	// Fetch all the vouchers of the campaign owned by the account
+	bk.IterateAccountBalances(ctx, accountAddr, func(coin sdk.Coin) bool {
+		coinCampID, err := types.VoucherCampaign(coin.Denom)
+		if err == nil && coinCampID == campID {
+			coins = append(coins, coin)
+		}
+		return true
+	})
+	coins = coins.Sort()
+
+	// Find the sim account
+	for _, acc := range accs {
+		if found = acc.Address.Equals(accountAddr); found {
+			account = acc
+			return
+		}
+	}
+	return
 }
 
 // SimulateMsgCreateCampaign simulates a MsgCreateCampaign message
@@ -402,7 +447,17 @@ func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk typ
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBurnVouchers, "skip burn vouchers"), nil, nil
+		campID, simAccount, vouchers, found := getAccountWithVouchers(ctx, bk, accs)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBurnVouchers, "skip burn vouchers"), nil, nil
+		}
+
+		msg := types.NewMsgBurnVouchers(
+			simAccount.Address.String(),
+			campID,
+			vouchers,
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
 	}
 }
 

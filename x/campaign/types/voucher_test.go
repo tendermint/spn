@@ -267,45 +267,45 @@ func TestVoucherToShareDenom(t *testing.T) {
 
 func TestVoucherCampaign(t *testing.T) {
 	tests := []struct {
-		name string
-		denom string
+		name       string
+		denom      string
 		campaignID uint64
-		valid bool
-	} {
+		valid      bool
+	}{
 		{
-			name: "campaign is 0",
-			denom: "v/0/foo",
+			name:       "campaign is 0",
+			denom:      "v/0/foo",
 			campaignID: uint64(0),
-			valid: true,
+			valid:      true,
 		},
 		{
-			name: "campaign is 50",
-			denom: "v/50/bar",
+			name:       "campaign is 50",
+			denom:      "v/50/bar",
 			campaignID: uint64(50),
-			valid: true,
+			valid:      true,
 		},
 		{
-			name: "no voucher prefix",
+			name:  "no voucher prefix",
 			denom: "0/foo",
 			valid: false,
 		},
 		{
-			name: "invalid format",
+			name:  "invalid format",
 			denom: "v/0/foo/bar",
 			valid: false,
 		},
 		{
-			name: "campaign ID is not a number",
+			name:  "campaign ID is not a number",
 			denom: "v/foo/foo",
 			valid: false,
 		},
 		{
-			name: "empty campaign ID",
+			name:  "empty campaign ID",
 			denom: "v//foo",
 			valid: false,
 		},
 		{
-			name: "actual denom is empty",
+			name:  "actual denom is empty",
 			denom: "v/0/",
 			valid: false,
 		},
