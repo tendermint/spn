@@ -272,9 +272,10 @@ func LaunchGenesisState(coordinators ...profile.Coordinator) launch.GenesisState
 		coordinators = append(coordinators, Coordinator(Address()))
 	}
 
-	chains := make([]launch.Chain, len(coordinators))
-	for i, coord := range coordinators {
-		chains[i] = Chain(uint64(i), coord.CoordinatorId)
+	chainsLength := 3
+	chains := make([]launch.Chain, chainsLength)
+	for i := 0; i < chainsLength; i++ {
+		chains[i] = Chain(uint64(i), coordinators[i].CoordinatorId)
 	}
 
 	return launch.GenesisState{
@@ -306,7 +307,7 @@ func LaunchGenesisState(coordinators ...profile.Coordinator) launch.GenesisState
 			},
 			{
 				ChainID: chains[1].Id,
-				Count:   1,
+				Count:   2,
 			},
 		},
 		Params: LaunchParams(),
