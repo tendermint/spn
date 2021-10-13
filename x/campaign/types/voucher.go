@@ -1,15 +1,20 @@
 package types
 
 import (
+	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 const (
+	// VoucherSeparator is used in voucher denom to separate the denom component
+	VoucherSeparator = "/"
+
 	// VoucherPrefix is the prefix used to represent a voucher denomination
-	VoucherPrefix = "v/"
+	VoucherPrefix = "v" + VoucherSeparator
 )
 
 // SharesToVouchers returns new Coins vouchers from the Shares representation
@@ -56,7 +61,7 @@ func VouchersToShares(vouchers sdk.Coins, campaignID uint64) (Shares, error) {
 
 // VoucherDenom returns the Voucher name with prefix
 func VoucherDenom(campaignID uint64, denom string) string {
-	return fmt.Sprintf("%s%d/%s", VoucherPrefix, campaignID, denom)
+	return fmt.Sprintf("%s%d%s%s", VoucherPrefix, campaignID, VoucherSeparator, denom)
 }
 
 // VoucherToShareDenom remove the voucher prefix and add the share prefix
@@ -64,4 +69,21 @@ func VoucherToShareDenom(campaignID uint64, denom string) string {
 	prefix := VoucherDenom(campaignID, "")
 	shareDenom := strings.TrimPrefix(denom, prefix)
 	return SharePrefix + shareDenom
+}
+
+// VoucherCampaign returns the campaign associated to a voucher denom
+func VoucherCampaign(denom string) (uint64, error) {
+	if !strings.HasPrefix(denom, VoucherPrefix) {
+		return 0, errors.New("no voucher prefix")
+	}
+	denom = strings.TrimPrefix(denom, VoucherPrefix)
+
+	parsed := strings.Split(denom, VoucherSeparator)
+	if len(parsed) != 2 {
+		return 0, errors.New("invalid format")
+	}
+	if parsed[1] == "" {
+		return 0, errors.New("actual denom is empty")
+	}
+	return strconv.ParseUint(parsed[0], 10, 64)
 }
