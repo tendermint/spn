@@ -86,7 +86,7 @@ func ProfileGenesisState(coordinators ...string) profile.GenesisState {
 			},
 			{
 				Address:       coordinators[2],
-				CoordinatorId: 1,
+				CoordinatorId: 2,
 			},
 		},
 		CoordinatorCount: 3,

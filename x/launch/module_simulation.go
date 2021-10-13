@@ -200,6 +200,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	}
 }
 
+// findChainCoordinatorAccount find coordinator account by chain id
 func findChainCoordinatorAccount(ctx sdk.Context, k keeper.Keeper, accs []simtypes.Account, chainID uint64) (simtypes.Account, error) {
 	chain, found := k.GetChain(ctx, chainID)
 	if !found {
@@ -208,6 +209,10 @@ func findChainCoordinatorAccount(ctx sdk.Context, k keeper.Keeper, accs []simtyp
 	}
 	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
+		all := k.GetProfileKeeper().GetAllCoordinator(ctx)
+		fmt.Printf("%v", all)
+		alla := k.GetProfileKeeper().GetAllCoordinatorByAddress(ctx)
+		fmt.Printf("%v", alla)
 		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
 	}
 	coordAddr, err := sdk.AccAddressFromBech32(address)
@@ -221,6 +226,7 @@ func findChainCoordinatorAccount(ctx sdk.Context, k keeper.Keeper, accs []simtyp
 	return simAccount, nil
 }
 
+// findAccount find account by string hex address
 func findAccount(accs []simtypes.Account, address string) (simtypes.Account, error) {
 	coordAddr, err := sdk.AccAddressFromBech32(address)
 	if err != nil {

@@ -82,11 +82,11 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a random account
-		accountNb := r.Intn(len(accs))
+		simAccount, _ := simtypes.RandomAcc(r, accs)
 
 		desc := sample.ValidatorDescription(sample.String(50))
 		msg := types.NewMsgUpdateValidatorDescription(
-			accs[accountNb].Address.String(),
+			simAccount.Address.String(),
 			desc.Identity,
 			desc.Moniker,
 			desc.Website,
@@ -102,7 +102,7 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 			Msg:             msg,
 			MsgType:         msg.Type(),
 			Context:         ctx,
-			SimAccount:      accs[accountNb],
+			SimAccount:      simAccount,
 			AccountKeeper:   ak,
 			Bankkeeper:      bk,
 			ModuleName:      types.ModuleName,
@@ -295,7 +295,8 @@ func SimulateMsgDeleteCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 
 		// Find an account with coordinator associated
 		var found bool
-		for _, acc := range accs {
+		for i := len(accs); i > 0; i-- {
+			acc := accs[i-1]
 			_, found = k.GetCoordinatorByAddress(ctx, acc.Address.String())
 			if found {
 				simAccount = acc
