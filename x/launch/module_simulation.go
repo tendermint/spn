@@ -19,7 +19,7 @@ const (
 	defaultWeightMsgCreateChain                 int = 50
 	defaultWeightMsgEditChain                   int = 10
 	defaultWeightMsgRequestAddGenesisAccount    int = 50
-	defaultWeightMsgRequestRemoveGenesisAccount int = 50
+	defaultWeightMsgRequestRemoveGenesisAccount int = 25
 	defaultWeightMsgRequestAddVestingAccount    int = 50
 	defaultWeightMsgRequestRemoveVestingAccount int = 25
 	defaultWeightMsgRequestAddValidator         int = 50
@@ -209,21 +209,9 @@ func findChainCoordinatorAccount(ctx sdk.Context, k keeper.Keeper, accs []simtyp
 	}
 	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
-		all := k.GetProfileKeeper().GetAllCoordinator(ctx)
-		fmt.Printf("%v", all)
-		alla := k.GetProfileKeeper().GetAllCoordinatorByAddress(ctx)
-		fmt.Printf("%v", alla)
 		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
 	}
-	coordAddr, err := sdk.AccAddressFromBech32(address)
-	if err != nil {
-		return simtypes.Account{}, err
-	}
-	simAccount, found := simtypes.FindAccount(accs, coordAddr)
-	if !found {
-		return simAccount, fmt.Errorf("address %s not found in the sim accounts", address)
-	}
-	return simAccount, nil
+	return findAccount(accs, address)
 }
 
 // findAccount find account by string hex address
