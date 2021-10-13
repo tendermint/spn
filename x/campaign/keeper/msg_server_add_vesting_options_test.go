@@ -109,7 +109,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "campaign already in mainnet",
+			name: "campaign with initialized mainnet",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddrMainnetInitialized,
 				CampaignID:     campaignMainnetInitialized.Id,
@@ -117,7 +117,6 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
 			},
-			err: types.ErrMainnetInitialized,
 		},
 		{
 			name: "allocated shares greater them total shares",
