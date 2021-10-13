@@ -13,7 +13,6 @@ import (
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 const (
@@ -44,8 +43,11 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	profileGenesis := sample.ProfileGenesisState()
-	simState.GenState[profiletypes.ModuleName] = simState.Cdc.MustMarshalJSON(&profileGenesis)
+	accs := make([]string, len(simState.Accounts))
+	for i, acc := range simState.Accounts {
+		accs[i] = acc.Address.String()
+	}
+	profileGenesis := sample.ProfileGenesisState(accs...)
 	launchGenesis := sample.LaunchGenesisState(profileGenesis.CoordinatorList...)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&launchGenesis)
 }
@@ -58,14 +60,12 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 	launchParams := sample.LaunchParams()
-
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMinLaunchTime), func(r *rand.Rand) string {
 			return fmt.Sprintf("\"%d\"", launchParams.MinLaunchTime)
 		}),
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMaxLaunchTime), func(r *rand.Rand) string {
 			return fmt.Sprintf("\"%d\"", launchParams.MaxLaunchTime)
-
 		}),
 	}
 }
@@ -91,73 +91,61 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 
 	appParams := simState.AppParams
 	cdc := simState.Cdc
-
 	appParams.GetOrGenerate(cdc, opWeightMsgCreateChain, &weightMsgCreateChain, nil,
 		func(_ *rand.Rand) {
 			weightMsgCreateChain = defaultWeightMsgCreateChain
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgEditChain, &weightMsgEditChain, nil,
 		func(_ *rand.Rand) {
 			weightMsgEditChain = defaultWeightMsgEditChain
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgRequestAddGenesisAccount, &weightMsgRequestAddGenesisAccount, nil,
 		func(_ *rand.Rand) {
 			weightMsgRequestAddGenesisAccount = defaultWeightMsgRequestAddGenesisAccount
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgRequestAddGenesisAccount, &weightMsgRequestAddGenesisAccount, nil,
 		func(_ *rand.Rand) {
 			weightMsgRequestAddGenesisAccount = defaultWeightMsgRequestAddGenesisAccount
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgRequestRemoveGenesisAccount, &weightMsgRequestRemoveGenesisAccount, nil,
 		func(_ *rand.Rand) {
 			weightMsgRequestRemoveGenesisAccount = defaultWeightMsgRequestRemoveGenesisAccount
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgRequestAddVestingAccount, &weightMsgRequestAddVestingAccount, nil,
 		func(_ *rand.Rand) {
 			weightMsgRequestAddVestingAccount = defaultWeightMsgRequestAddVestingAccount
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgRequestRemoveVestingAccount, &weightMsgRequestRemoveVestingAccount, nil,
 		func(_ *rand.Rand) {
 			weightMsgRequestRemoveVestingAccount = defaultWeightMsgRequestRemoveVestingAccount
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgRequestAddValidator, &weightMsgRequestAddValidator, nil,
 		func(_ *rand.Rand) {
 			weightMsgRequestAddValidator = defaultWeightMsgRequestAddValidator
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgRequestRemoveValidator, &weightMsgRequestRemoveValidator, nil,
 		func(_ *rand.Rand) {
 			weightMsgRequestRemoveValidator = defaultWeightMsgRequestRemoveValidator
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgTriggerLaunch, &weightMsgTriggerLaunch, nil,
 		func(_ *rand.Rand) {
 			weightMsgTriggerLaunch = defaultWeightMsgTriggerLaunch
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgRevertLaunch, &weightMsgRevertLaunch, nil,
 		func(_ *rand.Rand) {
 			weightMsgRevertLaunch = defaultWeightMsgRevertLaunch
 		},
 	)
-
 	appParams.GetOrGenerate(cdc, opWeightMsgSettleRequest, &weightMsgSettleRequest, nil,
 		func(_ *rand.Rand) {
 			weightMsgSettleRequest = defaultWeightMsgSettleRequest
@@ -212,34 +200,62 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	}
 }
 
+func findChainCoordinatorAccount(ctx sdk.Context, k keeper.Keeper, accs []simtypes.Account, chainID uint64) (simtypes.Account, error) {
+	chain, found := k.GetChain(ctx, chainID)
+	if !found {
+		// No message if no coordinator address
+		return simtypes.Account{}, fmt.Errorf("chain %d not found", chainID)
+	}
+	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	if !found {
+		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+	}
+	coordAddr, err := sdk.AccAddressFromBech32(address)
+	if err != nil {
+		return simtypes.Account{}, err
+	}
+	simAccount, found := simtypes.FindAccount(accs, coordAddr)
+	if !found {
+		return simAccount, fmt.Errorf("address %s not found in the sim accounts", address)
+	}
+	return simAccount, nil
+}
+
+func findAccount(accs []simtypes.Account, address string) (simtypes.Account, error) {
+	coordAddr, err := sdk.AccAddressFromBech32(address)
+	if err != nil {
+		return simtypes.Account{}, err
+	}
+	simAccount, found := simtypes.FindAccount(accs, coordAddr)
+	if !found {
+		return simAccount, fmt.Errorf("address %s not found in the sim accounts", address)
+	}
+	return simAccount, nil
+}
+
 // SimulateMsgCreateChain simulates a MsgCreateChain message
 func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-
 		// Check if the coordinator address is already in the store
-		profileKepper := k.GetProfileKeeper()
-		address := simAccount.Address.String()
-		_, found := profileKepper.GetCoordinatorByAddress(ctx, address)
-		if !found {
-			coord := sample.Coordinator(address)
-			coord.CoordinatorId = profileKepper.AppendCoordinator(ctx, coord)
-			profileKepper.SetCoordinatorByAddress(ctx, profiletypes.CoordinatorByAddress{
-				Address:       address,
-				CoordinatorId: coord.CoordinatorId,
-			})
+		coordinators := k.GetProfileKeeper().GetAllCoordinator(ctx)
+		if len(coordinators) == 0 {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateChain, "coordinator not found"), nil, nil
 		}
+		chainNb := r.Intn(len(coordinators))
+		coordinator := coordinators[chainNb]
 
+		simAccount, err := findAccount(accs, coordinator.Address)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateChain, err.Error()), nil, err
+		}
 		msg := sample.MsgCreateChain(
 			simAccount.Address.String(),
 			"",
 			false,
 			0,
 		)
-
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -271,27 +287,12 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 		chainNb := r.Intn(len(chains))
 		chain := chains[chainNb]
 
-		coord, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-		if !found {
-			// No message if no coordinator address
-			err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, err.Error()), nil, err
-		}
-
-		coordAddr, err := sdk.AccAddressFromBech32(coord)
+		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, chain.Id)
 		if err != nil {
-			err := fmt.Errorf("invalid coordinator address %s", coord)
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, err.Error()), nil, err
 		}
-		simAccount, found := simtypes.FindAccount(accs, coordAddr)
-		if !found {
-			// No message if no coordinator address
-			err := fmt.Errorf("coordinator %d not found in the sim accounts", chain.CoordinatorID)
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, err.Error()), nil, err
-		}
-
 		msg := sample.MsgEditChain(
-			coord,
+			simAccount.Address.String(),
 			chain.Id,
 			true,
 			true,
@@ -321,9 +322,6 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-
 		// Select a random chain
 		chains := k.GetAllChain(ctx)
 		if len(chains) == 0 {
@@ -332,20 +330,10 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 		chainNb := r.Intn(len(chains))
 		chain := chains[chainNb]
 
-		// Select between new address or coordinator address randomly
-		creator := simAccount.Address.String()
-		if r.Intn(2) == 1 {
-			var found bool
-			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-			if !found {
-				// No message if no coordinator address
-				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, err.Error()), nil, err
-			}
-		}
-
+		// Select a random account
+		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := sample.MsgRequestAddAccount(
-			creator,
+			simAccount.Address.String(),
 			chain.Id,
 		)
 		txCtx := simulation.OperationInput{
@@ -371,17 +359,6 @@ func SimulateMsgRequestRemoveGenesisAccount(ak types.AccountKeeper, bk types.Ban
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-
-		// Select a random chain
-		chains := k.GetAllChain(ctx)
-		if len(chains) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, "chain not found"), nil, nil
-		}
-		chainNb := r.Intn(len(chains))
-		chain := chains[chainNb]
-
 		// Select a random genesis account
 		genAccs := k.GetAllGenesisAccount(ctx)
 		if len(genAccs) == 0 {
@@ -390,20 +367,13 @@ func SimulateMsgRequestRemoveGenesisAccount(ak types.AccountKeeper, bk types.Ban
 		genAccNb := r.Intn(len(genAccs))
 		genAcc := genAccs[genAccNb]
 
-		// Select between new address or coordinator address randomly
-		creator := simAccount.Address.String()
-		if r.Intn(2) == 1 {
-			var found bool
-			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-			if !found {
-				// No message if no coordinator address
-				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, err.Error()), nil, err
-			}
+		// Find coordinator account
+		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, genAcc.ChainID)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, err.Error()), nil, err
 		}
-
 		msg := sample.MsgRequestRemoveAccount(
-			creator,
+			simAccount.Address.String(),
 			genAcc.Address,
 			genAcc.ChainID,
 		)
@@ -442,19 +412,8 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 		chain := chains[chainNb]
 
 		// Select between new address or coordinator address randomly
-		creator := simAccount.Address.String()
-		if r.Intn(2) == 1 {
-			var found bool
-			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-			if !found {
-				// No message if no coordinator address
-				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddValidator, err.Error()), nil, err
-			}
-		}
-
 		msg := sample.MsgRequestAddValidator(
-			creator,
+			simAccount.Address.String(),
 			chain.Id,
 		)
 		txCtx := simulation.OperationInput{
@@ -480,17 +439,6 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-
-		// Select a random chain
-		chains := k.GetAllChain(ctx)
-		if len(chains) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "chain not found"), nil, nil
-		}
-		chainNb := r.Intn(len(chains))
-		chain := chains[chainNb]
-
 		// Select a random validator
 		valAccs := k.GetAllGenesisValidator(ctx)
 		if len(valAccs) == 0 {
@@ -499,20 +447,13 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 		valAccNb := r.Intn(len(valAccs))
 		valAcc := valAccs[valAccNb]
 
-		// Select between new address or coordinator address randomly
-		creator := simAccount.Address.String()
-		if r.Intn(2) == 1 {
-			var found bool
-			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-			if !found {
-				// No message if no coordinator address
-				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, err.Error()), nil, err
-			}
+		// Find coordinator account
+		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, valAcc.ChainID)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, err.Error()), nil, err
 		}
-
 		msg := sample.MsgRequestRemoveValidator(
-			creator,
+			simAccount.Address.String(),
 			valAcc.Address,
 			valAcc.ChainID,
 		)
@@ -539,9 +480,6 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-
 		// Select a random chain
 		chains := k.GetAllChain(ctx)
 		if len(chains) == 0 {
@@ -550,18 +488,9 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 		chainNb := r.Intn(len(chains))
 		chain := chains[chainNb]
 
-		// Select between new address or coordinator address randomly
+		// Select a random account
+		simAccount, _ := simtypes.RandomAcc(r, accs)
 		creator := simAccount.Address.String()
-		if r.Intn(2) == 1 {
-			var found bool
-			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-			if !found {
-				// No message if no coordinator address
-				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddVestingAccount, err.Error()), nil, err
-			}
-		}
-
 		msg := sample.MsgRequestAddVestingAccount(
 			creator,
 			chain.Id,
@@ -589,17 +518,6 @@ func SimulateMsgRequestRemoveVestingAccount(ak types.AccountKeeper, bk types.Ban
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-
-		// Select a random chain
-		chains := k.GetAllChain(ctx)
-		if len(chains) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, "chain not found"), nil, nil
-		}
-		chainNb := r.Intn(len(chains))
-		chain := chains[chainNb]
-
 		// Select a random vesting account
 		vestAccs := k.GetAllVestingAccount(ctx)
 		if len(vestAccs) == 0 {
@@ -608,20 +526,13 @@ func SimulateMsgRequestRemoveVestingAccount(ak types.AccountKeeper, bk types.Ban
 		vestAccNb := r.Intn(len(vestAccs))
 		vestAcc := vestAccs[vestAccNb]
 
-		// Select between new address or coordinator address randomly
-		creator := simAccount.Address.String()
-		if r.Intn(2) == 1 {
-			var found bool
-			creator, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-			if !found {
-				// No message if no coordinator address
-				err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-				return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, err.Error()), nil, err
-			}
+		// Find coordinator account
+		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, vestAcc.ChainID)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, err.Error()), nil, err
 		}
-
 		msg := sample.MsgRequestRemoveAccount(
-			creator,
+			simAccount.Address.String(),
 			vestAcc.Address,
 			vestAcc.ChainID,
 		)
@@ -648,9 +559,6 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-
 		// Select a random chain
 		var (
 			found bool
@@ -668,14 +576,12 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, "non-triggered chain not found"), nil, nil
 		}
 
-		coordinator, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-		if !found {
-			// No message if no coordinator address
-			err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+		// Find coordinator account
+		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, chain.Id)
+		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, err.Error()), nil, err
 		}
-
-		msg := sample.MsgTriggerLaunch(coordinator, chain.Id)
+		msg := sample.MsgTriggerLaunch(simAccount.Address.String(), chain.Id)
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -699,15 +605,11 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-
 		// Select a random request
 		requests := k.GetAllRequest(ctx)
 		if len(requests) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, "request not found"), nil, nil
 		}
-
 		requestNb := r.Intn(len(requests))
 		request := requests[requestNb]
 
@@ -717,16 +619,14 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, "chain not found"), nil, nil
 		}
 
-		coordinator, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-		if !found {
-			// No message if no coordinator address
-			err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, err.Error()), nil, err
+		// Find coordinator account
+		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, chain.Id)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, err.Error()), nil, err
 		}
-
 		approve := r.Intn(2) == 1
 		msg := sample.MsgSettleRequest(
-			coordinator,
+			simAccount.Address.String(),
 			chain.Id,
 			request.RequestID,
 			approve,
@@ -754,9 +654,6 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-
 		// Select a random chain
 		var (
 			found bool
@@ -774,14 +671,12 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, "triggered chain not found"), nil, nil
 		}
 
-		coordinator, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-		if !found {
-			// No message if no coordinator address
-			err := fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+		// Find coordinator account
+		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, chain.Id)
+		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, err.Error()), nil, err
 		}
-
-		msg := sample.MsgRevertLaunch(coordinator, chain.Id)
+		msg := sample.MsgRevertLaunch(simAccount.Address.String(), chain.Id)
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,

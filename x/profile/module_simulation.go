@@ -25,7 +25,11 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	profileGenesis := sample.ProfileGenesisState()
+	accs := make([]string, len(simState.Accounts))
+	for i, acc := range simState.Accounts {
+		accs[i] = acc.Address.String()
+	}
+	profileGenesis := sample.ProfileGenesisState(accs...)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&profileGenesis)
 }
 
