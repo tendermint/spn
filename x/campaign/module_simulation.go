@@ -2,6 +2,7 @@ package campaign
 
 import (
 	"math/rand"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -348,7 +349,27 @@ func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, p
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddVestingOptions, "skip add vesting options"), nil, nil
+		simAccount, campID, found := getCoordSimAccountWithCampaignID(ctx, pk, k, accs, false, false)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddVestingOptions, "skip add vesting options"), nil, nil
+		}
+
+		shares, getShares := getSharesFromCampaign(r, ctx, k, campID)
+		if !getShares {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddVestingOptions, "skip add vesting options"), nil, nil
+		}
+
+		// Select a random account to give vesting options
+		accountNb := r.Intn(len(accs))
+
+		msg := types.NewMsgAddVestingOptions(
+			campID,
+			simAccount.Address.String(),
+			accs[accountNb].Address.String(),
+			types.EmptyShares(),
+			*types.NewShareDelayedVesting(shares, time.Now().Unix()),
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
 	}
 }
 
@@ -357,7 +378,22 @@ func SimulateMsgMintVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk typ
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgMintVouchers, "skip mint vouchers"), nil, nil
+		simAccount, campID, found := getCoordSimAccountWithCampaignID(ctx, pk, k, accs, false, false)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgMintVouchers, "skip mint vouchers"), nil, nil
+		}
+
+		shares, getShares := getSharesFromCampaign(r, ctx, k, campID)
+		if !getShares {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgMintVouchers, "skip mint vouchers"), nil, nil
+		}
+
+		msg := types.NewMsgMintVouchers(
+			simAccount.Address.String(),
+			campID,
+			shares,
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
 	}
 }
 
