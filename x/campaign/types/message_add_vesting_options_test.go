@@ -18,7 +18,7 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgAddVestingOptions{
-				Coordinator:    sample.AccAddress(),
+				Coordinator:    sample.Address(),
 				CampaignID:     0,
 				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
@@ -37,7 +37,7 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid starting shares",
 			msg: types.MsgAddVestingOptions{
-				Coordinator:    sample.AccAddress(),
+				Coordinator:    sample.Address(),
 				CampaignID:     0,
 				StartingShares: invalidShares,
 				VestingOptions: sample.ShareVestingOptions(),

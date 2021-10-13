@@ -11,11 +11,11 @@ import (
 
 func TestMsgSettleRequest(t *testing.T) {
 	var (
-		addr1                       = sample.AccAddress()
-		addr2                       = sample.AccAddress()
-		addr3                       = sample.AccAddress()
-		addr4                       = sample.AccAddress()
-		addr5                       = sample.AccAddress()
+		addr1                       = sample.Address()
+		addr2                       = sample.Address()
+		addr3                       = sample.Address()
+		addr4                       = sample.Address()
+		addr5                       = sample.Address()
 		coordinator1                = sample.Coordinator()
 		coordinator2                = sample.Coordinator()
 		invalidChain                = uint64(1000)

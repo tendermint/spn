@@ -18,7 +18,7 @@ func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     sample.AccAddress(),
+				Sender:     sample.Address(),
 				CampaignID: 0,
 				Shares:     sample.Shares(),
 			},
@@ -35,7 +35,7 @@ func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid shares",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     sample.AccAddress(),
+				Sender:     sample.Address(),
 				CampaignID: 0,
 				Shares:     invalidShares,
 			},
@@ -44,7 +44,7 @@ func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "empty shares",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     sample.AccAddress(),
+				Sender:     sample.Address(),
 				CampaignID: 0,
 				Shares:     types.EmptyShares(),
 			},

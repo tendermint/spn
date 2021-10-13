@@ -15,13 +15,13 @@ func TestMsgCreateChain(t *testing.T) {
 	ctx := sdk.WrapSDKContext(sdkCtx)
 
 	// Create an invalid coordinator
-	invalidCoordAddress := sample.AccAddress()
+	invalidCoordAddress := sample.Address()
 	msgCreateInvalidCoordinator := sample.MsgCreateCoordinator(invalidCoordAddress)
 	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
 	require.NoError(t, err)
 
 	// Create a coordinator
-	coordAddress := sample.AccAddress()
+	coordAddress := sample.Address()
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
 	resCoord, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
@@ -61,7 +61,7 @@ func TestMsgCreateChain(t *testing.T) {
 		},
 		{
 			name: "coordinator doesn't exist for the chain",
-			msg:  sample.MsgCreateChain(sample.AccAddress(), "", false, 0),
+			msg:  sample.MsgCreateChain(sample.Address(), "", false, 0),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{

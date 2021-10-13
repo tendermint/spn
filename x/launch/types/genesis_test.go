@@ -12,9 +12,9 @@ var (
 	chainID1         = uint64(0)
 	chainID2         = uint64(1)
 	noExistChainID   = uint64(2)
-	addr1            = sample.AccAddress()
-	addr2            = sample.AccAddress()
-	vestingAddress   = sample.AccAddress()
+	addr1            = sample.Address()
+	addr2            = sample.Address()
+	vestingAddress   = sample.Address()
 	genesisValidator = sample.GenesisValidator(chainID1, addr1)
 	genesisChainID   = sample.GenesisChainID()
 
@@ -373,10 +373,39 @@ func TestGenesisState_Validate(t *testing.T) {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()
-			if tc.shouldBeValid {
-				require.NoError(t, err)
-			} else {
+			if !tc.shouldBeValid {
 				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+
+			chainIDMap := make(map[uint64]struct{})
+			for _, elem := range tc.genState.ChainList {
+				chainIDMap[elem.Id] = struct{}{}
+			}
+
+			for _, acc := range tc.genState.RequestList {
+				// check if the chain exist for requests
+				_, ok := chainIDMap[acc.ChainID]
+				require.True(t, ok)
+			}
+
+			for _, acc := range tc.genState.GenesisValidatorList {
+				// check if the chain exist for validators
+				_, ok := chainIDMap[acc.ChainID]
+				require.True(t, ok)
+			}
+
+			for _, acc := range tc.genState.GenesisAccountList {
+				// check if the chain exist for genesis accounts
+				_, ok := chainIDMap[acc.ChainID]
+				require.True(t, ok)
+			}
+
+			for _, acc := range tc.genState.VestingAccountList {
+				// check if the chain exist for vesting accounts
+				_, ok := chainIDMap[acc.ChainID]
+				require.True(t, ok)
 			}
 		})
 	}

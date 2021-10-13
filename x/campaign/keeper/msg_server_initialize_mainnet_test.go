@@ -15,8 +15,8 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		campaignID                                                          uint64 = 0
 		campaignMainnetInitializedID                                        uint64 = 1
 		campaignIncorrectCoordID                                            uint64 = 2
-		coordAddr                                                                  = sample.AccAddress()
-		coordAddrNoCampaign                                                        = sample.AccAddress()
+		coordAddr                                                                  = sample.Address()
+		coordAddrNoCampaign                                                        = sample.Address()
 		campaignKeeper, _, launchKeeper, _, campaignSrv, profileSrv, sdkCtx        = setupMsgServer(t)
 		ctx                                                                        = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -89,7 +89,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			name: "non-existent coordinator",
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignIncorrectCoordID,
-				Coordinator:    sample.AccAddress(),
+				Coordinator:    sample.Address(),
 				SourceHash:     sample.String(30),
 				SourceURL:      sample.String(20),
 				MainnetChainID: sample.GenesisChainID(),

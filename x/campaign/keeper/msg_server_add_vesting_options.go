@@ -31,10 +31,6 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 		))
 	}
 
-	if campaign.MainnetInitialized {
-		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%v", msg.CampaignID)
-	}
-
 	// check if the account already exists
 	oldAccount, foundAcc := k.GetMainnetVestingAccount(ctx, campaign.Id, msg.Address)
 	if foundAcc {
@@ -52,7 +48,7 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	account := types.MainnetVestingAccount{
 		CampaignID:     campaign.Id,
 		Address:        msg.Address,
-		Shares:         msg.StartingShares,
+		StartingShares: msg.StartingShares,
 		VestingOptions: msg.VestingOptions,
 	}
 

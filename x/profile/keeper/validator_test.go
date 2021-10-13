@@ -18,7 +18,7 @@ var _ = strconv.IntSize
 func createNValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Validator {
 	items := make([]types.Validator, n)
 	for i := range items {
-		items[i].Address = sample.AccAddress()
+		items[i].Address = sample.Address()
 		keeper.SetValidator(ctx, items[i])
 	}
 	return items

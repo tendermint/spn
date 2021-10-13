@@ -12,11 +12,11 @@ import (
 
 func TestMsgAddVestingOptions(t *testing.T) {
 	var (
-		addr1                          = sample.AccAddress()
-		addr2                          = sample.AccAddress()
-		coordAddr1                     = sample.AccAddress()
-		coordAddr2                     = sample.AccAddress()
-		coordAddrMainnetInitialized    = sample.AccAddress()
+		addr1                          = sample.Address()
+		addr2                          = sample.Address()
+		coordAddr1                     = sample.Address()
+		coordAddr2                     = sample.Address()
+		coordAddrMainnetInitialized    = sample.Address()
 		campaign                       = sample.Campaign(0)
 		campaignInvalidAllocatedShares = sample.Campaign(2)
 		campaignMainnetInitialized     = sample.Campaign(1)
@@ -109,7 +109,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "campaign already in mainnet",
+			name: "campaign with initialized mainnet",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddrMainnetInitialized,
 				CampaignID:     campaignMainnetInitialized.Id,
@@ -117,7 +117,6 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
 			},
-			err: types.ErrMainnetInitialized,
 		},
 		{
 			name: "allocated shares greater them total shares",

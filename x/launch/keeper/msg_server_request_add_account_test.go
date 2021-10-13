@@ -13,10 +13,10 @@ import (
 func TestMsgRequestAddAccount(t *testing.T) {
 	var (
 		invalidChain                = uint64(1000)
-		coordAddr                   = sample.AccAddress()
-		addr1                       = sample.AccAddress()
-		addr2                       = sample.AccAddress()
-		addr3                       = sample.AccAddress()
+		coordAddr                   = sample.Address()
+		addr1                       = sample.Address()
+		addr2                       = sample.Address()
+		addr3                       = sample.Address()
 		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
 		ctx                         = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -44,7 +44,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			name: "invalid chain",
 			msg: types.MsgRequestAddAccount{
 				ChainID: invalidChain,
-				Address: sample.AccAddress(),
+				Address: sample.Address(),
 				Coins:   sample.Coins(),
 			},
 			err: types.ErrChainNotFound,

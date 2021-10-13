@@ -6,6 +6,6 @@ func (m MainnetVestingAccount) GetTotalShares() (Shares, error) {
 	if err != nil {
 		return nil, err
 	}
-	totalShares := IncreaseShares(m.Shares, vestingShares)
+	totalShares := IncreaseShares(m.StartingShares, vestingShares)
 	return totalShares, nil
 }
