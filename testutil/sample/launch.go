@@ -231,10 +231,12 @@ func MsgRevertLaunch(coordinator string, chainID uint64) launch.MsgRevertLaunch 
 
 // MsgTriggerLaunch returns a sample MsgTriggerLaunch
 func MsgTriggerLaunch(coordinator string, chainID uint64) launch.MsgTriggerLaunch {
+	launchTimeRange := int(launch.DefaultMaxLaunchTime - launch.DefaultMinLaunchTime)
+	launchTime := uint64(rand.Intn(launchTimeRange)) + launch.DefaultMinLaunchTime
 	return *launch.NewMsgTriggerLaunch(
 		coordinator,
 		chainID,
-		launch.DefaultMinLaunchTime,
+		launchTime,
 	)
 }
 
@@ -256,43 +258,42 @@ func GenesisHash() string {
 
 // LaunchParams returns a sample of params for the launch module
 func LaunchParams() launch.Params {
-	maxLaunchTime := rand.Intn(int(launch.MaxParametrableLaunchTime))
-	minLaunchTime := rand.Intn(maxLaunchTime)
-
+	maxLaunchTime := launch.DefaultMaxLaunchTime - uint64(rand.Intn(10))
+	minLaunchTime := uint64(rand.Intn(10)) + launch.DefaultMinLaunchTime
 	return launch.Params{
-		MinLaunchTime: uint64(minLaunchTime),
-		MaxLaunchTime: uint64(maxLaunchTime),
+		MinLaunchTime: minLaunchTime,
+		MaxLaunchTime: maxLaunchTime,
 	}
 }
 
 // LaunchGenesisState returns a sample genesis state for the launch module
 func LaunchGenesisState(coordinators ...profile.Coordinator) launch.GenesisState {
-	for len(coordinators) < 2 {
+	for len(coordinators) < 11 {
 		coordinators = append(coordinators, Coordinator(Address()))
 	}
 
-	chains := make([]launch.Chain, 0)
+	chains := make([]launch.Chain, len(coordinators))
 	for i, coord := range coordinators {
-		chains = append(chains, Chain(uint64(i), coord.CoordinatorId))
+		chains[i] = Chain(uint64(i), coord.CoordinatorId)
 	}
 
 	return launch.GenesisState{
 		ChainList:  chains,
 		ChainCount: uint64(len(chains)),
 		GenesisAccountList: []launch.GenesisAccount{
-			GenesisAccount(chains[0].Id, Address()),
-			GenesisAccount(chains[0].Id, Address()),
-			GenesisAccount(chains[1].Id, Address()),
+			GenesisAccount(chains[0].Id, coordinators[2].Address),
+			GenesisAccount(chains[0].Id, coordinators[3].Address),
+			GenesisAccount(chains[1].Id, coordinators[4].Address),
 		},
 		VestingAccountList: []launch.VestingAccount{
-			VestingAccount(chains[0].Id, Address()),
-			VestingAccount(chains[0].Id, Address()),
-			VestingAccount(chains[1].Id, Address()),
+			VestingAccount(chains[0].Id, coordinators[5].Address),
+			VestingAccount(chains[0].Id, coordinators[6].Address),
+			VestingAccount(chains[1].Id, coordinators[7].Address),
 		},
 		GenesisValidatorList: []launch.GenesisValidator{
-			GenesisValidator(chains[0].Id, Address()),
-			GenesisValidator(chains[0].Id, Address()),
-			GenesisValidator(chains[1].Id, Address()),
+			GenesisValidator(chains[0].Id, coordinators[8].Address),
+			GenesisValidator(chains[0].Id, coordinators[9].Address),
+			GenesisValidator(chains[1].Id, coordinators[10].Address),
 		},
 		RequestList: []launch.Request{
 			Request(chains[0].Id),
