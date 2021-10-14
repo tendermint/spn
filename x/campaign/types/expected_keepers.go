@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/tendermint/spn/x/profile/types"
 )
 
 type LaunchKeeper interface {
@@ -32,7 +33,9 @@ type BankKeeper interface {
 }
 
 type ProfileKeeper interface {
+	GetAllCoordinator(ctx sdk.Context) []types.Coordinator
 	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, found bool)
+	GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) (string, bool)
 }
 
 type AccountKeeper interface {

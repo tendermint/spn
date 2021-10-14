@@ -20,13 +20,12 @@ const (
 	weightMsgCreateCoordinator            = 50
 	weightMsgUpdateCoordinatorDescription = 20
 	weightMsgUpdateCoordinatorAddress     = 20
-	weightMsgDeleteCoordinator            = 10
+	weightMsgDeleteCoordinator            = 5
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	profileGenesis := sample.ProfileGenesisState()
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&profileGenesis)
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(types.DefaultGenesis())
 }
 
 // ProposalContents doesn't return any content functions for governance proposals
