@@ -1,6 +1,7 @@
 package campaign
 
 import (
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"math/rand"
 	"time"
 
@@ -22,16 +23,17 @@ type TypedMsg interface {
 }
 
 const (
-	weightMsgCreateCampaign    = 50
+	weightMsgCreateCampaign    = 25
 	weightMsgUpdateTotalSupply = 20
 	weightMsgUpdateTotalShares = 20
 	weightMsgInitializeMainnet = 5
 	weightMsgAddShares         = 20
 	weightMsgAddVestingOptions = 20
-	weightMsgMintVouchers      = 40
+	weightMsgMintVouchers      = 20
 	weightMsgBurnVouchers      = 20
 	weightMsgRedeemVouchers    = 20
 	weightMsgUnredeemVouchers  = 20
+	weightMsgSendVouchers      = 20
 )
 
 var (
@@ -63,7 +65,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateCampaign,
-			SimulateMsgCreateCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+			SimulateMsgCreateCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUpdateTotalSupply,
@@ -91,15 +93,19 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		),
 		simulation.NewWeightedOperation(
 			weightMsgBurnVouchers,
-			SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+			SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRedeemVouchers,
-			SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+			SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUnredeemVouchers,
-			SimulateMsgUnredeemVouchers(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+			SimulateMsgUnredeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgSendVouchers,
+			SimulateMsgSendVouchers(am.accountKeeper, am.bankKeeper),
 		),
 	}
 }
@@ -197,7 +203,7 @@ func getSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 			continue
 		}
 
-		shareNb := r.Int63n(5000)
+		shareNb := r.Int63n(5000) + 1
 		if shareNb > remaining {
 			shareNb = remaining
 		}
@@ -284,7 +290,7 @@ func getAccountWithShares(
 }
 
 // SimulateMsgCreateCampaign simulates a MsgCreateCampaign message
-func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -470,7 +476,7 @@ func SimulateMsgMintVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk typ
 }
 
 // SimulateMsgBurnVouchers simulates a MsgBurnVouchers message
-func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -489,7 +495,7 @@ func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk typ
 }
 
 // SimulateMsgRedeemVouchers simulates a MsgRedeemVouchers message
-func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -512,7 +518,7 @@ func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk t
 }
 
 // SimulateMsgUnredeemVouchers simulates a MsgUnredeemVouchers message
-func SimulateMsgUnredeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgUnredeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -528,5 +534,34 @@ func SimulateMsgUnredeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk
 			shares,
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
+	}
+}
+
+// SimulateMsgSendVouchers simulates a Msg message from the bank module with vouchers
+func SimulateMsgSendVouchers(ak types.AccountKeeper, bk types.BankKeeper) simtypes.Operation {
+	return func(
+		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		_, simAccount, vouchers, found := getAccountWithVouchers(ctx, bk, accs)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, banktypes.TypeMsgSend, "skip send vouchers"), nil, nil
+		}
+
+		// Select a random receiver account
+		accountNb := r.Intn(len(accs))
+		if accs[accountNb].Address.Equals(simAccount.Address) {
+			if accountNb == 0 {
+				accountNb++
+			} else {
+				accountNb--
+			}
+		}
+
+		msg := banktypes.NewMsgSend(
+			simAccount.Address,
+			accs[accountNb].Address,
+			vouchers,
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, vouchers)
 	}
 }

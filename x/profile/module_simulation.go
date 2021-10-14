@@ -47,7 +47,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgUpdateValidatorDescription,
-			SimulateMsgUpdateValidatorDescription(am.accountKeeper, am.bankKeeper, am.keeper),
+			SimulateMsgUpdateValidatorDescription(am.accountKeeper, am.bankKeeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgDeleteValidator,
@@ -73,7 +73,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 }
 
 // SimulateMsgUpdateValidatorDescription simulates a MsgUpdateValidatorDescription message
-func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.BankKeeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
