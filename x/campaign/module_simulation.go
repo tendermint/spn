@@ -467,7 +467,21 @@ func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk t
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRedeemVouchers, "skip redeem vouchers"), nil, nil
+		campID, simAccount, vouchers, found := getAccountWithVouchers(ctx, bk, accs)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRedeemVouchers, "skip redeem vouchers"), nil, nil
+		}
+
+		// Select a random account to redeem vouchers into
+		accountNb := r.Intn(len(accs))
+
+		msg := types.NewMsgRedeemVouchers(
+			simAccount.Address.String(),
+			campID,
+			accs[accountNb].Address.String(),
+			vouchers,
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, vouchers)
 	}
 }
 
