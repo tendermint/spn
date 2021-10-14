@@ -91,22 +91,22 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgMintVouchers,
 			SimulateMsgMintVouchers(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
-		simulation.NewWeightedOperation(
-			weightMsgBurnVouchers,
-			SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper),
-		),
-		simulation.NewWeightedOperation(
-			weightMsgRedeemVouchers,
-			SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper),
-		),
-		simulation.NewWeightedOperation(
-			weightMsgUnredeemVouchers,
-			SimulateMsgUnredeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
-		),
-		simulation.NewWeightedOperation(
-			weightMsgSendVouchers,
-			SimulateMsgSendVouchers(am.accountKeeper, am.bankKeeper),
-		),
+		//simulation.NewWeightedOperation(
+		//	weightMsgBurnVouchers,
+		//	SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper),
+		//),
+		//simulation.NewWeightedOperation(
+		//	weightMsgRedeemVouchers,
+		//	SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper),
+		//),
+		//simulation.NewWeightedOperation(
+		//	weightMsgUnredeemVouchers,
+		//	SimulateMsgUnredeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
+		//),
+		//simulation.NewWeightedOperation(
+		//	weightMsgSendVouchers,
+		//	SimulateMsgSendVouchers(am.accountKeeper, am.bankKeeper),
+		//),
 	}
 }
 
@@ -203,7 +203,7 @@ func getSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 			continue
 		}
 
-		shareNb := r.Int63n(5000) + 1
+		shareNb := r.Int63n(5000) + 10
 		if shareNb > remaining {
 			shareNb = remaining
 		}
@@ -233,6 +233,12 @@ func getAccountWithVouchers(
 		if err != nil {
 			return false
 		}
+
+		// Look for accounts with at least 10 vouchers
+		if coin.Amount.Int64() < 10 {
+			return false
+		}
+
 		found = true
 		accountAddr = addr
 		return true
@@ -247,6 +253,11 @@ func getAccountWithVouchers(
 	bk.IterateAccountBalances(ctx, accountAddr, func(coin sdk.Coin) bool {
 		coinCampID, err := types.VoucherCampaign(coin.Denom)
 		if err == nil && coinCampID == campID {
+
+			// Get a portion of the balance
+			if coin.Amount.Int64() > 1 {
+				coin.Amount = coin.Amount.Quo(sdk.NewInt(2))
+			}
 			coins = append(coins, coin)
 		}
 		return false
