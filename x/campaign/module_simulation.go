@@ -36,7 +36,7 @@ const (
 
 var (
 	// shareDenoms are the denom used for the shares in the simulation
-	shareDenoms = []string{"s/foo", "s/bar", "s/foobar"}
+	shareDenoms = []string{"s/foo", "s/bar", "s/toto"}
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -113,6 +113,7 @@ func deliverSimTx(
 	bk types.BankKeeper,
 	simAccount simtypes.Account,
 	msg TypedMsg,
+	coinsSpent sdk.Coins,
 ) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 	txCtx := simulation.OperationInput{
 		R:               r,
@@ -126,7 +127,7 @@ func deliverSimTx(
 		AccountKeeper:   ak,
 		Bankkeeper:      bk,
 		ModuleName:      types.ModuleName,
-		CoinsSpentInMsg: sdk.NewCoins(),
+		CoinsSpentInMsg: coinsSpent,
 	}
 	return simulation.GenAndDeliverTxWithRandFees(txCtx)
 }
@@ -224,11 +225,11 @@ func getAccountWithVouchers(
 	bk.IterateAllBalances(ctx, func(addr sdk.AccAddress, coin sdk.Coin) bool {
 		campID, err = types.VoucherCampaign(coin.Denom)
 		if err != nil {
-			return true
+			return false
 		}
 		found = true
 		accountAddr = addr
-		return false
+		return true
 	})
 
 	// No account has vouchers
@@ -242,7 +243,7 @@ func getAccountWithVouchers(
 		if err == nil && coinCampID == campID {
 			coins = append(coins, coin)
 		}
-		return true
+		return false
 	})
 	coins = coins.Sort()
 
@@ -274,7 +275,7 @@ func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk t
 			sample.Coins(),
 			dynamicShares,
 		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }
 
@@ -293,7 +294,7 @@ func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, p
 			campID,
 			sample.Coins(),
 		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }
 
@@ -336,7 +337,7 @@ func SimulateMsgUpdateTotalShares(ak types.AccountKeeper, bk types.BankKeeper, p
 			campID,
 			types.Shares(newTotalShares),
 		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }
 
@@ -357,7 +358,7 @@ func SimulateMsgInitializeMainnet(ak types.AccountKeeper, bk types.BankKeeper, p
 			sample.String(32),
 			sample.GenesisChainID(),
 		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }
 
@@ -385,7 +386,7 @@ func SimulateMsgAddShares(ak types.AccountKeeper, bk types.BankKeeper, pk types.
 			accs[accountNb].Address.String(),
 			shares,
 		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }
 
@@ -414,7 +415,7 @@ func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, p
 			types.EmptyShares(),
 			*types.NewShareDelayedVesting(shares, time.Now().Unix()),
 		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }
 
@@ -438,7 +439,7 @@ func SimulateMsgMintVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk typ
 			campID,
 			shares,
 		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }
 
@@ -457,7 +458,7 @@ func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk typ
 			campID,
 			vouchers,
 		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, vouchers)
 	}
 }
 
