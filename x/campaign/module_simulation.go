@@ -169,7 +169,7 @@ func getCoordSimAccountWithCampaignID(
 	return coord, 0, false
 }
 
-// getSharesFromCampaign returns a small portion of shares to be minted as vouchers or added to an accounts
+// getSharesFromCampaign returns a small portion of shares that can be minted as vouchers or added to an accounts
 func getSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campID uint64) (types.Shares, bool) {
 	camp, found := k.GetCampaign(ctx, campID)
 	if !found {
@@ -255,6 +255,32 @@ func getAccountWithVouchers(
 		}
 	}
 	return
+}
+
+// getAccountWithShares returns an account that contains allocated shares with its associated campaign
+func getAccountWithShares(
+	r *rand.Rand,
+	ctx sdk.Context,
+	k keeper.Keeper,
+	accs []simtypes.Account,
+) (uint64, simtypes.Account, types.Shares, bool) {
+	mainnetAccounts := k.GetAllMainnetAccount(ctx)
+	nb := len(mainnetAccounts)
+
+	// No account have been created yet
+	if nb == 0 {
+		return 0, simtypes.Account{}, nil, false
+	}
+
+	mainnetAccount := mainnetAccounts[r.Intn(nb)]
+
+	// Find the associated sim acocunt
+	for _, acc := range accs {
+		if acc.Address.String() == mainnetAccount.Address {
+			return mainnetAccount.CampaignID, acc, mainnetAccount.Shares, true
+		}
+	}
+	return 0, simtypes.Account{}, nil, false
 }
 
 // SimulateMsgCreateCampaign simulates a MsgCreateCampaign message
@@ -490,6 +516,17 @@ func SimulateMsgUnredeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUnredeemVouchers, "skip unredeem vouchers"), nil, nil
+		// Find a random account from a random campaign that contains shares
+		campID, simAccount, shares, found := getAccountWithShares(r, ctx, k, accs)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUnredeemVouchers, "skip unredeem vouchers"), nil, nil
+		}
+
+		msg := types.NewMsgUnredeemVouchers(
+			simAccount.Address.String(),
+			campID,
+			shares,
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }
