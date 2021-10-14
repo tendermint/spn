@@ -199,6 +199,15 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	}
 }
 
+// isLaunchTriggeredChain check if chain is launch triggered
+func isLaunchTriggeredChain(ctx sdk.Context, k keeper.Keeper, chainID uint64) bool {
+	chain, found := k.GetChain(ctx, chainID)
+	if !found {
+		return false
+	}
+	return chain.LaunchTriggered
+}
+
 // findChain find a chain
 func findChain(ctx sdk.Context, k keeper.Keeper, launchTriggered bool) (types.Chain, bool) {
 	found := false
@@ -247,16 +256,18 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Check if the coordinator address is already in the store
-		coordinators := k.GetProfileKeeper().GetAllCoordinator(ctx)
-		if len(coordinators) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateChain, "coordinator not found"), nil, nil
+		var found bool
+		var simAccount simtypes.Account
+		for _, acc := range accs {
+			_, found = k.GetProfileKeeper().CoordinatorIDFromAddress(ctx, acc.Address.String())
+			if found {
+				simAccount = acc
+				break
+			}
 		}
-		coordinatorsNb := r.Intn(len(coordinators))
-		coordinator := coordinators[coordinatorsNb]
-
-		simAccount, err := findAccount(accs, coordinator.Address)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateChain, err.Error()), nil, err
+		if !found {
+			// No message if no coordinator
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateChain, "skip create a new chain"), nil, nil
 		}
 		msg := sample.MsgCreateChain(
 			simAccount.Address.String(),
@@ -367,11 +378,19 @@ func SimulateMsgRequestRemoveGenesisAccount(ak types.AccountKeeper, bk types.Ban
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a genesis account
+		found := false
+		var genAcc types.GenesisAccount
 		genAccs := k.GetAllGenesisAccount(ctx)
-		if len(genAccs) == 0 {
+		for _, acc := range genAccs {
+			if !isLaunchTriggeredChain(ctx, k, acc.ChainID) {
+				genAcc = acc
+				found = true
+				break
+			}
+		}
+		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, "genesis account not found"), nil, nil
 		}
-		genAcc := genAccs[len(genAccs)-1]
 
 		// Find coordinator account
 		simAccount, err := findAccount(accs, genAcc.Address)
@@ -443,11 +462,19 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a validator
+		found := false
+		var valAcc types.GenesisValidator
 		valAccs := k.GetAllGenesisValidator(ctx)
-		if len(valAccs) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "validator not found"), nil, nil
+		for _, acc := range valAccs {
+			if !isLaunchTriggeredChain(ctx, k, acc.ChainID) {
+				valAcc = acc
+				found = true
+				break
+			}
 		}
-		valAcc := valAccs[len(valAccs)-1]
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "genesis account not found"), nil, nil
+		}
 
 		// Find coordinator account
 		simAccount, err := findAccount(accs, valAcc.Address)
@@ -520,11 +547,19 @@ func SimulateMsgRequestRemoveVestingAccount(ak types.AccountKeeper, bk types.Ban
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a vesting account
+		found := false
 		vestAccs := k.GetAllVestingAccount(ctx)
-		if len(vestAccs) == 0 {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, "vesting account not found"), nil, nil
+		var vestAcc types.VestingAccount
+		for _, acc := range vestAccs {
+			if !isLaunchTriggeredChain(ctx, k, acc.ChainID) {
+				vestAcc = acc
+				found = true
+				break
+			}
 		}
-		vestAcc := vestAccs[len(vestAccs)-1]
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, "genesis account not found"), nil, nil
+		}
 
 		// Find coordinator account
 		simAccount, err := findAccount(accs, vestAcc.Address)
