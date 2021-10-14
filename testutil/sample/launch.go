@@ -8,7 +8,6 @@ import (
 
 	"github.com/tendermint/spn/pkg/chainid"
 	launch "github.com/tendermint/spn/x/launch/types"
-	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 // GenesisChainID returns a sample chain id
@@ -267,46 +266,43 @@ func LaunchParams() launch.Params {
 }
 
 // LaunchGenesisState returns a sample genesis state for the launch module
-func LaunchGenesisState(coordinators ...profile.Coordinator) launch.GenesisState {
-	for len(coordinators) < 11 {
-		coordinators = append(coordinators, Coordinator(Address()))
-	}
-
-	chainsLength := 3
-	chains := make([]launch.Chain, chainsLength)
-	for i := 0; i < chainsLength; i++ {
-		chains[i] = Chain(uint64(i), coordinators[i].CoordinatorId)
+func LaunchGenesisState(addresses ...string) launch.GenesisState {
+	for len(addresses) < 11 {
+		addresses = append(addresses, Address())
 	}
 
 	return launch.GenesisState{
-		ChainList:  chains,
-		ChainCount: uint64(len(chains)),
+		ChainList: []launch.Chain{
+			Chain(0, 0),
+			Chain(1, 1),
+		},
+		ChainCount: 2,
 		GenesisAccountList: []launch.GenesisAccount{
-			GenesisAccount(chains[0].Id, coordinators[2].Address),
-			GenesisAccount(chains[0].Id, coordinators[3].Address),
-			GenesisAccount(chains[1].Id, coordinators[4].Address),
+			GenesisAccount(0, addresses[2]),
+			GenesisAccount(0, addresses[3]),
+			GenesisAccount(1, addresses[4]),
 		},
 		VestingAccountList: []launch.VestingAccount{
-			VestingAccount(chains[0].Id, coordinators[5].Address),
-			VestingAccount(chains[0].Id, coordinators[6].Address),
-			VestingAccount(chains[1].Id, coordinators[7].Address),
+			VestingAccount(0, addresses[6]),
+			VestingAccount(0, addresses[5]),
+			VestingAccount(1, addresses[7]),
 		},
 		GenesisValidatorList: []launch.GenesisValidator{
-			GenesisValidator(chains[0].Id, coordinators[8].Address),
-			GenesisValidator(chains[0].Id, coordinators[9].Address),
-			GenesisValidator(chains[1].Id, coordinators[10].Address),
+			GenesisValidator(0, addresses[8]),
+			GenesisValidator(0, addresses[9]),
+			GenesisValidator(1, addresses[10]),
 		},
 		RequestList: []launch.Request{
-			Request(chains[0].Id),
-			Request(chains[1].Id),
+			Request(0),
+			Request(1),
 		},
 		RequestCountList: []launch.RequestCount{
 			{
-				ChainID: chains[0].Id,
+				ChainID: 0,
 				Count:   1,
 			},
 			{
-				ChainID: chains[1].Id,
+				ChainID: 1,
 				Count:   2,
 			},
 		},

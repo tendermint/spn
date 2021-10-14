@@ -47,8 +47,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 	}
-	profileGenesis := sample.ProfileGenesisState(accs...)
-	launchGenesis := sample.LaunchGenesisState(profileGenesis.CoordinatorList...)
+	launchGenesis := sample.LaunchGenesisState(accs...)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&launchGenesis)
 }
 
@@ -252,8 +251,8 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 		if len(coordinators) == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateChain, "coordinator not found"), nil, nil
 		}
-		chainNb := r.Intn(len(coordinators))
-		coordinator := coordinators[chainNb]
+		coordinatorsNb := r.Intn(len(coordinators))
+		coordinator := coordinators[coordinatorsNb]
 
 		simAccount, err := findAccount(accs, coordinator.Address)
 		if err != nil {
