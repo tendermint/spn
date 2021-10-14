@@ -25,7 +25,7 @@ const (
 	defaultWeightMsgRequestAddValidator         int = 50
 	defaultWeightMsgRequestRemoveValidator      int = 25
 	defaultWeightMsgTriggerLaunch               int = 15
-	defaultWeightMsgRevertLaunch                int = 15
+	defaultWeightMsgRevertLaunch                int = 10
 	defaultWeightMsgSettleRequest               int = 50
 
 	opWeightMsgCreateChain                 = "op_weight_msg_create_chain"
@@ -188,10 +188,10 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgTriggerLaunch,
 			SimulateMsgTriggerLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
-		simulation.NewWeightedOperation(
-			weightMsgRevertLaunch,
-			SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
-		),
+		//simulation.NewWeightedOperation(
+		//	weightMsgRevertLaunch,
+		//	SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+		//),
 		simulation.NewWeightedOperation(
 			weightMsgSettleRequest,
 			SimulateMsgSettleRequest(am.accountKeeper, am.bankKeeper, am.keeper),

@@ -109,8 +109,8 @@ func GenesisAccountContent(chainID uint64, address string) launch.RequestContent
 }
 
 // Request returns a sample Request
-func Request(chainID uint64) launch.Request {
-	content := GenesisAccountContent(chainID, Address())
+func Request(chainID uint64, address string) launch.Request {
+	content := GenesisAccountContent(chainID, address)
 	return RequestWithContent(chainID, content)
 }
 
@@ -270,7 +270,6 @@ func LaunchGenesisState(addresses ...string) launch.GenesisState {
 	for len(addresses) < 11 {
 		addresses = append(addresses, Address())
 	}
-
 	return launch.GenesisState{
 		ChainList: []launch.Chain{
 			Chain(0, 0),
@@ -278,23 +277,23 @@ func LaunchGenesisState(addresses ...string) launch.GenesisState {
 		},
 		ChainCount: 2,
 		GenesisAccountList: []launch.GenesisAccount{
-			GenesisAccount(0, addresses[2]),
-			GenesisAccount(0, addresses[3]),
-			GenesisAccount(1, addresses[4]),
+			GenesisAccount(0, addresses[0]),
+			GenesisAccount(0, addresses[1]),
+			GenesisAccount(1, addresses[2]),
 		},
 		VestingAccountList: []launch.VestingAccount{
-			VestingAccount(0, addresses[6]),
-			VestingAccount(0, addresses[5]),
-			VestingAccount(1, addresses[7]),
+			VestingAccount(0, addresses[3]),
+			VestingAccount(0, addresses[4]),
+			VestingAccount(1, addresses[5]),
 		},
 		GenesisValidatorList: []launch.GenesisValidator{
-			GenesisValidator(0, addresses[8]),
-			GenesisValidator(0, addresses[9]),
-			GenesisValidator(1, addresses[10]),
+			GenesisValidator(0, addresses[6]),
+			GenesisValidator(0, addresses[7]),
+			GenesisValidator(1, addresses[8]),
 		},
 		RequestList: []launch.Request{
-			Request(0),
-			Request(1),
+			Request(0, addresses[9]),
+			Request(1, addresses[10]),
 		},
 		RequestCountList: []launch.RequestCount{
 			{
