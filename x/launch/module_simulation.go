@@ -188,14 +188,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgTriggerLaunch,
 			SimulateMsgTriggerLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
-		//simulation.NewWeightedOperation(
-		//	weightMsgRevertLaunch,
-		//	SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
-		//),
 		simulation.NewWeightedOperation(
 			weightMsgSettleRequest,
 			SimulateMsgSettleRequest(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
+		// simulation.NewWeightedOperation(weightMsgRevertLaunch, SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper)),
 	}
 }
 

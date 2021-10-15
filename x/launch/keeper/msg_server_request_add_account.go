@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -34,12 +33,6 @@ func (k msgServer) RequestAddAccount(
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
-		chains := k.GetAllChain(ctx)
-		fmt.Println(chains)
-		coords := k.profileKeeper.GetAllCoordinator(ctx)
-		fmt.Println(coords)
-		coordas := k.profileKeeper.GetAllCoordinatorByAddress(ctx)
-		fmt.Println(coordas)
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
 			"the chain %d coordinator has been deleted", chain.Id)
 	}
