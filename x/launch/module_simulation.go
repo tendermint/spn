@@ -298,21 +298,29 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a random chain
+		// Select a chain with a valid coordinator account
+		var (
+			err        error
+			found      bool
+			chain      uint64
+			simAccount simtypes.Account
+		)
 		chains := k.GetAllChain(ctx)
-		if len(chains) == 0 {
+		for _, c := range chains {
+			simAccount, err = findChainCoordinatorAccount(ctx, k, accs, c.Id)
+			if err != nil {
+				continue
+			}
+			found = true
+			chain = c.Id
+		}
+		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, "chain not found"), nil, nil
 		}
-		chainNb := r.Intn(len(chains))
-		chain := chains[chainNb]
 
-		simAccount, err := findChainCoordinatorAccount(ctx, k, accs, chain.Id)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, err.Error()), nil, err
-		}
 		msg := sample.MsgEditChain(
 			simAccount.Address.String(),
-			chain.Id,
+			chain,
 			true,
 			true,
 			true,

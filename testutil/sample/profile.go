@@ -44,7 +44,7 @@ func CoordinatorDescription() profile.CoordinatorDescription {
 
 // ProfileGenesisState returns a sample genesis state for the profile module
 func ProfileGenesisState(addresses ...string) profile.GenesisState {
-	for len(addresses) < 5 {
+	for len(addresses) < 7 {
 		addresses = append(addresses, Address())
 	}
 	return profile.GenesisState{
@@ -64,6 +64,16 @@ func ProfileGenesisState(addresses ...string) profile.GenesisState {
 				Address:       addresses[2],
 				Description:   CoordinatorDescription(),
 			},
+			{
+				CoordinatorId: 3,
+				Address:       addresses[3],
+				Description:   CoordinatorDescription(),
+			},
+			{
+				CoordinatorId: 4,
+				Address:       addresses[4],
+				Description:   CoordinatorDescription(),
+			},
 		},
 		CoordinatorByAddressList: []profile.CoordinatorByAddress{
 			{
@@ -78,15 +88,23 @@ func ProfileGenesisState(addresses ...string) profile.GenesisState {
 				Address:       addresses[2],
 				CoordinatorId: 2,
 			},
+			{
+				Address:       addresses[3],
+				CoordinatorId: 3,
+			},
+			{
+				Address:       addresses[4],
+				CoordinatorId: 4,
+			},
 		},
-		CoordinatorCount: 3,
+		CoordinatorCount: 4,
 		ValidatorList: []profile.Validator{
 			{
-				Address:     addresses[3],
+				Address:     addresses[5],
 				Description: ValidatorDescription(String(10)),
 			},
 			{
-				Address:     addresses[4],
+				Address:     addresses[6],
 				Description: ValidatorDescription(String(10)),
 			},
 		},
