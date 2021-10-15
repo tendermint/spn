@@ -19,11 +19,11 @@ const (
 	defaultWeightMsgCreateChain                 int = 50
 	defaultWeightMsgEditChain                   int = 10
 	defaultWeightMsgRequestAddGenesisAccount    int = 50
-	defaultWeightMsgRequestRemoveGenesisAccount int = 20
+	defaultWeightMsgRequestRemoveGenesisAccount int = 15
 	defaultWeightMsgRequestAddVestingAccount    int = 50
-	defaultWeightMsgRequestRemoveVestingAccount int = 20
+	defaultWeightMsgRequestRemoveVestingAccount int = 15
 	defaultWeightMsgRequestAddValidator         int = 50
-	defaultWeightMsgRequestRemoveValidator      int = 20
+	defaultWeightMsgRequestRemoveValidator      int = 15
 	defaultWeightMsgTriggerLaunch               int = 15
 	defaultWeightMsgRevertLaunch                int = 10
 	defaultWeightMsgSettleRequest               int = 50
@@ -671,7 +671,7 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, err.Error()), nil, err
 		}
 
-		approve := r.Intn(3) == 2
+		approve := r.Intn(4) == 2
 		msg := sample.MsgSettleRequest(
 			simAccount.Address.String(),
 			request.ChainID,
