@@ -24,9 +24,9 @@ const (
 	defaultWeightMsgRequestRemoveVestingAccount int = 25
 	defaultWeightMsgRequestAddValidator         int = 50
 	defaultWeightMsgRequestRemoveValidator      int = 25
-	defaultWeightMsgTriggerLaunch               int = 15
-	defaultWeightMsgRevertLaunch                int = 10
 	defaultWeightMsgSettleRequest               int = 50
+	defaultWeightMsgTriggerLaunch               int = 15
+	defaultWeightMsgRevertLaunch                int = 0
 
 	opWeightMsgCreateChain                 = "op_weight_msg_create_chain"
 	opWeightMsgEditChain                   = "op_weight_msg_edit_chain"
@@ -474,25 +474,29 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a validator
+		var (
+			valAcc     types.GenesisValidator
+			simAccount simtypes.Account
+			err        error
+		)
 		found := false
-		var valAcc types.GenesisValidator
 		valAccs := k.GetAllGenesisValidator(ctx)
 		for _, acc := range valAccs {
-			if !isLaunchTriggeredChain(ctx, k, acc.ChainID) {
-				valAcc = acc
-				found = true
-				break
+			if isLaunchTriggeredChain(ctx, k, acc.ChainID) {
+				continue
 			}
+			// get coordinator account for removal
+			simAccount, err = findChainCoordinatorAccount(ctx, k, accs, acc.ChainID)
+			if err != nil {
+				continue
+			}
+			found = true
 		}
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "genesis account not found"), nil, nil
 		}
 
 		// Find coordinator account
-		simAccount, err := findAccount(accs, valAcc.Address)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, err.Error()), nil, err
-		}
 		msg := sample.MsgRequestRemoveValidator(
 			valAcc.Address,
 			valAcc.Address,
@@ -559,25 +563,30 @@ func SimulateMsgRequestRemoveVestingAccount(ak types.AccountKeeper, bk types.Ban
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a vesting account
+		var (
+			vestAcc    types.VestingAccount
+			simAccount simtypes.Account
+			err        error
+		)
 		found := false
 		vestAccs := k.GetAllVestingAccount(ctx)
-		var vestAcc types.VestingAccount
 		for _, acc := range vestAccs {
-			if !isLaunchTriggeredChain(ctx, k, acc.ChainID) {
-				vestAcc = acc
-				found = true
-				break
+			if isLaunchTriggeredChain(ctx, k, acc.ChainID) {
+				continue
 			}
+			// get coordinator account for removal
+			simAccount, err = findChainCoordinatorAccount(ctx, k, accs, acc.ChainID)
+			if err != nil {
+				continue
+			}
+			vestAcc = acc
+			found = true
 		}
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, "genesis account not found"), nil, nil
 		}
 
 		// Find coordinator account
-		simAccount, err := findAccount(accs, vestAcc.Address)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, err.Error()), nil, err
-		}
 		msg := sample.MsgRequestRemoveAccount(
 			vestAcc.Address,
 			vestAcc.Address,
