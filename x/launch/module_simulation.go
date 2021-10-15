@@ -19,11 +19,11 @@ const (
 	defaultWeightMsgCreateChain                 int = 50
 	defaultWeightMsgEditChain                   int = 10
 	defaultWeightMsgRequestAddGenesisAccount    int = 50
-	defaultWeightMsgRequestRemoveGenesisAccount int = 15
+	defaultWeightMsgRequestRemoveGenesisAccount int = 25
 	defaultWeightMsgRequestAddVestingAccount    int = 50
-	defaultWeightMsgRequestRemoveVestingAccount int = 15
+	defaultWeightMsgRequestRemoveVestingAccount int = 25
 	defaultWeightMsgRequestAddValidator         int = 50
-	defaultWeightMsgRequestRemoveValidator      int = 15
+	defaultWeightMsgRequestRemoveValidator      int = 25
 	defaultWeightMsgTriggerLaunch               int = 15
 	defaultWeightMsgRevertLaunch                int = 10
 	defaultWeightMsgSettleRequest               int = 50
@@ -657,6 +657,23 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			_, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 			if !found {
 				continue
+			}
+			switch content := request.Content.Content.(type) {
+			case *types.RequestContent_ValidatorRemoval:
+				// if is validator removal, check if the validator exist
+				if _, found := k.GetGenesisValidator(
+					ctx,
+					chain.Id,
+					content.ValidatorRemoval.ValAddress,
+				); !found {
+					continue
+				}
+			case *types.RequestContent_AccountRemoval:
+				// if is account removal, check if account exist
+				found, err := keeper.CheckAccount(ctx, k, chain.Id, content.AccountRemoval.Address)
+				if err != nil || !found {
+					continue
+				}
 			}
 			chainNotFound = false
 		}
