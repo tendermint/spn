@@ -19,11 +19,11 @@ const (
 	defaultWeightMsgCreateChain                 int = 50
 	defaultWeightMsgEditChain                   int = 10
 	defaultWeightMsgRequestAddGenesisAccount    int = 50
-	defaultWeightMsgRequestRemoveGenesisAccount int = 25
+	defaultWeightMsgRequestRemoveGenesisAccount int = 20
 	defaultWeightMsgRequestAddVestingAccount    int = 50
-	defaultWeightMsgRequestRemoveVestingAccount int = 25
+	defaultWeightMsgRequestRemoveVestingAccount int = 20
 	defaultWeightMsgRequestAddValidator         int = 50
-	defaultWeightMsgRequestRemoveValidator      int = 25
+	defaultWeightMsgRequestRemoveValidator      int = 20
 	defaultWeightMsgTriggerLaunch               int = 15
 	defaultWeightMsgRevertLaunch                int = 10
 	defaultWeightMsgSettleRequest               int = 50
@@ -192,7 +192,10 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgSettleRequest,
 			SimulateMsgSettleRequest(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
-		// simulation.NewWeightedOperation(weightMsgRevertLaunch, SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper)),
+		simulation.NewWeightedOperation(
+			weightMsgRevertLaunch,
+			SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+		),
 	}
 }
 
@@ -639,12 +642,14 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		// Select a request without launch triggered
-		chainFound := false
+		// Select a random request without launch triggered
 		requests := k.GetAllRequest(ctx)
 		var request types.Request
-		for _, r := range requests {
-			chain, found := k.GetChain(ctx, r.ChainID)
+		chainNotFound := true
+		for chainNotFound {
+			requestNb := r.Intn(len(requests))
+			request = requests[requestNb]
+			chain, found := k.GetChain(ctx, request.ChainID)
 			if !found || chain.LaunchTriggered {
 				continue
 			}
@@ -653,10 +658,9 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			if !found {
 				continue
 			}
-			request = r
-			chainFound = true
+			chainNotFound = false
 		}
-		if !chainFound {
+		if chainNotFound {
 			// No message if no non-triggered chain
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, "request for non-triggered chain not found"), nil, nil
 		}
@@ -666,7 +670,8 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, err.Error()), nil, err
 		}
-		approve := r.Intn(2) == 1
+
+		approve := r.Intn(3) == 2
 		msg := sample.MsgSettleRequest(
 			simAccount.Address.String(),
 			request.ChainID,
@@ -701,6 +706,11 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 		if !found {
 			// No message if no triggered chain
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, "triggered chain not found"), nil, nil
+		}
+
+		// Wait for a specific delay once the chain is launched
+		if ctx.BlockTime().Unix() < chain.LaunchTimestamp+types.RevertDelay {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, "invalid chain launch timestamp"), nil, nil
 		}
 
 		// Find coordinator account
