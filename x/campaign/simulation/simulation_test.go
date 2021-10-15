@@ -193,3 +193,32 @@ func TestGetSharesFromCampaign(t *testing.T) {
 	require.True(t, found)
 	require.NotEqualValues(t, campaigntypes.EmptyShares(), shares)
 }
+
+func TestGetAccountWithVouchers(t *testing.T) {
+	_, _, _, bk, ctx := testkeeper.AllKeepers(t)
+	r := sample.Rand()
+	accs := sample.SimAccounts()
+
+	// No account
+	_, _, _, found := simcampaign.GetAccountWithVouchers(ctx, bk, accs)
+	require.False(t, found)
+
+	mint := func (addr sdk.AccAddress, coins sdk.Coins) {
+		require.NoError(t, bk.MintCoins(ctx, campaigntypes.ModuleName, coins))
+		require.NoError(t, bk.SendCoinsFromModuleToAccount(ctx, campaigntypes.ModuleName, addr, coins))
+	}
+
+	// Vouchers in an account not part of accs
+	mint(sample.AccAddress(), sample.Vouchers(10))
+	_, _, _, found = simcampaign.GetAccountWithVouchers(ctx, bk, accs)
+	require.False(t, found)
+
+	// Vouchers from an account
+	acc, _ := simtypes.RandomAcc(r, accs)
+	mint(acc.Address, sample.Vouchers(10))
+	campID, acc, coins, found := simcampaign.GetAccountWithVouchers(ctx, bk, accs)
+	require.True(t, found)
+	require.EqualValues(t, 10, campID)
+	require.False(t, coins.Empty())
+	require.Contains(t, accs, acc)
+}
