@@ -22,8 +22,8 @@ type TypedMsg interface {
 }
 
 var (
-	// shareDenoms are the denom used for the shares in the simulation
-	shareDenoms = []string{"s/foo", "s/bar", "s/toto"}
+	// ShareDenoms are the denom used for the shares in the simulation
+	ShareDenoms = []string{"s/foo", "s/bar", "s/toto"}
 )
 
 // deliverSimTx delivers the tx for simulation from the provided message
@@ -146,7 +146,7 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 	}
 
 	var shares sdk.Coins
-	for _, share := range shareDenoms {
+	for _, share := range ShareDenoms {
 		total := totalShares[share]
 		if total == 0 {
 			total = types.DefaultTotalShareNumber
@@ -324,7 +324,7 @@ func SimulateMsgUpdateTotalShares(ak types.AccountKeeper, bk types.BankKeeper, p
 
 		// Defined the value to update
 		var newTotalShares sdk.Coins
-		for _, share := range shareDenoms {
+		for _, share := range ShareDenoms {
 			currentTotal := totalShares[share]
 			if currentTotal == 0 {
 				currentTotal = types.DefaultTotalShareNumber

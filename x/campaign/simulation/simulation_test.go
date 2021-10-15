@@ -1,6 +1,7 @@
 package simulation_test
 
 import (
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
@@ -152,4 +153,43 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 	require.EqualValues(t, id, camp.Id)
 	require.False(t, camp.MainnetInitialized)
 	require.True(t, camp.DynamicShares)
+}
+
+func TestGetSharesFromCampaign(t *testing.T) {
+	ck, ctx := testkeeper.Campaign(t)
+	r := sample.Rand()
+
+	// No campaign
+	_, found := simcampaign.GetSharesFromCampaign(r, ctx, *ck, 0)
+	require.False(t, found)
+
+	// No shares remains for the campaign
+	camp := campaigntypes.NewCampaign(
+		0,
+		sample.AlphaString(5),
+		0,
+		sample.Coins(),
+		false,
+	)
+	shares, err := campaigntypes.NewShares(fmt.Sprintf(
+		"%[1]dfoo,%[1]dbar,%[1]dtoto",
+		campaigntypes.DefaultTotalShareNumber,
+		))
+	require.NoError(t, err)
+	camp.AllocatedShares = shares
+	campSharesReached := ck.AppendCampaign(ctx, camp)
+	_, found = simcampaign.GetSharesFromCampaign(r, ctx, *ck, campSharesReached)
+	require.False(t, found)
+
+	// Campaign with available shares
+	campID := ck.AppendCampaign(ctx, campaigntypes.NewCampaign(
+		1,
+		sample.AlphaString(5),
+		0,
+		sample.Coins(),
+		false,
+	))
+	shares, found = simcampaign.GetSharesFromCampaign(r, ctx, *ck, campID)
+	require.True(t, found)
+	require.NotEqualValues(t, campaigntypes.EmptyShares(), shares)
 }
