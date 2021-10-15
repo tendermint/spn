@@ -315,8 +315,8 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			if err != nil {
 				continue
 			}
-			found = true
 			chain = c.Id
+			found = true
 		}
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, "chain not found"), nil, nil
@@ -390,27 +390,31 @@ func SimulateMsgRequestRemoveGenesisAccount(ak types.AccountKeeper, bk types.Ban
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a genesis account
+		var (
+			simAccount simtypes.Account
+			genAcc     types.GenesisAccount
+			err        error
+		)
 		found := false
-		var genAcc types.GenesisAccount
 		genAccs := k.GetAllGenesisAccount(ctx)
 		for _, acc := range genAccs {
-			if !isLaunchTriggeredChain(ctx, k, acc.ChainID) {
-				genAcc = acc
-				found = true
-				break
+			if isLaunchTriggeredChain(ctx, k, acc.ChainID) {
+				continue
 			}
+			// get coordinator account for removal
+			simAccount, err = findChainCoordinatorAccount(ctx, k, accs, acc.ChainID)
+			if err != nil {
+				continue
+			}
+			genAcc = acc
+			found = true
 		}
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, "genesis account not found"), nil, nil
 		}
 
-		// Find coordinator account
-		simAccount, err := findAccount(accs, genAcc.Address)
-		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveGenesisAccount, err.Error()), nil, err
-		}
 		msg := sample.MsgRequestRemoveAccount(
-			genAcc.Address,
+			simAccount.Address.String(),
 			genAcc.Address,
 			genAcc.ChainID,
 		)
@@ -490,15 +494,15 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 			if err != nil {
 				continue
 			}
+			valAcc = acc
 			found = true
 		}
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "genesis account not found"), nil, nil
 		}
 
-		// Find coordinator account
 		msg := sample.MsgRequestRemoveValidator(
-			valAcc.Address,
+			simAccount.Address.String(),
 			valAcc.Address,
 			valAcc.ChainID,
 		)
@@ -586,9 +590,8 @@ func SimulateMsgRequestRemoveVestingAccount(ak types.AccountKeeper, bk types.Ban
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveVestingAccount, "genesis account not found"), nil, nil
 		}
 
-		// Find coordinator account
 		msg := sample.MsgRequestRemoveAccount(
-			vestAcc.Address,
+			simAccount.Address.String(),
 			vestAcc.Address,
 			vestAcc.ChainID,
 		)
