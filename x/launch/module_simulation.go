@@ -211,11 +211,15 @@ func findChain(ctx sdk.Context, k keeper.Keeper, launchTriggered bool) (types.Ch
 	chains := k.GetAllChain(ctx)
 	var chain types.Chain
 	for _, c := range chains {
-		if c.LaunchTriggered == launchTriggered {
-			chain = c
-			found = true
-			break
+		if c.LaunchTriggered != launchTriggered {
+			continue
 		}
+		// check if the coordinator is still in the store
+		_, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+		if !found {
+			continue
+		}
+		chain = c
 	}
 	return chain, found
 }
@@ -641,11 +645,16 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		var request types.Request
 		for _, r := range requests {
 			chain, found := k.GetChain(ctx, r.ChainID)
-			if found && !chain.LaunchTriggered {
-				request = r
-				chainFound = true
-				break
+			if !found || chain.LaunchTriggered {
+				continue
 			}
+			// check if the coordinator is still in the store
+			_, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+			if !found {
+				continue
+			}
+			request = r
+			chainFound = true
 		}
 		if !chainFound {
 			// No message if no non-triggered chain
