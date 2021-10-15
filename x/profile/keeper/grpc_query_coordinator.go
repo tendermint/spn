@@ -45,15 +45,10 @@ func (k Keeper) Coordinator(c context.Context, req *types.QueryGetCoordinatorReq
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var coordinator types.Coordinator
 	ctx := sdk.UnwrapSDKContext(c)
-
-	if !k.HasCoordinator(ctx, req.Id) {
+	coordinator, found := k.GetCoordinator(ctx, req.Id)
+	if !found {
 		return nil, sdkerrors.ErrKeyNotFound
 	}
-
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
-	k.cdc.MustUnmarshal(store.Get(GetCoordinatorIDBytes(req.Id)), &coordinator)
-
 	return &types.QueryGetCoordinatorResponse{Coordinator: coordinator}, nil
 }
