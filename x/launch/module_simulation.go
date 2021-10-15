@@ -19,14 +19,14 @@ const (
 	defaultWeightMsgCreateChain                 int = 50
 	defaultWeightMsgEditChain                   int = 10
 	defaultWeightMsgRequestAddGenesisAccount    int = 50
-	defaultWeightMsgRequestRemoveGenesisAccount int = 25
+	defaultWeightMsgRequestRemoveGenesisAccount int = 15
 	defaultWeightMsgRequestAddVestingAccount    int = 50
-	defaultWeightMsgRequestRemoveVestingAccount int = 25
+	defaultWeightMsgRequestRemoveVestingAccount int = 15
 	defaultWeightMsgRequestAddValidator         int = 50
-	defaultWeightMsgRequestRemoveValidator      int = 25
+	defaultWeightMsgRequestRemoveValidator      int = 15
 	defaultWeightMsgSettleRequest               int = 50
 	defaultWeightMsgTriggerLaunch               int = 15
-	defaultWeightMsgRevertLaunch                int = 0
+	defaultWeightMsgRevertLaunch                int = 5
 
 	opWeightMsgCreateChain                 = "op_weight_msg_create_chain"
 	opWeightMsgEditChain                   = "op_weight_msg_edit_chain"
