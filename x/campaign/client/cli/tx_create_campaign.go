@@ -17,20 +17,23 @@ func CmdCreateCampaign() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-campaign [campaign-name] [total-supply]",
 		Short: "Create a new campaign",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.RangeArgs(1, 2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var (
 				dynamicShares, _ = cmd.Flags().GetBool(flagDynamicShares)
 			)
 
-			totalSupply, err := sdk.ParseCoinsNormalized(args[1])
+			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
+			totalSupply := sdk.NewCoins()
+			if len(args) > 1 {
+				totalSupply, err = sdk.ParseCoinsNormalized(args[1])
+				if err != nil {
+					return err
+				}
 			}
 
 			msg := types.NewMsgCreateCampaign(
