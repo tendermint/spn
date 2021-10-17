@@ -241,7 +241,7 @@ func TestGetAccountWithShares(t *testing.T) {
 	_, _, _, found = simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
 	require.False(t, found)
 
-	// Account can be retrieve
+	// Account can be retrieved
 	acc, _ := simtypes.RandomAcc(r, accs)
 	share := sample.Shares()
 	ck.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
