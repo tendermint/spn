@@ -2,17 +2,17 @@ package simulation_test
 
 import (
 	"fmt"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
-	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	"math/rand"
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	simcampaign "github.com/tendermint/spn/x/campaign/simulation"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
@@ -174,7 +174,7 @@ func TestGetSharesFromCampaign(t *testing.T) {
 	shares, err := campaigntypes.NewShares(fmt.Sprintf(
 		"%[1]dfoo,%[1]dbar,%[1]dtoto",
 		campaigntypes.DefaultTotalShareNumber,
-		))
+	))
 	require.NoError(t, err)
 	camp.AllocatedShares = shares
 	campSharesReached := ck.AppendCampaign(ctx, camp)
@@ -203,7 +203,7 @@ func TestGetAccountWithVouchers(t *testing.T) {
 	_, _, _, found := simcampaign.GetAccountWithVouchers(ctx, bk, accs)
 	require.False(t, found)
 
-	mint := func (addr sdk.AccAddress, coins sdk.Coins) {
+	mint := func(addr sdk.AccAddress, coins sdk.Coins) {
 		require.NoError(t, bk.MintCoins(ctx, campaigntypes.ModuleName, coins))
 		require.NoError(t, bk.SendCoinsFromModuleToAccount(ctx, campaigntypes.ModuleName, addr, coins))
 	}
@@ -235,8 +235,8 @@ func TestGetAccountWithShares(t *testing.T) {
 	// Account not part of sim accounts
 	ck.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
 		CampaignID: 10,
-		Address: sample.Address(),
-		Shares: sample.Shares(),
+		Address:    sample.Address(),
+		Shares:     sample.Shares(),
 	})
 	_, _, _, found = simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
 	require.False(t, found)
@@ -246,8 +246,8 @@ func TestGetAccountWithShares(t *testing.T) {
 	share := sample.Shares()
 	ck.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
 		CampaignID: 10,
-		Address: acc.Address.String(),
-		Shares: share,
+		Address:    acc.Address.String(),
+		Shares:     share,
 	})
 	campID, acc, shareRetrieved, found := simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
 	require.True(t, found)

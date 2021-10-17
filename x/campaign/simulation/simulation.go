@@ -508,7 +508,7 @@ func SimulateMsgUnredeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, k 
 }
 
 // SimulateMsgSendVouchers simulates a Msg message from the bank module with vouchers
-// TODO: This message constently fails in simulation log, investigate why
+// TODO: This message constantly fails in simulation log, investigate why
 func SimulateMsgSendVouchers(ak types.AccountKeeper, bk types.BankKeeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
