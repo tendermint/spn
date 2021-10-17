@@ -222,3 +222,36 @@ func TestGetAccountWithVouchers(t *testing.T) {
 	require.False(t, coins.Empty())
 	require.Contains(t, accs, acc)
 }
+
+func TestGetAccountWithShares(t *testing.T) {
+	ck, ctx := testkeeper.Campaign(t)
+	r := sample.Rand()
+	accs := sample.SimAccounts()
+
+	// No account
+	_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
+	require.False(t, found)
+
+	// Account not part of sim accounts
+	ck.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
+		CampaignID: 10,
+		Address: sample.Address(),
+		Shares: sample.Shares(),
+	})
+	_, _, _, found = simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
+	require.False(t, found)
+
+	// Account can be retrieve
+	acc, _ := simtypes.RandomAcc(r, accs)
+	share := sample.Shares()
+	ck.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
+		CampaignID: 10,
+		Address: acc.Address.String(),
+		Shares: share,
+	})
+	campID, acc, shareRetrieved, found := simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
+	require.True(t, found)
+	require.Contains(t, accs, acc)
+	require.EqualValues(t, uint64(10), campID)
+	require.EqualValues(t, share, shareRetrieved)
+}
