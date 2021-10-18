@@ -16,11 +16,11 @@ func TestMsgUpdateCampaignName_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid name",
+			name: "invalid campaign name",
 			msg: types.MsgUpdateCampaignName{
 				CampaignID:  0,
 				Coordinator: sample.Address(),
-				Name:        "",
+				Name:        invalidCampaignName,
 			},
 			err: types.ErrInvalidCampaignName,
 		},
@@ -29,7 +29,7 @@ func TestMsgUpdateCampaignName_ValidateBasic(t *testing.T) {
 			msg: types.MsgUpdateCampaignName{
 				CampaignID:  0,
 				Coordinator: "invalid_address",
-				Name:        "new_name",
+				Name:        "newName",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
@@ -38,7 +38,7 @@ func TestMsgUpdateCampaignName_ValidateBasic(t *testing.T) {
 			msg: types.MsgUpdateCampaignName{
 				CampaignID:  0,
 				Coordinator: sample.Address(),
-				Name:        "new_name",
+				Name:        "newName",
 			},
 		},
 	}

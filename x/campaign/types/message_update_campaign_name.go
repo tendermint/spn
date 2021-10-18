@@ -41,8 +41,9 @@ func (msg *MsgUpdateCampaignName) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
-	if msg.Name == "" {
-		return sdkerrors.Wrapf(ErrInvalidCampaignName, "empty campaign name")
+
+	if err := CheckCampaignName(msg.Name); err != nil {
+		return sdkerrors.Wrap(ErrInvalidCampaignName, err.Error())
 	}
 	return nil
 }
