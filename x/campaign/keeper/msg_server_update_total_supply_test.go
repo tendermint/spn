@@ -51,7 +51,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
 				Coordinator: coordAddr1,
-				TotalSupply: sample.Coins(),
+				TotalSupplyUpdate: sample.Coins(),
 			},
 		},
 		{
@@ -59,7 +59,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
 				Coordinator: coordAddr1,
-				TotalSupply: sample.Coins(),
+				TotalSupplyUpdate: sample.Coins(),
 			},
 		},
 		{
@@ -67,7 +67,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  100,
 				Coordinator: coordAddr1,
-				TotalSupply: sample.Coins(),
+				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -76,7 +76,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
 				Coordinator: sample.Address(),
-				TotalSupply: sample.Coins(),
+				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -85,7 +85,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  0,
 				Coordinator: coordAddr2,
-				TotalSupply: sample.Coins(),
+				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
@@ -94,7 +94,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:  1,
 				Coordinator: coordAddr1,
-				TotalSupply: sample.Coins(),
+				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: types.ErrMainnetInitialized,
 		},
@@ -108,7 +108,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			require.NoError(t, err)
 			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
-			require.True(t, tc.msg.TotalSupply.IsEqual(campaign.TotalSupply))
+			require.True(t, tc.msg.TotalSupplyUpdate.IsEqual(campaign.TotalSupply))
 		})
 	}
 }

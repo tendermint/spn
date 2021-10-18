@@ -21,7 +21,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator: sample.Address(),
 				CampaignID:  0,
-				TotalSupply: sample.Coins(),
+				TotalSupplyUpdate: sample.Coins(),
 			},
 		},
 		{
@@ -29,7 +29,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator: "invalid_address",
 				CampaignID:  0,
-				TotalSupply: sample.Coins(),
+				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
@@ -38,7 +38,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator: sample.Address(),
 				CampaignID:  0,
-				TotalSupply: invalidCoins,
+				TotalSupplyUpdate: invalidCoins,
 			},
 			err: types.ErrInvalidTotalSupply,
 		},
@@ -47,7 +47,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator: sample.Address(),
 				CampaignID:  0,
-				TotalSupply: sdk.NewCoins(),
+				TotalSupplyUpdate: sdk.NewCoins(),
 			},
 			err: types.ErrInvalidTotalSupply,
 		},

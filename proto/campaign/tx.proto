@@ -35,7 +35,7 @@ message MsgUpdateTotalSharesResponse {
 message MsgUpdateTotalSupply {
   string coordinator = 1;
   uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin totalSupply = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated cosmos.base.v1beta1.Coin totalSupplyUpdate = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 message MsgUpdateTotalSupplyResponse {

@@ -34,7 +34,7 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%v", msg.CampaignID)
 	}
 
-	campaign.TotalSupply = msg.TotalSupply
+	campaign.TotalSupply = msg.TotalSupplyUpdate
 	k.SetCampaign(ctx, campaign)
 
 	return &types.MsgUpdateTotalSupplyResponse{}, nil
