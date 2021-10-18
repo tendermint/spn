@@ -49,24 +49,24 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "update total supply",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:  0,
-				Coordinator: coordAddr1,
+				CampaignID:        0,
+				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.Coins(),
 			},
 		},
 		{
 			name: "can update total supply again",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:  0,
-				Coordinator: coordAddr1,
+				CampaignID:        0,
+				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.Coins(),
 			},
 		},
 		{
 			name: "campaign not found",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:  100,
-				Coordinator: coordAddr1,
+				CampaignID:        100,
+				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: types.ErrCampaignNotFound,
@@ -74,8 +74,8 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "non existing coordinator",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:  0,
-				Coordinator: sample.Address(),
+				CampaignID:        0,
+				Coordinator:       sample.Address(),
 				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
@@ -83,8 +83,8 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "not the coordinator of the campaign",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:  0,
-				Coordinator: coordAddr2,
+				CampaignID:        0,
+				Coordinator:       coordAddr2,
 				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: profiletypes.ErrCoordInvalid,
@@ -92,14 +92,21 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "cannot update total supply when mainnet is initialized",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:  1,
-				Coordinator: coordAddr1,
+				CampaignID:        1,
+				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: types.ErrMainnetInitialized,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
+			var previousTotalSupply sdk.Coins
+			if tc.err == nil {
+				campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				require.True(t, found)
+				previousTotalSupply = campaign.TotalSupply
+			}
+
 			_, err := campaignSrv.UpdateTotalSupply(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
@@ -108,7 +115,9 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			require.NoError(t, err)
 			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
-			require.True(t, tc.msg.TotalSupplyUpdate.IsEqual(campaign.TotalSupply))
+			require.True(t, campaign.TotalSupply.IsEqual(
+				types.UpdateTotalSupply(previousTotalSupply, tc.msg.TotalSupplyUpdate),
+			))
 		})
 	}
 }

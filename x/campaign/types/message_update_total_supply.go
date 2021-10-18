@@ -9,8 +9,8 @@ var _ sdk.Msg = &MsgUpdateTotalSupply{}
 
 func NewMsgUpdateTotalSupply(coordinator string, campaignID uint64, totalSupplyUpdate sdk.Coins) *MsgUpdateTotalSupply {
 	return &MsgUpdateTotalSupply{
-		Coordinator: coordinator,
-		CampaignID:  campaignID,
+		Coordinator:       coordinator,
+		CampaignID:        campaignID,
 		TotalSupplyUpdate: totalSupplyUpdate,
 	}
 }
