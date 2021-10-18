@@ -233,13 +233,15 @@ func TestGetAccountWithShares(t *testing.T) {
 	require.False(t, found)
 
 	// Account not part of sim accounts
+	sampleAddr := sample.Address()
 	ck.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
 		CampaignID: 10,
-		Address:    sample.Address(),
+		Address:    sampleAddr,
 		Shares:     sample.Shares(),
 	})
 	_, _, _, found = simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
 	require.False(t, found)
+	ck.RemoveMainnetAccount(ctx, 10, sampleAddr)
 
 	// Account can be retrieved
 	acc, _ := simtypes.RandomAcc(r, accs)
