@@ -18,24 +18,27 @@ func TestMsgUpdateCampaignName_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid name",
 			msg: types.MsgUpdateCampaignName{
-				Creator: sample.Address(),
-				Name:    "",
+				CampaignID:  0,
+				Coordinator: sample.Address(),
+				Name:        "",
 			},
 			err: types.ErrInvalidCampaignName,
 		},
 		{
-			name: "invalid address",
+			name: "invalid coordinator address",
 			msg: types.MsgUpdateCampaignName{
-				Creator: "invalid_address",
-				Name:    "new_name",
+				CampaignID:  0,
+				Coordinator: "invalid_address",
+				Name:        "new_name",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "valid address",
+			name: "valid coordinator message",
 			msg: types.MsgUpdateCampaignName{
-				Creator: sample.Address(),
-				Name:    "new_name",
+				CampaignID:  0,
+				Coordinator: sample.Address(),
+				Name:        "new_name",
 			},
 		},
 	}

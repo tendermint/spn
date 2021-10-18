@@ -7,11 +7,11 @@ import (
 
 var _ sdk.Msg = &MsgUpdateCampaignName{}
 
-func NewMsgUpdateCampaignName(creator, name string, campaignID uint64) *MsgUpdateCampaignName {
+func NewMsgUpdateCampaignName(coordinator, name string, campaignID uint64) *MsgUpdateCampaignName {
 	return &MsgUpdateCampaignName{
-		Creator:    creator,
-		CampaignID: campaignID,
-		Name:       name,
+		Coordinator: coordinator,
+		CampaignID:  campaignID,
+		Name:        name,
 	}
 }
 
@@ -24,11 +24,11 @@ func (msg *MsgUpdateCampaignName) Type() string {
 }
 
 func (msg *MsgUpdateCampaignName) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	coordinator, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{creator}
+	return []sdk.AccAddress{coordinator}
 }
 
 func (msg *MsgUpdateCampaignName) GetSignBytes() []byte {
@@ -37,9 +37,9 @@ func (msg *MsgUpdateCampaignName) GetSignBytes() []byte {
 }
 
 func (msg *MsgUpdateCampaignName) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 	if msg.Name == "" {
 		return sdkerrors.Wrapf(ErrInvalidCampaignName, "empty campaign name")

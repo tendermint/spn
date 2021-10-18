@@ -42,36 +42,36 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		{
 			name: "invalid campaign id",
 			msg: types.MsgUpdateCampaignName{
-				Creator:    coordAddr,
-				CampaignID: 100,
-				Name:       "new_name",
+				Coordinator: coordAddr,
+				CampaignID:  100,
+				Name:        "new_name",
 			},
 			err: types.ErrCampaignNotFound,
 		},
 		{
-			name: "invalid creator address",
+			name: "invalid coordinator address",
 			msg: types.MsgUpdateCampaignName{
-				Creator:    sample.Address(),
-				CampaignID: campaign.Id,
-				Name:       "new_name",
+				Coordinator: sample.Address(),
+				CampaignID:  campaign.Id,
+				Name:        "new_name",
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "invalid coordinator id",
+			name: "wrong coordinator id",
 			msg: types.MsgUpdateCampaignName{
-				Creator:    coordAddrNoCampaign,
-				CampaignID: campaign.Id,
-				Name:       "new_name",
+				Coordinator: coordAddrNoCampaign,
+				CampaignID:  campaign.Id,
+				Name:        "new_name",
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
 			name: "valid message",
 			msg: types.MsgUpdateCampaignName{
-				Creator:    coordAddr,
-				CampaignID: campaign.Id,
-				Name:       "new_name",
+				Coordinator: coordAddr,
+				CampaignID:  campaign.Id,
+				Name:        "new_name",
 			},
 		},
 	} {

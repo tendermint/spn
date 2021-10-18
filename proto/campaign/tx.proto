@@ -123,7 +123,7 @@ message MsgRedeemVouchersResponse {
 }
 
 message MsgUpdateCampaignName {
-  string creator = 1;
+  string coordinator = 1;
   uint64 campaignID = 2;
   string name = 3;
 }

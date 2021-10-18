@@ -19,9 +19,9 @@ func (k msgServer) UpdateCampaignName(goCtx context.Context, msg *types.MsgUpdat
 	}
 
 	// Get the coordinator ID
-	coordinatorID, found := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Creator)
+	coordinatorID, found := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if !found {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Creator)
+		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
 	}
 	if campaign.CoordinatorID != coordinatorID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
