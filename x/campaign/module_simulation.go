@@ -12,17 +12,29 @@ import (
 )
 
 const (
-	weightMsgCreateCampaign    = 25
-	weightMsgUpdateTotalSupply = 20
-	weightMsgUpdateTotalShares = 20
-	weightMsgInitializeMainnet = 5
-	weightMsgAddShares         = 20
-	weightMsgAddVestingOptions = 20
-	weightMsgMintVouchers      = 20
-	weightMsgBurnVouchers      = 20
-	weightMsgRedeemVouchers    = 20
-	weightMsgUnredeemVouchers  = 20
-	weightMsgSendVouchers      = 20
+	defaultWeightMsgCreateCampaign    = 25
+	defaultWeightMsgUpdateTotalSupply = 20
+	defaultWeightMsgUpdateTotalShares = 20
+	defaultWeightMsgInitializeMainnet = 5
+	defaultWeightMsgAddShares         = 20
+	defaultWeightMsgAddVestingOptions = 20
+	defaultWeightMsgMintVouchers      = 20
+	defaultWeightMsgBurnVouchers      = 20
+	defaultWeightMsgRedeemVouchers    = 20
+	defaultWeightMsgUnredeemVouchers  = 20
+	defaultWeightMsgSendVouchers      = 20
+
+	opWeightMsgCreateCampaign    = "op_weight_msg_create_campaign"
+	opWeightMsgUpdateTotalSupply = "op_weight_msg_update_total_supply"
+	opWeightMsgUpdateTotalShares = "op_weight_msg_update_total_share"
+	opWeightMsgInitializeMainnet = "op_weight_msg_initialize_mainnet"
+	opWeightMsgAddShares         = "op_weight_msg_add_shares"
+	opWeightMsgAddVestingOptions = "op_weight_msg_add_vesting_options"
+	opWeightMsgMintVouchers      = "op_weight_msg_mint_vouchers"
+	opWeightMsgBurnVouchers      = "op_weight_msg_burn_vouchers"
+	opWeightMsgRedeemVouchers    = "op_weight_msg_redeem_vouchers"
+	opWeightMsgUnredeemVouchers  = "op_weight_msg_unredeem_vouchers"
+	opWeightMsgSendVouchers      = "op_weight_msg_send_vouchers"
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -45,6 +57,78 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+	var (
+		weightMsgCreateCampaign    int
+		weightMsgUpdateTotalSupply int
+		weightMsgUpdateTotalShares int
+		weightMsgInitializeMainnet int
+		weightMsgAddShares         int
+		weightMsgAddVestingOptions int
+		weightMsgMintVouchers      int
+		weightMsgBurnVouchers      int
+		weightMsgRedeemVouchers    int
+		weightMsgUnredeemVouchers  int
+		weightMsgSendVouchers      int
+	)
+
+	appParams := simState.AppParams
+	cdc := simState.Cdc
+	appParams.GetOrGenerate(cdc, opWeightMsgCreateCampaign, &weightMsgCreateCampaign, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateCampaign = defaultWeightMsgCreateCampaign
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgUpdateTotalSupply, &weightMsgUpdateTotalSupply, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateTotalSupply = defaultWeightMsgUpdateTotalSupply
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgUpdateTotalShares, &weightMsgUpdateTotalShares, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateTotalShares = defaultWeightMsgUpdateTotalShares
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgInitializeMainnet, &weightMsgInitializeMainnet, nil,
+		func(_ *rand.Rand) {
+			weightMsgInitializeMainnet = defaultWeightMsgInitializeMainnet
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgAddShares, &weightMsgAddShares, nil,
+		func(_ *rand.Rand) {
+			weightMsgAddShares = defaultWeightMsgAddShares
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgAddVestingOptions, &weightMsgAddVestingOptions, nil,
+		func(_ *rand.Rand) {
+			weightMsgAddVestingOptions = defaultWeightMsgAddVestingOptions
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgMintVouchers, &weightMsgMintVouchers, nil,
+		func(_ *rand.Rand) {
+			weightMsgMintVouchers = defaultWeightMsgMintVouchers
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgBurnVouchers, &weightMsgBurnVouchers, nil,
+		func(_ *rand.Rand) {
+			weightMsgBurnVouchers = defaultWeightMsgBurnVouchers
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgRedeemVouchers, &weightMsgRedeemVouchers, nil,
+		func(_ *rand.Rand) {
+			weightMsgRedeemVouchers = defaultWeightMsgRedeemVouchers
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgUnredeemVouchers, &weightMsgUnredeemVouchers, nil,
+		func(_ *rand.Rand) {
+			weightMsgUnredeemVouchers = defaultWeightMsgUnredeemVouchers
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgSendVouchers, &weightMsgSendVouchers, nil,
+		func(_ *rand.Rand) {
+			weightMsgSendVouchers = defaultWeightMsgSendVouchers
+		},
+	)
+
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateCampaign,
