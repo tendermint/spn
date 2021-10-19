@@ -19,35 +19,35 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 		{
 			name: "valid address",
 			msg: types.MsgUpdateTotalSupply{
-				Coordinator: sample.Address(),
-				CampaignID:  0,
-				TotalSupply: sample.Coins(),
+				Coordinator:       sample.Address(),
+				CampaignID:        0,
+				TotalSupplyUpdate: sample.Coins(),
 			},
 		},
 		{
 			name: "invalid address",
 			msg: types.MsgUpdateTotalSupply{
-				Coordinator: "invalid_address",
-				CampaignID:  0,
-				TotalSupply: sample.Coins(),
+				Coordinator:       "invalid_address",
+				CampaignID:        0,
+				TotalSupplyUpdate: sample.Coins(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid total supply",
 			msg: types.MsgUpdateTotalSupply{
-				Coordinator: sample.Address(),
-				CampaignID:  0,
-				TotalSupply: invalidCoins,
+				Coordinator:       sample.Address(),
+				CampaignID:        0,
+				TotalSupplyUpdate: invalidCoins,
 			},
 			err: types.ErrInvalidTotalSupply,
 		},
 		{
 			name: "empty total supply",
 			msg: types.MsgUpdateTotalSupply{
-				Coordinator: sample.Address(),
-				CampaignID:  0,
-				TotalSupply: sdk.NewCoins(),
+				Coordinator:       sample.Address(),
+				CampaignID:        0,
+				TotalSupplyUpdate: sdk.NewCoins(),
 			},
 			err: types.ErrInvalidTotalSupply,
 		},

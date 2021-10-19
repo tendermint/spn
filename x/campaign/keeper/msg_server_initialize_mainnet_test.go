@@ -12,13 +12,15 @@ import (
 
 func TestMsgInitializeMainnet(t *testing.T) {
 	var (
-		campaignID                                                          uint64 = 0
-		campaignMainnetInitializedID                                        uint64 = 1
-		campaignIncorrectCoordID                                            uint64 = 2
-		coordAddr                                                                  = sample.Address()
-		coordAddrNoCampaign                                                        = sample.Address()
-		campaignKeeper, _, launchKeeper, _, campaignSrv, profileSrv, sdkCtx        = setupMsgServer(t)
-		ctx                                                                        = sdk.WrapSDKContext(sdkCtx)
+		campaignID                   uint64 = 0
+		campaignMainnetInitializedID uint64 = 1
+		campaignIncorrectCoordID     uint64 = 2
+		campaignEmptySupplyID        uint64 = 3
+		coordAddr                           = sample.Address()
+		coordAddrNoCampaign                 = sample.Address()
+
+		campaignKeeper, _, launchKeeper, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
+		ctx                                                                 = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
@@ -43,6 +45,11 @@ func TestMsgInitializeMainnet(t *testing.T) {
 	campaignMainnetInitialized.CoordinatorID = coordID
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignKeeper.SetCampaign(sdkCtx, campaignMainnetInitialized)
+
+	campaignEmptySupply := sample.Campaign(campaignEmptySupplyID)
+	campaignEmptySupply.CoordinatorID = coordID
+	campaignEmptySupply.TotalSupply = sdk.NewCoins()
+	campaignKeeper.SetCampaign(sdkCtx, campaignEmptySupply)
 
 	campaignIncorrectCoord := sample.Campaign(campaignIncorrectCoordID)
 	campaignIncorrectCoord.CoordinatorID = coordID
@@ -84,6 +91,17 @@ func TestMsgInitializeMainnet(t *testing.T) {
 				MainnetChainID: sample.GenesisChainID(),
 			},
 			err: types.ErrMainnetInitialized,
+		},
+		{
+			name: "campaign empty supply",
+			msg: types.MsgInitializeMainnet{
+				CampaignID:     campaignEmptySupplyID,
+				Coordinator:    coordAddr,
+				SourceHash:     sample.String(30),
+				SourceURL:      sample.String(20),
+				MainnetChainID: sample.GenesisChainID(),
+			},
+			err: types.ErrInvalidTotalSupply,
 		},
 		{
 			name: "non-existent coordinator",

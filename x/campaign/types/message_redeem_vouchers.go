@@ -7,7 +7,7 @@ import (
 
 var _ sdk.Msg = &MsgRedeemVouchers{}
 
-func NewMsgRedeemVouchers(sender string, campaignID uint64, account string, vouchers sdk.Coins) *MsgRedeemVouchers {
+func NewMsgRedeemVouchers(sender, account string, campaignID uint64, vouchers sdk.Coins) *MsgRedeemVouchers {
 	return &MsgRedeemVouchers{
 		Sender:     sender,
 		CampaignID: campaignID,

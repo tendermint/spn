@@ -21,52 +21,47 @@ func createNCoordinator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.C
 }
 
 func TestCoordinatorGet(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNCoordinator(keeper, ctx, 10)
+	k, ctx := testkeeper.Profile(t)
+	items := createNCoordinator(k, ctx, 10)
 	for _, item := range items {
-		require.Equal(t, item, keeper.GetCoordinator(ctx, item.CoordinatorId))
-	}
-}
-
-func TestCoordinatorExist(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNCoordinator(keeper, ctx, 10)
-	for _, item := range items {
-		require.True(t, keeper.HasCoordinator(ctx, item.CoordinatorId))
+		coord, found := k.GetCoordinator(ctx, item.CoordinatorId)
+		require.True(t, found)
+		require.Equal(t, item, coord)
 	}
 }
 
 func TestCoordinatorRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNCoordinator(keeper, ctx, 10)
+	k, ctx := testkeeper.Profile(t)
+	items := createNCoordinator(k, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveCoordinator(ctx, item.CoordinatorId)
-		require.False(t, keeper.HasCoordinator(ctx, item.CoordinatorId))
+		k.RemoveCoordinator(ctx, item.CoordinatorId)
+		_, found := k.GetCoordinator(ctx, item.CoordinatorId)
+		require.False(t, found)
 	}
 }
 
 func TestCoordinatorGetAll(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNCoordinator(keeper, ctx, 10)
-	require.ElementsMatch(t, items, keeper.GetAllCoordinator(ctx))
+	k, ctx := testkeeper.Profile(t)
+	items := createNCoordinator(k, ctx, 10)
+	require.ElementsMatch(t, items, k.GetAllCoordinator(ctx))
 }
 
 func TestCoordinatorCount(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNCoordinator(keeper, ctx, 10)
+	k, ctx := testkeeper.Profile(t)
+	items := createNCoordinator(k, ctx, 10)
 	count := uint64(len(items))
-	require.Equal(t, count, keeper.GetCoordinatorCount(ctx))
+	require.Equal(t, count, k.GetCoordinatorCount(ctx))
 }
 
 func TestGetCoordinatorAddressFromID(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
+	k, ctx := testkeeper.Profile(t)
 	coordinator := sample.Coordinator(sample.Address())
-	coordinator.CoordinatorId = keeper.AppendCoordinator(ctx, coordinator)
+	coordinator.CoordinatorId = k.AppendCoordinator(ctx, coordinator)
 
-	address, found := keeper.GetCoordinatorAddressFromID(ctx, coordinator.CoordinatorId)
+	address, found := k.GetCoordinatorAddressFromID(ctx, coordinator.CoordinatorId)
 	require.True(t, found)
 	require.Equal(t, coordinator.Address, address)
 
-	_, found = keeper.GetCoordinatorAddressFromID(ctx, 100)
+	_, found = k.GetCoordinatorAddressFromID(ctx, 100)
 	require.False(t, found)
 }

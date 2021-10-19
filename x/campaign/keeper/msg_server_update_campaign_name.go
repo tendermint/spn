@@ -10,7 +10,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdateTotalSupply) (*types.MsgUpdateTotalSupplyResponse, error) {
+func (k msgServer) UpdateCampaignName(goCtx context.Context, msg *types.MsgUpdateCampaignName) (*types.MsgUpdateCampaignNameResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
@@ -29,13 +29,8 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 			campaign.CoordinatorID,
 		))
 	}
-
-	if campaign.MainnetInitialized {
-		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%v", msg.CampaignID)
-	}
-
-	campaign.TotalSupply = types.UpdateTotalSupply(campaign.TotalSupply, msg.TotalSupplyUpdate)
+	campaign.CampaignName = msg.Name
 	k.SetCampaign(ctx, campaign)
 
-	return &types.MsgUpdateTotalSupplyResponse{}, nil
+	return &types.MsgUpdateCampaignNameResponse{}, nil
 }
