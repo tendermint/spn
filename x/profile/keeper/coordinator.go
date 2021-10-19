@@ -61,17 +61,14 @@ func (k Keeper) SetCoordinator(ctx sdk.Context, coordinator types.Coordinator) {
 }
 
 // GetCoordinator returns a coordinator from its id
-func (k Keeper) GetCoordinator(ctx sdk.Context, id uint64) types.Coordinator {
+func (k Keeper) GetCoordinator(ctx sdk.Context, id uint64) (val types.Coordinator, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
-	var coordinator types.Coordinator
-	k.cdc.MustUnmarshal(store.Get(GetCoordinatorIDBytes(id)), &coordinator)
-	return coordinator
-}
-
-// HasCoordinator checks if the coordinator exists in the store
-func (k Keeper) HasCoordinator(ctx sdk.Context, id uint64) bool {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
-	return store.Has(GetCoordinatorIDBytes(id))
+	b := store.Get(GetCoordinatorIDBytes(id))
+	if b == nil {
+		return val, false
+	}
+	k.cdc.MustUnmarshal(b, &val)
+	return val, true
 }
 
 // RemoveCoordinator removes a coordinator from the store
@@ -98,10 +95,8 @@ func (k Keeper) GetAllCoordinator(ctx sdk.Context) (list []types.Coordinator) {
 
 // GetCoordinatorAddressFromID returns a coordinator address from its id
 func (k Keeper) GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) (string, bool) {
-	if !k.HasCoordinator(ctx, id) {
-		return "", false
-	}
-	return k.GetCoordinator(ctx, id).Address, true
+	coord, found := k.GetCoordinator(ctx, id)
+	return coord.Address, found
 }
 
 // GetCoordinatorIDBytes returns the byte representation of the ID

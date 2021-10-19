@@ -56,7 +56,8 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			if tt.err == nil {
 				coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
 				require.True(t, found, "coordinator by address not found")
-				oldCoord = k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
+				oldCoord, found = k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
+				require.True(t, found, "coordinator not found")
 			}
 
 			_, err := srv.UpdateCoordinatorDescription(wCtx, &tt.msg)
@@ -67,8 +68,9 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			require.NoError(t, err)
 
 			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			require.True(t, found, "coordinator id not found")
-			coord := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
+			require.True(t, found, "coordinator by address not found")
+			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
+			require.True(t, found, "coordinator not found")
 			require.EqualValues(t, tt.msg.Address, coord.Address)
 			require.EqualValues(t, coordByAddr.CoordinatorId, coord.CoordinatorId)
 

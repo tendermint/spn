@@ -30,7 +30,7 @@ func CoordinatorAddrNotFoundInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
 		all := k.GetAllCoordinatorByAddress(ctx)
 		for _, coord := range all {
-			if !k.HasCoordinator(ctx, coord.CoordinatorId) {
+			if _, found := k.GetCoordinator(ctx, coord.CoordinatorId); !found {
 				return sdk.FormatInvariant(
 					types.ModuleName, coordinatorIDNotFoundRoute,
 					fmt.Sprintf("%s: %d", types.ErrCoordAddressNotFound, coord.CoordinatorId),
