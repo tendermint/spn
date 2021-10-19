@@ -49,7 +49,7 @@ func TestMsgCreateCoordinator(t *testing.T) {
 			require.EqualValues(t, tt.wantId, coordByAddr.CoordinatorId)
 			require.EqualValues(t, tt.wantId, got.CoordinatorId)
 
-			coord := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
+			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
 			require.True(t, found, "coordinator id not found")
 			require.EqualValues(t, tt.msg.Address, coord.Address)
 			require.EqualValues(t, tt.msg.Description, coord.Description)
