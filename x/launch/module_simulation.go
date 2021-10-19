@@ -14,29 +14,27 @@ import (
 )
 
 const (
-	defaultWeightMsgCreateChain                 int = 50
-	defaultWeightMsgEditChain                   int = 10
-	defaultWeightMsgRequestAddGenesisAccount    int = 50
-	defaultWeightMsgRequestRemoveGenesisAccount int = 15
-	defaultWeightMsgRequestAddVestingAccount    int = 50
-	defaultWeightMsgRequestRemoveVestingAccount int = 15
-	defaultWeightMsgRequestAddValidator         int = 50
-	defaultWeightMsgRequestRemoveValidator      int = 15
-	defaultWeightMsgSettleRequest               int = 50
-	defaultWeightMsgTriggerLaunch               int = 15
-	defaultWeightMsgRevertLaunch                int = 5
+	defaultWeightMsgCreateChain              int = 50
+	defaultWeightMsgEditChain                int = 10
+	defaultWeightMsgRequestAddGenesisAccount int = 50
+	defaultWeightMsgRequestAddVestingAccount int = 50
+	defaultWeightMsgRequestRemoveAccount     int = 15
+	defaultWeightMsgRequestAddValidator      int = 50
+	defaultWeightMsgRequestRemoveValidator   int = 15
+	defaultWeightMsgSettleRequest            int = 50
+	defaultWeightMsgTriggerLaunch            int = 15
+	defaultWeightMsgRevertLaunch             int = 5
 
-	opWeightMsgCreateChain                 = "op_weight_msg_create_chain"
-	opWeightMsgEditChain                   = "op_weight_msg_edit_chain"
-	opWeightMsgRequestAddGenesisAccount    = "op_weight_msg_request_add_genesis_account"
-	opWeightMsgRequestRemoveGenesisAccount = "op_weight_msg_request_remove_genesis_account"
-	opWeightMsgRequestAddVestingAccount    = "op_weight_msg_request_add_vesting_account"
-	opWeightMsgRequestRemoveVestingAccount = "op_weight_msg_request_remove_vesting_account"
-	opWeightMsgRequestAddValidator         = "op_weight_msg_request_add_validator"
-	opWeightMsgRequestRemoveValidator      = "op_weight_msg_request_remove_validator"
-	opWeightMsgTriggerLaunch               = "op_weight_msg_trigger_launch"
-	opWeightMsgRevertLaunch                = "op_weight_msg_revert_launch"
-	opWeightMsgSettleRequest               = "op_weight_msg_settle_request"
+	opWeightMsgCreateChain              = "op_weight_msg_create_chain"
+	opWeightMsgEditChain                = "op_weight_msg_edit_chain"
+	opWeightMsgRequestAddGenesisAccount = "op_weight_msg_request_add_genesis_account"
+	opWeightMsgRequestAddVestingAccount = "op_weight_msg_request_add_vesting_account"
+	opWeightMsgRequestRemoveAccount     = "op_weight_msg_request_remove_account"
+	opWeightMsgRequestAddValidator      = "op_weight_msg_request_add_validator"
+	opWeightMsgRequestRemoveValidator   = "op_weight_msg_request_remove_validator"
+	opWeightMsgTriggerLaunch            = "op_weight_msg_trigger_launch"
+	opWeightMsgRevertLaunch             = "op_weight_msg_revert_launch"
+	opWeightMsgSettleRequest            = "op_weight_msg_settle_request"
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -73,17 +71,16 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	var (
-		weightMsgCreateChain                 int
-		weightMsgEditChain                   int
-		weightMsgRequestAddGenesisAccount    int
-		weightMsgRequestRemoveGenesisAccount int
-		weightMsgRequestAddVestingAccount    int
-		weightMsgRequestRemoveVestingAccount int
-		weightMsgRequestAddValidator         int
-		weightMsgRequestRemoveValidator      int
-		weightMsgTriggerLaunch               int
-		weightMsgRevertLaunch                int
-		weightMsgSettleRequest               int
+		weightMsgCreateChain              int
+		weightMsgEditChain                int
+		weightMsgRequestAddGenesisAccount int
+		weightMsgRequestAddVestingAccount int
+		weightMsgRequestRemoveAccount     int
+		weightMsgRequestAddValidator      int
+		weightMsgRequestRemoveValidator   int
+		weightMsgTriggerLaunch            int
+		weightMsgRevertLaunch             int
+		weightMsgSettleRequest            int
 	)
 
 	appParams := simState.AppParams
@@ -108,19 +105,14 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgRequestAddGenesisAccount = defaultWeightMsgRequestAddGenesisAccount
 		},
 	)
-	appParams.GetOrGenerate(cdc, opWeightMsgRequestRemoveGenesisAccount, &weightMsgRequestRemoveGenesisAccount, nil,
-		func(_ *rand.Rand) {
-			weightMsgRequestRemoveGenesisAccount = defaultWeightMsgRequestRemoveGenesisAccount
-		},
-	)
 	appParams.GetOrGenerate(cdc, opWeightMsgRequestAddVestingAccount, &weightMsgRequestAddVestingAccount, nil,
 		func(_ *rand.Rand) {
 			weightMsgRequestAddVestingAccount = defaultWeightMsgRequestAddVestingAccount
 		},
 	)
-	appParams.GetOrGenerate(cdc, opWeightMsgRequestRemoveVestingAccount, &weightMsgRequestRemoveVestingAccount, nil,
+	appParams.GetOrGenerate(cdc, opWeightMsgRequestRemoveAccount, &weightMsgRequestRemoveAccount, nil,
 		func(_ *rand.Rand) {
-			weightMsgRequestRemoveVestingAccount = defaultWeightMsgRequestRemoveVestingAccount
+			weightMsgRequestRemoveAccount = defaultWeightMsgRequestRemoveAccount
 		},
 	)
 	appParams.GetOrGenerate(cdc, opWeightMsgRequestAddValidator, &weightMsgRequestAddValidator, nil,
@@ -163,16 +155,12 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			launchsimulation.SimulateMsgRequestAddGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
-			weightMsgRequestRemoveGenesisAccount,
-			launchsimulation.SimulateMsgRequestRemoveGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
-		),
-		simulation.NewWeightedOperation(
 			weightMsgRequestAddVestingAccount,
 			launchsimulation.SimulateMsgRequestAddVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
-			weightMsgRequestRemoveVestingAccount,
-			launchsimulation.SimulateMsgRequestRemoveVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			weightMsgRequestRemoveAccount,
+			launchsimulation.SimulateMsgRequestRemoveAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddValidator,

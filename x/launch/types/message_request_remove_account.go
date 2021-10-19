@@ -6,8 +6,7 @@ import (
 )
 
 const (
-	TypeMsgRequestRemoveGenesisAccount = "request_remove_genesis_account"
-	TypeMsgRequestRemoveVestingAccount = "request_remove_vesting_account"
+	TypeMsgRequestRemoveAccount = "request_remove_account"
 )
 
 var _ sdk.Msg = &MsgRequestRemoveAccount{}
