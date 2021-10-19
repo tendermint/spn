@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+// NewShareDelayedVesting return the ShareVestingOptions
 func NewShareDelayedVesting(vesting Shares, endTime int64) *ShareVestingOptions {
 	return &ShareVestingOptions{
 		Options: &ShareVestingOptions_DelayedVesting{

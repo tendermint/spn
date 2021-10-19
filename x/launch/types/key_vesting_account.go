@@ -20,6 +20,5 @@ func VestingAccountKey(chainID uint64, address string) []byte {
 func VestingAccountAllKey(chainID uint64) []byte {
 	prefixBytes := []byte(VestingAccountKeyPrefix)
 	chainIDBytes := append(uintBytes(chainID), byte('/'))
-
 	return append(prefixBytes, chainIDBytes...)
 }

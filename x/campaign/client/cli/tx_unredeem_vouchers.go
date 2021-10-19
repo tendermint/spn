@@ -20,7 +20,7 @@ func CmdUnredeemVouchers() *cobra.Command {
 		Short: "Unredeem vouchers that have been redeemed into an account and get vouchers back",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argCampaignID, err := cast.ToUint64E(args[0])
+			campaignID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
@@ -37,7 +37,7 @@ func CmdUnredeemVouchers() *cobra.Command {
 
 			msg := types.NewMsgUnredeemVouchers(
 				clientCtx.GetFromAddress().String(),
-				argCampaignID,
+				campaignID,
 				shares,
 			)
 			if err := msg.ValidateBasic(); err != nil {
