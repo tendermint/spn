@@ -20,6 +20,7 @@ service Msg {
   rpc MintVouchers(MsgMintVouchers) returns (MsgMintVouchersResponse);
   rpc BurnVouchers(MsgBurnVouchers) returns (MsgBurnVouchersResponse);
   rpc RedeemVouchers(MsgRedeemVouchers) returns (MsgRedeemVouchersResponse);
+  rpc UpdateCampaignName(MsgUpdateCampaignName) returns (MsgUpdateCampaignNameResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -119,6 +120,15 @@ message MsgRedeemVouchers {
 }
 
 message MsgRedeemVouchersResponse {
+}
+
+message MsgUpdateCampaignName {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  string name = 3;
+}
+
+message MsgUpdateCampaignNameResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

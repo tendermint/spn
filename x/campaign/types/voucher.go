@@ -7,10 +7,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-const (
-	// VoucherPrefix is the prefix used to represent a voucher denomination
-	VoucherPrefix = "v/"
-)
+// VoucherPrefix is the prefix used to represent a voucher denomination
+const VoucherPrefix = "v/"
 
 // SharesToVouchers returns new Coins vouchers from the Shares representation
 func SharesToVouchers(shares Shares, campaignID uint64) (sdk.Coins, error) {
