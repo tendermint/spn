@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -13,62 +12,6 @@ import (
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
-
-// IsLaunchTriggeredChain check if chain is launch triggered
-func IsLaunchTriggeredChain(ctx sdk.Context, k keeper.Keeper, chainID uint64) bool {
-	chain, found := k.GetChain(ctx, chainID)
-	if !found {
-		return false
-	}
-	return chain.LaunchTriggered
-}
-
-// FindChain find a chain
-func FindChain(ctx sdk.Context, k keeper.Keeper, launchTriggered bool) (types.Chain, bool) {
-	found := false
-	chains := k.GetAllChain(ctx)
-	var chain types.Chain
-	for _, c := range chains {
-		if c.LaunchTriggered != launchTriggered {
-			continue
-		}
-		// check if the coordinator is still in the store
-		_, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, c.CoordinatorID)
-		if !found {
-			continue
-		}
-		chain = c
-		break
-	}
-	return chain, found
-}
-
-// FindChainCoordinatorAccount find coordinator account by chain id
-func FindChainCoordinatorAccount(ctx sdk.Context, k keeper.Keeper, accs []simtypes.Account, chainID uint64) (simtypes.Account, error) {
-	chain, found := k.GetChain(ctx, chainID)
-	if !found {
-		// No message if no coordinator address
-		return simtypes.Account{}, fmt.Errorf("chain %d not found", chainID)
-	}
-	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-	if !found {
-		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-	}
-	return FindAccount(accs, address)
-}
-
-// FindAccount find account by string hex address
-func FindAccount(accs []simtypes.Account, address string) (simtypes.Account, error) {
-	coordAddr, err := sdk.AccAddressFromBech32(address)
-	if err != nil {
-		return simtypes.Account{}, err
-	}
-	simAccount, found := simtypes.FindAccount(accs, coordAddr)
-	if !found {
-		return simAccount, fmt.Errorf("address %s not found in the sim accounts", address)
-	}
-	return simAccount, nil
-}
 
 // SimulateMsgCreateChain simulates a MsgCreateChain message
 func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
@@ -344,28 +287,9 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a validator
-		var (
-			valAcc     types.GenesisValidator
-			simAccount simtypes.Account
-			err        error
-		)
-		found := false
-		valAccs := k.GetAllGenesisValidator(ctx)
-		for _, acc := range valAccs {
-			if IsLaunchTriggeredChain(ctx, k, acc.ChainID) {
-				continue
-			}
-			// get coordinator account for removal
-			simAccount, err = FindChainCoordinatorAccount(ctx, k, accs, acc.ChainID)
-			if err != nil {
-				continue
-			}
-			valAcc = acc
-			found = true
-			break
-		}
+		simAccount, valAcc, found := FindValidator(ctx, k, accs)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "genesis account not found"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "validator not found"), nil, nil
 		}
 
 		msg := sample.MsgRequestRemoveValidator(
@@ -433,42 +357,8 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a random request without launch triggered
-		requests := k.GetAllRequest(ctx)
-		var request types.Request
-		chainFound := false
-		for _, req := range requests {
-			chain, found := k.GetChain(ctx, req.ChainID)
-			if !found || chain.LaunchTriggered {
-				continue
-			}
-			// check if the coordinator is still in the store
-			_, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-			if !found {
-				continue
-			}
-			switch content := req.Content.Content.(type) {
-			case *types.RequestContent_ValidatorRemoval:
-				// if is validator removal, check if the validator exist
-				if _, found := k.GetGenesisValidator(
-					ctx,
-					chain.Id,
-					content.ValidatorRemoval.ValAddress,
-				); !found {
-					continue
-				}
-			case *types.RequestContent_AccountRemoval:
-				// if is account removal, check if account exist
-				found, err := keeper.CheckAccount(ctx, k, chain.Id, content.AccountRemoval.Address)
-				if err != nil || !found {
-					continue
-				}
-			}
-			chainFound = true
-			request = req
-			break
-		}
-		if !chainFound {
-			// No message if no non-triggered chain
+		request, found := FindRequest(ctx, k)
+		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, "request for non-triggered chain not found"), nil, nil
 		}
 

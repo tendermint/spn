@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/simulation"
+	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -84,6 +85,13 @@ func TestFindChain(t *testing.T) {
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		msgCreateCoord = sample.MsgCreateCoordinator(sample.Address())
 	)
+
+	t.Run("no chains", func(t *testing.T) {
+		_, found := launchsimulation.FindChain(sdkCtx, *k, true)
+		require.False(t, found)
+		_, found = launchsimulation.FindChain(sdkCtx, *k, false)
+		require.False(t, found)
+	})
 
 	// Create coordinator
 	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
@@ -215,4 +223,130 @@ func TestIsLaunchTriggeredChain(t *testing.T) {
 			require.Equal(t, tt.IsTriggered, got)
 		})
 	}
+}
+
+func TestFindValidator(t *testing.T) {
+	var (
+		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
+
+		ctx  = sdk.WrapSDKContext(sdkCtx)
+		r    = rand.New(rand.NewSource(1))
+		accs = simulation.RandomAccounts(r, 2)
+	)
+
+	t.Run("empty validators", func(t *testing.T) {
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+
+		require.False(t, gotFound)
+		require.Equal(t, simtypes.Account{}, gotSimAcc)
+		require.Equal(t, types.GenesisValidator{}, gotVal)
+	})
+
+	t.Run("chain triggered launch", func(t *testing.T) {
+		chainID := k.AppendChain(sdkCtx, types.Chain{
+			LaunchTriggered: true,
+		})
+		k.SetGenesisValidator(sdkCtx, sample.GenesisValidator(chainID, sample.Address()))
+
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+		require.False(t, gotFound)
+		require.Equal(t, simtypes.Account{}, gotSimAcc)
+		require.Equal(t, types.GenesisValidator{}, gotVal)
+	})
+
+	t.Run("chain without coordinator", func(t *testing.T) {
+		chainID := k.AppendChain(sdkCtx, sample.Chain(0, 1000))
+		k.SetGenesisValidator(sdkCtx, sample.GenesisValidator(chainID, sample.Address()))
+
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+		require.False(t, gotFound)
+		require.Equal(t, simtypes.Account{}, gotSimAcc)
+		require.Equal(t, types.GenesisValidator{}, gotVal)
+	})
+
+	t.Run("chain without coordinator account", func(t *testing.T) {
+		msgCreateCoord := sample.MsgCreateCoordinator(sample.Address())
+		res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
+		require.NoError(t, err)
+		chainID := k.AppendChain(sdkCtx, sample.Chain(0, res.CoordinatorId))
+		k.SetGenesisValidator(sdkCtx, sample.GenesisValidator(chainID, sample.Address()))
+
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+		require.False(t, gotFound)
+		require.Equal(t, simtypes.Account{}, gotSimAcc)
+		require.Equal(t, types.GenesisValidator{}, gotVal)
+	})
+
+	t.Run("got a valid validator", func(t *testing.T) {
+		msgCreateCoord := sample.MsgCreateCoordinator(accs[0].Address.String())
+		res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
+		require.NoError(t, err)
+		chainID := k.AppendChain(sdkCtx, sample.Chain(0, res.CoordinatorId))
+		validator := sample.GenesisValidator(chainID, sample.Address())
+		k.SetGenesisValidator(sdkCtx, validator)
+
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+		require.True(t, gotFound)
+		require.Equal(t, accs[0], gotSimAcc)
+		require.Equal(t, validator, gotVal)
+	})
+}
+
+func TestFindRequest(t *testing.T) {
+	var (
+		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
+
+		ctx = sdk.WrapSDKContext(sdkCtx)
+	)
+
+	t.Run("empty requests", func(t *testing.T) {
+		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		require.Equal(t, types.Request{}, gotRequest)
+		require.False(t, gotFound)
+	})
+
+	t.Run("no chain request", func(t *testing.T) {
+		k.AppendRequest(sdkCtx, types.Request{
+			ChainID: 10000,
+			Creator: sample.Address(),
+		})
+		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		require.Equal(t, types.Request{}, gotRequest)
+		require.False(t, gotFound)
+	})
+
+	t.Run("launch triggered chain request", func(t *testing.T) {
+		chainID := k.AppendChain(sdkCtx, types.Chain{
+			LaunchTriggered: true,
+		})
+		k.AppendRequest(sdkCtx, sample.Request(chainID, sample.Address()))
+		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		require.Equal(t, types.Request{}, gotRequest)
+		require.False(t, gotFound)
+	})
+
+	t.Run("chain without coordinator", func(t *testing.T) {
+		chainID := k.AppendChain(sdkCtx, types.Chain{
+			CoordinatorID:   10000,
+			LaunchTriggered: true,
+		})
+		k.AppendRequest(sdkCtx, sample.Request(chainID, sample.Address()))
+		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		require.Equal(t, types.Request{}, gotRequest)
+		require.False(t, gotFound)
+	})
+
+	t.Run("get a valid request", func(t *testing.T) {
+		msgCreateCoord := sample.MsgCreateCoordinator(sample.Address())
+		res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
+		require.NoError(t, err)
+
+		chainID := k.AppendChain(sdkCtx, sample.Chain(0, res.CoordinatorId))
+		request := sample.Request(chainID, sample.Address())
+		k.AppendRequest(sdkCtx, request)
+
+		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		require.Equal(t, gotRequest, request)
+		require.True(t, gotFound)
+	})
 }
