@@ -3,6 +3,7 @@ package simulation_test
 import (
 	"math/rand"
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/simulation"
@@ -40,7 +41,7 @@ func setupMsgServer(t testing.TB) (
 
 func TestFindAccount(t *testing.T) {
 	var (
-		r    = rand.New(rand.NewSource(1))
+		r    = rand.New(rand.NewSource(time.Now().Unix()))
 		accs = simulation.RandomAccounts(r, 5)
 	)
 	tests := []struct {
@@ -137,7 +138,7 @@ func TestFindChainCoordinatorAccount(t *testing.T) {
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
 		ctx  = sdk.WrapSDKContext(sdkCtx)
-		r    = rand.New(rand.NewSource(1))
+		r    = rand.New(rand.NewSource(time.Now().Unix()))
 		accs = simulation.RandomAccounts(r, 2)
 	)
 
@@ -230,7 +231,7 @@ func TestFindValidator(t *testing.T) {
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
 		ctx  = sdk.WrapSDKContext(sdkCtx)
-		r    = rand.New(rand.NewSource(1))
+		r    = rand.New(rand.NewSource(time.Now().Unix()))
 		accs = simulation.RandomAccounts(r, 2)
 	)
 
