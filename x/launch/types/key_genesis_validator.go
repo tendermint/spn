@@ -20,6 +20,5 @@ func GenesisValidatorKey(chainID uint64, address string) []byte {
 func GenesisValidatorAllKey(chainID uint64) []byte {
 	prefixBytes := []byte(GenesisValidatorKeyPrefix)
 	chainIDBytes := append(uintBytes(chainID), byte('/'))
-
 	return append(prefixBytes, chainIDBytes...)
 }

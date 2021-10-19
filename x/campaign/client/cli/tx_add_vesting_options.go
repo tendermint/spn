@@ -20,12 +20,12 @@ func CmdAddVestingOptions() *cobra.Command {
 		Short: "Add a mainnet vesting account",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			argCampaignID, err := cast.ToUint64E(args[0])
+			campaignID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
 
-			argAddress := args[1]
+			address := args[1]
 
 			startingShares, err := types.NewShares(args[2])
 			if err != nil {
@@ -45,9 +45,9 @@ func CmdAddVestingOptions() *cobra.Command {
 			}
 
 			msg := types.NewMsgAddVestingOptions(
-				argCampaignID,
+				campaignID,
 				clientCtx.GetFromAddress().String(),
-				argAddress,
+				address,
 				startingShares,
 				delayedVesting,
 			)
