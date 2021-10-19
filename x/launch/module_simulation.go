@@ -9,7 +9,7 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/launch/keeper"
+	launchsimulation "github.com/tendermint/spn/x/launch/simulation"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -152,103 +152,47 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateChain,
-			SimulateMsgCreateChain(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgCreateChain(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgEditChain,
-			SimulateMsgEditChain(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgEditChain(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddGenesisAccount,
-			SimulateMsgRequestAddGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgRequestAddGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestRemoveGenesisAccount,
-			SimulateMsgRequestRemoveGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgRequestRemoveGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddVestingAccount,
-			SimulateMsgRequestAddVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgRequestAddVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestRemoveVestingAccount,
-			SimulateMsgRequestRemoveVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgRequestRemoveVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddValidator,
-			SimulateMsgRequestAddValidator(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgRequestAddValidator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestRemoveValidator,
-			SimulateMsgRequestRemoveValidator(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgRequestRemoveValidator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgTriggerLaunch,
-			SimulateMsgTriggerLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgTriggerLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgSettleRequest,
-			SimulateMsgSettleRequest(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgSettleRequest(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRevertLaunch,
-			SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsimulation.SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
-}
-
-// IsLaunchTriggeredChain check if chain is launch triggered
-func IsLaunchTriggeredChain(ctx sdk.Context, k keeper.Keeper, chainID uint64) bool {
-	chain, found := k.GetChain(ctx, chainID)
-	if !found {
-		return false
-	}
-	return chain.LaunchTriggered
-}
-
-// FindChain find a chain
-func FindChain(ctx sdk.Context, k keeper.Keeper, launchTriggered bool) (types.Chain, bool) {
-	found := false
-	chains := k.GetAllChain(ctx)
-	var chain types.Chain
-	for _, c := range chains {
-		if c.LaunchTriggered != launchTriggered {
-			continue
-		}
-		// check if the coordinator is still in the store
-		_, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, c.CoordinatorID)
-		if !found {
-			continue
-		}
-		chain = c
-		break
-	}
-	return chain, found
-}
-
-// FindChainCoordinatorAccount find coordinator account by chain id
-func FindChainCoordinatorAccount(ctx sdk.Context, k keeper.Keeper, accs []simtypes.Account, chainID uint64) (simtypes.Account, error) {
-	chain, found := k.GetChain(ctx, chainID)
-	if !found {
-		// No message if no coordinator address
-		return simtypes.Account{}, fmt.Errorf("chain %d not found", chainID)
-	}
-	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-	if !found {
-		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-	}
-	return FindAccount(accs, address)
-}
-
-// FindAccount find account by string hex address
-func FindAccount(accs []simtypes.Account, address string) (simtypes.Account, error) {
-	coordAddr, err := sdk.AccAddressFromBech32(address)
-	if err != nil {
-		return simtypes.Account{}, err
-	}
-	simAccount, found := simtypes.FindAccount(accs, coordAddr)
-	if !found {
-		return simAccount, fmt.Errorf("address %s not found in the sim accounts", address)
-	}
-	return simAccount, nil
 }

@@ -1,4 +1,4 @@
-package launch_test
+package simulation_test
 
 import (
 	"math/rand"
@@ -11,8 +11,8 @@ import (
 	"github.com/tendermint/spn/testutil/sample"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
-	"github.com/tendermint/spn/x/launch"
 	"github.com/tendermint/spn/x/launch/keeper"
+	launchsimulation "github.com/tendermint/spn/x/launch/simulation"
 	"github.com/tendermint/spn/x/launch/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -66,7 +66,7 @@ func TestFindAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := launch.FindAccount(accs, tt.address)
+			got, err := launchsimulation.FindAccount(accs, tt.address)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -94,7 +94,7 @@ func TestFindChain(t *testing.T) {
 			CoordinatorID:   1000,
 			LaunchTriggered: true,
 		})
-		_, found := launch.FindChain(sdkCtx, *k, true)
+		_, found := launchsimulation.FindChain(sdkCtx, *k, true)
 		require.False(t, found)
 	})
 
@@ -103,9 +103,9 @@ func TestFindChain(t *testing.T) {
 			CoordinatorID:   res.CoordinatorId,
 			LaunchTriggered: false,
 		})
-		_, found := launch.FindChain(sdkCtx, *k, true)
+		_, found := launchsimulation.FindChain(sdkCtx, *k, true)
 		require.False(t, found)
-		got, found := launch.FindChain(sdkCtx, *k, false)
+		got, found := launchsimulation.FindChain(sdkCtx, *k, false)
 		require.True(t, found)
 		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
 	})
@@ -115,10 +115,10 @@ func TestFindChain(t *testing.T) {
 			CoordinatorID:   res.CoordinatorId,
 			LaunchTriggered: true,
 		})
-		got, found := launch.FindChain(sdkCtx, *k, true)
+		got, found := launchsimulation.FindChain(sdkCtx, *k, true)
 		require.True(t, found)
 		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
-		got, found = launch.FindChain(sdkCtx, *k, false)
+		got, found = launchsimulation.FindChain(sdkCtx, *k, false)
 		require.True(t, found)
 		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
 	})
@@ -169,7 +169,7 @@ func TestFindChainCoordinatorAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := launch.FindChainCoordinatorAccount(sdkCtx, *k, accs, tt.chainID)
+			got, err := launchsimulation.FindChainCoordinatorAccount(sdkCtx, *k, accs, tt.chainID)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -211,7 +211,7 @@ func TestIsLaunchTriggeredChain(t *testing.T) {
 				CoordinatorID:   res.CoordinatorId,
 				LaunchTriggered: tt.IsTriggered,
 			})
-			got := launch.IsLaunchTriggeredChain(sdkCtx, *k, chainID)
+			got := launchsimulation.IsLaunchTriggeredChain(sdkCtx, *k, chainID)
 			require.Equal(t, tt.IsTriggered, got)
 		})
 	}
