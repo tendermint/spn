@@ -207,12 +207,7 @@ func TestGetAccountWithVouchers(t *testing.T) {
 		require.NoError(t, bk.MintCoins(ctx, campaigntypes.ModuleName, coins))
 		require.NoError(t, bk.SendCoinsFromModuleToAccount(ctx, campaigntypes.ModuleName, addr, coins))
 	}
-
-	// Vouchers in an account not part of accs
-	mint(sample.AccAddress(), sample.Vouchers(10))
-	_, _, _, found = simcampaign.GetAccountWithVouchers(ctx, bk, accs)
-	require.False(t, found)
-
+	
 	// Vouchers from an account
 	acc, _ := simtypes.RandomAcc(r, accs)
 	mint(acc.Address, sample.Vouchers(10))
