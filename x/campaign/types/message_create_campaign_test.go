@@ -3,7 +3,6 @@ package types_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -51,16 +50,6 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 				Coordinator:   sample.Address(),
 				CampaignName:  sample.CampaignName(),
 				TotalSupply:   invalidCoins,
-				DynamicShares: sample.Bool(),
-			},
-			err: types.ErrInvalidTotalSupply,
-		},
-		{
-			name: "empty total supply",
-			msg: types.MsgCreateCampaign{
-				Coordinator:   sample.Address(),
-				CampaignName:  sample.CampaignName(),
-				TotalSupply:   sdk.NewCoins(),
 				DynamicShares: sample.Bool(),
 			},
 			err: types.ErrInvalidTotalSupply,
