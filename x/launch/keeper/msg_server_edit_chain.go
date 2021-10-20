@@ -15,7 +15,7 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%v", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
 	}
 
 	// Check sender is the coordinator of the chain
@@ -25,7 +25,7 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 	}
 	if chain.CoordinatorID != coordinatorID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the chain is %v",
+			"coordinator of the chain is %d",
 			chain.CoordinatorID,
 		))
 	}

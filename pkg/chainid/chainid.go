@@ -44,7 +44,7 @@ func CheckChainName(chainName string) error {
 	}
 
 	if len(chainName) > ChainNameMaxLength {
-		return fmt.Errorf("chain name is too big, max length is %v", ChainNameMaxLength)
+		return fmt.Errorf("chain name is too big, max length is %d", ChainNameMaxLength)
 	}
 
 	// Iterate characters

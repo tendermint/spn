@@ -61,7 +61,7 @@ func CheckCampaignName(campaignName string) error {
 	}
 
 	if len(campaignName) > CampaignNameMaxLength {
-		return fmt.Errorf("campaign name is too big, max length is %v", CampaignNameMaxLength)
+		return fmt.Errorf("campaign name is too big, max length is %d", CampaignNameMaxLength)
 	}
 
 	// Iterate characters
