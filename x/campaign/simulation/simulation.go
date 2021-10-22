@@ -128,7 +128,7 @@ func GetCoordSimAccountWithCampaignID(
 	return simtypes.Account{}, 0, false
 }
 
-// getSharesFromCampaign returns a small portion of shares that can be minted as vouchers or added to an accounts
+// GetSharesFromCampaign returns a small portion of shares that can be minted as vouchers or added to an accounts
 func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campID uint64) (types.Shares, bool) {
 	camp, found := k.GetCampaign(ctx, campID)
 	if !found {
