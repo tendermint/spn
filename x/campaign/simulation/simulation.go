@@ -54,7 +54,7 @@ func deliverSimTx(
 	return simulation.GenAndDeliverTxWithRandFees(txCtx)
 }
 
-// getCoordSimAccount finds an account associated with a coordinator profile from simulation accounts
+// GetCoordSimAccount finds an account associated with a coordinator profile from simulation accounts
 func GetCoordSimAccount(
 	r *rand.Rand,
 	ctx sdk.Context,
@@ -78,7 +78,7 @@ func GetCoordSimAccount(
 	return simtypes.Account{}, 0, false
 }
 
-// getCoordSimAccountWithCampaignID finds an account associated with a coordinator profile from simulation accounts and a campaign created by this coordinator
+// GetCoordSimAccountWithCampaignID finds an account associated with a coordinator profile from simulation accounts and a campaign created by this coordinator
 func GetCoordSimAccountWithCampaignID(
 	r *rand.Rand,
 	ctx sdk.Context,
@@ -128,7 +128,7 @@ func GetCoordSimAccountWithCampaignID(
 	return simtypes.Account{}, 0, false
 }
 
-// getSharesFromCampaign returns a small portion of shares that can be minted as vouchers or added to an accounts
+// GetSharesFromCampaign returns a small portion of shares that can be minted as vouchers or added to an accounts
 func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campID uint64) (types.Shares, bool) {
 	camp, found := k.GetCampaign(ctx, campID)
 	if !found {
@@ -164,14 +164,14 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 	}
 
 	// No shares can be distributed
-	if len(shares) == 0 {
+	if shares.Empty() {
 		return types.EmptyShares(), false
 	}
 	shares = shares.Sort()
 	return types.Shares(shares), true
 }
 
-// getAccountWithVouchers returns an account that has vouchers for a campaign
+// GetAccountWithVouchers returns an account that has vouchers for a campaign
 func GetAccountWithVouchers(
 	ctx sdk.Context,
 	bk types.BankKeeper,
@@ -218,7 +218,7 @@ func GetAccountWithVouchers(
 		}
 		return false
 	})
-	if len(coins) == 0 {
+	if coins.Empty() {
 		return 0, account, coins, false
 	}
 
@@ -233,7 +233,7 @@ func GetAccountWithVouchers(
 	return 0, account, coins, false
 }
 
-// getAccountWithShares returns an account that contains allocated shares with its associated campaign
+// GetAccountWithShares returns an account that contains allocated shares with its associated campaign
 func GetAccountWithShares(
 	r *rand.Rand,
 	ctx sdk.Context,
