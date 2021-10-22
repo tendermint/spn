@@ -23,6 +23,10 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%v", msg.CampaignID)
 	}
 
+	if campaign.TotalSupply.Empty() {
+		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, "total supply is empty")
+	}
+
 	// Get the coordinator ID
 	coordinatorID, found := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if !found {

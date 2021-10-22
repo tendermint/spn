@@ -57,10 +57,5 @@ func (msg *MsgCreateCampaign) ValidateBasic() error {
 	if !msg.TotalSupply.IsValid() {
 		return sdkerrors.Wrap(ErrInvalidTotalSupply, "total supply is not a valid Coins object")
 	}
-
-	if msg.TotalSupply.Empty() {
-		return sdkerrors.Wrap(ErrInvalidTotalSupply, "total supply is empty")
-	}
-
 	return nil
 }

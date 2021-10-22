@@ -30,12 +30,12 @@ func (k msgServer) UpdateCoordinatorAddress(
 				fmt.Sprintf("new address already have a coordinator: %d", newCoordAddr.CoordinatorId))
 	}
 
-	if !k.HasCoordinator(ctx, coordByAddress.CoordinatorId) {
+	coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
+	if !found {
 		return &types.MsgUpdateCoordinatorAddressResponse{},
 			spnerrors.Criticalf("a coordinator address is associated to a non-existent coordinator ID: %d",
 				coordByAddress.CoordinatorId)
 	}
-	coord := k.GetCoordinator(ctx, coordByAddress.CoordinatorId)
 	coord.Address = msg.NewAddress
 
 	// Remove the old coordinator by address and create a new one

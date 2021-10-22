@@ -51,8 +51,8 @@ func CmdRedeemVouchers() *cobra.Command {
 
 			msg := types.NewMsgRedeemVouchers(
 				clientCtx.GetFromAddress().String(),
-				campaignID,
 				account,
+				campaignID,
 				vouchers,
 			)
 			if err := msg.ValidateBasic(); err != nil {

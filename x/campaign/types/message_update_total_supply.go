@@ -9,11 +9,11 @@ const TypeMsgUpdateTotalSupply = "update_total_supply"
 
 var _ sdk.Msg = &MsgUpdateTotalSupply{}
 
-func NewMsgUpdateTotalSupply(coordinator string, campaignID uint64, totalSupply sdk.Coins) *MsgUpdateTotalSupply {
+func NewMsgUpdateTotalSupply(coordinator string, campaignID uint64, totalSupplyUpdate sdk.Coins) *MsgUpdateTotalSupply {
 	return &MsgUpdateTotalSupply{
-		Coordinator: coordinator,
-		CampaignID:  campaignID,
-		TotalSupply: totalSupply,
+		Coordinator:       coordinator,
+		CampaignID:        campaignID,
+		TotalSupplyUpdate: totalSupplyUpdate,
 	}
 }
 
@@ -44,11 +44,11 @@ func (msg *MsgUpdateTotalSupply) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
-	if !msg.TotalSupply.IsValid() {
+	if !msg.TotalSupplyUpdate.IsValid() {
 		return sdkerrors.Wrap(ErrInvalidTotalSupply, "total supply is not a valid Coins object")
 	}
 
-	if msg.TotalSupply.Empty() {
+	if msg.TotalSupplyUpdate.Empty() {
 		return sdkerrors.Wrap(ErrInvalidTotalSupply, "total supply is empty")
 	}
 

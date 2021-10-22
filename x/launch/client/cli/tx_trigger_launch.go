@@ -18,7 +18,7 @@ func CmdTriggerLaunch() *cobra.Command {
 		Short: "Trigger the launch of a chain",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			argsRemainingTime, _ := strconv.ParseUint(args[1], 10, 64)
+			remainingTime, _ := strconv.ParseUint(args[1], 10, 64)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -30,7 +30,7 @@ func CmdTriggerLaunch() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgTriggerLaunch(clientCtx.GetFromAddress().String(), chainID, argsRemainingTime)
+			msg := types.NewMsgTriggerLaunch(clientCtx.GetFromAddress().String(), chainID, remainingTime)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

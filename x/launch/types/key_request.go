@@ -14,7 +14,6 @@ const (
 func RequestKey(chainID, requestID uint64) []byte {
 	prefix := RequestPoolKey(chainID)
 	requestIDBytes := append(uintBytes(requestID), byte('/'))
-
 	return append(prefix, requestIDBytes...)
 }
 
