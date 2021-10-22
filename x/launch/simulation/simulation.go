@@ -330,7 +330,7 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		// Find coordinator account
 		simAccount, err := FindChainCoordinatorAccount(ctx, k, accs, chain.Id)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, err.Error()), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, err.Error()), nil, nil
 		}
 		msg := sample.MsgTriggerLaunch(simAccount.Address.String(), chain.Id)
 		txCtx := simulation.OperationInput{
@@ -365,7 +365,7 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		// Find coordinator account
 		simAccount, err := FindChainCoordinatorAccount(ctx, k, accs, request.ChainID)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, err.Error()), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, err.Error()), nil, nil
 		}
 
 		approve := r.Intn(100) < 50
@@ -413,7 +413,7 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 		// Find coordinator account
 		simAccount, err := FindChainCoordinatorAccount(ctx, k, accs, chain.Id)
 		if err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, err.Error()), nil, err
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, err.Error()), nil, nil
 		}
 		msg := sample.MsgRevertLaunch(simAccount.Address.String(), chain.Id)
 		txCtx := simulation.OperationInput{
