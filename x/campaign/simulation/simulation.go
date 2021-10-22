@@ -54,7 +54,7 @@ func deliverSimTx(
 	return simulation.GenAndDeliverTxWithRandFees(txCtx)
 }
 
-// getCoordSimAccount finds an account associated with a coordinator profile from simulation accounts
+// GetCoordSimAccount finds an account associated with a coordinator profile from simulation accounts
 func GetCoordSimAccount(
 	r *rand.Rand,
 	ctx sdk.Context,
