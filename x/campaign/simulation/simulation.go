@@ -233,7 +233,7 @@ func GetAccountWithVouchers(
 	return 0, account, coins, false
 }
 
-// getAccountWithShares returns an account that contains allocated shares with its associated campaign
+// GetAccountWithShares returns an account that contains allocated shares with its associated campaign
 func GetAccountWithShares(
 	r *rand.Rand,
 	ctx sdk.Context,
