@@ -479,8 +479,8 @@ func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper) simt
 
 		msg := types.NewMsgRedeemVouchers(
 			simAccount.Address.String(),
-			campID,
 			accs[accountNb].Address.String(),
+			campID,
 			vouchers,
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, vouchers)

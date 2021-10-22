@@ -69,7 +69,8 @@ func TestGetCoordSimAccount(t *testing.T) {
 	acc, coordID, found := simcampaign.GetCoordSimAccount(r, ctx, pk, accs)
 	require.True(t, found)
 	require.Contains(t, accs, acc)
-	require.True(t, pk.HasCoordinator(ctx, coordID))
+	_, found = pk.GetCoordinator(ctx, coordID)
+	require.True(t, found)
 }
 
 func TestGetCoordSimAccountWithCampaignID(t *testing.T) {

@@ -9,7 +9,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-<<<<<<< HEAD
 const (
 	// VoucherSeparator is used in voucher denom to separate the denom component
 	VoucherSeparator = "/"
