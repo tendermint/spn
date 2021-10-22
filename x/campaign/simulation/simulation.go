@@ -302,24 +302,15 @@ func SimulateMsgUpdateTotalShares(ak types.AccountKeeper, bk types.BankKeeper, p
 
 		camp, _ := k.GetCampaign(ctx, campID)
 
-		// Update all total shares to a number between allocated and current+100000
-		totalShares := make(map[string]int64)
-		allocatedShares := make(map[string]int64)
-		for _, total := range camp.TotalShares {
-			totalShares[total.Denom] = total.Amount.Int64()
-		}
-		for _, allocated := range camp.AllocatedShares {
-			allocatedShares[allocated.Denom] = allocated.Amount.Int64()
-		}
-
 		// Defined the value to update
 		var newTotalShares sdk.Coins
 		for _, share := range ShareDenoms {
-			currentTotal := totalShares[share]
+			currentTotal := camp.TotalShares.AmountOf(share)
 			if currentTotal == 0 {
 				currentTotal = types.DefaultTotalShareNumber
 			}
-			newTotal := r.Int63n(currentTotal+types.DefaultTotalShareNumber) + allocatedShares[share]
+			allocatedShare := camp.AllocatedShares.AmountOf(share)
+			newTotal := r.Int63n(currentTotal+types.DefaultTotalShareNumber) + allocatedShare
 			newTotalShares = append(newTotalShares, sdk.NewCoin(share, sdk.NewInt(newTotal)))
 		}
 		newTotalShares = newTotalShares.Sort()
