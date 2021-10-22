@@ -78,7 +78,7 @@ func GetCoordSimAccount(
 	return simtypes.Account{}, 0, false
 }
 
-// getCoordSimAccountWithCampaignID finds an account associated with a coordinator profile from simulation accounts and a campaign created by this coordinator
+// GetCoordSimAccountWithCampaignID finds an account associated with a coordinator profile from simulation accounts and a campaign created by this coordinator
 func GetCoordSimAccountWithCampaignID(
 	r *rand.Rand,
 	ctx sdk.Context,
