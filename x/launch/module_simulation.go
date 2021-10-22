@@ -15,7 +15,7 @@ import (
 
 const (
 	defaultWeightMsgCreateChain              int = 50
-	defaultWeightMsgEditChain                int = 10
+	defaultWeightMsgEditChain                int = 20
 	defaultWeightMsgRequestAddGenesisAccount int = 50
 	defaultWeightMsgRequestAddVestingAccount int = 50
 	defaultWeightMsgRequestRemoveAccount     int = 15
@@ -23,7 +23,7 @@ const (
 	defaultWeightMsgRequestRemoveValidator   int = 15
 	defaultWeightMsgSettleRequest            int = 50
 	defaultWeightMsgTriggerLaunch            int = 15
-	defaultWeightMsgRevertLaunch             int = 5
+	defaultWeightMsgRevertLaunch             int = 0
 
 	opWeightMsgCreateChain              = "op_weight_msg_create_chain"
 	opWeightMsgEditChain                = "op_weight_msg_edit_chain"

@@ -7,7 +7,7 @@ import (
 	"github.com/tendermint/spn/pkg/chainid"
 )
 
-const TypeMsgCreateChain = "create_chain"
+const TypeMsgCreateChain = "CreateChain"
 
 var _ sdk.Msg = &MsgCreateChain{}
 
@@ -38,7 +38,7 @@ func (msg *MsgCreateChain) Route() string {
 }
 
 func (msg *MsgCreateChain) Type() string {
-	return "CreateChain"
+	return TypeMsgCreateChain
 }
 
 func (msg *MsgCreateChain) GetSigners() []sdk.AccAddress {

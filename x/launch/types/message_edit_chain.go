@@ -7,7 +7,7 @@ import (
 	"github.com/tendermint/spn/pkg/chainid"
 )
 
-const TypeMsgEditChain = "edit_chain"
+const TypeMsgEditChain = "EditChain"
 
 var _ sdk.Msg = &MsgEditChain{}
 
@@ -34,7 +34,7 @@ func (msg *MsgEditChain) Route() string {
 }
 
 func (msg *MsgEditChain) Type() string {
-	return "EditChain"
+	return TypeMsgEditChain
 }
 
 func (msg *MsgEditChain) GetSigners() []sdk.AccAddress {

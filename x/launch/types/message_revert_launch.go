@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgRevertLaunch = "revert_launch"
+const TypeMsgRevertLaunch = "RevertLaunch"
 
 var _ sdk.Msg = &MsgRevertLaunch{}
 
@@ -21,7 +21,7 @@ func (msg *MsgRevertLaunch) Route() string {
 }
 
 func (msg *MsgRevertLaunch) Type() string {
-	return "RevertLaunch"
+	return TypeMsgRevertLaunch
 }
 
 func (msg *MsgRevertLaunch) GetSigners() []sdk.AccAddress {

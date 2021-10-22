@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgRequestAddVestingAccount = "request_add_vesting_account"
+const TypeMsgRequestAddVestingAccount = "RequestAddVestingAccount"
 
 var _ sdk.Msg = &MsgRequestAddVestingAccount{}
 
@@ -28,7 +28,7 @@ func (msg *MsgRequestAddVestingAccount) Route() string {
 }
 
 func (msg *MsgRequestAddVestingAccount) Type() string {
-	return "RequestAddVestingAccount"
+	return TypeMsgRequestAddVestingAccount
 }
 
 func (msg *MsgRequestAddVestingAccount) GetSigners() []sdk.AccAddress {

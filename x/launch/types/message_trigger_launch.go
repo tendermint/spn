@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgTriggerLaunch = "trigger_launch"
+const TypeMsgTriggerLaunch = "TriggerLaunch"
 
 var _ sdk.Msg = &MsgTriggerLaunch{}
 
@@ -22,7 +22,7 @@ func (msg *MsgTriggerLaunch) Route() string {
 }
 
 func (msg *MsgTriggerLaunch) Type() string {
-	return "TriggerLaunch"
+	return TypeMsgTriggerLaunch
 }
 
 func (msg *MsgTriggerLaunch) GetSigners() []sdk.AccAddress {

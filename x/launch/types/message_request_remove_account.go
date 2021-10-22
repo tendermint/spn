@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	TypeMsgRequestRemoveAccount = "request_remove_account"
+	TypeMsgRequestRemoveAccount = "RequestRemoveAccount"
 )
 
 var _ sdk.Msg = &MsgRequestRemoveAccount{}
@@ -24,7 +24,7 @@ func (msg *MsgRequestRemoveAccount) Route() string {
 }
 
 func (msg *MsgRequestRemoveAccount) Type() string {
-	return "RequestRemoveAccount"
+	return TypeMsgRequestRemoveAccount
 }
 
 func (msg *MsgRequestRemoveAccount) GetSigners() []sdk.AccAddress {

@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgSettleRequest = "settle_request"
+const TypeMsgSettleRequest = "SettleRequest"
 
 var _ sdk.Msg = &MsgSettleRequest{}
 
@@ -23,7 +23,7 @@ func (msg *MsgSettleRequest) Route() string {
 }
 
 func (msg *MsgSettleRequest) Type() string {
-	return "SettleRequest"
+	return TypeMsgSettleRequest
 }
 
 func (msg *MsgSettleRequest) GetSigners() []sdk.AccAddress {
