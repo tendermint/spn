@@ -171,7 +171,7 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 	return types.Shares(shares), true
 }
 
-// getAccountWithVouchers returns an account that has vouchers for a campaign
+// GetAccountWithVouchers returns an account that has vouchers for a campaign
 func GetAccountWithVouchers(
 	ctx sdk.Context,
 	bk types.BankKeeper,
