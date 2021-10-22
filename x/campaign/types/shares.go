@@ -108,3 +108,8 @@ func IsTotalSharesReached(shares, totalShares Shares) bool {
 func (shares Shares) IsAllLTE(cmpShares Shares) bool {
 	return sdk.Coins(shares).IsAllLTE(sdk.Coins(cmpShares))
 }
+
+// AmountOf returns the amount of a denom from shares
+func (shares Shares) AmountOf(denom string) int64 {
+	return sdk.Coins(shares).AmountOf(denom).Int64()
+}

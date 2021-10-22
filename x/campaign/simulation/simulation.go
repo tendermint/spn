@@ -135,23 +135,13 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 		return types.EmptyShares(), false
 	}
 
-	// store current values in map
-	totalShares := make(map[string]int64)
-	allocatedShares := make(map[string]int64)
-	for _, total := range camp.TotalShares {
-		totalShares[total.Denom] = total.Amount.Int64()
-	}
-	for _, allocated := range camp.AllocatedShares {
-		allocatedShares[allocated.Denom] = allocated.Amount.Int64()
-	}
-
 	var shares sdk.Coins
 	for _, share := range ShareDenoms {
-		total := totalShares[share]
+		total := camp.TotalShares.AmountOf(share)
 		if total == 0 {
 			total = types.DefaultTotalShareNumber
 		}
-		remaining := total - allocatedShares[share]
+		remaining := total - camp.AllocatedShares.AmountOf(share)
 		if remaining == 0 {
 			continue
 		}
