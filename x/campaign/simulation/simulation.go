@@ -218,7 +218,7 @@ func GetAccountWithVouchers(
 		}
 		return false
 	})
-	if len(coins) == 0 {
+	if coins.Empty() {
 		return 0, account, coins, false
 	}
 
