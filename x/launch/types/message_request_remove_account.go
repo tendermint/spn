@@ -5,9 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const (
-	TypeMsgRequestRemoveAccount = "RequestRemoveAccount"
-)
+const TypeMsgRequestRemoveAccount = "request_remove_account"
 
 var _ sdk.Msg = &MsgRequestRemoveAccount{}
 

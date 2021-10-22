@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgSettleRequest = "SettleRequest"
+const TypeMsgSettleRequest = "settle_request"
 
 var _ sdk.Msg = &MsgSettleRequest{}
 

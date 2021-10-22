@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgRequestRemoveValidator = "RequestRemoveValidator"
+const TypeMsgRequestRemoveValidator = "request_remove_validator"
 
 var _ sdk.Msg = &MsgRequestRemoveValidator{}
 

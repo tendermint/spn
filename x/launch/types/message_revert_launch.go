@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgRevertLaunch = "RevertLaunch"
+const TypeMsgRevertLaunch = "revert_launch"
 
 var _ sdk.Msg = &MsgRevertLaunch{}
 

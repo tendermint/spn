@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgRequestAddAccount = "RequestAddAccount"
+const TypeMsgRequestAddAccount = "request_add_account"
 
 var _ sdk.Msg = &MsgRequestAddAccount{}
 

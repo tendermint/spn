@@ -7,7 +7,7 @@ import (
 	"github.com/tendermint/spn/pkg/chainid"
 )
 
-const TypeMsgEditChain = "EditChain"
+const TypeMsgEditChain = "edit_chain"
 
 var _ sdk.Msg = &MsgEditChain{}
 

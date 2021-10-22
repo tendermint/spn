@@ -7,7 +7,7 @@ import (
 	"github.com/tendermint/spn/pkg/chainid"
 )
 
-const TypeMsgCreateChain = "CreateChain"
+const TypeMsgCreateChain = "create_chain"
 
 var _ sdk.Msg = &MsgCreateChain{}
 

@@ -5,7 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgTriggerLaunch = "TriggerLaunch"
+const TypeMsgTriggerLaunch = "trigger_launch"
 
 var _ sdk.Msg = &MsgTriggerLaunch{}
 
