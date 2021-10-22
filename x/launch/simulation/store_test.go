@@ -79,60 +79,6 @@ func TestFindAccount(t *testing.T) {
 	}
 }
 
-func TestFindChain(t *testing.T) {
-	var (
-		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
-
-		ctx            = sdk.WrapSDKContext(sdkCtx)
-		msgCreateCoord = sample.MsgCreateCoordinator(sample.Address())
-	)
-
-	t.Run("no chains", func(t *testing.T) {
-		_, found := launchsimulation.FindChain(sdkCtx, *k, true)
-		require.False(t, found)
-		_, found = launchsimulation.FindChain(sdkCtx, *k, false)
-		require.False(t, found)
-	})
-
-	// Create coordinator
-	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
-	require.NoError(t, err)
-
-	t.Run("chain without coordinator", func(t *testing.T) {
-		k.AppendChain(sdkCtx, types.Chain{
-			CoordinatorID:   1000,
-			LaunchTriggered: true,
-		})
-		_, found := launchsimulation.FindChain(sdkCtx, *k, true)
-		require.False(t, found)
-	})
-
-	t.Run("not launch triggered chain", func(t *testing.T) {
-		k.AppendChain(sdkCtx, types.Chain{
-			CoordinatorID:   res.CoordinatorId,
-			LaunchTriggered: false,
-		})
-		_, found := launchsimulation.FindChain(sdkCtx, *k, true)
-		require.False(t, found)
-		got, found := launchsimulation.FindChain(sdkCtx, *k, false)
-		require.True(t, found)
-		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
-	})
-
-	t.Run("found chain", func(t *testing.T) {
-		k.AppendChain(sdkCtx, types.Chain{
-			CoordinatorID:   res.CoordinatorId,
-			LaunchTriggered: true,
-		})
-		got, found := launchsimulation.FindChain(sdkCtx, *k, true)
-		require.True(t, found)
-		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
-		got, found = launchsimulation.FindChain(sdkCtx, *k, false)
-		require.True(t, found)
-		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
-	})
-}
-
 func TestFindChainCoordinatorAccount(t *testing.T) {
 	var (
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
@@ -226,7 +172,62 @@ func TestIsLaunchTriggeredChain(t *testing.T) {
 	}
 }
 
-func TestFindValidator(t *testing.T) {
+func TestFindRandomChain(t *testing.T) {
+	var (
+		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
+
+		r              = rand.New(rand.NewSource(time.Now().Unix()))
+		ctx            = sdk.WrapSDKContext(sdkCtx)
+		msgCreateCoord = sample.MsgCreateCoordinator(sample.Address())
+	)
+
+	t.Run("no chains", func(t *testing.T) {
+		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true)
+		require.False(t, found)
+		_, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false)
+		require.False(t, found)
+	})
+
+	// Create coordinator
+	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
+	require.NoError(t, err)
+
+	t.Run("chain without coordinator", func(t *testing.T) {
+		k.AppendChain(sdkCtx, types.Chain{
+			CoordinatorID:   1000,
+			LaunchTriggered: true,
+		})
+		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true)
+		require.False(t, found)
+	})
+
+	t.Run("not launch triggered chain", func(t *testing.T) {
+		k.AppendChain(sdkCtx, types.Chain{
+			CoordinatorID:   res.CoordinatorId,
+			LaunchTriggered: false,
+		})
+		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true)
+		require.False(t, found)
+		got, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, false)
+		require.True(t, found)
+		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
+	})
+
+	t.Run("found chain", func(t *testing.T) {
+		k.AppendChain(sdkCtx, types.Chain{
+			CoordinatorID:   res.CoordinatorId,
+			LaunchTriggered: true,
+		})
+		got, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true)
+		require.True(t, found)
+		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
+		got, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false)
+		require.True(t, found)
+		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
+	})
+}
+
+func TestFindRandomValidator(t *testing.T) {
 	var (
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
@@ -236,7 +237,7 @@ func TestFindValidator(t *testing.T) {
 	)
 
 	t.Run("empty validators", func(t *testing.T) {
-		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindRandomValidator(r, sdkCtx, *k, accs)
 
 		require.False(t, gotFound)
 		require.Equal(t, simtypes.Account{}, gotSimAcc)
@@ -249,7 +250,7 @@ func TestFindValidator(t *testing.T) {
 		})
 		k.SetGenesisValidator(sdkCtx, sample.GenesisValidator(chainID, sample.Address()))
 
-		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindRandomValidator(r, sdkCtx, *k, accs)
 		require.False(t, gotFound)
 		require.Equal(t, simtypes.Account{}, gotSimAcc)
 		require.Equal(t, types.GenesisValidator{}, gotVal)
@@ -259,7 +260,7 @@ func TestFindValidator(t *testing.T) {
 		chainID := k.AppendChain(sdkCtx, sample.Chain(0, 1000))
 		k.SetGenesisValidator(sdkCtx, sample.GenesisValidator(chainID, sample.Address()))
 
-		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindRandomValidator(r, sdkCtx, *k, accs)
 		require.False(t, gotFound)
 		require.Equal(t, simtypes.Account{}, gotSimAcc)
 		require.Equal(t, types.GenesisValidator{}, gotVal)
@@ -272,7 +273,7 @@ func TestFindValidator(t *testing.T) {
 		chainID := k.AppendChain(sdkCtx, sample.Chain(0, res.CoordinatorId))
 		k.SetGenesisValidator(sdkCtx, sample.GenesisValidator(chainID, sample.Address()))
 
-		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindRandomValidator(r, sdkCtx, *k, accs)
 		require.False(t, gotFound)
 		require.Equal(t, simtypes.Account{}, gotSimAcc)
 		require.Equal(t, types.GenesisValidator{}, gotVal)
@@ -286,22 +287,23 @@ func TestFindValidator(t *testing.T) {
 		validator := sample.GenesisValidator(chainID, sample.Address())
 		k.SetGenesisValidator(sdkCtx, validator)
 
-		gotSimAcc, gotVal, gotFound := launchsimulation.FindValidator(sdkCtx, *k, accs)
+		gotSimAcc, gotVal, gotFound := launchsimulation.FindRandomValidator(r, sdkCtx, *k, accs)
 		require.True(t, gotFound)
 		require.Equal(t, accs[0], gotSimAcc)
 		require.Equal(t, validator, gotVal)
 	})
 }
 
-func TestFindRequest(t *testing.T) {
+func TestFindRandomRequest(t *testing.T) {
 	var (
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
+		r   = rand.New(rand.NewSource(time.Now().Unix()))
 		ctx = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	t.Run("empty requests", func(t *testing.T) {
-		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		gotRequest, gotFound := launchsimulation.FindRandomRequest(r, sdkCtx, *k)
 		require.Equal(t, types.Request{}, gotRequest)
 		require.False(t, gotFound)
 	})
@@ -311,7 +313,7 @@ func TestFindRequest(t *testing.T) {
 			ChainID: 10000,
 			Creator: sample.Address(),
 		})
-		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		gotRequest, gotFound := launchsimulation.FindRandomRequest(r, sdkCtx, *k)
 		require.Equal(t, types.Request{}, gotRequest)
 		require.False(t, gotFound)
 	})
@@ -321,7 +323,7 @@ func TestFindRequest(t *testing.T) {
 			LaunchTriggered: true,
 		})
 		k.AppendRequest(sdkCtx, sample.Request(chainID, sample.Address()))
-		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		gotRequest, gotFound := launchsimulation.FindRandomRequest(r, sdkCtx, *k)
 		require.Equal(t, types.Request{}, gotRequest)
 		require.False(t, gotFound)
 	})
@@ -332,7 +334,7 @@ func TestFindRequest(t *testing.T) {
 			LaunchTriggered: true,
 		})
 		k.AppendRequest(sdkCtx, sample.Request(chainID, sample.Address()))
-		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		gotRequest, gotFound := launchsimulation.FindRandomRequest(r, sdkCtx, *k)
 		require.Equal(t, types.Request{}, gotRequest)
 		require.False(t, gotFound)
 	})
@@ -346,7 +348,7 @@ func TestFindRequest(t *testing.T) {
 		request := sample.Request(chainID, sample.Address())
 		k.AppendRequest(sdkCtx, request)
 
-		gotRequest, gotFound := launchsimulation.FindRequest(sdkCtx, *k)
+		gotRequest, gotFound := launchsimulation.FindRandomRequest(r, sdkCtx, *k)
 		require.Equal(t, gotRequest, request)
 		require.True(t, gotFound)
 	})

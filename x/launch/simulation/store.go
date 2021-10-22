@@ -2,6 +2,7 @@ package simulation
 
 import (
 	"fmt"
+	"math/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -18,10 +19,51 @@ func IsLaunchTriggeredChain(ctx sdk.Context, k keeper.Keeper, chainID uint64) bo
 	return chain.LaunchTriggered
 }
 
-// FindChain find a chain
-func FindChain(ctx sdk.Context, k keeper.Keeper, launchTriggered bool) (types.Chain, bool) {
+// FindAccount find account by string hex address
+func FindAccount(accs []simtypes.Account, address string) (simtypes.Account, error) {
+	coordAddr, err := sdk.AccAddressFromBech32(address)
+	if err != nil {
+		return simtypes.Account{}, err
+	}
+	simAccount, found := simtypes.FindAccount(accs, coordAddr)
+	if !found {
+		return simAccount, fmt.Errorf("address %s not found in the sim accounts", address)
+	}
+	return simAccount, nil
+}
+
+// FindChainCoordinatorAccount find coordinator account by chain id
+func FindChainCoordinatorAccount(
+	ctx sdk.Context,
+	k keeper.Keeper,
+	accs []simtypes.Account,
+	chainID uint64,
+) (simtypes.Account, error) {
+	chain, found := k.GetChain(ctx, chainID)
+	if !found {
+		// No message if no coordinator address
+		return simtypes.Account{}, fmt.Errorf("chain %d not found", chainID)
+	}
+	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	if !found {
+		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
+	}
+	return FindAccount(accs, address)
+}
+
+// FindRandomChain find a random chain from store
+func FindRandomChain(
+	r *rand.Rand,
+	ctx sdk.Context,
+	k keeper.Keeper,
+	launchTriggered bool,
+) (types.Chain, bool) {
+
 	found := false
 	chains := k.GetAllChain(ctx)
+	r.Shuffle(len(chains), func(i, j int) {
+		chains[i], chains[j] = chains[j], chains[i]
+	})
 	var chain types.Chain
 	for _, c := range chains {
 		if c.LaunchTriggered != launchTriggered {
@@ -38,37 +80,18 @@ func FindChain(ctx sdk.Context, k keeper.Keeper, launchTriggered bool) (types.Ch
 	return chain, found
 }
 
-// FindChainCoordinatorAccount find coordinator account by chain id
-func FindChainCoordinatorAccount(ctx sdk.Context, k keeper.Keeper, accs []simtypes.Account, chainID uint64) (simtypes.Account, error) {
-	chain, found := k.GetChain(ctx, chainID)
-	if !found {
-		// No message if no coordinator address
-		return simtypes.Account{}, fmt.Errorf("chain %d not found", chainID)
-	}
-	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-	if !found {
-		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
-	}
-	return FindAccount(accs, address)
-}
+// FindRandomRequest find a valid random request from store
+func FindRandomRequest(
+	r *rand.Rand,
+	ctx sdk.Context,
+	k keeper.Keeper,
+) (request types.Request, found bool) {
 
-// FindAccount find account by string hex address
-func FindAccount(accs []simtypes.Account, address string) (simtypes.Account, error) {
-	coordAddr, err := sdk.AccAddressFromBech32(address)
-	if err != nil {
-		return simtypes.Account{}, err
-	}
-	simAccount, found := simtypes.FindAccount(accs, coordAddr)
-	if !found {
-		return simAccount, fmt.Errorf("address %s not found in the sim accounts", address)
-	}
-	return simAccount, nil
-}
-
-// FindRequest find a valid request from store
-func FindRequest(ctx sdk.Context, k keeper.Keeper) (request types.Request, found bool) {
 	// Select a random request without launch triggered
 	requests := k.GetAllRequest(ctx)
+	r.Shuffle(len(requests), func(i, j int) {
+		requests[i], requests[j] = requests[j], requests[i]
+	})
 	for _, req := range requests {
 		chain, chainFound := k.GetChain(ctx, req.ChainID)
 		if !chainFound || chain.LaunchTriggered {
@@ -103,13 +126,17 @@ func FindRequest(ctx sdk.Context, k keeper.Keeper) (request types.Request, found
 	return request, found
 }
 
-// FindValidator find a valid validator from store
-func FindValidator(
+// FindRandomValidator find a valid validator from store
+func FindRandomValidator(
+	r *rand.Rand,
 	ctx sdk.Context,
 	k keeper.Keeper,
 	accs []simtypes.Account,
 ) (simAccount simtypes.Account, valAcc types.GenesisValidator, found bool) {
 	valAccs := k.GetAllGenesisValidator(ctx)
+	r.Shuffle(len(valAccs), func(i, j int) {
+		valAccs[i], valAccs[j] = valAccs[j], valAccs[i]
+	})
 	for _, acc := range valAccs {
 		if IsLaunchTriggeredChain(ctx, k, acc.ChainID) {
 			continue
