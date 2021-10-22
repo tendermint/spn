@@ -57,14 +57,12 @@ func FindRandomChain(
 	ctx sdk.Context,
 	k keeper.Keeper,
 	launchTriggered bool,
-) (types.Chain, bool) {
+) (chain types.Chain, found bool) {
 
-	found := false
 	chains := k.GetAllChain(ctx)
 	r.Shuffle(len(chains), func(i, j int) {
 		chains[i], chains[j] = chains[j], chains[i]
 	})
-	var chain types.Chain
 	for _, c := range chains {
 		if c.LaunchTriggered != launchTriggered {
 			continue
