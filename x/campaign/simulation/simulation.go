@@ -164,7 +164,7 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 	}
 
 	// No shares can be distributed
-	if len(shares) == 0 {
+	if shares.Empty() {
 		return types.EmptyShares(), false
 	}
 	shares = shares.Sort()
