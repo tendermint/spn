@@ -25,7 +25,7 @@ func populateCoordinators(
 	accs []simtypes.Account,
 	coordNb int,
 ) (coordIDs []uint64) {
-	accsNb :=  len(accs)
+	accsNb := len(accs)
 	require.LessOrEqual(t, coordNb, accsNb)
 
 	// Create coordinator from random sim accounts
@@ -33,7 +33,7 @@ func populateCoordinators(
 	for i := 0; i < coordNb; i++ {
 		// Find randomly an index never used
 		var nb int
-		for j:=0;;j++{
+		for j := 0; ; j++ {
 			nb = r.Intn(accsNb)
 			if _, ok := created[nb]; !ok {
 				created[nb] = struct{}{}
