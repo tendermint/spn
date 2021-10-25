@@ -30,198 +30,6 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type MsgUpdateTotalShares struct {
-	Coordinator string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
-	CampaignID  uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
-	TotalShares Shares `protobuf:"bytes,3,rep,name=totalShares,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=Shares" json:"totalShares"`
-}
-
-func (m *MsgUpdateTotalShares) Reset()         { *m = MsgUpdateTotalShares{} }
-func (m *MsgUpdateTotalShares) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateTotalShares) ProtoMessage()    {}
-func (*MsgUpdateTotalShares) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{0}
-}
-func (m *MsgUpdateTotalShares) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgUpdateTotalShares) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgUpdateTotalShares.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgUpdateTotalShares) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateTotalShares.Merge(m, src)
-}
-func (m *MsgUpdateTotalShares) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgUpdateTotalShares) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateTotalShares.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgUpdateTotalShares proto.InternalMessageInfo
-
-func (m *MsgUpdateTotalShares) GetCoordinator() string {
-	if m != nil {
-		return m.Coordinator
-	}
-	return ""
-}
-
-func (m *MsgUpdateTotalShares) GetCampaignID() uint64 {
-	if m != nil {
-		return m.CampaignID
-	}
-	return 0
-}
-
-func (m *MsgUpdateTotalShares) GetTotalShares() Shares {
-	if m != nil {
-		return m.TotalShares
-	}
-	return nil
-}
-
-type MsgUpdateTotalSharesResponse struct {
-}
-
-func (m *MsgUpdateTotalSharesResponse) Reset()         { *m = MsgUpdateTotalSharesResponse{} }
-func (m *MsgUpdateTotalSharesResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateTotalSharesResponse) ProtoMessage()    {}
-func (*MsgUpdateTotalSharesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{1}
-}
-func (m *MsgUpdateTotalSharesResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgUpdateTotalSharesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgUpdateTotalSharesResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgUpdateTotalSharesResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateTotalSharesResponse.Merge(m, src)
-}
-func (m *MsgUpdateTotalSharesResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgUpdateTotalSharesResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateTotalSharesResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgUpdateTotalSharesResponse proto.InternalMessageInfo
-
-type MsgUpdateTotalSupply struct {
-	Coordinator       string                                   `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
-	CampaignID        uint64                                   `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
-	TotalSupplyUpdate github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,3,rep,name=totalSupplyUpdate,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"totalSupplyUpdate"`
-}
-
-func (m *MsgUpdateTotalSupply) Reset()         { *m = MsgUpdateTotalSupply{} }
-func (m *MsgUpdateTotalSupply) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateTotalSupply) ProtoMessage()    {}
-func (*MsgUpdateTotalSupply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{2}
-}
-func (m *MsgUpdateTotalSupply) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgUpdateTotalSupply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgUpdateTotalSupply.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgUpdateTotalSupply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateTotalSupply.Merge(m, src)
-}
-func (m *MsgUpdateTotalSupply) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgUpdateTotalSupply) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateTotalSupply.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgUpdateTotalSupply proto.InternalMessageInfo
-
-func (m *MsgUpdateTotalSupply) GetCoordinator() string {
-	if m != nil {
-		return m.Coordinator
-	}
-	return ""
-}
-
-func (m *MsgUpdateTotalSupply) GetCampaignID() uint64 {
-	if m != nil {
-		return m.CampaignID
-	}
-	return 0
-}
-
-func (m *MsgUpdateTotalSupply) GetTotalSupplyUpdate() github_com_cosmos_cosmos_sdk_types.Coins {
-	if m != nil {
-		return m.TotalSupplyUpdate
-	}
-	return nil
-}
-
-type MsgUpdateTotalSupplyResponse struct {
-}
-
-func (m *MsgUpdateTotalSupplyResponse) Reset()         { *m = MsgUpdateTotalSupplyResponse{} }
-func (m *MsgUpdateTotalSupplyResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateTotalSupplyResponse) ProtoMessage()    {}
-func (*MsgUpdateTotalSupplyResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{3}
-}
-func (m *MsgUpdateTotalSupplyResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgUpdateTotalSupplyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgUpdateTotalSupplyResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgUpdateTotalSupplyResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateTotalSupplyResponse.Merge(m, src)
-}
-func (m *MsgUpdateTotalSupplyResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgUpdateTotalSupplyResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateTotalSupplyResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgUpdateTotalSupplyResponse proto.InternalMessageInfo
-
 type MsgCreateCampaign struct {
 	Coordinator   string                                   `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
 	CampaignName  string                                   `protobuf:"bytes,2,opt,name=campaignName,proto3" json:"campaignName,omitempty"`
@@ -233,7 +41,7 @@ func (m *MsgCreateCampaign) Reset()         { *m = MsgCreateCampaign{} }
 func (m *MsgCreateCampaign) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateCampaign) ProtoMessage()    {}
 func (*MsgCreateCampaign) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{4}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{0}
 }
 func (m *MsgCreateCampaign) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -298,7 +106,7 @@ func (m *MsgCreateCampaignResponse) Reset()         { *m = MsgCreateCampaignResp
 func (m *MsgCreateCampaignResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateCampaignResponse) ProtoMessage()    {}
 func (*MsgCreateCampaignResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{5}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{1}
 }
 func (m *MsgCreateCampaignResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -334,6 +142,294 @@ func (m *MsgCreateCampaignResponse) GetCampaignID() uint64 {
 	return 0
 }
 
+type MsgUpdateCampaignName struct {
+	Coordinator string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
+	CampaignID  uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	Name        string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (m *MsgUpdateCampaignName) Reset()         { *m = MsgUpdateCampaignName{} }
+func (m *MsgUpdateCampaignName) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateCampaignName) ProtoMessage()    {}
+func (*MsgUpdateCampaignName) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{2}
+}
+func (m *MsgUpdateCampaignName) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateCampaignName) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateCampaignName.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateCampaignName) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateCampaignName.Merge(m, src)
+}
+func (m *MsgUpdateCampaignName) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateCampaignName) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateCampaignName.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateCampaignName proto.InternalMessageInfo
+
+func (m *MsgUpdateCampaignName) GetCoordinator() string {
+	if m != nil {
+		return m.Coordinator
+	}
+	return ""
+}
+
+func (m *MsgUpdateCampaignName) GetCampaignID() uint64 {
+	if m != nil {
+		return m.CampaignID
+	}
+	return 0
+}
+
+func (m *MsgUpdateCampaignName) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type MsgUpdateCampaignNameResponse struct {
+}
+
+func (m *MsgUpdateCampaignNameResponse) Reset()         { *m = MsgUpdateCampaignNameResponse{} }
+func (m *MsgUpdateCampaignNameResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateCampaignNameResponse) ProtoMessage()    {}
+func (*MsgUpdateCampaignNameResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{3}
+}
+func (m *MsgUpdateCampaignNameResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateCampaignNameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateCampaignNameResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateCampaignNameResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateCampaignNameResponse.Merge(m, src)
+}
+func (m *MsgUpdateCampaignNameResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateCampaignNameResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateCampaignNameResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateCampaignNameResponse proto.InternalMessageInfo
+
+type MsgUpdateTotalSupply struct {
+	Coordinator       string                                   `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
+	CampaignID        uint64                                   `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	TotalSupplyUpdate github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,3,rep,name=totalSupplyUpdate,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"totalSupplyUpdate"`
+}
+
+func (m *MsgUpdateTotalSupply) Reset()         { *m = MsgUpdateTotalSupply{} }
+func (m *MsgUpdateTotalSupply) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateTotalSupply) ProtoMessage()    {}
+func (*MsgUpdateTotalSupply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{4}
+}
+func (m *MsgUpdateTotalSupply) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateTotalSupply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateTotalSupply.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateTotalSupply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateTotalSupply.Merge(m, src)
+}
+func (m *MsgUpdateTotalSupply) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateTotalSupply) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateTotalSupply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateTotalSupply proto.InternalMessageInfo
+
+func (m *MsgUpdateTotalSupply) GetCoordinator() string {
+	if m != nil {
+		return m.Coordinator
+	}
+	return ""
+}
+
+func (m *MsgUpdateTotalSupply) GetCampaignID() uint64 {
+	if m != nil {
+		return m.CampaignID
+	}
+	return 0
+}
+
+func (m *MsgUpdateTotalSupply) GetTotalSupplyUpdate() github_com_cosmos_cosmos_sdk_types.Coins {
+	if m != nil {
+		return m.TotalSupplyUpdate
+	}
+	return nil
+}
+
+type MsgUpdateTotalSupplyResponse struct {
+}
+
+func (m *MsgUpdateTotalSupplyResponse) Reset()         { *m = MsgUpdateTotalSupplyResponse{} }
+func (m *MsgUpdateTotalSupplyResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateTotalSupplyResponse) ProtoMessage()    {}
+func (*MsgUpdateTotalSupplyResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{5}
+}
+func (m *MsgUpdateTotalSupplyResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateTotalSupplyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateTotalSupplyResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateTotalSupplyResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateTotalSupplyResponse.Merge(m, src)
+}
+func (m *MsgUpdateTotalSupplyResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateTotalSupplyResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateTotalSupplyResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateTotalSupplyResponse proto.InternalMessageInfo
+
+type MsgUpdateTotalShares struct {
+	Coordinator string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
+	CampaignID  uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	TotalShares Shares `protobuf:"bytes,3,rep,name=totalShares,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=Shares" json:"totalShares"`
+}
+
+func (m *MsgUpdateTotalShares) Reset()         { *m = MsgUpdateTotalShares{} }
+func (m *MsgUpdateTotalShares) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateTotalShares) ProtoMessage()    {}
+func (*MsgUpdateTotalShares) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{6}
+}
+func (m *MsgUpdateTotalShares) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateTotalShares) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateTotalShares.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateTotalShares) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateTotalShares.Merge(m, src)
+}
+func (m *MsgUpdateTotalShares) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateTotalShares) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateTotalShares.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateTotalShares proto.InternalMessageInfo
+
+func (m *MsgUpdateTotalShares) GetCoordinator() string {
+	if m != nil {
+		return m.Coordinator
+	}
+	return ""
+}
+
+func (m *MsgUpdateTotalShares) GetCampaignID() uint64 {
+	if m != nil {
+		return m.CampaignID
+	}
+	return 0
+}
+
+func (m *MsgUpdateTotalShares) GetTotalShares() Shares {
+	if m != nil {
+		return m.TotalShares
+	}
+	return nil
+}
+
+type MsgUpdateTotalSharesResponse struct {
+}
+
+func (m *MsgUpdateTotalSharesResponse) Reset()         { *m = MsgUpdateTotalSharesResponse{} }
+func (m *MsgUpdateTotalSharesResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateTotalSharesResponse) ProtoMessage()    {}
+func (*MsgUpdateTotalSharesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_fb6bf904ffc53c1f, []int{7}
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgUpdateTotalSharesResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateTotalSharesResponse.Merge(m, src)
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgUpdateTotalSharesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateTotalSharesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgUpdateTotalSharesResponse proto.InternalMessageInfo
+
 type MsgInitializeMainnet struct {
 	Coordinator    string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
 	CampaignID     uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
@@ -346,7 +442,7 @@ func (m *MsgInitializeMainnet) Reset()         { *m = MsgInitializeMainnet{} }
 func (m *MsgInitializeMainnet) String() string { return proto.CompactTextString(m) }
 func (*MsgInitializeMainnet) ProtoMessage()    {}
 func (*MsgInitializeMainnet) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{6}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{8}
 }
 func (m *MsgInitializeMainnet) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -418,7 +514,7 @@ func (m *MsgInitializeMainnetResponse) Reset()         { *m = MsgInitializeMainn
 func (m *MsgInitializeMainnetResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgInitializeMainnetResponse) ProtoMessage()    {}
 func (*MsgInitializeMainnetResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{7}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{9}
 }
 func (m *MsgInitializeMainnetResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -465,7 +561,7 @@ func (m *MsgAddShares) Reset()         { *m = MsgAddShares{} }
 func (m *MsgAddShares) String() string { return proto.CompactTextString(m) }
 func (*MsgAddShares) ProtoMessage()    {}
 func (*MsgAddShares) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{8}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{10}
 }
 func (m *MsgAddShares) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -529,7 +625,7 @@ func (m *MsgAddSharesResponse) Reset()         { *m = MsgAddSharesResponse{} }
 func (m *MsgAddSharesResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgAddSharesResponse) ProtoMessage()    {}
 func (*MsgAddSharesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{9}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{11}
 }
 func (m *MsgAddSharesResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -570,7 +666,7 @@ func (m *MsgAddVestingOptions) Reset()         { *m = MsgAddVestingOptions{} }
 func (m *MsgAddVestingOptions) String() string { return proto.CompactTextString(m) }
 func (*MsgAddVestingOptions) ProtoMessage()    {}
 func (*MsgAddVestingOptions) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{10}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{12}
 }
 func (m *MsgAddVestingOptions) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -641,7 +737,7 @@ func (m *MsgAddVestingOptionsResponse) Reset()         { *m = MsgAddVestingOptio
 func (m *MsgAddVestingOptionsResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgAddVestingOptionsResponse) ProtoMessage()    {}
 func (*MsgAddVestingOptionsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{11}
+	return fileDescriptor_fb6bf904ffc53c1f, []int{13}
 }
 func (m *MsgAddVestingOptionsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -669,102 +765,6 @@ func (m *MsgAddVestingOptionsResponse) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_MsgAddVestingOptionsResponse proto.InternalMessageInfo
-
-type MsgUnredeemVouchers struct {
-	Sender     string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
-	CampaignID uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
-	Shares     Shares `protobuf:"bytes,4,rep,name=shares,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=Shares" json:"shares"`
-}
-
-func (m *MsgUnredeemVouchers) Reset()         { *m = MsgUnredeemVouchers{} }
-func (m *MsgUnredeemVouchers) String() string { return proto.CompactTextString(m) }
-func (*MsgUnredeemVouchers) ProtoMessage()    {}
-func (*MsgUnredeemVouchers) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{12}
-}
-func (m *MsgUnredeemVouchers) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgUnredeemVouchers) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgUnredeemVouchers.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgUnredeemVouchers) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUnredeemVouchers.Merge(m, src)
-}
-func (m *MsgUnredeemVouchers) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgUnredeemVouchers) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUnredeemVouchers.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgUnredeemVouchers proto.InternalMessageInfo
-
-func (m *MsgUnredeemVouchers) GetSender() string {
-	if m != nil {
-		return m.Sender
-	}
-	return ""
-}
-
-func (m *MsgUnredeemVouchers) GetCampaignID() uint64 {
-	if m != nil {
-		return m.CampaignID
-	}
-	return 0
-}
-
-func (m *MsgUnredeemVouchers) GetShares() Shares {
-	if m != nil {
-		return m.Shares
-	}
-	return nil
-}
-
-type MsgUnredeemVouchersResponse struct {
-}
-
-func (m *MsgUnredeemVouchersResponse) Reset()         { *m = MsgUnredeemVouchersResponse{} }
-func (m *MsgUnredeemVouchersResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUnredeemVouchersResponse) ProtoMessage()    {}
-func (*MsgUnredeemVouchersResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_fb6bf904ffc53c1f, []int{13}
-}
-func (m *MsgUnredeemVouchersResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgUnredeemVouchersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgUnredeemVouchersResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgUnredeemVouchersResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUnredeemVouchersResponse.Merge(m, src)
-}
-func (m *MsgUnredeemVouchersResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgUnredeemVouchersResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUnredeemVouchersResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgUnredeemVouchersResponse proto.InternalMessageInfo
 
 type MsgMintVouchers struct {
 	Coordinator string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
@@ -1062,24 +1062,24 @@ func (m *MsgRedeemVouchersResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgRedeemVouchersResponse proto.InternalMessageInfo
 
-type MsgUpdateCampaignName struct {
-	Coordinator string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
-	CampaignID  uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
-	Name        string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+type MsgUnredeemVouchers struct {
+	Sender     string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
+	CampaignID uint64 `protobuf:"varint,2,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	Shares     Shares `protobuf:"bytes,4,rep,name=shares,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=Shares" json:"shares"`
 }
 
-func (m *MsgUpdateCampaignName) Reset()         { *m = MsgUpdateCampaignName{} }
-func (m *MsgUpdateCampaignName) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateCampaignName) ProtoMessage()    {}
-func (*MsgUpdateCampaignName) Descriptor() ([]byte, []int) {
+func (m *MsgUnredeemVouchers) Reset()         { *m = MsgUnredeemVouchers{} }
+func (m *MsgUnredeemVouchers) String() string { return proto.CompactTextString(m) }
+func (*MsgUnredeemVouchers) ProtoMessage()    {}
+func (*MsgUnredeemVouchers) Descriptor() ([]byte, []int) {
 	return fileDescriptor_fb6bf904ffc53c1f, []int{20}
 }
-func (m *MsgUpdateCampaignName) XXX_Unmarshal(b []byte) error {
+func (m *MsgUnredeemVouchers) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateCampaignName) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgUnredeemVouchers) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateCampaignName.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgUnredeemVouchers.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1089,54 +1089,54 @@ func (m *MsgUpdateCampaignName) XXX_Marshal(b []byte, deterministic bool) ([]byt
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateCampaignName) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateCampaignName.Merge(m, src)
+func (m *MsgUnredeemVouchers) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUnredeemVouchers.Merge(m, src)
 }
-func (m *MsgUpdateCampaignName) XXX_Size() int {
+func (m *MsgUnredeemVouchers) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateCampaignName) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateCampaignName.DiscardUnknown(m)
+func (m *MsgUnredeemVouchers) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUnredeemVouchers.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateCampaignName proto.InternalMessageInfo
+var xxx_messageInfo_MsgUnredeemVouchers proto.InternalMessageInfo
 
-func (m *MsgUpdateCampaignName) GetCoordinator() string {
+func (m *MsgUnredeemVouchers) GetSender() string {
 	if m != nil {
-		return m.Coordinator
+		return m.Sender
 	}
 	return ""
 }
 
-func (m *MsgUpdateCampaignName) GetCampaignID() uint64 {
+func (m *MsgUnredeemVouchers) GetCampaignID() uint64 {
 	if m != nil {
 		return m.CampaignID
 	}
 	return 0
 }
 
-func (m *MsgUpdateCampaignName) GetName() string {
+func (m *MsgUnredeemVouchers) GetShares() Shares {
 	if m != nil {
-		return m.Name
+		return m.Shares
 	}
-	return ""
+	return nil
 }
 
-type MsgUpdateCampaignNameResponse struct {
+type MsgUnredeemVouchersResponse struct {
 }
 
-func (m *MsgUpdateCampaignNameResponse) Reset()         { *m = MsgUpdateCampaignNameResponse{} }
-func (m *MsgUpdateCampaignNameResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateCampaignNameResponse) ProtoMessage()    {}
-func (*MsgUpdateCampaignNameResponse) Descriptor() ([]byte, []int) {
+func (m *MsgUnredeemVouchersResponse) Reset()         { *m = MsgUnredeemVouchersResponse{} }
+func (m *MsgUnredeemVouchersResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUnredeemVouchersResponse) ProtoMessage()    {}
+func (*MsgUnredeemVouchersResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_fb6bf904ffc53c1f, []int{21}
 }
-func (m *MsgUpdateCampaignNameResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgUnredeemVouchersResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateCampaignNameResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgUnredeemVouchersResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateCampaignNameResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgUnredeemVouchersResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1146,109 +1146,109 @@ func (m *MsgUpdateCampaignNameResponse) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateCampaignNameResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateCampaignNameResponse.Merge(m, src)
+func (m *MsgUnredeemVouchersResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUnredeemVouchersResponse.Merge(m, src)
 }
-func (m *MsgUpdateCampaignNameResponse) XXX_Size() int {
+func (m *MsgUnredeemVouchersResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateCampaignNameResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateCampaignNameResponse.DiscardUnknown(m)
+func (m *MsgUnredeemVouchersResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUnredeemVouchersResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateCampaignNameResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgUnredeemVouchersResponse proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*MsgUpdateTotalShares)(nil), "tendermint.spn.campaign.MsgUpdateTotalShares")
-	proto.RegisterType((*MsgUpdateTotalSharesResponse)(nil), "tendermint.spn.campaign.MsgUpdateTotalSharesResponse")
-	proto.RegisterType((*MsgUpdateTotalSupply)(nil), "tendermint.spn.campaign.MsgUpdateTotalSupply")
-	proto.RegisterType((*MsgUpdateTotalSupplyResponse)(nil), "tendermint.spn.campaign.MsgUpdateTotalSupplyResponse")
 	proto.RegisterType((*MsgCreateCampaign)(nil), "tendermint.spn.campaign.MsgCreateCampaign")
 	proto.RegisterType((*MsgCreateCampaignResponse)(nil), "tendermint.spn.campaign.MsgCreateCampaignResponse")
+	proto.RegisterType((*MsgUpdateCampaignName)(nil), "tendermint.spn.campaign.MsgUpdateCampaignName")
+	proto.RegisterType((*MsgUpdateCampaignNameResponse)(nil), "tendermint.spn.campaign.MsgUpdateCampaignNameResponse")
+	proto.RegisterType((*MsgUpdateTotalSupply)(nil), "tendermint.spn.campaign.MsgUpdateTotalSupply")
+	proto.RegisterType((*MsgUpdateTotalSupplyResponse)(nil), "tendermint.spn.campaign.MsgUpdateTotalSupplyResponse")
+	proto.RegisterType((*MsgUpdateTotalShares)(nil), "tendermint.spn.campaign.MsgUpdateTotalShares")
+	proto.RegisterType((*MsgUpdateTotalSharesResponse)(nil), "tendermint.spn.campaign.MsgUpdateTotalSharesResponse")
 	proto.RegisterType((*MsgInitializeMainnet)(nil), "tendermint.spn.campaign.MsgInitializeMainnet")
 	proto.RegisterType((*MsgInitializeMainnetResponse)(nil), "tendermint.spn.campaign.MsgInitializeMainnetResponse")
 	proto.RegisterType((*MsgAddShares)(nil), "tendermint.spn.campaign.MsgAddShares")
 	proto.RegisterType((*MsgAddSharesResponse)(nil), "tendermint.spn.campaign.MsgAddSharesResponse")
 	proto.RegisterType((*MsgAddVestingOptions)(nil), "tendermint.spn.campaign.MsgAddVestingOptions")
 	proto.RegisterType((*MsgAddVestingOptionsResponse)(nil), "tendermint.spn.campaign.MsgAddVestingOptionsResponse")
-	proto.RegisterType((*MsgUnredeemVouchers)(nil), "tendermint.spn.campaign.MsgUnredeemVouchers")
-	proto.RegisterType((*MsgUnredeemVouchersResponse)(nil), "tendermint.spn.campaign.MsgUnredeemVouchersResponse")
 	proto.RegisterType((*MsgMintVouchers)(nil), "tendermint.spn.campaign.MsgMintVouchers")
 	proto.RegisterType((*MsgMintVouchersResponse)(nil), "tendermint.spn.campaign.MsgMintVouchersResponse")
 	proto.RegisterType((*MsgBurnVouchers)(nil), "tendermint.spn.campaign.MsgBurnVouchers")
 	proto.RegisterType((*MsgBurnVouchersResponse)(nil), "tendermint.spn.campaign.MsgBurnVouchersResponse")
 	proto.RegisterType((*MsgRedeemVouchers)(nil), "tendermint.spn.campaign.MsgRedeemVouchers")
 	proto.RegisterType((*MsgRedeemVouchersResponse)(nil), "tendermint.spn.campaign.MsgRedeemVouchersResponse")
-	proto.RegisterType((*MsgUpdateCampaignName)(nil), "tendermint.spn.campaign.MsgUpdateCampaignName")
-	proto.RegisterType((*MsgUpdateCampaignNameResponse)(nil), "tendermint.spn.campaign.MsgUpdateCampaignNameResponse")
+	proto.RegisterType((*MsgUnredeemVouchers)(nil), "tendermint.spn.campaign.MsgUnredeemVouchers")
+	proto.RegisterType((*MsgUnredeemVouchersResponse)(nil), "tendermint.spn.campaign.MsgUnredeemVouchersResponse")
 }
 
 func init() { proto.RegisterFile("campaign/tx.proto", fileDescriptor_fb6bf904ffc53c1f) }
 
 var fileDescriptor_fb6bf904ffc53c1f = []byte{
-	// 983 bytes of a gzipped FileDescriptorProto
+	// 978 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x58, 0xcf, 0x6f, 0xdc, 0x44,
-	0x14, 0x8e, 0xb3, 0x4b, 0xe8, 0xbe, 0x0d, 0x81, 0x98, 0xd2, 0x6e, 0xb6, 0xa9, 0xb3, 0xb2, 0xa0,
-	0xac, 0xaa, 0xc6, 0xa6, 0xe1, 0x87, 0x84, 0xe0, 0x42, 0xb6, 0x07, 0x2a, 0xb1, 0x20, 0xb9, 0xb4,
-	0x87, 0x72, 0xa8, 0x26, 0xf6, 0xc8, 0x6b, 0x88, 0x67, 0x2c, 0xcf, 0xec, 0xaa, 0x41, 0x3d, 0x73,
-	0x46, 0x9c, 0x10, 0x67, 0x4e, 0xfc, 0x0b, 0x48, 0x48, 0xdc, 0x7a, 0xe0, 0x90, 0x63, 0x4f, 0x01,
-	0x25, 0xff, 0x45, 0x2f, 0x20, 0x8f, 0xed, 0x59, 0xff, 0x5a, 0x67, 0xa3, 0x6c, 0x5a, 0x4e, 0x89,
-	0xc7, 0x9f, 0xdf, 0xf7, 0xbe, 0xcf, 0xcf, 0xef, 0x3d, 0x2d, 0xac, 0xdb, 0xc8, 0x0f, 0x90, 0xe7,
-	0x12, 0x93, 0x3f, 0x36, 0x82, 0x90, 0x72, 0xaa, 0x5e, 0xe5, 0x98, 0x38, 0x38, 0xf4, 0x3d, 0xc2,
-	0x0d, 0x16, 0x10, 0x23, 0x45, 0x74, 0x2f, 0xbb, 0xd4, 0xa5, 0x02, 0x63, 0x46, 0xff, 0xc5, 0xf0,
-	0xae, 0x66, 0x53, 0xe6, 0x53, 0x66, 0xee, 0x21, 0x86, 0xcd, 0xc9, 0xed, 0x3d, 0xcc, 0xd1, 0x6d,
-	0xd3, 0xa6, 0x1e, 0x49, 0xee, 0xdf, 0x90, 0x0c, 0x3e, 0xf2, 0x08, 0xc1, 0xfc, 0xd1, 0x04, 0x33,
-	0xee, 0x11, 0xf7, 0x11, 0xb2, 0x6d, 0x3a, 0x26, 0x3c, 0xc6, 0xe9, 0x87, 0x0a, 0x5c, 0x1e, 0x32,
-	0xf7, 0x7e, 0xe0, 0x20, 0x8e, 0xbf, 0xa6, 0x1c, 0xed, 0xdf, 0x1b, 0xa1, 0x10, 0x33, 0xb5, 0x07,
-	0x6d, 0x9b, 0xd2, 0xd0, 0xf1, 0x08, 0xe2, 0x34, 0xec, 0x28, 0x3d, 0xa5, 0xdf, 0xb2, 0xb2, 0x47,
-	0xaa, 0x06, 0x90, 0x92, 0xdc, 0xbd, 0xd3, 0x59, 0xee, 0x29, 0xfd, 0xa6, 0x95, 0x39, 0x51, 0x27,
-	0xd0, 0xe6, 0xd3, 0x80, 0x9d, 0x46, 0xaf, 0xd1, 0x6f, 0xef, 0x6c, 0x18, 0x71, 0xe2, 0x46, 0x94,
-	0xb8, 0x91, 0x24, 0x6e, 0x0c, 0xa8, 0x47, 0x76, 0x3f, 0x7e, 0x7a, 0xb4, 0xb5, 0xf4, 0xfc, 0x68,
-	0xeb, 0x5d, 0xd7, 0xe3, 0xa3, 0xf1, 0x9e, 0x61, 0x53, 0xdf, 0x4c, 0x54, 0xc6, 0x7f, 0xb6, 0x99,
-	0xf3, 0x9d, 0xc9, 0x0f, 0x02, 0xcc, 0xc4, 0x03, 0xbf, 0xfd, 0xbd, 0xb5, 0x12, 0xc7, 0xb6, 0xb2,
-	0x44, 0xba, 0x06, 0x9b, 0x55, 0x8a, 0x2c, 0xcc, 0x02, 0x4a, 0x18, 0xd6, 0xff, 0x2d, 0x4b, 0x1e,
-	0x07, 0xc1, 0xfe, 0xc1, 0x02, 0x24, 0xff, 0xaa, 0xc0, 0x3a, 0x9f, 0x46, 0x8c, 0x29, 0x4e, 0x57,
-	0xfe, 0xcd, 0xd9, 0x95, 0xf7, 0xe7, 0x84, 0x32, 0xab, 0x9c, 0x50, 0x85, 0x43, 0xe2, 0xae, 0x74,
-	0xe8, 0x97, 0x65, 0x58, 0x1f, 0x32, 0x77, 0x10, 0x62, 0xc4, 0xf1, 0x20, 0x91, 0x37, 0x87, 0x3d,
-	0x3a, 0xac, 0xa6, 0x66, 0x7c, 0x89, 0x7c, 0x2c, 0x0c, 0x6a, 0x59, 0xb9, 0x33, 0xf5, 0x67, 0x05,
-	0xda, 0x19, 0xce, 0x97, 0x6c, 0x4e, 0x36, 0x15, 0xf5, 0x6d, 0x78, 0xcd, 0x39, 0x20, 0xc8, 0xf7,
-	0xec, 0xa4, 0x64, 0x9b, 0x3d, 0xa5, 0x7f, 0xc9, 0xca, 0x1f, 0xea, 0x9f, 0xc0, 0x46, 0xc9, 0x9b,
-	0xd4, 0xb9, 0x42, 0x81, 0x28, 0xc5, 0x02, 0xd1, 0xff, 0x88, 0x6b, 0xef, 0x2e, 0xf1, 0xb8, 0x87,
-	0xf6, 0xbd, 0xef, 0xf1, 0x30, 0xfe, 0x3a, 0x17, 0x50, 0x7b, 0x9b, 0xd0, 0x62, 0x74, 0x1c, 0xda,
-	0xf8, 0xbe, 0xf5, 0x45, 0xa7, 0x21, 0x9e, 0x9f, 0x1e, 0x44, 0x4f, 0xc7, 0x17, 0x9f, 0x23, 0x36,
-	0x12, 0xc2, 0x5a, 0x56, 0xe6, 0x44, 0xbd, 0x01, 0x6b, 0x49, 0xa3, 0x18, 0x8c, 0x90, 0x17, 0x31,
-	0xbc, 0x22, 0x30, 0x85, 0x53, 0xfd, 0x53, 0x51, 0x3a, 0xa5, 0xfc, 0xa5, 0x01, 0x9b, 0xd0, 0x4a,
-	0x9e, 0x90, 0xfa, 0xa7, 0x07, 0xfa, 0x33, 0x05, 0x56, 0x87, 0xcc, 0xfd, 0xcc, 0x71, 0x16, 0xd6,
-	0x65, 0x3a, 0xf0, 0x2a, 0x72, 0x9c, 0x10, 0x33, 0x96, 0x88, 0x4e, 0x2f, 0xd5, 0x7d, 0x58, 0x61,
-	0xe9, 0x7b, 0xbc, 0xb8, 0xd6, 0x93, 0x70, 0xe8, 0x57, 0xc4, 0x8b, 0x95, 0xca, 0xe4, 0xb7, 0xf4,
-	0xd7, 0x72, 0x7a, 0xe3, 0x41, 0xdc, 0x80, 0xbf, 0x0a, 0xb8, 0x47, 0xc9, 0xc5, 0x4a, 0x7f, 0x02,
-	0x6b, 0x8c, 0xa3, 0x30, 0xa2, 0xbb, 0x77, 0xf1, 0x16, 0x14, 0xb8, 0xd4, 0x87, 0xb0, 0x36, 0xc9,
-	0x69, 0x15, 0xb5, 0xd4, 0xde, 0xb9, 0x65, 0xcc, 0x98, 0x71, 0x86, 0x78, 0x30, 0xef, 0xcf, 0x6e,
-	0x33, 0x4a, 0xc8, 0x2a, 0x44, 0x4a, 0x5a, 0x57, 0xc9, 0x4d, 0x69, 0xf7, 0xef, 0x0a, 0xbc, 0x19,
-	0xf5, 0x36, 0x12, 0x62, 0x07, 0x63, 0xff, 0x01, 0x1d, 0xdb, 0x23, 0x1c, 0x32, 0xf5, 0x0a, 0xac,
-	0x30, 0x41, 0x9e, 0x18, 0x9d, 0x5c, 0x9d, 0xea, 0xf1, 0x8b, 0x2d, 0xa2, 0xeb, 0x70, 0xad, 0x22,
-	0x79, 0x29, 0xee, 0x4f, 0x05, 0x5e, 0x1f, 0x32, 0x77, 0xe8, 0x11, 0x2e, 0x85, 0x9d, 0xbf, 0x8c,
-	0xa6, 0x12, 0x1b, 0x2f, 0x40, 0xe2, 0x06, 0x5c, 0x2d, 0x48, 0x90, 0xf2, 0x8e, 0x62, 0x79, 0xbb,
-	0xe3, 0x90, 0x9c, 0xfb, 0xbd, 0xfd, 0xa4, 0xc0, 0xa5, 0x49, 0x12, 0xe4, 0x25, 0xcf, 0x18, 0x99,
-	0x47, 0xa2, 0x3d, 0xab, 0x4f, 0x6a, 0x7f, 0xae, 0x88, 0x91, 0x6b, 0x2d, 0xa6, 0x6a, 0xa3, 0xce,
-	0x10, 0xaf, 0x79, 0xb2, 0x33, 0xc4, 0x97, 0x79, 0x5f, 0x9a, 0xff, 0x13, 0x5f, 0xae, 0x89, 0x91,
-	0x6a, 0x55, 0x17, 0xbd, 0x0f, 0x6f, 0xc9, 0x65, 0x65, 0x90, 0xdd, 0x24, 0xce, 0x5f, 0xf9, 0x2a,
-	0x34, 0x49, 0xb4, 0xa7, 0xc4, 0x1e, 0x89, 0xff, 0xf5, 0x2d, 0xb8, 0x5e, 0x49, 0x97, 0xe6, 0xb3,
-	0xf3, 0x03, 0x40, 0x63, 0xc8, 0x5c, 0x35, 0x80, 0xb5, 0xc2, 0x82, 0x74, 0x73, 0x66, 0x7f, 0x2b,
-	0x2d, 0x0c, 0xdd, 0x9d, 0xf9, 0xb1, 0x72, 0xb6, 0x1e, 0xc0, 0x7a, 0x79, 0x4f, 0xdf, 0xae, 0x0b,
-	0x54, 0x82, 0x77, 0x3f, 0x3c, 0x13, 0x7c, 0x16, 0x75, 0xbc, 0x2f, 0xcd, 0x4d, 0x2d, 0xe0, 0xf3,
-	0x53, 0xe7, 0x96, 0xd1, 0x88, 0xba, 0xbc, 0x2e, 0xd5, 0x52, 0x97, 0xe0, 0xf5, 0xd4, 0xb3, 0x97,
-	0x19, 0x04, 0xad, 0xe9, 0xaa, 0xf2, 0x4e, 0x5d, 0x0c, 0x09, 0xeb, 0x6e, 0xcf, 0x05, 0xcb, 0xaa,
-	0x2b, 0xaf, 0x06, 0xa7, 0xc5, 0xc8, 0xc3, 0xeb, 0xd5, 0xcd, 0x1c, 0x95, 0xea, 0x04, 0xde, 0x28,
-	0x8d, 0xc9, 0x5b, 0xb5, 0xef, 0xa8, 0x80, 0xee, 0x7e, 0x70, 0x16, 0xb4, 0xe4, 0xfd, 0x16, 0x56,
-	0x73, 0x13, 0xac, 0x5f, 0x17, 0x25, 0x8b, 0xec, 0xbe, 0x37, 0x2f, 0x32, 0xcb, 0x95, 0x1b, 0x27,
-	0xb5, 0x5c, 0x59, 0x64, 0x3d, 0x57, 0x55, 0x0b, 0x8f, 0x1a, 0x42, 0xa1, 0x7d, 0xd7, 0x36, 0x84,
-	0x3c, 0xb6, 0xbe, 0x21, 0x54, 0xb7, 0x46, 0xf5, 0x09, 0xa8, 0x15, 0x7d, 0xd1, 0x38, 0xfd, 0x3b,
-	0xcb, 0xe2, 0xbb, 0x1f, 0x9d, 0x0d, 0x9f, 0xb2, 0xef, 0xde, 0x79, 0x7a, 0xac, 0x29, 0x87, 0xc7,
-	0x9a, 0xf2, 0xcf, 0xb1, 0xa6, 0xfc, 0x78, 0xa2, 0x2d, 0x1d, 0x9e, 0x68, 0x4b, 0xcf, 0x4e, 0xb4,
-	0xa5, 0x87, 0x37, 0x33, 0x33, 0x60, 0x1a, 0xdb, 0x64, 0x01, 0x31, 0x1f, 0x9b, 0xd3, 0x9f, 0x3e,
-	0xa2, 0x59, 0xb0, 0xb7, 0x22, 0x7e, 0x87, 0x78, 0xff, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x0b,
-	0x8f, 0xb1, 0x9f, 0x13, 0x11, 0x00, 0x00,
+	0x14, 0x8e, 0xb3, 0x4b, 0xe8, 0xbe, 0x0d, 0x81, 0x98, 0xd2, 0x6e, 0xb6, 0xa9, 0x13, 0x59, 0x50,
+	0x56, 0x55, 0x63, 0xd3, 0xf0, 0x43, 0x42, 0x70, 0x21, 0xe9, 0x81, 0x4a, 0x2c, 0x48, 0x0e, 0xed,
+	0xa1, 0x1c, 0xaa, 0x89, 0x3d, 0xf2, 0x1a, 0xe2, 0x19, 0xcb, 0x33, 0xbb, 0x6a, 0x50, 0xcf, 0x9c,
+	0x11, 0x27, 0xc4, 0x99, 0x13, 0xff, 0x02, 0x12, 0x12, 0xb7, 0x1e, 0x38, 0xe4, 0xd8, 0x53, 0x40,
+	0xc9, 0x7f, 0xd1, 0x0b, 0xc8, 0x63, 0x7b, 0xfc, 0x6b, 0xd7, 0xbb, 0xab, 0x6e, 0x5a, 0x4e, 0xbb,
+	0x9e, 0xfd, 0xe6, 0x7d, 0xef, 0xfb, 0x3c, 0xf3, 0xde, 0xd3, 0xc2, 0xba, 0x8d, 0xfc, 0x00, 0x79,
+	0x2e, 0x31, 0xf9, 0x23, 0x23, 0x08, 0x29, 0xa7, 0xea, 0x55, 0x8e, 0x89, 0x83, 0x43, 0xdf, 0x23,
+	0xdc, 0x60, 0x01, 0x31, 0x52, 0x44, 0xf7, 0xb2, 0x4b, 0x5d, 0x2a, 0x30, 0x66, 0xf4, 0x2d, 0x86,
+	0x77, 0x35, 0x9b, 0x32, 0x9f, 0x32, 0xf3, 0x10, 0x31, 0x6c, 0x8e, 0x6e, 0x1f, 0x62, 0x8e, 0x6e,
+	0x9b, 0x36, 0xf5, 0x48, 0xf2, 0xfb, 0x0d, 0xc9, 0xe0, 0x23, 0x8f, 0x10, 0xcc, 0x1f, 0x8e, 0x30,
+	0xe3, 0x1e, 0x71, 0x1f, 0x22, 0xdb, 0xa6, 0x43, 0xc2, 0x63, 0x9c, 0xfe, 0xcb, 0x32, 0xac, 0xf7,
+	0x99, 0xbb, 0x1f, 0x62, 0xc4, 0xf1, 0x7e, 0xb2, 0x47, 0xdd, 0x86, 0xb6, 0x4d, 0x69, 0xe8, 0x78,
+	0x04, 0x71, 0x1a, 0x76, 0x94, 0x6d, 0xa5, 0xd7, 0xb2, 0xf2, 0x4b, 0xaa, 0x0e, 0xab, 0x29, 0xc3,
+	0x97, 0xc8, 0xc7, 0x9d, 0x65, 0x01, 0x29, 0xac, 0xa9, 0x3f, 0x2b, 0xd0, 0xfe, 0x9a, 0x72, 0x74,
+	0x74, 0x30, 0x0c, 0x82, 0xa3, 0xe3, 0x4e, 0x63, 0xbb, 0xd1, 0x6b, 0xef, 0x6e, 0x18, 0x71, 0xea,
+	0x46, 0x94, 0xba, 0x91, 0xa4, 0x6e, 0xec, 0x53, 0x8f, 0xec, 0x7d, 0xf3, 0xe4, 0x74, 0x6b, 0xe9,
+	0xd9, 0xe9, 0xd6, 0xbb, 0xae, 0xc7, 0x07, 0xc3, 0x43, 0xc3, 0xa6, 0xbe, 0x99, 0xe8, 0x8c, 0x3f,
+	0x76, 0x98, 0xf3, 0x9d, 0xc9, 0x8f, 0x03, 0xcc, 0xc4, 0x86, 0xdf, 0xfe, 0xde, 0xea, 0xcd, 0x08,
+	0x65, 0x56, 0x3e, 0x15, 0xf5, 0x6d, 0x78, 0xcd, 0x39, 0x26, 0xc8, 0xf7, 0xec, 0x83, 0x01, 0x0a,
+	0x31, 0xeb, 0x34, 0xb7, 0x95, 0xde, 0x25, 0xab, 0xb8, 0xa8, 0x7f, 0x02, 0x1b, 0x15, 0x6f, 0x2c,
+	0xcc, 0x02, 0x4a, 0x18, 0x56, 0x35, 0x80, 0x54, 0xed, 0xdd, 0x3b, 0xc2, 0xa2, 0xa6, 0x95, 0x5b,
+	0xd1, 0x7d, 0x78, 0xab, 0xcf, 0xdc, 0x7b, 0x81, 0x93, 0xdb, 0x2c, 0x6c, 0x99, 0x6e, 0x6e, 0x31,
+	0xf4, 0x72, 0x39, 0xb4, 0xaa, 0x42, 0x93, 0x44, 0xa6, 0x37, 0xc4, 0x56, 0xf1, 0x5d, 0xdf, 0x82,
+	0xeb, 0x63, 0xe9, 0xd2, 0x7c, 0xf5, 0x7f, 0x15, 0xb8, 0x2c, 0x11, 0x79, 0x2f, 0x9e, 0x3f, 0x9f,
+	0x5f, 0x15, 0x58, 0xe7, 0x59, 0xc4, 0x98, 0xe2, 0x25, 0xbf, 0xee, 0x6a, 0x42, 0xba, 0x06, 0x9b,
+	0xe3, 0x0c, 0x90, 0x0e, 0x9d, 0x54, 0x1d, 0x12, 0xe7, 0x60, 0x01, 0x0e, 0x8d, 0xa0, 0xcd, 0xb3,
+	0x80, 0xd3, 0xad, 0xf9, 0x78, 0x7e, 0x6b, 0x56, 0xe2, 0xd8, 0x56, 0x9e, 0x68, 0x8c, 0xe4, 0x18,
+	0x94, 0x4a, 0xfe, 0x23, 0x96, 0x7c, 0x97, 0x78, 0xdc, 0x43, 0x47, 0xde, 0xf7, 0xb8, 0x1f, 0x57,
+	0x8b, 0x05, 0x48, 0xde, 0x84, 0x16, 0xa3, 0xc3, 0xd0, 0xc6, 0xf7, 0xac, 0x2f, 0x92, 0x93, 0x9a,
+	0x2d, 0x44, 0xbb, 0xe3, 0x87, 0xcf, 0x11, 0x1b, 0x88, 0xdb, 0xd7, 0xb2, 0x72, 0x2b, 0xea, 0x0d,
+	0x58, 0x4b, 0x0a, 0xd7, 0xfe, 0x00, 0x79, 0x11, 0xc3, 0x2b, 0x02, 0x53, 0x5a, 0xd5, 0x3f, 0x15,
+	0x02, 0x2b, 0xf9, 0xcb, 0x5b, 0xba, 0x09, 0xad, 0x64, 0x87, 0xbc, 0xa4, 0xd9, 0x82, 0xfe, 0x54,
+	0x81, 0xd5, 0x3e, 0x73, 0x3f, 0x73, 0x9c, 0x85, 0xbd, 0xe9, 0x0e, 0xbc, 0x8a, 0x1c, 0x27, 0xc4,
+	0x8c, 0x25, 0xa2, 0xd3, 0x47, 0xf5, 0x08, 0x56, 0x58, 0x5a, 0x6c, 0x2e, 0xee, 0xf5, 0x27, 0x1c,
+	0xfa, 0x15, 0xf1, 0x62, 0xa5, 0x32, 0xf9, 0xc6, 0xff, 0x5a, 0x4e, 0x7f, 0xb8, 0x1f, 0x37, 0x84,
+	0xaf, 0x02, 0xee, 0x51, 0x72, 0xb1, 0xd2, 0x1f, 0xc3, 0x1a, 0xe3, 0x28, 0x8c, 0xe8, 0x0e, 0x2e,
+	0xde, 0x82, 0x12, 0x97, 0xfa, 0x00, 0xd6, 0x46, 0x05, 0xad, 0xe2, 0x2c, 0xb5, 0x77, 0x6f, 0x19,
+	0x13, 0x7a, 0xae, 0x21, 0x36, 0x16, 0xfd, 0xd9, 0x6b, 0x46, 0x09, 0x59, 0xa5, 0x48, 0xc9, 0x05,
+	0xab, 0xb8, 0x29, 0xed, 0xfe, 0x53, 0x81, 0xd7, 0xfb, 0xcc, 0xed, 0x7b, 0x84, 0xdf, 0xa7, 0x43,
+	0x7b, 0x80, 0xc3, 0x45, 0x38, 0x9d, 0x1d, 0xa5, 0xc6, 0x0b, 0x38, 0x4a, 0x1b, 0x70, 0xb5, 0x24,
+	0x41, 0xca, 0x3b, 0x8d, 0xe5, 0xed, 0x0d, 0x43, 0x22, 0xe5, 0x5d, 0x81, 0x15, 0x26, 0x7c, 0x4d,
+	0x94, 0x25, 0x4f, 0x53, 0x45, 0xfd, 0xa4, 0xc0, 0xa5, 0x51, 0x12, 0xe4, 0x25, 0x37, 0x0f, 0x99,
+	0x47, 0xa2, 0x3d, 0xaf, 0x4f, 0x6a, 0x7f, 0xa6, 0x88, 0xd1, 0xc9, 0xc2, 0x0e, 0xc6, 0xfe, 0x73,
+	0xab, 0x8f, 0x2e, 0x4f, 0x3c, 0x99, 0xc9, 0xcb, 0x13, 0x3f, 0x16, 0x7d, 0x69, 0xfe, 0x4f, 0x7c,
+	0xb9, 0x26, 0x46, 0xa3, 0xa2, 0x76, 0xe9, 0xcc, 0xef, 0x0a, 0xbc, 0x19, 0xb5, 0x1d, 0x12, 0x2e,
+	0xc6, 0x9b, 0x17, 0x5b, 0x39, 0xaf, 0xc3, 0xb5, 0x31, 0xc9, 0xa7, 0xe2, 0x76, 0x7f, 0x00, 0x68,
+	0xf4, 0x99, 0xab, 0x06, 0xb0, 0x56, 0x9a, 0x9a, 0x6f, 0x4e, 0xac, 0x27, 0x95, 0x29, 0xb2, 0xbb,
+	0x3b, 0x3b, 0x56, 0xf6, 0xb2, 0xc7, 0xa0, 0x8e, 0x19, 0x27, 0x8d, 0xba, 0x48, 0x55, 0x7c, 0xf7,
+	0xa3, 0xf9, 0xf0, 0x92, 0xfd, 0x18, 0xd6, 0xab, 0xb3, 0xe3, 0xce, 0xf4, 0x60, 0x39, 0x78, 0xf7,
+	0xc3, 0xb9, 0xe0, 0x93, 0xa8, 0xe3, 0xaa, 0x3e, 0x33, 0xb5, 0x80, 0xcf, 0x4e, 0x5d, 0x68, 0x97,
+	0x11, 0x75, 0x75, 0x38, 0xaa, 0xa5, 0xae, 0xc0, 0xeb, 0xa9, 0x27, 0x8f, 0x2e, 0x08, 0x5a, 0xd9,
+	0x60, 0xf2, 0x4e, 0x5d, 0x0c, 0x09, 0xeb, 0xee, 0xcc, 0x04, 0xcb, 0xab, 0xab, 0x0e, 0x02, 0xd3,
+	0x62, 0x14, 0xe1, 0xf5, 0xea, 0x26, 0x36, 0x46, 0xf5, 0x5b, 0x58, 0x2d, 0x34, 0xc5, 0x5e, 0x5d,
+	0x98, 0x3c, 0xb2, 0xfb, 0xde, 0xac, 0xc8, 0x3c, 0x57, 0xa1, 0x43, 0xd5, 0x72, 0xe5, 0x91, 0xf5,
+	0x5c, 0xe3, 0xba, 0x42, 0x54, 0x16, 0x4a, 0x1d, 0xa1, 0xb6, 0x2c, 0x14, 0xb1, 0xf5, 0x65, 0x61,
+	0x7c, 0xb5, 0x55, 0x47, 0xf0, 0x46, 0xa5, 0xd2, 0xde, 0xaa, 0x3d, 0xed, 0x25, 0x74, 0xf7, 0x83,
+	0x79, 0xd0, 0x29, 0xef, 0xde, 0x9d, 0x27, 0x67, 0x9a, 0x72, 0x72, 0xa6, 0x29, 0xff, 0x9c, 0x69,
+	0xca, 0x8f, 0xe7, 0xda, 0xd2, 0xc9, 0xb9, 0xb6, 0xf4, 0xf4, 0x5c, 0x5b, 0x7a, 0x70, 0x33, 0x57,
+	0x7c, 0xb3, 0xc8, 0x26, 0x0b, 0x88, 0xf9, 0xc8, 0xcc, 0xfe, 0xfa, 0x88, 0x8a, 0xf0, 0xe1, 0x8a,
+	0xf8, 0x1f, 0xe2, 0xfd, 0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0xb8, 0x45, 0xf9, 0x0d, 0x13, 0x11,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1264,16 +1264,16 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
 	CreateCampaign(ctx context.Context, in *MsgCreateCampaign, opts ...grpc.CallOption) (*MsgCreateCampaignResponse, error)
-	UpdateTotalShares(ctx context.Context, in *MsgUpdateTotalShares, opts ...grpc.CallOption) (*MsgUpdateTotalSharesResponse, error)
+	UpdateCampaignName(ctx context.Context, in *MsgUpdateCampaignName, opts ...grpc.CallOption) (*MsgUpdateCampaignNameResponse, error)
 	UpdateTotalSupply(ctx context.Context, in *MsgUpdateTotalSupply, opts ...grpc.CallOption) (*MsgUpdateTotalSupplyResponse, error)
+	UpdateTotalShares(ctx context.Context, in *MsgUpdateTotalShares, opts ...grpc.CallOption) (*MsgUpdateTotalSharesResponse, error)
 	InitializeMainnet(ctx context.Context, in *MsgInitializeMainnet, opts ...grpc.CallOption) (*MsgInitializeMainnetResponse, error)
 	AddShares(ctx context.Context, in *MsgAddShares, opts ...grpc.CallOption) (*MsgAddSharesResponse, error)
 	AddVestingOptions(ctx context.Context, in *MsgAddVestingOptions, opts ...grpc.CallOption) (*MsgAddVestingOptionsResponse, error)
-	UnredeemVouchers(ctx context.Context, in *MsgUnredeemVouchers, opts ...grpc.CallOption) (*MsgUnredeemVouchersResponse, error)
 	MintVouchers(ctx context.Context, in *MsgMintVouchers, opts ...grpc.CallOption) (*MsgMintVouchersResponse, error)
 	BurnVouchers(ctx context.Context, in *MsgBurnVouchers, opts ...grpc.CallOption) (*MsgBurnVouchersResponse, error)
 	RedeemVouchers(ctx context.Context, in *MsgRedeemVouchers, opts ...grpc.CallOption) (*MsgRedeemVouchersResponse, error)
-	UpdateCampaignName(ctx context.Context, in *MsgUpdateCampaignName, opts ...grpc.CallOption) (*MsgUpdateCampaignNameResponse, error)
+	UnredeemVouchers(ctx context.Context, in *MsgUnredeemVouchers, opts ...grpc.CallOption) (*MsgUnredeemVouchersResponse, error)
 }
 
 type msgClient struct {
@@ -1293,9 +1293,9 @@ func (c *msgClient) CreateCampaign(ctx context.Context, in *MsgCreateCampaign, o
 	return out, nil
 }
 
-func (c *msgClient) UpdateTotalShares(ctx context.Context, in *MsgUpdateTotalShares, opts ...grpc.CallOption) (*MsgUpdateTotalSharesResponse, error) {
-	out := new(MsgUpdateTotalSharesResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/UpdateTotalShares", in, out, opts...)
+func (c *msgClient) UpdateCampaignName(ctx context.Context, in *MsgUpdateCampaignName, opts ...grpc.CallOption) (*MsgUpdateCampaignNameResponse, error) {
+	out := new(MsgUpdateCampaignNameResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/UpdateCampaignName", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1305,6 +1305,15 @@ func (c *msgClient) UpdateTotalShares(ctx context.Context, in *MsgUpdateTotalSha
 func (c *msgClient) UpdateTotalSupply(ctx context.Context, in *MsgUpdateTotalSupply, opts ...grpc.CallOption) (*MsgUpdateTotalSupplyResponse, error) {
 	out := new(MsgUpdateTotalSupplyResponse)
 	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/UpdateTotalSupply", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) UpdateTotalShares(ctx context.Context, in *MsgUpdateTotalShares, opts ...grpc.CallOption) (*MsgUpdateTotalSharesResponse, error) {
+	out := new(MsgUpdateTotalSharesResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/UpdateTotalShares", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1338,15 +1347,6 @@ func (c *msgClient) AddVestingOptions(ctx context.Context, in *MsgAddVestingOpti
 	return out, nil
 }
 
-func (c *msgClient) UnredeemVouchers(ctx context.Context, in *MsgUnredeemVouchers, opts ...grpc.CallOption) (*MsgUnredeemVouchersResponse, error) {
-	out := new(MsgUnredeemVouchersResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/UnredeemVouchers", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *msgClient) MintVouchers(ctx context.Context, in *MsgMintVouchers, opts ...grpc.CallOption) (*MsgMintVouchersResponse, error) {
 	out := new(MsgMintVouchersResponse)
 	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/MintVouchers", in, out, opts...)
@@ -1374,9 +1374,9 @@ func (c *msgClient) RedeemVouchers(ctx context.Context, in *MsgRedeemVouchers, o
 	return out, nil
 }
 
-func (c *msgClient) UpdateCampaignName(ctx context.Context, in *MsgUpdateCampaignName, opts ...grpc.CallOption) (*MsgUpdateCampaignNameResponse, error) {
-	out := new(MsgUpdateCampaignNameResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/UpdateCampaignName", in, out, opts...)
+func (c *msgClient) UnredeemVouchers(ctx context.Context, in *MsgUnredeemVouchers, opts ...grpc.CallOption) (*MsgUnredeemVouchersResponse, error) {
+	out := new(MsgUnredeemVouchersResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.campaign.Msg/UnredeemVouchers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1386,16 +1386,16 @@ func (c *msgClient) UpdateCampaignName(ctx context.Context, in *MsgUpdateCampaig
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	CreateCampaign(context.Context, *MsgCreateCampaign) (*MsgCreateCampaignResponse, error)
-	UpdateTotalShares(context.Context, *MsgUpdateTotalShares) (*MsgUpdateTotalSharesResponse, error)
+	UpdateCampaignName(context.Context, *MsgUpdateCampaignName) (*MsgUpdateCampaignNameResponse, error)
 	UpdateTotalSupply(context.Context, *MsgUpdateTotalSupply) (*MsgUpdateTotalSupplyResponse, error)
+	UpdateTotalShares(context.Context, *MsgUpdateTotalShares) (*MsgUpdateTotalSharesResponse, error)
 	InitializeMainnet(context.Context, *MsgInitializeMainnet) (*MsgInitializeMainnetResponse, error)
 	AddShares(context.Context, *MsgAddShares) (*MsgAddSharesResponse, error)
 	AddVestingOptions(context.Context, *MsgAddVestingOptions) (*MsgAddVestingOptionsResponse, error)
-	UnredeemVouchers(context.Context, *MsgUnredeemVouchers) (*MsgUnredeemVouchersResponse, error)
 	MintVouchers(context.Context, *MsgMintVouchers) (*MsgMintVouchersResponse, error)
 	BurnVouchers(context.Context, *MsgBurnVouchers) (*MsgBurnVouchersResponse, error)
 	RedeemVouchers(context.Context, *MsgRedeemVouchers) (*MsgRedeemVouchersResponse, error)
-	UpdateCampaignName(context.Context, *MsgUpdateCampaignName) (*MsgUpdateCampaignNameResponse, error)
+	UnredeemVouchers(context.Context, *MsgUnredeemVouchers) (*MsgUnredeemVouchersResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -1405,11 +1405,14 @@ type UnimplementedMsgServer struct {
 func (*UnimplementedMsgServer) CreateCampaign(ctx context.Context, req *MsgCreateCampaign) (*MsgCreateCampaignResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCampaign not implemented")
 }
-func (*UnimplementedMsgServer) UpdateTotalShares(ctx context.Context, req *MsgUpdateTotalShares) (*MsgUpdateTotalSharesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateTotalShares not implemented")
+func (*UnimplementedMsgServer) UpdateCampaignName(ctx context.Context, req *MsgUpdateCampaignName) (*MsgUpdateCampaignNameResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCampaignName not implemented")
 }
 func (*UnimplementedMsgServer) UpdateTotalSupply(ctx context.Context, req *MsgUpdateTotalSupply) (*MsgUpdateTotalSupplyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTotalSupply not implemented")
+}
+func (*UnimplementedMsgServer) UpdateTotalShares(ctx context.Context, req *MsgUpdateTotalShares) (*MsgUpdateTotalSharesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTotalShares not implemented")
 }
 func (*UnimplementedMsgServer) InitializeMainnet(ctx context.Context, req *MsgInitializeMainnet) (*MsgInitializeMainnetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitializeMainnet not implemented")
@@ -1420,9 +1423,6 @@ func (*UnimplementedMsgServer) AddShares(ctx context.Context, req *MsgAddShares)
 func (*UnimplementedMsgServer) AddVestingOptions(ctx context.Context, req *MsgAddVestingOptions) (*MsgAddVestingOptionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddVestingOptions not implemented")
 }
-func (*UnimplementedMsgServer) UnredeemVouchers(ctx context.Context, req *MsgUnredeemVouchers) (*MsgUnredeemVouchersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UnredeemVouchers not implemented")
-}
 func (*UnimplementedMsgServer) MintVouchers(ctx context.Context, req *MsgMintVouchers) (*MsgMintVouchersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MintVouchers not implemented")
 }
@@ -1432,8 +1432,8 @@ func (*UnimplementedMsgServer) BurnVouchers(ctx context.Context, req *MsgBurnVou
 func (*UnimplementedMsgServer) RedeemVouchers(ctx context.Context, req *MsgRedeemVouchers) (*MsgRedeemVouchersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RedeemVouchers not implemented")
 }
-func (*UnimplementedMsgServer) UpdateCampaignName(ctx context.Context, req *MsgUpdateCampaignName) (*MsgUpdateCampaignNameResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateCampaignName not implemented")
+func (*UnimplementedMsgServer) UnredeemVouchers(ctx context.Context, req *MsgUnredeemVouchers) (*MsgUnredeemVouchersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnredeemVouchers not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -1458,20 +1458,20 @@ func _Msg_CreateCampaign_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_UpdateTotalShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgUpdateTotalShares)
+func _Msg_UpdateCampaignName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateCampaignName)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).UpdateTotalShares(ctx, in)
+		return srv.(MsgServer).UpdateCampaignName(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.campaign.Msg/UpdateTotalShares",
+		FullMethod: "/tendermint.spn.campaign.Msg/UpdateCampaignName",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UpdateTotalShares(ctx, req.(*MsgUpdateTotalShares))
+		return srv.(MsgServer).UpdateCampaignName(ctx, req.(*MsgUpdateCampaignName))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1490,6 +1490,24 @@ func _Msg_UpdateTotalSupply_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).UpdateTotalSupply(ctx, req.(*MsgUpdateTotalSupply))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_UpdateTotalShares_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdateTotalShares)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).UpdateTotalShares(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.campaign.Msg/UpdateTotalShares",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).UpdateTotalShares(ctx, req.(*MsgUpdateTotalShares))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1548,24 +1566,6 @@ func _Msg_AddVestingOptions_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_UnredeemVouchers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgUnredeemVouchers)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).UnredeemVouchers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/tendermint.spn.campaign.Msg/UnredeemVouchers",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UnredeemVouchers(ctx, req.(*MsgUnredeemVouchers))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Msg_MintVouchers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgMintVouchers)
 	if err := dec(in); err != nil {
@@ -1620,20 +1620,20 @@ func _Msg_RedeemVouchers_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_UpdateCampaignName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgUpdateCampaignName)
+func _Msg_UnredeemVouchers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUnredeemVouchers)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).UpdateCampaignName(ctx, in)
+		return srv.(MsgServer).UnredeemVouchers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.campaign.Msg/UpdateCampaignName",
+		FullMethod: "/tendermint.spn.campaign.Msg/UnredeemVouchers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UpdateCampaignName(ctx, req.(*MsgUpdateCampaignName))
+		return srv.(MsgServer).UnredeemVouchers(ctx, req.(*MsgUnredeemVouchers))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1647,12 +1647,16 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_CreateCampaign_Handler,
 		},
 		{
-			MethodName: "UpdateTotalShares",
-			Handler:    _Msg_UpdateTotalShares_Handler,
+			MethodName: "UpdateCampaignName",
+			Handler:    _Msg_UpdateCampaignName_Handler,
 		},
 		{
 			MethodName: "UpdateTotalSupply",
 			Handler:    _Msg_UpdateTotalSupply_Handler,
+		},
+		{
+			MethodName: "UpdateTotalShares",
+			Handler:    _Msg_UpdateTotalShares_Handler,
 		},
 		{
 			MethodName: "InitializeMainnet",
@@ -1667,10 +1671,6 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_AddVestingOptions_Handler,
 		},
 		{
-			MethodName: "UnredeemVouchers",
-			Handler:    _Msg_UnredeemVouchers_Handler,
-		},
-		{
 			MethodName: "MintVouchers",
 			Handler:    _Msg_MintVouchers_Handler,
 		},
@@ -1683,156 +1683,12 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_RedeemVouchers_Handler,
 		},
 		{
-			MethodName: "UpdateCampaignName",
-			Handler:    _Msg_UpdateCampaignName_Handler,
+			MethodName: "UnredeemVouchers",
+			Handler:    _Msg_UnredeemVouchers_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "campaign/tx.proto",
-}
-
-func (m *MsgUpdateTotalShares) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUpdateTotalShares) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUpdateTotalShares) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.TotalShares) > 0 {
-		for iNdEx := len(m.TotalShares) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.TotalShares[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintTx(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x1a
-		}
-	}
-	if m.CampaignID != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
-		i--
-		dAtA[i] = 0x10
-	}
-	if len(m.Coordinator) > 0 {
-		i -= len(m.Coordinator)
-		copy(dAtA[i:], m.Coordinator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Coordinator)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgUpdateTotalSharesResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUpdateTotalSharesResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUpdateTotalSharesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgUpdateTotalSupply) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUpdateTotalSupply) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUpdateTotalSupply) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.TotalSupplyUpdate) > 0 {
-		for iNdEx := len(m.TotalSupplyUpdate) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.TotalSupplyUpdate[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintTx(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x1a
-		}
-	}
-	if m.CampaignID != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
-		i--
-		dAtA[i] = 0x10
-	}
-	if len(m.Coordinator) > 0 {
-		i -= len(m.Coordinator)
-		copy(dAtA[i:], m.Coordinator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Coordinator)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgUpdateTotalSupplyResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUpdateTotalSupplyResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUpdateTotalSupplyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
 }
 
 func (m *MsgCreateCampaign) Marshal() (dAtA []byte, err error) {
@@ -1921,6 +1777,215 @@ func (m *MsgCreateCampaignResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 		i--
 		dAtA[i] = 0x8
 	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateCampaignName) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateCampaignName) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateCampaignName) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if m.CampaignID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Coordinator) > 0 {
+		i -= len(m.Coordinator)
+		copy(dAtA[i:], m.Coordinator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Coordinator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateCampaignNameResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateCampaignNameResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateCampaignNameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateTotalSupply) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateTotalSupply) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateTotalSupply) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.TotalSupplyUpdate) > 0 {
+		for iNdEx := len(m.TotalSupplyUpdate) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.TotalSupplyUpdate[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTx(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if m.CampaignID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Coordinator) > 0 {
+		i -= len(m.Coordinator)
+		copy(dAtA[i:], m.Coordinator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Coordinator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateTotalSupplyResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateTotalSupplyResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateTotalSupplyResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateTotalShares) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateTotalShares) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateTotalShares) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.TotalShares) > 0 {
+		for iNdEx := len(m.TotalShares) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.TotalShares[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTx(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if m.CampaignID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Coordinator) > 0 {
+		i -= len(m.Coordinator)
+		copy(dAtA[i:], m.Coordinator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Coordinator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgUpdateTotalSharesResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgUpdateTotalSharesResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgUpdateTotalSharesResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
 	return len(dAtA) - i, nil
 }
 
@@ -2176,78 +2241,6 @@ func (m *MsgAddVestingOptionsResponse) MarshalToSizedBuffer(dAtA []byte) (int, e
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUnredeemVouchers) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUnredeemVouchers) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUnredeemVouchers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Shares) > 0 {
-		for iNdEx := len(m.Shares) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.Shares[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintTx(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0x22
-		}
-	}
-	if m.CampaignID != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
-		i--
-		dAtA[i] = 0x10
-	}
-	if len(m.Sender) > 0 {
-		i -= len(m.Sender)
-		copy(dAtA[i:], m.Sender)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgUnredeemVouchersResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgUnredeemVouchersResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgUnredeemVouchersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
 func (m *MsgMintVouchers) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -2471,7 +2464,7 @@ func (m *MsgRedeemVouchersResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateCampaignName) Marshal() (dAtA []byte, err error) {
+func (m *MsgUnredeemVouchers) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2481,39 +2474,46 @@ func (m *MsgUpdateCampaignName) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateCampaignName) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgUnredeemVouchers) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateCampaignName) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgUnredeemVouchers) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Name) > 0 {
-		i -= len(m.Name)
-		copy(dAtA[i:], m.Name)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Name)))
-		i--
-		dAtA[i] = 0x1a
+	if len(m.Shares) > 0 {
+		for iNdEx := len(m.Shares) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Shares[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTx(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x22
+		}
 	}
 	if m.CampaignID != 0 {
 		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.Coordinator) > 0 {
-		i -= len(m.Coordinator)
-		copy(dAtA[i:], m.Coordinator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Coordinator)))
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateCampaignNameResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgUnredeemVouchersResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2523,12 +2523,12 @@ func (m *MsgUpdateCampaignNameResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateCampaignNameResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgUnredeemVouchersResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateCampaignNameResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgUnredeemVouchersResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2547,7 +2547,45 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgUpdateTotalShares) Size() (n int) {
+func (m *MsgCreateCampaign) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Coordinator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.CampaignName)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if len(m.TotalSupply) > 0 {
+		for _, e := range m.TotalSupply {
+			l = e.Size()
+			n += 1 + l + sovTx(uint64(l))
+		}
+	}
+	if m.DynamicShares {
+		n += 2
+	}
+	return n
+}
+
+func (m *MsgCreateCampaignResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.CampaignID != 0 {
+		n += 1 + sovTx(uint64(m.CampaignID))
+	}
+	return n
+}
+
+func (m *MsgUpdateCampaignName) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2560,16 +2598,14 @@ func (m *MsgUpdateTotalShares) Size() (n int) {
 	if m.CampaignID != 0 {
 		n += 1 + sovTx(uint64(m.CampaignID))
 	}
-	if len(m.TotalShares) > 0 {
-		for _, e := range m.TotalShares {
-			l = e.Size()
-			n += 1 + l + sovTx(uint64(l))
-		}
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
 
-func (m *MsgUpdateTotalSharesResponse) Size() (n int) {
+func (m *MsgUpdateCampaignNameResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2609,7 +2645,7 @@ func (m *MsgUpdateTotalSupplyResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgCreateCampaign) Size() (n int) {
+func (m *MsgUpdateTotalShares) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2619,31 +2655,24 @@ func (m *MsgCreateCampaign) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.CampaignName)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
+	if m.CampaignID != 0 {
+		n += 1 + sovTx(uint64(m.CampaignID))
 	}
-	if len(m.TotalSupply) > 0 {
-		for _, e := range m.TotalSupply {
+	if len(m.TotalShares) > 0 {
+		for _, e := range m.TotalShares {
 			l = e.Size()
 			n += 1 + l + sovTx(uint64(l))
 		}
 	}
-	if m.DynamicShares {
-		n += 2
-	}
 	return n
 }
 
-func (m *MsgCreateCampaignResponse) Size() (n int) {
+func (m *MsgUpdateTotalSharesResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.CampaignID != 0 {
-		n += 1 + sovTx(uint64(m.CampaignID))
-	}
 	return n
 }
 
@@ -2759,37 +2788,6 @@ func (m *MsgAddVestingOptionsResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgUnredeemVouchers) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Sender)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	if m.CampaignID != 0 {
-		n += 1 + sovTx(uint64(m.CampaignID))
-	}
-	if len(m.Shares) > 0 {
-		for _, e := range m.Shares {
-			l = e.Size()
-			n += 1 + l + sovTx(uint64(l))
-		}
-	}
-	return n
-}
-
-func (m *MsgUnredeemVouchersResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	return n
-}
-
 func (m *MsgMintVouchers) Size() (n int) {
 	if m == nil {
 		return 0
@@ -2887,27 +2885,29 @@ func (m *MsgRedeemVouchersResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgUpdateCampaignName) Size() (n int) {
+func (m *MsgUnredeemVouchers) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.Coordinator)
+	l = len(m.Sender)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
 	if m.CampaignID != 0 {
 		n += 1 + sovTx(uint64(m.CampaignID))
 	}
-	l = len(m.Name)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
+	if len(m.Shares) > 0 {
+		for _, e := range m.Shares {
+			l = e.Size()
+			n += 1 + l + sovTx(uint64(l))
+		}
 	}
 	return n
 }
 
-func (m *MsgUpdateCampaignNameResponse) Size() (n int) {
+func (m *MsgUnredeemVouchersResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2921,376 +2921,6 @@ func sovTx(x uint64) (n int) {
 }
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
-}
-func (m *MsgUpdateTotalShares) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateTotalShares: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateTotalShares: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Coordinator = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
-			}
-			m.CampaignID = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.CampaignID |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TotalShares", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.TotalShares = append(m.TotalShares, github_com_cosmos_cosmos_sdk_types.Coin{})
-			if err := m.TotalShares[len(m.TotalShares)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgUpdateTotalSharesResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateTotalSharesResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateTotalSharesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgUpdateTotalSupply) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateTotalSupply: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateTotalSupply: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Coordinator = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
-			}
-			m.CampaignID = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.CampaignID |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TotalSupplyUpdate", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.TotalSupplyUpdate = append(m.TotalSupplyUpdate, github_com_cosmos_cosmos_sdk_types.Coin{})
-			if err := m.TotalSupplyUpdate[len(m.TotalSupplyUpdate)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgUpdateTotalSupplyResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateTotalSupplyResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateTotalSupplyResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
 }
 func (m *MsgCreateCampaign) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -3508,6 +3138,559 @@ func (m *MsgCreateCampaignResponse) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateCampaignName) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateCampaignName: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateCampaignName: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Coordinator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
+			}
+			m.CampaignID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CampaignID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateCampaignNameResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateCampaignNameResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateCampaignNameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateTotalSupply) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateTotalSupply: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateTotalSupply: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Coordinator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
+			}
+			m.CampaignID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CampaignID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TotalSupplyUpdate", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TotalSupplyUpdate = append(m.TotalSupplyUpdate, github_com_cosmos_cosmos_sdk_types.Coin{})
+			if err := m.TotalSupplyUpdate[len(m.TotalSupplyUpdate)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateTotalSupplyResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateTotalSupplyResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateTotalSupplyResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateTotalShares) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateTotalShares: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateTotalShares: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Coordinator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
+			}
+			m.CampaignID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CampaignID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TotalShares", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TotalShares = append(m.TotalShares, github_com_cosmos_cosmos_sdk_types.Coin{})
+			if err := m.TotalShares[len(m.TotalShares)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgUpdateTotalSharesResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgUpdateTotalSharesResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgUpdateTotalSharesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -4262,191 +4445,6 @@ func (m *MsgAddVestingOptionsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUnredeemVouchers) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUnredeemVouchers: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUnredeemVouchers: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Sender = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
-			}
-			m.CampaignID = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.CampaignID |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 4:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Shares", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Shares = append(m.Shares, github_com_cosmos_cosmos_sdk_types.Coin{})
-			if err := m.Shares[len(m.Shares)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgUnredeemVouchersResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUnredeemVouchersResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUnredeemVouchersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
 func (m *MsgMintVouchers) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5034,7 +5032,7 @@ func (m *MsgRedeemVouchersResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateCampaignName) Unmarshal(dAtA []byte) error {
+func (m *MsgUnredeemVouchers) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5057,15 +5055,15 @@ func (m *MsgUpdateCampaignName) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateCampaignName: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgUnredeemVouchers: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateCampaignName: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgUnredeemVouchers: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5093,7 +5091,7 @@ func (m *MsgUpdateCampaignName) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Coordinator = string(dAtA[iNdEx:postIndex])
+			m.Sender = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -5114,11 +5112,11 @@ func (m *MsgUpdateCampaignName) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 3:
+		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Shares", wireType)
 			}
-			var stringLen uint64
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -5128,23 +5126,25 @@ func (m *MsgUpdateCampaignName) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
+			if msglen < 0 {
 				return ErrInvalidLengthTx
 			}
-			postIndex := iNdEx + intStringLen
+			postIndex := iNdEx + msglen
 			if postIndex < 0 {
 				return ErrInvalidLengthTx
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Name = string(dAtA[iNdEx:postIndex])
+			m.Shares = append(m.Shares, github_com_cosmos_cosmos_sdk_types.Coin{})
+			if err := m.Shares[len(m.Shares)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -5167,7 +5167,7 @@ func (m *MsgUpdateCampaignName) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateCampaignNameResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgUnredeemVouchersResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -5190,10 +5190,10 @@ func (m *MsgUpdateCampaignNameResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateCampaignNameResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgUnredeemVouchersResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateCampaignNameResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgUnredeemVouchersResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:
