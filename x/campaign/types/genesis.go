@@ -32,7 +32,7 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("campaign id should be lower or equal than the last id")
 		}
 		if err := elem.Validate(); err != nil {
-			return fmt.Errorf("invalid campaign %v: %v", elem.Id, err.Error())
+			return fmt.Errorf("invalid campaign %d: %s", elem.Id, err.Error())
 		}
 		campaignIDMap[elem.Id] = true
 	}

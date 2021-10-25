@@ -16,11 +16,11 @@ func (k msgServer) SettleRequest(
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%v", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%v", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.ChainID)
 	}
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
@@ -36,7 +36,7 @@ func (k msgServer) SettleRequest(
 	request, found := k.GetRequest(ctx, msg.ChainID, msg.RequestID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrRequestNotFound,
-			"request %d for chain %v not found",
+			"request %d for chain %d not found",
 			msg.RequestID,
 			msg.ChainID,
 		)
