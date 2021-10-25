@@ -13,8 +13,14 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// findCoordinatorAccount find coordinator account from []simtypes.Account
-func findCoordinatorAccount(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, accs []simtypes.Account, exist bool) (simtypes.Account, bool) {
+// FindCoordinatorAccount find a sim account for a coordinator that exists or not
+func FindCoordinatorAccount(
+	r *rand.Rand,
+	ctx sdk.Context,
+	k keeper.Keeper,
+	accs []simtypes.Account,
+	exist bool,
+) (simtypes.Account, bool) {
 	// Randomize the set for coordinator operation entropy
 	r.Shuffle(len(accs), func(i, j int) {
 		accs[i], accs[j] = accs[j], accs[i]
@@ -117,7 +123,7 @@ func SimulateMsgCreateCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Find an account with no coordinator
-		simAccount, found := findCoordinatorAccount(r, ctx, k, accs, false)
+		simAccount, found := FindCoordinatorAccount(r, ctx, k, accs, false)
 		if !found {
 			// No message if all coordinator created
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCoordinator, "skip coordinator creation"), nil, nil
@@ -153,7 +159,7 @@ func SimulateMsgUpdateCoordinatorDescription(ak types.AccountKeeper, bk types.Ba
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Find an account with coordinator associated
-		simAccount, found := findCoordinatorAccount(r, ctx, k, accs, true)
+		simAccount, found := FindCoordinatorAccount(r, ctx, k, accs, true)
 		if !found {
 			// No message if no coordinator
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorDescription, "skip update coordinator description"), nil, nil
@@ -191,12 +197,12 @@ func SimulateMsgUpdateCoordinatorAddress(ak types.AccountKeeper, bk types.BankKe
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a random account
-		coord, found := findCoordinatorAccount(r, ctx, k, accs, true)
+		coord, found := FindCoordinatorAccount(r, ctx, k, accs, true)
 		if !found {
 			// No message if no coordinator
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorAddress, "skip update coordinator address"), nil, nil
 		}
-		simAccount, found := findCoordinatorAccount(r, ctx, k, accs, false)
+		simAccount, found := FindCoordinatorAccount(r, ctx, k, accs, false)
 		if !found && coord.Address.String() != simAccount.Address.String() {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorAddress, "skip update coordinator address"), nil, nil
 		}
@@ -224,20 +230,9 @@ func SimulateMsgDeleteCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		var (
-			found      bool
-			simAccount simtypes.Account
-		)
 		// Find an account with coordinator associated
 		// avoid delete coordinator associated a chain (id 0,1,2)
-		for i := 3; i < len(accs); i++ {
-			acc := accs[i]
-			_, found = k.GetCoordinatorByAddress(ctx, acc.Address.String())
-			if found {
-				simAccount = acc
-				break
-			}
-		}
+		simAccount, found := FindCoordinatorAccount(r, ctx, k, accs[3:], true)
 		if !found {
 			// No message if no coordinator
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDeleteCoordinator, "skip update coordinator delete"), nil, nil
