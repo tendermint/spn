@@ -12,5 +12,5 @@ func TestCritical(t *testing.T) {
 }
 
 func TestCriticalf(t *testing.T) {
-	require.ErrorIs(t, spnerrors.ErrCritical, spnerrors.Criticalf("foo %v", "bar"))
+	require.ErrorIs(t, spnerrors.ErrCritical, spnerrors.Criticalf("foo %s", "bar"))
 }

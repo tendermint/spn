@@ -66,7 +66,7 @@ func DuplicatedAccountInvariant(k Keeper) sdk.Invariant {
 				return sdk.FormatInvariant(
 					types.ModuleName, duplicatedAccountRoute,
 					fmt.Sprintf(
-						"account %s for chain %v found in vesting and genesis accounts",
+						"account %s for chain %d found in vesting and genesis accounts",
 						account.Address,
 						account.ChainID,
 					),
