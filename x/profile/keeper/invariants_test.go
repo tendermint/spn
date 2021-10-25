@@ -12,7 +12,7 @@ import (
 func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 	ctx, k, _ := setupMsgServer(t)
 	t.Run("valid case", func(t *testing.T) {
-		coord := sample.Coordinator()
+		coord := sample.Coordinator(sample.Address())
 		coord.CoordinatorId = k.AppendCoordinator(ctx, coord)
 		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 			Address:       sample.Address(),

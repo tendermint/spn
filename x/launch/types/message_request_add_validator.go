@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgRequestAddValidator = "request_add_validator"
+
 var _ sdk.Msg = &MsgRequestAddValidator{}
 
 func NewMsgRequestAddValidator(
@@ -30,7 +32,7 @@ func (msg *MsgRequestAddValidator) Route() string {
 }
 
 func (msg *MsgRequestAddValidator) Type() string {
-	return "RequestAddValidator"
+	return TypeMsgRequestAddValidator
 }
 
 func (msg *MsgRequestAddValidator) GetSigners() []sdk.AccAddress {

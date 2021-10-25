@@ -111,9 +111,9 @@ func (k Keeper) GetAllRequest(ctx sdk.Context) (list []types.Request) {
 	return
 }
 
-// checkAccount check account inconsistency and return
+// CheckAccount check account inconsistency and return
 // if an account exists for genesis or vesting accounts
-func checkAccount(ctx sdk.Context, k Keeper, chainID uint64, address string) (bool, error) {
+func CheckAccount(ctx sdk.Context, k Keeper, chainID uint64, address string) (bool, error) {
 	_, foundGenesis := k.GetGenesisAccount(ctx, chainID, address)
 	_, foundVesting := k.GetVestingAccount(ctx, chainID, address)
 	if foundGenesis && foundVesting {
@@ -140,7 +140,7 @@ func ApplyRequest(
 	switch requestContent := request.Content.Content.(type) {
 	case *types.RequestContent_GenesisAccount:
 		ga := requestContent.GenesisAccount
-		found, err := checkAccount(ctx, k, chainID, ga.Address)
+		found, err := CheckAccount(ctx, k, chainID, ga.Address)
 		if err != nil {
 			return err
 		}
@@ -153,7 +153,7 @@ func ApplyRequest(
 		k.SetGenesisAccount(ctx, *ga)
 	case *types.RequestContent_VestingAccount:
 		va := requestContent.VestingAccount
-		found, err := checkAccount(ctx, k, chainID, va.Address)
+		found, err := CheckAccount(ctx, k, chainID, va.Address)
 		if err != nil {
 			return err
 		}
@@ -166,7 +166,7 @@ func ApplyRequest(
 		k.SetVestingAccount(ctx, *va)
 	case *types.RequestContent_AccountRemoval:
 		ar := requestContent.AccountRemoval
-		found, err := checkAccount(ctx, k, chainID, ar.Address)
+		found, err := CheckAccount(ctx, k, chainID, ar.Address)
 		if err != nil {
 			return err
 		}

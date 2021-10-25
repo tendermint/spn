@@ -53,3 +53,8 @@ func (k *Keeper) SetCampaignKeeper(campaignKeeper types.CampaignKeeper) {
 	}
 	k.campaignKeeper = campaignKeeper
 }
+
+// GetProfileKeeper get the profile keeper interface of the module
+func (k *Keeper) GetProfileKeeper() types.ProfileKeeper {
+	return k.profileKeeper
+}

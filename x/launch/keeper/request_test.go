@@ -33,7 +33,7 @@ func createRequests(
 func createNRequest(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
-		items[i] = sample.Request(0)
+		items[i] = sample.Request(0, sample.Address())
 		id := keeper.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}

@@ -26,9 +26,9 @@ func ValidatorDescription(desc string) profile.ValidatorDescription {
 }
 
 // Coordinator returns a sample Coordinator
-func Coordinator() profile.Coordinator {
+func Coordinator(address string) profile.Coordinator {
 	return profile.Coordinator{
-		Address:     Address(),
+		Address:     address,
 		Description: CoordinatorDescription(),
 	}
 }
@@ -43,42 +43,70 @@ func CoordinatorDescription() profile.CoordinatorDescription {
 }
 
 // ProfileGenesisState returns a sample genesis state for the profile module
-func ProfileGenesisState() profile.GenesisState {
-	coordAddr1, coordAddr2 := Address(), Address()
-
+func ProfileGenesisState(addresses ...string) profile.GenesisState {
+	for len(addresses) < 7 {
+		addresses = append(addresses, Address())
+	}
 	return profile.GenesisState{
-		ValidatorList: []profile.Validator{
-			{
-				Address:     Address(),
-				Description: ValidatorDescription(String(10)),
-			},
-			{
-				Address:     Address(),
-				Description: ValidatorDescription(String(10)),
-			},
-		},
 		CoordinatorList: []profile.Coordinator{
 			{
 				CoordinatorId: 0,
-				Address:       coordAddr1,
+				Address:       addresses[0],
 				Description:   CoordinatorDescription(),
 			},
 			{
 				CoordinatorId: 1,
-				Address:       coordAddr2,
+				Address:       addresses[1],
+				Description:   CoordinatorDescription(),
+			},
+			{
+				CoordinatorId: 2,
+				Address:       addresses[2],
+				Description:   CoordinatorDescription(),
+			},
+			{
+				CoordinatorId: 3,
+				Address:       addresses[3],
+				Description:   CoordinatorDescription(),
+			},
+			{
+				CoordinatorId: 4,
+				Address:       addresses[4],
 				Description:   CoordinatorDescription(),
 			},
 		},
 		CoordinatorByAddressList: []profile.CoordinatorByAddress{
 			{
-				Address:       coordAddr1,
+				Address:       addresses[0],
 				CoordinatorId: 0,
 			},
 			{
-				Address:       coordAddr2,
+				Address:       addresses[1],
 				CoordinatorId: 1,
 			},
+			{
+				Address:       addresses[2],
+				CoordinatorId: 2,
+			},
+			{
+				Address:       addresses[3],
+				CoordinatorId: 3,
+			},
+			{
+				Address:       addresses[4],
+				CoordinatorId: 4,
+			},
 		},
-		CoordinatorCount: 2,
+		CoordinatorCount: 5,
+		ValidatorList: []profile.Validator{
+			{
+				Address:     addresses[5],
+				Description: ValidatorDescription(String(10)),
+			},
+			{
+				Address:     addresses[6],
+				Description: ValidatorDescription(String(10)),
+			},
+		},
 	}
 }

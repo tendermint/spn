@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgRequestRemoveAccount = "request_remove_account"
+
 var _ sdk.Msg = &MsgRequestRemoveAccount{}
 
 func NewMsgRequestRemoveAccount(chainID uint64, creator, address string) *MsgRequestRemoveAccount {
@@ -20,7 +22,7 @@ func (msg *MsgRequestRemoveAccount) Route() string {
 }
 
 func (msg *MsgRequestRemoveAccount) Type() string {
-	return "RequestRemoveAccount"
+	return TypeMsgRequestRemoveAccount
 }
 
 func (msg *MsgRequestRemoveAccount) GetSigners() []sdk.AccAddress {

@@ -7,6 +7,10 @@ accounts:
     coins: ["10000token", "100000000stake"]
   - name: dave
     coins: ["10000token", "100000000stake"]
+  - name: joe
+    coins: ["10000token", "100000000stake"]
+  - name: steve
+    coins: ["10000token", "100000000stake"]
 validator:
   name: alice
   staked: "100000000stake"
