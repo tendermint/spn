@@ -25,27 +25,13 @@ func populateCoordinators(
 	accs []simtypes.Account,
 	coordNb int,
 ) (coordIDs []uint64) {
-	accsNb := len(accs)
-	require.LessOrEqual(t, coordNb, accsNb)
-
-	// Create coordinator from random sim accounts
-	created := make(map[int]struct{})
+	require.LessOrEqual(t, coordNb, len(accs))
+	r.Shuffle(len(accs), func(i, j int) {
+		accs[i], accs[j] = accs[j], accs[i]
+	})
 	for i := 0; i < coordNb; i++ {
-		// Find randomly an index never used
-		var nb int
-		for j := 0; ; j++ {
-			nb = r.Intn(accsNb)
-			if _, ok := created[nb]; !ok {
-				created[nb] = struct{}{}
-				break
-			}
-
-			// Prevent infinite loop
-			require.Less(t, j, 10, fmt.Sprintf("can't find an account for the coordinator %d", i))
-		}
-
 		coordID := pk.AppendCoordinator(ctx, profiletypes.Coordinator{
-			Address:     accs[nb].Address.String(),
+			Address:     accs[i].Address.String(),
 			Description: sample.CoordinatorDescription(),
 		})
 
