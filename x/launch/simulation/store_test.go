@@ -1,10 +1,6 @@
 package simulation_test
 
 import (
-	"math/rand"
-	"testing"
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/simulation"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -18,6 +14,7 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"testing"
 )
 
 func setupMsgServer(t testing.TB) (
@@ -41,7 +38,7 @@ func setupMsgServer(t testing.TB) (
 
 func TestFindAccount(t *testing.T) {
 	var (
-		r    = rand.New(rand.NewSource(time.Now().Unix()))
+		r    = sample.Rand()
 		accs = simulation.RandomAccounts(r, 5)
 	)
 	tests := []struct {
@@ -84,7 +81,7 @@ func TestFindChainCoordinatorAccount(t *testing.T) {
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
 		ctx  = sdk.WrapSDKContext(sdkCtx)
-		r    = rand.New(rand.NewSource(time.Now().Unix()))
+		r    = sample.Rand()
 		accs = simulation.RandomAccounts(r, 2)
 	)
 
@@ -176,7 +173,7 @@ func TestFindRandomChain(t *testing.T) {
 	var (
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
-		r              = rand.New(rand.NewSource(time.Now().Unix()))
+		r              = sample.Rand()
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		msgCreateCoord = sample.MsgCreateCoordinator(sample.Address())
 	)
@@ -232,7 +229,7 @@ func TestFindRandomValidator(t *testing.T) {
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
 		ctx  = sdk.WrapSDKContext(sdkCtx)
-		r    = rand.New(rand.NewSource(time.Now().Unix()))
+		r    = sample.Rand()
 		accs = simulation.RandomAccounts(r, 2)
 	)
 
@@ -298,7 +295,7 @@ func TestFindRandomRequest(t *testing.T) {
 	var (
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
-		r   = rand.New(rand.NewSource(time.Now().Unix()))
+		r   = sample.Rand()
 		ctx = sdk.WrapSDKContext(sdkCtx)
 	)
 
