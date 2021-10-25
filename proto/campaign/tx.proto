@@ -11,35 +11,17 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 // Msg defines the Msg service.
 service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
-  rpc UpdateTotalShares(MsgUpdateTotalShares) returns (MsgUpdateTotalSharesResponse);
+  rpc UpdateCampaignName(MsgUpdateCampaignName) returns (MsgUpdateCampaignNameResponse);
   rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
+  rpc UpdateTotalShares(MsgUpdateTotalShares) returns (MsgUpdateTotalSharesResponse);
   rpc InitializeMainnet(MsgInitializeMainnet) returns (MsgInitializeMainnetResponse);
   rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
   rpc AddVestingOptions(MsgAddVestingOptions) returns (MsgAddVestingOptionsResponse);
-  rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
   rpc MintVouchers(MsgMintVouchers) returns (MsgMintVouchersResponse);
   rpc BurnVouchers(MsgBurnVouchers) returns (MsgBurnVouchersResponse);
   rpc RedeemVouchers(MsgRedeemVouchers) returns (MsgRedeemVouchersResponse);
-  rpc UpdateCampaignName(MsgUpdateCampaignName) returns (MsgUpdateCampaignNameResponse);
+  rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
-}
-
-message MsgUpdateTotalShares {
-  string coordinator = 1;
-  uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin totalShares = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
-}
-
-message MsgUpdateTotalSharesResponse {
-}
-
-message MsgUpdateTotalSupply {
-  string coordinator = 1;
-  uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin totalSupplyUpdate = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
-}
-
-message MsgUpdateTotalSupplyResponse {
 }
 
 message MsgCreateCampaign {
@@ -53,6 +35,33 @@ message MsgCreateCampaignResponse {
   uint64 campaignID = 1;
 }
 
+message MsgUpdateCampaignName {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  string name = 3;
+}
+
+message MsgUpdateCampaignNameResponse {
+}
+
+message MsgUpdateTotalSupply {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  repeated cosmos.base.v1beta1.Coin totalSupplyUpdate = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+}
+
+message MsgUpdateTotalSupplyResponse {
+}
+
+message MsgUpdateTotalShares {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  repeated cosmos.base.v1beta1.Coin totalShares = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+}
+
+message MsgUpdateTotalSharesResponse {
+}
+
 message MsgInitializeMainnet {
   string coordinator = 1;
   uint64 campaignID = 2;
@@ -64,6 +73,7 @@ message MsgInitializeMainnet {
 message MsgInitializeMainnetResponse {
   uint64 mainnetID = 1;
 }
+
 message MsgAddShares {
   string coordinator = 1;
   uint64 campaignID = 2;
@@ -83,15 +93,6 @@ message MsgAddVestingOptions {
 }
 
 message MsgAddVestingOptionsResponse {
-}
-
-message MsgUnredeemVouchers {
-  string sender = 1;
-  uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin shares = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
-}
-
-message MsgUnredeemVouchersResponse {
 }
 
 message MsgMintVouchers {
@@ -122,13 +123,13 @@ message MsgRedeemVouchers {
 message MsgRedeemVouchersResponse {
 }
 
-message MsgUpdateCampaignName {
-  string coordinator = 1;
+message MsgUnredeemVouchers {
+  string sender = 1;
   uint64 campaignID = 2;
-  string name = 3;
+  repeated cosmos.base.v1beta1.Coin shares = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
 }
 
-message MsgUpdateCampaignNameResponse {
+message MsgUnredeemVouchersResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
