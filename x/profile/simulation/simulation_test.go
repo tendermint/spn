@@ -1,21 +1,21 @@
 package simulation_test
 
 import (
-	"github.com/stretchr/testify/require"
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/x/profile/types"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/types/simulation"
+	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	profilesim "github.com/tendermint/spn/x/profile/simulation"
+	"github.com/tendermint/spn/x/profile/types"
 )
 
 func TestFindCoordinatorAccount(t *testing.T) {
 	var (
 		k, ctx = testkeeper.Profile(t)
-		r = sample.Rand()
-		accs = simulation.RandomAccounts(r, 20)
+		r      = sample.Rand()
+		accs   = simulation.RandomAccounts(r, 20)
 	)
 
 	t.Run("false for empty set", func(t *testing.T) {
@@ -37,7 +37,7 @@ func TestFindCoordinatorAccount(t *testing.T) {
 	// Set ccordinator to a random account
 	acc, accIndex := simulation.RandomAcc(r, accs)
 	k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
-		Address: acc.Address.String(),
+		Address:       acc.Address.String(),
 		CoordinatorId: sample.Uint64(),
 	})
 
