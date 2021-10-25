@@ -15,7 +15,7 @@ func (k msgServer) UpdateCampaignName(goCtx context.Context, msg *types.MsgUpdat
 
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%v", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
 	// Get the coordinator ID
@@ -25,7 +25,7 @@ func (k msgServer) UpdateCampaignName(goCtx context.Context, msg *types.MsgUpdat
 	}
 	if campaign.CoordinatorID != coordinatorID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the campaign is %v",
+			"coordinator of the campaign is %d",
 			campaign.CoordinatorID,
 		))
 	}

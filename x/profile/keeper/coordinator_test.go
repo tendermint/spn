@@ -14,7 +14,7 @@ import (
 func createNCoordinator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Coordinator {
 	items := make([]types.Coordinator, n)
 	for i := range items {
-		items[i] = sample.Coordinator()
+		items[i] = sample.Coordinator(sample.Address())
 		items[i].CoordinatorId = keeper.AppendCoordinator(ctx, items[i])
 	}
 	return items
@@ -55,7 +55,7 @@ func TestCoordinatorCount(t *testing.T) {
 
 func TestGetCoordinatorAddressFromID(t *testing.T) {
 	k, ctx := testkeeper.Profile(t)
-	coordinator := sample.Coordinator()
+	coordinator := sample.Coordinator(sample.Address())
 	coordinator.CoordinatorId = k.AppendCoordinator(ctx, coordinator)
 
 	address, found := k.GetCoordinatorAddressFromID(ctx, coordinator.CoordinatorId)

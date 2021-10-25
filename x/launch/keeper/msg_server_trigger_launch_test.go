@@ -20,7 +20,6 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	coordNoExist := sample.Address()
 	chainIDNoExist := uint64(1000)
 
-	launchTime := types.DefaultMinLaunchTime
 	launchTimeTooLow := types.DefaultMinLaunchTime - 1
 	launchTimeTooHigh := types.DefaultMaxLaunchTime + 1
 
@@ -60,26 +59,26 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	}{
 		{
 			name: "launch chain not launched",
-			msg:  *types.NewMsgTriggerLaunch(coordAddress, chainID, launchTime),
+			msg:  sample.MsgTriggerLaunch(coordAddress, chainID),
 		},
 		{
 			name: "non existent chain id",
-			msg:  *types.NewMsgTriggerLaunch(coordAddress, chainIDNoExist, launchTime),
+			msg:  sample.MsgTriggerLaunch(coordAddress, chainIDNoExist),
 			err:  types.ErrChainNotFound,
 		},
 		{
 			name: "non existent coordinator",
-			msg:  *types.NewMsgTriggerLaunch(coordNoExist, chainID2, launchTime),
+			msg:  sample.MsgTriggerLaunch(coordNoExist, chainID2),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{
 			name: "invalid coordinator",
-			msg:  *types.NewMsgTriggerLaunch(coordAddress2, chainID2, launchTime),
+			msg:  sample.MsgTriggerLaunch(coordAddress2, chainID2),
 			err:  profiletypes.ErrCoordInvalid,
 		},
 		{
 			name: "chain launch already triggered",
-			msg:  *types.NewMsgTriggerLaunch(coordAddress, alreadyLaunched, launchTime),
+			msg:  sample.MsgTriggerLaunch(coordAddress, alreadyLaunched),
 			err:  types.ErrTriggeredLaunch,
 		},
 		{
