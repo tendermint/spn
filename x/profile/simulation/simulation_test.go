@@ -35,7 +35,7 @@ func TestFindCoordinatorAccount(t *testing.T) {
 	})
 
 	// Set ccordinator to a random account
-	acc, accIndex := simulation.RandomAcc(r, accs)
+	acc, _ := simulation.RandomAcc(r, accs)
 	k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       acc.Address.String(),
 		CoordinatorId: sample.Uint64(),
@@ -52,10 +52,10 @@ func TestFindCoordinatorAccount(t *testing.T) {
 	})
 
 	t.Run("all coordinator account", func(t *testing.T) {
-		_, found := profilesim.FindCoordinatorAccount(r, ctx, *k, accs[accIndex:accIndex+1], false)
+		_, found := profilesim.FindCoordinatorAccount(r, ctx, *k, []simulation.Account{acc}, false)
 		require.False(t, found)
 
-		acc, found := profilesim.FindCoordinatorAccount(r, ctx, *k, accs[accIndex:accIndex+1], true)
+		acc, found := profilesim.FindCoordinatorAccount(r, ctx, *k, []simulation.Account{acc}, true)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
 	})
