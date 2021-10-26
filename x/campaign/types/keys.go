@@ -19,7 +19,7 @@ const (
 	MemStoreKey = "mem_campaign"
 
 	// CampaignKey is the prefix to retrieve all Campaign
-	CampaignKey      = "Campaign-value-"
+	CampaignKey = "Campaign-value-"
 
 	// CampaignCountKey is the prefix to store campaign count
 	CampaignCountKey = "Campaign-count-"

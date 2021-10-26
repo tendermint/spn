@@ -12,9 +12,9 @@ import (
 
 type (
 	Keeper struct {
-		cdc      codec.BinaryCodec
-		storeKey sdk.StoreKey
-		memKey   sdk.StoreKey
+		cdc           codec.BinaryCodec
+		storeKey      sdk.StoreKey
+		memKey        sdk.StoreKey
 		launchKeeper  types.LaunchKeeper
 		bankKeeper    types.BankKeeper
 		profileKeeper types.ProfileKeeper

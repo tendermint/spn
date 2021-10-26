@@ -5,7 +5,7 @@ const (
 	ChainKeyPrefix = "Chain/value/"
 
 	// ChainCountKey is the prefix to store chain count
-	ChainCountKey  = "Chain/count/"
+	ChainCountKey = "Chain/count/"
 )
 
 // ChainKey returns the store key to retrieve a Chain from the index fields

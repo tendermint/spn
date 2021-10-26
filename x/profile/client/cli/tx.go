@@ -2,10 +2,9 @@ package cli
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
