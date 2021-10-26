@@ -1,9 +1,5 @@
 package types
 
-import "encoding/binary"
-
-var _ binary.ByteOrder
-
 const (
 	// GenesisAccountKeyPrefix is the prefix to retrieve all GenesisAccount
 	GenesisAccountKeyPrefix = "GenesisAccount/value/"

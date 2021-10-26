@@ -1,9 +1,5 @@
 package types
 
-import "encoding/binary"
-
-var _ binary.ByteOrder
-
 const (
 	// GenesisValidatorKeyPrefix is the prefix to retrieve all GenesisValidator
 	GenesisValidatorKeyPrefix = "GenesisValidator/value/"

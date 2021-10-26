@@ -1,11 +1,6 @@
 package types
 
-import (
-	"fmt"
-)
-
-// DefaultIndex is the default capability global index
-const DefaultIndex uint64 = 1
+import "fmt"
 
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {

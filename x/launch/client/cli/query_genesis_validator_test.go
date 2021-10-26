@@ -8,18 +8,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/client/cli"
 	"github.com/tendermint/spn/x/launch/types"
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func networkWithGenesisValidatorObjects(t *testing.T, n int) (*network.Network, []types.GenesisValidator) {
 	t.Helper()

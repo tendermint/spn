@@ -12,8 +12,6 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdRequestAddValidator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "request-add-validator [chain-id] [gentx-file] [consensus-public-key] [self-delegation] [peer]",

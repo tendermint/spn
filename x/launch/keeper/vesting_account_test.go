@@ -12,9 +12,6 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func createNVestingAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.VestingAccount {
 	items := make([]types.VestingAccount, n)
 	for i := range items {
