@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,9 +10,6 @@ import (
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func createNMainnetVestingAccount(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.MainnetVestingAccount {
 	items := make([]types.MainnetVestingAccount, n)

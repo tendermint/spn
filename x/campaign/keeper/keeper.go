@@ -15,7 +15,6 @@ type (
 		cdc      codec.BinaryCodec
 		storeKey sdk.StoreKey
 		memKey   sdk.StoreKey
-
 		launchKeeper  types.LaunchKeeper
 		bankKeeper    types.BankKeeper
 		profileKeeper types.ProfileKeeper

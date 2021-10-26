@@ -7,17 +7,13 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
+	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/keeper"
+	"github.com/tendermint/spn/x/campaign/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	keepertest "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/x/campaign/types"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func createNMainnetAccountForCampaignID(
 	keeper *keeper.Keeper,

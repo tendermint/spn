@@ -33,10 +33,7 @@ func (k Keeper) SetCampaignCount(ctx sdk.Context, count uint64) {
 }
 
 // AppendCampaign appends a campaign in the store with a new id and update the count
-func (k Keeper) AppendCampaign(
-	ctx sdk.Context,
-	campaign types.Campaign,
-) uint64 {
+func (k Keeper) AppendCampaign(ctx sdk.Context, campaign types.Campaign) uint64 {
 	// Create the campaign
 	count := k.GetCampaignCount(ctx)
 

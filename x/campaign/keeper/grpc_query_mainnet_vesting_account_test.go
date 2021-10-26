@@ -15,9 +15,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func createNMainnetVestingAccountForCampaignID(
 	keeper *keeper.Keeper,
 	ctx sdk.Context,
