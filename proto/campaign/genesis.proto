@@ -12,10 +12,10 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 // GenesisState defines the campaign module's genesis state.
 message GenesisState {
-  repeated Campaign campaignList = 1 [(gogoproto.nullable) = false]; // this line is used by starport scaffolding # genesis/proto/stateField
-  uint64 campaignCount = 2; // this line is used by starport scaffolding # genesis/proto/stateField
-  repeated CampaignChains campaignChainsList = 3 [(gogoproto.nullable) = false]; // this line is used by starport scaffolding # genesis/proto/stateField
-  repeated MainnetAccount mainnetAccountList = 4 [(gogoproto.nullable) = false]; // this line is used by starport scaffolding # genesis/proto/stateField
-  repeated MainnetVestingAccount mainnetVestingAccountList = 5 [(gogoproto.nullable) = false]; // this line is used by starport scaffolding # genesis/proto/stateField
+  repeated Campaign campaignList = 1 [(gogoproto.nullable) = false];
+  uint64 campaignCount = 2;
+  repeated CampaignChains campaignChainsList = 3 [(gogoproto.nullable) = false];
+  repeated MainnetAccount mainnetAccountList = 4 [(gogoproto.nullable) = false];
+  repeated MainnetVestingAccount mainnetVestingAccountList = 5 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }
