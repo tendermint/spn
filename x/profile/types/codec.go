@@ -10,17 +10,16 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	// this line is used by starport scaffolding # 2
 	cdc.RegisterConcrete(&MsgUpdateValidatorDescription{}, "profile/UpdateValidatorDescription", nil)
 	cdc.RegisterConcrete(&MsgDeleteValidator{}, "profile/DeleteValidator", nil)
 	cdc.RegisterConcrete(&MsgCreateCoordinator{}, "profile/CreateCoordinator", nil)
 	cdc.RegisterConcrete(&MsgUpdateCoordinatorDescription{}, "profile/UpdateCoordinatorDescription", nil)
 	cdc.RegisterConcrete(&MsgUpdateCoordinatorAddress{}, "profile/UpdateCoordinatorAddress", nil)
 	cdc.RegisterConcrete(&MsgDeleteCoordinator{}, "profile/DeleteCoordinator", nil)
+	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
-	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateValidatorDescription{},
 		&MsgDeleteValidator{},
@@ -29,6 +28,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgUpdateCoordinatorAddress{},
 		&MsgDeleteCoordinator{},
 	)
+	// this line is used by starport scaffolding # 3
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 

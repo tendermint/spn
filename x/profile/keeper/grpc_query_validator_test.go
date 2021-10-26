@@ -13,9 +13,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func TestValidatorQuerySingle(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)

@@ -15,13 +15,14 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_profile"
+
+	// CoordinatorKey is the prefix to retrieve all Coordinator
+	CoordinatorKey      = "Coordinator-value-"
+
+	// CoordinatorCountKey is the prefix to store coordinator count
+	CoordinatorCountKey = "Coordinator-count-"
 )
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
-
-const (
-	CoordinatorKey      = "Coordinator-value-"
-	CoordinatorCountKey = "Coordinator-count-"
-)
