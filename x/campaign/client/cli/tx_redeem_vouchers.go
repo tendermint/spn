@@ -1,23 +1,16 @@
 package cli
 
 import (
-	"strconv"
-
-	"github.com/spf13/cast"
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-var _ = strconv.Itoa(0)
-
-const (
-	flagAccount = "account"
-)
+const flagAccount = "account"
 
 func CmdRedeemVouchers() *cobra.Command {
 	cmd := &cobra.Command{
