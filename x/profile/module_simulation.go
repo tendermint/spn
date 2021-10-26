@@ -25,7 +25,12 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(types.DefaultGenesis())
+	accs := make([]string, len(simState.Accounts))
+	for i, acc := range simState.Accounts {
+		accs[i] = acc.Address.String()
+	}
+	profileGenesis := sample.ProfileGenesisState(accs...)
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&profileGenesis)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals
@@ -34,7 +39,7 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 	return []simtypes.ParamChange{}
 }
 
@@ -42,7 +47,7 @@ func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
-func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+func (am AppModule) WeightedOperations(_ module.SimulationState) []simtypes.WeightedOperation {
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgUpdateValidatorDescription,
@@ -71,24 +76,34 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	}
 }
 
+// findCoordinatorAccount find coordinator account from []simtypes.Account
+func findCoordinatorAccount(ctx sdk.Context, k keeper.Keeper, accs []simtypes.Account, exist bool) (simtypes.Account, bool) {
+	for _, acc := range accs {
+		_, found := k.GetCoordinatorByAddress(ctx, acc.Address.String())
+		if found == exist {
+			return acc, true
+		}
+	}
+	return simtypes.Account{}, false
+}
+
 // SimulateMsgUpdateValidatorDescription simulates a MsgUpdateValidatorDescription message
-func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.BankKeeper) simtypes.Operation {
+func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.BankKeeper, _ keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a random account
-		accountNb := r.Intn(len(accs))
+		simAccount, _ := simtypes.RandomAcc(r, accs)
 
 		desc := sample.ValidatorDescription(sample.String(50))
 		msg := types.NewMsgUpdateValidatorDescription(
-			accs[accountNb].Address.String(),
+			simAccount.Address.String(),
 			desc.Identity,
 			desc.Moniker,
 			desc.Website,
 			desc.SecurityContact,
 			desc.Details,
 		)
-
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -97,7 +112,7 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 			Msg:             msg,
 			MsgType:         msg.Type(),
 			Context:         ctx,
-			SimAccount:      accs[accountNb],
+			SimAccount:      simAccount,
 			AccountKeeper:   ak,
 			Bankkeeper:      bk,
 			ModuleName:      types.ModuleName,
@@ -112,11 +127,13 @@ func SimulateMsgDeleteValidator(ak types.AccountKeeper, bk types.BankKeeper, k k
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		var simAccount simtypes.Account
-
+		var (
+			found      bool
+			simAccount simtypes.Account
+		)
 		// Find an account with validator description
-		var found bool
-		for _, acc := range accs {
+		for i := 2; i < len(accs); i++ {
+			acc := accs[i]
 			_, found = k.GetValidator(ctx, acc.Address.String())
 			if found {
 				simAccount = acc
@@ -152,19 +169,9 @@ func SimulateMsgCreateCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		var simAccount simtypes.Account
-
 		// Find an account with no coordinator
-		allCreated := true
-		for _, acc := range accs {
-			_, found := k.GetCoordinatorByAddress(ctx, acc.Address.String())
-			if !found {
-				simAccount = acc
-				allCreated = false
-				break
-			}
-		}
-		if allCreated {
+		simAccount, found := findCoordinatorAccount(ctx, k, accs, false)
+		if !found {
 			// No message if all coordinator created
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCoordinator, "skip coordinator creation"), nil, nil
 		}
@@ -175,7 +182,6 @@ func SimulateMsgCreateCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 			sample.String(30),
 			sample.String(30),
 		)
-
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -199,17 +205,8 @@ func SimulateMsgUpdateCoordinatorDescription(ak types.AccountKeeper, bk types.Ba
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		var simAccount simtypes.Account
-
 		// Find an account with coordinator associated
-		var found bool
-		for _, acc := range accs {
-			_, found = k.GetCoordinatorByAddress(ctx, acc.Address.String())
-			if found {
-				simAccount = acc
-				break
-			}
-		}
+		simAccount, found := findCoordinatorAccount(ctx, k, accs, true)
 		if !found {
 			// No message if no coordinator
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorDescription, "skip update coordinator description"), nil, nil
@@ -246,23 +243,17 @@ func SimulateMsgUpdateCoordinatorAddress(ak types.AccountKeeper, bk types.BankKe
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		var simAccount simtypes.Account
-
-		// Find an account with coordinator associated
-		var found bool
-		for _, acc := range accs {
-			_, found = k.GetCoordinatorByAddress(ctx, acc.Address.String())
-			if found {
-				simAccount = acc
-				break
-			}
-		}
+		// Select a random account
+		coord, found := findCoordinatorAccount(ctx, k, accs, true)
 		if !found {
 			// No message if no coordinator
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorAddress, "skip update coordinator address"), nil, nil
 		}
-
-		msg := types.NewMsgUpdateCoordinatorAddress(simAccount.Address.String(), sample.Address())
+		simAccount, found := findCoordinatorAccount(ctx, k, accs, false)
+		if !found && coord.Address.String() != simAccount.Address.String() {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorAddress, "skip update coordinator address"), nil, nil
+		}
+		msg := types.NewMsgUpdateCoordinatorAddress(coord.Address.String(), simAccount.Address.String())
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -271,7 +262,7 @@ func SimulateMsgUpdateCoordinatorAddress(ak types.AccountKeeper, bk types.BankKe
 			Msg:             msg,
 			MsgType:         msg.Type(),
 			Context:         ctx,
-			SimAccount:      simAccount,
+			SimAccount:      coord,
 			AccountKeeper:   ak,
 			Bankkeeper:      bk,
 			ModuleName:      types.ModuleName,
@@ -286,11 +277,14 @@ func SimulateMsgDeleteCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		var simAccount simtypes.Account
-
+		var (
+			found      bool
+			simAccount simtypes.Account
+		)
 		// Find an account with coordinator associated
-		var found bool
-		for _, acc := range accs {
+		// avoid delete coordinator associated a chain (id 0,1,2)
+		for i := 3; i < len(accs); i++ {
+			acc := accs[i]
 			_, found = k.GetCoordinatorByAddress(ctx, acc.Address.String())
 			if found {
 				simAccount = acc

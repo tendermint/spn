@@ -16,7 +16,7 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%v", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
 	// Get the coordinator ID
@@ -26,7 +26,7 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	}
 	if campaign.CoordinatorID != coordinatorID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the campaign is %v",
+			"coordinator of the campaign is %d",
 			campaign.CoordinatorID,
 		))
 	}
@@ -64,7 +64,7 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	// increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, totalShares)
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
-		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%v", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
 	}
 
 	k.SetCampaign(ctx, campaign)

@@ -48,7 +48,7 @@ func TestZeroLaunchTimestampInvariant(t *testing.T) {
 func TestUnknownRequestTypeInvariant(t *testing.T) {
 	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
 	t.Run("valid case", func(t *testing.T) {
-		k.AppendRequest(ctx, sample.Request(0))
+		k.AppendRequest(ctx, sample.Request(0, sample.Address()))
 		_, isValid := keeper.UnknownRequestTypeInvariant(*k)(ctx)
 		require.Equal(t, false, isValid)
 	})

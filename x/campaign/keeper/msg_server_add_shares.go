@@ -15,7 +15,7 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%v", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
 	// Get the coordinator ID
@@ -25,7 +25,7 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 	}
 	if campaign.CoordinatorID != coordinatorID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the campaign is %v",
+			"coordinator of the campaign is %d",
 			campaign.CoordinatorID,
 		))
 	}
@@ -46,7 +46,7 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 	// increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
-		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%v", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
 	}
 	ctx.BlockTime().Unix()
 

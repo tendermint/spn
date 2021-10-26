@@ -15,7 +15,7 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 
 	chain, found := k.GetChain(ctx, msg.ChainID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%v", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
 	}
 
 	// Check sender is the coordinator of the chain
@@ -25,20 +25,20 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 	}
 	if chain.CoordinatorID != coordinatorID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the chain is %v",
+			"coordinator of the chain is %d",
 			chain.CoordinatorID,
 		))
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%v", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.ChainID)
 	}
 
 	if msg.RemainingTime < k.MinLaunchTime(ctx) {
-		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooLow, "%v", msg.RemainingTime)
+		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooLow, "%d", msg.RemainingTime)
 	}
 	if msg.RemainingTime > k.MaxLaunchTime(ctx) {
-		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooHigh, "%v", msg.RemainingTime)
+		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooHigh, "%d", msg.RemainingTime)
 	}
 
 	chain.LaunchTriggered = true

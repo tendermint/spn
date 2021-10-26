@@ -27,7 +27,6 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 6)
 	chains[0].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[0])
-	delayedVesting := *types.NewDelayedVesting(sample.Coins(), 10000)
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 	chains[5].IsMainnet = true
@@ -43,123 +42,63 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 	}{
 		{
 			name: "invalid chain",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         invalidChain,
-				Address:         addr1,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
-			err: types.ErrChainNotFound,
+			msg:  sample.MsgRequestAddVestingAccount(addr1, invalidChain),
+			err:  types.ErrChainNotFound,
 		},
 		{
 			name: "launch triggered chain",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[0].Id,
-				Address:         addr1,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
-			err: types.ErrTriggeredLaunch,
+			msg:  sample.MsgRequestAddVestingAccount(addr1, chains[0].Id),
+			err:  types.ErrTriggeredLaunch,
 		},
 		{
 			name: "coordinator not found",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[1].Id,
-				Address:         addr1,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
-			err: types.ErrChainInactive,
+			msg:  sample.MsgRequestAddVestingAccount(addr1, chains[1].Id),
+			err:  types.ErrChainInactive,
 		},
 		{
-			name: "add chain 3 request 1",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[2].Id,
-				Address:         addr1,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
+			name:   "add chain 3 request 1",
+			msg:    sample.MsgRequestAddVestingAccount(addr1, chains[2].Id),
 			wantID: 0,
 		},
 		{
-			name: "add chain 4 request 1",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[3].Id,
-				Address:         addr1,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
+			name:   "add chain 4 request 1",
+			msg:    sample.MsgRequestAddVestingAccount(addr1, chains[3].Id),
 			wantID: 0,
 		},
 		{
-			name: "add chain 4 request 2",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[3].Id,
-				Address:         addr2,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
+			name:   "add chain 4 request 2",
+			msg:    sample.MsgRequestAddVestingAccount(addr2, chains[3].Id),
 			wantID: 1,
 		},
 		{
-			name: "add chain 5 request 1",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[4].Id,
-				Address:         addr1,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
+			name:   "add chain 5 request 1",
+			msg:    sample.MsgRequestAddVestingAccount(addr1, chains[4].Id),
 			wantID: 0,
 		},
 		{
-			name: "add chain 5 request 2",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[4].Id,
-				Address:         addr2,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
+			name:   "add chain 5 request 2",
+			msg:    sample.MsgRequestAddVestingAccount(addr2, chains[4].Id),
 			wantID: 1,
 		},
 		{
-			name: "add chain 5 request 3",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[4].Id,
-				Address:         addr3,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
+			name:   "add chain 5 request 3",
+			msg:    sample.MsgRequestAddVestingAccount(addr3, chains[4].Id),
 			wantID: 2,
 		},
 		{
-			name: "request from coordinator is pre-approved",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[4].Id,
-				Address:         coordAddr,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
+			name:        "request from coordinator is pre-approved",
+			msg:         sample.MsgRequestAddVestingAccount(coordAddr, chains[4].Id),
 			wantApprove: true,
 		},
 		{
 			name: "failing request from coordinator",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[4].Id,
-				Address:         coordAddr,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
-			err: types.ErrAccountAlreadyExist,
+			msg:  sample.MsgRequestAddVestingAccount(coordAddr, chains[4].Id),
+			err:  types.ErrAccountAlreadyExist,
 		},
 		{
 			name: "is mainnet chain",
-			msg: types.MsgRequestAddVestingAccount{
-				ChainID:         chains[5].Id,
-				Address:         coordAddr,
-				StartingBalance: sample.Coins(),
-				Options:         delayedVesting,
-			},
-			err: types.ErrAddMainnetVestingAccount,
+			msg:  sample.MsgRequestAddVestingAccount(coordAddr, chains[5].Id),
+			err:  types.ErrAddMainnetVestingAccount,
 		},
 	}
 	for _, tt := range tests {

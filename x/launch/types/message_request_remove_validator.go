@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgRequestRemoveValidator = "request_remove_validator"
+
 var _ sdk.Msg = &MsgRequestRemoveValidator{}
 
 func NewMsgRequestRemoveValidator(chainID uint64, creator, validatorAddress string) *MsgRequestRemoveValidator {
@@ -20,7 +22,7 @@ func (msg *MsgRequestRemoveValidator) Route() string {
 }
 
 func (msg *MsgRequestRemoveValidator) Type() string {
-	return "RequestRemoveValidator"
+	return TypeMsgRequestRemoveValidator
 }
 
 func (msg *MsgRequestRemoveValidator) GetSigners() []sdk.AccAddress {
