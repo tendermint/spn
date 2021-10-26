@@ -51,7 +51,7 @@ func (am AppModule) WeightedOperations(_ module.SimulationState) []simtypes.Weig
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgUpdateValidatorDescription,
-			SimulateMsgUpdateValidatorDescription(am.accountKeeper, am.bankKeeper),
+			SimulateMsgUpdateValidatorDescription(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgDeleteValidator,
