@@ -18,7 +18,7 @@ const (
 	defaultWeightMsgCreateCoordinator            = 50
 	defaultWeightMsgUpdateCoordinatorDescription = 20
 	defaultWeightMsgUpdateCoordinatorAddress     = 20
-	defaultWeightMsgDeleteCoordinator            = 10
+	defaultWeightMsgDeleteCoordinator            = 5
 
 	opWeightMsgUpdateValidatorDescription   = "op_weight_msg_update_validator_description"
 	opWeightMsgDeleteValidator              = "op_weight_msg_delete_validator"

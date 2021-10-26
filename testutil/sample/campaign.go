@@ -1,8 +1,10 @@
 package sample
 
 import (
+	"math/rand"
 	"time"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 
@@ -14,6 +16,17 @@ func Shares() campaign.Shares {
 // ShareVestingOptions returns a sample ShareVestingOptions
 func ShareVestingOptions() campaign.ShareVestingOptions {
 	return *campaign.NewShareDelayedVesting(Shares(), time.Now().Unix())
+}
+
+// Voucher returns a sample voucher structure
+func Voucher(campaignID uint64) sdk.Coin {
+	denom := campaign.VoucherDenom(campaignID, AlphaString(5))
+	return sdk.NewCoin(denom, sdk.NewInt(int64(rand.Intn(10000)+1)))
+}
+
+// Vouchers returns a sample vouchers structure
+func Vouchers(campaignID uint64) sdk.Coins {
+	return sdk.NewCoins(Voucher(campaignID), Voucher(campaignID), Voucher(campaignID))
 }
 
 // CustomShareVestingOptions returns a sample ShareVestingOptions with shares

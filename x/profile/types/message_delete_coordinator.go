@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgDeleteCoordinator = "delete_coordinator"
+
 var _ sdk.Msg = &MsgDeleteCoordinator{}
 
 func NewMsgDeleteCoordinator(address string) *MsgDeleteCoordinator {
@@ -18,7 +20,7 @@ func (msg *MsgDeleteCoordinator) Route() string {
 }
 
 func (msg *MsgDeleteCoordinator) Type() string {
-	return "DeleteCoordinator"
+	return TypeMsgDeleteCoordinator
 }
 
 func (msg *MsgDeleteCoordinator) GetSigners() []sdk.AccAddress {

@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgCreateCampaign = "create_campaign"
+
 var _ sdk.Msg = &MsgCreateCampaign{}
 
 func NewMsgCreateCampaign(
@@ -26,7 +28,7 @@ func (msg *MsgCreateCampaign) Route() string {
 }
 
 func (msg *MsgCreateCampaign) Type() string {
-	return "CreateCampaign"
+	return TypeMsgCreateCampaign
 }
 
 func (msg *MsgCreateCampaign) GetSigners() []sdk.AccAddress {

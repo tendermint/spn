@@ -179,9 +179,9 @@ func TestFindRandomChain(t *testing.T) {
 	)
 
 	t.Run("no chains", func(t *testing.T) {
-		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true)
+		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true, false)
 		require.False(t, found)
-		_, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false)
+		_, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false,  false)
 		require.False(t, found)
 	})
 
@@ -194,8 +194,24 @@ func TestFindRandomChain(t *testing.T) {
 			CoordinatorID:   1000,
 			LaunchTriggered: true,
 		})
-		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true)
+		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true, false)
 		require.False(t, found)
+	})
+
+	t.Run("chain with no mainnet", func(t *testing.T) {
+		k.AppendChain(sdkCtx, types.Chain{
+			CoordinatorID:   res.CoordinatorId,
+			IsMainnet: true,
+		})
+		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, false, true)
+		require.False(t, found)
+
+		k.AppendChain(sdkCtx, types.Chain{
+			CoordinatorID:   res.CoordinatorId,
+		})
+		c, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, false, true)
+		require.True(t, found)
+		require.False(t, c.IsMainnet)
 	})
 
 	t.Run("not launch triggered chain", func(t *testing.T) {
@@ -203,9 +219,9 @@ func TestFindRandomChain(t *testing.T) {
 			CoordinatorID:   res.CoordinatorId,
 			LaunchTriggered: false,
 		})
-		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true)
+		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true, false)
 		require.False(t, found)
-		got, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, false)
+		got, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, false, false)
 		require.True(t, found)
 		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
 	})
@@ -215,10 +231,10 @@ func TestFindRandomChain(t *testing.T) {
 			CoordinatorID:   res.CoordinatorId,
 			LaunchTriggered: true,
 		})
-		got, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true)
+		got, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true, false)
 		require.True(t, found)
 		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
-		got, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false)
+		got, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false, false)
 		require.True(t, found)
 		require.Equal(t, res.CoordinatorId, got.CoordinatorID)
 	})

@@ -56,7 +56,8 @@ func FindRandomChain(
 	r *rand.Rand,
 	ctx sdk.Context,
 	k keeper.Keeper,
-	launchTriggered bool,
+	launchTriggered,
+	noMainnet bool,
 ) (chain types.Chain, found bool) {
 
 	chains := k.GetAllChain(ctx)
@@ -65,6 +66,9 @@ func FindRandomChain(
 	})
 	for _, c := range chains {
 		if c.LaunchTriggered != launchTriggered {
+			continue
+		}
+		if noMainnet && c.IsMainnet {
 			continue
 		}
 		// check if the coordinator is still in the store

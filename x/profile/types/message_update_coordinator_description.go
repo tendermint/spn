@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgUpdateCoordinatorDescription = "update_coordinator_description"
+
 var _ sdk.Msg = &MsgUpdateCoordinatorDescription{}
 
 func NewMsgUpdateCoordinatorDescription(address, identity, website, details string) *MsgUpdateCoordinatorDescription {
@@ -23,7 +25,7 @@ func (msg *MsgUpdateCoordinatorDescription) Route() string {
 }
 
 func (msg *MsgUpdateCoordinatorDescription) Type() string {
-	return "UpdateCoordinatorDescription"
+	return TypeMsgUpdateCoordinatorDescription
 }
 
 func (msg *MsgUpdateCoordinatorDescription) GetSigners() []sdk.AccAddress {
