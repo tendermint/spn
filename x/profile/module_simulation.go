@@ -20,7 +20,7 @@ const (
 	weightMsgCreateCoordinator            = 50
 	weightMsgUpdateCoordinatorDescription = 20
 	weightMsgUpdateCoordinatorAddress     = 20
-	weightMsgDeleteCoordinator            = 10
+	weightMsgDeleteCoordinator            = 5
 )
 
 // GenerateGenesisState creates a randomized GenState of the module

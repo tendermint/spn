@@ -48,6 +48,7 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
 		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
 	}
+	ctx.BlockTime().Unix()
 
 	k.SetCampaign(ctx, campaign)
 	k.SetMainnetAccount(ctx, account)
