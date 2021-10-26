@@ -1,9 +1,5 @@
 package types
 
-import "encoding/binary"
-
-var _ binary.ByteOrder
-
 const (
 	// CampaignChainsKeyPrefix is the prefix to retrieve all CampaignChains
 	CampaignChainsKeyPrefix = "CampaignChains/value/"

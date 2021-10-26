@@ -12,9 +12,6 @@ import (
 var (
 	invalidCampaignName = "not_valid"
 	invalidCoins        = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
-)
-
-var (
 	invalidShares = campaign.Shares{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
 )
 
