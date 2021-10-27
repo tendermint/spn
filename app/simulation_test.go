@@ -57,8 +57,8 @@ var defaultConsensusParams = &abci.ConsensusParams{
 // go test -benchmem -run=^$ -bench ^BenchmarkSimulation -Commit=true -cpuprofile cpu.out
 func BenchmarkSimulation(b *testing.B) {
 	simapp.FlagEnabledValue = true
-	simapp.FlagNumBlocksValue = 250
-	simapp.FlagBlockSizeValue = 20
+	simapp.FlagNumBlocksValue = 200
+	simapp.FlagBlockSizeValue = 50
 	simapp.FlagCommitValue = true
 	simapp.FlagVerboseValue = true
 
