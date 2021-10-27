@@ -62,7 +62,7 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a chain with a valid coordinator account
-		chain, found := FindRandomChain(r, ctx, k, r.Intn(100) < 50)
+		chain, found := FindRandomChain(r, ctx, k, r.Intn(100) < 50, false)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, "chain not found"), nil, nil
 		}
@@ -105,7 +105,7 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a chain without launch triggered
-		chain, found := FindRandomChain(r, ctx, k, false)
+		chain, found := FindRandomChain(r, ctx, k, false, true)
 		if !found {
 			// No message if no non-triggered chain
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "non-triggered chain not found"), nil, nil
@@ -141,7 +141,7 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a chain without launch triggered
-		chain, found := FindRandomChain(r, ctx, k, false)
+		chain, found := FindRandomChain(r, ctx, k, false, true)
 		if !found {
 			// No message if no non-triggered chain
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, "non-triggered chain not found"), nil, nil
@@ -241,7 +241,7 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a chain without launch triggered
-		chain, found := FindRandomChain(r, ctx, k, false)
+		chain, found := FindRandomChain(r, ctx, k, false, false)
 		if !found {
 			// No message if no non-triggered chain
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddValidator, "non-triggered chain not found"), nil, nil
@@ -311,7 +311,7 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a chain without launch triggered
-		chain, found := FindRandomChain(r, ctx, k, false)
+		chain, found := FindRandomChain(r, ctx, k, false, false)
 		if !found {
 			// No message if no non-triggered chain
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, "non-triggered chain not found"), nil, nil
@@ -389,7 +389,7 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a chain with launch triggered
-		chain, found := FindRandomChain(r, ctx, k, true)
+		chain, found := FindRandomChain(r, ctx, k, true, false)
 		if !found {
 			// No message if no triggered chain
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, "triggered chain not found"), nil, nil

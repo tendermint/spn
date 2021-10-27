@@ -5,6 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
+const TypeMsgAddShares = "add_shares"
+
 var _ sdk.Msg = &MsgAddShares{}
 
 func NewMsgAddShares(campaignID uint64, coordinator, address string, shares Shares) *MsgAddShares {
@@ -21,7 +23,7 @@ func (msg *MsgAddShares) Route() string {
 }
 
 func (msg *MsgAddShares) Type() string {
-	return "AddShares"
+	return TypeMsgAddShares
 }
 
 func (msg *MsgAddShares) GetSigners() []sdk.AccAddress {

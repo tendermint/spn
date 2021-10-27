@@ -441,7 +441,7 @@ func New(
 		// this line is used by starport scaffolding # stargate/app/appModule
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
-		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper),
+		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -506,7 +506,7 @@ func New(
 		transferModule,
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
-		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper),
+		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 	)
 	app.sm.RegisterStoreDecoders()
 
