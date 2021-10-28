@@ -1,6 +1,8 @@
 package simulation_test
 
 import (
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/simulation"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -14,7 +16,6 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
-	"testing"
 )
 
 func setupMsgServer(t testing.TB) (
@@ -181,7 +182,7 @@ func TestFindRandomChain(t *testing.T) {
 	t.Run("no chains", func(t *testing.T) {
 		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true, false)
 		require.False(t, found)
-		_, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false,  false)
+		_, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false, false)
 		require.False(t, found)
 	})
 
@@ -200,14 +201,14 @@ func TestFindRandomChain(t *testing.T) {
 
 	t.Run("chain with no mainnet", func(t *testing.T) {
 		k.AppendChain(sdkCtx, types.Chain{
-			CoordinatorID:   res.CoordinatorId,
-			IsMainnet: true,
+			CoordinatorID: res.CoordinatorId,
+			IsMainnet:     true,
 		})
 		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, false, true)
 		require.False(t, found)
 
 		k.AppendChain(sdkCtx, types.Chain{
-			CoordinatorID:   res.CoordinatorId,
+			CoordinatorID: res.CoordinatorId,
 		})
 		c, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, false, true)
 		require.True(t, found)
