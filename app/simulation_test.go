@@ -58,7 +58,7 @@ var defaultConsensusParams = &abci.ConsensusParams{
 func BenchmarkSimulation(b *testing.B) {
 	simapp.FlagEnabledValue = true
 	simapp.FlagNumBlocksValue = 200
-	simapp.FlagBlockSizeValue = 50
+	simapp.FlagBlockSizeValue = 26
 	simapp.FlagCommitValue = true
 	simapp.FlagVerboseValue = true
 
