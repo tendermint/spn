@@ -24,14 +24,14 @@ func NewGenesisChainID(chainName string, networkNumber uint64) string {
 func ParseGenesisChainID(genesisChainID string) (string, uint64, error) {
 	parsed := strings.Split(genesisChainID, ChainIDSeparator)
 	if len(parsed) != 2 {
-		return "", 0, errors.New("incorrect chain ID format")
+		return "", 0, fmt.Errorf("%s: invalid chain ID, format must be <chain-name>-<network-number>", genesisChainID)
 	}
 	if err := CheckChainName(parsed[0]); err != nil {
-		return "", 0, err
+		return "", 0, fmt.Errorf("invalid chain name: %s", err.Error())
 	}
 	number, err := strconv.ParseUint(parsed[1], 10, 64)
 	if err != nil {
-		return "", 0, errors.New("incorrect chain number")
+		return "", 0, fmt.Errorf("%d: invalid chain id network number", number)
 	}
 
 	return parsed[0], number, nil
@@ -44,7 +44,7 @@ func CheckChainName(chainName string) error {
 	}
 
 	if len(chainName) > ChainNameMaxLength {
-		return fmt.Errorf("chain name is too big, max length is %d", ChainNameMaxLength)
+		return fmt.Errorf("chain name is too long, max length is %d", ChainNameMaxLength)
 	}
 
 	// Iterate characters
