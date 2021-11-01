@@ -60,7 +60,7 @@ func (msg *MsgInitializeMainnet) ValidateBasic() error {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "empty source hash")
 	}
 	if _, _, err := chainid.ParseGenesisChainID(msg.MainnetChainID); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid chain ID: %s", err.Error())
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
 	return nil
