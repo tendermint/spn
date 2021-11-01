@@ -31,7 +31,7 @@ func ParseGenesisChainID(genesisChainID string) (string, uint64, error) {
 	}
 	number, err := strconv.ParseUint(parsed[1], 10, 64)
 	if err != nil {
-		return "", 0, fmt.Errorf("%d: invalid chain id network number", number)
+		return "", 0, fmt.Errorf("%s: invalid chain id network number", parsed[1])
 	}
 
 	return parsed[0], number, nil
