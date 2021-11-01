@@ -10,8 +10,6 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdTriggerLaunch() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "trigger-launch [chain-id] [remaining-time]",

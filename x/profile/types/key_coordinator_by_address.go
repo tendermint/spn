@@ -1,9 +1,5 @@
 package types
 
-import "encoding/binary"
-
-var _ binary.ByteOrder
-
 const (
 	// CoordinatorByAddressKeyPrefix is the prefix to retrieve all CoordinatorByAddress
 	CoordinatorByAddressKeyPrefix = "CoordinatorByAddress/value/"

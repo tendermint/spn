@@ -2,17 +2,10 @@ package cli
 
 import (
 	"fmt"
-	"time"
-
-	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/profile/types"
-)
-
-var (
-	DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
 )
 
 // GetTxCmd returns the transaction commands for this module
@@ -25,13 +18,13 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	// this line is used by starport scaffolding # 1
 	cmd.AddCommand(CmdUpdateValidatorDescription())
 	cmd.AddCommand(CmdDeleteValidator())
 	cmd.AddCommand(CmdCreateCoordinator())
 	cmd.AddCommand(CmdUpdateCoordinatorDescription())
 	cmd.AddCommand(CmdUpdateCoordinatorAddress())
 	cmd.AddCommand(CmdDeleteCoordinator())
+	// this line is used by starport scaffolding # 1
 
 	return cmd
 }

@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/testutil/sample"
 	"strconv"
 	"testing"
 
@@ -10,15 +9,13 @@ import (
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/client/cli"
 	"github.com/tendermint/spn/x/campaign/types"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func networkWithMainnetAccountObjects(t *testing.T, n int) (*network.Network, []types.MainnetAccount) {
 	t.Helper()

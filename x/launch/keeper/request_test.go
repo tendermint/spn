@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,9 +10,6 @@ import (
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func createRequests(
 	keeper *keeper.Keeper,

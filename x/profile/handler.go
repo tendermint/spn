@@ -20,7 +20,6 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		var res proto.Message
 		var err error
 		switch msg := msg.(type) {
-		// this line is used by starport scaffolding # 1
 		case *types.MsgUpdateValidatorDescription:
 			res, err = msgServer.UpdateValidatorDescription(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgDeleteValidator:
@@ -33,6 +32,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err = msgServer.UpdateCoordinatorAddress(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgDeleteCoordinator:
 			res, err = msgServer.DeleteCoordinator(sdk.WrapSDKContext(ctx), msg)
+		// this line is used by starport scaffolding # 1
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)

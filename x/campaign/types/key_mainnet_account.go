@@ -1,9 +1,5 @@
 package types
 
-import "encoding/binary"
-
-var _ binary.ByteOrder
-
 const (
 	// MainnetAccountKeyPrefix is the prefix to retrieve all MainnetAccount
 	MainnetAccountKeyPrefix = "MainnetAccount/value/"

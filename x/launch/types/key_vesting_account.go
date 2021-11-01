@@ -1,9 +1,5 @@
 package types
 
-import "encoding/binary"
-
-var _ binary.ByteOrder
-
 const (
 	// VestingAccountKeyPrefix is the prefix to retrieve all VestingAccount
 	VestingAccountKeyPrefix = "VestingAccount/value/"

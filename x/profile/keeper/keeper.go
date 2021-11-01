@@ -22,7 +22,6 @@ func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey,
 	memKey sdk.StoreKey,
-
 ) *Keeper {
 	return &Keeper{
 		cdc:      cdc,

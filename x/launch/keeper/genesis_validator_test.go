@@ -12,9 +12,6 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func createNGenesisValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, n)
 	for i := range items {

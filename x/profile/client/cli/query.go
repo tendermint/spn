@@ -2,14 +2,9 @@ package cli
 
 import (
 	"fmt"
-	// "strings"
-
-	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
-	// sdk "github.com/cosmos/cosmos-sdk/types"
-
+	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -24,12 +19,12 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	// this line is used by starport scaffolding # 1
 	cmd.AddCommand(CmdShowValidator())
 	cmd.AddCommand(CmdListValidator())
 	cmd.AddCommand(CmdShowCoordinator())
 	cmd.AddCommand(CmdListCoordinator())
 	cmd.AddCommand(CmdShowCoordinatorByAddress())
+	// this line is used by starport scaffolding # 1
 
 	return cmd
 }

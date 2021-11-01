@@ -9,9 +9,7 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-const (
-	flagDynamicShares = "dynamic-shares"
-)
+const flagDynamicShares = "dynamic-shares"
 
 func CmdCreateCampaign() *cobra.Command {
 	cmd := &cobra.Command{

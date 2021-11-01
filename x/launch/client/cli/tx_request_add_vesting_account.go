@@ -12,8 +12,6 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdRequestAddVestingAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "request-add-vesting-account [chain-id] [starting-balance] [vesting-coins] [vesting-end-time]",

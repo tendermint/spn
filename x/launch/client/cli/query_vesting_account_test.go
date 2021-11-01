@@ -17,9 +17,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func networkWithVestingAccountObjects(t *testing.T, n int) (*network.Network, []types.VestingAccount) {
 	t.Helper()
 	cfg := network.DefaultConfig()

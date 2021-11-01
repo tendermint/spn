@@ -15,9 +15,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func createNGenesisValidatorForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, n)
 	for i := range items {

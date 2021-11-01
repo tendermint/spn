@@ -7,9 +7,7 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-const (
-	coordinatorIDNotFoundRoute = "coordinator-id-not-found"
-)
+const coordinatorIDNotFoundRoute = "coordinator-id-not-found"
 
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {

@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,9 +10,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func TestCampaignChainsQuerySingle(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)

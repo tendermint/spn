@@ -1,9 +1,5 @@
 package types
 
-import "encoding/binary"
-
-var _ binary.ByteOrder
-
 const (
 	// RequestKeyPrefix is the prefix to retrieve all Request
 	RequestKeyPrefix      = "Request/value/"

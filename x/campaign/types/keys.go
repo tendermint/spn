@@ -17,10 +17,11 @@ const (
 
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_campaign"
-)
 
-const (
-	CampaignKey      = "Campaign-value-"
+	// CampaignKey is the prefix to retrieve all Campaign
+	CampaignKey = "Campaign-value-"
+
+	// CampaignCountKey is the prefix to store campaign count
 	CampaignCountKey = "Campaign-count-"
 )
 

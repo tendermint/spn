@@ -8,7 +8,6 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	// this line is used by starport scaffolding # 2
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
 	cdc.RegisterConcrete(&MsgRequestAddAccount{}, "launch/RequestAddAccount", nil)
@@ -19,10 +18,10 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgSettleRequest{}, "launch/SettleRequest", nil)
 	cdc.RegisterConcrete(&MsgTriggerLaunch{}, "launch/TriggerLaunch", nil)
 	cdc.RegisterConcrete(&MsgRevertLaunch{}, "launch/RevertLaunch", nil)
+	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
-	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateChain{},
 		&MsgEditChain{},
@@ -35,6 +34,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgTriggerLaunch{},
 		&MsgRevertLaunch{},
 	)
+	// this line is used by starport scaffolding # 3
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

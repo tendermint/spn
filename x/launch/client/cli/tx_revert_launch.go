@@ -10,8 +10,6 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdRevertLaunch() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "revert-launch [chain-id]",
