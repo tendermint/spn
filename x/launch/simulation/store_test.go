@@ -1,9 +1,7 @@
 package simulation_test
 
 import (
-	"math/rand"
 	"testing"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/simulation"
@@ -41,7 +39,7 @@ func setupMsgServer(t testing.TB) (
 
 func TestFindAccount(t *testing.T) {
 	var (
-		r    = rand.New(rand.NewSource(time.Now().Unix()))
+		r    = sample.Rand()
 		accs = simulation.RandomAccounts(r, 5)
 	)
 	tests := []struct {
@@ -84,7 +82,7 @@ func TestFindChainCoordinatorAccount(t *testing.T) {
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
 		ctx  = sdk.WrapSDKContext(sdkCtx)
-		r    = rand.New(rand.NewSource(time.Now().Unix()))
+		r    = sample.Rand()
 		accs = simulation.RandomAccounts(r, 2)
 	)
 
@@ -176,7 +174,7 @@ func TestFindRandomChain(t *testing.T) {
 	var (
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
-		r              = rand.New(rand.NewSource(time.Now().Unix()))
+		r              = sample.Rand()
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		msgCreateCoord = sample.MsgCreateCoordinator(sample.Address())
 	)
@@ -184,7 +182,7 @@ func TestFindRandomChain(t *testing.T) {
 	t.Run("no chains", func(t *testing.T) {
 		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, true, false)
 		require.False(t, found)
-		_, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false,  false)
+		_, found = launchsimulation.FindRandomChain(r, sdkCtx, *k, false, false)
 		require.False(t, found)
 	})
 
@@ -203,14 +201,14 @@ func TestFindRandomChain(t *testing.T) {
 
 	t.Run("chain with no mainnet", func(t *testing.T) {
 		k.AppendChain(sdkCtx, types.Chain{
-			CoordinatorID:   res.CoordinatorId,
-			IsMainnet: true,
+			CoordinatorID: res.CoordinatorId,
+			IsMainnet:     true,
 		})
 		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, false, true)
 		require.False(t, found)
 
 		k.AppendChain(sdkCtx, types.Chain{
-			CoordinatorID:   res.CoordinatorId,
+			CoordinatorID: res.CoordinatorId,
 		})
 		c, found := launchsimulation.FindRandomChain(r, sdkCtx, *k, false, true)
 		require.True(t, found)
@@ -248,7 +246,7 @@ func TestFindRandomValidator(t *testing.T) {
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
 		ctx  = sdk.WrapSDKContext(sdkCtx)
-		r    = rand.New(rand.NewSource(time.Now().Unix()))
+		r    = sample.Rand()
 		accs = simulation.RandomAccounts(r, 2)
 	)
 
@@ -314,7 +312,7 @@ func TestFindRandomRequest(t *testing.T) {
 	var (
 		k, _, _, _, profileSrv, _, sdkCtx = setupMsgServer(t)
 
-		r   = rand.New(rand.NewSource(time.Now().Unix()))
+		r   = sample.Rand()
 		ctx = sdk.WrapSDKContext(sdkCtx)
 	)
 
