@@ -20,7 +20,7 @@ func (k Keeper) GenesisAccountAll(c context.Context, req *types.QueryAllGenesisA
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	genesisAccountStore := prefix.NewStore(store, types.GenesisAccountAllKey(req.ChainID))
+	genesisAccountStore := prefix.NewStore(store, types.GenesisAccountAllKey(req.LaunchID))
 
 	pageRes, err := query.Paginate(genesisAccountStore, req.Pagination, func(key []byte, value []byte) error {
 		var genesisAccount types.GenesisAccount
@@ -47,7 +47,7 @@ func (k Keeper) GenesisAccount(c context.Context, req *types.QueryGetGenesisAcco
 
 	val, found := k.GetGenesisAccount(
 		ctx,
-		req.ChainID,
+		req.LaunchID,
 		req.Address,
 	)
 	if !found {

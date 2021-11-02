@@ -47,57 +47,57 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		},
 		{
 			name: "launch triggered chain",
-			msg:  sample.MsgRequestAddAccount(addr1, chains[0].Id),
+			msg:  sample.MsgRequestAddAccount(addr1, chains[0].LaunchID),
 			err:  types.ErrTriggeredLaunch,
 		},
 		{
 			name: "coordinator not found",
-			msg:  sample.MsgRequestAddAccount(addr1, chains[1].Id),
+			msg:  sample.MsgRequestAddAccount(addr1, chains[1].LaunchID),
 			err:  types.ErrChainInactive,
 		},
 		{
 			name:   "add chain 3 request 1",
-			msg:    sample.MsgRequestAddAccount(addr1, chains[2].Id),
+			msg:    sample.MsgRequestAddAccount(addr1, chains[2].LaunchID),
 			wantID: 0,
 		},
 		{
 			name:   "add chain 4 request 1",
-			msg:    sample.MsgRequestAddAccount(addr1, chains[3].Id),
+			msg:    sample.MsgRequestAddAccount(addr1, chains[3].LaunchID),
 			wantID: 0,
 		},
 		{
 			name:   "add chain 4 request 2",
-			msg:    sample.MsgRequestAddAccount(addr2, chains[3].Id),
+			msg:    sample.MsgRequestAddAccount(addr2, chains[3].LaunchID),
 			wantID: 1,
 		},
 		{
 			name:   "add chain 5 request 1",
-			msg:    sample.MsgRequestAddAccount(addr1, chains[4].Id),
+			msg:    sample.MsgRequestAddAccount(addr1, chains[4].LaunchID),
 			wantID: 0,
 		},
 		{
 			name:   "add chain 5 request 2",
-			msg:    sample.MsgRequestAddAccount(addr2, chains[4].Id),
+			msg:    sample.MsgRequestAddAccount(addr2, chains[4].LaunchID),
 			wantID: 1,
 		},
 		{
 			name:   "add chain 5 request 3",
-			msg:    sample.MsgRequestAddAccount(addr3, chains[4].Id),
+			msg:    sample.MsgRequestAddAccount(addr3, chains[4].LaunchID),
 			wantID: 2,
 		},
 		{
 			name:        "request from coordinator is pre-approved",
-			msg:         sample.MsgRequestAddAccount(coordAddr, chains[4].Id),
+			msg:         sample.MsgRequestAddAccount(coordAddr, chains[4].LaunchID),
 			wantApprove: true,
 		},
 		{
 			name: "failing request from coordinator",
-			msg:  sample.MsgRequestAddAccount(coordAddr, chains[4].Id),
+			msg:  sample.MsgRequestAddAccount(coordAddr, chains[4].LaunchID),
 			err:  types.ErrAccountAlreadyExist,
 		},
 		{
 			name: "is mainnet chain",
-			msg:  sample.MsgRequestAddAccount(coordAddr, chains[5].Id),
+			msg:  sample.MsgRequestAddAccount(coordAddr, chains[5].LaunchID),
 			err:  types.ErrAddMainnetAccount,
 		},
 	}
@@ -113,17 +113,17 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
 			if !tt.wantApprove {
-				request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, got.RequestID)
+				request, found := k.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
 				content := request.Content.GetGenesisAccount()
 				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
-				require.Equal(t, tt.msg.ChainID, content.ChainID)
+				require.Equal(t, tt.msg.LaunchID, content.LaunchID)
 				require.Equal(t, tt.msg.Coins, content.Coins)
 			} else {
-				_, found := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
+				_, found := k.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.True(t, found, "genesis account not found")
 			}
 		})

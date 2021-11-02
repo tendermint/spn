@@ -45,7 +45,7 @@ func (k Keeper) Chain(c context.Context, req *types.QueryGetChainRequest) (*type
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetChain(ctx, req.Id)
+	val, found := k.GetChain(ctx, req.LaunchID)
 	if !found {
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}

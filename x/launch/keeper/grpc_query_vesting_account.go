@@ -20,7 +20,7 @@ func (k Keeper) VestingAccountAll(c context.Context, req *types.QueryAllVestingA
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	vestingAccountStore := prefix.NewStore(store, types.VestingAccountAllKey(req.ChainID))
+	vestingAccountStore := prefix.NewStore(store, types.VestingAccountAllKey(req.LaunchID))
 
 	pageRes, err := query.Paginate(vestingAccountStore, req.Pagination, func(key []byte, value []byte) error {
 		var vestingAccount types.VestingAccount
@@ -47,7 +47,7 @@ func (k Keeper) VestingAccount(c context.Context, req *types.QueryGetVestingAcco
 
 	val, found := k.GetVestingAccount(
 		ctx,
-		req.ChainID,
+		req.LaunchID,
 		req.Address,
 	)
 	if !found {

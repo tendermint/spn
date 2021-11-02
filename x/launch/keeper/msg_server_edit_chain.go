@@ -13,9 +13,9 @@ import (
 func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*types.MsgEditChainResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	chain, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.LaunchID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
 	// Check sender is the coordinator of the chain

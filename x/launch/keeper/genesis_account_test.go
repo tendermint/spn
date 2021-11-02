@@ -26,7 +26,7 @@ func TestGenesisAccountGet(t *testing.T) {
 	items := createNGenesisAccount(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetGenesisAccount(ctx,
-			item.ChainID,
+			item.LaunchID,
 			item.Address,
 		)
 		require.True(t, found)
@@ -38,11 +38,11 @@ func TestGenesisAccountRemove(t *testing.T) {
 	items := createNGenesisAccount(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveGenesisAccount(ctx,
-			item.ChainID,
+			item.LaunchID,
 			item.Address,
 		)
 		_, found := keeper.GetGenesisAccount(ctx,
-			item.ChainID,
+			item.LaunchID,
 			item.Address,
 		)
 		require.False(t, found)

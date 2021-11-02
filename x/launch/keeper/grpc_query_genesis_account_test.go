@@ -37,7 +37,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetGenesisAccountRequest{
-				ChainID: msgs[0].ChainID,
+				LaunchID: msgs[0].LaunchID,
 				Address: msgs[0].Address,
 			},
 			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: msgs[0]},
@@ -45,7 +45,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 		{
 			desc: "Second",
 			request: &types.QueryGetGenesisAccountRequest{
-				ChainID: msgs[1].ChainID,
+				LaunchID: msgs[1].LaunchID,
 				Address: msgs[1].Address,
 			},
 			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: msgs[1]},
@@ -53,7 +53,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetGenesisAccountRequest{
-				ChainID: uint64(100000),
+				LaunchID: uint64(100000),
 				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
@@ -84,9 +84,9 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 		msgs        = createNGenesisAccountForChainID(keeper, ctx, 5, chainID)
 	)
 
-	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisAccountRequest {
+	request := func(launchID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisAccountRequest {
 		return &types.QueryAllGenesisAccountRequest{
-			ChainID: chainID,
+			LaunchID: launchID,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,

@@ -31,7 +31,7 @@ func TestZeroLaunchTimestampInvariant(t *testing.T) {
 	t.Run("valid case", func(t *testing.T) {
 		chain := sample.Chain(0, 0)
 		chain.LaunchTimestamp = 1000
-		chain.Id = k.AppendChain(ctx, chain)
+		chain.LaunchID = k.AppendChain(ctx, chain)
 		_, isValid := keeper.ZeroLaunchTimestampInvariant(*k)(ctx)
 		require.Equal(t, false, isValid)
 	})
@@ -39,7 +39,7 @@ func TestZeroLaunchTimestampInvariant(t *testing.T) {
 	t.Run("invalid case", func(t *testing.T) {
 		chain := sample.Chain(0, 0)
 		chain.LaunchTimestamp = 0
-		chain.Id = k.AppendChain(ctx, chain)
+		chain.LaunchID = k.AppendChain(ctx, chain)
 		_, isValid := keeper.ZeroLaunchTimestampInvariant(*k)(ctx)
 		require.Equal(t, true, isValid)
 	})

@@ -11,7 +11,7 @@ func (k Keeper) SetVestingAccount(ctx sdk.Context, vestingAccount types.VestingA
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VestingAccountKeyPrefix))
 	b := k.cdc.MustMarshal(&vestingAccount)
 	store.Set(types.VestingAccountKey(
-		vestingAccount.ChainID,
+		vestingAccount.LaunchID,
 		vestingAccount.Address,
 	), b)
 }
@@ -19,12 +19,12 @@ func (k Keeper) SetVestingAccount(ctx sdk.Context, vestingAccount types.VestingA
 // GetVestingAccount returns a vestingAccount from its index
 func (k Keeper) GetVestingAccount(
 	ctx sdk.Context,
-	chainID uint64,
+	launchID uint64,
 	address string,
 ) (val types.VestingAccount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VestingAccountKeyPrefix))
 
-	b := store.Get(types.VestingAccountKey(chainID, address))
+	b := store.Get(types.VestingAccountKey(launchID, address))
 	if b == nil {
 		return val, false
 	}
@@ -36,12 +36,12 @@ func (k Keeper) GetVestingAccount(
 // RemoveVestingAccount removes a vestingAccount from the store
 func (k Keeper) RemoveVestingAccount(
 	ctx sdk.Context,
-	chainID uint64,
+	launchID uint64,
 	address string,
 
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VestingAccountKeyPrefix))
-	store.Delete(types.VestingAccountKey(chainID, address))
+	store.Delete(types.VestingAccountKey(launchID, address))
 }
 
 // GetAllVestingAccount returns all vestingAccount

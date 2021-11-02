@@ -35,6 +35,6 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	}
 
 	return &types.MsgCreateChainResponse{
-		Id: id,
+		LaunchID: id,
 	}, nil
 }

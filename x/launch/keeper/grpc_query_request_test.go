@@ -25,7 +25,7 @@ func TestRequestQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetRequestRequest{
-				ChainID:   msgs[0].ChainID,
+				LaunchID:   msgs[0].LaunchID,
 				RequestID: msgs[0].RequestID,
 			},
 			response: &types.QueryGetRequestResponse{Request: msgs[0]},
@@ -33,7 +33,7 @@ func TestRequestQuerySingle(t *testing.T) {
 		{
 			desc: "Second",
 			request: &types.QueryGetRequestRequest{
-				ChainID:   msgs[1].ChainID,
+				LaunchID:   msgs[1].LaunchID,
 				RequestID: msgs[1].RequestID,
 			},
 			response: &types.QueryGetRequestResponse{Request: msgs[1]},
@@ -41,7 +41,7 @@ func TestRequestQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetRequestRequest{
-				ChainID:   uint64(100000),
+				LaunchID:   uint64(100000),
 				RequestID: 100000,
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
@@ -70,7 +70,7 @@ func TestRequestQueryPaginated(t *testing.T) {
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllRequestRequest {
 		return &types.QueryAllRequestRequest{
-			ChainID: uint64(0),
+			LaunchID: uint64(0),
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
