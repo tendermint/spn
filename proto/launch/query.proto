@@ -20,7 +20,7 @@ service Query {
 
   // Queries a chain by index.
   rpc Chain(QueryGetChainRequest) returns (QueryGetChainResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/chain/{id}";
+    option (google.api.http).get = "/tendermint/spn/launch/chain/{launchID}";
   }
   // Queries a list of chain items.
   rpc ChainAll(QueryAllChainRequest) returns (QueryAllChainResponse) {
@@ -29,7 +29,7 @@ service Query {
 
   // Queries a genesisAccount by index.
   rpc GenesisAccount(QueryGetGenesisAccountRequest) returns (QueryGetGenesisAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/genesisAccount/{chainID}/{address}";
+    option (google.api.http).get = "/tendermint/spn/launch/genesisAccount/{launchID}/{address}";
   }
   // Queries a list of genesisAccount items.
   rpc GenesisAccountAll(QueryAllGenesisAccountRequest) returns (QueryAllGenesisAccountResponse) {
@@ -38,7 +38,7 @@ service Query {
 
   // Queries a vestingAccount by index.
   rpc VestingAccount(QueryGetVestingAccountRequest) returns (QueryGetVestingAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/vestingAccount/{chainID}/{address}";
+    option (google.api.http).get = "/tendermint/spn/launch/vestingAccount/{launchID}/{address}";
   }
   // Queries a list of vestingAccount items.
   rpc VestingAccountAll(QueryAllVestingAccountRequest) returns (QueryAllVestingAccountResponse) {
@@ -47,7 +47,7 @@ service Query {
 
   // Queries a genesisValidator by index.
   rpc GenesisValidator(QueryGetGenesisValidatorRequest) returns (QueryGetGenesisValidatorResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/genesisValidator/{chainID}/{address}";
+    option (google.api.http).get = "/tendermint/spn/launch/genesisValidator/{launchID}/{address}";
   }
 
   // Queries a list of genesisValidator items.
@@ -57,11 +57,11 @@ service Query {
 
   // Queries a request by index.
   rpc Request(QueryGetRequestRequest) returns (QueryGetRequestResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}/{requestID}";
+    option (google.api.http).get = "/tendermint/spn/launch/request/{launchID}/{requestID}";
   }
   // Queries a list of request for a chain.
   rpc RequestAll(QueryAllRequestRequest) returns (QueryAllRequestResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/request/{chainID}";
+    option (google.api.http).get = "/tendermint/spn/launch/request/{launchID}";
   }
 
   // Parameters queries the parameters of the module.
@@ -71,7 +71,7 @@ service Query {
 }
 
 message QueryGetChainRequest {
-  uint64 id = 1;
+  uint64 launchID = 1;
 }
 
 message QueryGetChainResponse {
@@ -88,7 +88,7 @@ message QueryAllChainResponse {
 }
 
 message QueryGetGenesisAccountRequest {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   string address = 2;
 }
 
@@ -97,7 +97,7 @@ message QueryGetGenesisAccountResponse {
 }
 
 message QueryAllGenesisAccountRequest {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
@@ -107,7 +107,7 @@ message QueryAllGenesisAccountResponse {
 }
 
 message QueryGetVestingAccountRequest {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   string address = 2;
 }
 
@@ -116,7 +116,7 @@ message QueryGetVestingAccountResponse {
 }
 
 message QueryAllVestingAccountRequest {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
@@ -126,7 +126,7 @@ message QueryAllVestingAccountResponse {
 }
 
 message QueryGetGenesisValidatorRequest {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   string address = 2;
 }
 
@@ -135,7 +135,7 @@ message QueryGetGenesisValidatorResponse {
 }
 
 message QueryAllGenesisValidatorRequest {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
@@ -145,7 +145,7 @@ message QueryAllGenesisValidatorResponse {
 }
 
 message QueryGetRequestRequest {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   uint64 requestID = 2;
 }
 
@@ -154,7 +154,7 @@ message QueryGetRequestResponse {
 }
 
 message QueryAllRequestRequest {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 

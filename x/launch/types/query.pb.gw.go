@@ -44,15 +44,15 @@ func request_Query_Chain_0(ctx context.Context, marshaler runtime.Marshaler, cli
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.Id, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	msg, err := client.Chain(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -71,15 +71,15 @@ func local_request_Query_Chain_0(ctx context.Context, marshaler runtime.Marshale
 		_   = err
 	)
 
-	val, ok = pathParams["id"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.Id, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	msg, err := server.Chain(ctx, &protoReq)
@@ -134,15 +134,15 @@ func request_Query_GenesisAccount_0(ctx context.Context, marshaler runtime.Marsh
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	val, ok = pathParams["address"]
@@ -172,15 +172,15 @@ func local_request_Query_GenesisAccount_0(ctx context.Context, marshaler runtime
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	val, ok = pathParams["address"]
@@ -246,15 +246,15 @@ func request_Query_VestingAccount_0(ctx context.Context, marshaler runtime.Marsh
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	val, ok = pathParams["address"]
@@ -284,15 +284,15 @@ func local_request_Query_VestingAccount_0(ctx context.Context, marshaler runtime
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	val, ok = pathParams["address"]
@@ -358,15 +358,15 @@ func request_Query_GenesisValidator_0(ctx context.Context, marshaler runtime.Mar
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	val, ok = pathParams["address"]
@@ -396,15 +396,15 @@ func local_request_Query_GenesisValidator_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	val, ok = pathParams["address"]
@@ -470,15 +470,15 @@ func request_Query_Request_0(ctx context.Context, marshaler runtime.Marshaler, c
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	val, ok = pathParams["requestID"]
@@ -508,15 +508,15 @@ func local_request_Query_Request_0(ctx context.Context, marshaler runtime.Marsha
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	val, ok = pathParams["requestID"]
@@ -536,7 +536,7 @@ func local_request_Query_Request_0(ctx context.Context, marshaler runtime.Marsha
 }
 
 var (
-	filter_Query_RequestAll_0 = &utilities.DoubleArray{Encoding: map[string]int{"chainID": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_RequestAll_0 = &utilities.DoubleArray{Encoding: map[string]int{"launchID": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_Query_RequestAll_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -550,15 +550,15 @@ func request_Query_RequestAll_0(ctx context.Context, marshaler runtime.Marshaler
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -584,15 +584,15 @@ func local_request_Query_RequestAll_0(ctx context.Context, marshaler runtime.Mar
 		_   = err
 	)
 
-	val, ok = pathParams["chainID"]
+	val, ok = pathParams["launchID"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "chainID")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "launchID")
 	}
 
-	protoReq.ChainID, err = runtime.Uint64(val)
+	protoReq.LaunchID, err = runtime.Uint64(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "chainID", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "launchID", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -1149,25 +1149,25 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Chain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "chain", "id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Chain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "chain", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_ChainAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "chain"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_GenesisAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "genesisAccount", "chainID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_GenesisAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "genesisAccount", "launchID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_GenesisAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "genesisAccount"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_VestingAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "vestingAccount", "chainID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_VestingAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "vestingAccount", "launchID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_VestingAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "vestingAccount"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_GenesisValidator_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "genesisValidator", "chainID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_GenesisValidator_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "genesisValidator", "launchID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_GenesisValidatorAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "genesisValidator"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Request_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "request", "chainID", "requestID"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Request_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "request", "launchID", "requestID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_RequestAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "request", "chainID"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_RequestAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "request", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 )
