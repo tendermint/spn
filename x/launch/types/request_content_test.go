@@ -134,7 +134,7 @@ func TestAccountRemoval_Validate(t *testing.T) {
 
 func TestGenesisAccount_Validate(t *testing.T) {
 	var (
-		addr    = sample.Address()
+		addr     = sample.Address()
 		launchID = uint64(0)
 	)
 	tests := []struct {
@@ -145,36 +145,36 @@ func TestGenesisAccount_Validate(t *testing.T) {
 		{
 			name: "invalid address",
 			content: types.GenesisAccount{
-				Address: "invalid_address",
+				Address:  "invalid_address",
 				LaunchID: launchID,
-				Coins:   sample.Coins(),
+				Coins:    sample.Coins(),
 			},
 			wantErr: true,
 		},
 		{
 			name: "request content without coins",
 			content: types.GenesisAccount{
-				Address: addr,
+				Address:  addr,
 				LaunchID: launchID,
-				Coins:   sdk.NewCoins(),
+				Coins:    sdk.NewCoins(),
 			},
 			wantErr: true,
 		},
 		{
 			name: "request content with invalid coins",
 			content: types.GenesisAccount{
-				Address: addr,
+				Address:  addr,
 				LaunchID: launchID,
-				Coins:   sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
+				Coins:    sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 			},
 			wantErr: true,
 		},
 		{
 			name: "valid request content",
 			content: types.GenesisAccount{
-				Address: sample.Address(),
+				Address:  sample.Address(),
 				LaunchID: launchID,
-				Coins:   sample.Coins(),
+				Coins:    sample.Coins(),
 			},
 		},
 	}
@@ -192,7 +192,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 
 func TestGenesisValidator_Validate(t *testing.T) {
 	var (
-		addr    = sample.Address()
+		addr     = sample.Address()
 		launchID = uint64(0)
 	)
 	tests := []struct {
@@ -203,7 +203,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "valid request content",
 			content: types.GenesisValidator{
-				LaunchID:        launchID,
+				LaunchID:       launchID,
 				Address:        addr,
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     sample.Bytes(30),
@@ -214,7 +214,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "invalid address",
 			content: types.GenesisValidator{
-				LaunchID:        launchID,
+				LaunchID:       launchID,
 				Address:        "invalid_address",
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     sample.Bytes(30),
@@ -226,7 +226,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "empty consensus public key",
 			content: types.GenesisValidator{
-				LaunchID:        launchID,
+				LaunchID:       launchID,
 				Address:        addr,
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     nil,
@@ -238,7 +238,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "empty gentx",
 			content: types.GenesisValidator{
-				LaunchID:        launchID,
+				LaunchID:       launchID,
 				Address:        addr,
 				GenTx:          nil,
 				ConsPubKey:     sample.Bytes(30),
@@ -250,7 +250,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "empty peer",
 			content: types.GenesisValidator{
-				LaunchID:        launchID,
+				LaunchID:       launchID,
 				Address:        addr,
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     sample.Bytes(30),
@@ -262,7 +262,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "invalid self delegation",
 			content: types.GenesisValidator{
-				LaunchID:    launchID,
+				LaunchID:   launchID,
 				Address:    addr,
 				GenTx:      sample.Bytes(500),
 				ConsPubKey: sample.Bytes(30),
@@ -277,7 +277,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "zero self delegation",
 			content: types.GenesisValidator{
-				LaunchID:    launchID,
+				LaunchID:   launchID,
 				Address:    addr,
 				GenTx:      sample.Bytes(500),
 				ConsPubKey: sample.Bytes(30),
@@ -347,7 +347,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 		{
 			name: "invalid address",
 			content: types.VestingAccount{
-				LaunchID:         launchID,
+				LaunchID:        launchID,
 				Address:         "invalid_address",
 				StartingBalance: sample.Coins(),
 				VestingOptions:  option,
@@ -358,7 +358,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 			name: "invalid coins",
 			content: types.VestingAccount{
 				Address:         sample.Address(),
-				LaunchID:         launchID,
+				LaunchID:        launchID,
 				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				VestingOptions:  option,
 			},
@@ -368,7 +368,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 			name: "valid request content",
 			content: types.VestingAccount{
 				Address:         sample.Address(),
-				LaunchID:         launchID,
+				LaunchID:        launchID,
 				StartingBalance: sample.Coins(),
 				VestingOptions:  option,
 			},

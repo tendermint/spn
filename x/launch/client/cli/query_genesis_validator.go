@@ -31,7 +31,7 @@ func CmdListGenesisValidator() *cobra.Command {
 			}
 
 			params := &types.QueryAllGenesisValidatorRequest{
-				LaunchID:    launchID,
+				LaunchID:   launchID,
 				Pagination: pageReq,
 			}
 
@@ -67,7 +67,7 @@ func CmdShowGenesisValidator() *cobra.Command {
 
 			params := &types.QueryGetGenesisValidatorRequest{
 				LaunchID: launchID,
-				Address: args[1],
+				Address:  args[1],
 			}
 
 			res, err := queryClient.GenesisValidator(context.Background(), params)

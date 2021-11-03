@@ -16,7 +16,7 @@ func NewMsgRequestAddVestingAccount(
 	options VestingOptions,
 ) *MsgRequestAddVestingAccount {
 	return &MsgRequestAddVestingAccount{
-		LaunchID:         launchID,
+		LaunchID:        launchID,
 		Address:         address,
 		StartingBalance: coins,
 		Options:         options,

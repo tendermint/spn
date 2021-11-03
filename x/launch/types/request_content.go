@@ -30,8 +30,8 @@ func NewGenesisAccount(launchID uint64, address string, coins sdk.Coins) Request
 		Content: &RequestContent_GenesisAccount{
 			GenesisAccount: &GenesisAccount{
 				LaunchID: launchID,
-				Address: address,
-				Coins:   coins,
+				Address:  address,
+				Coins:    coins,
 			},
 		},
 	}
@@ -55,7 +55,7 @@ func NewVestingAccount(launchID uint64, address string, startingBalance sdk.Coin
 	return RequestContent{
 		Content: &RequestContent_VestingAccount{
 			VestingAccount: &VestingAccount{
-				LaunchID:         launchID,
+				LaunchID:        launchID,
 				Address:         address,
 				StartingBalance: startingBalance,
 				VestingOptions:  vestingOptions,
@@ -93,7 +93,7 @@ func NewGenesisValidator(
 	return RequestContent{
 		Content: &RequestContent_GenesisValidator{
 			GenesisValidator: &GenesisValidator{
-				LaunchID:        launchID,
+				LaunchID:       launchID,
 				Address:        address,
 				GenTx:          genTx,
 				ConsPubKey:     consPubKey,

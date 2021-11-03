@@ -49,7 +49,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgSettleRequest{
-				LaunchID:     invalidChain,
+				LaunchID:    invalidChain,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -59,7 +59,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "launch triggered chain",
 			msg: types.MsgSettleRequest{
-				LaunchID:     chains[0].LaunchID,
+				LaunchID:    chains[0].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -69,7 +69,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "coordinator not found",
 			msg: types.MsgSettleRequest{
-				LaunchID:     chains[1].LaunchID,
+				LaunchID:    chains[1].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -79,7 +79,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "no permission error",
 			msg: types.MsgSettleRequest{
-				LaunchID:     chains[2].LaunchID,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator2.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -89,7 +89,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve an invalid request",
 			msg: types.MsgSettleRequest{
-				LaunchID:     chains[2].LaunchID,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   99999999,
 				Approve:     true,
@@ -99,7 +99,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 1",
 			msg: types.MsgSettleRequest{
-				LaunchID:     chains[2].LaunchID,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -109,7 +109,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 2",
 			msg: types.MsgSettleRequest{
-				LaunchID:     chains[2].LaunchID,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[1].RequestID,
 				Approve:     true,
@@ -119,7 +119,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 3",
 			msg: types.MsgSettleRequest{
-				LaunchID:     chains[2].LaunchID,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[2].RequestID,
 				Approve:     true,
@@ -129,7 +129,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 4",
 			msg: types.MsgSettleRequest{
-				LaunchID:     chains[2].LaunchID,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[3].RequestID,
 				Approve:     true,
@@ -139,7 +139,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "reject chain request 5",
 			msg: types.MsgSettleRequest{
-				LaunchID:     chains[2].LaunchID,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[4].RequestID,
 				Approve:     false,

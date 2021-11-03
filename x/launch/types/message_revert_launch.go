@@ -12,7 +12,7 @@ var _ sdk.Msg = &MsgRevertLaunch{}
 func NewMsgRevertLaunch(coordinator string, launchID uint64) *MsgRevertLaunch {
 	return &MsgRevertLaunch{
 		Coordinator: coordinator,
-		LaunchID:     launchID,
+		LaunchID:    launchID,
 	}
 }
 

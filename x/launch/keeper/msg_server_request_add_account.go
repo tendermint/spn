@@ -39,7 +39,7 @@ func (k msgServer) RequestAddAccount(
 
 	content := types.NewGenesisAccount(msg.LaunchID, msg.Address, msg.Coins)
 	request := types.Request{
-		LaunchID:   msg.LaunchID,
+		LaunchID:  msg.LaunchID,
 		Creator:   msg.Address,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,

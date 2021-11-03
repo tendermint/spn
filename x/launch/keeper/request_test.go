@@ -84,7 +84,7 @@ func TestApplyRequest(t *testing.T) {
 		vestingAcc     = sample.Address()
 		validatorAcc   = sample.Address()
 		k, ctx         = testkeeper.Launch(t)
-		launchID        = uint64(10)
+		launchID       = uint64(10)
 		contents       = sample.AllRequestContents(launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
 	)

@@ -45,7 +45,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          invalidChain,
+				LaunchID:         invalidChain,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
@@ -54,7 +54,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[0].LaunchID,
+				LaunchID:         chains[0].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
@@ -63,7 +63,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "coordinator not found",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[1].LaunchID,
+				LaunchID:         chains[1].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
@@ -72,7 +72,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "no permission error",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[2].LaunchID,
+				LaunchID:         chains[2].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr3,
 			},
@@ -81,7 +81,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[2].LaunchID,
+				LaunchID:         chains[2].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
@@ -90,7 +90,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[3].LaunchID,
+				LaunchID:         chains[3].LaunchID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr1,
 			},
@@ -99,7 +99,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "add chain 4 request 2",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[3].LaunchID,
+				LaunchID:         chains[3].LaunchID,
 				Creator:          addr2,
 				ValidatorAddress: addr2,
 			},
@@ -108,7 +108,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "add chain 5 request 1",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[4].LaunchID,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
@@ -117,7 +117,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "add chain 5 request 2",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[4].LaunchID,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr2,
 			},
@@ -126,7 +126,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "add chain 5 request 3",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[4].LaunchID,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          addr3,
 				ValidatorAddress: addr3,
 			},
@@ -135,7 +135,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "request from coordinator is pre-approved",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[4].LaunchID,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr4,
 			},
@@ -144,7 +144,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "failing request from coordinator",
 			msg: types.MsgRequestRemoveValidator{
-				LaunchID:          chains[4].LaunchID,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr4,
 			},

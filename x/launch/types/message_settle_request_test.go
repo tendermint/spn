@@ -20,7 +20,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 			name: "invalid coordinator address",
 			msg: types.MsgSettleRequest{
 				Coordinator: "invalid_address",
-				LaunchID:     launchID,
+				LaunchID:    launchID,
 				RequestID:   10,
 				Approve:     true,
 			},
@@ -30,7 +30,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 			name: "valid message",
 			msg: types.MsgSettleRequest{
 				Coordinator: sample.Address(),
-				LaunchID:     launchID,
+				LaunchID:    launchID,
 				RequestID:   10,
 				Approve:     true,
 			},

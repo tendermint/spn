@@ -32,7 +32,7 @@ func CmdListRequest() *cobra.Command {
 			}
 
 			params := &types.QueryAllRequestRequest{
-				LaunchID:    launchID,
+				LaunchID:   launchID,
 				Pagination: pageReq,
 			}
 
@@ -72,7 +72,7 @@ func CmdShowRequest() *cobra.Command {
 			}
 
 			params := &types.QueryGetRequestRequest{
-				LaunchID:   launchID,
+				LaunchID:  launchID,
 				RequestID: argsRequestID,
 			}
 

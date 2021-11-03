@@ -38,7 +38,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 			desc: "First",
 			request: &types.QueryGetGenesisAccountRequest{
 				LaunchID: msgs[0].LaunchID,
-				Address: msgs[0].Address,
+				Address:  msgs[0].Address,
 			},
 			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: msgs[0]},
 		},
@@ -46,7 +46,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 			desc: "Second",
 			request: &types.QueryGetGenesisAccountRequest{
 				LaunchID: msgs[1].LaunchID,
-				Address: msgs[1].Address,
+				Address:  msgs[1].Address,
 			},
 			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: msgs[1]},
 		},
@@ -54,7 +54,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 			desc: "KeyNotFound",
 			request: &types.QueryGetGenesisAccountRequest{
 				LaunchID: uint64(100000),
-				Address: strconv.Itoa(100000),
+				Address:  strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},

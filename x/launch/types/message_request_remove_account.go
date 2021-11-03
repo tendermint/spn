@@ -12,8 +12,8 @@ var _ sdk.Msg = &MsgRequestRemoveAccount{}
 func NewMsgRequestRemoveAccount(launchID uint64, creator, address string) *MsgRequestRemoveAccount {
 	return &MsgRequestRemoveAccount{
 		LaunchID: launchID,
-		Creator: creator,
-		Address: address,
+		Creator:  creator,
+		Address:  address,
 	}
 }
 

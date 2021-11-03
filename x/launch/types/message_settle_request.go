@@ -12,7 +12,7 @@ var _ sdk.Msg = &MsgSettleRequest{}
 func NewMsgSettleRequest(coordinator string, launchID uint64, requestID uint64, approve bool) *MsgSettleRequest {
 	return &MsgSettleRequest{
 		Coordinator: coordinator,
-		LaunchID:     launchID,
+		LaunchID:    launchID,
 		RequestID:   requestID,
 		Approve:     approve,
 	}

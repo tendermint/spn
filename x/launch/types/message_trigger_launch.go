@@ -12,7 +12,7 @@ var _ sdk.Msg = &MsgTriggerLaunch{}
 func NewMsgTriggerLaunch(coordinator string, launchID, remainingTime uint64) *MsgTriggerLaunch {
 	return &MsgTriggerLaunch{
 		Coordinator:   coordinator,
-		LaunchID:       launchID,
+		LaunchID:      launchID,
 		RemainingTime: remainingTime,
 	}
 }

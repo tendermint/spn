@@ -21,7 +21,7 @@ func TestMsgRequestRemoveValidator_ValidateBasic(t *testing.T) {
 			msg: types.MsgRequestRemoveValidator{
 				Creator:          "invalid_address",
 				ValidatorAddress: sample.Address(),
-				LaunchID:          launchID,
+				LaunchID:         launchID,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
@@ -30,7 +30,7 @@ func TestMsgRequestRemoveValidator_ValidateBasic(t *testing.T) {
 			msg: types.MsgRequestRemoveValidator{
 				Creator:          sample.Address(),
 				ValidatorAddress: "invalid_address",
-				LaunchID:          launchID,
+				LaunchID:         launchID,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
@@ -39,7 +39,7 @@ func TestMsgRequestRemoveValidator_ValidateBasic(t *testing.T) {
 			msg: types.MsgRequestRemoveValidator{
 				Creator:          sample.Address(),
 				ValidatorAddress: sample.Address(),
-				LaunchID:          launchID,
+				LaunchID:         launchID,
 			},
 		},
 	}

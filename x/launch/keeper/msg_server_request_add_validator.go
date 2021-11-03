@@ -38,7 +38,7 @@ func (k msgServer) RequestAddValidator(
 		msg.Peer,
 	)
 	request := types.Request{
-		LaunchID:   msg.LaunchID,
+		LaunchID:  msg.LaunchID,
 		Creator:   msg.ValAddress,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,

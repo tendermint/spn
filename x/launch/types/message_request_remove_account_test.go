@@ -19,8 +19,8 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid creator address",
 			msg: types.MsgRequestRemoveAccount{
-				Creator: "invalid_address",
-				Address: sample.Address(),
+				Creator:  "invalid_address",
+				Address:  sample.Address(),
 				LaunchID: launchID,
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -28,8 +28,8 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid address",
 			msg: types.MsgRequestRemoveAccount{
-				Creator: sample.Address(),
-				Address: "invalid_address",
+				Creator:  sample.Address(),
+				Address:  "invalid_address",
 				LaunchID: launchID,
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -37,8 +37,8 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgRequestRemoveAccount{
-				Creator: sample.Address(),
-				Address: sample.Address(),
+				Creator:  sample.Address(),
+				Address:  sample.Address(),
 				LaunchID: launchID,
 			},
 		},

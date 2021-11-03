@@ -25,7 +25,7 @@ func TestRequestQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetRequestRequest{
-				LaunchID:   msgs[0].LaunchID,
+				LaunchID:  msgs[0].LaunchID,
 				RequestID: msgs[0].RequestID,
 			},
 			response: &types.QueryGetRequestResponse{Request: msgs[0]},
@@ -33,7 +33,7 @@ func TestRequestQuerySingle(t *testing.T) {
 		{
 			desc: "Second",
 			request: &types.QueryGetRequestRequest{
-				LaunchID:   msgs[1].LaunchID,
+				LaunchID:  msgs[1].LaunchID,
 				RequestID: msgs[1].RequestID,
 			},
 			response: &types.QueryGetRequestResponse{Request: msgs[1]},
@@ -41,7 +41,7 @@ func TestRequestQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetRequestRequest{
-				LaunchID:   uint64(100000),
+				LaunchID:  uint64(100000),
 				RequestID: 100000,
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),

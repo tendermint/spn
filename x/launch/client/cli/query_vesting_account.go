@@ -31,7 +31,7 @@ func CmdListVestingAccount() *cobra.Command {
 			}
 
 			params := &types.QueryAllVestingAccountRequest{
-				LaunchID:    launchID,
+				LaunchID:   launchID,
 				Pagination: pageReq,
 			}
 
@@ -67,7 +67,7 @@ func CmdShowVestingAccount() *cobra.Command {
 
 			params := &types.QueryGetVestingAccountRequest{
 				LaunchID: launchID,
-				Address: args[1],
+				Address:  args[1],
 			}
 
 			res, err := queryClient.VestingAccount(context.Background(), params)

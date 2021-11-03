@@ -11,7 +11,7 @@ var _ sdk.Msg = &MsgRequestRemoveValidator{}
 
 func NewMsgRequestRemoveValidator(launchID uint64, creator, validatorAddress string) *MsgRequestRemoveValidator {
 	return &MsgRequestRemoveValidator{
-		LaunchID:          launchID,
+		LaunchID:         launchID,
 		Creator:          creator,
 		ValidatorAddress: validatorAddress,
 	}

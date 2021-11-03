@@ -37,7 +37,7 @@ func (k msgServer) RequestRemoveValidator(
 
 	content := types.NewValidatorRemoval(msg.ValidatorAddress)
 	request := types.Request{
-		LaunchID:   msg.LaunchID,
+		LaunchID:  msg.LaunchID,
 		Creator:   msg.ValidatorAddress,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,

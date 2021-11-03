@@ -20,7 +20,7 @@ func GenesisChainID() string {
 // Chain returns a sample Chain
 func Chain(id uint64, coordinatorID uint64) launch.Chain {
 	return launch.Chain{
-		LaunchID:              id,
+		LaunchID:        id,
 		CoordinatorID:   coordinatorID,
 		GenesisChainID:  GenesisChainID(),
 		CreatedAt:       time.Now().Unix(),
@@ -35,8 +35,8 @@ func Chain(id uint64, coordinatorID uint64) launch.Chain {
 func GenesisAccount(launchID uint64, address string) launch.GenesisAccount {
 	return launch.GenesisAccount{
 		LaunchID: launchID,
-		Address: address,
-		Coins:   Coins(),
+		Address:  address,
+		Coins:    Coins(),
 	}
 }
 
@@ -48,7 +48,7 @@ func VestingOptions() launch.VestingOptions {
 // VestingAccount returns a sample VestingAccount
 func VestingAccount(launchID uint64, address string) launch.VestingAccount {
 	return launch.VestingAccount{
-		LaunchID:         launchID,
+		LaunchID:        launchID,
 		Address:         address,
 		StartingBalance: Coins(),
 		VestingOptions:  VestingOptions(),
@@ -65,7 +65,7 @@ func AccountRemoval(address string) *launch.AccountRemoval {
 // GenesisValidator returns a sample GenesisValidator
 func GenesisValidator(launchID uint64, address string) launch.GenesisValidator {
 	return launch.GenesisValidator{
-		LaunchID:        launchID,
+		LaunchID:       launchID,
 		Address:        address,
 		GenTx:          Bytes(200),
 		ConsPubKey:     Bytes(10),
@@ -84,7 +84,7 @@ func ValidatorRemoval(address string) launch.ValidatorRemoval {
 // RequestWithContent creates a launch request object with launch id and content
 func RequestWithContent(launchID uint64, content launch.RequestContent) launch.Request {
 	return launch.Request{
-		LaunchID:   launchID,
+		LaunchID:  launchID,
 		Creator:   Address(),
 		CreatedAt: time.Now().Unix(),
 		Content:   content,
@@ -298,11 +298,11 @@ func LaunchGenesisState(addresses ...string) launch.GenesisState {
 		RequestCountList: []launch.RequestCount{
 			{
 				LaunchID: 0,
-				Count:   1,
+				Count:    1,
 			},
 			{
 				LaunchID: 1,
-				Count:   2,
+				Count:    2,
 			},
 		},
 		Params: LaunchParams(),

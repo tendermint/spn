@@ -325,7 +325,7 @@ func TestFindRandomRequest(t *testing.T) {
 	t.Run("no chain request", func(t *testing.T) {
 		k.AppendRequest(sdkCtx, types.Request{
 			LaunchID: 10000,
-			Creator: sample.Address(),
+			Creator:  sample.Address(),
 		})
 		gotRequest, gotFound := launchsimulation.FindRandomRequest(r, sdkCtx, *k)
 		require.Equal(t, types.Request{}, gotRequest)

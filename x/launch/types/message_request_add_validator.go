@@ -19,7 +19,7 @@ func NewMsgRequestAddValidator(
 ) *MsgRequestAddValidator {
 	return &MsgRequestAddValidator{
 		ValAddress:     valAddress,
-		LaunchID:        launchID,
+		LaunchID:       launchID,
 		GenTx:          genTx,
 		ConsPubKey:     consPubKey,
 		SelfDelegation: selfDelegation,

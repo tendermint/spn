@@ -38,7 +38,7 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 			desc: "First",
 			request: &types.QueryGetVestingAccountRequest{
 				LaunchID: msgs[0].LaunchID,
-				Address: msgs[0].Address,
+				Address:  msgs[0].Address,
 			},
 			response: &types.QueryGetVestingAccountResponse{VestingAccount: msgs[0]},
 		},
@@ -46,7 +46,7 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 			desc: "Second",
 			request: &types.QueryGetVestingAccountRequest{
 				LaunchID: msgs[1].LaunchID,
-				Address: msgs[1].Address,
+				Address:  msgs[1].Address,
 			},
 			response: &types.QueryGetVestingAccountResponse{VestingAccount: msgs[1]},
 		},
@@ -54,7 +54,7 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 			desc: "KeyNotFound",
 			request: &types.QueryGetVestingAccountRequest{
 				LaunchID: uint64(100000),
-				Address: strconv.Itoa(100000),
+				Address:  strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},
@@ -79,7 +79,7 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 	var (
 		keeper, ctx = testkeeper.Launch(t)
 		wctx        = sdk.WrapSDKContext(ctx)
-		launchID     = uint64(0)
+		launchID    = uint64(0)
 		msgs        = createNVestingAccountForChainID(keeper, ctx, 5, launchID)
 	)
 

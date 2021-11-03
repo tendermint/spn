@@ -31,7 +31,7 @@ func CmdListGenesisAccount() *cobra.Command {
 			}
 
 			params := &types.QueryAllGenesisAccountRequest{
-				LaunchID:    launchID,
+				LaunchID:   launchID,
 				Pagination: pageReq,
 			}
 
@@ -67,7 +67,7 @@ func CmdShowGenesisAccount() *cobra.Command {
 
 			params := &types.QueryGetGenesisAccountRequest{
 				LaunchID: launchID,
-				Address: args[1],
+				Address:  args[1],
 			}
 
 			res, err := queryClient.GenesisAccount(context.Background(), params)

@@ -45,7 +45,7 @@ func (k msgServer) RequestRemoveAccount(
 
 	content := types.NewAccountRemoval(msg.Address)
 	request := types.Request{
-		LaunchID:   msg.LaunchID,
+		LaunchID:  msg.LaunchID,
 		Creator:   msg.Address,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,

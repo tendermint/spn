@@ -21,7 +21,7 @@ func NewMsgEditChain(
 ) *MsgEditChain {
 	return &MsgEditChain{
 		Coordinator:    coordinator,
-		LaunchID:        launchID,
+		LaunchID:       launchID,
 		GenesisChainID: genesisChainID,
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
