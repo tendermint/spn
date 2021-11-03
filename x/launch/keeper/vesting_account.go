@@ -38,7 +38,6 @@ func (k Keeper) RemoveVestingAccount(
 	ctx sdk.Context,
 	launchID uint64,
 	address string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VestingAccountKeyPrefix))
 	store.Delete(types.VestingAccountKey(launchID, address))
