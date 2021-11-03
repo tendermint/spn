@@ -123,10 +123,10 @@ func (k Keeper) SetChain(ctx sdk.Context, chain types.Chain) {
 }
 
 // GetChain returns a chain from its index
-func (k Keeper) GetChain(ctx sdk.Context, id uint64) (val types.Chain, found bool) {
+func (k Keeper) GetChain(ctx sdk.Context, launchID uint64) (val types.Chain, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
 
-	b := store.Get(types.ChainKey(id))
+	b := store.Get(types.ChainKey(launchID))
 	if b == nil {
 		return val, false
 	}
@@ -136,9 +136,9 @@ func (k Keeper) GetChain(ctx sdk.Context, id uint64) (val types.Chain, found boo
 }
 
 // RemoveChain removes a chain from the store
-func (k Keeper) RemoveChain(ctx sdk.Context, id uint64) {
+func (k Keeper) RemoveChain(ctx sdk.Context, launchID uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
-	store.Delete(types.ChainKey(id))
+	store.Delete(types.ChainKey(launchID))
 }
 
 // GetAllChain returns all chain
