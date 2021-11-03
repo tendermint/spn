@@ -15,10 +15,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func createNVestingAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.VestingAccount {
+func createNVestingAccountForLaunchID(keeper *keeper.Keeper, ctx sdk.Context, n int, launchID uint64) []types.VestingAccount {
 	items := make([]types.VestingAccount, n)
 	for i := range items {
-		items[i] = sample.VestingAccount(chainID, strconv.Itoa(i))
+		items[i] = sample.VestingAccount(launchID, strconv.Itoa(i))
 		keeper.SetVestingAccount(ctx, items[i])
 	}
 	return items
@@ -80,7 +80,7 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 		keeper, ctx = testkeeper.Launch(t)
 		wctx        = sdk.WrapSDKContext(ctx)
 		launchID    = uint64(0)
-		msgs        = createNVestingAccountForChainID(keeper, ctx, 5, launchID)
+		msgs        = createNVestingAccountForLaunchID(keeper, ctx, 5, launchID)
 	)
 
 	request := func(launchID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllVestingAccountRequest {

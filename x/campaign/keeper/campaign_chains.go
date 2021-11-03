@@ -9,7 +9,7 @@ import (
 )
 
 // AddChainToCampaign adds a new chain into an existing campaign
-func (k Keeper) AddChainToCampaign(ctx sdk.Context, campaignID, chainID uint64) error {
+func (k Keeper) AddChainToCampaign(ctx sdk.Context, campaignID, launchID uint64) error {
 	// Check campaign exist
 	if _, found := k.GetCampaign(ctx, campaignID); !found {
 		return fmt.Errorf("campaign %d not found", campaignID)
@@ -19,16 +19,16 @@ func (k Keeper) AddChainToCampaign(ctx sdk.Context, campaignID, chainID uint64) 
 	if !found {
 		campaignChains = types.CampaignChains{
 			CampaignID: campaignID,
-			Chains:     []uint64{chainID},
+			Chains:     []uint64{launchID},
 		}
 	} else {
 		// Ensure no duplicated chain ID
 		for _, existingChainID := range campaignChains.Chains {
-			if existingChainID == chainID {
-				return fmt.Errorf("chain %d already associated to campaign %d", chainID, campaignID)
+			if existingChainID == launchID {
+				return fmt.Errorf("chain %d already associated to campaign %d", launchID, campaignID)
 			}
 		}
-		campaignChains.Chains = append(campaignChains.Chains, chainID)
+		campaignChains.Chains = append(campaignChains.Chains, launchID)
 	}
 	k.SetCampaignChains(ctx, campaignChains)
 	return nil

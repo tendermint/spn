@@ -16,7 +16,7 @@ func TestMsgEditChain(t *testing.T) {
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
 	coordNoExist := sample.Address()
-	chainIDNoExist := uint64(1000)
+	launchIDNoExist := uint64(1000)
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
@@ -84,8 +84,8 @@ func TestMsgEditChain(t *testing.T) {
 			),
 		},
 		{
-			name: "non existent chain id",
-			msg: sample.MsgEditChain(coordAddress, chainIDNoExist,
+			name: "non existent launch id",
+			msg: sample.MsgEditChain(coordAddress, launchIDNoExist,
 				false,
 				true,
 				false,
