@@ -12,7 +12,7 @@ import (
 
 func CmdListGenesisValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-genesis-validator [chain-id]",
+		Use:   "list-genesis-validator [launch-id]",
 		Short: "list all genesisValidator",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -25,13 +25,13 @@ func CmdListGenesisValidator() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryAllGenesisValidatorRequest{
-				ChainID:    chainID,
+				LaunchID:    launchID,
 				Pagination: pageReq,
 			}
 
@@ -52,7 +52,7 @@ func CmdListGenesisValidator() *cobra.Command {
 
 func CmdShowGenesisValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-genesis-validator [chain-id] [address]",
+		Use:   "show-genesis-validator [launch-id] [address]",
 		Short: "shows a genesisValidator",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -60,13 +60,13 @@ func CmdShowGenesisValidator() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryGetGenesisValidatorRequest{
-				ChainID: chainID,
+				LaunchID: launchID,
 				Address: args[1],
 			}
 

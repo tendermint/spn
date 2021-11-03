@@ -55,7 +55,7 @@ func TestShowRequest(t *testing.T) {
 	}{
 		{
 			desc:        "found",
-			idChainID:   strconv.Itoa(int(objs[0].ChainID)),
+			idChainID:   strconv.Itoa(int(objs[0].LaunchID)),
 			idRequestID: objs[0].RequestID,
 
 			args: common,

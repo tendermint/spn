@@ -13,7 +13,7 @@ import (
 
 func CmdListRequest() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-request [chain-id]",
+		Use:   "list-request [launch-id]",
 		Short: "list all request",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -26,13 +26,13 @@ func CmdListRequest() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryAllRequestRequest{
-				ChainID:    chainID,
+				LaunchID:    launchID,
 				Pagination: pageReq,
 			}
 
@@ -53,7 +53,7 @@ func CmdListRequest() *cobra.Command {
 
 func CmdShowRequest() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-request [chain-id] [request-id]",
+		Use:   "show-request [launch-id] [request-id]",
 		Short: "shows a request",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -66,13 +66,13 @@ func CmdShowRequest() *cobra.Command {
 				return err
 			}
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryGetRequestRequest{
-				ChainID:   chainID,
+				LaunchID:   launchID,
 				RequestID: argsRequestID,
 			}
 

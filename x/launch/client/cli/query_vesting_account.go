@@ -12,7 +12,7 @@ import (
 
 func CmdListVestingAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-vesting-account [chain-id]",
+		Use:   "list-vesting-account [launch-id]",
 		Short: "list all vestingAccount",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -25,13 +25,13 @@ func CmdListVestingAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryAllVestingAccountRequest{
-				ChainID:    chainID,
+				LaunchID:    launchID,
 				Pagination: pageReq,
 			}
 
@@ -52,7 +52,7 @@ func CmdListVestingAccount() *cobra.Command {
 
 func CmdShowVestingAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-vesting-account [chain-id] [address]",
+		Use:   "show-vesting-account [launch-id] [address]",
 		Short: "shows a vestingAccount",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -60,13 +60,13 @@ func CmdShowVestingAccount() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryGetVestingAccountRequest{
-				ChainID: chainID,
+				LaunchID: launchID,
 				Address: args[1],
 			}
 
