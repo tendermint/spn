@@ -39,7 +39,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 
 	// Set all request count
 	for _, elem := range genState.RequestCountList {
-		k.SetRequestCount(ctx, elem.ChainID, elem.Count)
+		k.SetRequestCount(ctx, elem.LaunchID, elem.Count)
 	}
 
 	k.SetParams(ctx, genState.Params)
@@ -60,9 +60,9 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	// Get request counts
 	for _, elem := range genesis.ChainList {
 		// Get request count
-		count := k.GetRequestCount(ctx, elem.Id)
+		count := k.GetRequestCount(ctx, elem.LaunchID)
 		genesis.RequestCountList = append(genesis.RequestCountList, types.RequestCount{
-			ChainID: elem.Id,
+			LaunchID: elem.LaunchID,
 			Count:   count,
 		})
 	}
