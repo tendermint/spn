@@ -13,7 +13,7 @@ import (
 func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 	var (
 		addr    = sample.Address()
-		chainID = uint64(10)
+		launchID = uint64(10)
 	)
 	tests := []struct {
 		name string
@@ -24,7 +24,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: types.MsgRequestAddAccount{
 				Address: "invalid_address",
-				ChainID: chainID,
+				LaunchID: launchID,
 				Coins:   sample.Coins(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -33,7 +33,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			name: "message without coins",
 			msg: types.MsgRequestAddAccount{
 				Address: addr,
-				ChainID: chainID,
+				LaunchID: launchID,
 				Coins:   sdk.NewCoins(),
 			},
 			err: types.ErrInvalidCoins,
@@ -42,7 +42,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			name: "message with invalid coins",
 			msg: types.MsgRequestAddAccount{
 				Address: addr,
-				ChainID: chainID,
+				LaunchID: launchID,
 				Coins:   sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 			},
 			err: types.ErrInvalidCoins,
@@ -51,7 +51,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			name: "valid message",
 			msg: types.MsgRequestAddAccount{
 				Address: sample.Address(),
-				ChainID: chainID,
+				LaunchID: launchID,
 				Coins:   sample.Coins(),
 			},
 		},

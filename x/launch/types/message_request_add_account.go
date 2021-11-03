@@ -9,10 +9,10 @@ const TypeMsgRequestAddAccount = "request_add_account"
 
 var _ sdk.Msg = &MsgRequestAddAccount{}
 
-func NewMsgRequestAddAccount(address string, chainID uint64, coins sdk.Coins) *MsgRequestAddAccount {
+func NewMsgRequestAddAccount(address string, launchID uint64, coins sdk.Coins) *MsgRequestAddAccount {
 	return &MsgRequestAddAccount{
 		Address: address,
-		ChainID: chainID,
+		LaunchID: launchID,
 		Coins:   coins,
 	}
 }

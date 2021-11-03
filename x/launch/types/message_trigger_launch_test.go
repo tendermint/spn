@@ -10,7 +10,7 @@ import (
 
 func TestMsgTriggerLaunch_ValidateBasic(t *testing.T) {
 	addr := sample.Address()
-	chainID := uint64(0)
+	launchID := uint64(0)
 
 	for _, tc := range []struct {
 		desc  string
@@ -19,12 +19,12 @@ func TestMsgTriggerLaunch_ValidateBasic(t *testing.T) {
 	}{
 		{
 			desc:  "valid message",
-			msg:   *types.NewMsgTriggerLaunch(addr, chainID, uint64(1000)),
+			msg:   *types.NewMsgTriggerLaunch(addr, launchID, uint64(1000)),
 			valid: true,
 		},
 		{
 			desc:  "invalid coordinator address",
-			msg:   *types.NewMsgTriggerLaunch("invalid", chainID, uint64(1000)),
+			msg:   *types.NewMsgTriggerLaunch("invalid", launchID, uint64(1000)),
 			valid: false,
 		},
 	} {

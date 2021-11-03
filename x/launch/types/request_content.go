@@ -25,11 +25,11 @@ func (m RequestContent) Validate() error {
 }
 
 // NewGenesisAccount returns a RequestContent containing an GenesisAccount
-func NewGenesisAccount(chainID uint64, address string, coins sdk.Coins) RequestContent {
+func NewGenesisAccount(launchID uint64, address string, coins sdk.Coins) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_GenesisAccount{
 			GenesisAccount: &GenesisAccount{
-				ChainID: chainID,
+				LaunchID: launchID,
 				Address: address,
 				Coins:   coins,
 			},
@@ -51,11 +51,11 @@ func (m GenesisAccount) Validate() error {
 }
 
 // NewVestingAccount returns a RequestContent containing a VestingAccount
-func NewVestingAccount(chainID uint64, address string, startingBalance sdk.Coins, vestingOptions VestingOptions) RequestContent {
+func NewVestingAccount(launchID uint64, address string, startingBalance sdk.Coins, vestingOptions VestingOptions) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_VestingAccount{
 			VestingAccount: &VestingAccount{
-				ChainID:         chainID,
+				LaunchID:         launchID,
 				Address:         address,
 				StartingBalance: startingBalance,
 				VestingOptions:  vestingOptions,
@@ -83,7 +83,7 @@ func (m VestingAccount) Validate() error {
 
 // NewGenesisValidator returns a RequestContent containing a GenesisValidator
 func NewGenesisValidator(
-	chainID uint64,
+	launchID uint64,
 	address string,
 	genTx,
 	consPubKey []byte,
@@ -93,7 +93,7 @@ func NewGenesisValidator(
 	return RequestContent{
 		Content: &RequestContent_GenesisValidator{
 			GenesisValidator: &GenesisValidator{
-				ChainID:        chainID,
+				LaunchID:        launchID,
 				Address:        address,
 				GenTx:          genTx,
 				ConsPubKey:     consPubKey,

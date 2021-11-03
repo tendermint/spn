@@ -8,7 +8,7 @@ import (
 
 type CampaignKeeper interface {
 	GetCampaign(ctx sdk.Context, id uint64) (campaigntypes.Campaign, bool)
-	AddChainToCampaign(ctx sdk.Context, campaignID, chainID uint64) error
+	AddChainToCampaign(ctx sdk.Context, campaignID, launchID uint64) error
 }
 
 type ProfileKeeper interface {

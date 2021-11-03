@@ -10,9 +10,9 @@ import (
 )
 
 func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
-	chainID := uint64(0)
+	launchID := uint64(0)
 
-	validMsg := sample.MsgRequestAddValidator(sample.Address(), chainID)
+	validMsg := sample.MsgRequestAddValidator(sample.Address(), launchID)
 	emptyConsPubKey := validMsg
 	emptyConsPubKey.ConsPubKey = []byte{}
 	emptyGentx := validMsg
@@ -36,7 +36,7 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 		},
 		{
 			name:  "invalid address",
-			msg:   sample.MsgRequestAddValidator("invalid", chainID),
+			msg:   sample.MsgRequestAddValidator("invalid", launchID),
 			valid: false,
 		},
 		{

@@ -9,10 +9,10 @@ const TypeMsgRevertLaunch = "revert_launch"
 
 var _ sdk.Msg = &MsgRevertLaunch{}
 
-func NewMsgRevertLaunch(coordinator string, chainID uint64) *MsgRevertLaunch {
+func NewMsgRevertLaunch(coordinator string, launchID uint64) *MsgRevertLaunch {
 	return &MsgRevertLaunch{
 		Coordinator: coordinator,
-		ChainID:     chainID,
+		LaunchID:     launchID,
 	}
 }
 

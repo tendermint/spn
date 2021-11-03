@@ -10,7 +10,7 @@ import (
 )
 
 func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
-	chainID := uint64(10)
+	launchID := uint64(10)
 	tests := []struct {
 		name string
 		msg  types.MsgRequestRemoveAccount
@@ -21,7 +21,7 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 			msg: types.MsgRequestRemoveAccount{
 				Creator: "invalid_address",
 				Address: sample.Address(),
-				ChainID: chainID,
+				LaunchID: launchID,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
@@ -30,7 +30,7 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 			msg: types.MsgRequestRemoveAccount{
 				Creator: sample.Address(),
 				Address: "invalid_address",
-				ChainID: chainID,
+				LaunchID: launchID,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
@@ -39,7 +39,7 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 			msg: types.MsgRequestRemoveAccount{
 				Creator: sample.Address(),
 				Address: sample.Address(),
-				ChainID: chainID,
+				LaunchID: launchID,
 			},
 		},
 	}
