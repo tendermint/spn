@@ -20,7 +20,7 @@ func GenesisChainID() string {
 // Chain returns a sample Chain
 func Chain(id uint64, coordinatorID uint64) launch.Chain {
 	return launch.Chain{
-		Id:              id,
+		LaunchID:              id,
 		CoordinatorID:   coordinatorID,
 		GenesisChainID:  GenesisChainID(),
 		CreatedAt:       time.Now().Unix(),
@@ -32,9 +32,9 @@ func Chain(id uint64, coordinatorID uint64) launch.Chain {
 }
 
 // GenesisAccount returns a sample GenesisAccount
-func GenesisAccount(chainID uint64, address string) launch.GenesisAccount {
+func GenesisAccount(launchID uint64, address string) launch.GenesisAccount {
 	return launch.GenesisAccount{
-		ChainID: chainID,
+		LaunchID: launchID,
 		Address: address,
 		Coins:   Coins(),
 	}
@@ -46,9 +46,9 @@ func VestingOptions() launch.VestingOptions {
 }
 
 // VestingAccount returns a sample VestingAccount
-func VestingAccount(chainID uint64, address string) launch.VestingAccount {
+func VestingAccount(launchID uint64, address string) launch.VestingAccount {
 	return launch.VestingAccount{
-		ChainID:         chainID,
+		LaunchID:         launchID,
 		Address:         address,
 		StartingBalance: Coins(),
 		VestingOptions:  VestingOptions(),
@@ -63,9 +63,9 @@ func AccountRemoval(address string) *launch.AccountRemoval {
 }
 
 // GenesisValidator returns a sample GenesisValidator
-func GenesisValidator(chainID uint64, address string) launch.GenesisValidator {
+func GenesisValidator(launchID uint64, address string) launch.GenesisValidator {
 	return launch.GenesisValidator{
-		ChainID:        chainID,
+		LaunchID:        launchID,
 		Address:        address,
 		GenTx:          Bytes(200),
 		ConsPubKey:     Bytes(10),
@@ -81,10 +81,10 @@ func ValidatorRemoval(address string) launch.ValidatorRemoval {
 	}
 }
 
-// RequestWithContent creates a launch request object with chain id and content
-func RequestWithContent(chainID uint64, content launch.RequestContent) launch.Request {
+// RequestWithContent creates a launch request object with launch id and content
+func RequestWithContent(launchID uint64, content launch.RequestContent) launch.Request {
 	return launch.Request{
-		ChainID:   chainID,
+		LaunchID:   launchID,
 		Creator:   Address(),
 		CreatedAt: time.Now().Unix(),
 		Content:   content,
@@ -92,26 +92,26 @@ func RequestWithContent(chainID uint64, content launch.RequestContent) launch.Re
 }
 
 // AllRequestContents creates all contents types for request
-func AllRequestContents(chainID uint64, genesis, vesting, validator string) []launch.RequestContent {
+func AllRequestContents(launchID uint64, genesis, vesting, validator string) []launch.RequestContent {
 	return []launch.RequestContent{
-		launch.NewGenesisAccount(chainID, genesis, Coins()),
+		launch.NewGenesisAccount(launchID, genesis, Coins()),
 		launch.NewAccountRemoval(genesis),
-		launch.NewVestingAccount(chainID, vesting, Coins(), VestingOptions()),
+		launch.NewVestingAccount(launchID, vesting, Coins(), VestingOptions()),
 		launch.NewAccountRemoval(vesting),
-		launch.NewGenesisValidator(chainID, validator, Bytes(300), Bytes(30), Coin(), String(30)),
+		launch.NewGenesisValidator(launchID, validator, Bytes(300), Bytes(30), Coin(), String(30)),
 		launch.NewValidatorRemoval(validator),
 	}
 }
 
 // GenesisAccountContent returns a sample GenesisAccount request content
-func GenesisAccountContent(chainID uint64, address string) launch.RequestContent {
-	return launch.NewGenesisAccount(chainID, address, Coins())
+func GenesisAccountContent(launchID uint64, address string) launch.RequestContent {
+	return launch.NewGenesisAccount(launchID, address, Coins())
 }
 
 // Request returns a sample Request
-func Request(chainID uint64, address string) launch.Request {
-	content := GenesisAccountContent(chainID, address)
-	return RequestWithContent(chainID, content)
+func Request(launchID uint64, address string) launch.Request {
+	content := GenesisAccountContent(launchID, address)
+	return RequestWithContent(launchID, content)
 }
 
 // MsgCreateChain returns a sample MsgCreateChain
@@ -136,7 +136,7 @@ func MsgCreateChain(coordAddress, genesisURL string, hasCampaign bool, campaignI
 // MsgEditChain returns a sample MsgEditChain
 func MsgEditChain(
 	coordAddress string,
-	chainID uint64,
+	launchID uint64,
 	modifyGenesisChainID,
 	modifySource,
 	modifyInitialGenesis,
@@ -163,7 +163,7 @@ func MsgEditChain(
 
 	return *launch.NewMsgEditChain(
 		coordAddress,
-		chainID,
+		launchID,
 		genesisChainID,
 		sourceURL,
 		sourceHash,
@@ -172,47 +172,47 @@ func MsgEditChain(
 }
 
 // MsgRequestAddAccount returns a sample MsgRequestAddAccount
-func MsgRequestAddAccount(address string, chainID uint64) launch.MsgRequestAddAccount {
+func MsgRequestAddAccount(address string, launchID uint64) launch.MsgRequestAddAccount {
 	return *launch.NewMsgRequestAddAccount(
 		address,
-		chainID,
+		launchID,
 		Coins(),
 	)
 }
 
 // MsgRequestAddVestingAccount returns a sample MsgRequestAddVestingAccount
-func MsgRequestAddVestingAccount(address string, chainID uint64) launch.MsgRequestAddVestingAccount {
+func MsgRequestAddVestingAccount(address string, launchID uint64) launch.MsgRequestAddVestingAccount {
 	return *launch.NewMsgRequestAddVestingAccount(
 		address,
-		chainID,
+		launchID,
 		Coins(),
 		VestingOptions(),
 	)
 }
 
 // MsgRequestRemoveAccount returns a sample MsgRequestRemoveAccount
-func MsgRequestRemoveAccount(creator, address string, chainID uint64) launch.MsgRequestRemoveAccount {
+func MsgRequestRemoveAccount(creator, address string, launchID uint64) launch.MsgRequestRemoveAccount {
 	return *launch.NewMsgRequestRemoveAccount(
-		chainID,
+		launchID,
 		creator,
 		address,
 	)
 }
 
 // MsgRequestRemoveValidator returns a sample MsgRequestRemoveValidator
-func MsgRequestRemoveValidator(creator, validatorAddr string, chainID uint64) launch.MsgRequestRemoveValidator {
+func MsgRequestRemoveValidator(creator, validatorAddr string, launchID uint64) launch.MsgRequestRemoveValidator {
 	return *launch.NewMsgRequestRemoveValidator(
-		chainID,
+		launchID,
 		creator,
 		validatorAddr,
 	)
 }
 
 // MsgRequestAddValidator returns a sample MsgRequestAddValidator
-func MsgRequestAddValidator(address string, chainID uint64) launch.MsgRequestAddValidator {
+func MsgRequestAddValidator(address string, launchID uint64) launch.MsgRequestAddValidator {
 	return *launch.NewMsgRequestAddValidator(
 		address,
-		chainID,
+		launchID,
 		Bytes(500),
 		Bytes(30),
 		Coin(),
@@ -221,29 +221,29 @@ func MsgRequestAddValidator(address string, chainID uint64) launch.MsgRequestAdd
 }
 
 // MsgRevertLaunch returns a sample MsgRevertLaunch
-func MsgRevertLaunch(coordinator string, chainID uint64) launch.MsgRevertLaunch {
+func MsgRevertLaunch(coordinator string, launchID uint64) launch.MsgRevertLaunch {
 	return *launch.NewMsgRevertLaunch(
 		coordinator,
-		chainID,
+		launchID,
 	)
 }
 
 // MsgTriggerLaunch returns a sample MsgTriggerLaunch
-func MsgTriggerLaunch(coordinator string, chainID uint64) launch.MsgTriggerLaunch {
+func MsgTriggerLaunch(coordinator string, launchID uint64) launch.MsgTriggerLaunch {
 	launchTimeRange := int(launch.DefaultMaxLaunchTime - launch.DefaultMinLaunchTime)
 	launchTime := uint64(rand.Intn(launchTimeRange)) + launch.DefaultMinLaunchTime
 	return *launch.NewMsgTriggerLaunch(
 		coordinator,
-		chainID,
+		launchID,
 		launchTime,
 	)
 }
 
 // MsgSettleRequest returns a sample MsgSettleRequest
-func MsgSettleRequest(coordinator string, chainID, requestID uint64, approve bool) launch.MsgSettleRequest {
+func MsgSettleRequest(coordinator string, launchID, requestID uint64, approve bool) launch.MsgSettleRequest {
 	return *launch.NewMsgSettleRequest(
 		coordinator,
-		chainID,
+		launchID,
 		requestID,
 		approve,
 	)
@@ -297,11 +297,11 @@ func LaunchGenesisState(addresses ...string) launch.GenesisState {
 		},
 		RequestCountList: []launch.RequestCount{
 			{
-				ChainID: 0,
+				LaunchID: 0,
 				Count:   1,
 			},
 			{
-				ChainID: 1,
+				LaunchID: 1,
 				Count:   2,
 			},
 		},
