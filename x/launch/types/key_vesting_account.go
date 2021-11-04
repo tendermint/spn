@@ -6,15 +6,15 @@ const (
 )
 
 // VestingAccountKey returns the store key to retrieve a VestingAccount from the index fields
-func VestingAccountKey(chainID uint64, address string) []byte {
-	chainIDBytes := append(uintBytes(chainID), byte('/'))
+func VestingAccountKey(launchID uint64, address string) []byte {
+	launchIDBytes := append(uintBytes(launchID), byte('/'))
 	addressBytes := append([]byte(address), byte('/'))
-	return append(chainIDBytes, addressBytes...)
+	return append(launchIDBytes, addressBytes...)
 }
 
-// VestingAccountAllKey returns the store key to retrieve all VestingAccount by chainID
-func VestingAccountAllKey(chainID uint64) []byte {
+// VestingAccountAllKey returns the store key to retrieve all VestingAccount by launchID
+func VestingAccountAllKey(launchID uint64) []byte {
 	prefixBytes := []byte(VestingAccountKeyPrefix)
-	chainIDBytes := append(uintBytes(chainID), byte('/'))
-	return append(prefixBytes, chainIDBytes...)
+	launchIDBytes := append(uintBytes(launchID), byte('/'))
+	return append(prefixBytes, launchIDBytes...)
 }

@@ -14,7 +14,7 @@ import (
 
 func CmdRequestAddAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-account [chain-id] [coins]",
+		Use:   "request-add-account [launch-id] [coins]",
 		Short: "Request to add an account",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -28,14 +28,14 @@ func CmdRequestAddAccount() *cobra.Command {
 				return fmt.Errorf("failed to parse coins: %w", err)
 			}
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			msg := types.NewMsgRequestAddAccount(
 				clientCtx.GetFromAddress().String(),
-				chainID,
+				launchID,
 				coins,
 			)
 			if err := msg.ValidateBasic(); err != nil {

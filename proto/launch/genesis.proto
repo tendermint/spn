@@ -26,6 +26,6 @@ message GenesisState {
 }
 
 message RequestCount {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   uint64 count = 2;
 }

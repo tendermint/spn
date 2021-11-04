@@ -14,32 +14,32 @@ func (k msgServer) RequestAddAccount(
 ) (*types.MsgRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	chain, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.LaunchID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
 	if chain.IsMainnet {
 		return nil, sdkerrors.Wrapf(
 			types.ErrAddMainnetAccount,
 			"the chain %d is a mainnet",
-			msg.ChainID,
+			msg.LaunchID,
 		)
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.LaunchID)
 	}
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
-			"the chain %d coordinator has been deleted", chain.Id)
+			"the chain %d coordinator has been deleted", chain.LaunchID)
 	}
 
-	content := types.NewGenesisAccount(msg.ChainID, msg.Address, msg.Coins)
+	content := types.NewGenesisAccount(msg.LaunchID, msg.Address, msg.Coins)
 	request := types.Request{
-		ChainID:   msg.ChainID,
+		LaunchID:  msg.LaunchID,
 		Creator:   msg.Address,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
@@ -48,7 +48,7 @@ func (k msgServer) RequestAddAccount(
 	var requestID uint64
 	approved := false
 	if msg.Address == coordAddress {
-		err := ApplyRequest(ctx, k.Keeper, msg.ChainID, request)
+		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err
 		}

@@ -11,7 +11,7 @@ func (k Keeper) SetGenesisValidator(ctx sdk.Context, genesisValidator types.Gene
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisValidatorKeyPrefix))
 	b := k.cdc.MustMarshal(&genesisValidator)
 	store.Set(types.GenesisValidatorKey(
-		genesisValidator.ChainID,
+		genesisValidator.LaunchID,
 		genesisValidator.Address,
 	), b)
 }
@@ -19,13 +19,13 @@ func (k Keeper) SetGenesisValidator(ctx sdk.Context, genesisValidator types.Gene
 // GetGenesisValidator returns a genesisValidator from its index
 func (k Keeper) GetGenesisValidator(
 	ctx sdk.Context,
-	chainID uint64,
+	launchID uint64,
 	address string,
 
 ) (val types.GenesisValidator, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisValidatorKeyPrefix))
 
-	b := store.Get(types.GenesisValidatorKey(chainID, address))
+	b := store.Get(types.GenesisValidatorKey(launchID, address))
 	if b == nil {
 		return val, false
 	}
@@ -37,12 +37,12 @@ func (k Keeper) GetGenesisValidator(
 // RemoveGenesisValidator removes a genesisValidator from the store
 func (k Keeper) RemoveGenesisValidator(
 	ctx sdk.Context,
-	chainID uint64,
+	launchID uint64,
 	address string,
 
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisValidatorKeyPrefix))
-	store.Delete(types.GenesisValidatorKey(chainID, address))
+	store.Delete(types.GenesisValidatorKey(launchID, address))
 }
 
 // GetAllGenesisValidator returns all genesisValidator

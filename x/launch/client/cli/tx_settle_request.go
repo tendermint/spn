@@ -20,7 +20,7 @@ var (
 
 func CmdSettleRequest() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "settle-request [approve|reject] [chain-id] [request-id]",
+		Use:   "settle-request [approve|reject] [launch-id] [request-id]",
 		Short: "Approve or reject a pending request",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -42,14 +42,14 @@ func CmdSettleRequest() *cobra.Command {
 				return err
 			}
 
-			chainID, err := strconv.ParseUint(args[1], 10, 64)
+			launchID, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			msg := types.NewMsgSettleRequest(
 				clientCtx.GetFromAddress().String(),
-				chainID,
+				launchID,
 				requestID,
 				approve,
 			)

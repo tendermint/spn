@@ -6,15 +6,15 @@ const (
 )
 
 // GenesisAccountKey returns the store key to retrieve a GenesisAccount from the index fields
-func GenesisAccountKey(chainID uint64, address string) []byte {
-	chainIDBytes := append(uintBytes(chainID), byte('/'))
+func GenesisAccountKey(launchID uint64, address string) []byte {
+	launchIDBytes := append(uintBytes(launchID), byte('/'))
 	addressBytes := append([]byte(address), byte('/'))
-	return append(chainIDBytes, addressBytes...)
+	return append(launchIDBytes, addressBytes...)
 }
 
-// GenesisAccountAllKey returns the store key to retrieve all GenesisAccount by chainID
-func GenesisAccountAllKey(chainID uint64) []byte {
+// GenesisAccountAllKey returns the store key to retrieve all GenesisAccount by launchID
+func GenesisAccountAllKey(launchID uint64) []byte {
 	prefixBytes := []byte(GenesisAccountKeyPrefix)
-	chainIDBytes := append(uintBytes(chainID), byte('/'))
-	return append(prefixBytes, chainIDBytes...)
+	launchIDBytes := append(uintBytes(launchID), byte('/'))
+	return append(prefixBytes, launchIDBytes...)
 }

@@ -10,7 +10,7 @@ import (
 )
 
 func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
-	chainID := uint64(0)
+	launchID := uint64(0)
 	tests := []struct {
 		name string
 		msg  types.MsgSettleRequest
@@ -20,7 +20,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 			name: "invalid coordinator address",
 			msg: types.MsgSettleRequest{
 				Coordinator: "invalid_address",
-				ChainID:     chainID,
+				LaunchID:    launchID,
 				RequestID:   10,
 				Approve:     true,
 			},
@@ -30,7 +30,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 			name: "valid message",
 			msg: types.MsgSettleRequest{
 				Coordinator: sample.Address(),
-				ChainID:     chainID,
+				LaunchID:    launchID,
 				RequestID:   10,
 				Approve:     true,
 			},

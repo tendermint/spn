@@ -14,7 +14,7 @@ import (
 
 func CmdRequestAddValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-validator [chain-id] [gentx-file] [consensus-public-key] [self-delegation] [peer]",
+		Use:   "request-add-validator [launch-id] [gentx-file] [consensus-public-key] [self-delegation] [peer]",
 		Short: "Send a request for a genesis validator",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -35,14 +35,14 @@ func CmdRequestAddValidator() *cobra.Command {
 				return err
 			}
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			msg := types.NewMsgRequestAddValidator(
 				clientCtx.GetFromAddress().String(),
-				chainID,
+				launchID,
 				gentxBytes,
 				[]byte(args[2]),
 				selfDelegation,

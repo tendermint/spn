@@ -36,12 +36,12 @@ message MsgCreateChain {
 }
 
 message MsgCreateChainResponse {
-  uint64 id = 1;
+  uint64 launchID = 1;
 }
 
 message MsgEditChain {
   string coordinator = 1;
-  uint64 chainID = 2;
+  uint64 launchID = 2;
   string genesisChainID = 3;
   string sourceURL = 4;
   string sourceHash = 5;
@@ -51,26 +51,26 @@ message MsgEditChain {
 message MsgEditChainResponse {}
 
 message MsgRequestAddAccount {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   string address = 2;
   repeated cosmos.base.v1beta1.Coin Coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 message MsgRequestAddVestingAccount {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   string address = 2;
   repeated cosmos.base.v1beta1.Coin startingBalance = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
   VestingOptions options = 4 [(gogoproto.nullable) = false];
 }
 
 message MsgRequestRemoveAccount {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   string creator = 2;
   string address = 3;
 }
 
 message MsgRequestAddValidator {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   string valAddress = 2;
   bytes genTx = 3;
   bytes consPubKey = 4;
@@ -79,7 +79,7 @@ message MsgRequestAddValidator {
 }
 
 message MsgRequestRemoveValidator {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   string creator = 2;
   string validatorAddress = 3;
 }
@@ -91,7 +91,7 @@ message MsgRequestResponse {
 
 message MsgSettleRequest {
   string coordinator = 1;
-  uint64 chainID = 2;
+  uint64 launchID = 2;
   uint64 requestID = 3;
   bool approve = 4;
 }
@@ -100,7 +100,7 @@ message MsgSettleRequestResponse {}
 
 message MsgTriggerLaunch {
   string coordinator = 1;
-  uint64 chainID = 2;
+  uint64 launchID = 2;
   uint64 remainingTime = 3;
 }
 
@@ -108,7 +108,7 @@ message MsgTriggerLaunchResponse {}
 
 message MsgRevertLaunch {
   string coordinator = 1;
-  uint64 chainID = 2;
+  uint64 launchID = 2;
 }
 
 message MsgRevertLaunchResponse {}

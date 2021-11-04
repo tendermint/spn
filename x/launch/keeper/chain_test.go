@@ -189,7 +189,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 func createNChain(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Chain {
 	items := make([]types.Chain, n)
 	for i := range items {
-		items[i].Id = keeper.AppendChain(ctx, items[i])
+		items[i].LaunchID = keeper.AppendChain(ctx, items[i])
 	}
 	return items
 }
@@ -198,7 +198,7 @@ func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordina
 	items := make([]types.Chain, n)
 	for i := range items {
 		items[i].CoordinatorID = coordinatorID
-		items[i].Id = keeper.AppendChain(ctx, items[i])
+		items[i].LaunchID = keeper.AppendChain(ctx, items[i])
 	}
 	return items
 }
@@ -207,7 +207,7 @@ func TestGetChain(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetChain(ctx, item.Id)
+		rst, found := keeper.GetChain(ctx, item.LaunchID)
 		require.True(t, found)
 		require.Equal(t, item, rst)
 	}
@@ -217,8 +217,8 @@ func TestRemoveChain(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveChain(ctx, item.Id)
-		_, found := keeper.GetChain(ctx, item.Id)
+		keeper.RemoveChain(ctx, item.LaunchID)
+		_, found := keeper.GetChain(ctx, item.LaunchID)
 		require.False(t, found)
 	}
 }

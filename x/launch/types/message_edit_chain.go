@@ -13,7 +13,7 @@ var _ sdk.Msg = &MsgEditChain{}
 
 func NewMsgEditChain(
 	coordinator string,
-	chainID uint64,
+	launchID uint64,
 	genesisChainID,
 	sourceURL,
 	sourceHash string,
@@ -21,7 +21,7 @@ func NewMsgEditChain(
 ) *MsgEditChain {
 	return &MsgEditChain{
 		Coordinator:    coordinator,
-		ChainID:        chainID,
+		LaunchID:       launchID,
 		GenesisChainID: genesisChainID,
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,

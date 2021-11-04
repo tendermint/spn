@@ -44,7 +44,7 @@ func TestShowGenesisAccount(t *testing.T) {
 	}
 	for _, tc := range []struct {
 		desc      string
-		idChainID string
+		idLaunchID string
 		idAddress string
 
 		args []string
@@ -53,7 +53,7 @@ func TestShowGenesisAccount(t *testing.T) {
 	}{
 		{
 			desc:      "found",
-			idChainID: strconv.Itoa(int(objs[0].ChainID)),
+			idLaunchID: strconv.Itoa(int(objs[0].LaunchID)),
 			idAddress: objs[0].Address,
 
 			args: common,
@@ -61,7 +61,7 @@ func TestShowGenesisAccount(t *testing.T) {
 		},
 		{
 			desc:      "not found",
-			idChainID: strconv.Itoa(100000),
+			idLaunchID: strconv.Itoa(100000),
 			idAddress: strconv.Itoa(100000),
 
 			args: common,
@@ -71,7 +71,7 @@ func TestShowGenesisAccount(t *testing.T) {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idChainID,
+				tc.idLaunchID,
 				tc.idAddress,
 			}
 			args = append(args, tc.args...)
@@ -94,7 +94,7 @@ func TestShowGenesisAccount(t *testing.T) {
 func TestListGenesisAccount(t *testing.T) {
 	net, objs := networkWithGenesisAccountObjects(t, 5)
 
-	chainID := objs[0].ChainID
+	chainID := objs[0].LaunchID
 	ctx := net.Validators[0].ClientCtx
 	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{

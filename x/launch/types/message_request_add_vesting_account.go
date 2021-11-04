@@ -11,12 +11,12 @@ var _ sdk.Msg = &MsgRequestAddVestingAccount{}
 
 func NewMsgRequestAddVestingAccount(
 	address string,
-	chainID uint64,
+	launchID uint64,
 	coins sdk.Coins,
 	options VestingOptions,
 ) *MsgRequestAddVestingAccount {
 	return &MsgRequestAddVestingAccount{
-		ChainID:         chainID,
+		LaunchID:        launchID,
 		Address:         address,
 		StartingBalance: coins,
 		Options:         options,

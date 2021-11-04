@@ -11,7 +11,7 @@ var _ sdk.Msg = &MsgRequestAddValidator{}
 
 func NewMsgRequestAddValidator(
 	valAddress string,
-	chainID uint64,
+	launchID uint64,
 	genTx,
 	consPubKey []byte,
 	selfDelegation sdk.Coin,
@@ -19,7 +19,7 @@ func NewMsgRequestAddValidator(
 ) *MsgRequestAddValidator {
 	return &MsgRequestAddValidator{
 		ValAddress:     valAddress,
-		ChainID:        chainID,
+		LaunchID:       launchID,
 		GenTx:          genTx,
 		ConsPubKey:     consPubKey,
 		SelfDelegation: selfDelegation,

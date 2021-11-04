@@ -9,10 +9,10 @@ const TypeMsgSettleRequest = "settle_request"
 
 var _ sdk.Msg = &MsgSettleRequest{}
 
-func NewMsgSettleRequest(coordinator string, chainID uint64, requestID uint64, approve bool) *MsgSettleRequest {
+func NewMsgSettleRequest(coordinator string, launchID uint64, requestID uint64, approve bool) *MsgSettleRequest {
 	return &MsgSettleRequest{
 		Coordinator: coordinator,
-		ChainID:     chainID,
+		LaunchID:    launchID,
 		RequestID:   requestID,
 		Approve:     approve,
 	}

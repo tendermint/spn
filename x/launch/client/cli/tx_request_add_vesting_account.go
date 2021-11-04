@@ -14,7 +14,7 @@ import (
 
 func CmdRequestAddVestingAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-vesting-account [chain-id] [starting-balance] [vesting-coins] [vesting-end-time]",
+		Use:   "request-add-vesting-account [launch-id] [starting-balance] [vesting-coins] [vesting-end-time]",
 		Short: "Request to add a vesting account",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -37,14 +37,14 @@ func CmdRequestAddVestingAccount() *cobra.Command {
 
 			delayedVesting := *types.NewDelayedVesting(vestingCoins, int64(endTime))
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			msg := types.NewMsgRequestAddVestingAccount(
 				clientCtx.GetFromAddress().String(),
-				chainID,
+				launchID,
 				startingBalance,
 				delayedVesting,
 			)

@@ -20,7 +20,7 @@ func (k Keeper) GenesisValidatorAll(c context.Context, req *types.QueryAllGenesi
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	genesisValidatorStore := prefix.NewStore(store, types.GenesisValidatorAllKey(req.ChainID))
+	genesisValidatorStore := prefix.NewStore(store, types.GenesisValidatorAllKey(req.LaunchID))
 
 	pageRes, err := query.Paginate(genesisValidatorStore, req.Pagination, func(key []byte, value []byte) error {
 		var genesisValidator types.GenesisValidator
@@ -47,7 +47,7 @@ func (k Keeper) GenesisValidator(c context.Context, req *types.QueryGetGenesisVa
 
 	val, found := k.GetGenesisValidator(
 		ctx,
-		req.ChainID,
+		req.LaunchID,
 		req.Address,
 	)
 	if !found {

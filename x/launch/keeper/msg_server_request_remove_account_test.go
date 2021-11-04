@@ -34,9 +34,9 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 	chains[5].HasCampaign = true
 	k.SetChain(sdkCtx, chains[5])
 
-	k.SetVestingAccount(sdkCtx, types.VestingAccount{ChainID: chains[3].Id, Address: addr1})
-	k.SetVestingAccount(sdkCtx, types.VestingAccount{ChainID: chains[4].Id, Address: addr2})
-	k.SetVestingAccount(sdkCtx, types.VestingAccount{ChainID: chains[4].Id, Address: addr4})
+	k.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[3].LaunchID, Address: addr1})
+	k.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[4].LaunchID, Address: addr2})
+	k.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[4].LaunchID, Address: addr4})
 
 	tests := []struct {
 		name        string
@@ -48,117 +48,117 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: invalidChain,
-				Creator: addr1,
-				Address: addr1,
+				LaunchID: invalidChain,
+				Creator:  addr1,
+				Address:  addr1,
 			},
 			err: types.ErrChainNotFound,
 		},
 		{
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[0].Id,
-				Creator: addr1,
-				Address: addr1,
+				LaunchID: chains[0].LaunchID,
+				Creator:  addr1,
+				Address:  addr1,
 			},
 			err: types.ErrTriggeredLaunch,
 		},
 		{
 			name: "coordinator not found",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[1].Id,
-				Creator: addr1,
-				Address: addr1,
+				LaunchID: chains[1].LaunchID,
+				Creator:  addr1,
+				Address:  addr1,
 			},
 			err: types.ErrChainInactive,
 		},
 		{
 			name: "no permission error",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[2].Id,
-				Creator: addr1,
-				Address: addr3,
+				LaunchID: chains[2].LaunchID,
+				Creator:  addr1,
+				Address:  addr3,
 			},
 			err: types.ErrNoAddressPermission,
 		},
 		{
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[2].Id,
-				Creator: addr1,
-				Address: addr1,
+				LaunchID: chains[2].LaunchID,
+				Creator:  addr1,
+				Address:  addr1,
 			},
 			wantID: 0,
 		},
 		{
 			name: "add chain 4 request 2",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[3].Id,
-				Creator: coordAddr,
-				Address: addr1,
+				LaunchID: chains[3].LaunchID,
+				Creator:  coordAddr,
+				Address:  addr1,
 			},
 			wantApprove: true,
 		},
 		{
 			name: "add chain 4 request 3",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[3].Id,
-				Creator: addr2,
-				Address: addr2,
+				LaunchID: chains[3].LaunchID,
+				Creator:  addr2,
+				Address:  addr2,
 			},
 			wantID: 0,
 		},
 		{
 			name: "add chain 5 request 1",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].Id,
-				Creator: addr1,
-				Address: addr1,
+				LaunchID: chains[4].LaunchID,
+				Creator:  addr1,
+				Address:  addr1,
 			},
 			wantID: 0,
 		},
 		{
 			name: "add chain 5 request 2",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].Id,
-				Creator: coordAddr,
-				Address: addr2,
+				LaunchID: chains[4].LaunchID,
+				Creator:  coordAddr,
+				Address:  addr2,
 			},
 			wantApprove: true,
 		},
 		{
 			name: "add chain 5 request 3",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].Id,
-				Creator: addr3,
-				Address: addr3,
+				LaunchID: chains[4].LaunchID,
+				Creator:  addr3,
+				Address:  addr3,
 			},
 			wantID: 1,
 		},
 		{
 			name: "request from coordinator is pre-approved",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].Id,
-				Creator: coordAddr,
-				Address: addr4,
+				LaunchID: chains[4].LaunchID,
+				Creator:  coordAddr,
+				Address:  addr4,
 			},
 			wantApprove: true,
 		},
 		{
 			name: "failing request from coordinator",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[4].Id,
-				Creator: coordAddr,
-				Address: addr4,
+				LaunchID: chains[4].LaunchID,
+				Creator:  coordAddr,
+				Address:  addr4,
 			},
 			err: types.ErrAccountNotFound,
 		},
 		{
 			name: "is mainnet chain",
 			msg: types.MsgRequestRemoveAccount{
-				ChainID: chains[5].Id,
-				Creator: coordAddr,
-				Address: addr1,
+				LaunchID: chains[5].LaunchID,
+				Creator:  coordAddr,
+				Address:  addr1,
 			},
 			err: types.ErrRemoveMainnetAccount,
 		},
@@ -175,7 +175,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
 			if !tt.wantApprove {
-				request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, got.RequestID)
+				request, found := k.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
@@ -183,9 +183,9 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
 			} else {
-				_, foundGenesis := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
+				_, foundGenesis := k.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.False(t, foundGenesis, "genesis account not removed")
-				_, foundVesting := k.GetVestingAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
+				_, foundVesting := k.GetVestingAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.False(t, foundVesting, "vesting account not removed")
 			}
 		})
