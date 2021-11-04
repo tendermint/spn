@@ -13,9 +13,9 @@ import (
 func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLaunch) (*types.MsgTriggerLaunchResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	chain, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.LaunchID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
 	// Check sender is the coordinator of the chain
@@ -31,7 +31,7 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.LaunchID)
 	}
 
 	if msg.RemainingTime < k.MinLaunchTime(ctx) {

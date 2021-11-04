@@ -95,7 +95,7 @@ func FindRandomRequest(
 		requests[i], requests[j] = requests[j], requests[i]
 	})
 	for _, req := range requests {
-		chain, chainFound := k.GetChain(ctx, req.ChainID)
+		chain, chainFound := k.GetChain(ctx, req.LaunchID)
 		if !chainFound || chain.LaunchTriggered {
 			continue
 		}
@@ -109,14 +109,14 @@ func FindRandomRequest(
 			// if is validator removal, check if the validator exist
 			if _, found := k.GetGenesisValidator(
 				ctx,
-				chain.Id,
+				chain.LaunchID,
 				content.ValidatorRemoval.ValAddress,
 			); !found {
 				continue
 			}
 		case *types.RequestContent_AccountRemoval:
 			// if is account removal, check if account exist
-			found, err := keeper.CheckAccount(ctx, k, chain.Id, content.AccountRemoval.Address)
+			found, err := keeper.CheckAccount(ctx, k, chain.LaunchID, content.AccountRemoval.Address)
 			if err != nil || !found {
 				continue
 			}
@@ -140,12 +140,12 @@ func FindRandomValidator(
 		valAccs[i], valAccs[j] = valAccs[j], valAccs[i]
 	})
 	for _, acc := range valAccs {
-		if IsLaunchTriggeredChain(ctx, k, acc.ChainID) {
+		if IsLaunchTriggeredChain(ctx, k, acc.LaunchID) {
 			continue
 		}
 		// get coordinator account for removal
 		var err error
-		simAccount, err = FindChainCoordinatorAccount(ctx, k, accs, acc.ChainID)
+		simAccount, err = FindChainCoordinatorAccount(ctx, k, accs, acc.LaunchID)
 		if err != nil {
 			continue
 		}

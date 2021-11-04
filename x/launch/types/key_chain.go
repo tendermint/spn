@@ -9,6 +9,6 @@ const (
 )
 
 // ChainKey returns the store key to retrieve a Chain from the index fields
-func ChainKey(chainID uint64) []byte {
-	return append(uintBytes(chainID), byte('/'))
+func ChainKey(launchID uint64) []byte {
+	return append(uintBytes(launchID), byte('/'))
 }

@@ -26,7 +26,7 @@ func TestGenesisValidatorGet(t *testing.T) {
 	items := createNGenesisValidator(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetGenesisValidator(ctx,
-			item.ChainID,
+			item.LaunchID,
 			item.Address,
 		)
 		require.True(t, found)
@@ -38,11 +38,11 @@ func TestGenesisValidatorRemove(t *testing.T) {
 	items := createNGenesisValidator(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveGenesisValidator(ctx,
-			item.ChainID,
+			item.LaunchID,
 			item.Address,
 		)
 		_, found := keeper.GetGenesisValidator(ctx,
-			item.ChainID,
+			item.LaunchID,
 			item.Address,
 		)
 		require.False(t, found)

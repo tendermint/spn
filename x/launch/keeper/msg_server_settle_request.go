@@ -14,38 +14,38 @@ func (k msgServer) SettleRequest(
 ) (*types.MsgSettleRequestResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	chain, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.LaunchID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.LaunchID)
 	}
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
-			"the chain %d coordinator has been deleted", chain.Id)
+			"the chain %d coordinator has been deleted", chain.LaunchID)
 	}
 	if msg.Coordinator != coordAddress {
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Coordinator)
 	}
 
 	// first check if the request exists
-	request, found := k.GetRequest(ctx, msg.ChainID, msg.RequestID)
+	request, found := k.GetRequest(ctx, msg.LaunchID, msg.RequestID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrRequestNotFound,
 			"request %d for chain %d not found",
 			msg.RequestID,
-			msg.ChainID,
+			msg.LaunchID,
 		)
 	}
 
 	// perform request action
-	k.RemoveRequest(ctx, msg.ChainID, request.RequestID)
+	k.RemoveRequest(ctx, msg.LaunchID, request.RequestID)
 	if msg.Approve {
-		err := ApplyRequest(ctx, k.Keeper, msg.ChainID, request)
+		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err
 		}

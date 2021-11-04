@@ -11,14 +11,14 @@ import (
 )
 
 func TestNewGenesisAccount(t *testing.T) {
-	chainID := uint64(0)
+	launchID := uint64(0)
 	address := sample.Address()
 	coins := sample.Coins()
-	requestContent := types.NewGenesisAccount(chainID, address, coins)
+	requestContent := types.NewGenesisAccount(launchID, address, coins)
 
 	genesisAccount := requestContent.GetGenesisAccount()
 	require.NotNil(t, genesisAccount)
-	require.EqualValues(t, chainID, genesisAccount.ChainID)
+	require.EqualValues(t, launchID, genesisAccount.LaunchID)
 	require.EqualValues(t, address, genesisAccount.Address)
 	require.True(t, coins.IsEqual(genesisAccount.Coins))
 
@@ -29,15 +29,15 @@ func TestNewGenesisAccount(t *testing.T) {
 }
 
 func TestNewVestingAccount(t *testing.T) {
-	chainID := uint64(0)
+	launchID := uint64(0)
 	address := sample.Address()
 	startingBalance := sample.Coins()
 	vestingOptions := sample.VestingOptions()
-	requestContent := types.NewVestingAccount(chainID, address, startingBalance, vestingOptions)
+	requestContent := types.NewVestingAccount(launchID, address, startingBalance, vestingOptions)
 
 	vestingAccount := requestContent.GetVestingAccount()
 	require.NotNil(t, vestingAccount)
-	require.EqualValues(t, chainID, vestingAccount.ChainID)
+	require.EqualValues(t, launchID, vestingAccount.LaunchID)
 	require.EqualValues(t, address, vestingAccount.Address)
 	require.True(t, startingBalance.IsEqual(vestingAccount.StartingBalance))
 	require.Equal(t, vestingOptions, vestingAccount.VestingOptions)
@@ -49,17 +49,17 @@ func TestNewVestingAccount(t *testing.T) {
 }
 
 func TestNewGenesisValidator(t *testing.T) {
-	chainID := uint64(0)
+	launchID := uint64(0)
 	address := sample.Address()
 	gentTx := sample.Bytes(300)
 	consPubKey := sample.Bytes(30)
 	selfDelegation := sample.Coin()
 	peer := sample.String(30)
-	requestContent := types.NewGenesisValidator(chainID, address, gentTx, consPubKey, selfDelegation, peer)
+	requestContent := types.NewGenesisValidator(launchID, address, gentTx, consPubKey, selfDelegation, peer)
 
 	genesisValidator := requestContent.GetGenesisValidator()
 	require.NotNil(t, genesisValidator)
-	require.EqualValues(t, chainID, genesisValidator.ChainID)
+	require.EqualValues(t, launchID, genesisValidator.LaunchID)
 	require.EqualValues(t, address, genesisValidator.Address)
 	require.EqualValues(t, gentTx, genesisValidator.GenTx)
 	require.EqualValues(t, consPubKey, genesisValidator.ConsPubKey)
@@ -134,8 +134,8 @@ func TestAccountRemoval_Validate(t *testing.T) {
 
 func TestGenesisAccount_Validate(t *testing.T) {
 	var (
-		addr    = sample.Address()
-		chainID = uint64(0)
+		addr     = sample.Address()
+		launchID = uint64(0)
 	)
 	tests := []struct {
 		name    string
@@ -145,36 +145,36 @@ func TestGenesisAccount_Validate(t *testing.T) {
 		{
 			name: "invalid address",
 			content: types.GenesisAccount{
-				Address: "invalid_address",
-				ChainID: chainID,
-				Coins:   sample.Coins(),
+				Address:  "invalid_address",
+				LaunchID: launchID,
+				Coins:    sample.Coins(),
 			},
 			wantErr: true,
 		},
 		{
 			name: "request content without coins",
 			content: types.GenesisAccount{
-				Address: addr,
-				ChainID: chainID,
-				Coins:   sdk.NewCoins(),
+				Address:  addr,
+				LaunchID: launchID,
+				Coins:    sdk.NewCoins(),
 			},
 			wantErr: true,
 		},
 		{
 			name: "request content with invalid coins",
 			content: types.GenesisAccount{
-				Address: addr,
-				ChainID: chainID,
-				Coins:   sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
+				Address:  addr,
+				LaunchID: launchID,
+				Coins:    sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 			},
 			wantErr: true,
 		},
 		{
 			name: "valid request content",
 			content: types.GenesisAccount{
-				Address: sample.Address(),
-				ChainID: chainID,
-				Coins:   sample.Coins(),
+				Address:  sample.Address(),
+				LaunchID: launchID,
+				Coins:    sample.Coins(),
 			},
 		},
 	}
@@ -192,8 +192,8 @@ func TestGenesisAccount_Validate(t *testing.T) {
 
 func TestGenesisValidator_Validate(t *testing.T) {
 	var (
-		addr    = sample.Address()
-		chainID = uint64(0)
+		addr     = sample.Address()
+		launchID = uint64(0)
 	)
 	tests := []struct {
 		name    string
@@ -203,7 +203,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "valid request content",
 			content: types.GenesisValidator{
-				ChainID:        chainID,
+				LaunchID:       launchID,
 				Address:        addr,
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     sample.Bytes(30),
@@ -214,7 +214,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "invalid address",
 			content: types.GenesisValidator{
-				ChainID:        chainID,
+				LaunchID:       launchID,
 				Address:        "invalid_address",
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     sample.Bytes(30),
@@ -226,7 +226,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "empty consensus public key",
 			content: types.GenesisValidator{
-				ChainID:        chainID,
+				LaunchID:       launchID,
 				Address:        addr,
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     nil,
@@ -238,7 +238,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "empty gentx",
 			content: types.GenesisValidator{
-				ChainID:        chainID,
+				LaunchID:       launchID,
 				Address:        addr,
 				GenTx:          nil,
 				ConsPubKey:     sample.Bytes(30),
@@ -250,7 +250,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "empty peer",
 			content: types.GenesisValidator{
-				ChainID:        chainID,
+				LaunchID:       launchID,
 				Address:        addr,
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     sample.Bytes(30),
@@ -262,7 +262,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "invalid self delegation",
 			content: types.GenesisValidator{
-				ChainID:    chainID,
+				LaunchID:   launchID,
 				Address:    addr,
 				GenTx:      sample.Bytes(500),
 				ConsPubKey: sample.Bytes(30),
@@ -277,7 +277,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 		{
 			name: "zero self delegation",
 			content: types.GenesisValidator{
-				ChainID:    chainID,
+				LaunchID:   launchID,
 				Address:    addr,
 				GenTx:      sample.Bytes(500),
 				ConsPubKey: sample.Bytes(30),
@@ -335,7 +335,7 @@ func TestValidatorRemoval_Validate(t *testing.T) {
 }
 
 func TestVestingAccount_Validate(t *testing.T) {
-	chainID := uint64(0)
+	launchID := uint64(0)
 
 	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
 
@@ -347,7 +347,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 		{
 			name: "invalid address",
 			content: types.VestingAccount{
-				ChainID:         chainID,
+				LaunchID:        launchID,
 				Address:         "invalid_address",
 				StartingBalance: sample.Coins(),
 				VestingOptions:  option,
@@ -358,7 +358,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 			name: "invalid coins",
 			content: types.VestingAccount{
 				Address:         sample.Address(),
-				ChainID:         chainID,
+				LaunchID:        launchID,
 				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				VestingOptions:  option,
 			},
@@ -368,7 +368,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 			name: "valid request content",
 			content: types.VestingAccount{
 				Address:         sample.Address(),
-				ChainID:         chainID,
+				LaunchID:        launchID,
 				StartingBalance: sample.Coins(),
 				VestingOptions:  option,
 			},

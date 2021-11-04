@@ -45,7 +45,7 @@ func CmdListChain() *cobra.Command {
 
 func CmdShowChain() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-chain [chain-id]",
+		Use:   "show-chain [launch-id]",
 		Short: "shows a chain",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -59,7 +59,7 @@ func CmdShowChain() *cobra.Command {
 			}
 
 			params := &types.QueryGetChainRequest{
-				Id: id,
+				LaunchID: id,
 			}
 
 			res, err := queryClient.Chain(context.Background(), params)

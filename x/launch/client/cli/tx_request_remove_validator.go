@@ -12,7 +12,7 @@ import (
 
 func CmdRequestRemoveValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-remove-validator [chain-id] [validator-address]",
+		Use:   "request-remove-validator [launch-id] [validator-address]",
 		Short: "Request to remove a genesis validator",
 		Args:  cobra.RangeArgs(1, 2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -27,13 +27,13 @@ func CmdRequestRemoveValidator() *cobra.Command {
 				validator = args[1]
 			}
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			msg := types.NewMsgRequestRemoveValidator(
-				chainID, creator, validator,
+				launchID, creator, validator,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

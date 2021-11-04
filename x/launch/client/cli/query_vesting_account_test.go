@@ -53,7 +53,7 @@ func TestShowVestingAccount(t *testing.T) {
 	}{
 		{
 			desc:      "found",
-			idChainID: strconv.Itoa(int(objs[0].ChainID)),
+			idChainID: strconv.Itoa(int(objs[0].LaunchID)),
 			idAddress: objs[0].Address,
 
 			args: common,
@@ -94,7 +94,7 @@ func TestShowVestingAccount(t *testing.T) {
 func TestListVestingAccount(t *testing.T) {
 	net, objs := networkWithVestingAccountObjects(t, 5)
 
-	chainID := strconv.Itoa(int(objs[0].ChainID))
+	chainID := strconv.Itoa(int(objs[0].LaunchID))
 	ctx := net.Validators[0].ClientCtx
 	request := func(chainID string, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{

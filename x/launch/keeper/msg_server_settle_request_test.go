@@ -32,12 +32,12 @@ func TestMsgSettleRequest(t *testing.T) {
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 
-	requests := createRequests(k, sdkCtx, chains[2].Id, []types.RequestContent{
-		sample.GenesisAccountContent(chains[2].Id, addr1),
-		sample.GenesisAccountContent(chains[2].Id, addr2),
-		sample.GenesisAccountContent(chains[2].Id, addr3),
-		sample.GenesisAccountContent(chains[2].Id, addr4),
-		sample.GenesisAccountContent(chains[2].Id, addr5),
+	requests := createRequests(k, sdkCtx, chains[2].LaunchID, []types.RequestContent{
+		sample.GenesisAccountContent(chains[2].LaunchID, addr1),
+		sample.GenesisAccountContent(chains[2].LaunchID, addr2),
+		sample.GenesisAccountContent(chains[2].LaunchID, addr3),
+		sample.GenesisAccountContent(chains[2].LaunchID, addr4),
+		sample.GenesisAccountContent(chains[2].LaunchID, addr5),
 	})
 
 	tests := []struct {
@@ -49,7 +49,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgSettleRequest{
-				ChainID:     invalidChain,
+				LaunchID:    invalidChain,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -59,7 +59,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "launch triggered chain",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[0].Id,
+				LaunchID:    chains[0].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -69,7 +69,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "coordinator not found",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[1].Id,
+				LaunchID:    chains[1].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -79,7 +79,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "no permission error",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].Id,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator2.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -89,7 +89,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve an invalid request",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].Id,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   99999999,
 				Approve:     true,
@@ -99,7 +99,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 1",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].Id,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[0].RequestID,
 				Approve:     true,
@@ -109,7 +109,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 2",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].Id,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[1].RequestID,
 				Approve:     true,
@@ -119,7 +119,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 3",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].Id,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[2].RequestID,
 				Approve:     true,
@@ -129,7 +129,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "approve chain request 4",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].Id,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[3].RequestID,
 				Approve:     true,
@@ -139,7 +139,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		{
 			name: "reject chain request 5",
 			msg: types.MsgSettleRequest{
-				ChainID:     chains[2].Id,
+				LaunchID:    chains[2].LaunchID,
 				Coordinator: coordinator1.Address,
 				RequestID:   requests[4].RequestID,
 				Approve:     false,
@@ -156,10 +156,10 @@ func TestMsgSettleRequest(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			_, found := k.GetRequest(sdkCtx, tt.msg.ChainID, tt.msg.RequestID)
+			_, found := k.GetRequest(sdkCtx, tt.msg.LaunchID, tt.msg.RequestID)
 			require.False(t, found, "request not removed")
 
-			_, found = k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, tt.checkAddr)
+			_, found = k.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.checkAddr)
 			require.Equal(t, tt.msg.Approve, found, "request apply not performed")
 		})
 	}

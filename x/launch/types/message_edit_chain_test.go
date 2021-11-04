@@ -9,11 +9,11 @@ import (
 )
 
 func TestMsgEditChain_ValidateBasic(t *testing.T) {
-	chainID := uint64(0)
+	launchID := uint64(0)
 
 	msgInvalidGenesisHash := sample.MsgEditChain(
 		sample.Address(),
-		chainID,
+		launchID,
 		false,
 		true,
 		false,
@@ -24,7 +24,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 
 	msgInvalidGenesisChainID := sample.MsgEditChain(
 		sample.Address(),
-		chainID,
+		launchID,
 		false,
 		true,
 		false,
@@ -41,7 +41,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			desc: "valid message",
 			msg: sample.MsgEditChain(
 				sample.Address(),
-				chainID,
+				launchID,
 				true,
 				true,
 				true,
@@ -53,7 +53,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			desc: "valid message with new genesis chain ID",
 			msg: sample.MsgEditChain(
 				sample.Address(),
-				chainID,
+				launchID,
 				true,
 				false,
 				false,
@@ -65,7 +65,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			desc: "valid message with new source",
 			msg: sample.MsgEditChain(
 				sample.Address(),
-				chainID,
+				launchID,
 				false,
 				true,
 				false,
@@ -77,7 +77,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			desc: "valid message with new genesis",
 			msg: sample.MsgEditChain(
 				sample.Address(),
-				chainID,
+				launchID,
 				false,
 				false,
 				true,
@@ -89,7 +89,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			desc: "valid message with new genesis with a custom genesis url",
 			msg: sample.MsgEditChain(
 				sample.Address(),
-				chainID,
+				launchID,
 				false,
 				false,
 				true,
@@ -101,7 +101,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			desc: "invalid coordinator address",
 			msg: sample.MsgEditChain(
 				"invalid",
-				chainID,
+				launchID,
 				false,
 				true,
 				true,
@@ -113,7 +113,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			desc: "no value to edit",
 			msg: sample.MsgEditChain(
 				sample.Address(),
-				chainID,
+				launchID,
 				false,
 				false,
 				false,
