@@ -58,7 +58,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 
 	if msg.GenesisChainID != "" {
 		if _, _, err := chainid.ParseGenesisChainID(msg.GenesisChainID); err != nil {
-			return sdkerrors.Wrapf(ErrInvalidGenesisChainID, msg.GenesisChainID)
+			return sdkerrors.Wrapf(ErrInvalidGenesisChainID, err.Error())
 		}
 	}
 
