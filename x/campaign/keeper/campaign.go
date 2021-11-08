@@ -14,10 +14,9 @@ func (k Keeper) GetCampaignCount(ctx sdk.Context) uint64 {
 	byteKey := types.KeyPrefix(types.CampaignCountKey)
 	bz := store.Get(byteKey)
 
-	// Count doesn't exist
-	// The first ID is 1
+	// Count doesn't exist: no element
 	if bz == nil {
-		return 1
+		return 0
 	}
 
 	// Parse bytes
