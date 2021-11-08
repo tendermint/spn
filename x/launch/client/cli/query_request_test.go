@@ -46,7 +46,7 @@ func TestShowRequest(t *testing.T) {
 	}
 	for _, tc := range []struct {
 		desc        string
-		idLaunchID   string
+		idLaunchID  string
 		idRequestID uint64
 
 		args []string
@@ -55,7 +55,7 @@ func TestShowRequest(t *testing.T) {
 	}{
 		{
 			desc:        "found",
-			idLaunchID:   strconv.Itoa(int(objs[0].LaunchID)),
+			idLaunchID:  strconv.Itoa(int(objs[0].LaunchID)),
 			idRequestID: objs[0].RequestID,
 
 			args: common,
@@ -63,7 +63,7 @@ func TestShowRequest(t *testing.T) {
 		},
 		{
 			desc:        "not found",
-			idLaunchID:   strconv.Itoa(100000),
+			idLaunchID:  strconv.Itoa(100000),
 			idRequestID: 100000,
 
 			args: common,

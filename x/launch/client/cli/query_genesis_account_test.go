@@ -43,26 +43,26 @@ func TestShowGenesisAccount(t *testing.T) {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc      string
+		desc       string
 		idLaunchID string
-		idAddress string
+		idAddress  string
 
 		args []string
 		err  error
 		obj  types.GenesisAccount
 	}{
 		{
-			desc:      "found",
+			desc:       "found",
 			idLaunchID: strconv.Itoa(int(objs[0].LaunchID)),
-			idAddress: objs[0].Address,
+			idAddress:  objs[0].Address,
 
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc:      "not found",
+			desc:       "not found",
 			idLaunchID: strconv.Itoa(100000),
-			idAddress: strconv.Itoa(100000),
+			idAddress:  strconv.Itoa(100000),
 
 			args: common,
 			err:  status.Error(codes.InvalidArgument, "not found"),
