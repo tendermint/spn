@@ -8,6 +8,7 @@ import (
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		CampaignList:              []Campaign{},
+		CampaignCount:             1,
 		CampaignChainsList:        []CampaignChains{},
 		MainnetAccountList:        []MainnetAccount{},
 		MainnetVestingAccountList: []MainnetVestingAccount{},
