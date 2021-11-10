@@ -70,12 +70,12 @@ func TestRequestGetAll(t *testing.T) {
 	require.ElementsMatch(t, items, keeper.GetAllRequest(ctx))
 }
 
-func TestRequestCount(t *testing.T) {
+func TestRequestCounter(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
-	count := uint64(len(items))
-	require.Equal(t, count, keeper.GetRequestCount(ctx, 0))
-	require.Equal(t, uint64(0), keeper.GetRequestCount(ctx, 1))
+	counter := uint64(len(items))
+	require.Equal(t, counter, keeper.GetRequestCounter(ctx, 0))
+	require.Equal(t, uint64(0), keeper.GetRequestCounter(ctx, 1))
 }
 
 func TestApplyRequest(t *testing.T) {

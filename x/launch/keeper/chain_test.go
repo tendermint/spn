@@ -230,9 +230,9 @@ func TestGetAllChain(t *testing.T) {
 	require.ElementsMatch(t, items, keeper.GetAllChain(ctx))
 }
 
-func TestChainCount(t *testing.T) {
+func TestChainCounter(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNChain(keeper, ctx, 10)
-	count := uint64(len(items))
-	require.Equal(t, count, keeper.GetChainCount(ctx))
+	counter := uint64(len(items))
+	require.Equal(t, counter, keeper.GetChainCounter(ctx))
 }

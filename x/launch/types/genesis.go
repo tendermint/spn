@@ -7,12 +7,12 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # genesis/types/default
 		ChainList:            []Chain{},
-		ChainCount:           1,
+		ChainCounter:           1,
 		GenesisAccountList:   []GenesisAccount{},
 		VestingAccountList:   []VestingAccount{},
 		GenesisValidatorList: []GenesisValidator{},
 		RequestList:          []Request{},
-		RequestCountList:     []RequestCount{},
+		RequestCounterList:     []RequestCounter{},
 		Params:               DefaultParams(),
 	}
 }
@@ -39,7 +39,7 @@ func (gs GenesisState) Validate() error {
 
 func validateChains(gs GenesisState) (map[uint64]struct{}, error) {
 	// Check for duplicated index in chain
-	count := gs.GetChainCount()
+	counter := gs.GetChainCounter()
 	launchIDMap := make(map[uint64]struct{})
 	for _, elem := range gs.ChainList {
 		if err := elem.Validate(); err != nil {
@@ -52,9 +52,9 @@ func validateChains(gs GenesisState) (map[uint64]struct{}, error) {
 		}
 		launchIDMap[launchID] = struct{}{}
 
-		if elem.LaunchID >= count {
+		if elem.LaunchID >= counter {
 			return nil, fmt.Errorf("launch id %d should be lower or equal than the last id %d",
-				elem.LaunchID, count)
+				elem.LaunchID, counter)
 		}
 	}
 
@@ -63,16 +63,16 @@ func validateChains(gs GenesisState) (map[uint64]struct{}, error) {
 
 func validateRequests(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 	// We checkout request counts to perform verification
-	requestCountMap := make(map[uint64]uint64)
-	for _, elem := range gs.RequestCountList {
-		if _, ok := requestCountMap[elem.LaunchID]; ok {
-			return fmt.Errorf("duplicated request count")
+	requestCounterMap := make(map[uint64]uint64)
+	for _, elem := range gs.RequestCounterList {
+		if _, ok := requestCounterMap[elem.LaunchID]; ok {
+			return fmt.Errorf("duplicated request counter")
 		}
-		requestCountMap[elem.LaunchID] = elem.Count
+		requestCounterMap[elem.LaunchID] = elem.Counter
 
 		// Each genesis account must be associated with an existing chain
 		if _, ok := launchIDMap[elem.LaunchID]; !ok {
-			return fmt.Errorf("request count to a non-existing chain: %d",
+			return fmt.Errorf("request counter to a non-existing chain: %d",
 				elem.LaunchID,
 			)
 		}
@@ -94,18 +94,18 @@ func validateRequests(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 			)
 		}
 
-		// Check the request count of the associated chain is not below the request ID
-		requestCount, ok := requestCountMap[elem.LaunchID]
+		// Check the request counter of the associated chain is not below the request ID
+		requestCounter, ok := requestCounterMap[elem.LaunchID]
 		if !ok {
-			return fmt.Errorf("chain %d has requests but no request count",
+			return fmt.Errorf("chain %d has requests but no request counter",
 				elem.LaunchID,
 			)
 		}
-		if elem.RequestID >= requestCount {
-			return fmt.Errorf("chain %d contains a request with an ID above the request count: %d >= %d",
+		if elem.RequestID >= requestCounter {
+			return fmt.Errorf("chain %d contains a request with an ID above the request counter: %d >= %d",
 				elem.LaunchID,
 				elem.RequestID,
-				requestCount,
+				requestCounter,
 			)
 		}
 	}
