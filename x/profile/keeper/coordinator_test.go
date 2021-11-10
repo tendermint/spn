@@ -46,11 +46,11 @@ func TestCoordinatorGetAll(t *testing.T) {
 	require.ElementsMatch(t, items, k.GetAllCoordinator(ctx))
 }
 
-func TestCoordinatorCount(t *testing.T) {
+func TestCoordinatorCounter(t *testing.T) {
 	k, ctx := testkeeper.Profile(t)
 	items := createNCoordinator(k, ctx, 10)
-	count := uint64(len(items))
-	require.Equal(t, count, k.GetCoordinatorCount(ctx))
+	counter := uint64(len(items))
+	require.Equal(t, counter, k.GetCoordinatorCounter(ctx))
 }
 
 func TestGetCoordinatorAddressFromID(t *testing.T) {

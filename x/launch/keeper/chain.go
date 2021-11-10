@@ -92,7 +92,7 @@ func (k Keeper) GetChainCounter(ctx sdk.Context) uint64 {
 // SetChainCounter set the counter for chains
 func (k Keeper) SetChainCounter(ctx sdk.Context, counter uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
-	byteKey := types.KeyPrefix(types.ChainCounertKey)
+	byteKey := types.KeyPrefix(types.ChainCounterKey)
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, counter)
 	store.Set(byteKey, bz)

@@ -20,8 +20,8 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetCoordinator(ctx, elem)
 	}
 
-	// Set coordinator count
-	k.SetCoordinatorCount(ctx, genState.CoordinatorCount)
+	// Set coordinator counter
+	k.SetCoordinatorCounter(ctx, genState.CoordinatorCounter)
 
 	// Set all the coordinatorByAddress
 	for _, elem := range genState.CoordinatorByAddressList {
@@ -35,7 +35,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 
 	genesis.ValidatorList = k.GetAllValidator(ctx)
 	genesis.CoordinatorList = k.GetAllCoordinator(ctx)
-	genesis.CoordinatorCount = k.GetCoordinatorCount(ctx)
+	genesis.CoordinatorCounter = k.GetCoordinatorCounter(ctx)
 	genesis.CoordinatorByAddressList = k.GetAllCoordinatorByAddress(ctx)
 
 	// this line is used by starport scaffolding # genesis/module/export
