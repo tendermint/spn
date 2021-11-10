@@ -8,6 +8,7 @@ func DefaultGenesis() *GenesisState {
 		// this line is used by starport scaffolding # genesis/types/default
 		ValidatorList:            []Validator{},
 		CoordinatorList:          []Coordinator{},
+		CoordinatorCounter:       1,
 		CoordinatorByAddressList: []CoordinatorByAddress{},
 	}
 }
