@@ -5,11 +5,6 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
-message ChainNameCount {
-  string chainName = 1;
-  uint64 count = 2;
-}
-
 message Chain {
   uint64 launchID = 1;
   uint64 coordinatorID = 2;
