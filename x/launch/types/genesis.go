@@ -7,7 +7,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # genesis/types/default
 		ChainList:            []Chain{},
-		ChainCount:           0,
+		ChainCount:           1,
 		GenesisAccountList:   []GenesisAccount{},
 		VestingAccountList:   []VestingAccount{},
 		GenesisValidatorList: []GenesisValidator{},
