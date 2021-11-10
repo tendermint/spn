@@ -8,7 +8,7 @@ import (
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		CampaignList:              []Campaign{},
-		CampaignCount:             1,
+		CampaignCounter:             1,
 		CampaignChainsList:        []CampaignChains{},
 		MainnetAccountList:        []MainnetAccount{},
 		MainnetVestingAccountList: []MainnetVestingAccount{},
@@ -21,12 +21,12 @@ func DefaultGenesis() *GenesisState {
 func (gs GenesisState) Validate() error {
 	// Check for duplicated ID in campaign
 	campaignIDMap := make(map[uint64]bool)
-	campaignCount := gs.GetCampaignCount()
+	campaignCounter := gs.GetCampaignCounter()
 	for _, elem := range gs.CampaignList {
 		if _, ok := campaignIDMap[elem.Id]; ok {
 			return fmt.Errorf("duplicated id for campaign")
 		}
-		if elem.Id >= campaignCount {
+		if elem.Id >= campaignCounter {
 			return fmt.Errorf("campaign id should be lower or equal than the last id")
 		}
 		if err := elem.Validate(); err != nil {

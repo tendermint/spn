@@ -13,8 +13,8 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.CampaignList {
 		k.SetCampaign(ctx, elem)
 	}
-	// Set campaign count
-	k.SetCampaignCount(ctx, genState.CampaignCount)
+	// Set campaign counter
+	k.SetCampaignCounter(ctx, genState.CampaignCounter)
 
 	// Set all the campaignChains
 	for _, elem := range genState.CampaignChainsList {
@@ -40,7 +40,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
 	genesis.CampaignList = k.GetAllCampaign(ctx)
-	genesis.CampaignCount = k.GetCampaignCount(ctx)
+	genesis.CampaignCounter = k.GetCampaignCounter(ctx)
 	genesis.CampaignChainsList = k.GetAllCampaignChains(ctx)
 	genesis.MainnetAccountList = k.GetAllMainnetAccount(ctx)
 	genesis.MainnetVestingAccountList = k.GetAllMainnetVestingAccount(ctx)
