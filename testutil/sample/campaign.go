@@ -92,7 +92,7 @@ func CampaignGenesisState() campaign.GenesisState {
 			campaign1,
 			campaign2,
 		},
-		CampaignCount: 2,
+		CampaignCounter: 2,
 		CampaignChainsList: []campaign.CampaignChains{
 			{
 				CampaignID: 0,

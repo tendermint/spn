@@ -2,7 +2,7 @@ package types
 
 const (
 	// RequestKeyPrefix is the prefix to retrieve all Request
-	RequestKeyPrefix      = "Request/value/"
+	RequestKeyPrefix        = "Request/value/"
 	RequestCounterKeyPrefix = "Request/count/"
 )
 

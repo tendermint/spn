@@ -275,7 +275,7 @@ func LaunchGenesisState(addresses ...string) launch.GenesisState {
 			Chain(0, 0),
 			Chain(1, 1),
 		},
-		ChainCount: 2,
+		ChainCounter: 2,
 		GenesisAccountList: []launch.GenesisAccount{
 			GenesisAccount(0, addresses[0]),
 			GenesisAccount(0, addresses[1]),
@@ -295,14 +295,14 @@ func LaunchGenesisState(addresses ...string) launch.GenesisState {
 			Request(0, addresses[9]),
 			Request(1, addresses[10]),
 		},
-		RequestCountList: []launch.RequestCount{
+		RequestCounterList: []launch.RequestCounter{
 			{
 				LaunchID: 0,
-				Count:    1,
+				Counter:  1,
 			},
 			{
 				LaunchID: 1,
-				Count:    2,
+				Counter:  2,
 			},
 		},
 		Params: LaunchParams(),

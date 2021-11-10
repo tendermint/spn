@@ -97,7 +97,7 @@ func ProfileGenesisState(addresses ...string) profile.GenesisState {
 				CoordinatorId: 4,
 			},
 		},
-		CoordinatorCount: 5,
+		CoordinatorCounter: 5,
 		ValidatorList: []profile.Validator{
 			{
 				Address:     addresses[5],
