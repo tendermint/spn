@@ -8,7 +8,6 @@ import (
 
 // x/campaign module sentinel errors
 var (
-	ErrInvalidCampaignName  = sdkerrors.Register(ModuleName, 1, "invalid campaign name")
 	ErrInvalidTotalSupply   = sdkerrors.Register(ModuleName, 2, "invalid total supply")
 	ErrCampaignNotFound     = sdkerrors.Register(ModuleName, 3, "campaign not found")
 	ErrMainnetInitialized   = sdkerrors.Register(ModuleName, 4, "mainnet initialized")
@@ -21,4 +20,5 @@ var (
 	ErrInvalidVouchers      = sdkerrors.Register(ModuleName, 11, "invalid vouchers")
 	ErrNoMatchVouchers      = sdkerrors.Register(ModuleName, 12, "vouchers don't match to campaign")
 	ErrInsufficientVouchers = sdkerrors.Register(ModuleName, 13, "account with insufficient vouchers")
+	ErrInvalidCampaignName  = sdkerrors.Register(ModuleName, 14, "invalid campaign name")
 )
