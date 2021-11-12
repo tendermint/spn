@@ -14,11 +14,11 @@ service Msg {
   // this line is used by starport scaffolding # proto/tx/rpc
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
-  rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestResponse);
-  rpc RequestAddVestingAccount(MsgRequestAddVestingAccount) returns (MsgRequestResponse);
-  rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestResponse);
-  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestResponse);
-  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestResponse);
+  rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestAddAccountResponse);
+  rpc RequestAddVestingAccount(MsgRequestAddVestingAccount) returns (MsgRequestAddVestingAccountResponse);
+  rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
+  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestAddValidatorResponse);
+  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
   rpc SettleRequest(MsgSettleRequest) returns (MsgSettleRequestResponse);
   rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
   rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
@@ -56,6 +56,11 @@ message MsgRequestAddAccount {
   repeated cosmos.base.v1beta1.Coin Coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
+message MsgRequestAddAccountResponse {
+  uint64 requestID = 1;
+  bool autoApproved = 2;
+}
+
 message MsgRequestAddVestingAccount {
   uint64 launchID = 1;
   string address = 2;
@@ -63,10 +68,20 @@ message MsgRequestAddVestingAccount {
   VestingOptions options = 4 [(gogoproto.nullable) = false];
 }
 
+message MsgRequestAddVestingAccountResponse {
+  uint64 requestID = 1;
+  bool autoApproved = 2;
+}
+
 message MsgRequestRemoveAccount {
   uint64 launchID = 1;
   string creator = 2;
   string address = 3;
+}
+
+message MsgRequestRemoveAccountResponse {
+  uint64 requestID = 1;
+  bool autoApproved = 2;
 }
 
 message MsgRequestAddValidator {
@@ -78,13 +93,18 @@ message MsgRequestAddValidator {
   string peer = 6;
 }
 
+message MsgRequestAddValidatorResponse {
+  uint64 requestID = 1;
+  bool autoApproved = 2;
+}
+
 message MsgRequestRemoveValidator {
   uint64 launchID = 1;
   string creator = 2;
   string validatorAddress = 3;
 }
 
-message MsgRequestResponse {
+message MsgRequestRemoveValidatorResponse {
   uint64 requestID = 1;
   bool autoApproved = 2;
 }
