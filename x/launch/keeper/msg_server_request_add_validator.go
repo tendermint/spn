@@ -11,7 +11,7 @@ import (
 func (k msgServer) RequestAddValidator(
 	goCtx context.Context,
 	msg *types.MsgRequestAddValidator,
-) (*types.MsgRequestResponse, error) {
+) (*types.MsgRequestAddValidatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	chain, found := k.GetChain(ctx, msg.LaunchID)
@@ -56,7 +56,7 @@ func (k msgServer) RequestAddValidator(
 		requestID = k.AppendRequest(ctx, request)
 	}
 
-	return &types.MsgRequestResponse{
+	return &types.MsgRequestAddValidatorResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
 	}, nil
