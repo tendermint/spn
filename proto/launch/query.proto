@@ -33,7 +33,7 @@ service Query {
   }
   // Queries a list of genesisAccount items.
   rpc GenesisAccountAll(QueryAllGenesisAccountRequest) returns (QueryAllGenesisAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/genesisAccount";
+    option (google.api.http).get = "/tendermint/spn/launch/genesisAccount/{launchID}";
   }
 
   // Queries a vestingAccount by index.
@@ -42,7 +42,7 @@ service Query {
   }
   // Queries a list of vestingAccount items.
   rpc VestingAccountAll(QueryAllVestingAccountRequest) returns (QueryAllVestingAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/vestingAccount";
+    option (google.api.http).get = "/tendermint/spn/launch/vestingAccount/{launchID}";
   }
 
   // Queries a genesisValidator by index.
@@ -52,7 +52,7 @@ service Query {
 
   // Queries a list of genesisValidator items.
   rpc GenesisValidatorAll(QueryAllGenesisValidatorRequest) returns (QueryAllGenesisValidatorResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/genesisValidator";
+    option (google.api.http).get = "/tendermint/spn/launch/genesisValidator/{launchID}";
   }
 
   // Queries a request by index.
