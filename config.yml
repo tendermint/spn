@@ -22,3 +22,14 @@ genesis:
     staking:
       params:
         bond_denom: "spn"
+    crisis:
+      constant_fee:
+        denom: "spn"
+    gov:
+      deposit_params:
+        min_deposit:
+          - "amount": "10000000",
+            "denom": "stake"
+    mint:
+      params:
+        mint_denom: "spn"
