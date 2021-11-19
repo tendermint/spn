@@ -23,13 +23,13 @@ func TestGenesis(t *testing.T) {
 
 	// Compare lists
 	require.ElementsMatch(t, genesisState.ChainList, got.ChainList)
-	require.Equal(t, genesisState.ChainCount, got.ChainCount)
+	require.Equal(t, genesisState.ChainCounter, got.ChainCounter)
 
 	require.ElementsMatch(t, genesisState.GenesisAccountList, got.GenesisAccountList)
 	require.ElementsMatch(t, genesisState.VestingAccountList, got.VestingAccountList)
 	require.ElementsMatch(t, genesisState.GenesisValidatorList, got.GenesisValidatorList)
 	require.ElementsMatch(t, genesisState.RequestList, got.RequestList)
-	require.ElementsMatch(t, genesisState.RequestCountList, got.RequestCountList)
+	require.ElementsMatch(t, genesisState.RequestCounterList, got.RequestCounterList)
 
 	require.Equal(t, genesisState.Params, got.Params)
 

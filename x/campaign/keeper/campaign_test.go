@@ -49,6 +49,6 @@ func TestCampaignGetAll(t *testing.T) {
 func TestCampaignCount(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaign(keeper, ctx, 10)
-	count := uint64(len(items))
-	require.Equal(t, count, keeper.GetCampaignCount(ctx))
+	counter := uint64(len(items))
+	require.Equal(t, counter, keeper.GetCampaignCounter(ctx))
 }

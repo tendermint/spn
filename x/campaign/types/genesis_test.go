@@ -58,7 +58,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					campaign1,
 					campaign2,
 				},
-				CampaignCount: 2,
+				CampaignCounter: 2,
 				MainnetAccountList: []types.MainnetAccount{
 					{
 						CampaignID: campaign1.Id,
@@ -103,7 +103,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(0),
 					sample.Campaign(1),
 				},
-				CampaignCount: 2,
+				CampaignCounter: 2,
 				MainnetAccountList: []types.MainnetAccount{
 					sample.MainnetAccount(0, sample.Address()),
 					sample.MainnetAccount(1, sample.Address()),
@@ -136,7 +136,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(0),
 					sample.Campaign(1),
 				},
-				CampaignCount: 2,
+				CampaignCounter: 2,
 				MainnetAccountList: []types.MainnetAccount{
 					sample.MainnetAccount(330, sample.Address()),
 					sample.MainnetAccount(434, sample.Address()),
@@ -159,7 +159,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(99),
 					sample.Campaign(88),
 				},
-				CampaignCount: 100,
+				CampaignCounter: 100,
 			},
 			valid: false,
 		},
@@ -199,7 +199,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(0),
 					sample.Campaign(0),
 				},
-				CampaignCount: 2,
+				CampaignCounter: 2,
 			},
 			valid: false,
 		},
@@ -209,7 +209,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				CampaignList: []types.Campaign{
 					sample.Campaign(1),
 				},
-				CampaignCount: 0,
+				CampaignCounter: 0,
 			},
 			valid: false,
 		},
@@ -219,7 +219,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				CampaignList: []types.Campaign{
 					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.Coins(), false),
 				},
-				CampaignCount: 1,
+				CampaignCounter: 1,
 			},
 			valid: false,
 		},

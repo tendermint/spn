@@ -2,8 +2,8 @@ package types
 
 const (
 	// RequestKeyPrefix is the prefix to retrieve all Request
-	RequestKeyPrefix      = "Request/value/"
-	RequestCountKeyPrefix = "Request/count/"
+	RequestKeyPrefix        = "Request/value/"
+	RequestCounterKeyPrefix = "Request/count/"
 )
 
 // RequestKey returns the store key to retrieve a Request from the index fields
@@ -19,7 +19,7 @@ func RequestPoolKey(launchID uint64) []byte {
 	return append(uintBytes(launchID), byte('/'))
 }
 
-// RequestCountKey returns the store key to retrieve the count of request from a launch ID
-func RequestCountKey(launchID uint64) []byte {
+// RequestCounterKey returns the store key to retrieve the count of request from a launch ID
+func RequestCounterKey(launchID uint64) []byte {
 	return append(uintBytes(launchID), byte('/'))
 }

@@ -11,12 +11,12 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-// GetRequestCount get the total number of request for a specific chain ID
-func (k Keeper) GetRequestCount(ctx sdk.Context, launchID uint64) uint64 {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestCountKeyPrefix))
-	bz := store.Get(types.RequestCountKey(launchID))
+// GetRequestCounter get request counter for a specific chain ID
+func (k Keeper) GetRequestCounter(ctx sdk.Context, launchID uint64) uint64 {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestCounterKeyPrefix))
+	bz := store.Get(types.RequestCounterKey(launchID))
 
-	// Count doesn't exist: no element
+	// Counter doesn't exist: no element
 	if bz == nil {
 		return 0
 	}
@@ -25,12 +25,12 @@ func (k Keeper) GetRequestCount(ctx sdk.Context, launchID uint64) uint64 {
 	return binary.BigEndian.Uint64(bz)
 }
 
-// SetRequestCount set the total number of request for a chain
-func (k Keeper) SetRequestCount(ctx sdk.Context, launchID, count uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestCountKeyPrefix))
+// SetRequestCounter set the total number of request for a chain
+func (k Keeper) SetRequestCounter(ctx sdk.Context, launchID, counter uint64) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestCounterKeyPrefix))
 	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, count)
-	store.Set(types.RequestCountKey(launchID), bz)
+	binary.BigEndian.PutUint64(bz, counter)
+	store.Set(types.RequestCounterKey(launchID), bz)
 }
 
 // SetRequest set a specific request in the store from its index
@@ -43,12 +43,12 @@ func (k Keeper) SetRequest(ctx sdk.Context, request types.Request) {
 	), b)
 }
 
-// AppendRequest appends a request for a chain in the store with a new id and update the count
+// AppendRequest appends a request for a chain in the store with a new id and update the counter
 func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestKeyPrefix))
 
-	count := k.GetRequestCount(ctx, request.LaunchID)
-	request.RequestID = count
+	counter := k.GetRequestCounter(ctx, request.LaunchID)
+	request.RequestID = counter
 
 	b := k.cdc.MustMarshal(&request)
 	store.Set(types.RequestKey(
@@ -56,10 +56,10 @@ func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 		request.RequestID,
 	), b)
 
-	// increment the count
-	k.SetRequestCount(ctx, request.LaunchID, count+1)
+	// increment the counter
+	k.SetRequestCounter(ctx, request.LaunchID, counter+1)
 
-	return count
+	return counter
 }
 
 // GetRequest returns a request from its index

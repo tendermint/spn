@@ -8,13 +8,13 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// GetCoordinatorCount get the total number of Coordinators
-func (k Keeper) GetCoordinatorCount(ctx sdk.Context) uint64 {
+// GetCoordinatorCounter get the total number of Coordinators
+func (k Keeper) GetCoordinatorCounter(ctx sdk.Context) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
-	byteKey := types.KeyPrefix(types.CoordinatorCountKey)
+	byteKey := types.KeyPrefix(types.CoordinatorCounterKey)
 	bz := store.Get(byteKey)
 
-	// Count doesn't exist: no element
+	// Counter doesn't exist: no element
 	if bz == nil {
 		return 0
 	}
@@ -23,34 +23,34 @@ func (k Keeper) GetCoordinatorCount(ctx sdk.Context) uint64 {
 	return binary.BigEndian.Uint64(bz)
 }
 
-// SetCoordinatorCount set the total number of coordinator
-func (k Keeper) SetCoordinatorCount(ctx sdk.Context, count uint64) {
+// SetCoordinatorCounter set the total number of coordinator
+func (k Keeper) SetCoordinatorCounter(ctx sdk.Context, counter uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
-	byteKey := types.KeyPrefix(types.CoordinatorCountKey)
+	byteKey := types.KeyPrefix(types.CoordinatorCounterKey)
 	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, count)
+	binary.BigEndian.PutUint64(bz, counter)
 	store.Set(byteKey, bz)
 }
 
-// AppendCoordinator appends a coordinator in the store with a new id and update the count
+// AppendCoordinator appends a coordinator in the store with a new id and update the counter
 func (k Keeper) AppendCoordinator(
 	ctx sdk.Context,
 	coordinator types.Coordinator,
 ) uint64 {
 	// Create the coordinator
-	count := k.GetCoordinatorCount(ctx)
+	counter := k.GetCoordinatorCounter(ctx)
 
 	// Set the ID of the appended value
-	coordinator.CoordinatorId = count
+	coordinator.CoordinatorId = counter
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
 	appendedValue := k.cdc.MustMarshal(&coordinator)
 	store.Set(GetCoordinatorIDBytes(coordinator.CoordinatorId), appendedValue)
 
-	// Update coordinator count
-	k.SetCoordinatorCount(ctx, count+1)
+	// Update coordinator counter
+	k.SetCoordinatorCounter(ctx, counter+1)
 
-	return count
+	return counter
 }
 
 // SetCoordinator set a specific coordinator in the store
