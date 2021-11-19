@@ -28,8 +28,8 @@ genesis:
     gov:
       deposit_params:
         min_deposit:
-          - "amount": "10000000",
-            "denom": "stake"
+          - "amount": "10000000"
+            "denom": "spn"
     mint:
       params:
         mint_denom: "spn"
