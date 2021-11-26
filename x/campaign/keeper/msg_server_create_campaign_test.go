@@ -25,13 +25,13 @@ func TestMsgCreateCampaign(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	coordMap[coordAddr1] = res.CoordinatorId
+	coordMap[coordAddr1] = res.CoordinatorID
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	coordMap[coordAddr2] = res.CoordinatorId
+	coordMap[coordAddr2] = res.CoordinatorID
 
 	for _, tc := range []struct {
 		name       string

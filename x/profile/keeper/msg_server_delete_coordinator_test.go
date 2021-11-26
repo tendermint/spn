@@ -45,7 +45,7 @@ func TestMsgDeleteCoordinator(t *testing.T) {
 			_, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
 			require.False(t, found, "coordinator by address was not removed")
 
-			_, found = k.GetCoordinator(ctx, got.CoordinatorId)
+			_, found = k.GetCoordinator(ctx, got.CoordinatorID)
 			require.False(t, found, "coordinator id not removed")
 		})
 	}

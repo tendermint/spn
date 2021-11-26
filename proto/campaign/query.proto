@@ -57,7 +57,7 @@ message QueryGetCampaignRequest {
 }
 
 message QueryGetCampaignResponse {
-  Campaign Campaign = 1 [(gogoproto.nullable) = false];
+  Campaign campaign = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllCampaignRequest {
@@ -65,7 +65,7 @@ message QueryAllCampaignRequest {
 }
 
 message QueryAllCampaignResponse {
-  repeated Campaign Campaign = 1 [(gogoproto.nullable) = false];
+  repeated Campaign campaign = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

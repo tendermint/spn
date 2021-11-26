@@ -21,12 +21,12 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
 	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
-	coordID := res.CoordinatorId
+	coordID := res.CoordinatorID
 
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordNoCampaignAddress)
 	res, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
-	coordNoCampaignID := res.CoordinatorId
+	coordNoCampaignID := res.CoordinatorID
 
 	// Create a campaign
 	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)

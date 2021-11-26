@@ -23,10 +23,10 @@ func TestMsgSettleRequest(t *testing.T) {
 		ctx                         = sdk.WrapSDKContext(sdkCtx)
 	)
 
-	coordinator1.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator1)
-	coordinator2.CoordinatorId = pk.AppendCoordinator(sdkCtx, coordinator2)
+	coordinator1.CoordinatorID = pk.AppendCoordinator(sdkCtx, coordinator1)
+	coordinator2.CoordinatorID = pk.AppendCoordinator(sdkCtx, coordinator2)
 
-	chains := createNChainForCoordinator(k, sdkCtx, coordinator1.CoordinatorId, 3)
+	chains := createNChainForCoordinator(k, sdkCtx, coordinator1.CoordinatorID, 3)
 	chains[0].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999

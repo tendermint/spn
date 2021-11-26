@@ -53,7 +53,7 @@ message MsgEditChainResponse {}
 message MsgRequestAddAccount {
   uint64 launchID = 1;
   string address = 2;
-  repeated cosmos.base.v1beta1.Coin Coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated cosmos.base.v1beta1.Coin coins = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
 }
 
 message MsgRequestAddAccountResponse {

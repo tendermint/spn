@@ -41,7 +41,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaignMainnetInitialized.CoordinatorID = res.CoordinatorId
+	campaignMainnetInitialized.CoordinatorID = res.CoordinatorID
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.AllocatedShares = allocatedShares
 	campaignMainnetInitialized.TotalShares = totalShares
@@ -52,7 +52,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaign.CoordinatorID = res.CoordinatorId
+	campaign.CoordinatorID = res.CoordinatorID
 	campaign.AllocatedShares = allocatedShares
 	campaign.TotalShares = totalShares
 	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
@@ -64,7 +64,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorId
+	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorID
 	campaignInvalidAllocatedShares.AllocatedShares = allocatedShares
 	campaignInvalidAllocatedShares.TotalShares = totalShares
 	campaignInvalidAllocatedShares.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)

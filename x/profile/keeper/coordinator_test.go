@@ -15,7 +15,7 @@ func createNCoordinator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.C
 	items := make([]types.Coordinator, n)
 	for i := range items {
 		items[i] = sample.Coordinator(sample.Address())
-		items[i].CoordinatorId = keeper.AppendCoordinator(ctx, items[i])
+		items[i].CoordinatorID = keeper.AppendCoordinator(ctx, items[i])
 	}
 	return items
 }
@@ -24,7 +24,7 @@ func TestCoordinatorGet(t *testing.T) {
 	k, ctx := testkeeper.Profile(t)
 	items := createNCoordinator(k, ctx, 10)
 	for _, item := range items {
-		coord, found := k.GetCoordinator(ctx, item.CoordinatorId)
+		coord, found := k.GetCoordinator(ctx, item.CoordinatorID)
 		require.True(t, found)
 		require.Equal(t, item, coord)
 	}
@@ -34,8 +34,8 @@ func TestCoordinatorRemove(t *testing.T) {
 	k, ctx := testkeeper.Profile(t)
 	items := createNCoordinator(k, ctx, 10)
 	for _, item := range items {
-		k.RemoveCoordinator(ctx, item.CoordinatorId)
-		_, found := k.GetCoordinator(ctx, item.CoordinatorId)
+		k.RemoveCoordinator(ctx, item.CoordinatorID)
+		_, found := k.GetCoordinator(ctx, item.CoordinatorID)
 		require.False(t, found)
 	}
 }
@@ -56,9 +56,9 @@ func TestCoordinatorCounter(t *testing.T) {
 func TestGetCoordinatorAddressFromID(t *testing.T) {
 	k, ctx := testkeeper.Profile(t)
 	coordinator := sample.Coordinator(sample.Address())
-	coordinator.CoordinatorId = k.AppendCoordinator(ctx, coordinator)
+	coordinator.CoordinatorID = k.AppendCoordinator(ctx, coordinator)
 
-	address, found := k.GetCoordinatorAddressFromID(ctx, coordinator.CoordinatorId)
+	address, found := k.GetCoordinatorAddressFromID(ctx, coordinator.CoordinatorID)
 	require.True(t, found)
 	require.Equal(t, coordinator.Address, address)
 

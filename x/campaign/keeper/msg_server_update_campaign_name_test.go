@@ -24,7 +24,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaign.CoordinatorID = res.CoordinatorId
+	campaign.CoordinatorID = res.CoordinatorID
 	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{

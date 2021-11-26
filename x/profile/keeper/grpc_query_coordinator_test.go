@@ -25,12 +25,12 @@ func TestCoordinatorQuerySingle(t *testing.T) {
 	}{
 		{
 			desc:     "First",
-			request:  &types.QueryGetCoordinatorRequest{Id: msgs[0].CoordinatorId},
+			request:  &types.QueryGetCoordinatorRequest{Id: msgs[0].CoordinatorID},
 			response: &types.QueryGetCoordinatorResponse{Coordinator: msgs[0]},
 		},
 		{
 			desc:     "Second",
-			request:  &types.QueryGetCoordinatorRequest{Id: msgs[1].CoordinatorId},
+			request:  &types.QueryGetCoordinatorRequest{Id: msgs[1].CoordinatorID},
 			response: &types.QueryGetCoordinatorResponse{Coordinator: msgs[1]},
 		},
 		{

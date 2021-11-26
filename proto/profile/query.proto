@@ -63,7 +63,7 @@ message QueryGetCoordinatorRequest {
 }
 
 message QueryGetCoordinatorResponse {
-  Coordinator Coordinator = 1 [(gogoproto.nullable) = false];;
+  Coordinator coordinator = 1 [(gogoproto.nullable) = false];;
 }
 
 message QueryAllCoordinatorRequest {
@@ -71,7 +71,7 @@ message QueryAllCoordinatorRequest {
 }
 
 message QueryAllCoordinatorResponse {
-  repeated Coordinator Coordinator = 1 [(gogoproto.nullable) = false];;
+  repeated Coordinator coordinator = 1 [(gogoproto.nullable) = false];;
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

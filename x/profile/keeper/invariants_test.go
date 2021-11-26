@@ -13,10 +13,10 @@ func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 	ctx, k, _ := setupMsgServer(t)
 	t.Run("valid case", func(t *testing.T) {
 		coord := sample.Coordinator(sample.Address())
-		coord.CoordinatorId = k.AppendCoordinator(ctx, coord)
+		coord.CoordinatorID = k.AppendCoordinator(ctx, coord)
 		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 			Address:       sample.Address(),
-			CoordinatorId: coord.CoordinatorId,
+			CoordinatorID: coord.CoordinatorID,
 		})
 		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*k)(ctx)
 		require.Equal(t, false, isValid)
@@ -25,7 +25,7 @@ func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 	t.Run("invalid case", func(t *testing.T) {
 		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 			Address:       sample.Address(),
-			CoordinatorId: 10,
+			CoordinatorID: 10,
 		})
 		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*k)(ctx)
 		require.Equal(t, true, isValid)
