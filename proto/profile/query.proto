@@ -25,7 +25,7 @@ service Query {
 
   // Queries a coordinator by id.
   rpc Coordinator(QueryGetCoordinatorRequest) returns (QueryGetCoordinatorResponse) {
-    option (google.api.http).get = "/tendermint/spn/profile/coordinator/{id}";
+    option (google.api.http).get = "/tendermint/spn/profile/coordinator/{coordinatorID}";
   }
 
   // Queries a list of coordinator items.
@@ -59,7 +59,7 @@ message QueryAllValidatorResponse {
 }
 
 message QueryGetCoordinatorRequest {
-  uint64 id = 1;
+  uint64 coordinatorID = 1;
 }
 
 message QueryGetCoordinatorResponse {

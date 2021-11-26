@@ -7,7 +7,7 @@ import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 message Campaign {
-  uint64 id = 1;
+  uint64 campaignID = 1;
   string campaignName = 2;
   uint64 coordinatorID = 3;
   uint64 mainnetID = 4;

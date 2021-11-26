@@ -16,7 +16,7 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 service Query {
   // Queries a campaign by id.
   rpc Campaign(QueryGetCampaignRequest) returns (QueryGetCampaignResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/campaign/{id}";
+    option (google.api.http).get = "/tendermint/spn/campaign/campaign/{campaignID}";
   }
 
   // Queries a list of campaign items.
@@ -53,7 +53,7 @@ service Query {
 }
 
 message QueryGetCampaignRequest {
-  uint64 id = 1;
+  uint64 campaignID = 1;
 }
 
 message QueryGetCampaignResponse {

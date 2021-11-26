@@ -121,7 +121,7 @@ func GetCoordSimAccountWithCampaignID(
 	}
 	for _, acc := range accs {
 		if acc.Address.String() == coordAddr {
-			return acc, camp.Id, true
+			return acc, camp.CampaignID, true
 		}
 	}
 
