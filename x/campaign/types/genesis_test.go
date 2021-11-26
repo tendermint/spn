@@ -25,12 +25,14 @@ func TestGenesisState_Validate(t *testing.T) {
 	campaign1.AllocatedShares = sharesCampaign1
 	campaign1.TotalShares = sharesCampaign1
 	campaign1.DynamicShares = true
+	campaign1.CoordinatorID = 0
 
 	sharesCampaign2 := types.IncreaseShares(shares3, shares4)
 	sharesCampaign2 = types.IncreaseShares(sharesCampaign2, sharesVesting2)
 	campaign2.AllocatedShares = sharesCampaign2
 	campaign2.TotalShares = sharesCampaign2
 	campaign2.DynamicShares = true
+	campaign2.CoordinatorID = 1
 
 	for _, tc := range []struct {
 		desc     string
