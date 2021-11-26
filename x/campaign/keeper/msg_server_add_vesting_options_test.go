@@ -45,7 +45,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.AllocatedShares = allocatedShares
 	campaignMainnetInitialized.TotalShares = totalShares
-	campaignMainnetInitialized.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
+	campaignMainnetInitialized.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
@@ -55,8 +55,8 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaign.CoordinatorID = res.CoordinatorID
 	campaign.AllocatedShares = allocatedShares
 	campaign.TotalShares = totalShares
-	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
-	accShare := sample.MainnetVestingAccountWithShares(campaign.Id, addr2, lowShare)
+	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	accShare := sample.MainnetVestingAccountWithShares(campaign.CampaignID, addr2, lowShare)
 	campaignKeeper.SetMainnetVestingAccount(sdkCtx, accShare)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
@@ -67,7 +67,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorID
 	campaignInvalidAllocatedShares.AllocatedShares = allocatedShares
 	campaignInvalidAllocatedShares.TotalShares = totalShares
-	campaignInvalidAllocatedShares.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
+	campaignInvalidAllocatedShares.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
 
 	for _, tc := range []struct {
 		name       string
@@ -90,7 +90,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "invalid coordinator address",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    addr1,
-				CampaignID:     campaign.Id,
+				CampaignID:     campaign.CampaignID,
 				Address:        addr1,
 				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
@@ -101,7 +101,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "invalid coordinator id",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddrMainnetInitialized,
-				CampaignID:     campaign.Id,
+				CampaignID:     campaign.CampaignID,
 				Address:        addr1,
 				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
@@ -112,7 +112,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "campaign with initialized mainnet",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddrMainnetInitialized,
-				CampaignID:     campaignMainnetInitialized.Id,
+				CampaignID:     campaignMainnetInitialized.CampaignID,
 				Address:        addr1,
 				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
@@ -122,7 +122,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "allocated shares greater them total shares",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr2,
-				CampaignID:     campaignInvalidAllocatedShares.Id,
+				CampaignID:     campaignInvalidAllocatedShares.CampaignID,
 				Address:        addr1,
 				StartingShares: highShare,
 				VestingOptions: sample.ShareVestingOptions(),
@@ -133,7 +133,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "create new account with shares",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr1,
-				CampaignID:     campaign.Id,
+				CampaignID:     campaign.CampaignID,
 				Address:        addr1,
 				StartingShares: lowShare,
 				VestingOptions: sample.ShareVestingOptions(),
@@ -143,7 +143,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			name: "update existing account shares",
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    coordAddr1,
-				CampaignID:     campaign.Id,
+				CampaignID:     campaign.CampaignID,
 				Address:        addr2,
 				StartingShares: lowShare,
 				VestingOptions: sample.ShareVestingOptions(),

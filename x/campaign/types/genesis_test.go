@@ -48,10 +48,10 @@ func TestGenesisState_Validate(t *testing.T) {
 				// this line is used by starport scaffolding # types/genesis/validField
 				CampaignChainsList: []types.CampaignChains{
 					{
-						CampaignID: campaign1.Id,
+						CampaignID: campaign1.CampaignID,
 					},
 					{
-						CampaignID: campaign2.Id,
+						CampaignID: campaign2.CampaignID,
 					},
 				},
 				CampaignList: []types.Campaign{
@@ -61,25 +61,25 @@ func TestGenesisState_Validate(t *testing.T) {
 				CampaignCounter: 2,
 				MainnetAccountList: []types.MainnetAccount{
 					{
-						CampaignID: campaign1.Id,
+						CampaignID: campaign1.CampaignID,
 						Address:    sample.Address(),
 						Shares:     shares1,
 					},
 					{
-						CampaignID: campaign2.Id,
+						CampaignID: campaign2.CampaignID,
 						Address:    sample.Address(),
 						Shares:     shares3,
 					},
 				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
-						CampaignID:     campaign1.Id,
+						CampaignID:     campaign1.CampaignID,
 						Address:        sample.Address(),
 						StartingShares: shares2,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting1, time.Now().Unix()),
 					},
 					{
-						CampaignID:     campaign2.Id,
+						CampaignID:     campaign2.CampaignID,
 						Address:        sample.Address(),
 						StartingShares: shares4,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting2, time.Now().Unix()),
@@ -251,7 +251,7 @@ func TestGenesisState_Validate(t *testing.T) {
 
 			campaignIDMap := make(map[uint64]types.Shares)
 			for _, elem := range tc.genState.CampaignList {
-				campaignIDMap[elem.Id] = elem.AllocatedShares
+				campaignIDMap[elem.CampaignID] = elem.AllocatedShares
 			}
 			shares := make(map[uint64]types.Shares)
 

@@ -90,7 +90,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.Equal(t, tc.expectedID, got.CampaignID)
 			campaign, found := campaignKeeper.GetCampaign(sdkCtx, got.CampaignID)
 			require.True(t, found)
-			require.EqualValues(t, got.CampaignID, campaign.Id)
+			require.EqualValues(t, got.CampaignID, campaign.CampaignID)
 			require.EqualValues(t, tc.msg.CampaignName, campaign.CampaignName)
 			require.EqualValues(t, coordMap[tc.msg.Coordinator], campaign.CoordinatorID)
 			require.False(t, campaign.MainnetInitialized)

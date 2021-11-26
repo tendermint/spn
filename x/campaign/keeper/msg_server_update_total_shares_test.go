@@ -35,24 +35,24 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 	campaign := sample.Campaign(0)
 	campaign.CoordinatorID = coordID
 	campaign.DynamicShares = true
-	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	campaignMainnetInitialized := sample.Campaign(1)
 	campaignMainnetInitialized.CoordinatorID = coordID
 	campaignMainnetInitialized.DynamicShares = true
 	campaignMainnetInitialized.MainnetInitialized = true
-	campaignMainnetInitialized.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
+	campaignMainnetInitialized.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	campaignNoDynamicShares := sample.Campaign(2)
 	campaignNoDynamicShares.CoordinatorID = coordID
 	campaignNoDynamicShares.DynamicShares = false
-	campaignNoDynamicShares.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignNoDynamicShares)
+	campaignNoDynamicShares.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignNoDynamicShares)
 
 	campaignWithAllocatedShares := sample.Campaign(3)
 	campaignWithAllocatedShares.CoordinatorID = coordID
 	campaignWithAllocatedShares.DynamicShares = true
 	campaignWithAllocatedShares.AllocatedShares, _ = types.NewShares("100foo")
-	campaignWithAllocatedShares.Id = campaignKeeper.AppendCampaign(sdkCtx, campaignWithAllocatedShares)
+	campaignWithAllocatedShares.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignWithAllocatedShares)
 	smallerTotalShares, _ := types.NewShares("50foo")
 
 	for _, tc := range []struct {
@@ -63,7 +63,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 		{
 			name: "update total shares",
 			msg: types.MsgUpdateTotalShares{
-				CampaignID:  campaign.Id,
+				CampaignID:  campaign.CampaignID,
 				Coordinator: coordAddr1,
 				TotalShares: sample.Shares(),
 			},
@@ -71,7 +71,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 		{
 			name: "can update total shares again",
 			msg: types.MsgUpdateTotalShares{
-				CampaignID:  campaign.Id,
+				CampaignID:  campaign.CampaignID,
 				Coordinator: coordAddr1,
 				TotalShares: sample.Shares(),
 			},
@@ -88,7 +88,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 		{
 			name: "non existing coordinator",
 			msg: types.MsgUpdateTotalShares{
-				CampaignID:  campaign.Id,
+				CampaignID:  campaign.CampaignID,
 				Coordinator: sample.Address(),
 				TotalShares: sample.Shares(),
 			},
@@ -97,7 +97,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 		{
 			name: "not the coordinator of the campaign",
 			msg: types.MsgUpdateTotalShares{
-				CampaignID:  campaign.Id,
+				CampaignID:  campaign.CampaignID,
 				Coordinator: coordAddr2,
 				TotalShares: sample.Shares(),
 			},
@@ -106,7 +106,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 		{
 			name: "cannot update total shares when mainnet is initialized",
 			msg: types.MsgUpdateTotalShares{
-				CampaignID:  campaignMainnetInitialized.Id,
+				CampaignID:  campaignMainnetInitialized.CampaignID,
 				Coordinator: coordAddr1,
 				TotalShares: sample.Shares(),
 			},
@@ -115,7 +115,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 		{
 			name: "cannot update total shares when dynamic shares option not set",
 			msg: types.MsgUpdateTotalShares{
-				CampaignID:  campaignNoDynamicShares.Id,
+				CampaignID:  campaignNoDynamicShares.CampaignID,
 				Coordinator: coordAddr1,
 				TotalShares: sample.Shares(),
 			},
@@ -124,7 +124,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 		{
 			name: "cannot update total shares when below allocated shares",
 			msg: types.MsgUpdateTotalShares{
-				CampaignID:  campaignWithAllocatedShares.Id,
+				CampaignID:  campaignWithAllocatedShares.CampaignID,
 				Coordinator: coordAddr1,
 				TotalShares: smallerTotalShares,
 			},

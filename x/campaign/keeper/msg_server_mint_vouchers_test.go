@@ -40,7 +40,7 @@ func TestMsgMintVouchers(t *testing.T) {
 	// Set campaign
 	campaign := sample.Campaign(0)
 	campaign.CoordinatorID = coordID
-	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	for _, tc := range []struct {
 		name string

@@ -23,7 +23,7 @@ func TestNewCampaign(t *testing.T) {
 	dynamicShares := sample.Bool()
 
 	cmpn := campaign.NewCampaign(campaignID, campaignName, coordinator, totalSupply, dynamicShares)
-	require.EqualValues(t, campaignID, cmpn.Id)
+	require.EqualValues(t, campaignID, cmpn.CampaignID)
 	require.EqualValues(t, campaignName, cmpn.CampaignName)
 	require.EqualValues(t, coordinator, cmpn.CoordinatorID)
 	require.False(t, cmpn.MainnetInitialized)

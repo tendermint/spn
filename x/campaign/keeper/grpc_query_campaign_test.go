@@ -25,17 +25,17 @@ func TestCampaignQuerySingle(t *testing.T) {
 	}{
 		{
 			desc:     "First",
-			request:  &types.QueryGetCampaignRequest{Id: msgs[0].Id},
+			request:  &types.QueryGetCampaignRequest{CampaignID: msgs[0].CampaignID},
 			response: &types.QueryGetCampaignResponse{Campaign: msgs[0]},
 		},
 		{
 			desc:     "Second",
-			request:  &types.QueryGetCampaignRequest{Id: msgs[1].Id},
+			request:  &types.QueryGetCampaignRequest{CampaignID: msgs[1].CampaignID},
 			response: &types.QueryGetCampaignResponse{Campaign: msgs[1]},
 		},
 		{
 			desc:    "KeyNotFound",
-			request: &types.QueryGetCampaignRequest{Id: uint64(len(msgs))},
+			request: &types.QueryGetCampaignRequest{CampaignID: uint64(len(msgs))},
 			err:     sdkerrors.ErrKeyNotFound,
 		},
 		{

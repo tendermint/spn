@@ -29,10 +29,10 @@ func TestMsgRedeemVouchers(t *testing.T) {
 
 	// Set campaign
 	campaign.AllocatedShares = shares
-	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	// Create vouchers
-	vouchers, err := types.SharesToVouchers(shares, campaign.Id)
+	vouchers, err := types.SharesToVouchers(shares, campaign.CampaignID)
 	require.NoError(t, err)
 
 	// Send coins to account
@@ -42,7 +42,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 	require.NoError(t, err)
 
 	campaignKeeper.SetMainnetAccount(sdkCtx, types.MainnetAccount{
-		CampaignID: campaign.Id,
+		CampaignID: campaign.CampaignID,
 		Address:    existAddr.String(),
 		Shares:     shares,
 	})
@@ -71,7 +71,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sample.Coins(),
 			},
 			err: spnerrors.ErrCritical,
@@ -81,7 +81,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     "invalid_address",
 				Account:    addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   vouchers,
 			},
 			err: spnerrors.ErrCritical,
@@ -91,7 +91,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   vouchersTooBig,
 			},
 			err: types.ErrInsufficientVouchers,
@@ -101,7 +101,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    sample.Address(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   vouchers,
 			},
 		},
@@ -110,7 +110,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
 		},
@@ -119,7 +119,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[1]),
 			},
 		},
@@ -128,7 +128,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[2]),
 			},
 		},
@@ -137,7 +137,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   vouchers,
 			},
 			err: types.ErrInsufficientVouchers,
@@ -147,7 +147,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
 			err: types.ErrInsufficientVouchers,
