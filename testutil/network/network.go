@@ -28,16 +28,7 @@ type (
 
 // New creates instance with fully configured cosmos network.
 // Accepts optional config, that will be used in place of the DefaultConfig() if provided.
-func New(t *testing.T, configs ...network.Config) *network.Network {
-	if len(configs) > 1 {
-		panic("at most one config should be provided")
-	}
-	var cfg network.Config
-	if len(configs) == 0 {
-		cfg = DefaultConfig()
-	} else {
-		cfg = configs[0]
-	}
+func New(t *testing.T, cfg network.Config) *network.Network {
 	net := network.New(t, cfg)
 	t.Cleanup(net.Cleanup)
 	return net
