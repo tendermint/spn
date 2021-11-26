@@ -26,27 +26,27 @@ service Query {
 
   // Queries a campaignChains by index.
   rpc CampaignChains(QueryGetCampaignChainsRequest) returns (QueryGetCampaignChainsResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/campaignChains/{campaignID}";
+    option (google.api.http).get = "/tendermint/spn/campaign/campaign_chains/{campaignID}";
   }
 
   // Queries a mainnetAccount by index.
   rpc MainnetAccount(QueryGetMainnetAccountRequest) returns (QueryGetMainnetAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnetAccount/{campaignID}/{address}";
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account/{campaignID}/{address}";
   }
 
   // Queries a list of mainnetAccount items.
   rpc MainnetAccountAll(QueryAllMainnetAccountRequest) returns (QueryAllMainnetAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnetAccount";
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account";
   }
 
   // Queries a mainnetVestingAccount by index.
   rpc MainnetVestingAccount(QueryGetMainnetVestingAccountRequest) returns (QueryGetMainnetVestingAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnetVestingAccount/{campaignID}/{address}";
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account/{campaignID}/{address}";
   }
 
   // Queries a list of mainnetVestingAccount items.
   rpc MainnetVestingAccountAll(QueryAllMainnetVestingAccountRequest) returns (QueryAllMainnetVestingAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnetVestingAccount";
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account";
   }
 
   // this line is used by starport scaffolding # 2

@@ -757,15 +757,15 @@ var (
 
 	pattern_Query_CampaignAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 2}, []string{"tendermint", "spn", "campaign"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_CampaignChains_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "campaign", "campaignChains", "campaignID"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_CampaignChains_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "campaign", "campaign_chains", "campaignID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MainnetAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "campaign", "mainnetAccount", "campaignID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MainnetAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "campaign", "mainnet_account", "campaignID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MainnetAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "campaign", "mainnetAccount"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MainnetAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "campaign", "mainnet_account"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MainnetVestingAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "campaign", "mainnetVestingAccount", "campaignID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MainnetVestingAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "campaign", "mainnet_vesting_account", "campaignID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_MainnetVestingAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "campaign", "mainnetVestingAccount"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MainnetVestingAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "campaign", "mainnet_vesting_account"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

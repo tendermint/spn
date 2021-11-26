@@ -14,4 +14,3 @@ message GenesisValidator {
   cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
   string peer = 6;
 }
-

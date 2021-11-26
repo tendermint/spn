@@ -25,7 +25,7 @@ func networkWithRequestObjects(t *testing.T, n int) (*network.Network, []types.R
 
 	for i := 0; i < n; i++ {
 		request := sample.Request(0, sample.Address())
-		request.RequestID = uint64(i)
+		request.requestId = uint64(i)
 		state.RequestList = append(
 			state.RequestList,
 			request,
