@@ -14,16 +14,11 @@ service Msg {
   // this line is used by starport scaffolding # proto/tx/rpc
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
-  rpc RequestAddAccount(MsgRequestAddAccount)
-      returns (MsgRequestAddAccountResponse);
-  rpc RequestAddVestingAccount(MsgRequestAddVestingAccount)
-      returns (MsgRequestAddVestingAccountResponse);
-  rpc RequestRemoveAccount(MsgRequestRemoveAccount)
-      returns (MsgRequestRemoveAccountResponse);
-  rpc RequestAddValidator(MsgRequestAddValidator)
-      returns (MsgRequestAddValidatorResponse);
-  rpc RequestRemoveValidator(MsgRequestRemoveValidator)
-      returns (MsgRequestRemoveValidatorResponse);
+  rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestAddAccountResponse);
+  rpc RequestAddVestingAccount(MsgRequestAddVestingAccount) returns (MsgRequestAddVestingAccountResponse);
+  rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
+  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestAddValidatorResponse);
+  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
   rpc SettleRequest(MsgSettleRequest) returns (MsgSettleRequestResponse);
   rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
   rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
@@ -40,7 +35,9 @@ message MsgCreateChain {
   uint64 campaignID = 8;
 }
 
-message MsgCreateChainResponse { uint64 launchID = 1; }
+message MsgCreateChainResponse {
+  uint64 launchID = 1;
+}
 
 message MsgEditChain {
   string coordinator = 1;
@@ -76,7 +73,7 @@ message MsgRequestAddVestingAccount {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
-  VestingOptions options = 4 [ (gogoproto.nullable) = false ];
+  VestingOptions options = 4 [(gogoproto.nullable) = false];
 }
 
 message MsgRequestAddVestingAccountResponse {
@@ -100,7 +97,7 @@ message MsgRequestAddValidator {
   string valAddress = 2;
   bytes genTx = 3;
   bytes consPubKey = 4;
-  cosmos.base.v1beta1.Coin selfDelegation = 5 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
   string peer = 6;
 }
 

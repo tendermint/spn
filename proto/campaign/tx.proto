@@ -11,22 +11,16 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 // Msg defines the Msg service.
 service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
-  rpc UpdateCampaignName(MsgUpdateCampaignName)
-      returns (MsgUpdateCampaignNameResponse);
-  rpc UpdateTotalSupply(MsgUpdateTotalSupply)
-      returns (MsgUpdateTotalSupplyResponse);
-  rpc UpdateTotalShares(MsgUpdateTotalShares)
-      returns (MsgUpdateTotalSharesResponse);
-  rpc InitializeMainnet(MsgInitializeMainnet)
-      returns (MsgInitializeMainnetResponse);
+  rpc UpdateCampaignName(MsgUpdateCampaignName) returns (MsgUpdateCampaignNameResponse);
+  rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
+  rpc UpdateTotalShares(MsgUpdateTotalShares) returns (MsgUpdateTotalSharesResponse);
+  rpc InitializeMainnet(MsgInitializeMainnet) returns (MsgInitializeMainnetResponse);
   rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
-  rpc AddVestingOptions(MsgAddVestingOptions)
-      returns (MsgAddVestingOptionsResponse);
+  rpc AddVestingOptions(MsgAddVestingOptions) returns (MsgAddVestingOptionsResponse);
   rpc MintVouchers(MsgMintVouchers) returns (MsgMintVouchersResponse);
   rpc BurnVouchers(MsgBurnVouchers) returns (MsgBurnVouchersResponse);
   rpc RedeemVouchers(MsgRedeemVouchers) returns (MsgRedeemVouchersResponse);
-  rpc UnredeemVouchers(MsgUnredeemVouchers)
-      returns (MsgUnredeemVouchersResponse);
+  rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -41,7 +35,9 @@ message MsgCreateCampaign {
   bool dynamicShares = 4;
 }
 
-message MsgCreateCampaignResponse { uint64 campaignID = 1; }
+message MsgCreateCampaignResponse {
+  uint64 campaignID = 1;
+}
 
 message MsgUpdateCampaignName {
   string coordinator = 1;
@@ -83,7 +79,9 @@ message MsgInitializeMainnet {
   string mainnetChainID = 5;
 }
 
-message MsgInitializeMainnetResponse { uint64 mainnetID = 1; }
+message MsgInitializeMainnetResponse {
+  uint64 mainnetID = 1;
+}
 
 message MsgAddShares {
   string coordinator = 1;
@@ -107,7 +105,7 @@ message MsgAddVestingOptions {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
-  ShareVestingOptions vestingOptions = 5 [ (gogoproto.nullable) = false ];
+  ShareVestingOptions vestingOptions = 5 [(gogoproto.nullable) = false];
 }
 
 message MsgAddVestingOptionsResponse {}

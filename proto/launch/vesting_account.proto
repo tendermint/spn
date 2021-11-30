@@ -14,11 +14,11 @@ message VestingAccount {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
-  VestingOptions vestingOptions = 4 [ (gogoproto.nullable) = false ];
+  VestingOptions vestingOptions = 4 [(gogoproto.nullable) = false];
 }
 
 message VestingOptions {
-  oneof options { DelayedVesting delayedVesting = 1; }
+  oneof options {DelayedVesting delayedVesting = 1;}
 }
 
 // DelayedVesting represents options for delayed vesting

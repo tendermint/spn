@@ -14,11 +14,11 @@ message MainnetVestingAccount {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
-  ShareVestingOptions vestingOptions = 4 [ (gogoproto.nullable) = false ];
+  ShareVestingOptions vestingOptions = 4 [(gogoproto.nullable) = false];
 }
 
 message ShareVestingOptions {
-  oneof options { ShareDelayedVesting delayedVesting = 1; }
+  oneof options {ShareDelayedVesting delayedVesting = 1;}
 }
 
 // ShareDelayedVesting represents options for share delayed vesting

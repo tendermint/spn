@@ -11,6 +11,6 @@ message GenesisValidator {
   string address = 2;
   bytes genTx = 3;
   bytes consPubKey = 4;
-  cosmos.base.v1beta1.Coin selfDelegation = 5 [ (gogoproto.nullable) = false ];
+  cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
   string peer = 6;
 }

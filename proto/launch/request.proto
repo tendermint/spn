@@ -13,7 +13,7 @@ message Request {
   uint64 requestID = 2;
   string creator = 3;
   int64 createdAt = 4;
-  RequestContent content = 5 [ (gogoproto.nullable) = false ];
+  RequestContent content = 5 [(gogoproto.nullable) = false];
 }
 
 message RequestContent {
@@ -26,6 +26,10 @@ message RequestContent {
   }
 }
 
-message AccountRemoval { string address = 1; }
+message AccountRemoval {
+  string address = 1;
+}
 
-message ValidatorRemoval { string valAddress = 1; }
+message ValidatorRemoval {
+  string valAddress = 1;
+}
