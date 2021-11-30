@@ -47,7 +47,7 @@ func (k Keeper) SetRequest(ctx sdk.Context, request types.Request) {
 func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestKeyPrefix))
 
-	counter := k.GetRequestCounter(ctx, request.LaunchID)
+	counter := k.GetRequestCounter(ctx, request.LaunchID) + 1
 	request.RequestID = counter
 
 	b := k.cdc.MustMarshal(&request)
@@ -57,7 +57,7 @@ func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 	), b)
 
 	// increment the counter
-	k.SetRequestCounter(ctx, request.LaunchID, counter+1)
+	k.SetRequestCounter(ctx, request.LaunchID, counter)
 
 	return counter
 }
