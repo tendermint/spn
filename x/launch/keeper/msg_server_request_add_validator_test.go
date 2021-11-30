@@ -54,17 +54,17 @@ func TestMsgRequestAddValidator(t *testing.T) {
 		{
 			name:   "request to a chain 3",
 			msg:    sample.MsgRequestAddValidator(addr1, chains[2].LaunchID),
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name:   "second request to a chain 3",
 			msg:    sample.MsgRequestAddValidator(addr2, chains[2].LaunchID),
-			wantID: 1,
+			wantID: 2,
 		},
 		{
 			name:   "request to a chain 4",
 			msg:    sample.MsgRequestAddValidator(addr1, chains[3].LaunchID),
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name:        "request from coordinator is pre-approved",

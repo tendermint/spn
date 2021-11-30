@@ -363,7 +363,7 @@ func TestFindRandomRequest(t *testing.T) {
 		k.AppendRequest(sdkCtx, request)
 
 		gotRequest, gotFound := launchsimulation.FindRandomRequest(r, sdkCtx, *k)
-		require.Equal(t, gotRequest, request)
+		require.Equal(t, request, gotRequest)
 		require.True(t, gotFound)
 	})
 }

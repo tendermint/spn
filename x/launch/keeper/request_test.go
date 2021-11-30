@@ -73,9 +73,9 @@ func TestRequestGetAll(t *testing.T) {
 func TestRequestCounter(t *testing.T) {
 	keeper, ctx := testkeeper.Launch(t)
 	items := createNRequest(keeper, ctx, 10)
-	counter := uint64(len(items))
+	counter := uint64(len(items)) + 1
 	require.Equal(t, counter, keeper.GetRequestCounter(ctx, 0))
-	require.Equal(t, uint64(0), keeper.GetRequestCounter(ctx, 1))
+	require.Equal(t, uint64(1), keeper.GetRequestCounter(ctx, 1))
 }
 
 func TestApplyRequest(t *testing.T) {
