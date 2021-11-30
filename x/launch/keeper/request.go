@@ -18,7 +18,7 @@ func (k Keeper) GetRequestCounter(ctx sdk.Context, launchID uint64) uint64 {
 
 	// Counter doesn't exist: no element
 	if bz == nil {
-		return 0
+		return 1
 	}
 
 	// Parse bytes
@@ -47,7 +47,7 @@ func (k Keeper) SetRequest(ctx sdk.Context, request types.Request) {
 func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestKeyPrefix))
 
-	counter := k.GetRequestCounter(ctx, request.LaunchID) + 1
+	counter := k.GetRequestCounter(ctx, request.LaunchID)
 	request.RequestID = counter
 
 	b := k.cdc.MustMarshal(&request)
@@ -57,7 +57,7 @@ func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 	), b)
 
 	// increment the counter
-	k.SetRequestCounter(ctx, request.LaunchID, counter)
+	k.SetRequestCounter(ctx, request.LaunchID, counter+1)
 
 	return counter
 }
