@@ -240,7 +240,8 @@ func (*InitialGenesis) XXX_OneofWrappers() []interface{} {
 	}
 }
 
-// DefaultInitialGenesis specifies using the default CLI-generated genesis as an initial genesis
+// DefaultInitialGenesis specifies using the default CLI-generated genesis as an
+// initial genesis
 type DefaultInitialGenesis struct {
 }
 

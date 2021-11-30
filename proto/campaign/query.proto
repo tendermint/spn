@@ -16,7 +16,8 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 service Query {
   // Queries a campaign by id.
   rpc Campaign(QueryGetCampaignRequest) returns (QueryGetCampaignResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/campaign/{campaignID}";
+    option (google.api.http).get =
+        "/tendermint/spn/campaign/campaign/{campaignID}";
   }
 
   // Queries a list of campaign items.
@@ -25,39 +26,47 @@ service Query {
   }
 
   // Queries a campaignChains by index.
-  rpc CampaignChains(QueryGetCampaignChainsRequest) returns (QueryGetCampaignChainsResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/campaign_chains/{campaignID}";
+  rpc CampaignChains(QueryGetCampaignChainsRequest)
+      returns (QueryGetCampaignChainsResponse) {
+    option (google.api.http).get =
+        "/tendermint/spn/campaign/campaign_chains/{campaignID}";
   }
 
   // Queries a mainnetAccount by index.
-  rpc MainnetAccount(QueryGetMainnetAccountRequest) returns (QueryGetMainnetAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account/{campaignID}/{address}";
+  rpc MainnetAccount(QueryGetMainnetAccountRequest)
+      returns (QueryGetMainnetAccountResponse) {
+    option (google.api.http).get =
+        "/tendermint/spn/campaign/mainnet_account/{campaignID}/{address}";
   }
 
   // Queries a list of mainnetAccount items.
-  rpc MainnetAccountAll(QueryAllMainnetAccountRequest) returns (QueryAllMainnetAccountResponse) {
+  rpc MainnetAccountAll(QueryAllMainnetAccountRequest)
+      returns (QueryAllMainnetAccountResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account";
   }
 
   // Queries a mainnetVestingAccount by index.
-  rpc MainnetVestingAccount(QueryGetMainnetVestingAccountRequest) returns (QueryGetMainnetVestingAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account/{campaignID}/{address}";
+  rpc MainnetVestingAccount(QueryGetMainnetVestingAccountRequest)
+      returns (QueryGetMainnetVestingAccountResponse) {
+    option (google.api.http).get =
+        "/tendermint/spn/campaign/mainnet_vesting_account/{campaignID}/"
+        "{address}";
   }
 
   // Queries a list of mainnetVestingAccount items.
-  rpc MainnetVestingAccountAll(QueryAllMainnetVestingAccountRequest) returns (QueryAllMainnetVestingAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account";
+  rpc MainnetVestingAccountAll(QueryAllMainnetVestingAccountRequest)
+      returns (QueryAllMainnetVestingAccountResponse) {
+    option (google.api.http).get =
+        "/tendermint/spn/campaign/mainnet_vesting_account";
   }
 
   // this line is used by starport scaffolding # 2
 }
 
-message QueryGetCampaignRequest {
-  uint64 campaignID = 1;
-}
+message QueryGetCampaignRequest { uint64 campaignID = 1; }
 
 message QueryGetCampaignResponse {
-  Campaign campaign = 1 [(gogoproto.nullable) = false];
+  Campaign campaign = 1 [ (gogoproto.nullable) = false ];
 }
 
 message QueryAllCampaignRequest {
@@ -65,17 +74,14 @@ message QueryAllCampaignRequest {
 }
 
 message QueryAllCampaignResponse {
-  repeated Campaign campaign = 1 [(gogoproto.nullable) = false];
+  repeated Campaign campaign = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetCampaignChainsRequest {
-  uint64 campaignID = 1;
-
-}
+message QueryGetCampaignChainsRequest { uint64 campaignID = 1; }
 
 message QueryGetCampaignChainsResponse {
-  CampaignChains campaignChains = 1 [(gogoproto.nullable) = false];
+  CampaignChains campaignChains = 1 [ (gogoproto.nullable) = false ];
 }
 
 message QueryGetMainnetAccountRequest {
@@ -84,7 +90,7 @@ message QueryGetMainnetAccountRequest {
 }
 
 message QueryGetMainnetAccountResponse {
-  MainnetAccount mainnetAccount = 1 [(gogoproto.nullable) = false];
+  MainnetAccount mainnetAccount = 1 [ (gogoproto.nullable) = false ];
 }
 
 message QueryAllMainnetAccountRequest {
@@ -93,7 +99,7 @@ message QueryAllMainnetAccountRequest {
 }
 
 message QueryAllMainnetAccountResponse {
-  repeated MainnetAccount mainnetAccount = 1 [(gogoproto.nullable) = false];
+  repeated MainnetAccount mainnetAccount = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -103,7 +109,8 @@ message QueryGetMainnetVestingAccountRequest {
 }
 
 message QueryGetMainnetVestingAccountResponse {
-  MainnetVestingAccount mainnetVestingAccount = 1 [(gogoproto.nullable) = false];
+  MainnetVestingAccount mainnetVestingAccount = 1
+      [ (gogoproto.nullable) = false ];
 }
 
 message QueryAllMainnetVestingAccountRequest {
@@ -112,7 +119,8 @@ message QueryAllMainnetVestingAccountRequest {
 }
 
 message QueryAllMainnetVestingAccountResponse {
-  repeated MainnetVestingAccount mainnetVestingAccount = 1 [(gogoproto.nullable) = false];
+  repeated MainnetVestingAccount mainnetVestingAccount = 1
+      [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

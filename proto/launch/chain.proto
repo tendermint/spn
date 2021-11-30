@@ -14,7 +14,7 @@ message Chain {
   string sourceURL = 5;
   string sourceHash = 6;
 
-  InitialGenesis initialGenesis = 7 [(gogoproto.nullable) = false];
+  InitialGenesis initialGenesis = 7 [ (gogoproto.nullable) = false ];
 
   bool hasCampaign = 8;
   uint64 campaignID = 9;
@@ -31,7 +31,8 @@ message InitialGenesis {
   }
 }
 
-// DefaultInitialGenesis specifies using the default CLI-generated genesis as an initial genesis
+// DefaultInitialGenesis specifies using the default CLI-generated genesis as an
+// initial genesis
 message DefaultInitialGenesis {}
 
 // GenesisURL specifies using a custom genesis from a URL as the initial genesis

@@ -9,6 +9,8 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  uint64 minLaunchTime = 1 [(gogoproto.moretags) = "yaml:\"min_launch_time\""];
-  uint64 maxLaunchTime = 2 [(gogoproto.moretags) = "yaml:\"max_launch_time\""];
+  uint64 minLaunchTime = 1
+      [ (gogoproto.moretags) = "yaml:\"min_launch_time\"" ];
+  uint64 maxLaunchTime = 2
+      [ (gogoproto.moretags) = "yaml:\"max_launch_time\"" ];
 }

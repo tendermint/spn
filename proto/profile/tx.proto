@@ -10,40 +10,41 @@ option go_package = "github.com/tendermint/spn/x/profile/types";
 
 // Msg defines the Msg service.
 service Msg {
-  rpc UpdateValidatorDescription(MsgUpdateValidatorDescription) returns (MsgUpdateValidatorDescriptionResponse);
+  rpc UpdateValidatorDescription(MsgUpdateValidatorDescription)
+      returns (MsgUpdateValidatorDescriptionResponse);
   rpc DeleteValidator(MsgDeleteValidator) returns (MsgDeleteValidatorResponse);
-  rpc CreateCoordinator(MsgCreateCoordinator) returns (MsgCreateCoordinatorResponse);
-  rpc UpdateCoordinatorDescription(MsgUpdateCoordinatorDescription) returns (MsgUpdateCoordinatorDescriptionResponse);
-  rpc UpdateCoordinatorAddress(MsgUpdateCoordinatorAddress) returns (MsgUpdateCoordinatorAddressResponse);
-  rpc DeleteCoordinator(MsgDeleteCoordinator) returns (MsgDeleteCoordinatorResponse);
+  rpc CreateCoordinator(MsgCreateCoordinator)
+      returns (MsgCreateCoordinatorResponse);
+  rpc UpdateCoordinatorDescription(MsgUpdateCoordinatorDescription)
+      returns (MsgUpdateCoordinatorDescriptionResponse);
+  rpc UpdateCoordinatorAddress(MsgUpdateCoordinatorAddress)
+      returns (MsgUpdateCoordinatorAddressResponse);
+  rpc DeleteCoordinator(MsgDeleteCoordinator)
+      returns (MsgDeleteCoordinatorResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgUpdateValidatorDescription {
   string address = 1;
-  ValidatorDescription description = 2 [(gogoproto.nullable) = false];
+  ValidatorDescription description = 2 [ (gogoproto.nullable) = false ];
 }
 
 message MsgUpdateValidatorDescriptionResponse {}
 
-message MsgDeleteValidator {
-  string address = 1;
-}
+message MsgDeleteValidator { string address = 1; }
 
 message MsgDeleteValidatorResponse {}
 
 message MsgCreateCoordinator {
   string address = 1;
-  CoordinatorDescription description = 2 [(gogoproto.nullable) = false];
+  CoordinatorDescription description = 2 [ (gogoproto.nullable) = false ];
 }
 
-message MsgCreateCoordinatorResponse {
-  uint64 coordinatorID = 1;
-}
+message MsgCreateCoordinatorResponse { uint64 coordinatorID = 1; }
 
 message MsgUpdateCoordinatorDescription {
   string address = 1;
-  CoordinatorDescription description = 2 [(gogoproto.nullable) = false];
+  CoordinatorDescription description = 2 [ (gogoproto.nullable) = false ];
 }
 
 message MsgUpdateCoordinatorDescriptionResponse {}
@@ -55,12 +56,8 @@ message MsgUpdateCoordinatorAddress {
 
 message MsgUpdateCoordinatorAddressResponse {}
 
-message MsgDeleteCoordinator {
-  string address = 1;
-}
+message MsgDeleteCoordinator { string address = 1; }
 
-message MsgDeleteCoordinatorResponse {
-  uint64 coordinatorID = 1;
-}
+message MsgDeleteCoordinatorResponse { uint64 coordinatorID = 1; }
 
 // this line is used by starport scaffolding # proto/tx/message
