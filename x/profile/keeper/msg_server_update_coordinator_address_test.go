@@ -79,10 +79,10 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 			require.True(t, found, "coordinator by address not found")
 			require.EqualValues(t, tt.msg.NewAddress, coordByAddr.Address)
 
-			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorId)
+			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
 			require.True(t, found, "coordinator id not found")
 			require.EqualValues(t, tt.msg.NewAddress, coord.Address)
-			require.EqualValues(t, coordByAddr.CoordinatorId, coord.CoordinatorId)
+			require.EqualValues(t, coordByAddr.CoordinatorID, coord.CoordinatorID)
 		})
 	}
 }

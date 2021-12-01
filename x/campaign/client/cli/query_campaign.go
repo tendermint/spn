@@ -53,13 +53,13 @@ func CmdShowCampaign() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			id, err := strconv.ParseUint(args[0], 10, 64)
+			campaignID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryGetCampaignRequest{
-				Id: id,
+				CampaignID: campaignID,
 			}
 
 			res, err := queryClient.Campaign(context.Background(), params)

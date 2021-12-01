@@ -13,8 +13,8 @@ func TestAccountWithoutCampaignInvariant(t *testing.T) {
 	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
-		campaign.Id = k.AppendCampaign(ctx, campaign)
-		k.SetMainnetAccount(ctx, sample.MainnetAccount(campaign.Id, sample.Address()))
+		campaign.CampaignID = k.AppendCampaign(ctx, campaign)
+		k.SetMainnetAccount(ctx, sample.MainnetAccount(campaign.CampaignID, sample.Address()))
 		_, isValid := keeper.AccountWithoutCampaignInvariant(*k)(ctx)
 		require.Equal(t, false, isValid)
 	})
@@ -30,8 +30,8 @@ func TestVestingAccountWithoutCampaignInvariant(t *testing.T) {
 	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
-		campaign.Id = k.AppendCampaign(ctx, campaign)
-		k.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(campaign.Id, sample.Address()))
+		campaign.CampaignID = k.AppendCampaign(ctx, campaign)
+		k.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(campaign.CampaignID, sample.Address()))
 		_, isValid := keeper.VestingAccountWithoutCampaignInvariant(*k)(ctx)
 		require.Equal(t, false, isValid)
 	})
@@ -47,8 +47,8 @@ func TestCampaignChainsWithoutCampaignInvariant(t *testing.T) {
 	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
-		campaign.Id = k.AppendCampaign(ctx, campaign)
-		k.SetCampaignChains(ctx, types.CampaignChains{CampaignID: campaign.Id})
+		campaign.CampaignID = k.AppendCampaign(ctx, campaign)
+		k.SetCampaignChains(ctx, types.CampaignChains{CampaignID: campaign.CampaignID})
 		_, isValid := keeper.CampaignChainsWithoutCampaignInvariant(*k)(ctx)
 		require.Equal(t, false, isValid)
 	})

@@ -25,12 +25,14 @@ func TestGenesisState_Validate(t *testing.T) {
 	campaign1.AllocatedShares = sharesCampaign1
 	campaign1.TotalShares = sharesCampaign1
 	campaign1.DynamicShares = true
+	campaign1.CoordinatorID = 0
 
 	sharesCampaign2 := types.IncreaseShares(shares3, shares4)
 	sharesCampaign2 = types.IncreaseShares(sharesCampaign2, sharesVesting2)
 	campaign2.AllocatedShares = sharesCampaign2
 	campaign2.TotalShares = sharesCampaign2
 	campaign2.DynamicShares = true
+	campaign2.CoordinatorID = 1
 
 	for _, tc := range []struct {
 		desc     string
@@ -48,10 +50,10 @@ func TestGenesisState_Validate(t *testing.T) {
 				// this line is used by starport scaffolding # types/genesis/validField
 				CampaignChainsList: []types.CampaignChains{
 					{
-						CampaignID: campaign1.Id,
+						CampaignID: campaign1.CampaignID,
 					},
 					{
-						CampaignID: campaign2.Id,
+						CampaignID: campaign2.CampaignID,
 					},
 				},
 				CampaignList: []types.Campaign{
@@ -61,25 +63,25 @@ func TestGenesisState_Validate(t *testing.T) {
 				CampaignCounter: 2,
 				MainnetAccountList: []types.MainnetAccount{
 					{
-						CampaignID: campaign1.Id,
+						CampaignID: campaign1.CampaignID,
 						Address:    sample.Address(),
 						Shares:     shares1,
 					},
 					{
-						CampaignID: campaign2.Id,
+						CampaignID: campaign2.CampaignID,
 						Address:    sample.Address(),
 						Shares:     shares3,
 					},
 				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
-						CampaignID:     campaign1.Id,
+						CampaignID:     campaign1.CampaignID,
 						Address:        sample.Address(),
 						StartingShares: shares2,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting1, time.Now().Unix()),
 					},
 					{
-						CampaignID:     campaign2.Id,
+						CampaignID:     campaign2.CampaignID,
 						Address:        sample.Address(),
 						StartingShares: shares4,
 						VestingOptions: *types.NewShareDelayedVesting(sharesVesting2, time.Now().Unix()),
@@ -251,7 +253,7 @@ func TestGenesisState_Validate(t *testing.T) {
 
 			campaignIDMap := make(map[uint64]types.Shares)
 			for _, elem := range tc.genState.CampaignList {
-				campaignIDMap[elem.Id] = elem.AllocatedShares
+				campaignIDMap[elem.CampaignID] = elem.AllocatedShares
 			}
 			shares := make(map[uint64]types.Shares)
 

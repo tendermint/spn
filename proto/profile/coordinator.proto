@@ -6,7 +6,7 @@ option go_package = "github.com/tendermint/spn/x/profile/types";
 import "gogoproto/gogo.proto";
 
 message Coordinator {
-  uint64 coordinatorId = 1;
+  uint64 coordinatorID = 1;
   string address = 2;
   CoordinatorDescription description = 3 [(gogoproto.nullable) = false];
 }
@@ -19,5 +19,5 @@ message CoordinatorDescription {
 
 message CoordinatorByAddress {
   string address = 1;
-  uint64 coordinatorId = 2;
+  uint64 coordinatorID = 2;
 }

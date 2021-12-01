@@ -30,7 +30,7 @@ func TestMsgMintVouchers(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	coordID := res.CoordinatorId
+	coordID := res.CoordinatorID
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordNoCampaign,
 		Description: sample.CoordinatorDescription(),
@@ -40,7 +40,7 @@ func TestMsgMintVouchers(t *testing.T) {
 	// Set campaign
 	campaign := sample.Campaign(0)
 	campaign.CoordinatorID = coordID
-	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	for _, tc := range []struct {
 		name string

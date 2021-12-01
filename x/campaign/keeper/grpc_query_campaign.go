@@ -46,7 +46,7 @@ func (k Keeper) Campaign(c context.Context, req *types.QueryGetCampaignRequest) 
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	campaign, found := k.GetCampaign(ctx, req.Id)
+	campaign, found := k.GetCampaign(ctx, req.CampaignID)
 	if !found {
 		return nil, sdkerrors.ErrKeyNotFound
 	}

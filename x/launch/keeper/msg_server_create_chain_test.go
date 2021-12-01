@@ -25,7 +25,7 @@ func TestMsgCreateChain(t *testing.T) {
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
 	resCoord, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
-	coordID := resCoord.CoordinatorId
+	coordID := resCoord.CoordinatorID
 
 	// Create a campaign
 	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)

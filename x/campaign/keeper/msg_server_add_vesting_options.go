@@ -32,7 +32,7 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	}
 
 	// check if the account already exists
-	oldAccount, foundAcc := k.GetMainnetVestingAccount(ctx, campaign.Id, msg.Address)
+	oldAccount, foundAcc := k.GetMainnetVestingAccount(ctx, campaign.CampaignID, msg.Address)
 	if foundAcc {
 		// if yes, remove the allocated share
 		totalShares, err := oldAccount.GetTotalShares()
@@ -46,7 +46,7 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	}
 
 	account := types.MainnetVestingAccount{
-		CampaignID:     campaign.Id,
+		CampaignID:     campaign.CampaignID,
 		Address:        msg.Address,
 		StartingShares: msg.StartingShares,
 		VestingOptions: msg.VestingOptions,

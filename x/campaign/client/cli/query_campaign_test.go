@@ -47,7 +47,7 @@ func TestShowCampaign(t *testing.T) {
 	}{
 		{
 			desc: "found",
-			id:   fmt.Sprintf("%d", objs[0].Id),
+			id:   fmt.Sprintf("%d", objs[0].CampaignID),
 			args: common,
 			obj:  objs[0],
 		},

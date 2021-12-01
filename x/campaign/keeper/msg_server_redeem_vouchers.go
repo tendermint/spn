@@ -40,7 +40,7 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 	if !found {
 		// If not, create the account
 		account = types.MainnetAccount{
-			CampaignID: campaign.Id,
+			CampaignID: campaign.CampaignID,
 			Address:    msg.Account,
 			Shares:     types.EmptyShares(),
 		}
