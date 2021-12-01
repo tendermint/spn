@@ -53,13 +53,13 @@ func CmdShowCoordinator() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			id, err := strconv.ParseUint(args[0], 10, 64)
+			coordinatorID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			params := &types.QueryGetCoordinatorRequest{
-				Id: id,
+				CoordinatorID: coordinatorID,
 			}
 
 			res, err := queryClient.Coordinator(context.Background(), params)

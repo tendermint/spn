@@ -29,7 +29,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	coordID := res.CoordinatorId
+	coordID := res.CoordinatorID
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrNoCampaign,
 		Description: sample.CoordinatorDescription(),

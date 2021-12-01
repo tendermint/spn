@@ -38,11 +38,11 @@ func (k Keeper) AppendCampaign(ctx sdk.Context, campaign types.Campaign) uint64 
 	counter := k.GetCampaignCounter(ctx)
 
 	// Set the ID of the appended value
-	campaign.Id = counter
+	campaign.CampaignID = counter
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
 	appendedValue := k.cdc.MustMarshal(&campaign)
-	store.Set(GetCampaignIDBytes(campaign.Id), appendedValue)
+	store.Set(GetCampaignIDBytes(campaign.CampaignID), appendedValue)
 
 	// Update campaign count
 	k.SetCampaignCounter(ctx, counter+1)
@@ -54,7 +54,7 @@ func (k Keeper) AppendCampaign(ctx sdk.Context, campaign types.Campaign) uint64 
 func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
 	b := k.cdc.MustMarshal(&campaign)
-	store.Set(GetCampaignIDBytes(campaign.Id), b)
+	store.Set(GetCampaignIDBytes(campaign.CampaignID), b)
 }
 
 // GetCampaign returns a campaign from its id

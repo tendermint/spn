@@ -89,7 +89,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 		require.Contains(t, accs, acc)
 		_, found = ck.GetCampaign(ctx, id)
 		require.True(t, found)
-		require.EqualValues(t, id, camp.Id)
+		require.EqualValues(t, id, camp.CampaignID)
 	})
 
 	t.Run("find a campaign with dynamic shares", func(t *testing.T) {
@@ -108,7 +108,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 		camp, found = ck.GetCampaign(ctx, id)
 		require.True(t, found)
 		require.EqualValues(t, idDynamicShares, id)
-		require.EqualValues(t, id, camp.Id)
+		require.EqualValues(t, id, camp.CampaignID)
 		require.True(t, camp.DynamicShares)
 	})
 
@@ -127,7 +127,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 		_, found = ck.GetCampaign(ctx, id)
 		require.True(t, found)
 		require.EqualValues(t, idNoMainnet, id)
-		require.EqualValues(t, id, camp.Id)
+		require.EqualValues(t, id, camp.CampaignID)
 		require.False(t, camp.MainnetInitialized)
 	})
 
@@ -146,7 +146,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 		_, found = ck.GetCampaign(ctx, id)
 		require.True(t, found)
 		require.EqualValues(t, idNoMainnetDynamicShares, id)
-		require.EqualValues(t, id, camp.Id)
+		require.EqualValues(t, id, camp.CampaignID)
 		require.False(t, camp.MainnetInitialized)
 		require.True(t, camp.DynamicShares)
 	})

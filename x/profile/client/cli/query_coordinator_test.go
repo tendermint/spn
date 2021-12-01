@@ -22,7 +22,7 @@ func networkWithCoordinatorObjects(t *testing.T, n int) (*network.Network, []typ
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.CoordinatorList = append(state.CoordinatorList, types.Coordinator{CoordinatorId: uint64(i)})
+		state.CoordinatorList = append(state.CoordinatorList, types.Coordinator{CoordinatorID: uint64(i)})
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
@@ -46,7 +46,7 @@ func TestShowCoordinator(t *testing.T) {
 	}{
 		{
 			desc: "found",
-			id:   fmt.Sprintf("%d", objs[0].CoordinatorId),
+			id:   fmt.Sprintf("%d", objs[0].CoordinatorID),
 			args: common,
 			obj:  objs[0],
 		},

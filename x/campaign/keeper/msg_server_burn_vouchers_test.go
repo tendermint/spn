@@ -28,10 +28,10 @@ func TestMsgBurnVouchers(t *testing.T) {
 
 	// Set campaign
 	campaign.AllocatedShares = shares
-	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	// Create vouchers
-	vouchers, err := types.SharesToVouchers(shares, campaign.Id)
+	vouchers, err := types.SharesToVouchers(shares, campaign.CampaignID)
 	require.NoError(t, err)
 
 	// Send coins to account
@@ -58,7 +58,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "invalid sender address",
 			msg: types.MsgBurnVouchers{
 				Sender:     "invalid_address",
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sample.Coins(),
 			},
 			err: spnerrors.ErrCritical,
@@ -67,7 +67,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "should not burn more than allocated shares",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   vouchersTooBig,
 			},
 			err: types.ErrInsufficientVouchers,
@@ -76,7 +76,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "burn voucher one",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
 		},
@@ -84,7 +84,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "insufficient funds for voucher one",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
 			err: types.ErrInsufficientVouchers,
@@ -93,7 +93,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "burn voucher two",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[1]),
 			},
 		},
@@ -101,7 +101,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "insufficient funds for voucher two",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[1]),
 			},
 			err: types.ErrInsufficientVouchers,
@@ -110,7 +110,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "burn voucher three",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[2]),
 			},
 		},
@@ -118,7 +118,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "insufficient funds for voucher three",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.Id,
+				CampaignID: campaign.CampaignID,
 				Vouchers:   sdk.NewCoins(vouchers[2]),
 			},
 			err: types.ErrInsufficientVouchers,

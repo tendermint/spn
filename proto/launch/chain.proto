@@ -31,7 +31,8 @@ message InitialGenesis {
   }
 }
 
-// DefaultInitialGenesis specifies using the default CLI-generated genesis as an initial genesis
+// DefaultInitialGenesis specifies using the default CLI-generated genesis as an
+// initial genesis
 message DefaultInitialGenesis {}
 
 // GenesisURL specifies using a custom genesis from a URL as the initial genesis

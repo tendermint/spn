@@ -23,16 +23,16 @@ func (gs GenesisState) Validate() error {
 	campaignIDMap := make(map[uint64]bool)
 	campaignCounter := gs.GetCampaignCounter()
 	for _, elem := range gs.CampaignList {
-		if _, ok := campaignIDMap[elem.Id]; ok {
+		if _, ok := campaignIDMap[elem.CoordinatorID]; ok {
 			return fmt.Errorf("duplicated id for campaign")
 		}
-		if elem.Id >= campaignCounter {
+		if elem.CoordinatorID >= campaignCounter {
 			return fmt.Errorf("campaign id should be lower or equal than the last id")
 		}
 		if err := elem.Validate(); err != nil {
-			return fmt.Errorf("invalid campaign %d: %s", elem.Id, err.Error())
+			return fmt.Errorf("invalid campaign %d: %s", elem.CoordinatorID, err.Error())
 		}
-		campaignIDMap[elem.Id] = true
+		campaignIDMap[elem.CoordinatorID] = true
 	}
 
 	// Check for duplicated index in campaignChains

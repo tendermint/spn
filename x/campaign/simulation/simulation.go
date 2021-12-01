@@ -72,7 +72,7 @@ func GetCoordSimAccount(
 	// Find the account linked to this address
 	for _, acc := range accs {
 		if acc.Address.String() == coord.Address {
-			return acc, coord.CoordinatorId, true
+			return acc, coord.CoordinatorID, true
 		}
 	}
 	return simtypes.Account{}, 0, false
@@ -121,7 +121,7 @@ func GetCoordSimAccountWithCampaignID(
 	}
 	for _, acc := range accs {
 		if acc.Address.String() == coordAddr {
-			return acc, camp.Id, true
+			return acc, camp.CampaignID, true
 		}
 	}
 

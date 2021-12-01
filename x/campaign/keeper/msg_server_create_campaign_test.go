@@ -25,13 +25,13 @@ func TestMsgCreateCampaign(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	coordMap[coordAddr1] = res.CoordinatorId
+	coordMap[coordAddr1] = res.CoordinatorID
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	coordMap[coordAddr2] = res.CoordinatorId
+	coordMap[coordAddr2] = res.CoordinatorID
 
 	for _, tc := range []struct {
 		name       string
@@ -90,7 +90,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.Equal(t, tc.expectedID, got.CampaignID)
 			campaign, found := campaignKeeper.GetCampaign(sdkCtx, got.CampaignID)
 			require.True(t, found)
-			require.EqualValues(t, got.CampaignID, campaign.Id)
+			require.EqualValues(t, got.CampaignID, campaign.CampaignID)
 			require.EqualValues(t, tc.msg.CampaignName, campaign.CampaignName)
 			require.EqualValues(t, coordMap[tc.msg.Coordinator], campaign.CoordinatorID)
 			require.False(t, campaign.MainnetInitialized)

@@ -20,7 +20,7 @@ func (k msgServer) CreateCoordinator(
 	if found {
 		return &types.MsgCreateCoordinatorResponse{},
 			sdkerrors.Wrap(types.ErrCoordAlreadyExist,
-				fmt.Sprintf("coordinatorId: %d", coord.CoordinatorId))
+				fmt.Sprintf("coordinatorId: %d", coord.CoordinatorID))
 	}
 
 	coordID := k.AppendCoordinator(ctx, types.Coordinator{
@@ -29,10 +29,10 @@ func (k msgServer) CreateCoordinator(
 	})
 	k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       msg.Address,
-		CoordinatorId: coordID,
+		CoordinatorID: coordID,
 	})
 
 	return &types.MsgCreateCoordinatorResponse{
-		CoordinatorId: coordID,
+		CoordinatorID: coordID,
 	}, nil
 }

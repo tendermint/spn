@@ -166,7 +166,8 @@ func (*ShareVestingOptions) XXX_OneofWrappers() []interface{} {
 }
 
 // ShareDelayedVesting represents options for share delayed vesting
-// Delayed vesting is the type of vesting where all vesting coins are vested once end time is reached
+// Delayed vesting is the type of vesting where all vesting coins are vested
+// once end time is reached
 type ShareDelayedVesting struct {
 	Vesting Shares `protobuf:"bytes,1,rep,name=vesting,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=Shares" json:"vesting"`
 	EndTime int64  `protobuf:"varint,2,opt,name=endTime,proto3" json:"endTime,omitempty"`

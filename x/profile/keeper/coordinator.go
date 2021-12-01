@@ -41,11 +41,11 @@ func (k Keeper) AppendCoordinator(
 	counter := k.GetCoordinatorCounter(ctx)
 
 	// Set the ID of the appended value
-	coordinator.CoordinatorId = counter
+	coordinator.CoordinatorID = counter
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
 	appendedValue := k.cdc.MustMarshal(&coordinator)
-	store.Set(GetCoordinatorIDBytes(coordinator.CoordinatorId), appendedValue)
+	store.Set(GetCoordinatorIDBytes(coordinator.CoordinatorID), appendedValue)
 
 	// Update coordinator counter
 	k.SetCoordinatorCounter(ctx, counter+1)
@@ -57,7 +57,7 @@ func (k Keeper) AppendCoordinator(
 func (k Keeper) SetCoordinator(ctx sdk.Context, coordinator types.Coordinator) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
 	b := k.cdc.MustMarshal(&coordinator)
-	store.Set(GetCoordinatorIDBytes(coordinator.CoordinatorId), b)
+	store.Set(GetCoordinatorIDBytes(coordinator.CoordinatorID), b)
 }
 
 // GetCoordinator returns a coordinator from its id
