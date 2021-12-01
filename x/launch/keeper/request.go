@@ -18,7 +18,7 @@ func (k Keeper) GetRequestCounter(ctx sdk.Context, launchID uint64) uint64 {
 
 	// Counter doesn't exist: no element
 	if bz == nil {
-		return 0
+		return 1
 	}
 
 	// Parse bytes

@@ -84,6 +84,7 @@ func ValidatorRemoval(address string) launch.ValidatorRemoval {
 // RequestWithContent creates a launch request object with launch id and content
 func RequestWithContent(launchID uint64, content launch.RequestContent) launch.Request {
 	return launch.Request{
+		RequestID: 1,
 		LaunchID:  launchID,
 		Creator:   Address(),
 		CreatedAt: time.Now().Unix(),

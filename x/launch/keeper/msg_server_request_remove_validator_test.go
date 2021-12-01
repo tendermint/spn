@@ -85,7 +85,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name: "add chain 3 request 1",
@@ -103,7 +103,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr2,
 				ValidatorAddress: addr2,
 			},
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name: "add chain 5 request 1",
@@ -112,7 +112,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name: "add chain 5 request 2",
@@ -130,7 +130,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr3,
 				ValidatorAddress: addr3,
 			},
-			wantID: 1,
+			wantID: 2,
 		},
 		{
 			name: "request from coordinator is pre-approved",

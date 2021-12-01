@@ -58,32 +58,32 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		{
 			name:   "add chain 3 request 1",
 			msg:    sample.MsgRequestAddAccount(addr1, chains[2].LaunchID),
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name:   "add chain 4 request 1",
 			msg:    sample.MsgRequestAddAccount(addr1, chains[3].LaunchID),
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name:   "add chain 4 request 2",
 			msg:    sample.MsgRequestAddAccount(addr2, chains[3].LaunchID),
-			wantID: 1,
+			wantID: 2,
 		},
 		{
 			name:   "add chain 5 request 1",
 			msg:    sample.MsgRequestAddAccount(addr1, chains[4].LaunchID),
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name:   "add chain 5 request 2",
 			msg:    sample.MsgRequestAddAccount(addr2, chains[4].LaunchID),
-			wantID: 1,
+			wantID: 2,
 		},
 		{
 			name:   "add chain 5 request 3",
 			msg:    sample.MsgRequestAddAccount(addr3, chains[4].LaunchID),
-			wantID: 2,
+			wantID: 3,
 		},
 		{
 			name:        "request from coordinator is pre-approved",

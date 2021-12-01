@@ -88,7 +88,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Creator:  addr1,
 				Address:  addr1,
 			},
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name: "add chain 4 request 2",
@@ -106,7 +106,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Creator:  addr2,
 				Address:  addr2,
 			},
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name: "add chain 5 request 1",
@@ -115,7 +115,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Creator:  addr1,
 				Address:  addr1,
 			},
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name: "add chain 5 request 2",
@@ -133,7 +133,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Creator:  addr3,
 				Address:  addr3,
 			},
-			wantID: 1,
+			wantID: 2,
 		},
 		{
 			name: "request from coordinator is pre-approved",
