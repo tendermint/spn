@@ -51,9 +51,10 @@ message MsgEditChain {
 message MsgEditChainResponse {}
 
 message MsgRequestAddAccount {
-  uint64 launchID = 1;
-  string address = 2;
-  repeated cosmos.base.v1beta1.Coin coins = 3 [
+  string creator = 1;
+  uint64 launchID = 2;
+  string address = 3;
+  repeated cosmos.base.v1beta1.Coin coins = 4 [
     (gogoproto.nullable) = false,
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
@@ -66,14 +67,15 @@ message MsgRequestAddAccountResponse {
 }
 
 message MsgRequestAddVestingAccount {
-  uint64 launchID = 1;
-  string address = 2;
-  repeated cosmos.base.v1beta1.Coin startingBalance = 3 [
+  string creator = 1;
+  uint64 launchID = 2;
+  string address = 3;
+  repeated cosmos.base.v1beta1.Coin startingBalance = 4 [
     (gogoproto.nullable) = false,
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
-  VestingOptions options = 4 [(gogoproto.nullable) = false];
+  VestingOptions options = 5 [(gogoproto.nullable) = false];
 }
 
 message MsgRequestAddVestingAccountResponse {
@@ -93,12 +95,13 @@ message MsgRequestRemoveAccountResponse {
 }
 
 message MsgRequestAddValidator {
-  uint64 launchID = 1;
-  string valAddress = 2;
-  bytes genTx = 3;
-  bytes consPubKey = 4;
-  cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
-  string peer = 6;
+  string creator = 1;
+  uint64 launchID = 2;
+  string valAddress = 3;
+  bytes genTx = 4;
+  bytes consPubKey = 5;
+  cosmos.base.v1beta1.Coin selfDelegation = 6 [(gogoproto.nullable) = false];
+  string peer = 7;
 }
 
 message MsgRequestAddValidatorResponse {
