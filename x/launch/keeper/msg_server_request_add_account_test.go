@@ -17,6 +17,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		addr1                       = sample.Address()
 		addr2                       = sample.Address()
 		addr3                       = sample.Address()
+		addr4                       = sample.Address()
 		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
 		ctx                         = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -87,12 +88,12 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		},
 		{
 			name:        "request from coordinator is pre-approved",
-			msg:         sample.MsgRequestAddAccount(coordAddr, sample.Address(), chains[4].LaunchID),
+			msg:         sample.MsgRequestAddAccount(coordAddr, addr4, chains[4].LaunchID),
 			wantApprove: true,
 		},
 		{
 			name: "failing request from coordinator",
-			msg:  sample.MsgRequestAddAccount(coordAddr, sample.Address(), chains[4].LaunchID),
+			msg:  sample.MsgRequestAddAccount(coordAddr, addr4, chains[4].LaunchID),
 			err:  types.ErrAccountAlreadyExist,
 		},
 		{

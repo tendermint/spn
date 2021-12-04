@@ -16,6 +16,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 		coordAddr                   = sample.Address()
 		addr1                       = sample.Address()
 		addr2                       = sample.Address()
+		addr3                       = sample.Address()
 		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
 		ctx                         = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -68,12 +69,12 @@ func TestMsgRequestAddValidator(t *testing.T) {
 		},
 		{
 			name:        "request from coordinator is pre-approved",
-			msg:         sample.MsgRequestAddValidator(coordAddr, sample.Address(), chains[3].LaunchID),
+			msg:         sample.MsgRequestAddValidator(coordAddr, addr3, chains[3].LaunchID),
 			wantApprove: true,
 		},
 		{
 			name:        "failing request from coordinator",
-			msg:         sample.MsgRequestAddValidator(coordAddr, sample.Address(), chains[3].LaunchID),
+			msg:         sample.MsgRequestAddValidator(coordAddr, addr3, chains[3].LaunchID),
 			err:         types.ErrValidatorAlreadyExist,
 			wantApprove: true,
 		},
