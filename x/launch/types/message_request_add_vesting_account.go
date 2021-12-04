@@ -10,8 +10,9 @@ const TypeMsgRequestAddVestingAccount = "request_add_vesting_account"
 var _ sdk.Msg = &MsgRequestAddVestingAccount{}
 
 func NewMsgRequestAddVestingAccount(
-	address string,
+	creator string,
 	launchID uint64,
+	address string,
 	coins sdk.Coins,
 	options VestingOptions,
 ) *MsgRequestAddVestingAccount {
@@ -32,7 +33,7 @@ func (msg *MsgRequestAddVestingAccount) Type() string {
 }
 
 func (msg *MsgRequestAddVestingAccount) GetSigners() []sdk.AccAddress {
-	address, err := sdk.AccAddressFromBech32(msg.Address)
+	address, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
 	}
@@ -45,9 +46,12 @@ func (msg *MsgRequestAddVestingAccount) GetSignBytes() []byte {
 }
 
 func (msg *MsgRequestAddVestingAccount) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Address)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address (%s)", err)
+	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.Address); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
 
 	if !msg.StartingBalance.IsValid() {

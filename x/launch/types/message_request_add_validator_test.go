@@ -35,7 +35,12 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
-			name:  "invalid address",
+			name:  "invalid creator address",
+			msg:   sample.MsgRequestAddValidator("invalid", launchID),
+			valid: false,
+		},
+		{
+			name:  "invalid validator address",
 			msg:   sample.MsgRequestAddValidator("invalid", launchID),
 			valid: false,
 		},
