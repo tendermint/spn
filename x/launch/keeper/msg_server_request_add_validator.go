@@ -46,7 +46,7 @@ func (k msgServer) RequestAddValidator(
 
 	var requestID uint64
 	approved := false
-	if msg.ValAddress == coordAddress {
+	if msg.Creator == coordAddress {
 		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err

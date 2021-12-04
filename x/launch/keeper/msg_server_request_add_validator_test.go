@@ -38,42 +38,42 @@ func TestMsgRequestAddValidator(t *testing.T) {
 	}{
 		{
 			name: "invalid chain",
-			msg:  sample.MsgRequestAddValidator(addr1, invalidChain),
+			msg:  sample.MsgRequestAddValidator(sample.Address(), addr1, invalidChain),
 			err:  types.ErrChainNotFound,
 		},
 		{
 			name: "chain with triggered launch",
-			msg:  sample.MsgRequestAddValidator(addr1, chains[0].LaunchID),
+			msg:  sample.MsgRequestAddValidator(sample.Address(), addr1, chains[0].LaunchID),
 			err:  types.ErrTriggeredLaunch,
 		},
 		{
 			name: "chain without coordinator",
-			msg:  sample.MsgRequestAddValidator(addr1, chains[1].LaunchID),
+			msg:  sample.MsgRequestAddValidator(sample.Address(), addr1, chains[1].LaunchID),
 			err:  types.ErrChainInactive,
 		},
 		{
 			name:   "request to a chain 3",
-			msg:    sample.MsgRequestAddValidator(addr1, chains[2].LaunchID),
+			msg:    sample.MsgRequestAddValidator(sample.Address(), addr1, chains[2].LaunchID),
 			wantID: 1,
 		},
 		{
 			name:   "second request to a chain 3",
-			msg:    sample.MsgRequestAddValidator(addr2, chains[2].LaunchID),
+			msg:    sample.MsgRequestAddValidator(sample.Address(), addr2, chains[2].LaunchID),
 			wantID: 2,
 		},
 		{
 			name:   "request to a chain 4",
-			msg:    sample.MsgRequestAddValidator(addr1, chains[3].LaunchID),
+			msg:    sample.MsgRequestAddValidator(sample.Address(), addr1, chains[3].LaunchID),
 			wantID: 1,
 		},
 		{
 			name:        "request from coordinator is pre-approved",
-			msg:         sample.MsgRequestAddValidator(coordAddr, chains[3].LaunchID),
+			msg:         sample.MsgRequestAddValidator(coordAddr, sample.Address(), chains[3].LaunchID),
 			wantApprove: true,
 		},
 		{
 			name:        "failing request from coordinator",
-			msg:         sample.MsgRequestAddValidator(coordAddr, chains[3].LaunchID),
+			msg:         sample.MsgRequestAddValidator(coordAddr, sample.Address(), chains[3].LaunchID),
 			err:         types.ErrValidatorAlreadyExist,
 			wantApprove: true,
 		},
@@ -92,6 +92,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 				request, found := k.GetRequest(sdkCtx, tc.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tc.wantID, request.RequestID)
+				require.Equal(t, tc.msg.Creator, request.Creator)
 
 				content := request.Content.GetGenesisValidator()
 				require.NotNil(t, content)
