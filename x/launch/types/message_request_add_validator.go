@@ -19,7 +19,7 @@ func NewMsgRequestAddValidator(
 	peer string,
 ) *MsgRequestAddValidator {
 	return &MsgRequestAddValidator{
-		Creator: creator,
+		Creator:        creator,
 		ValAddress:     valAddress,
 		LaunchID:       launchID,
 		GenTx:          genTx,

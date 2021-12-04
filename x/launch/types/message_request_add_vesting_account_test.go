@@ -26,7 +26,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid creator address",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator: "invalid_address",
+				Creator:         "invalid_address",
 				Address:         sample.Address(),
 				LaunchID:        launchID,
 				StartingBalance: sample.Coins(),
@@ -37,7 +37,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid account address",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator: sample.Address(),
+				Creator:         sample.Address(),
 				Address:         "invalid_address",
 				LaunchID:        launchID,
 				StartingBalance: sample.Coins(),
@@ -48,7 +48,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid coins",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator: sample.Address(),
+				Creator:         sample.Address(),
 				Address:         sample.Address(),
 				LaunchID:        launchID,
 				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
@@ -59,7 +59,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid message option",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator: sample.Address(),
+				Creator:         sample.Address(),
 				Address:         sample.Address(),
 				LaunchID:        launchID,
 				StartingBalance: sample.Coins(),
@@ -70,7 +70,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator: sample.Address(),
+				Creator:         sample.Address(),
 				Address:         sample.Address(),
 				LaunchID:        launchID,
 				StartingBalance: sample.Coins(),

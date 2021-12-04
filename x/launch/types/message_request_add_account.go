@@ -14,7 +14,7 @@ func NewMsgRequestAddAccount(
 	launchID uint64,
 	address string,
 	coins sdk.Coins,
-	) *MsgRequestAddAccount {
+) *MsgRequestAddAccount {
 	return &MsgRequestAddAccount{
 		Creator:  creator,
 		Address:  address,
