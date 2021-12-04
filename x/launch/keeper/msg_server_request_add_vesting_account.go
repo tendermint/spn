@@ -40,7 +40,7 @@ func (k msgServer) RequestAddVestingAccount(
 	content := types.NewVestingAccount(msg.LaunchID, msg.Address, msg.StartingBalance, msg.Options)
 	request := types.Request{
 		LaunchID:  msg.LaunchID,
-		Creator:   msg.Address,
+		Creator:   msg.Creator,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
 	}
