@@ -12,7 +12,8 @@ import (
 func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 	launchID := uint64(0)
 
-	validMsg := sample.MsgRequestAddValidator(sample.Address(), launchID)
+	addr := sample.Address()
+	validMsg := sample.MsgRequestAddValidator(sample.Address(), sample.Address(), launchID)
 	emptyConsPubKey := validMsg
 	emptyConsPubKey.ConsPubKey = []byte{}
 	emptyGentx := validMsg
@@ -35,13 +36,18 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
+			name:  "same creator and validator",
+			msg:   sample.MsgRequestAddValidator(addr, addr, launchID),
+			valid: true,
+		},
+		{
 			name:  "invalid creator address",
-			msg:   sample.MsgRequestAddValidator("invalid", launchID),
+			msg:   sample.MsgRequestAddValidator("invalid", sample.Address(), launchID),
 			valid: false,
 		},
 		{
 			name:  "invalid validator address",
-			msg:   sample.MsgRequestAddValidator("invalid", launchID),
+			msg:   sample.MsgRequestAddValidator(sample.Address(), "invalid", launchID),
 			valid: false,
 		},
 		{

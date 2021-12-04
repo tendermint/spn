@@ -173,19 +173,21 @@ func MsgEditChain(
 }
 
 // MsgRequestAddAccount returns a sample MsgRequestAddAccount
-func MsgRequestAddAccount(address string, launchID uint64) launch.MsgRequestAddAccount {
+func MsgRequestAddAccount(creator, address string, launchID uint64) launch.MsgRequestAddAccount {
 	return *launch.NewMsgRequestAddAccount(
-		address,
+		creator,
 		launchID,
+		address,
 		Coins(),
 	)
 }
 
 // MsgRequestAddVestingAccount returns a sample MsgRequestAddVestingAccount
-func MsgRequestAddVestingAccount(address string, launchID uint64) launch.MsgRequestAddVestingAccount {
+func MsgRequestAddVestingAccount(creator, address string, launchID uint64) launch.MsgRequestAddVestingAccount {
 	return *launch.NewMsgRequestAddVestingAccount(
-		address,
+		creator,
 		launchID,
+		address,
 		Coins(),
 		VestingOptions(),
 	)
@@ -210,10 +212,11 @@ func MsgRequestRemoveValidator(creator, validatorAddr string, launchID uint64) l
 }
 
 // MsgRequestAddValidator returns a sample MsgRequestAddValidator
-func MsgRequestAddValidator(address string, launchID uint64) launch.MsgRequestAddValidator {
+func MsgRequestAddValidator(creator, address string, launchID uint64) launch.MsgRequestAddValidator {
 	return *launch.NewMsgRequestAddValidator(
-		address,
+		creator,
 		launchID,
+		address,
 		Bytes(500),
 		Bytes(30),
 		Coin(),
