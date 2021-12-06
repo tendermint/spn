@@ -9,10 +9,10 @@ const TypeMsgRequestRemoveValidator = "request_remove_validator"
 
 var _ sdk.Msg = &MsgRequestRemoveValidator{}
 
-func NewMsgRequestRemoveValidator(launchID uint64, creator, validatorAddress string) *MsgRequestRemoveValidator {
+func NewMsgRequestRemoveValidator(creator string, launchID uint64, validatorAddress string) *MsgRequestRemoveValidator {
 	return &MsgRequestRemoveValidator{
-		LaunchID:         launchID,
 		Creator:          creator,
+		LaunchID:         launchID,
 		ValidatorAddress: validatorAddress,
 	}
 }

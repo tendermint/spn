@@ -23,6 +23,17 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid address",
 			msg: types.MsgRequestAddAccount{
+				Creator:  "invalid_address",
+				Address:  sample.Address(),
+				LaunchID: launchID,
+				Coins:    sample.Coins(),
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		},
+		{
+			name: "invalid account address",
+			msg: types.MsgRequestAddAccount{
+				Creator:  sample.Address(),
 				Address:  "invalid_address",
 				LaunchID: launchID,
 				Coins:    sample.Coins(),
@@ -32,6 +43,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "message without coins",
 			msg: types.MsgRequestAddAccount{
+				Creator:  sample.Address(),
 				Address:  addr,
 				LaunchID: launchID,
 				Coins:    sdk.NewCoins(),
@@ -41,6 +53,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "message with invalid coins",
 			msg: types.MsgRequestAddAccount{
+				Creator:  sample.Address(),
 				Address:  addr,
 				LaunchID: launchID,
 				Coins:    sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
@@ -50,7 +63,17 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgRequestAddAccount{
+				Creator:  sample.Address(),
 				Address:  sample.Address(),
+				LaunchID: launchID,
+				Coins:    sample.Coins(),
+			},
+		},
+		{
+			name: "same creator and account",
+			msg: types.MsgRequestAddAccount{
+				Creator:  addr,
+				Address:  addr,
 				LaunchID: launchID,
 				Coins:    sample.Coins(),
 			},

@@ -9,10 +9,10 @@ const TypeMsgRequestRemoveAccount = "request_remove_account"
 
 var _ sdk.Msg = &MsgRequestRemoveAccount{}
 
-func NewMsgRequestRemoveAccount(launchID uint64, creator, address string) *MsgRequestRemoveAccount {
+func NewMsgRequestRemoveAccount(creator string, launchID uint64, address string) *MsgRequestRemoveAccount {
 	return &MsgRequestRemoveAccount{
-		LaunchID: launchID,
 		Creator:  creator,
+		LaunchID: launchID,
 		Address:  address,
 	}
 }
