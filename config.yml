@@ -33,3 +33,6 @@ genesis:
     mint:
       params:
         mint_denom: "spn"
+    launch:
+      params:
+        minLaunchTime: "5"
