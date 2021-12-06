@@ -196,8 +196,8 @@ func MsgRequestAddVestingAccount(creator, address string, launchID uint64) launc
 // MsgRequestRemoveAccount returns a sample MsgRequestRemoveAccount
 func MsgRequestRemoveAccount(creator, address string, launchID uint64) launch.MsgRequestRemoveAccount {
 	return *launch.NewMsgRequestRemoveAccount(
-		launchID,
 		creator,
+		launchID,
 		address,
 	)
 }
@@ -205,8 +205,8 @@ func MsgRequestRemoveAccount(creator, address string, launchID uint64) launch.Ms
 // MsgRequestRemoveValidator returns a sample MsgRequestRemoveValidator
 func MsgRequestRemoveValidator(creator, validatorAddr string, launchID uint64) launch.MsgRequestRemoveValidator {
 	return *launch.NewMsgRequestRemoveValidator(
-		launchID,
 		creator,
+		launchID,
 		validatorAddr,
 	)
 }

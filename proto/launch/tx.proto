@@ -84,8 +84,8 @@ message MsgRequestAddVestingAccountResponse {
 }
 
 message MsgRequestRemoveAccount {
-  uint64 launchID = 1;
-  string creator = 2;
+  string creator = 1;
+  uint64 launchID = 2;
   string address = 3;
 }
 
@@ -110,8 +110,8 @@ message MsgRequestAddValidatorResponse {
 }
 
 message MsgRequestRemoveValidator {
-  uint64 launchID = 1;
-  string creator = 2;
+  string creator = 1;
+  uint64 launchID = 2;
   string validatorAddress = 3;
 }
 
