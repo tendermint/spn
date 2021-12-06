@@ -34,11 +34,11 @@ func (msg *MsgRequestAddVestingAccount) Type() string {
 }
 
 func (msg *MsgRequestAddVestingAccount) GetSigners() []sdk.AccAddress {
-	address, err := sdk.AccAddressFromBech32(msg.Creator)
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{address}
+	return []sdk.AccAddress{creator}
 }
 
 func (msg *MsgRequestAddVestingAccount) GetSignBytes() []byte {
