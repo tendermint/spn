@@ -42,9 +42,16 @@ func CmdRequestAddVestingAccount() *cobra.Command {
 				return err
 			}
 
+			fromAddr := clientCtx.GetFromAddress().String()
+			accountAddr, _ := cmd.Flags().GetString(flagAccountAddress)
+			if accountAddr == "" {
+				accountAddr = fromAddr
+			}
+
 			msg := types.NewMsgRequestAddVestingAccount(
-				clientCtx.GetFromAddress().String(),
+				fromAddr,
 				launchID,
+				accountAddr,
 				startingBalance,
 				delayedVesting,
 			)
@@ -55,6 +62,7 @@ func CmdRequestAddVestingAccount() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagAccountAddress, "", "Address of the vesting account to request")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

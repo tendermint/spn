@@ -12,6 +12,10 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+const (
+	flagValidatorAddress = "validator-address"
+)
+
 func CmdRequestAddValidator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "request-add-validator [launch-id] [gentx-file] [consensus-public-key] [self-delegation] [peer]",
@@ -40,9 +44,16 @@ func CmdRequestAddValidator() *cobra.Command {
 				return err
 			}
 
+			fromAddr := clientCtx.GetFromAddress().String()
+			valAddr, _ := cmd.Flags().GetString(flagValidatorAddress)
+			if valAddr == "" {
+				valAddr = fromAddr
+			}
+
 			msg := types.NewMsgRequestAddValidator(
 				clientCtx.GetFromAddress().String(),
 				launchID,
+				valAddr,
 				gentxBytes,
 				[]byte(args[2]),
 				selfDelegation,
@@ -55,6 +66,7 @@ func CmdRequestAddValidator() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagValidatorAddress, "", "Address of the genesis validator to request")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

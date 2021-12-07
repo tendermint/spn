@@ -12,6 +12,10 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+const (
+	flagAccountAddress = "account-address"
+)
+
 func CmdRequestAddAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "request-add-account [launch-id] [coins]",
@@ -33,9 +37,16 @@ func CmdRequestAddAccount() *cobra.Command {
 				return err
 			}
 
+			fromAddr := clientCtx.GetFromAddress().String()
+			accountAddr, _ := cmd.Flags().GetString(flagAccountAddress)
+			if accountAddr == "" {
+				accountAddr = fromAddr
+			}
+
 			msg := types.NewMsgRequestAddAccount(
-				clientCtx.GetFromAddress().String(),
+				fromAddr,
 				launchID,
+				accountAddr,
 				coins,
 			)
 			if err := msg.ValidateBasic(); err != nil {
@@ -45,6 +56,7 @@ func CmdRequestAddAccount() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagAccountAddress, "", "Address of the genesis account to request")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

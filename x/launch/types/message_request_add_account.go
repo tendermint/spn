@@ -9,8 +9,14 @@ const TypeMsgRequestAddAccount = "request_add_account"
 
 var _ sdk.Msg = &MsgRequestAddAccount{}
 
-func NewMsgRequestAddAccount(address string, launchID uint64, coins sdk.Coins) *MsgRequestAddAccount {
+func NewMsgRequestAddAccount(
+	creator string,
+	launchID uint64,
+	address string,
+	coins sdk.Coins,
+) *MsgRequestAddAccount {
 	return &MsgRequestAddAccount{
+		Creator:  creator,
 		Address:  address,
 		LaunchID: launchID,
 		Coins:    coins,
@@ -26,11 +32,11 @@ func (msg *MsgRequestAddAccount) Type() string {
 }
 
 func (msg *MsgRequestAddAccount) GetSigners() []sdk.AccAddress {
-	address, err := sdk.AccAddressFromBech32(msg.Address)
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{address}
+	return []sdk.AccAddress{creator}
 }
 
 func (msg *MsgRequestAddAccount) GetSignBytes() []byte {
@@ -39,9 +45,12 @@ func (msg *MsgRequestAddAccount) GetSignBytes() []byte {
 }
 
 func (msg *MsgRequestAddAccount) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Address)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address (%s)", err)
+	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.Address); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
 
 	if !msg.Coins.IsValid() || msg.Coins.Empty() {

@@ -10,14 +10,16 @@ const TypeMsgRequestAddValidator = "request_add_validator"
 var _ sdk.Msg = &MsgRequestAddValidator{}
 
 func NewMsgRequestAddValidator(
-	valAddress string,
+	creator string,
 	launchID uint64,
+	valAddress string,
 	genTx,
 	consPubKey []byte,
 	selfDelegation sdk.Coin,
 	peer string,
 ) *MsgRequestAddValidator {
 	return &MsgRequestAddValidator{
+		Creator:        creator,
 		ValAddress:     valAddress,
 		LaunchID:       launchID,
 		GenTx:          genTx,
@@ -36,11 +38,11 @@ func (msg *MsgRequestAddValidator) Type() string {
 }
 
 func (msg *MsgRequestAddValidator) GetSigners() []sdk.AccAddress {
-	valAddress, err := sdk.AccAddressFromBech32(msg.ValAddress)
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{valAddress}
+	return []sdk.AccAddress{creator}
 }
 
 func (msg *MsgRequestAddValidator) GetSignBytes() []byte {
@@ -49,9 +51,12 @@ func (msg *MsgRequestAddValidator) GetSignBytes() []byte {
 }
 
 func (msg *MsgRequestAddValidator) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.ValAddress)
-	if err != nil {
+	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+
+	if _, err := sdk.AccAddressFromBech32(msg.ValAddress); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 
 	if len(msg.GenTx) == 0 {

@@ -40,14 +40,14 @@ func (k msgServer) RequestAddAccount(
 	content := types.NewGenesisAccount(msg.LaunchID, msg.Address, msg.Coins)
 	request := types.Request{
 		LaunchID:  msg.LaunchID,
-		Creator:   msg.Address,
+		Creator:   msg.Creator,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
 	}
 
 	var requestID uint64
 	approved := false
-	if msg.Address == coordAddress {
+	if msg.Creator == coordAddress {
 		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err

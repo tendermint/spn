@@ -115,6 +115,7 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		msg := sample.MsgRequestAddAccount(
 			simAccount.Address.String(),
+			simAccount.Address.String(),
 			chain.LaunchID,
 		)
 		txCtx := simulation.OperationInput{
@@ -149,9 +150,9 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 
 		// Select a random account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		creator := simAccount.Address.String()
 		msg := sample.MsgRequestAddVestingAccount(
-			creator,
+			simAccount.Address.String(),
+			simAccount.Address.String(),
 			chain.LaunchID,
 		)
 		txCtx := simulation.OperationInput{
@@ -250,6 +251,7 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		// Select between new address or coordinator address randomly
 		msg := sample.MsgRequestAddValidator(
+			simAccount.Address.String(),
 			simAccount.Address.String(),
 			chain.LaunchID,
 		)
