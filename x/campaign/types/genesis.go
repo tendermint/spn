@@ -20,19 +20,19 @@ func DefaultGenesis() *GenesisState {
 // failure.
 func (gs GenesisState) Validate() error {
 	// Check for duplicated ID in campaign
-	campaignIDMap := make(map[uint64]bool)
+	campaignIDMap := make(map[uint64]struct{})
 	campaignCounter := gs.GetCampaignCounter()
-	for _, elem := range gs.CampaignList {
-		if _, ok := campaignIDMap[elem.CoordinatorID]; ok {
+	for _, campaign := range gs.CampaignList {
+		if _, ok := campaignIDMap[campaign.CampaignID]; ok {
 			return fmt.Errorf("duplicated id for campaign")
 		}
-		if elem.CoordinatorID >= campaignCounter {
+		if campaign.CampaignID >= campaignCounter {
 			return fmt.Errorf("campaign id should be lower or equal than the last id")
 		}
-		if err := elem.Validate(); err != nil {
-			return fmt.Errorf("invalid campaign %d: %s", elem.CoordinatorID, err.Error())
+		if err := campaign.Validate(); err != nil {
+			return fmt.Errorf("invalid campaign %d: %s", campaign.CampaignID, err.Error())
 		}
-		campaignIDMap[elem.CoordinatorID] = true
+		campaignIDMap[campaign.CampaignID] = struct{}{}
 	}
 
 	// Check for duplicated index in campaignChains
