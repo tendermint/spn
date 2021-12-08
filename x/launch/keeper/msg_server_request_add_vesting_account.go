@@ -37,7 +37,7 @@ func (k msgServer) RequestAddVestingAccount(
 			"the chain %d coordinator has been deleted", chain.LaunchID)
 	}
 
-	content := types.NewVestingAccount(msg.LaunchID, msg.Address, msg.StartingBalance, msg.Options)
+	content := types.NewVestingAccount(msg.LaunchID, msg.Address, msg.Options)
 	request := types.Request{
 		LaunchID:  msg.LaunchID,
 		Creator:   msg.Creator,

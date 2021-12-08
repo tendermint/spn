@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
@@ -16,7 +15,11 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		launchID = uint64(10)
 	)
 
-	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
+	option := *types.NewDelayedVesting(
+		coinsStr(t, "1000foo500bar"),
+		coinsStr(t, "500foo500bar"),
+		time.Now().Unix(),
+		)
 
 	tests := []struct {
 		name string
@@ -29,7 +32,6 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 				Creator:         "invalid_address",
 				Address:         sample.Address(),
 				LaunchID:        launchID,
-				StartingBalance: sample.Coins(),
 				Options:         option,
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -40,7 +42,6 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 				Creator:         sample.Address(),
 				Address:         "invalid_address",
 				LaunchID:        launchID,
-				StartingBalance: sample.Coins(),
 				Options:         option,
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -51,19 +52,17 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 				Creator:         sample.Address(),
 				Address:         sample.Address(),
 				LaunchID:        launchID,
-				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				Options:         option,
 			},
 			err: types.ErrInvalidCoins,
 		},
 		{
-			name: "invalid message option",
+			name: "invalid vesting option",
 			msg: types.MsgRequestAddVestingAccount{
 				Creator:         sample.Address(),
 				Address:         sample.Address(),
 				LaunchID:        launchID,
-				StartingBalance: sample.Coins(),
-				Options:         *types.NewDelayedVesting(sample.Coins(), 0),
+				Options:         *types.NewDelayedVesting(sample.Coins(), sample.Coins(), 0),
 			},
 			err: types.ErrInvalidVestingOption,
 		},
@@ -73,7 +72,6 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 				Creator:         sample.Address(),
 				Address:         sample.Address(),
 				LaunchID:        launchID,
-				StartingBalance: sample.Coins(),
 				Options:         option,
 			},
 		},
