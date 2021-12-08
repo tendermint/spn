@@ -49,9 +49,9 @@ func VestingOptions() launch.VestingOptions {
 // VestingAccount returns a sample VestingAccount
 func VestingAccount(launchID uint64, address string) launch.VestingAccount {
 	return launch.VestingAccount{
-		LaunchID:        launchID,
-		Address:         address,
-		VestingOptions:  VestingOptions(),
+		LaunchID:       launchID,
+		Address:        address,
+		VestingOptions: VestingOptions(),
 	}
 }
 

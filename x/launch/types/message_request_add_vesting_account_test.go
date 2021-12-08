@@ -19,7 +19,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		coinsStr(t, "1000foo500bar"),
 		coinsStr(t, "500foo500bar"),
 		time.Now().Unix(),
-		)
+	)
 
 	tests := []struct {
 		name string
@@ -29,40 +29,40 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid creator address",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator:         "invalid_address",
-				Address:         sample.Address(),
-				LaunchID:        launchID,
-				Options:         option,
+				Creator:  "invalid_address",
+				Address:  sample.Address(),
+				LaunchID: launchID,
+				Options:  option,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid account address",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator:         sample.Address(),
-				Address:         "invalid_address",
-				LaunchID:        launchID,
-				Options:         option,
+				Creator:  sample.Address(),
+				Address:  "invalid_address",
+				LaunchID: launchID,
+				Options:  option,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid vesting option",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator:         sample.Address(),
-				Address:         sample.Address(),
-				LaunchID:        launchID,
-				Options:         *types.NewDelayedVesting(sample.Coins(), sample.Coins(), 0),
+				Creator:  sample.Address(),
+				Address:  sample.Address(),
+				LaunchID: launchID,
+				Options:  *types.NewDelayedVesting(sample.Coins(), sample.Coins(), 0),
 			},
 			err: types.ErrInvalidVestingOption,
 		},
 		{
 			name: "valid message",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator:         sample.Address(),
-				Address:         sample.Address(),
-				LaunchID:        launchID,
-				Options:         option,
+				Creator:  sample.Address(),
+				Address:  sample.Address(),
+				LaunchID: launchID,
+				Options:  option,
 			},
 		},
 	}

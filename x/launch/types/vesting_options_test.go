@@ -78,8 +78,8 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "vesting with total balance smaller than vesting",
 			option: *types.NewDelayedVesting(
-				coinsStr(t,"1000foo,500bar,2000toto"),
-				coinsStr(t,"1000foo,501bar,2000toto"),
+				coinsStr(t, "1000foo,500bar,2000toto"),
+				coinsStr(t, "1000foo,501bar,2000toto"),
 				time.Now().Unix(),
 			),
 			valid: false,
@@ -87,8 +87,8 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "vesting denoms is not a subset of total balance",
 			option: *types.NewDelayedVesting(
-				coinsStr(t,"1000foo,500bar"),
-				coinsStr(t,"1000foo,500bar,2000toto"),
+				coinsStr(t, "1000foo,500bar"),
+				coinsStr(t, "1000foo,500bar,2000toto"),
 				time.Now().Unix(),
 			),
 			valid: false,

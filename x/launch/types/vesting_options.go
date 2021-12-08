@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -11,8 +12,8 @@ func NewDelayedVesting(totalBalance, vesting sdk.Coins, endTime int64) *VestingO
 		Options: &VestingOptions_DelayedVesting{
 			DelayedVesting: &DelayedVesting{
 				TotalBalance: totalBalance,
-				Vesting: vesting,
-				EndTime: endTime,
+				Vesting:      vesting,
+				EndTime:      endTime,
 			},
 		},
 	}

@@ -16,10 +16,10 @@ func NewMsgRequestAddVestingAccount(
 	options VestingOptions,
 ) *MsgRequestAddVestingAccount {
 	return &MsgRequestAddVestingAccount{
-		Creator:         creator,
-		LaunchID:        launchID,
-		Address:         address,
-		Options:         options,
+		Creator:  creator,
+		LaunchID: launchID,
+		Address:  address,
+		Options:  options,
 	}
 }
 

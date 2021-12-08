@@ -345,31 +345,31 @@ func TestVestingAccount_Validate(t *testing.T) {
 		{
 			name: "invalid address",
 			content: types.VestingAccount{
-				LaunchID:        launchID,
-				Address:         "invalid_address",
-				VestingOptions:  option,
+				LaunchID:       launchID,
+				Address:        "invalid_address",
+				VestingOptions: option,
 			},
 			wantErr: true,
 		},
 		{
 			name: "invalid vesting option",
 			content: types.VestingAccount{
-				Address:         sample.Address(),
-				LaunchID:        launchID,
-				VestingOptions:  *types.NewDelayedVesting(
+				Address:  sample.Address(),
+				LaunchID: launchID,
+				VestingOptions: *types.NewDelayedVesting(
 					sample.Coins(),
 					sample.Coins(),
 					0,
-					),
+				),
 			},
 			wantErr: true,
 		},
 		{
 			name: "valid request content",
 			content: types.VestingAccount{
-				Address:         sample.Address(),
-				LaunchID:        launchID,
-				VestingOptions:  option,
+				Address:        sample.Address(),
+				LaunchID:       launchID,
+				VestingOptions: option,
 			},
 		},
 	}

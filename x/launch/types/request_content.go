@@ -55,9 +55,9 @@ func NewVestingAccount(launchID uint64, address string, vestingOptions VestingOp
 	return RequestContent{
 		Content: &RequestContent_VestingAccount{
 			VestingAccount: &VestingAccount{
-				LaunchID:        launchID,
-				Address:         address,
-				VestingOptions:  vestingOptions,
+				LaunchID:       launchID,
+				Address:        address,
+				VestingOptions: vestingOptions,
 			},
 		},
 	}
