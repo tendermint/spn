@@ -31,15 +31,13 @@ func TestNewGenesisAccount(t *testing.T) {
 func TestNewVestingAccount(t *testing.T) {
 	launchID := uint64(0)
 	address := sample.Address()
-	startingBalance := sample.Coins()
 	vestingOptions := sample.VestingOptions()
-	requestContent := types.NewVestingAccount(launchID, address, startingBalance, vestingOptions)
+	requestContent := types.NewVestingAccount(launchID, address, vestingOptions)
 
 	vestingAccount := requestContent.GetVestingAccount()
 	require.NotNil(t, vestingAccount)
 	require.EqualValues(t, launchID, vestingAccount.LaunchID)
 	require.EqualValues(t, address, vestingAccount.Address)
-	require.True(t, startingBalance.IsEqual(vestingAccount.StartingBalance))
 	require.Equal(t, vestingOptions, vestingAccount.VestingOptions)
 
 	require.Nil(t, requestContent.GetGenesisAccount())
@@ -337,7 +335,7 @@ func TestValidatorRemoval_Validate(t *testing.T) {
 func TestVestingAccount_Validate(t *testing.T) {
 	launchID := uint64(0)
 
-	option := *types.NewDelayedVesting(sample.Coins(), time.Now().Unix())
+	option := *types.NewDelayedVesting(coinsStr(t, "1000foo500bar"), coinsStr(t, "500foo500bar"), time.Now().Unix())
 
 	tests := []struct {
 		name    string
@@ -349,18 +347,20 @@ func TestVestingAccount_Validate(t *testing.T) {
 			content: types.VestingAccount{
 				LaunchID:        launchID,
 				Address:         "invalid_address",
-				StartingBalance: sample.Coins(),
 				VestingOptions:  option,
 			},
 			wantErr: true,
 		},
 		{
-			name: "invalid coins",
+			name: "invalid vesting option",
 			content: types.VestingAccount{
 				Address:         sample.Address(),
 				LaunchID:        launchID,
-				StartingBalance: sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
-				VestingOptions:  option,
+				VestingOptions:  *types.NewDelayedVesting(
+					sample.Coins(),
+					sample.Coins(),
+					0,
+					),
 			},
 			wantErr: true,
 		},
@@ -369,7 +369,6 @@ func TestVestingAccount_Validate(t *testing.T) {
 			content: types.VestingAccount{
 				Address:         sample.Address(),
 				LaunchID:        launchID,
-				StartingBalance: sample.Coins(),
 				VestingOptions:  option,
 			},
 		},

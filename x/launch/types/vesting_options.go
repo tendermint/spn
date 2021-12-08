@@ -3,14 +3,14 @@ package types
 import (
 	"errors"
 	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func NewDelayedVesting(vesting sdk.Coins, endTime int64) *VestingOptions {
+func NewDelayedVesting(totalBalance, vesting sdk.Coins, endTime int64) *VestingOptions {
 	return &VestingOptions{
 		Options: &VestingOptions_DelayedVesting{
 			DelayedVesting: &DelayedVesting{
+				TotalBalance: totalBalance,
 				Vesting: vesting,
 				EndTime: endTime,
 			},
@@ -28,6 +28,14 @@ func (m VestingOptions) Validate() error {
 		if !vestionOptions.DelayedVesting.Vesting.IsValid() {
 			return fmt.Errorf("invalid vesting coins for DelayedVesting: %s", vestionOptions.DelayedVesting.Vesting.String())
 		}
+
+		if !vestionOptions.DelayedVesting.TotalBalance.IsValid() {
+			return fmt.Errorf("invalid total balance for DelayedVesting: %s", vestionOptions.DelayedVesting.TotalBalance.String())
+		}
+		if !vestionOptions.DelayedVesting.TotalBalance.IsAllGTE(vestionOptions.DelayedVesting.Vesting) {
+			return errors.New("TotalBalance is smaller than vesting")
+		}
+
 		if vestionOptions.DelayedVesting.EndTime == 0 {
 			return errors.New("end time for DelayedVesting cannot be 0")
 		}
