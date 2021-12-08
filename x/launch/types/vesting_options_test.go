@@ -17,8 +17,8 @@ func coinsStr(t *testing.T, str string) sdk.Coins {
 }
 
 func TestNewDelayedVesting(t *testing.T) {
-	totalBalance := coinsStr(t, "1000foo500bar2000toto")
-	vesting := coinsStr(t, "500foo500bar")
+	totalBalance := coinsStr(t, "1000foo,500bar,2000toto")
+	vesting := coinsStr(t, "500foo,500bar")
 	endTime := time.Now().Unix()
 
 	vestingOptions := types.NewDelayedVesting(totalBalance, vesting, endTime)
@@ -31,8 +31,8 @@ func TestNewDelayedVesting(t *testing.T) {
 }
 
 func TestDelayedVesting_Validate(t *testing.T) {
-	sampleTotalBalance := coinsStr(t, "1000foo500bar1000toto")
-	sampleVesting := coinsStr(t, "500foo500bar")
+	sampleTotalBalance := coinsStr(t, "1000foo,500bar,1000toto")
+	sampleVesting := coinsStr(t, "500foo,500bar")
 
 	tests := []struct {
 		name   string
@@ -78,17 +78,17 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "vesting with total balance smaller than vesting",
 			option: *types.NewDelayedVesting(
-				coinsStr(t,"1000foo500bar2000toto"),
-				coinsStr(t,"1000foo501bar2000toto"),
+				coinsStr(t,"1000foo,500bar,2000toto"),
+				coinsStr(t,"1000foo,501bar,2000toto"),
 				time.Now().Unix(),
 			),
 			valid: false,
 		},
 		{
-			name: "vesting contains coins not present in total balance",
+			name: "vesting denoms is not a subset of total balance",
 			option: *types.NewDelayedVesting(
-				coinsStr(t,"1000foo500bar"),
-				coinsStr(t,"1000foo500bar2000toto"),
+				coinsStr(t,"1000foo,500bar"),
+				coinsStr(t,"1000foo,500bar,2000toto"),
 				time.Now().Unix(),
 			),
 			valid: false,
