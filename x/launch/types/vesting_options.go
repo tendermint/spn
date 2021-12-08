@@ -36,7 +36,7 @@ func (m VestingOptions) Validate() error {
 		}
 
 		if !dv.Vesting.IsAllLTE(dv.TotalBalance) {
-			return errors.New("vesting denoms is not a subset of the total balance denoms")
+			return errors.New("vesting is not a subset of the total balance")
 		}
 
 		if dv.EndTime == 0 {

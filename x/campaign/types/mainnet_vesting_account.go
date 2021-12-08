@@ -1,11 +1,12 @@
 package types
 
+import "errors"
+
 // GetTotalShares return total shares for account and delayed vesting options
 func (m MainnetVestingAccount) GetTotalShares() (Shares, error) {
-	vestingShares, err := m.VestingOptions.GetDelayedVestingShare()
-	if err != nil {
-		return nil, err
+	dv := m.VestingOptions.GetDelayedVesting()
+	if dv == nil {
+		return nil, errors.New("invalid vesting options type")
 	}
-	totalShares := IncreaseShares(m.StartingShares, vestingShares)
-	return totalShares, nil
+	return dv.TotalShares, nil
 }

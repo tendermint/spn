@@ -8,10 +8,11 @@ import (
 )
 
 // NewShareDelayedVesting return the ShareVestingOptions
-func NewShareDelayedVesting(vesting Shares, endTime int64) *ShareVestingOptions {
+func NewShareDelayedVesting(totalShare, vesting Shares, endTime int64) *ShareVestingOptions {
 	return &ShareVestingOptions{
 		Options: &ShareVestingOptions_DelayedVesting{
 			DelayedVesting: &ShareDelayedVesting{
+				TotalShares: totalShare,
 				Vesting: vesting,
 				EndTime: endTime,
 			},
@@ -19,29 +20,32 @@ func NewShareDelayedVesting(vesting Shares, endTime int64) *ShareVestingOptions 
 	}
 }
 
-// GetDelayedVestingShare return the vesting share for delayed vesting options
-func (m ShareVestingOptions) GetDelayedVestingShare() (Shares, error) {
-	switch vestionOptions := m.Options.(type) {
-	case *ShareVestingOptions_DelayedVesting:
-		return vestionOptions.DelayedVesting.Vesting, nil
-	default:
-		return nil, errors.New("invalid vesting options type")
-	}
-}
-
 // Validate check the ShareDelayedVesting object
 func (m ShareVestingOptions) Validate() error {
 	switch vestionOptions := m.Options.(type) {
 	case *ShareVestingOptions_DelayedVesting:
-		if sdk.Coins(vestionOptions.DelayedVesting.Vesting).Empty() {
+		dv := vestionOptions.DelayedVesting
+
+		if sdk.Coins(dv.Vesting).Empty() {
 			return errors.New("empty vesting shares for ShareDelayedVesting")
 		}
-		if !sdk.Coins(vestionOptions.DelayedVesting.Vesting).IsValid() {
+		if !sdk.Coins(dv.Vesting).IsValid() {
 			return fmt.Errorf(
 				"invalid vesting shares for DelayedVesting: %s",
-				sdk.Coins(vestionOptions.DelayedVesting.Vesting).String(),
+				sdk.Coins(dv.Vesting).String(),
 			)
 		}
+
+		if !sdk.Coins(dv.TotalShares).IsValid() {
+			return fmt.Errorf(
+				"invalid total balance for DelayedVesting: %s",
+				sdk.Coins(dv.TotalShares).String(),
+				)
+		}
+		if !dv.Vesting.IsAllLTE(dv.TotalShares) {
+			return errors.New("vesting is not a subset of the total shares")
+		}
+
 		if vestionOptions.DelayedVesting.EndTime == 0 {
 			return errors.New("end time for DelayedVesting cannot be 0")
 		}
