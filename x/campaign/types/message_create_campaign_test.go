@@ -18,35 +18,35 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgCreateCampaign{
-				Coordinator:   sample.Address(),
-				CampaignName:  sample.CampaignName(),
-				TotalSupply:   sample.Coins(),
+				Coordinator:  sample.Address(),
+				CampaignName: sample.CampaignName(),
+				TotalSupply:  sample.Coins(),
 			},
 		},
 		{
 			name: "invalid address",
 			msg: types.MsgCreateCampaign{
-				Coordinator:   "invalid_address",
-				CampaignName:  sample.CampaignName(),
-				TotalSupply:   sample.Coins(),
+				Coordinator:  "invalid_address",
+				CampaignName: sample.CampaignName(),
+				TotalSupply:  sample.Coins(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid campaign name",
 			msg: types.MsgCreateCampaign{
-				Coordinator:   sample.Address(),
-				CampaignName:  invalidCampaignName,
-				TotalSupply:   sample.Coins(),
+				Coordinator:  sample.Address(),
+				CampaignName: invalidCampaignName,
+				TotalSupply:  sample.Coins(),
 			},
 			err: types.ErrInvalidCampaignName,
 		},
 		{
 			name: "invalid total supply",
 			msg: types.MsgCreateCampaign{
-				Coordinator:   sample.Address(),
-				CampaignName:  sample.CampaignName(),
-				TotalSupply:   invalidCoins,
+				Coordinator:  sample.Address(),
+				CampaignName: sample.CampaignName(),
+				TotalSupply:  invalidCoins,
 			},
 			err: types.ErrInvalidTotalSupply,
 		},

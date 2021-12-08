@@ -15,9 +15,9 @@ func NewMsgCreateCampaign(
 	totalSupply sdk.Coins,
 ) *MsgCreateCampaign {
 	return &MsgCreateCampaign{
-		Coordinator:   coordinator,
-		CampaignName:  campaignName,
-		TotalSupply:   totalSupply,
+		Coordinator:  coordinator,
+		CampaignName: campaignName,
+		TotalSupply:  totalSupply,
 	}
 }
 

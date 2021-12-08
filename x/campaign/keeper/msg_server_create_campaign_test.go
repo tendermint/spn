@@ -42,27 +42,27 @@ func TestMsgCreateCampaign(t *testing.T) {
 		{
 			name: "create a campaign 1",
 			msg: types.MsgCreateCampaign{
-				CampaignName:  sample.CampaignName(),
-				Coordinator:   coordAddr1,
-				TotalSupply:   sample.Coins(),
+				CampaignName: sample.CampaignName(),
+				Coordinator:  coordAddr1,
+				TotalSupply:  sample.Coins(),
 			},
 			expectedID: uint64(0),
 		},
 		{
 			name: "create a campaign from a different coordinator",
 			msg: types.MsgCreateCampaign{
-				CampaignName:  sample.CampaignName(),
-				Coordinator:   coordAddr2,
-				TotalSupply:   sample.Coins(),
+				CampaignName: sample.CampaignName(),
+				Coordinator:  coordAddr2,
+				TotalSupply:  sample.Coins(),
 			},
 			expectedID: uint64(1),
 		},
 		{
 			name: "create a campaign from a non existing coordinator",
 			msg: types.MsgCreateCampaign{
-				CampaignName:  sample.CampaignName(),
-				Coordinator:   sample.Address(),
-				TotalSupply:   sample.Coins(),
+				CampaignName: sample.CampaignName(),
+				Coordinator:  sample.Address(),
+				TotalSupply:  sample.Coins(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
