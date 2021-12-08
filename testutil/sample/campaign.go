@@ -15,7 +15,9 @@ func Shares() campaign.Shares {
 
 // ShareVestingOptions returns a sample ShareVestingOptions
 func ShareVestingOptions() campaign.ShareVestingOptions {
-	return *campaign.NewShareDelayedVesting(Shares(), time.Now().Unix())
+	// use vesting shares as total shares
+	vestingShares := Shares()
+	return *campaign.NewShareDelayedVesting(vestingShares, vestingShares, time.Now().Unix())
 }
 
 // Voucher returns a sample voucher structure
@@ -31,7 +33,7 @@ func Vouchers(campaignID uint64) sdk.Coins {
 
 // CustomShareVestingOptions returns a sample ShareVestingOptions with shares
 func CustomShareVestingOptions(shares campaign.Shares) campaign.ShareVestingOptions {
-	return *campaign.NewShareDelayedVesting(shares, time.Now().Unix())
+	return *campaign.NewShareDelayedVesting(shares, shares, time.Now().Unix())
 }
 
 // MainnetVestingAccount returns a sample MainnetVestingAccount
@@ -43,13 +45,12 @@ func MainnetVestingAccount(campaignID uint64, address string) campaign.MainnetVe
 func MainnetVestingAccountWithShares(
 	campaignID uint64,
 	address string,
-	startingShares campaign.Shares,
+	shares campaign.Shares,
 ) campaign.MainnetVestingAccount {
 	return campaign.MainnetVestingAccount{
 		CampaignID:     campaignID,
 		Address:        address,
-		StartingShares: startingShares,
-		VestingOptions: CustomShareVestingOptions(startingShares),
+		VestingOptions: CustomShareVestingOptions(shares),
 	}
 }
 

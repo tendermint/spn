@@ -48,7 +48,6 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	account := types.MainnetVestingAccount{
 		CampaignID:     campaign.CampaignID,
 		Address:        msg.Address,
-		StartingShares: msg.StartingShares,
 		VestingOptions: msg.VestingOptions,
 	}
 
