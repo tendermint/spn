@@ -79,7 +79,6 @@ func MsgCreateCampaign(coordAddr string) campaign.MsgCreateCampaign {
 		Coordinator:   coordAddr,
 		CampaignName:  CampaignName(),
 		TotalSupply:   Coins(),
-		DynamicShares: false,
 	}
 }
 

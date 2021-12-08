@@ -45,19 +45,8 @@ func TestMsgCreateCampaign(t *testing.T) {
 				CampaignName:  sample.CampaignName(),
 				Coordinator:   coordAddr1,
 				TotalSupply:   sample.Coins(),
-				DynamicShares: false,
 			},
 			expectedID: uint64(0),
-		},
-		{
-			name: "create a campaign 2 with dynamic shares",
-			msg: types.MsgCreateCampaign{
-				CampaignName:  sample.CampaignName(),
-				Coordinator:   coordAddr1,
-				TotalSupply:   sample.Coins(),
-				DynamicShares: true,
-			},
-			expectedID: uint64(1),
 		},
 		{
 			name: "create a campaign from a different coordinator",
@@ -65,9 +54,8 @@ func TestMsgCreateCampaign(t *testing.T) {
 				CampaignName:  sample.CampaignName(),
 				Coordinator:   coordAddr2,
 				TotalSupply:   sample.Coins(),
-				DynamicShares: false,
 			},
-			expectedID: uint64(2),
+			expectedID: uint64(1),
 		},
 		{
 			name: "create a campaign from a non existing coordinator",
@@ -75,7 +63,6 @@ func TestMsgCreateCampaign(t *testing.T) {
 				CampaignName:  sample.CampaignName(),
 				Coordinator:   sample.Address(),
 				TotalSupply:   sample.Coins(),
-				DynamicShares: false,
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -95,9 +82,11 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.EqualValues(t, coordMap[tc.msg.Coordinator], campaign.CoordinatorID)
 			require.False(t, campaign.MainnetInitialized)
 			require.True(t, tc.msg.TotalSupply.IsEqual(campaign.TotalSupply))
-			require.EqualValues(t, tc.msg.DynamicShares, campaign.DynamicShares)
 			require.EqualValues(t, types.EmptyShares(), campaign.AllocatedShares)
 			require.EqualValues(t, types.EmptyShares(), campaign.TotalShares)
+
+			// dynamic share is always disabled
+			require.EqualValues(t, false, campaign.DynamicShares)
 
 			// Empty list of campaign chains
 			campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)
