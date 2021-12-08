@@ -13,7 +13,6 @@ func NewMsgRequestAddVestingAccount(
 	creator string,
 	launchID uint64,
 	address string,
-	coins sdk.Coins,
 	options VestingOptions,
 ) *MsgRequestAddVestingAccount {
 	return &MsgRequestAddVestingAccount{
