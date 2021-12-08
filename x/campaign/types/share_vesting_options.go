@@ -13,8 +13,8 @@ func NewShareDelayedVesting(totalShare, vesting Shares, endTime int64) *ShareVes
 		Options: &ShareVestingOptions_DelayedVesting{
 			DelayedVesting: &ShareDelayedVesting{
 				TotalShares: totalShare,
-				Vesting: vesting,
-				EndTime: endTime,
+				Vesting:     vesting,
+				EndTime:     endTime,
 			},
 		},
 	}
@@ -40,7 +40,7 @@ func (m ShareVestingOptions) Validate() error {
 			return fmt.Errorf(
 				"invalid total balance for DelayedVesting: %s",
 				sdk.Coins(dv.TotalShares).String(),
-				)
+			)
 		}
 		if !dv.Vesting.IsAllLTE(dv.TotalShares) {
 			return errors.New("vesting is not a subset of the total shares")

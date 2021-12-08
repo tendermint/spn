@@ -11,24 +11,20 @@ import (
 
 func TestGenesisState_Validate(t *testing.T) {
 	var (
-		campaign1      = sample.Campaign(0)
-		campaign2      = sample.Campaign(1)
-		sharesVesting1 = sample.Shares()
-		sharesVesting2 = sample.Shares()
-		shares1        = sample.Shares()
-		shares2        = sample.Shares()
-		shares3        = sample.Shares()
-		shares4        = sample.Shares()
+		campaign1 = sample.Campaign(0)
+		campaign2 = sample.Campaign(1)
+		shares1   = sample.Shares()
+		shares2   = sample.Shares()
+		shares3   = sample.Shares()
+		shares4   = sample.Shares()
 	)
 	sharesCampaign1 := types.IncreaseShares(shares1, shares2)
-	sharesCampaign1 = types.IncreaseShares(sharesCampaign1, sharesVesting1)
 	campaign1.AllocatedShares = sharesCampaign1
 	campaign1.TotalShares = sharesCampaign1
 	campaign1.DynamicShares = true
 	campaign1.CoordinatorID = 0
 
 	sharesCampaign2 := types.IncreaseShares(shares3, shares4)
-	sharesCampaign2 = types.IncreaseShares(sharesCampaign2, sharesVesting2)
 	campaign2.AllocatedShares = sharesCampaign2
 	campaign2.TotalShares = sharesCampaign2
 	campaign2.DynamicShares = true
@@ -77,14 +73,12 @@ func TestGenesisState_Validate(t *testing.T) {
 					{
 						CampaignID:     campaign1.CampaignID,
 						Address:        sample.Address(),
-						StartingShares: shares2,
-						VestingOptions: *types.NewShareDelayedVesting(sharesVesting1, time.Now().Unix()),
+						VestingOptions: *types.NewShareDelayedVesting(shares2, shares2, time.Now().Unix()),
 					},
 					{
 						CampaignID:     campaign2.CampaignID,
 						Address:        sample.Address(),
-						StartingShares: shares4,
-						VestingOptions: *types.NewShareDelayedVesting(sharesVesting2, time.Now().Unix()),
+						VestingOptions: *types.NewShareDelayedVesting(shares4, shares4, time.Now().Unix()),
 					},
 				},
 			},
