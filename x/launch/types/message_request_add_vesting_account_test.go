@@ -47,16 +47,6 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid coins",
-			msg: types.MsgRequestAddVestingAccount{
-				Creator:         sample.Address(),
-				Address:         sample.Address(),
-				LaunchID:        launchID,
-				Options:         option,
-			},
-			err: types.ErrInvalidCoins,
-		},
-		{
 			name: "invalid vesting option",
 			msg: types.MsgRequestAddVestingAccount{
 				Creator:         sample.Address(),

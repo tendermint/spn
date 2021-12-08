@@ -188,7 +188,6 @@ func MsgRequestAddVestingAccount(creator, address string, launchID uint64) launc
 		creator,
 		launchID,
 		address,
-		Coins(),
 		VestingOptions(),
 	)
 }

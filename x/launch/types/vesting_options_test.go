@@ -31,7 +31,7 @@ func TestNewDelayedVesting(t *testing.T) {
 }
 
 func TestDelayedVesting_Validate(t *testing.T) {
-	sampleTotalBalance := coinsStr(t, "1000foo500bar2000toto")
+	sampleTotalBalance := coinsStr(t, "1000foo500bar1000toto")
 	sampleVesting := coinsStr(t, "500foo500bar")
 
 	tests := []struct {
@@ -106,6 +106,15 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			name: "valid account vesting",
 			option: *types.NewDelayedVesting(
 				sampleTotalBalance,
+				sampleVesting,
+				time.Now().Unix(),
+			),
+			valid: true,
+		},
+		{
+			name: "vesting is equal to total balance",
+			option: *types.NewDelayedVesting(
+				sampleVesting,
 				sampleVesting,
 				time.Now().Unix(),
 			),

@@ -32,7 +32,7 @@ func (m VestingOptions) Validate() error {
 		if !vestionOptions.DelayedVesting.TotalBalance.IsValid() {
 			return fmt.Errorf("invalid total balance for DelayedVesting: %s", vestionOptions.DelayedVesting.TotalBalance.String())
 		}
-		if !vestionOptions.DelayedVesting.TotalBalance.IsAllGTE(vestionOptions.DelayedVesting.Vesting) {
+		if _, ok := vestionOptions.DelayedVesting.TotalBalance.SafeSub(vestionOptions.DelayedVesting.Vesting); ok {
 			return errors.New("TotalBalance is smaller than vesting")
 		}
 
