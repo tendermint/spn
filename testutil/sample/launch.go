@@ -42,7 +42,8 @@ func GenesisAccount(launchID uint64, address string) launch.GenesisAccount {
 
 // VestingOptions returns a sample VestingOptions
 func VestingOptions() launch.VestingOptions {
-	return *launch.NewDelayedVesting(Coins(), time.Now().Unix())
+	balance := Coins()
+	return *launch.NewDelayedVesting(balance, balance, time.Now().Unix())
 }
 
 // VestingAccount returns a sample VestingAccount
@@ -50,7 +51,6 @@ func VestingAccount(launchID uint64, address string) launch.VestingAccount {
 	return launch.VestingAccount{
 		LaunchID:        launchID,
 		Address:         address,
-		StartingBalance: Coins(),
 		VestingOptions:  VestingOptions(),
 	}
 }
@@ -97,7 +97,7 @@ func AllRequestContents(launchID uint64, genesis, vesting, validator string) []l
 	return []launch.RequestContent{
 		launch.NewGenesisAccount(launchID, genesis, Coins()),
 		launch.NewAccountRemoval(genesis),
-		launch.NewVestingAccount(launchID, vesting, Coins(), VestingOptions()),
+		launch.NewVestingAccount(launchID, vesting, VestingOptions()),
 		launch.NewAccountRemoval(vesting),
 		launch.NewGenesisValidator(launchID, validator, Bytes(300), Bytes(30), Coin(), String(30)),
 		launch.NewValidatorRemoval(validator),
