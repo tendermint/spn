@@ -43,7 +43,7 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 		return nil, spnerrors.Criticalf("verified shares are invalid %s", err.Error())
 	}
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, vouchers); err != nil {
-		return nil, spnerrors.Criticalf("can't mint vouchers %s", err.Error())
+		return nil, sdkerrors.Wrap(types.ErrVouchersMinting, err.Error())
 	}
 
 	receiver, err := sdk.AccAddressFromBech32(msg.Coordinator)
