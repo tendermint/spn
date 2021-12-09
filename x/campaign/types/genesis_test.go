@@ -138,10 +138,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				CampaignCounter: 2,
 				MainnetAccountList: []types.MainnetAccount{
-					{
-						CampaignID: 330,
-						Address:    "330",
-					},
+					sample.MainnetAccount(330, "330"),
 				},
 			},
 			errorMessage: "campaign id 330 doesn't exist for mainnet account 330",
