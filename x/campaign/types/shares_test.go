@@ -298,3 +298,145 @@ func TestIsEqualShares(t *testing.T) {
 		})
 	}
 }
+
+func TestSharesAmountOf(t *testing.T) {
+	tests := []struct {
+		name   string
+		shares campaign.Shares
+		want   int64
+	}{
+		{
+			name: "present positive",
+			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(200)),
+				sdk.NewCoin(prefixedShareFoobar, sdk.NewInt(50)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(205)),
+			)),
+			want: 50,
+		},
+		{
+			name: "present zero",
+			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareFoobar, sdk.NewInt(0)),
+			)),
+			want: 0,
+		},
+		{
+			name: "absent",
+			shares: campaign.NewSharesFromCoins(sdk.NewCoins(
+				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
+			)),
+			want: 0,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.shares.AmountOf(campaign.SharePrefix + prefixedShareFoobar)
+			require.True(t, got == tt.want)
+		})
+	}
+}
+
+func TestSharesIsAllLTE(t *testing.T) {
+	type args struct {
+		share1 campaign.Shares
+		share2 campaign.Shares
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "all less",
+			args: args{
+				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
+				)),
+				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(200)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(205)),
+				)),
+			},
+			want: true,
+		},
+		{
+			name: "not everyone less",
+			args: args{
+				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(200)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
+				)),
+				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(105)),
+				)),
+			},
+			want: false,
+		},
+		{
+			name: "no one less",
+			args: args{
+				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(200)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(200)),
+				)),
+				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(105)),
+				)),
+			},
+			want: false,
+		},
+		{
+			name: "equal",
+			args: args{
+				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(200)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
+				)),
+				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(200)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(100)),
+				)),
+			},
+			want: true,
+		},
+		{
+			name: "different set less",
+			args: args{
+				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(5)),
+				)),
+				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(50)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(10)),
+				)),
+			},
+			want: true,
+		},
+		{
+			name: "different set greater",
+			args: args{
+				share1: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(100)),
+				)),
+				share2: campaign.NewSharesFromCoins(sdk.NewCoins(
+					sdk.NewCoin(prefixedShareFoo, sdk.NewInt(50)),
+					sdk.NewCoin(prefixedShareBar, sdk.NewInt(10)),
+				)),
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.args.share1.IsAllLTE(tt.args.share2)
+			require.True(t, got == tt.want)
+		})
+	}
+}
