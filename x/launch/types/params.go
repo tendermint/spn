@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	// DefaultMinLaunchTime
+	// DefaultMinLaunchTime ...
 	// TODO: set back this value to the defaut one
 	// uint64(time.Hour.Seconds() * 24)
 	DefaultMinLaunchTime = uint64(5)
