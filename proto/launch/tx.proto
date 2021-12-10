@@ -70,12 +70,7 @@ message MsgRequestAddVestingAccount {
   string creator = 1;
   uint64 launchID = 2;
   string address = 3;
-  repeated cosmos.base.v1beta1.Coin startingBalance = 4 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
-  ];
-  VestingOptions options = 5 [(gogoproto.nullable) = false];
+  VestingOptions options = 4 [(gogoproto.nullable) = false];
 }
 
 message MsgRequestAddVestingAccountResponse {

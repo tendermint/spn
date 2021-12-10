@@ -13,15 +13,13 @@ func NewMsgRequestAddVestingAccount(
 	creator string,
 	launchID uint64,
 	address string,
-	coins sdk.Coins,
 	options VestingOptions,
 ) *MsgRequestAddVestingAccount {
 	return &MsgRequestAddVestingAccount{
-		Creator:         creator,
-		LaunchID:        launchID,
-		Address:         address,
-		StartingBalance: coins,
-		Options:         options,
+		Creator:  creator,
+		LaunchID: launchID,
+		Address:  address,
+		Options:  options,
 	}
 }
 
@@ -55,12 +53,9 @@ func (msg *MsgRequestAddVestingAccount) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
 
-	if !msg.StartingBalance.IsValid() {
-		return sdkerrors.Wrapf(ErrInvalidCoins, "invalid starting balance: %s", msg.StartingBalance.String())
-	}
-
 	if err := msg.Options.Validate(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidVestingOption, err.Error())
 	}
+
 	return nil
 }

@@ -20,7 +20,6 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    sample.Address(),
 				CampaignID:     0,
-				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
 			},
 		},
@@ -29,20 +28,18 @@ func TestMsgAddVestingOptions_ValidateBasic(t *testing.T) {
 			msg: types.MsgAddVestingOptions{
 				Coordinator:    "invalid_address",
 				CampaignID:     0,
-				StartingShares: sample.Shares(),
 				VestingOptions: sample.ShareVestingOptions(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid starting shares",
+			name: "invalid vesting options",
 			msg: types.MsgAddVestingOptions{
-				Coordinator:    sample.Address(),
+				Coordinator:    "invalid_address",
 				CampaignID:     0,
-				StartingShares: invalidShares,
-				VestingOptions: sample.ShareVestingOptions(),
+				VestingOptions: *types.NewShareDelayedVesting(sample.Shares(), sample.Shares(), 0),
 			},
-			err: types.ErrInvalidShares,
+			err: sdkerrors.ErrInvalidAddress,
 		},
 	}
 	for _, tt := range tests {
