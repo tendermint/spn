@@ -13,14 +13,12 @@ func NewMsgAddVestingOptions(
 	campaignID uint64,
 	coordinator,
 	address string,
-	startingShares Shares,
 	options ShareVestingOptions,
 ) *MsgAddVestingOptions {
 	return &MsgAddVestingOptions{
 		CampaignID:     campaignID,
 		Coordinator:    coordinator,
 		Address:        address,
-		StartingShares: startingShares,
 		VestingOptions: options,
 	}
 }
@@ -50,10 +48,6 @@ func (msg *MsgAddVestingOptions) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
-	}
-
-	if !sdk.Coins(msg.StartingShares).IsValid() {
-		return sdkerrors.Wrap(ErrInvalidShares, sdk.Coins(msg.StartingShares).String())
 	}
 
 	if err := msg.VestingOptions.Validate(); err != nil {

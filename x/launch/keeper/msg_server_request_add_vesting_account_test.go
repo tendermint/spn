@@ -123,7 +123,6 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
 				require.Equal(t, tt.msg.LaunchID, content.LaunchID)
-				require.Equal(t, tt.msg.StartingBalance, content.StartingBalance)
 				require.Equal(t, tt.msg.Options.String(), content.VestingOptions.String())
 			} else {
 				_, found := k.GetVestingAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)

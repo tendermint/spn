@@ -51,14 +51,13 @@ func (m GenesisAccount) Validate() error {
 }
 
 // NewVestingAccount returns a RequestContent containing a VestingAccount
-func NewVestingAccount(launchID uint64, address string, startingBalance sdk.Coins, vestingOptions VestingOptions) RequestContent {
+func NewVestingAccount(launchID uint64, address string, vestingOptions VestingOptions) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_VestingAccount{
 			VestingAccount: &VestingAccount{
-				LaunchID:        launchID,
-				Address:         address,
-				StartingBalance: startingBalance,
-				VestingOptions:  vestingOptions,
+				LaunchID:       launchID,
+				Address:        address,
+				VestingOptions: vestingOptions,
 			},
 		},
 	}
@@ -69,10 +68,6 @@ func (m VestingAccount) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
-	}
-
-	if !m.StartingBalance.IsValid() {
-		return sdkerrors.Wrap(ErrInvalidSelfDelegation, m.StartingBalance.String())
 	}
 
 	if err := m.VestingOptions.Validate(); err != nil {

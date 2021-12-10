@@ -14,7 +14,7 @@ import (
 
 func CmdRequestAddVestingAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-vesting-account [launch-id] [starting-balance] [vesting-coins] [vesting-end-time]",
+		Use:   "request-add-vesting-account [launch-id] [total-balance] [vesting-coins] [vesting-end-time]",
 		Short: "Request to add a vesting account",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -23,7 +23,7 @@ func CmdRequestAddVestingAccount() *cobra.Command {
 				return err
 			}
 
-			startingBalance, err := sdk.ParseCoinsNormalized(args[1])
+			totalBalance, err := sdk.ParseCoinsNormalized(args[1])
 			if err != nil {
 				return fmt.Errorf("failed to parse coins: %w", err)
 			}
@@ -35,7 +35,7 @@ func CmdRequestAddVestingAccount() *cobra.Command {
 
 			endTime, _ := strconv.ParseUint(args[3], 10, 64)
 
-			delayedVesting := *types.NewDelayedVesting(vestingCoins, int64(endTime))
+			delayedVesting := *types.NewDelayedVesting(totalBalance, vestingCoins, int64(endTime))
 
 			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
@@ -52,7 +52,6 @@ func CmdRequestAddVestingAccount() *cobra.Command {
 				fromAddr,
 				launchID,
 				accountAddr,
-				startingBalance,
 				delayedVesting,
 			)
 			if err := msg.ValidateBasic(); err != nil {

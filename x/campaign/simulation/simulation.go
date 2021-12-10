@@ -392,8 +392,7 @@ func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, p
 			campID,
 			simAccount.Address.String(),
 			accs[accountNb].Address.String(),
-			types.EmptyShares(),
-			*types.NewShareDelayedVesting(shares, time.Now().Unix()),
+			*types.NewShareDelayedVesting(shares, shares, time.Now().Unix()),
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}

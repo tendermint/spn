@@ -99,12 +99,7 @@ message MsgAddVestingOptions {
   string coordinator = 1;
   uint64 campaignID = 2;
   string address = 3;
-  repeated cosmos.base.v1beta1.Coin startingShares = 4 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.castrepeated) = "Shares"
-  ];
-  ShareVestingOptions vestingOptions = 5 [(gogoproto.nullable) = false];
+  ShareVestingOptions vestingOptions = 4 [(gogoproto.nullable) = false];
 }
 
 message MsgAddVestingOptionsResponse {}
