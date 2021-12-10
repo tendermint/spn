@@ -259,13 +259,10 @@ func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk t
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
 		}
 
-		dynamicShares := r.Intn(100) > 80
-
 		msg := types.NewMsgCreateCampaign(
 			simAccount.Address.String(),
 			sample.CampaignName(),
 			sample.Coins(),
-			dynamicShares,
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}

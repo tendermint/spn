@@ -77,10 +77,9 @@ func MainnetAccount(campaignID uint64, address string) campaign.MainnetAccount {
 // MsgCreateCampaign returns a sample MsgCreateCampaign
 func MsgCreateCampaign(coordAddr string) campaign.MsgCreateCampaign {
 	return campaign.MsgCreateCampaign{
-		Coordinator:   coordAddr,
-		CampaignName:  CampaignName(),
-		TotalSupply:   Coins(),
-		DynamicShares: false,
+		Coordinator:  coordAddr,
+		CampaignName: CampaignName(),
+		TotalSupply:  Coins(),
 	}
 }
 
@@ -104,6 +103,10 @@ func CampaignGenesisState() campaign.GenesisState {
 			MainnetVestingAccount(0, Address()),
 			MainnetVestingAccount(0, Address()),
 			MainnetVestingAccount(1, Address()),
+		},
+		MainnetAccountList: []campaign.MainnetAccount{
+			MainnetAccount(0, Address()),
+			MainnetAccount(1, Address()),
 		},
 	}
 }
