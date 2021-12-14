@@ -52,7 +52,7 @@ curl https://get.starport.network/tendermint/spn@latest! | sudo bash
 
 ## Learn more
 
-Starport is a free and open source product maintained by [Tendermint](https://tendermint.com). Here's where you can find us. Stay in touch.
+Starport Network (SPN) is a free and open source product maintained by [Tendermint](https://tendermint.com). Here's where you can find us. Stay in touch.
 
 - [Starport.com website](https://starport.com)
 - [Starport docs](https://docs.starport.com/)
@@ -60,4 +60,4 @@ Starport is a free and open source product maintained by [Tendermint](https://te
 - [@StarportHQ on Twitter](https://twitter.com/StarportHQ)
 - [Starport.com/blog](https://starport.com/blog/)
 - [Starport YouTube](https://www.youtube.com/channel/UCXMndYLK7OuvjvElSeSWJ1Q)
-
+- [Cosmos SDK docs](https://docs.cosmos.network)
