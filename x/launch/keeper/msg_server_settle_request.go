@@ -28,8 +28,8 @@ func (k msgServer) SettleRequest(
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
 			"the chain %d coordinator has been deleted", chain.LaunchID)
 	}
-	if msg.Coordinator != coordAddress {
-		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Coordinator)
+	if msg.Approve && msg.Settler != coordAddress {
+		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Settler)
 	}
 
 	// first check if the request exists
@@ -40,6 +40,10 @@ func (k msgServer) SettleRequest(
 			msg.RequestID,
 			msg.LaunchID,
 		)
+	}
+
+	if msg.Settler != request.Creator && msg.Settler != coordAddress {
+		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Settler)
 	}
 
 	// perform request action

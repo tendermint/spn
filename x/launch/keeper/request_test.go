@@ -11,15 +11,20 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func createRequests(
+type RequestSample struct {
+	Content types.RequestContent
+	Creator string
+}
+
+func createRequestsFromSamples(
 	keeper *keeper.Keeper,
 	ctx sdk.Context,
 	launchID uint64,
-	contents []types.RequestContent,
+	samples []RequestSample,
 ) []types.Request {
-	items := make([]types.Request, len(contents))
-	for i, content := range contents {
-		items[i] = sample.RequestWithContent(launchID, content)
+	items := make([]types.Request, len(samples))
+	for i, s := range samples {
+		items[i] = sample.RequestWithContentAndCreator(launchID, s.Content, s.Creator)
 		id := keeper.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
