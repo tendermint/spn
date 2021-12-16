@@ -52,8 +52,12 @@ curl https://get.starport.network/tendermint/spn@latest! | sudo bash
 
 ## Learn more
 
-- [Starport](https://github.com/tendermint/starport)
-- [Starport Docs](https://docs.starport.network)
-- [Cosmos SDK documentation](https://docs.cosmos.network)
-- [Cosmos SDK Tutorials](https://tutorials.cosmos.network)
-- [Discord](https://discord.gg/cosmosnetwork)
+Starport Network (SPN) is a free and open source product maintained by [Tendermint](https://tendermint.com). Here's where you can find us. Stay in touch.
+
+- [Starport.com website](https://starport.com)
+- [Starport docs](https://docs.starport.com/)
+- [Starport Discord](https://discord.com/starport)
+- [@StarportHQ on Twitter](https://twitter.com/StarportHQ)
+- [Starport.com/blog](https://starport.com/blog/)
+- [Starport YouTube](https://www.youtube.com/channel/UCXMndYLK7OuvjvElSeSWJ1Q)
+- [Cosmos SDK docs](https://docs.cosmos.network)
