@@ -116,7 +116,7 @@ message MsgRequestRemoveValidatorResponse {
 }
 
 message MsgSettleRequest {
-  string settler = 1;
+  string signer = 1;
   uint64 launchID = 2;
   uint64 requestID = 3;
   bool approve = 4;

@@ -19,7 +19,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid coordinator address",
 			msg: types.MsgSettleRequest{
-				Settler:   "invalid_address",
+				Signer:    "invalid_address",
 				LaunchID:  launchID,
 				RequestID: 10,
 				Approve:   true,
@@ -29,7 +29,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgSettleRequest{
-				Settler:   sample.Address(),
+				Signer:    sample.Address(),
 				LaunchID:  launchID,
 				RequestID: 10,
 				Approve:   true,
