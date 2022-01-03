@@ -19,20 +19,20 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid coordinator address",
 			msg: types.MsgSettleRequest{
-				Coordinator: "invalid_address",
-				LaunchID:    launchID,
-				RequestID:   10,
-				Approve:     true,
+				Signer:    "invalid_address",
+				LaunchID:  launchID,
+				RequestID: 10,
+				Approve:   true,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "valid message",
 			msg: types.MsgSettleRequest{
-				Coordinator: sample.Address(),
-				LaunchID:    launchID,
-				RequestID:   10,
-				Approve:     true,
+				Signer:    sample.Address(),
+				LaunchID:  launchID,
+				RequestID: 10,
+				Approve:   true,
 			},
 		},
 	}

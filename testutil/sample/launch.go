@@ -92,6 +92,17 @@ func RequestWithContent(launchID uint64, content launch.RequestContent) launch.R
 	}
 }
 
+// RequestWithContentAndCreator creates a launch request object with launch id and content and creator
+func RequestWithContentAndCreator(launchID uint64, content launch.RequestContent, creator string) launch.Request {
+	return launch.Request{
+		RequestID: 1,
+		LaunchID:  launchID,
+		Creator:   creator,
+		CreatedAt: time.Now().Unix(),
+		Content:   content,
+	}
+}
+
 // AllRequestContents creates all contents types for request
 func AllRequestContents(launchID uint64, genesis, vesting, validator string) []launch.RequestContent {
 	return []launch.RequestContent{
