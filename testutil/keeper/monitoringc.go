@@ -35,19 +35,19 @@ func MonitoringcKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	appCodec := codec.NewProtoCodec(registry)
 	capabilityKeeper := capabilitykeeper.NewKeeper(appCodec, storeKey, memStoreKey)
 
-	ss := typesparams.NewSubspace(appCodec,
+	ibcSubSpace := typesparams.NewSubspace(appCodec,
 		types.Amino,
 		storeKey,
 		memStoreKey,
-		"MonitoringcSubSpace",
+		"IBCSubSpace",
 	)
 	IBCKeeper := ibckeeper.NewKeeper(
 		appCodec,
 		storeKey,
-		ss,
+		ibcSubSpace,
 		nil,
 		nil,
-		capabilityKeeper.ScopeToModule("MonitoringcIBCKeeper"),
+		capabilityKeeper.ScopeToModule("IBC"),
 	)
 
 	paramsSubspace := typesparams.NewSubspace(appCodec,

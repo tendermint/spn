@@ -10,6 +10,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	typesparams "github.com/cosmos/cosmos-sdk/x/params/types"
+	ibchost "github.com/cosmos/ibc-go/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/modules/core/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/monitoringp/keeper"
@@ -35,26 +36,26 @@ func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	appCodec := codec.NewProtoCodec(registry)
 	capabilityKeeper := capabilitykeeper.NewKeeper(appCodec, storeKey, memStoreKey)
 
-	ss := typesparams.NewSubspace(appCodec,
+	ibcSubSpace := typesparams.NewSubspace(appCodec,
 		types.Amino,
 		storeKey,
 		memStoreKey,
-		"MonitoringpSubSpace",
+		"IBCSubSpace",
 	)
 	IBCKeeper := ibckeeper.NewKeeper(
 		appCodec,
 		storeKey,
-		ss,
+		ibcSubSpace,
 		nil,
 		nil,
-		capabilityKeeper.ScopeToModule("MonitoringpIBCKeeper"),
+		capabilityKeeper.ScopeToModule(ibchost.ModuleName),
 	)
 
 	paramsSubspace := typesparams.NewSubspace(appCodec,
 		types.Amino,
 		storeKey,
 		memStoreKey,
-		"MonitoringpParams",
+		types.ModuleName,
 	)
 	k := keeper.NewKeeper(
 		appCodec,
@@ -63,7 +64,7 @@ func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		paramsSubspace,
 		IBCKeeper.ChannelKeeper,
 		&IBCKeeper.PortKeeper,
-		capabilityKeeper.ScopeToModule("MonitoringpScopedKeeper"),
+		capabilityKeeper.ScopeToModule(types.ModuleName),
 	)
 
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, logger)
