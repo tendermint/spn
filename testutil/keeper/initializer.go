@@ -11,10 +11,12 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	ibctransfertypes "github.com/cosmos/ibc-go/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/modules/core/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -27,6 +29,17 @@ import (
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	tmdb "github.com/tendermint/tm-db"
+)
+
+var (
+	moduleAccountPerms = map[string][]string{
+		authtypes.FeeCollectorName:  nil,
+		minttypes.ModuleName:        {authtypes.Minter},
+		ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
+		campaigntypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+	}
 )
 
 // initializer allows to initialize each module keeper
@@ -174,15 +187,15 @@ func (i initializer) Monitoringc(
 	launchKeeper *launchkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 ) *monitoringcmodulekeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(launchtypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(launchtypes.MemStoreKey)
+	storeKey := sdk.NewKVStoreKey(monitoringcmoduletypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(monitoringcmoduletypes.MemStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
 
 	paramKeeper.Subspace(monitoringcmoduletypes.ModuleName)
 	subspace, _ := paramKeeper.GetSubspace(monitoringcmoduletypes.ModuleName)
-	scopedMonitoringKeeper := capabilityKeeper.ScopeToModule(ibchost.ModuleName)
+	scopedMonitoringKeeper := capabilityKeeper.ScopeToModule(monitoringcmoduletypes.ModuleName)
 
 	return monitoringcmodulekeeper.NewKeeper(
 		i.Codec,

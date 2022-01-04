@@ -90,7 +90,7 @@ import (
 	monitoringcmodule "github.com/tendermint/spn/x/monitoringc"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
 	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
-	// this line is used by starport scaffolding # stargate/app/moduleImport
+
 	campaignmodule "github.com/tendermint/spn/x/campaign"
 	campaignmodulekeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaignmoduletypes "github.com/tendermint/spn/x/campaign/types"
@@ -102,6 +102,8 @@ import (
 	profilemodule "github.com/tendermint/spn/x/profile"
 	profilemodulekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profilemoduletypes "github.com/tendermint/spn/x/profile/types"
+
+	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/tendermint/spm/cosmoscmd"
 )

@@ -5,13 +5,9 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
-	ibctransfertypes "github.com/cosmos/ibc-go/modules/apps/transfer/types"
 	"github.com/stretchr/testify/require"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -23,13 +19,6 @@ import (
 var (
 	// ExampleTimestamp is a timestamp used as the current time for the context of the keepers returned from the package
 	ExampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
-
-	moduleAccountPerms = map[string][]string{
-		authtypes.FeeCollectorName:  nil,
-		minttypes.ModuleName:        {authtypes.Minter},
-		ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
-		campaigntypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-	}
 )
 
 // AllKeepers returns initialized instances of all the keepers of the module
