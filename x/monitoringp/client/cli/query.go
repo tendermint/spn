@@ -17,7 +17,7 @@ import (
 func GetQueryCmd(queryRoute string) *cobra.Command {
 	// Group monitoringp queries under a subcommand
 	cmd := &cobra.Command{
-		Use:                        types.ModuleName,
+		Use:                        types.FullModuleName,
 		Short:                      fmt.Sprintf("Querying commands for the %s module", types.ModuleName),
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,

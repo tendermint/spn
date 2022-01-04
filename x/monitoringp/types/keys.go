@@ -4,6 +4,9 @@ const (
 	// ModuleName defines the module name
 	ModuleName = "monitoringp"
 
+	// FullModuleName defines the full module name used in interface like CLI to make it more explanatory
+	FullModuleName = "monitoring-provider"
+
 	// StoreKey defines the primary module store key
 	StoreKey = ModuleName
 
