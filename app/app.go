@@ -87,6 +87,9 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
+	monitoringcmodule "github.com/tendermint/spn/x/monitoringc"
+	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
+	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 	campaignmodule "github.com/tendermint/spn/x/campaign"
 	campaignmodulekeeper "github.com/tendermint/spn/x/campaign/keeper"
@@ -150,6 +153,7 @@ var (
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		monitoringcmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		campaignmodule.AppModuleBasic{},
 		launchmodule.AppModuleBasic{},
@@ -223,6 +227,8 @@ type App struct {
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
+	ScopedMonitoringcKeeper capabilitykeeper.ScopedKeeper
+	MonitoringcKeeper       monitoringcmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	CampaignKeeper campaignmodulekeeper.Keeper
@@ -277,6 +283,7 @@ func New(
 		profilemoduletypes.StoreKey,
 		launchmoduletypes.StoreKey,
 		campaignmoduletypes.StoreKey,
+		monitoringcmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -400,11 +407,26 @@ func New(
 	app.CampaignKeeper = *campaignKeeper
 	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
 
+	scopedMonitoringcKeeper := app.CapabilityKeeper.ScopeToModule(monitoringcmoduletypes.ModuleName)
+	app.ScopedMonitoringcKeeper = scopedMonitoringcKeeper
+	app.MonitoringcKeeper = *monitoringcmodulekeeper.NewKeeper(
+		appCodec,
+		keys[monitoringcmoduletypes.StoreKey],
+		keys[monitoringcmoduletypes.MemStoreKey],
+		app.GetSubspace(monitoringcmoduletypes.ModuleName),
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		scopedMonitoringcKeeper,
+		app.LaunchKeeper,
+	)
+	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferModule)
+	ibcRouter.AddRoute(monitoringcmoduletypes.ModuleName, monitoringcModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
@@ -438,6 +460,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
+		monitoringcModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
@@ -479,6 +502,7 @@ func New(
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		monitoringcmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 		campaignmoduletypes.ModuleName,
 		launchmoduletypes.ModuleName,
@@ -693,6 +717,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
+	paramsKeeper.Subspace(monitoringcmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 	paramsKeeper.Subspace(campaignmoduletypes.ModuleName)
 	paramsKeeper.Subspace(launchmoduletypes.ModuleName)
