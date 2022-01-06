@@ -57,7 +57,8 @@ func CmdRequestAddValidator() *cobra.Command {
 				gentxBytes,
 				[]byte(args[2]),
 				selfDelegation,
-				args[4],
+				// args[4],
+				nil,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

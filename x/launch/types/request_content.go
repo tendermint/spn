@@ -83,7 +83,7 @@ func NewGenesisValidator(
 	genTx,
 	consPubKey []byte,
 	selfDelegation sdk.Coin,
-	peer string,
+	peer *Peer,
 ) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_GenesisValidator{
@@ -122,8 +122,20 @@ func (m GenesisValidator) Validate() error {
 		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "self delegation is zero")
 	}
 
-	if m.Peer == "" {
-		return sdkerrors.Wrap(ErrInvalidPeer, "empty peer")
+	switch conn := m.Peer.Connection.(type) {
+	case *Peer_TcpAddress:
+		if conn.TcpAddress == "" {
+			return sdkerrors.Wrap(ErrInvalidPeer, "empty peer")
+		}
+	case *Peer_HttpTunnel:
+		if conn.HttpTunnel.Name == "" {
+			return sdkerrors.Wrap(ErrInvalidPeer, "empty http tunnel peer name")
+		}
+		if conn.HttpTunnel.Address == "" {
+			return sdkerrors.Wrap(ErrInvalidPeer, "empty http tunnel peer address")
+		}
+	default:
+		return sdkerrors.Wrap(ErrInvalidPeer, "invalid peer connection peer")
 	}
 	return nil
 }
