@@ -122,6 +122,9 @@ func (m GenesisValidator) Validate() error {
 		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "self delegation is zero")
 	}
 
+	if m.Peer == nil {
+		return sdkerrors.Wrap(ErrInvalidPeer, "null peer connection")
+	}
 	switch conn := m.Peer.Connection.(type) {
 	case *Peer_TcpAddress:
 		if conn.TcpAddress == "" {
@@ -135,7 +138,7 @@ func (m GenesisValidator) Validate() error {
 			return sdkerrors.Wrap(ErrInvalidPeer, "empty http tunnel peer address")
 		}
 	default:
-		return sdkerrors.Wrap(ErrInvalidPeer, "invalid peer connection peer")
+		return sdkerrors.Wrap(ErrInvalidPeer, "invalid peer connection")
 	}
 	return nil
 }
