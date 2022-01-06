@@ -13,12 +13,13 @@ import (
 )
 
 const (
-	flagValidatorAddress = "validator-address"
+	flagValidatorAddress    = "validator-address"
+	flagValidatorPeerTunnel = "validator-peer-tunnel"
 )
 
 func CmdRequestAddValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-validator [launch-id] [gentx-file] [consensus-public-key] [self-delegation] [peer]",
+		Use:   "request-add-validator [launch-id] [gentx-file] [consensus-public-key] [self-delegation] [peer-address]",
 		Short: "Send a request for a genesis validator",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -50,6 +51,21 @@ func CmdRequestAddValidator() *cobra.Command {
 				valAddr = fromAddr
 			}
 
+			valPeerTunnel, _ := cmd.Flags().GetString(flagValidatorPeerTunnel)
+			var peer *types.Peer
+			if valPeerTunnel != "" {
+				peer.Connection = &types.Peer_HttpTunnel{
+					HttpTunnel: &types.Peer_HTTPTunnel{
+						Name:    valPeerTunnel,
+						Address: args[4],
+					},
+				}
+			} else {
+				peer.Connection = &types.Peer_TcpAddress{
+					TcpAddress: args[4],
+				}
+			}
+
 			msg := types.NewMsgRequestAddValidator(
 				clientCtx.GetFromAddress().String(),
 				launchID,
@@ -57,8 +73,7 @@ func CmdRequestAddValidator() *cobra.Command {
 				gentxBytes,
 				[]byte(args[2]),
 				selfDelegation,
-				// args[4],
-				nil,
+				peer,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -68,6 +83,7 @@ func CmdRequestAddValidator() *cobra.Command {
 	}
 
 	cmd.Flags().String(flagValidatorAddress, "", "Address of the genesis validator to request")
+	cmd.Flags().String(flagValidatorPeerTunnel, "", "Add the validator peer as a tunnel and create a name")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
