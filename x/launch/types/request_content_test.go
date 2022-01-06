@@ -52,14 +52,14 @@ func TestNewGenesisValidator(t *testing.T) {
 	gentTx := sample.Bytes(300)
 	consPubKey := sample.Bytes(30)
 	selfDelegation := sample.Coin()
-	peer := sample.String(30)
+	peer := sample.GenesisValidatorPeer()
 	requestContent := types.NewGenesisValidator(
 		launchID,
 		address,
 		gentTx,
 		consPubKey,
 		selfDelegation,
-		sample.GenesisValidatorPeer(),
+		peer,
 	)
 
 	genesisValidator := requestContent.GetGenesisValidator()
