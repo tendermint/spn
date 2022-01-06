@@ -19,7 +19,9 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 	emptyGentx := validMsg
 	emptyGentx.GenTx = []byte{}
 	emptyPeer := validMsg
-	emptyPeer.Peer = sample.GenesisValidatorPeer()
+	emptyPeer.Peer = &types.Peer{}
+	nullPeer := emptyPeer
+	nullPeer.Peer = nil
 	invalidSelfDelegation := validMsg
 	invalidSelfDelegation.SelfDelegation.Denom = ""
 	zeroDelegation := validMsg
@@ -63,6 +65,11 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 		{
 			name:  "empty peer",
 			msg:   emptyPeer,
+			valid: false,
+		},
+		{
+			name:  "null peer",
+			msg:   nullPeer,
 			valid: false,
 		},
 		{
