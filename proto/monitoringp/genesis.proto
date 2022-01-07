@@ -1,0 +1,15 @@
+syntax = "proto3";
+package tendermint.spn.monitoringp;
+
+import "gogoproto/gogo.proto";
+import "monitoringp/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/tendermint/spn/x/monitoringp/types";
+
+// GenesisState defines the monitoringp module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  string port_id = 2;
+  // this line is used by starport scaffolding # genesis/proto/state
+}
