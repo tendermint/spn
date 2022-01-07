@@ -74,8 +74,9 @@ func GenesisValidator(launchID uint64, address string) launch.GenesisValidator {
 		Peer:           GenesisValidatorPeer(),
 	}
 }
-func GenesisValidatorPeer() *launch.Peer {
-	return &launch.Peer{
+
+func GenesisValidatorPeer() launch.Peer {
+	return launch.Peer{
 		Id: String(10),
 		Connection: &launch.Peer_TcpAddress{
 			TcpAddress: fmt.Sprintf("%s@%s", String(5), String(10)),

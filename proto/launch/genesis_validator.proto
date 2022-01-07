@@ -12,7 +12,7 @@ message GenesisValidator {
   bytes genTx = 3;
   bytes consPubKey = 4;
   cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
-  Peer peer = 6;
+  Peer peer = 6 [(gogoproto.nullable) = false];
 }
 
 message Peer {

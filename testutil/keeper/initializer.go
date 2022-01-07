@@ -33,10 +33,10 @@ import (
 
 var (
 	moduleAccountPerms = map[string][]string{
-		authtypes.FeeCollectorName:  nil,
-		minttypes.ModuleName:        {authtypes.Minter},
-		ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
-		campaigntypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		authtypes.FeeCollectorName:     nil,
+		minttypes.ModuleName:           {authtypes.Minter},
+		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	}

@@ -97,7 +97,7 @@ message MsgRequestAddValidator {
   bytes genTx = 4;
   bytes consPubKey = 5;
   cosmos.base.v1beta1.Coin selfDelegation = 6 [(gogoproto.nullable) = false];
-  Peer peer = 7;
+  Peer peer = 7 [(gogoproto.nullable) = false];
 }
 
 message MsgRequestAddValidatorResponse {

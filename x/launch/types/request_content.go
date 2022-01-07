@@ -83,7 +83,7 @@ func NewGenesisValidator(
 	genTx,
 	consPubKey []byte,
 	selfDelegation sdk.Coin,
-	peer *Peer,
+	peer Peer,
 ) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_GenesisValidator{
@@ -122,9 +122,6 @@ func (m GenesisValidator) Validate() error {
 		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "self delegation is zero")
 	}
 
-	if m.Peer == nil {
-		return sdkerrors.Wrap(ErrInvalidPeer, "null peer connection")
-	}
 	switch conn := m.Peer.Connection.(type) {
 	case *Peer_TcpAddress:
 		if conn.TcpAddress == "" {
