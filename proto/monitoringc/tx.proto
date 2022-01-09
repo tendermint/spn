@@ -13,6 +13,7 @@ service Msg {
 
 message MsgCreateClient {
   string creator = 1;
+  uint64 launchID = 2;
 }
 
 message MsgCreateClientResponse {

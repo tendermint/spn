@@ -12,6 +12,6 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 
 	// TODO: Handling the message
 	_ = ctx
-
+	
 	return &types.MsgCreateClientResponse{}, nil
 }
