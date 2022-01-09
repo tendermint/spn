@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/cosmos/ibc-go/modules/core/exported"
 )
 
 type LaunchKeeper interface {
@@ -19,4 +20,11 @@ type AccountKeeper interface {
 type BankKeeper interface {
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
 	// Methods imported from bank should be defined here
+}
+
+// ClientKeeper is imported to add the ability to create IBC Client from the module
+type ClientKeeper interface {
+	CreateClient(
+		ctx sdk.Context, clientState exported.ClientState, consensusState exported.ConsensusState,
+	) (string, error)
 }
