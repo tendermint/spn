@@ -7,7 +7,16 @@ option go_package = "github.com/tendermint/spn/x/monitoringc/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc CreateClient(MsgCreateClient) returns (MsgCreateClientResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgCreateClient {
+  string creator = 1;
+}
+
+message MsgCreateClientResponse {
+  string clientID = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message
