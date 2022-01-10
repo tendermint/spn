@@ -8,7 +8,8 @@ import (
 
 // x/monitoringc module sentinel errors
 var (
-	ErrSample               = sdkerrors.Register(ModuleName, 1100, "sample error")
-	ErrInvalidPacketTimeout = sdkerrors.Register(ModuleName, 1500, "invalid packet timeout")
-	ErrInvalidVersion       = sdkerrors.Register(ModuleName, 1501, "invalid version")
+	ErrInvalidPacketTimeout = sdkerrors.Register(ModuleName, 1, "invalid packet timeout")
+	ErrInvalidVersion       = sdkerrors.Register(ModuleName, 2, "invalid version")
+	ErrInvalidClientState       = sdkerrors.Register(ModuleName, 3, "invalid client state")
+
 )

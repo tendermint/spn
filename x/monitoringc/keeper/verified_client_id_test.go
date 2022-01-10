@@ -27,7 +27,7 @@ func createNVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 }
 
 func TestVerifiedClientIDGet(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNVerifiedClientID(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetVerifiedClientID(ctx,
@@ -42,7 +42,7 @@ func TestVerifiedClientIDGet(t *testing.T) {
 	}
 }
 func TestVerifiedClientIDRemove(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNVerifiedClientID(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveVerifiedClientID(ctx,
@@ -58,7 +58,7 @@ func TestVerifiedClientIDRemove(t *testing.T) {
 }
 
 func TestVerifiedClientIDGetAll(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNVerifiedClientID(keeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

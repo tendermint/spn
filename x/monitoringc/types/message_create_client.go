@@ -3,15 +3,24 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	ibctmtypes "github.com/cosmos/ibc-go/modules/light-clients/07-tendermint/types"
 )
 
 const TypeMsgCreateClient = "create_client"
 
 var _ sdk.Msg = &MsgCreateClient{}
 
-func NewMsgCreateClient(creator string) *MsgCreateClient {
+func NewMsgCreateClient(
+	creator string,
+	launchID uint64,
+	clientState ibctmtypes.ClientState,
+	consensusState ibctmtypes.ConsensusState,
+	) *MsgCreateClient {
 	return &MsgCreateClient{
 		Creator: creator,
+		LaunchID: launchID,
+		ClientState: clientState,
+		ConsensusState: consensusState,
 	}
 }
 
@@ -41,5 +50,10 @@ func (msg *MsgCreateClient) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if err := msg.ClientState.Validate(); err != nil {
+		return sdkerrors.Wrap(ErrInvalidClientState, err.Error())
+	}
+
 	return nil
 }

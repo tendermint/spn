@@ -23,7 +23,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg: MsgCreateClient{
-				Creator: sample.AccAddress(),
+				Creator: sample.Address(),
 			},
 		},
 	}
