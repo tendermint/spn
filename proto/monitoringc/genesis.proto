@@ -3,6 +3,7 @@ package tendermint.spn.monitoringc;
 
 import "gogoproto/gogo.proto";
 import "monitoringc/params.proto";
+import "monitoringc/verified_client_id.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/tendermint/spn/x/monitoringc/types";
@@ -11,5 +12,6 @@ option go_package = "github.com/tendermint/spn/x/monitoringc/types";
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   string port_id = 2;
+  repeated VerifiedClientID verifiedClientIDList = 3 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

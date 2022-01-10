@@ -22,6 +22,12 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 		return nil, err
 	}
 
+	// add the client ID as verified client ID
+	k.SetVerifiedClientID(ctx, types.VerifiedClientID{
+		ClientID: clientID,
+		LaunchID: msg.LaunchID,
+	})
+
 	return &types.MsgCreateClientResponse{
 		ClientID: clientID,
 	}, nil
