@@ -17,8 +17,7 @@ service Msg {
 message MsgCreateClient {
   string creator = 1;
   uint64 launchID = 2;
-  ibc.lightclients.tendermint.v1.ClientState clientState = 3 [(gogoproto.nullable) = false];
-  ibc.lightclients.tendermint.v1.ConsensusState consensusState = 4 [(gogoproto.nullable) = false];
+  ibc.lightclients.tendermint.v1.ConsensusState consensusState = 3 [(gogoproto.nullable) = false];
 }
 
 message MsgCreateClientResponse {

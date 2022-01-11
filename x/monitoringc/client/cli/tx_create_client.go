@@ -6,13 +6,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	clienttypes "github.com/cosmos/ibc-go/modules/core/02-client/types"
 	committypes "github.com/cosmos/ibc-go/modules/core/23-commitment/types"
 	ibctmtypes "github.com/cosmos/ibc-go/modules/light-clients/07-tendermint/types"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/monitoringc/types"
-	"github.com/tendermint/tendermint/light"
 	"time"
 )
 
@@ -32,24 +30,6 @@ func CmdCreateClient() *cobra.Command {
 				return err
 			}
 
-			// sample client State
-			chainID := "orbit-1"
-			unbondingPeriod := time.Hour*24*21
-			trustingPeriod := unbondingPeriod-1
-			latestHeight := clienttypes.NewHeight(1, 1)
-			clientState := ibctmtypes.NewClientState(
-				chainID,
-				ibctmtypes.NewFractionFromTm(light.DefaultTrustLevel),
-				trustingPeriod,
-				unbondingPeriod,
-				time.Minute*10,
-				latestHeight,
-				committypes.GetSDKSpecs(),
-				[]string{"upgrade", "upgradedIBCState"},
-				true,
-				true,
-			)
-
 			timestamp, err := time.Parse(time.RFC3339, "2022-01-11T08:25:36.020826Z")
 			if err != nil {
 				return err
@@ -65,7 +45,6 @@ func CmdCreateClient() *cobra.Command {
 			msg := types.NewMsgCreateClient(
 				clientCtx.GetFromAddress().String(),
 				launchID,
-				*clientState,
 				*consensusState,
 			)
 			if err := msg.ValidateBasic(); err != nil {

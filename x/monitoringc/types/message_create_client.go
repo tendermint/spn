@@ -13,13 +13,11 @@ var _ sdk.Msg = &MsgCreateClient{}
 func NewMsgCreateClient(
 	creator string,
 	launchID uint64,
-	clientState ibctmtypes.ClientState,
 	consensusState ibctmtypes.ConsensusState,
 	) *MsgCreateClient {
 	return &MsgCreateClient{
 		Creator: creator,
 		LaunchID: launchID,
-		ClientState: clientState,
 		ConsensusState: consensusState,
 	}
 }
@@ -49,10 +47,6 @@ func (msg *MsgCreateClient) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-
-	if err := msg.ClientState.Validate(); err != nil {
-		return sdkerrors.Wrap(ErrInvalidClientState, err.Error())
 	}
 
 	return nil
