@@ -13,11 +13,8 @@ import (
 func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClient) (*types.MsgCreateClientResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	var clientState ibctmtypes.ClientState
-	var consensusState ibctmtypes.ConsensusState
-
 	// create the client from IBC keeper
-	clientID, err := k.clientKeeper.CreateClient(ctx, &clientState, &consensusState)
+	clientID, err := k.clientKeeper.CreateClient(ctx, &msg.ClientState, &msg.ConsensusState)
 	if err != nil {
 		return nil, err
 	}

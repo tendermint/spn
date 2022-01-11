@@ -20,8 +20,8 @@ func (k Keeper) VerifiedClientIds(goCtx context.Context, req *types.QueryVerifie
 	var verifiedClientIDs []string
 
 	store := ctx.KVStore(k.storeKey)
-	campaignStore := prefix.NewStore(store, types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
-	pageRes, err := query.Paginate(campaignStore, req.Pagination, func(key []byte, value []byte) error {
+	clientIDsStore := prefix.NewStore(store, types.VerifiedClientIDsPrefix(req.LaunchID))
+	pageRes, err := query.Paginate(clientIDsStore, req.Pagination, func(key []byte, value []byte) error {
 		var client types.VerifiedClientID
 		if err := k.cdc.Unmarshal(value, &client); err != nil {
 			return err

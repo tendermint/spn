@@ -2,28 +2,25 @@ package types
 
 import "encoding/binary"
 
-var _ binary.ByteOrder
-
 const (
 	// VerifiedClientIDKeyPrefix is the prefix to retrieve all VerifiedClientID
 	VerifiedClientIDKeyPrefix = "VerifiedClientID/value/"
 )
 
-// VerifiedClientIDKey returns the store key to retrieve a VerifiedClientID from the index fields
-func VerifiedClientIDKey(
-	launchID uint64,
-	clientID string,
-) []byte {
-	var key []byte
-
+// VerifiedClientIDsFomLaunchIDKey returns the store key to retrieve client ids from a launch ID
+func VerifiedClientIDsFomLaunchIDKey(launchID uint64) []byte {
 	launchIDBytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(launchIDBytes, launchID)
-	key = append(key, launchIDBytes...)
-	key = append(key, []byte("/")...)
+	return append(launchIDBytes, []byte("/")...)
+}
 
-	clientIDBytes := []byte(clientID)
-	key = append(key, clientIDBytes...)
-	key = append(key, []byte("/")...)
 
-	return key
+// VerifiedClientIDKey returns the store key to retrieve a VerifiedClientID from the index fields
+func VerifiedClientIDKey(launchID uint64, clientID string) []byte {
+	return append(VerifiedClientIDsFomLaunchIDKey(launchID), []byte(clientID + "/")...)
+}
+
+// VerifiedClientIDsPrefix returns the prefix path to retrieve client ids from a launch ID
+func VerifiedClientIDsPrefix(launchID uint64) []byte {
+	return append([]byte(VerifiedClientIDKeyPrefix), VerifiedClientIDsFomLaunchIDKey(launchID)...)
 }
