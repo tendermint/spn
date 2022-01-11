@@ -54,9 +54,9 @@ func CmdRequestAddValidator() *cobra.Command {
 			valPeerTunnel, _ := cmd.Flags().GetString(flagValidatorPeerTunnel)
 			var peer types.Peer
 			if valPeerTunnel != "" {
-				types.NewPeerTunnel(args[4], valPeerTunnel, args[5])
+				peer = types.NewPeerTunnel(args[4], valPeerTunnel, args[5])
 			} else {
-				types.NewPeerConn(args[4], args[5])
+				peer = types.NewPeerConn(args[4], args[5])
 			}
 
 			msg := types.NewMsgRequestAddValidator(
