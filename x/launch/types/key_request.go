@@ -13,6 +13,10 @@ func RequestKey(launchID, requestID uint64) []byte {
 	return append(prefix, requestIDBytes...)
 }
 
+func RequestIDBytes(requestID uint64) []byte {
+	return append(uintBytes(requestID), byte('/'))
+}
+
 // RequestPoolKey returns the store key to retrieve a Request Pool
 // This is the entry with all the requests of a specific chain
 func RequestPoolKey(launchID uint64) []byte {
