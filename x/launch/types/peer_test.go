@@ -16,12 +16,12 @@ func TestPeer_Validate(t *testing.T) {
 	}{
 		{
 			name:    "validate new peer connection",
-			peer:    types.NewPeerConn(sample.String(10)),
+			peer:    types.NewPeerConn(sample.String(3), sample.String(10)),
 			wantErr: false,
 		},
 		{
 			name:    "validate new peer tunnel",
-			peer:    types.NewPeerTunnel(sample.String(5), sample.String(10)),
+			peer:    types.NewPeerTunnel(sample.String(3), sample.String(5), sample.String(10)),
 			wantErr: false,
 		},
 		{
@@ -30,18 +30,23 @@ func TestPeer_Validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name:    "empty peer id",
+			peer:    types.NewPeerConn("", sample.String(10)),
+			wantErr: true,
+		},
+		{
 			name:    "empty new peer connection address",
-			peer:    types.NewPeerConn(""),
+			peer:    types.NewPeerConn(sample.String(3), ""),
 			wantErr: true,
 		},
 		{
 			name:    "empty new peer tunnel address",
-			peer:    types.NewPeerTunnel("", sample.String(10)),
+			peer:    types.NewPeerTunnel(sample.String(3), "", sample.String(10)),
 			wantErr: true,
 		},
 		{
 			name:    "empty new peer tunnel name",
-			peer:    types.NewPeerTunnel(sample.String(10), ""),
+			peer:    types.NewPeerTunnel(sample.String(3), sample.String(10), ""),
 			wantErr: true,
 		},
 	}

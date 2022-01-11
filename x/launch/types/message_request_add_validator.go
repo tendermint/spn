@@ -76,7 +76,7 @@ func (msg *MsgRequestAddValidator) ValidateBasic() error {
 	}
 
 	if err := msg.Peer.Validate(); err != nil {
-		return sdkerrors.Wrap(err, "invalid peer")
+		return sdkerrors.Wrap(ErrInvalidPeer, err.Error())
 	}
 
 	return nil

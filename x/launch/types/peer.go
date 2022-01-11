@@ -1,11 +1,12 @@
 package types
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"errors"
 )
 
-func NewPeerTunnel(name, address string) Peer {
+func NewPeerTunnel(id, name, address string) Peer {
 	return Peer{
+		Id: id,
 		Connection: &Peer_HttpTunnel{
 			HttpTunnel: &Peer_HTTPTunnel{
 				Name:    name,
@@ -15,8 +16,9 @@ func NewPeerTunnel(name, address string) Peer {
 	}
 }
 
-func NewPeerConn(address string) Peer {
+func NewPeerConn(id, address string) Peer {
 	return Peer{
+		Id: id,
 		Connection: &Peer_TcpAddress{
 			TcpAddress: address,
 		},
@@ -25,20 +27,23 @@ func NewPeerConn(address string) Peer {
 
 // Validate check the Peer object
 func (m Peer) Validate() error {
+	if m.Id == "" {
+		return errors.New("empty peer id")
+	}
 	switch conn := m.Connection.(type) {
 	case *Peer_TcpAddress:
 		if conn.TcpAddress == "" {
-			return sdkerrors.Wrap(ErrInvalidPeer, "empty peer")
+			return errors.New("empty peer tcp address")
 		}
 	case *Peer_HttpTunnel:
 		if conn.HttpTunnel.Name == "" {
-			return sdkerrors.Wrap(ErrInvalidPeer, "empty http tunnel peer name")
+			return errors.New("empty http tunnel peer name")
 		}
 		if conn.HttpTunnel.Address == "" {
-			return sdkerrors.Wrap(ErrInvalidPeer, "empty http tunnel peer address")
+			return errors.New("empty http tunnel peer address")
 		}
 	default:
-		return sdkerrors.Wrap(ErrInvalidPeer, "invalid peer connection")
+		return errors.New("invalid peer connection")
 	}
 	return nil
 }

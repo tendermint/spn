@@ -19,9 +19,9 @@ const (
 
 func CmdRequestAddValidator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-validator [launch-id] [gentx-file] [consensus-public-key] [self-delegation] [peer-address]",
+		Use:   "request-add-validator [launch-id] [gentx-file] [consensus-public-key] [self-delegation] [peer-id] [peer-address]",
 		Short: "Send a request for a genesis validator",
-		Args:  cobra.ExactArgs(5),
+		Args:  cobra.ExactArgs(6),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -54,9 +54,9 @@ func CmdRequestAddValidator() *cobra.Command {
 			valPeerTunnel, _ := cmd.Flags().GetString(flagValidatorPeerTunnel)
 			var peer types.Peer
 			if valPeerTunnel != "" {
-				types.NewPeerTunnel(valPeerTunnel, args[4])
+				types.NewPeerTunnel(args[4], valPeerTunnel, args[5])
 			} else {
-				types.NewPeerConn(args[4])
+				types.NewPeerConn(args[4], args[5])
 			}
 
 			msg := types.NewMsgRequestAddValidator(
