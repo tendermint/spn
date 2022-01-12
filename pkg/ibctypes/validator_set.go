@@ -1,7 +1,6 @@
 package ibctypes
 
 import (
-	"bytes"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -99,6 +98,7 @@ func NewValidatorSet(validators []Validator) (valSet tmtypes.ValidatorSet, err e
 
 // CheckValidatorSet checks the validator set hash matches the consensus state next validator set hash
 func CheckValidatorSet(valSet tmtypes.ValidatorSet, consensusState ibctmtypes.ConsensusState) bool {
-	valHash := consensusState.NextValidatorsHash
-	return !bytes.Equal(valHash.Bytes(), valSet.Hash())
+	nextValHash := base64.StdEncoding.EncodeToString(consensusState.NextValidatorsHash)
+	valSetHash := base64.StdEncoding.EncodeToString(valSet.Hash())
+	return nextValHash == valSetHash
 }
