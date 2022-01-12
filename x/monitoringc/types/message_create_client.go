@@ -14,10 +14,10 @@ func NewMsgCreateClient(
 	creator string,
 	launchID uint64,
 	consensusState ibctmtypes.ConsensusState,
-	) *MsgCreateClient {
+) *MsgCreateClient {
 	return &MsgCreateClient{
-		Creator: creator,
-		LaunchID: launchID,
+		Creator:        creator,
+		LaunchID:       launchID,
 		ConsensusState: consensusState,
 	}
 }
