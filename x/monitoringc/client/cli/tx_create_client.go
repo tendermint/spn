@@ -12,9 +12,9 @@ import (
 
 func CmdCreateClient() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-client [launch-id] [consensus-state-file]",
+		Use:   "create-client [launch-id] [consensus-state-file] [validator-set-file]",
 		Short: "Create a verified client ID to connect to the chain with the specified launch ID",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			launchID, err := cast.ToUint64E(args[0])
 			if err != nil {
@@ -35,10 +35,20 @@ func CmdCreateClient() *cobra.Command {
 				return err
 			}
 
+			vsf, err := ibctypes.ParseValSetFile(args[2])
+			if err != nil {
+				return err
+			}
+			vs, err := ibctypes.NewValidatorSet(vsf.Validators)
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgCreateClient(
 				clientCtx.GetFromAddress().String(),
 				launchID,
 				cs,
+				vs,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

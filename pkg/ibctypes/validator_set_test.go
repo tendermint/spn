@@ -206,8 +206,8 @@ func TestCheckValidatorSet(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	require.True(t, ibctypes.CheckValidatorSet(valSet1, consensusState1))
-	require.True(t, ibctypes.CheckValidatorSet(valSet2, consensusState2))
-	require.False(t, ibctypes.CheckValidatorSet(valSet1, consensusState2))
-	require.False(t, ibctypes.CheckValidatorSet(valSet2, consensusState1))
+	require.True(t, ibctypes.CheckValidatorSetHash(valSet1, consensusState1))
+	require.True(t, ibctypes.CheckValidatorSetHash(valSet2, consensusState2))
+	require.False(t, ibctypes.CheckValidatorSetHash(valSet1, consensusState2))
+	require.False(t, ibctypes.CheckValidatorSetHash(valSet2, consensusState1))
 }

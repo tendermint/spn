@@ -96,8 +96,8 @@ func NewValidatorSet(validators []Validator) (valSet tmtypes.ValidatorSet, err e
 	return valSet, nil
 }
 
-// CheckValidatorSet checks the validator set hash matches the consensus state next validator set hash
-func CheckValidatorSet(valSet tmtypes.ValidatorSet, consensusState ibctmtypes.ConsensusState) bool {
+// CheckValidatorSetHash checks the validator set hash matches the consensus state next validator set hash
+func CheckValidatorSetHash(valSet tmtypes.ValidatorSet, consensusState ibctmtypes.ConsensusState) bool {
 	nextValHash := base64.StdEncoding.EncodeToString(consensusState.NextValidatorsHash)
 	valSetHash := base64.StdEncoding.EncodeToString(valSet.Hash())
 	return nextValHash == valSetHash
