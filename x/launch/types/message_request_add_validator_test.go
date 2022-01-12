@@ -19,7 +19,7 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 	emptyGentx := validMsg
 	emptyGentx.GenTx = []byte{}
 	emptyPeer := validMsg
-	emptyPeer.Peer = ""
+	emptyPeer.Peer = types.Peer{}
 	invalidSelfDelegation := validMsg
 	invalidSelfDelegation.SelfDelegation.Denom = ""
 	zeroDelegation := validMsg

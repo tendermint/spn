@@ -3,6 +3,7 @@ package sample
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -70,7 +71,16 @@ func GenesisValidator(launchID uint64, address string) launch.GenesisValidator {
 		GenTx:          Bytes(200),
 		ConsPubKey:     Bytes(10),
 		SelfDelegation: Coin(),
-		Peer:           String(10),
+		Peer:           GenesisValidatorPeer(),
+	}
+}
+
+func GenesisValidatorPeer() launch.Peer {
+	return launch.Peer{
+		Id: String(10),
+		Connection: &launch.Peer_TcpAddress{
+			TcpAddress: fmt.Sprintf("%s@%s", String(5), String(10)),
+		},
 	}
 }
 
@@ -110,7 +120,7 @@ func AllRequestContents(launchID uint64, genesis, vesting, validator string) []l
 		launch.NewAccountRemoval(genesis),
 		launch.NewVestingAccount(launchID, vesting, VestingOptions()),
 		launch.NewAccountRemoval(vesting),
-		launch.NewGenesisValidator(launchID, validator, Bytes(300), Bytes(30), Coin(), String(30)),
+		launch.NewGenesisValidator(launchID, validator, Bytes(300), Bytes(30), Coin(), GenesisValidatorPeer()),
 		launch.NewValidatorRemoval(validator),
 	}
 }
@@ -230,7 +240,7 @@ func MsgRequestAddValidator(creator, address string, launchID uint64) launch.Msg
 		Bytes(500),
 		Bytes(30),
 		Coin(),
-		String(30),
+		GenesisValidatorPeer(),
 	)
 }
 
