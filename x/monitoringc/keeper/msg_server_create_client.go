@@ -1,14 +1,12 @@
 package keeper
 
 import (
-	"bytes"
 	"context"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	clienttypes "github.com/cosmos/ibc-go/modules/core/02-client/types"
 	committypes "github.com/cosmos/ibc-go/modules/core/23-commitment/types"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/tendermint/light"
-	tmtypes "github.com/tendermint/tendermint/types"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -53,11 +51,6 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 	return &types.MsgCreateClientResponse{
 		ClientID: clientID,
 	}, nil
-}
-
-func checkValidatorSet(valSet tmtypes.ValidatorSet, consensusState ibctmtypes.ConsensusState) bool {
-	valHash := consensusState.NextValidatorsHash
-	return !bytes.Equal(valHash.Bytes(), valSet.Hash())
 }
 
 // initializeClientState initializes the client state provided for the IBC client

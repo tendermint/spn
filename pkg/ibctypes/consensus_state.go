@@ -11,7 +11,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// MerkeRool represents a Merkel Root
+// MerkeRool represents a Merkel Root in ConsensusStateFile
 type MerkeRool struct {
 	Hash string `yaml:"hash"`
 }
