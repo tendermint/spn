@@ -32,9 +32,9 @@ type Validator struct {
 func NewValidator(pubKey string, proposerPriority int64, votingPower int64) Validator {
 	return Validator{
 		ProposerPriority: strconv.Itoa(int(proposerPriority)),
-		VotingPower: strconv.Itoa(int(votingPower)),
+		VotingPower:      strconv.Itoa(int(votingPower)),
 		PubKey: PubKey{
-			Type: TypeEd25519,
+			Type:  TypeEd25519,
 			Value: pubKey,
 		},
 	}
@@ -71,7 +71,7 @@ func NewValidatorSet(validators []Validator) (valSet tmtypes.ValidatorSet, err e
 				i,
 				v.PubKey.Type,
 				TypeEd25519,
-				)
+			)
 		}
 
 		keyBase64, err := base64.StdEncoding.DecodeString(v.PubKey.Value)
