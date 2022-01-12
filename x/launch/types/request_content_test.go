@@ -52,8 +52,15 @@ func TestNewGenesisValidator(t *testing.T) {
 	gentTx := sample.Bytes(300)
 	consPubKey := sample.Bytes(30)
 	selfDelegation := sample.Coin()
-	peer := sample.String(30)
-	requestContent := types.NewGenesisValidator(launchID, address, gentTx, consPubKey, selfDelegation, peer)
+	peer := sample.GenesisValidatorPeer()
+	requestContent := types.NewGenesisValidator(
+		launchID,
+		address,
+		gentTx,
+		consPubKey,
+		selfDelegation,
+		peer,
+	)
 
 	genesisValidator := requestContent.GetGenesisValidator()
 	require.NotNil(t, genesisValidator)
@@ -206,7 +213,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     sample.Bytes(30),
 				SelfDelegation: sample.Coin(),
-				Peer:           sample.String(30),
+				Peer:           sample.GenesisValidatorPeer(),
 			},
 		},
 		{
@@ -217,7 +224,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     sample.Bytes(30),
 				SelfDelegation: sample.Coin(),
-				Peer:           sample.String(30),
+				Peer:           sample.GenesisValidatorPeer(),
 			},
 			wantErr: true,
 		},
@@ -229,7 +236,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     nil,
 				SelfDelegation: sample.Coin(),
-				Peer:           sample.String(30),
+				Peer:           sample.GenesisValidatorPeer(),
 			},
 			wantErr: true,
 		},
@@ -241,7 +248,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 				GenTx:          nil,
 				ConsPubKey:     sample.Bytes(30),
 				SelfDelegation: sample.Coin(),
-				Peer:           sample.String(30),
+				Peer:           sample.GenesisValidatorPeer(),
 			},
 			wantErr: true,
 		},
@@ -253,7 +260,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 				GenTx:          sample.Bytes(500),
 				ConsPubKey:     sample.Bytes(30),
 				SelfDelegation: sample.Coin(),
-				Peer:           "",
+				Peer:           types.Peer{},
 			},
 			wantErr: true,
 		},
@@ -268,7 +275,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 					Denom:  "",
 					Amount: sdk.NewInt(10),
 				},
-				Peer: sample.String(30),
+				Peer: sample.GenesisValidatorPeer(),
 			},
 			wantErr: true,
 		},
@@ -283,7 +290,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 					Denom:  "stake",
 					Amount: sdk.NewInt(0),
 				},
-				Peer: sample.String(30),
+				Peer: sample.GenesisValidatorPeer(),
 			},
 			wantErr: true,
 		},

@@ -16,7 +16,7 @@ func NewMsgRequestAddValidator(
 	genTx,
 	consPubKey []byte,
 	selfDelegation sdk.Coin,
-	peer string,
+	peer Peer,
 ) *MsgRequestAddValidator {
 	return &MsgRequestAddValidator{
 		Creator:        creator,
@@ -75,8 +75,8 @@ func (msg *MsgRequestAddValidator) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "self delegation is zero")
 	}
 
-	if msg.Peer == "" {
-		return sdkerrors.Wrap(ErrInvalidPeer, "empty peer")
+	if err := msg.Peer.Validate(); err != nil {
+		return sdkerrors.Wrap(ErrInvalidPeer, err.Error())
 	}
 
 	return nil

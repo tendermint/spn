@@ -6,6 +6,7 @@ import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "launch/chain.proto";
 import "launch/vesting_account.proto";
+import "launch/genesis_validator.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -96,7 +97,7 @@ message MsgRequestAddValidator {
   bytes genTx = 4;
   bytes consPubKey = 5;
   cosmos.base.v1beta1.Coin selfDelegation = 6 [(gogoproto.nullable) = false];
-  string peer = 7;
+  Peer peer = 7 [(gogoproto.nullable) = false];
 }
 
 message MsgRequestAddValidatorResponse {
