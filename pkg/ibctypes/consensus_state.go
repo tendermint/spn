@@ -42,25 +42,25 @@ func ParseConsensusStateFile(filePath string) (csf ConsensusStateFile, err error
 }
 
 // NewConsensusState returns a new IBC Tendermint Consensus State from string values
-func NewConsensusState(timestamp, nextValSetHash, rootHash string) (*ibctmtypes.ConsensusState, error) {
+func NewConsensusState(timestamp, nextValSetHash, rootHash string) (ibctmtypes.ConsensusState, error) {
 	// parse the RFC3339 timestamp format
 	t, err := time.Parse(time.RFC3339Nano, timestamp)
 	if err != nil {
-		return nil, err
+		return ibctmtypes.ConsensusState{}, err
 	}
 
 	// decode validator set
 	nextValSetHashBytes, err := hex.DecodeString(nextValSetHash)
 	if err != nil {
-		return nil, err
+		return ibctmtypes.ConsensusState{}, err
 	}
 
 	// decode root hash
 	rootHashBase64, err := base64.StdEncoding.DecodeString(rootHash)
 	if err != nil {
-		return nil, err
+		return ibctmtypes.ConsensusState{}, err
 	}
-	return ibctmtypes.NewConsensusState(
+	return *ibctmtypes.NewConsensusState(
 		t,
 		committypes.NewMerkleRoot(rootHashBase64),
 		nextValSetHashBytes,

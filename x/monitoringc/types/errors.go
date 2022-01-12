@@ -11,5 +11,6 @@ var (
 	ErrInvalidPacketTimeout  = sdkerrors.Register(ModuleName, 1, "invalid packet timeout")
 	ErrInvalidVersion        = sdkerrors.Register(ModuleName, 2, "invalid version")
 	ErrInvalidClientState    = sdkerrors.Register(ModuleName, 3, "invalid client state")
-	ErrClientCreationFailure = sdkerrors.Register(ModuleName, 4, "failed to create IBC client")
+	ErrInvalidConsensusState    = sdkerrors.Register(ModuleName, 4, "invalid consensus state")
+	ErrClientCreationFailure = sdkerrors.Register(ModuleName, 5, "failed to create IBC client")
 )

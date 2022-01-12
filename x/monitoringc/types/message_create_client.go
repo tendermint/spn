@@ -49,5 +49,10 @@ func (msg *MsgCreateClient) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
+	// validate consensus state
+	if err := msg.ConsensusState.ValidateBasic(); err != nil {
+		return sdkerrors.Wrapf(ErrInvalidConsensusState, err.Error())
+	}
+
 	return nil
 }
