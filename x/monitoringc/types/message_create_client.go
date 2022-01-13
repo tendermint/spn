@@ -3,9 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	ibctmtypes "github.com/cosmos/ibc-go/modules/light-clients/07-tendermint/types"
 	"github.com/tendermint/spn/pkg/ibctypes"
-	tmtypes "github.com/tendermint/tendermint/types"
 )
 
 const TypeMsgCreateClient = "create_client"
@@ -15,8 +13,8 @@ var _ sdk.Msg = &MsgCreateClient{}
 func NewMsgCreateClient(
 	creator string,
 	launchID uint64,
-	consensusState ibctmtypes.ConsensusState,
-	validatorSet tmtypes.ValidatorSet,
+	consensusState ibctypes.ConsensusState,
+	validatorSet ibctypes.ValidatorSet,
 ) *MsgCreateClient {
 	return &MsgCreateClient{
 		Creator:        creator,
@@ -54,18 +52,26 @@ func (msg *MsgCreateClient) ValidateBasic() error {
 	}
 
 	// validate consensus state
-	if err := msg.ConsensusState.ValidateBasic(); err != nil {
+	tmConsensusState, err := msg.ConsensusState.ToTendermintConsensusState()
+	if err != nil {
+		return sdkerrors.Wrapf(ErrInvalidConsensusState, err.Error())
+	}
+	if err := tmConsensusState.ValidateBasic(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidConsensusState, err.Error())
 	}
 
 	// validate validator set
-	if err := msg.ValidatorSet.ValidateBasic(); err != nil {
+	tmValidatorSet, err := msg.ValidatorSet.ToTendermintValidatorSet()
+	if err != nil {
+		return sdkerrors.Wrapf(ErrInvalidConsensusState, err.Error())
+	}
+	if err := tmValidatorSet.ValidateBasic(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidValidatorSet, err.Error())
 	}
 
 	// check validator set hash matches consensus state
-	if !ibctypes.CheckValidatorSetHash(msg.ValidatorSet, msg.ConsensusState) {
-		return sdkerrors.Wrapf(ErrInvalidValidatorSet, "validator set hash doesn't match the consensus state")
+	if !ibctypes.CheckValidatorSetHash(tmValidatorSet, tmConsensusState) {
+		return sdkerrors.Wrapf(ErrInvalidValidatorSetHash, "validator set hash doesn't match the consensus state")
 	}
 
 	return nil

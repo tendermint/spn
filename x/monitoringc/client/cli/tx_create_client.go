@@ -26,20 +26,12 @@ func CmdCreateClient() *cobra.Command {
 				return err
 			}
 
-			csf, err := ibctypes.ParseConsensusStateFile(args[1])
-			if err != nil {
-				return err
-			}
-			cs, err := ibctypes.NewConsensusState(csf.Timestamp, csf.NextValHash, csf.RootHash())
+			cs, err := ibctypes.ParseConsensusStateFromFile(args[1])
 			if err != nil {
 				return err
 			}
 
-			vsf, err := ibctypes.ParseValSetFile(args[2])
-			if err != nil {
-				return err
-			}
-			vs, err := ibctypes.NewValidatorSet(vsf.Validators)
+			vs, err := ibctypes.ParseValidatorSetFromFile(args[2])
 			if err != nil {
 				return err
 			}

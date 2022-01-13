@@ -1,3 +1,4 @@
+// Package ibctypes defines to handle IBC handshakes in SPN modules
 package ibctypes
 
 import (
