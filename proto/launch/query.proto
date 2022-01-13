@@ -17,11 +17,11 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 // Query defines the gRPC querier service.
 service Query {
   // Queries a list of requestSelection items.
-	rpc RequestSelection(QueryRequestSelectionRequest) returns (QueryRequestSelectionResponse) {
-		option (google.api.http).get = "/tendermint/spn/launch/requestSelection";
-	}
+  rpc RequestSelection(QueryRequestSelectionRequest) returns (QueryRequestSelectionResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/requestSelection";
+  }
 
-// this line is used by starport scaffolding # 2
+  // this line is used by starport scaffolding # 2
 
   // Queries a chain by index.
   rpc Chain(QueryGetChainRequest) returns (QueryGetChainResponse) {
