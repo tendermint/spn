@@ -63,7 +63,7 @@ func (msg *MsgCreateClient) ValidateBasic() error {
 	// validate validator set
 	tmValidatorSet, err := msg.ValidatorSet.ToTendermintValidatorSet()
 	if err != nil {
-		return sdkerrors.Wrapf(ErrInvalidConsensusState, err.Error())
+		return sdkerrors.Wrapf(ErrInvalidValidatorSet, err.Error())
 	}
 	if err := tmValidatorSet.ValidateBasic(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidValidatorSet, err.Error())

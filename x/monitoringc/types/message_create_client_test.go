@@ -1,31 +1,79 @@
-package types
+package types_test
 
 import (
-	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/pkg/ibctypes"
+	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
 func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgCreateClient
+		msg  types.MsgCreateClient
 		err  error
 	}{
 		{
-			name: "valid address",
-			msg: MsgCreateClient{
-				Creator: sample.Address(),
+			name: "valid message",
+			msg: types.MsgCreateClient{
+				Creator:        sample.Address(),
+				LaunchID:       0,
+				ConsensusState: sample.ConsensusState(0),
+				ValidatorSet:   sample.ValidatorSet(0),
 			},
 		},
 		{
 			name: "invalid address",
-			msg: MsgCreateClient{
-				Creator: "invalid_address",
+			msg: types.MsgCreateClient{
+				Creator:        "invalid_address",
+				LaunchID:       0,
+				ConsensusState: sample.ConsensusState(0),
+				ValidatorSet:   sample.ValidatorSet(0),
 			},
 			err: sdkerrors.ErrInvalidAddress,
+		},
+		{
+			name: "invalid consensus state",
+			msg: types.MsgCreateClient{
+				Creator:  sample.Address(),
+				LaunchID: 0,
+				ConsensusState: ibctypes.NewConsensusState(
+					"2022-01-12T07:56:35.394367Z",
+					"foo",
+					"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
+				),
+				ValidatorSet: sample.ValidatorSet(1),
+			},
+			err: types.ErrInvalidConsensusState,
+		},
+		{
+			name: "invalid validator set",
+			msg: types.MsgCreateClient{
+				Creator:        sample.Address(),
+				LaunchID:       0,
+				ConsensusState: sample.ConsensusState(0),
+				ValidatorSet: ibctypes.NewValidatorSet(
+					ibctypes.NewValidator(
+						"foo",
+						0,
+						100,
+					),
+				),
+			},
+			err: types.ErrInvalidValidatorSet,
+		},
+		{
+			name: "validator set not matching consensus state",
+			msg: types.MsgCreateClient{
+				Creator:        sample.Address(),
+				LaunchID:       0,
+				ConsensusState: sample.ConsensusState(0),
+				ValidatorSet:   sample.ValidatorSet(1),
+			},
+			err: types.ErrInvalidValidatorSetHash,
 		},
 	}
 	for _, tt := range tests {
