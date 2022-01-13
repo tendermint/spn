@@ -5,12 +5,13 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"os"
+	"strconv"
+
 	ibctmtypes "github.com/cosmos/ibc-go/modules/light-clients/07-tendermint/types"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 	tmtypes "github.com/tendermint/tendermint/types"
 	"gopkg.in/yaml.v2"
-	"os"
-	"strconv"
 )
 
 const TypeEd25519 = "tendermint/PubKeyEd25519"
