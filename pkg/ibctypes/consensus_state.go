@@ -12,13 +12,13 @@ import (
 )
 
 // RootHash returns the Merkle Root hash of the Consensus State
-func (csf ConsensusState) RootHash() string {
-	return csf.Root.Hash
+func (cs ConsensusState) RootHash() string {
+	return cs.Root.Hash
 }
 
-// ParseConsensusStateFile parses a YAML dumped Consensus State file and
-// returns a new IBC Tendermint Consensus State
-func ParseConsensusStateFile(filePath string) (csf ConsensusState, err error) {
+// ParseConsensusStateFromFile parses a YAML dumped Consensus State file and
+// returns a new Consensus State
+func ParseConsensusStateFromFile(filePath string) (csf ConsensusState, err error) {
 	f, err := os.ReadFile(filePath)
 	if err != nil {
 		return csf, err
@@ -28,22 +28,33 @@ func ParseConsensusStateFile(filePath string) (csf ConsensusState, err error) {
 	return
 }
 
-// NewConsensusState returns a new IBC Tendermint Consensus State from string values
-func NewConsensusState(timestamp, nextValSetHash, rootHash string) (ibctmtypes.ConsensusState, error) {
+// NewConsensusState initializes a new consensus state
+func NewConsensusState(timestamp, nextValHash, rootHash string) ConsensusState {
+	return ConsensusState{
+		NextValHash: nextValHash,
+		Timestamp:   timestamp,
+		Root: MerkeRool{
+			Hash: rootHash,
+		},
+	}
+}
+
+// ToTendermintConsensusState returns a new IBC Tendermint Consensus State
+func (cs ConsensusState) ToTendermintConsensusState() (ibctmtypes.ConsensusState, error) {
 	// parse the RFC3339 timestamp format
-	t, err := time.Parse(time.RFC3339Nano, timestamp)
+	t, err := time.Parse(time.RFC3339Nano, cs.Timestamp)
 	if err != nil {
 		return ibctmtypes.ConsensusState{}, err
 	}
 
 	// decode validator set
-	nextValSetHashBytes, err := hex.DecodeString(nextValSetHash)
+	nextValSetHashBytes, err := hex.DecodeString(cs.NextValHash)
 	if err != nil {
 		return ibctmtypes.ConsensusState{}, err
 	}
 
 	// decode root hash
-	rootHashBase64, err := base64.StdEncoding.DecodeString(rootHash)
+	rootHashBase64, err := base64.StdEncoding.DecodeString(cs.RootHash())
 	if err != nil {
 		return ibctmtypes.ConsensusState{}, err
 	}

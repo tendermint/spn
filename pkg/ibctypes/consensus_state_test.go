@@ -21,52 +21,58 @@ func TestConsensusStateFile_RootHash(t *testing.T) {
 	require.EqualValues(t, "bar", csf.RootHash())
 }
 
-func TestNewConsensusState(t *testing.T) {
+func TestConsensusState_ToTendermintConsensusState(t *testing.T) {
 	tests := []struct {
 		name           string
-		timestamp      string
-		nextValSetHash string
-		rootHash       string
+		consensusState ibctypes.ConsensusState
 		wantErr        bool
 	}{
 		{
-			name:           "returns a new consensus state",
-			timestamp:      "2022-01-12T07:56:35.394367Z",
-			nextValSetHash: "DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
-			rootHash:       "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
+			name: "returns a new consensus state",
+			consensusState: ibctypes.NewConsensusState(
+				"2022-01-12T07:56:35.394367Z",
+				"DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
+				"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
+			),
 		},
 		{
-			name:           "invalid timestamp",
-			timestamp:      "foo",
-			nextValSetHash: "DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
-			rootHash:       "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
-			wantErr:        true,
+			name: "invalid timestamp",
+			consensusState: ibctypes.NewConsensusState(
+				"foo",
+				"DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
+				"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
+			),
+			wantErr: true,
 		},
 		{
-			name:           "invalid next validator set hash",
-			timestamp:      "2022-01-12T07:56:35.394367Z",
-			nextValSetHash: "foo",
-			rootHash:       "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
-			wantErr:        true,
+			name: "invalid next validator set hash",
+			consensusState: ibctypes.NewConsensusState(
+				"2022-01-12T07:56:35.394367Z",
+				"foo",
+				"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
+			),
+			wantErr: true,
 		},
 		{
-			name:           "invalid root hash",
-			timestamp:      "2022-01-12T07:56:35.394367Z",
-			nextValSetHash: "DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
-			rootHash:       "foo",
-			wantErr:        true,
+			name: "invalid root hash",
+			consensusState: ibctypes.NewConsensusState(
+				"2022-01-12T07:56:35.394367Z",
+				"DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
+				"foo",
+			),
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ibctypes.NewConsensusState(tt.timestamp, tt.nextValSetHash, tt.rootHash)
+			got, err := tt.consensusState.ToTendermintConsensusState()
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
-			require.EqualValues(t, tt.timestamp, got.Timestamp.Format(time.RFC3339Nano))
-			require.EqualValues(t, tt.nextValSetHash, got.NextValidatorsHash.String())
-			require.EqualValues(t, tt.rootHash, base64.StdEncoding.EncodeToString(got.Root.Hash))
+			require.EqualValues(t, tt.consensusState.Timestamp, got.Timestamp.Format(time.RFC3339Nano))
+			require.EqualValues(t, tt.consensusState.NextValHash, got.NextValidatorsHash.String())
+			require.EqualValues(t, tt.consensusState.RootHash(), base64.StdEncoding.EncodeToString(got.Root.Hash))
 		})
 	}
 }
@@ -87,7 +93,7 @@ timestamp: "2022-01-12T07:56:35.394367Z"
 		_, err = f.WriteString(consensusStateYAML)
 		require.NoError(t, err)
 
-		csf, err := ibctypes.ParseConsensusStateFile(f.Name())
+		csf, err := ibctypes.ParseConsensusStateFromFile(f.Name())
 		require.NoError(t, err)
 		require.EqualValues(t, "2022-01-12T07:56:35.394367Z", csf.Timestamp)
 		require.EqualValues(t, "DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2", csf.NextValHash)
@@ -96,7 +102,7 @@ timestamp: "2022-01-12T07:56:35.394367Z"
 	})
 
 	t.Run("non-existent file", func(t *testing.T) {
-		_, err := ibctypes.ParseConsensusStateFile("/foo/bar/foobar")
+		_, err := ibctypes.ParseConsensusStateFromFile("/foo/bar/foobar")
 		require.Error(t, err)
 	})
 
@@ -111,7 +117,7 @@ timestamp: "2022-01-12T07:56:35.394367Z"
 		_, err = f.WriteString(consensusStateYAML)
 		require.NoError(t, err)
 
-		_, err = ibctypes.ParseConsensusStateFile(f.Name())
+		_, err = ibctypes.ParseConsensusStateFromFile(f.Name())
 		require.Error(t, err)
 	})
 }

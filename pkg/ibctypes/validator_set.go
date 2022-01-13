@@ -26,24 +26,31 @@ func NewValidator(pubKey string, proposerPriority int64, votingPower int64) Vali
 	}
 }
 
-// ParseValSetFile parses a YAML dumped Validator Set file and returns a new Tendermint Validator Set
-func ParseValSetFile(filePath string) (vsf ValidatorSet, err error) {
+// ParseValidatorSetFromFile parses a YAML dumped Validator Set file and returns a new Validator Set
+func ParseValidatorSetFromFile(filePath string) (vs ValidatorSet, err error) {
 	f, err := os.ReadFile(filePath)
 	if err != nil {
-		return vsf, err
+		return vs, err
 	}
 
-	err = yaml.Unmarshal(f, &vsf)
+	err = yaml.Unmarshal(f, &vs)
 	return
 }
 
-// NewValidatorSet returns a new Tendermint Validator Set from a list of validators
-func NewValidatorSet(validators []Validator) (valSet tmtypes.ValidatorSet, err error) {
-	if len(validators) == 0 {
+// NewValidatorSet returns a new Validator Set from a list of validators
+func NewValidatorSet(validators ...Validator) ValidatorSet {
+	return ValidatorSet{
+		Validators: validators,
+	}
+}
+
+// ToTendermintValidatorSet returns a new Tendermint Validator Set
+func (vs ValidatorSet) ToTendermintValidatorSet() (valSet tmtypes.ValidatorSet, err error) {
+	if len(vs.Validators) == 0 {
 		return tmtypes.ValidatorSet{}, errors.New("empty validator set")
 	}
 
-	for i, v := range validators {
+	for i, v := range vs.Validators {
 		// convert the public key
 		if v.PubKey.Type != TypeEd25519 {
 			return valSet, fmt.Errorf(
@@ -77,7 +84,7 @@ func NewValidatorSet(validators []Validator) (valSet tmtypes.ValidatorSet, err e
 	return valSet, nil
 }
 
-// CheckValidatorSetHash checks the validator set hash matches the consensus state next validator set hash
+// CheckValidatorSetHash checks the Tendermint validator set hash matches the Tendermint consensus state next validator set hash
 func CheckValidatorSetHash(valSet tmtypes.ValidatorSet, consensusState ibctmtypes.ConsensusState) bool {
 	nextValHash := base64.StdEncoding.EncodeToString(consensusState.NextValidatorsHash)
 	valSetHash := base64.StdEncoding.EncodeToString(valSet.Hash())

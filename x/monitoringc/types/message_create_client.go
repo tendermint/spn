@@ -22,7 +22,7 @@ func NewMsgCreateClient(
 		Creator:        creator,
 		LaunchID:       launchID,
 		ConsensusState: consensusState,
-		ValidatorSet: validatorSet,
+		ValidatorSet:   validatorSet,
 	}
 }
 

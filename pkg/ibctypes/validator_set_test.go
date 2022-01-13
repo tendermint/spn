@@ -2,11 +2,12 @@ package ibctypes_test
 
 import (
 	"encoding/base64"
-	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/pkg/ibctypes"
 	"os"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/pkg/ibctypes"
 )
 
 func TestParseValSetFile(t *testing.T) {
@@ -32,7 +33,7 @@ func TestParseValSetFile(t *testing.T) {
 		_, err = f.WriteString(validatorSetYAML)
 		require.NoError(t, err)
 
-		vsf, err := ibctypes.ParseValSetFile(f.Name())
+		vsf, err := ibctypes.ParseValidatorSetFromFile(f.Name())
 		require.NoError(t, err)
 		require.Len(t, vsf.Validators, 2)
 		require.EqualValues(t, ibctypes.Validator{
@@ -54,7 +55,7 @@ func TestParseValSetFile(t *testing.T) {
 	})
 
 	t.Run("non-existent file", func(t *testing.T) {
-		_, err := ibctypes.ParseValSetFile("/foo/bar/foobar")
+		_, err := ibctypes.ParseValidatorSetFromFile("/foo/bar/foobar")
 		require.Error(t, err)
 	})
 
@@ -69,20 +70,20 @@ func TestParseValSetFile(t *testing.T) {
 		_, err = f.WriteString(validatorSetYAML)
 		require.NoError(t, err)
 
-		_, err = ibctypes.ParseValSetFile(f.Name())
+		_, err = ibctypes.ParseValidatorSetFromFile(f.Name())
 		require.Error(t, err)
 	})
 }
 
-func TestNewValidatorSet(t *testing.T) {
+func TestValidatorSet_ToTendermintValidatorSet(t *testing.T) {
 	tests := []struct {
-		name       string
-		validators []ibctypes.Validator
-		wantErr    bool
+		name         string
+		validatorSet ibctypes.ValidatorSet
+		wantErr      bool
 	}{
 		{
 			name: "return a new validator set",
-			validators: []ibctypes.Validator{
+			validatorSet: ibctypes.NewValidatorSet(
 				ibctypes.NewValidator(
 					"fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=",
 					0,
@@ -93,18 +94,18 @@ func TestNewValidatorSet(t *testing.T) {
 					1,
 					50,
 				),
-			},
+			),
 		},
 		{
-			name:       "prevent empty validator set",
-			wantErr:    true,
-			validators: []ibctypes.Validator{},
+			name:         "prevent empty validator set",
+			wantErr:      true,
+			validatorSet: ibctypes.NewValidatorSet(),
 		},
 		{
 			name:    "prevent other key than ED25519",
 			wantErr: true,
-			validators: []ibctypes.Validator{
-				{
+			validatorSet: ibctypes.NewValidatorSet(
+				ibctypes.Validator{
 					VotingPower:      "100",
 					ProposerPriority: "0",
 					PubKey: ibctypes.PubKey{
@@ -112,24 +113,24 @@ func TestNewValidatorSet(t *testing.T) {
 						Value: "fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=",
 					},
 				},
-			},
+			),
 		},
 		{
 			name:    "prevent non-base 64 public key",
 			wantErr: true,
-			validators: []ibctypes.Validator{
+			validatorSet: ibctypes.NewValidatorSet(
 				ibctypes.NewValidator(
 					"foo",
 					0,
 					100,
 				),
-			},
+			),
 		},
 		{
 			name:    "prevent invalid voting power",
 			wantErr: true,
-			validators: []ibctypes.Validator{
-				{
+			validatorSet: ibctypes.NewValidatorSet(
+				ibctypes.Validator{
 					VotingPower:      "foo",
 					ProposerPriority: "0",
 					PubKey: ibctypes.PubKey{
@@ -137,13 +138,13 @@ func TestNewValidatorSet(t *testing.T) {
 						Value: "fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=",
 					},
 				},
-			},
+			),
 		},
 		{
 			name:    "prevent invalid proposer priority",
 			wantErr: true,
-			validators: []ibctypes.Validator{
-				{
+			validatorSet: ibctypes.NewValidatorSet(
+				ibctypes.Validator{
 					VotingPower:      "100",
 					ProposerPriority: "foo",
 					PubKey: ibctypes.PubKey{
@@ -151,29 +152,29 @@ func TestNewValidatorSet(t *testing.T) {
 						Value: "fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=",
 					},
 				},
-			},
+			),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ibctypes.NewValidatorSet(tt.validators)
+			got, err := tt.validatorSet.ToTendermintValidatorSet()
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 			// parse all validators
-			require.Len(t, got.Validators, len(tt.validators))
+			require.Len(t, got.Validators, len(tt.validatorSet.Validators))
 			for i, v := range got.Validators {
 				require.EqualValues(t,
-					tt.validators[i].VotingPower,
+					tt.validatorSet.Validators[i].VotingPower,
 					strconv.Itoa(int(v.VotingPower)),
 				)
 				require.EqualValues(t,
-					tt.validators[i].ProposerPriority,
+					tt.validatorSet.Validators[i].ProposerPriority,
 					strconv.Itoa(int(v.ProposerPriority)),
 				)
 				require.EqualValues(t,
-					tt.validators[i].PubKey.Value,
+					tt.validatorSet.Validators[i].PubKey.Value,
 					base64.StdEncoding.EncodeToString(v.PubKey.Bytes()),
 				)
 			}
@@ -183,31 +184,35 @@ func TestNewValidatorSet(t *testing.T) {
 
 func TestCheckValidatorSet(t *testing.T) {
 	// first pair
-	valSet1, err := ibctypes.NewValidatorSet([]ibctypes.Validator{
+	valSet1 := ibctypes.NewValidatorSet(
 		ibctypes.NewValidator("fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=", 0, 100),
-	})
+	)
+	tendermintValSet1, err := valSet1.ToTendermintValidatorSet()
 	require.NoError(t, err)
-	consensusState1, err := ibctypes.NewConsensusState(
+	consensusState1 := ibctypes.NewConsensusState(
 		"2022-01-12T12:25:19.523109Z",
 		"48C4C20AC5A7BD99A45AEBAB92E61F5667253A2C51CCCD84D20327D3CB8737C9",
 		"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
 	)
+	tendermintConsensusState1, err := consensusState1.ToTendermintConsensusState()
 	require.NoError(t, err)
 
 	// second pair
-	valSet2, err := ibctypes.NewValidatorSet([]ibctypes.Validator{
+	valSet2 := ibctypes.NewValidatorSet(
 		ibctypes.NewValidator("rQMyKjkzXXUhYsAdII6fSlTkFdf24hiSPGrSCBub5Oc=", 0, 100),
-	})
+	)
+	tendermintValSet2, err := valSet2.ToTendermintValidatorSet()
 	require.NoError(t, err)
-	consensusState2, err := ibctypes.NewConsensusState(
+	consensusState2 := ibctypes.NewConsensusState(
 		"2022-01-12T14:15:12.981874Z",
 		"65BD4CB5502F7C926228F4A929E4FAF07384B3E5A0EC553A4230B8AB5A1022ED",
 		"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
 	)
+	tendermintConsensusState2, err := consensusState2.ToTendermintConsensusState()
 	require.NoError(t, err)
 
-	require.True(t, ibctypes.CheckValidatorSetHash(valSet1, consensusState1))
-	require.True(t, ibctypes.CheckValidatorSetHash(valSet2, consensusState2))
-	require.False(t, ibctypes.CheckValidatorSetHash(valSet1, consensusState2))
-	require.False(t, ibctypes.CheckValidatorSetHash(valSet2, consensusState1))
+	require.True(t, ibctypes.CheckValidatorSetHash(tendermintValSet1, tendermintConsensusState1))
+	require.True(t, ibctypes.CheckValidatorSetHash(tendermintValSet2, tendermintConsensusState2))
+	require.False(t, ibctypes.CheckValidatorSetHash(tendermintValSet1, tendermintConsensusState2))
+	require.False(t, ibctypes.CheckValidatorSetHash(tendermintValSet2, tendermintConsensusState1))
 }
