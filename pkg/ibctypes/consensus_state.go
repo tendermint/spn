@@ -11,27 +11,14 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// MerkeRool represents a Merkel Root in ConsensusStateFile
-type MerkeRool struct {
-	Hash string `yaml:"hash"`
-}
-
-// ConsensusStateFile represents a Consensus State dumped into a YAML file with command:
-// appd q ibc client self-consensus-state
-type ConsensusStateFile struct {
-	NextValHash string    `yaml:"next_validators_hash"`
-	Root        MerkeRool `yaml:"root"`
-	Timestamp   string    `yaml:"timestamp"`
-}
-
 // RootHash returns the Merkle Root hash of the Consensus State
-func (csf ConsensusStateFile) RootHash() string {
+func (csf ConsensusState) RootHash() string {
 	return csf.Root.Hash
 }
 
 // ParseConsensusStateFile parses a YAML dumped Consensus State file and
 // returns a new IBC Tendermint Consensus State
-func ParseConsensusStateFile(filePath string) (csf ConsensusStateFile, err error) {
+func ParseConsensusStateFile(filePath string) (csf ConsensusState, err error) {
 	f, err := os.ReadFile(filePath)
 	if err != nil {
 		return csf, err

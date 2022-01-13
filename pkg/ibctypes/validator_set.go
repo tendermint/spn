@@ -14,19 +14,6 @@ import (
 
 const TypeEd25519 = "tendermint/PubKeyEd25519"
 
-// PubKey represents a public key in Validator
-type PubKey struct {
-	Type  string `yaml:"type"`
-	Value string `yaml:"value"`
-}
-
-// Validator represents a validator in ValSetFile
-type Validator struct {
-	ProposerPriority string `yaml:"proposer_priority"`
-	PubKey           PubKey `yaml:"pub_key"`
-	VotingPower      string `yaml:"voting_power"`
-}
-
 // NewValidator returns a validator with a ed25519 public key
 func NewValidator(pubKey string, proposerPriority int64, votingPower int64) Validator {
 	return Validator{
@@ -39,14 +26,8 @@ func NewValidator(pubKey string, proposerPriority int64, votingPower int64) Vali
 	}
 }
 
-// ValSetFile represents a Validator Set dumped into a YAML file with command:
-// appd q tendermint-validator-set n
-type ValSetFile struct {
-	Validators []Validator `yaml:"validators"`
-}
-
 // ParseValSetFile parses a YAML dumped Validator Set file and returns a new Tendermint Validator Set
-func ParseValSetFile(filePath string) (vsf ValSetFile, err error) {
+func ParseValSetFile(filePath string) (vsf ValidatorSet, err error) {
 	f, err := os.ReadFile(filePath)
 	if err != nil {
 		return vsf, err

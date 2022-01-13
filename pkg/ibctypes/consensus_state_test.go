@@ -11,7 +11,7 @@ import (
 )
 
 func TestConsensusStateFile_RootHash(t *testing.T) {
-	csf := ibctypes.ConsensusStateFile{
+	csf := ibctypes.ConsensusState{
 		NextValHash: "foo",
 		Root: ibctypes.MerkeRool{
 			Hash: "bar",
