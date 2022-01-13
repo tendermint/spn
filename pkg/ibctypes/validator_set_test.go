@@ -162,6 +162,7 @@ func TestValidatorSet_ToTendermintValidatorSet(t *testing.T) {
 				require.Error(t, err)
 				return
 			}
+			require.NoError(t, got.ValidateBasic(), "the converted type should be valid")
 			// parse all validators
 			require.Len(t, got.Validators, len(tt.validatorSet.Validators))
 			for i, v := range got.Validators {
@@ -187,32 +188,32 @@ func TestCheckValidatorSet(t *testing.T) {
 	valSet1 := ibctypes.NewValidatorSet(
 		ibctypes.NewValidator("fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=", 0, 100),
 	)
-	tendermintValSet1, err := valSet1.ToTendermintValidatorSet()
+	tmValSet1, err := valSet1.ToTendermintValidatorSet()
 	require.NoError(t, err)
 	consensusState1 := ibctypes.NewConsensusState(
 		"2022-01-12T12:25:19.523109Z",
 		"48C4C20AC5A7BD99A45AEBAB92E61F5667253A2C51CCCD84D20327D3CB8737C9",
 		"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
 	)
-	tendermintConsensusState1, err := consensusState1.ToTendermintConsensusState()
+	tmConsensusState1, err := consensusState1.ToTendermintConsensusState()
 	require.NoError(t, err)
 
 	// second pair
 	valSet2 := ibctypes.NewValidatorSet(
 		ibctypes.NewValidator("rQMyKjkzXXUhYsAdII6fSlTkFdf24hiSPGrSCBub5Oc=", 0, 100),
 	)
-	tendermintValSet2, err := valSet2.ToTendermintValidatorSet()
+	tmValSet2, err := valSet2.ToTendermintValidatorSet()
 	require.NoError(t, err)
 	consensusState2 := ibctypes.NewConsensusState(
 		"2022-01-12T14:15:12.981874Z",
 		"65BD4CB5502F7C926228F4A929E4FAF07384B3E5A0EC553A4230B8AB5A1022ED",
 		"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
 	)
-	tendermintConsensusState2, err := consensusState2.ToTendermintConsensusState()
+	tmConsensusState2, err := consensusState2.ToTendermintConsensusState()
 	require.NoError(t, err)
 
-	require.True(t, ibctypes.CheckValidatorSetHash(tendermintValSet1, tendermintConsensusState1))
-	require.True(t, ibctypes.CheckValidatorSetHash(tendermintValSet2, tendermintConsensusState2))
-	require.False(t, ibctypes.CheckValidatorSetHash(tendermintValSet1, tendermintConsensusState2))
-	require.False(t, ibctypes.CheckValidatorSetHash(tendermintValSet2, tendermintConsensusState1))
+	require.True(t, ibctypes.CheckValidatorSetHash(tmValSet1, tmConsensusState1))
+	require.True(t, ibctypes.CheckValidatorSetHash(tmValSet2, tmConsensusState2))
+	require.False(t, ibctypes.CheckValidatorSetHash(tmValSet1, tmConsensusState2))
+	require.False(t, ibctypes.CheckValidatorSetHash(tmValSet2, tmConsensusState1))
 }

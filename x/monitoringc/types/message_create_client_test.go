@@ -1,11 +1,11 @@
 package types
 
 import (
+	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/testutil/sample"
 )
 
 func TestMsgCreateClient_ValidateBasic(t *testing.T) {
@@ -15,16 +15,17 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
+			name: "valid address",
+			msg: MsgCreateClient{
+				Creator: sample.Address(),
+			},
+		},
+		{
 			name: "invalid address",
 			msg: MsgCreateClient{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg: MsgCreateClient{
-				Creator: sample.Address(),
-			},
 		},
 	}
 	for _, tt := range tests {

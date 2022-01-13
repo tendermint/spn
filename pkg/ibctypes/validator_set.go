@@ -28,6 +28,7 @@ func NewValidator(pubKey string, proposerPriority int64, votingPower int64) Vali
 }
 
 // ParseValidatorSetFromFile parses a YAML dumped Validator Set file and returns a new Validator Set
+// TODO: Support other format than YAML if there are other format of dumped file
 func ParseValidatorSetFromFile(filePath string) (vs ValidatorSet, err error) {
 	f, err := os.ReadFile(filePath)
 	if err != nil {
@@ -80,6 +81,13 @@ func (vs ValidatorSet) ToTendermintValidatorSet() (valSet tmtypes.ValidatorSet, 
 		v.ProposerPriority = proposerPriority
 
 		valSet.Validators = append(valSet.Validators, v)
+
+		// ValidateBasic() method of Validator Set type requires to have a non-nil proposer
+		// We add the first validator as proposer to ensure the method succeeds
+		// This value doesn't influence the hash verification of the validator set
+		if valSet.Proposer == nil {
+			valSet.Proposer = v
+		}
 	}
 
 	return valSet, nil

@@ -70,6 +70,7 @@ func TestConsensusState_ToTendermintConsensusState(t *testing.T) {
 				require.Error(t, err)
 				return
 			}
+			require.NoError(t, got.ValidateBasic(), "the converted type should be valid")
 			require.EqualValues(t, tt.consensusState.Timestamp, got.Timestamp.Format(time.RFC3339Nano))
 			require.EqualValues(t, tt.consensusState.NextValHash, got.NextValidatorsHash.String())
 			require.EqualValues(t, tt.consensusState.RootHash(), base64.StdEncoding.EncodeToString(got.Root.Hash))

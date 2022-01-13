@@ -19,6 +19,7 @@ func (cs ConsensusState) RootHash() string {
 
 // ParseConsensusStateFromFile parses a YAML dumped Consensus State file and
 // returns a new Consensus State
+// TODO: Support other format than YAML if there are other format of dumped file
 func ParseConsensusStateFromFile(filePath string) (csf ConsensusState, err error) {
 	f, err := os.ReadFile(filePath)
 	if err != nil {
