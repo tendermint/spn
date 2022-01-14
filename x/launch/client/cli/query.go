@@ -14,7 +14,7 @@ import (
 )
 
 // GetQueryCmd returns the cli query commands for this module
-func GetQueryCmd(queryRoute string) *cobra.Command {
+func GetQueryCmd(_ string) *cobra.Command {
 	// Group launch queries under a subcommand
 	cmd := &cobra.Command{
 		Use:                        types.ModuleName,
@@ -35,8 +35,8 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdListGenesisAccount(),
 		CmdShowRequest(),
 		CmdListRequest(),
+		CmdSelectRequest(),
 		CmdQueryParams(),
-		CmdRequestSelection(),
 	)
 
 	// this line is used by starport scaffolding # 1

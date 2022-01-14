@@ -18,8 +18,11 @@ func (k Keeper) RequestSelection(goCtx context.Context, req *types.QueryRequestS
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 	ids, err := numbers.ParseList(req.RequestIDs)
-	if err != nil || len(ids) == 0 {
-		return nil, status.Error(codes.InvalidArgument, "invalid argument")
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+	if len(ids) == 0 {
+		return nil, status.Error(codes.InvalidArgument, "no request id provided")
 	}
 
 	store := ctx.KVStore(k.storeKey)
@@ -27,32 +30,22 @@ func (k Keeper) RequestSelection(goCtx context.Context, req *types.QueryRequestS
 	requestStore := prefix.NewStore(store, keyPrefix)
 
 	result := make([]types.Request, 0)
-	iterator := requestStore.Iterator(
-		types.RequestIDBytes(ids[0]),
-		types.RequestIDBytes(ids[len(ids)-1]+1),
-	)
-	defer iterator.Close()
-	selectionMap := prepareSelectionMap(ids)
-
-	for ; iterator.Valid(); iterator.Next() {
+	for _, id := range ids {
 		var request types.Request
-		err := k.cdc.Unmarshal(iterator.Value(), &request)
+
+		b := requestStore.Get(types.RequestIDBytes(id))
+
+		if b == nil {
+			// TODO: decide on error content
+			return nil, status.Error(codes.NotFound, "Not found")
+		}
+
+		err := k.cdc.Unmarshal(b, &request)
 		if err != nil {
 			return nil, status.Error(codes.Internal, err.Error())
 		}
-		if _, ok := selectionMap[request.RequestID]; ok {
-			result = append(result, request)
-			selectionMap[request.RequestID] = struct{}{}
-		}
+		result = append(result, request)
 	}
 
 	return &types.QueryRequestSelectionResponse{Request: result}, nil
-}
-
-func prepareSelectionMap(ids []uint64) map[uint64]struct{} {
-	selectionMap := make(map[uint64]struct{})
-	for _, id := range ids {
-		selectionMap[id] = struct{}{}
-	}
-	return selectionMap
 }

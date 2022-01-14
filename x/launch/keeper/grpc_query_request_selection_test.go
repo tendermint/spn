@@ -43,7 +43,7 @@ func TestQueryRequestSelection(t *testing.T) {
 				LaunchID:   0,
 				RequestIDs: "invalid,,",
 			},
-			err: status.Error(codes.InvalidArgument, "invalid argument"),
+			err: status.Error(codes.InvalidArgument, "strconv.ParseUint: parsing \"invalid\": invalid syntax"),
 		},
 		{
 			name: "whole selection exists",
@@ -60,6 +60,7 @@ func TestQueryRequestSelection(t *testing.T) {
 				RequestIDs: "1-7",
 			},
 			resultSequence: []uint64{1, 2, 3, 4, 5, 6},
+			err:            status.Error(codes.NotFound, "Not found"),
 		},
 		{
 			name: "selection doesn't exist",
@@ -68,6 +69,7 @@ func TestQueryRequestSelection(t *testing.T) {
 				RequestIDs: "7-9",
 			},
 			resultSequence: []uint64{},
+			err:            status.Error(codes.NotFound, "Not found"),
 		},
 	}
 

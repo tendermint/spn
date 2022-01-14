@@ -16,11 +16,6 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // Queries a list of requestSelection items.
-  rpc RequestSelection(QueryRequestSelectionRequest) returns (QueryRequestSelectionResponse) {
-    option (google.api.http).get = "/tendermint/spn/launch/requestSelection";
-  }
-
   // this line is used by starport scaffolding # 2
 
   // Queries a chain by index.
@@ -67,6 +62,10 @@ service Query {
   // Queries a list of request for a chain.
   rpc RequestAll(QueryAllRequestRequest) returns (QueryAllRequestResponse) {
     option (google.api.http).get = "/tendermint/spn/launch/request/{launchID}";
+  }
+  // Queries a list of requestSelection items.
+  rpc RequestSelection(QueryRequestSelectionRequest) returns (QueryRequestSelectionResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/requestSelection/{launchID}/{requestIDs}";
   }
 
   // Parameters queries the parameters of the module.
@@ -168,15 +167,6 @@ message QueryAllRequestResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
-message QueryParamsRequest {}
-
-// QueryParamsResponse is response type for the Query/Params RPC method.
-message QueryParamsResponse {
-  // params holds all the parameters of this module.
-  Params params = 1 [(gogoproto.nullable) = false];
-}
-
 message QueryRequestSelectionRequest {
   uint64 launchID = 1;
   string requestIDs = 2;
@@ -184,6 +174,15 @@ message QueryRequestSelectionRequest {
 
 message QueryRequestSelectionResponse {
   repeated Request request = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
 }
 
 // this line is used by starport scaffolding # 3

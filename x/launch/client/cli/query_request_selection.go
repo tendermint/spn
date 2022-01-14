@@ -3,19 +3,16 @@ package cli
 import (
 	"strconv"
 
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-var _ = strconv.Itoa(0)
-
-func CmdRequestSelection() *cobra.Command {
+func CmdSelectRequest() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-selection [launch-id] [request-ids]",
-		Short: "Query request-selection",
+		Use:   "select-request [launch-id] [request-ids]",
+		Short: "Query requests specifying their ids",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			reqRequestIDs := args[1]
