@@ -17,9 +17,6 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func networkWithValidatorByConsAddressObjects(t *testing.T, n int) (*network.Network, []types.ValidatorByConsAddress) {
 	t.Helper()
 	cfg := network.DefaultConfig()

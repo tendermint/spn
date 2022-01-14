@@ -19,7 +19,6 @@ func (k Keeper) SetValidatorByConsAddress(ctx sdk.Context, validatorByConsAddres
 func (k Keeper) GetValidatorByConsAddress(
 	ctx sdk.Context,
 	consensusAddress string,
-
 ) (val types.ValidatorByConsAddress, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByConsAddressKeyPrefix))
 
@@ -35,11 +34,7 @@ func (k Keeper) GetValidatorByConsAddress(
 }
 
 // RemoveValidatorByConsAddress removes a validatorByConsAddress from the store
-func (k Keeper) RemoveValidatorByConsAddress(
-	ctx sdk.Context,
-	consensusAddress string,
-
-) {
+func (k Keeper) RemoveValidatorByConsAddress(ctx sdk.Context, consensusAddress string) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByConsAddressKeyPrefix))
 	store.Delete(types.ValidatorByConsAddressKey(
 		consensusAddress,

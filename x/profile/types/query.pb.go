@@ -661,7 +661,7 @@ type QueryClient interface {
 	Validator(ctx context.Context, in *QueryGetValidatorRequest, opts ...grpc.CallOption) (*QueryGetValidatorResponse, error)
 	// Queries a list of validator items.
 	ValidatorAll(ctx context.Context, in *QueryAllValidatorRequest, opts ...grpc.CallOption) (*QueryAllValidatorResponse, error)
-	// Queries a ValidatorByConsAddress by index.
+	// Queries a ValidatorByConsAddress by consensus address.
 	ValidatorByConsAddress(ctx context.Context, in *QueryGetValidatorByConsAddressRequest, opts ...grpc.CallOption) (*QueryGetValidatorByConsAddressResponse, error)
 	// Queries a coordinator by id.
 	Coordinator(ctx context.Context, in *QueryGetCoordinatorRequest, opts ...grpc.CallOption) (*QueryGetCoordinatorResponse, error)
@@ -739,7 +739,7 @@ type QueryServer interface {
 	Validator(context.Context, *QueryGetValidatorRequest) (*QueryGetValidatorResponse, error)
 	// Queries a list of validator items.
 	ValidatorAll(context.Context, *QueryAllValidatorRequest) (*QueryAllValidatorResponse, error)
-	// Queries a ValidatorByConsAddress by index.
+	// Queries a ValidatorByConsAddress by consensus address.
 	ValidatorByConsAddress(context.Context, *QueryGetValidatorByConsAddressRequest) (*QueryGetValidatorByConsAddressResponse, error)
 	// Queries a coordinator by id.
 	Coordinator(context.Context, *QueryGetCoordinatorRequest) (*QueryGetCoordinatorResponse, error)

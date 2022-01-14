@@ -24,7 +24,7 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/profile/validator";
   }
 
-  // Queries a ValidatorByConsAddress by index.
+  // Queries a ValidatorByConsAddress by consensus address.
   rpc ValidatorByConsAddress(QueryGetValidatorByConsAddressRequest) returns (QueryGetValidatorByConsAddressResponse) {
     option (google.api.http).get = "/tendermint/spn/profile/validator_by_cons_address/{consensusAddress}";
   }

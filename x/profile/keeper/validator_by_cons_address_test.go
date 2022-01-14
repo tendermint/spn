@@ -12,9 +12,6 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func createNValidatorByConsAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ValidatorByConsAddress {
 	items := make([]types.ValidatorByConsAddress, n)
 	for i := range items {

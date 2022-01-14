@@ -14,9 +14,6 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func TestValidatorByConsAddressQuerySingle(t *testing.T) {
 	keeper, ctx := keepertest.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)
