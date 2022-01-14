@@ -11,6 +11,7 @@ func DefaultGenesis() *GenesisState {
 		// this line is used by starport scaffolding # genesis/types/default
 		ValidatorList:              []Validator{},
 		ValidatorByConsAddressList: []ValidatorByConsAddress{},
+		ConsensusKeyNonceList:      []ConsensusKeyNonce{},
 		CoordinatorList:            []Coordinator{},
 		CoordinatorCounter:         1,
 		CoordinatorByAddressList:   []CoordinatorByAddress{},
@@ -40,6 +41,16 @@ func (gs GenesisState) ValidateValidators() error {
 		validatorByConsAddressIndexMap[index] = struct{}{}
 	}
 
+	// Check for duplicated index in consensusKeyNonce
+	consensusKeyNonceIndexMap := make(map[string]struct{})
+	for _, elem := range gs.ConsensusKeyNonceList {
+		index := string(ConsensusKeyNonceKey(elem.ConsensusAddress))
+		if _, ok := consensusKeyNonceIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for consensusKeyNonce: %s", elem.ConsensusAddress)
+		}
+		consensusKeyNonceIndexMap[index] = struct{}{}
+	}
+
 	// Check for duplicated index in validator
 	validatorIndexMap := make(map[string]struct{})
 	for _, elem := range gs.ValidatorList {
@@ -50,12 +61,20 @@ func (gs GenesisState) ValidateValidators() error {
 
 		consAddrIndex := string(ValidatorByConsAddressKey(elem.ConsensusAddress))
 		if _, ok := validatorByConsAddressIndexMap[consAddrIndex]; !ok {
-			return fmt.Errorf("validator consensus address not found for ValidatorByConsAddress: %s", elem.Address)
+			return fmt.Errorf("validator consensus address not found for ValidatorByConsAddress: %s", elem.ConsensusAddress)
 		}
-		validatorIndexMap[valIndex] = struct{}{}
+
+		consNonceIndex := string(ConsensusKeyNonceKey(elem.ConsensusAddress))
+		if _, ok := consensusKeyNonceIndexMap[consNonceIndex]; !ok {
+			return fmt.Errorf("validator consensus address not found for ConsensusKeyNonce: %s", elem.ConsensusAddress)
+		}
 
 		// Remove to check if all validator by consensus address exist
 		delete(validatorByConsAddressIndexMap, consAddrIndex)
+		// Remove to check if all consensus key nonce address exist
+		delete(consensusKeyNonceIndexMap, consNonceIndex)
+
+		validatorIndexMap[valIndex] = struct{}{}
 	}
 	// Check if all validator by consensus address exist
 	for validator := range validatorByConsAddressIndexMap {
