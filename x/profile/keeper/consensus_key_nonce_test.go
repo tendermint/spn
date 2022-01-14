@@ -12,9 +12,6 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func createNConsensusKeyNonce(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ConsensusKeyNonce {
 	items := make([]types.ConsensusKeyNonce, n)
 	for i := range items {
@@ -26,7 +23,7 @@ func createNConsensusKeyNonce(keeper *keeper.Keeper, ctx sdk.Context, n int) []t
 }
 
 func TestConsensusKeyNonceGet(t *testing.T) {
-	keeper, ctx := keepertest.ProfileKeeper(t)
+	keeper, ctx := keepertest.Profile(t)
 	items := createNConsensusKeyNonce(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetConsensusKeyNonce(ctx,
@@ -40,7 +37,7 @@ func TestConsensusKeyNonceGet(t *testing.T) {
 	}
 }
 func TestConsensusKeyNonceRemove(t *testing.T) {
-	keeper, ctx := keepertest.ProfileKeeper(t)
+	keeper, ctx := keepertest.Profile(t)
 	items := createNConsensusKeyNonce(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveConsensusKeyNonce(ctx,
@@ -51,13 +48,4 @@ func TestConsensusKeyNonceRemove(t *testing.T) {
 		)
 		require.False(t, found)
 	}
-}
-
-func TestConsensusKeyNonceGetAll(t *testing.T) {
-	keeper, ctx := keepertest.ProfileKeeper(t)
-	items := createNConsensusKeyNonce(keeper, ctx, 10)
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllConsensusKeyNonce(ctx)),
-	)
 }
