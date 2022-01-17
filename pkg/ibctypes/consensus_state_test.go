@@ -10,10 +10,10 @@ import (
 	"github.com/tendermint/spn/pkg/ibctypes"
 )
 
-func TestConsensusStateFile_RootHash(t *testing.T) {
+func TestConsensusState_RootHash(t *testing.T) {
 	csf := ibctypes.ConsensusState{
-		NextValHash: "foo",
-		Root: ibctypes.MerkeRool{
+		NextValidatorsHash: "foo",
+		Root: ibctypes.MerkelRool{
 			Hash: "bar",
 		},
 		Timestamp: "foobar",
@@ -72,13 +72,13 @@ func TestConsensusState_ToTendermintConsensusState(t *testing.T) {
 			}
 			require.NoError(t, got.ValidateBasic(), "the converted type should be valid")
 			require.EqualValues(t, tt.consensusState.Timestamp, got.Timestamp.Format(time.RFC3339Nano))
-			require.EqualValues(t, tt.consensusState.NextValHash, got.NextValidatorsHash.String())
+			require.EqualValues(t, tt.consensusState.NextValidatorsHash, got.NextValidatorsHash.String())
 			require.EqualValues(t, tt.consensusState.RootHash(), base64.StdEncoding.EncodeToString(got.Root.Hash))
 		})
 	}
 }
 
-func TestParseConsensusStateFile(t *testing.T) {
+func TestParseConsensusStateFromFile(t *testing.T) {
 	t.Run("parse a dumped consensus state", func(t *testing.T) {
 		consensusStateYAML := `next_validators_hash: DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2
 root:
@@ -97,7 +97,7 @@ timestamp: "2022-01-12T07:56:35.394367Z"
 		csf, err := ibctypes.ParseConsensusStateFromFile(f.Name())
 		require.NoError(t, err)
 		require.EqualValues(t, "2022-01-12T07:56:35.394367Z", csf.Timestamp)
-		require.EqualValues(t, "DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2", csf.NextValHash)
+		require.EqualValues(t, "DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2", csf.NextValidatorsHash)
 		require.EqualValues(t, "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=", csf.RootHash())
 
 	})

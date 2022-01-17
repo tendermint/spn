@@ -3,18 +3,54 @@ package ibctypes
 
 import (
 	"encoding/base64"
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
 
 	ibctmtypes "github.com/cosmos/ibc-go/modules/light-clients/07-tendermint/types"
+	"github.com/pkg/errors"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 	tmtypes "github.com/tendermint/tendermint/types"
 	"gopkg.in/yaml.v2"
 )
 
 const TypeEd25519 = "tendermint/PubKeyEd25519"
+
+// ParseValidatorSetFromFile parses a YAML dumped Validator Set file and returns a new Validator Set
+// TODO: Support other format than YAML if there are other format of dumped file
+func ParseValidatorSetFromFile(filePath string) (vs ValidatorSet, err error) {
+	// parse file
+	var vsf struct {
+		Validators []struct {
+			ProposerPriority string `yaml:"proposer_priority"`
+			VotingPower  string `yaml:"voting_power"`
+			PubKey  struct {
+				Type string `yaml:"type"`
+				Value  string `yaml:"value"`
+			} `yaml:"pub_key"`
+		} `yaml:"validators"`
+	}
+	f, err := os.ReadFile(filePath)
+	if err != nil {
+		return vs, err
+	}
+	err = yaml.Unmarshal(f, &vsf)
+
+	// convert
+	for i, v := range vsf.Validators {
+		proposerPriority, err := strconv.ParseInt(v.ProposerPriority, 10, 64)
+		if err != nil {
+			return vs, errors.Wrapf(err, "invalid validator %d proposer priority", i)
+		}
+		votingPower, err := strconv.ParseInt(v.VotingPower, 10, 64)
+		if err != nil {
+			return vs, errors.Wrapf(err, "invalid validator %d voting power", i)
+		}
+		vs.Validators = append(vs.Validators, NewValidator(v.PubKey.Value, proposerPriority, votingPower))
+	}
+
+	return
+}
 
 // NewValidator returns a validator with a ed25519 public key
 func NewValidator(pubKey string, proposerPriority int64, votingPower int64) Validator {
@@ -26,18 +62,6 @@ func NewValidator(pubKey string, proposerPriority int64, votingPower int64) Vali
 			Value: pubKey,
 		},
 	}
-}
-
-// ParseValidatorSetFromFile parses a YAML dumped Validator Set file and returns a new Validator Set
-// TODO: Support other format than YAML if there are other format of dumped file
-func ParseValidatorSetFromFile(filePath string) (vs ValidatorSet, err error) {
-	f, err := os.ReadFile(filePath)
-	if err != nil {
-		return vs, err
-	}
-
-	err = yaml.Unmarshal(f, &vs)
-	return
 }
 
 // NewValidatorSet returns a new Validator Set from a list of validators
@@ -91,6 +115,7 @@ func (vs ValidatorSet) ToTendermintValidatorSet() (valSet tmtypes.ValidatorSet, 
 		}
 	}
 
+	valSet.Validators[0].PubKey.Address()
 	return valSet, nil
 }
 

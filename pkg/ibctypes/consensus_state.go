@@ -19,23 +19,33 @@ func (cs ConsensusState) RootHash() string {
 
 // ParseConsensusStateFromFile parses a YAML dumped Consensus State file and
 // returns a new Consensus State
-// TODO: Support other format than YAML if there are other format of dumped file
-func ParseConsensusStateFromFile(filePath string) (csf ConsensusState, err error) {
+// TODO: Improve method and support other format than YAML if there are other format of dumped file
+func ParseConsensusStateFromFile(filePath string) (ConsensusState, error) {
+	// parse file
+	var csf struct {
+		NextValidatorsHash string `yaml:"next_validators_hash"`
+		Timestamp          string `yaml:"timestamp"`
+		Root struct {
+			Hash string `yaml:"hash"`
+		}
+	}
 	f, err := os.ReadFile(filePath)
 	if err != nil {
-		return csf, err
+		return ConsensusState{}, err
 	}
-
 	err = yaml.Unmarshal(f, &csf)
-	return
+
+	// convert
+	cs := NewConsensusState(csf.Timestamp, csf.NextValidatorsHash, csf.Root.Hash)
+	return cs, err
 }
 
 // NewConsensusState initializes a new consensus state
 func NewConsensusState(timestamp, nextValHash, rootHash string) ConsensusState {
 	return ConsensusState{
-		NextValHash: nextValHash,
+		NextValidatorsHash: nextValHash,
 		Timestamp:   timestamp,
-		Root: MerkeRool{
+		Root: MerkelRool{
 			Hash: rootHash,
 		},
 	}
@@ -50,7 +60,7 @@ func (cs ConsensusState) ToTendermintConsensusState() (ibctmtypes.ConsensusState
 	}
 
 	// decode validator set
-	nextValSetHashBytes, err := hex.DecodeString(cs.NextValHash)
+	nextValSetHashBytes, err := hex.DecodeString(cs.NextValidatorsHash)
 	if err != nil {
 		return ibctmtypes.ConsensusState{}, err
 	}

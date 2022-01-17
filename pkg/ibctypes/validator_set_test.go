@@ -10,7 +10,7 @@ import (
 	"github.com/tendermint/spn/pkg/ibctypes"
 )
 
-func TestParseValSetFile(t *testing.T) {
+func TestParseValidatorSetFromFile(t *testing.T) {
 	t.Run("parse a dumped validator set", func(t *testing.T) {
 		validatorSetYAML := `validators:
 - proposer_priority: "0"
