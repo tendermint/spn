@@ -19,6 +19,7 @@ type (
 		storeKey   sdk.StoreKey
 		memKey     sdk.StoreKey
 		paramstore paramtypes.Subspace
+		clientKeeper types.ClientKeeper
 	}
 )
 
@@ -30,7 +31,7 @@ func NewKeeper(
 	channelKeeper ibckeeper.ChannelKeeper,
 	portKeeper ibckeeper.PortKeeper,
 	scopedKeeper ibckeeper.ScopedKeeper,
-
+	clientKeeper types.ClientKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -49,6 +50,7 @@ func NewKeeper(
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramstore: ps,
+		clientKeeper: clientKeeper,
 	}
 }
 
