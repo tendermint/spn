@@ -9,10 +9,6 @@ import (
 // InitGenesis initializes the capability module's state from a provided genesis
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
-	// Set all the consensusKeyNonce
-	for _, elem := range genState.ConsensusKeyNonceList {
-		k.SetConsensusKeyNonce(ctx, elem)
-	}
 	// this line is used by starport scaffolding # genesis/module/init
 
 	// Set all the validator
@@ -23,6 +19,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// Set all the validatorByConsAddress
 	for _, elem := range genState.ValidatorByConsAddressList {
 		k.SetValidatorByConsAddress(ctx, elem)
+	}
+
+	// Set all the consensusKeyNonce
+	for _, elem := range genState.ConsensusKeyNonceList {
+		k.SetConsensusKeyNonce(ctx, elem)
 	}
 
 	// Set all the coordinator

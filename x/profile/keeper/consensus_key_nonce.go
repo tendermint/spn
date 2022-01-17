@@ -19,7 +19,6 @@ func (k Keeper) SetConsensusKeyNonce(ctx sdk.Context, consensusKeyNonce types.Co
 func (k Keeper) GetConsensusKeyNonce(
 	ctx sdk.Context,
 	consensusAddress string,
-
 ) (val types.ConsensusKeyNonce, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ConsensusKeyNonceKeyPrefix))
 
@@ -35,11 +34,7 @@ func (k Keeper) GetConsensusKeyNonce(
 }
 
 // RemoveConsensusKeyNonce removes a consensusKeyNonce from the store
-func (k Keeper) RemoveConsensusKeyNonce(
-	ctx sdk.Context,
-	consensusAddress string,
-
-) {
+func (k Keeper) RemoveConsensusKeyNonce(ctx sdk.Context, consensusAddress string) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ConsensusKeyNonceKeyPrefix))
 	store.Delete(types.ConsensusKeyNonceKey(
 		consensusAddress,
