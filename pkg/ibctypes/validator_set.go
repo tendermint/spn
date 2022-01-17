@@ -74,7 +74,7 @@ func NewValidatorSet(validators ...Validator) ValidatorSet {
 // ToTendermintValidatorSet returns a new Tendermint Validator Set
 func (vs ValidatorSet) ToTendermintValidatorSet() (valSet tmtypes.ValidatorSet, err error) {
 	if len(vs.Validators) == 0 {
-		return tmtypes.ValidatorSet{}, errors.New("empty validator set")
+		return valSet, errors.New("empty validator set")
 	}
 
 	for i, v := range vs.Validators {
