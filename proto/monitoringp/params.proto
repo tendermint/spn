@@ -10,5 +10,5 @@ option go_package = "github.com/tendermint/spn/x/monitoringp/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  tendermint.spn.ibctypes.ConsensusState consumerConsensusState = 3 [(gogoproto.nullable) = false];
+  tendermint.spn.ibctypes.ConsensusState consumerConsensusState = 2;
 }
