@@ -2,17 +2,17 @@ package types
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/pkg/chainid"
 
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/tendermint/spn/pkg/chainid"
 	"github.com/tendermint/spn/pkg/ibctypes"
 	"gopkg.in/yaml.v2"
 )
 
 var (
 	KeyConsumerConsensusState = []byte("ConsumerConsensusState")
-	KeyConsumerChainID = []byte("ConsumerChainID")
+	KeyConsumerChainID        = []byte("ConsumerChainID")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -26,7 +26,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams(ccs ibctypes.ConsensusState) Params {
 	return Params{
 		ConsumerConsensusState: ccs,
-		ConsumerChainID: "spn-1",
+		ConsumerChainID:        "spn-1",
 	}
 }
 
