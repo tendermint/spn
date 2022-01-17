@@ -24,14 +24,13 @@ const (
 // InitializeConsumerClient initializes the consumer IBC client and and set it in the store
 func (k Keeper) InitializeConsumerClient(ctx sdk.Context) error {
 	// initialize the client state
-	clientState := k.initializeClientState("spn")
+	clientState := k.initializeClientState(k.ConsumerChainID(ctx))
 	if err := clientState.Validate(); err != nil {
 		return sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
 	}
 
 	// get consensus state from param
-	css := k.ConsumerConsensusState(ctx)
-	tmConsensusState, err := css.ToTendermintConsensusState()
+	tmConsensusState, err := k.ConsumerConsensusState(ctx).ToTendermintConsensusState()
 	if err != nil {
 		return spnerrors.Criticalf("consensus state from param is invalid %s", err.Error())
 	}

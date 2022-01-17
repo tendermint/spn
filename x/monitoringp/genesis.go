@@ -26,6 +26,12 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		}
 	}
 	k.SetParams(ctx, genState.Params)
+
+	// initialize and setup the consumer IBC client
+	err := k.InitializeConsumerClient(ctx)
+	if err != nil {
+		panic("couldn't initialize the consumer client ID" + err.Error())
+	}
 }
 
 // ExportGenesis returns the capability module's exported genesis.
