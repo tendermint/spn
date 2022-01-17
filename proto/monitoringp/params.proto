@@ -2,11 +2,13 @@ syntax = "proto3";
 package tendermint.spn.monitoringp;
 
 import "gogoproto/gogo.proto";
+import "types/ibctypes.proto";
 
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
 
 // Params defines the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
-  
+
+  tendermint.spn.ibctypes.ConsensusState consumerConsensusState = 3 [(gogoproto.nullable) = false];
 }
