@@ -21,7 +21,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(ccs *ibctypes.ConsensusState) Params {
+func NewParams(ccs ibctypes.ConsensusState) Params {
 	return Params{
 		ConsumerConsensusState: ccs,
 	}
@@ -29,7 +29,7 @@ func NewParams(ccs *ibctypes.ConsensusState) Params {
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(nil)
+	return NewParams(ibctypes.ConsensusState{})
 }
 
 // ParamSetPairs get the params.ParamSet
@@ -56,13 +56,14 @@ func (p Params) String() string {
 
 // validateConsumerConsensusState validates consumer consensus state
 func validateConsumerConsensusState(i interface{}) error {
-	ccs, ok := i.(*ibctypes.ConsensusState)
+	ccs, ok := i.(ibctypes.ConsensusState)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	// if defined, the consumer consensus state must be a valid consensus state
-	if ccs != nil {
+	// perform the verification only if the Consumer Consensus State is defined
+	// TODO: remove this check and set an official SPN mainnet consensus state as default
+	if ccs.Timestamp != "" {
 		tmConsensusState, err := ccs.ToTendermintConsensusState()
 		if err != nil {
 			return errors.Wrap(err, "consumer consensus state can't be converted")

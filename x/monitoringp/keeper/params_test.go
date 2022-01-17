@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"github.com/tendermint/spn/pkg/ibctypes"
 	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
@@ -14,11 +15,11 @@ func TestGetParams(t *testing.T) {
 	params := types.DefaultParams()
 	k.SetParams(ctx, params)
 	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, nil, k.ConsumerConsensusState(ctx))
+	require.EqualValues(t, ibctypes.ConsensusState{}, k.ConsumerConsensusState(ctx))
 
 	cs := sample.ConsensusState(0)
-	params = types.NewParams(&cs)
+	params = types.NewParams(cs)
 	k.SetParams(ctx, params)
 	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, cs, *k.ConsumerConsensusState(ctx))
+	require.EqualValues(t, cs, k.ConsumerConsensusState(ctx))
 }

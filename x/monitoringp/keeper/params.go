@@ -7,7 +7,7 @@ import (
 )
 
 // ConsumerConsensusState returns the consumer consensus state param
-func (k Keeper) ConsumerConsensusState(ctx sdk.Context) (res *ibctypes.ConsensusState) {
+func (k Keeper) ConsumerConsensusState(ctx sdk.Context) (res ibctypes.ConsensusState) {
 	k.paramstore.Get(ctx, types.KeyConsumerConsensusState, &res)
 	return
 }
