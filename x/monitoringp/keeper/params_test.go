@@ -16,10 +16,13 @@ func TestGetParams(t *testing.T) {
 	k.SetParams(ctx, params)
 	require.EqualValues(t, params, k.GetParams(ctx))
 	require.EqualValues(t, ibctypes.ConsensusState{}, k.ConsumerConsensusState(ctx))
+	require.EqualValues(t, types.DefautConsumerChainID, k.ConsumerChainID(ctx))
 
+	chainID := sample.GenesisChainID()
 	cs := sample.ConsensusState(0)
-	params = types.NewParams(cs)
+	params = types.NewParams(chainID, cs)
 	k.SetParams(ctx, params)
 	require.EqualValues(t, params, k.GetParams(ctx))
 	require.EqualValues(t, cs, k.ConsumerConsensusState(ctx))
+	require.EqualValues(t, chainID, k.ConsumerChainID(ctx))
 }

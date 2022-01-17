@@ -65,6 +65,7 @@ func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 		IBCKeeper.ChannelKeeper,
 		&IBCKeeper.PortKeeper,
 		capabilityKeeper.ScopeToModule(types.ModuleName),
+		IBCKeeper.ClientKeeper,
 	)
 
 	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, logger)

@@ -12,9 +12,16 @@ func (k Keeper) ConsumerConsensusState(ctx sdk.Context) (res ibctypes.ConsensusS
 	return
 }
 
+// ConsumerChainID returns the consumer chain ID param
+func (k Keeper) ConsumerChainID(ctx sdk.Context) (res string) {
+	k.paramstore.Get(ctx, types.KeyConsumerChainID, &res)
+	return
+}
+
 // GetParams get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
+		k.ConsumerChainID(ctx),
 		k.ConsumerConsensusState(ctx),
 	)
 }

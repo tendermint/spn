@@ -21,7 +21,7 @@ func TestParamsValidate(t *testing.T) {
 		{
 			name: "valid consumer consensus state",
 			params: Params{
-				ConsumerChainID: sample.GenesisChainID(),
+				ConsumerChainID:        sample.GenesisChainID(),
 				ConsumerConsensusState: sample.ConsensusState(0),
 			},
 		},
@@ -40,7 +40,7 @@ func TestParamsValidate(t *testing.T) {
 		{
 			name: "invalid consumer chain ID",
 			params: Params{
-				ConsumerChainID: "foo",
+				ConsumerChainID:        "foo",
 				ConsumerConsensusState: sample.ConsensusState(0),
 			},
 			wantErr: true,
