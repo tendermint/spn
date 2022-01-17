@@ -1,12 +1,12 @@
 package keeper_test
 
 import (
-	"github.com/tendermint/spn/pkg/ibctypes"
-	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/pkg/ibctypes"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
