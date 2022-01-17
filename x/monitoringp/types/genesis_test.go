@@ -22,6 +22,9 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				PortId: types.PortID,
+				ConsumerClientID: &types.ConsumerClientID{
+					ClientID: "29",
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
