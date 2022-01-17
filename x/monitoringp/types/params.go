@@ -21,13 +21,15 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams() Params {
-	return Params{}
+func NewParams(ccs *ibctypes.ConsensusState) Params {
+	return Params{
+		ConsumerConsensusState: ccs,
+	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams()
+	return NewParams(nil)
 }
 
 // ParamSetPairs get the params.ParamSet
