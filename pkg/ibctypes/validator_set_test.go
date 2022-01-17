@@ -11,8 +11,19 @@ import (
 )
 
 func TestParseValidatorSetFromFile(t *testing.T) {
-	t.Run("parse a dumped validator set", func(t *testing.T) {
-		validatorSetYAML := `validators:
+	fileFromContent := func(content string) string {
+		f, err := os.CreateTemp("", "spn_validator_set_test")
+		require.NoError(t, err)
+		t.Cleanup(func() {
+			os.Remove(f.Name())
+		})
+		_, err = f.WriteString(content)
+		require.NoError(t, err)
+		require.NoError(t, f.Close())
+		return f.Name()
+	}
+
+	validValidatorSet := `validators:
 - proposer_priority: "0"
   pub_key:
     type: tendermint/PubKeyEd25519
@@ -24,55 +35,91 @@ func TestParseValidatorSetFromFile(t *testing.T) {
     value: /hO27XpCRWr6bZKqOxdNyYdLB3sAG2dG9dYXrOfM2II=
   voting_power: "50"
 `
-		f, err := os.CreateTemp("", "spn_validator_set_test")
-		require.NoError(t, err)
-		t.Cleanup(func() {
-			f.Close()
-			os.Remove(f.Name())
+	validatorSetInvalidVotingPower := `validators:
+- proposer_priority: "0"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=
+  voting_power: "foo""
+- proposer_priority: "1"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: /hO27XpCRWr6bZKqOxdNyYdLB3sAG2dG9dYXrOfM2II=
+  voting_power: "50"
+`
+	validatorSetInvalidProposerPriority := `validators:
+- proposer_priority: "0"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=
+  voting_power: "100""
+- proposer_priority: "foo"
+  pub_key:
+    type: tendermint/PubKeyEd25519
+    value: /hO27XpCRWr6bZKqOxdNyYdLB3sAG2dG9dYXrOfM2II=
+  voting_power: "50"
+`
+	tests := []struct {
+		name     string
+		filename string
+		expected ibctypes.ValidatorSet
+		wantErr  bool
+	}{
+		{
+			name:     "parse a dumped validator set",
+			filename: fileFromContent(validValidatorSet),
+			expected: ibctypes.NewValidatorSet(
+				ibctypes.Validator{
+					ProposerPriority: "0",
+					VotingPower:      "100",
+					PubKey: ibctypes.PubKey{
+						Type:  ibctypes.TypeEd25519,
+						Value: "fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=",
+					},
+				},
+				ibctypes.Validator{
+					ProposerPriority: "1",
+					VotingPower:      "50",
+					PubKey: ibctypes.PubKey{
+						Type:  ibctypes.TypeEd25519,
+						Value: "/hO27XpCRWr6bZKqOxdNyYdLB3sAG2dG9dYXrOfM2II=",
+					},
+				},
+			),
+		},
+		{
+			name:     "invalid voting power",
+			filename: fileFromContent(validatorSetInvalidVotingPower),
+			wantErr:  true,
+		},
+		{
+			name:     "invalid proposer priority",
+			filename: fileFromContent(validatorSetInvalidProposerPriority),
+			wantErr:  true,
+		},
+		{
+			name:     "non-existent file",
+			filename: "/foo/bar/foobar",
+			wantErr:  true,
+		},
+		{
+			name:     "invalid file",
+			filename: fileFromContent("foo"),
+			wantErr:  true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			vs, err := ibctypes.ParseValidatorSetFromFile(tt.filename)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+			require.Len(t, vs.Validators, len(tt.expected.Validators))
+			require.EqualValues(t, vs, tt.expected)
 		})
-		_, err = f.WriteString(validatorSetYAML)
-		require.NoError(t, err)
-
-		vsf, err := ibctypes.ParseValidatorSetFromFile(f.Name())
-		require.NoError(t, err)
-		require.Len(t, vsf.Validators, 2)
-		require.EqualValues(t, ibctypes.Validator{
-			ProposerPriority: "0",
-			VotingPower:      "100",
-			PubKey: ibctypes.PubKey{
-				Type:  ibctypes.TypeEd25519,
-				Value: "fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=",
-			},
-		}, vsf.Validators[0])
-		require.EqualValues(t, ibctypes.Validator{
-			ProposerPriority: "1",
-			VotingPower:      "50",
-			PubKey: ibctypes.PubKey{
-				Type:  ibctypes.TypeEd25519,
-				Value: "/hO27XpCRWr6bZKqOxdNyYdLB3sAG2dG9dYXrOfM2II=",
-			},
-		}, vsf.Validators[1])
-	})
-
-	t.Run("non-existent file", func(t *testing.T) {
-		_, err := ibctypes.ParseValidatorSetFromFile("/foo/bar/foobar")
-		require.Error(t, err)
-	})
-
-	t.Run("invalid file", func(t *testing.T) {
-		validatorSetYAML := `foo`
-		f, err := os.CreateTemp("", "spn_validator_set_test")
-		require.NoError(t, err)
-		t.Cleanup(func() {
-			f.Close()
-			os.Remove(f.Name())
-		})
-		_, err = f.WriteString(validatorSetYAML)
-		require.NoError(t, err)
-
-		_, err = ibctypes.ParseValidatorSetFromFile(f.Name())
-		require.Error(t, err)
-	})
+	}
 }
 
 func TestValidatorSet_ToTendermintValidatorSet(t *testing.T) {

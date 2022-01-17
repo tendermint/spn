@@ -25,7 +25,7 @@ func ParseConsensusStateFromFile(filePath string) (ConsensusState, error) {
 	var csf struct {
 		NextValidatorsHash string `yaml:"next_validators_hash"`
 		Timestamp          string `yaml:"timestamp"`
-		Root struct {
+		Root               struct {
 			Hash string `yaml:"hash"`
 		}
 	}
@@ -44,7 +44,7 @@ func ParseConsensusStateFromFile(filePath string) (ConsensusState, error) {
 func NewConsensusState(timestamp, nextValHash, rootHash string) ConsensusState {
 	return ConsensusState{
 		NextValidatorsHash: nextValHash,
-		Timestamp:   timestamp,
+		Timestamp:          timestamp,
 		Root: MerkelRool{
 			Hash: rootHash,
 		},

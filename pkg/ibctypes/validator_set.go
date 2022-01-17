@@ -23,10 +23,10 @@ func ParseValidatorSetFromFile(filePath string) (vs ValidatorSet, err error) {
 	var vsf struct {
 		Validators []struct {
 			ProposerPriority string `yaml:"proposer_priority"`
-			VotingPower  string `yaml:"voting_power"`
-			PubKey  struct {
-				Type string `yaml:"type"`
-				Value  string `yaml:"value"`
+			VotingPower      string `yaml:"voting_power"`
+			PubKey           struct {
+				Type  string `yaml:"type"`
+				Value string `yaml:"value"`
 			} `yaml:"pub_key"`
 		} `yaml:"validators"`
 	}
