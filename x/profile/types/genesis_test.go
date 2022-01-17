@@ -67,9 +67,9 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{Address: addr3, ConsensusAddress: consAddr3},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: consAddr1},
-					{ConsensusAddress: consAddr2, ValidatorAddress: consAddr2},
-					{ConsensusAddress: consAddr3, ValidatorAddress: consAddr3},
+					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
+					{ConsensusAddress: consAddr2, ValidatorAddress: addr2},
+					{ConsensusAddress: consAddr3, ValidatorAddress: addr3},
 				},
 				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
 					{ConsensusAddress: consAddr1, Nonce: 0},
@@ -99,9 +99,12 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		{
 			name: "duplicated validator by consensus address",
 			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
+					{Address: addr1, ConsensusAddress: consAddr1},
+				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: consAddr1},
-					{ConsensusAddress: consAddr1, ValidatorAddress: consAddr1},
+					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
+					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
 				},
 			},
 			err: fmt.Errorf("duplicated index for validatorByConsAddress: %s", consAddr1),
@@ -109,6 +112,12 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		{
 			name: "duplicated validator consensus nonce",
 			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
+					{Address: addr1, ConsensusAddress: consAddr1},
+				},
+				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
+					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
+				},
 				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
 					{ConsensusAddress: consAddr1, Nonce: 0},
 					{ConsensusAddress: consAddr1, Nonce: 1},
@@ -134,7 +143,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{ConsensusAddress: consAddr3, Nonce: 2},
 				},
 			},
-			err: fmt.Errorf("validator consensus address not found for ValidatorByConsAddress: %s", consAddr3),
+			err: fmt.Errorf("consensus key address not found for ValidatorByConsAddress: %s", consAddr3),
 		},
 		{
 			name: "missing validator by cons nonce",
@@ -142,7 +151,6 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 				ValidatorList: []types.Validator{
 					{Address: addr1, ConsensusAddress: consAddr1},
 					{Address: addr2, ConsensusAddress: consAddr2},
-					{Address: addr3, ConsensusAddress: consAddr3},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
 					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
@@ -152,9 +160,10 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
 					{ConsensusAddress: consAddr1, Nonce: 0},
 					{ConsensusAddress: consAddr2, Nonce: 1},
+					{ConsensusAddress: consAddr3, Nonce: 1},
 				},
 			},
-			err: fmt.Errorf("validator consensus address not found for ConsensusKeyNonce: %s", consAddr3),
+			err: fmt.Errorf("validator consensus address %s not found for Validator: %s", consAddr3, addr3),
 		},
 	}
 	for _, tt := range tests {

@@ -31,12 +31,29 @@ func (gs GenesisState) Validate() error {
 }
 
 func (gs GenesisState) ValidateValidators() error {
+	// Check for duplicated index in validator
+	validatorIndexMap := make(map[string]struct{})
+	for _, elem := range gs.ValidatorList {
+		valIndex := string(ValidatorKey(elem.Address))
+		if _, ok := validatorIndexMap[valIndex]; ok {
+			return fmt.Errorf("duplicated index for validator: %s", elem.Address)
+		}
+		validatorIndexMap[valIndex] = struct{}{}
+	}
+
 	// Check for duplicated index in validatorByConsAddress
 	validatorByConsAddressIndexMap := make(map[string]struct{})
 	for _, elem := range gs.ValidatorByConsAddressList {
 		index := string(ValidatorByConsAddressKey(elem.ConsensusAddress))
 		if _, ok := validatorByConsAddressIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for validatorByConsAddress: %s", elem.ConsensusAddress)
+		}
+		valIndex := ValidatorKey(elem.ValidatorAddress)
+		if _, ok := validatorIndexMap[string(valIndex)]; !ok {
+			return fmt.Errorf(
+				"validator consensus address %s not found for Validator: %s",
+				elem.ConsensusAddress,
+				elem.ValidatorAddress)
 		}
 		validatorByConsAddressIndexMap[index] = struct{}{}
 	}
@@ -48,37 +65,13 @@ func (gs GenesisState) ValidateValidators() error {
 		if _, ok := consensusKeyNonceIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for consensusKeyNonce: %s", elem.ConsensusAddress)
 		}
+		consAddrIndex := ValidatorByConsAddressKey(elem.ConsensusAddress)
+		if _, ok := validatorByConsAddressIndexMap[string(consAddrIndex)]; !ok {
+			return fmt.Errorf(
+				"consensus key address not found for ValidatorByConsAddress: %s",
+				elem.ConsensusAddress)
+		}
 		consensusKeyNonceIndexMap[index] = struct{}{}
-	}
-
-	// Check for duplicated index in validator
-	validatorIndexMap := make(map[string]struct{})
-	for _, elem := range gs.ValidatorList {
-		valIndex := string(ValidatorKey(elem.Address))
-		if _, ok := validatorIndexMap[valIndex]; ok {
-			return fmt.Errorf("duplicated index for validator: %s", elem.Address)
-		}
-
-		consAddrIndex := string(ValidatorByConsAddressKey(elem.ConsensusAddress))
-		if _, ok := validatorByConsAddressIndexMap[consAddrIndex]; !ok {
-			return fmt.Errorf("validator consensus address not found for ValidatorByConsAddress: %s", elem.ConsensusAddress)
-		}
-
-		consNonceIndex := string(ConsensusKeyNonceKey(elem.ConsensusAddress))
-		if _, ok := consensusKeyNonceIndexMap[consNonceIndex]; !ok {
-			return fmt.Errorf("validator consensus address not found for ConsensusKeyNonce: %s", elem.ConsensusAddress)
-		}
-
-		// Remove to check if all validator by consensus address exist
-		delete(validatorByConsAddressIndexMap, consAddrIndex)
-		// Remove to check if all consensus key nonce address exist
-		delete(consensusKeyNonceIndexMap, consNonceIndex)
-
-		validatorIndexMap[valIndex] = struct{}{}
-	}
-	// Check if all validator by consensus address exist
-	for validator := range validatorByConsAddressIndexMap {
-		return fmt.Errorf("validator consensus address %s not found for validator address", validator)
 	}
 	return nil
 }
