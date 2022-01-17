@@ -1,0 +1,19 @@
+syntax = "proto3";
+package tendermint.spn.ibctypes;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/tendermint/spn/pkg/ibctypes";
+
+// MerkelRool represents a Merkel Root in ConsensusState
+message MerkelRool {
+    string hash = 1;
+}
+
+// ConsensusState represents a Consensus State
+// it is compatible with the dumped state from `appd q ibc client self-consensus-state` command
+message ConsensusState {
+    string nextValidatorsHash = 1;
+    string timestamp = 2;
+    MerkelRool root = 3 [(gogoproto.nullable) = false];
+}
