@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"github.com/tendermint/spn/pkg/chainid"
 
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -11,6 +12,7 @@ import (
 
 var (
 	KeyConsumerConsensusState = []byte("ConsumerConsensusState")
+	KeyConsumerChainID = []byte("ConsumerChainID")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -24,6 +26,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams(ccs ibctypes.ConsensusState) Params {
 	return Params{
 		ConsumerConsensusState: ccs,
+		ConsumerChainID: "spn-1",
 	}
 }
 
@@ -40,11 +43,19 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			&p.ConsumerConsensusState,
 			validateConsumerConsensusState,
 		),
+		paramtypes.NewParamSetPair(
+			KeyConsumerChainID,
+			&p.ConsumerChainID,
+			validateConsumerChainID,
+		),
 	}
 }
 
 // Validate validates the set of params
 func (p Params) Validate() error {
+	if err := validateConsumerChainID(p.ConsumerChainID); err != nil {
+		return err
+	}
 	return validateConsumerConsensusState(p.ConsumerConsensusState)
 }
 
@@ -71,6 +82,20 @@ func validateConsumerConsensusState(i interface{}) error {
 		if err := tmConsensusState.ValidateBasic(); err != nil {
 			return errors.Wrap(err, "invalid consumer consensus state")
 		}
+	}
+	return nil
+}
+
+// validateConsumerChainID validates consumer chain ID
+func validateConsumerChainID(i interface{}) error {
+	chainID, ok := i.(string)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	_, _, err := chainid.ParseGenesisChainID(chainID)
+	if err != nil {
+		return errors.Wrap(err, "invalid chain ID param")
 	}
 	return nil
 }
