@@ -24,3 +24,7 @@ message ValidatorByConsAddress {
   string validatorAddress = 2;
 }
 
+message ConsensusKeyNonce {
+  string consensusAddress = 1;
+  uint64 nonce = 2;
+}

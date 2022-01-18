@@ -30,7 +30,6 @@ func NewKeeper(
 	channelKeeper ibckeeper.ChannelKeeper,
 	portKeeper ibckeeper.PortKeeper,
 	scopedKeeper ibckeeper.ScopedKeeper,
-
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
