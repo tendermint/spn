@@ -22,23 +22,23 @@ const (
 )
 
 // InitializeConsumerClient initializes the consumer IBC client and and set it in the store
-func (k Keeper) InitializeConsumerClient(ctx sdk.Context) error {
+func (k Keeper) InitializeConsumerClient(ctx sdk.Context) (string, error) {
 	// initialize the client state
 	clientState := k.initializeClientState(k.ConsumerChainID(ctx))
 	if err := clientState.Validate(); err != nil {
-		return sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
+		return "", sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
 	}
 
 	// get consensus state from param
 	tmConsensusState, err := k.ConsumerConsensusState(ctx).ToTendermintConsensusState()
 	if err != nil {
-		return spnerrors.Criticalf("consensus state from param is invalid %s", err.Error())
+		return "", spnerrors.Criticalf("consensus state from param is invalid %s", err.Error())
 	}
 
 	// create IBC client for consumer
 	clientID, err := k.clientKeeper.CreateClient(ctx, clientState, &tmConsensusState)
 	if err != nil {
-		return sdkerrors.Wrap(types.ErrClientCreationFailure, err.Error())
+		return "", sdkerrors.Wrap(types.ErrClientCreationFailure, err.Error())
 	}
 
 	// register the IBC client
@@ -46,7 +46,7 @@ func (k Keeper) InitializeConsumerClient(ctx sdk.Context) error {
 		ClientID: clientID,
 	})
 
-	return nil
+	return clientID, nil
 }
 
 // initializeClientState initializes the client state provided for the IBC client

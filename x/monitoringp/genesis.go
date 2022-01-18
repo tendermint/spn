@@ -28,9 +28,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	k.SetParams(ctx, genState.Params)
 
 	// initialize and setup the consumer IBC client
-	err := k.InitializeConsumerClient(ctx)
-	if err != nil {
-		panic("couldn't initialize the consumer client ID" + err.Error())
+	if genState.Params.ConsumerConsensusState.Timestamp != "" {
+		_, err := k.InitializeConsumerClient(ctx)
+		if err != nil {
+			panic("couldn't initialize the consumer client ID" + err.Error())
+		}
 	}
 }
 

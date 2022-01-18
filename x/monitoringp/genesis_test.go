@@ -29,7 +29,6 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.Equal(t, genesisState.PortId, got.PortId)
-
 	require.Equal(t, genesisState.ConsumerClientID, got.ConsumerClientID)
 	// this line is used by starport scaffolding # genesis/test/assert
 }
