@@ -60,7 +60,7 @@ func TestQueryRequestSelection(t *testing.T) {
 				RequestIDs: "1-7",
 			},
 			resultSequence: []uint64{1, 2, 3, 4, 5, 6},
-			err:            status.Error(codes.NotFound, "Not found"),
+			err:            status.Error(codes.NotFound, "request with id 7 not found"),
 		},
 		{
 			name: "selection doesn't exist",
@@ -69,7 +69,7 @@ func TestQueryRequestSelection(t *testing.T) {
 				RequestIDs: "7-9",
 			},
 			resultSequence: []uint64{},
-			err:            status.Error(codes.NotFound, "Not found"),
+			err:            status.Error(codes.NotFound, "request with id 7 not found"),
 		},
 	}
 
