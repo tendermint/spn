@@ -16,25 +16,32 @@ import (
 
 const TypeEd25519 = "tendermint/PubKeyEd25519"
 
+// validatorSetFile represents dumped validator set from
+// q tendermint-validator-set
+type validatorSetFile struct {
+	Validators []struct {
+		ProposerPriority string `yaml:"proposer_priority"`
+		VotingPower      string `yaml:"voting_power"`
+		PubKey           struct {
+			Type  string `yaml:"type"`
+			Value string `yaml:"value"`
+		} `yaml:"pub_key"`
+	} `yaml:"validators"`
+}
+
 // ParseValidatorSetFromFile parses a YAML dumped Validator Set file and returns a new Validator Set
 // TODO: Support other format than YAML if there are other format of dumped file
 func ParseValidatorSetFromFile(filePath string) (vs ValidatorSet, err error) {
 	// parse file
-	var vsf struct {
-		Validators []struct {
-			ProposerPriority string `yaml:"proposer_priority"`
-			VotingPower      string `yaml:"voting_power"`
-			PubKey           struct {
-				Type  string `yaml:"type"`
-				Value string `yaml:"value"`
-			} `yaml:"pub_key"`
-		} `yaml:"validators"`
-	}
+	var vsf validatorSetFile
 	f, err := os.ReadFile(filePath)
 	if err != nil {
 		return vs, err
 	}
 	err = yaml.Unmarshal(f, &vsf)
+	if err != nil {
+		return vs, err
+	}
 
 	// convert
 	for i, v := range vsf.Validators {
