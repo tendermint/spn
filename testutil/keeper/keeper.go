@@ -109,4 +109,5 @@ func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
 func setIBCDefaultParams(ctx sdk.Context, ibcKeeper *ibckeeper.Keeper) {
 	ibcKeeper.ClientKeeper.SetParams(ctx, ibcclienttypes.DefaultParams())
 	ibcKeeper.ConnectionKeeper.SetParams(ctx, ibcconnectiontypes.DefaultParams())
+	ibcKeeper.ClientKeeper.SetNextClientSequence(ctx, 0)
 }

@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibckeeper "github.com/cosmos/ibc-go/modules/core/keeper"
+	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/monitoringp/keeper"
 	"github.com/tendermint/spn/x/monitoringp/types"
 	"github.com/tendermint/tendermint/libs/log"
@@ -25,6 +26,7 @@ func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Con
 		*capabilityKeeper,
 		paramKeeper,
 		)
+	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{}, false, log.NewNopLogger())
 

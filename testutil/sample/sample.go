@@ -11,6 +11,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	ibctypes "github.com/cosmos/ibc-go/modules/core/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	profile "github.com/tendermint/spn/x/profile/types"
 )
@@ -25,6 +26,7 @@ func Codec() codec.Codec {
 	banktypes.RegisterInterfaces(interfaceRegistry)
 	launch.RegisterInterfaces(interfaceRegistry)
 	profile.RegisterInterfaces(interfaceRegistry)
+	ibctypes.RegisterInterfaces(interfaceRegistry)
 
 	return codec.NewProtoCodec(interfaceRegistry)
 }
