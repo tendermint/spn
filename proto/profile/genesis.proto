@@ -15,5 +15,6 @@ message GenesisState {
   repeated Coordinator coordinatorList = 3 [(gogoproto.nullable) = false];
   uint64 coordinatorCounter = 4;
   repeated CoordinatorByAddress coordinatorByAddressList = 5 [(gogoproto.nullable) = false];
+  repeated ConsensusKeyNonce consensusKeyNonceList = 6 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }
