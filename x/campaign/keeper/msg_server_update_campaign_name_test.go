@@ -24,8 +24,8 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	campaign.CoordinatorID = res.CoordinatorId
-	campaign.Id = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CoordinatorID = res.CoordinatorID
+	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrNoCampaign,
@@ -52,7 +52,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			name: "invalid coordinator address",
 			msg: types.MsgUpdateCampaignName{
 				Coordinator: sample.Address(),
-				CampaignID:  campaign.Id,
+				CampaignID:  campaign.CampaignID,
 				Name:        "new_name",
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
@@ -61,7 +61,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			name: "wrong coordinator id",
 			msg: types.MsgUpdateCampaignName{
 				Coordinator: coordAddrNoCampaign,
-				CampaignID:  campaign.Id,
+				CampaignID:  campaign.CampaignID,
 				Name:        "new_name",
 			},
 			err: profiletypes.ErrCoordInvalid,
@@ -70,7 +70,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			name: "valid message",
 			msg: types.MsgUpdateCampaignName{
 				Coordinator: coordAddr,
-				CampaignID:  campaign.Id,
+				CampaignID:  campaign.CampaignID,
 				Name:        "new_name",
 			},
 		},

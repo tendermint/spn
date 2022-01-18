@@ -214,15 +214,105 @@ func (m *QueryAllValidatorResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+type QueryGetValidatorByConsAddressRequest struct {
+	ConsensusAddress string `protobuf:"bytes,1,opt,name=consensusAddress,proto3" json:"consensusAddress,omitempty"`
+}
+
+func (m *QueryGetValidatorByConsAddressRequest) Reset()         { *m = QueryGetValidatorByConsAddressRequest{} }
+func (m *QueryGetValidatorByConsAddressRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetValidatorByConsAddressRequest) ProtoMessage()    {}
+func (*QueryGetValidatorByConsAddressRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_882bdd73bbc62204, []int{4}
+}
+func (m *QueryGetValidatorByConsAddressRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetValidatorByConsAddressRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetValidatorByConsAddressRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetValidatorByConsAddressRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetValidatorByConsAddressRequest.Merge(m, src)
+}
+func (m *QueryGetValidatorByConsAddressRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetValidatorByConsAddressRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetValidatorByConsAddressRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetValidatorByConsAddressRequest proto.InternalMessageInfo
+
+func (m *QueryGetValidatorByConsAddressRequest) GetConsensusAddress() string {
+	if m != nil {
+		return m.ConsensusAddress
+	}
+	return ""
+}
+
+type QueryGetValidatorByConsAddressResponse struct {
+	ValidatorByConsAddress ValidatorByConsAddress `protobuf:"bytes,1,opt,name=validatorByConsAddress,proto3" json:"validatorByConsAddress"`
+}
+
+func (m *QueryGetValidatorByConsAddressResponse) Reset() {
+	*m = QueryGetValidatorByConsAddressResponse{}
+}
+func (m *QueryGetValidatorByConsAddressResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetValidatorByConsAddressResponse) ProtoMessage()    {}
+func (*QueryGetValidatorByConsAddressResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_882bdd73bbc62204, []int{5}
+}
+func (m *QueryGetValidatorByConsAddressResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetValidatorByConsAddressResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetValidatorByConsAddressResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetValidatorByConsAddressResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetValidatorByConsAddressResponse.Merge(m, src)
+}
+func (m *QueryGetValidatorByConsAddressResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetValidatorByConsAddressResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetValidatorByConsAddressResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetValidatorByConsAddressResponse proto.InternalMessageInfo
+
+func (m *QueryGetValidatorByConsAddressResponse) GetValidatorByConsAddress() ValidatorByConsAddress {
+	if m != nil {
+		return m.ValidatorByConsAddress
+	}
+	return ValidatorByConsAddress{}
+}
+
 type QueryGetCoordinatorRequest struct {
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	CoordinatorID uint64 `protobuf:"varint,1,opt,name=coordinatorID,proto3" json:"coordinatorID,omitempty"`
 }
 
 func (m *QueryGetCoordinatorRequest) Reset()         { *m = QueryGetCoordinatorRequest{} }
 func (m *QueryGetCoordinatorRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryGetCoordinatorRequest) ProtoMessage()    {}
 func (*QueryGetCoordinatorRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_882bdd73bbc62204, []int{4}
+	return fileDescriptor_882bdd73bbc62204, []int{6}
 }
 func (m *QueryGetCoordinatorRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -251,22 +341,22 @@ func (m *QueryGetCoordinatorRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryGetCoordinatorRequest proto.InternalMessageInfo
 
-func (m *QueryGetCoordinatorRequest) GetId() uint64 {
+func (m *QueryGetCoordinatorRequest) GetCoordinatorID() uint64 {
 	if m != nil {
-		return m.Id
+		return m.CoordinatorID
 	}
 	return 0
 }
 
 type QueryGetCoordinatorResponse struct {
-	Coordinator Coordinator `protobuf:"bytes,1,opt,name=Coordinator,proto3" json:"Coordinator"`
+	Coordinator Coordinator `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator"`
 }
 
 func (m *QueryGetCoordinatorResponse) Reset()         { *m = QueryGetCoordinatorResponse{} }
 func (m *QueryGetCoordinatorResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryGetCoordinatorResponse) ProtoMessage()    {}
 func (*QueryGetCoordinatorResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_882bdd73bbc62204, []int{5}
+	return fileDescriptor_882bdd73bbc62204, []int{7}
 }
 func (m *QueryGetCoordinatorResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -310,7 +400,7 @@ func (m *QueryAllCoordinatorRequest) Reset()         { *m = QueryAllCoordinatorR
 func (m *QueryAllCoordinatorRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryAllCoordinatorRequest) ProtoMessage()    {}
 func (*QueryAllCoordinatorRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_882bdd73bbc62204, []int{6}
+	return fileDescriptor_882bdd73bbc62204, []int{8}
 }
 func (m *QueryAllCoordinatorRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -347,7 +437,7 @@ func (m *QueryAllCoordinatorRequest) GetPagination() *query.PageRequest {
 }
 
 type QueryAllCoordinatorResponse struct {
-	Coordinator []Coordinator       `protobuf:"bytes,1,rep,name=Coordinator,proto3" json:"Coordinator"`
+	Coordinator []Coordinator       `protobuf:"bytes,1,rep,name=coordinator,proto3" json:"coordinator"`
 	Pagination  *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -355,7 +445,7 @@ func (m *QueryAllCoordinatorResponse) Reset()         { *m = QueryAllCoordinator
 func (m *QueryAllCoordinatorResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryAllCoordinatorResponse) ProtoMessage()    {}
 func (*QueryAllCoordinatorResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_882bdd73bbc62204, []int{7}
+	return fileDescriptor_882bdd73bbc62204, []int{9}
 }
 func (m *QueryAllCoordinatorResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -406,7 +496,7 @@ func (m *QueryGetCoordinatorByAddressRequest) Reset()         { *m = QueryGetCoo
 func (m *QueryGetCoordinatorByAddressRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryGetCoordinatorByAddressRequest) ProtoMessage()    {}
 func (*QueryGetCoordinatorByAddressRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_882bdd73bbc62204, []int{8}
+	return fileDescriptor_882bdd73bbc62204, []int{10}
 }
 func (m *QueryGetCoordinatorByAddressRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -450,7 +540,7 @@ func (m *QueryGetCoordinatorByAddressResponse) Reset()         { *m = QueryGetCo
 func (m *QueryGetCoordinatorByAddressResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryGetCoordinatorByAddressResponse) ProtoMessage()    {}
 func (*QueryGetCoordinatorByAddressResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_882bdd73bbc62204, []int{9}
+	return fileDescriptor_882bdd73bbc62204, []int{11}
 }
 func (m *QueryGetCoordinatorByAddressResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -491,6 +581,8 @@ func init() {
 	proto.RegisterType((*QueryGetValidatorResponse)(nil), "tendermint.spn.profile.QueryGetValidatorResponse")
 	proto.RegisterType((*QueryAllValidatorRequest)(nil), "tendermint.spn.profile.QueryAllValidatorRequest")
 	proto.RegisterType((*QueryAllValidatorResponse)(nil), "tendermint.spn.profile.QueryAllValidatorResponse")
+	proto.RegisterType((*QueryGetValidatorByConsAddressRequest)(nil), "tendermint.spn.profile.QueryGetValidatorByConsAddressRequest")
+	proto.RegisterType((*QueryGetValidatorByConsAddressResponse)(nil), "tendermint.spn.profile.QueryGetValidatorByConsAddressResponse")
 	proto.RegisterType((*QueryGetCoordinatorRequest)(nil), "tendermint.spn.profile.QueryGetCoordinatorRequest")
 	proto.RegisterType((*QueryGetCoordinatorResponse)(nil), "tendermint.spn.profile.QueryGetCoordinatorResponse")
 	proto.RegisterType((*QueryAllCoordinatorRequest)(nil), "tendermint.spn.profile.QueryAllCoordinatorRequest")
@@ -502,48 +594,55 @@ func init() {
 func init() { proto.RegisterFile("profile/query.proto", fileDescriptor_882bdd73bbc62204) }
 
 var fileDescriptor_882bdd73bbc62204 = []byte{
-	// 651 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0x3f, 0x6f, 0xd3, 0x4e,
-	0x18, 0xc7, 0x73, 0x69, 0x7f, 0xfd, 0xa9, 0x57, 0xd4, 0xe1, 0xa8, 0x20, 0x35, 0xc8, 0x50, 0x87,
-	0x3f, 0xfd, 0x87, 0xaf, 0x49, 0x10, 0x42, 0x02, 0x81, 0x92, 0x0a, 0x3a, 0xb0, 0x40, 0x06, 0x06,
-	0x36, 0x3b, 0xbe, 0x1a, 0x23, 0xc7, 0xe7, 0xfa, 0x9c, 0x8a, 0xa8, 0xea, 0xc2, 0x0b, 0x40, 0x48,
-	0xec, 0x6c, 0x20, 0x24, 0x46, 0xde, 0x44, 0xc7, 0x22, 0x16, 0x26, 0x84, 0x12, 0x5e, 0x04, 0x23,
-	0xca, 0xf9, 0xec, 0x38, 0xc9, 0x05, 0x27, 0x51, 0xb7, 0x24, 0xf7, 0x7c, 0x9f, 0xfb, 0x7c, 0xbf,
-	0x77, 0xcf, 0x05, 0x9e, 0xf7, 0x03, 0xba, 0xef, 0xb8, 0x04, 0x1f, 0xb4, 0x48, 0xd0, 0xd6, 0xfd,
-	0x80, 0x86, 0x14, 0x5d, 0x08, 0x89, 0x67, 0x91, 0xa0, 0xe9, 0x78, 0xa1, 0xce, 0x7c, 0x4f, 0x17,
-	0x35, 0xca, 0x8a, 0x4d, 0x6d, 0xca, 0x4b, 0x70, 0xef, 0x53, 0x54, 0xad, 0x5c, 0xb6, 0x29, 0xb5,
-	0x5d, 0x82, 0x0d, 0xdf, 0xc1, 0x86, 0xe7, 0xd1, 0xd0, 0x08, 0x1d, 0xea, 0x31, 0xb1, 0xba, 0xd9,
-	0xa0, 0xac, 0x49, 0x19, 0x36, 0x0d, 0x26, 0x36, 0xc1, 0x87, 0x25, 0x93, 0x84, 0x46, 0x09, 0xfb,
-	0x86, 0xed, 0x78, 0xbc, 0x58, 0xd4, 0x5e, 0x8c, 0x61, 0x0e, 0x0d, 0xd7, 0xb1, 0x8c, 0x90, 0x06,
-	0x62, 0x61, 0x35, 0x5e, 0x68, 0x50, 0x1a, 0x58, 0x3d, 0x51, 0xbc, 0xa4, 0xdd, 0x86, 0x85, 0x67,
-	0xbd, 0xae, 0x7b, 0x24, 0x7c, 0x1e, 0xab, 0xea, 0xe4, 0xa0, 0x45, 0x58, 0x88, 0x0a, 0xf0, 0x7f,
-	0xc3, 0xb2, 0x02, 0xc2, 0x58, 0x01, 0x5c, 0x05, 0xeb, 0x8b, 0xf5, 0xf8, 0xab, 0x66, 0xc2, 0x55,
-	0x89, 0x8a, 0xf9, 0xd4, 0x63, 0x04, 0x3d, 0x82, 0x8b, 0x09, 0x00, 0x17, 0x2e, 0x95, 0xd7, 0x74,
-	0x79, 0x24, 0x7a, 0xa2, 0xae, 0xcd, 0x9f, 0xfc, 0xbc, 0x92, 0xab, 0xf7, 0x95, 0x9a, 0x29, 0xc8,
-	0xaa, 0xae, 0x3b, 0x42, 0xf6, 0x18, 0xc2, 0xbe, 0x7b, 0xb1, 0xc7, 0x0d, 0x3d, 0x8a, 0x4a, 0xef,
-	0x45, 0xa5, 0x47, 0xe7, 0x21, 0xa2, 0xd2, 0x9f, 0x1a, 0x36, 0x11, 0xda, 0x7a, 0x4a, 0xa9, 0x7d,
-	0x01, 0xc2, 0xc8, 0xe0, 0x26, 0x72, 0x23, 0x73, 0xb3, 0x19, 0x41, 0x7b, 0x03, 0xb0, 0x79, 0x0e,
-	0x7b, 0x33, 0x13, 0x36, 0x62, 0x18, 0xa0, 0xdd, 0x86, 0x4a, 0x9c, 0xfa, 0x6e, 0xff, 0x20, 0xe3,
-	0x4c, 0x96, 0x61, 0xde, 0xb1, 0x78, 0x16, 0xf3, 0xf5, 0xbc, 0x63, 0x69, 0xaf, 0xe0, 0x25, 0x69,
-	0xb5, 0x30, 0xf7, 0x04, 0x2e, 0xa5, 0x7e, 0x16, 0x19, 0x16, 0xc7, 0xd9, 0x4b, 0x95, 0x0a, 0x83,
-	0x69, 0xb5, 0x66, 0x09, 0xb2, 0xaa, 0xeb, 0x4a, 0xc8, 0xce, 0xea, 0xb4, 0xbe, 0x02, 0x61, 0x69,
-	0x78, 0x9b, 0x71, 0x96, 0xe6, 0x66, 0xb7, 0x74, 0x76, 0xa7, 0xf6, 0x10, 0x16, 0x25, 0xe7, 0x50,
-	0x6b, 0x57, 0xa3, 0x59, 0xca, 0x1e, 0xb6, 0xb7, 0x00, 0x5e, 0xfb, 0x77, 0x07, 0xe1, 0x7f, 0x1f,
-	0xae, 0x34, 0x24, 0xeb, 0x22, 0xf1, 0xed, 0x49, 0x82, 0x88, 0x35, 0x22, 0x11, 0x69, 0xbf, 0xf2,
-	0x9f, 0x05, 0xf8, 0x1f, 0x07, 0x42, 0x1f, 0x01, 0x5c, 0x4c, 0x6e, 0x3e, 0xda, 0x19, 0xb7, 0xc3,
-	0xb8, 0x17, 0x46, 0x29, 0x4d, 0xa1, 0x88, 0x4c, 0x6a, 0x95, 0x37, 0xdf, 0x7f, 0xbf, 0xcf, 0xdf,
-	0x42, 0x5b, 0xb8, 0x2f, 0xc5, 0xcc, 0xf7, 0xf0, 0xc8, 0xe3, 0x87, 0x8f, 0x44, 0x82, 0xc7, 0xe8,
-	0x03, 0x80, 0xe7, 0x92, 0x56, 0x55, 0xd7, 0xcd, 0x40, 0x95, 0x3c, 0x39, 0x19, 0xa8, 0xb2, 0xf7,
-	0x43, 0xdb, 0xe0, 0xa8, 0x45, 0xb4, 0x96, 0x89, 0x8a, 0x3e, 0x83, 0x81, 0xbb, 0x8b, 0xca, 0x59,
-	0xc1, 0x8c, 0x8e, 0x99, 0x52, 0x99, 0x4a, 0x23, 0x18, 0x77, 0x38, 0xe3, 0x26, 0x5a, 0x1f, 0xc7,
-	0x98, 0xba, 0x01, 0xf8, 0xc8, 0xb1, 0x8e, 0xd1, 0x27, 0x00, 0x97, 0x53, 0x9d, 0x7a, 0x69, 0x96,
-	0xb3, 0xb2, 0x99, 0x9a, 0x56, 0x3e, 0xe1, 0xda, 0x16, 0xa7, 0xbd, 0x8e, 0x8a, 0x13, 0xd0, 0xa2,
-	0x6f, 0x00, 0xae, 0xc8, 0xee, 0x36, 0xba, 0x37, 0x45, 0x50, 0xc3, 0x73, 0xaa, 0xdc, 0x9f, 0x4d,
-	0x2c, 0x0c, 0x3c, 0xe0, 0x06, 0xee, 0xa2, 0x3b, 0x13, 0x18, 0x48, 0xd4, 0xfd, 0x8b, 0x5c, 0xdb,
-	0x3d, 0xe9, 0xa8, 0xe0, 0xb4, 0xa3, 0x82, 0x5f, 0x1d, 0x15, 0xbc, 0xeb, 0xaa, 0xb9, 0xd3, 0xae,
-	0x9a, 0xfb, 0xd1, 0x55, 0x73, 0x2f, 0x36, 0x6c, 0x27, 0x7c, 0xd9, 0x32, 0xf5, 0x06, 0x6d, 0x0e,
-	0xf7, 0x7e, 0x9d, 0x74, 0x0f, 0xdb, 0x3e, 0x61, 0xe6, 0x02, 0xff, 0xeb, 0xaf, 0xfc, 0x0d, 0x00,
-	0x00, 0xff, 0xff, 0x48, 0x08, 0x99, 0x84, 0xbd, 0x08, 0x00, 0x00,
+	// 757 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0xcd, 0x6e, 0xd3, 0x4c,
+	0x14, 0xcd, 0xb4, 0xfd, 0x3e, 0xe8, 0x14, 0x10, 0x1a, 0xaa, 0xd2, 0x1a, 0x14, 0xa8, 0xd3, 0x16,
+	0xda, 0x82, 0x4d, 0x13, 0x90, 0x10, 0xe5, 0x2f, 0x69, 0x69, 0x85, 0x60, 0x01, 0x41, 0x62, 0xc1,
+	0xa6, 0xb2, 0x93, 0xa9, 0x31, 0x72, 0x3d, 0xae, 0xc7, 0xa9, 0x88, 0xaa, 0x6e, 0x78, 0x00, 0x84,
+	0x84, 0xc4, 0x92, 0x1d, 0x6c, 0x58, 0xf6, 0x25, 0xba, 0xac, 0xd4, 0x0d, 0x2b, 0x84, 0x5a, 0x58,
+	0xf2, 0x0e, 0xc8, 0xce, 0xb5, 0xe3, 0x24, 0x63, 0x9c, 0x44, 0xdd, 0x25, 0xbe, 0xf7, 0xdc, 0x39,
+	0xe7, 0xcc, 0xf1, 0x4d, 0xf0, 0x39, 0xc7, 0x65, 0xeb, 0xa6, 0x45, 0xd5, 0xcd, 0x1a, 0x75, 0xeb,
+	0x8a, 0xe3, 0x32, 0x8f, 0x91, 0x31, 0x8f, 0xda, 0x55, 0xea, 0x6e, 0x98, 0xb6, 0xa7, 0x70, 0xc7,
+	0x56, 0xa0, 0x47, 0x1a, 0x35, 0x98, 0xc1, 0x82, 0x16, 0xd5, 0xff, 0xd4, 0xe8, 0x96, 0x2e, 0x1a,
+	0x8c, 0x19, 0x16, 0x55, 0x35, 0xc7, 0x54, 0x35, 0xdb, 0x66, 0x9e, 0xe6, 0x99, 0xcc, 0xe6, 0x50,
+	0x9d, 0xab, 0x30, 0xbe, 0xc1, 0xb8, 0xaa, 0x6b, 0x1c, 0x0e, 0x51, 0xb7, 0x16, 0x74, 0xea, 0x69,
+	0x0b, 0xaa, 0xa3, 0x19, 0xa6, 0x1d, 0x34, 0x43, 0xef, 0xf9, 0x90, 0xcc, 0x96, 0x66, 0x99, 0x55,
+	0xcd, 0x63, 0x2e, 0x14, 0x26, 0xc2, 0x42, 0x85, 0x31, 0xb7, 0xea, 0x83, 0xc2, 0x92, 0x7c, 0x13,
+	0x8f, 0x3f, 0xf7, 0xa7, 0xae, 0x52, 0xef, 0x65, 0x88, 0x2a, 0xd3, 0xcd, 0x1a, 0xe5, 0x1e, 0x19,
+	0xc7, 0x27, 0xb4, 0x6a, 0xd5, 0xa5, 0x9c, 0x8f, 0xa3, 0xcb, 0xe8, 0xea, 0x70, 0x39, 0xfc, 0x2a,
+	0xeb, 0x78, 0x42, 0x80, 0xe2, 0x0e, 0xb3, 0x39, 0x25, 0x8f, 0xf0, 0x70, 0x44, 0x20, 0x00, 0x8e,
+	0xe4, 0x27, 0x15, 0xb1, 0x25, 0x4a, 0x84, 0x2e, 0x0d, 0xed, 0xfd, 0xb8, 0x94, 0x29, 0x37, 0x91,
+	0xb2, 0x0e, 0xcc, 0x8a, 0x96, 0xd5, 0xc1, 0x6c, 0x05, 0xe3, 0xa6, 0x7a, 0x38, 0x63, 0x46, 0x69,
+	0x58, 0xa5, 0xf8, 0x56, 0x29, 0x8d, 0xfb, 0x00, 0xab, 0x94, 0x67, 0x9a, 0x41, 0x01, 0x5b, 0x8e,
+	0x21, 0xe5, 0x6f, 0x08, 0x84, 0xb4, 0x1e, 0x22, 0x16, 0x32, 0xd8, 0x9f, 0x10, 0xb2, 0xda, 0x42,
+	0x76, 0x20, 0x20, 0x7b, 0x25, 0x95, 0x6c, 0x83, 0x43, 0x0b, 0xdb, 0x17, 0x78, 0xba, 0xc3, 0xf5,
+	0x52, 0x7d, 0x89, 0xd9, 0xbc, 0xd8, 0xb8, 0x97, 0xd0, 0x9e, 0x39, 0x7c, 0xb6, 0xe2, 0xa3, 0x6d,
+	0x5e, 0x0b, 0x4b, 0x70, 0x83, 0x1d, 0xcf, 0xe5, 0x4f, 0x08, 0xcf, 0xa4, 0x4d, 0x05, 0x3f, 0x2c,
+	0x3c, 0xb6, 0x25, 0xec, 0x80, 0x1b, 0x50, 0xd2, 0xcd, 0x89, 0xa3, 0xc0, 0xa9, 0x84, 0x99, 0x72,
+	0x09, 0x4b, 0x21, 0xaf, 0xa5, 0x66, 0x6c, 0x43, 0x89, 0x53, 0xf8, 0x74, 0x2c, 0xcc, 0x8f, 0x97,
+	0x03, 0x0a, 0x43, 0xe5, 0xd6, 0x87, 0xf2, 0x1b, 0x7c, 0x41, 0x38, 0x03, 0x04, 0x3d, 0xc1, 0x23,
+	0xb1, 0x7e, 0x50, 0x91, 0x4b, 0x52, 0x11, 0x9b, 0x00, 0xd4, 0xe3, 0x68, 0xb9, 0x0a, 0x7c, 0x8b,
+	0x96, 0x25, 0xe0, 0x7b, 0x5c, 0x89, 0xdd, 0x45, 0x20, 0xa9, 0xfd, 0x98, 0x24, 0x49, 0x83, 0xfd,
+	0x4b, 0x3a, 0xbe, 0xe4, 0x3e, 0xc0, 0x39, 0xc1, 0x3d, 0x94, 0xea, 0x6d, 0xb9, 0x4d, 0x5e, 0x38,
+	0xef, 0x11, 0x9e, 0xfa, 0xf7, 0x04, 0xd0, 0xbf, 0x8e, 0x47, 0x2b, 0x82, 0x3a, 0x38, 0x7e, 0xad,
+	0x1b, 0x23, 0xea, 0xad, 0xf9, 0x14, 0xce, 0xcb, 0xff, 0x39, 0x89, 0xff, 0x0b, 0x08, 0x91, 0x2f,
+	0x08, 0x0f, 0x47, 0x01, 0x27, 0x37, 0x92, 0x4e, 0x48, 0xda, 0xb2, 0xd2, 0x42, 0x0f, 0x88, 0x86,
+	0x48, 0xb9, 0xf0, 0xee, 0xe0, 0xd7, 0xc7, 0x81, 0xeb, 0x64, 0x5e, 0x6d, 0x42, 0x55, 0xee, 0xd8,
+	0x6a, 0xc7, 0x0f, 0x80, 0xba, 0x0d, 0x0e, 0xee, 0x90, 0xcf, 0x08, 0x9f, 0x8a, 0x46, 0x15, 0x2d,
+	0x2b, 0x85, 0xaa, 0x60, 0xed, 0xa6, 0x50, 0x15, 0xed, 0x50, 0x79, 0x36, 0xa0, 0x9a, 0x23, 0x93,
+	0xa9, 0x54, 0xc9, 0x6f, 0x84, 0xc7, 0xc4, 0x9b, 0x82, 0xdc, 0xeb, 0xda, 0x23, 0xd1, 0x3e, 0x94,
+	0xee, 0xf7, 0x0b, 0x07, 0x11, 0x4f, 0x03, 0x11, 0x2b, 0x64, 0x39, 0x55, 0xc4, 0x9a, 0x5e, 0x5f,
+	0xf3, 0x57, 0xec, 0x1a, 0xd8, 0xae, 0x6e, 0xb7, 0x2f, 0xdc, 0x1d, 0xb2, 0x8b, 0xf0, 0x48, 0x2c,
+	0x6f, 0x24, 0x9f, 0xc6, 0xae, 0x73, 0x9d, 0x48, 0x85, 0x9e, 0x30, 0x20, 0x63, 0x31, 0x90, 0x71,
+	0x8b, 0x14, 0x92, 0x64, 0xc4, 0x92, 0xee, 0x13, 0x8f, 0x6d, 0xd2, 0x1d, 0xf2, 0x15, 0xe1, 0x33,
+	0xb1, 0xa1, 0x7e, 0x80, 0xf2, 0x69, 0x71, 0xe8, 0x99, 0xb8, 0x78, 0xa9, 0xc9, 0xf3, 0x01, 0xf1,
+	0x69, 0x92, 0xeb, 0x82, 0x38, 0x39, 0x40, 0x78, 0x54, 0xf4, 0x3a, 0x93, 0xc5, 0x1e, 0x3c, 0x6b,
+	0x5f, 0x4d, 0xd2, 0xdd, 0xfe, 0xc0, 0x20, 0xe0, 0x61, 0x20, 0xe0, 0x0e, 0xb9, 0xdd, 0x85, 0x00,
+	0x3f, 0x42, 0x51, 0x7a, 0xc2, 0xb7, 0xb7, 0xb4, 0xb4, 0x77, 0x98, 0x45, 0xfb, 0x87, 0x59, 0xf4,
+	0xf3, 0x30, 0x8b, 0x3e, 0x1c, 0x65, 0x33, 0xfb, 0x47, 0xd9, 0xcc, 0xf7, 0xa3, 0x6c, 0xe6, 0xd5,
+	0xac, 0x61, 0x7a, 0xaf, 0x6b, 0xba, 0x52, 0x61, 0x1b, 0xed, 0xd3, 0xdf, 0x46, 0xf3, 0xbd, 0xba,
+	0x43, 0xb9, 0xfe, 0x7f, 0xf0, 0x9f, 0xaf, 0xf0, 0x37, 0x00, 0x00, 0xff, 0xff, 0xee, 0x3e, 0x08,
+	0x02, 0xb6, 0x0a, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -558,11 +657,12 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type QueryClient interface {
-	// this line is used by starport scaffolding # 2
 	// Queries a validator by index.
 	Validator(ctx context.Context, in *QueryGetValidatorRequest, opts ...grpc.CallOption) (*QueryGetValidatorResponse, error)
 	// Queries a list of validator items.
 	ValidatorAll(ctx context.Context, in *QueryAllValidatorRequest, opts ...grpc.CallOption) (*QueryAllValidatorResponse, error)
+	// Queries a ValidatorByConsAddress by consensus address.
+	ValidatorByConsAddress(ctx context.Context, in *QueryGetValidatorByConsAddressRequest, opts ...grpc.CallOption) (*QueryGetValidatorByConsAddressResponse, error)
 	// Queries a coordinator by id.
 	Coordinator(ctx context.Context, in *QueryGetCoordinatorRequest, opts ...grpc.CallOption) (*QueryGetCoordinatorResponse, error)
 	// Queries a list of coordinator items.
@@ -591,6 +691,15 @@ func (c *queryClient) Validator(ctx context.Context, in *QueryGetValidatorReques
 func (c *queryClient) ValidatorAll(ctx context.Context, in *QueryAllValidatorRequest, opts ...grpc.CallOption) (*QueryAllValidatorResponse, error) {
 	out := new(QueryAllValidatorResponse)
 	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Query/ValidatorAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) ValidatorByConsAddress(ctx context.Context, in *QueryGetValidatorByConsAddressRequest, opts ...grpc.CallOption) (*QueryGetValidatorByConsAddressResponse, error) {
+	out := new(QueryGetValidatorByConsAddressResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.profile.Query/ValidatorByConsAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -626,11 +735,12 @@ func (c *queryClient) CoordinatorByAddress(ctx context.Context, in *QueryGetCoor
 
 // QueryServer is the server API for Query service.
 type QueryServer interface {
-	// this line is used by starport scaffolding # 2
 	// Queries a validator by index.
 	Validator(context.Context, *QueryGetValidatorRequest) (*QueryGetValidatorResponse, error)
 	// Queries a list of validator items.
 	ValidatorAll(context.Context, *QueryAllValidatorRequest) (*QueryAllValidatorResponse, error)
+	// Queries a ValidatorByConsAddress by consensus address.
+	ValidatorByConsAddress(context.Context, *QueryGetValidatorByConsAddressRequest) (*QueryGetValidatorByConsAddressResponse, error)
 	// Queries a coordinator by id.
 	Coordinator(context.Context, *QueryGetCoordinatorRequest) (*QueryGetCoordinatorResponse, error)
 	// Queries a list of coordinator items.
@@ -648,6 +758,9 @@ func (*UnimplementedQueryServer) Validator(ctx context.Context, req *QueryGetVal
 }
 func (*UnimplementedQueryServer) ValidatorAll(ctx context.Context, req *QueryAllValidatorRequest) (*QueryAllValidatorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ValidatorAll not implemented")
+}
+func (*UnimplementedQueryServer) ValidatorByConsAddress(ctx context.Context, req *QueryGetValidatorByConsAddressRequest) (*QueryGetValidatorByConsAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidatorByConsAddress not implemented")
 }
 func (*UnimplementedQueryServer) Coordinator(ctx context.Context, req *QueryGetCoordinatorRequest) (*QueryGetCoordinatorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Coordinator not implemented")
@@ -695,6 +808,24 @@ func _Query_ValidatorAll_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).ValidatorAll(ctx, req.(*QueryAllValidatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_ValidatorByConsAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetValidatorByConsAddressRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ValidatorByConsAddress(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.profile.Query/ValidatorByConsAddress",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ValidatorByConsAddress(ctx, req.(*QueryGetValidatorByConsAddressRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -764,6 +895,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ValidatorAll",
 			Handler:    _Query_ValidatorAll_Handler,
+		},
+		{
+			MethodName: "ValidatorByConsAddress",
+			Handler:    _Query_ValidatorByConsAddress_Handler,
 		},
 		{
 			MethodName: "Coordinator",
@@ -929,6 +1064,69 @@ func (m *QueryAllValidatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryGetValidatorByConsAddressRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetValidatorByConsAddressRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetValidatorByConsAddressRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ConsensusAddress) > 0 {
+		i -= len(m.ConsensusAddress)
+		copy(dAtA[i:], m.ConsensusAddress)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ConsensusAddress)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetValidatorByConsAddressResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetValidatorByConsAddressResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetValidatorByConsAddressResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.ValidatorByConsAddress.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
 func (m *QueryGetCoordinatorRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -949,8 +1147,8 @@ func (m *QueryGetCoordinatorRequest) MarshalToSizedBuffer(dAtA []byte) (int, err
 	_ = i
 	var l int
 	_ = l
-	if m.Id != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.Id))
+	if m.CoordinatorID != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.CoordinatorID))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -1204,14 +1402,38 @@ func (m *QueryAllValidatorResponse) Size() (n int) {
 	return n
 }
 
+func (m *QueryGetValidatorByConsAddressRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ConsensusAddress)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetValidatorByConsAddressResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.ValidatorByConsAddress.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
 func (m *QueryGetCoordinatorRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Id != 0 {
-		n += 1 + sovQuery(uint64(m.Id))
+	if m.CoordinatorID != 0 {
+		n += 1 + sovQuery(uint64(m.CoordinatorID))
 	}
 	return n
 }
@@ -1660,6 +1882,171 @@ func (m *QueryAllValidatorResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *QueryGetValidatorByConsAddressRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetValidatorByConsAddressRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetValidatorByConsAddressRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ConsensusAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ConsensusAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetValidatorByConsAddressResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetValidatorByConsAddressResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetValidatorByConsAddressResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorByConsAddress", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ValidatorByConsAddress.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *QueryGetCoordinatorRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1691,9 +2078,9 @@ func (m *QueryGetCoordinatorRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorID", wireType)
 			}
-			m.Id = 0
+			m.CoordinatorID = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -1703,7 +2090,7 @@ func (m *QueryGetCoordinatorRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Id |= uint64(b&0x7F) << shift
+				m.CoordinatorID |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

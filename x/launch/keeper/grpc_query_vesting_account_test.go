@@ -15,10 +15,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func createNVestingAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.VestingAccount {
+func createNVestingAccountForLaunchID(keeper *keeper.Keeper, ctx sdk.Context, n int, launchID uint64) []types.VestingAccount {
 	items := make([]types.VestingAccount, n)
 	for i := range items {
-		items[i] = sample.VestingAccount(chainID, strconv.Itoa(i))
+		items[i] = sample.VestingAccount(launchID, strconv.Itoa(i))
 		keeper.SetVestingAccount(ctx, items[i])
 	}
 	return items
@@ -37,24 +37,24 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetVestingAccountRequest{
-				ChainID: msgs[0].ChainID,
-				Address: msgs[0].Address,
+				LaunchID: msgs[0].LaunchID,
+				Address:  msgs[0].Address,
 			},
 			response: &types.QueryGetVestingAccountResponse{VestingAccount: msgs[0]},
 		},
 		{
 			desc: "Second",
 			request: &types.QueryGetVestingAccountRequest{
-				ChainID: msgs[1].ChainID,
-				Address: msgs[1].Address,
+				LaunchID: msgs[1].LaunchID,
+				Address:  msgs[1].Address,
 			},
 			response: &types.QueryGetVestingAccountResponse{VestingAccount: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetVestingAccountRequest{
-				ChainID: uint64(100000),
-				Address: strconv.Itoa(100000),
+				LaunchID: uint64(100000),
+				Address:  strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},
@@ -79,13 +79,13 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 	var (
 		keeper, ctx = testkeeper.Launch(t)
 		wctx        = sdk.WrapSDKContext(ctx)
-		chainID     = uint64(0)
-		msgs        = createNVestingAccountForChainID(keeper, ctx, 5, chainID)
+		launchID    = uint64(0)
+		msgs        = createNVestingAccountForLaunchID(keeper, ctx, 5, launchID)
 	)
 
-	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllVestingAccountRequest {
+	request := func(launchID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllVestingAccountRequest {
 		return &types.QueryAllVestingAccountRequest{
-			ChainID: chainID,
+			LaunchID: launchID,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
@@ -97,7 +97,7 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.VestingAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
+			resp, err := keeper.VestingAccountAll(wctx, request(launchID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.VestingAccount), step)
 			require.Subset(t, msgs, resp.VestingAccount)
@@ -107,7 +107,7 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.VestingAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
+			resp, err := keeper.VestingAccountAll(wctx, request(launchID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.VestingAccount), step)
 			require.Subset(t, msgs, resp.VestingAccount)
@@ -115,7 +115,7 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.VestingAccountAll(wctx, request(chainID, nil, 0, 0, true))
+		resp, err := keeper.VestingAccountAll(wctx, request(launchID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.VestingAccount)

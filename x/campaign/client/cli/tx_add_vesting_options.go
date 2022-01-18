@@ -13,7 +13,7 @@ import (
 
 func CmdAddVestingOptions() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-vesting-options [campaign-id] [address] [starting-shares] [vesting-shares] [vesting-end-time]",
+		Use:   "add-vesting-options [campaign-id] [address] [total-shares] [vesting-shares] [vesting-end-time]",
 		Short: "Add a mainnet vesting account",
 		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -24,7 +24,7 @@ func CmdAddVestingOptions() *cobra.Command {
 
 			address := args[1]
 
-			startingShares, err := types.NewShares(args[2])
+			totalShares, err := types.NewShares(args[2])
 			if err != nil {
 				return err
 			}
@@ -34,7 +34,7 @@ func CmdAddVestingOptions() *cobra.Command {
 				return err
 			}
 			endTime, _ := strconv.ParseUint(args[4], 10, 64)
-			delayedVesting := *types.NewShareDelayedVesting(vestingShares, int64(endTime))
+			delayedVesting := *types.NewShareDelayedVesting(totalShares, vestingShares, int64(endTime))
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -45,7 +45,6 @@ func CmdAddVestingOptions() *cobra.Command {
 				campaignID,
 				clientCtx.GetFromAddress().String(),
 				address,
-				startingShares,
 				delayedVesting,
 			)
 			if err := msg.ValidateBasic(); err != nil {

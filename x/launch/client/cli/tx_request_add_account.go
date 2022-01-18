@@ -12,9 +12,13 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+const (
+	flagAccountAddress = "account-address"
+)
+
 func CmdRequestAddAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "request-add-account [chain-id] [coins]",
+		Use:   "request-add-account [launch-id] [coins]",
 		Short: "Request to add an account",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -28,14 +32,21 @@ func CmdRequestAddAccount() *cobra.Command {
 				return fmt.Errorf("failed to parse coins: %w", err)
 			}
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
+			fromAddr := clientCtx.GetFromAddress().String()
+			accountAddr, _ := cmd.Flags().GetString(flagAccountAddress)
+			if accountAddr == "" {
+				accountAddr = fromAddr
+			}
+
 			msg := types.NewMsgRequestAddAccount(
-				clientCtx.GetFromAddress().String(),
-				chainID,
+				fromAddr,
+				launchID,
+				accountAddr,
 				coins,
 			)
 			if err := msg.ValidateBasic(); err != nil {
@@ -45,6 +56,7 @@ func CmdRequestAddAccount() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagAccountAddress, "", "Address of the genesis account to request")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

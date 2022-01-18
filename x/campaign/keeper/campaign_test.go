@@ -15,7 +15,7 @@ func createNCampaign(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []ty
 	items := make([]types.Campaign, n)
 	for i := range items {
 		items[i] = sample.Campaign(0)
-		items[i].Id = keeper.AppendCampaign(ctx, items[i])
+		items[i].CampaignID = keeper.AppendCampaign(ctx, items[i])
 	}
 	return items
 }
@@ -24,7 +24,7 @@ func TestCampaignGet(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaign(keeper, ctx, 10)
 	for _, item := range items {
-		got, found := keeper.GetCampaign(ctx, item.Id)
+		got, found := keeper.GetCampaign(ctx, item.CampaignID)
 		require.True(t, found)
 		require.Equal(t, item, got)
 	}
@@ -34,8 +34,8 @@ func TestCampaignRemove(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaign(keeper, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveCampaign(ctx, item.Id)
-		_, found := keeper.GetCampaign(ctx, item.Id)
+		keeper.RemoveCampaign(ctx, item.CampaignID)
+		_, found := keeper.GetCampaign(ctx, item.CampaignID)
 		require.False(t, found)
 	}
 }
@@ -49,6 +49,6 @@ func TestCampaignGetAll(t *testing.T) {
 func TestCampaignCount(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaign(keeper, ctx, 10)
-	count := uint64(len(items))
-	require.Equal(t, count, keeper.GetCampaignCount(ctx))
+	counter := uint64(len(items))
+	require.Equal(t, counter, keeper.GetCampaignCounter(ctx))
 }

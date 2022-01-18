@@ -12,7 +12,7 @@ import (
 
 func CmdTriggerLaunch() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "trigger-launch [chain-id] [remaining-time]",
+		Use:   "trigger-launch [launch-id] [remaining-time]",
 		Short: "Trigger the launch of a chain",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -23,12 +23,12 @@ func CmdTriggerLaunch() *cobra.Command {
 				return err
 			}
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgTriggerLaunch(clientCtx.GetFromAddress().String(), chainID, remainingTime)
+			msg := types.NewMsgTriggerLaunch(clientCtx.GetFromAddress().String(), launchID, remainingTime)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

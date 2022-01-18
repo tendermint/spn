@@ -46,7 +46,7 @@ func TestShowRequest(t *testing.T) {
 	}
 	for _, tc := range []struct {
 		desc        string
-		idChainID   string
+		idLaunchID  string
 		idRequestID uint64
 
 		args []string
@@ -55,7 +55,7 @@ func TestShowRequest(t *testing.T) {
 	}{
 		{
 			desc:        "found",
-			idChainID:   strconv.Itoa(int(objs[0].ChainID)),
+			idLaunchID:  strconv.Itoa(int(objs[0].LaunchID)),
 			idRequestID: objs[0].RequestID,
 
 			args: common,
@@ -63,7 +63,7 @@ func TestShowRequest(t *testing.T) {
 		},
 		{
 			desc:        "not found",
-			idChainID:   strconv.Itoa(100000),
+			idLaunchID:  strconv.Itoa(100000),
 			idRequestID: 100000,
 
 			args: common,
@@ -73,7 +73,7 @@ func TestShowRequest(t *testing.T) {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idChainID,
+				tc.idLaunchID,
 				strconv.Itoa(int(tc.idRequestID)),
 			}
 			args = append(args, tc.args...)
@@ -97,9 +97,9 @@ func TestListRequest(t *testing.T) {
 	net, objs := networkWithRequestObjects(t, 5)
 
 	ctx := net.Validators[0].ClientCtx
-	request := func(chainID string, next []byte, offset, limit uint64, total bool) []string {
+	request := func(launchID string, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
-			chainID,
+			launchID,
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 		}
 		if next == nil {

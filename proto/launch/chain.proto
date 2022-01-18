@@ -5,13 +5,8 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
-message ChainNameCount {
-  string chainName = 1;
-  uint64 count = 2;
-}
-
 message Chain {
-  uint64 id = 1;
+  uint64 launchID = 1;
   uint64 coordinatorID = 2;
   string genesisChainID = 3;
   int64 createdAt = 4;
@@ -36,7 +31,8 @@ message InitialGenesis {
   }
 }
 
-// DefaultInitialGenesis specifies using the default CLI-generated genesis as an initial genesis
+// DefaultInitialGenesis specifies using the default CLI-generated genesis as an
+// initial genesis
 message DefaultInitialGenesis {}
 
 // GenesisURL specifies using a custom genesis from a URL as the initial genesis

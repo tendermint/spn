@@ -9,7 +9,7 @@ import "launch/genesis_validator.proto";
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 message Request {
-  uint64 chainID = 1;
+  uint64 launchID = 1;
   uint64 requestID = 2;
   string creator = 3;
   int64 createdAt = 4;

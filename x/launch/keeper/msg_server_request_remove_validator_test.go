@@ -31,9 +31,9 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
 
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[3].Id, Address: addr1})
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[4].Id, Address: addr2})
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{ChainID: chains[4].Id, Address: addr4})
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{LaunchID: chains[3].LaunchID, Address: addr1})
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{LaunchID: chains[4].LaunchID, Address: addr2})
+	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{LaunchID: chains[4].LaunchID, Address: addr4})
 
 	tests := []struct {
 		name        string
@@ -45,7 +45,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          invalidChain,
+				LaunchID:         invalidChain,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
@@ -54,7 +54,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "launch triggered chain",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[0].Id,
+				LaunchID:         chains[0].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
@@ -63,7 +63,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "coordinator not found",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[1].Id,
+				LaunchID:         chains[1].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
@@ -72,7 +72,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "no permission error",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[2].Id,
+				LaunchID:         chains[2].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr3,
 			},
@@ -81,16 +81,16 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[2].Id,
+				LaunchID:         chains[2].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name: "add chain 3 request 1",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[3].Id,
+				LaunchID:         chains[3].LaunchID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr1,
 			},
@@ -99,25 +99,25 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "add chain 4 request 2",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[3].Id,
+				LaunchID:         chains[3].LaunchID,
 				Creator:          addr2,
 				ValidatorAddress: addr2,
 			},
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name: "add chain 5 request 1",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[4].Id,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          addr1,
 				ValidatorAddress: addr1,
 			},
-			wantID: 0,
+			wantID: 1,
 		},
 		{
 			name: "add chain 5 request 2",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[4].Id,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr2,
 			},
@@ -126,16 +126,16 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "add chain 5 request 3",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[4].Id,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          addr3,
 				ValidatorAddress: addr3,
 			},
-			wantID: 1,
+			wantID: 2,
 		},
 		{
 			name: "request from coordinator is pre-approved",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[4].Id,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr4,
 			},
@@ -144,7 +144,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 		{
 			name: "failing request from coordinator",
 			msg: types.MsgRequestRemoveValidator{
-				ChainID:          chains[4].Id,
+				LaunchID:         chains[4].LaunchID,
 				Creator:          coordAddr,
 				ValidatorAddress: addr4,
 			},
@@ -163,7 +163,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
 			if !tt.wantApprove {
-				request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, got.RequestID)
+				request, found := k.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
@@ -171,7 +171,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				require.NotNil(t, content)
 				require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
 			} else {
-				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.ChainID, tt.msg.ValidatorAddress)
+				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.LaunchID, tt.msg.ValidatorAddress)
 				require.False(t, found, "genesis validator not removed")
 			}
 		})

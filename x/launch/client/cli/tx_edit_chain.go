@@ -20,7 +20,7 @@ const (
 
 func CmdEditChain() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "edit-chain [id]",
+		Use:   "edit-chain [launch-id]",
 		Short: "Edit chain information",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -53,14 +53,14 @@ func CmdEditChain() *cobra.Command {
 				initialGenesis = &genesisURL
 			}
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
 			msg := types.NewMsgEditChain(
 				clientCtx.GetFromAddress().String(),
-				chainID,
+				launchID,
 				genesisChainID,
 				sourceURL,
 				sourceHash,

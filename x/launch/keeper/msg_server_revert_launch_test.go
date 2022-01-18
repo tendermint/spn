@@ -32,11 +32,11 @@ func TestMsgRevertLaunch(t *testing.T) {
 	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	notLaunched := res.Id
+	notLaunched := res.LaunchID
 
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	delayNotReached := res.Id
+	delayNotReached := res.LaunchID
 	chain, found := k.GetChain(sdkCtx, delayNotReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
@@ -45,7 +45,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	delayReached := res.Id
+	delayReached := res.LaunchID
 	chain, found = k.GetChain(sdkCtx, delayReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
@@ -97,7 +97,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 			require.NoError(t, err)
 
 			// Check value
-			chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
+			chain, found := k.GetChain(sdkCtx, tc.msg.LaunchID)
 			require.True(t, found)
 			require.False(t, chain.LaunchTriggered)
 			require.EqualValues(t, int64(0), chain.LaunchTimestamp)

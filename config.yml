@@ -1,21 +1,40 @@
 accounts:
   - name: alice
-    coins: ["20000token", "200000000stake"]
+    coins: ["200000000uspn"]
   - name: bob
-    coins: ["10000token", "100000000stake"]
+    coins: ["100000000uspn"]
   - name: carol
-    coins: ["10000token", "100000000stake"]
+    coins: ["100000000uspn"]
   - name: dave
-    coins: ["10000token", "100000000stake"]
+    coins: ["100000000uspn"]
   - name: joe
-    coins: ["10000token", "100000000stake"]
+    coins: ["100000000uspn"]
   - name: steve
-    coins: ["10000token", "100000000stake"]
+    coins: ["100000000uspn"]
 validator:
   name: alice
-  staked: "100000000stake"
+  staked: "100000000uspn"
 faucet:
   name: bob
-  coins: ["5token", "100000stake"]
+  coins: ["100000uspn"]
+genesis:
+  app_state:
+    staking:
+      params:
+        bond_denom: "uspn"
+    crisis:
+      constant_fee:
+        denom: "uspn"
+    gov:
+      deposit_params:
+        min_deposit:
+          - "amount": "10000000"
+            "denom": "uspn"
+    mint:
+      params:
+        mint_denom: "uspn"
+    launch:
+      params:
+        minLaunchTime: "5"
 genesis:
   chain_id: spn-1

@@ -38,7 +38,7 @@ message MsgCreateCoordinator {
 }
 
 message MsgCreateCoordinatorResponse {
-  uint64 coordinatorId = 1;
+  uint64 coordinatorID = 1;
 }
 
 message MsgUpdateCoordinatorDescription {
@@ -60,7 +60,7 @@ message MsgDeleteCoordinator {
 }
 
 message MsgDeleteCoordinatorResponse {
-  uint64 coordinatorId = 1;
+  uint64 coordinatorID = 1;
 }
 
 // this line is used by starport scaffolding # proto/tx/message

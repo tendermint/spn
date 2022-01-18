@@ -50,27 +50,27 @@ func ProfileGenesisState(addresses ...string) profile.GenesisState {
 	return profile.GenesisState{
 		CoordinatorList: []profile.Coordinator{
 			{
-				CoordinatorId: 0,
+				CoordinatorID: 0,
 				Address:       addresses[0],
 				Description:   CoordinatorDescription(),
 			},
 			{
-				CoordinatorId: 1,
+				CoordinatorID: 1,
 				Address:       addresses[1],
 				Description:   CoordinatorDescription(),
 			},
 			{
-				CoordinatorId: 2,
+				CoordinatorID: 2,
 				Address:       addresses[2],
 				Description:   CoordinatorDescription(),
 			},
 			{
-				CoordinatorId: 3,
+				CoordinatorID: 3,
 				Address:       addresses[3],
 				Description:   CoordinatorDescription(),
 			},
 			{
-				CoordinatorId: 4,
+				CoordinatorID: 4,
 				Address:       addresses[4],
 				Description:   CoordinatorDescription(),
 			},
@@ -78,26 +78,26 @@ func ProfileGenesisState(addresses ...string) profile.GenesisState {
 		CoordinatorByAddressList: []profile.CoordinatorByAddress{
 			{
 				Address:       addresses[0],
-				CoordinatorId: 0,
+				CoordinatorID: 0,
 			},
 			{
 				Address:       addresses[1],
-				CoordinatorId: 1,
+				CoordinatorID: 1,
 			},
 			{
 				Address:       addresses[2],
-				CoordinatorId: 2,
+				CoordinatorID: 2,
 			},
 			{
 				Address:       addresses[3],
-				CoordinatorId: 3,
+				CoordinatorID: 3,
 			},
 			{
 				Address:       addresses[4],
-				CoordinatorId: 4,
+				CoordinatorID: 4,
 			},
 		},
-		CoordinatorCount: 5,
+		CoordinatorCounter: 5,
 		ValidatorList: []profile.Validator{
 			{
 				Address:     addresses[5],

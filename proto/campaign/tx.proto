@@ -27,8 +27,11 @@ service Msg {
 message MsgCreateCampaign {
   string coordinator = 1;
   string campaignName = 2;
-  repeated cosmos.base.v1beta1.Coin TotalSupply = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
-  bool dynamicShares = 4;
+  repeated cosmos.base.v1beta1.Coin totalSupply = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }
 
 message MsgCreateCampaignResponse {
@@ -41,26 +44,31 @@ message MsgUpdateCampaignName {
   string name = 3;
 }
 
-message MsgUpdateCampaignNameResponse {
-}
+message MsgUpdateCampaignNameResponse {}
 
 message MsgUpdateTotalSupply {
   string coordinator = 1;
   uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin totalSupplyUpdate = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated cosmos.base.v1beta1.Coin totalSupplyUpdate = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }
 
-message MsgUpdateTotalSupplyResponse {
-}
+message MsgUpdateTotalSupplyResponse {}
 
 message MsgUpdateTotalShares {
   string coordinator = 1;
   uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin totalShares = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+  repeated cosmos.base.v1beta1.Coin totalShares = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "Shares"
+  ];
 }
 
-message MsgUpdateTotalSharesResponse {
-}
+message MsgUpdateTotalSharesResponse {}
 
 message MsgInitializeMainnet {
   string coordinator = 1;
@@ -78,58 +86,71 @@ message MsgAddShares {
   string coordinator = 1;
   uint64 campaignID = 2;
   string address = 3;
-  repeated cosmos.base.v1beta1.Coin shares = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+  repeated cosmos.base.v1beta1.Coin shares = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "Shares"
+  ];
 }
 
-message MsgAddSharesResponse {
-}
+message MsgAddSharesResponse {}
 
 message MsgAddVestingOptions {
   string coordinator = 1;
   uint64 campaignID = 2;
   string address = 3;
-  repeated cosmos.base.v1beta1.Coin startingShares = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
-  ShareVestingOptions vestingOptions = 5 [(gogoproto.nullable) = false];
+  ShareVestingOptions vestingOptions = 4 [(gogoproto.nullable) = false];
 }
 
-message MsgAddVestingOptionsResponse {
-}
+message MsgAddVestingOptionsResponse {}
 
 message MsgMintVouchers {
   string coordinator = 1;
   uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin shares = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+  repeated cosmos.base.v1beta1.Coin shares = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "Shares"
+  ];
 }
 
-message MsgMintVouchersResponse {
-}
+message MsgMintVouchersResponse {}
 
 message MsgBurnVouchers {
   string sender = 1;
   uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin vouchers = 3 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated cosmos.base.v1beta1.Coin vouchers = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }
 
-message MsgBurnVouchersResponse {
-}
+message MsgBurnVouchersResponse {}
 
 message MsgRedeemVouchers {
   string sender = 1;
   uint64 campaignID = 2;
   string account = 3;
-  repeated cosmos.base.v1beta1.Coin vouchers = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"];
+  repeated cosmos.base.v1beta1.Coin vouchers = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }
 
-message MsgRedeemVouchersResponse {
-}
+message MsgRedeemVouchersResponse {}
 
 message MsgUnredeemVouchers {
   string sender = 1;
   uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin shares = 4 [(gogoproto.nullable) = false, (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.castrepeated) = "Shares"];
+  repeated cosmos.base.v1beta1.Coin shares = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "Shares"
+  ];
 }
 
-message MsgUnredeemVouchersResponse {
-}
+message MsgUnredeemVouchersResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

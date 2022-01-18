@@ -11,36 +11,33 @@ import (
 
 func TestGenesisState_Validate(t *testing.T) {
 	var (
-		campaign1      = sample.Campaign(0)
-		campaign2      = sample.Campaign(1)
-		sharesVesting1 = sample.Shares()
-		sharesVesting2 = sample.Shares()
-		shares1        = sample.Shares()
-		shares2        = sample.Shares()
-		shares3        = sample.Shares()
-		shares4        = sample.Shares()
+		campaign1 = sample.Campaign(0)
+		campaign2 = sample.Campaign(1)
+		shares1   = sample.Shares()
+		shares2   = sample.Shares()
+		shares3   = sample.Shares()
+		shares4   = sample.Shares()
 	)
 	sharesCampaign1 := types.IncreaseShares(shares1, shares2)
-	sharesCampaign1 = types.IncreaseShares(sharesCampaign1, sharesVesting1)
 	campaign1.AllocatedShares = sharesCampaign1
 	campaign1.TotalShares = sharesCampaign1
 	campaign1.DynamicShares = true
+	campaign1.CoordinatorID = 0
 
 	sharesCampaign2 := types.IncreaseShares(shares3, shares4)
-	sharesCampaign2 = types.IncreaseShares(sharesCampaign2, sharesVesting2)
 	campaign2.AllocatedShares = sharesCampaign2
 	campaign2.TotalShares = sharesCampaign2
 	campaign2.DynamicShares = true
+	campaign2.CoordinatorID = 1
 
 	for _, tc := range []struct {
-		desc     string
-		genState *types.GenesisState
-		valid    bool
+		desc         string
+		genState     *types.GenesisState
+		errorMessage string
 	}{
 		{
 			desc:     "default is valid",
 			genState: types.DefaultGenesis(),
-			valid:    true,
 		},
 		{
 			desc: "valid genesis state",
@@ -48,45 +45,42 @@ func TestGenesisState_Validate(t *testing.T) {
 				// this line is used by starport scaffolding # types/genesis/validField
 				CampaignChainsList: []types.CampaignChains{
 					{
-						CampaignID: campaign1.Id,
+						CampaignID: campaign1.CampaignID,
 					},
 					{
-						CampaignID: campaign2.Id,
+						CampaignID: campaign2.CampaignID,
 					},
 				},
 				CampaignList: []types.Campaign{
 					campaign1,
 					campaign2,
 				},
-				CampaignCount: 2,
+				CampaignCounter: 2,
 				MainnetAccountList: []types.MainnetAccount{
 					{
-						CampaignID: campaign1.Id,
+						CampaignID: campaign1.CampaignID,
 						Address:    sample.Address(),
 						Shares:     shares1,
 					},
 					{
-						CampaignID: campaign2.Id,
+						CampaignID: campaign2.CampaignID,
 						Address:    sample.Address(),
 						Shares:     shares3,
 					},
 				},
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
-						CampaignID:     campaign1.Id,
+						CampaignID:     campaign1.CampaignID,
 						Address:        sample.Address(),
-						StartingShares: shares2,
-						VestingOptions: *types.NewShareDelayedVesting(sharesVesting1, time.Now().Unix()),
+						VestingOptions: *types.NewShareDelayedVesting(shares2, shares2, time.Now().Unix()),
 					},
 					{
-						CampaignID:     campaign2.Id,
+						CampaignID:     campaign2.CampaignID,
 						Address:        sample.Address(),
-						StartingShares: shares4,
-						VestingOptions: *types.NewShareDelayedVesting(sharesVesting2, time.Now().Unix()),
+						VestingOptions: *types.NewShareDelayedVesting(shares4, shares4, time.Now().Unix()),
 					},
 				},
 			},
-			valid: true,
 		},
 		{
 			desc: "non existing campaign for mainnet vesting account",
@@ -103,7 +97,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(0),
 					sample.Campaign(1),
 				},
-				CampaignCount: 2,
+				CampaignCounter: 2,
 				MainnetAccountList: []types.MainnetAccount{
 					sample.MainnetAccount(0, sample.Address()),
 					sample.MainnetAccount(1, sample.Address()),
@@ -119,7 +113,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 			},
-			valid: false,
+			errorMessage: "campaign id 33333 doesn't exist for mainnet vesting account 33333",
 		},
 		{
 			desc: "non existing campaign for mainnet account",
@@ -136,13 +130,12 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(0),
 					sample.Campaign(1),
 				},
-				CampaignCount: 2,
+				CampaignCounter: 2,
 				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(330, sample.Address()),
-					sample.MainnetAccount(434, sample.Address()),
+					sample.MainnetAccount(330, "330"),
 				},
 			},
-			valid: false,
+			errorMessage: "campaign id 330 doesn't exist for mainnet account 330",
 		},
 		{
 			desc: "non existing campaign for chains",
@@ -159,13 +152,17 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(99),
 					sample.Campaign(88),
 				},
-				CampaignCount: 100,
+				CampaignCounter: 100,
 			},
-			valid: false,
+			errorMessage: "campaign id 2 doesn't exist for chains",
 		},
 		{
 			desc: "duplicated campaignChains",
 			genState: &types.GenesisState{
+				CampaignList: []types.Campaign{
+					sample.Campaign(0),
+				},
+				CampaignCounter: 1,
 				CampaignChainsList: []types.CampaignChains{
 					{
 						CampaignID: 0,
@@ -175,10 +172,15 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 			},
+			errorMessage: "duplicated index for campaignChains",
 		},
 		{
 			desc: "duplicated mainnetVestingAccount",
 			genState: &types.GenesisState{
+				CampaignList: []types.Campaign{
+					sample.Campaign(0),
+				},
+				CampaignCounter: 1,
 				MainnetVestingAccountList: []types.MainnetVestingAccount{
 					{
 						CampaignID: 0,
@@ -190,7 +192,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 			},
-			valid: false,
+			errorMessage: "duplicated index for mainnetVestingAccount",
 		},
 		{
 			desc: "duplicated campaign",
@@ -199,9 +201,9 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(0),
 					sample.Campaign(0),
 				},
-				CampaignCount: 2,
+				CampaignCounter: 2,
 			},
-			valid: false,
+			errorMessage: "duplicated id for campaign",
 		},
 		{
 			desc: "invalid campaign count",
@@ -209,9 +211,9 @@ func TestGenesisState_Validate(t *testing.T) {
 				CampaignList: []types.Campaign{
 					sample.Campaign(1),
 				},
-				CampaignCount: 0,
+				CampaignCounter: 0,
 			},
-			valid: false,
+			errorMessage: "campaign id should be lower or equal than the last id",
 		},
 		{
 			desc: "invalid campaign",
@@ -219,13 +221,17 @@ func TestGenesisState_Validate(t *testing.T) {
 				CampaignList: []types.Campaign{
 					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.Coins(), false),
 				},
-				CampaignCount: 1,
+				CampaignCounter: 1,
 			},
-			valid: false,
+			errorMessage: "invalid campaign 0: campaign name can only contain alphanumerical characters or hyphen",
 		},
 		{
 			desc: "duplicated mainnetAccount",
 			genState: &types.GenesisState{
+				CampaignList: []types.Campaign{
+					sample.Campaign(0),
+				},
+				CampaignCounter: 1,
 				MainnetAccountList: []types.MainnetAccount{
 					{
 						CampaignID: 0,
@@ -237,21 +243,22 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 			},
-			valid: false,
+			errorMessage: "duplicated index for mainnetAccount",
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()
-			if !tc.valid {
+			if tc.errorMessage != "" {
 				require.Error(t, err)
+				require.Equal(t, tc.errorMessage, err.Error())
 				return
 			}
 			require.NoError(t, err)
 
 			campaignIDMap := make(map[uint64]types.Shares)
 			for _, elem := range tc.genState.CampaignList {
-				campaignIDMap[elem.Id] = elem.AllocatedShares
+				campaignIDMap[elem.CampaignID] = elem.AllocatedShares
 			}
 			shares := make(map[uint64]types.Shares)
 

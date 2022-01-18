@@ -9,9 +9,11 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// TODO: Determine default values
 var (
-	DefaultMinLaunchTime = uint64(time.Hour.Seconds() * 24)
+	// DefaultMinLaunchTime ...
+	// TODO: set back this value to the defaut one
+	// uint64(time.Hour.Seconds() * 24)
+	DefaultMinLaunchTime = uint64(5)
 	DefaultMaxLaunchTime = uint64(time.Hour.Seconds() * 24 * 7)
 
 	MaxParametrableLaunchTime = uint64(time.Hour.Seconds() * 24 * 31)

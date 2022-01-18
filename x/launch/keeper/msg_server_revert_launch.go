@@ -13,9 +13,9 @@ import (
 func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunch) (*types.MsgRevertLaunchResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	chain, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.LaunchID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
 	// Check sender is the coordinator of the chain
@@ -32,7 +32,7 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 	}
 
 	if !chain.LaunchTriggered {
-		return nil, sdkerrors.Wrapf(types.ErrNotTriggeredLaunch, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrNotTriggeredLaunch, "%d", msg.LaunchID)
 	}
 
 	// The LaunchTimestamp must always be a non-zero value if LaunchTriggered is set
@@ -42,7 +42,7 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 
 	// We must wait for a specific delay once the chain is launched before being able to revert it
 	if ctx.BlockTime().Unix() < chain.LaunchTimestamp+types.RevertDelay {
-		return nil, sdkerrors.Wrapf(types.ErrRevertDelayNotReached, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrRevertDelayNotReached, "%d", msg.LaunchID)
 	}
 
 	chain.LaunchTriggered = false

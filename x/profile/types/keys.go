@@ -19,8 +19,8 @@ const (
 	// CoordinatorKey is the prefix to retrieve all Coordinator
 	CoordinatorKey = "Coordinator-value-"
 
-	// CoordinatorCountKey is the prefix to store coordinator count
-	CoordinatorCountKey = "Coordinator-count-"
+	// CoordinatorCounterKey is the prefix to store coordinator counter
+	CoordinatorCounterKey = "Coordinator-count-"
 )
 
 func KeyPrefix(p string) []byte {

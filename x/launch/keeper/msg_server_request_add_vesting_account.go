@@ -11,44 +11,44 @@ import (
 func (k msgServer) RequestAddVestingAccount(
 	goCtx context.Context,
 	msg *types.MsgRequestAddVestingAccount,
-) (*types.MsgRequestResponse, error) {
+) (*types.MsgRequestAddVestingAccountResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	chain, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.LaunchID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
 	if chain.IsMainnet {
 		return nil, sdkerrors.Wrapf(
 			types.ErrAddMainnetVestingAccount,
 			"the chain %d is a mainnet",
-			msg.ChainID,
+			msg.LaunchID,
 		)
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.LaunchID)
 	}
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
-			"the chain %d coordinator has been deleted", chain.Id)
+			"the chain %d coordinator has been deleted", chain.LaunchID)
 	}
 
-	content := types.NewVestingAccount(msg.ChainID, msg.Address, msg.StartingBalance, msg.Options)
+	content := types.NewVestingAccount(msg.LaunchID, msg.Address, msg.Options)
 	request := types.Request{
-		ChainID:   msg.ChainID,
-		Creator:   msg.Address,
+		LaunchID:  msg.LaunchID,
+		Creator:   msg.Creator,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
 	}
 
 	var requestID uint64
 	approved := false
-	if msg.Address == coordAddress {
-		err := ApplyRequest(ctx, k.Keeper, msg.ChainID, request)
+	if msg.Creator == coordAddress {
+		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err
 		}
@@ -57,7 +57,7 @@ func (k msgServer) RequestAddVestingAccount(
 		requestID = k.AppendRequest(ctx, request)
 	}
 
-	return &types.MsgRequestResponse{
+	return &types.MsgRequestAddVestingAccountResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
 	}, nil

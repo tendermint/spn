@@ -43,26 +43,26 @@ func TestShowGenesisAccount(t *testing.T) {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc      string
-		idChainID string
-		idAddress string
+		desc       string
+		idLaunchID string
+		idAddress  string
 
 		args []string
 		err  error
 		obj  types.GenesisAccount
 	}{
 		{
-			desc:      "found",
-			idChainID: strconv.Itoa(int(objs[0].ChainID)),
-			idAddress: objs[0].Address,
+			desc:       "found",
+			idLaunchID: strconv.Itoa(int(objs[0].LaunchID)),
+			idAddress:  objs[0].Address,
 
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc:      "not found",
-			idChainID: strconv.Itoa(100000),
-			idAddress: strconv.Itoa(100000),
+			desc:       "not found",
+			idLaunchID: strconv.Itoa(100000),
+			idAddress:  strconv.Itoa(100000),
 
 			args: common,
 			err:  status.Error(codes.InvalidArgument, "not found"),
@@ -71,7 +71,7 @@ func TestShowGenesisAccount(t *testing.T) {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idChainID,
+				tc.idLaunchID,
 				tc.idAddress,
 			}
 			args = append(args, tc.args...)
@@ -94,7 +94,7 @@ func TestShowGenesisAccount(t *testing.T) {
 func TestListGenesisAccount(t *testing.T) {
 	net, objs := networkWithGenesisAccountObjects(t, 5)
 
-	chainID := objs[0].ChainID
+	chainID := objs[0].LaunchID
 	ctx := net.Validators[0].ClientCtx
 	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{

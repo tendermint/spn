@@ -2,16 +2,19 @@
 package chainid
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 const (
 	ChainIDSeparator   = "-"
 	ChainNameMaxLength = 30
 )
+
+var ErrInvalidChainID = errors.New("invalid chain ID, format must be <chain-name>-<network-number>")
 
 // NewGenesisChainID returns the genesis chain id from the chain name and the number
 func NewGenesisChainID(chainName string, networkNumber uint64) string {
@@ -24,14 +27,14 @@ func NewGenesisChainID(chainName string, networkNumber uint64) string {
 func ParseGenesisChainID(genesisChainID string) (string, uint64, error) {
 	parsed := strings.Split(genesisChainID, ChainIDSeparator)
 	if len(parsed) != 2 {
-		return "", 0, errors.New("incorrect chain ID format")
+		return "", 0, errors.Wrapf(ErrInvalidChainID, "%s: invalid format", genesisChainID)
 	}
 	if err := CheckChainName(parsed[0]); err != nil {
-		return "", 0, err
+		return "", 0, errors.Wrapf(ErrInvalidChainID, "%s: invalid chain name %s", parsed[0], err.Error())
 	}
 	number, err := strconv.ParseUint(parsed[1], 10, 64)
 	if err != nil {
-		return "", 0, errors.New("incorrect chain number")
+		return "", 0, errors.Wrapf(ErrInvalidChainID, "%s: invalid network id %s", parsed[1], err.Error())
 	}
 
 	return parsed[0], number, nil
@@ -44,7 +47,7 @@ func CheckChainName(chainName string) error {
 	}
 
 	if len(chainName) > ChainNameMaxLength {
-		return fmt.Errorf("chain name is too big, max length is %d", ChainNameMaxLength)
+		return fmt.Errorf("chain name is too long, max length is %d", ChainNameMaxLength)
 	}
 
 	// Iterate characters

@@ -25,17 +25,17 @@ func TestCoordinatorQuerySingle(t *testing.T) {
 	}{
 		{
 			desc:     "First",
-			request:  &types.QueryGetCoordinatorRequest{Id: msgs[0].CoordinatorId},
+			request:  &types.QueryGetCoordinatorRequest{CoordinatorID: msgs[0].CoordinatorID},
 			response: &types.QueryGetCoordinatorResponse{Coordinator: msgs[0]},
 		},
 		{
 			desc:     "Second",
-			request:  &types.QueryGetCoordinatorRequest{Id: msgs[1].CoordinatorId},
+			request:  &types.QueryGetCoordinatorRequest{CoordinatorID: msgs[1].CoordinatorID},
 			response: &types.QueryGetCoordinatorResponse{Coordinator: msgs[1]},
 		},
 		{
 			desc:    "KeyNotFound",
-			request: &types.QueryGetCoordinatorRequest{Id: uint64(len(msgs))},
+			request: &types.QueryGetCoordinatorRequest{CoordinatorID: uint64(len(msgs))},
 			err:     sdkerrors.ErrKeyNotFound,
 		},
 		{

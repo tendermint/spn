@@ -9,10 +9,10 @@ const TypeMsgTriggerLaunch = "trigger_launch"
 
 var _ sdk.Msg = &MsgTriggerLaunch{}
 
-func NewMsgTriggerLaunch(coordinator string, chainID, remainingTime uint64) *MsgTriggerLaunch {
+func NewMsgTriggerLaunch(coordinator string, launchID, remainingTime uint64) *MsgTriggerLaunch {
 	return &MsgTriggerLaunch{
 		Coordinator:   coordinator,
-		ChainID:       chainID,
+		LaunchID:      launchID,
 		RemainingTime: remainingTime,
 	}
 }

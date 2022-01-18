@@ -26,7 +26,7 @@ func TestVestingAccountGet(t *testing.T) {
 	items := createNVestingAccount(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetVestingAccount(ctx,
-			item.ChainID,
+			item.LaunchID,
 			item.Address,
 		)
 		require.True(t, found)
@@ -38,11 +38,11 @@ func TestVestingAccountRemove(t *testing.T) {
 	items := createNVestingAccount(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveVestingAccount(ctx,
-			item.ChainID,
+			item.LaunchID,
 			item.Address,
 		)
 		_, found := keeper.GetVestingAccount(ctx,
-			item.ChainID,
+			item.LaunchID,
 			item.Address,
 		)
 		require.False(t, found)

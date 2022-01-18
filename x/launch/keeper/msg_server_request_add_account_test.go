@@ -17,6 +17,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		addr1                       = sample.Address()
 		addr2                       = sample.Address()
 		addr3                       = sample.Address()
+		addr4                       = sample.Address()
 		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
 		ctx                         = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -42,62 +43,62 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	}{
 		{
 			name: "invalid chain",
-			msg:  sample.MsgRequestAddAccount(sample.Address(), invalidChain),
+			msg:  sample.MsgRequestAddAccount(sample.Address(), sample.Address(), invalidChain),
 			err:  types.ErrChainNotFound,
 		},
 		{
 			name: "launch triggered chain",
-			msg:  sample.MsgRequestAddAccount(addr1, chains[0].Id),
+			msg:  sample.MsgRequestAddAccount(sample.Address(), addr1, chains[0].LaunchID),
 			err:  types.ErrTriggeredLaunch,
 		},
 		{
 			name: "coordinator not found",
-			msg:  sample.MsgRequestAddAccount(addr1, chains[1].Id),
+			msg:  sample.MsgRequestAddAccount(sample.Address(), addr1, chains[1].LaunchID),
 			err:  types.ErrChainInactive,
 		},
 		{
 			name:   "add chain 3 request 1",
-			msg:    sample.MsgRequestAddAccount(addr1, chains[2].Id),
-			wantID: 0,
+			msg:    sample.MsgRequestAddAccount(sample.Address(), addr1, chains[2].LaunchID),
+			wantID: 1,
 		},
 		{
 			name:   "add chain 4 request 1",
-			msg:    sample.MsgRequestAddAccount(addr1, chains[3].Id),
-			wantID: 0,
+			msg:    sample.MsgRequestAddAccount(sample.Address(), addr1, chains[3].LaunchID),
+			wantID: 1,
 		},
 		{
 			name:   "add chain 4 request 2",
-			msg:    sample.MsgRequestAddAccount(addr2, chains[3].Id),
-			wantID: 1,
-		},
-		{
-			name:   "add chain 5 request 1",
-			msg:    sample.MsgRequestAddAccount(addr1, chains[4].Id),
-			wantID: 0,
-		},
-		{
-			name:   "add chain 5 request 2",
-			msg:    sample.MsgRequestAddAccount(addr2, chains[4].Id),
-			wantID: 1,
-		},
-		{
-			name:   "add chain 5 request 3",
-			msg:    sample.MsgRequestAddAccount(addr3, chains[4].Id),
+			msg:    sample.MsgRequestAddAccount(sample.Address(), addr2, chains[3].LaunchID),
 			wantID: 2,
 		},
 		{
+			name:   "add chain 5 request 1",
+			msg:    sample.MsgRequestAddAccount(sample.Address(), addr1, chains[4].LaunchID),
+			wantID: 1,
+		},
+		{
+			name:   "add chain 5 request 2",
+			msg:    sample.MsgRequestAddAccount(sample.Address(), addr2, chains[4].LaunchID),
+			wantID: 2,
+		},
+		{
+			name:   "add chain 5 request 3",
+			msg:    sample.MsgRequestAddAccount(sample.Address(), addr3, chains[4].LaunchID),
+			wantID: 3,
+		},
+		{
 			name:        "request from coordinator is pre-approved",
-			msg:         sample.MsgRequestAddAccount(coordAddr, chains[4].Id),
+			msg:         sample.MsgRequestAddAccount(coordAddr, addr4, chains[4].LaunchID),
 			wantApprove: true,
 		},
 		{
 			name: "failing request from coordinator",
-			msg:  sample.MsgRequestAddAccount(coordAddr, chains[4].Id),
+			msg:  sample.MsgRequestAddAccount(coordAddr, addr4, chains[4].LaunchID),
 			err:  types.ErrAccountAlreadyExist,
 		},
 		{
 			name: "is mainnet chain",
-			msg:  sample.MsgRequestAddAccount(coordAddr, chains[5].Id),
+			msg:  sample.MsgRequestAddAccount(coordAddr, sample.Address(), chains[5].LaunchID),
 			err:  types.ErrAddMainnetAccount,
 		},
 	}
@@ -113,17 +114,18 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
 			if !tt.wantApprove {
-				request, found := k.GetRequest(sdkCtx, tt.msg.ChainID, got.RequestID)
+				request, found := k.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
+				require.Equal(t, tt.msg.Creator, request.Creator)
 
 				content := request.Content.GetGenesisAccount()
 				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
-				require.Equal(t, tt.msg.ChainID, content.ChainID)
+				require.Equal(t, tt.msg.LaunchID, content.LaunchID)
 				require.Equal(t, tt.msg.Coins, content.Coins)
 			} else {
-				_, found := k.GetGenesisAccount(sdkCtx, tt.msg.ChainID, tt.msg.Address)
+				_, found := k.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.True(t, found, "genesis account not found")
 			}
 		})

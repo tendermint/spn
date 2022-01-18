@@ -7,12 +7,13 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func NewDelayedVesting(vesting sdk.Coins, endTime int64) *VestingOptions {
+func NewDelayedVesting(totalBalance, vesting sdk.Coins, endTime int64) *VestingOptions {
 	return &VestingOptions{
 		Options: &VestingOptions_DelayedVesting{
 			DelayedVesting: &DelayedVesting{
-				Vesting: vesting,
-				EndTime: endTime,
+				TotalBalance: totalBalance,
+				Vesting:      vesting,
+				EndTime:      endTime,
 			},
 		},
 	}
@@ -22,13 +23,23 @@ func NewDelayedVesting(vesting sdk.Coins, endTime int64) *VestingOptions {
 func (m VestingOptions) Validate() error {
 	switch vestionOptions := m.Options.(type) {
 	case *VestingOptions_DelayedVesting:
-		if vestionOptions.DelayedVesting.Vesting.Empty() {
+		dv := vestionOptions.DelayedVesting
+		if dv.Vesting.Empty() {
 			return errors.New("empty vesting coins for DelayedVesting")
 		}
-		if !vestionOptions.DelayedVesting.Vesting.IsValid() {
-			return fmt.Errorf("invalid vesting coins for DelayedVesting: %s", vestionOptions.DelayedVesting.Vesting.String())
+		if !dv.Vesting.IsValid() {
+			return fmt.Errorf("invalid vesting coins for DelayedVesting: %s", dv.Vesting.String())
 		}
-		if vestionOptions.DelayedVesting.EndTime == 0 {
+
+		if !dv.TotalBalance.IsValid() {
+			return fmt.Errorf("invalid total balance for DelayedVesting: %s", dv.TotalBalance.String())
+		}
+
+		if !dv.Vesting.IsAllLTE(dv.TotalBalance) {
+			return errors.New("vesting is not a subset of the total balance")
+		}
+
+		if dv.EndTime == 0 {
 			return errors.New("end time for DelayedVesting cannot be 0")
 		}
 	default:

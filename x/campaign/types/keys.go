@@ -21,8 +21,8 @@ const (
 	// CampaignKey is the prefix to retrieve all Campaign
 	CampaignKey = "Campaign-value-"
 
-	// CampaignCountKey is the prefix to store campaign count
-	CampaignCountKey = "Campaign-count-"
+	// CampaignCounterKey is the prefix to store campaign count
+	CampaignCounterKey = "Campaign-count-"
 )
 
 func KeyPrefix(p string) []byte {

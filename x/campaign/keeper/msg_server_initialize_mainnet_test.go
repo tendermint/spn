@@ -29,7 +29,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	coordID := res.CoordinatorId
+	coordID := res.CoordinatorID
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrNoCampaign,
 		Description: sample.CoordinatorDescription(),
@@ -126,27 +126,29 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 	} {
-		res, err := campaignSrv.InitializeMainnet(ctx, &tc.msg)
-		if tc.err != nil {
-			require.ErrorIs(t, err, tc.err)
-			return
-		}
-		require.NoError(t, err)
-		campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
-		require.True(t, found)
-		require.True(t, campaign.MainnetInitialized)
-		require.EqualValues(t, res.MainnetID, campaign.MainnetID)
+		t.Run(tc.name, func(t *testing.T) {
+			res, err := campaignSrv.InitializeMainnet(ctx, &tc.msg)
+			if tc.err != nil {
+				require.ErrorIs(t, err, tc.err)
+				return
+			}
+			require.NoError(t, err)
+			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			require.True(t, found)
+			require.True(t, campaign.MainnetInitialized)
+			require.EqualValues(t, res.MainnetID, campaign.MainnetID)
 
-		// Chain is in launch module
-		chain, found := launchKeeper.GetChain(sdkCtx, campaign.MainnetID)
-		require.True(t, found)
-		require.True(t, chain.HasCampaign)
-		require.True(t, chain.IsMainnet)
-		require.EqualValues(t, tc.msg.CampaignID, chain.CampaignID)
+			// Chain is in launch module
+			chain, found := launchKeeper.GetChain(sdkCtx, campaign.MainnetID)
+			require.True(t, found)
+			require.True(t, chain.HasCampaign)
+			require.True(t, chain.IsMainnet)
+			require.EqualValues(t, tc.msg.CampaignID, chain.CampaignID)
 
-		// Mainnet ID is listed in campaign chains
-		campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
-		require.True(t, found)
-		require.Contains(t, campaignChains.Chains, campaign.MainnetID)
+			// Mainnet ID is listed in campaign chains
+			campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
+			require.True(t, found)
+			require.Contains(t, campaignChains.Chains, campaign.MainnetID)
+		})
 	}
 }

@@ -72,7 +72,7 @@ func GetCoordSimAccount(
 	// Find the account linked to this address
 	for _, acc := range accs {
 		if acc.Address.String() == coord.Address {
-			return acc, coord.CoordinatorId, true
+			return acc, coord.CoordinatorID, true
 		}
 	}
 	return simtypes.Account{}, 0, false
@@ -121,7 +121,7 @@ func GetCoordSimAccountWithCampaignID(
 	}
 	for _, acc := range accs {
 		if acc.Address.String() == coordAddr {
-			return acc, camp.Id, true
+			return acc, camp.CampaignID, true
 		}
 	}
 
@@ -259,13 +259,10 @@ func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk t
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
 		}
 
-		dynamicShares := r.Intn(100) > 80
-
 		msg := types.NewMsgCreateCampaign(
 			simAccount.Address.String(),
 			sample.CampaignName(),
 			sample.Coins(),
-			dynamicShares,
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
@@ -395,8 +392,7 @@ func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, p
 			campID,
 			simAccount.Address.String(),
 			accs[accountNb].Address.String(),
-			types.EmptyShares(),
-			*types.NewShareDelayedVesting(shares, time.Now().Unix()),
+			*types.NewShareDelayedVesting(shares, shares, time.Now().Unix()),
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}

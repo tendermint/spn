@@ -4,15 +4,16 @@ package tendermint.spn.profile;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-// this line is used by starport scaffolding # 1
 import "profile/validator.proto";
 import "profile/coordinator.proto";
+// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/profile/types";
 
 // Query defines the gRPC querier service.
 service Query {
   // this line is used by starport scaffolding # 2
+
   // Queries a validator by index.
   rpc Validator(QueryGetValidatorRequest) returns (QueryGetValidatorResponse) {
     option (google.api.http).get = "/tendermint/spn/profile/validator/{address}";
@@ -23,9 +24,14 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/profile/validator";
   }
 
+  // Queries a ValidatorByConsAddress by consensus address.
+  rpc ValidatorByConsAddress(QueryGetValidatorByConsAddressRequest) returns (QueryGetValidatorByConsAddressResponse) {
+    option (google.api.http).get = "/tendermint/spn/profile/validator_by_cons_address/{consensusAddress}";
+  }
+
   // Queries a coordinator by id.
   rpc Coordinator(QueryGetCoordinatorRequest) returns (QueryGetCoordinatorResponse) {
-    option (google.api.http).get = "/tendermint/spn/profile/coordinator/{id}";
+    option (google.api.http).get = "/tendermint/spn/profile/coordinator/{coordinatorID}";
   }
 
   // Queries a list of coordinator items.
@@ -35,7 +41,7 @@ service Query {
 
   // Queries a coordinatorByAddress by index.
   rpc CoordinatorByAddress(QueryGetCoordinatorByAddressRequest) returns (QueryGetCoordinatorByAddressResponse) {
-    option (google.api.http).get = "/tendermint/spn/profile/coordinatorByAddress/{address}";
+    option (google.api.http).get = "/tendermint/spn/profile/coordinator_by_address/{address}";
   }
 }
 
@@ -46,7 +52,7 @@ message QueryGetValidatorRequest {
 }
 
 message QueryGetValidatorResponse {
-  Validator validator = 1 [(gogoproto.nullable) = false];;
+  Validator validator = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllValidatorRequest {
@@ -54,16 +60,24 @@ message QueryAllValidatorRequest {
 }
 
 message QueryAllValidatorResponse {
-  repeated Validator validator = 1 [(gogoproto.nullable) = false];;
+  repeated Validator validator = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+message QueryGetValidatorByConsAddressRequest {
+  string consensusAddress = 1;
+}
+
+message QueryGetValidatorByConsAddressResponse {
+  ValidatorByConsAddress validatorByConsAddress = 1 [(gogoproto.nullable) = false];
+}
+
 message QueryGetCoordinatorRequest {
-  uint64 id = 1;
+  uint64 coordinatorID = 1;
 }
 
 message QueryGetCoordinatorResponse {
-  Coordinator Coordinator = 1 [(gogoproto.nullable) = false];;
+  Coordinator coordinator = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllCoordinatorRequest {
@@ -71,7 +85,7 @@ message QueryAllCoordinatorRequest {
 }
 
 message QueryAllCoordinatorResponse {
-  repeated Coordinator Coordinator = 1 [(gogoproto.nullable) = false];;
+  repeated Coordinator coordinator = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -80,5 +94,5 @@ message QueryGetCoordinatorByAddressRequest {
 }
 
 message QueryGetCoordinatorByAddressResponse {
-  CoordinatorByAddress coordinatorByAddress = 1 [(gogoproto.nullable) = false];;
+  CoordinatorByAddress coordinatorByAddress = 1 [(gogoproto.nullable) = false];
 }

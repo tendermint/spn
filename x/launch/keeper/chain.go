@@ -62,26 +62,25 @@ func (k Keeper) CreateNewChain(
 	}
 
 	// Append the chain to the store
-	chainID := k.AppendChain(ctx, chain)
+	launchID := k.AppendChain(ctx, chain)
 
 	// Register the chain to the campaign
 	if hasCampaign {
-		if err := k.campaignKeeper.AddChainToCampaign(ctx, campaignID, chainID); err != nil {
+		if err := k.campaignKeeper.AddChainToCampaign(ctx, campaignID, launchID); err != nil {
 			return 0, err
 		}
 	}
 
-	return chainID, nil
-
+	return launchID, nil
 }
 
-// GetChainCount get the total number of chains
-func (k Keeper) GetChainCount(ctx sdk.Context) uint64 {
+// GetChainCounter get the counter for chains
+func (k Keeper) GetChainCounter(ctx sdk.Context) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
-	byteKey := types.KeyPrefix(types.ChainCountKey)
+	byteKey := types.KeyPrefix(types.ChainCounterKey)
 	bz := store.Get(byteKey)
 
-	// Count doesn't exist: no element
+	// Counter doesn't exist: no element
 	if bz == nil {
 		return 0
 	}
@@ -90,44 +89,44 @@ func (k Keeper) GetChainCount(ctx sdk.Context) uint64 {
 	return binary.BigEndian.Uint64(bz)
 }
 
-// SetChainCount set the total number of chains
-func (k Keeper) SetChainCount(ctx sdk.Context, count uint64) {
+// SetChainCounter set the counter for chains
+func (k Keeper) SetChainCounter(ctx sdk.Context, counter uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
-	byteKey := types.KeyPrefix(types.ChainCountKey)
+	byteKey := types.KeyPrefix(types.ChainCounterKey)
 	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, count)
+	binary.BigEndian.PutUint64(bz, counter)
 	store.Set(byteKey, bz)
 }
 
-// AppendChain appends a chain in the store with a new id and update the count
+// AppendChain appends a chain in the store with a new id and update the counter
 func (k Keeper) AppendChain(ctx sdk.Context, chain types.Chain) uint64 {
-	count := k.GetChainCount(ctx)
+	counter := k.GetChainCounter(ctx)
 
 	// Set the ID of the appended value
-	chain.Id = count
+	chain.LaunchID = counter
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
 	appendedValue := k.cdc.MustMarshal(&chain)
-	store.Set(types.ChainKey(chain.Id), appendedValue)
+	store.Set(types.ChainKey(chain.LaunchID), appendedValue)
 
-	// Update chain count
-	k.SetChainCount(ctx, count+1)
+	// Update chain counter
+	k.SetChainCounter(ctx, counter+1)
 
-	return count
+	return counter
 }
 
 // SetChain set a specific chain in the store from its index
 func (k Keeper) SetChain(ctx sdk.Context, chain types.Chain) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
 	b := k.cdc.MustMarshal(&chain)
-	store.Set(types.ChainKey(chain.Id), b)
+	store.Set(types.ChainKey(chain.LaunchID), b)
 }
 
 // GetChain returns a chain from its index
-func (k Keeper) GetChain(ctx sdk.Context, id uint64) (val types.Chain, found bool) {
+func (k Keeper) GetChain(ctx sdk.Context, launchID uint64) (val types.Chain, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
 
-	b := store.Get(types.ChainKey(id))
+	b := store.Get(types.ChainKey(launchID))
 	if b == nil {
 		return val, false
 	}
@@ -137,9 +136,9 @@ func (k Keeper) GetChain(ctx sdk.Context, id uint64) (val types.Chain, found boo
 }
 
 // RemoveChain removes a chain from the store
-func (k Keeper) RemoveChain(ctx sdk.Context, id uint64) {
+func (k Keeper) RemoveChain(ctx sdk.Context, launchID uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
-	store.Delete(types.ChainKey(id))
+	store.Delete(types.ChainKey(launchID))
 }
 
 // GetAllChain returns all chain

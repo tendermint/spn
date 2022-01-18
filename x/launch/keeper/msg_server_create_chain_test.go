@@ -25,7 +25,7 @@ func TestMsgCreateChain(t *testing.T) {
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
 	resCoord, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
-	coordID := resCoord.CoordinatorId
+	coordID := resCoord.CoordinatorID
 
 	// Create a campaign
 	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
@@ -82,13 +82,13 @@ func TestMsgCreateChain(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			require.EqualValues(t, tc.wantedChainID, got.Id)
+			require.EqualValues(t, tc.wantedChainID, got.LaunchID)
 
 			// The chain must exist in the store
-			chain, found := k.GetChain(sdkCtx, got.Id)
+			chain, found := k.GetChain(sdkCtx, got.LaunchID)
 			require.True(t, found)
 			require.EqualValues(t, coordID, chain.CoordinatorID)
-			require.EqualValues(t, got.Id, chain.Id)
+			require.EqualValues(t, got.LaunchID, chain.LaunchID)
 			require.EqualValues(t, tc.msg.GenesisChainID, chain.GenesisChainID)
 			require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
 			require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)
@@ -113,7 +113,7 @@ func TestMsgCreateChain(t *testing.T) {
 				require.Equal(t, tc.msg.CampaignID, chain.CampaignID)
 				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
-				require.Contains(t, campaignChains.Chains, chain.Id)
+				require.Contains(t, campaignChains.Chains, chain.LaunchID)
 			}
 		})
 	}

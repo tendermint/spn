@@ -15,7 +15,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetChain(ctx, elem)
 	}
 
-	k.SetChainCount(ctx, genState.ChainCount)
+	k.SetChainCounter(ctx, genState.ChainCounter)
 
 	// Set all the genesisAccount
 	for _, elem := range genState.GenesisAccountList {
@@ -37,9 +37,9 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetRequest(ctx, elem)
 	}
 
-	// Set all request count
-	for _, elem := range genState.RequestCountList {
-		k.SetRequestCount(ctx, elem.ChainID, elem.Count)
+	// Set all request counter
+	for _, elem := range genState.RequestCounterList {
+		k.SetRequestCounter(ctx, elem.LaunchID, elem.Counter)
 	}
 
 	k.SetParams(ctx, genState.Params)
@@ -50,7 +50,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
 	genesis.ChainList = k.GetAllChain(ctx)
-	genesis.ChainCount = k.GetChainCount(ctx)
+	genesis.ChainCounter = k.GetChainCounter(ctx)
 	genesis.GenesisAccountList = k.GetAllGenesisAccount(ctx)
 	genesis.VestingAccountList = k.GetAllVestingAccount(ctx)
 	genesis.GenesisValidatorList = k.GetAllGenesisValidator(ctx)
@@ -60,10 +60,10 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	// Get request counts
 	for _, elem := range genesis.ChainList {
 		// Get request count
-		count := k.GetRequestCount(ctx, elem.Id)
-		genesis.RequestCountList = append(genesis.RequestCountList, types.RequestCount{
-			ChainID: elem.Id,
-			Count:   count,
+		counter := k.GetRequestCounter(ctx, elem.LaunchID)
+		genesis.RequestCounterList = append(genesis.RequestCounterList, types.RequestCounter{
+			LaunchID: elem.LaunchID,
+			Counter:  counter,
 		})
 	}
 

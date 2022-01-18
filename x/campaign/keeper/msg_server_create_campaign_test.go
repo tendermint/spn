@@ -25,13 +25,13 @@ func TestMsgCreateCampaign(t *testing.T) {
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	coordMap[coordAddr1] = res.CoordinatorId
+	coordMap[coordAddr1] = res.CoordinatorID
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
-	coordMap[coordAddr2] = res.CoordinatorId
+	coordMap[coordAddr2] = res.CoordinatorID
 
 	for _, tc := range []struct {
 		name       string
@@ -42,40 +42,27 @@ func TestMsgCreateCampaign(t *testing.T) {
 		{
 			name: "create a campaign 1",
 			msg: types.MsgCreateCampaign{
-				CampaignName:  sample.CampaignName(),
-				Coordinator:   coordAddr1,
-				TotalSupply:   sample.Coins(),
-				DynamicShares: false,
+				CampaignName: sample.CampaignName(),
+				Coordinator:  coordAddr1,
+				TotalSupply:  sample.Coins(),
 			},
 			expectedID: uint64(0),
 		},
 		{
-			name: "create a campaign 2 with dynamic shares",
+			name: "create a campaign from a different coordinator",
 			msg: types.MsgCreateCampaign{
-				CampaignName:  sample.CampaignName(),
-				Coordinator:   coordAddr1,
-				TotalSupply:   sample.Coins(),
-				DynamicShares: true,
+				CampaignName: sample.CampaignName(),
+				Coordinator:  coordAddr2,
+				TotalSupply:  sample.Coins(),
 			},
 			expectedID: uint64(1),
 		},
 		{
-			name: "create a campaign from a different coordinator",
-			msg: types.MsgCreateCampaign{
-				CampaignName:  sample.CampaignName(),
-				Coordinator:   coordAddr2,
-				TotalSupply:   sample.Coins(),
-				DynamicShares: false,
-			},
-			expectedID: uint64(2),
-		},
-		{
 			name: "create a campaign from a non existing coordinator",
 			msg: types.MsgCreateCampaign{
-				CampaignName:  sample.CampaignName(),
-				Coordinator:   sample.Address(),
-				TotalSupply:   sample.Coins(),
-				DynamicShares: false,
+				CampaignName: sample.CampaignName(),
+				Coordinator:  sample.Address(),
+				TotalSupply:  sample.Coins(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -90,14 +77,16 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.Equal(t, tc.expectedID, got.CampaignID)
 			campaign, found := campaignKeeper.GetCampaign(sdkCtx, got.CampaignID)
 			require.True(t, found)
-			require.EqualValues(t, got.CampaignID, campaign.Id)
+			require.EqualValues(t, got.CampaignID, campaign.CampaignID)
 			require.EqualValues(t, tc.msg.CampaignName, campaign.CampaignName)
 			require.EqualValues(t, coordMap[tc.msg.Coordinator], campaign.CoordinatorID)
 			require.False(t, campaign.MainnetInitialized)
 			require.True(t, tc.msg.TotalSupply.IsEqual(campaign.TotalSupply))
-			require.EqualValues(t, tc.msg.DynamicShares, campaign.DynamicShares)
 			require.EqualValues(t, types.EmptyShares(), campaign.AllocatedShares)
 			require.EqualValues(t, types.EmptyShares(), campaign.TotalShares)
+
+			// dynamic share is always disabled
+			require.EqualValues(t, false, campaign.DynamicShares)
 
 			// Empty list of campaign chains
 			campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)

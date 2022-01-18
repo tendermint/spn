@@ -46,7 +46,7 @@ func (k Keeper) Coordinator(c context.Context, req *types.QueryGetCoordinatorReq
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	coordinator, found := k.GetCoordinator(ctx, req.Id)
+	coordinator, found := k.GetCoordinator(ctx, req.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.ErrKeyNotFound
 	}

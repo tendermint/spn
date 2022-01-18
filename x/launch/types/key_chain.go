@@ -4,11 +4,11 @@ const (
 	// ChainKeyPrefix is the prefix to retrieve all Chain
 	ChainKeyPrefix = "Chain/value/"
 
-	// ChainCountKey is the prefix to store chain count
-	ChainCountKey = "Chain/count/"
+	// ChainCounterKey is the prefix to store chain counter
+	ChainCounterKey = "Chain/count/"
 )
 
 // ChainKey returns the store key to retrieve a Chain from the index fields
-func ChainKey(chainID uint64) []byte {
-	return append(uintBytes(chainID), byte('/'))
+func ChainKey(launchID uint64) []byte {
+	return append(uintBytes(launchID), byte('/'))
 }

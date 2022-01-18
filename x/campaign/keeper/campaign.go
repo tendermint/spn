@@ -8,10 +8,10 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-// GetCampaignCount get the total number of campaign
-func (k Keeper) GetCampaignCount(ctx sdk.Context) uint64 {
+// GetCampaignCounter get the counter for campaign
+func (k Keeper) GetCampaignCounter(ctx sdk.Context) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
-	byteKey := types.KeyPrefix(types.CampaignCountKey)
+	byteKey := types.KeyPrefix(types.CampaignCounterKey)
 	bz := store.Get(byteKey)
 
 	// Count doesn't exist: no element
@@ -23,38 +23,38 @@ func (k Keeper) GetCampaignCount(ctx sdk.Context) uint64 {
 	return binary.BigEndian.Uint64(bz)
 }
 
-// SetCampaignCount set the total number of campaign
-func (k Keeper) SetCampaignCount(ctx sdk.Context, count uint64) {
+// SetCampaignCounter set the counter for campaign
+func (k Keeper) SetCampaignCounter(ctx sdk.Context, counter uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
-	byteKey := types.KeyPrefix(types.CampaignCountKey)
+	byteKey := types.KeyPrefix(types.CampaignCounterKey)
 	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, count)
+	binary.BigEndian.PutUint64(bz, counter)
 	store.Set(byteKey, bz)
 }
 
 // AppendCampaign appends a campaign in the store with a new id and update the count
 func (k Keeper) AppendCampaign(ctx sdk.Context, campaign types.Campaign) uint64 {
 	// Create the campaign
-	count := k.GetCampaignCount(ctx)
+	counter := k.GetCampaignCounter(ctx)
 
 	// Set the ID of the appended value
-	campaign.Id = count
+	campaign.CampaignID = counter
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
 	appendedValue := k.cdc.MustMarshal(&campaign)
-	store.Set(GetCampaignIDBytes(campaign.Id), appendedValue)
+	store.Set(GetCampaignIDBytes(campaign.CampaignID), appendedValue)
 
 	// Update campaign count
-	k.SetCampaignCount(ctx, count+1)
+	k.SetCampaignCounter(ctx, counter+1)
 
-	return count
+	return counter
 }
 
 // SetCampaign set a specific campaign in the store
 func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
 	b := k.cdc.MustMarshal(&campaign)
-	store.Set(GetCampaignIDBytes(campaign.Id), b)
+	store.Set(GetCampaignIDBytes(campaign.CampaignID), b)
 }
 
 // GetCampaign returns a campaign from its id

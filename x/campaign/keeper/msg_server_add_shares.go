@@ -31,11 +31,11 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 	}
 
 	// check if the account already exists
-	account, found := k.GetMainnetAccount(ctx, campaign.Id, msg.Address)
+	account, found := k.GetMainnetAccount(ctx, campaign.CampaignID, msg.Address)
 	if !found {
 		// if not, create the account
 		account = types.MainnetAccount{
-			CampaignID: campaign.Id,
+			CampaignID: campaign.CampaignID,
 			Address:    msg.Address,
 			Shares:     types.EmptyShares(),
 		}
@@ -48,7 +48,6 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
 		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
 	}
-	ctx.BlockTime().Unix()
 
 	k.SetCampaign(ctx, campaign)
 	k.SetMainnetAccount(ctx, account)

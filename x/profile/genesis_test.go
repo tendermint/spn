@@ -23,9 +23,10 @@ func TestGenesis(t *testing.T) {
 
 	// Compare lists
 	require.ElementsMatch(t, genesisState.ValidatorList, got.ValidatorList)
+	require.ElementsMatch(t, genesisState.ValidatorByConsAddressList, got.ValidatorByConsAddressList)
 	require.ElementsMatch(t, genesisState.CoordinatorList, got.CoordinatorList)
 	require.ElementsMatch(t, genesisState.CoordinatorByAddressList, got.CoordinatorByAddressList)
-	require.Equal(t, genesisState.CoordinatorCount, got.CoordinatorCount)
+	require.Equal(t, genesisState.CoordinatorCounter, got.CoordinatorCounter)
 
 	// this line is used by starport scaffolding # genesis/test/assert
 }

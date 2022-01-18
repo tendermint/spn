@@ -25,13 +25,13 @@ func (m RequestContent) Validate() error {
 }
 
 // NewGenesisAccount returns a RequestContent containing an GenesisAccount
-func NewGenesisAccount(chainID uint64, address string, coins sdk.Coins) RequestContent {
+func NewGenesisAccount(launchID uint64, address string, coins sdk.Coins) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_GenesisAccount{
 			GenesisAccount: &GenesisAccount{
-				ChainID: chainID,
-				Address: address,
-				Coins:   coins,
+				LaunchID: launchID,
+				Address:  address,
+				Coins:    coins,
 			},
 		},
 	}
@@ -51,14 +51,13 @@ func (m GenesisAccount) Validate() error {
 }
 
 // NewVestingAccount returns a RequestContent containing a VestingAccount
-func NewVestingAccount(chainID uint64, address string, startingBalance sdk.Coins, vestingOptions VestingOptions) RequestContent {
+func NewVestingAccount(launchID uint64, address string, vestingOptions VestingOptions) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_VestingAccount{
 			VestingAccount: &VestingAccount{
-				ChainID:         chainID,
-				Address:         address,
-				StartingBalance: startingBalance,
-				VestingOptions:  vestingOptions,
+				LaunchID:       launchID,
+				Address:        address,
+				VestingOptions: vestingOptions,
 			},
 		},
 	}
@@ -71,10 +70,6 @@ func (m VestingAccount) Validate() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 
-	if !m.StartingBalance.IsValid() {
-		return sdkerrors.Wrap(ErrInvalidSelfDelegation, m.StartingBalance.String())
-	}
-
 	if err := m.VestingOptions.Validate(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidVestingOption, err.Error())
 	}
@@ -83,17 +78,17 @@ func (m VestingAccount) Validate() error {
 
 // NewGenesisValidator returns a RequestContent containing a GenesisValidator
 func NewGenesisValidator(
-	chainID uint64,
+	launchID uint64,
 	address string,
 	genTx,
 	consPubKey []byte,
 	selfDelegation sdk.Coin,
-	peer string,
+	peer Peer,
 ) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_GenesisValidator{
 			GenesisValidator: &GenesisValidator{
-				ChainID:        chainID,
+				LaunchID:       launchID,
 				Address:        address,
 				GenTx:          genTx,
 				ConsPubKey:     consPubKey,
@@ -127,8 +122,8 @@ func (m GenesisValidator) Validate() error {
 		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "self delegation is zero")
 	}
 
-	if m.Peer == "" {
-		return sdkerrors.Wrap(ErrInvalidPeer, "empty peer")
+	if err := m.Peer.Validate(); err != nil {
+		return sdkerrors.Wrap(ErrInvalidPeer, err.Error())
 	}
 	return nil
 }

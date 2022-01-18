@@ -36,15 +36,15 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	chainID := res.Id
+	chainID := res.LaunchID
 
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	chainID2 := res.Id
+	chainID2 := res.LaunchID
 
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	alreadyLaunched := res.Id
+	alreadyLaunched := res.LaunchID
 
 	// Set a chain as already launched
 	chain, found := k.GetChain(sdkCtx, alreadyLaunched)
@@ -102,7 +102,7 @@ func TestMsgTriggerLaunch(t *testing.T) {
 			require.NoError(t, err)
 
 			// Check value
-			chain, found := k.GetChain(sdkCtx, tc.msg.ChainID)
+			chain, found := k.GetChain(sdkCtx, tc.msg.LaunchID)
 			require.True(t, found)
 			require.True(t, chain.LaunchTriggered)
 			require.EqualValues(t, testkeeper.ExampleTimestamp.Unix()+int64(tc.msg.RemainingTime), chain.LaunchTimestamp)

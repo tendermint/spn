@@ -9,12 +9,12 @@ const TypeMsgSettleRequest = "settle_request"
 
 var _ sdk.Msg = &MsgSettleRequest{}
 
-func NewMsgSettleRequest(coordinator string, chainID uint64, requestID uint64, approve bool) *MsgSettleRequest {
+func NewMsgSettleRequest(settler string, launchID uint64, requestID uint64, approve bool) *MsgSettleRequest {
 	return &MsgSettleRequest{
-		Coordinator: coordinator,
-		ChainID:     chainID,
-		RequestID:   requestID,
-		Approve:     approve,
+		Signer:    settler,
+		LaunchID:  launchID,
+		RequestID: requestID,
+		Approve:   approve,
 	}
 }
 
@@ -27,11 +27,11 @@ func (msg *MsgSettleRequest) Type() string {
 }
 
 func (msg *MsgSettleRequest) GetSigners() []sdk.AccAddress {
-	coordinator, err := sdk.AccAddressFromBech32(msg.Coordinator)
+	settler, err := sdk.AccAddressFromBech32(msg.Signer)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{coordinator}
+	return []sdk.AccAddress{settler}
 }
 
 func (msg *MsgSettleRequest) GetSignBytes() []byte {
@@ -40,9 +40,9 @@ func (msg *MsgSettleRequest) GetSignBytes() []byte {
 }
 
 func (msg *MsgSettleRequest) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
+	_, err := sdk.AccAddressFromBech32(msg.Signer)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid settler address (%s)", err)
 	}
 
 	return nil

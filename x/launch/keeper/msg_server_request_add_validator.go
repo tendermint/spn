@@ -11,26 +11,26 @@ import (
 func (k msgServer) RequestAddValidator(
 	goCtx context.Context,
 	msg *types.MsgRequestAddValidator,
-) (*types.MsgRequestResponse, error) {
+) (*types.MsgRequestAddValidatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	chain, found := k.GetChain(ctx, msg.ChainID)
+	chain, found := k.GetChain(ctx, msg.LaunchID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
 	if chain.LaunchTriggered {
-		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.ChainID)
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.LaunchID)
 	}
 
 	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
-			"the chain %d coordinator has been deleted", chain.Id)
+			"the chain %d coordinator has been deleted", chain.LaunchID)
 	}
 
 	content := types.NewGenesisValidator(
-		msg.ChainID,
+		msg.LaunchID,
 		msg.ValAddress,
 		msg.GenTx,
 		msg.ConsPubKey,
@@ -38,16 +38,16 @@ func (k msgServer) RequestAddValidator(
 		msg.Peer,
 	)
 	request := types.Request{
-		ChainID:   msg.ChainID,
-		Creator:   msg.ValAddress,
+		LaunchID:  msg.LaunchID,
+		Creator:   msg.Creator,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
 	}
 
 	var requestID uint64
 	approved := false
-	if msg.ValAddress == coordAddress {
-		err := ApplyRequest(ctx, k.Keeper, msg.ChainID, request)
+	if msg.Creator == coordAddress {
+		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err
 		}
@@ -56,7 +56,7 @@ func (k msgServer) RequestAddValidator(
 		requestID = k.AppendRequest(ctx, request)
 	}
 
-	return &types.MsgRequestResponse{
+	return &types.MsgRequestAddValidatorResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
 	}, nil

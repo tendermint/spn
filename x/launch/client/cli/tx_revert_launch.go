@@ -12,7 +12,7 @@ import (
 
 func CmdRevertLaunch() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "revert-launch [chain-id]",
+		Use:   "revert-launch [launch-id]",
 		Short: "Revert the launch of a chain",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -21,12 +21,12 @@ func CmdRevertLaunch() *cobra.Command {
 				return err
 			}
 
-			chainID, err := strconv.ParseUint(args[0], 10, 64)
+			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			msg := types.NewMsgRevertLaunch(clientCtx.GetFromAddress().String(), chainID)
+			msg := types.NewMsgRevertLaunch(clientCtx.GetFromAddress().String(), launchID)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

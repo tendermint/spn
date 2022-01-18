@@ -15,7 +15,9 @@ func Shares() campaign.Shares {
 
 // ShareVestingOptions returns a sample ShareVestingOptions
 func ShareVestingOptions() campaign.ShareVestingOptions {
-	return *campaign.NewShareDelayedVesting(Shares(), time.Now().Unix())
+	// use vesting shares as total shares
+	vestingShares := Shares()
+	return *campaign.NewShareDelayedVesting(vestingShares, vestingShares, time.Now().Unix())
 }
 
 // Voucher returns a sample voucher structure
@@ -31,7 +33,7 @@ func Vouchers(campaignID uint64) sdk.Coins {
 
 // CustomShareVestingOptions returns a sample ShareVestingOptions with shares
 func CustomShareVestingOptions(shares campaign.Shares) campaign.ShareVestingOptions {
-	return *campaign.NewShareDelayedVesting(shares, time.Now().Unix())
+	return *campaign.NewShareDelayedVesting(shares, shares, time.Now().Unix())
 }
 
 // MainnetVestingAccount returns a sample MainnetVestingAccount
@@ -43,13 +45,12 @@ func MainnetVestingAccount(campaignID uint64, address string) campaign.MainnetVe
 func MainnetVestingAccountWithShares(
 	campaignID uint64,
 	address string,
-	startingShares campaign.Shares,
+	shares campaign.Shares,
 ) campaign.MainnetVestingAccount {
 	return campaign.MainnetVestingAccount{
 		CampaignID:     campaignID,
 		Address:        address,
-		StartingShares: startingShares,
-		VestingOptions: CustomShareVestingOptions(startingShares),
+		VestingOptions: CustomShareVestingOptions(shares),
 	}
 }
 
@@ -76,10 +77,9 @@ func MainnetAccount(campaignID uint64, address string) campaign.MainnetAccount {
 // MsgCreateCampaign returns a sample MsgCreateCampaign
 func MsgCreateCampaign(coordAddr string) campaign.MsgCreateCampaign {
 	return campaign.MsgCreateCampaign{
-		Coordinator:   coordAddr,
-		CampaignName:  CampaignName(),
-		TotalSupply:   Coins(),
-		DynamicShares: false,
+		Coordinator:  coordAddr,
+		CampaignName: CampaignName(),
+		TotalSupply:  Coins(),
 	}
 }
 
@@ -92,7 +92,7 @@ func CampaignGenesisState() campaign.GenesisState {
 			campaign1,
 			campaign2,
 		},
-		CampaignCount: 2,
+		CampaignCounter: 2,
 		CampaignChainsList: []campaign.CampaignChains{
 			{
 				CampaignID: 0,
@@ -103,6 +103,10 @@ func CampaignGenesisState() campaign.GenesisState {
 			MainnetVestingAccount(0, Address()),
 			MainnetVestingAccount(0, Address()),
 			MainnetVestingAccount(1, Address()),
+		},
+		MainnetAccountList: []campaign.MainnetAccount{
+			MainnetAccount(0, Address()),
+			MainnetAccount(1, Address()),
 		},
 	}
 }

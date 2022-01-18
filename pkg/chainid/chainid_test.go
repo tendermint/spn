@@ -73,6 +73,7 @@ func TestParseGenesisChainID(t *testing.T) {
 			} else {
 				_, _, err := chainid.ParseGenesisChainID(tc.chainID)
 				require.Error(t, err)
+				require.ErrorIs(t, err, chainid.ErrInvalidChainID)
 			}
 		})
 	}
