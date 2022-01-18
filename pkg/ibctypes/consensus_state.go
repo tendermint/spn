@@ -12,6 +12,16 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// consensusStateFile represents dumped consensus state from
+// q ibc client self-consensus-state
+type consensusStateFile struct {
+	NextValidatorsHash string `yaml:"next_validators_hash"`
+	Timestamp          string `yaml:"timestamp"`
+	Root               struct {
+		Hash string `yaml:"hash"`
+	}
+}
+
 // RootHash returns the Merkle Root hash of the Consensus State
 func (cs ConsensusState) RootHash() string {
 	return cs.Root.Hash
@@ -22,13 +32,7 @@ func (cs ConsensusState) RootHash() string {
 // TODO: Improve method and support other format than YAML if there are other format of dumped file
 func ParseConsensusStateFromFile(filePath string) (ConsensusState, error) {
 	// parse file
-	var csf struct {
-		NextValidatorsHash string `yaml:"next_validators_hash"`
-		Timestamp          string `yaml:"timestamp"`
-		Root               struct {
-			Hash string `yaml:"hash"`
-		}
-	}
+	var csf consensusStateFile
 	f, err := os.ReadFile(filePath)
 	if err != nil {
 		return ConsensusState{}, err
