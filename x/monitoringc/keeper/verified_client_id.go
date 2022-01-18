@@ -42,7 +42,6 @@ func (k Keeper) RemoveVerifiedClientID(
 	launchID uint64,
 	clientID string,
 
-) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
 	store.Delete(types.VerifiedClientIDKey(
 		launchID,
