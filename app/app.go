@@ -111,7 +111,7 @@ import (
 const (
 	AccountAddressPrefix = "spn"
 	Name                 = "spn"
-	DefaultChainID		 = "spn-1"
+	DefaultChainID       = "spn-1"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
