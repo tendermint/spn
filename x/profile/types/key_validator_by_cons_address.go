@@ -1,9 +1,5 @@
 package types
 
-import "encoding/binary"
-
-var _ binary.ByteOrder
-
 const (
 	// ValidatorByConsAddressKeyPrefix is the prefix to retrieve all ValidatorByConsAddress
 	ValidatorByConsAddressKeyPrefix = "ValidatorByConsAddress/value/"
