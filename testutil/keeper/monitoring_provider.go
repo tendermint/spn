@@ -25,7 +25,7 @@ func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Con
 		*ibcKeeper,
 		*capabilityKeeper,
 		paramKeeper,
-		)
+	)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{}, false, log.NewNopLogger())
