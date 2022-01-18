@@ -3,75 +3,34 @@ package keeper
 import (
 	"testing"
 
-	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/store"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
-	typesparams "github.com/cosmos/cosmos-sdk/x/params/types"
-	ibchost "github.com/cosmos/ibc-go/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/modules/core/keeper"
-	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/monitoringp/keeper"
 	"github.com/tendermint/spn/x/monitoringp/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	tmdb "github.com/tendermint/tm-db"
 )
 
-func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
-	logger := log.NewNopLogger()
+func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Context) {
+	initializer := newInitializer()
 
-	storeKey := sdk.NewKVStoreKey(types.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(types.MemStoreKey)
+	paramKeeper := initializer.Param()
+	capabilityKeeper := initializer.Capability()
+	authKeeper := initializer.Auth(paramKeeper)
+	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
+	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
+	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
+	monitoringKeeper := initializer.Monitoringp(
+		*ibcKeeper,
+		*capabilityKeeper,
+		paramKeeper,
+		)
 
-	db := tmdb.NewMemDB()
-	stateStore := store.NewCommitMultiStore(db)
-	stateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, db)
-	stateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
-	require.NoError(t, stateStore.LoadLatestVersion())
-
-	registry := codectypes.NewInterfaceRegistry()
-	appCodec := codec.NewProtoCodec(registry)
-	capabilityKeeper := capabilitykeeper.NewKeeper(appCodec, storeKey, memStoreKey)
-
-	ibcSubSpace := typesparams.NewSubspace(appCodec,
-		types.Amino,
-		storeKey,
-		memStoreKey,
-		"IBCSubSpace",
-	)
-	IBCKeeper := ibckeeper.NewKeeper(
-		appCodec,
-		storeKey,
-		ibcSubSpace,
-		nil,
-		nil,
-		capabilityKeeper.ScopeToModule(ibchost.ModuleName),
-	)
-
-	paramsSubspace := typesparams.NewSubspace(appCodec,
-		types.Amino,
-		storeKey,
-		memStoreKey,
-		types.ModuleName,
-	)
-	k := keeper.NewKeeper(
-		appCodec,
-		storeKey,
-		memStoreKey,
-		paramsSubspace,
-		IBCKeeper.ChannelKeeper,
-		&IBCKeeper.PortKeeper,
-		capabilityKeeper.ScopeToModule(types.ModuleName),
-		IBCKeeper.ClientKeeper,
-	)
-
-	ctx := sdk.NewContext(stateStore, tmproto.Header{}, false, logger)
+	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{}, false, log.NewNopLogger())
 
 	// Initialize params
-	k.SetParams(ctx, types.DefaultParams())
+	monitoringKeeper.SetParams(ctx, types.DefaultParams())
+	setIBCDefaultParams(ctx, ibcKeeper)
 
-	return k, ctx
+	return monitoringKeeper, ibcKeeper, ctx
 }

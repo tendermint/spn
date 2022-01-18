@@ -8,7 +8,6 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/modules/core/02-client/types"
 	committypes "github.com/cosmos/ibc-go/modules/core/23-commitment/types"
 	ibctmtypes "github.com/cosmos/ibc-go/modules/light-clients/07-tendermint/types"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/monitoringp/types"
 	"github.com/tendermint/tendermint/light"
 )
@@ -32,7 +31,7 @@ func (k Keeper) InitializeConsumerClient(ctx sdk.Context) (string, error) {
 	// get consensus state from param
 	tmConsensusState, err := k.ConsumerConsensusState(ctx).ToTendermintConsensusState()
 	if err != nil {
-		return "", spnerrors.Criticalf("consensus state from param is invalid %s", err.Error())
+		return "", sdkerrors.Wrap(types.ErrInvalidConsensusState, err.Error())
 	}
 
 	// create IBC client for consumer
