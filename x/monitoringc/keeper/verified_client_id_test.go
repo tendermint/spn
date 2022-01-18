@@ -12,7 +12,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-
 func createNVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.VerifiedClientID {
 	items := make([]types.VerifiedClientID, n)
 	for i := range items {
