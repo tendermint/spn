@@ -21,7 +21,6 @@ func (k Keeper) GetVerifiedClientID(
 	ctx sdk.Context,
 	launchID uint64,
 	clientID string,
-
 ) (val types.VerifiedClientID, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
 
