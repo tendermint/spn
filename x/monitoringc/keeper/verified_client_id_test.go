@@ -39,6 +39,7 @@ func TestVerifiedClientIDGet(t *testing.T) {
 		)
 	}
 }
+
 func TestVerifiedClientIDRemove(t *testing.T) {
 	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNVerifiedClientID(keeper, ctx, 10)
