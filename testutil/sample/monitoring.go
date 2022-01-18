@@ -25,3 +25,21 @@ func ConsensusState(nb int) ibctypes.ConsensusState {
 		),
 	}[nb]
 }
+
+// ValidatorSet returns a sample ValidatorSet
+// nb allows to select a consensus state with a matching validator set
+// consensus state 0 match with validator set 0
+// nb is 0 if above max value
+func ValidatorSet(nb int) ibctypes.ValidatorSet {
+	if nb >= ConsensusStateNb {
+		nb = 0
+	}
+	return []ibctypes.ValidatorSet{
+		ibctypes.NewValidatorSet(
+			ibctypes.NewValidator("fYaox+q+N3XkGZdcQ5f3MH4/5J4oh6FRoYdW0vxRdIg=", 0, 100),
+		),
+		ibctypes.NewValidatorSet(
+			ibctypes.NewValidator("rQMyKjkzXXUhYsAdII6fSlTkFdf24hiSPGrSCBub5Oc=", 0, 100),
+		),
+	}[nb]
+}

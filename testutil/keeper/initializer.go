@@ -208,6 +208,7 @@ func (i initializer) Monitoringc(
 		&ibcKeeper.PortKeeper,
 		scopedMonitoringKeeper,
 		launchKeeper,
+		ibcKeeper.ClientKeeper,
 	)
 }
 
