@@ -20,8 +20,9 @@ type (
 		memKey     sdk.StoreKey
 		paramstore paramtypes.Subspace
 
-		launchKeeper types.LaunchKeeper
-		clientKeeper types.ClientKeeper
+		launchKeeper     types.LaunchKeeper
+		clientKeeper     types.ClientKeeper
+		connectionKeeper types.ConnectionKeeper
 	}
 )
 
@@ -35,6 +36,7 @@ func NewKeeper(
 	scopedKeeper ibckeeper.ScopedKeeper,
 	launchKeeper types.LaunchKeeper,
 	clientKeeper types.ClientKeeper,
+	connectionKeeper types.ConnectionKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -49,12 +51,13 @@ func NewKeeper(
 			portKeeper,
 			scopedKeeper,
 		),
-		cdc:          cdc,
-		storeKey:     storeKey,
-		memKey:       memKey,
-		paramstore:   ps,
-		launchKeeper: launchKeeper,
-		clientKeeper: clientKeeper,
+		cdc:              cdc,
+		storeKey:         storeKey,
+		memKey:           memKey,
+		paramstore:       ps,
+		launchKeeper:     launchKeeper,
+		clientKeeper:     clientKeeper,
+		connectionKeeper: connectionKeeper,
 	}
 }
 

@@ -207,5 +207,6 @@ func (i initializer) Monitoringc(
 		scopedMonitoringKeeper,
 		launchKeeper,
 		ibcKeeper.ClientKeeper,
+		ibcKeeper.ConnectionKeeper,
 	)
 }
