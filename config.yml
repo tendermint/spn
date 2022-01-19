@@ -10,6 +10,7 @@ accounts:
   - name: joe
     coins: ["100000000uspn"]
   - name: steve
+    mnemonic: "initial aisle blush gift shuffle hat solar dove dwarf soup credit acid update seed mercy thumb swear main verb image dove rose chat inmate"
     coins: ["100000000uspn"]
 validator:
   name: alice
