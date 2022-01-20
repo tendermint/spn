@@ -43,6 +43,11 @@ func (am AppModule) OnChanOpenInit(
 		return err
 	}
 
+	// Check if the client ID is a verified from MsgCreateClient
+	if err := am.keeper.VerifyClientIDFromChannelID(ctx, channelID); err != nil {
+		return sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
+	}
+
 	return nil
 }
 
