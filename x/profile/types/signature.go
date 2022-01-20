@@ -9,10 +9,11 @@ import (
 )
 
 const (
-	// PublicKeySize is the size, in bytes, of public keys as used in this package.
+	// PublicKeySize is the size, in bytes
 	PublicKeySize = 32
-
-	signMessage   = "StarportNetwork-MsgSetValidatorConsAddress"
+	// signMessage is the size message constant
+	signMessage = "StarportNetwork-MsgSetValidatorConsAddress"
+	// signSeparator is the size message separator
 	signSeparator = byte('/')
 )
 
