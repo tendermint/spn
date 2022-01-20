@@ -8,7 +8,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-
 func (k Keeper) getClientIDFromChannel(ctx sdk.Context, channelID string) (string, error) {
 	// retrieve the client ID from the channel
 	channel, ok := k.ChannelKeeper.GetChannel(ctx, types.PortID, channelID)
