@@ -38,7 +38,7 @@ func (k msgServer) SetValidatorConsAddress(
 	acc := k.accountKeeper.GetAccount(ctx, address)
 	if acc != nil {
 		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrapf(types.ErrConsdAddressNotFound, "consensus address not found: %s", msg.ConsAddress)
+			sdkerrors.Wrapf(types.ErrConsdAccNotFound, "consensus address not found: %s", msg.ConsAddress)
 	}
 	if err := types.CheckValidatorSignature(
 		acc.GetPubKey().Bytes(),
