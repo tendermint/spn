@@ -201,8 +201,8 @@ func (i initializer) Monitoringc(
 
 	// check if ibc mocks should be used for connection and channel
 	var (
-		connKeeper monitoringcmoduletypes.ConnectionKeeper = ibcKeeper.ConnectionKeeper
-		channelKeeper monitoringcmoduletypes.ChannelKeeper = ibcKeeper.ChannelKeeper
+		connKeeper    monitoringcmoduletypes.ConnectionKeeper = ibcKeeper.ConnectionKeeper
+		channelKeeper monitoringcmoduletypes.ChannelKeeper    = ibcKeeper.ChannelKeeper
 	)
 	if len(connectionMock) != 0 {
 		connKeeper = NewConnectionMock(connectionMock)

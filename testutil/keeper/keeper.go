@@ -111,7 +111,7 @@ func MonitoringcWithIBCMocks(
 	t testing.TB,
 	connectionMock []Connection,
 	channelMock []Channel,
-	) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
+) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()

@@ -9,9 +9,9 @@ import (
 )
 
 // Connection is an IBC connection end associated to a connection ID
-type Connection struct{
+type Connection struct {
 	ConnID string
-	Conn connectiontypes.ConnectionEnd
+	Conn   connectiontypes.ConnectionEnd
 }
 
 // ConnectionMock represents a mocked IBC connection keeper used for test purposes
@@ -35,9 +35,9 @@ func (c ConnectionMock) GetConnection(_ sdk.Context, connectionID string) (conne
 }
 
 // Channel is an IBC channel end associated to a channel ID
-type Channel struct{
+type Channel struct {
 	ChannelID string
-	Channel channeltypes.Channel
+	Channel   channeltypes.Channel
 }
 
 // ChannelMock represents a mocked IBC channel keeper used for test purposes
