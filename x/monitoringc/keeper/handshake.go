@@ -42,7 +42,11 @@ func (k Keeper) VerifyClientIDFromChannelID(ctx sdk.Context, channelID string) e
 func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID string) error {
 	clientID, err := k.getClientIDFromChannelID(ctx, channelID)
 	if err != nil {
-		return err
+		return spnerrors.Criticalf(
+			"client ID %s should be retrieved during registration, got error: %s",
+			clientID,
+			err.Error(),
+			)
 	}
 
 	// get the launch ID from the client ID
