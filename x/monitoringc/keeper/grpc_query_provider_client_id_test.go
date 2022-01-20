@@ -19,7 +19,7 @@ import (
 var _ = strconv.IntSize
 
 func TestProviderClientIDQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNProviderClientID(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -70,7 +70,7 @@ func TestProviderClientIDQuerySingle(t *testing.T) {
 }
 
 func TestProviderClientIDQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNProviderClientID(keeper, ctx, 5)
 

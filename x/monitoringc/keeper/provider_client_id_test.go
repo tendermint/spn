@@ -26,7 +26,7 @@ func createNProviderClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 }
 
 func TestProviderClientIDGet(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNProviderClientID(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetProviderClientID(ctx,
@@ -40,7 +40,7 @@ func TestProviderClientIDGet(t *testing.T) {
 	}
 }
 func TestProviderClientIDRemove(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNProviderClientID(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveProviderClientID(ctx,
@@ -54,7 +54,7 @@ func TestProviderClientIDRemove(t *testing.T) {
 }
 
 func TestProviderClientIDGetAll(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNProviderClientID(keeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
