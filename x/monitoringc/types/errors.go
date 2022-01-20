@@ -15,4 +15,5 @@ var (
 	ErrInvalidValidatorSet     = sdkerrors.Register(ModuleName, 6, "invalid validator set")
 	ErrInvalidValidatorSetHash = sdkerrors.Register(ModuleName, 7, "invalid validator set hash")
 	ErrClientCreationFailure   = sdkerrors.Register(ModuleName, 8, "failed to create IBC client")
+	ErrInvalidHandshake        = sdkerrors.Register(ModuleName, 9, "invalid handshake")
 )
