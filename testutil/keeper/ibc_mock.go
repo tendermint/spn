@@ -8,14 +8,24 @@ import (
 	"github.com/cosmos/ibc-go/modules/core/exported"
 )
 
+// Connection is an IBC connection end associated to a connection ID
+type Connection struct{
+	ConnID string
+	Conn connectiontypes.ConnectionEnd
+}
+
 // ConnectionMock represents a mocked IBC connection keeper used for test purposes
 type ConnectionMock struct {
 	connections map[string]connectiontypes.ConnectionEnd
 }
 
-// SetConnection sets a connection for mocking purpose
-func (c *ConnectionMock) SetConnection(connectionID string, connection connectiontypes.ConnectionEnd) {
-	c.connections[connectionID] = connection
+// NewConnectionMock initializes a new connection mock
+func NewConnectionMock(conns []Connection) (c ConnectionMock) {
+	c.connections = make(map[string]connectiontypes.ConnectionEnd)
+	for _, conn := range conns {
+		c.connections[conn.ConnID] = conn.Conn
+	}
+	return
 }
 
 // GetConnection implements ConnectionKeeper
@@ -24,14 +34,24 @@ func (c ConnectionMock) GetConnection(_ sdk.Context, connectionID string) (conne
 	return conn, ok
 }
 
+// Channel is an IBC channel end associated to a channel ID
+type Channel struct{
+	ChannelID string
+	Channel channeltypes.Channel
+}
+
 // ChannelMock represents a mocked IBC channel keeper used for test purposes
 type ChannelMock struct {
 	channels map[string]channeltypes.Channel
 }
 
-// SetChannel sets a channel for mocking purpose
-func (c ChannelMock) SetChannel(channelID string, channel channeltypes.Channel) {
-	c.channels[channelID] = channel
+// NewChannelMock initializes a new channel mock
+func NewChannelMock(channels []Channel) (c ChannelMock) {
+	c.channels = make(map[string]channeltypes.Channel)
+	for _, channel := range channels {
+		c.channels[channel.ChannelID] = channel.Channel
+	}
+	return
 }
 
 // GetChannel implements ChannelKeeper

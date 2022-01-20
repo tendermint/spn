@@ -186,6 +186,8 @@ func (i initializer) Monitoringc(
 	capabilityKeeper capabilitykeeper.Keeper,
 	launchKeeper *launchkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
+	connectionMock []Connection,
+	channelMock []Channel,
 ) *monitoringcmodulekeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(monitoringcmoduletypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(monitoringcmoduletypes.MemStoreKey)
@@ -197,14 +199,26 @@ func (i initializer) Monitoringc(
 	subspace, _ := paramKeeper.GetSubspace(monitoringcmoduletypes.ModuleName)
 	scopedMonitoringKeeper := capabilityKeeper.ScopeToModule(monitoringcmoduletypes.ModuleName)
 
+	// check if ibc mocks should be used for connection and channel
+	var (
+		connKeeper monitoringcmoduletypes.ConnectionKeeper = ibcKeeper.ConnectionKeeper
+		channelKeeper monitoringcmoduletypes.ChannelKeeper = ibcKeeper.ChannelKeeper
+	)
+	if len(connectionMock) != 0 {
+		connKeeper = NewConnectionMock(connectionMock)
+	}
+	if len(channelMock) != 0 {
+		channelKeeper = NewChannelMock(channelMock)
+	}
+
 	return monitoringcmodulekeeper.NewKeeper(
 		i.Codec,
 		storeKey,
 		memStoreKey,
 		subspace,
 		ibcKeeper.ClientKeeper,
-		ibcKeeper.ConnectionKeeper,
-		ibcKeeper.ChannelKeeper,
+		connKeeper,
+		channelKeeper,
 		&ibcKeeper.PortKeeper,
 		scopedMonitoringKeeper,
 		launchKeeper,
