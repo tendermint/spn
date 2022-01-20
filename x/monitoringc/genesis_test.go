@@ -14,6 +14,16 @@ func TestGenesis(t *testing.T) {
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
 		PortId: types.PortID,
+		VerifiedClientIDList: []types.VerifiedClientID{
+			{
+				LaunchID: 0,
+				ClientID: "0",
+			},
+			{
+				LaunchID: 1,
+				ClientID: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -27,5 +37,6 @@ func TestGenesis(t *testing.T) {
 
 	require.Equal(t, genesisState.PortId, got.PortId)
 
+	require.ElementsMatch(t, genesisState.VerifiedClientIDList, got.VerifiedClientIDList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

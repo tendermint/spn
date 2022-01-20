@@ -114,6 +114,7 @@ import (
 const (
 	AccountAddressPrefix = "spn"
 	Name                 = "spn"
+	DefaultChainID       = "spn-1"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -436,6 +437,7 @@ func New(
 		&app.IBCKeeper.PortKeeper,
 		scopedMonitoringcKeeper,
 		app.LaunchKeeper,
+		app.IBCKeeper.ClientKeeper,
 	)
 	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
 
