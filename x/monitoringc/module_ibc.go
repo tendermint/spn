@@ -17,11 +17,11 @@ import (
 func (am AppModule) OnChanOpenInit(
 	ctx sdk.Context,
 	order channeltypes.Order,
-	connectionHops []string,
+	_ []string,
 	portID string,
 	channelID string,
 	chanCap *capabilitytypes.Capability,
-	counterparty channeltypes.Counterparty,
+	_ channeltypes.Counterparty,
 	version string,
 ) error {
 	if order != channeltypes.ORDERED {
@@ -53,15 +53,15 @@ func (am AppModule) OnChanOpenInit(
 
 // OnChanOpenTry implements the IBCModule interface
 func (am AppModule) OnChanOpenTry(
-	ctx sdk.Context,
-	order channeltypes.Order,
-	connectionHops []string,
-	portID,
-	channelID string,
-	chanCap *capabilitytypes.Capability,
-	counterparty channeltypes.Counterparty,
-	version,
-	counterpartyVersion string,
+	_ sdk.Context,
+	_ channeltypes.Order,
+	_ []string,
+	_,
+	_ string,
+	_ *capabilitytypes.Capability,
+	_ channeltypes.Counterparty,
+	_,
+	_ string,
 ) error {
 	return sdkerrors.Wrap(types.ErrInvalidHandshake, "IBC handshake must be initiated by the consumer")
 }
@@ -69,30 +69,36 @@ func (am AppModule) OnChanOpenTry(
 // OnChanOpenAck implements the IBCModule interface
 func (am AppModule) OnChanOpenAck(
 	ctx sdk.Context,
-	portID,
+	_,
 	channelID string,
 	counterpartyVersion string,
 ) error {
 	if counterpartyVersion != types.Version {
 		return sdkerrors.Wrapf(types.ErrInvalidVersion, "invalid counterparty version: %s, expected %s", counterpartyVersion, types.Version)
 	}
+
+	// register the official client ID for the provider connection
+	if err := am.keeper.RegisterProviderClientIDFromChannelID(ctx, channelID); err != nil {
+		return sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
+	}
+
 	return nil
 }
 
 // OnChanOpenConfirm implements the IBCModule interface
 func (am AppModule) OnChanOpenConfirm(
-	ctx sdk.Context,
-	portID,
-	channelID string,
+	_ sdk.Context,
+	_,
+	_ string,
 ) error {
 	return sdkerrors.Wrap(types.ErrInvalidHandshake, "IBC handshake must be initiated by the consumer")
 }
 
 // OnChanCloseInit implements the IBCModule interface
 func (am AppModule) OnChanCloseInit(
-	ctx sdk.Context,
-	portID,
-	channelID string,
+	_ sdk.Context,
+	_,
+	_ string,
 ) error {
 	// Disallow user-initiated channel closing for channels
 	return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "user cannot close channel")
@@ -100,9 +106,9 @@ func (am AppModule) OnChanCloseInit(
 
 // OnChanCloseConfirm implements the IBCModule interface
 func (am AppModule) OnChanCloseConfirm(
-	ctx sdk.Context,
-	portID,
-	channelID string,
+	_ sdk.Context,
+	_,
+	_ string,
 ) error {
 	return nil
 }
