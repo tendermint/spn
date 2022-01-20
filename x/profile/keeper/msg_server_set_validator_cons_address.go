@@ -5,10 +5,14 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func (k msgServer) SetValidatorConsAddress(goCtx context.Context, msg *types.MsgSetValidatorConsAddress) (*types.MsgSetValidatorConsAddressResponse, error) {
+func (k msgServer) SetValidatorConsAddress(
+	goCtx context.Context,
+	msg *types.MsgSetValidatorConsAddress,
+) (*types.MsgSetValidatorConsAddressResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// cannot set the consensus key if it's used for another validator
@@ -25,7 +29,23 @@ func (k msgServer) SetValidatorConsAddress(goCtx context.Context, msg *types.Msg
 		currentNonce = consensusNonce.Nonce
 	}
 
-	if !checkValidatorSignature(msg.Signature, msg.ConsAddress, currentNonce) {
+	address, err := sdk.AccAddressFromBech32(msg.Address)
+	if err != nil {
+		return &types.MsgSetValidatorConsAddressResponse{},
+			spnerrors.Criticalf("invalid consensus address %s", address.String())
+	}
+
+	acc := k.accountKeeper.GetAccount(ctx, address)
+	if acc != nil {
+		return &types.MsgSetValidatorConsAddressResponse{},
+			sdkerrors.Wrapf(types.ErrConsdAddressNotFound, "consensus address not found: %s", msg.ConsAddress)
+	}
+	if err := types.CheckValidatorSignature(
+		acc.GetPubKey().Bytes(),
+		msg.Signature,
+		msg.ConsAddress,
+		currentNonce,
+	); err != nil {
 		return &types.MsgSetValidatorConsAddressResponse{},
 			sdkerrors.Wrapf(types.ErrInvalidValidatorSignature, "consensus address: %s / signature: %s", msg.ConsAddress, msg.Signature)
 	}
