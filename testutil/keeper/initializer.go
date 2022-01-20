@@ -202,11 +202,11 @@ func (i initializer) Monitoringc(
 		storeKey,
 		memStoreKey,
 		subspace,
+		ibcKeeper.ClientKeeper,
+		ibcKeeper.ConnectionKeeper,
 		ibcKeeper.ChannelKeeper,
 		&ibcKeeper.PortKeeper,
 		scopedMonitoringKeeper,
 		launchKeeper,
-		ibcKeeper.ClientKeeper,
-		ibcKeeper.ConnectionKeeper,
 	)
 }

@@ -16,6 +16,6 @@ var (
 	ErrInvalidValidatorSetHash      = sdkerrors.Register(ModuleName, 7, "invalid validator set hash")
 	ErrClientCreationFailure        = sdkerrors.Register(ModuleName, 8, "failed to create IBC client")
 	ErrInvalidHandshake             = sdkerrors.Register(ModuleName, 9, "invalid handshake")
-	ErrClientNotVerified            = sdkerrors.Register(ModuleName, 9, "ibc client not verified")
-	ErrConnectionAlreadyEstablished = sdkerrors.Register(ModuleName, 9, "ibc connection already established")
+	ErrClientNotVerified            = sdkerrors.Register(ModuleName, 10, "ibc client not verified")
+	ErrConnectionAlreadyEstablished = sdkerrors.Register(ModuleName, 11, "ibc connection already established")
 )
