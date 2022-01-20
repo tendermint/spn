@@ -42,7 +42,7 @@ func (k msgServer) SetValidatorConsAddress(
 	}
 	if err := types.CheckValidatorSignature(
 		acc.GetPubKey().Bytes(),
-		msg.Signature,
+		[]byte(msg.Signature),
 		msg.ConsAddress,
 		currentNonce,
 	); err != nil {
