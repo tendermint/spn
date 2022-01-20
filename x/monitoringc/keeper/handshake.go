@@ -46,7 +46,7 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 			"client ID %s should be retrieved during registration, got error: %s",
 			clientID,
 			err.Error(),
-			)
+		)
 	}
 
 	// get the launch ID from the client ID
@@ -78,7 +78,7 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 // getClientIDFromChannelID retrieves the client ID associated with the provided channel ID
 func (k Keeper) getClientIDFromChannelID(ctx sdk.Context, channelID string) (string, error) {
 	// retrieve the client ID from the channel
-	channel, ok := k.ChannelKeeper.GetChannel(ctx, types.PortID, channelID)
+	channel, ok := k.channelKeeper.GetChannel(ctx, types.PortID, channelID)
 	if !ok {
 		return "", sdkerrors.Wrapf(
 			channeltypes.ErrChannelNotFound,

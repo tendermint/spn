@@ -11,6 +11,7 @@ accounts:
     coins: ["100000000uspn"]
   - name: steve
     coins: ["100000000uspn"]
+    mnemonic: "initial aisle blush gift shuffle hat solar dove dwarf soup credit acid update seed mercy thumb swear main verb image dove rose chat inmate"
 validator:
   name: alice
   staked: "100000000uspn"

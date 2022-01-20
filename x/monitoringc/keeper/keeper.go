@@ -2,29 +2,28 @@ package keeper
 
 import (
 	"fmt"
-	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
-	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	host "github.com/cosmos/ibc-go/modules/core/24-host"
-
-	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
+	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	host "github.com/cosmos/ibc-go/modules/core/24-host"
 	"github.com/tendermint/spn/x/monitoringc/types"
+	"github.com/tendermint/tendermint/libs/log"
 )
 
 type (
 	Keeper struct {
-		cdc        codec.BinaryCodec
-		portKey []byte
-		storeKey   sdk.StoreKey
-		memKey     sdk.StoreKey
-		paramstore paramtypes.Subspace
+		cdc              codec.BinaryCodec
+		portKey          []byte
+		storeKey         sdk.StoreKey
+		memKey           sdk.StoreKey
+		paramstore       paramtypes.Subspace
 		clientKeeper     types.ClientKeeper
 		connectionKeeper types.ConnectionKeeper
-		channelKeeper types.ChannelKeeper
-		portKeeper types.PortKeeper
+		channelKeeper    types.ChannelKeeper
+		portKeeper       types.PortKeeper
 		scopedKeeper     capabilitykeeper.ScopedKeeper
 		launchKeeper     types.LaunchKeeper
 	}
@@ -49,15 +48,15 @@ func NewKeeper(
 
 	return &Keeper{
 		cdc:              cdc,
-		portKey: types.PortKey,
+		portKey:          types.PortKey,
 		storeKey:         storeKey,
 		memKey:           memKey,
 		paramstore:       ps,
 		clientKeeper:     clientKeeper,
 		connectionKeeper: connectionKeeper,
-		channelKeeper: channelKeeper,
-		portKeeper: portKeeper,
-		scopedKeeper: scopedKeeper,
+		channelKeeper:    channelKeeper,
+		portKeeper:       portKeeper,
+		scopedKeeper:     scopedKeeper,
 		launchKeeper:     launchKeeper,
 	}
 }
@@ -90,7 +89,6 @@ func (k Keeper) SetPort(ctx sdk.Context, portID string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(k.portKey, []byte(portID))
 }
-
 
 // ClaimCapability allows the transfer module that can claim a capability that IBC module
 // passes to it
