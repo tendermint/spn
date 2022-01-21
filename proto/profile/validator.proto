@@ -7,7 +7,8 @@ import "gogoproto/gogo.proto";
 
 message Validator {
   string address = 1;
-  ValidatorDescription description = 2 [(gogoproto.nullable) = false];
+  string consensusAddress = 2;
+  ValidatorDescription description = 3 [(gogoproto.nullable) = false];
 }
 
 message ValidatorDescription {
@@ -16,4 +17,14 @@ message ValidatorDescription {
   string website = 3;
   string securityContact = 4;
   string details = 5;
+}
+
+message ValidatorByConsAddress {
+  string consensusAddress = 1;
+  string validatorAddress = 2;
+}
+
+message ConsensusKeyNonce {
+  string consensusAddress = 1;
+  uint64 nonce = 2;
 }

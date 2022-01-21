@@ -36,3 +36,4 @@ genesis:
     launch:
       params:
         minLaunchTime: "5"
+  chain_id: spn-1
