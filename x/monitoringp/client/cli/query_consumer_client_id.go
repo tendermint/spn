@@ -12,7 +12,7 @@ import (
 func CmdShowConsumerClientID() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-consumer-client-id",
-		Short: "shows consumerClientID",
+		Short: "shows the consumer client ID used for the IBC connection",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
