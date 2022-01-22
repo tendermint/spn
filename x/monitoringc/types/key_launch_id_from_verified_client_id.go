@@ -1,8 +1,5 @@
 package types
 
-import "encoding/binary"
-
-
 const (
 	// LaunchIDFromVerifiedClientIDKeyPrefix is the prefix to retrieve all LaunchIDFromVerifiedClientID
 	LaunchIDFromVerifiedClientIDKeyPrefix = "LaunchIDFromVerifiedClientID/value/"

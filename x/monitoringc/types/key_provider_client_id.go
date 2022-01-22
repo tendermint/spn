@@ -2,7 +2,6 @@ package types
 
 import "encoding/binary"
 
-
 const (
 	// ProviderClientIDKeyPrefix is the prefix to retrieve all ProviderClientID
 	ProviderClientIDKeyPrefix = "ProviderClientID/value/"
