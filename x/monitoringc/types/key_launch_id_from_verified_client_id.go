@@ -9,9 +9,7 @@ const (
 )
 
 // LaunchIDFromVerifiedClientIDKey returns the store key to retrieve a LaunchIDFromVerifiedClientID from the index fields
-func LaunchIDFromVerifiedClientIDKey(
-	clientID string,
-) []byte {
+func LaunchIDFromVerifiedClientIDKey(clientID string) []byte {
 	var key []byte
 
 	clientIDBytes := []byte(clientID)
