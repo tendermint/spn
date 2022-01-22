@@ -10,7 +10,8 @@ import (
 
 func CmdSetValidatorConsAddress() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-validator-cons-address [address] [cons-address] [signature]",
+		Use: "set-validator-cons-address [address] [cons-address] [signature] [validator_key]",
+		// TODO change the description
 		Short: "Broadcast message set-validator-cons-address",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -18,6 +19,10 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 			if err != nil {
 				return err
 			}
+
+			validatorKeyPath := args[3]
+			// TODO extract the key information
+			// PUB key consensus
 
 			msg := types.NewMsgSetValidatorConsAddress(
 				clientCtx.GetFromAddress().String(),

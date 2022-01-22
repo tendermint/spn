@@ -8,6 +8,11 @@ import (
 	"github.com/tendermint/tendermint/crypto/ed25519"
 )
 
+type name interface {
+	Sign()
+	Verify()
+}
+
 const (
 	// PublicKeySize is the size, in bytes
 	PublicKeySize = 32

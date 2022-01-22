@@ -35,8 +35,13 @@ func (k msgServer) SetValidatorConsAddress(
 			spnerrors.Criticalf("invalid consensus address %s", address.String())
 	}
 
+	// TODO
+	// validator private key can be a parameter
+	// if not provided should check chain already init and get the default
+	// use key from validator ~/.mars/config/priv_validator_key.json
+
 	acc := k.accountKeeper.GetAccount(ctx, address)
-	if acc != nil {
+	if acc == nil {
 		return &types.MsgSetValidatorConsAddressResponse{},
 			sdkerrors.Wrapf(types.ErrConsdAccNotFound, "consensus address not found: %s", msg.ConsAddress)
 	}
