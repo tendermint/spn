@@ -37,6 +37,7 @@ func TestLaunchIDFromVerifiedClientIDGet(t *testing.T) {
 		)
 	}
 }
+
 func TestLaunchIDFromVerifiedClientIDRemove(t *testing.T) {
 	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNLaunchIDFromVerifiedClientID(keeper, ctx, 10)
