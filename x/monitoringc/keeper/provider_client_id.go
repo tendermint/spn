@@ -31,11 +31,7 @@ func (k Keeper) GetProviderClientID(ctx sdk.Context, launchID uint64) (val types
 }
 
 // RemoveProviderClientID removes a providerClientID from the store
-func (k Keeper) RemoveProviderClientID(
-	ctx sdk.Context,
-	launchID uint64,
-
-) {
+func (k Keeper) RemoveProviderClientID(ctx sdk.Context, launchID uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProviderClientIDKeyPrefix))
 	store.Delete(types.ProviderClientIDKey(
 		launchID,
