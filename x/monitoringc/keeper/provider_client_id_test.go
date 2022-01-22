@@ -37,6 +37,7 @@ func TestProviderClientIDGet(t *testing.T) {
 		)
 	}
 }
+
 func TestProviderClientIDRemove(t *testing.T) {
 	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNProviderClientID(keeper, ctx, 10)
