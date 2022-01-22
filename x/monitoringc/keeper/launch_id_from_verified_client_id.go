@@ -19,7 +19,6 @@ func (k Keeper) SetLaunchIDFromVerifiedClientID(ctx sdk.Context, launchIDFromVer
 func (k Keeper) GetLaunchIDFromVerifiedClientID(
 	ctx sdk.Context,
 	clientID string,
-
 ) (val types.LaunchIDFromVerifiedClientID, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LaunchIDFromVerifiedClientIDKeyPrefix))
 
