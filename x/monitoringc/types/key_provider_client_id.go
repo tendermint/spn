@@ -9,9 +9,7 @@ const (
 )
 
 // ProviderClientIDKey returns the store key to retrieve a ProviderClientID from the index fields
-func ProviderClientIDKey(
-	launchID uint64,
-) []byte {
+func ProviderClientIDKey(launchID uint64) []byte {
 	var key []byte
 
 	launchIDBytes := make([]byte, 8)
