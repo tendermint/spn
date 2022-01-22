@@ -2,7 +2,6 @@ package types
 
 import "encoding/binary"
 
-var _ binary.ByteOrder
 
 const (
 	// LaunchIDFromVerifiedClientIDKeyPrefix is the prefix to retrieve all LaunchIDFromVerifiedClientID
