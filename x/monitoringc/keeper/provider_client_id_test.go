@@ -12,8 +12,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func createNProviderClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ProviderClientID {
 	items := make([]types.ProviderClientID, n)
