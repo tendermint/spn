@@ -18,8 +18,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func networkWithProviderClientIDObjects(t *testing.T, n int) (*network.Network, []types.ProviderClientID) {
 	t.Helper()
