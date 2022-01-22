@@ -16,11 +16,7 @@ func (k Keeper) SetProviderClientID(ctx sdk.Context, providerClientID types.Prov
 }
 
 // GetProviderClientID returns a providerClientID from its index
-func (k Keeper) GetProviderClientID(
-	ctx sdk.Context,
-	launchID uint64,
-
-) (val types.ProviderClientID, found bool) {
+func (k Keeper) GetProviderClientID(ctx sdk.Context, launchID uint64) (val types.ProviderClientID, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProviderClientIDKeyPrefix))
 
 	b := store.Get(types.ProviderClientIDKey(
