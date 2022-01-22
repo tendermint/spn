@@ -12,8 +12,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func createNLaunchIDFromVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.LaunchIDFromVerifiedClientID {
 	items := make([]types.LaunchIDFromVerifiedClientID, n)
