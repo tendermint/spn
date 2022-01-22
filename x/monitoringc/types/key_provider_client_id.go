@@ -2,7 +2,6 @@ package types
 
 import "encoding/binary"
 
-var _ binary.ByteOrder
 
 const (
 	// ProviderClientIDKeyPrefix is the prefix to retrieve all ProviderClientID
