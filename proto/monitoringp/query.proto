@@ -17,10 +17,10 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/monitoringp/params";
   }
   // Queries a ConsumerClientID by index.
-	rpc ConsumerClientID(QueryGetConsumerClientIDRequest) returns (QueryGetConsumerClientIDResponse) {
-		option (google.api.http).get = "/tendermint/spn/monitoringp/consumer_client_id";
-	}
-// this line is used by starport scaffolding # 2
+  rpc ConsumerClientID(QueryGetConsumerClientIDRequest) returns (QueryGetConsumerClientIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringp/consumer_client_id";
+  }
+  // this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -35,6 +35,6 @@ message QueryParamsResponse {
 message QueryGetConsumerClientIDRequest {}
 
 message QueryGetConsumerClientIDResponse {
-	ConsumerClientID ConsumerClientID = 1 [(gogoproto.nullable) = false];
+  ConsumerClientID ConsumerClientID = 1 [(gogoproto.nullable) = false];
 }
 // this line is used by starport scaffolding # 3
