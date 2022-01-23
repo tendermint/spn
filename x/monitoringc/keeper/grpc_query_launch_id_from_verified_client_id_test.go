@@ -7,14 +7,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/types"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
-
 
 func TestLaunchIDFromVerifiedClientIDQuerySingle(t *testing.T) {
 	keeper, ctx := keepertest.Monitoringc(t)
