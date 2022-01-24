@@ -18,6 +18,7 @@ faucet:
   name: bob
   coins: ["100000uspn"]
 genesis:
+  chain_id: spn-1
   app_state:
     staking:
       params:
@@ -36,4 +37,9 @@ genesis:
     launch:
       params:
         minLaunchTime: "5"
-  chain_id: spn-1
+    fundraising:
+      params:
+        auction_creation_fee:
+          - "amount": "100"
+            "denom": "uspn"
+
