@@ -1,9 +1,9 @@
 syntax = "proto3";
-package tendermint.spn.ibctypes;
+package tendermint.spn.types;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/tendermint/spn/pkg/ibctypes";
+option go_package = "github.com/tendermint/spn/pkg/types";
 
 // MerkelRool represents a Merkel Root in ConsensusState
 message MerkelRool {

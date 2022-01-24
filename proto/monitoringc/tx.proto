@@ -4,7 +4,7 @@ package tendermint.spn.monitoringc;
 // this line is used by starport scaffolding # proto/tx/import
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
-import "types/ibctypes.proto";
+import "types/ibc.proto";
 
 option go_package = "github.com/tendermint/spn/x/monitoringc/types";
 
@@ -17,8 +17,8 @@ service Msg {
 message MsgCreateClient {
   string creator = 1;
   uint64 launchID = 2;
-  tendermint.spn.ibctypes.ConsensusState consensusState = 3 [(gogoproto.nullable) = false];
-  tendermint.spn.ibctypes.ValidatorSet validatorSet = 4 [(gogoproto.nullable) = false];
+  tendermint.spn.types.ConsensusState consensusState = 3 [(gogoproto.nullable) = false];
+  tendermint.spn.types.ValidatorSet validatorSet = 4 [(gogoproto.nullable) = false];
 }
 
 message MsgCreateClientResponse {
