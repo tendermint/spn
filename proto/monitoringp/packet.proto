@@ -6,10 +6,10 @@ package tendermint.spn.monitoringp;
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
 
 message MonitoringpPacketData {
-    oneof packet {
-        NoData noData = 1;
-        // this line is used by starport scaffolding # ibc/packet/proto/field
-    }
+  oneof packet {
+    NoData noData = 1;
+    // this line is used by starport scaffolding # ibc/packet/proto/field
+  }
 }
 
 message NoData {

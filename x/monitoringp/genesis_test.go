@@ -14,10 +14,13 @@ func TestGenesis(t *testing.T) {
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
 		PortId: types.PortID,
+		ConsumerClientID: &types.ConsumerClientID{
+			ClientID: "29",
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
-	k, ctx := keepertest.MonitoringpKeeper(t)
+	k, _, ctx := keepertest.MonitoringpKeeper(t)
 	monitoringp.InitGenesis(ctx, *k, genesisState)
 	got := monitoringp.ExportGenesis(ctx, *k)
 	require.NotNil(t, got)
@@ -26,6 +29,6 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.Equal(t, genesisState.PortId, got.PortId)
-
+	require.Equal(t, genesisState.ConsumerClientID, got.ConsumerClientID)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

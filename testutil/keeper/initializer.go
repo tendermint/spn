@@ -26,6 +26,8 @@ import (
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
 	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
+	monitoringpmodulekeeper "github.com/tendermint/spn/x/monitoringp/keeper"
+	monitoringpmoduletypes "github.com/tendermint/spn/x/monitoringp/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	tmdb "github.com/tendermint/tm-db"
@@ -222,5 +224,32 @@ func (i initializer) Monitoringc(
 		&ibcKeeper.PortKeeper,
 		scopedMonitoringKeeper,
 		launchKeeper,
+	)
+}
+
+func (i initializer) Monitoringp(
+	ibcKeeper ibckeeper.Keeper,
+	capabilityKeeper capabilitykeeper.Keeper,
+	paramKeeper paramskeeper.Keeper,
+) *monitoringpmodulekeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(monitoringpmoduletypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(monitoringpmoduletypes.MemStoreKey)
+
+	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
+	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
+
+	paramKeeper.Subspace(monitoringpmoduletypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(monitoringpmoduletypes.ModuleName)
+	scopedMonitoringKeeper := capabilityKeeper.ScopeToModule(monitoringpmoduletypes.ModuleName)
+
+	return monitoringpmodulekeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		memStoreKey,
+		subspace,
+		ibcKeeper.ChannelKeeper,
+		&ibcKeeper.PortKeeper,
+		scopedMonitoringKeeper,
+		ibcKeeper.ClientKeeper,
 	)
 }

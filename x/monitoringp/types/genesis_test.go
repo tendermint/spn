@@ -3,6 +3,7 @@ package types_test
 import (
 	"testing"
 
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
@@ -22,9 +23,28 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				PortId: types.PortID,
+				ConsumerClientID: &types.ConsumerClientID{
+					ClientID: "29",
+				},
+				Params: types.DefaultParams(),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
+		},
+		{
+			desc: "invalid params",
+			genState: &types.GenesisState{
+				PortId: types.PortID,
+				ConsumerClientID: &types.ConsumerClientID{
+					ClientID: "29",
+				},
+				Params: types.NewParams(
+					"foo",
+					sample.ConsensusState(0),
+				),
+				// this line is used by starport scaffolding # types/genesis/validField
+			},
+			valid: false,
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
