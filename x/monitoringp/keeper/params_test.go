@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/pkg/ibctypes"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/monitoringp/types"
@@ -15,7 +15,7 @@ func TestGetParams(t *testing.T) {
 	params := types.DefaultParams()
 	k.SetParams(ctx, params)
 	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, ibctypes.ConsensusState{}, k.ConsumerConsensusState(ctx))
+	require.EqualValues(t, spntypes.ConsensusState{}, k.ConsumerConsensusState(ctx))
 	require.EqualValues(t, types.DefautConsumerChainID, k.ConsumerChainID(ctx))
 
 	chainID := sample.GenesisChainID()

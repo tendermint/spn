@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/pkg/ibctypes"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 )
 
@@ -29,7 +29,7 @@ func TestParamsValidate(t *testing.T) {
 			name: "invalid consumer consensus state",
 			params: Params{
 				ConsumerChainID: sample.GenesisChainID(),
-				ConsumerConsensusState: ibctypes.NewConsensusState(
+				ConsumerConsensusState: spntypes.NewConsensusState(
 					"foo",
 					"DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
 					"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
