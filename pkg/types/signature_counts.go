@@ -3,6 +3,7 @@ package types
 
 import (
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -29,7 +30,6 @@ func (m *SignatureCounts) AddSignature(consAddress string, validatorSetSize int6
 		ConsAddress:        consAddress,
 		RelativeSignatures: relSignature,
 	})
-	return
 }
 
 // Validate checks if the signature counts object is valid
