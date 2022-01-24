@@ -6,6 +6,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+	ibcclienttypes "github.com/cosmos/ibc-go/modules/core/02-client/types"
+	ibcconnectiontypes "github.com/cosmos/ibc-go/modules/core/03-connection/types"
+	ibckeeper "github.com/cosmos/ibc-go/modules/core/keeper"
 	"github.com/stretchr/testify/require"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
@@ -55,6 +58,7 @@ func AllKeepers(t testing.TB) (
 
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
+	setIBCDefaultParams(ctx, ibcKeeper)
 
 	return campaignKeeper, launchKeeper, profileKeeper, monitoringConsumerKeeper, bankKeeper, ctx
 }
@@ -99,4 +103,11 @@ func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
 func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
 	_, _, _, monitoringcKeeper, _, ctx := AllKeepers(t) // nolint
 	return monitoringcKeeper, ctx
+}
+
+// setIBCDefaultParams set default params for IBC client and connection keepers
+func setIBCDefaultParams(ctx sdk.Context, ibcKeeper *ibckeeper.Keeper) {
+	ibcKeeper.ClientKeeper.SetParams(ctx, ibcclienttypes.DefaultParams())
+	ibcKeeper.ConnectionKeeper.SetParams(ctx, ibcconnectiontypes.DefaultParams())
+	ibcKeeper.ClientKeeper.SetNextClientSequence(ctx, 0)
 }
