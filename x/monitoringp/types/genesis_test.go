@@ -3,8 +3,8 @@ package types_test
 import (
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
@@ -27,6 +27,9 @@ func TestGenesisState_Validate(t *testing.T) {
 					ClientID: "29",
 				},
 				Params: types.DefaultParams(),
+				ConnectionChannelID: &types.ConnectionChannelID{
+					ChannelID: "67",
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
