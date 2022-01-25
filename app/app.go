@@ -435,11 +435,12 @@ func New(
 		keys[monitoringcmoduletypes.StoreKey],
 		keys[monitoringcmoduletypes.MemStoreKey],
 		app.GetSubspace(monitoringcmoduletypes.ModuleName),
+		app.IBCKeeper.ClientKeeper,
+		app.IBCKeeper.ConnectionKeeper,
 		app.IBCKeeper.ChannelKeeper,
 		&app.IBCKeeper.PortKeeper,
 		scopedMonitoringcKeeper,
 		app.LaunchKeeper,
-		app.IBCKeeper.ClientKeeper,
 	)
 	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
 

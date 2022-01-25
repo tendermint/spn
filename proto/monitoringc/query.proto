@@ -5,6 +5,8 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "monitoringc/params.proto";
+import "monitoringc/provider_client_id.proto";
+import "monitoringc/launch_id_from_verified_client_id.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/monitoringc/types";
@@ -15,9 +17,30 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringc/params";
   }
+
   // Queries a list of VerifiedClientIds items.
   rpc VerifiedClientIds(QueryVerifiedClientIdsRequest) returns (QueryVerifiedClientIdsResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringc/verified_client_ids/{launchID}";
+  }
+
+  // Queries a ProviderClientID by index.
+  rpc ProviderClientID(QueryGetProviderClientIDRequest) returns (QueryGetProviderClientIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/provider_client_id/{launchID}";
+  }
+
+  // Queries a list of ProviderClientID items.
+  rpc ProviderClientIDAll(QueryAllProviderClientIDRequest) returns (QueryAllProviderClientIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/provider_client_id";
+  }
+
+  // Queries a LaunchIDFromVerifiedClientID by index.
+  rpc LaunchIDFromVerifiedClientID(QueryGetLaunchIDFromVerifiedClientIDRequest) returns (QueryGetLaunchIDFromVerifiedClientIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_verified_client_id/{clientID}";
+  }
+
+  // Queries a list of LaunchIDFromVerifiedClientID items.
+  rpc LaunchIDFromVerifiedClientIDAll(QueryAllLaunchIDFromVerifiedClientIDRequest) returns (QueryAllLaunchIDFromVerifiedClientIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_verified_client_id";
   }
 
   // this line is used by starport scaffolding # 2
@@ -39,6 +62,42 @@ message QueryVerifiedClientIdsRequest {
 
 message QueryVerifiedClientIdsResponse {
   repeated string clientIds = 1;
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetProviderClientIDRequest {
+  uint64 launchID = 1;
+
+}
+
+message QueryGetProviderClientIDResponse {
+  ProviderClientID providerClientID = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllProviderClientIDRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllProviderClientIDResponse {
+  repeated ProviderClientID providerClientID = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetLaunchIDFromVerifiedClientIDRequest {
+  string clientID = 1;
+
+}
+
+message QueryGetLaunchIDFromVerifiedClientIDResponse {
+  LaunchIDFromVerifiedClientID launchIDFromVerifiedClientID = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllLaunchIDFromVerifiedClientIDRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllLaunchIDFromVerifiedClientIDResponse {
+  repeated LaunchIDFromVerifiedClientID launchIDFromVerifiedClientID = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

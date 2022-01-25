@@ -12,6 +12,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
 
+// MonitoringpKeeper returns a keeper of the monitoring provider module for testing purpose
 func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Context) {
 	initializer := newInitializer()
 
