@@ -1,6 +1,8 @@
 package keeper_test
 
 import (
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	connectiontypes "github.com/cosmos/ibc-go/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/modules/core/04-channel/types"
@@ -9,7 +11,6 @@ import (
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	monitoringpmodulekeeper "github.com/tendermint/spn/x/monitoringp/keeper"
 	"github.com/tendermint/spn/x/monitoringp/types"
-	"testing"
 )
 
 // monitoringpKeeperWithFooClient returns a test monitoring keeper containing necessary IBC mocks for a client with ID foo

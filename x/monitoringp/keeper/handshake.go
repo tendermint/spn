@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	connectiontypes "github.com/cosmos/ibc-go/modules/core/03-connection/types"

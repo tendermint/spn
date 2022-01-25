@@ -2,13 +2,13 @@ package keeper
 
 import (
 	"fmt"
-	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
-	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	host "github.com/cosmos/ibc-go/modules/core/24-host"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
+	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	host "github.com/cosmos/ibc-go/modules/core/24-host"
 	"github.com/tendermint/spn/x/monitoringp/types"
 	"github.com/tendermint/tendermint/libs/log"
 )
