@@ -13,4 +13,5 @@ var (
 	ErrInvalidClientState    = sdkerrors.Register(ModuleName, 4, "invalid client state")
 	ErrInvalidConsensusState = sdkerrors.Register(ModuleName, 5, "invalid consensus state")
 	ErrClientCreationFailure = sdkerrors.Register(ModuleName, 6, "failed to create an IBC client")
+	ErrInvalidHandshake      = sdkerrors.Register(ModuleName, 7, "invalid handshake")
 )
