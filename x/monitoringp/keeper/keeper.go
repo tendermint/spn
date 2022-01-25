@@ -15,13 +15,13 @@ import (
 
 type (
 	Keeper struct {
-		cdc          codec.BinaryCodec
+		cdc              codec.BinaryCodec
 		portKey          []byte
-		storeKey     sdk.StoreKey
-		memKey       sdk.StoreKey
-		paramstore   paramtypes.Subspace
+		storeKey         sdk.StoreKey
+		memKey           sdk.StoreKey
+		paramstore       paramtypes.Subspace
 		scopedKeeper     capabilitykeeper.ScopedKeeper
-		clientKeeper types.ClientKeeper
+		clientKeeper     types.ClientKeeper
 		portKeeper       types.PortKeeper
 		connectionKeeper types.ConnectionKeeper
 		channelKeeper    types.ChannelKeeper
@@ -45,13 +45,13 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:          cdc,
+		cdc:              cdc,
 		portKey:          types.PortKey,
-		storeKey:     storeKey,
-		memKey:       memKey,
-		paramstore:   ps,
+		storeKey:         storeKey,
+		memKey:           memKey,
+		paramstore:       ps,
 		scopedKeeper:     scopedKeeper,
-		clientKeeper: clientKeeper,
+		clientKeeper:     clientKeeper,
 		portKeeper:       portKeeper,
 		connectionKeeper: connectionKeeper,
 		channelKeeper:    channelKeeper,
