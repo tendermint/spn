@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tendermint/spn/pkg/ibctypes"
+	"github.com/tendermint/spn/pkg/types"
 )
 
 const TypeMsgCreateClient = "create_client"
@@ -13,8 +13,8 @@ var _ sdk.Msg = &MsgCreateClient{}
 func NewMsgCreateClient(
 	creator string,
 	launchID uint64,
-	consensusState ibctypes.ConsensusState,
-	validatorSet ibctypes.ValidatorSet,
+	consensusState types.ConsensusState,
+	validatorSet types.ValidatorSet,
 ) *MsgCreateClient {
 	return &MsgCreateClient{
 		Creator:        creator,
@@ -70,7 +70,7 @@ func (msg *MsgCreateClient) ValidateBasic() error {
 	}
 
 	// check validator set hash matches consensus state
-	if !ibctypes.CheckValidatorSetHash(tmValidatorSet, tmConsensusState) {
+	if !types.CheckValidatorSetHash(tmValidatorSet, tmConsensusState) {
 		return sdkerrors.Wrapf(ErrInvalidValidatorSetHash, "validator set hash doesn't match the consensus state")
 	}
 
