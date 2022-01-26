@@ -5,7 +5,6 @@ option go_package = "github.com/tendermint/spn/x/monitoringc/types";
 
 message LaunchIDFromChannelID {
   string channelID = 1; 
-  uint64 launchID = 2; 
-  
+  uint64 launchID = 2;
 }
 
