@@ -68,6 +68,11 @@ func (am AppModule) OnChanOpenTry(
 		}
 	}
 
+	// Check if the right consumer client ID is used
+	if err := am.keeper.VerifyClientIDFromChannelID(ctx, channelID); err != nil {
+		return sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
+	}
+
 	return nil
 }
 
@@ -88,6 +93,11 @@ func (am AppModule) OnChanOpenConfirm(
 	portID,
 	channelID string,
 ) error {
+	// register channel ID as the connection for monitoring
+	if err := am.keeper.RegisterConnectionChannelID(ctx, channelID); err != nil {
+		return sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
+	}
+
 	return nil
 }
 
