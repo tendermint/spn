@@ -45,16 +45,16 @@ service Query {
   }
 
   // Queries a LaunchIDFromChannelID by index.
-	rpc LaunchIDFromChannelID(QueryGetLaunchIDFromChannelIDRequest) returns (QueryGetLaunchIDFromChannelIDResponse) {
-		option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id/{channelID}";
-	}
+  rpc LaunchIDFromChannelID(QueryGetLaunchIDFromChannelIDRequest) returns (QueryGetLaunchIDFromChannelIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id/{channelID}";
+  }
 
-	// Queries a list of LaunchIDFromChannelID items.
-	rpc LaunchIDFromChannelIDAll(QueryAllLaunchIDFromChannelIDRequest) returns (QueryAllLaunchIDFromChannelIDResponse) {
-		option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id";
-	}
+  // Queries a list of LaunchIDFromChannelID items.
+  rpc LaunchIDFromChannelIDAll(QueryAllLaunchIDFromChannelIDRequest) returns (QueryAllLaunchIDFromChannelIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id";
+  }
 
-// this line is used by starport scaffolding # 2
+  // this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -78,7 +78,6 @@ message QueryVerifiedClientIdsResponse {
 
 message QueryGetProviderClientIDRequest {
   uint64 launchID = 1;
-
 }
 
 message QueryGetProviderClientIDResponse {
@@ -113,21 +112,20 @@ message QueryAllLaunchIDFromVerifiedClientIDResponse {
 }
 
 message QueryGetLaunchIDFromChannelIDRequest {
-	  string channelID = 1;
-
+  string channelID = 1;
 }
 
 message QueryGetLaunchIDFromChannelIDResponse {
-	LaunchIDFromChannelID launchIDFromChannelID = 1 [(gogoproto.nullable) = false];
+  LaunchIDFromChannelID launchIDFromChannelID = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllLaunchIDFromChannelIDRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
 message QueryAllLaunchIDFromChannelIDResponse {
-	repeated LaunchIDFromChannelID launchIDFromChannelID = 1 [(gogoproto.nullable) = false];
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated LaunchIDFromChannelID launchIDFromChannelID = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3
