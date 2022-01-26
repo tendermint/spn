@@ -2,7 +2,7 @@ syntax = "proto3";
 package tendermint.spn.monitoringp;
 
 import "gogoproto/gogo.proto";
-import "types/ibctypes.proto";
+import "types/ibc.proto";
 
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
 
@@ -11,5 +11,5 @@ message Params {
   option (gogoproto.goproto_stringer) = false;
 
   string consumerChainID = 1;
-  tendermint.spn.ibctypes.ConsensusState consumerConsensusState = 2 [(gogoproto.nullable) = false];
+  tendermint.spn.types.ConsensusState consumerConsensusState = 2 [(gogoproto.nullable) = false];
 }

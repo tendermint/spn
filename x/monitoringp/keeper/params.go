@@ -2,12 +2,12 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/pkg/ibctypes"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
 // ConsumerConsensusState returns the consumer consensus state param
-func (k Keeper) ConsumerConsensusState(ctx sdk.Context) (res ibctypes.ConsensusState) {
+func (k Keeper) ConsumerConsensusState(ctx sdk.Context) (res spntypes.ConsensusState) {
 	k.paramstore.Get(ctx, types.KeyConsumerConsensusState, &res)
 	return
 }

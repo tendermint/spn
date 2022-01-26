@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/spn/pkg/chainid"
-	"github.com/tendermint/spn/pkg/ibctypes"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"gopkg.in/yaml.v2"
 )
 
@@ -25,7 +25,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(consumerChainID string, ccs ibctypes.ConsensusState) Params {
+func NewParams(consumerChainID string, ccs spntypes.ConsensusState) Params {
 	return Params{
 		ConsumerConsensusState: ccs,
 		ConsumerChainID:        consumerChainID,
@@ -34,7 +34,7 @@ func NewParams(consumerChainID string, ccs ibctypes.ConsensusState) Params {
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(DefautConsumerChainID, ibctypes.ConsensusState{})
+	return NewParams(DefautConsumerChainID, spntypes.ConsensusState{})
 }
 
 // ParamSetPairs get the params.ParamSet
@@ -69,7 +69,7 @@ func (p Params) String() string {
 
 // validateConsumerConsensusState validates consumer consensus state
 func validateConsumerConsensusState(i interface{}) error {
-	ccs, ok := i.(ibctypes.ConsensusState)
+	ccs, ok := i.(spntypes.ConsensusState)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
