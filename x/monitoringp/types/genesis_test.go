@@ -41,6 +41,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.NewParams(
 					"foo",
 					sample.ConsensusState(0),
+					false,
 				),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
