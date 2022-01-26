@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
 	"testing"
 	"time"
 
@@ -107,6 +108,7 @@ func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
 // Monitoringc returns a keeper of the monitoring consumer module for testing purpose
 func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
 	_, _, _, monitoringConsumerKeeper, _, ctx := AllKeepers(t) // nolint
+	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
 	return monitoringConsumerKeeper, ctx
 }
 
@@ -146,6 +148,7 @@ func MonitoringcWithIBCMocks(
 
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
+	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
 
 	return monitoringConsumerKeeper, ctx
 }
