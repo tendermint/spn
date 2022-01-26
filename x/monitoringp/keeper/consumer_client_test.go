@@ -18,6 +18,7 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 		k.SetParams(ctx, types.NewParams(
 			types.DefautConsumerChainID,
 			sample.ConsensusState(0),
+			false,
 		))
 		clientID, err := k.InitializeConsumerClient(ctx)
 		require.NoError(t, err)

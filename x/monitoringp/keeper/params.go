@@ -18,11 +18,18 @@ func (k Keeper) ConsumerChainID(ctx sdk.Context) (res string) {
 	return
 }
 
+// DebugMode returns if debug mode param is set
+func (k Keeper) DebugMode(ctx sdk.Context) (res bool) {
+	k.paramstore.Get(ctx, types.KeyDebugMode, &res)
+	return
+}
+
 // GetParams get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
 		k.ConsumerChainID(ctx),
 		k.ConsumerConsensusState(ctx),
+		k.DebugMode(ctx),
 	)
 }
 
