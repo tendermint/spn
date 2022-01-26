@@ -63,7 +63,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 
 // Validate validates the set of params
 func (p Params) Validate() error {
-	if err := validateLastBlockHeight(p.ConsumerChainID); err != nil {
+	if err := validateLastBlockHeight(p.LastBlockHeight); err != nil {
 		return err
 	}
 	if err := validateConsumerChainID(p.ConsumerChainID); err != nil {
