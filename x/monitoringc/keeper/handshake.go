@@ -9,8 +9,8 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// debubModeLaunchID is the launch ID automatically used when debug mode is set
-const debubModeLaunchID = 1
+// DebugModeLaunchID is the launch ID automatically used when debug mode is set
+const DebugModeLaunchID = 1
 
 // VerifyClientIDFromChannelID verifies if the client ID associated with the provided channel ID
 // is a verified client ID and if no connection is yet established with the provider chain
@@ -59,7 +59,7 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 	if k.DebugMode(ctx) {
 		k.SetProviderClientID(ctx, types.ProviderClientID{
 			ClientID: clientID,
-			LaunchID: debubModeLaunchID,
+			LaunchID: DebugModeLaunchID,
 		})
 
 		// TODO: add launch ID from channel ID
