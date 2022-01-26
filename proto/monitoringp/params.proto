@@ -12,4 +12,5 @@ message Params {
 
   string consumerChainID = 1;
   tendermint.spn.types.ConsensusState consumerConsensusState = 2 [(gogoproto.nullable) = false];
+  bool debugMode = 3;
 }
