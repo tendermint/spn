@@ -13,7 +13,7 @@ import (
 var (
 	KeyConsumerConsensusState = []byte("ConsumerConsensusState")
 	KeyConsumerChainID        = []byte("ConsumerChainID")
-	KeyDebugMode        = []byte("DebugMode")
+	KeyDebugMode              = []byte("DebugMode")
 
 	DefautConsumerChainID = "spn-1"
 )
@@ -30,7 +30,7 @@ func NewParams(consumerChainID string, ccs spntypes.ConsensusState, debugMode bo
 	return Params{
 		ConsumerConsensusState: ccs,
 		ConsumerChainID:        consumerChainID,
-		DebugMode: debugMode,
+		DebugMode:              debugMode,
 	}
 }
 
@@ -55,7 +55,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(
 			KeyDebugMode,
 			&p.DebugMode,
-			func (i interface{}) error {return nil},
+			func(i interface{}) error { return nil },
 		),
 	}
 }

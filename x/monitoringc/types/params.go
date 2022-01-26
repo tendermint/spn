@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	KeyDebugMode        = []byte("DebugMode")
+	KeyDebugMode = []byte("DebugMode")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -34,7 +34,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(
 			KeyDebugMode,
 			&p.DebugMode,
-			func (i interface{}) error {return nil},
+			func(i interface{}) error { return nil },
 		),
 	}
 }

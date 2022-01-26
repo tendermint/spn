@@ -12,7 +12,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-
 func createNLaunchIDFromVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.LaunchIDFromVerifiedClientID {
 	items := make([]types.LaunchIDFromVerifiedClientID, n)
 	for i := range items {

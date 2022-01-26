@@ -15,7 +15,7 @@ func (k Keeper) DebugMode(ctx sdk.Context) (res bool) {
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
 		k.DebugMode(ctx),
-		)
+	)
 }
 
 // SetParams set the params
