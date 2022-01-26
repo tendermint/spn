@@ -18,7 +18,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-
 func networkWithLaunchIDFromVerifiedClientIDObjects(t *testing.T, n int) (*network.Network, []types.LaunchIDFromVerifiedClientID) {
 	t.Helper()
 	cfg := network.DefaultConfig()

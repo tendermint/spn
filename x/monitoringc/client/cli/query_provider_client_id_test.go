@@ -18,7 +18,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-
 func networkWithProviderClientIDObjects(t *testing.T, n int) (*network.Network, []types.ProviderClientID) {
 	t.Helper()
 	cfg := network.DefaultConfig()

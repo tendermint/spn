@@ -16,6 +16,7 @@ func DefaultGenesis() *GenesisState {
 		VerifiedClientIDList:             []VerifiedClientID{},
 		ProviderClientIDList:             []ProviderClientID{},
 		LaunchIDFromVerifiedClientIDList: []LaunchIDFromVerifiedClientID{},
+		LaunchIDFromChannelIDList:        []LaunchIDFromChannelID{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -56,6 +57,16 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for launchIDFromVerifiedClientID")
 		}
 		launchIDFromVerifiedClientIDIndexMap[index] = struct{}{}
+	}
+	// Check for duplicated index in launchIDFromChannelID
+	launchIDFromChannelIDIndexMap := make(map[string]struct{})
+
+	for _, elem := range gs.LaunchIDFromChannelIDList {
+		index := string(LaunchIDFromChannelIDKey(elem.ChannelID))
+		if _, ok := launchIDFromChannelIDIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for launchIDFromChannelID")
+		}
+		launchIDFromChannelIDIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 

@@ -15,11 +15,8 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func TestLaunchIDFromChannelIDQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNLaunchIDFromChannelID(keeper, ctx, 2)
 	for _, tc := range []struct {
@@ -70,7 +67,7 @@ func TestLaunchIDFromChannelIDQuerySingle(t *testing.T) {
 }
 
 func TestLaunchIDFromChannelIDQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNLaunchIDFromChannelID(keeper, ctx, 5)
 

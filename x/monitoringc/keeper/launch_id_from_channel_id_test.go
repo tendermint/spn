@@ -12,9 +12,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func createNLaunchIDFromChannelID(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.LaunchIDFromChannelID {
 	items := make([]types.LaunchIDFromChannelID, n)
 	for i := range items {
@@ -26,7 +23,7 @@ func createNLaunchIDFromChannelID(keeper *keeper.Keeper, ctx sdk.Context, n int)
 }
 
 func TestLaunchIDFromChannelIDGet(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNLaunchIDFromChannelID(keeper, ctx, 10)
 	for _, item := range items {
 		rst, found := keeper.GetLaunchIDFromChannelID(ctx,
@@ -40,7 +37,7 @@ func TestLaunchIDFromChannelIDGet(t *testing.T) {
 	}
 }
 func TestLaunchIDFromChannelIDRemove(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNLaunchIDFromChannelID(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveLaunchIDFromChannelID(ctx,
@@ -54,7 +51,7 @@ func TestLaunchIDFromChannelIDRemove(t *testing.T) {
 }
 
 func TestLaunchIDFromChannelIDGetAll(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringcKeeper(t)
+	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNLaunchIDFromChannelID(keeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

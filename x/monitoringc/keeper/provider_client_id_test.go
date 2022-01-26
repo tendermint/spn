@@ -11,7 +11,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-
 func createNProviderClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ProviderClientID {
 	items := make([]types.ProviderClientID, n)
 	for i := range items {

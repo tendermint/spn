@@ -21,6 +21,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.LaunchIDFromVerifiedClientIDList {
 		k.SetLaunchIDFromVerifiedClientID(ctx, elem)
 	}
+	// Set all the launchIDFromChannelID
+	for _, elem := range genState.LaunchIDFromChannelIDList {
+		k.SetLaunchIDFromChannelID(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetPort(ctx, genState.PortId)
 	// Only try to bind to port if it is not already bound, since we may already own
@@ -45,6 +49,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.VerifiedClientIDList = k.GetAllVerifiedClientID(ctx)
 	genesis.ProviderClientIDList = k.GetAllProviderClientID(ctx)
 	genesis.LaunchIDFromVerifiedClientIDList = k.GetAllLaunchIDFromVerifiedClientID(ctx)
+	genesis.LaunchIDFromChannelIDList = k.GetAllLaunchIDFromChannelID(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis
