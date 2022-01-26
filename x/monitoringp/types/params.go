@@ -3,18 +3,20 @@ package types
 import (
 	"fmt"
 
-	"github.com/cosmos/cosmos-sdk/types/errors"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/pkg/errors"
 	"github.com/tendermint/spn/pkg/chainid"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"gopkg.in/yaml.v2"
 )
 
 var (
+	KeyLastBlockHeight        = []byte("LastBlockHeight")
 	KeyConsumerConsensusState = []byte("ConsumerConsensusState")
 	KeyConsumerChainID        = []byte("ConsumerChainID")
 
-	DefautConsumerChainID = "spn-1"
+	DefaultLastBlockHeight uint64 = 1
+	DefautConsumerChainID         = "spn-1"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -25,8 +27,9 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(consumerChainID string, ccs spntypes.ConsensusState) Params {
+func NewParams(lastBlockHeight uint64, consumerChainID string, ccs spntypes.ConsensusState) Params {
 	return Params{
+		LastBlockHeight:        lastBlockHeight,
 		ConsumerConsensusState: ccs,
 		ConsumerChainID:        consumerChainID,
 	}
@@ -34,12 +37,17 @@ func NewParams(consumerChainID string, ccs spntypes.ConsensusState) Params {
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(DefautConsumerChainID, spntypes.ConsensusState{})
+	return NewParams(DefaultLastBlockHeight, DefautConsumerChainID, spntypes.ConsensusState{})
 }
 
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
+		paramtypes.NewParamSetPair(
+			KeyLastBlockHeight,
+			&p.LastBlockHeight,
+			validateLastBlockHeight,
+		),
 		paramtypes.NewParamSetPair(
 			KeyConsumerConsensusState,
 			&p.ConsumerConsensusState,
@@ -55,6 +63,9 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 
 // Validate validates the set of params
 func (p Params) Validate() error {
+	if err := validateLastBlockHeight(p.ConsumerChainID); err != nil {
+		return err
+	}
 	if err := validateConsumerChainID(p.ConsumerChainID); err != nil {
 		return err
 	}
@@ -65,6 +76,20 @@ func (p Params) Validate() error {
 func (p Params) String() string {
 	out, _ := yaml.Marshal(p)
 	return string(out)
+}
+
+// validateLastBlockHeight validates last block height
+func validateLastBlockHeight(i interface{}) error {
+	lastBlockHeight, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if lastBlockHeight == 0 {
+		return errors.New("last block height can't be 0")
+	}
+
+	return nil
 }
 
 // validateConsumerConsensusState validates consumer consensus state
