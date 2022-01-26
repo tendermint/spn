@@ -54,6 +54,10 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 		ClientID: clientID,
 		LaunchID: msg.LaunchID,
 	})
+	k.SetLaunchIDFromVerifiedClientID(ctx, types.LaunchIDFromVerifiedClientID{
+		ClientID: clientID,
+		LaunchID: msg.LaunchID,
+	})
 
 	return &types.MsgCreateClientResponse{
 		ClientID: clientID,

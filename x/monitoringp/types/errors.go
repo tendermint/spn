@@ -8,7 +8,9 @@ import (
 
 // x/monitoringp module sentinel errors
 var (
-	ErrSample               = sdkerrors.Register(ModuleName, 1100, "sample error")
-	ErrInvalidPacketTimeout = sdkerrors.Register(ModuleName, 1500, "invalid packet timeout")
-	ErrInvalidVersion       = sdkerrors.Register(ModuleName, 1501, "invalid version")
+	ErrInvalidPacketTimeout  = sdkerrors.Register(ModuleName, 2, "invalid packet timeout")
+	ErrInvalidVersion        = sdkerrors.Register(ModuleName, 3, "invalid version")
+	ErrInvalidClientState    = sdkerrors.Register(ModuleName, 4, "invalid client state")
+	ErrInvalidConsensusState = sdkerrors.Register(ModuleName, 5, "invalid consensus state")
+	ErrClientCreationFailure = sdkerrors.Register(ModuleName, 6, "failed to create an IBC client")
 )

@@ -217,46 +217,457 @@ func (m *QueryVerifiedClientIdsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+type QueryGetProviderClientIDRequest struct {
+	LaunchID uint64 `protobuf:"varint,1,opt,name=launchID,proto3" json:"launchID,omitempty"`
+}
+
+func (m *QueryGetProviderClientIDRequest) Reset()         { *m = QueryGetProviderClientIDRequest{} }
+func (m *QueryGetProviderClientIDRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetProviderClientIDRequest) ProtoMessage()    {}
+func (*QueryGetProviderClientIDRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{4}
+}
+func (m *QueryGetProviderClientIDRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetProviderClientIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetProviderClientIDRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetProviderClientIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetProviderClientIDRequest.Merge(m, src)
+}
+func (m *QueryGetProviderClientIDRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetProviderClientIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetProviderClientIDRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetProviderClientIDRequest proto.InternalMessageInfo
+
+func (m *QueryGetProviderClientIDRequest) GetLaunchID() uint64 {
+	if m != nil {
+		return m.LaunchID
+	}
+	return 0
+}
+
+type QueryGetProviderClientIDResponse struct {
+	ProviderClientID ProviderClientID `protobuf:"bytes,1,opt,name=providerClientID,proto3" json:"providerClientID"`
+}
+
+func (m *QueryGetProviderClientIDResponse) Reset()         { *m = QueryGetProviderClientIDResponse{} }
+func (m *QueryGetProviderClientIDResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetProviderClientIDResponse) ProtoMessage()    {}
+func (*QueryGetProviderClientIDResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{5}
+}
+func (m *QueryGetProviderClientIDResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetProviderClientIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetProviderClientIDResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetProviderClientIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetProviderClientIDResponse.Merge(m, src)
+}
+func (m *QueryGetProviderClientIDResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetProviderClientIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetProviderClientIDResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetProviderClientIDResponse proto.InternalMessageInfo
+
+func (m *QueryGetProviderClientIDResponse) GetProviderClientID() ProviderClientID {
+	if m != nil {
+		return m.ProviderClientID
+	}
+	return ProviderClientID{}
+}
+
+type QueryAllProviderClientIDRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllProviderClientIDRequest) Reset()         { *m = QueryAllProviderClientIDRequest{} }
+func (m *QueryAllProviderClientIDRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllProviderClientIDRequest) ProtoMessage()    {}
+func (*QueryAllProviderClientIDRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{6}
+}
+func (m *QueryAllProviderClientIDRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllProviderClientIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllProviderClientIDRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllProviderClientIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllProviderClientIDRequest.Merge(m, src)
+}
+func (m *QueryAllProviderClientIDRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllProviderClientIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllProviderClientIDRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllProviderClientIDRequest proto.InternalMessageInfo
+
+func (m *QueryAllProviderClientIDRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllProviderClientIDResponse struct {
+	ProviderClientID []ProviderClientID  `protobuf:"bytes,1,rep,name=providerClientID,proto3" json:"providerClientID"`
+	Pagination       *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllProviderClientIDResponse) Reset()         { *m = QueryAllProviderClientIDResponse{} }
+func (m *QueryAllProviderClientIDResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllProviderClientIDResponse) ProtoMessage()    {}
+func (*QueryAllProviderClientIDResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{7}
+}
+func (m *QueryAllProviderClientIDResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllProviderClientIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllProviderClientIDResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllProviderClientIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllProviderClientIDResponse.Merge(m, src)
+}
+func (m *QueryAllProviderClientIDResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllProviderClientIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllProviderClientIDResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllProviderClientIDResponse proto.InternalMessageInfo
+
+func (m *QueryAllProviderClientIDResponse) GetProviderClientID() []ProviderClientID {
+	if m != nil {
+		return m.ProviderClientID
+	}
+	return nil
+}
+
+func (m *QueryAllProviderClientIDResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryGetLaunchIDFromVerifiedClientIDRequest struct {
+	ClientID string `protobuf:"bytes,1,opt,name=clientID,proto3" json:"clientID,omitempty"`
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) Reset() {
+	*m = QueryGetLaunchIDFromVerifiedClientIDRequest{}
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) String() string {
+	return proto.CompactTextString(m)
+}
+func (*QueryGetLaunchIDFromVerifiedClientIDRequest) ProtoMessage() {}
+func (*QueryGetLaunchIDFromVerifiedClientIDRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{8}
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetLaunchIDFromVerifiedClientIDRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetLaunchIDFromVerifiedClientIDRequest.Merge(m, src)
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetLaunchIDFromVerifiedClientIDRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetLaunchIDFromVerifiedClientIDRequest proto.InternalMessageInfo
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) GetClientID() string {
+	if m != nil {
+		return m.ClientID
+	}
+	return ""
+}
+
+type QueryGetLaunchIDFromVerifiedClientIDResponse struct {
+	LaunchIDFromVerifiedClientID LaunchIDFromVerifiedClientID `protobuf:"bytes,1,opt,name=launchIDFromVerifiedClientID,proto3" json:"launchIDFromVerifiedClientID"`
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) Reset() {
+	*m = QueryGetLaunchIDFromVerifiedClientIDResponse{}
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) String() string {
+	return proto.CompactTextString(m)
+}
+func (*QueryGetLaunchIDFromVerifiedClientIDResponse) ProtoMessage() {}
+func (*QueryGetLaunchIDFromVerifiedClientIDResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{9}
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetLaunchIDFromVerifiedClientIDResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetLaunchIDFromVerifiedClientIDResponse.Merge(m, src)
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetLaunchIDFromVerifiedClientIDResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetLaunchIDFromVerifiedClientIDResponse proto.InternalMessageInfo
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) GetLaunchIDFromVerifiedClientID() LaunchIDFromVerifiedClientID {
+	if m != nil {
+		return m.LaunchIDFromVerifiedClientID
+	}
+	return LaunchIDFromVerifiedClientID{}
+}
+
+type QueryAllLaunchIDFromVerifiedClientIDRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) Reset() {
+	*m = QueryAllLaunchIDFromVerifiedClientIDRequest{}
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) String() string {
+	return proto.CompactTextString(m)
+}
+func (*QueryAllLaunchIDFromVerifiedClientIDRequest) ProtoMessage() {}
+func (*QueryAllLaunchIDFromVerifiedClientIDRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{10}
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllLaunchIDFromVerifiedClientIDRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllLaunchIDFromVerifiedClientIDRequest.Merge(m, src)
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllLaunchIDFromVerifiedClientIDRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllLaunchIDFromVerifiedClientIDRequest proto.InternalMessageInfo
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllLaunchIDFromVerifiedClientIDResponse struct {
+	LaunchIDFromVerifiedClientID []LaunchIDFromVerifiedClientID `protobuf:"bytes,1,rep,name=launchIDFromVerifiedClientID,proto3" json:"launchIDFromVerifiedClientID"`
+	Pagination                   *query.PageResponse            `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) Reset() {
+	*m = QueryAllLaunchIDFromVerifiedClientIDResponse{}
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) String() string {
+	return proto.CompactTextString(m)
+}
+func (*QueryAllLaunchIDFromVerifiedClientIDResponse) ProtoMessage() {}
+func (*QueryAllLaunchIDFromVerifiedClientIDResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{11}
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllLaunchIDFromVerifiedClientIDResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllLaunchIDFromVerifiedClientIDResponse.Merge(m, src)
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllLaunchIDFromVerifiedClientIDResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllLaunchIDFromVerifiedClientIDResponse proto.InternalMessageInfo
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) GetLaunchIDFromVerifiedClientID() []LaunchIDFromVerifiedClientID {
+	if m != nil {
+		return m.LaunchIDFromVerifiedClientID
+	}
+	return nil
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "tendermint.spn.monitoringc.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "tendermint.spn.monitoringc.QueryParamsResponse")
 	proto.RegisterType((*QueryVerifiedClientIdsRequest)(nil), "tendermint.spn.monitoringc.QueryVerifiedClientIdsRequest")
 	proto.RegisterType((*QueryVerifiedClientIdsResponse)(nil), "tendermint.spn.monitoringc.QueryVerifiedClientIdsResponse")
+	proto.RegisterType((*QueryGetProviderClientIDRequest)(nil), "tendermint.spn.monitoringc.QueryGetProviderClientIDRequest")
+	proto.RegisterType((*QueryGetProviderClientIDResponse)(nil), "tendermint.spn.monitoringc.QueryGetProviderClientIDResponse")
+	proto.RegisterType((*QueryAllProviderClientIDRequest)(nil), "tendermint.spn.monitoringc.QueryAllProviderClientIDRequest")
+	proto.RegisterType((*QueryAllProviderClientIDResponse)(nil), "tendermint.spn.monitoringc.QueryAllProviderClientIDResponse")
+	proto.RegisterType((*QueryGetLaunchIDFromVerifiedClientIDRequest)(nil), "tendermint.spn.monitoringc.QueryGetLaunchIDFromVerifiedClientIDRequest")
+	proto.RegisterType((*QueryGetLaunchIDFromVerifiedClientIDResponse)(nil), "tendermint.spn.monitoringc.QueryGetLaunchIDFromVerifiedClientIDResponse")
+	proto.RegisterType((*QueryAllLaunchIDFromVerifiedClientIDRequest)(nil), "tendermint.spn.monitoringc.QueryAllLaunchIDFromVerifiedClientIDRequest")
+	proto.RegisterType((*QueryAllLaunchIDFromVerifiedClientIDResponse)(nil), "tendermint.spn.monitoringc.QueryAllLaunchIDFromVerifiedClientIDResponse")
 }
 
 func init() { proto.RegisterFile("monitoringc/query.proto", fileDescriptor_ecb4a38bab58f58d) }
 
 var fileDescriptor_ecb4a38bab58f58d = []byte{
-	// 463 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x93, 0x41, 0x6b, 0x14, 0x31,
-	0x14, 0xc7, 0x37, 0x6b, 0x5d, 0x6c, 0x3c, 0x19, 0x0b, 0x0e, 0x43, 0x1d, 0xcb, 0x20, 0x5a, 0x0a,
-	0x26, 0xb4, 0x9e, 0x2c, 0x1e, 0x64, 0x15, 0x4b, 0x6f, 0x75, 0x0e, 0x0a, 0x5e, 0x4a, 0x66, 0x26,
-	0xa6, 0x81, 0x9d, 0x24, 0x9d, 0x64, 0x8a, 0x45, 0xbc, 0xe8, 0xc1, 0xab, 0x20, 0x7e, 0xa7, 0x9e,
-	0xa4, 0xe0, 0xc5, 0x93, 0xc8, 0xae, 0x1f, 0xc0, 0x8f, 0x20, 0x9b, 0x64, 0xdd, 0xa9, 0xeb, 0x76,
-	0xa5, 0xb7, 0x99, 0x37, 0xef, 0xff, 0xfe, 0xbf, 0xfc, 0x5f, 0x06, 0xde, 0xa8, 0x94, 0x14, 0x56,
-	0xd5, 0x42, 0xf2, 0x82, 0x1c, 0x36, 0xac, 0x3e, 0xc6, 0xba, 0x56, 0x56, 0xa1, 0xd8, 0x32, 0x59,
-	0xb2, 0xba, 0x12, 0xd2, 0x62, 0xa3, 0x25, 0x6e, 0xf5, 0xc5, 0x2b, 0x5c, 0x71, 0xe5, 0xda, 0xc8,
-	0xf8, 0xc9, 0x2b, 0xe2, 0x55, 0xae, 0x14, 0x1f, 0x30, 0x42, 0xb5, 0x20, 0x54, 0x4a, 0x65, 0xa9,
-	0x15, 0x4a, 0x9a, 0xf0, 0x75, 0xa3, 0x50, 0xa6, 0x52, 0x86, 0xe4, 0xd4, 0x30, 0x6f, 0x44, 0x8e,
-	0x36, 0x73, 0x66, 0xe9, 0x26, 0xd1, 0x94, 0x0b, 0xe9, 0x9a, 0x43, 0x6f, 0xd4, 0x86, 0xd2, 0xb4,
-	0xa6, 0x55, 0x98, 0x92, 0xae, 0x40, 0xf4, 0x6c, 0xac, 0xdd, 0x73, 0xc5, 0x8c, 0x1d, 0x36, 0xcc,
-	0xd8, 0xf4, 0x05, 0xbc, 0x7e, 0xa6, 0x6a, 0xb4, 0x92, 0x86, 0xa1, 0x47, 0xb0, 0xe7, 0xc5, 0x11,
-	0x58, 0x03, 0xeb, 0x57, 0xb7, 0x52, 0x3c, 0xff, 0x4c, 0xd8, 0x6b, 0xfb, 0x4b, 0x27, 0xdf, 0x6f,
-	0x75, 0xb2, 0xa0, 0x4b, 0xdf, 0x03, 0x78, 0xd3, 0x4d, 0x7e, 0xce, 0x6a, 0xf1, 0x4a, 0xb0, 0xf2,
-	0xf1, 0x40, 0x30, 0x69, 0x77, 0xcb, 0x89, 0x35, 0x8a, 0xe1, 0x95, 0x01, 0x6d, 0x64, 0x71, 0xb0,
-	0xfb, 0xc4, 0xb9, 0x2c, 0x65, 0x7f, 0xde, 0xd1, 0x53, 0x08, 0xa7, 0x47, 0x8b, 0xba, 0x8e, 0xe1,
-	0x0e, 0xf6, 0x39, 0xe0, 0x71, 0x0e, 0xd8, 0x07, 0x1e, 0x72, 0xc0, 0x7b, 0x94, 0xb3, 0x30, 0x37,
-	0x6b, 0x29, 0xd3, 0x0f, 0x00, 0x26, 0xf3, 0x28, 0xc2, 0x51, 0x57, 0xe1, 0x72, 0x31, 0x29, 0x46,
-	0x60, 0xed, 0xd2, 0xfa, 0x72, 0x36, 0x2d, 0xa0, 0x9d, 0x7f, 0x80, 0xdc, 0x5d, 0x08, 0xe2, 0x47,
-	0xb7, 0x49, 0xb6, 0x7e, 0x75, 0xe1, 0x65, 0x47, 0x82, 0x3e, 0x03, 0xd8, 0xf3, 0x91, 0x21, 0x7c,
-	0x5e, 0xac, 0xb3, 0xdb, 0x8a, 0xc9, 0x7f, 0xf7, 0x7b, 0x82, 0x74, 0xe3, 0xdd, 0xd7, 0x9f, 0x9f,
-	0xba, 0xb7, 0x51, 0x4a, 0xa6, 0x42, 0x62, 0xb4, 0x24, 0xb3, 0xd7, 0x04, 0x7d, 0x01, 0xf0, 0xda,
-	0x4c, 0x4c, 0xe8, 0xc1, 0x42, 0xcb, 0x79, 0x0b, 0x8e, 0xb7, 0x2f, 0x22, 0x0d, 0xe0, 0x7d, 0x07,
-	0xfe, 0x10, 0x6d, 0x9f, 0x07, 0x7e, 0x14, 0xe4, 0xfb, 0x7e, 0x5f, 0xfb, 0xa2, 0x34, 0xe4, 0xcd,
-	0xe4, 0x0e, 0xbd, 0xed, 0xef, 0x9c, 0x0c, 0x13, 0x70, 0x3a, 0x4c, 0xc0, 0x8f, 0x61, 0x02, 0x3e,
-	0x8e, 0x92, 0xce, 0xe9, 0x28, 0xe9, 0x7c, 0x1b, 0x25, 0x9d, 0x97, 0xf7, 0xb8, 0xb0, 0x07, 0x4d,
-	0x8e, 0x0b, 0x55, 0xfd, 0x3d, 0xff, 0xf5, 0x19, 0x07, 0x7b, 0xac, 0x99, 0xc9, 0x7b, 0xee, 0x0f,
-	0xba, 0xff, 0x3b, 0x00, 0x00, 0xff, 0xff, 0x9c, 0x7c, 0x4f, 0x14, 0xf2, 0x03, 0x00, 0x00,
+	// 766 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x4d, 0x4f, 0xd4, 0x40,
+	0x18, 0xde, 0x01, 0x24, 0x32, 0x5e, 0x70, 0x20, 0x71, 0xd3, 0xac, 0x85, 0x34, 0x44, 0x09, 0x62,
+	0x2b, 0x90, 0x18, 0xf9, 0x8a, 0x2e, 0x22, 0x0b, 0x86, 0xc3, 0xba, 0x07, 0x4d, 0x3c, 0xb8, 0xe9,
+	0x76, 0x87, 0x32, 0x49, 0xdb, 0x29, 0x6d, 0x97, 0x48, 0x08, 0x17, 0x38, 0x78, 0x35, 0x1a, 0x7f,
+	0x89, 0x7f, 0x82, 0xc4, 0xc4, 0x90, 0x78, 0xf1, 0x64, 0x0c, 0xf8, 0x2f, 0xf4, 0x60, 0x76, 0x3a,
+	0x85, 0x6e, 0x97, 0xce, 0xd6, 0x65, 0xbd, 0x6d, 0xdb, 0xf7, 0xe3, 0xf9, 0x98, 0x7d, 0xdf, 0x81,
+	0xb7, 0x6c, 0xea, 0x90, 0x80, 0x7a, 0xc4, 0x31, 0x0d, 0x6d, 0xa7, 0x81, 0xbd, 0x3d, 0xd5, 0xf5,
+	0x68, 0x40, 0x91, 0x14, 0x60, 0xa7, 0x8e, 0x3d, 0x9b, 0x38, 0x81, 0xea, 0xbb, 0x8e, 0x1a, 0x8b,
+	0x93, 0x46, 0x4d, 0x6a, 0x52, 0x16, 0xa6, 0x35, 0x7f, 0x85, 0x19, 0x52, 0xc1, 0xa4, 0xd4, 0xb4,
+	0xb0, 0xa6, 0xbb, 0x44, 0xd3, 0x1d, 0x87, 0x06, 0x7a, 0x40, 0xa8, 0xe3, 0xf3, 0xaf, 0x53, 0x06,
+	0xf5, 0x6d, 0xea, 0x6b, 0x35, 0xdd, 0xc7, 0x61, 0x23, 0x6d, 0x77, 0xa6, 0x86, 0x03, 0x7d, 0x46,
+	0x73, 0x75, 0x93, 0x38, 0x2c, 0x98, 0xc7, 0xe6, 0xe3, 0xa0, 0x5c, 0xdd, 0xd3, 0xed, 0xa8, 0xca,
+	0x44, 0xcb, 0x17, 0x8f, 0xee, 0x92, 0x3a, 0xf6, 0xaa, 0x86, 0x45, 0xb0, 0x13, 0x54, 0x49, 0x9d,
+	0x47, 0xcd, 0xc5, 0xa3, 0x2c, 0xbd, 0xe1, 0x18, 0xdb, 0x55, 0x52, 0xaf, 0x6e, 0x79, 0xd4, 0xae,
+	0xee, 0x62, 0x8f, 0x6c, 0x11, 0x5c, 0x4f, 0x26, 0x29, 0xa3, 0x10, 0xbd, 0x68, 0xc2, 0x2a, 0xb3,
+	0x7e, 0x15, 0xbc, 0xd3, 0xc0, 0x7e, 0xa0, 0xbc, 0x82, 0x23, 0x2d, 0x6f, 0x7d, 0x97, 0x3a, 0x3e,
+	0x46, 0x4f, 0xe0, 0x60, 0x88, 0x2b, 0x0f, 0xc6, 0xc1, 0xe4, 0x8d, 0x59, 0x45, 0x4d, 0x97, 0x4b,
+	0x0d, 0x73, 0x57, 0x06, 0x8e, 0x7f, 0x8c, 0xe5, 0x2a, 0x3c, 0x4f, 0x39, 0x02, 0xf0, 0x36, 0xab,
+	0xfc, 0x92, 0x03, 0x7a, 0xca, 0xf0, 0x6c, 0xd4, 0xa3, 0xd6, 0x48, 0x82, 0xd7, 0x43, 0xec, 0x1b,
+	0xab, 0xac, 0xcb, 0x40, 0xe5, 0xfc, 0x19, 0xad, 0x41, 0x78, 0xa1, 0x5a, 0xbe, 0x8f, 0x61, 0xb8,
+	0xa3, 0x86, 0x12, 0xab, 0x4d, 0x89, 0xd5, 0xd0, 0x4b, 0x2e, 0xb1, 0x5a, 0xd6, 0x4d, 0xcc, 0xeb,
+	0x56, 0x62, 0x99, 0xca, 0x3b, 0x00, 0xe5, 0x34, 0x14, 0x9c, 0x6a, 0x01, 0x0e, 0x19, 0xd1, 0xcb,
+	0x3c, 0x18, 0xef, 0x9f, 0x1c, 0xaa, 0x5c, 0xbc, 0x40, 0xa5, 0x4b, 0x80, 0xdc, 0xed, 0x08, 0x24,
+	0x2c, 0xdd, 0x82, 0x64, 0x19, 0x8e, 0x31, 0x20, 0x25, 0x1c, 0x94, 0xb9, 0xaf, 0x1c, 0xcb, 0x6a,
+	0x06, 0x41, 0x94, 0x43, 0x00, 0xc7, 0xd3, 0xf3, 0x39, 0x95, 0x37, 0x70, 0xd8, 0x4d, 0x7c, 0xe3,
+	0xfe, 0x4d, 0x0b, 0xfd, 0x4b, 0xe4, 0x70, 0x27, 0xdb, 0x6a, 0x29, 0x84, 0x73, 0x28, 0x5a, 0x56,
+	0x1a, 0x87, 0x56, 0xe3, 0x40, 0xd7, 0xc6, 0x7d, 0x89, 0xf8, 0x5e, 0xda, 0x4b, 0xc8, 0xb7, 0xbf,
+	0x57, 0x7c, 0x7b, 0x67, 0xfe, 0x06, 0xbc, 0x17, 0x99, 0xb7, 0xc9, 0x1d, 0x5d, 0xf3, 0xa8, 0x9d,
+	0x38, 0x94, 0xf1, 0x83, 0x60, 0xc4, 0xfd, 0x1b, 0xaa, 0x9c, 0x3f, 0x2b, 0x9f, 0x01, 0x9c, 0xce,
+	0x56, 0x8b, 0x8b, 0x74, 0x08, 0x60, 0xc1, 0x12, 0x04, 0x72, 0x93, 0x1e, 0x89, 0x14, 0x13, 0x35,
+	0xe2, 0xea, 0x09, 0x7b, 0x28, 0x0d, 0x2e, 0x40, 0xd1, 0xb2, 0xb2, 0x08, 0xd0, 0xab, 0x53, 0xf4,
+	0x27, 0x12, 0xab, 0x63, 0xdf, 0xec, 0x62, 0xf5, 0xff, 0x6f, 0xb1, 0x7a, 0x76, 0xec, 0x66, 0x3f,
+	0x40, 0x78, 0x8d, 0xd1, 0x47, 0x9f, 0x00, 0x1c, 0x0c, 0xc7, 0x34, 0x52, 0x45, 0xd8, 0xdb, 0x37,
+	0x84, 0xa4, 0x65, 0x8e, 0x0f, 0x11, 0x28, 0x53, 0x87, 0xdf, 0x7e, 0x7d, 0xec, 0x9b, 0x40, 0x8a,
+	0x76, 0x91, 0xa8, 0xf9, 0xae, 0xa3, 0xb5, 0x6f, 0x3d, 0xf4, 0x15, 0xc0, 0x9b, 0x6d, 0xa3, 0x19,
+	0xcd, 0x77, 0x6c, 0x99, 0xb6, 0x54, 0xa4, 0x85, 0x6e, 0x52, 0x39, 0xf0, 0x15, 0x06, 0x7c, 0x09,
+	0x2d, 0x88, 0x80, 0xb7, 0xef, 0x57, 0x5f, 0xdb, 0x8f, 0xec, 0x3c, 0x40, 0x27, 0x00, 0x0e, 0x27,
+	0xe7, 0x0b, 0x5a, 0xec, 0x08, 0x2a, 0x7d, 0x2b, 0x48, 0x4b, 0xdd, 0x25, 0x73, 0x4e, 0x45, 0xc6,
+	0x69, 0x11, 0xcd, 0x0b, 0xcd, 0x68, 0xbb, 0x68, 0xc4, 0x29, 0x1d, 0x03, 0x38, 0x92, 0xac, 0x5f,
+	0xb4, 0xac, 0x0c, 0xac, 0xd2, 0xf7, 0x44, 0x06, 0x56, 0x82, 0xc1, 0xaf, 0x3c, 0x64, 0xac, 0x1e,
+	0x20, 0xf5, 0xdf, 0x58, 0xa1, 0xa3, 0x3e, 0x58, 0xd8, 0x14, 0xfe, 0xf5, 0xb2, 0x88, 0x9d, 0x61,
+	0x82, 0x49, 0xeb, 0x57, 0x2f, 0xc4, 0xb9, 0x96, 0x19, 0xd7, 0xe7, 0x68, 0x5d, 0xc4, 0xb5, 0xe3,
+	0x25, 0x50, 0xdb, 0x8f, 0x36, 0xc8, 0x01, 0xfa, 0x0d, 0xe0, 0x98, 0xa8, 0x75, 0xd3, 0xdc, 0x52,
+	0x16, 0x7f, 0x7a, 0x23, 0x44, 0xc6, 0xd9, 0xac, 0x3c, 0x63, 0x42, 0x3c, 0x46, 0xcb, 0x57, 0x12,
+	0x62, 0xa5, 0x74, 0x7c, 0x2a, 0x83, 0x93, 0x53, 0x19, 0xfc, 0x3c, 0x95, 0xc1, 0xfb, 0x33, 0x39,
+	0x77, 0x72, 0x26, 0xe7, 0xbe, 0x9f, 0xc9, 0xb9, 0xd7, 0xf7, 0x4d, 0x12, 0x6c, 0x37, 0x6a, 0xaa,
+	0x41, 0xed, 0x64, 0x8b, 0xb7, 0x2d, 0x4d, 0x82, 0x3d, 0x17, 0xfb, 0xb5, 0x41, 0x76, 0xaf, 0x9e,
+	0xfb, 0x1b, 0x00, 0x00, 0xff, 0xff, 0xe6, 0x12, 0xdc, 0xe1, 0x63, 0x0c, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -275,6 +686,14 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Queries a list of VerifiedClientIds items.
 	VerifiedClientIds(ctx context.Context, in *QueryVerifiedClientIdsRequest, opts ...grpc.CallOption) (*QueryVerifiedClientIdsResponse, error)
+	// Queries a ProviderClientID by index.
+	ProviderClientID(ctx context.Context, in *QueryGetProviderClientIDRequest, opts ...grpc.CallOption) (*QueryGetProviderClientIDResponse, error)
+	// Queries a list of ProviderClientID items.
+	ProviderClientIDAll(ctx context.Context, in *QueryAllProviderClientIDRequest, opts ...grpc.CallOption) (*QueryAllProviderClientIDResponse, error)
+	// Queries a LaunchIDFromVerifiedClientID by index.
+	LaunchIDFromVerifiedClientID(ctx context.Context, in *QueryGetLaunchIDFromVerifiedClientIDRequest, opts ...grpc.CallOption) (*QueryGetLaunchIDFromVerifiedClientIDResponse, error)
+	// Queries a list of LaunchIDFromVerifiedClientID items.
+	LaunchIDFromVerifiedClientIDAll(ctx context.Context, in *QueryAllLaunchIDFromVerifiedClientIDRequest, opts ...grpc.CallOption) (*QueryAllLaunchIDFromVerifiedClientIDResponse, error)
 }
 
 type queryClient struct {
@@ -303,12 +722,56 @@ func (c *queryClient) VerifiedClientIds(ctx context.Context, in *QueryVerifiedCl
 	return out, nil
 }
 
+func (c *queryClient) ProviderClientID(ctx context.Context, in *QueryGetProviderClientIDRequest, opts ...grpc.CallOption) (*QueryGetProviderClientIDResponse, error) {
+	out := new(QueryGetProviderClientIDResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.monitoringc.Query/ProviderClientID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) ProviderClientIDAll(ctx context.Context, in *QueryAllProviderClientIDRequest, opts ...grpc.CallOption) (*QueryAllProviderClientIDResponse, error) {
+	out := new(QueryAllProviderClientIDResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.monitoringc.Query/ProviderClientIDAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) LaunchIDFromVerifiedClientID(ctx context.Context, in *QueryGetLaunchIDFromVerifiedClientIDRequest, opts ...grpc.CallOption) (*QueryGetLaunchIDFromVerifiedClientIDResponse, error) {
+	out := new(QueryGetLaunchIDFromVerifiedClientIDResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.monitoringc.Query/LaunchIDFromVerifiedClientID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) LaunchIDFromVerifiedClientIDAll(ctx context.Context, in *QueryAllLaunchIDFromVerifiedClientIDRequest, opts ...grpc.CallOption) (*QueryAllLaunchIDFromVerifiedClientIDResponse, error) {
+	out := new(QueryAllLaunchIDFromVerifiedClientIDResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.monitoringc.Query/LaunchIDFromVerifiedClientIDAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	// Queries a list of VerifiedClientIds items.
 	VerifiedClientIds(context.Context, *QueryVerifiedClientIdsRequest) (*QueryVerifiedClientIdsResponse, error)
+	// Queries a ProviderClientID by index.
+	ProviderClientID(context.Context, *QueryGetProviderClientIDRequest) (*QueryGetProviderClientIDResponse, error)
+	// Queries a list of ProviderClientID items.
+	ProviderClientIDAll(context.Context, *QueryAllProviderClientIDRequest) (*QueryAllProviderClientIDResponse, error)
+	// Queries a LaunchIDFromVerifiedClientID by index.
+	LaunchIDFromVerifiedClientID(context.Context, *QueryGetLaunchIDFromVerifiedClientIDRequest) (*QueryGetLaunchIDFromVerifiedClientIDResponse, error)
+	// Queries a list of LaunchIDFromVerifiedClientID items.
+	LaunchIDFromVerifiedClientIDAll(context.Context, *QueryAllLaunchIDFromVerifiedClientIDRequest) (*QueryAllLaunchIDFromVerifiedClientIDResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -320,6 +783,18 @@ func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsReq
 }
 func (*UnimplementedQueryServer) VerifiedClientIds(ctx context.Context, req *QueryVerifiedClientIdsRequest) (*QueryVerifiedClientIdsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifiedClientIds not implemented")
+}
+func (*UnimplementedQueryServer) ProviderClientID(ctx context.Context, req *QueryGetProviderClientIDRequest) (*QueryGetProviderClientIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProviderClientID not implemented")
+}
+func (*UnimplementedQueryServer) ProviderClientIDAll(ctx context.Context, req *QueryAllProviderClientIDRequest) (*QueryAllProviderClientIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ProviderClientIDAll not implemented")
+}
+func (*UnimplementedQueryServer) LaunchIDFromVerifiedClientID(ctx context.Context, req *QueryGetLaunchIDFromVerifiedClientIDRequest) (*QueryGetLaunchIDFromVerifiedClientIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LaunchIDFromVerifiedClientID not implemented")
+}
+func (*UnimplementedQueryServer) LaunchIDFromVerifiedClientIDAll(ctx context.Context, req *QueryAllLaunchIDFromVerifiedClientIDRequest) (*QueryAllLaunchIDFromVerifiedClientIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LaunchIDFromVerifiedClientIDAll not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -362,6 +837,78 @@ func _Query_VerifiedClientIds_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_ProviderClientID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetProviderClientIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ProviderClientID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.monitoringc.Query/ProviderClientID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ProviderClientID(ctx, req.(*QueryGetProviderClientIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_ProviderClientIDAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllProviderClientIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ProviderClientIDAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.monitoringc.Query/ProviderClientIDAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ProviderClientIDAll(ctx, req.(*QueryAllProviderClientIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_LaunchIDFromVerifiedClientID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetLaunchIDFromVerifiedClientIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).LaunchIDFromVerifiedClientID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.monitoringc.Query/LaunchIDFromVerifiedClientID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).LaunchIDFromVerifiedClientID(ctx, req.(*QueryGetLaunchIDFromVerifiedClientIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_LaunchIDFromVerifiedClientIDAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllLaunchIDFromVerifiedClientIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).LaunchIDFromVerifiedClientIDAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.monitoringc.Query/LaunchIDFromVerifiedClientIDAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).LaunchIDFromVerifiedClientIDAll(ctx, req.(*QueryAllLaunchIDFromVerifiedClientIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "tendermint.spn.monitoringc.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -373,6 +920,22 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifiedClientIds",
 			Handler:    _Query_VerifiedClientIds_Handler,
+		},
+		{
+			MethodName: "ProviderClientID",
+			Handler:    _Query_ProviderClientID_Handler,
+		},
+		{
+			MethodName: "ProviderClientIDAll",
+			Handler:    _Query_ProviderClientIDAll_Handler,
+		},
+		{
+			MethodName: "LaunchIDFromVerifiedClientID",
+			Handler:    _Query_LaunchIDFromVerifiedClientID_Handler,
+		},
+		{
+			MethodName: "LaunchIDFromVerifiedClientIDAll",
+			Handler:    _Query_LaunchIDFromVerifiedClientIDAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -519,6 +1082,298 @@ func (m *QueryVerifiedClientIdsResponse) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryGetProviderClientIDRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetProviderClientIDRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetProviderClientIDRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.LaunchID != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.LaunchID))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetProviderClientIDResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetProviderClientIDResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetProviderClientIDResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.ProviderClientID.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllProviderClientIDRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllProviderClientIDRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllProviderClientIDRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllProviderClientIDResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllProviderClientIDResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllProviderClientIDResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ProviderClientID) > 0 {
+		for iNdEx := len(m.ProviderClientID) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.ProviderClientID[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ClientID) > 0 {
+		i -= len(m.ClientID)
+		copy(dAtA[i:], m.ClientID)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ClientID)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.LaunchIDFromVerifiedClientID.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.LaunchIDFromVerifiedClientID) > 0 {
+		for iNdEx := len(m.LaunchIDFromVerifiedClientID) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.LaunchIDFromVerifiedClientID[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -575,6 +1430,117 @@ func (m *QueryVerifiedClientIdsResponse) Size() (n int) {
 	if len(m.ClientIds) > 0 {
 		for _, s := range m.ClientIds {
 			l = len(s)
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetProviderClientIDRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.LaunchID != 0 {
+		n += 1 + sovQuery(uint64(m.LaunchID))
+	}
+	return n
+}
+
+func (m *QueryGetProviderClientIDResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.ProviderClientID.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryAllProviderClientIDRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllProviderClientIDResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.ProviderClientID) > 0 {
+		for _, e := range m.ProviderClientID {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ClientID)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.LaunchIDFromVerifiedClientID.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.LaunchIDFromVerifiedClientID) > 0 {
+		for _, e := range m.LaunchIDFromVerifiedClientID {
+			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
 	}
@@ -889,6 +1855,735 @@ func (m *QueryVerifiedClientIdsResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.ClientIds = append(m.ClientIds, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetProviderClientIDRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetProviderClientIDRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetProviderClientIDRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LaunchID", wireType)
+			}
+			m.LaunchID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LaunchID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetProviderClientIDResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetProviderClientIDResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetProviderClientIDResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProviderClientID", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ProviderClientID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllProviderClientIDRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllProviderClientIDRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllProviderClientIDRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllProviderClientIDResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllProviderClientIDResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllProviderClientIDResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ProviderClientID", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ProviderClientID = append(m.ProviderClientID, ProviderClientID{})
+			if err := m.ProviderClientID[len(m.ProviderClientID)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetLaunchIDFromVerifiedClientIDRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetLaunchIDFromVerifiedClientIDRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClientID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ClientID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetLaunchIDFromVerifiedClientIDResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetLaunchIDFromVerifiedClientIDResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetLaunchIDFromVerifiedClientIDResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LaunchIDFromVerifiedClientID", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.LaunchIDFromVerifiedClientID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllLaunchIDFromVerifiedClientIDRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllLaunchIDFromVerifiedClientIDRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllLaunchIDFromVerifiedClientIDResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllLaunchIDFromVerifiedClientIDResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LaunchIDFromVerifiedClientID", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.LaunchIDFromVerifiedClientID = append(m.LaunchIDFromVerifiedClientID, LaunchIDFromVerifiedClientID{})
+			if err := m.LaunchIDFromVerifiedClientID[len(m.LaunchIDFromVerifiedClientID)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {

@@ -32,6 +32,22 @@ func TestGenesisState_Validate(t *testing.T) {
 						ClientID: "1",
 					},
 				},
+				ProviderClientIDList: []types.ProviderClientID{
+					{
+						LaunchID: 0,
+					},
+					{
+						LaunchID: 1,
+					},
+				},
+				LaunchIDFromVerifiedClientIDList: []types.LaunchIDFromVerifiedClientID{
+					{
+						ClientID: "0",
+					},
+					{
+						ClientID: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -46,6 +62,34 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						LaunchID: 0,
+						ClientID: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated providerClientID",
+			genState: &types.GenesisState{
+				ProviderClientIDList: []types.ProviderClientID{
+					{
+						LaunchID: 0,
+					},
+					{
+						LaunchID: 0,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated launchIDFromVerifiedClientID",
+			genState: &types.GenesisState{
+				LaunchIDFromVerifiedClientIDList: []types.LaunchIDFromVerifiedClientID{
+					{
+						ClientID: "0",
+					},
+					{
 						ClientID: "0",
 					},
 				},

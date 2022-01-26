@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
-	"github.com/tendermint/spn/pkg/ibctypes"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
@@ -26,12 +26,12 @@ func CmdCreateClient() *cobra.Command {
 				return err
 			}
 
-			cs, err := ibctypes.ParseConsensusStateFromFile(args[1])
+			cs, err := spntypes.ParseConsensusStateFromFile(args[1])
 			if err != nil {
 				return err
 			}
 
-			vs, err := ibctypes.ParseValidatorSetFromFile(args[2])
+			vs, err := spntypes.ParseValidatorSetFromFile(args[2])
 			if err != nil {
 				return err
 			}
