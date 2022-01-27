@@ -39,3 +39,7 @@ const (
 	// ConsumerClientIDKey allows to retrieve in the store the client ID used for the IBC communication with the Consumer Chain
 	ConsumerClientIDKey = "ConsumerClientID-value-"
 )
+
+const (
+	ConnectionChannelIDKey = "ConnectionChannelID-value-"
+)

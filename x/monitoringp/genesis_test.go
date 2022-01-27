@@ -17,6 +17,9 @@ func TestGenesis(t *testing.T) {
 		ConsumerClientID: &types.ConsumerClientID{
 			ClientID: "29",
 		},
+		ConnectionChannelID: &types.ConnectionChannelID{
+			ChannelID: "17",
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -30,5 +33,6 @@ func TestGenesis(t *testing.T) {
 
 	require.Equal(t, genesisState.PortId, got.PortId)
 	require.Equal(t, genesisState.ConsumerClientID, got.ConsumerClientID)
+	require.Equal(t, genesisState.ConnectionChannelID, got.ConnectionChannelID)
 	// this line is used by starport scaffolding # genesis/test/assert
 }
