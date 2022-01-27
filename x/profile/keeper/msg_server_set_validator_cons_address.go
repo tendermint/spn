@@ -36,7 +36,7 @@ func (k msgServer) SetValidatorConsAddress(
 		currentNonce = consensusNonce.Nonce
 	}
 
-	if !valKey.VerifySignature(currentNonce, msg.Signature) {
+	if !valKey.VerifySignature(currentNonce, ctx.ChainID(), msg.Signature) {
 		return &types.MsgSetValidatorConsAddressResponse{},
 			sdkerrors.Wrapf(types.ErrInvalidValidatorSignature,
 				"invalid signature for consensus address: %s - %s",

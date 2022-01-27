@@ -24,8 +24,8 @@ type ValidatorKey struct {
 }
 
 // Sign signs the message with privateKey and returns a signature
-func (v ValidatorKey) Sign(nonce uint64) (string, error) {
-	sign, err := v.PrivKey.Sign(CreateSignMessage(nonce))
+func (v ValidatorKey) Sign(nonce uint64, chainID string) (string, error) {
+	sign, err := v.PrivKey.Sign(CreateSignMessage(nonce, chainID))
 	if err != nil {
 		return "", err
 	}
@@ -33,12 +33,12 @@ func (v ValidatorKey) Sign(nonce uint64) (string, error) {
 }
 
 // VerifySignature reports whether sig is a valid signature of mes
-func (v ValidatorKey) VerifySignature(nonce uint64, sig string) bool {
+func (v ValidatorKey) VerifySignature(nonce uint64, chainID, sig string) bool {
 	sigBytes, err := base64.StdEncoding.DecodeString(sig)
 	if err != nil {
 		return false
 	}
-	return v.PubKey.VerifySignature(CreateSignMessage(nonce), sigBytes)
+	return v.PubKey.VerifySignature(CreateSignMessage(nonce, chainID), sigBytes)
 }
 
 // GetConsAddress return the validator consensus address
@@ -60,9 +60,11 @@ func LoadValidatorKey(keyJSONBytes []byte) (pvKey ValidatorKey, err error) {
 }
 
 // CreateSignMessage create the sign message with nonce and chain id
-func CreateSignMessage(nonce uint64) []byte {
+func CreateSignMessage(nonce uint64, chainID string) []byte {
 	msg := append([]byte(signMessage), signSeparator)
 	nonceBytes := append(UintBytes(nonce), signSeparator)
 	msg = append(msg, nonceBytes...)
+	chainIDBytes := append([]byte(chainID), signSeparator)
+	msg = append(msg, chainIDBytes...)
 	return msg
 }

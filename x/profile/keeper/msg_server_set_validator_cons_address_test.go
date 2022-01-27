@@ -39,7 +39,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 	require.NoError(t, err)
 	valKey, err := valtypes.LoadValidatorKey([]byte(validatorKey))
 	require.NoError(t, err)
-	signature, err := valKey.Sign(0)
+	signature, err := valKey.Sign(0, ctx.ChainID())
 	require.NoError(t, err)
 
 	k.SetValidator(ctx, types.Validator{
@@ -57,16 +57,18 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 			name:   "valid message",
 			valKey: valKey,
 			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorKey: []byte(validatorKey),
-				Signature:    signature,
+				ValidatorAddress: valKey.Address.String(),
+				ValidatorKey:     []byte(validatorKey),
+				Signature:        signature,
 			},
 		},
 		{
 			name:   "invalid validator key",
 			valKey: valKey,
 			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorKey: []byte("invalid_key"),
-				Signature:    "invalid_signature",
+				ValidatorAddress: valKey.Address.String(),
+				ValidatorKey:     []byte("invalid_key"),
+				Signature:        "invalid_signature",
 			},
 			err: types.ErrInvalidValidatorKey,
 		},
@@ -74,8 +76,9 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 			name:   "validator consensus already exist",
 			valKey: valKey,
 			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorKey: []byte(validatorKey),
-				Signature:    signature,
+				ValidatorAddress: valKey.Address.String(),
+				ValidatorKey:     []byte(validatorKey),
+				Signature:        signature,
 			},
 			err: types.ErrValidatorConsAddressAlreadyExit,
 		},
@@ -83,8 +86,9 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 			name:   "invalid signature",
 			valKey: randValKey,
 			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorKey: invalidValKey,
-				Signature:    "invalid_signature",
+				ValidatorAddress: randValKey.Address.String(),
+				ValidatorKey:     invalidValKey,
+				Signature:        "invalid_signature",
 			},
 			err: types.ErrInvalidValidatorSignature,
 		},

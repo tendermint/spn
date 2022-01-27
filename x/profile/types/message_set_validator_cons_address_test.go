@@ -3,7 +3,9 @@ package types_test
 import (
 	"testing"
 
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -29,14 +31,24 @@ func TestMsgSetValidatorConsAddress_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid validator key",
 			msg: types.MsgSetValidatorConsAddress{
-				ValidatorKey: []byte("invalid_key"),
+				ValidatorAddress: sample.Address(),
+				ValidatorKey:     []byte("invalid_key"),
 			},
 			err: types.ErrInvalidValidatorKey,
 		},
 		{
+			name: "invalid validator address",
+			msg: types.MsgSetValidatorConsAddress{
+				ValidatorAddress: "invalid_address",
+				ValidatorKey:     []byte("invalid_key"),
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		},
+		{
 			name: "valid message",
 			msg: types.MsgSetValidatorConsAddress{
-				ValidatorKey: []byte(valKey),
+				ValidatorAddress: sample.Address(),
+				ValidatorKey:     []byte(valKey),
 			},
 		},
 	}

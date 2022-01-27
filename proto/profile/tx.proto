@@ -34,7 +34,7 @@ message MsgDeleteValidator {
 message MsgDeleteValidatorResponse {}
 
 message MsgSetValidatorConsAddress {
-  string creator = 1;
+  string validatorAddress = 1;
   bytes validatorKey = 2;
   string signature = 3;
 }

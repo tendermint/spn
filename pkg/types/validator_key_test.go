@@ -13,23 +13,33 @@ import (
 
 func TestCreateSignMessage(t *testing.T) {
 	tests := []struct {
-		name  string
-		nonce uint64
-		want  []byte
+		name    string
+		nonce   uint64
+		chainID string
+		want    []byte
 	}{
 		{
-			name:  "with nonce and chain id",
-			nonce: 10,
-			want:  []byte{0x53, 0x74, 0x61, 0x72, 0x70, 0x6f, 0x72, 0x74, 0x4e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x2d, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x43, 0x6f, 0x6e, 0x73, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x2f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xa, 0x2f},
+			name:    "with nonce and chain id",
+			chainID: "spn-1",
+			nonce:   10,
+			want:    []byte{0x53, 0x74, 0x61, 0x72, 0x70, 0x6f, 0x72, 0x74, 0x4e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x2d, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x43, 0x6f, 0x6e, 0x73, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x2f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xa, 0x2f, 0x73, 0x70, 0x6e, 0x2d, 0x31, 0x2f},
 		},
 		{
-			name: "zero nonce",
-			want: []byte{0x53, 0x74, 0x61, 0x72, 0x70, 0x6f, 0x72, 0x74, 0x4e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x2d, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x43, 0x6f, 0x6e, 0x73, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x2f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2f},
+			name:    "without chain id",
+			chainID: "",
+			nonce:   10,
+			want:    []byte{0x53, 0x74, 0x61, 0x72, 0x70, 0x6f, 0x72, 0x74, 0x4e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x2d, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x43, 0x6f, 0x6e, 0x73, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x2f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xa, 0x2f, 0x2f},
+		},
+		{
+			name:    "zero nonce",
+			chainID: "spn-1",
+			nonce:   0,
+			want:    []byte{0x53, 0x74, 0x61, 0x72, 0x70, 0x6f, 0x72, 0x74, 0x4e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x2d, 0x4d, 0x73, 0x67, 0x53, 0x65, 0x74, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x6f, 0x72, 0x43, 0x6f, 0x6e, 0x73, 0x41, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73, 0x2f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x2f, 0x73, 0x70, 0x6e, 0x2d, 0x31, 0x2f},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := types.CreateSignMessage(tt.nonce)
+			got := types.CreateSignMessage(tt.nonce, tt.chainID)
 			require.Equal(t, tt.want, got)
 		})
 	}
@@ -145,42 +155,55 @@ func TestValidatorKey_Sign(t *testing.T) {
 			PrivKey: randPrivKey,
 		}
 	)
-	validSig, err := valKey.Sign(10)
+	validSig, err := valKey.Sign(10, "spn-1")
 	require.NoError(t, err)
-	validZeroNonceSig, err := valKey.Sign(0)
+	zeroNonceSig, err := valKey.Sign(0, "spn-1")
 	require.NoError(t, err)
-	randSig, err := randValKey.Sign(99)
+	emptyChainIDSig, err := valKey.Sign(10, "")
+	require.NoError(t, err)
+	randSig, err := randValKey.Sign(99, "spn-1")
 	require.NoError(t, err)
 
 	tests := []struct {
-		name   string
-		valKey types.ValidatorKey
-		nonce  uint64
-		want   string
-		err    error
+		name    string
+		valKey  types.ValidatorKey
+		nonce   uint64
+		chainID string
+		want    string
+		err     error
 	}{
 		{
-			name:   "valid sign",
-			valKey: valKey,
-			nonce:  10,
-			want:   validSig,
+			name:    "valid sign",
+			valKey:  valKey,
+			chainID: "spn-1",
+			nonce:   10,
+			want:    validSig,
 		},
 		{
-			name:   "zero nonce sign",
-			valKey: valKey,
-			nonce:  0,
-			want:   validZeroNonceSig,
+			name:    "empty chain id",
+			valKey:  valKey,
+			chainID: "",
+			nonce:   10,
+			want:    emptyChainIDSig,
 		},
 		{
-			name:   "random sign",
-			valKey: randValKey,
-			nonce:  99,
-			want:   randSig,
+			name:    "zero nonce sign",
+			valKey:  valKey,
+			chainID: "spn-1",
+			nonce:   0,
+			want:    zeroNonceSig,
+		},
+		{
+			name:    "random sign",
+			valKey:  randValKey,
+			chainID: "spn-1",
+			nonce:   99,
+			want:    randSig,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.valKey.Sign(tt.nonce)
+			got, err := tt.valKey.Sign(tt.nonce, tt.chainID)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, tt.err.Error(), err.Error())
@@ -210,52 +233,57 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 			PrivKey: invalidPrivKey,
 		}
 	)
-	validSig, err := valKey.Sign(10)
+	validSig, err := valKey.Sign(10, "spn-1")
 	require.NoError(t, err)
-	validZeroNonceSig, err := valKey.Sign(0)
+	validZeroNonceSig, err := valKey.Sign(0, "spn-1")
 	require.NoError(t, err)
-	invalidSig, err := invalidValKey.Sign(0)
+	invalidSig, err := invalidValKey.Sign(0, "spn-1")
 	require.NoError(t, err)
 
 	tests := []struct {
-		name   string
-		valKey types.ValidatorKey
-		nonce  uint64
-		sig    string
-		want   bool
+		name    string
+		valKey  types.ValidatorKey
+		nonce   uint64
+		chainID string
+		sig     string
+		want    bool
 	}{
 		{
-			name:   "valid check",
-			valKey: valKey,
-			sig:    validSig,
-			nonce:  10,
-			want:   true,
+			name:    "valid check",
+			valKey:  valKey,
+			sig:     validSig,
+			nonce:   10,
+			chainID: "spn-1",
+			want:    true,
 		},
 		{
-			name:   "zero nonce",
-			valKey: valKey,
-			sig:    validZeroNonceSig,
-			nonce:  0,
-			want:   true,
+			name:    "zero nonce",
+			valKey:  valKey,
+			sig:     validZeroNonceSig,
+			nonce:   0,
+			chainID: "spn-1",
+			want:    true,
 		},
 		{
-			name:   "random signature",
-			valKey: valKey,
-			sig:    sample.String(10),
-			nonce:  0,
-			want:   false,
+			name:    "random signature",
+			valKey:  valKey,
+			sig:     sample.String(10),
+			nonce:   10,
+			chainID: "spn-1",
+			want:    false,
 		},
 		{
-			name:   "invalid validator key",
-			valKey: invalidValKey,
-			sig:    invalidSig,
-			nonce:  0,
-			want:   false,
+			name:    "invalid validator key",
+			valKey:  invalidValKey,
+			sig:     invalidSig,
+			nonce:   10,
+			chainID: "spn-1",
+			want:    false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.valKey.VerifySignature(tt.nonce, tt.sig)
+			got := tt.valKey.VerifySignature(tt.nonce, tt.chainID, tt.sig)
 			require.Equal(t, tt.want, got)
 		})
 	}
