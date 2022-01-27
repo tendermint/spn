@@ -1,4 +1,4 @@
-package ibctypes_test
+package types_test
 
 import (
 	"encoding/base64"
@@ -7,13 +7,13 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/pkg/ibctypes"
+	"github.com/tendermint/spn/pkg/types"
 )
 
 func TestConsensusState_RootHash(t *testing.T) {
-	csf := ibctypes.ConsensusState{
+	csf := types.ConsensusState{
 		NextValidatorsHash: "foo",
-		Root: ibctypes.MerkelRool{
+		Root: types.MerkelRool{
 			Hash: "bar",
 		},
 		Timestamp: "foobar",
@@ -24,12 +24,12 @@ func TestConsensusState_RootHash(t *testing.T) {
 func TestConsensusState_ToTendermintConsensusState(t *testing.T) {
 	tests := []struct {
 		name           string
-		consensusState ibctypes.ConsensusState
+		consensusState types.ConsensusState
 		wantErr        bool
 	}{
 		{
 			name: "returns a new consensus state",
-			consensusState: ibctypes.NewConsensusState(
+			consensusState: types.NewConsensusState(
 				"2022-01-12T07:56:35.394367Z",
 				"DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
 				"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
@@ -37,7 +37,7 @@ func TestConsensusState_ToTendermintConsensusState(t *testing.T) {
 		},
 		{
 			name: "invalid timestamp",
-			consensusState: ibctypes.NewConsensusState(
+			consensusState: types.NewConsensusState(
 				"foo",
 				"DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
 				"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
@@ -46,7 +46,7 @@ func TestConsensusState_ToTendermintConsensusState(t *testing.T) {
 		},
 		{
 			name: "invalid next validator set hash",
-			consensusState: ibctypes.NewConsensusState(
+			consensusState: types.NewConsensusState(
 				"2022-01-12T07:56:35.394367Z",
 				"foo",
 				"47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
@@ -55,7 +55,7 @@ func TestConsensusState_ToTendermintConsensusState(t *testing.T) {
 		},
 		{
 			name: "invalid root hash",
-			consensusState: ibctypes.NewConsensusState(
+			consensusState: types.NewConsensusState(
 				"2022-01-12T07:56:35.394367Z",
 				"DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2",
 				"foo",
@@ -94,7 +94,7 @@ timestamp: "2022-01-12T07:56:35.394367Z"
 		_, err = f.WriteString(consensusStateYAML)
 		require.NoError(t, err)
 
-		csf, err := ibctypes.ParseConsensusStateFromFile(f.Name())
+		csf, err := types.ParseConsensusStateFromFile(f.Name())
 		require.NoError(t, err)
 		require.EqualValues(t, "2022-01-12T07:56:35.394367Z", csf.Timestamp)
 		require.EqualValues(t, "DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2", csf.NextValidatorsHash)
@@ -103,7 +103,7 @@ timestamp: "2022-01-12T07:56:35.394367Z"
 	})
 
 	t.Run("non-existent file", func(t *testing.T) {
-		_, err := ibctypes.ParseConsensusStateFromFile("/foo/bar/foobar")
+		_, err := types.ParseConsensusStateFromFile("/foo/bar/foobar")
 		require.Error(t, err)
 	})
 
@@ -118,7 +118,7 @@ timestamp: "2022-01-12T07:56:35.394367Z"
 		_, err = f.WriteString(consensusStateYAML)
 		require.NoError(t, err)
 
-		_, err = ibctypes.ParseConsensusStateFromFile(f.Name())
+		_, err = types.ParseConsensusStateFromFile(f.Name())
 		require.Error(t, err)
 	})
 }

@@ -10,7 +10,9 @@ accounts:
   - name: joe
     coins: ["100000000uspn"]
   - name: steve
+    mnemonic: "initial aisle blush gift shuffle hat solar dove dwarf soup credit acid update seed mercy thumb swear main verb image dove rose chat inmate"
     coins: ["100000000uspn"]
+    mnemonic: "initial aisle blush gift shuffle hat solar dove dwarf soup credit acid update seed mercy thumb swear main verb image dove rose chat inmate"
 validator:
   name: alice
   staked: "100000000uspn"
@@ -18,6 +20,7 @@ faucet:
   name: bob
   coins: ["100000uspn"]
 genesis:
+  chain_id: spn-1
   app_state:
     staking:
       params:
@@ -36,4 +39,9 @@ genesis:
     launch:
       params:
         minLaunchTime: "5"
-  chain_id: spn-1
+    fundraising:
+      params:
+        auction_creation_fee:
+          - "amount": "100"
+            "denom": "uspn"
+

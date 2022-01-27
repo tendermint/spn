@@ -1,5 +1,5 @@
-// Package ibctypes defines to handle IBC handshakes in SPN modules
-package ibctypes
+// Package types defines types to handle IBC handshakes in SPN modules
+package types
 
 import (
 	"encoding/base64"
