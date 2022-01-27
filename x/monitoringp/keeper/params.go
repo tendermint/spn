@@ -6,6 +6,12 @@ import (
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
+// LastBlockHeight returns the last block height state param
+func (k Keeper) LastBlockHeight(ctx sdk.Context) (res uint64) {
+	k.paramstore.Get(ctx, types.KeyLastBlockHeight, &res)
+	return
+}
+
 // ConsumerConsensusState returns the consumer consensus state param
 func (k Keeper) ConsumerConsensusState(ctx sdk.Context) (res spntypes.ConsensusState) {
 	k.paramstore.Get(ctx, types.KeyConsumerConsensusState, &res)
@@ -21,6 +27,7 @@ func (k Keeper) ConsumerChainID(ctx sdk.Context) (res string) {
 // GetParams get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
+		k.LastBlockHeight(ctx),
 		k.ConsumerChainID(ctx),
 		k.ConsumerConsensusState(ctx),
 	)
