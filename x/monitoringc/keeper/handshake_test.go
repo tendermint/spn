@@ -233,10 +233,15 @@ func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
 		err := k.RegisterProviderClientIDFromChannelID(ctx, "foo")
 		require.NoError(t, err, spnerrors.ErrCritical)
 
-		pCid, found := k.GetProviderClientID(ctx, 1)
+		pCid, found := k.GetProviderClientID(ctx, monitoringcmodulekeeper.DebugModeLaunchID)
 		require.True(t, found)
 		require.EqualValues(t, monitoringcmodulekeeper.DebugModeLaunchID, pCid.LaunchID)
 		require.EqualValues(t, "foo", pCid.ClientID)
+
+		launcIDFromChanID, found := k.GetLaunchIDFromChannelID(ctx, "foo")
+		require.True(t, found)
+		require.EqualValues(t, monitoringcmodulekeeper.DebugModeLaunchID, launcIDFromChanID.LaunchID)
+		require.EqualValues(t, "foo", launcIDFromChanID.ChannelID)
 	})
 
 	t.Run("debug mode allows to register a new client", func(t *testing.T) {
@@ -253,9 +258,14 @@ func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
 		err := k.RegisterProviderClientIDFromChannelID(ctx, "foo")
 		require.NoError(t, err, spnerrors.ErrCritical)
 
-		pCid, found := k.GetProviderClientID(ctx, 1)
+		pCid, found := k.GetProviderClientID(ctx, monitoringcmodulekeeper.DebugModeLaunchID)
 		require.True(t, found)
 		require.EqualValues(t, monitoringcmodulekeeper.DebugModeLaunchID, pCid.LaunchID)
 		require.EqualValues(t, "foo", pCid.ClientID)
+
+		launcIDFromChanID, found := k.GetLaunchIDFromChannelID(ctx, "foo")
+		require.True(t, found)
+		require.EqualValues(t, monitoringcmodulekeeper.DebugModeLaunchID, launcIDFromChanID.LaunchID)
+		require.EqualValues(t, "foo", launcIDFromChanID.ChannelID)
 	})
 }
