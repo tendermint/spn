@@ -19,7 +19,6 @@ func (k Keeper) SetLaunchIDFromChannelID(ctx sdk.Context, launchIDFromChannelID 
 func (k Keeper) GetLaunchIDFromChannelID(
 	ctx sdk.Context,
 	channelID string,
-
 ) (val types.LaunchIDFromChannelID, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LaunchIDFromChannelIDKeyPrefix))
 
