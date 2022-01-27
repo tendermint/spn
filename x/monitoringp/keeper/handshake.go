@@ -15,31 +15,34 @@ import (
 // is the consumer client ID and if no connection is yet established with the consumer chain
 // this operation should be performed at OnChanOpenTry handshake phase
 func (k Keeper) VerifyClientIDFromChannelID(ctx sdk.Context, channelID string) error {
-	// check no connection is already established
-	_, found := k.GetConnectionChannelID(ctx)
-	if found {
-		return types.ErrConsumerConnectionEstablished
-	}
-
-	// check if the consumer client ID exists
-	consumerClient, found := k.GetConsumerClientID(ctx)
-	if !found {
-		return types.ErrNoConsumerClient
-	}
-
 	// get the current client ID and check if it's the consumer client ID
 	clientID, err := k.getClientIDFromChannelID(ctx, channelID)
 	if err != nil {
 		return err
 	}
 
-	if consumerClient.ClientID != clientID {
-		return sdkerrors.Wrapf(
-			types.ErrInvalidClient,
-			"the client is not the consumer client, got %s, expected %s",
-			clientID,
-			consumerClient.ClientID,
-		)
+	// no verification if debug mode is set
+	if !k.DebugMode(ctx) {
+		// check no connection is already established
+		_, found := k.GetConnectionChannelID(ctx)
+		if found {
+			return types.ErrConsumerConnectionEstablished
+		}
+
+		// check if the consumer client ID exists
+		consumerClient, found := k.GetConsumerClientID(ctx)
+		if !found {
+			return types.ErrNoConsumerClient
+		}
+
+		if consumerClient.ClientID != clientID {
+			return sdkerrors.Wrapf(
+				types.ErrInvalidClient,
+				"the client is not the consumer client, got %s, expected %s",
+				clientID,
+				consumerClient.ClientID,
+			)
+		}
 	}
 
 	return nil

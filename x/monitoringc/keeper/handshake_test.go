@@ -244,7 +244,7 @@ func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
 		require.EqualValues(t, "foo", launcIDFromChanID.ChannelID)
 	})
 
-	t.Run("debug mode allows to register a new client", func(t *testing.T) {
+	t.Run("debug mode allows to register a new client and replace previous one", func(t *testing.T) {
 		k, ctx := monitoringcKeeperWithFooClient(t)
 		k.SetParams(ctx, types.NewParams(true))
 		k.SetLaunchIDFromVerifiedClientID(ctx, types.LaunchIDFromVerifiedClientID{

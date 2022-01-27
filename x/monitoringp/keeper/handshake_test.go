@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -113,6 +114,48 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		err := k.VerifyClientIDFromChannelID(ctx, "foo")
 		require.ErrorIs(t, err, types.ErrConsumerConnectionEstablished)
 	})
+
+	t.Run("debug mode should fail if client ID can't be retrieve from channel ID", func(t *testing.T) {
+		k, ctx := monitoringpKeeperWithFooClient(t)
+		k.SetParams(ctx, types.Params{
+			LastBlockHeight:        1,
+			ConsumerChainID:        "foo-1",
+			ConsumerConsensusState: spntypes.ConsensusState{},
+			DebugMode:              true,
+		})
+		err := k.VerifyClientIDFromChannelID(ctx, "bar")
+		require.ErrorIs(t, err, channeltypes.ErrChannelNotFound)
+	})
+
+	t.Run("should return no error when debug mode is set and client doesn't exist", func(t *testing.T) {
+		k, ctx := monitoringpKeeperWithFooClient(t)
+		k.SetParams(ctx, types.Params{
+			LastBlockHeight:        1,
+			ConsumerChainID:        "foo-1",
+			ConsumerConsensusState: spntypes.ConsensusState{},
+			DebugMode:              true,
+		})
+		err := k.VerifyClientIDFromChannelID(ctx, "foo")
+		require.NoError(t, err)
+	})
+
+	t.Run("should return no error when debug mode is set and connection has already been established", func(t *testing.T) {
+		k, ctx := monitoringpKeeperWithFooClient(t)
+		k.SetParams(ctx, types.Params{
+			LastBlockHeight:        1,
+			ConsumerChainID:        "foo-1",
+			ConsumerConsensusState: spntypes.ConsensusState{},
+			DebugMode:              true,
+		})
+		k.SetConsumerClientID(ctx, types.ConsumerClientID{
+			ClientID: "foo",
+		})
+		k.SetConnectionChannelID(ctx, types.ConnectionChannelID{
+			ChannelID: "bar",
+		})
+		err := k.VerifyClientIDFromChannelID(ctx, "foo")
+		require.NoError(t, err)
+	})
 }
 
 func TestKeeper_RegisterConnectionChannelID(t *testing.T) {
@@ -147,5 +190,57 @@ func TestKeeper_RegisterConnectionChannelID(t *testing.T) {
 		k, ctx := monitoringpKeeperWithFooClient(t)
 		err := k.RegisterConnectionChannelID(ctx, "foo")
 		require.ErrorIs(t, err, spnerrors.ErrCritical)
+	})
+
+	t.Run("debug mode should fail with critical if client ID can't be retrieve from channel ID", func(t *testing.T) {
+		k, ctx := monitoringpKeeperWithFooClient(t)
+		k.SetParams(ctx, types.Params{
+			LastBlockHeight:        1,
+			ConsumerChainID:        "foo-1",
+			ConsumerConsensusState: spntypes.ConsensusState{},
+			DebugMode:              true,
+		})
+		err := k.RegisterConnectionChannelID(ctx, "bar")
+		require.ErrorIs(t, err, spnerrors.ErrCritical)
+	})
+
+	t.Run("debug mode allow to register a channel ID when consumer client ID doesn't exist", func(t *testing.T) {
+		k, ctx := monitoringpKeeperWithFooClient(t)
+		k.SetParams(ctx, types.Params{
+			LastBlockHeight:        1,
+			ConsumerChainID:        "foo-1",
+			ConsumerConsensusState: spntypes.ConsensusState{},
+			DebugMode:              true,
+		})
+		err := k.RegisterConnectionChannelID(ctx, "foo")
+		require.NoError(t, err)
+		channelID, found := k.GetConnectionChannelID(ctx)
+		require.True(t, found)
+		require.EqualValues(t, types.ConnectionChannelID{
+			ChannelID: "foo",
+		}, channelID)
+	})
+
+	t.Run("debug mode allow to register a new channel ID and replace previous one", func(t *testing.T) {
+		k, ctx := monitoringpKeeperWithFooClient(t)
+		k.SetParams(ctx, types.Params{
+			LastBlockHeight:        1,
+			ConsumerChainID:        "foo-1",
+			ConsumerConsensusState: spntypes.ConsensusState{},
+			DebugMode:              true,
+		})
+		k.SetConsumerClientID(ctx, types.ConsumerClientID{
+			ClientID: "foo",
+		})
+		k.SetConnectionChannelID(ctx, types.ConnectionChannelID{
+			ChannelID: "bar",
+		})
+		err := k.RegisterConnectionChannelID(ctx, "foo")
+		require.NoError(t, err)
+		channelID, found := k.GetConnectionChannelID(ctx)
+		require.True(t, found)
+		require.EqualValues(t, types.ConnectionChannelID{
+			ChannelID: "foo",
+		}, channelID)
 	})
 }
