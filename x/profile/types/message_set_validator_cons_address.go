@@ -10,8 +10,9 @@ const TypeMsgSetValidatorConsAddress = "set_validator_cons_address"
 
 var _ sdk.Msg = &MsgSetValidatorConsAddress{}
 
-func NewMsgSetValidatorConsAddress(signature string, validatorKey []byte) *MsgSetValidatorConsAddress {
+func NewMsgSetValidatorConsAddress(creator, signature string, validatorKey []byte) *MsgSetValidatorConsAddress {
 	return &MsgSetValidatorConsAddress{
+		Creator:      creator,
 		ValidatorKey: validatorKey,
 		Signature:    signature,
 	}
@@ -26,7 +27,11 @@ func (msg *MsgSetValidatorConsAddress) Type() string {
 }
 
 func (msg *MsgSetValidatorConsAddress) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{}
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
 }
 
 func (msg *MsgSetValidatorConsAddress) GetSignBytes() []byte {

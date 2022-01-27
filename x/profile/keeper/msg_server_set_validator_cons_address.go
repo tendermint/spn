@@ -24,9 +24,9 @@ func (k msgServer) SetValidatorConsAddress(
 
 	// cannot set the consensus key if key is used for another validator
 	validatorByConsAddr, found := k.GetValidatorByConsAddress(ctx, consAddress)
-	if !found {
+	if found {
 		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrap(types.ErrValidatorConsAddressNotFound, consAddress)
+			sdkerrors.Wrap(types.ErrValidatorConsAddressAlreadyExit, consAddress)
 	}
 
 	// check signature

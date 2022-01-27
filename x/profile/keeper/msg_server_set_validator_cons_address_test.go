@@ -6,7 +6,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	valtypes "github.com/tendermint/spn/pkg/types"
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -33,9 +32,8 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 			PubKey:  randPubKey,
 			PrivKey: randPrivKey,
 		}
-		consensusAddrWithoutAcc = sample.Address()
-		ctx, k, srv             = setupMsgServer(t)
-		wCtx                    = sdk.WrapSDKContext(ctx)
+		ctx, k, srv = setupMsgServer(t)
+		wCtx        = sdk.WrapSDKContext(ctx)
 	)
 	invalidValKey, err := tmjson.Marshal(randValKey)
 	require.NoError(t, err)
@@ -47,15 +45,6 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 	k.SetValidator(ctx, types.Validator{
 		Address:     valKey.Address.String(),
 		Description: types.ValidatorDescription{},
-	})
-	k.SetValidatorByConsAddress(ctx, types.ValidatorByConsAddress{
-		ValidatorAddress: valKey.Address.String(),
-		ConsensusAddress: valKey.GetConsAddress().String(),
-	})
-
-	k.SetValidatorByConsAddress(ctx, types.ValidatorByConsAddress{
-		ValidatorAddress: sample.Address(),
-		ConsensusAddress: consensusAddrWithoutAcc,
 	})
 
 	tests := []struct {
@@ -73,22 +62,31 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 			},
 		},
 		{
-			name:   "invalid signature",
+			name:   "invalid validator key",
+			valKey: valKey,
+			msg: &types.MsgSetValidatorConsAddress{
+				ValidatorKey: []byte("invalid_key"),
+				Signature:    "invalid_signature",
+			},
+			err: types.ErrInvalidValidatorKey,
+		},
+		{
+			name:   "validator consensus already exist",
 			valKey: valKey,
 			msg: &types.MsgSetValidatorConsAddress{
 				ValidatorKey: []byte(validatorKey),
-				Signature:    "invalid_signature",
+				Signature:    signature,
 			},
-			err: types.ErrInvalidValidatorSignature,
+			err: types.ErrValidatorConsAddressAlreadyExit,
 		},
 		{
-			name:   "invalid validator key",
+			name:   "invalid signature",
 			valKey: randValKey,
 			msg: &types.MsgSetValidatorConsAddress{
 				ValidatorKey: invalidValKey,
-				Signature:    signature,
+				Signature:    "invalid_signature",
 			},
-			err: types.ErrValidatorConsAddressNotFound,
+			err: types.ErrInvalidValidatorSignature,
 		},
 	}
 	for _, tt := range tests {

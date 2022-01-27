@@ -28,6 +28,7 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 			}
 
 			msg := types.NewMsgSetValidatorConsAddress(
+				clientCtx.GetFromAddress().String(),
 				args[1],
 				valKeyBytes,
 			)
