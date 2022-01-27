@@ -16,4 +16,5 @@ var (
 	ErrValidatorConsAddressNotFound = sdkerrors.Register(ModuleName, 7, "validator consensus address not found")
 	ErrInvalidValidatorSignature    = sdkerrors.Register(ModuleName, 8, "invalid validator signature")
 	ErrConsdAccNotFound             = sdkerrors.Register(ModuleName, 9, "consensus account not found")
+	ErrInvalidValidatorKey          = sdkerrors.Register(ModuleName, 10, "invalid validator key")
 )

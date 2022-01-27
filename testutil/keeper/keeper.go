@@ -128,7 +128,7 @@ func MonitoringcWithIBCMocks(
 	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
 
-	profileKeeper := initializer.Profile()
+	profileKeeper := initializer.Profile(authKeeper)
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
 	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)

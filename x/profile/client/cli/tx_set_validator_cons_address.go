@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"io/ioutil"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -10,9 +12,8 @@ import (
 
 func CmdSetValidatorConsAddress() *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "set-validator-cons-address [address] [cons-address] [signature] [validator_key]",
-		// TODO change the description
-		Short: "Broadcast message set-validator-cons-address",
+		Use:   "set-validator-cons-address [validator-key] [signature]",
+		Short: "Associate a consensus address for a specific SPN address",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -20,15 +21,16 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 				return err
 			}
 
-			validatorKeyPath := args[3]
-			// TODO extract the key information
-			// PUB key consensus
+			// Read validator key file
+			valKeyBytes, err := ioutil.ReadFile(args[0])
+			if err != nil {
+				return err
+			}
 
 			msg := types.NewMsgSetValidatorConsAddress(
 				clientCtx.GetFromAddress().String(),
-				args[0],
 				args[1],
-				args[2],
+				valKeyBytes,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
+	valtypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -15,49 +15,39 @@ func (k msgServer) SetValidatorConsAddress(
 ) (*types.MsgSetValidatorConsAddressResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// cannot set the consensus key if it's used for another validator
-	validatorByConsAddr, found := k.GetValidatorByConsAddress(ctx, msg.ConsAddress)
+	valKey, err := valtypes.LoadValidatorKey(msg.ValidatorKey)
+	if err != nil {
+		return &types.MsgSetValidatorConsAddressResponse{},
+			sdkerrors.Wrap(types.ErrInvalidValidatorKey, string(msg.ValidatorKey))
+	}
+	consAddress := valKey.GetConsAddress().String()
+
+	// cannot set the consensus key if key is used for another validator
+	validatorByConsAddr, found := k.GetValidatorByConsAddress(ctx, consAddress)
 	if !found {
 		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrap(types.ErrValidatorConsAddressNotFound, msg.ConsAddress)
+			sdkerrors.Wrap(types.ErrValidatorConsAddressNotFound, consAddress)
 	}
 
 	// check signature
 	currentNonce := uint64(0)
-	consensusNonce, found := k.GetConsensusKeyNonce(ctx, msg.ConsAddress)
+	consensusNonce, found := k.GetConsensusKeyNonce(ctx, consAddress)
 	if found {
 		currentNonce = consensusNonce.Nonce
 	}
 
-	address, err := sdk.AccAddressFromBech32(msg.Address)
-	if err != nil {
+	if !valKey.VerifySignature(currentNonce, []byte(msg.Signature)) {
 		return &types.MsgSetValidatorConsAddressResponse{},
-			spnerrors.Criticalf("invalid consensus address %s", address.String())
-	}
-
-	// TODO
-	// validator private key can be a parameter
-	// if not provided should check chain already init and get the default
-	// use key from validator ~/.mars/config/priv_validator_key.json
-
-	acc := k.accountKeeper.GetAccount(ctx, address)
-	if acc == nil {
-		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrapf(types.ErrConsdAccNotFound, "consensus address not found: %s", msg.ConsAddress)
-	}
-	if err := types.CheckValidatorSignature(
-		acc.GetPubKey().Bytes(),
-		[]byte(msg.Signature),
-		msg.ConsAddress,
-		currentNonce,
-	); err != nil {
-		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrapf(types.ErrInvalidValidatorSignature, "consensus address: %s / signature: %s", msg.ConsAddress, msg.Signature)
+			sdkerrors.Wrapf(types.ErrInvalidValidatorSignature,
+				"invalid signature for consensus address: %s - %s",
+				consAddress,
+				msg.Signature,
+			)
 	}
 
 	validator := types.Validator{
-		Address:          msg.Address,
-		ConsensusAddress: msg.ConsAddress,
+		Address:          valKey.Address.String(),
+		ConsensusAddress: consAddress,
 		Description:      types.ValidatorDescription{},
 	}
 
@@ -70,8 +60,8 @@ func (k msgServer) SetValidatorConsAddress(
 	// store validator information
 	k.SetValidator(ctx, validator)
 	k.SetValidatorByConsAddress(ctx, types.ValidatorByConsAddress{
-		ConsensusAddress: msg.ConsAddress,
-		ValidatorAddress: msg.Address,
+		ConsensusAddress: consAddress,
+		ValidatorAddress: valKey.Address.String(),
 	})
 	k.SetConsensusKeyNonce(ctx, types.ConsensusKeyNonce{
 		ConsensusAddress: consensusNonce.ConsensusAddress,

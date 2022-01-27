@@ -5,6 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/tendermint/crypto/ed25519"
@@ -174,7 +175,7 @@ func Test_createSignMessage(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := types.CreateSignMessage(tt.chainID, tt.nonce)
+			got := spntypes.CreateSignMessage(tt.nonce)
 			require.Equal(t, tt.want, got)
 		})
 	}
@@ -192,7 +193,7 @@ func Test_uintBytes(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := types.UintBytes(tt.v)
+			got := spntypes.UintBytes(tt.v)
 			require.Equal(t, tt.want, got)
 		})
 	}
