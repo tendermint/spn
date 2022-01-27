@@ -35,11 +35,7 @@ func (k Keeper) GetLaunchIDFromChannelID(
 }
 
 // RemoveLaunchIDFromChannelID removes a launchIDFromChannelID from the store
-func (k Keeper) RemoveLaunchIDFromChannelID(
-	ctx sdk.Context,
-	channelID string,
-
-) {
+func (k Keeper) RemoveLaunchIDFromChannelID(ctx sdk.Context, channelID string) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LaunchIDFromChannelIDKeyPrefix))
 	store.Delete(types.LaunchIDFromChannelIDKey(
 		channelID,
