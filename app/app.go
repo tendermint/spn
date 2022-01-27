@@ -407,7 +407,6 @@ func New(
 		appCodec,
 		keys[profilemoduletypes.StoreKey],
 		keys[profilemoduletypes.MemStoreKey],
-		app.AuthKeeper,
 	)
 
 	app.LaunchKeeper = *launchmodulekeeper.NewKeeper(

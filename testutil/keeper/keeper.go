@@ -42,7 +42,7 @@ func AllKeepers(t testing.TB) (
 	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
 
-	profileKeeper := initializer.Profile(authKeeper)
+	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
 	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
@@ -72,9 +72,7 @@ func AllKeepers(t testing.TB) (
 func Profile(t testing.TB) (*profilekeeper.Keeper, sdk.Context) {
 	initializer := newInitializer()
 
-	paramKeeper := initializer.Param()
-	authKeeper := initializer.Auth(paramKeeper)
-	keeper := initializer.Profile(authKeeper)
+	keeper := initializer.Profile()
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	return keeper, sdk.NewContext(initializer.StateStore, tmproto.Header{}, false, log.NewNopLogger())
@@ -85,8 +83,7 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
-	authKeeper := initializer.Auth(paramKeeper)
-	profileKeeper := initializer.Profile(authKeeper)
+	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
@@ -128,7 +125,7 @@ func MonitoringcWithIBCMocks(
 	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
 
-	profileKeeper := initializer.Profile(authKeeper)
+	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
 	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)

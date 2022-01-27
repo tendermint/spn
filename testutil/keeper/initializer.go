@@ -143,14 +143,14 @@ func (i initializer) IBC(
 	)
 }
 
-func (i initializer) Profile(authKeeper authkeeper.AccountKeeper) *profilekeeper.Keeper {
+func (i initializer) Profile() *profilekeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(profiletypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(profiletypes.MemStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
 
-	return profilekeeper.NewKeeper(i.Codec, storeKey, memStoreKey, authKeeper)
+	return profilekeeper.NewKeeper(i.Codec, storeKey, memStoreKey)
 }
 
 func (i initializer) Launch(
