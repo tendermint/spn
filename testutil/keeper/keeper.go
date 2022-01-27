@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
 	"testing"
 	"time"
 
@@ -15,6 +14,7 @@ import (
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
+	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
