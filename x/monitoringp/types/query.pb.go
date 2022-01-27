@@ -193,43 +193,130 @@ func (m *QueryGetConsumerClientIDResponse) GetConsumerClientID() ConsumerClientI
 	return ConsumerClientID{}
 }
 
+type QueryGetConnectionChannelIDRequest struct {
+}
+
+func (m *QueryGetConnectionChannelIDRequest) Reset()         { *m = QueryGetConnectionChannelIDRequest{} }
+func (m *QueryGetConnectionChannelIDRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetConnectionChannelIDRequest) ProtoMessage()    {}
+func (*QueryGetConnectionChannelIDRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_752da97189c2fec8, []int{4}
+}
+func (m *QueryGetConnectionChannelIDRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetConnectionChannelIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetConnectionChannelIDRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetConnectionChannelIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetConnectionChannelIDRequest.Merge(m, src)
+}
+func (m *QueryGetConnectionChannelIDRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetConnectionChannelIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetConnectionChannelIDRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetConnectionChannelIDRequest proto.InternalMessageInfo
+
+type QueryGetConnectionChannelIDResponse struct {
+	ConnectionChannelID ConnectionChannelID `protobuf:"bytes,1,opt,name=ConnectionChannelID,proto3" json:"ConnectionChannelID"`
+}
+
+func (m *QueryGetConnectionChannelIDResponse) Reset()         { *m = QueryGetConnectionChannelIDResponse{} }
+func (m *QueryGetConnectionChannelIDResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetConnectionChannelIDResponse) ProtoMessage()    {}
+func (*QueryGetConnectionChannelIDResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_752da97189c2fec8, []int{5}
+}
+func (m *QueryGetConnectionChannelIDResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetConnectionChannelIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetConnectionChannelIDResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetConnectionChannelIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetConnectionChannelIDResponse.Merge(m, src)
+}
+func (m *QueryGetConnectionChannelIDResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetConnectionChannelIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetConnectionChannelIDResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetConnectionChannelIDResponse proto.InternalMessageInfo
+
+func (m *QueryGetConnectionChannelIDResponse) GetConnectionChannelID() ConnectionChannelID {
+	if m != nil {
+		return m.ConnectionChannelID
+	}
+	return ConnectionChannelID{}
+}
+
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "tendermint.spn.monitoringp.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "tendermint.spn.monitoringp.QueryParamsResponse")
 	proto.RegisterType((*QueryGetConsumerClientIDRequest)(nil), "tendermint.spn.monitoringp.QueryGetConsumerClientIDRequest")
 	proto.RegisterType((*QueryGetConsumerClientIDResponse)(nil), "tendermint.spn.monitoringp.QueryGetConsumerClientIDResponse")
+	proto.RegisterType((*QueryGetConnectionChannelIDRequest)(nil), "tendermint.spn.monitoringp.QueryGetConnectionChannelIDRequest")
+	proto.RegisterType((*QueryGetConnectionChannelIDResponse)(nil), "tendermint.spn.monitoringp.QueryGetConnectionChannelIDResponse")
 }
 
 func init() { proto.RegisterFile("monitoringp/query.proto", fileDescriptor_752da97189c2fec8) }
 
 var fileDescriptor_752da97189c2fec8 = []byte{
-	// 405 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x92, 0x4d, 0x8b, 0x1a, 0x31,
-	0x18, 0xc7, 0x27, 0xd2, 0x7a, 0x48, 0x2f, 0x25, 0x15, 0x2a, 0x43, 0x19, 0xed, 0xe0, 0xa1, 0x48,
-	0x9b, 0x54, 0x0b, 0xbd, 0xb4, 0x87, 0xa2, 0x05, 0xe9, 0xad, 0xf5, 0x52, 0xe8, 0xa1, 0x92, 0x19,
-	0xc3, 0x34, 0xe0, 0x24, 0x71, 0x92, 0x29, 0xf5, 0xea, 0x27, 0x28, 0x94, 0x7e, 0xa4, 0x82, 0x47,
-	0xa1, 0x97, 0x3d, 0x2d, 0x8b, 0x2e, 0xec, 0xd7, 0x58, 0xcc, 0x44, 0x56, 0x1d, 0x74, 0x97, 0xbd,
-	0x89, 0xcf, 0xff, 0xe5, 0xf7, 0x3c, 0x13, 0xf8, 0x34, 0x95, 0x82, 0x1b, 0x99, 0x71, 0x91, 0x28,
-	0x32, 0xcd, 0x59, 0x36, 0xc3, 0x2a, 0x93, 0x46, 0x22, 0xdf, 0x30, 0x31, 0x66, 0x59, 0xca, 0x85,
-	0xc1, 0x5a, 0x09, 0xbc, 0xa3, 0xf3, 0x6b, 0x89, 0x4c, 0xa4, 0x95, 0x91, 0xcd, 0xaf, 0xc2, 0xe1,
-	0x3f, 0x4b, 0xa4, 0x4c, 0x26, 0x8c, 0x50, 0xc5, 0x09, 0x15, 0x42, 0x1a, 0x6a, 0xb8, 0x14, 0xda,
-	0x4d, 0xdb, 0xb1, 0xd4, 0xa9, 0xd4, 0x24, 0xa2, 0x9a, 0x15, 0x45, 0xe4, 0x67, 0x27, 0x62, 0x86,
-	0x76, 0x88, 0xa2, 0x09, 0x17, 0x56, 0xec, 0xb4, 0xf5, 0x5d, 0x28, 0x45, 0x33, 0x9a, 0x6e, 0x53,
-	0x5a, 0xbb, 0x93, 0x58, 0x0a, 0x9d, 0xa7, 0x2c, 0x1b, 0xc5, 0x13, 0xce, 0x84, 0x19, 0xf1, 0x71,
-	0xa1, 0x0a, 0x6b, 0x10, 0x7d, 0xd9, 0x34, 0x7c, 0xb6, 0xd6, 0x21, 0x9b, 0xe6, 0x4c, 0x9b, 0xf0,
-	0x2b, 0x7c, 0xb2, 0xf7, 0xaf, 0x56, 0x52, 0x68, 0x86, 0x3e, 0xc0, 0x6a, 0x51, 0x51, 0x07, 0x4d,
-	0xf0, 0xe2, 0x51, 0x37, 0xc4, 0xc7, 0x37, 0xc7, 0x85, 0xb7, 0xf7, 0x60, 0x71, 0xde, 0xf0, 0x86,
-	0xce, 0x17, 0x3e, 0x87, 0x0d, 0x1b, 0x3c, 0x60, 0xa6, 0xef, 0x90, 0xfa, 0x96, 0xe8, 0xd3, 0xc7,
-	0x6d, 0xf7, 0x1c, 0xc0, 0xe6, 0x71, 0x8d, 0x23, 0xf9, 0x0e, 0x1f, 0x1f, 0xce, 0x1c, 0xd3, 0xcb,
-	0x53, 0x4c, 0x87, 0x1e, 0x47, 0x57, 0xca, 0xea, 0x5e, 0x55, 0xe0, 0x43, 0x0b, 0x81, 0xfe, 0x02,
-	0x58, 0x2d, 0x56, 0x41, 0xf8, 0x54, 0x74, 0xf9, 0x8a, 0x3e, 0xb9, 0xb3, 0xbe, 0xd8, 0x2a, 0x6c,
-	0xcf, 0xff, 0x5f, 0xfe, 0xa9, 0xb4, 0x50, 0x48, 0x6e, 0x8c, 0x44, 0x2b, 0x41, 0xca, 0x1f, 0x19,
-	0xfd, 0x03, 0xe5, 0x13, 0xa0, 0x77, 0xb7, 0x36, 0x1e, 0x3f, 0xbc, 0xff, 0xfe, 0x7e, 0x66, 0xc7,
-	0xfe, 0xd6, 0xb2, 0xbf, 0x46, 0xf8, 0x14, 0x7b, 0xf9, 0x19, 0xf6, 0x06, 0x8b, 0x55, 0x00, 0x96,
-	0xab, 0x00, 0x5c, 0xac, 0x02, 0xf0, 0x7b, 0x1d, 0x78, 0xcb, 0x75, 0xe0, 0x9d, 0xad, 0x03, 0xef,
-	0xdb, 0xab, 0x84, 0x9b, 0x1f, 0x79, 0x84, 0x63, 0x99, 0x1e, 0x66, 0xfe, 0xda, 0x4b, 0x35, 0x33,
-	0xc5, 0x74, 0x54, 0xb5, 0x0f, 0xfa, 0xcd, 0x75, 0x00, 0x00, 0x00, 0xff, 0xff, 0x62, 0x87, 0x31,
-	0x4e, 0xa7, 0x03, 0x00, 0x00,
+	// 488 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x94, 0x4f, 0x6b, 0x14, 0x31,
+	0x18, 0xc6, 0x37, 0x52, 0xf7, 0x10, 0x2f, 0x92, 0x16, 0x2c, 0x83, 0x4c, 0x6b, 0x5c, 0x50, 0x8a,
+	0x26, 0x6e, 0x0b, 0x82, 0x28, 0x2a, 0x5d, 0xa1, 0x78, 0xd3, 0x5e, 0x04, 0x0f, 0x2e, 0xd9, 0x69,
+	0x48, 0x03, 0x3b, 0x6f, 0xd2, 0x49, 0x56, 0xec, 0xb5, 0x1f, 0x40, 0x04, 0xf1, 0xd3, 0x78, 0x16,
+	0x7a, 0xac, 0x78, 0xf1, 0x24, 0xb2, 0xeb, 0x07, 0x91, 0xcd, 0xa4, 0xed, 0x76, 0x66, 0xff, 0x94,
+	0xde, 0x96, 0x7d, 0x9f, 0xe7, 0x79, 0x7f, 0x6f, 0xde, 0x4c, 0xf0, 0xad, 0xdc, 0x80, 0xf6, 0xa6,
+	0xd0, 0xa0, 0x2c, 0x3f, 0x18, 0xc8, 0xe2, 0x90, 0xd9, 0xc2, 0x78, 0x43, 0x12, 0x2f, 0x61, 0x4f,
+	0x16, 0xb9, 0x06, 0xcf, 0x9c, 0x05, 0x36, 0xa1, 0x4b, 0x56, 0x94, 0x51, 0x26, 0xc8, 0xf8, 0xf8,
+	0x57, 0xe9, 0x48, 0x6e, 0x2b, 0x63, 0x54, 0x5f, 0x72, 0x61, 0x35, 0x17, 0x00, 0xc6, 0x0b, 0xaf,
+	0x0d, 0xb8, 0x58, 0xdd, 0xc8, 0x8c, 0xcb, 0x8d, 0xe3, 0x3d, 0xe1, 0x64, 0xd9, 0x88, 0x7f, 0x6c,
+	0xf7, 0xa4, 0x17, 0x6d, 0x6e, 0x85, 0xd2, 0x10, 0xc4, 0x51, 0xbb, 0x3a, 0x09, 0x65, 0x45, 0x21,
+	0xf2, 0xd3, 0x94, 0xd6, 0x64, 0x25, 0x33, 0xe0, 0x06, 0xb9, 0x2c, 0xba, 0x59, 0x5f, 0x4b, 0xf0,
+	0x5d, 0xbd, 0x17, 0x55, 0xf7, 0x2a, 0x2a, 0x90, 0xd9, 0x38, 0xbd, 0x9b, 0xed, 0x0b, 0x00, 0xd9,
+	0x3f, 0x13, 0xd2, 0x15, 0x4c, 0xde, 0x8e, 0x51, 0xde, 0x84, 0x1e, 0xbb, 0xf2, 0x60, 0x20, 0x9d,
+	0xa7, 0xef, 0xf0, 0xf2, 0x85, 0x7f, 0x9d, 0x35, 0xe0, 0x24, 0x79, 0x89, 0x9b, 0x25, 0xcb, 0x2a,
+	0x5a, 0x47, 0xf7, 0x6f, 0x6c, 0x52, 0x36, 0xfb, 0x88, 0x58, 0xe9, 0xdd, 0x5e, 0x3a, 0xfe, 0xb3,
+	0xd6, 0xd8, 0x8d, 0x3e, 0x7a, 0x07, 0xaf, 0x85, 0xe0, 0x1d, 0xe9, 0x3b, 0x91, 0xbd, 0x13, 0xd0,
+	0x5f, 0xbf, 0x3a, 0xed, 0x7d, 0x84, 0xf0, 0xfa, 0x6c, 0x4d, 0x24, 0xf9, 0x80, 0x6f, 0x56, 0x6b,
+	0x91, 0xe9, 0xc1, 0x3c, 0xa6, 0xaa, 0x27, 0xd2, 0xd5, 0xb2, 0x68, 0x0b, 0xd3, 0x09, 0x86, 0x78,
+	0x7a, 0x9d, 0xf2, 0xf0, 0xce, 0x51, 0x3f, 0x23, 0x7c, 0x77, 0xae, 0x2c, 0xd2, 0x2a, 0xbc, 0x3c,
+	0xa5, 0x1c, 0x81, 0xf9, 0x02, 0xe0, 0xaa, 0x2d, 0x32, 0x4f, 0x4b, 0xdc, 0xfc, 0xbe, 0x84, 0xaf,
+	0x07, 0x20, 0xf2, 0x0d, 0xe1, 0x66, 0xb9, 0x01, 0xc2, 0xe6, 0x35, 0xa8, 0x2f, 0x3f, 0xe1, 0x97,
+	0xd6, 0x97, 0xe3, 0xd1, 0x8d, 0xa3, 0x5f, 0xff, 0xbe, 0x5e, 0x6b, 0x11, 0xca, 0xcf, 0x8d, 0xdc,
+	0x59, 0xe0, 0xf5, 0x4b, 0x4c, 0x7e, 0xa0, 0xfa, 0xe6, 0xc8, 0xd3, 0x85, 0x1d, 0x67, 0xdf, 0x97,
+	0xe4, 0xd9, 0xd5, 0xcc, 0x91, 0xfd, 0x71, 0x60, 0x7f, 0x44, 0xd8, 0x3c, 0xf6, 0xfa, 0x67, 0x46,
+	0x7e, 0xa2, 0xa9, 0x3b, 0x25, 0xcf, 0x2f, 0x49, 0x33, 0xe3, 0x4a, 0x25, 0x2f, 0xae, 0xec, 0x8f,
+	0x03, 0x3d, 0x09, 0x03, 0x6d, 0x91, 0xf6, 0x82, 0x81, 0xea, 0x2f, 0xc2, 0xf6, 0xce, 0xf1, 0x30,
+	0x45, 0x27, 0xc3, 0x14, 0xfd, 0x1d, 0xa6, 0xe8, 0xcb, 0x28, 0x6d, 0x9c, 0x8c, 0xd2, 0xc6, 0xef,
+	0x51, 0xda, 0x78, 0xff, 0x50, 0x69, 0xbf, 0x3f, 0xe8, 0xb1, 0xcc, 0xe4, 0xd5, 0xd8, 0x4f, 0x17,
+	0x82, 0xfd, 0xa1, 0x95, 0xae, 0xd7, 0x0c, 0x6f, 0xcb, 0xd6, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff,
+	0x07, 0xfd, 0xa5, 0xf3, 0x5b, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -248,6 +335,8 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Queries a ConsumerClientID by index.
 	ConsumerClientID(ctx context.Context, in *QueryGetConsumerClientIDRequest, opts ...grpc.CallOption) (*QueryGetConsumerClientIDResponse, error)
+	// Queries a ConnectionChannelID by index.
+	ConnectionChannelID(ctx context.Context, in *QueryGetConnectionChannelIDRequest, opts ...grpc.CallOption) (*QueryGetConnectionChannelIDResponse, error)
 }
 
 type queryClient struct {
@@ -276,12 +365,23 @@ func (c *queryClient) ConsumerClientID(ctx context.Context, in *QueryGetConsumer
 	return out, nil
 }
 
+func (c *queryClient) ConnectionChannelID(ctx context.Context, in *QueryGetConnectionChannelIDRequest, opts ...grpc.CallOption) (*QueryGetConnectionChannelIDResponse, error) {
+	out := new(QueryGetConnectionChannelIDResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.monitoringp.Query/ConnectionChannelID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	// Queries a ConsumerClientID by index.
 	ConsumerClientID(context.Context, *QueryGetConsumerClientIDRequest) (*QueryGetConsumerClientIDResponse, error)
+	// Queries a ConnectionChannelID by index.
+	ConnectionChannelID(context.Context, *QueryGetConnectionChannelIDRequest) (*QueryGetConnectionChannelIDResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -293,6 +393,9 @@ func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsReq
 }
 func (*UnimplementedQueryServer) ConsumerClientID(ctx context.Context, req *QueryGetConsumerClientIDRequest) (*QueryGetConsumerClientIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConsumerClientID not implemented")
+}
+func (*UnimplementedQueryServer) ConnectionChannelID(ctx context.Context, req *QueryGetConnectionChannelIDRequest) (*QueryGetConnectionChannelIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConnectionChannelID not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -335,6 +438,24 @@ func _Query_ConsumerClientID_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_ConnectionChannelID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetConnectionChannelIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ConnectionChannelID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.monitoringp.Query/ConnectionChannelID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ConnectionChannelID(ctx, req.(*QueryGetConnectionChannelIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "tendermint.spn.monitoringp.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -346,6 +467,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ConsumerClientID",
 			Handler:    _Query_ConsumerClientID_Handler,
+		},
+		{
+			MethodName: "ConnectionChannelID",
+			Handler:    _Query_ConnectionChannelID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -464,6 +589,62 @@ func (m *QueryGetConsumerClientIDResponse) MarshalToSizedBuffer(dAtA []byte) (in
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryGetConnectionChannelIDRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetConnectionChannelIDRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetConnectionChannelIDRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetConnectionChannelIDResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetConnectionChannelIDResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetConnectionChannelIDResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.ConnectionChannelID.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -511,6 +692,26 @@ func (m *QueryGetConsumerClientIDResponse) Size() (n int) {
 	var l int
 	_ = l
 	l = m.ConsumerClientID.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryGetConnectionChannelIDRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func (m *QueryGetConnectionChannelIDResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.ConnectionChannelID.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
@@ -763,6 +964,139 @@ func (m *QueryGetConsumerClientIDResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.ConsumerClientID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetConnectionChannelIDRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetConnectionChannelIDRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetConnectionChannelIDRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetConnectionChannelIDResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetConnectionChannelIDResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetConnectionChannelIDResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ConnectionChannelID", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ConnectionChannelID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

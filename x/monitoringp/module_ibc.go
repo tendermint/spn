@@ -15,35 +15,16 @@ import (
 
 // OnChanOpenInit implements the IBCModule interface
 func (am AppModule) OnChanOpenInit(
-	ctx sdk.Context,
-	order channeltypes.Order,
-	connectionHops []string,
-	portID string,
-	channelID string,
-	chanCap *capabilitytypes.Capability,
-	counterparty channeltypes.Counterparty,
-	version string,
+	_ sdk.Context,
+	_ channeltypes.Order,
+	_ []string,
+	_ string,
+	_ string,
+	_ *capabilitytypes.Capability,
+	_ channeltypes.Counterparty,
+	_ string,
 ) error {
-	if order != channeltypes.ORDERED {
-		return sdkerrors.Wrapf(channeltypes.ErrInvalidChannelOrdering, "expected %s channel, got %s ", channeltypes.ORDERED, order)
-	}
-
-	// Require portID is the portID module is bound to
-	boundPort := am.keeper.GetPort(ctx)
-	if boundPort != portID {
-		return sdkerrors.Wrapf(porttypes.ErrInvalidPort, "invalid port: %s, expected %s", portID, boundPort)
-	}
-
-	if version != types.Version {
-		return sdkerrors.Wrapf(types.ErrInvalidVersion, "got %s, expected %s", version, types.Version)
-	}
-
-	// Claim channel capability passed back by IBC module
-	if err := am.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
-		return err
-	}
-
-	return nil
+	return sdkerrors.Wrap(types.ErrInvalidHandshake, "IBC handshake must be initiated by the consumer")
 }
 
 // OnChanOpenTry implements the IBCModule interface
@@ -87,20 +68,23 @@ func (am AppModule) OnChanOpenTry(
 		}
 	}
 
+	// Check if the right consumer client ID is used
+	if err := am.keeper.VerifyClientIDFromChannelID(ctx, channelID); err != nil {
+		return sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
+	}
+
 	return nil
 }
 
 // OnChanOpenAck implements the IBCModule interface
 func (am AppModule) OnChanOpenAck(
-	ctx sdk.Context,
-	portID,
-	channelID string,
-	counterpartyVersion string,
+	_ sdk.Context,
+	_,
+	_,
+	_ string,
 ) error {
-	if counterpartyVersion != types.Version {
-		return sdkerrors.Wrapf(types.ErrInvalidVersion, "invalid counterparty version: %s, expected %s", counterpartyVersion, types.Version)
-	}
-	return nil
+	return sdkerrors.Wrap(types.ErrInvalidHandshake, "IBC handshake must be initiated by the consumer")
+
 }
 
 // OnChanOpenConfirm implements the IBCModule interface
@@ -109,6 +93,11 @@ func (am AppModule) OnChanOpenConfirm(
 	portID,
 	channelID string,
 ) error {
+	// register channel ID as the connection for monitoring
+	if err := am.keeper.RegisterConnectionChannelID(ctx, channelID); err != nil {
+		return sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
+	}
+
 	return nil
 }
 

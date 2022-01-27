@@ -14,6 +14,15 @@ import (
 
 // MonitoringpKeeper returns a keeper of the monitoring provider module for testing purpose
 func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Context) {
+	return MonitoringpKeeperWithIBCMock(t, []Connection{}, []Channel{})
+}
+
+// MonitoringpKeeperWithIBCMock returns a keeper of the monitoring provider module for testing purpose
+func MonitoringpKeeperWithIBCMock(
+	t testing.TB,
+	connectionMock []Connection,
+	channelMock []Channel,
+) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Context) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
@@ -26,6 +35,8 @@ func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Con
 		*ibcKeeper,
 		*capabilityKeeper,
 		paramKeeper,
+		connectionMock,
+		channelMock,
 	)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
