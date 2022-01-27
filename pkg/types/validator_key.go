@@ -1,10 +1,12 @@
 package types
 
 import (
-	"encoding/json"
+	"encoding/base64"
+	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/crypto"
+	tmjson "github.com/tendermint/tendermint/libs/json"
 )
 
 const (
@@ -16,19 +18,27 @@ const (
 
 // ValidatorKey stores the validator private key
 type ValidatorKey struct {
-	Address crypto.Address
-	PubKey  crypto.PubKey
-	PrivKey crypto.PrivKey
+	Address crypto.Address `json:"address"`
+	PubKey  crypto.PubKey  `json:"pub_key"`
+	PrivKey crypto.PrivKey `json:"priv_key"`
 }
 
 // Sign signs the message with privateKey and returns a signature
-func (v ValidatorKey) Sign(nonce uint64) ([]byte, error) {
-	return v.PrivKey.Sign(CreateSignMessage(nonce))
+func (v ValidatorKey) Sign(nonce uint64) (string, error) {
+	sign, err := v.PrivKey.Sign(CreateSignMessage(nonce))
+	if err != nil {
+		return "", err
+	}
+	return base64.StdEncoding.EncodeToString(sign), nil
 }
 
 // VerifySignature reports whether sig is a valid signature of mes
-func (v ValidatorKey) VerifySignature(nonce uint64, sig []byte) bool {
-	return v.PubKey.VerifySignature(CreateSignMessage(nonce), sig)
+func (v ValidatorKey) VerifySignature(nonce uint64, sig string) bool {
+	sigBytes, err := base64.StdEncoding.DecodeString(sig)
+	if err != nil {
+		return false
+	}
+	return v.PubKey.VerifySignature(CreateSignMessage(nonce), sigBytes)
 }
 
 // GetConsAddress return the validator consensus address
@@ -38,7 +48,12 @@ func (v ValidatorKey) GetConsAddress() types.ConsAddress {
 
 // LoadValidatorKey load the validator key file into the ValidatorKey struct
 func LoadValidatorKey(keyJSONBytes []byte) (pvKey ValidatorKey, err error) {
-	err = json.Unmarshal(keyJSONBytes, &pvKey)
+	err = tmjson.Unmarshal(keyJSONBytes, &pvKey)
+	if err != nil {
+		return pvKey, fmt.Errorf("error reading PrivValidator key: %s", err)
+	}
+
+	// overwrite pubkey and address for convenience
 	pvKey.PubKey = pvKey.PrivKey.PubKey()
 	pvKey.Address = pvKey.PubKey.Address()
 	return

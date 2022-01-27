@@ -3,51 +3,40 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgSetValidatorConsAddress_ValidateBasic(t *testing.T) {
+	var (
+		valKey = `{
+  "address": "B4AAC35ED4E14C09E530B10AF4DD604FAAC597C0",
+  "pub_key": {
+    "type": "tendermint/PubKeyEd25519",
+    "value": "sYTsd7W1+SBtjD3BN/aTEDFvfRbZ9zdfpQH2Lk3MRK4="
+  },
+  "priv_key": {
+    "type": "tendermint/PrivKeyEd25519",
+    "value": "j45JhnCflEk3T6FC8LLuJqg9tPfCzJH+UYZY88xn+0exhOx3tbX5IG2MPcE39pMQMW99Ftn3N1+lAfYuTcxErg=="
+  }
+}`
+	)
 	tests := []struct {
 		name string
 		msg  types.MsgSetValidatorConsAddress
 		err  error
 	}{
 		{
-			name: "invalid creator address",
+			name: "invalid validator key",
 			msg: types.MsgSetValidatorConsAddress{
-				Creator:     "invalid_address",
-				Address:     sample.Address(),
-				ConsAddress: sample.Address(),
+				ValidatorKey: []byte("invalid_key"),
 			},
-			err: sdkerrors.ErrInvalidAddress,
-		},
-		{
-			name: "invalid validator address",
-			msg: types.MsgSetValidatorConsAddress{
-				Creator:     sample.Address(),
-				Address:     "invalid_address",
-				ConsAddress: sample.Address(),
-			},
-			err: sdkerrors.ErrInvalidAddress,
-		},
-		{
-			name: "invalid consensus address",
-			msg: types.MsgSetValidatorConsAddress{
-				Creator:     sample.Address(),
-				Address:     sample.Address(),
-				ConsAddress: "invalid_address",
-			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: types.ErrInvalidValidatorKey,
 		},
 		{
 			name: "valid message",
 			msg: types.MsgSetValidatorConsAddress{
-				Address:     sample.Address(),
-				Creator:     sample.Address(),
-				ConsAddress: sample.Address(),
+				ValidatorKey: []byte(valKey),
 			},
 		},
 	}

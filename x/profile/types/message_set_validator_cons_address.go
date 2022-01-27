@@ -10,9 +10,8 @@ const TypeMsgSetValidatorConsAddress = "set_validator_cons_address"
 
 var _ sdk.Msg = &MsgSetValidatorConsAddress{}
 
-func NewMsgSetValidatorConsAddress(creator, signature string, validatorKey []byte) *MsgSetValidatorConsAddress {
+func NewMsgSetValidatorConsAddress(signature string, validatorKey []byte) *MsgSetValidatorConsAddress {
 	return &MsgSetValidatorConsAddress{
-		Creator:      creator,
 		ValidatorKey: validatorKey,
 		Signature:    signature,
 	}
@@ -27,11 +26,7 @@ func (msg *MsgSetValidatorConsAddress) Type() string {
 }
 
 func (msg *MsgSetValidatorConsAddress) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
+	return []sdk.AccAddress{}
 }
 
 func (msg *MsgSetValidatorConsAddress) GetSignBytes() []byte {
@@ -40,9 +35,6 @@ func (msg *MsgSetValidatorConsAddress) GetSignBytes() []byte {
 }
 
 func (msg *MsgSetValidatorConsAddress) ValidateBasic() error {
-	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
 	if _, err := types.LoadValidatorKey(msg.ValidatorKey); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidValidatorKey, "invalid validator key (%s)", err)
 	}

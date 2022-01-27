@@ -14,7 +14,7 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-validator-cons-address [validator-key] [signature]",
 		Short: "Associate a consensus address for a specific SPN address",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -28,7 +28,6 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 			}
 
 			msg := types.NewMsgSetValidatorConsAddress(
-				clientCtx.GetFromAddress().String(),
 				args[1],
 				valKeyBytes,
 			)
