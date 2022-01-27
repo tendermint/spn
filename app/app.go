@@ -448,6 +448,7 @@ func New(
 		&app.IBCKeeper.PortKeeper,
 		scopedMonitoringcKeeper,
 		app.LaunchKeeper,
+		app.RewardKeeper,
 	)
 	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
 
@@ -781,7 +782,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(rewardmoduletypes.ModuleName)
 	paramsKeeper.Subspace(fundraisingtypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
-	
+
 	return paramsKeeper
 }
 
