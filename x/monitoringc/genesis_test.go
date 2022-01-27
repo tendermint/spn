@@ -40,6 +40,14 @@ func TestGenesis(t *testing.T) {
 				ClientID: "1",
 			},
 		},
+		LaunchIDFromChannelIDList: []types.LaunchIDFromChannelID{
+			{
+				ChannelID: "0",
+			},
+			{
+				ChannelID: "1",
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -56,5 +64,6 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.VerifiedClientIDList, got.VerifiedClientIDList)
 	require.ElementsMatch(t, genesisState.ProviderClientIDList, got.ProviderClientIDList)
 	require.ElementsMatch(t, genesisState.LaunchIDFromVerifiedClientIDList, got.LaunchIDFromVerifiedClientIDList)
+	require.ElementsMatch(t, genesisState.LaunchIDFromChannelIDList, got.LaunchIDFromChannelIDList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

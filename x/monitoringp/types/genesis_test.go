@@ -27,6 +27,9 @@ func TestGenesisState_Validate(t *testing.T) {
 					ClientID: "29",
 				},
 				Params: types.DefaultParams(),
+				ConnectionChannelID: &types.ConnectionChannelID{
+					ChannelID: "67",
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -39,7 +42,8 @@ func TestGenesisState_Validate(t *testing.T) {
 					ClientID: "29",
 				},
 				Params: types.NewParams(
-					"foo",
+					1000,
+					"foo", // chain id should be <chain-name>-<revision-number>
 					sample.ConsensusState(0),
 					false,
 				),

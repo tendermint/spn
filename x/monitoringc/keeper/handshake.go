@@ -10,7 +10,7 @@ import (
 )
 
 // DebugModeLaunchID is the launch ID automatically used when debug mode is set
-const DebugModeLaunchID = 1
+const DebugModeLaunchID uint64 = 1
 
 // VerifyClientIDFromChannelID verifies if the client ID associated with the provided channel ID
 // is a verified client ID and if no connection is yet established with the provider chain
@@ -55,16 +55,10 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 		)
 	}
 
+	launchID := DebugModeLaunchID
+
 	// if debug mode is set, the launch ID 1 is automatically registered for the client
-	if k.DebugMode(ctx) {
-		k.SetProviderClientID(ctx, types.ProviderClientID{
-			ClientID: clientID,
-			LaunchID: DebugModeLaunchID,
-		})
-
-		// TODO: add launch ID from channel ID
-
-	} else {
+	if !k.DebugMode(ctx) {
 		// get the launch ID from the client ID
 		lidFromCid, found := k.GetLaunchIDFromVerifiedClientID(ctx, clientID)
 		if !found {
@@ -82,13 +76,20 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 				pCid.LaunchID, pCid.ClientID,
 			)
 		}
-
-		// register the client for the provider
-		k.SetProviderClientID(ctx, types.ProviderClientID{
-			ClientID: clientID,
-			LaunchID: lidFromCid.LaunchID,
-		})
+		launchID = lidFromCid.LaunchID
 	}
+
+	// register the client for the provider
+	k.SetProviderClientID(ctx, types.ProviderClientID{
+		ClientID: clientID,
+		LaunchID: launchID,
+	})
+
+	// associate the channel ID for the provider connection with the correct launch ID
+	k.SetLaunchIDFromChannelID(ctx, types.LaunchIDFromChannelID{
+		LaunchID:  launchID,
+		ChannelID: channelID,
+	})
 
 	return nil
 }

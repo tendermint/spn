@@ -16,6 +16,7 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 
 		// set params with valid values
 		k.SetParams(ctx, types.NewParams(
+			1000,
 			types.DefautConsumerChainID,
 			sample.ConsensusState(0),
 			false,

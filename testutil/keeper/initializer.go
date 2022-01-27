@@ -30,6 +30,7 @@ import (
 	monitoringpmoduletypes "github.com/tendermint/spn/x/monitoringp/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	rewardmodulekeeper "github.com/tendermint/spn/x/reward/keeper"
 	tmdb "github.com/tendermint/tm-db"
 )
 
@@ -183,10 +184,37 @@ func (i initializer) Campaign(
 	return campaignkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, launchKeeper, bankKeeper, profileKeeper)
 }
 
+func (i initializer) Reward(
+	bankKeeper bankkeeper.Keeper,
+	profileKeeper *profilekeeper.Keeper,
+	launchKeeper *launchkeeper.Keeper,
+	paramKeeper paramskeeper.Keeper,
+) *rewardmodulekeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(monitoringpmoduletypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(monitoringpmoduletypes.MemStoreKey)
+
+	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
+	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
+
+	paramKeeper.Subspace(monitoringpmoduletypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(monitoringpmoduletypes.ModuleName)
+
+	return rewardmodulekeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		memStoreKey,
+		subspace,
+		bankKeeper,
+		profileKeeper,
+		launchKeeper,
+	)
+}
+
 func (i initializer) Monitoringc(
 	ibcKeeper ibckeeper.Keeper,
 	capabilityKeeper capabilitykeeper.Keeper,
 	launchKeeper *launchkeeper.Keeper,
+	rewardKeeper *rewardmodulekeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 	connectionMock []Connection,
 	channelMock []Channel,
@@ -224,6 +252,7 @@ func (i initializer) Monitoringc(
 		&ibcKeeper.PortKeeper,
 		scopedMonitoringKeeper,
 		launchKeeper,
+		rewardKeeper,
 	)
 }
 
@@ -231,6 +260,8 @@ func (i initializer) Monitoringp(
 	ibcKeeper ibckeeper.Keeper,
 	capabilityKeeper capabilitykeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
+	connectionMock []Connection,
+	channelMock []Channel,
 ) *monitoringpmodulekeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(monitoringpmoduletypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(monitoringpmoduletypes.MemStoreKey)
@@ -242,14 +273,27 @@ func (i initializer) Monitoringp(
 	subspace, _ := paramKeeper.GetSubspace(monitoringpmoduletypes.ModuleName)
 	scopedMonitoringKeeper := capabilityKeeper.ScopeToModule(monitoringpmoduletypes.ModuleName)
 
+	// check if ibc mocks should be used for connection and channel
+	var (
+		connKeeper    monitoringcmoduletypes.ConnectionKeeper = ibcKeeper.ConnectionKeeper
+		channelKeeper monitoringcmoduletypes.ChannelKeeper    = ibcKeeper.ChannelKeeper
+	)
+	if len(connectionMock) != 0 {
+		connKeeper = NewConnectionMock(connectionMock)
+	}
+	if len(channelMock) != 0 {
+		channelKeeper = NewChannelMock(channelMock)
+	}
+
 	return monitoringpmodulekeeper.NewKeeper(
 		i.Codec,
 		storeKey,
 		memStoreKey,
 		subspace,
-		ibcKeeper.ChannelKeeper,
+		ibcKeeper.ClientKeeper,
+		connKeeper,
+		channelKeeper,
 		&ibcKeeper.PortKeeper,
 		scopedMonitoringKeeper,
-		ibcKeeper.ClientKeeper,
 	)
 }

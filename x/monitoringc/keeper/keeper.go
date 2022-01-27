@@ -22,6 +22,7 @@ type (
 		paramstore       paramtypes.Subspace
 		scopedKeeper     capabilitykeeper.ScopedKeeper
 		launchKeeper     types.LaunchKeeper
+		rewardKeeper     types.RewardKeeper
 		clientKeeper     types.ClientKeeper
 		portKeeper       types.PortKeeper
 		connectionKeeper types.ConnectionKeeper
@@ -40,6 +41,7 @@ func NewKeeper(
 	portKeeper types.PortKeeper,
 	scopedKeeper capabilitykeeper.ScopedKeeper,
 	launchKeeper types.LaunchKeeper,
+	rewardKeeper types.RewardKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -54,6 +56,7 @@ func NewKeeper(
 		paramstore:       ps,
 		scopedKeeper:     scopedKeeper,
 		launchKeeper:     launchKeeper,
+		rewardKeeper:     rewardKeeper,
 		clientKeeper:     clientKeeper,
 		portKeeper:       portKeeper,
 		connectionKeeper: connectionKeeper,

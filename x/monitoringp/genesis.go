@@ -13,6 +13,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if genState.ConsumerClientID != nil {
 		k.SetConsumerClientID(ctx, *genState.ConsumerClientID)
 	}
+	// Set if defined
+	if genState.ConnectionChannelID != nil {
+		k.SetConnectionChannelID(ctx, *genState.ConnectionChannelID)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetPort(ctx, genState.PortId)
 	// Only try to bind to port if it is not already bound, since we may already own
@@ -46,6 +50,11 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	consumerClientID, found := k.GetConsumerClientID(ctx)
 	if found {
 		genesis.ConsumerClientID = &consumerClientID
+	}
+	// Get all connectionChannelID
+	connectionChannelID, found := k.GetConnectionChannelID(ctx)
+	if found {
+		genesis.ConnectionChannelID = &connectionChannelID
 	}
 	// this line is used by starport scaffolding # genesis/module/export
 
