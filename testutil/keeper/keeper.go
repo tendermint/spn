@@ -120,7 +120,6 @@ func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
 	return rewardKeeper, ctx
 }
 
-
 // Monitoringc returns a keeper of the monitoring consumer module for testing purpose
 func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
 	_, _, _, _, monitoringConsumerKeeper, _, ctx := AllKeepers(t) // nolint

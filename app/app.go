@@ -110,6 +110,7 @@ import (
 	rewardmodule "github.com/tendermint/spn/x/reward"
 	rewardmodulekeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardmoduletypes "github.com/tendermint/spn/x/reward/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/tendermint/spm/cosmoscmd"
@@ -244,11 +245,11 @@ type App struct {
 
 	ScopedMonitoringcKeeper capabilitykeeper.ScopedKeeper
 
-	ProfileKeeper  profilemodulekeeper.Keeper
-	LaunchKeeper   launchmodulekeeper.Keeper
-	CampaignKeeper campaignmodulekeeper.Keeper
-	MonitoringcKeeper       monitoringcmodulekeeper.Keeper
-	RewardKeeper rewardmodulekeeper.Keeper
+	ProfileKeeper     profilemodulekeeper.Keeper
+	LaunchKeeper      launchmodulekeeper.Keeper
+	CampaignKeeper    campaignmodulekeeper.Keeper
+	MonitoringcKeeper monitoringcmodulekeeper.Keeper
+	RewardKeeper      rewardmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// the module manager
