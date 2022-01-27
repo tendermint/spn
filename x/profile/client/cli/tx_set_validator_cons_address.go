@@ -19,7 +19,7 @@ const (
 func CmdSetValidatorConsAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-validator-cons-address [validator-key] [nonce]",
-		Short: "Associate a consensus address for a specific SPN address",
+		Short: "Associate a Tendermint consensus address to a specific validator address on SPN",
 		Args:  cobra.RangeArgs(1, 2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -28,11 +28,11 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 			}
 
 			// Read validator key file
-			valKeyBytes, err := ioutil.ReadFile(args[0])
+			valConsKeyBytes, err := ioutil.ReadFile(args[0])
 			if err != nil {
 				return err
 			}
-			valKey, err := valtypes.LoadValidatorKey(valKeyBytes)
+			valConsKey, err := valtypes.LoadValidatorKey(valConsKeyBytes)
 			if err != nil {
 				return err
 			}
@@ -44,7 +44,7 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 				if err != nil {
 					return err
 				}
-				signature, err = valKey.Sign(nonce, clientCtx.ChainID)
+				signature, err = valConsKey.Sign(nonce, clientCtx.ChainID)
 				if err != nil {
 					return err
 				}
@@ -53,8 +53,8 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 			msg := types.NewMsgSetValidatorConsAddress(
 				clientCtx.GetFromAddress().String(),
 				signature,
-				valKey.PubKey.Type(),
-				valKey.PubKey.Bytes(),
+				valConsKey.PubKey.Type(),
+				valConsKey.PubKey.Bytes(),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -63,7 +63,7 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagSignature, "", "already sign nonce and chain id signature")
+	cmd.Flags().String(flagSignature, "", "signature of the nonce and chain id. Using this arg invalidate the nonce parameter")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

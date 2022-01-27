@@ -10,12 +10,12 @@ const TypeMsgSetValidatorConsAddress = "set_validator_cons_address"
 
 var _ sdk.Msg = &MsgSetValidatorConsAddress{}
 
-func NewMsgSetValidatorConsAddress(validatorAddress, signature, keyType string, validatorPubKey []byte) *MsgSetValidatorConsAddress {
+func NewMsgSetValidatorConsAddress(validatorAddress, signature, keyType string, validatorConsPubKey []byte) *MsgSetValidatorConsAddress {
 	return &MsgSetValidatorConsAddress{
-		ValidatorAddress: validatorAddress,
-		ValidatorPubKey:  validatorPubKey,
-		ValidatorKeyType: keyType,
-		Signature:        signature,
+		ValidatorAddress:    validatorAddress,
+		ValidatorConsPubKey: validatorConsPubKey,
+		ValidatorKeyType:    keyType,
+		Signature:           signature,
 	}
 }
 
@@ -44,8 +44,8 @@ func (msg *MsgSetValidatorConsAddress) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.ValidatorAddress); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
-	if _, err := valtypes.NewValidatorPubKey(msg.ValidatorPubKey, msg.ValidatorKeyType); err != nil {
-		return sdkerrors.Wrap(ErrInvalidValidatorKey, string(msg.ValidatorPubKey))
+	if _, err := valtypes.NewValidatorConsPubKey(msg.ValidatorConsPubKey, msg.ValidatorKeyType); err != nil {
+		return sdkerrors.Wrap(ErrInvalidValidatorKey, string(msg.ValidatorConsPubKey))
 	}
 	return nil
 }

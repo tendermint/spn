@@ -41,50 +41,50 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 
 	tests := []struct {
 		name   string
-		pubKey valtypes.ValidatorPubKey
+		pubKey valtypes.ValidatorConsPubKey
 		msg    *types.MsgSetValidatorConsAddress
 		err    error
 	}{
 		{
 			name:   "valid message",
-			pubKey: valtypes.ValidatorPubKey{PubKey: valKey.PubKey},
+			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
 			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorAddress: valKey.Address.String(),
-				ValidatorPubKey:  valKey.PubKey.Bytes(),
-				ValidatorKeyType: valKey.PubKey.Type(),
-				Signature:        signature,
+				ValidatorAddress:    valKey.Address.String(),
+				ValidatorConsPubKey: valKey.PubKey.Bytes(),
+				ValidatorKeyType:    valKey.PubKey.Type(),
+				Signature:           signature,
 			},
 		},
 		{
 			name:   "invalid validator key",
-			pubKey: valtypes.ValidatorPubKey{PubKey: valKey.PubKey},
+			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
 			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorAddress: valKey.Address.String(),
-				ValidatorPubKey:  []byte("invalid_key"),
-				ValidatorKeyType: "invalid_type",
-				Signature:        "invalid_signature",
+				ValidatorAddress:    valKey.Address.String(),
+				ValidatorConsPubKey: []byte("invalid_key"),
+				ValidatorKeyType:    "invalid_type",
+				Signature:           "invalid_signature",
 			},
 			err: types.ErrInvalidValidatorKey,
 		},
 		{
 			name:   "validator consensus already exist",
-			pubKey: valtypes.ValidatorPubKey{PubKey: valKey.PubKey},
+			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
 			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorAddress: valKey.Address.String(),
-				ValidatorPubKey:  valKey.PubKey.Bytes(),
-				ValidatorKeyType: valKey.PubKey.Type(),
-				Signature:        signature,
+				ValidatorAddress:    valKey.Address.String(),
+				ValidatorConsPubKey: valKey.PubKey.Bytes(),
+				ValidatorKeyType:    valKey.PubKey.Type(),
+				Signature:           signature,
 			},
 			err: types.ErrValidatorConsAddressAlreadyExit,
 		},
 		{
 			name:   "invalid signature",
-			pubKey: valtypes.ValidatorPubKey{PubKey: randPubKey},
+			pubKey: valtypes.ValidatorConsPubKey{PubKey: randPubKey},
 			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorAddress: randPubKey.Address().String(),
-				ValidatorPubKey:  randPubKey.Bytes(),
-				ValidatorKeyType: randPubKey.Type(),
-				Signature:        "invalid_signature",
+				ValidatorAddress:    randPubKey.Address().String(),
+				ValidatorConsPubKey: randPubKey.Bytes(),
+				ValidatorKeyType:    randPubKey.Type(),
+				Signature:           "invalid_signature",
 			},
 			err: types.ErrInvalidValidatorSignature,
 		},

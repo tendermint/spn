@@ -107,17 +107,17 @@ func TestValidatorKey_GetConsAddress(t *testing.T) {
 	)
 	tests := []struct {
 		name   string
-		valKey types.ValidatorPubKey
+		valKey types.ValidatorConsPubKey
 		want   string
 	}{
 		{
 			name:   "validator key",
-			valKey: types.ValidatorPubKey{PubKey: pubKey},
+			valKey: types.ValidatorConsPubKey{PubKey: pubKey},
 			want:   "cosmosvalcons1s80pwt3df76q68pr2srnc2qvc3gulr83caxuqe",
 		},
 		{
 			name:   "random priv key",
-			valKey: types.ValidatorPubKey{PubKey: randPubKey},
+			valKey: types.ValidatorConsPubKey{PubKey: randPubKey},
 			want:   sdk.ConsAddress(randPubKey.Address()).String(),
 		},
 	}
@@ -234,7 +234,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		valKey  types.ValidatorPubKey
+		valKey  types.ValidatorConsPubKey
 		nonce   uint64
 		chainID string
 		sig     string
@@ -242,7 +242,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 	}{
 		{
 			name:    "valid check",
-			valKey:  types.ValidatorPubKey{PubKey: valKey.PubKey},
+			valKey:  types.ValidatorConsPubKey{PubKey: valKey.PubKey},
 			sig:     validSig,
 			nonce:   10,
 			chainID: "spn-1",
@@ -250,7 +250,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 		},
 		{
 			name:    "zero nonce",
-			valKey:  types.ValidatorPubKey{PubKey: valKey.PubKey},
+			valKey:  types.ValidatorConsPubKey{PubKey: valKey.PubKey},
 			sig:     validZeroNonceSig,
 			nonce:   0,
 			chainID: "spn-1",
@@ -258,7 +258,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 		},
 		{
 			name:    "random signature",
-			valKey:  types.ValidatorPubKey{PubKey: valKey.PubKey},
+			valKey:  types.ValidatorConsPubKey{PubKey: valKey.PubKey},
 			sig:     sample.String(10),
 			nonce:   10,
 			chainID: "spn-1",
@@ -266,7 +266,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 		},
 		{
 			name:    "invalid validator key",
-			valKey:  types.ValidatorPubKey{PubKey: invalidPubKey},
+			valKey:  types.ValidatorConsPubKey{PubKey: invalidPubKey},
 			sig:     invalidSig,
 			nonce:   10,
 			chainID: "spn-1",

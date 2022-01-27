@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	"github.com/tendermint/tendermint/crypto/ed25519"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -18,16 +19,27 @@ func TestMsgSetValidatorConsAddress_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid validator address",
 			msg: types.MsgSetValidatorConsAddress{
-				ValidatorAddress: "invalid_address",
-				ValidatorPubKey:  sample.Bytes(10),
+				ValidatorAddress:    "invalid_address",
+				ValidatorConsPubKey: sample.Bytes(10),
+				ValidatorKeyType:    ed25519.KeyType,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
+			name: "invalid validator consensus key",
+			msg: types.MsgSetValidatorConsAddress{
+				ValidatorAddress:    sample.Address(),
+				ValidatorConsPubKey: sample.Bytes(10),
+				ValidatorKeyType:    "invalid_key_type",
+			},
+			err: types.ErrInvalidValidatorKey,
+		},
+		{
 			name: "valid message",
 			msg: types.MsgSetValidatorConsAddress{
-				ValidatorAddress: sample.Address(),
-				ValidatorPubKey:  sample.Bytes(10),
+				ValidatorAddress:    sample.Address(),
+				ValidatorConsPubKey: sample.Bytes(10),
+				ValidatorKeyType:    ed25519.KeyType,
 			},
 		},
 	}

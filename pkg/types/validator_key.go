@@ -26,7 +26,7 @@ type (
 		PubKey  crypto.PubKey  `json:"pub_key"`
 		PrivKey crypto.PrivKey `json:"priv_key"`
 	}
-	ValidatorPubKey struct {
+	ValidatorConsPubKey struct {
 		PubKey crypto.PubKey `json:"pub_key"`
 	}
 )
@@ -40,22 +40,22 @@ func (v ValidatorKey) Sign(nonce uint64, chainID string) (string, error) {
 	return base64.StdEncoding.EncodeToString(sign), nil
 }
 
-// NewValidatorPubKey creates a new validator pub key based in the type
-func NewValidatorPubKey(key []byte, keyType string) (ValidatorPubKey, error) {
+// NewValidatorConsPubKey creates a new validator pub key based in the type
+func NewValidatorConsPubKey(key []byte, keyType string) (ValidatorConsPubKey, error) {
 	switch keyType {
 	case ed25519.KeyType:
-		return ValidatorPubKey{PubKey: ed25519.PubKey(key)}, nil
+		return ValidatorConsPubKey{PubKey: ed25519.PubKey(key)}, nil
 	case secp256k1.KeyType:
-		return ValidatorPubKey{PubKey: secp256k1.PubKey(key)}, nil
+		return ValidatorConsPubKey{PubKey: secp256k1.PubKey(key)}, nil
 	case "sr25519":
-		return ValidatorPubKey{PubKey: sr25519.PubKey(key)}, nil
+		return ValidatorConsPubKey{PubKey: sr25519.PubKey(key)}, nil
 	default:
-		return ValidatorPubKey{}, fmt.Errorf("key type: %s is not supported", keyType)
+		return ValidatorConsPubKey{}, fmt.Errorf("key type: %s is not supported", keyType)
 	}
 }
 
 // VerifySignature reports whether sig is a valid signature of mes
-func (v ValidatorPubKey) VerifySignature(nonce uint64, chainID, sig string) bool {
+func (v ValidatorConsPubKey) VerifySignature(nonce uint64, chainID, sig string) bool {
 	sigBytes, err := base64.StdEncoding.DecodeString(sig)
 	if err != nil {
 		return false
@@ -64,12 +64,12 @@ func (v ValidatorPubKey) VerifySignature(nonce uint64, chainID, sig string) bool
 }
 
 // Address return the validator address
-func (v ValidatorPubKey) Address() crypto.Address {
+func (v ValidatorConsPubKey) Address() crypto.Address {
 	return v.PubKey.Address()
 }
 
 // GetConsAddress return the validator consensus address
-func (v ValidatorPubKey) GetConsAddress() types.ConsAddress {
+func (v ValidatorConsPubKey) GetConsAddress() types.ConsAddress {
 	return types.ConsAddress(v.PubKey.Address())
 }
 

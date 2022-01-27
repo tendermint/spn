@@ -15,10 +15,10 @@ func (k msgServer) SetValidatorConsAddress(
 ) (*types.MsgSetValidatorConsAddressResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	valPubKey, err := valtypes.NewValidatorPubKey(msg.ValidatorPubKey, msg.ValidatorKeyType)
+	valPubKey, err := valtypes.NewValidatorConsPubKey(msg.ValidatorConsPubKey, msg.ValidatorKeyType)
 	if err != nil {
 		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrap(types.ErrInvalidValidatorKey, string(msg.ValidatorPubKey))
+			sdkerrors.Wrap(types.ErrInvalidValidatorKey, string(msg.ValidatorConsPubKey))
 	}
 	consAddress := valPubKey.GetConsAddress().String()
 
