@@ -601,6 +601,190 @@ func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) GetPagination() *query.Pa
 	return nil
 }
 
+type QueryGetLaunchIDFromChannelIDRequest struct {
+	ChannelID string `protobuf:"bytes,1,opt,name=channelID,proto3" json:"channelID,omitempty"`
+}
+
+func (m *QueryGetLaunchIDFromChannelIDRequest) Reset()         { *m = QueryGetLaunchIDFromChannelIDRequest{} }
+func (m *QueryGetLaunchIDFromChannelIDRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetLaunchIDFromChannelIDRequest) ProtoMessage()    {}
+func (*QueryGetLaunchIDFromChannelIDRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{12}
+}
+func (m *QueryGetLaunchIDFromChannelIDRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetLaunchIDFromChannelIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetLaunchIDFromChannelIDRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetLaunchIDFromChannelIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetLaunchIDFromChannelIDRequest.Merge(m, src)
+}
+func (m *QueryGetLaunchIDFromChannelIDRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetLaunchIDFromChannelIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetLaunchIDFromChannelIDRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetLaunchIDFromChannelIDRequest proto.InternalMessageInfo
+
+func (m *QueryGetLaunchIDFromChannelIDRequest) GetChannelID() string {
+	if m != nil {
+		return m.ChannelID
+	}
+	return ""
+}
+
+type QueryGetLaunchIDFromChannelIDResponse struct {
+	LaunchIDFromChannelID LaunchIDFromChannelID `protobuf:"bytes,1,opt,name=launchIDFromChannelID,proto3" json:"launchIDFromChannelID"`
+}
+
+func (m *QueryGetLaunchIDFromChannelIDResponse) Reset()         { *m = QueryGetLaunchIDFromChannelIDResponse{} }
+func (m *QueryGetLaunchIDFromChannelIDResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetLaunchIDFromChannelIDResponse) ProtoMessage()    {}
+func (*QueryGetLaunchIDFromChannelIDResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{13}
+}
+func (m *QueryGetLaunchIDFromChannelIDResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetLaunchIDFromChannelIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetLaunchIDFromChannelIDResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetLaunchIDFromChannelIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetLaunchIDFromChannelIDResponse.Merge(m, src)
+}
+func (m *QueryGetLaunchIDFromChannelIDResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetLaunchIDFromChannelIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetLaunchIDFromChannelIDResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetLaunchIDFromChannelIDResponse proto.InternalMessageInfo
+
+func (m *QueryGetLaunchIDFromChannelIDResponse) GetLaunchIDFromChannelID() LaunchIDFromChannelID {
+	if m != nil {
+		return m.LaunchIDFromChannelID
+	}
+	return LaunchIDFromChannelID{}
+}
+
+type QueryAllLaunchIDFromChannelIDRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllLaunchIDFromChannelIDRequest) Reset()         { *m = QueryAllLaunchIDFromChannelIDRequest{} }
+func (m *QueryAllLaunchIDFromChannelIDRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryAllLaunchIDFromChannelIDRequest) ProtoMessage()    {}
+func (*QueryAllLaunchIDFromChannelIDRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{14}
+}
+func (m *QueryAllLaunchIDFromChannelIDRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllLaunchIDFromChannelIDRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllLaunchIDFromChannelIDRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllLaunchIDFromChannelIDRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllLaunchIDFromChannelIDRequest.Merge(m, src)
+}
+func (m *QueryAllLaunchIDFromChannelIDRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllLaunchIDFromChannelIDRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllLaunchIDFromChannelIDRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllLaunchIDFromChannelIDRequest proto.InternalMessageInfo
+
+func (m *QueryAllLaunchIDFromChannelIDRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+type QueryAllLaunchIDFromChannelIDResponse struct {
+	LaunchIDFromChannelID []LaunchIDFromChannelID `protobuf:"bytes,1,rep,name=launchIDFromChannelID,proto3" json:"launchIDFromChannelID"`
+	Pagination            *query.PageResponse     `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryAllLaunchIDFromChannelIDResponse) Reset()         { *m = QueryAllLaunchIDFromChannelIDResponse{} }
+func (m *QueryAllLaunchIDFromChannelIDResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryAllLaunchIDFromChannelIDResponse) ProtoMessage()    {}
+func (*QueryAllLaunchIDFromChannelIDResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ecb4a38bab58f58d, []int{15}
+}
+func (m *QueryAllLaunchIDFromChannelIDResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryAllLaunchIDFromChannelIDResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryAllLaunchIDFromChannelIDResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryAllLaunchIDFromChannelIDResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryAllLaunchIDFromChannelIDResponse.Merge(m, src)
+}
+func (m *QueryAllLaunchIDFromChannelIDResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryAllLaunchIDFromChannelIDResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryAllLaunchIDFromChannelIDResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryAllLaunchIDFromChannelIDResponse proto.InternalMessageInfo
+
+func (m *QueryAllLaunchIDFromChannelIDResponse) GetLaunchIDFromChannelID() []LaunchIDFromChannelID {
+	if m != nil {
+		return m.LaunchIDFromChannelID
+	}
+	return nil
+}
+
+func (m *QueryAllLaunchIDFromChannelIDResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "tendermint.spn.monitoringc.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "tendermint.spn.monitoringc.QueryParamsResponse")
@@ -614,60 +798,74 @@ func init() {
 	proto.RegisterType((*QueryGetLaunchIDFromVerifiedClientIDResponse)(nil), "tendermint.spn.monitoringc.QueryGetLaunchIDFromVerifiedClientIDResponse")
 	proto.RegisterType((*QueryAllLaunchIDFromVerifiedClientIDRequest)(nil), "tendermint.spn.monitoringc.QueryAllLaunchIDFromVerifiedClientIDRequest")
 	proto.RegisterType((*QueryAllLaunchIDFromVerifiedClientIDResponse)(nil), "tendermint.spn.monitoringc.QueryAllLaunchIDFromVerifiedClientIDResponse")
+	proto.RegisterType((*QueryGetLaunchIDFromChannelIDRequest)(nil), "tendermint.spn.monitoringc.QueryGetLaunchIDFromChannelIDRequest")
+	proto.RegisterType((*QueryGetLaunchIDFromChannelIDResponse)(nil), "tendermint.spn.monitoringc.QueryGetLaunchIDFromChannelIDResponse")
+	proto.RegisterType((*QueryAllLaunchIDFromChannelIDRequest)(nil), "tendermint.spn.monitoringc.QueryAllLaunchIDFromChannelIDRequest")
+	proto.RegisterType((*QueryAllLaunchIDFromChannelIDResponse)(nil), "tendermint.spn.monitoringc.QueryAllLaunchIDFromChannelIDResponse")
 }
 
 func init() { proto.RegisterFile("monitoringc/query.proto", fileDescriptor_ecb4a38bab58f58d) }
 
 var fileDescriptor_ecb4a38bab58f58d = []byte{
-	// 766 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x4d, 0x4f, 0xd4, 0x40,
-	0x18, 0xde, 0x01, 0x24, 0x32, 0x5e, 0x70, 0x20, 0x71, 0xd3, 0xac, 0x85, 0x34, 0x44, 0x09, 0x62,
-	0x2b, 0x90, 0x18, 0xf9, 0x8a, 0x2e, 0x22, 0x0b, 0x86, 0xc3, 0xba, 0x07, 0x4d, 0x3c, 0xb8, 0xe9,
-	0x76, 0x87, 0x32, 0x49, 0xdb, 0x29, 0x6d, 0x97, 0x48, 0x08, 0x17, 0x38, 0x78, 0x35, 0x1a, 0x7f,
-	0x89, 0x7f, 0x82, 0xc4, 0xc4, 0x90, 0x78, 0xf1, 0x64, 0x0c, 0xf8, 0x2f, 0xf4, 0x60, 0x76, 0x3a,
-	0x85, 0x6e, 0x97, 0xce, 0xd6, 0x65, 0xbd, 0x6d, 0xdb, 0xf7, 0xe3, 0xf9, 0x98, 0x7d, 0xdf, 0x81,
-	0xb7, 0x6c, 0xea, 0x90, 0x80, 0x7a, 0xc4, 0x31, 0x0d, 0x6d, 0xa7, 0x81, 0xbd, 0x3d, 0xd5, 0xf5,
-	0x68, 0x40, 0x91, 0x14, 0x60, 0xa7, 0x8e, 0x3d, 0x9b, 0x38, 0x81, 0xea, 0xbb, 0x8e, 0x1a, 0x8b,
-	0x93, 0x46, 0x4d, 0x6a, 0x52, 0x16, 0xa6, 0x35, 0x7f, 0x85, 0x19, 0x52, 0xc1, 0xa4, 0xd4, 0xb4,
-	0xb0, 0xa6, 0xbb, 0x44, 0xd3, 0x1d, 0x87, 0x06, 0x7a, 0x40, 0xa8, 0xe3, 0xf3, 0xaf, 0x53, 0x06,
-	0xf5, 0x6d, 0xea, 0x6b, 0x35, 0xdd, 0xc7, 0x61, 0x23, 0x6d, 0x77, 0xa6, 0x86, 0x03, 0x7d, 0x46,
-	0x73, 0x75, 0x93, 0x38, 0x2c, 0x98, 0xc7, 0xe6, 0xe3, 0xa0, 0x5c, 0xdd, 0xd3, 0xed, 0xa8, 0xca,
-	0x44, 0xcb, 0x17, 0x8f, 0xee, 0x92, 0x3a, 0xf6, 0xaa, 0x86, 0x45, 0xb0, 0x13, 0x54, 0x49, 0x9d,
-	0x47, 0xcd, 0xc5, 0xa3, 0x2c, 0xbd, 0xe1, 0x18, 0xdb, 0x55, 0x52, 0xaf, 0x6e, 0x79, 0xd4, 0xae,
-	0xee, 0x62, 0x8f, 0x6c, 0x11, 0x5c, 0x4f, 0x26, 0x29, 0xa3, 0x10, 0xbd, 0x68, 0xc2, 0x2a, 0xb3,
-	0x7e, 0x15, 0xbc, 0xd3, 0xc0, 0x7e, 0xa0, 0xbc, 0x82, 0x23, 0x2d, 0x6f, 0x7d, 0x97, 0x3a, 0x3e,
-	0x46, 0x4f, 0xe0, 0x60, 0x88, 0x2b, 0x0f, 0xc6, 0xc1, 0xe4, 0x8d, 0x59, 0x45, 0x4d, 0x97, 0x4b,
-	0x0d, 0x73, 0x57, 0x06, 0x8e, 0x7f, 0x8c, 0xe5, 0x2a, 0x3c, 0x4f, 0x39, 0x02, 0xf0, 0x36, 0xab,
-	0xfc, 0x92, 0x03, 0x7a, 0xca, 0xf0, 0x6c, 0xd4, 0xa3, 0xd6, 0x48, 0x82, 0xd7, 0x43, 0xec, 0x1b,
-	0xab, 0xac, 0xcb, 0x40, 0xe5, 0xfc, 0x19, 0xad, 0x41, 0x78, 0xa1, 0x5a, 0xbe, 0x8f, 0x61, 0xb8,
-	0xa3, 0x86, 0x12, 0xab, 0x4d, 0x89, 0xd5, 0xd0, 0x4b, 0x2e, 0xb1, 0x5a, 0xd6, 0x4d, 0xcc, 0xeb,
-	0x56, 0x62, 0x99, 0xca, 0x3b, 0x00, 0xe5, 0x34, 0x14, 0x9c, 0x6a, 0x01, 0x0e, 0x19, 0xd1, 0xcb,
-	0x3c, 0x18, 0xef, 0x9f, 0x1c, 0xaa, 0x5c, 0xbc, 0x40, 0xa5, 0x4b, 0x80, 0xdc, 0xed, 0x08, 0x24,
-	0x2c, 0xdd, 0x82, 0x64, 0x19, 0x8e, 0x31, 0x20, 0x25, 0x1c, 0x94, 0xb9, 0xaf, 0x1c, 0xcb, 0x6a,
-	0x06, 0x41, 0x94, 0x43, 0x00, 0xc7, 0xd3, 0xf3, 0x39, 0x95, 0x37, 0x70, 0xd8, 0x4d, 0x7c, 0xe3,
-	0xfe, 0x4d, 0x0b, 0xfd, 0x4b, 0xe4, 0x70, 0x27, 0xdb, 0x6a, 0x29, 0x84, 0x73, 0x28, 0x5a, 0x56,
-	0x1a, 0x87, 0x56, 0xe3, 0x40, 0xd7, 0xc6, 0x7d, 0x89, 0xf8, 0x5e, 0xda, 0x4b, 0xc8, 0xb7, 0xbf,
-	0x57, 0x7c, 0x7b, 0x67, 0xfe, 0x06, 0xbc, 0x17, 0x99, 0xb7, 0xc9, 0x1d, 0x5d, 0xf3, 0xa8, 0x9d,
-	0x38, 0x94, 0xf1, 0x83, 0x60, 0xc4, 0xfd, 0x1b, 0xaa, 0x9c, 0x3f, 0x2b, 0x9f, 0x01, 0x9c, 0xce,
-	0x56, 0x8b, 0x8b, 0x74, 0x08, 0x60, 0xc1, 0x12, 0x04, 0x72, 0x93, 0x1e, 0x89, 0x14, 0x13, 0x35,
-	0xe2, 0xea, 0x09, 0x7b, 0x28, 0x0d, 0x2e, 0x40, 0xd1, 0xb2, 0xb2, 0x08, 0xd0, 0xab, 0x53, 0xf4,
-	0x27, 0x12, 0xab, 0x63, 0xdf, 0xec, 0x62, 0xf5, 0xff, 0x6f, 0xb1, 0x7a, 0x76, 0xec, 0x66, 0x3f,
-	0x40, 0x78, 0x8d, 0xd1, 0x47, 0x9f, 0x00, 0x1c, 0x0c, 0xc7, 0x34, 0x52, 0x45, 0xd8, 0xdb, 0x37,
-	0x84, 0xa4, 0x65, 0x8e, 0x0f, 0x11, 0x28, 0x53, 0x87, 0xdf, 0x7e, 0x7d, 0xec, 0x9b, 0x40, 0x8a,
-	0x76, 0x91, 0xa8, 0xf9, 0xae, 0xa3, 0xb5, 0x6f, 0x3d, 0xf4, 0x15, 0xc0, 0x9b, 0x6d, 0xa3, 0x19,
-	0xcd, 0x77, 0x6c, 0x99, 0xb6, 0x54, 0xa4, 0x85, 0x6e, 0x52, 0x39, 0xf0, 0x15, 0x06, 0x7c, 0x09,
-	0x2d, 0x88, 0x80, 0xb7, 0xef, 0x57, 0x5f, 0xdb, 0x8f, 0xec, 0x3c, 0x40, 0x27, 0x00, 0x0e, 0x27,
-	0xe7, 0x0b, 0x5a, 0xec, 0x08, 0x2a, 0x7d, 0x2b, 0x48, 0x4b, 0xdd, 0x25, 0x73, 0x4e, 0x45, 0xc6,
-	0x69, 0x11, 0xcd, 0x0b, 0xcd, 0x68, 0xbb, 0x68, 0xc4, 0x29, 0x1d, 0x03, 0x38, 0x92, 0xac, 0x5f,
-	0xb4, 0xac, 0x0c, 0xac, 0xd2, 0xf7, 0x44, 0x06, 0x56, 0x82, 0xc1, 0xaf, 0x3c, 0x64, 0xac, 0x1e,
-	0x20, 0xf5, 0xdf, 0x58, 0xa1, 0xa3, 0x3e, 0x58, 0xd8, 0x14, 0xfe, 0xf5, 0xb2, 0x88, 0x9d, 0x61,
-	0x82, 0x49, 0xeb, 0x57, 0x2f, 0xc4, 0xb9, 0x96, 0x19, 0xd7, 0xe7, 0x68, 0x5d, 0xc4, 0xb5, 0xe3,
-	0x25, 0x50, 0xdb, 0x8f, 0x36, 0xc8, 0x01, 0xfa, 0x0d, 0xe0, 0x98, 0xa8, 0x75, 0xd3, 0xdc, 0x52,
-	0x16, 0x7f, 0x7a, 0x23, 0x44, 0xc6, 0xd9, 0xac, 0x3c, 0x63, 0x42, 0x3c, 0x46, 0xcb, 0x57, 0x12,
-	0x62, 0xa5, 0x74, 0x7c, 0x2a, 0x83, 0x93, 0x53, 0x19, 0xfc, 0x3c, 0x95, 0xc1, 0xfb, 0x33, 0x39,
-	0x77, 0x72, 0x26, 0xe7, 0xbe, 0x9f, 0xc9, 0xb9, 0xd7, 0xf7, 0x4d, 0x12, 0x6c, 0x37, 0x6a, 0xaa,
-	0x41, 0xed, 0x64, 0x8b, 0xb7, 0x2d, 0x4d, 0x82, 0x3d, 0x17, 0xfb, 0xb5, 0x41, 0x76, 0xaf, 0x9e,
-	0xfb, 0x1b, 0x00, 0x00, 0xff, 0xff, 0xe6, 0x12, 0xdc, 0xe1, 0x63, 0x0c, 0x00, 0x00,
+	// 918 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x57, 0x4b, 0x6f, 0xe3, 0x44,
+	0x1c, 0xcf, 0x34, 0x4b, 0x45, 0x07, 0x21, 0x2d, 0xb3, 0xbb, 0x22, 0xb2, 0x42, 0x5a, 0x8d, 0x0a,
+	0xac, 0x76, 0x8b, 0x4d, 0x5b, 0xf1, 0xe8, 0x4b, 0x34, 0x6d, 0x69, 0x1a, 0xd4, 0x43, 0xc8, 0x01,
+	0x24, 0x0e, 0x44, 0x8e, 0x33, 0x75, 0x2d, 0xd9, 0x33, 0xae, 0xed, 0x54, 0x54, 0x55, 0x2f, 0xed,
+	0x81, 0x2b, 0x12, 0x82, 0x2f, 0xc2, 0x97, 0xa8, 0x84, 0x84, 0x2a, 0x71, 0xe1, 0x42, 0x41, 0x2d,
+	0x12, 0x1f, 0x02, 0x0e, 0x28, 0xe3, 0x71, 0x1e, 0x76, 0xfc, 0x48, 0x6a, 0x6e, 0xc9, 0xf8, 0xff,
+	0xf8, 0x3d, 0x46, 0xfe, 0xff, 0x0d, 0xdf, 0xb4, 0x18, 0x35, 0x3c, 0xe6, 0x18, 0x54, 0xd7, 0x94,
+	0x93, 0x2e, 0x71, 0xce, 0x64, 0xdb, 0x61, 0x1e, 0x43, 0x92, 0x47, 0x68, 0x87, 0x38, 0x96, 0x41,
+	0x3d, 0xd9, 0xb5, 0xa9, 0x3c, 0x14, 0x27, 0x3d, 0xd5, 0x99, 0xce, 0x78, 0x98, 0xd2, 0xfb, 0xe5,
+	0x67, 0x48, 0x65, 0x9d, 0x31, 0xdd, 0x24, 0x8a, 0x6a, 0x1b, 0x8a, 0x4a, 0x29, 0xf3, 0x54, 0xcf,
+	0x60, 0xd4, 0x15, 0x4f, 0x5f, 0x68, 0xcc, 0xb5, 0x98, 0xab, 0xb4, 0x55, 0x97, 0xf8, 0x8d, 0x94,
+	0xd3, 0xe5, 0x36, 0xf1, 0xd4, 0x65, 0xc5, 0x56, 0x75, 0x83, 0xf2, 0x60, 0x11, 0x5b, 0x1a, 0x06,
+	0x65, 0xab, 0x8e, 0x6a, 0x05, 0x55, 0x16, 0x47, 0x9e, 0x38, 0xec, 0xd4, 0xe8, 0x10, 0xa7, 0xa5,
+	0x99, 0x06, 0xa1, 0x5e, 0xcb, 0xe8, 0x88, 0xa8, 0xd5, 0xe1, 0x28, 0x53, 0xed, 0x52, 0xed, 0xb8,
+	0x65, 0x74, 0x5a, 0x47, 0x0e, 0xb3, 0x5a, 0xa7, 0xc4, 0x31, 0x8e, 0x0c, 0xd2, 0x89, 0x24, 0xbd,
+	0x4c, 0x48, 0xd2, 0x8e, 0x55, 0x4a, 0x89, 0xd9, 0x0f, 0xc6, 0x4f, 0x21, 0xfa, 0xbc, 0xc7, 0xa1,
+	0xc1, 0xc1, 0x35, 0xc9, 0x49, 0x97, 0xb8, 0x1e, 0xfe, 0x12, 0x3e, 0x19, 0x39, 0x75, 0x6d, 0x46,
+	0x5d, 0x82, 0xb6, 0xe1, 0xac, 0x4f, 0xa2, 0x04, 0x16, 0xc0, 0xf3, 0xd7, 0x56, 0xb0, 0x1c, 0xaf,
+	0xad, 0xec, 0xe7, 0xee, 0x3c, 0xba, 0xbe, 0x9d, 0x2f, 0x34, 0x45, 0x1e, 0xbe, 0x02, 0xf0, 0x2d,
+	0x5e, 0xf9, 0x0b, 0x81, 0x7e, 0x97, 0x83, 0xaf, 0x77, 0x82, 0xd6, 0x48, 0x82, 0xaf, 0xfa, 0x98,
+	0xeb, 0x7b, 0xbc, 0xcb, 0xa3, 0x66, 0xff, 0x3f, 0xda, 0x87, 0x70, 0x20, 0x71, 0x69, 0x86, 0x63,
+	0x78, 0x47, 0xf6, 0xfd, 0x90, 0x7b, 0x7e, 0xc8, 0xbe, 0xf1, 0xc2, 0x0f, 0xb9, 0xa1, 0xea, 0x44,
+	0xd4, 0x6d, 0x0e, 0x65, 0xe2, 0x6f, 0x01, 0xac, 0xc4, 0xa1, 0x10, 0x54, 0xcb, 0x70, 0x4e, 0x0b,
+	0x0e, 0x4b, 0x60, 0xa1, 0xf8, 0x7c, 0xae, 0x39, 0x38, 0x40, 0xb5, 0x31, 0x40, 0xde, 0x4d, 0x05,
+	0xe2, 0x97, 0x1e, 0x41, 0xb2, 0x05, 0xe7, 0x39, 0x90, 0x1a, 0xf1, 0x1a, 0xe2, 0x12, 0x08, 0x2c,
+	0x7b, 0x19, 0x04, 0xc1, 0x97, 0x00, 0x2e, 0xc4, 0xe7, 0x0b, 0x2a, 0x5f, 0xc3, 0xc7, 0x76, 0xe8,
+	0x99, 0xf0, 0x6f, 0x29, 0xd1, 0xbf, 0x50, 0x8e, 0x70, 0x32, 0x52, 0x0b, 0x1b, 0x82, 0x43, 0xd5,
+	0x34, 0xe3, 0x38, 0x8c, 0x1a, 0x07, 0xa6, 0x36, 0xee, 0xe7, 0x80, 0xef, 0xd8, 0x5e, 0x89, 0x7c,
+	0x8b, 0x79, 0xf1, 0xcd, 0xcf, 0xfc, 0x3a, 0x7c, 0x19, 0x98, 0x77, 0x28, 0x1c, 0xdd, 0x77, 0x98,
+	0x15, 0xba, 0x94, 0xc3, 0x17, 0x41, 0x1b, 0xf6, 0x6f, 0xae, 0xd9, 0xff, 0x8f, 0x7f, 0x02, 0x70,
+	0x29, 0x5b, 0x2d, 0x21, 0xd2, 0x25, 0x80, 0x65, 0x33, 0x21, 0x50, 0x98, 0xf4, 0x71, 0x92, 0x62,
+	0x49, 0x8d, 0x84, 0x7a, 0x89, 0x3d, 0x70, 0x57, 0x08, 0x50, 0x35, 0xcd, 0x2c, 0x02, 0xe4, 0x75,
+	0x8b, 0xfe, 0x0d, 0xc4, 0x4a, 0xed, 0x9b, 0x5d, 0xac, 0xe2, 0xff, 0x2d, 0x56, 0x7e, 0xd7, 0x6e,
+	0x0f, 0x2e, 0x8e, 0xbb, 0x2a, 0xbb, 0xfe, 0x68, 0x18, 0xc8, 0xdd, 0x7b, 0x05, 0x06, 0x67, 0xe2,
+	0xc2, 0x0d, 0x0e, 0xf0, 0x8f, 0x00, 0xbe, 0x9d, 0x52, 0x46, 0xa8, 0x67, 0xc1, 0x67, 0xe6, 0xb8,
+	0x00, 0xe1, 0xe0, 0x72, 0x56, 0xd5, 0xfa, 0x89, 0x42, 0xae, 0xf1, 0x55, 0x31, 0x15, 0xf4, 0x42,
+	0xe6, 0x46, 0xe8, 0xe5, 0x75, 0x9b, 0xfe, 0x08, 0x84, 0x88, 0x6f, 0x98, 0x2e, 0x44, 0x31, 0x7f,
+	0x21, 0x72, 0xbb, 0x30, 0x2b, 0xbf, 0xbf, 0x0e, 0x5f, 0xe1, 0x0c, 0xd1, 0x0f, 0x00, 0xce, 0xfa,
+	0x73, 0x1d, 0xc9, 0x49, 0x68, 0xa3, 0x2b, 0x85, 0xa4, 0x64, 0x8e, 0xf7, 0x11, 0xe0, 0x17, 0x97,
+	0xbf, 0xfe, 0xf5, 0xfd, 0xcc, 0x22, 0xc2, 0xca, 0x20, 0x51, 0x71, 0x6d, 0xaa, 0x44, 0x77, 0x2a,
+	0xf4, 0x0b, 0x80, 0x6f, 0x44, 0x66, 0x39, 0x5a, 0x4b, 0x6d, 0x19, 0xb7, 0x85, 0x48, 0xeb, 0xd3,
+	0xa4, 0x0a, 0xe0, 0x3b, 0x1c, 0xf8, 0x26, 0x5a, 0x4f, 0x02, 0x1e, 0xdd, 0xde, 0x5c, 0xe5, 0x3c,
+	0xf0, 0xf1, 0x02, 0xdd, 0x00, 0xf8, 0x38, 0x3c, 0x90, 0xd0, 0x46, 0x2a, 0xa8, 0xf8, 0x35, 0x42,
+	0xda, 0x9c, 0x2e, 0x59, 0x70, 0xaa, 0x72, 0x4e, 0x1b, 0x68, 0x2d, 0xd1, 0x8c, 0xc8, 0x1a, 0x3b,
+	0x4c, 0xe9, 0x1a, 0xc0, 0x27, 0xe1, 0xfa, 0x55, 0xd3, 0xcc, 0xc0, 0x2a, 0x7e, 0xb1, 0xc8, 0xc0,
+	0x2a, 0x61, 0x53, 0xc0, 0x1f, 0x72, 0x56, 0xef, 0x23, 0x79, 0x32, 0x56, 0xe8, 0x6a, 0x06, 0x96,
+	0x0f, 0x13, 0xdf, 0xd5, 0x59, 0xc4, 0xce, 0x30, 0xf2, 0xa4, 0x83, 0x87, 0x17, 0x12, 0x5c, 0x1b,
+	0x9c, 0xeb, 0x67, 0xe8, 0x20, 0x89, 0x6b, 0xea, 0x27, 0x86, 0x72, 0x1e, 0xac, 0x1c, 0x17, 0xe8,
+	0x1f, 0x00, 0xe7, 0x93, 0x5a, 0xf7, 0xcc, 0xad, 0x65, 0xf1, 0x27, 0x1f, 0x21, 0x32, 0x0e, 0x73,
+	0xfc, 0x29, 0x17, 0xe2, 0x13, 0xb4, 0xf5, 0x20, 0x21, 0xd0, 0xdf, 0x00, 0x3e, 0x1b, 0xfb, 0x52,
+	0x46, 0xdb, 0x93, 0x7a, 0x16, 0x1e, 0x4d, 0x52, 0xf5, 0x01, 0x15, 0x04, 0xcb, 0x3a, 0x67, 0xb9,
+	0x8b, 0xaa, 0x13, 0xb0, 0x1c, 0x7c, 0x1c, 0x2a, 0xe7, 0xfd, 0x41, 0x7f, 0x81, 0x6e, 0x01, 0x2c,
+	0x8d, 0x6d, 0xd6, 0x33, 0x78, 0x7b, 0x52, 0x5f, 0xa6, 0x20, 0x9b, 0x36, 0x58, 0xf1, 0x16, 0x27,
+	0xfb, 0x11, 0xfa, 0x60, 0x2a, 0xb2, 0x3b, 0xb5, 0xeb, 0xbb, 0x0a, 0xb8, 0xb9, 0xab, 0x80, 0x3f,
+	0xef, 0x2a, 0xe0, 0xbb, 0xfb, 0x4a, 0xe1, 0xe6, 0xbe, 0x52, 0xf8, 0xed, 0xbe, 0x52, 0xf8, 0xea,
+	0x3d, 0xdd, 0xf0, 0x8e, 0xbb, 0x6d, 0x59, 0x63, 0x56, 0xb8, 0xf4, 0x37, 0x23, 0xc5, 0xbd, 0x33,
+	0x9b, 0xb8, 0xed, 0x59, 0xfe, 0x4d, 0xbd, 0xfa, 0x5f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xdc, 0x8d,
+	0x59, 0xd3, 0x8c, 0x10, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -694,6 +892,10 @@ type QueryClient interface {
 	LaunchIDFromVerifiedClientID(ctx context.Context, in *QueryGetLaunchIDFromVerifiedClientIDRequest, opts ...grpc.CallOption) (*QueryGetLaunchIDFromVerifiedClientIDResponse, error)
 	// Queries a list of LaunchIDFromVerifiedClientID items.
 	LaunchIDFromVerifiedClientIDAll(ctx context.Context, in *QueryAllLaunchIDFromVerifiedClientIDRequest, opts ...grpc.CallOption) (*QueryAllLaunchIDFromVerifiedClientIDResponse, error)
+	// Queries a LaunchIDFromChannelID by index.
+	LaunchIDFromChannelID(ctx context.Context, in *QueryGetLaunchIDFromChannelIDRequest, opts ...grpc.CallOption) (*QueryGetLaunchIDFromChannelIDResponse, error)
+	// Queries a list of LaunchIDFromChannelID items.
+	LaunchIDFromChannelIDAll(ctx context.Context, in *QueryAllLaunchIDFromChannelIDRequest, opts ...grpc.CallOption) (*QueryAllLaunchIDFromChannelIDResponse, error)
 }
 
 type queryClient struct {
@@ -758,6 +960,24 @@ func (c *queryClient) LaunchIDFromVerifiedClientIDAll(ctx context.Context, in *Q
 	return out, nil
 }
 
+func (c *queryClient) LaunchIDFromChannelID(ctx context.Context, in *QueryGetLaunchIDFromChannelIDRequest, opts ...grpc.CallOption) (*QueryGetLaunchIDFromChannelIDResponse, error) {
+	out := new(QueryGetLaunchIDFromChannelIDResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.monitoringc.Query/LaunchIDFromChannelID", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) LaunchIDFromChannelIDAll(ctx context.Context, in *QueryAllLaunchIDFromChannelIDRequest, opts ...grpc.CallOption) (*QueryAllLaunchIDFromChannelIDResponse, error) {
+	out := new(QueryAllLaunchIDFromChannelIDResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.monitoringc.Query/LaunchIDFromChannelIDAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
@@ -772,6 +992,10 @@ type QueryServer interface {
 	LaunchIDFromVerifiedClientID(context.Context, *QueryGetLaunchIDFromVerifiedClientIDRequest) (*QueryGetLaunchIDFromVerifiedClientIDResponse, error)
 	// Queries a list of LaunchIDFromVerifiedClientID items.
 	LaunchIDFromVerifiedClientIDAll(context.Context, *QueryAllLaunchIDFromVerifiedClientIDRequest) (*QueryAllLaunchIDFromVerifiedClientIDResponse, error)
+	// Queries a LaunchIDFromChannelID by index.
+	LaunchIDFromChannelID(context.Context, *QueryGetLaunchIDFromChannelIDRequest) (*QueryGetLaunchIDFromChannelIDResponse, error)
+	// Queries a list of LaunchIDFromChannelID items.
+	LaunchIDFromChannelIDAll(context.Context, *QueryAllLaunchIDFromChannelIDRequest) (*QueryAllLaunchIDFromChannelIDResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -795,6 +1019,12 @@ func (*UnimplementedQueryServer) LaunchIDFromVerifiedClientID(ctx context.Contex
 }
 func (*UnimplementedQueryServer) LaunchIDFromVerifiedClientIDAll(ctx context.Context, req *QueryAllLaunchIDFromVerifiedClientIDRequest) (*QueryAllLaunchIDFromVerifiedClientIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LaunchIDFromVerifiedClientIDAll not implemented")
+}
+func (*UnimplementedQueryServer) LaunchIDFromChannelID(ctx context.Context, req *QueryGetLaunchIDFromChannelIDRequest) (*QueryGetLaunchIDFromChannelIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LaunchIDFromChannelID not implemented")
+}
+func (*UnimplementedQueryServer) LaunchIDFromChannelIDAll(ctx context.Context, req *QueryAllLaunchIDFromChannelIDRequest) (*QueryAllLaunchIDFromChannelIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LaunchIDFromChannelIDAll not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -909,6 +1139,42 @@ func _Query_LaunchIDFromVerifiedClientIDAll_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_LaunchIDFromChannelID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetLaunchIDFromChannelIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).LaunchIDFromChannelID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.monitoringc.Query/LaunchIDFromChannelID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).LaunchIDFromChannelID(ctx, req.(*QueryGetLaunchIDFromChannelIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_LaunchIDFromChannelIDAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryAllLaunchIDFromChannelIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).LaunchIDFromChannelIDAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.monitoringc.Query/LaunchIDFromChannelIDAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).LaunchIDFromChannelIDAll(ctx, req.(*QueryAllLaunchIDFromChannelIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "tendermint.spn.monitoringc.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -936,6 +1202,14 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LaunchIDFromVerifiedClientIDAll",
 			Handler:    _Query_LaunchIDFromVerifiedClientIDAll_Handler,
+		},
+		{
+			MethodName: "LaunchIDFromChannelID",
+			Handler:    _Query_LaunchIDFromChannelID_Handler,
+		},
+		{
+			MethodName: "LaunchIDFromChannelIDAll",
+			Handler:    _Query_LaunchIDFromChannelIDAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1374,6 +1648,153 @@ func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) MarshalToSizedBuffer(dAtA
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryGetLaunchIDFromChannelIDRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetLaunchIDFromChannelIDRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetLaunchIDFromChannelIDRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.ChannelID) > 0 {
+		i -= len(m.ChannelID)
+		copy(dAtA[i:], m.ChannelID)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.ChannelID)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetLaunchIDFromChannelIDResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetLaunchIDFromChannelIDResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetLaunchIDFromChannelIDResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size, err := m.LaunchIDFromChannelID.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0xa
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllLaunchIDFromChannelIDRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllLaunchIDFromChannelIDRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllLaunchIDFromChannelIDRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryAllLaunchIDFromChannelIDResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryAllLaunchIDFromChannelIDResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryAllLaunchIDFromChannelIDResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.LaunchIDFromChannelID) > 0 {
+		for iNdEx := len(m.LaunchIDFromChannelID) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.LaunchIDFromChannelID[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -1540,6 +1961,62 @@ func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) Size() (n int) {
 	_ = l
 	if len(m.LaunchIDFromVerifiedClientID) > 0 {
 		for _, e := range m.LaunchIDFromVerifiedClientID {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetLaunchIDFromChannelIDRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ChannelID)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetLaunchIDFromChannelIDResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = m.LaunchIDFromChannelID.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	return n
+}
+
+func (m *QueryAllLaunchIDFromChannelIDRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryAllLaunchIDFromChannelIDResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.LaunchIDFromChannelID) > 0 {
+		for _, e := range m.LaunchIDFromChannelID {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -2582,6 +3059,377 @@ func (m *QueryAllLaunchIDFromVerifiedClientIDResponse) Unmarshal(dAtA []byte) er
 			}
 			m.LaunchIDFromVerifiedClientID = append(m.LaunchIDFromVerifiedClientID, LaunchIDFromVerifiedClientID{})
 			if err := m.LaunchIDFromVerifiedClientID[len(m.LaunchIDFromVerifiedClientID)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetLaunchIDFromChannelIDRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetLaunchIDFromChannelIDRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetLaunchIDFromChannelIDRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ChannelID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ChannelID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetLaunchIDFromChannelIDResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetLaunchIDFromChannelIDResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetLaunchIDFromChannelIDResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LaunchIDFromChannelID", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.LaunchIDFromChannelID.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllLaunchIDFromChannelIDRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllLaunchIDFromChannelIDRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllLaunchIDFromChannelIDRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryAllLaunchIDFromChannelIDResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryAllLaunchIDFromChannelIDResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryAllLaunchIDFromChannelIDResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LaunchIDFromChannelID", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.LaunchIDFromChannelID = append(m.LaunchIDFromChannelID, LaunchIDFromChannelID{})
+			if err := m.LaunchIDFromChannelID[len(m.LaunchIDFromChannelID)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

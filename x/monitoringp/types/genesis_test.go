@@ -27,6 +27,9 @@ func TestGenesisState_Validate(t *testing.T) {
 					ClientID: "29",
 				},
 				Params: types.DefaultParams(),
+				ConnectionChannelID: &types.ConnectionChannelID{
+					ChannelID: "67",
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,

@@ -72,6 +72,13 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 		ClientID: clientID,
 		LaunchID: lidFromCid.LaunchID,
 	})
+
+	// associate the channel ID for the provider connection with the correct launch ID
+	k.SetLaunchIDFromChannelID(ctx, types.LaunchIDFromChannelID{
+		LaunchID:  lidFromCid.LaunchID,
+		ChannelID: channelID,
+	})
+
 	return nil
 }
 
