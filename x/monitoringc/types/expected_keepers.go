@@ -14,6 +14,9 @@ type LaunchKeeper interface {
 	GetChain(ctx sdk.Context, launchID uint64) (val launchtypes.Chain, found bool)
 }
 
+type RewardKeeper interface {
+}
+
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
 type AccountKeeper interface {
 	GetAccount(ctx sdk.Context, addr sdk.AccAddress) types.AccountI
