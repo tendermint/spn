@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "monitoringp/params.proto";
 import "monitoringp/consumer_client_id.proto";
+import "monitoringp/connection_channel_id.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
@@ -20,7 +21,11 @@ service Query {
   rpc ConsumerClientID(QueryGetConsumerClientIDRequest) returns (QueryGetConsumerClientIDResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringp/consumer_client_id";
   }
-  // this line is used by starport scaffolding # 2
+  // Queries a ConnectionChannelID by index.
+	rpc ConnectionChannelID(QueryGetConnectionChannelIDRequest) returns (QueryGetConnectionChannelIDResponse) {
+		option (google.api.http).get = "/tendermint/spn/monitoringp/connection_channel_id";
+	}
+// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -36,5 +41,10 @@ message QueryGetConsumerClientIDRequest {}
 
 message QueryGetConsumerClientIDResponse {
   ConsumerClientID ConsumerClientID = 1 [(gogoproto.nullable) = false];
+}
+message QueryGetConnectionChannelIDRequest {}
+
+message QueryGetConnectionChannelIDResponse {
+	ConnectionChannelID ConnectionChannelID = 1 [(gogoproto.nullable) = false];
 }
 // this line is used by starport scaffolding # 3
