@@ -15,12 +15,12 @@ func (k msgServer) SetValidatorConsAddress(
 ) (*types.MsgSetValidatorConsAddressResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	valKey, err := valtypes.LoadValidatorKey(msg.ValidatorKey)
+	valPubKey, err := valtypes.NewValidatorPubKey(msg.ValidatorPubKey, msg.ValidatorKeyType)
 	if err != nil {
 		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrap(types.ErrInvalidValidatorKey, string(msg.ValidatorKey))
+			sdkerrors.Wrap(types.ErrInvalidValidatorKey, string(msg.ValidatorPubKey))
 	}
-	consAddress := valKey.GetConsAddress().String()
+	consAddress := valPubKey.GetConsAddress().String()
 
 	// cannot set the consensus key if key is used for another validator
 	validatorByConsAddr, found := k.GetValidatorByConsAddress(ctx, consAddress)
@@ -36,7 +36,7 @@ func (k msgServer) SetValidatorConsAddress(
 		currentNonce = consensusNonce.Nonce
 	}
 
-	if !valKey.VerifySignature(currentNonce, ctx.ChainID(), msg.Signature) {
+	if !valPubKey.VerifySignature(currentNonce, ctx.ChainID(), msg.Signature) {
 		return &types.MsgSetValidatorConsAddressResponse{},
 			sdkerrors.Wrapf(types.ErrInvalidValidatorSignature,
 				"invalid signature for consensus address: %s - %s",
@@ -46,7 +46,7 @@ func (k msgServer) SetValidatorConsAddress(
 	}
 
 	validator := types.Validator{
-		Address:          valKey.Address.String(),
+		Address:          valPubKey.Address().String(),
 		ConsensusAddress: consAddress,
 		Description:      types.ValidatorDescription{},
 	}
@@ -61,7 +61,7 @@ func (k msgServer) SetValidatorConsAddress(
 	k.SetValidator(ctx, validator)
 	k.SetValidatorByConsAddress(ctx, types.ValidatorByConsAddress{
 		ConsensusAddress: consAddress,
-		ValidatorAddress: valKey.Address.String(),
+		ValidatorAddress: valPubKey.Address().String(),
 	})
 	k.SetConsensusKeyNonce(ctx, types.ConsensusKeyNonce{
 		ConsensusAddress: consAddress,

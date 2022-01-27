@@ -10,37 +10,16 @@ import (
 )
 
 func TestMsgSetValidatorConsAddress_ValidateBasic(t *testing.T) {
-	var (
-		valKey = `{
-  "address": "B4AAC35ED4E14C09E530B10AF4DD604FAAC597C0",
-  "pub_key": {
-    "type": "tendermint/PubKeyEd25519",
-    "value": "sYTsd7W1+SBtjD3BN/aTEDFvfRbZ9zdfpQH2Lk3MRK4="
-  },
-  "priv_key": {
-    "type": "tendermint/PrivKeyEd25519",
-    "value": "j45JhnCflEk3T6FC8LLuJqg9tPfCzJH+UYZY88xn+0exhOx3tbX5IG2MPcE39pMQMW99Ftn3N1+lAfYuTcxErg=="
-  }
-}`
-	)
 	tests := []struct {
 		name string
 		msg  types.MsgSetValidatorConsAddress
 		err  error
 	}{
 		{
-			name: "invalid validator key",
-			msg: types.MsgSetValidatorConsAddress{
-				ValidatorAddress: sample.Address(),
-				ValidatorKey:     []byte("invalid_key"),
-			},
-			err: types.ErrInvalidValidatorKey,
-		},
-		{
 			name: "invalid validator address",
 			msg: types.MsgSetValidatorConsAddress{
 				ValidatorAddress: "invalid_address",
-				ValidatorKey:     []byte("invalid_key"),
+				ValidatorPubKey:  sample.Bytes(10),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
@@ -48,7 +27,7 @@ func TestMsgSetValidatorConsAddress_ValidateBasic(t *testing.T) {
 			name: "valid message",
 			msg: types.MsgSetValidatorConsAddress{
 				ValidatorAddress: sample.Address(),
-				ValidatorKey:     []byte(valKey),
+				ValidatorPubKey:  sample.Bytes(10),
 			},
 		},
 	}

@@ -8,7 +8,6 @@ import (
 	valtypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/tendermint/crypto/ed25519"
-	tmjson "github.com/tendermint/tendermint/libs/json"
 )
 
 const validatorKey = `{
@@ -27,16 +26,9 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 	var (
 		randPrivKey = ed25519.GenPrivKey()
 		randPubKey  = randPrivKey.PubKey()
-		randValKey  = valtypes.ValidatorKey{
-			Address: randPubKey.Address(),
-			PubKey:  randPubKey,
-			PrivKey: randPrivKey,
-		}
 		ctx, k, srv = setupMsgServer(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 	)
-	invalidValKey, err := tmjson.Marshal(randValKey)
-	require.NoError(t, err)
 	valKey, err := valtypes.LoadValidatorKey([]byte(validatorKey))
 	require.NoError(t, err)
 	signature, err := valKey.Sign(0, ctx.ChainID())
@@ -49,45 +41,49 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 
 	tests := []struct {
 		name   string
-		valKey valtypes.ValidatorKey
+		pubKey valtypes.ValidatorPubKey
 		msg    *types.MsgSetValidatorConsAddress
 		err    error
 	}{
 		{
 			name:   "valid message",
-			valKey: valKey,
+			pubKey: valtypes.ValidatorPubKey{PubKey: valKey.PubKey},
 			msg: &types.MsgSetValidatorConsAddress{
 				ValidatorAddress: valKey.Address.String(),
-				ValidatorKey:     []byte(validatorKey),
+				ValidatorPubKey:  valKey.PubKey.Bytes(),
+				ValidatorKeyType: valKey.PubKey.Type(),
 				Signature:        signature,
 			},
 		},
 		{
 			name:   "invalid validator key",
-			valKey: valKey,
+			pubKey: valtypes.ValidatorPubKey{PubKey: valKey.PubKey},
 			msg: &types.MsgSetValidatorConsAddress{
 				ValidatorAddress: valKey.Address.String(),
-				ValidatorKey:     []byte("invalid_key"),
+				ValidatorPubKey:  []byte("invalid_key"),
+				ValidatorKeyType: "invalid_type",
 				Signature:        "invalid_signature",
 			},
 			err: types.ErrInvalidValidatorKey,
 		},
 		{
 			name:   "validator consensus already exist",
-			valKey: valKey,
+			pubKey: valtypes.ValidatorPubKey{PubKey: valKey.PubKey},
 			msg: &types.MsgSetValidatorConsAddress{
 				ValidatorAddress: valKey.Address.String(),
-				ValidatorKey:     []byte(validatorKey),
+				ValidatorPubKey:  valKey.PubKey.Bytes(),
+				ValidatorKeyType: valKey.PubKey.Type(),
 				Signature:        signature,
 			},
 			err: types.ErrValidatorConsAddressAlreadyExit,
 		},
 		{
 			name:   "invalid signature",
-			valKey: randValKey,
+			pubKey: valtypes.ValidatorPubKey{PubKey: randPubKey},
 			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorAddress: randValKey.Address.String(),
-				ValidatorKey:     invalidValKey,
+				ValidatorAddress: randPubKey.Address().String(),
+				ValidatorPubKey:  randPubKey.Bytes(),
+				ValidatorKeyType: randPubKey.Type(),
 				Signature:        "invalid_signature",
 			},
 			err: types.ErrInvalidValidatorSignature,
@@ -96,7 +92,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			currentNonce := uint64(1)
-			oldConsNonce, hasConsNonce := k.GetConsensusKeyNonce(ctx, tt.valKey.GetConsAddress().String())
+			oldConsNonce, hasConsNonce := k.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().String())
 			if hasConsNonce {
 				currentNonce = oldConsNonce.Nonce + 1
 			}
@@ -108,20 +104,20 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			validator, found := k.GetValidator(ctx, tt.valKey.Address.String())
+			validator, found := k.GetValidator(ctx, tt.pubKey.Address().String())
 			require.True(t, found, "validator was not saved")
-			require.Equal(t, tt.valKey.Address.String(), validator.Address)
-			require.Equal(t, tt.valKey.GetConsAddress().String(), validator.ConsensusAddress)
+			require.Equal(t, tt.pubKey.Address().String(), validator.Address)
+			require.Equal(t, tt.pubKey.GetConsAddress().String(), validator.ConsensusAddress)
 
 			valByConsAddr, found := k.GetValidatorByConsAddress(ctx, validator.ConsensusAddress)
 			require.True(t, found, "validator by consensus address was not saved")
-			require.Equal(t, tt.valKey.Address.String(), valByConsAddr.ValidatorAddress)
-			require.Equal(t, tt.valKey.GetConsAddress().String(), valByConsAddr.ConsensusAddress)
+			require.Equal(t, tt.pubKey.Address().String(), valByConsAddr.ValidatorAddress)
+			require.Equal(t, tt.pubKey.GetConsAddress().String(), valByConsAddr.ConsensusAddress)
 
 			consNonce, found := k.GetConsensusKeyNonce(ctx, validator.ConsensusAddress)
 			require.True(t, found, "validator consensus nonce was not saved")
 			require.Equal(t, currentNonce, consNonce.Nonce)
-			require.Equal(t, tt.valKey.GetConsAddress().String(), consNonce.ConsensusAddress)
+			require.Equal(t, tt.pubKey.GetConsAddress().String(), consNonce.ConsensusAddress)
 		})
 	}
 }

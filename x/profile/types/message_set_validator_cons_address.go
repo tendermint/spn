@@ -3,17 +3,18 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tendermint/spn/pkg/types"
+	valtypes "github.com/tendermint/spn/pkg/types"
 )
 
 const TypeMsgSetValidatorConsAddress = "set_validator_cons_address"
 
 var _ sdk.Msg = &MsgSetValidatorConsAddress{}
 
-func NewMsgSetValidatorConsAddress(validatorAddress, signature string, validatorKey []byte) *MsgSetValidatorConsAddress {
+func NewMsgSetValidatorConsAddress(validatorAddress, signature, keyType string, validatorPubKey []byte) *MsgSetValidatorConsAddress {
 	return &MsgSetValidatorConsAddress{
 		ValidatorAddress: validatorAddress,
-		ValidatorKey:     validatorKey,
+		ValidatorPubKey:  validatorPubKey,
+		ValidatorKeyType: keyType,
 		Signature:        signature,
 	}
 }
@@ -43,8 +44,8 @@ func (msg *MsgSetValidatorConsAddress) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.ValidatorAddress); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
-	if _, err := types.LoadValidatorKey(msg.ValidatorKey); err != nil {
-		return sdkerrors.Wrapf(ErrInvalidValidatorKey, "invalid validator key (%s)", err)
+	if _, err := valtypes.NewValidatorPubKey(msg.ValidatorPubKey, msg.ValidatorKeyType); err != nil {
+		return sdkerrors.Wrap(ErrInvalidValidatorKey, string(msg.ValidatorPubKey))
 	}
 	return nil
 }

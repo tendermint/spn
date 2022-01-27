@@ -6,6 +6,9 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/crypto"
+	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/tendermint/tendermint/crypto/secp256k1"
+	"github.com/tendermint/tendermint/crypto/sr25519"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 )
 
@@ -17,11 +20,16 @@ const (
 )
 
 // ValidatorKey stores the validator private key
-type ValidatorKey struct {
-	Address crypto.Address `json:"address"`
-	PubKey  crypto.PubKey  `json:"pub_key"`
-	PrivKey crypto.PrivKey `json:"priv_key"`
-}
+type (
+	ValidatorKey struct {
+		Address crypto.Address `json:"address"`
+		PubKey  crypto.PubKey  `json:"pub_key"`
+		PrivKey crypto.PrivKey `json:"priv_key"`
+	}
+	ValidatorPubKey struct {
+		PubKey crypto.PubKey `json:"pub_key"`
+	}
+)
 
 // Sign signs the message with privateKey and returns a signature
 func (v ValidatorKey) Sign(nonce uint64, chainID string) (string, error) {
@@ -32,8 +40,22 @@ func (v ValidatorKey) Sign(nonce uint64, chainID string) (string, error) {
 	return base64.StdEncoding.EncodeToString(sign), nil
 }
 
+// NewValidatorPubKey creates a new validator pub key based in the type
+func NewValidatorPubKey(key []byte, keyType string) (ValidatorPubKey, error) {
+	switch keyType {
+	case ed25519.KeyType:
+		return ValidatorPubKey{PubKey: ed25519.PubKey(key)}, nil
+	case secp256k1.KeyType:
+		return ValidatorPubKey{PubKey: secp256k1.PubKey(key)}, nil
+	case "sr25519":
+		return ValidatorPubKey{PubKey: sr25519.PubKey(key)}, nil
+	default:
+		return ValidatorPubKey{}, fmt.Errorf("key type: %s is not supported", keyType)
+	}
+}
+
 // VerifySignature reports whether sig is a valid signature of mes
-func (v ValidatorKey) VerifySignature(nonce uint64, chainID, sig string) bool {
+func (v ValidatorPubKey) VerifySignature(nonce uint64, chainID, sig string) bool {
 	sigBytes, err := base64.StdEncoding.DecodeString(sig)
 	if err != nil {
 		return false
@@ -41,8 +63,13 @@ func (v ValidatorKey) VerifySignature(nonce uint64, chainID, sig string) bool {
 	return v.PubKey.VerifySignature(CreateSignMessage(nonce, chainID), sigBytes)
 }
 
+// Address return the validator address
+func (v ValidatorPubKey) Address() crypto.Address {
+	return v.PubKey.Address()
+}
+
 // GetConsAddress return the validator consensus address
-func (v ValidatorKey) GetConsAddress() types.ConsAddress {
+func (v ValidatorPubKey) GetConsAddress() types.ConsAddress {
 	return types.ConsAddress(v.PubKey.Address())
 }
 

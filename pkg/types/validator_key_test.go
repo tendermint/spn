@@ -107,26 +107,18 @@ func TestValidatorKey_GetConsAddress(t *testing.T) {
 	)
 	tests := []struct {
 		name   string
-		valKey types.ValidatorKey
+		valKey types.ValidatorPubKey
 		want   string
 	}{
 		{
-			name: "validator key",
-			valKey: types.ValidatorKey{
-				Address: pubKey.Address(),
-				PubKey:  pubKey,
-				PrivKey: privKey,
-			},
-			want: "cosmosvalcons1s80pwt3df76q68pr2srnc2qvc3gulr83caxuqe",
+			name:   "validator key",
+			valKey: types.ValidatorPubKey{PubKey: pubKey},
+			want:   "cosmosvalcons1s80pwt3df76q68pr2srnc2qvc3gulr83caxuqe",
 		},
 		{
-			name: "random priv key",
-			valKey: types.ValidatorKey{
-				Address: randPubKey.Address(),
-				PubKey:  randPubKey,
-				PrivKey: randPrivKey,
-			},
-			want: sdk.ConsAddress(randPubKey.Address()).String(),
+			name:   "random priv key",
+			valKey: types.ValidatorPubKey{PubKey: randPubKey},
+			want:   sdk.ConsAddress(randPubKey.Address()).String(),
 		},
 	}
 	for _, tt := range tests {
@@ -242,7 +234,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 
 	tests := []struct {
 		name    string
-		valKey  types.ValidatorKey
+		valKey  types.ValidatorPubKey
 		nonce   uint64
 		chainID string
 		sig     string
@@ -250,7 +242,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 	}{
 		{
 			name:    "valid check",
-			valKey:  valKey,
+			valKey:  types.ValidatorPubKey{PubKey: valKey.PubKey},
 			sig:     validSig,
 			nonce:   10,
 			chainID: "spn-1",
@@ -258,7 +250,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 		},
 		{
 			name:    "zero nonce",
-			valKey:  valKey,
+			valKey:  types.ValidatorPubKey{PubKey: valKey.PubKey},
 			sig:     validZeroNonceSig,
 			nonce:   0,
 			chainID: "spn-1",
@@ -266,7 +258,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 		},
 		{
 			name:    "random signature",
-			valKey:  valKey,
+			valKey:  types.ValidatorPubKey{PubKey: valKey.PubKey},
 			sig:     sample.String(10),
 			nonce:   10,
 			chainID: "spn-1",
@@ -274,7 +266,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 		},
 		{
 			name:    "invalid validator key",
-			valKey:  invalidValKey,
+			valKey:  types.ValidatorPubKey{PubKey: invalidPubKey},
 			sig:     invalidSig,
 			nonce:   10,
 			chainID: "spn-1",
