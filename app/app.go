@@ -457,8 +457,6 @@ func New(
 		keys[rewardmoduletypes.StoreKey],
 		keys[rewardmoduletypes.MemStoreKey],
 		app.GetSubspace(rewardmoduletypes.ModuleName),
-
-		app.AuthKeeper,
 		app.BankKeeper,
 		app.ProfileKeeper,
 		app.LaunchKeeper,
