@@ -16,6 +16,7 @@ import (
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
+	rewardtypes "github.com/tendermint/spn/x/reward/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
@@ -67,6 +68,7 @@ func AllKeepers(t testing.TB) (
 
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
+	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	return campaignKeeper, launchKeeper, profileKeeper, rewardKeeper, monitoringConsumerKeeper, bankKeeper, ctx
@@ -111,6 +113,10 @@ func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
 // Reward returns a keeper of the reward module for testing purpose
 func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
 	_, _, _, rewardKeeper, _, _, ctx := AllKeepers(t) // nolint
+
+	// Initialize params
+	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
+
 	return rewardKeeper, ctx
 }
 
@@ -118,6 +124,7 @@ func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
 // Monitoringc returns a keeper of the monitoring consumer module for testing purpose
 func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
 	_, _, _, _, monitoringConsumerKeeper, _, ctx := AllKeepers(t) // nolint
+
 	return monitoringConsumerKeeper, ctx
 }
 
