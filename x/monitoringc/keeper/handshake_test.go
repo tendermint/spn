@@ -123,6 +123,12 @@ func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
 		require.True(t, found)
 		require.EqualValues(t, 1, pCid.LaunchID)
 		require.EqualValues(t, "foo", pCid.ClientID)
+
+		// the channel ID is associated with the correct launch ID
+		launcIDFromChanID, found := k.GetLaunchIDFromChannelID(ctx, "foo")
+		require.True(t, found)
+		require.EqualValues(t, 1, launcIDFromChanID.LaunchID)
+		require.EqualValues(t, "foo", launcIDFromChanID.ChannelID)
 	})
 
 	t.Run("should fails with critical if channel doesn't exist", func(t *testing.T) {
