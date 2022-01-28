@@ -1,8 +1,11 @@
 syntax = "proto3";
 package tendermint.spn.monitoringp;
 
+import "gogoproto/gogo.proto";
+import "types/monitoring.proto";
+
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
 
 message MonitoringInfo {
-  
+  tendermint.spn.types.SignatureCounts signatureCounts = 1 [(gogoproto.nullable) = false];
 }
