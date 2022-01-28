@@ -230,4 +230,3 @@ func (am AppModule) NegotiateAppVersion(
 ) (version string, err error) {
 	return proposedVersion, nil
 }
-
