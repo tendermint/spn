@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	valtypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -18,7 +19,7 @@ func (k msgServer) SetValidatorConsAddress(
 	valPubKey, err := valtypes.NewValidatorConsPubKey(msg.ValidatorConsPubKey, msg.ValidatorKeyType)
 	if err != nil {
 		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrap(types.ErrInvalidValidatorKey, string(msg.ValidatorConsPubKey))
+			spnerrors.Criticalf("invalid consensus pub key %s", msg.ValidatorKeyType)
 	}
 	consAddress := valPubKey.GetConsAddress().String()
 
@@ -38,12 +39,12 @@ func (k msgServer) SetValidatorConsAddress(
 	}
 
 	validator := types.Validator{
-		Address:          valPubKey.Address().String(),
+		Address:          msg.ValidatorAddress,
 		ConsensusAddress: consAddress,
 		Description:      types.ValidatorDescription{},
 	}
 
-	// get the current validator to eventually overwrite description
+	// get the current validator to eventually overwrite description and remove existing consensus key
 	validatorStore, found := k.GetValidator(ctx, msg.ValidatorAddress)
 	if found {
 		validator.Description = validatorStore.Description
@@ -54,7 +55,7 @@ func (k msgServer) SetValidatorConsAddress(
 	k.SetValidator(ctx, validator)
 	k.SetValidatorByConsAddress(ctx, types.ValidatorByConsAddress{
 		ConsensusAddress: consAddress,
-		ValidatorAddress: valPubKey.Address().String(),
+		ValidatorAddress: msg.ValidatorAddress,
 	})
 	k.SetConsensusKeyNonce(ctx, types.ConsensusKeyNonce{
 		ConsensusAddress: consAddress,
