@@ -6,9 +6,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	clienttypes "github.com/cosmos/ibc-go/modules/core/02-client/types"
-	committypes "github.com/cosmos/ibc-go/modules/core/23-commitment/types"
-	ibctmtypes "github.com/cosmos/ibc-go/modules/light-clients/07-tendermint/types"
+	clienttypes "github.com/cosmos/ibc-go/v2/modules/core/02-client/types"
+	committypes "github.com/cosmos/ibc-go/v2/modules/core/23-commitment/types"
+	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
