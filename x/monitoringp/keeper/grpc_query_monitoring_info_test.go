@@ -14,7 +14,7 @@ import (
 )
 
 func TestMonitoringInfoQuery(t *testing.T) {
-	keeper, ctx := keepertest.MonitoringpKeeper(t)
+	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	item := createTestMonitoringInfo(keeper, ctx)
 	for _, tc := range []struct {
