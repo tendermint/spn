@@ -1,6 +1,8 @@
 package types_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -47,6 +49,33 @@ func TestGenesisState_Validate(t *testing.T) {
 					"foo", // chain id should be <chain-name>-<revision-number>
 					sample.ConsensusState(0),
 				),
+				// this line is used by starport scaffolding # types/genesis/validField
+			},
+			valid: false,
+		},
+		{
+			desc: "invalid monitoring info",
+			genState: &types.GenesisState{
+				PortId: types.PortID,
+				ConsumerClientID: &types.ConsumerClientID{
+					ClientID: "29",
+				},
+				Params: types.DefaultParams(),
+				ConnectionChannelID: &types.ConnectionChannelID{
+					ChannelID: "67",
+				},
+				// Block count is lower than sum of relative signatures
+				MonitoringInfo: &types.MonitoringInfo{
+					SignatureCounts: spntypes.SignatureCounts{
+						BlockCount: 1,
+						Counts: []spntypes.SignatureCount{
+							{
+								ConsAddress: "foo",
+								RelativeSignatures: sdk.NewDec(10),
+							},
+						},
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: false,

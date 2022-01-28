@@ -28,5 +28,12 @@ func (gs GenesisState) Validate() error {
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
 
+	// check monitoring info validity
+	if  gs.MonitoringInfo != nil {
+		if err := gs.MonitoringInfo.SignatureCounts.Validate(); err != nil {
+			return err
+		}
+	}
+
 	return gs.Params.Validate()
 }
