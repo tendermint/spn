@@ -14,6 +14,7 @@ func DefaultGenesis() *GenesisState {
 		PortId:              PortID,
 		ConsumerClientID:    nil,
 		ConnectionChannelID: nil,
+		MonitoringInfo:      nil,
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}

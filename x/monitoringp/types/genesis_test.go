@@ -30,6 +30,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				ConnectionChannelID: &types.ConnectionChannelID{
 					ChannelID: "67",
 				},
+				MonitoringInfo: &types.MonitoringInfo{},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
