@@ -22,13 +22,6 @@ func (k msgServer) SetValidatorConsAddress(
 	}
 	consAddress := valPubKey.GetConsAddress().String()
 
-	// cannot set the consensus key if key is used for another validator
-	validatorByConsAddr, found := k.GetValidatorByConsAddress(ctx, consAddress)
-	if found {
-		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrap(types.ErrValidatorConsAddressAlreadyExit, consAddress)
-	}
-
 	// check signature
 	currentNonce := uint64(0)
 	consensusNonce, found := k.GetConsensusKeyNonce(ctx, consAddress)
@@ -52,9 +45,10 @@ func (k msgServer) SetValidatorConsAddress(
 	}
 
 	// get the current validator to eventually overwrite description
-	validatorStore, found := k.GetValidator(ctx, validatorByConsAddr.ValidatorAddress)
+	validatorStore, found := k.GetValidator(ctx, msg.ValidatorAddress)
 	if found {
 		validator.Description = validatorStore.Description
+		k.RemoveValidatorByConsAddress(ctx, validatorStore.ConsensusAddress)
 	}
 
 	// store validator information
