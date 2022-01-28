@@ -21,11 +21,20 @@ func createNGenesisValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 	return items
 }
 
+func createNGenesisValidatorByLaunchID(keeper *keeper.Keeper, ctx sdk.Context, launchID int) []types.GenesisValidator {
+	items := make([]types.GenesisValidator, launchID)
+	for i := range items {
+		items[i] = sample.GenesisValidator(uint64(launchID), strconv.Itoa(i))
+		keeper.SetGenesisValidator(ctx, items[i])
+	}
+	return items
+}
+
 func TestGenesisValidatorGet(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(keeper, ctx, 10)
+	k, ctx := testkeeper.Launch(t)
+	items := createNGenesisValidator(k, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetGenesisValidator(ctx,
+		rst, found := k.GetGenesisValidator(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -34,14 +43,14 @@ func TestGenesisValidatorGet(t *testing.T) {
 	}
 }
 func TestGenesisValidatorRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(keeper, ctx, 10)
+	k, ctx := testkeeper.Launch(t)
+	items := createNGenesisValidator(k, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveGenesisValidator(ctx,
+		k.RemoveGenesisValidator(ctx,
 			item.LaunchID,
 			item.Address,
 		)
-		_, found := keeper.GetGenesisValidator(ctx,
+		_, found := k.GetGenesisValidator(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -50,7 +59,15 @@ func TestGenesisValidatorRemove(t *testing.T) {
 }
 
 func TestGenesisValidatorGetAll(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(keeper, ctx, 10)
-	require.ElementsMatch(t, items, keeper.GetAllGenesisValidator(ctx))
+	k, ctx := testkeeper.Launch(t)
+	items := createNGenesisValidator(k, ctx, 10)
+	require.ElementsMatch(t, items, k.GetAllGenesisValidator(ctx))
+}
+
+func TestGenesisValidatorGetAllByLaunchID(t *testing.T) {
+	launchID := 10
+	k, ctx := testkeeper.Launch(t)
+	createNGenesisValidator(k, ctx, 10)
+	items := createNGenesisValidatorByLaunchID(k, ctx, launchID)
+	require.ElementsMatch(t, items, k.GetAllGenesisValidatorByLaunchID(ctx, uint64(launchID)))
 }

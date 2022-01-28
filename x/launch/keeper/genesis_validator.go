@@ -54,3 +54,19 @@ func (k Keeper) GetAllGenesisValidator(ctx sdk.Context) (list []types.GenesisVal
 
 	return
 }
+
+// GetAllGenesisValidatorByLaunchID returns all genesisValidator by a launch id
+func (k Keeper) GetAllGenesisValidatorByLaunchID(ctx sdk.Context, launchID uint64) (list []types.GenesisValidator) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.GenesisValidatorAllKey(launchID))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.GenesisValidator
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
