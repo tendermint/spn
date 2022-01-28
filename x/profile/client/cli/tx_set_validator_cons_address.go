@@ -20,7 +20,7 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-validator-cons-address [validator-key] [nonce]",
 		Short: "Associate a Tendermint consensus address to a specific validator address on SPN",
-		Args:  cobra.RangeArgs(1, 2),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -37,13 +37,14 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 				return err
 			}
 
+			nonce, err := strconv.ParseUint(args[1], 10, 64)
+			if err != nil {
+				return err
+			}
+
 			// check if the signature flag exists, if not, create the signature based in the nonce
 			signature, _ := cmd.Flags().GetString(flagSignature)
 			if signature == "" {
-				nonce, err := strconv.ParseUint(args[1], 10, 64)
-				if err != nil {
-					return err
-				}
 				signature, err = valConsKey.Sign(nonce, clientCtx.ChainID)
 				if err != nil {
 					return err
@@ -54,6 +55,8 @@ func CmdSetValidatorConsAddress() *cobra.Command {
 				clientCtx.GetFromAddress().String(),
 				signature,
 				valConsKey.PubKey.Type(),
+				clientCtx.ChainID,
+				nonce,
 				valConsKey.PubKey.Bytes(),
 			)
 			if err := msg.ValidateBasic(); err != nil {

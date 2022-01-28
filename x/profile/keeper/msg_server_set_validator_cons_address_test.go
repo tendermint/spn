@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 	valtypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/profile/types"
-	"github.com/tendermint/tendermint/crypto/ed25519"
 )
 
 const validatorKey = `{
@@ -24,8 +23,6 @@ const validatorKey = `{
 
 func TestMsgSetValidatorConsAddress(t *testing.T) {
 	var (
-		randPrivKey = ed25519.GenPrivKey()
-		randPubKey  = randPrivKey.PubKey()
 		ctx, k, srv = setupMsgServer(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 	)
@@ -46,6 +43,45 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 		err    error
 	}{
 		{
+			name:   "invalid validator key",
+			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
+			msg: &types.MsgSetValidatorConsAddress{
+				ValidatorAddress:    valKey.Address.String(),
+				ValidatorConsPubKey: []byte("invalid_key"),
+				ValidatorKeyType:    "invalid_type",
+				Signature:           signature,
+				Nonce:               0,
+				ChainID:             ctx.ChainID(),
+			},
+			err: types.ErrInvalidValidatorKey,
+		},
+		{
+			name:   "invalid validator nonce",
+			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
+			msg: &types.MsgSetValidatorConsAddress{
+				ValidatorAddress:    valKey.Address.String(),
+				ValidatorConsPubKey: valKey.PubKey.Bytes(),
+				ValidatorKeyType:    valKey.PubKey.Type(),
+				Signature:           signature,
+				Nonce:               1,
+				ChainID:             ctx.ChainID(),
+			},
+			err: types.ErrInvalidValidatorNonce,
+		},
+		{
+			name:   "invalid validator chain id",
+			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
+			msg: &types.MsgSetValidatorConsAddress{
+				ValidatorAddress:    valKey.Address.String(),
+				ValidatorConsPubKey: valKey.PubKey.Bytes(),
+				ValidatorKeyType:    valKey.PubKey.Type(),
+				Signature:           signature,
+				Nonce:               0,
+				ChainID:             ctx.ChainID() + "_invalid",
+			},
+			err: types.ErrInvalidValidatorChainID,
+		},
+		{
 			name:   "valid message",
 			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
 			msg: &types.MsgSetValidatorConsAddress{
@@ -53,40 +89,9 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 				ValidatorConsPubKey: valKey.PubKey.Bytes(),
 				ValidatorKeyType:    valKey.PubKey.Type(),
 				Signature:           signature,
+				Nonce:               0,
+				ChainID:             ctx.ChainID(),
 			},
-		},
-		{
-			name:   "invalid validator key",
-			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
-			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorAddress:    valKey.Address.String(),
-				ValidatorConsPubKey: []byte("invalid_key"),
-				ValidatorKeyType:    "invalid_type",
-				Signature:           "invalid_signature",
-			},
-			err: types.ErrInvalidValidatorKey,
-		},
-		{
-			name:   "validator consensus already exist",
-			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
-			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorAddress:    valKey.Address.String(),
-				ValidatorConsPubKey: valKey.PubKey.Bytes(),
-				ValidatorKeyType:    valKey.PubKey.Type(),
-				Signature:           signature,
-			},
-			err: types.ErrValidatorConsAddressAlreadyExit,
-		},
-		{
-			name:   "invalid signature",
-			pubKey: valtypes.ValidatorConsPubKey{PubKey: randPubKey},
-			msg: &types.MsgSetValidatorConsAddress{
-				ValidatorAddress:    randPubKey.Address().String(),
-				ValidatorConsPubKey: randPubKey.Bytes(),
-				ValidatorKeyType:    randPubKey.Type(),
-				Signature:           "invalid_signature",
-			},
-			err: types.ErrInvalidValidatorSignature,
 		},
 	}
 	for _, tt := range tests {

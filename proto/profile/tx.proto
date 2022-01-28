@@ -38,6 +38,8 @@ message MsgSetValidatorConsAddress {
   bytes validatorConsPubKey = 2;
   string validatorKeyType = 3;
   string signature = 4;
+  uint64 nonce = 5;
+  string chainID = 6;
 }
 
 message MsgSetValidatorConsAddressResponse {

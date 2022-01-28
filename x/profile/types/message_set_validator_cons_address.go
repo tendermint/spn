@@ -10,12 +10,21 @@ const TypeMsgSetValidatorConsAddress = "set_validator_cons_address"
 
 var _ sdk.Msg = &MsgSetValidatorConsAddress{}
 
-func NewMsgSetValidatorConsAddress(validatorAddress, signature, keyType string, validatorConsPubKey []byte) *MsgSetValidatorConsAddress {
+func NewMsgSetValidatorConsAddress(
+	validatorAddress,
+	signature,
+	keyType,
+	chainID string,
+	nonce uint64,
+	validatorConsPubKey []byte,
+) *MsgSetValidatorConsAddress {
 	return &MsgSetValidatorConsAddress{
 		ValidatorAddress:    validatorAddress,
 		ValidatorConsPubKey: validatorConsPubKey,
 		ValidatorKeyType:    keyType,
 		Signature:           signature,
+		Nonce:               nonce,
+		ChainID:             chainID,
 	}
 }
 
@@ -44,8 +53,12 @@ func (msg *MsgSetValidatorConsAddress) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.ValidatorAddress); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
-	if _, err := valtypes.NewValidatorConsPubKey(msg.ValidatorConsPubKey, msg.ValidatorKeyType); err != nil {
-		return sdkerrors.Wrap(ErrInvalidValidatorKey, string(msg.ValidatorConsPubKey))
+	valPubKey, err := valtypes.NewValidatorConsPubKey(msg.ValidatorConsPubKey, msg.ValidatorKeyType)
+	if err != nil {
+		return sdkerrors.Wrap(ErrInvalidValidatorKey, msg.ValidatorKeyType)
+	}
+	if !valPubKey.VerifySignature(msg.Nonce, msg.ChainID, msg.Signature) {
+		return sdkerrors.Wrap(ErrInvalidValidatorSignature, msg.Signature)
 	}
 	return nil
 }

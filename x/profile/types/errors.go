@@ -16,4 +16,6 @@ var (
 	ErrValidatorConsAddressAlreadyExit = sdkerrors.Register(ModuleName, 7, "validator consensus address already exist")
 	ErrInvalidValidatorSignature       = sdkerrors.Register(ModuleName, 8, "invalid validator signature")
 	ErrInvalidValidatorKey             = sdkerrors.Register(ModuleName, 9, "invalid validator key")
+	ErrInvalidValidatorNonce           = sdkerrors.Register(ModuleName, 10, "invalid validator nonce")
+	ErrInvalidValidatorChainID         = sdkerrors.Register(ModuleName, 11, "invalid validator chain id")
 )

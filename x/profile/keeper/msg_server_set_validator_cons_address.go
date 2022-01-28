@@ -28,14 +28,13 @@ func (k msgServer) SetValidatorConsAddress(
 	if found {
 		currentNonce = consensusNonce.Nonce
 	}
-
-	if !valPubKey.VerifySignature(currentNonce, ctx.ChainID(), msg.Signature) {
+	if currentNonce != msg.Nonce {
 		return &types.MsgSetValidatorConsAddressResponse{},
-			sdkerrors.Wrapf(types.ErrInvalidValidatorSignature,
-				"invalid signature for consensus address: %s - %s",
-				consAddress,
-				msg.Signature,
-			)
+			sdkerrors.Wrapf(types.ErrInvalidValidatorNonce, "%d", msg.Nonce)
+	}
+	if ctx.ChainID() != msg.ChainID {
+		return &types.MsgSetValidatorConsAddressResponse{},
+			sdkerrors.Wrap(types.ErrInvalidValidatorChainID, msg.ChainID)
 	}
 
 	validator := types.Validator{
