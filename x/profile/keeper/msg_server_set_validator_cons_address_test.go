@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -53,7 +54,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 				Nonce:               0,
 				ChainID:             ctx.ChainID(),
 			},
-			err: types.ErrInvalidValidatorKey,
+			err: spnerrors.ErrCritical,
 		},
 		{
 			name:   "invalid validator nonce",
