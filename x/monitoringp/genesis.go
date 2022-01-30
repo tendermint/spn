@@ -17,6 +17,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if genState.ConnectionChannelID != nil {
 		k.SetConnectionChannelID(ctx, *genState.ConnectionChannelID)
 	}
+	// Set if defined
+	if genState.MonitoringInfo != nil {
+		k.SetMonitoringInfo(ctx, *genState.MonitoringInfo)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetPort(ctx, genState.PortId)
 	// Only try to bind to port if it is not already bound, since we may already own
@@ -55,6 +59,11 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	connectionChannelID, found := k.GetConnectionChannelID(ctx)
 	if found {
 		genesis.ConnectionChannelID = &connectionChannelID
+	}
+	// Get all monitoringInfo
+	monitoringInfo, found := k.GetMonitoringInfo(ctx)
+	if found {
+		genesis.MonitoringInfo = &monitoringInfo
 	}
 	// this line is used by starport scaffolding # genesis/module/export
 

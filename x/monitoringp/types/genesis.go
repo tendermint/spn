@@ -14,6 +14,7 @@ func DefaultGenesis() *GenesisState {
 		PortId:              PortID,
 		ConsumerClientID:    nil,
 		ConnectionChannelID: nil,
+		MonitoringInfo:      nil,
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -26,6 +27,13 @@ func (gs GenesisState) Validate() error {
 		return err
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
+
+	// check monitoring info validity
+	if gs.MonitoringInfo != nil {
+		if err := gs.MonitoringInfo.SignatureCounts.Validate(); err != nil {
+			return err
+		}
+	}
 
 	return gs.Params.Validate()
 }
