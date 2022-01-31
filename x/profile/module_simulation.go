@@ -15,6 +15,7 @@ import (
 const (
 	defaultWeightMsgUpdateValidatorDescription   = 50
 	defaultWeightMsgDeleteValidator              = 10
+	defaultWeightMsgSetValidatorConsAddress      = 50
 	defaultWeightMsgCreateCoordinator            = 50
 	defaultWeightMsgUpdateCoordinatorDescription = 20
 	defaultWeightMsgUpdateCoordinatorAddress     = 20
@@ -22,6 +23,7 @@ const (
 
 	opWeightMsgUpdateValidatorDescription   = "op_weight_msg_update_validator_description"
 	opWeightMsgDeleteValidator              = "op_weight_msg_delete_validator"
+	opWeightMsgSetValidatorConsAddress      = "op_weight_msg_create_chain"
 	opWeightMsgCreateCoordinator            = "op_weight_msg_create_coordinator"
 	opWeightMsgUpdateCoordinatorDescription = "op_weight_msg_update_coordinator_description"
 	opWeightMsgUpdateCoordinatorAddress     = "op_weight_msg_update_coordinator_address"
@@ -60,6 +62,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgUpdateCoordinatorDescription int
 		weightMsgUpdateCoordinatorAddress     int
 		weightMsgDeleteCoordinator            int
+		weightMsgSetValidatorConsAddress      int
 	)
 
 	appParams := simState.AppParams
@@ -72,6 +75,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	appParams.GetOrGenerate(cdc, opWeightMsgDeleteValidator, &weightMsgDeleteValidator, nil,
 		func(_ *rand.Rand) {
 			weightMsgDeleteValidator = defaultWeightMsgDeleteValidator
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgSetValidatorConsAddress, &weightMsgSetValidatorConsAddress, nil,
+		func(_ *rand.Rand) {
+			weightMsgSetValidatorConsAddress = defaultWeightMsgSetValidatorConsAddress
 		},
 	)
 	appParams.GetOrGenerate(cdc, opWeightMsgCreateCoordinator, &weightMsgCreateCoordinator, nil,
@@ -103,6 +111,10 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		simulation.NewWeightedOperation(
 			weightMsgDeleteValidator,
 			profilesimulation.SimulateMsgDeleteValidator(am.accountKeeper, am.bankKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgSetValidatorConsAddress,
+			profilesimulation.SimulateMsgSetValidatorConsAddress(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgCreateCoordinator,
