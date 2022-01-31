@@ -7,6 +7,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "monitoringp/params.proto";
 import "monitoringp/consumer_client_id.proto";
 import "monitoringp/connection_channel_id.proto";
+import "monitoringp/monitoring_info.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
@@ -24,6 +25,10 @@ service Query {
   // Queries a ConnectionChannelID by index.
 	rpc ConnectionChannelID(QueryGetConnectionChannelIDRequest) returns (QueryGetConnectionChannelIDResponse) {
 		option (google.api.http).get = "/tendermint/spn/monitoringp/connection_channel_id";
+	}
+// Queries a MonitoringInfo by index.
+	rpc MonitoringInfo(QueryGetMonitoringInfoRequest) returns (QueryGetMonitoringInfoResponse) {
+		option (google.api.http).get = "/tendermint/spn/monitoringp/monitoring_info";
 	}
 // this line is used by starport scaffolding # 2
 }
@@ -46,5 +51,10 @@ message QueryGetConnectionChannelIDRequest {}
 
 message QueryGetConnectionChannelIDResponse {
 	ConnectionChannelID ConnectionChannelID = 1 [(gogoproto.nullable) = false];
+}
+message QueryGetMonitoringInfoRequest {}
+
+message QueryGetMonitoringInfoResponse {
+	MonitoringInfo MonitoringInfo = 1 [(gogoproto.nullable) = false];
 }
 // this line is used by starport scaffolding # 3
