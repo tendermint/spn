@@ -71,3 +71,15 @@ func TestGenesisValidatorGetAllByLaunchID(t *testing.T) {
 	items := createNGenesisValidatorByLaunchID(k, ctx, launchID)
 	require.ElementsMatch(t, items, k.GetAllGenesisValidatorByLaunchID(ctx, uint64(launchID)))
 }
+
+func TestGetGenesisValidatorByConsPubKey(t *testing.T) {
+	k, ctx := testkeeper.Launch(t)
+	items := createNGenesisValidator(k, ctx, 10)
+	for i, item := range items {
+		t.Run(item.Address, func(t *testing.T) {
+			val, found := k.GetGenesisValidatorByConsPubKey(ctx, uint64(i), item.ConsPubKey)
+			require.True(t, found)
+			require.EqualValues(t, item, val)
+		})
+	}
+}

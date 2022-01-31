@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"bytes"
+	
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/launch/types"
@@ -69,4 +71,25 @@ func (k Keeper) GetAllGenesisValidatorByLaunchID(ctx sdk.Context, launchID uint6
 	}
 
 	return
+}
+
+// GetGenesisValidatorByConsPubKey returns the genesisValidator by consensus address
+func (k Keeper) GetGenesisValidatorByConsPubKey(
+	ctx sdk.Context,
+	launchID uint64,
+	consPubKey []byte,
+) (types.GenesisValidator, bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.GenesisValidatorAllKey(launchID))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.GenesisValidator
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		if bytes.Compare(val.ConsPubKey, consPubKey) == 0 {
+			return val, true
+		}
+	}
+	return types.GenesisValidator{}, false
 }
