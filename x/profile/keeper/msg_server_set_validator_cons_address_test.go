@@ -1,12 +1,13 @@
 package keeper_test
 
 import (
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	valtypes "github.com/tendermint/spn/pkg/types"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -94,6 +95,18 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 				ChainID:             ctx.ChainID(),
 			},
 		},
+		{
+			name:   "duplicated cons pub key message",
+			pubKey: valtypes.ValidatorConsPubKey{PubKey: valKey.PubKey},
+			msg: &types.MsgSetValidatorConsAddress{
+				ValidatorAddress:    sample.Address(),
+				ValidatorConsPubKey: valKey.PubKey.Bytes(),
+				ValidatorKeyType:    valKey.PubKey.Type(),
+				Signature:           signature,
+				Nonce:               1,
+				ChainID:             ctx.ChainID(),
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -110,14 +123,14 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			validator, found := k.GetValidator(ctx, tt.pubKey.Address().String())
+			validator, found := k.GetValidator(ctx, tt.msg.ValidatorAddress)
 			require.True(t, found, "validator was not saved")
-			require.Equal(t, tt.pubKey.Address().String(), validator.Address)
+			require.Equal(t, tt.msg.ValidatorAddress, validator.Address)
 			require.Equal(t, tt.pubKey.GetConsAddress().String(), validator.ConsensusAddress)
 
 			valByConsAddr, found := k.GetValidatorByConsAddress(ctx, validator.ConsensusAddress)
 			require.True(t, found, "validator by consensus address was not saved")
-			require.Equal(t, tt.pubKey.Address().String(), valByConsAddr.ValidatorAddress)
+			require.Equal(t, tt.msg.ValidatorAddress, valByConsAddr.ValidatorAddress)
 			require.Equal(t, tt.pubKey.GetConsAddress().String(), valByConsAddr.ConsensusAddress)
 
 			consNonce, found := k.GetConsensusKeyNonce(ctx, validator.ConsensusAddress)

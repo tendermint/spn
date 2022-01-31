@@ -44,9 +44,21 @@ func (k msgServer) SetValidatorConsAddress(
 		Description:      types.ValidatorDescription{},
 	}
 
+	if valByConsAddr, found := k.GetValidatorByConsAddress(ctx, consAddress); found {
+		lastValidator, found := k.GetValidator(ctx, valByConsAddr.ValidatorAddress)
+		if !found {
+			return &types.MsgSetValidatorConsAddressResponse{},
+				spnerrors.Criticalf(
+					"validator not exist for consensus pub key %s",
+					valByConsAddr.ValidatorAddress,
+				)
+		}
+		lastValidator.ConsensusAddress = ""
+		k.SetValidator(ctx, lastValidator)
+	}
+
 	// get the current validator to eventually overwrite description and remove existing consensus key
-	validatorStore, found := k.GetValidator(ctx, msg.ValidatorAddress)
-	if found {
+	if validatorStore, found := k.GetValidator(ctx, msg.ValidatorAddress); found {
 		validator.Description = validatorStore.Description
 		k.RemoveValidatorByConsAddress(ctx, validatorStore.ConsensusAddress)
 	}
