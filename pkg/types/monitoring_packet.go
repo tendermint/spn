@@ -15,7 +15,7 @@ func (m MonitoringPacket) ValidateBasic() error {
 			"block height %d must be greater or equal to block count %d",
 			m.BlockHeight,
 			m.SignatureCounts.BlockCount,
-			)
+		)
 	}
 	return nil
 }

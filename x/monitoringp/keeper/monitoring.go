@@ -77,7 +77,7 @@ func (k Keeper) OnRecvMonitoringPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
 	data spntypes.MonitoringPacket,
-	) (packetAck types.MonitoringPacketAck, err error) {
+) (packetAck types.MonitoringPacketAck, err error) {
 	// validate packet data upon receiving
 	if err := data.ValidateBasic(); err != nil {
 		return packetAck, err
@@ -93,9 +93,9 @@ func (k Keeper) OnRecvMonitoringPacket(
 func (k Keeper) OnAcknowledgementMonitoringPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
-	data  spntypes.MonitoringPacket,
+	data spntypes.MonitoringPacket,
 	ack channeltypes.Acknowledgement,
-	) error {
+) error {
 	switch dispatchedAck := ack.Response.(type) {
 	case *channeltypes.Acknowledgement_Error:
 
@@ -125,8 +125,8 @@ func (k Keeper) OnAcknowledgementMonitoringPacket(
 func (k Keeper) OnTimeoutMonitoringPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
-	data  spntypes.MonitoringPacket,
-	) error {
+	data spntypes.MonitoringPacket,
+) error {
 
 	return nil
 }

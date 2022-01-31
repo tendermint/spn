@@ -9,12 +9,12 @@ import (
 func TestMonitoringPacket_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name    string
-		mp types.MonitoringPacket
+		mp      types.MonitoringPacket
 		wantErr bool
 	}{
 		{
 			name: "empty is valid",
-			mp: types.MonitoringPacket{},
+			mp:   types.MonitoringPacket{},
 		},
 		{
 			name: "block height can be greater than block count",
