@@ -74,18 +74,11 @@ func (k Keeper) TransmitMonitoringPacket(
 
 // OnRecvMonitoringPacket processes packet reception
 func (k Keeper) OnRecvMonitoringPacket(
-	ctx sdk.Context,
-	packet channeltypes.Packet,
-	data spntypes.MonitoringPacket,
+	_ sdk.Context,
+	_ channeltypes.Packet,
+	_ spntypes.MonitoringPacket,
 ) (packetAck types.MonitoringPacketAck, err error) {
-	// validate packet data upon receiving
-	if err := data.ValidateBasic(); err != nil {
-		return packetAck, err
-	}
-
-	// TODO: packet reception logic
-
-	return packetAck, nil
+	return packetAck, errors.New("not implemented")
 }
 
 // OnAcknowledgementMonitoringPacket responds to the the success or failure of a packet
@@ -123,10 +116,9 @@ func (k Keeper) OnAcknowledgementMonitoringPacket(
 
 // OnTimeoutMonitoringPacket responds to the case where a packet has not been transmitted because of a timeout
 func (k Keeper) OnTimeoutMonitoringPacket(
-	ctx sdk.Context,
-	packet channeltypes.Packet,
-	data spntypes.MonitoringPacket,
+	_ sdk.Context,
+	_ channeltypes.Packet,
+	_ spntypes.MonitoringPacket,
 ) error {
-
-	return nil
+	return errors.New("not implemented")
 }
