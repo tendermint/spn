@@ -2,17 +2,18 @@ syntax = "proto3";
 package tendermint.spn.monitoringp;
 
 // this line is used by starport scaffolding # proto/packet/import
+import "types/monitoring.proto";
 
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
 
 message MonitoringpPacketData {
   oneof packet {
-    NoData noData = 1;
     // this line is used by starport scaffolding # ibc/packet/proto/field
+    tendermint.spn.types.MonitoringPacket monitoringPacket = 1;
   }
 }
 
-message NoData {
+// MonitoringPacketAck defines a struct for the packet acknowledgment
+message MonitoringPacketAck {
 }
-
 // this line is used by starport scaffolding # ibc/packet/proto/message
