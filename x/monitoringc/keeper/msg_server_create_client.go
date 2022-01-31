@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"github.com/tendermint/spn/pkg/chainid"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -32,7 +33,10 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 	}
 
 	// initialize the client state
-	clientState := k.initializeClientState(chain.GenesisChainID)
+	clientState, err := k.initializeClientState(chain.GenesisChainID)
+	if err != nil {
+		return nil, sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
+	}
 	if err := clientState.Validate(); err != nil {
 		return nil, sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
 	}
@@ -66,17 +70,22 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 
 // initializeClientState initializes the client state provided for the IBC client
 // TODO: Investigate configurable values
-func (k msgServer) initializeClientState(chainID string) *ibctmtypes.ClientState {
+func (k msgServer) initializeClientState(chainID string) (*ibctmtypes.ClientState, error) {
+	_, revisionHeight, err := chainid.ParseGenesisChainID(chainID)
+	if err != nil {
+		return nil, err
+	}
+
 	return ibctmtypes.NewClientState(
 		chainID,
 		ibctmtypes.NewFractionFromTm(light.DefaultTrustLevel),
 		DefaultTrustingPeriod,
 		DefaultUnbondingPeriod,
 		time.Minute*10,
-		clienttypes.NewHeight(1, 1),
+		clienttypes.NewHeight(1, revisionHeight),
 		committypes.GetSDKSpecs(),
 		[]string{"upgrade", "upgradedIBCState"},
 		true,
 		true,
-	)
+	), nil
 }
