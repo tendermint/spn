@@ -61,7 +61,6 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want bool
 		err  error
 	}{
 		{
@@ -101,33 +100,31 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 			err: types.ErrValidatorNotFound,
 		},
 		{
-			name: "valid validator set",
-			args: args{
-				launchID:     launchID,
-				chainID:      "spn-1",
-				validatorSet: validatorSet,
-			},
-			want: true,
-		},
-		{
 			name: "invalid validator set",
 			args: args{
 				launchID:     launchID,
 				chainID:      "spn-1",
 				validatorSet: invalidValidatorSet,
 			},
-			want: false,
+			err: types.ErrMinSelfDelegationNotReached,
+		},
+		{
+			name: "valid validator set",
+			args: args{
+				launchID:     launchID,
+				chainID:      "spn-1",
+				validatorSet: validatorSet,
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := k.CheckValidatorSet(ctx, tt.args.launchID, tt.args.chainID, tt.args.validatorSet)
+			err := k.CheckValidatorSet(ctx, tt.args.launchID, tt.args.chainID, tt.args.validatorSet)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
-			require.Equal(t, tt.want, got)
 		})
 	}
 }
