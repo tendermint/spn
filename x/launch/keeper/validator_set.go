@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"bytes"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/launch/types"
@@ -34,13 +32,9 @@ func (k Keeper) CheckValidatorSet(
 	// must reach at least 2/3 of the total self delegation for the chain
 	valSetSelfDelegation := sdk.NewDec(0)
 	for _, validator := range validatorSet.Validators {
-		valAddr := sdk.AccAddress(validator.Address.Bytes())
-		launchValidator, found := k.GetGenesisValidator(ctx, launchID, valAddr.String())
-		if !found {
-			return sdkerrors.Wrap(types.ErrValidatorNotFound, valAddr.String())
-		}
 		valConsPubKey := validator.PubKey.Bytes()
-		if bytes.Compare(launchValidator.ConsPubKey, valConsPubKey) != 0 { // nolint
+		launchValidator, found := k.GetGenesisValidatorByConsPubKey(ctx, launchID, valConsPubKey)
+		if !found {
 			return sdkerrors.Wrap(types.ErrInvalidConsPubKey, validator.PubKey.Address().String())
 		}
 		valSetSelfDelegation = valSetSelfDelegation.Add(launchValidator.SelfDelegation.Amount.ToDec())

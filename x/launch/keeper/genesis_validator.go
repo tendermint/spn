@@ -2,7 +2,7 @@ package keeper
 
 import (
 	"bytes"
-	
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/launch/types"
