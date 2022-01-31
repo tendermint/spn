@@ -1,9 +1,10 @@
 package types_test
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/pkg/types"
-	"testing"
 )
 
 func TestMonitoringPacket_ValidateBasic(t *testing.T) {
