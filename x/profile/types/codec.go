@@ -12,6 +12,7 @@ import (
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgUpdateValidatorDescription{}, "profile/UpdateValidatorDescription", nil)
 	cdc.RegisterConcrete(&MsgDeleteValidator{}, "profile/DeleteValidator", nil)
+	cdc.RegisterConcrete(&MsgSetValidatorConsAddress{}, "profile/SetValidatorConsAddress", nil)
 	cdc.RegisterConcrete(&MsgCreateCoordinator{}, "profile/CreateCoordinator", nil)
 	cdc.RegisterConcrete(&MsgUpdateCoordinatorDescription{}, "profile/UpdateCoordinatorDescription", nil)
 	cdc.RegisterConcrete(&MsgUpdateCoordinatorAddress{}, "profile/UpdateCoordinatorAddress", nil)
@@ -23,6 +24,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateValidatorDescription{},
 		&MsgDeleteValidator{},
+		&MsgSetValidatorConsAddress{},
 		&MsgCreateCoordinator{},
 		&MsgUpdateCoordinatorDescription{},
 		&MsgUpdateCoordinatorAddress{},

@@ -1,5 +1,7 @@
 package types
 
+import spntypes "github.com/tendermint/spn/pkg/types"
+
 const (
 	// ChainKeyPrefix is the prefix to retrieve all Chain
 	ChainKeyPrefix = "Chain/value/"
@@ -10,5 +12,5 @@ const (
 
 // ChainKey returns the store key to retrieve a Chain from the index fields
 func ChainKey(launchID uint64) []byte {
-	return append(uintBytes(launchID), byte('/'))
+	return append(spntypes.UintBytes(launchID), byte('/'))
 }
