@@ -1,10 +1,10 @@
 package keeper_test
 
 import (
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	connectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
 	"github.com/stretchr/testify/require"
