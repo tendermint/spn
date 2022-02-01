@@ -106,6 +106,35 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		err := k.VerifyClientIDFromChannelID(ctx, "foo")
 		require.ErrorIs(t, err, types.ErrConnectionAlreadyEstablished)
 	})
+
+	t.Run("debug mode should fail if client ID can't be retrieve from channel ID", func(t *testing.T) {
+		k, ctx := monitoringcKeeperWithFooClient(t)
+		k.SetParams(ctx, types.NewParams(true))
+		err := k.VerifyClientIDFromChannelID(ctx, "bar")
+		require.ErrorIs(t, err, channeltypes.ErrChannelNotFound)
+	})
+
+	t.Run("should return no error when debug mode is set and client is not verified", func(t *testing.T) {
+		k, ctx := monitoringcKeeperWithFooClient(t)
+		k.SetParams(ctx, types.NewParams(true))
+		err := k.VerifyClientIDFromChannelID(ctx, "foo")
+		require.NoError(t, err)
+	})
+
+	t.Run("should return no error when debug mode is set and connection is already established", func(t *testing.T) {
+		k, ctx := monitoringcKeeperWithFooClient(t)
+		k.SetParams(ctx, types.NewParams(true))
+		k.SetLaunchIDFromVerifiedClientID(ctx, types.LaunchIDFromVerifiedClientID{
+			LaunchID: 1,
+			ClientID: "foo",
+		})
+		k.SetProviderClientID(ctx, types.ProviderClientID{
+			LaunchID: 1,
+			ClientID: "bar",
+		})
+		err := k.VerifyClientIDFromChannelID(ctx, "foo")
+		require.NoError(t, err)
+	})
 }
 
 func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
@@ -189,5 +218,54 @@ func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
 		})
 		err := k.RegisterProviderClientIDFromChannelID(ctx, "foo")
 		require.ErrorIs(t, err, types.ErrConnectionAlreadyEstablished)
+	})
+
+	t.Run("debug mode should fail with critical if client ID can't be retrieve from channel ID", func(t *testing.T) {
+		k, ctx := monitoringcKeeperWithFooClient(t)
+		k.SetParams(ctx, types.NewParams(true))
+		err := k.RegisterProviderClientIDFromChannelID(ctx, "bar")
+		require.ErrorIs(t, err, spnerrors.ErrCritical)
+	})
+
+	t.Run("debug mode allows to automatically register the client for a predefined launch ID", func(t *testing.T) {
+		k, ctx := monitoringcKeeperWithFooClient(t)
+		k.SetParams(ctx, types.NewParams(true))
+		err := k.RegisterProviderClientIDFromChannelID(ctx, "foo")
+		require.NoError(t, err, spnerrors.ErrCritical)
+
+		pCid, found := k.GetProviderClientID(ctx, monitoringcmodulekeeper.DebugModeLaunchID)
+		require.True(t, found)
+		require.EqualValues(t, monitoringcmodulekeeper.DebugModeLaunchID, pCid.LaunchID)
+		require.EqualValues(t, "foo", pCid.ClientID)
+
+		launcIDFromChanID, found := k.GetLaunchIDFromChannelID(ctx, "foo")
+		require.True(t, found)
+		require.EqualValues(t, monitoringcmodulekeeper.DebugModeLaunchID, launcIDFromChanID.LaunchID)
+		require.EqualValues(t, "foo", launcIDFromChanID.ChannelID)
+	})
+
+	t.Run("debug mode allows to register a new client and replace previous one", func(t *testing.T) {
+		k, ctx := monitoringcKeeperWithFooClient(t)
+		k.SetParams(ctx, types.NewParams(true))
+		k.SetLaunchIDFromVerifiedClientID(ctx, types.LaunchIDFromVerifiedClientID{
+			LaunchID: 1,
+			ClientID: "foo",
+		})
+		k.SetProviderClientID(ctx, types.ProviderClientID{
+			LaunchID: 1,
+			ClientID: "bar",
+		})
+		err := k.RegisterProviderClientIDFromChannelID(ctx, "foo")
+		require.NoError(t, err, spnerrors.ErrCritical)
+
+		pCid, found := k.GetProviderClientID(ctx, monitoringcmodulekeeper.DebugModeLaunchID)
+		require.True(t, found)
+		require.EqualValues(t, monitoringcmodulekeeper.DebugModeLaunchID, pCid.LaunchID)
+		require.EqualValues(t, "foo", pCid.ClientID)
+
+		launcIDFromChanID, found := k.GetLaunchIDFromChannelID(ctx, "foo")
+		require.True(t, found)
+		require.EqualValues(t, monitoringcmodulekeeper.DebugModeLaunchID, launcIDFromChanID.LaunchID)
+		require.EqualValues(t, "foo", launcIDFromChanID.ChannelID)
 	})
 }
