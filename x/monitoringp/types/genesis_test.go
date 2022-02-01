@@ -48,6 +48,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					1000,
 					"foo", // chain id should be <chain-name>-<revision-number>
 					sample.ConsensusState(0),
+					false,
 				),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},

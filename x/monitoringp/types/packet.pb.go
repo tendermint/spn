@@ -6,6 +6,7 @@ package types
 import (
 	fmt "fmt"
 	proto "github.com/gogo/protobuf/proto"
+	types "github.com/tendermint/spn/pkg/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -24,7 +25,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type MonitoringpPacketData struct {
 	// Types that are valid to be assigned to Packet:
-	//	*MonitoringpPacketData_NoData
+	//	*MonitoringpPacketData_MonitoringPacket
 	Packet isMonitoringpPacketData_Packet `protobuf_oneof:"packet"`
 }
 
@@ -67,11 +68,11 @@ type isMonitoringpPacketData_Packet interface {
 	Size() int
 }
 
-type MonitoringpPacketData_NoData struct {
-	NoData *NoData `protobuf:"bytes,1,opt,name=noData,proto3,oneof" json:"noData,omitempty"`
+type MonitoringpPacketData_MonitoringPacket struct {
+	MonitoringPacket *types.MonitoringPacket `protobuf:"bytes,1,opt,name=monitoringPacket,proto3,oneof" json:"monitoringPacket,omitempty"`
 }
 
-func (*MonitoringpPacketData_NoData) isMonitoringpPacketData_Packet() {}
+func (*MonitoringpPacketData_MonitoringPacket) isMonitoringpPacketData_Packet() {}
 
 func (m *MonitoringpPacketData) GetPacket() isMonitoringpPacketData_Packet {
 	if m != nil {
@@ -80,9 +81,9 @@ func (m *MonitoringpPacketData) GetPacket() isMonitoringpPacketData_Packet {
 	return nil
 }
 
-func (m *MonitoringpPacketData) GetNoData() *NoData {
-	if x, ok := m.GetPacket().(*MonitoringpPacketData_NoData); ok {
-		return x.NoData
+func (m *MonitoringpPacketData) GetMonitoringPacket() *types.MonitoringPacket {
+	if x, ok := m.GetPacket().(*MonitoringpPacketData_MonitoringPacket); ok {
+		return x.MonitoringPacket
 	}
 	return nil
 }
@@ -90,25 +91,26 @@ func (m *MonitoringpPacketData) GetNoData() *NoData {
 // XXX_OneofWrappers is for the internal use of the proto package.
 func (*MonitoringpPacketData) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
-		(*MonitoringpPacketData_NoData)(nil),
+		(*MonitoringpPacketData_MonitoringPacket)(nil),
 	}
 }
 
-type NoData struct {
+// MonitoringPacketAck defines a struct for the packet acknowledgment
+type MonitoringPacketAck struct {
 }
 
-func (m *NoData) Reset()         { *m = NoData{} }
-func (m *NoData) String() string { return proto.CompactTextString(m) }
-func (*NoData) ProtoMessage()    {}
-func (*NoData) Descriptor() ([]byte, []int) {
+func (m *MonitoringPacketAck) Reset()         { *m = MonitoringPacketAck{} }
+func (m *MonitoringPacketAck) String() string { return proto.CompactTextString(m) }
+func (*MonitoringPacketAck) ProtoMessage()    {}
+func (*MonitoringPacketAck) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9da0db0ad71a289f, []int{1}
 }
-func (m *NoData) XXX_Unmarshal(b []byte) error {
+func (m *MonitoringPacketAck) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *NoData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MonitoringPacketAck) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_NoData.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MonitoringPacketAck.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -118,39 +120,40 @@ func (m *NoData) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *NoData) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_NoData.Merge(m, src)
+func (m *MonitoringPacketAck) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MonitoringPacketAck.Merge(m, src)
 }
-func (m *NoData) XXX_Size() int {
+func (m *MonitoringPacketAck) XXX_Size() int {
 	return m.Size()
 }
-func (m *NoData) XXX_DiscardUnknown() {
-	xxx_messageInfo_NoData.DiscardUnknown(m)
+func (m *MonitoringPacketAck) XXX_DiscardUnknown() {
+	xxx_messageInfo_MonitoringPacketAck.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_NoData proto.InternalMessageInfo
+var xxx_messageInfo_MonitoringPacketAck proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*MonitoringpPacketData)(nil), "tendermint.spn.monitoringp.MonitoringpPacketData")
-	proto.RegisterType((*NoData)(nil), "tendermint.spn.monitoringp.NoData")
+	proto.RegisterType((*MonitoringPacketAck)(nil), "tendermint.spn.monitoringp.MonitoringPacketAck")
 }
 
 func init() { proto.RegisterFile("monitoringp/packet.proto", fileDescriptor_9da0db0ad71a289f) }
 
 var fileDescriptor_9da0db0ad71a289f = []byte{
-	// 185 bytes of a gzipped FileDescriptorProto
+	// 201 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x92, 0xc8, 0xcd, 0xcf, 0xcb,
 	0x2c, 0xc9, 0x2f, 0xca, 0xcc, 0x4b, 0x2f, 0xd0, 0x2f, 0x48, 0x4c, 0xce, 0x4e, 0x2d, 0xd1, 0x2b,
 	0x28, 0xca, 0x2f, 0xc9, 0x17, 0x92, 0x2a, 0x49, 0xcd, 0x4b, 0x49, 0x2d, 0xca, 0xcd, 0xcc, 0x2b,
-	0xd1, 0x2b, 0x2e, 0xc8, 0xd3, 0x43, 0x52, 0xa8, 0x14, 0xcf, 0x25, 0xea, 0x8b, 0xe0, 0x06, 0x80,
-	0xb5, 0xb9, 0x24, 0x96, 0x24, 0x0a, 0xd9, 0x70, 0xb1, 0xe5, 0xe5, 0x83, 0x58, 0x12, 0x8c, 0x0a,
-	0x8c, 0x1a, 0xdc, 0x46, 0x4a, 0x7a, 0xb8, 0x4d, 0xd1, 0xf3, 0x03, 0xab, 0xf4, 0x60, 0x08, 0x82,
-	0xea, 0x71, 0xe2, 0xe0, 0x62, 0x83, 0x38, 0x41, 0x89, 0x83, 0x8b, 0x0d, 0x22, 0xeb, 0xe4, 0x7e,
-	0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7,
-	0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0xba, 0xe9, 0x99, 0x25, 0x19, 0xa5,
-	0x49, 0x7a, 0xc9, 0xf9, 0xb9, 0xfa, 0x08, 0x5b, 0xf4, 0x8b, 0x0b, 0xf2, 0xf4, 0x2b, 0xf4, 0x91,
-	0xbd, 0x55, 0x52, 0x59, 0x90, 0x5a, 0x9c, 0xc4, 0x06, 0xf6, 0x96, 0x31, 0x20, 0x00, 0x00, 0xff,
-	0xff, 0x1c, 0xf4, 0x9e, 0x3b, 0xf2, 0x00, 0x00, 0x00,
+	0xd1, 0x2b, 0x2e, 0xc8, 0xd3, 0x43, 0x52, 0x28, 0x25, 0x56, 0x52, 0x59, 0x90, 0x5a, 0xac, 0x8f,
+	0x10, 0x82, 0xe8, 0x51, 0x2a, 0xe7, 0x12, 0xf5, 0x45, 0x28, 0x0b, 0x00, 0x1b, 0xe7, 0x92, 0x58,
+	0x92, 0x28, 0x14, 0xc2, 0x25, 0x80, 0x50, 0x0c, 0x11, 0x97, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x36,
+	0x52, 0xd3, 0x43, 0xb3, 0x07, 0x6c, 0xb4, 0x9e, 0x2f, 0x9a, 0x6a, 0x0f, 0x86, 0x20, 0x0c, 0x13,
+	0x9c, 0x38, 0xb8, 0xd8, 0x20, 0x4e, 0x56, 0x12, 0xe5, 0x12, 0x46, 0xd7, 0xe1, 0x98, 0x9c, 0xed,
+	0xe4, 0x7e, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78,
+	0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0xba, 0xe9, 0x99, 0x25,
+	0x19, 0xa5, 0x49, 0x7a, 0xc9, 0xf9, 0xb9, 0xfa, 0x08, 0x07, 0xe8, 0x17, 0x17, 0xe4, 0xe9, 0x57,
+	0xe8, 0x23, 0x87, 0x09, 0xd8, 0x39, 0x49, 0x6c, 0x60, 0xff, 0x19, 0x03, 0x02, 0x00, 0x00, 0xff,
+	0xff, 0x1c, 0xdc, 0xdb, 0xe7, 0x2f, 0x01, 0x00, 0x00,
 }
 
 func (m *MonitoringpPacketData) Marshal() (dAtA []byte, err error) {
@@ -185,16 +188,16 @@ func (m *MonitoringpPacketData) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MonitoringpPacketData_NoData) MarshalTo(dAtA []byte) (int, error) {
+func (m *MonitoringpPacketData_MonitoringPacket) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MonitoringpPacketData_NoData) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MonitoringpPacketData_MonitoringPacket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
-	if m.NoData != nil {
+	if m.MonitoringPacket != nil {
 		{
-			size, err := m.NoData.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.MonitoringPacket.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -206,7 +209,7 @@ func (m *MonitoringpPacketData_NoData) MarshalToSizedBuffer(dAtA []byte) (int, e
 	}
 	return len(dAtA) - i, nil
 }
-func (m *NoData) Marshal() (dAtA []byte, err error) {
+func (m *MonitoringPacketAck) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -216,12 +219,12 @@ func (m *NoData) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *NoData) MarshalTo(dAtA []byte) (int, error) {
+func (m *MonitoringPacketAck) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *NoData) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MonitoringPacketAck) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -252,19 +255,19 @@ func (m *MonitoringpPacketData) Size() (n int) {
 	return n
 }
 
-func (m *MonitoringpPacketData_NoData) Size() (n int) {
+func (m *MonitoringpPacketData_MonitoringPacket) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.NoData != nil {
-		l = m.NoData.Size()
+	if m.MonitoringPacket != nil {
+		l = m.MonitoringPacket.Size()
 		n += 1 + l + sovPacket(uint64(l))
 	}
 	return n
 }
-func (m *NoData) Size() (n int) {
+func (m *MonitoringPacketAck) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -310,7 +313,7 @@ func (m *MonitoringpPacketData) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field NoData", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MonitoringPacket", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -337,11 +340,11 @@ func (m *MonitoringpPacketData) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			v := &NoData{}
+			v := &types.MonitoringPacket{}
 			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
-			m.Packet = &MonitoringpPacketData_NoData{v}
+			m.Packet = &MonitoringpPacketData_MonitoringPacket{v}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -364,7 +367,7 @@ func (m *MonitoringpPacketData) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *NoData) Unmarshal(dAtA []byte) error {
+func (m *MonitoringPacketAck) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -387,10 +390,10 @@ func (m *NoData) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: NoData: wiretype end group for non-group")
+			return fmt.Errorf("proto: MonitoringPacketAck: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: NoData: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MonitoringPacketAck: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

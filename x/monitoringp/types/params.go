@@ -14,6 +14,7 @@ var (
 	KeyLastBlockHeight        = []byte("LastBlockHeight")
 	KeyConsumerConsensusState = []byte("ConsumerConsensusState")
 	KeyConsumerChainID        = []byte("ConsumerChainID")
+	KeyDebugMode              = []byte("DebugMode")
 
 	DefaultLastBlockHeight uint64 = 1
 	DefautConsumerChainID         = "spn-1"
@@ -27,17 +28,18 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(lastBlockHeight uint64, consumerChainID string, ccs spntypes.ConsensusState) Params {
+func NewParams(lastBlockHeight uint64, consumerChainID string, ccs spntypes.ConsensusState, debugMode bool) Params {
 	return Params{
 		LastBlockHeight:        lastBlockHeight,
 		ConsumerConsensusState: ccs,
 		ConsumerChainID:        consumerChainID,
+		DebugMode:              debugMode,
 	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(DefaultLastBlockHeight, DefautConsumerChainID, spntypes.ConsensusState{})
+	return NewParams(DefaultLastBlockHeight, DefautConsumerChainID, spntypes.ConsensusState{}, false)
 }
 
 // ParamSetPairs get the params.ParamSet
@@ -57,6 +59,11 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			KeyConsumerChainID,
 			&p.ConsumerChainID,
 			validateConsumerChainID,
+		),
+		paramtypes.NewParamSetPair(
+			KeyDebugMode,
+			&p.DebugMode,
+			func(i interface{}) error { return nil },
 		),
 	}
 }

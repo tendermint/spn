@@ -14,6 +14,7 @@ import (
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
+	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
@@ -123,6 +124,7 @@ func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
 // Monitoringc returns a keeper of the monitoring consumer module for testing purpose
 func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
 	_, _, _, _, monitoringConsumerKeeper, _, ctx := AllKeepers(t) // nolint
+	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
 
 	return monitoringConsumerKeeper, ctx
 }
@@ -165,6 +167,7 @@ func MonitoringcWithIBCMocks(
 
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
+	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
 
 	return monitoringConsumerKeeper, ctx
 }
