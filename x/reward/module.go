@@ -1,10 +1,9 @@
 package reward
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
-
-	"context"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
