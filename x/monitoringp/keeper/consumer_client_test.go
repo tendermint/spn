@@ -19,6 +19,7 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 			1000,
 			types.DefautConsumerChainID,
 			sample.ConsensusState(0),
+			false,
 		))
 		clientID, err := k.InitializeConsumerClient(ctx)
 		require.NoError(t, err)
