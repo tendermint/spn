@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 import "monitoringp/params.proto";
 import "monitoringp/consumer_client_id.proto";
 import "monitoringp/connection_channel_id.proto";
+import "monitoringp/monitoring_info.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
@@ -15,5 +16,6 @@ message GenesisState {
   string port_id = 2;
   ConsumerClientID consumerClientID = 3;
   ConnectionChannelID connectionChannelID = 4;
+  MonitoringInfo monitoringInfo = 5;
   // this line is used by starport scaffolding # genesis/proto/state
 }

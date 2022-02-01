@@ -1,5 +1,7 @@
 package types
 
+import spntypes "github.com/tendermint/spn/pkg/types"
+
 const (
 	// MainnetAccountKeyPrefix is the prefix to retrieve all MainnetAccount
 	MainnetAccountKeyPrefix = "MainnetAccount/value/"
@@ -7,7 +9,7 @@ const (
 
 // MainnetAccountKey returns the store key to retrieve a MainnetAccount from the index fields
 func MainnetAccountKey(campaignID uint64, address string) []byte {
-	campaignIDBytes := append(uintBytes(campaignID), byte('/'))
+	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
 	addressBytes := append([]byte(address), byte('/'))
 	return append(campaignIDBytes, addressBytes...)
 }
@@ -15,6 +17,6 @@ func MainnetAccountKey(campaignID uint64, address string) []byte {
 // MainnetAccountAllKey returns the store key to retrieve all MainnetAccount by campaign id
 func MainnetAccountAllKey(campaignID uint64) []byte {
 	prefixBytes := []byte(MainnetAccountKeyPrefix)
-	campaignIDBytes := append(uintBytes(campaignID), byte('/'))
+	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
 	return append(prefixBytes, campaignIDBytes...)
 }

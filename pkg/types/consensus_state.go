@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
-	committypes "github.com/cosmos/ibc-go/modules/core/23-commitment/types"
-	ibctmtypes "github.com/cosmos/ibc-go/modules/light-clients/07-tendermint/types"
+	committypes "github.com/cosmos/ibc-go/v2/modules/core/23-commitment/types"
+	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"gopkg.in/yaml.v2"
 )
 

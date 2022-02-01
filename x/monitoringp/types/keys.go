@@ -43,3 +43,7 @@ const (
 const (
 	ConnectionChannelIDKey = "ConnectionChannelID-value-"
 )
+
+const (
+	MonitoringInfoKey = "MonitoringInfo-value-"
+)
