@@ -64,14 +64,6 @@ func TestGenesisValidatorGetAll(t *testing.T) {
 	require.ElementsMatch(t, items, k.GetAllGenesisValidator(ctx))
 }
 
-func TestGenesisValidatorGetAllByLaunchID(t *testing.T) {
-	launchID := 10
-	k, ctx := testkeeper.Launch(t)
-	createNGenesisValidator(k, ctx, 10)
-	items := createNGenesisValidatorByLaunchID(k, ctx, launchID)
-	require.ElementsMatch(t, items, k.GetAllGenesisValidatorByLaunchID(ctx, uint64(launchID)))
-}
-
 func TestGetGenesisValidatorByConsPubKey(t *testing.T) {
 	k, ctx := testkeeper.Launch(t)
 	items := createNGenesisValidator(k, ctx, 10)
@@ -82,4 +74,15 @@ func TestGetGenesisValidatorByConsPubKey(t *testing.T) {
 			require.EqualValues(t, item, val)
 		})
 	}
+}
+
+func TestKeeper_GetTotalSelfDelegation(t *testing.T) {
+	k, ctx := testkeeper.Launch(t)
+	launchID := 10
+	validators := createNGenesisValidatorByLaunchID(k, ctx, launchID)
+	totalSelfDelegation := sdk.NewDec(0)
+	for _, validator := range validators {
+		totalSelfDelegation = totalSelfDelegation.Add(validator.SelfDelegation.Amount.ToDec())
+	}
+	require.Equal(t, totalSelfDelegation, k.GetTotalSelfDelegation(ctx, uint64(launchID)))
 }

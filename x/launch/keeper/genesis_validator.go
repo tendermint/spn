@@ -57,22 +57,6 @@ func (k Keeper) GetAllGenesisValidator(ctx sdk.Context) (list []types.GenesisVal
 	return
 }
 
-// GetAllGenesisValidatorByLaunchID returns all genesisValidator by a launch id
-func (k Keeper) GetAllGenesisValidatorByLaunchID(ctx sdk.Context, launchID uint64) (list []types.GenesisValidator) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.GenesisValidatorAllKey(launchID))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
-
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.GenesisValidator
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
-	}
-
-	return
-}
-
 // GetGenesisValidatorByConsPubKey returns the genesisValidator by consensus address
 func (k Keeper) GetGenesisValidatorByConsPubKey(
 	ctx sdk.Context,
@@ -92,4 +76,21 @@ func (k Keeper) GetGenesisValidatorByConsPubKey(
 		}
 	}
 	return types.GenesisValidator{}, false
+}
+
+// GetTotalSelfDelegation returns the sum of all self delegation
+func (k Keeper) GetTotalSelfDelegation(ctx sdk.Context, launchID uint64) sdk.Dec {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.GenesisValidatorAllKey(launchID))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	totalSelfDelegation := sdk.NewDec(0)
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.GenesisValidator
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		totalSelfDelegation = totalSelfDelegation.Add(val.SelfDelegation.Amount.ToDec())
+	}
+
+	return totalSelfDelegation
 }

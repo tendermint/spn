@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/tendermint/crypto"
@@ -127,15 +126,4 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 			require.NoError(t, err)
 		})
 	}
-}
-
-func TestKeeper_GetTotalSelfDelegation(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	launchID := 10
-	validators := createNGenesisValidatorByLaunchID(k, ctx, launchID)
-	var totalSelfDelegation int64 = 0
-	for _, validator := range validators {
-		totalSelfDelegation += validator.SelfDelegation.Amount.Int64()
-	}
-	require.Equal(t, totalSelfDelegation, k.GetTotalSelfDelegation(ctx, uint64(launchID)))
 }

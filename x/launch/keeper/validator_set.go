@@ -35,7 +35,11 @@ func (k Keeper) CheckValidatorSet(
 		valConsPubKey := validator.PubKey.Bytes()
 		launchValidator, found := k.GetGenesisValidatorByConsPubKey(ctx, launchID, valConsPubKey)
 		if !found {
-			return sdkerrors.Wrap(types.ErrInvalidConsPubKey, validator.PubKey.Address().String())
+			return sdkerrors.Wrapf(
+				types.ErrValidatorNotFound,
+				"validator consensus pub key not found: %s",
+				validator.PubKey.Address().String(),
+			)
 		}
 		valSetSelfDelegation = valSetSelfDelegation.Add(launchValidator.SelfDelegation.Amount.ToDec())
 	}
@@ -48,14 +52,4 @@ func (k Keeper) CheckValidatorSet(
 		return sdkerrors.Wrap(types.ErrMinSelfDelegationNotReached, validatorSet.String())
 	}
 	return nil
-}
-
-// GetTotalSelfDelegation returns the sum of all self delegation
-func (k Keeper) GetTotalSelfDelegation(ctx sdk.Context, launchID uint64) sdk.Dec {
-	validators := k.GetAllGenesisValidatorByLaunchID(ctx, launchID)
-	totalSelfDelegation := sdk.NewDec(0)
-	for _, validator := range validators {
-		totalSelfDelegation = totalSelfDelegation.Add(validator.SelfDelegation.Amount.ToDec())
-	}
-	return totalSelfDelegation
 }
