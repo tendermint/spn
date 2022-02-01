@@ -22,6 +22,9 @@ faucet:
 genesis:
   chain_id: spn-1
   app_state:
+    monitoringc:
+      params:
+        debugMode: false
     staking:
       params:
         bond_denom: "uspn"
