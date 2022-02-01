@@ -1,0 +1,15 @@
+syntax = "proto3";
+package tendermint.spn.reward;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/tendermint/spn/x/reward/types";
+
+message RewardPool {
+  uint64 launchID = 1;
+  string provider = 2;
+  repeated cosmos.base.v1beta1.Coin coins = 3 [(gogoproto.nullable) = false];
+  uint64 lastRewardHeight = 4;
+  uint64 currentRewardHeight = 5;
+}

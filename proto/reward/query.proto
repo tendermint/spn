@@ -1,10 +1,12 @@
 syntax = "proto3";
 package tendermint.spn.reward;
 
-import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "reward/params.proto";
+import "reward/reward_pool.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/reward/types";
@@ -15,6 +17,16 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/reward/params";
   }
+  // Queries a RewardPool by index.
+  rpc RewardPool(QueryGetRewardPoolRequest) returns (QueryGetRewardPoolResponse) {
+    option (google.api.http).get = "/tendermint/spn/reward/reward_pool/{launchID}";
+  }
+
+  // Queries a list of RewardPool items.
+  rpc RewardPoolAll(QueryAllRewardPoolRequest) returns (QueryAllRewardPoolResponse) {
+    option (google.api.http).get = "/tendermint/spn/reward/reward_pool";
+  }
+
   // this line is used by starport scaffolding # 2
 }
 
@@ -25,6 +37,23 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetRewardPoolRequest {
+  uint64 launchID = 1;
+}
+
+message QueryGetRewardPoolResponse {
+  RewardPool rewardPool = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllRewardPoolRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllRewardPoolResponse {
+  repeated RewardPool rewardPool = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3
