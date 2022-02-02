@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"encoding/base64"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/launch/types"
@@ -27,13 +28,15 @@ func (k Keeper) CheckValidatorSet(
 		return sdkerrors.Wrap(types.ErrInvalidGenesisChainID, chainID)
 	}
 
+	validators, totalSelfDelegation := k.GetValidatorsAndTotalDelegation(ctx, launchID)
+
 	// all validators must be present in the launch module and
 	// the total amount of self-delegation from the provided validators
 	// must reach at least 2/3 of the total self delegation for the chain
 	valSetSelfDelegation := sdk.NewDec(0)
 	for _, validator := range validatorSet.Validators {
-		valConsPubKey := validator.PubKey.Bytes()
-		launchValidator, found := k.GetGenesisValidatorByConsPubKey(ctx, launchID, valConsPubKey)
+		consPubKey := base64.StdEncoding.EncodeToString(validator.PubKey.Bytes())
+		launchValidator, found := validators[consPubKey]
 		if !found {
 			return sdkerrors.Wrapf(
 				types.ErrValidatorNotFound,
@@ -46,7 +49,6 @@ func (k Keeper) CheckValidatorSet(
 
 	// check if 2/3 of total self-delegation is reached from the provided validator set
 	// GetTotalSelfDelegation is the sum of all self delegation
-	totalSelfDelegation := k.GetTotalSelfDelegation(ctx, launchID)
 	minSelfDelegation := totalSelfDelegation.Mul(sdk.NewDecWithPrec(6666, 4))
 	if valSetSelfDelegation.LT(minSelfDelegation) {
 		return sdkerrors.Wrap(types.ErrMinSelfDelegationNotReached, validatorSet.String())

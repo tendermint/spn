@@ -1,8 +1,7 @@
 package keeper
 
 import (
-	"bytes"
-
+	"encoding/base64"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/spn/x/launch/types"
@@ -57,40 +56,25 @@ func (k Keeper) GetAllGenesisValidator(ctx sdk.Context) (list []types.GenesisVal
 	return
 }
 
-// GetGenesisValidatorByConsPubKey returns the genesisValidator by consensus address
-func (k Keeper) GetGenesisValidatorByConsPubKey(
+// GetValidatorsAndTotalDelegation returns the genesisValidator map by
+// consensus address and total of self delegation
+func (k Keeper) GetValidatorsAndTotalDelegation(
 	ctx sdk.Context,
 	launchID uint64,
-	consPubKey []byte,
-) (types.GenesisValidator, bool) {
+) (map[string]types.GenesisValidator, sdk.Dec) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.GenesisValidatorAllKey(launchID))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
+	validators := make(map[string]types.GenesisValidator)
+	totalDelegation := sdk.NewDec(0)
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.GenesisValidator
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		if bytes.Compare(val.ConsPubKey, consPubKey) == 0 {
-			return val, true
-		}
+		consPubKey := base64.StdEncoding.EncodeToString(val.ConsPubKey)
+		validators[consPubKey] = val
+		totalDelegation = totalDelegation.Add(val.SelfDelegation.Amount.ToDec())
 	}
-	return types.GenesisValidator{}, false
-}
-
-// GetTotalSelfDelegation returns the sum of all self delegation
-func (k Keeper) GetTotalSelfDelegation(ctx sdk.Context, launchID uint64) sdk.Dec {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.GenesisValidatorAllKey(launchID))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
-
-	defer iterator.Close()
-
-	totalSelfDelegation := sdk.NewDec(0)
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.GenesisValidator
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		totalSelfDelegation = totalSelfDelegation.Add(val.SelfDelegation.Amount.ToDec())
-	}
-
-	return totalSelfDelegation
+	return validators, totalDelegation
 }

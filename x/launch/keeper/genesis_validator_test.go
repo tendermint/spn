@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"encoding/base64"
 	"strconv"
 	"testing"
 
@@ -64,25 +65,18 @@ func TestGenesisValidatorGetAll(t *testing.T) {
 	require.ElementsMatch(t, items, k.GetAllGenesisValidator(ctx))
 }
 
-func TestGetGenesisValidatorByConsPubKey(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(k, ctx, 10)
-	for i, item := range items {
-		t.Run(item.Address, func(t *testing.T) {
-			val, found := k.GetGenesisValidatorByConsPubKey(ctx, uint64(i), item.ConsPubKey)
-			require.True(t, found)
-			require.EqualValues(t, item, val)
-		})
-	}
-}
-
-func TestKeeper_GetTotalSelfDelegation(t *testing.T) {
+func TestKeeper_GetValidatorsAndTotalDelegation(t *testing.T) {
 	k, ctx := testkeeper.Launch(t)
 	launchID := 10
 	validators := createNGenesisValidatorByLaunchID(k, ctx, launchID)
 	totalSelfDelegation := sdk.NewDec(0)
+	validatorMap := make(map[string]types.GenesisValidator)
 	for _, validator := range validators {
+		consPubKey := base64.StdEncoding.EncodeToString(validator.ConsPubKey)
+		validatorMap[consPubKey] = validator
 		totalSelfDelegation = totalSelfDelegation.Add(validator.SelfDelegation.Amount.ToDec())
 	}
-	require.Equal(t, totalSelfDelegation, k.GetTotalSelfDelegation(ctx, uint64(launchID)))
+	val, got := k.GetValidatorsAndTotalDelegation(ctx, uint64(launchID))
+	require.Equal(t, totalSelfDelegation, got)
+	require.EqualValues(t, validatorMap, val)
 }
