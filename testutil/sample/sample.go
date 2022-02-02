@@ -6,7 +6,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -14,6 +13,8 @@ import (
 	ibctypes "github.com/cosmos/ibc-go/v2/modules/core/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/tendermint/crypto"
+	"github.com/tendermint/tendermint/crypto/ed25519"
 )
 
 // Codec returns a codec with preregistered interfaces
@@ -69,10 +70,14 @@ func AlphaString(n int) string {
 	return string(randomString)
 }
 
+// PubKey returns a sample account PubKey
+func PubKey() crypto.PubKey {
+	return ed25519.GenPrivKey().PubKey()
+}
+
 // AccAddress returns a sample account address
 func AccAddress() sdk.AccAddress {
-	pk := ed25519.GenPrivKey().PubKey()
-	addr := pk.Address()
+	addr := PubKey().Address()
 	return sdk.AccAddress(addr)
 }
 

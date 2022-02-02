@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"encoding/base64"
 	"strconv"
 	"testing"
 
@@ -21,11 +22,20 @@ func createNGenesisValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 	return items
 }
 
+func createNGenesisValidatorByLaunchID(keeper *keeper.Keeper, ctx sdk.Context, launchID int) []types.GenesisValidator {
+	items := make([]types.GenesisValidator, launchID)
+	for i := range items {
+		items[i] = sample.GenesisValidator(uint64(launchID), strconv.Itoa(i))
+		keeper.SetGenesisValidator(ctx, items[i])
+	}
+	return items
+}
+
 func TestGenesisValidatorGet(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(keeper, ctx, 10)
+	k, ctx := testkeeper.Launch(t)
+	items := createNGenesisValidator(k, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetGenesisValidator(ctx,
+		rst, found := k.GetGenesisValidator(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -34,14 +44,14 @@ func TestGenesisValidatorGet(t *testing.T) {
 	}
 }
 func TestGenesisValidatorRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(keeper, ctx, 10)
+	k, ctx := testkeeper.Launch(t)
+	items := createNGenesisValidator(k, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveGenesisValidator(ctx,
+		k.RemoveGenesisValidator(ctx,
 			item.LaunchID,
 			item.Address,
 		)
-		_, found := keeper.GetGenesisValidator(ctx,
+		_, found := k.GetGenesisValidator(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -50,7 +60,23 @@ func TestGenesisValidatorRemove(t *testing.T) {
 }
 
 func TestGenesisValidatorGetAll(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(keeper, ctx, 10)
-	require.ElementsMatch(t, items, keeper.GetAllGenesisValidator(ctx))
+	k, ctx := testkeeper.Launch(t)
+	items := createNGenesisValidator(k, ctx, 10)
+	require.ElementsMatch(t, items, k.GetAllGenesisValidator(ctx))
+}
+
+func TestKeeper_GetValidatorsAndTotalDelegation(t *testing.T) {
+	k, ctx := testkeeper.Launch(t)
+	launchID := 10
+	validators := createNGenesisValidatorByLaunchID(k, ctx, launchID)
+	totalSelfDelegation := sdk.NewDec(0)
+	validatorMap := make(map[string]types.GenesisValidator)
+	for _, validator := range validators {
+		consPubKey := base64.StdEncoding.EncodeToString(validator.ConsPubKey)
+		validatorMap[consPubKey] = validator
+		totalSelfDelegation = totalSelfDelegation.Add(validator.SelfDelegation.Amount.ToDec())
+	}
+	val, got := k.GetValidatorsAndTotalDelegation(ctx, uint64(launchID))
+	require.Equal(t, totalSelfDelegation, got)
+	require.EqualValues(t, validatorMap, val)
 }
