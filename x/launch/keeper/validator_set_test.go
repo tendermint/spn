@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/tendermint/crypto"
@@ -13,8 +14,7 @@ import (
 
 func TestKeeper_CheckValidatorSet(t *testing.T) {
 	var (
-		k, _, _, _, _, _, ctx = setupMsgServer(t)
-
+		k, ctx               = testkeeper.Launch(t)
 		validators           = []crypto.PubKey{sample.PubKey(), sample.PubKey(), sample.PubKey()}
 		validatorSet         = tmtypes.ValidatorSet{}
 		validatorNotFoundSet = tmtypes.ValidatorSet{}
