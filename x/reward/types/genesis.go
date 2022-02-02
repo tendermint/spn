@@ -23,6 +23,9 @@ func (gs GenesisState) Validate() error {
 	rewardPoolIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.RewardPoolList {
+		if err := elem.Validate(); err != nil {
+			return err
+		}
 		index := string(RewardPoolKey(elem.LaunchID))
 		if _, ok := rewardPoolIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for rewardPool")
@@ -30,6 +33,5 @@ func (gs GenesisState) Validate() error {
 		rewardPoolIndexMap[index] = struct{}{}
 	}
 	// this line is used by starport scaffolding # genesis/types/validate
-
 	return gs.Params.Validate()
 }
