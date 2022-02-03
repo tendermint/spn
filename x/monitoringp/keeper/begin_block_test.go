@@ -110,6 +110,86 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 				},
 			),
 		},
+		{
+			name:                "if monitoring info doesn't exists, the structure is created with block count to 1 and signatures from commit",
+			monitoringInfoExist: false,
+			lastBlockHeight:     10,
+			lastCommitInfo: lastCommit(
+				vote{
+					address: "foo",
+					signed:  true,
+				},
+			),
+			currentBlockHeight:          1,
+			expectedMonitoringInfoFound: true,
+			expectedMonitoringInfo: monitoringInfo(1,
+				signatureCount{
+					"foo",
+					"1",
+				},
+			),
+		},
+		{
+			name:                "monitoring info should be updated following signatures in the last commit",
+			monitoringInfoExist: true,
+			inputMonitoringInfo: monitoringInfo(50,
+				signatureCount{
+					"foo",
+					"1",
+				},
+				signatureCount{
+					"bar",
+					"2",
+				},
+				signatureCount{
+					"baz",
+					"3",
+				},
+			),
+			lastBlockHeight: 10,
+			lastCommitInfo: lastCommit(
+				vote{
+					address: "foo",
+					signed:  true,
+				},
+				vote{
+					address: "bar",
+					signed:  false,
+				},
+				vote{
+					address: "baz",
+					signed:  true,
+				},
+				vote{
+					address: "qux",
+					signed:  false,
+				},
+				vote{
+					address: "fred",
+					signed:  true,
+				},
+			),
+			currentBlockHeight:          1,
+			expectedMonitoringInfoFound: true,
+			expectedMonitoringInfo: monitoringInfo(51,
+				signatureCount{
+					"foo",
+					"1.2",
+				},
+				signatureCount{
+					"bar",
+					"2",
+				},
+				signatureCount{
+					"baz",
+					"3.2",
+				},
+				signatureCount{
+					"fred",
+					"0.2",
+				},
+			),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
