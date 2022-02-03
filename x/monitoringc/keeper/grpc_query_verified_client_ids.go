@@ -16,7 +16,7 @@ func (k Keeper) VerifiedClientIds(goCtx context.Context, req *types.QueryVerifie
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	verifiedClientID, found := k.GetVerifiedClientID(ctx, req.LaunchID)
-	if found {
+	if !found {
 		return nil, status.Errorf(codes.Internal, "launch id not found %d", req.LaunchID)
 	}
 
