@@ -53,7 +53,7 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 			sigDec, err := sdk.NewDecFromStr(sc.relativeSignature)
 			require.NoError(t, err)
 			mi.SignatureCounts.Counts = append(mi.SignatureCounts.Counts, spntypes.SignatureCount{
-				ConsAddress:        sc.consAddr,
+				ConsAddress:        []byte(sc.consAddr),
 				RelativeSignatures: sigDec,
 			})
 		}

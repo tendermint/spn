@@ -2,6 +2,7 @@
 package types
 
 import (
+	"bytes"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,13 +14,13 @@ func NewSignatureCounts() SignatureCounts {
 }
 
 // AddSignature adds a signature for the consensus address at a specific validator set size
-func (m *SignatureCounts) AddSignature(consAddress string, validatorSetSize int64) {
+func (m *SignatureCounts) AddSignature(consAddress []byte, validatorSetSize int64) {
 	// relative signature is the signature relative to the validator set size
 	relSignature := sdk.NewDec(1).QuoInt(sdk.NewInt(validatorSetSize))
 
 	// search for the consensus address
 	for i, c := range m.Counts {
-		if c.ConsAddress == consAddress {
+		if bytes.Equal(c.ConsAddress, consAddress) {
 			m.Counts[i].RelativeSignatures = c.RelativeSignatures.Add(relSignature)
 			return
 		}
@@ -40,11 +41,12 @@ func (m SignatureCounts) Validate() error {
 
 	// iterate all signature count
 	for _, sc := range m.Counts {
+		strConsAddress := string(sc.ConsAddress)
 		// a consensus address must have a single entry
-		if _, ok := consAddr[sc.ConsAddress]; ok {
-			return fmt.Errorf("duplicated consensus address %s", sc.ConsAddress)
+		if _, ok := consAddr[strConsAddress]; ok {
+			return fmt.Errorf("duplicated consensus address %s", strConsAddress)
 		}
-		consAddr[sc.ConsAddress] = struct{}{}
+		consAddr[strConsAddress] = struct{}{}
 		sumSig = sumSig.Add(sc.RelativeSignatures)
 	}
 
