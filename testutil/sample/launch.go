@@ -69,7 +69,7 @@ func GenesisValidator(launchID uint64, address string) launch.GenesisValidator {
 		LaunchID:       launchID,
 		Address:        address,
 		GenTx:          Bytes(200),
-		ConsPubKey:     Bytes(10),
+		ConsPubKey:     PubKey().Bytes(),
 		SelfDelegation: Coin(),
 		Peer:           GenesisValidatorPeer(),
 	}
