@@ -24,12 +24,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				PortId: types.PortID,
 				VerifiedClientIDList: []types.VerifiedClientID{
 					{
-						LaunchID: 0,
-						ClientID: "0",
+						LaunchID:  0,
+						ClientIDs: []string{"0"},
 					},
 					{
-						LaunchID: 1,
-						ClientID: "1",
+						LaunchID:  1,
+						ClientIDs: []string{"1", "2"},
 					},
 				},
 				ProviderClientIDList: []types.ProviderClientID{
@@ -65,12 +65,12 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				VerifiedClientIDList: []types.VerifiedClientID{
 					{
-						LaunchID: 0,
-						ClientID: "0",
+						LaunchID:  0,
+						ClientIDs: []string{"0"},
 					},
 					{
-						LaunchID: 0,
-						ClientID: "0",
+						LaunchID:  0,
+						ClientIDs: []string{"1", "2"},
 					},
 				},
 			},

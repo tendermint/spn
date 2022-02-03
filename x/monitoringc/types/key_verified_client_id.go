@@ -15,8 +15,8 @@ func VerifiedClientIDsFomLaunchIDKey(launchID uint64) []byte {
 }
 
 // VerifiedClientIDKey returns the store key to retrieve a VerifiedClientID from the index fields
-func VerifiedClientIDKey(launchID uint64, clientID string) []byte {
-	return append(VerifiedClientIDsFomLaunchIDKey(launchID), []byte(clientID+"/")...)
+func VerifiedClientIDKey(launchID uint64) []byte {
+	return append(spntypes.UintBytes(launchID), byte('/'))
 }
 
 // VerifiedClientIDsPrefix returns the prefix path to retrieve client ids from a launch ID
