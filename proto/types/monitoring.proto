@@ -8,7 +8,7 @@ option go_package = "github.com/tendermint/spn/pkg/types";
 
 // MonitoringPacket is the packet sent over IBC that contains all the signature counts
 message MonitoringPacket {
-  uint64 blockHeight = 1;
+  int64 blockHeight = 1;
   SignatureCounts signatureCounts = 2 [(gogoproto.nullable) = false];
 }
 

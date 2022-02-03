@@ -64,13 +64,19 @@ func (k Keeper) TransmitSignatures(ctx sdk.Context, blockHeight int64) error {
 	// transmit signature packet
 	err := k.TransmitMonitoringPacket(
 		ctx,
-		spntypes.MonitoringPacket{},
+		spntypes.MonitoringPacket{
+			BlockHeight: blockHeight,
+			SignatureCounts: mi.SignatureCounts,
+		},
 		types.PortID,
 		cid.ChannelID,
 		clienttypes.ZeroHeight(),
 		uint64(ctx.BlockTime().Add(MonitoringPacketTimeoutDelay).Unix()),
 	)
 	if err != nil {
+		k.SetConsumerClientID(ctx, types.ConsumerClientID{
+			ClientID: err.Error(),
+		})
 		return err
 	}
 
