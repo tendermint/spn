@@ -16,21 +16,17 @@ func createNVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 	items := make([]types.VerifiedClientID, n)
 	for i := range items {
 		items[i].LaunchID = uint64(i)
-		items[i].ClientID = strconv.Itoa(i)
-
+		items[i].ClientIDs = []string{strconv.Itoa(i)}
 		keeper.SetVerifiedClientID(ctx, items[i])
 	}
 	return items
 }
 
 func TestVerifiedClientIDGet(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNVerifiedClientID(keeper, ctx, 10)
+	k, ctx := keepertest.Monitoringc(t)
+	items := createNVerifiedClientID(k, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetVerifiedClientID(ctx,
-			item.LaunchID,
-			item.ClientID,
-		)
+		rst, found := k.GetVerifiedClientID(ctx, item.LaunchID)
 		require.True(t, found)
 		require.Equal(t,
 			nullify.Fill(&item),
@@ -40,26 +36,20 @@ func TestVerifiedClientIDGet(t *testing.T) {
 }
 
 func TestVerifiedClientIDRemove(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNVerifiedClientID(keeper, ctx, 10)
+	k, ctx := keepertest.Monitoringc(t)
+	items := createNVerifiedClientID(k, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveVerifiedClientID(ctx,
-			item.LaunchID,
-			item.ClientID,
-		)
-		_, found := keeper.GetVerifiedClientID(ctx,
-			item.LaunchID,
-			item.ClientID,
-		)
+		k.RemoveVerifiedClientID(ctx, item.LaunchID)
+		_, found := k.GetVerifiedClientID(ctx, item.LaunchID)
 		require.False(t, found)
 	}
 }
 
 func TestVerifiedClientIDGetAll(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNVerifiedClientID(keeper, ctx, 10)
+	k, ctx := keepertest.Monitoringc(t)
+	items := createNVerifiedClientID(k, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllVerifiedClientID(ctx)),
+		nullify.Fill(k.GetAllVerifiedClientID(ctx)),
 	)
 }

@@ -1,16 +1,12 @@
 package cli
 
 import (
-	"strconv"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
-
-var _ = strconv.Itoa(0)
 
 func CmdVerifiedClientIds() *cobra.Command {
 	cmd := &cobra.Command{
@@ -30,16 +26,7 @@ func CmdVerifiedClientIds() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryVerifiedClientIdsRequest{
-
-				LaunchID: reqLaunchID,
-			}
-
-			pageReq, err := client.ReadPageRequest(cmd.Flags())
-			if err != nil {
-				return err
-			}
-			params.Pagination = pageReq
+			params := &types.QueryVerifiedClientIdsRequest{LaunchID: reqLaunchID}
 
 			res, err := queryClient.VerifiedClientIds(cmd.Context(), params)
 			if err != nil {
