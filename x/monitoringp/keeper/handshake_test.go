@@ -20,16 +20,16 @@ func monitoringpKeeperWithFooClient(t *testing.T) (*monitoringpmodulekeeper.Keep
 		t,
 		[]testkeeper.Connection{
 			{
-				"foo",
-				connectiontypes.ConnectionEnd{
+				ConnID: "foo",
+				Conn: connectiontypes.ConnectionEnd{
 					ClientId: "foo",
 				},
 			},
 		},
 		[]testkeeper.Channel{
 			{
-				"foo",
-				channeltypes.Channel{
+				ChannelID: "foo",
+				Channel: channeltypes.Channel{
 					ConnectionHops: []string{"foo"},
 				},
 			},
@@ -63,8 +63,8 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 			[]testkeeper.Connection{},
 			[]testkeeper.Channel{
 				{
-					"foo",
-					channeltypes.Channel{
+					ChannelID: "foo",
+					Channel: channeltypes.Channel{
 						ConnectionHops: []string{"foo", "bar"},
 					},
 				},
@@ -83,8 +83,8 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 			[]testkeeper.Connection{},
 			[]testkeeper.Channel{
 				{
-					"foo",
-					channeltypes.Channel{
+					ChannelID: "foo",
+					Channel: channeltypes.Channel{
 						ConnectionHops: []string{"foo"},
 					},
 				},
