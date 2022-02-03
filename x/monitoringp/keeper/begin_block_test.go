@@ -1,13 +1,14 @@
 package keeper_test
 
 import (
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/x/monitoringp/types"
 	abci "github.com/tendermint/tendermint/abci/types"
-	"testing"
 )
 
 func TestKeeper_ReportBlockSignatures(t *testing.T) {

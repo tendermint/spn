@@ -1,12 +1,13 @@
 package keeper
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	clienttypes "github.com/cosmos/ibc-go/v2/modules/core/02-client/types"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/monitoringp/types"
 	abci "github.com/tendermint/tendermint/abci/types"
-	"time"
 )
 
 const (
@@ -68,7 +69,7 @@ func (k Keeper) TransmitSignatures(ctx sdk.Context, blockHeight int64) error {
 		cid.ChannelID,
 		clienttypes.ZeroHeight(),
 		uint64(ctx.BlockTime().Add(MonitoringPacketTimeoutDelay).Unix()),
-		)
+	)
 	if err != nil {
 		return err
 	}

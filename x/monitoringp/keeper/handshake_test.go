@@ -4,11 +4,11 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	spntypes "github.com/tendermint/spn/pkg/types"
 	connectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
 	"github.com/stretchr/testify/require"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	monitoringpmodulekeeper "github.com/tendermint/spn/x/monitoringp/keeper"
 	"github.com/tendermint/spn/x/monitoringp/types"
