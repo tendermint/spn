@@ -26,9 +26,6 @@ func NewRewardPool(
 
 // Validate check the RewardPool object
 func (m RewardPool) Validate() error {
-	if m.LaunchID == 0 {
-		return errors.New("invalid launch id")
-	}
 	if m.Coins.Empty() {
 		return errors.New("empty reward pool coins")
 	}

@@ -16,17 +16,6 @@ func TestRewardPool_Validate(t *testing.T) {
 		wantErr    bool
 	}{
 		{
-			name: "invalid launch id",
-			rewardPool: types.RewardPool{
-				LaunchID:            0,
-				Provider:            sample.Address(),
-				Coins:               sample.Coins(),
-				LastRewardHeight:    50,
-				CurrentRewardHeight: 100,
-			},
-			wantErr: true,
-		},
-		{
 			name: "invalid provider address",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
