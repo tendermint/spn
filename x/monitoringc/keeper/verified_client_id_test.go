@@ -53,3 +53,50 @@ func TestVerifiedClientIDGetAll(t *testing.T) {
 		nullify.Fill(k.GetAllVerifiedClientID(ctx)),
 	)
 }
+
+func TestAddVerifiedClientID(t *testing.T) {
+	k, ctx := keepertest.Monitoringc(t)
+	t.Run("update a verified client id", func(t *testing.T) {
+		var (
+			launchID         = uint64(1)
+			newClientID      = "2"
+			verifiedClientID = types.VerifiedClientID{
+				LaunchID:  launchID,
+				ClientIDs: []string{"1"},
+			}
+		)
+		k.SetVerifiedClientID(ctx, verifiedClientID)
+		k.AddVerifiedClientID(ctx, launchID, newClientID)
+		got, found := k.GetVerifiedClientID(ctx, launchID)
+		require.True(t, found)
+		verifiedClientID.ClientIDs = append(verifiedClientID.ClientIDs, newClientID)
+		require.Equal(t, verifiedClientID, got)
+	})
+
+	t.Run("update a duplicated verified client id", func(t *testing.T) {
+		var (
+			launchID         = uint64(2)
+			newClientID      = "2"
+			verifiedClientID = types.VerifiedClientID{
+				LaunchID:  launchID,
+				ClientIDs: []string{"1", newClientID},
+			}
+		)
+		k.SetVerifiedClientID(ctx, verifiedClientID)
+		k.AddVerifiedClientID(ctx, launchID, newClientID)
+		got, found := k.GetVerifiedClientID(ctx, launchID)
+		require.True(t, found)
+		require.Equal(t, verifiedClientID, got)
+	})
+
+	t.Run("update a non exiting verified client id", func(t *testing.T) {
+		verifiedClientID := types.VerifiedClientID{
+			LaunchID:  3,
+			ClientIDs: []string{"1"},
+		}
+		k.AddVerifiedClientID(ctx, verifiedClientID.LaunchID, verifiedClientID.ClientIDs[0])
+		got, found := k.GetVerifiedClientID(ctx, verifiedClientID.LaunchID)
+		require.True(t, found)
+		require.Equal(t, verifiedClientID, got)
+	})
+}
