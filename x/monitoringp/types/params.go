@@ -87,7 +87,7 @@ func (p Params) String() string {
 
 // validateLastBlockHeight validates last block height
 func validateLastBlockHeight(i interface{}) error {
-	lastBlockHeight, ok := i.(uint64)
+	lastBlockHeight, ok := i.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
