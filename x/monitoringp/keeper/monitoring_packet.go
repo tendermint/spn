@@ -21,7 +21,6 @@ func (k Keeper) TransmitMonitoringPacket(
 	timeoutHeight clienttypes.Height,
 	timeoutTimestamp uint64,
 ) error {
-
 	sourceChannelEnd, found := k.channelKeeper.GetChannel(ctx, sourcePort, sourceChannel)
 	if !found {
 		return sdkerrors.Wrapf(channeltypes.ErrChannelNotFound, "port ID (%s) channel ID (%s)", sourcePort, sourceChannel)
