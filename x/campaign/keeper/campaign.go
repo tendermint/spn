@@ -5,6 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
@@ -92,9 +93,7 @@ func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
 
 // GetCampaignIDBytes returns the byte representation of the ID
 func GetCampaignIDBytes(id uint64) []byte {
-	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, id)
-	return bz
+	return spntypes.UintBytes(id)
 }
 
 // GetCampaignIDFromBytes returns ID in uint64 format from a byte array
