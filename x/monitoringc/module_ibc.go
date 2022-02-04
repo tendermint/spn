@@ -24,9 +24,9 @@ func (am AppModule) OnChanOpenInit(
 	_ channeltypes.Counterparty,
 	version string,
 ) error {
-	//if order != channeltypes.ORDERED {
-	//	return sdkerrors.Wrapf(channeltypes.ErrInvalidChannelOrdering, "expected %s channel, got %s ", channeltypes.ORDERED, order)
-	//}
+	if order != channeltypes.ORDERED {
+		return sdkerrors.Wrapf(channeltypes.ErrInvalidChannelOrdering, "expected %s channel, got %s ", channeltypes.ORDERED, order)
+	}
 
 	// Require portID is the portID module is bound to
 	boundPort := am.keeper.GetPort(ctx)
