@@ -65,7 +65,7 @@ func (k Keeper) TransmitSignatures(ctx sdk.Context, blockHeight int64) error {
 	err := k.TransmitMonitoringPacket(
 		ctx,
 		spntypes.MonitoringPacket{
-			BlockHeight: blockHeight,
+			BlockHeight:     blockHeight,
 			SignatureCounts: mi.SignatureCounts,
 		},
 		types.PortID,
