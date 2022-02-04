@@ -7,5 +7,6 @@ import (
 )
 
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 2, "sample error")
+	ErrInvalidRewardPoolCoins = sdkerrors.Register(ModuleName, 2, "invalid coins for reward pool")
+	ErrInvalidCoordinatorID   = sdkerrors.Register(ModuleName, 3, "invalid coordinator id for reward pool")
 )
