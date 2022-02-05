@@ -72,7 +72,7 @@ func SetBalance(
 				provider,
 				sdk.NewCoins(balance.Sub(coin)),
 			); err != nil {
-				return spnerrors.Criticalf("can't send coins to module %s", err.Error())
+				return spnerrors.Criticalf("can't send coin from module to account %s", err.Error())
 			}
 		} else if coin.Amount.GT(balance.Amount) { // the balance is lower than the new value
 			if err := bankKeeper.SendCoinsFromAccountToModule(
@@ -81,7 +81,7 @@ func SetBalance(
 				types.ModuleName,
 				sdk.NewCoins(coin.Sub(balance)),
 			); err != nil {
-				return spnerrors.Criticalf("can't send coins to module %s", err.Error())
+				return spnerrors.Criticalf("can't send coin from account to module %s", err.Error())
 			}
 		}
 	}
