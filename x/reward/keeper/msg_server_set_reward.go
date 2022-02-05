@@ -41,13 +41,11 @@ func (k msgServer) SetReward(goCtx context.Context, msg *types.MsgSetReward) (*t
 	if !found {
 		// create the reward pool and transfer tokens if not created yet
 		if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, provider, types.ModuleName, msg.Coins); err != nil {
-			return nil, spnerrors.Criticalf("can't send coins to module %s", err.Error())
+			return nil, sdkerrors.Wrap(types.ErrInsufficientFunds, err.Error())
 		}
 		rewardPool = types.NewRewardPool(msg.LaunchID, ctx.BlockHeight())
-	} else {
-		if err := SetBalance(ctx, k.accountKeeper, k.bankKeeper, provider, msg.Coins); err != nil {
-			return nil, spnerrors.Criticalf("can't set balance %s", err.Error())
-		}
+	} else if err := SetBalance(ctx, k.accountKeeper, k.bankKeeper, provider, msg.Coins); err != nil {
+		return nil, spnerrors.Criticalf("can't set balance %s", err.Error())
 	}
 	rewardPool.Coins = msg.Coins
 	rewardPool.Provider = msg.Provider
