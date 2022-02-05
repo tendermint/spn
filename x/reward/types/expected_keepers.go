@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 type AuthKeeper interface {
@@ -10,7 +11,7 @@ type AuthKeeper interface {
 }
 
 type ProfileKeeper interface {
-	// Methods imported from profile should be defined here
+	GetValidator(ctx sdk.Context, address string) (val profiletypes.Validator, found bool)
 }
 
 type LaunchKeeper interface {
@@ -26,5 +27,5 @@ type AccountKeeper interface {
 // BankKeeper defines the expected interface needed to retrieve account balances.
 type BankKeeper interface {
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
-	// Methods imported from bank should be defined here
+	SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error
 }
