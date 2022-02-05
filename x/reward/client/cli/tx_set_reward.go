@@ -20,11 +20,11 @@ func CmdSetReward() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			coins, err := sdk.ParseCoinsNormalized(args[2])
+			coins, err := sdk.ParseCoinsNormalized(args[1])
 			if err != nil {
 				return err
 			}
-			lastRewardHeight, err := cast.ToUint64E(args[3])
+			lastRewardHeight, err := cast.ToUint64E(args[2])
 			if err != nil {
 				return err
 			}
