@@ -265,5 +265,5 @@ func (am AppModule) NegotiateAppVersion(
 	counterparty channeltypes.Counterparty,
 	proposedVersion string,
 ) (version string, err error) {
-	return proposedVersion, nil
+	return types.Version, nil
 }
