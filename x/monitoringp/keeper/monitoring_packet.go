@@ -48,7 +48,8 @@ func (k Keeper) TransmitMonitoringPacket(
 	modulePacket.Packet = &types.MonitoringpPacketData_MonitoringPacket{
 		MonitoringPacket: &packetData,
 	}
-	packetBytes, err := modulePacket.Marshal()
+
+	packetBytes, err := types.ModuleCdc.MarshalJSON(&modulePacket) // modulePacket.Marshal()
 	if err != nil {
 		return sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, "cannot marshal the packet: "+err.Error())
 	}
