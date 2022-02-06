@@ -15,7 +15,7 @@ func (k Keeper) OnRecvMonitoringPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
 	data spntypes.MonitoringPacket,
-) (packetAck types.MonitoringPacketAck, err error) {
+) (packetAck spntypes.MonitoringPacketAck, err error) {
 	// validate packet data upon receiving
 	if err := data.ValidateBasic(); err != nil {
 		return packetAck, err

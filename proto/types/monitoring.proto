@@ -5,6 +5,17 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/tendermint/spn/pkg/types";
 
+// MonitoringPacketData is the IBC packet for monitoring modules
+message MonitoringPacketData {
+  oneof packet {
+    // this line is used by starport scaffolding # ibc/packet/proto/field
+    MonitoringPacket monitoringPacket = 1;
+  }
+}
+
+// MonitoringPacketAck defines a struct for the packet acknowledgment
+message MonitoringPacketAck {
+}
 
 // MonitoringPacket is the packet sent over IBC that contains all the signature counts
 message MonitoringPacket {
