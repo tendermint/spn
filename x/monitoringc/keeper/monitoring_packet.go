@@ -27,7 +27,7 @@ func (k Keeper) OnRecvMonitoringPacket(
 		return packetAck, fmt.Errorf("no launch ID associated to channel ID %s", packet.DestinationChannel)
 	}
 	k.SetMonitoringHistory(ctx, types.MonitoringHistory{
-		LaunchID: lidFromCid.LaunchID,
+		LaunchID:               lidFromCid.LaunchID,
 		LatestMonitoringPacket: data,
 	})
 

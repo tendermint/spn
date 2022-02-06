@@ -2,7 +2,6 @@ package monitoringc
 
 import (
 	"fmt"
-	spntypes "github.com/tendermint/spn/pkg/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -11,6 +10,7 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v2/modules/core/05-port/types"
 	host "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibcexported "github.com/cosmos/ibc-go/v2/modules/core/exported"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
