@@ -93,5 +93,5 @@ func Coin() sdk.Coin {
 
 // Coins returns a sample coins structure
 func Coins() sdk.Coins {
-	return sdk.NewCoins(Coin(), Coin(), Coin()).Sort()
+	return sdk.NewCoins(Coin(), Coin(), Coin())
 }

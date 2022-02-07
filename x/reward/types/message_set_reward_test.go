@@ -10,15 +10,15 @@ import (
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-func TestMsgSetReward_ValidateBasic(t *testing.T) {
+func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgSetReward
+		msg  types.MsgSetRewards
 		err  error
 	}{
 		{
 			name: "invalid provider address",
-			msg: types.MsgSetReward{
+			msg: types.MsgSetRewards{
 				LaunchID:         1,
 				Provider:         "invalid address",
 				Coins:            sample.Coins(),
@@ -28,7 +28,7 @@ func TestMsgSetReward_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "empty coins",
-			msg: types.MsgSetReward{
+			msg: types.MsgSetRewards{
 				LaunchID:         1,
 				Provider:         sample.Address(),
 				Coins:            sdk.NewCoins(),
@@ -38,7 +38,7 @@ func TestMsgSetReward_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid coins",
-			msg: types.MsgSetReward{
+			msg: types.MsgSetRewards{
 				LaunchID: 1,
 				Provider: sample.Address(),
 				Coins: sdk.Coins{sdk.Coin{
@@ -51,7 +51,7 @@ func TestMsgSetReward_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "valid reward pool message",
-			msg: types.MsgSetReward{
+			msg: types.MsgSetRewards{
 				LaunchID:         1,
 				Provider:         sample.Address(),
 				Coins:            sample.Coins(),

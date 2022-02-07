@@ -11,7 +11,7 @@ import (
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-func (k msgServer) SetReward(goCtx context.Context, msg *types.MsgSetReward) (*types.MsgSetRewardResponse, error) {
+func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (*types.MsgSetRewardsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// determine if the chain exists
@@ -43,7 +43,7 @@ func (k msgServer) SetReward(goCtx context.Context, msg *types.MsgSetReward) (*t
 		if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, provider, types.ModuleName, msg.Coins); err != nil {
 			return nil, sdkerrors.Wrap(types.ErrInsufficientFunds, err.Error())
 		}
-		rewardPool = types.NewRewardPool(msg.LaunchID, ctx.BlockHeight())
+		rewardPool = types.NewRewardPool(msg.LaunchID, 0)
 	} else if err := SetBalance(ctx, k.accountKeeper, k.bankKeeper, provider, msg.Coins); err != nil {
 		return nil, spnerrors.Criticalf("can't set balance %s", err.Error())
 	}
@@ -51,7 +51,7 @@ func (k msgServer) SetReward(goCtx context.Context, msg *types.MsgSetReward) (*t
 	rewardPool.Provider = msg.Provider
 	rewardPool.LastRewardHeight = msg.LastRewardHeight
 
-	return &types.MsgSetRewardResponse{}, nil
+	return &types.MsgSetRewardsResponse{}, nil
 }
 
 // SetBalance set balance to Coins on the module account

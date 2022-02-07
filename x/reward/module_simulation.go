@@ -24,9 +24,9 @@ var (
 )
 
 const (
-	opWeightMsgSetReward = "op_weight_msg_create_chain"
+	opWeightMsgSetRewards = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgSetReward int = 100
+	defaultWeightMsgSetRewards int = 100
 
 	// this line is used by starport scaffolding # simapp/module/const
 )
@@ -50,7 +50,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
 	return []simtypes.ParamChange{}
 }
 
@@ -61,15 +60,15 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgSetReward int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSetReward, &weightMsgSetReward, nil,
+	var weightMsgSetRewards int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSetRewards, &weightMsgSetRewards, nil,
 		func(_ *rand.Rand) {
-			weightMsgSetReward = defaultWeightMsgSetReward
+			weightMsgSetRewards = defaultWeightMsgSetRewards
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgSetReward,
-		rewardsimulation.SimulateMsgSetReward(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgSetRewards,
+		rewardsimulation.SimulateMsgSetRewards(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

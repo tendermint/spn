@@ -10,10 +10,10 @@ import (
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-func CmdSetReward() *cobra.Command {
+func CmdSetRewards() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-reward [launch-id] [coins] [last-reward-height]",
-		Short: "Set rewards for a chain",
+		Short: "Set rewards for being validator for a chain",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			launchID, err := cast.ToUint64E(args[0])
@@ -34,7 +34,7 @@ func CmdSetReward() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgSetReward(
+			msg := types.NewMsgSetRewards(
 				clientCtx.GetFromAddress().String(),
 				launchID,
 				lastRewardHeight,

@@ -10,7 +10,7 @@ import (
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-func SimulateMsgSetReward(
+func SimulateMsgSetRewards(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -18,12 +18,12 @@ func SimulateMsgSetReward(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgSetReward{
+		msg := &types.MsgSetRewards{
 			Provider: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the SetReward simulation
+		// TODO: Handling the SetRewards simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "SetReward simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "SetRewards simulation not implemented"), nil, nil
 	}
 }

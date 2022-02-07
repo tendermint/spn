@@ -9,11 +9,11 @@ option go_package = "github.com/tendermint/spn/x/reward/types";
 
 // Msg defines the Msg service.
 service Msg {
-  rpc SetReward(MsgSetReward) returns (MsgSetRewardResponse);
+  rpc SetRewards(MsgSetRewards) returns (MsgSetRewardsResponse);
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
-message MsgSetReward {
+message MsgSetRewards {
   string provider = 1;
   uint64 launchID = 2;
   repeated cosmos.base.v1beta1.Coin coins = 3 [
@@ -24,7 +24,7 @@ message MsgSetReward {
   uint64 lastRewardHeight = 4;
 }
 
-message MsgSetRewardResponse {
+message MsgSetRewardsResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

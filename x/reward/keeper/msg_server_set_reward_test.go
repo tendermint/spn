@@ -12,7 +12,7 @@ import (
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-func Test_msgServer_SetReward(t *testing.T) {
+func Test_msgServer_SetRewards(t *testing.T) {
 	var (
 		k, lk, _, bk, ak, srv, psrv, _, sdkCtx = setupMsgServer(t)
 
@@ -48,12 +48,12 @@ func Test_msgServer_SetReward(t *testing.T) {
 
 	tests := []struct {
 		name string
-		msg  types.MsgSetReward
+		msg  types.MsgSetRewards
 		err  error
 	}{
 		{
 			name: "invalid chain",
-			msg: types.MsgSetReward{
+			msg: types.MsgSetRewards{
 				Provider:         provider.String(),
 				LaunchID:         9999,
 				Coins:            newBalance,
@@ -63,7 +63,7 @@ func Test_msgServer_SetReward(t *testing.T) {
 		},
 		{
 			name: "coordinator address not found",
-			msg: types.MsgSetReward{
+			msg: types.MsgSetRewards{
 				Provider:         sample.Address(),
 				LaunchID:         launchID,
 				Coins:            newBalance,
@@ -73,7 +73,7 @@ func Test_msgServer_SetReward(t *testing.T) {
 		},
 		{
 			name: "invalid coordinator id",
-			msg: types.MsgSetReward{
+			msg: types.MsgSetRewards{
 				Provider:         invalidCoord,
 				LaunchID:         launchID,
 				Coins:            newBalance,
@@ -83,7 +83,7 @@ func Test_msgServer_SetReward(t *testing.T) {
 		},
 		{
 			name: "launch triggered chain",
-			msg: types.MsgSetReward{
+			msg: types.MsgSetRewards{
 				Provider:         provider.String(),
 				LaunchID:         launchTriggeredChainID,
 				Coins:            newBalance,
@@ -93,7 +93,7 @@ func Test_msgServer_SetReward(t *testing.T) {
 		},
 		{
 			name: "coordinator with insufficient funds",
-			msg: types.MsgSetReward{
+			msg: types.MsgSetRewards{
 				Provider:         noBalanceCoord,
 				LaunchID:         noBalancelaunchID,
 				Coins:            newBalance,
@@ -104,7 +104,7 @@ func Test_msgServer_SetReward(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.SetReward(ctx, &tt.msg)
+			_, err := srv.SetRewards(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
 				return

@@ -5,12 +5,12 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgSetReward = "set_reward"
+const TypeMsgSetRewards = "set_rewards"
 
-var _ sdk.Msg = &MsgSetReward{}
+var _ sdk.Msg = &MsgSetRewards{}
 
-func NewMsgSetReward(provider string, launchID, lastRewardHeight uint64, coins sdk.Coins) *MsgSetReward {
-	return &MsgSetReward{
+func NewMsgSetRewards(provider string, launchID, lastRewardHeight uint64, coins sdk.Coins) *MsgSetRewards {
+	return &MsgSetRewards{
 		Provider:         provider,
 		LaunchID:         launchID,
 		Coins:            coins,
@@ -18,15 +18,15 @@ func NewMsgSetReward(provider string, launchID, lastRewardHeight uint64, coins s
 	}
 }
 
-func (msg *MsgSetReward) Route() string {
+func (msg *MsgSetRewards) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgSetReward) Type() string {
-	return TypeMsgSetReward
+func (msg *MsgSetRewards) Type() string {
+	return TypeMsgSetRewards
 }
 
-func (msg *MsgSetReward) GetSigners() []sdk.AccAddress {
+func (msg *MsgSetRewards) GetSigners() []sdk.AccAddress {
 	provider, err := sdk.AccAddressFromBech32(msg.Provider)
 	if err != nil {
 		panic(err)
@@ -34,12 +34,12 @@ func (msg *MsgSetReward) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{provider}
 }
 
-func (msg *MsgSetReward) GetSignBytes() []byte {
+func (msg *MsgSetRewards) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgSetReward) ValidateBasic() error {
+func (msg *MsgSetRewards) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Provider); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid provider address (%s)", err)
 	}
