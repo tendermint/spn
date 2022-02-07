@@ -8,10 +8,10 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func CmdDeleteCoordinator() *cobra.Command {
+func CmdDisableCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "delete-coordinator",
-		Short: "Delete the coordinator profile associated to the sender address",
+		Use:   "disable-coordinator",
+		Short: "Disable the coordinator profile associated to the sender address",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -19,7 +19,7 @@ func CmdDeleteCoordinator() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgDeleteCoordinator(clientCtx.GetFromAddress().String())
+			msg := types.NewMsgDisableCoordinator(clientCtx.GetFromAddress().String())
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

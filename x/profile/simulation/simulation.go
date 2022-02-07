@@ -237,8 +237,8 @@ func SimulateMsgUpdateCoordinatorAddress(ak types.AccountKeeper, bk types.BankKe
 	}
 }
 
-// SimulateMsgDeleteCoordinator simulates a MsgDeleteCoordinator message
-func SimulateMsgDeleteCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+// SimulateMsgDisableCoordinator simulates a MsgDisableCoordinator message
+func SimulateMsgDisableCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -247,10 +247,10 @@ func SimulateMsgDeleteCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 		simAccount, found := FindCoordinatorAccount(r, ctx, k, accs[3:], true)
 		if !found {
 			// No message if no coordinator
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDeleteCoordinator, "skip update coordinator delete"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDisableCoordinator, "skip update coordinator delete"), nil, nil
 		}
 
-		msg := types.NewMsgDeleteCoordinator(simAccount.Address.String())
+		msg := types.NewMsgDisableCoordinator(simAccount.Address.String())
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,

@@ -9,29 +9,29 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func (k msgServer) DeleteCoordinator(
+func (k msgServer) DisableCoordinator(
 	goCtx context.Context,
-	msg *types.MsgDeleteCoordinator,
-) (*types.MsgDeleteCoordinatorResponse, error) {
+	msg *types.MsgDisableCoordinator,
+) (*types.MsgDisableCoordinatorResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the coordinator address is already in the store
 	coordByAddress, found := k.GetCoordinatorByAddress(ctx, msg.Address)
 	if !found {
-		return &types.MsgDeleteCoordinatorResponse{},
+		return &types.MsgDisableCoordinatorResponse{},
 			sdkerrors.Wrap(types.ErrCoordAddressNotFound, msg.Address)
 	}
 
 	coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorID)
 	if !found {
-		return &types.MsgDeleteCoordinatorResponse{},
+		return &types.MsgDisableCoordinatorResponse{},
 			spnerrors.Criticalf("a coordinator address is associated to a non-existent coordinator ID: %d",
 				coordByAddress.CoordinatorID)
 	}
 
 	k.RemoveCoordinatorByAddress(ctx, msg.Address)
 	k.RemoveCoordinator(ctx, coord.CoordinatorID)
-	return &types.MsgDeleteCoordinatorResponse{
+	return &types.MsgDisableCoordinatorResponse{
 		CoordinatorID: coord.CoordinatorID,
 	}, nil
 }

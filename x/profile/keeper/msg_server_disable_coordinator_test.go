@@ -9,7 +9,7 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgDeleteCoordinator(t *testing.T) {
+func TestMsgDisableCoordinator(t *testing.T) {
 	var (
 		addr        = sample.Address()
 		msgCoord    = sample.MsgCreateCoordinator(sample.Address())
@@ -21,22 +21,22 @@ func TestMsgDeleteCoordinator(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		msg  types.MsgDeleteCoordinator
+		msg  types.MsgDisableCoordinator
 		err  error
 	}{
 		{
 			name: "not found coordinator address",
-			msg:  types.MsgDeleteCoordinator{Address: addr},
+			msg:  types.MsgDisableCoordinator{Address: addr},
 			err:  types.ErrCoordAddressNotFound,
 		},
 		{
 			name: "delete coordinator",
-			msg:  types.MsgDeleteCoordinator{Address: msgCoord.Address},
+			msg:  types.MsgDisableCoordinator{Address: msgCoord.Address},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := srv.DeleteCoordinator(wCtx, &tt.msg)
+			got, err := srv.DisableCoordinator(wCtx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
