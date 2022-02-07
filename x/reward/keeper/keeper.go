@@ -17,7 +17,6 @@ type (
 		storeKey      sdk.StoreKey
 		memKey        sdk.StoreKey
 		paramstore    paramtypes.Subspace
-		accountKeeper types.AccountKeeper
 		bankKeeper    types.BankKeeper
 		profileKeeper types.ProfileKeeper
 		launchKeeper  types.LaunchKeeper
@@ -30,7 +29,6 @@ func NewKeeper(
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
 	bankKeeper types.BankKeeper,
-	accountKeeper types.AccountKeeper,
 	profileKeeper types.ProfileKeeper,
 	launchKeeper types.LaunchKeeper,
 ) *Keeper {
@@ -44,7 +42,6 @@ func NewKeeper(
 		memKey:        memKey,
 		paramstore:    ps,
 		bankKeeper:    bankKeeper,
-		accountKeeper: accountKeeper,
 		profileKeeper: profileKeeper,
 		launchKeeper:  launchKeeper,
 	}

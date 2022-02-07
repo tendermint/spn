@@ -41,15 +41,16 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 	if !found {
 		// create the reward pool and transfer tokens if not created yet
 		if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, provider, types.ModuleName, msg.Coins); err != nil {
-			return nil, sdkerrors.Wrap(types.ErrAddressWithoutBalance, err.Error())
+			return nil, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, err.Error())
 		}
 		rewardPool = types.NewRewardPool(msg.LaunchID, 0)
-	} else if err := SetBalance(ctx, k.accountKeeper, k.bankKeeper, provider, msg.Coins); err != nil {
+	} else if err := SetBalance(ctx, k.bankKeeper, provider, msg.Coins, rewardPool.Coins); err != nil {
 		return nil, err
 	}
 	rewardPool.Coins = msg.Coins
 	rewardPool.Provider = msg.Provider
 	rewardPool.LastRewardHeight = msg.LastRewardHeight
+	k.SetRewardPool(ctx, rewardPool)
 
 	return &types.MsgSetRewardsResponse{}, nil
 }
@@ -58,31 +59,32 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 // calling the transfer depending on the balance difference
 func SetBalance(
 	ctx sdk.Context,
-	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 	provider sdk.AccAddress,
 	coins sdk.Coins,
+	poolCoins sdk.Coins,
 ) error {
-	for _, coin := range coins {
-		balance := bankKeeper.GetBalance(ctx, accountKeeper.GetModuleAddress(types.ModuleName), coin.Denom)
-		if balance.Amount.GT(coin.Amount) { // the balance is greater than the new value
-			if err := bankKeeper.SendCoinsFromModuleToAccount(
-				ctx,
-				types.ModuleName,
-				provider,
-				sdk.NewCoins(balance.Sub(coin)),
-			); err != nil {
-				return sdkerrors.Wrap(types.ErrAddressWithoutBalance, err.Error())
-			}
-		} else if coin.Amount.GT(balance.Amount) { // the balance is lower than the new value
-			if err := bankKeeper.SendCoinsFromAccountToModule(
-				ctx,
-				provider,
-				types.ModuleName,
-				sdk.NewCoins(coin.Sub(balance)),
-			); err != nil {
-				return sdkerrors.Wrap(types.ErrModuleWithoutBalance, err.Error())
-			}
+	if coins.DenomsSubsetOf(poolCoins) && coins.IsEqual(poolCoins) {
+		return nil
+	}
+	if poolCoins != nil && !poolCoins.IsZero() {
+		if err := bankKeeper.SendCoinsFromModuleToAccount(
+			ctx,
+			types.ModuleName,
+			provider,
+			poolCoins,
+		); err != nil {
+			return spnerrors.Critical(err.Error())
+		}
+	}
+	if coins != nil && !coins.IsZero() {
+		if err := bankKeeper.SendCoinsFromAccountToModule(
+			ctx,
+			provider,
+			types.ModuleName,
+			coins,
+		); err != nil {
+			return sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, err.Error())
 		}
 	}
 	return nil

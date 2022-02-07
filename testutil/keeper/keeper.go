@@ -5,7 +5,6 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	ibcclienttypes "github.com/cosmos/ibc-go/v2/modules/core/02-client/types"
 	ibcconnectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
@@ -36,7 +35,6 @@ func AllKeepers(t testing.TB) (
 	*rewardkeeper.Keeper,
 	*monitoringcmodulekeeper.Keeper,
 	bankkeeper.Keeper,
-	authkeeper.AccountKeeper,
 	sdk.Context,
 ) {
 	initializer := newInitializer()
@@ -51,7 +49,7 @@ func AllKeepers(t testing.TB) (
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
 	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper)
-	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
+	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
 		*ibcKeeper,
@@ -74,7 +72,7 @@ func AllKeepers(t testing.TB) (
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
-	return campaignKeeper, launchKeeper, profileKeeper, rewardKeeper, monitoringConsumerKeeper, bankKeeper, authKeeper, ctx
+	return campaignKeeper, launchKeeper, profileKeeper, rewardKeeper, monitoringConsumerKeeper, bankKeeper, ctx
 }
 
 // Profile returns a keeper of the profile module for testing purpose
@@ -109,13 +107,13 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
 
 // Campaign returns a keeper of the campaign module for testing purpose
 func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
-	campaignKeeper, _, _, _, _, _, _, ctx := AllKeepers(t) // nolint
+	campaignKeeper, _, _, _, _, _, ctx := AllKeepers(t) // nolint
 	return campaignKeeper, ctx
 }
 
 // Reward returns a keeper of the reward module for testing purpose
 func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
-	_, _, _, rewardKeeper, _, _, _, ctx := AllKeepers(t) // nolint
+	_, _, _, rewardKeeper, _, _, ctx := AllKeepers(t) // nolint
 
 	// Initialize params
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
@@ -125,7 +123,7 @@ func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
 
 // Monitoringc returns a keeper of the monitoring consumer module for testing purpose
 func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
-	_, _, _, _, monitoringConsumerKeeper, _, _, ctx := AllKeepers(t) // nolint
+	_, _, _, _, monitoringConsumerKeeper, _, ctx := AllKeepers(t) // nolint
 	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
 
 	return monitoringConsumerKeeper, ctx
@@ -149,7 +147,7 @@ func MonitoringcWithIBCMocks(
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
 	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper)
-	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
+	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
 		*ibcKeeper,

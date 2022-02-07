@@ -19,7 +19,6 @@ type LaunchKeeper interface {
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
 type AccountKeeper interface {
-	GetModuleAddress(moduleName string) sdk.AccAddress
 }
 
 // BankKeeper defines the expected interface needed to retrieve account balances.

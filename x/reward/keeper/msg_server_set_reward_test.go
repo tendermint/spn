@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
@@ -14,7 +15,7 @@ import (
 
 func Test_msgServer_SetRewards(t *testing.T) {
 	var (
-		k, lk, _, bk, ak, srv, psrv, _, sdkCtx = setupMsgServer(t)
+		k, lk, _, bk, srv, psrv, _, sdkCtx = setupMsgServer(t)
 
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		moduleBalance  = sample.Coins()
@@ -99,7 +100,7 @@ func Test_msgServer_SetRewards(t *testing.T) {
 				Coins:            newBalance,
 				LastRewardHeight: 1000,
 			},
-			err: types.ErrAddressWithoutBalance,
+			err: sdkerrors.ErrInsufficientFunds,
 		},
 	}
 	for _, tt := range tests {
@@ -116,32 +117,29 @@ func Test_msgServer_SetRewards(t *testing.T) {
 			require.Equal(t, tt.msg.Coins, rewardPool.Coins)
 			require.Equal(t, tt.msg.Provider, rewardPool.Provider)
 			require.Equal(t, tt.msg.LastRewardHeight, rewardPool.LastRewardHeight)
-
-			for _, coin := range tt.msg.Coins {
-				balance := bk.GetBalance(sdkCtx, ak.GetModuleAddress(types.ModuleName), coin.Denom)
-				require.Equal(t, coin.Amount, balance.Amount)
-			}
 		})
 	}
 }
 
 func TestSetBalance(t *testing.T) {
 	var (
-		_, _, _, bk, ak, _, _, _, sdkCtx = setupMsgServer(t)
+		_, _, _, bk, _, _, _, sdkCtx = setupMsgServer(t)
 
-		moduleBalance = sample.Coins()
+		poolCoins     = sample.Coins()
 		newBalance    = sample.Coins()
 		provider      = sample.AccAddress()
 		noBalanceAddr = sample.AccAddress()
 	)
-	err := bk.MintCoins(sdkCtx, types.ModuleName, append(moduleBalance, newBalance...).Sort())
+	totalBalance := append(newBalance.Add(newBalance...).Add(newBalance...))
+	err := bk.MintCoins(sdkCtx, types.ModuleName, append(poolCoins, totalBalance...).Sort())
 	require.NoError(t, err)
-	err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, newBalance)
+	err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, totalBalance)
 	require.NoError(t, err)
 
 	type args struct {
-		provider sdk.AccAddress
-		coins    sdk.Coins
+		provider  sdk.AccAddress
+		coins     sdk.Coins
+		poolCoins sdk.Coins
 	}
 	tests := []struct {
 		name    string
@@ -151,46 +149,62 @@ func TestSetBalance(t *testing.T) {
 		{
 			name: "use the same module balance",
 			args: args{
-				provider: provider,
-				coins:    moduleBalance,
+				provider:  provider,
+				coins:     poolCoins,
+				poolCoins: poolCoins,
 			},
 		},
 		{
 			name: "set new balance",
 			args: args{
-				provider: provider,
-				coins:    newBalance,
+				provider:  provider,
+				coins:     newBalance,
+				poolCoins: poolCoins,
+			},
+		},
+		{
+			name: "empty reward pool",
+			args: args{
+				provider:  provider,
+				coins:     newBalance,
+				poolCoins: sdk.NewCoins(),
+			},
+		},
+		{
+			name: "nil reward pool",
+			args: args{
+				provider:  provider,
+				coins:     newBalance,
+				poolCoins: nil,
 			},
 		},
 		{
 			name: "no balance provider",
 			args: args{
-				provider: provider,
-				coins:    append(newBalance, sample.Coins()...).Sort(),
+				provider:  provider,
+				coins:     append(newBalance, sample.Coins()...).Sort(),
+				poolCoins: poolCoins,
 			},
 			wantErr: true,
 		},
 		{
 			name: "no balance address",
 			args: args{
-				provider: noBalanceAddr,
-				coins:    sample.Coins(),
+				provider:  noBalanceAddr,
+				coins:     sample.Coins(),
+				poolCoins: poolCoins,
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := keeper.SetBalance(sdkCtx, ak, bk, tt.args.provider, tt.args.coins)
+			err := keeper.SetBalance(sdkCtx, bk, tt.args.provider, tt.args.coins, tt.args.poolCoins)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
-			for _, coin := range tt.args.coins {
-				balance := bk.GetBalance(sdkCtx, ak.GetModuleAddress(types.ModuleName), coin.Denom)
-				require.Equal(t, coin.Amount, balance.Amount)
-			}
 		})
 	}
 }
