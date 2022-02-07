@@ -41,11 +41,11 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 	if !found {
 		// create the reward pool and transfer tokens if not created yet
 		if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, provider, types.ModuleName, msg.Coins); err != nil {
-			return nil, sdkerrors.Wrap(types.ErrInsufficientFunds, err.Error())
+			return nil, sdkerrors.Wrap(types.ErrAddressWithoutBalance, err.Error())
 		}
 		rewardPool = types.NewRewardPool(msg.LaunchID, 0)
 	} else if err := SetBalance(ctx, k.accountKeeper, k.bankKeeper, provider, msg.Coins); err != nil {
-		return nil, spnerrors.Criticalf("can't set balance %s", err.Error())
+		return nil, err
 	}
 	rewardPool.Coins = msg.Coins
 	rewardPool.Provider = msg.Provider
@@ -72,7 +72,7 @@ func SetBalance(
 				provider,
 				sdk.NewCoins(balance.Sub(coin)),
 			); err != nil {
-				return spnerrors.Criticalf("can't send coin from module to account %s", err.Error())
+				return sdkerrors.Wrap(types.ErrAddressWithoutBalance, err.Error())
 			}
 		} else if coin.Amount.GT(balance.Amount) { // the balance is lower than the new value
 			if err := bankKeeper.SendCoinsFromAccountToModule(
@@ -81,7 +81,7 @@ func SetBalance(
 				types.ModuleName,
 				sdk.NewCoins(coin.Sub(balance)),
 			); err != nil {
-				return spnerrors.Criticalf("can't send coin from account to module %s", err.Error())
+				return sdkerrors.Wrap(types.ErrModuleWithoutBalance, err.Error())
 			}
 		}
 	}

@@ -99,7 +99,7 @@ func Test_msgServer_SetRewards(t *testing.T) {
 				Coins:            newBalance,
 				LastRewardHeight: 1000,
 			},
-			err: types.ErrInsufficientFunds,
+			err: types.ErrAddressWithoutBalance,
 		},
 	}
 	for _, tt := range tests {
