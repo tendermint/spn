@@ -33,7 +33,7 @@ func (gs GenesisState) Validate() error {
 	verifiedClientIDIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.VerifiedClientIDList {
-		index := string(VerifiedClientIDKey(elem.LaunchID, elem.ClientID))
+		index := string(VerifiedClientIDKey(elem.LaunchID))
 		if _, ok := verifiedClientIDIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for verifiedClientID")
 		}

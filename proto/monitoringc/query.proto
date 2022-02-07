@@ -79,12 +79,10 @@ message QueryParamsResponse {
 
 message QueryVerifiedClientIdsRequest {
   uint64 launchID = 1;
-  cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryVerifiedClientIdsResponse {
   repeated string clientIds = 1;
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetProviderClientIDRequest {
@@ -106,7 +104,6 @@ message QueryAllProviderClientIDResponse {
 
 message QueryGetLaunchIDFromVerifiedClientIDRequest {
   string clientID = 1;
-
 }
 
 message QueryGetLaunchIDFromVerifiedClientIDResponse {
