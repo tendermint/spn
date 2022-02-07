@@ -9,6 +9,7 @@ message Coordinator {
   uint64 coordinatorID = 1;
   string address = 2;
   CoordinatorDescription description = 3 [(gogoproto.nullable) = false];
+  bool active = 4;
 }
 
 message CoordinatorDescription {
@@ -20,4 +21,5 @@ message CoordinatorDescription {
 message CoordinatorByAddress {
   string address = 1;
   uint64 coordinatorID = 2;
+  bool active = 4;
 }

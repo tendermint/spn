@@ -29,8 +29,13 @@ func (k msgServer) DisableCoordinator(
 				coordByAddress.CoordinatorID)
 	}
 
-	k.RemoveCoordinatorByAddress(ctx, msg.Address)
-	k.RemoveCoordinator(ctx, coord.CoordinatorID)
+	// disable by setting to inactive
+	coordByAddress.Active = false
+	coord.Active = false
+
+	// TODO modify
+	k.SetCoordinatorByAddress(ctx, coordByAddress)
+	k.SetCoordinator(ctx, coord)
 	return &types.MsgDisableCoordinatorResponse{
 		CoordinatorID: coord.CoordinatorID,
 	}, nil

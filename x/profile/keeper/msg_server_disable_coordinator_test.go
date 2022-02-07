@@ -30,7 +30,7 @@ func TestMsgDisableCoordinator(t *testing.T) {
 			err:  types.ErrCoordAddressNotFound,
 		},
 		{
-			name: "delete coordinator",
+			name: "disable coordinator",
 			msg:  types.MsgDisableCoordinator{Address: msgCoord.Address},
 		},
 	}
@@ -42,11 +42,14 @@ func TestMsgDisableCoordinator(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			_, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			require.False(t, found, "coordinator by address was not removed")
+			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			require.True(t, found)
+			require.EqualValues(t, false, coordByAddr.Active)
 
-			_, found = k.GetCoordinator(ctx, got.CoordinatorID)
-			require.False(t, found, "coordinator id not removed")
+			coord, found := k.GetCoordinator(ctx, got.CoordinatorID)
+			require.True(t, found)
+			require.EqualValues(t, false, coord.Active)
+
 		})
 	}
 }

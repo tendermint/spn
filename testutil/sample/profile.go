@@ -30,6 +30,7 @@ func Coordinator(address string) profile.Coordinator {
 	return profile.Coordinator{
 		Address:     address,
 		Description: CoordinatorDescription(),
+		Active:      true,
 	}
 }
 
