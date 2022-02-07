@@ -258,6 +258,7 @@ func (am AppModule) OnTimeoutPacket(
 }
 
 // NegotiateAppVersion implements the IBCModule interface
+// TODO(492): implement correct logic
 func (am AppModule) NegotiateAppVersion(
 	ctx sdk.Context,
 	order channeltypes.Order,
