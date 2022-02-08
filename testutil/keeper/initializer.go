@@ -31,6 +31,7 @@ import (
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	rewardmodulekeeper "github.com/tendermint/spn/x/reward/keeper"
+	rewardmoduletypes "github.com/tendermint/spn/x/reward/types"
 	tmdb "github.com/tendermint/tm-db"
 )
 
@@ -42,6 +43,7 @@ var (
 		campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+		rewardmoduletypes.ModuleName:   {authtypes.Minter},
 	}
 )
 

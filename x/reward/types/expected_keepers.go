@@ -11,7 +11,8 @@ type AuthKeeper interface {
 }
 
 type ProfileKeeper interface {
-	GetValidator(ctx sdk.Context, address string) (val profiletypes.Validator, found bool)
+	GetValidator(ctx sdk.Context, address string) (profiletypes.Validator, bool)
+	GetValidatorByConsAddress(ctx sdk.Context, consensusAddress string) (profiletypes.ValidatorByConsAddress, bool)
 }
 
 type LaunchKeeper interface {

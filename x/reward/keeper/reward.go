@@ -52,8 +52,15 @@ func (k Keeper) DistributeRewards(
 		// get the validator address from the cons address
 		// if the validator is not registered, reward distribution is skipped
 		// all funds are sent back to the coordinator
-		validator, found := k.profileKeeper.GetValidator(ctx, signatureCount.ConsAddress)
+		validatorByConsAddr, found := k.profileKeeper.GetValidatorByConsAddress(ctx, signatureCount.ConsAddress)
 		if found {
+			validator, found := k.profileKeeper.GetValidator(ctx, validatorByConsAddr.ValidatorAddress)
+			if !found {
+				return spnerrors.Criticalf(
+					"validator by consensus address not associated with a validator %s",
+					validatorByConsAddr.ValidatorAddress,
+				)
+			}
 			// compute reward relative to the signature and block count
 			// and update reward pool
 			relativeSignatures, err := signatureCount.RelativeSignatures.Float64()
@@ -66,10 +73,11 @@ func (k Keeper) DistributeRewards(
 			if err != nil {
 				return spnerrors.Criticalf("invalid reward: %s", err.Error())
 			}
-			rewardPool.Coins = rewardPool.Coins.Sub(reward)
-			if rewardPool.Coins.IsAnyNegative() {
+			coins, isNegative := rewardPool.Coins.SafeSub(reward)
+			if isNegative {
 				return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
 			}
+			rewardPool.Coins = coins
 
 			// send rewards to the address
 			account, err := sdk.AccAddressFromBech32(validator.Address)
@@ -109,10 +117,11 @@ func (k Keeper) DistributeRewards(
 	if err != nil {
 		return spnerrors.Criticalf("invalid reward: %s", err.Error())
 	}
-	rewardPool.Coins = rewardPool.Coins.Sub(reward)
-	if rewardPool.Coins.IsAnyNegative() {
+	coins, isNegative := rewardPool.Coins.SafeSub(reward)
+	if isNegative {
 		return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
 	}
+	rewardPool.Coins = coins
 
 	// send rewards to the address
 	if err := k.bankKeeper.SendCoinsFromModuleToAccount(
