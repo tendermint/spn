@@ -2,6 +2,7 @@ package simulation
 
 import (
 	"fmt"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"math/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -77,8 +78,9 @@ func FindRandomChain(
 			continue
 		}
 		// check if the coordinator is still in the store and active
-		coord, found := k.GetProfileKeeper().GetCoordinator(ctx, c.CoordinatorID)
-		if !found || coord.Active {
+		var coord profiletypes.Coordinator
+		coord, found = k.GetProfileKeeper().GetCoordinator(ctx, c.CoordinatorID)
+		if !found || !coord.Active {
 			continue
 		}
 		chain = c
@@ -105,8 +107,9 @@ func FindRandomRequest(
 			continue
 		}
 		// check if the coordinator is still in the store and active
-		coord, found := k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
-		if !found || coord.Active {
+		var coord profiletypes.Coordinator
+		coord, found = k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
+		if !found || !coord.Active {
 			continue
 		}
 		switch content := req.Content.Content.(type) {

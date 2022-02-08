@@ -28,7 +28,10 @@ func FindCoordinatorAccount(
 
 	for _, acc := range accs {
 		coord, found := k.GetCoordinatorByAddress(ctx, acc.Address.String())
-		if found == exist && coord.Active {
+		if found == exist {
+			if found == true && coord.Active == false {
+				continue
+			}
 			return acc, true
 		}
 	}

@@ -39,6 +39,7 @@ func TestFindCoordinatorAccount(t *testing.T) {
 	k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       acc.Address.String(),
 		CoordinatorID: sample.Uint64(),
+		Active:        true,
 	})
 
 	t.Run("one coordinator account", func(t *testing.T) {
