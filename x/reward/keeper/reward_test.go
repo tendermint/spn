@@ -98,7 +98,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		provider                   = sample.Address()
 		coins                      = sample.Coins()
 		signatureCounts            = spntypes.SignatureCounts{
-			BlockCount: 0,
+			BlockCount: 2,
 			Counts: []spntypes.SignatureCount{
 				{ConsAddress: validatorConsAddrFoo, RelativeSignatures: sdk.NewDec(1)},
 				{ConsAddress: validatorConsAddrBar, RelativeSignatures: sdk.NewDecWithPrec(5, 1)},
@@ -110,12 +110,16 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 	signatureCountsValNotFound.Counts = append(signatureCountsValNotFound.Counts, spntypes.SignatureCount{
 		ConsAddress: notFoundValidatorAddr, RelativeSignatures: sdk.NewDec(1),
 	})
+	moduleSupply := coins
 	for _, launchID := range launchIDs {
 		k.SetRewardPool(ctx, types.RewardPool{
-			LaunchID: launchID,
-			Provider: provider,
-			Coins:    coins,
+			LaunchID:            launchID,
+			Provider:            provider,
+			Coins:               coins,
+			LastRewardHeight:    1,
+			CurrentRewardHeight: 4,
 		})
+		moduleSupply = moduleSupply.Add(moduleSupply...)
 	}
 	pk.SetValidator(ctx, profiletypes.Validator{
 		Address:          validatorFoo,
@@ -137,7 +141,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		ValidatorAddress: sample.Address(),
 		ConsensusAddress: notFoundValidatorAddr,
 	})
-	err := bk.MintCoins(ctx, types.ModuleName, coins.Add(coins...))
+	err := bk.MintCoins(ctx, types.ModuleName, moduleSupply)
 	require.NoError(t, err)
 
 	type args struct {
@@ -156,7 +160,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID:        99999,
 				signatureCounts: signatureCounts,
-				lastBlockHeight: 0,
+				lastBlockHeight: 1,
 				closeRewardPool: false,
 			},
 			err: types.ErrRewardPoolNotFound,
@@ -166,7 +170,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID:        launchIDs[0],
 				signatureCounts: signatureCountsValNotFound,
-				lastBlockHeight: 0,
+				lastBlockHeight: 1,
 				closeRewardPool: false,
 			},
 			err: spnerrors.ErrCritical,
@@ -185,7 +189,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID:        launchIDs[2],
 				signatureCounts: signatureCounts,
-				lastBlockHeight: 0,
+				lastBlockHeight: 1,
 				closeRewardPool: true,
 			},
 		},
@@ -194,7 +198,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID:        launchIDs[3],
 				signatureCounts: signatureCounts,
-				lastBlockHeight: 0,
+				lastBlockHeight: 2,
 				closeRewardPool: false,
 			},
 		},
@@ -217,13 +221,13 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			rewadPool, found := k.GetRewardPool(ctx, tt.args.launchID)
-			if tt.args.closeRewardPool {
+			rewardPool, found := k.GetRewardPool(ctx, tt.args.launchID)
+			if tt.args.closeRewardPool || tt.args.lastBlockHeight >= rewardPool.LastRewardHeight {
 				require.False(t, found)
 				return
 			}
 			require.True(t, found)
-			require.Equal(t, tt.args.lastBlockHeight, rewadPool.CurrentRewardHeight)
+			require.Equal(t, tt.args.lastBlockHeight, rewardPool.CurrentRewardHeight)
 		})
 	}
 }
