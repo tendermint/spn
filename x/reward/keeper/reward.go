@@ -46,10 +46,9 @@ func (k Keeper) DistributeRewards(
 		blockRatio = sdk.NewDec(1)
 	}
 
+	totalRelativeSignaturesDistributed := sdk.NewDec(0)
 	// distribute rewards to all block signers
-	totalSignaturesRelative := sdk.NewDec(0)
 	for _, signatureCount := range signatureCounts.Counts {
-		totalSignaturesRelative = totalSignaturesRelative.Add(signatureCount.RelativeSignatures)
 
 		// get the validator address from the cons address
 		// if the validator is not registered, reward distribution is skipped
@@ -63,6 +62,9 @@ func (k Keeper) DistributeRewards(
 					validatorByConsAddr.ValidatorAddress,
 				)
 			}
+			// calculate the total relative signature distributed for we calculate the refund
+			totalRelativeSignaturesDistributed = totalRelativeSignaturesDistributed.Add(signatureCount.RelativeSignatures)
+
 			// compute reward relative to the signature and block count
 			// and update reward pool
 			signatureRatio := signatureCount.RelativeSignatures.Quo(sdk.NewDec(int64(signatureCounts.BlockCount)))
@@ -104,7 +106,7 @@ func (k Keeper) DistributeRewards(
 	// refundRation is blockCount.
 	// This is sum of signaturesRelative values from validator to compute refund
 	blockCount := sdk.NewDec(int64(signatureCounts.BlockCount))
-	refundRatio := blockCount.Sub(totalSignaturesRelative).Quo(blockCount)
+	refundRatio := blockCount.Sub(totalRelativeSignaturesDistributed).Quo(blockCount)
 	reward, err := CalculateReward(blockRatio, refundRatio, rewardPool.Coins)
 	if err != nil {
 		return spnerrors.Criticalf("invalid reward: %s", err.Error())
