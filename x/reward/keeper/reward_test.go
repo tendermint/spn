@@ -21,8 +21,8 @@ func TestCalculateReward(t *testing.T) {
 		coins = sdk.NewCoins(coinA, coinB, coinC)
 	)
 	type args struct {
-		blockRatio float64
-		ratio      float64
+		blockRatio sdk.Dec
+		ratio      sdk.Dec
 		coins      sdk.Coins
 	}
 	tests := []struct {
@@ -34,8 +34,8 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "test zero values",
 			args: args{
-				blockRatio: 0,
-				ratio:      0,
+				blockRatio: sdk.NewDec(0),
+				ratio:      sdk.NewDec(0),
 				coins:      sdk.NewCoins(),
 			},
 			want: sdk.NewCoins(),
@@ -43,8 +43,8 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "test nil coins",
 			args: args{
-				blockRatio: 0,
-				ratio:      0,
+				blockRatio: sdk.NewDec(0),
+				ratio:      sdk.NewDec(0),
 				coins:      nil,
 			},
 			want: sdk.NewCoins(),
@@ -52,8 +52,8 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "negative coin amount",
 			args: args{
-				blockRatio: 1000,
-				ratio:      100,
+				blockRatio: sdk.NewDec(1000),
+				ratio:      sdk.NewDec(100),
 				coins:      sample.Coins(),
 			},
 			wantErr: true,
@@ -61,8 +61,8 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "valid case",
 			args: args{
-				blockRatio: 0.6,
-				ratio:      0.34,
+				blockRatio: sdk.NewDecWithPrec(6, 1),
+				ratio:      sdk.NewDecWithPrec(34, 2),
 				coins:      coins,
 			},
 			want: sdk.NewCoins(

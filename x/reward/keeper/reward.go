@@ -10,7 +10,7 @@ import (
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-// DistributeRewards distribute rewards based on the monitoring packet
+// DistributeRewards distributes rewards based on the monitoring packet
 // this `closeRewardPool` is a boolean that specifies if the reward pool
 // must be closed after the reward distribution.
 // In a model where rewards are distributed in a single round, this
@@ -39,9 +39,11 @@ func (k Keeper) DistributeRewards(
 	}
 
 	// only the monitored blocks relative to last reward height are rewarded
-	blockRatio := float64(lastBlockHeight-rewardPool.CurrentRewardHeight) / float64(rewardPool.LastRewardHeight-rewardPool.CurrentRewardHeight)
-	if blockRatio > 1 {
-		blockRatio = 1
+	blockRatioA := sdk.NewDec(int64(lastBlockHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
+	blockRatioB := sdk.NewDec(int64(rewardPool.LastRewardHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
+	blockRatio := blockRatioA.Quo(blockRatioB)
+	if blockRatio.GT(sdk.NewDec(1)) {
+		blockRatio = sdk.NewDec(1)
 	}
 
 	// distribute rewards to all block signers
@@ -63,12 +65,7 @@ func (k Keeper) DistributeRewards(
 			}
 			// compute reward relative to the signature and block count
 			// and update reward pool
-			relativeSignatures, err := signatureCount.RelativeSignatures.Float64()
-			if err != nil {
-				return spnerrors.Critical("decimal to float conversion fail")
-			}
-
-			signatureRatio := relativeSignatures / float64(signatureCounts.BlockCount)
+			signatureRatio := signatureCount.RelativeSignatures.Quo(sdk.NewDec(int64(signatureCounts.BlockCount)))
 			reward, err := CalculateReward(blockRatio, signatureRatio, rewardPool.Coins)
 			if err != nil {
 				return spnerrors.Criticalf("invalid reward: %s", err.Error())
@@ -106,13 +103,8 @@ func (k Keeper) DistributeRewards(
 	// Otherwise, the refund is relative to the block ratio and the reward pool is updated
 	// refundRation is blockCount.
 	// This is sum of signaturesRelative values from validator to compute refund
-	totalSigs, err := totalSignaturesRelative.Float64()
-	if err != nil {
-		return spnerrors.Critical("decimal to float conversion fail")
-	}
-
-	blockCount := float64(signatureCounts.BlockCount)
-	refundRatio := (blockCount - totalSigs) / blockCount
+	blockCount := sdk.NewDec(int64(signatureCounts.BlockCount))
+	refundRatio := blockCount.Sub(totalSignaturesRelative).Quo(blockCount)
 	reward, err := CalculateReward(blockRatio, refundRatio, rewardPool.Coins)
 	if err != nil {
 		return spnerrors.Criticalf("invalid reward: %s", err.Error())
@@ -138,14 +130,15 @@ func (k Keeper) DistributeRewards(
 	return nil
 }
 
-func CalculateReward(blockRatio, ratio float64, coins sdk.Coins) (sdk.Coins, error) {
+func CalculateReward(blockRatio, ratio sdk.Dec, coins sdk.Coins) (sdk.Coins, error) {
 	reward := sdk.NewCoins()
 	for _, coin := range coins {
-		refund := int64(blockRatio * ratio * float64(coin.Amount.Uint64()))
-		if coin.Amount.Int64()-refund < 0 {
-			return reward, fmt.Errorf("negative coin reward amount %d", coin.Amount.Int64()-refund)
+		refund := blockRatio.Mul(ratio).Mul(coin.Amount.ToDec())
+		amount := coin.Amount.ToDec().Sub(refund)
+		if amount.IsNegative() {
+			return reward, fmt.Errorf("negative coin reward amount %s", amount.String())
 		}
-		reward = reward.Add(coin.SubAmount(sdk.NewInt(refund)))
+		reward = reward.Add(coin.SubAmount(refund.TruncateInt()))
 	}
 	return reward, nil
 }
