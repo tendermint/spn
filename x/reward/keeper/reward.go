@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
@@ -37,7 +39,7 @@ func (k Keeper) DistributeRewards(
 	}
 
 	// only the monitored blocks relative to last reward height are rewarded
-	blockRatio := (lastBlockHeight - rewardPool.CurrentRewardHeight) / (rewardPool.LastRewardHeight - rewardPool.CurrentRewardHeight)
+	blockRatio := float64(lastBlockHeight-rewardPool.CurrentRewardHeight) / float64(rewardPool.LastRewardHeight-rewardPool.CurrentRewardHeight)
 	if blockRatio > 1 {
 		blockRatio = 1
 	}
@@ -60,7 +62,10 @@ func (k Keeper) DistributeRewards(
 			}
 
 			signatureRatio := relativeSignatures / float64(signatureCounts.BlockCount)
-			reward := CalculateReward(blockRatio, signatureRatio, rewardPool.Coins)
+			reward, err := CalculateReward(blockRatio, signatureRatio, rewardPool.Coins)
+			if err != nil {
+				return spnerrors.Criticalf("invalid reward: %s", err.Error())
+			}
 			rewardPool.Coins = rewardPool.Coins.Sub(reward)
 			if rewardPool.Coins.IsAnyNegative() {
 				return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
@@ -100,7 +105,10 @@ func (k Keeper) DistributeRewards(
 
 	blockCount := float64(signatureCounts.BlockCount)
 	refundRatio := (blockCount - totalSigs) / blockCount
-	reward := CalculateReward(blockRatio, refundRatio, rewardPool.Coins)
+	reward, err := CalculateReward(blockRatio, refundRatio, rewardPool.Coins)
+	if err != nil {
+		return spnerrors.Criticalf("invalid reward: %s", err.Error())
+	}
 	rewardPool.Coins = rewardPool.Coins.Sub(reward)
 	if rewardPool.Coins.IsAnyNegative() {
 		return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
@@ -121,11 +129,14 @@ func (k Keeper) DistributeRewards(
 	return nil
 }
 
-func CalculateReward(blockRatio uint64, ratio float64, coins sdk.Coins) sdk.Coins {
+func CalculateReward(blockRatio, ratio float64, coins sdk.Coins) (sdk.Coins, error) {
 	reward := sdk.NewCoins()
 	for _, coin := range coins {
-		refund := blockRatio * uint64(ratio) * coin.Amount.Uint64()
-		reward.Add(coin.SubAmount(sdk.NewIntFromUint64(refund)))
+		refund := int64(blockRatio * ratio * float64(coin.Amount.Uint64()))
+		if coin.Amount.Int64()-refund < 0 {
+			return reward, fmt.Errorf("negative coin reward amount %d", coin.Amount.Int64()-refund)
+		}
+		reward = reward.Add(coin.SubAmount(sdk.NewInt(refund)))
 	}
-	return reward
+	return reward, nil
 }
