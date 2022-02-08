@@ -44,11 +44,16 @@ func FindChainCoordinatorAccount(
 		// No message if no coordinator address
 		return simtypes.Account{}, fmt.Errorf("chain %d not found", chainID)
 	}
-	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	coord, found := k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
 	if !found {
 		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
 	}
-	return FindAccount(accs, address)
+
+	if !coord.Active {
+		return simtypes.Account{}, fmt.Errorf("coordinator %d inactive", chain.CoordinatorID)
+	}
+
+	return FindAccount(accs, coord.Address)
 }
 
 // FindRandomChain find a random chain from store
@@ -71,9 +76,9 @@ func FindRandomChain(
 		if noMainnet && c.IsMainnet {
 			continue
 		}
-		// check if the coordinator is still in the store
-		_, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, c.CoordinatorID)
-		if !found {
+		// check if the coordinator is still in the store and active
+		coord, found := k.GetProfileKeeper().GetCoordinator(ctx, c.CoordinatorID)
+		if !found || coord.Active {
 			continue
 		}
 		chain = c
@@ -99,9 +104,9 @@ func FindRandomRequest(
 		if !chainFound || chain.LaunchTriggered {
 			continue
 		}
-		// check if the coordinator is still in the store
-		_, coordFound := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-		if !coordFound {
+		// check if the coordinator is still in the store and active
+		coord, found := k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
+		if !found || coord.Active {
 			continue
 		}
 		switch content := req.Content.Content.(type) {
