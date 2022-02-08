@@ -7,5 +7,5 @@ import (
 )
 
 var (
-	ErrRewardPoolNotFound = sdkerrors.Register(ModuleName, 5, "reward pool not found")
+	ErrRewardPoolNotFound = sdkerrors.Register(ModuleName, 4, "reward pool not found")
 )

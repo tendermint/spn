@@ -31,6 +31,10 @@ func (k Keeper) DistributeRewards(
 	if !found {
 		return sdkerrors.Wrapf(types.ErrRewardPoolNotFound, "%d", launchID)
 	}
+	provider, err := sdk.AccAddressFromBech32(rewardPool.Provider)
+	if err != nil {
+		return spnerrors.Criticalf("can't parse the provider address %s", err.Error())
+	}
 
 	// only the monitored blocks relative to last reward height are rewarded
 	blockRatio := (lastBlockHeight - rewardPool.CurrentRewardHeight) / (rewardPool.LastRewardHeight - rewardPool.CurrentRewardHeight)
@@ -39,9 +43,9 @@ func (k Keeper) DistributeRewards(
 	}
 
 	// distribute rewards to all block signers
-	signatureCounts := rewardPool.SignatureCounts
-	for _, signatureCount := range signatureCounts {
-		//totalSignaturesRelative += signatureCount.RelativeSignatures
+	totalSignaturesRelative := sdk.NewDec(0)
+	for _, signatureCount := range signatureCounts.Counts {
+		totalSignaturesRelative = totalSignaturesRelative.Add(signatureCount.RelativeSignatures)
 
 		// get the validator address from the cons address
 		// if the validator is not registered, reward distribution is skipped
@@ -50,12 +54,17 @@ func (k Keeper) DistributeRewards(
 		if found {
 			// compute reward relative to the signature and block count
 			// and update reward pool
-			//signatureRatio = signatureCount.RelativeSignatures/signatureCounts.BlockCount
-			//reward = floor(blockRatio*signatureRatio*rewardPool.Coins)
-			//rewardPool.Coins = rewardPool.Coins.SubstractCoins(reward)
-			//if negative(rewardPool.Coins) {
-			//	panic
-			//}
+			relativeSignatures, err := signatureCount.RelativeSignatures.Float64()
+			if err != nil {
+				return spnerrors.Critical("decimal to float conversion fail")
+			}
+
+			signatureRatio := relativeSignatures / float64(signatureCounts.BlockCount)
+			reward := CalculateReward(blockRatio, signatureRatio, rewardPool.Coins)
+			rewardPool.Coins = rewardPool.Coins.Sub(reward)
+			if rewardPool.Coins.IsAnyNegative() {
+				return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
+			}
 
 			// send rewards to the address
 			account, err := sdk.AccAddressFromBech32(validator.Address)
@@ -63,39 +72,60 @@ func (k Keeper) DistributeRewards(
 				return spnerrors.Criticalf("can't parse address %s", err.Error())
 			}
 			if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, account, reward); err != nil {
-				return spnerrors.Criticalf("can't send coins from module %s", err.Error())
+				return spnerrors.Criticalf("send rewards error: %s", err.Error())
 			}
 		}
 	}
 	// if the reward pool is closed or last reward height is reached
 	// the remaining coins are refunded and reward pool is deleted
-	//if closeRewardPool || lastBlockHeight >= rewardPool.LastRewardHeight
-	//if bankKeeper.Transfer(ModuleAccount, rewardPool.Provider, rewardPool.Coins) != nil
-	//	panic
-	//delete(RewardPools, launchID)
-	//
-	//else
-	// otherwise the refund is relative to the block ratio and the reward pool is updated
-	// refundRation is blockCount
-	//
-	// this is sum of signaturesRelative values from validator to compute refund
-	//var totalSignaturesRelative float
-	//for signatureCount in signatureCounts
-	//totalSignaturesRelative += signatureCount.RelativeSignatures
-	//
-	//refundRatio = (signatureCounts.BlockCount-totalSignaturesRelative)/signatureCounts.BlockCount
-	//refund = floor(blockRatio*refundRatio*rewardPool.Coins)
-	//rewardPool.Coins = rewardPool.Coins.SubstractCoins(reward)
-	//if negative(rewardPool.Coins)
-	//	panic
-	//
-	// send rewards to the address
-	//if bankKeeper.Transfer(ModuleAccount, address, reward) != nil
-	//	panic
-	//
-	// update the current reward height for next reward
-	//rewardPool.CurrentRewardHeight = lastBlockHeight
-	//save(RewardPools, launchID, rewardPool)
+	if closeRewardPool || lastBlockHeight >= rewardPool.LastRewardHeight {
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
+			ctx,
+			types.ModuleName,
+			provider,
+			rewardPool.Coins); err != nil {
+			return spnerrors.Criticalf("send rewards error: %s", err.Error())
+		}
+		k.RemoveRewardPool(ctx, launchID)
+		return nil
+	}
 
+	// Otherwise, the refund is relative to the block ratio and the reward pool is updated
+	// refundRation is blockCount.
+	// This is sum of signaturesRelative values from validator to compute refund
+	totalSigs, err := totalSignaturesRelative.Float64()
+	if err != nil {
+		return spnerrors.Critical("decimal to float conversion fail")
+	}
+
+	blockCount := float64(signatureCounts.BlockCount)
+	refundRatio := (blockCount - totalSigs) / blockCount
+	reward := CalculateReward(blockRatio, refundRatio, rewardPool.Coins)
+	rewardPool.Coins = rewardPool.Coins.Sub(reward)
+	if rewardPool.Coins.IsAnyNegative() {
+		return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
+	}
+
+	// send rewards to the address
+	if err := k.bankKeeper.SendCoinsFromModuleToAccount(
+		ctx,
+		types.ModuleName,
+		provider,
+		rewardPool.Coins); err != nil {
+		return spnerrors.Criticalf("send rewards error: %s", err.Error())
+	}
+
+	// update the current reward height for next reward
+	rewardPool.CurrentRewardHeight = lastBlockHeight
+	k.SetRewardPool(ctx, rewardPool)
 	return nil
+}
+
+func CalculateReward(blockRatio uint64, ratio float64, coins sdk.Coins) sdk.Coins {
+	reward := sdk.NewCoins()
+	for _, coin := range coins {
+		refund := blockRatio * uint64(ratio) * coin.Amount.Uint64()
+		reward.Add(coin.SubAmount(sdk.NewIntFromUint64(refund)))
+	}
+	return reward
 }
