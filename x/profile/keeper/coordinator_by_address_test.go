@@ -15,6 +15,7 @@ func createNCoordinatorByAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) 
 	items := make([]types.CoordinatorByAddress, n)
 	for i := range items {
 		items[i].Address = sample.Address()
+		items[i].Active = true
 		keeper.SetCoordinatorByAddress(ctx, items[i])
 	}
 	return items

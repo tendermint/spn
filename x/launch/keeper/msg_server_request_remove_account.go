@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func (k msgServer) RequestRemoveAccount(
@@ -30,13 +31,18 @@ func (k msgServer) RequestRemoveAccount(
 	if chain.LaunchTriggered {
 		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.LaunchID)
 	}
-
-	coordAddress, found := k.profileKeeper.GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	coord, found := k.profileKeeper.GetCoordinator(ctx, chain.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrChainInactive,
-			"the chain %d coordinator has been deleted", chain.LaunchID)
+			"the chain %d coordinator not found", chain.LaunchID)
 	}
-	if msg.Creator != msg.Address && msg.Creator != coordAddress {
+
+	if !coord.Active {
+		return nil, sdkerrors.Wrapf(profiletypes.ErrCoordInactive,
+			"the chain %d coordinator inactive", chain.LaunchID)
+	}
+
+	if msg.Creator != msg.Address && msg.Creator != coord.Address {
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)
 	}
 
@@ -51,7 +57,7 @@ func (k msgServer) RequestRemoveAccount(
 		Content:   content,
 	}
 
-	if msg.Creator == coordAddress {
+	if msg.Creator == coord.Address {
 		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err

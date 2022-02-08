@@ -29,6 +29,13 @@ func (k msgServer) UpdateCoordinatorDescription(
 				coordByAddress.CoordinatorID)
 	}
 
+	// Check if the coordinator is inactive
+	if !coordByAddress.Active || !coord.Active {
+		return &types.MsgUpdateCoordinatorDescriptionResponse{},
+			sdkerrors.Wrap(types.ErrCoordInactive,
+				"inactive coordinators cannot be updated")
+	}
+
 	if len(msg.Description.Identity) > 0 {
 		coord.Description.Identity = msg.Description.Identity
 	}
