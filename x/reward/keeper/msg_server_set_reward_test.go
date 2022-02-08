@@ -13,7 +13,7 @@ import (
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-func Test_msgServer_SetRewards(t *testing.T) {
+func TestMsgSetRewards(t *testing.T) {
 	var (
 		k, lk, _, bk, srv, psrv, _, sdkCtx = setupMsgServer(t)
 
@@ -101,6 +101,26 @@ func Test_msgServer_SetRewards(t *testing.T) {
 				LastRewardHeight: 1000,
 			},
 			err: sdkerrors.ErrInsufficientFunds,
+		},
+		{
+			name: "coordinator with insufficient funds",
+			msg: types.MsgSetRewards{
+				Provider:         noBalanceCoord,
+				LaunchID:         noBalancelaunchID,
+				Coins:            newBalance,
+				LastRewardHeight: 1000,
+			},
+			err: sdkerrors.ErrInsufficientFunds,
+		},
+
+		{
+			name: "valid message",
+			msg: types.MsgSetRewards{
+				Provider:         provider.String(),
+				LaunchID:         launchID,
+				Coins:            newBalance,
+				LastRewardHeight: 1000,
+			},
 		},
 	}
 	for _, tt := range tests {
