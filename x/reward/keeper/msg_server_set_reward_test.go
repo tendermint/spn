@@ -112,7 +112,6 @@ func TestMsgSetRewards(t *testing.T) {
 			},
 			err: sdkerrors.ErrInsufficientFunds,
 		},
-
 		{
 			name: "valid message",
 			msg: types.MsgSetRewards{
