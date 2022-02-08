@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"encoding/base64"
 	"io/ioutil"
 	"strconv"
 
@@ -28,14 +29,20 @@ func CmdRequestAddValidator() *cobra.Command {
 				return err
 			}
 
-			// Read self-delegation
-			selfDelegation, err := sdk.ParseCoinNormalized(args[3])
+			// Read gentxFile
+			gentxBytes, err := ioutil.ReadFile(args[1])
 			if err != nil {
 				return err
 			}
 
-			// Read gentxFile
-			gentxBytes, err := ioutil.ReadFile(args[1])
+			// Read consensus pub key
+			consPubKey, err := base64.StdEncoding.DecodeString(args[2])
+			if err != nil {
+				return err
+			}
+
+			// Read self-delegation
+			selfDelegation, err := sdk.ParseCoinNormalized(args[3])
 			if err != nil {
 				return err
 			}
@@ -59,12 +66,14 @@ func CmdRequestAddValidator() *cobra.Command {
 				peer = types.NewPeerConn(args[4], args[5])
 			}
 
+
+
 			msg := types.NewMsgRequestAddValidator(
 				clientCtx.GetFromAddress().String(),
 				launchID,
 				valAddr,
 				gentxBytes,
-				[]byte(args[2]),
+				consPubKey,
 				selfDelegation,
 				peer,
 			)
