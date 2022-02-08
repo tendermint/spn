@@ -66,8 +66,6 @@ func CmdRequestAddValidator() *cobra.Command {
 				peer = types.NewPeerConn(args[4], args[5])
 			}
 
-
-
 			msg := types.NewMsgRequestAddValidator(
 				clientCtx.GetFromAddress().String(),
 				launchID,

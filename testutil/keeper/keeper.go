@@ -74,13 +74,13 @@ func AllKeepers(t testing.TB) (
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	return campaignKeeper,
-	launchKeeper,
-	profileKeeper,
-	rewardKeeper,
-	monitoringConsumerKeeper,
-	bankKeeper,
-	ibcKeeper,
-	ctx
+		launchKeeper,
+		profileKeeper,
+		rewardKeeper,
+		monitoringConsumerKeeper,
+		bankKeeper,
+		ibcKeeper,
+		ctx
 }
 
 // Profile returns a keeper of the profile module for testing purpose

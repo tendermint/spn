@@ -49,7 +49,7 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 		msg.LaunchID,
 		chain.GenesisChainID,
 		tmValidatorSet,
-		)
+	)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidValidatorSet, "validator set can't be verified %s", err.Error())
 	}
