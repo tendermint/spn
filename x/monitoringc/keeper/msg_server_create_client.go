@@ -37,7 +37,22 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 		return nil, sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
 	}
 
-	// TODO: Verify validator set with data on launch mode
+	// convert validator set
+	tmValidatorSet, err := msg.ValidatorSet.ToTendermintValidatorSet()
+	if err != nil {
+		return nil, spnerrors.Criticalf("validated validator can't be converted %s", err.Error())
+	}
+
+	// verify the validator set
+	err = k.launchKeeper.CheckValidatorSet(
+		ctx,
+		msg.LaunchID,
+		chain.GenesisChainID,
+		tmValidatorSet,
+		)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidValidatorSet, "validator set can't be verified %s", err.Error())
+	}
 
 	// create the client from IBC keeper
 	tmConsensusState, err := msg.ConsensusState.ToTendermintConsensusState()
