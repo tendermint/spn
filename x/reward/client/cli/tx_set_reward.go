@@ -12,7 +12,7 @@ import (
 
 func CmdSetRewards() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "set-reward [launch-id] [coins] [last-reward-height]",
+		Use:   "set-rewards [launch-id] [coins] [last-reward-height]",
 		Short: "Set rewards for being validator for a chain",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
