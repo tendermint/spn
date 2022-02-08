@@ -102,6 +102,44 @@ func (k Keeper) DistributeRewards(
 		return nil
 	}
 
+	return k.RefundRewards(
+		ctx,
+		rewardPool,
+		provider,
+		signatureCounts,
+		totalRelativeSignaturesDistributed,
+		blockRatio,
+		launchID,
+		lastBlockHeight,
+		closeRewardPool,
+	)
+}
+
+func (k Keeper) RefundRewards(
+	ctx sdk.Context,
+	rewardPool types.RewardPool,
+	provider sdk.AccAddress,
+	signatureCounts spntypes.SignatureCounts,
+	totalRelativeSignaturesDistributed,
+	blockRatio sdk.Dec,
+	launchID uint64,
+	lastBlockHeight uint64,
+	closeRewardPool bool,
+) error {
+	// if the reward pool is closed or last reward height is reached
+	// the remaining coins are refunded and reward pool is deleted
+	if closeRewardPool || lastBlockHeight >= rewardPool.LastRewardHeight {
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
+			ctx,
+			types.ModuleName,
+			provider,
+			rewardPool.Coins); err != nil {
+			return spnerrors.Criticalf("send rewards error: %s", err.Error())
+		}
+		k.RemoveRewardPool(ctx, launchID)
+		return nil
+	}
+
 	// Otherwise, the refund is relative to the block ratio and the reward pool is updated
 	// refundRation is blockCount.
 	// This is sum of signaturesRelative values from validator to compute refund
