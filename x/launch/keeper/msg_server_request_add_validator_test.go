@@ -23,6 +23,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
+		Active:  true,
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
 	chains[0].LaunchTriggered = true
