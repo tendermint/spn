@@ -5,21 +5,19 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gorilla/mux"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/spf13/cobra"
-
-	abci "github.com/tendermint/tendermint/abci/types"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	porttypes "github.com/cosmos/ibc-go/v2/modules/core/05-port/types"
+	"github.com/gorilla/mux"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/x/monitoringp/client/cli"
 	"github.com/tendermint/spn/x/monitoringp/keeper"
 	"github.com/tendermint/spn/x/monitoringp/types"
+	abci "github.com/tendermint/tendermint/abci/types"
 )
 
 var (
@@ -168,7 +166,16 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 func (AppModule) ConsensusVersion() uint64 { return 2 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
-func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
+func (am AppModule) BeginBlock(ctx sdk.Context, bb abci.RequestBeginBlock) {
+	// reports signatures for the block
+	am.keeper.ReportBlockSignatures(ctx, bb.LastCommitInfo, bb.Header.Height)
+
+	// check and transmit signatures
+	err := am.keeper.TransmitSignatures(ctx, bb.Header.Height)
+	if err != nil {
+		ctx.Logger().Error(fmt.Sprintf("error transmitting the validator signatures %s", err.Error()))
+	}
+}
 
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It
 // returns no validator updates.

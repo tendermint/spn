@@ -7,6 +7,7 @@ import "monitoringc/verified_client_id.proto";
 import "monitoringc/provider_client_id.proto";
 import "monitoringc/launch_id_from_verified_client_id.proto";
 import "monitoringc/launch_id_from_channel_id.proto";
+import "monitoringc/monitoring_history.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/tendermint/spn/x/monitoringc/types";
@@ -19,5 +20,6 @@ message GenesisState {
   repeated ProviderClientID providerClientIDList = 4 [(gogoproto.nullable) = false];
   repeated LaunchIDFromVerifiedClientID launchIDFromVerifiedClientIDList = 5 [(gogoproto.nullable) = false];
   repeated LaunchIDFromChannelID launchIDFromChannelIDList = 6 [(gogoproto.nullable) = false];
+  repeated MonitoringHistory monitoringHistoryList = 7 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }
