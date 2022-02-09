@@ -18,6 +18,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
 	coordNoExist := sample.Address()
+	coordDisableAddr := sample.Address()
 	chainIDNoExist := uint64(1000)
 
 	// Create coordinators
@@ -25,6 +26,9 @@ func TestMsgRevertLaunch(t *testing.T) {
 	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
+	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	require.NoError(t, err)
+	msgCreateCoordinator = sample.MsgCreateCoordinator(coordDisableAddr)
 	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 
@@ -51,6 +55,15 @@ func TestMsgRevertLaunch(t *testing.T) {
 	chain.LaunchTriggered = true
 	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - types.RevertDelay
 	k.SetChain(sdkCtx, chain)
+
+	// create chain then disable coord
+	msgCreateChain = sample.MsgCreateChain(coordDisableAddr, "", false, 0)
+	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	require.NoError(t, err)
+	msgDisableCoord := sample.MsgDisableCoordinator(coordDisableAddr)
+	_, err = profileSrv.DisableCoordinator(ctx, &msgDisableCoord)
+	require.NoError(t, err)
+	disabledID := res.LaunchID
 
 	for _, tc := range []struct {
 		name string
@@ -85,6 +98,11 @@ func TestMsgRevertLaunch(t *testing.T) {
 			name: "non existent chain id",
 			msg:  *types.NewMsgRevertLaunch(coordAddress, chainIDNoExist),
 			err:  types.ErrChainNotFound,
+		},
+		{
+			name: "disable coordinator",
+			msg:  *types.NewMsgRevertLaunch(coordDisableAddr, disabledID),
+			err:  profiletypes.ErrCoordInactive,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

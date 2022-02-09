@@ -14,6 +14,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 	var (
 		invalidChain                = uint64(1000)
 		coordAddr                   = sample.Address()
+		coordDisableAddr            = sample.Address()
 		addr1                       = sample.Address()
 		addr2                       = sample.Address()
 		addr3                       = sample.Address()
@@ -38,6 +39,12 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 	k.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[3].LaunchID, Address: addr1})
 	k.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[4].LaunchID, Address: addr2})
 	k.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[4].LaunchID, Address: addr4})
+
+	coordDisableID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+		Address: coordDisableAddr,
+		Active:  false,
+	})
+	disableChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
 
 	tests := []struct {
 		name        string
@@ -162,6 +169,15 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address:  addr1,
 			},
 			err: types.ErrRemoveMainnetAccount,
+		},
+		{
+			name: "disable coordinator",
+			msg: types.MsgRequestRemoveAccount{
+				LaunchID: disableChain[0].LaunchID,
+				Creator:  sample.Address(),
+				Address:  sample.Address(),
+			},
+			err: profiletypes.ErrCoordInactive,
 		},
 	}
 	for _, tt := range tests {

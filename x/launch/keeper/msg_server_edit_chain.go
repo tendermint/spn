@@ -31,7 +31,7 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 
 	if !coord.Active {
 		return nil, sdkerrors.Wrapf(profiletypes.ErrCoordInactive,
-			"coordinator %d inactive", coord.CoordinatorID)
+			"the chain %d coordinator not found", chain.LaunchID)
 	}
 
 	if chain.CoordinatorID != coord.CoordinatorID {

@@ -14,6 +14,13 @@ func MsgCreateCoordinator(coordAddress string) profile.MsgCreateCoordinator {
 	)
 }
 
+// MsgDisableCoordinator returns a sample MsgDisableCoordinator
+func MsgDisableCoordinator(coordAddress string) profile.MsgDisableCoordinator {
+	return *profile.NewMsgDisableCoordinator(
+		coordAddress,
+	)
+}
+
 // ValidatorDescription returns a sample ValidatorDescription
 func ValidatorDescription(desc string) profile.ValidatorDescription {
 	return profile.ValidatorDescription{

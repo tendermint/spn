@@ -14,6 +14,7 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 	var (
 		invalidChain                = uint64(1000)
 		coordAddr                   = sample.Address()
+		coordDisableAddr            = sample.Address()
 		addr1                       = sample.Address()
 		addr2                       = sample.Address()
 		addr3                       = sample.Address()
@@ -34,6 +35,12 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 	chains[5].IsMainnet = true
 	chains[5].HasCampaign = true
 	k.SetChain(sdkCtx, chains[5])
+
+	coordDisableID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+		Address: coordDisableAddr,
+		Active:  false,
+	})
+	disableChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
 
 	tests := []struct {
 		name        string
@@ -101,6 +108,11 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 			name: "is mainnet chain",
 			msg:  sample.MsgRequestAddVestingAccount(coordAddr, sample.Address(), chains[5].LaunchID),
 			err:  types.ErrAddMainnetVestingAccount,
+		},
+		{
+			name: "disable coordinator",
+			msg:  sample.MsgRequestAddVestingAccount(sample.Address(), sample.Address(), disableChain[0].LaunchID),
+			err:  profiletypes.ErrCoordInactive,
 		},
 	}
 	for _, tt := range tests {
