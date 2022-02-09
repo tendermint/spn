@@ -15,8 +15,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func TestMonitoringHistoryQuerySingle(t *testing.T) {
 	keeper, ctx := keepertest.Monitoringc(t)
