@@ -11,7 +11,7 @@ func (m MonitoringPacket) ValidateBasic() error {
 		return errors.Wrap(err, "invalid signature counts")
 	}
 
-	if m.BlockHeight < m.SignatureCounts.BlockCount {
+	if uint64(m.BlockHeight) < m.SignatureCounts.BlockCount {
 		return fmt.Errorf(
 			"block height %d must be greater or equal to block count %d",
 			m.BlockHeight,

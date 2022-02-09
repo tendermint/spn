@@ -25,6 +25,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.LaunchIDFromChannelIDList {
 		k.SetLaunchIDFromChannelID(ctx, elem)
 	}
+	// Set all the monitoringHistory
+	for _, elem := range genState.MonitoringHistoryList {
+		k.SetMonitoringHistory(ctx, elem)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetPort(ctx, genState.PortId)
 	// Only try to bind to port if it is not already bound, since we may already own
@@ -50,6 +54,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.ProviderClientIDList = k.GetAllProviderClientID(ctx)
 	genesis.LaunchIDFromVerifiedClientIDList = k.GetAllLaunchIDFromVerifiedClientID(ctx)
 	genesis.LaunchIDFromChannelIDList = k.GetAllLaunchIDFromChannelID(ctx)
+	genesis.MonitoringHistoryList = k.GetAllMonitoringHistory(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

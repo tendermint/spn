@@ -27,9 +27,18 @@ func TestParamsValidate(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid last block height",
+			name: "zero last block height",
 			params: Params{
 				LastBlockHeight:        0,
+				ConsumerChainID:        "foo",
+				ConsumerConsensusState: sample.ConsensusState(0),
+			},
+			wantErr: true,
+		},
+		{
+			name: "negative last block height",
+			params: Params{
+				LastBlockHeight:        -1,
 				ConsumerChainID:        "foo",
 				ConsumerConsensusState: sample.ConsensusState(0),
 			},

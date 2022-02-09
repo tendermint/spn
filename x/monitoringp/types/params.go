@@ -16,8 +16,8 @@ var (
 	KeyConsumerChainID        = []byte("ConsumerChainID")
 	KeyDebugMode              = []byte("DebugMode")
 
-	DefaultLastBlockHeight uint64 = 1
-	DefautConsumerChainID         = "spn-1"
+	DefaultLastBlockHeight int64 = 1
+	DefautConsumerChainID        = "spn-1"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -28,7 +28,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(lastBlockHeight uint64, consumerChainID string, ccs spntypes.ConsensusState, debugMode bool) Params {
+func NewParams(lastBlockHeight int64, consumerChainID string, ccs spntypes.ConsensusState, debugMode bool) Params {
 	return Params{
 		LastBlockHeight:        lastBlockHeight,
 		ConsumerConsensusState: ccs,
@@ -87,13 +87,13 @@ func (p Params) String() string {
 
 // validateLastBlockHeight validates last block height
 func validateLastBlockHeight(i interface{}) error {
-	lastBlockHeight, ok := i.(uint64)
+	lastBlockHeight, ok := i.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if lastBlockHeight == 0 {
-		return errors.New("last block height can't be 0")
+	if lastBlockHeight <= 0 {
+		return errors.New("last block height can't be 0 or negative")
 	}
 
 	return nil

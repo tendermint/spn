@@ -7,5 +7,6 @@ import "types/monitoring.proto";
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
 
 message MonitoringInfo {
-  tendermint.spn.types.SignatureCounts signatureCounts = 1 [(gogoproto.nullable) = false];
+  bool transmitted = 1;
+  tendermint.spn.types.SignatureCounts signatureCounts = 2 [(gogoproto.nullable) = false];
 }
