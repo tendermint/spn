@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,7 +10,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/keeper"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
-
 
 func createNMonitoringHistory(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.MonitoringHistory {
 	items := make([]types.MonitoringHistory, n)
