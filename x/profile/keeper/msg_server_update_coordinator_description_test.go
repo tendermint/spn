@@ -11,12 +11,20 @@ import (
 
 func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	var (
-		addr        = sample.Address()
-		msgCoord    = sample.MsgCreateCoordinator(sample.Address())
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		addr         = sample.Address()
+		msgCoord     = sample.MsgCreateCoordinator(sample.Address())
+		disableCoord = sample.MsgCreateCoordinator(sample.Address())
+		disableMsg   = sample.MsgDisableCoordinator(disableCoord.Address)
+		ctx, k, srv  = setupMsgServer(t)
+		wCtx         = sdk.WrapSDKContext(ctx)
 	)
 	if _, err := srv.CreateCoordinator(wCtx, &msgCoord); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := srv.CreateCoordinator(wCtx, &disableCoord); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := srv.DisableCoordinator(wCtx, &disableMsg); err != nil {
 		t.Fatal(err)
 	}
 	tests := []struct {
@@ -30,7 +38,8 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 				Address: addr,
 			},
 			err: types.ErrCoordAddressNotFound,
-		}, {
+		},
+		{
 			name: "update one value",
 			msg: types.MsgUpdateCoordinatorDescription{
 				Address: msgCoord.Address,
@@ -38,7 +47,8 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 					Identity: "update",
 				},
 			},
-		}, {
+		},
+		{
 			name: "update all values",
 			msg: types.MsgUpdateCoordinatorDescription{
 				Address: msgCoord.Address,
@@ -48,6 +58,18 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 					Details:  "update",
 				},
 			},
+		},
+		{
+			name: "inactive coordinator",
+			msg: types.MsgUpdateCoordinatorDescription{
+				Address: disableCoord.Address,
+				Description: types.CoordinatorDescription{
+					Identity: "update",
+					Website:  "update",
+					Details:  "update",
+				},
+			},
+			err: types.ErrCoordInactive,
 		},
 	}
 	for _, tt := range tests {
