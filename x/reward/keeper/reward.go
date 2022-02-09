@@ -102,30 +102,6 @@ func (k Keeper) DistributeRewards(
 		return nil
 	}
 
-	return k.RefundRewards(
-		ctx,
-		rewardPool,
-		provider,
-		signatureCounts,
-		totalRelativeSignaturesDistributed,
-		blockRatio,
-		launchID,
-		lastBlockHeight,
-		closeRewardPool,
-	)
-}
-
-func (k Keeper) RefundRewards(
-	ctx sdk.Context,
-	rewardPool types.RewardPool,
-	provider sdk.AccAddress,
-	signatureCounts spntypes.SignatureCounts,
-	totalRelativeSignaturesDistributed,
-	blockRatio sdk.Dec,
-	launchID uint64,
-	lastBlockHeight uint64,
-	closeRewardPool bool,
-) error {
 	// if the reward pool is closed or last reward height is reached
 	// the remaining coins are refunded and reward pool is deleted
 	if closeRewardPool || lastBlockHeight >= rewardPool.LastRewardHeight {
@@ -170,6 +146,7 @@ func (k Keeper) RefundRewards(
 	return nil
 }
 
+// CalculateReward calculates the reward relative to the signature and block count
 func CalculateReward(blockRatio, ratio sdk.Dec, coins sdk.Coins) (sdk.Coins, error) {
 	reward := sdk.NewCoins()
 	for _, coin := range coins {
