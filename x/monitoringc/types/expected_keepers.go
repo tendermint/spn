@@ -8,10 +8,17 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v2/modules/core/exported"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
+	tmtypes "github.com/tendermint/tendermint/types"
 )
 
 type LaunchKeeper interface {
 	GetChain(ctx sdk.Context, launchID uint64) (val launchtypes.Chain, found bool)
+	CheckValidatorSet(
+		ctx sdk.Context,
+		launchID uint64,
+		chainID string,
+		validatorSet tmtypes.ValidatorSet,
+	) error
 }
 
 type RewardKeeper interface {
