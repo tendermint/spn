@@ -25,7 +25,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	}
 
 	cmd.AddCommand(
-		CmdVerifiedClientIds(),
+		CmdShowVerifiedClientIds(),
 		CmdListProviderClientID(),
 		CmdShowProviderClientID(),
 		CmdListLaunchIDFromVerifiedClientID(),

@@ -21,7 +21,7 @@ service Query {
   }
 
   // Queries a list of VerifiedClientIds items.
-  rpc VerifiedClientIds(QueryVerifiedClientIdsRequest) returns (QueryVerifiedClientIdsResponse) {
+  rpc VerifiedClientIds(QueryGetVerifiedClientIdsRequest) returns (QueryGetVerifiedClientIdsResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringc/verified_client_ids/{launchID}";
   }
 
@@ -77,11 +77,11 @@ message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryVerifiedClientIdsRequest {
+message QueryGetVerifiedClientIdsRequest {
   uint64 launchID = 1;
 }
 
-message QueryVerifiedClientIdsResponse {
+message QueryGetVerifiedClientIdsResponse {
   repeated string clientIds = 1;
 }
 
