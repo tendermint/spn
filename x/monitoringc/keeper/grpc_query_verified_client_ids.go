@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) VerifiedClientIds(goCtx context.Context, req *types.QueryVerifiedClientIdsRequest) (*types.QueryVerifiedClientIdsResponse, error) {
+func (k Keeper) VerifiedClientIds(goCtx context.Context, req *types.QueryGetVerifiedClientIdsRequest) (*types.QueryGetVerifiedClientIdsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -20,7 +20,7 @@ func (k Keeper) VerifiedClientIds(goCtx context.Context, req *types.QueryVerifie
 		return nil, status.Errorf(codes.Internal, "launch id not found %d", req.LaunchID)
 	}
 
-	return &types.QueryVerifiedClientIdsResponse{
+	return &types.QueryGetVerifiedClientIdsResponse{
 		ClientIds: verifiedClientID.ClientIDs,
 	}, nil
 }
