@@ -1,17 +1,17 @@
 package keeper_test
 
 import (
-	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
-	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
-	launchtypes "github.com/tendermint/spn/x/launch/types"
-	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
+	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/keeper"
 	"github.com/tendermint/spn/x/monitoringc/types"
+	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func setupMsgServer(t testing.TB) (
