@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"fmt"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -96,8 +97,13 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		validatorConsAddrBaz       = sample.Address()
 		notFoundValidatorAddr      = sample.Address()
 		provider                   = sample.Address()
-		coins                      = sample.Coins()
-		signatureCounts            = spntypes.SignatureCounts{
+		coins                      = sdk.NewCoins(
+			sdk.NewCoin("bar", sdk.NewInt(11)),
+			sdk.NewCoin("baz", sdk.NewInt(222)),
+			sdk.NewCoin("foo", sdk.NewInt(3333)),
+			sdk.NewCoin("foobar", sdk.NewInt(4444)),
+		)
+		signatureCounts = spntypes.SignatureCounts{
 			BlockCount: 2,
 			Counts: []spntypes.SignatureCount{
 				{ConsAddress: validatorConsAddrFoo, RelativeSignatures: sdk.NewDec(1)},
@@ -110,16 +116,14 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 	signatureCountsValNotFound.Counts = append(signatureCountsValNotFound.Counts, spntypes.SignatureCount{
 		ConsAddress: notFoundValidatorAddr, RelativeSignatures: sdk.NewDec(1),
 	})
-	moduleSupply := coins
 	for _, launchID := range launchIDs {
 		k.SetRewardPool(ctx, types.RewardPool{
 			LaunchID:            launchID,
 			Provider:            provider,
 			Coins:               coins,
-			LastRewardHeight:    1,
-			CurrentRewardHeight: 4,
+			LastRewardHeight:    5,
+			CurrentRewardHeight: 10,
 		})
-		moduleSupply = moduleSupply.Add(moduleSupply...)
 	}
 	pk.SetValidator(ctx, profiletypes.Validator{
 		Address:          validatorFoo,
@@ -141,8 +145,6 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		ValidatorAddress: sample.Address(),
 		ConsensusAddress: notFoundValidatorAddr,
 	})
-	err := bk.MintCoins(ctx, types.ModuleName, moduleSupply)
-	require.NoError(t, err)
 
 	type args struct {
 		launchID        uint64
@@ -151,9 +153,10 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		closeRewardPool bool
 	}
 	tests := []struct {
-		name string
-		args args
-		err  error
+		name        string
+		args        args
+		wantBalance map[string]sdk.Coins
+		err         error
 	}{
 		{
 			name: "invalid reward pool",
@@ -183,6 +186,21 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 2,
 				closeRewardPool: true,
 			},
+			wantBalance: map[string]sdk.Coins{
+				provider: sdk.NewCoins(),
+				validatorBar: sdk.NewCoins(
+					sdk.NewCoin("bar", sdk.NewInt(2)),
+					sdk.NewCoin("baz", sdk.NewInt(60)),
+					sdk.NewCoin("foo", sdk.NewInt(936)),
+					sdk.NewCoin("foobar", sdk.NewInt(1248)),
+				),
+				validatorFoo: sdk.NewCoins(
+					sdk.NewCoin("bar", sdk.NewInt(2)),
+					sdk.NewCoin("baz", sdk.NewInt(60)),
+					sdk.NewCoin("foo", sdk.NewInt(936)),
+					sdk.NewCoin("foobar", sdk.NewInt(1248)),
+				),
+			},
 		},
 		{
 			name: "valid close reward pool with lower last block height",
@@ -191,6 +209,21 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				signatureCounts: signatureCounts,
 				lastBlockHeight: 1,
 				closeRewardPool: true,
+			},
+			wantBalance: map[string]sdk.Coins{
+				provider: sdk.NewCoins(),
+				validatorBar: sdk.NewCoins(
+					sdk.NewCoin("bar", sdk.NewInt(2)),
+					sdk.NewCoin("baz", sdk.NewInt(60)),
+					sdk.NewCoin("foo", sdk.NewInt(936)),
+					sdk.NewCoin("foobar", sdk.NewInt(1248)),
+				),
+				validatorFoo: sdk.NewCoins(
+					sdk.NewCoin("bar", sdk.NewInt(2)),
+					sdk.NewCoin("baz", sdk.NewInt(60)),
+					sdk.NewCoin("foo", sdk.NewInt(936)),
+					sdk.NewCoin("foobar", sdk.NewInt(1248)),
+				),
 			},
 		},
 		{
@@ -201,6 +234,26 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 2,
 				closeRewardPool: false,
 			},
+			wantBalance: map[string]sdk.Coins{
+				provider: sdk.NewCoins(
+					sdk.NewCoin("bar", sdk.NewInt(2)),
+					sdk.NewCoin("baz", sdk.NewInt(60)),
+					sdk.NewCoin("foo", sdk.NewInt(936)),
+					sdk.NewCoin("foobar", sdk.NewInt(1248)),
+				),
+				validatorBar: sdk.NewCoins(
+					sdk.NewCoin("bar", sdk.NewInt(16)),
+					sdk.NewCoin("baz", sdk.NewInt(336)),
+					sdk.NewCoin("foo", sdk.NewInt(5000)),
+					sdk.NewCoin("foobar", sdk.NewInt(6668)),
+				),
+				validatorFoo: sdk.NewCoins(
+					sdk.NewCoin("bar", sdk.NewInt(24)),
+					sdk.NewCoin("baz", sdk.NewInt(444)),
+					sdk.NewCoin("foo", sdk.NewInt(6668)),
+					sdk.NewCoin("foobar", sdk.NewInt(8888)),
+				),
+			},
 		},
 		{
 			name: "valid distribute rewards with high last block height",
@@ -210,10 +263,34 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 3,
 				closeRewardPool: false,
 			},
+			wantBalance: map[string]sdk.Coins{
+				provider: sdk.NewCoins(
+					sdk.NewCoin("baz", sdk.NewInt(6)),
+					sdk.NewCoin("foo", sdk.NewInt(104)),
+					sdk.NewCoin("foobar", sdk.NewInt(138)),
+				),
+				validatorBar: sdk.NewCoins(
+					sdk.NewCoin("bar", sdk.NewInt(4)),
+					sdk.NewCoin("baz", sdk.NewInt(84)),
+					sdk.NewCoin("foo", sdk.NewInt(1250)),
+					sdk.NewCoin("foobar", sdk.NewInt(1667)),
+				),
+				validatorFoo: sdk.NewCoins(
+					sdk.NewCoin("bar", sdk.NewInt(6)),
+					sdk.NewCoin("baz", sdk.NewInt(111)),
+					sdk.NewCoin("foo", sdk.NewInt(1667)),
+					sdk.NewCoin("foobar", sdk.NewInt(2222)),
+				),
+			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			if rewardPool, found := k.GetRewardPool(ctx, tt.args.launchID); found {
+				err := bk.MintCoins(ctx, types.ModuleName, rewardPool.Coins)
+				require.NoError(t, err)
+			}
+
 			err := k.DistributeRewards(ctx, tt.args.launchID, tt.args.signatureCounts, tt.args.lastBlockHeight, tt.args.closeRewardPool)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
@@ -228,6 +305,22 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			}
 			require.True(t, found)
 			require.Equal(t, tt.args.lastBlockHeight, rewardPool.CurrentRewardHeight)
+
+			for wantAddr, wantBalance := range tt.wantBalance {
+				t.Run(fmt.Sprintf("check balance %s", wantAddr), func(t *testing.T) {
+					wantAcc, err := sdk.AccAddressFromBech32(wantAddr)
+					require.NoError(t, err)
+
+					balance := bk.GetAllBalances(ctx, wantAcc)
+					require.Equal(t, wantBalance, balance)
+
+					// remove the test balance
+					err = bk.SendCoinsFromAccountToModule(ctx, wantAcc, types.ModuleName, balance)
+					require.NoError(t, err)
+					err = bk.BurnCoins(ctx, types.ModuleName, balance)
+					require.NoError(t, err)
+				})
+			}
 		})
 	}
 }
