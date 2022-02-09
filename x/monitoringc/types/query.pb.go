@@ -1075,7 +1075,7 @@ type QueryClient interface {
 	LaunchIDFromChannelID(ctx context.Context, in *QueryGetLaunchIDFromChannelIDRequest, opts ...grpc.CallOption) (*QueryGetLaunchIDFromChannelIDResponse, error)
 	// Queries a list of LaunchIDFromChannelID items.
 	LaunchIDFromChannelIDAll(ctx context.Context, in *QueryAllLaunchIDFromChannelIDRequest, opts ...grpc.CallOption) (*QueryAllLaunchIDFromChannelIDResponse, error)
-	// Queries a MonitoringHistory by index.
+	// Queries a MonitoringHistory by launch id.
 	MonitoringHistory(ctx context.Context, in *QueryGetMonitoringHistoryRequest, opts ...grpc.CallOption) (*QueryGetMonitoringHistoryResponse, error)
 	// Queries a list of MonitoringHistory items.
 	MonitoringHistoryAll(ctx context.Context, in *QueryAllMonitoringHistoryRequest, opts ...grpc.CallOption) (*QueryAllMonitoringHistoryResponse, error)
@@ -1197,7 +1197,7 @@ type QueryServer interface {
 	LaunchIDFromChannelID(context.Context, *QueryGetLaunchIDFromChannelIDRequest) (*QueryGetLaunchIDFromChannelIDResponse, error)
 	// Queries a list of LaunchIDFromChannelID items.
 	LaunchIDFromChannelIDAll(context.Context, *QueryAllLaunchIDFromChannelIDRequest) (*QueryAllLaunchIDFromChannelIDResponse, error)
-	// Queries a MonitoringHistory by index.
+	// Queries a MonitoringHistory by launch id.
 	MonitoringHistory(context.Context, *QueryGetMonitoringHistoryRequest) (*QueryGetMonitoringHistoryResponse, error)
 	// Queries a list of MonitoringHistory items.
 	MonitoringHistoryAll(context.Context, *QueryAllMonitoringHistoryRequest) (*QueryAllMonitoringHistoryResponse, error)

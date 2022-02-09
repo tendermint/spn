@@ -1,8 +1,8 @@
 package types
 
-import "encoding/binary"
-
-var _ binary.ByteOrder
+import (
+	spntypes "github.com/tendermint/spn/pkg/types"
+)
 
 const (
 	// MonitoringHistoryKeyPrefix is the prefix to retrieve all MonitoringHistory
