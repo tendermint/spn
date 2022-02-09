@@ -7,7 +7,7 @@ import (
 )
 
 // LastBlockHeight returns the last block height state param
-func (k Keeper) LastBlockHeight(ctx sdk.Context) (res uint64) {
+func (k Keeper) LastBlockHeight(ctx sdk.Context) (res int64) {
 	k.paramstore.Get(ctx, types.KeyLastBlockHeight, &res)
 	return
 }
