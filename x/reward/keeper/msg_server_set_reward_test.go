@@ -42,7 +42,7 @@ func TestMsgSetRewards(t *testing.T) {
 	launchTriggeredChain.LaunchTriggered = true
 	launchTriggeredChainID := lk.AppendChain(sdkCtx, launchTriggeredChain)
 
-	err = bk.MintCoins(sdkCtx, types.ModuleName, append(moduleBalance, newBalance...).Sort())
+	err = bk.MintCoins(sdkCtx, types.ModuleName, moduleBalance.Add(newBalance...))
 	require.NoError(t, err)
 	err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, newBalance)
 	require.NoError(t, err)
@@ -144,17 +144,8 @@ func TestSetBalance(t *testing.T) {
 	var (
 		_, _, _, bk, _, _, _, sdkCtx = setupMsgServer(t)
 
-		poolCoins     = sample.Coins()
-		newBalance    = sample.Coins()
-		provider      = sample.AccAddress()
-		noBalanceAddr = sample.AccAddress()
+		provider = sample.AccAddress()
 	)
-	totalBalance := append(newBalance.Add(newBalance...).Add(newBalance...))
-	err := bk.MintCoins(sdkCtx, types.ModuleName, append(poolCoins, totalBalance...).Sort())
-	require.NoError(t, err)
-	err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, totalBalance)
-	require.NoError(t, err)
-
 	type args struct {
 		provider  sdk.AccAddress
 		coins     sdk.Coins
@@ -169,56 +160,104 @@ func TestSetBalance(t *testing.T) {
 			name: "use the same module balance",
 			args: args{
 				provider:  provider,
-				coins:     poolCoins,
-				poolCoins: poolCoins,
+				coins:     sample.Coins(),
+				poolCoins: sample.Coins(),
 			},
 		},
 		{
 			name: "set new balance",
 			args: args{
 				provider:  provider,
-				coins:     newBalance,
-				poolCoins: poolCoins,
+				coins:     sample.Coins(),
+				poolCoins: sample.Coins(),
+			},
+		},
+		{
+			name: "set the old balance",
+			args: args{
+				provider:  provider,
+				coins:     sample.Coins(),
+				poolCoins: sample.Coins(),
 			},
 		},
 		{
 			name: "empty reward pool",
 			args: args{
 				provider:  provider,
-				coins:     newBalance,
+				coins:     sample.Coins(),
 				poolCoins: sdk.NewCoins(),
+			},
+		},
+		{
+			name: "equal coins and pool coins",
+			args: args{
+				provider: provider,
+				coins: sdk.NewCoins(
+					sdk.NewCoin("aaa", sdk.NewInt(101)),
+					sdk.NewCoin("bbb", sdk.NewInt(102)),
+				),
+				poolCoins: sdk.NewCoins(
+					sdk.NewCoin("aaa", sdk.NewInt(101)),
+					sdk.NewCoin("bbb", sdk.NewInt(102)),
+				),
+			},
+		},
+		{
+			name: "extra coin",
+			args: args{
+				provider: provider,
+				coins: sdk.NewCoins(
+					sdk.NewCoin("aaa", sdk.NewInt(101)),
+					sdk.NewCoin("bbb", sdk.NewInt(102)),
+					sdk.NewCoin("ccc", sdk.NewInt(103)),
+				),
+				poolCoins: sdk.NewCoins(
+					sdk.NewCoin("aaa", sdk.NewInt(33)),
+					sdk.NewCoin("bbb", sdk.NewInt(22)),
+				),
+			},
+		},
+		{
+			name: "extra pool coin",
+			args: args{
+				provider: provider,
+				coins: sdk.NewCoins(
+					sdk.NewCoin("aaa", sdk.NewInt(101)),
+					sdk.NewCoin("bbb", sdk.NewInt(102)),
+				),
+				poolCoins: sdk.NewCoins(
+					sdk.NewCoin("aaa", sdk.NewInt(33)),
+					sdk.NewCoin("bbb", sdk.NewInt(22)),
+					sdk.NewCoin("ccc", sdk.NewInt(11)),
+				),
 			},
 		},
 		{
 			name: "nil reward pool",
 			args: args{
 				provider:  provider,
-				coins:     newBalance,
+				coins:     sample.Coins(),
 				poolCoins: nil,
 			},
 		},
 		{
-			name: "no balance provider",
-			args: args{
-				provider:  provider,
-				coins:     append(newBalance, sample.Coins()...).Sort(),
-				poolCoins: poolCoins,
-			},
-			wantErr: true,
-		},
-		{
 			name: "no balance address",
 			args: args{
-				provider:  noBalanceAddr,
+				provider:  sample.AccAddress(),
 				coins:     sample.Coins(),
-				poolCoins: poolCoins,
+				poolCoins: sample.Coins(),
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := keeper.SetBalance(sdkCtx, bk, tt.args.provider, tt.args.coins, tt.args.poolCoins)
+			err := bk.MintCoins(sdkCtx, types.ModuleName, tt.args.coins.Add(tt.args.poolCoins...))
+			require.NoError(t, err)
+			err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, tt.args.coins)
+			require.NoError(t, err)
+
+			err = keeper.SetBalance(sdkCtx, bk, tt.args.provider, tt.args.coins, tt.args.poolCoins)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
