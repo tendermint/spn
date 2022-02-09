@@ -13,7 +13,8 @@ import (
 func CmdListMonitoringHistory() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-monitoring-history",
-		Short: "list all monitoringHistory",
+		Short: "list all monitoring histories",
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -46,7 +47,7 @@ func CmdListMonitoringHistory() *cobra.Command {
 func CmdShowMonitoringHistory() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-monitoring-history [launch-id]",
-		Short: "shows a monitoringHistory",
+		Short: "shows the monitoring history",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)

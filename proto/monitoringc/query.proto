@@ -55,7 +55,7 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id";
   }
 
-  // Queries a MonitoringHistory by index.
+	// Queries a MonitoringHistory by launch id.
 	rpc MonitoringHistory(QueryGetMonitoringHistoryRequest) returns (QueryGetMonitoringHistoryResponse) {
 		option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history/{launchID}";
 	}
@@ -138,7 +138,6 @@ message QueryAllLaunchIDFromChannelIDResponse {
 
 message QueryGetMonitoringHistoryRequest {
 	  uint64 launchID = 1;
-
 }
 
 message QueryGetMonitoringHistoryResponse {

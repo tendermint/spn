@@ -171,8 +171,10 @@ func (am AppModule) BeginBlock(ctx sdk.Context, bb abci.RequestBeginBlock) {
 	am.keeper.ReportBlockSignatures(ctx, bb.LastCommitInfo, bb.Header.Height)
 
 	// check and transmit signatures
-	// TODO(): investigate proper error handling
-	_ = am.keeper.TransmitSignatures(ctx, bb.Header.Height)
+	err := am.keeper.TransmitSignatures(ctx, bb.Header.Height)
+	if err != nil {
+		ctx.Logger().Error(fmt.Sprintf("error transmitting the validator signatures %s", err.Error()))
+	}
 }
 
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It

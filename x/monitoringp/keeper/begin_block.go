@@ -55,9 +55,15 @@ func (k Keeper) TransmitSignatures(ctx sdk.Context, blockHeight int64) error {
 	// last block height must be reached
 	// monitoring info must exist
 	// signatures must not yet be transmitted
+	if blockHeight < k.LastBlockHeight(ctx) {
+		return nil
+	}
 	cid, cidFound := k.GetConnectionChannelID(ctx)
+	if !cidFound {
+		return nil
+	}
 	mi, miFound := k.GetMonitoringInfo(ctx)
-	if blockHeight < k.LastBlockHeight(ctx) || !cidFound || !miFound || mi.Transmitted {
+	if !miFound || mi.Transmitted {
 		return nil
 	}
 
