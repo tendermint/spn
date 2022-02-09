@@ -31,7 +31,6 @@ func (k msgServer) CreateCoordinator(
 	k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       msg.Address,
 		CoordinatorID: coordID,
-		Active:        true,
 	})
 
 	return &types.MsgCreateCoordinatorResponse{

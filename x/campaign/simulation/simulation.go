@@ -264,6 +264,7 @@ func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk t
 			sample.CampaignName(),
 			sample.Coins(),
 		)
+
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }

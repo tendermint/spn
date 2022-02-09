@@ -27,14 +27,20 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, "total supply is empty")
 	}
 
-	// Get the coordinator ID
-	coord, found := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
+	// Get the coordinator ID associated to the sender address
+	coordByAddress, found := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
+	if !found {
+		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
+	}
+
+	coord, found := k.profileKeeper.GetCoordinator(ctx, coordByAddress.CoordinatorID)
 	if !found {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
 	}
 
 	if !coord.Active {
-		return nil, profiletypes.ErrCoordInactive
+		return nil, sdkerrors.Wrapf(profiletypes.ErrCoordInactive,
+			"coordinator %d inactive", coord.CoordinatorID)
 	}
 
 	if campaign.CoordinatorID != coord.CoordinatorID {

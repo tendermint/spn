@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
@@ -30,11 +29,8 @@ func (k msgServer) DisableCoordinator(
 	}
 
 	// disable by setting to inactive
-	coordByAddress.Active = false
 	coord.Active = false
 
-	// TODO modify
-	k.SetCoordinatorByAddress(ctx, coordByAddress)
 	k.SetCoordinator(ctx, coord)
 	return &types.MsgDisableCoordinatorResponse{
 		CoordinatorID: coord.CoordinatorID,

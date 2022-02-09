@@ -21,5 +21,4 @@ message CoordinatorDescription {
 message CoordinatorByAddress {
   string address = 1;
   uint64 coordinatorID = 2;
-  bool active = 4;
 }

@@ -84,6 +84,7 @@ func FindRandomChain(
 			continue
 		}
 		chain = c
+		found = true
 		break
 	}
 	return chain, found

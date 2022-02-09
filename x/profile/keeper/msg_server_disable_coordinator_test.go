@@ -42,9 +42,8 @@ func TestMsgDisableCoordinator(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			_, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
 			require.True(t, found)
-			require.EqualValues(t, false, coordByAddr.Active)
 
 			coord, found := k.GetCoordinator(ctx, got.CoordinatorID)
 			require.True(t, found)
