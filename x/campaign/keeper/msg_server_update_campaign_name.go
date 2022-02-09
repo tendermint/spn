@@ -24,11 +24,7 @@ func (k msgServer) UpdateCampaignName(goCtx context.Context, msg *types.MsgUpdat
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
 	}
 
-	coord, found := k.profileKeeper.GetCoordinator(ctx, coordByAddress.CoordinatorID)
-	if !found {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
-	}
-
+	coord, _ := k.profileKeeper.GetCoordinator(ctx, coordByAddress.CoordinatorID)
 	if !coord.Active {
 		return nil, sdkerrors.Wrapf(profiletypes.ErrCoordInactive,
 			"coordinator %d inactive", coord.CoordinatorID)

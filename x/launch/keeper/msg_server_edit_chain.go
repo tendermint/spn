@@ -24,11 +24,7 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
 	}
 
-	coord, found := k.profileKeeper.GetCoordinator(ctx, coordByAddress.CoordinatorID)
-	if !found {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
-	}
-
+	coord, _ := k.profileKeeper.GetCoordinator(ctx, coordByAddress.CoordinatorID)
 	if !coord.Active {
 		return nil, sdkerrors.Wrapf(profiletypes.ErrCoordInactive,
 			"the chain %d coordinator not found", chain.LaunchID)
