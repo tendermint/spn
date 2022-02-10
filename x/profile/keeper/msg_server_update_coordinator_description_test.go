@@ -69,7 +69,7 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 					Details:  "update",
 				},
 			},
-			err: types.ErrCoordInactive,
+			err: types.ErrCoordAddressNotFound,
 		},
 	}
 	for _, tt := range tests {

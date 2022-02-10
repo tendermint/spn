@@ -102,7 +102,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 		{
 			name: "disable coordinator",
 			msg:  *types.NewMsgRevertLaunch(coordDisableAddr, disabledID),
-			err:  profiletypes.ErrCoordInactive,
+			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

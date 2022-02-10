@@ -77,7 +77,7 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 				Address:    disableCoord.Address,
 				NewAddress: addr2,
 			},
-			err: types.ErrCoordInactive,
+			err: types.ErrCoordAddressNotFound,
 		},
 	}
 	for _, tt := range tests {

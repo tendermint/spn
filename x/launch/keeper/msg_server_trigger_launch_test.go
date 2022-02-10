@@ -109,7 +109,7 @@ func TestMsgTriggerLaunch(t *testing.T) {
 		{
 			name: "disable coordinator",
 			msg:  sample.MsgTriggerLaunch(disableCoordAddress, disableChainID),
-			err:  profiletypes.ErrCoordInactive,
+			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

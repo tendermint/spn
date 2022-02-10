@@ -39,7 +39,7 @@ func TestMsgEditChain(t *testing.T) {
 	// Create a campaign with disabled
 	msgCreateChain := sample.MsgCreateChain(coordDisableAddress, "", false, 0)
 	_, err = srv.CreateChain(ctx, &msgCreateChain)
-	require.ErrorIs(t, err, profiletypes.ErrCoordInactive)
+	require.ErrorIs(t, err, profiletypes.ErrCoordAddressNotFound)
 
 	// Create a chain
 	msgCreateChain = sample.MsgCreateChain(coordAddress, "", false, 0)
