@@ -24,7 +24,7 @@ func setupMsgServer(t testing.TB) (
 	launchtypes.MsgServer,
 	sdk.Context,
 ) {
-	_, launchKeeper, profileKeeper, rewardKeeper, _, bankKeeper, ctx := testkeeper.AllKeepers(t)
+	_, launchKeeper, profileKeeper, rewardKeeper, _, bankKeeper, _, ctx := testkeeper.AllKeepers(t)
 
 	return rewardKeeper,
 		launchKeeper,

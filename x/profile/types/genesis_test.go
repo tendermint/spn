@@ -45,9 +45,9 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		addr1     = sample.Address()
 		addr2     = sample.Address()
 		addr3     = sample.Address()
-		consAddr1 = sample.Address()
-		consAddr2 = sample.Address()
-		consAddr3 = sample.Address()
+		consAddr1 = sample.ConsAddress()
+		consAddr2 = sample.ConsAddress()
+		consAddr3 = sample.ConsAddress()
 	)
 	tests := []struct {
 		name     string
@@ -86,8 +86,8 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{Address: addr1, ConsensusAddress: consAddr1},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: consAddr1},
-					{ConsensusAddress: consAddr2, ValidatorAddress: consAddr2},
+					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
+					{ConsensusAddress: consAddr2, ValidatorAddress: addr2},
 				},
 				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
 					{ConsensusAddress: consAddr1, Nonce: 0},

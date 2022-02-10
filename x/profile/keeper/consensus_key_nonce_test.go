@@ -15,8 +15,7 @@ import (
 func createNConsensusKeyNonce(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ConsensusKeyNonce {
 	items := make([]types.ConsensusKeyNonce, n)
 	for i := range items {
-		items[i].ConsensusAddress = strconv.Itoa(i)
-
+		items[i].ConsensusAddress = []byte(strconv.Itoa(i))
 		keeper.SetConsensusKeyNonce(ctx, items[i])
 	}
 	return items

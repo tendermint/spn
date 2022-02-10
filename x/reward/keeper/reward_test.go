@@ -92,10 +92,10 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		launchIDs                  = []uint64{1, 2, 3, 4, 5}
 		validatorFoo               = sample.Address()
 		validatorBar               = sample.Address()
-		validatorConsAddrFoo       = sample.Address()
-		validatorConsAddrBar       = sample.Address()
-		validatorConsAddrBaz       = sample.Address()
-		notFoundValidatorAddr      = sample.Address()
+		validatorConsAddrFoo       = sample.ConsAddress()
+		validatorConsAddrBar       = sample.ConsAddress()
+		validatorConsAddrBaz       = sample.ConsAddress()
+		notFoundValidatorAddr      = sample.ConsAddress()
 		provider                   = sample.Address()
 		coins                      = sdk.NewCoins(
 			sdk.NewCoin("bar", sdk.NewInt(11)),

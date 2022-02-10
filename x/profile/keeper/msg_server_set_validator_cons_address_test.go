@@ -111,7 +111,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			currentNonce := uint64(1)
-			oldConsNonce, hasConsNonce := k.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().String())
+			oldConsNonce, hasConsNonce := k.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress())
 			if hasConsNonce {
 				currentNonce = oldConsNonce.Nonce + 1
 			}
