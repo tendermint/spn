@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -59,4 +60,40 @@ func TestCoordinatorIDFromAddress(t *testing.T) {
 
 	_, found = keeper.CoordinatorIDFromAddress(ctx, sample.Address())
 	require.False(t, found)
+}
+
+func TestActiveCoordinatorByAddressGet(t *testing.T) {
+	keeper, ctx := testkeeper.Profile(t)
+	address := sample.Address()
+
+	// set initial valid state
+	keeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
+		Address:       address,
+		CoordinatorID: 10,
+	})
+	keeper.SetCoordinator(ctx, types.Coordinator{
+		Address:       address,
+		CoordinatorID: 10,
+		Active:        true,
+	})
+
+	rst, err := keeper.GetActiveCoordinatorByAddress(ctx, address)
+	require.NoError(t, err)
+	require.Equal(t, uint64(10), rst.CoordinatorID)
+	require.Equal(t, address, rst.Address)
+
+	// set invalid critical error state
+	keeper.SetCoordinator(ctx, types.Coordinator{
+		Address:       address,
+		CoordinatorID: 10,
+		Active:        false,
+	})
+
+	rst, err = keeper.GetActiveCoordinatorByAddress(ctx, address)
+	require.ErrorIs(t, err, spnerrors.ErrCritical)
+
+	// set valid state where coordinator is disabled
+	keeper.RemoveCoordinatorByAddress(ctx, address)
+	rst, err = keeper.GetActiveCoordinatorByAddress(ctx, address)
+	require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 }

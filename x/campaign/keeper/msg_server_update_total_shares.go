@@ -23,15 +23,9 @@ func (k msgServer) UpdateTotalShares(goCtx context.Context, msg *types.MsgUpdate
 	}
 
 	// Get the coordinator ID associated to the sender address
-	coordByAddress, found := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
-	if !found {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
-	}
-
-	coord, _ := k.profileKeeper.GetCoordinator(ctx, coordByAddress.CoordinatorID)
-	if !coord.Active {
-		return nil, sdkerrors.Wrapf(profiletypes.ErrCoordInactive,
-			"coordinator %d inactive", coord.CoordinatorID)
+	coord, err := k.profileKeeper.GetActiveCoordinatorByAddress(ctx, msg.Coordinator)
+	if err != nil {
+		return nil, err
 	}
 
 	if campaign.CoordinatorID != coord.CoordinatorID {
