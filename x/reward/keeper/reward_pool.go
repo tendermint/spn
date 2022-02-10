@@ -10,9 +10,7 @@ import (
 func (k Keeper) SetRewardPool(ctx sdk.Context, rewardPool types.RewardPool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RewardPoolKeyPrefix))
 	b := k.cdc.MustMarshal(&rewardPool)
-	store.Set(types.RewardPoolKey(
-		rewardPool.LaunchID,
-	), b)
+	store.Set(types.RewardPoolKey(rewardPool.LaunchID), b)
 }
 
 // GetRewardPool returns a rewardPool from its index

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"encoding/base64"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -19,10 +20,13 @@ func CmdShowValidatorByConsAddress() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argConsensusAddress := args[0]
+			consAddr, err := base64.StdEncoding.DecodeString(args[0])
+			if err != nil {
+				return err
+			}
 
 			params := &types.QueryGetValidatorByConsAddressRequest{
-				ConsensusAddress: argConsensusAddress,
+				ConsensusAddress: consAddr,
 			}
 
 			res, err := queryClient.ValidatorByConsAddress(context.Background(), params)

@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -41,7 +40,7 @@ func TestConsensusKeyNonceQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetConsensusKeyNonceRequest{
-				ConsensusAddress: strconv.Itoa(100000),
+				ConsensusAddress: []byte("100000"),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},

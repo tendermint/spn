@@ -139,7 +139,7 @@ func request_Query_ValidatorByConsAddress_0(ctx context.Context, marshaler runti
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "consensusAddress")
 	}
 
-	protoReq.ConsensusAddress, err = runtime.String(val)
+	protoReq.ConsensusAddress, err = runtime.Bytes(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "consensusAddress", err)
@@ -166,7 +166,7 @@ func local_request_Query_ValidatorByConsAddress_0(ctx context.Context, marshaler
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "consensusAddress")
 	}
 
-	protoReq.ConsensusAddress, err = runtime.String(val)
+	protoReq.ConsensusAddress, err = runtime.Bytes(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "consensusAddress", err)
@@ -193,7 +193,7 @@ func request_Query_ConsensusKeyNonce_0(ctx context.Context, marshaler runtime.Ma
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "consensusAddress")
 	}
 
-	protoReq.ConsensusAddress, err = runtime.String(val)
+	protoReq.ConsensusAddress, err = runtime.Bytes(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "consensusAddress", err)
@@ -220,7 +220,7 @@ func local_request_Query_ConsensusKeyNonce_0(ctx context.Context, marshaler runt
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "consensusAddress")
 	}
 
-	protoReq.ConsensusAddress, err = runtime.String(val)
+	protoReq.ConsensusAddress, err = runtime.Bytes(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "consensusAddress", err)

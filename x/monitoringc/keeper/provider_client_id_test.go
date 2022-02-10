@@ -15,7 +15,6 @@ func createNProviderClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 	items := make([]types.ProviderClientID, n)
 	for i := range items {
 		items[i].LaunchID = uint64(i)
-
 		keeper.SetProviderClientID(ctx, items[i])
 	}
 	return items

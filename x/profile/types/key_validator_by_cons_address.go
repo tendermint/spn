@@ -6,6 +6,6 @@ const (
 )
 
 // ValidatorByConsAddressKey returns the store key to retrieve a ValidatorByConsAddress from the index fields
-func ValidatorByConsAddressKey(consensusAddress string) []byte {
-	return []byte(consensusAddress + "/")
+func ValidatorByConsAddressKey(consensusAddress []byte) []byte {
+	return append(consensusAddress, []byte("/")...)
 }

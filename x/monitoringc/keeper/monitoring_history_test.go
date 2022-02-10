@@ -15,7 +15,6 @@ func createNMonitoringHistory(keeper *keeper.Keeper, ctx sdk.Context, n int) []t
 	items := make([]types.MonitoringHistory, n)
 	for i := range items {
 		items[i].LaunchID = uint64(i)
-
 		keeper.SetMonitoringHistory(ctx, items[i])
 	}
 	return items

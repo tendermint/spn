@@ -43,7 +43,7 @@ var (
 		campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
-		rewardmoduletypes.ModuleName:   {authtypes.Minter},
+		rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
 	}
 )
 

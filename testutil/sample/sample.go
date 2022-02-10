@@ -75,6 +75,11 @@ func PubKey() crypto.PubKey {
 	return ed25519.GenPrivKey().PubKey()
 }
 
+// ConsAddress returns a sample consensus address
+func ConsAddress() sdk.ConsAddress {
+	return sdk.ConsAddress(PubKey().Address())
+}
+
 // AccAddress returns a sample account address
 func AccAddress() sdk.AccAddress {
 	addr := PubKey().Address()
