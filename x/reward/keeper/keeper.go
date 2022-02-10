@@ -36,7 +36,6 @@ func NewKeeper(
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
 	}
-
 	return &Keeper{
 		cdc:           cdc,
 		storeKey:      storeKey,

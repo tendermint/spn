@@ -242,7 +242,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 			err: errors.New("duplicated id for coordinator"),
 		},
 		{
-			name: "profile not associated with chain",
+			name: "coordinator without a coordinator by address",
 			genState: &types.GenesisState{
 				CoordinatorByAddressList: []types.CoordinatorByAddress{
 					{CoordinatorID: 0, Address: addr1},
@@ -256,7 +256,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 			err: errors.New("coordinator address not found for CoordinatorByAddress"),
 		},
 		{
-			name: "profile not associated with chain",
+			name: "coordinator by address without a coordinator",
 			genState: &types.GenesisState{
 				CoordinatorByAddressList: []types.CoordinatorByAddress{
 					{CoordinatorID: 0, Address: addr1},

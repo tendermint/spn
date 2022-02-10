@@ -22,10 +22,10 @@ func createNValidatorByConsAddress(keeper *keeper.Keeper, ctx sdk.Context, n int
 }
 
 func TestValidatorByConsAddressGet(t *testing.T) {
-	keeper, ctx := keepertest.Profile(t)
-	items := createNValidatorByConsAddress(keeper, ctx, 10)
+	k, ctx := keepertest.Profile(t)
+	items := createNValidatorByConsAddress(k, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetValidatorByConsAddress(ctx,
+		rst, found := k.GetValidatorByConsAddress(ctx,
 			item.ConsensusAddress,
 		)
 		require.True(t, found)
@@ -36,13 +36,13 @@ func TestValidatorByConsAddressGet(t *testing.T) {
 	}
 }
 func TestValidatorByConsAddressRemove(t *testing.T) {
-	keeper, ctx := keepertest.Profile(t)
-	items := createNValidatorByConsAddress(keeper, ctx, 10)
+	k, ctx := keepertest.Profile(t)
+	items := createNValidatorByConsAddress(k, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveValidatorByConsAddress(ctx,
+		k.RemoveValidatorByConsAddress(ctx,
 			item.ConsensusAddress,
 		)
-		_, found := keeper.GetValidatorByConsAddress(ctx,
+		_, found := k.GetValidatorByConsAddress(ctx,
 			item.ConsensusAddress,
 		)
 		require.False(t, found)
@@ -50,10 +50,10 @@ func TestValidatorByConsAddressRemove(t *testing.T) {
 }
 
 func TestValidatorByConsAddressGetAll(t *testing.T) {
-	keeper, ctx := keepertest.Profile(t)
-	items := createNValidatorByConsAddress(keeper, ctx, 10)
+	k, ctx := keepertest.Profile(t)
+	items := createNValidatorByConsAddress(k, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllValidatorByConsAddress(ctx)),
+		nullify.Fill(k.GetAllValidatorByConsAddress(ctx)),
 	)
 }

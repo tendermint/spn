@@ -92,7 +92,6 @@ func (gs GenesisState) ValidateCoordinators() error {
 		if elem.CoordinatorID >= counter {
 			return errors.New("coordinator id should be lower or equal than the last id")
 		}
-
 		index := string(CoordinatorByAddressKey(elem.Address))
 		if _, ok := coordinatorByAddressIndexMap[index]; !ok {
 			return errors.New("coordinator address not found for CoordinatorByAddress")
