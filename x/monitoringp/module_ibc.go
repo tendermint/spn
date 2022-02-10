@@ -10,6 +10,7 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v2/modules/core/05-port/types"
 	host "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibcexported "github.com/cosmos/ibc-go/v2/modules/core/exported"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
@@ -130,14 +131,14 @@ func (am AppModule) OnRecvPacket(
 
 	// this line is used by starport scaffolding # oracle/packet/module/recv
 
-	var modulePacketData types.MonitoringpPacketData
-	if err := modulePacketData.Unmarshal(modulePacket.GetData()); err != nil {
+	var modulePacketData spntypes.MonitoringPacketData
+	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &modulePacketData); err != nil {
 		return channeltypes.NewErrorAcknowledgement(sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error()).Error())
 	}
 
 	// Dispatch packet
 	switch packet := modulePacketData.Packet.(type) {
-	case *types.MonitoringpPacketData_MonitoringPacket:
+	case *spntypes.MonitoringPacketData_MonitoringPacket:
 		packetAck, err := am.keeper.OnRecvMonitoringPacket(ctx, modulePacket, *packet.MonitoringPacket)
 		if err != nil {
 			ack = channeltypes.NewErrorAcknowledgement(err.Error())
@@ -180,8 +181,8 @@ func (am AppModule) OnAcknowledgementPacket(
 
 	// this line is used by starport scaffolding # oracle/packet/module/ack
 
-	var modulePacketData types.MonitoringpPacketData
-	if err := modulePacketData.Unmarshal(modulePacket.GetData()); err != nil {
+	var modulePacketData spntypes.MonitoringPacketData
+	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &modulePacketData); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
 	}
 
@@ -189,7 +190,7 @@ func (am AppModule) OnAcknowledgementPacket(
 
 	// Dispatch packet
 	switch packet := modulePacketData.Packet.(type) {
-	case *types.MonitoringpPacketData_MonitoringPacket:
+	case *spntypes.MonitoringPacketData_MonitoringPacket:
 		err := am.keeper.OnAcknowledgementMonitoringPacket(ctx, modulePacket, *packet.MonitoringPacket, ack)
 		if err != nil {
 			return err
@@ -235,14 +236,14 @@ func (am AppModule) OnTimeoutPacket(
 	modulePacket channeltypes.Packet,
 	relayer sdk.AccAddress,
 ) error {
-	var modulePacketData types.MonitoringpPacketData
-	if err := modulePacketData.Unmarshal(modulePacket.GetData()); err != nil {
+	var modulePacketData spntypes.MonitoringPacketData
+	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &modulePacketData); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
 	}
 
 	// Dispatch packet
 	switch packet := modulePacketData.Packet.(type) {
-	case *types.MonitoringpPacketData_MonitoringPacket:
+	case *spntypes.MonitoringPacketData_MonitoringPacket:
 		err := am.keeper.OnTimeoutMonitoringPacket(ctx, modulePacket, *packet.MonitoringPacket)
 		if err != nil {
 			return err
@@ -257,6 +258,7 @@ func (am AppModule) OnTimeoutPacket(
 }
 
 // NegotiateAppVersion implements the IBCModule interface
+// TODO(492): implement correct logic
 func (am AppModule) NegotiateAppVersion(
 	ctx sdk.Context,
 	order channeltypes.Order,
@@ -265,5 +267,5 @@ func (am AppModule) NegotiateAppVersion(
 	counterparty channeltypes.Counterparty,
 	proposedVersion string,
 ) (version string, err error) {
-	return proposedVersion, nil
+	return types.Version, nil
 }

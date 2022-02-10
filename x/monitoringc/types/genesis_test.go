@@ -38,6 +38,14 @@ func TestGenesisState_Validate(t *testing.T) {
 					{LaunchID: 0, ChannelID: "0"},
 					{LaunchID: 1, ChannelID: "1"},
 				},
+				MonitoringHistoryList: []types.MonitoringHistory{
+					{
+						LaunchID: 0,
+					},
+					{
+						LaunchID: 1,
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -135,6 +143,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						ChannelID: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated monitoringHistory",
+			genState: &types.GenesisState{
+				MonitoringHistoryList: []types.MonitoringHistory{
+					{
+						LaunchID: 0,
+					},
+					{
+						LaunchID: 0,
 					},
 				},
 			},

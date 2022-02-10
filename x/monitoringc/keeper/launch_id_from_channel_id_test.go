@@ -16,7 +16,6 @@ func createNLaunchIDFromChannelID(keeper *keeper.Keeper, ctx sdk.Context, n int)
 	items := make([]types.LaunchIDFromChannelID, n)
 	for i := range items {
 		items[i].ChannelID = strconv.Itoa(i)
-
 		keeper.SetLaunchIDFromChannelID(ctx, items[i])
 	}
 	return items

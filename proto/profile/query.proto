@@ -70,7 +70,7 @@ message QueryAllValidatorResponse {
 }
 
 message QueryGetValidatorByConsAddressRequest {
-  string consensusAddress = 1;
+  bytes consensusAddress = 1;
 }
 
 message QueryGetValidatorByConsAddressResponse {
@@ -78,7 +78,7 @@ message QueryGetValidatorByConsAddressResponse {
 }
 
 message QueryGetConsensusKeyNonceRequest {
-  string consensusAddress = 1;
+  bytes consensusAddress = 1;
 }
 
 message QueryGetConsensusKeyNonceResponse {

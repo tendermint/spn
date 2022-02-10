@@ -21,7 +21,6 @@ func (k Keeper) TransmitMonitoringPacket(
 	timeoutHeight clienttypes.Height,
 	timeoutTimestamp uint64,
 ) error {
-
 	sourceChannelEnd, found := k.channelKeeper.GetChannel(ctx, sourcePort, sourceChannel)
 	if !found {
 		return sdkerrors.Wrapf(channeltypes.ErrChannelNotFound, "port ID (%s) channel ID (%s)", sourcePort, sourceChannel)
@@ -45,11 +44,12 @@ func (k Keeper) TransmitMonitoringPacket(
 	}
 
 	// encode the packet
-	var modulePacket types.MonitoringpPacketData
-	modulePacket.Packet = &types.MonitoringpPacketData_MonitoringPacket{
+	var modulePacket spntypes.MonitoringPacketData
+	modulePacket.Packet = &spntypes.MonitoringPacketData_MonitoringPacket{
 		MonitoringPacket: &packetData,
 	}
-	packetBytes, err := modulePacket.Marshal()
+
+	packetBytes, err := types.ModuleCdc.MarshalJSON(&modulePacket)
 	if err != nil {
 		return sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, "cannot marshal the packet: "+err.Error())
 	}
@@ -77,7 +77,7 @@ func (k Keeper) OnRecvMonitoringPacket(
 	_ sdk.Context,
 	_ channeltypes.Packet,
 	_ spntypes.MonitoringPacket,
-) (packetAck types.MonitoringPacketAck, err error) {
+) (packetAck spntypes.MonitoringPacketAck, err error) {
 	return packetAck, errors.New("not implemented")
 }
 
@@ -98,7 +98,7 @@ func (k Keeper) OnAcknowledgementMonitoringPacket(
 		return nil
 	case *channeltypes.Acknowledgement_Result:
 		// Decode the packet acknowledgment
-		var packetAck types.MonitoringPacketAck
+		var packetAck spntypes.MonitoringPacketAck
 
 		if err := types.ModuleCdc.UnmarshalJSON(dispatchedAck.Result, &packetAck); err != nil {
 			// The counter-party module doesn't implement the correct acknowledgment format

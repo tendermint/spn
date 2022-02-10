@@ -21,7 +21,7 @@ func (k msgServer) SetValidatorConsAddress(
 		return &types.MsgSetValidatorConsAddressResponse{},
 			spnerrors.Criticalf("invalid consensus pub key %s", msg.ValidatorKeyType)
 	}
-	consAddress := valPubKey.GetConsAddress().String()
+	consAddress := valPubKey.GetConsAddress()
 
 	// check signature
 	currentNonce := uint64(0)
@@ -53,7 +53,7 @@ func (k msgServer) SetValidatorConsAddress(
 					valByConsAddr.ValidatorAddress,
 				)
 		}
-		lastValidator.ConsensusAddress = ""
+		lastValidator.ConsensusAddress = nil
 		k.SetValidator(ctx, lastValidator)
 	}
 

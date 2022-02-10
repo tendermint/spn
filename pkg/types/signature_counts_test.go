@@ -12,7 +12,7 @@ func signatureCount(t *testing.T, consAddr, sig string) types.SignatureCount {
 	sigDec, err := sdk.NewDecFromStr(sig)
 	require.NoError(t, err)
 	return types.SignatureCount{
-		ConsAddress:        consAddr,
+		ConsAddress:        []byte(consAddr),
 		RelativeSignatures: sigDec,
 	}
 }
@@ -106,7 +106,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.sc.AddSignature(tt.consAddres, tt.validatorSetSize)
+			tt.sc.AddSignature([]byte(tt.consAddres), tt.validatorSetSize)
 			require.Equal(t, tt.expected, tt.sc)
 		})
 	}

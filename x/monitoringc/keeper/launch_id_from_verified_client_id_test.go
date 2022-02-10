@@ -16,7 +16,6 @@ func createNLaunchIDFromVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context,
 	items := make([]types.LaunchIDFromVerifiedClientID, n)
 	for i := range items {
 		items[i].ClientID = strconv.Itoa(i)
-
 		keeper.SetLaunchIDFromVerifiedClientID(ctx, items[i])
 	}
 	return items
