@@ -26,12 +26,23 @@ func (k Keeper) OnRecvMonitoringPacket(
 	if !found {
 		return packetAck, fmt.Errorf("no launch ID associated to channel ID %s", packet.DestinationChannel)
 	}
+
+	// save the latest received monitoring packet for documentation purpose
 	k.SetMonitoringHistory(ctx, types.MonitoringHistory{
 		LaunchID:               lidFromCid.LaunchID,
 		LatestMonitoringPacket: data,
 	})
 
-	return packetAck, nil
+	// distribute reward from the signature count
+	err = k.rewardKeeper.DistributeRewards(
+		ctx,
+		lidFromCid.LaunchID,
+		data.SignatureCounts,
+		uint64(data.BlockHeight),
+		true,
+	)
+
+	return packetAck, err
 }
 
 // OnAcknowledgementMonitoringPacket responds to the the success or failure of a packet
