@@ -6,10 +6,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/x/monitoringp/keeper"
-	"github.com/tendermint/spn/x/monitoringp/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
+	"github.com/tendermint/spn/x/monitoringp/keeper"
+	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
 // MonitoringpKeeper returns a keeper of the monitoring provider module for testing purpose
