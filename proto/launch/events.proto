@@ -1,0 +1,7 @@
+syntax = "proto3";
+package tendermint.spn.launch;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
