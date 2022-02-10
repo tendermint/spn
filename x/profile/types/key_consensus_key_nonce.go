@@ -6,6 +6,6 @@ const (
 )
 
 // ConsensusKeyNonceKey returns the store key to retrieve a ConsensusKeyNonce from the index fields
-func ConsensusKeyNonceKey(consensusAddress string) []byte {
-	return []byte(consensusAddress + "/")
+func ConsensusKeyNonceKey(consensusAddress []byte) []byte {
+	return append(consensusAddress, []byte("/")...)
 }

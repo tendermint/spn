@@ -1,13 +1,13 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -15,8 +15,7 @@ import (
 func createNValidatorByConsAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ValidatorByConsAddress {
 	items := make([]types.ValidatorByConsAddress, n)
 	for i := range items {
-		items[i].ConsensusAddress = strconv.Itoa(i)
-
+		items[i].ConsensusAddress = sample.ConsAddress().Bytes()
 		keeper.SetValidatorByConsAddress(ctx, items[i])
 	}
 	return items

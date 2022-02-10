@@ -1,17 +1,16 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func TestValidatorByConsAddressQuerySingle(t *testing.T) {
@@ -41,7 +40,7 @@ func TestValidatorByConsAddressQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetValidatorByConsAddressRequest{
-				ConsensusAddress: strconv.Itoa(100000),
+				ConsensusAddress: sample.ConsAddress().Bytes(),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},

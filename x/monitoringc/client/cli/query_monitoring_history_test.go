@@ -18,7 +18,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-
 func networkWithMonitoringHistoryObjects(t *testing.T, n int) (*network.Network, []types.MonitoringHistory) {
 	t.Helper()
 	cfg := network.DefaultConfig()

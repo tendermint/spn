@@ -1,7 +1,7 @@
 package types_test
 
 import (
-	"fmt"
+	"github.com/pkg/errors"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -45,9 +45,9 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		addr1     = sample.Address()
 		addr2     = sample.Address()
 		addr3     = sample.Address()
-		consAddr1 = sample.Address()
-		consAddr2 = sample.Address()
-		consAddr3 = sample.Address()
+		consAddr1 = sample.ConsAddress().Bytes()
+		consAddr2 = sample.ConsAddress().Bytes()
+		consAddr3 = sample.ConsAddress().Bytes()
 	)
 	tests := []struct {
 		name     string
@@ -86,15 +86,15 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{Address: addr1, ConsensusAddress: consAddr1},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: consAddr1},
-					{ConsensusAddress: consAddr2, ValidatorAddress: consAddr2},
+					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
+					{ConsensusAddress: consAddr2, ValidatorAddress: addr2},
 				},
 				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
 					{ConsensusAddress: consAddr1, Nonce: 0},
 					{ConsensusAddress: consAddr2, Nonce: 1},
 				},
 			},
-			err: fmt.Errorf("duplicated index for validator: %s", addr1),
+			err: errors.New("duplicated index for validator"),
 		},
 		{
 			name: "duplicated validator by consensus address",
@@ -107,7 +107,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
 				},
 			},
-			err: fmt.Errorf("duplicated index for validatorByConsAddress: %s", consAddr1),
+			err: errors.New("duplicated index for validatorByConsAddress"),
 		},
 		{
 			name: "duplicated validator consensus nonce",
@@ -123,7 +123,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{ConsensusAddress: consAddr1, Nonce: 1},
 				},
 			},
-			err: fmt.Errorf("duplicated index for consensusKeyNonce: %s", consAddr1),
+			err: errors.New("duplicated index for consensusKeyNonce"),
 		},
 		{
 			name: "missing validator by cons address",
@@ -143,7 +143,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{ConsensusAddress: consAddr3, Nonce: 2},
 				},
 			},
-			err: fmt.Errorf("consensus key address not found for ValidatorByConsAddress: %s", consAddr3),
+			err: errors.New("consensus key address not found for ValidatorByConsAddress"),
 		},
 		{
 			name: "missing validator by cons nonce",
@@ -163,7 +163,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{ConsensusAddress: consAddr3, Nonce: 1},
 				},
 			},
-			err: fmt.Errorf("validator consensus address %s not found for Validator: %s", consAddr3, addr3),
+			err: errors.New("validator consensus address %s not found for Validator"),
 		},
 	}
 	for _, tt := range tests {
@@ -224,7 +224,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 				},
 				CoordinatorCounter: 2,
 			},
-			err: fmt.Errorf("duplicated index for coordinatorByAddress: %s", addr1),
+			err: errors.New("duplicated index for coordinatorByAddress"),
 		},
 		{
 			name: "duplicated coordinator id",
@@ -239,7 +239,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 				},
 				CoordinatorCounter: 2,
 			},
-			err: fmt.Errorf("duplicated id for coordinator: 0"),
+			err: errors.New("duplicated id for coordinator"),
 		},
 		{
 			name: "profile not associated with chain",
@@ -253,7 +253,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 				},
 				CoordinatorCounter: 2,
 			},
-			err: fmt.Errorf("coordinator address not found for CoordinatorByAddress: %s", addr2),
+			err: errors.New("coordinator address not found for CoordinatorByAddress"),
 		},
 		{
 			name: "profile not associated with chain",
@@ -267,7 +267,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 				},
 				CoordinatorCounter: 2,
 			},
-			err: fmt.Errorf("coordinator address not found for coordinatorID: 1"),
+			err: errors.New("coordinator address not found for coordinatorID"),
 		},
 		{
 			name: "invalid coordinator id",
@@ -282,7 +282,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 				},
 				CoordinatorCounter: 2,
 			},
-			err: fmt.Errorf("coordinator id 133 should be lower or equal than the last id 2"),
+			err: errors.New("coordinator id should be lower or equal than the last id"),
 		},
 	}
 	for _, tt := range tests {
