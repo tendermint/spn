@@ -163,7 +163,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{ConsensusAddress: consAddr3, Nonce: 1},
 				},
 			},
-			err: errors.New("validator consensus address %s not found for Validator"),
+			err: errors.New("validator consensus address not found for Validator"),
 		},
 	}
 	for _, tt := range tests {
