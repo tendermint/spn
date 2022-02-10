@@ -6,10 +6,17 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	_ "github.com/cosmos/cosmos-sdk/types"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
+	io "io"
 	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -23,18 +30,141 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+type MsgSetRewards struct {
+	Provider         string                                   `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	LaunchID         uint64                                   `protobuf:"varint,2,opt,name=launchID,proto3" json:"launchID,omitempty"`
+	Coins            github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,3,rep,name=coins,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"coins"`
+	LastRewardHeight uint64                                   `protobuf:"varint,4,opt,name=lastRewardHeight,proto3" json:"lastRewardHeight,omitempty"`
+}
+
+func (m *MsgSetRewards) Reset()         { *m = MsgSetRewards{} }
+func (m *MsgSetRewards) String() string { return proto.CompactTextString(m) }
+func (*MsgSetRewards) ProtoMessage()    {}
+func (*MsgSetRewards) Descriptor() ([]byte, []int) {
+	return fileDescriptor_837cc604acddc9f4, []int{0}
+}
+func (m *MsgSetRewards) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgSetRewards) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgSetRewards.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgSetRewards) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSetRewards.Merge(m, src)
+}
+func (m *MsgSetRewards) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgSetRewards) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSetRewards.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgSetRewards proto.InternalMessageInfo
+
+func (m *MsgSetRewards) GetProvider() string {
+	if m != nil {
+		return m.Provider
+	}
+	return ""
+}
+
+func (m *MsgSetRewards) GetLaunchID() uint64 {
+	if m != nil {
+		return m.LaunchID
+	}
+	return 0
+}
+
+func (m *MsgSetRewards) GetCoins() github_com_cosmos_cosmos_sdk_types.Coins {
+	if m != nil {
+		return m.Coins
+	}
+	return nil
+}
+
+func (m *MsgSetRewards) GetLastRewardHeight() uint64 {
+	if m != nil {
+		return m.LastRewardHeight
+	}
+	return 0
+}
+
+type MsgSetRewardsResponse struct {
+}
+
+func (m *MsgSetRewardsResponse) Reset()         { *m = MsgSetRewardsResponse{} }
+func (m *MsgSetRewardsResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgSetRewardsResponse) ProtoMessage()    {}
+func (*MsgSetRewardsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_837cc604acddc9f4, []int{1}
+}
+func (m *MsgSetRewardsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgSetRewardsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgSetRewardsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgSetRewardsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSetRewardsResponse.Merge(m, src)
+}
+func (m *MsgSetRewardsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgSetRewardsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSetRewardsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgSetRewardsResponse proto.InternalMessageInfo
+
+func init() {
+	proto.RegisterType((*MsgSetRewards)(nil), "tendermint.spn.reward.MsgSetRewards")
+	proto.RegisterType((*MsgSetRewardsResponse)(nil), "tendermint.spn.reward.MsgSetRewardsResponse")
+}
+
 func init() { proto.RegisterFile("reward/tx.proto", fileDescriptor_837cc604acddc9f4) }
 
 var fileDescriptor_837cc604acddc9f4 = []byte{
-	// 128 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2f, 0x4a, 0x2d, 0x4f,
-	0x2c, 0x4a, 0xd1, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x2d, 0x49, 0xcd,
-	0x4b, 0x49, 0x2d, 0xca, 0xcd, 0xcc, 0x2b, 0xd1, 0x2b, 0x2e, 0xc8, 0xd3, 0x83, 0xc8, 0x1b, 0xb1,
-	0x72, 0x31, 0xfb, 0x16, 0xa7, 0x3b, 0x39, 0x9d, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3,
-	0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e, 0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c,
-	0x43, 0x94, 0x46, 0x7a, 0x66, 0x49, 0x46, 0x69, 0x92, 0x5e, 0x72, 0x7e, 0xae, 0x3e, 0xc2, 0x08,
-	0xfd, 0xe2, 0x82, 0x3c, 0xfd, 0x0a, 0x7d, 0x98, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c, 0x60,
-	0x8b, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x8a, 0x87, 0x27, 0x0f, 0x7b, 0x00, 0x00, 0x00,
+	// 344 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x3f, 0x4f, 0xc2, 0x40,
+	0x14, 0xc0, 0x7b, 0x80, 0x46, 0xcf, 0x18, 0x4d, 0x23, 0xb1, 0x76, 0x38, 0x08, 0x31, 0xb1, 0x31,
+	0x7a, 0x17, 0xf0, 0x1b, 0xa0, 0x83, 0x0e, 0x2c, 0x75, 0xd3, 0xc5, 0xfe, 0xb9, 0x1c, 0x8d, 0x70,
+	0xd7, 0xf4, 0x1d, 0x88, 0xab, 0xb3, 0x83, 0x9f, 0xc3, 0x4f, 0xc2, 0xc8, 0xe8, 0x84, 0x06, 0xbe,
+	0x85, 0x93, 0x69, 0x0b, 0x08, 0xd1, 0x81, 0xe9, 0xde, 0xff, 0xf7, 0x7b, 0xef, 0x1d, 0xde, 0x4b,
+	0xf8, 0x93, 0x97, 0x84, 0x4c, 0x0f, 0x68, 0x9c, 0x28, 0xad, 0xcc, 0xb2, 0xe6, 0x32, 0xe4, 0x49,
+	0x37, 0x92, 0x9a, 0x42, 0x2c, 0x69, 0xee, 0xb7, 0x49, 0xa0, 0xa0, 0xab, 0x80, 0xf9, 0x1e, 0x70,
+	0xd6, 0xaf, 0xfb, 0x5c, 0x7b, 0x75, 0x16, 0xa8, 0x48, 0xe6, 0x69, 0xf6, 0x81, 0x50, 0x42, 0x65,
+	0x22, 0x4b, 0xa5, 0xdc, 0x5a, 0x7b, 0x29, 0xe0, 0xdd, 0x16, 0x88, 0x5b, 0xae, 0xdd, 0xac, 0x0c,
+	0x98, 0x36, 0xde, 0x8a, 0x13, 0xd5, 0x8f, 0x42, 0x9e, 0x58, 0xa8, 0x8a, 0x9c, 0x6d, 0x77, 0xa1,
+	0xa7, 0xbe, 0x8e, 0xd7, 0x93, 0x41, 0xfb, 0xe6, 0xca, 0x2a, 0x54, 0x91, 0x53, 0x72, 0x17, 0xba,
+	0xf9, 0x8a, 0xf0, 0x46, 0xda, 0x0e, 0xac, 0x62, 0xb5, 0xe8, 0xec, 0x34, 0x8e, 0x68, 0x0e, 0x44,
+	0x53, 0x20, 0x3a, 0x03, 0xa2, 0x97, 0x2a, 0x92, 0xcd, 0xfb, 0xe1, 0xb8, 0x62, 0x7c, 0x8f, 0x2b,
+	0x27, 0x22, 0xd2, 0xed, 0x9e, 0x4f, 0x03, 0xd5, 0x65, 0x33, 0xfa, 0xfc, 0x39, 0x87, 0xf0, 0x91,
+	0xe9, 0xe7, 0x98, 0x43, 0x96, 0xf0, 0xfe, 0x59, 0x71, 0xd6, 0x0c, 0x05, 0x37, 0x87, 0x30, 0x4f,
+	0xf1, 0x7e, 0xc7, 0x83, 0xd9, 0x54, 0xd7, 0x3c, 0x12, 0x6d, 0x6d, 0x95, 0x32, 0xe4, 0x3f, 0xf6,
+	0xda, 0x21, 0x2e, 0xaf, 0xec, 0xc0, 0xe5, 0x10, 0x2b, 0x09, 0xbc, 0x21, 0x70, 0xb1, 0x05, 0xc2,
+	0x7c, 0xc0, 0x78, 0x69, 0x41, 0xc7, 0xf4, 0xdf, 0x03, 0xd0, 0x95, 0x12, 0xf6, 0xd9, 0x3a, 0x51,
+	0xf3, 0x46, 0xcd, 0xe6, 0x70, 0x42, 0xd0, 0x68, 0x42, 0xd0, 0xd7, 0x84, 0xa0, 0xb7, 0x29, 0x31,
+	0x46, 0x53, 0x62, 0x7c, 0x4c, 0x89, 0x71, 0xb7, 0x3c, 0xf8, 0x6f, 0x45, 0x06, 0xb1, 0x64, 0x03,
+	0x36, 0xff, 0x1a, 0xe9, 0xf8, 0xfe, 0x66, 0x76, 0xd1, 0x8b, 0x9f, 0x00, 0x00, 0x00, 0xff, 0xff,
+	0xe8, 0x60, 0x20, 0x52, 0x31, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -49,6 +179,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	SetRewards(ctx context.Context, in *MsgSetRewards, opts ...grpc.CallOption) (*MsgSetRewardsResponse, error)
 }
 
 type msgClient struct {
@@ -59,22 +190,476 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
+func (c *msgClient) SetRewards(ctx context.Context, in *MsgSetRewards, opts ...grpc.CallOption) (*MsgSetRewardsResponse, error) {
+	out := new(MsgSetRewardsResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.reward.Msg/SetRewards", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	SetRewards(context.Context, *MsgSetRewards) (*MsgSetRewardsResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
+func (*UnimplementedMsgServer) SetRewards(ctx context.Context, req *MsgSetRewards) (*MsgSetRewardsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetRewards not implemented")
+}
+
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
+}
+
+func _Msg_SetRewards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSetRewards)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).SetRewards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.reward.Msg/SetRewards",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).SetRewards(ctx, req.(*MsgSetRewards))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "tendermint.spn.reward.Msg",
 	HandlerType: (*MsgServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "reward/tx.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SetRewards",
+			Handler:    _Msg_SetRewards_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "reward/tx.proto",
 }
+
+func (m *MsgSetRewards) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgSetRewards) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgSetRewards) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.LastRewardHeight != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.LastRewardHeight))
+		i--
+		dAtA[i] = 0x20
+	}
+	if len(m.Coins) > 0 {
+		for iNdEx := len(m.Coins) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Coins[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintTx(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if m.LaunchID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.LaunchID))
+		i--
+		dAtA[i] = 0x10
+	}
+	if len(m.Provider) > 0 {
+		i -= len(m.Provider)
+		copy(dAtA[i:], m.Provider)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Provider)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgSetRewardsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgSetRewardsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgSetRewardsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
+func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
+	offset -= sovTx(v)
+	base := offset
+	for v >= 1<<7 {
+		dAtA[offset] = uint8(v&0x7f | 0x80)
+		v >>= 7
+		offset++
+	}
+	dAtA[offset] = uint8(v)
+	return base
+}
+func (m *MsgSetRewards) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Provider)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.LaunchID != 0 {
+		n += 1 + sovTx(uint64(m.LaunchID))
+	}
+	if len(m.Coins) > 0 {
+		for _, e := range m.Coins {
+			l = e.Size()
+			n += 1 + l + sovTx(uint64(l))
+		}
+	}
+	if m.LastRewardHeight != 0 {
+		n += 1 + sovTx(uint64(m.LastRewardHeight))
+	}
+	return n
+}
+
+func (m *MsgSetRewardsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
+func sovTx(x uint64) (n int) {
+	return (math_bits.Len64(x|1) + 6) / 7
+}
+func sozTx(x uint64) (n int) {
+	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgSetRewards) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgSetRewards: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgSetRewards: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Provider", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Provider = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LaunchID", wireType)
+			}
+			m.LaunchID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LaunchID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coins", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Coins = append(m.Coins, github_com_cosmos_cosmos_sdk_types.Coin{})
+			if err := m.Coins[len(m.Coins)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LastRewardHeight", wireType)
+			}
+			m.LastRewardHeight = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LastRewardHeight |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgSetRewardsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgSetRewardsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgSetRewardsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func skipTx(dAtA []byte) (n int, err error) {
+	l := len(dAtA)
+	iNdEx := 0
+	depth := 0
+	for iNdEx < l {
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return 0, ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return 0, io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		wireType := int(wire & 0x7)
+		switch wireType {
+		case 0:
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				iNdEx++
+				if dAtA[iNdEx-1] < 0x80 {
+					break
+				}
+			}
+		case 1:
+			iNdEx += 8
+		case 2:
+			var length int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return 0, ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return 0, io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				length |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if length < 0 {
+				return 0, ErrInvalidLengthTx
+			}
+			iNdEx += length
+		case 3:
+			depth++
+		case 4:
+			if depth == 0 {
+				return 0, ErrUnexpectedEndOfGroupTx
+			}
+			depth--
+		case 5:
+			iNdEx += 4
+		default:
+			return 0, fmt.Errorf("proto: illegal wireType %d", wireType)
+		}
+		if iNdEx < 0 {
+			return 0, ErrInvalidLengthTx
+		}
+		if depth == 0 {
+			return iNdEx, nil
+		}
+	}
+	return 0, io.ErrUnexpectedEOF
+}
+
+var (
+	ErrInvalidLengthTx        = fmt.Errorf("proto: negative length found during unmarshaling")
+	ErrIntOverflowTx          = fmt.Errorf("proto: integer overflow")
+	ErrUnexpectedEndOfGroupTx = fmt.Errorf("proto: unexpected end of group")
+)
