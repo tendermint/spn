@@ -5,10 +5,11 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/x/profile/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/x/profile/types"
 )
 
 func TestCoordinatorByAddressQuerySingle(t *testing.T) {

@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	valtypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
@@ -111,7 +112,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			currentNonce := uint64(1)
-			oldConsNonce, hasConsNonce := k.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress())
+			oldConsNonce, hasConsNonce := k.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().Bytes())
 			if hasConsNonce {
 				currentNonce = oldConsNonce.Nonce + 1
 			}

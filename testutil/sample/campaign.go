@@ -5,6 +5,7 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 

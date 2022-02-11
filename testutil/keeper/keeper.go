@@ -10,6 +10,9 @@ import (
 	ibcconnectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/tendermint/libs/log"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
@@ -18,8 +21,6 @@ import (
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
 
 var (

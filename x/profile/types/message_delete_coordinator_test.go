@@ -5,6 +5,7 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 	profile "github.com/tendermint/spn/x/profile/types"
 )
