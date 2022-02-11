@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/pkg/chainid"
 	"github.com/tendermint/spn/testutil/sample"
 )

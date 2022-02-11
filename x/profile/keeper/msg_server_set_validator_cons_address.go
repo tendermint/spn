@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	valtypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/profile/types"
@@ -21,7 +22,7 @@ func (k msgServer) SetValidatorConsAddress(
 		return &types.MsgSetValidatorConsAddressResponse{},
 			spnerrors.Criticalf("invalid consensus pub key %s", msg.ValidatorKeyType)
 	}
-	consAddress := valPubKey.GetConsAddress().String()
+	consAddress := valPubKey.GetConsAddress().Bytes()
 
 	// check signature
 	currentNonce := uint64(0)
@@ -53,7 +54,7 @@ func (k msgServer) SetValidatorConsAddress(
 					valByConsAddr.ValidatorAddress,
 				)
 		}
-		lastValidator.ConsensusAddress = ""
+		lastValidator.ConsensusAddress = nil
 		k.SetValidator(ctx, lastValidator)
 	}
 

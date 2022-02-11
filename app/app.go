@@ -79,13 +79,14 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
 	"github.com/spf13/cast"
-	"github.com/tendermint/spn/docs"
 	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
+
+	"github.com/tendermint/spn/docs"
 
 	monitoringcmodule "github.com/tendermint/spn/x/monitoringc"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -182,10 +183,10 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		// this line is used by starport scaffolding # stargate/app/maccPerms
 		campaignmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 		rewardmoduletypes.ModuleName:   nil,
 		fundraisingtypes.ModuleName:    nil,
+		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
 
@@ -518,6 +519,7 @@ func New(
 	// NOTE: staking module is required if HistoricalEntries param > 0
 	app.mm.SetOrderBeginBlockers(
 		upgradetypes.ModuleName,
+		capabilitytypes.ModuleName,
 		minttypes.ModuleName,
 		distrtypes.ModuleName,
 		slashingtypes.ModuleName,
@@ -585,6 +587,7 @@ func New(
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
+		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
 
 		// TODO: Include fundraising for simapp when available
 		// fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),

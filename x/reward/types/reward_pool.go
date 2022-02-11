@@ -8,19 +8,10 @@ import (
 )
 
 // NewRewardPool returns a new RewardPool object
-func NewRewardPool(
-	launchID,
-	lastRewardHeight,
-	currentRewardHeight uint64,
-	provider string,
-	coins sdk.Coins,
-) *RewardPool {
-	return &RewardPool{
+func NewRewardPool(launchID uint64, currentRewardHeight int64) RewardPool {
+	return RewardPool{
 		LaunchID:            launchID,
-		LastRewardHeight:    lastRewardHeight,
-		CurrentRewardHeight: currentRewardHeight,
-		Provider:            provider,
-		Coins:               coins,
+		CurrentRewardHeight: uint64(currentRewardHeight),
 	}
 }
 

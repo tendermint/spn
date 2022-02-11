@@ -4,6 +4,7 @@ import (
 	"context"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/profile/types"
 )

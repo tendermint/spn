@@ -2,12 +2,13 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
 // LastBlockHeight returns the last block height state param
-func (k Keeper) LastBlockHeight(ctx sdk.Context) (res uint64) {
+func (k Keeper) LastBlockHeight(ctx sdk.Context) (res int64) {
 	k.paramstore.Get(ctx, types.KeyLastBlockHeight, &res)
 	return
 }

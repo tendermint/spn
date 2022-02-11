@@ -6,6 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
+
 	"github.com/tendermint/spn/x/campaign/types"
 )
 

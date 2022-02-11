@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
@@ -54,6 +55,14 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						ChannelID: "1",
+					},
+				},
+				MonitoringHistoryList: []types.MonitoringHistory{
+					{
+						LaunchID: 0,
+					},
+					{
+						LaunchID: 1,
 					},
 				},
 				// this line is used by starport scaffolding # types/genesis/validField
@@ -113,6 +122,20 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 					{
 						ChannelID: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated monitoringHistory",
+			genState: &types.GenesisState{
+				MonitoringHistoryList: []types.MonitoringHistory{
+					{
+						LaunchID: 0,
+					},
+					{
+						LaunchID: 0,
 					},
 				},
 			},

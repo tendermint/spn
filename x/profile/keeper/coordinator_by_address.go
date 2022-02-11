@@ -4,8 +4,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
+
 	"github.com/tendermint/spn/x/profile/types"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 )
 
 // SetCoordinatorByAddress set a specific coordinatorByAddress in the store from its index
@@ -32,7 +33,6 @@ func (k Keeper) GetCoordinatorByAddress(
 	}
 
 	k.cdc.MustUnmarshal(b, &val)
-
 	return val, true
 }
 

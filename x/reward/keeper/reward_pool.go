@@ -3,6 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/x/reward/types"
 )
 
@@ -10,9 +11,7 @@ import (
 func (k Keeper) SetRewardPool(ctx sdk.Context, rewardPool types.RewardPool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RewardPoolKeyPrefix))
 	b := k.cdc.MustMarshal(&rewardPool)
-	store.Set(types.RewardPoolKey(
-		rewardPool.LaunchID,
-	), b)
+	store.Set(types.RewardPoolKey(rewardPool.LaunchID), b)
 }
 
 // GetRewardPool returns a rewardPool from its index

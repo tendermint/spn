@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc"
@@ -48,6 +49,14 @@ func TestGenesis(t *testing.T) {
 				ChannelID: "1",
 			},
 		},
+		MonitoringHistoryList: []types.MonitoringHistory{
+			{
+				LaunchID: 0,
+			},
+			{
+				LaunchID: 1,
+			},
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -65,5 +74,6 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.ProviderClientIDList, got.ProviderClientIDList)
 	require.ElementsMatch(t, genesisState.LaunchIDFromVerifiedClientIDList, got.LaunchIDFromVerifiedClientIDList)
 	require.ElementsMatch(t, genesisState.LaunchIDFromChannelIDList, got.LaunchIDFromChannelIDList)
+	require.ElementsMatch(t, genesisState.MonitoringHistoryList, got.MonitoringHistoryList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

@@ -3,6 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -18,13 +19,11 @@ func (k Keeper) SetConsensusKeyNonce(ctx sdk.Context, consensusKeyNonce types.Co
 // GetConsensusKeyNonce returns a consensusKeyNonce from its index
 func (k Keeper) GetConsensusKeyNonce(
 	ctx sdk.Context,
-	consensusAddress string,
+	consensusAddress []byte,
 ) (val types.ConsensusKeyNonce, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ConsensusKeyNonceKeyPrefix))
 
-	b := store.Get(types.ConsensusKeyNonceKey(
-		consensusAddress,
-	))
+	b := store.Get(types.ConsensusKeyNonceKey(consensusAddress))
 	if b == nil {
 		return val, false
 	}
@@ -34,11 +33,9 @@ func (k Keeper) GetConsensusKeyNonce(
 }
 
 // RemoveConsensusKeyNonce removes a consensusKeyNonce from the store
-func (k Keeper) RemoveConsensusKeyNonce(ctx sdk.Context, consensusAddress string) {
+func (k Keeper) RemoveConsensusKeyNonce(ctx sdk.Context, consensusAddress []byte) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ConsensusKeyNonceKeyPrefix))
-	store.Delete(types.ConsensusKeyNonceKey(
-		consensusAddress,
-	))
+	store.Delete(types.ConsensusKeyNonceKey(consensusAddress))
 }
 
 // GetAllConsensusKeyNonce returns all consensusKeyNonce

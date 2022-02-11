@@ -2,9 +2,11 @@ package keeper
 
 import (
 	"errors"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
+
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
@@ -14,13 +16,21 @@ func (k Keeper) OnRecvMonitoringPacket(
 	ctx sdk.Context,
 	packet channeltypes.Packet,
 	data spntypes.MonitoringPacket,
-) (packetAck types.MonitoringPacketAck, err error) {
+) (packetAck spntypes.MonitoringPacketAck, err error) {
 	// validate packet data upon receiving
 	if err := data.ValidateBasic(); err != nil {
 		return packetAck, err
 	}
 
-	// TODO: packet reception logic
+	// retrieve launch ID for channel ID
+	lidFromCid, found := k.GetLaunchIDFromChannelID(ctx, packet.DestinationChannel)
+	if !found {
+		return packetAck, fmt.Errorf("no launch ID associated to channel ID %s", packet.DestinationChannel)
+	}
+	k.SetMonitoringHistory(ctx, types.MonitoringHistory{
+		LaunchID:               lidFromCid.LaunchID,
+		LatestMonitoringPacket: data,
+	})
 
 	return packetAck, nil
 }
