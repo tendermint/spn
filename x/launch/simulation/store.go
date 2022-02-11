@@ -2,8 +2,9 @@ package simulation
 
 import (
 	"fmt"
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"math/rand"
+
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -103,8 +104,10 @@ func FindRandomRequest(
 	r.Shuffle(len(requests), func(i, j int) {
 		requests[i], requests[j] = requests[j], requests[i]
 	})
+	var chain types.Chain
+	var chainFound bool
 	for _, req := range requests {
-		chain, chainFound := k.GetChain(ctx, req.LaunchID)
+		chain, chainFound = k.GetChain(ctx, req.LaunchID)
 		if !chainFound || chain.LaunchTriggered {
 			continue
 		}
@@ -114,6 +117,7 @@ func FindRandomRequest(
 		if !found || !coord.Active {
 			continue
 		}
+
 		switch content := req.Content.Content.(type) {
 		case *types.RequestContent_ValidatorRemoval:
 			// if is validator removal, check if the validator exist
@@ -131,11 +135,11 @@ func FindRandomRequest(
 				continue
 			}
 		}
-		found = true
-		request = req
-		break
+
+		return req, true
 	}
-	return request, found
+
+	return request, false
 }
 
 // FindRandomValidator find a valid validator from store

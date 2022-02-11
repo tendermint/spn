@@ -1,8 +1,9 @@
 package keeper_test
 
 import (
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"testing"
+
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"

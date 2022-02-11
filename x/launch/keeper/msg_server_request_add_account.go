@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"

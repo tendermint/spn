@@ -31,7 +31,7 @@ func FindCoordinatorAccount(
 		coordByAddress, found := k.GetCoordinatorByAddress(ctx, acc.Address.String())
 		if found == exist {
 			coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorID)
-			if found == true && coord.Active == false {
+			if found && !coord.Active {
 				continue
 			}
 			return acc, true

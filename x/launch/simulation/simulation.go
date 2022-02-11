@@ -369,6 +369,7 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			request.RequestID,
 			approve,
 		)
+
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
