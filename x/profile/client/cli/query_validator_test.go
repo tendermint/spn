@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/tendermint/spn/testutil/nullify"
+
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
@@ -80,7 +82,7 @@ func TestShowValidator(t *testing.T) {
 				var resp types.QueryGetValidatorResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.Validator)
-				require.Equal(t, tc.obj, resp.Validator)
+				require.Equal(t, nullify.Fill(&tc.obj), nullify.Fill(&tc.obj))
 			}
 		})
 	}
