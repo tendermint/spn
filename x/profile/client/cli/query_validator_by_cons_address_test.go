@@ -7,14 +7,15 @@ import (
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/client/cli"
 	"github.com/tendermint/spn/x/profile/types"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 func networkWithValidatorByConsAddressObjects(t *testing.T, n int) (*network.Network, []types.ValidatorByConsAddress) {
@@ -25,7 +26,7 @@ func networkWithValidatorByConsAddressObjects(t *testing.T, n int) (*network.Net
 
 	for i := 0; i < n; i++ {
 		validatorByConsAddress := types.ValidatorByConsAddress{
-			ConsensusAddress: sample.ConsAddress(),
+			ConsensusAddress: sample.ConsAddress().Bytes(),
 		}
 		nullify.Fill(&validatorByConsAddress)
 		state.ValidatorByConsAddressList = append(state.ValidatorByConsAddressList, validatorByConsAddress)
@@ -60,7 +61,7 @@ func TestShowValidatorByConsAddress(t *testing.T) {
 		},
 		{
 			desc:               "not found",
-			idConsensusAddress: sample.ConsAddress(),
+			idConsensusAddress: sample.ConsAddress().Bytes(),
 
 			args: common,
 			err:  status.Error(codes.InvalidArgument, "not found"),
