@@ -62,9 +62,9 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			name: "valid custom genesis",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr2, ConsensusAddress: consAddr2},
-					{Address: addr3, ConsensusAddress: consAddr3},
+					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
+					{Address: addr2, ConsensusAddresses: [][]byte{consAddr2}},
+					{Address: addr3, ConsensusAddresses: [][]byte{consAddr3}},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
 					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
@@ -82,8 +82,8 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			name: "duplicated validator by address",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr1, ConsensusAddress: consAddr1},
+					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
+					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
 					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
@@ -100,7 +100,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			name: "duplicated validator by consensus address",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddress: consAddr1},
+					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
 					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
@@ -113,7 +113,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			name: "duplicated validator consensus nonce",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddress: consAddr1},
+					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
 					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
@@ -129,9 +129,9 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			name: "missing validator by cons address",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr2, ConsensusAddress: consAddr2},
-					{Address: addr3, ConsensusAddress: consAddr3},
+					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
+					{Address: addr2, ConsensusAddresses: [][]byte{consAddr2}},
+					{Address: addr3, ConsensusAddresses: [][]byte{consAddr3}},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
 					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
@@ -149,8 +149,8 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			name: "missing validator by cons nonce",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddress: consAddr1},
-					{Address: addr2, ConsensusAddress: consAddr2},
+					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
+					{Address: addr2, ConsensusAddresses: [][]byte{consAddr2}},
 				},
 				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
 					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
