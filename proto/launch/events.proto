@@ -2,6 +2,61 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 import "gogoproto/gogo.proto";
+import "launch/chain.proto";
+import "launch/request.proto";
+
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
+message EventChainCreated {
+  Chain chain = 1;
+}
+
+message EventChainUpdated {
+  Chain chain = 1;
+}
+
+message EventRequestCreated {
+  Request request = 1;
+}
+
+message EventRequestSettled {
+  uint64 launchID = 1;
+  uint64 requestID = 2;
+  bool approved = 3;
+}
+
+message EventGenesisAccountAdded {
+  string genesisAccount = 1;
+  uint64 launchID = 2;
+}
+
+message EventVestingAccountAdded {
+  string vestingAccount = 1;
+  uint64 launchID = 2;
+}
+
+message EventValidatorAdded {
+  string genesisValidatorAccount = 1;
+  uint64 launchID = 2;
+}
+
+
+message EventAccountRemoved {
+  string genesisAccount = 1;
+  uint64 launchID = 2;
+}
+
+message EventValidatorRemoved {
+  string genesisValidatorAccount = 1;
+  uint64 launchID = 2;
+}
+
+message EventLaunchTriggered {
+  uint64 launchID = 1;
+  uint64 remainingTime = 2;
+}
+
+message EventLaunchReverted {
+  uint64 launchID = 1;
+}
