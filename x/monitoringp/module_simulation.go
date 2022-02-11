@@ -9,6 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+
 	"github.com/tendermint/spn/testutil/sample"
 	monitoringpsimulation "github.com/tendermint/spn/x/monitoringp/simulation"
 	"github.com/tendermint/spn/x/monitoringp/types"

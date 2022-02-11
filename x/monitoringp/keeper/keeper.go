@@ -9,8 +9,9 @@ import (
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	host "github.com/cosmos/ibc-go/v2/modules/core/24-host"
-	"github.com/tendermint/spn/x/monitoringp/types"
 	"github.com/tendermint/tendermint/libs/log"
+
+	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
 type (

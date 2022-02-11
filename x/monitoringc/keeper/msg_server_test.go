@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
+
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"

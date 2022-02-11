@@ -2,6 +2,7 @@ package reward
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/x/reward/keeper"
 	"github.com/tendermint/spn/x/reward/types"
 )

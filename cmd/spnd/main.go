@@ -4,8 +4,9 @@ import (
 	"os"
 
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
-	"github.com/tendermint/spn/app"
 	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
+
+	"github.com/tendermint/spn/app"
 )
 
 func main() {

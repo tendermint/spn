@@ -5,10 +5,13 @@ govet:
 	@echo Running go vet...
 	@go vet ./...
 
-## format: Run gofmt.
+FIND_ARGS := -name '*.go' -type f -not -name '*.pb.go'
+
+## format: Run gofmt and goimports.
 format:
 	@echo Formatting...
-	@find . -name '*.go' -type f | xargs gofmt -d -s
+	@find . $(FIND_ARGS) | xargs gofmt -d -s
+	@find . $(FIND_ARGS) | xargs goimports -w -local github.com/tendermint/spn
 
 ## lint: Run Golang CI Lint.
 lint:

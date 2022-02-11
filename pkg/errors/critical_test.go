@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 )
 

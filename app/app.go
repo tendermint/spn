@@ -79,13 +79,14 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
 	"github.com/spf13/cast"
-	"github.com/tendermint/spn/docs"
 	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
+
+	"github.com/tendermint/spn/docs"
 
 	monitoringcmodule "github.com/tendermint/spn/x/monitoringc"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
