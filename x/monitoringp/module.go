@@ -14,10 +14,11 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
+	abci "github.com/tendermint/tendermint/abci/types"
+
 	"github.com/tendermint/spn/x/monitoringp/client/cli"
 	"github.com/tendermint/spn/x/monitoringp/keeper"
 	"github.com/tendermint/spn/x/monitoringp/types"
-	abci "github.com/tendermint/tendermint/abci/types"
 )
 
 var (

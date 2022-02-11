@@ -7,9 +7,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/tendermint/spn/x/campaign/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/tendermint/spn/x/campaign/types"
 )
 
 func (k Keeper) CampaignAll(c context.Context, req *types.QueryAllCampaignRequest) (*types.QueryAllCampaignResponse, error) {

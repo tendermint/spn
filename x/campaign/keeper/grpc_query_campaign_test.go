@@ -7,10 +7,11 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-	"github.com/tendermint/spn/x/campaign/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+	"github.com/tendermint/spn/x/campaign/types"
 )
 
 func TestCampaignQuerySingle(t *testing.T) {
