@@ -7,8 +7,9 @@ import (
 	connectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v2/modules/core/exported"
-	launchtypes "github.com/tendermint/spn/x/launch/types"
 	tmtypes "github.com/tendermint/tendermint/types"
+
+	launchtypes "github.com/tendermint/spn/x/launch/types"
 )
 
 type LaunchKeeper interface {

@@ -5,9 +5,10 @@ import (
 
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/pkg/errors"
+	"gopkg.in/yaml.v2"
+
 	"github.com/tendermint/spn/pkg/chainid"
 	spntypes "github.com/tendermint/spn/pkg/types"
-	"gopkg.in/yaml.v2"
 )
 
 var (

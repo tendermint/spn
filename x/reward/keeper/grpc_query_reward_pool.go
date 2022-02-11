@@ -6,9 +6,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/tendermint/spn/x/reward/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/tendermint/spn/x/reward/types"
 )
 
 func (k Keeper) RewardPoolAll(c context.Context, req *types.QueryAllRewardPoolRequest) (*types.QueryAllRewardPoolResponse, error) {

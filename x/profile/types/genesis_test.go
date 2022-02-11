@@ -1,10 +1,12 @@
 package types_test
 
 import (
-	"github.com/pkg/errors"
 	"testing"
 
+	"github.com/pkg/errors"
+
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -45,9 +47,9 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		addr1     = sample.Address()
 		addr2     = sample.Address()
 		addr3     = sample.Address()
-		consAddr1 = sample.ConsAddress()
-		consAddr2 = sample.ConsAddress()
-		consAddr3 = sample.ConsAddress()
+		consAddr1 = sample.ConsAddress().Bytes()
+		consAddr2 = sample.ConsAddress().Bytes()
+		consAddr3 = sample.ConsAddress().Bytes()
 	)
 	tests := []struct {
 		name     string

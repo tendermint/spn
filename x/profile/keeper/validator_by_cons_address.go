@@ -3,6 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -22,9 +23,7 @@ func (k Keeper) GetValidatorByConsAddress(
 ) (val types.ValidatorByConsAddress, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByConsAddressKeyPrefix))
 
-	b := store.Get(types.ValidatorByConsAddressKey(
-		consensusAddress,
-	))
+	b := store.Get(types.ValidatorByConsAddressKey(consensusAddress))
 	if b == nil {
 		return val, false
 	}
