@@ -45,6 +45,7 @@ func (k msgServer) SetValidatorConsAddress(
 		Description:        types.ValidatorDescription{},
 	}
 
+	// remove the consensus key from previous address
 	if valByConsAddr, found := k.GetValidatorByConsAddress(ctx, consAddress); found {
 		lastValidator, found := k.GetValidator(ctx, valByConsAddr.ValidatorAddress)
 		if !found {

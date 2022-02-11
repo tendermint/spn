@@ -112,6 +112,24 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			err: errors.New("duplicated index for validatorByConsAddress"),
 		},
 		{
+			name: "missing consensus address in the validator list",
+			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
+					{Address: addr1, ConsensusAddresses: [][]byte{}},
+					{Address: addr2, ConsensusAddresses: [][]byte{consAddr2}},
+				},
+				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
+					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
+					{ConsensusAddress: consAddr2, ValidatorAddress: addr2},
+				},
+				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
+					{ConsensusAddress: consAddr1, Nonce: 0},
+					{ConsensusAddress: consAddr2, Nonce: 1},
+				},
+			},
+			err: errors.New("consensus address not found in the Validator consensus address list"),
+		},
+		{
 			name: "duplicated validator consensus nonce",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
