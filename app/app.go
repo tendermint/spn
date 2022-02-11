@@ -436,6 +436,17 @@ func New(
 	app.CampaignKeeper = *campaignKeeper
 	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
 
+	app.RewardKeeper = *rewardmodulekeeper.NewKeeper(
+		appCodec,
+		keys[rewardmoduletypes.StoreKey],
+		keys[rewardmoduletypes.MemStoreKey],
+		app.GetSubspace(rewardmoduletypes.ModuleName),
+		app.BankKeeper,
+		app.ProfileKeeper,
+		app.LaunchKeeper,
+	)
+	rewardModule := rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper)
+
 	scopedMonitoringcKeeper := app.CapabilityKeeper.ScopeToModule(monitoringcmoduletypes.ModuleName)
 	app.ScopedMonitoringcKeeper = scopedMonitoringcKeeper
 	app.MonitoringcKeeper = *monitoringcmodulekeeper.NewKeeper(
@@ -452,17 +463,6 @@ func New(
 		app.RewardKeeper,
 	)
 	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
-
-	app.RewardKeeper = *rewardmodulekeeper.NewKeeper(
-		appCodec,
-		keys[rewardmoduletypes.StoreKey],
-		keys[rewardmoduletypes.MemStoreKey],
-		app.GetSubspace(rewardmoduletypes.ModuleName),
-		app.BankKeeper,
-		app.ProfileKeeper,
-		app.LaunchKeeper,
-	)
-	rewardModule := rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
