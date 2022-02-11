@@ -5,8 +5,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/tendermint/spn/x/launch/types"
 	tmtypes "github.com/tendermint/tendermint/types"
+
+	"github.com/tendermint/spn/x/launch/types"
 )
 
 // CheckValidatorSet checks the information about a validator

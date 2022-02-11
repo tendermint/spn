@@ -11,10 +11,11 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctypes "github.com/cosmos/ibc-go/v2/modules/core/types"
-	launch "github.com/tendermint/spn/x/launch/types"
-	profile "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
+
+	launch "github.com/tendermint/spn/x/launch/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 // Codec returns a codec with preregistered interfaces
