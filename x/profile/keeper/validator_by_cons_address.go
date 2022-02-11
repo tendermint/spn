@@ -23,9 +23,7 @@ func (k Keeper) GetValidatorByConsAddress(
 ) (val types.ValidatorByConsAddress, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByConsAddressKeyPrefix))
 
-	b := store.Get(types.ValidatorByConsAddressKey(
-		consensusAddress,
-	))
+	b := store.Get(types.ValidatorByConsAddressKey(consensusAddress))
 	if b == nil {
 		return val, false
 	}

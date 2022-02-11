@@ -47,9 +47,9 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 		addr1     = sample.Address()
 		addr2     = sample.Address()
 		addr3     = sample.Address()
-		consAddr1 = sample.ConsAddress()
-		consAddr2 = sample.ConsAddress()
-		consAddr3 = sample.ConsAddress()
+		consAddr1 = sample.ConsAddress().Bytes()
+		consAddr2 = sample.ConsAddress().Bytes()
+		consAddr3 = sample.ConsAddress().Bytes()
 	)
 	tests := []struct {
 		name     string

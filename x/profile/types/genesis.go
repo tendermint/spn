@@ -64,8 +64,7 @@ func (gs GenesisState) ValidateValidators() error {
 		}
 		consAddrIndex := ValidatorByConsAddressKey(elem.ConsensusAddress)
 		if _, ok := validatorByConsAddressIndexMap[string(consAddrIndex)]; !ok {
-			return errors.New(
-				"consensus key address not found for ValidatorByConsAddress")
+			return errors.New("consensus key address not found for ValidatorByConsAddress")
 		}
 		consensusKeyNonceIndexMap[index] = struct{}{}
 	}

@@ -41,7 +41,7 @@ func TestValidatorByConsAddressQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetValidatorByConsAddressRequest{
-				ConsensusAddress: sample.ConsAddress(),
+				ConsensusAddress: sample.ConsAddress().Bytes(),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},
