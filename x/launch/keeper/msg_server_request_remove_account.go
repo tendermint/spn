@@ -54,7 +54,7 @@ func (k msgServer) RequestRemoveAccount(
 	}
 
 	if msg.Creator == coordAddress {
-		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
+		err = ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err
 		}

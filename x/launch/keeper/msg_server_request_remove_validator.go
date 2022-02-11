@@ -46,7 +46,7 @@ func (k msgServer) RequestRemoveValidator(
 	}
 
 	if msg.Creator == coordAddress {
-		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
+		err = ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err
 		}

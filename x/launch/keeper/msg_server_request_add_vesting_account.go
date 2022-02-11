@@ -50,7 +50,7 @@ func (k msgServer) RequestAddVestingAccount(
 	var err error
 	approved := false
 	if msg.Creator == coordAddress {
-		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
+		err = ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err
 		}
