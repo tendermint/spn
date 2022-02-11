@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -47,5 +46,9 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 
 	k.SetChain(ctx, chain)
 
-	return &types.MsgEditChainResponse{}, nil
+	err := ctx.EventManager().EmitTypedEvent(&types.EventChainUpdated{
+		Chain: chain,
+	})
+
+	return &types.MsgEditChainResponse{}, err
 }

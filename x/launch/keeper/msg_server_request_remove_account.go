@@ -42,6 +42,7 @@ func (k msgServer) RequestRemoveAccount(
 	}
 
 	var requestID uint64
+	var err error
 	approved := false
 
 	content := types.NewAccountRemoval(msg.Address)
@@ -58,12 +59,19 @@ func (k msgServer) RequestRemoveAccount(
 			return nil, err
 		}
 		approved = true
+		err = ctx.EventManager().EmitTypedEvent(&types.EventAccountRemoved{
+			GenesisAccount: msg.Address,
+			LaunchID:       msg.LaunchID,
+		})
 	} else {
 		requestID = k.AppendRequest(ctx, request)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventRequestCreated{
+			Request: request,
+		})
 	}
 
 	return &types.MsgRequestRemoveAccountResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
-	}, nil
+	}, err
 }

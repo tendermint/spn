@@ -34,6 +34,7 @@ func (k msgServer) RequestRemoveValidator(
 	}
 
 	var requestID uint64
+	var err error
 	approved := false
 
 	content := types.NewValidatorRemoval(msg.ValidatorAddress)
@@ -50,12 +51,19 @@ func (k msgServer) RequestRemoveValidator(
 			return nil, err
 		}
 		approved = true
+		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorRemoved{
+			GenesisValidatorAccount: msg.ValidatorAddress,
+			LaunchID:                msg.LaunchID,
+		})
 	} else {
 		requestID = k.AppendRequest(ctx, request)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventRequestCreated{
+			Request: request,
+		})
 	}
 
 	return &types.MsgRequestRemoveValidatorResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
-	}, nil
+	}, err
 }

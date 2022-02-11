@@ -46,6 +46,7 @@ func (k msgServer) RequestAddValidator(
 	}
 
 	var requestID uint64
+	var err error
 	approved := false
 	if msg.Creator == coordAddress {
 		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
@@ -53,12 +54,18 @@ func (k msgServer) RequestAddValidator(
 			return nil, err
 		}
 		approved = true
+		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorAdded{
+			GenesisValidator: *content.GetGenesisValidator(),
+		})
 	} else {
 		requestID = k.AppendRequest(ctx, request)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventRequestCreated{
+			Request: request,
+		})
 	}
 
 	return &types.MsgRequestAddValidatorResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
-	}, nil
+	}, err
 }

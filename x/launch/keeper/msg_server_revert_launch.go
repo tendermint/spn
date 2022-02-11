@@ -50,5 +50,9 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 	chain.LaunchTimestamp = 0
 	k.SetChain(ctx, chain)
 
-	return &types.MsgRevertLaunchResponse{}, nil
+	err := ctx.EventManager().EmitTypedEvent(&types.EventLaunchReverted{
+		LaunchID: msg.LaunchID,
+	})
+
+	return &types.MsgRevertLaunchResponse{}, err
 }

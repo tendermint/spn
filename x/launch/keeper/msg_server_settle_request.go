@@ -56,5 +56,11 @@ func (k msgServer) SettleRequest(
 		}
 	}
 
-	return &types.MsgSettleRequestResponse{}, nil
+	err := ctx.EventManager().EmitTypedEvent(&types.EventRequestSettled{
+		LaunchID:  msg.LaunchID,
+		RequestID: request.RequestID,
+		Approved:  msg.Approve,
+	})
+
+	return &types.MsgSettleRequestResponse{}, err
 }

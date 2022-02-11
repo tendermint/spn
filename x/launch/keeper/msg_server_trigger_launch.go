@@ -43,8 +43,14 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 	}
 
 	chain.LaunchTriggered = true
-	chain.LaunchTimestamp = ctx.BlockTime().Unix() + int64(msg.RemainingTime)
+	timestamp := ctx.BlockTime().Unix() + int64(msg.RemainingTime)
+	chain.LaunchTimestamp = timestamp
 	k.SetChain(ctx, chain)
 
-	return &types.MsgTriggerLaunchResponse{}, nil
+	err := ctx.EventManager().EmitTypedEvent(&types.EventLaunchTriggered{
+		LaunchID:        msg.LaunchID,
+		LaunchTimestamp: timestamp,
+	})
+
+	return &types.MsgTriggerLaunchResponse{}, err
 }

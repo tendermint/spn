@@ -47,6 +47,7 @@ func (k msgServer) RequestAddAccount(
 	}
 
 	var requestID uint64
+	var err error
 	approved := false
 	if msg.Creator == coordAddress {
 		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
@@ -54,12 +55,18 @@ func (k msgServer) RequestAddAccount(
 			return nil, err
 		}
 		approved = true
+		err = ctx.EventManager().EmitTypedEvent(&types.EventGenesisAccountAdded{
+			GenesisAccount: *content.GetGenesisAccount(),
+		})
 	} else {
 		requestID = k.AppendRequest(ctx, request)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventRequestCreated{
+			Request: request,
+		})
 	}
 
 	return &types.MsgRequestAddAccountResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
-	}, nil
+	}, err
 }

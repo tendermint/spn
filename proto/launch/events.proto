@@ -4,20 +4,22 @@ package tendermint.spn.launch;
 import "gogoproto/gogo.proto";
 import "launch/chain.proto";
 import "launch/request.proto";
-
+import "launch/genesis_account.proto";
+import "launch/vesting_account.proto";
+import "launch/genesis_validator.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 message EventChainCreated {
-  Chain chain = 1;
+  Chain chain = 1 [(gogoproto.nullable) = false];
 }
 
 message EventChainUpdated {
-  Chain chain = 1;
+  Chain chain = 1 [(gogoproto.nullable) = false];
 }
 
 message EventRequestCreated {
-  Request request = 1;
+  Request request = 1 [(gogoproto.nullable) = false];
 }
 
 message EventRequestSettled {
@@ -27,20 +29,16 @@ message EventRequestSettled {
 }
 
 message EventGenesisAccountAdded {
-  string genesisAccount = 1;
-  uint64 launchID = 2;
+  GenesisAccount genesisAccount = 1 [(gogoproto.nullable) = false];
 }
 
 message EventVestingAccountAdded {
-  string vestingAccount = 1;
-  uint64 launchID = 2;
+  VestingAccount vestingAccount = 1 [(gogoproto.nullable) = false];
 }
 
 message EventValidatorAdded {
-  string genesisValidatorAccount = 1;
-  uint64 launchID = 2;
+  GenesisValidator genesisValidator = 1 [(gogoproto.nullable) = false];
 }
-
 
 message EventAccountRemoved {
   string genesisAccount = 1;
@@ -54,7 +52,7 @@ message EventValidatorRemoved {
 
 message EventLaunchTriggered {
   uint64 launchID = 1;
-  uint64 remainingTime = 2;
+  int64 launchTimestamp = 2;
 }
 
 message EventLaunchReverted {
