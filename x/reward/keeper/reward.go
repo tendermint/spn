@@ -47,8 +47,13 @@ func (k Keeper) DistributeRewards(
 		blockRatio = sdk.NewDec(1)
 	}
 
+	// store the total relative signature distributed to calculate the refund for the round
 	totalRelativeSignaturesDistributed := sdk.NewDec(0)
-	// distribute rewards to all block signers
+
+	// store rewards to distributes per address
+	rewardToDistribute := make(map[string]sdk.Coins)
+
+	// calculate the total reward for all validators
 	for _, signatureCount := range signatureCounts.Counts {
 
 		// get the validator address from the cons address
@@ -63,44 +68,38 @@ func (k Keeper) DistributeRewards(
 					validatorByConsAddr.ValidatorAddress,
 				)
 			}
-			// calculate the total relative signature distributed for we calculate the refund
+			// calculate the total relative signature distributed to calculate the refund for the round
 			totalRelativeSignaturesDistributed = totalRelativeSignaturesDistributed.Add(signatureCount.RelativeSignatures)
 
 			// compute reward relative to the signature and block count
 			// and update reward pool
-			signatureRatio := signatureCount.RelativeSignatures.Quo(sdk.NewDec(int64(signatureCounts.BlockCount)))
+			signatureRatio := signatureCount.RelativeSignatures.Quo(
+				sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount)),
+			)
 			reward, err := CalculateReward(blockRatio, signatureRatio, rewardPool.Coins)
 			if err != nil {
 				return spnerrors.Criticalf("invalid reward: %s", err.Error())
 			}
-			coins, isNegative := rewardPool.Coins.SafeSub(reward)
-			if isNegative {
-				return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
-			}
-			rewardPool.Coins = coins
-
-			// send rewards to the address
-			account, err := sdk.AccAddressFromBech32(validator.Address)
-			if err != nil {
-				return spnerrors.Criticalf("can't parse address %s", err.Error())
-			}
-			if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, account, reward); err != nil {
-				return spnerrors.Criticalf("send rewards error: %s", err.Error())
-			}
+			rewardToDistribute[validator.Address] = reward
 		}
 	}
-	// if the reward pool is closed or last reward height is reached
-	// the remaining coins are refunded and reward pool is deleted
-	if closeRewardPool || lastBlockHeight >= rewardPool.LastRewardHeight {
-		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
-			ctx,
-			types.ModuleName,
-			provider,
-			rewardPool.Coins); err != nil {
+
+	// distribute the rewards to validators
+	for address, rewards := range rewardToDistribute {
+		coins, isNegative := rewardPool.Coins.SafeSub(rewards)
+		if isNegative {
+			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
+		}
+		rewardPool.Coins = coins
+
+		// send rewards to the address
+		account, err := sdk.AccAddressFromBech32(address)
+		if err != nil {
+			return spnerrors.Criticalf("can't parse address %s", err.Error())
+		}
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, account, reward); err != nil {
 			return spnerrors.Criticalf("send rewards error: %s", err.Error())
 		}
-		k.RemoveRewardPool(ctx, launchID)
-		return nil
 	}
 
 	// if the reward pool is closed or last reward height is reached
