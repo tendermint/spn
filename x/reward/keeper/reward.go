@@ -97,7 +97,7 @@ func (k Keeper) DistributeRewards(
 		if err != nil {
 			return spnerrors.Criticalf("can't parse address %s", err.Error())
 		}
-		if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, account, reward); err != nil {
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, account, rewards); err != nil {
 			return spnerrors.Criticalf("send rewards error: %s", err.Error())
 		}
 	}
