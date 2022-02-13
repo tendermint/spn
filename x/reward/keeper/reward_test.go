@@ -127,16 +127,16 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		})
 	}
 	pk.SetValidator(ctx, profiletypes.Validator{
-		Address:          validatorFoo,
-		ConsensusAddress: validatorConsAddrFoo,
+		Address:            validatorFoo,
+		ConsensusAddresses: [][]byte{validatorConsAddrFoo},
 	})
 	pk.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
 		ValidatorAddress: validatorFoo,
 		ConsensusAddress: validatorConsAddrFoo,
 	})
 	pk.SetValidator(ctx, profiletypes.Validator{
-		Address:          validatorBar,
-		ConsensusAddress: validatorConsAddrBar,
+		Address:            validatorBar,
+		ConsensusAddresses: [][]byte{validatorConsAddrBar},
 	})
 	pk.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
 		ValidatorAddress: validatorBar,

@@ -32,13 +32,13 @@ func (gs GenesisState) Validate() error {
 
 func (gs GenesisState) ValidateValidators() error {
 	// Check for duplicated index in validator
-	validatorIndexMap := make(map[string]struct{})
+	validatorIndexMap := make(map[string]Validator)
 	for _, elem := range gs.ValidatorList {
 		valIndex := string(ValidatorKey(elem.Address))
 		if _, ok := validatorIndexMap[valIndex]; ok {
 			return errors.New("duplicated index for validator")
 		}
-		validatorIndexMap[valIndex] = struct{}{}
+		validatorIndexMap[valIndex] = elem
 	}
 
 	// Check for duplicated index in validatorByConsAddress
@@ -49,8 +49,12 @@ func (gs GenesisState) ValidateValidators() error {
 			return errors.New("duplicated index for validatorByConsAddress")
 		}
 		valIndex := ValidatorKey(elem.ValidatorAddress)
-		if _, ok := validatorIndexMap[string(valIndex)]; !ok {
+		validator, ok := validatorIndexMap[string(valIndex)]
+		if !ok {
 			return errors.New("validator consensus address not found for Validator")
+		}
+		if !validator.HasConsensusAddress(elem.ConsensusAddress) {
+			return errors.New("consensus address not found in the Validator consensus address list")
 		}
 		validatorByConsAddressIndexMap[index] = struct{}{}
 	}
@@ -64,8 +68,7 @@ func (gs GenesisState) ValidateValidators() error {
 		}
 		consAddrIndex := ValidatorByConsAddressKey(elem.ConsensusAddress)
 		if _, ok := validatorByConsAddressIndexMap[string(consAddrIndex)]; !ok {
-			return errors.New(
-				"consensus key address not found for ValidatorByConsAddress")
+			return errors.New("consensus key address not found for ValidatorByConsAddress")
 		}
 		consensusKeyNonceIndexMap[index] = struct{}{}
 	}

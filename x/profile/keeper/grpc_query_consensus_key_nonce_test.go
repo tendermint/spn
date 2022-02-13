@@ -10,6 +10,7 @@ import (
 
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -40,7 +41,7 @@ func TestConsensusKeyNonceQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetConsensusKeyNonceRequest{
-				ConsensusAddress: []byte("100000"),
+				ConsensusAddress: sample.ConsAddress().Bytes(),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},
