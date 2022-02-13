@@ -40,11 +40,12 @@ func (k msgServer) SetValidatorConsAddress(
 	}
 
 	validator := types.Validator{
-		Address:          msg.ValidatorAddress,
-		ConsensusAddress: consAddress,
-		Description:      types.ValidatorDescription{},
+		Address:            msg.ValidatorAddress,
+		ConsensusAddresses: [][]byte{consAddress},
+		Description:        types.ValidatorDescription{},
 	}
 
+	// remove the consensus key from previous address
 	if valByConsAddr, found := k.GetValidatorByConsAddress(ctx, consAddress); found {
 		lastValidator, found := k.GetValidator(ctx, valByConsAddr.ValidatorAddress)
 		if !found {
@@ -54,14 +55,14 @@ func (k msgServer) SetValidatorConsAddress(
 					valByConsAddr.ValidatorAddress,
 				)
 		}
-		lastValidator.ConsensusAddress = nil
+		lastValidator = lastValidator.RemoveValidatorConsensusAddress(consAddress)
 		k.SetValidator(ctx, lastValidator)
 	}
 
 	// get the current validator to eventually overwrite description and remove existing consensus key
 	if validatorStore, found := k.GetValidator(ctx, msg.ValidatorAddress); found {
 		validator.Description = validatorStore.Description
-		k.RemoveValidatorByConsAddress(ctx, validatorStore.ConsensusAddress)
+		validator = validatorStore.AddValidatorConsensusAddress(consAddress)
 	}
 
 	// store validator information
