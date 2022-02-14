@@ -33,8 +33,10 @@ func (k msgServer) RequestRemoveValidator(
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)
 	}
 
-	var requestID uint64
-	var err error
+	var (
+		requestID uint64
+		err error
+	)
 	approved := false
 
 	content := types.NewValidatorRemoval(msg.ValidatorAddress)
