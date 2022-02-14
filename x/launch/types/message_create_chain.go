@@ -71,6 +71,7 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 		return sdkerrors.Wrapf(ErrInvalidInitialGenesis, "hash of custom genesis must be sha256")
 	}
 
+	// TODO parameterize
 	if len(msg.Metadata) > 100 {
 		return ErrInvalidMetadataLength
 	}

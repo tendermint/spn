@@ -55,7 +55,7 @@ func CmdCreateChain() *cobra.Command {
 				}
 			}
 
-			// Read consensus pub key
+			// Read metadata bytes
 			metadataBytes, err := base64.StdEncoding.DecodeString(args[3])
 			if err != nil {
 				return err

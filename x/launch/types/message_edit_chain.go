@@ -64,7 +64,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		}
 	}
 
-	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil && len(msg.Metadata) <= 0 {
+	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil && len(msg.Metadata) == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
 	}
 
@@ -74,6 +74,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		}
 	}
 
+	// TODO parameterize
 	if len(msg.Metadata) > 100 {
 		return ErrInvalidMetadataLength
 	}
