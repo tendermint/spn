@@ -69,7 +69,7 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 
 	// If a genesis URL is provided, the hash must be sha256, which is 32 bytes
 	if msg.GenesisURL != "" && len(msg.GenesisHash) != HashLength {
-		return sdkerrors.Wrapf(ErrInvalidInitialGenesis, "hash of custom genesis must be sha256")
+		return sdkerrors.Wrap(ErrInvalidInitialGenesis, "hash of custom genesis must be sha256")
 	}
 
 	// TODO parameterize
