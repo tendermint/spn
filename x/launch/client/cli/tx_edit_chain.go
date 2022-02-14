@@ -89,6 +89,7 @@ func CmdEditChain() *cobra.Command {
 	cmd.Flags().String(flagSourceHash, "", "Hash from the new source URL for the chain")
 	cmd.Flags().Bool(flagDefaultGenesis, false, "Set the initial genesis to the default genesis of the chain")
 	cmd.Flags().String(flagGenesisURL, "", "Set the initial genesis from a URL containing a custom genesis")
+	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
