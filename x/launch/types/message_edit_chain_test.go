@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -34,6 +35,17 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		false,
 	)
 	msgInvalidGenesisChainID.GenesisChainID = "invalid"
+
+	msgInvalidMetadataLen := sample.MsgEditChain(
+		sample.Address(),
+		launchID,
+		false,
+		false,
+		false,
+		false,
+		false,
+	)
+	msgInvalidMetadataLen.Metadata = []byte(sample.String(spntypes.DefaultMaxMetadataLength + 10))
 
 	for _, tc := range []struct {
 		desc  string
@@ -152,6 +164,11 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc:  "invalid initial genesis chain ID",
 			msg:   msgInvalidGenesisChainID,
+			valid: false,
+		},
+		{
+			desc:  "invalid metadata length",
+			msg:   msgInvalidMetadataLen,
 			valid: false,
 		},
 	} {

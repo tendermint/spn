@@ -5,6 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tendermint/spn/pkg/chainid"
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 const TypeMsgEditChain = "edit_chain"
@@ -75,7 +76,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 	}
 
 	// TODO parameterize
-	if len(msg.Metadata) > 100 {
+	if len(msg.Metadata) > spntypes.DefaultMaxMetadataLength {
 		return ErrInvalidMetadataLength
 	}
 
