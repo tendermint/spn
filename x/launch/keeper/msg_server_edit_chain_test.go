@@ -179,6 +179,12 @@ func TestMsgEditChain(t *testing.T) {
 			} else {
 				require.EqualValues(t, previousChain.InitialGenesis, chain.InitialGenesis)
 			}
+
+			if len(tc.msg.Metadata) > 0 {
+				require.EqualValues(t, tc.msg.Metadata, chain.Metadata)
+			} else {
+				require.EqualValues(t, previousChain.Metadata, chain.Metadata)
+			}
 		})
 	}
 }

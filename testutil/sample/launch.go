@@ -11,6 +11,11 @@ import (
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
+// Metadata returns sample metadata bytes
+func Metadata(len int) []byte {
+	return Bytes(len)
+}
+
 // GenesisChainID returns a sample chain id
 func GenesisChainID() string {
 	chainName := AlphaString(5)
@@ -29,7 +34,7 @@ func Chain(id uint64, coordinatorID uint64) launch.Chain {
 		SourceHash:      String(10),
 		LaunchTriggered: false,
 		InitialGenesis:  launch.NewDefaultInitialGenesis(),
-		Metadata:        []byte(String(20)),
+		Metadata:        Metadata(20),
 	}
 }
 
@@ -153,7 +158,7 @@ func MsgCreateChain(coordAddress, genesisURL string, hasCampaign bool, campaignI
 		genesisHash,
 		hasCampaign,
 		campaignID,
-		[]byte(String(20)),
+		Metadata(20),
 	)
 }
 
@@ -188,7 +193,7 @@ func MsgEditChain(
 
 	var metadata []byte
 	if modifyMetadata {
-		metadata = []byte(String(20))
+		metadata = Metadata(20)
 	}
 
 	return *launch.NewMsgEditChain(
