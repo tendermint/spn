@@ -127,14 +127,14 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 			validator, found := k.GetValidator(ctx, tt.msg.ValidatorAddress)
 			require.True(t, found, "validator was not saved")
 			require.Equal(t, tt.msg.ValidatorAddress, validator.Address)
-			require.Equal(t, tt.pubKey.GetConsAddress().Bytes(), validator.ConsensusAddress)
+			require.True(t, validator.HasConsensusAddress(tt.pubKey.GetConsAddress().Bytes()))
 
-			valByConsAddr, found := k.GetValidatorByConsAddress(ctx, validator.ConsensusAddress)
+			valByConsAddr, found := k.GetValidatorByConsAddress(ctx, tt.pubKey.GetConsAddress().Bytes())
 			require.True(t, found, "validator by consensus address was not saved")
 			require.Equal(t, tt.msg.ValidatorAddress, valByConsAddr.ValidatorAddress)
 			require.Equal(t, tt.pubKey.GetConsAddress().Bytes(), valByConsAddr.ConsensusAddress)
 
-			consNonce, found := k.GetConsensusKeyNonce(ctx, validator.ConsensusAddress)
+			consNonce, found := k.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().Bytes())
 			require.True(t, found, "validator consensus nonce was not saved")
 			require.Equal(t, currentNonce, consNonce.Nonce)
 			require.Equal(t, tt.pubKey.GetConsAddress().Bytes(), consNonce.ConsensusAddress)

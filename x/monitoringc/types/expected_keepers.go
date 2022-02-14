@@ -9,6 +9,7 @@ import (
 	"github.com/cosmos/ibc-go/v2/modules/core/exported"
 	tmtypes "github.com/tendermint/tendermint/types"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 )
 
@@ -23,6 +24,13 @@ type LaunchKeeper interface {
 }
 
 type RewardKeeper interface {
+	DistributeRewards(
+		ctx sdk.Context,
+		launchID uint64,
+		signatureCounts spntypes.SignatureCounts,
+		lastBlockHeight uint64,
+		closeRewardPool bool,
+	) error
 }
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
