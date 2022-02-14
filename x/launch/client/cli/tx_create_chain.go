@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -22,9 +21,9 @@ const (
 
 func CmdCreateChain() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-chain [genesis-chain-id] [source-url] [source-hash] [metadata]",
+		Use:   "create-chain [genesis-chain-id] [source-url] [source-hash]",
 		Short: "Create a new chain for launch",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -55,11 +54,11 @@ func CmdCreateChain() *cobra.Command {
 				}
 			}
 
-			// Read metadata bytes
-			metadataBytes, err := base64.StdEncoding.DecodeString(args[3])
+			metadata, err := cmd.Flags().GetString(flagMetadata)
 			if err != nil {
 				return err
 			}
+			metadataBytes := []byte(metadata)
 
 			msg := types.NewMsgCreateChain(
 				clientCtx.GetFromAddress().String(),
@@ -81,6 +80,7 @@ func CmdCreateChain() *cobra.Command {
 
 	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
 	cmd.Flags().Int64(flagCampaignID, -1, "The campaign id")
+	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

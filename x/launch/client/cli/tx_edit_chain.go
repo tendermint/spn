@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"encoding/base64"
 	"errors"
 	"strconv"
 
@@ -57,11 +56,7 @@ func CmdEditChain() *cobra.Command {
 				initialGenesis = &genesisURL
 			}
 
-			// Read metadata bytes
-			metadataBytes, err := base64.StdEncoding.DecodeString(metadata)
-			if err != nil {
-				return err
-			}
+			metadataBytes := []byte(metadata)
 
 			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
