@@ -74,7 +74,8 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 
 	// TODO parameterize
 	if len(msg.Metadata) > spntypes.MaxMetadataLength {
-		return ErrInvalidMetadataLength
+		return sdkerrors.Wrapf(ErrInvalidMetadataLength, "data length %d is greater than maximum %d",
+			len(msg.Metadata), spntypes.MaxMetadataLength)
 	}
 
 	return nil
