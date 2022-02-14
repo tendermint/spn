@@ -20,6 +20,7 @@ func NewMsgCreateChain(
 	genesisHash string,
 	hasCampaign bool,
 	campaignID uint64,
+	metadata []byte,
 ) *MsgCreateChain {
 	return &MsgCreateChain{
 		Coordinator:    coordinator,
@@ -30,6 +31,7 @@ func NewMsgCreateChain(
 		GenesisHash:    genesisHash,
 		HasCampaign:    hasCampaign,
 		CampaignID:     campaignID,
+		Metadata:       metadata,
 	}
 }
 
@@ -67,6 +69,10 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 	// If a genesis URL is provided, the hash must be sha256, which is 32 bytes
 	if msg.GenesisURL != "" && len(msg.GenesisHash) != HashLength {
 		return sdkerrors.Wrapf(ErrInvalidInitialGenesis, "hash of custom genesis must be sha256")
+	}
+
+	if len(msg.Metadata) > 100 {
+		return ErrInvalidMetadataLength
 	}
 
 	return nil

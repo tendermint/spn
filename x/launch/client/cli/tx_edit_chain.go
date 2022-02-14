@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"encoding/base64"
 	"errors"
 	"strconv"
 
@@ -17,6 +18,7 @@ const (
 	flagSourceURL      = "source-url"
 	flagSourceHash     = "source-hash"
 	flagDefaultGenesis = "default-genesis"
+	flagMetadata       = "metadata"
 )
 
 func CmdEditChain() *cobra.Command {
@@ -31,6 +33,7 @@ func CmdEditChain() *cobra.Command {
 				sourceHash, _     = cmd.Flags().GetString(flagSourceHash)
 				defaultGenesis, _ = cmd.Flags().GetBool(flagDefaultGenesis)
 				genesisURL, _     = cmd.Flags().GetString(flagGenesisURL)
+				metadata, _       = cmd.Flags().GetString(flagMetadata)
 			)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -54,6 +57,12 @@ func CmdEditChain() *cobra.Command {
 				initialGenesis = &genesisURL
 			}
 
+			// Read metadata bytes
+			metadataBytes, err := base64.StdEncoding.DecodeString(metadata)
+			if err != nil {
+				return err
+			}
+
 			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
@@ -66,6 +75,7 @@ func CmdEditChain() *cobra.Command {
 				sourceURL,
 				sourceHash,
 				initialGenesis,
+				metadataBytes,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

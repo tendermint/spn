@@ -52,6 +52,7 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		true,
 		msg.CampaignID,
 		true,
+		[]byte{},
 	)
 	if err != nil {
 		return nil, spnerrors.Criticalf("cannot create the mainnet: %s", err.Error())

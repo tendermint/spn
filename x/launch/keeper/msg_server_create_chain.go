@@ -19,6 +19,8 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
 	}
 
+	// TODO check metadata len
+
 	id, err := k.CreateNewChain(
 		ctx,
 		coordID,
@@ -30,6 +32,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		msg.HasCampaign,
 		msg.CampaignID,
 		false,
+		msg.Metadata,
 	)
 	if err != nil {
 		return nil, sdkerrors.Wrap(types.ErrCreateChainFail, err.Error())

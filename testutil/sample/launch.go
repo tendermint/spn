@@ -29,6 +29,7 @@ func Chain(id uint64, coordinatorID uint64) launch.Chain {
 		SourceHash:      String(10),
 		LaunchTriggered: false,
 		InitialGenesis:  launch.NewDefaultInitialGenesis(),
+		Metadata:        []byte(String(20)),
 	}
 }
 
@@ -152,6 +153,7 @@ func MsgCreateChain(coordAddress, genesisURL string, hasCampaign bool, campaignI
 		genesisHash,
 		hasCampaign,
 		campaignID,
+		[]byte(String(20)),
 	)
 }
 
@@ -162,7 +164,8 @@ func MsgEditChain(
 	modifyGenesisChainID,
 	modifySource,
 	modifyInitialGenesis,
-	genesisURL bool,
+	genesisURL,
+	modifyMetadata bool,
 ) launch.MsgEditChain {
 	var genesisChainID, sourceURL, sourceHash string
 
@@ -183,6 +186,11 @@ func MsgEditChain(
 		}
 	}
 
+	var metadata []byte
+	if modifyMetadata {
+		metadata = []byte(String(20))
+	}
+
 	return *launch.NewMsgEditChain(
 		coordAddress,
 		launchID,
@@ -190,6 +198,7 @@ func MsgEditChain(
 		sourceURL,
 		sourceHash,
 		initialGenesis,
+		metadata,
 	)
 }
 

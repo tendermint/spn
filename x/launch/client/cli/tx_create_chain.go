@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -21,9 +22,9 @@ const (
 
 func CmdCreateChain() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-chain [genesis-chain-id] [source-url] [source-hash]",
+		Use:   "create-chain [genesis-chain-id] [source-url] [source-hash] [metadata]",
 		Short: "Create a new chain for launch",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -54,6 +55,12 @@ func CmdCreateChain() *cobra.Command {
 				}
 			}
 
+			// Read consensus pub key
+			metadataBytes, err := base64.StdEncoding.DecodeString(args[3])
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgCreateChain(
 				clientCtx.GetFromAddress().String(),
 				args[0],
@@ -63,6 +70,7 @@ func CmdCreateChain() *cobra.Command {
 				genesisHash,
 				hasCampaign,
 				campaignID,
+				metadataBytes,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

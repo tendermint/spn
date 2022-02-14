@@ -46,6 +46,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 		hasCampaign    bool
 		campaignID     uint64
 		isMainnet      bool
+		metadata       []byte
 		wantedID       uint64
 		valid          bool
 	}{
@@ -57,6 +58,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceHash:     sample.String(20),
 			genesisURL:     "",
 			hasCampaign:    false,
+			metadata:       []byte(sample.String(20)),
 			wantedID:       0,
 			valid:          true,
 		},
@@ -70,6 +72,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
+			metadata:       []byte(sample.String(20)),
 			wantedID:       1,
 			valid:          true,
 		},
@@ -83,6 +86,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			hasCampaign:    true,
 			campaignID:     0,
 			isMainnet:      true,
+			metadata:       []byte(sample.String(20)),
 			wantedID:       2,
 			valid:          true,
 		},
@@ -95,6 +99,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisURL:     sample.String(30),
 			genesisHash:    sample.GenesisHash(),
 			hasCampaign:    false,
+			metadata:       []byte(sample.String(20)),
 			wantedID:       3,
 			valid:          true,
 		},
@@ -107,6 +112,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisURL:     "",
 			hasCampaign:    true,
 			campaignID:     1000,
+			metadata:       []byte(sample.String(20)),
 			isMainnet:      false,
 			valid:          false,
 		},
@@ -120,6 +126,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
+			metadata:       []byte(sample.String(20)),
 			wantedID:       1,
 			valid:          false,
 		},
@@ -132,6 +139,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisURL:     "",
 			hasCampaign:    false,
 			campaignID:     0,
+			metadata:       []byte(sample.String(20)),
 			isMainnet:      true,
 			valid:          false,
 		},
@@ -148,6 +156,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 				tc.hasCampaign,
 				tc.campaignID,
 				tc.isMainnet,
+				tc.metadata,
 			)
 
 			if !tc.valid {
@@ -165,6 +174,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			require.EqualValues(t, tc.hasCampaign, chain.HasCampaign)
 			require.EqualValues(t, tc.campaignID, chain.CampaignID)
 			require.EqualValues(t, tc.isMainnet, chain.IsMainnet)
+			require.EqualValues(t, tc.metadata, chain.Metadata)
 
 			// Compare initial genesis
 			if tc.genesisURL == "" {

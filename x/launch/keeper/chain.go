@@ -22,6 +22,7 @@ func (k Keeper) CreateNewChain(
 	hasCampaign bool,
 	campaignID uint64,
 	isMainnet bool,
+	metadata []byte,
 ) (uint64, error) {
 	chain := types.Chain{
 		CoordinatorID:   coordinatorID,
@@ -34,6 +35,7 @@ func (k Keeper) CreateNewChain(
 		IsMainnet:       isMainnet,
 		LaunchTriggered: false,
 		LaunchTimestamp: 0,
+		Metadata:        metadata,
 	}
 
 	// Initialize initial genesis

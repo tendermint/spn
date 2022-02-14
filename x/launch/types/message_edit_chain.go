@@ -18,6 +18,7 @@ func NewMsgEditChain(
 	sourceURL,
 	sourceHash string,
 	initialGenesis *InitialGenesis,
+	metadata []byte,
 ) *MsgEditChain {
 	return &MsgEditChain{
 		Coordinator:    coordinator,
@@ -26,6 +27,7 @@ func NewMsgEditChain(
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
 		InitialGenesis: initialGenesis,
+		Metadata:       metadata,
 	}
 }
 
@@ -62,7 +64,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		}
 	}
 
-	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil {
+	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil && len(msg.Metadata) <= 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
 	}
 
@@ -70,6 +72,10 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		if err := msg.InitialGenesis.Validate(); err != nil {
 			return sdkerrors.Wrap(ErrInvalidInitialGenesis, err.Error())
 		}
+	}
+
+	if len(msg.Metadata) > 100 {
+		return ErrInvalidMetadataLength
 	}
 
 	return nil
