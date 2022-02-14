@@ -1,5 +1,5 @@
 package types
 
 const (
-	DefaultMaxMetadataLength = 100
+	MaxMetadataLength = 100
 )
