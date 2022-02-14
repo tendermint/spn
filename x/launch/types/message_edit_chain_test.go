@@ -45,7 +45,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		false,
 		false,
 	)
-	msgInvalidMetadataLen.Metadata = []byte(sample.String(spntypes.DefaultMaxMetadataLength + 10))
+	msgInvalidMetadataLen.Metadata = []byte(sample.String(spntypes.MaxMetadataLength + 10))
 
 	for _, tc := range []struct {
 		desc  string

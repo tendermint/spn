@@ -73,7 +73,7 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 	}
 
 	// TODO parameterize
-	if len(msg.Metadata) > spntypes.DefaultMaxMetadataLength {
+	if len(msg.Metadata) > spntypes.MaxMetadataLength {
 		return ErrInvalidMetadataLength
 	}
 
