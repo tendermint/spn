@@ -18,7 +18,7 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 	invalidGenesisChainID.GenesisChainID = "invalid"
 
 	msgInvalidMetadataLen := sample.MsgCreateChain(sample.Address(), "foo.com", false, 0)
-	msgInvalidMetadataLen.Metadata = []byte(sample.String(spntypes.MaxMetadataLength + 10))
+	msgInvalidMetadataLen.Metadata = sample.Bytes(spntypes.MaxMetadataLength + 1)
 
 	for _, tc := range []struct {
 		desc  string
