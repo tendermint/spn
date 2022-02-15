@@ -33,18 +33,18 @@ func TestMsgEditChain(t *testing.T) {
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordDisableAddress)
 	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
+	// Create a chain
+	msgCreateChain := sample.MsgCreateChain(coordDisableAddress, "", false, 0)
+	res, err := srv.CreateChain(ctx, &msgCreateChain)
+	require.NoError(t, err)
+	disableLaunchID := res.LaunchID
 	msgDisableCoord := sample.MsgDisableCoordinator(coordDisableAddress)
 	_, err = profileSrv.DisableCoordinator(ctx, &msgDisableCoord)
 	require.NoError(t, err)
 
-	// Create a campaign with disabled
-	msgCreateChain := sample.MsgCreateChain(coordDisableAddress, "", false, 0)
-	_, err = srv.CreateChain(ctx, &msgCreateChain)
-	require.ErrorIs(t, err, profiletypes.ErrCoordAddressNotFound)
-
 	// Create a chain
 	msgCreateChain = sample.MsgCreateChain(coordAddress, "", false, 0)
-	res, err := srv.CreateChain(ctx, &msgCreateChain)
+	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchID := res.LaunchID
 
@@ -127,6 +127,16 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 			),
 			err: profiletypes.ErrCoordInvalid,
+		},
+		{
+			name: "disabled coordinator - not found",
+			msg: sample.MsgEditChain(coordDisableAddress, disableLaunchID,
+				false,
+				true,
+				false,
+				false,
+			),
+			err: profiletypes.ErrCoordAddressNotFound,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
