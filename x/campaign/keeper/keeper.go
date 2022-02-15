@@ -3,6 +3,8 @@ package keeper
 import (
 	"fmt"
 
+	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -19,6 +21,7 @@ type (
 		launchKeeper  types.LaunchKeeper
 		bankKeeper    types.BankKeeper
 		profileKeeper types.ProfileKeeper
+		paramSpace    paramtypes.Subspace
 	}
 )
 
