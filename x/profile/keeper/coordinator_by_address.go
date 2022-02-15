@@ -19,7 +19,7 @@ func (k Keeper) SetCoordinatorByAddress(ctx sdk.Context, coordinatorByAddress ty
 }
 
 // GetCoordinatorByAddress returns a coordinatorByAddress from its index
-func (k Keeper) GetCoordinatorByAddress(
+func (k Keeper) getCoordinatorByAddress(
 	ctx sdk.Context,
 	address string,
 ) (val types.CoordinatorByAddress, found bool) {
@@ -62,14 +62,17 @@ func (k Keeper) GetAllCoordinatorByAddress(ctx sdk.Context) (list []types.Coordi
 
 // CoordinatorIDFromAddress returns the coordinator id associated to an address
 func (k Keeper) CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, found bool) {
-	coord, found := k.GetCoordinatorByAddress(ctx, address)
+	coord, found := k.getCoordinatorByAddress(ctx, address)
 	return coord.CoordinatorID, found
 }
 
-func (k Keeper) GetActiveCoordinatorByAddress(ctx sdk.Context, address string) (types.CoordinatorByAddress, error) {
-	coordByAddress, found := k.GetCoordinatorByAddress(ctx, address)
+// GetCoordinatorByAddress returns the CoordinatorByAddress associated to an address
+// returns ErrCoordAddressNotFound if not found in the store
+// if the corresponding Coordinator is not found or is inactive, returns ErrCritical
+func (k Keeper) GetCoordinatorByAddress(ctx sdk.Context, address string) (types.CoordinatorByAddress, error) {
+	coordByAddress, found := k.getCoordinatorByAddress(ctx, address)
 	if !found {
-		return types.CoordinatorByAddress{}, sdkerrors.Wrap(types.ErrCoordAddressNotFound, address)
+		return types.CoordinatorByAddress{}, sdkerrors.Wrapf(types.ErrCoordAddressNotFound, "address: %s", address)
 	}
 
 	coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorID)

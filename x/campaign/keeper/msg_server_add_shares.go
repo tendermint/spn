@@ -19,7 +19,7 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
-	coord, err := k.profileKeeper.GetActiveCoordinatorByAddress(ctx, msg.Coordinator)
+	coord, err := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
 	if err != nil {
 		return nil, err
 	}

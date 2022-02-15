@@ -23,13 +23,36 @@ func createNCoordinatorByAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) 
 	return items
 }
 
+func createNCoordinatorBoth(keeper *keeper.Keeper, ctx sdk.Context, n int) ([]types.CoordinatorByAddress, []types.Coordinator) {
+	coordsByAddr := make([]types.CoordinatorByAddress, n)
+	coords := make([]types.Coordinator, n)
+	for i := range coords {
+		coordsByAddr[i].Address = sample.Address()
+		keeper.SetCoordinatorByAddress(ctx, coordsByAddr[i])
+
+		coords[i].Address = coordsByAddr[i].Address
+		coords[i].Active = true
+		keeper.SetCoordinator(ctx, coords[i])
+	}
+	return coordsByAddr, coords
+}
+
 func TestCoordinatorByAddressGet(t *testing.T) {
+	keeper, ctx := testkeeper.Profile(t)
+	items, _ := createNCoordinatorBoth(keeper, ctx, 10)
+	for _, item := range items {
+		rst, err := keeper.GetCoordinatorByAddress(ctx, item.Address)
+		require.NoError(t, err)
+		require.Equal(t, item, rst)
+	}
+}
+
+func TestCoordinatorByAddressInvalid(t *testing.T) {
 	keeper, ctx := testkeeper.Profile(t)
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetCoordinatorByAddress(ctx, item.Address)
-		require.True(t, found)
-		require.Equal(t, item, rst)
+		_, err := keeper.GetCoordinatorByAddress(ctx, item.Address)
+		require.ErrorIs(t, err, spnerrors.ErrCritical)
 	}
 }
 func TestCoordinatorByAddressRemove(t *testing.T) {
@@ -37,8 +60,8 @@ func TestCoordinatorByAddressRemove(t *testing.T) {
 	items := createNCoordinatorByAddress(keeper, ctx, 10)
 	for _, item := range items {
 		keeper.RemoveCoordinatorByAddress(ctx, item.Address)
-		_, found := keeper.GetCoordinatorByAddress(ctx, item.Address)
-		require.False(t, found)
+		_, err := keeper.GetCoordinatorByAddress(ctx, item.Address)
+		require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 	}
 }
 
@@ -79,7 +102,7 @@ func TestActiveCoordinatorByAddressGet(t *testing.T) {
 		Active:        true,
 	})
 
-	rst, err := keeper.GetActiveCoordinatorByAddress(ctx, address)
+	rst, err := keeper.GetCoordinatorByAddress(ctx, address)
 	require.NoError(t, err)
 	require.Equal(t, uint64(10), rst.CoordinatorID)
 	require.Equal(t, address, rst.Address)
@@ -91,11 +114,11 @@ func TestActiveCoordinatorByAddressGet(t *testing.T) {
 		Active:        false,
 	})
 
-	rst, err = keeper.GetActiveCoordinatorByAddress(ctx, address)
+	rst, err = keeper.GetCoordinatorByAddress(ctx, address)
 	require.ErrorIs(t, err, spnerrors.ErrCritical)
 
 	// set valid state where coordinator is disabled
 	keeper.RemoveCoordinatorByAddress(ctx, address)
-	rst, err = keeper.GetActiveCoordinatorByAddress(ctx, address)
+	rst, err = keeper.GetCoordinatorByAddress(ctx, address)
 	require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 }

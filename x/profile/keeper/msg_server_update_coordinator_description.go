@@ -17,7 +17,7 @@ func (k msgServer) UpdateCoordinatorDescription(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the coordinator address is already in the store
-	coordByAddress, found := k.GetCoordinatorByAddress(ctx, msg.Address)
+	coordByAddress, found := k.getCoordinatorByAddress(ctx, msg.Address)
 	if !found {
 		return &types.MsgUpdateCoordinatorDescriptionResponse{},
 			sdkerrors.Wrap(types.ErrCoordAddressNotFound, msg.Address)
@@ -34,7 +34,7 @@ func (k msgServer) UpdateCoordinatorDescription(
 	if !coord.Active {
 		return &types.MsgUpdateCoordinatorDescriptionResponse{},
 			sdkerrors.Wrap(types.ErrCoordInactive,
-				"inactive coordinators cannot be updated")
+				"inactive coordinator description cannot be updated")
 	}
 
 	if len(msg.Description.Identity) > 0 {

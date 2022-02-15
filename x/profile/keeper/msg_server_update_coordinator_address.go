@@ -17,14 +17,14 @@ func (k msgServer) UpdateCoordinatorAddress(
 ) (*types.MsgUpdateCoordinatorAddressResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	coordByAddress, found := k.GetCoordinatorByAddress(ctx, msg.Address)
+	coordByAddress, found := k.getCoordinatorByAddress(ctx, msg.Address)
 	if !found {
 		return &types.MsgUpdateCoordinatorAddressResponse{},
 			sdkerrors.Wrap(types.ErrCoordAddressNotFound, msg.Address)
 	}
 
 	// Check if the new coordinator address is already in the store
-	newCoordAddr, found := k.GetCoordinatorByAddress(ctx, msg.NewAddress)
+	newCoordAddr, found := k.getCoordinatorByAddress(ctx, msg.NewAddress)
 	if found {
 		return &types.MsgUpdateCoordinatorAddressResponse{},
 			sdkerrors.Wrap(types.ErrCoordAlreadyExist,
@@ -42,7 +42,7 @@ func (k msgServer) UpdateCoordinatorAddress(
 	if !coord.Active {
 		return &types.MsgUpdateCoordinatorAddressResponse{},
 			sdkerrors.Wrap(types.ErrCoordInactive,
-				"inactive coordinators cannot be updated")
+				"inactive coordinator address cannot be updated")
 	}
 
 	coord.Address = msg.NewAddress

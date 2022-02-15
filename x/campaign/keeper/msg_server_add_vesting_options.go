@@ -21,7 +21,7 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	}
 
 	// Get the coordinator ID associated to the sender address
-	coord, err := k.profileKeeper.GetActiveCoordinatorByAddress(ctx, msg.Coordinator)
+	coord, err := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
 	if err != nil {
 		return nil, err
 	}

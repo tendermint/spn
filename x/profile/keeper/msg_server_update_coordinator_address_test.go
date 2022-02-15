@@ -12,14 +12,14 @@ import (
 
 func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 	var (
-		addr         = sample.Address()
-		invactiveCoord        = sample.Address()
-		coord1       = sample.MsgCreateCoordinator(sample.Address())
-		coord2       = sample.MsgCreateCoordinator(sample.Address())
-		disableCoord = sample.MsgCreateCoordinator(sample.Address())
-		disableMsg   = sample.MsgDisableCoordinator(disableCoord.Address)
-		ctx, k, srv  = setupMsgServer(t)
-		wCtx         = sdk.WrapSDKContext(ctx)
+		addr           = sample.Address()
+		invactiveCoord = sample.Address()
+		coord1         = sample.MsgCreateCoordinator(sample.Address())
+		coord2         = sample.MsgCreateCoordinator(sample.Address())
+		disableCoord   = sample.MsgCreateCoordinator(sample.Address())
+		disableMsg     = sample.MsgDisableCoordinator(disableCoord.Address)
+		ctx, k, srv    = setupMsgServer(t)
+		wCtx           = sdk.WrapSDKContext(ctx)
 	)
 	if _, err := srv.CreateCoordinator(wCtx, &coord1); err != nil {
 		t.Fatal(err)
@@ -73,10 +73,10 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 			},
 			err: types.ErrCoordAlreadyExist,
 		}, {
-			name: "inactive coordinator",
+			name: "inactive coordinator - address not found",
 			msg: types.MsgUpdateCoordinatorAddress{
 				Address:    disableCoord.Address,
-				NewAddress: addr2,
+				NewAddress: invactiveCoord,
 			},
 			err: types.ErrCoordAddressNotFound,
 		},
@@ -90,11 +90,11 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			_, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			require.False(t, found, "old coordinator address was not removed")
+			_, err = k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			require.ErrorIs(t, err, types.ErrCoordAddressNotFound, "old coordinator address was not removed")
 
-			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.NewAddress)
-			require.True(t, found, "coordinator by address not found")
+			coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.NewAddress)
+			require.NoError(t, err, "coordinator by address not found")
 			require.EqualValues(t, tt.msg.NewAddress, coordByAddr.Address)
 
 			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorID)

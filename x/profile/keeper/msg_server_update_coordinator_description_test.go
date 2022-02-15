@@ -35,10 +35,8 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	}{
 		{
 			name: "not found address",
-			msg: types.MsgUpdateCoordinatorDescription{
-				Address: addr,
-			},
-			err: types.ErrCoordAddressNotFound,
+			msg:  sample.MsgUpdateCoordinatorDescription(addr),
+			err:  types.ErrCoordAddressNotFound,
 		},
 		{
 			name: "update one value",
@@ -51,34 +49,22 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 		},
 		{
 			name: "update all values",
-			msg: types.MsgUpdateCoordinatorDescription{
-				Address: msgCoord.Address,
-				Description: types.CoordinatorDescription{
-					Identity: "update",
-					Website:  "update",
-					Details:  "update",
-				},
-			},
+			msg:  sample.MsgUpdateCoordinatorDescription(msgCoord.Address),
 		},
 		{
-			name: "inactive coordinator",
-			msg: types.MsgUpdateCoordinatorDescription{
-				Address: disableCoord.Address,
-				Description: types.CoordinatorDescription{
-					Identity: "update",
-					Website:  "update",
-					Details:  "update",
-				},
-			},
-			err: types.ErrCoordAddressNotFound,
+			name: "inactive coordinator - address not found",
+			msg:  sample.MsgUpdateCoordinatorDescription(disableCoord.Address),
+			err:  types.ErrCoordAddressNotFound,
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var oldCoord types.Coordinator
+			var found bool
 			if tt.err == nil {
-				coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-				require.True(t, found, "coordinator by address not found")
+				coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+				require.NoError(t, err, "coordinator by address not found")
 				oldCoord, found = k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
 				require.True(t, found, "coordinator not found")
 			}
@@ -90,8 +76,8 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			require.True(t, found, "coordinator by address not found")
+			coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			require.NoError(t, err, "coordinator by address not found")
 			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
 			require.True(t, found, "coordinator not found")
 			require.EqualValues(t, tt.msg.Address, coord.Address)

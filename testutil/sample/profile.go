@@ -21,6 +21,16 @@ func MsgDisableCoordinator(coordAddress string) profile.MsgDisableCoordinator {
 	)
 }
 
+// MsgUpdateCoordinatorDescription returns a sample MsgUpdateCoordinatorDescription
+func MsgUpdateCoordinatorDescription(coordAddress string) profile.MsgUpdateCoordinatorDescription {
+	return *profile.NewMsgUpdateCoordinatorDescription(
+		coordAddress,
+		coordAddress+" update identity",
+		"https://cosmos.network/update/"+coordAddress,
+		coordAddress+" update details",
+	)
+}
+
 // ValidatorDescription returns a sample ValidatorDescription
 func ValidatorDescription(desc string) profile.ValidatorDescription {
 	return profile.ValidatorDescription{

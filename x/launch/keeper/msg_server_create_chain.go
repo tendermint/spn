@@ -13,7 +13,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Get the coordinator ID associated to the sender address
-	coord, err := k.profileKeeper.GetActiveCoordinatorByAddress(ctx, msg.Coordinator)
+	coord, err := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
 	if err != nil {
 		return nil, err
 	}

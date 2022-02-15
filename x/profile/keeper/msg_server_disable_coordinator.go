@@ -17,10 +17,10 @@ func (k msgServer) DisableCoordinator(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the coordinator address is already in the store
-	coordByAddress, found := k.GetCoordinatorByAddress(ctx, msg.Address)
+	coordByAddress, found := k.getCoordinatorByAddress(ctx, msg.Address)
 	if !found {
 		return &types.MsgDisableCoordinatorResponse{},
-			sdkerrors.Wrap(types.ErrCoordAddressNotFound, msg.Address)
+			sdkerrors.Wrapf(types.ErrCoordAddressNotFound, "coordinator address %s not found", msg.Address)
 	}
 
 	coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorID)

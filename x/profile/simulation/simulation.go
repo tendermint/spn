@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"errors"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -28,7 +29,8 @@ func FindCoordinatorAccount(
 	})
 
 	for _, acc := range accs {
-		coordByAddress, found := k.GetCoordinatorByAddress(ctx, acc.Address.String())
+		coordByAddress, err := k.GetCoordinatorByAddress(ctx, acc.Address.String())
+		found := !errors.Is(err, types.ErrCoordAddressNotFound)
 		if found == exist {
 			coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorID)
 			if found && !coord.Active {
