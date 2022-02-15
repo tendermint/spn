@@ -12,13 +12,13 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Get the coordinator ID associated to the sender address
-	coord, err := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {
 		return nil, err
 	}
 
 	// Append the new campaign
-	campaign := types.NewCampaign(0, msg.CampaignName, coord.CoordinatorID, msg.TotalSupply, false)
+	campaign := types.NewCampaign(0, msg.CampaignName, coordID, msg.TotalSupply, false)
 	campaignID := k.AppendCampaign(ctx, campaign)
 
 	// Initialize the list of campaign chains

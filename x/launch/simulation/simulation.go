@@ -23,7 +23,7 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 		var found bool
 		var simAccount simtypes.Account
 		for _, acc := range accs {
-			_, err := k.GetProfileKeeper().GetCoordinatorByAddress(ctx, acc.Address.String())
+			_, err := k.GetProfileKeeper().CoordinatorIDFromAddress(ctx, acc.Address.String())
 			if err == nil {
 				simAccount = acc
 				found = true

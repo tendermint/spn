@@ -78,13 +78,18 @@ func TestCoordinatorIDFromAddress(t *testing.T) {
 		Address:       address,
 		CoordinatorID: 10,
 	})
+	keeper.SetCoordinator(ctx, types.Coordinator{
+		Address:       address,
+		CoordinatorID: 10,
+		Active:        true,
+	})
 
-	id, found := keeper.CoordinatorIDFromAddress(ctx, address)
-	require.True(t, found)
+	id, err := keeper.CoordinatorIDFromAddress(ctx, address)
+	require.NoError(t, err)
 	require.Equal(t, uint64(10), id)
 
-	_, found = keeper.CoordinatorIDFromAddress(ctx, sample.Address())
-	require.False(t, found)
+	_, err = keeper.CoordinatorIDFromAddress(ctx, sample.Address())
+	require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 }
 
 func TestActiveCoordinatorByAddressGet(t *testing.T) {

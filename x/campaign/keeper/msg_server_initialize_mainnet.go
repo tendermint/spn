@@ -29,12 +29,12 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 	}
 
 	// Get the coordinator ID associated to the sender address
-	coord, err := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {
 		return nil, err
 	}
 
-	if campaign.CoordinatorID != coord.CoordinatorID {
+	if campaign.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
 			"coordinator of the campaign is %d",
 			campaign.CoordinatorID,
@@ -44,7 +44,7 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 	// Create the mainnet chain for launch
 	mainnetID, err := k.launchKeeper.CreateNewChain(
 		ctx,
-		coord.CoordinatorID,
+		coordID,
 		msg.MainnetChainID,
 		msg.SourceURL,
 		msg.SourceHash,

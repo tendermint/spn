@@ -20,12 +20,12 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 	}
 
 	// Get the coordinator ID associated to the sender address
-	coord, err := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {
 		return nil, err
 	}
 
-	if chain.CoordinatorID != coord.CoordinatorID {
+	if chain.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrapf(
 			profiletypes.ErrCoordInvalid,
 			"coordinator of the chain is %d",

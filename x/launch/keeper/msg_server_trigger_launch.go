@@ -20,12 +20,12 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 	}
 
 	// Get the coordinator ID associated to the sender address
-	coord, err := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {
 		return nil, err
 	}
 
-	if chain.CoordinatorID != coord.CoordinatorID {
+	if chain.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
 			"coordinator of the chain is %d",
 			chain.CoordinatorID,

@@ -14,10 +14,9 @@ type CampaignKeeper interface {
 }
 
 type ProfileKeeper interface {
-	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, found bool)
+	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, err error)
 	GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) (address string, found bool)
 	GetCoordinator(ctx sdk.Context, id uint64) (val profiletypes.Coordinator, found bool)
-	GetCoordinatorByAddress(ctx sdk.Context, address string) (profiletypes.CoordinatorByAddress, error)
 }
 
 type AccountKeeper interface {

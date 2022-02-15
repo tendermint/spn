@@ -61,9 +61,9 @@ func (k Keeper) GetAllCoordinatorByAddress(ctx sdk.Context) (list []types.Coordi
 }
 
 // CoordinatorIDFromAddress returns the coordinator id associated to an address
-func (k Keeper) CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, found bool) {
-	coord, found := k.getCoordinatorByAddress(ctx, address)
-	return coord.CoordinatorID, found
+func (k Keeper) CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, err error) {
+	coord, err := k.GetCoordinatorByAddress(ctx, address)
+	return coord.CoordinatorID, err
 }
 
 // GetCoordinatorByAddress returns the CoordinatorByAddress associated to an address

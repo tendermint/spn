@@ -20,12 +20,12 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 	}
 
 	// Get the coordinator ID associated to the sender address
-	coord, err := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Coordinator)
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {
 		return nil, err
 	}
 
-	if campaign.CoordinatorID != coord.CoordinatorID {
+	if campaign.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
 			"coordinator of the campaign is %d",
 			campaign.CoordinatorID,
