@@ -112,7 +112,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		},
 		{
 			name: "disable coordinator",
-			msg:  sample.MsgRequestAddAccount(sample.Address(), sample.Address(), disableChain[0].LaunchID),
+			msg:  sample.MsgRequestAddAccount(sample.Address(), sample.Address(), disabledChain[0].LaunchID),
 			err:  profiletypes.ErrCoordInactive,
 		},
 	}
