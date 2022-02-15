@@ -146,16 +146,20 @@ func (k Keeper) DistributeRewards(
 	return nil
 }
 
-// CalculateReward calculates the reward relative to the signature and block count
+// CalculateRewards calculates the reward relative to the signature and block count
 func CalculateRewards(blockRatio, ratio sdk.Dec, coins sdk.Coins) (sdk.Coins, error) {
-	reward := sdk.NewCoins()
+	rewards := sdk.NewCoins()
 	for _, coin := range coins {
-		refund := blockRatio.Mul(ratio).Mul(coin.Amount.ToDec())
-		amount := coin.Amount.ToDec().Sub(refund)
-		if amount.IsNegative() {
-			return reward, fmt.Errorf("negative coin reward amount %s", amount.String())
+		amount := blockRatio.Mul(ratio).Mul(coin.Amount.ToDec())
+
+		// cehck remaining is not negative
+		remaining := coin.Amount.ToDec().Sub(amount)
+		if remaining.IsNegative() {
+			return rewards, fmt.Errorf("negative coin reward amount %s", amount.String())
 		}
-		reward = reward.Add(coin.SubAmount(refund.TruncateInt()))
+
+		coin.Amount = amount.TruncateInt()
+		rewards = rewards.Add(coin)
 	}
-	return reward, nil
+	return rewards, nil
 }
