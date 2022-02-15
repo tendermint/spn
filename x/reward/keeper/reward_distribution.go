@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -146,18 +145,25 @@ func (k Keeper) DistributeRewards(
 	return nil
 }
 
-// CalculateRewards calculates the reward relative to the signature and block count
-func CalculateRewards(blockRatio, ratio sdk.Dec, coins sdk.Coins) (sdk.Coins, error) {
+// CalculateRewards calculates the reward relative to the signature and block ratio
+func CalculateRewards(blockRatio, signatureRatio sdk.Dec, coins sdk.Coins) (sdk.Coins, error) {
+	// ratio can't be greater than one
+	if blockRatio.GT(sdk.NewDec(1)) {
+		return nil, fmt.Errorf("block ratio is greater than 1 %s", blockRatio.String())
+	}
+	if signatureRatio.GT(sdk.NewDec(1)) {
+		return nil, fmt.Errorf("signature ratio is greater than 1 %s", signatureRatio.String())
+	}
+
+	// if one ratio is zero, rewards are null
+	if blockRatio.IsZero() || signatureRatio.IsZero() {
+		return sdk.NewCoins(), nil
+	}
+
+	// calculate rewards
 	rewards := sdk.NewCoins()
 	for _, coin := range coins {
-		amount := blockRatio.Mul(ratio).Mul(coin.Amount.ToDec())
-
-		// cehck remaining is not negative
-		remaining := coin.Amount.ToDec().Sub(amount)
-		if remaining.IsNegative() {
-			return rewards, fmt.Errorf("negative coin reward amount %s", amount.String())
-		}
-
+		amount := blockRatio.Mul(signatureRatio).Mul(coin.Amount.ToDec())
 		coin.Amount = amount.TruncateInt()
 		rewards = rewards.Add(coin)
 	}

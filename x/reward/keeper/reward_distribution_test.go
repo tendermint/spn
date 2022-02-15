@@ -16,12 +16,9 @@ import (
 )
 
 func TestCalculateReward(t *testing.T) {
-	var (
-		coins = coinsFromString(t, "9999999aaa,3000bbb,10ccc")
-	)
 	type args struct {
 		blockRatio sdk.Dec
-		ratio      sdk.Dec
+		sigRatio      sdk.Dec
 		coins      sdk.Coins
 	}
 	tests := []struct {
@@ -31,51 +28,98 @@ func TestCalculateReward(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "test zero values",
+			name: "prevent using block ratio greater than 1",
 			args: args{
-				blockRatio: sdk.NewDec(0),
-				ratio:      sdk.NewDec(0),
-				coins:      sdk.NewCoins(),
-			},
-			want: sdk.NewCoins(),
-		},
-		{
-			name: "test nil coins",
-			args: args{
-				blockRatio: sdk.NewDec(0),
-				ratio:      sdk.NewDec(0),
-				coins:      nil,
-			},
-			want: sdk.NewCoins(),
-		},
-		{
-			name: "negative coin amount",
-			args: args{
-				blockRatio: sdk.NewDec(1000),
-				ratio:      sdk.NewDec(100),
+				blockRatio: decFromString(t, "1.1"),
+				sigRatio:      sdk.NewDec(0),
 				coins:      sample.Coins(),
 			},
 			wantErr: true,
 		},
 		{
-			name: "valid case",
+			name: "prevent using signature ratio greater than 1",
 			args: args{
-				blockRatio: sdk.NewDecWithPrec(6, 1),
-				ratio:      sdk.NewDecWithPrec(34, 2),
-				coins:      coins,
+				blockRatio: sdk.NewDec(0),
+				sigRatio:   decFromString(t, "1.1"),
+				coins:      sample.Coins(),
 			},
-			want: coinsFromString(t, "7960000aaa,2388bbb,8ccc"),
+			wantErr: true,
+		},
+		{
+			name: "zero ratios and zero coins should give zero rewards",
+			args: args{
+				blockRatio: sdk.NewDec(0),
+				sigRatio:      sdk.NewDec(0),
+				coins:      sdk.NewCoins(),
+			},
+			want: sdk.NewCoins(),
+		},
+		{
+			name: "nil coins should give zero rewards",
+			args: args{
+				blockRatio: sdk.NewDec(0),
+				sigRatio:      sdk.NewDec(0),
+				coins:      nil,
+			},
+			want: sdk.NewCoins(),
+		},
+		{
+			name: "0 block ratio should give 0 rewards",
+			args: args{
+				blockRatio: sdk.NewDec(0),
+				sigRatio:   sdk.NewDec(1),
+				coins:     coinsFromString(t, "10aaa,10bbb,10ccc"),
+			},
+			want: sdk.NewCoins(),
+		},
+		{
+			name: "0 signature ratio should give 0 rewards",
+			args: args{
+				blockRatio: sdk.NewDec(1),
+				sigRatio:   sdk.NewDec(0),
+				coins:     coinsFromString(t, "10aaa,10bbb,10ccc"),
+			},
+			want: sdk.NewCoins(),
+		},
+		{
+			name: "0.5 block ratio should give half rewards",
+			args: args{
+				blockRatio: decFromString(t, "0.5"),
+				sigRatio:   sdk.NewDec(1),
+				coins:      coinsFromString(t, "10aaa,100bbb,1000ccc"),
+			},
+			want: coinsFromString(t, "5aaa,50bbb,500ccc"),
+		},
+		{
+			name: "0.5 block ratio and 0.4 signature ratio should give 0.2 rewards",
+			args: args{
+				blockRatio: decFromString(t, "0.5"),
+				sigRatio:   decFromString(t, "0.4"),
+				coins:      coinsFromString(t, "10aaa,100bbb,1000ccc"),
+			},
+			want: coinsFromString(t, "2aaa,20bbb,200ccc"),
+		},
+		{
+			name: "decimal rewards should be truncated",
+			args: args{
+				blockRatio: decFromString(t, "0.5"),
+				sigRatio:   sdk.NewDec(1),
+				coins:      coinsFromString(t, "1aaa,11bbb,101ccc"),
+			},
+			want: coinsFromString(t, "5bbb,50ccc"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := keeper.CalculateRewards(tt.args.blockRatio, tt.args.ratio, tt.args.coins)
+			got, err := keeper.CalculateRewards(tt.args.blockRatio, tt.args.sigRatio, tt.args.coins)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
-			require.ElementsMatch(t, tt.want, got)
+			require.True(t, got.IsEqual(tt.want),
+				fmt.Sprintf("want: %s, got: %s", tt.want.String(), got.String()),
+			)
 		})
 	}
 }

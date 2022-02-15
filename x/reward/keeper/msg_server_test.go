@@ -44,3 +44,10 @@ func coinsFromString(t testing.TB, str string) sdk.Coins {
 	require.NoError(t, err)
 	return coins
 }
+
+// decFromString returns a sdk.Dec from a string
+func decFromString(t testing.TB, str string) sdk.Dec {
+	dec, err := sdk.NewDecFromStr(str)
+	require.NoError(t, err)
+	return dec
+}
