@@ -17,10 +17,7 @@ import (
 
 func TestCalculateReward(t *testing.T) {
 	var (
-		coinA = sdk.NewCoin("abc", sdk.NewInt(9999999))
-		coinB = sdk.NewCoin("bcd", sdk.NewInt(3000))
-		coinC = sdk.NewCoin("cde", sdk.NewInt(10))
-		coins = sdk.NewCoins(coinA, coinB, coinC)
+		coins = coinsFromString(t, "9999999aaa,3000bbb,10ccc")
 	)
 	type args struct {
 		blockRatio sdk.Dec
@@ -67,11 +64,7 @@ func TestCalculateReward(t *testing.T) {
 				ratio:      sdk.NewDecWithPrec(34, 2),
 				coins:      coins,
 			},
-			want: sdk.NewCoins(
-				sdk.NewCoin(coinA.Denom, sdk.NewInt(7960000)),
-				sdk.NewCoin(coinB.Denom, sdk.NewInt(2388)),
-				sdk.NewCoin(coinC.Denom, sdk.NewInt(8)),
-			),
+			want: coinsFromString(t, "7960000aaa,2388bbb,8ccc"),
 		},
 	}
 	for _, tt := range tests {
@@ -98,12 +91,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		validatorConsAddrBaz       = sample.ConsAddress()
 		notFoundValidatorAddr      = sample.ConsAddress()
 		provider                   = sample.Address()
-		coins                      = sdk.NewCoins(
-			sdk.NewCoin("bar", sdk.NewInt(11)),
-			sdk.NewCoin("baz", sdk.NewInt(222)),
-			sdk.NewCoin("foo", sdk.NewInt(3333)),
-			sdk.NewCoin("foobar", sdk.NewInt(4444)),
-		)
+		coins = coinsFromString(t, "11bar,222baz,3333foo,4444foobar")
+
 		signatureCounts = spntypes.SignatureCounts{
 			BlockCount: 2,
 			Counts: []spntypes.SignatureCount{
@@ -189,18 +178,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 			wantBalance: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
-				validatorBar: sdk.NewCoins(
-					sdk.NewCoin("bar", sdk.NewInt(2)),
-					sdk.NewCoin("baz", sdk.NewInt(60)),
-					sdk.NewCoin("foo", sdk.NewInt(936)),
-					sdk.NewCoin("foobar", sdk.NewInt(1248)),
-				),
-				validatorFoo: sdk.NewCoins(
-					sdk.NewCoin("bar", sdk.NewInt(2)),
-					sdk.NewCoin("baz", sdk.NewInt(60)),
-					sdk.NewCoin("foo", sdk.NewInt(936)),
-					sdk.NewCoin("foobar", sdk.NewInt(1248)),
-				),
+				validatorBar: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
+				validatorFoo: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
 			},
 		},
 		{
@@ -213,18 +192,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 			wantBalance: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
-				validatorBar: sdk.NewCoins(
-					sdk.NewCoin("bar", sdk.NewInt(2)),
-					sdk.NewCoin("baz", sdk.NewInt(60)),
-					sdk.NewCoin("foo", sdk.NewInt(936)),
-					sdk.NewCoin("foobar", sdk.NewInt(1248)),
-				),
-				validatorFoo: sdk.NewCoins(
-					sdk.NewCoin("bar", sdk.NewInt(2)),
-					sdk.NewCoin("baz", sdk.NewInt(60)),
-					sdk.NewCoin("foo", sdk.NewInt(936)),
-					sdk.NewCoin("foobar", sdk.NewInt(1248)),
-				),
+				validatorBar: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
+				validatorFoo: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
 			},
 		},
 		{
@@ -236,24 +205,9 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				closeRewardPool: false,
 			},
 			wantBalance: map[string]sdk.Coins{
-				provider: sdk.NewCoins(
-					sdk.NewCoin("bar", sdk.NewInt(2)),
-					sdk.NewCoin("baz", sdk.NewInt(60)),
-					sdk.NewCoin("foo", sdk.NewInt(936)),
-					sdk.NewCoin("foobar", sdk.NewInt(1248)),
-				),
-				validatorBar: sdk.NewCoins(
-					sdk.NewCoin("bar", sdk.NewInt(16)),
-					sdk.NewCoin("baz", sdk.NewInt(336)),
-					sdk.NewCoin("foo", sdk.NewInt(5000)),
-					sdk.NewCoin("foobar", sdk.NewInt(6668)),
-				),
-				validatorFoo: sdk.NewCoins(
-					sdk.NewCoin("bar", sdk.NewInt(24)),
-					sdk.NewCoin("baz", sdk.NewInt(444)),
-					sdk.NewCoin("foo", sdk.NewInt(6668)),
-					sdk.NewCoin("foobar", sdk.NewInt(8888)),
-				),
+				provider: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
+				validatorBar: coinsFromString(t,"16bar,336baz,5000foo,6668foobar"),
+				validatorFoo: coinsFromString(t,"24bar,444baz,6668foo,8888foobar"),
 			},
 		},
 		{
@@ -265,23 +219,9 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				closeRewardPool: false,
 			},
 			wantBalance: map[string]sdk.Coins{
-				provider: sdk.NewCoins(
-					sdk.NewCoin("baz", sdk.NewInt(6)),
-					sdk.NewCoin("foo", sdk.NewInt(104)),
-					sdk.NewCoin("foobar", sdk.NewInt(138)),
-				),
-				validatorBar: sdk.NewCoins(
-					sdk.NewCoin("bar", sdk.NewInt(4)),
-					sdk.NewCoin("baz", sdk.NewInt(84)),
-					sdk.NewCoin("foo", sdk.NewInt(1250)),
-					sdk.NewCoin("foobar", sdk.NewInt(1667)),
-				),
-				validatorFoo: sdk.NewCoins(
-					sdk.NewCoin("bar", sdk.NewInt(6)),
-					sdk.NewCoin("baz", sdk.NewInt(111)),
-					sdk.NewCoin("foo", sdk.NewInt(1667)),
-					sdk.NewCoin("foobar", sdk.NewInt(2222)),
-				),
+				provider: coinsFromString(t,"6baz,104foo,138foobar"),
+				validatorBar: coinsFromString(t,"4bar,84baz,1250foo,1667foobar"),
+				validatorFoo: coinsFromString(t,"6bar,111baz,1667foo,2222foobar"),
 			},
 		},
 	}

@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"github.com/stretchr/testify/require"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -35,4 +36,11 @@ func setupMsgServer(t testing.TB) (
 		profilekeeper.NewMsgServerImpl(*profileKeeper),
 		launchkeeper.NewMsgServerImpl(*launchKeeper),
 		ctx
+}
+
+// coinsFromString returns a sdk.Coins from a string
+func coinsFromString(t testing.TB, str string) sdk.Coins {
+	coins, err := sdk.ParseCoinsNormalized(str)
+	require.NoError(t, err)
+	return coins
 }
