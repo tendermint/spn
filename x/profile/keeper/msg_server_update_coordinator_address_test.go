@@ -13,7 +13,7 @@ import (
 func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 	var (
 		addr         = sample.Address()
-		addr2        = sample.Address()
+		invactiveCoord        = sample.Address()
 		coord1       = sample.MsgCreateCoordinator(sample.Address())
 		coord2       = sample.MsgCreateCoordinator(sample.Address())
 		disableCoord = sample.MsgCreateCoordinator(sample.Address())
