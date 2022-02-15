@@ -76,7 +76,7 @@ func TestCalculateReward(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := keeper.CalculateReward(tt.args.blockRatio, tt.args.ratio, tt.args.coins)
+			got, err := keeper.CalculateRewards(tt.args.blockRatio, tt.args.ratio, tt.args.coins)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
