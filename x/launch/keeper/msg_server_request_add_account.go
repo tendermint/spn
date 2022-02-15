@@ -42,7 +42,7 @@ func (k msgServer) RequestAddAccount(
 
 	if !coord.Active {
 		return nil, sdkerrors.Wrapf(profiletypes.ErrCoordInactive,
-			"the chain %d coordinator not found", chain.LaunchID)
+			"the chain %d coordinator is inactive", chain.LaunchID)
 	}
 
 	content := types.NewGenesisAccount(msg.LaunchID, msg.Address, msg.Coins)
