@@ -41,7 +41,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		Address: coordDisableAddr,
 		Active:  false,
 	})
-	disableChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
+	disabledChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
 
 	tests := []struct {
 		name        string
