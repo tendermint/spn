@@ -18,7 +18,7 @@ import (
 func TestCalculateReward(t *testing.T) {
 	type args struct {
 		blockRatio sdk.Dec
-		sigRatio      sdk.Dec
+		sigRatio   sdk.Dec
 		coins      sdk.Coins
 	}
 	tests := []struct {
@@ -31,7 +31,7 @@ func TestCalculateReward(t *testing.T) {
 			name: "prevent using block ratio greater than 1",
 			args: args{
 				blockRatio: decFromString(t, "1.1"),
-				sigRatio:      sdk.NewDec(0),
+				sigRatio:   sdk.NewDec(0),
 				coins:      sample.Coins(),
 			},
 			wantErr: true,
@@ -49,7 +49,7 @@ func TestCalculateReward(t *testing.T) {
 			name: "zero ratios and zero coins should give zero rewards",
 			args: args{
 				blockRatio: sdk.NewDec(0),
-				sigRatio:      sdk.NewDec(0),
+				sigRatio:   sdk.NewDec(0),
 				coins:      sdk.NewCoins(),
 			},
 			want: sdk.NewCoins(),
@@ -58,7 +58,7 @@ func TestCalculateReward(t *testing.T) {
 			name: "nil coins should give zero rewards",
 			args: args{
 				blockRatio: sdk.NewDec(0),
-				sigRatio:      sdk.NewDec(0),
+				sigRatio:   sdk.NewDec(0),
 				coins:      nil,
 			},
 			want: sdk.NewCoins(),
@@ -68,7 +68,7 @@ func TestCalculateReward(t *testing.T) {
 			args: args{
 				blockRatio: sdk.NewDec(0),
 				sigRatio:   sdk.NewDec(1),
-				coins:     coinsFromString(t, "10aaa,10bbb,10ccc"),
+				coins:      coinsFromString(t, "10aaa,10bbb,10ccc"),
 			},
 			want: sdk.NewCoins(),
 		},
@@ -77,7 +77,7 @@ func TestCalculateReward(t *testing.T) {
 			args: args{
 				blockRatio: sdk.NewDec(1),
 				sigRatio:   sdk.NewDec(0),
-				coins:     coinsFromString(t, "10aaa,10bbb,10ccc"),
+				coins:      coinsFromString(t, "10aaa,10bbb,10ccc"),
 			},
 			want: sdk.NewCoins(),
 		},
@@ -127,57 +127,35 @@ func TestCalculateReward(t *testing.T) {
 func TestKeeper_DistributeRewards(t *testing.T) {
 	var (
 		k, _, pk, bk, _, _, _, ctx = setupMsgServer(t)
-		launchIDs                  = []uint64{1, 2, 3, 4, 5}
-		validatorFoo               = sample.Address()
-		validatorBar               = sample.Address()
-		validatorConsAddrFoo       = sample.ConsAddress()
-		validatorConsAddrBar       = sample.ConsAddress()
-		validatorConsAddrBaz       = sample.ConsAddress()
-		notFoundValidatorAddr      = sample.ConsAddress()
+		valFoo                     = sample.Address()
+		valBar                     = sample.Address()
+		valConsAddrFoo             = sample.ConsAddress()
+		valConsAddrBar             = sample.ConsAddress()
+		noProfileVal               = sample.ConsAddress()
+		notFoundValAddr            = sample.ConsAddress()
 		provider                   = sample.Address()
-		coins = coinsFromString(t, "11bar,222baz,3333foo,4444foobar")
-
-		signatureCounts = spntypes.SignatureCounts{
-			BlockCount: 2,
-			Counts: []spntypes.SignatureCount{
-				{ConsAddress: validatorConsAddrFoo, RelativeSignatures: sdk.NewDec(1)},
-				{ConsAddress: validatorConsAddrBar, RelativeSignatures: sdk.NewDecWithPrec(5, 1)},
-				{ConsAddress: validatorConsAddrBaz, RelativeSignatures: sdk.NewDecWithPrec(55, 1)},
-			},
-		}
-		signatureCountsValNotFound = signatureCounts
 	)
-	signatureCountsValNotFound.Counts = append(signatureCountsValNotFound.Counts, spntypes.SignatureCount{
-		ConsAddress: notFoundValidatorAddr, RelativeSignatures: sdk.NewDec(1),
-	})
-	for _, launchID := range launchIDs {
-		k.SetRewardPool(ctx, types.RewardPool{
-			LaunchID:            launchID,
-			Provider:            provider,
-			Coins:               coins,
-			LastRewardHeight:    5,
-			CurrentRewardHeight: 10,
-		})
-	}
+
+	// set validator profiles
 	pk.SetValidator(ctx, profiletypes.Validator{
-		Address:            validatorFoo,
-		ConsensusAddresses: [][]byte{validatorConsAddrFoo},
+		Address:            valFoo,
+		ConsensusAddresses: [][]byte{valConsAddrFoo},
 	})
 	pk.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
-		ValidatorAddress: validatorFoo,
-		ConsensusAddress: validatorConsAddrFoo,
+		ValidatorAddress: valFoo,
+		ConsensusAddress: valConsAddrFoo,
 	})
 	pk.SetValidator(ctx, profiletypes.Validator{
-		Address:            validatorBar,
-		ConsensusAddresses: [][]byte{validatorConsAddrBar},
+		Address:            valBar,
+		ConsensusAddresses: [][]byte{valConsAddrBar},
 	})
 	pk.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
-		ValidatorAddress: validatorBar,
-		ConsensusAddress: validatorConsAddrBar,
+		ValidatorAddress: valBar,
+		ConsensusAddress: valConsAddrBar,
 	})
 	pk.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
 		ValidatorAddress: sample.Address(),
-		ConsensusAddress: notFoundValidatorAddr,
+		ConsensusAddress: notFoundValAddr,
 	})
 
 	type args struct {
@@ -188,6 +166,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 	}
 	tests := []struct {
 		name        string
+		rewardPool  types.RewardPool
 		args        args
 		wantBalance map[string]sdk.Coins
 		err         error
@@ -195,18 +174,28 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		{
 			name: "invalid reward pool",
 			args: args{
-				launchID:        99999,
-				signatureCounts: signatureCounts,
+				launchID: 99999,
+				signatureCounts: signatureCounts(1,
+					signatureCount(t, valConsAddrFoo, "0.5"),
+				),
 				lastBlockHeight: 1,
 				closeRewardPool: false,
 			},
 			err: types.ErrRewardPoolNotFound,
 		},
 		{
-			name: "not found validator",
+			name: "validator with a consensus address but without profile should return a critical error",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+			},
 			args: args{
-				launchID:        launchIDs[0],
-				signatureCounts: signatureCountsValNotFound,
+				launchID: 1,
+				signatureCounts: signatureCounts(1,
+					signatureCount(t, notFoundValAddr, "0.5"),
+				),
 				lastBlockHeight: 1,
 				closeRewardPool: false,
 			},
@@ -214,65 +203,127 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		},
 		{
 			name: "valid close reward pool",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+			},
 			args: args{
-				launchID:        launchIDs[1],
-				signatureCounts: signatureCounts,
-				lastBlockHeight: 2,
+				launchID: 1,
+				signatureCounts: signatureCounts(1,
+					signatureCount(t, valConsAddrFoo, "0.5"),
+					signatureCount(t, valConsAddrBar, "0.5"),
+				),
+				lastBlockHeight: 10,
 				closeRewardPool: true,
 			},
 			wantBalance: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
-				validatorBar: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
-				validatorFoo: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
+				valFoo:   coinsFromString(t, "50aaa,50bbb"),
+				valBar:   coinsFromString(t, "50aaa,50bbb"),
 			},
 		},
 		{
 			name: "valid close reward pool with lower last block height",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+			},
 			args: args{
-				launchID:        launchIDs[2],
-				signatureCounts: signatureCounts,
-				lastBlockHeight: 1,
+				launchID: 1,
+				signatureCounts: signatureCounts(1,
+					signatureCount(t, valConsAddrFoo, "0.5"),
+					signatureCount(t, valConsAddrBar, "0.5"),
+				),
+				lastBlockHeight: 5,
 				closeRewardPool: true,
 			},
 			wantBalance: map[string]sdk.Coins{
-				provider: sdk.NewCoins(),
-				validatorBar: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
-				validatorFoo: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
+				provider: coinsFromString(t, "50aaa,50bbb"),
+				valFoo:   coinsFromString(t, "25aaa,25bbb"),
+				valBar:   coinsFromString(t, "25aaa,25bbb"),
 			},
 		},
 		{
 			name: "valid distribute rewards without close",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+			},
 			args: args{
-				launchID:        launchIDs[3],
-				signatureCounts: signatureCounts,
-				lastBlockHeight: 2,
+				launchID: 1,
+				signatureCounts: signatureCounts(1,
+					signatureCount(t, valConsAddrFoo, "0.5"),
+					signatureCount(t, valConsAddrBar, "0.5"),
+				),
+				lastBlockHeight: 5,
 				closeRewardPool: false,
 			},
 			wantBalance: map[string]sdk.Coins{
-				provider: coinsFromString(t,"2bar,60baz,936foo,1248foobar"),
-				validatorBar: coinsFromString(t,"16bar,336baz,5000foo,6668foobar"),
-				validatorFoo: coinsFromString(t,"24bar,444baz,6668foo,8888foobar"),
+				provider: sdk.NewCoins(),
+				valFoo:   coinsFromString(t, "25aaa,25bbb"),
+				valBar:   coinsFromString(t, "25aaa,25bbb"),
 			},
 		},
 		{
-			name: "valid distribute rewards with high last block height",
+			name: "valid distribute rewards with last block height greater than reward pool last reward height",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+			},
 			args: args{
-				launchID:        launchIDs[4],
-				signatureCounts: signatureCounts,
-				lastBlockHeight: 3,
+				launchID: 1,
+				signatureCounts: signatureCounts(1,
+					signatureCount(t, valConsAddrFoo, "0.5"),
+					signatureCount(t, valConsAddrBar, "0.5"),
+				),
+				lastBlockHeight: 10,
 				closeRewardPool: false,
 			},
 			wantBalance: map[string]sdk.Coins{
-				provider: coinsFromString(t,"6baz,104foo,138foobar"),
-				validatorBar: coinsFromString(t,"4bar,84baz,1250foo,1667foobar"),
-				validatorFoo: coinsFromString(t,"6bar,111baz,1667foo,2222foobar"),
+				provider: sdk.NewCoins(),
+				valFoo:   coinsFromString(t, "50aaa,50bbb"),
+				valBar:   coinsFromString(t, "50aaa,50bbb"),
+			},
+		},
+		{
+			name: "rewards for validator with no profile should be refunded to provider",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+			},
+			args: args{
+				launchID: 1,
+				signatureCounts: signatureCounts(1,
+					signatureCount(t, valConsAddrFoo, "0.3"),
+					signatureCount(t, valConsAddrBar, "0.3"),
+					signatureCount(t, noProfileVal, "0.3"),
+				),
+				lastBlockHeight: 10,
+				closeRewardPool: false,
+			},
+			wantBalance: map[string]sdk.Coins{
+				provider: coinsFromString(t, "40aaa,40bbb"),
+				valFoo:   coinsFromString(t, "30aaa,30bbb"),
+				valBar:   coinsFromString(t, "30aaa,30bbb"),
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if rewardPool, found := k.GetRewardPool(ctx, tt.args.launchID); found {
-				err := bk.MintCoins(ctx, types.ModuleName, rewardPool.Coins)
+			// set test reward pool if contains coins
+			if tt.rewardPool.Coins != nil {
+				k.SetRewardPool(ctx, tt.rewardPool)
+				err := bk.MintCoins(ctx, types.ModuleName, tt.rewardPool.Coins)
 				require.NoError(t, err)
 			}
 
@@ -283,13 +334,16 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			}
 			require.NoError(t, err)
 
+			// check if reward pool should be closed
 			rewardPool, found := k.GetRewardPool(ctx, tt.args.launchID)
 			if tt.args.closeRewardPool || tt.args.lastBlockHeight >= rewardPool.LastRewardHeight {
 				require.False(t, found)
-				return
+				// TODO: https://github.com/tendermint/spn/issues/502
+				// assert the module account has no coin left
+			} else {
+				require.True(t, found)
+				require.Equal(t, tt.args.lastBlockHeight, rewardPool.CurrentRewardHeight)
 			}
-			require.True(t, found)
-			require.Equal(t, tt.args.lastBlockHeight, rewardPool.CurrentRewardHeight)
 
 			for wantAddr, wantBalance := range tt.wantBalance {
 				t.Run(fmt.Sprintf("check balance %s", wantAddr), func(t *testing.T) {
@@ -297,15 +351,26 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 					require.NoError(t, err)
 
 					balance := bk.GetAllBalances(ctx, wantAcc)
-					require.Equal(t, wantBalance, balance)
+					require.True(t, balance.IsEqual(wantBalance),
+						fmt.Sprintf("address: %s,  want: %s, got: %s",
+							wantAddr, wantBalance.String(), balance.String(),
+						),
+					)
 
 					// remove the test balance
 					err = bk.SendCoinsFromAccountToModule(ctx, wantAcc, types.ModuleName, balance)
 					require.NoError(t, err)
 					err = bk.BurnCoins(ctx, types.ModuleName, balance)
 					require.NoError(t, err)
+
+					// TODO: https://github.com/tendermint/spn/issues/502
+					// assert coins no distributed are still documented in the reward pool
+					// assert coins in reward pool equals coins in the module
 				})
 			}
+
+			// remove the reward pool used for the test
+			k.RemoveRewardPool(ctx, tt.rewardPool.LaunchID)
 		})
 	}
 }

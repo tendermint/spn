@@ -39,9 +39,9 @@ func (k Keeper) DistributeRewards(
 	}
 
 	// only the monitored blocks relative to last reward height are rewarded
-	blockRatioA := sdk.NewDec(int64(lastBlockHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
-	blockRatioB := sdk.NewDec(int64(rewardPool.LastRewardHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
-	blockRatio := blockRatioA.Quo(blockRatioB)
+	blockRatioNumerator := sdk.NewDec(int64(lastBlockHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
+	blockRatioDenominator := sdk.NewDec(int64(rewardPool.LastRewardHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
+	blockRatio := blockRatioNumerator.Quo(blockRatioDenominator)
 	if blockRatio.GT(sdk.NewDec(1)) {
 		blockRatio = sdk.NewDec(1)
 	}
@@ -118,25 +118,30 @@ func (k Keeper) DistributeRewards(
 	// Otherwise, the refund is relative to the block ratio and the reward pool is updated
 	// refundRation is blockCount.
 	// This is sum of signaturesRelative values from validator to compute refund
-	blockCount := sdk.NewDec(int64(signatureCounts.BlockCount))
-	refundRatio := blockCount.Sub(totalRelativeSignaturesDistributed).Quo(blockCount)
-	reward, err := CalculateRewards(blockRatio, refundRatio, rewardPool.Coins)
+	blockCount := sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount))
+	refundRatioNumerator := blockCount.Sub(totalRelativeSignaturesDistributed)
+	refundRatio := refundRatioNumerator.Quo(blockCount)
+	refund, err := CalculateRewards(blockRatio, refundRatio, rewardPool.Coins)
 	if err != nil {
 		return spnerrors.Criticalf("invalid reward: %s", err.Error())
 	}
-	coins, isNegative := rewardPool.Coins.SafeSub(reward)
-	if isNegative {
-		return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
-	}
-	rewardPool.Coins = coins
 
-	// send rewards to the address
-	if err := k.bankKeeper.SendCoinsFromModuleToAccount(
-		ctx,
-		types.ModuleName,
-		provider,
-		rewardPool.Coins); err != nil {
-		return spnerrors.Criticalf("send rewards error: %s", err.Error())
+	// if refund is non null, refund is sent to the provider
+	if !refund.IsZero() {
+		coins, isNegative := rewardPool.Coins.SafeSub(refund)
+		if isNegative {
+			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
+		}
+		rewardPool.Coins = coins
+
+		// send rewards to the address
+		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
+			ctx,
+			types.ModuleName,
+			provider,
+			rewardPool.Coins); err != nil {
+			return spnerrors.Criticalf("send rewards error: %s", err.Error())
+		}
 	}
 
 	// update the current reward height for next reward

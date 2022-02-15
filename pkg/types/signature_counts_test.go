@@ -9,8 +9,8 @@ import (
 	"github.com/tendermint/spn/pkg/types"
 )
 
-func signatureCount(t *testing.T, consAddr, sig string) types.SignatureCount {
-	sigDec, err := sdk.NewDecFromStr(sig)
+func signatureCount(t *testing.T, consAddr, relSig string) types.SignatureCount {
+	sigDec, err := sdk.NewDecFromStr(relSig)
 	require.NoError(t, err)
 	return types.SignatureCount{
 		ConsAddress:        []byte(consAddr),
