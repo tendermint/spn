@@ -3,9 +3,10 @@ package types
 import (
 	"errors"
 	"fmt"
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestParamsValidateBasic(t *testing.T) {
@@ -15,12 +16,12 @@ func TestParamsValidateBasic(t *testing.T) {
 		err    error
 	}{
 		{
-			name: "invalid range",
+			name:   "invalid range",
 			params: NewParams(DefaultMaxTotalSupply, DefaultMinTotalSupply),
-			err: errors.New("maximum total supply should be greater than greater or equal than minimum total supply"),
+			err:    errors.New("maximum total supply should be greater than greater or equal than minimum total supply"),
 		},
 		{
-			name: "valid range",
+			name:   "valid range",
 			params: NewParams(DefaultMinTotalSupply, DefaultMaxTotalSupply),
 		},
 	}
@@ -49,23 +50,23 @@ func TestValidateTotalSupplyRange(t *testing.T) {
 			err:         fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:        "invalid minTotalSupply",
+			name: "invalid minTotalSupply",
 			supplyRange: TotalSupplyRange{
 				MinTotalSupply: sdk.ZeroInt(),
 				MaxTotalSupply: DefaultMaxTotalSupply,
 			},
-			err:         errors.New("parameter minTotalSupply cannot be less than one"),
+			err: errors.New("parameter minTotalSupply cannot be less than one"),
 		},
 		{
-			name:        "invalid range",
+			name: "invalid range",
 			supplyRange: TotalSupplyRange{
 				MinTotalSupply: DefaultMaxTotalSupply,
 				MaxTotalSupply: DefaultMinTotalSupply,
 			},
-			err:         errors.New("parameter maxTotalSupply cannot be less than minTotalSupply"),
+			err: errors.New("parameter maxTotalSupply cannot be less than minTotalSupply"),
 		},
 		{
-			name:        "valid range",
+			name: "valid range",
 			supplyRange: TotalSupplyRange{
 				MinTotalSupply: DefaultMinTotalSupply,
 				MaxTotalSupply: DefaultMinTotalSupply.Add(sdk.OneInt()),

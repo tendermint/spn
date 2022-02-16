@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	DefaultMinTotalSupply = sdk.NewInt(100) // One hundred
+	DefaultMinTotalSupply = sdk.NewInt(100)                   // One hundred
 	DefaultMaxTotalSupply = sdk.NewInt(1_000_000_000_000_000) // One Quadrillion
 
 	ParamStoreKeyTotalSupplyRange = []byte("totalsupplyrange")

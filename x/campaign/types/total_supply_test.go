@@ -64,28 +64,28 @@ func TestValidateTotalSupply(t *testing.T) {
 	}
 
 	tests := []struct {
-		name         string
-		coins        sdk.Coins
-		supplyRange  campaign.TotalSupplyRange
-		valid        bool
+		name        string
+		coins       sdk.Coins
+		supplyRange campaign.TotalSupplyRange
+		valid       bool
 	}{
 		{
-			name: "total supply less than min",
-			coins: newCoins("100foo,1000bar"),
+			name:        "total supply less than min",
+			coins:       newCoins("100foo,1000bar"),
 			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1000), sdk.NewInt(10_000)),
-			valid: false,
+			valid:       false,
 		},
 		{
-			name: "total supply more than max",
-			coins: newCoins("1000foo,10000bar"),
+			name:        "total supply more than max",
+			coins:       newCoins("1000foo,10000bar"),
 			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1000), sdk.NewInt(1000)),
-			valid: false,
+			valid:       false,
 		},
 		{
-			name: "valid supply",
-			coins: newCoins("1000foo,1000bar"),
+			name:        "valid supply",
+			coins:       newCoins("1000foo,1000bar"),
 			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(100), sdk.NewInt(1000)),
-			valid: true,
+			valid:       true,
 		},
 	}
 	for _, tt := range tests {
