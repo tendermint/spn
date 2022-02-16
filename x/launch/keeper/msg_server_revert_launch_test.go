@@ -19,7 +19,6 @@ func TestMsgRevertLaunch(t *testing.T) {
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
 	coordNoExist := sample.Address()
-	coordDisableAddr := sample.Address()
 	chainIDNoExist := uint64(1000)
 
 	// Create coordinators
@@ -27,9 +26,6 @@ func TestMsgRevertLaunch(t *testing.T) {
 	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
-	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordDisableAddr)
 	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 
