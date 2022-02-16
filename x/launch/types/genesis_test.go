@@ -421,14 +421,21 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 		{
 			desc: "max launch time above the max parametrable launch time",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1),
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1, types.DefaultRevertDelay),
 			},
 			shouldBeValid: false,
 		},
 		{
 			desc: "min launch time above max launch time",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinLaunchTime+1, types.DefaultMinLaunchTime),
+				Params: types.NewParams(types.DefaultMinLaunchTime+1, types.DefaultMinLaunchTime, types.DefaultRevertDelay),
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "revert delay above max parametrable revert delay",
+			genState: types.GenesisState{
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.DefaultMaxLaunchTime, types.MaxParametrableRevertDelay+1),
 			},
 			shouldBeValid: false,
 		},

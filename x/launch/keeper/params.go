@@ -18,11 +18,18 @@ func (k Keeper) MaxLaunchTime(ctx sdk.Context) (res uint64) {
 	return
 }
 
+// RevertDelay returns the revert delay param
+func (k Keeper) RevertDelay(ctx sdk.Context) (res uint64) {
+	k.paramstore.Get(ctx, types.KeyRevertDelay, &res)
+	return
+}
+
 // GetParams get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
 		k.MinLaunchTime(ctx),
 		k.MaxLaunchTime(ctx),
+		k.RevertDelay(ctx),
 	)
 }
 

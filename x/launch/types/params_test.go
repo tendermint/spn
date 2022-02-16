@@ -16,18 +16,20 @@ func TestParamsValidate(t *testing.T) {
 		err    error
 	}{
 		{
-			name: "invalid range",
+			name: "invalid launch time range",
 			params: Params{
 				MinLaunchTime: DefaultMaxLaunchTime,
 				MaxLaunchTime: DefaultMinLaunchTime,
+				RevertDelay:   DefaultRevertDelay,
 			},
 			err: errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
 		},
 		{
-			name: "valid range",
+			name: "valid params",
 			params: Params{
 				MinLaunchTime: DefaultMinLaunchTime,
 				MaxLaunchTime: DefaultMaxLaunchTime,
+				RevertDelay:   DefaultRevertDelay,
 			},
 		},
 	}
@@ -56,7 +58,7 @@ func TestValidateLaunchTime(t *testing.T) {
 			err:        fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:       "invalid interface",
+			name:       "invalid interface - too high",
 			launchTime: MaxParametrableLaunchTime + 1,
 			err:        errors.New("max parametrable launch time reached"),
 		},
@@ -72,6 +74,44 @@ func TestValidateLaunchTime(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := validateLaunchTime(tt.launchTime)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestValidateRevertDelay(t *testing.T) {
+	tests := []struct {
+		name       string
+		launchTime interface{}
+		err        error
+	}{
+		{
+			name:       "invalid interface",
+			launchTime: "test",
+			err:        fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:       "invalid interface - too high",
+			launchTime: MaxParametrableRevertDelay + 1,
+			err:        errors.New("max parametrable revert delay reached"),
+		},
+		{
+			name:       "max revert delay",
+			launchTime: MaxParametrableRevertDelay,
+		},
+		{
+			name:       "valid launch time",
+			launchTime: uint64(time.Minute.Seconds() * 1),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateRevertDelay(tt.launchTime)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)
