@@ -2,7 +2,6 @@ package campaign
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/testutil/sample"
 	"math/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -10,6 +9,7 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	"github.com/tendermint/spn/testutil/sample"
 	campaignsim "github.com/tendermint/spn/x/campaign/simulation"
 	"github.com/tendermint/spn/x/campaign/types"
 )
