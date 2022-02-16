@@ -31,7 +31,7 @@ func TestMsgDisableCoordinator(t *testing.T) {
 			err:  types.ErrCoordAddressNotFound,
 		},
 		{
-			name: "disable coordinator",
+			name: "successfully disable coordinator",
 			msg:  types.MsgDisableCoordinator{Address: msgCoord.Address},
 		},
 	}
