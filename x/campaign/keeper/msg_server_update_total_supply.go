@@ -36,6 +36,12 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%d", msg.CampaignID)
 	}
 
+	// Validate provided totalSupply
+	totalSupplyRange := k.TotalSupplyRange(ctx)
+	if err := types.ValidateTotalSupply(msg.TotalSupplyUpdate, totalSupplyRange); err != nil {
+		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, err.Error())
+	}
+
 	campaign.TotalSupply = types.UpdateTotalSupply(campaign.TotalSupply, msg.TotalSupplyUpdate)
 	k.SetCampaign(ctx, campaign)
 

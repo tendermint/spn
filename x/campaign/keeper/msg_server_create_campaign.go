@@ -17,6 +17,12 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, err
 	}
 
+	// Validate provided totalSupply
+	totalSupplyRange := k.TotalSupplyRange(ctx)
+	if err := types.ValidateTotalSupply(msg.TotalSupply, totalSupplyRange); err != nil {
+		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, err.Error())
+	}
+
 	// Append the new campaign
 	campaign := types.NewCampaign(0, msg.CampaignName, coordID, msg.TotalSupply, false)
 	campaignID := k.AppendCampaign(ctx, campaign)

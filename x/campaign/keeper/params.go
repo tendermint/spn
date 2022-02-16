@@ -17,12 +17,8 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramSpace.SetParamSet(ctx, &params)
 }
 
-func (k Keeper) MinTotalSupply(ctx sdk.Context) (amount sdk.Int) {
-	k.paramSpace.Get(ctx, types.ParamStoreKeyMinTotalSupply, &amount)
-	return
-}
-
-func (k Keeper) MaxTotalSupply(ctx sdk.Context) (amount sdk.Int) {
-	k.paramSpace.Get(ctx, types.ParamStoreKeyMaxTotalSupply, &amount)
+// TotalSupplyRange returns the param that defines the allowed range for total supply
+func (k Keeper) TotalSupplyRange(ctx sdk.Context) (totalSupplyRange types.TotalSupplyRange) {
+	k.paramSpace.Get(ctx, types.ParamStoreKeyTotalSupplyRange, &totalSupplyRange)
 	return
 }
