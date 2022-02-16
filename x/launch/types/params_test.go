@@ -86,32 +86,32 @@ func TestValidateLaunchTime(t *testing.T) {
 
 func TestValidateRevertDelay(t *testing.T) {
 	tests := []struct {
-		name       string
-		launchTime interface{}
-		err        error
+		name        string
+		revertDelay interface{}
+		err         error
 	}{
 		{
-			name:       "invalid interface",
-			launchTime: "test",
-			err:        fmt.Errorf("invalid parameter type: string"),
+			name:        "invalid interface",
+			revertDelay: "test",
+			err:         fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:       "invalid interface - too high",
-			launchTime: MaxParametrableRevertDelay + 1,
-			err:        errors.New("max parametrable revert delay reached"),
+			name:        "invalid interface - too high",
+			revertDelay: MaxParametrableRevertDelay + 1,
+			err:         errors.New("max parametrable revert delay reached"),
 		},
 		{
-			name:       "max revert delay",
-			launchTime: MaxParametrableRevertDelay,
+			name:        "max revert delay",
+			revertDelay: MaxParametrableRevertDelay,
 		},
 		{
-			name:       "valid launch time",
-			launchTime: uint64(time.Minute.Seconds() * 1),
+			name:        "valid revert delay",
+			revertDelay: uint64(time.Minute.Seconds() * 1),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateRevertDelay(tt.launchTime)
+			err := validateRevertDelay(tt.revertDelay)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)

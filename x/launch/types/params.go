@@ -24,7 +24,7 @@ var (
 	DefaultRevertDelay = uint64(60 * 60)
 
 	MaxParametrableLaunchTime  = uint64(time.Hour.Seconds() * 24 * 31)
-	MaxParametrableRevertDelay = MaxParametrableLaunchTime
+	MaxParametrableRevertDelay = uint64(time.Hour.Seconds() * 24)
 
 	KeyMinLaunchTime = []byte("MinLaunchTime")
 	KeyMaxLaunchTime = []byte("MaxLaunchTime")

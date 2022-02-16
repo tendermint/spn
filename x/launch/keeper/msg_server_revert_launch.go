@@ -42,7 +42,7 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 	}
 
 	// We must wait for a specific delay once the chain is launched before being able to revert it
-	if ctx.BlockTime().Unix() < chain.LaunchTimestamp+types.RevertDelay {
+	if ctx.BlockTime().Unix() < chain.LaunchTimestamp+int64(k.RevertDelay(ctx)) {
 		return nil, sdkerrors.Wrapf(types.ErrRevertDelayNotReached, "%d", msg.LaunchID)
 	}
 
