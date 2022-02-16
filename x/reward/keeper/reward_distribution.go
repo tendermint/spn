@@ -117,7 +117,7 @@ func (k Keeper) DistributeRewards(
 	}
 
 	// Otherwise, the refund is relative to the block ratio and the reward pool is updated
-	// refundRation is blockCount.
+	// refundRatio is blockCount.
 	// This is sum of signaturesRelative values from validator to compute refund
 	blockCount := sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount))
 	refundRatioNumerator := blockCount.Sub(totalRelativeSignaturesDistributed)
