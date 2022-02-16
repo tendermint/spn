@@ -8,6 +8,7 @@ release/
 .envrc
 
 # Localnet
-node?/data/*.db
-node?/data/cs.wal
-node?/config/write-file-atomic-*
+localnet/node?/data/*.db
+localnet/node?/data/snapshots
+localnet/node?/data/cs.wal
+localnet/node?/config/write-file-atomic-*
