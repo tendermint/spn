@@ -168,7 +168,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		name        string
 		rewardPool  types.RewardPool
 		args        args
-		wantBalance map[string]sdk.Coins
+		wantBalances map[string]sdk.Coins
 		err         error
 	}{
 		{
@@ -218,7 +218,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 10,
 				closeRewardPool: true,
 			},
-			wantBalance: map[string]sdk.Coins{
+			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
 				valFoo:   coinsFromString(t, "50aaa,50bbb"),
 				valBar:   coinsFromString(t, "50aaa,50bbb"),
@@ -241,7 +241,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 5,
 				closeRewardPool: true,
 			},
-			wantBalance: map[string]sdk.Coins{
+			wantBalances: map[string]sdk.Coins{
 				provider: coinsFromString(t, "50aaa,50bbb"),
 				valFoo:   coinsFromString(t, "25aaa,25bbb"),
 				valBar:   coinsFromString(t, "25aaa,25bbb"),
@@ -264,7 +264,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 5,
 				closeRewardPool: false,
 			},
-			wantBalance: map[string]sdk.Coins{
+			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
 				valFoo:   coinsFromString(t, "25aaa,25bbb"),
 				valBar:   coinsFromString(t, "25aaa,25bbb"),
@@ -287,7 +287,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 10,
 				closeRewardPool: false,
 			},
-			wantBalance: map[string]sdk.Coins{
+			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
 				valFoo:   coinsFromString(t, "50aaa,50bbb"),
 				valBar:   coinsFromString(t, "50aaa,50bbb"),
@@ -311,7 +311,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 10,
 				closeRewardPool: false,
 			},
-			wantBalance: map[string]sdk.Coins{
+			wantBalances: map[string]sdk.Coins{
 				provider: coinsFromString(t, "40aaa,40bbb"),
 				valFoo:   coinsFromString(t, "30aaa,30bbb"),
 				valBar:   coinsFromString(t, "30aaa,30bbb"),
@@ -345,7 +345,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				require.Equal(t, tt.args.lastBlockHeight, rewardPool.CurrentRewardHeight)
 			}
 
-			for wantAddr, wantBalance := range tt.wantBalance {
+			for wantAddr, wantBalance := range tt.wantBalances {
 				t.Run(fmt.Sprintf("check balance %s", wantAddr), func(t *testing.T) {
 					wantAcc, err := sdk.AccAddressFromBech32(wantAddr)
 					require.NoError(t, err)
