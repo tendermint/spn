@@ -17,9 +17,9 @@ func TestMsgDisableCoordinator(t *testing.T) {
 		ctx, k, srv = setupMsgServer(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 	)
-	if _, err := srv.CreateCoordinator(wCtx, &msgCoord); err != nil {
-		t.Fatal(err)
-	}
+	_, err := srv.CreateCoordinator(wCtx, &msgCoord)
+	require.NoError(t, err)
+
 	tests := []struct {
 		name string
 		msg  types.MsgDisableCoordinator

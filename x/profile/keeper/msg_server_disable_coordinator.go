@@ -30,6 +30,13 @@ func (k msgServer) DisableCoordinator(
 				coordByAddress.CoordinatorID)
 	}
 
+	// Check if the coordinator is inactive
+	if !coord.Active {
+		return &types.MsgDisableCoordinatorResponse{},
+			spnerrors.Criticalf("inactive coordinator address should not exist in store, ID: %d",
+				coordByAddress.CoordinatorID)
+	}
+
 	// disable by setting to inactive and remove CoordByAddress
 	coord.Active = false
 	k.SetCoordinator(ctx, coord)
