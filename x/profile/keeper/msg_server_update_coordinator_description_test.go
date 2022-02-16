@@ -12,22 +12,14 @@ import (
 
 func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	var (
-		addr         = sample.Address()
-		msgCoord     = sample.MsgCreateCoordinator(sample.Address())
-		disableCoord = sample.MsgCreateCoordinator(sample.Address())
-		disableMsg   = sample.MsgDisableCoordinator(disableCoord.Address)
-		ctx, k, srv  = setupMsgServer(t)
-		wCtx         = sdk.WrapSDKContext(ctx)
+		addr        = sample.Address()
+		msgCoord    = sample.MsgCreateCoordinator(sample.Address())
+		ctx, k, srv = setupMsgServer(t)
+		wCtx        = sdk.WrapSDKContext(ctx)
 	)
-	if _, err := srv.CreateCoordinator(wCtx, &msgCoord); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := srv.CreateCoordinator(wCtx, &disableCoord); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := srv.DisableCoordinator(wCtx, &disableMsg); err != nil {
-		t.Fatal(err)
-	}
+	_, err := srv.CreateCoordinator(wCtx, &msgCoord)
+	require.NoError(t, err)
+
 	tests := []struct {
 		name string
 		msg  types.MsgUpdateCoordinatorDescription
@@ -50,11 +42,6 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 		{
 			name: "update all values",
 			msg:  sample.MsgUpdateCoordinatorDescription(msgCoord.Address),
-		},
-		{
-			name: "inactive coordinator - address not found",
-			msg:  sample.MsgUpdateCoordinatorDescription(disableCoord.Address),
-			err:  types.ErrCoordAddressNotFound,
 		},
 	}
 

@@ -12,27 +12,16 @@ import (
 
 func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 	var (
-		addr           = sample.Address()
-		invactiveCoord = sample.Address()
-		coord1         = sample.MsgCreateCoordinator(sample.Address())
-		coord2         = sample.MsgCreateCoordinator(sample.Address())
-		disableCoord   = sample.MsgCreateCoordinator(sample.Address())
-		disableMsg     = sample.MsgDisableCoordinator(disableCoord.Address)
-		ctx, k, srv    = setupMsgServer(t)
-		wCtx           = sdk.WrapSDKContext(ctx)
+		addr        = sample.Address()
+		coord1      = sample.MsgCreateCoordinator(sample.Address())
+		coord2      = sample.MsgCreateCoordinator(sample.Address())
+		ctx, k, srv = setupMsgServer(t)
+		wCtx        = sdk.WrapSDKContext(ctx)
 	)
-	if _, err := srv.CreateCoordinator(wCtx, &coord1); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := srv.CreateCoordinator(wCtx, &coord2); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := srv.CreateCoordinator(wCtx, &disableCoord); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := srv.DisableCoordinator(wCtx, &disableMsg); err != nil {
-		t.Fatal(err)
-	}
+	_, err := srv.CreateCoordinator(wCtx, &coord1)
+	require.NoError(t, err)
+	_, err = srv.CreateCoordinator(wCtx, &coord2)
+	require.NoError(t, err)
 
 	tests := []struct {
 		name string
@@ -72,13 +61,6 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 				NewAddress: coord1.Address,
 			},
 			err: types.ErrCoordAlreadyExist,
-		}, {
-			name: "inactive coordinator - address not found",
-			msg: types.MsgUpdateCoordinatorAddress{
-				Address:    disableCoord.Address,
-				NewAddress: invactiveCoord,
-			},
-			err: types.ErrCoordAddressNotFound,
 		},
 	}
 	for _, tt := range tests {

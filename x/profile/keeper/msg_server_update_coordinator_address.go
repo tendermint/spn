@@ -41,8 +41,8 @@ func (k msgServer) UpdateCoordinatorAddress(
 	// Check if the coordinator is inactive
 	if !coord.Active {
 		return &types.MsgUpdateCoordinatorAddressResponse{},
-			sdkerrors.Wrap(types.ErrCoordInactive,
-				"inactive coordinator address cannot be updated")
+			spnerrors.Criticalf("inactive coordinator address should not exist in store, ID: %d",
+				coordByAddress.CoordinatorID)
 	}
 
 	coord.Address = msg.NewAddress
