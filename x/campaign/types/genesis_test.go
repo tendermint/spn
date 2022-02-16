@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"testing"
 	"time"
 
@@ -302,6 +303,46 @@ func TestGenesisState_Validate(t *testing.T) {
 				require.True(t, ok)
 				isLowerEqual := accShares.IsAllLTE(share)
 				require.True(t, isLowerEqual)
+			}
+		})
+	}
+}
+
+func TestGenesisState_ValidateParams(t *testing.T) {
+	for _, tc := range []struct {
+		desc          string
+		genState      types.GenesisState
+		shouldBeValid bool
+	}{
+		{
+			desc: "max total supply below min total supply",
+			genState: types.GenesisState{
+				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Sub(sdk.OneInt())),
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "min total supply below one",
+			genState: types.GenesisState{
+				Params: types.NewParams(sdk.ZeroInt(), types.DefaultMaxTotalSupply),
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "valid range",
+			genState: types.GenesisState{
+				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdk.OneInt())),
+			},
+			shouldBeValid: true,
+		},
+	} {
+		tc := tc
+		t.Run(tc.desc, func(t *testing.T) {
+			err := tc.genState.Validate()
+			if tc.shouldBeValid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
 			}
 		})
 	}

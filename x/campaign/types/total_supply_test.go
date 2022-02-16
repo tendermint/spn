@@ -55,3 +55,47 @@ func TestUpdateTotalSupply(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateTotalSupply(t *testing.T) {
+	newCoins := func(coinsStr string) sdk.Coins {
+		coins, err := sdk.ParseCoinsNormalized(coinsStr)
+		require.NoError(t, err)
+		return coins
+	}
+
+	tests := []struct {
+		name         string
+		coins        sdk.Coins
+		supplyRange  campaign.TotalSupplyRange
+		valid        bool
+	}{
+		{
+			name: "total supply less than min",
+			coins: newCoins("100foo,1000bar"),
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1000), sdk.NewInt(10_000)),
+			valid: false,
+		},
+		{
+			name: "total supply more than max",
+			coins: newCoins("1000foo,10000bar"),
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1000), sdk.NewInt(1000)),
+			valid: false,
+		},
+		{
+			name: "valid supply",
+			coins: newCoins("1000foo,1000bar"),
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(100), sdk.NewInt(1000)),
+			valid: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := campaign.ValidateTotalSupply(tt.coins, tt.supplyRange)
+			if tt.valid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
+			}
+		})
+	}
+}

@@ -77,10 +77,25 @@ func MainnetAccount(campaignID uint64, address string) campaign.MainnetAccount {
 
 // MsgCreateCampaign returns a sample MsgCreateCampaign
 func MsgCreateCampaign(coordAddr string) campaign.MsgCreateCampaign {
+	coins := Coins()
+	for i := range coins {
+		coins[i].Amount = coins[i].Amount.Add(campaign.DefaultMinTotalSupply)
+	}
+
 	return campaign.MsgCreateCampaign{
 		Coordinator:  coordAddr,
 		CampaignName: CampaignName(),
-		TotalSupply:  Coins(),
+		TotalSupply:  coins,
+	}
+}
+
+// CampaignParams returns a sample of params for the campaign module
+func CampaignParams() campaign.Params {
+	minTotalSupply := sdk.NewInt(rand.Int63n(campaign.DefaultMinTotalSupply.Int64())).Add(campaign.DefaultMinTotalSupply)
+	maxTotalSupply := sdk.NewInt(rand.Int63n(campaign.DefaultMaxTotalSupply.Int64())).Add(minTotalSupply)
+
+	return campaign.Params{
+		TotalSupplyRange: campaign.NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
 	}
 }
 
@@ -109,5 +124,6 @@ func CampaignGenesisState() campaign.GenesisState {
 			MainnetAccount(0, Address()),
 			MainnetAccount(1, Address()),
 		},
+		Params: CampaignParams(),
 	}
 }

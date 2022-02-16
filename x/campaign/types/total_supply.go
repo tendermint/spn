@@ -33,7 +33,8 @@ func ValidateTotalSupply(coins sdk.Coins, supplyRange TotalSupplyRange) error {
 		return fmt.Errorf(
 			"provided total supply range is invalid, min > max: [%s, %s]",
 			supplyRange.MinTotalSupply.String(),
-			supplyRange.MaxTotalSupply.String())
+			supplyRange.MaxTotalSupply.String(),
+		)
 	}
 
 	for _, coin := range coins {

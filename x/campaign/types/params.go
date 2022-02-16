@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 
 	"gopkg.in/yaml.v2"
@@ -10,6 +11,9 @@ import (
 )
 
 var (
+	DefaultMinTotalSupply = sdk.NewInt(100) // One hundred
+	DefaultMaxTotalSupply = sdk.NewInt(1_000_000_000_000_000) // One Quadrillion
+
 	ParamStoreKeyTotalSupplyRange = []byte("totalsupplyrange")
 )
 
@@ -18,14 +22,24 @@ func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
 
+// NewTotalSupplyRange creates a new TotalSupplyRange instance
+func NewTotalSupplyRange(minTotalSupply, maxTotalSupply sdk.Int) TotalSupplyRange {
+	return TotalSupplyRange{
+		MinTotalSupply: minTotalSupply,
+		MaxTotalSupply: maxTotalSupply,
+	}
+}
+
+// NewParams creates a new Params instance
+func NewParams(minTotalSupply, maxTotalSupply sdk.Int) Params {
+	return Params{
+		TotalSupplyRange: NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
+	}
+}
+
 // DefaultParams returns default campaign parameters
 func DefaultParams() Params {
-	return Params{
-		TotalSupplyRange: TotalSupplyRange{
-			MinTotalSupply: sdk.NewInt(1_000),                 // A Thousand
-			MaxTotalSupply: sdk.NewInt(1_000_000_000_000_000), // One Quadrillion
-		},
-	}
+	return NewParams(DefaultMinTotalSupply, DefaultMaxTotalSupply)
 }
 
 // String implements stringer interface
@@ -43,16 +57,11 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 
 // ValidateBasic performs basic validation on campaign parameters.
 func (p Params) ValidateBasic() error {
-	if p.TotalSupplyRange.MinTotalSupply.LT(sdk.ZeroInt()) {
-		return fmt.Errorf(
-			"minimum total supply should be greater than one: %s", p.TotalSupplyRange.MinTotalSupply,
-		)
+	if p.TotalSupplyRange.MinTotalSupply.LT(sdk.OneInt()) {
+		return errors.New("minimum total supply should be greater than one")
 	}
 	if p.TotalSupplyRange.MaxTotalSupply.LT(p.TotalSupplyRange.MinTotalSupply) {
-		return fmt.Errorf(
-			"maximum total supply should be greater than greater or equal than minimum total supply: %s",
-			p.TotalSupplyRange.MaxTotalSupply,
-		)
+		return errors.New("maximum total supply should be greater than greater or equal than minimum total supply")
 	}
 
 	return nil
@@ -65,11 +74,11 @@ func validateTotalSupplyRange(i interface{}) error {
 	}
 
 	if v.MinTotalSupply.LT(sdk.OneInt()) {
-		return fmt.Errorf("parameter minTotalSupply cannot be less than one")
+		return errors.New("parameter minTotalSupply cannot be less than one")
 	}
 
 	if v.MaxTotalSupply.LT(v.MinTotalSupply) {
-		return fmt.Errorf("parameter maxTotalSupply cannot be less than minTotalSupply")
+		return errors.New("parameter maxTotalSupply cannot be less than minTotalSupply")
 	}
 
 	return nil
