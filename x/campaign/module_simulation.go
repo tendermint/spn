@@ -1,6 +1,8 @@
 package campaign
 
 import (
+	"fmt"
+	"github.com/tendermint/spn/testutil/sample"
 	"math/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -40,7 +42,8 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(types.DefaultGenesis())
+	campaignGenesis := sample.CampaignGenesisState()
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&campaignGenesis)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals
@@ -50,7 +53,12 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
-	return []simtypes.ParamChange{}
+	campaignParams := sample.CampaignParams()
+	return []simtypes.ParamChange{
+		simulation.NewSimParamChange(types.ModuleName, string(types.ParamStoreKeyTotalSupplyRange), func(r *rand.Rand) string {
+			return fmt.Sprintf("\"%v\"", campaignParams.TotalSupplyRange.String())
+		}),
+	}
 }
 
 // RegisterStoreDecoder registers a decoder

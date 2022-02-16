@@ -83,6 +83,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						VestingOptions: *types.NewShareDelayedVesting(shares4, shares4, time.Now().Unix()),
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 		},
 		{

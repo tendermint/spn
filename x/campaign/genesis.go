@@ -33,6 +33,8 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetMainnetVestingAccount(ctx, elem)
 	}
 
+	k.SetParams(ctx, genState.Params)
+
 	// this line is used by starport scaffolding # genesis/module/init
 }
 
@@ -45,6 +47,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.CampaignChainsList = k.GetAllCampaignChains(ctx)
 	genesis.MainnetAccountList = k.GetAllMainnetAccount(ctx)
 	genesis.MainnetVestingAccountList = k.GetAllMainnetVestingAccount(ctx)
+	genesis.Params = k.GetParams(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis
