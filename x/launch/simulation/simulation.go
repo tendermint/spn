@@ -399,7 +399,7 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 		}
 
 		// Wait for a specific delay once the chain is launched
-		if ctx.BlockTime().Unix() < chain.LaunchTimestamp+int64(k.RevertDelay(ctx)) {
+		if ctx.BlockTime().Unix() < chain.LaunchTimestamp+k.RevertDelay(ctx) {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, "invalid chain launch timestamp"), nil, nil
 		}
 
