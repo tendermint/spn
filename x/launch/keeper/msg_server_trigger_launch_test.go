@@ -18,7 +18,6 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
-	disableCoordAddress := sample.Address()
 	coordNoExist := sample.Address()
 	chainIDNoExist := uint64(1000)
 
@@ -31,10 +30,6 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	require.NoError(t, err)
 
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
-	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-
-	msgCreateCoordinator = sample.MsgCreateCoordinator(disableCoordAddress)
 	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 
@@ -51,16 +46,6 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	alreadyLaunched := res.LaunchID
-
-	// Create chains
-	msgCreateChain = sample.MsgCreateChain(disableCoordAddress, "", false, 0)
-	res, err = srv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	disableChainID := res.LaunchID
-
-	msgDisableCoord := sample.MsgDisableCoordinator(disableCoordAddress)
-	_, err = profileSrv.DisableCoordinator(ctx, &msgDisableCoord)
-	require.NoError(t, err)
 
 	// Set a chain as already launched
 	chain, found := k.GetChain(sdkCtx, alreadyLaunched)
@@ -106,11 +91,6 @@ func TestMsgTriggerLaunch(t *testing.T) {
 			name: "launch time too high",
 			msg:  *types.NewMsgTriggerLaunch(coordAddress, chainID2, launchTimeTooHigh),
 			err:  types.ErrLaunchTimeTooHigh,
-		},
-		{
-			name: "fail if the coordinator of the chain is disabled - not found",
-			msg:  sample.MsgTriggerLaunch(disableCoordAddress, disableChainID),
-			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
