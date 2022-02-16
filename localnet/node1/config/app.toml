@@ -10,7 +10,7 @@ pruning-keep-every = "0"
 pruning-keep-recent = "0"
 
 [api]
-  address = "tcp://0.0.0.0:1317"
+  address = "tcp://localhost:1318"
   enable = true
   enabled-unsafe-cors = true
   max-open-connections = 1000
@@ -20,12 +20,12 @@ pruning-keep-recent = "0"
   swagger = false
 
 [grpc]
-  address = "0.0.0.0:9090"
-  enable = true
+  address = ""
+  enable = false
 
 [grpc-web]
-  address = "0.0.0.0:9091"
-  enable = true
+  address = ""
+  enable = false
   enable-unsafe-cors = false
 
 [rosetta]

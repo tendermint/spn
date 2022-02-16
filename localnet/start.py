@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import subprocess
+import pathlib
 
 if pathlib.PurePath(os.getcwd()).name != 'localnet':
     print('script must be run from localnet folder')
@@ -13,15 +14,19 @@ debugMode = False
 # Staking
 
 # Validator set size, setting the value to 1 allows testing full validator set change
-maxValidator = 10
+maxValidators = 100
 
-# Self-delegation must be lower than 200000000stake
-selfDelegationVal1 = '70000000stake'
-selfDelegationVal2 = '60000000stake'
-selfDelegationVal3 = '50000000stake'
+# Self-delegation must be lower than 200000000
+selfDelegationVal1 = 10000000
+selfDelegationVal2 = 10000000
+selfDelegationVal3 = 10000000
 
 # Unbonding time in seconds
-unbondingTime = 1
+# Default: 21 days = 1814400 seconds
+unbondingTime = 1814400
+
+# Denom
+denom = 'uspn'
 
 # Reset all nodes
 os.system('spnd unsafe-reset-all --home ./node1')
@@ -39,19 +44,19 @@ genesis['genesis_time'] = "2022-02-10T10:29:59.410196Z"
 genesis['app_state']['monitoringc']['params']['debugMode'] = debugMode
 
 # Set staking params
-genesis['app_state']['staking']['params']['max_validators'] = maxValidator
-genesis['app_state']['staking']['params']['unbonding_time'] = str(unbondingTime)+"s"
+genesis['app_state']['staking']['params']['max_validators'] = maxValidators
+# genesis['app_state']['staking']['params']['unbonding_time'] = str(unbondingTime)+"s"
 
 # Create the gentxs
-os.system('spnd gentx alice {} --chain-id spn-1 --moniker="bob" --home ./node1 --output-document ./gentx1.json'.format(selfDelegationVal1))
+os.system('spnd gentx joe {} --chain-id spn-1 --moniker="joe" --home ./node1 --output-document ./gentx1.json'.format(str(selfDelegationVal1)+denom))
 gentx1File = open('./gentx1.json')
 gentx1 = json.load(gentx1File)
 
-os.system('spnd gentx bob {} --chain-id spn-1 --moniker="carol" --home ./node2 --output-document ./gentx2.json'.format(selfDelegationVal2))
+os.system('spnd gentx steve {} --chain-id spn-1 --moniker="steve" --home ./node2 --output-document ./gentx2.json'.format(str(selfDelegationVal2)+denom))
 gentx2File = open('./gentx2.json')
 gentx2 = json.load(gentx2File)
 
-os.system('spnd gentx carol {} --chain-id spn-1 --moniker="dave" --home ./node3 --output-document ./gentx3.json'.format(selfDelegationVal3))
+os.system('spnd gentx olivia {} --chain-id spn-1 --moniker="olivia" --home ./node3 --output-document ./gentx3.json'.format(str(selfDelegationVal3)+denom))
 gentx3File = open('./gentx3.json')
 gentx3 = json.load(gentx3File)
 
@@ -73,7 +78,7 @@ with open('./node3/config/genesis.json', 'w', encoding='utf-8') as f:
     json.dump(genesis, f, ensure_ascii=False, indent=4)
 
 print('Starting the network')
-subprocess.Popen(["spnd", "start", "--home", "./node2"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-subprocess.Popen(["spnd", "start", "--home", "./node3"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-subprocess.run(["spnd start --home ./node1"], shell=True, check=True)
-
+# subprocess.Popen(["spnd", "start", "--home", "./node2"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+# subprocess.Popen(["spnd", "start", "--home", "./node3"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+# subprocess.run(["spnd start --home ./node1"], shell=True, check=True)
+#
