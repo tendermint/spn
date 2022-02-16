@@ -6,3 +6,8 @@ release/
 # IDE
 .idea
 .envrc
+
+# Localnet
+node?/data/*.db
+node?/data/cs.wal
+node?/config/write-file-atomic-*
