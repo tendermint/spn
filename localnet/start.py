@@ -3,15 +3,25 @@ import sys
 import json
 import subprocess
 
-# Consumer debug mode
+if pathlib.PurePath(os.getcwd()).name != 'localnet':
+    print('script must be run from localnet folder')
+    exit(1)
+
+# Debug mode
 debugMode = False
 
 # Staking
-# Must be lower than 200000000stake
+
+# Validator set size, setting the value to 1 allows testing full validator set change
 maxValidator = 10
+
+# Self-delegation must be lower than 200000000stake
 selfDelegationVal1 = '70000000stake'
 selfDelegationVal2 = '60000000stake'
 selfDelegationVal3 = '50000000stake'
+
+# Unbonding time in seconds
+unbondingTime = 1
 
 # Reset all nodes
 os.system('spnd unsafe-reset-all --home ./node1')
@@ -25,10 +35,12 @@ genesis = json.load(genesisFile)
 # Set timestamp
 genesis['genesis_time'] = "2022-02-10T10:29:59.410196Z"
 
-# Set monitoring module param
-genesis['app_state']['monitoringp']['params']['debugMode'] = debugMode
-# Set staking max validators
+# Set monitoring param
+genesis['app_state']['monitoringc']['params']['debugMode'] = debugMode
+
+# Set staking params
 genesis['app_state']['staking']['params']['max_validators'] = maxValidator
+genesis['app_state']['staking']['params']['unbonding_time'] = str(unbondingTime)+"s"
 
 # Create the gentxs
 os.system('spnd gentx alice {} --chain-id spn-1 --moniker="bob" --home ./node1 --output-document ./gentx1.json'.format(selfDelegationVal1))
