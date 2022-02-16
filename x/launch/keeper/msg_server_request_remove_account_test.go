@@ -172,7 +172,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			err: types.ErrRemoveMainnetAccount,
 		},
 		{
-			name: "disable coordinator",
+			name: "fail if the coordinator of the chain is disabled",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: disableChain[0].LaunchID,
 				Creator:  sample.Address(),

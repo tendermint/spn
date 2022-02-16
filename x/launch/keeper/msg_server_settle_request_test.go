@@ -163,7 +163,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrNoAddressPermission,
 		},
 		{
-			name: "inactive coordinator",
+			name: "fail if the coordinator of the chain is disabled",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[3].LaunchID,
 				Signer:    disableCoordinator.Address,

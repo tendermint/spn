@@ -101,7 +101,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 			err:  types.ErrChainNotFound,
 		},
 		{
-			name: "disable coordinator",
+			name: "fail if the coordinator of the chain is disabled - not found",
 			msg:  *types.NewMsgRevertLaunch(coordDisableAddr, disabledID),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},

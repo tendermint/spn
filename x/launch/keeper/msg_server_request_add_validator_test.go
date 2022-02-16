@@ -88,7 +88,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			wantApprove: true,
 		},
 		{
-			name: "disable coordinator",
+			name: "fail if the coordinator of the chain is disabled",
 			msg:  sample.MsgRequestAddValidator(sample.Address(), sample.Address(), disableChain[0].LaunchID),
 			err:  profiletypes.ErrCoordInactive,
 		},

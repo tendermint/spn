@@ -108,7 +108,7 @@ func TestMsgTriggerLaunch(t *testing.T) {
 			err:  types.ErrLaunchTimeTooHigh,
 		},
 		{
-			name: "disable coordinator",
+			name: "fail if the coordinator of the chain is disabled - not found",
 			msg:  sample.MsgTriggerLaunch(disableCoordAddress, disableChainID),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},

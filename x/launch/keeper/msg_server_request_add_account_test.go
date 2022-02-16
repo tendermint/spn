@@ -111,7 +111,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			err:  types.ErrAddMainnetAccount,
 		},
 		{
-			name: "disable coordinator",
+			name: "fail if the coordinator of the chain is disabled",
 			msg:  sample.MsgRequestAddAccount(sample.Address(), sample.Address(), disabledChain[0].LaunchID),
 			err:  profiletypes.ErrCoordInactive,
 		},

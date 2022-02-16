@@ -160,7 +160,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			err: types.ErrValidatorNotFound,
 		},
 		{
-			name: "disable coordinator",
+			name: "fail if the coordinator of the chain is disabled",
 			msg: types.MsgRequestRemoveValidator{
 				LaunchID:         disableChain[0].LaunchID,
 				Creator:          sample.Address(),
