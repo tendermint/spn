@@ -21,10 +21,10 @@ var (
 	// Chain launch can be reverted on-chain when the actual chain launch failed (incorrect gentx, etc...)
 	// This delay must be small be big enough to ensure nodes had the time to bootstrap\
 	// This currently corresponds to 1 hour
-	DefaultRevertDelay = uint64(60 * 60)
+	DefaultRevertDelay = int64(60 * 60)
 
 	MaxParametrableLaunchTime  = uint64(time.Hour.Seconds() * 24 * 31)
-	MaxParametrableRevertDelay = uint64(time.Hour.Seconds() * 24)
+	MaxParametrableRevertDelay = int64(time.Hour.Seconds() * 24)
 
 	KeyMinLaunchTime = []byte("MinLaunchTime")
 	KeyMaxLaunchTime = []byte("MaxLaunchTime")
@@ -39,7 +39,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(minLaunchTime, maxLaunchTime, revertDelay uint64) Params {
+func NewParams(minLaunchTime, maxLaunchTime uint64, revertDelay int64) Params {
 	return Params{
 		MinLaunchTime: minLaunchTime,
 		MaxLaunchTime: maxLaunchTime,
@@ -101,7 +101,7 @@ func validateLaunchTime(i interface{}) error {
 }
 
 func validateRevertDelay(i interface{}) error {
-	v, ok := i.(uint64)
+	v, ok := i.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
@@ -109,5 +109,10 @@ func validateRevertDelay(i interface{}) error {
 	if v > MaxParametrableRevertDelay {
 		return errors.New("max parametrable revert delay reached")
 	}
+
+	if v <= 0 {
+		return errors.New("revert delay parameter must be positive")
+	}
+
 	return nil
 }

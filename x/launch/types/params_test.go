@@ -106,7 +106,7 @@ func TestValidateRevertDelay(t *testing.T) {
 		},
 		{
 			name:        "valid revert delay",
-			revertDelay: uint64(time.Minute.Seconds() * 1),
+			revertDelay: int64(time.Minute.Seconds() * 1),
 		},
 	}
 	for _, tt := range tests {
