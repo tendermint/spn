@@ -4,19 +4,22 @@ accounts:
     coins: ["200000000uspn"]
   - name: bob
     mnemonic: "trap possible liquid elite embody host segment fantasy swim cable digital eager tiny broom burden diary earn hen grow engine pigeon fringe claim program"
-    coins: ["100000000uspn"]
+    coins: ["200000000uspn"]
   - name: carol
     mnemonic: "great immense still pill defense fetch pencil slow purchase symptom speed arm shoot fence have divorce cigar rapid hen vehicle pear evolve correct nerve"
-    coins: ["100000000uspn"]
+    coins: ["200000000uspn"]
   - name: dave
     mnemonic: "resist portion leisure lawn shell lunch inhale start pupil add fault segment hour dwarf toddler insect frame math remove twist easy paddle nice rhythm"
-    coins: ["100000000uspn"]
+    coins: ["200000000uspn"]
   - name: joe
     mnemonic: "diary behind allow lawn loop assault armor survey media toe rural mass skull way crater tobacco pair glare window soon lift pistol fitness annual"
-    coins: ["100000000uspn"]
+    coins: ["200000000uspn"]
   - name: steve
     mnemonic: "initial aisle blush gift shuffle hat solar dove dwarf soup credit acid update seed mercy thumb swear main verb image dove rose chat inmate"
-    coins: ["100000000uspn"]
+    coins: ["200000000uspn"]
+  - name: olivia
+    mnemonic: "dinosaur submit around jacket movie garden crash weather matter option time cabbage butter mind skin nature ride mosquito seat lock elephant merit empower come"
+    coins: ["200000000uspn"]
 validator:
   name: alice
   staked: "100000000uspn"

@@ -113,3 +113,13 @@ func (shares Shares) IsAllLTE(cmpShares Shares) bool {
 func (shares Shares) AmountOf(denom string) int64 {
 	return sdk.Coins(shares).AmountOf(denom).Int64()
 }
+
+// Empty returns true if there are no coins and false otherwise.
+func (shares Shares) Empty() bool {
+	return sdk.Coins(shares).Empty()
+}
+
+// String returns all coins comma separated
+func (shares Shares) String() string {
+	return sdk.Coins(shares).String()
+}
