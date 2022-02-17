@@ -41,7 +41,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	chain, found := k.GetChain(sdkCtx, delayNotReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
-	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - int64(k.RevertDelay(sdkCtx)) + 1
+	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - k.RevertDelay(sdkCtx) + 1
 	k.SetChain(sdkCtx, chain)
 
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
@@ -50,7 +50,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	chain, found = k.GetChain(sdkCtx, delayReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
-	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - int64(k.RevertDelay(sdkCtx))
+	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - k.RevertDelay(sdkCtx)
 	k.SetChain(sdkCtx, chain)
 
 	for _, tc := range []struct {
