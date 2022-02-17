@@ -16,7 +16,7 @@ func NewSignatureCounts() SignatureCounts {
 // AddSignature adds a signature for the consensus address at a specific validator set size
 func (m *SignatureCounts) AddSignature(consAddress []byte, validatorSetSize int64) {
 	// relative signature is the signature relative to the validator set size
-	relSignature := sdk.NewDec(1).QuoInt(sdk.NewInt(validatorSetSize))
+	relSignature := sdk.OneDec().QuoInt(sdk.NewInt(validatorSetSize))
 
 	// search for the consensus address
 	for i, c := range m.Counts {
@@ -37,7 +37,7 @@ func (m *SignatureCounts) AddSignature(consAddress []byte, validatorSetSize int6
 // the sum of all relative signatures should not exceed the number of block
 func (m SignatureCounts) Validate() error {
 	consAddr := make(map[string]struct{})
-	sumSig := sdk.NewDec(0)
+	sumSig := sdk.ZeroDec()
 
 	// iterate all signature count
 	for _, sc := range m.Counts {
