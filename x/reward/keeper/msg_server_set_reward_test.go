@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -193,24 +194,24 @@ func TestSetBalance(t *testing.T) {
 			name: "equal coins and pool coins",
 			args: args{
 				provider:  provider,
-				coins:     coinsFromString(t, "101aaa,102bbb"),
-				poolCoins: coinsFromString(t, "101aaa,102bbb"),
+				coins:     tc.CoinsFromString(t, "101aaa,102bbb"),
+				poolCoins: tc.CoinsFromString(t, "101aaa,102bbb"),
 			},
 		},
 		{
 			name: "extra coin",
 			args: args{
 				provider:  provider,
-				coins:     coinsFromString(t, "101aaa,102bbb"),
-				poolCoins: coinsFromString(t, "33aaa,22bbb"),
+				coins:     tc.CoinsFromString(t, "101aaa,102bbb"),
+				poolCoins: tc.CoinsFromString(t, "33aaa,22bbb"),
 			},
 		},
 		{
 			name: "extra pool coin",
 			args: args{
 				provider:  provider,
-				coins:     coinsFromString(t, "101aaa,102bbb"),
-				poolCoins: coinsFromString(t, "33aaa,22bbb,11ccc"),
+				coins:     tc.CoinsFromString(t, "101aaa,102bbb"),
+				poolCoins: tc.CoinsFromString(t, "33aaa,22bbb,11ccc"),
 			},
 		},
 		{
