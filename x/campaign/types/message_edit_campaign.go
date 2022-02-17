@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 var _ sdk.Msg = &MsgEditCampaign{}
@@ -46,5 +47,12 @@ func (msg *MsgEditCampaign) ValidateBasic() error {
 	if err := CheckCampaignName(msg.Name); err != nil {
 		return sdkerrors.Wrap(ErrInvalidCampaignName, err.Error())
 	}
+
+	// TODO parameterize
+	if len(msg.Metadata) > spntypes.MaxMetadataLength {
+		return sdkerrors.Wrapf(ErrInvalidMetadataLength, "data length %d is greater than maximum %d",
+			len(msg.Metadata), spntypes.MaxMetadataLength)
+	}
+
 	return nil
 }

@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 const TypeMsgCreateCampaign = "create_campaign"
@@ -57,5 +58,12 @@ func (msg *MsgCreateCampaign) ValidateBasic() error {
 	if !msg.TotalSupply.IsValid() {
 		return sdkerrors.Wrap(ErrInvalidTotalSupply, "total supply is not a valid Coins object")
 	}
+
+	// TODO parameterize
+	if len(msg.Metadata) > spntypes.MaxMetadataLength {
+		return sdkerrors.Wrapf(ErrInvalidMetadataLength, "data length %d is greater than maximum %d",
+			len(msg.Metadata), spntypes.MaxMetadataLength)
+	}
+
 	return nil
 }

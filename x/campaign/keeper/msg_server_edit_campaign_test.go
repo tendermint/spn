@@ -35,10 +35,9 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 	require.NoError(t, err)
 
 	for _, tc := range []struct {
-		name       string
-		msg        types.MsgEditCampaign
-		expectedID uint64
-		err        error
+		name string
+		msg  types.MsgEditCampaign
+		err  error
 	}{
 		{
 			name: "invalid campaign id",
@@ -46,6 +45,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 				Coordinator: coordAddr,
 				CampaignID:  100,
 				Name:        "new_name",
+				Metadata:    sample.Metadata(20),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -55,6 +55,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 				Coordinator: sample.Address(),
 				CampaignID:  campaign.CampaignID,
 				Name:        "new_name",
+				Metadata:    sample.Metadata(20),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -64,20 +65,31 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 				Coordinator: coordAddrNoCampaign,
 				CampaignID:  campaign.CampaignID,
 				Name:        "new_name",
+				Metadata:    sample.Metadata(20),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "valid message",
+			name: "valid transaction",
 			msg: types.MsgEditCampaign{
 				Coordinator: coordAddr,
 				CampaignID:  campaign.CampaignID,
 				Name:        "new_name",
+				Metadata:    sample.Metadata(20),
 			},
 		},
-		// TODO add metadata test
+		{
+			name: "valid transaction - unmodified metadata",
+			msg: types.MsgEditCampaign{
+				Coordinator: coordAddr,
+				CampaignID:  campaign.CampaignID,
+				Name:        "new_name",
+				Metadata:    []byte{},
+			},
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
+			previousCampaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			_, err := campaignSrv.EditCampaign(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
@@ -88,6 +100,11 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 			require.Equal(t, tc.msg.Name, campaign.CampaignName)
+			if len(tc.msg.Metadata) > 0 {
+				require.EqualValues(t, tc.msg.Metadata, campaign.Metadata)
+			} else {
+				require.EqualValues(t, previousCampaign.Metadata, campaign.Metadata)
+			}
 		})
 	}
 }

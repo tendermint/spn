@@ -31,7 +31,13 @@ func (k msgServer) EditCampaign(goCtx context.Context, msg *types.MsgEditCampaig
 			campaign.CoordinatorID,
 		))
 	}
+
 	campaign.CampaignName = msg.Name
+
+	if len(msg.Metadata) > 0 {
+		campaign.Metadata = msg.Metadata
+	}
+
 	k.SetCampaign(ctx, campaign)
 
 	return &types.MsgEditCampaignResponse{}, nil

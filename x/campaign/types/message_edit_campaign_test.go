@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -45,7 +46,16 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 				Metadata:    sample.Metadata(20),
 			},
 		},
-		// TODO add test for metadata
+		{
+			name: "invalid metadata length",
+			msg: types.MsgEditCampaign{
+				CampaignID:  0,
+				Coordinator: sample.Address(),
+				Name:        "newName",
+				Metadata:    sample.Metadata(spntypes.MaxMetadataLength + 1),
+			},
+			err: types.ErrInvalidMetadataLength,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
