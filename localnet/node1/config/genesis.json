@@ -527,7 +527,7 @@
                 "historical_entries": 10000,
                 "max_entries": 7,
                 "max_validators": 100,
-                "unbonding_time": "1814400s"
+                "unbonding_time": "1s"
             },
             "redelegations": [],
             "unbonding_delegations": [],

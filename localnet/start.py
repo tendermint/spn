@@ -22,9 +22,9 @@ selfDelegationVal1 = 10000000
 selfDelegationVal2 = 10000000
 selfDelegationVal3 = 10000000
 
-# Unbonding time in seconds
+# Unbonding time in seconds, low value allows to experiment validator set change
 # Default: 21 days = 1814400 seconds
-unbondingTime = 1814400
+unbondingTime = 1
 
 # Denom
 denom = 'uspn'
@@ -41,7 +41,7 @@ genesis['app_state']['monitoringc']['params']['debugMode'] = debugMode
 
 # Set staking params
 genesis['app_state']['staking']['params']['max_validators'] = maxValidators
-# genesis['app_state']['staking']['params']['unbonding_time'] = str(unbondingTime)+"s"
+genesis['app_state']['staking']['params']['unbonding_time'] = str(unbondingTime)+"s"
 
 # Create the gentxs
 os.system('spnd gentx joe {} --chain-id spn-1 --moniker="joe" --home ./node1 --output-document ./gentx1.json'.format(str(selfDelegationVal1)+denom))
