@@ -1,19 +1,19 @@
 package types_test
 
 import (
-	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/pkg/types"
 	tc "github.com/tendermint/spn/testutil/constructor"
+	"github.com/tendermint/spn/testutil/sample"
 )
 
 var (
-	caFoo = sample.ConsAddress()
-	caBar = sample.ConsAddress()
-	caBaz = sample.ConsAddress()
+	caFoo    = sample.ConsAddress()
+	caBar    = sample.ConsAddress()
+	caBaz    = sample.ConsAddress()
 	caFoobar = sample.ConsAddress()
 )
 

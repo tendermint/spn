@@ -6,6 +6,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/pkg/types"
+	tc "github.com/tendermint/spn/testutil/constructor"
+	"github.com/tendermint/spn/testutil/sample"
 )
 
 func TestMonitoringPacket_ValidateBasic(t *testing.T) {
@@ -25,9 +27,9 @@ func TestMonitoringPacket_ValidateBasic(t *testing.T) {
 				SignatureCounts: types.SignatureCounts{
 					BlockCount: 100,
 					Counts: []types.SignatureCount{
-						signatureCount(t, "foo", "1"),
-						signatureCount(t, "bar", "0.5"),
-						signatureCount(t, "baz", "5.5"),
+						tc.SignatureCount(t, sample.ConsAddress(), "1"),
+						tc.SignatureCount(t, sample.ConsAddress(), "0.5"),
+						tc.SignatureCount(t, sample.ConsAddress(), "5.5"),
 					},
 				},
 			},
@@ -39,9 +41,9 @@ func TestMonitoringPacket_ValidateBasic(t *testing.T) {
 				SignatureCounts: types.SignatureCounts{
 					BlockCount: 100,
 					Counts: []types.SignatureCount{
-						signatureCount(t, "foo", "1"),
-						signatureCount(t, "bar", "0.5"),
-						signatureCount(t, "baz", "5.5"),
+						tc.SignatureCount(t, sample.ConsAddress(), "1"),
+						tc.SignatureCount(t, sample.ConsAddress(), "0.5"),
+						tc.SignatureCount(t, sample.ConsAddress(), "5.5"),
 					},
 				},
 			},
@@ -53,9 +55,9 @@ func TestMonitoringPacket_ValidateBasic(t *testing.T) {
 				SignatureCounts: types.SignatureCounts{
 					BlockCount: 1,
 					Counts: []types.SignatureCount{
-						signatureCount(t, "foo", "1"),
-						signatureCount(t, "bar", "0.5"),
-						signatureCount(t, "baz", "5.5"),
+						tc.SignatureCount(t, sample.ConsAddress(), "1"),
+						tc.SignatureCount(t, sample.ConsAddress(), "0.5"),
+						tc.SignatureCount(t, sample.ConsAddress(), "5.5"),
 					},
 				},
 			},
@@ -68,9 +70,9 @@ func TestMonitoringPacket_ValidateBasic(t *testing.T) {
 				SignatureCounts: types.SignatureCounts{
 					BlockCount: 100,
 					Counts: []types.SignatureCount{
-						signatureCount(t, "foo", "1"),
-						signatureCount(t, "bar", "0.5"),
-						signatureCount(t, "baz", "5.5"),
+						tc.SignatureCount(t, sample.ConsAddress(), "1"),
+						tc.SignatureCount(t, sample.ConsAddress(), "0.5"),
+						tc.SignatureCount(t, sample.ConsAddress(), "5.5"),
 					},
 				},
 			},

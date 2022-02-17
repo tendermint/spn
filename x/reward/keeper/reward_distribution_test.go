@@ -9,6 +9,7 @@ import (
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	spntypes "github.com/tendermint/spn/pkg/types"
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/spn/x/reward/keeper"
@@ -30,7 +31,7 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "prevent using block ratio greater than 1",
 			args: args{
-				blockRatio: decFromString(t, "1.1"),
+				blockRatio: tc.DecFromString(t, "1.1"),
 				sigRatio:   sdk.ZeroDec(),
 				coins:      sample.Coins(),
 			},
@@ -40,7 +41,7 @@ func TestCalculateReward(t *testing.T) {
 			name: "prevent using signature ratio greater than 1",
 			args: args{
 				blockRatio: sdk.ZeroDec(),
-				sigRatio:   decFromString(t, "1.1"),
+				sigRatio:   tc.DecFromString(t, "1.1"),
 				coins:      sample.Coins(),
 			},
 			wantErr: true,
@@ -68,7 +69,7 @@ func TestCalculateReward(t *testing.T) {
 			args: args{
 				blockRatio: sdk.ZeroDec(),
 				sigRatio:   sdk.OneDec(),
-				coins:      coinsFromString(t, "10aaa,10bbb,10ccc"),
+				coins:      tc.CoinsFromString(t, "10aaa,10bbb,10ccc"),
 			},
 			want: sdk.NewCoins(),
 		},
@@ -77,36 +78,36 @@ func TestCalculateReward(t *testing.T) {
 			args: args{
 				blockRatio: sdk.OneDec(),
 				sigRatio:   sdk.ZeroDec(),
-				coins:      coinsFromString(t, "10aaa,10bbb,10ccc"),
+				coins:      tc.CoinsFromString(t, "10aaa,10bbb,10ccc"),
 			},
 			want: sdk.NewCoins(),
 		},
 		{
 			name: "0.5 block ratio should give half rewards",
 			args: args{
-				blockRatio: decFromString(t, "0.5"),
+				blockRatio: tc.DecFromString(t, "0.5"),
 				sigRatio:   sdk.OneDec(),
-				coins:      coinsFromString(t, "10aaa,100bbb,1000ccc"),
+				coins:      tc.CoinsFromString(t, "10aaa,100bbb,1000ccc"),
 			},
-			want: coinsFromString(t, "5aaa,50bbb,500ccc"),
+			want: tc.CoinsFromString(t, "5aaa,50bbb,500ccc"),
 		},
 		{
 			name: "0.5 block ratio and 0.4 signature ratio should give 0.2 rewards",
 			args: args{
-				blockRatio: decFromString(t, "0.5"),
-				sigRatio:   decFromString(t, "0.4"),
-				coins:      coinsFromString(t, "10aaa,100bbb,1000ccc"),
+				blockRatio: tc.DecFromString(t, "0.5"),
+				sigRatio:   tc.DecFromString(t, "0.4"),
+				coins:      tc.CoinsFromString(t, "10aaa,100bbb,1000ccc"),
 			},
-			want: coinsFromString(t, "2aaa,20bbb,200ccc"),
+			want: tc.CoinsFromString(t, "2aaa,20bbb,200ccc"),
 		},
 		{
 			name: "decimal rewards should be truncated",
 			args: args{
-				blockRatio: decFromString(t, "0.5"),
+				blockRatio: tc.DecFromString(t, "0.5"),
 				sigRatio:   sdk.OneDec(),
-				coins:      coinsFromString(t, "1aaa,11bbb,101ccc"),
+				coins:      tc.CoinsFromString(t, "1aaa,11bbb,101ccc"),
 			},
-			want: coinsFromString(t, "5bbb,50ccc"),
+			want: tc.CoinsFromString(t, "5bbb,50ccc"),
 		},
 	}
 	for _, tt := range tests {
@@ -165,18 +166,18 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		closeRewardPool bool
 	}
 	tests := []struct {
-		name        string
-		rewardPool  types.RewardPool
-		args        args
+		name         string
+		rewardPool   types.RewardPool
+		args         args
 		wantBalances map[string]sdk.Coins
-		err         error
+		err          error
 	}{
 		{
 			name: "invalid reward pool",
 			args: args{
 				launchID: 99999,
-				signatureCounts: signatureCounts(1,
-					signatureCount(t, valConsAddrFoo, "0.5"),
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
 				),
 				lastBlockHeight: 1,
 				closeRewardPool: false,
@@ -188,13 +189,13 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
 				launchID: 1,
-				signatureCounts: signatureCounts(1,
-					signatureCount(t, notFoundValAddr, "0.5"),
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, notFoundValAddr, "0.5"),
 				),
 				lastBlockHeight: 1,
 				closeRewardPool: false,
@@ -206,22 +207,22 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
 				launchID: 1,
-				signatureCounts: signatureCounts(1,
-					signatureCount(t, valConsAddrFoo, "0.5"),
-					signatureCount(t, valConsAddrBar, "0.5"),
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
+					tc.SignatureCount(t, valConsAddrBar, "0.5"),
 				),
 				lastBlockHeight: 10,
 				closeRewardPool: true,
 			},
 			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
-				valFoo:   coinsFromString(t, "50aaa,50bbb"),
-				valBar:   coinsFromString(t, "50aaa,50bbb"),
+				valFoo:   tc.CoinsFromString(t, "50aaa,50bbb"),
+				valBar:   tc.CoinsFromString(t, "50aaa,50bbb"),
 			},
 		},
 		{
@@ -229,22 +230,22 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
 				launchID: 1,
-				signatureCounts: signatureCounts(1,
-					signatureCount(t, valConsAddrFoo, "0.5"),
-					signatureCount(t, valConsAddrBar, "0.5"),
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
+					tc.SignatureCount(t, valConsAddrBar, "0.5"),
 				),
 				lastBlockHeight: 5,
 				closeRewardPool: true,
 			},
 			wantBalances: map[string]sdk.Coins{
-				provider: coinsFromString(t, "50aaa,50bbb"),
-				valFoo:   coinsFromString(t, "25aaa,25bbb"),
-				valBar:   coinsFromString(t, "25aaa,25bbb"),
+				provider: tc.CoinsFromString(t, "50aaa,50bbb"),
+				valFoo:   tc.CoinsFromString(t, "25aaa,25bbb"),
+				valBar:   tc.CoinsFromString(t, "25aaa,25bbb"),
 			},
 		},
 		{
@@ -252,22 +253,22 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
 				launchID: 1,
-				signatureCounts: signatureCounts(1,
-					signatureCount(t, valConsAddrFoo, "0.5"),
-					signatureCount(t, valConsAddrBar, "0.5"),
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
+					tc.SignatureCount(t, valConsAddrBar, "0.5"),
 				),
 				lastBlockHeight: 5,
 				closeRewardPool: false,
 			},
 			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
-				valFoo:   coinsFromString(t, "25aaa,25bbb"),
-				valBar:   coinsFromString(t, "25aaa,25bbb"),
+				valFoo:   tc.CoinsFromString(t, "25aaa,25bbb"),
+				valBar:   tc.CoinsFromString(t, "25aaa,25bbb"),
 			},
 		},
 		{
@@ -275,22 +276,22 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
 				launchID: 1,
-				signatureCounts: signatureCounts(1,
-					signatureCount(t, valConsAddrFoo, "0.5"),
-					signatureCount(t, valConsAddrBar, "0.5"),
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
+					tc.SignatureCount(t, valConsAddrBar, "0.5"),
 				),
 				lastBlockHeight: 10,
 				closeRewardPool: false,
 			},
 			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
-				valFoo:   coinsFromString(t, "50aaa,50bbb"),
-				valBar:   coinsFromString(t, "50aaa,50bbb"),
+				valFoo:   tc.CoinsFromString(t, "50aaa,50bbb"),
+				valBar:   tc.CoinsFromString(t, "50aaa,50bbb"),
 			},
 		},
 		{
@@ -298,23 +299,23 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            coinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
 				launchID: 1,
-				signatureCounts: signatureCounts(1,
-					signatureCount(t, valConsAddrFoo, "0.3"),
-					signatureCount(t, valConsAddrBar, "0.3"),
-					signatureCount(t, noProfileVal, "0.3"),
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valConsAddrFoo, "0.3"),
+					tc.SignatureCount(t, valConsAddrBar, "0.3"),
+					tc.SignatureCount(t, noProfileVal, "0.3"),
 				),
 				lastBlockHeight: 10,
 				closeRewardPool: false,
 			},
 			wantBalances: map[string]sdk.Coins{
-				provider: coinsFromString(t, "40aaa,40bbb"),
-				valFoo:   coinsFromString(t, "30aaa,30bbb"),
-				valBar:   coinsFromString(t, "30aaa,30bbb"),
+				provider: tc.CoinsFromString(t, "40aaa,40bbb"),
+				valFoo:   tc.CoinsFromString(t, "30aaa,30bbb"),
+				valBar:   tc.CoinsFromString(t, "30aaa,30bbb"),
 			},
 		},
 	}
