@@ -7,8 +7,9 @@ import pathlib
 if pathlib.PurePath(os.getcwd()).name != 'localnet':
     print('script must be run from localnet folder')
     exit(1)
+subprocess.run(["python3", "./clear.py"], check=True)
 
-# Debug mode
+# Debug mode for monitoring
 debugMode = False
 
 # Staking
@@ -27,11 +28,6 @@ unbondingTime = 1814400
 
 # Denom
 denom = 'uspn'
-
-# Reset all nodes
-os.system('spnd unsafe-reset-all --home ./node1')
-os.system('spnd unsafe-reset-all --home ./node2')
-os.system('spnd unsafe-reset-all --home ./node3')
 
 # Open the genesis template
 genesisFile = open('./genesis_template.json')
@@ -78,7 +74,7 @@ with open('./node3/config/genesis.json', 'w', encoding='utf-8') as f:
     json.dump(genesis, f, ensure_ascii=False, indent=4)
 
 print('Starting the network')
-# subprocess.Popen(["spnd", "start", "--home", "./node2"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-# subprocess.Popen(["spnd", "start", "--home", "./node3"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-# subprocess.run(["spnd start --home ./node1"], shell=True, check=True)
-#
+subprocess.Popen(["spnd", "start", "--home", "./node2"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+subprocess.Popen(["spnd", "start", "--home", "./node3"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+subprocess.run(["spnd start --home ./node1"], shell=True, check=True)
+
