@@ -36,4 +36,3 @@ func setupMsgServer(t testing.TB) (
 		launchkeeper.NewMsgServerImpl(*launchKeeper),
 		ctx
 }
-
