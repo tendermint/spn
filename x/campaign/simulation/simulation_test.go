@@ -34,6 +34,7 @@ func populateCoordinators(
 		coordID := pk.AppendCoordinator(ctx, profiletypes.Coordinator{
 			Address:     accs[i].Address.String(),
 			Description: sample.CoordinatorDescription(),
+			Active:      true,
 		})
 
 		coordIDs = append(coordIDs, coordID)

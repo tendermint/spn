@@ -6,3 +6,4 @@ release/
 # IDE
 .idea
 .envrc
+.vscode

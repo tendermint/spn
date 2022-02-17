@@ -15,6 +15,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	var (
 		invalidChain                = uint64(1000)
 		coordAddr                   = sample.Address()
+		coordDisableAddr            = sample.Address()
 		addr1                       = sample.Address()
 		addr2                       = sample.Address()
 		addr3                       = sample.Address()
@@ -25,6 +26,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
+		Active:  true,
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 6)
 	chains[0].LaunchTriggered = true
@@ -34,6 +36,12 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	chains[5].IsMainnet = true
 	chains[5].HasCampaign = true
 	k.SetChain(sdkCtx, chains[5])
+
+	coordDisableID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+		Address: coordDisableAddr,
+		Active:  false,
+	})
+	disabledChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
 
 	tests := []struct {
 		name        string
@@ -101,6 +109,11 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			name: "is mainnet chain",
 			msg:  sample.MsgRequestAddAccount(coordAddr, sample.Address(), chains[5].LaunchID),
 			err:  types.ErrAddMainnetAccount,
+		},
+		{
+			name: "fail if the coordinator of the chain is disabled",
+			msg:  sample.MsgRequestAddAccount(sample.Address(), sample.Address(), disabledChain[0].LaunchID),
+			err:  profiletypes.ErrCoordInactive,
 		},
 	}
 	for _, tt := range tests {
