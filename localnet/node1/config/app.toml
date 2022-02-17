@@ -20,8 +20,8 @@ pruning-keep-recent = "0"
   swagger = false
 
 [grpc]
-  address = ""
-  enable = false
+  address = ":9090"
+  enable = true
 
 [grpc-web]
   address = ""

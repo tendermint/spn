@@ -240,7 +240,7 @@
                                 },
                                 "value": {
                                     "denom": "uspn",
-                                    "amount": "10000000"
+                                    "amount": "1000000"
                                 }
                             }
                         ],
@@ -272,7 +272,7 @@
                         }
                     },
                     "signatures": [
-                        "YL5cKSgHMfPwgFO7PaI0QHZq/cMXVoPFenIWj+NVj3c3QtPRKn+TCzpirz2tozMypGVxXi/sYH4RJv++zn3Jvw=="
+                        "YWp1dIwwyV4tEr2NeP/oSLAB+92sGrvp5hM+EAYTF+leSP/QZmygMmpDltq1EvXp0DNbSaDH8WWVQtctFxexpA=="
                     ]
                 },
                 {
@@ -301,7 +301,7 @@
                                 },
                                 "value": {
                                     "denom": "uspn",
-                                    "amount": "10000000"
+                                    "amount": "900000"
                                 }
                             }
                         ],
@@ -333,7 +333,7 @@
                         }
                     },
                     "signatures": [
-                        "w0XFviMziPa9I3pWvJguji4FNU36fGFENLNvuFTV1vw9nZ2v6mdouZDJjrVefFNcAnO9RnpUu+bsN3HVP3ysgg=="
+                        "X0SfXPG8wyTp09r+G+bkO74A+U34gGT+ZMelUSyMuNF6Vh+IXqQ1qc12DEocHXnwuJ9/Hrjk5VsJkigtJaySIg=="
                     ]
                 },
                 {
@@ -362,7 +362,7 @@
                                 },
                                 "value": {
                                     "denom": "uspn",
-                                    "amount": "10000000"
+                                    "amount": "900000"
                                 }
                             }
                         ],
@@ -394,7 +394,7 @@
                         }
                     },
                     "signatures": [
-                        "4W8GhSK9CGJdhln4LwgwbqmmXOoKOCWUyZtLY9pjs4kx8MNwaSq0fHpHKjUtZbj55FmxhoEpbq/amlIajCE0Uw=="
+                        "Gkn3N8XXST/ad2QWjTjLo0dobqD+0BwDM4LZfGQuFqMArJZaU27C3fyMC6v0v2bjv0yn+NcbKaeLaEM1BjSiZw=="
                     ]
                 }
             ]
@@ -526,7 +526,7 @@
                 "bond_denom": "uspn",
                 "historical_entries": 10000,
                 "max_entries": 7,
-                "max_validators": 10,
+                "max_validators": 1,
                 "unbonding_time": "1s"
             },
             "redelegations": [],
