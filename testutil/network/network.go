@@ -1,3 +1,4 @@
+// Package network allows to programmatically spin up a local network for CLI tests
 package network
 
 import (

@@ -70,7 +70,7 @@ func TestKeeper_GetValidatorsAndTotalDelegation(t *testing.T) {
 	k, ctx := testkeeper.Launch(t)
 	launchID := 10
 	validators := createNGenesisValidatorByLaunchID(k, ctx, launchID)
-	totalSelfDelegation := sdk.NewDec(0)
+	totalSelfDelegation := sdk.ZeroDec()
 	validatorMap := make(map[string]types.GenesisValidator)
 	for _, validator := range validators {
 		consPubKey := base64.StdEncoding.EncodeToString(validator.ConsPubKey)

@@ -70,7 +70,7 @@ func (k Keeper) GetValidatorsAndTotalDelegation(
 	defer iterator.Close()
 
 	validators := make(map[string]types.GenesisValidator)
-	totalDelegation := sdk.NewDec(0)
+	totalDelegation := sdk.ZeroDec()
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.GenesisValidator
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
