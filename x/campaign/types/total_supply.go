@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // UpdateTotalSupply returns updated total supply by adding new denoms and replacing existing ones
@@ -27,21 +28,16 @@ func UpdateTotalSupply(coins, updatedCoins sdk.Coins) sdk.Coins {
 }
 
 // ValidateTotalSupply checks whether the total supply for each denom is within the provided total supply range
-func ValidateTotalSupply(coins sdk.Coins, supplyRange TotalSupplyRange) error {
-	// extra safety check, this should never happen
-	if supplyRange.MaxTotalSupply.LT(supplyRange.MinTotalSupply) {
-		return fmt.Errorf(
-			"provided total supply range is invalid, min > max: [%s, %s]",
-			supplyRange.MinTotalSupply.String(),
-			supplyRange.MaxTotalSupply.String(),
-		)
+func ValidateTotalSupply(totalSupply sdk.Coins, supplyRange TotalSupplyRange) error {
+	if err := supplyRange.Validate(); err != nil {
+		return err
 	}
 
-	for _, coin := range coins {
+	for _, coin := range totalSupply {
 		totalSupply := coin.Amount
 		if totalSupply.LT(supplyRange.MinTotalSupply) {
 			return fmt.Errorf(
-				"total supply for %s cannot be less than minTotalSupply %s: %s",
+				"total supply for %s cannot be lower than minTotalSupply %s: %s",
 				coin.Denom,
 				supplyRange.MinTotalSupply.String(),
 				coin.Amount.String())
@@ -53,6 +49,19 @@ func ValidateTotalSupply(coins sdk.Coins, supplyRange TotalSupplyRange) error {
 				supplyRange.MaxTotalSupply.String(),
 				coin.Amount.String())
 		}
+	}
+	return nil
+}
+
+// Validate performs basic validation on an instance of TotalSupplyRange
+func (sr TotalSupplyRange) Validate() error {
+	if sr.MaxTotalSupply.LT(sr.MinTotalSupply) {
+		return sdkerrors.Wrapf(
+			ErrInvalidSupplyRange,
+			"provided total supply range is invalid, min > max: [%s, %s]",
+			sr.MinTotalSupply.String(),
+			sr.MaxTotalSupply.String(),
+		)
 	}
 	return nil
 }

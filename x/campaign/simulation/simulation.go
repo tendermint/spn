@@ -263,7 +263,7 @@ func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk t
 		msg := types.NewMsgCreateCampaign(
 			simAccount.Address.String(),
 			sample.CampaignName(),
-			sample.Coins(),
+			sample.TotalSupply(),
 		)
 
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
@@ -283,7 +283,7 @@ func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, p
 		msg := types.NewMsgUpdateTotalSupply(
 			simAccount.Address.String(),
 			campID,
-			sample.Coins(),
+			sample.TotalSupply(),
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}

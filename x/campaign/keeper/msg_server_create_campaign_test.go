@@ -67,6 +67,15 @@ func TestMsgCreateCampaign(t *testing.T) {
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
+		{
+			name: "create a campaign with an invalid token supply",
+			msg: types.MsgCreateCampaign{
+				CampaignName: sample.CampaignName(),
+				Coordinator:  coordAddr1,
+				TotalSupply:  sample.CoinsWithRange(10, 20),
+			},
+			err: types.ErrInvalidTotalSupply,
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := campaignSrv.CreateCampaign(ctx, &tc.msg)

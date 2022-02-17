@@ -330,13 +330,6 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 			},
 			shouldBeValid: false,
 		},
-		{
-			desc: "valid range",
-			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdk.OneInt())),
-			},
-			shouldBeValid: true,
-		},
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {

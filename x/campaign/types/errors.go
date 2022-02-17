@@ -21,4 +21,5 @@ var (
 	ErrNoMatchVouchers      = sdkerrors.Register(ModuleName, 12, "vouchers don't match to campaign")
 	ErrInsufficientVouchers = sdkerrors.Register(ModuleName, 13, "account with insufficient vouchers")
 	ErrInvalidCampaignName  = sdkerrors.Register(ModuleName, 14, "invalid campaign name")
+	ErrInvalidSupplyRange   = sdkerrors.Register(ModuleName, 15, "invalid total supply range")
 )

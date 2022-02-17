@@ -2,9 +2,11 @@ package keeper
 
 import (
 	"context"
+	"errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
@@ -20,6 +22,10 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	// Validate provided totalSupply
 	totalSupplyRange := k.TotalSupplyRange(ctx)
 	if err := types.ValidateTotalSupply(msg.TotalSupply, totalSupplyRange); err != nil {
+		if errors.Is(err, types.ErrInvalidSupplyRange) {
+			return nil, spnerrors.Critical(err.Error())
+		}
+
 		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, err.Error())
 	}
 

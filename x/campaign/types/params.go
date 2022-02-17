@@ -57,14 +57,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 
 // ValidateBasic performs basic validation on campaign parameters.
 func (p Params) ValidateBasic() error {
-	if p.TotalSupplyRange.MinTotalSupply.LT(sdk.OneInt()) {
-		return errors.New("minimum total supply should be greater than one")
-	}
-	if p.TotalSupplyRange.MaxTotalSupply.LT(p.TotalSupplyRange.MinTotalSupply) {
-		return errors.New("maximum total supply should be greater than greater or equal than minimum total supply")
-	}
-
-	return nil
+	return validateTotalSupplyRange(p.TotalSupplyRange)
 }
 
 func validateTotalSupplyRange(i interface{}) error {
@@ -74,11 +67,11 @@ func validateTotalSupplyRange(i interface{}) error {
 	}
 
 	if v.MinTotalSupply.LT(sdk.OneInt()) {
-		return errors.New("parameter minTotalSupply cannot be less than one")
+		return errors.New("minimum total supply should be greater than one")
 	}
 
 	if v.MaxTotalSupply.LT(v.MinTotalSupply) {
-		return errors.New("parameter maxTotalSupply cannot be less than minTotalSupply")
+		return errors.New("maximum total supply should be greater or equal than minimum total supply")
 	}
 
 	return nil

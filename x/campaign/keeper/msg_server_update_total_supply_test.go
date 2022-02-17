@@ -99,6 +99,15 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			},
 			err: types.ErrMainnetInitialized,
 		},
+		{
+			name: "total supply outside of valid range",
+			msg: types.MsgUpdateTotalSupply{
+				CampaignID:        0,
+				Coordinator:       coordAddr1,
+				TotalSupplyUpdate: sample.CoinsWithRange(10, 20),
+			},
+			err: types.ErrInvalidTotalSupply,
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			var previousTotalSupply sdk.Coins

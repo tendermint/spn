@@ -70,6 +70,12 @@ func TestValidateTotalSupply(t *testing.T) {
 		valid       bool
 	}{
 		{
+			name:        "invalid supply range",
+			coins:       newCoins("1000foo,1000bar"),
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1_000), sdk.NewInt(100)),
+			valid:       false,
+		},
+		{
 			name:        "total supply less than min",
 			coins:       newCoins("100foo,1000bar"),
 			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1000), sdk.NewInt(10_000)),
