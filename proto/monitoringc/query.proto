@@ -8,6 +8,7 @@ import "monitoringc/params.proto";
 import "monitoringc/provider_client_id.proto";
 import "monitoringc/launch_id_from_verified_client_id.proto";
 import "monitoringc/launch_id_from_channel_id.proto";
+import "monitoringc/monitoring_history.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/monitoringc/types";
@@ -20,7 +21,7 @@ service Query {
   }
 
   // Queries a list of VerifiedClientIds items.
-  rpc VerifiedClientIds(QueryVerifiedClientIdsRequest) returns (QueryVerifiedClientIdsResponse) {
+  rpc VerifiedClientIds(QueryGetVerifiedClientIdsRequest) returns (QueryGetVerifiedClientIdsResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringc/verified_client_ids/{launchID}";
   }
 
@@ -54,7 +55,17 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id";
   }
 
-  // this line is used by starport scaffolding # 2
+	// Queries a MonitoringHistory by launch id.
+	rpc MonitoringHistory(QueryGetMonitoringHistoryRequest) returns (QueryGetMonitoringHistoryResponse) {
+		option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history/{launchID}";
+	}
+
+	// Queries a list of MonitoringHistory items.
+	rpc MonitoringHistoryAll(QueryAllMonitoringHistoryRequest) returns (QueryAllMonitoringHistoryResponse) {
+		option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -66,14 +77,12 @@ message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryVerifiedClientIdsRequest {
+message QueryGetVerifiedClientIdsRequest {
   uint64 launchID = 1;
-  cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
-message QueryVerifiedClientIdsResponse {
+message QueryGetVerifiedClientIdsResponse {
   repeated string clientIds = 1;
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetProviderClientIDRequest {
@@ -95,7 +104,6 @@ message QueryAllProviderClientIDResponse {
 
 message QueryGetLaunchIDFromVerifiedClientIDRequest {
   string clientID = 1;
-
 }
 
 message QueryGetLaunchIDFromVerifiedClientIDResponse {
@@ -126,6 +134,23 @@ message QueryAllLaunchIDFromChannelIDRequest {
 message QueryAllLaunchIDFromChannelIDResponse {
   repeated LaunchIDFromChannelID launchIDFromChannelID = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetMonitoringHistoryRequest {
+	  uint64 launchID = 1;
+}
+
+message QueryGetMonitoringHistoryResponse {
+	MonitoringHistory monitoringHistory = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMonitoringHistoryRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllMonitoringHistoryResponse {
+	repeated MonitoringHistory monitoringHistory = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+
 	"github.com/tendermint/spn/testutil/sample"
 	profilesimulation "github.com/tendermint/spn/x/profile/simulation"
 	"github.com/tendermint/spn/x/profile/types"
@@ -19,7 +20,7 @@ const (
 	defaultWeightMsgCreateCoordinator            = 50
 	defaultWeightMsgUpdateCoordinatorDescription = 20
 	defaultWeightMsgUpdateCoordinatorAddress     = 20
-	defaultWeightMsgDeleteCoordinator            = 5
+	defaultWeightMsgDisableCoordinator           = 5
 
 	opWeightMsgUpdateValidatorDescription   = "op_weight_msg_update_validator_description"
 	opWeightMsgDeleteValidator              = "op_weight_msg_delete_validator"
@@ -27,7 +28,7 @@ const (
 	opWeightMsgCreateCoordinator            = "op_weight_msg_create_coordinator"
 	opWeightMsgUpdateCoordinatorDescription = "op_weight_msg_update_coordinator_description"
 	opWeightMsgUpdateCoordinatorAddress     = "op_weight_msg_update_coordinator_address"
-	opWeightMsgDeleteCoordinator            = "op_weight_msg_delete_coordinator"
+	opWeightMsgDisableCoordinator           = "op_weight_msg_disable_coordinator"
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -61,7 +62,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgCreateCoordinator            int
 		weightMsgUpdateCoordinatorDescription int
 		weightMsgUpdateCoordinatorAddress     int
-		weightMsgDeleteCoordinator            int
+		weightMsgDisableCoordinator           int
 		weightMsgSetValidatorConsAddress      int
 	)
 
@@ -97,9 +98,9 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgUpdateCoordinatorAddress = defaultWeightMsgUpdateCoordinatorAddress
 		},
 	)
-	appParams.GetOrGenerate(cdc, opWeightMsgDeleteCoordinator, &weightMsgDeleteCoordinator, nil,
+	appParams.GetOrGenerate(cdc, opWeightMsgDisableCoordinator, &weightMsgDisableCoordinator, nil,
 		func(_ *rand.Rand) {
-			weightMsgDeleteCoordinator = defaultWeightMsgDeleteCoordinator
+			weightMsgDisableCoordinator = defaultWeightMsgDisableCoordinator
 		},
 	)
 
@@ -129,8 +130,8 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			profilesimulation.SimulateMsgUpdateCoordinatorAddress(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
-			weightMsgDeleteCoordinator,
-			profilesimulation.SimulateMsgDeleteCoordinator(am.accountKeeper, am.bankKeeper, am.keeper),
+			weightMsgDisableCoordinator,
+			profilesimulation.SimulateMsgDisableCoordinator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }

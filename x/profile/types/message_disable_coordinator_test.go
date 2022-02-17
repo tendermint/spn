@@ -5,25 +5,26 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 	profile "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgDeleteCoordinator_ValidateBasic(t *testing.T) {
+func TestMsgDisableCoordinator_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  profile.MsgDeleteCoordinator
+		msg  profile.MsgDisableCoordinator
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: profile.MsgDeleteCoordinator{
+			msg: profile.MsgDisableCoordinator{
 				Address: "invalid address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: profile.MsgDeleteCoordinator{
+			msg: profile.MsgDisableCoordinator{
 				Address: sample.Address(),
 			},
 		},

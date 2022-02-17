@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -18,12 +19,13 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
-	// Check sender is the coordinator of the chain
-	coordinatorID, found := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
-	if !found {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
+	// Get the coordinator ID associated to the sender address
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
+	if err != nil {
+		return nil, err
 	}
-	if chain.CoordinatorID != coordinatorID {
+
+	if chain.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrapf(
 			profiletypes.ErrCoordInvalid,
 			"coordinator of the chain is %d",
@@ -41,7 +43,7 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 	}
 
 	// We must wait for a specific delay once the chain is launched before being able to revert it
-	if ctx.BlockTime().Unix() < chain.LaunchTimestamp+types.RevertDelay {
+	if ctx.BlockTime().Unix() < chain.LaunchTimestamp+k.RevertDelay(ctx) {
 		return nil, sdkerrors.Wrapf(types.ErrRevertDelayNotReached, "%d", msg.LaunchID)
 	}
 

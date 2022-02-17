@@ -10,6 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cobra"
+
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -53,6 +54,12 @@ func CmdCreateChain() *cobra.Command {
 				}
 			}
 
+			metadata, err := cmd.Flags().GetString(flagMetadata)
+			if err != nil {
+				return err
+			}
+			metadataBytes := []byte(metadata)
+
 			msg := types.NewMsgCreateChain(
 				clientCtx.GetFromAddress().String(),
 				args[0],
@@ -62,6 +69,7 @@ func CmdCreateChain() *cobra.Command {
 				genesisHash,
 				hasCampaign,
 				campaignID,
+				metadataBytes,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -72,6 +80,7 @@ func CmdCreateChain() *cobra.Command {
 
 	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
 	cmd.Flags().Int64(flagCampaignID, -1, "The campaign id")
+	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

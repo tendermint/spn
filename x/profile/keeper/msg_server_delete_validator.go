@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -18,7 +19,9 @@ func (k msgServer) DeleteValidator(goCtx context.Context, msg *types.MsgDeleteVa
 			sdkerrors.Wrap(types.ErrValidatorNotFound, msg.Address)
 	}
 	k.RemoveValidator(ctx, msg.Address)
-	k.RemoveValidatorByConsAddress(ctx, validator.ConsensusAddress)
+	for _, consAddr := range validator.ConsensusAddresses {
+		k.RemoveValidatorByConsAddress(ctx, consAddr)
+	}
 
 	return &types.MsgDeleteValidatorResponse{}, nil
 }

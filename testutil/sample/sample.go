@@ -1,3 +1,4 @@
+// Package sample provides methods to initialize sample object of various types for test purposes
 package sample
 
 import (
@@ -6,12 +7,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctypes "github.com/cosmos/ibc-go/v2/modules/core/types"
+	"github.com/tendermint/tendermint/crypto"
+	"github.com/tendermint/tendermint/crypto/ed25519"
+
 	launch "github.com/tendermint/spn/x/launch/types"
 	profile "github.com/tendermint/spn/x/profile/types"
 )
@@ -69,10 +72,19 @@ func AlphaString(n int) string {
 	return string(randomString)
 }
 
+// PubKey returns a sample account PubKey
+func PubKey() crypto.PubKey {
+	return ed25519.GenPrivKey().PubKey()
+}
+
+// ConsAddress returns a sample consensus address
+func ConsAddress() sdk.ConsAddress {
+	return sdk.ConsAddress(PubKey().Address())
+}
+
 // AccAddress returns a sample account address
 func AccAddress() sdk.AccAddress {
-	pk := ed25519.GenPrivKey().PubKey()
-	addr := pk.Address()
+	addr := PubKey().Address()
 	return sdk.AccAddress(addr)
 }
 

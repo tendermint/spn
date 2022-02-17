@@ -6,9 +6,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/tendermint/spn/x/campaign/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/tendermint/spn/x/campaign/types"
 )
 
 func (k Keeper) MainnetVestingAccountAll(c context.Context, req *types.QueryAllMainnetVestingAccountRequest) (*types.QueryAllMainnetVestingAccountResponse, error) {

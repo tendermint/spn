@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,6 +10,7 @@ import (
 
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -41,7 +41,7 @@ func TestValidatorByConsAddressQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetValidatorByConsAddressRequest{
-				ConsensusAddress: strconv.Itoa(100000),
+				ConsensusAddress: sample.ConsAddress().Bytes(),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},

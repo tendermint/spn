@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/keeper"
@@ -16,7 +17,6 @@ func createNLaunchIDFromVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context,
 	items := make([]types.LaunchIDFromVerifiedClientID, n)
 	for i := range items {
 		items[i].ClientID = strconv.Itoa(i)
-
 		keeper.SetLaunchIDFromVerifiedClientID(ctx, items[i])
 	}
 	return items

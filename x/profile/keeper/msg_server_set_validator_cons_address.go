@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	valtypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/profile/types"
@@ -21,7 +22,7 @@ func (k msgServer) SetValidatorConsAddress(
 		return &types.MsgSetValidatorConsAddressResponse{},
 			spnerrors.Criticalf("invalid consensus pub key %s", msg.ValidatorKeyType)
 	}
-	consAddress := valPubKey.GetConsAddress().String()
+	consAddress := valPubKey.GetConsAddress().Bytes()
 
 	// check signature
 	currentNonce := uint64(0)
@@ -39,11 +40,12 @@ func (k msgServer) SetValidatorConsAddress(
 	}
 
 	validator := types.Validator{
-		Address:          msg.ValidatorAddress,
-		ConsensusAddress: consAddress,
-		Description:      types.ValidatorDescription{},
+		Address:            msg.ValidatorAddress,
+		ConsensusAddresses: [][]byte{consAddress},
+		Description:        types.ValidatorDescription{},
 	}
 
+	// remove the consensus key from previous address
 	if valByConsAddr, found := k.GetValidatorByConsAddress(ctx, consAddress); found {
 		lastValidator, found := k.GetValidator(ctx, valByConsAddr.ValidatorAddress)
 		if !found {
@@ -53,14 +55,14 @@ func (k msgServer) SetValidatorConsAddress(
 					valByConsAddr.ValidatorAddress,
 				)
 		}
-		lastValidator.ConsensusAddress = ""
+		lastValidator = lastValidator.RemoveValidatorConsensusAddress(consAddress)
 		k.SetValidator(ctx, lastValidator)
 	}
 
 	// get the current validator to eventually overwrite description and remove existing consensus key
 	if validatorStore, found := k.GetValidator(ctx, msg.ValidatorAddress); found {
 		validator.Description = validatorStore.Description
-		k.RemoveValidatorByConsAddress(ctx, validatorStore.ConsensusAddress)
+		validator = validatorStore.AddValidatorConsensusAddress(consAddress)
 	}
 
 	// store validator information

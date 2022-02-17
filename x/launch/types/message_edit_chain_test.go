@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -18,6 +20,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		true,
 		false,
 		false,
+		false,
 	)
 	genesisURL := types.NewGenesisURL("foo.com", "NoHash")
 	msgInvalidGenesisHash.InitialGenesis = &genesisURL
@@ -29,8 +32,20 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		true,
 		false,
 		false,
+		false,
 	)
 	msgInvalidGenesisChainID.GenesisChainID = "invalid"
+
+	msgInvalidMetadataLen := sample.MsgEditChain(
+		sample.Address(),
+		launchID,
+		false,
+		false,
+		false,
+		false,
+		false,
+	)
+	msgInvalidMetadataLen.Metadata = sample.Bytes(spntypes.MaxMetadataLength + 1)
 
 	for _, tc := range []struct {
 		desc  string
@@ -46,6 +61,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				true,
 				true,
 				false,
+				false,
 			),
 			valid: true,
 		},
@@ -55,6 +71,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				sample.Address(),
 				launchID,
 				true,
+				false,
 				false,
 				false,
 				false,
@@ -70,6 +87,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				true,
 				false,
 				false,
+				false,
 			),
 			valid: true,
 		},
@@ -81,6 +99,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				false,
 				true,
+				false,
 				false,
 			),
 			valid: true,
@@ -94,6 +113,20 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				true,
 				true,
+				false,
+			),
+			valid: true,
+		},
+		{
+			desc: "valid message with new metadata",
+			msg: sample.MsgEditChain(
+				sample.Address(),
+				launchID,
+				false,
+				false,
+				false,
+				false,
+				true,
 			),
 			valid: true,
 		},
@@ -106,6 +139,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				true,
 				true,
 				false,
+				false,
 			),
 			valid: false,
 		},
@@ -114,6 +148,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			msg: sample.MsgEditChain(
 				sample.Address(),
 				launchID,
+				false,
 				false,
 				false,
 				false,
@@ -129,6 +164,11 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		{
 			desc:  "invalid initial genesis chain ID",
 			msg:   msgInvalidGenesisChainID,
+			valid: false,
+		},
+		{
+			desc:  "invalid metadata length",
+			msg:   msgInvalidMetadataLen,
 			valid: false,
 		},
 	} {

@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/simulation"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/stretchr/testify/require"
+
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
@@ -27,7 +28,7 @@ func setupMsgServer(t testing.TB) (
 	campaigntypes.MsgServer,
 	sdk.Context,
 ) {
-	campaignKeeper, launchLKeeper, profileKeeper, _, _, _, ctx := testkeeper.AllKeepers(t)
+	campaignKeeper, launchLKeeper, profileKeeper, _, _, _, _, ctx := testkeeper.AllKeepers(t)
 	return launchLKeeper,
 		profileKeeper,
 		campaignKeeper,
@@ -91,6 +92,14 @@ func TestFindChainCoordinatorAccount(t *testing.T) {
 	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
 	require.NoError(t, err)
 
+	// Create coordinator and disable
+	msgCreateCoord = sample.MsgCreateCoordinator(accs[1].Address.String())
+	resDisable, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
+	require.NoError(t, err)
+	msgDisableCoord := sample.MsgDisableCoordinator(accs[1].Address.String())
+	_, err = profileSrv.DisableCoordinator(ctx, &msgDisableCoord)
+	require.NoError(t, err)
+
 	// Create chains
 	chainID := k.AppendChain(sdkCtx, types.Chain{
 		CoordinatorID: res.CoordinatorID,
@@ -98,6 +107,11 @@ func TestFindChainCoordinatorAccount(t *testing.T) {
 	chainWithoutCoordID := k.AppendChain(sdkCtx, types.Chain{
 		CoordinatorID: 1000,
 	})
+
+	chainWithDisableCoord := k.AppendChain(sdkCtx, types.Chain{
+		CoordinatorID: resDisable.CoordinatorID,
+	})
+
 	tests := []struct {
 		name    string
 		chainID uint64
@@ -112,6 +126,11 @@ func TestFindChainCoordinatorAccount(t *testing.T) {
 		{
 			name:    "chain without coordinator",
 			chainID: chainWithoutCoordID,
+			wantErr: true,
+		},
+		{
+			name:    "chain with disabled coordinator",
+			chainID: chainWithDisableCoord,
 			wantErr: true,
 		},
 		{

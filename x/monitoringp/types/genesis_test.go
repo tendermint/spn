@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/monitoringp/types"
@@ -71,7 +72,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						BlockCount: 1,
 						Counts: []spntypes.SignatureCount{
 							{
-								ConsAddress:        "foo",
+								ConsAddress:        []byte("foo"),
 								RelativeSignatures: sdk.NewDec(10),
 							},
 						},

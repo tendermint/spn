@@ -1,8 +1,11 @@
 package keeper
 
 import (
+	"encoding/base64"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -53,4 +56,27 @@ func (k Keeper) GetAllGenesisValidator(ctx sdk.Context) (list []types.GenesisVal
 	}
 
 	return
+}
+
+// GetValidatorsAndTotalDelegation returns the genesisValidator map by
+// consensus address and total of self delegation
+func (k Keeper) GetValidatorsAndTotalDelegation(
+	ctx sdk.Context,
+	launchID uint64,
+) (map[string]types.GenesisValidator, sdk.Dec) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.GenesisValidatorAllKey(launchID))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	validators := make(map[string]types.GenesisValidator)
+	totalDelegation := sdk.ZeroDec()
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.GenesisValidator
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		consPubKey := base64.StdEncoding.EncodeToString(val.ConsPubKey)
+		validators[consPubKey] = val
+		totalDelegation = totalDelegation.Add(val.SelfDelegation.Amount.ToDec())
+	}
+	return validators, totalDelegation
 }

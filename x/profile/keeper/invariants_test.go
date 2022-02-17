@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
@@ -22,7 +23,7 @@ func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 		require.Equal(t, false, isValid)
 	})
 
-	t.Run("invalid case", func(t *testing.T) {
+	t.Run("invalid case 1", func(t *testing.T) {
 		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 			Address:       sample.Address(),
 			CoordinatorID: 10,

@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -16,9 +17,9 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 		ctx, k, srv = setupMsgServer(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 	)
-	if _, err := srv.CreateCoordinator(wCtx, &msgCoord); err != nil {
-		t.Fatal(err)
-	}
+	_, err := srv.CreateCoordinator(wCtx, &msgCoord)
+	require.NoError(t, err)
+
 	tests := []struct {
 		name string
 		msg  types.MsgUpdateCoordinatorDescription
@@ -26,11 +27,10 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	}{
 		{
 			name: "not found address",
-			msg: types.MsgUpdateCoordinatorDescription{
-				Address: addr,
-			},
-			err: types.ErrCoordAddressNotFound,
-		}, {
+			msg:  sample.MsgUpdateCoordinatorDescription(addr),
+			err:  types.ErrCoordAddressNotFound,
+		},
+		{
 			name: "update one value",
 			msg: types.MsgUpdateCoordinatorDescription{
 				Address: msgCoord.Address,
@@ -38,24 +38,20 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 					Identity: "update",
 				},
 			},
-		}, {
+		},
+		{
 			name: "update all values",
-			msg: types.MsgUpdateCoordinatorDescription{
-				Address: msgCoord.Address,
-				Description: types.CoordinatorDescription{
-					Identity: "update",
-					Website:  "update",
-					Details:  "update",
-				},
-			},
+			msg:  sample.MsgUpdateCoordinatorDescription(msgCoord.Address),
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var oldCoord types.Coordinator
+			var found bool
 			if tt.err == nil {
-				coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-				require.True(t, found, "coordinator by address not found")
+				coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+				require.NoError(t, err, "coordinator by address not found")
 				oldCoord, found = k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
 				require.True(t, found, "coordinator not found")
 			}
@@ -67,8 +63,8 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			require.True(t, found, "coordinator by address not found")
+			coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			require.NoError(t, err, "coordinator by address not found")
 			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
 			require.True(t, found, "coordinator not found")
 			require.EqualValues(t, tt.msg.Address, coord.Address)

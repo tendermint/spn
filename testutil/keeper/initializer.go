@@ -19,6 +19,8 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v2/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
+	tmdb "github.com/tendermint/tm-db"
+
 	"github.com/tendermint/spn/testutil/sample"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
@@ -31,7 +33,7 @@ import (
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	rewardmodulekeeper "github.com/tendermint/spn/x/reward/keeper"
-	tmdb "github.com/tendermint/tm-db"
+	rewardmoduletypes "github.com/tendermint/spn/x/reward/types"
 )
 
 var (
@@ -42,6 +44,7 @@ var (
 		campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+		rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
 	}
 )
 

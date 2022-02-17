@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -22,12 +23,13 @@ func (k msgServer) UpdateTotalShares(goCtx context.Context, msg *types.MsgUpdate
 		return nil, sdkerrors.Wrap(types.ErrNoDynamicShares, "campaign doesn't has dynamic shares option set")
 	}
 
-	// Get the coordinator ID
-	coordinatorID, found := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
-	if !found {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
+	// Get the coordinator ID associated to the sender address
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
+	if err != nil {
+		return nil, err
 	}
-	if campaign.CoordinatorID != coordinatorID {
+
+	if campaign.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
 			"coordinator of the campaign is %d",
 			campaign.CoordinatorID,

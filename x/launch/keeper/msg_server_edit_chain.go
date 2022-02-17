@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -18,12 +19,13 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
-	// Check sender is the coordinator of the chain
-	coordinatorID, found := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
-	if !found {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
+	// Get the coordinator ID associated to the sender address
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
+	if err != nil {
+		return nil, err
 	}
-	if chain.CoordinatorID != coordinatorID {
+
+	if chain.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
 			"coordinator of the chain is %d",
 			chain.CoordinatorID,
@@ -42,6 +44,10 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 	}
 	if msg.InitialGenesis != nil {
 		chain.InitialGenesis = *msg.InitialGenesis
+	}
+
+	if len(msg.Metadata) > 0 {
+		chain.Metadata = msg.Metadata
 	}
 
 	k.SetChain(ctx, chain)

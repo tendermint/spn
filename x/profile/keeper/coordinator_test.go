@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/keeper"
@@ -15,6 +16,7 @@ func createNCoordinator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.C
 	items := make([]types.Coordinator, n)
 	for i := range items {
 		items[i] = sample.Coordinator(sample.Address())
+		items[i].Active = true
 		items[i].CoordinatorID = keeper.AppendCoordinator(ctx, items[i])
 	}
 	return items

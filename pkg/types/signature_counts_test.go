@@ -3,19 +3,19 @@ package types_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/pkg/types"
+	tc "github.com/tendermint/spn/testutil/constructor"
+	"github.com/tendermint/spn/testutil/sample"
 )
 
-func signatureCount(t *testing.T, consAddr, sig string) types.SignatureCount {
-	sigDec, err := sdk.NewDecFromStr(sig)
-	require.NoError(t, err)
-	return types.SignatureCount{
-		ConsAddress:        consAddr,
-		RelativeSignatures: sigDec,
-	}
-}
+var (
+	caFoo    = sample.ConsAddress()
+	caBar    = sample.ConsAddress()
+	caBaz    = sample.ConsAddress()
+	caFoobar = sample.ConsAddress()
+)
 
 func TestNewSignatureCounts(t *testing.T) {
 	sc := types.NewSignatureCounts()
@@ -26,7 +26,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 	tests := []struct {
 		name             string
 		sc               types.SignatureCounts
-		consAddres       string
+		consAddres       []byte
 		validatorSetSize int64
 		expected         types.SignatureCounts
 	}{
@@ -36,12 +36,12 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 1,
 				Counts:     []types.SignatureCount{},
 			},
-			consAddres:       "foo",
+			consAddres:       caFoo,
 			validatorSetSize: 1,
 			expected: types.SignatureCounts{
 				BlockCount: 1,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "1"),
+					tc.SignatureCount(t, caFoo, "1"),
 				},
 			},
 		},
@@ -51,12 +51,12 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 100,
 				Counts:     []types.SignatureCount{},
 			},
-			consAddres:       "foo",
+			consAddres:       caFoo,
 			validatorSetSize: 10000,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "0.0001"),
+					tc.SignatureCount(t, caFoo, "0.0001"),
 				},
 			},
 		},
@@ -65,20 +65,20 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "1"),
-					signatureCount(t, "bar", "0.5"),
-					signatureCount(t, "baz", "5.5"),
+					tc.SignatureCount(t, caFoo, "1"),
+					tc.SignatureCount(t, caBar, "0.5"),
+					tc.SignatureCount(t, caBaz, "5.5"),
 				},
 			},
-			consAddres:       "foobar",
+			consAddres:       caFoobar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "1"),
-					signatureCount(t, "bar", "0.5"),
-					signatureCount(t, "baz", "5.5"),
-					signatureCount(t, "foobar", "0.1"),
+					tc.SignatureCount(t, caFoo, "1"),
+					tc.SignatureCount(t, caBar, "0.5"),
+					tc.SignatureCount(t, caBaz, "5.5"),
+					tc.SignatureCount(t, caFoobar, "0.1"),
 				},
 			},
 		},
@@ -87,19 +87,19 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "1"),
-					signatureCount(t, "bar", "0.5"),
-					signatureCount(t, "baz", "5.5"),
+					tc.SignatureCount(t, caFoo, "1"),
+					tc.SignatureCount(t, caBar, "0.5"),
+					tc.SignatureCount(t, caBaz, "5.5"),
 				},
 			},
-			consAddres:       "bar",
+			consAddres:       caBar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "1"),
-					signatureCount(t, "bar", "0.6"),
-					signatureCount(t, "baz", "5.5"),
+					tc.SignatureCount(t, caFoo, "1"),
+					tc.SignatureCount(t, caBar, "0.6"),
+					tc.SignatureCount(t, caBaz, "5.5"),
 				},
 			},
 		},
@@ -127,9 +127,9 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 2,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "1"),
-					signatureCount(t, "bar", "0.1"),
-					signatureCount(t, "foobar", "0.5"),
+					tc.SignatureCount(t, caFoo, "1"),
+					tc.SignatureCount(t, caBar, "0.1"),
+					tc.SignatureCount(t, caFoobar, "0.5"),
 				},
 			},
 		},
@@ -138,10 +138,10 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 2,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "0.5"),
-					signatureCount(t, "bar", "0.5"),
-					signatureCount(t, "baz", "0.5"),
-					signatureCount(t, "foobar", "0.5"),
+					tc.SignatureCount(t, caFoo, "0.5"),
+					tc.SignatureCount(t, caBar, "0.5"),
+					tc.SignatureCount(t, caBaz, "0.5"),
+					tc.SignatureCount(t, caFoobar, "0.5"),
 				},
 			},
 		},
@@ -150,9 +150,9 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 2,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "1"),
-					signatureCount(t, "bar", "0.1"),
-					signatureCount(t, "bar", "0.5"),
+					tc.SignatureCount(t, caFoo, "1"),
+					tc.SignatureCount(t, caBar, "0.1"),
+					tc.SignatureCount(t, caBar, "0.5"),
 				},
 			},
 			wantErr: true,
@@ -162,9 +162,9 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 2,
 				Counts: []types.SignatureCount{
-					signatureCount(t, "foo", "1"),
-					signatureCount(t, "bar", "1"),
-					signatureCount(t, "baz", "0.5"),
+					tc.SignatureCount(t, caFoo, "1"),
+					tc.SignatureCount(t, caBar, "1"),
+					tc.SignatureCount(t, caBaz, "0.5"),
 				},
 			},
 			wantErr: true,

@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -19,12 +20,13 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
-	// Get the coordinator ID
-	coordinatorID, found := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
-	if !found {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Coordinator)
+	// Get the coordinator ID associated to the sender address
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
+	if err != nil {
+		return nil, err
 	}
-	if campaign.CoordinatorID != coordinatorID {
+
+	if campaign.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
 			"coordinator of the campaign is %d",
 			campaign.CoordinatorID,

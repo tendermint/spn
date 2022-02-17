@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -92,6 +93,7 @@ func TestMsgCreateChain(t *testing.T) {
 			require.EqualValues(t, tc.msg.GenesisChainID, chain.GenesisChainID)
 			require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
 			require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)
+			require.EqualValues(t, tc.msg.Metadata, chain.Metadata)
 
 			// Compare initial genesis
 			if tc.msg.GenesisURL == "" {

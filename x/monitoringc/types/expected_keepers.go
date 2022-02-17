@@ -7,14 +7,30 @@ import (
 	connectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v2/modules/core/exported"
+	tmtypes "github.com/tendermint/tendermint/types"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 )
 
 type LaunchKeeper interface {
 	GetChain(ctx sdk.Context, launchID uint64) (val launchtypes.Chain, found bool)
+	CheckValidatorSet(
+		ctx sdk.Context,
+		launchID uint64,
+		chainID string,
+		validatorSet tmtypes.ValidatorSet,
+	) error
 }
 
 type RewardKeeper interface {
+	DistributeRewards(
+		ctx sdk.Context,
+		launchID uint64,
+		signatureCounts spntypes.SignatureCounts,
+		lastBlockHeight uint64,
+		closeRewardPool bool,
+	) error
 }
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)

@@ -2,6 +2,7 @@ package monitoringc
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/x/monitoringc/keeper"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
@@ -24,6 +25,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// Set all the launchIDFromChannelID
 	for _, elem := range genState.LaunchIDFromChannelIDList {
 		k.SetLaunchIDFromChannelID(ctx, elem)
+	}
+	// Set all the monitoringHistory
+	for _, elem := range genState.MonitoringHistoryList {
+		k.SetMonitoringHistory(ctx, elem)
 	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetPort(ctx, genState.PortId)
@@ -50,6 +55,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.ProviderClientIDList = k.GetAllProviderClientID(ctx)
 	genesis.LaunchIDFromVerifiedClientIDList = k.GetAllLaunchIDFromVerifiedClientID(ctx)
 	genesis.LaunchIDFromChannelIDList = k.GetAllLaunchIDFromChannelID(ctx)
+	genesis.MonitoringHistoryList = k.GetAllMonitoringHistory(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

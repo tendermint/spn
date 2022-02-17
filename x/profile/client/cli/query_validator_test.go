@@ -5,15 +5,18 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/tendermint/spn/testutil/nullify"
+
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/x/profile/client/cli"
-	"github.com/tendermint/spn/x/profile/types"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/x/profile/client/cli"
+	"github.com/tendermint/spn/x/profile/types"
 )
 
 func networkWithValidatorObjects(t *testing.T, n int) (*network.Network, []types.Validator) {
@@ -79,7 +82,7 @@ func TestShowValidator(t *testing.T) {
 				var resp types.QueryGetValidatorResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.Validator)
-				require.Equal(t, tc.obj, resp.Validator)
+				require.Equal(t, nullify.Fill(&tc.obj), nullify.Fill(&resp.Validator))
 			}
 		})
 	}
@@ -113,7 +116,7 @@ func TestListValidator(t *testing.T) {
 			var resp types.QueryAllValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Validator), step)
-			require.Subset(t, objs, resp.Validator)
+			require.Subset(t, nullify.Fill(objs), nullify.Fill(resp.Validator))
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -126,7 +129,7 @@ func TestListValidator(t *testing.T) {
 			var resp types.QueryAllValidatorResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Validator), step)
-			require.Subset(t, objs, resp.Validator)
+			require.Subset(t, nullify.Fill(objs), nullify.Fill(resp.Validator))
 			next = resp.Pagination.NextKey
 		}
 	})
@@ -138,6 +141,6 @@ func TestListValidator(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.ElementsMatch(t, objs, resp.Validator)
+		require.ElementsMatch(t, nullify.Fill(objs), nullify.Fill(resp.Validator))
 	})
 }

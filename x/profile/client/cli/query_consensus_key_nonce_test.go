@@ -1,8 +1,8 @@
 package cli_test
 
 import (
+	"encoding/base64"
 	"fmt"
-	"strconv"
 	"testing"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
@@ -13,6 +13,7 @@ import (
 
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/client/cli"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -25,7 +26,7 @@ func networkWithConsensusKeyNonceObjects(t *testing.T, n int) (*network.Network,
 
 	for i := 0; i < n; i++ {
 		consensusKeyNonce := types.ConsensusKeyNonce{
-			ConsensusAddress: strconv.Itoa(i),
+			ConsensusAddress: sample.ConsAddress().Bytes(),
 		}
 		nullify.Fill(&consensusKeyNonce)
 		state.ConsensusKeyNonceList = append(state.ConsensusKeyNonceList, consensusKeyNonce)
@@ -45,7 +46,7 @@ func TestShowConsensusKeyNonce(t *testing.T) {
 	}
 	for _, tc := range []struct {
 		desc               string
-		idConsensusAddress string
+		idConsensusAddress []byte
 
 		args []string
 		err  error
@@ -60,7 +61,7 @@ func TestShowConsensusKeyNonce(t *testing.T) {
 		},
 		{
 			desc:               "not found",
-			idConsensusAddress: strconv.Itoa(100000),
+			idConsensusAddress: sample.ConsAddress().Bytes(),
 
 			args: common,
 			err:  status.Error(codes.InvalidArgument, "not found"),
@@ -69,7 +70,7 @@ func TestShowConsensusKeyNonce(t *testing.T) {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
-				tc.idConsensusAddress,
+				base64.StdEncoding.EncodeToString(tc.idConsensusAddress),
 			}
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowConsensusKeyNonce(), args)

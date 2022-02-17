@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
@@ -22,7 +23,7 @@ func setupMsgServer(t testing.TB) (
 	profiletypes.MsgServer,
 	sdk.Context,
 ) {
-	campaignKeeper, launchKeeper, profileKeeper, _, _, bankKeeper, ctx := testkeeper.AllKeepers(t)
+	campaignKeeper, launchKeeper, profileKeeper, _, _, bankKeeper, _, ctx := testkeeper.AllKeepers(t)
 
 	return campaignKeeper,
 		profileKeeper,

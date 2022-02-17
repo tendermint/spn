@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/keeper"
@@ -15,7 +16,6 @@ func createNProviderClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 	items := make([]types.ProviderClientID, n)
 	for i := range items {
 		items[i].LaunchID = uint64(i)
-
 		keeper.SetProviderClientID(ctx, items[i])
 	}
 	return items

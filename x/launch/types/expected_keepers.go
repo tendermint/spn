@@ -3,7 +3,9 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 type CampaignKeeper interface {
@@ -12,8 +14,9 @@ type CampaignKeeper interface {
 }
 
 type ProfileKeeper interface {
-	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, found bool)
+	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, err error)
 	GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) (address string, found bool)
+	GetCoordinator(ctx sdk.Context, id uint64) (val profiletypes.Coordinator, found bool)
 }
 
 type AccountKeeper interface {

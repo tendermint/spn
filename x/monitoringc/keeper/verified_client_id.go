@@ -3,31 +3,25 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// SetVerifiedClientID set a specific verifiedClientID in the store from its index
+// SetVerifiedClientID set a specific verifiedClientID in the store from its launch id
 func (k Keeper) SetVerifiedClientID(ctx sdk.Context, verifiedClientID types.VerifiedClientID) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
 	b := k.cdc.MustMarshal(&verifiedClientID)
-	store.Set(types.VerifiedClientIDKey(
-		verifiedClientID.LaunchID,
-		verifiedClientID.ClientID,
-	), b)
+	store.Set(types.VerifiedClientIDKey(verifiedClientID.LaunchID), b)
 }
 
-// GetVerifiedClientID returns a verifiedClientID from its index
+// GetVerifiedClientID returns a verifiedClientID from its launch id
 func (k Keeper) GetVerifiedClientID(
 	ctx sdk.Context,
 	launchID uint64,
-	clientID string,
 ) (val types.VerifiedClientID, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
 
-	b := store.Get(types.VerifiedClientIDKey(
-		launchID,
-		clientID,
-	))
+	b := store.Get(types.VerifiedClientIDKey(launchID))
 	if b == nil {
 		return val, false
 	}
@@ -36,17 +30,10 @@ func (k Keeper) GetVerifiedClientID(
 	return val, true
 }
 
-// RemoveVerifiedClientID removes a verifiedClientID from the store
-func (k Keeper) RemoveVerifiedClientID(
-	ctx sdk.Context,
-	launchID uint64,
-	clientID string,
-) {
+// RemoveVerifiedClientID removes a verifiedClientID from the launch id
+func (k Keeper) RemoveVerifiedClientID(ctx sdk.Context, launchID uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
-	store.Delete(types.VerifiedClientIDKey(
-		launchID,
-		clientID,
-	))
+	store.Delete(types.VerifiedClientIDKey(launchID))
 }
 
 // GetAllVerifiedClientID returns all verifiedClientID
@@ -63,4 +50,20 @@ func (k Keeper) GetAllVerifiedClientID(ctx sdk.Context) (list []types.VerifiedCl
 	}
 
 	return
+}
+
+// AddVerifiedClientID add a specific verifiedClientID without duplication in the store from its launch id
+func (k Keeper) AddVerifiedClientID(ctx sdk.Context, launchID uint64, clientID string) {
+	verifiedClientID, found := k.GetVerifiedClientID(ctx, launchID)
+	if !found {
+		verifiedClientID = types.VerifiedClientID{LaunchID: launchID}
+	}
+
+	for _, cID := range verifiedClientID.ClientIDs {
+		if clientID == cID {
+			return
+		}
+	}
+	verifiedClientID.ClientIDs = append(verifiedClientID.ClientIDs, clientID)
+	k.SetVerifiedClientID(ctx, verifiedClientID)
 }

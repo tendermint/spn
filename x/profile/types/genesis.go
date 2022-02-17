@@ -1,7 +1,7 @@
 package types
 
 import (
-	"fmt"
+	"github.com/pkg/errors"
 	// this line is used by starport scaffolding # genesis/types/import
 )
 
@@ -32,13 +32,13 @@ func (gs GenesisState) Validate() error {
 
 func (gs GenesisState) ValidateValidators() error {
 	// Check for duplicated index in validator
-	validatorIndexMap := make(map[string]struct{})
+	validatorIndexMap := make(map[string]Validator)
 	for _, elem := range gs.ValidatorList {
 		valIndex := string(ValidatorKey(elem.Address))
 		if _, ok := validatorIndexMap[valIndex]; ok {
-			return fmt.Errorf("duplicated index for validator: %s", elem.Address)
+			return errors.New("duplicated index for validator")
 		}
-		validatorIndexMap[valIndex] = struct{}{}
+		validatorIndexMap[valIndex] = elem
 	}
 
 	// Check for duplicated index in validatorByConsAddress
@@ -46,14 +46,15 @@ func (gs GenesisState) ValidateValidators() error {
 	for _, elem := range gs.ValidatorByConsAddressList {
 		index := string(ValidatorByConsAddressKey(elem.ConsensusAddress))
 		if _, ok := validatorByConsAddressIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for validatorByConsAddress: %s", elem.ConsensusAddress)
+			return errors.New("duplicated index for validatorByConsAddress")
 		}
 		valIndex := ValidatorKey(elem.ValidatorAddress)
-		if _, ok := validatorIndexMap[string(valIndex)]; !ok {
-			return fmt.Errorf(
-				"validator consensus address %s not found for Validator: %s",
-				elem.ConsensusAddress,
-				elem.ValidatorAddress)
+		validator, ok := validatorIndexMap[string(valIndex)]
+		if !ok {
+			return errors.New("validator consensus address not found for Validator")
+		}
+		if !validator.HasConsensusAddress(elem.ConsensusAddress) {
+			return errors.New("consensus address not found in the Validator consensus address list")
 		}
 		validatorByConsAddressIndexMap[index] = struct{}{}
 	}
@@ -63,13 +64,11 @@ func (gs GenesisState) ValidateValidators() error {
 	for _, elem := range gs.ConsensusKeyNonceList {
 		index := string(ConsensusKeyNonceKey(elem.ConsensusAddress))
 		if _, ok := consensusKeyNonceIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for consensusKeyNonce: %s", elem.ConsensusAddress)
+			return errors.New("duplicated index for consensusKeyNonce")
 		}
 		consAddrIndex := ValidatorByConsAddressKey(elem.ConsensusAddress)
 		if _, ok := validatorByConsAddressIndexMap[string(consAddrIndex)]; !ok {
-			return fmt.Errorf(
-				"consensus key address not found for ValidatorByConsAddress: %s",
-				elem.ConsensusAddress)
+			return errors.New("consensus key address not found for ValidatorByConsAddress")
 		}
 		consensusKeyNonceIndexMap[index] = struct{}{}
 	}
@@ -82,7 +81,7 @@ func (gs GenesisState) ValidateCoordinators() error {
 	for _, elem := range gs.CoordinatorByAddressList {
 		index := string(CoordinatorByAddressKey(elem.Address))
 		if _, ok := coordinatorByAddressIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for coordinatorByAddress: %s", elem.Address)
+			return errors.New("duplicated index for coordinatorByAddress")
 		}
 		coordinatorByAddressIndexMap[index] = elem.CoordinatorID
 	}
@@ -92,16 +91,14 @@ func (gs GenesisState) ValidateCoordinators() error {
 	counter := gs.GetCoordinatorCounter()
 	for _, elem := range gs.CoordinatorList {
 		if _, ok := coordinatorIDMap[elem.CoordinatorID]; ok {
-			return fmt.Errorf("duplicated id for coordinator: %d", elem.CoordinatorID)
+			return errors.New("duplicated id for coordinator")
 		}
 		if elem.CoordinatorID >= counter {
-			return fmt.Errorf("coordinator id %d should be lower or equal than the last id %d",
-				elem.CoordinatorID, counter)
+			return errors.New("coordinator id should be lower or equal than the last id")
 		}
-
 		index := string(CoordinatorByAddressKey(elem.Address))
 		if _, ok := coordinatorByAddressIndexMap[index]; !ok {
-			return fmt.Errorf("coordinator address not found for CoordinatorByAddress: %s", elem.Address)
+			return errors.New("coordinator address not found for CoordinatorByAddress")
 		}
 		coordinatorIDMap[elem.CoordinatorID] = true
 
@@ -109,8 +106,8 @@ func (gs GenesisState) ValidateCoordinators() error {
 		delete(coordinatorByAddressIndexMap, index)
 	}
 	// Check if all coordinator by address exist
-	for _, coordinatorID := range coordinatorByAddressIndexMap {
-		return fmt.Errorf("coordinator address not found for coordinatorID: %d", coordinatorID)
+	if len(coordinatorByAddressIndexMap) > 0 {
+		return errors.New("coordinator address not found for coordinatorID")
 	}
 	return nil
 }

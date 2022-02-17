@@ -5,6 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/spf13/cobra"
+
 	"github.com/tendermint/spn/x/reward/types"
 )
 
@@ -18,6 +19,7 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
+	cmd.AddCommand(CmdSetRewards())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

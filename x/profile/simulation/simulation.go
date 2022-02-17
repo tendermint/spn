@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"errors"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -8,6 +9,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
@@ -27,8 +29,13 @@ func FindCoordinatorAccount(
 	})
 
 	for _, acc := range accs {
-		_, found := k.GetCoordinatorByAddress(ctx, acc.Address.String())
+		coordByAddress, err := k.GetCoordinatorByAddress(ctx, acc.Address.String())
+		found := !errors.Is(err, types.ErrCoordAddressNotFound)
 		if found == exist {
+			coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorID)
+			if found && !coord.Active {
+				continue
+			}
 			return acc, true
 		}
 	}
@@ -237,8 +244,8 @@ func SimulateMsgUpdateCoordinatorAddress(ak types.AccountKeeper, bk types.BankKe
 	}
 }
 
-// SimulateMsgDeleteCoordinator simulates a MsgDeleteCoordinator message
-func SimulateMsgDeleteCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+// SimulateMsgDisableCoordinator simulates a MsgDisableCoordinator message
+func SimulateMsgDisableCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -247,10 +254,10 @@ func SimulateMsgDeleteCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 		simAccount, found := FindCoordinatorAccount(r, ctx, k, accs[3:], true)
 		if !found {
 			// No message if no coordinator
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDeleteCoordinator, "skip update coordinator delete"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDisableCoordinator, "skip update coordinator delete"), nil, nil
 		}
 
-		msg := types.NewMsgDeleteCoordinator(simAccount.Address.String())
+		msg := types.NewMsgDisableCoordinator(simAccount.Address.String())
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,

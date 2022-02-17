@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/gogo/protobuf/proto"
+
 	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -32,8 +33,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err = msgServer.UpdateCoordinatorDescription(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgUpdateCoordinatorAddress:
 			res, err = msgServer.UpdateCoordinatorAddress(sdk.WrapSDKContext(ctx), msg)
-		case *types.MsgDeleteCoordinator:
-			res, err = msgServer.DeleteCoordinator(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgDisableCoordinator:
+			res, err = msgServer.DisableCoordinator(sdk.WrapSDKContext(ctx), msg)
 			// this line is used by starport scaffolding # 1
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)

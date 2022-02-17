@@ -5,6 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/spf13/cobra"
+
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -24,7 +25,7 @@ func GetTxCmd() *cobra.Command {
 		CmdCreateCoordinator(),
 		CmdUpdateCoordinatorDescription(),
 		CmdUpdateCoordinatorAddress(),
-		CmdDeleteCoordinator(),
+		CmdDisableCoordinator(),
 		CmdSetValidatorConsAddress(),
 	)
 	// this line is used by starport scaffolding # 1

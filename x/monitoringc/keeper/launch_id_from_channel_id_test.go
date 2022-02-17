@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/keeper"
@@ -16,7 +17,6 @@ func createNLaunchIDFromChannelID(keeper *keeper.Keeper, ctx sdk.Context, n int)
 	items := make([]types.LaunchIDFromChannelID, n)
 	for i := range items {
 		items[i].ChannelID = strconv.Itoa(i)
-
 		keeper.SetLaunchIDFromChannelID(ctx, items[i])
 	}
 	return items

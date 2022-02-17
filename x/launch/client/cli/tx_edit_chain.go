@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cobra"
+
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -16,6 +17,7 @@ const (
 	flagSourceURL      = "source-url"
 	flagSourceHash     = "source-hash"
 	flagDefaultGenesis = "default-genesis"
+	flagMetadata       = "metadata"
 )
 
 func CmdEditChain() *cobra.Command {
@@ -30,6 +32,7 @@ func CmdEditChain() *cobra.Command {
 				sourceHash, _     = cmd.Flags().GetString(flagSourceHash)
 				defaultGenesis, _ = cmd.Flags().GetBool(flagDefaultGenesis)
 				genesisURL, _     = cmd.Flags().GetString(flagGenesisURL)
+				metadata, _       = cmd.Flags().GetString(flagMetadata)
 			)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -53,6 +56,8 @@ func CmdEditChain() *cobra.Command {
 				initialGenesis = &genesisURL
 			}
 
+			metadataBytes := []byte(metadata)
+
 			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
@@ -65,6 +70,7 @@ func CmdEditChain() *cobra.Command {
 				sourceURL,
 				sourceHash,
 				initialGenesis,
+				metadataBytes,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -78,6 +84,7 @@ func CmdEditChain() *cobra.Command {
 	cmd.Flags().String(flagSourceHash, "", "Hash from the new source URL for the chain")
 	cmd.Flags().Bool(flagDefaultGenesis, false, "Set the initial genesis to the default genesis of the chain")
 	cmd.Flags().String(flagGenesisURL, "", "Set the initial genesis from a URL containing a custom genesis")
+	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

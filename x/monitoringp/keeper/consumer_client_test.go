@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/monitoringp/types"
@@ -29,7 +30,7 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 		require.True(t, found, "consumer client ID should be registered in the store")
 		require.EqualValues(t, clientID, consumerClientID.ClientID)
 
-		// IBC client is created
+		// IBC client should be created
 		_, found = ibcKeeper.ClientKeeper.GetClientState(ctx, clientID)
 		require.True(t, found, "IBC consumer client state should be created")
 	})

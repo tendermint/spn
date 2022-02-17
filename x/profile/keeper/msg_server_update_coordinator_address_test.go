@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
@@ -17,12 +18,11 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 		ctx, k, srv = setupMsgServer(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 	)
-	if _, err := srv.CreateCoordinator(wCtx, &coord1); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := srv.CreateCoordinator(wCtx, &coord2); err != nil {
-		t.Fatal(err)
-	}
+	_, err := srv.CreateCoordinator(wCtx, &coord1)
+	require.NoError(t, err)
+	_, err = srv.CreateCoordinator(wCtx, &coord2)
+	require.NoError(t, err)
+
 	tests := []struct {
 		name string
 		msg  types.MsgUpdateCoordinatorAddress
@@ -72,11 +72,11 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			_, found := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
-			require.False(t, found, "old coordinator address was not removed")
+			_, err = k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			require.ErrorIs(t, err, types.ErrCoordAddressNotFound, "old coordinator address was not removed")
 
-			coordByAddr, found := k.GetCoordinatorByAddress(ctx, tt.msg.NewAddress)
-			require.True(t, found, "coordinator by address not found")
+			coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.NewAddress)
+			require.NoError(t, err, "coordinator by address not found")
 			require.EqualValues(t, tt.msg.NewAddress, coordByAddr.Address)
 
 			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorID)

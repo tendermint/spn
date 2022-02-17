@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/keeper"
@@ -16,21 +17,17 @@ func createNVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 	items := make([]types.VerifiedClientID, n)
 	for i := range items {
 		items[i].LaunchID = uint64(i)
-		items[i].ClientID = strconv.Itoa(i)
-
+		items[i].ClientIDs = []string{strconv.Itoa(i)}
 		keeper.SetVerifiedClientID(ctx, items[i])
 	}
 	return items
 }
 
 func TestVerifiedClientIDGet(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNVerifiedClientID(keeper, ctx, 10)
+	k, ctx := keepertest.Monitoringc(t)
+	items := createNVerifiedClientID(k, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetVerifiedClientID(ctx,
-			item.LaunchID,
-			item.ClientID,
-		)
+		rst, found := k.GetVerifiedClientID(ctx, item.LaunchID)
 		require.True(t, found)
 		require.Equal(t,
 			nullify.Fill(&item),
@@ -40,26 +37,67 @@ func TestVerifiedClientIDGet(t *testing.T) {
 }
 
 func TestVerifiedClientIDRemove(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNVerifiedClientID(keeper, ctx, 10)
+	k, ctx := keepertest.Monitoringc(t)
+	items := createNVerifiedClientID(k, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveVerifiedClientID(ctx,
-			item.LaunchID,
-			item.ClientID,
-		)
-		_, found := keeper.GetVerifiedClientID(ctx,
-			item.LaunchID,
-			item.ClientID,
-		)
+		k.RemoveVerifiedClientID(ctx, item.LaunchID)
+		_, found := k.GetVerifiedClientID(ctx, item.LaunchID)
 		require.False(t, found)
 	}
 }
 
 func TestVerifiedClientIDGetAll(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNVerifiedClientID(keeper, ctx, 10)
+	k, ctx := keepertest.Monitoringc(t)
+	items := createNVerifiedClientID(k, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllVerifiedClientID(ctx)),
+		nullify.Fill(k.GetAllVerifiedClientID(ctx)),
 	)
+}
+
+func TestAddVerifiedClientID(t *testing.T) {
+	k, ctx := keepertest.Monitoringc(t)
+	t.Run("update a verified client id", func(t *testing.T) {
+		var (
+			launchID         = uint64(1)
+			newClientID      = "2"
+			verifiedClientID = types.VerifiedClientID{
+				LaunchID:  launchID,
+				ClientIDs: []string{"1"},
+			}
+		)
+		k.SetVerifiedClientID(ctx, verifiedClientID)
+		k.AddVerifiedClientID(ctx, launchID, newClientID)
+		got, found := k.GetVerifiedClientID(ctx, launchID)
+		require.True(t, found)
+		verifiedClientID.ClientIDs = append(verifiedClientID.ClientIDs, newClientID)
+		require.Equal(t, verifiedClientID, got)
+	})
+
+	t.Run("update a duplicated verified client id", func(t *testing.T) {
+		var (
+			launchID         = uint64(2)
+			newClientID      = "2"
+			verifiedClientID = types.VerifiedClientID{
+				LaunchID:  launchID,
+				ClientIDs: []string{"1", newClientID},
+			}
+		)
+		k.SetVerifiedClientID(ctx, verifiedClientID)
+		k.AddVerifiedClientID(ctx, launchID, newClientID)
+		got, found := k.GetVerifiedClientID(ctx, launchID)
+		require.True(t, found)
+		require.Equal(t, verifiedClientID, got)
+	})
+
+	t.Run("update a non exiting verified client id", func(t *testing.T) {
+		verifiedClientID := types.VerifiedClientID{
+			LaunchID:  3,
+			ClientIDs: []string{"1"},
+		}
+		k.AddVerifiedClientID(ctx, verifiedClientID.LaunchID, verifiedClientID.ClientIDs[0])
+		got, found := k.GetVerifiedClientID(ctx, verifiedClientID.LaunchID)
+		require.True(t, found)
+		require.Equal(t, verifiedClientID, got)
+	})
 }

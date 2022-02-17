@@ -8,6 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
@@ -22,9 +23,10 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 		var found bool
 		var simAccount simtypes.Account
 		for _, acc := range accs {
-			_, found = k.GetProfileKeeper().CoordinatorIDFromAddress(ctx, acc.Address.String())
-			if found {
+			_, err := k.GetProfileKeeper().CoordinatorIDFromAddress(ctx, acc.Address.String())
+			if err == nil {
 				simAccount = acc
+				found = true
 				break
 			}
 		}
@@ -80,6 +82,7 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			!modify,
 			modify,
 			!modify && r.Intn(100) < 50,
+			modify,
 		)
 		txCtx := simulation.OperationInput{
 			R:               r,
@@ -367,6 +370,7 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			request.RequestID,
 			approve,
 		)
+
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -398,7 +402,7 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 		}
 
 		// Wait for a specific delay once the chain is launched
-		if ctx.BlockTime().Unix() < chain.LaunchTimestamp+types.RevertDelay {
+		if ctx.BlockTime().Unix() < chain.LaunchTimestamp+k.RevertDelay(ctx) {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, "invalid chain launch timestamp"), nil, nil
 		}
 

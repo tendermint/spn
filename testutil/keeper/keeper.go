@@ -1,3 +1,4 @@
+// Package keeper provides methods to initialize SDK keepers with local storage for test purposes
 package keeper
 
 import (
@@ -10,6 +11,9 @@ import (
 	ibcconnectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
 	"github.com/stretchr/testify/require"
+	"github.com/tendermint/tendermint/libs/log"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
@@ -18,8 +22,6 @@ import (
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
 
 var (
@@ -35,6 +37,7 @@ func AllKeepers(t testing.TB) (
 	*rewardkeeper.Keeper,
 	*monitoringcmodulekeeper.Keeper,
 	bankkeeper.Keeper,
+	*ibckeeper.Keeper,
 	sdk.Context,
 ) {
 	initializer := newInitializer()
@@ -72,7 +75,14 @@ func AllKeepers(t testing.TB) (
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
-	return campaignKeeper, launchKeeper, profileKeeper, rewardKeeper, monitoringConsumerKeeper, bankKeeper, ctx
+	return campaignKeeper,
+		launchKeeper,
+		profileKeeper,
+		rewardKeeper,
+		monitoringConsumerKeeper,
+		bankKeeper,
+		ibcKeeper,
+		ctx
 }
 
 // Profile returns a keeper of the profile module for testing purpose
@@ -107,13 +117,13 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
 
 // Campaign returns a keeper of the campaign module for testing purpose
 func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
-	campaignKeeper, _, _, _, _, _, ctx := AllKeepers(t) // nolint
+	campaignKeeper, _, _, _, _, _, _, ctx := AllKeepers(t) // nolint
 	return campaignKeeper, ctx
 }
 
 // Reward returns a keeper of the reward module for testing purpose
 func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
-	_, _, _, rewardKeeper, _, _, ctx := AllKeepers(t) // nolint
+	_, _, _, rewardKeeper, _, _, _, ctx := AllKeepers(t) // nolint
 
 	// Initialize params
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
@@ -123,7 +133,7 @@ func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
 
 // Monitoringc returns a keeper of the monitoring consumer module for testing purpose
 func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
-	_, _, _, _, monitoringConsumerKeeper, _, ctx := AllKeepers(t) // nolint
+	_, _, _, _, monitoringConsumerKeeper, _, _, ctx := AllKeepers(t) // nolint
 	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
 
 	return monitoringConsumerKeeper, ctx

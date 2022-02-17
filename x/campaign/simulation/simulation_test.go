@@ -8,6 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/stretchr/testify/require"
+
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	simcampaign "github.com/tendermint/spn/x/campaign/simulation"
@@ -33,6 +34,7 @@ func populateCoordinators(
 		coordID := pk.AppendCoordinator(ctx, profiletypes.Coordinator{
 			Address:     accs[i].Address.String(),
 			Description: sample.CoordinatorDescription(),
+			Active:      true,
 		})
 
 		coordIDs = append(coordIDs, coordID)
@@ -63,7 +65,7 @@ func TestGetCoordSimAccount(t *testing.T) {
 }
 
 func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
-	ck, _, pk, _, _, _, ctx := testkeeper.AllKeepers(t)
+	ck, _, pk, _, _, _, _, ctx := testkeeper.AllKeepers(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
@@ -195,7 +197,7 @@ func TestGetSharesFromCampaign(t *testing.T) {
 }
 
 func TestGetAccountWithVouchers(t *testing.T) {
-	_, _, _, _, _, bk, ctx := testkeeper.AllKeepers(t)
+	_, _, _, _, _, bk, _, ctx := testkeeper.AllKeepers(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 

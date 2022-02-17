@@ -1,6 +1,8 @@
 package types
 
-import spntypes "github.com/tendermint/spn/pkg/types"
+import (
+	spntypes "github.com/tendermint/spn/pkg/types"
+)
 
 const (
 	// RequestKeyPrefix is the prefix to retrieve all Request

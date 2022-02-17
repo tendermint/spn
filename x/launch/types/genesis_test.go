@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -97,6 +98,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				GenesisValidatorList: sampleGenesisValidatorList,
 				RequestList:          sampleRequestList,
 				RequestCounterList:   sampleRequestCounterList,
+				Params:               types.DefaultParams(),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			shouldBeValid: true,
@@ -129,6 +131,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				ChainCounter: 10,
+				Params:       types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -142,6 +145,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				ChainCounter: 10,
+				Params:       types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -160,6 +164,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:  addr1,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -174,6 +179,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:  addr1,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -192,6 +198,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:  vestingAddress,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -226,6 +233,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:  addr1,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -237,6 +245,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				GenesisValidatorList: []types.GenesisValidator{
 					sample.GenesisValidator(noExistLaunchID, addr1),
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -249,6 +258,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.GenesisValidator(launchID1, addr1),
 					sample.GenesisValidator(launchID1, addr1),
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -260,6 +270,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				GenesisValidatorList: []types.GenesisValidator{
 					sample.GenesisValidator(noExistLaunchID, addr1),
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -279,6 +290,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						RequestID: 0,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -294,6 +306,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						RequestID: 0,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -314,6 +327,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						RequestID: 0,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -332,6 +346,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Counter:  1,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -346,6 +361,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Counter:  0,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -366,6 +382,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						RequestID: 10,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -420,16 +437,30 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 		{
 			desc: "max launch time above the max parametrable launch time",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1),
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1, types.DefaultRevertDelay),
 			},
 			shouldBeValid: false,
 		},
 		{
 			desc: "min launch time above max launch time",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinLaunchTime+1, types.DefaultMinLaunchTime),
+				Params: types.NewParams(types.DefaultMinLaunchTime+1, types.DefaultMinLaunchTime, types.DefaultRevertDelay),
 			},
 			shouldBeValid: false,
+		},
+		{
+			desc: "revert delay above max parametrable revert delay",
+			genState: types.GenesisState{
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.DefaultMaxLaunchTime, types.MaxParametrableRevertDelay+1),
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "valid params",
+			genState: types.GenesisState{
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.DefaultMaxLaunchTime, types.DefaultRevertDelay),
+			},
+			shouldBeValid: true,
 		},
 	} {
 		tc := tc

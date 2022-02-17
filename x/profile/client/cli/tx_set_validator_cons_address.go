@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cobra"
+
 	valtypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/profile/types"
 )

@@ -10,10 +10,11 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v2/modules/core/02-client/types"
 	committypes "github.com/cosmos/ibc-go/v2/modules/core/23-commitment/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
+	"github.com/tendermint/tendermint/light"
+
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
-	"github.com/tendermint/tendermint/light"
 )
 
 const (
@@ -41,7 +42,22 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 		return nil, sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
 	}
 
-	// TODO: Verify validator set with data on launch mode
+	// convert validator set
+	tmValidatorSet, err := msg.ValidatorSet.ToTendermintValidatorSet()
+	if err != nil {
+		return nil, spnerrors.Criticalf("validated validator can't be converted %s", err.Error())
+	}
+
+	// verify the validator set
+	err = k.launchKeeper.CheckValidatorSet(
+		ctx,
+		msg.LaunchID,
+		chain.GenesisChainID,
+		tmValidatorSet,
+	)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidValidatorSet, "validator set can't be verified %s", err.Error())
+	}
 
 	// create the client from IBC keeper
 	tmConsensusState, err := msg.ConsensusState.ToTendermintConsensusState()
@@ -54,13 +70,10 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 	}
 
 	// add the client ID as verified client ID
-	k.SetVerifiedClientID(ctx, types.VerifiedClientID{
-		ClientID: clientID,
-		LaunchID: msg.LaunchID,
-	})
+	k.AddVerifiedClientID(ctx, msg.LaunchID, clientID)
 	k.SetLaunchIDFromVerifiedClientID(ctx, types.LaunchIDFromVerifiedClientID{
-		ClientID: clientID,
 		LaunchID: msg.LaunchID,
+		ClientID: clientID,
 	})
 
 	return &types.MsgCreateClientResponse{

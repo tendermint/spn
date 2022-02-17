@@ -11,6 +11,11 @@ import (
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
+// Metadata returns sample metadata bytes
+func Metadata(len int) []byte {
+	return Bytes(len)
+}
+
 // GenesisChainID returns a sample chain id
 func GenesisChainID() string {
 	chainName := AlphaString(5)
@@ -29,6 +34,7 @@ func Chain(id uint64, coordinatorID uint64) launch.Chain {
 		SourceHash:      String(10),
 		LaunchTriggered: false,
 		InitialGenesis:  launch.NewDefaultInitialGenesis(),
+		Metadata:        Metadata(20),
 	}
 }
 
@@ -69,7 +75,7 @@ func GenesisValidator(launchID uint64, address string) launch.GenesisValidator {
 		LaunchID:       launchID,
 		Address:        address,
 		GenTx:          Bytes(200),
-		ConsPubKey:     Bytes(10),
+		ConsPubKey:     PubKey().Bytes(),
 		SelfDelegation: Coin(),
 		Peer:           GenesisValidatorPeer(),
 	}
@@ -152,6 +158,7 @@ func MsgCreateChain(coordAddress, genesisURL string, hasCampaign bool, campaignI
 		genesisHash,
 		hasCampaign,
 		campaignID,
+		Metadata(20),
 	)
 }
 
@@ -162,7 +169,8 @@ func MsgEditChain(
 	modifyGenesisChainID,
 	modifySource,
 	modifyInitialGenesis,
-	genesisURL bool,
+	genesisURL,
+	modifyMetadata bool,
 ) launch.MsgEditChain {
 	var genesisChainID, sourceURL, sourceHash string
 
@@ -183,6 +191,11 @@ func MsgEditChain(
 		}
 	}
 
+	var metadata []byte
+	if modifyMetadata {
+		metadata = Metadata(20)
+	}
+
 	return *launch.NewMsgEditChain(
 		coordAddress,
 		launchID,
@@ -190,6 +203,7 @@ func MsgEditChain(
 		sourceURL,
 		sourceHash,
 		initialGenesis,
+		metadata,
 	)
 }
 
@@ -286,6 +300,7 @@ func LaunchParams() launch.Params {
 	return launch.Params{
 		MinLaunchTime: minLaunchTime,
 		MaxLaunchTime: maxLaunchTime,
+		RevertDelay:   launch.DefaultRevertDelay,
 	}
 }
 
