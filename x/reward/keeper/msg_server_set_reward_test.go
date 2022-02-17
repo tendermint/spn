@@ -1,8 +1,9 @@
 package keeper_test
 
 import (
-	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
+
+	tc "github.com/tendermint/spn/testutil/constructor"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
