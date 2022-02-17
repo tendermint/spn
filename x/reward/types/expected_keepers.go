@@ -13,7 +13,7 @@ type AuthKeeper interface {
 type ProfileKeeper interface {
 	GetValidator(ctx sdk.Context, address string) (profiletypes.Validator, bool)
 	GetValidatorByConsAddress(ctx sdk.Context, consensusAddress []byte) (profiletypes.ValidatorByConsAddress, bool)
-	GetCoordinatorByAddress(ctx sdk.Context, address string) (profiletypes.CoordinatorByAddress, bool)
+	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, err error)
 }
 
 type LaunchKeeper interface {

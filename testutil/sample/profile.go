@@ -14,6 +14,23 @@ func MsgCreateCoordinator(coordAddress string) profile.MsgCreateCoordinator {
 	)
 }
 
+// MsgDisableCoordinator returns a sample MsgDisableCoordinator
+func MsgDisableCoordinator(coordAddress string) profile.MsgDisableCoordinator {
+	return *profile.NewMsgDisableCoordinator(
+		coordAddress,
+	)
+}
+
+// MsgUpdateCoordinatorDescription returns a sample MsgUpdateCoordinatorDescription
+func MsgUpdateCoordinatorDescription(coordAddress string) profile.MsgUpdateCoordinatorDescription {
+	return *profile.NewMsgUpdateCoordinatorDescription(
+		coordAddress,
+		coordAddress+" update identity",
+		"https://cosmos.network/update/"+coordAddress,
+		coordAddress+" update details",
+	)
+}
+
 // ValidatorDescription returns a sample ValidatorDescription
 func ValidatorDescription(desc string) profile.ValidatorDescription {
 	return profile.ValidatorDescription{
@@ -30,6 +47,7 @@ func Coordinator(address string) profile.Coordinator {
 	return profile.Coordinator{
 		Address:     address,
 		Description: CoordinatorDescription(),
+		Active:      true,
 	}
 }
 
@@ -53,26 +71,31 @@ func ProfileGenesisState(addresses ...string) profile.GenesisState {
 				CoordinatorID: 0,
 				Address:       addresses[0],
 				Description:   CoordinatorDescription(),
+				Active:        true,
 			},
 			{
 				CoordinatorID: 1,
 				Address:       addresses[1],
 				Description:   CoordinatorDescription(),
+				Active:        true,
 			},
 			{
 				CoordinatorID: 2,
 				Address:       addresses[2],
 				Description:   CoordinatorDescription(),
+				Active:        true,
 			},
 			{
 				CoordinatorID: 3,
 				Address:       addresses[3],
 				Description:   CoordinatorDescription(),
+				Active:        true,
 			},
 			{
 				CoordinatorID: 4,
 				Address:       addresses[4],
 				Description:   CoordinatorDescription(),
+				Active:        true,
 			},
 		},
 		CoordinatorByAddressList: []profile.CoordinatorByAddress{

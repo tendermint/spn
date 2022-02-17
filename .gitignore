@@ -6,6 +6,7 @@ release/
 # IDE
 .idea
 .envrc
+.vscode
 
 # Localnet
 localnet/node?/data/*.db
