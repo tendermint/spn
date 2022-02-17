@@ -39,32 +39,3 @@ func setupMsgServer(t testing.TB) (
 		ctx
 }
 
-// coinsFromString returns a sdk.Coins from a string
-func coinsFromString(t testing.TB, str string) sdk.Coins {
-	coins, err := sdk.ParseCoinsNormalized(str)
-	require.NoError(t, err)
-	return coins
-}
-
-// decFromString returns a sdk.Dec from a string
-func decFromString(t testing.TB, str string) sdk.Dec {
-	dec, err := sdk.NewDecFromStr(str)
-	require.NoError(t, err)
-	return dec
-}
-
-// signatureCount returns a signature count object for test from a cons address and a decimal string for relative signatures
-func signatureCount(t *testing.T, consAddr []byte, relSig string) spntypes.SignatureCount {
-	return spntypes.SignatureCount{
-		ConsAddress:        consAddr,
-		RelativeSignatures: decFromString(t, relSig),
-	}
-}
-
-// signatureCounts returns a signature counts object for tests from a a block count and list of signature counts
-func signatureCounts(blockCount uint64, sc ...spntypes.SignatureCount) spntypes.SignatureCounts {
-	return spntypes.SignatureCounts{
-		BlockCount: blockCount,
-		Counts:     sc,
-	}
-}

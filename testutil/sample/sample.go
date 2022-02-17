@@ -1,3 +1,4 @@
+// Package sample provides methods to initialize sample object of various types for test purposes
 package sample
 
 import (

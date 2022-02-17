@@ -1,3 +1,4 @@
+// Package keeper provides methods to initialize SDK keepers with local storage for test purposes
 package keeper
 
 import (
