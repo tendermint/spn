@@ -4,6 +4,7 @@ import yaml
 
 if len(sys.argv) != 4:
     print('usage: undelegate.py [val1_stake] [val2_stake] [val3_stake]')
+    exit(0)
 
 # Load config
 confFile = open('./conf.yml')

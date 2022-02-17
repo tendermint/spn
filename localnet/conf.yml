@@ -4,13 +4,13 @@ chain_id: "spn-1"
 # Using debug mode skips IBC client verification for monitoring IBC connection
 debug_mode: false
 
-# Validator set max size, setting 1 allows to test full validator set changes
+# Validator set max size, setting 1 allows to experiment full validator set changes
 max_validators: 10
 
 # Denom of the staking token
 staking_denom: "uspn"
 
-# Unbonding time in seconds, low value allows to experiment validator set change
+# Unbonding time in seconds, low value allows to experiment validator set changes
 # Default: 21 days = 1814400 seconds
 unbonding_time: 1
 
