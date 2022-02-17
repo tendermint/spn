@@ -13,8 +13,8 @@ import (
 
 func CmdUpdateTotalSupply() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-total-supply [campaign-id] [total-shares]",
-		Short: "Update the total of the mainnet of a campaign",
+		Use:   "update-total-supply [campaign-id] [total-supply]",
+		Short: "Update the total supply of the mainnet of a campaign",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			campaignID, err := cast.ToUint64E(args[0])
