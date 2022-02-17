@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"errors"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -10,11 +12,13 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
+const flagName = "flagName"
+
 func CmdEditCampaign() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-campaign-name [campaign-id] [name]",
-		Short: "Update the campaign name",
-		Args:  cobra.ExactArgs(2),
+		Use:   "edit-campaign [campaign-id]",
+		Short: "Edit the campaign name or metadata",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			campaignID, err := cast.ToUint64E(args[0])
 			if err != nil {
@@ -26,15 +30,24 @@ func CmdEditCampaign() *cobra.Command {
 				return err
 			}
 
+			name, err := cmd.Flags().GetString(flagName)
+			if err != nil {
+				return err
+			}
+
 			metadata, err := cmd.Flags().GetString(flagMetadata)
 			if err != nil {
 				return err
 			}
 			metadataBytes := []byte(metadata)
 
+			if len(name) == 0 && len(metadataBytes) == 0 {
+				return errors.New("must modify at least one field (name or metadata)")
+			}
+
 			msg := types.NewMsgEditCampaign(
 				clientCtx.GetFromAddress().String(),
-				args[1],
+				name,
 				campaignID,
 				metadataBytes,
 			)
@@ -46,6 +59,7 @@ func CmdEditCampaign() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagName, "", "Set name  for the campaign")
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the campaign")
 	flags.AddTxFlagsToCmd(cmd)
 
