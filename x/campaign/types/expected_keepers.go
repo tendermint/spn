@@ -19,6 +19,7 @@ type LaunchKeeper interface {
 		hasCampaign bool,
 		campaignID uint64,
 		isMainnet bool,
+		metadata []byte,
 	) (uint64, error)
 }
 

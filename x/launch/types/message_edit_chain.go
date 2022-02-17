@@ -5,6 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tendermint/spn/pkg/chainid"
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 const TypeMsgEditChain = "edit_chain"
@@ -18,6 +19,7 @@ func NewMsgEditChain(
 	sourceURL,
 	sourceHash string,
 	initialGenesis *InitialGenesis,
+	metadata []byte,
 ) *MsgEditChain {
 	return &MsgEditChain{
 		Coordinator:    coordinator,
@@ -26,6 +28,7 @@ func NewMsgEditChain(
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
 		InitialGenesis: initialGenesis,
+		Metadata:       metadata,
 	}
 }
 
@@ -62,7 +65,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		}
 	}
 
-	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil {
+	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil && len(msg.Metadata) == 0 {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
 	}
 
@@ -70,6 +73,12 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		if err := msg.InitialGenesis.Validate(); err != nil {
 			return sdkerrors.Wrap(ErrInvalidInitialGenesis, err.Error())
 		}
+	}
+
+	// TODO parameterize
+	if len(msg.Metadata) > spntypes.MaxMetadataLength {
+		return sdkerrors.Wrapf(ErrInvalidMetadataLength, "data length %d is greater than maximum %d",
+			len(msg.Metadata), spntypes.MaxMetadataLength)
 	}
 
 	return nil

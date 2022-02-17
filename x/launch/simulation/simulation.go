@@ -81,6 +81,7 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			!modify,
 			modify,
 			!modify && r.Intn(100) < 50,
+			modify,
 		)
 		txCtx := simulation.OperationInput{
 			R:               r,

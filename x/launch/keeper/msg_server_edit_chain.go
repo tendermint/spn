@@ -45,6 +45,10 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		chain.InitialGenesis = *msg.InitialGenesis
 	}
 
+	if len(msg.Metadata) > 0 {
+		chain.Metadata = msg.Metadata
+	}
+
 	k.SetChain(ctx, chain)
 
 	return &types.MsgEditChainResponse{}, nil
