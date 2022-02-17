@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -192,45 +193,25 @@ func TestSetBalance(t *testing.T) {
 		{
 			name: "equal coins and pool coins",
 			args: args{
-				provider: provider,
-				coins: sdk.NewCoins(
-					sdk.NewCoin("aaa", sdk.NewInt(101)),
-					sdk.NewCoin("bbb", sdk.NewInt(102)),
-				),
-				poolCoins: sdk.NewCoins(
-					sdk.NewCoin("aaa", sdk.NewInt(101)),
-					sdk.NewCoin("bbb", sdk.NewInt(102)),
-				),
+				provider:  provider,
+				coins:     tc.Coins(t, "101aaa,102bbb"),
+				poolCoins: tc.Coins(t, "101aaa,102bbb"),
 			},
 		},
 		{
 			name: "extra coin",
 			args: args{
-				provider: provider,
-				coins: sdk.NewCoins(
-					sdk.NewCoin("aaa", sdk.NewInt(101)),
-					sdk.NewCoin("bbb", sdk.NewInt(102)),
-					sdk.NewCoin("ccc", sdk.NewInt(103)),
-				),
-				poolCoins: sdk.NewCoins(
-					sdk.NewCoin("aaa", sdk.NewInt(33)),
-					sdk.NewCoin("bbb", sdk.NewInt(22)),
-				),
+				provider:  provider,
+				coins:     tc.Coins(t, "101aaa,102bbb"),
+				poolCoins: tc.Coins(t, "33aaa,22bbb"),
 			},
 		},
 		{
 			name: "extra pool coin",
 			args: args{
-				provider: provider,
-				coins: sdk.NewCoins(
-					sdk.NewCoin("aaa", sdk.NewInt(101)),
-					sdk.NewCoin("bbb", sdk.NewInt(102)),
-				),
-				poolCoins: sdk.NewCoins(
-					sdk.NewCoin("aaa", sdk.NewInt(33)),
-					sdk.NewCoin("bbb", sdk.NewInt(22)),
-					sdk.NewCoin("ccc", sdk.NewInt(11)),
-				),
+				provider:  provider,
+				coins:     tc.Coins(t, "101aaa,102bbb"),
+				poolCoins: tc.Coins(t, "33aaa,22bbb,11ccc"),
 			},
 		},
 		{
