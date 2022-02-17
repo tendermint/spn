@@ -7,9 +7,10 @@ Running localnet requires Python 3.
 The three nodes use the following config:
 
 ```
-rpc: 26657
-p2p: 26656
-api: 1317
+rpc:  26657
+p2p:  26656
+api:  1317
+grpc: 9090
 ```
 *Node 1 (Joe)*
 ```
