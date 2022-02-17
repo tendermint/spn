@@ -15,6 +15,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 	var (
 		invalidChain                = uint64(1000)
 		coordAddr                   = sample.Address()
+		coordDisableAddr            = sample.Address()
 		addr1                       = sample.Address()
 		addr2                       = sample.Address()
 		addr3                       = sample.Address()
@@ -24,12 +25,19 @@ func TestMsgRequestAddValidator(t *testing.T) {
 
 	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
+		Active:  true,
 	})
 	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
 	chains[0].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
+
+	coordDisableID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+		Address: coordDisableAddr,
+		Active:  false,
+	})
+	disableChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
 
 	for _, tc := range []struct {
 		name        string
@@ -78,6 +86,11 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			msg:         sample.MsgRequestAddValidator(coordAddr, addr3, chains[3].LaunchID),
 			err:         types.ErrValidatorAlreadyExist,
 			wantApprove: true,
+		},
+		{
+			name: "fail if the coordinator of the chain is disabled",
+			msg:  sample.MsgRequestAddValidator(sample.Address(), sample.Address(), disableChain[0].LaunchID),
+			err:  profiletypes.ErrCoordInactive,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

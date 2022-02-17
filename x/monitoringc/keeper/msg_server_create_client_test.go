@@ -56,6 +56,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		"",
 		false,
 		0,
+		sample.Metadata(20),
 	))
 	require.NoError(t, err)
 	_, err = msgSrvLaunch.RequestAddValidator(ctx, launchtypes.NewMsgRequestAddValidator(

@@ -17,4 +17,5 @@ var (
 	ErrInvalidValidatorKey       = sdkerrors.Register(ModuleName, 8, "invalid validator key")
 	ErrInvalidValidatorNonce     = sdkerrors.Register(ModuleName, 9, "invalid validator nonce")
 	ErrInvalidValidatorChainID   = sdkerrors.Register(ModuleName, 10, "invalid validator chain id")
+	ErrCoordInactive             = sdkerrors.Register(ModuleName, 11, "inactive coordinator")
 )

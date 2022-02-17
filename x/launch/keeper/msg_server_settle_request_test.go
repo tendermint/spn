@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	profiletypes "github.com/tendermint/spn/x/profile/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -14,19 +16,25 @@ func TestMsgSettleRequest(t *testing.T) {
 	var (
 		coordinator1                = sample.Coordinator(sample.Address())
 		coordinator2                = sample.Coordinator(sample.Address())
+		disableCoordinator          = sample.Coordinator(sample.Address())
 		invalidChain                = uint64(1000)
 		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
 		ctx                         = sdk.WrapSDKContext(sdkCtx)
 	)
 
+	disableCoordinator.Active = false
+
 	coordinator1.CoordinatorID = pk.AppendCoordinator(sdkCtx, coordinator1)
 	coordinator2.CoordinatorID = pk.AppendCoordinator(sdkCtx, coordinator2)
+	disableCoordinator.CoordinatorID = pk.AppendCoordinator(sdkCtx, disableCoordinator)
 
-	chains := createNChainForCoordinator(k, sdkCtx, coordinator1.CoordinatorID, 3)
+	chains := createNChainForCoordinator(k, sdkCtx, coordinator1.CoordinatorID, 4)
 	chains[0].LaunchTriggered = true
 	k.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999
 	k.SetChain(sdkCtx, chains[1])
+	chains[3].CoordinatorID = disableCoordinator.CoordinatorID
+	k.SetChain(sdkCtx, chains[3])
 
 	requestSamples := make([]RequestSample, 6)
 	for i := 0; i < 6; i++ {
@@ -153,6 +161,16 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:   true,
 			},
 			err: types.ErrNoAddressPermission,
+		},
+		{
+			name: "fail if the coordinator of the chain is disabled",
+			msg: types.MsgSettleRequest{
+				LaunchID:  chains[3].LaunchID,
+				Signer:    disableCoordinator.Address,
+				RequestID: requests[5].RequestID,
+				Approve:   true,
+			},
+			err: profiletypes.ErrCoordInactive,
 		},
 	}
 	for _, tt := range tests {

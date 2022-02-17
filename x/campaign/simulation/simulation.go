@@ -72,7 +72,7 @@ func GetCoordSimAccount(
 
 	// Find the account linked to this address
 	for _, acc := range accs {
-		if acc.Address.String() == coord.Address {
+		if acc.Address.String() == coord.Address && coord.Active {
 			return acc, coord.CoordinatorID, true
 		}
 	}
@@ -116,12 +116,12 @@ func GetCoordSimAccountWithCampaignID(
 	}
 
 	// Find the sim account of the campaign coordinator
-	coordAddr, found := pk.GetCoordinatorAddressFromID(ctx, camp.CoordinatorID)
+	coord, found := pk.GetCoordinator(ctx, camp.CoordinatorID)
 	if !found {
 		return simtypes.Account{}, 0, false
 	}
 	for _, acc := range accs {
-		if acc.Address.String() == coordAddr {
+		if acc.Address.String() == coord.Address && coord.Active {
 			return acc, camp.CampaignID, true
 		}
 	}
@@ -265,6 +265,7 @@ func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk t
 			sample.CampaignName(),
 			sample.Coins(),
 		)
+
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }

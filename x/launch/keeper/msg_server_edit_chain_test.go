@@ -46,6 +46,7 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 				false,
+				false,
 			),
 		},
 		{
@@ -53,6 +54,7 @@ func TestMsgEditChain(t *testing.T) {
 			msg: sample.MsgEditChain(coordAddress, launchID,
 				false,
 				true,
+				false,
 				false,
 				false,
 			),
@@ -64,6 +66,7 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				true,
 				false,
+				false,
 			),
 		},
 		{
@@ -73,6 +76,7 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				true,
 				true,
+				false,
 			),
 		},
 		{
@@ -82,6 +86,17 @@ func TestMsgEditChain(t *testing.T) {
 				true,
 				true,
 				true,
+				false,
+			),
+		},
+		{
+			name: "edit metadata",
+			msg: sample.MsgEditChain(coordAddress, launchID,
+				false,
+				false,
+				false,
+				false,
+				true,
 			),
 		},
 		{
@@ -89,6 +104,7 @@ func TestMsgEditChain(t *testing.T) {
 			msg: sample.MsgEditChain(coordAddress, launchIDNoExist,
 				false,
 				true,
+				false,
 				false,
 				false,
 			),
@@ -101,6 +117,7 @@ func TestMsgEditChain(t *testing.T) {
 				true,
 				false,
 				false,
+				false,
 			),
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -109,6 +126,7 @@ func TestMsgEditChain(t *testing.T) {
 			msg: sample.MsgEditChain(coordAddress2, launchID,
 				false,
 				true,
+				false,
 				false,
 				false,
 			),
@@ -160,6 +178,12 @@ func TestMsgEditChain(t *testing.T) {
 				require.EqualValues(t, *tc.msg.InitialGenesis, chain.InitialGenesis)
 			} else {
 				require.EqualValues(t, previousChain.InitialGenesis, chain.InitialGenesis)
+			}
+
+			if len(tc.msg.Metadata) > 0 {
+				require.EqualValues(t, tc.msg.Metadata, chain.Metadata)
+			} else {
+				require.EqualValues(t, previousChain.Metadata, chain.Metadata)
 			}
 		})
 	}
