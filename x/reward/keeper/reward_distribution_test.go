@@ -31,7 +31,7 @@ func TestCalculateReward(t *testing.T) {
 			name: "prevent using block ratio greater than 1",
 			args: args{
 				blockRatio: decFromString(t, "1.1"),
-				sigRatio:   sdk.NewDec(0),
+				sigRatio:   sdk.ZeroDec(),
 				coins:      sample.Coins(),
 			},
 			wantErr: true,
@@ -39,7 +39,7 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "prevent using signature ratio greater than 1",
 			args: args{
-				blockRatio: sdk.NewDec(0),
+				blockRatio: sdk.ZeroDec(),
 				sigRatio:   decFromString(t, "1.1"),
 				coins:      sample.Coins(),
 			},
@@ -48,8 +48,8 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "zero ratios and zero coins should give zero rewards",
 			args: args{
-				blockRatio: sdk.NewDec(0),
-				sigRatio:   sdk.NewDec(0),
+				blockRatio: sdk.ZeroDec(),
+				sigRatio:   sdk.ZeroDec(),
 				coins:      sdk.NewCoins(),
 			},
 			want: sdk.NewCoins(),
@@ -57,8 +57,8 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "nil coins should give zero rewards",
 			args: args{
-				blockRatio: sdk.NewDec(0),
-				sigRatio:   sdk.NewDec(0),
+				blockRatio: sdk.ZeroDec(),
+				sigRatio:   sdk.ZeroDec(),
 				coins:      nil,
 			},
 			want: sdk.NewCoins(),
@@ -66,8 +66,8 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "0 block ratio should give 0 rewards",
 			args: args{
-				blockRatio: sdk.NewDec(0),
-				sigRatio:   sdk.NewDec(1),
+				blockRatio: sdk.ZeroDec(),
+				sigRatio:   sdk.OneDec(),
 				coins:      coinsFromString(t, "10aaa,10bbb,10ccc"),
 			},
 			want: sdk.NewCoins(),
@@ -75,8 +75,8 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "0 signature ratio should give 0 rewards",
 			args: args{
-				blockRatio: sdk.NewDec(1),
-				sigRatio:   sdk.NewDec(0),
+				blockRatio: sdk.OneDec(),
+				sigRatio:   sdk.ZeroDec(),
 				coins:      coinsFromString(t, "10aaa,10bbb,10ccc"),
 			},
 			want: sdk.NewCoins(),
@@ -85,7 +85,7 @@ func TestCalculateReward(t *testing.T) {
 			name: "0.5 block ratio should give half rewards",
 			args: args{
 				blockRatio: decFromString(t, "0.5"),
-				sigRatio:   sdk.NewDec(1),
+				sigRatio:   sdk.OneDec(),
 				coins:      coinsFromString(t, "10aaa,100bbb,1000ccc"),
 			},
 			want: coinsFromString(t, "5aaa,50bbb,500ccc"),
@@ -103,7 +103,7 @@ func TestCalculateReward(t *testing.T) {
 			name: "decimal rewards should be truncated",
 			args: args{
 				blockRatio: decFromString(t, "0.5"),
-				sigRatio:   sdk.NewDec(1),
+				sigRatio:   sdk.OneDec(),
 				coins:      coinsFromString(t, "1aaa,11bbb,101ccc"),
 			},
 			want: coinsFromString(t, "5bbb,50ccc"),

@@ -35,7 +35,7 @@ func (k Keeper) CheckValidatorSet(
 	// all validators must be present in the launch module and
 	// the total amount of self-delegation from the provided validators
 	// must reach at least 2/3 of the total self delegation for the chain
-	valSetSelfDelegation := sdk.NewDec(0)
+	valSetSelfDelegation := sdk.ZeroDec()
 	for _, validator := range validatorSet.Validators {
 		consPubKey := base64.StdEncoding.EncodeToString(validator.PubKey.Bytes())
 		launchValidator, found := validators[consPubKey]

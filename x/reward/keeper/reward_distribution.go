@@ -43,12 +43,12 @@ func (k Keeper) DistributeRewards(
 	blockRatioNumerator := sdk.NewDec(int64(lastBlockHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
 	blockRatioDenominator := sdk.NewDec(int64(rewardPool.LastRewardHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
 	blockRatio := blockRatioNumerator.Quo(blockRatioDenominator)
-	if blockRatio.GT(sdk.NewDec(1)) {
-		blockRatio = sdk.NewDec(1)
+	if blockRatio.GT(sdk.OneDec()) {
+		blockRatio = sdk.OneDec()
 	}
 
 	// store the total relative signature distributed to calculate the refund for the round
-	totalRelativeSignaturesDistributed := sdk.NewDec(0)
+	totalRelativeSignaturesDistributed := sdk.ZeroDec()
 
 	// store rewards to distributes per address
 	rewardToDistribute := make(map[string]sdk.Coins)
@@ -154,10 +154,10 @@ func (k Keeper) DistributeRewards(
 // CalculateRewards calculates the reward relative to the signature and block ratio
 func CalculateRewards(blockRatio, signatureRatio sdk.Dec, coins sdk.Coins) (sdk.Coins, error) {
 	// ratio can't be greater than one
-	if blockRatio.GT(sdk.NewDec(1)) {
+	if blockRatio.GT(sdk.OneDec()) {
 		return nil, fmt.Errorf("block ratio is greater than 1 %s", blockRatio.String())
 	}
-	if signatureRatio.GT(sdk.NewDec(1)) {
+	if signatureRatio.GT(sdk.OneDec()) {
 		return nil, fmt.Errorf("signature ratio is greater than 1 %s", signatureRatio.String())
 	}
 
