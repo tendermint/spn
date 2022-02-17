@@ -300,6 +300,7 @@ func LaunchParams() launch.Params {
 	return launch.Params{
 		MinLaunchTime: minLaunchTime,
 		MaxLaunchTime: maxLaunchTime,
+		RevertDelay:   launch.DefaultRevertDelay,
 	}
 }
 
