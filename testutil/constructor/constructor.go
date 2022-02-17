@@ -10,15 +10,15 @@ import (
 	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
-// CoinsFromString returns a sdk.Coins from a string
-func CoinsFromString(t testing.TB, str string) sdk.Coins {
+// Coins returns a sdk.Coins from a string
+func Coins(t testing.TB, str string) sdk.Coins {
 	coins, err := sdk.ParseCoinsNormalized(str)
 	require.NoError(t, err)
 	return coins
 }
 
-// DecFromString returns a sdk.Dec from a string
-func DecFromString(t testing.TB, str string) sdk.Dec {
+// Dec returns a sdk.Dec from a string
+func Dec(t testing.TB, str string) sdk.Dec {
 	dec, err := sdk.NewDecFromStr(str)
 	require.NoError(t, err)
 	return dec
@@ -28,7 +28,7 @@ func DecFromString(t testing.TB, str string) sdk.Dec {
 func SignatureCount(t *testing.T, consAddr []byte, relSig string) spntypes.SignatureCount {
 	return spntypes.SignatureCount{
 		ConsAddress:        consAddr,
-		RelativeSignatures: DecFromString(t, relSig),
+		RelativeSignatures: Dec(t, relSig),
 	}
 }
 

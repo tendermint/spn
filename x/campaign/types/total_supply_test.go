@@ -19,33 +19,33 @@ func TestUpdateTotalSupply(t *testing.T) {
 	}{
 		{
 			name:          "no update",
-			previousCoins: tc.CoinsFromString(t, "1000foo,1000bar"),
+			previousCoins: tc.Coins(t, "1000foo,1000bar"),
 			updatedCoins:  sdk.NewCoins(),
-			wantedCoins:   tc.CoinsFromString(t,"1000foo,1000bar"),
+			wantedCoins:   tc.Coins(t,"1000foo,1000bar"),
 		},
 		{
 			name:          "update from empty set",
 			previousCoins: sdk.NewCoins(),
-			updatedCoins:  tc.CoinsFromString(t,"1000foo,1000bar"),
-			wantedCoins:   tc.CoinsFromString(t,"1000foo,1000bar"),
+			updatedCoins:  tc.Coins(t,"1000foo,1000bar"),
+			wantedCoins:   tc.Coins(t,"1000foo,1000bar"),
 		},
 		{
 			name:          "update existing",
-			previousCoins: tc.CoinsFromString(t,"3000foo,4000bar"),
-			updatedCoins:  tc.CoinsFromString(t,"1000foo,2000bar"),
-			wantedCoins:   tc.CoinsFromString(t,"1000foo,2000bar"),
+			previousCoins: tc.Coins(t,"3000foo,4000bar"),
+			updatedCoins:  tc.Coins(t,"1000foo,2000bar"),
+			wantedCoins:   tc.Coins(t,"1000foo,2000bar"),
 		},
 		{
 			name:          "disjoint set",
-			previousCoins: tc.CoinsFromString(t,"3000toto,4000tata"),
-			updatedCoins:  tc.CoinsFromString(t,"1000foo,2000bar"),
-			wantedCoins:   tc.CoinsFromString(t,"3000toto,4000tata,1000foo,2000bar"),
+			previousCoins: tc.Coins(t,"3000toto,4000tata"),
+			updatedCoins:  tc.Coins(t,"1000foo,2000bar"),
+			wantedCoins:   tc.Coins(t,"3000toto,4000tata,1000foo,2000bar"),
 		},
 		{
 			name:          "new values",
-			previousCoins: tc.CoinsFromString(t,"3000toto,4000tata"),
-			updatedCoins:  tc.CoinsFromString(t,"1000foo,2000bar,5000toto,6000tata"),
-			wantedCoins:   tc.CoinsFromString(t,"5000toto,6000tata,1000foo,2000bar"),
+			previousCoins: tc.Coins(t,"3000toto,4000tata"),
+			updatedCoins:  tc.Coins(t,"1000foo,2000bar,5000toto,6000tata"),
+			wantedCoins:   tc.Coins(t,"5000toto,6000tata,1000foo,2000bar"),
 		},
 	}
 	for _, tt := range tests {

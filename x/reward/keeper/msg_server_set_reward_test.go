@@ -194,24 +194,24 @@ func TestSetBalance(t *testing.T) {
 			name: "equal coins and pool coins",
 			args: args{
 				provider:  provider,
-				coins:     tc.CoinsFromString(t, "101aaa,102bbb"),
-				poolCoins: tc.CoinsFromString(t, "101aaa,102bbb"),
+				coins:     tc.Coins(t, "101aaa,102bbb"),
+				poolCoins: tc.Coins(t, "101aaa,102bbb"),
 			},
 		},
 		{
 			name: "extra coin",
 			args: args{
 				provider:  provider,
-				coins:     tc.CoinsFromString(t, "101aaa,102bbb"),
-				poolCoins: tc.CoinsFromString(t, "33aaa,22bbb"),
+				coins:     tc.Coins(t, "101aaa,102bbb"),
+				poolCoins: tc.Coins(t, "33aaa,22bbb"),
 			},
 		},
 		{
 			name: "extra pool coin",
 			args: args{
 				provider:  provider,
-				coins:     tc.CoinsFromString(t, "101aaa,102bbb"),
-				poolCoins: tc.CoinsFromString(t, "33aaa,22bbb,11ccc"),
+				coins:     tc.Coins(t, "101aaa,102bbb"),
+				poolCoins: tc.Coins(t, "33aaa,22bbb,11ccc"),
 			},
 		},
 		{

@@ -31,7 +31,7 @@ func TestCalculateReward(t *testing.T) {
 		{
 			name: "prevent using block ratio greater than 1",
 			args: args{
-				blockRatio: tc.DecFromString(t, "1.1"),
+				blockRatio: tc.Dec(t, "1.1"),
 				sigRatio:   sdk.ZeroDec(),
 				coins:      sample.Coins(),
 			},
@@ -41,7 +41,7 @@ func TestCalculateReward(t *testing.T) {
 			name: "prevent using signature ratio greater than 1",
 			args: args{
 				blockRatio: sdk.ZeroDec(),
-				sigRatio:   tc.DecFromString(t, "1.1"),
+				sigRatio:   tc.Dec(t, "1.1"),
 				coins:      sample.Coins(),
 			},
 			wantErr: true,
@@ -69,7 +69,7 @@ func TestCalculateReward(t *testing.T) {
 			args: args{
 				blockRatio: sdk.ZeroDec(),
 				sigRatio:   sdk.OneDec(),
-				coins:      tc.CoinsFromString(t, "10aaa,10bbb,10ccc"),
+				coins:      tc.Coins(t, "10aaa,10bbb,10ccc"),
 			},
 			want: sdk.NewCoins(),
 		},
@@ -78,36 +78,36 @@ func TestCalculateReward(t *testing.T) {
 			args: args{
 				blockRatio: sdk.OneDec(),
 				sigRatio:   sdk.ZeroDec(),
-				coins:      tc.CoinsFromString(t, "10aaa,10bbb,10ccc"),
+				coins:      tc.Coins(t, "10aaa,10bbb,10ccc"),
 			},
 			want: sdk.NewCoins(),
 		},
 		{
 			name: "0.5 block ratio should give half rewards",
 			args: args{
-				blockRatio: tc.DecFromString(t, "0.5"),
+				blockRatio: tc.Dec(t, "0.5"),
 				sigRatio:   sdk.OneDec(),
-				coins:      tc.CoinsFromString(t, "10aaa,100bbb,1000ccc"),
+				coins:      tc.Coins(t, "10aaa,100bbb,1000ccc"),
 			},
-			want: tc.CoinsFromString(t, "5aaa,50bbb,500ccc"),
+			want: tc.Coins(t, "5aaa,50bbb,500ccc"),
 		},
 		{
 			name: "0.5 block ratio and 0.4 signature ratio should give 0.2 rewards",
 			args: args{
-				blockRatio: tc.DecFromString(t, "0.5"),
-				sigRatio:   tc.DecFromString(t, "0.4"),
-				coins:      tc.CoinsFromString(t, "10aaa,100bbb,1000ccc"),
+				blockRatio: tc.Dec(t, "0.5"),
+				sigRatio:   tc.Dec(t, "0.4"),
+				coins:      tc.Coins(t, "10aaa,100bbb,1000ccc"),
 			},
-			want: tc.CoinsFromString(t, "2aaa,20bbb,200ccc"),
+			want: tc.Coins(t, "2aaa,20bbb,200ccc"),
 		},
 		{
 			name: "decimal rewards should be truncated",
 			args: args{
-				blockRatio: tc.DecFromString(t, "0.5"),
+				blockRatio: tc.Dec(t, "0.5"),
 				sigRatio:   sdk.OneDec(),
-				coins:      tc.CoinsFromString(t, "1aaa,11bbb,101ccc"),
+				coins:      tc.Coins(t, "1aaa,11bbb,101ccc"),
 			},
-			want: tc.CoinsFromString(t, "5bbb,50ccc"),
+			want: tc.Coins(t, "5bbb,50ccc"),
 		},
 	}
 	for _, tt := range tests {
@@ -189,7 +189,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
@@ -207,7 +207,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
@@ -221,8 +221,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
-				valFoo:   tc.CoinsFromString(t, "50aaa,50bbb"),
-				valBar:   tc.CoinsFromString(t, "50aaa,50bbb"),
+				valFoo:   tc.Coins(t, "50aaa,50bbb"),
+				valBar:   tc.Coins(t, "50aaa,50bbb"),
 			},
 		},
 		{
@@ -230,7 +230,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
@@ -243,9 +243,9 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				closeRewardPool: true,
 			},
 			wantBalances: map[string]sdk.Coins{
-				provider: tc.CoinsFromString(t, "50aaa,50bbb"),
-				valFoo:   tc.CoinsFromString(t, "25aaa,25bbb"),
-				valBar:   tc.CoinsFromString(t, "25aaa,25bbb"),
+				provider: tc.Coins(t, "50aaa,50bbb"),
+				valFoo:   tc.Coins(t, "25aaa,25bbb"),
+				valBar:   tc.Coins(t, "25aaa,25bbb"),
 			},
 		},
 		{
@@ -253,7 +253,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
@@ -267,8 +267,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
-				valFoo:   tc.CoinsFromString(t, "25aaa,25bbb"),
-				valBar:   tc.CoinsFromString(t, "25aaa,25bbb"),
+				valFoo:   tc.Coins(t, "25aaa,25bbb"),
+				valBar:   tc.Coins(t, "25aaa,25bbb"),
 			},
 		},
 		{
@@ -276,7 +276,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
@@ -290,8 +290,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
-				valFoo:   tc.CoinsFromString(t, "50aaa,50bbb"),
-				valBar:   tc.CoinsFromString(t, "50aaa,50bbb"),
+				valFoo:   tc.Coins(t, "50aaa,50bbb"),
+				valBar:   tc.Coins(t, "50aaa,50bbb"),
 			},
 		},
 		{
@@ -299,7 +299,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
-				Coins:            tc.CoinsFromString(t, "100aaa,100bbb"),
+				Coins:            tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 			},
 			args: args{
@@ -313,9 +313,9 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				closeRewardPool: false,
 			},
 			wantBalances: map[string]sdk.Coins{
-				provider: tc.CoinsFromString(t, "40aaa,40bbb"),
-				valFoo:   tc.CoinsFromString(t, "30aaa,30bbb"),
-				valBar:   tc.CoinsFromString(t, "30aaa,30bbb"),
+				provider: tc.Coins(t, "40aaa,40bbb"),
+				valFoo:   tc.Coins(t, "30aaa,30bbb"),
+				valBar:   tc.Coins(t, "30aaa,30bbb"),
 			},
 		},
 	}
