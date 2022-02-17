@@ -8,7 +8,6 @@ import (
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/spn/x/reward/types"
 )
 
@@ -21,12 +20,13 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 		return nil, sdkerrors.Wrapf(launchtypes.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 	// check coordinator
-	coordByAddr, found := k.profileKeeper.GetCoordinatorByAddress(ctx, msg.Provider)
-	if !found {
-		return nil, sdkerrors.Wrap(profiletypes.ErrCoordAddressNotFound, msg.Provider)
+	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Provider)
+	if err != nil {
+		return nil, err
 	}
-	if coordByAddr.CoordinatorID != chain.CoordinatorID {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidCoordinatorID, "%d", coordByAddr.CoordinatorID)
+
+	if chain.CoordinatorID != coordID {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidCoordinatorID, "%d", coordID)
 	}
 	// reward can't be changed once launch is triggered
 	if chain.LaunchTriggered {

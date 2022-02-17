@@ -5,25 +5,25 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-const TypeMsgDeleteCoordinator = "delete_coordinator"
+const TypeMsgDisableCoordinator = "disable_coordinator"
 
-var _ sdk.Msg = &MsgDeleteCoordinator{}
+var _ sdk.Msg = &MsgDisableCoordinator{}
 
-func NewMsgDeleteCoordinator(address string) *MsgDeleteCoordinator {
-	return &MsgDeleteCoordinator{
+func NewMsgDisableCoordinator(address string) *MsgDisableCoordinator {
+	return &MsgDisableCoordinator{
 		Address: address,
 	}
 }
 
-func (msg *MsgDeleteCoordinator) Route() string {
+func (msg *MsgDisableCoordinator) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgDeleteCoordinator) Type() string {
-	return TypeMsgDeleteCoordinator
+func (msg *MsgDisableCoordinator) Type() string {
+	return TypeMsgDisableCoordinator
 }
 
-func (msg *MsgDeleteCoordinator) GetSigners() []sdk.AccAddress {
+func (msg *MsgDisableCoordinator) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		panic(err)
@@ -31,12 +31,12 @@ func (msg *MsgDeleteCoordinator) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgDeleteCoordinator) GetSignBytes() []byte {
+func (msg *MsgDisableCoordinator) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgDeleteCoordinator) ValidateBasic() error {
+func (msg *MsgDisableCoordinator) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

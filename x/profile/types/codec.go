@@ -16,7 +16,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateCoordinator{}, "profile/CreateCoordinator", nil)
 	cdc.RegisterConcrete(&MsgUpdateCoordinatorDescription{}, "profile/UpdateCoordinatorDescription", nil)
 	cdc.RegisterConcrete(&MsgUpdateCoordinatorAddress{}, "profile/UpdateCoordinatorAddress", nil)
-	cdc.RegisterConcrete(&MsgDeleteCoordinator{}, "profile/DeleteCoordinator", nil)
+	cdc.RegisterConcrete(&MsgDisableCoordinator{}, "profile/DisableCoordinator", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -28,7 +28,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgCreateCoordinator{},
 		&MsgUpdateCoordinatorDescription{},
 		&MsgUpdateCoordinatorAddress{},
-		&MsgDeleteCoordinator{},
+		&MsgDisableCoordinator{},
 	)
 	// this line is used by starport scaffolding # 3
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

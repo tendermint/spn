@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"math/rand"
 
+	profiletypes "github.com/tendermint/spn/x/profile/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
@@ -45,11 +47,16 @@ func FindChainCoordinatorAccount(
 		// No message if no coordinator address
 		return simtypes.Account{}, fmt.Errorf("chain %d not found", chainID)
 	}
-	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	coord, found := k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
 	if !found {
 		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
 	}
-	return FindAccount(accs, address)
+
+	if !coord.Active {
+		return simtypes.Account{}, fmt.Errorf("coordinator %d inactive", chain.CoordinatorID)
+	}
+
+	return FindAccount(accs, coord.Address)
 }
 
 // FindRandomChain find a random chain from store
@@ -72,12 +79,14 @@ func FindRandomChain(
 		if noMainnet && c.IsMainnet {
 			continue
 		}
-		// check if the coordinator is still in the store
-		_, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, c.CoordinatorID)
-		if !found {
+		// check if the coordinator is still in the store and active
+		var coord profiletypes.Coordinator
+		coord, found = k.GetProfileKeeper().GetCoordinator(ctx, c.CoordinatorID)
+		if !found || !coord.Active {
 			continue
 		}
 		chain = c
+		found = true
 		break
 	}
 	return chain, found
@@ -95,16 +104,20 @@ func FindRandomRequest(
 	r.Shuffle(len(requests), func(i, j int) {
 		requests[i], requests[j] = requests[j], requests[i]
 	})
+	var chain types.Chain
+	var chainFound bool
 	for _, req := range requests {
-		chain, chainFound := k.GetChain(ctx, req.LaunchID)
+		chain, chainFound = k.GetChain(ctx, req.LaunchID)
 		if !chainFound || chain.LaunchTriggered {
 			continue
 		}
-		// check if the coordinator is still in the store
-		_, coordFound := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-		if !coordFound {
+		// check if the coordinator is still in the store and active
+		var coord profiletypes.Coordinator
+		coord, found = k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
+		if !found || !coord.Active {
 			continue
 		}
+
 		switch content := req.Content.Content.(type) {
 		case *types.RequestContent_ValidatorRemoval:
 			// if is validator removal, check if the validator exist
@@ -122,11 +135,11 @@ func FindRandomRequest(
 				continue
 			}
 		}
-		found = true
-		request = req
-		break
+
+		return req, true
 	}
-	return request, found
+
+	return request, false
 }
 
 // FindRandomValidator find a valid validator from store

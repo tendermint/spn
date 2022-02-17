@@ -5,6 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tendermint/spn/pkg/chainid"
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 const TypeMsgCreateChain = "create_chain"
@@ -20,6 +21,7 @@ func NewMsgCreateChain(
 	genesisHash string,
 	hasCampaign bool,
 	campaignID uint64,
+	metadata []byte,
 ) *MsgCreateChain {
 	return &MsgCreateChain{
 		Coordinator:    coordinator,
@@ -30,6 +32,7 @@ func NewMsgCreateChain(
 		GenesisHash:    genesisHash,
 		HasCampaign:    hasCampaign,
 		CampaignID:     campaignID,
+		Metadata:       metadata,
 	}
 }
 
@@ -66,7 +69,13 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 
 	// If a genesis URL is provided, the hash must be sha256, which is 32 bytes
 	if msg.GenesisURL != "" && len(msg.GenesisHash) != HashLength {
-		return sdkerrors.Wrapf(ErrInvalidInitialGenesis, "hash of custom genesis must be sha256")
+		return sdkerrors.Wrap(ErrInvalidInitialGenesis, "hash of custom genesis must be sha256")
+	}
+
+	// TODO parameterize
+	if len(msg.Metadata) > spntypes.MaxMetadataLength {
+		return sdkerrors.Wrapf(ErrInvalidMetadataLength, "data length %d is greater than maximum %d",
+			len(msg.Metadata), spntypes.MaxMetadataLength)
 	}
 
 	return nil

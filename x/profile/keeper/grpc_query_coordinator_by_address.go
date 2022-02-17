@@ -16,10 +16,11 @@ func (k Keeper) CoordinatorByAddress(c context.Context, req *types.QueryGetCoord
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetCoordinatorByAddress(
+	val, found := k.getCoordinatorByAddress(
 		ctx,
 		req.Address,
 	)
+
 	if !found {
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
