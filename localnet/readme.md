@@ -2,6 +2,8 @@
 
 Localnet is a simple local testnet for Starport Network that includes 3 validators.
 
+Running localnet requires Python 3.
+
 The three nodes use the following config:
 
 ```
@@ -20,6 +22,11 @@ p2p: 26654
 *Node 3 (Olivia)*
 
 ### Starting the Localnet
+
+Before running any scripts, `spnd` must be built for the current branch
+```
+starport chain build
+```
 
 The localnet can be started from the following script:
 (must be run in `localnet` directory)
