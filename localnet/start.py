@@ -1,33 +1,17 @@
 import os
-import sys
 import json
 import subprocess
 import pathlib
+import yaml
 
 if pathlib.PurePath(os.getcwd()).name != 'localnet':
     print('script must be run from localnet folder')
     exit(1)
 subprocess.run(["python3", "./clear.py"], check=True)
 
-# Debug mode for monitoring
-debugMode = False
-
-# Staking
-
-# Validator set size, setting the value to 1 allows testing full validator set change
-maxValidators = 100
-
-# Self-delegation must be lower than 200000000
-selfDelegationVal1 = 10000000
-selfDelegationVal2 = 10000000
-selfDelegationVal3 = 10000000
-
-# Unbonding time in seconds, low value allows to experiment validator set change
-# Default: 21 days = 1814400 seconds
-unbondingTime = 1
-
-# Denom
-denom = 'uspn'
+# Load config
+confFile = open('./conf.yml')
+conf = yaml.safe_load(confFile)
 
 # Open the genesis template
 genesisFile = open('./genesis_template.json')
@@ -36,34 +20,29 @@ genesis = json.load(genesisFile)
 # Set timestamp
 genesis['genesis_time'] = "2022-02-10T10:29:59.410196Z"
 
+# Set chain ID
+genesis['chain_id'] = conf['chain_id']
+
 # Set monitoring param
-genesis['app_state']['monitoringc']['params']['debugMode'] = debugMode
+genesis['app_state']['monitoringc']['params']['debugMode'] = conf['debug_mode']
 
 # Set staking params
-genesis['app_state']['staking']['params']['max_validators'] = maxValidators
-genesis['app_state']['staking']['params']['unbonding_time'] = str(unbondingTime)+"s"
+genesis['app_state']['staking']['params']['max_validators'] = conf['max_validators']
+genesis['app_state']['staking']['params']['unbonding_time'] = str(conf['unbonding_time'])+"s"
 
 # Create the gentxs
-os.system('spnd gentx joe {} --chain-id spn-1 --moniker="joe" --home ./node1 --output-document ./gentx1.json'.format(str(selfDelegationVal1)+denom))
-gentx1File = open('./gentx1.json')
-gentx1 = json.load(gentx1File)
-
-os.system('spnd gentx steve {} --chain-id spn-1 --moniker="steve" --home ./node2 --output-document ./gentx2.json'.format(str(selfDelegationVal2)+denom))
-gentx2File = open('./gentx2.json')
-gentx2 = json.load(gentx2File)
-
-os.system('spnd gentx olivia {} --chain-id spn-1 --moniker="olivia" --home ./node3 --output-document ./gentx3.json'.format(str(selfDelegationVal3)+denom))
-gentx3File = open('./gentx3.json')
-gentx3 = json.load(gentx3File)
-
-# Collect gentxs
-genesis['app_state']['genutil']['gen_txs'].append(gentx1)
-genesis['app_state']['genutil']['gen_txs'].append(gentx2)
-genesis['app_state']['genutil']['gen_txs'].append(gentx3)
-
-os.remove('./gentx1.json')
-os.remove('./gentx2.json')
-os.remove('./gentx3.json')
+for i in range(3):
+    gentxCmd = 'spnd gentx {valName} {selfDelegation} --chain-id {chainID} --moniker="{valName}" --home ./node{i} --output-document ./gentx.json'.format(
+        valName=conf['validator_names'][i],
+        selfDelegation=str(conf['validator_self_delegations'][i])+conf['staking_denom'],
+        chainID=conf['chain_id'],
+        i=str(i+1),
+    )
+    os.system(gentxCmd)
+    gentxFile = open('./gentx.json')
+    gentx = json.load(gentxFile)
+    genesis['app_state']['genutil']['gen_txs'].append(gentx)
+    os.remove('./gentx.json')
 
 # Save genesis
 with open('./node1/config/genesis.json', 'w', encoding='utf-8') as f:

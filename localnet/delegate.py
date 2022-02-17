@@ -1,36 +1,26 @@
 import sys
 import subprocess
+import yaml
 
 if len(sys.argv) != 4:
     print('usage: delegate.py [val1_stake] [val2_stake] [val3_stake]')
 
-chainID = 'spn-1'
-denom = 'uspn'
-
-valName = [
-    "joe",
-    "steve",
-    "olivia",
-]
-
-valAddr = [
-    "spnvaloper15rz2rwnlgr7nf6eauz52usezffwrxc0muf4z5n",
-    "spnvaloper1mhyps2hlkm0nz6k2puumn69928cnvgg4nznru5",
-    "spnvaloper1hmx8eakt2948szjgmksvpv9ha0q9s6w09pdeer",
-]
+# Load config
+confFile = open('./conf.yml')
+conf = yaml.safe_load(confFile)
 
 def delegate_cmd(valNumber, amount):
     cmd = ["spnd", "tx", "staking", "delegate"]
-    cmd.append(valAddr[valNumber])
+    cmd.append(conf['validator_addresses'][valNumber])
 
-    stake = amount + denom
+    stake = amount + conf['staking_denom']
     cmd.append(stake)
 
     cmd.append('--from')
-    cmd.append(valName[valNumber])
+    cmd.append(conf['validator_names'][valNumber])
 
     cmd.append('--chain-id')
-    cmd.append(chainID)
+    cmd.append(conf['chain_id'])
 
     cmd.append('-y')
 

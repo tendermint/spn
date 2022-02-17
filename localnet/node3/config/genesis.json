@@ -526,7 +526,7 @@
                 "bond_denom": "uspn",
                 "historical_entries": 10000,
                 "max_entries": 7,
-                "max_validators": 100,
+                "max_validators": 10,
                 "unbonding_time": "1s"
             },
             "redelegations": [],
