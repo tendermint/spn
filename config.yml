@@ -45,6 +45,7 @@ genesis:
         mint_denom: "uspn"
     launch:
       params:
+        revertDelay: "5"
         minLaunchTime: "5"
     fundraising:
       params:
