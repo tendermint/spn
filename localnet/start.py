@@ -4,6 +4,14 @@ import subprocess
 import pathlib
 import yaml
 
+def saveGenesis(genesis):
+    with open('./node1/config/genesis.json', 'w', encoding='utf-8') as f:
+        json.dump(genesis, f, ensure_ascii=False, indent=4)
+    with open('./node2/config/genesis.json', 'w', encoding='utf-8') as f:
+        json.dump(genesis, f, ensure_ascii=False, indent=4)
+    with open('./node3/config/genesis.json', 'w', encoding='utf-8') as f:
+        json.dump(genesis, f, ensure_ascii=False, indent=4)
+
 if pathlib.PurePath(os.getcwd()).name != 'localnet':
     print('script must be run from localnet folder')
     exit(1)
@@ -16,6 +24,10 @@ conf = yaml.safe_load(confFile)
 # Open the genesis template
 genesisFile = open('./genesis_template.json')
 genesis = json.load(genesisFile)
+
+# Each node's home must contain a valid genesis in order to generate a gentx
+# The initial genesis template is therefore first saved in each home
+saveGenesis(genesis)
 
 # Set timestamp
 genesis['genesis_time'] = "2022-02-10T10:29:59.410196Z"
@@ -45,12 +57,7 @@ for i in range(3):
     os.remove('./gentx.json')
 
 # Save genesis
-with open('./node1/config/genesis.json', 'w', encoding='utf-8') as f:
-    json.dump(genesis, f, ensure_ascii=False, indent=4)
-with open('./node2/config/genesis.json', 'w', encoding='utf-8') as f:
-    json.dump(genesis, f, ensure_ascii=False, indent=4)
-with open('./node3/config/genesis.json', 'w', encoding='utf-8') as f:
-    json.dump(genesis, f, ensure_ascii=False, indent=4)
+saveGenesis(genesis)
 
 print('Starting the network')
 subprocess.Popen(["spnd", "start", "--home", "./node2"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
