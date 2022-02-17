@@ -264,11 +264,14 @@ func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk t
 			simAccount.Address.String(),
 			sample.CampaignName(),
 			sample.Coins(),
+			sample.Metadata(20),
 		)
 
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
 }
+
+// TODO add SimulateMsgEditCampaign
 
 // SimulateMsgUpdateTotalSupply simulates a MsgUpdateTotalSupply message
 func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {

@@ -62,7 +62,7 @@ func CampaignName() string {
 
 // Campaign returns a sample campaign
 func Campaign(id uint64) campaign.Campaign {
-	c := campaign.NewCampaign(id, CampaignName(), Uint64(), Coins(), Bool())
+	c := campaign.NewCampaign(id, CampaignName(), Uint64(), Coins(), Bool(), Metadata(20))
 	return c
 }
 

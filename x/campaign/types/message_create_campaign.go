@@ -13,11 +13,13 @@ func NewMsgCreateCampaign(
 	coordinator string,
 	campaignName string,
 	totalSupply sdk.Coins,
+	metadata []byte,
 ) *MsgCreateCampaign {
 	return &MsgCreateCampaign{
 		Coordinator:  coordinator,
 		CampaignName: campaignName,
 		TotalSupply:  totalSupply,
+		Metadata:     metadata,
 	}
 }
 

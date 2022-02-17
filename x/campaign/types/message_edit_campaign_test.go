@@ -10,38 +10,42 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func TestMsgUpdateCampaignName_ValidateBasic(t *testing.T) {
+func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgUpdateCampaignName
+		msg  types.MsgEditCampaign
 		err  error
 	}{
 		{
 			name: "invalid campaign name",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: sample.Address(),
 				Name:        invalidCampaignName,
+				Metadata:    sample.Metadata(20),
 			},
 			err: types.ErrInvalidCampaignName,
 		},
 		{
 			name: "invalid coordinator address",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: "invalid_address",
 				Name:        "newName",
+				Metadata:    sample.Metadata(20),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "valid coordinator message",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: sample.Address(),
 				Name:        "newName",
+				Metadata:    sample.Metadata(20),
 			},
 		},
+		// TODO add test for metadata
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

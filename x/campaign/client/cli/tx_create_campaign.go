@@ -10,6 +10,10 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
+const (
+	flagMetadata = "metadata"
+)
+
 func CmdCreateCampaign() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-campaign [campaign-name] [total-supply]",
@@ -30,10 +34,17 @@ func CmdCreateCampaign() *cobra.Command {
 				}
 			}
 
+			metadata, err := cmd.Flags().GetString(flagMetadata)
+			if err != nil {
+				return err
+			}
+			metadataBytes := []byte(metadata)
+
 			msg := types.NewMsgCreateCampaign(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 				totalSupply,
+				metadataBytes,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -42,6 +53,7 @@ func CmdCreateCampaign() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagMetadata, "", "Set metadata field for the campaign")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

@@ -22,8 +22,9 @@ func TestNewCampaign(t *testing.T) {
 	coordinator := sample.Uint64()
 	totalSupply := sample.Coins()
 	dynamicShares := sample.Bool()
+	metadata := sample.Metadata(20)
 
-	cmpn := campaign.NewCampaign(campaignID, campaignName, coordinator, totalSupply, dynamicShares)
+	cmpn := campaign.NewCampaign(campaignID, campaignName, coordinator, totalSupply, dynamicShares, metadata)
 	require.EqualValues(t, campaignID, cmpn.CampaignID)
 	require.EqualValues(t, campaignName, cmpn.CampaignName)
 	require.EqualValues(t, coordinator, cmpn.CoordinatorID)
@@ -72,6 +73,7 @@ func TestCampaign_Validate(t *testing.T) {
 				sample.Uint64(),
 				sample.Coins(),
 				false,
+				sample.Metadata(20),
 			),
 			valid: false,
 		},
@@ -83,6 +85,7 @@ func TestCampaign_Validate(t *testing.T) {
 				sample.Uint64(),
 				invalidCoins,
 				false,
+				sample.Metadata(20),
 			),
 			valid: false,
 		},

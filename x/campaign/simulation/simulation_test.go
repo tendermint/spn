@@ -83,6 +83,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			coords[0],
 			sample.Coins(),
 			false,
+			sample.Metadata(20),
 		)
 		camp.MainnetInitialized = true
 		ck.AppendCampaign(ctx, camp)
@@ -101,6 +102,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			coords[1],
 			sample.Coins(),
 			true,
+			sample.Metadata(20),
 		)
 		camp.MainnetInitialized = true
 		idDynamicShares := ck.AppendCampaign(ctx, camp)
@@ -121,6 +123,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			coords[2],
 			sample.Coins(),
 			false,
+			sample.Metadata(20),
 		)
 		idNoMainnet := ck.AppendCampaign(ctx, camp)
 		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(r, ctx, pk, *ck, accs, false, true)
@@ -140,6 +143,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			coords[3],
 			sample.Coins(),
 			true,
+			sample.Metadata(20),
 		)
 		idNoMainnetDynamicShares := ck.AppendCampaign(ctx, camp)
 		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(r, ctx, pk, *ck, accs, true, true)
@@ -170,6 +174,7 @@ func TestGetSharesFromCampaign(t *testing.T) {
 			0,
 			sample.Coins(),
 			false,
+			sample.Metadata(20),
 		)
 		shares, err := campaigntypes.NewShares(fmt.Sprintf(
 			"%[1]dfoo,%[1]dbar,%[1]dtoto",
@@ -189,6 +194,7 @@ func TestGetSharesFromCampaign(t *testing.T) {
 			0,
 			sample.Coins(),
 			false,
+			sample.Metadata(20),
 		))
 		shares, found := simcampaign.GetSharesFromCampaign(r, ctx, *ck, campID)
 		require.True(t, found)

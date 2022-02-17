@@ -36,13 +36,13 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 
 	for _, tc := range []struct {
 		name       string
-		msg        types.MsgUpdateCampaignName
+		msg        types.MsgEditCampaign
 		expectedID uint64
 		err        error
 	}{
 		{
 			name: "invalid campaign id",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				Coordinator: coordAddr,
 				CampaignID:  100,
 				Name:        "new_name",
@@ -51,7 +51,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		},
 		{
 			name: "invalid coordinator address",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				Coordinator: sample.Address(),
 				CampaignID:  campaign.CampaignID,
 				Name:        "new_name",
@@ -60,7 +60,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		},
 		{
 			name: "wrong coordinator id",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				Coordinator: coordAddrNoCampaign,
 				CampaignID:  campaign.CampaignID,
 				Name:        "new_name",
@@ -69,15 +69,16 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		},
 		{
 			name: "valid message",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				Coordinator: coordAddr,
 				CampaignID:  campaign.CampaignID,
 				Name:        "new_name",
 			},
 		},
+		// TODO add metadata test
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			_, err := campaignSrv.UpdateCampaignName(ctx, &tc.msg)
+			_, err := campaignSrv.EditCampaign(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
