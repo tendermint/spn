@@ -29,7 +29,7 @@ func UpdateTotalSupply(coins, updatedCoins sdk.Coins) sdk.Coins {
 
 // ValidateTotalSupply checks whether the total supply for each denom is within the provided total supply range
 func ValidateTotalSupply(totalSupply sdk.Coins, supplyRange TotalSupplyRange) error {
-	if err := supplyRange.Validate(); err != nil {
+	if err := supplyRange.ValidateBasic(); err != nil {
 		return err
 	}
 
@@ -53,15 +53,15 @@ func ValidateTotalSupply(totalSupply sdk.Coins, supplyRange TotalSupplyRange) er
 	return nil
 }
 
-// Validate performs basic validation on an instance of TotalSupplyRange
-func (sr TotalSupplyRange) Validate() error {
-	if sr.MaxTotalSupply.LT(sr.MinTotalSupply) {
-		return sdkerrors.Wrapf(
-			ErrInvalidSupplyRange,
-			"provided total supply range is invalid, min > max: [%s, %s]",
-			sr.MinTotalSupply.String(),
-			sr.MaxTotalSupply.String(),
-		)
+// ValidateBasic performs basic validation on an instance of TotalSupplyRange
+func (sr TotalSupplyRange) ValidateBasic() error {
+	if sr.MinTotalSupply.LT(sdk.OneInt()) {
+		return sdkerrors.Wrap(ErrInvalidSupplyRange, "minimum total supply should be greater than one")
 	}
+
+	if sr.MaxTotalSupply.LT(sr.MinTotalSupply) {
+		return sdkerrors.Wrap(ErrInvalidSupplyRange, "maximum total supply should be greater or equal than minimum total supply")
+	}
+
 	return nil
 }

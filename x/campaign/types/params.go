@@ -65,14 +65,8 @@ func validateTotalSupplyRange(i interface{}) error {
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
-
-	if v.MinTotalSupply.LT(sdk.OneInt()) {
-		return errors.New("minimum total supply should be greater than one")
+	if err := v.ValidateBasic(); err != nil {
+		return errors.New(err.Error())
 	}
-
-	if v.MaxTotalSupply.LT(v.MinTotalSupply) {
-		return errors.New("maximum total supply should be greater or equal than minimum total supply")
-	}
-
 	return nil
 }

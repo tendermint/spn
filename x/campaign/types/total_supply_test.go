@@ -105,3 +105,37 @@ func TestValidateTotalSupply(t *testing.T) {
 		})
 	}
 }
+
+func TestTotalSupplyRange_ValidateBasic(t *testing.T) {
+	tests := []struct {
+		name        string
+		supplyRange campaign.TotalSupplyRange
+		valid       bool
+	}{
+		{
+			name:        "min total supply lower than one",
+			supplyRange: campaign.NewTotalSupplyRange(sdk.ZeroInt(), sdk.OneInt()),
+			valid:       false,
+		},
+		{
+			name:        "min total supply greater than max total supply",
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(2), sdk.OneInt()),
+			valid:       false,
+		},
+		{
+			name:        "valid total supply range",
+			supplyRange: campaign.NewTotalSupplyRange(sdk.OneInt(), sdk.OneInt()),
+			valid:       true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.supplyRange.ValidateBasic()
+			if tt.valid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
+			}
+		})
+	}
+}

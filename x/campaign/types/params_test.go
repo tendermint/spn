@@ -18,12 +18,12 @@ func TestParamsValidateBasic(t *testing.T) {
 		{
 			name:   "invalid min total supply",
 			params: NewParams(sdk.ZeroInt(), DefaultMaxTotalSupply),
-			err:    errors.New("minimum total supply should be greater than one"),
+			err:    errors.New("minimum total supply should be greater than one: invalid total supply range"),
 		},
 		{
 			name:   "min total supply greater than max",
 			params: NewParams(DefaultMaxTotalSupply, DefaultMinTotalSupply),
-			err:    errors.New("maximum total supply should be greater or equal than minimum total supply"),
+			err:    errors.New("maximum total supply should be greater or equal than minimum total supply: invalid total supply range"),
 		},
 		{
 			name:   "valid range",
@@ -55,20 +55,12 @@ func TestValidateTotalSupplyRange(t *testing.T) {
 			err:         fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name: "invalid minTotalSupply",
-			supplyRange: TotalSupplyRange{
-				MinTotalSupply: sdk.ZeroInt(),
-				MaxTotalSupply: DefaultMaxTotalSupply,
-			},
-			err: errors.New("minimum total supply should be greater than one"),
-		},
-		{
 			name: "invalid range",
 			supplyRange: TotalSupplyRange{
 				MinTotalSupply: DefaultMaxTotalSupply,
 				MaxTotalSupply: DefaultMinTotalSupply,
 			},
-			err: errors.New("maximum total supply should be greater or equal than minimum total supply"),
+			err: errors.New("maximum total supply should be greater or equal than minimum total supply: invalid total supply range"),
 		},
 		{
 			name: "valid range",

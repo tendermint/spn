@@ -45,7 +45,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(),
 				Coordinator:  coordAddr1,
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 			},
 			expectedID: uint64(0),
 		},
@@ -54,7 +54,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(),
 				Coordinator:  coordAddr2,
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 			},
 			expectedID: uint64(1),
 		},
@@ -63,7 +63,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(),
 				Coordinator:  sample.Address(),
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},

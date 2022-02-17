@@ -223,7 +223,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "invalid campaign",
 			genState: &types.GenesisState{
 				CampaignList: []types.Campaign{
-					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.Coins(), false),
+					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.TotalSupply(), false),
 				},
 				CampaignCounter: 1,
 			},
@@ -324,11 +324,11 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 			shouldBeValid: false,
 		},
 		{
-			desc: "min total supply below one",
+			desc: "valid parameters",
 			genState: types.GenesisState{
-				Params: types.NewParams(sdk.ZeroInt(), types.DefaultMaxTotalSupply),
+				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdk.OneInt())),
 			},
-			shouldBeValid: false,
+			shouldBeValid: true,
 		},
 	} {
 		tc := tc
