@@ -22,7 +22,7 @@ func CmdUpdateTotalSupply() *cobra.Command {
 				return err
 			}
 
-			totalShares, err := sdk.ParseCoinsNormalized(args[1])
+			totalSupply, err := sdk.ParseCoinsNormalized(args[1])
 			if err != nil {
 				return err
 			}
@@ -35,7 +35,7 @@ func CmdUpdateTotalSupply() *cobra.Command {
 			msg := types.NewMsgUpdateTotalSupply(
 				clientCtx.GetFromAddress().String(),
 				campaignID,
-				totalShares,
+				totalSupply,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
