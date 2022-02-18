@@ -32,17 +32,35 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: "invalid_address",
-				Name:        "newName",
+				Name:        sample.CampaignName(),
 				Metadata:    sample.Metadata(20),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "valid coordinator message",
+			name: "valid message - both modified",
 			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: sample.Address(),
-				Name:        "newName",
+				Name:        sample.CampaignName(),
+				Metadata:    sample.Metadata(20),
+			},
+		},
+		{
+			name: "valid message - name modified",
+			msg: types.MsgEditCampaign{
+				CampaignID:  0,
+				Coordinator: sample.Address(),
+				Name:        sample.CampaignName(),
+				Metadata:    []byte{},
+			},
+		},
+		{
+			name: "valid message - metadata modified",
+			msg: types.MsgEditCampaign{
+				CampaignID:  0,
+				Coordinator: sample.Address(),
+				Name:        "",
 				Metadata:    sample.Metadata(20),
 			},
 		},
@@ -51,10 +69,20 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: sample.Address(),
-				Name:        "newName",
+				Name:        sample.CampaignName(),
 				Metadata:    sample.Metadata(spntypes.MaxMetadataLength + 1),
 			},
 			err: types.ErrInvalidMetadataLength,
+		},
+		{
+			name: "no fields modified",
+			msg: types.MsgEditCampaign{
+				CampaignID:  0,
+				Coordinator: sample.Address(),
+				Name:        "",
+				Metadata:    []byte{},
+			},
+			err: sdkerrors.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {

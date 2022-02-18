@@ -44,8 +44,14 @@ func (msg *MsgEditCampaign) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
-	if err := CheckCampaignName(msg.Name); err != nil {
-		return sdkerrors.Wrap(ErrInvalidCampaignName, err.Error())
+	if len(msg.Name) == 0 && len(msg.Metadata) == 0 {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "must modify at least one field (name or metadata)")
+	}
+
+	if len(msg.Name) != 0 {
+		if err := CheckCampaignName(msg.Name); err != nil {
+			return sdkerrors.Wrap(ErrInvalidCampaignName, err.Error())
+		}
 	}
 
 	// TODO parameterize
