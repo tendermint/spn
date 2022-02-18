@@ -2,6 +2,7 @@
 package constructor
 
 import (
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -38,4 +39,21 @@ func SignatureCounts(blockCount uint64, sc ...spntypes.SignatureCount) spntypes.
 		BlockCount: blockCount,
 		Counts:     sc,
 	}
+}
+
+// Shares returns a Shares object from a string of coin inputs
+func Shares(t testing.TB, coinStr string) campaigntypes.Shares {
+	shares := campaigntypes.NewSharesFromCoins(Coins(t, coinStr))
+	return shares
+}
+
+// Vouchers returns a Vouchers object from a string of coin inputs
+func Vouchers(t testing.TB, coinStr string, campaignID uint64) sdk.Coins {
+	coins := Coins(t, coinStr)
+	vouchers := make(sdk.Coins, len(coins))
+	for i, coin := range coins {
+		coin.Denom = campaigntypes.VoucherDenom(campaignID, coin.Denom)
+		vouchers[i] = coin
+	}
+	return vouchers
 }

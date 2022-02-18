@@ -1,9 +1,9 @@
 package types_test
 
 import (
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
@@ -57,9 +57,7 @@ func TestMsgUpdateTotalShares_ValidateBasic(t *testing.T) {
 			msg: types.MsgUpdateTotalShares{
 				Coordinator: sample.Address(),
 				CampaignID:  0,
-				TotalShares: types.Shares(sdk.NewCoins(
-					sdk.NewCoin("foo", sdk.NewInt(100)),
-				)),
+				TotalShares: types.Shares(tc.Coins(t, "100foo")),
 			},
 			err: types.ErrInvalidShares,
 		},

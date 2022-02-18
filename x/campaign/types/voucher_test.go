@@ -2,6 +2,7 @@ package types_test
 
 import (
 	"errors"
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -88,46 +89,26 @@ func TestSharesToVouchers(t *testing.T) {
 		{
 			name:       "test one share",
 			campaignID: campaignID,
-			shares: campaign.Shares(sdk.NewCoins(
-				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
-			)),
-			want: sdk.NewCoins(
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
-			),
+			shares:     tc.Shares(t, "10foo"),
+			want:       tc.Vouchers(t, "10foo", campaignID),
 		},
 		{
 			name:       "test two shares",
 			campaignID: campaignID,
-			shares: campaign.Shares(sdk.NewCoins(
-				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
-				sdk.NewCoin(prefixedShareBar, sdk.NewInt(11)),
-			)),
-			want: sdk.NewCoins(
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
-				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(11)),
-			),
+			shares:     tc.Shares(t, "10foo,11bar"),
+			want:       tc.Vouchers(t, "10foo,11bar", campaignID),
 		},
 		{
 			name:       "another campaign id",
 			campaignID: 1000,
-			shares: campaign.Shares(sdk.NewCoins(
-				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
-				sdk.NewCoin(prefixedShareBar, sdk.NewInt(11)),
-				sdk.NewCoin(prefixedShareFoobar, sdk.NewInt(12)),
-			)),
-			want: sdk.NewCoins(
-				sdk.NewCoin("v/1000/foo", sdk.NewInt(10)),
-				sdk.NewCoin("v/1000/bar", sdk.NewInt(11)),
-				sdk.NewCoin("v/1000/foobar", sdk.NewInt(12)),
-			),
+			shares:     tc.Shares(t, "10foo,11bar,12foobar"),
+			want:       tc.Vouchers(t, "10foo,11bar,12foobar", 1000),
 		},
 		{
 			name:       "invalid share prefix",
 			campaignID: 1000,
-			shares: campaign.Shares(sdk.NewCoins(
-				sdk.NewCoin("t/foo", sdk.NewInt(10)),
-			)),
-			err: errors.New("t/foo doesn't contain the share prefix s/"),
+			shares:     campaign.Shares(tc.Coins(t, "10t/foo")),
+			err:        errors.New("t/foo doesn't contain the share prefix s/"),
 		},
 	}
 	for _, tt := range tests {
@@ -189,33 +170,21 @@ func TestVouchersToShares(t *testing.T) {
 		{
 			name:       "test one voucher",
 			campaignID: campaignID,
-			vouchers: sdk.NewCoins(
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
-			),
-			want: campaign.Shares(sdk.NewCoins(
-				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
-			)),
+			vouchers:   tc.Vouchers(t, "10foo", campaignID),
+			want:       tc.Shares(t, "10foo"),
 		},
 		{
 			name:       "test two vouchers",
 			campaignID: campaignID,
-			vouchers: sdk.NewCoins(
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
-				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(11)),
-			),
-			want: campaign.Shares(sdk.NewCoins(
-				sdk.NewCoin(prefixedShareFoo, sdk.NewInt(10)),
-				sdk.NewCoin(prefixedShareBar, sdk.NewInt(11)),
-			)),
+			vouchers:   tc.Vouchers(t, "10foo,11bar", campaignID),
+			want:       tc.Shares(t, "10foo,11bar"),
 		},
 		{
 			name:       "wrong campaign id",
 			campaignID: 1000,
-			vouchers: sdk.NewCoins(
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(10)),
-				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(11)),
-			),
-			err: errors.New("v/10/bar doesn't contain the voucher prefix v/1000/"),
+			// use old coin syntax to write incorrect coins
+			vouchers: tc.Coins(t, "10v/10/bar,11v/10/foo"),
+			err:      errors.New("v/10/bar doesn't contain the voucher prefix v/1000/"),
 		},
 	}
 	for _, tt := range tests {
