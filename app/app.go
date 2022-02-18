@@ -430,6 +430,7 @@ func New(
 		appCodec,
 		keys[campaignmoduletypes.StoreKey],
 		keys[campaignmoduletypes.MemStoreKey],
+		app.GetSubspace(campaignmoduletypes.ModuleName),
 		&app.LaunchKeeper,
 		app.BankKeeper,
 		app.ProfileKeeper,

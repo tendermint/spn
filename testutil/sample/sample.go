@@ -4,6 +4,8 @@ package sample
 import (
 	"math/rand"
 
+	campaign "github.com/tendermint/spn/x/campaign/types"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
@@ -95,10 +97,26 @@ func Address() string {
 
 // Coin returns a sample coin structure
 func Coin() sdk.Coin {
-	return sdk.NewCoin(AlphaString(5), sdk.NewInt(int64(rand.Intn(10000)+1)))
+	return sdk.NewCoin(AlphaString(5), sdk.NewInt(rand.Int63n(10000)+1))
+}
+
+// CoinWithRange returns a sample coin structure where the amount is a random number between provided min and max values
+func CoinWithRange(min, max int64) sdk.Coin {
+	return sdk.NewCoin(AlphaString(5), sdk.NewInt(rand.Int63n(max-min)+min))
 }
 
 // Coins returns a sample coins structure
 func Coins() sdk.Coins {
 	return sdk.NewCoins(Coin(), Coin(), Coin())
+}
+
+// CoinsWithRange returns a sample coins structure where the amount is a random number between provided min and max values
+func CoinsWithRange(min, max int64) sdk.Coins {
+	return sdk.NewCoins(CoinWithRange(min, max), CoinWithRange(min, max), CoinWithRange(min, max))
+}
+
+// TotalSupply returns a sample coins structure where each denom's total supply is within the default
+// allowed supply range
+func TotalSupply() sdk.Coins {
+	return CoinsWithRange(campaign.DefaultMinTotalSupply.Int64(), campaign.DefaultMaxTotalSupply.Int64())
 }

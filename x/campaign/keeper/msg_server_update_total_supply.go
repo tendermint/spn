@@ -2,11 +2,13 @@ package keeper
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -34,6 +36,15 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 
 	if campaign.MainnetInitialized {
 		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%d", msg.CampaignID)
+	}
+
+	// Validate provided totalSupply
+	totalSupplyRange := k.TotalSupplyRange(ctx)
+	if err := types.ValidateTotalSupply(msg.TotalSupplyUpdate, totalSupplyRange); err != nil {
+		if errors.Is(err, types.ErrInvalidSupplyRange) {
+			return nil, spnerrors.Critical(err.Error())
+		}
+		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, err.Error())
 	}
 
 	campaign.TotalSupply = types.UpdateTotalSupply(campaign.TotalSupply, msg.TotalSupplyUpdate)

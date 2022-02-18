@@ -55,3 +55,81 @@ func TestUpdateTotalSupply(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateTotalSupply(t *testing.T) {
+	tests := []struct {
+		name        string
+		coins       sdk.Coins
+		supplyRange campaign.TotalSupplyRange
+		valid       bool
+	}{
+		{
+			name:        "invalid supply range",
+			coins:       tc.Coins(t, "1000foo,1000bar"),
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1_000), sdk.NewInt(100)),
+			valid:       false,
+		},
+		{
+			name:        "total supply less than min",
+			coins:       tc.Coins(t, "100foo,1000bar"),
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1000), sdk.NewInt(10_000)),
+			valid:       false,
+		},
+		{
+			name:        "total supply more than max",
+			coins:       tc.Coins(t, "1000foo,10000bar"),
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1000), sdk.NewInt(1000)),
+			valid:       false,
+		},
+		{
+			name:        "valid supply",
+			coins:       tc.Coins(t, "1000foo,1000bar"),
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(100), sdk.NewInt(1000)),
+			valid:       true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := campaign.ValidateTotalSupply(tt.coins, tt.supplyRange)
+			if tt.valid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
+			}
+		})
+	}
+}
+
+func TestTotalSupplyRange_ValidateBasic(t *testing.T) {
+	tests := []struct {
+		name        string
+		supplyRange campaign.TotalSupplyRange
+		valid       bool
+	}{
+		{
+			name:        "min total supply lower than one",
+			supplyRange: campaign.NewTotalSupplyRange(sdk.ZeroInt(), sdk.OneInt()),
+			valid:       false,
+		},
+		{
+			name:        "min total supply greater than max total supply",
+			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(2), sdk.OneInt()),
+			valid:       false,
+		},
+		{
+			name:        "valid total supply range",
+			supplyRange: campaign.NewTotalSupplyRange(sdk.OneInt(), sdk.OneInt()),
+			valid:       true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.supplyRange.ValidateBasic()
+			if tt.valid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
+			}
+		})
+	}
+}
