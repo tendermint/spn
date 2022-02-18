@@ -1,8 +1,9 @@
 package types_test
 
 import (
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"

@@ -32,9 +32,9 @@ func (k msgServer) EditCampaign(goCtx context.Context, msg *types.MsgEditCampaig
 		))
 	}
 
-if len(msg.Name) > 0 {
-	campaign.CampaignName = msg.Name
-}
+	if len(msg.Name) > 0 {
+		campaign.CampaignName = msg.Name
+	}
 
 	if len(msg.Metadata) > 0 {
 		campaign.Metadata = msg.Metadata
