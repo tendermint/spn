@@ -20,7 +20,7 @@ func TestNewCampaign(t *testing.T) {
 	campaignID := sample.Uint64()
 	campaignName := sample.CampaignName()
 	coordinator := sample.Uint64()
-	totalSupply := sample.Coins()
+	totalSupply := sample.TotalSupply()
 	dynamicShares := sample.Bool()
 
 	cmpn := campaign.NewCampaign(campaignID, campaignName, coordinator, totalSupply, dynamicShares)
@@ -70,7 +70,7 @@ func TestCampaign_Validate(t *testing.T) {
 				0,
 				invalidCampaignName,
 				sample.Uint64(),
-				sample.Coins(),
+				sample.TotalSupply(),
 				false,
 			),
 			valid: false,

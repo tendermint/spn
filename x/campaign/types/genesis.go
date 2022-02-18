@@ -12,6 +12,7 @@ func DefaultGenesis() *GenesisState {
 		CampaignChainsList:        []CampaignChains{},
 		MainnetAccountList:        []MainnetAccount{},
 		MainnetVestingAccountList: []MainnetVestingAccount{},
+		Params:                    DefaultParams(),
 		// this line is used by starport scaffolding # genesis/types/default
 	}
 }
@@ -79,5 +80,5 @@ func (gs GenesisState) Validate() error {
 
 	// this line is used by starport scaffolding # genesis/types/validate
 
-	return nil
+	return gs.Params.ValidateBasic()
 }

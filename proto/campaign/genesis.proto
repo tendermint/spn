@@ -7,6 +7,7 @@ import "campaign/campaign_chains.proto";
 import "campaign/mainnet_vesting_account.proto";
 import "campaign/campaign.proto";
 import "campaign/mainnet_account.proto";
+import "campaign/params.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
@@ -17,5 +18,6 @@ message GenesisState {
   repeated CampaignChains campaignChainsList = 3 [(gogoproto.nullable) = false];
   repeated MainnetAccount mainnetAccountList = 4 [(gogoproto.nullable) = false];
   repeated MainnetVestingAccount mainnetVestingAccountList = 5 [(gogoproto.nullable) = false];
+  Params params = 6 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }
