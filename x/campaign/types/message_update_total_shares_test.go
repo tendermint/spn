@@ -1,8 +1,9 @@
 package types_test
 
 import (
-	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
+
+	tc "github.com/tendermint/spn/testutil/constructor"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
