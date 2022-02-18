@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"errors"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -40,10 +38,6 @@ func CmdEditCampaign() *cobra.Command {
 				return err
 			}
 			metadataBytes := []byte(metadata)
-
-			if len(name) == 0 && len(metadataBytes) == 0 {
-				return errors.New("must modify at least one field (name or metadata)")
-			}
 
 			msg := types.NewMsgEditCampaign(
 				clientCtx.GetFromAddress().String(),
