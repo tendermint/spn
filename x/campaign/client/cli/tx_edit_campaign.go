@@ -59,7 +59,7 @@ func CmdEditCampaign() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagName, "", "Set name  for the campaign")
+	cmd.Flags().String(flagName, "", "Set name for the campaign")
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the campaign")
 	flags.AddTxFlagsToCmd(cmd)
 
