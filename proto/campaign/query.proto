@@ -8,6 +8,7 @@ import "campaign/campaign_chains.proto";
 import "campaign/campaign.proto";
 import "campaign/mainnet_vesting_account.proto";
 import "campaign/mainnet_account.proto";
+import "campaign/params.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
@@ -48,6 +49,11 @@ service Query {
   // Queries a list of mainnetVestingAccount items.
   rpc MainnetVestingAccountAll(QueryAllMainnetVestingAccountRequest) returns (QueryAllMainnetVestingAccountResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account";
+  }
+
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/params";
   }
 
   // this line is used by starport scaffolding # 2
@@ -114,6 +120,15 @@ message QueryAllMainnetVestingAccountRequest {
 message QueryAllMainnetVestingAccountResponse {
   repeated MainnetVestingAccount mainnetVestingAccount = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
 }
 
 // this line is used by starport scaffolding # 3
