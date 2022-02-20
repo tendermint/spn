@@ -149,6 +149,21 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
+			desc: "valid message with new chain ID",
+			msg: sample.MsgEditChain(
+				sample.Address(),
+				launchID,
+				false,
+				false,
+				false,
+				false,
+				true,
+				0,
+				true,
+			),
+			valid: true,
+		},
+		{
 			desc: "invalid coordinator address",
 			msg: sample.MsgEditChain(
 				"invalid",

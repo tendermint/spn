@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,7 +13,7 @@ import (
 )
 
 func TestMsgEditChain(t *testing.T) {
-	k, _, _, srv, profileSrv, _, sdkCtx := setupMsgServer(t)
+	k, _, _, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
@@ -33,6 +34,35 @@ func TestMsgEditChain(t *testing.T) {
 	res, err := srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchID := res.LaunchID
+
+	// create a campaign
+	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
+	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+
+	// create a chain with an existing campaign
+	msgCreateChain = sample.MsgCreateChain(coordAddress, "", true, resCampaign.CampaignID)
+	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	require.NoError(t, err)
+	launchIDHasCampaign := res.LaunchID
+
+	// create a campaign
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
+	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	validCampaignID := resCampaign.CampaignID
+
+	// create a campaign from a different address
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress2)
+	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	invalidCampaignID := resCampaign.CampaignID
+
+	// Create a new chain for more tests
+	msgCreateChain = sample.MsgCreateChain(coordAddress, "", false, 0)
+	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	require.NoError(t, err)
+	launchID2 := res.LaunchID
 
 	for _, tc := range []struct {
 		name string
@@ -106,6 +136,18 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 				false,
+				true,
+				validCampaignID,
+				false,
+			),
+		},
+		{
+			name: "edit metadata",
+			msg: sample.MsgEditChain(coordAddress, launchID,
+				false,
+				false,
+				false,
+				false,
 				false,
 				0,
 				true,
@@ -146,6 +188,45 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 				0,
+				false,
+			),
+			err: profiletypes.ErrCoordInvalid,
+		},
+		{
+			name: "chain already has campaign",
+			msg: sample.MsgEditChain(coordAddress, launchIDHasCampaign,
+				false,
+				false,
+				false,
+				false,
+				true,
+				0,
+				false,
+			),
+			err: types.ErrChainCampaignAlreadyExist,
+		},
+		{
+			name: "campaign does not exist",
+			msg: sample.MsgEditChain(coordAddress, launchID2,
+				false,
+				false,
+				false,
+				false,
+				true,
+				999,
+				false,
+			),
+			err: campaigntypes.ErrCampaignNotFound,
+		},
+		{
+			name: "campaign does not exist",
+			msg: sample.MsgEditChain(coordAddress, launchID2,
+				false,
+				false,
+				false,
+				false,
+				true,
+				invalidCampaignID,
 				false,
 			),
 			err: profiletypes.ErrCoordInvalid,
