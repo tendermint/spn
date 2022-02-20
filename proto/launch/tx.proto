@@ -48,7 +48,7 @@ message MsgEditChain {
   string sourceURL = 4;
   string sourceHash = 5;
   InitialGenesis initialGenesis = 6;
-  bool hasCampaign = 7;
+  bool setCampaignID = 7;
   uint64 campaignID = 8;
   bytes metadata = 9;
 }

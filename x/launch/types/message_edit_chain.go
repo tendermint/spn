@@ -30,7 +30,7 @@ func NewMsgEditChain(
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
 		InitialGenesis: initialGenesis,
-		HasCampaign:    hasCampaign,
+		SetCampaignID:  hasCampaign,
 		CampaignID:     campaignID,
 		Metadata:       metadata,
 	}
@@ -69,7 +69,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		}
 	}
 
-	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil && len(msg.Metadata) == 0 && msg.HasCampaign == false {
+	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil && len(msg.Metadata) == 0 && !msg.SetCampaignID {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
 	}
 

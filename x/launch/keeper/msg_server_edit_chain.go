@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -51,7 +52,7 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		chain.Metadata = msg.Metadata
 	}
 
-	if msg.HasCampaign {
+	if msg.SetCampaignID {
 		// check if chain already has id associated
 		if chain.HasCampaign {
 			return nil, sdkerrors.Wrapf(types.ErrChainCampaignAlreadyExist,

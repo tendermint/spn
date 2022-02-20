@@ -1,8 +1,9 @@
 package keeper_test
 
 import (
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"testing"
+
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
