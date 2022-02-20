@@ -23,7 +23,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				Coordinator:  sample.Address(),
 				CampaignName: sample.CampaignName(),
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 				Metadata:     sample.Metadata(20),
 			},
 		},
@@ -32,7 +32,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				Coordinator:  "invalid_address",
 				CampaignName: sample.CampaignName(),
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 				Metadata:     sample.Metadata(20),
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -42,7 +42,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				Coordinator:  sample.Address(),
 				CampaignName: invalidCampaignName,
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 				Metadata:     sample.Metadata(20),
 			},
 			err: types.ErrInvalidCampaignName,
@@ -62,7 +62,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				Coordinator:  sample.Address(),
 				CampaignName: sample.CampaignName(),
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 				Metadata:     sample.Metadata(spntypes.MaxMetadataLength + 1),
 			},
 			err: types.ErrInvalidMetadataLength,

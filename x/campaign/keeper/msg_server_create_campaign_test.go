@@ -45,7 +45,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(),
 				Coordinator:  coordAddr1,
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 				Metadata:     sample.Metadata(20),
 			},
 			expectedID: uint64(0),
@@ -55,7 +55,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(),
 				Coordinator:  coordAddr2,
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 				Metadata:     sample.Metadata(20),
 			},
 			expectedID: uint64(1),
@@ -65,10 +65,19 @@ func TestMsgCreateCampaign(t *testing.T) {
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(),
 				Coordinator:  sample.Address(),
-				TotalSupply:  sample.Coins(),
+				TotalSupply:  sample.TotalSupply(),
 				Metadata:     sample.Metadata(20),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
+		},
+		{
+			name: "create a campaign with an invalid token supply",
+			msg: types.MsgCreateCampaign{
+				CampaignName: sample.CampaignName(),
+				Coordinator:  coordAddr1,
+				TotalSupply:  sample.CoinsWithRange(10, 20),
+			},
+			err: types.ErrInvalidTotalSupply,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

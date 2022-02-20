@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -81,6 +83,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						VestingOptions: *types.NewShareDelayedVesting(shares4, shares4, time.Now().Unix()),
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 		},
 		{
@@ -220,7 +223,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "invalid campaign",
 			genState: &types.GenesisState{
 				CampaignList: []types.Campaign{
-					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.Coins(), false, sample.Metadata(20)),
+					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.TotalSupply(), false, sample.Metadata(20)),
 				},
 				CampaignCounter: 1,
 			},
@@ -302,6 +305,39 @@ func TestGenesisState_Validate(t *testing.T) {
 				require.True(t, ok)
 				isLowerEqual := accShares.IsAllLTE(share)
 				require.True(t, isLowerEqual)
+			}
+		})
+	}
+}
+
+func TestGenesisState_ValidateParams(t *testing.T) {
+	for _, tc := range []struct {
+		desc          string
+		genState      types.GenesisState
+		shouldBeValid bool
+	}{
+		{
+			desc: "max total supply below min total supply",
+			genState: types.GenesisState{
+				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Sub(sdk.OneInt())),
+			},
+			shouldBeValid: false,
+		},
+		{
+			desc: "valid parameters",
+			genState: types.GenesisState{
+				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdk.OneInt())),
+			},
+			shouldBeValid: true,
+		},
+	} {
+		tc := tc
+		t.Run(tc.desc, func(t *testing.T) {
+			err := tc.genState.Validate()
+			if tc.shouldBeValid {
+				require.NoError(t, err)
+			} else {
+				require.Error(t, err)
 			}
 		})
 	}
