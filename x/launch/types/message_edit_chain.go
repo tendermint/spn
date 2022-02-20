@@ -19,6 +19,8 @@ func NewMsgEditChain(
 	sourceURL,
 	sourceHash string,
 	initialGenesis *InitialGenesis,
+	hasCampaign bool,
+	campaignID uint64,
 	metadata []byte,
 ) *MsgEditChain {
 	return &MsgEditChain{
@@ -28,6 +30,8 @@ func NewMsgEditChain(
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
 		InitialGenesis: initialGenesis,
+		HasCampaign:    hasCampaign,
+		CampaignID:     campaignID,
 		Metadata:       metadata,
 	}
 }

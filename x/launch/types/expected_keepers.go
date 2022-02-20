@@ -11,6 +11,7 @@ import (
 type CampaignKeeper interface {
 	GetCampaign(ctx sdk.Context, id uint64) (campaigntypes.Campaign, bool)
 	AddChainToCampaign(ctx sdk.Context, campaignID, launchID uint64) error
+	GetAllCampaign(ctx sdk.Context) (list []campaigntypes.Campaign)
 }
 
 type ProfileKeeper interface {

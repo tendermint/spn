@@ -21,6 +21,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		false,
 		false,
 		false,
+		0,
+		false,
 	)
 	genesisURL := types.NewGenesisURL("foo.com", "NoHash")
 	msgInvalidGenesisHash.InitialGenesis = &genesisURL
@@ -33,6 +35,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		false,
 		false,
 		false,
+		0,
+		false,
 	)
 	msgInvalidGenesisChainID.GenesisChainID = "invalid"
 
@@ -43,6 +47,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		false,
 		false,
 		false,
+		false,
+		0,
 		false,
 	)
 	msgInvalidMetadataLen.Metadata = sample.Bytes(spntypes.MaxMetadataLength + 1)
@@ -62,6 +68,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				true,
 				false,
 				false,
+				0,
+				false,
 			),
 			valid: true,
 		},
@@ -74,6 +82,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				false,
 				false,
+				false,
+				0,
 				false,
 			),
 			valid: true,
@@ -88,6 +98,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				false,
 				false,
+				0,
+				false,
 			),
 			valid: true,
 		},
@@ -100,6 +112,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				true,
 				false,
+				false,
+				0,
 				false,
 			),
 			valid: true,
@@ -114,6 +128,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				true,
 				true,
 				false,
+				0,
+				false,
 			),
 			valid: true,
 		},
@@ -126,6 +142,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				false,
 				false,
+				false,
+				0,
 				true,
 			),
 			valid: true,
@@ -140,6 +158,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				true,
 				false,
 				false,
+				0,
+				false,
 			),
 			valid: false,
 		},
@@ -152,6 +172,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				false,
 				false,
+				false,
+				0,
 				false,
 			),
 			valid: false,

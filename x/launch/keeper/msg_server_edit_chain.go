@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -48,6 +49,34 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 
 	if len(msg.Metadata) > 0 {
 		chain.Metadata = msg.Metadata
+	}
+
+	if msg.HasCampaign {
+		// check if chain already has id associated
+		if chain.HasCampaign {
+			return nil, sdkerrors.Wrapf(types.ErrChainCampaignAlreadyExist,
+				"campaign with id %d already associated with chain %d",
+				chain.CampaignID,
+				chain.LaunchID,
+			)
+		}
+
+		// check if chain coordinator is campaign coordinator
+		campaign, found := k.campaignKeeper.GetCampaign(ctx, msg.CampaignID)
+		if !found {
+			return nil, sdkerrors.Wrapf(campaigntypes.ErrCampaignNotFound, "campaign with id %d not found", msg.CampaignID)
+		}
+
+		if campaign.CoordinatorID != chain.CoordinatorID {
+			return nil, sdkerrors.Wrapf(profiletypes.ErrCoordInvalid,
+				"coordinator of the campaign is %d, chain coordinator is %d",
+				campaign.CoordinatorID,
+				chain.CoordinatorID,
+			)
+		}
+
+		chain.CampaignID = msg.CampaignID
+		chain.HasCampaign = true
 	}
 
 	k.SetChain(ctx, chain)
