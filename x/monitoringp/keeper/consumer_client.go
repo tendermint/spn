@@ -56,7 +56,7 @@ func (k Keeper) InitializeConsumerClient(ctx sdk.Context) (string, error) {
 // initializeClientState initializes the client state provided for the IBC client
 // TODO: Investigate configurable values
 func (k Keeper) initializeClientState(chainID string) (*ibctmtypes.ClientState, error) {
-	_, revisionHeight, err := chainid.ParseGenesisChainID(chainID)
+	_, revisionNumber, err := chainid.ParseGenesisChainID(chainID)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (k Keeper) initializeClientState(chainID string) (*ibctmtypes.ClientState, 
 		DefaultTrustingPeriod,
 		DefaultUnbondingPeriod,
 		time.Minute*10,
-		clienttypes.NewHeight(1, revisionHeight),
+		clienttypes.NewHeight(revisionNumber, 1),
 		committypes.GetSDKSpecs(),
 		[]string{"upgrade", "upgradedIBCState"},
 		true,
