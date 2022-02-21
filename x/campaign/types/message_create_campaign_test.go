@@ -3,6 +3,8 @@ package types_test
 import (
 	"testing"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
@@ -22,6 +24,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 				Coordinator:  sample.Address(),
 				CampaignName: sample.CampaignName(),
 				TotalSupply:  sample.TotalSupply(),
+				Metadata:     sample.Metadata(20),
 			},
 		},
 		{
@@ -30,6 +33,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 				Coordinator:  "invalid_address",
 				CampaignName: sample.CampaignName(),
 				TotalSupply:  sample.TotalSupply(),
+				Metadata:     sample.Metadata(20),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
@@ -39,6 +43,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 				Coordinator:  sample.Address(),
 				CampaignName: invalidCampaignName,
 				TotalSupply:  sample.TotalSupply(),
+				Metadata:     sample.Metadata(20),
 			},
 			err: types.ErrInvalidCampaignName,
 		},
@@ -48,8 +53,19 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 				Coordinator:  sample.Address(),
 				CampaignName: sample.CampaignName(),
 				TotalSupply:  invalidCoins,
+				Metadata:     sample.Metadata(20),
 			},
 			err: types.ErrInvalidTotalSupply,
+		},
+		{
+			name: "invalid metadata length",
+			msg: types.MsgCreateCampaign{
+				Coordinator:  sample.Address(),
+				CampaignName: sample.CampaignName(),
+				TotalSupply:  sample.TotalSupply(),
+				Metadata:     sample.Metadata(spntypes.MaxMetadataLength + 1),
+			},
+			err: types.ErrInvalidMetadataLength,
 		},
 	}
 	for _, tt := range tests {

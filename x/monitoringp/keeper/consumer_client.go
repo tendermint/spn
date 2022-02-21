@@ -10,6 +10,7 @@ import (
 	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"github.com/tendermint/tendermint/light"
 
+	"github.com/tendermint/spn/pkg/chainid"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
@@ -24,7 +25,10 @@ const (
 // InitializeConsumerClient initializes the consumer IBC client and and set it in the store
 func (k Keeper) InitializeConsumerClient(ctx sdk.Context) (string, error) {
 	// initialize the client state
-	clientState := k.initializeClientState(k.ConsumerChainID(ctx))
+	clientState, err := k.initializeClientState(k.ConsumerChainID(ctx))
+	if err != nil {
+		return "", sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
+	}
 	if err := clientState.Validate(); err != nil {
 		return "", sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
 	}
@@ -51,17 +55,22 @@ func (k Keeper) InitializeConsumerClient(ctx sdk.Context) (string, error) {
 
 // initializeClientState initializes the client state provided for the IBC client
 // TODO: Investigate configurable values
-func (k Keeper) initializeClientState(chainID string) *ibctmtypes.ClientState {
+func (k Keeper) initializeClientState(chainID string) (*ibctmtypes.ClientState, error) {
+	_, revisionNumber, err := chainid.ParseGenesisChainID(chainID)
+	if err != nil {
+		return nil, err
+	}
+
 	return ibctmtypes.NewClientState(
 		chainID,
 		ibctmtypes.NewFractionFromTm(light.DefaultTrustLevel),
 		DefaultTrustingPeriod,
 		DefaultUnbondingPeriod,
 		time.Minute*10,
-		clienttypes.NewHeight(1, 1),
+		clienttypes.NewHeight(revisionNumber, 1),
 		committypes.GetSDKSpecs(),
 		[]string{"upgrade", "upgradedIBCState"},
 		true,
 		true,
-	)
+	), nil
 }

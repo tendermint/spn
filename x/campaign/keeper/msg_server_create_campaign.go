@@ -31,7 +31,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	}
 
 	// Append the new campaign
-	campaign := types.NewCampaign(0, msg.CampaignName, coordID, msg.TotalSupply, false)
+	campaign := types.NewCampaign(0, msg.CampaignName, coordID, msg.TotalSupply, false, msg.Metadata)
 	campaignID := k.AppendCampaign(ctx, campaign)
 
 	// Initialize the list of campaign chains
