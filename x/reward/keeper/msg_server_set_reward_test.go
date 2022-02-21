@@ -3,12 +3,11 @@ package keeper_test
 import (
 	"testing"
 
-	tc "github.com/tendermint/spn/testutil/constructor"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -127,7 +126,8 @@ func TestMsgSetRewards(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.SetRewards(ctx, &tt.msg)
+			previusRewardPool, _ := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
+			got, err := srv.SetRewards(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
 				return
@@ -139,6 +139,11 @@ func TestMsgSetRewards(t *testing.T) {
 			require.Equal(t, tt.msg.Coins, rewardPool.Coins)
 			require.Equal(t, tt.msg.Provider, rewardPool.Provider)
 			require.Equal(t, tt.msg.LastRewardHeight, rewardPool.LastRewardHeight)
+
+			require.Equal(t, tt.msg.Coins, got.NewCoins)
+			require.Equal(t, tt.msg.LastRewardHeight, got.NewLastRewardHeight)
+			require.Equal(t, previusRewardPool.Coins, got.PreviousCoins)
+			require.Equal(t, previusRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
 		})
 	}
 }
