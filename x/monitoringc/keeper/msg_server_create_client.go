@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"github.com/tendermint/spn/pkg/chainid"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,6 +11,7 @@ import (
 	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"github.com/tendermint/tendermint/light"
 
+	"github.com/tendermint/spn/pkg/chainid"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
