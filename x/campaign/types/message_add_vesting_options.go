@@ -50,9 +50,5 @@ func (msg *MsgAddVestingOptions) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
-	if err := msg.VestingOptions.Validate(); err != nil {
-		return err
-	}
-
-	return nil
+	return msg.VestingOptions.Validate()
 }
