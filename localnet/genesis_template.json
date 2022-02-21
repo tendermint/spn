@@ -160,7 +160,13 @@
       "campaignCounter": "1",
       "campaignList": [],
       "mainnetAccountList": [],
-      "mainnetVestingAccountList": []
+      "mainnetVestingAccountList": [],
+      "params": {
+        "totalSupplyRange": {
+          "maxTotalSupply": "1000000000000000",
+          "minTotalSupply": "100"
+        }
+      }
     },
     "capability": {
       "index": "1",
