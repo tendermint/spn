@@ -35,49 +35,71 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 	require.NoError(t, err)
 
 	for _, tc := range []struct {
-		name       string
-		msg        types.MsgUpdateCampaignName
-		expectedID uint64
-		err        error
+		name string
+		msg  types.MsgEditCampaign
+		err  error
 	}{
 		{
 			name: "invalid campaign id",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				Coordinator: coordAddr,
 				CampaignID:  100,
-				Name:        "new_name",
+				Name:        sample.CampaignName(),
+				Metadata:    sample.Metadata(20),
 			},
 			err: types.ErrCampaignNotFound,
 		},
 		{
 			name: "invalid coordinator address",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				Coordinator: sample.Address(),
 				CampaignID:  campaign.CampaignID,
-				Name:        "new_name",
+				Name:        sample.CampaignName(),
+				Metadata:    sample.Metadata(20),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
 			name: "wrong coordinator id",
-			msg: types.MsgUpdateCampaignName{
+			msg: types.MsgEditCampaign{
 				Coordinator: coordAddrNoCampaign,
 				CampaignID:  campaign.CampaignID,
-				Name:        "new_name",
+				Name:        sample.CampaignName(),
+				Metadata:    sample.Metadata(20),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "valid message",
-			msg: types.MsgUpdateCampaignName{
+			name: "valid transaction - both modified",
+			msg: types.MsgEditCampaign{
 				Coordinator: coordAddr,
 				CampaignID:  campaign.CampaignID,
-				Name:        "new_name",
+				Name:        sample.CampaignName(),
+				Metadata:    sample.Metadata(20),
+			},
+		},
+		{
+			name: "valid transaction - unmodified metadata",
+			msg: types.MsgEditCampaign{
+				Coordinator: coordAddr,
+				CampaignID:  campaign.CampaignID,
+				Name:        sample.CampaignName(),
+				Metadata:    []byte{},
+			},
+		},
+		{
+			name: "valid transaction - unmodified name",
+			msg: types.MsgEditCampaign{
+				Coordinator: coordAddr,
+				CampaignID:  campaign.CampaignID,
+				Name:        "",
+				Metadata:    sample.Metadata(20),
 			},
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			_, err := campaignSrv.UpdateCampaignName(ctx, &tc.msg)
+			previousCampaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			_, err := campaignSrv.EditCampaign(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -86,7 +108,18 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 
 			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
-			require.Equal(t, tc.msg.Name, campaign.CampaignName)
+
+			if len(tc.msg.Name) > 0 {
+				require.EqualValues(t, tc.msg.Name, campaign.CampaignName)
+			} else {
+				require.EqualValues(t, previousCampaign.CampaignName, campaign.CampaignName)
+			}
+
+			if len(tc.msg.Metadata) > 0 {
+				require.EqualValues(t, tc.msg.Metadata, campaign.Metadata)
+			} else {
+				require.EqualValues(t, previousCampaign.Metadata, campaign.Metadata)
+			}
 		})
 	}
 }

@@ -10,11 +10,13 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func CmdUpdateCampaignName() *cobra.Command {
+const flagName = "flag-campaign-name"
+
+func CmdEditCampaign() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-campaign-name [campaign-id] [name]",
-		Short: "Update the campaign name",
-		Args:  cobra.ExactArgs(2),
+		Use:   "edit-campaign [campaign-id]",
+		Short: "Edit the campaign name or metadata",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			campaignID, err := cast.ToUint64E(args[0])
 			if err != nil {
@@ -26,11 +28,24 @@ func CmdUpdateCampaignName() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgUpdateCampaignName(
+			name, err := cmd.Flags().GetString(flagName)
+			if err != nil {
+				return err
+			}
+
+			metadata, err := cmd.Flags().GetString(flagMetadata)
+			if err != nil {
+				return err
+			}
+			metadataBytes := []byte(metadata)
+
+			msg := types.NewMsgEditCampaign(
 				clientCtx.GetFromAddress().String(),
-				args[1],
+				name,
 				campaignID,
+				metadataBytes,
 			)
+
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
@@ -38,6 +53,8 @@ func CmdUpdateCampaignName() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().String(flagName, "", "Set name for the campaign")
+	cmd.Flags().String(flagMetadata, "", "Set metadata field for the campaign")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

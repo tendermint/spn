@@ -55,6 +55,14 @@ func ValidateTotalSupply(totalSupply sdk.Coins, supplyRange TotalSupplyRange) er
 
 // ValidateBasic performs basic validation on an instance of TotalSupplyRange
 func (sr TotalSupplyRange) ValidateBasic() error {
+	if sr.MinTotalSupply.IsNil() {
+		return sdkerrors.Wrap(ErrInvalidSupplyRange, "minimum total supply should be set")
+	}
+
+	if sr.MaxTotalSupply.IsNil() {
+		return sdkerrors.Wrap(ErrInvalidSupplyRange, "maximum total supply should be set")
+	}
+
 	if sr.MinTotalSupply.LT(sdk.OneInt()) {
 		return sdkerrors.Wrap(ErrInvalidSupplyRange, "minimum total supply should be greater than one")
 	}

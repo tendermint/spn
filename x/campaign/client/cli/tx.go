@@ -20,7 +20,7 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdCreateCampaign())
-	cmd.AddCommand(CmdUpdateCampaignName())
+	cmd.AddCommand(CmdEditCampaign())
 	cmd.AddCommand(CmdUpdateTotalSupply())
 	cmd.AddCommand(CmdUpdateTotalShares())
 	cmd.AddCommand(CmdInitializeMainnet())
