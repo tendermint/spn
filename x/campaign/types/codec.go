@@ -9,7 +9,7 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateCampaign{}, "campaign/CreateCampaign", nil)
-	cdc.RegisterConcrete(&MsgUpdateCampaignName{}, "campaign/UpdateCampaignName", nil)
+	cdc.RegisterConcrete(&MsgEditCampaign{}, "campaign/EditCampaign", nil)
 	cdc.RegisterConcrete(&MsgUpdateTotalSupply{}, "campaign/UpdateTotalSupply", nil)
 	cdc.RegisterConcrete(&MsgUpdateTotalShares{}, "campaign/UpdateTotalShares", nil)
 	cdc.RegisterConcrete(&MsgInitializeMainnet{}, "campaign/InitializeMainnet", nil)
@@ -26,7 +26,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateCampaign{},
-		&MsgUpdateCampaignName{},
+		&MsgEditCampaign{},
 		&MsgUpdateTotalSupply{},
 		&MsgUpdateTotalShares{},
 		&MsgInitializeMainnet{},

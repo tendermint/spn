@@ -13,7 +13,7 @@ const (
 )
 
 // NewCampaign returns a new initialized campaign
-func NewCampaign(campaignID uint64, campaignName string, coordinatorID uint64, totalSupply sdk.Coins, dynamicShares bool) Campaign {
+func NewCampaign(campaignID uint64, campaignName string, coordinatorID uint64, totalSupply sdk.Coins, dynamicShares bool, metadata []byte) Campaign {
 	return Campaign{
 		CampaignID:         campaignID,
 		CampaignName:       campaignName,
@@ -23,6 +23,7 @@ func NewCampaign(campaignID uint64, campaignName string, coordinatorID uint64, t
 		AllocatedShares:    EmptyShares(),
 		DynamicShares:      dynamicShares,
 		TotalShares:        EmptyShares(),
+		Metadata:           metadata,
 	}
 }
 
