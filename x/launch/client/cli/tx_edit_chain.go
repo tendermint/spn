@@ -18,7 +18,6 @@ const (
 	flagSourceHash     = "source-hash"
 	flagDefaultGenesis = "default-genesis"
 	flagMetadata       = "metadata"
-	flagSetCampaignID  = "set-campaign-id"
 )
 
 func CmdEditChain() *cobra.Command {
@@ -34,7 +33,7 @@ func CmdEditChain() *cobra.Command {
 				defaultGenesis, _ = cmd.Flags().GetBool(flagDefaultGenesis)
 				genesisURL, _     = cmd.Flags().GetString(flagGenesisURL)
 				metadata, _       = cmd.Flags().GetString(flagMetadata)
-				campaignID, _     = cmd.Flags().GetUint64(flagSetCampaignID)
+				campaignID, _     = cmd.Flags().GetUint64(flagCampaignID)
 			)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -58,7 +57,7 @@ func CmdEditChain() *cobra.Command {
 				initialGenesis = &genesisURL
 			}
 
-			modifyCampaignID := cmd.Flags().Changed(flagSetCampaignID)
+			modifyCampaignID := cmd.Flags().Changed(flagCampaignID)
 
 			metadataBytes := []byte(metadata)
 
@@ -91,7 +90,7 @@ func CmdEditChain() *cobra.Command {
 	cmd.Flags().Bool(flagDefaultGenesis, false, "Set the initial genesis to the default genesis of the chain")
 	cmd.Flags().String(flagGenesisURL, "", "Set the initial genesis from a URL containing a custom genesis")
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
-	cmd.Flags().Uint64(flagSetCampaignID, 0, "Set the campaign ID if the chain is not associated with a campaign")
+	cmd.Flags().Uint64(flagCampaignID, 0, "Set the campaign ID if the chain is not associated with a campaign")
 
 	flags.AddTxFlagsToCmd(cmd)
 

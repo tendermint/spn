@@ -35,5 +35,5 @@ var (
 	ErrLaunchTimeTooHigh           = sdkerrors.Register(ModuleName, 26, "the remaining time is above authorized launch time")
 	ErrMinSelfDelegationNotReached = sdkerrors.Register(ModuleName, 27, "the minimum self delgation is not reachead")
 	ErrInvalidMetadataLength       = sdkerrors.Register(ModuleName, 28, "metadata field too long")
-	ErrChainCampaignAlreadyExist   = sdkerrors.Register(ModuleName, 29, "chain already is associated with a campaign")
+	ErrChainHasCampaign            = sdkerrors.Register(ModuleName, 29, "chain already is associated with a campaign")
 )

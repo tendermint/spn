@@ -55,7 +55,7 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 	if msg.SetCampaignID {
 		// check if chain already has id associated
 		if chain.HasCampaign {
-			return nil, sdkerrors.Wrapf(types.ErrChainCampaignAlreadyExist,
+			return nil, sdkerrors.Wrapf(types.ErrChainHasCampaign,
 				"campaign with id %d already associated with chain %d",
 				chain.CampaignID,
 				chain.LaunchID,

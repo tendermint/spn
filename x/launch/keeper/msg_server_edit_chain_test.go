@@ -204,7 +204,7 @@ func TestMsgEditChain(t *testing.T) {
 				0,
 				false,
 			),
-			err: types.ErrChainCampaignAlreadyExist,
+			err: types.ErrChainHasCampaign,
 		},
 		{
 			name: "campaign does not exist",
