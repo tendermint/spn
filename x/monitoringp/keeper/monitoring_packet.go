@@ -66,11 +66,7 @@ func (k Keeper) TransmitMonitoringPacket(
 		timeoutTimestamp,
 	)
 
-	if err := k.channelKeeper.SendPacket(ctx, channelCap, packet); err != nil {
-		return err
-	}
-
-	return nil
+	return k.channelKeeper.SendPacket(ctx, channelCap, packet)
 }
 
 // OnRecvMonitoringPacket processes packet reception
