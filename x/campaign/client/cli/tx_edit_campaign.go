@@ -10,7 +10,7 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-const flagName = "flagCampaignName"
+const flagName = "flag-campaign-name"
 
 func CmdEditCampaign() *cobra.Command {
 	cmd := &cobra.Command{
