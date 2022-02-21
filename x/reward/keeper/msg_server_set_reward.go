@@ -38,6 +38,10 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 		return nil, spnerrors.Criticalf("can't parse provider address %s", err.Error())
 	}
 
+	var (
+		previousCoins            sdk.Coins
+		previousLastRewardHeight uint64
+	)
 	rewardPool, found := k.GetRewardPool(ctx, msg.LaunchID)
 	if !found {
 		// create the reward pool and transfer tokens if not created yet
@@ -45,15 +49,24 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 			return nil, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, err.Error())
 		}
 		rewardPool = types.NewRewardPool(msg.LaunchID, 0)
-	} else if err := SetBalance(ctx, k.bankKeeper, provider, msg.Coins, rewardPool.Coins); err != nil {
-		return nil, err
+	} else {
+		previousCoins = rewardPool.Coins
+		previousLastRewardHeight = rewardPool.LastRewardHeight
+		if err := SetBalance(ctx, k.bankKeeper, provider, msg.Coins, rewardPool.Coins); err != nil {
+			return nil, err
+		}
 	}
 	rewardPool.Coins = msg.Coins
 	rewardPool.Provider = msg.Provider
 	rewardPool.LastRewardHeight = msg.LastRewardHeight
 	k.SetRewardPool(ctx, rewardPool)
 
-	return &types.MsgSetRewardsResponse{}, nil
+	return &types.MsgSetRewardsResponse{
+		PreviousCoins:            previousCoins,
+		PreviousLastRewardHeight: previousLastRewardHeight,
+		NewCoins:                 rewardPool.Coins,
+		NewLastRewardHeight:      rewardPool.LastRewardHeight,
+	}, nil
 }
 
 // SetBalance set balance to Coins on the module account

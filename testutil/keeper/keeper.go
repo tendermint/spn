@@ -15,6 +15,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -51,7 +52,7 @@ func AllKeepers(t testing.TB) (
 
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -73,6 +74,7 @@ func AllKeepers(t testing.TB) (
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
+	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	return campaignKeeper,
@@ -156,7 +158,7 @@ func MonitoringcWithIBCMocks(
 
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(

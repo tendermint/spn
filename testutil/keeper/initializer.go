@@ -177,6 +177,7 @@ func (i initializer) Campaign(
 	launchKeeper *launchkeeper.Keeper,
 	profileKeeper *profilekeeper.Keeper,
 	bankKeeper bankkeeper.Keeper,
+	paramKeeper paramskeeper.Keeper,
 ) *campaignkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(campaigntypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(campaigntypes.MemStoreKey)
@@ -184,7 +185,10 @@ func (i initializer) Campaign(
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
 
-	return campaignkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, launchKeeper, bankKeeper, profileKeeper)
+	paramKeeper.Subspace(campaigntypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(campaigntypes.ModuleName)
+
+	return campaignkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, subspace, launchKeeper, bankKeeper, profileKeeper)
 }
 
 func (i initializer) Reward(

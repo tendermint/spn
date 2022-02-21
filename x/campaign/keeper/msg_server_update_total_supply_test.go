@@ -52,7 +52,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        0,
 				Coordinator:       coordAddr1,
-				TotalSupplyUpdate: sample.Coins(),
+				TotalSupplyUpdate: sample.TotalSupply(),
 			},
 		},
 		{
@@ -60,7 +60,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        0,
 				Coordinator:       coordAddr1,
-				TotalSupplyUpdate: sample.Coins(),
+				TotalSupplyUpdate: sample.TotalSupply(),
 			},
 		},
 		{
@@ -68,7 +68,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        100,
 				Coordinator:       coordAddr1,
-				TotalSupplyUpdate: sample.Coins(),
+				TotalSupplyUpdate: sample.TotalSupply(),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -77,7 +77,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        0,
 				Coordinator:       sample.Address(),
-				TotalSupplyUpdate: sample.Coins(),
+				TotalSupplyUpdate: sample.TotalSupply(),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -86,7 +86,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        0,
 				Coordinator:       coordAddr2,
-				TotalSupplyUpdate: sample.Coins(),
+				TotalSupplyUpdate: sample.TotalSupply(),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
@@ -95,9 +95,18 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        1,
 				Coordinator:       coordAddr1,
-				TotalSupplyUpdate: sample.Coins(),
+				TotalSupplyUpdate: sample.TotalSupply(),
 			},
 			err: types.ErrMainnetInitialized,
+		},
+		{
+			name: "total supply outside of valid range",
+			msg: types.MsgUpdateTotalSupply{
+				CampaignID:        0,
+				Coordinator:       coordAddr1,
+				TotalSupplyUpdate: sample.CoinsWithRange(10, 20),
+			},
+			err: types.ErrInvalidTotalSupply,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

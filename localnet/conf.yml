@@ -1,0 +1,33 @@
+# Chain ID used in the network
+chain_id: "spn-1"
+
+# Using debug mode skips IBC client verification for monitoring IBC connection
+debug_mode: false
+
+# Validator set max size, setting 1 allows to experiment full validator set changes
+max_validators: 10
+
+# Denom of the staking token
+staking_denom: "uspn"
+
+# Unbonding time in seconds, low value allows to experiment validator set changes
+# Default: 21 days = 1814400 seconds
+unbonding_time: 10
+
+# List of validator names used for delegate and undelegate scripts
+validator_names:
+  - "joe"
+  - "steve"
+  - "olivia"
+
+# List of validator addresses used for delegate and undelegate scripts
+validator_addresses:
+  - "spnvaloper15rz2rwnlgr7nf6eauz52usezffwrxc0muf4z5n"
+  - "spnvaloper1mhyps2hlkm0nz6k2puumn69928cnvgg4nznru5"
+  - "spnvaloper1hmx8eakt2948szjgmksvpv9ha0q9s6w09pdeer"
+
+# Initial self delegation of validators at genesis time
+validator_self_delegations:
+  - 10000000
+  - 10000000
+  - 10000000
