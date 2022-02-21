@@ -11,7 +11,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func (k msgServer) UpdateCampaignName(goCtx context.Context, msg *types.MsgUpdateCampaignName) (*types.MsgUpdateCampaignNameResponse, error) {
+func (k msgServer) EditCampaign(goCtx context.Context, msg *types.MsgEditCampaign) (*types.MsgEditCampaignResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
@@ -31,8 +31,16 @@ func (k msgServer) UpdateCampaignName(goCtx context.Context, msg *types.MsgUpdat
 			campaign.CoordinatorID,
 		))
 	}
-	campaign.CampaignName = msg.Name
+
+	if len(msg.Name) > 0 {
+		campaign.CampaignName = msg.Name
+	}
+
+	if len(msg.Metadata) > 0 {
+		campaign.Metadata = msg.Metadata
+	}
+
 	k.SetCampaign(ctx, campaign)
 
-	return &types.MsgUpdateCampaignNameResponse{}, nil
+	return &types.MsgEditCampaignResponse{}, nil
 }

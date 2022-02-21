@@ -21,8 +21,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgCreateCampaign:
 			res, err := msgServer.CreateCampaign(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgUpdateCampaignName:
-			res, err := msgServer.UpdateCampaignName(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgEditCampaign:
+			res, err := msgServer.EditCampaign(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgUpdateTotalSupply:
 			res, err := msgServer.UpdateTotalSupply(sdk.WrapSDKContext(ctx), msg)
