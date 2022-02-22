@@ -57,7 +57,7 @@ func CmdEditChain() *cobra.Command {
 				initialGenesis = &genesisURL
 			}
 
-			modifyCampaignID := cmd.Flags().Changed(flagCampaignID)
+			setCampaignID := cmd.Flags().Changed(flagCampaignID)
 
 			metadataBytes := []byte(metadata)
 
