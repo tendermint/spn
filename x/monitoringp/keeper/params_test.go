@@ -18,15 +18,26 @@ func TestGetParams(t *testing.T) {
 	require.EqualValues(t, params, k.GetParams(ctx))
 	require.EqualValues(t, spntypes.ConsensusState{}, k.ConsumerConsensusState(ctx))
 	require.EqualValues(t, types.DefautConsumerChainID, k.ConsumerChainID(ctx))
+	require.EqualValues(t, spntypes.DefaultUnbondingPeriod, k.ConsumerUnbondingPeriod(ctx))
+	require.EqualValues(t, types.DefautRevisionHeight, k.ConsumerRevisionHeight(ctx))
 	require.EqualValues(t, false, k.DebugMode(ctx))
 
 	chainID := sample.GenesisChainID()
 	cs := sample.ConsensusState(0)
-	params = types.NewParams(1000, chainID, cs, true)
+	params = types.NewParams(
+		1000,
+		chainID,
+		cs,
+		10,
+		20,
+		true,
+		)
 	k.SetParams(ctx, params)
 	require.EqualValues(t, params, k.GetParams(ctx))
+	require.EqualValues(t, 1000, k.LastBlockHeight(ctx))
 	require.EqualValues(t, cs, k.ConsumerConsensusState(ctx))
 	require.EqualValues(t, chainID, k.ConsumerChainID(ctx))
+	require.EqualValues(t, 10, k.ConsumerUnbondingPeriod(ctx))
+	require.EqualValues(t, 20, k.ConsumerRevisionHeight(ctx))
 	require.EqualValues(t, true, k.DebugMode(ctx))
-	require.EqualValues(t, 1000, k.LastBlockHeight(ctx))
 }

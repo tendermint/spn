@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -20,6 +21,8 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 			1000,
 			types.DefautConsumerChainID,
 			sample.ConsensusState(0),
+			spntypes.DefaultUnbondingPeriod,
+			types.DefautRevisionHeight,
 			false,
 		))
 		clientID, err := k.InitializeConsumerClient(ctx)
