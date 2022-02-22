@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
