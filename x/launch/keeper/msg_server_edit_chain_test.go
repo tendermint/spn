@@ -57,7 +57,7 @@ func TestMsgEditChain(t *testing.T) {
 	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress2)
 	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
-	invalidCampaignID := resCampaign.CampaignID
+	campaignDifferentCoordinator := resCampaign.CampaignID
 
 	// Create a new chain for more tests
 	msgCreateChain = sample.MsgCreateChain(coordAddress, "", false, 0)
