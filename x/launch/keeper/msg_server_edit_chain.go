@@ -3,7 +3,6 @@ package keeper
 import (
 	"context"
 	"fmt"
-
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -78,6 +77,11 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 
 		chain.CampaignID = msg.CampaignID
 		chain.HasCampaign = true
+
+		err := k.campaignKeeper.AddChainToCampaign(ctx, chain.CampaignID, chain.LaunchID)
+		if err != nil {
+			return nil, sdkerrors.Wrap(types.ErrAddChainToCampaign, err.Error())
+		}
 	}
 
 	k.SetChain(ctx, chain)

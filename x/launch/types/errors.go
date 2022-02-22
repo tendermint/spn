@@ -36,4 +36,5 @@ var (
 	ErrMinSelfDelegationNotReached = sdkerrors.Register(ModuleName, 27, "the minimum self delgation is not reachead")
 	ErrInvalidMetadataLength       = sdkerrors.Register(ModuleName, 28, "metadata field too long")
 	ErrChainHasCampaign            = sdkerrors.Register(ModuleName, 29, "chain already is associated with a campaign")
+	ErrAddChainToCampaign          = sdkerrors.Register(ModuleName, 30, "unable to add chain to campaign")
 )

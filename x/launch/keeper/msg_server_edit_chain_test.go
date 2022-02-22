@@ -131,7 +131,7 @@ func TestMsgEditChain(t *testing.T) {
 			),
 		},
 		{
-			name: "edit metadata",
+			name: "set campaign ID",
 			msg: sample.MsgEditChain(coordAddress, launchID,
 				false,
 				false,
@@ -284,6 +284,28 @@ func TestMsgEditChain(t *testing.T) {
 				require.EqualValues(t, tc.msg.Metadata, chain.Metadata)
 			} else {
 				require.EqualValues(t, previousChain.Metadata, chain.Metadata)
+			}
+
+			if tc.msg.SetCampaignID {
+				require.True(t, chain.HasCampaign)
+				require.EqualValues(t, tc.msg.CampaignID, chain.CampaignID)
+				// ensure campaign exist
+				_, found := k.GetCampaignKeeper().GetCampaign(sdkCtx, chain.CampaignID)
+				require.True(t, found)
+				// ensure campaign chains exist
+				campaignChains, found := k.GetCampaignKeeper().GetCampaignChains(sdkCtx, chain.CampaignID)
+				require.True(t, found)
+
+				// check that the chain launch ID is in the campaign chains
+				found = false
+				for _, chainID := range campaignChains.Chains {
+					if chainID == chain.LaunchID {
+						found = true
+						break
+					}
+				}
+
+				require.True(t, found)
 			}
 		})
 	}
