@@ -227,7 +227,7 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 				true,
-				invalidCampaignID,
+				campaignDifferentCoordinator,
 				false,
 			),
 			err: profiletypes.ErrCoordInvalid,
