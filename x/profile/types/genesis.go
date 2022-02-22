@@ -98,11 +98,11 @@ func (gs GenesisState) ValidateCoordinators() error {
 		}
 		index := string(CoordinatorByAddressKey(elem.Address))
 		_, found := coordinatorByAddressIndexMap[index]
-		if !found {
-			return errors.New("coordinator address not found for CoordinatorByAddress")
-		}
 
-		if !elem.Active {
+		switch {
+		case !found && elem.Active:
+			return errors.New("coordinator address not found for CoordinatorByAddress")
+		case found && !elem.Active:
 			return errors.New("coordinator found by CoordinatorByAddress should not be inactive")
 		}
 

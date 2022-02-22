@@ -236,6 +236,19 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 			},
 		},
 		{
+			name: "valid with inactive coordinator",
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
+					{CoordinatorID: 0, Address: addr1},
+				},
+				CoordinatorList: []types.Coordinator{
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: false},
+				},
+				CoordinatorCounter: 2,
+			},
+		},
+		{
 			name: "duplicated coordinator",
 			genState: &types.GenesisState{
 				CoordinatorByAddressList: []types.CoordinatorByAddress{
