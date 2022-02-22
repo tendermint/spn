@@ -227,12 +227,25 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 3, Address: addr4},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
-					{CoordinatorID: 1, Address: addr2},
-					{CoordinatorID: 2, Address: addr3},
-					{CoordinatorID: 3, Address: addr4},
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: true},
+					{CoordinatorID: 2, Address: addr3, Active: true},
+					{CoordinatorID: 3, Address: addr4, Active: true},
 				},
 				CoordinatorCounter: 4,
+			},
+		},
+		{
+			name: "valid with inactive coordinator",
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
+					{CoordinatorID: 0, Address: addr1},
+				},
+				CoordinatorList: []types.Coordinator{
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: false},
+				},
+				CoordinatorCounter: 2,
 			},
 		},
 		{
@@ -254,8 +267,8 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 0, Address: addr2},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
-					{CoordinatorID: 0, Address: addr2},
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 0, Address: addr2, Active: true},
 				},
 				CoordinatorCounter: 2,
 			},
@@ -268,8 +281,8 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 0, Address: addr1},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
-					{CoordinatorID: 1, Address: addr2},
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: true},
 				},
 				CoordinatorCounter: 2,
 			},
@@ -283,7 +296,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 1, Address: addr2},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
+					{CoordinatorID: 0, Address: addr1, Active: true},
 				},
 				CoordinatorCounter: 2,
 			},
@@ -297,12 +310,27 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 133, Address: addr2},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
-					{CoordinatorID: 133, Address: addr2},
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 133, Address: addr2, Active: true},
 				},
 				CoordinatorCounter: 2,
 			},
 			err: errors.New("coordinator id should be lower or equal than the last id"),
+		},
+		{
+			name: "inactive coordinator associated to CoordinatorByAddress",
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
+					{CoordinatorID: 0, Address: addr1},
+					{CoordinatorID: 1, Address: addr2},
+				},
+				CoordinatorList: []types.Coordinator{
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: false},
+				},
+				CoordinatorCounter: 2,
+			},
+			err: errors.New("coordinator found by CoordinatorByAddress should not be inactive"),
 		},
 	}
 	for _, tt := range tests {

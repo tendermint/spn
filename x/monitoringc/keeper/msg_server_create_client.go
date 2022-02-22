@@ -11,6 +11,7 @@ import (
 	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"github.com/tendermint/tendermint/light"
 
+	"github.com/tendermint/spn/pkg/chainid"
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
@@ -33,7 +34,14 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 	}
 
 	// initialize the client state
-	clientState := k.initializeClientState(chain.GenesisChainID)
+	clientState, err := k.initializeClientState(
+		chain.GenesisChainID,
+		msg.UnbondingPeriod,
+		msg.RevisionHeight,
+	)
+	if err != nil {
+		return nil, sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
+	}
 	if err := clientState.Validate(); err != nil {
 		return nil, sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
 	}
@@ -83,17 +91,22 @@ func (k msgServer) initializeClientState(
 	chainID string,
 	unbondingPeriod int64,
 	revisionHeight uint64,
-	) *ibctmtypes.ClientState {
+) (*ibctmtypes.ClientState, error) {
+	_, revisionNumber, err := chainid.ParseGenesisChainID(chainID)
+	if err != nil {
+		return nil, err
+	}
+
 	return ibctmtypes.NewClientState(
 		chainID,
 		ibctmtypes.NewFractionFromTm(light.DefaultTrustLevel),
 		DefaultTrustingPeriod,
-		unbondingPeriod,
+		time.Duration(unbondingPeriod),
 		time.Minute*10,
-		clienttypes.NewHeight(1, 1),
+		clienttypes.NewHeight(revisionNumber, revisionHeight),
 		committypes.GetSDKSpecs(),
 		[]string{"upgrade", "upgradedIBCState"},
 		true,
 		true,
-	)
+	), nil
 }

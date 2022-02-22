@@ -86,7 +86,7 @@ func (gs GenesisState) ValidateCoordinators() error {
 		coordinatorByAddressIndexMap[index] = elem.CoordinatorID
 	}
 
-	// Check for duplicated ID in coordinator
+	// Check for duplicated ID in coordinator or if coordinator is inactive
 	coordinatorIDMap := make(map[uint64]bool)
 	counter := gs.GetCoordinatorCounter()
 	for _, elem := range gs.CoordinatorList {
@@ -97,9 +97,15 @@ func (gs GenesisState) ValidateCoordinators() error {
 			return errors.New("coordinator id should be lower or equal than the last id")
 		}
 		index := string(CoordinatorByAddressKey(elem.Address))
-		if _, ok := coordinatorByAddressIndexMap[index]; !ok {
+		_, found := coordinatorByAddressIndexMap[index]
+
+		switch {
+		case !found && elem.Active:
 			return errors.New("coordinator address not found for CoordinatorByAddress")
+		case found && !elem.Active:
+			return errors.New("coordinator found by CoordinatorByAddress should not be inactive")
 		}
+
 		coordinatorIDMap[elem.CoordinatorID] = true
 
 		// Remove to check if all coordinator by address exist
