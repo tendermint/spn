@@ -1,6 +1,13 @@
 package app_test
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/cosmos/cosmos-sdk/store"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	"github.com/tendermint/tendermint/libs/log"
+	dbm "github.com/tendermint/tm-db"
+	"math/rand"
 	"os"
 	"testing"
 	"time"
@@ -36,6 +43,7 @@ type SimApp interface {
 	BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock
 	EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
 	InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
+	LastCommitID() storetypes.CommitID
 }
 
 var defaultConsensusParams = &abci.ConsensusParams{
@@ -55,8 +63,14 @@ var defaultConsensusParams = &abci.ConsensusParams{
 	},
 }
 
-// go test -benchmem -run=^$ -bench ^BenchmarkSimulation -Commit=true -cpuprofile cpu.out
-func BenchmarkSimulation(b *testing.B) {
+// interBlockCacheOpt returns a BaseApp option function that sets the persistent
+// inter-block write-through cache.
+func interBlockCacheOpt() func(*baseapp.BaseApp) {
+	return baseapp.SetInterBlockCache(store.NewCommitKVStoreCacheManager())
+}
+
+// go test ./app -v -benchmem -run=^$ -bench ^CISimulation -Commit=true -cpuprofile cpu.out
+func CISimulation(b *testing.B) {
 	simapp.FlagEnabledValue = true
 	simapp.FlagNumBlocksValue = 200
 	simapp.FlagBlockSizeValue = 26
@@ -74,7 +88,7 @@ func BenchmarkSimulation(b *testing.B) {
 
 	encoding := cosmoscmd.MakeEncodingConfig(app.ModuleBasics)
 
-	app := app.New(
+	cmdApp := app.New(
 		logger,
 		db,
 		nil,
@@ -86,28 +100,167 @@ func BenchmarkSimulation(b *testing.B) {
 		simapp.EmptyAppOptions{},
 	)
 
-	simApp, ok := app.(SimApp)
+	app, ok := cmdApp.(SimApp)
 	require.True(b, ok, "can't use simapp")
 
 	// Run randomized simulations
 	_, simParams, simErr := simulation.SimulateFromSeed(
 		b,
 		os.Stdout,
-		simApp.GetBaseApp(),
-		simapp.AppStateFn(simApp.AppCodec(), simApp.SimulationManager()),
+		app.GetBaseApp(),
+		simapp.AppStateFn(app.AppCodec(), app.SimulationManager()),
 		simulationtypes.RandomAccounts,
-		simapp.SimulationOperations(simApp, simApp.AppCodec(), config),
-		simApp.ModuleAccountAddrs(),
+		simapp.SimulationOperations(app, app.AppCodec(), config),
+		app.ModuleAccountAddrs(),
 		config,
-		simApp.AppCodec(),
+		app.AppCodec(),
 	)
 
 	// export state and simParams before the simulation error is checked
-	err = simapp.CheckExportSimulation(simApp, config, simParams)
+	err = simapp.CheckExportSimulation(app, config, simParams)
 	require.NoError(b, err)
 	require.NoError(b, simErr)
 
 	if config.Commit {
 		simapp.PrintStats(db)
+	}
+}
+
+// go test ./app -v -benchmem -run=^$ -bench ^BenchmarkSimulation -Commit=true -cpuprofile cpu.out
+func BenchmarkSimulation(b *testing.B) {
+	simapp.FlagEnabledValue = true
+	simapp.FlagNumBlocksValue = 2000
+	simapp.FlagBlockSizeValue = 100
+	simapp.FlagCommitValue = true
+	simapp.FlagPeriodValue = 10
+	// simapp.FlagSeedValue = 10
+	simapp.FlagVerboseValue = true
+
+	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
+	require.NoError(b, err, "simulation setup failed")
+
+	b.Cleanup(func() {
+		db.Close()
+		err = os.RemoveAll(dir)
+		require.NoError(b, err)
+	})
+
+	encoding := cosmoscmd.MakeEncodingConfig(app.ModuleBasics)
+
+	cmdApp := app.New(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		app.DefaultNodeHome,
+		0,
+		encoding,
+		simapp.EmptyAppOptions{},
+	)
+
+	app, ok := cmdApp.(SimApp)
+	require.True(b, ok, "can't use simapp")
+
+	// Run randomized simulations
+	_, simParams, simErr := simulation.SimulateFromSeed(
+		b,
+		os.Stdout,
+		app.GetBaseApp(),
+		simapp.AppStateFn(app.AppCodec(), app.SimulationManager()),
+		simulationtypes.RandomAccounts,
+		simapp.SimulationOperations(app, app.AppCodec(), config),
+		app.ModuleAccountAddrs(),
+		config,
+		app.AppCodec(),
+	)
+
+	// export state and simParams before the simulation error is checked
+	err = simapp.CheckExportSimulation(app, config, simParams)
+	require.NoError(b, err)
+	require.NoError(b, simErr)
+
+	if config.Commit {
+		simapp.PrintStats(db)
+	}
+}
+
+func TestAppStateDeterminism(t *testing.T) {
+	if !simapp.FlagEnabledValue {
+		t.Skip("skipping application simulation")
+	}
+
+	config := simapp.NewConfigFromFlags()
+	config.InitialBlockHeight = 1
+	config.ExportParamsPath = ""
+	config.OnOperation = false
+	config.AllInvariants = false
+	config.ChainID = "pylons-app"
+
+	numSeeds := 3
+	numTimesToRunPerSeed := 5
+	appHashList := make([]json.RawMessage, numTimesToRunPerSeed)
+
+	for i := 0; i < numSeeds; i++ {
+		config.Seed = rand.Int63()
+
+		for j := 0; j < numTimesToRunPerSeed; j++ {
+			var logger log.Logger
+			if simapp.FlagVerboseValue {
+				logger = log.TestingLogger()
+			} else {
+				logger = log.NewNopLogger()
+			}
+
+			db := dbm.NewMemDB()
+			encoding := cosmoscmd.MakeEncodingConfig(app.ModuleBasics)
+			cmdApp := app.New(
+				logger,
+				db,
+				nil,
+				true,
+				map[int64]bool{},
+				app.DefaultNodeHome,
+				simapp.FlagPeriodValue,
+				encoding,
+				simapp.EmptyAppOptions{},
+				interBlockCacheOpt(),
+			)
+
+			app, ok := cmdApp.(SimApp)
+			require.True(t, ok, "can't use simapp")
+
+			fmt.Printf(
+				"running non-determinism simulation; seed %d: %d/%d, attempt: %d/%d\n",
+				config.Seed, i+1, numSeeds, j+1, numTimesToRunPerSeed,
+			)
+
+			_, _, err := simulation.SimulateFromSeed(
+				t,
+				os.Stdout,
+				app.GetBaseApp(),
+				simapp.AppStateFn(app.AppCodec(), app.SimulationManager()),
+				simulationtypes.RandomAccounts,
+				simapp.SimulationOperations(app, app.AppCodec(), config),
+				app.ModuleAccountAddrs(),
+				config,
+				app.AppCodec(),
+			)
+			require.NoError(t, err)
+
+			if config.Commit {
+				simapp.PrintStats(db)
+			}
+
+			appHash := app.LastCommitID().Hash
+			appHashList[j] = appHash
+
+			if j != 0 {
+				require.Equal(
+					t, string(appHashList[0]), string(appHashList[j]),
+					"non-determinism in seed %d: %d/%d, attempt: %d/%d\n", config.Seed, i+1, numSeeds, j+1, numTimesToRunPerSeed,
+				)
+			}
+		}
 	}
 }
