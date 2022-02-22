@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"encoding/base64"
+	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -88,6 +89,8 @@ func Test_msgServer_CreateClient(t *testing.T) {
 				invalidChain,
 				cs,
 				vs,
+				spntypes.DefaultUnbondingPeriod,
+				1,
 			),
 			err: launchtypes.ErrChainNotFound,
 		},
@@ -98,6 +101,8 @@ func Test_msgServer_CreateClient(t *testing.T) {
 				resCreateChain.LaunchID,
 				sample.ConsensusState(0),
 				sample.ValidatorSet(1),
+				spntypes.DefaultUnbondingPeriod,
+				1,
 			),
 			err: types.ErrInvalidValidatorSet,
 		},
@@ -108,6 +113,8 @@ func Test_msgServer_CreateClient(t *testing.T) {
 				resCreateChain.LaunchID,
 				cs,
 				vs,
+				spntypes.DefaultUnbondingPeriod,
+				1,
 			),
 		},
 	}
@@ -132,8 +139,12 @@ func Test_msgServer_CreateClient(t *testing.T) {
 			require.EqualValues(t, tt.msg.LaunchID, launchIDFromClient.LaunchID)
 
 			// IBC client should be created
-			_, found = ibcKeeper.ClientKeeper.GetClientState(sdkCtx, res.ClientID)
+			clientState, found := ibcKeeper.ClientKeeper.GetClientState(sdkCtx, res.ClientID)
 			require.True(t, found, "IBC consumer client state should be created")
+			cs, ok := clientState.(*ibctmtypes.ClientState)
+			require.True(t, ok)
+			require.EqualValues(t, tt.msg.RevisionHeight, cs.LatestHeight.RevisionHeight)
+			require.EqualValues(t, tt.msg.UnbondingPeriod, cs.UnbondingPeriod)
 		})
 	}
 }
