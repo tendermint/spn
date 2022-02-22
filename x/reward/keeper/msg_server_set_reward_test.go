@@ -62,12 +62,13 @@ func TestMsgSetRewards(t *testing.T) {
 	_, err := psrv.CreateCoordinator(ctx, &invalidCoordMsg)
 	require.NoError(t, err)
 
-	rewardPool := initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-	noBalanceRewadPool := initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-	emptyCoinsRewadPool := initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-	zeroRewarHeightRewadPool := initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-
-	launchedRewadPool := initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+	var (
+		rewardPool               = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		noBalanceRewadPool       = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		emptyCoinsRewadPool      = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		zeroRewarHeightRewadPool = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		launchedRewadPool        = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+	)
 	launchTriggeredChain, found := lk.GetChain(sdkCtx, launchedRewadPool.LaunchID)
 	require.True(t, found)
 	launchTriggeredChain.LaunchTriggered = true
