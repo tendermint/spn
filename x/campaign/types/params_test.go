@@ -87,3 +87,37 @@ func TestValidateTotalSupplyRange(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateCampaignCreationFee(t *testing.T) {
+	tests := []struct {
+		name        string
+		creationFee interface{}
+		err         error
+	}{
+		{
+			name:        "invalid interface",
+			creationFee: "test",
+			err:         fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:        "invalid coin",
+			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdk.NewInt(-1)}},
+			err:         errors.New("coin -1foo amount is not positive"),
+		},
+		{
+			name:        "valid param",
+			creationFee: DefaultCampaignCreationFee,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateCampaignCreationFee(tt.creationFee)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}

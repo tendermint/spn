@@ -22,3 +22,9 @@ func (k Keeper) TotalSupplyRange(ctx sdk.Context) (totalSupplyRange types.TotalS
 	k.paramSpace.Get(ctx, types.ParamStoreKeyTotalSupplyRange, &totalSupplyRange)
 	return
 }
+
+// CampaignCreationFee returns the campaign creation fee param
+func (k Keeper) CampaignCreationFee(ctx sdk.Context) (campaignCreationFee sdk.Coins) {
+	k.paramSpace.Get(ctx, types.ParamStoreKeyCampaignCreationFee, &campaignCreationFee)
+	return
+}

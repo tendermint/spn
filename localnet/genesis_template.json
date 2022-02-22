@@ -165,7 +165,8 @@
         "totalSupplyRange": {
           "maxTotalSupply": "1000000000000000",
           "minTotalSupply": "100"
-        }
+        },
+        "campaignCreationFee": []
       }
     },
     "capability": {

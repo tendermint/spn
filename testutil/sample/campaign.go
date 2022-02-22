@@ -89,10 +89,9 @@ func CampaignParams() campaign.Params {
 	// no point in randomizing these values, using defaults
 	minTotalSupply := campaign.DefaultMinTotalSupply
 	maxTotalSupply := campaign.DefaultMaxTotalSupply
+	campaignCreationFee := campaign.DefaultCampaignCreationFee
 
-	return campaign.Params{
-		TotalSupplyRange: campaign.NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
-	}
+	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee)
 }
 
 // CampaignGenesisState returns a sample genesis state for the campaign module
