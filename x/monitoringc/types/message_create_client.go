@@ -75,5 +75,15 @@ func (msg *MsgCreateClient) ValidateBasic() error {
 		return sdkerrors.Wrapf(ErrInvalidValidatorSetHash, "validator set hash doesn't match the consensus state")
 	}
 
+	// check unbonding period is positive
+	if msg.UnbondingPeriod <= 0 {
+		return sdkerrors.Wrapf(ErrInvalidUnbondingPeriod, "unbonding period must be positive")
+	}
+
+	// check revision height is non-null
+	if msg.RevisionHeight == 0 {
+		return sdkerrors.Wrapf(ErrInvalidRevisionHeight, "revision height must be non-null")
+	}
+
 	return nil
 }

@@ -79,12 +79,16 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 
 // initializeClientState initializes the client state provided for the IBC client
 // TODO: Investigate configurable values
-func (k msgServer) initializeClientState(chainID string) *ibctmtypes.ClientState {
+func (k msgServer) initializeClientState(
+	chainID string,
+	unbondingPeriod int64,
+	revisionHeight uint64,
+	) *ibctmtypes.ClientState {
 	return ibctmtypes.NewClientState(
 		chainID,
 		ibctmtypes.NewFractionFromTm(light.DefaultTrustLevel),
 		DefaultTrustingPeriod,
-		DefaultUnbondingPeriod,
+		unbondingPeriod,
 		time.Minute*10,
 		clienttypes.NewHeight(1, 1),
 		committypes.GetSDKSpecs(),
