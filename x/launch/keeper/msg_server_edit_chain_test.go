@@ -220,7 +220,7 @@ func TestMsgEditChain(t *testing.T) {
 			err: campaigntypes.ErrCampaignNotFound,
 		},
 		{
-			name: "campaign does not exist",
+			name: "campaign has a different coordinator",
 			msg: sample.MsgEditChain(coordAddress, launchID2,
 				false,
 				false,
