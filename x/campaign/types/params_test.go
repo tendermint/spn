@@ -17,17 +17,22 @@ func TestParamsValidateBasic(t *testing.T) {
 	}{
 		{
 			name:   "invalid min total supply",
-			params: NewParams(sdk.ZeroInt(), DefaultMaxTotalSupply),
+			params: NewParams(sdk.ZeroInt(), DefaultMaxTotalSupply, DefaultCampaignCreationFee),
 			err:    errors.New("minimum total supply should be greater than one: invalid total supply range"),
 		},
 		{
 			name:   "min total supply greater than max",
-			params: NewParams(DefaultMaxTotalSupply, DefaultMinTotalSupply),
+			params: NewParams(DefaultMaxTotalSupply, DefaultMinTotalSupply, DefaultCampaignCreationFee),
 			err:    errors.New("maximum total supply should be greater or equal than minimum total supply: invalid total supply range"),
 		},
 		{
-			name:   "valid range",
-			params: NewParams(DefaultMinTotalSupply, DefaultMaxTotalSupply),
+			name:   "invalid coins for campaign creation fee",
+			params: NewParams(DefaultMinTotalSupply, DefaultMaxTotalSupply, sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdk.NewInt(-1)}}),
+			err:    errors.New("coin -1foo amount is not positive"),
+		},
+		{
+			name:   "valid params",
+			params: NewParams(DefaultMinTotalSupply, DefaultMaxTotalSupply, DefaultCampaignCreationFee),
 		},
 	}
 	for _, tt := range tests {

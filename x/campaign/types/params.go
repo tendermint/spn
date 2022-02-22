@@ -11,10 +11,12 @@ import (
 )
 
 var (
-	DefaultMinTotalSupply = sdk.NewInt(100)                   // One hundred
-	DefaultMaxTotalSupply = sdk.NewInt(1_000_000_000_000_000) // One Quadrillion
+	DefaultMinTotalSupply      = sdk.NewInt(100)                   // One hundred
+	DefaultMaxTotalSupply      = sdk.NewInt(1_000_000_000_000_000) // One Quadrillion
+	DefaultCampaignCreationFee = sdk.NewCoins()                    // EmptyCoins
 
-	ParamStoreKeyTotalSupplyRange = []byte("totalsupplyrange")
+	ParamStoreKeyTotalSupplyRange    = []byte("totalsupplyrange")
+	ParamStoreKeyCampaignCreationFee = []byte("campaigncreationfee")
 )
 
 // ParamKeyTable returns the parameter key table.
@@ -31,15 +33,16 @@ func NewTotalSupplyRange(minTotalSupply, maxTotalSupply sdk.Int) TotalSupplyRang
 }
 
 // NewParams creates a new Params instance
-func NewParams(minTotalSupply, maxTotalSupply sdk.Int) Params {
+func NewParams(minTotalSupply, maxTotalSupply sdk.Int, campaignCreationFee sdk.Coins) Params {
 	return Params{
-		TotalSupplyRange: NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
+		TotalSupplyRange:    NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
+		CampaignCreationFee: campaignCreationFee,
 	}
 }
 
 // DefaultParams returns default campaign parameters
 func DefaultParams() Params {
-	return NewParams(DefaultMinTotalSupply, DefaultMaxTotalSupply)
+	return NewParams(DefaultMinTotalSupply, DefaultMaxTotalSupply, DefaultCampaignCreationFee)
 }
 
 // String implements stringer interface
@@ -52,12 +55,16 @@ func (p Params) String() string {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(ParamStoreKeyTotalSupplyRange, &p.TotalSupplyRange, validateTotalSupplyRange),
+		paramtypes.NewParamSetPair(ParamStoreKeyCampaignCreationFee, &p.CampaignCreationFee, validateCampaignCreationFee),
 	}
 }
 
 // ValidateBasic performs basic validation on campaign parameters.
 func (p Params) ValidateBasic() error {
-	return validateTotalSupplyRange(p.TotalSupplyRange)
+	if err := validateTotalSupplyRange(p.TotalSupplyRange); err != nil {
+		return err
+	}
+	return p.CampaignCreationFee.Validate()
 }
 
 func validateTotalSupplyRange(i interface{}) error {
@@ -69,4 +76,12 @@ func validateTotalSupplyRange(i interface{}) error {
 		return errors.New(err.Error())
 	}
 	return nil
+}
+
+func validateCampaignCreationFee(i interface{}) error {
+	v, ok := i.(sdk.Coins)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+	return v.Validate()
 }
