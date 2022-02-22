@@ -73,7 +73,7 @@ func CmdEditChain() *cobra.Command {
 				sourceURL,
 				sourceHash,
 				initialGenesis,
-				modifyCampaignID,
+				setCampaignID,
 				campaignID,
 				metadataBytes,
 			)
