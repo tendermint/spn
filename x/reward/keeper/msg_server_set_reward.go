@@ -56,10 +56,16 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 			return nil, err
 		}
 	}
-	rewardPool.Coins = msg.Coins
-	rewardPool.Provider = msg.Provider
-	rewardPool.LastRewardHeight = msg.LastRewardHeight
-	k.SetRewardPool(ctx, rewardPool)
+	if msg.Coins.Empty() || msg.LastRewardHeight == 0 {
+		rewardPool.Coins = sdk.NewCoins()
+		rewardPool.LastRewardHeight = 0
+		k.RemoveRewardPool(ctx, msg.LaunchID)
+	} else {
+		rewardPool.Coins = msg.Coins
+		rewardPool.Provider = msg.Provider
+		rewardPool.LastRewardHeight = msg.LastRewardHeight
+		k.SetRewardPool(ctx, rewardPool)
+	}
 
 	return &types.MsgSetRewardsResponse{
 		PreviousCoins:            previousCoins,
