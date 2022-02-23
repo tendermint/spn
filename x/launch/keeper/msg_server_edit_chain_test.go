@@ -14,7 +14,7 @@ import (
 )
 
 func TestMsgEditChain(t *testing.T) {
-	k, _, _, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	k, _, campaignK, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
@@ -64,6 +64,15 @@ func TestMsgEditChain(t *testing.T) {
 	res, err = srv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchID2 := res.LaunchID
+
+	// create a new campaign and add a chainCampaigns entry to it
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
+	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campaignDuplicateChain := resCampaign.CampaignID
+
+	err = campaignK.AddChainToCampaign(sdkCtx, campaignDuplicateChain, launchID2)
+	require.NoError(t, err)
 
 	for _, tc := range []struct {
 		name string
@@ -231,6 +240,19 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 			),
 			err: profiletypes.ErrCoordInvalid,
+		},
+		{
+			name: "campaign chain entry is duplicated",
+			msg: sample.MsgEditChain(coordAddress, launchID2,
+				false,
+				false,
+				false,
+				false,
+				true,
+				campaignDuplicateChain,
+				false,
+			),
+			err: types.ErrAddChainToCampaign,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
