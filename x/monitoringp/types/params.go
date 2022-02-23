@@ -21,7 +21,6 @@ var (
 
 	DefaultLastBlockHeight int64  = 1
 	DefautConsumerChainID         = "spn-1"
-	DefautRevisionHeight   uint64 = 1
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -57,7 +56,7 @@ func DefaultParams() Params {
 		DefautConsumerChainID,
 		spntypes.ConsensusState{},
 		spntypes.DefaultUnbondingPeriod,
-		DefautRevisionHeight,
+		spntypes.DefautRevisionHeight,
 		false,
 	)
 }

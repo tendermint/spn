@@ -12,4 +12,7 @@ const (
 	// it must greater than 1 because trusting period for the IBC client is unbonding period - 1
 	// and trusting period can't be 0
 	MinimalUnbondingPeriod = 2
+
+	// DefautRevisionHeight is the revision height used by default for creating the monitoring IBC client
+	DefautRevisionHeight = 1
 )
