@@ -74,7 +74,7 @@ func TestParamsValidate(t *testing.T) {
 				LastBlockHeight:         1000,
 				ConsumerChainID:         sample.GenesisChainID(),
 				ConsumerConsensusState:  sample.ConsensusState(0),
-				ConsumerUnbondingPeriod: spntypes.MinimalUnbondinPeriod - 1,
+				ConsumerUnbondingPeriod: spntypes.MinimalUnbondingPeriod - 1,
 				ConsumerRevisionHeight:  1,
 			},
 			wantErr: true,
@@ -128,8 +128,8 @@ func TestValidateConsumerChainID(t *testing.T) {
 
 func TestValidateConsumerUnbondingPeriod(t *testing.T) {
 	require.Error(t, validateConsumerUnbondingPeriod("foo"), "should expect a int64")
-	require.Error(t, validateConsumerUnbondingPeriod(int64(spntypes.MinimalUnbondinPeriod-1)), "should prevent below minimal value")
-	require.NoError(t, validateConsumerUnbondingPeriod(int64(spntypes.MinimalUnbondinPeriod)))
+	require.Error(t, validateConsumerUnbondingPeriod(int64(spntypes.MinimalUnbondingPeriod-1)), "should prevent below minimal value")
+	require.NoError(t, validateConsumerUnbondingPeriod(int64(spntypes.MinimalUnbondingPeriod)))
 	require.NoError(t, validateConsumerUnbondingPeriod(int64(spntypes.DefaultUnbondingPeriod)))
 }
 

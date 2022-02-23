@@ -81,7 +81,7 @@ func (msg *MsgCreateClient) ValidateBasic() error {
 
 	// unbonding period must greater than 1 because trusting period for the IBC client is unbonding period - 1
 	// and trusting period can't be 0
-	if msg.UnbondingPeriod < spntypes.MinimalUnbondinPeriod {
+	if msg.UnbondingPeriod < spntypes.MinimalUnbondingPeriod {
 		return sdkerrors.Wrapf(ErrInvalidUnbondingPeriod, "unbonding period must be greater than 1")
 	}
 

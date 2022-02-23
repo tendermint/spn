@@ -8,8 +8,8 @@ const (
 	// 1814400 represents 21 days
 	DefaultUnbondingPeriod = 1814400
 
-	// MinimalUnbondinPeriod is the minimal unbonding time that can be set for a chain
+	// MinimalUnbondingPeriod is the minimal unbonding time that can be set for a chain
 	// it must greater than 1 because trusting period for the IBC client is unbonding period - 1
 	// and trusting period can't be 0
-	MinimalUnbondinPeriod = 2
+	MinimalUnbondingPeriod = 2
 )

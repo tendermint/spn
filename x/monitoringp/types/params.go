@@ -177,8 +177,8 @@ func validateConsumerUnbondingPeriod(i interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if unbondingPeriod < spntypes.MinimalUnbondinPeriod {
-		return fmt.Errorf("minimal unbonding period is %d", spntypes.MinimalUnbondinPeriod)
+	if unbondingPeriod < spntypes.MinimalUnbondingPeriod {
+		return fmt.Errorf("minimal unbonding period is %d", spntypes.MinimalUnbondingPeriod)
 	}
 
 	return nil
@@ -192,7 +192,7 @@ func validateConsumerRevisionHeight(i interface{}) error {
 	}
 
 	if revisionHeight == 0 {
-		return fmt.Errorf("minimal unbonding period is %d", spntypes.MinimalUnbondinPeriod)
+		return fmt.Errorf("minimal unbonding period is %d", spntypes.MinimalUnbondingPeriod)
 	}
 
 	return nil
