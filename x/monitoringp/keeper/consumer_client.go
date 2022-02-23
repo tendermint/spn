@@ -14,18 +14,10 @@ import (
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
-const (
-	// DefaultUnbondingPeriod is 21 days
-	DefaultUnbondingPeriod = time.Hour * 24 * 21
-
-	// DefaultTrustingPeriod must be lower than DefaultUnbondingPeriod
-	DefaultTrustingPeriod = time.Hour*24*21 - 1
-)
-
 // InitializeConsumerClient initializes the consumer IBC client and and set it in the store
 func (k Keeper) InitializeConsumerClient(ctx sdk.Context) (string, error) {
 	// initialize the client state
-	clientState, err := k.initializeClientState(k.ConsumerChainID(ctx))
+	clientState, err := k.initializeClientState(ctx, k.ConsumerChainID(ctx))
 	if err != nil {
 		return "", sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
 	}
@@ -55,19 +47,22 @@ func (k Keeper) InitializeConsumerClient(ctx sdk.Context) (string, error) {
 
 // initializeClientState initializes the client state provided for the IBC client
 // TODO: Investigate configurable values
-func (k Keeper) initializeClientState(chainID string) (*ibctmtypes.ClientState, error) {
+func (k Keeper) initializeClientState(ctx sdk.Context, chainID string) (*ibctmtypes.ClientState, error) {
 	_, revisionNumber, err := chainid.ParseGenesisChainID(chainID)
 	if err != nil {
 		return nil, err
 	}
 
+	unbondingPeriod := k.ConsumerUnbondingPeriod(ctx)
+	revisionHeight := k.ConsumerRevisionHeight(ctx)
+
 	return ibctmtypes.NewClientState(
 		chainID,
 		ibctmtypes.NewFractionFromTm(light.DefaultTrustLevel),
-		DefaultTrustingPeriod,
-		DefaultUnbondingPeriod,
+		time.Duration(unbondingPeriod)-1,
+		time.Duration(unbondingPeriod),
 		time.Minute*10,
-		clienttypes.NewHeight(revisionNumber, 1),
+		clienttypes.NewHeight(revisionNumber, revisionHeight),
 		committypes.GetSDKSpecs(),
 		[]string{"upgrade", "upgradedIBCState"},
 		true,

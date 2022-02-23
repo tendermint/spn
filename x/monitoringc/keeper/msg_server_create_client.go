@@ -17,14 +17,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-const (
-	// DefaultUnbondingPeriod is 21 days
-	DefaultUnbondingPeriod = time.Hour * 24 * 21
-
-	// DefaultTrustingPeriod must be lower than DefaultUnbondingPeriod
-	DefaultTrustingPeriod = time.Hour*24*21 - 1
-)
-
 func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClient) (*types.MsgCreateClientResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
