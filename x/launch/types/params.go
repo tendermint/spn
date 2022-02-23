@@ -26,9 +26,8 @@ var (
 	MaxParametrableLaunchTime  = uint64(time.Hour.Seconds() * 24 * 31)
 	MaxParametrableRevertDelay = int64(time.Hour.Seconds() * 24)
 
-	KeyMinLaunchTime = []byte("MinLaunchTime")
-	KeyMaxLaunchTime = []byte("MaxLaunchTime")
-	KeyRevertDelay   = []byte("RevertDelay")
+	KeyLaunchTimeRange = []byte("LaunchTimeRange")
+	KeyRevertDelay     = []byte("RevertDelay")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -38,12 +37,19 @@ func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
 
+// NewLaunchTimeRange creates a new LaunchTimeRange instance
+func NewLaunchTimeRange(minLaunchTime, maxLaunchTime uint64) LaunchTimeRange {
+	return LaunchTimeRange{
+		MinLaunchTime: minLaunchTime,
+		MaxLaunchTime: maxLaunchTime,
+	}
+}
+
 // NewParams creates a new Params instance
 func NewParams(minLaunchTime, maxLaunchTime uint64, revertDelay int64) Params {
 	return Params{
-		MinLaunchTime: minLaunchTime,
-		MaxLaunchTime: maxLaunchTime,
-		RevertDelay:   revertDelay,
+		LaunchTimeRange: NewLaunchTimeRange(minLaunchTime, maxLaunchTime),
+		RevertDelay:     revertDelay,
 	}
 }
 
@@ -59,23 +65,14 @@ func DefaultParams() Params {
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMinLaunchTime, &p.MinLaunchTime, validateLaunchTime),
-		paramtypes.NewParamSetPair(KeyMaxLaunchTime, &p.MaxLaunchTime, validateLaunchTime),
+		paramtypes.NewParamSetPair(KeyLaunchTimeRange, &p.LaunchTimeRange, validateLaunchTimeRange),
 		paramtypes.NewParamSetPair(KeyRevertDelay, &p.RevertDelay, validateRevertDelay),
 	}
 }
 
 // Validate validates the set of params
 func (p Params) Validate() error {
-	if p.MinLaunchTime > p.MaxLaunchTime {
-		return errors.New("MinLaunchTime can't be higher than MaxLaunchTime")
-	}
-
-	if err := validateLaunchTime(p.MinLaunchTime); err != nil {
-		return err
-	}
-
-	if err := validateLaunchTime(p.MaxLaunchTime); err != nil {
+	if err := validateLaunchTimeRange(p.LaunchTimeRange); err != nil {
 		return err
 	}
 
@@ -88,13 +85,18 @@ func (p Params) String() string {
 	return string(out)
 }
 
-func validateLaunchTime(i interface{}) error {
-	v, ok := i.(uint64)
+func validateLaunchTimeRange(i interface{}) error {
+	v, ok := i.(LaunchTimeRange)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if v > MaxParametrableLaunchTime {
+	if v.MinLaunchTime > v.MaxLaunchTime {
+		return errors.New("MinLaunchTime can't be higher than MaxLaunchTime")
+	}
+
+	// just need to check max launch time due to check above that guarantees correctness of the range
+	if v.MaxLaunchTime > MaxParametrableLaunchTime {
 		return errors.New("max parametrable launch time reached")
 	}
 	return nil

@@ -36,10 +36,10 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.LaunchID)
 	}
 
-	if msg.RemainingTime < k.MinLaunchTime(ctx) {
+	if msg.RemainingTime < k.LaunchTimeRange(ctx).MinLaunchTime {
 		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooLow, "%d", msg.RemainingTime)
 	}
-	if msg.RemainingTime > k.MaxLaunchTime(ctx) {
+	if msg.RemainingTime > k.LaunchTimeRange(ctx).MaxLaunchTime {
 		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooHigh, "%d", msg.RemainingTime)
 	}
 

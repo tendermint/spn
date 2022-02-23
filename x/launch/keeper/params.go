@@ -6,15 +6,9 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-// MinLaunchTime returns the minimum launch time param
-func (k Keeper) MinLaunchTime(ctx sdk.Context) (res uint64) {
-	k.paramstore.Get(ctx, types.KeyMinLaunchTime, &res)
-	return
-}
-
-// MaxLaunchTime returns the maximum launch time param
-func (k Keeper) MaxLaunchTime(ctx sdk.Context) (res uint64) {
-	k.paramstore.Get(ctx, types.KeyMaxLaunchTime, &res)
+// LaunchTimeRange returns the launch time range param
+func (k Keeper) LaunchTimeRange(ctx sdk.Context) (res types.LaunchTimeRange) {
+	k.paramstore.Get(ctx, types.KeyLaunchTimeRange, &res)
 	return
 }
 
@@ -27,8 +21,8 @@ func (k Keeper) RevertDelay(ctx sdk.Context) (res int64) {
 // GetParams get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
-		k.MinLaunchTime(ctx),
-		k.MaxLaunchTime(ctx),
+		k.LaunchTimeRange(ctx).MinLaunchTime,
+		k.LaunchTimeRange(ctx).MaxLaunchTime,
 		k.RevertDelay(ctx),
 	)
 }

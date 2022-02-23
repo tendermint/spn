@@ -297,11 +297,7 @@ func GenesisHash() string {
 func LaunchParams() launch.Params {
 	maxLaunchTime := launch.DefaultMaxLaunchTime - uint64(rand.Intn(10))
 	minLaunchTime := uint64(rand.Intn(10)) + launch.DefaultMinLaunchTime
-	return launch.Params{
-		MinLaunchTime: minLaunchTime,
-		MaxLaunchTime: maxLaunchTime,
-		RevertDelay:   launch.DefaultRevertDelay,
-	}
+	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay)
 }
 
 // LaunchGenesisState returns a sample genesis state for the launch module
