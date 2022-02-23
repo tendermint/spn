@@ -1,9 +1,6 @@
 package app
 
 import (
-	"github.com/cosmos/cosmos-sdk/x/authz"
-	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
-	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
 	"io"
 	"net/http"
 	"os"
@@ -30,6 +27,9 @@ import (
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
+	"github.com/cosmos/cosmos-sdk/x/authz"
+	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
+	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -242,7 +242,7 @@ type App struct {
 	EvidenceKeeper    evidencekeeper.Keeper
 	TransferKeeper    ibctransferkeeper.Keeper
 	FeeGrantKeeper    feegrantkeeper.Keeper
-	AuthzKeeper      authzkeeper.Keeper
+	AuthzKeeper       authzkeeper.Keeper
 	FundraisingKeeper fundraisingkeeper.Keeper
 
 	// make scoped keepers public for test purposes
