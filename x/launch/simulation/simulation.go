@@ -371,6 +371,10 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			approve,
 		)
 
+		if err := checkRequest(ctx, k, request); err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, err.Error()), nil, nil
+		}
+
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
