@@ -1,7 +1,7 @@
 package types
 
 const (
-	// MaxMetadataLength is the max length for metadata attached to chain and campaing
+	// MaxMetadataLength is the max length for metadata attached to chain and campaign
 	MaxMetadataLength = 100
 
 	// DefaultUnbondingPeriod is the default unbonding time in seconds

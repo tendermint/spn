@@ -37,7 +37,6 @@ func (k Keeper) ConsumerRevisionHeight(ctx sdk.Context) (res uint64) {
 	return
 }
 
-
 // DebugMode returns if debug mode param is set
 func (k Keeper) DebugMode(ctx sdk.Context) (res bool) {
 	k.paramstore.Get(ctx, types.KeyDebugMode, &res)

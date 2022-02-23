@@ -17,6 +17,6 @@ var (
 	ErrInvalidHandshake             = sdkerrors.Register(ModuleName, 8, "invalid handshake")
 	ErrClientNotVerified            = sdkerrors.Register(ModuleName, 9, "ibc client not verified")
 	ErrConnectionAlreadyEstablished = sdkerrors.Register(ModuleName, 10, "ibc connection already established")
-	ErrInvalidUnbondingPeriod = sdkerrors.Register(ModuleName, 11, "invalid unbonding period")
-	ErrInvalidRevisionHeight = sdkerrors.Register(ModuleName, 12, "invalid revision height")
+	ErrInvalidUnbondingPeriod       = sdkerrors.Register(ModuleName, 11, "invalid unbonding period")
+	ErrInvalidRevisionHeight        = sdkerrors.Register(ModuleName, 12, "invalid revision height")
 )

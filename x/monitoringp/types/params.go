@@ -12,16 +12,16 @@ import (
 )
 
 var (
-	KeyLastBlockHeight        = []byte("LastBlockHeight")
-	KeyConsumerConsensusState = []byte("ConsumerConsensusState")
-	KeyConsumerChainID        = []byte("ConsumerChainID")
+	KeyLastBlockHeight         = []byte("LastBlockHeight")
+	KeyConsumerConsensusState  = []byte("ConsumerConsensusState")
+	KeyConsumerChainID         = []byte("ConsumerChainID")
 	KeyConsumerUnbondingPeriod = []byte("ConsumerUnbondingPeriod")
-	KeyConsumerRevisionHeight        = []byte("RevisionHeight")
-	KeyDebugMode              = []byte("DebugMode")
+	KeyConsumerRevisionHeight  = []byte("RevisionHeight")
+	KeyDebugMode               = []byte("DebugMode")
 
-	DefaultLastBlockHeight int64 = 1
-	DefautConsumerChainID        = "spn-1"
-	DefautRevisionHeight uint64 = 1
+	DefaultLastBlockHeight int64  = 1
+	DefautConsumerChainID         = "spn-1"
+	DefautRevisionHeight   uint64 = 1
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -39,14 +39,14 @@ func NewParams(
 	consumerUnbondingpPeriod int64,
 	consumerRevisionHeight uint64,
 	debugMode bool,
-	) Params {
+) Params {
 	return Params{
-		LastBlockHeight:        lastBlockHeight,
-		ConsumerConsensusState: ccs,
-		ConsumerChainID:        consumerChainID,
+		LastBlockHeight:         lastBlockHeight,
+		ConsumerConsensusState:  ccs,
+		ConsumerChainID:         consumerChainID,
 		ConsumerUnbondingPeriod: consumerUnbondingpPeriod,
-		ConsumerRevisionHeight: consumerRevisionHeight,
-		DebugMode:              debugMode,
+		ConsumerRevisionHeight:  consumerRevisionHeight,
+		DebugMode:               debugMode,
 	}
 }
 
@@ -59,7 +59,7 @@ func DefaultParams() Params {
 		spntypes.DefaultUnbondingPeriod,
 		DefautRevisionHeight,
 		false,
-		)
+	)
 }
 
 // ParamSetPairs get the params.ParamSet

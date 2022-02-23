@@ -20,12 +20,12 @@ func NewMsgCreateClient(
 	revisionHeight uint64,
 ) *MsgCreateClient {
 	return &MsgCreateClient{
-		Creator:        creator,
-		LaunchID:       launchID,
-		ConsensusState: consensusState,
-		ValidatorSet:   validatorSet,
+		Creator:         creator,
+		LaunchID:        launchID,
+		ConsensusState:  consensusState,
+		ValidatorSet:    validatorSet,
 		UnbondingPeriod: unbondingPeriod,
-		RevisionHeight: revisionHeight,
+		RevisionHeight:  revisionHeight,
 	}
 }
 

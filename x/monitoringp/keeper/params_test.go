@@ -31,7 +31,7 @@ func TestGetParams(t *testing.T) {
 		10,
 		20,
 		true,
-		)
+	)
 	k.SetParams(ctx, params)
 	require.EqualValues(t, params, k.GetParams(ctx))
 	require.EqualValues(t, 1000, k.LastBlockHeight(ctx))

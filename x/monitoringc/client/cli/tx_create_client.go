@@ -13,7 +13,7 @@ import (
 
 const (
 	flagUnbondingPeriod = "unbonding-period"
-	flagRevisionHeight = "revision-height"
+	flagRevisionHeight  = "revision-height"
 )
 
 func CmdCreateClient() *cobra.Command {
@@ -23,7 +23,7 @@ func CmdCreateClient() *cobra.Command {
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			var (
-				unbondingTime, _ = cmd.Flags().GetInt64(flagUnbondingPeriod)
+				unbondingTime, _  = cmd.Flags().GetInt64(flagUnbondingPeriod)
 				revisionHeight, _ = cmd.Flags().GetUint64(flagRevisionHeight)
 			)
 
