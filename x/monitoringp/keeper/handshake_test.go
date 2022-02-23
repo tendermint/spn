@@ -118,36 +118,42 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 
 	t.Run("debug mode should fail if client ID can't be retrieve from channel ID", func(t *testing.T) {
 		k, ctx := monitoringpKeeperWithFooClient(t)
-		k.SetParams(ctx, types.Params{
-			LastBlockHeight:        1,
-			ConsumerChainID:        "foo-1",
-			ConsumerConsensusState: spntypes.ConsensusState{},
-			DebugMode:              true,
-		})
+		k.SetParams(ctx, types.NewParams(
+			1,
+			"foo-1",
+			spntypes.ConsensusState{},
+			spntypes.DefaultUnbondingPeriod,
+			1,
+			true,
+		))
 		err := k.VerifyClientIDFromChannelID(ctx, "bar")
 		require.ErrorIs(t, err, channeltypes.ErrChannelNotFound)
 	})
 
 	t.Run("should return no error when debug mode is set and client doesn't exist", func(t *testing.T) {
 		k, ctx := monitoringpKeeperWithFooClient(t)
-		k.SetParams(ctx, types.Params{
-			LastBlockHeight:        1,
-			ConsumerChainID:        "foo-1",
-			ConsumerConsensusState: spntypes.ConsensusState{},
-			DebugMode:              true,
-		})
+		k.SetParams(ctx, types.NewParams(
+			1,
+			"foo-1",
+			spntypes.ConsensusState{},
+			spntypes.DefaultUnbondingPeriod,
+			1,
+			true,
+		))
 		err := k.VerifyClientIDFromChannelID(ctx, "foo")
 		require.NoError(t, err)
 	})
 
 	t.Run("should return no error when debug mode is set and connection has already been established", func(t *testing.T) {
 		k, ctx := monitoringpKeeperWithFooClient(t)
-		k.SetParams(ctx, types.Params{
-			LastBlockHeight:        1,
-			ConsumerChainID:        "foo-1",
-			ConsumerConsensusState: spntypes.ConsensusState{},
-			DebugMode:              true,
-		})
+		k.SetParams(ctx, types.NewParams(
+			1,
+			"foo-1",
+			spntypes.ConsensusState{},
+			spntypes.DefaultUnbondingPeriod,
+			1,
+			true,
+		))
 		k.SetConsumerClientID(ctx, types.ConsumerClientID{
 			ClientID: "foo",
 		})
@@ -195,24 +201,28 @@ func TestKeeper_RegisterConnectionChannelID(t *testing.T) {
 
 	t.Run("debug mode should fail with critical if client ID can't be retrieve from channel ID", func(t *testing.T) {
 		k, ctx := monitoringpKeeperWithFooClient(t)
-		k.SetParams(ctx, types.Params{
-			LastBlockHeight:        1,
-			ConsumerChainID:        "foo-1",
-			ConsumerConsensusState: spntypes.ConsensusState{},
-			DebugMode:              true,
-		})
+		k.SetParams(ctx, types.NewParams(
+			1,
+			"foo-1",
+			spntypes.ConsensusState{},
+			spntypes.DefaultUnbondingPeriod,
+			1,
+			true,
+		))
 		err := k.RegisterConnectionChannelID(ctx, "bar")
 		require.ErrorIs(t, err, spnerrors.ErrCritical)
 	})
 
 	t.Run("debug mode allow to register a channel ID when consumer client ID doesn't exist", func(t *testing.T) {
 		k, ctx := monitoringpKeeperWithFooClient(t)
-		k.SetParams(ctx, types.Params{
-			LastBlockHeight:        1,
-			ConsumerChainID:        "foo-1",
-			ConsumerConsensusState: spntypes.ConsensusState{},
-			DebugMode:              true,
-		})
+		k.SetParams(ctx, types.NewParams(
+			1,
+			"foo-1",
+			spntypes.ConsensusState{},
+			spntypes.DefaultUnbondingPeriod,
+			1,
+			true,
+		))
 		err := k.RegisterConnectionChannelID(ctx, "foo")
 		require.NoError(t, err)
 		channelID, found := k.GetConnectionChannelID(ctx)
@@ -224,12 +234,14 @@ func TestKeeper_RegisterConnectionChannelID(t *testing.T) {
 
 	t.Run("debug mode allow to register a new channel ID and replace previous one", func(t *testing.T) {
 		k, ctx := monitoringpKeeperWithFooClient(t)
-		k.SetParams(ctx, types.Params{
-			LastBlockHeight:        1,
-			ConsumerChainID:        "foo-1",
-			ConsumerConsensusState: spntypes.ConsensusState{},
-			DebugMode:              true,
-		})
+		k.SetParams(ctx, types.NewParams(
+			1,
+			"foo-1",
+			spntypes.ConsensusState{},
+			spntypes.DefaultUnbondingPeriod,
+			1,
+			true,
+		))
 		k.SetConsumerClientID(ctx, types.ConsumerClientID{
 			ClientID: "foo",
 		})
