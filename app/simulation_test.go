@@ -130,10 +130,10 @@ func CISimulation(b *testing.B) {
 func BenchmarkSimulation(b *testing.B) {
 	simapp.FlagEnabledValue = true
 	simapp.FlagNumBlocksValue = 2000
-	simapp.FlagBlockSizeValue = 100
+	simapp.FlagBlockSizeValue = 26
 	simapp.FlagCommitValue = true
 	simapp.FlagPeriodValue = 10
-	// simapp.FlagSeedValue = 10
+	simapp.FlagSeedValue = 10
 	simapp.FlagVerboseValue = true
 
 	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
