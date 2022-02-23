@@ -56,7 +56,7 @@ func DefaultParams() Params {
 		DefautConsumerChainID,
 		spntypes.ConsensusState{},
 		spntypes.DefaultUnbondingPeriod,
-		spntypes.DefautRevisionHeight,
+		spntypes.DefaultRevisionHeight,
 		false,
 	)
 }

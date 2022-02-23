@@ -63,7 +63,7 @@ func CmdCreateClient() *cobra.Command {
 	}
 
 	cmd.Flags().Int64(flagUnbondingPeriod, spntypes.DefaultUnbondingPeriod, "Custom unbonding period of the provider chain")
-	cmd.Flags().Uint64(flagRevisionHeight, spntypes.DefautRevisionHeight, "Custom revision height for the IBC client of the provider chain")
+	cmd.Flags().Uint64(flagRevisionHeight, spntypes.DefaultRevisionHeight, "Custom revision height for the IBC client of the provider chain")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
