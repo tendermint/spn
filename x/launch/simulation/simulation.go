@@ -357,10 +357,6 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, "request for non-triggered chain not found"), nil, nil
 		}
 
-		if err := checkRequest(ctx, k, request); err != nil {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSettleRequest, err.Error()), nil, nil
-		}
-
 		// Find coordinator account
 		simAccount, err := FindChainCoordinatorAccount(ctx, k, accs, request.LaunchID)
 		if err != nil {
@@ -374,6 +370,11 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			request.RequestID,
 			approve,
 		)
+
+		// if we cannot check the request, reject
+		if err := keeper.CheckRequest(ctx, k, request.LaunchID, request); err != nil {
+			msg.Approve = false
+		}
 
 		txCtx := simulation.OperationInput{
 			R:               r,
