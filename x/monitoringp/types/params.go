@@ -19,8 +19,8 @@ var (
 	KeyConsumerRevisionHeight  = []byte("RevisionHeight")
 	KeyDebugMode               = []byte("DebugMode")
 
-	DefaultLastBlockHeight int64  = 1
-	DefautConsumerChainID         = "spn-1"
+	DefaultLastBlockHeight int64 = 1
+	DefautConsumerChainID        = "spn-1"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
