@@ -33,7 +33,7 @@ func TestMsgSetRewards(t *testing.T) {
 	coordMsg = sample.MsgCreateCoordinator(noBalanceCoord)
 	res, err = psrv.CreateCoordinator(ctx, &coordMsg)
 	require.NoError(t, err)
-	noBalancelaunchID := lk.AppendChain(sdkCtx, sample.Chain(1, res.CoordinatorID))
+	noBalanceLaunchID := lk.AppendChain(sdkCtx, sample.Chain(1, res.CoordinatorID))
 
 	coordMsg = sample.MsgCreateCoordinator(provider.String())
 	res, err = psrv.CreateCoordinator(ctx, &coordMsg)
@@ -54,6 +54,15 @@ func TestMsgSetRewards(t *testing.T) {
 		msg  types.MsgSetRewards
 		err  error
 	}{
+		{
+			name: "valid message",
+			msg: types.MsgSetRewards{
+				Provider:         provider.String(),
+				LaunchID:         launchID,
+				Coins:            newBalance,
+				LastRewardHeight: 1000,
+			},
+		},
 		{
 			name: "invalid chain",
 			msg: types.MsgSetRewards{
@@ -98,35 +107,16 @@ func TestMsgSetRewards(t *testing.T) {
 			name: "coordinator with insufficient funds",
 			msg: types.MsgSetRewards{
 				Provider:         noBalanceCoord,
-				LaunchID:         noBalancelaunchID,
+				LaunchID:         noBalanceLaunchID,
 				Coins:            newBalance,
 				LastRewardHeight: 1000,
 			},
 			err: sdkerrors.ErrInsufficientFunds,
-		},
-		{
-			name: "coordinator with insufficient funds",
-			msg: types.MsgSetRewards{
-				Provider:         noBalanceCoord,
-				LaunchID:         noBalancelaunchID,
-				Coins:            newBalance,
-				LastRewardHeight: 1000,
-			},
-			err: sdkerrors.ErrInsufficientFunds,
-		},
-		{
-			name: "valid message",
-			msg: types.MsgSetRewards{
-				Provider:         provider.String(),
-				LaunchID:         launchID,
-				Coins:            newBalance,
-				LastRewardHeight: 1000,
-			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			previusRewardPool, _ := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
+			previousRewardPool, _ := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
 			got, err := srv.SetRewards(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
@@ -142,8 +132,8 @@ func TestMsgSetRewards(t *testing.T) {
 
 			require.Equal(t, tt.msg.Coins, got.NewCoins)
 			require.Equal(t, tt.msg.LastRewardHeight, got.NewLastRewardHeight)
-			require.Equal(t, previusRewardPool.Coins, got.PreviousCoins)
-			require.Equal(t, previusRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
+			require.Equal(t, previousRewardPool.Coins, got.PreviousCoins)
+			require.Equal(t, previousRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
 		})
 	}
 }
@@ -165,23 +155,7 @@ func TestSetBalance(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "use the same module balance",
-			args: args{
-				provider:  provider,
-				coins:     sample.Coins(),
-				poolCoins: sample.Coins(),
-			},
-		},
-		{
 			name: "set new balance",
-			args: args{
-				provider:  provider,
-				coins:     sample.Coins(),
-				poolCoins: sample.Coins(),
-			},
-		},
-		{
-			name: "set the old balance",
 			args: args{
 				provider:  provider,
 				coins:     sample.Coins(),

@@ -14,7 +14,7 @@ import (
 func CmdListRewardPool() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-reward-pool",
-		Short: "list all RewardPool",
+		Short: "list all RewardPools",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -59,11 +59,11 @@ func CmdShowRewardPool() *cobra.Command {
 				return err
 			}
 
-			params := &types.QueryGetRewardPoolRequest{
+			request := &types.QueryGetRewardPoolRequest{
 				LaunchID: argLaunchID,
 			}
 
-			res, err := queryClient.RewardPool(context.Background(), params)
+			res, err := queryClient.RewardPool(context.Background(), request)
 			if err != nil {
 				return err
 			}
