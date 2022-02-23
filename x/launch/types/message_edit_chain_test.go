@@ -159,7 +159,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				false,
 				true,
 				0,
-				true,
+				false,
 			),
 			valid: true,
 		},
