@@ -2,10 +2,10 @@ package keeper_test
 
 import (
 	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
+	"github.com/stretchr/testify/require"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
-
-	"github.com/stretchr/testify/require"
+	"time"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -41,7 +41,7 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 		cs, ok := clientState.(*ibctmtypes.ClientState)
 		require.True(t, ok)
 		require.EqualValues(t, k.ConsumerRevisionHeight(ctx), cs.LatestHeight.RevisionHeight)
-		require.EqualValues(t, k.ConsumerUnbondingPeriod(ctx), cs.UnbondingPeriod)
+		require.EqualValues(t, time.Second*time.Duration(k.ConsumerUnbondingPeriod(ctx)), cs.UnbondingPeriod)
 	})
 
 	t.Run("invalid consumer consensus state", func(t *testing.T) {

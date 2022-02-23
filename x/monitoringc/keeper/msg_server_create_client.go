@@ -92,8 +92,8 @@ func (k msgServer) initializeClientState(
 	return ibctmtypes.NewClientState(
 		chainID,
 		ibctmtypes.NewFractionFromTm(light.DefaultTrustLevel),
-		time.Duration(unbondingPeriod)-1,
-		time.Duration(unbondingPeriod),
+		time.Second*time.Duration(unbondingPeriod)-1,
+		time.Second*time.Duration(unbondingPeriod),
 		time.Minute*10,
 		clienttypes.NewHeight(revisionNumber, revisionHeight),
 		committypes.GetSDKSpecs(),

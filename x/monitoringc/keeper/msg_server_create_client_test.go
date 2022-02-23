@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -144,7 +145,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 			cs, ok := clientState.(*ibctmtypes.ClientState)
 			require.True(t, ok)
 			require.EqualValues(t, tt.msg.RevisionHeight, cs.LatestHeight.RevisionHeight)
-			require.EqualValues(t, tt.msg.UnbondingPeriod, cs.UnbondingPeriod)
+			require.EqualValues(t, time.Second*time.Duration(tt.msg.UnbondingPeriod), cs.UnbondingPeriod)
 		})
 	}
 }
