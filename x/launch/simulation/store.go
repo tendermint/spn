@@ -20,6 +20,33 @@ func IsLaunchTriggeredChain(ctx sdk.Context, k keeper.Keeper, chainID uint64) bo
 	return chain.LaunchTriggered
 }
 
+func FindCoordinatorCampaign(
+	r *rand.Rand,
+	ctx sdk.Context,
+	ck types.CampaignKeeper,
+	coordID uint64,
+) (uint64, bool) {
+	campaigns := ck.GetAllCampaign(ctx)
+
+	campNb := len(campaigns)
+	if campNb == 0 {
+		return 0, false
+	}
+
+	// Randomize the set
+	r.Shuffle(len(campaigns), func(i, j int) {
+		campaigns[i], campaigns[j] = campaigns[j], campaigns[i]
+	})
+
+	for _, campaign := range campaigns {
+		if campaign.CoordinatorID == coordID {
+			return campaign.CampaignID, true
+		}
+	}
+
+	return 0, false
+}
+
 // FindAccount find account by string hex address
 func FindAccount(accs []simtypes.Account, address string) (simtypes.Account, error) {
 	coordAddr, err := sdk.AccAddressFromBech32(address)
