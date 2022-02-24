@@ -2,9 +2,12 @@ package keeper_test
 
 import (
 	"testing"
+	"time"
 
+	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/monitoringp/types"
@@ -20,6 +23,8 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 			1000,
 			types.DefautConsumerChainID,
 			sample.ConsensusState(0),
+			spntypes.DefaultUnbondingPeriod,
+			spntypes.DefaultRevisionHeight,
 			false,
 		))
 		clientID, err := k.InitializeConsumerClient(ctx)
@@ -31,8 +36,13 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 		require.EqualValues(t, clientID, consumerClientID.ClientID)
 
 		// IBC client should be created
-		_, found = ibcKeeper.ClientKeeper.GetClientState(ctx, clientID)
+		clientState, found := ibcKeeper.ClientKeeper.GetClientState(ctx, clientID)
 		require.True(t, found, "IBC consumer client state should be created")
+
+		cs, ok := clientState.(*ibctmtypes.ClientState)
+		require.True(t, ok)
+		require.EqualValues(t, k.ConsumerRevisionHeight(ctx), cs.LatestHeight.RevisionHeight)
+		require.EqualValues(t, time.Second*time.Duration(k.ConsumerUnbondingPeriod(ctx)), cs.UnbondingPeriod)
 	})
 
 	t.Run("invalid consumer consensus state", func(t *testing.T) {

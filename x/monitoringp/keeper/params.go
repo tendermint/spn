@@ -25,6 +25,18 @@ func (k Keeper) ConsumerChainID(ctx sdk.Context) (res string) {
 	return
 }
 
+// ConsumerUnbondingPeriod returns the consumer unbonding period
+func (k Keeper) ConsumerUnbondingPeriod(ctx sdk.Context) (res int64) {
+	k.paramstore.Get(ctx, types.KeyConsumerUnbondingPeriod, &res)
+	return
+}
+
+// ConsumerRevisionHeight returns the consumer revision height
+func (k Keeper) ConsumerRevisionHeight(ctx sdk.Context) (res uint64) {
+	k.paramstore.Get(ctx, types.KeyConsumerRevisionHeight, &res)
+	return
+}
+
 // DebugMode returns if debug mode param is set
 func (k Keeper) DebugMode(ctx sdk.Context) (res bool) {
 	k.paramstore.Get(ctx, types.KeyDebugMode, &res)
@@ -37,6 +49,8 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 		k.LastBlockHeight(ctx),
 		k.ConsumerChainID(ctx),
 		k.ConsumerConsensusState(ctx),
+		k.ConsumerUnbondingPeriod(ctx),
+		k.ConsumerRevisionHeight(ctx),
 		k.DebugMode(ctx),
 	)
 }
