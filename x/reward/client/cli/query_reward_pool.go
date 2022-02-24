@@ -14,7 +14,7 @@ import (
 func CmdListRewardPool() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-reward-pool",
-		Short: "list all RewardPools",
+		Short: "list all reward pools",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
