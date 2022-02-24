@@ -16,21 +16,13 @@ func TestParamsValidate(t *testing.T) {
 		err    error
 	}{
 		{
-			name: "invalid launch time range",
-			params: Params{
-				MinLaunchTime: DefaultMaxLaunchTime,
-				MaxLaunchTime: DefaultMinLaunchTime,
-				RevertDelay:   DefaultRevertDelay,
-			},
-			err: errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
+			name:   "invalid launch time range",
+			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay),
+			err:    errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
 		},
 		{
-			name: "valid params",
-			params: Params{
-				MinLaunchTime: DefaultMinLaunchTime,
-				MaxLaunchTime: DefaultMaxLaunchTime,
-				RevertDelay:   DefaultRevertDelay,
-			},
+			name:   "valid params",
+			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay),
 		},
 	}
 	for _, tt := range tests {
@@ -46,34 +38,44 @@ func TestParamsValidate(t *testing.T) {
 	}
 }
 
-func TestValidateLaunchTime(t *testing.T) {
+func TestValidateLaunchTimeRange(t *testing.T) {
 	tests := []struct {
-		name       string
-		launchTime interface{}
-		err        error
+		name            string
+		launchTimeRange interface{}
+		err             error
 	}{
 		{
-			name:       "invalid interface",
-			launchTime: "test",
-			err:        fmt.Errorf("invalid parameter type: string"),
+			name:            "invalid interface",
+			launchTimeRange: "test",
+			err:             fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:       "invalid interface - too high",
-			launchTime: MaxParametrableLaunchTime + 1,
-			err:        errors.New("max parametrable launch time reached"),
+			name:            "invalid range - min is negative",
+			launchTimeRange: NewLaunchTimeRange(-1, 1),
+			err:             errors.New("MinLaunchTime can't be negative"),
 		},
 		{
-			name:       "max launch time",
-			launchTime: MaxParametrableLaunchTime,
+			name:            "invalid range - too high",
+			launchTimeRange: NewLaunchTimeRange(1, MaxParametrableLaunchTime+1),
+			err:             errors.New("max parametrable launch time reached"),
 		},
 		{
-			name:       "valid launch time",
-			launchTime: uint64(time.Hour.Seconds() * 24),
+			name:            "invalid range - max lower than min",
+			launchTimeRange: NewLaunchTimeRange(10, 1),
+			err:             errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
+		},
+		{
+			name:            "max launch time",
+			launchTimeRange: NewLaunchTimeRange(1, MaxParametrableLaunchTime),
+		},
+		{
+			name:            "valid launch time",
+			launchTimeRange: NewLaunchTimeRange(0, int64(time.Hour.Seconds()*24)),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateLaunchTime(tt.launchTime)
+			err := validateLaunchTimeRange(tt.launchTimeRange)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)

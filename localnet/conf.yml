@@ -12,7 +12,7 @@ staking_denom: "uspn"
 
 # Unbonding time in seconds, low value allows to experiment validator set changes
 # Default: 21 days = 1814400 seconds
-unbonding_time: 10
+unbonding_time: 1000
 
 # List of validator names used for delegate and undelegate scripts
 validator_names:

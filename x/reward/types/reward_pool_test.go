@@ -45,7 +45,7 @@ func TestRewardPool_Validate(t *testing.T) {
 				Provider: sample.Address(),
 				Coins: sdk.Coins{sdk.Coin{
 					Denom:  "invalid denom",
-					Amount: sdk.NewInt(0),
+					Amount: sdk.ZeroInt(),
 				}},
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
@@ -53,7 +53,7 @@ func TestRewardPool_Validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "curren reward lower than last reward height",
+			name: "current reward lower than last reward height",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            sample.Address(),

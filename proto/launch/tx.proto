@@ -132,7 +132,7 @@ message MsgSettleRequestResponse {}
 message MsgTriggerLaunch {
   string coordinator = 1;
   uint64 launchID = 2;
-  uint64 remainingTime = 3;
+  int64 remainingTime = 3;
 }
 
 message MsgTriggerLaunchResponse {}
