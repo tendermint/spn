@@ -17,7 +17,7 @@ func CmdTriggerLaunch() *cobra.Command {
 		Short: "Trigger the launch of a chain",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			remainingTime, _ := strconv.ParseUint(args[1], 10, 64)
+			remainingTime, _ := strconv.ParseInt(args[1], 10, 64)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {

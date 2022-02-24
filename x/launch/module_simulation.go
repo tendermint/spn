@@ -57,11 +57,11 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 	launchParams := sample.LaunchParams()
 	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMinLaunchTime), func(r *rand.Rand) string {
-			return fmt.Sprintf("\"%d\"", launchParams.MinLaunchTime)
-		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMaxLaunchTime), func(r *rand.Rand) string {
-			return fmt.Sprintf("\"%d\"", launchParams.MaxLaunchTime)
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyLaunchTimeRange), func(r *rand.Rand) string {
+			return fmt.Sprintf(
+				"{\"minLaunchTime\":\"%v\",\"maxLaunchTime\":\"%v\"}",
+				launchParams.LaunchTimeRange.MinLaunchTime,
+				launchParams.LaunchTimeRange.MaxLaunchTime)
 		}),
 	}
 }

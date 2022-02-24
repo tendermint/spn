@@ -3,11 +3,10 @@ package keeper_test
 import (
 	"testing"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
