@@ -217,7 +217,6 @@ func TestCheckRequest(t *testing.T) {
 		}, {
 			name:    "test VestingAccount content",
 			request: sample.RequestWithContent(launchID, contents[2]),
-			err:     nil,
 		}, {
 			name:    "test duplicated VestingAccount content",
 			request: sample.RequestWithContent(launchID, contents[2]),
