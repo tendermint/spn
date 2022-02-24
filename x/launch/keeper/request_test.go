@@ -238,7 +238,6 @@ func TestCheckRequest(t *testing.T) {
 		}, {
 			name:    "test ValidatorRemoval content",
 			request: sample.RequestWithContent(launchID, contents[5]),
-			err:     nil,
 		}, {
 			name:    "test not found ValidatorRemoval content",
 			request: sample.RequestWithContent(launchID, contents[5]),
