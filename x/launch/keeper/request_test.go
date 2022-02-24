@@ -231,7 +231,6 @@ func TestCheckRequest(t *testing.T) {
 		}, {
 			name:    "test GenesisValidator content",
 			request: sample.RequestWithContent(launchID, contents[4]),
-			err:     nil,
 		}, {
 			name:    "test duplicated GenesisValidator content",
 			request: sample.RequestWithContent(launchID, contents[4]),
