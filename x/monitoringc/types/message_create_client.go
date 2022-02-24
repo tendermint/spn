@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/tendermint/spn/pkg/types"
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 const TypeMsgCreateClient = "create_client"
@@ -14,14 +14,18 @@ var _ sdk.Msg = &MsgCreateClient{}
 func NewMsgCreateClient(
 	creator string,
 	launchID uint64,
-	consensusState types.ConsensusState,
-	validatorSet types.ValidatorSet,
+	consensusState spntypes.ConsensusState,
+	validatorSet spntypes.ValidatorSet,
+	unbondingPeriod int64,
+	revisionHeight uint64,
 ) *MsgCreateClient {
 	return &MsgCreateClient{
-		Creator:        creator,
-		LaunchID:       launchID,
-		ConsensusState: consensusState,
-		ValidatorSet:   validatorSet,
+		Creator:         creator,
+		LaunchID:        launchID,
+		ConsensusState:  consensusState,
+		ValidatorSet:    validatorSet,
+		UnbondingPeriod: unbondingPeriod,
+		RevisionHeight:  revisionHeight,
 	}
 }
 
@@ -71,8 +75,19 @@ func (msg *MsgCreateClient) ValidateBasic() error {
 	}
 
 	// check validator set hash matches consensus state
-	if !types.CheckValidatorSetHash(tmValidatorSet, tmConsensusState) {
+	if !spntypes.CheckValidatorSetHash(tmValidatorSet, tmConsensusState) {
 		return sdkerrors.Wrapf(ErrInvalidValidatorSetHash, "validator set hash doesn't match the consensus state")
+	}
+
+	// unbonding period must greater than 1 because trusting period for the IBC client is unbonding period - 1
+	// and trusting period can't be 0
+	if msg.UnbondingPeriod < spntypes.MinimalUnbondingPeriod {
+		return sdkerrors.Wrapf(ErrInvalidUnbondingPeriod, "unbonding period must be greater than 1")
+	}
+
+	// check revision height is non-null
+	if msg.RevisionHeight == 0 {
+		return sdkerrors.Wrapf(ErrInvalidRevisionHeight, "revision height must be non-null")
 	}
 
 	return nil
