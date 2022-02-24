@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -12,7 +14,7 @@ import (
 )
 
 func TestMsgEditChain(t *testing.T) {
-	k, _, _, srv, profileSrv, _, sdkCtx := setupMsgServer(t)
+	k, _, campaignK, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
@@ -34,6 +36,44 @@ func TestMsgEditChain(t *testing.T) {
 	require.NoError(t, err)
 	launchID := res.LaunchID
 
+	// create a campaign
+	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
+	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+
+	// create a chain with an existing campaign
+	msgCreateChain = sample.MsgCreateChain(coordAddress, "", true, resCampaign.CampaignID)
+	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	require.NoError(t, err)
+	launchIDHasCampaign := res.LaunchID
+
+	// create a campaign
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
+	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	validCampaignID := resCampaign.CampaignID
+
+	// create a campaign from a different address
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress2)
+	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campaignDifferentCoordinator := resCampaign.CampaignID
+
+	// Create a new chain for more tests
+	msgCreateChain = sample.MsgCreateChain(coordAddress, "", false, 0)
+	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	require.NoError(t, err)
+	launchID2 := res.LaunchID
+
+	// create a new campaign and add a chainCampaigns entry to it
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
+	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campaignDuplicateChain := resCampaign.CampaignID
+
+	err = campaignK.AddChainToCampaign(sdkCtx, campaignDuplicateChain, launchID2)
+	require.NoError(t, err)
+
 	for _, tc := range []struct {
 		name string
 		msg  types.MsgEditChain
@@ -47,6 +87,8 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 				false,
+				0,
+				false,
 			),
 		},
 		{
@@ -56,6 +98,8 @@ func TestMsgEditChain(t *testing.T) {
 				true,
 				false,
 				false,
+				false,
+				0,
 				false,
 			),
 		},
@@ -67,6 +111,8 @@ func TestMsgEditChain(t *testing.T) {
 				true,
 				false,
 				false,
+				0,
+				false,
 			),
 		},
 		{
@@ -76,6 +122,8 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				true,
 				true,
+				false,
+				0,
 				false,
 			),
 		},
@@ -87,6 +135,20 @@ func TestMsgEditChain(t *testing.T) {
 				true,
 				true,
 				false,
+				0,
+				false,
+			),
+		},
+		{
+			name: "set campaign ID",
+			msg: sample.MsgEditChain(coordAddress, launchID,
+				false,
+				false,
+				false,
+				false,
+				true,
+				validCampaignID,
+				false,
 			),
 		},
 		{
@@ -96,6 +158,8 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 				false,
+				false,
+				0,
 				true,
 			),
 		},
@@ -106,6 +170,8 @@ func TestMsgEditChain(t *testing.T) {
 				true,
 				false,
 				false,
+				false,
+				0,
 				false,
 			),
 			err: types.ErrChainNotFound,
@@ -118,6 +184,8 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 				false,
+				0,
+				false,
 			),
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -129,8 +197,62 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 				false,
 				false,
+				0,
+				false,
 			),
 			err: profiletypes.ErrCoordInvalid,
+		},
+		{
+			name: "chain already has campaign",
+			msg: sample.MsgEditChain(coordAddress, launchIDHasCampaign,
+				false,
+				false,
+				false,
+				false,
+				true,
+				0,
+				false,
+			),
+			err: types.ErrChainHasCampaign,
+		},
+		{
+			name: "campaign does not exist",
+			msg: sample.MsgEditChain(coordAddress, launchID2,
+				false,
+				false,
+				false,
+				false,
+				true,
+				999,
+				false,
+			),
+			err: campaigntypes.ErrCampaignNotFound,
+		},
+		{
+			name: "campaign has a different coordinator",
+			msg: sample.MsgEditChain(coordAddress, launchID2,
+				false,
+				false,
+				false,
+				false,
+				true,
+				campaignDifferentCoordinator,
+				false,
+			),
+			err: profiletypes.ErrCoordInvalid,
+		},
+		{
+			name: "campaign chain entry is duplicated",
+			msg: sample.MsgEditChain(coordAddress, launchID2,
+				false,
+				false,
+				false,
+				false,
+				true,
+				campaignDuplicateChain,
+				false,
+			),
+			err: types.ErrAddChainToCampaign,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -184,6 +306,28 @@ func TestMsgEditChain(t *testing.T) {
 				require.EqualValues(t, tc.msg.Metadata, chain.Metadata)
 			} else {
 				require.EqualValues(t, previousChain.Metadata, chain.Metadata)
+			}
+
+			if tc.msg.SetCampaignID {
+				require.True(t, chain.HasCampaign)
+				require.EqualValues(t, tc.msg.CampaignID, chain.CampaignID)
+				// ensure campaign exist
+				_, found := k.GetCampaignKeeper().GetCampaign(sdkCtx, chain.CampaignID)
+				require.True(t, found)
+				// ensure campaign chains exist
+				campaignChains, found := k.GetCampaignKeeper().GetCampaignChains(sdkCtx, chain.CampaignID)
+				require.True(t, found)
+
+				// check that the chain launch ID is in the campaign chains
+				found = false
+				for _, chainID := range campaignChains.Chains {
+					if chainID == chain.LaunchID {
+						found = true
+						break
+					}
+				}
+
+				require.True(t, found)
 			}
 		})
 	}
