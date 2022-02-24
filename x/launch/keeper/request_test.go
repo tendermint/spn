@@ -203,7 +203,6 @@ func TestCheckRequest(t *testing.T) {
 		{
 			name:    "test GenesisAccount content",
 			request: sample.RequestWithContent(launchID, contents[0]),
-			err:     nil,
 		}, {
 			name:    "test duplicated GenesisAccount content",
 			request: sample.RequestWithContent(launchID, contents[0]),
