@@ -224,7 +224,6 @@ func TestCheckRequest(t *testing.T) {
 		}, {
 			name:    "test vesting AccountRemoval content",
 			request: sample.RequestWithContent(launchID, contents[3]),
-			err:     nil,
 		}, {
 			name:    "test not found vesting AccountRemoval content",
 			request: sample.RequestWithContent(launchID, contents[3]),
