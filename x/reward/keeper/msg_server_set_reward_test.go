@@ -63,13 +63,13 @@ func TestMsgSetRewards(t *testing.T) {
 	require.NoError(t, err)
 
 	var (
-		rewardPool               = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-		noBalanceRewadPool       = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-		emptyCoinsRewadPool      = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-		zeroRewarHeightRewadPool = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-		launchedRewadPool        = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		rewardPool                 = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		noBalanceRewardPool        = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		emptyCoinsRewardPool       = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		zeroRewardHeightRewardPool = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		launchedRewardPool         = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
 	)
-	launchTriggeredChain, found := lk.GetChain(sdkCtx, launchedRewadPool.LaunchID)
+	launchTriggeredChain, found := lk.GetChain(sdkCtx, launchedRewardPool.LaunchID)
 	require.True(t, found)
 	launchTriggeredChain.LaunchTriggered = true
 	lk.SetChain(sdkCtx, launchTriggeredChain)
@@ -112,9 +112,9 @@ func TestMsgSetRewards(t *testing.T) {
 		{
 			name: "launch triggered chain",
 			msg: types.MsgSetRewards{
-				Provider:         launchedRewadPool.Provider,
-				LaunchID:         launchedRewadPool.LaunchID,
-				Coins:            launchedRewadPool.Coins,
+				Provider:         launchedRewardPool.Provider,
+				LaunchID:         launchedRewardPool.LaunchID,
+				Coins:            launchedRewardPool.Coins,
 				LastRewardHeight: 1000,
 			},
 			err: launchtypes.ErrTriggeredLaunch,
@@ -122,8 +122,8 @@ func TestMsgSetRewards(t *testing.T) {
 		{
 			name: "coordinator with insufficient funds",
 			msg: types.MsgSetRewards{
-				Provider:         noBalanceRewadPool.Provider,
-				LaunchID:         noBalanceRewadPool.LaunchID,
+				Provider:         noBalanceRewardPool.Provider,
+				LaunchID:         noBalanceRewardPool.LaunchID,
 				Coins:            sample.Coins(),
 				LastRewardHeight: 1000,
 			},
@@ -132,8 +132,8 @@ func TestMsgSetRewards(t *testing.T) {
 		{
 			name: "empty coins",
 			msg: types.MsgSetRewards{
-				Provider:         emptyCoinsRewadPool.Provider,
-				LaunchID:         emptyCoinsRewadPool.LaunchID,
+				Provider:         emptyCoinsRewardPool.Provider,
+				LaunchID:         emptyCoinsRewardPool.LaunchID,
 				Coins:            sdk.NewCoins(),
 				LastRewardHeight: 1000,
 			},
@@ -141,9 +141,9 @@ func TestMsgSetRewards(t *testing.T) {
 		{
 			name: "zero reward height",
 			msg: types.MsgSetRewards{
-				Provider:         zeroRewarHeightRewadPool.Provider,
-				LaunchID:         zeroRewarHeightRewadPool.LaunchID,
-				Coins:            zeroRewarHeightRewadPool.Coins,
+				Provider:         zeroRewardHeightRewardPool.Provider,
+				LaunchID:         zeroRewardHeightRewardPool.LaunchID,
+				Coins:            zeroRewardHeightRewardPool.Coins,
 				LastRewardHeight: 0,
 			},
 		},
@@ -159,7 +159,7 @@ func TestMsgSetRewards(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			previusRewardPool, _ := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
+			previousRewardPool, _ := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
 			got, err := srv.SetRewards(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
@@ -167,8 +167,8 @@ func TestMsgSetRewards(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			require.Equal(t, previusRewardPool.Coins, got.PreviousCoins)
-			require.Equal(t, previusRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
+			require.Equal(t, previousRewardPool.Coins, got.PreviousCoins)
+			require.Equal(t, previousRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
 
 			rewardPool, found := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
 			if tt.msg.Coins.Empty() || tt.msg.LastRewardHeight == 0 {
@@ -205,23 +205,7 @@ func TestSetBalance(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "use the same module balance",
-			args: args{
-				provider:  provider,
-				coins:     sample.Coins(),
-				poolCoins: sample.Coins(),
-			},
-		},
-		{
 			name: "set new balance",
-			args: args{
-				provider:  provider,
-				coins:     sample.Coins(),
-				poolCoins: sample.Coins(),
-			},
-		},
-		{
-			name: "set the old balance",
 			args: args{
 				provider:  provider,
 				coins:     sample.Coins(),

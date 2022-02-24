@@ -20,7 +20,7 @@ import (
 // only a portion of the rewards will be distributed and the remaining is
 // refunded to the reward's provider.
 // When rewards are distributed periodically, this value is set to `false`
-// so the reward pool is not closed as long as `lastBlockHeight` doesn’t
+// so the reward pool is not closed as long as `lastBlockHeight` does not
 // reach `rewardPool.LastRewardHeight`
 func (k Keeper) DistributeRewards(
 	ctx sdk.Context,
@@ -51,7 +51,7 @@ func (k Keeper) DistributeRewards(
 	totalRelativeSignaturesDistributed := sdk.ZeroDec()
 
 	// store rewards to distributes per address
-	rewardToDistribute := make(map[string]sdk.Coins)
+	rewardsToDistribute := make(map[string]sdk.Coins)
 
 	// calculate the total reward for all validators
 	for _, signatureCount := range signatureCounts.Counts {
@@ -76,16 +76,16 @@ func (k Keeper) DistributeRewards(
 			signatureRatio := signatureCount.RelativeSignatures.Quo(
 				sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount)),
 			)
-			reward, err := CalculateRewards(blockRatio, signatureRatio, rewardPool.Coins)
+			rewards, err := CalculateRewards(blockRatio, signatureRatio, rewardPool.Coins)
 			if err != nil {
 				return spnerrors.Criticalf("invalid reward: %s", err.Error())
 			}
-			rewardToDistribute[validator.Address] = reward
+			rewardsToDistribute[validator.Address] = rewards
 		}
 	}
 
 	// distribute the rewards to validators
-	for address, rewards := range rewardToDistribute {
+	for address, rewards := range rewardsToDistribute {
 		coins, isNegative := rewardPool.Coins.SafeSub(rewards)
 		if isNegative {
 			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
@@ -127,7 +127,7 @@ func (k Keeper) DistributeRewards(
 		return spnerrors.Criticalf("invalid reward: %s", err.Error())
 	}
 
-	// if refund is non null, refund is sent to the provider
+	// if refund is non-null, refund is sent to the provider
 	if !refund.IsZero() {
 		coins, isNegative := rewardPool.Coins.SafeSub(refund)
 		if isNegative {

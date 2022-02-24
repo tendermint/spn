@@ -16,7 +16,7 @@ import (
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-func TestCalculateReward(t *testing.T) {
+func TestCalculateRewards(t *testing.T) {
 	type args struct {
 		blockRatio sdk.Dec
 		sigRatio   sdk.Dec
@@ -173,36 +173,6 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		err          error
 	}{
 		{
-			name: "invalid reward pool",
-			args: args{
-				launchID: 99999,
-				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
-				),
-				lastBlockHeight: 1,
-				closeRewardPool: false,
-			},
-			err: types.ErrRewardPoolNotFound,
-		},
-		{
-			name: "validator with a consensus address but without profile should return a critical error",
-			rewardPool: types.RewardPool{
-				LaunchID:         1,
-				Provider:         provider,
-				Coins:            tc.Coins(t, "100aaa,100bbb"),
-				LastRewardHeight: 10,
-			},
-			args: args{
-				launchID: 1,
-				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, notFoundValAddr, "0.5"),
-				),
-				lastBlockHeight: 1,
-				closeRewardPool: false,
-			},
-			err: spnerrors.ErrCritical,
-		},
-		{
 			name: "valid close reward pool",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
@@ -317,6 +287,36 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				valFoo:   tc.Coins(t, "30aaa,30bbb"),
 				valBar:   tc.Coins(t, "30aaa,30bbb"),
 			},
+		},
+		{
+			name: "invalid reward pool",
+			args: args{
+				launchID: 99999,
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
+				),
+				lastBlockHeight: 1,
+				closeRewardPool: false,
+			},
+			err: types.ErrRewardPoolNotFound,
+		},
+		{
+			name: "validator with a consensus address but without profile should return a critical error",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				Coins:            tc.Coins(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+			},
+			args: args{
+				launchID: 1,
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, notFoundValAddr, "0.5"),
+				),
+				lastBlockHeight: 1,
+				closeRewardPool: false,
+			},
+			err: spnerrors.ErrCritical,
 		},
 	}
 	for _, tt := range tests {
