@@ -210,7 +210,6 @@ func TestCheckRequest(t *testing.T) {
 		}, {
 			name:    "test genesis AccountRemoval content",
 			request: sample.RequestWithContent(launchID, contents[1]),
-			err:     nil,
 		}, {
 			name:    "test not found genesis AccountRemoval content",
 			request: sample.RequestWithContent(launchID, contents[1]),
