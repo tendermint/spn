@@ -46,7 +46,7 @@ func NewLaunchTimeRange(minLaunchTime, maxLaunchTime int64) LaunchTimeRange {
 }
 
 // NewParams creates a new Params instance
-func NewParams(minLaunchTime, maxLaunchTime int64, revertDelay int64) Params {
+func NewParams(minLaunchTime, maxLaunchTime, revertDelay int64) Params {
 	return Params{
 		LaunchTimeRange: NewLaunchTimeRange(minLaunchTime, maxLaunchTime),
 		RevertDelay:     revertDelay,

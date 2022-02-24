@@ -44,5 +44,8 @@ func (msg *MsgTriggerLaunch) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
+	if msg.RemainingTime <= 0 {
+		return sdkerrors.Wrapf(ErrNegativeRemainingTime, "%v < 0", msg.RemainingTime)
+	}
 	return nil
 }
