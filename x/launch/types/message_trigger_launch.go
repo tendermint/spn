@@ -45,7 +45,7 @@ func (msg *MsgTriggerLaunch) ValidateBasic() error {
 	}
 
 	if msg.RemainingTime <= 0 {
-		return sdkerrors.Wrapf(ErrNegativeRemainingTime, "%v < 0", msg.RemainingTime)
+		return sdkerrors.Wrapf(ErrRemainingTimeNotPositive, "value must be greater than 0, %v <= 0", msg.RemainingTime)
 	}
 	return nil
 }
