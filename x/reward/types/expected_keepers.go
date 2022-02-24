@@ -7,20 +7,17 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-type AuthKeeper interface {
-}
-
 type ProfileKeeper interface {
 	GetValidator(ctx sdk.Context, address string) (profiletypes.Validator, bool)
 	GetValidatorByConsAddress(ctx sdk.Context, consensusAddress []byte) (profiletypes.ValidatorByConsAddress, bool)
-	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, err error)
+	CoordinatorIDFromAddress(ctx sdk.Context, address string) (uint64, error)
 }
 
 type LaunchKeeper interface {
 	GetChain(ctx sdk.Context, launchID uint64) (launchtypes.Chain, bool)
 }
 
-// AccountKeeper defines the expected account keeper used for simulations (noalias)
+// AccountKeeper defines the expected account keeper used for simulations
 type AccountKeeper interface {
 }
 

@@ -12,20 +12,20 @@ import (
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-func createNRewardPool(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.RewardPool {
+func createNRewardPool(k *keeper.Keeper, ctx sdk.Context, n int) []types.RewardPool {
 	items := make([]types.RewardPool, n)
 	for i := range items {
 		items[i].LaunchID = uint64(i)
-		keeper.SetRewardPool(ctx, items[i])
+		k.SetRewardPool(ctx, items[i])
 	}
 	return items
 }
 
 func TestRewardPoolGet(t *testing.T) {
-	keeper, ctx := keepertest.Reward(t)
-	items := createNRewardPool(keeper, ctx, 10)
+	k, ctx := keepertest.Reward(t)
+	items := createNRewardPool(k, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetRewardPool(ctx,
+		rst, found := k.GetRewardPool(ctx,
 			item.LaunchID,
 		)
 		require.True(t, found)
@@ -36,13 +36,13 @@ func TestRewardPoolGet(t *testing.T) {
 	}
 }
 func TestRewardPoolRemove(t *testing.T) {
-	keeper, ctx := keepertest.Reward(t)
-	items := createNRewardPool(keeper, ctx, 10)
+	k, ctx := keepertest.Reward(t)
+	items := createNRewardPool(k, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveRewardPool(ctx,
+		k.RemoveRewardPool(ctx,
 			item.LaunchID,
 		)
-		_, found := keeper.GetRewardPool(ctx,
+		_, found := k.GetRewardPool(ctx,
 			item.LaunchID,
 		)
 		require.False(t, found)
@@ -50,10 +50,10 @@ func TestRewardPoolRemove(t *testing.T) {
 }
 
 func TestRewardPoolGetAll(t *testing.T) {
-	keeper, ctx := keepertest.Reward(t)
-	items := createNRewardPool(keeper, ctx, 10)
+	k, ctx := keepertest.Reward(t)
+	items := createNRewardPool(k, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllRewardPool(ctx)),
+		nullify.Fill(k.GetAllRewardPool(ctx)),
 	)
 }
