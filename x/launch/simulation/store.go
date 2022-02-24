@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 
-	profiletypes "github.com/tendermint/spn/x/profile/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
@@ -20,6 +18,33 @@ func IsLaunchTriggeredChain(ctx sdk.Context, k keeper.Keeper, chainID uint64) bo
 		return false
 	}
 	return chain.LaunchTriggered
+}
+
+func FindCoordinatorCampaign(
+	r *rand.Rand,
+	ctx sdk.Context,
+	ck types.CampaignKeeper,
+	coordID uint64,
+) (uint64, bool) {
+	campaigns := ck.GetAllCampaign(ctx)
+
+	campNb := len(campaigns)
+	if campNb == 0 {
+		return 0, false
+	}
+
+	// Randomize the set
+	r.Shuffle(len(campaigns), func(i, j int) {
+		campaigns[i], campaigns[j] = campaigns[j], campaigns[i]
+	})
+
+	for _, campaign := range campaigns {
+		if campaign.CoordinatorID == coordID {
+			return campaign.CampaignID, true
+		}
+	}
+
+	return 0, false
 }
 
 // FindAccount find account by string hex address
@@ -80,9 +105,8 @@ func FindRandomChain(
 			continue
 		}
 		// check if the coordinator is still in the store and active
-		var coord profiletypes.Coordinator
-		coord, found = k.GetProfileKeeper().GetCoordinator(ctx, c.CoordinatorID)
-		if !found || !coord.Active {
+		coord, coordFound := k.GetProfileKeeper().GetCoordinator(ctx, c.CoordinatorID)
+		if !coordFound || !coord.Active {
 			continue
 		}
 		chain = c
@@ -104,17 +128,14 @@ func FindRandomRequest(
 	r.Shuffle(len(requests), func(i, j int) {
 		requests[i], requests[j] = requests[j], requests[i]
 	})
-	var chain types.Chain
-	var chainFound bool
 	for _, req := range requests {
-		chain, chainFound = k.GetChain(ctx, req.LaunchID)
+		chain, chainFound := k.GetChain(ctx, req.LaunchID)
 		if !chainFound || chain.LaunchTriggered {
 			continue
 		}
 		// check if the coordinator is still in the store and active
-		var coord profiletypes.Coordinator
-		coord, found = k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
-		if !found || !coord.Active {
+		coord, coordFound := k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
+		if !coordFound || !coord.Active {
 			continue
 		}
 

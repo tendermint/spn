@@ -5,49 +5,74 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/stretchr/testify/require"
 
 	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
+	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/spn/x/reward/keeper"
 	"github.com/tendermint/spn/x/reward/types"
 )
 
+func initRewardPool(
+	t *testing.T,
+	k *keeper.Keeper,
+	bk bankkeeper.Keeper,
+	lk *launchkeeper.Keeper,
+	sdkCtx sdk.Context,
+	psrv profiletypes.MsgServer,
+) types.RewardPool {
+	var (
+		provider = sample.AccAddress()
+		coins    = sample.Coins()
+		ctx      = sdk.WrapSDKContext(sdkCtx)
+		coordMsg = sample.MsgCreateCoordinator(provider.String())
+	)
+	res, err := psrv.CreateCoordinator(ctx, &coordMsg)
+	require.NoError(t, err)
+	launchID := lk.AppendChain(sdkCtx, sample.Chain(1, res.CoordinatorID))
+	rewardPool := types.RewardPool{
+		Provider:            provider.String(),
+		LaunchID:            launchID,
+		Coins:               coins,
+		LastRewardHeight:    100,
+		CurrentRewardHeight: 30,
+	}
+	k.SetRewardPool(sdkCtx, rewardPool)
+
+	err = bk.MintCoins(sdkCtx, types.ModuleName, coins.Add(coins...))
+	require.NoError(t, err)
+	err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, coins)
+	require.NoError(t, err)
+
+	return rewardPool
+}
+
 func TestMsgSetRewards(t *testing.T) {
 	var (
 		k, lk, _, bk, srv, psrv, _, sdkCtx = setupMsgServer(t)
 
-		ctx            = sdk.WrapSDKContext(sdkCtx)
-		moduleBalance  = sample.Coins()
-		newBalance     = sample.Coins()
-		provider       = sample.AccAddress()
-		invalidCoord   = sample.Address()
-		noBalanceCoord = sample.Address()
+		ctx          = sdk.WrapSDKContext(sdkCtx)
+		invalidCoord = sample.Address()
 	)
-	coordMsg := sample.MsgCreateCoordinator(invalidCoord)
-	res, err := psrv.CreateCoordinator(ctx, &coordMsg)
+	invalidCoordMsg := sample.MsgCreateCoordinator(invalidCoord)
+	_, err := psrv.CreateCoordinator(ctx, &invalidCoordMsg)
 	require.NoError(t, err)
 
-	coordMsg = sample.MsgCreateCoordinator(noBalanceCoord)
-	res, err = psrv.CreateCoordinator(ctx, &coordMsg)
-	require.NoError(t, err)
-	noBalancelaunchID := lk.AppendChain(sdkCtx, sample.Chain(1, res.CoordinatorID))
-
-	coordMsg = sample.MsgCreateCoordinator(provider.String())
-	res, err = psrv.CreateCoordinator(ctx, &coordMsg)
-	require.NoError(t, err)
-	launchID := lk.AppendChain(sdkCtx, sample.Chain(1, res.CoordinatorID))
-
-	launchTriggeredChain := sample.Chain(1, res.CoordinatorID)
+	var (
+		rewardPool               = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		noBalanceRewadPool       = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		emptyCoinsRewadPool      = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		zeroRewarHeightRewadPool = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		launchedRewadPool        = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+	)
+	launchTriggeredChain, found := lk.GetChain(sdkCtx, launchedRewadPool.LaunchID)
+	require.True(t, found)
 	launchTriggeredChain.LaunchTriggered = true
-	launchTriggeredChainID := lk.AppendChain(sdkCtx, launchTriggeredChain)
-
-	err = bk.MintCoins(sdkCtx, types.ModuleName, moduleBalance.Add(newBalance...))
-	require.NoError(t, err)
-	err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, newBalance)
-	require.NoError(t, err)
+	lk.SetChain(sdkCtx, launchTriggeredChain)
 
 	tests := []struct {
 		name string
@@ -57,9 +82,9 @@ func TestMsgSetRewards(t *testing.T) {
 		{
 			name: "invalid chain",
 			msg: types.MsgSetRewards{
-				Provider:         provider.String(),
+				Provider:         rewardPool.Provider,
 				LaunchID:         9999,
-				Coins:            newBalance,
+				Coins:            rewardPool.Coins,
 				LastRewardHeight: 1000,
 			},
 			err: launchtypes.ErrChainNotFound,
@@ -68,8 +93,8 @@ func TestMsgSetRewards(t *testing.T) {
 			name: "coordinator address not found",
 			msg: types.MsgSetRewards{
 				Provider:         sample.Address(),
-				LaunchID:         launchID,
-				Coins:            newBalance,
+				LaunchID:         rewardPool.LaunchID,
+				Coins:            rewardPool.Coins,
 				LastRewardHeight: 1000,
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
@@ -78,8 +103,8 @@ func TestMsgSetRewards(t *testing.T) {
 			name: "invalid coordinator id",
 			msg: types.MsgSetRewards{
 				Provider:         invalidCoord,
-				LaunchID:         launchID,
-				Coins:            newBalance,
+				LaunchID:         rewardPool.LaunchID,
+				Coins:            rewardPool.Coins,
 				LastRewardHeight: 1000,
 			},
 			err: types.ErrInvalidCoordinatorID,
@@ -87,9 +112,9 @@ func TestMsgSetRewards(t *testing.T) {
 		{
 			name: "launch triggered chain",
 			msg: types.MsgSetRewards{
-				Provider:         provider.String(),
-				LaunchID:         launchTriggeredChainID,
-				Coins:            newBalance,
+				Provider:         launchedRewadPool.Provider,
+				LaunchID:         launchedRewadPool.LaunchID,
+				Coins:            launchedRewadPool.Coins,
 				LastRewardHeight: 1000,
 			},
 			err: launchtypes.ErrTriggeredLaunch,
@@ -97,29 +122,37 @@ func TestMsgSetRewards(t *testing.T) {
 		{
 			name: "coordinator with insufficient funds",
 			msg: types.MsgSetRewards{
-				Provider:         noBalanceCoord,
-				LaunchID:         noBalancelaunchID,
-				Coins:            newBalance,
+				Provider:         noBalanceRewadPool.Provider,
+				LaunchID:         noBalanceRewadPool.LaunchID,
+				Coins:            sample.Coins(),
 				LastRewardHeight: 1000,
 			},
 			err: sdkerrors.ErrInsufficientFunds,
 		},
 		{
-			name: "coordinator with insufficient funds",
+			name: "empty coins",
 			msg: types.MsgSetRewards{
-				Provider:         noBalanceCoord,
-				LaunchID:         noBalancelaunchID,
-				Coins:            newBalance,
+				Provider:         emptyCoinsRewadPool.Provider,
+				LaunchID:         emptyCoinsRewadPool.LaunchID,
+				Coins:            sdk.NewCoins(),
 				LastRewardHeight: 1000,
 			},
-			err: sdkerrors.ErrInsufficientFunds,
+		},
+		{
+			name: "zero reward height",
+			msg: types.MsgSetRewards{
+				Provider:         zeroRewarHeightRewadPool.Provider,
+				LaunchID:         zeroRewarHeightRewadPool.LaunchID,
+				Coins:            zeroRewarHeightRewadPool.Coins,
+				LastRewardHeight: 0,
+			},
 		},
 		{
 			name: "valid message",
 			msg: types.MsgSetRewards{
-				Provider:         provider.String(),
-				LaunchID:         launchID,
-				Coins:            newBalance,
+				Provider:         rewardPool.Provider,
+				LaunchID:         rewardPool.LaunchID,
+				Coins:            rewardPool.Coins,
 				LastRewardHeight: 1000,
 			},
 		},
@@ -134,7 +167,16 @@ func TestMsgSetRewards(t *testing.T) {
 			}
 			require.NoError(t, err)
 
+			require.Equal(t, previusRewardPool.Coins, got.PreviousCoins)
+			require.Equal(t, previusRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
+
 			rewardPool, found := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
+			if tt.msg.Coins.Empty() || tt.msg.LastRewardHeight == 0 {
+				require.False(t, found)
+				require.Equal(t, uint64(0), got.NewLastRewardHeight)
+				require.Equal(t, sdk.NewCoins(), got.NewCoins)
+				return
+			}
 			require.True(t, found)
 			require.Equal(t, tt.msg.Coins, rewardPool.Coins)
 			require.Equal(t, tt.msg.Provider, rewardPool.Provider)
@@ -142,8 +184,6 @@ func TestMsgSetRewards(t *testing.T) {
 
 			require.Equal(t, tt.msg.Coins, got.NewCoins)
 			require.Equal(t, tt.msg.LastRewardHeight, got.NewLastRewardHeight)
-			require.Equal(t, previusRewardPool.Coins, got.PreviousCoins)
-			require.Equal(t, previusRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
 		})
 	}
 }

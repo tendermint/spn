@@ -170,6 +170,8 @@ func MsgEditChain(
 	modifySource,
 	modifyInitialGenesis,
 	genesisURL,
+	setCampaignID bool,
+	campaignID uint64,
 	modifyMetadata bool,
 ) launch.MsgEditChain {
 	var genesisChainID, sourceURL, sourceHash string
@@ -203,6 +205,8 @@ func MsgEditChain(
 		sourceURL,
 		sourceHash,
 		initialGenesis,
+		setCampaignID,
+		campaignID,
 		metadata,
 	)
 }
