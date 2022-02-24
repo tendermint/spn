@@ -75,6 +75,13 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 		}
 
 		modify := r.Intn(100) < 50
+
+		setCampaignID := r.Intn(100) < 20
+		campaignID := uint64(0)
+		if setCampaignID {
+			campaignID, setCampaignID = FindCoordinatorCampaign(r, ctx, k.GetCampaignKeeper(), chain.CoordinatorID)
+		}
+
 		msg := sample.MsgEditChain(
 			simAccount.Address.String(),
 			chain.LaunchID,
@@ -82,6 +89,8 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			!modify,
 			modify,
 			!modify && r.Intn(100) < 50,
+			setCampaignID,
+			campaignID,
 			modify,
 		)
 		txCtx := simulation.OperationInput{
@@ -370,6 +379,11 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			request.RequestID,
 			approve,
 		)
+
+		// if we cannot check the request, reject
+		if err := keeper.CheckRequest(ctx, k, request.LaunchID, request); err != nil {
+			msg.Approve = false
+		}
 
 		txCtx := simulation.OperationInput{
 			R:               r,
