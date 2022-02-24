@@ -17,14 +17,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-const (
-	// DefaultUnbondingPeriod is 21 days
-	DefaultUnbondingPeriod = time.Hour * 24 * 21
-
-	// DefaultTrustingPeriod must be lower than DefaultUnbondingPeriod
-	DefaultTrustingPeriod = time.Hour*24*21 - 1
-)
-
 func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClient) (*types.MsgCreateClientResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -34,7 +26,11 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 	}
 
 	// initialize the client state
-	clientState, err := k.initializeClientState(chain.GenesisChainID)
+	clientState, err := k.initializeClientState(
+		chain.GenesisChainID,
+		msg.UnbondingPeriod,
+		msg.RevisionHeight,
+	)
 	if err != nil {
 		return nil, sdkerrors.Wrap(types.ErrInvalidClientState, err.Error())
 	}
@@ -83,7 +79,11 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 
 // initializeClientState initializes the client state provided for the IBC client
 // TODO: Investigate configurable values
-func (k msgServer) initializeClientState(chainID string) (*ibctmtypes.ClientState, error) {
+func (k msgServer) initializeClientState(
+	chainID string,
+	unbondingPeriod int64,
+	revisionHeight uint64,
+) (*ibctmtypes.ClientState, error) {
 	_, revisionNumber, err := chainid.ParseGenesisChainID(chainID)
 	if err != nil {
 		return nil, err
@@ -92,10 +92,10 @@ func (k msgServer) initializeClientState(chainID string) (*ibctmtypes.ClientStat
 	return ibctmtypes.NewClientState(
 		chainID,
 		ibctmtypes.NewFractionFromTm(light.DefaultTrustLevel),
-		DefaultTrustingPeriod,
-		DefaultUnbondingPeriod,
+		time.Second*time.Duration(unbondingPeriod)-1,
+		time.Second*time.Duration(unbondingPeriod),
 		time.Minute*10,
-		clienttypes.NewHeight(revisionNumber, 1),
+		clienttypes.NewHeight(revisionNumber, revisionHeight),
 		committypes.GetSDKSpecs(),
 		[]string{"upgrade", "upgradedIBCState"},
 		true,
