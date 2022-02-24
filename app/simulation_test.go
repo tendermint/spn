@@ -3,14 +3,15 @@ package app_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/store"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	"github.com/tendermint/tendermint/libs/log"
-	dbm "github.com/tendermint/tm-db"
 	"math/rand"
 	"os"
 	"testing"
 	"time"
+
+	"github.com/cosmos/cosmos-sdk/store"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	"github.com/tendermint/tendermint/libs/log"
+	dbm "github.com/tendermint/tm-db"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -69,70 +70,8 @@ func interBlockCacheOpt() func(*baseapp.BaseApp) {
 	return baseapp.SetInterBlockCache(store.NewCommitKVStoreCacheManager())
 }
 
-// go test ./app -v -benchmem -run=^$ -bench ^CISimulation -Commit=true -cpuprofile cpu.out
-func CISimulation(b *testing.B) {
-	simapp.FlagEnabledValue = true
-	simapp.FlagNumBlocksValue = 200
-	simapp.FlagBlockSizeValue = 26
-	simapp.FlagCommitValue = true
-	simapp.FlagVerboseValue = true
-
-	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
-	require.NoError(b, err, "simulation setup failed")
-
-	b.Cleanup(func() {
-		db.Close()
-		err = os.RemoveAll(dir)
-		require.NoError(b, err)
-	})
-
-	encoding := cosmoscmd.MakeEncodingConfig(app.ModuleBasics)
-
-	cmdApp := app.New(
-		logger,
-		db,
-		nil,
-		true,
-		map[int64]bool{},
-		app.DefaultNodeHome,
-		0,
-		encoding,
-		simapp.EmptyAppOptions{},
-	)
-
-	app, ok := cmdApp.(SimApp)
-	require.True(b, ok, "can't use simapp")
-
-	// Run randomized simulations
-	_, simParams, simErr := simulation.SimulateFromSeed(
-		b,
-		os.Stdout,
-		app.GetBaseApp(),
-		simapp.AppStateFn(app.AppCodec(), app.SimulationManager()),
-		simulationtypes.RandomAccounts,
-		simapp.SimulationOperations(app, app.AppCodec(), config),
-		app.ModuleAccountAddrs(),
-		config,
-		app.AppCodec(),
-	)
-
-	// export state and simParams before the simulation error is checked
-	err = simapp.CheckExportSimulation(app, config, simParams)
-	require.NoError(b, err)
-	require.NoError(b, simErr)
-
-	if config.Commit {
-		simapp.PrintStats(db)
-	}
-}
-
 // go test ./app -v -benchmem -run=^$ -bench ^BenchmarkSimulation -Commit=true -cpuprofile cpu.out
 func BenchmarkSimulation(b *testing.B) {
-	simapp.FlagEnabledValue = true
-	simapp.FlagNumBlocksValue = 2000
-	simapp.FlagBlockSizeValue = 26
-	simapp.FlagCommitValue = true
-	simapp.FlagPeriodValue = 10
 	simapp.FlagSeedValue = 10
 	simapp.FlagVerboseValue = true
 
@@ -195,7 +134,6 @@ func TestAppStateDeterminism(t *testing.T) {
 	config.ExportParamsPath = ""
 	config.OnOperation = false
 	config.AllInvariants = false
-	config.ChainID = "pylons-app"
 
 	numSeeds := 3
 	numTimesToRunPerSeed := 5
