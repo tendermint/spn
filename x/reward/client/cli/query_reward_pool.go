@@ -47,7 +47,7 @@ func CmdListRewardPool() *cobra.Command {
 func CmdShowRewardPool() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-reward-pool [launch-id]",
-		Short: "shows a RewardPool",
+		Short: "shows a reward pool",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
