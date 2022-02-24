@@ -43,9 +43,6 @@ func (msg *MsgSetRewards) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Provider); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid provider address (%s)", err)
 	}
-	if msg.Coins.Empty() {
-		return sdkerrors.Wrap(ErrInvalidRewardPoolCoins, "empty reward pool coins")
-	}
 	if err := msg.Coins.Validate(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidRewardPoolCoins, "invalid reward pool coins (%s)", err)
 	}
