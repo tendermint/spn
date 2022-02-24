@@ -7,9 +7,6 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-type AuthKeeper interface {
-}
-
 type ProfileKeeper interface {
 	GetValidator(ctx sdk.Context, address string) (profiletypes.Validator, bool)
 	GetValidatorByConsAddress(ctx sdk.Context, consensusAddress []byte) (profiletypes.ValidatorByConsAddress, bool)
