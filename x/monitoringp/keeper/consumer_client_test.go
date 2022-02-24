@@ -1,12 +1,13 @@
 package keeper_test
 
 import (
-	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
-	"github.com/stretchr/testify/require"
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 	"time"
 
+	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
+	"github.com/stretchr/testify/require"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/monitoringp/types"
@@ -23,7 +24,7 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 			types.DefautConsumerChainID,
 			sample.ConsensusState(0),
 			spntypes.DefaultUnbondingPeriod,
-			types.DefautRevisionHeight,
+			spntypes.DefaultRevisionHeight,
 			false,
 		))
 		clientID, err := k.InitializeConsumerClient(ctx)
