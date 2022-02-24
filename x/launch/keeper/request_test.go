@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -18,7 +19,7 @@ type RequestSample struct {
 }
 
 func createRequestsFromSamples(
-	keeper *keeper.Keeper,
+	k *keeper.Keeper,
 	ctx sdk.Context,
 	launchID uint64,
 	samples []RequestSample,
@@ -26,27 +27,27 @@ func createRequestsFromSamples(
 	items := make([]types.Request, len(samples))
 	for i, s := range samples {
 		items[i] = sample.RequestWithContentAndCreator(launchID, s.Content, s.Creator)
-		id := keeper.AppendRequest(ctx, items[i])
+		id := k.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
 	return items
 }
 
-func createNRequest(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
+func createNRequest(k *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
 		items[i] = sample.Request(0, sample.Address())
-		id := keeper.AppendRequest(ctx, items[i])
+		id := k.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
 	return items
 }
 
 func TestRequestGet(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNRequest(keeper, ctx, 10)
+	k, ctx := testkeeper.Launch(t)
+	items := createNRequest(k, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetRequest(ctx,
+		rst, found := k.GetRequest(ctx,
 			item.LaunchID,
 			item.RequestID,
 		)
@@ -55,14 +56,14 @@ func TestRequestGet(t *testing.T) {
 	}
 }
 func TestRequestRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNRequest(keeper, ctx, 10)
+	k, ctx := testkeeper.Launch(t)
+	items := createNRequest(k, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveRequest(ctx,
+		k.RemoveRequest(ctx,
 			item.LaunchID,
 			item.RequestID,
 		)
-		_, found := keeper.GetRequest(ctx,
+		_, found := k.GetRequest(ctx,
 			item.LaunchID,
 			item.RequestID,
 		)
@@ -71,17 +72,17 @@ func TestRequestRemove(t *testing.T) {
 }
 
 func TestRequestGetAll(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNRequest(keeper, ctx, 10)
-	require.ElementsMatch(t, items, keeper.GetAllRequest(ctx))
+	k, ctx := testkeeper.Launch(t)
+	items := createNRequest(k, ctx, 10)
+	require.ElementsMatch(t, items, k.GetAllRequest(ctx))
 }
 
 func TestRequestCounter(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNRequest(keeper, ctx, 10)
+	k, ctx := testkeeper.Launch(t)
+	items := createNRequest(k, ctx, 10)
 	counter := uint64(len(items)) + 1
-	require.Equal(t, counter, keeper.GetRequestCounter(ctx, 0))
-	require.Equal(t, uint64(1), keeper.GetRequestCounter(ctx, 1))
+	require.Equal(t, counter, k.GetRequestCounter(ctx, 0))
+	require.Equal(t, uint64(1), k.GetRequestCounter(ctx, 1))
 }
 
 func TestApplyRequest(t *testing.T) {
@@ -179,6 +180,88 @@ func TestApplyRequest(t *testing.T) {
 				vr := requestContent.ValidatorRemoval
 				_, found := k.GetGenesisValidator(ctx, launchID, vr.ValAddress)
 				require.False(t, found, "genesis validator not removed")
+			}
+		})
+	}
+}
+
+func TestCheckRequest(t *testing.T) {
+	var (
+		genesisAcc     = sample.Address()
+		vestingAcc     = sample.Address()
+		validatorAcc   = sample.Address()
+		k, ctx         = testkeeper.Launch(t)
+		launchID       = uint64(10)
+		contents       = sample.AllRequestContents(launchID, genesisAcc, vestingAcc, validatorAcc)
+		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
+	)
+	tests := []struct {
+		name    string
+		request types.Request
+		err     error
+	}{
+		{
+			name:    "test GenesisAccount content",
+			request: sample.RequestWithContent(launchID, contents[0]),
+			err:     nil,
+		}, {
+			name:    "test duplicated GenesisAccount content",
+			request: sample.RequestWithContent(launchID, contents[0]),
+			err:     types.ErrAccountAlreadyExist,
+		}, {
+			name:    "test genesis AccountRemoval content",
+			request: sample.RequestWithContent(launchID, contents[1]),
+			err:     nil,
+		}, {
+			name:    "test not found genesis AccountRemoval content",
+			request: sample.RequestWithContent(launchID, contents[1]),
+			err:     types.ErrAccountNotFound,
+		}, {
+			name:    "test VestingAccount content",
+			request: sample.RequestWithContent(launchID, contents[2]),
+			err:     nil,
+		}, {
+			name:    "test duplicated VestingAccount content",
+			request: sample.RequestWithContent(launchID, contents[2]),
+			err:     types.ErrAccountAlreadyExist,
+		}, {
+			name:    "test vesting AccountRemoval content",
+			request: sample.RequestWithContent(launchID, contents[3]),
+			err:     nil,
+		}, {
+			name:    "test not found vesting AccountRemoval content",
+			request: sample.RequestWithContent(launchID, contents[3]),
+			err:     types.ErrAccountNotFound,
+		}, {
+			name:    "test GenesisValidator content",
+			request: sample.RequestWithContent(launchID, contents[4]),
+			err:     nil,
+		}, {
+			name:    "test duplicated GenesisValidator content",
+			request: sample.RequestWithContent(launchID, contents[4]),
+			err:     types.ErrValidatorAlreadyExist,
+		}, {
+			name:    "test ValidatorRemoval content",
+			request: sample.RequestWithContent(launchID, contents[5]),
+			err:     nil,
+		}, {
+			name:    "test not found ValidatorRemoval content",
+			request: sample.RequestWithContent(launchID, contents[5]),
+			err:     types.ErrValidatorNotFound,
+		}, {
+			name:    "test request with invalid parameters",
+			request: sample.RequestWithContent(launchID, invalidContent),
+			err:     spnerrors.ErrCritical,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := keeper.CheckRequest(ctx, *k, launchID, tt.request)
+			if tt.err != nil {
+				require.ErrorIs(t, err, tt.err)
+			} else {
+				err := keeper.ApplyRequest(ctx, *k, launchID, tt.request)
+				require.NoError(t, err)
 			}
 		})
 	}
