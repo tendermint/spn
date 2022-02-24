@@ -16,7 +16,7 @@ func Test_GetParams(t *testing.T) {
 	k.SetParams(ctx, params)
 
 	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, params.MaxLaunchTime, k.MaxLaunchTime(ctx))
-	require.EqualValues(t, params.MinLaunchTime, k.MinLaunchTime(ctx))
+	require.EqualValues(t, params.LaunchTimeRange.MaxLaunchTime, k.LaunchTimeRange(ctx).MaxLaunchTime)
+	require.EqualValues(t, params.LaunchTimeRange.MinLaunchTime, k.LaunchTimeRange(ctx).MinLaunchTime)
 	require.EqualValues(t, params.RevertDelay, k.RevertDelay(ctx))
 }
