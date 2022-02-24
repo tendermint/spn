@@ -380,6 +380,11 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			approve,
 		)
 
+		// if we cannot check the request, reject
+		if err := keeper.CheckRequest(ctx, k, request.LaunchID, request); err != nil {
+			msg.Approve = false
+		}
+
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
