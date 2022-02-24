@@ -13,9 +13,9 @@ import (
 var (
 	// DefaultMinLaunchTime ...
 	// TODO: set back this value to the default one
-	// uint64(time.Hour.Seconds() * 24)
-	DefaultMinLaunchTime = uint64(5)
-	DefaultMaxLaunchTime = uint64(time.Hour.Seconds() * 24 * 7)
+	// int64(time.Hour.Seconds() * 24)
+	DefaultMinLaunchTime = int64(5)
+	DefaultMaxLaunchTime = int64(time.Hour.Seconds() * 24 * 7)
 
 	// DefaultRevertDelay is the delay after the launch time when it is possible to revert the launch of the chain
 	// Chain launch can be reverted on-chain when the actual chain launch failed (incorrect gentx, etc...)
@@ -23,7 +23,7 @@ var (
 	// This currently corresponds to 1 hour
 	DefaultRevertDelay = int64(60 * 60)
 
-	MaxParametrableLaunchTime  = uint64(time.Hour.Seconds() * 24 * 31)
+	MaxParametrableLaunchTime  = int64(time.Hour.Seconds() * 24 * 31)
 	MaxParametrableRevertDelay = int64(time.Hour.Seconds() * 24)
 
 	KeyLaunchTimeRange = []byte("LaunchTimeRange")
@@ -38,7 +38,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewLaunchTimeRange creates a new LaunchTimeRange instance
-func NewLaunchTimeRange(minLaunchTime, maxLaunchTime uint64) LaunchTimeRange {
+func NewLaunchTimeRange(minLaunchTime, maxLaunchTime int64) LaunchTimeRange {
 	return LaunchTimeRange{
 		MinLaunchTime: minLaunchTime,
 		MaxLaunchTime: maxLaunchTime,
@@ -46,7 +46,7 @@ func NewLaunchTimeRange(minLaunchTime, maxLaunchTime uint64) LaunchTimeRange {
 }
 
 // NewParams creates a new Params instance
-func NewParams(minLaunchTime, maxLaunchTime uint64, revertDelay int64) Params {
+func NewParams(minLaunchTime, maxLaunchTime int64, revertDelay int64) Params {
 	return Params{
 		LaunchTimeRange: NewLaunchTimeRange(minLaunchTime, maxLaunchTime),
 		RevertDelay:     revertDelay,
@@ -89,6 +89,11 @@ func validateLaunchTimeRange(i interface{}) error {
 	v, ok := i.(LaunchTimeRange)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	// it is enough to check that minLaunchTime is positive since it must be that minLaunchTime < maxLaunchTime
+	if v.MinLaunchTime < 0 {
+		return errors.New("MinLaunchTime can't be negative")
 	}
 
 	if v.MinLaunchTime > v.MaxLaunchTime {

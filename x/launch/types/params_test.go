@@ -50,6 +50,11 @@ func TestValidateLaunchTimeRange(t *testing.T) {
 			err:             fmt.Errorf("invalid parameter type: string"),
 		},
 		{
+			name:            "invalid range - min is negative",
+			launchTimeRange: NewLaunchTimeRange(-1, 1),
+			err:             errors.New("MinLaunchTime can't be negative"),
+		},
+		{
 			name:            "invalid range - too high",
 			launchTimeRange: NewLaunchTimeRange(1, MaxParametrableLaunchTime+1),
 			err:             errors.New("max parametrable launch time reached"),
@@ -65,7 +70,7 @@ func TestValidateLaunchTimeRange(t *testing.T) {
 		},
 		{
 			name:            "valid launch time",
-			launchTimeRange: NewLaunchTimeRange(0, uint64(time.Hour.Seconds()*24)),
+			launchTimeRange: NewLaunchTimeRange(0, int64(time.Hour.Seconds()*24)),
 		},
 	}
 	for _, tt := range tests {

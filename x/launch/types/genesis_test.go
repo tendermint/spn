@@ -435,7 +435,7 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 		shouldBeValid bool
 	}{
 		{
-			desc: "max launch time above the max parametrable launch time",
+			desc: "should fail if params are invalid",
 			genState: types.GenesisState{
 				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1, types.DefaultRevertDelay),
 			},

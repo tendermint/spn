@@ -268,8 +268,8 @@ func MsgRevertLaunch(coordinator string, launchID uint64) launch.MsgRevertLaunch
 
 // MsgTriggerLaunch returns a sample MsgTriggerLaunch
 func MsgTriggerLaunch(coordinator string, launchID uint64) launch.MsgTriggerLaunch {
-	launchTimeRange := int(launch.DefaultMaxLaunchTime - launch.DefaultMinLaunchTime)
-	launchTime := uint64(rand.Intn(launchTimeRange)) + launch.DefaultMinLaunchTime
+	launchTimeRange := launch.DefaultMaxLaunchTime - launch.DefaultMinLaunchTime
+	launchTime := rand.Int63n(launchTimeRange) + launch.DefaultMinLaunchTime
 	return *launch.NewMsgTriggerLaunch(
 		coordinator,
 		launchID,
@@ -295,8 +295,8 @@ func GenesisHash() string {
 
 // LaunchParams returns a sample of params for the launch module
 func LaunchParams() launch.Params {
-	maxLaunchTime := launch.DefaultMaxLaunchTime - uint64(rand.Intn(10))
-	minLaunchTime := uint64(rand.Intn(10)) + launch.DefaultMinLaunchTime
+	maxLaunchTime := launch.DefaultMaxLaunchTime - rand.Int63n(10)
+	minLaunchTime := rand.Int63n(10) + launch.DefaultMinLaunchTime
 	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay)
 }
 
