@@ -28,4 +28,4 @@ jobs:
           go-version: 1.16
 
       - name: Run simulation tests
-        run: go test -v -benchmem -run=^$ -bench ^BenchmarkSimulation ./app
+        run: make test-sim-ci
