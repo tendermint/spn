@@ -38,18 +38,19 @@ test-unit:
 	@echo Running unit tests...
 	@VERSION=$(VERSION) go test -mod=readonly -v -timeout 30m $(PACKAGES)
 
-## test-unit: Run the unit tests checking for race conditions
+## test-race: Run the unit tests checking for race conditions
 test-race:
 	@echo Running unit tests with race condition reporting...
 	@VERSION=$(VERSION) go test -mod=readonly -v -race -timeout 30m  $(PACKAGES)
 
-## test-unit: Run the unit tests and create a coverate html report
+## test-cover: Run the unit tests and create a coverage html report
 test-cover:
 	@echo Running unit tests and creating coverage report...
 	@VERSION=$(VERSION) go test -mod=readonly -v -timeout 30m -coverprofile=$(COVER_FILE) -covermode=atomic $(PACKAGES)
 	@go tool cover -html=$(COVER_FILE) -o $(COVER_HTML_FILE)
 	@rm $(COVER_FILE)
 
+## bench: Run the unit tests with benchmarking enabled
 bench:
 	@echo Running unit tests with benchmarking...
 	@VERSION=$(VERSION) go test -mod=readonly -v -timeout 30m -bench=. $(PACKAGES)
