@@ -13,7 +13,7 @@ import (
 var (
 	DefaultMinTotalSupply      = sdk.NewInt(100)                   // One hundred
 	DefaultMaxTotalSupply      = sdk.NewInt(1_000_000_000_000_000) // One Quadrillion
-	DefaultCampaignCreationFee = sdk.NewCoins()                    // EmptyCoins
+	DefaultCampaignCreationFee = sdk.Coins(nil)                    // EmptyCoins
 
 	ParamStoreKeyTotalSupplyRange    = []byte("totalsupplyrange")
 	ParamStoreKeyCampaignCreationFee = []byte("campaigncreationfee")

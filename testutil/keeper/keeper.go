@@ -47,12 +47,13 @@ func AllKeepers(t testing.TB) (
 	capabilityKeeper := initializer.Capability()
 	authKeeper := initializer.Auth(paramKeeper)
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
-	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
+	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
+	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
 
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -153,12 +154,13 @@ func MonitoringcWithIBCMocks(
 	capabilityKeeper := initializer.Capability()
 	authKeeper := initializer.Auth(paramKeeper)
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
-	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
+	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
+	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
 
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(

@@ -444,6 +444,7 @@ func New(
 		app.GetSubspace(campaignmoduletypes.ModuleName),
 		&app.LaunchKeeper,
 		app.BankKeeper,
+		app.DistrKeeper,
 		app.ProfileKeeper,
 	)
 	app.CampaignKeeper = *campaignKeeper
@@ -519,7 +520,7 @@ func New(
 		transferModule,
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper, app.CampaignKeeper),
-		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
+		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.DistrKeeper, app.ProfileKeeper),
 		monitoringcModule,
 		rewardModule,
 		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),
@@ -603,7 +604,7 @@ func New(
 		transferModule,
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper, app.CampaignKeeper),
-		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
+		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.DistrKeeper, app.ProfileKeeper),
 		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
 
 		// TODO: Include fundraising for simapp when available
