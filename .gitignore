@@ -19,3 +19,4 @@ localnet/node?/config/write-file-atomic-*
 # Generate report files
 *.out
 *.test
+cover.html
