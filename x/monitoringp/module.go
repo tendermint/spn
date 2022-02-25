@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -168,6 +167,10 @@ func (AppModule) ConsensusVersion() uint64 { return 2 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
 func (am AppModule) BeginBlock(ctx sdk.Context, bb abci.RequestBeginBlock) {
+	if ctx.BlockHeight() == 1 {
+		return
+	}
+
 	// reports signatures for the block
 	am.keeper.ReportBlockSignatures(ctx, bb.LastCommitInfo, bb.Header.Height)
 
