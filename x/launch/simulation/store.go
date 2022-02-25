@@ -25,6 +25,7 @@ func FindCoordinatorCampaign(
 	ctx sdk.Context,
 	ck types.CampaignKeeper,
 	coordID uint64,
+	chainID uint64,
 ) (uint64, bool) {
 	campaigns := ck.GetAllCampaign(ctx)
 
@@ -38,8 +39,21 @@ func FindCoordinatorCampaign(
 		campaigns[i], campaigns[j] = campaigns[j], campaigns[i]
 	})
 
+	// check if campaign is already associated with chain
 	for _, campaign := range campaigns {
 		if campaign.CoordinatorID == coordID {
+			// get chain ids
+			campaignChains, hasChains := ck.GetCampaignChains(ctx, campaign.CampaignID)
+			if !hasChains {
+				return campaign.CampaignID, true
+			}
+
+			for _, campaignChain := range campaignChains.Chains {
+				if campaignChain == chainID {
+					return 0, false
+				}
+			}
+
 			return campaign.CampaignID, true
 		}
 	}
