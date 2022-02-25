@@ -79,7 +79,7 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 		setCampaignID := r.Intn(100) < 20
 		campaignID := uint64(0)
 		if setCampaignID {
-			campaignID, setCampaignID = FindCoordinatorCampaign(r, ctx, k.GetCampaignKeeper(), chain.CoordinatorID)
+			campaignID, setCampaignID = FindCoordinatorCampaign(r, ctx, k.GetCampaignKeeper(), chain.CoordinatorID, chain.LaunchID)
 		}
 
 		msg := sample.MsgEditChain(
