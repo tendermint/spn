@@ -11,6 +11,9 @@ import (
 )
 
 func TestRewardPool_Validate(t *testing.T) {
+	initialCoinMax := int64(10000)
+	currentCoinMax := initialCoinMax / int64(2)
+
 	tests := []struct {
 		name       string
 		rewardPool types.RewardPool
@@ -21,9 +24,11 @@ func TestRewardPool_Validate(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            "invalid address",
-				Coins:               sample.Coins(),
+				InitialCoins:        sample.CoinsWithRange(currentCoinMax, initialCoinMax),
+				CurrentCoins:        sample.CoinsWithRange(0, currentCoinMax),
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
+				Closed:              false,
 			},
 			wantErr: true,
 		},
@@ -32,23 +37,60 @@ func TestRewardPool_Validate(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            sample.Address(),
-				Coins:               sdk.NewCoins(),
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
+				Closed:              false,
 			},
 			wantErr: true,
 		},
 		{
-			name: "invalid coins",
+			name: "invalid initial coins",
 			rewardPool: types.RewardPool{
 				LaunchID: 1,
 				Provider: sample.Address(),
-				Coins: sdk.Coins{sdk.Coin{
+				InitialCoins: sdk.Coins{sdk.Coin{
+					Denom:  "invalid denom",
+					Amount: sdk.ZeroInt(),
+				}},
+				CurrentCoins:        sample.CoinsWithRange(0, currentCoinMax),
+				LastRewardHeight:    50,
+				CurrentRewardHeight: 100,
+				Closed:              false,
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid current coins",
+			rewardPool: types.RewardPool{
+				LaunchID:     1,
+				Provider:     sample.Address(),
+				InitialCoins: sample.CoinsWithRange(currentCoinMax, initialCoinMax),
+				CurrentCoins: sdk.Coins{sdk.Coin{
 					Denom:  "invalid denom",
 					Amount: sdk.ZeroInt(),
 				}},
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
+				Closed:              false,
+			},
+			wantErr: true,
+		},
+		{
+			name: "current coins greater than initial coins",
+			rewardPool: types.RewardPool{
+				LaunchID: 1,
+				Provider: sample.Address(),
+				InitialCoins: sdk.Coins{sdk.Coin{
+					Denom:  "test",
+					Amount: sdk.NewInt(5),
+				}},
+				CurrentCoins: sdk.Coins{sdk.Coin{
+					Denom:  "test",
+					Amount: sdk.NewInt(6),
+				}},
+				LastRewardHeight:    50,
+				CurrentRewardHeight: 100,
+				Closed:              false,
 			},
 			wantErr: true,
 		},
@@ -57,9 +99,11 @@ func TestRewardPool_Validate(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            sample.Address(),
-				Coins:               sample.Coins(),
+				InitialCoins:        sample.CoinsWithRange(currentCoinMax, initialCoinMax),
+				CurrentCoins:        sample.CoinsWithRange(0, currentCoinMax),
 				LastRewardHeight:    100,
 				CurrentRewardHeight: 50,
+				Closed:              false,
 			},
 			wantErr: true,
 		},
@@ -68,9 +112,11 @@ func TestRewardPool_Validate(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            sample.Address(),
-				Coins:               sample.Coins(),
+				InitialCoins:        sample.CoinsWithRange(currentCoinMax, initialCoinMax),
+				CurrentCoins:        sample.CoinsWithRange(0, currentCoinMax),
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
+				Closed:              false,
 			},
 		},
 	}

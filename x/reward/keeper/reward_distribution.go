@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -34,6 +33,11 @@ func (k Keeper) DistributeRewards(
 	if !found {
 		return sdkerrors.Wrapf(types.ErrRewardPoolNotFound, "%d", launchID)
 	}
+
+	if rewardPool.Closed {
+		return sdkerrors.Wrapf(types.ErrRewardPoolClosed, "%d", launchID)
+	}
+
 	provider, err := sdk.AccAddressFromBech32(rewardPool.Provider)
 	if err != nil {
 		return spnerrors.Criticalf("can't parse the provider address %s", err.Error())
@@ -76,7 +80,7 @@ func (k Keeper) DistributeRewards(
 			signatureRatio := signatureCount.RelativeSignatures.Quo(
 				sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount)),
 			)
-			rewards, err := CalculateRewards(blockRatio, signatureRatio, rewardPool.Coins)
+			rewards, err := CalculateRewards(blockRatio, signatureRatio, rewardPool.CurrentCoins)
 			if err != nil {
 				return spnerrors.Criticalf("invalid reward: %s", err.Error())
 			}
@@ -86,11 +90,11 @@ func (k Keeper) DistributeRewards(
 
 	// distribute the rewards to validators
 	for address, rewards := range rewardsToDistribute {
-		coins, isNegative := rewardPool.Coins.SafeSub(rewards)
+		coins, isNegative := rewardPool.CurrentCoins.SafeSub(rewards)
 		if isNegative {
-			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
+			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.CurrentCoins.String())
 		}
-		rewardPool.Coins = coins
+		rewardPool.CurrentCoins = coins
 
 		// send rewards to the address
 		account, err := sdk.AccAddressFromBech32(address)
@@ -109,10 +113,13 @@ func (k Keeper) DistributeRewards(
 			ctx,
 			types.ModuleName,
 			provider,
-			rewardPool.Coins); err != nil {
+			rewardPool.CurrentCoins); err != nil {
 			return spnerrors.Criticalf("send rewards error: %s", err.Error())
 		}
-		k.RemoveRewardPool(ctx, launchID)
+
+		// close the pool
+		rewardPool.Closed = true
+		k.SetRewardPool(ctx, rewardPool)
 		return nil
 	}
 
@@ -122,25 +129,25 @@ func (k Keeper) DistributeRewards(
 	blockCount := sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount))
 	refundRatioNumerator := blockCount.Sub(totalRelativeSignaturesDistributed)
 	refundRatio := refundRatioNumerator.Quo(blockCount)
-	refund, err := CalculateRewards(blockRatio, refundRatio, rewardPool.Coins)
+	refund, err := CalculateRewards(blockRatio, refundRatio, rewardPool.CurrentCoins)
 	if err != nil {
 		return spnerrors.Criticalf("invalid reward: %s", err.Error())
 	}
 
 	// if refund is non-null, refund is sent to the provider
 	if !refund.IsZero() {
-		coins, isNegative := rewardPool.Coins.SafeSub(refund)
+		coins, isNegative := rewardPool.CurrentCoins.SafeSub(refund)
 		if isNegative {
-			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.Coins.String())
+			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.CurrentCoins.String())
 		}
-		rewardPool.Coins = coins
+		rewardPool.CurrentCoins = coins
 
 		// send rewards to the address
 		if err := k.bankKeeper.SendCoinsFromModuleToAccount(
 			ctx,
 			types.ModuleName,
 			provider,
-			rewardPool.Coins); err != nil {
+			rewardPool.CurrentCoins); err != nil {
 			return spnerrors.Criticalf("send rewards error: %s", err.Error())
 		}
 	}

@@ -12,17 +12,36 @@ func NewRewardPool(launchID uint64, currentRewardHeight int64) RewardPool {
 	return RewardPool{
 		LaunchID:            launchID,
 		CurrentRewardHeight: uint64(currentRewardHeight),
+		Closed:              false,
 	}
 }
 
 // Validate check the RewardPool object
 func (m RewardPool) Validate() error {
-	if m.Coins.Empty() {
+	if m.InitialCoins.Empty() {
 		return errors.New("empty reward pool coins")
 	}
-	if err := m.Coins.Validate(); err != nil {
+	if err := m.InitialCoins.Validate(); err != nil {
 		return fmt.Errorf("invalid reward pool coins: %s", err)
 	}
+	if m.CurrentCoins.Empty() {
+		return errors.New("empty reward pool coins")
+	}
+
+	if err := m.CurrentCoins.Validate(); err != nil {
+		return fmt.Errorf("invalid reward pool coins: %s", err)
+	}
+
+	if !m.CurrentCoins.IsZero() {
+		if err := m.CurrentCoins.Validate(); err != nil {
+			return fmt.Errorf("invalid reward pool coins: %s", err)
+		}
+	}
+
+	if m.CurrentCoins.IsAnyGTE(m.InitialCoins) {
+		return errors.New("current coin cannot be greater than initial coin")
+	}
+
 	if _, err := sdk.AccAddressFromBech32(m.Provider); err != nil {
 		return fmt.Errorf("invalid provider address: %s", err)
 	}
