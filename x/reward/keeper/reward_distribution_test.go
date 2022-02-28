@@ -272,7 +272,6 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				valBar:   tc.Coins(t, "50aaa,50bbb"),
 			},
 		},
-		// TODO case where the pool is already closed
 		{
 			name: "rewards for validator with no profile should be refunded to provider",
 			rewardPool: types.RewardPool{
@@ -300,7 +299,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid reward pool",
+			name: "invalid reward pool - does not exist",
 			args: args{
 				launchID: 99999,
 				signatureCounts: tc.SignatureCounts(1,
@@ -310,6 +309,26 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				closeRewardPool: false,
 			},
 			err: types.ErrRewardPoolNotFound,
+		},
+		{
+			name: "invalid reward pool - closed",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
+				CurrentCoins:     tc.Coins(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+				Closed:           true,
+			},
+			args: args{
+				launchID: 1,
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
+				),
+				lastBlockHeight: 1,
+				closeRewardPool: false,
+			},
+			err: types.ErrRewardPoolClosed,
 		},
 		{
 			name: "validator with a consensus address but without profile should return a critical error",
