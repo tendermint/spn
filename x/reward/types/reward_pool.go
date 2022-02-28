@@ -27,15 +27,8 @@ func (m RewardPool) Validate() error {
 	if m.CurrentCoins.Empty() {
 		return errors.New("empty reward pool coins")
 	}
-
 	if err := m.CurrentCoins.Validate(); err != nil {
 		return fmt.Errorf("invalid reward pool coins: %s", err)
-	}
-
-	if !m.CurrentCoins.IsZero() {
-		if err := m.CurrentCoins.Validate(); err != nil {
-			return fmt.Errorf("invalid reward pool coins: %s", err)
-		}
 	}
 
 	if m.CurrentCoins.IsAnyGTE(m.InitialCoins) {
