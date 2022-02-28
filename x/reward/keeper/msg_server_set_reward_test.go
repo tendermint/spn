@@ -32,16 +32,14 @@ func initRewardPool(
 		coordMsg = sample.MsgCreateCoordinator(provider.String())
 	)
 
-	initialCoins := sample.Coins()
-
 	res, err := psrv.CreateCoordinator(ctx, &coordMsg)
 	require.NoError(t, err)
 	launchID := lk.AppendChain(sdkCtx, sample.Chain(1, res.CoordinatorID))
 	rewardPool := types.RewardPool{
 		Provider:            provider.String(),
 		LaunchID:            launchID,
-		InitialCoins:        initialCoins,
-		CurrentCoins:        initialCoins,
+		InitialCoins:        coins,
+		CurrentCoins:        coins,
 		LastRewardHeight:    100,
 		CurrentRewardHeight: 30,
 		Closed:              false,
