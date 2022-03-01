@@ -31,6 +31,11 @@ func (m RewardPool) Validate() error {
 		return fmt.Errorf("invalid reward pool coins: %s", err)
 	}
 
+	// check that coins have same denom set
+	if !m.RemainingCoins.DenomsSubsetOf(m.InitialCoins) || m.RemainingCoins.Len() != m.InitialCoins.Len() {
+		return fmt.Errorf("initial coins and remaining coins must be of the same denom set")
+	}
+
 	if m.RemainingCoins.IsAnyGTE(m.InitialCoins) {
 		return errors.New("current coin cannot be greater than initial coin")
 	}
