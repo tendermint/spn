@@ -26,7 +26,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 	tests := []struct {
 		name             string
 		sc               types.SignatureCounts
-		consAddres       string
+		opAddres       string
 		validatorSetSize int64
 		expected         types.SignatureCounts
 	}{
@@ -36,7 +36,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 1,
 				Counts:     []types.SignatureCount{},
 			},
-			consAddres:       opAddrFoo,
+			opAddres:       opAddrFoo,
 			validatorSetSize: 1,
 			expected: types.SignatureCounts{
 				BlockCount: 1,
@@ -51,7 +51,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 100,
 				Counts:     []types.SignatureCount{},
 			},
-			consAddres:       opAddrFoo,
+			opAddres:       opAddrFoo,
 			validatorSetSize: 10000,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
@@ -70,7 +70,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 					tc.SignatureCount(t, opAddrBaz, "5.5"),
 				},
 			},
-			consAddres:       opAddrFoobar,
+			opAddres:       opAddrFoobar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
@@ -92,7 +92,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 					tc.SignatureCount(t, opAddrBaz, "5.5"),
 				},
 			},
-			consAddres:       opAddrBar,
+			opAddres:       opAddrBar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
@@ -106,7 +106,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.sc.AddSignature(tt.consAddres, tt.validatorSetSize)
+			tt.sc.AddSignature(tt.opAddres, tt.validatorSetSize)
 			require.Equal(t, tt.expected, tt.sc)
 		})
 	}
