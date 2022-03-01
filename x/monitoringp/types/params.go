@@ -111,7 +111,10 @@ func (p Params) Validate() error {
 	if err := validateConsumerUnbondingPeriod(p.ConsumerUnbondingPeriod); err != nil {
 		return err
 	}
-	return validateConsumerRevisionHeight(p.ConsumerRevisionHeight)
+	if err := validateConsumerRevisionHeight(p.ConsumerRevisionHeight); err != nil {
+		return err
+	}
+	return validateDebugMode(p.DebugMode)
 }
 
 // String implements the Stringer interface.
