@@ -2,7 +2,6 @@
 package constructor
 
 import (
-	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,6 +10,7 @@ import (
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 )
 
 // Vote is a simplified type for abci.VoteInfo for testing purpose

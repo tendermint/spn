@@ -2,11 +2,8 @@
 package sample
 
 import (
-	"github.com/stretchr/testify/require"
 	"math/rand"
 	"testing"
-
-	campaign "github.com/tendermint/spn/x/campaign/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -17,6 +14,8 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctypes "github.com/cosmos/ibc-go/v2/modules/core/types"
+	"github.com/stretchr/testify/require"
+	campaign "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 
