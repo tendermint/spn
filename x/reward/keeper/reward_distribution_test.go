@@ -370,6 +370,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			// check if reward pool should be closed
 			rewardPool, found := k.GetRewardPool(ctx, tt.args.launchID)
 			require.True(t, found)
+			require.Equal(t, tt.rewardPool.InitialCoins, rewardPool.InitialCoins)
+
 			if tt.args.closeRewardPool || tt.args.lastBlockHeight >= rewardPool.LastRewardHeight {
 				require.Equal(t, true, rewardPool.Closed)
 				// TODO: https://github.com/tendermint/spn/issues/502
