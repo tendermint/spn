@@ -26,10 +26,10 @@ func Dec(t testing.TB, str string) sdk.Dec {
 	return dec
 }
 
-// SignatureCount returns a signature count object for test from a cons address and a decimal string for relative signatures
-func SignatureCount(t testing.TB, consAddr []byte, relSig string) spntypes.SignatureCount {
+// SignatureCount returns a signature count object for test from a operator address and a decimal string for relative signatures
+func SignatureCount(t testing.TB, opAddr string, relSig string) spntypes.SignatureCount {
 	return spntypes.SignatureCount{
-		ConsAddress:        consAddr,
+		OpAddress:        opAddr,
 		RelativeSignatures: Dec(t, relSig),
 	}
 }

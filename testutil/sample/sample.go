@@ -95,6 +95,11 @@ func Address() string {
 	return AccAddress().String()
 }
 
+// OperatorAddress returns a sample string validator operator address
+func OperatorAddress() string {
+	return sdk.ValAddress(PubKey().Address()).String()
+}
+
 // Coin returns a sample coin structure
 func Coin() sdk.Coin {
 	return sdk.NewCoin(AlphaString(5), sdk.NewInt(rand.Int63n(10000)+1))

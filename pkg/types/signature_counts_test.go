@@ -11,10 +11,10 @@ import (
 )
 
 var (
-	caFoo    = sample.ConsAddress()
-	caBar    = sample.ConsAddress()
-	caBaz    = sample.ConsAddress()
-	caFoobar = sample.ConsAddress()
+	opAddrFoo    = sample.OperatorAddress()
+	opAddrBar    = sample.OperatorAddress()
+	opAddrBaz    = sample.OperatorAddress()
+	opAddrFoobar = sample.OperatorAddress()
 )
 
 func TestNewSignatureCounts(t *testing.T) {
@@ -26,7 +26,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 	tests := []struct {
 		name             string
 		sc               types.SignatureCounts
-		consAddres       []byte
+		consAddres       string
 		validatorSetSize int64
 		expected         types.SignatureCounts
 	}{
@@ -36,12 +36,12 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 1,
 				Counts:     []types.SignatureCount{},
 			},
-			consAddres:       caFoo,
+			consAddres:       opAddrFoo,
 			validatorSetSize: 1,
 			expected: types.SignatureCounts{
 				BlockCount: 1,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "1"),
+					tc.SignatureCount(t, opAddrFoo, "1"),
 				},
 			},
 		},
@@ -51,12 +51,12 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 100,
 				Counts:     []types.SignatureCount{},
 			},
-			consAddres:       caFoo,
+			consAddres:       opAddrFoo,
 			validatorSetSize: 10000,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "0.0001"),
+					tc.SignatureCount(t, opAddrFoo, "0.0001"),
 				},
 			},
 		},
@@ -65,20 +65,20 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "1"),
-					tc.SignatureCount(t, caBar, "0.5"),
-					tc.SignatureCount(t, caBaz, "5.5"),
+					tc.SignatureCount(t, opAddrFoo, "1"),
+					tc.SignatureCount(t, opAddrBar, "0.5"),
+					tc.SignatureCount(t, opAddrBaz, "5.5"),
 				},
 			},
-			consAddres:       caFoobar,
+			consAddres:       opAddrFoobar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "1"),
-					tc.SignatureCount(t, caBar, "0.5"),
-					tc.SignatureCount(t, caBaz, "5.5"),
-					tc.SignatureCount(t, caFoobar, "0.1"),
+					tc.SignatureCount(t, opAddrFoo, "1"),
+					tc.SignatureCount(t, opAddrBar, "0.5"),
+					tc.SignatureCount(t, opAddrBaz, "5.5"),
+					tc.SignatureCount(t, opAddrFoobar, "0.1"),
 				},
 			},
 		},
@@ -87,19 +87,19 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "1"),
-					tc.SignatureCount(t, caBar, "0.5"),
-					tc.SignatureCount(t, caBaz, "5.5"),
+					tc.SignatureCount(t, opAddrFoo, "1"),
+					tc.SignatureCount(t, opAddrBar, "0.5"),
+					tc.SignatureCount(t, opAddrBaz, "5.5"),
 				},
 			},
-			consAddres:       caBar,
+			consAddres:       opAddrBar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "1"),
-					tc.SignatureCount(t, caBar, "0.6"),
-					tc.SignatureCount(t, caBaz, "5.5"),
+					tc.SignatureCount(t, opAddrFoo, "1"),
+					tc.SignatureCount(t, opAddrBar, "0.6"),
+					tc.SignatureCount(t, opAddrBaz, "5.5"),
 				},
 			},
 		},
@@ -127,9 +127,9 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 2,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "1"),
-					tc.SignatureCount(t, caBar, "0.1"),
-					tc.SignatureCount(t, caFoobar, "0.5"),
+					tc.SignatureCount(t, opAddrFoo, "1"),
+					tc.SignatureCount(t, opAddrBar, "0.1"),
+					tc.SignatureCount(t, opAddrFoobar, "0.5"),
 				},
 			},
 		},
@@ -138,10 +138,10 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 2,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "0.5"),
-					tc.SignatureCount(t, caBar, "0.5"),
-					tc.SignatureCount(t, caBaz, "0.5"),
-					tc.SignatureCount(t, caFoobar, "0.5"),
+					tc.SignatureCount(t, opAddrFoo, "0.5"),
+					tc.SignatureCount(t, opAddrBar, "0.5"),
+					tc.SignatureCount(t, opAddrBaz, "0.5"),
+					tc.SignatureCount(t, opAddrFoobar, "0.5"),
 				},
 			},
 		},
@@ -150,9 +150,9 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 2,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "1"),
-					tc.SignatureCount(t, caBar, "0.1"),
-					tc.SignatureCount(t, caBar, "0.5"),
+					tc.SignatureCount(t, opAddrFoo, "1"),
+					tc.SignatureCount(t, opAddrBar, "0.1"),
+					tc.SignatureCount(t, opAddrBar, "0.5"),
 				},
 			},
 			wantErr: true,
@@ -162,9 +162,9 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			sc: types.SignatureCounts{
 				BlockCount: 2,
 				Counts: []types.SignatureCount{
-					tc.SignatureCount(t, caFoo, "1"),
-					tc.SignatureCount(t, caBar, "1"),
-					tc.SignatureCount(t, caBaz, "0.5"),
+					tc.SignatureCount(t, opAddrFoo, "1"),
+					tc.SignatureCount(t, opAddrBar, "1"),
+					tc.SignatureCount(t, opAddrBaz, "0.5"),
 				},
 			},
 			wantErr: true,

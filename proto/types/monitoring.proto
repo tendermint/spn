@@ -39,4 +39,5 @@ message SignatureCount {
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"
   ];
+  string opAddress = 3;
 }
