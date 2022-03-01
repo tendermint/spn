@@ -53,7 +53,7 @@ func NewKeeper(
 		storeKey:         storeKey,
 		memKey:           memKey,
 		paramstore:       ps,
-		stakingKeeper: stakingKeeper,
+		stakingKeeper:    stakingKeeper,
 		scopedKeeper:     scopedKeeper,
 		clientKeeper:     clientKeeper,
 		portKeeper:       portKeeper,

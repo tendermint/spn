@@ -27,7 +27,7 @@ func (m *SignatureCounts) AddSignature(opAddress string, validatorSetSize int64)
 
 	// consensus address not found, a new one is added to the signature counts
 	m.Counts = append(m.Counts, SignatureCount{
-		OpAddress:        opAddress,
+		OpAddress:          opAddress,
 		RelativeSignatures: relSignature,
 	})
 }

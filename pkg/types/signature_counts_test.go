@@ -26,7 +26,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 	tests := []struct {
 		name             string
 		sc               types.SignatureCounts
-		opAddres       string
+		opAddres         string
 		validatorSetSize int64
 		expected         types.SignatureCounts
 	}{
@@ -36,7 +36,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 1,
 				Counts:     []types.SignatureCount{},
 			},
-			opAddres:       opAddrFoo,
+			opAddres:         opAddrFoo,
 			validatorSetSize: 1,
 			expected: types.SignatureCounts{
 				BlockCount: 1,
@@ -51,7 +51,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 100,
 				Counts:     []types.SignatureCount{},
 			},
-			opAddres:       opAddrFoo,
+			opAddres:         opAddrFoo,
 			validatorSetSize: 10000,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
@@ -70,7 +70,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 					tc.SignatureCount(t, opAddrBaz, "5.5"),
 				},
 			},
-			opAddres:       opAddrFoobar,
+			opAddres:         opAddrFoobar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
@@ -92,7 +92,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 					tc.SignatureCount(t, opAddrBaz, "5.5"),
 				},
 			},
-			opAddres:       opAddrBar,
+			opAddres:         opAddrBar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,

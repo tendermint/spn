@@ -2,13 +2,16 @@
 package sample
 
 import (
+	"github.com/stretchr/testify/require"
 	"math/rand"
+	"testing"
 
 	campaign "github.com/tendermint/spn/x/campaign/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+	cosmosed25519 "github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -95,9 +98,24 @@ func Address() string {
 	return AccAddress().String()
 }
 
+// ValAddress returns a sample validator operator address
+func ValAddress() sdk.ValAddress {
+	return sdk.ValAddress(PubKey().Address())
+}
+
 // OperatorAddress returns a sample string validator operator address
 func OperatorAddress() string {
-	return sdk.ValAddress(PubKey().Address()).String()
+	return ValAddress().String()
+}
+
+// Validator returns a sample staking validator
+func Validator(t testing.TB) stakingtypes.Validator {
+	val, err := stakingtypes.NewValidator(
+		ValAddress(),
+		cosmosed25519.GenPrivKey().PubKey(),
+		stakingtypes.Description{})
+	require.NoError(t, err)
+	return val
 }
 
 // Coin returns a sample coin structure
