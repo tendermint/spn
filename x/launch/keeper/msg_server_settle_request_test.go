@@ -14,27 +14,27 @@ import (
 
 func TestMsgSettleRequest(t *testing.T) {
 	var (
-		coordinator1                = sample.Coordinator(sample.Address())
-		coordinator2                = sample.Coordinator(sample.Address())
-		disableCoordinator          = sample.Coordinator(sample.Address())
-		invalidChain                = uint64(1000)
-		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
-		ctx                         = sdk.WrapSDKContext(sdkCtx)
+		coordinator1          = sample.Coordinator(sample.Address())
+		coordinator2          = sample.Coordinator(sample.Address())
+		disableCoordinator    = sample.Coordinator(sample.Address())
+		invalidChain          = uint64(1000)
+		sdkCtx, tk, srv, _, _ = setupMsgServer(t)
+		ctx                   = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	disableCoordinator.Active = false
 
-	coordinator1.CoordinatorID = pk.AppendCoordinator(sdkCtx, coordinator1)
-	coordinator2.CoordinatorID = pk.AppendCoordinator(sdkCtx, coordinator2)
-	disableCoordinator.CoordinatorID = pk.AppendCoordinator(sdkCtx, disableCoordinator)
+	coordinator1.CoordinatorID = tk.ProfileKeeper.AppendCoordinator(sdkCtx, coordinator1)
+	coordinator2.CoordinatorID = tk.ProfileKeeper.AppendCoordinator(sdkCtx, coordinator2)
+	disableCoordinator.CoordinatorID = tk.ProfileKeeper.AppendCoordinator(sdkCtx, disableCoordinator)
 
-	chains := createNChainForCoordinator(k, sdkCtx, coordinator1.CoordinatorID, 4)
+	chains := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordinator1.CoordinatorID, 4)
 	chains[0].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[0])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[1])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[1])
 	chains[3].CoordinatorID = disableCoordinator.CoordinatorID
-	k.SetChain(sdkCtx, chains[3])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[3])
 
 	requestSamples := make([]RequestSample, 6)
 	for i := 0; i < 6; i++ {
@@ -44,7 +44,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			Creator: addr,
 		}
 	}
-	requests := createRequestsFromSamples(k, sdkCtx, chains[2].LaunchID, requestSamples)
+	requests := createRequestsFromSamples(tk.LaunchKeeper, sdkCtx, chains[2].LaunchID, requestSamples)
 
 	tests := []struct {
 		name      string
@@ -182,10 +182,10 @@ func TestMsgSettleRequest(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			_, found := k.GetRequest(sdkCtx, tt.msg.LaunchID, tt.msg.RequestID)
+			_, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, tt.msg.RequestID)
 			require.False(t, found, "request not removed")
 
-			_, found = k.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.checkAddr)
+			_, found = tk.LaunchKeeper.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.checkAddr)
 			require.Equal(t, tt.msg.Approve, found, "request apply not performed")
 		})
 	}

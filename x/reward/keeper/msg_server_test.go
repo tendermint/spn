@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
@@ -16,23 +15,17 @@ import (
 )
 
 func setupMsgServer(t testing.TB) (
-	*keeper.Keeper,
-	*launchkeeper.Keeper,
-	*profilekeeper.Keeper,
-	bankkeeper.Keeper,
+	sdk.Context,
+	testkeeper.TestKeepers,
 	types.MsgServer,
 	profiletypes.MsgServer,
 	launchtypes.MsgServer,
-	sdk.Context,
 ) {
-	_, launchKeeper, profileKeeper, rewardKeeper, _, bankKeeper, _, ctx := testkeeper.AllKeepers(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 
-	return rewardKeeper,
-		launchKeeper,
-		profileKeeper,
-		bankKeeper,
-		keeper.NewMsgServerImpl(*rewardKeeper),
-		profilekeeper.NewMsgServerImpl(*profileKeeper),
-		launchkeeper.NewMsgServerImpl(*launchKeeper),
-		ctx
+	return ctx,
+		tk,
+		keeper.NewMsgServerImpl(*tk.RewardKeeper),
+		profilekeeper.NewMsgServerImpl(*tk.ProfileKeeper),
+		launchkeeper.NewMsgServerImpl(*tk.LaunchKeeper)
 }

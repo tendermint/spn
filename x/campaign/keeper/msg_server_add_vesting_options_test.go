@@ -22,8 +22,8 @@ func TestMsgAddVestingOptions(t *testing.T) {
 		campaignInvalidAllocatedShares = sample.Campaign(2)
 		campaignMainnetInitialized     = sample.Campaign(1)
 
-		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
+		ctx                                 = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// create shares
@@ -46,7 +46,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.AllocatedShares = allocatedShares
 	campaignMainnetInitialized.TotalShares = totalShares
-	campaignMainnetInitialized.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
+	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
@@ -56,9 +56,9 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaign.CoordinatorID = res.CoordinatorID
 	campaign.AllocatedShares = allocatedShares
 	campaign.TotalShares = totalShares
-	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 	accShare := sample.MainnetVestingAccountWithShares(campaign.CampaignID, addr2, lowShare)
-	campaignKeeper.SetMainnetVestingAccount(sdkCtx, accShare)
+	tk.CampaignKeeper.SetMainnetVestingAccount(sdkCtx, accShare)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
@@ -68,7 +68,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorID
 	campaignInvalidAllocatedShares.AllocatedShares = allocatedShares
 	campaignInvalidAllocatedShares.TotalShares = totalShares
-	campaignInvalidAllocatedShares.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
+	campaignInvalidAllocatedShares.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
 
 	for _, tc := range []struct {
 		name       string
@@ -152,10 +152,10 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			)
 			if tc.err == nil {
 				var found bool
-				previousCampaign, found = campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				previousCampaign, found = tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 
-				previousAccount, accountExists = campaignKeeper.GetMainnetVestingAccount(
+				previousAccount, accountExists = tk.CampaignKeeper.GetMainnetVestingAccount(
 					sdkCtx,
 					tc.msg.CampaignID,
 					tc.msg.Address,
@@ -168,10 +168,10 @@ func TestMsgAddVestingOptions(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			account, found := campaignKeeper.GetMainnetVestingAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Address)
+			account, found := tk.CampaignKeeper.GetMainnetVestingAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Address)
 			require.True(t, found)
 
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 
 			totalShares, err := account.GetTotalShares()

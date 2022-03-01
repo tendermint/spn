@@ -13,36 +13,36 @@ import (
 
 func TestMsgRequestRemoveValidator(t *testing.T) {
 	var (
-		invalidChain                = uint64(1000)
-		coordAddr                   = sample.Address()
-		coordDisableAddr            = sample.Address()
-		addr1                       = sample.Address()
-		addr2                       = sample.Address()
-		addr3                       = sample.Address()
-		addr4                       = sample.Address()
-		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
-		ctx                         = sdk.WrapSDKContext(sdkCtx)
+		invalidChain          = uint64(1000)
+		coordAddr             = sample.Address()
+		coordDisableAddr      = sample.Address()
+		addr1                 = sample.Address()
+		addr2                 = sample.Address()
+		addr3                 = sample.Address()
+		addr4                 = sample.Address()
+		sdkCtx, tk, srv, _, _ = setupMsgServer(t)
+		ctx                   = sdk.WrapSDKContext(sdkCtx)
 	)
 
-	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+	coordID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 		Active:  true,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 5)
+	chains := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordID, 5)
 	chains[0].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[0])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[1])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[1])
 
-	coordDisableID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+	coordDisableID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordDisableAddr,
 		Active:  false,
 	})
-	disableChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
+	disableChain := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordDisableID, 1)
 
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{LaunchID: chains[3].LaunchID, Address: addr1})
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{LaunchID: chains[4].LaunchID, Address: addr2})
-	k.SetGenesisValidator(sdkCtx, types.GenesisValidator{LaunchID: chains[4].LaunchID, Address: addr4})
+	tk.LaunchKeeper.SetGenesisValidator(sdkCtx, types.GenesisValidator{LaunchID: chains[3].LaunchID, Address: addr1})
+	tk.LaunchKeeper.SetGenesisValidator(sdkCtx, types.GenesisValidator{LaunchID: chains[4].LaunchID, Address: addr2})
+	tk.LaunchKeeper.SetGenesisValidator(sdkCtx, types.GenesisValidator{LaunchID: chains[4].LaunchID, Address: addr4})
 
 	tests := []struct {
 		name        string
@@ -180,7 +180,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
 			if !tt.wantApprove {
-				request, found := k.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
+				request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
@@ -188,7 +188,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				require.NotNil(t, content)
 				require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
 			} else {
-				_, found := k.GetGenesisValidator(sdkCtx, tt.msg.LaunchID, tt.msg.ValidatorAddress)
+				_, found := tk.LaunchKeeper.GetGenesisValidator(sdkCtx, tt.msg.LaunchID, tt.msg.ValidatorAddress)
 				require.False(t, found, "genesis validator not removed")
 			}
 		})

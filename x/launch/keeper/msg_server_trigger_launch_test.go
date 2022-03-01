@@ -13,7 +13,7 @@ import (
 )
 
 func TestMsgTriggerLaunch(t *testing.T) {
-	k, _, _, srv, profileSrv, _, sdkCtx := setupMsgServer(t)
+	sdkCtx, tk, srv, profileSrv, _ := setupMsgServer(t)
 
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
@@ -48,10 +48,10 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	alreadyLaunched := res.LaunchID
 
 	// Set a chain as already launched
-	chain, found := k.GetChain(sdkCtx, alreadyLaunched)
+	chain, found := tk.LaunchKeeper.GetChain(sdkCtx, alreadyLaunched)
 	require.True(t, found)
 	chain.LaunchTriggered = true
-	k.SetChain(sdkCtx, chain)
+	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
 	for _, tc := range []struct {
 		name string
@@ -103,7 +103,7 @@ func TestMsgTriggerLaunch(t *testing.T) {
 			require.NoError(t, err)
 
 			// Check value
-			chain, found := k.GetChain(sdkCtx, tc.msg.LaunchID)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, tc.msg.LaunchID)
 			require.True(t, found)
 			require.True(t, chain.LaunchTriggered)
 			require.EqualValues(t, testkeeper.ExampleTimestamp.Unix()+int64(tc.msg.RemainingTime), chain.LaunchTimestamp)

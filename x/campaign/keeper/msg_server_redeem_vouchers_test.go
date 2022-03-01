@@ -13,7 +13,7 @@ import (
 
 func TestMsgRedeemVouchers(t *testing.T) {
 	var (
-		campaignKeeper, _, _, bankKeeper, campaignSrv, _, sdkCtx = setupMsgServer(t)
+		sdkCtx, tk, campaignSrv, _ = setupMsgServer(t)
 
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		addr           = sample.AccAddress()
@@ -30,26 +30,26 @@ func TestMsgRedeemVouchers(t *testing.T) {
 
 	// Set campaign
 	campaign.AllocatedShares = shares
-	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	// Create vouchers
 	vouchers, err := types.SharesToVouchers(shares, campaign.CampaignID)
 	require.NoError(t, err)
 
 	// Send coins to account
-	err = bankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
+	err = tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
 	require.NoError(t, err)
-	err = bankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, addr, vouchers)
+	err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, addr, vouchers)
 	require.NoError(t, err)
 
-	campaignKeeper.SetMainnetAccount(sdkCtx, types.MainnetAccount{
+	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, types.MainnetAccount{
 		CampaignID: campaign.CampaignID,
 		Address:    existAddr.String(),
 		Shares:     shares,
 	})
-	err = bankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
+	err = tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
 	require.NoError(t, err)
-	err = bankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, existAddr, vouchers)
+	err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, existAddr, vouchers)
 	require.NoError(t, err)
 
 	for _, tc := range []struct {
@@ -165,9 +165,9 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				accountAddr, err = sdk.AccAddressFromBech32(tc.msg.Account)
 				require.NoError(t, err)
 
-				previousAccount, foundAccount = campaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Account)
+				previousAccount, foundAccount = tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Account)
 				if foundAccount {
-					previousBalance = bankKeeper.GetAllBalances(sdkCtx, accountAddr)
+					previousBalance = tk.BankKeeper.GetAllBalances(sdkCtx, accountAddr)
 				}
 			}
 
@@ -182,7 +182,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			shares, err := types.VouchersToShares(tc.msg.Vouchers, tc.msg.CampaignID)
 			require.NoError(t, err)
 
-			account, found := campaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Account)
+			account, found := tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Account)
 			require.True(t, found)
 
 			// Check account shares
@@ -199,7 +199,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				expectedVouchers, negative = previousBalance.SafeSub(tc.msg.Vouchers)
 				require.False(t, negative)
 			}
-			balance := bankKeeper.GetAllBalances(sdkCtx, accountAddr)
+			balance := tk.BankKeeper.GetAllBalances(sdkCtx, accountAddr)
 			require.True(t, expectedVouchers.IsEqual(balance))
 		})
 	}

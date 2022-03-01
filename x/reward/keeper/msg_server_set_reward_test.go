@@ -53,7 +53,7 @@ func initRewardPool(
 
 func TestMsgSetRewards(t *testing.T) {
 	var (
-		k, lk, _, bk, srv, psrv, _, sdkCtx = setupMsgServer(t)
+		sdkCtx, tk, srv, psrv, _ = setupMsgServer(t)
 
 		ctx          = sdk.WrapSDKContext(sdkCtx)
 		invalidCoord = sample.Address()
@@ -63,16 +63,16 @@ func TestMsgSetRewards(t *testing.T) {
 	require.NoError(t, err)
 
 	var (
-		rewardPool                 = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-		noBalanceRewardPool        = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-		emptyCoinsRewardPool       = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-		zeroRewardHeightRewardPool = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
-		launchedRewardPool         = initRewardPool(t, k, bk, lk, sdkCtx, psrv)
+		rewardPool                 = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
+		noBalanceRewardPool        = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
+		emptyCoinsRewardPool       = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
+		zeroRewardHeightRewardPool = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
+		launchedRewardPool         = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
 	)
-	launchTriggeredChain, found := lk.GetChain(sdkCtx, launchedRewardPool.LaunchID)
+	launchTriggeredChain, found := tk.LaunchKeeper.GetChain(sdkCtx, launchedRewardPool.LaunchID)
 	require.True(t, found)
 	launchTriggeredChain.LaunchTriggered = true
-	lk.SetChain(sdkCtx, launchTriggeredChain)
+	tk.LaunchKeeper.SetChain(sdkCtx, launchTriggeredChain)
 
 	tests := []struct {
 		name string
@@ -159,7 +159,7 @@ func TestMsgSetRewards(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			previousRewardPool, _ := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
+			previousRewardPool, _ := tk.RewardKeeper.GetRewardPool(sdkCtx, tt.msg.LaunchID)
 			got, err := srv.SetRewards(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
@@ -170,7 +170,7 @@ func TestMsgSetRewards(t *testing.T) {
 			require.Equal(t, previousRewardPool.Coins, got.PreviousCoins)
 			require.Equal(t, previousRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
 
-			rewardPool, found := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
+			rewardPool, found := tk.RewardKeeper.GetRewardPool(sdkCtx, tt.msg.LaunchID)
 			if tt.msg.Coins.Empty() || tt.msg.LastRewardHeight == 0 {
 				require.False(t, found)
 				require.Equal(t, uint64(0), got.NewLastRewardHeight)
@@ -190,7 +190,7 @@ func TestMsgSetRewards(t *testing.T) {
 
 func TestSetBalance(t *testing.T) {
 	var (
-		_, _, _, bk, _, _, _, sdkCtx = setupMsgServer(t)
+		sdkCtx, tk, _, _, _ = setupMsgServer(t)
 
 		provider = sample.AccAddress()
 	)
@@ -264,12 +264,12 @@ func TestSetBalance(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := bk.MintCoins(sdkCtx, types.ModuleName, tt.args.coins.Add(tt.args.poolCoins...))
+			err := tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, tt.args.coins.Add(tt.args.poolCoins...))
 			require.NoError(t, err)
-			err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, tt.args.coins)
+			err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, tt.args.coins)
 			require.NoError(t, err)
 
-			err = keeper.SetBalance(sdkCtx, bk, tt.args.provider, tt.args.coins, tt.args.poolCoins)
+			err = keeper.SetBalance(sdkCtx, tk.BankKeeper, tt.args.provider, tt.args.coins, tt.args.poolCoins)
 			if tt.wantErr {
 				require.Error(t, err)
 				return

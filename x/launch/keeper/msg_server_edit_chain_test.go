@@ -14,7 +14,7 @@ import (
 )
 
 func TestMsgEditChain(t *testing.T) {
-	k, _, campaignK, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	sdkCtx, tk, srv, profileSrv, campaignSrv := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
@@ -71,7 +71,7 @@ func TestMsgEditChain(t *testing.T) {
 	require.NoError(t, err)
 	campaignDuplicateChain := resCampaign.CampaignID
 
-	err = campaignK.AddChainToCampaign(sdkCtx, campaignDuplicateChain, launchID2)
+	err = tk.CampaignKeeper.AddChainToCampaign(sdkCtx, campaignDuplicateChain, launchID2)
 	require.NoError(t, err)
 
 	for _, tc := range []struct {
@@ -260,7 +260,7 @@ func TestMsgEditChain(t *testing.T) {
 			var previousChain types.Chain
 			var found bool
 			if tc.err == nil {
-				previousChain, found = k.GetChain(sdkCtx, tc.msg.LaunchID)
+				previousChain, found = tk.LaunchKeeper.GetChain(sdkCtx, tc.msg.LaunchID)
 				require.True(t, found)
 			}
 
@@ -273,7 +273,7 @@ func TestMsgEditChain(t *testing.T) {
 			require.NoError(t, err)
 
 			// The chain must continue to exist in the store
-			chain, found := k.GetChain(sdkCtx, tc.msg.LaunchID)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, tc.msg.LaunchID)
 			require.True(t, found)
 
 			// Unchanged values
@@ -312,10 +312,10 @@ func TestMsgEditChain(t *testing.T) {
 				require.True(t, chain.HasCampaign)
 				require.EqualValues(t, tc.msg.CampaignID, chain.CampaignID)
 				// ensure campaign exist
-				_, found := k.GetCampaignKeeper().GetCampaign(sdkCtx, chain.CampaignID)
+				_, found := tk.CampaignKeeper.GetCampaign(sdkCtx, chain.CampaignID)
 				require.True(t, found)
 				// ensure campaign chains exist
-				campaignChains, found := k.GetCampaignKeeper().GetCampaignChains(sdkCtx, chain.CampaignID)
+				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, chain.CampaignID)
 				require.True(t, found)
 
 				// check that the chain launch ID is in the campaign chains

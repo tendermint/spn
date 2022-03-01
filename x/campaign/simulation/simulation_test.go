@@ -65,16 +65,24 @@ func TestGetCoordSimAccount(t *testing.T) {
 }
 
 func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
-	ck, _, pk, _, _, _, _, ctx := testkeeper.AllKeepers(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
 	t.Run("no campaign", func(t *testing.T) {
-		_, _, found := simcampaign.GetCoordSimAccountWithCampaignID(r, ctx, pk, *ck, accs, false, false)
+		_, _, found := simcampaign.GetCoordSimAccountWithCampaignID(
+			r,
+			ctx,
+			tk.ProfileKeeper,
+			*tk.CampaignKeeper,
+			accs,
+			false,
+			false,
+		)
 		require.False(t, found)
 	})
 
-	coords := populateCoordinators(t, r, ctx, *pk, accs, 10)
+	coords := populateCoordinators(t, r, ctx, *tk.ProfileKeeper, accs, 10)
 
 	t.Run("find a campaign", func(t *testing.T) {
 		camp := campaigntypes.NewCampaign(
@@ -86,11 +94,19 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			sample.Metadata(20),
 		)
 		camp.MainnetInitialized = true
-		ck.AppendCampaign(ctx, camp)
-		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(r, ctx, pk, *ck, accs, false, false)
+		tk.CampaignKeeper.AppendCampaign(ctx, camp)
+		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(
+			r,
+			ctx,
+			tk.ProfileKeeper,
+			*tk.CampaignKeeper,
+			accs,
+			false,
+			false,
+		)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
-		_, found = ck.GetCampaign(ctx, id)
+		_, found = tk.CampaignKeeper.GetCampaign(ctx, id)
 		require.True(t, found)
 		require.EqualValues(t, id, camp.CampaignID)
 	})
@@ -105,11 +121,19 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			sample.Metadata(20),
 		)
 		camp.MainnetInitialized = true
-		idDynamicShares := ck.AppendCampaign(ctx, camp)
-		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(r, ctx, pk, *ck, accs, true, false)
+		idDynamicShares := tk.CampaignKeeper.AppendCampaign(ctx, camp)
+		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(
+			r,
+			ctx,
+			tk.ProfileKeeper,
+			*tk.CampaignKeeper,
+			accs,
+			true,
+			false,
+		)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
-		camp, found = ck.GetCampaign(ctx, id)
+		camp, found = tk.CampaignKeeper.GetCampaign(ctx, id)
 		require.True(t, found)
 		require.EqualValues(t, idDynamicShares, id)
 		require.EqualValues(t, id, camp.CampaignID)
@@ -125,11 +149,19 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			false,
 			sample.Metadata(20),
 		)
-		idNoMainnet := ck.AppendCampaign(ctx, camp)
-		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(r, ctx, pk, *ck, accs, false, true)
+		idNoMainnet := tk.CampaignKeeper.AppendCampaign(ctx, camp)
+		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(
+			r,
+			ctx,
+			tk.ProfileKeeper,
+			*tk.CampaignKeeper,
+			accs,
+			false,
+			true,
+		)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
-		_, found = ck.GetCampaign(ctx, id)
+		_, found = tk.CampaignKeeper.GetCampaign(ctx, id)
 		require.True(t, found)
 		require.EqualValues(t, idNoMainnet, id)
 		require.EqualValues(t, id, camp.CampaignID)
@@ -145,11 +177,19 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			true,
 			sample.Metadata(20),
 		)
-		idNoMainnetDynamicShares := ck.AppendCampaign(ctx, camp)
-		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(r, ctx, pk, *ck, accs, true, true)
+		idNoMainnetDynamicShares := tk.CampaignKeeper.AppendCampaign(ctx, camp)
+		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(
+			r,
+			ctx,
+			tk.ProfileKeeper,
+			*tk.CampaignKeeper,
+			accs,
+			true,
+			true,
+		)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
-		_, found = ck.GetCampaign(ctx, id)
+		_, found = tk.CampaignKeeper.GetCampaign(ctx, id)
 		require.True(t, found)
 		require.EqualValues(t, idNoMainnetDynamicShares, id)
 		require.EqualValues(t, id, camp.CampaignID)
@@ -203,24 +243,24 @@ func TestGetSharesFromCampaign(t *testing.T) {
 }
 
 func TestGetAccountWithVouchers(t *testing.T) {
-	_, _, _, _, _, bk, _, ctx := testkeeper.AllKeepers(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
 	mint := func(addr sdk.AccAddress, coins sdk.Coins) {
-		require.NoError(t, bk.MintCoins(ctx, campaigntypes.ModuleName, coins))
-		require.NoError(t, bk.SendCoinsFromModuleToAccount(ctx, campaigntypes.ModuleName, addr, coins))
+		require.NoError(t, tk.BankKeeper.MintCoins(ctx, campaigntypes.ModuleName, coins))
+		require.NoError(t, tk.BankKeeper.SendCoinsFromModuleToAccount(ctx, campaigntypes.ModuleName, addr, coins))
 	}
 
 	t.Run("no account", func(t *testing.T) {
-		_, _, _, found := simcampaign.GetAccountWithVouchers(ctx, bk, accs)
+		_, _, _, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, accs)
 		require.False(t, found)
 	})
 
 	t.Run("vouchers from an account", func(t *testing.T) {
 		acc, _ := simtypes.RandomAcc(r, accs)
 		mint(acc.Address, sample.Vouchers(10))
-		campID, acc, coins, found := simcampaign.GetAccountWithVouchers(ctx, bk, accs)
+		campID, acc, coins, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, accs)
 		require.True(t, found)
 		require.EqualValues(t, 10, campID)
 		require.False(t, coins.Empty())

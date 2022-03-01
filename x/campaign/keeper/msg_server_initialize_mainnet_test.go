@@ -20,8 +20,8 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		coordAddr                           = sample.Address()
 		coordAddrNoCampaign                 = sample.Address()
 
-		campaignKeeper, _, launchKeeper, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                                 = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
+		ctx                                 = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
@@ -40,21 +40,21 @@ func TestMsgInitializeMainnet(t *testing.T) {
 	// Set different campaigns
 	campaign := sample.Campaign(campaignID)
 	campaign.CoordinatorID = coordID
-	campaignKeeper.SetCampaign(sdkCtx, campaign)
+	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
 
 	campaignMainnetInitialized := sample.Campaign(campaignMainnetInitializedID)
 	campaignMainnetInitialized.CoordinatorID = coordID
 	campaignMainnetInitialized.MainnetInitialized = true
-	campaignKeeper.SetCampaign(sdkCtx, campaignMainnetInitialized)
+	tk.CampaignKeeper.SetCampaign(sdkCtx, campaignMainnetInitialized)
 
 	campaignEmptySupply := sample.Campaign(campaignEmptySupplyID)
 	campaignEmptySupply.CoordinatorID = coordID
 	campaignEmptySupply.TotalSupply = sdk.NewCoins()
-	campaignKeeper.SetCampaign(sdkCtx, campaignEmptySupply)
+	tk.CampaignKeeper.SetCampaign(sdkCtx, campaignEmptySupply)
 
 	campaignIncorrectCoord := sample.Campaign(campaignIncorrectCoordID)
 	campaignIncorrectCoord.CoordinatorID = coordID
-	campaignKeeper.SetCampaign(sdkCtx, campaignIncorrectCoord)
+	tk.CampaignKeeper.SetCampaign(sdkCtx, campaignIncorrectCoord)
 
 	for _, tc := range []struct {
 		name string
@@ -134,20 +134,20 @@ func TestMsgInitializeMainnet(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 			require.True(t, campaign.MainnetInitialized)
 			require.EqualValues(t, res.MainnetID, campaign.MainnetID)
 
 			// Chain is in launch module
-			chain, found := launchKeeper.GetChain(sdkCtx, campaign.MainnetID)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, campaign.MainnetID)
 			require.True(t, found)
 			require.True(t, chain.HasCampaign)
 			require.True(t, chain.IsMainnet)
 			require.EqualValues(t, tc.msg.CampaignID, chain.CampaignID)
 
 			// Mainnet ID is listed in campaign chains
-			campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
+			campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 			require.Contains(t, campaignChains.Chains, campaign.MainnetID)
 		})

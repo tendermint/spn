@@ -13,10 +13,10 @@ import (
 
 func TestMsgCreateCampaign(t *testing.T) {
 	var (
-		coordAddr1                                               = sample.Address()
-		coordAddr2                                               = sample.Address()
-		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
+		coordAddr1                          = sample.Address()
+		coordAddr2                          = sample.Address()
+		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
+		ctx                                 = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
@@ -88,7 +88,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			}
 			require.NoError(t, err)
 			require.Equal(t, tc.expectedID, got.CampaignID)
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, got.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, got.CampaignID)
 			require.True(t, found)
 			require.EqualValues(t, got.CampaignID, campaign.CampaignID)
 			require.EqualValues(t, tc.msg.CampaignName, campaign.CampaignName)
@@ -102,7 +102,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.EqualValues(t, false, campaign.DynamicShares)
 
 			// Empty list of campaign chains
-			campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)
+			campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)
 			require.True(t, found)
 			require.EqualValues(t, got.CampaignID, campaignChains.CampaignID)
 			require.Empty(t, campaignChains.Chains)

@@ -17,8 +17,8 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		coordAddrNoCampaign = sample.Address()
 		campaign            = sample.Campaign(0)
 
-		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
+		ctx                                 = sdk.WrapSDKContext(sdkCtx)
 	)
 	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr,
@@ -26,7 +26,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 	})
 	require.NoError(t, err)
 	campaign.CoordinatorID = res.CoordinatorID
-	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrNoCampaign,
@@ -98,7 +98,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			previousCampaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			previousCampaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			_, err := campaignSrv.EditCampaign(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
@@ -106,7 +106,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 
 			if len(tc.msg.Name) > 0 {

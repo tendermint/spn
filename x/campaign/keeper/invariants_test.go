@@ -11,52 +11,52 @@ import (
 )
 
 func TestAccountWithoutCampaignInvariant(t *testing.T) {
-	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
+	ctx, tk, _, _ := setupMsgServer(t) //nolint
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
-		campaign.CampaignID = k.AppendCampaign(ctx, campaign)
-		k.SetMainnetAccount(ctx, sample.MainnetAccount(campaign.CampaignID, sample.Address()))
-		_, isValid := keeper.AccountWithoutCampaignInvariant(*k)(ctx)
+		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
+		tk.CampaignKeeper.SetMainnetAccount(ctx, sample.MainnetAccount(campaign.CampaignID, sample.Address()))
+		_, isValid := keeper.AccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
 		require.Equal(t, false, isValid)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		k.SetMainnetAccount(ctx, sample.MainnetAccount(100, sample.Address()))
-		_, isValid := keeper.AccountWithoutCampaignInvariant(*k)(ctx)
+		tk.CampaignKeeper.SetMainnetAccount(ctx, sample.MainnetAccount(100, sample.Address()))
+		_, isValid := keeper.AccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
 		require.Equal(t, true, isValid)
 	})
 }
 
 func TestVestingAccountWithoutCampaignInvariant(t *testing.T) {
-	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
+	ctx, tk, _, _ := setupMsgServer(t) //nolint
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
-		campaign.CampaignID = k.AppendCampaign(ctx, campaign)
-		k.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(campaign.CampaignID, sample.Address()))
-		_, isValid := keeper.VestingAccountWithoutCampaignInvariant(*k)(ctx)
+		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
+		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(campaign.CampaignID, sample.Address()))
+		_, isValid := keeper.VestingAccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
 		require.Equal(t, false, isValid)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		k.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(10000, sample.Address()))
-		_, isValid := keeper.VestingAccountWithoutCampaignInvariant(*k)(ctx)
+		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(10000, sample.Address()))
+		_, isValid := keeper.VestingAccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
 		require.Equal(t, true, isValid)
 	})
 }
 
 func TestCampaignChainsWithoutCampaignInvariant(t *testing.T) {
-	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
+	ctx, tk, _, _ := setupMsgServer(t) //nolint
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
-		campaign.CampaignID = k.AppendCampaign(ctx, campaign)
-		k.SetCampaignChains(ctx, types.CampaignChains{CampaignID: campaign.CampaignID})
-		_, isValid := keeper.CampaignChainsWithoutCampaignInvariant(*k)(ctx)
+		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
+		tk.CampaignKeeper.SetCampaignChains(ctx, types.CampaignChains{CampaignID: campaign.CampaignID})
+		_, isValid := keeper.CampaignChainsWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
 		require.Equal(t, false, isValid)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		k.SetCampaignChains(ctx, types.CampaignChains{CampaignID: 1000})
-		_, isValid := keeper.CampaignChainsWithoutCampaignInvariant(*k)(ctx)
+		tk.CampaignKeeper.SetCampaignChains(ctx, types.CampaignChains{CampaignID: 1000})
+		_, isValid := keeper.CampaignChainsWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
 		require.Equal(t, true, isValid)
 	})
 }

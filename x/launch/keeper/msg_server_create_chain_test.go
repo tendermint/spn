@@ -12,7 +12,7 @@ import (
 )
 
 func TestMsgCreateChain(t *testing.T) {
-	k, _, campaignKeeper, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	sdkCtx, tk, srv, profileSrv, campaignSrv := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 
 	// Create an invalid coordinator
@@ -86,7 +86,7 @@ func TestMsgCreateChain(t *testing.T) {
 			require.EqualValues(t, tc.wantedChainID, got.LaunchID)
 
 			// The chain must exist in the store
-			chain, found := k.GetChain(sdkCtx, got.LaunchID)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, got.LaunchID)
 			require.True(t, found)
 			require.EqualValues(t, coordID, chain.CoordinatorID)
 			require.EqualValues(t, got.LaunchID, chain.LaunchID)
@@ -113,7 +113,7 @@ func TestMsgCreateChain(t *testing.T) {
 
 			if tc.msg.HasCampaign {
 				require.Equal(t, tc.msg.CampaignID, chain.CampaignID)
-				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
+				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 				require.Contains(t, campaignChains.Chains, chain.LaunchID)
 			}

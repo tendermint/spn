@@ -22,8 +22,8 @@ func TestMsgAddShares(t *testing.T) {
 		campaignInvalidAllocatedShares = sample.Campaign(2)
 		campaignMainnetInitialized     = sample.Campaign(1)
 
-		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
+		ctx                                 = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// create shares
@@ -36,7 +36,7 @@ func TestMsgAddShares(t *testing.T) {
 	lowShare, err := types.NewShares("8token")
 	require.NoError(t, err)
 
-	campaignKeeper.SetMainnetAccount(sdkCtx, sample.MainnetAccount(campaign.CampaignID, addr2))
+	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, sample.MainnetAccount(campaign.CampaignID, addr2))
 	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrMainnetInitialized,
 		Description: sample.CoordinatorDescription(),
@@ -46,7 +46,7 @@ func TestMsgAddShares(t *testing.T) {
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.AllocatedShares = allocatedShares
 	campaignMainnetInitialized.TotalShares = totalShares
-	campaignMainnetInitialized.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
+	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
@@ -54,7 +54,7 @@ func TestMsgAddShares(t *testing.T) {
 	})
 	require.NoError(t, err)
 	campaign.CoordinatorID = res.CoordinatorID
-	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 	campaign.AllocatedShares = allocatedShares
 	campaign.TotalShares = totalShares
 
@@ -66,7 +66,7 @@ func TestMsgAddShares(t *testing.T) {
 	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorID
 	campaignInvalidAllocatedShares.AllocatedShares = allocatedShares
 	campaignInvalidAllocatedShares.TotalShares = totalShares
-	campaignInvalidAllocatedShares.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
+	campaignInvalidAllocatedShares.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
 
 	for _, tc := range []struct {
 		name       string
@@ -150,10 +150,10 @@ func TestMsgAddShares(t *testing.T) {
 			)
 			if tc.err == nil {
 				var found bool
-				previousCampaign, found = campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				previousCampaign, found = tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 
-				previousAccount, accountExists = campaignKeeper.GetMainnetAccount(
+				previousAccount, accountExists = tk.CampaignKeeper.GetMainnetAccount(
 					sdkCtx,
 					tc.msg.CampaignID,
 					tc.msg.Address,
@@ -166,10 +166,10 @@ func TestMsgAddShares(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			account, found := campaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Address)
+			account, found := tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Address)
 			require.True(t, found)
 
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 
 			if accountExists {

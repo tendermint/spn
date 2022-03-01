@@ -13,7 +13,7 @@ import (
 )
 
 func TestKeeper_CreateNewChain(t *testing.T) {
-	k, _, campaignKeeper, _, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	sdkCtx, tk, _, profileSrv, campaignSrv := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordNoCampaignAddress := sample.Address()
@@ -158,7 +158,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			id, err := k.CreateNewChain(
+			id, err := tk.LaunchKeeper.CreateNewChain(
 				sdkCtx,
 				tc.coordinatorID,
 				tc.genesisChainID,
@@ -178,7 +178,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			}
 			require.EqualValues(t, tc.wantedID, id)
 
-			chain, found := k.GetChain(sdkCtx, id)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, id)
 			require.True(t, found)
 			require.EqualValues(t, tc.coordinatorID, chain.CoordinatorID)
 			require.EqualValues(t, tc.genesisChainID, chain.GenesisChainID)
@@ -202,7 +202,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 
 			// Check chain has been appended in the campaign
 			if tc.hasCampaign {
-				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.campaignID)
+				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, tc.campaignID)
 				require.True(t, found)
 				require.Contains(t, campaignChains.Chains, id)
 			}

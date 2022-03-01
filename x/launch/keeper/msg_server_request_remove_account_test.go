@@ -13,39 +13,39 @@ import (
 
 func TestMsgRequestRemoveAccount(t *testing.T) {
 	var (
-		invalidChain                = uint64(1000)
-		coordAddr                   = sample.Address()
-		coordDisableAddr            = sample.Address()
-		addr1                       = sample.Address()
-		addr2                       = sample.Address()
-		addr3                       = sample.Address()
-		addr4                       = sample.Address()
-		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
-		ctx                         = sdk.WrapSDKContext(sdkCtx)
+		invalidChain          = uint64(1000)
+		coordAddr             = sample.Address()
+		coordDisableAddr      = sample.Address()
+		addr1                 = sample.Address()
+		addr2                 = sample.Address()
+		addr3                 = sample.Address()
+		addr4                 = sample.Address()
+		sdkCtx, tk, srv, _, _ = setupMsgServer(t)
+		ctx                   = sdk.WrapSDKContext(sdkCtx)
 	)
 
-	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+	coordID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 		Active:  true,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 6)
+	chains := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordID, 6)
 	chains[0].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[0])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[1])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[1])
 	chains[5].IsMainnet = true
 	chains[5].HasCampaign = true
-	k.SetChain(sdkCtx, chains[5])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[5])
 
-	k.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[3].LaunchID, Address: addr1})
-	k.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[4].LaunchID, Address: addr2})
-	k.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[4].LaunchID, Address: addr4})
+	tk.LaunchKeeper.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[3].LaunchID, Address: addr1})
+	tk.LaunchKeeper.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[4].LaunchID, Address: addr2})
+	tk.LaunchKeeper.SetVestingAccount(sdkCtx, types.VestingAccount{LaunchID: chains[4].LaunchID, Address: addr4})
 
-	coordDisableID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+	coordDisableID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordDisableAddr,
 		Active:  false,
 	})
-	disableChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
+	disableChain := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordDisableID, 1)
 
 	tests := []struct {
 		name        string
@@ -193,7 +193,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
 			if !tt.wantApprove {
-				request, found := k.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
+				request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 
@@ -201,9 +201,9 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				require.NotNil(t, content)
 				require.Equal(t, tt.msg.Address, content.Address)
 			} else {
-				_, foundGenesis := k.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
+				_, foundGenesis := tk.LaunchKeeper.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.False(t, foundGenesis, "genesis account not removed")
-				_, foundVesting := k.GetVestingAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
+				_, foundVesting := tk.LaunchKeeper.GetVestingAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.False(t, foundVesting, "vesting account not removed")
 			}
 		})

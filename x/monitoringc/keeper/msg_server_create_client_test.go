@@ -2,9 +2,10 @@ package keeper_test
 
 import (
 	"encoding/base64"
-	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"testing"
 	"time"
+
+	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -21,7 +22,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		coordAddr    = sample.Address()
 		invalidChain = uint64(1000)
 
-		monitoringKeeper, _, _, msgSrv, msgSrvProfile, msgSrvLaunch, ibcKeeper, sdkCtx = setupMsgServer(t)
+		sdkCtx, tk, msgSrv, msgSrvProfile, msgSrvLaunch = setupMsgServer(t)
 
 		ctx = sdk.WrapSDKContext(sdkCtx)
 
@@ -129,18 +130,18 @@ func Test_msgServer_CreateClient(t *testing.T) {
 			require.NoError(t, err)
 
 			// verify the client is created
-			verifiedClients, found := monitoringKeeper.GetVerifiedClientID(sdkCtx, tt.msg.LaunchID)
+			verifiedClients, found := tk.MonitoringConsumerKeeper.GetVerifiedClientID(sdkCtx, tt.msg.LaunchID)
 			require.True(t, found, "verified client ID should be added in the list")
 			require.EqualValues(t, tt.msg.LaunchID, verifiedClients.LaunchID)
 			require.Contains(t, verifiedClients.ClientIDs, res.ClientID)
 
-			launchIDFromClient, found := monitoringKeeper.GetLaunchIDFromVerifiedClientID(sdkCtx, res.ClientID)
+			launchIDFromClient, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromVerifiedClientID(sdkCtx, res.ClientID)
 			require.True(t, found, "launch ID should be registered for the verified client ID")
 			require.EqualValues(t, res.ClientID, launchIDFromClient.ClientID)
 			require.EqualValues(t, tt.msg.LaunchID, launchIDFromClient.LaunchID)
 
 			// IBC client should be created
-			clientState, found := ibcKeeper.ClientKeeper.GetClientState(sdkCtx, res.ClientID)
+			clientState, found := tk.IBCKeeper.ClientKeeper.GetClientState(sdkCtx, res.ClientID)
 			require.True(t, found, "IBC consumer client state should be created")
 			cs, ok := clientState.(*ibctmtypes.ClientState)
 			require.True(t, ok)
