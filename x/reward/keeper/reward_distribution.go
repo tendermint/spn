@@ -120,6 +120,7 @@ func (k Keeper) DistributeRewards(
 
 		// close the pool
 		rewardPool.Closed = true
+		rewardPool.RemainingCoins = rewardPool.RemainingCoins.Sub(rewardPool.RemainingCoins) // sub coins transferred
 		k.SetRewardPool(ctx, rewardPool)
 		return nil
 	}

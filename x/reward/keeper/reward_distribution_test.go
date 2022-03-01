@@ -389,21 +389,11 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			// check if reward pool should be closed
 			if tt.args.closeRewardPool || tt.args.lastBlockHeight >= rewardPool.LastRewardHeight {
 				require.Equal(t, true, rewardPool.Closed)
-				// TODO: https://github.com/tendermint/spn/issues/502
-				// assert the module account has no coin left
-				// accAddr, err := sdk.AccAddressFromBech32(tt.rewardPool.Provider)
-				// require.NoError(t, err)
-				// err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, accAddr,
-				//	sdk.NewCoins(sdk.NewCoin(
-				//		rewardPool.InitialCoins.GetDenomByIndex(0),
-				//		sdk.OneInt(),
-				//	)))
-				// require.ErrorIs(t, err, sdkerrors.ErrInsufficientFunds)
 			} else {
 				require.Equal(t, tt.args.lastBlockHeight, rewardPool.CurrentRewardHeight)
 			}
 
-			totalBalances := sdk.NewCoins()
+			totalDistributedBalances := sdk.NewCoins()
 			for wantAddr, wantBalance := range tt.wantBalances {
 				t.Run(fmt.Sprintf("check balance %s", wantAddr), func(t *testing.T) {
 					wantAcc, err := sdk.AccAddressFromBech32(wantAddr)
@@ -415,21 +405,19 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 							wantAddr, wantBalance.String(), balance.String(),
 						),
 					)
-					totalBalances.Add(balance...)
+					totalDistributedBalances = totalDistributedBalances.Add(balance...)
 
 					// remove the test balance
 					err = bk.SendCoinsFromAccountToModule(ctx, wantAcc, types.ModuleName, balance)
 					require.NoError(t, err)
 					err = bk.BurnCoins(ctx, types.ModuleName, balance)
 					require.NoError(t, err)
-
-					// TODO: https://github.com/tendermint/spn/issues/502
-					// assert coins no distributed are still documented in the reward pool
-					// assert coins in reward pool equals coins in the module
 				})
 			}
 
-			require.Equal(t, previousRemainingCoins, rewardPool.RemainingCoins.Add(totalBalances...))
+			// assert currentRemainingCoins = previousRemainingCoins - distributedRewards
+			coinTotal := rewardPool.RemainingCoins.Add(totalDistributedBalances...)
+			require.True(t, previousRemainingCoins.IsEqual(coinTotal))
 
 			// remove the reward pool used for the test
 			k.RemoveRewardPool(ctx, tt.rewardPool.LaunchID)
