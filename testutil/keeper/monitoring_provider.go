@@ -33,6 +33,7 @@ func MonitoringpKeeperWithIBCMock(
 	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
 	monitoringKeeper := initializer.Monitoringp(
+		stakingkeeper,
 		*ibcKeeper,
 		*capabilityKeeper,
 		paramKeeper,
