@@ -13,14 +13,6 @@ import (
 )
 
 func TestKeeper_ReportBlockSignatures(t *testing.T) {
-	// valSet is a validator set for testing purpose that represent consensus addresses
-	// association with operator addresses
-	type val struct {
-		opAddr   string
-		consAddr []byte
-	}
-	type valSet []val
-
 	// initialize validators
 	k, _, stakingKeeper, ctx := testkeeper.MonitoringpKeeper(t)
 	valFoo, valBar, valBaz, valFred, valQux := sample.Validator(t),
