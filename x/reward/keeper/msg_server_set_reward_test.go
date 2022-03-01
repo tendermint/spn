@@ -181,6 +181,7 @@ func TestMsgSetRewards(t *testing.T) {
 				return
 			}
 			require.True(t, found)
+			require.False(t, rewardPool.Closed)
 			require.Equal(t, tt.msg.Coins, rewardPool.InitialCoins)
 			require.Equal(t, tt.msg.Coins, rewardPool.RemainingCoins)
 			require.Equal(t, tt.msg.Provider, rewardPool.Provider)
