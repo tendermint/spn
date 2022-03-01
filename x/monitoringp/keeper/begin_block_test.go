@@ -13,7 +13,7 @@ import (
 )
 
 func TestKeeper_ReportBlockSignatures(t *testing.T) {
-	k, _, ctx := testkeeper.MonitoringpKeeper(t)
+	k, _, stakingKeeper, ctx := testkeeper.MonitoringpKeeper(t)
 
 	// simplified type for abci.VoteInfo for testing purpose
 	type vote struct {
