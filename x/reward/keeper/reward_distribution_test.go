@@ -353,11 +353,26 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			var (
+				previousRewardPool     types.RewardPool
+				found                  bool
+				previousInitialCoins   sdk.Coins
+				previousRemainingCoins sdk.Coins
+			)
+
 			// set test reward pool if contains coins
 			if tt.rewardPool.RemainingCoins != nil {
 				k.SetRewardPool(ctx, tt.rewardPool)
 				err := bk.MintCoins(ctx, types.ModuleName, tt.rewardPool.RemainingCoins)
 				require.NoError(t, err)
+
+				previousRewardPool, found = k.GetRewardPool(ctx, tt.args.launchID)
+				require.True(t, found)
+				previousInitialCoins = previousRewardPool.InitialCoins
+				previousRemainingCoins = previousRewardPool.RemainingCoins
+				require.Equal(t, tt.rewardPool.InitialCoins, previousInitialCoins)
+				require.Equal(t, tt.rewardPool.RemainingCoins, previousRemainingCoins)
+
 			}
 
 			err := k.DistributeRewards(ctx, tt.args.launchID, tt.args.signatureCounts, tt.args.lastBlockHeight, tt.args.closeRewardPool)
@@ -367,11 +382,11 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			// check if reward pool should be closed
 			rewardPool, found := k.GetRewardPool(ctx, tt.args.launchID)
 			require.True(t, found)
-			require.Equal(t, tt.rewardPool.InitialCoins, rewardPool.InitialCoins)
+			require.Equal(t, previousInitialCoins, rewardPool.InitialCoins)
 
+			// check if reward pool should be closed
 			if tt.args.closeRewardPool || tt.args.lastBlockHeight >= rewardPool.LastRewardHeight {
 				require.Equal(t, true, rewardPool.Closed)
 				// TODO: https://github.com/tendermint/spn/issues/502
@@ -388,6 +403,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				require.Equal(t, tt.args.lastBlockHeight, rewardPool.CurrentRewardHeight)
 			}
 
+			totalBalances := sdk.NewCoins()
 			for wantAddr, wantBalance := range tt.wantBalances {
 				t.Run(fmt.Sprintf("check balance %s", wantAddr), func(t *testing.T) {
 					wantAcc, err := sdk.AccAddressFromBech32(wantAddr)
@@ -399,6 +415,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 							wantAddr, wantBalance.String(), balance.String(),
 						),
 					)
+					totalBalances.Add(balance...)
 
 					// remove the test balance
 					err = bk.SendCoinsFromAccountToModule(ctx, wantAcc, types.ModuleName, balance)
@@ -411,6 +428,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 					// assert coins in reward pool equals coins in the module
 				})
 			}
+
+			require.Equal(t, previousRemainingCoins, rewardPool.RemainingCoins.Add(totalBalances...))
 
 			// remove the reward pool used for the test
 			k.RemoveRewardPool(ctx, tt.rewardPool.LaunchID)
