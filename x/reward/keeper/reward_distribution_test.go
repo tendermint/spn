@@ -376,6 +376,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				require.Equal(t, true, rewardPool.Closed)
 				// TODO: https://github.com/tendermint/spn/issues/502
 				// assert the module account has no coin left
+				require.Equal(t, sdk.NewCoins(), rewardPool.RemainingCoins)
 			} else {
 				require.Equal(t, tt.args.lastBlockHeight, rewardPool.CurrentRewardHeight)
 			}
