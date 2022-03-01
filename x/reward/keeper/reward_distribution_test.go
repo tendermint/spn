@@ -299,7 +299,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid reward pool - does not exist",
+			name: "should prevent distributing rewards with a non-existent reward pool",
 			args: args{
 				launchID: 99999,
 				signatureCounts: tc.SignatureCounts(1,
@@ -311,7 +311,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			err: types.ErrRewardPoolNotFound,
 		},
 		{
-			name: "invalid reward pool - closed",
+			name: "should prevent distributing rewards from a closed reward pool",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
