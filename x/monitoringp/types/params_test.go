@@ -138,3 +138,8 @@ func TestValidateConsumerRevisionHeight(t *testing.T) {
 	require.Error(t, validateConsumerRevisionHeight(uint64(0)), "should prevent using 0")
 	require.NoError(t, validateConsumerRevisionHeight(uint64(1)))
 }
+
+func TestValidateDebugMode(t *testing.T) {
+	require.Error(t, validateDebugMode(1))
+	require.NoError(t, validateDebugMode(false))
+}
