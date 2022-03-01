@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	ibcclienttypes "github.com/cosmos/ibc-go/v2/modules/core/02-client/types"
@@ -72,7 +74,11 @@ func AllKeepers(t testing.TB) (
 		Time: ExampleTimestamp,
 	}, false, log.NewNopLogger())
 
+	// Initialize community pool
+	distrKeeper.SetFeePool(ctx, distrtypes.InitialFeePool())
+
 	// Initialize params
+	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
 	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
@@ -127,10 +133,6 @@ func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
 // Reward returns a keeper of the reward module for testing purpose
 func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
 	_, _, _, rewardKeeper, _, _, _, ctx := AllKeepers(t) // nolint
-
-	// Initialize params
-	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
-
 	return rewardKeeper, ctx
 }
 
@@ -179,7 +181,6 @@ func MonitoringcWithIBCMocks(
 		Time: ExampleTimestamp,
 	}, false, log.NewNopLogger())
 
-	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
 
