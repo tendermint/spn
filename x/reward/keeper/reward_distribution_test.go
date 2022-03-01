@@ -376,7 +376,14 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				require.Equal(t, true, rewardPool.Closed)
 				// TODO: https://github.com/tendermint/spn/issues/502
 				// assert the module account has no coin left
-				require.Equal(t, sdk.NewCoins(), rewardPool.RemainingCoins)
+				// accAddr, err := sdk.AccAddressFromBech32(tt.rewardPool.Provider)
+				// require.NoError(t, err)
+				// err = bk.SendCoinsFromModuleToAccount(ctx, types.ModuleName, accAddr,
+				//	sdk.NewCoins(sdk.NewCoin(
+				//		rewardPool.InitialCoins.GetDenomByIndex(0),
+				//		sdk.OneInt(),
+				//	)))
+				// require.ErrorIs(t, err, sdkerrors.ErrInsufficientFunds)
 			} else {
 				require.Equal(t, tt.args.lastBlockHeight, rewardPool.CurrentRewardHeight)
 			}
