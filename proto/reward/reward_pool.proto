@@ -14,7 +14,7 @@ message RewardPool {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
-  repeated cosmos.base.v1beta1.Coin currentCoins = 4 [
+  repeated cosmos.base.v1beta1.Coin remainingCoins = 4 [
     (gogoproto.nullable) = false,
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"

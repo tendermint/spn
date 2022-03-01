@@ -39,7 +39,7 @@ func initRewardPool(
 		Provider:            provider.String(),
 		LaunchID:            launchID,
 		InitialCoins:        coins,
-		CurrentCoins:        coins,
+		RemainingCoins:      coins,
 		LastRewardHeight:    100,
 		CurrentRewardHeight: 30,
 		Closed:              false,
@@ -87,7 +87,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         rewardPool.Provider,
 				LaunchID:         9999,
-				Coins:            rewardPool.CurrentCoins,
+				Coins:            rewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 			err: launchtypes.ErrChainNotFound,
@@ -97,7 +97,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         sample.Address(),
 				LaunchID:         rewardPool.LaunchID,
-				Coins:            rewardPool.CurrentCoins,
+				Coins:            rewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
@@ -107,7 +107,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         invalidCoord,
 				LaunchID:         rewardPool.LaunchID,
-				Coins:            rewardPool.CurrentCoins,
+				Coins:            rewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 			err: types.ErrInvalidCoordinatorID,
@@ -117,7 +117,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         launchedRewardPool.Provider,
 				LaunchID:         launchedRewardPool.LaunchID,
-				Coins:            launchedRewardPool.CurrentCoins,
+				Coins:            launchedRewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 			err: launchtypes.ErrTriggeredLaunch,
@@ -146,7 +146,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         zeroRewardHeightRewardPool.Provider,
 				LaunchID:         zeroRewardHeightRewardPool.LaunchID,
-				Coins:            zeroRewardHeightRewardPool.CurrentCoins,
+				Coins:            zeroRewardHeightRewardPool.RemainingCoins,
 				LastRewardHeight: 0,
 			},
 		},
@@ -155,7 +155,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         rewardPool.Provider,
 				LaunchID:         rewardPool.LaunchID,
-				Coins:            rewardPool.CurrentCoins,
+				Coins:            rewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 		},
@@ -170,7 +170,7 @@ func TestMsgSetRewards(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			require.Equal(t, previousRewardPool.CurrentCoins, got.PreviousCoins)
+			require.Equal(t, previousRewardPool.RemainingCoins, got.PreviousCoins)
 			require.Equal(t, previousRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
 
 			rewardPool, found := k.GetRewardPool(sdkCtx, tt.msg.LaunchID)
@@ -182,7 +182,7 @@ func TestMsgSetRewards(t *testing.T) {
 			}
 			require.True(t, found)
 			require.Equal(t, tt.msg.Coins, rewardPool.InitialCoins)
-			require.Equal(t, tt.msg.Coins, rewardPool.CurrentCoins)
+			require.Equal(t, tt.msg.Coins, rewardPool.RemainingCoins)
 			require.Equal(t, tt.msg.Provider, rewardPool.Provider)
 			require.Equal(t, tt.msg.LastRewardHeight, rewardPool.LastRewardHeight)
 

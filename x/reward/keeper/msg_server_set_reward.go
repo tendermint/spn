@@ -50,21 +50,21 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 		}
 		rewardPool = types.NewRewardPool(msg.LaunchID, 0)
 	} else {
-		previousCoins = rewardPool.CurrentCoins
+		previousCoins = rewardPool.RemainingCoins
 		previousLastRewardHeight = rewardPool.LastRewardHeight
-		if err := SetBalance(ctx, k.bankKeeper, provider, msg.Coins, rewardPool.CurrentCoins); err != nil {
+		if err := SetBalance(ctx, k.bankKeeper, provider, msg.Coins, rewardPool.RemainingCoins); err != nil {
 			return nil, err
 		}
 	}
 
 	if msg.Coins.Empty() || msg.LastRewardHeight == 0 {
 		rewardPool.InitialCoins = sdk.NewCoins()
-		rewardPool.CurrentCoins = sdk.NewCoins()
+		rewardPool.RemainingCoins = sdk.NewCoins()
 		rewardPool.LastRewardHeight = 0
 		k.RemoveRewardPool(ctx, msg.LaunchID)
 	} else {
 		rewardPool.InitialCoins = msg.Coins
-		rewardPool.CurrentCoins = msg.Coins
+		rewardPool.RemainingCoins = msg.Coins
 		rewardPool.Provider = msg.Provider
 		rewardPool.LastRewardHeight = msg.LastRewardHeight
 		k.SetRewardPool(ctx, rewardPool)

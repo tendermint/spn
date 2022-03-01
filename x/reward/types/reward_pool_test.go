@@ -25,7 +25,7 @@ func TestRewardPool_Validate(t *testing.T) {
 				LaunchID:            1,
 				Provider:            "invalid address",
 				InitialCoins:        sample.CoinsWithRange(currentCoinMax, initialCoinMax),
-				CurrentCoins:        sample.CoinsWithRange(0, currentCoinMax),
+				RemainingCoins:      sample.CoinsWithRange(0, currentCoinMax),
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
 				Closed:              false,
@@ -52,7 +52,7 @@ func TestRewardPool_Validate(t *testing.T) {
 					Denom:  "invalid denom",
 					Amount: sdk.ZeroInt(),
 				}},
-				CurrentCoins:        sample.CoinsWithRange(0, currentCoinMax),
+				RemainingCoins:      sample.CoinsWithRange(0, currentCoinMax),
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
 				Closed:              false,
@@ -65,7 +65,7 @@ func TestRewardPool_Validate(t *testing.T) {
 				LaunchID:     1,
 				Provider:     sample.Address(),
 				InitialCoins: sample.CoinsWithRange(currentCoinMax, initialCoinMax),
-				CurrentCoins: sdk.Coins{sdk.Coin{
+				RemainingCoins: sdk.Coins{sdk.Coin{
 					Denom:  "invalid denom",
 					Amount: sdk.ZeroInt(),
 				}},
@@ -84,7 +84,7 @@ func TestRewardPool_Validate(t *testing.T) {
 					Denom:  "test",
 					Amount: sdk.NewInt(5),
 				}},
-				CurrentCoins: sdk.Coins{sdk.Coin{
+				RemainingCoins: sdk.Coins{sdk.Coin{
 					Denom:  "test",
 					Amount: sdk.NewInt(6),
 				}},
@@ -100,7 +100,7 @@ func TestRewardPool_Validate(t *testing.T) {
 				LaunchID:            1,
 				Provider:            sample.Address(),
 				InitialCoins:        sample.CoinsWithRange(currentCoinMax, initialCoinMax),
-				CurrentCoins:        sample.CoinsWithRange(0, currentCoinMax),
+				RemainingCoins:      sample.CoinsWithRange(0, currentCoinMax),
 				LastRewardHeight:    100,
 				CurrentRewardHeight: 50,
 				Closed:              false,
@@ -113,7 +113,7 @@ func TestRewardPool_Validate(t *testing.T) {
 				LaunchID:            1,
 				Provider:            sample.Address(),
 				InitialCoins:        sample.CoinsWithRange(currentCoinMax, initialCoinMax),
-				CurrentCoins:        sample.CoinsWithRange(0, currentCoinMax),
+				RemainingCoins:      sample.CoinsWithRange(0, currentCoinMax),
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
 				Closed:              false,

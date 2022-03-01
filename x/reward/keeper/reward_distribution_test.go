@@ -178,7 +178,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				LaunchID:         1,
 				Provider:         provider,
 				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
-				CurrentCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 				Closed:           false,
 			},
@@ -203,7 +203,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				LaunchID:         1,
 				Provider:         provider,
 				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
-				CurrentCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 				Closed:           false,
 			},
@@ -228,7 +228,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				LaunchID:         1,
 				Provider:         provider,
 				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
-				CurrentCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 				Closed:           false,
 			},
@@ -253,7 +253,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				LaunchID:         1,
 				Provider:         provider,
 				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
-				CurrentCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 				Closed:           false,
 			},
@@ -278,7 +278,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				LaunchID:         1,
 				Provider:         provider,
 				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
-				CurrentCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 				Closed:           false,
 			},
@@ -316,7 +316,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				LaunchID:         1,
 				Provider:         provider,
 				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
-				CurrentCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 				Closed:           true,
 			},
@@ -336,7 +336,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				LaunchID:         1,
 				Provider:         provider,
 				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
-				CurrentCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
 				LastRewardHeight: 10,
 				Closed:           false,
 			},
@@ -354,9 +354,9 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// set test reward pool if contains coins
-			if tt.rewardPool.CurrentCoins != nil {
+			if tt.rewardPool.RemainingCoins != nil {
 				k.SetRewardPool(ctx, tt.rewardPool)
-				err := bk.MintCoins(ctx, types.ModuleName, tt.rewardPool.CurrentCoins)
+				err := bk.MintCoins(ctx, types.ModuleName, tt.rewardPool.RemainingCoins)
 				require.NoError(t, err)
 			}
 

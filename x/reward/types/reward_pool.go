@@ -24,14 +24,14 @@ func (m RewardPool) Validate() error {
 	if err := m.InitialCoins.Validate(); err != nil {
 		return fmt.Errorf("invalid reward pool coins: %s", err)
 	}
-	if m.CurrentCoins.Empty() {
+	if m.RemainingCoins.Empty() {
 		return errors.New("empty reward pool coins")
 	}
-	if err := m.CurrentCoins.Validate(); err != nil {
+	if err := m.RemainingCoins.Validate(); err != nil {
 		return fmt.Errorf("invalid reward pool coins: %s", err)
 	}
 
-	if m.CurrentCoins.IsAnyGTE(m.InitialCoins) {
+	if m.RemainingCoins.IsAnyGTE(m.InitialCoins) {
 		return errors.New("current coin cannot be greater than initial coin")
 	}
 
