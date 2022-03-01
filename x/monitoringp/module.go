@@ -171,7 +171,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, bb abci.RequestBeginBlock) {
 	// reports signatures for the block
 	err := am.keeper.ReportBlockSignatures(ctx, bb.LastCommitInfo, bb.Header.Height)
 	if err != nil {
-		ctx.Logger().Error(fmt.Sprintf("error reporting block signatures %s", err.Error()))
+		ctx.Logger().Error(fmt.Sprintf("error reporting block signatures: %s", err.Error()))
 	}
 
 	// check and transmit signatures
