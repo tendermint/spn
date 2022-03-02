@@ -106,7 +106,8 @@ func TestMsgTriggerLaunch(t *testing.T) {
 			chain, found := k.GetChain(sdkCtx, tc.msg.LaunchID)
 			require.True(t, found)
 			require.True(t, chain.LaunchTriggered)
-			require.EqualValues(t, testkeeper.ExampleTimestamp.Unix()+int64(tc.msg.RemainingTime), chain.LaunchTimestamp)
+			require.EqualValues(t, testkeeper.ExampleTimestamp.Unix()+tc.msg.RemainingTime, chain.LaunchTimestamp)
+			require.EqualValues(t, testkeeper.ExampleHeight, chain.ConsumerRevisionHeight)
 		})
 	}
 }
