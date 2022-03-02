@@ -10,7 +10,7 @@ func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # genesis/types/default
 		ValidatorList:              []Validator{},
-		ValidatorByConsAddressList: []ValidatorByConsAddress{},
+		ValidatorByOperatorAddressList: []ValidatorByOperatorAddress{},
 		CoordinatorList:            []Coordinator{},
 		CoordinatorCounter:         1,
 		CoordinatorByAddressList:   []CoordinatorByAddress{},
@@ -41,21 +41,21 @@ func (gs GenesisState) ValidateValidators() error {
 	}
 
 	// Check for duplicated index in validatorByConsAddress
-	validatorByConsAddressIndexMap := make(map[string]struct{})
-	for _, elem := range gs.ValidatorByConsAddressList {
-		index := string(ValidatorByConsAddressKey(elem.ConsensusAddress))
-		if _, ok := validatorByConsAddressIndexMap[index]; ok {
-			return errors.New("duplicated index for validatorByConsAddress")
+	validatorByOperatorAddressIndexMap := make(map[string]struct{})
+	for _, elem := range gs.ValidatorByOperatorAddressList {
+		index := string(CoordinatorByAddressKey(elem.OperatorAddress))
+		if _, ok := validatorByOperatorAddressIndexMap[index]; ok {
+			return errors.New("duplicated index for validatorByOperatorAddress")
 		}
 		valIndex := ValidatorKey(elem.ValidatorAddress)
 		validator, ok := validatorIndexMap[string(valIndex)]
 		if !ok {
-			return errors.New("validator consensus address not found for Validator")
+			return errors.New("validator operator address not found for Validator")
 		}
-		if !validator.HasConsensusAddress(elem.ConsensusAddress) {
+		if !validator.HasOperatorAddress(elem.OperatorAddress) {
 			return errors.New("consensus address not found in the Validator consensus address list")
 		}
-		validatorByConsAddressIndexMap[index] = struct{}{}
+		validatorByOperatorAddressIndexMap[index] = struct{}{}
 	}
 
 	return nil

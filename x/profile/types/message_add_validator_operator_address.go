@@ -3,63 +3,50 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
-	valtypes "github.com/tendermint/spn/pkg/types"
 )
 
-const TypeMsgSetValidatorConsAddress = "set_validator_cons_address"
+const TypeMsgAddValidatorOperatorAddress = "add_validator_operator_address"
 
-var _ sdk.Msg = &MsgSetValidatorConsAddress{}
+var _ sdk.Msg = &MsgAddValidatorOperatorAddress{}
 
 func NewMsgSetValidatorConsAddress(
 	validatorAddress,
-	signature,
-	keyType,
-	chainID string,
-	nonce uint64,
-	validatorConsPubKey []byte,
-) *MsgSetValidatorConsAddress {
-	return &MsgSetValidatorConsAddress{
+	operatorAddress string,
+) *MsgAddValidatorOperatorAddress {
+	return &MsgAddValidatorOperatorAddress{
 		ValidatorAddress:    validatorAddress,
-		ValidatorConsPubKey: validatorConsPubKey,
-		ValidatorKeyType:    keyType,
-		Signature:           signature,
-		Nonce:               nonce,
-		ChainID:             chainID,
+		OperatorAddress: operatorAddress,
 	}
 }
 
-func (msg *MsgSetValidatorConsAddress) Route() string {
+func (msg *MsgAddValidatorOperatorAddress) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgSetValidatorConsAddress) Type() string {
-	return TypeMsgSetValidatorConsAddress
+func (msg *MsgAddValidatorOperatorAddress) Type() string {
+	return TypeMsgAddValidatorOperatorAddress
 }
 
-func (msg *MsgSetValidatorConsAddress) GetSigners() []sdk.AccAddress {
-	valAddress, err := sdk.AccAddressFromBech32(msg.ValidatorAddress)
+func (msg *MsgAddValidatorOperatorAddress) GetSigners() []sdk.AccAddress {
+	operatorAddress, err := sdk.AccAddressFromBech32(msg.OperatorAddress)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{valAddress}
+	return []sdk.AccAddress{operatorAddress}
 }
 
-func (msg *MsgSetValidatorConsAddress) GetSignBytes() []byte {
+func (msg *MsgAddValidatorOperatorAddress) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgSetValidatorConsAddress) ValidateBasic() error {
+func (msg *MsgAddValidatorOperatorAddress) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.ValidatorAddress); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
-	valPubKey, err := valtypes.NewValidatorConsPubKey(msg.ValidatorConsPubKey, msg.ValidatorKeyType)
-	if err != nil {
-		return sdkerrors.Wrap(ErrInvalidValidatorKey, msg.ValidatorKeyType)
+	if _, err := sdk.AccAddressFromBech32(msg.ValidatorAddress); err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator operator address (%s)", err)
 	}
-	if !valPubKey.VerifySignature(msg.Nonce, msg.ChainID, msg.Signature) {
-		return sdkerrors.Wrap(ErrInvalidValidatorSignature, msg.Signature)
-	}
+
 	return nil
 }
