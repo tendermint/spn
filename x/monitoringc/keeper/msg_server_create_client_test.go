@@ -11,6 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
@@ -22,9 +23,8 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		coordAddr    = sample.Address()
 		invalidChain = uint64(1000)
 
-		sdkCtx, tk, msgSrv, msgSrvProfile, msgSrvLaunch = setupMsgServer(t)
-
-		ctx = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 
 		consPubKeyStr = "jP0v8F0e2kSAS367V/QAikddQPze+V36v7lhkv1Iqgg="
 		cs            = spntypes.NewConsensusState(
@@ -43,14 +43,14 @@ func Test_msgServer_CreateClient(t *testing.T) {
 	require.NoError(t, err)
 
 	// create a coordinator and a chain with a genesis validator
-	_, err = msgSrvProfile.CreateCoordinator(ctx, profiletypes.NewMsgCreateCoordinator(
+	_, err = ts.ProfileSrv.CreateCoordinator(ctx, profiletypes.NewMsgCreateCoordinator(
 		coordAddr,
 		"",
 		"",
 		"",
 	))
 	require.NoError(t, err)
-	resCreateChain, err := msgSrvLaunch.CreateChain(ctx, launchtypes.NewMsgCreateChain(
+	resCreateChain, err := ts.LaunchSrv.CreateChain(ctx, launchtypes.NewMsgCreateChain(
 		coordAddr,
 		"orbit-1",
 		sample.String(10),
@@ -62,7 +62,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		sample.Metadata(20),
 	))
 	require.NoError(t, err)
-	_, err = msgSrvLaunch.RequestAddValidator(ctx, launchtypes.NewMsgRequestAddValidator(
+	_, err = ts.LaunchSrv.RequestAddValidator(ctx, launchtypes.NewMsgRequestAddValidator(
 		coordAddr,
 		resCreateChain.LaunchID,
 		sample.Address(),
@@ -72,7 +72,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		sample.GenesisValidatorPeer(),
 	))
 	require.NoError(t, err)
-	_, err = msgSrvLaunch.TriggerLaunch(ctx, launchtypes.NewMsgTriggerLaunch(
+	_, err = ts.LaunchSrv.TriggerLaunch(ctx, launchtypes.NewMsgTriggerLaunch(
 		coordAddr,
 		resCreateChain.LaunchID,
 		launchtypes.DefaultMinLaunchTime,
@@ -122,7 +122,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			res, err := msgSrv.CreateClient(ctx, &tt.msg)
+			res, err := ts.MonitoringcSrv.CreateClient(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
 				return
