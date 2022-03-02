@@ -71,7 +71,7 @@ func AllKeepers(t testing.TB) (
 
 	// Create a context using a custom timestamp
 	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{
-		Time: ExampleTimestamp,
+		Time:   ExampleTimestamp,
 		Height: ExampleHeight,
 	}, false, log.NewNopLogger())
 
@@ -112,7 +112,7 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
 
 	// Create a context using a custom timestamp
 	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{
-		Time: ExampleTimestamp,
+		Time:   ExampleTimestamp,
 		Height: ExampleHeight,
 	}, false, log.NewNopLogger())
 
