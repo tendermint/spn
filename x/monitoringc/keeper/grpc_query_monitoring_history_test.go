@@ -9,15 +9,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
 func TestMonitoringHistoryQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNMonitoringHistory(keeper, ctx, 2)
+	msgs := createNMonitoringHistory(tk.MonitoringConsumerKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetMonitoringHistoryRequest
@@ -51,7 +51,7 @@ func TestMonitoringHistoryQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.MonitoringHistory(wctx, tc.request)
+			response, err := tk.MonitoringConsumerKeeper.MonitoringHistory(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -66,9 +66,9 @@ func TestMonitoringHistoryQuerySingle(t *testing.T) {
 }
 
 func TestMonitoringHistoryQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNMonitoringHistory(keeper, ctx, 5)
+	msgs := createNMonitoringHistory(tk.MonitoringConsumerKeeper, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllMonitoringHistoryRequest {
 		return &types.QueryAllMonitoringHistoryRequest{
@@ -83,7 +83,7 @@ func TestMonitoringHistoryQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.MonitoringHistoryAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.MonitoringConsumerKeeper.MonitoringHistoryAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MonitoringHistory), step)
 			require.Subset(t,
@@ -96,7 +96,7 @@ func TestMonitoringHistoryQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.MonitoringHistoryAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := tk.MonitoringConsumerKeeper.MonitoringHistoryAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MonitoringHistory), step)
 			require.Subset(t,
@@ -107,7 +107,7 @@ func TestMonitoringHistoryQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.MonitoringHistoryAll(wctx, request(nil, 0, 0, true))
+		resp, err := tk.MonitoringConsumerKeeper.MonitoringHistoryAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
@@ -116,7 +116,7 @@ func TestMonitoringHistoryQueryPaginated(t *testing.T) {
 		)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.MonitoringHistoryAll(wctx, nil)
+		_, err := tk.MonitoringConsumerKeeper.MonitoringHistoryAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }
