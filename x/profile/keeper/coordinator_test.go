@@ -32,16 +32,6 @@ func TestCoordinatorGet(t *testing.T) {
 	}
 }
 
-func TestCoordinatorRemove(t *testing.T) {
-	k, ctx := testkeeper.Profile(t)
-	items := createNCoordinator(k, ctx, 10)
-	for _, item := range items {
-		k.RemoveCoordinator(ctx, item.CoordinatorID)
-		_, found := k.GetCoordinator(ctx, item.CoordinatorID)
-		require.False(t, found)
-	}
-}
-
 func TestCoordinatorGetAll(t *testing.T) {
 	k, ctx := testkeeper.Profile(t)
 	items := createNCoordinator(k, ctx, 10)
