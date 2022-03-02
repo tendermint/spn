@@ -36,16 +36,6 @@ func TestVerifiedClientIDGet(t *testing.T) {
 	}
 }
 
-func TestVerifiedClientIDRemove(t *testing.T) {
-	k, ctx := keepertest.Monitoringc(t)
-	items := createNVerifiedClientID(k, ctx, 10)
-	for _, item := range items {
-		k.RemoveVerifiedClientID(ctx, item.LaunchID)
-		_, found := k.GetVerifiedClientID(ctx, item.LaunchID)
-		require.False(t, found)
-	}
-}
-
 func TestVerifiedClientIDGetAll(t *testing.T) {
 	k, ctx := keepertest.Monitoringc(t)
 	items := createNVerifiedClientID(k, ctx, 10)
