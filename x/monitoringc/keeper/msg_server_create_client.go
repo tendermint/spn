@@ -78,7 +78,6 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 }
 
 // initializeClientState initializes the client state provided for the IBC client
-// TODO: Investigate configurable values
 func (k msgServer) initializeClientState(
 	chainID string,
 	unbondingPeriod int64,
