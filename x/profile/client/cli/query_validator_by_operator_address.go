@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"encoding/base64"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -11,26 +10,23 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func CmdShowValidatorByConsAddress() *cobra.Command {
+func CmdShowValidatorByOperatorAddress() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-validator-by-cons-address [consensus-address]",
-		Short: "shows a ValidatorByConsAddress",
+		Use:   "show-validator-by-operator-address [operator-address]",
+		Short: "shows a validator address by an associated operator address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			consAddr, err := base64.StdEncoding.DecodeString(args[0])
-			if err != nil {
-				return err
+			opAddr := args[0]
+
+			params := &types.QueryGetValidatorByOperatorAddressRequest{
+				OperatorAddress: opAddr,
 			}
 
-			params := &types.QueryGetValidatorByConsAddressRequest{
-				ConsensusAddress: consAddr,
-			}
-
-			res, err := queryClient.ValidatorByConsAddress(context.Background(), params)
+			res, err := queryClient.ValidatorByOperatorAddress(context.Background(), params)
 			if err != nil {
 				return err
 			}
