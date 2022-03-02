@@ -34,14 +34,6 @@ func (k Keeper) GetMonitoringHistory(
 	return val, true
 }
 
-// RemoveMonitoringHistory removes a monitoringHistory from the store
-func (k Keeper) RemoveMonitoringHistory(ctx sdk.Context, launchID uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MonitoringHistoryKeyPrefix))
-	store.Delete(types.MonitoringHistoryKey(
-		launchID,
-	))
-}
-
 // GetAllMonitoringHistory returns all monitoringHistory
 func (k Keeper) GetAllMonitoringHistory(ctx sdk.Context) (list []types.MonitoringHistory) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MonitoringHistoryKeyPrefix))

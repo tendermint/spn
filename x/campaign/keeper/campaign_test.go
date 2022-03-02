@@ -31,16 +31,6 @@ func TestCampaignGet(t *testing.T) {
 	}
 }
 
-func TestCampaignRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Campaign(t)
-	items := createNCampaign(keeper, ctx, 10)
-	for _, item := range items {
-		keeper.RemoveCampaign(ctx, item.CampaignID)
-		_, found := keeper.GetCampaign(ctx, item.CampaignID)
-		require.False(t, found)
-	}
-}
-
 func TestCampaignGetAll(t *testing.T) {
 	keeper, ctx := testkeeper.Campaign(t)
 	items := createNCampaign(keeper, ctx, 10)
