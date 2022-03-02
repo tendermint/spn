@@ -80,6 +80,13 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 			expectedMonitoringInfoFound: false,
 		},
 		{
+			name:                        "no monitoring info created because counting skipped if blockHeight == 1",
+			monitoringInfoExist:         false,
+			lastBlockHeight:             1,
+			currentBlockHeight:          1,
+			expectedMonitoringInfoFound: false,
+		},
+		{
 			name:                "lastBlockHeight reached doesn't update an existent monitoring info",
 			monitoringInfoExist: true,
 			inputMonitoringInfo: monitoringInfo(10,
@@ -122,7 +129,7 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 					signed:  true,
 				},
 			),
-			currentBlockHeight:          1,
+			currentBlockHeight:          2,
 			expectedMonitoringInfoFound: true,
 			expectedMonitoringInfo: monitoringInfo(1,
 				signatureCount{
@@ -171,7 +178,7 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 					signed:  true,
 				},
 			),
-			currentBlockHeight:          1,
+			currentBlockHeight:          2,
 			expectedMonitoringInfoFound: true,
 			expectedMonitoringInfo: monitoringInfo(51,
 				signatureCount{
