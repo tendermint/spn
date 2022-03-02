@@ -61,7 +61,8 @@ func TestMsgCreateCampaign(t *testing.T) {
 	require.NoError(t, err)
 	coordMap[coordAddr2] = res.CoordinatorID
 
-	// assign random sdk.Coins to `campaignCreationFee` param and provide balance to coordinators
+	// assign random sdk.Coins to `campaignCreationFee` param and provide balance to coordinators to cover for
+	// one campaign creation
 	initCreationFeeAndCoordAccounts(t, campaignKeeper, bankKeeper, sdkCtx, sample.Coins(), coordAddr1, coordAddr2)
 
 	for _, tc := range []struct {

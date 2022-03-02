@@ -241,7 +241,7 @@ func GetAccountWithShares(
 
 	mainnetAccount := mainnetAccounts[r.Intn(nb)]
 
-	// Find the associated sim acocunt
+	// Find the associated sim account
 	for _, acc := range accs {
 		if acc.Address.String() == mainnetAccount.Address {
 			return mainnetAccount.CampaignID, acc, mainnetAccount.Shares, true

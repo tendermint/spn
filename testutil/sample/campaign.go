@@ -89,6 +89,8 @@ func CampaignParams() campaign.Params {
 	// no point in randomizing these values, using defaults
 	minTotalSupply := campaign.DefaultMinTotalSupply
 	maxTotalSupply := campaign.DefaultMaxTotalSupply
+
+	// TODO: randomize this after figuring out how to properly fund accounts in simulation
 	campaignCreationFee := campaign.DefaultCampaignCreationFee
 
 	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee)
