@@ -128,7 +128,7 @@ func SimulateMsgDeleteValidator(ak types.AccountKeeper, bk types.BankKeeper, k k
 func SimulateMsgSetValidatorConsAddress(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		msg := &types.MsgSetValidatorConsAddress{}
+		msg := &types.MsgAddValidatorOperatorAddress{}
 
 		// TODO: Handling the SetValidatorConsAddress simulation
 

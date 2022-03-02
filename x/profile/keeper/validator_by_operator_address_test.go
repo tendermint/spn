@@ -13,21 +13,21 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func createNValidatorByConsAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ValidatorByConsAddress {
-	items := make([]types.ValidatorByConsAddress, n)
+func createNValidatorByOperatorAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ValidatorByOperatorAddress {
+	items := make([]types.ValidatorByOperatorAddress, n)
 	for i := range items {
-		items[i].ConsensusAddress = sample.ConsAddress().Bytes()
-		keeper.SetValidatorByConsAddress(ctx, items[i])
+		items[i].OperatorAddress = sample.Address()
+		keeper.SetValidatorByOperatorAddress(ctx, items[i])
 	}
 	return items
 }
 
-func TestValidatorByConsAddressGet(t *testing.T) {
+func TestValidatorByOperatorAddressGet(t *testing.T) {
 	k, ctx := keepertest.Profile(t)
-	items := createNValidatorByConsAddress(k, ctx, 10)
+	items := createNValidatorByOperatorAddress(k, ctx, 10)
 	for _, item := range items {
-		rst, found := k.GetValidatorByConsAddress(ctx,
-			item.ConsensusAddress,
+		rst, found := k.GetValidatorByOperatorAddress(ctx,
+			item.OperatorAddress,
 		)
 		require.True(t, found)
 		require.Equal(t,
@@ -36,25 +36,25 @@ func TestValidatorByConsAddressGet(t *testing.T) {
 		)
 	}
 }
-func TestValidatorByConsAddressRemove(t *testing.T) {
+func TestValidatorByOperatorAddressRemove(t *testing.T) {
 	k, ctx := keepertest.Profile(t)
-	items := createNValidatorByConsAddress(k, ctx, 10)
+	items := createNValidatorByOperatorAddress(k, ctx, 10)
 	for _, item := range items {
-		k.RemoveValidatorByConsAddress(ctx,
-			item.ConsensusAddress,
+		k.RemoveValidatorByOperatorAddress(ctx,
+			item.OperatorAddress,
 		)
-		_, found := k.GetValidatorByConsAddress(ctx,
-			item.ConsensusAddress,
+		_, found := k.GetValidatorByOperatorAddress(ctx,
+			item.OperatorAddress,
 		)
 		require.False(t, found)
 	}
 }
 
-func TestValidatorByConsAddressGetAll(t *testing.T) {
+func TestValidatorByOperatorAddressGetAll(t *testing.T) {
 	k, ctx := keepertest.Profile(t)
-	items := createNValidatorByConsAddress(k, ctx, 10)
+	items := createNValidatorByOperatorAddress(k, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(k.GetAllValidatorByConsAddress(ctx)),
+		nullify.Fill(k.GetAllValidatorByOperatorAddress(ctx)),
 	)
 }

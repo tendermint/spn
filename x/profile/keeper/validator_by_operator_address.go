@@ -7,23 +7,23 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// SetValidatorByConsAddress set a specific validatorByConsAddress in the store from its index
-func (k Keeper) SetValidatorByConsAddress(ctx sdk.Context, validatorByConsAddress types.ValidatorByConsAddress) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByConsAddressKeyPrefix))
-	b := k.cdc.MustMarshal(&validatorByConsAddress)
-	store.Set(types.ValidatorByConsAddressKey(
-		validatorByConsAddress.ConsensusAddress,
+// SetValidatorByOperatorAddress set a specific validatorByOperatorAddress in the store from its index
+func (k Keeper) SetValidatorByOperatorAddress(ctx sdk.Context, validatorByOperatorAddress types.ValidatorByOperatorAddress) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByOperatorAddressKeyPrefix))
+	b := k.cdc.MustMarshal(&validatorByOperatorAddress)
+	store.Set(types.ValidatorByOperatorAddressKey(
+		validatorByOperatorAddress.OperatorAddress,
 	), b)
 }
 
-// GetValidatorByConsAddress returns a validatorByConsAddress from its index
-func (k Keeper) GetValidatorByConsAddress(
+// GetValidatorByOperatorAddress returns a validatorByOperatorAddress from its index
+func (k Keeper) GetValidatorByOperatorAddress(
 	ctx sdk.Context,
-	consensusAddress []byte,
-) (val types.ValidatorByConsAddress, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByConsAddressKeyPrefix))
+	operatorAddress string,
+) (val types.ValidatorByOperatorAddress, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByOperatorAddressKeyPrefix))
 
-	b := store.Get(types.ValidatorByConsAddressKey(consensusAddress))
+	b := store.Get(types.ValidatorByOperatorAddressKey(operatorAddress))
 	if b == nil {
 		return val, false
 	}
@@ -32,21 +32,21 @@ func (k Keeper) GetValidatorByConsAddress(
 	return val, true
 }
 
-// RemoveValidatorByConsAddress removes a validatorByConsAddress from the store
-func (k Keeper) RemoveValidatorByConsAddress(ctx sdk.Context, consensusAddress []byte) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByConsAddressKeyPrefix))
-	store.Delete(types.ValidatorByConsAddressKey(consensusAddress))
+// RemoveValidatorByOperatorAddress removes a validatorByOperatorAddress from the store
+func (k Keeper) RemoveValidatorByOperatorAddress(ctx sdk.Context, operatorAddress string) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByOperatorAddressKeyPrefix))
+	store.Delete(types.ValidatorByOperatorAddressKey(operatorAddress))
 }
 
-// GetAllValidatorByConsAddress returns all validatorByConsAddress
-func (k Keeper) GetAllValidatorByConsAddress(ctx sdk.Context) (list []types.ValidatorByConsAddress) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByConsAddressKeyPrefix))
+// GetAllValidatorByOperatorAddress returns all validatorByOperatorAddress
+func (k Keeper) GetAllValidatorByOperatorAddress(ctx sdk.Context) (list []types.ValidatorByOperatorAddress) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorByOperatorAddressKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.ValidatorByConsAddress
+		var val types.ValidatorByOperatorAddress
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
