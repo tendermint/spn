@@ -9,142 +9,142 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func TestValidator_AddValidatorConsensusAddress(t *testing.T) {
+func TestValidator_AddValidatorOperatorAddress(t *testing.T) {
 	var (
-		consensusAddress   = sample.PubKey().Bytes()
-		consensusAddresses = [][]byte{
-			sample.PubKey().Bytes(),
-			sample.PubKey().Bytes(),
-			sample.PubKey().Bytes(),
+		operatorAddress   = sample.Address()
+		operatorAddresses = []string{
+			sample.Address(),
+			sample.Address(),
+			sample.Address(),
 		}
 	)
 	tests := []struct {
 		name               string
-		consensusAddress   []byte
-		consensusAddresses [][]byte
-		want               [][]byte
+		operatorAddress   string
+		operatorAddresses []string
+		want               []string
 	}{
 		{
 			name:               "valid case",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: consensusAddresses,
-			want:               append(consensusAddresses, consensusAddress),
+			operatorAddress:   operatorAddress,
+			operatorAddresses: operatorAddresses,
+			want:               append(operatorAddresses, operatorAddress),
 		},
 		{
-			name:               "empty consensus address list",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: [][]byte{},
-			want:               [][]byte{consensusAddress},
+			name:               "empty operator address list",
+			operatorAddress:   operatorAddress,
+			operatorAddresses: []string{},
+			want:               []string{operatorAddress},
 		},
 		{
-			name:               "already existing consensus address case",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: append(consensusAddresses, consensusAddress),
-			want:               append(consensusAddresses, consensusAddress),
+			name:               "already existing operator address case",
+			operatorAddress:   operatorAddress,
+			operatorAddresses: append(operatorAddresses, operatorAddress),
+			want:               append(operatorAddresses, operatorAddress),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			validator := types.Validator{ConsensusAddresses: tt.consensusAddresses}
-			got := validator.AddValidatorConsensusAddress(tt.consensusAddress)
-			require.Equal(t, tt.want, got.ConsensusAddresses)
+			validator := types.Validator{OperatorAddresses: tt.operatorAddresses}
+			got := validator.AddValidatorOperatorAddress(tt.operatorAddress)
+			require.Equal(t, tt.want, got.OperatorAddresses)
 		})
 	}
 }
 
-func TestValidator_RemoveValidatorConsensusAddress(t *testing.T) {
+func TestValidator_RemoveValidatorOperatorAddress(t *testing.T) {
 	var (
-		consensusAddress   = sample.PubKey().Bytes()
-		consensusAddresses = [][]byte{
-			sample.PubKey().Bytes(),
-			sample.PubKey().Bytes(),
-			sample.PubKey().Bytes(),
+		operatorAddress   = sample.Address()
+		operatorAddresses = []string{
+			sample.Address(),
+			sample.Address(),
+			sample.Address(),
 		}
 	)
 	tests := []struct {
 		name               string
-		consensusAddress   []byte
-		consensusAddresses [][]byte
-		want               [][]byte
+		operatorAddress   string
+		operatorAddresses []string
+		want               []string
 	}{
 		{
 			name:               "valid case",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: append(consensusAddresses, consensusAddress),
-			want:               consensusAddresses,
+			operatorAddress:   operatorAddress,
+			operatorAddresses: append(operatorAddresses, operatorAddress),
+			want:               operatorAddresses,
 		},
 		{
-			name:               "empty consensus address list",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: [][]byte{consensusAddress},
-			want:               [][]byte{},
+			name:               "empty operator address list",
+			operatorAddress:   operatorAddress,
+			operatorAddresses: []string{operatorAddress},
+			want:               []string{},
 		},
 		{
-			name:               "non existing consensus address case",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: consensusAddresses,
-			want:               consensusAddresses,
+			name:               "non existing operator address case",
+			operatorAddress:   operatorAddress,
+			operatorAddresses: operatorAddresses,
+			want:               operatorAddresses,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			validator := types.Validator{ConsensusAddresses: tt.consensusAddresses}
-			got := validator.RemoveValidatorConsensusAddress(tt.consensusAddress)
-			require.Equal(t, tt.want, got.ConsensusAddresses)
+			validator := types.Validator{OperatorAddresses: tt.operatorAddresses}
+			got := validator.RemoveValidatorOperatorAddress(tt.operatorAddress)
+			require.Equal(t, tt.want, got.OperatorAddresses)
 		})
 	}
 }
 
-func TestValidator_HasConsensusAddress(t *testing.T) {
+func TestValidator_HasOperatorAddress(t *testing.T) {
 	var (
-		consensusAddress   = sample.PubKey().Bytes()
-		consensusAddresses = [][]byte{
-			sample.PubKey().Bytes(),
-			sample.PubKey().Bytes(),
-			sample.PubKey().Bytes(),
+		operatorAddress   = sample.Address()
+		operatorAddresses = []string{
+			sample.Address(),
+			sample.Address(),
+			sample.Address(),
 		}
 	)
 	tests := []struct {
 		name               string
-		consensusAddress   []byte
-		consensusAddresses [][]byte
+		operatorAddress   string
+		operatorAddresses []string
 		want               bool
 	}{
 		{
-			name:               "hasn't the consensus address",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: consensusAddresses,
+			name:               "hasn't the operator address",
+			operatorAddress:   operatorAddress,
+			operatorAddresses: operatorAddresses,
 			want:               false,
 		},
 		{
-			name:               "only the consensus address",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: [][]byte{consensusAddress},
+			name:               "only the operator address",
+			operatorAddress:   operatorAddress,
+			operatorAddresses: []string{operatorAddress},
 			want:               true,
 		},
 		{
-			name:               "empty consensus address list",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: [][]byte{},
+			name:               "empty operator address list",
+			operatorAddress:   operatorAddress,
+			operatorAddresses: []string{},
 			want:               false,
 		},
 		{
-			name:               "nil consensus address list",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: nil,
+			name:               "nil operator address list",
+			operatorAddress:   operatorAddress,
+			operatorAddresses: nil,
 			want:               false,
 		},
 		{
-			name:               "has the consensus address",
-			consensusAddress:   consensusAddress,
-			consensusAddresses: append(consensusAddresses, consensusAddress),
+			name:               "has the operator address",
+			operatorAddress:   operatorAddress,
+			operatorAddresses: append(operatorAddresses, operatorAddress),
 			want:               true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			validator := types.Validator{ConsensusAddresses: tt.consensusAddresses}
-			got := validator.HasConsensusAddress(tt.consensusAddress)
+			validator := types.Validator{OperatorAddresses: tt.operatorAddresses}
+			got := validator.HasOperatorAddress(tt.operatorAddress)
 			require.Equal(t, tt.want, got)
 		})
 	}
