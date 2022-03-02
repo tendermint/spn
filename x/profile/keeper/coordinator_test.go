@@ -44,16 +44,3 @@ func TestCoordinatorCounter(t *testing.T) {
 	counter := uint64(len(items))
 	require.Equal(t, counter, k.GetCoordinatorCounter(ctx))
 }
-
-func TestGetCoordinatorAddressFromID(t *testing.T) {
-	k, ctx := testkeeper.Profile(t)
-	coordinator := sample.Coordinator(sample.Address())
-	coordinator.CoordinatorID = k.AppendCoordinator(ctx, coordinator)
-
-	address, found := k.GetCoordinatorAddressFromID(ctx, coordinator.CoordinatorID)
-	require.True(t, found)
-	require.Equal(t, coordinator.Address, address)
-
-	_, found = k.GetCoordinatorAddressFromID(ctx, 100)
-	require.False(t, found)
-}
