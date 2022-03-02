@@ -21,30 +21,30 @@ func TestMsgSetValidatorConsAddress_ValidateBasic(t *testing.T) {
 		{
 			name: "should allow different addresses for SPN validator and operator address",
 			msg: types.MsgAddValidatorOperatorAddress{
-				ValidatorAddress:    sample.Address(),
-				OperatorAddress: 	 sample.Address(),
+				ValidatorAddress: sample.Address(),
+				OperatorAddress:  sample.Address(),
 			},
 		},
 		{
 			name: "should allow same address for SPN validator and operator address",
 			msg: types.MsgAddValidatorOperatorAddress{
-				ValidatorAddress:    sampleAddr,
-				OperatorAddress: 	 sampleAddr,
+				ValidatorAddress: sampleAddr,
+				OperatorAddress:  sampleAddr,
 			},
 		},
 		{
 			name: "should prevent invalid SPN validator address",
 			msg: types.MsgAddValidatorOperatorAddress{
-				ValidatorAddress:    "invalid_address",
-				OperatorAddress: 	 sample.Address(),
+				ValidatorAddress: "invalid_address",
+				OperatorAddress:  sample.Address(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "should prevent invalid operator address",
 			msg: types.MsgAddValidatorOperatorAddress{
-				ValidatorAddress:    sample.Address(),
-				OperatorAddress: 	 "invalid_address",
+				ValidatorAddress: sample.Address(),
+				OperatorAddress:  "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},

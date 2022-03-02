@@ -9,13 +9,13 @@ const TypeMsgAddValidatorOperatorAddress = "add_validator_operator_address"
 
 var _ sdk.Msg = &MsgAddValidatorOperatorAddress{}
 
-func NewMsgSetValidatorConsAddress(
+func NewMsgSAddValidatorOperatorAddress(
 	validatorAddress,
 	operatorAddress string,
 ) *MsgAddValidatorOperatorAddress {
 	return &MsgAddValidatorOperatorAddress{
-		ValidatorAddress:    validatorAddress,
-		OperatorAddress: operatorAddress,
+		ValidatorAddress: validatorAddress,
+		OperatorAddress:  operatorAddress,
 	}
 }
 

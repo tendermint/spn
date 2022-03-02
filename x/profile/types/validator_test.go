@@ -19,28 +19,28 @@ func TestValidator_AddValidatorOperatorAddress(t *testing.T) {
 		}
 	)
 	tests := []struct {
-		name               string
+		name              string
 		operatorAddress   string
 		operatorAddresses []string
-		want               []string
+		want              []string
 	}{
 		{
-			name:               "valid case",
+			name:              "valid case",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: operatorAddresses,
-			want:               append(operatorAddresses, operatorAddress),
+			want:              append(operatorAddresses, operatorAddress),
 		},
 		{
-			name:               "empty operator address list",
+			name:              "empty operator address list",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: []string{},
-			want:               []string{operatorAddress},
+			want:              []string{operatorAddress},
 		},
 		{
-			name:               "already existing operator address case",
+			name:              "already existing operator address case",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: append(operatorAddresses, operatorAddress),
-			want:               append(operatorAddresses, operatorAddress),
+			want:              append(operatorAddresses, operatorAddress),
 		},
 	}
 	for _, tt := range tests {
@@ -62,28 +62,28 @@ func TestValidator_RemoveValidatorOperatorAddress(t *testing.T) {
 		}
 	)
 	tests := []struct {
-		name               string
+		name              string
 		operatorAddress   string
 		operatorAddresses []string
-		want               []string
+		want              []string
 	}{
 		{
-			name:               "valid case",
+			name:              "valid case",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: append(operatorAddresses, operatorAddress),
-			want:               operatorAddresses,
+			want:              operatorAddresses,
 		},
 		{
-			name:               "empty operator address list",
+			name:              "empty operator address list",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: []string{operatorAddress},
-			want:               []string{},
+			want:              []string{},
 		},
 		{
-			name:               "non existing operator address case",
+			name:              "non existing operator address case",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: operatorAddresses,
-			want:               operatorAddresses,
+			want:              operatorAddresses,
 		},
 	}
 	for _, tt := range tests {
@@ -105,40 +105,40 @@ func TestValidator_HasOperatorAddress(t *testing.T) {
 		}
 	)
 	tests := []struct {
-		name               string
+		name              string
 		operatorAddress   string
 		operatorAddresses []string
-		want               bool
+		want              bool
 	}{
 		{
-			name:               "hasn't the operator address",
+			name:              "hasn't the operator address",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: operatorAddresses,
-			want:               false,
+			want:              false,
 		},
 		{
-			name:               "only the operator address",
+			name:              "only the operator address",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: []string{operatorAddress},
-			want:               true,
+			want:              true,
 		},
 		{
-			name:               "empty operator address list",
+			name:              "empty operator address list",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: []string{},
-			want:               false,
+			want:              false,
 		},
 		{
-			name:               "nil operator address list",
+			name:              "nil operator address list",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: nil,
-			want:               false,
+			want:              false,
 		},
 		{
-			name:               "has the operator address",
+			name:              "has the operator address",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: append(operatorAddresses, operatorAddress),
-			want:               true,
+			want:              true,
 		},
 	}
 	for _, tt := range tests {

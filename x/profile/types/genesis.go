@@ -9,11 +9,11 @@ import (
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # genesis/types/default
-		ValidatorList:              []Validator{},
+		ValidatorList:                  []Validator{},
 		ValidatorByOperatorAddressList: []ValidatorByOperatorAddress{},
-		CoordinatorList:            []Coordinator{},
-		CoordinatorCounter:         1,
-		CoordinatorByAddressList:   []CoordinatorByAddress{},
+		CoordinatorList:                []Coordinator{},
+		CoordinatorCounter:             1,
+		CoordinatorByAddressList:       []CoordinatorByAddress{},
 	}
 }
 
