@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,15 +14,15 @@ import (
 
 func TestMsgRequestAddAccount(t *testing.T) {
 	var (
-		invalidChain          = uint64(1000)
-		coordAddr             = sample.Address()
-		coordDisableAddr      = sample.Address()
-		addr1                 = sample.Address()
-		addr2                 = sample.Address()
-		addr3                 = sample.Address()
-		addr4                 = sample.Address()
-		sdkCtx, tk, srv, _, _ = setupMsgServer(t)
-		ctx                   = sdk.WrapSDKContext(sdkCtx)
+		invalidChain     = uint64(1000)
+		coordAddr        = sample.Address()
+		coordDisableAddr = sample.Address()
+		addr1            = sample.Address()
+		addr2            = sample.Address()
+		addr3            = sample.Address()
+		addr4            = sample.Address()
+		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
+		ctx              = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	coordID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
@@ -118,7 +119,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := srv.RequestAddAccount(ctx, &tt.msg)
+			got, err := ts.LaunchSrv.RequestAddAccount(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return

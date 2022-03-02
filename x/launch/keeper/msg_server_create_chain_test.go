@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,25 +13,25 @@ import (
 )
 
 func TestMsgCreateChain(t *testing.T) {
-	sdkCtx, tk, srv, profileSrv, campaignSrv := setupMsgServer(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 
 	// Create an invalid coordinator
 	invalidCoordAddress := sample.Address()
 	msgCreateInvalidCoordinator := sample.MsgCreateCoordinator(invalidCoordAddress)
-	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
+	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
 	require.NoError(t, err)
 
 	// Create a coordinator
 	coordAddress := sample.Address()
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	resCoord, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	coordID := resCoord.CoordinatorID
 
 	// Create a campaign
 	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignID := resCampaign.CampaignID
 
@@ -77,7 +78,7 @@ func TestMsgCreateChain(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			got, err := srv.CreateChain(ctx, &tc.msg)
+			got, err := ts.LaunchSrv.CreateChain(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

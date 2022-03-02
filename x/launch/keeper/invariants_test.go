@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -10,7 +11,7 @@ import (
 )
 
 func TestDuplicatedAccountInvariant(t *testing.T) {
-	ctx, tk, _, _, _ := setupMsgServer(t) //nolint
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		tk.LaunchKeeper.SetVestingAccount(ctx, sample.VestingAccount(0, sample.Address()))
 		tk.LaunchKeeper.SetGenesisAccount(ctx, sample.GenesisAccount(0, sample.Address()))
@@ -28,7 +29,7 @@ func TestDuplicatedAccountInvariant(t *testing.T) {
 }
 
 func TestZeroLaunchTimestampInvariant(t *testing.T) {
-	ctx, tk, _, _, _ := setupMsgServer(t) //nolint
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		chain := sample.Chain(0, 0)
 		chain.LaunchTimestamp = 1000
@@ -47,7 +48,7 @@ func TestZeroLaunchTimestampInvariant(t *testing.T) {
 }
 
 func TestUnknownRequestTypeInvariant(t *testing.T) {
-	ctx, tk, _, _, _ := setupMsgServer(t) //nolint
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		tk.LaunchKeeper.AppendRequest(ctx, sample.Request(0, sample.Address()))
 		_, isValid := keeper.UnknownRequestTypeInvariant(*tk.LaunchKeeper)(ctx)

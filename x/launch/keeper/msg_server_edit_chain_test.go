@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
@@ -14,7 +15,7 @@ import (
 )
 
 func TestMsgEditChain(t *testing.T) {
-	sdkCtx, tk, srv, profileSrv, campaignSrv := setupMsgServer(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
@@ -23,51 +24,51 @@ func TestMsgEditChain(t *testing.T) {
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
-	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	_, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 
 	// Create a chain
 	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
-	res, err := srv.CreateChain(ctx, &msgCreateChain)
+	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchID := res.LaunchID
 
 	// create a campaign
 	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 
 	// create a chain with an existing campaign
 	msgCreateChain = sample.MsgCreateChain(coordAddress, "", true, resCampaign.CampaignID)
-	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchIDHasCampaign := res.LaunchID
 
 	// create a campaign
 	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	validCampaignID := resCampaign.CampaignID
 
 	// create a campaign from a different address
 	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress2)
-	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignDifferentCoordinator := resCampaign.CampaignID
 
 	// Create a new chain for more tests
 	msgCreateChain = sample.MsgCreateChain(coordAddress, "", false, 0)
-	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchID2 := res.LaunchID
 
 	// create a new campaign and add a chainCampaigns entry to it
 	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignDuplicateChain := resCampaign.CampaignID
 
@@ -265,7 +266,7 @@ func TestMsgEditChain(t *testing.T) {
 			}
 
 			// Send the message
-			_, err := srv.EditChain(ctx, &tc.msg)
+			_, err := ts.LaunchSrv.EditChain(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

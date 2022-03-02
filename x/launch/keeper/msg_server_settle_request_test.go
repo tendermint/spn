@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -14,12 +15,12 @@ import (
 
 func TestMsgSettleRequest(t *testing.T) {
 	var (
-		coordinator1          = sample.Coordinator(sample.Address())
-		coordinator2          = sample.Coordinator(sample.Address())
-		disableCoordinator    = sample.Coordinator(sample.Address())
-		invalidChain          = uint64(1000)
-		sdkCtx, tk, srv, _, _ = setupMsgServer(t)
-		ctx                   = sdk.WrapSDKContext(sdkCtx)
+		coordinator1       = sample.Coordinator(sample.Address())
+		coordinator2       = sample.Coordinator(sample.Address())
+		disableCoordinator = sample.Coordinator(sample.Address())
+		invalidChain       = uint64(1000)
+		sdkCtx, tk, ts     = testkeeper.NewTestSetup(t)
+		ctx                = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	disableCoordinator.Active = false
@@ -175,7 +176,7 @@ func TestMsgSettleRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.SettleRequest(ctx, &tt.msg)
+			_, err := ts.LaunchSrv.SettleRequest(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
 				return

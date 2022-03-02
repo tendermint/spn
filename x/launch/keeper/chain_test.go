@@ -13,25 +13,25 @@ import (
 )
 
 func TestKeeper_CreateNewChain(t *testing.T) {
-	sdkCtx, tk, _, profileSrv, campaignSrv := setupMsgServer(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordNoCampaignAddress := sample.Address()
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
 
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordNoCampaignAddress)
-	res, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	coordNoCampaignID := res.CoordinatorID
 
 	// Create a campaign
 	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignID := resCampaign.CampaignID
 
