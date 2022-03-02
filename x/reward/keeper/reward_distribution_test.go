@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -127,14 +129,14 @@ func TestCalculateRewards(t *testing.T) {
 
 func TestKeeper_DistributeRewards(t *testing.T) {
 	var (
-		ctx, tk, _, _, _ = setupMsgServer(t)
-		valFoo           = sample.Address()
-		valBar           = sample.Address()
-		valConsAddrFoo   = sample.ConsAddress()
-		valConsAddrBar   = sample.ConsAddress()
-		noProfileVal     = sample.ConsAddress()
-		notFoundValAddr  = sample.ConsAddress()
-		provider         = sample.Address()
+		ctx, tk, _      = testkeeper.NewTestSetup(t)
+		valFoo          = sample.Address()
+		valBar          = sample.Address()
+		valConsAddrFoo  = sample.ConsAddress()
+		valConsAddrBar  = sample.ConsAddress()
+		noProfileVal    = sample.ConsAddress()
+		notFoundValAddr = sample.ConsAddress()
+		provider        = sample.Address()
 	)
 
 	// set validator profiles

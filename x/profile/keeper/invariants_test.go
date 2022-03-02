@@ -1,8 +1,9 @@
 package keeper_test
 
 import (
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
+
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
 	"github.com/stretchr/testify/require"
 

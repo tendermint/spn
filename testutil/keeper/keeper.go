@@ -2,9 +2,10 @@
 package keeper
 
 import (
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"testing"
 	"time"
+
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"

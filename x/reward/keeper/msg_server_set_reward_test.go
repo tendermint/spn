@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
@@ -53,21 +55,21 @@ func initRewardPool(
 
 func TestMsgSetRewards(t *testing.T) {
 	var (
-		sdkCtx, tk, srv, psrv, _ = setupMsgServer(t)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 
 		ctx          = sdk.WrapSDKContext(sdkCtx)
 		invalidCoord = sample.Address()
 	)
 	invalidCoordMsg := sample.MsgCreateCoordinator(invalidCoord)
-	_, err := psrv.CreateCoordinator(ctx, &invalidCoordMsg)
+	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &invalidCoordMsg)
 	require.NoError(t, err)
 
 	var (
-		rewardPool                 = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
-		noBalanceRewardPool        = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
-		emptyCoinsRewardPool       = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
-		zeroRewardHeightRewardPool = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
-		launchedRewardPool         = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, psrv)
+		rewardPool                 = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
+		noBalanceRewardPool        = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
+		emptyCoinsRewardPool       = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
+		zeroRewardHeightRewardPool = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
+		launchedRewardPool         = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
 	)
 	launchTriggeredChain, found := tk.LaunchKeeper.GetChain(sdkCtx, launchedRewardPool.LaunchID)
 	require.True(t, found)
@@ -160,7 +162,7 @@ func TestMsgSetRewards(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			previousRewardPool, _ := tk.RewardKeeper.GetRewardPool(sdkCtx, tt.msg.LaunchID)
-			got, err := srv.SetRewards(ctx, &tt.msg)
+			got, err := ts.RewardSrv.SetRewards(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
 				return
@@ -190,7 +192,7 @@ func TestMsgSetRewards(t *testing.T) {
 
 func TestSetBalance(t *testing.T) {
 	var (
-		sdkCtx, tk, _, _, _ = setupMsgServer(t)
+		sdkCtx, tk, _ = testkeeper.NewTestSetup(t)
 
 		provider = sample.AccAddress()
 	)

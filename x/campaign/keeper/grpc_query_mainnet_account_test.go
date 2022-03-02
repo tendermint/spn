@@ -1,9 +1,10 @@
 package keeper_test
 
 import (
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"strconv"
 	"testing"
+
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
