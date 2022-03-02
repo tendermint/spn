@@ -353,26 +353,11 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var (
-				previousRewardPool     types.RewardPool
-				found                  bool
-				previousInitialCoins   sdk.Coins
-				previousRemainingCoins sdk.Coins
-			)
-
 			// set test reward pool if contains coins
 			if tt.rewardPool.RemainingCoins != nil {
 				k.SetRewardPool(ctx, tt.rewardPool)
 				err := bk.MintCoins(ctx, types.ModuleName, tt.rewardPool.RemainingCoins)
 				require.NoError(t, err)
-
-				previousRewardPool, found = k.GetRewardPool(ctx, tt.args.launchID)
-				require.True(t, found)
-				previousInitialCoins = previousRewardPool.InitialCoins
-				previousRemainingCoins = previousRewardPool.RemainingCoins
-				require.Equal(t, tt.rewardPool.InitialCoins, previousInitialCoins)
-				require.Equal(t, tt.rewardPool.RemainingCoins, previousRemainingCoins)
-
 			}
 
 			err := k.DistributeRewards(ctx, tt.args.launchID, tt.args.signatureCounts, tt.args.lastBlockHeight, tt.args.closeRewardPool)
@@ -384,7 +369,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 
 			rewardPool, found := k.GetRewardPool(ctx, tt.args.launchID)
 			require.True(t, found)
-			require.Equal(t, previousInitialCoins, rewardPool.InitialCoins)
+			require.Equal(t, tt.rewardPool.InitialCoins, rewardPool.InitialCoins)
 
 			// check if reward pool should be closed
 			if tt.args.closeRewardPool || tt.args.lastBlockHeight >= rewardPool.LastRewardHeight {
@@ -417,7 +402,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 
 			// assert currentRemainingCoins = previousRemainingCoins - distributedRewards
 			coinTotal := rewardPool.RemainingCoins.Add(totalDistributedBalances...)
-			require.True(t, previousRemainingCoins.IsEqual(coinTotal))
+			require.True(t, tt.rewardPool.RemainingCoins.IsEqual(coinTotal))
 
 			// remove the reward pool used for the test
 			k.RemoveRewardPool(ctx, tt.rewardPool.LaunchID)
