@@ -51,7 +51,7 @@ func TestValidatorByConsAddressQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.ValidatorByConsAddress(wctx, tc.request)
+			response, err := keeper.ValidatorByOperatorAddress(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
