@@ -9,7 +9,7 @@ const TypeMsgSetRewards = "set_rewards"
 
 var _ sdk.Msg = &MsgSetRewards{}
 
-func NewMsgSetRewards(provider string, launchID, lastRewardHeight uint64, coins sdk.Coins) *MsgSetRewards {
+func NewMsgSetRewards(provider string, launchID uint64, lastRewardHeight int64, coins sdk.Coins) *MsgSetRewards {
 	return &MsgSetRewards{
 		Provider:         provider,
 		LaunchID:         launchID,

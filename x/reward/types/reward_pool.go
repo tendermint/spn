@@ -11,7 +11,7 @@ import (
 func NewRewardPool(launchID uint64, currentRewardHeight int64) RewardPool {
 	return RewardPool{
 		LaunchID:            launchID,
-		CurrentRewardHeight: uint64(currentRewardHeight),
+		CurrentRewardHeight: currentRewardHeight,
 	}
 }
 

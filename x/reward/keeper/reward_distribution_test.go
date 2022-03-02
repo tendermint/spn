@@ -162,7 +162,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 	type args struct {
 		launchID        uint64
 		signatureCounts spntypes.SignatureCounts
-		lastBlockHeight uint64
+		lastBlockHeight int64
 		closeRewardPool bool
 	}
 	tests := []struct {

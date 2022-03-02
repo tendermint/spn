@@ -40,7 +40,7 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 
 	var (
 		previousCoins            sdk.Coins
-		previousLastRewardHeight uint64
+		previousLastRewardHeight int64
 	)
 	rewardPool, found := k.GetRewardPool(ctx, msg.LaunchID)
 	if !found {
