@@ -10,7 +10,7 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func (k Keeper) ValidatorByConsAddress(c context.Context, req *types.QueryGetValidatorByOperatorAddressRequest) (
+func (k Keeper) ValidatorByOperatorAddress(c context.Context, req *types.QueryGetValidatorByOperatorAddressRequest) (
 	*types.QueryGetValidatorByOperatorAddressResponse,
 	error,
 ) {
