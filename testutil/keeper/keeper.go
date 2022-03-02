@@ -90,14 +90,6 @@ func NewTestKeepers(t testing.TB) (sdk.Context, TestKeepers) {
 
 }
 
-// Monitoringc returns a keeper of the monitoring consumer module for testing purpose
-func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
-	ctx, tk := NewTestKeepers(t)
-	tk.MonitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
-
-	return tk.MonitoringConsumerKeeper, ctx
-}
-
 // MonitoringcWithIBCMocks returns a keeper of the monitoring consumer module for testing purpose with mocks for IBC keepers
 func MonitoringcWithIBCMocks(
 	t testing.TB,
