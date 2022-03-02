@@ -16,13 +16,6 @@ func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
 		CoordinatorAddrNotFoundInvariant(k))
 }
 
-// AllInvariants runs all invariants of the module.
-func AllInvariants(k Keeper) sdk.Invariant {
-	return func(ctx sdk.Context) (string, bool) {
-		return CoordinatorAddrNotFoundInvariant(k)(ctx)
-	}
-}
-
 // CoordinatorAddrNotFoundInvariant invariant that checks if
 // the `CoordinateByAddress` is associated with a coordinator
 func CoordinatorAddrNotFoundInvariant(k Keeper) sdk.Invariant {

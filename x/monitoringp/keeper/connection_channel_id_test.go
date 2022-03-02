@@ -28,11 +28,3 @@ func TestConnectionChannelIDGet(t *testing.T) {
 		nullify.Fill(&rst),
 	)
 }
-
-func TestConnectionChannelIDRemove(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
-	createTestConnectionChannelID(keeper, ctx)
-	keeper.RemoveConnectionChannelID(ctx)
-	_, found := keeper.GetConnectionChannelID(ctx)
-	require.False(t, found)
-}
