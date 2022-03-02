@@ -24,7 +24,7 @@ func createNConsensusKeyNonce(keeper *keeper.Keeper, ctx sdk.Context, n int) []t
 }
 
 func TestConsensusKeyNonceGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNConsensusKeyNonce(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.ProfileKeeper.GetConsensusKeyNonce(ctx,
@@ -38,7 +38,7 @@ func TestConsensusKeyNonceGet(t *testing.T) {
 	}
 }
 func TestConsensusKeyNonceRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNConsensusKeyNonce(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
 		tk.ProfileKeeper.RemoveConsensusKeyNonce(ctx,

@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -17,10 +18,10 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		coordAddrNoCampaign = sample.Address()
 		campaign            = sample.Campaign(0)
 
-		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
-		ctx                                 = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
-	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -28,7 +29,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 	campaign.CoordinatorID = res.CoordinatorID
 	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrNoCampaign,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -99,7 +100,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			previousCampaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
-			_, err := campaignSrv.EditCampaign(ctx, &tc.msg)
+			_, err := ts.CampaignSrv.EditCampaign(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

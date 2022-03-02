@@ -14,7 +14,7 @@ import (
 )
 
 func TestChainQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNChain(tk.LaunchKeeper, ctx, 2)
 	for _, tc := range []struct {
@@ -57,7 +57,7 @@ func TestChainQuerySingle(t *testing.T) {
 }
 
 func TestFooQueryPaginated(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNChain(tk.LaunchKeeper, ctx, 5)
 

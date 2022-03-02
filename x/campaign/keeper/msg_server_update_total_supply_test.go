@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,20 +14,20 @@ import (
 
 func TestMsgUpdateTotalSupply(t *testing.T) {
 	var (
-		coordAddr1                          = sample.Address()
-		coordAddr2                          = sample.Address()
-		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
-		ctx                                 = sdk.WrapSDKContext(sdkCtx)
+		coordAddr1     = sample.Address()
+		coordAddr2     = sample.Address()
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
-	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -117,7 +118,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 				previousTotalSupply = campaign.TotalSupply
 			}
 
-			_, err := campaignSrv.UpdateTotalSupply(ctx, &tc.msg)
+			_, err := ts.CampaignSrv.UpdateTotalSupply(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

@@ -228,7 +228,7 @@ func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordina
 }
 
 func TestGetChain(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNChain(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.LaunchKeeper.GetChain(ctx, item.LaunchID)
@@ -238,14 +238,14 @@ func TestGetChain(t *testing.T) {
 }
 
 func TestGetAllChain(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNChain(tk.LaunchKeeper, ctx, 10)
 
 	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllChain(ctx))
 }
 
 func TestChainCounter(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNChain(tk.LaunchKeeper, ctx, 10)
 	counter := uint64(len(items))
 	require.Equal(t, counter, tk.LaunchKeeper.GetChainCounter(ctx))

@@ -11,6 +11,6 @@ import (
 )
 
 func setupMsgServer(t testing.TB) (sdk.Context, testkeeper.TestKeepers, types.MsgServer) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	return ctx, tk, keeper.NewMsgServerImpl(*tk.ProfileKeeper)
 }

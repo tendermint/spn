@@ -15,7 +15,7 @@ import (
 )
 
 func TestRewardPoolQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNRewardPool(tk.RewardKeeper, ctx, 2)
 	for _, tc := range []struct {
@@ -66,7 +66,7 @@ func TestRewardPoolQuerySingle(t *testing.T) {
 }
 
 func TestRewardPoolQueryPaginated(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNRewardPool(tk.RewardKeeper, ctx, 5)
 

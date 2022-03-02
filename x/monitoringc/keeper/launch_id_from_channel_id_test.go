@@ -23,7 +23,7 @@ func createNLaunchIDFromChannelID(keeper *keeper.Keeper, ctx sdk.Context, n int)
 }
 
 func TestLaunchIDFromChannelIDGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNLaunchIDFromChannelID(tk.MonitoringConsumerKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromChannelID(ctx,
@@ -38,7 +38,7 @@ func TestLaunchIDFromChannelIDGet(t *testing.T) {
 }
 
 func TestLaunchIDFromChannelIDGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNLaunchIDFromChannelID(tk.MonitoringConsumerKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

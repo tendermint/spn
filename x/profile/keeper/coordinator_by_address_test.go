@@ -38,7 +38,7 @@ func createNCoordinatorBoth(keeper *keeper.Keeper, ctx sdk.Context, n int) ([]ty
 }
 
 func TestCoordinatorByAddressGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items, _ := createNCoordinatorBoth(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
 		rst, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
@@ -48,7 +48,7 @@ func TestCoordinatorByAddressGet(t *testing.T) {
 }
 
 func TestCoordinatorByAddressInvalid(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
 		_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
@@ -56,7 +56,7 @@ func TestCoordinatorByAddressInvalid(t *testing.T) {
 	}
 }
 func TestCoordinatorByAddressRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
 		tk.ProfileKeeper.RemoveCoordinatorByAddress(ctx, item.Address)
@@ -66,13 +66,13 @@ func TestCoordinatorByAddressRemove(t *testing.T) {
 }
 
 func TestCoordinatorByAddressGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)
 	require.ElementsMatch(t, items, tk.ProfileKeeper.GetAllCoordinatorByAddress(ctx))
 }
 
 func TestCoordinatorIDFromAddress(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	address := sample.Address()
 	tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       address,
@@ -93,7 +93,7 @@ func TestCoordinatorIDFromAddress(t *testing.T) {
 }
 
 func TestActiveCoordinatorByAddressGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	address := sample.Address()
 
 	// set initial valid state

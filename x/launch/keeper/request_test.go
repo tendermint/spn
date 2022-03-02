@@ -44,7 +44,7 @@ func createNRequest(k *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 }
 
 func TestRequestGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.LaunchKeeper.GetRequest(ctx,
@@ -56,7 +56,7 @@ func TestRequestGet(t *testing.T) {
 	}
 }
 func TestRequestRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
 		tk.LaunchKeeper.RemoveRequest(ctx,
@@ -72,13 +72,13 @@ func TestRequestRemove(t *testing.T) {
 }
 
 func TestRequestGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
 	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllRequest(ctx))
 }
 
 func TestRequestCounter(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
 	counter := uint64(len(items)) + 1
 	require.Equal(t, counter, tk.LaunchKeeper.GetRequestCounter(ctx, 0))
@@ -90,7 +90,7 @@ func TestApplyRequest(t *testing.T) {
 		genesisAcc     = sample.Address()
 		vestingAcc     = sample.Address()
 		validatorAcc   = sample.Address()
-		ctx, tk        = testkeeper.NewTestKeepers(t)
+		ctx, tk, _     = testkeeper.NewTestSetup(t)
 		launchID       = uint64(10)
 		contents       = sample.AllRequestContents(launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
@@ -190,7 +190,7 @@ func TestCheckRequest(t *testing.T) {
 		genesisAcc     = sample.Address()
 		vestingAcc     = sample.Address()
 		validatorAcc   = sample.Address()
-		ctx, tk        = testkeeper.NewTestKeepers(t)
+		ctx, tk, _     = testkeeper.NewTestSetup(t)
 		launchID       = uint64(10)
 		contents       = sample.AllRequestContents(launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())

@@ -44,7 +44,7 @@ func populateCoordinators(
 }
 
 func TestGetCoordSimAccount(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
@@ -65,7 +65,7 @@ func TestGetCoordSimAccount(t *testing.T) {
 }
 
 func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
@@ -199,7 +199,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 }
 
 func TestGetSharesFromCampaign(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 
 	t.Run("no campaign", func(t *testing.T) {
@@ -243,7 +243,7 @@ func TestGetSharesFromCampaign(t *testing.T) {
 }
 
 func TestGetAccountWithVouchers(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
@@ -269,7 +269,7 @@ func TestGetAccountWithVouchers(t *testing.T) {
 }
 
 func TestGetAccountWithShares(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 

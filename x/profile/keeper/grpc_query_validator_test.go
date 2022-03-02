@@ -15,7 +15,7 @@ import (
 )
 
 func TestValidatorQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNValidator(tk.ProfileKeeper, ctx, 2)
 	for _, tc := range []struct {
@@ -63,7 +63,7 @@ func TestValidatorQuerySingle(t *testing.T) {
 }
 
 func TestValidatorQueryPaginated(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNValidator(tk.ProfileKeeper, ctx, 5)
 

@@ -15,7 +15,7 @@ import (
 )
 
 func TestMonitoringHistoryQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNMonitoringHistory(tk.MonitoringConsumerKeeper, ctx, 2)
 	for _, tc := range []struct {
@@ -66,7 +66,7 @@ func TestMonitoringHistoryQuerySingle(t *testing.T) {
 }
 
 func TestMonitoringHistoryQueryPaginated(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNMonitoringHistory(tk.MonitoringConsumerKeeper, ctx, 5)
 

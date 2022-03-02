@@ -32,9 +32,9 @@ func createNMainnetVestingAccountForCampaignID(
 
 func TestMainnetVestingAccountQuerySingle(t *testing.T) {
 	var (
-		ctx, tk = testkeeper.NewTestKeepers(t)
-		wctx    = sdk.WrapSDKContext(ctx)
-		msgs    = createNMainnetVestingAccount(tk.CampaignKeeper, ctx, 2)
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		msgs       = createNMainnetVestingAccount(tk.CampaignKeeper, ctx, 2)
 	)
 	for _, tc := range []struct {
 		desc     string
@@ -86,7 +86,7 @@ func TestMainnetVestingAccountQuerySingle(t *testing.T) {
 func TestMainnetVestingAccountQueryPaginated(t *testing.T) {
 	var (
 		campaignID = uint64(5)
-		ctx, tk    = testkeeper.NewTestKeepers(t)
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
 		msgs       = createNMainnetVestingAccountForCampaignID(tk.CampaignKeeper, ctx, 5, campaignID)
 	)

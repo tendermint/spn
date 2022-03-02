@@ -22,7 +22,7 @@ func createNRewardPool(k *keeper.Keeper, ctx sdk.Context, n int) []types.RewardP
 }
 
 func TestRewardPoolGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRewardPool(tk.RewardKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.RewardKeeper.GetRewardPool(ctx,
@@ -36,7 +36,7 @@ func TestRewardPoolGet(t *testing.T) {
 	}
 }
 func TestRewardPoolRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRewardPool(tk.RewardKeeper, ctx, 10)
 	for _, item := range items {
 		tk.RewardKeeper.RemoveRewardPool(ctx,
@@ -50,7 +50,7 @@ func TestRewardPoolRemove(t *testing.T) {
 }
 
 func TestRewardPoolGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRewardPool(tk.RewardKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

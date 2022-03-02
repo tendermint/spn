@@ -23,7 +23,7 @@ func createNValidatorByConsAddress(keeper *keeper.Keeper, ctx sdk.Context, n int
 }
 
 func TestValidatorByConsAddressGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNValidatorByConsAddress(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.ProfileKeeper.GetValidatorByConsAddress(ctx,
@@ -37,7 +37,7 @@ func TestValidatorByConsAddressGet(t *testing.T) {
 	}
 }
 func TestValidatorByConsAddressRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNValidatorByConsAddress(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
 		tk.ProfileKeeper.RemoveValidatorByConsAddress(ctx,
@@ -51,7 +51,7 @@ func TestValidatorByConsAddressRemove(t *testing.T) {
 }
 
 func TestValidatorByConsAddressGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNValidatorByConsAddress(tk.ProfileKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

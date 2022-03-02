@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -11,7 +12,7 @@ import (
 )
 
 func TestAccountWithoutCampaignInvariant(t *testing.T) {
-	ctx, tk, _, _ := setupMsgServer(t) //nolint
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
 		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
@@ -28,7 +29,7 @@ func TestAccountWithoutCampaignInvariant(t *testing.T) {
 }
 
 func TestVestingAccountWithoutCampaignInvariant(t *testing.T) {
-	ctx, tk, _, _ := setupMsgServer(t) //nolint
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
 		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
@@ -45,7 +46,7 @@ func TestVestingAccountWithoutCampaignInvariant(t *testing.T) {
 }
 
 func TestCampaignChainsWithoutCampaignInvariant(t *testing.T) {
-	ctx, tk, _, _ := setupMsgServer(t) //nolint
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		campaign := sample.Campaign(0)
 		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)

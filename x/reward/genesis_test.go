@@ -26,7 +26,7 @@ func TestGenesis(t *testing.T) {
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	reward.InitGenesis(ctx, *tk.RewardKeeper, genesisState)
 	got := reward.ExportGenesis(ctx, *tk.RewardKeeper)
 	require.NotNil(t, got)

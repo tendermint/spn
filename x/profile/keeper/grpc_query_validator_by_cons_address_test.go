@@ -15,7 +15,7 @@ import (
 )
 
 func TestValidatorByConsAddressQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNValidatorByConsAddress(tk.ProfileKeeper, ctx, 2)
 	for _, tc := range []struct {

@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -20,18 +21,18 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		coordAddr                           = sample.Address()
 		coordAddrNoCampaign                 = sample.Address()
 
-		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
-		ctx                                 = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
-	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrNoCampaign,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -128,7 +129,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			res, err := campaignSrv.InitializeMainnet(ctx, &tc.msg)
+			res, err := ts.CampaignSrv.InitializeMainnet(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

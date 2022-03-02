@@ -26,7 +26,7 @@ func createNGenesisAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n i
 }
 
 func TestGenesisAccountQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNGenesisAccount(tk.LaunchKeeper, ctx, 2)
 	for _, tc := range []struct {
@@ -79,10 +79,10 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 
 func TestGenesisAccountQueryPaginated(t *testing.T) {
 	var (
-		ctx, tk = testkeeper.NewTestKeepers(t)
-		wctx    = sdk.WrapSDKContext(ctx)
-		chainID = uint64(0)
-		msgs    = createNGenesisAccountForChainID(tk.LaunchKeeper, ctx, 5, chainID)
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		chainID    = uint64(0)
+		msgs       = createNGenesisAccountForChainID(tk.LaunchKeeper, ctx, 5, chainID)
 	)
 
 	request := func(launchID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisAccountRequest {

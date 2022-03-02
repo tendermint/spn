@@ -13,7 +13,7 @@ import (
 )
 
 func TestCampaignChainsQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCampaignChains(tk.CampaignKeeper, ctx, 2)
 	for _, tc := range []struct {

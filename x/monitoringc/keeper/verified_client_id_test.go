@@ -24,7 +24,7 @@ func createNVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 }
 
 func TestVerifiedClientIDGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.MonitoringConsumerKeeper.GetVerifiedClientID(ctx, item.LaunchID)
@@ -37,7 +37,7 @@ func TestVerifiedClientIDGet(t *testing.T) {
 }
 
 func TestVerifiedClientIDGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
@@ -46,7 +46,7 @@ func TestVerifiedClientIDGetAll(t *testing.T) {
 }
 
 func TestAddVerifiedClientID(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("update a verified client id", func(t *testing.T) {
 		var (
 			launchID         = uint64(1)

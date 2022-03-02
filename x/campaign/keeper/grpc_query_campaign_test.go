@@ -15,7 +15,7 @@ import (
 )
 
 func TestCampaignQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCampaign(tk.CampaignKeeper, ctx, 2)
 	for _, tc := range []struct {
@@ -58,7 +58,7 @@ func TestCampaignQuerySingle(t *testing.T) {
 }
 
 func TestCampaignQueryPaginated(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCampaign(tk.CampaignKeeper, ctx, 5)
 

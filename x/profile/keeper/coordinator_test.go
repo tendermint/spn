@@ -23,7 +23,7 @@ func createNCoordinator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.C
 }
 
 func TestCoordinatorGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinator(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
 		coord, found := tk.ProfileKeeper.GetCoordinator(ctx, item.CoordinatorID)
@@ -33,13 +33,13 @@ func TestCoordinatorGet(t *testing.T) {
 }
 
 func TestCoordinatorGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinator(tk.ProfileKeeper, ctx, 10)
 	require.ElementsMatch(t, items, tk.ProfileKeeper.GetAllCoordinator(ctx))
 }
 
 func TestCoordinatorCounter(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinator(tk.ProfileKeeper, ctx, 10)
 	counter := uint64(len(items))
 	require.Equal(t, counter, tk.ProfileKeeper.GetCoordinatorCounter(ctx))

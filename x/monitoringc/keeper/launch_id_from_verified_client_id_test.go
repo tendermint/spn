@@ -23,7 +23,7 @@ func createNLaunchIDFromVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context,
 }
 
 func TestLaunchIDFromVerifiedClientIDGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNLaunchIDFromVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromVerifiedClientID(ctx,
@@ -38,7 +38,7 @@ func TestLaunchIDFromVerifiedClientIDGet(t *testing.T) {
 }
 
 func TestLaunchIDFromVerifiedClientIDGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNLaunchIDFromVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

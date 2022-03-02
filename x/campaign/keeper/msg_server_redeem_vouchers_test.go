@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,7 +14,7 @@ import (
 
 func TestMsgRedeemVouchers(t *testing.T) {
 	var (
-		sdkCtx, tk, campaignSrv, _ = setupMsgServer(t)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		addr           = sample.AccAddress()
@@ -172,7 +173,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			}
 
 			// Execute message
-			_, err = campaignSrv.RedeemVouchers(ctx, &tc.msg)
+			_, err = ts.CampaignSrv.RedeemVouchers(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

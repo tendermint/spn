@@ -2,6 +2,7 @@
 package keeper
 
 import (
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"testing"
 	"time"
 
@@ -30,6 +31,7 @@ var (
 	ExampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
 )
 
+// TestKeepers holds all keepers used during keeper tests for all modules
 type TestKeepers struct {
 	CampaignKeeper           *campaignkeeper.Keeper
 	LaunchKeeper             *launchkeeper.Keeper
@@ -40,8 +42,17 @@ type TestKeepers struct {
 	IBCKeeper                *ibckeeper.Keeper
 }
 
-// NewTestKeepers returns initialized instances of all the keepers of the module
-func NewTestKeepers(t testing.TB) (sdk.Context, TestKeepers) {
+// TestMsgServers holds all message servers used during keeper tests for all modules
+type TestMsgServers struct {
+	ProfileSrv     profiletypes.MsgServer
+	LaunchSrv      launchtypes.MsgServer
+	CampaignSrv    campaigntypes.MsgServer
+	RewardSrv      rewardtypes.MsgServer
+	MonitoringcSrv monitoringcmoduletypes.MsgServer
+}
+
+// NewTestSetup returns initialized instances of all the keepers and message servers of the modules
+func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
@@ -78,16 +89,27 @@ func NewTestKeepers(t testing.TB) (sdk.Context, TestKeepers) {
 	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
-	return ctx, TestKeepers{
-		CampaignKeeper:           campaignKeeper,
-		LaunchKeeper:             launchKeeper,
-		ProfileKeeper:            profileKeeper,
-		RewardKeeper:             rewardKeeper,
-		MonitoringConsumerKeeper: monitoringConsumerKeeper,
-		BankKeeper:               bankKeeper,
-		IBCKeeper:                ibcKeeper,
-	}
+	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
+	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
+	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
+	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
+	monitoringcSrv := monitoringcmodulekeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
 
+	return ctx, TestKeepers{
+			CampaignKeeper:           campaignKeeper,
+			LaunchKeeper:             launchKeeper,
+			ProfileKeeper:            profileKeeper,
+			RewardKeeper:             rewardKeeper,
+			MonitoringConsumerKeeper: monitoringConsumerKeeper,
+			BankKeeper:               bankKeeper,
+			IBCKeeper:                ibcKeeper,
+		}, TestMsgServers{
+			ProfileSrv:     profileSrv,
+			LaunchSrv:      launchSrv,
+			CampaignSrv:    campaignSrv,
+			RewardSrv:      rewardSrv,
+			MonitoringcSrv: monitoringcSrv,
+		}
 }
 
 // MonitoringcWithIBCMocks returns a keeper of the monitoring consumer module for testing purpose with mocks for IBC keepers

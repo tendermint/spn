@@ -16,7 +16,7 @@ import (
 )
 
 func TestLaunchIDFromChannelIDQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNLaunchIDFromChannelID(tk.MonitoringConsumerKeeper, ctx, 2)
 	for _, tc := range []struct {
@@ -67,7 +67,7 @@ func TestLaunchIDFromChannelIDQuerySingle(t *testing.T) {
 }
 
 func TestLaunchIDFromChannelIDQueryPaginated(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNLaunchIDFromChannelID(tk.MonitoringConsumerKeeper, ctx, 5)
 

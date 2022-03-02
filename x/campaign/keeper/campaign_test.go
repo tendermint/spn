@@ -22,7 +22,7 @@ func createNCampaign(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []ty
 }
 
 func TestCampaignGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
 	for _, item := range items {
 		got, found := tk.CampaignKeeper.GetCampaign(ctx, item.CampaignID)
@@ -32,13 +32,13 @@ func TestCampaignGet(t *testing.T) {
 }
 
 func TestCampaignGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
 	require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllCampaign(ctx))
 }
 
 func TestCampaignCount(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
 	counter := uint64(len(items))
 	require.Equal(t, counter, tk.CampaignKeeper.GetCampaignCounter(ctx))

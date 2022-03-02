@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -22,8 +23,8 @@ func TestMsgAddVestingOptions(t *testing.T) {
 		campaignInvalidAllocatedShares = sample.Campaign(2)
 		campaignMainnetInitialized     = sample.Campaign(1)
 
-		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
-		ctx                                 = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// create shares
@@ -37,7 +38,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create a campaigns
-	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrMainnetInitialized,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -48,7 +49,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaignMainnetInitialized.TotalShares = totalShares
 	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -60,7 +61,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	accShare := sample.MainnetVestingAccountWithShares(campaign.CampaignID, addr2, lowShare)
 	tk.CampaignKeeper.SetMainnetVestingAccount(sdkCtx, accShare)
 
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -161,7 +162,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 					tc.msg.Address,
 				)
 			}
-			_, err := campaignSrv.AddVestingOptions(ctx, &tc.msg)
+			_, err := ts.CampaignSrv.AddVestingOptions(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

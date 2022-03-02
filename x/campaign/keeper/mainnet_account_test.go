@@ -23,7 +23,7 @@ func createNMainnetAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 }
 
 func TestMainnetAccountGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.CampaignKeeper.GetMainnetAccount(ctx,
@@ -35,7 +35,7 @@ func TestMainnetAccountGet(t *testing.T) {
 	}
 }
 func TestMainnetAccountRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
 	for _, item := range items {
 		tk.CampaignKeeper.RemoveMainnetAccount(ctx,
@@ -51,7 +51,7 @@ func TestMainnetAccountRemove(t *testing.T) {
 }
 
 func TestMainnetAccountGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
 	require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllMainnetAccount(ctx))
 }

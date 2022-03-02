@@ -13,7 +13,7 @@ import (
 )
 
 func TestKeeper_AddChainToCampaign(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 	// Fail if campaign doesn't exist
 	err := tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 0)
@@ -49,7 +49,7 @@ func createNCampaignChains(k *keeper.Keeper, ctx sdk.Context, n int) []types.Cam
 }
 
 func TestCampaignChainsGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCampaignChains(tk.CampaignKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.CampaignKeeper.GetCampaignChains(ctx,
@@ -61,7 +61,7 @@ func TestCampaignChainsGet(t *testing.T) {
 }
 
 func TestCampaignChainsGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCampaignChains(tk.CampaignKeeper, ctx, 10)
 	require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllCampaignChains(ctx))
 }

@@ -33,7 +33,7 @@ func createNGenesisValidatorByLaunchID(keeper *keeper.Keeper, ctx sdk.Context, l
 }
 
 func TestGenesisValidatorGet(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
 		rst, found := tk.LaunchKeeper.GetGenesisValidator(ctx,
@@ -45,7 +45,7 @@ func TestGenesisValidatorGet(t *testing.T) {
 	}
 }
 func TestGenesisValidatorRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
 		tk.LaunchKeeper.RemoveGenesisValidator(ctx,
@@ -61,13 +61,13 @@ func TestGenesisValidatorRemove(t *testing.T) {
 }
 
 func TestGenesisValidatorGetAll(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)
 	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllGenesisValidator(ctx))
 }
 
 func TestKeeper_GetValidatorsAndTotalDelegation(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	launchID := 10
 	validators := createNGenesisValidatorByLaunchID(tk.LaunchKeeper, ctx, launchID)
 	totalSelfDelegation := sdk.ZeroDec()

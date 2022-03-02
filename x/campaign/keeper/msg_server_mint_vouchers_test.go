@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,8 +14,8 @@ import (
 
 func TestMsgMintVouchers(t *testing.T) {
 	var (
-		sdkCtx, tk, campaignSrv, profileSrv = setupMsgServer(t)
-		ctx                                 = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 
 		coord           = sample.Address()
 		coordNoCampaign = sample.Address()
@@ -26,13 +27,13 @@ func TestMsgMintVouchers(t *testing.T) {
 	)
 
 	// Create coordinators
-	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coord,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordNoCampaign,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -126,7 +127,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			}
 
 			// Execute message
-			_, err = campaignSrv.MintVouchers(ctx, &tc.msg)
+			_, err = ts.CampaignSrv.MintVouchers(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

@@ -14,9 +14,9 @@ import (
 
 func TestFindCoordinatorAccount(t *testing.T) {
 	var (
-		ctx, tk = testkeeper.NewTestKeepers(t)
-		r       = sample.Rand()
-		accs    = simulation.RandomAccounts(r, 20)
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		r          = sample.Rand()
+		accs       = simulation.RandomAccounts(r, 20)
 	)
 
 	t.Run("false for empty set", func(t *testing.T) {

@@ -21,7 +21,7 @@ func setupMsgServer(t testing.TB) (
 	profiletypes.MsgServer,
 	launchtypes.MsgServer,
 ) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 	return ctx,
 		tk,

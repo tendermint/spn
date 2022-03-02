@@ -26,7 +26,7 @@ func createNVestingAccountForLaunchID(keeper *keeper.Keeper, ctx sdk.Context, n 
 }
 
 func TestVestingAccountQuerySingle(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNVestingAccount(tk.LaunchKeeper, ctx, 2)
 	for _, tc := range []struct {
@@ -78,10 +78,10 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 
 func TestVestingAccountQueryPaginated(t *testing.T) {
 	var (
-		ctx, tk  = testkeeper.NewTestKeepers(t)
-		wctx     = sdk.WrapSDKContext(ctx)
-		launchID = uint64(0)
-		msgs     = createNVestingAccountForLaunchID(tk.LaunchKeeper, ctx, 5, launchID)
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		launchID   = uint64(0)
+		msgs       = createNVestingAccountForLaunchID(tk.LaunchKeeper, ctx, 5, launchID)
 	)
 
 	request := func(launchID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllVestingAccountRequest {
