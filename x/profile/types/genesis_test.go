@@ -90,7 +90,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			err: errors.New("duplicated index for validator"),
 		},
 		{
-			name: "duplicated validator by consensus address",
+			name: "duplicated validator by operator address",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
 					{Address: addr1, OperatorAddresses: []string{opAddr1}},
@@ -100,10 +100,10 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
 				},
 			},
-			err: errors.New("duplicated index for validatorByConsAddress"),
+			err: errors.New("duplicated index for validatorByOperatorAddress"),
 		},
 		{
-			name: "missing consensus address in the validator list",
+			name: "missing operator address in the validator list",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
 					{Address: addr1, OperatorAddresses: []string{}},
@@ -114,49 +114,7 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
 				},
 			},
-			err: errors.New("consensus address not found in the Validator consensus address list"),
-		},
-		{
-			name: "duplicated validator consensus nonce",
-			genState: &types.GenesisState{
-				ValidatorList: []types.Validator{
-					{Address: addr1, OperatorAddresses: []string{opAddr1}},
-				},
-				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
-					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
-				},
-			},
-			err: errors.New("duplicated index for consensusKeyNonce"),
-		},
-		{
-			name: "missing validator by cons address",
-			genState: &types.GenesisState{
-				ValidatorList: []types.Validator{
-					{Address: addr1, OperatorAddresses: []string{opAddr1}},
-					{Address: addr2, OperatorAddresses: []string{opAddr2}},
-					{Address: addr3, OperatorAddresses: []string{opAddr3}},
-				},
-				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
-					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
-					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
-				},
-			},
-			err: errors.New("consensus key address not found for ValidatorByConsAddress"),
-		},
-		{
-			name: "missing validator by cons nonce",
-			genState: &types.GenesisState{
-				ValidatorList: []types.Validator{
-					{Address: addr1, OperatorAddresses: []string{opAddr1}},
-					{Address: addr2, OperatorAddresses: []string{opAddr2}},
-				},
-				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
-					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
-					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
-					{OperatorAddress: opAddr3, ValidatorAddress: addr3},
-				},
-			},
-			err: errors.New("validator consensus address not found for Validator"),
+			err: errors.New("operator address not found in the Validator operator address list"),
 		},
 	}
 	for _, tt := range tests {

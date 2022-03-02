@@ -25,8 +25,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err = msgServer.UpdateValidatorDescription(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgDeleteValidator:
 			res, err = msgServer.DeleteValidator(sdk.WrapSDKContext(ctx), msg)
-		case *types.MsgSetValidatorConsAddress:
-			res, err = msgServer.SetValidatorConsAddress(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgAddValidatorOperatorAddress:
+			res, err = msgServer.AddValidatorOperatorAddress(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgCreateCoordinator:
 			res, err = msgServer.CreateCoordinator(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgUpdateCoordinatorDescription:

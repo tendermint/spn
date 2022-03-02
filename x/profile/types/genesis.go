@@ -40,7 +40,7 @@ func (gs GenesisState) ValidateValidators() error {
 		validatorIndexMap[valIndex] = elem
 	}
 
-	// Check for duplicated index in validatorByConsAddress
+	// Check for duplicated index in validatorByOperatorAddress
 	validatorByOperatorAddressIndexMap := make(map[string]struct{})
 	for _, elem := range gs.ValidatorByOperatorAddressList {
 		index := string(CoordinatorByAddressKey(elem.OperatorAddress))
@@ -53,7 +53,7 @@ func (gs GenesisState) ValidateValidators() error {
 			return errors.New("validator operator address not found for Validator")
 		}
 		if !validator.HasOperatorAddress(elem.OperatorAddress) {
-			return errors.New("consensus address not found in the Validator consensus address list")
+			return errors.New("operator address not found in the Validator operator address list")
 		}
 		validatorByOperatorAddressIndexMap[index] = struct{}{}
 	}
