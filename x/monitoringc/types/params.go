@@ -1,6 +1,8 @@
 package types
 
 import (
+	"fmt"
+
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -34,18 +36,27 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(
 			KeyDebugMode,
 			&p.DebugMode,
-			func(i interface{}) error { return nil },
+			validateDebugMode,
 		),
 	}
 }
 
 // Validate validates the set of params
 func (p Params) Validate() error {
-	return nil
+	return validateDebugMode(p.DebugMode)
 }
 
 // String implements the Stringer interface.
 func (p Params) String() string {
 	out, _ := yaml.Marshal(p)
 	return string(out)
+}
+
+// validateDebugMode checks the param is a boolean
+func validateDebugMode(i interface{}) error {
+	_, ok := i.(bool)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+	return nil
 }

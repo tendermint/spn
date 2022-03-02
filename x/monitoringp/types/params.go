@@ -92,7 +92,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(
 			KeyDebugMode,
 			&p.DebugMode,
-			func(i interface{}) error { return nil },
+			validateDebugMode,
 		),
 	}
 }
@@ -111,7 +111,10 @@ func (p Params) Validate() error {
 	if err := validateConsumerUnbondingPeriod(p.ConsumerUnbondingPeriod); err != nil {
 		return err
 	}
-	return validateConsumerRevisionHeight(p.ConsumerRevisionHeight)
+	if err := validateConsumerRevisionHeight(p.ConsumerRevisionHeight); err != nil {
+		return err
+	}
+	return validateDebugMode(p.DebugMode)
 }
 
 // String implements the Stringer interface.
@@ -194,5 +197,14 @@ func validateConsumerRevisionHeight(i interface{}) error {
 		return fmt.Errorf("minimal unbonding period is %d", spntypes.MinimalUnbondingPeriod)
 	}
 
+	return nil
+}
+
+// validateDebugMode checks the param is a boolean
+func validateDebugMode(i interface{}) error {
+	_, ok := i.(bool)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
 	return nil
 }
