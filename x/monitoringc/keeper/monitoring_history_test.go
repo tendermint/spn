@@ -35,19 +35,6 @@ func TestMonitoringHistoryGet(t *testing.T) {
 		)
 	}
 }
-func TestMonitoringHistoryRemove(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNMonitoringHistory(keeper, ctx, 10)
-	for _, item := range items {
-		keeper.RemoveMonitoringHistory(ctx,
-			item.LaunchID,
-		)
-		_, found := keeper.GetMonitoringHistory(ctx,
-			item.LaunchID,
-		)
-		require.False(t, found)
-	}
-}
 
 func TestMonitoringHistoryGetAll(t *testing.T) {
 	keeper, ctx := keepertest.Monitoringc(t)

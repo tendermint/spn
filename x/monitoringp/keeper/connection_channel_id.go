@@ -26,9 +26,3 @@ func (k Keeper) GetConnectionChannelID(ctx sdk.Context) (val types.ConnectionCha
 	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
-
-// RemoveConnectionChannelID removes connectionChannelID from the store
-func (k Keeper) RemoveConnectionChannelID(ctx sdk.Context) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ConnectionChannelIDKey))
-	store.Delete([]byte{0})
-}

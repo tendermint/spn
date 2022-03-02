@@ -37,20 +37,6 @@ func TestLaunchIDFromVerifiedClientIDGet(t *testing.T) {
 	}
 }
 
-func TestLaunchIDFromVerifiedClientIDRemove(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNLaunchIDFromVerifiedClientID(keeper, ctx, 10)
-	for _, item := range items {
-		keeper.RemoveLaunchIDFromVerifiedClientID(ctx,
-			item.ClientID,
-		)
-		_, found := keeper.GetLaunchIDFromVerifiedClientID(ctx,
-			item.ClientID,
-		)
-		require.False(t, found)
-	}
-}
-
 func TestLaunchIDFromVerifiedClientIDGetAll(t *testing.T) {
 	keeper, ctx := keepertest.Monitoringc(t)
 	items := createNLaunchIDFromVerifiedClientID(keeper, ctx, 10)

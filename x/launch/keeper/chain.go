@@ -138,12 +138,6 @@ func (k Keeper) GetChain(ctx sdk.Context, launchID uint64) (val types.Chain, fou
 	return val, true
 }
 
-// RemoveChain removes a chain from the store
-func (k Keeper) RemoveChain(ctx sdk.Context, launchID uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
-	store.Delete(types.ChainKey(launchID))
-}
-
 // GetAllChain returns all chain
 func (k Keeper) GetAllChain(ctx sdk.Context) (list []types.Chain) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
