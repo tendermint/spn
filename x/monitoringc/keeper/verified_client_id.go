@@ -30,12 +30,6 @@ func (k Keeper) GetVerifiedClientID(
 	return val, true
 }
 
-// RemoveVerifiedClientID removes a verifiedClientID from the launch id
-func (k Keeper) RemoveVerifiedClientID(ctx sdk.Context, launchID uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
-	store.Delete(types.VerifiedClientIDKey(launchID))
-}
-
 // GetAllVerifiedClientID returns all verifiedClientID
 func (k Keeper) GetAllVerifiedClientID(ctx sdk.Context) (list []types.VerifiedClientID) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
