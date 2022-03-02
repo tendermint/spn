@@ -22,8 +22,10 @@ message Chain {
 
   bool launchTriggered = 11;
   int64 launchTimestamp = 12;
-  
-  bytes metadata = 13;
+
+  int64 consumerRevisionHeight = 13;
+
+  bytes metadata = 14;
 }
 
 message InitialGenesis {

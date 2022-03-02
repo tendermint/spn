@@ -28,6 +28,9 @@ import (
 var (
 	// ExampleTimestamp is a timestamp used as the current time for the context of the keepers returned from the package
 	ExampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
+
+	// ExampleHeight is a block height used as the current block height for the context of test keeper
+	ExampleHeight = int64(1111)
 )
 
 // AllKeepers returns initialized instances of all the keepers of the module
@@ -68,7 +71,8 @@ func AllKeepers(t testing.TB) (
 
 	// Create a context using a custom timestamp
 	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{
-		Time: ExampleTimestamp,
+		Time:   ExampleTimestamp,
+		Height: ExampleHeight,
 	}, false, log.NewNopLogger())
 
 	// Initialize params
@@ -108,7 +112,8 @@ func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
 
 	// Create a context using a custom timestamp
 	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{
-		Time: ExampleTimestamp,
+		Time:   ExampleTimestamp,
+		Height: ExampleHeight,
 	}, false, log.NewNopLogger())
 
 	// Initialize params
