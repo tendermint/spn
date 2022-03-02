@@ -12,7 +12,7 @@ option go_package = "github.com/tendermint/spn/x/profile/types";
 service Msg {
   rpc UpdateValidatorDescription(MsgUpdateValidatorDescription) returns (MsgUpdateValidatorDescriptionResponse);
   rpc DeleteValidator(MsgDeleteValidator) returns (MsgDeleteValidatorResponse);
-  rpc SetValidatorConsAddress(MsgSetValidatorConsAddress) returns (MsgSetValidatorConsAddressResponse);
+  rpc AddValidatorOperatorAddress(MsgAddValidatorOperatorAddress) returns (MsgAddValidatorOperatorAddressResponse);
   rpc CreateCoordinator(MsgCreateCoordinator) returns (MsgCreateCoordinatorResponse);
   rpc UpdateCoordinatorDescription(MsgUpdateCoordinatorDescription) returns (MsgUpdateCoordinatorDescriptionResponse);
   rpc UpdateCoordinatorAddress(MsgUpdateCoordinatorAddress) returns (MsgUpdateCoordinatorAddressResponse);
@@ -33,17 +33,12 @@ message MsgDeleteValidator {
 
 message MsgDeleteValidatorResponse {}
 
-message MsgSetValidatorConsAddress {
+message MsgAddValidatorOperatorAddress {
   string validatorAddress = 1;
-  bytes validatorConsPubKey = 2;
-  string validatorKeyType = 3;
-  string signature = 4;
-  uint64 nonce = 5;
-  string chainID = 6;
+  string operatorAddress = 2;
 }
 
-message MsgSetValidatorConsAddressResponse {
-}
+message MsgAddValidatorOperatorAddressResponse {}
 
 message MsgCreateCoordinator {
   string address = 1;

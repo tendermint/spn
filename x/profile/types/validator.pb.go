@@ -24,9 +24,9 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Validator struct {
-	Address            string               `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	ConsensusAddresses [][]byte             `protobuf:"bytes,2,rep,name=consensusAddresses,proto3" json:"consensusAddresses,omitempty"`
-	Description        ValidatorDescription `protobuf:"bytes,3,opt,name=description,proto3" json:"description"`
+	Address           string               `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	OperatorAddresses []string             `protobuf:"bytes,2,rep,name=operatorAddresses,proto3" json:"operatorAddresses,omitempty"`
+	Description       ValidatorDescription `protobuf:"bytes,3,opt,name=description,proto3" json:"description"`
 }
 
 func (m *Validator) Reset()         { *m = Validator{} }
@@ -69,9 +69,9 @@ func (m *Validator) GetAddress() string {
 	return ""
 }
 
-func (m *Validator) GetConsensusAddresses() [][]byte {
+func (m *Validator) GetOperatorAddresses() []string {
 	if m != nil {
-		return m.ConsensusAddresses
+		return m.OperatorAddresses
 	}
 	return nil
 }
@@ -159,23 +159,23 @@ func (m *ValidatorDescription) GetDetails() string {
 	return ""
 }
 
-type ValidatorByConsAddress struct {
-	ConsensusAddress []byte `protobuf:"bytes,1,opt,name=consensusAddress,proto3" json:"consensusAddress,omitempty"`
+type ValidatorByOperatorAddress struct {
+	OperatorAddress  string `protobuf:"bytes,1,opt,name=operatorAddress,proto3" json:"operatorAddress,omitempty"`
 	ValidatorAddress string `protobuf:"bytes,2,opt,name=validatorAddress,proto3" json:"validatorAddress,omitempty"`
 }
 
-func (m *ValidatorByConsAddress) Reset()         { *m = ValidatorByConsAddress{} }
-func (m *ValidatorByConsAddress) String() string { return proto.CompactTextString(m) }
-func (*ValidatorByConsAddress) ProtoMessage()    {}
-func (*ValidatorByConsAddress) Descriptor() ([]byte, []int) {
+func (m *ValidatorByOperatorAddress) Reset()         { *m = ValidatorByOperatorAddress{} }
+func (m *ValidatorByOperatorAddress) String() string { return proto.CompactTextString(m) }
+func (*ValidatorByOperatorAddress) ProtoMessage()    {}
+func (*ValidatorByOperatorAddress) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8e2276f43ab77aa3, []int{2}
 }
-func (m *ValidatorByConsAddress) XXX_Unmarshal(b []byte) error {
+func (m *ValidatorByOperatorAddress) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ValidatorByConsAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ValidatorByOperatorAddress) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ValidatorByConsAddress.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ValidatorByOperatorAddress.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -185,26 +185,26 @@ func (m *ValidatorByConsAddress) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *ValidatorByConsAddress) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ValidatorByConsAddress.Merge(m, src)
+func (m *ValidatorByOperatorAddress) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ValidatorByOperatorAddress.Merge(m, src)
 }
-func (m *ValidatorByConsAddress) XXX_Size() int {
+func (m *ValidatorByOperatorAddress) XXX_Size() int {
 	return m.Size()
 }
-func (m *ValidatorByConsAddress) XXX_DiscardUnknown() {
-	xxx_messageInfo_ValidatorByConsAddress.DiscardUnknown(m)
+func (m *ValidatorByOperatorAddress) XXX_DiscardUnknown() {
+	xxx_messageInfo_ValidatorByOperatorAddress.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ValidatorByConsAddress proto.InternalMessageInfo
+var xxx_messageInfo_ValidatorByOperatorAddress proto.InternalMessageInfo
 
-func (m *ValidatorByConsAddress) GetConsensusAddress() []byte {
+func (m *ValidatorByOperatorAddress) GetOperatorAddress() string {
 	if m != nil {
-		return m.ConsensusAddress
+		return m.OperatorAddress
 	}
-	return nil
+	return ""
 }
 
-func (m *ValidatorByConsAddress) GetValidatorAddress() string {
+func (m *ValidatorByOperatorAddress) GetValidatorAddress() string {
 	if m != nil {
 		return m.ValidatorAddress
 	}
@@ -214,35 +214,35 @@ func (m *ValidatorByConsAddress) GetValidatorAddress() string {
 func init() {
 	proto.RegisterType((*Validator)(nil), "tendermint.spn.profile.Validator")
 	proto.RegisterType((*ValidatorDescription)(nil), "tendermint.spn.profile.ValidatorDescription")
-	proto.RegisterType((*ValidatorByConsAddress)(nil), "tendermint.spn.profile.ValidatorByConsAddress")
+	proto.RegisterType((*ValidatorByOperatorAddress)(nil), "tendermint.spn.profile.ValidatorByOperatorAddress")
 }
 
 func init() { proto.RegisterFile("profile/validator.proto", fileDescriptor_8e2276f43ab77aa3) }
 
 var fileDescriptor_8e2276f43ab77aa3 = []byte{
-	// 352 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x92, 0xcd, 0x4e, 0x3a, 0x31,
-	0x14, 0xc5, 0xa7, 0xc0, 0xff, 0x83, 0x42, 0xa2, 0x69, 0x08, 0x4e, 0x58, 0x8c, 0x84, 0xd5, 0x68,
-	0xcc, 0x4c, 0xa2, 0x4f, 0x20, 0xf8, 0x04, 0x13, 0xe3, 0xc2, 0xdd, 0x30, 0xbd, 0x62, 0x23, 0xb4,
-	0x4d, 0x7b, 0x51, 0x79, 0x0b, 0x9f, 0x43, 0x5f, 0x84, 0x25, 0x4b, 0x57, 0xc6, 0xc0, 0x8b, 0x98,
-	0xf9, 0xc4, 0x00, 0xbb, 0x39, 0xa7, 0xbf, 0x39, 0x39, 0xb7, 0xbd, 0xf4, 0x44, 0x1b, 0xf5, 0x20,
-	0xa6, 0x10, 0x3e, 0xc7, 0x53, 0xc1, 0x63, 0x54, 0x26, 0xd0, 0x46, 0xa1, 0x62, 0x5d, 0x04, 0xc9,
-	0xc1, 0xcc, 0x84, 0xc4, 0xc0, 0x6a, 0x19, 0x14, 0x5c, 0xaf, 0x33, 0x51, 0x13, 0x95, 0x21, 0x61,
-	0xfa, 0x95, 0xd3, 0x83, 0x0f, 0x42, 0x9b, 0x77, 0x65, 0x02, 0x73, 0xe9, 0xbf, 0x98, 0x73, 0x03,
-	0xd6, 0xba, 0xa4, 0x4f, 0xfc, 0x66, 0x54, 0x4a, 0x16, 0x50, 0x96, 0x28, 0x69, 0x41, 0xda, 0xb9,
-	0xbd, 0xce, 0x3d, 0xb0, 0x6e, 0xad, 0x5f, 0xf7, 0xdb, 0xd1, 0x81, 0x13, 0x76, 0x4b, 0x5b, 0x1c,
-	0x6c, 0x62, 0x84, 0x46, 0xa1, 0xa4, 0x5b, 0xef, 0x13, 0xbf, 0x75, 0x79, 0x11, 0x1c, 0xee, 0x16,
-	0x54, 0x0d, 0x6e, 0xb6, 0xff, 0x0c, 0x1b, 0xcb, 0xaf, 0x53, 0x27, 0xfa, 0x1d, 0x33, 0x78, 0x27,
-	0xb4, 0x73, 0x88, 0x65, 0x3d, 0xfa, 0x5f, 0x70, 0x90, 0x28, 0x70, 0x51, 0x34, 0xaf, 0x74, 0x3a,
-	0xd4, 0x4c, 0x49, 0xf1, 0x04, 0xc6, 0xad, 0xe5, 0x43, 0x15, 0x32, 0x3d, 0x79, 0x81, 0xb1, 0x15,
-	0x08, 0x59, 0xc1, 0x66, 0x54, 0x4a, 0xe6, 0xd3, 0x23, 0x0b, 0xc9, 0xdc, 0x08, 0x5c, 0x8c, 0x94,
-	0xc4, 0x38, 0x41, 0xb7, 0x91, 0x11, 0xbb, 0x76, 0x9a, 0xc1, 0x01, 0x63, 0x31, 0xb5, 0xee, 0x9f,
-	0x3c, 0xa3, 0x90, 0x03, 0x4d, 0xbb, 0x55, 0xd7, 0x61, 0xca, 0x97, 0xd7, 0xc3, 0xce, 0xe9, 0xf1,
-	0xee, 0x95, 0x65, 0xad, 0xdb, 0xd1, 0x9e, 0x9f, 0xb2, 0xd5, 0x0b, 0x97, 0x6c, 0x3e, 0xc6, 0x9e,
-	0x3f, 0x1c, 0x2d, 0xd7, 0x1e, 0x59, 0xad, 0x3d, 0xf2, 0xbd, 0xf6, 0xc8, 0xdb, 0xc6, 0x73, 0x56,
-	0x1b, 0xcf, 0xf9, 0xdc, 0x78, 0xce, 0xfd, 0xd9, 0x44, 0xe0, 0xe3, 0x7c, 0x1c, 0x24, 0x6a, 0x16,
-	0x6e, 0xdf, 0x20, 0xb4, 0x5a, 0x86, 0xaf, 0x61, 0xb9, 0x49, 0xb8, 0xd0, 0x60, 0xc7, 0x7f, 0xb3,
-	0xc5, 0xb8, 0xfa, 0x09, 0x00, 0x00, 0xff, 0xff, 0x81, 0x50, 0xb3, 0x1b, 0x61, 0x02, 0x00, 0x00,
+	// 350 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x52, 0xcd, 0x4e, 0xf2, 0x40,
+	0x14, 0xed, 0x00, 0xdf, 0x4f, 0x87, 0xc5, 0xf7, 0xd9, 0x10, 0x6d, 0x58, 0x54, 0xc2, 0xaa, 0x1a,
+	0xd2, 0x26, 0xfa, 0x04, 0x82, 0x7b, 0x93, 0xc6, 0xb8, 0x70, 0x57, 0x3a, 0x57, 0x9c, 0x08, 0x33,
+	0x93, 0x99, 0x8b, 0xda, 0xb7, 0xf0, 0x35, 0xf4, 0x49, 0x58, 0xb2, 0x74, 0x65, 0x0c, 0xbc, 0x88,
+	0xe9, 0x2f, 0x0a, 0xec, 0x7a, 0xce, 0x9c, 0x9e, 0x7b, 0xee, 0x0f, 0x3d, 0x52, 0x5a, 0xde, 0xf1,
+	0x29, 0x84, 0x8f, 0xf1, 0x94, 0xb3, 0x18, 0xa5, 0x0e, 0x94, 0x96, 0x28, 0x9d, 0x43, 0x04, 0xc1,
+	0x40, 0xcf, 0xb8, 0xc0, 0xc0, 0x28, 0x11, 0x94, 0xba, 0x6e, 0x67, 0x22, 0x27, 0x32, 0x97, 0x84,
+	0xd9, 0x57, 0xa1, 0xee, 0xbf, 0x12, 0x6a, 0xdf, 0x54, 0x0e, 0x8e, 0x4b, 0xff, 0xc4, 0x8c, 0x69,
+	0x30, 0xc6, 0x25, 0x3d, 0xe2, 0xdb, 0x51, 0x05, 0x9d, 0x01, 0x3d, 0x90, 0x0a, 0x74, 0xa6, 0xba,
+	0x28, 0x28, 0x30, 0x6e, 0xa3, 0xd7, 0xf4, 0xed, 0x68, 0xf7, 0xc1, 0xb9, 0xa6, 0x6d, 0x06, 0x26,
+	0xd1, 0x5c, 0x21, 0x97, 0xc2, 0x6d, 0xf6, 0x88, 0xdf, 0x3e, 0x1b, 0x04, 0xfb, 0x93, 0x05, 0x75,
+	0xfd, 0xcb, 0xcd, 0x3f, 0xc3, 0xd6, 0xe2, 0xe3, 0xd8, 0x8a, 0xbe, 0xdb, 0xf4, 0xdf, 0x08, 0xed,
+	0xec, 0xd3, 0x3a, 0x5d, 0xfa, 0x97, 0x33, 0x10, 0xc8, 0x31, 0x2d, 0x73, 0xd7, 0x38, 0x6b, 0x69,
+	0x26, 0x05, 0x7f, 0x00, 0xed, 0x36, 0x8a, 0x96, 0x4a, 0x98, 0xbd, 0x3c, 0xc1, 0xd8, 0x70, 0x84,
+	0x3c, 0xa0, 0x1d, 0x55, 0xd0, 0xf1, 0xe9, 0x3f, 0x03, 0xc9, 0x5c, 0x73, 0x4c, 0x47, 0x52, 0x60,
+	0x9c, 0xa0, 0xdb, 0xca, 0x15, 0xdb, 0x74, 0xe6, 0xc1, 0x00, 0x63, 0x3e, 0x35, 0xee, 0xaf, 0xc2,
+	0xa3, 0x84, 0x7d, 0x4d, 0xbb, 0x75, 0xd6, 0x61, 0x7a, 0xf5, 0x73, 0x44, 0x59, 0x85, 0xad, 0xa9,
+	0x95, 0xc1, 0xb7, 0x69, 0xe7, 0x94, 0xfe, 0xaf, 0x37, 0x5c, 0x49, 0x8b, 0x46, 0x76, 0xf8, 0xe1,
+	0x68, 0xb1, 0xf2, 0xc8, 0x72, 0xe5, 0x91, 0xcf, 0x95, 0x47, 0x5e, 0xd6, 0x9e, 0xb5, 0x5c, 0x7b,
+	0xd6, 0xfb, 0xda, 0xb3, 0x6e, 0x4f, 0x26, 0x1c, 0xef, 0xe7, 0xe3, 0x20, 0x91, 0xb3, 0x70, 0xb3,
+	0x85, 0xd0, 0x28, 0x11, 0x3e, 0x87, 0xd5, 0x25, 0x61, 0xaa, 0xc0, 0x8c, 0x7f, 0xe7, 0x87, 0x71,
+	0xfe, 0x15, 0x00, 0x00, 0xff, 0xff, 0x27, 0x26, 0x81, 0xa5, 0x61, 0x02, 0x00, 0x00,
 }
 
 func (m *Validator) Marshal() (dAtA []byte, err error) {
@@ -275,11 +275,11 @@ func (m *Validator) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	}
 	i--
 	dAtA[i] = 0x1a
-	if len(m.ConsensusAddresses) > 0 {
-		for iNdEx := len(m.ConsensusAddresses) - 1; iNdEx >= 0; iNdEx-- {
-			i -= len(m.ConsensusAddresses[iNdEx])
-			copy(dAtA[i:], m.ConsensusAddresses[iNdEx])
-			i = encodeVarintValidator(dAtA, i, uint64(len(m.ConsensusAddresses[iNdEx])))
+	if len(m.OperatorAddresses) > 0 {
+		for iNdEx := len(m.OperatorAddresses) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.OperatorAddresses[iNdEx])
+			copy(dAtA[i:], m.OperatorAddresses[iNdEx])
+			i = encodeVarintValidator(dAtA, i, uint64(len(m.OperatorAddresses[iNdEx])))
 			i--
 			dAtA[i] = 0x12
 		}
@@ -352,7 +352,7 @@ func (m *ValidatorDescription) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *ValidatorByConsAddress) Marshal() (dAtA []byte, err error) {
+func (m *ValidatorByOperatorAddress) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -362,12 +362,12 @@ func (m *ValidatorByConsAddress) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ValidatorByConsAddress) MarshalTo(dAtA []byte) (int, error) {
+func (m *ValidatorByOperatorAddress) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ValidatorByConsAddress) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *ValidatorByOperatorAddress) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -379,10 +379,10 @@ func (m *ValidatorByConsAddress) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ConsensusAddress) > 0 {
-		i -= len(m.ConsensusAddress)
-		copy(dAtA[i:], m.ConsensusAddress)
-		i = encodeVarintValidator(dAtA, i, uint64(len(m.ConsensusAddress)))
+	if len(m.OperatorAddress) > 0 {
+		i -= len(m.OperatorAddress)
+		copy(dAtA[i:], m.OperatorAddress)
+		i = encodeVarintValidator(dAtA, i, uint64(len(m.OperatorAddress)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -410,9 +410,9 @@ func (m *Validator) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovValidator(uint64(l))
 	}
-	if len(m.ConsensusAddresses) > 0 {
-		for _, b := range m.ConsensusAddresses {
-			l = len(b)
+	if len(m.OperatorAddresses) > 0 {
+		for _, s := range m.OperatorAddresses {
+			l = len(s)
 			n += 1 + l + sovValidator(uint64(l))
 		}
 	}
@@ -450,13 +450,13 @@ func (m *ValidatorDescription) Size() (n int) {
 	return n
 }
 
-func (m *ValidatorByConsAddress) Size() (n int) {
+func (m *ValidatorByOperatorAddress) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.ConsensusAddress)
+	l = len(m.OperatorAddress)
 	if l > 0 {
 		n += 1 + l + sovValidator(uint64(l))
 	}
@@ -536,9 +536,9 @@ func (m *Validator) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ConsensusAddresses", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OperatorAddresses", wireType)
 			}
-			var byteLen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowValidator
@@ -548,23 +548,23 @@ func (m *Validator) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				byteLen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if byteLen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthValidator
 			}
-			postIndex := iNdEx + byteLen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthValidator
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ConsensusAddresses = append(m.ConsensusAddresses, make([]byte, postIndex-iNdEx))
-			copy(m.ConsensusAddresses[len(m.ConsensusAddresses)-1], dAtA[iNdEx:postIndex])
+			m.OperatorAddresses = append(m.OperatorAddresses, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
@@ -830,7 +830,7 @@ func (m *ValidatorDescription) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ValidatorByConsAddress) Unmarshal(dAtA []byte) error {
+func (m *ValidatorByOperatorAddress) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -853,17 +853,17 @@ func (m *ValidatorByConsAddress) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ValidatorByConsAddress: wiretype end group for non-group")
+			return fmt.Errorf("proto: ValidatorByOperatorAddress: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ValidatorByConsAddress: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ValidatorByOperatorAddress: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ConsensusAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OperatorAddress", wireType)
 			}
-			var byteLen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowValidator
@@ -873,25 +873,23 @@ func (m *ValidatorByConsAddress) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				byteLen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if byteLen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthValidator
 			}
-			postIndex := iNdEx + byteLen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthValidator
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ConsensusAddress = append(m.ConsensusAddress[:0], dAtA[iNdEx:postIndex]...)
-			if m.ConsensusAddress == nil {
-				m.ConsensusAddress = []byte{}
-			}
+			m.OperatorAddress = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {

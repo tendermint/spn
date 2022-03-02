@@ -7,7 +7,7 @@ import "gogoproto/gogo.proto";
 
 message Validator {
   string address = 1;
-  repeated bytes consensusAddresses = 2;
+  repeated string operatorAddresses = 2;
   ValidatorDescription description = 3 [(gogoproto.nullable) = false];
 }
 
@@ -19,7 +19,7 @@ message ValidatorDescription {
   string details = 5;
 }
 
-message ValidatorByConsAddress {
-  bytes consensusAddress = 1;
+message ValidatorByOperatorAddress {
+  string operatorAddress = 1;
   string validatorAddress = 2;
 }
