@@ -9,15 +9,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/reward/types"
 )
 
 func TestRewardPoolQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.Reward(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNRewardPool(keeper, ctx, 2)
+	msgs := createNRewardPool(tk.RewardKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetRewardPoolRequest
@@ -51,7 +51,7 @@ func TestRewardPoolQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.RewardPool(wctx, tc.request)
+			response, err := tk.RewardKeeper.RewardPool(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -66,9 +66,9 @@ func TestRewardPoolQuerySingle(t *testing.T) {
 }
 
 func TestRewardPoolQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.Reward(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNRewardPool(keeper, ctx, 5)
+	msgs := createNRewardPool(tk.RewardKeeper, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllRewardPoolRequest {
 		return &types.QueryAllRewardPoolRequest{
@@ -83,7 +83,7 @@ func TestRewardPoolQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.RewardPoolAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.RewardKeeper.RewardPoolAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.RewardPool), step)
 			require.Subset(t,
@@ -96,7 +96,7 @@ func TestRewardPoolQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.RewardPoolAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := tk.RewardKeeper.RewardPoolAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.RewardPool), step)
 			require.Subset(t,
@@ -107,7 +107,7 @@ func TestRewardPoolQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.RewardPoolAll(wctx, request(nil, 0, 0, true))
+		resp, err := tk.RewardKeeper.RewardPoolAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
@@ -116,7 +116,7 @@ func TestRewardPoolQueryPaginated(t *testing.T) {
 		)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.RewardPoolAll(wctx, nil)
+		_, err := tk.RewardKeeper.RewardPoolAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }
