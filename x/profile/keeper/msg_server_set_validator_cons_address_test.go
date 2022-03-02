@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -26,15 +27,15 @@ const validatorKey = `{
 
 func TestMsgSetValidatorConsAddress(t *testing.T) {
 	var (
-		ctx, tk, srv = setupMsgServer(t)
-		wCtx         = sdk.WrapSDKContext(ctx)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 	valKey, err := valtypes.LoadValidatorKey([]byte(validatorKey))
 	require.NoError(t, err)
-	signature, err := valKey.Sign(0, ctx.ChainID())
+	signature, err := valKey.Sign(0, sdkCtx.ChainID())
 	require.NoError(t, err)
 
-	tk.ProfileKeeper.SetValidator(ctx, types.Validator{
+	tk.ProfileKeeper.SetValidator(sdkCtx, types.Validator{
 		Address:     valKey.Address.String(),
 		Description: types.ValidatorDescription{},
 	})
@@ -54,7 +55,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 				ValidatorKeyType:    "invalid_type",
 				Signature:           signature,
 				Nonce:               0,
-				ChainID:             ctx.ChainID(),
+				ChainID:             sdkCtx.ChainID(),
 			},
 			err: spnerrors.ErrCritical,
 		},
@@ -67,7 +68,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 				ValidatorKeyType:    valKey.PubKey.Type(),
 				Signature:           signature,
 				Nonce:               1,
-				ChainID:             ctx.ChainID(),
+				ChainID:             sdkCtx.ChainID(),
 			},
 			err: types.ErrInvalidValidatorNonce,
 		},
@@ -80,7 +81,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 				ValidatorKeyType:    valKey.PubKey.Type(),
 				Signature:           signature,
 				Nonce:               0,
-				ChainID:             ctx.ChainID() + "_invalid",
+				ChainID:             sdkCtx.ChainID() + "_invalid",
 			},
 			err: types.ErrInvalidValidatorChainID,
 		},
@@ -93,7 +94,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 				ValidatorKeyType:    valKey.PubKey.Type(),
 				Signature:           signature,
 				Nonce:               0,
-				ChainID:             ctx.ChainID(),
+				ChainID:             sdkCtx.ChainID(),
 			},
 		},
 		{
@@ -105,36 +106,36 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 				ValidatorKeyType:    valKey.PubKey.Type(),
 				Signature:           signature,
 				Nonce:               1,
-				ChainID:             ctx.ChainID(),
+				ChainID:             sdkCtx.ChainID(),
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			currentNonce := uint64(1)
-			oldConsNonce, hasConsNonce := tk.ProfileKeeper.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().Bytes())
+			oldConsNonce, hasConsNonce := tk.ProfileKeeper.GetConsensusKeyNonce(sdkCtx, tt.pubKey.GetConsAddress().Bytes())
 			if hasConsNonce {
 				currentNonce = oldConsNonce.Nonce + 1
 			}
 
-			_, err := srv.SetValidatorConsAddress(wCtx, tt.msg)
+			_, err := ts.ProfileSrv.SetValidatorConsAddress(ctx, tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
 
-			validator, found := tk.ProfileKeeper.GetValidator(ctx, tt.msg.ValidatorAddress)
+			validator, found := tk.ProfileKeeper.GetValidator(sdkCtx, tt.msg.ValidatorAddress)
 			require.True(t, found, "validator was not saved")
 			require.Equal(t, tt.msg.ValidatorAddress, validator.Address)
 			require.True(t, validator.HasConsensusAddress(tt.pubKey.GetConsAddress().Bytes()))
 
-			valByConsAddr, found := tk.ProfileKeeper.GetValidatorByConsAddress(ctx, tt.pubKey.GetConsAddress().Bytes())
+			valByConsAddr, found := tk.ProfileKeeper.GetValidatorByConsAddress(sdkCtx, tt.pubKey.GetConsAddress().Bytes())
 			require.True(t, found, "validator by consensus address was not saved")
 			require.Equal(t, tt.msg.ValidatorAddress, valByConsAddr.ValidatorAddress)
 			require.Equal(t, tt.pubKey.GetConsAddress().Bytes(), valByConsAddr.ConsensusAddress)
 
-			consNonce, found := tk.ProfileKeeper.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().Bytes())
+			consNonce, found := tk.ProfileKeeper.GetConsensusKeyNonce(sdkCtx, tt.pubKey.GetConsAddress().Bytes())
 			require.True(t, found, "validator consensus nonce was not saved")
 			require.Equal(t, currentNonce, consNonce.Nonce)
 			require.Equal(t, tt.pubKey.GetConsAddress().Bytes(), consNonce.ConsensusAddress)

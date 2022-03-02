@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -11,7 +12,7 @@ import (
 )
 
 func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
-	ctx, tk, _ := setupMsgServer(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		coord := sample.Coordinator(sample.Address())
 		coord.CoordinatorID = tk.ProfileKeeper.AppendCoordinator(ctx, coord)
