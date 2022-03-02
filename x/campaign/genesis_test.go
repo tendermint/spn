@@ -16,11 +16,11 @@ import (
 */
 
 func TestGenesis(t *testing.T) {
-	keeper, ctx := testkeeper.Campaign(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 
 	genesisState := sample.CampaignGenesisState()
-	campaign.InitGenesis(ctx, *keeper, genesisState)
-	got := *campaign.ExportGenesis(ctx, *keeper)
+	campaign.InitGenesis(ctx, *tk.CampaignKeeper, genesisState)
+	got := *campaign.ExportGenesis(ctx, *tk.CampaignKeeper)
 
 	require.ElementsMatch(t, genesisState.CampaignChainsList, got.CampaignChainsList)
 

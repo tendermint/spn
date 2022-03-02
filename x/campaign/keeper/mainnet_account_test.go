@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
@@ -23,10 +23,10 @@ func createNMainnetAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 }
 
 func TestMainnetAccountGet(t *testing.T) {
-	k, ctx := keepertest.Campaign(t)
-	items := createNMainnetAccount(k, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := k.GetMainnetAccount(ctx,
+		rst, found := tk.CampaignKeeper.GetMainnetAccount(ctx,
 			item.CampaignID,
 			item.Address,
 		)
@@ -35,14 +35,14 @@ func TestMainnetAccountGet(t *testing.T) {
 	}
 }
 func TestMainnetAccountRemove(t *testing.T) {
-	k, ctx := keepertest.Campaign(t)
-	items := createNMainnetAccount(k, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
 	for _, item := range items {
-		k.RemoveMainnetAccount(ctx,
+		tk.CampaignKeeper.RemoveMainnetAccount(ctx,
 			item.CampaignID,
 			item.Address,
 		)
-		_, found := k.GetMainnetAccount(ctx,
+		_, found := tk.CampaignKeeper.GetMainnetAccount(ctx,
 			item.CampaignID,
 			item.Address,
 		)
@@ -51,7 +51,7 @@ func TestMainnetAccountRemove(t *testing.T) {
 }
 
 func TestMainnetAccountGetAll(t *testing.T) {
-	k, ctx := keepertest.Campaign(t)
-	items := createNMainnetAccount(k, ctx, 10)
-	require.ElementsMatch(t, items, k.GetAllMainnetAccount(ctx))
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
+	require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllMainnetAccount(ctx))
 }

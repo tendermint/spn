@@ -90,12 +90,6 @@ func NewTestKeepers(t testing.TB) (sdk.Context, TestKeepers) {
 
 }
 
-// Campaign returns a keeper of the campaign module for testing purpose
-func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
-	ctx, tk := NewTestKeepers(t)
-	return tk.CampaignKeeper, ctx
-}
-
 // Reward returns a keeper of the reward module for testing purpose
 func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
 	ctx, tk := NewTestKeepers(t)

@@ -13,9 +13,9 @@ import (
 )
 
 func TestCampaignChainsQuerySingle(t *testing.T) {
-	keeper, ctx := testkeeper.Campaign(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNCampaignChains(keeper, ctx, 2)
+	msgs := createNCampaignChains(tk.CampaignKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetCampaignChainsRequest
@@ -50,7 +50,7 @@ func TestCampaignChainsQuerySingle(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.CampaignChains(wctx, tc.request)
+			response, err := tk.CampaignKeeper.CampaignChains(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

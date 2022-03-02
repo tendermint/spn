@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"strconv"
 	"testing"
 
@@ -10,7 +11,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
@@ -32,9 +32,9 @@ func createNMainnetAccountForCampaignID(
 
 func TestMainnetAccountQuerySingle(t *testing.T) {
 	var (
-		k, ctx = keepertest.Campaign(t)
-		wctx   = sdk.WrapSDKContext(ctx)
-		msgs   = createNMainnetAccount(k, ctx, 2)
+		ctx, tk = testkeeper.NewTestKeepers(t)
+		wctx    = sdk.WrapSDKContext(ctx)
+		msgs    = createNMainnetAccount(tk.CampaignKeeper, ctx, 2)
 	)
 	for _, tc := range []struct {
 		desc     string
@@ -72,7 +72,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := k.MainnetAccount(wctx, tc.request)
+			response, err := tk.CampaignKeeper.MainnetAccount(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -85,9 +85,9 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 func TestMainnetAccountQueryPaginated(t *testing.T) {
 	var (
 		campaignID = uint64(5)
-		k, ctx     = keepertest.Campaign(t)
+		ctx, tk    = testkeeper.NewTestKeepers(t)
 		wctx       = sdk.WrapSDKContext(ctx)
-		msgs       = createNMainnetAccountForCampaignID(k, ctx, 5, campaignID)
+		msgs       = createNMainnetAccountForCampaignID(tk.CampaignKeeper, ctx, 5, campaignID)
 	)
 	request := func(campaignID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllMainnetAccountRequest {
 		return &types.QueryAllMainnetAccountRequest{
@@ -103,7 +103,7 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := k.MainnetAccountAll(wctx, request(campaignID, nil, uint64(i), uint64(step), false))
+			resp, err := tk.CampaignKeeper.MainnetAccountAll(wctx, request(campaignID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetAccount), step)
 			require.Subset(t, msgs, resp.MainnetAccount)
@@ -113,7 +113,7 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := k.MainnetAccountAll(wctx, request(campaignID, next, 0, uint64(step), false))
+			resp, err := tk.CampaignKeeper.MainnetAccountAll(wctx, request(campaignID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetAccount), step)
 			require.Subset(t, msgs, resp.MainnetAccount)
@@ -121,13 +121,13 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := k.MainnetAccountAll(wctx, request(campaignID, nil, 0, 0, true))
+		resp, err := tk.CampaignKeeper.MainnetAccountAll(wctx, request(campaignID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.MainnetAccount)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := k.MainnetAccountAll(wctx, nil)
+		_, err := tk.CampaignKeeper.MainnetAccountAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

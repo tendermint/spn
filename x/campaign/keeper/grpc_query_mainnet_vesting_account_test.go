@@ -32,9 +32,9 @@ func createNMainnetVestingAccountForCampaignID(
 
 func TestMainnetVestingAccountQuerySingle(t *testing.T) {
 	var (
-		k, ctx = testkeeper.Campaign(t)
-		wctx   = sdk.WrapSDKContext(ctx)
-		msgs   = createNMainnetVestingAccount(k, ctx, 2)
+		ctx, tk = testkeeper.NewTestKeepers(t)
+		wctx    = sdk.WrapSDKContext(ctx)
+		msgs    = createNMainnetVestingAccount(tk.CampaignKeeper, ctx, 2)
 	)
 	for _, tc := range []struct {
 		desc     string
@@ -73,7 +73,7 @@ func TestMainnetVestingAccountQuerySingle(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := k.MainnetVestingAccount(wctx, tc.request)
+			response, err := tk.CampaignKeeper.MainnetVestingAccount(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -86,9 +86,9 @@ func TestMainnetVestingAccountQuerySingle(t *testing.T) {
 func TestMainnetVestingAccountQueryPaginated(t *testing.T) {
 	var (
 		campaignID = uint64(5)
-		k, ctx     = testkeeper.Campaign(t)
+		ctx, tk    = testkeeper.NewTestKeepers(t)
 		wctx       = sdk.WrapSDKContext(ctx)
-		msgs       = createNMainnetVestingAccountForCampaignID(k, ctx, 5, campaignID)
+		msgs       = createNMainnetVestingAccountForCampaignID(tk.CampaignKeeper, ctx, 5, campaignID)
 	)
 	request := func(campaignID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllMainnetVestingAccountRequest {
 		return &types.QueryAllMainnetVestingAccountRequest{
@@ -104,7 +104,7 @@ func TestMainnetVestingAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := k.MainnetVestingAccountAll(wctx, request(campaignID, nil, uint64(i), uint64(step), false))
+			resp, err := tk.CampaignKeeper.MainnetVestingAccountAll(wctx, request(campaignID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetVestingAccount), step)
 			require.Subset(t, msgs, resp.MainnetVestingAccount)
@@ -114,7 +114,7 @@ func TestMainnetVestingAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := k.MainnetVestingAccountAll(wctx, request(campaignID, next, 0, uint64(step), false))
+			resp, err := tk.CampaignKeeper.MainnetVestingAccountAll(wctx, request(campaignID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetVestingAccount), step)
 			require.Subset(t, msgs, resp.MainnetVestingAccount)
@@ -122,13 +122,13 @@ func TestMainnetVestingAccountQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := k.MainnetVestingAccountAll(wctx, request(campaignID, nil, 0, 0, true))
+		resp, err := tk.CampaignKeeper.MainnetVestingAccountAll(wctx, request(campaignID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.MainnetVestingAccount)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := k.MainnetVestingAccountAll(wctx, nil)
+		_, err := tk.CampaignKeeper.MainnetVestingAccountAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

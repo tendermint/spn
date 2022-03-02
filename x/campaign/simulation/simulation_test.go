@@ -199,11 +199,11 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 }
 
 func TestGetSharesFromCampaign(t *testing.T) {
-	ck, ctx := testkeeper.Campaign(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	r := sample.Rand()
 
 	t.Run("no campaign", func(t *testing.T) {
-		_, found := simcampaign.GetSharesFromCampaign(r, ctx, *ck, 0)
+		_, found := simcampaign.GetSharesFromCampaign(r, ctx, *tk.CampaignKeeper, 0)
 		require.False(t, found)
 	})
 
@@ -222,13 +222,13 @@ func TestGetSharesFromCampaign(t *testing.T) {
 		))
 		require.NoError(t, err)
 		camp.AllocatedShares = shares
-		campSharesReached := ck.AppendCampaign(ctx, camp)
-		_, found := simcampaign.GetSharesFromCampaign(r, ctx, *ck, campSharesReached)
+		campSharesReached := tk.CampaignKeeper.AppendCampaign(ctx, camp)
+		_, found := simcampaign.GetSharesFromCampaign(r, ctx, *tk.CampaignKeeper, campSharesReached)
 		require.False(t, found)
 	})
 
 	t.Run("campaign with available shares", func(t *testing.T) {
-		campID := ck.AppendCampaign(ctx, campaigntypes.NewCampaign(
+		campID := tk.CampaignKeeper.AppendCampaign(ctx, campaigntypes.NewCampaign(
 			1,
 			sample.AlphaString(5),
 			0,
@@ -236,7 +236,7 @@ func TestGetSharesFromCampaign(t *testing.T) {
 			false,
 			sample.Metadata(20),
 		))
-		shares, found := simcampaign.GetSharesFromCampaign(r, ctx, *ck, campID)
+		shares, found := simcampaign.GetSharesFromCampaign(r, ctx, *tk.CampaignKeeper, campID)
 		require.True(t, found)
 		require.NotEqualValues(t, campaigntypes.EmptyShares(), shares)
 	})
@@ -269,36 +269,36 @@ func TestGetAccountWithVouchers(t *testing.T) {
 }
 
 func TestGetAccountWithShares(t *testing.T) {
-	ck, ctx := testkeeper.Campaign(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
 	t.Run("no account", func(t *testing.T) {
-		_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
+		_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs)
 		require.False(t, found)
 	})
 
 	t.Run("account not part of sim accounts", func(t *testing.T) {
 		sampleAddr := sample.Address()
-		ck.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
+		tk.CampaignKeeper.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
 			CampaignID: 10,
 			Address:    sampleAddr,
 			Shares:     sample.Shares(),
 		})
-		_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
+		_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs)
 		require.False(t, found)
-		ck.RemoveMainnetAccount(ctx, 10, sampleAddr)
+		tk.CampaignKeeper.RemoveMainnetAccount(ctx, 10, sampleAddr)
 	})
 
 	t.Run("account can be retrieved", func(t *testing.T) {
 		acc, _ := simtypes.RandomAcc(r, accs)
 		share := sample.Shares()
-		ck.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
+		tk.CampaignKeeper.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
 			CampaignID: 10,
 			Address:    acc.Address.String(),
 			Shares:     share,
 		})
-		campID, acc, shareRetrieved, found := simcampaign.GetAccountWithShares(r, ctx, *ck, accs)
+		campID, acc, shareRetrieved, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
 		require.EqualValues(t, uint64(10), campID)
