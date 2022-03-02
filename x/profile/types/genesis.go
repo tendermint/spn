@@ -11,7 +11,6 @@ func DefaultGenesis() *GenesisState {
 		// this line is used by starport scaffolding # genesis/types/default
 		ValidatorList:              []Validator{},
 		ValidatorByConsAddressList: []ValidatorByConsAddress{},
-		ConsensusKeyNonceList:      []ConsensusKeyNonce{},
 		CoordinatorList:            []Coordinator{},
 		CoordinatorCounter:         1,
 		CoordinatorByAddressList:   []CoordinatorByAddress{},
@@ -59,19 +58,6 @@ func (gs GenesisState) ValidateValidators() error {
 		validatorByConsAddressIndexMap[index] = struct{}{}
 	}
 
-	// Check for duplicated index in consensusKeyNonce
-	consensusKeyNonceIndexMap := make(map[string]struct{})
-	for _, elem := range gs.ConsensusKeyNonceList {
-		index := string(ConsensusKeyNonceKey(elem.ConsensusAddress))
-		if _, ok := consensusKeyNonceIndexMap[index]; ok {
-			return errors.New("duplicated index for consensusKeyNonce")
-		}
-		consAddrIndex := ValidatorByConsAddressKey(elem.ConsensusAddress)
-		if _, ok := validatorByConsAddressIndexMap[string(consAddrIndex)]; !ok {
-			return errors.New("consensus key address not found for ValidatorByConsAddress")
-		}
-		consensusKeyNonceIndexMap[index] = struct{}{}
-	}
 	return nil
 }
 
