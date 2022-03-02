@@ -43,7 +43,6 @@ func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.LastCommi
 	valSetSize := int64(len(lastCommit.Votes))
 	for _, vote := range lastCommit.Votes {
 		if vote.SignedLastBlock {
-			// TODO(490): implement correct address format
 			monitoringInfo.SignatureCounts.AddSignature(vote.Validator.Address, valSetSize)
 		}
 	}
