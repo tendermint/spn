@@ -1,12 +1,12 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/keeper"
@@ -23,10 +23,10 @@ func createNConsensusKeyNonce(keeper *keeper.Keeper, ctx sdk.Context, n int) []t
 }
 
 func TestConsensusKeyNonceGet(t *testing.T) {
-	k, ctx := keepertest.Profile(t)
-	items := createNConsensusKeyNonce(k, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNConsensusKeyNonce(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := k.GetConsensusKeyNonce(ctx,
+		rst, found := tk.ProfileKeeper.GetConsensusKeyNonce(ctx,
 			item.ConsensusAddress,
 		)
 		require.True(t, found)
@@ -37,13 +37,13 @@ func TestConsensusKeyNonceGet(t *testing.T) {
 	}
 }
 func TestConsensusKeyNonceRemove(t *testing.T) {
-	k, ctx := keepertest.Profile(t)
-	items := createNConsensusKeyNonce(k, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNConsensusKeyNonce(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
-		k.RemoveConsensusKeyNonce(ctx,
+		tk.ProfileKeeper.RemoveConsensusKeyNonce(ctx,
 			item.ConsensusAddress,
 		)
-		_, found := k.GetConsensusKeyNonce(ctx,
+		_, found := tk.ProfileKeeper.GetConsensusKeyNonce(ctx,
 			item.ConsensusAddress,
 		)
 		require.False(t, found)

@@ -12,12 +12,12 @@ import (
 
 func TestMsgDeleteValidator(t *testing.T) {
 	var (
-		addr1       = sample.Address()
-		addr2       = sample.Address()
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		addr1        = sample.Address()
+		addr2        = sample.Address()
+		ctx, tk, srv = setupMsgServer(t)
+		wCtx         = sdk.WrapSDKContext(ctx)
 	)
-	k.SetValidator(ctx, types.Validator{
+	tk.ProfileKeeper.SetValidator(ctx, types.Validator{
 		Address:     addr2,
 		Description: types.ValidatorDescription{},
 	})
@@ -47,7 +47,7 @@ func TestMsgDeleteValidator(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			_, found := k.GetValidator(ctx, tt.msg.Address)
+			_, found := tk.ProfileKeeper.GetValidator(ctx, tt.msg.Address)
 			require.False(t, found, "validator was not removed")
 		})
 	}

@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/keeper"
@@ -23,10 +23,10 @@ func createNValidatorByConsAddress(keeper *keeper.Keeper, ctx sdk.Context, n int
 }
 
 func TestValidatorByConsAddressGet(t *testing.T) {
-	k, ctx := keepertest.Profile(t)
-	items := createNValidatorByConsAddress(k, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNValidatorByConsAddress(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := k.GetValidatorByConsAddress(ctx,
+		rst, found := tk.ProfileKeeper.GetValidatorByConsAddress(ctx,
 			item.ConsensusAddress,
 		)
 		require.True(t, found)
@@ -37,13 +37,13 @@ func TestValidatorByConsAddressGet(t *testing.T) {
 	}
 }
 func TestValidatorByConsAddressRemove(t *testing.T) {
-	k, ctx := keepertest.Profile(t)
-	items := createNValidatorByConsAddress(k, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNValidatorByConsAddress(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
-		k.RemoveValidatorByConsAddress(ctx,
+		tk.ProfileKeeper.RemoveValidatorByConsAddress(ctx,
 			item.ConsensusAddress,
 		)
-		_, found := k.GetValidatorByConsAddress(ctx,
+		_, found := tk.ProfileKeeper.GetValidatorByConsAddress(ctx,
 			item.ConsensusAddress,
 		)
 		require.False(t, found)
@@ -51,10 +51,10 @@ func TestValidatorByConsAddressRemove(t *testing.T) {
 }
 
 func TestValidatorByConsAddressGetAll(t *testing.T) {
-	k, ctx := keepertest.Profile(t)
-	items := createNValidatorByConsAddress(k, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNValidatorByConsAddress(tk.ProfileKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(k.GetAllValidatorByConsAddress(ctx)),
+		nullify.Fill(tk.ProfileKeeper.GetAllValidatorByConsAddress(ctx)),
 	)
 }

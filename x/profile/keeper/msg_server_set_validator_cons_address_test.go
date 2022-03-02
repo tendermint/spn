@@ -26,15 +26,15 @@ const validatorKey = `{
 
 func TestMsgSetValidatorConsAddress(t *testing.T) {
 	var (
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		ctx, tk, srv = setupMsgServer(t)
+		wCtx         = sdk.WrapSDKContext(ctx)
 	)
 	valKey, err := valtypes.LoadValidatorKey([]byte(validatorKey))
 	require.NoError(t, err)
 	signature, err := valKey.Sign(0, ctx.ChainID())
 	require.NoError(t, err)
 
-	k.SetValidator(ctx, types.Validator{
+	tk.ProfileKeeper.SetValidator(ctx, types.Validator{
 		Address:     valKey.Address.String(),
 		Description: types.ValidatorDescription{},
 	})
@@ -112,7 +112,7 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			currentNonce := uint64(1)
-			oldConsNonce, hasConsNonce := k.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().Bytes())
+			oldConsNonce, hasConsNonce := tk.ProfileKeeper.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().Bytes())
 			if hasConsNonce {
 				currentNonce = oldConsNonce.Nonce + 1
 			}
@@ -124,17 +124,17 @@ func TestMsgSetValidatorConsAddress(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			validator, found := k.GetValidator(ctx, tt.msg.ValidatorAddress)
+			validator, found := tk.ProfileKeeper.GetValidator(ctx, tt.msg.ValidatorAddress)
 			require.True(t, found, "validator was not saved")
 			require.Equal(t, tt.msg.ValidatorAddress, validator.Address)
 			require.True(t, validator.HasConsensusAddress(tt.pubKey.GetConsAddress().Bytes()))
 
-			valByConsAddr, found := k.GetValidatorByConsAddress(ctx, tt.pubKey.GetConsAddress().Bytes())
+			valByConsAddr, found := tk.ProfileKeeper.GetValidatorByConsAddress(ctx, tt.pubKey.GetConsAddress().Bytes())
 			require.True(t, found, "validator by consensus address was not saved")
 			require.Equal(t, tt.msg.ValidatorAddress, valByConsAddr.ValidatorAddress)
 			require.Equal(t, tt.pubKey.GetConsAddress().Bytes(), valByConsAddr.ConsensusAddress)
 
-			consNonce, found := k.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().Bytes())
+			consNonce, found := tk.ProfileKeeper.GetConsensusKeyNonce(ctx, tt.pubKey.GetConsAddress().Bytes())
 			require.True(t, found, "validator consensus nonce was not saved")
 			require.Equal(t, currentNonce, consNonce.Nonce)
 			require.Equal(t, tt.pubKey.GetConsAddress().Bytes(), consNonce.ConsensusAddress)

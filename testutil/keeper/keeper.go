@@ -90,16 +90,6 @@ func NewTestKeepers(t testing.TB) (sdk.Context, TestKeepers) {
 
 }
 
-// Profile returns a keeper of the profile module for testing purpose
-func Profile(t testing.TB) (*profilekeeper.Keeper, sdk.Context) {
-	initializer := newInitializer()
-
-	keeper := initializer.Profile()
-	require.NoError(t, initializer.StateStore.LoadLatestVersion())
-
-	return keeper, sdk.NewContext(initializer.StateStore, tmproto.Header{}, false, log.NewNopLogger())
-}
-
 // Launch returns a keeper of the launch module for testing purpose
 func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
 	initializer := newInitializer()

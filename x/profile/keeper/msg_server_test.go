@@ -10,7 +10,7 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func setupMsgServer(t testing.TB) (sdk.Context, *keeper.Keeper, types.MsgServer) {
-	k, ctx := testkeeper.Profile(t)
-	return ctx, k, keeper.NewMsgServerImpl(*k)
+func setupMsgServer(t testing.TB) (sdk.Context, testkeeper.TestKeepers, types.MsgServer) {
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	return ctx, tk, keeper.NewMsgServerImpl(*tk.ProfileKeeper)
 }

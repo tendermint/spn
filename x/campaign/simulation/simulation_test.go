@@ -44,22 +44,22 @@ func populateCoordinators(
 }
 
 func TestGetCoordSimAccount(t *testing.T) {
-	pk, ctx := testkeeper.Profile(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
 	t.Run("no coordinator", func(t *testing.T) {
-		_, _, found := simcampaign.GetCoordSimAccount(r, ctx, pk, accs)
+		_, _, found := simcampaign.GetCoordSimAccount(r, ctx, tk.ProfileKeeper, accs)
 		require.False(t, found)
 	})
 
-	populateCoordinators(t, r, ctx, *pk, accs, 10)
+	populateCoordinators(t, r, ctx, *tk.ProfileKeeper, accs, 10)
 
 	t.Run("find coordinators", func(t *testing.T) {
-		acc, coordID, found := simcampaign.GetCoordSimAccount(r, ctx, pk, accs)
+		acc, coordID, found := simcampaign.GetCoordSimAccount(r, ctx, tk.ProfileKeeper, accs)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
-		_, found = pk.GetCoordinator(ctx, coordID)
+		_, found = tk.ProfileKeeper.GetCoordinator(ctx, coordID)
 		require.True(t, found)
 	})
 }

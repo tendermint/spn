@@ -12,10 +12,10 @@ import (
 
 func TestMsgUpdateValidatorDescription(t *testing.T) {
 	var (
-		addr1       = sample.Address()
-		addr2       = sample.Address()
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		addr1        = sample.Address()
+		addr2        = sample.Address()
+		ctx, tk, srv = setupMsgServer(t)
+		wCtx         = sdk.WrapSDKContext(ctx)
 	)
 	tests := []struct {
 		name string
@@ -44,7 +44,7 @@ func TestMsgUpdateValidatorDescription(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			oldValidator, oldFound := k.GetValidator(ctx, tt.msg.Address)
+			oldValidator, oldFound := tk.ProfileKeeper.GetValidator(ctx, tt.msg.Address)
 
 			_, err := srv.UpdateValidatorDescription(wCtx, &tt.msg)
 			if tt.err != nil {
@@ -53,7 +53,7 @@ func TestMsgUpdateValidatorDescription(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			validator, found := k.GetValidator(ctx, tt.msg.Address)
+			validator, found := tk.ProfileKeeper.GetValidator(ctx, tt.msg.Address)
 			require.True(t, found, "validator not found")
 			require.EqualValues(t, tt.msg.Address, validator.Address)
 

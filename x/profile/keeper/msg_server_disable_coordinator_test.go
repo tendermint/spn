@@ -12,10 +12,10 @@ import (
 
 func TestMsgDisableCoordinator(t *testing.T) {
 	var (
-		addr        = sample.Address()
-		msgCoord    = sample.MsgCreateCoordinator(sample.Address())
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		addr         = sample.Address()
+		msgCoord     = sample.MsgCreateCoordinator(sample.Address())
+		ctx, tk, srv = setupMsgServer(t)
+		wCtx         = sdk.WrapSDKContext(ctx)
 	)
 	_, err := srv.CreateCoordinator(wCtx, &msgCoord)
 	require.NoError(t, err)
@@ -43,10 +43,10 @@ func TestMsgDisableCoordinator(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			_, err = k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			_, err = tk.ProfileKeeper.GetCoordinatorByAddress(ctx, tt.msg.Address)
 			require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 
-			coord, found := k.GetCoordinator(ctx, got.CoordinatorID)
+			coord, found := tk.ProfileKeeper.GetCoordinator(ctx, got.CoordinatorID)
 			require.True(t, found)
 			require.EqualValues(t, false, coord.Active)
 

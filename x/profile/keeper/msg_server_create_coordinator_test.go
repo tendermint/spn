@@ -12,10 +12,10 @@ import (
 
 func TestMsgCreateCoordinator(t *testing.T) {
 	var (
-		msg1        = sample.MsgCreateCoordinator(sample.Address())
-		msg2        = sample.MsgCreateCoordinator(sample.Address())
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		msg1         = sample.MsgCreateCoordinator(sample.Address())
+		msg2         = sample.MsgCreateCoordinator(sample.Address())
+		ctx, tk, srv = setupMsgServer(t)
+		wCtx         = sdk.WrapSDKContext(ctx)
 	)
 	tests := []struct {
 		name   string
@@ -45,12 +45,12 @@ func TestMsgCreateCoordinator(t *testing.T) {
 				return
 			}
 			require.NoError(t, err)
-			coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			coordByAddr, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, tt.msg.Address)
 			require.NoError(t, err)
 			require.EqualValues(t, tt.wantId, coordByAddr.CoordinatorID)
 			require.EqualValues(t, tt.wantId, got.CoordinatorID)
 
-			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
+			coord, found := tk.ProfileKeeper.GetCoordinator(ctx, coordByAddr.CoordinatorID)
 			require.True(t, found, "coordinator id not found")
 			require.EqualValues(t, tt.msg.Address, coord.Address)
 			require.EqualValues(t, tt.msg.Description, coord.Description)

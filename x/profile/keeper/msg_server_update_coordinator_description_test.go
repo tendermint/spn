@@ -12,10 +12,10 @@ import (
 
 func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	var (
-		addr        = sample.Address()
-		msgCoord    = sample.MsgCreateCoordinator(sample.Address())
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		addr         = sample.Address()
+		msgCoord     = sample.MsgCreateCoordinator(sample.Address())
+		ctx, tk, srv = setupMsgServer(t)
+		wCtx         = sdk.WrapSDKContext(ctx)
 	)
 	_, err := srv.CreateCoordinator(wCtx, &msgCoord)
 	require.NoError(t, err)
@@ -50,9 +50,9 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			var oldCoord types.Coordinator
 			var found bool
 			if tt.err == nil {
-				coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+				coordByAddr, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, tt.msg.Address)
 				require.NoError(t, err, "coordinator by address not found")
-				oldCoord, found = k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
+				oldCoord, found = tk.ProfileKeeper.GetCoordinator(ctx, coordByAddr.CoordinatorID)
 				require.True(t, found, "coordinator not found")
 			}
 
@@ -63,9 +63,9 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			coordByAddr, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, tt.msg.Address)
 			require.NoError(t, err, "coordinator by address not found")
-			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
+			coord, found := tk.ProfileKeeper.GetCoordinator(ctx, coordByAddr.CoordinatorID)
 			require.True(t, found, "coordinator not found")
 			require.EqualValues(t, tt.msg.Address, coord.Address)
 			require.EqualValues(t, coordByAddr.CoordinatorID, coord.CoordinatorID)

@@ -15,9 +15,9 @@ import (
 )
 
 func TestCoordinatorQuerySingle(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNCoordinator(keeper, ctx, 2)
+	msgs := createNCoordinator(tk.ProfileKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetCoordinatorRequest
@@ -46,7 +46,7 @@ func TestCoordinatorQuerySingle(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.Coordinator(wctx, tc.request)
+			response, err := tk.ProfileKeeper.Coordinator(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -57,9 +57,9 @@ func TestCoordinatorQuerySingle(t *testing.T) {
 }
 
 func TestCoordinatorQueryPaginated(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNCoordinator(keeper, ctx, 5)
+	msgs := createNCoordinator(tk.ProfileKeeper, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllCoordinatorRequest {
 		return &types.QueryAllCoordinatorRequest{
@@ -74,7 +74,7 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.CoordinatorAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.ProfileKeeper.CoordinatorAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Coordinator), step)
 			require.Subset(t, msgs, resp.Coordinator)
@@ -84,7 +84,7 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.CoordinatorAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := tk.ProfileKeeper.CoordinatorAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Coordinator), step)
 			require.Subset(t, msgs, resp.Coordinator)
@@ -92,13 +92,13 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.CoordinatorAll(wctx, request(nil, 0, 0, true))
+		resp, err := tk.ProfileKeeper.CoordinatorAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.Coordinator)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.CoordinatorAll(wctx, nil)
+		_, err := tk.ProfileKeeper.CoordinatorAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

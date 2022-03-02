@@ -22,10 +22,10 @@ func createNValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Val
 }
 
 func TestValidatorGet(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNValidator(keeper, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNValidator(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetValidator(ctx,
+		rst, found := tk.ProfileKeeper.GetValidator(ctx,
 			item.Address,
 		)
 		require.True(t, found)
@@ -33,13 +33,13 @@ func TestValidatorGet(t *testing.T) {
 	}
 }
 func TestValidatorRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNValidator(keeper, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNValidator(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveValidator(ctx,
+		tk.ProfileKeeper.RemoveValidator(ctx,
 			item.Address,
 		)
-		_, found := keeper.GetValidator(ctx,
+		_, found := tk.ProfileKeeper.GetValidator(ctx,
 			item.Address,
 		)
 		require.False(t, found)
@@ -47,7 +47,7 @@ func TestValidatorRemove(t *testing.T) {
 }
 
 func TestValidatorGetAll(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNValidator(keeper, ctx, 10)
-	require.ElementsMatch(t, items, keeper.GetAllValidator(ctx))
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNValidator(tk.ProfileKeeper, ctx, 10)
+	require.ElementsMatch(t, items, tk.ProfileKeeper.GetAllValidator(ctx))
 }

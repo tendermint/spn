@@ -11,24 +11,24 @@ import (
 )
 
 func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
-	ctx, k, _ := setupMsgServer(t)
+	ctx, tk, _ := setupMsgServer(t)
 	t.Run("valid case", func(t *testing.T) {
 		coord := sample.Coordinator(sample.Address())
-		coord.CoordinatorID = k.AppendCoordinator(ctx, coord)
-		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
+		coord.CoordinatorID = tk.ProfileKeeper.AppendCoordinator(ctx, coord)
+		tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 			Address:       sample.Address(),
 			CoordinatorID: coord.CoordinatorID,
 		})
-		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*k)(ctx)
+		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)
 		require.Equal(t, false, isValid)
 	})
 
 	t.Run("invalid case 1", func(t *testing.T) {
-		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
+		tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 			Address:       sample.Address(),
 			CoordinatorID: 10,
 		})
-		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*k)(ctx)
+		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)
 		require.Equal(t, true, isValid)
 	})
 }
