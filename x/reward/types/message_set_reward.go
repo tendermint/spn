@@ -46,5 +46,10 @@ func (msg *MsgSetRewards) ValidateBasic() error {
 	if err := msg.Coins.Validate(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidRewardPoolCoins, "invalid reward pool coins (%s)", err)
 	}
+
+	if msg.LastRewardHeight < 0 {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "last reward height must be non-negative")
+	}
+
 	return nil
 }
