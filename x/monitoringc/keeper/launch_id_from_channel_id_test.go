@@ -36,19 +36,6 @@ func TestLaunchIDFromChannelIDGet(t *testing.T) {
 		)
 	}
 }
-func TestLaunchIDFromChannelIDRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
-	items := createNLaunchIDFromChannelID(tk.MonitoringConsumerKeeper, ctx, 10)
-	for _, item := range items {
-		tk.MonitoringConsumerKeeper.RemoveLaunchIDFromChannelID(ctx,
-			item.ChannelID,
-		)
-		_, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromChannelID(ctx,
-			item.ChannelID,
-		)
-		require.False(t, found)
-	}
-}
 
 func TestLaunchIDFromChannelIDGetAll(t *testing.T) {
 	ctx, tk := testkeeper.NewTestKeepers(t)

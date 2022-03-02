@@ -73,12 +73,6 @@ func (k Keeper) GetCoordinator(ctx sdk.Context, id uint64) (val types.Coordinato
 	return val, true
 }
 
-// RemoveCoordinator removes a coordinator from the store
-func (k Keeper) RemoveCoordinator(ctx sdk.Context, id uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
-	store.Delete(GetCoordinatorIDBytes(id))
-}
-
 // GetAllCoordinator returns all coordinator
 func (k Keeper) GetAllCoordinator(ctx sdk.Context) (list []types.Coordinator) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CoordinatorKey))
@@ -93,12 +87,6 @@ func (k Keeper) GetAllCoordinator(ctx sdk.Context) (list []types.Coordinator) {
 	}
 
 	return
-}
-
-// GetCoordinatorAddressFromID returns a coordinator address from its id
-func (k Keeper) GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) (string, bool) {
-	coord, found := k.GetCoordinator(ctx, id)
-	return coord.Address, found
 }
 
 // GetCoordinatorIDBytes returns the byte representation of the ID

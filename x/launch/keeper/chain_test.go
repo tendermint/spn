@@ -237,16 +237,6 @@ func TestGetChain(t *testing.T) {
 	}
 }
 
-func TestRemoveChain(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
-	items := createNChain(tk.LaunchKeeper, ctx, 10)
-	for _, item := range items {
-		tk.LaunchKeeper.RemoveChain(ctx, item.LaunchID)
-		_, found := tk.LaunchKeeper.GetChain(ctx, item.LaunchID)
-		require.False(t, found)
-	}
-}
-
 func TestGetAllChain(t *testing.T) {
 	ctx, tk := testkeeper.NewTestKeepers(t)
 	items := createNChain(tk.LaunchKeeper, ctx, 10)

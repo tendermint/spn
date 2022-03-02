@@ -36,20 +36,6 @@ func TestProviderClientIDGet(t *testing.T) {
 	}
 }
 
-func TestProviderClientIDRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
-	items := createNProviderClientID(tk.MonitoringConsumerKeeper, ctx, 10)
-	for _, item := range items {
-		tk.MonitoringConsumerKeeper.RemoveProviderClientID(ctx,
-			item.LaunchID,
-		)
-		_, found := tk.MonitoringConsumerKeeper.GetProviderClientID(ctx,
-			item.LaunchID,
-		)
-		require.False(t, found)
-	}
-}
-
 func TestProviderClientIDGetAll(t *testing.T) {
 	ctx, tk := testkeeper.NewTestKeepers(t)
 	items := createNProviderClientID(tk.MonitoringConsumerKeeper, ctx, 10)

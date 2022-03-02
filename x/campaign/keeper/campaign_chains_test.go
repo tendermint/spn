@@ -59,19 +59,6 @@ func TestCampaignChainsGet(t *testing.T) {
 		require.Equal(t, item, rst)
 	}
 }
-func TestCampaignChainsRemove(t *testing.T) {
-	ctx, tk := testkeeper.NewTestKeepers(t)
-	items := createNCampaignChains(tk.CampaignKeeper, ctx, 10)
-	for _, item := range items {
-		tk.CampaignKeeper.RemoveCampaignChains(ctx,
-			item.CampaignID,
-		)
-		_, found := tk.CampaignKeeper.GetCampaignChains(ctx,
-			item.CampaignID,
-		)
-		require.False(t, found)
-	}
-}
 
 func TestCampaignChainsGetAll(t *testing.T) {
 	ctx, tk := testkeeper.NewTestKeepers(t)

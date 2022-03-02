@@ -26,9 +26,3 @@ func (k Keeper) GetConsumerClientID(ctx sdk.Context) (val types.ConsumerClientID
 	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
-
-// RemoveConsumerClientID removes consumerClientID from the store
-func (k Keeper) RemoveConsumerClientID(ctx sdk.Context) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ConsumerClientIDKey))
-	store.Delete([]byte{0})
-}
