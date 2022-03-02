@@ -90,16 +90,6 @@ func NewTestKeepers(t testing.TB) (sdk.Context, TestKeepers) {
 
 }
 
-// Reward returns a keeper of the reward module for testing purpose
-func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
-	ctx, tk := NewTestKeepers(t)
-
-	// Initialize params
-	tk.RewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
-
-	return tk.RewardKeeper, ctx
-}
-
 // Monitoringc returns a keeper of the monitoring consumer module for testing purpose
 func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
 	ctx, tk := NewTestKeepers(t)
