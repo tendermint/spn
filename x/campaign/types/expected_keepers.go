@@ -36,7 +36,6 @@ type BankKeeper interface {
 
 type ProfileKeeper interface {
 	GetAllCoordinator(ctx sdk.Context) []profiletypes.Coordinator
-	GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) (string, bool)
 	GetCoordinator(ctx sdk.Context, id uint64) (val profiletypes.Coordinator, found bool)
 	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, err error)
 }

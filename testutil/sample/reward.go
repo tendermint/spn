@@ -8,11 +8,23 @@ import (
 
 // RewardPool returns a sample RewardPool
 func RewardPool(launchID uint64) reward.RewardPool {
+	// ensure current is never GT initial
+	initialCoins := CoinsWithRange(5000, 10000)
+	remainingCoins := CoinsWithRangeAmount(
+		initialCoins.GetDenomByIndex(0),
+		initialCoins.GetDenomByIndex(1),
+		initialCoins.GetDenomByIndex(2),
+		0,
+		5000,
+	)
+
 	return reward.RewardPool{
 		LaunchID:            launchID,
 		Provider:            Address(),
-		Coins:               Coins(),
+		InitialCoins:        initialCoins,
+		RemainingCoins:      remainingCoins,
 		CurrentRewardHeight: rand.Uint64()%100 + 50,
 		LastRewardHeight:    rand.Uint64() % 50,
+		Closed:              false,
 	}
 }

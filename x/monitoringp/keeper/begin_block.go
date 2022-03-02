@@ -20,6 +20,11 @@ const (
 
 // ReportBlockSignatures gets signatures from blocks and update monitoring info
 func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.LastCommitInfo, blockHeight int64) {
+	// skip first block because it is not signed
+	if blockHeight == 1 {
+		return
+	}
+
 	// no report if last height is reached
 	lastBlockHeight := k.LastBlockHeight(ctx)
 	if blockHeight > lastBlockHeight {
@@ -38,7 +43,6 @@ func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.LastCommi
 	valSetSize := int64(len(lastCommit.Votes))
 	for _, vote := range lastCommit.Votes {
 		if vote.SignedLastBlock {
-			// TODO(490): implement correct address format
 			monitoringInfo.SignatureCounts.AddSignature(vote.Validator.Address, valSetSize)
 		}
 	}

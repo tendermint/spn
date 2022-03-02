@@ -2,11 +2,11 @@ package keeper_test
 
 import (
 	"encoding/base64"
-	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"testing"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
