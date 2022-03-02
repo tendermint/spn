@@ -90,26 +90,6 @@ func NewTestKeepers(t testing.TB) (sdk.Context, TestKeepers) {
 
 }
 
-// Launch returns a keeper of the launch module for testing purpose
-func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
-	initializer := newInitializer()
-
-	paramKeeper := initializer.Param()
-	profileKeeper := initializer.Profile()
-	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
-	require.NoError(t, initializer.StateStore.LoadLatestVersion())
-
-	// Create a context using a custom timestamp
-	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{
-		Time: ExampleTimestamp,
-	}, false, log.NewNopLogger())
-
-	// Initialize params
-	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
-
-	return launchKeeper, ctx
-}
-
 // Campaign returns a keeper of the campaign module for testing purpose
 func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
 	ctx, tk := NewTestKeepers(t)

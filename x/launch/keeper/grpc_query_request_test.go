@@ -14,9 +14,9 @@ import (
 )
 
 func TestRequestQuerySingle(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNRequest(keeper, ctx, 2)
+	msgs := createNRequest(tk.LaunchKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetRequestRequest
@@ -54,7 +54,7 @@ func TestRequestQuerySingle(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.Request(wctx, tc.request)
+			response, err := tk.LaunchKeeper.Request(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -65,9 +65,9 @@ func TestRequestQuerySingle(t *testing.T) {
 }
 
 func TestRequestQueryPaginated(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNRequest(keeper, ctx, 5)
+	msgs := createNRequest(tk.LaunchKeeper, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllRequestRequest {
 		return &types.QueryAllRequestRequest{
@@ -83,7 +83,7 @@ func TestRequestQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.RequestAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.LaunchKeeper.RequestAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Request), step)
 			require.Subset(t, msgs, resp.Request)
@@ -93,7 +93,7 @@ func TestRequestQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.RequestAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := tk.LaunchKeeper.RequestAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Request), step)
 			require.Subset(t, msgs, resp.Request)
@@ -101,13 +101,13 @@ func TestRequestQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.RequestAll(wctx, request(nil, 0, 0, true))
+		resp, err := tk.LaunchKeeper.RequestAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.Request)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.RequestAll(wctx, nil)
+		_, err := tk.LaunchKeeper.RequestAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

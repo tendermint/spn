@@ -14,9 +14,9 @@ import (
 )
 
 func TestChainQuerySingle(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNChain(keeper, ctx, 2)
+	msgs := createNChain(tk.LaunchKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetChainRequest
@@ -45,7 +45,7 @@ func TestChainQuerySingle(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.Chain(wctx, tc.request)
+			response, err := tk.LaunchKeeper.Chain(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -57,9 +57,9 @@ func TestChainQuerySingle(t *testing.T) {
 }
 
 func TestFooQueryPaginated(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNChain(keeper, ctx, 5)
+	msgs := createNChain(tk.LaunchKeeper, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllChainRequest {
 		return &types.QueryAllChainRequest{
@@ -74,7 +74,7 @@ func TestFooQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.ChainAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.LaunchKeeper.ChainAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Chain), step)
 			require.Subset(t, msgs, resp.Chain)
@@ -84,7 +84,7 @@ func TestFooQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.ChainAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := tk.LaunchKeeper.ChainAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Chain), step)
 			require.Subset(t, msgs, resp.Chain)
@@ -92,13 +92,13 @@ func TestFooQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.ChainAll(wctx, request(nil, 0, 0, true))
+		resp, err := tk.LaunchKeeper.ChainAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.Chain)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.ChainAll(wctx, nil)
+		_, err := tk.LaunchKeeper.ChainAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

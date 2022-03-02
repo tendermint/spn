@@ -228,35 +228,35 @@ func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordina
 }
 
 func TestGetChain(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetChain(ctx, item.LaunchID)
+		rst, found := tk.LaunchKeeper.GetChain(ctx, item.LaunchID)
 		require.True(t, found)
 		require.Equal(t, item, rst)
 	}
 }
 
 func TestRemoveChain(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveChain(ctx, item.LaunchID)
-		_, found := keeper.GetChain(ctx, item.LaunchID)
+		tk.LaunchKeeper.RemoveChain(ctx, item.LaunchID)
+		_, found := tk.LaunchKeeper.GetChain(ctx, item.LaunchID)
 		require.False(t, found)
 	}
 }
 
 func TestGetAllChain(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 
-	require.ElementsMatch(t, items, keeper.GetAllChain(ctx))
+	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllChain(ctx))
 }
 
 func TestChainCounter(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk := testkeeper.NewTestKeepers(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 	counter := uint64(len(items))
-	require.Equal(t, counter, keeper.GetChainCounter(ctx))
+	require.Equal(t, counter, tk.LaunchKeeper.GetChainCounter(ctx))
 }

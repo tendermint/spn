@@ -12,12 +12,12 @@ import (
 )
 
 func TestParamsQuery(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
+	ctx, tk := testkeeper.NewTestKeepers(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	params := sample.LaunchParams()
-	keeper.SetParams(ctx, params)
+	tk.LaunchKeeper.SetParams(ctx, params)
 
-	response, err := keeper.Params(wctx, &types.QueryParamsRequest{})
+	response, err := tk.LaunchKeeper.Params(wctx, &types.QueryParamsRequest{})
 	require.NoError(t, err)
 	require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
 }
