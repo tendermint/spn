@@ -13,18 +13,25 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func initCreationFeeAndCoordAccounts(
+func initCreationFeeAndFundCoordAccounts(
 	t *testing.T,
 	keeper *keeper.Keeper,
 	bk bankkeeper.Keeper,
 	sdkCtx sdk.Context,
-	coins sdk.Coins,
+	fee sdk.Coins,
+	numCreations int64,
 	addrs ...string,
 ) {
 	// set fee param to `coins`
 	params := keeper.GetParams(sdkCtx)
-	params.ChainCreationFee = coins
+	params.ChainCreationFee = fee
 	keeper.SetParams(sdkCtx, params)
+
+	coins := sdk.NewCoins()
+	for _, coin := range fee {
+		coin.Amount = coin.Amount.MulRaw(numCreations)
+		coins.Add(coin)
+	}
 
 	// add `coins` to balance of each coordinator address
 	for _, addr := range addrs {
@@ -62,7 +69,7 @@ func TestMsgCreateChain(t *testing.T) {
 
 	// assign random sdk.Coins to `chainCreationFee` param and provide balance to coordinators to cover for
 	// one chain creation
-	initCreationFeeAndCoordAccounts(t, k, bankKeeper, sdkCtx, sample.Coins(), coordAddress)
+	initCreationFeeAndFundCoordAccounts(t, k, bankKeeper, sdkCtx, sample.Coins(), 4, coordAddress)
 
 	for _, tc := range []struct {
 		name          string

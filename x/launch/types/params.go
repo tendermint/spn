@@ -24,7 +24,7 @@ var (
 	// This currently corresponds to 1 hour
 	DefaultRevertDelay = int64(60 * 60)
 
-	DefaultCampaignCreationFee = sdk.Coins(nil) // EmptyCoins
+	DefaultChainCreationFee = sdk.Coins(nil) // EmptyCoins
 
 	MaxParametrableLaunchTime  = int64(time.Hour.Seconds() * 24 * 31)
 	MaxParametrableRevertDelay = int64(time.Hour.Seconds() * 24)
@@ -64,7 +64,7 @@ func DefaultParams() Params {
 		DefaultMinLaunchTime,
 		DefaultMaxLaunchTime,
 		DefaultRevertDelay,
-		DefaultCampaignCreationFee,
+		DefaultChainCreationFee,
 	)
 }
 

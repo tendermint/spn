@@ -30,6 +30,7 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 		k.LaunchTimeRange(ctx).MinLaunchTime,
 		k.LaunchTimeRange(ctx).MaxLaunchTime,
 		k.RevertDelay(ctx),
+		k.ChainCreationFee(ctx),
 	)
 }
 
