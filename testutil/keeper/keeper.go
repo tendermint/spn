@@ -159,6 +159,7 @@ func MonitoringcWithIBCMocks(
 		Time: ExampleTimestamp,
 	}, false, log.NewNopLogger())
 
+	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
 

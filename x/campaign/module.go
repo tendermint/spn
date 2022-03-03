@@ -97,11 +97,10 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 
-	keeper             keeper.Keeper
-	accountKeeper      types.AccountKeeper
-	bankKeeper         types.BankKeeper
-	distributionKeeper types.DistributionKeeper
-	profileKeeper      types.ProfileKeeper
+	keeper        keeper.Keeper
+	accountKeeper types.AccountKeeper
+	bankKeeper    types.BankKeeper
+	profileKeeper types.ProfileKeeper
 }
 
 func NewAppModule(
