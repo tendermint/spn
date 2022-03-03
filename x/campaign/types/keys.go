@@ -1,5 +1,7 @@
 package types
 
+import spntypes "github.com/tendermint/spn/pkg/types"
+
 const (
 	// ModuleName defines the module name
 	ModuleName = "campaign"
@@ -17,12 +19,54 @@ const (
 	MemStoreKey = "mem_campaign"
 
 	// CampaignKey is the prefix to retrieve all Campaign
-	CampaignKey = "Campaign-value-"
+	CampaignKey = "Campaign/value/"
 
 	// CampaignCounterKey is the prefix to store campaign count
-	CampaignCounterKey = "Campaign-count-"
+	CampaignCounterKey = "Campaign/count/"
+
+	// CampaignChainsKeyPrefix is the prefix to retrieve all CampaignChains
+	CampaignChainsKeyPrefix = "CampaignChains/value/"
+
+	// MainnetAccountKeyPrefix is the prefix to retrieve all MainnetAccount
+	MainnetAccountKeyPrefix = "MainnetAccount/value/"
+
+	// MainnetVestingAccountKeyPrefix is the prefix to retrieve all MainnetVestingAccount
+	MainnetVestingAccountKeyPrefix = "MainnetVestingAccount/value/"
 )
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
+}
+
+// CampaignChainsKey returns the store key to retrieve a CampaignChains from the index fields
+func CampaignChainsKey(campaignID uint64) []byte {
+	return append(spntypes.UintBytes(campaignID), byte('/'))
+}
+
+// MainnetAccountKey returns the store key to retrieve a MainnetAccount from the index fields
+func MainnetAccountKey(campaignID uint64, address string) []byte {
+	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
+	addressBytes := append([]byte(address), byte('/'))
+	return append(campaignIDBytes, addressBytes...)
+}
+
+// MainnetAccountAllKey returns the store key to retrieve all MainnetAccount by campaign id
+func MainnetAccountAllKey(campaignID uint64) []byte {
+	prefixBytes := []byte(MainnetAccountKeyPrefix)
+	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
+	return append(prefixBytes, campaignIDBytes...)
+}
+
+// MainnetVestingAccountKey returns the store key to retrieve a MainnetVestingAccount from the index fields
+func MainnetVestingAccountKey(campaignID uint64, address string) []byte {
+	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
+	addressBytes := append([]byte(address), byte('/'))
+	return append(campaignIDBytes, addressBytes...)
+}
+
+// MainnetVestingAccountAllKey returns the store key to retrieve all MainnetVestingAccount by campaign id
+func MainnetVestingAccountAllKey(campaignID uint64) []byte {
+	prefixBytes := []byte(MainnetVestingAccountKeyPrefix)
+	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
+	return append(prefixBytes, campaignIDBytes...)
 }
