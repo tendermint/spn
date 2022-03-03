@@ -77,4 +77,3 @@ func LaunchIDFromChannelIDKey(channelID string) []byte {
 func MonitoringHistoryKey(launchID uint64) []byte {
 	return append(spntypes.UintBytes(launchID), byte('/'))
 }
-

@@ -34,7 +34,7 @@ const (
 	GenesisValidatorKeyPrefix = "GenesisValidator/value/"
 
 	// RequestKeyPrefix is the prefix to retrieve all Request
-	RequestKeyPrefix        = "Request/value/"
+	RequestKeyPrefix = "Request/value/"
 
 	// RequestCounterKeyPrefix is the prefix to store request counter
 	RequestCounterKeyPrefix = "Request/count/"
@@ -108,4 +108,3 @@ func RequestPoolKey(launchID uint64) []byte {
 func RequestCounterKey(launchID uint64) []byte {
 	return append(spntypes.UintBytes(launchID), byte('/'))
 }
-
