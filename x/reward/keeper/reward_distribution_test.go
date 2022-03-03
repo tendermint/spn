@@ -356,7 +356,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// set test reward pool if contains coins
-			if tt.rewardPool.Coins != nil {
+			if tt.rewardPool.RemainingCoins != nil {
 				tk.RewardKeeper.SetRewardPool(ctx, tt.rewardPool)
 				err := tk.BankKeeper.MintCoins(ctx, types.ModuleName, tt.rewardPool.RemainingCoins)
 				require.NoError(t, err)
