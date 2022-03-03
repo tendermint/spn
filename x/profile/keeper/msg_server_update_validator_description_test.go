@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -12,10 +14,10 @@ import (
 
 func TestMsgUpdateValidatorDescription(t *testing.T) {
 	var (
-		addr1       = sample.Address()
-		addr2       = sample.Address()
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		addr1          = sample.Address()
+		addr2          = sample.Address()
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 	tests := []struct {
 		name string
@@ -44,16 +46,16 @@ func TestMsgUpdateValidatorDescription(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			oldValidator, oldFound := k.GetValidator(ctx, tt.msg.Address)
+			oldValidator, oldFound := tk.ProfileKeeper.GetValidator(sdkCtx, tt.msg.Address)
 
-			_, err := srv.UpdateValidatorDescription(wCtx, &tt.msg)
+			_, err := ts.ProfileSrv.UpdateValidatorDescription(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
 
-			validator, found := k.GetValidator(ctx, tt.msg.Address)
+			validator, found := tk.ProfileKeeper.GetValidator(sdkCtx, tt.msg.Address)
 			require.True(t, found, "validator not found")
 			require.EqualValues(t, tt.msg.Address, validator.Address)
 

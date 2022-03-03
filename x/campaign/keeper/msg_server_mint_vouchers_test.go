@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -13,8 +15,8 @@ import (
 
 func TestMsgMintVouchers(t *testing.T) {
 	var (
-		campaignKeeper, _, _, bankKeeper, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                               = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 
 		coord           = sample.Address()
 		coordNoCampaign = sample.Address()
@@ -26,13 +28,13 @@ func TestMsgMintVouchers(t *testing.T) {
 	)
 
 	// Create coordinators
-	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coord,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordNoCampaign,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -41,7 +43,7 @@ func TestMsgMintVouchers(t *testing.T) {
 	// Set campaign
 	campaign := sample.Campaign(0)
 	campaign.CoordinatorID = coordID
-	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	for _, tc := range []struct {
 		name string
@@ -119,21 +121,21 @@ func TestMsgMintVouchers(t *testing.T) {
 			// Get values before message execution
 			if tc.err == nil {
 				var found bool
-				previousCampaign, found = campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				previousCampaign, found = tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 
-				previousBalance = bankKeeper.GetAllBalances(sdkCtx, coordAddr)
+				previousBalance = tk.BankKeeper.GetAllBalances(sdkCtx, coordAddr)
 			}
 
 			// Execute message
-			_, err = campaignSrv.MintVouchers(ctx, &tc.msg)
+			_, err = ts.CampaignSrv.MintVouchers(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
 
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 
 			// Allocated shares of the campaign must be increased
@@ -143,7 +145,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			// Check coordinator balance
 			minted, err := types.SharesToVouchers(tc.msg.Shares, tc.msg.CampaignID)
 			require.NoError(t, err)
-			balance := bankKeeper.GetAllBalances(sdkCtx, coordAddr)
+			balance := tk.BankKeeper.GetAllBalances(sdkCtx, coordAddr)
 			require.True(t, balance.IsEqual(previousBalance.Add(minted...)))
 		})
 	}

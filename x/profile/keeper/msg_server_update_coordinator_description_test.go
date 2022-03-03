@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -12,12 +14,12 @@ import (
 
 func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 	var (
-		addr        = sample.Address()
-		msgCoord    = sample.MsgCreateCoordinator(sample.Address())
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		addr           = sample.Address()
+		msgCoord       = sample.MsgCreateCoordinator(sample.Address())
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
-	_, err := srv.CreateCoordinator(wCtx, &msgCoord)
+	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCoord)
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -50,22 +52,22 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			var oldCoord types.Coordinator
 			var found bool
 			if tt.err == nil {
-				coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+				coordByAddr, err := tk.ProfileKeeper.GetCoordinatorByAddress(sdkCtx, tt.msg.Address)
 				require.NoError(t, err, "coordinator by address not found")
-				oldCoord, found = k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
+				oldCoord, found = tk.ProfileKeeper.GetCoordinator(sdkCtx, coordByAddr.CoordinatorID)
 				require.True(t, found, "coordinator not found")
 			}
 
-			_, err := srv.UpdateCoordinatorDescription(wCtx, &tt.msg)
+			_, err := ts.ProfileSrv.UpdateCoordinatorDescription(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
 
-			coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			coordByAddr, err := tk.ProfileKeeper.GetCoordinatorByAddress(sdkCtx, tt.msg.Address)
 			require.NoError(t, err, "coordinator by address not found")
-			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
+			coord, found := tk.ProfileKeeper.GetCoordinator(sdkCtx, coordByAddr.CoordinatorID)
 			require.True(t, found, "coordinator not found")
 			require.EqualValues(t, tt.msg.Address, coord.Address)
 			require.EqualValues(t, coordByAddr.CoordinatorID, coord.CoordinatorID)

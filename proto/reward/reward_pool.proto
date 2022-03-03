@@ -9,11 +9,17 @@ option go_package = "github.com/tendermint/spn/x/reward/types";
 message RewardPool {
   uint64 launchID = 1;
   string provider = 2;
-  repeated cosmos.base.v1beta1.Coin coins = 3 [
+  repeated cosmos.base.v1beta1.Coin initialCoins = 3 [
     (gogoproto.nullable) = false,
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
-  int64 lastRewardHeight = 4;
-  int64 currentRewardHeight = 5;
+  repeated cosmos.base.v1beta1.Coin remainingCoins = 4 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+  int64 lastRewardHeight = 5;
+  int64 currentRewardHeight = 6;
+  bool closed = 7;
 }
