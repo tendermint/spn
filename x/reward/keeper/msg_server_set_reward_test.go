@@ -33,15 +33,18 @@ func initRewardPool(
 		ctx      = sdk.WrapSDKContext(sdkCtx)
 		coordMsg = sample.MsgCreateCoordinator(provider.String())
 	)
+
 	res, err := psrv.CreateCoordinator(ctx, &coordMsg)
 	require.NoError(t, err)
 	launchID := lk.AppendChain(sdkCtx, sample.Chain(1, res.CoordinatorID))
 	rewardPool := types.RewardPool{
 		Provider:            provider.String(),
 		LaunchID:            launchID,
-		Coins:               coins,
+		InitialCoins:        coins,
+		RemainingCoins:      coins,
 		LastRewardHeight:    100,
 		CurrentRewardHeight: 30,
+		Closed:              false,
 	}
 	k.SetRewardPool(sdkCtx, rewardPool)
 
@@ -86,7 +89,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         rewardPool.Provider,
 				LaunchID:         9999,
-				Coins:            rewardPool.Coins,
+				Coins:            rewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 			err: launchtypes.ErrChainNotFound,
@@ -96,7 +99,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         sample.Address(),
 				LaunchID:         rewardPool.LaunchID,
-				Coins:            rewardPool.Coins,
+				Coins:            rewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
@@ -106,7 +109,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         invalidCoord,
 				LaunchID:         rewardPool.LaunchID,
-				Coins:            rewardPool.Coins,
+				Coins:            rewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 			err: types.ErrInvalidCoordinatorID,
@@ -116,7 +119,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         launchedRewardPool.Provider,
 				LaunchID:         launchedRewardPool.LaunchID,
-				Coins:            launchedRewardPool.Coins,
+				Coins:            launchedRewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 			err: launchtypes.ErrTriggeredLaunch,
@@ -145,7 +148,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         zeroRewardHeightRewardPool.Provider,
 				LaunchID:         zeroRewardHeightRewardPool.LaunchID,
-				Coins:            zeroRewardHeightRewardPool.Coins,
+				Coins:            zeroRewardHeightRewardPool.RemainingCoins,
 				LastRewardHeight: 0,
 			},
 		},
@@ -154,7 +157,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         rewardPool.Provider,
 				LaunchID:         rewardPool.LaunchID,
-				Coins:            rewardPool.Coins,
+				Coins:            rewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
 			},
 		},
@@ -169,7 +172,7 @@ func TestMsgSetRewards(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			require.Equal(t, previousRewardPool.Coins, got.PreviousCoins)
+			require.Equal(t, previousRewardPool.RemainingCoins, got.PreviousCoins)
 			require.Equal(t, previousRewardPool.LastRewardHeight, got.PreviousLastRewardHeight)
 
 			rewardPool, found := tk.RewardKeeper.GetRewardPool(sdkCtx, tt.msg.LaunchID)
@@ -180,7 +183,9 @@ func TestMsgSetRewards(t *testing.T) {
 				return
 			}
 			require.True(t, found)
-			require.Equal(t, tt.msg.Coins, rewardPool.Coins)
+			require.False(t, rewardPool.Closed)
+			require.Equal(t, tt.msg.Coins, rewardPool.InitialCoins)
+			require.Equal(t, tt.msg.Coins, rewardPool.RemainingCoins)
 			require.Equal(t, tt.msg.Provider, rewardPool.Provider)
 			require.Equal(t, tt.msg.LastRewardHeight, rewardPool.LastRewardHeight)
 
