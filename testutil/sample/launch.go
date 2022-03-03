@@ -301,7 +301,11 @@ func GenesisHash() string {
 func LaunchParams() launch.Params {
 	maxLaunchTime := launch.DefaultMaxLaunchTime - rand.Int63n(10)
 	minLaunchTime := rand.Int63n(10) + launch.DefaultMinLaunchTime
-	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay)
+
+	// TODO: randomize this after figuring out how to properly fund accounts in simulation
+	chainCreationFee := launch.DefaultChainCreationFee
+
+	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay, chainCreationFee)
 }
 
 // LaunchGenesisState returns a sample genesis state for the launch module

@@ -159,6 +159,7 @@ func (i initializer) Profile() *profilekeeper.Keeper {
 
 func (i initializer) Launch(
 	profileKeeper *profilekeeper.Keeper,
+	distrKeeper distrkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 ) *launchkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(launchtypes.StoreKey)
@@ -170,7 +171,7 @@ func (i initializer) Launch(
 	paramKeeper.Subspace(launchtypes.ModuleName)
 	launchSubspace, _ := paramKeeper.GetSubspace(launchtypes.ModuleName)
 
-	return launchkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, launchSubspace, profileKeeper)
+	return launchkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, launchSubspace, distrKeeper, profileKeeper)
 }
 
 func (i initializer) Campaign(

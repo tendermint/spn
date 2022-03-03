@@ -4,15 +4,41 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
+func initCreationFeeAndCoordAccounts(
+	t *testing.T,
+	keeper *keeper.Keeper,
+	bk bankkeeper.Keeper,
+	sdkCtx sdk.Context,
+	coins sdk.Coins,
+	addrs ...string,
+) {
+	// set fee param to `coins`
+	params := keeper.GetParams(sdkCtx)
+	params.ChainCreationFee = coins
+	keeper.SetParams(sdkCtx, params)
+
+	// add `coins` to balance of each coordinator address
+	for _, addr := range addrs {
+		accAddr, err := sdk.AccAddressFromBech32(addr)
+		require.NoError(t, err)
+		err = bk.MintCoins(sdkCtx, types.ModuleName, coins)
+		require.NoError(t, err)
+		err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, accAddr, coins)
+		require.NoError(t, err)
+	}
+}
+
 func TestMsgCreateChain(t *testing.T) {
-	k, _, campaignKeeper, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	k, _, campaignKeeper, bankKeeper, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 
 	// Create an invalid coordinator
@@ -33,6 +59,10 @@ func TestMsgCreateChain(t *testing.T) {
 	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignID := resCampaign.CampaignID
+
+	// assign random sdk.Coins to `chainCreationFee` param and provide balance to coordinators to cover for
+	// one chain creation
+	initCreationFeeAndCoordAccounts(t, k, bankKeeper, sdkCtx, sample.Coins(), coordAddress)
 
 	for _, tc := range []struct {
 		name          string

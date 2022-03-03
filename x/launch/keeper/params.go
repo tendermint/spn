@@ -18,6 +18,12 @@ func (k Keeper) RevertDelay(ctx sdk.Context) (res int64) {
 	return
 }
 
+// ChainCreationFee returns the chain creation fee param
+func (k Keeper) ChainCreationFee(ctx sdk.Context) (chainCreationFee sdk.Coins) {
+	k.paramstore.Get(ctx, types.KeyChainCreationFee, &chainCreationFee)
+	return
+}
+
 // GetParams get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(

@@ -54,7 +54,7 @@ func AllKeepers(t testing.TB) (
 	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
 
 	profileKeeper := initializer.Profile()
-	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
+	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
@@ -103,22 +103,7 @@ func Profile(t testing.TB) (*profilekeeper.Keeper, sdk.Context) {
 
 // Launch returns a keeper of the launch module for testing purpose
 func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
-	initializer := newInitializer()
-
-	paramKeeper := initializer.Param()
-	profileKeeper := initializer.Profile()
-	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
-	require.NoError(t, initializer.StateStore.LoadLatestVersion())
-
-	// Create a context using a custom timestamp
-	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{
-		Time:   ExampleTimestamp,
-		Height: ExampleHeight,
-	}, false, log.NewNopLogger())
-
-	// Initialize params
-	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
-
+	_, launchKeeper, _, _, _, _, _, ctx := AllKeepers(t) // nolint
 	return launchKeeper, ctx
 }
 
@@ -162,7 +147,7 @@ func MonitoringcWithIBCMocks(
 	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
 
 	profileKeeper := initializer.Profile()
-	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
+	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)

@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -18,16 +19,18 @@ func setupMsgServer(t testing.TB) (
 	*keeper.Keeper,
 	*profilekeeper.Keeper,
 	*campaignkeeper.Keeper,
+	bankkeeper.Keeper,
 	types.MsgServer,
 	profiletypes.MsgServer,
 	campaigntypes.MsgServer,
 	sdk.Context,
 ) {
-	campaignKeeper, launchLKeeper, profileKeeper, _, _, _, _, ctx := testkeeper.AllKeepers(t)
+	campaignKeeper, launchLKeeper, profileKeeper, _, _, bankKeeper, _, ctx := testkeeper.AllKeepers(t)
 
 	return launchLKeeper,
 		profileKeeper,
 		campaignKeeper,
+		bankKeeper,
 		keeper.NewMsgServerImpl(*launchLKeeper),
 		profilekeeper.NewMsgServerImpl(*profileKeeper),
 		campaignkeeper.NewMsgServerImpl(*campaignKeeper),

@@ -290,7 +290,8 @@
         "launchTimeRange": {
           "maxLaunchTime": "604800",
           "minLaunchTime": "5"
-        }
+        },
+        "chainCreationFee": []
       },
       "requestCounterList": [],
       "requestList": [],
