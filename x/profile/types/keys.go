@@ -17,10 +17,10 @@ const (
 	MemStoreKey = "mem_profile"
 
 	// CoordinatorKey is the prefix to retrieve all Coordinator
-	CoordinatorKey = "Coordinator-value-"
+	CoordinatorKey = "Coordinator/value/"
 
 	// CoordinatorCounterKey is the prefix to store coordinator counter
-	CoordinatorCounterKey = "Coordinator-count-"
+	CoordinatorCounterKey = "Coordinator/count/"
 
 	// CoordinatorByAddressKeyPrefix is the prefix to retrieve all CoordinatorByAddress
 	CoordinatorByAddressKeyPrefix = "CoordinatorByAddress/value/"
