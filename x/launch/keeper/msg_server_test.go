@@ -1,10 +1,10 @@
 package keeper_test
 
 import (
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"

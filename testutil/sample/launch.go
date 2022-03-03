@@ -7,6 +7,8 @@ import (
 	"math/rand"
 	"time"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/pkg/chainid"
 	launch "github.com/tendermint/spn/x/launch/types"
 )
@@ -302,8 +304,8 @@ func LaunchParams() launch.Params {
 	maxLaunchTime := launch.DefaultMaxLaunchTime - rand.Int63n(10)
 	minLaunchTime := rand.Int63n(10) + launch.DefaultMinLaunchTime
 
-	// TODO: randomize this after figuring out how to properly fund accounts in simulation
-	chainCreationFee := launch.DefaultChainCreationFee
+	// assign random small amount of staking denom
+	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin("stake", rand.Int63n(100)+1))
 
 	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay, chainCreationFee)
 }

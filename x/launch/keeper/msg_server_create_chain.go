@@ -31,7 +31,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 			return nil, err
 		}
 	}
-	
+
 	id, err := k.CreateNewChain(
 		ctx,
 		coordID,
