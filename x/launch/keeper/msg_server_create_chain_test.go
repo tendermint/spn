@@ -30,7 +30,7 @@ func initCreationFeeAndFundCoordAccounts(
 	coins := sdk.NewCoins()
 	for _, coin := range fee {
 		coin.Amount = coin.Amount.MulRaw(numCreations)
-		coins.Add(coin)
+		coins = coins.Add(coin)
 	}
 
 	// add `coins` to balance of each coordinator address
