@@ -23,10 +23,10 @@ func createNVestingAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 }
 
 func TestVestingAccountGet(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNVestingAccount(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetVestingAccount(ctx,
+		rst, found := tk.LaunchKeeper.GetVestingAccount(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -35,14 +35,14 @@ func TestVestingAccountGet(t *testing.T) {
 	}
 }
 func TestVestingAccountRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNVestingAccount(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveVestingAccount(ctx,
+		tk.LaunchKeeper.RemoveVestingAccount(ctx,
 			item.LaunchID,
 			item.Address,
 		)
-		_, found := keeper.GetVestingAccount(ctx,
+		_, found := tk.LaunchKeeper.GetVestingAccount(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -51,7 +51,7 @@ func TestVestingAccountRemove(t *testing.T) {
 }
 
 func TestVestingAccountGetAll(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNVestingAccount(keeper, ctx, 10)
-	require.ElementsMatch(t, items, keeper.GetAllVestingAccount(ctx))
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
+	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllVestingAccount(ctx))
 }

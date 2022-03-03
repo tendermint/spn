@@ -7,13 +7,14 @@ import (
 	"github.com/stretchr/testify/require"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
 func TestMsgBurnVouchers(t *testing.T) {
 	var (
-		campaignKeeper, _, _, bankKeeper, campaignSrv, _, sdkCtx = setupMsgServer(t)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		campaign       = sample.Campaign(0)
@@ -29,16 +30,16 @@ func TestMsgBurnVouchers(t *testing.T) {
 
 	// Set campaign
 	campaign.AllocatedShares = shares
-	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	// Create vouchers
 	vouchers, err := types.SharesToVouchers(shares, campaign.CampaignID)
 	require.NoError(t, err)
 
 	// Send coins to account
-	err = bankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
+	err = tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
 	require.NoError(t, err)
-	err = bankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, addr, vouchers)
+	err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, addr, vouchers)
 	require.NoError(t, err)
 
 	for _, tc := range []struct {
@@ -133,23 +134,23 @@ func TestMsgBurnVouchers(t *testing.T) {
 			// Get values before message execution
 			if tc.err == nil {
 				var found bool
-				previousCampaign, found = campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				previousCampaign, found = tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 
 				creatorAddr, err = sdk.AccAddressFromBech32(tc.msg.Sender)
 				require.NoError(t, err)
-				previousBalance = bankKeeper.GetAllBalances(sdkCtx, creatorAddr)
+				previousBalance = tk.BankKeeper.GetAllBalances(sdkCtx, creatorAddr)
 			}
 
 			// Execute message
-			_, err = campaignSrv.BurnVouchers(ctx, &tc.msg)
+			_, err = ts.CampaignSrv.BurnVouchers(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
 
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 
 			// Allocated shares of the campaign must be decreased
@@ -161,7 +162,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			require.True(t, types.IsEqualShares(expectedShares, campaign.AllocatedShares))
 
 			// Check coordinator balance
-			balance := bankKeeper.GetAllBalances(sdkCtx, creatorAddr)
+			balance := tk.BankKeeper.GetAllBalances(sdkCtx, creatorAddr)
 			expectedBalance := previousBalance.Sub(tc.msg.Vouchers)
 			require.True(t, balance.IsEqual(expectedBalance))
 		})

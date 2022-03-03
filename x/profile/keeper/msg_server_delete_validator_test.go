@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -12,12 +14,12 @@ import (
 
 func TestMsgDeleteValidator(t *testing.T) {
 	var (
-		addr1       = sample.Address()
-		addr2       = sample.Address()
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		addr1          = sample.Address()
+		addr2          = sample.Address()
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
-	k.SetValidator(ctx, types.Validator{
+	tk.ProfileKeeper.SetValidator(sdkCtx, types.Validator{
 		Address:     addr2,
 		Description: types.ValidatorDescription{},
 	})
@@ -41,13 +43,13 @@ func TestMsgDeleteValidator(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.DeleteValidator(wCtx, &tt.msg)
+			_, err := ts.ProfileSrv.DeleteValidator(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
-			_, found := k.GetValidator(ctx, tt.msg.Address)
+			_, found := tk.ProfileKeeper.GetValidator(sdkCtx, tt.msg.Address)
 			require.False(t, found, "validator was not removed")
 		})
 	}

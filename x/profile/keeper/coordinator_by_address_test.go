@@ -38,92 +38,92 @@ func createNCoordinatorBoth(keeper *keeper.Keeper, ctx sdk.Context, n int) ([]ty
 }
 
 func TestCoordinatorByAddressGet(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items, _ := createNCoordinatorBoth(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items, _ := createNCoordinatorBoth(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
-		rst, err := keeper.GetCoordinatorByAddress(ctx, item.Address)
+		rst, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
 		require.NoError(t, err)
 		require.Equal(t, item, rst)
 	}
 }
 
 func TestCoordinatorByAddressInvalid(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNCoordinatorByAddress(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
-		_, err := keeper.GetCoordinatorByAddress(ctx, item.Address)
+		_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
 		require.ErrorIs(t, err, spnerrors.ErrCritical)
 	}
 }
 func TestCoordinatorByAddressRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNCoordinatorByAddress(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveCoordinatorByAddress(ctx, item.Address)
-		_, err := keeper.GetCoordinatorByAddress(ctx, item.Address)
+		tk.ProfileKeeper.RemoveCoordinatorByAddress(ctx, item.Address)
+		_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
 		require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 	}
 }
 
 func TestCoordinatorByAddressGetAll(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
-	items := createNCoordinatorByAddress(keeper, ctx, 10)
-	require.ElementsMatch(t, items, keeper.GetAllCoordinatorByAddress(ctx))
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)
+	require.ElementsMatch(t, items, tk.ProfileKeeper.GetAllCoordinatorByAddress(ctx))
 }
 
 func TestCoordinatorIDFromAddress(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	address := sample.Address()
-	keeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
+	tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       address,
 		CoordinatorID: 10,
 	})
-	keeper.SetCoordinator(ctx, types.Coordinator{
+	tk.ProfileKeeper.SetCoordinator(ctx, types.Coordinator{
 		Address:       address,
 		CoordinatorID: 10,
 		Active:        true,
 	})
 
-	id, err := keeper.CoordinatorIDFromAddress(ctx, address)
+	id, err := tk.ProfileKeeper.CoordinatorIDFromAddress(ctx, address)
 	require.NoError(t, err)
 	require.Equal(t, uint64(10), id)
 
-	_, err = keeper.CoordinatorIDFromAddress(ctx, sample.Address())
+	_, err = tk.ProfileKeeper.CoordinatorIDFromAddress(ctx, sample.Address())
 	require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 }
 
 func TestActiveCoordinatorByAddressGet(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	address := sample.Address()
 
 	// set initial valid state
-	keeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
+	tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       address,
 		CoordinatorID: 10,
 	})
-	keeper.SetCoordinator(ctx, types.Coordinator{
+	tk.ProfileKeeper.SetCoordinator(ctx, types.Coordinator{
 		Address:       address,
 		CoordinatorID: 10,
 		Active:        true,
 	})
 
-	rst, err := keeper.GetCoordinatorByAddress(ctx, address)
+	rst, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
 	require.NoError(t, err)
 	require.Equal(t, uint64(10), rst.CoordinatorID)
 	require.Equal(t, address, rst.Address)
 
 	// set invalid critical error state
-	keeper.SetCoordinator(ctx, types.Coordinator{
+	tk.ProfileKeeper.SetCoordinator(ctx, types.Coordinator{
 		Address:       address,
 		CoordinatorID: 10,
 		Active:        false,
 	})
 
-	rst, err = keeper.GetCoordinatorByAddress(ctx, address)
+	rst, err = tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
 	require.ErrorIs(t, err, spnerrors.ErrCritical)
 
 	// set valid state where coordinator is disabled
-	keeper.RemoveCoordinatorByAddress(ctx, address)
-	rst, err = keeper.GetCoordinatorByAddress(ctx, address)
+	tk.ProfileKeeper.RemoveCoordinatorByAddress(ctx, address)
+	rst, err = tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
 	require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 }

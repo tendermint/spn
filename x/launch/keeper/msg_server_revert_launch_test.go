@@ -13,7 +13,7 @@ import (
 )
 
 func TestMsgRevertLaunch(t *testing.T) {
-	k, _, _, srv, profileSrv, _, sdkCtx := setupMsgServer(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
@@ -23,35 +23,35 @@ func TestMsgRevertLaunch(t *testing.T) {
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
-	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	_, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 
 	// Create chains
 	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
-	res, err := srv.CreateChain(ctx, &msgCreateChain)
+	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	notLaunched := res.LaunchID
 
-	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	delayNotReached := res.LaunchID
-	chain, found := k.GetChain(sdkCtx, delayNotReached)
+	chain, found := tk.LaunchKeeper.GetChain(sdkCtx, delayNotReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
-	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - k.RevertDelay(sdkCtx) + 1
-	k.SetChain(sdkCtx, chain)
+	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - tk.LaunchKeeper.RevertDelay(sdkCtx) + 1
+	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
-	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	delayReached := res.LaunchID
-	chain, found = k.GetChain(sdkCtx, delayReached)
+	chain, found = tk.LaunchKeeper.GetChain(sdkCtx, delayReached)
 	require.True(t, found)
 	chain.LaunchTriggered = true
-	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - k.RevertDelay(sdkCtx)
-	k.SetChain(sdkCtx, chain)
+	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - tk.LaunchKeeper.RevertDelay(sdkCtx)
+	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
 	for _, tc := range []struct {
 		name string
@@ -90,7 +90,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			// Send the message
-			_, err := srv.RevertLaunch(ctx, &tc.msg)
+			_, err := ts.LaunchSrv.RevertLaunch(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -98,7 +98,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 			require.NoError(t, err)
 
 			// Check value
-			chain, found := k.GetChain(sdkCtx, tc.msg.LaunchID)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, tc.msg.LaunchID)
 			require.True(t, found)
 			require.False(t, chain.LaunchTriggered)
 			require.EqualValues(t, int64(0), chain.LaunchTimestamp)
