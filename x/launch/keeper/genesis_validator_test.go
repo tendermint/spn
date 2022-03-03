@@ -33,10 +33,10 @@ func createNGenesisValidatorByLaunchID(keeper *keeper.Keeper, ctx sdk.Context, l
 }
 
 func TestGenesisValidatorGet(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := k.GetGenesisValidator(ctx,
+		rst, found := tk.LaunchKeeper.GetGenesisValidator(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -45,14 +45,14 @@ func TestGenesisValidatorGet(t *testing.T) {
 	}
 }
 func TestGenesisValidatorRemove(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		k.RemoveGenesisValidator(ctx,
+		tk.LaunchKeeper.RemoveGenesisValidator(ctx,
 			item.LaunchID,
 			item.Address,
 		)
-		_, found := k.GetGenesisValidator(ctx,
+		_, found := tk.LaunchKeeper.GetGenesisValidator(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -61,15 +61,15 @@ func TestGenesisValidatorRemove(t *testing.T) {
 }
 
 func TestGenesisValidatorGetAll(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	items := createNGenesisValidator(k, ctx, 10)
-	require.ElementsMatch(t, items, k.GetAllGenesisValidator(ctx))
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)
+	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllGenesisValidator(ctx))
 }
 
 func TestKeeper_GetValidatorsAndTotalDelegation(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	launchID := 10
-	validators := createNGenesisValidatorByLaunchID(k, ctx, launchID)
+	validators := createNGenesisValidatorByLaunchID(tk.LaunchKeeper, ctx, launchID)
 	totalSelfDelegation := sdk.ZeroDec()
 	validatorMap := make(map[string]types.GenesisValidator)
 	for _, validator := range validators {
@@ -77,7 +77,7 @@ func TestKeeper_GetValidatorsAndTotalDelegation(t *testing.T) {
 		validatorMap[consPubKey] = validator
 		totalSelfDelegation = totalSelfDelegation.Add(validator.SelfDelegation.Amount.ToDec())
 	}
-	val, got := k.GetValidatorsAndTotalDelegation(ctx, uint64(launchID))
+	val, got := tk.LaunchKeeper.GetValidatorsAndTotalDelegation(ctx, uint64(launchID))
 	require.Equal(t, totalSelfDelegation, got)
 	require.EqualValues(t, validatorMap, val)
 }

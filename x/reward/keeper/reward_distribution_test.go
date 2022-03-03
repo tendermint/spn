@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -127,34 +129,34 @@ func TestCalculateRewards(t *testing.T) {
 
 func TestKeeper_DistributeRewards(t *testing.T) {
 	var (
-		k, _, pk, bk, _, _, _, ctx = setupMsgServer(t)
-		valFoo                     = sample.Address()
-		valBar                     = sample.Address()
-		valConsAddrFoo             = sample.ConsAddress()
-		valConsAddrBar             = sample.ConsAddress()
-		noProfileVal               = sample.ConsAddress()
-		notFoundValAddr            = sample.ConsAddress()
-		provider                   = sample.Address()
+		ctx, tk, _      = testkeeper.NewTestSetup(t)
+		valFoo          = sample.Address()
+		valBar          = sample.Address()
+		valConsAddrFoo  = sample.ConsAddress()
+		valConsAddrBar  = sample.ConsAddress()
+		noProfileVal    = sample.ConsAddress()
+		notFoundValAddr = sample.ConsAddress()
+		provider        = sample.Address()
 	)
 
 	// set validator profiles
-	pk.SetValidator(ctx, profiletypes.Validator{
+	tk.ProfileKeeper.SetValidator(ctx, profiletypes.Validator{
 		Address:            valFoo,
 		ConsensusAddresses: [][]byte{valConsAddrFoo},
 	})
-	pk.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
+	tk.ProfileKeeper.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
 		ValidatorAddress: valFoo,
 		ConsensusAddress: valConsAddrFoo,
 	})
-	pk.SetValidator(ctx, profiletypes.Validator{
+	tk.ProfileKeeper.SetValidator(ctx, profiletypes.Validator{
 		Address:            valBar,
 		ConsensusAddresses: [][]byte{valConsAddrBar},
 	})
-	pk.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
+	tk.ProfileKeeper.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
 		ValidatorAddress: valBar,
 		ConsensusAddress: valConsAddrBar,
 	})
-	pk.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
+	tk.ProfileKeeper.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
 		ValidatorAddress: sample.Address(),
 		ConsensusAddress: notFoundValAddr,
 	})
@@ -355,19 +357,24 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// set test reward pool if contains coins
 			if tt.rewardPool.RemainingCoins != nil {
-				k.SetRewardPool(ctx, tt.rewardPool)
-				err := bk.MintCoins(ctx, types.ModuleName, tt.rewardPool.RemainingCoins)
+				tk.RewardKeeper.SetRewardPool(ctx, tt.rewardPool)
+				err := tk.BankKeeper.MintCoins(ctx, types.ModuleName, tt.rewardPool.RemainingCoins)
 				require.NoError(t, err)
 			}
 
-			err := k.DistributeRewards(ctx, tt.args.launchID, tt.args.signatureCounts, tt.args.lastBlockHeight, tt.args.closeRewardPool)
+			err := tk.RewardKeeper.DistributeRewards(ctx,
+				tt.args.launchID,
+				tt.args.signatureCounts,
+				tt.args.lastBlockHeight,
+				tt.args.closeRewardPool,
+			)
 			if tt.err != nil {
 				require.ErrorIs(t, tt.err, err)
 				return
 			}
 			require.NoError(t, err)
 
-			rewardPool, found := k.GetRewardPool(ctx, tt.args.launchID)
+			rewardPool, found := tk.RewardKeeper.GetRewardPool(ctx, tt.args.launchID)
 			require.True(t, found)
 			require.Equal(t, tt.rewardPool.InitialCoins, rewardPool.InitialCoins)
 
@@ -384,7 +391,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 					wantAcc, err := sdk.AccAddressFromBech32(wantAddr)
 					require.NoError(t, err)
 
-					balance := bk.GetAllBalances(ctx, wantAcc)
+					balance := tk.BankKeeper.GetAllBalances(ctx, wantAcc)
 					require.True(t, balance.IsEqual(wantBalance),
 						fmt.Sprintf("address: %s,  want: %s, got: %s",
 							wantAddr, wantBalance.String(), balance.String(),
@@ -393,9 +400,9 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 					totalDistributedBalances = totalDistributedBalances.Add(balance...)
 
 					// remove the test balance
-					err = bk.SendCoinsFromAccountToModule(ctx, wantAcc, types.ModuleName, balance)
+					err = tk.BankKeeper.SendCoinsFromAccountToModule(ctx, wantAcc, types.ModuleName, balance)
 					require.NoError(t, err)
-					err = bk.BurnCoins(ctx, types.ModuleName, balance)
+					err = tk.BankKeeper.BurnCoins(ctx, types.ModuleName, balance)
 					require.NoError(t, err)
 				})
 			}
@@ -405,7 +412,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			require.True(t, tt.rewardPool.RemainingCoins.IsEqual(coinTotal))
 
 			// remove the reward pool used for the test
-			k.RemoveRewardPool(ctx, tt.rewardPool.LaunchID)
+			tk.RewardKeeper.RemoveRewardPool(ctx, tt.rewardPool.LaunchID)
 		})
 	}
 }

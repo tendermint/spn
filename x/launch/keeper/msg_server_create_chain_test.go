@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/stretchr/testify/require"
@@ -45,26 +47,26 @@ func initCreationFeeAndFundCoordAccounts(
 }
 
 func TestMsgCreateChain(t *testing.T) {
-	k, _, campaignKeeper, bankKeeper, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	chainCreationFee := sample.Coins()
 
 	// Create an invalid coordinator
 	invalidCoordAddress := sample.Address()
 	msgCreateInvalidCoordinator := sample.MsgCreateCoordinator(invalidCoordAddress)
-	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
+	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
 	require.NoError(t, err)
 
 	// Create a coordinator
 	coordAddress := sample.Address()
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	resCoord, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	coordID := resCoord.CoordinatorID
 
 	// Create a campaign
 	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignID := resCampaign.CampaignID
 
@@ -120,7 +122,7 @@ func TestMsgCreateChain(t *testing.T) {
 			require.NoError(t, err)
 			preBalance := tk.BankKeeper.SpendableCoins(sdkCtx, accAddr)
 
-			got, err := srv.CreateChain(ctx, &tc.msg)
+			got, err := ts.LaunchSrv.CreateChain(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -129,7 +131,7 @@ func TestMsgCreateChain(t *testing.T) {
 			require.EqualValues(t, tc.wantedChainID, got.LaunchID)
 
 			// The chain must exist in the store
-			chain, found := k.GetChain(sdkCtx, got.LaunchID)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, got.LaunchID)
 			require.True(t, found)
 			require.EqualValues(t, coordID, chain.CoordinatorID)
 			require.EqualValues(t, got.LaunchID, chain.LaunchID)
@@ -156,7 +158,7 @@ func TestMsgCreateChain(t *testing.T) {
 
 			if tc.msg.HasCampaign {
 				require.Equal(t, tc.msg.CampaignID, chain.CampaignID)
-				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
+				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 				require.Contains(t, campaignChains.Chains, chain.LaunchID)
 			}

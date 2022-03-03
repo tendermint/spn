@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -13,35 +15,35 @@ import (
 
 func TestMsgRequestAddAccount(t *testing.T) {
 	var (
-		invalidChain                = uint64(1000)
-		coordAddr                   = sample.Address()
-		coordDisableAddr            = sample.Address()
-		addr1                       = sample.Address()
-		addr2                       = sample.Address()
-		addr3                       = sample.Address()
-		addr4                       = sample.Address()
-		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
-		ctx                         = sdk.WrapSDKContext(sdkCtx)
+		invalidChain     = uint64(1000)
+		coordAddr        = sample.Address()
+		coordDisableAddr = sample.Address()
+		addr1            = sample.Address()
+		addr2            = sample.Address()
+		addr3            = sample.Address()
+		addr4            = sample.Address()
+		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
+		ctx              = sdk.WrapSDKContext(sdkCtx)
 	)
 
-	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+	coordID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 		Active:  true,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 6)
+	chains := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordID, 6)
 	chains[0].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[0])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[1])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[1])
 	chains[5].IsMainnet = true
 	chains[5].HasCampaign = true
-	k.SetChain(sdkCtx, chains[5])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[5])
 
-	coordDisableID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+	coordDisableID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordDisableAddr,
 		Active:  false,
 	})
-	disabledChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
+	disabledChain := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordDisableID, 1)
 
 	tests := []struct {
 		name        string
@@ -118,7 +120,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := srv.RequestAddAccount(ctx, &tt.msg)
+			got, err := ts.LaunchSrv.RequestAddAccount(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
@@ -128,7 +130,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
 			if !tt.wantApprove {
-				request, found := k.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
+				request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 				require.Equal(t, tt.msg.Creator, request.Creator)
@@ -139,7 +141,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				require.Equal(t, tt.msg.LaunchID, content.LaunchID)
 				require.Equal(t, tt.msg.Coins, content.Coins)
 			} else {
-				_, found := k.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
+				_, found := tk.LaunchKeeper.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.True(t, found, "genesis account not found")
 			}
 		})

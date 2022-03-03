@@ -13,9 +13,9 @@ import (
 )
 
 func TestCoordinatorByAddressQuerySingle(t *testing.T) {
-	keeper, ctx := testkeeper.Profile(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNCoordinatorByAddress(keeper, ctx, 2)
+	msgs := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetCoordinatorByAddressRequest
@@ -44,7 +44,7 @@ func TestCoordinatorByAddressQuerySingle(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.CoordinatorByAddress(wctx, tc.request)
+			response, err := tk.ProfileKeeper.CoordinatorByAddress(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

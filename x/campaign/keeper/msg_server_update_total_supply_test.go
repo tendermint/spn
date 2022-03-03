@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -13,20 +14,20 @@ import (
 
 func TestMsgUpdateTotalSupply(t *testing.T) {
 	var (
-		coordAddr1                                               = sample.Address()
-		coordAddr2                                               = sample.Address()
-		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
+		coordAddr1     = sample.Address()
+		coordAddr2     = sample.Address()
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
-	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -35,12 +36,12 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 	// Set a regular campaign and a campaign with an already initialized mainnet
 	campaign := sample.Campaign(0)
 	campaign.CoordinatorID = coordID
-	campaignKeeper.SetCampaign(sdkCtx, campaign)
+	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
 
 	campaign = sample.Campaign(1)
 	campaign.CoordinatorID = coordID
 	campaign.MainnetInitialized = true
-	campaignKeeper.SetCampaign(sdkCtx, campaign)
+	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
 
 	for _, tc := range []struct {
 		name string
@@ -112,18 +113,18 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			var previousTotalSupply sdk.Coins
 			if tc.err == nil {
-				campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 				require.True(t, found)
 				previousTotalSupply = campaign.TotalSupply
 			}
 
-			_, err := campaignSrv.UpdateTotalSupply(ctx, &tc.msg)
+			_, err := ts.CampaignSrv.UpdateTotalSupply(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 			require.True(t, campaign.TotalSupply.IsEqual(
 				types.UpdateTotalSupply(previousTotalSupply, tc.msg.TotalSupplyUpdate),
