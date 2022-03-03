@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	profiletypes "github.com/tendermint/spn/x/profile/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	ibcclienttypes "github.com/cosmos/ibc-go/v2/modules/core/02-client/types"
@@ -20,9 +18,10 @@ import (
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
-	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
-	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
+	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
+	monitoringctypes "github.com/tendermint/spn/x/monitoringc/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
 )
@@ -38,7 +37,7 @@ type TestKeepers struct {
 	LaunchKeeper             *launchkeeper.Keeper
 	ProfileKeeper            *profilekeeper.Keeper
 	RewardKeeper             *rewardkeeper.Keeper
-	MonitoringConsumerKeeper *monitoringcmodulekeeper.Keeper
+	MonitoringConsumerKeeper *monitoringckeeper.Keeper
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 }
@@ -49,7 +48,7 @@ type TestMsgServers struct {
 	LaunchSrv      launchtypes.MsgServer
 	CampaignSrv    campaigntypes.MsgServer
 	RewardSrv      rewardtypes.MsgServer
-	MonitoringcSrv monitoringcmoduletypes.MsgServer
+	MonitoringcSrv monitoringctypes.MsgServer
 }
 
 // NewTestSetup returns initialized instances of all the keepers and message servers of the modules
@@ -94,7 +93,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
 	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
 	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
-	monitoringcSrv := monitoringcmodulekeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
+	monitoringcSrv := monitoringckeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
 
 	return ctx, TestKeepers{
 			CampaignKeeper:           campaignKeeper,
@@ -118,7 +117,7 @@ func MonitoringcWithIBCMocks(
 	t testing.TB,
 	connectionMock []Connection,
 	channelMock []Channel,
-) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
+) (*monitoringckeeper.Keeper, sdk.Context) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
@@ -151,7 +150,7 @@ func MonitoringcWithIBCMocks(
 
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
-	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
+	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
 
 	return monitoringConsumerKeeper, ctx
 }
