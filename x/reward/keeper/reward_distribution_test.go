@@ -130,8 +130,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		k, _, pk, bk, _, _, _, ctx = setupMsgServer(t)
 		valFoo                     = sample.Address()
 		valBar                     = sample.Address()
-		valOpAddrFoo             = sample.Address()
-		valOpAddrBar             = sample.Address()
+		valOpAddrFoo               = sample.Address()
+		valOpAddrBar               = sample.Address()
 		noProfileVal               = sample.Address()
 		notFoundValAddr            = sample.Address()
 		provider                   = sample.Address()
@@ -139,24 +139,24 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 
 	// set validator profiles
 	pk.SetValidator(ctx, profiletypes.Validator{
-		Address:            valFoo,
+		Address:           valFoo,
 		OperatorAddresses: []string{valOpAddrFoo},
 	})
 	pk.SetValidatorByOperatorAddress(ctx, profiletypes.ValidatorByOperatorAddress{
 		ValidatorAddress: valFoo,
-		OperatorAddress: valOpAddrFoo,
+		OperatorAddress:  valOpAddrFoo,
 	})
 	pk.SetValidator(ctx, profiletypes.Validator{
-		Address:            valBar,
+		Address:           valBar,
 		OperatorAddresses: []string{valOpAddrBar},
 	})
 	pk.SetValidatorByOperatorAddress(ctx, profiletypes.ValidatorByOperatorAddress{
 		ValidatorAddress: valBar,
-		OperatorAddress: valOpAddrBar,
+		OperatorAddress:  valOpAddrBar,
 	})
 	pk.SetValidatorByOperatorAddress(ctx, profiletypes.ValidatorByOperatorAddress{
 		ValidatorAddress: sample.Address(),
-		OperatorAddress: notFoundValAddr,
+		OperatorAddress:  notFoundValAddr,
 	})
 
 	type args struct {

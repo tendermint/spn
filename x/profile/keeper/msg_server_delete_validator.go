@@ -19,8 +19,8 @@ func (k msgServer) DeleteValidator(goCtx context.Context, msg *types.MsgDeleteVa
 			sdkerrors.Wrap(types.ErrValidatorNotFound, msg.Address)
 	}
 	k.RemoveValidator(ctx, msg.Address)
-	for _, consAddr := range validator.OperatorAddresses {
-		k.RemoveValidatorByOperatorAddress(ctx, consAddr)
+	for _, opAddr := range validator.OperatorAddresses {
+		k.RemoveValidatorByOperatorAddress(ctx, opAddr)
 	}
 
 	return &types.MsgDeleteValidatorResponse{}, nil

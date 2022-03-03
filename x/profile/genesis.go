@@ -17,7 +17,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetValidator(ctx, elem)
 	}
 
-	// Set all the validatorByConsAddress
+	// Set all the validatorByOperatorAddress
 	for _, elem := range genState.ValidatorByOperatorAddressList {
 		k.SetValidatorByOperatorAddress(ctx, elem)
 	}

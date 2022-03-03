@@ -10,7 +10,7 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgSetValidatorConsAddress_ValidateBasic(t *testing.T) {
+func TestMsgAddValidatorOperatorAddress_ValidateBasic(t *testing.T) {
 	sampleAddr := sample.Address()
 
 	tests := []struct {

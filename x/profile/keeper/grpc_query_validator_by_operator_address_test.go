@@ -14,7 +14,7 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func TestValidatorByConsAddressQuerySingle(t *testing.T) {
+func TestValidatorByOperatorAddressQuerySingle(t *testing.T) {
 	keeper, ctx := keepertest.Profile(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNValidatorByOperatorAddress(keeper, ctx, 2)

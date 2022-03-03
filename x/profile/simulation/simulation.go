@@ -124,15 +124,15 @@ func SimulateMsgDeleteValidator(ak types.AccountKeeper, bk types.BankKeeper, k k
 	}
 }
 
-// SimulateMsgSetValidatorConsAddress simulates a MsgSetValidatorConsAddress message
-func SimulateMsgSetValidatorConsAddress(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+// SimulateMsgAddValidatorOperatorAddress simulates a MsgAddValidatorOperatorAddress message
+func SimulateMsgAddValidatorOperatorAddress(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		msg := &types.MsgAddValidatorOperatorAddress{}
 
-		// TODO: Handling the SetValidatorConsAddress simulation
+		// TODO: Handling the AddValidatorOperatorAddress simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "SetValidatorConsAddress simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "AddValidatorOperatorAddress simulation not implemented"), nil, nil
 	}
 }
 
