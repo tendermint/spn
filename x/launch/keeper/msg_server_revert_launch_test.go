@@ -53,6 +53,16 @@ func TestMsgRevertLaunch(t *testing.T) {
 	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - tk.LaunchKeeper.RevertDelay(sdkCtx)
 	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
+	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
+	require.NoError(t, err)
+	ibcConnected := res.LaunchID
+	chain, found = tk.LaunchKeeper.GetChain(sdkCtx, ibcConnected)
+	require.True(t, found)
+	chain.LaunchTriggered = true
+	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - tk.LaunchKeeper.RevertDelay(sdkCtx) + 1
+	chain.IbcConnected = true
+	tk.LaunchKeeper.SetChain(sdkCtx, chain)
+
 	for _, tc := range []struct {
 		name string
 		msg  types.MsgRevertLaunch
@@ -81,6 +91,11 @@ func TestMsgRevertLaunch(t *testing.T) {
 			name: "invalid coordinator",
 			msg:  *types.NewMsgRevertLaunch(coordAddress2, delayReached),
 			err:  profiletypes.ErrCoordInvalid,
+		},
+		{
+			name: "chain is already ibc connected",
+			msg:  *types.NewMsgRevertLaunch(coordAddress, ibcConnected),
+			err:  types.ErrChainIBCConnected,
 		},
 		{
 			name: "non existent chain id",
