@@ -140,6 +140,11 @@ func TestMsgCreateCampaign(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
+			// get account initial balance
+			accAddr, err := sdk.AccAddressFromBech32(tc.msg.Coordinator)
+			require.NoError(t, err)
+			preBalance := tk.BankKeeper.SpendableCoins(sdkCtx, accAddr)
+
 			got, err := ts.CampaignSrv.CreateCampaign(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
@@ -165,6 +170,10 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.True(t, found)
 			require.EqualValues(t, got.CampaignID, campaignChains.CampaignID)
 			require.Empty(t, campaignChains.Chains)
+
+			// check fee deduction
+			postBalance := tk.BankKeeper.SpendableCoins(sdkCtx, accAddr)
+			require.True(t, preBalance.Sub(campaignCreationFee).IsEqual(postBalance))
 		})
 	}
 }
