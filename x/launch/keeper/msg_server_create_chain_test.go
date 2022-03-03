@@ -47,6 +47,7 @@ func initCreationFeeAndFundCoordAccounts(
 func TestMsgCreateChain(t *testing.T) {
 	k, _, campaignKeeper, bankKeeper, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
+	chainCreationFee := sample.Coins()
 
 	// Create an invalid coordinator
 	invalidCoordAddress := sample.Address()
@@ -69,7 +70,7 @@ func TestMsgCreateChain(t *testing.T) {
 
 	// assign random sdk.Coins to `chainCreationFee` param and provide balance to coordinators to cover for
 	// one chain creation
-	initCreationFeeAndFundCoordAccounts(t, k, bankKeeper, sdkCtx, sample.Coins(), 4, coordAddress)
+	initCreationFeeAndFundCoordAccounts(t, k, bankKeeper, sdkCtx, chainCreationFee, 4, coordAddress)
 
 	for _, tc := range []struct {
 		name          string
@@ -114,6 +115,11 @@ func TestMsgCreateChain(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
+			// get account initial balance
+			accAddr, err := sdk.AccAddressFromBech32(tc.msg.Coordinator)
+			require.NoError(t, err)
+			preBalance := tk.BankKeeper.SpendableCoins(sdkCtx, accAddr)
+
 			got, err := srv.CreateChain(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
@@ -154,6 +160,10 @@ func TestMsgCreateChain(t *testing.T) {
 				require.True(t, found)
 				require.Contains(t, campaignChains.Chains, chain.LaunchID)
 			}
+
+			// check fee deduction
+			postBalance := tk.BankKeeper.SpendableCoins(sdkCtx, accAddr)
+			require.True(t, preBalance.Sub(chainCreationFee).IsEqual(postBalance))
 		})
 	}
 }
