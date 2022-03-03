@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -13,20 +15,20 @@ import (
 
 func TestMsgUpdateTotalShares(t *testing.T) {
 	var (
-		coordAddr1                                               = sample.Address()
-		coordAddr2                                               = sample.Address()
-		campaignKeeper, _, _, _, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
+		coordAddr1     = sample.Address()
+		coordAddr2     = sample.Address()
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
-	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -36,24 +38,24 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 	campaign := sample.Campaign(0)
 	campaign.CoordinatorID = coordID
 	campaign.DynamicShares = true
-	campaign.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaign)
+	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 
 	campaignMainnetInitialized := sample.Campaign(1)
 	campaignMainnetInitialized.CoordinatorID = coordID
 	campaignMainnetInitialized.DynamicShares = true
 	campaignMainnetInitialized.MainnetInitialized = true
-	campaignMainnetInitialized.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
+	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	campaignNoDynamicShares := sample.Campaign(2)
 	campaignNoDynamicShares.CoordinatorID = coordID
 	campaignNoDynamicShares.DynamicShares = false
-	campaignNoDynamicShares.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignNoDynamicShares)
+	campaignNoDynamicShares.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignNoDynamicShares)
 
 	campaignWithAllocatedShares := sample.Campaign(3)
 	campaignWithAllocatedShares.CoordinatorID = coordID
 	campaignWithAllocatedShares.DynamicShares = true
 	campaignWithAllocatedShares.AllocatedShares, _ = types.NewShares("100foo")
-	campaignWithAllocatedShares.CampaignID = campaignKeeper.AppendCampaign(sdkCtx, campaignWithAllocatedShares)
+	campaignWithAllocatedShares.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignWithAllocatedShares)
 	smallerTotalShares, _ := types.NewShares("50foo")
 
 	for _, tc := range []struct {
@@ -133,13 +135,13 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			_, err := campaignSrv.UpdateTotalShares(ctx, &tc.msg)
+			_, err := ts.CampaignSrv.UpdateTotalShares(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
 			require.True(t, found)
 			require.True(t, sdk.Coins(tc.msg.TotalShares).IsEqual(sdk.Coins(campaign.TotalShares)))
 		})

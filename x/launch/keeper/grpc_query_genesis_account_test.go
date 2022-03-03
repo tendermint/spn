@@ -26,9 +26,9 @@ func createNGenesisAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n i
 }
 
 func TestGenesisAccountQuerySingle(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNGenesisAccount(keeper, ctx, 2)
+	msgs := createNGenesisAccount(tk.LaunchKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetGenesisAccountRequest
@@ -66,7 +66,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.GenesisAccount(wctx, tc.request)
+			response, err := tk.LaunchKeeper.GenesisAccount(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -79,10 +79,10 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 
 func TestGenesisAccountQueryPaginated(t *testing.T) {
 	var (
-		keeper, ctx = testkeeper.Launch(t)
-		wctx        = sdk.WrapSDKContext(ctx)
-		chainID     = uint64(0)
-		msgs        = createNGenesisAccountForChainID(keeper, ctx, 5, chainID)
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		chainID    = uint64(0)
+		msgs       = createNGenesisAccountForChainID(tk.LaunchKeeper, ctx, 5, chainID)
 	)
 
 	request := func(launchID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllGenesisAccountRequest {
@@ -99,7 +99,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
+			resp, err := tk.LaunchKeeper.GenesisAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.GenesisAccount), step)
 			require.Subset(t, msgs, resp.GenesisAccount)
@@ -109,7 +109,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.GenesisAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
+			resp, err := tk.LaunchKeeper.GenesisAccountAll(wctx, request(chainID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.GenesisAccount), step)
 			require.Subset(t, msgs, resp.GenesisAccount)
@@ -117,13 +117,13 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.GenesisAccountAll(wctx, request(chainID, nil, 0, 0, true))
+		resp, err := tk.LaunchKeeper.GenesisAccountAll(wctx, request(chainID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.GenesisAccount)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.GenesisAccountAll(wctx, nil)
+		_, err := tk.LaunchKeeper.GenesisAccountAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

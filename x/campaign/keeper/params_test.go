@@ -10,13 +10,13 @@ import (
 )
 
 func Test_GetParams(t *testing.T) {
-	k, ctx := testkeeper.Campaign(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	params := sample.CampaignParams()
 
-	k.SetParams(ctx, params)
+	tk.CampaignKeeper.SetParams(ctx, params)
 
-	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, params.TotalSupplyRange.MinTotalSupply, k.TotalSupplyRange(ctx).MinTotalSupply)
-	require.EqualValues(t, params.TotalSupplyRange.MaxTotalSupply, k.TotalSupplyRange(ctx).MaxTotalSupply)
-	require.EqualValues(t, params.CampaignCreationFee, k.CampaignCreationFee(ctx))
+	require.EqualValues(t, params, tk.CampaignKeeper.GetParams(ctx))
+	require.EqualValues(t, params.TotalSupplyRange.MinTotalSupply, tk.CampaignKeeper.TotalSupplyRange(ctx).MinTotalSupply)
+	require.EqualValues(t, params.TotalSupplyRange.MaxTotalSupply, tk.CampaignKeeper.TotalSupplyRange(ctx).MaxTotalSupply)
+  require.EqualValues(t, params.CampaignCreationFee, tk.CampaignKeeper.CampaignCreationFee(ctx))
 }

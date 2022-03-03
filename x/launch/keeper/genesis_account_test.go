@@ -23,10 +23,10 @@ func createNGenesisAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 }
 
 func TestGenesisAccountGet(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNGenesisAccount(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNGenesisAccount(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetGenesisAccount(ctx,
+		rst, found := tk.LaunchKeeper.GetGenesisAccount(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -35,14 +35,14 @@ func TestGenesisAccountGet(t *testing.T) {
 	}
 }
 func TestGenesisAccountRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNGenesisAccount(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNGenesisAccount(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		keeper.RemoveGenesisAccount(ctx,
+		tk.LaunchKeeper.RemoveGenesisAccount(ctx,
 			item.LaunchID,
 			item.Address,
 		)
-		_, found := keeper.GetGenesisAccount(ctx,
+		_, found := tk.LaunchKeeper.GetGenesisAccount(ctx,
 			item.LaunchID,
 			item.Address,
 		)
@@ -51,7 +51,7 @@ func TestGenesisAccountRemove(t *testing.T) {
 }
 
 func TestGenesisAccountGetAll(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNGenesisAccount(keeper, ctx, 10)
-	require.ElementsMatch(t, items, keeper.GetAllGenesisAccount(ctx))
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNGenesisAccount(tk.LaunchKeeper, ctx, 10)
+	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllGenesisAccount(ctx))
 }

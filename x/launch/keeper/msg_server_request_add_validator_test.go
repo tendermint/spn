@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -13,31 +15,31 @@ import (
 
 func TestMsgRequestAddValidator(t *testing.T) {
 	var (
-		invalidChain                = uint64(1000)
-		coordAddr                   = sample.Address()
-		coordDisableAddr            = sample.Address()
-		addr1                       = sample.Address()
-		addr2                       = sample.Address()
-		addr3                       = sample.Address()
-		k, pk, _, srv, _, _, sdkCtx = setupMsgServer(t)
-		ctx                         = sdk.WrapSDKContext(sdkCtx)
+		invalidChain     = uint64(1000)
+		coordAddr        = sample.Address()
+		coordDisableAddr = sample.Address()
+		addr1            = sample.Address()
+		addr2            = sample.Address()
+		addr3            = sample.Address()
+		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
+		ctx              = sdk.WrapSDKContext(sdkCtx)
 	)
 
-	coordID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+	coordID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordAddr,
 		Active:  true,
 	})
-	chains := createNChainForCoordinator(k, sdkCtx, coordID, 4)
+	chains := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordID, 4)
 	chains[0].LaunchTriggered = true
-	k.SetChain(sdkCtx, chains[0])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[0])
 	chains[1].CoordinatorID = 99999
-	k.SetChain(sdkCtx, chains[1])
+	tk.LaunchKeeper.SetChain(sdkCtx, chains[1])
 
-	coordDisableID := pk.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
+	coordDisableID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
 		Address: coordDisableAddr,
 		Active:  false,
 	})
-	disableChain := createNChainForCoordinator(k, sdkCtx, coordDisableID, 1)
+	disableChain := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordDisableID, 1)
 
 	for _, tc := range []struct {
 		name        string
@@ -94,7 +96,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			got, err := srv.RequestAddValidator(ctx, &tc.msg)
+			got, err := ts.LaunchSrv.RequestAddValidator(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 				return
@@ -104,7 +106,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			require.Equal(t, tc.wantApprove, got.AutoApproved)
 
 			if !tc.wantApprove {
-				request, found := k.GetRequest(sdkCtx, tc.msg.LaunchID, got.RequestID)
+				request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tc.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tc.wantID, request.RequestID)
 				require.Equal(t, tc.msg.Creator, request.Creator)
@@ -118,7 +120,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 				require.Equal(t, tc.msg.Peer, content.Peer)
 				require.Equal(t, tc.msg.ConsPubKey, content.ConsPubKey)
 			} else {
-				_, found := k.GetGenesisValidator(sdkCtx, tc.msg.LaunchID, tc.msg.ValAddress)
+				_, found := tk.LaunchKeeper.GetGenesisValidator(sdkCtx, tc.msg.LaunchID, tc.msg.ValAddress)
 				require.True(t, found, "genesis validator not found")
 			}
 		})

@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -14,7 +16,7 @@ import (
 )
 
 func TestMsgEditChain(t *testing.T) {
-	k, _, campaignK, srv, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordAddress2 := sample.Address()
@@ -23,55 +25,55 @@ func TestMsgEditChain(t *testing.T) {
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	_, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
-	_, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	_, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 
 	// Create a chain
 	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
-	res, err := srv.CreateChain(ctx, &msgCreateChain)
+	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchID := res.LaunchID
 
 	// create a campaign
 	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 
 	// create a chain with an existing campaign
 	msgCreateChain = sample.MsgCreateChain(coordAddress, "", true, resCampaign.CampaignID)
-	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchIDHasCampaign := res.LaunchID
 
 	// create a campaign
 	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	validCampaignID := resCampaign.CampaignID
 
 	// create a campaign from a different address
 	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress2)
-	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignDifferentCoordinator := resCampaign.CampaignID
 
 	// Create a new chain for more tests
 	msgCreateChain = sample.MsgCreateChain(coordAddress, "", false, 0)
-	res, err = srv.CreateChain(ctx, &msgCreateChain)
+	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchID2 := res.LaunchID
 
 	// create a new campaign and add a chainCampaigns entry to it
 	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err = campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignDuplicateChain := resCampaign.CampaignID
 
-	err = campaignK.AddChainToCampaign(sdkCtx, campaignDuplicateChain, launchID2)
+	err = tk.CampaignKeeper.AddChainToCampaign(sdkCtx, campaignDuplicateChain, launchID2)
 	require.NoError(t, err)
 
 	for _, tc := range []struct {
@@ -260,12 +262,12 @@ func TestMsgEditChain(t *testing.T) {
 			var previousChain types.Chain
 			var found bool
 			if tc.err == nil {
-				previousChain, found = k.GetChain(sdkCtx, tc.msg.LaunchID)
+				previousChain, found = tk.LaunchKeeper.GetChain(sdkCtx, tc.msg.LaunchID)
 				require.True(t, found)
 			}
 
 			// Send the message
-			_, err := srv.EditChain(ctx, &tc.msg)
+			_, err := ts.LaunchSrv.EditChain(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -273,7 +275,7 @@ func TestMsgEditChain(t *testing.T) {
 			require.NoError(t, err)
 
 			// The chain must continue to exist in the store
-			chain, found := k.GetChain(sdkCtx, tc.msg.LaunchID)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, tc.msg.LaunchID)
 			require.True(t, found)
 
 			// Unchanged values
@@ -312,10 +314,10 @@ func TestMsgEditChain(t *testing.T) {
 				require.True(t, chain.HasCampaign)
 				require.EqualValues(t, tc.msg.CampaignID, chain.CampaignID)
 				// ensure campaign exist
-				_, found := k.GetCampaignKeeper().GetCampaign(sdkCtx, chain.CampaignID)
+				_, found := tk.CampaignKeeper.GetCampaign(sdkCtx, chain.CampaignID)
 				require.True(t, found)
 				// ensure campaign chains exist
-				campaignChains, found := k.GetCampaignKeeper().GetCampaignChains(sdkCtx, chain.CampaignID)
+				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, chain.CampaignID)
 				require.True(t, found)
 
 				// check that the chain launch ID is in the campaign chains

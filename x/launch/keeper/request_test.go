@@ -44,10 +44,10 @@ func createNRequest(k *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 }
 
 func TestRequestGet(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	items := createNRequest(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNRequest(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := k.GetRequest(ctx,
+		rst, found := tk.LaunchKeeper.GetRequest(ctx,
 			item.LaunchID,
 			item.RequestID,
 		)
@@ -56,14 +56,14 @@ func TestRequestGet(t *testing.T) {
 	}
 }
 func TestRequestRemove(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	items := createNRequest(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNRequest(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		k.RemoveRequest(ctx,
+		tk.LaunchKeeper.RemoveRequest(ctx,
 			item.LaunchID,
 			item.RequestID,
 		)
-		_, found := k.GetRequest(ctx,
+		_, found := tk.LaunchKeeper.GetRequest(ctx,
 			item.LaunchID,
 			item.RequestID,
 		)
@@ -72,17 +72,17 @@ func TestRequestRemove(t *testing.T) {
 }
 
 func TestRequestGetAll(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	items := createNRequest(k, ctx, 10)
-	require.ElementsMatch(t, items, k.GetAllRequest(ctx))
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNRequest(tk.LaunchKeeper, ctx, 10)
+	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllRequest(ctx))
 }
 
 func TestRequestCounter(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	items := createNRequest(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNRequest(tk.LaunchKeeper, ctx, 10)
 	counter := uint64(len(items)) + 1
-	require.Equal(t, counter, k.GetRequestCounter(ctx, 0))
-	require.Equal(t, uint64(1), k.GetRequestCounter(ctx, 1))
+	require.Equal(t, counter, tk.LaunchKeeper.GetRequestCounter(ctx, 0))
+	require.Equal(t, uint64(1), tk.LaunchKeeper.GetRequestCounter(ctx, 1))
 }
 
 func TestApplyRequest(t *testing.T) {
@@ -90,7 +90,7 @@ func TestApplyRequest(t *testing.T) {
 		genesisAcc     = sample.Address()
 		vestingAcc     = sample.Address()
 		validatorAcc   = sample.Address()
-		k, ctx         = testkeeper.Launch(t)
+		ctx, tk, _     = testkeeper.NewTestSetup(t)
 		launchID       = uint64(10)
 		contents       = sample.AllRequestContents(launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
@@ -150,7 +150,7 @@ func TestApplyRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := keeper.ApplyRequest(ctx, *k, launchID, tt.request)
+			err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -160,25 +160,25 @@ func TestApplyRequest(t *testing.T) {
 			switch requestContent := tt.request.Content.Content.(type) {
 			case *types.RequestContent_GenesisAccount:
 				ga := requestContent.GenesisAccount
-				_, found := k.GetGenesisAccount(ctx, launchID, ga.Address)
+				_, found := tk.LaunchKeeper.GetGenesisAccount(ctx, launchID, ga.Address)
 				require.True(t, found, "genesis account not found")
 			case *types.RequestContent_VestingAccount:
 				va := requestContent.VestingAccount
-				_, found := k.GetVestingAccount(ctx, launchID, va.Address)
+				_, found := tk.LaunchKeeper.GetVestingAccount(ctx, launchID, va.Address)
 				require.True(t, found, "vesting account not found")
 			case *types.RequestContent_AccountRemoval:
 				ar := requestContent.AccountRemoval
-				_, foundGenesis := k.GetGenesisAccount(ctx, launchID, ar.Address)
+				_, foundGenesis := tk.LaunchKeeper.GetGenesisAccount(ctx, launchID, ar.Address)
 				require.False(t, foundGenesis, "genesis account not removed")
-				_, foundVesting := k.GetVestingAccount(ctx, launchID, ar.Address)
+				_, foundVesting := tk.LaunchKeeper.GetVestingAccount(ctx, launchID, ar.Address)
 				require.False(t, foundVesting, "vesting account not removed")
 			case *types.RequestContent_GenesisValidator:
 				ga := requestContent.GenesisValidator
-				_, found := k.GetGenesisValidator(ctx, launchID, ga.Address)
+				_, found := tk.LaunchKeeper.GetGenesisValidator(ctx, launchID, ga.Address)
 				require.True(t, found, "genesis validator not found")
 			case *types.RequestContent_ValidatorRemoval:
 				vr := requestContent.ValidatorRemoval
-				_, found := k.GetGenesisValidator(ctx, launchID, vr.ValAddress)
+				_, found := tk.LaunchKeeper.GetGenesisValidator(ctx, launchID, vr.ValAddress)
 				require.False(t, found, "genesis validator not removed")
 			}
 		})
@@ -190,7 +190,7 @@ func TestCheckRequest(t *testing.T) {
 		genesisAcc     = sample.Address()
 		vestingAcc     = sample.Address()
 		validatorAcc   = sample.Address()
-		k, ctx         = testkeeper.Launch(t)
+		ctx, tk, _     = testkeeper.NewTestSetup(t)
 		launchID       = uint64(10)
 		contents       = sample.AllRequestContents(launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
@@ -250,11 +250,11 @@ func TestCheckRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := keeper.CheckRequest(ctx, *k, launchID, tt.request)
+			err := keeper.CheckRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
-				err := keeper.ApplyRequest(ctx, *k, launchID, tt.request)
+				err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
 				require.NoError(t, err)
 			}
 		})

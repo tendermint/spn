@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/keeper"
 	"github.com/tendermint/spn/x/monitoringc/types"
@@ -23,10 +23,10 @@ func createNLaunchIDFromVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context,
 }
 
 func TestLaunchIDFromVerifiedClientIDGet(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNLaunchIDFromVerifiedClientID(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNLaunchIDFromVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetLaunchIDFromVerifiedClientID(ctx,
+		rst, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromVerifiedClientID(ctx,
 			item.ClientID,
 		)
 		require.True(t, found)
@@ -38,10 +38,10 @@ func TestLaunchIDFromVerifiedClientIDGet(t *testing.T) {
 }
 
 func TestLaunchIDFromVerifiedClientIDGetAll(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNLaunchIDFromVerifiedClientID(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNLaunchIDFromVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllLaunchIDFromVerifiedClientID(ctx)),
+		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllLaunchIDFromVerifiedClientID(ctx)),
 	)
 }

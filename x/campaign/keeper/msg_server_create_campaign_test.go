@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
@@ -47,21 +49,21 @@ func initCreationFeeAndFundCoordAccounts(
 
 func TestMsgCreateCampaign(t *testing.T) {
 	var (
-		coordAddr1                                                        = sample.Address()
-		coordAddr2                                                        = sample.Address()
-		campaignKeeper, _, _, bankKeeper, campaignSrv, profileSrv, sdkCtx = setupMsgServer(t)
-		ctx                                                               = sdk.WrapSDKContext(sdkCtx)
+		coordAddr1     = sample.Address()
+		coordAddr2     = sample.Address()
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// Create coordinators
 	coordMap := make(map[string]uint64)
-	res, err := profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
 		Description: sample.CoordinatorDescription(),
 	})
 	require.NoError(t, err)
 	coordMap[coordAddr1] = res.CoordinatorID
-	res, err = profileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
 		Description: sample.CoordinatorDescription(),
 	})
@@ -129,14 +131,14 @@ func TestMsgCreateCampaign(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			got, err := campaignSrv.CreateCampaign(ctx, &tc.msg)
+			got, err := ts.CampaignSrv.CreateCampaign(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
 			require.Equal(t, tc.expectedID, got.CampaignID)
-			campaign, found := campaignKeeper.GetCampaign(sdkCtx, got.CampaignID)
+			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, got.CampaignID)
 			require.True(t, found)
 			require.EqualValues(t, got.CampaignID, campaign.CampaignID)
 			require.EqualValues(t, tc.msg.CampaignName, campaign.CampaignName)
@@ -150,7 +152,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.EqualValues(t, false, campaign.DynamicShares)
 
 			// Empty list of campaign chains
-			campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)
+			campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)
 			require.True(t, found)
 			require.EqualValues(t, got.CampaignID, campaignChains.CampaignID)
 			require.Empty(t, campaignChains.Chains)
