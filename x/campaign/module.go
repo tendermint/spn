@@ -109,16 +109,14 @@ func NewAppModule(
 	keeper keeper.Keeper,
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
-	distributionKeeper types.DistributionKeeper,
 	profileKeeper types.ProfileKeeper,
 ) AppModule {
 	return AppModule{
-		AppModuleBasic:     NewAppModuleBasic(cdc),
-		keeper:             keeper,
-		accountKeeper:      accountKeeper,
-		bankKeeper:         bankKeeper,
-		distributionKeeper: distributionKeeper,
-		profileKeeper:      profileKeeper,
+		AppModuleBasic: NewAppModuleBasic(cdc),
+		keeper:         keeper,
+		accountKeeper:  accountKeeper,
+		bankKeeper:     bankKeeper,
+		profileKeeper:  profileKeeper,
 	}
 }
 

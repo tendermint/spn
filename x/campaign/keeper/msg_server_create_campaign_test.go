@@ -14,18 +14,25 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func initCreationFeeAndCoordAccounts(
+func initCreationFeeAndFundCoordAccounts(
 	t *testing.T,
 	keeper *keeper.Keeper,
 	bk bankkeeper.Keeper,
 	sdkCtx sdk.Context,
-	coins sdk.Coins,
+	fee sdk.Coins,
+	numCreations int64,
 	addrs ...string,
 ) {
 	// set fee param to `coins`
 	params := keeper.GetParams(sdkCtx)
-	params.CampaignCreationFee = coins
+	params.CampaignCreationFee = fee
 	keeper.SetParams(sdkCtx, params)
+
+	coins := sdk.NewCoins()
+	for _, coin := range fee {
+		coin.Amount = coin.Amount.MulRaw(numCreations)
+		coins.Add(coin)
+	}
 
 	// add `coins` to balance of each coordinator address
 	for _, addr := range addrs {
@@ -61,9 +68,8 @@ func TestMsgCreateCampaign(t *testing.T) {
 	require.NoError(t, err)
 	coordMap[coordAddr2] = res.CoordinatorID
 
-	// assign random sdk.Coins to `campaignCreationFee` param and provide balance to coordinators to cover for
-	// one campaign creation
-	initCreationFeeAndCoordAccounts(t, campaignKeeper, bankKeeper, sdkCtx, sample.Coins(), coordAddr1, coordAddr2)
+	// assign random sdk.Coins to `campaignCreationFee` param and provide balance to coordinators
+	initCreationFeeAndFundCoordAccounts(t, campaignKeeper, bankKeeper, sdkCtx, sample.Coins(), 1, coordAddr1, coordAddr2)
 
 	for _, tc := range []struct {
 		name       string
