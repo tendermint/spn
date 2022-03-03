@@ -64,13 +64,13 @@ func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 		)
 	}
 	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.ParamStoreKeyTotalSupplyRange), func(r *rand.Rand) string {
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyTotalSupplyRange), func(r *rand.Rand) string {
 			return fmt.Sprintf(
 				"{\"minTotalSupply\":\"%v\",\"maxTotalSupply\":\"%v\"}",
 				campaignParams.TotalSupplyRange.MinTotalSupply,
 				campaignParams.TotalSupplyRange.MaxTotalSupply)
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.ParamStoreKeyCampaignCreationFee), func(r *rand.Rand) string {
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyCampaignCreationFee), func(r *rand.Rand) string {
 			return fmt.Sprintf("[%v]", strings.Join(creationFee, ","))
 		}),
 	}

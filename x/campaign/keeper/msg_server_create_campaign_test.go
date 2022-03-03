@@ -49,10 +49,12 @@ func initCreationFeeAndFundCoordAccounts(
 
 func TestMsgCreateCampaign(t *testing.T) {
 	var (
-		coordAddr1     = sample.Address()
-		coordAddr2     = sample.Address()
-		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
-		ctx            = sdk.WrapSDKContext(sdkCtx)
+		coordAddr1          = sample.Address()
+		coordAddr2          = sample.Address()
+		coordAddr3          = sample.Address()
+		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
+		ctx                 = sdk.WrapSDKContext(sdkCtx)
+		campaignCreationFee = sample.Coins()
 	)
 
 	// Create coordinators
@@ -69,9 +71,16 @@ func TestMsgCreateCampaign(t *testing.T) {
 	})
 	require.NoError(t, err)
 	coordMap[coordAddr2] = res.CoordinatorID
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+		Address:     coordAddr3,
+		Description: sample.CoordinatorDescription(),
+	})
+	require.NoError(t, err)
+	coordMap[coordAddr3] = res.CoordinatorID
 
 	// assign random sdk.Coins to `campaignCreationFee` param and provide balance to coordinators
-	initCreationFeeAndFundCoordAccounts(t, tk.CampaignKeeper, tk.BankKeeper, sdkCtx, sample.Coins(), 1, coordAddr1, coordAddr2)
+	// coordAddr3 is not funded
+	initCreationFeeAndFundCoordAccounts(t, tk.CampaignKeeper, tk.BankKeeper, sdkCtx, campaignCreationFee, 1, coordAddr1, coordAddr2)
 
 	for _, tc := range []struct {
 		name       string
@@ -123,7 +132,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			name: "insufficient balance to cover creation fee",
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(),
-				Coordinator:  coordAddr1,
+				Coordinator:  coordAddr3,
 				TotalSupply:  sample.TotalSupply(),
 				Metadata:     sample.Metadata(20),
 			},

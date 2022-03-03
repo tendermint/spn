@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -105,8 +106,15 @@ func TestValidateCampaignCreationFee(t *testing.T) {
 			err:         errors.New("coin -1foo amount is not positive"),
 		},
 		{
-			name:        "valid param",
+			name:        "valid empty param",
 			creationFee: DefaultCampaignCreationFee,
+		},
+		{
+			name: "valid param",
+			creationFee: sdk.NewCoins(
+				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
+				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),
+			),
 		},
 	}
 	for _, tt := range tests {

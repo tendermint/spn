@@ -19,12 +19,12 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 
 // TotalSupplyRange returns the param that defines the allowed range for total supply
 func (k Keeper) TotalSupplyRange(ctx sdk.Context) (totalSupplyRange types.TotalSupplyRange) {
-	k.paramSpace.Get(ctx, types.ParamStoreKeyTotalSupplyRange, &totalSupplyRange)
+	k.paramSpace.Get(ctx, types.KeyTotalSupplyRange, &totalSupplyRange)
 	return
 }
 
 // CampaignCreationFee returns the campaign creation fee param
 func (k Keeper) CampaignCreationFee(ctx sdk.Context) (campaignCreationFee sdk.Coins) {
-	k.paramSpace.Get(ctx, types.ParamStoreKeyCampaignCreationFee, &campaignCreationFee)
+	k.paramSpace.Get(ctx, types.KeyCampaignCreationFee, &campaignCreationFee)
 	return
 }

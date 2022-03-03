@@ -15,8 +15,8 @@ var (
 	DefaultMaxTotalSupply      = sdk.NewInt(1_000_000_000_000_000) // One Quadrillion
 	DefaultCampaignCreationFee = sdk.Coins(nil)                    // EmptyCoins
 
-	ParamStoreKeyTotalSupplyRange    = []byte("totalsupplyrange")
-	ParamStoreKeyCampaignCreationFee = []byte("campaigncreationfee")
+	KeyTotalSupplyRange    = []byte("TotalSupplyRange")
+	KeyCampaignCreationFee = []byte("CampaignCreationFee")
 )
 
 // ParamKeyTable returns the parameter key table.
@@ -54,8 +54,8 @@ func (p Params) String() string {
 // ParamSetPairs returns the parameter set pairs.
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(ParamStoreKeyTotalSupplyRange, &p.TotalSupplyRange, validateTotalSupplyRange),
-		paramtypes.NewParamSetPair(ParamStoreKeyCampaignCreationFee, &p.CampaignCreationFee, validateCampaignCreationFee),
+		paramtypes.NewParamSetPair(KeyTotalSupplyRange, &p.TotalSupplyRange, validateTotalSupplyRange),
+		paramtypes.NewParamSetPair(KeyCampaignCreationFee, &p.CampaignCreationFee, validateCampaignCreationFee),
 	}
 }
 
