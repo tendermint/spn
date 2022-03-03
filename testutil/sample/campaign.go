@@ -90,8 +90,8 @@ func CampaignParams() campaign.Params {
 	minTotalSupply := campaign.DefaultMinTotalSupply
 	maxTotalSupply := campaign.DefaultMaxTotalSupply
 
-	// TODO: randomize this after figuring out how to properly fund accounts in simulation
-	campaignCreationFee := campaign.DefaultCampaignCreationFee
+	// assign random small amount of staking denom
+	campaignCreationFee := sdk.NewCoins(sdk.NewCoin("stake", sdk.NewInt(rand.Int63n(100)+1)))
 
 	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee)
 }

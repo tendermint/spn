@@ -251,12 +251,23 @@ func GetAccountWithShares(
 }
 
 // SimulateMsgCreateCampaign simulates a MsgCreateCampaign message
-func SimulateMsgCreateCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper) simtypes.Operation {
+func SimulateMsgCreateCampaign(
+	k keeper.Keeper,
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	pk types.ProfileKeeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _, found := GetCoordSimAccount(r, ctx, pk, accs)
 		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
+		}
+
+		// skip if account cannot cover creation fee
+		creationFee := k.CampaignCreationFee(ctx)
+		if !creationFee.Empty() && !bk.SpendableCoins(ctx, simAccount.Address).IsAllGTE(creationFee) {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
 		}
 
