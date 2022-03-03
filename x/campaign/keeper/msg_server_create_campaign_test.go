@@ -33,7 +33,7 @@ func initCreationFeeAndFundCoordAccounts(
 	coins := sdk.NewCoins()
 	for _, coin := range fee {
 		coin.Amount = coin.Amount.MulRaw(numCreations)
-		coins.Add(coin)
+		coins = coins.Add(coin)
 	}
 
 	// add `coins` to balance of each coordinator address
@@ -71,7 +71,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 	coordMap[coordAddr2] = res.CoordinatorID
 
 	// assign random sdk.Coins to `campaignCreationFee` param and provide balance to coordinators
-	initCreationFeeAndFundCoordAccounts(t, campaignKeeper, bankKeeper, sdkCtx, sample.Coins(), 1, coordAddr1, coordAddr2)
+	initCreationFeeAndFundCoordAccounts(t, tk.CampaignKeeper, tk.BankKeeper, sdkCtx, sample.Coins(), 1, coordAddr1, coordAddr2)
 
 	for _, tc := range []struct {
 		name       string

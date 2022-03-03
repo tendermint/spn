@@ -18,5 +18,5 @@ func Test_GetParams(t *testing.T) {
 	require.EqualValues(t, params, tk.CampaignKeeper.GetParams(ctx))
 	require.EqualValues(t, params.TotalSupplyRange.MinTotalSupply, tk.CampaignKeeper.TotalSupplyRange(ctx).MinTotalSupply)
 	require.EqualValues(t, params.TotalSupplyRange.MaxTotalSupply, tk.CampaignKeeper.TotalSupplyRange(ctx).MaxTotalSupply)
-  require.EqualValues(t, params.CampaignCreationFee, tk.CampaignKeeper.CampaignCreationFee(ctx))
+	require.EqualValues(t, params.CampaignCreationFee, tk.CampaignKeeper.CampaignCreationFee(ctx))
 }
