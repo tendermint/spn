@@ -28,7 +28,7 @@ type RewardKeeper interface {
 		ctx sdk.Context,
 		launchID uint64,
 		signatureCounts spntypes.SignatureCounts,
-		lastBlockHeight uint64,
+		lastBlockHeight int64,
 		closeRewardPool bool,
 	) error
 }
