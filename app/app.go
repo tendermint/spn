@@ -90,6 +90,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/tendermint/spn/docs"
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	monitoringcmodule "github.com/tendermint/spn/x/monitoringc"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -118,12 +119,6 @@ import (
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
-)
-
-const (
-	AccountAddressPrefix = "spn"
-	Name                 = "spn"
-	DefaultChainID       = "spn-1"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -206,7 +201,7 @@ func init() {
 		panic(err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	DefaultNodeHome = filepath.Join(userHomeDir, "."+spntypes.Name)
 }
 
 // App extends an ABCI application, but with most of its parameters exported.
@@ -283,7 +278,7 @@ func New(
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
 
-	bApp := baseapp.NewBaseApp(Name, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
+	bApp := baseapp.NewBaseApp(spntypes.Name, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetVersion(version.Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
@@ -758,7 +753,7 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 
 	// register app's OpenAPI routes.
 	apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(http.FS(docs.Docs)))
-	apiSvr.Router.HandleFunc("/", openapiconsole.Handler(Name, "/static/openapi.yml"))
+	apiSvr.Router.HandleFunc("/", openapiconsole.Handler(spntypes.Name, "/static/openapi.yml"))
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
