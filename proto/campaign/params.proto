@@ -11,6 +11,11 @@ message Params {
   option (gogoproto.goproto_stringer) = false;
 
   TotalSupplyRange totalSupplyRange = 1 [(gogoproto.nullable) = false];
+  repeated cosmos.base.v1beta1.Coin campaignCreationFee = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }
 
 // TotalSupplyRange defines the range of allowed values for total supply
