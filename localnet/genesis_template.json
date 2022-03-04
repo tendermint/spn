@@ -322,6 +322,15 @@
       "verifiedClientIDList": []
     },
     "params": null,
+    "participation": {
+      "params": {
+        "allocationPrice": {
+          "staking": "0"
+        },
+        "participationTierList": [],
+        "withdrawalAllocationDelay": 0
+      }
+    },
     "profile": {
       "consensusKeyNonceList": [],
       "coordinatorByAddressList": [],
