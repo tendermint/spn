@@ -13,5 +13,5 @@ var (
 	ErrCoordInvalid         = sdkerrors.Register(ModuleName, 4, "invalid coordinator")
 	ErrEmptyDescription     = sdkerrors.Register(ModuleName, 5, "you must provide at least one description parameter")
 	ErrValidatorNotFound    = sdkerrors.Register(ModuleName, 6, "validator address not found")
-	ErrCoordInactive        = sdkerrors.Register(ModuleName, 11, "inactive coordinator")
+	ErrCoordInactive        = sdkerrors.Register(ModuleName, 7, "inactive coordinator")
 )

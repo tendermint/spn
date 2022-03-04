@@ -77,53 +77,6 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 	}
 }
 
-// SimulateMsgDeleteValidator simulates a MsgUpdateValidatorDescription message
-func SimulateMsgDeleteValidator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
-	return func(
-		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
-	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		var (
-			found      bool
-			simAccount simtypes.Account
-		)
-
-		r.Shuffle(len(accs), func(i, j int) {
-			accs[i], accs[j] = accs[j], accs[i]
-		})
-
-		// Find an account with validator description
-		for i := 0; i < len(accs); i++ {
-			acc := accs[i]
-			_, found = k.GetValidator(ctx, acc.Address.String())
-			if found {
-				simAccount = acc
-				break
-			}
-		}
-		if !found {
-			// No message if no validator description
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDeleteValidator, "skip validator delete"), nil, nil
-		}
-
-		msg := types.NewMsgDeleteValidator(simAccount.Address.String())
-		txCtx := simulation.OperationInput{
-			R:               r,
-			App:             app,
-			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
-			Cdc:             nil,
-			Msg:             msg,
-			MsgType:         msg.Type(),
-			Context:         ctx,
-			SimAccount:      simAccount,
-			AccountKeeper:   ak,
-			Bankkeeper:      bk,
-			ModuleName:      types.ModuleName,
-			CoinsSpentInMsg: sdk.NewCoins(),
-		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
-	}
-}
-
 // SimulateMsgAddValidatorOperatorAddress simulates a MsgAddValidatorOperatorAddress message
 func SimulateMsgAddValidatorOperatorAddress(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,

@@ -19,7 +19,7 @@ func createTestConsumerClientID(keeper *keeper.Keeper, ctx sdk.Context) types.Co
 }
 
 func TestConsumerClientIDGet(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
+	keeper, _, _, ctx := keepertest.MonitoringpKeeper(t)
 	item := createTestConsumerClientID(keeper, ctx)
 	rst, found := keeper.GetConsumerClientID(ctx)
 	require.True(t, found)
@@ -27,12 +27,4 @@ func TestConsumerClientIDGet(t *testing.T) {
 		nullify.Fill(&item),
 		nullify.Fill(&rst),
 	)
-}
-
-func TestConsumerClientIDRemove(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
-	createTestConsumerClientID(keeper, ctx)
-	keeper.RemoveConsumerClientID(ctx)
-	_, found := keeper.GetConsumerClientID(ctx)
-	require.False(t, found)
 }

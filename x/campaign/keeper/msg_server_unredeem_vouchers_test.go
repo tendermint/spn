@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -12,8 +14,8 @@ import (
 
 func TestMsgUnredeemVouchers(t *testing.T) {
 	var (
-		campaignKeeper, _, _, bankKeeper, campaignSrv, _, sdkCtx = setupMsgServer(t)
-		ctx                                                      = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 
 		accountAddr              = sample.Address()
 		account                  = sample.MainnetAccount(0, accountAddr)
@@ -28,11 +30,11 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 	accountFewShares.Shares = accountFewSharesShare
 
 	// Create campaign
-	campaignKeeper.AppendCampaign(sdkCtx, sample.Campaign(0))
+	tk.CampaignKeeper.AppendCampaign(sdkCtx, sample.Campaign(0))
 
 	// Create accounts
-	campaignKeeper.SetMainnetAccount(sdkCtx, account)
-	campaignKeeper.SetMainnetAccount(sdkCtx, accountFewShares)
+	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, account)
+	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, accountFewShares)
 
 	for _, tc := range []struct {
 		name string
@@ -109,14 +111,14 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 
 			// Get values before message execution
 			if tc.err == nil {
-				previousAccount, found = campaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Sender)
+				previousAccount, found = tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Sender)
 				require.True(t, found)
 
-				previousBalance = bankKeeper.GetAllBalances(sdkCtx, accountAddr)
+				previousBalance = tk.BankKeeper.GetAllBalances(sdkCtx, accountAddr)
 			}
 
 			// Execute message
-			_, err = campaignSrv.UnredeemVouchers(ctx, &tc.msg)
+			_, err = ts.CampaignSrv.UnredeemVouchers(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -125,11 +127,11 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 
 			if types.IsEqualShares(tc.msg.Shares, previousAccount.Shares) {
 				// All unredeemed
-				_, found := campaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Sender)
+				_, found := tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Sender)
 				require.False(t, found)
 
 			} else {
-				account, found := campaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Sender)
+				account, found := tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Sender)
 				require.True(t, found)
 
 				expectedShares, err := types.DecreaseShares(previousAccount.Shares, tc.msg.Shares)
@@ -140,7 +142,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			// Compare balance
 			unredeemed, err := types.SharesToVouchers(tc.msg.Shares, tc.msg.CampaignID)
 			require.NoError(t, err)
-			balance := bankKeeper.GetAllBalances(sdkCtx, accountAddr)
+			balance := tk.BankKeeper.GetAllBalances(sdkCtx, accountAddr)
 			require.True(t, balance.IsEqual(previousBalance.Add(unredeemed...)))
 		})
 	}

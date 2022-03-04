@@ -264,6 +264,7 @@ func (i initializer) Monitoringc(
 }
 
 func (i initializer) Monitoringp(
+	stakingKeeper stakingkeeper.Keeper,
 	ibcKeeper ibckeeper.Keeper,
 	capabilityKeeper capabilitykeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
@@ -297,6 +298,7 @@ func (i initializer) Monitoringp(
 		storeKey,
 		memStoreKey,
 		subspace,
+		stakingKeeper,
 		ibcKeeper.ClientKeeper,
 		connKeeper,
 		channelKeeper,

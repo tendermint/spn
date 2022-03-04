@@ -12,7 +12,7 @@ import (
 )
 
 func TestGetParams(t *testing.T) {
-	k, _, ctx := testkeeper.MonitoringpKeeper(t)
+	k, _, _, ctx := testkeeper.MonitoringpKeeper(t)
 	params := types.DefaultParams()
 	k.SetParams(ctx, params)
 	require.EqualValues(t, params, k.GetParams(ctx))

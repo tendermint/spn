@@ -26,9 +26,9 @@ func createNVestingAccountForLaunchID(keeper *keeper.Keeper, ctx sdk.Context, n 
 }
 
 func TestVestingAccountQuerySingle(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNVestingAccount(keeper, ctx, 2)
+	msgs := createNVestingAccount(tk.LaunchKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetVestingAccountRequest
@@ -65,7 +65,7 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.VestingAccount(wctx, tc.request)
+			response, err := tk.LaunchKeeper.VestingAccount(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -78,10 +78,10 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 
 func TestVestingAccountQueryPaginated(t *testing.T) {
 	var (
-		keeper, ctx = testkeeper.Launch(t)
-		wctx        = sdk.WrapSDKContext(ctx)
-		launchID    = uint64(0)
-		msgs        = createNVestingAccountForLaunchID(keeper, ctx, 5, launchID)
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		launchID   = uint64(0)
+		msgs       = createNVestingAccountForLaunchID(tk.LaunchKeeper, ctx, 5, launchID)
 	)
 
 	request := func(launchID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllVestingAccountRequest {
@@ -98,7 +98,7 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.VestingAccountAll(wctx, request(launchID, nil, uint64(i), uint64(step), false))
+			resp, err := tk.LaunchKeeper.VestingAccountAll(wctx, request(launchID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.VestingAccount), step)
 			require.Subset(t, msgs, resp.VestingAccount)
@@ -108,7 +108,7 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.VestingAccountAll(wctx, request(launchID, next, 0, uint64(step), false))
+			resp, err := tk.LaunchKeeper.VestingAccountAll(wctx, request(launchID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.VestingAccount), step)
 			require.Subset(t, msgs, resp.VestingAccount)
@@ -116,13 +116,13 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.VestingAccountAll(wctx, request(launchID, nil, 0, 0, true))
+		resp, err := tk.LaunchKeeper.VestingAccountAll(wctx, request(launchID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.VestingAccount)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.VestingAccountAll(wctx, nil)
+		_, err := tk.LaunchKeeper.VestingAccountAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

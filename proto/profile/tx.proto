@@ -11,7 +11,6 @@ option go_package = "github.com/tendermint/spn/x/profile/types";
 // Msg defines the Msg service.
 service Msg {
   rpc UpdateValidatorDescription(MsgUpdateValidatorDescription) returns (MsgUpdateValidatorDescriptionResponse);
-  rpc DeleteValidator(MsgDeleteValidator) returns (MsgDeleteValidatorResponse);
   rpc AddValidatorOperatorAddress(MsgAddValidatorOperatorAddress) returns (MsgAddValidatorOperatorAddressResponse);
   rpc CreateCoordinator(MsgCreateCoordinator) returns (MsgCreateCoordinatorResponse);
   rpc UpdateCoordinatorDescription(MsgUpdateCoordinatorDescription) returns (MsgUpdateCoordinatorDescriptionResponse);
@@ -26,12 +25,6 @@ message MsgUpdateValidatorDescription {
 }
 
 message MsgUpdateValidatorDescriptionResponse {}
-
-message MsgDeleteValidator {
-  string address = 1;
-}
-
-message MsgDeleteValidatorResponse {}
 
 message MsgAddValidatorOperatorAddress {
   string validatorAddress = 1;

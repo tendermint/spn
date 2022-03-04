@@ -13,25 +13,25 @@ import (
 )
 
 func TestKeeper_CreateNewChain(t *testing.T) {
-	k, _, campaignKeeper, _, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
 	coordNoCampaignAddress := sample.Address()
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
 
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordNoCampaignAddress)
-	res, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	coordNoCampaignID := res.CoordinatorID
 
 	// Create a campaign
 	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignID := resCampaign.CampaignID
 
@@ -158,7 +158,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			id, err := k.CreateNewChain(
+			id, err := tk.LaunchKeeper.CreateNewChain(
 				sdkCtx,
 				tc.coordinatorID,
 				tc.genesisChainID,
@@ -178,7 +178,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			}
 			require.EqualValues(t, tc.wantedID, id)
 
-			chain, found := k.GetChain(sdkCtx, id)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, id)
 			require.True(t, found)
 			require.EqualValues(t, tc.coordinatorID, chain.CoordinatorID)
 			require.EqualValues(t, tc.genesisChainID, chain.GenesisChainID)
@@ -202,7 +202,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 
 			// Check chain has been appended in the campaign
 			if tc.hasCampaign {
-				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.campaignID)
+				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, tc.campaignID)
 				require.True(t, found)
 				require.Contains(t, campaignChains.Chains, id)
 			}
@@ -228,35 +228,25 @@ func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordina
 }
 
 func TestGetChain(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetChain(ctx, item.LaunchID)
+		rst, found := tk.LaunchKeeper.GetChain(ctx, item.LaunchID)
 		require.True(t, found)
 		require.Equal(t, item, rst)
 	}
 }
 
-func TestRemoveChain(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
-	for _, item := range items {
-		keeper.RemoveChain(ctx, item.LaunchID)
-		_, found := keeper.GetChain(ctx, item.LaunchID)
-		require.False(t, found)
-	}
-}
-
 func TestGetAllChain(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 
-	require.ElementsMatch(t, items, keeper.GetAllChain(ctx))
+	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllChain(ctx))
 }
 
 func TestChainCounter(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 	counter := uint64(len(items))
-	require.Equal(t, counter, keeper.GetChainCounter(ctx))
+	require.Equal(t, counter, tk.LaunchKeeper.GetChainCounter(ctx))
 }

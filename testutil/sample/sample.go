@@ -3,17 +3,19 @@ package sample
 
 import (
 	"math/rand"
-
-	campaign "github.com/tendermint/spn/x/campaign/types"
+	"testing"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+	cosmosed25519 "github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctypes "github.com/cosmos/ibc-go/v2/modules/core/types"
+	"github.com/stretchr/testify/require"
+	campaign "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 
@@ -95,14 +97,41 @@ func Address() string {
 	return AccAddress().String()
 }
 
+// ValAddress returns a sample validator operator address
+func ValAddress() sdk.ValAddress {
+	return sdk.ValAddress(PubKey().Address())
+}
+
+// OperatorAddress returns a sample string validator operator address
+func OperatorAddress() string {
+	return ValAddress().String()
+}
+
+// Validator returns a sample staking validator
+func Validator(t testing.TB) stakingtypes.Validator {
+	val, err := stakingtypes.NewValidator(
+		ValAddress(),
+		cosmosed25519.GenPrivKey().PubKey(),
+		stakingtypes.Description{})
+	require.NoError(t, err)
+	return val
+}
+
 // Coin returns a sample coin structure
 func Coin() sdk.Coin {
 	return sdk.NewCoin(AlphaString(5), sdk.NewInt(rand.Int63n(10000)+1))
 }
 
 // CoinWithRange returns a sample coin structure where the amount is a random number between provided min and max values
+// with a random denom
 func CoinWithRange(min, max int64) sdk.Coin {
 	return sdk.NewCoin(AlphaString(5), sdk.NewInt(rand.Int63n(max-min)+min))
+}
+
+// CoinWithRangeAmount returns a sample coin structure where the amount is a random number between provided min and max values
+// with a given denom
+func CoinWithRangeAmount(denom string, min, max int64) sdk.Coin {
+	return sdk.NewCoin(denom, sdk.NewInt(rand.Int63n(max-min)+min))
 }
 
 // Coins returns a sample coins structure
@@ -113,6 +142,12 @@ func Coins() sdk.Coins {
 // CoinsWithRange returns a sample coins structure where the amount is a random number between provided min and max values
 func CoinsWithRange(min, max int64) sdk.Coins {
 	return sdk.NewCoins(CoinWithRange(min, max), CoinWithRange(min, max), CoinWithRange(min, max))
+}
+
+// CoinsWithRangeAmount returns a sample coins structure where the amount is a random number between provided min and max values
+// with a set of given denoms
+func CoinsWithRangeAmount(denom1, denom2, denom3 string, min, max int64) sdk.Coins {
+	return sdk.NewCoins(CoinWithRangeAmount(denom1, min, max), CoinWithRangeAmount(denom2, min, max), CoinWithRangeAmount(denom3, min, max))
 }
 
 // TotalSupply returns a sample coins structure where each denom's total supply is within the default

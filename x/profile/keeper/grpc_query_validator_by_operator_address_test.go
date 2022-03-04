@@ -8,16 +8,16 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
 func TestValidatorByOperatorAddressQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.Profile(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNValidatorByOperatorAddress(keeper, ctx, 2)
+	msgs := createNValidatorByOperatorAddress(tk.ProfileKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetValidatorByOperatorAddressRequest
@@ -51,7 +51,7 @@ func TestValidatorByOperatorAddressQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.ValidatorByOperatorAddress(wctx, tc.request)
+			response, err := tk.ProfileKeeper.ValidatorByOperatorAddress(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

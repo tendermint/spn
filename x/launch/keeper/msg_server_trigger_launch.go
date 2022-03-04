@@ -43,8 +43,13 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooHigh, "%d", msg.RemainingTime)
 	}
 
+	// set launch timestamp
 	chain.LaunchTriggered = true
 	chain.LaunchTimestamp = ctx.BlockTime().Unix() + msg.RemainingTime
+
+	// set revision height for monitoring IBC client
+	chain.ConsumerRevisionHeight = ctx.BlockHeight()
+
 	k.SetChain(ctx, chain)
 
 	return &types.MsgTriggerLaunchResponse{}, nil
