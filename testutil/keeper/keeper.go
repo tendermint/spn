@@ -11,6 +11,7 @@ import (
 	ibcconnectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
 	"github.com/stretchr/testify/require"
+	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -46,6 +47,7 @@ type TestKeepers struct {
 	MonitoringConsumerKeeper *monitoringckeeper.Keeper
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
+	FundraisingKeeper        *fundraisingkeeper.Keeper
 	ParticipationKeeper      *participationkeeper.Keeper
 }
 
@@ -117,6 +119,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
+			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 		}, TestMsgServers{
 			ProfileSrv:       profileSrv,

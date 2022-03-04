@@ -256,12 +256,11 @@ type App struct {
 
 	ScopedMonitoringcKeeper capabilitykeeper.ScopedKeeper
 
-	ProfileKeeper     profilemodulekeeper.Keeper
-	LaunchKeeper      launchmodulekeeper.Keeper
-	CampaignKeeper    campaignmodulekeeper.Keeper
-	MonitoringcKeeper monitoringcmodulekeeper.Keeper
-	RewardKeeper      rewardmodulekeeper.Keeper
-
+	ProfileKeeper       profilemodulekeeper.Keeper
+	LaunchKeeper        launchmodulekeeper.Keeper
+	CampaignKeeper      campaignmodulekeeper.Keeper
+	MonitoringcKeeper   monitoringcmodulekeeper.Keeper
+	RewardKeeper        rewardmodulekeeper.Keeper
 	ParticipationKeeper participationmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
@@ -490,7 +489,6 @@ func New(
 		keys[participationmoduletypes.StoreKey],
 		keys[participationmoduletypes.MemStoreKey],
 		app.GetSubspace(participationmoduletypes.ModuleName),
-
 		app.FundraisingKeeper,
 		app.StakingKeeper,
 	)

@@ -3,11 +3,10 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/tendermint/tendermint/libs/log"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/tendermint/spn/x/participation/types"
 )
@@ -28,8 +27,8 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
-
-	fundraisingKeeper types.FundraisingKeeper, stakingKeeper types.StakingKeeper,
+	fundraisingKeeper types.FundraisingKeeper,
+	stakingKeeper types.StakingKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
