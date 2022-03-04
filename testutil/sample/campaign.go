@@ -90,9 +90,10 @@ func CampaignParams() campaign.Params {
 	minTotalSupply := campaign.DefaultMinTotalSupply
 	maxTotalSupply := campaign.DefaultMaxTotalSupply
 
-	return campaign.Params{
-		TotalSupplyRange: campaign.NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
-	}
+	// assign random small amount of staking denom
+	campaignCreationFee := sdk.NewCoins(sdk.NewInt64Coin("stake", rand.Int63n(100)+1))
+
+	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee)
 }
 
 // CampaignGenesisState returns a sample genesis state for the campaign module

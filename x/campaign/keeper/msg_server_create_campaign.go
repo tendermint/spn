@@ -30,6 +30,18 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, err.Error())
 	}
 
+	// Deduct campaign creation fee if set
+	creationFee := k.CampaignCreationFee(ctx)
+	if !creationFee.Empty() {
+		coordAddr, err := sdk.AccAddressFromBech32(msg.Coordinator)
+		if err != nil {
+			return nil, err
+		}
+		if err = k.distrKeeper.FundCommunityPool(ctx, creationFee, coordAddr); err != nil {
+			return nil, err
+		}
+	}
+
 	// Append the new campaign
 	campaign := types.NewCampaign(0, msg.CampaignName, coordID, msg.TotalSupply, false, msg.Metadata)
 	campaignID := k.AppendCampaign(ctx, campaign)

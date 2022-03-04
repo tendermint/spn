@@ -7,6 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	ibcclienttypes "github.com/cosmos/ibc-go/v2/modules/core/02-client/types"
 	ibcconnectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
@@ -62,12 +63,13 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	capabilityKeeper := initializer.Capability()
 	authKeeper := initializer.Auth(paramKeeper)
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
-	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
+	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
+	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
 
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -87,7 +89,11 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 		Height: ExampleHeight,
 	}, false, log.NewNopLogger())
 
+	// Initialize community pool
+	distrKeeper.SetFeePool(ctx, distrtypes.InitialFeePool())
+
 	// Initialize params
+	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
 	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
@@ -128,12 +134,13 @@ func MonitoringcWithIBCMocks(
 	capabilityKeeper := initializer.Capability()
 	authKeeper := initializer.Auth(paramKeeper)
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
-	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
+	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
+	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
 
-	profileKeeper := initializer.Profile()
+  profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(

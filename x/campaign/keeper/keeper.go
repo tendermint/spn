@@ -18,6 +18,7 @@ type (
 		memKey        sdk.StoreKey
 		launchKeeper  types.LaunchKeeper
 		bankKeeper    types.BankKeeper
+		distrKeeper   types.DistributionKeeper
 		profileKeeper types.ProfileKeeper
 		paramSpace    paramtypes.Subspace
 	}
@@ -30,6 +31,7 @@ func NewKeeper(
 	paramSpace paramtypes.Subspace,
 	launchKeeper types.LaunchKeeper,
 	bankKeeper types.BankKeeper,
+	distrKeeper types.DistributionKeeper,
 	profileKeeper types.ProfileKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
@@ -44,6 +46,7 @@ func NewKeeper(
 		paramSpace:    paramSpace,
 		launchKeeper:  launchKeeper,
 		bankKeeper:    bankKeeper,
+		distrKeeper:   distrKeeper,
 		profileKeeper: profileKeeper,
 	}
 }
