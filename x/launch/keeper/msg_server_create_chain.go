@@ -20,18 +20,6 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 
 	// TODO check metadata len
 
-	// Deduct chain creation fee if set
-	creationFee := k.ChainCreationFee(ctx)
-	if !creationFee.Empty() {
-		coordAddr, err := sdk.AccAddressFromBech32(msg.Coordinator)
-		if err != nil {
-			return nil, err
-		}
-		if err = k.distrKeeper.FundCommunityPool(ctx, creationFee, coordAddr); err != nil {
-			return nil, err
-		}
-	}
-
 	id, err := k.CreateNewChain(
 		ctx,
 		coordID,
@@ -47,6 +35,18 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	)
 	if err != nil {
 		return nil, sdkerrors.Wrap(types.ErrCreateChainFail, err.Error())
+	}
+
+	// Deduct chain creation fee if set
+	creationFee := k.ChainCreationFee(ctx)
+	if !creationFee.Empty() {
+		coordAddr, err := sdk.AccAddressFromBech32(msg.Coordinator)
+		if err != nil {
+			return nil, err
+		}
+		if err = k.distrKeeper.FundCommunityPool(ctx, creationFee, coordAddr); err != nil {
+			return nil, err
+		}
 	}
 
 	return &types.MsgCreateChainResponse{

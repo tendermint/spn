@@ -1,15 +1,15 @@
 package keeper_test
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"testing"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/stretchr/testify/require"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
@@ -37,12 +37,13 @@ func initCreationFeeAndFundCoordAccounts(
 	}
 
 	// add `coins` to balance of each coordinator address
+	// using `campaign` module account for minting as `launch` does not have one
 	for _, addr := range addrs {
 		accAddr, err := sdk.AccAddressFromBech32(addr)
 		require.NoError(t, err)
-		err = bk.MintCoins(sdkCtx, types.ModuleName, coins)
+		err = bk.MintCoins(sdkCtx, campaigntypes.ModuleName, coins)
 		require.NoError(t, err)
-		err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, accAddr, coins)
+		err = bk.SendCoinsFromModuleToAccount(sdkCtx, campaigntypes.ModuleName, accAddr, coins)
 		require.NoError(t, err)
 	}
 }
