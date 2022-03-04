@@ -319,14 +319,14 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 		{
 			desc: "max total supply below min total supply",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Sub(sdk.OneInt())),
+				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Sub(sdk.OneInt()), types.DefaultCampaignCreationFee),
 			},
 			shouldBeValid: false,
 		},
 		{
 			desc: "valid parameters",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdk.OneInt())),
+				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdk.OneInt()), types.DefaultCampaignCreationFee),
 			},
 			shouldBeValid: true,
 		},

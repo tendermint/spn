@@ -15,7 +15,7 @@ import (
 func CmdListMainnetAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-mainnet-account [campaign-id]",
-		Short: "list all MainnetAccount",
+		Short: "List all mainnet accounts for a campaign",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			campaignID, err := strconv.ParseUint(args[0], 10, 64)
@@ -55,7 +55,7 @@ func CmdListMainnetAccount() *cobra.Command {
 func CmdShowMainnetAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-mainnet-account [campaign-id] [address]",
-		Short: "shows a MainnetAccount",
+		Short: "Shows the mainnet account for a campaign",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)

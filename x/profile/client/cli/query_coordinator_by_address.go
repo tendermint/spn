@@ -13,7 +13,7 @@ import (
 func CmdShowCoordinatorByAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-coordinator-by-address [address]",
-		Short: "shows a coordinatorByAddress",
+		Short: "Shows a coordinator by its address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
