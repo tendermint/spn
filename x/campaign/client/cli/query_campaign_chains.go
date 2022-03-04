@@ -13,8 +13,8 @@ import (
 
 func CmdShowCampaignChains() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-campaign-chains [campaign-id]",
-		Short: "shows a campaignChains",
+		Use:   "list-campaign-chains [campaign-id]",
+		Short: "List all chains of a campaign",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)

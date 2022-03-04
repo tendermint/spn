@@ -14,7 +14,7 @@ import (
 func CmdListProviderClientID() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-provider-client-id",
-		Short: "list all providerClientID",
+		Short: "List all provider client IDs",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
