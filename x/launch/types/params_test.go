@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"testing"
 	"time"
 
@@ -143,8 +144,15 @@ func TestValidateChainCreationFee(t *testing.T) {
 			err:         errors.New("coin -1foo amount is not positive"),
 		},
 		{
-			name:        "valid param",
-			creationFee: DefaultCampaignCreationFee,
+			name:        "valid empty param",
+			creationFee: DefaultChainCreationFee,
+		},
+		{
+			name: "valid param",
+			creationFee: sdk.NewCoins(
+				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
+				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),
+			),
 		},
 	}
 	for _, tt := range tests {

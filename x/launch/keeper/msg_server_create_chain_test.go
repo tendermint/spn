@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"testing"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -47,9 +48,16 @@ func initCreationFeeAndFundCoordAccounts(
 }
 
 func TestMsgCreateChain(t *testing.T) {
-	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
-	ctx := sdk.WrapSDKContext(sdkCtx)
-	chainCreationFee := sample.Coins()
+	var (
+		coordAddr1       = sample.Address()
+		coordAddr2       = sample.Address()
+		coordAddr3       = sample.Address()
+		coordAddr4       = sample.Address()
+		coordAddr5       = sample.Address()
+		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
+		ctx              = sdk.WrapSDKContext(sdkCtx)
+		chainCreationFee = sample.Coins()
+	)
 
 	// Create an invalid coordinator
 	invalidCoordAddress := sample.Address()
@@ -57,22 +65,66 @@ func TestMsgCreateChain(t *testing.T) {
 	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
 	require.NoError(t, err)
 
-	// Create a coordinator
-	coordAddress := sample.Address()
-	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
+	// Create coordinators
+	coordMap := make(map[string]uint64)
+	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddr1)
 	resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
-	coordID := resCoord.CoordinatorID
+	coordMap[coordAddr1] = resCoord.CoordinatorID
+	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddr2)
+	resCoord, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	require.NoError(t, err)
+	coordMap[coordAddr2] = resCoord.CoordinatorID
+	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddr3)
+	resCoord, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	require.NoError(t, err)
+	coordMap[coordAddr3] = resCoord.CoordinatorID
+	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddr4)
+	resCoord, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	require.NoError(t, err)
+	coordMap[coordAddr4] = resCoord.CoordinatorID
+	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddr5)
+	resCoord, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	require.NoError(t, err)
+	coordMap[coordAddr5] = resCoord.CoordinatorID
 
-	// Create a campaign
-	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
+	// Create a campaign for each valid coordinator
+	campMap := make(map[string]uint64)
+	msgCreateCampaign := sample.MsgCreateCampaign(coordAddr1)
 	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
-	campaignID := resCampaign.CampaignID
+	campMap[coordAddr1] = resCampaign.CampaignID
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddr2)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campMap[coordAddr2] = resCampaign.CampaignID
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddr3)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campMap[coordAddr3] = resCampaign.CampaignID
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddr4)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campMap[coordAddr4] = resCampaign.CampaignID
+	msgCreateCampaign = sample.MsgCreateCampaign(coordAddr5)
+	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	require.NoError(t, err)
+	campMap[coordAddr5] = resCampaign.CampaignID
 
-	// assign random sdk.Coins to `chainCreationFee` param and provide balance to coordinators to cover for
-	// one chain creation
-	initCreationFeeAndFundCoordAccounts(t, k, bankKeeper, sdkCtx, chainCreationFee, 4, coordAddress)
+	// assign random sdk.Coins to `chainCreationFee` param and provide balance to coordinators
+	// coordAddr5 is not funded
+	initCreationFeeAndFundCoordAccounts(
+		t,
+		tk.LaunchKeeper,
+		tk.BankKeeper,
+		sdkCtx,
+		chainCreationFee,
+		1,
+		coordAddr1,
+		coordAddr2,
+		coordAddr3,
+		coordAddr4,
+	)
 
 	for _, tc := range []struct {
 		name          string
@@ -82,22 +134,22 @@ func TestMsgCreateChain(t *testing.T) {
 	}{
 		{
 			name:          "valid message",
-			msg:           sample.MsgCreateChain(coordAddress, "", false, campaignID),
+			msg:           sample.MsgCreateChain(coordAddr1, "", false, campMap[coordAddr1]),
 			wantedChainID: 0,
 		},
 		{
 			name:          "creates a unique chain ID",
-			msg:           sample.MsgCreateChain(coordAddress, "", false, campaignID),
+			msg:           sample.MsgCreateChain(coordAddr2, "", false, campMap[coordAddr2]),
 			wantedChainID: 1,
 		},
 		{
 			name:          "valid message with genesis url",
-			msg:           sample.MsgCreateChain(coordAddress, "foo.com", false, campaignID),
+			msg:           sample.MsgCreateChain(coordAddr3, "foo.com", false, campMap[coordAddr3]),
 			wantedChainID: 2,
 		},
 		{
 			name:          "creates message with campaign",
-			msg:           sample.MsgCreateChain(coordAddress, "", true, campaignID),
+			msg:           sample.MsgCreateChain(coordAddr4, "", true, campMap[coordAddr4]),
 			wantedChainID: 3,
 		},
 		{
@@ -107,13 +159,18 @@ func TestMsgCreateChain(t *testing.T) {
 		},
 		{
 			name: "invalid campaign id",
-			msg:  sample.MsgCreateChain(coordAddress, "", true, 1000),
+			msg:  sample.MsgCreateChain(coordAddr1, "", true, 1000),
 			err:  types.ErrCreateChainFail,
 		},
 		{
 			name: "invalid coordinator address",
 			msg:  sample.MsgCreateChain(invalidCoordAddress, "", true, 1000),
 			err:  types.ErrCreateChainFail,
+		},
+		{
+			name: "insufficient balance to cover creation fee",
+			msg:  sample.MsgCreateChain(coordAddr5, "", false, campMap[coordAddr5]),
+			err:  sdkerrors.ErrInsufficientFunds,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -133,7 +190,7 @@ func TestMsgCreateChain(t *testing.T) {
 			// The chain must exist in the store
 			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, got.LaunchID)
 			require.True(t, found)
-			require.EqualValues(t, coordID, chain.CoordinatorID)
+			require.EqualValues(t, coordMap[tc.msg.Coordinator], chain.CoordinatorID)
 			require.EqualValues(t, got.LaunchID, chain.LaunchID)
 			require.EqualValues(t, tc.msg.GenesisChainID, chain.GenesisChainID)
 			require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
