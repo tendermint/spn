@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
@@ -14,7 +16,7 @@ import (
 )
 
 // MonitoringpKeeper returns a keeper of the monitoring provider module for testing purpose
-func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Context) {
+func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, *ibckeeper.Keeper, stakingkeeper.Keeper, sdk.Context) {
 	return MonitoringpKeeperWithIBCMock(t, []Connection{}, []Channel{})
 }
 
@@ -23,16 +25,17 @@ func MonitoringpKeeperWithIBCMock(
 	t testing.TB,
 	connectionMock []Connection,
 	channelMock []Channel,
-) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Context) {
+) (*keeper.Keeper, *ibckeeper.Keeper, stakingkeeper.Keeper, sdk.Context) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
 	capabilityKeeper := initializer.Capability()
 	authKeeper := initializer.Auth(paramKeeper)
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
-	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
+	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
 	monitoringKeeper := initializer.Monitoringp(
+		stakingKeeper,
 		*ibcKeeper,
 		*capabilityKeeper,
 		paramKeeper,
@@ -45,7 +48,8 @@ func MonitoringpKeeperWithIBCMock(
 
 	// Initialize params
 	monitoringKeeper.SetParams(ctx, types.DefaultParams())
+	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
-	return monitoringKeeper, ibcKeeper, ctx
+	return monitoringKeeper, ibcKeeper, stakingKeeper, ctx
 }

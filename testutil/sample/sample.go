@@ -3,17 +3,19 @@ package sample
 
 import (
 	"math/rand"
-
-	campaign "github.com/tendermint/spn/x/campaign/types"
+	"testing"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
+	cosmosed25519 "github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctypes "github.com/cosmos/ibc-go/v2/modules/core/types"
+	"github.com/stretchr/testify/require"
+	campaign "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 
@@ -93,6 +95,26 @@ func AccAddress() sdk.AccAddress {
 // Address returns a sample string account address
 func Address() string {
 	return AccAddress().String()
+}
+
+// ValAddress returns a sample validator operator address
+func ValAddress() sdk.ValAddress {
+	return sdk.ValAddress(PubKey().Address())
+}
+
+// OperatorAddress returns a sample string validator operator address
+func OperatorAddress() string {
+	return ValAddress().String()
+}
+
+// Validator returns a sample staking validator
+func Validator(t testing.TB) stakingtypes.Validator {
+	val, err := stakingtypes.NewValidator(
+		ValAddress(),
+		cosmosed25519.GenPrivKey().PubKey(),
+		stakingtypes.Description{})
+	require.NoError(t, err)
+	return val
 }
 
 // Coin returns a sample coin structure

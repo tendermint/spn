@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"fmt"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -19,11 +20,11 @@ const (
 )
 
 // ReportBlockSignatures gets signatures from blocks and update monitoring info
-func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.LastCommitInfo, blockHeight int64) {
+func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.LastCommitInfo, blockHeight int64) error {
 	// no report if last height is reached
 	lastBlockHeight := k.LastBlockHeight(ctx)
 	if blockHeight > lastBlockHeight {
-		return
+		return nil
 	}
 
 	// get monitoring info
@@ -38,14 +39,22 @@ func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.LastCommi
 	valSetSize := int64(len(lastCommit.Votes))
 	for _, vote := range lastCommit.Votes {
 		if vote.SignedLastBlock {
-			// TODO(490): implement correct address format
-			monitoringInfo.SignatureCounts.AddSignature(vote.Validator.Address, valSetSize)
+
+			// get the operator address from the consensus address
+			val, found := k.stakingKeeper.GetValidatorByConsAddr(ctx, vote.Validator.Address)
+			if !found {
+				return fmt.Errorf("validator from consensus address %s not found", vote.Validator.Address)
+			}
+
+			monitoringInfo.SignatureCounts.AddSignature(val.OperatorAddress, valSetSize)
 		}
 	}
 
 	// increment block count and save the monitoring info
 	monitoringInfo.SignatureCounts.BlockCount++
 	k.SetMonitoringInfo(ctx, monitoringInfo)
+
+	return nil
 }
 
 // TransmitSignatures transmits over IBC the signatures to consumer if height is reached

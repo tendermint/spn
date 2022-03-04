@@ -16,7 +16,7 @@ import (
 func TestKeeper_InitializeConsumerClient(t *testing.T) {
 
 	t.Run("initialize consumer client", func(t *testing.T) {
-		k, ibcKeeper, ctx := testkeeper.MonitoringpKeeper(t)
+		k, ibcKeeper, _, ctx := testkeeper.MonitoringpKeeper(t)
 
 		// set params with valid values
 		k.SetParams(ctx, types.NewParams(
@@ -46,7 +46,7 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 	})
 
 	t.Run("invalid consumer consensus state", func(t *testing.T) {
-		k, _, ctx := testkeeper.MonitoringpKeeper(t)
+		k, _, _, ctx := testkeeper.MonitoringpKeeper(t)
 
 		// default params contain an empty consensus state, therefore invalid
 		_, err := k.InitializeConsumerClient(ctx)

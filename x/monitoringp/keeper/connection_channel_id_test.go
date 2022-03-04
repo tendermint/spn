@@ -19,7 +19,7 @@ func createTestConnectionChannelID(keeper *keeper.Keeper, ctx sdk.Context) types
 }
 
 func TestConnectionChannelIDGet(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
+	keeper, _, _, ctx := keepertest.MonitoringpKeeper(t)
 	item := createTestConnectionChannelID(keeper, ctx)
 	rst, found := keeper.GetConnectionChannelID(ctx)
 	require.True(t, found)
@@ -30,7 +30,7 @@ func TestConnectionChannelIDGet(t *testing.T) {
 }
 
 func TestConnectionChannelIDRemove(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
+	keeper, _, _, ctx := keepertest.MonitoringpKeeper(t)
 	createTestConnectionChannelID(keeper, ctx)
 	keeper.RemoveConnectionChannelID(ctx)
 	_, found := keeper.GetConnectionChannelID(ctx)

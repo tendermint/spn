@@ -19,7 +19,7 @@ func createTestMonitoringInfo(keeper *keeper.Keeper, ctx sdk.Context) types.Moni
 }
 
 func TestMonitoringInfoGet(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
+	keeper, _, _, ctx := keepertest.MonitoringpKeeper(t)
 	item := createTestMonitoringInfo(keeper, ctx)
 	rst, found := keeper.GetMonitoringInfo(ctx)
 	require.True(t, found)
@@ -30,7 +30,7 @@ func TestMonitoringInfoGet(t *testing.T) {
 }
 
 func TestMonitoringInfoRemove(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
+	keeper, _, _, ctx := keepertest.MonitoringpKeeper(t)
 	createTestMonitoringInfo(keeper, ctx)
 	keeper.RemoveMonitoringInfo(ctx)
 	_, found := keeper.GetMonitoringInfo(ctx)
