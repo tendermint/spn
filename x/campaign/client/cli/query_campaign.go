@@ -14,7 +14,7 @@ import (
 func CmdListCampaign() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-campaign",
-		Short: "list all campaign",
+		Short: "List all campaigns",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 

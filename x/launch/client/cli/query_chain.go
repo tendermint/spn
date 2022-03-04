@@ -14,7 +14,7 @@ import (
 func CmdListChain() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-chain",
-		Short: "list all chain",
+		Short: "List all chains",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -47,7 +47,7 @@ func CmdListChain() *cobra.Command {
 func CmdShowChain() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-chain [launch-id]",
-		Short: "shows a chain",
+		Short: "Shows a chain",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
