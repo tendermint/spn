@@ -20,7 +20,7 @@ const (
 func CmdSetValidatorConsAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-validator-cons-address [validator-key] [nonce]",
-		Short: "Associate a Tendermint consensus address to a specific validator address on SPN",
+		Short: "Associate a Tendermint consensus address to a specific validator address",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)

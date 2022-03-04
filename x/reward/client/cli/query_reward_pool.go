@@ -14,7 +14,7 @@ import (
 func CmdListRewardPool() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-reward-pool",
-		Short: "list all reward pools",
+		Short: "List all reward pools",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -47,7 +47,7 @@ func CmdListRewardPool() *cobra.Command {
 func CmdShowRewardPool() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-reward-pool [launch-id]",
-		Short: "shows a reward pool",
+		Short: "Shows the reward pool for a launch",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
