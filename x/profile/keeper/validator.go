@@ -31,14 +31,6 @@ func (k Keeper) GetValidator(ctx sdk.Context, address string) (val types.Validat
 	return val, true
 }
 
-// RemoveValidator removes a validator from the store
-func (k Keeper) RemoveValidator(ctx sdk.Context, address string) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorKeyPrefix))
-	store.Delete(types.ValidatorKey(
-		address,
-	))
-}
-
 // GetAllValidator returns all validator
 func (k Keeper) GetAllValidator(ctx sdk.Context) (list []types.Validator) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ValidatorKeyPrefix))
