@@ -32,19 +32,6 @@ func TestValidatorGet(t *testing.T) {
 		require.Equal(t, item, rst)
 	}
 }
-func TestValidatorRemove(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNValidator(tk.ProfileKeeper, ctx, 10)
-	for _, item := range items {
-		tk.ProfileKeeper.RemoveValidator(ctx,
-			item.Address,
-		)
-		_, found := tk.ProfileKeeper.GetValidator(ctx,
-			item.Address,
-		)
-		require.False(t, found)
-	}
-}
 
 func TestValidatorGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
