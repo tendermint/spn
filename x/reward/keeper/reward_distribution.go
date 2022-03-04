@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/types/bech32"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -183,4 +184,13 @@ func CalculateRewards(blockRatio, signatureRatio sdk.Dec, coins sdk.Coins) (sdk.
 		rewards = rewards.Add(coin)
 	}
 	return rewards, nil
+}
+
+// ConvertOperatorAddress returns the operator address with the spn account prefix
+func ConvertOperatorAddress(addr string) (string, error) {
+	_, decoded, err := bech32.DecodeAndConvert(addr)
+	if err != nil {
+		return "", err
+	}
+	return bech32.ConvertAndEncode(spntypes.AccountAddressPrefix, decoded)
 }
