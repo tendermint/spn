@@ -11,4 +11,5 @@ var (
 	ErrInvalidCoordinatorID   = sdkerrors.Register(ModuleName, 3, "invalid coordinator id for reward pool")
 	ErrRewardPoolNotFound     = sdkerrors.Register(ModuleName, 4, "reward pool not found")
 	ErrRewardPoolClosed       = sdkerrors.Register(ModuleName, 5, "reward pool is closed")
+	ErrInvalidSignatureCounts = sdkerrors.Register(ModuleName, 6, "invalid signature counts")
 )

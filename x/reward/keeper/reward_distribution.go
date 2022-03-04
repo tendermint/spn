@@ -63,7 +63,12 @@ func (k Keeper) DistributeRewards(
 		// get the validator address from the cons address
 		// if the validator is not registered, reward distribution is skipped
 		// all funds are sent back to the coordinator
-		validatorByOpAddr, found := k.profileKeeper.GetValidatorByOperatorAddress(ctx, signatureCount.OpAddress)
+
+		opAddr, err := signatureCount.GetOperatorAddress()
+		if err != nil {
+			return sdkerrors.Wrapf(types.ErrInvalidSignatureCounts, "invalid operator address: %s", signatureCount.OpAddress)
+		}
+		validatorByOpAddr, found := k.profileKeeper.GetValidatorByOperatorAddress(ctx, opAddr)
 		if found {
 			validator, found := k.profileKeeper.GetValidator(ctx, validatorByOpAddr.ValidatorAddress)
 			if !found {
