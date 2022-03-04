@@ -13,7 +13,7 @@ import (
 func CmdListLaunchIDFromVerifiedClientID() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-launch-id-from-verified-client-id",
-		Short: "list all launch IDs to verified client IDs associations",
+		Short: "list all launch ID to verified client ID associations",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
