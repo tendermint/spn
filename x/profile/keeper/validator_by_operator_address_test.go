@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/profile/keeper"
@@ -23,10 +23,10 @@ func createNValidatorByOperatorAddress(keeper *keeper.Keeper, ctx sdk.Context, n
 }
 
 func TestValidatorByOperatorAddressGet(t *testing.T) {
-	k, ctx := keepertest.Profile(t)
-	items := createNValidatorByOperatorAddress(k, ctx, 10)
+	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNValidatorByOperatorAddress(tk.ProfileKeeper, sdkCtx, 10)
 	for _, item := range items {
-		rst, found := k.GetValidatorByOperatorAddress(ctx,
+		rst, found := tk.ProfileKeeper.GetValidatorByOperatorAddress(sdkCtx,
 			item.OperatorAddress,
 		)
 		require.True(t, found)
@@ -37,13 +37,13 @@ func TestValidatorByOperatorAddressGet(t *testing.T) {
 	}
 }
 func TestValidatorByOperatorAddressRemove(t *testing.T) {
-	k, ctx := keepertest.Profile(t)
-	items := createNValidatorByOperatorAddress(k, ctx, 10)
+	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNValidatorByOperatorAddress(tk.ProfileKeeper, sdkCtx, 10)
 	for _, item := range items {
-		k.RemoveValidatorByOperatorAddress(ctx,
+		tk.ProfileKeeper.RemoveValidatorByOperatorAddress(sdkCtx,
 			item.OperatorAddress,
 		)
-		_, found := k.GetValidatorByOperatorAddress(ctx,
+		_, found := tk.ProfileKeeper.GetValidatorByOperatorAddress(sdkCtx,
 			item.OperatorAddress,
 		)
 		require.False(t, found)
@@ -51,10 +51,10 @@ func TestValidatorByOperatorAddressRemove(t *testing.T) {
 }
 
 func TestValidatorByOperatorAddressGetAll(t *testing.T) {
-	k, ctx := keepertest.Profile(t)
-	items := createNValidatorByOperatorAddress(k, ctx, 10)
+	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNValidatorByOperatorAddress(tk.ProfileKeeper, sdkCtx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(k.GetAllValidatorByOperatorAddress(ctx)),
+		nullify.Fill(tk.ProfileKeeper.GetAllValidatorByOperatorAddress(sdkCtx)),
 	)
 }

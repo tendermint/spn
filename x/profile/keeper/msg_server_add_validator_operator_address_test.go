@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,12 +13,12 @@ import (
 
 func TestMsgAddValidatorOperatorAddress(t *testing.T) {
 	var (
-		ctx, k, srv = setupMsgServer(t)
+		ctx, tk, ts = testkeeper.NewTestSetup(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 		valAddr     = sample.Address()
 	)
 
-	k.SetValidator(ctx, types.Validator{
+	tk.ProfileKeeper.SetValidator(ctx, types.Validator{
 		Address:     valAddr,
 		Description: types.ValidatorDescription{},
 	})
@@ -50,15 +51,15 @@ func TestMsgAddValidatorOperatorAddress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := srv.AddValidatorOperatorAddress(wCtx, tt.msg)
+			_, err := ts.ProfileSrv.AddValidatorOperatorAddress(wCtx, tt.msg)
 			require.NoError(t, err)
 
-			validator, found := k.GetValidator(ctx, tt.msg.ValidatorAddress)
+			validator, found := tk.ProfileKeeper.GetValidator(ctx, tt.msg.ValidatorAddress)
 			require.True(t, found, "validator was not saved")
 			require.Equal(t, tt.msg.ValidatorAddress, validator.Address)
 			require.True(t, validator.HasOperatorAddress(tt.msg.OperatorAddress))
 
-			valByOpAddr, found := k.GetValidatorByOperatorAddress(ctx, tt.msg.OperatorAddress)
+			valByOpAddr, found := tk.ProfileKeeper.GetValidatorByOperatorAddress(ctx, tt.msg.OperatorAddress)
 			require.True(t, found, "validator by operator address was not saved")
 			require.Equal(t, tt.msg.ValidatorAddress, valByOpAddr.ValidatorAddress)
 			require.Equal(t, tt.msg.OperatorAddress, valByOpAddr.OperatorAddress)
