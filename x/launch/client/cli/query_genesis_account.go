@@ -14,7 +14,7 @@ import (
 func CmdListGenesisAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-genesis-account [launch-id]",
-		Short: "list all genesisAccount",
+		Short: "List all genesis accounts for a launch",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -54,7 +54,7 @@ func CmdListGenesisAccount() *cobra.Command {
 func CmdShowGenesisAccount() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-genesis-account [launch-id] [address]",
-		Short: "shows a genesisAccount",
+		Short: "Shows the genesis account for a launch",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)

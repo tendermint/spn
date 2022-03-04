@@ -15,7 +15,7 @@ import (
 func CmdListRequest() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-request [launch-id]",
-		Short: "list all request",
+		Short: "List all requests",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)

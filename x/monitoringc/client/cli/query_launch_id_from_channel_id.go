@@ -13,7 +13,7 @@ import (
 func CmdListLaunchIDFromChannelID() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-launch-id-from-channel-id",
-		Short: "list all LaunchIDFromChannelID",
+		Short: "List all launch IDs to channel IDs associations",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -46,7 +46,7 @@ func CmdListLaunchIDFromChannelID() *cobra.Command {
 func CmdShowLaunchIDFromChannelID() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-launch-id-from-channel-id [channel-id]",
-		Short: "shows a LaunchIDFromChannelID",
+		Short: "Shows the launch ID for a channel ID",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
