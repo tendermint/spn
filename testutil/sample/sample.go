@@ -123,8 +123,15 @@ func Coin() sdk.Coin {
 }
 
 // CoinWithRange returns a sample coin structure where the amount is a random number between provided min and max values
+// with a random denom
 func CoinWithRange(min, max int64) sdk.Coin {
 	return sdk.NewCoin(AlphaString(5), sdk.NewInt(rand.Int63n(max-min)+min))
+}
+
+// CoinWithRangeAmount returns a sample coin structure where the amount is a random number between provided min and max values
+// with a given denom
+func CoinWithRangeAmount(denom string, min, max int64) sdk.Coin {
+	return sdk.NewCoin(denom, sdk.NewInt(rand.Int63n(max-min)+min))
 }
 
 // Coins returns a sample coins structure
@@ -135,6 +142,12 @@ func Coins() sdk.Coins {
 // CoinsWithRange returns a sample coins structure where the amount is a random number between provided min and max values
 func CoinsWithRange(min, max int64) sdk.Coins {
 	return sdk.NewCoins(CoinWithRange(min, max), CoinWithRange(min, max), CoinWithRange(min, max))
+}
+
+// CoinsWithRangeAmount returns a sample coins structure where the amount is a random number between provided min and max values
+// with a set of given denoms
+func CoinsWithRangeAmount(denom1, denom2, denom3 string, min, max int64) sdk.Coins {
+	return sdk.NewCoins(CoinWithRangeAmount(denom1, min, max), CoinWithRangeAmount(denom2, min, max), CoinWithRangeAmount(denom3, min, max))
 }
 
 // TotalSupply returns a sample coins structure where each denom's total supply is within the default

@@ -46,7 +46,6 @@ func (k Keeper) InitializeConsumerClient(ctx sdk.Context) (string, error) {
 }
 
 // initializeClientState initializes the client state provided for the IBC client
-// TODO: Investigate configurable values
 func (k Keeper) initializeClientState(ctx sdk.Context, chainID string) (*ibctmtypes.ClientState, error) {
 	_, revisionNumber, err := chainid.ParseGenesisChainID(chainID)
 	if err != nil {

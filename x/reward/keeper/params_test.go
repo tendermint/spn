@@ -10,10 +10,10 @@ import (
 )
 
 func TestGetParams(t *testing.T) {
-	k, ctx := testkeeper.Reward(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	params := types.DefaultParams()
 
-	k.SetParams(ctx, params)
+	tk.RewardKeeper.SetParams(ctx, params)
 
-	require.EqualValues(t, params, k.GetParams(ctx))
+	require.EqualValues(t, params, tk.RewardKeeper.GetParams(ctx))
 }

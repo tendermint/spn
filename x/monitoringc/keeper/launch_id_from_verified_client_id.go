@@ -34,14 +34,6 @@ func (k Keeper) GetLaunchIDFromVerifiedClientID(
 	return val, true
 }
 
-// RemoveLaunchIDFromVerifiedClientID removes a launchIDFromVerifiedClientID from the store
-func (k Keeper) RemoveLaunchIDFromVerifiedClientID(ctx sdk.Context, clientID string) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LaunchIDFromVerifiedClientIDKeyPrefix))
-	store.Delete(types.LaunchIDFromVerifiedClientIDKey(
-		clientID,
-	))
-}
-
 // GetAllLaunchIDFromVerifiedClientID returns all launchIDFromVerifiedClientID
 func (k Keeper) GetAllLaunchIDFromVerifiedClientID(ctx sdk.Context) (list []types.LaunchIDFromVerifiedClientID) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LaunchIDFromVerifiedClientIDKeyPrefix))

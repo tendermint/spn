@@ -1,5 +1,7 @@
 package types
 
+import spntypes "github.com/tendermint/spn/pkg/types"
+
 const (
 	// ModuleName defines the module name
 	ModuleName = "monitoringc"
@@ -25,6 +27,21 @@ const (
 
 	// PortID is the default port id that module binds to
 	PortID = "monitoring"
+
+	// VerifiedClientIDKeyPrefix is the prefix to retrieve all VerifiedClientID
+	VerifiedClientIDKeyPrefix = "VerifiedClientID/value/"
+
+	// ProviderClientIDKeyPrefix is the prefix to retrieve all ProviderClientID
+	ProviderClientIDKeyPrefix = "ProviderClientID/value/"
+
+	// LaunchIDFromVerifiedClientIDKeyPrefix is the prefix to retrieve all LaunchIDFromVerifiedClientID
+	LaunchIDFromVerifiedClientIDKeyPrefix = "LaunchIDFromVerifiedClientID/value/"
+
+	// LaunchIDFromChannelIDKeyPrefix is the prefix to retrieve all LaunchIDFromChannelID
+	LaunchIDFromChannelIDKeyPrefix = "LaunchIDFromChannelID/value/"
+
+	// MonitoringHistoryKeyPrefix is the prefix to retrieve all MonitoringHistory
+	MonitoringHistoryKeyPrefix = "MonitoringHistory/value/"
 )
 
 var (
@@ -34,4 +51,29 @@ var (
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)
+}
+
+// VerifiedClientIDKey returns the store key to retrieve a VerifiedClientID from the index fields
+func VerifiedClientIDKey(launchID uint64) []byte {
+	return append(spntypes.UintBytes(launchID), byte('/'))
+}
+
+// ProviderClientIDKey returns the store key to retrieve a ProviderClientID from the index fields
+func ProviderClientIDKey(launchID uint64) []byte {
+	return append(spntypes.UintBytes(launchID), byte('/'))
+}
+
+// LaunchIDFromVerifiedClientIDKey returns the store key to retrieve a LaunchIDFromVerifiedClientID from the index fields
+func LaunchIDFromVerifiedClientIDKey(clientID string) []byte {
+	return []byte(clientID + "/")
+}
+
+// LaunchIDFromChannelIDKey returns the store key to retrieve a LaunchIDFromChannelID from the index fields
+func LaunchIDFromChannelIDKey(channelID string) []byte {
+	return []byte(channelID + "/")
+}
+
+// MonitoringHistoryKey returns the store key to retrieve a MonitoringHistory from the index fields
+func MonitoringHistoryKey(launchID uint64) []byte {
+	return append(spntypes.UintBytes(launchID), byte('/'))
 }

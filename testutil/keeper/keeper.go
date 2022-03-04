@@ -18,9 +18,10 @@ import (
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
-	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
-	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
+	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
+	monitoringctypes "github.com/tendermint/spn/x/monitoringc/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
 )
@@ -28,19 +29,33 @@ import (
 var (
 	// ExampleTimestamp is a timestamp used as the current time for the context of the keepers returned from the package
 	ExampleTimestamp = time.Date(2020, time.January, 1, 12, 0, 0, 0, time.UTC)
+
+	// ExampleHeight is a block height used as the current block height for the context of test keeper
+	ExampleHeight = int64(1111)
 )
 
-// AllKeepers returns initialized instances of all the keepers of the module
-func AllKeepers(t testing.TB) (
-	*campaignkeeper.Keeper,
-	*launchkeeper.Keeper,
-	*profilekeeper.Keeper,
-	*rewardkeeper.Keeper,
-	*monitoringcmodulekeeper.Keeper,
-	bankkeeper.Keeper,
-	*ibckeeper.Keeper,
-	sdk.Context,
-) {
+// TestKeepers holds all keepers used during keeper tests for all modules
+type TestKeepers struct {
+	CampaignKeeper           *campaignkeeper.Keeper
+	LaunchKeeper             *launchkeeper.Keeper
+	ProfileKeeper            *profilekeeper.Keeper
+	RewardKeeper             *rewardkeeper.Keeper
+	MonitoringConsumerKeeper *monitoringckeeper.Keeper
+	BankKeeper               bankkeeper.Keeper
+	IBCKeeper                *ibckeeper.Keeper
+}
+
+// TestMsgServers holds all message servers used during keeper tests for all modules
+type TestMsgServers struct {
+	ProfileSrv     profiletypes.MsgServer
+	LaunchSrv      launchtypes.MsgServer
+	CampaignSrv    campaigntypes.MsgServer
+	RewardSrv      rewardtypes.MsgServer
+	MonitoringcSrv monitoringctypes.MsgServer
+}
+
+// NewTestSetup returns initialized instances of all the keepers and message servers of the modules
+func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
@@ -68,7 +83,8 @@ func AllKeepers(t testing.TB) (
 
 	// Create a context using a custom timestamp
 	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{
-		Time: ExampleTimestamp,
+		Time:   ExampleTimestamp,
+		Height: ExampleHeight,
 	}, false, log.NewNopLogger())
 
 	// Initialize params
@@ -77,68 +93,27 @@ func AllKeepers(t testing.TB) (
 	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
-	return campaignKeeper,
-		launchKeeper,
-		profileKeeper,
-		rewardKeeper,
-		monitoringConsumerKeeper,
-		bankKeeper,
-		ibcKeeper,
-		ctx
-}
+	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
+	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
+	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
+	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
+	monitoringcSrv := monitoringckeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
 
-// Profile returns a keeper of the profile module for testing purpose
-func Profile(t testing.TB) (*profilekeeper.Keeper, sdk.Context) {
-	initializer := newInitializer()
-
-	keeper := initializer.Profile()
-	require.NoError(t, initializer.StateStore.LoadLatestVersion())
-
-	return keeper, sdk.NewContext(initializer.StateStore, tmproto.Header{}, false, log.NewNopLogger())
-}
-
-// Launch returns a keeper of the launch module for testing purpose
-func Launch(t testing.TB) (*launchkeeper.Keeper, sdk.Context) {
-	initializer := newInitializer()
-
-	paramKeeper := initializer.Param()
-	profileKeeper := initializer.Profile()
-	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
-	require.NoError(t, initializer.StateStore.LoadLatestVersion())
-
-	// Create a context using a custom timestamp
-	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{
-		Time: ExampleTimestamp,
-	}, false, log.NewNopLogger())
-
-	// Initialize params
-	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
-
-	return launchKeeper, ctx
-}
-
-// Campaign returns a keeper of the campaign module for testing purpose
-func Campaign(t testing.TB) (*campaignkeeper.Keeper, sdk.Context) {
-	campaignKeeper, _, _, _, _, _, _, ctx := AllKeepers(t) // nolint
-	return campaignKeeper, ctx
-}
-
-// Reward returns a keeper of the reward module for testing purpose
-func Reward(t testing.TB) (*rewardkeeper.Keeper, sdk.Context) {
-	_, _, _, rewardKeeper, _, _, _, ctx := AllKeepers(t) // nolint
-
-	// Initialize params
-	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
-
-	return rewardKeeper, ctx
-}
-
-// Monitoringc returns a keeper of the monitoring consumer module for testing purpose
-func Monitoringc(t testing.TB) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
-	_, _, _, _, monitoringConsumerKeeper, _, _, ctx := AllKeepers(t) // nolint
-	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
-
-	return monitoringConsumerKeeper, ctx
+	return ctx, TestKeepers{
+			CampaignKeeper:           campaignKeeper,
+			LaunchKeeper:             launchKeeper,
+			ProfileKeeper:            profileKeeper,
+			RewardKeeper:             rewardKeeper,
+			MonitoringConsumerKeeper: monitoringConsumerKeeper,
+			BankKeeper:               bankKeeper,
+			IBCKeeper:                ibcKeeper,
+		}, TestMsgServers{
+			ProfileSrv:     profileSrv,
+			LaunchSrv:      launchSrv,
+			CampaignSrv:    campaignSrv,
+			RewardSrv:      rewardSrv,
+			MonitoringcSrv: monitoringcSrv,
+		}
 }
 
 // MonitoringcWithIBCMocks returns a keeper of the monitoring consumer module for testing purpose with mocks for IBC keepers
@@ -146,7 +121,7 @@ func MonitoringcWithIBCMocks(
 	t testing.TB,
 	connectionMock []Connection,
 	channelMock []Channel,
-) (*monitoringcmodulekeeper.Keeper, sdk.Context) {
+) (*monitoringckeeper.Keeper, sdk.Context) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
@@ -179,7 +154,7 @@ func MonitoringcWithIBCMocks(
 
 	// Initialize params
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
-	monitoringConsumerKeeper.SetParams(ctx, monitoringcmoduletypes.DefaultParams())
+	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
 
 	return monitoringConsumerKeeper, ctx
 }

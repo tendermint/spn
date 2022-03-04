@@ -25,6 +25,15 @@ const (
 
 	// PortID is the default port id that module binds to
 	PortID = "monitoring"
+
+	// ConsumerClientIDKey allows to retrieve in the store the client ID used for the IBC communication with the Consumer Chain
+	ConsumerClientIDKey = "ConsumerClientID/value/"
+
+	// ConnectionChannelIDKey allows to retrieve the connection channel ID that is the ID of the IBC channel used for monitoring packet transmission
+	ConnectionChannelIDKey = "ConnectionChannelID/value/"
+
+	// MonitoringInfoKey allows to retrieve moniroting info that contains information about the current state of monitoring
+	MonitoringInfoKey = "MonitoringInfo/value/"
 )
 
 var (
@@ -35,16 +44,3 @@ var (
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
-
-const (
-	// ConsumerClientIDKey allows to retrieve in the store the client ID used for the IBC communication with the Consumer Chain
-	ConsumerClientIDKey = "ConsumerClientID-value-"
-)
-
-const (
-	ConnectionChannelIDKey = "ConnectionChannelID-value-"
-)
-
-const (
-	MonitoringInfoKey = "MonitoringInfo-value-"
-)

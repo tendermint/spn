@@ -28,11 +28,3 @@ func TestConsumerClientIDGet(t *testing.T) {
 		nullify.Fill(&rst),
 	)
 }
-
-func TestConsumerClientIDRemove(t *testing.T) {
-	keeper, _, _, ctx := keepertest.MonitoringpKeeper(t)
-	createTestConsumerClientID(keeper, ctx)
-	keeper.RemoveConsumerClientID(ctx)
-	_, found := keeper.GetConsumerClientID(ctx)
-	require.False(t, found)
-}

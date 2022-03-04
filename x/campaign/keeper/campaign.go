@@ -70,12 +70,6 @@ func (k Keeper) GetCampaign(ctx sdk.Context, id uint64) (val types.Campaign, fou
 	return val, true
 }
 
-// RemoveCampaign removes a campaign from the store
-func (k Keeper) RemoveCampaign(ctx sdk.Context, id uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
-	store.Delete(GetCampaignIDBytes(id))
-}
-
 // GetAllCampaign returns all campaign
 func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
@@ -95,9 +89,4 @@ func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
 // GetCampaignIDBytes returns the byte representation of the ID
 func GetCampaignIDBytes(id uint64) []byte {
 	return spntypes.UintBytes(id)
-}
-
-// GetCampaignIDFromBytes returns ID in uint64 format from a byte array
-func GetCampaignIDFromBytes(bz []byte) uint64 {
-	return binary.BigEndian.Uint64(bz)
 }

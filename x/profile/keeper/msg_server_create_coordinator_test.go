@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -12,10 +14,10 @@ import (
 
 func TestMsgCreateCoordinator(t *testing.T) {
 	var (
-		msg1        = sample.MsgCreateCoordinator(sample.Address())
-		msg2        = sample.MsgCreateCoordinator(sample.Address())
-		ctx, k, srv = setupMsgServer(t)
-		wCtx        = sdk.WrapSDKContext(ctx)
+		msg1           = sample.MsgCreateCoordinator(sample.Address())
+		msg2           = sample.MsgCreateCoordinator(sample.Address())
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 	tests := []struct {
 		name   string
@@ -39,18 +41,18 @@ func TestMsgCreateCoordinator(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := srv.CreateCoordinator(wCtx, &tt.msg)
+			got, err := ts.ProfileSrv.CreateCoordinator(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
-			coordByAddr, err := k.GetCoordinatorByAddress(ctx, tt.msg.Address)
+			coordByAddr, err := tk.ProfileKeeper.GetCoordinatorByAddress(sdkCtx, tt.msg.Address)
 			require.NoError(t, err)
 			require.EqualValues(t, tt.wantId, coordByAddr.CoordinatorID)
 			require.EqualValues(t, tt.wantId, got.CoordinatorID)
 
-			coord, found := k.GetCoordinator(ctx, coordByAddr.CoordinatorID)
+			coord, found := tk.ProfileKeeper.GetCoordinator(sdkCtx, coordByAddr.CoordinatorID)
 			require.True(t, found, "coordinator id not found")
 			require.EqualValues(t, tt.msg.Address, coord.Address)
 			require.EqualValues(t, tt.msg.Description, coord.Description)
