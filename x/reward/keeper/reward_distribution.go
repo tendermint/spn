@@ -2,8 +2,6 @@ package keeper
 
 import (
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/types/bech32"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -65,7 +63,7 @@ func (k Keeper) DistributeRewards(
 		// get the validator address from the cons address
 		// if the validator is not registered, reward distribution is skipped
 		// all funds are sent back to the coordinator
-		validatorByOpAddr, found := k.profileKeeper.GetValidatorByOperatorAddress(ctx, string(signatureCount.ConsAddress))
+		validatorByOpAddr, found := k.profileKeeper.GetValidatorByOperatorAddress(ctx, signatureCount.OpAddress)
 		if found {
 			validator, found := k.profileKeeper.GetValidator(ctx, validatorByOpAddr.ValidatorAddress)
 			if !found {
@@ -184,13 +182,4 @@ func CalculateRewards(blockRatio, signatureRatio sdk.Dec, coins sdk.Coins) (sdk.
 		rewards = rewards.Add(coin)
 	}
 	return rewards, nil
-}
-
-// ConvertOperatorAddress returns the operator address with the spn account prefix
-func ConvertOperatorAddress(addr string) (string, error) {
-	_, decoded, err := bech32.DecodeAndConvert(addr)
-	if err != nil {
-		return "", err
-	}
-	return bech32.ConvertAndEncode(spntypes.AccountAddressPrefix, decoded)
 }

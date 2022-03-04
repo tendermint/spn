@@ -416,12 +416,3 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		})
 	}
 }
-
-func TestConvertOperatorAddress(t *testing.T) {
-	converted, err := keeper.ConvertOperatorAddress("cosmosvaloper17qqqsmyx43efr5ywp33h35l4dlmacfxvtkyed5")
-	require.NoError(t, err)
-	require.EqualValues(t, "spn17qqqsmyx43efr5ywp33h35l4dlmacfxvj7g20a", converted)
-
-	_, err = keeper.ConvertOperatorAddress("invalid_bech_32")
-	require.Error(t, err)
-}

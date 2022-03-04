@@ -169,6 +169,18 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name: "invalid operator address",
+			sc: types.SignatureCounts{
+				BlockCount: 2,
+				Counts: []types.SignatureCount{
+					tc.SignatureCount(t, opAddrFoo, "1"),
+					tc.SignatureCount(t, "invalid_bech_32", "0.1"),
+					tc.SignatureCount(t, opAddrFoobar, "0.5"),
+				},
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -180,4 +192,13 @@ func TestSignatureCounts_Validate(t *testing.T) {
 			require.NoError(t, err)
 		})
 	}
+}
+
+func TestSignatureCounts_GetOperatorAddress(t *testing.T) {
+	converted, err := tc.SignatureCount(t, "cosmosvaloper17qqqsmyx43efr5ywp33h35l4dlmacfxvtkyed5", "1").GetOperatorAddress()
+	require.NoError(t, err)
+	require.EqualValues(t, "spn17qqqsmyx43efr5ywp33h35l4dlmacfxvj7g20a", converted)
+
+	_, err = tc.SignatureCount(t, "invalid_bech_32", "1").GetOperatorAddress()
+	require.Error(t, err)
 }

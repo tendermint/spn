@@ -4,6 +4,9 @@ package types
 import (
 	"fmt"
 
+	"github.com/cosmos/cosmos-sdk/types/bech32"
+	"github.com/pkg/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -40,6 +43,12 @@ func (m SignatureCounts) Validate() error {
 
 	// iterate all signature count
 	for _, sc := range m.Counts {
+		// check is the signer has a invalid bech32 address
+		_, err := sc.GetOperatorAddress()
+		if err != nil {
+			return errors.Wrapf(err, "invalid bech32 operator address: %s", sc.OpAddress)
+		}
+
 		// a consensus address must have a single entry
 		if _, ok := opAddr[sc.OpAddress]; ok {
 			return fmt.Errorf("duplicated operator address %s", sc.OpAddress)
@@ -57,4 +66,13 @@ func (m SignatureCounts) Validate() error {
 		)
 	}
 	return nil
+}
+
+// GetOperatorAddress returns the operator address for the signer with the SPN prefix format
+func (m SignatureCount) GetOperatorAddress() (string, error) {
+	_, decoded, err := bech32.DecodeAndConvert(m.OpAddress)
+	if err != nil {
+		return "", err
+	}
+	return bech32.ConvertAndEncode(AccountAddressPrefix, decoded)
 }
