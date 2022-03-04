@@ -13,7 +13,7 @@ import (
 func CmdShowConnectionChannelID() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-connection-channel-id",
-		Short: "shows connectionChannelID",
+		Short: "Shows the connection channel ID used for the IBC connection",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
