@@ -451,6 +451,7 @@ func New(
 		app.GetSubspace(campaignmoduletypes.ModuleName),
 		&app.LaunchKeeper,
 		app.BankKeeper,
+		app.DistrKeeper,
 		app.ProfileKeeper,
 	)
 	app.CampaignKeeper = *campaignKeeper

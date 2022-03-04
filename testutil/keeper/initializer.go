@@ -11,6 +11,8 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
+	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -43,6 +45,7 @@ import (
 var (
 	moduleAccountPerms = map[string][]string{
 		authtypes.FeeCollectorName:     nil,
+		distrtypes.ModuleName:          nil,
 		minttypes.ModuleName:           {authtypes.Minter},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
@@ -70,6 +73,16 @@ func newInitializer() initializer {
 		DB:         db,
 		StateStore: stateStore,
 	}
+}
+
+// ModuleAccountAddrs returns all the app's module account addresses.
+func ModuleAccountAddrs(maccPerms map[string][]string) map[string]bool {
+	modAccAddrs := make(map[string]bool)
+	for acc := range maccPerms {
+		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
+	}
+
+	return modAccAddrs
 }
 
 func (i initializer) Param() paramskeeper.Keeper {
@@ -100,11 +113,7 @@ func (i initializer) Bank(paramKeeper paramskeeper.Keeper, authKeeper authkeeper
 	paramKeeper.Subspace(banktypes.ModuleName)
 	bankSubspace, _ := paramKeeper.GetSubspace(banktypes.ModuleName)
 
-	// module account addresses
-	modAccAddrs := make(map[string]bool)
-	for acc := range moduleAccountPerms {
-		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
-	}
+	modAccAddrs := ModuleAccountAddrs(moduleAccountPerms)
 
 	return bankkeeper.NewBaseKeeper(i.Codec, storeKey, authKeeper, bankSubspace, modAccAddrs)
 }
@@ -128,9 +137,9 @@ func (i initializer) Staking(
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 
 	paramKeeper.Subspace(stakingtypes.ModuleName)
-	statkingSubspace, _ := paramKeeper.GetSubspace(stakingtypes.ModuleName)
+	stakingSubspace, _ := paramKeeper.GetSubspace(stakingtypes.ModuleName)
 
-	return stakingkeeper.NewKeeper(i.Codec, storeKey, authKeeper, bankKeeper, statkingSubspace)
+	return stakingkeeper.NewKeeper(i.Codec, storeKey, authKeeper, bankKeeper, stakingSubspace)
 }
 
 func (i initializer) IBC(
@@ -149,6 +158,29 @@ func (i initializer) IBC(
 		stakingKeeper,
 		nil,
 		capabilityKeeper.ScopeToModule(ibchost.ModuleName),
+	)
+}
+
+func (i initializer) Distribution(
+	authKeeper authkeeper.AccountKeeper,
+	bankKeeper bankkeeper.Keeper,
+	stakingKeeper stakingkeeper.Keeper,
+	paramKeeper paramskeeper.Keeper,
+) distrkeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(distrtypes.StoreKey)
+	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
+
+	modAccAddrs := ModuleAccountAddrs(moduleAccountPerms)
+
+	return distrkeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		paramKeeper.Subspace(distrtypes.ModuleName),
+		authKeeper,
+		bankKeeper,
+		stakingKeeper,
+		authtypes.FeeCollectorName,
+		modAccAddrs,
 	)
 }
 
@@ -182,6 +214,7 @@ func (i initializer) Campaign(
 	launchKeeper *launchkeeper.Keeper,
 	profileKeeper *profilekeeper.Keeper,
 	bankKeeper bankkeeper.Keeper,
+	distrKeeper distrkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 ) *campaignkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(campaigntypes.StoreKey)
@@ -193,7 +226,7 @@ func (i initializer) Campaign(
 	paramKeeper.Subspace(campaigntypes.ModuleName)
 	subspace, _ := paramKeeper.GetSubspace(campaigntypes.ModuleName)
 
-	return campaignkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, subspace, launchKeeper, bankKeeper, profileKeeper)
+	return campaignkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, subspace, launchKeeper, bankKeeper, distrKeeper, profileKeeper)
 }
 
 func (i initializer) Reward(
