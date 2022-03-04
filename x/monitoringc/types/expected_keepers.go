@@ -15,6 +15,7 @@ import (
 
 type LaunchKeeper interface {
 	GetChain(ctx sdk.Context, launchID uint64) (val launchtypes.Chain, found bool)
+	SetChain(ctx sdk.Context, chain launchtypes.Chain)
 	CheckValidatorSet(
 		ctx sdk.Context,
 		launchID uint64,
