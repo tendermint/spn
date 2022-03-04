@@ -1,0 +1,40 @@
+syntax = "proto3";
+package tendermint.spn.participation;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/tendermint/spn/x/participation/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+  AllocationPrice allocationPrice = 1 [(gogoproto.nullable) = false];
+  repeated Tier participationTierList = 2 [(gogoproto.nullable) = false];
+
+  // defines the delay in seconds after the end of an auction when allocations can be withdrawn
+  uint64 withdrawalAllocationDelay = 3;
+}
+
+message AllocationPrice {
+  // number of delegated tokens necessary to get one allocation
+  string staking = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false
+  ];
+}
+
+// Matches a number of required allocations with benefits
+message Tier {
+  uint64 tierID = 1;
+  uint64 requiredAllocations = 2;
+  TierBenefits benefits = 3 [(gogoproto.nullable) = false];
+}
+
+message TierBenefits {
+  // maximum amount an auction participant can bid
+  string maxBidAmount = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false
+  ];
+}
