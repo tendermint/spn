@@ -20,12 +20,12 @@ func TestParamsValidate(t *testing.T) {
 	}{
 		{
 			name:   "invalid launch time range",
-			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay, DefaultCampaignCreationFee),
+			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
 			err:    errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
 		},
 		{
 			name:   "valid params",
-			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay, DefaultCampaignCreationFee),
+			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
 		},
 	}
 	for _, tt := range tests {
