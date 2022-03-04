@@ -25,7 +25,7 @@ func CmdSetRewards() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			lastRewardHeight, err := cast.ToUint64E(args[2])
+			lastRewardHeight, err := cast.ToInt64E(args[2])
 			if err != nil {
 				return err
 			}
