@@ -25,13 +25,8 @@ service Query {
   }
 
   // Queries a ValidatorByConsAddress by consensus address.
-  rpc ValidatorByConsAddress(QueryGetValidatorByConsAddressRequest) returns (QueryGetValidatorByConsAddressResponse) {
-    option (google.api.http).get = "/tendermint/spn/profile/validator_by_cons_address/{consensusAddress}";
-  }
-
-  // Queries a ConsensusKeyNonce by consensus address.
-  rpc ConsensusKeyNonce(QueryGetConsensusKeyNonceRequest) returns (QueryGetConsensusKeyNonceResponse) {
-    option (google.api.http).get = "/tendermint/spn/profile/consensus_key_nonce/{consensusAddress}";
+  rpc ValidatorByOperatorAddress(QueryGetValidatorByOperatorAddressRequest) returns (QueryGetValidatorByOperatorAddressResponse) {
+    option (google.api.http).get = "/tendermint/spn/profile/validator_by_operator_address/{operatorAddress}";
   }
 
   // Queries a coordinator by id.
@@ -69,20 +64,12 @@ message QueryAllValidatorResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetValidatorByConsAddressRequest {
-  bytes consensusAddress = 1;
+message QueryGetValidatorByOperatorAddressRequest {
+  string operatorAddress = 1;
 }
 
-message QueryGetValidatorByConsAddressResponse {
-  ValidatorByConsAddress validatorByConsAddress = 1 [(gogoproto.nullable) = false];
-}
-
-message QueryGetConsensusKeyNonceRequest {
-  bytes consensusAddress = 1;
-}
-
-message QueryGetConsensusKeyNonceResponse {
-  ConsensusKeyNonce consensusKeyNonce = 1 [(gogoproto.nullable) = false];
+message QueryGetValidatorByOperatorAddressResponse {
+  ValidatorByOperatorAddress validatorByOperatorAddress = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryGetCoordinatorRequest {
