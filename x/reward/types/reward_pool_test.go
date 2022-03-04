@@ -157,6 +157,32 @@ func TestRewardPool_Validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
+			name: "current reward height is negative",
+			rewardPool: types.RewardPool{
+				LaunchID:            1,
+				Provider:            sample.Address(),
+				InitialCoins:        validInitialCoins,
+				RemainingCoins:      validRemainingCoins,
+				LastRewardHeight:    100,
+				CurrentRewardHeight: -1,
+				Closed:              false,
+			},
+			wantErr: true,
+		},
+		{
+			name: "last reward height is negative",
+			rewardPool: types.RewardPool{
+				LaunchID:            1,
+				Provider:            sample.Address(),
+				InitialCoins:        validInitialCoins,
+				RemainingCoins:      validRemainingCoins,
+				LastRewardHeight:    -1,
+				CurrentRewardHeight: 100,
+				Closed:              false,
+			},
+			wantErr: true,
+		},
+		{
 			name: "valid reward pool",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
