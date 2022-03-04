@@ -41,6 +41,16 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidRewardPoolCoins,
 		},
 		{
+			name: "negative last reward height",
+			msg: types.MsgSetRewards{
+				LaunchID:         1,
+				Provider:         sample.Address(),
+				Coins:            sample.Coins(),
+				LastRewardHeight: -1,
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
 			name: "valid reward pool message",
 			msg: types.MsgSetRewards{
 				LaunchID:         1,
