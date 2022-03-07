@@ -25,7 +25,7 @@ func (k Keeper) DistributeRewards(
 	ctx sdk.Context,
 	launchID uint64,
 	signatureCounts spntypes.SignatureCounts,
-	lastBlockHeight uint64,
+	lastBlockHeight int64,
 	closeRewardPool bool,
 ) error {
 	// get the reward pool related to the chain
@@ -44,8 +44,8 @@ func (k Keeper) DistributeRewards(
 	}
 
 	// only the monitored blocks relative to last reward height are rewarded
-	blockRatioNumerator := sdk.NewDec(int64(lastBlockHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
-	blockRatioDenominator := sdk.NewDec(int64(rewardPool.LastRewardHeight)).Sub(sdk.NewDec(int64(rewardPool.CurrentRewardHeight)))
+	blockRatioNumerator := sdk.NewDec(lastBlockHeight).Sub(sdk.NewDec(rewardPool.CurrentRewardHeight))
+	blockRatioDenominator := sdk.NewDec(rewardPool.LastRewardHeight).Sub(sdk.NewDec(rewardPool.CurrentRewardHeight))
 	blockRatio := blockRatioNumerator.Quo(blockRatioDenominator)
 	if blockRatio.GT(sdk.OneDec()) {
 		blockRatio = sdk.OneDec()

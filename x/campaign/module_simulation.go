@@ -3,6 +3,7 @@ package campaign
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -54,12 +55,23 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 	campaignParams := sample.CampaignParams()
+	creationFee := make([]string, len(campaignParams.CampaignCreationFee))
+	for i := range campaignParams.CampaignCreationFee {
+		creationFee[i] = fmt.Sprintf(
+			"{\"denom\":\"%v\",\"amount\":\"%v\"}",
+			campaignParams.CampaignCreationFee[i].Denom,
+			campaignParams.CampaignCreationFee[i].Amount.String(),
+		)
+	}
 	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.ParamStoreKeyTotalSupplyRange), func(r *rand.Rand) string {
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyTotalSupplyRange), func(r *rand.Rand) string {
 			return fmt.Sprintf(
 				"{\"minTotalSupply\":\"%v\",\"maxTotalSupply\":\"%v\"}",
 				campaignParams.TotalSupplyRange.MinTotalSupply,
 				campaignParams.TotalSupplyRange.MaxTotalSupply)
+		}),
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyCampaignCreationFee), func(r *rand.Rand) string {
+			return fmt.Sprintf("[%v]", strings.Join(creationFee, ","))
 		}),
 	}
 }
@@ -144,7 +156,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateCampaign,
-			campaignsim.SimulateMsgCreateCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper),
+			campaignsim.SimulateMsgCreateCampaign(am.keeper, am.accountKeeper, am.bankKeeper, am.profileKeeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUpdateTotalSupply,

@@ -11,7 +11,7 @@ import (
 func NewRewardPool(launchID uint64, currentRewardHeight int64) RewardPool {
 	return RewardPool{
 		LaunchID:            launchID,
-		CurrentRewardHeight: uint64(currentRewardHeight),
+		CurrentRewardHeight: currentRewardHeight,
 		Closed:              false,
 	}
 }
@@ -40,8 +40,11 @@ func (m RewardPool) Validate() error {
 		return errors.New("current coin cannot be greater than initial coin")
 	}
 
-	if _, err := sdk.AccAddressFromBech32(m.Provider); err != nil {
-		return fmt.Errorf("invalid provider address: %s", err)
+	if m.LastRewardHeight < 0 {
+		return fmt.Errorf("last reward height (%d) must be non-negative", m.LastRewardHeight)
+	}
+	if m.CurrentRewardHeight < 0 {
+		return fmt.Errorf("current reward height (%d) must be non-negative", m.CurrentRewardHeight)
 	}
 	if m.CurrentRewardHeight < m.LastRewardHeight {
 		return fmt.Errorf(
@@ -50,5 +53,10 @@ func (m RewardPool) Validate() error {
 			m.LastRewardHeight,
 		)
 	}
+
+	if _, err := sdk.AccAddressFromBech32(m.Provider); err != nil {
+		return fmt.Errorf("invalid provider address: %s", err)
+	}
+
 	return nil
 }

@@ -14,7 +14,7 @@ import (
 func CmdListGenesisValidator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-genesis-validator [launch-id]",
-		Short: "list all genesisValidator",
+		Short: "List all genesis validators",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -54,7 +54,7 @@ func CmdListGenesisValidator() *cobra.Command {
 func CmdShowGenesisValidator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-genesis-validator [launch-id] [address]",
-		Short: "shows a genesisValidator",
+		Short: "Shows a genesis validator",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)

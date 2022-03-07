@@ -168,7 +168,8 @@
         "totalSupplyRange": {
           "maxTotalSupply": "1000000000000000",
           "minTotalSupply": "100"
-        }
+        },
+        "campaignCreationFee": []
       }
     },
     "capability": {
@@ -322,6 +323,15 @@
       "verifiedClientIDList": []
     },
     "params": null,
+    "participation": {
+      "params": {
+        "allocationPrice": {
+          "staking": "0"
+        },
+        "participationTierList": [],
+        "withdrawalAllocationDelay": 0
+      }
+    },
     "profile": {
       "consensusKeyNonceList": [],
       "coordinatorByAddressList": [],

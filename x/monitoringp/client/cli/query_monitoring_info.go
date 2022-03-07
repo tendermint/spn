@@ -13,7 +13,7 @@ import (
 func CmdShowMonitoringInfo() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-monitoring-info",
-		Short: "shows the monitoring information",
+		Short: "Shows the monitoring information",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)

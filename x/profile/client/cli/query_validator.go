@@ -13,7 +13,7 @@ import (
 func CmdListValidator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-validator",
-		Short: "list all validator",
+		Short: "List all validators",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -47,7 +47,7 @@ func CmdListValidator() *cobra.Command {
 func CmdShowValidator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-validator [address]",
-		Short: "shows a validator",
+		Short: "Shows a validator",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)

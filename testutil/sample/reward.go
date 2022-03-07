@@ -23,8 +23,8 @@ func RewardPool(launchID uint64) reward.RewardPool {
 		Provider:            Address(),
 		InitialCoins:        initialCoins,
 		RemainingCoins:      remainingCoins,
-		CurrentRewardHeight: rand.Uint64()%100 + 50,
-		LastRewardHeight:    rand.Uint64() % 50,
+		CurrentRewardHeight: rand.Int63()%100 + 50,
+		LastRewardHeight:    rand.Int63() % 50,
 		Closed:              false,
 	}
 }

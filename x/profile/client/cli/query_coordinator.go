@@ -14,7 +14,7 @@ import (
 func CmdListCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-coordinator",
-		Short: "list all coordinator",
+		Short: "List all coordinators",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -47,7 +47,7 @@ func CmdListCoordinator() *cobra.Command {
 func CmdShowCoordinator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-coordinator [coordinator-id]",
-		Short: "shows a coordinator",
+		Short: "Shows a coordinator",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)

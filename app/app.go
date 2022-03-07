@@ -116,6 +116,10 @@ import (
 	rewardmodulekeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardmoduletypes "github.com/tendermint/spn/x/reward/types"
 
+	participationmodule "github.com/tendermint/spn/x/participation"
+	participationmodulekeeper "github.com/tendermint/spn/x/participation/keeper"
+	participationmoduletypes "github.com/tendermint/spn/x/participation/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
@@ -164,6 +168,7 @@ var (
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		participationmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		profilemodule.AppModuleBasic{},
 		launchmodule.AppModuleBasic{},
@@ -246,11 +251,12 @@ type App struct {
 
 	ScopedMonitoringcKeeper capabilitykeeper.ScopedKeeper
 
-	ProfileKeeper     profilemodulekeeper.Keeper
-	LaunchKeeper      launchmodulekeeper.Keeper
-	CampaignKeeper    campaignmodulekeeper.Keeper
-	MonitoringcKeeper monitoringcmodulekeeper.Keeper
-	RewardKeeper      rewardmodulekeeper.Keeper
+	ProfileKeeper       profilemodulekeeper.Keeper
+	LaunchKeeper        launchmodulekeeper.Keeper
+	CampaignKeeper      campaignmodulekeeper.Keeper
+	MonitoringcKeeper   monitoringcmodulekeeper.Keeper
+	RewardKeeper        rewardmodulekeeper.Keeper
+	ParticipationKeeper participationmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// the module manager
@@ -305,6 +311,7 @@ func New(
 		monitoringcmoduletypes.StoreKey,
 		rewardmoduletypes.StoreKey,
 		fundraisingtypes.StoreKey,
+		participationmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -439,6 +446,7 @@ func New(
 		app.GetSubspace(campaignmoduletypes.ModuleName),
 		&app.LaunchKeeper,
 		app.BankKeeper,
+		app.DistrKeeper,
 		app.ProfileKeeper,
 	)
 	app.CampaignKeeper = *campaignKeeper
@@ -471,6 +479,16 @@ func New(
 		app.RewardKeeper,
 	)
 	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
+
+	app.ParticipationKeeper = *participationmodulekeeper.NewKeeper(
+		appCodec,
+		keys[participationmoduletypes.StoreKey],
+		keys[participationmoduletypes.MemStoreKey],
+		app.GetSubspace(participationmoduletypes.ModuleName),
+		app.FundraisingKeeper,
+		app.StakingKeeper,
+	)
+	participationModule := participationmodule.NewAppModule(appCodec, app.ParticipationKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -518,6 +536,7 @@ func New(
 		monitoringcModule,
 		rewardModule,
 		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),
+		participationModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -573,6 +592,7 @@ func New(
 		monitoringcmoduletypes.ModuleName,
 		rewardmoduletypes.ModuleName,
 		fundraisingtypes.ModuleName,
+		participationmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -795,6 +815,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(monitoringcmoduletypes.ModuleName)
 	paramsKeeper.Subspace(rewardmoduletypes.ModuleName)
 	paramsKeeper.Subspace(fundraisingtypes.ModuleName)
+	paramsKeeper.Subspace(participationmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
