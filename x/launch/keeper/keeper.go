@@ -17,6 +17,7 @@ type (
 		storeKey       sdk.StoreKey
 		memKey         sdk.StoreKey
 		paramstore     paramtypes.Subspace
+		distrKeeper    types.DistributionKeeper
 		profileKeeper  types.ProfileKeeper
 		campaignKeeper types.CampaignKeeper
 	}
@@ -27,6 +28,7 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
+	distrKeeper types.DistributionKeeper,
 	profileKeeper types.ProfileKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
@@ -39,6 +41,7 @@ func NewKeeper(
 		storeKey:      storeKey,
 		memKey:        memKey,
 		paramstore:    ps,
+		distrKeeper:   distrKeeper,
 		profileKeeper: profileKeeper,
 	}
 }
