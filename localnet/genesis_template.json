@@ -217,7 +217,7 @@
             "denom": "uspn"
           }
         ],
-        "auction_fee_collector": "spn1t2gp44cx86rt8gxv64lpt0dggveg98y4ma2wlnfqts7d4m4z70vqm6x5sp",
+        "fee_collector_address": "spn1t2gp44cx86rt8gxv64lpt0dggveg98y4ma2wlnfqts7d4m4z70vqm6x5sp",
         "extended_period": 1
       },
       "vesting_queues": []
@@ -333,11 +333,10 @@
       }
     },
     "profile": {
-      "consensusKeyNonceList": [],
       "coordinatorByAddressList": [],
       "coordinatorCounter": "1",
       "coordinatorList": [],
-      "validatorByConsAddressList": [],
+      "validatorByOperatorAddressList": [],
       "validatorList": []
     },
     "reward": {
