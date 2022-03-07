@@ -244,15 +244,18 @@ func TestEnableMonitoringConnection(t *testing.T) {
 	err := tk.LaunchKeeper.EnableMonitoringConnection(ctx, 1)
 	require.ErrorIs(t, err, types.ErrChainNotFound)
 
-	items := createNChain(tk.LaunchKeeper, ctx, 10)
-	for _, item := range items {
-		err = tk.LaunchKeeper.EnableMonitoringConnection(ctx, item.LaunchID)
-		require.NoError(t, err)
-		rst, found := tk.LaunchKeeper.GetChain(ctx, item.LaunchID)
-		require.True(t, found)
-		item.MonitoringConnected = true
-		require.Equal(t, item, rst)
-	}
+	validChain := types.Chain{}
+	validChainID := tk.LaunchKeeper.AppendChain(ctx, validChain)
+	err = tk.LaunchKeeper.EnableMonitoringConnection(ctx, validChainID)
+	require.NoError(t, err)
+	rst, found := tk.LaunchKeeper.GetChain(ctx, validChainID)
+	require.True(t, found)
+	validChain.MonitoringConnected = true
+	require.Equal(t, validChain, rst)
+
+	// try enabling again, but expect error since it is already enabled
+	err = tk.LaunchKeeper.EnableMonitoringConnection(ctx, validChainID)
+	require.ErrorIs(t, err, types.ErrChainMonitoringConnected)
 }
 
 func TestGetAllChain(t *testing.T) {

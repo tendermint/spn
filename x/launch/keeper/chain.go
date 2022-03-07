@@ -132,6 +132,10 @@ func (k Keeper) EnableMonitoringConnection(ctx sdk.Context, launchID uint64) err
 		return types.ErrChainNotFound
 	}
 
+	if chain.MonitoringConnected {
+		return types.ErrChainMonitoringConnected
+	}
+
 	chain.MonitoringConnected = true
 	k.SetChain(ctx, chain)
 	return nil
