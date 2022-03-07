@@ -75,7 +75,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
 	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, make(map[string]bool))
 	profileKeeper := initializer.Profile()
-	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
+	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
@@ -153,7 +153,7 @@ func MonitoringcWithIBCMocks(
 	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
 
 	profileKeeper := initializer.Profile()
-	launchKeeper := initializer.Launch(profileKeeper, paramKeeper)
+	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)

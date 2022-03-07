@@ -7,6 +7,7 @@ import (
 
 	"gopkg.in/yaml.v2"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
@@ -23,11 +24,14 @@ var (
 	// This currently corresponds to 1 hour
 	DefaultRevertDelay = int64(60 * 60)
 
+	DefaultChainCreationFee = sdk.Coins(nil) // EmptyCoins
+
 	MaxParametrableLaunchTime  = int64(time.Hour.Seconds() * 24 * 31)
 	MaxParametrableRevertDelay = int64(time.Hour.Seconds() * 24)
 
-	KeyLaunchTimeRange = []byte("LaunchTimeRange")
-	KeyRevertDelay     = []byte("RevertDelay")
+	KeyLaunchTimeRange  = []byte("LaunchTimeRange")
+	KeyRevertDelay      = []byte("RevertDelay")
+	KeyChainCreationFee = []byte("ChainCreationFee")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -46,10 +50,11 @@ func NewLaunchTimeRange(minLaunchTime, maxLaunchTime int64) LaunchTimeRange {
 }
 
 // NewParams creates a new Params instance
-func NewParams(minLaunchTime, maxLaunchTime, revertDelay int64) Params {
+func NewParams(minLaunchTime, maxLaunchTime, revertDelay int64, chainCreationFee sdk.Coins) Params {
 	return Params{
-		LaunchTimeRange: NewLaunchTimeRange(minLaunchTime, maxLaunchTime),
-		RevertDelay:     revertDelay,
+		LaunchTimeRange:  NewLaunchTimeRange(minLaunchTime, maxLaunchTime),
+		RevertDelay:      revertDelay,
+		ChainCreationFee: chainCreationFee,
 	}
 }
 
@@ -59,6 +64,7 @@ func DefaultParams() Params {
 		DefaultMinLaunchTime,
 		DefaultMaxLaunchTime,
 		DefaultRevertDelay,
+		DefaultChainCreationFee,
 	)
 }
 
@@ -67,6 +73,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyLaunchTimeRange, &p.LaunchTimeRange, validateLaunchTimeRange),
 		paramtypes.NewParamSetPair(KeyRevertDelay, &p.RevertDelay, validateRevertDelay),
+		paramtypes.NewParamSetPair(KeyChainCreationFee, &p.ChainCreationFee, validateChainCreationFee),
 	}
 }
 
@@ -75,8 +82,10 @@ func (p Params) Validate() error {
 	if err := validateLaunchTimeRange(p.LaunchTimeRange); err != nil {
 		return err
 	}
-
-	return validateRevertDelay(p.RevertDelay)
+	if err := validateRevertDelay(p.RevertDelay); err != nil {
+		return err
+	}
+	return p.ChainCreationFee.Validate()
 }
 
 // String implements the Stringer interface.
@@ -122,4 +131,12 @@ func validateRevertDelay(i interface{}) error {
 	}
 
 	return nil
+}
+
+func validateChainCreationFee(i interface{}) error {
+	v, ok := i.(sdk.Coins)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+	return v.Validate()
 }
