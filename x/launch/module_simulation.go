@@ -3,6 +3,7 @@ package launch
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -56,12 +57,23 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 	launchParams := sample.LaunchParams()
+	creationFee := make([]string, len(launchParams.ChainCreationFee))
+	for i := range launchParams.ChainCreationFee {
+		creationFee[i] = fmt.Sprintf(
+			"{\"denom\":\"%v\",\"amount\":\"%v\"}",
+			launchParams.ChainCreationFee[i].Denom,
+			launchParams.ChainCreationFee[i].Amount.String(),
+		)
+	}
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyLaunchTimeRange), func(r *rand.Rand) string {
 			return fmt.Sprintf(
 				"{\"minLaunchTime\":\"%v\",\"maxLaunchTime\":\"%v\"}",
 				launchParams.LaunchTimeRange.MinLaunchTime,
 				launchParams.LaunchTimeRange.MaxLaunchTime)
+		}),
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyChainCreationFee), func(r *rand.Rand) string {
+			return fmt.Sprintf("[%v]", strings.Join(creationFee, ","))
 		}),
 	}
 }

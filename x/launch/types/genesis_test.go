@@ -437,14 +437,14 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 		{
 			desc: "should fail if params are invalid",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1, types.DefaultRevertDelay),
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1, types.DefaultRevertDelay, types.DefaultChainCreationFee),
 			},
 			shouldBeValid: false,
 		},
 		{
 			desc: "valid params",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinLaunchTime, types.DefaultMaxLaunchTime, types.DefaultRevertDelay),
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.DefaultMaxLaunchTime, types.DefaultRevertDelay, types.DefaultChainCreationFee),
 			},
 			shouldBeValid: true,
 		},
