@@ -146,10 +146,6 @@ func Test_msgServer_CreateClient(t *testing.T) {
 			require.True(t, ok)
 			require.EqualValues(t, tt.msg.RevisionHeight, cs.LatestHeight.RevisionHeight)
 			require.EqualValues(t, time.Second*time.Duration(tt.msg.UnbondingPeriod), cs.UnbondingPeriod)
-
-			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, tt.msg.LaunchID)
-			require.True(t, found)
-			require.True(t, chain.IbcConnected)
 		})
 	}
 }

@@ -72,10 +72,6 @@ func (k msgServer) CreateClient(goCtx context.Context, msg *types.MsgCreateClien
 		ClientID: clientID,
 	})
 
-	// set chain to be IBC connected
-	chain.IbcConnected = true
-	k.launchKeeper.SetChain(ctx, chain)
-
 	return &types.MsgCreateClientResponse{
 		ClientID: clientID,
 	}, nil

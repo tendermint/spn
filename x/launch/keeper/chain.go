@@ -125,6 +125,18 @@ func (k Keeper) SetChain(ctx sdk.Context, chain types.Chain) {
 	store.Set(types.ChainKey(chain.LaunchID), b)
 }
 
+// EnableMonitoringConnection sets a chain with MonitoringConnected set to true
+func (k Keeper) EnableMonitoringConnection(ctx sdk.Context, launchID uint64) error {
+	chain, found := k.GetChain(ctx, launchID)
+	if !found {
+		return types.ErrChainNotFound
+	}
+
+	chain.MonitoringConnected = true
+	k.SetChain(ctx, chain)
+	return nil
+}
+
 // GetChain returns a chain from its index
 func (k Keeper) GetChain(ctx sdk.Context, launchID uint64) (val types.Chain, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))

@@ -38,5 +38,5 @@ var (
 	ErrChainHasCampaign            = sdkerrors.Register(ModuleName, 29, "chain already is associated with a campaign")
 	ErrAddChainToCampaign          = sdkerrors.Register(ModuleName, 30, "unable to add chain to campaign")
 	ErrRemainingTimeNotPositive    = sdkerrors.Register(ModuleName, 31, "invalid remaining time")
-	ErrChainIBCConnected           = sdkerrors.Register(ModuleName, 32, "chain is already IBC connected")
+	ErrChainMonitoringConnected    = sdkerrors.Register(ModuleName, 32, "chain is already connected to monitoring")
 )

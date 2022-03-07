@@ -60,7 +60,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	require.True(t, found)
 	chain.LaunchTriggered = true
 	chain.LaunchTimestamp = testkeeper.ExampleTimestamp.Unix() - tk.LaunchKeeper.RevertDelay(sdkCtx) + 1
-	chain.IbcConnected = true
+	chain.MonitoringConnected = true
 	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
 	for _, tc := range []struct {
@@ -95,7 +95,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 		{
 			name: "chain is already ibc connected",
 			msg:  *types.NewMsgRevertLaunch(coordAddress, ibcConnected),
-			err:  types.ErrChainIBCConnected,
+			err:  types.ErrChainMonitoringConnected,
 		},
 		{
 			name: "non existent chain id",

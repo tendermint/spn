@@ -26,8 +26,8 @@ func (k Keeper) CheckValidatorSet(
 	if !chain.LaunchTriggered {
 		return sdkerrors.Wrapf(types.ErrNotTriggeredLaunch, "%d", launchID)
 	}
-	if chain.IbcConnected {
-		return sdkerrors.Wrapf(types.ErrChainIBCConnected, "%d", launchID)
+	if chain.MonitoringConnected {
+		return sdkerrors.Wrapf(types.ErrChainMonitoringConnected, "%d", launchID)
 	}
 	if chain.GenesisChainID != chainID {
 		return sdkerrors.Wrap(types.ErrInvalidGenesisChainID, chainID)
