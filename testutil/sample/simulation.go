@@ -9,7 +9,12 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 )
 
-const simAccountsNb = 100
+const (
+	// BondDenom defines the bond denom used in testing
+	BondDenom = "stake"
+
+	simAccountsNb = 100
+)
 
 // SimAccounts returns a sample array of account for simulation
 func SimAccounts() (accounts []simtypes.Account) {

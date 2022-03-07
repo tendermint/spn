@@ -37,6 +37,18 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		return nil, sdkerrors.Wrap(types.ErrCreateChainFail, err.Error())
 	}
 
+	// Deduct chain creation fee if set
+	creationFee := k.ChainCreationFee(ctx)
+	if !creationFee.Empty() {
+		coordAddr, err := sdk.AccAddressFromBech32(msg.Coordinator)
+		if err != nil {
+			return nil, err
+		}
+		if err = k.distrKeeper.FundCommunityPool(ctx, creationFee, coordAddr); err != nil {
+			return nil, err
+		}
+	}
+
 	return &types.MsgCreateChainResponse{
 		LaunchID: id,
 	}, nil

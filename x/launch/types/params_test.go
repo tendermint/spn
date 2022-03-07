@@ -3,8 +3,11 @@ package types
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"testing"
 	"time"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/stretchr/testify/require"
 )
@@ -17,12 +20,12 @@ func TestParamsValidate(t *testing.T) {
 	}{
 		{
 			name:   "invalid launch time range",
-			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay),
+			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
 			err:    errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
 		},
 		{
 			name:   "valid params",
-			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay),
+			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
 		},
 	}
 	for _, tt := range tests {
@@ -114,6 +117,47 @@ func TestValidateRevertDelay(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := validateRevertDelay(tt.revertDelay)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestValidateChainCreationFee(t *testing.T) {
+	tests := []struct {
+		name        string
+		creationFee interface{}
+		err         error
+	}{
+		{
+			name:        "invalid interface",
+			creationFee: "test",
+			err:         fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:        "invalid coin",
+			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdk.NewInt(-1)}},
+			err:         errors.New("coin -1foo amount is not positive"),
+		},
+		{
+			name:        "valid empty param",
+			creationFee: DefaultChainCreationFee,
+		},
+		{
+			name: "valid param",
+			creationFee: sdk.NewCoins(
+				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
+				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),
+			),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateChainCreationFee(tt.creationFee)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)
