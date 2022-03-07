@@ -28,11 +28,8 @@ const (
 	// ValidatorKeyPrefix is the prefix to retrieve all Validator
 	ValidatorKeyPrefix = "Validator/value/"
 
-	// ValidatorByConsAddressKeyPrefix is the prefix to retrieve all ValidatorByConsAddress
-	ValidatorByConsAddressKeyPrefix = "ValidatorByConsAddress/value/"
-
-	// ConsensusKeyNonceKeyPrefix is the prefix to retrieve all ConsensusKeyNonce
-	ConsensusKeyNonceKeyPrefix = "ConsensusKeyNonce/value/"
+	// ValidatorByOperatorAddressKeyPrefix is the prefix to retrieve all ValidatorByOperatorAddress
+	ValidatorByOperatorAddressKeyPrefix = "ValidatorByOperatorAddress/value/"
 )
 
 func KeyPrefix(p string) []byte {
@@ -49,12 +46,7 @@ func ValidatorKey(address string) []byte {
 	return []byte(address + "/")
 }
 
-// ValidatorByConsAddressKey returns the store key to retrieve a ValidatorByConsAddress from the index fields
-func ValidatorByConsAddressKey(consensusAddress []byte) []byte {
-	return append(consensusAddress, []byte("/")...)
-}
-
-// ConsensusKeyNonceKey returns the store key to retrieve a ConsensusKeyNonce from the index fields
-func ConsensusKeyNonceKey(consensusAddress []byte) []byte {
-	return append(consensusAddress, []byte("/")...)
+// ValidatorByOperatorAddressKey returns the store key to retrieve a ValidatorByOperatorAddress from the index fields
+func ValidatorByOperatorAddressKey(operatorAddress string) []byte {
+	return []byte(operatorAddress + "/")
 }
