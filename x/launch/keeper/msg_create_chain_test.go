@@ -7,6 +7,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/stretchr/testify/require"
+
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -50,11 +51,9 @@ func initCreationFeeAndFundCoordAccounts(
 
 func TestMsgCreateChain(t *testing.T) {
 	var (
-		coordAddr1       = sample.Address()
-		coordAddr2       = sample.Address()
-		coordAddr3       = sample.Address()
-		coordAddr4       = sample.Address()
-		coordAddr5       = sample.Address()
+		coordAddrs       = make([]string, 5)
+		coordMap         = make(map[string]uint64)
+		campMap          = make(map[string]uint64)
 		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
 		ctx              = sdk.WrapSDKContext(sdkCtx)
 		chainCreationFee = sample.Coins()
@@ -67,65 +66,27 @@ func TestMsgCreateChain(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create coordinators
-	coordMap := make(map[string]uint64)
-	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddr1)
-	resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-	coordMap[coordAddr1] = resCoord.CoordinatorID
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddr2)
-	resCoord, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-	coordMap[coordAddr2] = resCoord.CoordinatorID
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddr3)
-	resCoord, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-	coordMap[coordAddr3] = resCoord.CoordinatorID
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddr4)
-	resCoord, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-	coordMap[coordAddr4] = resCoord.CoordinatorID
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddr5)
-	resCoord, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-	coordMap[coordAddr5] = resCoord.CoordinatorID
+	for i := range coordAddrs {
+		addr := sample.Address()
+		coordAddrs[i] = addr
+		msgCreateCoordinator := sample.MsgCreateCoordinator(addr)
+		resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+		require.NoError(t, err)
+		coordMap[addr] = resCoord.CoordinatorID
+	}
 
 	// Create a campaign for each valid coordinator
-	campMap := make(map[string]uint64)
-	msgCreateCampaign := sample.MsgCreateCampaign(coordAddr1)
-	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
-	require.NoError(t, err)
-	campMap[coordAddr1] = resCampaign.CampaignID
-	msgCreateCampaign = sample.MsgCreateCampaign(coordAddr2)
-	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
-	require.NoError(t, err)
-	campMap[coordAddr2] = resCampaign.CampaignID
-	msgCreateCampaign = sample.MsgCreateCampaign(coordAddr3)
-	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
-	require.NoError(t, err)
-	campMap[coordAddr3] = resCampaign.CampaignID
-	msgCreateCampaign = sample.MsgCreateCampaign(coordAddr4)
-	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
-	require.NoError(t, err)
-	campMap[coordAddr4] = resCampaign.CampaignID
-	msgCreateCampaign = sample.MsgCreateCampaign(coordAddr5)
-	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
-	require.NoError(t, err)
-	campMap[coordAddr5] = resCampaign.CampaignID
+	for i := range coordAddrs {
+		addr := coordAddrs[i]
+		msgCreateCampaign := sample.MsgCreateCampaign(addr)
+		resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+		require.NoError(t, err)
+		campMap[addr] = resCampaign.CampaignID
+	}
 
 	// assign random sdk.Coins to `chainCreationFee` param and provide balance to coordinators
-	// coordAddr5 is not funded
-	initCreationFeeAndFundCoordAccounts(
-		t,
-		tk.LaunchKeeper,
-		tk.BankKeeper,
-		sdkCtx,
-		chainCreationFee,
-		1,
-		coordAddr1,
-		coordAddr2,
-		coordAddr3,
-		coordAddr4,
-	)
+	// coordAddrs[4] is not funded
+	initCreationFeeAndFundCoordAccounts(t, tk.LaunchKeeper, tk.BankKeeper, sdkCtx, chainCreationFee, 1, coordAddrs[:4]...)
 
 	for _, tc := range []struct {
 		name          string
@@ -135,22 +96,22 @@ func TestMsgCreateChain(t *testing.T) {
 	}{
 		{
 			name:          "valid message",
-			msg:           sample.MsgCreateChain(coordAddr1, "", false, campMap[coordAddr1]),
+			msg:           sample.MsgCreateChain(coordAddrs[0], "", false, campMap[coordAddrs[0]]),
 			wantedChainID: 0,
 		},
 		{
 			name:          "creates a unique chain ID",
-			msg:           sample.MsgCreateChain(coordAddr2, "", false, campMap[coordAddr2]),
+			msg:           sample.MsgCreateChain(coordAddrs[1], "", false, campMap[coordAddrs[1]]),
 			wantedChainID: 1,
 		},
 		{
 			name:          "valid message with genesis url",
-			msg:           sample.MsgCreateChain(coordAddr3, "foo.com", false, campMap[coordAddr3]),
+			msg:           sample.MsgCreateChain(coordAddrs[2], "foo.com", false, campMap[coordAddrs[2]]),
 			wantedChainID: 2,
 		},
 		{
 			name:          "creates message with campaign",
-			msg:           sample.MsgCreateChain(coordAddr4, "", true, campMap[coordAddr4]),
+			msg:           sample.MsgCreateChain(coordAddrs[3], "", true, campMap[coordAddrs[3]]),
 			wantedChainID: 3,
 		},
 		{
@@ -160,7 +121,7 @@ func TestMsgCreateChain(t *testing.T) {
 		},
 		{
 			name: "invalid campaign id",
-			msg:  sample.MsgCreateChain(coordAddr1, "", true, 1000),
+			msg:  sample.MsgCreateChain(coordAddrs[0], "", true, 1000),
 			err:  types.ErrCreateChainFail,
 		},
 		{
@@ -170,7 +131,7 @@ func TestMsgCreateChain(t *testing.T) {
 		},
 		{
 			name: "insufficient balance to cover creation fee",
-			msg:  sample.MsgCreateChain(coordAddr5, "", false, campMap[coordAddr5]),
+			msg:  sample.MsgCreateChain(coordAddrs[4], "", false, campMap[coordAddrs[4]]),
 			err:  sdkerrors.ErrInsufficientFunds,
 		},
 	} {
