@@ -17,7 +17,7 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/participation/params";
   }
-  // Queries a UsedAllocations by index.
+  // Queries a UsedAllocations by address.
 	rpc UsedAllocations(QueryGetUsedAllocationsRequest) returns (QueryGetUsedAllocationsResponse) {
 		option (google.api.http).get = "/tendermint/spn/participation/used_allocations/{address}";
 	}
@@ -25,7 +25,7 @@ service Query {
 	rpc UsedAllocationsAll(QueryAllUsedAllocationsRequest) returns (QueryAllUsedAllocationsResponse) {
 		option (google.api.http).get = "/tendermint/spn/participation/used_allocations";
 	}
-  // Queries a AuctionUsedAllocations by index.
+	// Queries a AuctionUsedAllocations by address and auctionID.
 	rpc AuctionUsedAllocations(QueryGetAuctionUsedAllocationsRequest) returns (QueryGetAuctionUsedAllocationsResponse) {
 		option (google.api.http).get = "/tendermint/spn/participation/auction_used_allocations/{address}/{auctionID}";
 	}
