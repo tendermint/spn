@@ -441,6 +441,7 @@ func New(
 		keys[launchmoduletypes.StoreKey],
 		keys[launchmoduletypes.MemStoreKey],
 		app.GetSubspace(launchmoduletypes.ModuleName),
+		app.DistrKeeper,
 		app.ProfileKeeper,
 	)
 

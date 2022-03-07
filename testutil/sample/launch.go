@@ -7,6 +7,8 @@ import (
 	"math/rand"
 	"time"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/pkg/chainid"
 	launch "github.com/tendermint/spn/x/launch/types"
 )
@@ -301,7 +303,11 @@ func GenesisHash() string {
 func LaunchParams() launch.Params {
 	maxLaunchTime := launch.DefaultMaxLaunchTime - rand.Int63n(10)
 	minLaunchTime := rand.Int63n(10) + launch.DefaultMinLaunchTime
-	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay)
+
+	// assign random small amount of staking denom
+	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(BondDenom, rand.Int63n(100)+1))
+
+	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay, chainCreationFee)
 }
 
 // LaunchGenesisState returns a sample genesis state for the launch module

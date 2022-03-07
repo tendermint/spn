@@ -28,11 +28,8 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdShowVerifiedClientIds(),
 		CmdListProviderClientID(),
 		CmdShowProviderClientID(),
-		CmdListLaunchIDFromVerifiedClientID(),
-		CmdShowLaunchIDFromVerifiedClientID(),
 		CmdListLaunchIDFromChannelID(),
 		CmdShowLaunchIDFromChannelID(),
-		CmdListMonitoringHistory(),
 		CmdShowMonitoringHistory(),
 		CmdQueryParams(),
 	)

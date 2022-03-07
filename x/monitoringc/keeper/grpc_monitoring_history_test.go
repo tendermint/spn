@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -63,60 +62,4 @@ func TestMonitoringHistoryQuerySingle(t *testing.T) {
 			}
 		})
 	}
-}
-
-func TestMonitoringHistoryQueryPaginated(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNMonitoringHistory(tk.MonitoringConsumerKeeper, ctx, 5)
-
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllMonitoringHistoryRequest {
-		return &types.QueryAllMonitoringHistoryRequest{
-			Pagination: &query.PageRequest{
-				Key:        next,
-				Offset:     offset,
-				Limit:      limit,
-				CountTotal: total,
-			},
-		}
-	}
-	t.Run("ByOffset", func(t *testing.T) {
-		step := 2
-		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.MonitoringConsumerKeeper.MonitoringHistoryAll(wctx, request(nil, uint64(i), uint64(step), false))
-			require.NoError(t, err)
-			require.LessOrEqual(t, len(resp.MonitoringHistory), step)
-			require.Subset(t,
-				nullify.Fill(msgs),
-				nullify.Fill(resp.MonitoringHistory),
-			)
-		}
-	})
-	t.Run("ByKey", func(t *testing.T) {
-		step := 2
-		var next []byte
-		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.MonitoringConsumerKeeper.MonitoringHistoryAll(wctx, request(next, 0, uint64(step), false))
-			require.NoError(t, err)
-			require.LessOrEqual(t, len(resp.MonitoringHistory), step)
-			require.Subset(t,
-				nullify.Fill(msgs),
-				nullify.Fill(resp.MonitoringHistory),
-			)
-			next = resp.Pagination.NextKey
-		}
-	})
-	t.Run("Total", func(t *testing.T) {
-		resp, err := tk.MonitoringConsumerKeeper.MonitoringHistoryAll(wctx, request(nil, 0, 0, true))
-		require.NoError(t, err)
-		require.Equal(t, len(msgs), int(resp.Pagination.Total))
-		require.ElementsMatch(t,
-			nullify.Fill(msgs),
-			nullify.Fill(resp.MonitoringHistory),
-		)
-	})
-	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := tk.MonitoringConsumerKeeper.MonitoringHistoryAll(wctx, nil)
-		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
-	})
 }
