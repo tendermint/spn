@@ -205,7 +205,7 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 					Signed:  true,
 				},
 			),
-			currentBlockHeight: 1,
+			currentBlockHeight: 2,
 			wantErr:            true,
 		},
 	}
