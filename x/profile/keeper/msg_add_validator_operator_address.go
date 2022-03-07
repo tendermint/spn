@@ -14,21 +14,22 @@ func (k msgServer) AddValidatorOperatorAddress(
 	msg *types.MsgAddValidatorOperatorAddress,
 ) (*types.MsgAddValidatorOperatorAddressResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	valAddr := msg.ValidatorAddress
 	opAddr := msg.OperatorAddress
 
 	validator := types.Validator{
-		Address:           msg.ValidatorAddress,
+		Address:           valAddr,
 		OperatorAddresses: []string{opAddr},
 		Description:       types.ValidatorDescription{},
 	}
 
 	// remove the operator address from previous address
-	if valByOpAddr, found := k.GetValidatorByOperatorAddress(ctx, opAddr); found {
-		lastValidator, found := k.GetValidator(ctx, valByOpAddr.ValidatorAddress)
+	if previousValByOpAddr, found := k.GetValidatorByOperatorAddress(ctx, opAddr); found {
+		lastValidator, found := k.GetValidator(ctx, previousValByOpAddr.ValidatorAddress)
 		if !found {
 			return nil, spnerrors.Criticalf(
 				"validator should exist for operator address %s",
-				valByOpAddr.ValidatorAddress,
+				previousValByOpAddr.ValidatorAddress,
 			)
 		}
 		lastValidator = lastValidator.RemoveValidatorOperatorAddress(opAddr)
@@ -36,7 +37,7 @@ func (k msgServer) AddValidatorOperatorAddress(
 	}
 
 	// get the current validator to eventually overwrite description and remove existing operator address
-	if validatorStore, found := k.GetValidator(ctx, msg.ValidatorAddress); found {
+	if validatorStore, found := k.GetValidator(ctx, valAddr); found {
 		validator.Description = validatorStore.Description
 		validator = validatorStore.AddValidatorOperatorAddress(opAddr)
 	}
@@ -45,7 +46,7 @@ func (k msgServer) AddValidatorOperatorAddress(
 	k.SetValidator(ctx, validator)
 	k.SetValidatorByOperatorAddress(ctx, types.ValidatorByOperatorAddress{
 		OperatorAddress:  opAddr,
-		ValidatorAddress: msg.ValidatorAddress,
+		ValidatorAddress: valAddr,
 	})
 
 	return &types.MsgAddValidatorOperatorAddressResponse{}, nil
