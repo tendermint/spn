@@ -195,10 +195,10 @@ func TestSignatureCounts_Validate(t *testing.T) {
 }
 
 func TestSignatureCounts_GetOperatorAddress(t *testing.T) {
-	converted, err := tc.SignatureCount(t, "cosmosvaloper17qqqsmyx43efr5ywp33h35l4dlmacfxvtkyed5", "1").GetOperatorAddress()
+	converted, err := tc.SignatureCount(t, "cosmosvaloper17qqqsmyx43efr5ywp33h35l4dlmacfxvtkyed5", "1").GetOperatorAddress(types.AccountAddressPrefix)
 	require.NoError(t, err)
 	require.EqualValues(t, "spn17qqqsmyx43efr5ywp33h35l4dlmacfxvj7g20a", converted)
 
-	_, err = tc.SignatureCount(t, "invalid_bech_32", "1").GetOperatorAddress()
+	_, err = tc.SignatureCount(t, "invalid_bech_32", "1").GetOperatorAddress(types.AccountAddressPrefix)
 	require.Error(t, err)
 }

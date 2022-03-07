@@ -44,7 +44,7 @@ func (m SignatureCounts) Validate() error {
 	// iterate all signature count
 	for _, sc := range m.Counts {
 		// check is the signer has a invalid bech32 address
-		_, err := sc.GetOperatorAddress()
+		_, err := sc.GetOperatorAddress(AccountAddressPrefix)
 		if err != nil {
 			return errors.Wrapf(err, "invalid bech32 operator address: %s", sc.OpAddress)
 		}
@@ -69,10 +69,10 @@ func (m SignatureCounts) Validate() error {
 }
 
 // GetOperatorAddress returns the operator address for the signer with the SPN prefix format
-func (m SignatureCount) GetOperatorAddress() (string, error) {
+func (m SignatureCount) GetOperatorAddress(accountPrefix string) (string, error) {
 	_, decoded, err := bech32.DecodeAndConvert(m.OpAddress)
 	if err != nil {
 		return "", err
 	}
-	return bech32.ConvertAndEncode(AccountAddressPrefix, decoded)
+	return bech32.ConvertAndEncode(accountPrefix, decoded)
 }

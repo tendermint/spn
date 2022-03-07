@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -64,7 +65,11 @@ func (k Keeper) DistributeRewards(
 		// if the validator is not registered, reward distribution is skipped
 		// all funds are sent back to the coordinator
 
-		opAddr, err := signatureCount.GetOperatorAddress()
+		config := sdk.GetConfig()
+		if config == nil {
+			return spnerrors.Critical("SDK config not set")
+		}
+		opAddr, err := signatureCount.GetOperatorAddress(config.GetBech32AccountAddrPrefix())
 		if err != nil {
 			return sdkerrors.Wrapf(types.ErrInvalidSignatureCounts, "invalid operator address: %s", signatureCount.OpAddress)
 		}

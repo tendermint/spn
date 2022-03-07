@@ -129,13 +129,13 @@ func TestCalculateRewards(t *testing.T) {
 func TestKeeper_DistributeRewards(t *testing.T) {
 	var (
 		ctx, tk, _      = testkeeper.NewTestSetup(t)
-		valFoo                     = sample.Address()
-		valBar                     = sample.Address()
-		valOpAddrFoo               = sample.Address()
-		valOpAddrBar               = sample.Address()
-		noProfileVal               = sample.Address()
-		notFoundValAddr            = sample.Address()
-		provider                   = sample.Address()
+		valFoo          = sample.Address()
+		valBar          = sample.Address()
+		valOpAddrFoo    = sample.Address()
+		valOpAddrBar    = sample.Address()
+		noProfileVal    = sample.Address()
+		notFoundValAddr = sample.Address()
+		provider        = sample.Address()
 	)
 
 	// set validator profiles
