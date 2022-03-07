@@ -1,0 +1,10 @@
+syntax = "proto3";
+package tendermint.spn.participation;
+
+option go_package = "github.com/tendermint/spn/x/participation/types";
+
+// Describes the number of allocations already used by a user for existing auctions
+message UsedAllocations {
+  string address = 1;
+  uint64 numAllocations = 2;
+}
