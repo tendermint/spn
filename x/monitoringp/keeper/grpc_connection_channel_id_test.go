@@ -24,12 +24,12 @@ func TestConnectionChannelIDQuery(t *testing.T) {
 		err      error
 	}{
 		{
-			desc:     "First",
+			desc:     "Valid Request",
 			request:  &types.QueryGetConnectionChannelIDRequest{},
 			response: &types.QueryGetConnectionChannelIDResponse{ConnectionChannelID: item},
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "Invalid Request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {

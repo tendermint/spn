@@ -14,14 +14,13 @@ import (
 )
 
 func TestKeeper_InitializeConsumerClient(t *testing.T) {
-
 	t.Run("initialize consumer client", func(t *testing.T) {
 		k, ibcKeeper, ctx := testkeeper.MonitoringpKeeper(t)
 
 		// set params with valid values
 		k.SetParams(ctx, types.NewParams(
 			1000,
-			types.DefautConsumerChainID,
+			types.DefaultConsumerChainID,
 			sample.ConsensusState(0),
 			spntypes.DefaultUnbondingPeriod,
 			spntypes.DefaultRevisionHeight,

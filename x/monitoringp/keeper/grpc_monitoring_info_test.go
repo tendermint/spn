@@ -24,12 +24,12 @@ func TestMonitoringInfoQuery(t *testing.T) {
 		err      error
 	}{
 		{
-			desc:     "First",
+			desc:     "Valid Request",
 			request:  &types.QueryGetMonitoringInfoRequest{},
 			response: &types.QueryGetMonitoringInfoResponse{MonitoringInfo: item},
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "Invalid Request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {

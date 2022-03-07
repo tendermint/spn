@@ -24,12 +24,12 @@ func TestConsumerClientIDQuery(t *testing.T) {
 		err      error
 	}{
 		{
-			desc:     "First",
+			desc:     "Valid Request",
 			request:  &types.QueryGetConsumerClientIDRequest{},
 			response: &types.QueryGetConsumerClientIDResponse{ConsumerClientID: item},
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "Invalid Request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {

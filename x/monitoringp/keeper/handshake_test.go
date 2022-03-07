@@ -49,7 +49,7 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("should fails if channel doesn't exist", func(t *testing.T) {
+	t.Run("should fail if channel doesn't exist", func(t *testing.T) {
 		k, ctx := monitoringpKeeperWithFooClient(t)
 		k.SetConsumerClientID(ctx, types.ConsumerClientID{
 			ClientID: "foo",
@@ -58,7 +58,7 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		require.ErrorIs(t, err, channeltypes.ErrChannelNotFound)
 	})
 
-	t.Run("should fails if the channel has more than 1 hop connection", func(t *testing.T) {
+	t.Run("should fail if the channel has more than 1 hop connection", func(t *testing.T) {
 		k, _, ctx := testkeeper.MonitoringpKeeperWithIBCMock(
 			t,
 			[]testkeeper.Connection{},
@@ -78,7 +78,7 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		require.ErrorIs(t, err, channeltypes.ErrTooManyConnectionHops)
 	})
 
-	t.Run("should fails if the connection doesn't exist", func(t *testing.T) {
+	t.Run("should fail if the connection doesn't exist", func(t *testing.T) {
 		k, _, ctx := testkeeper.MonitoringpKeeperWithIBCMock(
 			t,
 			[]testkeeper.Connection{},
@@ -98,7 +98,7 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		require.ErrorIs(t, err, connectiontypes.ErrConnectionNotFound)
 	})
 
-	t.Run("should fails if the client doesn't exist", func(t *testing.T) {
+	t.Run("should fail if the client doesn't exist", func(t *testing.T) {
 		k, ctx := monitoringpKeeperWithFooClient(t)
 		err := k.VerifyClientIDFromChannelID(ctx, "foo")
 		require.ErrorIs(t, err, types.ErrNoConsumerClient)
