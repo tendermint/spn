@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	//BondDenom defines the bond denom used in testing
+	// BondDenom defines the bond denom used in testing
 	BondDenom = "stake"
 
 	simAccountsNb = 100
