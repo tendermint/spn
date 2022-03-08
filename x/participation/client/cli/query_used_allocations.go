@@ -45,7 +45,7 @@ func CmdListUsedAllocations() *cobra.Command {
 
 func CmdShowUsedAllocations() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-used-allocations [index]",
+		Use:   "show-used-allocations [address]",
 		Short: "Shows total used allocations for an address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {

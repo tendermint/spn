@@ -1,11 +1,8 @@
 package types
 
 import (
-	"encoding/binary"
 	"strconv"
 )
-
-var _ binary.ByteOrder
 
 const (
 	// ModuleName defines the module name

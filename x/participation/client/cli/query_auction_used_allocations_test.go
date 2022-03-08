@@ -18,9 +18,6 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func networkWithAuctionUsedAllocationsObjects(t *testing.T, n int) (*network.Network, []types.AuctionUsedAllocations) {
 	t.Helper()
 	cfg := network.DefaultConfig()
