@@ -15,14 +15,14 @@ import (
 
 const (
 	defaultWeightMsgUpdateValidatorDescription   = 50
-	defaultWeightMsgSetValidatorConsAddress      = 50
+	defaultWeightMsgAddValidatorOperatorAddress  = 50
 	defaultWeightMsgCreateCoordinator            = 50
 	defaultWeightMsgUpdateCoordinatorDescription = 20
 	defaultWeightMsgUpdateCoordinatorAddress     = 20
 	defaultWeightMsgDisableCoordinator           = 5
 
 	opWeightMsgUpdateValidatorDescription   = "op_weight_msg_update_validator_description"
-	opWeightMsgSetValidatorConsAddress      = "op_weight_msg_create_chain"
+	opWeightMsgAddValidatorOperatorAddress  = "op_weight_msg_add_vaildator_operator_address"
 	opWeightMsgCreateCoordinator            = "op_weight_msg_create_coordinator"
 	opWeightMsgUpdateCoordinatorDescription = "op_weight_msg_update_coordinator_description"
 	opWeightMsgUpdateCoordinatorAddress     = "op_weight_msg_update_coordinator_address"
@@ -60,7 +60,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgUpdateCoordinatorDescription int
 		weightMsgUpdateCoordinatorAddress     int
 		weightMsgDisableCoordinator           int
-		weightMsgSetValidatorConsAddress      int
+		weightMsgAddValidatorOperatorAddress  int
 	)
 
 	appParams := simState.AppParams
@@ -70,9 +70,9 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgUpdateValidatorDescription = defaultWeightMsgUpdateValidatorDescription
 		},
 	)
-	appParams.GetOrGenerate(cdc, opWeightMsgSetValidatorConsAddress, &weightMsgSetValidatorConsAddress, nil,
+	appParams.GetOrGenerate(cdc, opWeightMsgAddValidatorOperatorAddress, &weightMsgAddValidatorOperatorAddress, nil,
 		func(_ *rand.Rand) {
-			weightMsgSetValidatorConsAddress = defaultWeightMsgSetValidatorConsAddress
+			weightMsgAddValidatorOperatorAddress = defaultWeightMsgAddValidatorOperatorAddress
 		},
 	)
 	appParams.GetOrGenerate(cdc, opWeightMsgCreateCoordinator, &weightMsgCreateCoordinator, nil,
@@ -102,8 +102,8 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			profilesimulation.SimulateMsgUpdateValidatorDescription(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
-			weightMsgSetValidatorConsAddress,
-			profilesimulation.SimulateMsgSetValidatorConsAddress(am.accountKeeper, am.bankKeeper, am.keeper),
+			weightMsgAddValidatorOperatorAddress,
+			profilesimulation.SimulateMsgAddValidatorOperatorAddress(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgCreateCoordinator,

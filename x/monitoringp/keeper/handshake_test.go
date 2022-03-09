@@ -17,7 +17,7 @@ import (
 
 // monitoringpKeeperWithFooClient returns a test monitoring keeper containing necessary IBC mocks for a client with ID foo
 func monitoringpKeeperWithFooClient(t *testing.T) (*monitoringpmodulekeeper.Keeper, sdk.Context) {
-	k, _, ctx := testkeeper.MonitoringpKeeperWithIBCMock(
+	k, _, _, ctx := testkeeper.MonitoringpKeeperWithIBCMock(
 		t,
 		[]testkeeper.Connection{
 			{
@@ -59,7 +59,7 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 	})
 
 	t.Run("should fails if the channel has more than 1 hop connection", func(t *testing.T) {
-		k, _, ctx := testkeeper.MonitoringpKeeperWithIBCMock(
+		k, _, _, ctx := testkeeper.MonitoringpKeeperWithIBCMock(
 			t,
 			[]testkeeper.Connection{},
 			[]testkeeper.Channel{
@@ -79,7 +79,7 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 	})
 
 	t.Run("should fails if the connection doesn't exist", func(t *testing.T) {
-		k, _, ctx := testkeeper.MonitoringpKeeperWithIBCMock(
+		k, _, _, ctx := testkeeper.MonitoringpKeeperWithIBCMock(
 			t,
 			[]testkeeper.Connection{},
 			[]testkeeper.Channel{

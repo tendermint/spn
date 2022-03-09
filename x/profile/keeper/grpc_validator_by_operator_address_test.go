@@ -14,34 +14,34 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func TestValidatorByConsAddressQuerySingle(t *testing.T) {
+func TestValidatorByOperatorAddressQuerySingle(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNValidatorByConsAddress(tk.ProfileKeeper, ctx, 2)
+	msgs := createNValidatorByOperatorAddress(tk.ProfileKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
-		request  *types.QueryGetValidatorByConsAddressRequest
-		response *types.QueryGetValidatorByConsAddressResponse
+		request  *types.QueryGetValidatorByOperatorAddressRequest
+		response *types.QueryGetValidatorByOperatorAddressResponse
 		err      error
 	}{
 		{
 			desc: "First",
-			request: &types.QueryGetValidatorByConsAddressRequest{
-				ConsensusAddress: msgs[0].ConsensusAddress,
+			request: &types.QueryGetValidatorByOperatorAddressRequest{
+				OperatorAddress: msgs[0].OperatorAddress,
 			},
-			response: &types.QueryGetValidatorByConsAddressResponse{ValidatorByConsAddress: msgs[0]},
+			response: &types.QueryGetValidatorByOperatorAddressResponse{ValidatorByOperatorAddress: msgs[0]},
 		},
 		{
 			desc: "Second",
-			request: &types.QueryGetValidatorByConsAddressRequest{
-				ConsensusAddress: msgs[1].ConsensusAddress,
+			request: &types.QueryGetValidatorByOperatorAddressRequest{
+				OperatorAddress: msgs[1].OperatorAddress,
 			},
-			response: &types.QueryGetValidatorByConsAddressResponse{ValidatorByConsAddress: msgs[1]},
+			response: &types.QueryGetValidatorByOperatorAddressResponse{ValidatorByOperatorAddress: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.QueryGetValidatorByConsAddressRequest{
-				ConsensusAddress: sample.ConsAddress().Bytes(),
+			request: &types.QueryGetValidatorByOperatorAddressRequest{
+				OperatorAddress: sample.Address(),
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},
@@ -51,7 +51,7 @@ func TestValidatorByConsAddressQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := tk.ProfileKeeper.ValidatorByConsAddress(wctx, tc.request)
+			response, err := tk.ProfileKeeper.ValidatorByOperatorAddress(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

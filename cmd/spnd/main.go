@@ -7,15 +7,16 @@ import (
 	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
 
 	"github.com/tendermint/spn/app"
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 func main() {
 
 	rootCmd, _ := cosmoscmd.NewRootCmd(
-		app.Name,
-		app.AccountAddressPrefix,
+		spntypes.Name,
+		spntypes.AccountAddressPrefix,
 		app.DefaultNodeHome,
-		app.DefaultChainID,
+		spntypes.DefaultChainID,
 		app.ModuleBasics,
 		app.New,
 		// this line is used by starport scaffolding # root/arguments

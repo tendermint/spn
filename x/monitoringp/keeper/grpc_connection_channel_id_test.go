@@ -14,7 +14,7 @@ import (
 )
 
 func TestConnectionChannelIDQuery(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
+	keeper, _, _, ctx := keepertest.MonitoringpKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	item := createTestConnectionChannelID(keeper, ctx)
 	for _, tc := range []struct {
