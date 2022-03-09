@@ -17,7 +17,7 @@ import (
 func TestProviderClientIDQuerySingle(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNProviderClientID(tk.MonitoringConsumerKeeper, ctx, 2)
+	items := createNProviderClientID(ctx, tk.MonitoringConsumerKeeper, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetProviderClientIDRequest
@@ -27,16 +27,16 @@ func TestProviderClientIDQuerySingle(t *testing.T) {
 		{
 			desc: "first",
 			request: &types.QueryGetProviderClientIDRequest{
-				LaunchID: msgs[0].LaunchID,
+				LaunchID: items[0].LaunchID,
 			},
-			response: &types.QueryGetProviderClientIDResponse{ProviderClientID: msgs[0]},
+			response: &types.QueryGetProviderClientIDResponse{ProviderClientID: items[0]},
 		},
 		{
 			desc: "second",
 			request: &types.QueryGetProviderClientIDRequest{
-				LaunchID: msgs[1].LaunchID,
+				LaunchID: items[1].LaunchID,
 			},
-			response: &types.QueryGetProviderClientIDResponse{ProviderClientID: msgs[1]},
+			response: &types.QueryGetProviderClientIDResponse{ProviderClientID: items[1]},
 		},
 		{
 			desc: "key not found",
@@ -68,7 +68,7 @@ func TestProviderClientIDQuerySingle(t *testing.T) {
 func TestProviderClientIDQueryPaginated(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNProviderClientID(tk.MonitoringConsumerKeeper, ctx, 5)
+	items := createNProviderClientID(ctx, tk.MonitoringConsumerKeeper, 2)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllProviderClientIDRequest {
 		return &types.QueryAllProviderClientIDRequest{
@@ -80,38 +80,38 @@ func TestProviderClientIDQueryPaginated(t *testing.T) {
 			},
 		}
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	t.Run("by offset", func(t *testing.T) {
 		step := 2
-		for i := 0; i < len(msgs); i += step {
+		for i := 0; i < len(items); i += step {
 			resp, err := tk.MonitoringConsumerKeeper.ProviderClientIDAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.ProviderClientID), step)
 			require.Subset(t,
-				nullify.Fill(msgs),
+				nullify.Fill(items),
 				nullify.Fill(resp.ProviderClientID),
 			)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	t.Run("by key", func(t *testing.T) {
 		step := 2
 		var next []byte
-		for i := 0; i < len(msgs); i += step {
+		for i := 0; i < len(items); i += step {
 			resp, err := tk.MonitoringConsumerKeeper.ProviderClientIDAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.ProviderClientID), step)
 			require.Subset(t,
-				nullify.Fill(msgs),
+				nullify.Fill(items),
 				nullify.Fill(resp.ProviderClientID),
 			)
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
+	t.Run("total", func(t *testing.T) {
 		resp, err := tk.MonitoringConsumerKeeper.ProviderClientIDAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
-		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.Equal(t, len(items), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
-			nullify.Fill(msgs),
+			nullify.Fill(items),
 			nullify.Fill(resp.ProviderClientID),
 		)
 	})
