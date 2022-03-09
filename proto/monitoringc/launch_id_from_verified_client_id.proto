@@ -7,4 +7,3 @@ message LaunchIDFromVerifiedClientID {
   string clientID = 1; 
   uint64 launchID = 2;
 }
-

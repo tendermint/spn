@@ -7,4 +7,3 @@ message LaunchIDFromChannelID {
   string channelID = 1; 
   uint64 launchID = 2;
 }
-

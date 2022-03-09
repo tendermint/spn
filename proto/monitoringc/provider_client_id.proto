@@ -7,4 +7,3 @@ message ProviderClientID {
   uint64 launchID = 1; 
   string clientID = 2; 
 }
-
