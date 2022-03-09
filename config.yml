@@ -59,7 +59,7 @@ genesis:
     participation:
       params:
         allocationPrice:
-          staking: "1000"
+          bonded: "1000"
         participationTierList:
           - tierID: "1"
             requiredAllocations: "1"
