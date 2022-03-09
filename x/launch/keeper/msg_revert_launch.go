@@ -37,6 +37,10 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 		return nil, sdkerrors.Wrapf(types.ErrNotTriggeredLaunch, "%d", msg.LaunchID)
 	}
 
+	if chain.MonitoringConnected {
+		return nil, sdkerrors.Wrapf(types.ErrChainMonitoringConnected, "%d", msg.LaunchID)
+	}
+
 	// The LaunchTimestamp must always be a non-zero value if LaunchTriggered is set
 	if chain.LaunchTimestamp == 0 {
 		return nil, spnerrors.Critical("LaunchTimestamp is not set while LaunchTriggered is set")

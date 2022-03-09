@@ -25,7 +25,9 @@ message Chain {
 
   int64 consumerRevisionHeight = 13;
 
-  bytes metadata = 14;
+  bool monitoringConnected = 14;
+
+  bytes metadata = 15;
 }
 
 message InitialGenesis {

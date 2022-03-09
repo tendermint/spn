@@ -237,6 +237,27 @@ func TestGetChain(t *testing.T) {
 	}
 }
 
+func TestEnableMonitoringConnection(t *testing.T) {
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	// if chain does not exist, throw error
+	err := tk.LaunchKeeper.EnableMonitoringConnection(ctx, 1)
+	require.ErrorIs(t, err, types.ErrChainNotFound)
+
+	validChain := types.Chain{}
+	validChainID := tk.LaunchKeeper.AppendChain(ctx, validChain)
+	err = tk.LaunchKeeper.EnableMonitoringConnection(ctx, validChainID)
+	require.NoError(t, err)
+	rst, found := tk.LaunchKeeper.GetChain(ctx, validChainID)
+	require.True(t, found)
+	validChain.MonitoringConnected = true
+	require.Equal(t, validChain, rst)
+
+	// try enabling again, but expect error since it is already enabled
+	err = tk.LaunchKeeper.EnableMonitoringConnection(ctx, validChainID)
+	require.ErrorIs(t, err, types.ErrChainMonitoringConnected)
+}
+
 func TestGetAllChain(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNChain(tk.LaunchKeeper, ctx, 10)
