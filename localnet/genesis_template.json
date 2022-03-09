@@ -327,9 +327,38 @@
     "participation": {
       "params": {
         "allocationPrice": {
-          "staking": "0"
+          "staking": "1000"
         },
-        "participationTierList": [],
+        "participationTierList": [
+          {
+            "tierID": 1,
+            "requiredAllocations": 1,
+            "benefits": {
+              "maxBidAmount": "1000"
+            }
+          },
+          {
+            "tierID": 2,
+            "requiredAllocations": 2,
+            "benefits": {
+              "maxBidAmount": "1000"
+            }
+          },
+          {
+            "tierID": 3,
+            "requiredAllocations": 5,
+            "benefits": {
+              "maxBidAmount": "1000"
+            }
+          },
+          {
+            "tierID": 4,
+            "requiredAllocations": 10,
+            "benefits": {
+              "maxBidAmount": "1000"
+            }
+          }
+        ],
         "withdrawalAllocationDelay": 0
       }
     },
