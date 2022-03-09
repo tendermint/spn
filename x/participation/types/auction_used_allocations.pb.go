@@ -22,6 +22,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// Allocations used by a user for a specific auction
 type AuctionUsedAllocations struct {
 	Address        string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	AuctionID      uint64 `protobuf:"varint,2,opt,name=auctionID,proto3" json:"auctionID,omitempty"`

@@ -22,6 +22,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// Describes the number of allocations already used by a user for existing auctions
 type UsedAllocations struct {
 	Address        string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	NumAllocations uint64 `protobuf:"varint,2,opt,name=numAllocations,proto3" json:"numAllocations,omitempty"`

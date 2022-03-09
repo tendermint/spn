@@ -31,7 +31,7 @@ service Query {
 	}
 	// Queries a list of AuctionUsedAllocations items.
 	rpc AuctionUsedAllocationsAll(QueryAllAuctionUsedAllocationsRequest) returns (QueryAllAuctionUsedAllocationsResponse) {
-		option (google.api.http).get = "/tendermint/spn/participation/auction_used_allocations";
+		option (google.api.http).get = "/tendermint/spn/participation/auction_used_allocations/{address}";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -73,7 +73,8 @@ message QueryGetAuctionUsedAllocationsResponse {
 }
 
 message QueryAllAuctionUsedAllocationsRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+	string address = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryAllAuctionUsedAllocationsResponse {

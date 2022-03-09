@@ -15,9 +15,6 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func TestAuctionUsedAllocationsQuerySingle(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
@@ -75,10 +72,12 @@ func TestAuctionUsedAllocationsQuerySingle(t *testing.T) {
 func TestAuctionUsedAllocationsQueryPaginated(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
-	msgs := createNAuctionUsedAllocations(tk.ParticipationKeeper, sdkCtx, 5)
+	msgs := createNAuctionUsedAllocationsWithSameAddress(tk.ParticipationKeeper, sdkCtx, 5)
+	address := msgs[0].Address
 
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllAuctionUsedAllocationsRequest {
+	request := func(addr string, next []byte, offset, limit uint64, total bool) *types.QueryAllAuctionUsedAllocationsRequest {
 		return &types.QueryAllAuctionUsedAllocationsRequest{
+			Address: addr,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
@@ -90,7 +89,7 @@ func TestAuctionUsedAllocationsQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request(address, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.AuctionUsedAllocations), step)
 			require.Subset(t,
@@ -103,7 +102,7 @@ func TestAuctionUsedAllocationsQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request(address, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.AuctionUsedAllocations), step)
 			require.Subset(t,
@@ -114,7 +113,7 @@ func TestAuctionUsedAllocationsQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request(nil, 0, 0, true))
+		resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request(address, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,

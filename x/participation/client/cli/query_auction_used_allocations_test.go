@@ -14,6 +14,7 @@ import (
 
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/client/cli"
 	"github.com/tendermint/spn/x/participation/types"
 )
@@ -27,6 +28,27 @@ func networkWithAuctionUsedAllocationsObjects(t *testing.T, n int) (*network.Net
 	for i := 0; i < n; i++ {
 		auctionUsedAllocations := types.AuctionUsedAllocations{
 			Address:   strconv.Itoa(i),
+			AuctionID: uint64(i),
+		}
+		nullify.Fill(&auctionUsedAllocations)
+		state.AuctionUsedAllocationsList = append(state.AuctionUsedAllocationsList, auctionUsedAllocations)
+	}
+	buf, err := cfg.Codec.MarshalJSON(&state)
+	require.NoError(t, err)
+	cfg.GenesisState[types.ModuleName] = buf
+	return network.New(t, cfg), state.AuctionUsedAllocationsList
+}
+
+func networkWithAuctionUsedAllocationsObjectsWithSameAddress(t *testing.T, n int) (*network.Network, []types.AuctionUsedAllocations) {
+	t.Helper()
+	cfg := network.DefaultConfig()
+	state := types.GenesisState{}
+	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
+
+	address := sample.Address()
+	for i := 0; i < n; i++ {
+		auctionUsedAllocations := types.AuctionUsedAllocations{
+			Address:   address,
 			AuctionID: uint64(i),
 		}
 		nullify.Fill(&auctionUsedAllocations)
@@ -95,11 +117,13 @@ func TestShowAuctionUsedAllocations(t *testing.T) {
 }
 
 func TestListAuctionUsedAllocations(t *testing.T) {
-	net, objs := networkWithAuctionUsedAllocationsObjects(t, 5)
+	net, objs := networkWithAuctionUsedAllocationsObjectsWithSameAddress(t, 5)
+	address := objs[0].Address
 
 	ctx := net.Validators[0].ClientCtx
-	request := func(next []byte, offset, limit uint64, total bool) []string {
+	request := func(addr string, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
+			addr,
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 		}
 		if next == nil {
@@ -116,7 +140,7 @@ func TestListAuctionUsedAllocations(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
-			args := request(nil, uint64(i), uint64(step), false)
+			args := request(address, nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListAuctionUsedAllocations(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllAuctionUsedAllocationsResponse
@@ -132,7 +156,7 @@ func TestListAuctionUsedAllocations(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
-			args := request(next, 0, uint64(step), false)
+			args := request(address, next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListAuctionUsedAllocations(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllAuctionUsedAllocationsResponse
@@ -146,7 +170,7 @@ func TestListAuctionUsedAllocations(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(objs)), true)
+		args := request(address, nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListAuctionUsedAllocations(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllAuctionUsedAllocationsResponse

@@ -83,6 +83,30 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 			valid: false,
 		},
+		{
+			desc: "mismatch between usedAllocations and auctionUsedAllocations",
+			genState: &types.GenesisState{
+				UsedAllocationsList: []types.UsedAllocations{
+					{
+						Address:        addr1,
+						NumAllocations: 10,
+					},
+				},
+				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
+					{
+						Address:        addr1,
+						AuctionID:      auctionID1,
+						NumAllocations: 1,
+					},
+					{
+						Address:        addr1,
+						AuctionID:      auctionID2,
+						NumAllocations: 1,
+					},
+				},
+			},
+			valid: false,
+		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

@@ -27,6 +27,24 @@ func (k Keeper) GetAuctionUsedAllocations(ctx sdk.Context, address string, aucti
 	return val, true
 }
 
+func (k Keeper) GetAllAuctionUsedAllocationsByAddress(ctx sdk.Context, address string) (list []types.AuctionUsedAllocations) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AuctionUsedAllocationsKeyPrefix))
+
+	// use address as prefix to iterate only on address-related entries
+	// address is always the first part of the actual key (see types.AuctionUsedAllocationsKey)
+	iterator := sdk.KVStorePrefixIterator(store, []byte(address))
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.AuctionUsedAllocations
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
+
 // GetAllAuctionUsedAllocations returns all auctionUsedAllocations
 func (k Keeper) GetAllAuctionUsedAllocations(ctx sdk.Context) (list []types.AuctionUsedAllocations) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AuctionUsedAllocationsKeyPrefix))

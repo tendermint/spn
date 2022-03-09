@@ -13,9 +13,6 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func createNUsedAllocations(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.UsedAllocations {
 	items := make([]types.UsedAllocations, n)
 	for i := range items {

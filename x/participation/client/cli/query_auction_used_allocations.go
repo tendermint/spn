@@ -13,8 +13,9 @@ import (
 
 func CmdListAuctionUsedAllocations() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-auction-used-allocations",
-		Short: "List all used allocations for auctions by addresses",
+		Use:   "list-auction-used-allocations [address]",
+		Short: "List all used allocations for auctions for an address",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -23,9 +24,12 @@ func CmdListAuctionUsedAllocations() *cobra.Command {
 				return err
 			}
 
+			argAddress := args[0]
+
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryAllAuctionUsedAllocationsRequest{
+				Address:    argAddress,
 				Pagination: pageReq,
 			}
 

@@ -15,9 +15,6 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func TestUsedAllocationsQuerySingle(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
