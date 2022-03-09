@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	monitoringpkeeper "github.com/tendermint/spn/x/monitoringp/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
@@ -25,6 +23,7 @@ import (
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
 	monitoringctypes "github.com/tendermint/spn/x/monitoringc/types"
+	monitoringpkeeper "github.com/tendermint/spn/x/monitoringp/keeper"
 	participationkeeper "github.com/tendermint/spn/x/participation/keeper"
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
