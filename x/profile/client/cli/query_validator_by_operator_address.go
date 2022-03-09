@@ -13,7 +13,7 @@ import (
 func CmdShowValidatorByOperatorAddress() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-validator-by-operator-address [operator-address]",
-		Short: "shows a validator address by an associated operator address",
+		Short: "Shows a validator address by an associated operator address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
