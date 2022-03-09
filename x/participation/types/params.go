@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 
 	"gopkg.in/yaml.v2"
@@ -118,7 +119,7 @@ func validateAllocationPrice(v interface{}) error {
 	}
 
 	if allocationPrice.Bonded.LTE(sdk.ZeroInt()) {
-		return fmt.Errorf("value for 'bonded' must be greater than zero: %T", allocationPrice.String())
+		return errors.New("value for 'bonded' must be greater than zero")
 	}
 
 	return nil
@@ -132,27 +133,39 @@ func validateParticipationTierList(v interface{}) error {
 	}
 
 	tiersIndexMap := make(map[uint64]struct{})
+	lastTierID := uint64(0)
+	lastRequiredAllocations := uint64(0)
+	lastTierBenefits := TierBenefits{MaxBidAmount: sdk.ZeroInt()}
 	for _, tier := range participationTierList {
 		// check IDs are unique
 		if _, ok = tiersIndexMap[tier.TierID]; ok {
 			return fmt.Errorf("duplicated tier ID: %v", tier.TierID)
 		}
+		tiersIndexMap[tier.TierID] = struct{}{}
 
-		if tier.RequiredAllocations <= 0 {
-			return fmt.Errorf("required allocations must be greater than zero: %v", tier.RequiredAllocations)
+		// check IDs are sorted
+		if lastTierID > tier.TierID {
+			return fmt.Errorf("tiers must be sorted by ID")
 		}
+		lastTierID = tier.TierID
 
-		if err := validateTierBenefits(tier.Benefits); err != nil {
+		if tier.RequiredAllocations <= lastRequiredAllocations {
+			return errors.New("required allocations must be strictly increasing and greater than zero")
+		}
+		lastRequiredAllocations = tier.RequiredAllocations
+
+		if err := validateNextTierBenefits(tier.Benefits, lastTierBenefits); err != nil {
 			return err
 		}
+		lastTierBenefits = tier.Benefits
 	}
 
 	return nil
 }
 
-func validateTierBenefits(b TierBenefits) error {
-	if b.MaxBidAmount.LT(sdk.ZeroInt()) {
-		return fmt.Errorf("max vid amount must be greater than zero: %v", b.MaxBidAmount.String())
+func validateNextTierBenefits(next, last TierBenefits) error {
+	if next.MaxBidAmount.LTE(last.MaxBidAmount) || next.MaxBidAmount.LTE(sdk.ZeroInt()) {
+		return fmt.Errorf("max bid amount must be strictly increasing and greater than zero")
 	}
 
 	return nil
