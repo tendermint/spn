@@ -14,7 +14,7 @@ import (
 )
 
 type LaunchKeeper interface {
-	GetChain(ctx sdk.Context, launchID uint64) (val launchtypes.Chain, found bool)
+	GetChain(ctx sdk.Context, launchID uint64) (launchtypes.Chain, bool)
 	EnableMonitoringConnection(ctx sdk.Context, launchID uint64) error
 	CheckValidatorSet(
 		ctx sdk.Context,
@@ -58,7 +58,7 @@ type ConnectionKeeper interface {
 
 // ChannelKeeper defines the expected IBC channel keeper
 type ChannelKeeper interface {
-	GetChannel(ctx sdk.Context, srcPort, srcChan string) (channel channeltypes.Channel, found bool)
+	GetChannel(ctx sdk.Context, srcPort, srcChan string) (channeltypes.Channel, bool)
 	GetNextSequenceSend(ctx sdk.Context, portID, channelID string) (uint64, bool)
 	SendPacket(ctx sdk.Context, channelCap *capabilitytypes.Capability, packet exported.PacketI) error
 	WriteAcknowledgement(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet exported.PacketI, acknowledgement []byte) error
