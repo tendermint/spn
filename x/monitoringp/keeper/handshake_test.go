@@ -178,7 +178,7 @@ func TestKeeper_RegisterConnectionChannelID(t *testing.T) {
 		}, channelID)
 	})
 
-	t.Run("should fails with no critical if connection has already been established", func(t *testing.T) {
+	t.Run("should fail with no critical if connection has already been established", func(t *testing.T) {
 		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
 		tk.MonitoringProviderKeeper.SetConsumerClientID(ctx, types.ConsumerClientID{
 			ClientID: "foo",
@@ -191,7 +191,7 @@ func TestKeeper_RegisterConnectionChannelID(t *testing.T) {
 		require.NotErrorIs(t, err, spnerrors.ErrCritical)
 	})
 
-	t.Run("should fails with critical if verify channel id fails with other error than connection established", func(t *testing.T) {
+	t.Run("should fail with critical if verify channel id fails with other error than connection established", func(t *testing.T) {
 		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
 		err := tk.MonitoringProviderKeeper.RegisterConnectionChannelID(ctx, "foo")
 		require.ErrorIs(t, err, spnerrors.ErrCritical)

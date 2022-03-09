@@ -5,16 +5,18 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/stretchr/testify/require"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
+	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
+
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
-	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 	participationkeeper "github.com/tendermint/spn/x/participation/keeper"
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
@@ -43,6 +45,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
 	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
 	monitoringProviderKeeper := initializer.Monitoringp(
+		stakingKeeper,
 		*ibcKeeper,
 		*capabilityKeeper,
 		paramKeeper,
@@ -70,6 +73,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 
 	// Initialize params
 	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
+	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
 	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
@@ -92,6 +96,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 			MonitoringProviderKeeper: monitoringProviderKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
+			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 		}, TestMsgServers{

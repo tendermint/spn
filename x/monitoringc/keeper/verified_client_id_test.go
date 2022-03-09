@@ -13,7 +13,7 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-func createNVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.VerifiedClientID {
+func createNVerifiedClientID(ctx sdk.Context, keeper *keeper.Keeper, n int) []types.VerifiedClientID {
 	items := make([]types.VerifiedClientID, n)
 	for i := range items {
 		items[i].LaunchID = uint64(i)
@@ -25,7 +25,7 @@ func createNVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 
 func TestVerifiedClientIDGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
+	items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 10)
 	for _, item := range items {
 		rst, found := tk.MonitoringConsumerKeeper.GetVerifiedClientID(ctx, item.LaunchID)
 		require.True(t, found)
@@ -38,7 +38,7 @@ func TestVerifiedClientIDGet(t *testing.T) {
 
 func TestVerifiedClientIDGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
+	items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
 		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllVerifiedClientID(ctx)),

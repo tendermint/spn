@@ -9,7 +9,7 @@ import (
 
 type ProfileKeeper interface {
 	GetValidator(ctx sdk.Context, address string) (profiletypes.Validator, bool)
-	GetValidatorByConsAddress(ctx sdk.Context, consensusAddress []byte) (profiletypes.ValidatorByConsAddress, bool)
+	GetValidatorByOperatorAddress(ctx sdk.Context, operatorAddress string) (profiletypes.ValidatorByOperatorAddress, bool)
 	CoordinatorIDFromAddress(ctx sdk.Context, address string) (uint64, error)
 }
 

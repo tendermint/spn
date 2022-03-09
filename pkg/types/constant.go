@@ -1,6 +1,15 @@
 package types
 
 const (
+	// AccountAddressPrefix is the prefix used for account bech32 addresses
+	AccountAddressPrefix = "spn"
+
+	// Name is the name of the application
+	Name = "spn"
+
+	// DefaultChainID is the default chain ID used
+	DefaultChainID = "spn-1"
+
 	// MaxMetadataLength is the max length for metadata attached to chain and campaign
 	MaxMetadataLength = 100
 

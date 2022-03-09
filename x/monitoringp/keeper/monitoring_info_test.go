@@ -22,6 +22,7 @@ func TestMonitoringInfoGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	item := createTestMonitoringInfo(ctx, tk.MonitoringProviderKeeper)
 	rst, found := tk.MonitoringProviderKeeper.GetMonitoringInfo(ctx)
+
 	require.True(t, found)
 	require.Equal(t,
 		nullify.Fill(&item),

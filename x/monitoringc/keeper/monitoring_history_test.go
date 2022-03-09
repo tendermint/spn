@@ -12,7 +12,7 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-func createNMonitoringHistory(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.MonitoringHistory {
+func createNMonitoringHistory(ctx sdk.Context, keeper *keeper.Keeper, n int) []types.MonitoringHistory {
 	items := make([]types.MonitoringHistory, n)
 	for i := range items {
 		items[i].LaunchID = uint64(i)
@@ -23,7 +23,7 @@ func createNMonitoringHistory(keeper *keeper.Keeper, ctx sdk.Context, n int) []t
 
 func TestMonitoringHistoryGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNMonitoringHistory(tk.MonitoringConsumerKeeper, ctx, 10)
+	items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 10)
 	for _, item := range items {
 		rst, found := tk.MonitoringConsumerKeeper.GetMonitoringHistory(ctx,
 			item.LaunchID,
@@ -38,7 +38,7 @@ func TestMonitoringHistoryGet(t *testing.T) {
 
 func TestMonitoringHistoryGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNMonitoringHistory(tk.MonitoringConsumerKeeper, ctx, 10)
+	items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
 		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllMonitoringHistory(ctx)),

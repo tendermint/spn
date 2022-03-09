@@ -8,6 +8,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibcclienttypes "github.com/cosmos/ibc-go/v2/modules/core/02-client/types"
 	ibcconnectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
@@ -50,6 +52,7 @@ type TestKeepers struct {
 	MonitoringProviderKeeper *monitoringpkeeper.Keeper
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
+	StakingKeeper            stakingkeeper.Keeper
 	FundraisingKeeper        *fundraisingkeeper.Keeper
 	ParticipationKeeper      *participationkeeper.Keeper
 }
@@ -104,6 +107,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 
 	// Initialize params
 	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
+	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
 	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
@@ -127,6 +131,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
+			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 		}, TestMsgServers{
@@ -183,6 +188,7 @@ func NewTestSetupWithIBCMocks(
 
 	// Initialize params
 	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
+	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
 	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
@@ -206,6 +212,7 @@ func NewTestSetupWithIBCMocks(
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
+			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 		}, TestMsgServers{
