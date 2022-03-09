@@ -3,8 +3,12 @@ package keeper
 import (
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	"github.com/stretchr/testify/require"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+	"github.com/tendermint/tendermint/libs/log"
+	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
@@ -16,11 +20,6 @@ import (
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 )
 
 // NewTestSetupWithMonitoringp returns a test keepers struct and servers struct with the monitoring provider module
