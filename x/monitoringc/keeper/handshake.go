@@ -78,6 +78,12 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 			)
 		}
 		launchID = lidFromCid.LaunchID
+
+		// update the chain since it is not MonitoringConnected
+		// debug mode means we assume the chain actually exists
+		if err = k.launchKeeper.EnableMonitoringConnection(ctx, launchID); err != nil {
+			return err
+		}
 	}
 
 	// register the client for the provider

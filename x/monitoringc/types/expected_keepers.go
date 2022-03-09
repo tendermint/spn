@@ -15,6 +15,7 @@ import (
 
 type LaunchKeeper interface {
 	GetChain(ctx sdk.Context, launchID uint64) (val launchtypes.Chain, found bool)
+	EnableMonitoringConnection(ctx sdk.Context, launchID uint64) error
 	CheckValidatorSet(
 		ctx sdk.Context,
 		launchID uint64,
