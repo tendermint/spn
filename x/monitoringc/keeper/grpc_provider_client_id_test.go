@@ -25,28 +25,28 @@ func TestProviderClientIDQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc: "First",
+			desc: "first",
 			request: &types.QueryGetProviderClientIDRequest{
 				LaunchID: msgs[0].LaunchID,
 			},
 			response: &types.QueryGetProviderClientIDResponse{ProviderClientID: msgs[0]},
 		},
 		{
-			desc: "Second",
+			desc: "second",
 			request: &types.QueryGetProviderClientIDRequest{
 				LaunchID: msgs[1].LaunchID,
 			},
 			response: &types.QueryGetProviderClientIDResponse{ProviderClientID: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "key not found",
 			request: &types.QueryGetProviderClientIDRequest{
 				LaunchID: 100000,
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
