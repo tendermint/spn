@@ -3,20 +3,21 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
 func TestConsumerClientIDQuery(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
+	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	item := createTestConsumerClientID(keeper, ctx)
+	item := createTestConsumerClientID(ctx, tk.MonitoringProviderKeeper)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetConsumerClientIDRequest
@@ -34,7 +35,7 @@ func TestConsumerClientIDQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.ConsumerClientID(wctx, tc.request)
+			response, err := tk.MonitoringProviderKeeper.ConsumerClientID(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

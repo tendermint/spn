@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	monitoringpkeeper "github.com/tendermint/spn/x/monitoringp/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
@@ -46,6 +48,7 @@ type TestKeepers struct {
 	ProfileKeeper            *profilekeeper.Keeper
 	RewardKeeper             *rewardkeeper.Keeper
 	MonitoringConsumerKeeper *monitoringckeeper.Keeper
+	MonitoringProviderKeeper *monitoringpkeeper.Keeper
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 	FundraisingKeeper        *fundraisingkeeper.Keeper

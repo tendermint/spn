@@ -13,7 +13,7 @@ import (
 )
 
 func TestKeeper_ReportBlockSignatures(t *testing.T) {
-	k, _, ctx := testkeeper.MonitoringpKeeper(t)
+	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 
 	// simplified type for abci.VoteInfo for testing purpose
 	type vote struct {
@@ -203,20 +203,20 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// set keeper values
-			params := k.GetParams(ctx)
+			params := tk.MonitoringProviderKeeper.GetParams(ctx)
 			params.LastBlockHeight = tt.lastBlockHeight
-			k.SetParams(ctx, params)
+			tk.MonitoringProviderKeeper.SetParams(ctx, params)
 			if tt.monitoringInfoExist {
-				k.SetMonitoringInfo(ctx, tt.inputMonitoringInfo)
+				tk.MonitoringProviderKeeper.SetMonitoringInfo(ctx, tt.inputMonitoringInfo)
 			} else {
-				k.RemoveMonitoringInfo(ctx)
+				tk.MonitoringProviderKeeper.RemoveMonitoringInfo(ctx)
 			}
 
 			// report
-			k.ReportBlockSignatures(ctx, tt.lastCommitInfo, tt.currentBlockHeight)
+			tk.MonitoringProviderKeeper.ReportBlockSignatures(ctx, tt.lastCommitInfo, tt.currentBlockHeight)
 
 			// check saved values
-			monitoringInfo, found := k.GetMonitoringInfo(ctx)
+			monitoringInfo, found := tk.MonitoringProviderKeeper.GetMonitoringInfo(ctx)
 			require.EqualValues(t, tt.expectedMonitoringInfoFound, found)
 			require.EqualValues(t, tt.expectedMonitoringInfo, monitoringInfo)
 		})

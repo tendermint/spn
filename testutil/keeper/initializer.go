@@ -236,14 +236,14 @@ func (i initializer) Reward(
 	launchKeeper *launchkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 ) *rewardmodulekeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(monitoringpmoduletypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(monitoringpmoduletypes.MemStoreKey)
+	storeKey := sdk.NewKVStoreKey(rewardmoduletypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(rewardmoduletypes.MemStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
 
-	paramKeeper.Subspace(monitoringpmoduletypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(monitoringpmoduletypes.ModuleName)
+	paramKeeper.Subspace(rewardmoduletypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(rewardmoduletypes.ModuleName)
 
 	return rewardmodulekeeper.NewKeeper(
 		i.Codec,

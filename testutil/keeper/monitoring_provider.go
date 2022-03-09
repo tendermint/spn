@@ -3,49 +3,103 @@ package keeper
 import (
 	"testing"
 
+	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+
+	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
+	launchtypes "github.com/tendermint/spn/x/launch/types"
+	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
+	participationkeeper "github.com/tendermint/spn/x/participation/keeper"
+	participationtypes "github.com/tendermint/spn/x/participation/types"
+	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
+	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
+	rewardtypes "github.com/tendermint/spn/x/reward/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-
-	"github.com/tendermint/spn/x/monitoringp/keeper"
-	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
-// MonitoringpKeeper returns a keeper of the monitoring provider module for testing purpose
-func MonitoringpKeeper(t testing.TB) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Context) {
-	return MonitoringpKeeperWithIBCMock(t, []Connection{}, []Channel{})
+// NewTestSetupWithMonitoringp returns a test keepers struct and servers struct with the monitoring provider module
+func NewTestSetupWithMonitoringp(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
+	return NewTestSetupWithIBCMocksMonitoringp(t, []Connection{}, []Channel{})
 }
 
-// MonitoringpKeeperWithIBCMock returns a keeper of the monitoring provider module for testing purpose
-func MonitoringpKeeperWithIBCMock(
+// NewTestSetupWithIBCMocksMonitoringp returns a keeper of the monitoring provider module for testing purpose with mocks for IBC keepers
+func NewTestSetupWithIBCMocksMonitoringp(
 	t testing.TB,
 	connectionMock []Connection,
 	channelMock []Channel,
-) (*keeper.Keeper, *ibckeeper.Keeper, sdk.Context) {
+) (sdk.Context, TestKeepers, TestMsgServers) {
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
 	capabilityKeeper := initializer.Capability()
 	authKeeper := initializer.Auth(paramKeeper)
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
-	stakingkeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingkeeper, *capabilityKeeper)
-	monitoringKeeper := initializer.Monitoringp(
+	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
+	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
+	monitoringProviderKeeper := initializer.Monitoringp(
 		*ibcKeeper,
 		*capabilityKeeper,
 		paramKeeper,
 		connectionMock,
 		channelMock,
 	)
+	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, make(map[string]bool))
+	profileKeeper := initializer.Profile()
+	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, paramKeeper)
+	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
+	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
+	launchKeeper.SetCampaignKeeper(campaignKeeper)
+
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
-	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{}, false, log.NewNopLogger())
+	// Create a context using a custom timestamp
+	ctx := sdk.NewContext(initializer.StateStore, tmproto.Header{
+		Time:   ExampleTimestamp,
+		Height: ExampleHeight,
+	}, false, log.NewNopLogger())
+
+	// Initialize community pool
+	distrKeeper.SetFeePool(ctx, distrtypes.InitialFeePool())
 
 	// Initialize params
-	monitoringKeeper.SetParams(ctx, types.DefaultParams())
+	distrKeeper.SetParams(ctx, distrtypes.DefaultParams())
+	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
+	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
+	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
+	fundraisingKeeper.SetParams(ctx, fundraisingtypes.DefaultParams())
+	participationKeeper.SetParams(ctx, participationtypes.DefaultParams())
+	monitoringProviderKeeper.SetParams(ctx, monitoringptypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
-	return monitoringKeeper, ibcKeeper, ctx
+	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
+	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
+	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
+	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
+	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
+
+	return ctx, TestKeepers{
+			CampaignKeeper:           campaignKeeper,
+			LaunchKeeper:             launchKeeper,
+			ProfileKeeper:            profileKeeper,
+			RewardKeeper:             rewardKeeper,
+			MonitoringProviderKeeper: monitoringProviderKeeper,
+			BankKeeper:               bankKeeper,
+			IBCKeeper:                ibcKeeper,
+			FundraisingKeeper:        fundraisingKeeper,
+			ParticipationKeeper:      participationKeeper,
+		}, TestMsgServers{
+			ProfileSrv:       profileSrv,
+			LaunchSrv:        launchSrv,
+			CampaignSrv:      campaignSrv,
+			RewardSrv:        rewardSrv,
+			ParticipationSrv: participationSrv,
+		}
 }
