@@ -19,7 +19,7 @@ message RewardPool {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
-  uint64 lastRewardHeight = 5;
-  uint64 currentRewardHeight = 6;
+  int64 lastRewardHeight = 5;
+  int64 currentRewardHeight = 6;
   bool closed = 7;
 }

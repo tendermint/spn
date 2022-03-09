@@ -178,7 +178,7 @@ func TestMsgSetRewards(t *testing.T) {
 			rewardPool, found := tk.RewardKeeper.GetRewardPool(sdkCtx, tt.msg.LaunchID)
 			if tt.msg.Coins.Empty() || tt.msg.LastRewardHeight == 0 {
 				require.False(t, found)
-				require.Equal(t, uint64(0), got.NewLastRewardHeight)
+				require.Equal(t, int64(0), got.NewLastRewardHeight)
 				require.Equal(t, sdk.NewCoins(), got.NewCoins)
 				return
 			}

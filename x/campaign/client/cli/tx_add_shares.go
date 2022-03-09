@@ -13,7 +13,7 @@ import (
 func CmdAddShares() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add-shares [campaign-id] [address] [shares]",
-		Short: "Add a shares to an account",
+		Short: "Add shares to an account",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			argCampaignID, err := cast.ToUint64E(args[0])

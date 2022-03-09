@@ -15,6 +15,7 @@ import (
 
 type LaunchKeeper interface {
 	GetChain(ctx sdk.Context, launchID uint64) (val launchtypes.Chain, found bool)
+	EnableMonitoringConnection(ctx sdk.Context, launchID uint64) error
 	CheckValidatorSet(
 		ctx sdk.Context,
 		launchID uint64,
@@ -28,7 +29,7 @@ type RewardKeeper interface {
 		ctx sdk.Context,
 		launchID uint64,
 		signatureCounts spntypes.SignatureCounts,
-		lastBlockHeight uint64,
+		lastBlockHeight int64,
 		closeRewardPool bool,
 	) error
 }
