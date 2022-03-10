@@ -54,6 +54,31 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
+			desc: "matching usedAllocations and auctionUsedAllocations",
+			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
+				UsedAllocationsList: []types.UsedAllocations{
+					{
+						Address:        addr1,
+						NumAllocations: 5,
+					},
+				},
+				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
+					{
+						Address:        addr1,
+						AuctionID:      auctionID1,
+						NumAllocations: 2,
+					},
+					{
+						Address:        addr1,
+						AuctionID:      auctionID2,
+						NumAllocations: 3,
+					},
+				},
+			},
+			valid: true,
+		},
+		{
 			desc: "duplicated usedAllocations",
 			genState: &types.GenesisState{
 				UsedAllocationsList: []types.UsedAllocations{
