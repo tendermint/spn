@@ -8,6 +8,7 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/types"
 )
 
@@ -34,7 +35,7 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	participationParams := types.DefaultParams()
+	participationParams := sample.ParticipationParams()
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyAllocationPrice), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(participationParams.AllocationPrice))

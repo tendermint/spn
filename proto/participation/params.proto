@@ -17,8 +17,8 @@ message Params {
 }
 
 message AllocationPrice {
-  // number of delegated tokens necessary to get one allocation
-  string staking = 1 [
+  // number of bonded tokens necessary to get one allocation
+  string bonded = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false
   ];
