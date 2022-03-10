@@ -20,7 +20,7 @@ var (
 	KeyDebugMode               = []byte("DebugMode")
 
 	DefaultLastBlockHeight int64 = 1
-	DefautConsumerChainID        = "spn-1"
+	DefaultConsumerChainID       = "spn-1"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -53,7 +53,7 @@ func NewParams(
 func DefaultParams() Params {
 	return NewParams(
 		DefaultLastBlockHeight,
-		DefautConsumerChainID,
+		DefaultConsumerChainID,
 		spntypes.ConsensusState{},
 		spntypes.DefaultUnbondingPeriod,
 		spntypes.DefaultRevisionHeight,
