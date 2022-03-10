@@ -40,9 +40,8 @@ func (msg *MsgAddValidatorOperatorAddress) GetSigners() []sdk.AccAddress {
 	// if the operator address is different from the validator, both signatures are required
 	if validatorAddress.Equals(operatorAddress) {
 		return []sdk.AccAddress{validatorAddress}
-	} else {
-		return []sdk.AccAddress{validatorAddress, operatorAddress}
 	}
+	return []sdk.AccAddress{validatorAddress, operatorAddress}
 }
 
 func (msg *MsgAddValidatorOperatorAddress) GetSignBytes() []byte {
