@@ -8,6 +8,7 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/types"
 )
 
