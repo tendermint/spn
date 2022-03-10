@@ -36,7 +36,7 @@ func TestVerifiedClientIDGet(t *testing.T) {
 	}
 }
 
-func TestVerifiedClientIClear(t *testing.T) {
+func TestVerifiedClientIDClear(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 1)
 	rst, found := tk.MonitoringConsumerKeeper.GetVerifiedClientID(ctx, items[0].LaunchID)
