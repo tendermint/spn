@@ -1,39 +1,37 @@
 package types
 
-import (
-	"bytes"
-)
-
-// AddValidatorConsensusAddress add a specific consensus address without duplication
+// AddValidatorOperatorAddress adds a specific operator address without duplication
 // in the Validator and return it
-func (validator Validator) AddValidatorConsensusAddress(consensusAddress []byte) Validator {
-	for _, valConsAddr := range validator.ConsensusAddresses {
-		if bytes.Equal(consensusAddress, valConsAddr) {
-			return validator
+func (v Validator) AddValidatorOperatorAddress(operatorAddress string) Validator {
+	// no change if already exists
+	for _, opAddr := range v.OperatorAddresses {
+		if operatorAddress == opAddr {
+			return v
 		}
 	}
-	validator.ConsensusAddresses = append(validator.ConsensusAddresses, consensusAddress)
-	return validator
+
+	v.OperatorAddresses = append(v.OperatorAddresses, operatorAddress)
+	return v
 }
 
-// RemoveValidatorConsensusAddress remove a specific validator consensus address
+// RemoveValidatorOperatorAddress removes a specific validator operator address
 // from the Validator and return it
-func (validator Validator) RemoveValidatorConsensusAddress(consensusAddress []byte) Validator {
-	newConsAddrList := make([][]byte, 0)
-	for _, valConsAddr := range validator.ConsensusAddresses {
-		if bytes.Equal(consensusAddress, valConsAddr) {
+func (v Validator) RemoveValidatorOperatorAddress(operatorAddress string) Validator {
+	newList := make([]string, 0)
+	for _, opAddr := range v.OperatorAddresses {
+		if operatorAddress == opAddr {
 			continue
 		}
-		newConsAddrList = append(newConsAddrList, valConsAddr)
+		newList = append(newList, opAddr)
 	}
-	validator.ConsensusAddresses = newConsAddrList
-	return validator
+	v.OperatorAddresses = newList
+	return v
 }
 
-// HasConsensusAddress check if the validator has a consensus address
-func (validator Validator) HasConsensusAddress(consensusAddress []byte) bool {
-	for _, valConsAddr := range validator.ConsensusAddresses {
-		if bytes.Equal(consensusAddress, valConsAddr) {
+// HasOperatorAddress checks if the validator has a specific operator address associated to it
+func (v Validator) HasOperatorAddress(operatorAddress string) bool {
+	for _, opAddr := range v.OperatorAddresses {
+		if operatorAddress == opAddr {
 			return true
 		}
 	}

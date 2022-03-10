@@ -99,22 +99,16 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 
-	keeper        keeper.Keeper
-	accountKeeper types.AccountKeeper
-	bankKeeper    types.BankKeeper
+	keeper keeper.Keeper
 }
 
 func NewAppModule(
 	cdc codec.Codec,
 	keeper keeper.Keeper,
-	accountKeeper types.AccountKeeper,
-	bankKeeper types.BankKeeper,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
 		keeper:         keeper,
-		accountKeeper:  accountKeeper,
-		bankKeeper:     bankKeeper,
 	}
 }
 
@@ -169,12 +163,15 @@ func (AppModule) ConsensusVersion() uint64 { return 2 }
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
 func (am AppModule) BeginBlock(ctx sdk.Context, bb abci.RequestBeginBlock) {
 	// reports signatures for the block
-	am.keeper.ReportBlockSignatures(ctx, bb.LastCommitInfo, bb.Header.Height)
+	err := am.keeper.ReportBlockSignatures(ctx, bb.LastCommitInfo, bb.Header.Height)
+	if err != nil {
+		ctx.Logger().Error(fmt.Sprintf("error reporting block signatures: %s", err.Error()))
+	}
 
 	// check and transmit signatures
-	err := am.keeper.TransmitSignatures(ctx, bb.Header.Height)
+	err = am.keeper.TransmitSignatures(ctx, bb.Header.Height)
 	if err != nil {
-		ctx.Logger().Error(fmt.Sprintf("error transmitting the validator signatures %s", err.Error()))
+		ctx.Logger().Error(fmt.Sprintf("error transmitting the validator signatures: %s", err.Error()))
 	}
 }
 

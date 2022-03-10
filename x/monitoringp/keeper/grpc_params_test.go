@@ -11,12 +11,12 @@ import (
 )
 
 func TestParamsQuery(t *testing.T) {
-	keeper, _, ctx := testkeeper.MonitoringpKeeper(t)
+	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	params := types.DefaultParams()
-	keeper.SetParams(ctx, params)
+	tk.MonitoringProviderKeeper.SetParams(ctx, params)
 
-	response, err := keeper.Params(wctx, &types.QueryParamsRequest{})
+	response, err := tk.MonitoringProviderKeeper.Params(wctx, &types.QueryParamsRequest{})
 	require.NoError(t, err)
 	require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
 }

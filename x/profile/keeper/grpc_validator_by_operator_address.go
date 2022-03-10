@@ -10,16 +10,19 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func (k Keeper) ConsensusKeyNonce(c context.Context, req *types.QueryGetConsensusKeyNonceRequest) (*types.QueryGetConsensusKeyNonceResponse, error) {
+func (k Keeper) ValidatorByOperatorAddress(c context.Context, req *types.QueryGetValidatorByOperatorAddressRequest) (
+	*types.QueryGetValidatorByOperatorAddressResponse,
+	error,
+) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetConsensusKeyNonce(ctx, req.ConsensusAddress)
+	val, found := k.GetValidatorByOperatorAddress(ctx, req.OperatorAddress)
 	if !found {
 		return nil, status.Error(codes.InvalidArgument, "not found")
 	}
 
-	return &types.QueryGetConsensusKeyNonceResponse{ConsensusKeyNonce: val}, nil
+	return &types.QueryGetValidatorByOperatorAddressResponse{ValidatorByOperatorAddress: val}, nil
 }

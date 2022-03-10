@@ -64,13 +64,22 @@ func (k Keeper) DistributeRewards(
 		// get the validator address from the cons address
 		// if the validator is not registered, reward distribution is skipped
 		// all funds are sent back to the coordinator
-		validatorByConsAddr, found := k.profileKeeper.GetValidatorByConsAddress(ctx, signatureCount.ConsAddress)
+
+		config := sdk.GetConfig()
+		if config == nil {
+			return spnerrors.Critical("SDK config not set")
+		}
+		opAddr, err := signatureCount.GetOperatorAddress(config.GetBech32AccountAddrPrefix())
+		if err != nil {
+			return sdkerrors.Wrapf(types.ErrInvalidSignatureCounts, "invalid operator address: %s", signatureCount.OpAddress)
+		}
+		validatorByOpAddr, found := k.profileKeeper.GetValidatorByOperatorAddress(ctx, opAddr)
 		if found {
-			validator, found := k.profileKeeper.GetValidator(ctx, validatorByConsAddr.ValidatorAddress)
+			validator, found := k.profileKeeper.GetValidator(ctx, validatorByOpAddr.ValidatorAddress)
 			if !found {
 				return spnerrors.Criticalf(
 					"validator by consensus address not associated with a validator %s",
-					validatorByConsAddr.ValidatorAddress,
+					validatorByOpAddr.ValidatorAddress,
 				)
 			}
 			// calculate the total relative signature distributed to calculate the refund for the round

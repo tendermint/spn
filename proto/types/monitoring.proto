@@ -34,7 +34,7 @@ message SignatureCounts {
 // SignatureCount contains information of signature reporting for one specific validator with consensus address
 // RelativeSignatures is the sum of all signatures relative to the validator set size
 message SignatureCount {
-  bytes consAddress = 1;
+  string opAddress = 1;
   string RelativeSignatures = 2 [
     (gogoproto.nullable) = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"

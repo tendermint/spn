@@ -13,7 +13,7 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-func createNLaunchIDFromChannelID(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.LaunchIDFromChannelID {
+func createNLaunchIDFromChannelID(ctx sdk.Context, keeper *keeper.Keeper, n int) []types.LaunchIDFromChannelID {
 	items := make([]types.LaunchIDFromChannelID, n)
 	for i := range items {
 		items[i].ChannelID = strconv.Itoa(i)
@@ -24,7 +24,7 @@ func createNLaunchIDFromChannelID(keeper *keeper.Keeper, ctx sdk.Context, n int)
 
 func TestLaunchIDFromChannelIDGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNLaunchIDFromChannelID(tk.MonitoringConsumerKeeper, ctx, 10)
+	items := createNLaunchIDFromChannelID(ctx, tk.MonitoringConsumerKeeper, 10)
 	for _, item := range items {
 		rst, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromChannelID(ctx,
 			item.ChannelID,
@@ -39,7 +39,7 @@ func TestLaunchIDFromChannelIDGet(t *testing.T) {
 
 func TestLaunchIDFromChannelIDGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNLaunchIDFromChannelID(tk.MonitoringConsumerKeeper, ctx, 10)
+	items := createNLaunchIDFromChannelID(ctx, tk.MonitoringConsumerKeeper, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
 		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllLaunchIDFromChannelID(ctx)),

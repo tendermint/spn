@@ -74,7 +74,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						BlockCount: 1,
 						Counts: []spntypes.SignatureCount{
 							{
-								ConsAddress:        []byte("foo"),
+								OpAddress:          sample.Address(),
 								RelativeSignatures: sdk.NewDec(10),
 							},
 						},
