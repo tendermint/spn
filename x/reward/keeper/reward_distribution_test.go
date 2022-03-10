@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"

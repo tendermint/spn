@@ -75,8 +75,8 @@ func (k Keeper) IsBound(ctx sdk.Context, portID string) bool {
 // BindPort defines a wrapper function for the ort Keeper's function in
 // order to expose it to module's InitGenesis function
 func (k Keeper) BindPort(ctx sdk.Context, portID string) error {
-	cap := k.portKeeper.BindPort(ctx, portID)
-	return k.ClaimCapability(ctx, cap, host.PortPath(portID))
+	c := k.portKeeper.BindPort(ctx, portID)
+	return k.ClaimCapability(ctx, c, host.PortPath(portID))
 }
 
 // GetPort returns the portID for the module. Used in ExportGenesis
@@ -92,12 +92,12 @@ func (k Keeper) SetPort(ctx sdk.Context, portID string) {
 }
 
 // AuthenticateCapability wraps the scopedKeeper's AuthenticateCapability function
-func (k Keeper) AuthenticateCapability(ctx sdk.Context, cap *capabilitytypes.Capability, name string) bool {
-	return k.scopedKeeper.AuthenticateCapability(ctx, cap, name)
+func (k Keeper) AuthenticateCapability(ctx sdk.Context, c *capabilitytypes.Capability, name string) bool {
+	return k.scopedKeeper.AuthenticateCapability(ctx, c, name)
 }
 
 // ClaimCapability allows the transfer module that can claim a capability that IBC module
 // passes to it
-func (k Keeper) ClaimCapability(ctx sdk.Context, cap *capabilitytypes.Capability, name string) error {
-	return k.scopedKeeper.ClaimCapability(ctx, cap, name)
+func (k Keeper) ClaimCapability(ctx sdk.Context, c *capabilitytypes.Capability, name string) error {
+	return k.scopedKeeper.ClaimCapability(ctx, c, name)
 }
