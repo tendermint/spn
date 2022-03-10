@@ -10,4 +10,3 @@ message MonitoringHistory {
   uint64 launchID = 1;
   tendermint.spn.types.MonitoringPacket latestMonitoringPacket = 2 [(gogoproto.nullable) = false];
 }
-

@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"testing"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -132,33 +131,34 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		ctx, tk, _      = testkeeper.NewTestSetup(t)
 		valFoo          = sample.Address()
 		valBar          = sample.Address()
-		valConsAddrFoo  = sample.ConsAddress()
-		valConsAddrBar  = sample.ConsAddress()
-		noProfileVal    = sample.ConsAddress()
-		notFoundValAddr = sample.ConsAddress()
+		valOpAddrFoo    = sample.Address()
+		valOpAddrBar    = sample.Address()
+		noProfileVal    = sample.Address()
+		notFoundValAddr = sample.Address()
 		provider        = sample.Address()
 	)
 
 	// set validator profiles
 	tk.ProfileKeeper.SetValidator(ctx, profiletypes.Validator{
-		Address:            valFoo,
-		ConsensusAddresses: [][]byte{valConsAddrFoo},
+		Address:           valFoo,
+		OperatorAddresses: []string{valOpAddrFoo},
 	})
-	tk.ProfileKeeper.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
+	tk.ProfileKeeper.SetValidatorByOperatorAddress(ctx, profiletypes.ValidatorByOperatorAddress{
+
 		ValidatorAddress: valFoo,
-		ConsensusAddress: valConsAddrFoo,
+		OperatorAddress:  valOpAddrFoo,
 	})
 	tk.ProfileKeeper.SetValidator(ctx, profiletypes.Validator{
-		Address:            valBar,
-		ConsensusAddresses: [][]byte{valConsAddrBar},
+		Address:           valBar,
+		OperatorAddresses: []string{valOpAddrBar},
 	})
-	tk.ProfileKeeper.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
+	tk.ProfileKeeper.SetValidatorByOperatorAddress(ctx, profiletypes.ValidatorByOperatorAddress{
 		ValidatorAddress: valBar,
-		ConsensusAddress: valConsAddrBar,
+		OperatorAddress:  valOpAddrBar,
 	})
-	tk.ProfileKeeper.SetValidatorByConsAddress(ctx, profiletypes.ValidatorByConsAddress{
+	tk.ProfileKeeper.SetValidatorByOperatorAddress(ctx, profiletypes.ValidatorByOperatorAddress{
 		ValidatorAddress: sample.Address(),
-		ConsensusAddress: notFoundValAddr,
+		OperatorAddress:  notFoundValAddr,
 	})
 
 	type args struct {
@@ -187,8 +187,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID: 1,
 				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
-					tc.SignatureCount(t, valConsAddrBar, "0.5"),
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrBar, "0.5"),
 				),
 				lastBlockHeight: 10,
 				closeRewardPool: true,
@@ -212,8 +212,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID: 1,
 				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
-					tc.SignatureCount(t, valConsAddrBar, "0.5"),
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrBar, "0.5"),
 				),
 				lastBlockHeight: 5,
 				closeRewardPool: true,
@@ -237,8 +237,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID: 1,
 				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
-					tc.SignatureCount(t, valConsAddrBar, "0.5"),
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrBar, "0.5"),
 				),
 				lastBlockHeight: 5,
 				closeRewardPool: false,
@@ -262,8 +262,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID: 1,
 				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
-					tc.SignatureCount(t, valConsAddrBar, "0.5"),
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrBar, "0.5"),
 				),
 				lastBlockHeight: 10,
 				closeRewardPool: false,
@@ -287,8 +287,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID: 1,
 				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, valConsAddrFoo, "0.3"),
-					tc.SignatureCount(t, valConsAddrBar, "0.3"),
+					tc.SignatureCount(t, valOpAddrFoo, "0.3"),
+					tc.SignatureCount(t, valOpAddrBar, "0.3"),
 					tc.SignatureCount(t, noProfileVal, "0.3"),
 				),
 				lastBlockHeight: 10,
@@ -305,7 +305,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID: 99999,
 				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
 				),
 				lastBlockHeight: 1,
 				closeRewardPool: false,
@@ -325,7 +325,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			args: args{
 				launchID: 1,
 				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, valConsAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
 				),
 				lastBlockHeight: 1,
 				closeRewardPool: false,

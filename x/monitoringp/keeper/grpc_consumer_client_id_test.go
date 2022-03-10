@@ -14,7 +14,7 @@ import (
 )
 
 func TestConsumerClientIDQuery(t *testing.T) {
-	keeper, _, ctx := keepertest.MonitoringpKeeper(t)
+	keeper, _, _, ctx := keepertest.MonitoringpKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	item := createTestConsumerClientID(keeper, ctx)
 	for _, tc := range []struct {

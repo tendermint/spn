@@ -16,7 +16,7 @@ import (
 func TestMonitoringHistoryQuerySingle(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNMonitoringHistory(tk.MonitoringConsumerKeeper, ctx, 2)
+	items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetMonitoringHistoryRequest
@@ -24,28 +24,28 @@ func TestMonitoringHistoryQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc: "First",
+			desc: "first",
 			request: &types.QueryGetMonitoringHistoryRequest{
-				LaunchID: msgs[0].LaunchID,
+				LaunchID: items[0].LaunchID,
 			},
-			response: &types.QueryGetMonitoringHistoryResponse{MonitoringHistory: msgs[0]},
+			response: &types.QueryGetMonitoringHistoryResponse{MonitoringHistory: items[0]},
 		},
 		{
-			desc: "Second",
+			desc: "second",
 			request: &types.QueryGetMonitoringHistoryRequest{
-				LaunchID: msgs[1].LaunchID,
+				LaunchID: items[1].LaunchID,
 			},
-			response: &types.QueryGetMonitoringHistoryResponse{MonitoringHistory: msgs[1]},
+			response: &types.QueryGetMonitoringHistoryResponse{MonitoringHistory: items[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "key not found",
 			request: &types.QueryGetMonitoringHistoryRequest{
 				LaunchID: 100000,
 			},
 			err: status.Error(codes.InvalidArgument, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {

@@ -111,7 +111,7 @@ func TestListProviderClientID(t *testing.T) {
 		}
 		return args
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	t.Run("by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
@@ -126,7 +126,7 @@ func TestListProviderClientID(t *testing.T) {
 			)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	t.Run("by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
@@ -143,7 +143,7 @@ func TestListProviderClientID(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
+	t.Run("total", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListProviderClientID(), args)
 		require.NoError(t, err)

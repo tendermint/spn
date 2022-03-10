@@ -21,6 +21,7 @@ type (
 		storeKey         sdk.StoreKey
 		memKey           sdk.StoreKey
 		paramstore       paramtypes.Subspace
+		stakingKeeper    types.StakingKeeper
 		scopedKeeper     capabilitykeeper.ScopedKeeper
 		clientKeeper     types.ClientKeeper
 		portKeeper       types.PortKeeper
@@ -34,6 +35,7 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
+	stakingKeeper types.StakingKeeper,
 	clientKeeper types.ClientKeeper,
 	connectionKeeper types.ConnectionKeeper,
 	channelKeeper types.ChannelKeeper,
@@ -51,6 +53,7 @@ func NewKeeper(
 		storeKey:         storeKey,
 		memKey:           memKey,
 		paramstore:       ps,
+		stakingKeeper:    stakingKeeper,
 		scopedKeeper:     scopedKeeper,
 		clientKeeper:     clientKeeper,
 		portKeeper:       portKeeper,

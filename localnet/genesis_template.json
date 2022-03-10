@@ -363,11 +363,10 @@
       }
     },
     "profile": {
-      "consensusKeyNonceList": [],
       "coordinatorByAddressList": [],
       "coordinatorCounter": "1",
       "coordinatorList": [],
-      "validatorByConsAddressList": [],
+      "validatorByOperatorAddressList": [],
       "validatorList": []
     },
     "reward": {
