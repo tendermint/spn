@@ -52,6 +52,6 @@ func TestMismatchUsedAllocationsInvariant(t *testing.T) {
 			tk.ParticipationKeeper.SetAuctionUsedAllocations(ctx, auction)
 		}
 		_, isValid := keeper.MismatchUsedAllocationsInvariant(*tk.ParticipationKeeper)(ctx)
-		require.Equal(t, true, isValid)
+		require.True(t, isValid)
 	})
 }
