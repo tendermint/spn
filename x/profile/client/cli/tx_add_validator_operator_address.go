@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -27,7 +28,43 @@ func CmdAddValidatorOperatorAddress() *cobra.Command {
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+
+			// return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+
+
+			// sign the tx with both accounts
+			txf := tx.NewFactoryCLI(clientCtx, cmd.Flags())
+
+			num, seq, err := txf.AccountRetriever().GetAccountNumberSequence(clientCtx, clientCtx.FromAddress)
+			if err != nil {
+				return err
+			}
+			txf = txf.WithAccountNumber(num)
+			txf = txf.WithSequence(seq)
+
+			txBuilder, err := tx.BuildUnsignedTx(txf, msg)
+			if err != nil {
+				return err
+			}
+			if err := tx.Sign(txf, clientCtx.FromName, txBuilder, false); err != nil {
+				return err
+			}
+
+			// encode tx
+			encoder := clientCtx.TxConfig.TxEncoder()
+			encodedTx, err := encoder(txBuilder.GetTx())
+			if err != nil {
+				return err
+			}
+
+			// broadcast tx
+			resp, err := clientCtx.BroadcastTxSync(encodedTx)
+			if err != nil {
+				return err
+			}
+			fmt.Println(resp.String())
+
+			return nil
 		},
 	}
 
