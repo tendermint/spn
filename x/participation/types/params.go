@@ -136,9 +136,6 @@ func validateParticipationTierList(v interface{}) error {
 	}
 
 	tiersIndexMap := make(map[uint64]struct{})
-	lastTierID := uint64(0)
-	lastRequiredAllocations := uint64(0)
-	lastTierBenefits := TierBenefits{MaxBidAmount: sdk.ZeroInt()}
 	for _, tier := range participationTierList {
 		// check IDs are unique
 		if _, ok = tiersIndexMap[tier.TierID]; ok {
@@ -146,33 +143,25 @@ func validateParticipationTierList(v interface{}) error {
 		}
 		tiersIndexMap[tier.TierID] = struct{}{}
 
-		// check IDs are sorted
-		if lastTierID > tier.TierID {
-			return fmt.Errorf("tiers must be sorted by ID")
+		if tier.RequiredAllocations <= 0 {
+			return errors.New("required allocations must be greater than zero")
 		}
-		lastTierID = tier.TierID
 
-		if tier.RequiredAllocations <= lastRequiredAllocations {
-			return errors.New("required allocations must be strictly increasing and greater than zero")
-		}
-		lastRequiredAllocations = tier.RequiredAllocations
-
-		if err := validateNextTierBenefits(tier.Benefits, lastTierBenefits); err != nil {
+		if err := validateNextTierBenefits(tier.Benefits); err != nil {
 			return err
 		}
-		lastTierBenefits = tier.Benefits
 	}
 
 	return nil
 }
 
-func validateNextTierBenefits(next, last TierBenefits) error {
-	if next.MaxBidAmount.IsNil() || last.MaxBidAmount.IsNil() {
+func validateNextTierBenefits(b TierBenefits) error {
+	if b.MaxBidAmount.IsNil() {
 		return errors.New("max bid amount should be set")
 	}
 
-	if next.MaxBidAmount.LTE(last.MaxBidAmount) || !next.MaxBidAmount.IsPositive() {
-		return fmt.Errorf("max bid amount must be strictly increasing and greater than zero")
+	if !b.MaxBidAmount.IsPositive() {
+		return fmt.Errorf("max bid amount must be greater than zero")
 	}
 
 	return nil

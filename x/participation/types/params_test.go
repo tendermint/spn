@@ -116,22 +116,6 @@ func TestValidateParticipationTierList(t *testing.T) {
 			err: errors.New("duplicated tier ID: 0"),
 		},
 		{
-			name: "unsorted tiers",
-			participationTierList: []Tier{
-				{
-					TierID:              1,
-					RequiredAllocations: 1,
-					Benefits:            TierBenefits{MaxBidAmount: sdk.OneInt()},
-				},
-				{
-					TierID:              0,
-					RequiredAllocations: 2,
-					Benefits:            TierBenefits{MaxBidAmount: sdk.NewInt(2)},
-				},
-			},
-			err: errors.New("tiers must be sorted by ID"),
-		},
-		{
 			name: "invalid required allocations",
 			participationTierList: []Tier{
 				{
@@ -140,23 +124,7 @@ func TestValidateParticipationTierList(t *testing.T) {
 					Benefits:            TierBenefits{MaxBidAmount: sdk.OneInt()},
 				},
 			},
-			err: errors.New("required allocations must be strictly increasing and greater than zero"),
-		},
-		{
-			name: "non increasing required allocations",
-			participationTierList: []Tier{
-				{
-					TierID:              0,
-					RequiredAllocations: 1,
-					Benefits:            TierBenefits{MaxBidAmount: sdk.OneInt()},
-				},
-				{
-					TierID:              1,
-					RequiredAllocations: 1,
-					Benefits:            TierBenefits{MaxBidAmount: sdk.NewInt(2)},
-				},
-			},
-			err: errors.New("required allocations must be strictly increasing and greater than zero"),
+			err: errors.New("required allocations must be greater than zero"),
 		},
 		{
 			name: "invalid tier benefits",
@@ -167,7 +135,7 @@ func TestValidateParticipationTierList(t *testing.T) {
 					Benefits:            TierBenefits{MaxBidAmount: sdk.ZeroInt()},
 				},
 			},
-			err: errors.New("max bid amount must be strictly increasing and greater than zero"),
+			err: errors.New("max bid amount must be greater than zero"),
 		},
 		{
 			name:                  "empty participation tier list",
@@ -203,8 +171,6 @@ func TestValidateParticipationTierList(t *testing.T) {
 }
 
 func TestValidateNextTierBenefits(t *testing.T) {
-	cmpBenefits := TierBenefits{MaxBidAmount: sdk.ZeroInt()}
-
 	tests := []struct {
 		name         string
 		tierBenefits TierBenefits
@@ -216,9 +182,9 @@ func TestValidateNextTierBenefits(t *testing.T) {
 			err:          errors.New("max bid amount should be set"),
 		},
 		{
-			name:         "max bid amount lower or equal than compared benefits",
+			name:         "max bid amount lower than zero",
 			tierBenefits: TierBenefits{MaxBidAmount: sdk.NewInt(-1)},
-			err:          errors.New("max bid amount must be strictly increasing and greater than zero"),
+			err:          errors.New("max bid amount must be greater than zero"),
 		},
 		{
 			name:         "valid tier benefits",
@@ -227,7 +193,7 @@ func TestValidateNextTierBenefits(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateNextTierBenefits(tt.tierBenefits, cmpBenefits)
+			err := validateNextTierBenefits(tt.tierBenefits)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)
