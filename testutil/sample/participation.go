@@ -42,6 +42,8 @@ func ParticipationParams() participation.Params {
 // ParticipationGenesisState  returns a sample genesis state for the participation module
 func ParticipationGenesisState() participation.GenesisState {
 	return participation.GenesisState{
-		Params: ParticipationParams(),
+		Params:                     ParticipationParams(),
+		UsedAllocationsList:        []participation.UsedAllocations{},
+		AuctionUsedAllocationsList: []participation.AuctionUsedAllocations{},
 	}
 }

@@ -19,5 +19,7 @@ func TestGenesis(t *testing.T) {
 
 	require.Equal(t, genesisState.Params, got.Params)
 
+	require.ElementsMatch(t, genesisState.UsedAllocationsList, got.UsedAllocationsList)
+	require.ElementsMatch(t, genesisState.AuctionUsedAllocationsList, got.AuctionUsedAllocationsList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }
