@@ -480,6 +480,7 @@ func New(
 		app.RewardKeeper,
 	)
 	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
+	app.LaunchKeeper.SetMonitoringcKeeper(app.MonitoringcKeeper)
 
 	app.ParticipationKeeper = *participationmodulekeeper.NewKeeper(
 		appCodec,

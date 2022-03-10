@@ -36,6 +36,22 @@ func TestVerifiedClientIDGet(t *testing.T) {
 	}
 }
 
+func TestVerifiedClientIClear(t *testing.T) {
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 1)
+	rst, found := tk.MonitoringConsumerKeeper.GetVerifiedClientID(ctx, items[0].LaunchID)
+	require.True(t, found)
+	require.Equal(t,
+		nullify.Fill(&items[0]),
+		nullify.Fill(&rst),
+	)
+
+	tk.MonitoringConsumerKeeper.ClearVerifiedClientIDs(ctx, items[0].LaunchID)
+	_, found = tk.MonitoringConsumerKeeper.GetVerifiedClientID(ctx, items[0].LaunchID)
+	require.False(t, found)
+
+}
+
 func TestVerifiedClientIDGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 10)
