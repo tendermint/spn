@@ -61,7 +61,7 @@ func TestValidateAllocationPrice(t *testing.T) {
 			err:             fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:            "bonded amount lower or equal than zero",
+			name:            "uninitialized bonded amount",
 			allocationPrice: AllocationPrice{Bonded: sdk.Int{}},
 			err:             errors.New("value for 'bonded' should be set"),
 		},
@@ -211,12 +211,12 @@ func TestValidateNextTierBenefits(t *testing.T) {
 		err          error
 	}{
 		{
-			name:         "bonded amount lower or equal than compared benefits",
+			name:         "uninitialized max bid amount",
 			tierBenefits: TierBenefits{MaxBidAmount: sdk.Int{}},
 			err:          errors.New("max bid amount should be set"),
 		},
 		{
-			name:         "bonded amount lower or equal than compared benefits",
+			name:         "max bid amount lower or equal than compared benefits",
 			tierBenefits: TierBenefits{MaxBidAmount: sdk.NewInt(-1)},
 			err:          errors.New("max bid amount must be strictly increasing and greater than zero"),
 		},
