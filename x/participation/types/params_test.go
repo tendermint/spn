@@ -62,7 +62,12 @@ func TestValidateAllocationPrice(t *testing.T) {
 		},
 		{
 			name:            "bonded amount lower or equal than zero",
-			allocationPrice: AllocationPrice{Bonded: sdk.NewInt(-1)},
+			allocationPrice: AllocationPrice{Bonded: sdk.Int{}},
+			err:             errors.New("value for 'bonded' should be set"),
+		},
+		{
+			name:            "bonded amount lower or equal than zero",
+			allocationPrice: AllocationPrice{Bonded: sdk.ZeroInt()},
 			err:             errors.New("value for 'bonded' must be greater than zero"),
 		},
 		{
@@ -205,6 +210,11 @@ func TestValidateNextTierBenefits(t *testing.T) {
 		tierBenefits TierBenefits
 		err          error
 	}{
+		{
+			name:         "bonded amount lower or equal than compared benefits",
+			tierBenefits: TierBenefits{MaxBidAmount: sdk.Int{}},
+			err:          errors.New("max bid amount should be set"),
+		},
 		{
 			name:         "bonded amount lower or equal than compared benefits",
 			tierBenefits: TierBenefits{MaxBidAmount: sdk.NewInt(-1)},

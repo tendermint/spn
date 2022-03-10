@@ -4,9 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"gopkg.in/yaml.v2"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"gopkg.in/yaml.v2"
 
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
@@ -118,7 +117,11 @@ func validateAllocationPrice(v interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", v)
 	}
 
-	if allocationPrice.Bonded.LTE(sdk.ZeroInt()) {
+	if allocationPrice.Bonded.IsNil() {
+		return errors.New("value for 'bonded' should be set")
+	}
+
+	if !allocationPrice.Bonded.IsPositive() {
 		return errors.New("value for 'bonded' must be greater than zero")
 	}
 
@@ -164,7 +167,11 @@ func validateParticipationTierList(v interface{}) error {
 }
 
 func validateNextTierBenefits(next, last TierBenefits) error {
-	if next.MaxBidAmount.LTE(last.MaxBidAmount) || next.MaxBidAmount.LTE(sdk.ZeroInt()) {
+	if next.MaxBidAmount.IsNil() || last.MaxBidAmount.IsNil() {
+		return errors.New("max bid amount should be set")
+	}
+
+	if next.MaxBidAmount.LTE(last.MaxBidAmount) || !next.MaxBidAmount.IsPositive() {
 		return fmt.Errorf("max bid amount must be strictly increasing and greater than zero")
 	}
 
