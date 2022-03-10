@@ -14,7 +14,7 @@ import (
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
-// InitializeConsumerClient initializes the consumer IBC client and and set it in the store
+// InitializeConsumerClient initializes the consumer IBC client and set it in the store
 func (k Keeper) InitializeConsumerClient(ctx sdk.Context) (string, error) {
 	// initialize the client state
 	clientState, err := k.initializeClientState(ctx, k.ConsumerChainID(ctx))

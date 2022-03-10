@@ -14,42 +14,41 @@ import (
 )
 
 func TestKeeper_InitializeConsumerClient(t *testing.T) {
-
 	t.Run("initialize consumer client", func(t *testing.T) {
-		k, ibcKeeper, _, ctx := testkeeper.MonitoringpKeeper(t)
+		ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 
 		// set params with valid values
-		k.SetParams(ctx, types.NewParams(
+		tk.MonitoringProviderKeeper.SetParams(ctx, types.NewParams(
 			1000,
-			types.DefautConsumerChainID,
+			types.DefaultConsumerChainID,
 			sample.ConsensusState(0),
 			spntypes.DefaultUnbondingPeriod,
 			spntypes.DefaultRevisionHeight,
 			false,
 		))
-		clientID, err := k.InitializeConsumerClient(ctx)
+		clientID, err := tk.MonitoringProviderKeeper.InitializeConsumerClient(ctx)
 		require.NoError(t, err)
 		require.NotEmpty(t, clientID)
 
-		consumerClientID, found := k.GetConsumerClientID(ctx)
+		consumerClientID, found := tk.MonitoringProviderKeeper.GetConsumerClientID(ctx)
 		require.True(t, found, "consumer client ID should be registered in the store")
 		require.EqualValues(t, clientID, consumerClientID.ClientID)
 
 		// IBC client should be created
-		clientState, found := ibcKeeper.ClientKeeper.GetClientState(ctx, clientID)
+		clientState, found := tk.IBCKeeper.ClientKeeper.GetClientState(ctx, clientID)
 		require.True(t, found, "IBC consumer client state should be created")
 
 		cs, ok := clientState.(*ibctmtypes.ClientState)
 		require.True(t, ok)
-		require.EqualValues(t, k.ConsumerRevisionHeight(ctx), cs.LatestHeight.RevisionHeight)
-		require.EqualValues(t, time.Second*time.Duration(k.ConsumerUnbondingPeriod(ctx)), cs.UnbondingPeriod)
+		require.EqualValues(t, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx), cs.LatestHeight.RevisionHeight)
+		require.EqualValues(t, time.Second*time.Duration(tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx)), cs.UnbondingPeriod)
 	})
 
 	t.Run("invalid consumer consensus state", func(t *testing.T) {
-		k, _, _, ctx := testkeeper.MonitoringpKeeper(t)
+		ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 
 		// default params contain an empty consensus state, therefore invalid
-		_, err := k.InitializeConsumerClient(ctx)
+		_, err := tk.MonitoringProviderKeeper.InitializeConsumerClient(ctx)
 		require.ErrorIs(t, err, types.ErrInvalidConsensusState)
 	})
 }

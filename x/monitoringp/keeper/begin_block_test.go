@@ -13,8 +13,7 @@ import (
 )
 
 func TestKeeper_ReportBlockSignatures(t *testing.T) {
-	// initialize validators
-	k, _, stakingKeeper, ctx := testkeeper.MonitoringpKeeper(t)
+	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	valFoo, valBar, valBaz, valFred, valQux := sample.Validator(t),
 		sample.Validator(t),
 		sample.Validator(t),
@@ -35,20 +34,20 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 	consNoValidator := sample.ConsAddress()
 
 	// initialize staking validator set
-	stakingKeeper.SetValidator(ctx, valFoo)
-	stakingKeeper.SetValidator(ctx, valBar)
-	stakingKeeper.SetValidator(ctx, valBaz)
-	stakingKeeper.SetValidator(ctx, valFred)
-	stakingKeeper.SetValidator(ctx, valQux)
-	err = stakingKeeper.SetValidatorByConsAddr(ctx, valFoo)
+	tk.StakingKeeper.SetValidator(ctx, valFoo)
+	tk.StakingKeeper.SetValidator(ctx, valBar)
+	tk.StakingKeeper.SetValidator(ctx, valBaz)
+	tk.StakingKeeper.SetValidator(ctx, valFred)
+	tk.StakingKeeper.SetValidator(ctx, valQux)
+	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFoo)
 	require.NoError(t, err)
-	err = stakingKeeper.SetValidatorByConsAddr(ctx, valBar)
+	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBar)
 	require.NoError(t, err)
-	err = stakingKeeper.SetValidatorByConsAddr(ctx, valBaz)
+	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBaz)
 	require.NoError(t, err)
-	err = stakingKeeper.SetValidatorByConsAddr(ctx, valFred)
+	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFred)
 	require.NoError(t, err)
-	err = stakingKeeper.SetValidatorByConsAddr(ctx, valQux)
+	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valQux)
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -212,17 +211,17 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// set keeper values
-			params := k.GetParams(ctx)
+			params := tk.MonitoringProviderKeeper.GetParams(ctx)
 			params.LastBlockHeight = tt.lastBlockHeight
-			k.SetParams(ctx, params)
+			tk.MonitoringProviderKeeper.SetParams(ctx, params)
 			if tt.monitoringInfoExist {
-				k.SetMonitoringInfo(ctx, tt.inputMonitoringInfo)
+				tk.MonitoringProviderKeeper.SetMonitoringInfo(ctx, tt.inputMonitoringInfo)
 			} else {
-				k.RemoveMonitoringInfo(ctx)
+				tk.MonitoringProviderKeeper.RemoveMonitoringInfo(ctx)
 			}
 
 			// report
-			err := k.ReportBlockSignatures(ctx, tt.lastCommitInfo, tt.currentBlockHeight)
+			err := tk.MonitoringProviderKeeper.ReportBlockSignatures(ctx, tt.lastCommitInfo, tt.currentBlockHeight)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -230,7 +229,7 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 			require.NoError(t, err)
 
 			// check saved values
-			monitoringInfo, found := k.GetMonitoringInfo(ctx)
+			monitoringInfo, found := tk.MonitoringProviderKeeper.GetMonitoringInfo(ctx)
 			require.EqualValues(t, tt.expectedMonitoringInfoFound, found)
 			require.EqualValues(t, tt.expectedMonitoringInfo, monitoringInfo)
 		})

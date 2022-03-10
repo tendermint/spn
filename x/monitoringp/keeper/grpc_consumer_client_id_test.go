@@ -8,15 +8,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 
 func TestConsumerClientIDQuery(t *testing.T) {
-	keeper, _, _, ctx := keepertest.MonitoringpKeeper(t)
+	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	item := createTestConsumerClientID(keeper, ctx)
+	item := createTestConsumerClientID(ctx, tk.MonitoringProviderKeeper)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetConsumerClientIDRequest
@@ -24,17 +24,17 @@ func TestConsumerClientIDQuery(t *testing.T) {
 		err      error
 	}{
 		{
-			desc:     "First",
+			desc:     "Valid Request",
 			request:  &types.QueryGetConsumerClientIDRequest{},
 			response: &types.QueryGetConsumerClientIDResponse{ConsumerClientID: item},
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "Invalid Request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.ConsumerClientID(wctx, tc.request)
+			response, err := tk.MonitoringProviderKeeper.ConsumerClientID(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
