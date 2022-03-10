@@ -170,7 +170,7 @@ func TestValidateParticipationTierList(t *testing.T) {
 	}
 }
 
-func TestValidateNextTierBenefits(t *testing.T) {
+func TestValidateTierBenefits(t *testing.T) {
 	tests := []struct {
 		name         string
 		tierBenefits TierBenefits
@@ -193,7 +193,7 @@ func TestValidateNextTierBenefits(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateNextTierBenefits(tt.tierBenefits)
+			err := validateTierBenefits(tt.tierBenefits)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)

@@ -147,7 +147,7 @@ func validateParticipationTierList(v interface{}) error {
 			return errors.New("required allocations must be greater than zero")
 		}
 
-		if err := validateNextTierBenefits(tier.Benefits); err != nil {
+		if err := validateTierBenefits(tier.Benefits); err != nil {
 			return err
 		}
 	}
@@ -155,7 +155,7 @@ func validateParticipationTierList(v interface{}) error {
 	return nil
 }
 
-func validateNextTierBenefits(b TierBenefits) error {
+func validateTierBenefits(b TierBenefits) error {
 	if b.MaxBidAmount.IsNil() {
 		return errors.New("max bid amount should be set")
 	}
