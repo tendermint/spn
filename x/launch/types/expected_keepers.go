@@ -16,7 +16,7 @@ type CampaignKeeper interface {
 }
 
 type MonitoringConsumerKeeper interface {
-	ClearVerifiedClientIDs(ctx sdk.Context, launchID uint64)
+	ClearVerifiedClientIDs(ctx sdk.Context, launchID uint64) error
 }
 
 type ProfileKeeper interface {
