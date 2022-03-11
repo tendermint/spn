@@ -52,49 +52,6 @@ func TestValidator_AddValidatorOperatorAddress(t *testing.T) {
 	}
 }
 
-func TestValidator_RemoveValidatorOperatorAddress(t *testing.T) {
-	var (
-		operatorAddress   = sample.Address()
-		operatorAddresses = []string{
-			sample.Address(),
-			sample.Address(),
-			sample.Address(),
-		}
-	)
-	tests := []struct {
-		name              string
-		operatorAddress   string
-		operatorAddresses []string
-		want              []string
-	}{
-		{
-			name:              "valid case",
-			operatorAddress:   operatorAddress,
-			operatorAddresses: append(operatorAddresses, operatorAddress),
-			want:              operatorAddresses,
-		},
-		{
-			name:              "empty operator address list",
-			operatorAddress:   operatorAddress,
-			operatorAddresses: []string{operatorAddress},
-			want:              []string{},
-		},
-		{
-			name:              "non existing operator address case",
-			operatorAddress:   operatorAddress,
-			operatorAddresses: operatorAddresses,
-			want:              operatorAddresses,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			validator := types.Validator{OperatorAddresses: tt.operatorAddresses}
-			got := validator.RemoveValidatorOperatorAddress(tt.operatorAddress)
-			require.Equal(t, tt.want, got.OperatorAddresses)
-		})
-	}
-}
-
 func TestValidator_HasOperatorAddress(t *testing.T) {
 	var (
 		operatorAddress   = sample.Address()
