@@ -1,12 +1,13 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"gopkg.in/yaml.v2"
 
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"gopkg.in/yaml.v2"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -16,19 +17,41 @@ var (
 	KeyParticipationTierList     = []byte("ParticipationTierList")
 	KeyWithdrawalAllocationDelay = []byte("WithdrawalAllocationDelay")
 
-	// TODO: Determine the default values for these params
 	DefaultAllocationPrice = AllocationPrice{
-		Staking: sdk.OneInt(),
+		Bonded: sdk.NewInt(1000),
 	}
 	DefaultParticipationTierList = []Tier{
 		{
-			TierID:              0,
-			RequiredAllocations: 0,
+			TierID:              1,
+			RequiredAllocations: 1,
 			Benefits: TierBenefits{
-				MaxBidAmount: sdk.ZeroInt(),
+				MaxBidAmount: sdk.NewInt(1000),
+			},
+		},
+		{
+			TierID:              2,
+			RequiredAllocations: 2,
+			Benefits: TierBenefits{
+				MaxBidAmount: sdk.NewInt(2000),
+			},
+		},
+		{
+			TierID:              3,
+			RequiredAllocations: 5,
+			Benefits: TierBenefits{
+				MaxBidAmount: sdk.NewInt(10000),
+			},
+		},
+		{
+			TierID:              4,
+			RequiredAllocations: 10,
+			Benefits: TierBenefits{
+				MaxBidAmount: sdk.NewInt(30000),
 			},
 		},
 	}
+
+	// TODO: Determine the default values for this param
 	DefaultWithdrawalAllocationDelay = uint64(0)
 )
 
@@ -94,8 +117,13 @@ func validateAllocationPrice(v interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", v)
 	}
 
-	// TODO implement validation
-	_ = allocationPrice
+	if allocationPrice.Bonded.IsNil() {
+		return errors.New("value for 'bonded' should be set")
+	}
+
+	if !allocationPrice.Bonded.IsPositive() {
+		return errors.New("value for 'bonded' must be greater than zero")
+	}
 
 	return nil
 }
@@ -107,8 +135,34 @@ func validateParticipationTierList(v interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", v)
 	}
 
-	// TODO implement validation
-	_ = participationTierList
+	tiersIndexMap := make(map[uint64]struct{})
+	for _, tier := range participationTierList {
+		// check IDs are unique
+		if _, ok = tiersIndexMap[tier.TierID]; ok {
+			return fmt.Errorf("duplicated tier ID: %v", tier.TierID)
+		}
+		tiersIndexMap[tier.TierID] = struct{}{}
+
+		if tier.RequiredAllocations <= 0 {
+			return errors.New("required allocations must be greater than zero")
+		}
+
+		if err := validateTierBenefits(tier.Benefits); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func validateTierBenefits(b TierBenefits) error {
+	if b.MaxBidAmount.IsNil() {
+		return errors.New("max bid amount should be set")
+	}
+
+	if !b.MaxBidAmount.IsPositive() {
+		return fmt.Errorf("max bid amount must be greater than zero")
+	}
 
 	return nil
 }
