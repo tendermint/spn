@@ -9,8 +9,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/participation/types"
 	participationsim "github.com/tendermint/spn/x/participation/simulation"
+	"github.com/tendermint/spn/x/participation/types"
 )
 
 const (
