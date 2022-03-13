@@ -1,7 +1,13 @@
 package types
 
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+)
+
 type FundraisingKeeper interface {
-	// Methods imported from fundraising should be defined here
+	GetAuction(ctx sdk.Context, id uint64) (auction fundraisingtypes.AuctionI, found bool)
+	AddAllowedBidders(ctx sdk.Context, auctionId uint64, bidders []fundraisingtypes.AllowedBidder) error
 }
 
 type StakingKeeper interface {
