@@ -10,6 +10,7 @@ import (
 
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/types"
+	participationsim "github.com/tendermint/spn/x/participation/simulation"
 )
 
 const (
@@ -68,7 +69,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgParticipate,
-		participationsimulation.SimulateMsgParticipate(am.accountKeeper, am.bankKeeper, am.keeper),
+		participationsim.SimulateMsgParticipate(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
