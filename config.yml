@@ -56,4 +56,24 @@ genesis:
         auction_creation_fee:
           - "amount": "100"
             "denom": "uspn"
-
+    participation:
+      params:
+        allocationPrice:
+          bonded: "1000"
+        participationTierList:
+          - tierID: "1"
+            requiredAllocations: "1"
+            benefits:
+              maxBidAmount: "1000"
+          - tierID: "2"
+            requiredAllocations: "2"
+            benefits:
+              maxBidAmount: "2000"
+          - tierID: "3"
+            requiredAllocations: "5"
+            benefits:
+              maxBidAmount: "10000"
+          - tierID: "4"
+            requiredAllocations: "10"
+            benefits:
+              maxBidAmount: "30000"

@@ -3,8 +3,6 @@ package participation
 import (
 	"math/rand"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -12,14 +10,6 @@ import (
 
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/types"
-)
-
-// avoid unused import issue
-var (
-	_ = sample.AccAddress
-	_ = simappparams.StakePerAccount
-	_ = simulation.MsgEntryKind
-	_ = baseapp.Paramspace
 )
 
 const (
@@ -45,7 +35,7 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	participationParams := types.DefaultParams()
+	participationParams := sample.ParticipationParams()
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyAllocationPrice), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(participationParams.AllocationPrice))

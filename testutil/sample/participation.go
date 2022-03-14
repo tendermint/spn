@@ -1,11 +1,42 @@
 package sample
 
-import participation "github.com/tendermint/spn/x/participation/types"
+import (
+	"math/rand"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	participation "github.com/tendermint/spn/x/participation/types"
+)
 
 // ParticipationParams  returns a sample of params for the participation module
 func ParticipationParams() participation.Params {
-	// TODO: randomize params generation
-	return participation.DefaultParams()
+	allocationPrice := participation.AllocationPrice{
+		Bonded: sdk.NewInt(rand.Int63n(10000) + 1),
+	}
+
+	tiers := make([]participation.Tier, 0)
+	numTiers := uint64(rand.Int63n(10) + 1)
+	allocCnt := uint64(rand.Int63n(5) + 1)
+	maxBidCnt := sdk.NewInt(rand.Int63n(10000) + 1)
+	for i := uint64(1); i <= numTiers; i++ {
+		tier := participation.Tier{
+			TierID:              i,
+			RequiredAllocations: allocCnt,
+			Benefits: participation.TierBenefits{
+				MaxBidAmount: maxBidCnt,
+			},
+		}
+		tiers = append(tiers, tier)
+
+		// increment values for next tier
+		allocCnt += uint64(rand.Int63n(5) + 1)
+		maxBidCnt = maxBidCnt.AddRaw(rand.Int63n(10000) + 1)
+	}
+
+	// TODO: randomize param generation (?)
+	withdrawalAllocationDelay := participation.DefaultWithdrawalAllocationDelay
+
+	return participation.NewParams(allocationPrice, tiers, withdrawalAllocationDelay)
 }
 
 // ParticipationGenesisState  returns a sample genesis state for the participation module
