@@ -20,7 +20,7 @@ func MsgCreateFixedAuction(
 		Auctioneer:       auctioneer,
 		StartPrice:       sdk.NewDec(sellingPrice),
 		SellingCoin:      sellingCoin,
-		PayingCoinDenom:  "stake",
+		PayingCoinDenom:  sdktypes.DefaultBondDenom,
 		VestingSchedules: []fundraisingtypes.VestingSchedule{},
 		StartTime:        startTime,
 		EndTime:          startTime.Add(time.Hour * 24 * 7),

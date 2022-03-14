@@ -13,7 +13,7 @@ import (
 func CmdParticipate() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "participate [auction-id] [tier-id]",
-		Short: "Add as a participant for the auction with the specified tier benefit",
+		Short: "Add as a participant for the auction with a specified tier benefit",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argAuctionID, err := cast.ToUint64E(args[0])

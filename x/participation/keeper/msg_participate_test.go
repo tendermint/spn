@@ -19,6 +19,7 @@ func Test_msgServer_Participate(t *testing.T) {
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		auctioneer     = sample.Address()
 		sellingCoin    = sample.Coin()
+		startTime      = sdkCtx.BlockTime().Add(time.Hour)
 	)
 
 	// initialize an auction
@@ -26,7 +27,7 @@ func Test_msgServer_Participate(t *testing.T) {
 	res, err := tk.FundraisingKeeper.CreateFixedPriceAuction(sdkCtx, sample.MsgCreateFixedAuction(
 		auctioneer,
 		sellingCoin,
-		sdkCtx.BlockTime().Add(time.Hour),
+		startTime,
 	))
 	require.NoError(t, err)
 	require.NotNil(t, res)
