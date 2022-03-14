@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	opWeightMsgParticipate = "op_weight_msg_create_chain"
+	opWeightMsgParticipate = "op_weight_msg_participate"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgParticipate int = 100
 
