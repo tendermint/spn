@@ -1,4 +1,4 @@
-package types
+package types_test
 
 import (
 	"testing"
@@ -7,23 +7,24 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/participation/types"
 )
 
 func TestMsgParticipate_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgParticipate
+		msg  types.MsgParticipate
 		err  error
 	}{
 		{
 			name: "valid address",
-			msg: MsgParticipate{
+			msg: types.MsgParticipate{
 				Participant: sample.Address(),
 			},
 		},
 		{
 			name: "invalid address",
-			msg: MsgParticipate{
+			msg: types.MsgParticipate{
 				Participant: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
