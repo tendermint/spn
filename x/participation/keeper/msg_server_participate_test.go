@@ -16,8 +16,8 @@ func Test_msgServer_Participate(t *testing.T) {
 	var (
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
-		auctioneer = sample.Address()
-		sellingCoin = sample.Coin()
+		auctioneer     = sample.Address()
+		sellingCoin    = sample.Coin()
 	)
 
 	// initialize an auction
@@ -48,7 +48,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent participating in a non existent auction",
 			msg: &types.MsgParticipate{
 				Participant: sample.Address(),
-				AuctionID:   auctionID+1,
+				AuctionID:   auctionID + 1,
 			},
 			err: types.ErrAuctionNotFound,
 		},

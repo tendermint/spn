@@ -1,12 +1,13 @@
 package keeper_test
 
 import (
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	"testing"
 )
 
 func TestTestKeepers_Mint(t *testing.T) {
@@ -14,7 +15,6 @@ func TestTestKeepers_Mint(t *testing.T) {
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	address := sample.Address()
 	coins, otherCoins := sample.Coins(), sample.Coins()
-
 
 	getBalances := func(address string) sdk.Coins {
 		res, err := tk.BankKeeper.AllBalances(ctx, &banktypes.QueryAllBalancesRequest{

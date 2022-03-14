@@ -7,7 +7,7 @@ import (
 
 type FundraisingKeeper interface {
 	GetAuction(ctx sdk.Context, id uint64) (auction fundraisingtypes.AuctionI, found bool)
-	AddAllowedBidders(ctx sdk.Context, auctionId uint64, bidders []fundraisingtypes.AllowedBidder) error
+	AddAllowedBidders(ctx sdk.Context, auctionID uint64, bidders []fundraisingtypes.AllowedBidder) error
 }
 
 type StakingKeeper interface {

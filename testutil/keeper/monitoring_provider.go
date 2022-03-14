@@ -89,7 +89,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
 
 	return ctx, TestKeepers{
-			T: t,
+			T:                        t,
 			CampaignKeeper:           campaignKeeper,
 			LaunchKeeper:             launchKeeper,
 			ProfileKeeper:            profileKeeper,
