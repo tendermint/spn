@@ -5,6 +5,8 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 )
 
@@ -20,7 +22,7 @@ func MsgCreateFixedAuction(
 		Auctioneer:       auctioneer,
 		StartPrice:       sdk.NewDec(sellingPrice),
 		SellingCoin:      sellingCoin,
-		PayingCoinDenom:  sdktypes.DefaultBondDenom,
+		PayingCoinDenom:  stakingtypes.DefaultParams().BondDenom,
 		VestingSchedules: []fundraisingtypes.VestingSchedule{},
 		StartTime:        startTime,
 		EndTime:          startTime.Add(time.Hour * 24 * 7),
