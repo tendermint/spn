@@ -17,12 +17,7 @@ func (k Keeper) TotalAllocation(goCtx context.Context, req *types.QueryGetTotalA
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	acc, err := sdk.AccAddressFromBech32(req.Address)
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	}
-
-	numAlloc, err := k.GetTotalAllocation(ctx, acc)
+	numAlloc, err := k.GetTotalAllocation(ctx, req.Address)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
