@@ -23,6 +23,14 @@ func (k msgServer) EditChainSourceInformation(
 		return nil, sdkerrors.Wrapf(types.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 
+	if chain.LaunchTriggered {
+		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.LaunchID)
+	}
+
+	if chain.MonitoringConnected {
+		return nil, sdkerrors.Wrapf(types.ErrChainMonitoringConnected, "%d", msg.LaunchID)
+	}
+
 	// Get the coordinator ID associated to the sender address
 	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {

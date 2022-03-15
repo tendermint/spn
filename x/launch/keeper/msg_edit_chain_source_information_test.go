@@ -23,18 +23,29 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
+
+	coordID := resCoord.CoordinatorID
 
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
 	_, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 
 	// Create a chain
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
-	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	launchID := res.LaunchID
+	launchID := uint64(1)
+	chain := sample.Chain(launchID, coordID)
+	tk.LaunchKeeper.SetChain(sdkCtx, chain)
+
+	launchIDLaunchTriggered := uint64(2)
+	chain = sample.Chain(launchIDLaunchTriggered, coordID)
+	chain.LaunchTriggered = true
+	tk.LaunchKeeper.SetChain(sdkCtx, chain)
+
+	launchIDMonitoringConnected := uint64(3)
+	chain = sample.Chain(launchIDMonitoringConnected, coordID)
+	chain.MonitoringConnected = true
+	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
 	for _, tc := range []struct {
 		name string
@@ -115,6 +126,26 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 				false,
 			),
 			err: profiletypes.ErrCoordInvalid,
+		},
+		{
+			name: "launch triggered",
+			msg: sample.MsgEditChainSourceInformation(coordAddress, launchIDLaunchTriggered,
+				false,
+				true,
+				false,
+				false,
+			),
+			err: types.ErrTriggeredLaunch,
+		},
+		{
+			name: "monitoring connected",
+			msg: sample.MsgEditChainSourceInformation(coordAddress, launchIDMonitoringConnected,
+				false,
+				true,
+				false,
+				false,
+			),
+			err: types.ErrChainMonitoringConnected,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
