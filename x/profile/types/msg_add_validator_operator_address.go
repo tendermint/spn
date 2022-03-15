@@ -28,11 +28,20 @@ func (msg *MsgAddValidatorOperatorAddress) Type() string {
 }
 
 func (msg *MsgAddValidatorOperatorAddress) GetSigners() []sdk.AccAddress {
+	validatorAddress, err := sdk.AccAddressFromBech32(msg.ValidatorAddress)
+	if err != nil {
+		panic(err)
+	}
 	operatorAddress, err := sdk.AccAddressFromBech32(msg.OperatorAddress)
 	if err != nil {
 		panic(err)
 	}
-	return []sdk.AccAddress{operatorAddress}
+
+	// if the operator address is different from the validator, both signatures are required
+	if validatorAddress.Equals(operatorAddress) {
+		return []sdk.AccAddress{validatorAddress}
+	}
+	return []sdk.AccAddress{validatorAddress, operatorAddress}
 }
 
 func (msg *MsgAddValidatorOperatorAddress) GetSignBytes() []byte {
