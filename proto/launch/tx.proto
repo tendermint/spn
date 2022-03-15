@@ -12,7 +12,8 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 
 // Msg defines the Msg service.
 service Msg {
-  // this line is used by starport scaffolding # proto/tx/rpc
+    rpc EditChainSourceInformation(MsgEditChainSourceInformation) returns (MsgEditChainSourceInformationResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
   rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestAddAccountResponse);
@@ -44,13 +45,9 @@ message MsgCreateChainResponse {
 message MsgEditChain {
   string coordinator = 1;
   uint64 launchID = 2;
-  string genesisChainID = 3;
-  string sourceURL = 4;
-  string sourceHash = 5;
-  InitialGenesis initialGenesis = 6;
-  bool setCampaignID = 7;
-  uint64 campaignID = 8;
-  bytes metadata = 9;
+  bool setCampaignID = 3;
+  uint64 campaignID = 4;
+  bytes metadata = 5;
 }
 
 message MsgEditChainResponse {}
@@ -143,5 +140,17 @@ message MsgRevertLaunch {
 }
 
 message MsgRevertLaunchResponse {}
+
+message MsgEditChainSourceInformation {
+  string coordinator = 1;
+  uint64 launchID = 2;  
+  string genesisChainID = 3;
+  string sourceURL = 4;
+  string sourceHash = 5;
+  InitialGenesis initialGenesis = 6;
+}
+
+message MsgEditChainSourceInformationResponse {
+}
 
 // this line is used by starport scaffolding # proto/tx/message

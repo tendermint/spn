@@ -168,15 +168,35 @@ func MsgCreateChain(coordAddress, genesisURL string, hasCampaign bool, campaignI
 func MsgEditChain(
 	coordAddress string,
 	launchID uint64,
-	modifyGenesisChainID,
-	modifySource,
-	modifyInitialGenesis,
-	genesisURL,
 	setCampaignID bool,
 	campaignID uint64,
 	modifyMetadata bool,
 ) launch.MsgEditChain {
+	var metadata []byte
+	if modifyMetadata {
+		metadata = Metadata(20)
+	}
+
+	return *launch.NewMsgEditChain(
+		coordAddress,
+		launchID,
+		setCampaignID,
+		campaignID,
+		metadata,
+	)
+}
+
+// MsgEditChainSourceInformation returns a sample MsgEditChainSourceInformation
+func MsgEditChainSourceInformation(
+	coordAddress string,
+	launchID uint64,
+	modifyGenesisChainID,
+	modifySource,
+	modifyInitialGenesis,
+	genesisURL bool,
+) launch.MsgEditChainSourceInformation {
 	var genesisChainID, sourceURL, sourceHash string
+	var initialGenesis *launch.InitialGenesis
 
 	if modifyGenesisChainID {
 		genesisChainID = GenesisChainID()
@@ -184,7 +204,6 @@ func MsgEditChain(
 	if modifySource {
 		sourceURL, sourceHash = String(30), String(10)
 	}
-	var initialGenesis *launch.InitialGenesis
 	if modifyInitialGenesis {
 		if genesisURL {
 			newGenesisURL := launch.NewGenesisURL(String(30), GenesisHash())
@@ -195,21 +214,13 @@ func MsgEditChain(
 		}
 	}
 
-	var metadata []byte
-	if modifyMetadata {
-		metadata = Metadata(20)
-	}
-
-	return *launch.NewMsgEditChain(
+	return *launch.NewMsgEditChainSourceInformation(
 		coordAddress,
 		launchID,
 		genesisChainID,
 		sourceURL,
 		sourceHash,
 		initialGenesis,
-		setCampaignID,
-		campaignID,
-		metadata,
 	)
 }
 

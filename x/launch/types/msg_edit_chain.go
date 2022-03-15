@@ -4,7 +4,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/tendermint/spn/pkg/chainid"
 	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
@@ -15,24 +14,16 @@ var _ sdk.Msg = &MsgEditChain{}
 func NewMsgEditChain(
 	coordinator string,
 	launchID uint64,
-	genesisChainID,
-	sourceURL,
-	sourceHash string,
-	initialGenesis *InitialGenesis,
 	setCampaign bool,
 	campaignID uint64,
 	metadata []byte,
 ) *MsgEditChain {
 	return &MsgEditChain{
-		Coordinator:    coordinator,
-		LaunchID:       launchID,
-		GenesisChainID: genesisChainID,
-		SourceURL:      sourceURL,
-		SourceHash:     sourceHash,
-		InitialGenesis: initialGenesis,
-		SetCampaignID:  setCampaign,
-		CampaignID:     campaignID,
-		Metadata:       metadata,
+		Coordinator:   coordinator,
+		LaunchID:      launchID,
+		SetCampaignID: setCampaign,
+		CampaignID:    campaignID,
+		Metadata:      metadata,
 	}
 }
 
@@ -63,20 +54,8 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
-	if msg.GenesisChainID != "" {
-		if _, _, err := chainid.ParseGenesisChainID(msg.GenesisChainID); err != nil {
-			return sdkerrors.Wrapf(ErrInvalidGenesisChainID, err.Error())
-		}
-	}
-
-	if msg.GenesisChainID == "" && msg.SourceURL == "" && msg.InitialGenesis == nil && len(msg.Metadata) == 0 && !msg.SetCampaignID {
+	if len(msg.Metadata) == 0 && !msg.SetCampaignID {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
-	}
-
-	if msg.InitialGenesis != nil {
-		if err := msg.InitialGenesis.Validate(); err != nil {
-			return sdkerrors.Wrap(ErrInvalidInitialGenesis, err.Error())
-		}
 	}
 
 	// TODO parameterize

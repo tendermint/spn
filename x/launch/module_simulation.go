@@ -16,27 +16,30 @@ import (
 )
 
 const (
-	defaultWeightMsgCreateChain              int = 50
-	defaultWeightMsgEditChain                int = 20
-	defaultWeightMsgRequestAddGenesisAccount int = 50
-	defaultWeightMsgRequestAddVestingAccount int = 50
-	defaultWeightMsgRequestRemoveAccount     int = 15
-	defaultWeightMsgRequestAddValidator      int = 50
-	defaultWeightMsgRequestRemoveValidator   int = 15
-	defaultWeightMsgSettleRequest            int = 50
-	defaultWeightMsgTriggerLaunch            int = 15
-	defaultWeightMsgRevertLaunch             int = 0
+	// this line is used by starport scaffolding # simapp/module/const
+	defaultWeightMsgCreateChain                int = 50
+	defaultWeightMsgEditChain                  int = 20
+	defaultWeightMsgRequestAddGenesisAccount   int = 50
+	defaultWeightMsgRequestAddVestingAccount   int = 50
+	defaultWeightMsgRequestRemoveAccount       int = 15
+	defaultWeightMsgRequestAddValidator        int = 50
+	defaultWeightMsgRequestRemoveValidator     int = 15
+	defaultWeightMsgSettleRequest              int = 50
+	defaultWeightMsgTriggerLaunch              int = 15
+	defaultWeightMsgRevertLaunch               int = 0
+	defaultWeightMsgEditChainSourceInformation int = 100
 
-	opWeightMsgCreateChain              = "op_weight_msg_create_chain"
-	opWeightMsgEditChain                = "op_weight_msg_edit_chain"
-	opWeightMsgRequestAddGenesisAccount = "op_weight_msg_request_add_genesis_account"
-	opWeightMsgRequestAddVestingAccount = "op_weight_msg_request_add_vesting_account"
-	opWeightMsgRequestRemoveAccount     = "op_weight_msg_request_remove_account"
-	opWeightMsgRequestAddValidator      = "op_weight_msg_request_add_validator"
-	opWeightMsgRequestRemoveValidator   = "op_weight_msg_request_remove_validator"
-	opWeightMsgTriggerLaunch            = "op_weight_msg_trigger_launch"
-	opWeightMsgRevertLaunch             = "op_weight_msg_revert_launch"
-	opWeightMsgSettleRequest            = "op_weight_msg_settle_request"
+	opWeightMsgCreateChain                = "op_weight_msg_create_chain"
+	opWeightMsgEditChain                  = "op_weight_msg_edit_chain"
+	opWeightMsgRequestAddGenesisAccount   = "op_weight_msg_request_add_genesis_account"
+	opWeightMsgRequestAddVestingAccount   = "op_weight_msg_request_add_vesting_account"
+	opWeightMsgRequestRemoveAccount       = "op_weight_msg_request_remove_account"
+	opWeightMsgRequestAddValidator        = "op_weight_msg_request_add_validator"
+	opWeightMsgRequestRemoveValidator     = "op_weight_msg_request_remove_validator"
+	opWeightMsgTriggerLaunch              = "op_weight_msg_trigger_launch"
+	opWeightMsgRevertLaunch               = "op_weight_msg_revert_launch"
+	opWeightMsgSettleRequest              = "op_weight_msg_settle_request"
+	opWeightMsgEditChainSourceInformation = "op_weight_msg_edit_chain_source_information"
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -83,17 +86,19 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+	// this line is used by starport scaffolding # simapp/module/operation
 	var (
-		weightMsgCreateChain              int
-		weightMsgEditChain                int
-		weightMsgRequestAddGenesisAccount int
-		weightMsgRequestAddVestingAccount int
-		weightMsgRequestRemoveAccount     int
-		weightMsgRequestAddValidator      int
-		weightMsgRequestRemoveValidator   int
-		weightMsgTriggerLaunch            int
-		weightMsgRevertLaunch             int
-		weightMsgSettleRequest            int
+		weightMsgCreateChain                int
+		weightMsgEditChain                  int
+		weightMsgRequestAddGenesisAccount   int
+		weightMsgRequestAddVestingAccount   int
+		weightMsgRequestRemoveAccount       int
+		weightMsgRequestAddValidator        int
+		weightMsgRequestRemoveValidator     int
+		weightMsgTriggerLaunch              int
+		weightMsgRevertLaunch               int
+		weightMsgSettleRequest              int
+		weightMsgEditChainSourceInformation int
 	)
 
 	appParams := simState.AppParams
@@ -103,6 +108,12 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgCreateChain = defaultWeightMsgCreateChain
 		},
 	)
+	appParams.GetOrGenerate(simState.Cdc, opWeightMsgEditChainSourceInformation, &weightMsgEditChainSourceInformation, nil,
+		func(_ *rand.Rand) {
+			weightMsgEditChainSourceInformation = defaultWeightMsgEditChainSourceInformation
+		},
+	)
+
 	appParams.GetOrGenerate(cdc, opWeightMsgEditChain, &weightMsgEditChain, nil,
 		func(_ *rand.Rand) {
 			weightMsgEditChain = defaultWeightMsgEditChain
@@ -194,6 +205,10 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		simulation.NewWeightedOperation(
 			weightMsgRevertLaunch,
 			launchsimulation.SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgEditChainSourceInformation,
+			launchsimulation.SimulateMsgEditChainSourceInformation(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }
