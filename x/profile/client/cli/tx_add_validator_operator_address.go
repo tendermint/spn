@@ -70,7 +70,7 @@ func CmdAddValidatorOperatorAddress() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			fmt.Println(resp.String())
+			fmt.Print(resp.String())
 
 			return nil
 		},
