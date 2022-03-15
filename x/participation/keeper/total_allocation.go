@@ -8,7 +8,7 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-// GetTotalAllocation returns the number of available allocations based on stakings
+// GetTotalAllocation returns the number of available allocations based on delegations
 func (k Keeper) GetTotalAllocation(ctx sdk.Context, addr sdk.AccAddress) (uint64, error) {
 	allocationPriceBondedDec := k.AllocationPrice(ctx).Bonded.ToDec()
 

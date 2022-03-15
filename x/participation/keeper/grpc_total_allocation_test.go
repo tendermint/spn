@@ -44,14 +44,14 @@ func TestGetTotalAllocationQuery(t *testing.T) {
 		},
 
 		{
-			desc: "KeyNotFound",
+			desc: "invalid address",
 			request: &types.QueryGetTotalAllocationRequest{
 				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {

@@ -10,12 +10,10 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdGetTotalAllocation() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-total-allocation [address]",
-		Short: "Query get-total-allocation",
+		Short: "Show the total allocation available for an account",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			reqAddress := args[0]
