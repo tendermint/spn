@@ -26,8 +26,7 @@ func TestGetTotalAllocationQuery(t *testing.T) {
 	})
 
 	addr := sample.Address()
-	dels, totalShares := createNDelegations(sdkCtx, tk, addr, 10)
-	calcAlloc := totalShares.Quo(allocationPrice.Bonded.ToDec()).TruncateInt64()
+	dels, _ := tk.DelegateN(sdkCtx, addr, 100, 10)
 
 	for _, tc := range []struct {
 		desc     string
@@ -40,7 +39,7 @@ func TestGetTotalAllocationQuery(t *testing.T) {
 			request: &types.QueryGetTotalAllocationRequest{
 				Address: dels[0].DelegatorAddress,
 			},
-			response: &types.QueryGetTotalAllocationResponse{TotalAllocation: uint64(calcAlloc)},
+			response: &types.QueryGetTotalAllocationResponse{TotalAllocation: 10},
 		},
 
 		{
