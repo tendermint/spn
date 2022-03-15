@@ -1,0 +1,34 @@
+name: Reset Testnet State
+
+on:
+  workflow_dispatch:
+    inputs:
+      testnet:
+        description: 'testnet to reset'
+        required: true
+        default: 'nightly'
+
+jobs:
+  reset:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Scale down nodeset
+        uses: steebchen/kubectl@v2.0.0
+        with:
+          config: ${{ secrets.KUBECONFIG_B64 }}
+          command: scale nodeset spn-${{ github.event.inputs.testnet }} --replicas=0
+
+      - name: Delete data
+        uses: steebchen/kubectl@v2.0.0
+        with:
+          config: ${{ secrets.KUBECONFIG_B64 }}
+          command: delete pvc spn-${{ github.event.inputs.testnet }}-0 spn-${{ github.event.inputs.testnet }}-1
+
+      - name: Scale up nodeset
+        uses: steebchen/kubectl@v2.0.0
+        with:
+          config: ${{ secrets.KUBECONFIG_B64 }}
+          command: scale nodeset spn-${{ github.event.inputs.testnet }} --replicas=2
