@@ -454,7 +454,7 @@ func SimulateMsgEditChainSourceInformation(ak types.AccountKeeper, bk types.Bank
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Select a chain with a valid coordinator account
-		chain, found := FindRandomChain(r, ctx, k, r.Intn(100) < 50, false)
+		chain, found := FindRandomChain(r, ctx, k, false, false)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, "chain not found"), nil, nil
 		}
