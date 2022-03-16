@@ -34,8 +34,8 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/participation/auction_used_allocations/{address}";
 	}
 	// Queries a TotalAllocation of address.
-	rpc TotalAllocation(QueryGetTotalAllocationRequest) returns (QueryGetTotalAllocationResponse) {
-		option (google.api.http).get = "/tendermint/spn/participation/total_allocation/{address}";
+	rpc TotalAllocations(QueryGetTotalAllocationsRequest) returns (QueryGetTotalAllocationsResponse) {
+		option (google.api.http).get = "/tendermint/spn/participation/total_allocations/{address}";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -86,12 +86,12 @@ message QueryAllAuctionUsedAllocationsResponse {
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetTotalAllocationRequest {
+message QueryGetTotalAllocationsRequest {
   string address = 1;
 }
 
-message QueryGetTotalAllocationResponse {
-  uint64 totalAllocation = 1;
+message QueryGetTotalAllocationsResponse {
+  uint64 totalAllocations = 1;
 }
 
 // this line is used by starport scaffolding # 3

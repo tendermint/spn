@@ -8,10 +8,10 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-func CmdGetTotalAllocation() *cobra.Command {
+func CmdGetTotalAllocations() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-total-allocation [address]",
-		Short: "Show the total allocation available for an account",
+		Use:   "show-total-allocations [address]",
+		Short: "Show the total allocations available for an account",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			reqAddress := args[0]
@@ -23,12 +23,12 @@ func CmdGetTotalAllocation() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryGetTotalAllocationRequest{
+			params := &types.QueryGetTotalAllocationsRequest{
 
 				Address: reqAddress,
 			}
 
-			res, err := queryClient.TotalAllocation(cmd.Context(), params)
+			res, err := queryClient.TotalAllocations(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

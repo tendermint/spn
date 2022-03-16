@@ -26,7 +26,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(CmdShowUsedAllocations())
 	cmd.AddCommand(CmdListAuctionUsedAllocations())
 	cmd.AddCommand(CmdShowAuctionUsedAllocations())
-	cmd.AddCommand(CmdGetTotalAllocation())
+	cmd.AddCommand(CmdGetTotalAllocations())
 
 	// this line is used by starport scaffolding # 1
 

@@ -73,18 +73,18 @@ func TestShowTotalAllocations(t *testing.T) {
 				tc.delAddress,
 			}
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdGetTotalAllocation(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdGetTotalAllocations(), args)
 			if tc.err != nil {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
 				require.ErrorIs(t, stat.Err(), tc.err)
 			} else {
 				require.NoError(t, err)
-				var resp types.QueryGetTotalAllocationResponse
+				var resp types.QueryGetTotalAllocationsResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.Equal(t,
 					nullify.Fill(&tc.alloc),
-					nullify.Fill(&resp.TotalAllocation),
+					nullify.Fill(&resp.TotalAllocations),
 				)
 			}
 		})

@@ -10,17 +10,17 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-func (k Keeper) TotalAllocation(goCtx context.Context, req *types.QueryGetTotalAllocationRequest) (*types.QueryGetTotalAllocationResponse, error) {
+func (k Keeper) TotalAllocations(goCtx context.Context, req *types.QueryGetTotalAllocationsRequest) (*types.QueryGetTotalAllocationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	numAlloc, err := k.GetTotalAllocation(ctx, req.Address)
+	numAlloc, err := k.GetTotalAllocations(ctx, req.Address)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	return &types.QueryGetTotalAllocationResponse{TotalAllocation: numAlloc}, nil
+	return &types.QueryGetTotalAllocationsResponse{TotalAllocations: numAlloc}, nil
 }

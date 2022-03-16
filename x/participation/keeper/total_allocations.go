@@ -8,8 +8,8 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-// GetTotalAllocation returns the number of available allocations based on delegations
-func (k Keeper) GetTotalAllocation(ctx sdk.Context, address string) (uint64, error) {
+// GetTotalAllocations returns the number of available allocations based on delegations
+func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (uint64, error) {
 	allocationPriceBondedDec := k.AllocationPrice(ctx).Bonded.ToDec()
 
 	accAddr, err := sdk.AccAddressFromBech32(address)
