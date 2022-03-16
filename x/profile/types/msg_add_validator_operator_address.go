@@ -37,10 +37,7 @@ func (msg *MsgAddValidatorOperatorAddress) GetSigners() []sdk.AccAddress {
 		panic(err)
 	}
 
-	// if the operator address is different from the validator, both signatures are required
-	if validatorAddress.Equals(operatorAddress) {
-		return []sdk.AccAddress{validatorAddress}
-	}
+	// validator must prove ownership of both address
 	return []sdk.AccAddress{validatorAddress, operatorAddress}
 }
 
@@ -50,6 +47,10 @@ func (msg *MsgAddValidatorOperatorAddress) GetSignBytes() []byte {
 }
 
 func (msg *MsgAddValidatorOperatorAddress) ValidateBasic() error {
+	if msg.ValidatorAddress == msg.OperatorAddress {
+		return sdkerrors.Wrapf(ErrDupAddress, "validator profile address and operator address must be different")
+	}
+
 	if _, err := sdk.AccAddressFromBech32(msg.ValidatorAddress); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
