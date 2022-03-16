@@ -37,6 +37,10 @@ service Query {
 	rpc TotalAllocations(QueryGetTotalAllocationsRequest) returns (QueryGetTotalAllocationsResponse) {
 		option (google.api.http).get = "/tendermint/spn/participation/total_allocations/{address}";
 	}
+	// Queries the AvailableAllocation of address.
+	rpc AvailableAllocations(QueryGetAvailableAllocationsRequest) returns (QueryGetAvailableAllocationsResponse) {
+		option (google.api.http).get = "/tendermint/spn/participation/available_allocations/{address}";
+	}
 
 // this line is used by starport scaffolding # 2
 }
@@ -92,6 +96,14 @@ message QueryGetTotalAllocationsRequest {
 
 message QueryGetTotalAllocationsResponse {
   uint64 totalAllocations = 1;
+}
+
+message QueryGetAvailableAllocationsRequest {
+  string address = 1;
+}
+
+message QueryGetAvailableAllocationsResponse {
+  uint64 availableAllocations = 1;
 }
 
 // this line is used by starport scaffolding # 3

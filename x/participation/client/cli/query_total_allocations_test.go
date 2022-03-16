@@ -73,7 +73,7 @@ func TestShowTotalAllocations(t *testing.T) {
 				tc.delAddress,
 			}
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdGetTotalAllocations(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowTotalAllocations(), args)
 			if tc.err != nil {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)

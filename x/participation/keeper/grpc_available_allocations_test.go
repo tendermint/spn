@@ -15,7 +15,7 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-func TestShowTotalAllocationsQuery(t *testing.T) {
+func TestShowAvailableAllocationsQuery(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
 
@@ -30,21 +30,21 @@ func TestShowTotalAllocationsQuery(t *testing.T) {
 
 	for _, tc := range []struct {
 		desc     string
-		request  *types.QueryGetTotalAllocationsRequest
-		response *types.QueryGetTotalAllocationsResponse
+		request  *types.QueryGetAvailableAllocationsRequest
+		response *types.QueryGetAvailableAllocationsResponse
 		err      error
 	}{
 		{
 			desc: "valid case",
-			request: &types.QueryGetTotalAllocationsRequest{
+			request: &types.QueryGetAvailableAllocationsRequest{
 				Address: dels[0].DelegatorAddress,
 			},
-			response: &types.QueryGetTotalAllocationsResponse{TotalAllocations: 10},
+			response: &types.QueryGetAvailableAllocationsResponse{AvailableAllocations: 10},
 		},
 
 		{
 			desc: "invalid address",
-			request: &types.QueryGetTotalAllocationsRequest{
+			request: &types.QueryGetAvailableAllocationsRequest{
 				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6"),
@@ -55,7 +55,7 @@ func TestShowTotalAllocationsQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := tk.ParticipationKeeper.TotalAllocations(wctx, tc.request)
+			response, err := tk.ParticipationKeeper.AvailableAllocations(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

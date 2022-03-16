@@ -8,7 +8,7 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-func CmdGetTotalAllocations() *cobra.Command {
+func CmdShowTotalAllocations() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-total-allocations [address]",
 		Short: "Show the total allocations available for an account",
@@ -24,7 +24,6 @@ func CmdGetTotalAllocations() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryGetTotalAllocationsRequest{
-
 				Address: reqAddress,
 			}
 
