@@ -10,19 +10,54 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
+func getTierFromID(tierList []types.Tier, tierID uint64) (types.Tier, bool) {
+	for _, tier := range tierList {
+		if tier.TierID == tierID {
+			return tier, true
+		}
+	}
+
+	return types.Tier{}, false
+}
+
 func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate) (*types.MsgParticipateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Read available allocation
+	availableAlloc, err := k.GetAvailableAllocations(ctx, msg.Participant)
+	if err != nil {
+		return nil, err
+	}
 
+	// check if auction exists
 	_, found := k.fundraisingKeeper.GetAuction(ctx, msg.AuctionID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrAuctionNotFound, "auction %d not found", msg.AuctionID)
 	}
 
+	// check if a bid already exists
+	_, found = k.GetAuctionUsedAllocations(ctx, msg.Participant, msg.AuctionID)
+	if found {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidBidder,
+			"participant %s already has already bid in auction %d",
+			msg.Participant, msg.AuctionID)
+	}
+
+	tiers := k.GetParams(ctx).ParticipationTierList
+	tier, found := getTierFromID(tiers, msg.TierID)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrTierNotFound, "tier %d not found", msg.TierID)
+	}
+
+	// check if user has enough available allocations to cover tier
+	if tier.RequiredAllocations > availableAlloc {
+		return nil, sdkerrors.Wrapf(types.ErrInsufficientAllocations,
+			"available allocations %d is less than required allocations %d for tier %d",
+			availableAlloc, tier.RequiredAllocations, tier.TierID)
+	}
+
 	allowedBidder := fundraisingtypes.AllowedBidder{
 		Bidder:       msg.Participant,
-		MaxBidAmount: sdk.NewIntFromUint64(1000),
+		MaxBidAmount: tier.Benefits.MaxBidAmount,
 	}
 	if err := k.fundraisingKeeper.AddAllowedBidders(
 		ctx, msg.AuctionID,
@@ -30,6 +65,22 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	); err != nil {
 		return nil, sdkerrors.Wrap(types.ErrInvalidBidder, err.Error())
 	}
+
+	// set used allocations
+	usedAllocations, _ := k.GetUsedAllocations(ctx, msg.Participant)
+	usedAllocations.NumAllocations += tier.RequiredAllocations
+	usedAllocations.Address = msg.Participant
+	k.SetUsedAllocations(ctx, types.UsedAllocations{
+		Address:        msg.Participant,
+		NumAllocations: tier.RequiredAllocations,
+	})
+
+	// set auction used allocations
+	k.SetAuctionUsedAllocations(ctx, types.AuctionUsedAllocations{
+		Address:        msg.Participant,
+		AuctionID:      msg.AuctionID,
+		NumAllocations: tier.RequiredAllocations,
+	})
 
 	return &types.MsgParticipateResponse{}, nil
 }

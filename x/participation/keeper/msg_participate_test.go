@@ -40,17 +40,20 @@ func Test_msgServer_Participate(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "should allow to add the participant as allowed bidder in the auction",
+			name: "should prevent participating using a non existent tier",
 			msg: &types.MsgParticipate{
 				Participant: sample.Address(),
 				AuctionID:   auctionID,
+				TierID:      111,
 			},
+			err: types.ErrTierNotFound,
 		},
 		{
 			name: "should prevent participating in a non existent auction",
 			msg: &types.MsgParticipate{
 				Participant: sample.Address(),
 				AuctionID:   auctionID + 1,
+				TierID:      0,
 			},
 			err: types.ErrAuctionNotFound,
 		},
