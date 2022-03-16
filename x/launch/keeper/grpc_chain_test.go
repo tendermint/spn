@@ -36,7 +36,7 @@ func TestChainQuerySingle(t *testing.T) {
 		{
 			desc:    "KeyNotFound",
 			request: &types.QueryGetChainRequest{LaunchID: uint64(1000)},
-			err:     status.Error(codes.InvalidArgument, "not found"),
+			err:     status.Error(codes.NotFound, "not found"),
 		},
 		{
 			desc: "InvalidRequest",

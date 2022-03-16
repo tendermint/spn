@@ -51,7 +51,7 @@ func (k Keeper) RewardPool(c context.Context, req *types.QueryGetRewardPoolReque
 		req.LaunchID,
 	)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetRewardPoolResponse{RewardPool: val}, nil

@@ -21,7 +21,7 @@ func (k Keeper) ValidatorByOperatorAddress(c context.Context, req *types.QueryGe
 
 	val, found := k.GetValidatorByOperatorAddress(ctx, req.OperatorAddress)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetValidatorByOperatorAddressResponse{ValidatorByOperatorAddress: val}, nil

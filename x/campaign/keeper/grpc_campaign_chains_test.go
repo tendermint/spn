@@ -41,7 +41,7 @@ func TestCampaignChainsQuerySingle(t *testing.T) {
 			request: &types.QueryGetCampaignChainsRequest{
 				CampaignID: 100000,
 			},
-			err: status.Error(codes.InvalidArgument, "not found"),
+			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
 			desc: "InvalidRequest",

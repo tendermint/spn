@@ -57,7 +57,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 				LaunchID: uint64(100000),
 				Address:  strconv.Itoa(100000),
 			},
-			err: status.Error(codes.InvalidArgument, "not found"),
+			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
 			desc: "InvalidRequest",

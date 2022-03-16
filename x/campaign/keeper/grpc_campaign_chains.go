@@ -21,7 +21,7 @@ func (k Keeper) CampaignChains(c context.Context, req *types.QueryGetCampaignCha
 		req.CampaignID,
 	)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetCampaignChainsResponse{CampaignChains: val}, nil
