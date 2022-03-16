@@ -56,7 +56,6 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 	k.SetChain(ctx, chain)
 
 	// clear associated client IDs from monitoring
-	k.monitoringcKeeper.ClearVerifiedClientIDs(ctx, msg.LaunchID)
-
-	return &types.MsgRevertLaunchResponse{}, nil
+	err = k.monitoringcKeeper.ClearVerifiedClientIDs(ctx, msg.LaunchID)
+	return &types.MsgRevertLaunchResponse{}, err
 }
