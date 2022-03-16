@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-  fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 )
 
 type FundraisingKeeper interface {
