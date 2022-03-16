@@ -44,6 +44,7 @@ var (
 
 // TestKeepers holds all keepers used during keeper tests for all modules
 type TestKeepers struct {
+	T                        testing.TB
 	CampaignKeeper           *campaignkeeper.Keeper
 	LaunchKeeper             *launchkeeper.Keeper
 	ProfileKeeper            *profilekeeper.Keeper
@@ -124,6 +125,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
 
 	return ctx, TestKeepers{
+			T:                        t,
 			CampaignKeeper:           campaignKeeper,
 			LaunchKeeper:             launchKeeper,
 			ProfileKeeper:            profileKeeper,
@@ -205,6 +207,7 @@ func NewTestSetupWithIBCMocks(
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
 
 	return ctx, TestKeepers{
+			T:                        t,
 			CampaignKeeper:           campaignKeeper,
 			LaunchKeeper:             launchKeeper,
 			ProfileKeeper:            profileKeeper,
