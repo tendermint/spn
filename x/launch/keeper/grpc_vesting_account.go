@@ -52,7 +52,7 @@ func (k Keeper) VestingAccount(c context.Context, req *types.QueryGetVestingAcco
 		req.Address,
 	)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetVestingAccountResponse{VestingAccount: val}, nil

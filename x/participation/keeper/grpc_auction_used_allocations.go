@@ -52,7 +52,7 @@ func (k Keeper) AuctionUsedAllocations(c context.Context, req *types.QueryGetAuc
 		req.AuctionID,
 	)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetAuctionUsedAllocationsResponse{AuctionUsedAllocations: val}, nil

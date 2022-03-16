@@ -22,7 +22,7 @@ func (k Keeper) CoordinatorByAddress(c context.Context, req *types.QueryGetCoord
 	)
 
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetCoordinatorByAddressResponse{CoordinatorByAddress: val}, nil
