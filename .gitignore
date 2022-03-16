@@ -20,3 +20,6 @@ localnet/node?/config/write-file-atomic-*
 *.out
 *.test
 cover.html
+
+# Frontend
+ignite-ui

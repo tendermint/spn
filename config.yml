@@ -77,3 +77,6 @@ genesis:
             requiredAllocations: "10"
             benefits:
               maxBidAmount: "30000"
+client:
+  typescript:
+    path: "ignite-ui/src/generated"
