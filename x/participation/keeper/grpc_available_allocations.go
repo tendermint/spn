@@ -4,9 +4,10 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/x/participation/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/tendermint/spn/x/participation/types"
 )
 
 func (k Keeper) AvailableAllocations(goCtx context.Context,
