@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -21,19 +20,6 @@ func (k msgServer) AddValidatorOperatorAddress(
 		Address:           valAddr,
 		OperatorAddresses: []string{opAddr},
 		Description:       types.ValidatorDescription{},
-	}
-
-	// remove the operator address from previous address
-	if previousValByOpAddr, found := k.GetValidatorByOperatorAddress(ctx, opAddr); found {
-		lastValidator, found := k.GetValidator(ctx, previousValByOpAddr.ValidatorAddress)
-		if !found {
-			return nil, spnerrors.Criticalf(
-				"validator should exist for operator address %s",
-				previousValByOpAddr.ValidatorAddress,
-			)
-		}
-		lastValidator = lastValidator.RemoveValidatorOperatorAddress(opAddr)
-		k.SetValidator(ctx, lastValidator)
 	}
 
 	// get the current validator to eventually overwrite description and remove existing operator address

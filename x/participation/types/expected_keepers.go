@@ -2,7 +2,8 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+  fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 )
 
 type FundraisingKeeper interface {
@@ -11,5 +12,6 @@ type FundraisingKeeper interface {
 }
 
 type StakingKeeper interface {
-	// Methods imported from staking should be defined here
+	GetDelegatorDelegations(ctx sdk.Context, delegator sdk.AccAddress,
+		maxRetrieve uint16) []stakingtypes.Delegation
 }
