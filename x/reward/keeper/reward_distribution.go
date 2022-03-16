@@ -61,41 +61,37 @@ func (k Keeper) DistributeRewards(
 	// calculate the total reward for all validators
 	for _, signatureCount := range signatureCounts.Counts {
 
-		// get the validator address from the cons address
-		// if the validator is not registered, reward distribution is skipped
-		// all funds are sent back to the coordinator
-
+		// get the operator address of the signature counts with the chain prefix
 		config := sdk.GetConfig()
 		if config == nil {
 			return spnerrors.Critical("SDK config not set")
 		}
-		opAddr, err := signatureCount.GetOperatorAddress(config.GetBech32AccountAddrPrefix())
+		valAddr, err := signatureCount.GetOperatorAddress(config.GetBech32AccountAddrPrefix())
 		if err != nil {
 			return sdkerrors.Wrapf(types.ErrInvalidSignatureCounts, "invalid operator address: %s", signatureCount.OpAddress)
 		}
-		validatorByOpAddr, found := k.profileKeeper.GetValidatorByOperatorAddress(ctx, opAddr)
-		if found {
-			validator, found := k.profileKeeper.GetValidator(ctx, validatorByOpAddr.ValidatorAddress)
-			if !found {
-				return spnerrors.Criticalf(
-					"validator by consensus address not associated with a validator %s",
-					validatorByOpAddr.ValidatorAddress,
-				)
-			}
-			// calculate the total relative signature distributed to calculate the refund for the round
-			totalRelativeSignaturesDistributed = totalRelativeSignaturesDistributed.Add(signatureCount.RelativeSignatures)
 
-			// compute reward relative to the signature and block count
-			// and update reward pool
-			signatureRatio := signatureCount.RelativeSignatures.Quo(
-				sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount)),
-			)
-			rewards, err := CalculateRewards(blockRatio, signatureRatio, rewardPool.RemainingCoins)
-			if err != nil {
-				return spnerrors.Criticalf("invalid reward: %s", err.Error())
-			}
-			rewardsToDistribute[validator.Address] = rewards
+		// if the operator address is associated with a validator profile, this address is used to receive rewwards
+		// otherwise rewards are distributed to the operator address account
+		validatorByOpAddr, found := k.profileKeeper.GetValidatorByOperatorAddress(ctx, valAddr)
+		if found {
+			valAddr = validatorByOpAddr.ValidatorAddress
 		}
+
+		// calculate the total relative signature distributed to calculate the refund for the round
+		totalRelativeSignaturesDistributed = totalRelativeSignaturesDistributed.Add(signatureCount.RelativeSignatures)
+
+		// compute reward relative to the signature and block count
+		// and update reward pool
+		signatureRatio := signatureCount.RelativeSignatures.Quo(
+			sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount)),
+		)
+		rewards, err := CalculateRewards(blockRatio, signatureRatio, rewardPool.RemainingCoins)
+		if err != nil {
+			return spnerrors.Criticalf("invalid reward: %s", err.Error())
+		}
+		rewardsToDistribute[valAddr] = rewards
+
 	}
 
 	// distribute the rewards to validators
