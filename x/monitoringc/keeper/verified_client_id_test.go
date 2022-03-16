@@ -54,18 +54,12 @@ func TestVerifiedClientIDClear(t *testing.T) {
 			nullify.Fill(&rst),
 		)
 
-		err := tk.MonitoringConsumerKeeper.ClearVerifiedClientIDs(ctx, launchID)
-		require.NoError(t, err)
+		tk.MonitoringConsumerKeeper.ClearVerifiedClientIDs(ctx, launchID)
 		_, found = tk.MonitoringConsumerKeeper.GetVerifiedClientID(ctx, launchID)
 		require.False(t, found)
 
 		_, found = tk.MonitoringConsumerKeeper.GetLaunchIDFromVerifiedClientID(ctx, clientID)
 		require.False(t, found)
-	})
-
-	t.Run("return error if entry does not exist", func(t *testing.T) {
-		err := tk.MonitoringConsumerKeeper.ClearVerifiedClientIDs(ctx, 1000)
-		require.ErrorIs(t, err, types.ErrVerifiedClientIDsNotFound)
 	})
 }
 

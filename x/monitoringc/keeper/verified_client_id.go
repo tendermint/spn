@@ -3,7 +3,6 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
@@ -16,10 +15,10 @@ func (k Keeper) SetVerifiedClientID(ctx sdk.Context, verifiedClientID types.Veri
 }
 
 // ClearVerifiedClientIDs removes a set of verifiedClientID in the store from its launch ID
-func (k Keeper) ClearVerifiedClientIDs(ctx sdk.Context, launchID uint64) error {
+func (k Keeper) ClearVerifiedClientIDs(ctx sdk.Context, launchID uint64) {
 	verifiedClientID, found := k.GetVerifiedClientID(ctx, launchID)
 	if !found {
-		return sdkerrors.Wrapf(types.ErrVerifiedClientIDsNotFound, "launchID: %d", launchID)
+		return
 	}
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
@@ -30,7 +29,6 @@ func (k Keeper) ClearVerifiedClientIDs(ctx sdk.Context, launchID uint64) error {
 		store.Delete(types.LaunchIDFromChannelIDKey(id))
 	}
 
-	return nil
 }
 
 // GetVerifiedClientID returns a verifiedClientID from its launch id
