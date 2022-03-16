@@ -14,20 +14,6 @@ func (v Validator) AddValidatorOperatorAddress(operatorAddress string) Validator
 	return v
 }
 
-// RemoveValidatorOperatorAddress removes a specific validator operator address
-// from the Validator and return it
-func (v Validator) RemoveValidatorOperatorAddress(operatorAddress string) Validator {
-	newList := make([]string, 0)
-	for _, opAddr := range v.OperatorAddresses {
-		if operatorAddress == opAddr {
-			continue
-		}
-		newList = append(newList, opAddr)
-	}
-	v.OperatorAddresses = newList
-	return v
-}
-
 // HasOperatorAddress checks if the validator has a specific operator address associated to it
 func (v Validator) HasOperatorAddress(operatorAddress string) bool {
 	for _, opAddr := range v.OperatorAddresses {
