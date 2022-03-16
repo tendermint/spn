@@ -42,11 +42,6 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 	chain.LaunchTriggered = true
 	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
-	launchIDMonitoringConnected := uint64(3)
-	chain = sample.Chain(launchIDMonitoringConnected, coordID)
-	chain.MonitoringConnected = true
-	tk.LaunchKeeper.SetChain(sdkCtx, chain)
-
 	for _, tc := range []struct {
 		name string
 		msg  types.MsgUpdateLaunchInformation
@@ -136,16 +131,6 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 				false,
 			),
 			err: types.ErrTriggeredLaunch,
-		},
-		{
-			name: "monitoring connected",
-			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchIDMonitoringConnected,
-				false,
-				true,
-				false,
-				false,
-			),
-			err: types.ErrChainMonitoringConnected,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
