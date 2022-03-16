@@ -13,5 +13,5 @@ var (
 	ErrCoordInvalid         = sdkerrors.Register(ModuleName, 4, "invalid coordinator")
 	ErrEmptyDescription     = sdkerrors.Register(ModuleName, 5, "you must provide at least one description parameter")
 	ErrCoordInactive        = sdkerrors.Register(ModuleName, 7, "inactive coordinator")
-	ErrDupAddress        = sdkerrors.Register(ModuleName, 8, "address is duplicated")
+	ErrDupAddress           = sdkerrors.Register(ModuleName, 8, "address is duplicated")
 )
