@@ -490,7 +490,7 @@ func New(
 		app.FundraisingKeeper,
 		app.StakingKeeper,
 	)
-	participationModule := participationmodule.NewAppModule(appCodec, app.ParticipationKeeper)
+	participationModule := participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -533,7 +533,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
-		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper, app.CampaignKeeper),
+		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		monitoringcModule,
 		rewardModule,
@@ -619,7 +619,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
-		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper, app.CampaignKeeper),
+		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
 

@@ -3,9 +3,8 @@ package cli
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/spf13/cobra"
 
 	"github.com/tendermint/spn/x/participation/types"
 )
@@ -20,6 +19,7 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
+	cmd.AddCommand(CmdParticipate())
 	// this line is used by starport scaffolding # 1
 
 	return cmd
