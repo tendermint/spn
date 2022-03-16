@@ -118,6 +118,18 @@ func Validator(t testing.TB) stakingtypes.Validator {
 	return val
 }
 
+// Delegation returns staking delegation with the given address
+func Delegation(t testing.TB, addr string) stakingtypes.Delegation {
+	delAcc, err := sdk.AccAddressFromBech32(addr)
+	require.NoError(t, err)
+
+	return stakingtypes.NewDelegation(
+		delAcc,
+		ValAddress(),
+		sdk.NewDec(int64(rand.Intn(10000))),
+	)
+}
+
 // Coin returns a sample coin structure
 func Coin() sdk.Coin {
 	return sdk.NewCoin(AlphaString(5), sdk.NewInt(rand.Int63n(10000)+1))
