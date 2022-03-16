@@ -17,16 +17,19 @@ func TestMsgAddValidatorOperatorAddress(t *testing.T) {
 		ctx, tk, ts = testkeeper.NewTestSetup(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
 		valAddr     = sample.Address()
+		opAddr      = sample.Address()
 	)
 
 	tk.ProfileKeeper.SetValidator(ctx, types.Validator{
-		Address:     valAddr,
-		Description: types.ValidatorDescription{},
+		Address:           valAddr,
+		Description:       types.ValidatorDescription{},
+		OperatorAddresses: []string{opAddr},
 	})
 
 	tests := []struct {
-		name string
-		msg  *types.MsgAddValidatorOperatorAddress
+		name   string
+		msg    *types.MsgAddValidatorOperatorAddress
+		newVal bool
 	}{
 		{
 			name: "should allow associating a new operator address to a validator",
@@ -48,6 +51,7 @@ func TestMsgAddValidatorOperatorAddress(t *testing.T) {
 				ValidatorAddress: sample.Address(),
 				OperatorAddress:  sample.Address(),
 			},
+			newVal: true,
 		},
 	}
 	for _, tt := range tests {
@@ -59,6 +63,11 @@ func TestMsgAddValidatorOperatorAddress(t *testing.T) {
 			require.True(t, found, "validator was not saved")
 			require.Equal(t, tt.msg.ValidatorAddress, validator.Address)
 			require.True(t, validator.HasOperatorAddress(tt.msg.OperatorAddress))
+
+			// check that original address still exists if we appended to existing validator
+			if !tt.newVal {
+				require.True(t, validator.HasOperatorAddress(opAddr))
+			}
 
 			valByOpAddr, found := tk.ProfileKeeper.GetValidatorByOperatorAddress(ctx, tt.msg.OperatorAddress)
 			require.True(t, found, "validator by operator address was not saved")
