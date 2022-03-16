@@ -15,13 +15,17 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctypes "github.com/cosmos/ibc-go/v2/modules/core/types"
 	"github.com/stretchr/testify/require"
+	fundraising "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 
 	campaign "github.com/tendermint/spn/x/campaign/types"
-
 	launch "github.com/tendermint/spn/x/launch/types"
+	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
+	monitoringp "github.com/tendermint/spn/x/monitoringp/types"
+	participation "github.com/tendermint/spn/x/participation/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	reward "github.com/tendermint/spn/x/reward/types"
 )
 
 // Codec returns a codec with preregistered interfaces
@@ -32,9 +36,15 @@ func Codec() codec.Codec {
 	authtypes.RegisterInterfaces(interfaceRegistry)
 	stakingtypes.RegisterInterfaces(interfaceRegistry)
 	banktypes.RegisterInterfaces(interfaceRegistry)
+	ibctypes.RegisterInterfaces(interfaceRegistry)
 	launch.RegisterInterfaces(interfaceRegistry)
 	profile.RegisterInterfaces(interfaceRegistry)
-	ibctypes.RegisterInterfaces(interfaceRegistry)
+	campaign.RegisterInterfaces(interfaceRegistry)
+	monitoringc.RegisterInterfaces(interfaceRegistry)
+	monitoringp.RegisterInterfaces(interfaceRegistry)
+	reward.RegisterInterfaces(interfaceRegistry)
+	participation.RegisterInterfaces(interfaceRegistry)
+	fundraising.RegisterInterfaces(interfaceRegistry)
 
 	return codec.NewProtoCodec(interfaceRegistry)
 }
