@@ -22,7 +22,7 @@ func TestMsgAddValidatorOperatorAddress_GetSigners(t *testing.T) {
 	require.Contains(t, signers, valAddr)
 
 	// should contain two signers when different
-	opAddr  := sample.AccAddress()
+	opAddr := sample.AccAddress()
 	msg = types.MsgAddValidatorOperatorAddress{
 		ValidatorAddress: valAddr.String(),
 		OperatorAddress:  opAddr.String(),

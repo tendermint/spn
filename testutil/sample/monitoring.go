@@ -1,6 +1,12 @@
 package sample
 
-import "github.com/tendermint/spn/pkg/types"
+import (
+	"math/rand"
+
+	"github.com/tendermint/spn/pkg/types"
+	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
+	monitoringp "github.com/tendermint/spn/x/monitoringp/types"
+)
 
 const ConsensusStateNb = 2
 
@@ -42,4 +48,27 @@ func ValidatorSet(nb int) types.ValidatorSet {
 			types.NewValidator("rQMyKjkzXXUhYsAdII6fSlTkFdf24hiSPGrSCBub5Oc=", 0, 100),
 		),
 	}[nb]
+}
+
+// MonitoringpParams returns a sample of params for the monitoring provider module
+func MonitoringpParams() monitoringp.Params {
+	lastBlockHeight := monitoringp.DefaultLastBlockHeight + rand.Int63n(10)
+	consumerUnbondingpPeriod := types.MinimalUnbondingPeriod + rand.Int63n(types.DefaultUnbondingPeriod)
+	consumerRevisionHeight := types.DefaultRevisionHeight + rand.Uint64()
+	consumerChainID := monitoringp.DefaultConsumerChainID
+	consensusState := ConsensusState(0)
+
+	return monitoringp.NewParams(
+		lastBlockHeight,
+		consumerChainID,
+		consensusState,
+		consumerUnbondingpPeriod,
+		consumerRevisionHeight,
+		true,
+	)
+}
+
+// MonitoringcParams returns a sample of params for the monitoring consumer module
+func MonitoringcParams() monitoringc.Params {
+	return monitoringc.NewParams(true)
 }
