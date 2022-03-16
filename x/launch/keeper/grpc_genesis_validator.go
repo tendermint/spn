@@ -52,7 +52,7 @@ func (k Keeper) GenesisValidator(c context.Context, req *types.QueryGetGenesisVa
 		req.Address,
 	)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetGenesisValidatorResponse{GenesisValidator: val}, nil

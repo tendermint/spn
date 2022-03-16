@@ -43,7 +43,7 @@ func TestValidatorByOperatorAddressQuerySingle(t *testing.T) {
 			request: &types.QueryGetValidatorByOperatorAddressRequest{
 				OperatorAddress: sample.Address(),
 			},
-			err: status.Error(codes.InvalidArgument, "not found"),
+			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
 			desc: "InvalidRequest",
