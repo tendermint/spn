@@ -9,7 +9,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
-
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
 

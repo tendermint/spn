@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	opWeightMsgCreateClient          = "op_weight_msg_create_chain"
+	opWeightMsgCreateClient          = "op_weight_msg_create_client"
 	defaultWeightMsgCreateClient int = 50
 
 	// this line is used by starport scaffolding # simapp/module/const
