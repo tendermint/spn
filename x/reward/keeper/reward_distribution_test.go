@@ -7,10 +7,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
 	spntypes "github.com/tendermint/spn/pkg/types"
 	tc "github.com/tendermint/spn/testutil/constructor"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/spn/x/reward/keeper"
@@ -295,10 +294,10 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				closeRewardPool: false,
 			},
 			wantBalances: map[string]sdk.Coins{
-				provider: tc.Coins(t, "10aaa,10bbb"),
-				valFoo:   tc.Coins(t, "30aaa,30bbb"),
-				valBar:   tc.Coins(t, "30aaa,30bbb"),
-				noProfileVal:   tc.Coins(t, "30aaa,30bbb"),
+				provider:     tc.Coins(t, "10aaa,10bbb"),
+				valFoo:       tc.Coins(t, "30aaa,30bbb"),
+				valBar:       tc.Coins(t, "30aaa,30bbb"),
+				noProfileVal: tc.Coins(t, "30aaa,30bbb"),
 			},
 		},
 		{
