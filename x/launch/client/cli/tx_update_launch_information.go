@@ -22,7 +22,7 @@ const (
 func CmdUpdateLaunchInformation() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-launch-information [launch-id]",
-		Short: "Update chain genesis information",
+		Short: "Update initial information for the launch of the chain",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var (
