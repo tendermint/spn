@@ -9,10 +9,10 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestMsgEditChainSourceInformation_ValidateBasic(t *testing.T) {
+func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 	launchID := uint64(0)
 
-	msgInvalidGenesisHash := sample.MsgEditChainSourceInformation(
+	msgInvalidGenesisHash := sample.MsgUpdateLaunchInformation(
 		sample.Address(),
 		launchID,
 		false,
@@ -23,7 +23,7 @@ func TestMsgEditChainSourceInformation_ValidateBasic(t *testing.T) {
 	genesisURL := types.NewGenesisURL("foo.com", "NoHash")
 	msgInvalidGenesisHash.InitialGenesis = &genesisURL
 
-	msgInvalidGenesisChainID := sample.MsgEditChainSourceInformation(
+	msgInvalidGenesisChainID := sample.MsgUpdateLaunchInformation(
 		sample.Address(),
 		launchID,
 		false,
@@ -35,12 +35,12 @@ func TestMsgEditChainSourceInformation_ValidateBasic(t *testing.T) {
 
 	for _, tc := range []struct {
 		desc  string
-		msg   types.MsgEditChainSourceInformation
+		msg   types.MsgUpdateLaunchInformation
 		valid bool
 	}{
 		{
 			desc: "valid message",
-			msg: sample.MsgEditChainSourceInformation(
+			msg: sample.MsgUpdateLaunchInformation(
 				sample.Address(),
 				launchID,
 				true,
@@ -52,7 +52,7 @@ func TestMsgEditChainSourceInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new genesis chain ID",
-			msg: sample.MsgEditChainSourceInformation(
+			msg: sample.MsgUpdateLaunchInformation(
 				sample.Address(),
 				launchID,
 				true,
@@ -64,7 +64,7 @@ func TestMsgEditChainSourceInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new source",
-			msg: sample.MsgEditChainSourceInformation(
+			msg: sample.MsgUpdateLaunchInformation(
 				sample.Address(),
 				launchID,
 				false,
@@ -76,7 +76,7 @@ func TestMsgEditChainSourceInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new genesis",
-			msg: sample.MsgEditChainSourceInformation(
+			msg: sample.MsgUpdateLaunchInformation(
 				sample.Address(),
 				launchID,
 				false,
@@ -88,7 +88,7 @@ func TestMsgEditChainSourceInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new genesis with a custom genesis url",
-			msg: sample.MsgEditChainSourceInformation(
+			msg: sample.MsgUpdateLaunchInformation(
 				sample.Address(),
 				launchID,
 				false,
@@ -100,7 +100,7 @@ func TestMsgEditChainSourceInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "invalid coordinator address",
-			msg: sample.MsgEditChainSourceInformation(
+			msg: sample.MsgUpdateLaunchInformation(
 				"invalid",
 				launchID,
 				false,
@@ -112,7 +112,7 @@ func TestMsgEditChainSourceInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "no value to edit",
-			msg: sample.MsgEditChainSourceInformation(
+			msg: sample.MsgUpdateLaunchInformation(
 				sample.Address(),
 				launchID,
 				false,

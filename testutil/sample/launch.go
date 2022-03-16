@@ -186,15 +186,15 @@ func MsgEditChain(
 	)
 }
 
-// MsgEditChainSourceInformation returns a sample MsgEditChainSourceInformation
-func MsgEditChainSourceInformation(
+// MsgUpdateLaunchInformation returns a sample MsgUpdateLaunchInformation
+func MsgUpdateLaunchInformation(
 	coordAddress string,
 	launchID uint64,
 	modifyGenesisChainID,
 	modifySource,
 	modifyInitialGenesis,
 	genesisURL bool,
-) launch.MsgEditChainSourceInformation {
+) launch.MsgUpdateLaunchInformation {
 	var genesisChainID, sourceURL, sourceHash string
 	var initialGenesis *launch.InitialGenesis
 
@@ -214,7 +214,7 @@ func MsgEditChainSourceInformation(
 		}
 	}
 
-	return *launch.NewMsgEditChainSourceInformation(
+	return *launch.NewMsgUpdateLaunchInformation(
 		coordAddress,
 		launchID,
 		genesisChainID,

@@ -13,7 +13,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgEditChainSourceInformation(t *testing.T) {
+func TestMsgUpdateLaunchInformation(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address()
@@ -49,12 +49,12 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 
 	for _, tc := range []struct {
 		name string
-		msg  types.MsgEditChainSourceInformation
+		msg  types.MsgUpdateLaunchInformation
 		err  error
 	}{
 		{
 			name: "edit genesis chain ID",
-			msg: sample.MsgEditChainSourceInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
 				true,
 				false,
 				false,
@@ -63,7 +63,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 		},
 		{
 			name: "edit source",
-			msg: sample.MsgEditChainSourceInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
 				false,
 				true,
 				false,
@@ -72,7 +72,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 		},
 		{
 			name: "edit initial genesis with default genesis",
-			msg: sample.MsgEditChainSourceInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
 				false,
 				false,
 				true,
@@ -81,7 +81,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 		},
 		{
 			name: "edit initial genesis with genesis url",
-			msg: sample.MsgEditChainSourceInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
 				false,
 				false,
 				true,
@@ -90,7 +90,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 		},
 		{
 			name: "edit source and initial genesis",
-			msg: sample.MsgEditChainSourceInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
 				false,
 				true,
 				true,
@@ -99,7 +99,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 		},
 		{
 			name: "non existent launch id",
-			msg: sample.MsgEditChainSourceInformation(coordAddress, launchIDNoExist,
+			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchIDNoExist,
 				false,
 				true,
 				false,
@@ -109,7 +109,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 		},
 		{
 			name: "non existent coordinator",
-			msg: sample.MsgEditChainSourceInformation(coordNoExist, launchID,
+			msg: sample.MsgUpdateLaunchInformation(coordNoExist, launchID,
 				false,
 				true,
 				false,
@@ -119,7 +119,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 		},
 		{
 			name: "invalid coordinator",
-			msg: sample.MsgEditChainSourceInformation(coordAddress2, launchID,
+			msg: sample.MsgUpdateLaunchInformation(coordAddress2, launchID,
 				false,
 				true,
 				false,
@@ -129,7 +129,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 		},
 		{
 			name: "launch triggered",
-			msg: sample.MsgEditChainSourceInformation(coordAddress, launchIDLaunchTriggered,
+			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchIDLaunchTriggered,
 				false,
 				true,
 				false,
@@ -139,7 +139,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 		},
 		{
 			name: "monitoring connected",
-			msg: sample.MsgEditChainSourceInformation(coordAddress, launchIDMonitoringConnected,
+			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchIDMonitoringConnected,
 				false,
 				true,
 				false,
@@ -158,7 +158,7 @@ func TestMsgEditChainSourceInformation(t *testing.T) {
 			}
 
 			// Send the message
-			_, err := ts.LaunchSrv.EditChainSourceInformation(ctx, &tc.msg)
+			_, err := ts.LaunchSrv.UpdateLaunchInformation(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

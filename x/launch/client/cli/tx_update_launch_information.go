@@ -19,10 +19,10 @@ const (
 	flagDefaultGenesis = "default-genesis"
 )
 
-func CmdEditChainSourceInformation() *cobra.Command {
+func CmdUpdateLaunchInformation() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "edit-chain-source-information [launch-id]",
-		Short: "Edit chain genesis information",
+		Use:   "update-launch-information [launch-id]",
+		Short: "Update chain genesis information",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var (
@@ -59,7 +59,7 @@ func CmdEditChainSourceInformation() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgEditChainSourceInformation(
+			msg := types.NewMsgUpdateLaunchInformation(
 				clientCtx.GetFromAddress().String(),
 				launchID,
 				genesisChainID,

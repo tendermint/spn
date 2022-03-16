@@ -448,8 +448,8 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 	}
 }
 
-// SimulateMsgEditChainSourceInformation simulates a MsgEditChainSourceInformation message
-func SimulateMsgEditChainSourceInformation(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+// SimulateMsgUpdateLaunchInformation simulates a MsgUpdateLaunchInformation message
+func SimulateMsgUpdateLaunchInformation(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -465,7 +465,7 @@ func SimulateMsgEditChainSourceInformation(ak types.AccountKeeper, bk types.Bank
 		}
 
 		modify := r.Intn(100) < 50
-		msg := sample.MsgEditChainSourceInformation(
+		msg := sample.MsgUpdateLaunchInformation(
 			simAccount.Address.String(),
 			chain.LaunchID,
 			modify,

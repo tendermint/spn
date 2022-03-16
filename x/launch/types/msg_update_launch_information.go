@@ -7,19 +7,19 @@ import (
 	"github.com/tendermint/spn/pkg/chainid"
 )
 
-const TypeMsgEditChainSourceInformation = "edit_chain_source_information"
+const TypeMsgUpdateLaunchInformation = "update_launch_information"
 
-var _ sdk.Msg = &MsgEditChainSourceInformation{}
+var _ sdk.Msg = &MsgUpdateLaunchInformation{}
 
-func NewMsgEditChainSourceInformation(
+func NewMsgUpdateLaunchInformation(
 	coordinator string,
 	launchID uint64,
 	genesisChainID,
 	sourceURL,
 	sourceHash string,
 	initialGenesis *InitialGenesis,
-) *MsgEditChainSourceInformation {
-	return &MsgEditChainSourceInformation{
+) *MsgUpdateLaunchInformation {
+	return &MsgUpdateLaunchInformation{
 		Coordinator:    coordinator,
 		LaunchID:       launchID,
 		GenesisChainID: genesisChainID,
@@ -29,15 +29,15 @@ func NewMsgEditChainSourceInformation(
 	}
 }
 
-func (msg *MsgEditChainSourceInformation) Route() string {
+func (msg *MsgUpdateLaunchInformation) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgEditChainSourceInformation) Type() string {
-	return TypeMsgEditChainSourceInformation
+func (msg *MsgUpdateLaunchInformation) Type() string {
+	return TypeMsgUpdateLaunchInformation
 }
 
-func (msg *MsgEditChainSourceInformation) GetSigners() []sdk.AccAddress {
+func (msg *MsgUpdateLaunchInformation) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		panic(err)
@@ -45,12 +45,12 @@ func (msg *MsgEditChainSourceInformation) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgEditChainSourceInformation) GetSignBytes() []byte {
+func (msg *MsgUpdateLaunchInformation) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgEditChainSourceInformation) ValidateBasic() error {
+func (msg *MsgUpdateLaunchInformation) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

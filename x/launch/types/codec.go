@@ -18,7 +18,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgSettleRequest{}, "launch/SettleRequest", nil)
 	cdc.RegisterConcrete(&MsgTriggerLaunch{}, "launch/TriggerLaunch", nil)
 	cdc.RegisterConcrete(&MsgRevertLaunch{}, "launch/RevertLaunch", nil)
-	cdc.RegisterConcrete(&MsgEditChainSourceInformation{}, "launch/EditChainSourceInformation", nil)
+	cdc.RegisterConcrete(&MsgUpdateLaunchInformation{}, "launch/UpdateLaunchInformation", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -26,6 +26,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateChain{},
 		&MsgEditChain{},
+		&MsgUpdateLaunchInformation{},
 		&MsgRequestAddAccount{},
 		&MsgRequestAddVestingAccount{},
 		&MsgRequestRemoveAccount{},
@@ -34,9 +35,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgSettleRequest{},
 		&MsgTriggerLaunch{},
 		&MsgRevertLaunch{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgEditChainSourceInformation{},
 	)
 	// this line is used by starport scaffolding # 3
 

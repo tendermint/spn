@@ -11,10 +11,10 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func (k msgServer) EditChainSourceInformation(
+func (k msgServer) UpdateLaunchInformation(
 	goCtx context.Context,
-	msg *types.MsgEditChainSourceInformation,
-) (*types.MsgEditChainSourceInformationResponse, error) {
+	msg *types.MsgUpdateLaunchInformation,
+) (*types.MsgUpdateLaunchInformationResponse, error) {
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -60,5 +60,5 @@ func (k msgServer) EditChainSourceInformation(
 
 	k.SetChain(ctx, chain)
 
-	return &types.MsgEditChainSourceInformationResponse{}, nil
+	return &types.MsgUpdateLaunchInformationResponse{}, nil
 }
