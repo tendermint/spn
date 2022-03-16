@@ -9,11 +9,16 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
+	participationsim "github.com/tendermint/spn/x/participation/simulation"
 	"github.com/tendermint/spn/x/participation/types"
 )
 
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgParticipate = "op_weight_msg_participate"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgParticipate int = 100
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -55,6 +60,17 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
+
+	var weightMsgParticipate int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgParticipate, &weightMsgParticipate, nil,
+		func(_ *rand.Rand) {
+			weightMsgParticipate = defaultWeightMsgParticipate
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgParticipate,
+		participationsim.SimulateMsgParticipate(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
 
