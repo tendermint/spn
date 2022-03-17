@@ -43,7 +43,7 @@ func TestRewardPoolQuerySingle(t *testing.T) {
 			request: &types.QueryGetRewardPoolRequest{
 				LaunchID: 100000,
 			},
-			err: status.Error(codes.InvalidArgument, "not found"),
+			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
 			desc: "InvalidRequest",

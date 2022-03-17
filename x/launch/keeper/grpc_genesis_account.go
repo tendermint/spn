@@ -52,7 +52,7 @@ func (k Keeper) GenesisAccount(c context.Context, req *types.QueryGetGenesisAcco
 		req.Address,
 	)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetGenesisAccountResponse{GenesisAccount: val}, nil
