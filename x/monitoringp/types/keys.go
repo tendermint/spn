@@ -20,7 +20,6 @@ const (
 	MemStoreKey = "mem_monitoringp"
 
 	// Version defines the current version the IBC module supports
-	// TODO(492): set correct version
 	Version = "monitoring-1"
 
 	// PortID is the default port id that module binds to
