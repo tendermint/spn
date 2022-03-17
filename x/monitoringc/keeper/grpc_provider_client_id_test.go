@@ -43,7 +43,7 @@ func TestProviderClientIDQuerySingle(t *testing.T) {
 			request: &types.QueryGetProviderClientIDRequest{
 				LaunchID: 100000,
 			},
-			err: status.Error(codes.InvalidArgument, "not found"),
+			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
 			desc: "invalid request",

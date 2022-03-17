@@ -56,7 +56,7 @@ func TestShowCampaign(t *testing.T) {
 			desc: "not found",
 			id:   "not_found",
 			args: common,
-			err:  status.Error(codes.InvalidArgument, "not found"),
+			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
 		tc := tc

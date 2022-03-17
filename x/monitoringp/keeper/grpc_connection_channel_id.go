@@ -18,7 +18,7 @@ func (k Keeper) ConnectionChannelID(c context.Context, req *types.QueryGetConnec
 
 	val, found := k.GetConnectionChannelID(ctx)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetConnectionChannelIDResponse{ConnectionChannelID: val}, nil
