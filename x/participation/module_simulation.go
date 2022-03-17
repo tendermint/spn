@@ -48,9 +48,6 @@ func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyParticipationTierList), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(participationParams.ParticipationTierList))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyWithdrawalAllocationDelay), func(r *rand.Rand) string {
-			return string(types.Amino.MustMarshalJSON(participationParams.WithdrawalAllocationDelay))
-		}),
 	}
 }
 

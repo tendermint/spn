@@ -33,10 +33,7 @@ func ParticipationParams() participation.Params {
 		maxBidCnt = maxBidCnt.AddRaw(rand.Int63n(10000) + 1)
 	}
 
-	// TODO: randomize param generation (?)
-	withdrawalAllocationDelay := participation.DefaultWithdrawalAllocationDelay
-
-	return participation.NewParams(allocationPrice, tiers, withdrawalAllocationDelay)
+	return participation.NewParams(allocationPrice, tiers)
 }
 
 // ParticipationGenesisState  returns a sample genesis state for the participation module

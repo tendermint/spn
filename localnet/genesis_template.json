@@ -358,8 +358,7 @@
               "maxBidAmount": "1000"
             }
           }
-        ],
-        "withdrawalAllocationDelay": 0
+        ]
       }
     },
     "profile": {

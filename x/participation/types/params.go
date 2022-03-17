@@ -13,9 +13,8 @@ import (
 var _ paramtypes.ParamSet = (*Params)(nil)
 
 var (
-	KeyAllocationPrice           = []byte("AllocationPrice")
-	KeyParticipationTierList     = []byte("ParticipationTierList")
-	KeyWithdrawalAllocationDelay = []byte("WithdrawalAllocationDelay")
+	KeyAllocationPrice       = []byte("AllocationPrice")
+	KeyParticipationTierList = []byte("ParticipationTierList")
 
 	DefaultAllocationPrice = AllocationPrice{
 		Bonded: sdk.NewInt(1000),
@@ -50,9 +49,6 @@ var (
 			},
 		},
 	}
-
-	// TODO: Determine the default values for this param
-	DefaultWithdrawalAllocationDelay = uint64(0)
 )
 
 // ParamKeyTable the param key table for launch module
@@ -64,12 +60,10 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams(
 	allocationPrice AllocationPrice,
 	participationTierList []Tier,
-	withdrawalAllocationDelay uint64,
 ) Params {
 	return Params{
-		AllocationPrice:           allocationPrice,
-		ParticipationTierList:     participationTierList,
-		WithdrawalAllocationDelay: withdrawalAllocationDelay,
+		AllocationPrice:       allocationPrice,
+		ParticipationTierList: participationTierList,
 	}
 }
 
@@ -78,7 +72,6 @@ func DefaultParams() Params {
 	return NewParams(
 		DefaultAllocationPrice,
 		DefaultParticipationTierList,
-		DefaultWithdrawalAllocationDelay,
 	)
 }
 
@@ -87,7 +80,6 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyAllocationPrice, &p.AllocationPrice, validateAllocationPrice),
 		paramtypes.NewParamSetPair(KeyParticipationTierList, &p.ParticipationTierList, validateParticipationTierList),
-		paramtypes.NewParamSetPair(KeyWithdrawalAllocationDelay, &p.WithdrawalAllocationDelay, validateWithdrawalAllocationDelay),
 	}
 }
 
@@ -97,11 +89,7 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	if err := validateParticipationTierList(p.ParticipationTierList); err != nil {
-		return err
-	}
-
-	return validateWithdrawalAllocationDelay(p.WithdrawalAllocationDelay)
+	return validateParticipationTierList(p.ParticipationTierList)
 }
 
 // String implements the Stringer interface.
@@ -163,19 +151,6 @@ func validateTierBenefits(b TierBenefits) error {
 	if !b.MaxBidAmount.IsPositive() {
 		return fmt.Errorf("max bid amount must be greater than zero")
 	}
-
-	return nil
-}
-
-// validateWithdrawalAllocationDelay validates the WithdrawalAllocationDelay param
-func validateWithdrawalAllocationDelay(v interface{}) error {
-	withdrawalAllocationDelay, ok := v.(uint64)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", v)
-	}
-
-	// TODO implement validation
-	_ = withdrawalAllocationDelay
 
 	return nil
 }

@@ -19,5 +19,4 @@ func TestGetParams(t *testing.T) {
 	require.EqualValues(t, params, tk.ParticipationKeeper.GetParams(ctx))
 	require.EqualValues(t, params.AllocationPrice, tk.ParticipationKeeper.AllocationPrice(ctx))
 	require.EqualValues(t, params.ParticipationTierList, tk.ParticipationKeeper.ParticipationTierList(ctx))
-	require.EqualValues(t, params.WithdrawalAllocationDelay, tk.ParticipationKeeper.WithdrawalAllocationDelay(ctx))
 }

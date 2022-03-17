@@ -23,7 +23,6 @@ func TestParamsValidate(t *testing.T) {
 					Bonded: sdk.NewInt(-1),
 				},
 				DefaultParticipationTierList,
-				DefaultWithdrawalAllocationDelay,
 			),
 			err: errors.New("value for 'bonded' must be greater than zero"),
 		},
@@ -32,7 +31,6 @@ func TestParamsValidate(t *testing.T) {
 			params: NewParams(
 				DefaultAllocationPrice,
 				DefaultParticipationTierList,
-				DefaultWithdrawalAllocationDelay,
 			),
 		},
 	}
