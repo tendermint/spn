@@ -20,7 +20,7 @@ func (am AppModule) OnChanOpenInit(
 	_ sdk.Context,
 	_ channeltypes.Order,
 	_ []string,
-	_ string,
+	_,
 	_ string,
 	_ *capabilitytypes.Capability,
 	_ channeltypes.Counterparty,
@@ -37,7 +37,7 @@ func (am AppModule) OnChanOpenTry(
 	portID,
 	channelID string,
 	chanCap *capabilitytypes.Capability,
-	counterparty channeltypes.Counterparty,
+	_ channeltypes.Counterparty,
 	version,
 	counterpartyVersion string,
 ) error {
@@ -259,11 +259,10 @@ func (am AppModule) OnTimeoutPacket(
 }
 
 // NegotiateAppVersion implements the IBCModule interface
-// TODO(492): implement correct logic
 func (am AppModule) NegotiateAppVersion(
 	_ sdk.Context,
 	_ channeltypes.Order,
-	_ string,
+	_,
 	_ string,
 	_ channeltypes.Counterparty,
 	_ string,

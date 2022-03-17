@@ -8,14 +8,14 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	"github.com/tendermint/spn/testutil/sample"
 	monitoringcsimulation "github.com/tendermint/spn/x/monitoringc/simulation"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
 const (
-	opWeightMsgCreateClient = "op_weight_msg_create_chain"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgCreateClient int = 100
+	opWeightMsgCreateClient          = "op_weight_msg_create_client"
+	defaultWeightMsgCreateClient int = 50
 
 	// this line is used by starport scaffolding # simapp/module/const
 )
@@ -27,6 +27,8 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	monitoringcGenesis := types.GenesisState{
+		PortId: types.PortID,
+		Params: sample.MonitoringcParams(),
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&monitoringcGenesis)
@@ -39,8 +41,12 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
-	return []simtypes.ParamChange{}
+	monitoringcParams := sample.MonitoringcParams()
+	return []simtypes.ParamChange{
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyDebugMode), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(monitoringcParams.DebugMode))
+		}),
+	}
 }
 
 // RegisterStoreDecoder registers a decoder

@@ -95,6 +95,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 		[]Connection{},
 		[]Channel{},
 	)
+	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -179,6 +180,7 @@ func NewTestSetupWithIBCMocks(
 		connectionMock,
 		channelMock,
 	)
+	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
