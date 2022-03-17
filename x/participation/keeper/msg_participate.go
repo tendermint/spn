@@ -10,16 +10,6 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-func getTierFromID(tierList []types.Tier, tierID uint64) (types.Tier, bool) {
-	for _, tier := range tierList {
-		if tier.TierID == tierID {
-			return tier, true
-		}
-	}
-
-	return types.Tier{}, false
-}
-
 func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate) (*types.MsgParticipateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -43,7 +33,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	}
 
 	tiers := k.GetParams(ctx).ParticipationTierList
-	tier, found := getTierFromID(tiers, msg.TierID)
+	tier, found := types.GetTierFromID(tiers, msg.TierID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrTierNotFound, "tier %d not found", msg.TierID)
 	}
