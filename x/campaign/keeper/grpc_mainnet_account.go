@@ -48,7 +48,7 @@ func (k Keeper) MainnetAccount(c context.Context, req *types.QueryGetMainnetAcco
 
 	val, found := k.GetMainnetAccount(ctx, req.CampaignID, req.Address)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetMainnetAccountResponse{MainnetAccount: val}, nil

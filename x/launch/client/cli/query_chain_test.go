@@ -60,7 +60,7 @@ func TestShowChain(t *testing.T) {
 			desc: "not found",
 			id:   "10",
 			args: common,
-			err:  status.Error(codes.InvalidArgument, "not found"),
+			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
 		tc := tc

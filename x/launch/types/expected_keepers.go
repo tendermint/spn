@@ -15,6 +15,10 @@ type CampaignKeeper interface {
 	GetCampaignChains(ctx sdk.Context, campaignID uint64) (val campaigntypes.CampaignChains, found bool)
 }
 
+type MonitoringConsumerKeeper interface {
+	ClearVerifiedClientIDs(ctx sdk.Context, launchID uint64)
+}
+
 type ProfileKeeper interface {
 	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, err error)
 	GetCoordinator(ctx sdk.Context, id uint64) (val profiletypes.Coordinator, found bool)
