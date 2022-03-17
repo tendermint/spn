@@ -63,14 +63,20 @@ func TestMsgRevertLaunch(t *testing.T) {
 	chain.MonitoringConnected = true
 	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
+	// setup monitoringc keeper with client IDs
+	testClientID := "test-client-id-1"
+	tk.MonitoringConsumerKeeper.AddVerifiedClientID(sdkCtx, delayReached, testClientID)
+
 	for _, tc := range []struct {
-		name string
-		msg  types.MsgRevertLaunch
-		err  error
+		name     string
+		msg      types.MsgRevertLaunch
+		clientID string
+		err      error
 	}{
 		{
-			name: "revert delay reached",
-			msg:  *types.NewMsgRevertLaunch(coordAddress, delayReached),
+			name:     "revert delay reached",
+			msg:      *types.NewMsgRevertLaunch(coordAddress, delayReached),
+			clientID: testClientID,
 		},
 		{
 			name: "revert delay not reached",
@@ -112,11 +118,17 @@ func TestMsgRevertLaunch(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			// Check value
+			// Check value of chain
 			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, tc.msg.LaunchID)
 			require.True(t, found)
 			require.False(t, chain.LaunchTriggered)
 			require.EqualValues(t, int64(0), chain.LaunchTimestamp)
+
+			// check that monitoringc client ids are removed
+			_, found = tk.MonitoringConsumerKeeper.GetVerifiedClientID(sdkCtx, tc.msg.LaunchID)
+			require.False(t, found)
+			_, found = tk.MonitoringConsumerKeeper.GetLaunchIDFromVerifiedClientID(sdkCtx, tc.clientID)
+			require.False(t, found)
 		})
 	}
 }
