@@ -262,7 +262,7 @@ func (am AppModule) OnTimeoutPacket(
 func (am AppModule) NegotiateAppVersion(
 	_ sdk.Context,
 	_ channeltypes.Order,
-	_ ,
+	_,
 	_ string,
 	_ channeltypes.Counterparty,
 	_ string,
