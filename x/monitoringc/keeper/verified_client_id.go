@@ -14,6 +14,23 @@ func (k Keeper) SetVerifiedClientID(ctx sdk.Context, verifiedClientID types.Veri
 	store.Set(types.VerifiedClientIDKey(verifiedClientID.LaunchID), b)
 }
 
+// ClearVerifiedClientIDs removes a set of verifiedClientID in the store from its launch ID
+func (k Keeper) ClearVerifiedClientIDs(ctx sdk.Context, launchID uint64) {
+	verifiedClientID, found := k.GetVerifiedClientID(ctx, launchID)
+	if !found {
+		return
+	}
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.VerifiedClientIDKeyPrefix))
+	store.Delete(types.VerifiedClientIDKey(launchID))
+
+	for _, id := range verifiedClientID.GetClientIDs() {
+		store = prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LaunchIDFromVerifiedClientIDKeyPrefix))
+		store.Delete(types.LaunchIDFromChannelIDKey(id))
+	}
+
+}
+
 // GetVerifiedClientID returns a verifiedClientID from its launch id
 func (k Keeper) GetVerifiedClientID(
 	ctx sdk.Context,

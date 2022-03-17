@@ -19,4 +19,5 @@ var (
 	ErrConnectionAlreadyEstablished = sdkerrors.Register(ModuleName, 10, "ibc connection already established")
 	ErrInvalidUnbondingPeriod       = sdkerrors.Register(ModuleName, 11, "invalid unbonding period")
 	ErrInvalidRevisionHeight        = sdkerrors.Register(ModuleName, 12, "invalid revision height")
+	ErrVerifiedClientIDsNotFound    = sdkerrors.Register(ModuleName, 13, "verified client IDs not found")
 )
