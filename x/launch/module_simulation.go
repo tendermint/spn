@@ -16,6 +16,7 @@ import (
 )
 
 const (
+	// this line is used by starport scaffolding # simapp/module/const
 	defaultWeightMsgCreateChain              int = 50
 	defaultWeightMsgEditChain                int = 20
 	defaultWeightMsgRequestAddGenesisAccount int = 50
@@ -26,6 +27,7 @@ const (
 	defaultWeightMsgSettleRequest            int = 50
 	defaultWeightMsgTriggerLaunch            int = 15
 	defaultWeightMsgRevertLaunch             int = 0
+	defaultWeightMsgUpdateLaunchInformation  int = 20
 
 	opWeightMsgCreateChain              = "op_weight_msg_create_chain"
 	opWeightMsgEditChain                = "op_weight_msg_edit_chain"
@@ -37,6 +39,7 @@ const (
 	opWeightMsgTriggerLaunch            = "op_weight_msg_trigger_launch"
 	opWeightMsgRevertLaunch             = "op_weight_msg_revert_launch"
 	opWeightMsgSettleRequest            = "op_weight_msg_settle_request"
+	opWeightMsgUpdateLaunchInformation  = "op_weight_msg_update_launch_information"
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -83,6 +86,7 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+	// this line is used by starport scaffolding # simapp/module/operation
 	var (
 		weightMsgCreateChain              int
 		weightMsgEditChain                int
@@ -94,6 +98,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgTriggerLaunch            int
 		weightMsgRevertLaunch             int
 		weightMsgSettleRequest            int
+		weightMsgUpdateLaunchInformation  int
 	)
 
 	appParams := simState.AppParams
@@ -103,6 +108,12 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgCreateChain = defaultWeightMsgCreateChain
 		},
 	)
+	appParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateLaunchInformation, &weightMsgUpdateLaunchInformation, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateLaunchInformation = defaultWeightMsgUpdateLaunchInformation
+		},
+	)
+
 	appParams.GetOrGenerate(cdc, opWeightMsgEditChain, &weightMsgEditChain, nil,
 		func(_ *rand.Rand) {
 			weightMsgEditChain = defaultWeightMsgEditChain
@@ -194,6 +205,10 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		simulation.NewWeightedOperation(
 			weightMsgRevertLaunch,
 			launchsimulation.SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgUpdateLaunchInformation,
+			launchsimulation.SimulateMsgUpdateLaunchInformation(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }
