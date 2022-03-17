@@ -15,7 +15,6 @@ import (
 const (
 	// MonitoringPacketTimeoutDelay is the delay before a monitoring packet is timed out
 	// The current value represents a year
-	// TODO(489): define a proper value
 	MonitoringPacketTimeoutDelay = time.Hour * 8760
 )
 
