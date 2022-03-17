@@ -13,9 +13,8 @@ import (
 )
 
 const (
-	opWeightMsgSetRewards = "op_weight_msg_create_chain"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgSetRewards int = 100
+	opWeightMsgSetRewards          = "op_weight_msg_set_rewards"
+	defaultWeightMsgSetRewards int = 50
 
 	// this line is used by starport scaffolding # simapp/module/const
 )
