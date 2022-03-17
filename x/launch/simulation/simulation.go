@@ -80,24 +80,23 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 		}
 
 		modify := r.Intn(100) < 50
-
-		setCampaignID := r.Intn(100) < 20
+		setCampaignID := !modify
 		campaignID := uint64(0)
 		if setCampaignID {
 			campaignID, setCampaignID = FindCoordinatorCampaign(r, ctx, k.GetCampaignKeeper(), chain.CoordinatorID, chain.LaunchID)
+			if !modify && !setCampaignID {
+				modify = true
+			}
 		}
 
 		msg := sample.MsgEditChain(
 			simAccount.Address.String(),
 			chain.LaunchID,
-			modify,
-			!modify,
-			modify,
-			!modify && r.Intn(100) < 50,
 			setCampaignID,
 			campaignID,
 			modify,
 		)
+
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -431,6 +430,49 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, err.Error()), nil, nil
 		}
 		msg := sample.MsgRevertLaunch(simAccount.Address.String(), chain.LaunchID)
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             &msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      simAccount,
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      types.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+	}
+}
+
+// SimulateMsgUpdateLaunchInformation simulates a MsgUpdateLaunchInformation message
+func SimulateMsgUpdateLaunchInformation(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+	return func(
+		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		// Select a chain with a valid coordinator account
+		chain, found := FindRandomChain(r, ctx, k, false, false)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, "chain not found"), nil, nil
+		}
+
+		simAccount, err := FindChainCoordinatorAccount(ctx, k, accs, chain.LaunchID)
+		if err != nil {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgEditChain, "coordinator account not found"), nil, nil
+		}
+
+		modify := r.Intn(100) < 50
+		msg := sample.MsgUpdateLaunchInformation(
+			simAccount.Address.String(),
+			chain.LaunchID,
+			modify,
+			!modify,
+			modify,
+			!modify && r.Intn(100) < 50,
+		)
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
