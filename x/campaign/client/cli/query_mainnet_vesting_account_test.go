@@ -67,7 +67,7 @@ func TestShowMainnetVestingAccount(t *testing.T) {
 			idAddress:    strconv.Itoa(100000),
 
 			args: common,
-			err:  status.Error(codes.InvalidArgument, "not found"),
+			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

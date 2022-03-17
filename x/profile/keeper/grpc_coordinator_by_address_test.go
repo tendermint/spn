@@ -35,7 +35,7 @@ func TestCoordinatorByAddressQuerySingle(t *testing.T) {
 		{
 			desc:    "KeyNotFound",
 			request: &types.QueryGetCoordinatorByAddressRequest{Address: "missing"},
-			err:     status.Error(codes.InvalidArgument, "not found"),
+			err:     status.Error(codes.NotFound, "not found"),
 		},
 		{
 			desc: "InvalidRequest",

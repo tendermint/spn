@@ -51,7 +51,7 @@ func (k Keeper) LaunchIDFromChannelID(c context.Context, req *types.QueryGetLaun
 		req.ChannelID,
 	)
 	if !found {
-		return nil, status.Error(codes.InvalidArgument, "not found")
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetLaunchIDFromChannelIDResponse{LaunchIDFromChannelID: val}, nil
