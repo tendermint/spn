@@ -71,7 +71,7 @@ func Test_msgServer_Participate(t *testing.T) {
 				AuctionID:   auctionID,
 				TierID:      1,
 			},
-			err: types.ErrInvalidBidder,
+			err: types.ErrAlreadyParticipating,
 		},
 		{
 			name: "should prevent if address is invalid",
