@@ -5,6 +5,7 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 )
 
@@ -23,7 +24,7 @@ func TestMsgWithdrawAllocations_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg: MsgWithdrawAllocations{
-				Participant: sample.AccAddress(),
+				Participant: sample.Address(),
 			},
 		},
 	}

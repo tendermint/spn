@@ -6,7 +6,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
+
 	"github.com/tendermint/spn/x/participation/types"
 )
 
@@ -18,7 +20,10 @@ func CmdWithdrawAllocations() *cobra.Command {
 		Short: "Claim back used allocations",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argAuctionID := args[0]
+			argAuctionID, err := cast.ToUint64E(args[0])
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {

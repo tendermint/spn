@@ -9,7 +9,7 @@ const TypeMsgWithdrawAllocations = "withdraw_allocations"
 
 var _ sdk.Msg = &MsgWithdrawAllocations{}
 
-func NewMsgWithdrawAllocations(participant string, auctionID string) *MsgWithdrawAllocations {
+func NewMsgWithdrawAllocations(participant string, auctionID uint64) *MsgWithdrawAllocations {
 	return &MsgWithdrawAllocations{
 		Participant: participant,
 		AuctionID:   auctionID,
