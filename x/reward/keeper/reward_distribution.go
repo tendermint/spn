@@ -66,14 +66,15 @@ func (k Keeper) DistributeRewards(
 		if config == nil {
 			return spnerrors.Critical("SDK config not set")
 		}
-		valAddr, err := signatureCount.GetOperatorAddress(config.GetBech32AccountAddrPrefix())
+		opAddr, err := signatureCount.GetOperatorAddress(config.GetBech32AccountAddrPrefix())
 		if err != nil {
 			return sdkerrors.Wrapf(types.ErrInvalidSignatureCounts, "invalid operator address: %s", signatureCount.OpAddress)
 		}
 
 		// if the operator address is associated with a validator profile, this address is used to receive rewwards
 		// otherwise rewards are distributed to the operator address account
-		validatorByOpAddr, found := k.profileKeeper.GetValidatorByOperatorAddress(ctx, valAddr)
+		valAddr := opAddr
+		validatorByOpAddr, found := k.profileKeeper.GetValidatorByOperatorAddress(ctx, opAddr)
 		if found {
 			valAddr = validatorByOpAddr.ValidatorAddress
 		}
