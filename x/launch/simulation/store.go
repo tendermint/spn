@@ -20,6 +20,19 @@ func IsLaunchTriggeredChain(ctx sdk.Context, k keeper.Keeper, chainID uint64) bo
 	return chain.LaunchTriggered
 }
 
+// FindAccount find account by string hex address
+func FindAccount(accs []simtypes.Account, address string) (simtypes.Account, error) {
+	coordAddr, err := sdk.AccAddressFromBech32(address)
+	if err != nil {
+		return simtypes.Account{}, err
+	}
+	simAccount, found := simtypes.FindAccount(accs, coordAddr)
+	if !found {
+		return simAccount, fmt.Errorf("address %s not found in the sim accounts", address)
+	}
+	return simAccount, nil
+}
+
 func FindCoordinatorCampaign(
 	r *rand.Rand,
 	ctx sdk.Context,
@@ -59,19 +72,6 @@ func FindCoordinatorCampaign(
 	}
 
 	return 0, false
-}
-
-// FindAccount find account by string hex address
-func FindAccount(accs []simtypes.Account, address string) (simtypes.Account, error) {
-	coordAddr, err := sdk.AccAddressFromBech32(address)
-	if err != nil {
-		return simtypes.Account{}, err
-	}
-	simAccount, found := simtypes.FindAccount(accs, coordAddr)
-	if !found {
-		return simAccount, fmt.Errorf("address %s not found in the sim accounts", address)
-	}
-	return simAccount, nil
 }
 
 // FindChainCoordinatorAccount find coordinator account by chain id
