@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"errors"
 	"testing"
 	"time"
 
@@ -52,7 +51,6 @@ func Test_msgServer_Participate(t *testing.T) {
 		desiredUsedAlloc      uint64
 		currentAvailableAlloc uint64
 		err                   error
-		untypedErr            bool
 	}{
 		{
 			name: "valid message",
@@ -72,16 +70,6 @@ func Test_msgServer_Participate(t *testing.T) {
 				TierID:      1,
 			},
 			err: types.ErrAlreadyParticipating,
-		},
-		{
-			name: "should prevent if address is invalid",
-			msg: &types.MsgParticipate{
-				Participant: "invalid",
-				AuctionID:   auctionID,
-				TierID:      1,
-			},
-			untypedErr: true,
-			err:        errors.New("decoding bech32 failed: invalid bech32 string length 7"),
 		},
 		{
 			name: "should prevent if user has insufficient available allocations",
@@ -117,10 +105,7 @@ func Test_msgServer_Participate(t *testing.T) {
 
 			// check error
 			if tt.err != nil {
-				if !tt.untypedErr {
-					require.ErrorIs(t, err, tt.err)
-				}
-				require.Contains(t, err.Error(), tt.err.Error())
+				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
