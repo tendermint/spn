@@ -7,11 +7,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	tc "github.com/tendermint/spn/testutil/constructor"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/spn/x/reward/keeper"
@@ -276,7 +274,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "rewards for validator with no profile should be refunded to provider",
+			name: "rewards for validator with no profile should be distributed to the operator address",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -296,9 +294,10 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				closeRewardPool: false,
 			},
 			wantBalances: map[string]sdk.Coins{
-				provider: tc.Coins(t, "40aaa,40bbb"),
-				valFoo:   tc.Coins(t, "30aaa,30bbb"),
-				valBar:   tc.Coins(t, "30aaa,30bbb"),
+				provider:     tc.Coins(t, "10aaa,10bbb"),
+				valFoo:       tc.Coins(t, "30aaa,30bbb"),
+				valBar:       tc.Coins(t, "30aaa,30bbb"),
+				noProfileVal: tc.Coins(t, "30aaa,30bbb"),
 			},
 		},
 		{
@@ -332,26 +331,6 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				closeRewardPool: false,
 			},
 			err: types.ErrRewardPoolClosed,
-		},
-		{
-			name: "validator with a consensus address but without profile should return a critical error",
-			rewardPool: types.RewardPool{
-				LaunchID:         1,
-				Provider:         provider,
-				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
-				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
-				LastRewardHeight: 10,
-				Closed:           false,
-			},
-			args: args{
-				launchID: 1,
-				signatureCounts: tc.SignatureCounts(1,
-					tc.SignatureCount(t, notFoundValAddr, "0.5"),
-				),
-				lastBlockHeight: 1,
-				closeRewardPool: false,
-			},
-			err: spnerrors.ErrCritical,
 		},
 	}
 	for _, tt := range tests {
