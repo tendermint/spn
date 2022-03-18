@@ -11,23 +11,14 @@ import (
 )
 
 func TestMsgAddValidatorOperatorAddress_GetSigners(t *testing.T) {
-	// should contain only one signer if validator and operator address are equal
+	// should contain two signers
 	valAddr := sample.AccAddress()
-	msg := types.MsgAddValidatorOperatorAddress{
-		ValidatorAddress: valAddr.String(),
-		OperatorAddress:  valAddr.String(),
-	}
-	signers := msg.GetSigners()
-	require.Len(t, signers, 1)
-	require.Contains(t, signers, valAddr)
-
-	// should contain two signers when different
 	opAddr := sample.AccAddress()
-	msg = types.MsgAddValidatorOperatorAddress{
+	msg := types.MsgAddValidatorOperatorAddress{
 		ValidatorAddress: valAddr.String(),
 		OperatorAddress:  opAddr.String(),
 	}
-	signers = msg.GetSigners()
+	signers := msg.GetSigners()
 	require.Len(t, signers, 2)
 	require.Contains(t, signers, valAddr)
 	require.Contains(t, signers, opAddr)
@@ -49,11 +40,12 @@ func TestMsgAddValidatorOperatorAddress_ValidateBasic(t *testing.T) {
 			},
 		},
 		{
-			name: "should allow same address for SPN validator and operator address",
+			name: "should prevent using same address for SPN validator and operator address",
 			msg: types.MsgAddValidatorOperatorAddress{
 				ValidatorAddress: sampleAddr,
 				OperatorAddress:  sampleAddr,
 			},
+			err: types.ErrDupAddress,
 		},
 		{
 			name: "should prevent invalid SPN validator address",
