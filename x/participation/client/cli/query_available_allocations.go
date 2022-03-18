@@ -10,8 +10,6 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdShowAvailableAllocations() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-available-allocations [address]",

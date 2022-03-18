@@ -65,7 +65,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			currentAvailableAlloc: availableAlloc,
 		},
 		{
-			name: "should prevent if double bid from same address",
+			name: "should prevent participating twice in the same auction",
 			msg: &types.MsgParticipate{
 				Participant: addrWithDels,
 				AuctionID:   auctionID,
