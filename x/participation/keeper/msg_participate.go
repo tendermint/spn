@@ -57,12 +57,16 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	}
 
 	// set used allocations
-	usedAllocations, _ := k.GetUsedAllocations(ctx, msg.Participant)
-	usedAllocations.NumAllocations += tier.RequiredAllocations
-	usedAllocations.Address = msg.Participant
+	numUsedAllocations := uint64(0)
+	used, found := k.GetUsedAllocations(ctx, msg.Participant)
+	if found {
+		numUsedAllocations = used.NumAllocations
+	}
+
+	numUsedAllocations += tier.RequiredAllocations
 	k.SetUsedAllocations(ctx, types.UsedAllocations{
 		Address:        msg.Participant,
-		NumAllocations: tier.RequiredAllocations,
+		NumAllocations: numUsedAllocations,
 	})
 
 	// set auction used allocations
