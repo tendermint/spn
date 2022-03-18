@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -13,11 +12,7 @@ import (
 )
 
 const (
-	flagGenesisChainID = "genesis-chain-id"
-	flagSourceURL      = "source-url"
-	flagSourceHash     = "source-hash"
-	flagDefaultGenesis = "default-genesis"
-	flagMetadata       = "metadata"
+	flagMetadata = "metadata"
 )
 
 func CmdEditChain() *cobra.Command {
@@ -27,34 +22,13 @@ func CmdEditChain() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var (
-				genesisChainID, _ = cmd.Flags().GetString(flagGenesisChainID)
-				sourceURL, _      = cmd.Flags().GetString(flagSourceURL)
-				sourceHash, _     = cmd.Flags().GetString(flagSourceHash)
-				defaultGenesis, _ = cmd.Flags().GetBool(flagDefaultGenesis)
-				genesisURL, _     = cmd.Flags().GetString(flagGenesisURL)
-				metadata, _       = cmd.Flags().GetString(flagMetadata)
-				campaignID, _     = cmd.Flags().GetUint64(flagCampaignID)
+				metadata, _   = cmd.Flags().GetString(flagMetadata)
+				campaignID, _ = cmd.Flags().GetUint64(flagCampaignID)
 			)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
-			}
-
-			var initialGenesis *types.InitialGenesis
-			if defaultGenesis && genesisURL != "" {
-				return errors.New("the initial genesis can't be the default genesis and a custom genesis from URL at the same time")
-			}
-			if defaultGenesis {
-				defaultInitialGenesis := types.NewDefaultInitialGenesis()
-				initialGenesis = &defaultInitialGenesis
-			} else if genesisURL != "" {
-				genesisHash, err := getHashFromURL(cmd.Context(), genesisURL)
-				if err != nil {
-					return err
-				}
-				genesisURL := types.NewGenesisURL(genesisURL, genesisHash)
-				initialGenesis = &genesisURL
 			}
 
 			setCampaignID := cmd.Flags().Changed(flagCampaignID)
@@ -69,10 +43,6 @@ func CmdEditChain() *cobra.Command {
 			msg := types.NewMsgEditChain(
 				clientCtx.GetFromAddress().String(),
 				launchID,
-				genesisChainID,
-				sourceURL,
-				sourceHash,
-				initialGenesis,
 				setCampaignID,
 				campaignID,
 				metadataBytes,
@@ -84,11 +54,6 @@ func CmdEditChain() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagGenesisChainID, "", "Chain ID for the genesis of the chain")
-	cmd.Flags().String(flagSourceURL, "", "Set a new source URL for the chain")
-	cmd.Flags().String(flagSourceHash, "", "Hash from the new source URL for the chain")
-	cmd.Flags().Bool(flagDefaultGenesis, false, "Set the initial genesis to the default genesis of the chain")
-	cmd.Flags().String(flagGenesisURL, "", "Set the initial genesis from a URL containing a custom genesis")
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
 	cmd.Flags().Uint64(flagCampaignID, 0, "Set the campaign ID if the chain is not associated with a campaign")
 

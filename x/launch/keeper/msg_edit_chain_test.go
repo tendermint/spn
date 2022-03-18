@@ -82,72 +82,8 @@ func TestMsgEditChain(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "edit genesis chain ID",
-			msg: sample.MsgEditChain(coordAddress, launchID,
-				true,
-				false,
-				false,
-				false,
-				false,
-				0,
-				false,
-			),
-		},
-		{
-			name: "edit source",
-			msg: sample.MsgEditChain(coordAddress, launchID,
-				false,
-				true,
-				false,
-				false,
-				false,
-				0,
-				false,
-			),
-		},
-		{
-			name: "edit initial genesis with default genesis",
-			msg: sample.MsgEditChain(coordAddress, launchID,
-				false,
-				false,
-				true,
-				false,
-				false,
-				0,
-				false,
-			),
-		},
-		{
-			name: "edit initial genesis with genesis url",
-			msg: sample.MsgEditChain(coordAddress, launchID,
-				false,
-				false,
-				true,
-				true,
-				false,
-				0,
-				false,
-			),
-		},
-		{
-			name: "edit source and initial genesis",
-			msg: sample.MsgEditChain(coordAddress, launchID,
-				false,
-				true,
-				true,
-				true,
-				false,
-				0,
-				false,
-			),
-		},
-		{
 			name: "set campaign ID",
 			msg: sample.MsgEditChain(coordAddress, launchID,
-				false,
-				false,
-				false,
-				false,
 				true,
 				validCampaignID,
 				false,
@@ -157,10 +93,6 @@ func TestMsgEditChain(t *testing.T) {
 			name: "edit metadata",
 			msg: sample.MsgEditChain(coordAddress, launchID,
 				false,
-				false,
-				false,
-				false,
-				false,
 				0,
 				true,
 			),
@@ -168,11 +100,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "non existent launch id",
 			msg: sample.MsgEditChain(coordAddress, launchIDNoExist,
-				false,
 				true,
-				false,
-				false,
-				false,
 				0,
 				false,
 			),
@@ -181,11 +109,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "non existent coordinator",
 			msg: sample.MsgEditChain(coordNoExist, launchID,
-				false,
 				true,
-				false,
-				false,
-				false,
 				0,
 				false,
 			),
@@ -194,11 +118,7 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "invalid coordinator",
 			msg: sample.MsgEditChain(coordAddress2, launchID,
-				false,
 				true,
-				false,
-				false,
-				false,
 				0,
 				false,
 			),
@@ -207,10 +127,6 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "chain already has campaign",
 			msg: sample.MsgEditChain(coordAddress, launchIDHasCampaign,
-				false,
-				false,
-				false,
-				false,
 				true,
 				0,
 				false,
@@ -220,10 +136,6 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "campaign does not exist",
 			msg: sample.MsgEditChain(coordAddress, launchID2,
-				false,
-				false,
-				false,
-				false,
 				true,
 				999,
 				false,
@@ -233,10 +145,6 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "campaign has a different coordinator",
 			msg: sample.MsgEditChain(coordAddress, launchID2,
-				false,
-				false,
-				false,
-				false,
 				true,
 				campaignDifferentCoordinator,
 				false,
@@ -246,10 +154,6 @@ func TestMsgEditChain(t *testing.T) {
 		{
 			name: "campaign chain entry is duplicated",
 			msg: sample.MsgEditChain(coordAddress, launchID2,
-				false,
-				false,
-				false,
-				false,
 				true,
 				campaignDuplicateChain,
 				false,
@@ -283,26 +187,6 @@ func TestMsgEditChain(t *testing.T) {
 			require.EqualValues(t, previousChain.CreatedAt, chain.CreatedAt)
 			require.EqualValues(t, previousChain.LaunchTimestamp, chain.LaunchTimestamp)
 			require.EqualValues(t, previousChain.LaunchTriggered, chain.LaunchTriggered)
-
-			// Compare changed values
-			if tc.msg.GenesisChainID != "" {
-				require.EqualValues(t, tc.msg.GenesisChainID, chain.GenesisChainID)
-			} else {
-				require.EqualValues(t, previousChain.GenesisChainID, chain.GenesisChainID)
-			}
-			if tc.msg.SourceURL != "" {
-				require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
-				require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)
-			} else {
-				require.EqualValues(t, previousChain.SourceURL, chain.SourceURL)
-				require.EqualValues(t, previousChain.SourceHash, chain.SourceHash)
-			}
-
-			if tc.msg.InitialGenesis != nil {
-				require.EqualValues(t, *tc.msg.InitialGenesis, chain.InitialGenesis)
-			} else {
-				require.EqualValues(t, previousChain.InitialGenesis, chain.InitialGenesis)
-			}
 
 			if len(tc.msg.Metadata) > 0 {
 				require.EqualValues(t, tc.msg.Metadata, chain.Metadata)

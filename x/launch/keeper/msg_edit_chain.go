@@ -34,20 +34,6 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		))
 	}
 
-	// Modify from provided values
-	if msg.GenesisChainID != "" {
-		chain.GenesisChainID = msg.GenesisChainID
-	}
-	if msg.SourceURL != "" {
-		chain.SourceURL = msg.SourceURL
-	}
-	if msg.SourceHash != "" {
-		chain.SourceHash = msg.SourceHash
-	}
-	if msg.InitialGenesis != nil {
-		chain.InitialGenesis = *msg.InitialGenesis
-	}
-
 	if len(msg.Metadata) > 0 {
 		chain.Metadata = msg.Metadata
 	}

@@ -20,7 +20,7 @@ func (am AppModule) OnChanOpenInit(
 	ctx sdk.Context,
 	order channeltypes.Order,
 	_ []string,
-	portID string,
+	portID,
 	channelID string,
 	chanCap *capabilitytypes.Capability,
 	_ channeltypes.Counterparty,
@@ -252,14 +252,13 @@ func (am AppModule) OnTimeoutPacket(
 }
 
 // NegotiateAppVersion implements the IBCModule interface
-// TODO(492): implement correct logic
 func (am AppModule) NegotiateAppVersion(
-	ctx sdk.Context,
-	order channeltypes.Order,
-	connectionID string,
-	portID string,
-	counterparty channeltypes.Counterparty,
-	proposedVersion string,
+	_ sdk.Context,
+	_ channeltypes.Order,
+	_,
+	_ string,
+	_ channeltypes.Counterparty,
+	_ string,
 ) (version string, err error) {
 	return types.Version, nil
 }
