@@ -8,7 +8,8 @@ option go_package = "github.com/tendermint/spn/x/participation/types";
 // Msg defines the Msg service.
 service Msg {
   rpc Participate(MsgParticipate) returns (MsgParticipateResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc WithdrawAllocations(MsgWithdrawAllocations) returns (MsgWithdrawAllocationsResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgParticipate {
@@ -18,5 +19,13 @@ message MsgParticipate {
 }
 
 message MsgParticipateResponse {}
+
+message MsgWithdrawAllocations {
+  string participant = 1;
+  string auctionID = 2;
+}
+
+message MsgWithdrawAllocationsResponse {
+}
 
 // this line is used by starport scaffolding # proto/tx/message
