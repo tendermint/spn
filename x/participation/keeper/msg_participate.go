@@ -24,7 +24,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 		return nil, sdkerrors.Wrapf(types.ErrAuctionNotFound, "auction %d not found", msg.AuctionID)
 	}
 
-	// check if the user is already added as an allowed bidder for the auction 
+	// check if the user is already added as an allowed bidder for the auction
 	_, found = k.GetAuctionUsedAllocations(ctx, msg.Participant, msg.AuctionID)
 	if found {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidBidder,
