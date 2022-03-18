@@ -3,18 +3,25 @@ package types
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"gopkg.in/yaml.v2"
-
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"gopkg.in/yaml.v2"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
 var (
+	// MinTimeframeSize defines the minimum allowed value for either `RegistrationPeriod` or `WithdrawalDelay`
+	MinTimeframeSize = int64(time.Hour.Seconds() * 24) // One day
+	// MaxTimeframeSize defines the maximum allowed value for either `RegistrationPeriod` or `WithdrawalDelay`
+	MaxTimeframeSize = int64(time.Hour.Seconds() * 24 * 21) // 21 days
+
 	KeyAllocationPrice       = []byte("AllocationPrice")
 	KeyParticipationTierList = []byte("ParticipationTierList")
+	KeyRegistrationPeriod    = []byte("RegistrationPeriod")
+	KeyWithdrawalDelay       = []byte("WithdrawalDelay")
 
 	DefaultAllocationPrice = AllocationPrice{
 		Bonded: sdk.NewInt(1000),
@@ -49,6 +56,8 @@ var (
 			},
 		},
 	}
+	DefaultRegistrationPeriod = int64(time.Hour.Seconds() * 24 * 7)  // One week
+	DefaultWithdrawalDelay    = int64(time.Hour.Seconds() * 24 * 14) // Two weeks
 )
 
 // ParamKeyTable the param key table for launch module
@@ -60,10 +69,14 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams(
 	allocationPrice AllocationPrice,
 	participationTierList []Tier,
+	registrationPeriod,
+	withdrawalDelay int64,
 ) Params {
 	return Params{
 		AllocationPrice:       allocationPrice,
 		ParticipationTierList: participationTierList,
+		RegistrationPeriod:    registrationPeriod,
+		WithdrawalDelay:       withdrawalDelay,
 	}
 }
 
@@ -72,6 +85,8 @@ func DefaultParams() Params {
 	return NewParams(
 		DefaultAllocationPrice,
 		DefaultParticipationTierList,
+		DefaultRegistrationPeriod,
+		DefaultWithdrawalDelay,
 	)
 }
 
@@ -80,6 +95,8 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyAllocationPrice, &p.AllocationPrice, validateAllocationPrice),
 		paramtypes.NewParamSetPair(KeyParticipationTierList, &p.ParticipationTierList, validateParticipationTierList),
+		paramtypes.NewParamSetPair(KeyRegistrationPeriod, &p.RegistrationPeriod, validateAllocationsUsageTimeFrame),
+		paramtypes.NewParamSetPair(KeyWithdrawalDelay, &p.WithdrawalDelay, validateAllocationsUsageTimeFrame),
 	}
 }
 
@@ -150,6 +167,25 @@ func validateTierBenefits(b TierBenefits) error {
 
 	if !b.MaxBidAmount.IsPositive() {
 		return fmt.Errorf("max bid amount must be greater than zero")
+	}
+
+	return nil
+}
+
+// validateAllocationsUsageTimeFrame validates a time frame parameter related to allocations usage, specifically both
+// RegistrationPeriod and WithdrawalDelay
+func validateAllocationsUsageTimeFrame(v interface{}) error {
+	timeFrame, ok := v.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", v)
+	}
+
+	if timeFrame <= 0 {
+		return errors.New("time frame must be positive")
+	}
+
+	if timeFrame < MinTimeframeSize || timeFrame > MaxTimeframeSize {
+		return fmt.Errorf("time frame value must be in the range [%v, %v]", MinTimeframeSize, MaxTimeframeSize)
 	}
 
 	return nil

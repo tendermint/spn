@@ -33,7 +33,10 @@ func ParticipationParams() participation.Params {
 		maxBidCnt = maxBidCnt.AddRaw(rand.Int63n(10000) + 1)
 	}
 
-	return participation.NewParams(allocationPrice, tiers)
+	registrationPeriod := rand.Int63n(participation.MaxTimeframeSize-participation.MinTimeframeSize) + participation.MinTimeframeSize
+	withdrawalDelay := rand.Int63n(participation.MaxTimeframeSize-participation.MinTimeframeSize) + participation.MinTimeframeSize
+
+	return participation.NewParams(allocationPrice, tiers, registrationPeriod, withdrawalDelay)
 }
 
 // ParticipationGenesisState  returns a sample genesis state for the participation module

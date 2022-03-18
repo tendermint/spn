@@ -16,11 +16,10 @@ func TestTotalAllocationGet(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 
 	invalidAddress := strconv.Itoa(1)
-	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	params := types.DefaultParams()
+	params.AllocationPrice = types.AllocationPrice{Bonded: sdk.NewInt(100)}
 
-	tk.ParticipationKeeper.SetParams(sdkCtx, types.Params{
-		AllocationPrice: allocationPrice,
-	})
+	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
 	validAddress := sample.Address()
 	addressNegativeDelegations := sample.Address()

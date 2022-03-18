@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 
@@ -23,6 +24,8 @@ func TestParamsValidate(t *testing.T) {
 					Bonded: sdk.NewInt(-1),
 				},
 				DefaultParticipationTierList,
+				DefaultRegistrationPeriod,
+				DefaultWithdrawalDelay,
 			),
 			err: errors.New("value for 'bonded' must be greater than zero"),
 		},
@@ -31,6 +34,8 @@ func TestParamsValidate(t *testing.T) {
 			params: NewParams(
 				DefaultAllocationPrice,
 				DefaultParticipationTierList,
+				DefaultRegistrationPeriod,
+				DefaultWithdrawalDelay,
 			),
 		},
 	}
@@ -192,6 +197,45 @@ func TestValidateTierBenefits(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := validateTierBenefits(tt.tierBenefits)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestValidateAllocationsUsageTimeFrame(t *testing.T) {
+	tests := []struct {
+		name      string
+		timeFrame interface{}
+		err       error
+	}{
+		{
+			name:      "invalid interface",
+			timeFrame: "test",
+			err:       fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:      "negative value",
+			timeFrame: int64(-1),
+			err:       errors.New("time frame must be positive"),
+		},
+		{
+			name:      "value outside of range",
+			timeFrame: int64(time.Hour.Seconds() * 24 * 100), // 100 days
+			err:       fmt.Errorf("time frame value must be in the range [%v, %v]", MinTimeframeSize, MaxTimeframeSize),
+		},
+		{
+			name:      "valid time frame",
+			timeFrame: int64(time.Hour.Seconds() * 24 * 7), // One week
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateAllocationsUsageTimeFrame(tt.timeFrame)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)

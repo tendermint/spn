@@ -358,7 +358,9 @@
               "maxBidAmount": "1000"
             }
           }
-        ]
+        ],
+        "registrationPeriod": 604800,
+        "withdrawalDelay": 1209600
       }
     },
     "profile": {

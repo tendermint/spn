@@ -77,6 +77,8 @@ genesis:
             requiredAllocations: "10"
             benefits:
               maxBidAmount: "30000"
+        registrationPeriod: "604800"
+        withdrawalDelay: "1209600"
 client:
   typescript:
     path: "ignite-ui/src/generated"
