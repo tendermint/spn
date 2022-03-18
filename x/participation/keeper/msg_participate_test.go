@@ -40,9 +40,14 @@ func Test_msgServer_Participate(t *testing.T) {
 	require.NotNil(t, res.BaseAuction)
 	auctionID := res.BaseAuction.Id
 
-	addrWithDels := sample.Address()
-	tk.DelegateN(sdkCtx, addrWithDels, 100, 10)
-	availableAlloc, err := tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, addrWithDels)
+	addrWithDelsTier1 := sample.Address()
+	tk.DelegateN(sdkCtx, addrWithDelsTier1, 100, 10)
+	availableAllocTier1, err := tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, addrWithDelsTier1)
+	require.NoError(t, err)
+
+	addrWithDelsTier2 := sample.Address()
+	tk.DelegateN(sdkCtx, addrWithDelsTier2, 100, 10)
+	availableAllocTier2, err := tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, addrWithDelsTier2)
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -53,19 +58,29 @@ func Test_msgServer_Participate(t *testing.T) {
 		err                   error
 	}{
 		{
-			name: "valid message",
+			name: "valid message tier 1",
 			msg: &types.MsgParticipate{
-				Participant: addrWithDels,
+				Participant: addrWithDelsTier1,
 				AuctionID:   auctionID,
 				TierID:      1,
 			},
 			desiredUsedAlloc:      1,
-			currentAvailableAlloc: availableAlloc,
+			currentAvailableAlloc: availableAllocTier1,
+		},
+		{
+			name: "valid message tier 2",
+			msg: &types.MsgParticipate{
+				Participant: addrWithDelsTier2,
+				AuctionID:   auctionID,
+				TierID:      2,
+			},
+			desiredUsedAlloc:      2,
+			currentAvailableAlloc: availableAllocTier2,
 		},
 		{
 			name: "should prevent participating twice in the same auction",
 			msg: &types.MsgParticipate{
-				Participant: addrWithDels,
+				Participant: addrWithDelsTier1,
 				AuctionID:   auctionID,
 				TierID:      1,
 			},
@@ -110,12 +125,15 @@ func Test_msgServer_Participate(t *testing.T) {
 			}
 			require.NoError(t, err)
 
+			tier, found := types.GetTierFromID(types.DefaultParticipationTierList, tt.msg.TierID)
+			require.True(t, found)
+
 			// check auction contains allowed bidder
 			auction, found := tk.FundraisingKeeper.GetAuction(sdkCtx, tt.msg.AuctionID)
 			require.True(t, found)
 			require.Contains(t, auction.GetAllowedBidders(), fundraisingtypes.AllowedBidder{
 				Bidder:       tt.msg.Participant,
-				MaxBidAmount: sdk.NewIntFromUint64(1000),
+				MaxBidAmount: tier.Benefits.MaxBidAmount,
 			})
 
 			// check used allocations entry for bidder
@@ -124,13 +142,13 @@ func Test_msgServer_Participate(t *testing.T) {
 			require.EqualValues(t, tt.desiredUsedAlloc, usedAllocations.NumAllocations)
 
 			// check auction used allocations entry for bidder exists
-			_, found = tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, tt.msg.Participant, tt.msg.AuctionID)
+			auctionUsedAllocations, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, tt.msg.Participant, tt.msg.AuctionID)
 			require.True(t, found)
+			require.Equal(t, tier.RequiredAllocations, auctionUsedAllocations.NumAllocations)
 
 			// check that available allocations has decreased accordingly according to tier used
 			availableAlloc, err := tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, tt.msg.Participant)
 			require.NoError(t, err)
-			tier, found := types.GetTierFromID(types.DefaultParticipationTierList, tt.msg.TierID)
 			require.True(t, found)
 			require.EqualValues(t, tt.currentAvailableAlloc-tier.RequiredAllocations, availableAlloc)
 		})
