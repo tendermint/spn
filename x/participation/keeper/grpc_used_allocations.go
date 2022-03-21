@@ -47,7 +47,7 @@ func (k Keeper) UsedAllocations(c context.Context, req *types.QueryGetUsedAlloca
 	ctx := sdk.UnwrapSDKContext(c)
 
 	if _, err := sdk.AccAddressFromBech32(req.Address); err != nil {
-		return nil, status.Error(codes.NotFound, "not found")
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	val, found := k.GetUsedAllocations(

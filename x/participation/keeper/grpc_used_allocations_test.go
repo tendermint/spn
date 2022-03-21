@@ -49,11 +49,11 @@ func TestUsedAllocationsQuerySingle(t *testing.T) {
 			response: &types.QueryGetUsedAllocationsResponse{UsedAllocations: types.UsedAllocations{Address: validAddr, NumAllocations: 0}},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "InvalidAddress",
 			request: &types.QueryGetUsedAllocationsRequest{
 				Address: strconv.Itoa(100000),
 			},
-			err: status.Error(codes.NotFound, "not found"),
+			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6"),
 		},
 		{
 			desc: "InvalidRequest",
