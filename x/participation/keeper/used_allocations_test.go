@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -9,6 +8,7 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/keeper"
 	"github.com/tendermint/spn/x/participation/types"
 )
@@ -16,7 +16,7 @@ import (
 func createNUsedAllocations(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.UsedAllocations {
 	items := make([]types.UsedAllocations, n)
 	for i := range items {
-		items[i].Address = strconv.Itoa(i)
+		items[i].Address = sample.Address()
 
 		keeper.SetUsedAllocations(ctx, items[i])
 	}
