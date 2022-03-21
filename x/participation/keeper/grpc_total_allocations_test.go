@@ -19,11 +19,10 @@ func TestShowTotalAllocationsQuery(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
 
-	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	params := types.DefaultParams()
+	params.AllocationPrice = types.AllocationPrice{Bonded: sdk.NewInt(100)}
 
-	tk.ParticipationKeeper.SetParams(sdkCtx, types.Params{
-		AllocationPrice: allocationPrice,
-	})
+	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
 	addr := sample.Address()
 	dels, _ := tk.DelegateN(sdkCtx, addr, 100, 10)

@@ -3,19 +3,20 @@ package types
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"gopkg.in/yaml.v2"
-
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	"gopkg.in/yaml.v2"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
 var (
-	KeyAllocationPrice           = []byte("AllocationPrice")
-	KeyParticipationTierList     = []byte("ParticipationTierList")
-	KeyWithdrawalAllocationDelay = []byte("WithdrawalAllocationDelay")
+	KeyAllocationPrice       = []byte("AllocationPrice")
+	KeyParticipationTierList = []byte("ParticipationTierList")
+	KeyRegistrationPeriod    = []byte("RegistrationPeriod")
+	KeyWithdrawalDelay       = []byte("WithdrawalDelay")
 
 	DefaultAllocationPrice = AllocationPrice{
 		Bonded: sdk.NewInt(1000),
@@ -51,8 +52,11 @@ var (
 		},
 	}
 
-	// TODO: Determine the default values for this param
-	DefaultWithdrawalAllocationDelay = uint64(0)
+	// DefaultRegistrationPeriod is set to be 1/3 of the default staking UnbondingTime of 21 days.
+	DefaultRegistrationPeriod = int64(time.Hour.Seconds() * 24 * 7) // One week
+	// DefaultWithdrawalDelay is set to be 2/3 of the default staking UnbondingTime of 21 days. Together with
+	// DefaultRegistrationPeriod they sum up to the total default UnbondingTime
+	DefaultWithdrawalDelay = int64(time.Hour.Seconds() * 24 * 14) // Two weeks
 )
 
 // ParamKeyTable the param key table for launch module
@@ -64,12 +68,14 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams(
 	allocationPrice AllocationPrice,
 	participationTierList []Tier,
-	withdrawalAllocationDelay uint64,
+	registrationPeriod,
+	withdrawalDelay int64,
 ) Params {
 	return Params{
-		AllocationPrice:           allocationPrice,
-		ParticipationTierList:     participationTierList,
-		WithdrawalAllocationDelay: withdrawalAllocationDelay,
+		AllocationPrice:       allocationPrice,
+		ParticipationTierList: participationTierList,
+		RegistrationPeriod:    registrationPeriod,
+		WithdrawalDelay:       withdrawalDelay,
 	}
 }
 
@@ -78,7 +84,8 @@ func DefaultParams() Params {
 	return NewParams(
 		DefaultAllocationPrice,
 		DefaultParticipationTierList,
-		DefaultWithdrawalAllocationDelay,
+		DefaultRegistrationPeriod,
+		DefaultWithdrawalDelay,
 	)
 }
 
@@ -87,7 +94,8 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyAllocationPrice, &p.AllocationPrice, validateAllocationPrice),
 		paramtypes.NewParamSetPair(KeyParticipationTierList, &p.ParticipationTierList, validateParticipationTierList),
-		paramtypes.NewParamSetPair(KeyWithdrawalAllocationDelay, &p.WithdrawalAllocationDelay, validateWithdrawalAllocationDelay),
+		paramtypes.NewParamSetPair(KeyRegistrationPeriod, &p.RegistrationPeriod, validateAllocationsUsageTimeFrame),
+		paramtypes.NewParamSetPair(KeyWithdrawalDelay, &p.WithdrawalDelay, validateAllocationsUsageTimeFrame),
 	}
 }
 
@@ -101,7 +109,11 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	return validateWithdrawalAllocationDelay(p.WithdrawalAllocationDelay)
+	if err := validateAllocationsUsageTimeFrame(p.RegistrationPeriod); err != nil {
+		return err
+	}
+
+	return validateAllocationsUsageTimeFrame(p.WithdrawalDelay)
 }
 
 // String implements the Stringer interface.
@@ -167,15 +179,17 @@ func validateTierBenefits(b TierBenefits) error {
 	return nil
 }
 
-// validateWithdrawalAllocationDelay validates the WithdrawalAllocationDelay param
-func validateWithdrawalAllocationDelay(v interface{}) error {
-	withdrawalAllocationDelay, ok := v.(uint64)
+// validateAllocationsUsageTimeFrame validates a time frame parameter related to allocations usage, specifically both
+// RegistrationPeriod and WithdrawalDelay
+func validateAllocationsUsageTimeFrame(v interface{}) error {
+	timeFrame, ok := v.(int64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", v)
 	}
 
-	// TODO implement validation
-	_ = withdrawalAllocationDelay
+	if timeFrame <= 0 {
+		return errors.New("time frame must be positive")
+	}
 
 	return nil
 }
