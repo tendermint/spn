@@ -18,7 +18,7 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgParticipate int = 100
 
-	opWeightMsgWithdrawAllocations = "op_weight_msg_create_chain"
+	opWeightMsgWithdrawAllocations = "op_weight_withdraw_allocations"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgWithdrawAllocations int = 100
 
