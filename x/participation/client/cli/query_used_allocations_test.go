@@ -14,6 +14,7 @@ import (
 
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/client/cli"
 	"github.com/tendermint/spn/x/participation/types"
 )
@@ -26,7 +27,7 @@ func networkWithUsedAllocationsObjects(t *testing.T, n int) (*network.Network, [
 
 	for i := 0; i < n; i++ {
 		usedAllocations := types.UsedAllocations{
-			Address: strconv.Itoa(i),
+			Address: sample.Address(),
 		}
 		nullify.Fill(&usedAllocations)
 		state.UsedAllocationsList = append(state.UsedAllocationsList, usedAllocations)
