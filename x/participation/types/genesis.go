@@ -49,7 +49,9 @@ func (gs GenesisState) Validate() error {
 		}
 
 		// update total used allocations for address
-		auctionUsedAllocationsSum[address] += elem.NumAllocations
+		if !elem.Withdrawn {
+			auctionUsedAllocationsSum[address] += elem.NumAllocations
+		}
 	}
 
 	// check for consistency between UsedAllocationsList and AuctionUsedAllocationsList
