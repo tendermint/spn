@@ -7,6 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/participation/types"
 )
 
@@ -32,12 +33,12 @@ func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWith
 
 	totalUsedAllocations, found := k.GetUsedAllocations(ctx, msg.Participant)
 	if !found {
-		panic(fmt.Sprintf("unable to find total used allocations entry for address %s", msg.Participant))
+		return nil, spnerrors.Critical(fmt.Sprintf("unable to find total used allocations entry for address %s", msg.Participant))
 	}
 
 	// decrease totalUsedAllocations making sure subtraction is feasible
 	if totalUsedAllocations.NumAllocations < auctionUsedAllocations.NumAllocations {
-		panic("number of total used allocations cannot become negative")
+		return nil, spnerrors.Critical("number of total used allocations cannot become negative")
 	}
 	totalUsedAllocations.NumAllocations -= auctionUsedAllocations.NumAllocations
 

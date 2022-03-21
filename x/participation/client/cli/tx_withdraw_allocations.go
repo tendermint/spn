@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"strconv"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -12,12 +10,10 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdWithdrawAllocations() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "withdraw-allocations [auction-id]",
-		Short: "Claim back used allocations",
+		Short: "Claim back used allocations for an auction participation",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argAuctionID, err := cast.ToUint64E(args[0])
