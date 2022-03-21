@@ -21,7 +21,7 @@ func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWith
 
 	blockTime := ctx.BlockTime()
 	if !auction.IsAuctionStarted(blockTime) {
-		return nil, sdkerrors.Wrapf(types.ErrCannotWithdrawAllocations, "auction %d not yet started", msg.AuctionID)
+		return nil, sdkerrors.Wrapf(types.ErrAllocationsLocked, "auction %d not yet started", msg.AuctionID)
 	}
 
 	// TODO check delay is reached

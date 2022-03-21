@@ -17,7 +17,8 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
 		ctx                 = sdk.WrapSDKContext(sdkCtx)
 		auctioneer          = sample.Address()
-		participant         = sample.Address()
+		validParticipant    = sample.Address()
+		invalidParticipant  = sample.Address()
 		auctionSellingCoin  = sample.Coin()
 		auctionStartTime    = sdkCtx.BlockTime().Add(time.Hour)
 		validWithdrawalTime = auctionStartTime.Add(time.Hour * 24 * 30)
@@ -28,7 +29,8 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
 	// delegate some coins so participant has some allocations to use
-	tk.DelegateN(sdkCtx, participant, 100, 10)
+	tk.DelegateN(sdkCtx, validParticipant, 100, 10)
+	tk.DelegateN(sdkCtx, validParticipant, 100, 10)
 
 	// initialize an auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(auctionSellingCoin))
@@ -42,19 +44,28 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	require.NotNil(t, res.BaseAuction)
 	auctionID := res.BaseAuction.Id
 
-	// participate to auction
+	// validParticipant participates to auction
 	_, err = ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
-		Participant: participant,
+		Participant: validParticipant,
 		AuctionID:   auctionID,
 		TierID:      1,
 	})
 	require.NoError(t, err)
 
-	preUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(sdkCtx, participant)
+	preUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(sdkCtx, validParticipant)
 	require.True(t, found)
 
-	auctionUsedAllocations, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, participant, auctionID)
+	auctionUsedAllocations, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, validParticipant, auctionID)
 	require.True(t, found)
+	require.False(t, auctionUsedAllocations.Withdrawn)
+
+	// manually insert entry for invalidParticipant for later test
+	tk.ParticipationKeeper.SetAuctionUsedAllocations(sdkCtx, types.AuctionUsedAllocations{
+		Address:        invalidParticipant,
+		AuctionID:      auctionID,
+		NumAllocations: 1,
+		Withdrawn:      true, // set withdrawn to true
+	})
 
 	tests := []struct {
 		name      string
@@ -65,7 +76,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		{
 			name: "should allow to remove allocations",
 			msg: &types.MsgWithdrawAllocations{
-				Participant: participant,
+				Participant: validParticipant,
 				AuctionID:   auctionID,
 			},
 			blockTime: validWithdrawalTime,
@@ -73,7 +84,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		{
 			name: "auction does not exist",
 			msg: &types.MsgWithdrawAllocations{
-				Participant: participant,
+				Participant: validParticipant,
 				AuctionID:   auctionID + 1,
 			},
 			blockTime: validWithdrawalTime,
@@ -82,11 +93,11 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		{
 			name: "auction not yet started",
 			msg: &types.MsgWithdrawAllocations{
-				Participant: participant,
+				Participant: validParticipant,
 				AuctionID:   auctionID,
 			},
 			blockTime: sdkCtx.BlockTime(),
-			err:       types.ErrCannotWithdrawAllocations,
+			err:       types.ErrAllocationsLocked,
 		},
 		{
 			name: "used allocations not found",
@@ -96,6 +107,15 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			},
 			blockTime: validWithdrawalTime,
 			err:       types.ErrUsedAllocationsNotFound,
+		},
+		{
+			name: "cannot withdraw if already claimed",
+			msg: &types.MsgWithdrawAllocations{
+				Participant: invalidParticipant,
+				AuctionID:   auctionID,
+			},
+			blockTime: validWithdrawalTime,
+			err:       types.ErrAllocationsAlreadyWithdrawn,
 		},
 	}
 	for _, tt := range tests {
@@ -113,9 +133,10 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			// check auctionUsedAllocations is removed
-			_, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(tmpSdkCtx, tt.msg.Participant, tt.msg.AuctionID)
-			require.False(t, found)
+			// check auctionUsedAllocations is set to `withdrawn`
+			auctionAllocs, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(tmpSdkCtx, tt.msg.Participant, tt.msg.AuctionID)
+			require.True(t, found)
+			require.True(t, auctionAllocs.Withdrawn)
 
 			// check usedAllocationEntry is correctly decreased
 			postUsedAllocations, _ := tk.ParticipationKeeper.GetUsedAllocations(tmpSdkCtx, tt.msg.Participant)

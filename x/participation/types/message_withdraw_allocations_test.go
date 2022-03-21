@@ -7,23 +7,24 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/participation/types"
 )
 
 func TestMsgWithdrawAllocations_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgWithdrawAllocations
+		msg  types.MsgWithdrawAllocations
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgWithdrawAllocations{
+			msg: types.MsgWithdrawAllocations{
 				Participant: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgWithdrawAllocations{
+			msg: types.MsgWithdrawAllocations{
 				Participant: sample.Address(),
 			},
 		},

@@ -141,10 +141,11 @@ func Test_msgServer_Participate(t *testing.T) {
 			require.True(t, found)
 			require.EqualValues(t, tt.desiredUsedAlloc, usedAllocations.NumAllocations)
 
-			// check auction used allocations entry for bidder exists
+			// check valid auction used allocations entry for bidder exists
 			auctionUsedAllocations, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, tt.msg.Participant, tt.msg.AuctionID)
 			require.True(t, found)
 			require.Equal(t, tier.RequiredAllocations, auctionUsedAllocations.NumAllocations)
+			require.False(t, auctionUsedAllocations.Withdrawn)
 
 			// check that available allocations has decreased accordingly according to tier used
 			availableAlloc, err := tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, tt.msg.Participant)
