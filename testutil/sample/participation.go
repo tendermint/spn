@@ -2,6 +2,7 @@ package sample
 
 import (
 	"math/rand"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -33,8 +34,11 @@ func ParticipationParams() participation.Params {
 		maxBidCnt = maxBidCnt.AddRaw(rand.Int63n(10000) + 1)
 	}
 
-	registrationPeriod := rand.Int63n(participation.MaxTimeframeSize-participation.MinTimeframeSize) + participation.MinTimeframeSize
-	withdrawalDelay := rand.Int63n(participation.MaxTimeframeSize-participation.MinTimeframeSize) + participation.MinTimeframeSize
+	// generate a random time frame between an hour and four weeks for both params
+	fourWeeks := int64(time.Hour.Seconds() * 24 * 7 * 4)
+	oneHour := int64(time.Hour.Seconds())
+	registrationPeriod := rand.Int63n(fourWeeks-oneHour) + oneHour
+	withdrawalDelay := rand.Int63n(fourWeeks-oneHour) + oneHour
 
 	return participation.NewParams(allocationPrice, tiers, registrationPeriod, withdrawalDelay)
 }

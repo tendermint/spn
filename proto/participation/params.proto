@@ -11,9 +11,9 @@ message Params {
   
   AllocationPrice allocationPrice = 1 [(gogoproto.nullable) = false];
   repeated Tier participationTierList = 2 [(gogoproto.nullable) = false];
-  // Time frame before auction start where MsgParticipate can be called
+  // Time frame in seconds before auction start where MsgParticipate can be called
   int64 registrationPeriod = 3;
-  // Delay after auction start when allocations can be withdrawn
+  // Delay in seconds after auction start when allocations can be withdrawn
   int64 withdrawalDelay = 4;
 }
 

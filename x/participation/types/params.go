@@ -13,11 +13,6 @@ import (
 var _ paramtypes.ParamSet = (*Params)(nil)
 
 var (
-	// MinTimeframeSize defines the minimum allowed value for either `RegistrationPeriod` or `WithdrawalDelay`
-	MinTimeframeSize = int64(time.Hour.Seconds() * 24) // One day
-	// MaxTimeframeSize defines the maximum allowed value for either `RegistrationPeriod` or `WithdrawalDelay`
-	MaxTimeframeSize = int64(time.Hour.Seconds() * 24 * 21) // 21 days
-
 	KeyAllocationPrice       = []byte("AllocationPrice")
 	KeyParticipationTierList = []byte("ParticipationTierList")
 	KeyRegistrationPeriod    = []byte("RegistrationPeriod")
@@ -182,10 +177,6 @@ func validateAllocationsUsageTimeFrame(v interface{}) error {
 
 	if timeFrame <= 0 {
 		return errors.New("time frame must be positive")
-	}
-
-	if timeFrame < MinTimeframeSize || timeFrame > MaxTimeframeSize {
-		return fmt.Errorf("time frame value must be in the range [%v, %v]", MinTimeframeSize, MaxTimeframeSize)
 	}
 
 	return nil

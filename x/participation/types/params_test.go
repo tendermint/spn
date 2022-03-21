@@ -3,6 +3,7 @@ package types
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"testing"
 	"time"
 
@@ -219,14 +220,9 @@ func TestValidateAllocationsUsageTimeFrame(t *testing.T) {
 			err:       fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:      "negative value",
-			timeFrame: int64(-1),
+			name:      "value not positive",
+			timeFrame: -rand.Int63n(1000),
 			err:       errors.New("time frame must be positive"),
-		},
-		{
-			name:      "value outside of range",
-			timeFrame: int64(time.Hour.Seconds() * 24 * 100), // 100 days
-			err:       fmt.Errorf("time frame value must be in the range [%v, %v]", MinTimeframeSize, MaxTimeframeSize),
 		},
 		{
 			name:      "valid time frame",

@@ -28,9 +28,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type Params struct {
 	AllocationPrice       AllocationPrice `protobuf:"bytes,1,opt,name=allocationPrice,proto3" json:"allocationPrice"`
 	ParticipationTierList []Tier          `protobuf:"bytes,2,rep,name=participationTierList,proto3" json:"participationTierList"`
-	// Time frame before auction start where MsgParticipate can be called
+	// Time frame in seconds before auction start where MsgParticipate can be called
 	RegistrationPeriod int64 `protobuf:"varint,3,opt,name=registrationPeriod,proto3" json:"registrationPeriod,omitempty"`
-	// Delay after auction start when allocations can be withdrawn
+	// Delay in seconds after auction start when allocations can be withdrawn
 	WithdrawalDelay int64 `protobuf:"varint,4,opt,name=withdrawalDelay,proto3" json:"withdrawalDelay,omitempty"`
 }
 
