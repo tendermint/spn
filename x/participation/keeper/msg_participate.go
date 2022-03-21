@@ -28,7 +28,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	_, found = k.GetAuctionUsedAllocations(ctx, msg.Participant, msg.AuctionID)
 	if found {
 		return nil, sdkerrors.Wrapf(types.ErrAlreadyParticipating,
-			"participant %s already has already bid in auction %d",
+			"address %s is already a participant for auction %d",
 			msg.Participant, msg.AuctionID)
 	}
 
