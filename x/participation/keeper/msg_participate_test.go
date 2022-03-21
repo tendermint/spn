@@ -23,10 +23,9 @@ func Test_msgServer_Participate(t *testing.T) {
 	)
 
 	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(100)}
-	tk.ParticipationKeeper.SetParams(sdkCtx, types.Params{
-		AllocationPrice:       allocationPrice,
-		ParticipationTierList: types.DefaultParticipationTierList,
-	})
+	params := types.DefaultParams()
+	params.AllocationPrice = allocationPrice
+	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
 	// initialize an auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin))
