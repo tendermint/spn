@@ -31,6 +31,26 @@ func TestParamsValidate(t *testing.T) {
 			err: errors.New("value for 'bonded' must be greater than zero"),
 		},
 		{
+			name: "invalid registration period",
+			params: NewParams(
+				DefaultAllocationPrice,
+				DefaultParticipationTierList,
+				-1,
+				DefaultWithdrawalDelay,
+			),
+			err: errors.New("time frame must be positive"),
+		},
+		{
+			name: "invalid withdrawal delay",
+			params: NewParams(
+				DefaultAllocationPrice,
+				DefaultParticipationTierList,
+				DefaultRegistrationPeriod,
+				0,
+			),
+			err: errors.New("time frame must be positive"),
+		},
+		{
 			name: "valid params",
 			params: NewParams(
 				DefaultAllocationPrice,

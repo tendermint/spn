@@ -18,9 +18,9 @@ func TestAvailableAllocationsGet(t *testing.T) {
 	invalidAddress := strconv.Itoa(1)
 	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(100)}
 
-	tk.ParticipationKeeper.SetParams(sdkCtx, types.Params{
-		AllocationPrice: allocationPrice,
-	})
+	params := types.DefaultParams()
+	params.AllocationPrice = allocationPrice
+	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
 	validAddress := sample.Address()
 	validAddressNoUse := sample.Address()

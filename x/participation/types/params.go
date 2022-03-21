@@ -51,8 +51,12 @@ var (
 			},
 		},
 	}
-	DefaultRegistrationPeriod = int64(time.Hour.Seconds() * 24 * 7)  // One week
-	DefaultWithdrawalDelay    = int64(time.Hour.Seconds() * 24 * 14) // Two weeks
+
+	// DefaultRegistrationPeriod is set to be 1/3 of the default staking UnbondingTime of 21 days.
+	DefaultRegistrationPeriod = int64(time.Hour.Seconds() * 24 * 7) // One week
+	// DefaultWithdrawalDelay is set to be 2/3 of the default staking UnbondingTime of 21 days. Together with
+	// DefaultRegistrationPeriod they sum up to the total default UnbondingTime
+	DefaultWithdrawalDelay = int64(time.Hour.Seconds() * 24 * 14) // Two weeks
 )
 
 // ParamKeyTable the param key table for launch module
@@ -101,7 +105,15 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	return validateParticipationTierList(p.ParticipationTierList)
+	if err := validateParticipationTierList(p.ParticipationTierList); err != nil {
+		return err
+	}
+
+	if err := validateAllocationsUsageTimeFrame(p.RegistrationPeriod); err != nil {
+		return err
+	}
+
+	return validateAllocationsUsageTimeFrame(p.WithdrawalDelay)
 }
 
 // String implements the Stringer interface.
