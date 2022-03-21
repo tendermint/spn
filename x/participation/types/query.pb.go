@@ -501,22 +501,22 @@ func (m *QueryAllAuctionUsedAllocationsResponse) GetPagination() *query.PageResp
 	return nil
 }
 
-type QueryGetTotalAllocationRequest struct {
+type QueryGetTotalAllocationsRequest struct {
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 }
 
-func (m *QueryGetTotalAllocationRequest) Reset()         { *m = QueryGetTotalAllocationRequest{} }
-func (m *QueryGetTotalAllocationRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryGetTotalAllocationRequest) ProtoMessage()    {}
-func (*QueryGetTotalAllocationRequest) Descriptor() ([]byte, []int) {
+func (m *QueryGetTotalAllocationsRequest) Reset()         { *m = QueryGetTotalAllocationsRequest{} }
+func (m *QueryGetTotalAllocationsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetTotalAllocationsRequest) ProtoMessage()    {}
+func (*QueryGetTotalAllocationsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b6d9d472596bad2, []int{10}
 }
-func (m *QueryGetTotalAllocationRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryGetTotalAllocationsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetTotalAllocationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryGetTotalAllocationsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetTotalAllocationRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryGetTotalAllocationsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -526,41 +526,41 @@ func (m *QueryGetTotalAllocationRequest) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *QueryGetTotalAllocationRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetTotalAllocationRequest.Merge(m, src)
+func (m *QueryGetTotalAllocationsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetTotalAllocationsRequest.Merge(m, src)
 }
-func (m *QueryGetTotalAllocationRequest) XXX_Size() int {
+func (m *QueryGetTotalAllocationsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetTotalAllocationRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetTotalAllocationRequest.DiscardUnknown(m)
+func (m *QueryGetTotalAllocationsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetTotalAllocationsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetTotalAllocationRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryGetTotalAllocationsRequest proto.InternalMessageInfo
 
-func (m *QueryGetTotalAllocationRequest) GetAddress() string {
+func (m *QueryGetTotalAllocationsRequest) GetAddress() string {
 	if m != nil {
 		return m.Address
 	}
 	return ""
 }
 
-type QueryGetTotalAllocationResponse struct {
-	TotalAllocation uint64 `protobuf:"varint,1,opt,name=totalAllocation,proto3" json:"totalAllocation,omitempty"`
+type QueryGetTotalAllocationsResponse struct {
+	TotalAllocations uint64 `protobuf:"varint,1,opt,name=totalAllocations,proto3" json:"totalAllocations,omitempty"`
 }
 
-func (m *QueryGetTotalAllocationResponse) Reset()         { *m = QueryGetTotalAllocationResponse{} }
-func (m *QueryGetTotalAllocationResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryGetTotalAllocationResponse) ProtoMessage()    {}
-func (*QueryGetTotalAllocationResponse) Descriptor() ([]byte, []int) {
+func (m *QueryGetTotalAllocationsResponse) Reset()         { *m = QueryGetTotalAllocationsResponse{} }
+func (m *QueryGetTotalAllocationsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetTotalAllocationsResponse) ProtoMessage()    {}
+func (*QueryGetTotalAllocationsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3b6d9d472596bad2, []int{11}
 }
-func (m *QueryGetTotalAllocationResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryGetTotalAllocationsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetTotalAllocationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryGetTotalAllocationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetTotalAllocationResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryGetTotalAllocationsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -570,21 +570,109 @@ func (m *QueryGetTotalAllocationResponse) XXX_Marshal(b []byte, deterministic bo
 		return b[:n], nil
 	}
 }
-func (m *QueryGetTotalAllocationResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetTotalAllocationResponse.Merge(m, src)
+func (m *QueryGetTotalAllocationsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetTotalAllocationsResponse.Merge(m, src)
 }
-func (m *QueryGetTotalAllocationResponse) XXX_Size() int {
+func (m *QueryGetTotalAllocationsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetTotalAllocationResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetTotalAllocationResponse.DiscardUnknown(m)
+func (m *QueryGetTotalAllocationsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetTotalAllocationsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetTotalAllocationResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryGetTotalAllocationsResponse proto.InternalMessageInfo
 
-func (m *QueryGetTotalAllocationResponse) GetTotalAllocation() uint64 {
+func (m *QueryGetTotalAllocationsResponse) GetTotalAllocations() uint64 {
 	if m != nil {
-		return m.TotalAllocation
+		return m.TotalAllocations
+	}
+	return 0
+}
+
+type QueryGetAvailableAllocationsRequest struct {
+	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *QueryGetAvailableAllocationsRequest) Reset()         { *m = QueryGetAvailableAllocationsRequest{} }
+func (m *QueryGetAvailableAllocationsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryGetAvailableAllocationsRequest) ProtoMessage()    {}
+func (*QueryGetAvailableAllocationsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3b6d9d472596bad2, []int{12}
+}
+func (m *QueryGetAvailableAllocationsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetAvailableAllocationsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetAvailableAllocationsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetAvailableAllocationsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetAvailableAllocationsRequest.Merge(m, src)
+}
+func (m *QueryGetAvailableAllocationsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetAvailableAllocationsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetAvailableAllocationsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetAvailableAllocationsRequest proto.InternalMessageInfo
+
+func (m *QueryGetAvailableAllocationsRequest) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+type QueryGetAvailableAllocationsResponse struct {
+	AvailableAllocations uint64 `protobuf:"varint,1,opt,name=availableAllocations,proto3" json:"availableAllocations,omitempty"`
+}
+
+func (m *QueryGetAvailableAllocationsResponse) Reset()         { *m = QueryGetAvailableAllocationsResponse{} }
+func (m *QueryGetAvailableAllocationsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryGetAvailableAllocationsResponse) ProtoMessage()    {}
+func (*QueryGetAvailableAllocationsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3b6d9d472596bad2, []int{13}
+}
+func (m *QueryGetAvailableAllocationsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryGetAvailableAllocationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryGetAvailableAllocationsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryGetAvailableAllocationsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryGetAvailableAllocationsResponse.Merge(m, src)
+}
+func (m *QueryGetAvailableAllocationsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryGetAvailableAllocationsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryGetAvailableAllocationsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryGetAvailableAllocationsResponse proto.InternalMessageInfo
+
+func (m *QueryGetAvailableAllocationsResponse) GetAvailableAllocations() uint64 {
+	if m != nil {
+		return m.AvailableAllocations
 	}
 	return 0
 }
@@ -600,60 +688,67 @@ func init() {
 	proto.RegisterType((*QueryGetAuctionUsedAllocationsResponse)(nil), "tendermint.spn.participation.QueryGetAuctionUsedAllocationsResponse")
 	proto.RegisterType((*QueryAllAuctionUsedAllocationsRequest)(nil), "tendermint.spn.participation.QueryAllAuctionUsedAllocationsRequest")
 	proto.RegisterType((*QueryAllAuctionUsedAllocationsResponse)(nil), "tendermint.spn.participation.QueryAllAuctionUsedAllocationsResponse")
-	proto.RegisterType((*QueryGetTotalAllocationRequest)(nil), "tendermint.spn.participation.QueryGetTotalAllocationRequest")
-	proto.RegisterType((*QueryGetTotalAllocationResponse)(nil), "tendermint.spn.participation.QueryGetTotalAllocationResponse")
+	proto.RegisterType((*QueryGetTotalAllocationsRequest)(nil), "tendermint.spn.participation.QueryGetTotalAllocationsRequest")
+	proto.RegisterType((*QueryGetTotalAllocationsResponse)(nil), "tendermint.spn.participation.QueryGetTotalAllocationsResponse")
+	proto.RegisterType((*QueryGetAvailableAllocationsRequest)(nil), "tendermint.spn.participation.QueryGetAvailableAllocationsRequest")
+	proto.RegisterType((*QueryGetAvailableAllocationsResponse)(nil), "tendermint.spn.participation.QueryGetAvailableAllocationsResponse")
 }
 
 func init() { proto.RegisterFile("participation/query.proto", fileDescriptor_3b6d9d472596bad2) }
 
 var fileDescriptor_3b6d9d472596bad2 = []byte{
-	// 734 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0xcf, 0x4b, 0xdc, 0x4c,
-	0x18, 0xde, 0x51, 0x3f, 0x3f, 0x9c, 0x1e, 0x84, 0xa9, 0x88, 0x06, 0x89, 0x25, 0x58, 0x2b, 0xc5,
-	0x66, 0xd4, 0x96, 0x52, 0xa4, 0x05, 0x77, 0x15, 0xad, 0xb4, 0x14, 0x1b, 0xec, 0xa1, 0x85, 0x22,
-	0xb3, 0xbb, 0x43, 0x0c, 0x64, 0x33, 0x31, 0x33, 0x29, 0x15, 0x11, 0x4a, 0x0f, 0x85, 0xde, 0x0a,
-	0x3d, 0xb6, 0x7f, 0x90, 0xde, 0x84, 0x5e, 0x7a, 0x2a, 0x45, 0xdb, 0x7b, 0xaf, 0xbd, 0x95, 0x9d,
-	0xcc, 0x36, 0x26, 0x26, 0xd9, 0xe8, 0xda, 0x93, 0x6e, 0xe6, 0xfd, 0xf1, 0x3c, 0xcf, 0xfb, 0xce,
-	0x93, 0xc0, 0x71, 0x9f, 0x04, 0xc2, 0x69, 0x38, 0x3e, 0x11, 0x0e, 0xf3, 0xf0, 0x4e, 0x48, 0x83,
-	0x5d, 0xd3, 0x0f, 0x98, 0x60, 0x68, 0x42, 0x50, 0xaf, 0x49, 0x83, 0x96, 0xe3, 0x09, 0x93, 0xfb,
-	0x9e, 0x99, 0x88, 0xd4, 0x46, 0x6c, 0x66, 0x33, 0x19, 0x88, 0xdb, 0xff, 0x45, 0x39, 0xda, 0x84,
-	0xcd, 0x98, 0xed, 0x52, 0x4c, 0x7c, 0x07, 0x13, 0xcf, 0x63, 0x42, 0x06, 0x73, 0x75, 0x7a, 0xb3,
-	0xc1, 0x78, 0x8b, 0x71, 0x5c, 0x27, 0x9c, 0x46, 0xad, 0xf0, 0xab, 0xf9, 0x3a, 0x15, 0x64, 0x1e,
-	0xfb, 0xc4, 0x76, 0x3c, 0x19, 0xac, 0x62, 0xb5, 0x24, 0x30, 0x9f, 0x04, 0xa4, 0xd5, 0xa9, 0x33,
-	0x95, 0x3c, 0x0b, 0x39, 0x6d, 0x6e, 0x11, 0xd7, 0x65, 0x8d, 0x44, 0xb7, 0xd9, 0x64, 0x14, 0x09,
-	0x1b, 0xed, 0xbf, 0x5b, 0xd9, 0xd1, 0xc6, 0x08, 0x44, 0x4f, 0xdb, 0x88, 0x36, 0x64, 0x23, 0x8b,
-	0xee, 0x84, 0x94, 0x0b, 0xe3, 0x39, 0xbc, 0x9a, 0x78, 0xca, 0x7d, 0xe6, 0x71, 0x8a, 0x6a, 0x70,
-	0x30, 0x02, 0x34, 0x06, 0xae, 0x81, 0x99, 0x2b, 0x0b, 0x53, 0x66, 0x91, 0x56, 0x66, 0x94, 0x5d,
-	0x1b, 0x38, 0xf8, 0x36, 0x59, 0xb1, 0x54, 0xa6, 0xb1, 0x08, 0x75, 0x59, 0x7a, 0x8d, 0x8a, 0x67,
-	0x9c, 0x36, 0xab, 0x31, 0x22, 0xd5, 0x1c, 0x8d, 0xc1, 0xff, 0x49, 0xb3, 0x19, 0x50, 0x1e, 0xb5,
-	0x19, 0xb2, 0x3a, 0x3f, 0x8d, 0x37, 0x00, 0x4e, 0xe6, 0x26, 0x2b, 0x8c, 0x2f, 0xe1, 0x70, 0x98,
-	0x3c, 0x52, 0x60, 0x6f, 0x15, 0x83, 0x4d, 0xd5, 0x53, 0xa8, 0xd3, 0xb5, 0x8c, 0x6d, 0x05, 0xbf,
-	0xea, 0xba, 0x39, 0xf0, 0x57, 0x21, 0x8c, 0xa7, 0xaa, 0x7a, 0x4f, 0x9b, 0xd1, 0x0a, 0x98, 0xed,
-	0x15, 0x30, 0xa3, 0x6d, 0x53, 0x2b, 0x60, 0x6e, 0x10, 0x9b, 0xaa, 0x5c, 0xeb, 0x54, 0xa6, 0x71,
-	0xd8, 0x21, 0x9b, 0xd5, 0xaa, 0x88, 0x6c, 0xff, 0x65, 0x91, 0x45, 0x6b, 0x09, 0x2a, 0x7d, 0x92,
-	0xca, 0x8d, 0xae, 0x54, 0x22, 0x6c, 0x09, 0x2e, 0x5b, 0xf0, 0x7a, 0x67, 0x6e, 0xd5, 0x68, 0x1f,
-	0xcf, 0x3b, 0x7b, 0x34, 0x01, 0x87, 0xd4, 0x2a, 0xaf, 0xaf, 0x48, 0x28, 0x03, 0x56, 0xfc, 0xc0,
-	0xf8, 0x0c, 0xe0, 0x74, 0xb7, 0x0e, 0x4a, 0xb3, 0x00, 0x8e, 0x92, 0xcc, 0x08, 0x35, 0xab, 0x3b,
-	0xc5, 0xd2, 0x65, 0x57, 0x57, 0x0a, 0xe6, 0x54, 0x36, 0xde, 0x03, 0x25, 0x40, 0xd5, 0x75, 0x2f,
-	0x2a, 0xc0, 0x6a, 0xc6, 0x30, 0x2e, 0xb2, 0x57, 0x3f, 0x3b, 0x52, 0x15, 0x60, 0x29, 0x21, 0x55,
-	0xff, 0xbf, 0x91, 0xea, 0xf2, 0x76, 0xee, 0x94, 0xd1, 0x6c, 0x32, 0x41, 0xdc, 0xb8, 0x49, 0x77,
-	0xa3, 0x79, 0x14, 0xfb, 0xcc, 0x99, 0x5c, 0xa5, 0xcd, 0x0c, 0x1c, 0x16, 0xc9, 0x23, 0x59, 0x64,
-	0xc0, 0x4a, 0x3f, 0x5e, 0x78, 0x07, 0xe1, 0x7f, 0xb2, 0x1a, 0xfa, 0x04, 0xe0, 0x60, 0x64, 0x8a,
-	0x68, 0xae, 0x58, 0xba, 0xb3, 0x9e, 0xac, 0xcd, 0x9f, 0x23, 0x23, 0xc2, 0x68, 0xcc, 0xbe, 0xfd,
-	0xf2, 0xe3, 0x63, 0xdf, 0x34, 0x9a, 0xc2, 0x71, 0x2a, 0xe6, 0xbe, 0x7c, 0xad, 0x9c, 0x79, 0xc9,
-	0xa0, 0x23, 0x00, 0x87, 0xd3, 0xd3, 0xb8, 0x5f, 0xa2, 0x69, 0xae, 0x93, 0x6b, 0x0f, 0x2e, 0x98,
-	0xad, 0xe0, 0x2f, 0x49, 0xf8, 0x8b, 0xe8, 0x5e, 0x31, 0xfc, 0xf4, 0x9b, 0x0d, 0xef, 0xa9, 0x31,
-	0xee, 0xa3, 0x43, 0x00, 0x51, 0xaa, 0x7a, 0xd5, 0x75, 0x4b, 0xb1, 0xca, 0x35, 0xf8, 0x52, 0xac,
-	0xf2, 0x3d, 0xdb, 0xb8, 0x2b, 0x59, 0xcd, 0x21, 0xf3, 0x7c, 0xac, 0xd0, 0x6f, 0x00, 0x47, 0xb3,
-	0x6f, 0x14, 0x5a, 0x2e, 0xa7, 0x73, 0xa1, 0xf3, 0x68, 0x2b, 0xbd, 0x15, 0x51, 0xec, 0x36, 0x25,
-	0xbb, 0x27, 0xe8, 0x71, 0x31, 0xbb, 0xbc, 0xaf, 0x92, 0x78, 0x76, 0x78, 0xef, 0xaf, 0xbb, 0xef,
-	0xa3, 0x5f, 0x00, 0x8e, 0x67, 0x37, 0x6e, 0x8f, 0x73, 0xb9, 0xdc, 0x40, 0x7a, 0xa7, 0xdf, 0xd5,
-	0x31, 0x8d, 0x87, 0x92, 0x7e, 0x0d, 0x2d, 0xf5, 0x4a, 0x5f, 0xde, 0xc6, 0x94, 0xf7, 0x94, 0xbd,
-	0x8d, 0xd9, 0x76, 0x57, 0xf6, 0x36, 0xe6, 0x18, 0x5e, 0xd9, 0xdb, 0x28, 0xdd, 0xef, 0x14, 0xa7,
-	0x98, 0x52, 0x6d, 0xfd, 0xe0, 0x58, 0x07, 0x47, 0xc7, 0x3a, 0xf8, 0x7e, 0xac, 0x83, 0x0f, 0x27,
-	0x7a, 0xe5, 0xe8, 0x44, 0xaf, 0x7c, 0x3d, 0xd1, 0x2b, 0x2f, 0xb0, 0xed, 0x88, 0xed, 0xb0, 0x6e,
-	0x36, 0x58, 0x2b, 0x5d, 0xfd, 0x75, 0xba, 0xfe, 0xae, 0x4f, 0x79, 0x7d, 0x50, 0x7e, 0xbd, 0xde,
-	0xfe, 0x13, 0x00, 0x00, 0xff, 0xff, 0x59, 0xc0, 0x0e, 0x3a, 0xc8, 0x0b, 0x00, 0x00,
+	// 804 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x57, 0xc1, 0x4f, 0x13, 0x5d,
+	0x10, 0xef, 0x03, 0x3e, 0xbe, 0x30, 0x1c, 0x20, 0xef, 0x6b, 0x08, 0x6c, 0x48, 0x21, 0xfb, 0x55,
+	0x34, 0x04, 0x77, 0x01, 0x8d, 0x51, 0x10, 0xa1, 0x05, 0x41, 0x12, 0x43, 0xb0, 0xc1, 0x83, 0x24,
+	0x86, 0xbc, 0xb6, 0x2f, 0xcb, 0x26, 0xdb, 0x7d, 0xcb, 0xee, 0x96, 0x48, 0x08, 0x89, 0xf1, 0xe6,
+	0xcd, 0xc4, 0xa3, 0xfe, 0x41, 0x70, 0x23, 0xd1, 0x83, 0x27, 0x63, 0x00, 0xef, 0x7a, 0xf4, 0x66,
+	0xfa, 0xf6, 0x95, 0xba, 0xcb, 0xee, 0x76, 0xdb, 0xe2, 0x09, 0xba, 0x33, 0xf3, 0x9b, 0xdf, 0x6f,
+	0x66, 0x76, 0xa6, 0x85, 0x11, 0x8b, 0xd8, 0xae, 0x5e, 0xd2, 0x2d, 0xe2, 0xea, 0xcc, 0x54, 0xf7,
+	0xaa, 0xd4, 0x3e, 0x50, 0x2c, 0x9b, 0xb9, 0x0c, 0x8f, 0xba, 0xd4, 0x2c, 0x53, 0xbb, 0xa2, 0x9b,
+	0xae, 0xe2, 0x58, 0xa6, 0xe2, 0xf3, 0x94, 0xd2, 0x1a, 0xd3, 0x18, 0x77, 0x54, 0x6b, 0xff, 0x79,
+	0x31, 0xd2, 0xa8, 0xc6, 0x98, 0x66, 0x50, 0x95, 0x58, 0xba, 0x4a, 0x4c, 0x93, 0xb9, 0xdc, 0xd9,
+	0x11, 0xd6, 0xc9, 0x12, 0x73, 0x2a, 0xcc, 0x51, 0x8b, 0xc4, 0xa1, 0x5e, 0x2a, 0x75, 0x7f, 0xa6,
+	0x48, 0x5d, 0x32, 0xa3, 0x5a, 0x44, 0xd3, 0x4d, 0xee, 0x2c, 0x7c, 0x25, 0x3f, 0x31, 0x8b, 0xd8,
+	0xa4, 0x52, 0xc7, 0xc9, 0xfa, 0x6d, 0x55, 0x87, 0x96, 0x77, 0x88, 0x61, 0xb0, 0x92, 0x2f, 0xdb,
+	0x94, 0xdf, 0x8b, 0x54, 0x4b, 0xb5, 0xbf, 0x3b, 0xe1, 0xde, 0x72, 0x1a, 0xf0, 0xb3, 0x1a, 0xa3,
+	0x4d, 0x9e, 0xa8, 0x40, 0xf7, 0xaa, 0xd4, 0x71, 0xe5, 0x17, 0xf0, 0x9f, 0xef, 0xa9, 0x63, 0x31,
+	0xd3, 0xa1, 0x38, 0x0f, 0xbd, 0x1e, 0xa1, 0x61, 0x34, 0x8e, 0x6e, 0xf5, 0xcf, 0x66, 0x95, 0xb8,
+	0x5a, 0x29, 0x5e, 0x74, 0xbe, 0xe7, 0xf8, 0xeb, 0x58, 0xaa, 0x20, 0x22, 0xe5, 0x39, 0xc8, 0x70,
+	0xe8, 0x35, 0xea, 0x3e, 0x77, 0x68, 0x39, 0xd7, 0x60, 0x24, 0x92, 0xe3, 0x61, 0xf8, 0x97, 0x94,
+	0xcb, 0x36, 0x75, 0xbc, 0x34, 0x7d, 0x85, 0xfa, 0x47, 0xf9, 0x35, 0x82, 0xb1, 0xc8, 0x60, 0xc1,
+	0xf1, 0x25, 0x0c, 0x54, 0xfd, 0x26, 0x41, 0xf6, 0x76, 0x3c, 0xd9, 0x00, 0x9e, 0x60, 0x1d, 0xc4,
+	0x92, 0x77, 0x05, 0xfd, 0x9c, 0x61, 0x44, 0xd0, 0x5f, 0x05, 0x68, 0x74, 0x55, 0xe4, 0x9e, 0x50,
+	0xbc, 0x11, 0x50, 0x6a, 0x23, 0xa0, 0x78, 0xd3, 0x26, 0x46, 0x40, 0xd9, 0x24, 0x1a, 0x15, 0xb1,
+	0x85, 0x3f, 0x22, 0xe5, 0x93, 0xba, 0xd8, 0xb0, 0x54, 0x71, 0x62, 0xbb, 0xaf, 0x4b, 0x2c, 0x5e,
+	0xf3, 0x49, 0xe9, 0xe2, 0x52, 0x6e, 0x36, 0x95, 0xe2, 0x71, 0xf3, 0x69, 0xd9, 0x81, 0x1b, 0xf5,
+	0xbe, 0xe5, 0xbc, 0x79, 0x6c, 0xb5, 0xf7, 0x78, 0x14, 0xfa, 0xc4, 0x28, 0xaf, 0xaf, 0x70, 0x2a,
+	0x3d, 0x85, 0xc6, 0x03, 0xf9, 0x23, 0x82, 0x89, 0x66, 0x19, 0x44, 0xcd, 0x6c, 0x18, 0x22, 0xa1,
+	0x1e, 0xa2, 0x57, 0x77, 0xe3, 0x4b, 0x17, 0x8e, 0x2e, 0x2a, 0x18, 0x81, 0x2c, 0xbf, 0x45, 0xa2,
+	0x00, 0x39, 0xc3, 0x68, 0xb7, 0x00, 0xab, 0x21, 0xcd, 0x68, 0x67, 0xae, 0xbe, 0xd7, 0x4b, 0x15,
+	0xc3, 0x25, 0x41, 0xa9, 0xba, 0xff, 0x4e, 0xa9, 0xae, 0x6f, 0xe6, 0xe6, 0x1b, 0xbb, 0x62, 0x8b,
+	0xb9, 0xc4, 0x68, 0x69, 0xd3, 0x6c, 0xc0, 0x78, 0x74, 0xb0, 0xa8, 0xce, 0x24, 0x0c, 0xba, 0x01,
+	0x1b, 0x87, 0xe9, 0x29, 0x5c, 0x79, 0x2e, 0x2f, 0xc2, 0xff, 0x97, 0xe3, 0xb9, 0x4f, 0x74, 0x83,
+	0x14, 0x0d, 0xda, 0x12, 0xa1, 0x6d, 0xc8, 0xc6, 0x03, 0x08, 0x52, 0xb3, 0x90, 0x26, 0x21, 0x76,
+	0x41, 0x2c, 0xd4, 0x36, 0xfb, 0xb3, 0x1f, 0xfe, 0xe1, 0xe0, 0xf8, 0x03, 0x82, 0x5e, 0x6f, 0x6b,
+	0xe3, 0xe9, 0xf8, 0xde, 0x5e, 0x3d, 0x1a, 0xd2, 0x4c, 0x0b, 0x11, 0x1e, 0x5b, 0x79, 0xea, 0xcd,
+	0xa7, 0x8b, 0xf7, 0x5d, 0x13, 0x38, 0xab, 0x36, 0x42, 0x55, 0xc7, 0xe2, 0x77, 0xef, 0xca, 0x15,
+	0xc4, 0xa7, 0x08, 0x06, 0x82, 0xe3, 0xf2, 0x30, 0x41, 0xd2, 0xc8, 0x53, 0x23, 0x2d, 0xb4, 0x19,
+	0x2d, 0xe8, 0x2f, 0x71, 0xfa, 0x73, 0xf8, 0x7e, 0x3c, 0xfd, 0xe0, 0xe9, 0x55, 0x0f, 0x45, 0x57,
+	0x8f, 0xf0, 0x09, 0x02, 0x1c, 0x40, 0xcf, 0x19, 0x46, 0x22, 0x55, 0x91, 0x17, 0x28, 0x91, 0xaa,
+	0xe8, 0xa3, 0x22, 0xdf, 0xe3, 0xaa, 0xa6, 0xb1, 0xd2, 0x9a, 0x2a, 0xfc, 0x0b, 0xc1, 0x50, 0xf8,
+	0x2b, 0x8f, 0x97, 0x93, 0xd5, 0x39, 0x76, 0x35, 0x4a, 0x2b, 0x9d, 0x81, 0x08, 0x75, 0x5b, 0x5c,
+	0xdd, 0x06, 0x7e, 0x1a, 0xaf, 0x2e, 0xea, 0x6b, 0x53, 0xa3, 0x77, 0xea, 0xe1, 0xe5, 0xf9, 0x39,
+	0xc2, 0x3f, 0x10, 0x8c, 0x84, 0x27, 0xae, 0xb5, 0x73, 0x39, 0x59, 0x43, 0x3a, 0x97, 0xdf, 0x74,
+	0xa5, 0xcb, 0x4f, 0xb8, 0xfc, 0x3c, 0x5e, 0xea, 0x54, 0x3e, 0xfe, 0x8c, 0x60, 0x30, 0xb8, 0x1b,
+	0x71, 0xc2, 0x17, 0x2a, 0x62, 0x21, 0x4b, 0x8f, 0xda, 0x0d, 0x17, 0xea, 0x72, 0x5c, 0xdd, 0x3c,
+	0x7e, 0x10, 0xaf, 0x8e, 0xaf, 0xe7, 0x08, 0x59, 0x17, 0x08, 0xd2, 0x61, 0x1b, 0x16, 0xe7, 0x12,
+	0x8e, 0x5f, 0xf4, 0x7a, 0x97, 0xf2, 0x9d, 0x40, 0x08, 0x89, 0x8f, 0xb9, 0xc4, 0x45, 0xbc, 0xd0,
+	0xa4, 0x81, 0x75, 0x8c, 0x70, 0x99, 0xf9, 0xf5, 0xe3, 0xb3, 0x0c, 0x3a, 0x3d, 0xcb, 0xa0, 0x6f,
+	0x67, 0x19, 0xf4, 0xee, 0x3c, 0x93, 0x3a, 0x3d, 0xcf, 0xa4, 0xbe, 0x9c, 0x67, 0x52, 0xdb, 0xaa,
+	0xa6, 0xbb, 0xbb, 0xd5, 0xa2, 0x52, 0x62, 0x95, 0x60, 0x8a, 0x57, 0xc1, 0x3a, 0x1e, 0x58, 0xd4,
+	0x29, 0xf6, 0xf2, 0x5f, 0x12, 0x77, 0x7e, 0x07, 0x00, 0x00, 0xff, 0xff, 0x23, 0x5f, 0xbf, 0x44,
+	0x54, 0x0d, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -679,7 +774,9 @@ type QueryClient interface {
 	// Queries a list of AuctionUsedAllocations items.
 	AuctionUsedAllocationsAll(ctx context.Context, in *QueryAllAuctionUsedAllocationsRequest, opts ...grpc.CallOption) (*QueryAllAuctionUsedAllocationsResponse, error)
 	// Queries a TotalAllocation of address.
-	TotalAllocation(ctx context.Context, in *QueryGetTotalAllocationRequest, opts ...grpc.CallOption) (*QueryGetTotalAllocationResponse, error)
+	TotalAllocations(ctx context.Context, in *QueryGetTotalAllocationsRequest, opts ...grpc.CallOption) (*QueryGetTotalAllocationsResponse, error)
+	// Queries the AvailableAllocation of address.
+	AvailableAllocations(ctx context.Context, in *QueryGetAvailableAllocationsRequest, opts ...grpc.CallOption) (*QueryGetAvailableAllocationsResponse, error)
 }
 
 type queryClient struct {
@@ -735,9 +832,18 @@ func (c *queryClient) AuctionUsedAllocationsAll(ctx context.Context, in *QueryAl
 	return out, nil
 }
 
-func (c *queryClient) TotalAllocation(ctx context.Context, in *QueryGetTotalAllocationRequest, opts ...grpc.CallOption) (*QueryGetTotalAllocationResponse, error) {
-	out := new(QueryGetTotalAllocationResponse)
-	err := c.cc.Invoke(ctx, "/tendermint.spn.participation.Query/TotalAllocation", in, out, opts...)
+func (c *queryClient) TotalAllocations(ctx context.Context, in *QueryGetTotalAllocationsRequest, opts ...grpc.CallOption) (*QueryGetTotalAllocationsResponse, error) {
+	out := new(QueryGetTotalAllocationsResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.participation.Query/TotalAllocations", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) AvailableAllocations(ctx context.Context, in *QueryGetAvailableAllocationsRequest, opts ...grpc.CallOption) (*QueryGetAvailableAllocationsResponse, error) {
+	out := new(QueryGetAvailableAllocationsResponse)
+	err := c.cc.Invoke(ctx, "/tendermint.spn.participation.Query/AvailableAllocations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -757,7 +863,9 @@ type QueryServer interface {
 	// Queries a list of AuctionUsedAllocations items.
 	AuctionUsedAllocationsAll(context.Context, *QueryAllAuctionUsedAllocationsRequest) (*QueryAllAuctionUsedAllocationsResponse, error)
 	// Queries a TotalAllocation of address.
-	TotalAllocation(context.Context, *QueryGetTotalAllocationRequest) (*QueryGetTotalAllocationResponse, error)
+	TotalAllocations(context.Context, *QueryGetTotalAllocationsRequest) (*QueryGetTotalAllocationsResponse, error)
+	// Queries the AvailableAllocation of address.
+	AvailableAllocations(context.Context, *QueryGetAvailableAllocationsRequest) (*QueryGetAvailableAllocationsResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -779,8 +887,11 @@ func (*UnimplementedQueryServer) AuctionUsedAllocations(ctx context.Context, req
 func (*UnimplementedQueryServer) AuctionUsedAllocationsAll(ctx context.Context, req *QueryAllAuctionUsedAllocationsRequest) (*QueryAllAuctionUsedAllocationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AuctionUsedAllocationsAll not implemented")
 }
-func (*UnimplementedQueryServer) TotalAllocation(ctx context.Context, req *QueryGetTotalAllocationRequest) (*QueryGetTotalAllocationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method TotalAllocation not implemented")
+func (*UnimplementedQueryServer) TotalAllocations(ctx context.Context, req *QueryGetTotalAllocationsRequest) (*QueryGetTotalAllocationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TotalAllocations not implemented")
+}
+func (*UnimplementedQueryServer) AvailableAllocations(ctx context.Context, req *QueryGetAvailableAllocationsRequest) (*QueryGetAvailableAllocationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AvailableAllocations not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -877,20 +988,38 @@ func _Query_AuctionUsedAllocationsAll_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_TotalAllocation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryGetTotalAllocationRequest)
+func _Query_TotalAllocations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetTotalAllocationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).TotalAllocation(ctx, in)
+		return srv.(QueryServer).TotalAllocations(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/tendermint.spn.participation.Query/TotalAllocation",
+		FullMethod: "/tendermint.spn.participation.Query/TotalAllocations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).TotalAllocation(ctx, req.(*QueryGetTotalAllocationRequest))
+		return srv.(QueryServer).TotalAllocations(ctx, req.(*QueryGetTotalAllocationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_AvailableAllocations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryGetAvailableAllocationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).AvailableAllocations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/tendermint.spn.participation.Query/AvailableAllocations",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).AvailableAllocations(ctx, req.(*QueryGetAvailableAllocationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -920,8 +1049,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_AuctionUsedAllocationsAll_Handler,
 		},
 		{
-			MethodName: "TotalAllocation",
-			Handler:    _Query_TotalAllocation_Handler,
+			MethodName: "TotalAllocations",
+			Handler:    _Query_TotalAllocations_Handler,
+		},
+		{
+			MethodName: "AvailableAllocations",
+			Handler:    _Query_AvailableAllocations_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1290,7 +1423,7 @@ func (m *QueryAllAuctionUsedAllocationsResponse) MarshalToSizedBuffer(dAtA []byt
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetTotalAllocationRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryGetTotalAllocationsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1300,12 +1433,12 @@ func (m *QueryGetTotalAllocationRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetTotalAllocationRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryGetTotalAllocationsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetTotalAllocationRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryGetTotalAllocationsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1320,7 +1453,7 @@ func (m *QueryGetTotalAllocationRequest) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetTotalAllocationResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryGetTotalAllocationsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1330,18 +1463,76 @@ func (m *QueryGetTotalAllocationResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetTotalAllocationResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryGetTotalAllocationsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetTotalAllocationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryGetTotalAllocationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.TotalAllocation != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.TotalAllocation))
+	if m.TotalAllocations != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.TotalAllocations))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetAvailableAllocationsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetAvailableAllocationsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetAvailableAllocationsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryGetAvailableAllocationsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryGetAvailableAllocationsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryGetAvailableAllocationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.AvailableAllocations != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.AvailableAllocations))
 		i--
 		dAtA[i] = 0x8
 	}
@@ -1498,7 +1689,7 @@ func (m *QueryAllAuctionUsedAllocationsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryGetTotalAllocationRequest) Size() (n int) {
+func (m *QueryGetTotalAllocationsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1511,14 +1702,39 @@ func (m *QueryGetTotalAllocationRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryGetTotalAllocationResponse) Size() (n int) {
+func (m *QueryGetTotalAllocationsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.TotalAllocation != 0 {
-		n += 1 + sovQuery(uint64(m.TotalAllocation))
+	if m.TotalAllocations != 0 {
+		n += 1 + sovQuery(uint64(m.TotalAllocations))
+	}
+	return n
+}
+
+func (m *QueryGetAvailableAllocationsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryGetAvailableAllocationsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.AvailableAllocations != 0 {
+		n += 1 + sovQuery(uint64(m.AvailableAllocations))
 	}
 	return n
 }
@@ -2455,7 +2671,7 @@ func (m *QueryAllAuctionUsedAllocationsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetTotalAllocationRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryGetTotalAllocationsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2478,10 +2694,10 @@ func (m *QueryGetTotalAllocationRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetTotalAllocationRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryGetTotalAllocationsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetTotalAllocationRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryGetTotalAllocationsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2537,7 +2753,7 @@ func (m *QueryGetTotalAllocationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetTotalAllocationResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryGetTotalAllocationsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2560,17 +2776,17 @@ func (m *QueryGetTotalAllocationResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetTotalAllocationResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryGetTotalAllocationsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetTotalAllocationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryGetTotalAllocationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TotalAllocation", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field TotalAllocations", wireType)
 			}
-			m.TotalAllocation = 0
+			m.TotalAllocations = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -2580,7 +2796,158 @@ func (m *QueryGetTotalAllocationResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.TotalAllocation |= uint64(b&0x7F) << shift
+				m.TotalAllocations |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetAvailableAllocationsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetAvailableAllocationsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetAvailableAllocationsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryGetAvailableAllocationsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryGetAvailableAllocationsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryGetAvailableAllocationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field AvailableAllocations", wireType)
+			}
+			m.AvailableAllocations = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.AvailableAllocations |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

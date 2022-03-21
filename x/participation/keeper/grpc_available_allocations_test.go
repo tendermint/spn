@@ -15,35 +15,36 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-func TestGetTotalAllocationQuery(t *testing.T) {
+func TestShowAvailableAllocationsQuery(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
 
-	params := types.DefaultParams()
-	params.AllocationPrice = types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(100)}
 
-	tk.ParticipationKeeper.SetParams(sdkCtx, params)
+	tk.ParticipationKeeper.SetParams(sdkCtx, types.Params{
+		AllocationPrice: allocationPrice,
+	})
 
 	addr := sample.Address()
 	dels, _ := tk.DelegateN(sdkCtx, addr, 100, 10)
 
 	for _, tc := range []struct {
 		desc     string
-		request  *types.QueryGetTotalAllocationRequest
-		response *types.QueryGetTotalAllocationResponse
+		request  *types.QueryGetAvailableAllocationsRequest
+		response *types.QueryGetAvailableAllocationsResponse
 		err      error
 	}{
 		{
 			desc: "valid case",
-			request: &types.QueryGetTotalAllocationRequest{
+			request: &types.QueryGetAvailableAllocationsRequest{
 				Address: dels[0].DelegatorAddress,
 			},
-			response: &types.QueryGetTotalAllocationResponse{TotalAllocation: 10},
+			response: &types.QueryGetAvailableAllocationsResponse{AvailableAllocations: 10},
 		},
 
 		{
 			desc: "invalid address",
-			request: &types.QueryGetTotalAllocationRequest{
+			request: &types.QueryGetAvailableAllocationsRequest{
 				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6"),
@@ -54,7 +55,7 @@ func TestGetTotalAllocationQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := tk.ParticipationKeeper.TotalAllocation(wctx, tc.request)
+			response, err := tk.ParticipationKeeper.AvailableAllocations(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
