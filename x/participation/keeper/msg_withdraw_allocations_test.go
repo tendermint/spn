@@ -30,7 +30,6 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 
 	// delegate some coins so participant has some allocations to use
 	tk.DelegateN(sdkCtx, validParticipant, 100, 10)
-	tk.DelegateN(sdkCtx, validParticipant, 100, 10)
 
 	// initialize an auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(auctionSellingCoin))
