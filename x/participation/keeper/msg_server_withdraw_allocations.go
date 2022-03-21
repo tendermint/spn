@@ -30,6 +30,9 @@ func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWith
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrUsedAllocationsNotFound, "used allocations for auction %d not found", msg.AuctionID)
 	}
+	if auctionUsedAllocations.Withdrawn {
+		return nil, sdkerrors.Wrapf(types.ErrAllocationsAlreadyWithdrawn, "allocations for auction %d already claimed", msg.AuctionID)
+	}
 
 	totalUsedAllocations, found := k.GetUsedAllocations(ctx, msg.Participant)
 	if !found {
@@ -42,7 +45,8 @@ func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWith
 	}
 	totalUsedAllocations.NumAllocations -= auctionUsedAllocations.NumAllocations
 
-	k.RemoveAuctionUsedAllocations(ctx, auctionUsedAllocations.Address, auctionUsedAllocations.AuctionID)
+	auctionUsedAllocations.Withdrawn = true
+	k.SetAuctionUsedAllocations(ctx, auctionUsedAllocations)
 	k.SetUsedAllocations(ctx, totalUsedAllocations)
 
 	return &types.MsgWithdrawAllocationsResponse{}, nil

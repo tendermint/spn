@@ -50,16 +50,6 @@ func TestAuctionUsedAllocationsGet(t *testing.T) {
 	}
 }
 
-func TestAuctionUsedAllocationsRemove(t *testing.T) {
-	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNAuctionUsedAllocationsWithSameAddress(tk.ParticipationKeeper, sdkCtx, 10)
-	for _, item := range items {
-		tk.ParticipationKeeper.RemoveAuctionUsedAllocations(sdkCtx, item.Address, item.NumAllocations)
-		_, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, item.Address, item.NumAllocations)
-		require.False(t, found)
-	}
-}
-
 func TestAuctionUsedAllocationsGetAllByAddress(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNAuctionUsedAllocationsWithSameAddress(tk.ParticipationKeeper, sdkCtx, 10)

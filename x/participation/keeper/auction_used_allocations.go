@@ -45,12 +45,6 @@ func (k Keeper) GetAllAuctionUsedAllocationsByAddress(ctx sdk.Context, address s
 	return
 }
 
-// RemoveAuctionUsedAllocations removes a auctionUsedAllocations from the store
-func (k Keeper) RemoveAuctionUsedAllocations(ctx sdk.Context, address string, auctionID uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AuctionUsedAllocationsKeyPrefix))
-	store.Delete(types.AuctionUsedAllocationsKey(address, auctionID))
-}
-
 // GetAllAuctionUsedAllocations returns all auctionUsedAllocations
 func (k Keeper) GetAllAuctionUsedAllocations(ctx sdk.Context) (list []types.AuctionUsedAllocations) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AuctionUsedAllocationsKeyPrefix))
