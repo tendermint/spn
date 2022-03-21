@@ -51,7 +51,6 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.ConsensusState(0),
 					spntypes.DefaultUnbondingPeriod,
 					1,
-					false,
 				),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
