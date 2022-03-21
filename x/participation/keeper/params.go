@@ -11,7 +11,8 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
 		k.AllocationPrice(ctx),
 		k.ParticipationTierList(ctx),
-		k.WithdrawalAllocationDelay(ctx),
+		k.RegistrationPeriod(ctx),
+		k.WithdrawalDelay(ctx),
 	)
 }
 
@@ -32,8 +33,14 @@ func (k Keeper) ParticipationTierList(ctx sdk.Context) (res []types.Tier) {
 	return
 }
 
-// WithdrawalAllocationDelay returns the WithdrawalAllocationDelay param
-func (k Keeper) WithdrawalAllocationDelay(ctx sdk.Context) (res uint64) {
-	k.paramstore.Get(ctx, types.KeyWithdrawalAllocationDelay, &res)
+// RegistrationPeriod returns the RegistrationPeriod param
+func (k Keeper) RegistrationPeriod(ctx sdk.Context) (res int64) {
+	k.paramstore.Get(ctx, types.KeyRegistrationPeriod, &res)
+	return
+}
+
+// WithdrawalDelay returns the WithdrawalDelay param
+func (k Keeper) WithdrawalDelay(ctx sdk.Context) (res int64) {
+	k.paramstore.Get(ctx, types.KeyWithdrawalDelay, &res)
 	return
 }
