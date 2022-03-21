@@ -10,9 +10,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// DebugModeLaunchID is the launch ID automatically used when debug mode is set
-const DebugModeLaunchID uint64 = 1
-
 // VerifyClientIDFromChannelID verifies if the client ID associated with the provided channel ID
 // is a verified client ID and if no connection is yet established with the provider chain
 // this operation should be performed at OnChanOpenInit handshake phase
@@ -53,9 +50,6 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 		)
 	}
 
-	launchID := DebugModeLaunchID
-
-	// if debug mode is set, the launch ID 1 is automatically registered for the client
 	// get the launch ID from the client ID
 	lidFromCid, found := k.GetLaunchIDFromVerifiedClientID(ctx, clientID)
 	if !found {
@@ -73,10 +67,9 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 			pCid.LaunchID, pCid.ClientID,
 		)
 	}
-	launchID = lidFromCid.LaunchID
+	launchID := lidFromCid.LaunchID
 
 	// update the chain since it is not MonitoringConnected
-	// debug mode means we assume the chain actually exists
 	if err = k.launchKeeper.EnableMonitoringConnection(ctx, launchID); err != nil {
 		return err
 	}
