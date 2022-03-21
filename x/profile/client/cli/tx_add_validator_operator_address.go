@@ -11,15 +11,11 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-const (
-	flagOperatorAddress = "operator-address"
-)
-
 func CmdAddValidatorOperatorAddress() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-validator-operator-address",
+		Use:   "add-validator-operator-address [operator-address]",
 		Short: "Associate an validator operator address to a validator on SPN",
-		Args:  cobra.NoArgs,
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -27,10 +23,7 @@ func CmdAddValidatorOperatorAddress() *cobra.Command {
 			}
 
 			validatorAddr := clientCtx.GetFromAddress().String()
-			operatorAddr, _ := cmd.Flags().GetString(flagOperatorAddress)
-			if operatorAddr == "" {
-				operatorAddr = validatorAddr
-			}
+			operatorAddr := args[0]
 
 			msg := types.NewMsgSAddValidatorOperatorAddress(
 				validatorAddr,
@@ -47,11 +40,10 @@ func CmdAddValidatorOperatorAddress() *cobra.Command {
 				return err
 			}
 
+			// double sign with the operator address
 			if err := addSignature(clientCtx, txf, txBuilder, validatorAddr); err != nil {
 				return err
 			}
-
-			// double sign if the operator address is different from the SPN validator address
 			if operatorAddr != validatorAddr {
 				if err := addSignature(clientCtx, txf, txBuilder, operatorAddr); err != nil {
 					return err
@@ -76,7 +68,6 @@ func CmdAddValidatorOperatorAddress() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagOperatorAddress, "", "validator operator address")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

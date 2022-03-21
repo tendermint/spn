@@ -12,7 +12,7 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-func TestTotalAllocationGet(t *testing.T) {
+func TestTotalAllocationsGet(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 
 	invalidAddress := strconv.Itoa(1)
@@ -51,7 +51,7 @@ func TestTotalAllocationGet(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			alloc, err := tk.ParticipationKeeper.GetTotalAllocation(sdkCtx, tc.address)
+			alloc, err := tk.ParticipationKeeper.GetTotalAllocations(sdkCtx, tc.address)
 			if tc.wantError {
 				require.Error(t, err)
 				return
