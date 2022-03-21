@@ -12,4 +12,5 @@ var (
 	ErrTierNotFound            = sdkerrors.Register(ModuleName, 5, "tier not found")
 	ErrInsufficientAllocations = sdkerrors.Register(ModuleName, 6, "insufficient allocations")
 	ErrAlreadyParticipating    = sdkerrors.Register(ModuleName, 7, "address is already participating")
+	ErrParticipationNotAllowed = sdkerrors.Register(ModuleName, 8, "unable to participate to auction")
 )
