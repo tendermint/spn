@@ -2,42 +2,21 @@ package cli_test
 
 import (
 	"fmt"
-	"math/rand"
 	"strconv"
 	"testing"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/participation/client/cli"
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-func networkWithDelegations(t *testing.T) (*network.Network, uint64) {
-	t.Helper()
-	cfg := network.DefaultConfig()
-
-	// validator amount delegated to self
-	totalShares := cfg.BondedTokens.ToDec()
-
-	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(rand.Int63n(100))}
-	participationState := types.GenesisState{}
-	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &participationState))
-	participationState.Params.AllocationPrice = allocationPrice
-	buf, err := cfg.Codec.MarshalJSON(&participationState)
-	require.NoError(t, err)
-	cfg.GenesisState[types.ModuleName] = buf
-
-	return network.New(t, cfg), uint64(totalShares.Quo(allocationPrice.Bonded.ToDec()).TruncateInt64())
-}
-
-func TestShowTotalAllocations(t *testing.T) {
+func TestShowAvailableAllocations(t *testing.T) {
 	net, totalAlloc := networkWithDelegations(t)
 
 	ctx := net.Validators[0].ClientCtx
@@ -64,7 +43,7 @@ func TestShowTotalAllocations(t *testing.T) {
 			desc:       "not found",
 			delAddress: strconv.Itoa(100000),
 			args:       common,
-			err:        status.Error(codes.NotFound, "not found"),
+			err:        status.Error(codes.InvalidArgument, "not found"),
 		},
 	} {
 		tc := tc
@@ -73,18 +52,18 @@ func TestShowTotalAllocations(t *testing.T) {
 				tc.delAddress,
 			}
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdGetTotalAllocation(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowAvailableAllocations(), args)
 			if tc.err != nil {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
 				require.ErrorIs(t, stat.Err(), tc.err)
 			} else {
 				require.NoError(t, err)
-				var resp types.QueryGetTotalAllocationResponse
+				var resp types.QueryGetAvailableAllocationsResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.Equal(t,
 					nullify.Fill(&tc.alloc),
-					nullify.Fill(&resp.TotalAllocation),
+					nullify.Fill(&resp.AvailableAllocations),
 				)
 			}
 		})

@@ -33,6 +33,8 @@ func FindAccount(accs []simtypes.Account, address string) (simtypes.Account, err
 	return simAccount, nil
 }
 
+// FindCoordinatorCampaign finds a campaign associated with a coordinator
+// and returns if it is associated with a chain
 func FindCoordinatorCampaign(
 	r *rand.Rand,
 	ctx sdk.Context,
