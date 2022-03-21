@@ -12,6 +12,7 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/types"
 )
 
@@ -19,6 +20,7 @@ func TestUsedAllocationsQuerySingle(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
 	msgs := createNUsedAllocations(tk.ParticipationKeeper, sdkCtx, 2)
+	validAddr := sample.Address()
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetUsedAllocationsRequest
@@ -40,11 +42,18 @@ func TestUsedAllocationsQuerySingle(t *testing.T) {
 			response: &types.QueryGetUsedAllocationsResponse{UsedAllocations: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "ReturnZeroAllocations",
+			request: &types.QueryGetUsedAllocationsRequest{
+				Address: validAddr,
+			},
+			response: &types.QueryGetUsedAllocationsResponse{UsedAllocations: types.UsedAllocations{Address: validAddr, NumAllocations: 0}},
+		},
+		{
+			desc: "InvalidAddress",
 			request: &types.QueryGetUsedAllocationsRequest{
 				Address: strconv.Itoa(100000),
 			},
-			err: status.Error(codes.NotFound, "not found"),
+			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6"),
 		},
 		{
 			desc: "InvalidRequest",
