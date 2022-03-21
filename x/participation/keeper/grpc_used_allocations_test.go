@@ -12,6 +12,7 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/types"
 )
 
@@ -19,6 +20,7 @@ func TestUsedAllocationsQuerySingle(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
 	msgs := createNUsedAllocations(tk.ParticipationKeeper, sdkCtx, 2)
+	validAddr := sample.Address()
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetUsedAllocationsRequest
@@ -38,6 +40,13 @@ func TestUsedAllocationsQuerySingle(t *testing.T) {
 				Address: msgs[1].Address,
 			},
 			response: &types.QueryGetUsedAllocationsResponse{UsedAllocations: msgs[1]},
+		},
+		{
+			desc: "ReturnZeroAllocations",
+			request: &types.QueryGetUsedAllocationsRequest{
+				Address: validAddr,
+			},
+			response: &types.QueryGetUsedAllocationsResponse{UsedAllocations: types.UsedAllocations{Address: validAddr, NumAllocations: 0}},
 		},
 		{
 			desc: "KeyNotFound",
