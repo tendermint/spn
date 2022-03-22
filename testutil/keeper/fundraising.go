@@ -10,7 +10,7 @@ import (
 )
 
 // CreateFixedPriceAuction makes the provided address create a fixed price auction with the specified selling coin and
-// start time
+// start time. Returns the ID of the created auction.
 func (tk TestKeepers) CreateFixedPriceAuction(
 	ctx sdk.Context,
 	auctioneer string,
