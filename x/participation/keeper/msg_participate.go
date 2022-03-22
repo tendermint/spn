@@ -26,16 +26,16 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 		return nil, sdkerrors.Wrapf(types.ErrAuctionNotFound, "auction %d not found", msg.AuctionID)
 	}
 
+	// check if auction is already started
+	if auction.IsAuctionStarted(blockTime) {
+		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "auction %d is already started", msg.AuctionID)
+	}
+
 	// check if auction allows participation at this time
 	registrationPeriod := k.RegistrationPeriod(ctx)
 	// as commented in `Time.Sub()`: To compute t-d for a duration d, use t.Add(-d).
 	if blockTime.After(auction.GetStartTime().Add(time.Duration(-registrationPeriod))) {
-		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "participation start time for auction %d not yet reached", msg.AuctionID)
-	}
-
-	// check if auction is already started
-	if auction.IsAuctionStarted(blockTime) {
-		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "auction %d is already started", msg.AuctionID)
+		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "participation period for auction %d not yet started", msg.AuctionID)
 	}
 
 	// check if the user is already added as an allowed bidder for the auction
