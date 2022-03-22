@@ -33,30 +33,15 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 
 	// initialize an auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(auctionSellingCoin))
-	res, err := tk.FundraisingKeeper.CreateFixedPriceAuction(sdkCtx, sample.MsgCreateFixedAuction(
-		auctioneer,
-		auctionSellingCoin,
-		auctionStartTime,
-	))
-	require.NoError(t, err)
-	require.NotNil(t, res)
-	require.NotNil(t, res.BaseAuction)
-	auctionID := res.BaseAuction.Id
+	auctionID := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, auctionSellingCoin, auctionStartTime)
 
 	// validParticipant participates to auction
-	_, err = ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
+	_, err := ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
 		Participant: validParticipant,
 		AuctionID:   auctionID,
 		TierID:      1,
 	})
 	require.NoError(t, err)
-
-	preUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(sdkCtx, validParticipant)
-	require.True(t, found)
-
-	auctionUsedAllocations, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, validParticipant, auctionID)
-	require.True(t, found)
-	require.False(t, auctionUsedAllocations.Withdrawn)
 
 	// manually insert entry for invalidParticipant for later test
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(sdkCtx, types.AuctionUsedAllocations{
@@ -119,6 +104,19 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			preUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(sdkCtx, validParticipant)
+			if tt.err == nil {
+				// check if valid only when no error expected
+				require.True(t, found)
+			}
+
+			preAuctionUsedAllocations, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, validParticipant, auctionID)
+			if tt.err == nil {
+				// check if valid only when no error expected
+				require.True(t, found)
+				require.False(t, preAuctionUsedAllocations.Withdrawn)
+			}
+
 			// set wanted block time
 			tmpSdkCtx := sdkCtx.WithBlockTime(tt.blockTime)
 			tmpCtx := sdk.WrapSDKContext(tmpSdkCtx)
@@ -133,13 +131,15 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			require.NoError(t, err)
 
 			// check auctionUsedAllocations is set to `withdrawn`
-			auctionAllocs, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(tmpSdkCtx, tt.msg.Participant, tt.msg.AuctionID)
+			postAuctionUsedAllocations, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(tmpSdkCtx, tt.msg.Participant, tt.msg.AuctionID)
 			require.True(t, found)
-			require.True(t, auctionAllocs.Withdrawn)
+			require.True(t, postAuctionUsedAllocations.Withdrawn)
+			require.Equal(t, preAuctionUsedAllocations.NumAllocations, postAuctionUsedAllocations.NumAllocations)
 
 			// check usedAllocationEntry is correctly decreased
-			postUsedAllocations, _ := tk.ParticipationKeeper.GetUsedAllocations(tmpSdkCtx, tt.msg.Participant)
-			require.Equal(t, preUsedAllocations.NumAllocations-auctionUsedAllocations.NumAllocations, postUsedAllocations.NumAllocations)
+			postUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(tmpSdkCtx, tt.msg.Participant)
+			require.True(t, found)
+			require.Equal(t, preUsedAllocations.NumAllocations-preAuctionUsedAllocations.NumAllocations, postUsedAllocations.NumAllocations)
 		})
 	}
 }

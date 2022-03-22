@@ -29,15 +29,7 @@ func Test_msgServer_Participate(t *testing.T) {
 
 	// initialize an auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin))
-	res, err := tk.FundraisingKeeper.CreateFixedPriceAuction(sdkCtx, sample.MsgCreateFixedAuction(
-		auctioneer,
-		sellingCoin,
-		startTime,
-	))
-	require.NoError(t, err)
-	require.NotNil(t, res)
-	require.NotNil(t, res.BaseAuction)
-	auctionID := res.BaseAuction.Id
+	auctionID := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin, startTime)
 
 	addrWithDelsTier1 := sample.Address()
 	tk.DelegateN(sdkCtx, addrWithDelsTier1, 100, 10)

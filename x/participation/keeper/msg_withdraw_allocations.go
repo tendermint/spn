@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -36,7 +35,7 @@ func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWith
 
 	totalUsedAllocations, found := k.GetUsedAllocations(ctx, msg.Participant)
 	if !found {
-		return nil, spnerrors.Critical(fmt.Sprintf("unable to find total used allocations entry for address %s", msg.Participant))
+		return nil, spnerrors.Criticalf("unable to find total used allocations entry for address %s", msg.Participant)
 	}
 
 	// decrease totalUsedAllocations making sure subtraction is feasible
