@@ -77,7 +77,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			err:       types.ErrAuctionNotFound,
 		},
 		{
-			name: "auction not yet started",
+			name: "should prevent withdrawal before auction has started",
 			msg: &types.MsgWithdrawAllocations{
 				Participant: validParticipant,
 				AuctionID:   auctionID,
@@ -104,7 +104,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			err:       types.ErrUsedAllocationsNotFound,
 		},
 		{
-			name: "cannot withdraw if already claimed",
+			name: "should prevent withdrawal if already claimed",
 			msg: &types.MsgWithdrawAllocations{
 				Participant: invalidParticipant,
 				AuctionID:   auctionID,
