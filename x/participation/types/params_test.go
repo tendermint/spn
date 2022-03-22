@@ -228,7 +228,7 @@ func TestValidateTierBenefits(t *testing.T) {
 	}
 }
 
-func TestValidateDuration(t *testing.T) {
+func TestValidateTimeDuration(t *testing.T) {
 	tests := []struct {
 		name      string
 		timeFrame interface{}
@@ -251,7 +251,7 @@ func TestValidateDuration(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateDuration(tt.timeFrame)
+			err := validateTimeDuration(tt.timeFrame)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)
