@@ -74,6 +74,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 		Address:        msg.Participant,
 		AuctionID:      msg.AuctionID,
 		NumAllocations: tier.RequiredAllocations,
+		Withdrawn:      false,
 	})
 
 	return &types.MsgParticipateResponse{}, nil
