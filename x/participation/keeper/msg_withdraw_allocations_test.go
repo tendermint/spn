@@ -21,10 +21,12 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		invalidParticipant  = sample.Address()
 		auctionSellingCoin  = sample.Coin()
 		auctionStartTime    = sdkCtx.BlockTime().Add(time.Hour)
-		validWithdrawalTime = auctionStartTime.Add(time.Hour * 24 * 30)
+		validWithdrawalTime = auctionStartTime.Add(time.Hour * 10)
+		withdrawalDelay     = time.Hour * 5
 	)
 
 	params := types.DefaultParams()
+	params.WithdrawalDelay = withdrawalDelay
 	params.AllocationPrice = types.AllocationPrice{Bonded: sdk.NewInt(100)}
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
@@ -81,6 +83,15 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 				AuctionID:   auctionID,
 			},
 			blockTime: sdkCtx.BlockTime(),
+			err:       types.ErrAllocationsLocked,
+		},
+		{
+			name: "should prevent withdrawal before withdrawal delay has passed",
+			msg: &types.MsgWithdrawAllocations{
+				Participant: validParticipant,
+				AuctionID:   auctionID,
+			},
+			blockTime: auctionStartTime,
 			err:       types.ErrAllocationsLocked,
 		},
 		{

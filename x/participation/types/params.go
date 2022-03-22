@@ -56,7 +56,7 @@ var (
 	DefaultRegistrationPeriod = int64(time.Hour.Seconds() * 24 * 7) // One week
 	// DefaultWithdrawalDelay is set to be 2/3 of the default staking UnbondingTime of 21 days. Together with
 	// DefaultRegistrationPeriod they sum up to the total default UnbondingTime
-	DefaultWithdrawalDelay = int64(time.Hour.Seconds() * 24 * 14) // Two weeks
+	DefaultWithdrawalDelay = time.Hour * 24 * 14 // Two weeks
 )
 
 // ParamKeyTable the param key table for launch module
@@ -95,7 +95,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyAllocationPrice, &p.AllocationPrice, validateAllocationPrice),
 		paramtypes.NewParamSetPair(KeyParticipationTierList, &p.ParticipationTierList, validateParticipationTierList),
 		paramtypes.NewParamSetPair(KeyRegistrationPeriod, &p.RegistrationPeriod, validateAllocationsUsageTimeFrame),
-		paramtypes.NewParamSetPair(KeyWithdrawalDelay, &p.WithdrawalDelay, validateAllocationsUsageTimeFrame),
+		paramtypes.NewParamSetPair(KeyWithdrawalDelay, &p.WithdrawalDelay, validateTimeDuration),
 	}
 }
 
@@ -113,7 +113,7 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	return validateAllocationsUsageTimeFrame(p.WithdrawalDelay)
+	return validateTimeDuration(p.WithdrawalDelay)
 }
 
 // String implements the Stringer interface.
@@ -174,21 +174,6 @@ func validateTierBenefits(b TierBenefits) error {
 
 	if !b.MaxBidAmount.IsPositive() {
 		return fmt.Errorf("max bid amount must be greater than zero")
-	}
-
-	return nil
-}
-
-// validateAllocationsUsageTimeFrame validates a time frame parameter related to allocations usage, specifically both
-// RegistrationPeriod and WithdrawalDelay
-func validateAllocationsUsageTimeFrame(v interface{}) error {
-	timeFrame, ok := v.(int64)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", v)
-	}
-
-	if timeFrame <= 0 {
-		return errors.New("time frame must be positive")
 	}
 
 	return nil

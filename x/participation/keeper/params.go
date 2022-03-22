@@ -40,7 +40,7 @@ func (k Keeper) RegistrationPeriod(ctx sdk.Context) (res int64) {
 }
 
 // WithdrawalDelay returns the WithdrawalDelay param
-func (k Keeper) WithdrawalDelay(ctx sdk.Context) (res int64) {
+func (k Keeper) WithdrawalDelay(ctx sdk.Context) (res time.Duration) {
 	k.paramstore.Get(ctx, types.KeyWithdrawalDelay, &res)
 	return
 }
