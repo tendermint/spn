@@ -34,9 +34,9 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	// check if auction allows participation at this time
 	registrationPeriod := k.RegistrationPeriod(ctx)
 	auctionStartTime := auction.GetStartTime()
-	if time.Duration(auctionStartTime.Unix())*time.Second < registrationPeriod {
-		// subtraction would result in negative value, clamp the result to 0
-		// by making registrationPeriod == auctionStartTime
+	if auctionStartTime.Unix() < int64(registrationPeriod.Seconds()) {
+		// subtraction would result in negative value, clamp the result to ~0
+		// by making registrationPeriod ~= auctionStartTime
 		registrationPeriod = time.Duration(auctionStartTime.Unix()) * time.Second
 	}
 	// as commented in `Time.Sub()`: To compute t-d for a duration d, use t.Add(-d).
