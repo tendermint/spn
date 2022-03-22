@@ -32,7 +32,9 @@ func MismatchUsedAllocationsInvariant(k Keeper) sdk.Invariant {
 			auctionUsedAllocs := k.GetAllAuctionUsedAllocationsByAddress(ctx, usedAllocs.Address)
 			sum := uint64(0)
 			for _, auction := range auctionUsedAllocs {
-				sum += auction.NumAllocations
+				if !auction.Withdrawn {
+					sum += auction.NumAllocations
+				}
 			}
 			if sum != usedAllocs.NumAllocations {
 				return sdk.FormatInvariant(
