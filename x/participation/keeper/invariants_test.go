@@ -20,16 +20,24 @@ func TestMismatchUsedAllocationsInvariant(t *testing.T) {
 				Address:        addr,
 				AuctionID:      1,
 				NumAllocations: 1,
+				Withdrawn:      false,
 			},
 			{
 				Address:        addr,
 				AuctionID:      2,
 				NumAllocations: 1,
+				Withdrawn:      false,
+			},
+			{
+				Address:        addr,
+				AuctionID:      3,
+				NumAllocations: 5,
+				Withdrawn:      true,
 			},
 		}
 		invalidUsedAllocs = types.UsedAllocations{
 			Address:        addr,
-			NumAllocations: 1,
+			NumAllocations: 7,
 		}
 		validUsedAllocs = types.UsedAllocations{
 			Address:        addr,
