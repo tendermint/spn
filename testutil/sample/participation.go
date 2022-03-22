@@ -2,8 +2,7 @@ package sample
 
 import (
 	"math/rand"
-	"time"
-
+	
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	participation "github.com/tendermint/spn/x/participation/types"
@@ -35,10 +34,8 @@ func ParticipationParams() participation.Params {
 	}
 
 	// generate a random time frame between an hour and four weeks for both params
-	fourWeeks := int64(time.Hour.Seconds() * 24 * 7 * 4)
-	oneHour := int64(time.Hour.Seconds())
 	registrationPeriod := rand.Int63n(fourWeeks-oneHour) + oneHour
-	withdrawalDelay := rand.Int63n(fourWeeks-oneHour) + oneHour
+	withdrawalDelay := Duration()
 
 	return participation.NewParams(allocationPrice, tiers, registrationPeriod, withdrawalDelay)
 }
