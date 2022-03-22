@@ -35,9 +35,10 @@ func ParticipationParams() participation.Params {
 	}
 
 	// generate a random time frame between an hour and four weeks for both params
+	// TODO clean up after switching withdrawamDelay to time.Duration
 	fourWeeks := int64(time.Hour.Seconds() * 24 * 7 * 4)
 	oneHour := int64(time.Hour.Seconds())
-	registrationPeriod := rand.Int63n(fourWeeks-oneHour) + oneHour
+	registrationPeriod := time.Duration(rand.Int63n(fourWeeks-oneHour)+oneHour) * time.Second
 	withdrawalDelay := rand.Int63n(fourWeeks-oneHour) + oneHour
 
 	return participation.NewParams(allocationPrice, tiers, registrationPeriod, withdrawalDelay)
