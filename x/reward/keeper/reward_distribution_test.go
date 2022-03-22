@@ -31,7 +31,7 @@ func TestCalculateRewards(t *testing.T) {
 		{
 			name: "prevent using block ratio greater than 1",
 			args: args{
-				blockRatio: tc.Dec(t, "1.1"),
+				blockRatio: tc.Dec(t, "1.000001"),
 				sigRatio:   sdk.ZeroDec(),
 				coins:      sample.Coins(),
 			},
@@ -41,7 +41,7 @@ func TestCalculateRewards(t *testing.T) {
 			name: "prevent using signature ratio greater than 1",
 			args: args{
 				blockRatio: sdk.ZeroDec(),
-				sigRatio:   tc.Dec(t, "1.1"),
+				sigRatio:   tc.Dec(t, "1.000001"),
 				coins:      sample.Coins(),
 			},
 			wantErr: true,
@@ -58,8 +58,8 @@ func TestCalculateRewards(t *testing.T) {
 		{
 			name: "nil coins should give zero rewards",
 			args: args{
-				blockRatio: sdk.ZeroDec(),
-				sigRatio:   sdk.ZeroDec(),
+				blockRatio: sdk.OneDec(),
+				sigRatio:   sdk.OneDec(),
 				coins:      nil,
 			},
 			want: sdk.NewCoins(),
@@ -83,10 +83,28 @@ func TestCalculateRewards(t *testing.T) {
 			want: sdk.NewCoins(),
 		},
 		{
+			name: "full block and signature ration should give all rewards",
+			args: args{
+				blockRatio: sdk.OneDec(),
+				sigRatio:   sdk.OneDec(),
+				coins:      tc.Coins(t, "10aaa,10bbb,10ccc"),
+			},
+			want: tc.Coins(t, "10aaa,10bbb,10ccc"),
+		},
+		{
 			name: "0.5 block ratio should give half rewards",
 			args: args{
 				blockRatio: tc.Dec(t, "0.5"),
 				sigRatio:   sdk.OneDec(),
+				coins:      tc.Coins(t, "10aaa,100bbb,1000ccc"),
+			},
+			want: tc.Coins(t, "5aaa,50bbb,500ccc"),
+		},
+		{
+			name: "0.5 signature ratio should give half rewards",
+			args: args{
+				blockRatio: sdk.OneDec(),
+				sigRatio:   tc.Dec(t, "0.5"),
 				coins:      tc.Coins(t, "10aaa,100bbb,1000ccc"),
 			},
 			want: tc.Coins(t, "5aaa,50bbb,500ccc"),
@@ -108,6 +126,33 @@ func TestCalculateRewards(t *testing.T) {
 				coins:      tc.Coins(t, "1aaa,11bbb,101ccc"),
 			},
 			want: tc.Coins(t, "5bbb,50ccc"),
+		},
+		{
+			name: "0.1 block ratio and 0.1 signature ratio should give 0.01 rewards",
+			args: args{
+				blockRatio: tc.Dec(t, "0.1"),
+				sigRatio:   tc.Dec(t, "0.1"),
+				coins:      tc.Coins(t, "10aaa,100bbb,1000ccc"),
+			},
+			want: tc.Coins(t, "1bbb,10ccc"),
+		},
+		{
+			name: "rewards should be empty coins if all rewards are fully truncated",
+			args: args{
+				blockRatio: tc.Dec(t, "0.0001"),
+				sigRatio:   sdk.OneDec(),
+				coins:      tc.Coins(t, "10aaa,100bbb,1000ccc"),
+			},
+			want: sdk.NewCoins(),
+		},
+		{
+			name: "empty coins should return empty coins",
+			args: args{
+				blockRatio: sdk.OneDec(),
+				sigRatio:   sdk.OneDec(),
+				coins:      sdk.NewCoins(),
+			},
+			want: sdk.NewCoins(),
 		},
 	}
 	for _, tt := range tests {
