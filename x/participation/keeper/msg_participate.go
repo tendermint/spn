@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -32,8 +33,14 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 
 	// check if auction allows participation at this time
 	registrationPeriod := k.RegistrationPeriod(ctx)
+	auctionStartTime := auction.GetStartTime()
+	if time.Duration(auctionStartTime.Unix())*time.Second < registrationPeriod {
+		// subtraction would result in negative value, truncate to 0 by making registrationPeriod == auctionStartTime
+		registrationPeriod = time.Duration(auctionStartTime.Unix()) * time.Second
+	}
 	// as commented in `Time.Sub()`: To compute t-d for a duration d, use t.Add(-d).
-	if !blockTime.After(auction.GetStartTime().Add(-registrationPeriod)) {
+	registrationStart := auctionStartTime.Add(-registrationPeriod)
+	if !blockTime.After(registrationStart) {
 		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "participation period for auction %d not yet started", msg.AuctionID)
 	}
 
