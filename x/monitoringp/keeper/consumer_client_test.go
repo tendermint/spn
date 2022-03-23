@@ -24,7 +24,6 @@ func TestKeeper_InitializeConsumerClient(t *testing.T) {
 			sample.ConsensusState(0),
 			spntypes.DefaultUnbondingPeriod,
 			spntypes.DefaultRevisionHeight,
-			false,
 		))
 		clientID, err := tk.MonitoringProviderKeeper.InitializeConsumerClient(ctx)
 		require.NoError(t, err)

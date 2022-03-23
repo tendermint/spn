@@ -9,7 +9,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
-	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/x/monitoringp/types"
 )
@@ -113,54 +112,6 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		err := tk.MonitoringProviderKeeper.VerifyClientIDFromChannelID(ctx, "foo")
 		require.ErrorIs(t, err, types.ErrConsumerConnectionEstablished)
 	})
-
-	t.Run("debug mode should fail if client ID can't be retrieve from channel ID", func(t *testing.T) {
-		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
-		tk.MonitoringProviderKeeper.SetParams(ctx, types.NewParams(
-			1,
-			"foo-1",
-			spntypes.ConsensusState{},
-			spntypes.DefaultUnbondingPeriod,
-			1,
-			true,
-		))
-		err := tk.MonitoringProviderKeeper.VerifyClientIDFromChannelID(ctx, "bar")
-		require.ErrorIs(t, err, channeltypes.ErrChannelNotFound)
-	})
-
-	t.Run("should return no error when debug mode is set and client doesn't exist", func(t *testing.T) {
-		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
-		tk.MonitoringProviderKeeper.SetParams(ctx, types.NewParams(
-			1,
-			"foo-1",
-			spntypes.ConsensusState{},
-			spntypes.DefaultUnbondingPeriod,
-			1,
-			true,
-		))
-		err := tk.MonitoringProviderKeeper.VerifyClientIDFromChannelID(ctx, "foo")
-		require.NoError(t, err)
-	})
-
-	t.Run("should return no error when debug mode is set and connection has already been established", func(t *testing.T) {
-		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
-		tk.MonitoringProviderKeeper.SetParams(ctx, types.NewParams(
-			1,
-			"foo-1",
-			spntypes.ConsensusState{},
-			spntypes.DefaultUnbondingPeriod,
-			1,
-			true,
-		))
-		tk.MonitoringProviderKeeper.SetConsumerClientID(ctx, types.ConsumerClientID{
-			ClientID: "foo",
-		})
-		tk.MonitoringProviderKeeper.SetConnectionChannelID(ctx, types.ConnectionChannelID{
-			ChannelID: "bar",
-		})
-		err := tk.MonitoringProviderKeeper.VerifyClientIDFromChannelID(ctx, "foo")
-		require.NoError(t, err)
-	})
 }
 
 func TestKeeper_RegisterConnectionChannelID(t *testing.T) {
@@ -195,63 +146,5 @@ func TestKeeper_RegisterConnectionChannelID(t *testing.T) {
 		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
 		err := tk.MonitoringProviderKeeper.RegisterConnectionChannelID(ctx, "foo")
 		require.ErrorIs(t, err, spnerrors.ErrCritical)
-	})
-
-	t.Run("debug mode should fail with critical if client ID can't be retrieve from channel ID", func(t *testing.T) {
-		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
-		tk.MonitoringProviderKeeper.SetParams(ctx, types.NewParams(
-			1,
-			"foo-1",
-			spntypes.ConsensusState{},
-			spntypes.DefaultUnbondingPeriod,
-			1,
-			true,
-		))
-		err := tk.MonitoringProviderKeeper.RegisterConnectionChannelID(ctx, "bar")
-		require.ErrorIs(t, err, spnerrors.ErrCritical)
-	})
-
-	t.Run("debug mode allow to register a channel ID when consumer client ID doesn't exist", func(t *testing.T) {
-		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
-		tk.MonitoringProviderKeeper.SetParams(ctx, types.NewParams(
-			1,
-			"foo-1",
-			spntypes.ConsensusState{},
-			spntypes.DefaultUnbondingPeriod,
-			1,
-			true,
-		))
-		err := tk.MonitoringProviderKeeper.RegisterConnectionChannelID(ctx, "foo")
-		require.NoError(t, err)
-		channelID, found := tk.MonitoringProviderKeeper.GetConnectionChannelID(ctx)
-		require.True(t, found)
-		require.EqualValues(t, types.ConnectionChannelID{
-			ChannelID: "foo",
-		}, channelID)
-	})
-
-	t.Run("debug mode allow to register a new channel ID and replace previous one", func(t *testing.T) {
-		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
-		tk.MonitoringProviderKeeper.SetParams(ctx, types.NewParams(
-			1,
-			"foo-1",
-			spntypes.ConsensusState{},
-			spntypes.DefaultUnbondingPeriod,
-			1,
-			true,
-		))
-		tk.MonitoringProviderKeeper.SetConsumerClientID(ctx, types.ConsumerClientID{
-			ClientID: "foo",
-		})
-		tk.MonitoringProviderKeeper.SetConnectionChannelID(ctx, types.ConnectionChannelID{
-			ChannelID: "bar",
-		})
-		err := tk.MonitoringProviderKeeper.RegisterConnectionChannelID(ctx, "foo")
-		require.NoError(t, err)
-		channelID, found := tk.MonitoringProviderKeeper.GetConnectionChannelID(ctx)
-		require.True(t, found)
-		require.EqualValues(t, types.ConnectionChannelID{
-			ChannelID: "foo",
-		}, channelID)
 	})
 }

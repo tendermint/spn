@@ -15,5 +15,4 @@ message Params {
   tendermint.spn.types.ConsensusState consumerConsensusState = 3 [(gogoproto.nullable) = false];
   int64 consumerUnbondingPeriod = 4;
   uint64 consumerRevisionHeight = 5;
-  bool debugMode = 6;
 }

@@ -10,9 +10,6 @@ import (
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// DebugModeLaunchID is the launch ID automatically used when debug mode is set
-const DebugModeLaunchID uint64 = 1
-
 // VerifyClientIDFromChannelID verifies if the client ID associated with the provided channel ID
 // is a verified client ID and if no connection is yet established with the provider chain
 // this operation should be performed at OnChanOpenInit handshake phase
@@ -22,23 +19,20 @@ func (k Keeper) VerifyClientIDFromChannelID(ctx sdk.Context, channelID string) e
 		return err
 	}
 
-	// no verification if debug mode is set
-	if !k.DebugMode(ctx) {
-		// check if the client ID is verified
-		lidFromCid, found := k.GetLaunchIDFromVerifiedClientID(ctx, clientID)
-		if !found {
-			return sdkerrors.Wrapf(types.ErrClientNotVerified, clientID)
-		}
+	// check if the client ID is verified
+	lidFromCid, found := k.GetLaunchIDFromVerifiedClientID(ctx, clientID)
+	if !found {
+		return sdkerrors.Wrapf(types.ErrClientNotVerified, clientID)
+	}
 
-		// check if the connection with the provider for this launch ID is already established
-		pCid, found := k.GetProviderClientID(ctx, lidFromCid.LaunchID)
-		if found {
-			return sdkerrors.Wrapf(
-				types.ErrConnectionAlreadyEstablished,
-				"provider client ID for launch ID %d is: %s",
-				pCid.LaunchID, pCid.ClientID,
-			)
-		}
+	// check if the connection with the provider for this launch ID is already established
+	pCid, found := k.GetProviderClientID(ctx, lidFromCid.LaunchID)
+	if found {
+		return sdkerrors.Wrapf(
+			types.ErrConnectionAlreadyEstablished,
+			"provider client ID for launch ID %d is: %s",
+			pCid.LaunchID, pCid.ClientID,
+		)
 	}
 
 	return nil
@@ -56,34 +50,28 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 		)
 	}
 
-	launchID := DebugModeLaunchID
+	// get the launch ID from the client ID
+	lidFromCid, found := k.GetLaunchIDFromVerifiedClientID(ctx, clientID)
+	if !found {
+		// client should be verified at this phase, so a critical error is returned
+		return spnerrors.Criticalf("client ID %s should be verified during registration", clientID)
+	}
 
-	// if debug mode is set, the launch ID 1 is automatically registered for the client
-	if !k.DebugMode(ctx) {
-		// get the launch ID from the client ID
-		lidFromCid, found := k.GetLaunchIDFromVerifiedClientID(ctx, clientID)
-		if !found {
-			// client should be verified at this phase, so a critical error is returned
-			return spnerrors.Criticalf("client ID %s should be verified during registration", clientID)
-		}
+	// another connection could have been established between OnChanOpenInit and OnChanOpenAck
+	// so we check if provider client ID exists
+	pCid, found := k.GetProviderClientID(ctx, lidFromCid.LaunchID)
+	if found {
+		return sdkerrors.Wrapf(
+			types.ErrConnectionAlreadyEstablished,
+			"provider connection for launch ID %d has been established: %s",
+			pCid.LaunchID, pCid.ClientID,
+		)
+	}
+	launchID := lidFromCid.LaunchID
 
-		// another connection could have been established between OnChanOpenInit and OnChanOpenAck
-		// so we check if provider client ID exists
-		pCid, found := k.GetProviderClientID(ctx, lidFromCid.LaunchID)
-		if found {
-			return sdkerrors.Wrapf(
-				types.ErrConnectionAlreadyEstablished,
-				"provider connection for launch ID %d has been established: %s",
-				pCid.LaunchID, pCid.ClientID,
-			)
-		}
-		launchID = lidFromCid.LaunchID
-
-		// update the chain since it is not MonitoringConnected
-		// debug mode means we assume the chain actually exists
-		if err = k.launchKeeper.EnableMonitoringConnection(ctx, launchID); err != nil {
-			return err
-		}
+	// update the chain since it is not MonitoringConnected
+	if err = k.launchKeeper.EnableMonitoringConnection(ctx, launchID); err != nil {
+		return err
 	}
 
 	// register the client for the provider
