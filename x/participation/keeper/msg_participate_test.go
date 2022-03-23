@@ -17,13 +17,16 @@ func Test_msgServer_Participate(t *testing.T) {
 	var (
 		sdkCtx, tk, ts        = testkeeper.NewTestSetup(t)
 		auctioneer            = sample.Address()
-		sellingCoin           = sample.Coin()
-		startTime             = sdkCtx.BlockTime().Add(time.Hour * 10) // 10 hours from now
-		registrationPeriod    = time.Hour * 5                          // 5 hours before start
+		sellingCoin1          = sample.Coin()
+		sellingCoin2          = sample.Coin()
+		registrationPeriod    = time.Hour * 5 // 5 hours before start
+		startTime1            = sdkCtx.BlockTime().Add(time.Hour * 10)
+		startTime2            = time.Unix(int64((registrationPeriod - time.Hour).Seconds()), 0)
+		endTime               = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
 		validRegistrationTime = sdkCtx.BlockTime().Add(time.Hour * 6)
 		allocationPrice       = types.AllocationPrice{Bonded: sdk.NewInt(100)}
-		addrWithDelsTier1     = sample.Address()
-		addrWithDelsTier2     = sample.Address()
+		addrsWithDelsTier     = []string{sample.Address(), sample.Address(), sample.Address()}
+		availableAllocsTier   = make([]uint64, len(addrsWithDelsTier))
 	)
 
 	params := types.DefaultParams()
@@ -31,17 +34,20 @@ func Test_msgServer_Participate(t *testing.T) {
 	params.RegistrationPeriod = registrationPeriod
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
-	// initialize an auction
-	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin))
-	auctionID := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin, startTime)
+	// initialize auction
+	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
+	auctionID1 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin1, startTime1, endTime)
+	// initialize auction with edge case start time
+	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin2))
+	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin2, startTime2, endTime)
 
-	tk.DelegateN(sdkCtx, addrWithDelsTier1, 100, 10)
-	availableAllocTier1, err := tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, addrWithDelsTier1)
-	require.NoError(t, err)
-
-	tk.DelegateN(sdkCtx, addrWithDelsTier2, 100, 10)
-	availableAllocTier2, err := tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, addrWithDelsTier2)
-	require.NoError(t, err)
+	// add delegattions
+	for i := 0; i < len(addrsWithDelsTier); i++ {
+		tk.DelegateN(sdkCtx, addrsWithDelsTier[i], 100, 10)
+		var err error
+		availableAllocsTier[i], err = tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, addrsWithDelsTier[i])
+		require.NoError(t, err)
+	}
 
 	tests := []struct {
 		name                  string
@@ -54,30 +60,41 @@ func Test_msgServer_Participate(t *testing.T) {
 		{
 			name: "valid message tier 1",
 			msg: &types.MsgParticipate{
-				Participant: addrWithDelsTier1,
-				AuctionID:   auctionID,
+				Participant: addrsWithDelsTier[0],
+				AuctionID:   auctionID1,
 				TierID:      1,
 			},
 			desiredUsedAlloc:      1,
-			currentAvailableAlloc: availableAllocTier1,
+			currentAvailableAlloc: availableAllocsTier[0],
 			blockTime:             validRegistrationTime,
 		},
 		{
 			name: "valid message tier 2",
 			msg: &types.MsgParticipate{
-				Participant: addrWithDelsTier2,
-				AuctionID:   auctionID,
+				Participant: addrsWithDelsTier[1],
+				AuctionID:   auctionID1,
 				TierID:      2,
 			},
 			desiredUsedAlloc:      2,
-			currentAvailableAlloc: availableAllocTier2,
+			currentAvailableAlloc: availableAllocsTier[1],
 			blockTime:             validRegistrationTime,
+		},
+		{
+			name: "should allow participation when blockTime < registrationPeriod",
+			msg: &types.MsgParticipate{
+				Participant: addrsWithDelsTier[2],
+				AuctionID:   auctionID2,
+				TierID:      1,
+			},
+			desiredUsedAlloc:      1,
+			currentAvailableAlloc: availableAllocsTier[2],
+			blockTime:             time.Unix(1, 0),
 		},
 		{
 			name: "should prevent participating twice in the same auction",
 			msg: &types.MsgParticipate{
-				Participant: addrWithDelsTier1,
-				AuctionID:   auctionID,
+				Participant: addrsWithDelsTier[0],
+				AuctionID:   auctionID1,
 				TierID:      1,
 			},
 			err:       types.ErrAlreadyParticipating,
@@ -87,7 +104,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent if user has insufficient available allocations",
 			msg: &types.MsgParticipate{
 				Participant: sample.Address(),
-				AuctionID:   auctionID,
+				AuctionID:   auctionID1,
 				TierID:      1,
 			},
 			err:       types.ErrInsufficientAllocations,
@@ -97,7 +114,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent participating using a non existent tier",
 			msg: &types.MsgParticipate{
 				Participant: sample.Address(),
-				AuctionID:   auctionID,
+				AuctionID:   auctionID1,
 				TierID:      111,
 			},
 			err:       types.ErrTierNotFound,
@@ -107,7 +124,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent participating in a non existent auction",
 			msg: &types.MsgParticipate{
 				Participant: sample.Address(),
-				AuctionID:   auctionID + 1,
+				AuctionID:   auctionID2 + 1000,
 				TierID:      1,
 			},
 			err:       types.ErrAuctionNotFound,
@@ -116,18 +133,18 @@ func Test_msgServer_Participate(t *testing.T) {
 		{
 			name: "should prevent participating if auction started",
 			msg: &types.MsgParticipate{
-				Participant: addrWithDelsTier2,
-				AuctionID:   auctionID,
+				Participant: addrsWithDelsTier[1],
+				AuctionID:   auctionID1,
 				TierID:      1,
 			},
 			err:       types.ErrParticipationNotAllowed,
-			blockTime: startTime.Add(time.Hour),
+			blockTime: startTime1.Add(time.Hour),
 		},
 		{
 			name: "should prevent participating before registration period",
 			msg: &types.MsgParticipate{
-				Participant: addrWithDelsTier2,
-				AuctionID:   auctionID,
+				Participant: addrsWithDelsTier[1],
+				AuctionID:   auctionID1,
 				TierID:      2,
 			},
 			err:       types.ErrParticipationNotAllowed,

@@ -14,7 +14,8 @@ import (
 func MsgCreateFixedAuction(
 	auctioneer string,
 	sellingCoin sdk.Coin,
-	startTime time.Time,
+	startTime,
+	endTime time.Time,
 ) *fundraisingtypes.MsgCreateFixedPriceAuction {
 	sellingPrice := int64(rand.Intn(10000)) + 10000 // 10000 - 20000
 
@@ -25,6 +26,6 @@ func MsgCreateFixedAuction(
 		PayingCoinDenom:  stakingtypes.DefaultParams().BondDenom,
 		VestingSchedules: []fundraisingtypes.VestingSchedule{},
 		StartTime:        startTime,
-		EndTime:          startTime.Add(time.Hour * 24 * 7),
+		EndTime:          endTime,
 	}
 }
