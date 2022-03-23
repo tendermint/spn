@@ -18,6 +18,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgParticipate int = 100
 
+	opWeightMsgCreateAuction = "op_weight_create_auction"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateAuction int = 100
+
 	opWeightMsgWithdrawAllocations = "op_weight_withdraw_allocations"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgWithdrawAllocations int = 100
@@ -69,7 +73,12 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgParticipate int
+	var (
+		weightMsgParticipate         int
+		weightMsgCreateAuction       int
+		weightMsgWithdrawAllocations int
+	)
+
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgParticipate, &weightMsgParticipate, nil,
 		func(_ *rand.Rand) {
 			weightMsgParticipate = defaultWeightMsgParticipate
@@ -77,10 +86,19 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgParticipate,
-		participationsim.SimulateMsgParticipate(am.accountKeeper, am.bankKeeper, am.keeper),
+		participationsim.SimulateMsgParticipate(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
 	))
 
-	var weightMsgWithdrawAllocations int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateAuction, &weightMsgCreateAuction, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateAuction = defaultWeightMsgCreateAuction
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateAuction,
+		participationsim.SimulateCreateAuction(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
+	))
+
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgWithdrawAllocations, &weightMsgWithdrawAllocations, nil,
 		func(_ *rand.Rand) {
 			weightMsgWithdrawAllocations = defaultWeightMsgWithdrawAllocations

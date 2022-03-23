@@ -490,7 +490,13 @@ func New(
 		app.FundraisingKeeper,
 		app.StakingKeeper,
 	)
-	participationModule := participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper)
+	participationModule := participationmodule.NewAppModule(
+		appCodec,
+		app.ParticipationKeeper,
+		app.AuthKeeper,
+		app.BankKeeper,
+		app.FundraisingKeeper,
+	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
@@ -622,6 +628,7 @@ func New(
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
+		participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper, app.FundraisingKeeper),
 
 		// TODO: Include fundraising for simapp when available
 		// fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),

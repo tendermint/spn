@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -99,9 +100,10 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 
-	keeper        keeper.Keeper
-	accountKeeper authkeeper.AccountKeeper
-	bankKeeper    bankkeeper.Keeper
+	keeper            keeper.Keeper
+	accountKeeper     authkeeper.AccountKeeper
+	bankKeeper        bankkeeper.Keeper
+	fundraisingKeeper fundraisingkeeper.Keeper
 }
 
 func NewAppModule(
@@ -109,12 +111,14 @@ func NewAppModule(
 	keeper keeper.Keeper,
 	accountKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
+	fundraisingkeeper fundraisingkeeper.Keeper,
 ) AppModule {
 	return AppModule{
-		AppModuleBasic: NewAppModuleBasic(cdc),
-		keeper:         keeper,
-		accountKeeper:  accountKeeper,
-		bankKeeper:     bankKeeper,
+		AppModuleBasic:    NewAppModuleBasic(cdc),
+		keeper:            keeper,
+		accountKeeper:     accountKeeper,
+		bankKeeper:        bankKeeper,
+		fundraisingKeeper: fundraisingkeeper,
 	}
 }
 
