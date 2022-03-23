@@ -15,18 +15,18 @@ import (
 
 func Test_msgServer_Participate(t *testing.T) {
 	var (
-		sdkCtx, tk, ts        = testkeeper.NewTestSetup(t)
-		auctioneer            = sample.Address()
-		sellingCoin1          = sample.Coin()
-		sellingCoin2          = sample.Coin()
-		registrationPeriod    = time.Hour * 5 // 5 hours before start
-		startTime1            = sdkCtx.BlockTime().Add(time.Hour * 10)
-		startTime2            = time.Unix(int64((registrationPeriod - time.Hour).Seconds()), 0)
-		endTime               = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
-		validRegistrationTime = sdkCtx.BlockTime().Add(time.Hour * 6)
-		allocationPrice       = types.AllocationPrice{Bonded: sdk.NewInt(100)}
-		addrsWithDelsTier     = []string{sample.Address(), sample.Address(), sample.Address()}
-		availableAllocsTier   = make([]uint64, len(addrsWithDelsTier))
+		sdkCtx, tk, ts                   = testkeeper.NewTestSetup(t)
+		auctioneer                       = sample.Address()
+		sellingCoin1                     = sample.Coin()
+		sellingCoin2                     = sample.Coin()
+		registrationPeriod               = time.Hour * 5 // 5 hours before start
+		startTime                        = sdkCtx.BlockTime().Add(time.Hour * 10)
+		startTimeLowerRegistrationPeriod = time.Unix(int64((registrationPeriod - time.Hour).Seconds()), 0)
+		endTime                          = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
+		validRegistrationTime            = sdkCtx.BlockTime().Add(time.Hour * 6)
+		allocationPrice                  = types.AllocationPrice{Bonded: sdk.NewInt(100)}
+		addrsWithDelsTier                = []string{sample.Address(), sample.Address(), sample.Address()}
+		availableAllocsTier              = make([]uint64, len(addrsWithDelsTier))
 	)
 
 	params := types.DefaultParams()
@@ -36,10 +36,10 @@ func Test_msgServer_Participate(t *testing.T) {
 
 	// initialize auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
-	auctionID1 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin1, startTime1, endTime)
+	auctionID1 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin1, startTime, endTime)
 	// initialize auction with edge case start time
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin2))
-	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin2, startTime2, endTime)
+	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin2, startTimeLowerRegistrationPeriod, endTime)
 
 	// add delegations
 	for i := 0; i < len(addrsWithDelsTier); i++ {
@@ -80,7 +80,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			blockTime:             validRegistrationTime,
 		},
 		{
-			name: "should allow participation when blockTime < registrationPeriod",
+			name: "should allow participation when registration period is longer than range between Unix time 0 and auction's start time",
 			msg: &types.MsgParticipate{
 				Participant: addrsWithDelsTier[2],
 				AuctionID:   auctionID2,
@@ -138,7 +138,7 @@ func Test_msgServer_Participate(t *testing.T) {
 				TierID:      1,
 			},
 			err:       types.ErrParticipationNotAllowed,
-			blockTime: startTime1.Add(time.Hour),
+			blockTime: startTime.Add(time.Hour),
 		},
 		{
 			name: "should prevent participating before registration period",
