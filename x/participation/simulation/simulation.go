@@ -118,7 +118,7 @@ func SimulateCreateAuction(
 				nil
 		}
 
-		startTime := ctx.BlockTime()
+		startTime := ctx.BlockTime().Add(time.Hour * 24)
 		endTime := startTime.Add(time.Hour * 24 * 7)
 		msg := sample.MsgCreateFixedAuction(simAccount.Address.String(), sellCoin, startTime, endTime)
 
