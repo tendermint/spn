@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -54,6 +55,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	}
 
 	tiers := k.ParticipationTierList(ctx)
+	fmt.Println(tiers)
 	tier, found := types.GetTierFromID(tiers, msg.TierID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrTierNotFound, "tier %d not found", msg.TierID)

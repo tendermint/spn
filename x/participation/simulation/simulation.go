@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"fmt"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
@@ -123,9 +122,6 @@ func SimulateCreateAuction(
 		msg := sample.MsgCreateFixedAuction(simAccount.Address.String(), sellCoin, startTime, endTime)
 
 		mintAmt := sdk.NewCoins(msg.SellingCoin)
-		fmt.Println(msg.SellingCoin)
-		fmt.Println(sellCoin)
-		fmt.Println(mintAmt)
 		// must mint and send new coins to auctioneer
 		err := bk.MintCoins(ctx, minttypes.ModuleName, mintAmt)
 		if err != nil {
