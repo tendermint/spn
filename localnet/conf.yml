@@ -1,9 +1,6 @@
 # Chain ID used in the network
 chain_id: "spn-1"
 
-# Using debug mode skips IBC client verification for monitoring IBC connection
-debug_mode: false
-
 # Validator set max size, setting 1 allows to experiment full validator set changes
 max_validators: 10
 
