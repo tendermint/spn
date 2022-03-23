@@ -1,14 +1,16 @@
 package simulation
 
 import (
+	"math/rand"
+	"time"
+
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+
 	"github.com/tendermint/spn/testutil/sample"
-	"math/rand"
-	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -156,6 +158,7 @@ func SimulateCreateAuction(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// fundraising simulation params must be set
+		// since the module is not included in the simulation manager
 		params := fundraisingtypes.DefaultParams()
 		fk.SetParams(ctx, params)
 		fee := params.AuctionCreationFee

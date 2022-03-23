@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 
 	"github.com/cosmos/cosmos-sdk/client"
