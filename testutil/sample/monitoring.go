@@ -64,11 +64,10 @@ func MonitoringpParams() monitoringp.Params {
 		consensusState,
 		consumerUnbondingpPeriod,
 		consumerRevisionHeight,
-		true,
 	)
 }
 
 // MonitoringcParams returns a sample of params for the monitoring consumer module
 func MonitoringcParams() monitoringc.Params {
-	return monitoringc.NewParams(true)
+	return monitoringc.NewParams()
 }

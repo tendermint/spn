@@ -35,9 +35,6 @@ genesis['genesis_time'] = "2022-02-10T10:29:59.410196Z"
 # Set chain ID
 genesis['chain_id'] = conf['chain_id']
 
-# Set monitoring param
-genesis['app_state']['monitoringc']['params']['debugMode'] = conf['debug_mode']
-
 # Set staking params
 genesis['app_state']['staking']['params']['max_validators'] = conf['max_validators']
 genesis['app_state']['staking']['params']['unbonding_time'] = str(conf['unbonding_time'])+"s"

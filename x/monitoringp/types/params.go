@@ -17,7 +17,6 @@ var (
 	KeyConsumerChainID         = []byte("ConsumerChainID")
 	KeyConsumerUnbondingPeriod = []byte("ConsumerUnbondingPeriod")
 	KeyConsumerRevisionHeight  = []byte("RevisionHeight")
-	KeyDebugMode               = []byte("DebugMode")
 
 	DefaultLastBlockHeight int64 = 1
 	DefaultConsumerChainID       = "spn-1"
@@ -37,7 +36,6 @@ func NewParams(
 	ccs spntypes.ConsensusState,
 	consumerUnbondingpPeriod int64,
 	consumerRevisionHeight uint64,
-	debugMode bool,
 ) Params {
 	return Params{
 		LastBlockHeight:         lastBlockHeight,
@@ -45,7 +43,6 @@ func NewParams(
 		ConsumerChainID:         consumerChainID,
 		ConsumerUnbondingPeriod: consumerUnbondingpPeriod,
 		ConsumerRevisionHeight:  consumerRevisionHeight,
-		DebugMode:               debugMode,
 	}
 }
 
@@ -57,7 +54,6 @@ func DefaultParams() Params {
 		spntypes.ConsensusState{},
 		spntypes.DefaultUnbondingPeriod,
 		spntypes.DefaultRevisionHeight,
-		false,
 	)
 }
 
@@ -89,11 +85,6 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			&p.ConsumerRevisionHeight,
 			validateConsumerRevisionHeight,
 		),
-		paramtypes.NewParamSetPair(
-			KeyDebugMode,
-			&p.DebugMode,
-			validateDebugMode,
-		),
 	}
 }
 
@@ -111,10 +102,7 @@ func (p Params) Validate() error {
 	if err := validateConsumerUnbondingPeriod(p.ConsumerUnbondingPeriod); err != nil {
 		return err
 	}
-	if err := validateConsumerRevisionHeight(p.ConsumerRevisionHeight); err != nil {
-		return err
-	}
-	return validateDebugMode(p.DebugMode)
+	return validateConsumerRevisionHeight(p.ConsumerRevisionHeight)
 }
 
 // String implements the Stringer interface.
@@ -197,14 +185,5 @@ func validateConsumerRevisionHeight(i interface{}) error {
 		return fmt.Errorf("minimal unbonding period is %d", spntypes.MinimalUnbondingPeriod)
 	}
 
-	return nil
-}
-
-// validateDebugMode checks the param is a boolean
-func validateDebugMode(i interface{}) error {
-	_, ok := i.(bool)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
 	return nil
 }

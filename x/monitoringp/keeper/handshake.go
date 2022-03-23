@@ -22,28 +22,25 @@ func (k Keeper) VerifyClientIDFromChannelID(ctx sdk.Context, channelID string) e
 		return err
 	}
 
-	// no verification if debug mode is set
-	if !k.DebugMode(ctx) {
-		// check no connection is already established
-		_, found := k.GetConnectionChannelID(ctx)
-		if found {
-			return types.ErrConsumerConnectionEstablished
-		}
+	// check no connection is already established
+	_, found := k.GetConnectionChannelID(ctx)
+	if found {
+		return types.ErrConsumerConnectionEstablished
+	}
 
-		// check if the consumer client ID exists
-		consumerClient, found := k.GetConsumerClientID(ctx)
-		if !found {
-			return types.ErrNoConsumerClient
-		}
+	// check if the consumer client ID exists
+	consumerClient, found := k.GetConsumerClientID(ctx)
+	if !found {
+		return types.ErrNoConsumerClient
+	}
 
-		if consumerClient.ClientID != clientID {
-			return sdkerrors.Wrapf(
-				types.ErrInvalidClient,
-				"the client is not the consumer client, got %s, expected %s",
-				clientID,
-				consumerClient.ClientID,
-			)
-		}
+	if consumerClient.ClientID != clientID {
+		return sdkerrors.Wrapf(
+			types.ErrInvalidClient,
+			"the client is not the consumer client, got %s, expected %s",
+			clientID,
+			consumerClient.ClientID,
+		)
 	}
 
 	return nil
