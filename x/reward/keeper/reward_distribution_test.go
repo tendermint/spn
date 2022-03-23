@@ -219,7 +219,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		err          error
 	}{
 		{
-			name: "valid close reward pool",
+			name: "should allow distributing rewards",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -241,6 +241,31 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				provider: sdk.NewCoins(),
 				valFoo:   tc.Coins(t, "50aaa,50bbb"),
 				valBar:   tc.Coins(t, "50aaa,50bbb"),
+			},
+		},
+		{
+			name: "should allow distributing reward with different signature ratios",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				InitialCoins:     tc.Coins(t, "100aaa,1000bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,1000bbb"),
+				LastRewardHeight: 10,
+				Closed:           false,
+			},
+			args: args{
+				launchID: 1,
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valOpAddrFoo, "0.2"),
+					tc.SignatureCount(t, valOpAddrBar, "0.8"),
+				),
+				lastBlockHeight: 10,
+				closeRewardPool: true,
+			},
+			wantBalances: map[string]sdk.Coins{
+				provider: sdk.NewCoins(),
+				valFoo:   tc.Coins(t, "20aaa,200bbb"),
+				valBar:   tc.Coins(t, "80aaa,800bbb"),
 			},
 		},
 		{
@@ -346,6 +371,66 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
+			name: "rewards should all be refunded if the reward pool is closed and no signature counts are reported",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+				Closed:           false,
+			},
+			args: args{
+				launchID:        1,
+				signatureCounts: tc.SignatureCounts(1),
+				lastBlockHeight: 5,
+				closeRewardPool: true,
+			},
+			wantBalances: map[string]sdk.Coins{
+				provider: tc.Coins(t, "100aaa,100bbb"),
+			},
+		},
+		{
+			name: "rewards should all be refunded if the last reward height is reached and no signature counts are reported",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+				Closed:           false,
+			},
+			args: args{
+				launchID:        1,
+				signatureCounts: tc.SignatureCounts(1),
+				lastBlockHeight: 10,
+				closeRewardPool: false,
+			},
+			wantBalances: map[string]sdk.Coins{
+				provider: tc.Coins(t, "100aaa,100bbb"),
+			},
+		},
+		{
+			name: "reward should be refunded to the provider relative to the block ratio if the reward pool is not closed and no signature counts are reported",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+				Closed:           false,
+			},
+			args: args{
+				launchID:        1,
+				signatureCounts: tc.SignatureCounts(1),
+				lastBlockHeight: 5,
+				closeRewardPool: false,
+			},
+			wantBalances: map[string]sdk.Coins{
+				provider: tc.Coins(t, "50aaa,50bbb"),
+			},
+		},
+		{
 			name: "should prevent distributing rewards with a non-existent reward pool",
 			args: args{
 				launchID: 99999,
@@ -376,6 +461,27 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				closeRewardPool: false,
 			},
 			err: types.ErrRewardPoolClosed,
+		},
+		{
+			name: "prevent distributing rewards if signature counts are invalid",
+			rewardPool: types.RewardPool{
+				LaunchID:         1,
+				Provider:         provider,
+				InitialCoins:     tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:   tc.Coins(t, "100aaa,100bbb"),
+				LastRewardHeight: 10,
+				Closed:           false,
+			},
+			args: args{
+				launchID: 1,
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
+					tc.SignatureCount(t, "invalid-bech32-address", "0.5"),
+				),
+				lastBlockHeight: 1,
+				closeRewardPool: false,
+			},
+			err: types.ErrInvalidSignatureCounts,
 		},
 	}
 	for _, tt := range tests {
@@ -433,8 +539,16 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			}
 
 			// assert currentRemainingCoins = previousRemainingCoins - distributedRewards
-			coinTotal := rewardPool.RemainingCoins.Add(totalDistributedBalances...)
-			require.True(t, tt.rewardPool.RemainingCoins.IsEqual(coinTotal))
+
+			expectedRemainingCoins, neg := tt.rewardPool.RemainingCoins.SafeSub(totalDistributedBalances)
+			require.False(t, neg, "more coins have been distributed than coins in remaining coins %s > %s",
+				totalDistributedBalances.String(),
+				tt.rewardPool.RemainingCoins.String(),
+			)
+			require.True(t, rewardPool.RemainingCoins.IsEqual(expectedRemainingCoins), "expected remaining coins %s, got %s",
+				expectedRemainingCoins.String(),
+				rewardPool.RemainingCoins.String(),
+			)
 
 			// remove the reward pool used for the test
 			tk.RewardKeeper.RemoveRewardPool(ctx, tt.rewardPool.LaunchID)
