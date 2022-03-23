@@ -21,6 +21,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		invalidParticipant  = sample.Address()
 		auctionSellingCoin  = sample.Coin()
 		auctionStartTime    = sdkCtx.BlockTime().Add(time.Hour)
+		auctionEndTime      = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
 		validWithdrawalTime = auctionStartTime.Add(time.Hour * 24 * 30)
 	)
 
@@ -33,7 +34,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 
 	// initialize an auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(auctionSellingCoin))
-	auctionID := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, auctionSellingCoin, auctionStartTime)
+	auctionID := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, auctionSellingCoin, auctionStartTime, auctionEndTime)
 
 	// validParticipant participates to auction
 	_, err := ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{

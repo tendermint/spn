@@ -53,7 +53,7 @@ var (
 	}
 
 	// DefaultRegistrationPeriod is set to be 1/3 of the default staking UnbondingTime of 21 days.
-	DefaultRegistrationPeriod = int64(time.Hour.Seconds() * 24 * 7) // One week
+	DefaultRegistrationPeriod = time.Hour * 24 * 7 // One week
 	// DefaultWithdrawalDelay is set to be 2/3 of the default staking UnbondingTime of 21 days. Together with
 	// DefaultRegistrationPeriod they sum up to the total default UnbondingTime
 	DefaultWithdrawalDelay = int64(time.Hour.Seconds() * 24 * 14) // Two weeks
@@ -68,7 +68,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams(
 	allocationPrice AllocationPrice,
 	participationTierList []Tier,
-	registrationPeriod,
+	registrationPeriod time.Duration,
 	withdrawalDelay int64,
 ) Params {
 	return Params{
@@ -94,7 +94,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyAllocationPrice, &p.AllocationPrice, validateAllocationPrice),
 		paramtypes.NewParamSetPair(KeyParticipationTierList, &p.ParticipationTierList, validateParticipationTierList),
-		paramtypes.NewParamSetPair(KeyRegistrationPeriod, &p.RegistrationPeriod, validateAllocationsUsageTimeFrame),
+		paramtypes.NewParamSetPair(KeyRegistrationPeriod, &p.RegistrationPeriod, validateTimeDuration),
 		paramtypes.NewParamSetPair(KeyWithdrawalDelay, &p.WithdrawalDelay, validateAllocationsUsageTimeFrame),
 	}
 }
@@ -109,7 +109,7 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	if err := validateAllocationsUsageTimeFrame(p.RegistrationPeriod); err != nil {
+	if err := validateTimeDuration(p.RegistrationPeriod); err != nil {
 		return err
 	}
 
@@ -174,6 +174,20 @@ func validateTierBenefits(b TierBenefits) error {
 
 	if !b.MaxBidAmount.IsPositive() {
 		return fmt.Errorf("max bid amount must be greater than zero")
+	}
+
+	return nil
+}
+
+// validateTimeDuration validates a time.Duration parameter
+func validateTimeDuration(i interface{}) error {
+	v, ok := i.(time.Duration)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v <= 0 {
+		return fmt.Errorf("time frame must be positive")
 	}
 
 	return nil

@@ -15,10 +15,8 @@ func TestGetParams(t *testing.T) {
 	params := types.DefaultParams()
 	tk.MonitoringConsumerKeeper.SetParams(ctx, params)
 	require.EqualValues(t, params, tk.MonitoringConsumerKeeper.GetParams(ctx))
-	require.EqualValues(t, false, tk.MonitoringConsumerKeeper.DebugMode(ctx))
 
-	params = types.NewParams(true)
+	params = types.NewParams()
 	tk.MonitoringConsumerKeeper.SetParams(ctx, params)
 	require.EqualValues(t, params, tk.MonitoringConsumerKeeper.GetParams(ctx))
-	require.EqualValues(t, true, tk.MonitoringConsumerKeeper.DebugMode(ctx))
 }
