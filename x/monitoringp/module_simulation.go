@@ -54,9 +54,6 @@ func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyConsumerRevisionHeight), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(monitoringpParams.ConsumerRevisionHeight))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyDebugMode), func(r *rand.Rand) string {
-			return string(types.Amino.MustMarshalJSON(monitoringpParams.DebugMode))
-		}),
 	}
 }
 

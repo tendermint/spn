@@ -20,7 +20,6 @@ func TestGetParams(t *testing.T) {
 	require.EqualValues(t, types.DefaultConsumerChainID, tk.MonitoringProviderKeeper.ConsumerChainID(ctx))
 	require.EqualValues(t, spntypes.DefaultUnbondingPeriod, tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx))
 	require.EqualValues(t, spntypes.DefaultRevisionHeight, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx))
-	require.EqualValues(t, false, tk.MonitoringProviderKeeper.DebugMode(ctx))
 
 	chainID := sample.GenesisChainID()
 	cs := sample.ConsensusState(0)
@@ -30,7 +29,6 @@ func TestGetParams(t *testing.T) {
 		cs,
 		10,
 		20,
-		true,
 	)
 	tk.MonitoringProviderKeeper.SetParams(ctx, params)
 	require.EqualValues(t, params, tk.MonitoringProviderKeeper.GetParams(ctx))
@@ -39,5 +37,4 @@ func TestGetParams(t *testing.T) {
 	require.EqualValues(t, chainID, tk.MonitoringProviderKeeper.ConsumerChainID(ctx))
 	require.EqualValues(t, 10, tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx))
 	require.EqualValues(t, 20, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx))
-	require.EqualValues(t, true, tk.MonitoringProviderKeeper.DebugMode(ctx))
 }
