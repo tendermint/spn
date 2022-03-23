@@ -1,12 +1,15 @@
 package simulation
 
 import (
+	"fmt"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
+	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"math/rand"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -99,8 +102,13 @@ func SimulateCreateAuction(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		fee := fundraisingtypes.DefaultAuctionCreationFee
-		simAccount, _, found := RandomAccWithBalance(ctx, r, bk, accs, fee.Add(fee...))
+		// fundraising simulation params must be set
+		params := fundraisingtypes.DefaultParams()
+		fk.SetParams(ctx, params)
+		fee := params.AuctionCreationFee
+		sellCoin := sample.Coin()
+
+		simAccount, _, found := RandomAccWithBalance(ctx, r, bk, accs, fee)
 		if !found {
 			return simtypes.NoOpMsg(
 					types.ModuleName,
@@ -111,7 +119,33 @@ func SimulateCreateAuction(
 		}
 
 		startTime := ctx.BlockTime()
-		msg := sample.MsgCreateFixedAuction(simAccount.Address.String(), fee[0], startTime)
+		endTime := startTime.Add(time.Hour * 24 * 7)
+		msg := sample.MsgCreateFixedAuction(simAccount.Address.String(), sellCoin, startTime, endTime)
+
+		mintAmt := sdk.NewCoins(msg.SellingCoin)
+		fmt.Println(msg.SellingCoin)
+		fmt.Println(sellCoin)
+		fmt.Println(mintAmt)
+		// must mint and send new coins to auctioneer
+		err := bk.MintCoins(ctx, minttypes.ModuleName, mintAmt)
+		if err != nil {
+			return simtypes.NoOpMsg(
+					types.ModuleName,
+					fundraisingtypes.MsgCreateFixedPriceAuction{}.Type(),
+					"error setting up balance"),
+				nil,
+				nil
+		}
+		err = bk.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, simAccount.Address, mintAmt)
+		if err != nil {
+			return simtypes.NoOpMsg(
+					types.ModuleName,
+					fundraisingtypes.MsgCreateFixedPriceAuction{}.Type(),
+					"error setting up balance"),
+				nil,
+				nil
+		}
+
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -126,7 +160,20 @@ func SimulateCreateAuction(
 			ModuleName:      fundraisingtypes.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+
+		// choose custom fee that only uses the default bond denom
+		// otherwise the custom sellingCoin denom could be chosen
+		customFee, err := simtypes.RandomFees(txCtx.R, txCtx.Context, fee)
+		if err != nil {
+			return simtypes.NoOpMsg(
+					types.ModuleName,
+					fundraisingtypes.MsgCreateFixedPriceAuction{}.Type(),
+					"error setting up custom fee"),
+				nil,
+				nil
+		}
+
+		return simulation.GenAndDeliverTx(txCtx, customFee)
 	}
 }
 
