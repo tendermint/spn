@@ -24,7 +24,7 @@ func RandomAccWithBalance(ctx sdk.Context, r *rand.Rand,
 	bk bankkeeper.Keeper,
 	accs []simtypes.Account,
 	desired sdk.Coins,
-) (account simtypes.Account, coins sdk.Coins, found bool) {
+) (simtypes.Account, sdk.Coins, bool) {
 	// Randomize the set
 	r.Shuffle(len(accs), func(i, j int) {
 		accs[i], accs[j] = accs[j], accs[i]
@@ -46,8 +46,53 @@ func RandomAuction(ctx sdk.Context, r *rand.Rand, fk fundraisingkeeper.Keeper) (
 		return auction, false
 	}
 
-	index := r.Intn(len(auctions))
-	return auctions[index], true
+	r.Shuffle(len(auctions), func(i, j int) {
+		auctions[i], auctions[j] = auctions[j], auctions[i]
+	})
+
+	for _, a := range auctions {
+		// auction must not be started
+		if !a.IsAuctionStarted(ctx.BlockTime()) {
+			return a, true
+		}
+	}
+
+	return auction, false
+}
+
+func RandomAccWithAllocations(ctx sdk.Context, r *rand.Rand,
+	k keeper.Keeper,
+	accs []simtypes.Account,
+	desired uint64,
+	auctionID uint64,
+) (simtypes.Account, uint64, bool) {
+	// Randomize the set
+	r.Shuffle(len(accs), func(i, j int) {
+		accs[i], accs[j] = accs[j], accs[i]
+	})
+
+	// account must have allocations but not already have participated
+	for _, acc := range accs {
+		amt, err := k.GetAvailableAllocations(ctx, acc.Address.String())
+		if err != nil {
+			continue
+		}
+
+		if amt >= desired {
+			_, found := k.GetAuctionUsedAllocations(ctx, acc.Address.String(), auctionID)
+			if found {
+				continue
+			}
+
+			return acc, amt, true
+		}
+	}
+
+	return simtypes.Account{}, 0, false
+}
+
+func RandomTierFromList(r *rand.Rand, tierList []types.Tier) uint64 {
+	return uint64(1 + r.Intn(len(tierList)))
 }
 
 func SimulateMsgParticipate(
@@ -64,16 +109,25 @@ func SimulateMsgParticipate(
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no valid auction found"), nil, nil
 		}
 
-		numTiers := len(k.GetParams(ctx).ParticipationTierList)
+		tierList := k.ParticipationTierList(ctx)
+		numTiers := len(tierList)
 		if numTiers == 0 {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no valid tiers"), nil, nil
 		}
 
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg = &types.MsgParticipate{
-			Participant: simAccount.Address.String(),
-			AuctionID:   auction.GetId(),
+		tierID := RandomTierFromList(r, tierList)
+		tier, _ := types.GetTierFromID(tierList, tierID)
+		simAccount, _, found := RandomAccWithAllocations(ctx, r, k, accs, tier.RequiredAllocations, auction.GetId())
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no account with allocations"), nil, nil
+
 		}
+
+		msg = sample.MsgParticipate(
+			simAccount.Address.String(),
+			auction.GetId(),
+			tierID,
+		)
 
 		txCtx := simulation.OperationInput{
 			R:               r,
@@ -107,7 +161,19 @@ func SimulateCreateAuction(
 		fee := params.AuctionCreationFee
 		sellCoin := sample.Coin()
 
-		simAccount, _, found := RandomAccWithBalance(ctx, r, bk, accs, fee)
+		// choose custom fee that only uses the default bond denom
+		// otherwise the custom sellingCoin denom could be chosen
+		customFee, err := simtypes.RandomFees(r, ctx, fee)
+		if err != nil {
+			return simtypes.NoOpMsg(
+					types.ModuleName,
+					fundraisingtypes.MsgCreateFixedPriceAuction{}.Type(),
+					"error setting up custom fee"),
+				nil,
+				nil
+		}
+
+		simAccount, _, found := RandomAccWithBalance(ctx, r, bk, accs, fee.Add(customFee...))
 		if !found {
 			return simtypes.NoOpMsg(
 					types.ModuleName,
@@ -123,7 +189,7 @@ func SimulateCreateAuction(
 
 		mintAmt := sdk.NewCoins(msg.SellingCoin)
 		// must mint and send new coins to auctioneer
-		err := bk.MintCoins(ctx, minttypes.ModuleName, mintAmt)
+		err = bk.MintCoins(ctx, minttypes.ModuleName, mintAmt)
 		if err != nil {
 			return simtypes.NoOpMsg(
 					types.ModuleName,
@@ -155,18 +221,6 @@ func SimulateCreateAuction(
 			Bankkeeper:      bk,
 			ModuleName:      fundraisingtypes.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
-		}
-
-		// choose custom fee that only uses the default bond denom
-		// otherwise the custom sellingCoin denom could be chosen
-		customFee, err := simtypes.RandomFees(txCtx.R, txCtx.Context, fee)
-		if err != nil {
-			return simtypes.NoOpMsg(
-					types.ModuleName,
-					fundraisingtypes.MsgCreateFixedPriceAuction{}.Type(),
-					"error setting up custom fee"),
-				nil,
-				nil
 		}
 
 		return simulation.GenAndDeliverTx(txCtx, customFee)

@@ -44,6 +44,14 @@ func ParticipationParams() participation.Params {
 	return participation.NewParams(allocationPrice, tiers, registrationPeriod, withdrawalDelay)
 }
 
+func MsgParticipate(participant string, auctionID, tierID uint64) *participation.MsgParticipate {
+	return &participation.MsgParticipate{
+		Participant: participant,
+		AuctionID:   auctionID,
+		TierID:      tierID,
+	}
+}
+
 // ParticipationGenesisState  returns a sample genesis state for the participation module
 func ParticipationGenesisState() participation.GenesisState {
 	return participation.GenesisState{
