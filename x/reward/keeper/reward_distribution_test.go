@@ -260,7 +260,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 					tc.SignatureCount(t, valOpAddrBar, "0.8"),
 				),
 				lastBlockHeight: 10,
-				closeRewardPool: true,
+				closeRewardPool: false,
 			},
 			wantBalances: map[string]sdk.Coins{
 				provider: sdk.NewCoins(),
@@ -269,7 +269,33 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "valid close reward pool with lower last block height",
+			name: "current reward height should influence the block ration for reward distribution",
+			rewardPool: types.RewardPool{
+				LaunchID:            1,
+				Provider:            provider,
+				InitialCoins:        tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:      tc.Coins(t, "100aaa,100bbb"),
+				CurrentRewardHeight: 10,
+				LastRewardHeight:    20,
+				Closed:              false,
+			},
+			args: args{
+				launchID: 1,
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrBar, "0.5"),
+				),
+				lastBlockHeight: 15,
+				closeRewardPool: false,
+			},
+			wantBalances: map[string]sdk.Coins{
+				provider: sdk.NewCoins(),
+				valFoo:   tc.Coins(t, "25aaa,25bbb"),
+				valBar:   tc.Coins(t, "25aaa,25bbb"),
+			},
+		},
+		{
+			name: "closing the reward pool should distribute all rewards",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -294,7 +320,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "valid distribute rewards without close",
+			name: "last reward height not reached and reward pool not closed should distribute part of the reward",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -319,7 +345,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "valid distribute rewards with last block height greater than reward pool last reward height",
+			name: "last block height greater than reward pool last reward height should distribute all rewards",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -483,6 +509,44 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 			err: types.ErrInvalidSignatureCounts,
 		},
+		{
+			name: "prevent providing a last block height lower than the current reward height",
+			rewardPool: types.RewardPool{
+				LaunchID:            1,
+				Provider:            provider,
+				InitialCoins:        tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:      tc.Coins(t, "100aaa,100bbb"),
+				CurrentRewardHeight: 5,
+				LastRewardHeight:    10,
+				Closed:              false,
+			},
+			args: args{
+				launchID:        1,
+				signatureCounts: tc.SignatureCounts(1),
+				lastBlockHeight: 1,
+				closeRewardPool: false,
+			},
+			err: types.ErrInvalidLastBlockHeight,
+		},
+		{
+			name: "prevent providing a last block height equals to the current reward height",
+			rewardPool: types.RewardPool{
+				LaunchID:            1,
+				Provider:            provider,
+				InitialCoins:        tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:      tc.Coins(t, "100aaa,100bbb"),
+				CurrentRewardHeight: 5,
+				LastRewardHeight:    10,
+				Closed:              false,
+			},
+			args: args{
+				launchID:        1,
+				signatureCounts: tc.SignatureCounts(1),
+				lastBlockHeight: 5,
+				closeRewardPool: false,
+			},
+			err: types.ErrInvalidLastBlockHeight,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -508,6 +572,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			rewardPool, found := tk.RewardKeeper.GetRewardPool(ctx, tt.args.launchID)
 			require.True(t, found)
 			require.Equal(t, tt.rewardPool.InitialCoins, rewardPool.InitialCoins)
+			require.Equal(t, tt.rewardPool.Provider, rewardPool.Provider)
 
 			// check if reward pool should be closed
 			if tt.args.closeRewardPool || tt.args.lastBlockHeight >= rewardPool.LastRewardHeight {
@@ -539,7 +604,6 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			}
 
 			// assert currentRemainingCoins = previousRemainingCoins - distributedRewards
-
 			expectedRemainingCoins, neg := tt.rewardPool.RemainingCoins.SafeSub(totalDistributedBalances)
 			require.False(t, neg, "more coins have been distributed than coins in remaining coins %s > %s",
 				totalDistributedBalances.String(),
