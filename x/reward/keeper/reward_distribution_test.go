@@ -83,7 +83,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: sdk.NewCoins(),
 		},
 		{
-			name: "full block and signature ration should give all rewards",
+			name: "full block and signature ratios should give all rewards",
 			args: args{
 				blockRatio: sdk.OneDec(),
 				sigRatio:   sdk.OneDec(),
