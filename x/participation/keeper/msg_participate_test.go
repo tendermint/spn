@@ -41,7 +41,7 @@ func Test_msgServer_Participate(t *testing.T) {
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin2))
 	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin2, startTime2, endTime)
 
-	// add delegattions
+	// add delegations
 	for i := 0; i < len(addrsWithDelsTier); i++ {
 		tk.DelegateN(sdkCtx, addrsWithDelsTier[i], 100, 10)
 		var err error
