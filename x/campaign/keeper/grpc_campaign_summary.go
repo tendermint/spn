@@ -3,13 +3,14 @@ package keeper
 import (
 	"context"
 	"fmt"
-	"github.com/cosmos/cosmos-sdk/store/prefix"
-	"github.com/cosmos/cosmos-sdk/types/query"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/x/campaign/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/tendermint/spn/x/campaign/types"
 )
 
 func (k Keeper) CampaignSummaries(goCtx context.Context, req *types.QueryCampaignSummariesRequest) (*types.QueryCampaignSummariesResponse, error) {
@@ -44,7 +45,7 @@ func (k Keeper) CampaignSummaries(goCtx context.Context, req *types.QueryCampaig
 
 	return &types.QueryCampaignSummariesResponse{
 		CampaignSummaries: campaignSummaries,
-		Pagination: pageRes,
+		Pagination:        pageRes,
 	}, nil
 }
 
@@ -66,16 +67,16 @@ func (k Keeper) GetCampaignSummary(ctx sdk.Context, campaign types.Campaign) (cs
 
 		chain, found := k.launchKeeper.GetChain(ctx, mostRecentLaunchID)
 		if !found {
-			return cs, fmt.Errorf("chain not found for campaing chain %d", mostRecentLaunchID)
+			return cs, fmt.Errorf("chain not found for campaign chain %d", mostRecentLaunchID)
 		}
 
 		cs.MostRecentChain = types.MostRecentChain{
-			LaunchID: mostRecentLaunchID,
+			LaunchID:        mostRecentLaunchID,
 			LaunchTriggered: chain.LaunchTriggered,
-			SourceURL: chain.SourceURL,
-			SourceHash: chain.SourceHash,
-			RequestNb: k.launchKeeper.GetRequestCount(ctx, mostRecentLaunchID),
-			ValidatorNb: k.launchKeeper.GetGenesisValidatorCount(ctx, mostRecentLaunchID),
+			SourceURL:       chain.SourceURL,
+			SourceHash:      chain.SourceHash,
+			RequestNb:       k.launchKeeper.GetRequestCount(ctx, mostRecentLaunchID),
+			ValidatorNb:     k.launchKeeper.GetGenesisValidatorCount(ctx, mostRecentLaunchID),
 		}
 
 		// retrieve information about rewards
