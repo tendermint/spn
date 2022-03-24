@@ -51,12 +51,17 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account";
   }
 
+  // Queries a list of CampaignSummaries items.
+  rpc CampaignSummaries(QueryCampaignSummariesRequest) returns (QueryCampaignSummariesResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/campaign_summaries";
+  }
+
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/params";
   }
 
-  // this line is used by starport scaffolding # 2
+// this line is used by starport scaffolding # 2
 }
 
 message QueryGetCampaignRequest {
@@ -120,6 +125,14 @@ message QueryAllMainnetVestingAccountRequest {
 message QueryAllMainnetVestingAccountResponse {
   repeated MainnetVestingAccount mainnetVestingAccount = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryCampaignSummariesRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryCampaignSummariesResponse {
+  cosmos.base.query.v1beta1.PageResponse pagination = 1;
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
