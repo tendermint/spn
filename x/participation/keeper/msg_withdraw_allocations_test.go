@@ -78,22 +78,13 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			err:       types.ErrAuctionNotFound,
 		},
 		{
-			name: "should prevent withdrawal before auction has started",
-			msg: &types.MsgWithdrawAllocations{
-				Participant: validParticipant,
-				AuctionID:   auctionID,
-			},
-			blockTime: sdkCtx.BlockTime(),
-			err:       types.ErrAllocationsLocked,
-		},
-		{
 			name: "should prevent withdrawal before withdrawal delay has passed",
 			msg: &types.MsgWithdrawAllocations{
 				Participant: validParticipant,
 				AuctionID:   auctionID,
 			},
 			blockTime: auctionStartTime,
-			err:       types.ErrAllocationsLocked,
+			err:       types.ErrAllocationWithdrawalTimeNotReached,
 		},
 		{
 			name: "used allocations not found",

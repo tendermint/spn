@@ -19,13 +19,9 @@ func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWith
 		return nil, sdkerrors.Wrapf(types.ErrAuctionNotFound, "auction %d not found", msg.AuctionID)
 	}
 
-	if !auction.IsAuctionStarted(blockTime) {
-		return nil, sdkerrors.Wrapf(types.ErrAllocationsLocked, "auction %d not yet started", msg.AuctionID)
-	}
-
 	withdrawalDelay := k.WithdrawalDelay(ctx)
 	if !blockTime.After(auction.GetStartTime().Add(withdrawalDelay)) {
-		return nil, sdkerrors.Wrapf(types.ErrAllocationsLocked, "withdrawal for auction %d not yet allowed", msg.AuctionID)
+		return nil, sdkerrors.Wrapf(types.ErrAllocationWithdrawalTimeNotReached, "withdrawal for auction %d not yet allowed", msg.AuctionID)
 	}
 
 	auctionUsedAllocations, found := k.GetAuctionUsedAllocations(ctx, msg.Participant, msg.AuctionID)
