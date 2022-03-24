@@ -2,6 +2,7 @@ syntax = "proto3";
 package tendermint.spn.participation;
 
 import "gogoproto/gogo.proto";
+import "google/protobuf/duration.proto";
 
 option go_package = "github.com/tendermint/spn/x/participation/types";
 
@@ -11,8 +12,8 @@ message Params {
   
   AllocationPrice allocationPrice = 1 [(gogoproto.nullable) = false];
   repeated Tier participationTierList = 2 [(gogoproto.nullable) = false];
-  // Time frame in seconds before auction start where MsgParticipate can be called
-  int64 registrationPeriod = 3;
+  // Time frame before auction starts where MsgParticipate can be called
+  google.protobuf.Duration registrationPeriod = 3 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
   // Delay after auction starts when allocations can be withdrawn
   google.protobuf.Duration withdrawalDelay = 4 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
 }

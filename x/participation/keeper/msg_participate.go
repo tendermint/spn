@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -12,6 +13,7 @@ import (
 
 func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate) (*types.MsgParticipateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	blockTime := ctx.BlockTime()
 
 	availableAlloc, err := k.GetAvailableAllocations(ctx, msg.Participant)
 	if err != nil {
@@ -19,9 +21,28 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	}
 
 	// check if auction exists
-	_, found := k.fundraisingKeeper.GetAuction(ctx, msg.AuctionID)
+	auction, found := k.fundraisingKeeper.GetAuction(ctx, msg.AuctionID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrAuctionNotFound, "auction %d not found", msg.AuctionID)
+	}
+
+	// check if auction is already started
+	if auction.IsAuctionStarted(blockTime) {
+		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "auction %d is already started", msg.AuctionID)
+	}
+
+	// check if auction allows participation at this time
+	registrationPeriod := k.RegistrationPeriod(ctx)
+	auctionStartTime := auction.GetStartTime()
+	if auctionStartTime.Unix() < int64(registrationPeriod.Seconds()) {
+		// subtraction would result in negative value, clamp the result to ~0
+		// by making registrationPeriod ~= auctionStartTime
+		registrationPeriod = time.Duration(auctionStartTime.Unix()) * time.Second
+	}
+	// as commented in `Time.Sub()`: To compute t-d for a duration d, use t.Add(-d).
+	registrationStart := auctionStartTime.Add(-registrationPeriod)
+	if !blockTime.After(registrationStart) {
+		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "participation period for auction %d not yet started", msg.AuctionID)
 	}
 
 	// check if the user is already added as an allowed bidder for the auction
@@ -32,7 +53,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 			msg.Participant, msg.AuctionID)
 	}
 
-	tiers := k.GetParams(ctx).ParticipationTierList
+	tiers := k.ParticipationTierList(ctx)
 	tier, found := types.GetTierFromID(tiers, msg.TierID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrTierNotFound, "tier %d not found", msg.TierID)

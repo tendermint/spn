@@ -224,3 +224,37 @@ func TestValidateTierBenefits(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateTimeDuration(t *testing.T) {
+	tests := []struct {
+		name      string
+		timeFrame interface{}
+		err       error
+	}{
+		{
+			name:      "invalid interface",
+			timeFrame: "test",
+			err:       fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:      "value not positive",
+			timeFrame: time.Duration(-rand.Int63n(1000)),
+			err:       errors.New("time frame must be positive"),
+		},
+		{
+			name:      "valid time frame",
+			timeFrame: time.Hour,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateTimeDuration(tt.timeFrame)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}

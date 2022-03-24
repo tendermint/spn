@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tendermint/spn/x/participation/types"
@@ -34,7 +36,7 @@ func (k Keeper) ParticipationTierList(ctx sdk.Context) (res []types.Tier) {
 }
 
 // RegistrationPeriod returns the RegistrationPeriod param
-func (k Keeper) RegistrationPeriod(ctx sdk.Context) (res int64) {
+func (k Keeper) RegistrationPeriod(ctx sdk.Context) (res time.Duration) {
 	k.paramstore.Get(ctx, types.KeyRegistrationPeriod, &res)
 	return
 }

@@ -4,6 +4,7 @@ package sample
 import (
 	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -177,4 +178,9 @@ func CoinsWithRangeAmount(denom1, denom2, denom3 string, min, max int64) sdk.Coi
 // allowed supply range
 func TotalSupply() sdk.Coins {
 	return CoinsWithRange(campaign.DefaultMinTotalSupply.Int64(), campaign.DefaultMaxTotalSupply.Int64())
+}
+
+// Duration returns a sample time.Duration between a second and 21 days
+func Duration() time.Duration {
+	return time.Duration(rand.Int63n(int64(time.Hour*24*21-time.Second))) + time.Second
 }

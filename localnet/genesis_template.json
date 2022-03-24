@@ -317,7 +317,6 @@
       "launchIDFromVerifiedClientIDList": [],
       "monitoringHistoryList": [],
       "params": {
-        "debugMode": false
       },
       "port_id": "monitoring",
       "providerClientIDList": [],
@@ -359,8 +358,8 @@
             }
           }
         ],
-        "registrationPeriod": 604800,
-        "withdrawalDelay": "1209600s"
+        "registrationPeriod": "604800s",
+        "withdrawalDelay": "1209600s",
       }
     },
     "profile": {
