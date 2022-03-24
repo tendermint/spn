@@ -21,16 +21,14 @@ func TestNewCampaign(t *testing.T) {
 	campaignName := sample.CampaignName()
 	coordinator := sample.Uint64()
 	totalSupply := sample.TotalSupply()
-	dynamicShares := sample.Bool()
 	metadata := sample.Metadata(20)
 
-	cmpn := campaign.NewCampaign(campaignID, campaignName, coordinator, totalSupply, dynamicShares, metadata)
+	cmpn := campaign.NewCampaign(campaignID, campaignName, coordinator, totalSupply, metadata)
 	require.EqualValues(t, campaignID, cmpn.CampaignID)
 	require.EqualValues(t, campaignName, cmpn.CampaignName)
 	require.EqualValues(t, coordinator, cmpn.CoordinatorID)
 	require.False(t, cmpn.MainnetInitialized)
 	require.True(t, totalSupply.IsEqual(cmpn.TotalSupply))
-	require.EqualValues(t, dynamicShares, cmpn.DynamicShares)
 	require.EqualValues(t, campaign.EmptyShares(), cmpn.AllocatedShares)
 	require.EqualValues(t, campaign.EmptyShares(), cmpn.TotalShares)
 }
@@ -42,12 +40,7 @@ func TestCampaign_Validate(t *testing.T) {
 	invalidAllocatedShares.AllocatedShares = campaign.NewSharesFromCoins(invalidCoins)
 
 	invalidTotalShares := sample.Campaign(0)
-	invalidTotalShares.DynamicShares = true
 	invalidTotalShares.TotalShares = campaign.NewSharesFromCoins(invalidCoins)
-
-	noDynamicShares := sample.Campaign(0)
-	noDynamicShares.DynamicShares = false
-	noDynamicShares.TotalShares = sample.Shares()
 
 	totalSharesReached := sample.Campaign(0)
 	totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
@@ -72,7 +65,6 @@ func TestCampaign_Validate(t *testing.T) {
 				invalidCampaignName,
 				sample.Uint64(),
 				sample.TotalSupply(),
-				false,
 				sample.Metadata(20),
 			),
 			valid: false,
@@ -84,7 +76,6 @@ func TestCampaign_Validate(t *testing.T) {
 				sample.CampaignName(),
 				sample.Uint64(),
 				invalidCoins,
-				false,
 				sample.Metadata(20),
 			),
 			valid: false,
@@ -97,11 +88,6 @@ func TestCampaign_Validate(t *testing.T) {
 		{
 			desc:     "invalid total shares",
 			campaign: invalidTotalShares,
-			valid:    false,
-		},
-		{
-			desc:     "total shares can't be set if no dynamic shares",
-			campaign: noDynamicShares,
 			valid:    false,
 		},
 		{

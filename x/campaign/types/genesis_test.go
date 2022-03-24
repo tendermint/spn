@@ -24,13 +24,11 @@ func TestGenesisState_Validate(t *testing.T) {
 	sharesCampaign1 := types.IncreaseShares(shares1, shares2)
 	campaign1.AllocatedShares = sharesCampaign1
 	campaign1.TotalShares = sharesCampaign1
-	campaign1.DynamicShares = true
 	campaign1.CoordinatorID = 0
 
 	sharesCampaign2 := types.IncreaseShares(shares3, shares4)
 	campaign2.AllocatedShares = sharesCampaign2
 	campaign2.TotalShares = sharesCampaign2
-	campaign2.DynamicShares = true
 	campaign2.CoordinatorID = 1
 
 	for _, tc := range []struct {
@@ -223,7 +221,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "invalid campaign",
 			genState: &types.GenesisState{
 				CampaignList: []types.Campaign{
-					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.TotalSupply(), false, sample.Metadata(20)),
+					types.NewCampaign(0, invalidCampaignName, sample.Uint64(), sample.TotalSupply(), sample.Metadata(20)),
 				},
 				CampaignCounter: 1,
 			},

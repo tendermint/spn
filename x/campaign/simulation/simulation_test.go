@@ -77,7 +77,6 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			*tk.CampaignKeeper,
 			accs,
 			false,
-			false,
 		)
 		require.False(t, found)
 	})
@@ -90,7 +89,6 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			sample.AlphaString(5),
 			coords[0],
 			sample.TotalSupply(),
-			false,
 			sample.Metadata(20),
 		)
 		camp.MainnetInitialized = true
@@ -102,7 +100,6 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			*tk.CampaignKeeper,
 			accs,
 			false,
-			false,
 		)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
@@ -111,42 +108,12 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 		require.EqualValues(t, id, camp.CampaignID)
 	})
 
-	t.Run("find a campaign with dynamic shares", func(t *testing.T) {
+	t.Run("find a campaign with no mainnet initialized", func(t *testing.T) {
 		camp := campaigntypes.NewCampaign(
 			1,
 			sample.AlphaString(5),
-			coords[1],
-			sample.TotalSupply(),
-			true,
-			sample.Metadata(20),
-		)
-		camp.MainnetInitialized = true
-		idDynamicShares := tk.CampaignKeeper.AppendCampaign(ctx, camp)
-		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(
-			r,
-			ctx,
-			tk.ProfileKeeper,
-			*tk.CampaignKeeper,
-			accs,
-			true,
-			false,
-		)
-		require.True(t, found)
-		require.Contains(t, accs, acc)
-		camp, found = tk.CampaignKeeper.GetCampaign(ctx, id)
-		require.True(t, found)
-		require.EqualValues(t, idDynamicShares, id)
-		require.EqualValues(t, id, camp.CampaignID)
-		require.True(t, camp.DynamicShares)
-	})
-
-	t.Run("find a campaign with no mainnet initialized", func(t *testing.T) {
-		camp := campaigntypes.NewCampaign(
-			2,
-			sample.AlphaString(5),
 			coords[2],
 			sample.TotalSupply(),
-			false,
 			sample.Metadata(20),
 		)
 		idNoMainnet := tk.CampaignKeeper.AppendCampaign(ctx, camp)
@@ -156,7 +123,6 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			tk.ProfileKeeper,
 			*tk.CampaignKeeper,
 			accs,
-			false,
 			true,
 		)
 		require.True(t, found)
@@ -164,37 +130,8 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 		_, found = tk.CampaignKeeper.GetCampaign(ctx, id)
 		require.True(t, found)
 		require.EqualValues(t, idNoMainnet, id)
-		require.EqualValues(t, id, camp.CampaignID)
+		require.EqualValues(t, camp.CampaignID, id)
 		require.False(t, camp.MainnetInitialized)
-	})
-
-	t.Run("find a campaign with no mainnet initialized and with dynamic shares", func(t *testing.T) {
-		camp := campaigntypes.NewCampaign(
-			3,
-			sample.AlphaString(5),
-			coords[3],
-			sample.TotalSupply(),
-			true,
-			sample.Metadata(20),
-		)
-		idNoMainnetDynamicShares := tk.CampaignKeeper.AppendCampaign(ctx, camp)
-		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(
-			r,
-			ctx,
-			tk.ProfileKeeper,
-			*tk.CampaignKeeper,
-			accs,
-			true,
-			true,
-		)
-		require.True(t, found)
-		require.Contains(t, accs, acc)
-		_, found = tk.CampaignKeeper.GetCampaign(ctx, id)
-		require.True(t, found)
-		require.EqualValues(t, idNoMainnetDynamicShares, id)
-		require.EqualValues(t, id, camp.CampaignID)
-		require.False(t, camp.MainnetInitialized)
-		require.True(t, camp.DynamicShares)
 	})
 }
 
@@ -213,7 +150,6 @@ func TestGetSharesFromCampaign(t *testing.T) {
 			sample.AlphaString(5),
 			0,
 			sample.TotalSupply(),
-			false,
 			sample.Metadata(20),
 		)
 		shares, err := campaigntypes.NewShares(fmt.Sprintf(
@@ -233,7 +169,6 @@ func TestGetSharesFromCampaign(t *testing.T) {
 			sample.AlphaString(5),
 			0,
 			sample.TotalSupply(),
-			false,
 			sample.Metadata(20),
 		))
 		shares, found := simcampaign.GetSharesFromCampaign(r, ctx, *tk.CampaignKeeper, campID)

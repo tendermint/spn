@@ -150,9 +150,6 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.EqualValues(t, types.EmptyShares(), campaign.AllocatedShares)
 			require.EqualValues(t, types.EmptyShares(), campaign.TotalShares)
 
-			// dynamic share is always disabled
-			require.EqualValues(t, false, campaign.DynamicShares)
-
 			// Empty list of campaign chains
 			campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)
 			require.True(t, found)
