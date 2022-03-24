@@ -33,9 +33,8 @@ func ParticipationParams() participation.Params {
 		maxBidCnt = maxBidCnt.AddRaw(rand.Int63n(10000) + 1)
 	}
 
-	// generate a random time frame between an hour and four weeks for both params
-	withdrawalDelay := Duration()
 	registrationPeriod := Duration()
+	withdrawalDelay := Duration()
 
 	return participation.NewParams(allocationPrice, tiers, registrationPeriod, withdrawalDelay)
 }
