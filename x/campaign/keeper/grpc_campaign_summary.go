@@ -60,22 +60,26 @@ func (k Keeper) GetCampaignSummary(ctx sdk.Context, campaign types.Campaign) (cs
 	// retrieve information about most recent chain
 	chainCount := len(campaignChains.Chains)
 	if chainCount > 0 {
-		mostRecentChainID := campaignChains.Chains[chainCount-1]
+		mostRecentLaunchID := campaignChains.Chains[chainCount-1]
 
 		cs.HasMostRecentChain = true
 
-		chain, found := k.launchKeeper.GetChain(ctx, mostRecentChainID)
+		chain, found := k.launchKeeper.GetChain(ctx, mostRecentLaunchID)
 		if !found {
-			return cs, fmt.Errorf("chain not found for campaing chain %d", mostRecentChainID)
+			return cs, fmt.Errorf("chain not found for campaing chain %d", mostRecentLaunchID)
 		}
 
 		cs.MostRecentChain = types.MostRecentChain{
-			LaunchID: mostRecentChainID,
+			LaunchID: mostRecentLaunchID,
 			LaunchTriggered: chain.LaunchTriggered,
+			SourceURL: chain.SourceURL,
+			SourceHash: chain.SourceHash,
+			RequestNb: k.launchKeeper.GetRequestCount(ctx, mostRecentLaunchID),
+			ValidatorNb: k.launchKeeper.GetGenesisValidatorCount(ctx, mostRecentLaunchID),
 		}
 
 		// retrieve information about rewards
-		rewardPool, found := k.rewardKeeper.GetRewardPool(ctx, mostRecentChainID)
+		rewardPool, found := k.rewardKeeper.GetRewardPool(ctx, mostRecentLaunchID)
 		if found {
 			cs.Incentivized = true
 			cs.Rewards = rewardPool.InitialCoins

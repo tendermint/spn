@@ -15,6 +15,8 @@ import (
 
 type LaunchKeeper interface {
 	GetChain(ctx sdk.Context, launchID uint64) (val launchtypes.Chain, found bool)
+	GetRequestCount(ctx sdk.Context, launchID uint64) (count uint64)
+	GetGenesisValidatorCount(ctx sdk.Context, launchID uint64) (count uint64)
 	CreateNewChain(
 		ctx sdk.Context,
 		coordinatorID uint64,

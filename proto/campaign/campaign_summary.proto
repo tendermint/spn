@@ -23,5 +23,9 @@ message CampaignSummary {
 message MostRecentChain {
   uint64 launchID = 1;
   bool launchTriggered = 2;
+  string sourceURL = 3;
+  string sourceHash = 4;
+  uint64 requestNb = 5;
+  uint64 validatorNb = 6;
 }
 
