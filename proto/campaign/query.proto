@@ -5,6 +5,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
 import "campaign/campaign_chains.proto";
+import "campaign/campaign_summary.proto";
 import "campaign/campaign.proto";
 import "campaign/mainnet_vesting_account.proto";
 import "campaign/mainnet_account.proto";
@@ -128,11 +129,12 @@ message QueryAllMainnetVestingAccountResponse {
 }
 
 message QueryCampaignSummariesRequest {
-  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryCampaignSummariesResponse {
-  cosmos.base.query.v1beta1.PageResponse pagination = 1;
+  repeated CampaignSummary campaignSummaries = 1  [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.

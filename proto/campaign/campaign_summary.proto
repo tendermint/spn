@@ -1,0 +1,27 @@
+syntax = "proto3";
+package tendermint.spn.campaign;
+
+option go_package = "github.com/tendermint/spn/x/campaign/types";
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "campaign/campaign.proto";
+
+message CampaignSummary {
+  Campaign campaign = 1 [(gogoproto.nullable) = false];
+  bool hasMostRecentChain = 2;
+  MostRecentChain mostRecentChain = 3 [(gogoproto.nullable) = false];
+  bool incentivized = 4;
+  repeated cosmos.base.v1beta1.Coin rewards = 5 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+  bool rewardsDistributed = 6;
+}
+
+message MostRecentChain {
+  uint64 launchID = 1;
+  bool launchTriggered = 2;
+}
+
