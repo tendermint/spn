@@ -52,9 +52,14 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account";
   }
 
-  // Queries a list of CampaignSummaries items.
+  // Queries a campaign summary
+  rpc CampaignSummary(QueryCampaignSummaryRequest) returns (QueryCampaignSummaryResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/campaign_summary/{campaignID}";
+  }
+
+  // Queries a list of campaign summaries
   rpc CampaignSummaries(QueryCampaignSummariesRequest) returns (QueryCampaignSummariesResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/campaign_summaries";
+    option (google.api.http).get = "/tendermint/spn/campaign/campaign_summary";
   }
 
   // Parameters queries the parameters of the module.
@@ -126,6 +131,14 @@ message QueryAllMainnetVestingAccountRequest {
 message QueryAllMainnetVestingAccountResponse {
   repeated MainnetVestingAccount mainnetVestingAccount = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryCampaignSummaryRequest {
+  uint64 campaignID = 1;
+}
+
+message QueryCampaignSummaryResponse {
+  CampaignSummary campaignSummary = 1  [(gogoproto.nullable) = false];
 }
 
 message QueryCampaignSummariesRequest {

@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 	"fmt"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,6 +13,24 @@ import (
 
 	"github.com/tendermint/spn/x/campaign/types"
 )
+
+func (k Keeper) CampaignSummary(goCtx context.Context, req *types.QueryCampaignSummaryRequest) (*types.QueryCampaignSummaryResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	campaign, found := k.GetCampaign(ctx, req.CampaignID)
+	if !found {
+		return nil, sdkerrors.ErrKeyNotFound
+	}
+	campaignSummary, err := k.GetCampaignSummary(ctx, campaign)
+
+	return &types.QueryCampaignSummaryResponse{
+		CampaignSummary: campaignSummary,
+	}, err
+}
 
 func (k Keeper) CampaignSummaries(goCtx context.Context, req *types.QueryCampaignSummariesRequest) (*types.QueryCampaignSummariesResponse, error) {
 	if req == nil {
@@ -50,6 +69,7 @@ func (k Keeper) CampaignSummaries(goCtx context.Context, req *types.QueryCampaig
 }
 
 // GetCampaignSummary returns the campaign with summary attached to it like most recent chain and rewards attached to it
+// TODO: add tests https://github.com/tendermint/spn/issues/650
 func (k Keeper) GetCampaignSummary(ctx sdk.Context, campaign types.Campaign) (cs types.CampaignSummary, err error) {
 	cs.Campaign = campaign
 
