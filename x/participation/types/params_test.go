@@ -3,10 +3,12 @@ package types
 import (
 	"errors"
 	"fmt"
-	"github.com/stretchr/testify/require"
+	"math/rand"
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
 )
 
 func TestParamsValidate(t *testing.T) {

@@ -68,8 +68,8 @@ func ParamKeyTable() paramtypes.KeyTable {
 func NewParams(
 	allocationPrice AllocationPrice,
 	participationTierList []Tier,
-	registrationPeriod time.Duration,
-	withdrawalDelay int64,
+	registrationPeriod,
+	withdrawalDelay time.Duration,
 ) Params {
 	return Params{
 		AllocationPrice:       allocationPrice,
