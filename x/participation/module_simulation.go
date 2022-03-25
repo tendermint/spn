@@ -14,13 +14,10 @@ import (
 )
 
 const (
-	opWeightMsgParticipate = "op_weight_msg_participate"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgParticipate int = 100
-
-	opWeightMsgCreateAuction = "op_weight_create_auction"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgCreateAuction int = 100
+	opWeightMsgParticipate            = "op_weight_msg_participate"
+	defaultWeightMsgParticipate   int = 100
+	opWeightMsgCreateAuction          = "op_weight_create_auction"
+	defaultWeightMsgCreateAuction int = 20
 
 	opWeightMsgWithdrawAllocations = "op_weight_withdraw_allocations"
 	// TODO: Determine the simulation weight value
