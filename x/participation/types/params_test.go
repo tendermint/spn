@@ -7,9 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
 )
 
 func TestParamsValidate(t *testing.T) {
@@ -252,40 +251,6 @@ func TestValidateTimeDuration(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := validateTimeDuration(tt.timeFrame)
-			if tt.err != nil {
-				require.Error(t, err, tt.err)
-				require.Equal(t, err, tt.err)
-				return
-			}
-			require.NoError(t, err)
-		})
-	}
-}
-
-func TestValidateAllocationsUsageTimeFrame(t *testing.T) {
-	tests := []struct {
-		name      string
-		timeFrame interface{}
-		err       error
-	}{
-		{
-			name:      "invalid interface",
-			timeFrame: "test",
-			err:       fmt.Errorf("invalid parameter type: string"),
-		},
-		{
-			name:      "value not positive",
-			timeFrame: -rand.Int63n(1000),
-			err:       errors.New("time frame must be positive"),
-		},
-		{
-			name:      "valid time frame",
-			timeFrame: int64(time.Hour.Seconds() * 24 * 7), // One week
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := validateAllocationsUsageTimeFrame(tt.timeFrame)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)
