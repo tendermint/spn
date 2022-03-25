@@ -12,7 +12,7 @@ import (
 func CmdListCampaignSummary() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-campaign-summary",
-		Short: "List information summarizing campaigns",
+		Short: "List information summarizing all campaigns",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
