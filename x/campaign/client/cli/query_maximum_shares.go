@@ -15,7 +15,7 @@ var _ = strconv.Itoa(0)
 func CmdMaximumShares() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "maximum-shares",
-		Short: "Query MaximumShares",
+		Short: "Shows the maximum-shares value of campaigns",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
