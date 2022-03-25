@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"testing"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
-
-	tc "github.com/tendermint/spn/testutil/constructor"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+	tc "github.com/tendermint/spn/testutil/constructor"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 

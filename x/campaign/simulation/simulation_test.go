@@ -5,12 +5,11 @@ import (
 	"math/rand"
 	"testing"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	simcampaign "github.com/tendermint/spn/x/campaign/simulation"

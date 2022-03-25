@@ -4,7 +4,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )

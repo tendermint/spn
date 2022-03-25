@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strings"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 // Shares represents the portion of a supply

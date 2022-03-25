@@ -3,11 +3,10 @@ package types_test
 import (
 	"testing"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )

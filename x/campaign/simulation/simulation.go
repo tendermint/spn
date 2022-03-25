@@ -4,8 +4,6 @@ import (
 	"math/rand"
 	"time"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,6 +11,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
