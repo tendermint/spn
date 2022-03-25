@@ -1,6 +1,7 @@
 package campaign_test
 
 import (
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -31,6 +32,9 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.MainnetVestingAccountList, got.MainnetVestingAccountList)
 
 	require.Equal(t, genesisState.Params, got.Params)
+
+	maxShares := tk.CampaignKeeper.GetMaximumShares(ctx)
+	require.Equal(t, uint64(spntypes.TotalShareNumber), maxShares)
 
 	// this line is used by starport scaffolding # genesis/test/assert
 }
