@@ -168,12 +168,11 @@ func SimulateCreateAuction(
 		// otherwise the custom sellingCoin denom could be chosen
 		customFee, err := simtypes.RandomFees(r, ctx, fee)
 		if err != nil {
-			return simtypes.NoOpMsg(
-					types.ModuleName,
-					fundraisingtypes.MsgCreateFixedPriceAuction{}.Type(),
-					"error setting up custom fee"),
-				nil,
-				nil
+			if err != nil {
+				return simtypes.OperationMsg{},
+					nil,
+					err
+			}
 		}
 
 		simAccount, _, found := RandomAccWithBalance(ctx, r, bk, accs, fee.Add(customFee...))
