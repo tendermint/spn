@@ -105,7 +105,6 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			modify,
 		)
 
-		fmt.Println(msg)
 
 		txCtx := simulation.OperationInput{
 			R:               r,
