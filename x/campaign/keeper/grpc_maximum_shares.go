@@ -17,8 +17,7 @@ func (k Keeper) MaximumShares(goCtx context.Context, req *types.QueryMaximumShar
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Process the query
-	_ = ctx
+	shares := k.GetMaximumShares(ctx)
 
-	return &types.QueryMaximumSharesResponse{}, nil
+	return &types.QueryMaximumSharesResponse{MaximumShares: shares}, nil
 }
