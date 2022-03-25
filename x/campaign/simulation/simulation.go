@@ -55,6 +55,35 @@ func deliverSimTx(
 	return simulation.GenAndDeliverTxWithRandFees(txCtx)
 }
 
+// deliverSimTx delivers the tx for simulation from the provided message
+func deliverSimTxCustomFee(
+	r *rand.Rand,
+	app *baseapp.BaseApp,
+	ctx sdk.Context,
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	simAccount simtypes.Account,
+	msg TypedMsg,
+	coinsSpent sdk.Coins,
+	customFee sdk.Coins,
+) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+	txCtx := simulation.OperationInput{
+		R:               r,
+		App:             app,
+		TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+		Cdc:             nil,
+		Msg:             msg,
+		MsgType:         msg.Type(),
+		Context:         ctx,
+		SimAccount:      simAccount,
+		AccountKeeper:   ak,
+		Bankkeeper:      bk,
+		ModuleName:      types.ModuleName,
+		CoinsSpentInMsg: coinsSpent,
+	}
+	return simulation.GenAndDeliverTx(txCtx, customFee)
+}
+
 // GetCoordSimAccount finds an account associated with a coordinator profile from simulation accounts
 func GetCoordSimAccount(
 	r *rand.Rand,
@@ -267,7 +296,13 @@ func SimulateMsgCreateCampaign(
 
 		// skip if account cannot cover creation fee
 		creationFee := k.CampaignCreationFee(ctx)
-		if !creationFee.Empty() && !bk.SpendableCoins(ctx, simAccount.Address).IsAllGTE(creationFee) {
+		customFee, err := simtypes.RandomFees(r, ctx, creationFee)
+		if err != nil {
+			return simtypes.OperationMsg{},
+				nil,
+				err
+		}
+		if !creationFee.Empty() && !bk.SpendableCoins(ctx, simAccount.Address).IsAllGTE(creationFee.Add(customFee...)) {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
 		}
 
@@ -278,7 +313,7 @@ func SimulateMsgCreateCampaign(
 			sample.Metadata(20),
 		)
 
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
+		return deliverSimTxCustomFee(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins(), customFee)
 	}
 }
 
