@@ -1,7 +1,6 @@
 package simulation
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -104,7 +103,6 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			campaignID,
 			modify,
 		)
-
 
 		txCtx := simulation.OperationInput{
 			R:               r,
