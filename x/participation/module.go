@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -17,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
+	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/tendermint/spn/x/participation/client/cli"
