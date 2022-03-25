@@ -15,12 +15,14 @@ func (tk TestKeepers) CreateFixedPriceAuction(
 	ctx sdk.Context,
 	auctioneer string,
 	sellingCoin sdk.Coin,
-	startTime time.Time,
+	startTime,
+	endTime time.Time,
 ) uint64 {
 	res, err := tk.FundraisingKeeper.CreateFixedPriceAuction(ctx, sample.MsgCreateFixedAuction(
 		auctioneer,
 		sellingCoin,
 		startTime,
+		endTime,
 	))
 	require.NoError(tk.T, err)
 	require.NotNil(tk.T, res)

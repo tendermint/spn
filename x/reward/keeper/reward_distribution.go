@@ -44,6 +44,16 @@ func (k Keeper) DistributeRewards(
 		return spnerrors.Criticalf("can't parse the provider address %s", err.Error())
 	}
 
+	// lastBlockHeight must be strictly greater than the current reward height for the pool
+	if lastBlockHeight <= rewardPool.CurrentRewardHeight {
+		return sdkerrors.Wrapf(
+			types.ErrInvalidLastBlockHeight,
+			"last block height %d must be greater than current reward height for the reward pool %d",
+			lastBlockHeight,
+			rewardPool.CurrentRewardHeight,
+		)
+	}
+
 	// only the monitored blocks relative to last reward height are rewarded
 	blockRatioNumerator := sdk.NewDec(lastBlockHeight).Sub(sdk.NewDec(rewardPool.CurrentRewardHeight))
 	blockRatioDenominator := sdk.NewDec(rewardPool.LastRewardHeight).Sub(sdk.NewDec(rewardPool.CurrentRewardHeight))
