@@ -56,7 +56,7 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/params";
   }
 
-  // Queries a list of MaximumShares items.
+  // Queries the MaximumShares value
 	rpc MaximumShares(QueryMaximumSharesRequest) returns (QueryMaximumSharesResponse) {
 		option (google.api.http).get = "/tendermint/spn/campaign/maximum_shares";
 	}

@@ -1,8 +1,9 @@
 package campaign_test
 
 import (
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	"github.com/stretchr/testify/require"
 

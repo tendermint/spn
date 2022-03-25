@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"strconv"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cobra"
@@ -10,9 +8,7 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-var _ = strconv.Itoa(0)
-
-func CmdMaximumShares() *cobra.Command {
+func CmdQueryMaximumShares() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "maximum-shares",
 		Short: "Shows the maximum-shares value of campaigns",

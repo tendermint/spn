@@ -28,7 +28,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(CmdListMainnetVestingAccount())
 	cmd.AddCommand(CmdShowMainnetVestingAccount())
 	cmd.AddCommand(CmdQueryParams())
-	cmd.AddCommand(CmdMaximumShares())
+	cmd.AddCommand(CmdQueryMaximumShares())
 
 	// this line is used by starport scaffolding # 1
 

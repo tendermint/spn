@@ -1,14 +1,16 @@
 package keeper_test
 
 import (
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"testing"
 )
 
 func TestMaximumSharesQuery(t *testing.T) {
