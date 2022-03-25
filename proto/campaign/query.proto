@@ -56,7 +56,12 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/params";
   }
 
-  // this line is used by starport scaffolding # 2
+  // Queries a list of MaximumShares items.
+	rpc MaximumShares(QueryMaximumSharesRequest) returns (QueryMaximumSharesResponse) {
+		option (google.api.http).get = "/tendermint/spn/campaign/maximum_shares";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 message QueryGetCampaignRequest {
@@ -129,6 +134,13 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryMaximumSharesRequest {
+}
+
+message QueryMaximumSharesResponse {
+  string maximumShares = 1;
 }
 
 // this line is used by starport scaffolding # 3
