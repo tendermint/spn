@@ -39,12 +39,11 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 		creationFee := k.ChainCreationFee(ctx)
 		customFee, err := simtypes.RandomFees(r, ctx, creationFee)
 		if err != nil {
-			return simtypes.NoOpMsg(
-					types.ModuleName,
-					types.TypeMsgCreateChain,
-					"skip chain creation"),
-				nil,
-				nil
+			if err != nil {
+				return simtypes.OperationMsg{},
+					nil,
+					err
+			}
 		}
 
 		if !creationFee.Empty() && !bk.SpendableCoins(ctx, simAccount.Address).IsAllGTE(creationFee.Add(customFee...)) {

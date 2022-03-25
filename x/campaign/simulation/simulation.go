@@ -298,12 +298,9 @@ func SimulateMsgCreateCampaign(
 		creationFee := k.CampaignCreationFee(ctx)
 		customFee, err := simtypes.RandomFees(r, ctx, creationFee)
 		if err != nil {
-			return simtypes.NoOpMsg(
-					types.ModuleName,
-					types.TypeMsgCreateCampaign,
-					"skip campaign creation"),
+			return simtypes.OperationMsg{},
 				nil,
-				nil
+				err
 		}
 		if !creationFee.Empty() && !bk.SpendableCoins(ctx, simAccount.Address).IsAllGTE(creationFee.Add(customFee...)) {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
