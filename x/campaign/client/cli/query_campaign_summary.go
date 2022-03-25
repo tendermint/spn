@@ -13,7 +13,7 @@ func CmdListCampaignSummary() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-campaign-summary",
 		Short: "List information summarizing campaigns",
-		Args:  cobra.ExactArgs(0),
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
 			clientCtx, err := client.GetClientTxContext(cmd)
