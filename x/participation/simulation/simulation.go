@@ -62,7 +62,7 @@ func RandomAuction(ctx sdk.Context, r *rand.Rand, fk fundraisingkeeper.Keeper) (
 	return auction, false
 }
 
-func RandomAccWithAllocations(ctx sdk.Context, r *rand.Rand,
+func RandomAccWithAvailableAllocations(ctx sdk.Context, r *rand.Rand,
 	k keeper.Keeper,
 	accs []simtypes.Account,
 	desired uint64,
@@ -119,7 +119,7 @@ func SimulateMsgParticipate(
 
 		tierID := RandomTierFromList(r, tierList)
 		tier, _ := types.GetTierFromID(tierList, tierID)
-		simAccount, _, found := RandomAccWithAllocations(ctx, r, k, accs, tier.RequiredAllocations, auction.GetId())
+		simAccount, _, found := RandomAccWithAvailableAllocations(ctx, r, k, accs, tier.RequiredAllocations, auction.GetId())
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no account with allocations"), nil, nil
 
