@@ -6,6 +6,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/go-cmp/cmp"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 const (
@@ -48,7 +50,7 @@ func (m Campaign) Validate() error {
 		return errors.New("custom total shares with dynamic shares set to false")
 	}
 
-	if IsTotalSharesReached(m.AllocatedShares, m.TotalShares) {
+	if IsTotalSharesReached(m.AllocatedShares, m.TotalShares, spntypes.TotalShareNumber) {
 		return errors.New("more allocated shares than total shares")
 	}
 

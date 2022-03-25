@@ -11,12 +11,12 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
-
+	spntypes "github.com/tendermint/spn/pkg/types"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
+	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 	participationkeeper "github.com/tendermint/spn/x/participation/keeper"
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
@@ -87,6 +87,9 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
 	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
+
+	// set max shares - only set during app InitGenesis
+	campaignKeeper.SetMaximumShares(ctx, spntypes.TotalShareNumber)
 
 	return ctx, TestKeepers{
 			T:                        t,

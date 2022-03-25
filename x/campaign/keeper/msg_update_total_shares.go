@@ -41,7 +41,7 @@ func (k msgServer) UpdateTotalShares(goCtx context.Context, msg *types.MsgUpdate
 	}
 
 	// Check the new total shares are not overflown by the currently allocated shares
-	if types.IsTotalSharesReached(campaign.AllocatedShares, msg.TotalShares) {
+	if types.IsTotalSharesReached(campaign.AllocatedShares, msg.TotalShares, k.Keeper.GetMaximumShares(ctx)) {
 		return nil, sdkerrors.Wrap(types.ErrInvalidShares, "more allocated shares than total shares")
 	}
 	campaign.TotalShares = msg.TotalShares

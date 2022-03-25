@@ -35,7 +35,7 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 
 	// Increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
-	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares) {
+	if types.IsTotalSharesReached(campaign.AllocatedShares, campaign.TotalShares, k.Keeper.GetMaximumShares(ctx)) {
 		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
 	}
 

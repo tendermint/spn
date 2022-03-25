@@ -19,6 +19,7 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
@@ -127,6 +128,9 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	monitoringcSrv := monitoringckeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
 
+	// set max shares - only set during app InitGenesis
+	campaignKeeper.SetMaximumShares(ctx, spntypes.TotalShareNumber)
+
 	return ctx, TestKeepers{
 			T:                        t,
 			CampaignKeeper:           campaignKeeper,
@@ -209,6 +213,9 @@ func NewTestSetupWithIBCMocks(
 	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
 	monitoringcSrv := monitoringckeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
+
+	// set max shares - only set during app InitGenesis
+	campaignKeeper.SetMaximumShares(ctx, spntypes.TotalShareNumber)
 
 	return ctx, TestKeepers{
 			T:                        t,
