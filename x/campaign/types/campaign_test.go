@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -51,7 +52,7 @@ func TestCampaign_Validate(t *testing.T) {
 
 	totalSharesReached := sample.Campaign(0)
 	totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
-		sdk.NewCoin("foo", sdk.NewInt(campaign.DefaultTotalShareNumber+1)),
+		sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 	))
 	require.True(t, campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares, campaign.EmptyShares()))
 

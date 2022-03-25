@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -23,7 +24,7 @@ func TestMsgMintVouchers(t *testing.T) {
 
 		shares, _    = types.NewShares("1000foo,500bar,300foobar")
 		sharesTooBig = types.NewSharesFromCoins(sdk.NewCoins(
-			sdk.NewCoin("foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
+			sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 		))
 	)
 

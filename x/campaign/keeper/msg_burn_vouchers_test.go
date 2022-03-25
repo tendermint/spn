@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -20,7 +21,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 		campaign       = sample.Campaign(0)
 		addr           = sample.AccAddress()
 		vouchersTooBig = sdk.NewCoins(
-			sdk.NewCoin("v/0/foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
+			sdk.NewCoin("v/0/foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 		)
 	)
 

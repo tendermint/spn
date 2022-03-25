@@ -2,6 +2,7 @@ package simulation_test
 
 import (
 	"fmt"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"math/rand"
 	"testing"
 
@@ -218,7 +219,7 @@ func TestGetSharesFromCampaign(t *testing.T) {
 		)
 		shares, err := campaigntypes.NewShares(fmt.Sprintf(
 			"%[1]dfoo,%[1]dbar,%[1]dtoto",
-			campaigntypes.DefaultTotalShareNumber,
+			spntypes.TotalShareNumber,
 		))
 		require.NoError(t, err)
 		camp.AllocatedShares = shares

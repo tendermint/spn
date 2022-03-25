@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -22,7 +23,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		existAddr      = sample.AccAddress()
 		campaign       = sample.Campaign(0)
 		vouchersTooBig = sdk.NewCoins(
-			sdk.NewCoin("v/0/foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
+			sdk.NewCoin("v/0/foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 		)
 	)
 
