@@ -12,18 +12,17 @@ import (
 
 func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWithdrawAllocations) (*types.MsgWithdrawAllocationsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+	blockTime := ctx.BlockTime()
 
 	auction, found := k.fundraisingKeeper.GetAuction(ctx, msg.AuctionID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrAuctionNotFound, "auction %d not found", msg.AuctionID)
 	}
 
-	blockTime := ctx.BlockTime()
-	if !auction.IsAuctionStarted(blockTime) {
-		return nil, sdkerrors.Wrapf(types.ErrAllocationsLocked, "auction %d not yet started", msg.AuctionID)
+	withdrawalDelay := k.WithdrawalDelay(ctx)
+	if !blockTime.After(auction.GetStartTime().Add(withdrawalDelay)) {
+		return nil, sdkerrors.Wrapf(types.ErrAllocationWithdrawalTimeNotReached, "withdrawal for auction %d not yet allowed", msg.AuctionID)
 	}
-
-	// TODO check delay is reached
 
 	auctionUsedAllocations, found := k.GetAuctionUsedAllocations(ctx, msg.Participant, msg.AuctionID)
 	if !found {

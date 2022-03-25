@@ -2,7 +2,6 @@ package sample
 
 import (
 	"math/rand"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -34,12 +33,8 @@ func ParticipationParams() participation.Params {
 		maxBidCnt = maxBidCnt.AddRaw(rand.Int63n(10000) + 1)
 	}
 
-	// generate a random time frame between an hour and four weeks for both params
-	// TODO clean up after switching withdrawamDelay to time.Duration
-	fourWeeks := int64(time.Hour.Seconds() * 24 * 7 * 4)
-	oneHour := int64(time.Hour.Seconds())
 	registrationPeriod := Duration()
-	withdrawalDelay := rand.Int63n(fourWeeks-oneHour) + oneHour
+	withdrawalDelay := Duration()
 
 	return participation.NewParams(allocationPrice, tiers, registrationPeriod, withdrawalDelay)
 }

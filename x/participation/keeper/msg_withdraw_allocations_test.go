@@ -22,10 +22,12 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		auctionSellingCoin  = sample.Coin()
 		auctionStartTime    = sdkCtx.BlockTime().Add(time.Hour)
 		auctionEndTime      = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
-		validWithdrawalTime = auctionStartTime.Add(time.Hour * 24 * 30)
+		validWithdrawalTime = auctionStartTime.Add(time.Hour * 10)
+		withdrawalDelay     = time.Hour * 5
 	)
 
 	params := types.DefaultParams()
+	params.WithdrawalDelay = withdrawalDelay
 	params.AllocationPrice = types.AllocationPrice{Bonded: sdk.NewInt(100)}
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
@@ -76,13 +78,13 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			err:       types.ErrAuctionNotFound,
 		},
 		{
-			name: "auction not yet started",
+			name: "should prevent withdrawal before withdrawal delay has passed",
 			msg: &types.MsgWithdrawAllocations{
 				Participant: validParticipant,
 				AuctionID:   auctionID,
 			},
-			blockTime: sdkCtx.BlockTime(),
-			err:       types.ErrAllocationsLocked,
+			blockTime: auctionStartTime,
+			err:       types.ErrAllocationWithdrawalTimeNotReached,
 		},
 		{
 			name: "used allocations not found",
@@ -94,7 +96,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			err:       types.ErrUsedAllocationsNotFound,
 		},
 		{
-			name: "cannot withdraw if already claimed",
+			name: "should prevent withdrawal if already claimed",
 			msg: &types.MsgWithdrawAllocations{
 				Participant: invalidParticipant,
 				AuctionID:   auctionID,

@@ -359,7 +359,7 @@
           }
         ],
         "registrationPeriod": "604800s",
-        "withdrawalDelay": 1209600
+        "withdrawalDelay": "1209600s",
       }
     },
     "profile": {
