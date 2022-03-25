@@ -75,7 +75,7 @@ func (k Keeper) GetCampaignSummary(ctx sdk.Context, campaign types.Campaign) (cs
 
 	campaignChains, found := k.GetCampaignChains(ctx, campaign.CampaignID)
 	if !found {
-		return cs, fmt.Errorf("chain list not found for existing campaign %d", campaign.CampaignID)
+		return cs, status.Error(codes.NotFound, fmt.Sprintf("chain list not found for existing campaign %d", campaign.CampaignID))
 	}
 
 	// retrieve information about most recent chain
