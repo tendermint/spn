@@ -1,9 +1,10 @@
 package simulation
 
 import (
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"math/rand"
 	"time"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"

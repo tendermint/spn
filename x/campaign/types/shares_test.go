@@ -2,8 +2,9 @@ package types_test
 
 import (
 	"fmt"
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"testing"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	tc "github.com/tendermint/spn/testutil/constructor"
 

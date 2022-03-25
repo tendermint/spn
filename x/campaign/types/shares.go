@@ -3,8 +3,9 @@ package types
 import (
 	"errors"
 	"fmt"
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"strings"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )

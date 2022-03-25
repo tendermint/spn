@@ -24,6 +24,9 @@ const (
 	// CampaignCounterKey is the prefix to store campaign count
 	CampaignCounterKey = "Campaign/count/"
 
+	// MaximumSharesKey is the prefix to retrieve MaximumShares
+	MaximumSharesKey = "MaximumShares/value/"
+
 	// CampaignChainsKeyPrefix is the prefix to retrieve all CampaignChains
 	CampaignChainsKeyPrefix = "CampaignChains/value/"
 

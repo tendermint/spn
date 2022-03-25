@@ -2,9 +2,10 @@ package simulation_test
 
 import (
 	"fmt"
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"math/rand"
 	"testing"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"

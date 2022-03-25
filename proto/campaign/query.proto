@@ -140,7 +140,7 @@ message QueryMaximumSharesRequest {
 }
 
 message QueryMaximumSharesResponse {
-  string maximumShares = 1;
+  uint64 maximumShares = 1;
 }
 
 // this line is used by starport scaffolding # 3
