@@ -36,10 +36,10 @@ func Test_msgServer_Participate(t *testing.T) {
 
 	// initialize auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
-	auctionID1 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin1, startTime, endTime)
+	auctionID1 := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin1, startTime, endTime)
 	// initialize auction with edge case start time
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin2))
-	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin2, startTimeLowerRegistrationPeriod, endTime)
+	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin2, startTimeLowerRegistrationPeriod, endTime)
 
 	// add delegations
 	for i := 0; i < len(addrsWithDelsTier); i++ {

@@ -36,7 +36,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 
 	// initialize an auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(auctionSellingCoin))
-	auctionID := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, auctionSellingCoin, auctionStartTime, auctionEndTime)
+	auctionID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, auctionSellingCoin, auctionStartTime, auctionEndTime)
 
 	// validParticipant participates to auction
 	_, err := ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
