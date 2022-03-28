@@ -1,6 +1,9 @@
 package keeper_test
 
 import (
+	"fmt"
+	spntypes "github.com/tendermint/spn/pkg/types"
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -29,14 +32,10 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	)
 
 	// create shares
-	allocatedShares, err := types.NewShares("999token")
-	require.NoError(t, err)
-	totalShares, err := types.NewShares("9999token")
-	require.NoError(t, err)
-	highShare, err := types.NewShares("9999token")
-	require.NoError(t, err)
-	lowShare, err := types.NewShares("8token")
-	require.NoError(t, err)
+	allocatedShares := tc.Shares(t, "91token")
+	invalidAllocatedShares := tc.Shares(t, fmt.Sprintf("%dtoken", spntypes.TotalShareNumber))
+	highShare := tc.Shares(t, "1000token")
+	lowShare := tc.Shares(t, "8token")
 
 	// Create a campaigns
 	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
@@ -47,7 +46,6 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaignMainnetInitialized.CoordinatorID = res.CoordinatorID
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.AllocatedShares = allocatedShares
-	campaignMainnetInitialized.TotalShares = totalShares
 	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
@@ -57,7 +55,6 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	require.NoError(t, err)
 	campaign.CoordinatorID = res.CoordinatorID
 	campaign.AllocatedShares = allocatedShares
-	campaign.TotalShares = totalShares
 	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 	accShare := sample.MainnetVestingAccountWithShares(campaign.CampaignID, addr2, lowShare)
 	tk.CampaignKeeper.SetMainnetVestingAccount(sdkCtx, accShare)
@@ -68,8 +65,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	})
 	require.NoError(t, err)
 	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorID
-	campaignInvalidAllocatedShares.AllocatedShares = allocatedShares
-	campaignInvalidAllocatedShares.TotalShares = totalShares
+	campaignInvalidAllocatedShares.AllocatedShares = invalidAllocatedShares
 	campaignInvalidAllocatedShares.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
 
 	for _, tc := range []struct {

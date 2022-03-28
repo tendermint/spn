@@ -23,12 +23,10 @@ func TestGenesisState_Validate(t *testing.T) {
 	)
 	sharesCampaign1 := types.IncreaseShares(shares1, shares2)
 	campaign1.AllocatedShares = sharesCampaign1
-	campaign1.TotalShares = sharesCampaign1
 	campaign1.CoordinatorID = 0
 
 	sharesCampaign2 := types.IncreaseShares(shares3, shares4)
 	campaign2.AllocatedShares = sharesCampaign2
-	campaign2.TotalShares = sharesCampaign2
 	campaign2.CoordinatorID = 1
 
 	for _, tc := range []struct {

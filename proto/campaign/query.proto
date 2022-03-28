@@ -56,7 +56,12 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/params";
   }
 
-  // this line is used by starport scaffolding # 2
+  // Queries the TotalShares value
+	rpc TotalShares(QueryTotalSharesRequest) returns (QueryTotalSharesResponse) {
+		option (google.api.http).get = "/tendermint/spn/campaign/total_shares";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 message QueryGetCampaignRequest {
@@ -129,6 +134,13 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryTotalSharesRequest {
+}
+
+message QueryTotalSharesResponse {
+  uint64 totalShares = 1;
 }
 
 // this line is used by starport scaffolding # 3

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -12,9 +14,6 @@ import (
 type Shares sdk.Coins
 
 const (
-	// DefaultTotalShareNumber is the default number of total share for an underlying supply asset
-	DefaultTotalShareNumber = 100000
-
 	// SharePrefix is the prefix used to represent a share denomination
 	// A sdk.Coin containing this prefix must never be represented in a balance in the bank module
 	SharePrefix = "s/"
@@ -80,10 +79,9 @@ func DecreaseShares(shares, toDecrease Shares) (Shares, error) {
 func IsTotalSharesReached(shares Shares) bool {
 	for _, coin := range shares {
 		// If the denom is not specified in total share, we compare the default total share number
-		if coin.Amount.Uint64() > DefaultTotalShareNumber {
+		if coin.Amount.Uint64() > spntypes.TotalShareNumber {
 			return true
 		}
-
 	}
 
 	// denoms defined in totalShares but not in shares are not checked

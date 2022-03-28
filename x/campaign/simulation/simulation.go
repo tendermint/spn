@@ -165,11 +165,7 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 
 	var shares sdk.Coins
 	for _, share := range ShareDenoms {
-		total := camp.TotalShares.AmountOf(share)
-		if total == 0 {
-			total = types.DefaultTotalShareNumber
-		}
-		remaining := total - camp.AllocatedShares.AmountOf(share)
+		remaining := int64(k.GetTotalShares(ctx)) - camp.AllocatedShares.AmountOf(share)
 		if remaining == 0 {
 			continue
 		}

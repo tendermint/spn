@@ -148,7 +148,6 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.False(t, campaign.MainnetInitialized)
 			require.True(t, tc.msg.TotalSupply.IsEqual(campaign.TotalSupply))
 			require.EqualValues(t, types.EmptyShares(), campaign.AllocatedShares)
-			require.EqualValues(t, types.EmptyShares(), campaign.TotalShares)
 
 			// Empty list of campaign chains
 			campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)

@@ -9,6 +9,7 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	simcampaign "github.com/tendermint/spn/x/campaign/simulation"
@@ -154,7 +155,7 @@ func TestGetSharesFromCampaign(t *testing.T) {
 		)
 		shares, err := campaigntypes.NewShares(fmt.Sprintf(
 			"%[1]dfoo,%[1]dbar,%[1]dtoto",
-			campaigntypes.DefaultTotalShareNumber,
+			spntypes.TotalShareNumber,
 		))
 		require.NoError(t, err)
 		camp.AllocatedShares = shares

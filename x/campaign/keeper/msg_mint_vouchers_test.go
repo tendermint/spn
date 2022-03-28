@@ -3,11 +3,11 @@ package keeper_test
 import (
 	"testing"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -23,7 +23,7 @@ func TestMsgMintVouchers(t *testing.T) {
 
 		shares, _    = types.NewShares("1000foo,500bar,300foobar")
 		sharesTooBig = types.NewSharesFromCoins(sdk.NewCoins(
-			sdk.NewCoin("foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
+			sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 		))
 	)
 

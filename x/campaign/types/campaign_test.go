@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
@@ -30,7 +31,6 @@ func TestNewCampaign(t *testing.T) {
 	require.False(t, cmpn.MainnetInitialized)
 	require.True(t, totalSupply.IsEqual(cmpn.TotalSupply))
 	require.EqualValues(t, campaign.EmptyShares(), cmpn.AllocatedShares)
-	require.EqualValues(t, campaign.EmptyShares(), cmpn.TotalShares)
 }
 
 func TestCampaign_Validate(t *testing.T) {
@@ -39,14 +39,11 @@ func TestCampaign_Validate(t *testing.T) {
 	invalidAllocatedShares := sample.Campaign(0)
 	invalidAllocatedShares.AllocatedShares = campaign.NewSharesFromCoins(invalidCoins)
 
-	invalidTotalShares := sample.Campaign(0)
-	invalidTotalShares.TotalShares = campaign.NewSharesFromCoins(invalidCoins)
-
 	totalSharesReached := sample.Campaign(0)
 	totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
-		sdk.NewCoin("foo", sdk.NewInt(campaign.DefaultTotalShareNumber+1)),
+		sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 	))
-	require.True(t, campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares, campaign.EmptyShares()))
+	require.True(t, campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares))
 
 	for _, tc := range []struct {
 		desc     string
@@ -83,11 +80,6 @@ func TestCampaign_Validate(t *testing.T) {
 		{
 			desc:     "invalid allocated shares",
 			campaign: invalidAllocatedShares,
-			valid:    false,
-		},
-		{
-			desc:     "invalid total shares",
-			campaign: invalidTotalShares,
 			valid:    false,
 		},
 		{

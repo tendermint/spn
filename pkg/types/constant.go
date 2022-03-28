@@ -24,4 +24,7 @@ const (
 
 	// DefaultRevisionHeight is the revision height used by default for creating the monitoring IBC client
 	DefaultRevisionHeight = 1
+
+	// TotalShareNumber is the default number of total share for an underlying supply asset
+	TotalShareNumber = 100000
 )

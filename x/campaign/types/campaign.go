@@ -38,6 +38,7 @@ func (m Campaign) Validate() error {
 	}
 
 	if IsTotalSharesReached(m.AllocatedShares) {
+
 		return errors.New("more allocated shares than total shares")
 	}
 
