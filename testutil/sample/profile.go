@@ -2,6 +2,7 @@ package sample
 
 import (
 	profile "github.com/tendermint/spn/x/profile/types"
+	"math/rand"
 )
 
 // MsgCreateCoordinator returns a sample MsgCreateCoordinator
@@ -43,58 +44,58 @@ func ValidatorDescription(desc string) profile.ValidatorDescription {
 }
 
 // Coordinator returns a sample Coordinator
-func Coordinator(address string) profile.Coordinator {
+func Coordinator(r *rand.Rand, address string) profile.Coordinator {
 	return profile.Coordinator{
 		Address:     address,
-		Description: CoordinatorDescription(),
+		Description: CoordinatorDescription(r),
 		Active:      true,
 	}
 }
 
 // CoordinatorDescription returns a sample CoordinatorDescription
-func CoordinatorDescription() profile.CoordinatorDescription {
+func CoordinatorDescription(r *rand.Rand) profile.CoordinatorDescription {
 	return profile.CoordinatorDescription{
-		Identity: String(10),
-		Website:  String(10),
-		Details:  String(30),
+		Identity: String(r, 10),
+		Website:  String(r, 10),
+		Details:  String(r, 30),
 	}
 }
 
 // ProfileGenesisState returns a sample genesis state for the profile module
-func ProfileGenesisState(addresses ...string) profile.GenesisState {
+func ProfileGenesisState(r *rand.Rand, addresses ...string) profile.GenesisState {
 	for len(addresses) < 7 {
-		addresses = append(addresses, Address())
+		addresses = append(addresses, Address(r))
 	}
 	return profile.GenesisState{
 		CoordinatorList: []profile.Coordinator{
 			{
 				CoordinatorID: 0,
 				Address:       addresses[0],
-				Description:   CoordinatorDescription(),
+				Description:   CoordinatorDescription(r),
 				Active:        true,
 			},
 			{
 				CoordinatorID: 1,
 				Address:       addresses[1],
-				Description:   CoordinatorDescription(),
+				Description:   CoordinatorDescription(r),
 				Active:        true,
 			},
 			{
 				CoordinatorID: 2,
 				Address:       addresses[2],
-				Description:   CoordinatorDescription(),
+				Description:   CoordinatorDescription(r),
 				Active:        true,
 			},
 			{
 				CoordinatorID: 3,
 				Address:       addresses[3],
-				Description:   CoordinatorDescription(),
+				Description:   CoordinatorDescription(r),
 				Active:        true,
 			},
 			{
 				CoordinatorID: 4,
 				Address:       addresses[4],
-				Description:   CoordinatorDescription(),
+				Description:   CoordinatorDescription(r),
 				Active:        true,
 			},
 		},
@@ -124,11 +125,11 @@ func ProfileGenesisState(addresses ...string) profile.GenesisState {
 		ValidatorList: []profile.Validator{
 			{
 				Address:     addresses[5],
-				Description: ValidatorDescription(String(10)),
+				Description: ValidatorDescription(String(r, 10)),
 			},
 			{
 				Address:     addresses[6],
-				Description: ValidatorDescription(String(10)),
+				Description: ValidatorDescription(String(r, 10)),
 			},
 		},
 	}

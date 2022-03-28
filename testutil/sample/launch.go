@@ -4,63 +4,61 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"math/rand"
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"math/rand"
 
 	"github.com/tendermint/spn/pkg/chainid"
 	launch "github.com/tendermint/spn/x/launch/types"
 )
 
 // Metadata returns sample metadata bytes
-func Metadata(len int) []byte {
-	return Bytes(len)
+func Metadata(r *rand.Rand, len int) []byte {
+	return Bytes(r, len)
 }
 
 // GenesisChainID returns a sample chain id
-func GenesisChainID() string {
-	chainName := AlphaString(5)
-	number := Uint64()
+func GenesisChainID(r *rand.Rand) string {
+	chainName := AlphaString(r, 5)
+	number := Uint64(r)
 	return chainid.NewGenesisChainID(chainName, number)
 }
 
 // Chain returns a sample Chain
-func Chain(id uint64, coordinatorID uint64) launch.Chain {
+func Chain(r *rand.Rand, id, coordinatorID uint64) launch.Chain {
 	return launch.Chain{
 		LaunchID:        id,
 		CoordinatorID:   coordinatorID,
-		GenesisChainID:  GenesisChainID(),
-		CreatedAt:       time.Now().Unix(),
-		SourceURL:       String(10),
-		SourceHash:      String(10),
+		GenesisChainID:  GenesisChainID(r),
+		CreatedAt:       Duration(r).Milliseconds(),
+		SourceURL:       String(r, 10),
+		SourceHash:      String(r, 10),
 		LaunchTriggered: false,
 		InitialGenesis:  launch.NewDefaultInitialGenesis(),
-		Metadata:        Metadata(20),
+		Metadata:        Metadata(r, 20),
 	}
 }
 
 // GenesisAccount returns a sample GenesisAccount
-func GenesisAccount(launchID uint64, address string) launch.GenesisAccount {
+func GenesisAccount(r *rand.Rand, launchID uint64, address string) launch.GenesisAccount {
 	return launch.GenesisAccount{
 		LaunchID: launchID,
 		Address:  address,
-		Coins:    Coins(),
+		Coins:    Coins(r),
 	}
 }
 
 // VestingOptions returns a sample VestingOptions
-func VestingOptions() launch.VestingOptions {
-	balance := Coins()
-	return *launch.NewDelayedVesting(balance, balance, time.Now().Unix())
+func VestingOptions(r *rand.Rand) launch.VestingOptions {
+	balance := Coins(r)
+	return *launch.NewDelayedVesting(balance, balance, Duration(r).Milliseconds())
 }
 
 // VestingAccount returns a sample VestingAccount
-func VestingAccount(launchID uint64, address string) launch.VestingAccount {
+func VestingAccount(r *rand.Rand, launchID uint64, address string) launch.VestingAccount {
 	return launch.VestingAccount{
 		LaunchID:       launchID,
 		Address:        address,
-		VestingOptions: VestingOptions(),
+		VestingOptions: VestingOptions(r),
 	}
 }
 
@@ -72,22 +70,22 @@ func AccountRemoval(address string) *launch.AccountRemoval {
 }
 
 // GenesisValidator returns a sample GenesisValidator
-func GenesisValidator(launchID uint64, address string) launch.GenesisValidator {
+func GenesisValidator(r *rand.Rand, launchID uint64, address string) launch.GenesisValidator {
 	return launch.GenesisValidator{
 		LaunchID:       launchID,
 		Address:        address,
-		GenTx:          Bytes(200),
-		ConsPubKey:     PubKey().Bytes(),
-		SelfDelegation: Coin(),
-		Peer:           GenesisValidatorPeer(),
+		GenTx:          Bytes(r, 200),
+		ConsPubKey:     PubKey(r).Bytes(),
+		SelfDelegation: Coin(r),
+		Peer:           GenesisValidatorPeer(r),
 	}
 }
 
-func GenesisValidatorPeer() launch.Peer {
+func GenesisValidatorPeer(r *rand.Rand) launch.Peer {
 	return launch.Peer{
-		Id: String(10),
+		Id: String(r, 10),
 		Connection: &launch.Peer_TcpAddress{
-			TcpAddress: fmt.Sprintf("%s@%s", String(5), String(10)),
+			TcpAddress: fmt.Sprintf("%s@%s", String(r, 5), String(r, 10)),
 		},
 	}
 }
@@ -100,72 +98,73 @@ func ValidatorRemoval(address string) launch.ValidatorRemoval {
 }
 
 // RequestWithContent creates a launch request object with launch id and content
-func RequestWithContent(launchID uint64, content launch.RequestContent) launch.Request {
+func RequestWithContent(r *rand.Rand, launchID uint64, content launch.RequestContent) launch.Request {
 	return launch.Request{
 		RequestID: 1,
 		LaunchID:  launchID,
-		Creator:   Address(),
-		CreatedAt: time.Now().Unix(),
+		Creator:   Address(r),
+		CreatedAt: Duration(r).Milliseconds(),
 		Content:   content,
 	}
 }
 
 // RequestWithContentAndCreator creates a launch request object with launch id and content and creator
-func RequestWithContentAndCreator(launchID uint64, content launch.RequestContent, creator string) launch.Request {
+func RequestWithContentAndCreator(r *rand.Rand, launchID uint64, content launch.RequestContent, creator string) launch.Request {
 	return launch.Request{
 		RequestID: 1,
 		LaunchID:  launchID,
 		Creator:   creator,
-		CreatedAt: time.Now().Unix(),
+		CreatedAt: Duration(r).Milliseconds(),
 		Content:   content,
 	}
 }
 
 // AllRequestContents creates all contents types for request
-func AllRequestContents(launchID uint64, genesis, vesting, validator string) []launch.RequestContent {
+func AllRequestContents(r *rand.Rand, launchID uint64, genesis, vesting, validator string) []launch.RequestContent {
 	return []launch.RequestContent{
-		launch.NewGenesisAccount(launchID, genesis, Coins()),
+		launch.NewGenesisAccount(launchID, genesis, Coins(r)),
 		launch.NewAccountRemoval(genesis),
-		launch.NewVestingAccount(launchID, vesting, VestingOptions()),
+		launch.NewVestingAccount(launchID, vesting, VestingOptions(r)),
 		launch.NewAccountRemoval(vesting),
-		launch.NewGenesisValidator(launchID, validator, Bytes(300), Bytes(30), Coin(), GenesisValidatorPeer()),
+		launch.NewGenesisValidator(launchID, validator, Bytes(r, 300), Bytes(r, 30), Coin(r), GenesisValidatorPeer(r)),
 		launch.NewValidatorRemoval(validator),
 	}
 }
 
 // GenesisAccountContent returns a sample GenesisAccount request content
-func GenesisAccountContent(launchID uint64, address string) launch.RequestContent {
-	return launch.NewGenesisAccount(launchID, address, Coins())
+func GenesisAccountContent(r *rand.Rand, launchID uint64, address string) launch.RequestContent {
+	return launch.NewGenesisAccount(launchID, address, Coins(r))
 }
 
 // Request returns a sample Request
-func Request(launchID uint64, address string) launch.Request {
-	content := GenesisAccountContent(launchID, address)
-	return RequestWithContent(launchID, content)
+func Request(r *rand.Rand, launchID uint64, address string) launch.Request {
+	content := GenesisAccountContent(r, launchID, address)
+	return RequestWithContent(r, launchID, content)
 }
 
 // MsgCreateChain returns a sample MsgCreateChain
-func MsgCreateChain(coordAddress, genesisURL string, hasCampaign bool, campaignID uint64) launch.MsgCreateChain {
+func MsgCreateChain(r *rand.Rand, coordAddress, genesisURL string, hasCampaign bool, campaignID uint64) launch.MsgCreateChain {
 	var genesisHash string
 	if len(genesisURL) > 0 {
-		genesisHash = GenesisHash()
+		genesisHash = GenesisHash(r)
 	}
 
 	return *launch.NewMsgCreateChain(
 		coordAddress,
-		GenesisChainID(),
-		String(10),
-		String(10),
+		GenesisChainID(r),
+		String(r, 10),
+		String(r, 10),
 		genesisURL,
 		genesisHash,
 		hasCampaign,
 		campaignID,
-		Metadata(20),
+		Metadata(r, 20),
 	)
 }
 
 // MsgEditChain returns a sample MsgEditChain
 func MsgEditChain(
+	r *rand.Rand,
 	coordAddress string,
 	launchID uint64,
 	setCampaignID bool,
@@ -174,7 +173,7 @@ func MsgEditChain(
 ) launch.MsgEditChain {
 	var metadata []byte
 	if modifyMetadata {
-		metadata = Metadata(20)
+		metadata = Metadata(r, 20)
 	}
 
 	return *launch.NewMsgEditChain(
@@ -188,6 +187,7 @@ func MsgEditChain(
 
 // MsgUpdateLaunchInformation returns a sample MsgUpdateLaunchInformation
 func MsgUpdateLaunchInformation(
+	r *rand.Rand,
 	coordAddress string,
 	launchID uint64,
 	modifyGenesisChainID,
@@ -199,14 +199,14 @@ func MsgUpdateLaunchInformation(
 	var initialGenesis *launch.InitialGenesis
 
 	if modifyGenesisChainID {
-		genesisChainID = GenesisChainID()
+		genesisChainID = GenesisChainID(r)
 	}
 	if modifySource {
-		sourceURL, sourceHash = String(30), String(10)
+		sourceURL, sourceHash = String(r, 30), String(r, 10)
 	}
 	if modifyInitialGenesis {
 		if genesisURL {
-			newGenesisURL := launch.NewGenesisURL(String(30), GenesisHash())
+			newGenesisURL := launch.NewGenesisURL(String(r, 30), GenesisHash(r))
 			initialGenesis = &newGenesisURL
 		} else {
 			newDefault := launch.NewDefaultInitialGenesis()
@@ -225,22 +225,22 @@ func MsgUpdateLaunchInformation(
 }
 
 // MsgRequestAddAccount returns a sample MsgRequestAddAccount
-func MsgRequestAddAccount(creator, address string, launchID uint64) launch.MsgRequestAddAccount {
+func MsgRequestAddAccount(r *rand.Rand, creator, address string, launchID uint64) launch.MsgRequestAddAccount {
 	return *launch.NewMsgRequestAddAccount(
 		creator,
 		launchID,
 		address,
-		Coins(),
+		Coins(r),
 	)
 }
 
 // MsgRequestAddVestingAccount returns a sample MsgRequestAddVestingAccount
-func MsgRequestAddVestingAccount(creator, address string, launchID uint64) launch.MsgRequestAddVestingAccount {
+func MsgRequestAddVestingAccount(r *rand.Rand, creator, address string, launchID uint64) launch.MsgRequestAddVestingAccount {
 	return *launch.NewMsgRequestAddVestingAccount(
 		creator,
 		launchID,
 		address,
-		VestingOptions(),
+		VestingOptions(r),
 	)
 }
 
@@ -263,15 +263,15 @@ func MsgRequestRemoveValidator(creator, validatorAddr string, launchID uint64) l
 }
 
 // MsgRequestAddValidator returns a sample MsgRequestAddValidator
-func MsgRequestAddValidator(creator, address string, launchID uint64) launch.MsgRequestAddValidator {
+func MsgRequestAddValidator(r *rand.Rand, creator, address string, launchID uint64) launch.MsgRequestAddValidator {
 	return *launch.NewMsgRequestAddValidator(
 		creator,
 		launchID,
 		address,
-		Bytes(500),
-		Bytes(30),
-		Coin(),
-		GenesisValidatorPeer(),
+		Bytes(r, 500),
+		Bytes(r, 30),
+		Coin(r),
+		GenesisValidatorPeer(r),
 	)
 }
 
@@ -284,9 +284,9 @@ func MsgRevertLaunch(coordinator string, launchID uint64) launch.MsgRevertLaunch
 }
 
 // MsgTriggerLaunch returns a sample MsgTriggerLaunch
-func MsgTriggerLaunch(coordinator string, launchID uint64) launch.MsgTriggerLaunch {
+func MsgTriggerLaunch(r *rand.Rand, coordinator string, launchID uint64) launch.MsgTriggerLaunch {
 	launchTimeRange := launch.DefaultMaxLaunchTime - launch.DefaultMinLaunchTime
-	launchTime := rand.Int63n(launchTimeRange) + launch.DefaultMinLaunchTime
+	launchTime := r.Int63n(launchTimeRange) + launch.DefaultMinLaunchTime
 	return *launch.NewMsgTriggerLaunch(
 		coordinator,
 		launchID,
@@ -305,51 +305,51 @@ func MsgSettleRequest(coordinator string, launchID, requestID uint64, approve bo
 }
 
 // GenesisHash returns a sample sha256 hash of custom genesis for GenesisURL
-func GenesisHash() string {
-	hash := sha256.Sum256([]byte(String(50)))
+func GenesisHash(r *rand.Rand) string {
+	hash := sha256.Sum256([]byte(String(r, 50)))
 	return hex.EncodeToString(hash[:])
 }
 
 // LaunchParams returns a sample of params for the launch module
-func LaunchParams() launch.Params {
-	maxLaunchTime := launch.DefaultMaxLaunchTime - rand.Int63n(10)
-	minLaunchTime := rand.Int63n(10) + launch.DefaultMinLaunchTime
+func LaunchParams(r *rand.Rand) launch.Params {
+	maxLaunchTime := launch.DefaultMaxLaunchTime - r.Int63n(10)
+	minLaunchTime := r.Int63n(10) + launch.DefaultMinLaunchTime
 
 	// assign random small amount of staking denom
-	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(BondDenom, rand.Int63n(100)+1))
+	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(BondDenom, r.Int63n(100)+1))
 
 	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay, chainCreationFee)
 }
 
 // LaunchGenesisState returns a sample genesis state for the launch module
-func LaunchGenesisState(addresses ...string) launch.GenesisState {
+func LaunchGenesisState(r *rand.Rand, addresses ...string) launch.GenesisState {
 	for len(addresses) < 11 {
-		addresses = append(addresses, Address())
+		addresses = append(addresses, Address(r))
 	}
 	return launch.GenesisState{
 		ChainList: []launch.Chain{
-			Chain(0, 0),
-			Chain(1, 1),
+			Chain(r, 0, 0),
+			Chain(r, 1, 1),
 		},
 		ChainCounter: 2,
 		GenesisAccountList: []launch.GenesisAccount{
-			GenesisAccount(0, addresses[0]),
-			GenesisAccount(0, addresses[1]),
-			GenesisAccount(1, addresses[2]),
+			GenesisAccount(r, 0, addresses[0]),
+			GenesisAccount(r, 0, addresses[1]),
+			GenesisAccount(r, 1, addresses[2]),
 		},
 		VestingAccountList: []launch.VestingAccount{
-			VestingAccount(0, addresses[3]),
-			VestingAccount(0, addresses[4]),
-			VestingAccount(1, addresses[5]),
+			VestingAccount(r, 0, addresses[3]),
+			VestingAccount(r, 0, addresses[4]),
+			VestingAccount(r, 1, addresses[5]),
 		},
 		GenesisValidatorList: []launch.GenesisValidator{
-			GenesisValidator(0, addresses[6]),
-			GenesisValidator(0, addresses[7]),
-			GenesisValidator(1, addresses[8]),
+			GenesisValidator(r, 0, addresses[6]),
+			GenesisValidator(r, 0, addresses[7]),
+			GenesisValidator(r, 1, addresses[8]),
 		},
 		RequestList: []launch.Request{
-			Request(0, addresses[9]),
-			Request(1, addresses[10]),
+			Request(r, 0, addresses[9]),
+			Request(r, 1, addresses[10]),
 		},
 		RequestCounterList: []launch.RequestCounter{
 			{
@@ -361,6 +361,6 @@ func LaunchGenesisState(addresses ...string) launch.GenesisState {
 				Counter:  2,
 			},
 		},
-		Params: LaunchParams(),
+		Params: LaunchParams(r),
 	}
 }

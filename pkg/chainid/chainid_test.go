@@ -1,6 +1,7 @@
 package chainid_test
 
 import (
+	"math/rand"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -81,6 +82,8 @@ func TestParseGenesisChainID(t *testing.T) {
 }
 
 func TestCheckChainName(t *testing.T) {
+	r := rand.New(rand.NewSource(0))
+
 	for _, tc := range []struct {
 		desc  string
 		name  string
@@ -108,7 +111,7 @@ func TestCheckChainName(t *testing.T) {
 		},
 		{
 			desc:  "Too big",
-			name:  sample.AlphaString(chainid.ChainNameMaxLength + 1),
+			name:  sample.AlphaString(r, chainid.ChainNameMaxLength+1),
 			valid: false,
 		},
 		{

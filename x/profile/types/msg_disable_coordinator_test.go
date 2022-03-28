@@ -25,7 +25,7 @@ func TestMsgDisableCoordinator_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg: profile.MsgDisableCoordinator{
-				Address: sample.Address(),
+				Address: sample.Address(r),
 			},
 		},
 	}

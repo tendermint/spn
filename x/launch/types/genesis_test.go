@@ -13,11 +13,11 @@ var (
 	launchID1        = uint64(0)
 	launchID2        = uint64(1)
 	noExistLaunchID  = uint64(2)
-	addr1            = sample.Address()
-	addr2            = sample.Address()
-	vestingAddress   = sample.Address()
-	genesisValidator = sample.GenesisValidator(launchID1, addr1)
-	genesisChainID   = sample.GenesisChainID()
+	addr1            = sample.Address(r)
+	addr2            = sample.Address(r)
+	vestingAddress   = sample.Address(r)
+	genesisValidator = sample.GenesisValidator(r, launchID1, addr1)
+	genesisChainID   = sample.GenesisChainID(r)
 
 	// Those are samples we can use for each fields when they are not the one to test
 	sampleChainList = []types.Chain{
@@ -243,7 +243,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:    sampleChainList,
 				ChainCounter: 10,
 				GenesisValidatorList: []types.GenesisValidator{
-					sample.GenesisValidator(noExistLaunchID, addr1),
+					sample.GenesisValidator(r, noExistLaunchID, addr1),
 				},
 				Params: types.DefaultParams(),
 			},
@@ -255,8 +255,8 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:    sampleChainList,
 				ChainCounter: 10,
 				GenesisValidatorList: []types.GenesisValidator{
-					sample.GenesisValidator(launchID1, addr1),
-					sample.GenesisValidator(launchID1, addr1),
+					sample.GenesisValidator(r, launchID1, addr1),
+					sample.GenesisValidator(r, launchID1, addr1),
 				},
 				Params: types.DefaultParams(),
 			},
@@ -268,7 +268,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:    sampleChainList,
 				ChainCounter: 10,
 				GenesisValidatorList: []types.GenesisValidator{
-					sample.GenesisValidator(noExistLaunchID, addr1),
+					sample.GenesisValidator(r, noExistLaunchID, addr1),
 				},
 				Params: types.DefaultParams(),
 			},

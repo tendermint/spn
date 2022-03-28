@@ -20,7 +20,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgCreateClient{
-				Creator:         sample.Address(),
+				Creator:         sample.Address(r),
 				LaunchID:        0,
 				ConsensusState:  sample.ConsensusState(0),
 				ValidatorSet:    sample.ValidatorSet(0),
@@ -43,7 +43,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid consensus state",
 			msg: types.MsgCreateClient{
-				Creator:  sample.Address(),
+				Creator:  sample.Address(r),
 				LaunchID: 0,
 				ConsensusState: spntypes.NewConsensusState(
 					"2022-01-12T07:56:35.394367Z",
@@ -59,7 +59,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid validator set",
 			msg: types.MsgCreateClient{
-				Creator:        sample.Address(),
+				Creator:        sample.Address(r),
 				LaunchID:       0,
 				ConsensusState: sample.ConsensusState(0),
 				ValidatorSet: spntypes.NewValidatorSet(
@@ -77,7 +77,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 		{
 			name: "validator set not matching consensus state",
 			msg: types.MsgCreateClient{
-				Creator:         sample.Address(),
+				Creator:         sample.Address(r),
 				LaunchID:        0,
 				ConsensusState:  sample.ConsensusState(0),
 				ValidatorSet:    sample.ValidatorSet(1),
@@ -89,7 +89,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 		{
 			name: "should prevent unbonding period lower than minimal",
 			msg: types.MsgCreateClient{
-				Creator:         sample.Address(),
+				Creator:         sample.Address(r),
 				LaunchID:        0,
 				ConsensusState:  sample.ConsensusState(0),
 				ValidatorSet:    sample.ValidatorSet(0),
@@ -101,7 +101,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 		{
 			name: "should prevent zero revision height",
 			msg: types.MsgCreateClient{
-				Creator:         sample.Address(),
+				Creator:         sample.Address(r),
 				LaunchID:        0,
 				ConsensusState:  sample.ConsensusState(0),
 				ValidatorSet:    sample.ValidatorSet(0),

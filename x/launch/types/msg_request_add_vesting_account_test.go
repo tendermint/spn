@@ -31,7 +31,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 			name: "invalid creator address",
 			msg: types.MsgRequestAddVestingAccount{
 				Creator:  "invalid_address",
-				Address:  sample.Address(),
+				Address:  sample.Address(r),
 				LaunchID: launchID,
 				Options:  option,
 			},
@@ -40,7 +40,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid account address",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator:  sample.Address(),
+				Creator:  sample.Address(r),
 				Address:  "invalid_address",
 				LaunchID: launchID,
 				Options:  option,
@@ -50,18 +50,18 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid vesting option",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator:  sample.Address(),
-				Address:  sample.Address(),
+				Creator:  sample.Address(r),
+				Address:  sample.Address(r),
 				LaunchID: launchID,
-				Options:  *types.NewDelayedVesting(sample.Coins(), sample.Coins(), 0),
+				Options:  *types.NewDelayedVesting(sample.Coins(r), sample.Coins(r), 0),
 			},
 			err: types.ErrInvalidVestingOption,
 		},
 		{
 			name: "valid message",
 			msg: types.MsgRequestAddVestingAccount{
-				Creator:  sample.Address(),
-				Address:  sample.Address(),
+				Creator:  sample.Address(r),
+				Address:  sample.Address(r),
 				LaunchID: launchID,
 				Options:  option,
 			},

@@ -3,6 +3,7 @@ package sample
 
 import (
 	"math/rand"
+	"strconv"
 	"testing"
 	"time"
 
@@ -51,136 +52,138 @@ func Codec() codec.Codec {
 }
 
 // Bool returns randomly true or false
-func Bool() bool {
-	r := rand.Intn(100)
-	return r < 50
+func Bool(r *rand.Rand) bool {
+	b := r.Intn(100)
+	return b < 50
 }
 
 // Bytes returns a random array of bytes
-func Bytes(n int) []byte {
-	return []byte(String(n))
+func Bytes(r *rand.Rand, n int) []byte {
+	return []byte(String(r, n))
 }
 
 // Uint64 returns a random uint64
-func Uint64() uint64 {
-	return uint64(rand.Intn(10000))
+func Uint64(r *rand.Rand) uint64 {
+	return uint64(r.Intn(10000))
 }
 
 // String returns a random string of length n
-func String(n int) string {
+func String(r *rand.Rand, n int) string {
 	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
 	randomString := make([]rune, n)
 	for i := range randomString {
-		randomString[i] = letter[rand.Intn(len(letter))]
+		randomString[i] = letter[r.Intn(len(letter))]
 	}
 	return string(randomString)
 }
 
 // AlphaString returns a random string with lowercase alpha char of length n
-func AlphaString(n int) string {
+func AlphaString(r *rand.Rand, n int) string {
 	var letter = []rune("abcdefghijklmnopqrstuvwxyz")
 
 	randomString := make([]rune, n)
 	for i := range randomString {
-		randomString[i] = letter[rand.Intn(len(letter))]
+		randomString[i] = letter[r.Intn(len(letter))]
 	}
 	return string(randomString)
 }
 
 // PubKey returns a sample account PubKey
-func PubKey() crypto.PubKey {
-	return ed25519.GenPrivKey().PubKey()
+func PubKey(r *rand.Rand) crypto.PubKey {
+	seed := []byte(strconv.Itoa(r.Int()))
+	return ed25519.GenPrivKeyFromSecret(seed).PubKey()
 }
 
 // ConsAddress returns a sample consensus address
-func ConsAddress() sdk.ConsAddress {
-	return sdk.ConsAddress(PubKey().Address())
+func ConsAddress(r *rand.Rand) sdk.ConsAddress {
+	return sdk.ConsAddress(PubKey(r).Address())
 }
 
 // AccAddress returns a sample account address
-func AccAddress() sdk.AccAddress {
-	addr := PubKey().Address()
+func AccAddress(r *rand.Rand) sdk.AccAddress {
+	addr := PubKey(r).Address()
 	return sdk.AccAddress(addr)
 }
 
 // Address returns a sample string account address
-func Address() string {
-	return AccAddress().String()
+func Address(r *rand.Rand) string {
+	return AccAddress(r).String()
 }
 
 // ValAddress returns a sample validator operator address
-func ValAddress() sdk.ValAddress {
-	return sdk.ValAddress(PubKey().Address())
+func ValAddress(r *rand.Rand) sdk.ValAddress {
+	return sdk.ValAddress(PubKey(r).Address())
 }
 
 // OperatorAddress returns a sample string validator operator address
-func OperatorAddress() string {
-	return ValAddress().String()
+func OperatorAddress(r *rand.Rand) string {
+	return ValAddress(r).String()
 }
 
 // Validator returns a sample staking validator
-func Validator(t testing.TB) stakingtypes.Validator {
+func Validator(t testing.TB, r *rand.Rand) stakingtypes.Validator {
+	seed := []byte(strconv.Itoa(r.Int()))
 	val, err := stakingtypes.NewValidator(
-		ValAddress(),
-		cosmosed25519.GenPrivKey().PubKey(),
+		ValAddress(r),
+		cosmosed25519.GenPrivKeyFromSecret(seed).PubKey(),
 		stakingtypes.Description{})
 	require.NoError(t, err)
 	return val
 }
 
 // Delegation returns staking delegation with the given address
-func Delegation(t testing.TB, addr string) stakingtypes.Delegation {
+func Delegation(t testing.TB, r *rand.Rand, addr string) stakingtypes.Delegation {
 	delAcc, err := sdk.AccAddressFromBech32(addr)
 	require.NoError(t, err)
 
 	return stakingtypes.NewDelegation(
 		delAcc,
-		ValAddress(),
-		sdk.NewDec(int64(rand.Intn(10000))),
+		ValAddress(r),
+		sdk.NewDec(int64(r.Intn(10000))),
 	)
 }
 
 // Coin returns a sample coin structure
-func Coin() sdk.Coin {
-	return sdk.NewCoin(AlphaString(5), sdk.NewInt(rand.Int63n(10000)+1))
+func Coin(r *rand.Rand) sdk.Coin {
+	return sdk.NewCoin(AlphaString(r, 5), sdk.NewInt(r.Int63n(10000)+1))
 }
 
 // CoinWithRange returns a sample coin structure where the amount is a random number between provided min and max values
 // with a random denom
-func CoinWithRange(min, max int64) sdk.Coin {
-	return sdk.NewCoin(AlphaString(5), sdk.NewInt(rand.Int63n(max-min)+min))
+func CoinWithRange(r *rand.Rand, min, max int64) sdk.Coin {
+	return sdk.NewCoin(AlphaString(r, 5), sdk.NewInt(r.Int63n(max-min)+min))
 }
 
 // CoinWithRangeAmount returns a sample coin structure where the amount is a random number between provided min and max values
 // with a given denom
-func CoinWithRangeAmount(denom string, min, max int64) sdk.Coin {
-	return sdk.NewCoin(denom, sdk.NewInt(rand.Int63n(max-min)+min))
+func CoinWithRangeAmount(r *rand.Rand, denom string, min, max int64) sdk.Coin {
+	return sdk.NewCoin(denom, sdk.NewInt(r.Int63n(max-min)+min))
 }
 
 // Coins returns a sample coins structure
-func Coins() sdk.Coins {
-	return sdk.NewCoins(Coin(), Coin(), Coin())
+func Coins(r *rand.Rand) sdk.Coins {
+	return sdk.NewCoins(Coin(r), Coin(r), Coin(r))
 }
 
 // CoinsWithRange returns a sample coins structure where the amount is a random number between provided min and max values
-func CoinsWithRange(min, max int64) sdk.Coins {
-	return sdk.NewCoins(CoinWithRange(min, max), CoinWithRange(min, max), CoinWithRange(min, max))
+func CoinsWithRange(r *rand.Rand, min, max int64) sdk.Coins {
+	return sdk.NewCoins(CoinWithRange(r, min, max), CoinWithRange(r, min, max), CoinWithRange(r, min, max))
 }
 
 // CoinsWithRangeAmount returns a sample coins structure where the amount is a random number between provided min and max values
 // with a set of given denoms
-func CoinsWithRangeAmount(denom1, denom2, denom3 string, min, max int64) sdk.Coins {
-	return sdk.NewCoins(CoinWithRangeAmount(denom1, min, max), CoinWithRangeAmount(denom2, min, max), CoinWithRangeAmount(denom3, min, max))
+func CoinsWithRangeAmount(r *rand.Rand, denom1, denom2, denom3 string, min, max int64) sdk.Coins {
+	return sdk.NewCoins(CoinWithRangeAmount(r, denom1, min, max), CoinWithRangeAmount(r, denom2, min, max), CoinWithRangeAmount(r, denom3, min, max))
 }
 
 // TotalSupply returns a sample coins structure where each denom's total supply is within the default
 // allowed supply range
-func TotalSupply() sdk.Coins {
-	return CoinsWithRange(campaign.DefaultMinTotalSupply.Int64(), campaign.DefaultMaxTotalSupply.Int64())
+func TotalSupply(r *rand.Rand) sdk.Coins {
+	return CoinsWithRange(r, campaign.DefaultMinTotalSupply.Int64(), campaign.DefaultMaxTotalSupply.Int64())
 }
 
 // Duration returns a sample time.Duration between a second and 21 days
-func Duration() time.Duration {
-	return time.Duration(rand.Int63n(int64(time.Hour*24*21-time.Second))) + time.Second
+func Duration(r *rand.Rand) time.Duration {
+	return time.Duration(r.Int63n(int64(time.Hour*24*21-time.Second))) + time.Second
 }

@@ -11,10 +11,10 @@ import (
 )
 
 var (
-	opAddrFoo    = sample.OperatorAddress()
-	opAddrBar    = sample.OperatorAddress()
-	opAddrBaz    = sample.OperatorAddress()
-	opAddrFoobar = sample.OperatorAddress()
+	opAddrFoo    = sample.OperatorAddress(r)
+	opAddrBar    = sample.OperatorAddress(r)
+	opAddrBaz    = sample.OperatorAddress(r)
+	opAddrFoobar = sample.OperatorAddress(r)
 )
 
 func TestNewSignatureCounts(t *testing.T) {

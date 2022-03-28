@@ -30,7 +30,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgSettleRequest{
-				Signer:    sample.Address(),
+				Signer:    sample.Address(r),
 				LaunchID:  launchID,
 				RequestID: 10,
 				Approve:   true,
