@@ -18,9 +18,8 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgParticipate int = 100
 
-	opWeightMsgWithdrawAllocations = "op_weight_withdraw_allocations"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgWithdrawAllocations int = 100
+	opWeightMsgWithdrawAllocations          = "op_weight_withdraw_allocations"
+	defaultWeightMsgWithdrawAllocations int = 50
 
 	// this line is used by starport scaffolding # simapp/module/const
 )

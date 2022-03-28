@@ -1,9 +1,7 @@
 package campaign
 
 import (
-	"fmt"
 	"math/rand"
-	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -55,23 +53,12 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 	campaignParams := sample.CampaignParams()
-	creationFee := make([]string, len(campaignParams.CampaignCreationFee))
-	for i := range campaignParams.CampaignCreationFee {
-		creationFee[i] = fmt.Sprintf(
-			"{\"denom\":\"%v\",\"amount\":\"%v\"}",
-			campaignParams.CampaignCreationFee[i].Denom,
-			campaignParams.CampaignCreationFee[i].Amount.String(),
-		)
-	}
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyTotalSupplyRange), func(r *rand.Rand) string {
-			return fmt.Sprintf(
-				"{\"minTotalSupply\":\"%v\",\"maxTotalSupply\":\"%v\"}",
-				campaignParams.TotalSupplyRange.MinTotalSupply,
-				campaignParams.TotalSupplyRange.MaxTotalSupply)
+			return string(types.Amino.MustMarshalJSON(campaignParams.TotalSupplyRange))
 		}),
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyCampaignCreationFee), func(r *rand.Rand) string {
-			return fmt.Sprintf("[%v]", strings.Join(creationFee, ","))
+			return string(types.Amino.MustMarshalJSON(campaignParams.CampaignCreationFee))
 		}),
 	}
 }
