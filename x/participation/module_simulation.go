@@ -15,7 +15,7 @@ import (
 
 const (
 	opWeightMsgParticipate            = "op_weight_msg_participate"
-	defaultWeightMsgParticipate   int = 100
+	defaultWeightMsgParticipate   int = 50
 	opWeightMsgCreateAuction          = "op_weight_create_auction"
 	defaultWeightMsgCreateAuction int = 20
 
