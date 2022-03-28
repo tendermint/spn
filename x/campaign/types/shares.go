@@ -12,9 +12,6 @@ import (
 type Shares sdk.Coins
 
 const (
-	// DefaultTotalShareNumber is the default number of total share for an underlying supply asset
-	DefaultTotalShareNumber = 100000
-
 	// SharePrefix is the prefix used to represent a share denomination
 	// A sdk.Coin containing this prefix must never be represented in a balance in the bank module
 	SharePrefix = "s/"
@@ -76,8 +73,8 @@ func DecreaseShares(shares, toDecrease Shares) (Shares, error) {
 }
 
 // IsTotalSharesReached checks if the provided shares overflow the total number of shares
-// Denoms not specified in totalShares uses DefaultTotalShareNumber as the default number of total shares
-func IsTotalSharesReached(shares, totalShares Shares) bool {
+// Denoms not specified in totalShares uses maximumTotalShareNumber as the default number of total shares
+func IsTotalSharesReached(shares, totalShares Shares, maximumTotalShareNumber uint64) bool {
 	// Check the explicitly defined total shares
 	totalMap := make(map[string]uint64)
 	for _, coin := range totalShares {
@@ -92,7 +89,7 @@ func IsTotalSharesReached(shares, totalShares Shares) bool {
 				return true
 			}
 		} else {
-			if coin.Amount.Uint64() > DefaultTotalShareNumber {
+			if coin.Amount.Uint64() > maximumTotalShareNumber {
 				return true
 			}
 		}

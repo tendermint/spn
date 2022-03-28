@@ -11,6 +11,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
@@ -169,7 +170,7 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 	for _, share := range ShareDenoms {
 		total := camp.TotalShares.AmountOf(share)
 		if total == 0 {
-			total = types.DefaultTotalShareNumber
+			total = spntypes.TotalShareNumber
 		}
 		remaining := total - camp.AllocatedShares.AmountOf(share)
 		if remaining == 0 {
@@ -355,10 +356,10 @@ func SimulateMsgUpdateTotalShares(ak types.AccountKeeper, bk types.BankKeeper, p
 		for _, share := range ShareDenoms {
 			currentTotal := camp.TotalShares.AmountOf(share)
 			if currentTotal == 0 {
-				currentTotal = types.DefaultTotalShareNumber
+				currentTotal = spntypes.TotalShareNumber
 			}
 			allocatedShare := camp.AllocatedShares.AmountOf(share)
-			newTotal := r.Int63n(currentTotal+types.DefaultTotalShareNumber) + allocatedShare
+			newTotal := r.Int63n(currentTotal+spntypes.TotalShareNumber) + allocatedShare
 			newTotalShares = append(newTotalShares, sdk.NewCoin(share, sdk.NewInt(newTotal)))
 		}
 		newTotalShares = newTotalShares.Sort()

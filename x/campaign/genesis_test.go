@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign"
@@ -31,6 +32,9 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.MainnetVestingAccountList, got.MainnetVestingAccountList)
 
 	require.Equal(t, genesisState.Params, got.Params)
+
+	maxShares := tk.CampaignKeeper.GetTotalShares(ctx)
+	require.Equal(t, uint64(spntypes.TotalShareNumber), maxShares)
 
 	// this line is used by starport scaffolding # genesis/test/assert
 }
