@@ -11,7 +11,7 @@ import (
 // ParticipationParams  returns a sample of params for the participation module
 func ParticipationParams(r *rand.Rand) participation.Params {
 	allocationPrice := participation.AllocationPrice{
-		Bonded: sdk.NewInt(rand.Int63n(10000) + 1),
+		Bonded: sdk.NewInt(r.Int63n(10000) + 1),
 	}
 
 	tiers := make([]participation.Tier, 0)

@@ -12,12 +12,13 @@ import (
 
 // MsgCreateFixedAuction create a sample MsgCreateFixedAuction message
 func MsgCreateFixedAuction(
+	r *rand.Rand,
 	auctioneer string,
 	sellingCoin sdk.Coin,
 	startTime,
 	endTime time.Time,
 ) *fundraisingtypes.MsgCreateFixedPriceAuction {
-	sellingPrice := int64(rand.Intn(10000)) + 10000 // 10000 - 20000
+	sellingPrice := int64(r.Intn(10000)) + 10000 // 10000 - 20000
 
 	return &fundraisingtypes.MsgCreateFixedPriceAuction{
 		Auctioneer:       auctioneer,
