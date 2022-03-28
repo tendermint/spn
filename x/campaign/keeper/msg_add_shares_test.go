@@ -2,15 +2,14 @@ package keeper_test
 
 import (
 	"fmt"
-	spntypes "github.com/tendermint/spn/pkg/types"
-	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
-
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+	tc "github.com/tendermint/spn/testutil/constructor"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
