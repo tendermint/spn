@@ -1,6 +1,7 @@
 package sample
 
 import (
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"math/rand"
 	"time"
 
@@ -121,6 +122,7 @@ func CampaignGenesisState() campaign.GenesisState {
 			MainnetAccount(0, Address()),
 			MainnetAccount(1, Address()),
 		},
-		Params: CampaignParams(),
+		TotalShares: spntypes.TotalShareNumber,
+		Params:      CampaignParams(),
 	}
 }

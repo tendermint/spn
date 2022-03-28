@@ -90,7 +90,7 @@ func TestCampaign_Validate(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			require.EqualValues(t, tc.valid, tc.campaign.Validate() == nil)
+			require.EqualValues(t, tc.valid, tc.campaign.Validate(spntypes.TotalShareNumber) == nil)
 		})
 	}
 }

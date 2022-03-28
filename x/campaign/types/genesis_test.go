@@ -1,6 +1,9 @@
 package types_test
 
 import (
+	"fmt"
+	spntypes "github.com/tendermint/spn/pkg/types"
+	tc2 "github.com/tendermint/spn/testutil/constructor"
 	"testing"
 	"time"
 
@@ -79,7 +82,8 @@ func TestGenesisState_Validate(t *testing.T) {
 						VestingOptions: *types.NewShareDelayedVesting(shares4, shares4, time.Now().Unix()),
 					},
 				},
-				Params: types.DefaultParams(),
+				TotalShares: spntypes.TotalShareNumber,
+				Params:      types.DefaultParams(),
 			},
 		},
 		{
@@ -244,6 +248,31 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 			},
 			errorMessage: "duplicated index for mainnetAccount",
+		},
+		{
+			desc: "invalid allocations",
+			genState: &types.GenesisState{
+				CampaignList: []types.Campaign{
+					{
+						CampaignID:         0,
+						CampaignName:       "test",
+						CoordinatorID:      0,
+						MainnetID:          0,
+						MainnetInitialized: false,
+						TotalSupply:        nil,
+						AllocatedShares:    types.NewSharesFromCoins(tc2.Coins(t, fmt.Sprintf("%dstake", spntypes.TotalShareNumber+1))),
+						Metadata:           nil,
+					},
+				},
+				CampaignCounter: 1,
+				MainnetAccountList: []types.MainnetAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+				},
+			},
+			errorMessage: "invalid campaign 0: more allocated shares than total shares",
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
