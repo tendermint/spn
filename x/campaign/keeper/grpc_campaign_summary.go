@@ -108,5 +108,15 @@ func (k Keeper) GetCampaignSummary(ctx sdk.Context, campaign types.Campaign) (cs
 		}
 	}
 
+	// fetch previous rewards
+	previousRewards := sdk.NewCoins()
+	for i := 0; i < chainCount-1; i++ {
+		rewardPool, found := k.rewardKeeper.GetRewardPool(ctx, campaignChains.Chains[i])
+		if found {
+			previousRewards.Add(rewardPool.InitialCoins...)
+		}
+	}
+	cs.PreviousRewards = previousRewards
+
 	return cs, nil
 }

@@ -18,6 +18,11 @@ message CampaignSummary {
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
   bool rewardsDistributed = 6;
+  repeated cosmos.base.v1beta1.Coin previousRewards = 7 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }
 
 message MostRecentChain {
