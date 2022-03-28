@@ -10,23 +10,23 @@ import (
 	"github.com/tendermint/spn/testutil/sample"
 )
 
-var (
-	opAddrFoo    = sample.OperatorAddress(r)
-	opAddrBar    = sample.OperatorAddress(r)
-	opAddrBaz    = sample.OperatorAddress(r)
-	opAddrFoobar = sample.OperatorAddress(r)
-)
-
 func TestNewSignatureCounts(t *testing.T) {
 	sc := types.NewSignatureCounts()
 	require.Zero(t, sc)
 }
 
 func TestSignatureCounts_AddSignature(t *testing.T) {
+	var (
+		opAddrFoo    = sample.OperatorAddress(r)
+		opAddrBar    = sample.OperatorAddress(r)
+		opAddrBaz    = sample.OperatorAddress(r)
+		opAddrFoobar = sample.OperatorAddress(r)
+	)
+
 	tests := []struct {
 		name             string
 		sc               types.SignatureCounts
-		opAddres         string
+		opAddress        string
 		validatorSetSize int64
 		expected         types.SignatureCounts
 	}{
@@ -36,7 +36,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 1,
 				Counts:     []types.SignatureCount{},
 			},
-			opAddres:         opAddrFoo,
+			opAddress:        opAddrFoo,
 			validatorSetSize: 1,
 			expected: types.SignatureCounts{
 				BlockCount: 1,
@@ -51,7 +51,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 				BlockCount: 100,
 				Counts:     []types.SignatureCount{},
 			},
-			opAddres:         opAddrFoo,
+			opAddress:        opAddrFoo,
 			validatorSetSize: 10000,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
@@ -70,7 +70,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 					tc.SignatureCount(t, opAddrBaz, "5.5"),
 				},
 			},
-			opAddres:         opAddrFoobar,
+			opAddress:        opAddrFoobar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
@@ -92,7 +92,7 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 					tc.SignatureCount(t, opAddrBaz, "5.5"),
 				},
 			},
-			opAddres:         opAddrBar,
+			opAddress:        opAddrBar,
 			validatorSetSize: 10,
 			expected: types.SignatureCounts{
 				BlockCount: 100,
@@ -106,13 +106,20 @@ func TestSignatureCounts_AddSignature(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.sc.AddSignature(tt.opAddres, tt.validatorSetSize)
+			tt.sc.AddSignature(tt.opAddress, tt.validatorSetSize)
 			require.Equal(t, tt.expected, tt.sc)
 		})
 	}
 }
 
 func TestSignatureCounts_Validate(t *testing.T) {
+	var (
+		opAddrFoo    = sample.OperatorAddress(r)
+		opAddrBar    = sample.OperatorAddress(r)
+		opAddrBaz    = sample.OperatorAddress(r)
+		opAddrFoobar = sample.OperatorAddress(r)
+	)
+
 	tests := []struct {
 		name    string
 		sc      types.SignatureCounts

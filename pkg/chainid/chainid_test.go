@@ -1,7 +1,6 @@
 package chainid_test
 
 import (
-	"math/rand"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -82,7 +81,7 @@ func TestParseGenesisChainID(t *testing.T) {
 }
 
 func TestCheckChainName(t *testing.T) {
-	r := rand.New(rand.NewSource(0))
+	r := sample.Rand()
 
 	for _, tc := range []struct {
 		desc  string

@@ -20,7 +20,7 @@ func TestUsedAllocationsQuerySingle(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
 	msgs := createNUsedAllocations(tk.ParticipationKeeper, sdkCtx, 2)
-	validAddr := sample.Address()
+	validAddr := sample.Address(r)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetUsedAllocationsRequest

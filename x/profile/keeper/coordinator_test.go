@@ -15,7 +15,7 @@ import (
 func createNCoordinator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Coordinator {
 	items := make([]types.Coordinator, n)
 	for i := range items {
-		items[i] = sample.Coordinator(sample.Address())
+		items[i] = sample.Coordinator(r, sample.Address(r))
 		items[i].Active = true
 		items[i].CoordinatorID = keeper.AppendCoordinator(ctx, items[i])
 	}

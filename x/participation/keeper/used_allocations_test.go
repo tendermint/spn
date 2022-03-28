@@ -16,7 +16,7 @@ import (
 func createNUsedAllocations(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.UsedAllocations {
 	items := make([]types.UsedAllocations, n)
 	for i := range items {
-		items[i].Address = sample.Address()
+		items[i].Address = sample.Address(r)
 
 		keeper.SetUsedAllocations(ctx, items[i])
 	}

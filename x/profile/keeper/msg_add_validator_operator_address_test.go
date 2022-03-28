@@ -16,8 +16,8 @@ func TestMsgAddValidatorOperatorAddress(t *testing.T) {
 	var (
 		ctx, tk, ts = testkeeper.NewTestSetup(t)
 		wCtx        = sdk.WrapSDKContext(ctx)
-		valAddr     = sample.Address()
-		opAddr      = sample.Address()
+		valAddr     = sample.Address(r)
+		opAddr      = sample.Address(r)
 	)
 
 	tk.ProfileKeeper.SetValidator(ctx, types.Validator{
@@ -35,7 +35,7 @@ func TestMsgAddValidatorOperatorAddress(t *testing.T) {
 			name: "should allow associating a new operator address to a validator",
 			msg: &types.MsgAddValidatorOperatorAddress{
 				ValidatorAddress: valAddr,
-				OperatorAddress:  sample.Address(),
+				OperatorAddress:  sample.Address(r),
 			},
 		},
 		{
@@ -48,8 +48,8 @@ func TestMsgAddValidatorOperatorAddress(t *testing.T) {
 		{
 			name: "should create a validator is it doesn't exist",
 			msg: &types.MsgAddValidatorOperatorAddress{
-				ValidatorAddress: sample.Address(),
-				OperatorAddress:  sample.Address(),
+				ValidatorAddress: sample.Address(r),
+				OperatorAddress:  sample.Address(r),
 			},
 			newVal: true,
 		},

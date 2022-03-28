@@ -21,7 +21,7 @@ func TestGetParams(t *testing.T) {
 	require.EqualValues(t, spntypes.DefaultUnbondingPeriod, tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx))
 	require.EqualValues(t, spntypes.DefaultRevisionHeight, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx))
 
-	chainID := sample.GenesisChainID()
+	chainID := sample.GenesisChainID(r)
 	cs := sample.ConsensusState(0)
 	params = types.NewParams(
 		1000,

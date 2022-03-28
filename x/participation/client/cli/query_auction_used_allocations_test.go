@@ -41,11 +41,12 @@ func networkWithAuctionUsedAllocationsObjects(t *testing.T, n int) (*network.Net
 
 func networkWithAuctionUsedAllocationsObjectsWithSameAddress(t *testing.T, n int) (*network.Network, []types.AuctionUsedAllocations) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-	address := sample.Address()
+	address := sample.Address(r)
 	for i := 0; i < n; i++ {
 		auctionUsedAllocations := types.AuctionUsedAllocations{
 			Address:   address,

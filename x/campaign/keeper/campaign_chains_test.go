@@ -20,7 +20,7 @@ func TestKeeper_AddChainToCampaign(t *testing.T) {
 	require.Error(t, err)
 
 	// Chains can be added
-	tk.CampaignKeeper.SetCampaign(ctx, sample.Campaign(0))
+	tk.CampaignKeeper.SetCampaign(ctx, sample.Campaign(r, 0))
 	err = tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 0)
 	require.NoError(t, err)
 	err = tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 1)

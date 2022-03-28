@@ -15,7 +15,7 @@ import (
 func createNMainnetVestingAccount(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.MainnetVestingAccount {
 	items := make([]types.MainnetVestingAccount, n)
 	for i := range items {
-		items[i] = sample.MainnetVestingAccount(0, sample.Address())
+		items[i] = sample.MainnetVestingAccount(r, 0, sample.Address(r))
 		keeper.SetMainnetVestingAccount(ctx, items[i])
 	}
 	return items

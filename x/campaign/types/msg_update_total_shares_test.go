@@ -21,9 +21,9 @@ func TestMsgUpdateTotalShares_ValidateBasic(t *testing.T) {
 		{
 			name: "valid address",
 			msg: types.MsgUpdateTotalShares{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
-				TotalShares: sample.Shares(),
+				TotalShares: sample.Shares(r),
 			},
 		},
 		{
@@ -31,14 +31,14 @@ func TestMsgUpdateTotalShares_ValidateBasic(t *testing.T) {
 			msg: types.MsgUpdateTotalShares{
 				Coordinator: "invalid_address",
 				CampaignID:  0,
-				TotalShares: sample.Shares(),
+				TotalShares: sample.Shares(r),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid coins for total shares",
 			msg: types.MsgUpdateTotalShares{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
 				TotalShares: types.NewSharesFromCoins(invalidCoins),
 			},
@@ -47,7 +47,7 @@ func TestMsgUpdateTotalShares_ValidateBasic(t *testing.T) {
 		{
 			name: "empty total shares",
 			msg: types.MsgUpdateTotalShares{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
 				TotalShares: types.EmptyShares(),
 			},
@@ -56,7 +56,7 @@ func TestMsgUpdateTotalShares_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid shares prefix for total shares",
 			msg: types.MsgUpdateTotalShares{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
 				TotalShares: types.Shares(tc.Coins(t, "100foo")),
 			},

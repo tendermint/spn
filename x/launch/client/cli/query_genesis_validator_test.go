@@ -20,6 +20,7 @@ import (
 
 func networkWithGenesisValidatorObjects(t *testing.T, n int) (*network.Network, []types.GenesisValidator) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
@@ -27,7 +28,7 @@ func networkWithGenesisValidatorObjects(t *testing.T, n int) (*network.Network, 
 	for i := 0; i < n; i++ {
 		state.GenesisValidatorList = append(
 			state.GenesisValidatorList,
-			sample.GenesisValidator(uint64(0), strconv.Itoa(i)),
+			sample.GenesisValidator(r, uint64(0), strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)

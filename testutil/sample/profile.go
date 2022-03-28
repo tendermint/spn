@@ -1,8 +1,9 @@
 package sample
 
 import (
-	profile "github.com/tendermint/spn/x/profile/types"
 	"math/rand"
+
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 // MsgCreateCoordinator returns a sample MsgCreateCoordinator

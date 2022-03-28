@@ -16,7 +16,7 @@ import (
 func TestKeeper_CheckValidatorSet(t *testing.T) {
 	var (
 		ctx, tk, _           = testkeeper.NewTestSetup(t)
-		validators           = []crypto.PubKey{sample.PubKey(), sample.PubKey(), sample.PubKey()}
+		validators           = []crypto.PubKey{sample.PubKey(r), sample.PubKey(r), sample.PubKey(r)}
 		validatorSet         = tmtypes.ValidatorSet{}
 		validatorNotFoundSet = tmtypes.ValidatorSet{}
 		invalidValidatorSet  = tmtypes.ValidatorSet{}
@@ -50,7 +50,7 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 	}
 	validatorNotFoundSet.Validators = append(
 		validatorSet.Validators,
-		tmtypes.NewValidator(sample.PubKey(), 0),
+		tmtypes.NewValidator(sample.PubKey(r), 0),
 	)
 	invalidValidatorSet.Validators = validatorSet.Validators[:1]
 	type args struct {

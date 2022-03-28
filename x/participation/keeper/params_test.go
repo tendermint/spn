@@ -12,7 +12,7 @@ import (
 
 func TestGetParams(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	params := sample.ParticipationParams()
+	params := sample.ParticipationParams(r)
 
 	tk.ParticipationKeeper.SetParams(ctx, params)
 

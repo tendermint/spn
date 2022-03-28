@@ -15,8 +15,8 @@ import (
 
 func TestMsgUpdateTotalShares(t *testing.T) {
 	var (
-		coordAddr1     = sample.Address()
-		coordAddr2     = sample.Address()
+		coordAddr1     = sample.Address(r)
+		coordAddr2     = sample.Address(r)
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -24,34 +24,34 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 	// Create coordinators
 	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 
 	// Set different campaigns
-	campaign := sample.Campaign(0)
+	campaign := sample.Campaign(r, 0)
 	campaign.CoordinatorID = coordID
 	campaign.DynamicShares = true
 	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 
-	campaignMainnetInitialized := sample.Campaign(1)
+	campaignMainnetInitialized := sample.Campaign(r, 1)
 	campaignMainnetInitialized.CoordinatorID = coordID
 	campaignMainnetInitialized.DynamicShares = true
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
-	campaignNoDynamicShares := sample.Campaign(2)
+	campaignNoDynamicShares := sample.Campaign(r, 2)
 	campaignNoDynamicShares.CoordinatorID = coordID
 	campaignNoDynamicShares.DynamicShares = false
 	campaignNoDynamicShares.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignNoDynamicShares)
 
-	campaignWithAllocatedShares := sample.Campaign(3)
+	campaignWithAllocatedShares := sample.Campaign(r, 3)
 	campaignWithAllocatedShares.CoordinatorID = coordID
 	campaignWithAllocatedShares.DynamicShares = true
 	campaignWithAllocatedShares.AllocatedShares, _ = types.NewShares("100foo")
@@ -68,7 +68,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 			msg: types.MsgUpdateTotalShares{
 				CampaignID:  campaign.CampaignID,
 				Coordinator: coordAddr1,
-				TotalShares: sample.Shares(),
+				TotalShares: sample.Shares(r),
 			},
 		},
 		{
@@ -76,7 +76,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 			msg: types.MsgUpdateTotalShares{
 				CampaignID:  campaign.CampaignID,
 				Coordinator: coordAddr1,
-				TotalShares: sample.Shares(),
+				TotalShares: sample.Shares(r),
 			},
 		},
 		{
@@ -84,7 +84,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 			msg: types.MsgUpdateTotalShares{
 				CampaignID:  100,
 				Coordinator: coordAddr1,
-				TotalShares: sample.Shares(),
+				TotalShares: sample.Shares(r),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -92,8 +92,8 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 			name: "non existing coordinator",
 			msg: types.MsgUpdateTotalShares{
 				CampaignID:  campaign.CampaignID,
-				Coordinator: sample.Address(),
-				TotalShares: sample.Shares(),
+				Coordinator: sample.Address(r),
+				TotalShares: sample.Shares(r),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -102,7 +102,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 			msg: types.MsgUpdateTotalShares{
 				CampaignID:  campaign.CampaignID,
 				Coordinator: coordAddr2,
-				TotalShares: sample.Shares(),
+				TotalShares: sample.Shares(r),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
@@ -111,7 +111,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 			msg: types.MsgUpdateTotalShares{
 				CampaignID:  campaignMainnetInitialized.CampaignID,
 				Coordinator: coordAddr1,
-				TotalShares: sample.Shares(),
+				TotalShares: sample.Shares(r),
 			},
 			err: types.ErrMainnetInitialized,
 		},
@@ -120,7 +120,7 @@ func TestMsgUpdateTotalShares(t *testing.T) {
 			msg: types.MsgUpdateTotalShares{
 				CampaignID:  campaignNoDynamicShares.CampaignID,
 				Coordinator: coordAddr1,
-				TotalShares: sample.Shares(),
+				TotalShares: sample.Shares(r),
 			},
 			err: types.ErrNoDynamicShares,
 		},

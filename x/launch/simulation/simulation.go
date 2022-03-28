@@ -50,7 +50,7 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateChain, "skip chain creation"), nil, nil
 		}
 
-		msg := sample.MsgCreateChain(
+		msg := sample.MsgCreateChain(r,
 			simAccount.Address.String(),
 			"",
 			false,
@@ -107,7 +107,7 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			}
 		}
 
-		msg := sample.MsgEditChain(
+		msg := sample.MsgEditChain(r,
 			simAccount.Address.String(),
 			chain.LaunchID,
 			setCampaignID,
@@ -147,7 +147,7 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 
 		// Select a random account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := sample.MsgRequestAddAccount(
+		msg := sample.MsgRequestAddAccount(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),
 			chain.LaunchID,
@@ -184,7 +184,7 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 
 		// Select a random account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := sample.MsgRequestAddVestingAccount(
+		msg := sample.MsgRequestAddVestingAccount(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),
 			chain.LaunchID,
@@ -284,7 +284,7 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 		// Select a random account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		// Select between new address or coordinator address randomly
-		msg := sample.MsgRequestAddValidator(
+		msg := sample.MsgRequestAddValidator(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),
 			chain.LaunchID,
@@ -358,7 +358,7 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, err.Error()), nil, nil
 		}
-		msg := sample.MsgTriggerLaunch(simAccount.Address.String(), chain.LaunchID)
+		msg := sample.MsgTriggerLaunch(r, simAccount.Address.String(), chain.LaunchID)
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -483,7 +483,7 @@ func SimulateMsgUpdateLaunchInformation(ak types.AccountKeeper, bk types.BankKee
 		}
 
 		modify := r.Intn(100) < 50
-		msg := sample.MsgUpdateLaunchInformation(
+		msg := sample.MsgUpdateLaunchInformation(r,
 			simAccount.Address.String(),
 			chain.LaunchID,
 			modify,

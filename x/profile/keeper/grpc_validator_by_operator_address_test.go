@@ -41,7 +41,7 @@ func TestValidatorByOperatorAddressQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetValidatorByOperatorAddressRequest{
-				OperatorAddress: sample.Address(),
+				OperatorAddress: sample.Address(r),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},

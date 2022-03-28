@@ -2,6 +2,7 @@ package campaign
 
 import (
 	"fmt"
+	"github.com/tendermint/spn/testutil/sample"
 	"math/rand"
 	"strings"
 
@@ -42,8 +43,8 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	campaignGenesis := types.DefaultGenesis()
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(campaignGenesis)
+	campaignGenesis := sample.CampaignGenesisState(simState.Rand)
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&campaignGenesis)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals

@@ -56,18 +56,18 @@ func TestMsgCreateChain(t *testing.T) {
 		campMap          = make(map[string]uint64)
 		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
 		ctx              = sdk.WrapSDKContext(sdkCtx)
-		chainCreationFee = sample.Coins()
+		chainCreationFee = sample.Coins(r)
 	)
 
 	// Create an invalid coordinator
-	invalidCoordAddress := sample.Address()
+	invalidCoordAddress := sample.Address(r)
 	msgCreateInvalidCoordinator := sample.MsgCreateCoordinator(invalidCoordAddress)
 	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateInvalidCoordinator)
 	require.NoError(t, err)
 
 	// Create coordinators
 	for i := range coordAddrs {
-		addr := sample.Address()
+		addr := sample.Address(r)
 		coordAddrs[i] = addr
 		msgCreateCoordinator := sample.MsgCreateCoordinator(addr)
 		resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
@@ -78,7 +78,7 @@ func TestMsgCreateChain(t *testing.T) {
 	// Create a campaign for each valid coordinator
 	for i := range coordAddrs {
 		addr := coordAddrs[i]
-		msgCreateCampaign := sample.MsgCreateCampaign(addr)
+		msgCreateCampaign := sample.MsgCreateCampaign(r, addr)
 		resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 		require.NoError(t, err)
 		campMap[addr] = resCampaign.CampaignID
@@ -96,42 +96,42 @@ func TestMsgCreateChain(t *testing.T) {
 	}{
 		{
 			name:          "valid message",
-			msg:           sample.MsgCreateChain(coordAddrs[0], "", false, campMap[coordAddrs[0]]),
+			msg:           sample.MsgCreateChain(r, coordAddrs[0], "", false, campMap[coordAddrs[0]]),
 			wantedChainID: 0,
 		},
 		{
 			name:          "creates a unique chain ID",
-			msg:           sample.MsgCreateChain(coordAddrs[1], "", false, campMap[coordAddrs[1]]),
+			msg:           sample.MsgCreateChain(r, coordAddrs[1], "", false, campMap[coordAddrs[1]]),
 			wantedChainID: 1,
 		},
 		{
 			name:          "valid message with genesis url",
-			msg:           sample.MsgCreateChain(coordAddrs[2], "foo.com", false, campMap[coordAddrs[2]]),
+			msg:           sample.MsgCreateChain(r, coordAddrs[2], "foo.com", false, campMap[coordAddrs[2]]),
 			wantedChainID: 2,
 		},
 		{
 			name:          "creates message with campaign",
-			msg:           sample.MsgCreateChain(coordAddrs[3], "", true, campMap[coordAddrs[3]]),
+			msg:           sample.MsgCreateChain(r, coordAddrs[3], "", true, campMap[coordAddrs[3]]),
 			wantedChainID: 3,
 		},
 		{
 			name: "coordinator doesn't exist for the chain",
-			msg:  sample.MsgCreateChain(sample.Address(), "", false, 0),
+			msg:  sample.MsgCreateChain(r, sample.Address(r), "", false, 0),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{
 			name: "invalid campaign id",
-			msg:  sample.MsgCreateChain(coordAddrs[0], "", true, 1000),
+			msg:  sample.MsgCreateChain(r, coordAddrs[0], "", true, 1000),
 			err:  types.ErrCreateChainFail,
 		},
 		{
 			name: "invalid coordinator address",
-			msg:  sample.MsgCreateChain(invalidCoordAddress, "", true, 1000),
+			msg:  sample.MsgCreateChain(r, invalidCoordAddress, "", true, 1000),
 			err:  types.ErrCreateChainFail,
 		},
 		{
 			name: "insufficient balance to cover creation fee",
-			msg:  sample.MsgCreateChain(coordAddrs[4], "", false, campMap[coordAddrs[4]]),
+			msg:  sample.MsgCreateChain(r, coordAddrs[4], "", false, campMap[coordAddrs[4]]),
 			err:  sdkerrors.ErrInsufficientFunds,
 		},
 	} {

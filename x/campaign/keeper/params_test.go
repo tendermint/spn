@@ -11,7 +11,7 @@ import (
 
 func Test_GetParams(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	params := sample.CampaignParams()
+	params := sample.CampaignParams(r)
 
 	tk.CampaignKeeper.SetParams(ctx, params)
 

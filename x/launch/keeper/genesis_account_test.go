@@ -16,7 +16,7 @@ import (
 func createNGenesisAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.GenesisAccount {
 	items := make([]types.GenesisAccount, n)
 	for i := range items {
-		items[i] = sample.GenesisAccount(uint64(i), strconv.Itoa(i))
+		items[i] = sample.GenesisAccount(r, uint64(i), strconv.Itoa(i))
 		keeper.SetGenesisAccount(ctx, items[i])
 	}
 	return items
