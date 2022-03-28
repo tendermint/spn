@@ -6,8 +6,6 @@ import (
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 // Shares represents the portion of a supply
@@ -75,17 +73,13 @@ func DecreaseShares(shares, toDecrease Shares) (Shares, error) {
 }
 
 // IsTotalSharesReached checks if the provided shares overflow the total number of shares
-// Denoms not specified in totalShares uses DefaultTotalShareNumber as the default number of total shares
-func IsTotalSharesReached(shares Shares) bool {
+func IsTotalSharesReached(shares Shares, maximumTotalShareNumber uint64) bool {
 	for _, coin := range shares {
-		// If the denom is not specified in total share, we compare the default total share number
-		if coin.Amount.Uint64() > spntypes.TotalShareNumber {
+		if coin.Amount.Uint64() > maximumTotalShareNumber {
 			return true
 		}
 	}
 
-	// denoms defined in totalShares but not in shares are not checked
-	// the number of shares for an undefined denom is 0 by default therefore the total is never reached
 	return false
 }
 

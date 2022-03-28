@@ -46,7 +46,7 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 
 	// increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
-	if types.IsTotalSharesReached(campaign.AllocatedShares) {
+	if types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx)) {
 		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
 	}
 

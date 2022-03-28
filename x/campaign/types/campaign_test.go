@@ -43,7 +43,7 @@ func TestCampaign_Validate(t *testing.T) {
 	totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
 		sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 	))
-	require.True(t, campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares))
+	require.True(t, campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares, spntypes.TotalShareNumber))
 
 	for _, tc := range []struct {
 		desc     string

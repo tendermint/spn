@@ -146,7 +146,7 @@ func TestShareIsTotalReached(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			require.Equal(t, tc.reached, campaign.IsTotalSharesReached(tc.shares))
+			require.Equal(t, tc.reached, campaign.IsTotalSharesReached(tc.shares, spntypes.TotalShareNumber))
 		})
 	}
 }

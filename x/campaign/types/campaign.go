@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -37,7 +39,7 @@ func (m Campaign) Validate() error {
 		return errors.New("invalid allocated shares")
 	}
 
-	if IsTotalSharesReached(m.AllocatedShares) {
+	if IsTotalSharesReached(m.AllocatedShares, spntypes.TotalShareNumber) {
 
 		return errors.New("more allocated shares than total shares")
 	}
