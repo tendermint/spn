@@ -129,7 +129,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
 
 	// set max shares - only set during app InitGenesis
-	campaignKeeper.SetMaximumShares(ctx, spntypes.TotalShareNumber)
+	campaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
 
 	return ctx, TestKeepers{
 			T:                        t,
@@ -215,7 +215,7 @@ func NewTestSetupWithIBCMocks(
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
 
 	// set max shares - only set during app InitGenesis
-	campaignKeeper.SetMaximumShares(ctx, spntypes.TotalShareNumber)
+	campaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
 
 	return ctx, TestKeepers{
 			T:                        t,

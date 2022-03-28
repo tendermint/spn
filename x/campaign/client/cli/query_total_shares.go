@@ -8,10 +8,10 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func CmdQueryMaximumShares() *cobra.Command {
+func CmdQueryTotalShares() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "maximum-shares",
-		Short: "Shows the maximum-shares value of campaigns",
+		Use:   "total-shares",
+		Short: "Shows the total-shares value of campaigns",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
@@ -22,9 +22,9 @@ func CmdQueryMaximumShares() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryMaximumSharesRequest{}
+			params := &types.QueryTotalSharesRequest{}
 
-			res, err := queryClient.MaximumShares(cmd.Context(), params)
+			res, err := queryClient.TotalShares(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

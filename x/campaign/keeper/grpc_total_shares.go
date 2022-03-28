@@ -10,14 +10,14 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func (k Keeper) MaximumShares(goCtx context.Context, req *types.QueryMaximumSharesRequest) (*types.QueryMaximumSharesResponse, error) {
+func (k Keeper) TotalShares(goCtx context.Context, req *types.QueryTotalSharesRequest) (*types.QueryTotalSharesResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	shares := k.GetMaximumShares(ctx)
+	shares := k.GetTotalShares(ctx)
 
-	return &types.QueryMaximumSharesResponse{MaximumShares: shares}, nil
+	return &types.QueryTotalSharesResponse{TotalShares: shares}, nil
 }

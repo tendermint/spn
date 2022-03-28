@@ -37,7 +37,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	k.SetParams(ctx, genState.Params)
 
 	// set maximum shares constant value
-	k.SetMaximumShares(ctx, spntypes.TotalShareNumber)
+	k.SetTotalShares(ctx, spntypes.TotalShareNumber)
 
 	// this line is used by starport scaffolding # genesis/module/init
 }

@@ -13,22 +13,22 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func TestMaximumSharesQuery(t *testing.T) {
+func TestTotalSharesQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 
-	tk.CampaignKeeper.SetMaximumShares(ctx, spntypes.TotalShareNumber)
+	tk.CampaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
 
 	for _, tc := range []struct {
 		desc     string
-		request  *types.QueryMaximumSharesRequest
-		response *types.QueryMaximumSharesResponse
+		request  *types.QueryTotalSharesRequest
+		response *types.QueryTotalSharesResponse
 		err      error
 	}{
 		{
 			desc:     "First",
-			request:  &types.QueryMaximumSharesRequest{},
-			response: &types.QueryMaximumSharesResponse{MaximumShares: spntypes.TotalShareNumber},
+			request:  &types.QueryTotalSharesRequest{},
+			response: &types.QueryTotalSharesResponse{TotalShares: spntypes.TotalShareNumber},
 		},
 		{
 			desc: "InvalidRequest",
@@ -37,7 +37,7 @@ func TestMaximumSharesQuery(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := tk.CampaignKeeper.MaximumShares(wctx, tc.request)
+			response, err := tk.CampaignKeeper.TotalShares(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

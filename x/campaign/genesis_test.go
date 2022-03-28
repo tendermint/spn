@@ -33,7 +33,7 @@ func TestGenesis(t *testing.T) {
 
 	require.Equal(t, genesisState.Params, got.Params)
 
-	maxShares := tk.CampaignKeeper.GetMaximumShares(ctx)
+	maxShares := tk.CampaignKeeper.GetTotalShares(ctx)
 	require.Equal(t, uint64(spntypes.TotalShareNumber), maxShares)
 
 	// this line is used by starport scaffolding # genesis/test/assert
