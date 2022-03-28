@@ -10,7 +10,6 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"github.com/tendermint/spn/testutil/sample"
 	campaignsim "github.com/tendermint/spn/x/campaign/simulation"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -43,8 +42,8 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	campaignGenesis := sample.CampaignGenesisState()
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&campaignGenesis)
+	campaignGenesis := types.DefaultGenesis()
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(campaignGenesis)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals
@@ -54,7 +53,7 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
-	campaignParams := sample.CampaignParams()
+	campaignParams := types.DefaultParams()
 	creationFee := make([]string, len(campaignParams.CampaignCreationFee))
 	for i := range campaignParams.CampaignCreationFee {
 		creationFee[i] = fmt.Sprintf(
