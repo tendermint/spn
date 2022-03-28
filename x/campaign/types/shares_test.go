@@ -125,44 +125,28 @@ func TestDecreaseShares(t *testing.T) {
 
 func TestShareIsTotalReached(t *testing.T) {
 	for _, tc := range []struct {
-		desc        string
-		shares      campaign.Shares
-		totalShares campaign.Shares
-		reached     bool
+		desc    string
+		shares  campaign.Shares
+		reached bool
 	}{
 		{
-			desc:        "empty is false",
-			shares:      campaign.EmptyShares(),
-			totalShares: campaign.EmptyShares(),
-			reached:     false,
+			desc:    "empty is false",
+			shares:  campaign.EmptyShares(),
+			reached: false,
 		},
 		{
-			desc:        "no default total is reached",
-			shares:      tc.Shares(t, fmt.Sprintf("%dfoo,100bar", campaign.DefaultTotalShareNumber)),
-			totalShares: campaign.EmptyShares(),
-			reached:     false,
+			desc:    "no default total is reached",
+			shares:  tc.Shares(t, fmt.Sprintf("%dfoo,100bar", campaign.DefaultTotalShareNumber)),
+			reached: false,
 		},
 		{
-			desc:        "no custom total is reached",
-			shares:      tc.Shares(t, "100foo,50bar"),
-			totalShares: tc.Shares(t, "100foo,100bar,100foobar"),
-			reached:     false,
-		},
-		{
-			desc:        "a default total is reached",
-			shares:      tc.Shares(t, fmt.Sprintf("%dfoo,100bar", campaign.DefaultTotalShareNumber+1)),
-			totalShares: campaign.EmptyShares(),
-			reached:     true,
-		},
-		{
-			desc:        "a custom total is reached",
-			shares:      tc.Shares(t, fmt.Sprintf("%dfoo,101bar", campaign.DefaultTotalShareNumber)),
-			totalShares: tc.Shares(t, "100bar"),
-			reached:     true,
+			desc:    "a default total is reached",
+			shares:  tc.Shares(t, fmt.Sprintf("%dfoo,100bar", campaign.DefaultTotalShareNumber+1)),
+			reached: true,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			require.Equal(t, tc.reached, campaign.IsTotalSharesReached(tc.shares, tc.totalShares))
+			require.Equal(t, tc.reached, campaign.IsTotalSharesReached(tc.shares))
 		})
 	}
 }

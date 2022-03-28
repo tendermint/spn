@@ -20,7 +20,6 @@ func NewCampaign(campaignID uint64, campaignName string, coordinatorID uint64, t
 		MainnetInitialized: false,
 		TotalSupply:        totalSupply,
 		AllocatedShares:    EmptyShares(),
-		TotalShares:        EmptyShares(),
 		Metadata:           metadata,
 	}
 }
@@ -37,11 +36,8 @@ func (m Campaign) Validate() error {
 	if !sdk.Coins(m.AllocatedShares).IsValid() {
 		return errors.New("invalid allocated shares")
 	}
-	if !sdk.Coins(m.TotalShares).IsValid() {
-		return errors.New("invalid total shares")
-	}
 
-	if IsTotalSharesReached(m.AllocatedShares, m.TotalShares) {
+	if IsTotalSharesReached(m.AllocatedShares) {
 		return errors.New("more allocated shares than total shares")
 	}
 
