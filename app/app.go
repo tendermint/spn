@@ -440,19 +440,6 @@ func New(
 		app.ProfileKeeper,
 	)
 
-	campaignKeeper := campaignmodulekeeper.NewKeeper(
-		appCodec,
-		keys[campaignmoduletypes.StoreKey],
-		keys[campaignmoduletypes.MemStoreKey],
-		app.GetSubspace(campaignmoduletypes.ModuleName),
-		&app.LaunchKeeper,
-		app.BankKeeper,
-		app.DistrKeeper,
-		app.ProfileKeeper,
-	)
-	app.CampaignKeeper = *campaignKeeper
-	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
-
 	app.RewardKeeper = *rewardmodulekeeper.NewKeeper(
 		appCodec,
 		keys[rewardmoduletypes.StoreKey],
@@ -463,6 +450,20 @@ func New(
 		app.LaunchKeeper,
 	)
 	rewardModule := rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper)
+
+	campaignKeeper := campaignmodulekeeper.NewKeeper(
+		appCodec,
+		keys[campaignmoduletypes.StoreKey],
+		keys[campaignmoduletypes.MemStoreKey],
+		app.GetSubspace(campaignmoduletypes.ModuleName),
+		&app.LaunchKeeper,
+		app.BankKeeper,
+		app.DistrKeeper,
+		app.ProfileKeeper,
+		app.RewardKeeper,
+	)
+	app.CampaignKeeper = *campaignKeeper
+	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
 
 	scopedMonitoringcKeeper := app.CapabilityKeeper.ScopeToModule(monitoringcmoduletypes.ModuleName)
 	app.ScopedMonitoringcKeeper = scopedMonitoringcKeeper
