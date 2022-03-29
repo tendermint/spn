@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+
 	spntypes "github.com/tendermint/spn/pkg/types"
 )
 

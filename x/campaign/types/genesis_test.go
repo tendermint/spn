@@ -2,10 +2,11 @@ package types_test
 
 import (
 	"fmt"
-	spntypes "github.com/tendermint/spn/pkg/types"
-	tc2 "github.com/tendermint/spn/testutil/constructor"
 	"testing"
 	"time"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
+	tc2 "github.com/tendermint/spn/testutil/constructor"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 

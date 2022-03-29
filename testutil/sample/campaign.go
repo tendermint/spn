@@ -1,9 +1,10 @@
 package sample
 
 import (
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"math/rand"
 	"time"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
