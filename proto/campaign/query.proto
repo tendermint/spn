@@ -5,6 +5,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
 import "campaign/campaign_chains.proto";
+import "campaign/campaign_summary.proto";
 import "campaign/campaign.proto";
 import "campaign/mainnet_vesting_account.proto";
 import "campaign/mainnet_account.proto";
@@ -51,12 +52,27 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account";
   }
 
+  // Queries a campaign summary
+  rpc CampaignSummary(QueryCampaignSummaryRequest) returns (QueryCampaignSummaryResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/campaign_summary/{campaignID}";
+  }
+
+  // Queries a list of campaign summaries
+  rpc CampaignSummaries(QueryCampaignSummariesRequest) returns (QueryCampaignSummariesResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/campaign_summary";
+  }
+
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/params";
   }
 
-  // this line is used by starport scaffolding # 2
+  // Queries the TotalShares value
+	rpc TotalShares(QueryTotalSharesRequest) returns (QueryTotalSharesResponse) {
+		option (google.api.http).get = "/tendermint/spn/campaign/total_shares";
+	}
+
+// this line is used by starport scaffolding # 2
 }
 
 message QueryGetCampaignRequest {
@@ -122,6 +138,23 @@ message QueryAllMainnetVestingAccountResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+message QueryCampaignSummaryRequest {
+  uint64 campaignID = 1;
+}
+
+message QueryCampaignSummaryResponse {
+  CampaignSummary campaignSummary = 1  [(gogoproto.nullable) = false];
+}
+
+message QueryCampaignSummariesRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryCampaignSummariesResponse {
+  repeated CampaignSummary campaignSummaries = 1  [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
 
@@ -129,6 +162,13 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryTotalSharesRequest {
+}
+
+message QueryTotalSharesResponse {
+  uint64 totalShares = 1;
 }
 
 // this line is used by starport scaffolding # 3

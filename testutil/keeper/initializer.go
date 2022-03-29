@@ -216,6 +216,7 @@ func (i initializer) Campaign(
 	profileKeeper *profilekeeper.Keeper,
 	bankKeeper bankkeeper.Keeper,
 	distrKeeper distrkeeper.Keeper,
+	rewardKeeper rewardmodulekeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 ) *campaignkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(campaigntypes.StoreKey)
@@ -227,7 +228,17 @@ func (i initializer) Campaign(
 	paramKeeper.Subspace(campaigntypes.ModuleName)
 	subspace, _ := paramKeeper.GetSubspace(campaigntypes.ModuleName)
 
-	return campaignkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, subspace, launchKeeper, bankKeeper, distrKeeper, profileKeeper)
+	return campaignkeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		memStoreKey,
+		subspace,
+		launchKeeper,
+		bankKeeper,
+		distrKeeper,
+		profileKeeper,
+		rewardKeeper,
+	)
 }
 
 func (i initializer) Reward(

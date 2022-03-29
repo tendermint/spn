@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"testing"
 
-	tc "github.com/tendermint/spn/testutil/constructor"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+	tc "github.com/tendermint/spn/testutil/constructor"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 
@@ -138,7 +138,7 @@ func TestShareIsTotalReached(t *testing.T) {
 		},
 		{
 			desc:        "no default total is reached",
-			shares:      tc.Shares(t, fmt.Sprintf("%dfoo,100bar", campaign.DefaultTotalShareNumber)),
+			shares:      tc.Shares(t, fmt.Sprintf("%dfoo,100bar", spntypes.TotalShareNumber)),
 			totalShares: campaign.EmptyShares(),
 			reached:     false,
 		},
@@ -150,19 +150,20 @@ func TestShareIsTotalReached(t *testing.T) {
 		},
 		{
 			desc:        "a default total is reached",
-			shares:      tc.Shares(t, fmt.Sprintf("%dfoo,100bar", campaign.DefaultTotalShareNumber+1)),
+			shares:      tc.Shares(t, fmt.Sprintf("%dfoo,100bar", spntypes.TotalShareNumber+1)),
 			totalShares: campaign.EmptyShares(),
 			reached:     true,
 		},
 		{
 			desc:        "a custom total is reached",
-			shares:      tc.Shares(t, fmt.Sprintf("%dfoo,101bar", campaign.DefaultTotalShareNumber)),
+			shares:      tc.Shares(t, fmt.Sprintf("%dfoo,101bar", spntypes.TotalShareNumber)),
 			totalShares: tc.Shares(t, "100bar"),
 			reached:     true,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			require.Equal(t, tc.reached, campaign.IsTotalSharesReached(tc.shares, tc.totalShares))
+			require.Equal(t, tc.reached, campaign.IsTotalSharesReached(tc.shares, tc.totalShares,
+				spntypes.TotalShareNumber))
 		})
 	}
 }
@@ -180,24 +181,24 @@ func TestIsEqualShares(t *testing.T) {
 		{
 			name: "equal shares",
 			args: args{
-				share1: tc.Shares(t, fmt.Sprintf("%dfoo,101bar", campaign.DefaultTotalShareNumber)),
-				share2: tc.Shares(t, fmt.Sprintf("%dfoo,101bar", campaign.DefaultTotalShareNumber)),
+				share1: tc.Shares(t, fmt.Sprintf("%dfoo,101bar", spntypes.TotalShareNumber)),
+				share2: tc.Shares(t, fmt.Sprintf("%dfoo,101bar", spntypes.TotalShareNumber)),
 			},
 			want: true,
 		},
 		{
 			name: "not equal values",
 			args: args{
-				share1: tc.Shares(t, fmt.Sprintf("%dfoo,10bar", campaign.DefaultTotalShareNumber)),
-				share2: tc.Shares(t, fmt.Sprintf("%dfoo,101bar", campaign.DefaultTotalShareNumber)),
+				share1: tc.Shares(t, fmt.Sprintf("%dfoo,10bar", spntypes.TotalShareNumber)),
+				share2: tc.Shares(t, fmt.Sprintf("%dfoo,101bar", spntypes.TotalShareNumber)),
 			},
 			want: false,
 		},
 		{
 			name: "invalid coin number",
 			args: args{
-				share1: tc.Shares(t, fmt.Sprintf("%dfoo,10bar", campaign.DefaultTotalShareNumber)),
-				share2: tc.Shares(t, fmt.Sprintf("%dfoo", campaign.DefaultTotalShareNumber)),
+				share1: tc.Shares(t, fmt.Sprintf("%dfoo,10bar", spntypes.TotalShareNumber)),
+				share2: tc.Shares(t, fmt.Sprintf("%dfoo", spntypes.TotalShareNumber)),
 			},
 			want: false,
 		},

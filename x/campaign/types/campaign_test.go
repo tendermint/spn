@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
@@ -51,9 +52,10 @@ func TestCampaign_Validate(t *testing.T) {
 
 	totalSharesReached := sample.Campaign(0)
 	totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
-		sdk.NewCoin("foo", sdk.NewInt(campaign.DefaultTotalShareNumber+1)),
+		sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 	))
-	require.True(t, campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares, campaign.EmptyShares()))
+	require.True(t, campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares, campaign.EmptyShares(),
+		spntypes.TotalShareNumber))
 
 	for _, tc := range []struct {
 		desc     string

@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
@@ -20,7 +21,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 		campaign       = sample.Campaign(0)
 		addr           = sample.AccAddress()
 		vouchersTooBig = sdk.NewCoins(
-			sdk.NewCoin("v/0/foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
+			sdk.NewCoin("v/0/foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 		)
 	)
 
