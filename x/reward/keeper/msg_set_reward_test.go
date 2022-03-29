@@ -28,15 +28,15 @@ func initRewardPool(
 	psrv profiletypes.MsgServer,
 ) types.RewardPool {
 	var (
-		provider = sample.AccAddress()
-		coins    = sample.Coins()
+		provider = sample.AccAddress(r)
+		coins    = sample.Coins(r)
 		ctx      = sdk.WrapSDKContext(sdkCtx)
 		coordMsg = sample.MsgCreateCoordinator(provider.String())
 	)
 
 	res, err := psrv.CreateCoordinator(ctx, &coordMsg)
 	require.NoError(t, err)
-	launchID := lk.AppendChain(sdkCtx, sample.Chain(1, res.CoordinatorID))
+	launchID := lk.AppendChain(sdkCtx, sample.Chain(r, 1, res.CoordinatorID))
 	rewardPool := types.RewardPool{
 		Provider:            provider.String(),
 		LaunchID:            launchID,
@@ -59,9 +59,8 @@ func initRewardPool(
 func TestMsgSetRewards(t *testing.T) {
 	var (
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
-
-		ctx          = sdk.WrapSDKContext(sdkCtx)
-		invalidCoord = sample.Address()
+		ctx            = sdk.WrapSDKContext(sdkCtx)
+		invalidCoord   = sample.Address(r)
 	)
 	invalidCoordMsg := sample.MsgCreateCoordinator(invalidCoord)
 	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &invalidCoordMsg)
@@ -97,7 +96,7 @@ func TestMsgSetRewards(t *testing.T) {
 		{
 			name: "coordinator address not found",
 			msg: types.MsgSetRewards{
-				Provider:         sample.Address(),
+				Provider:         sample.Address(r),
 				LaunchID:         rewardPool.LaunchID,
 				Coins:            rewardPool.RemainingCoins,
 				LastRewardHeight: 1000,
@@ -129,7 +128,7 @@ func TestMsgSetRewards(t *testing.T) {
 			msg: types.MsgSetRewards{
 				Provider:         noBalanceRewardPool.Provider,
 				LaunchID:         noBalanceRewardPool.LaunchID,
-				Coins:            sample.Coins(),
+				Coins:            sample.Coins(r),
 				LastRewardHeight: 1000,
 			},
 			err: sdkerrors.ErrInsufficientFunds,
@@ -198,9 +197,9 @@ func TestMsgSetRewards(t *testing.T) {
 func TestSetBalance(t *testing.T) {
 	var (
 		sdkCtx, tk, _ = testkeeper.NewTestSetup(t)
-
-		provider = sample.AccAddress()
+		provider      = sample.AccAddress(r)
 	)
+
 	type args struct {
 		provider  sdk.AccAddress
 		coins     sdk.Coins
@@ -215,15 +214,15 @@ func TestSetBalance(t *testing.T) {
 			name: "set new balance",
 			args: args{
 				provider:  provider,
-				coins:     sample.Coins(),
-				poolCoins: sample.Coins(),
+				coins:     sample.Coins(r),
+				poolCoins: sample.Coins(r),
 			},
 		},
 		{
 			name: "empty reward pool",
 			args: args{
 				provider:  provider,
-				coins:     sample.Coins(),
+				coins:     sample.Coins(r),
 				poolCoins: sdk.NewCoins(),
 			},
 		},
@@ -255,16 +254,16 @@ func TestSetBalance(t *testing.T) {
 			name: "nil reward pool",
 			args: args{
 				provider:  provider,
-				coins:     sample.Coins(),
+				coins:     sample.Coins(r),
 				poolCoins: nil,
 			},
 		},
 		{
 			name: "no balance address",
 			args: args{
-				provider:  sample.AccAddress(),
-				coins:     sample.Coins(),
-				poolCoins: sample.Coins(),
+				provider:  sample.AccAddress(r),
+				coins:     sample.Coins(r),
+				poolCoins: sample.Coins(r),
 			},
 			wantErr: true,
 		},

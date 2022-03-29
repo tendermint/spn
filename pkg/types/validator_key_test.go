@@ -79,9 +79,9 @@ func TestLoadValidatorKey(t *testing.T) {
 		},
 		{
 			name:         "invalid key",
-			keyJSONBytes: sample.Bytes(100),
+			keyJSONBytes: sample.Bytes(r, 100),
 			want:         types.ValidatorKey{},
-			err:          errors.New("error reading PrivValidator key: invalid character 'B' looking for beginning of value"),
+			err:          errors.New("error reading PrivValidator key"),
 		},
 	}
 	for _, tt := range tests {
@@ -89,7 +89,7 @@ func TestLoadValidatorKey(t *testing.T) {
 			gotPvKey, err := types.LoadValidatorKey(tt.keyJSONBytes)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
-				require.Equal(t, tt.err.Error(), err.Error())
+				require.Contains(t, err.Error(), tt.err.Error())
 				return
 			}
 			require.NoError(t, err)
@@ -260,7 +260,7 @@ func TestValidatorKey_VerifySignature(t *testing.T) {
 		{
 			name:    "random signature",
 			valKey:  types.ValidatorConsPubKey{PubKey: valKey.PubKey},
-			sig:     sample.String(10),
+			sig:     sample.String(r, 10),
 			nonce:   10,
 			chainID: "spn-1",
 			want:    false,

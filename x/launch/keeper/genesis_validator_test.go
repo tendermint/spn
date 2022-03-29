@@ -17,7 +17,7 @@ import (
 func createNGenesisValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, n)
 	for i := range items {
-		items[i] = sample.GenesisValidator(uint64(i), strconv.Itoa(i))
+		items[i] = sample.GenesisValidator(r, uint64(i), strconv.Itoa(i))
 		keeper.SetGenesisValidator(ctx, items[i])
 	}
 	return items
@@ -26,7 +26,7 @@ func createNGenesisValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 func createNGenesisValidatorByLaunchID(keeper *keeper.Keeper, ctx sdk.Context, launchID int) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, launchID)
 	for i := range items {
-		items[i] = sample.GenesisValidator(uint64(launchID), strconv.Itoa(i))
+		items[i] = sample.GenesisValidator(r, uint64(launchID), strconv.Itoa(i))
 		keeper.SetGenesisValidator(ctx, items[i])
 	}
 	return items

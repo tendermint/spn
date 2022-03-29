@@ -16,10 +16,10 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	var (
 		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
 		ctx                 = sdk.WrapSDKContext(sdkCtx)
-		auctioneer          = sample.Address()
-		validParticipant    = sample.Address()
-		invalidParticipant  = sample.Address()
-		auctionSellingCoin  = sample.Coin()
+		auctioneer          = sample.Address(r)
+		validParticipant    = sample.Address(r)
+		invalidParticipant  = sample.Address(r)
+		auctionSellingCoin  = sample.Coin(r)
 		auctionStartTime    = sdkCtx.BlockTime().Add(time.Hour)
 		auctionEndTime      = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
 		validWithdrawalTime = auctionStartTime.Add(time.Hour * 10)
@@ -32,11 +32,11 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
 	// delegate some coins so participant has some allocations to use
-	tk.DelegateN(sdkCtx, validParticipant, 100, 10)
+	tk.DelegateN(sdkCtx, r, validParticipant, 100, 10)
 
 	// initialize an auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(auctionSellingCoin))
-	auctionID := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, auctionSellingCoin, auctionStartTime, auctionEndTime)
+	auctionID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, auctionSellingCoin, auctionStartTime, auctionEndTime)
 
 	// validParticipant participates to auction
 	_, err := ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
@@ -89,7 +89,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		{
 			name: "used allocations not found",
 			msg: &types.MsgWithdrawAllocations{
-				Participant: sample.Address(),
+				Participant: sample.Address(r),
 				AuctionID:   auctionID,
 			},
 			blockTime: validWithdrawalTime,

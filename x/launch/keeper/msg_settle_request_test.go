@@ -16,9 +16,9 @@ import (
 
 func TestMsgSettleRequest(t *testing.T) {
 	var (
-		coordinator1       = sample.Coordinator(sample.Address())
-		coordinator2       = sample.Coordinator(sample.Address())
-		disableCoordinator = sample.Coordinator(sample.Address())
+		coordinator1       = sample.Coordinator(r, sample.Address(r))
+		coordinator2       = sample.Coordinator(r, sample.Address(r))
+		disableCoordinator = sample.Coordinator(r, sample.Address(r))
 		invalidChain       = uint64(1000)
 		sdkCtx, tk, ts     = testkeeper.NewTestSetup(t)
 		ctx                = sdk.WrapSDKContext(sdkCtx)
@@ -40,9 +40,9 @@ func TestMsgSettleRequest(t *testing.T) {
 
 	requestSamples := make([]RequestSample, 6)
 	for i := 0; i < 6; i++ {
-		addr := sample.Address()
+		addr := sample.Address(r)
 		requestSamples[i] = RequestSample{
-			Content: sample.GenesisAccountContent(chains[2].LaunchID, addr),
+			Content: sample.GenesisAccountContent(r, chains[2].LaunchID, addr),
 			Creator: addr,
 		}
 	}

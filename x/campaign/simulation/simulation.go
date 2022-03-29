@@ -1,15 +1,13 @@
 package simulation
 
 import (
-	"math/rand"
-	"time"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"math/rand"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
@@ -309,9 +307,9 @@ func SimulateMsgCreateCampaign(
 
 		msg := types.NewMsgCreateCampaign(
 			simAccount.Address.String(),
-			sample.CampaignName(),
-			sample.TotalSupply(),
-			sample.Metadata(20),
+			sample.CampaignName(r),
+			sample.TotalSupply(r),
+			sample.Metadata(r, 20),
 		)
 
 		return deliverSimTxCustomFee(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins(), customFee)
@@ -333,7 +331,7 @@ func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, p
 		msg := types.NewMsgUpdateTotalSupply(
 			simAccount.Address.String(),
 			campID,
-			sample.TotalSupply(),
+			sample.TotalSupply(r),
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
@@ -386,9 +384,9 @@ func SimulateMsgInitializeMainnet(ak types.AccountKeeper, bk types.BankKeeper, p
 		msg := types.NewMsgInitializeMainnet(
 			simAccount.Address.String(),
 			campID,
-			sample.String(50),
-			sample.String(32),
-			sample.GenesisChainID(),
+			sample.String(r, 50),
+			sample.String(r, 32),
+			sample.GenesisChainID(r),
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
@@ -444,7 +442,7 @@ func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, p
 			campID,
 			simAccount.Address.String(),
 			accs[accountNb].Address.String(),
-			*types.NewShareDelayedVesting(shares, shares, time.Now().Unix()),
+			*types.NewShareDelayedVesting(shares, shares, int64(sample.Duration(r))),
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}

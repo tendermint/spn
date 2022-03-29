@@ -18,9 +18,9 @@ import (
 func TestMsgEditChain(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.Address()
-	coordAddress2 := sample.Address()
-	coordNoExist := sample.Address()
+	coordAddress := sample.Address(r)
+	coordAddress2 := sample.Address(r)
+	coordNoExist := sample.Address(r)
 	launchIDNoExist := uint64(1000)
 
 	// Create coordinators
@@ -33,42 +33,42 @@ func TestMsgEditChain(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create a chain
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
+	msgCreateChain := sample.MsgCreateChain(r, coordAddress, "", false, 0)
 	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchID := res.LaunchID
 
 	// create a campaign
-	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
+	msgCreateCampaign := sample.MsgCreateCampaign(r, coordAddress)
 	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 
 	// create a chain with an existing campaign
-	msgCreateChain = sample.MsgCreateChain(coordAddress, "", true, resCampaign.CampaignID)
+	msgCreateChain = sample.MsgCreateChain(r, coordAddress, "", true, resCampaign.CampaignID)
 	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchIDHasCampaign := res.LaunchID
 
 	// create a campaign
-	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
+	msgCreateCampaign = sample.MsgCreateCampaign(r, coordAddress)
 	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	validCampaignID := resCampaign.CampaignID
 
 	// create a campaign from a different address
-	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress2)
+	msgCreateCampaign = sample.MsgCreateCampaign(r, coordAddress2)
 	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignDifferentCoordinator := resCampaign.CampaignID
 
 	// Create a new chain for more tests
-	msgCreateChain = sample.MsgCreateChain(coordAddress, "", false, 0)
+	msgCreateChain = sample.MsgCreateChain(r, coordAddress, "", false, 0)
 	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	launchID2 := res.LaunchID
 
 	// create a new campaign and add a chainCampaigns entry to it
-	msgCreateCampaign = sample.MsgCreateCampaign(coordAddress)
+	msgCreateCampaign = sample.MsgCreateCampaign(r, coordAddress)
 	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignDuplicateChain := resCampaign.CampaignID
@@ -83,7 +83,9 @@ func TestMsgEditChain(t *testing.T) {
 	}{
 		{
 			name: "set campaign ID",
-			msg: sample.MsgEditChain(coordAddress, launchID,
+			msg: sample.MsgEditChain(r,
+				coordAddress,
+				launchID,
 				true,
 				validCampaignID,
 				false,
@@ -91,7 +93,9 @@ func TestMsgEditChain(t *testing.T) {
 		},
 		{
 			name: "edit metadata",
-			msg: sample.MsgEditChain(coordAddress, launchID,
+			msg: sample.MsgEditChain(r,
+				coordAddress,
+				launchID,
 				false,
 				0,
 				true,
@@ -99,7 +103,9 @@ func TestMsgEditChain(t *testing.T) {
 		},
 		{
 			name: "non existent launch id",
-			msg: sample.MsgEditChain(coordAddress, launchIDNoExist,
+			msg: sample.MsgEditChain(r,
+				coordAddress,
+				launchIDNoExist,
 				true,
 				0,
 				false,
@@ -108,7 +114,9 @@ func TestMsgEditChain(t *testing.T) {
 		},
 		{
 			name: "non existent coordinator",
-			msg: sample.MsgEditChain(coordNoExist, launchID,
+			msg: sample.MsgEditChain(r,
+				coordNoExist,
+				launchID,
 				true,
 				0,
 				false,
@@ -117,7 +125,9 @@ func TestMsgEditChain(t *testing.T) {
 		},
 		{
 			name: "invalid coordinator",
-			msg: sample.MsgEditChain(coordAddress2, launchID,
+			msg: sample.MsgEditChain(r,
+				coordAddress2,
+				launchID,
 				true,
 				0,
 				false,
@@ -126,7 +136,9 @@ func TestMsgEditChain(t *testing.T) {
 		},
 		{
 			name: "chain already has campaign",
-			msg: sample.MsgEditChain(coordAddress, launchIDHasCampaign,
+			msg: sample.MsgEditChain(r,
+				coordAddress,
+				launchIDHasCampaign,
 				true,
 				0,
 				false,
@@ -135,7 +147,9 @@ func TestMsgEditChain(t *testing.T) {
 		},
 		{
 			name: "campaign does not exist",
-			msg: sample.MsgEditChain(coordAddress, launchID2,
+			msg: sample.MsgEditChain(r,
+				coordAddress,
+				launchID2,
 				true,
 				999,
 				false,
@@ -144,7 +158,9 @@ func TestMsgEditChain(t *testing.T) {
 		},
 		{
 			name: "campaign has a different coordinator",
-			msg: sample.MsgEditChain(coordAddress, launchID2,
+			msg: sample.MsgEditChain(r,
+				coordAddress,
+				launchID2,
 				true,
 				campaignDifferentCoordinator,
 				false,
@@ -153,7 +169,9 @@ func TestMsgEditChain(t *testing.T) {
 		},
 		{
 			name: "campaign chain entry is duplicated",
-			msg: sample.MsgEditChain(coordAddress, launchID2,
+			msg: sample.MsgEditChain(r,
+				coordAddress,
+				launchID2,
 				true,
 				campaignDuplicateChain,
 				false,

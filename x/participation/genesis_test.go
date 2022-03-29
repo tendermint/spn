@@ -12,8 +12,9 @@ import (
 
 func TestGenesis(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	r := sample.Rand()
 
-	genesisState := sample.ParticipationGenesisState()
+	genesisState := sample.ParticipationGenesisState(r)
 	participation.InitGenesis(ctx, *tk.ParticipationKeeper, genesisState)
 	got := participation.ExportGenesis(ctx, *tk.ParticipationKeeper)
 

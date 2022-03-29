@@ -81,6 +81,8 @@ func TestParseGenesisChainID(t *testing.T) {
 }
 
 func TestCheckChainName(t *testing.T) {
+	r := sample.Rand()
+
 	for _, tc := range []struct {
 		desc  string
 		name  string
@@ -108,7 +110,7 @@ func TestCheckChainName(t *testing.T) {
 		},
 		{
 			desc:  "Too big",
-			name:  sample.AlphaString(chainid.ChainNameMaxLength + 1),
+			name:  sample.AlphaString(r, chainid.ChainNameMaxLength+1),
 			valid: false,
 		},
 		{

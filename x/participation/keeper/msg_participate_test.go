@@ -16,16 +16,16 @@ import (
 func Test_msgServer_Participate(t *testing.T) {
 	var (
 		sdkCtx, tk, ts                   = testkeeper.NewTestSetup(t)
-		auctioneer                       = sample.Address()
-		sellingCoin1                     = sample.Coin()
-		sellingCoin2                     = sample.Coin()
+		auctioneer                       = sample.Address(r)
+		sellingCoin1                     = sample.Coin(r)
+		sellingCoin2                     = sample.Coin(r)
 		registrationPeriod               = time.Hour * 5 // 5 hours before start
 		startTime                        = sdkCtx.BlockTime().Add(time.Hour * 10)
 		startTimeLowerRegistrationPeriod = time.Unix(int64((registrationPeriod - time.Hour).Seconds()), 0)
 		endTime                          = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
 		validRegistrationTime            = sdkCtx.BlockTime().Add(time.Hour * 6)
 		allocationPrice                  = types.AllocationPrice{Bonded: sdk.NewInt(100)}
-		addrsWithDelsTier                = []string{sample.Address(), sample.Address(), sample.Address()}
+		addrsWithDelsTier                = []string{sample.Address(r), sample.Address(r), sample.Address(r)}
 		availableAllocsTier              = make([]uint64, len(addrsWithDelsTier))
 	)
 
@@ -36,17 +36,18 @@ func Test_msgServer_Participate(t *testing.T) {
 
 	// initialize auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
-	auctionID1 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin1, startTime, endTime)
+	auctionID1 := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin1, startTime, endTime)
 	// initialize auction with edge case start time
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin2))
-	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, sellingCoin2, startTimeLowerRegistrationPeriod, endTime)
+	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin2, startTimeLowerRegistrationPeriod, endTime)
 
 	// add delegations
 	for i := 0; i < len(addrsWithDelsTier); i++ {
-		tk.DelegateN(sdkCtx, addrsWithDelsTier[i], 100, 10)
+		tk.DelegateN(sdkCtx, r, addrsWithDelsTier[i], 100, 10)
 		var err error
 		availableAllocsTier[i], err = tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, addrsWithDelsTier[i])
 		require.NoError(t, err)
+		require.EqualValues(t, 10, availableAllocsTier[i])
 	}
 
 	tests := []struct {
@@ -103,7 +104,7 @@ func Test_msgServer_Participate(t *testing.T) {
 		{
 			name: "should prevent if user has insufficient available allocations",
 			msg: &types.MsgParticipate{
-				Participant: sample.Address(),
+				Participant: sample.Address(r),
 				AuctionID:   auctionID1,
 				TierID:      1,
 			},
@@ -113,7 +114,7 @@ func Test_msgServer_Participate(t *testing.T) {
 		{
 			name: "should prevent participating using a non existent tier",
 			msg: &types.MsgParticipate{
-				Participant: sample.Address(),
+				Participant: sample.Address(r),
 				AuctionID:   auctionID1,
 				TierID:      111,
 			},
@@ -123,7 +124,7 @@ func Test_msgServer_Participate(t *testing.T) {
 		{
 			name: "should prevent participating in a non existent auction",
 			msg: &types.MsgParticipate{
-				Participant: sample.Address(),
+				Participant: sample.Address(r),
 				AuctionID:   auctionID2 + 1000,
 				TierID:      1,
 			},

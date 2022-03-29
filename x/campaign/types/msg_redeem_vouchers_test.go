@@ -12,7 +12,7 @@ import (
 )
 
 func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
-	addr := sample.Address()
+	addr := sample.Address(r)
 	tests := []struct {
 		name string
 		msg  types.MsgRedeemVouchers
@@ -22,8 +22,8 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 			name: "invalid sender address",
 			msg: types.MsgRedeemVouchers{
 				Sender:     "invalid_address",
-				Account:    sample.Address(),
-				Vouchers:   sample.Vouchers(0),
+				Account:    sample.Address(r),
+				Vouchers:   sample.Vouchers(r, 0),
 				CampaignID: 0,
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -31,9 +31,9 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid account address",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(),
+				Sender:     sample.Address(r),
 				Account:    "invalid_address",
-				Vouchers:   sample.Vouchers(0),
+				Vouchers:   sample.Vouchers(r, 0),
 				CampaignID: 0,
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -41,8 +41,8 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid coin voucher",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(),
-				Account:    sample.Address(),
+				Sender:     sample.Address(r),
+				Account:    sample.Address(r),
 				Vouchers:   invalidCoins,
 				CampaignID: 0,
 			},
@@ -51,9 +51,9 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "vouchers don't match to campaign",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(),
-				Account:    sample.Address(),
-				Vouchers:   sample.Vouchers(10),
+				Sender:     sample.Address(r),
+				Account:    sample.Address(r),
+				Vouchers:   sample.Vouchers(r, 10),
 				CampaignID: 0,
 			},
 			err: types.ErrNoMatchVouchers,
@@ -61,8 +61,8 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid voucher prefix",
 			msg: types.MsgRedeemVouchers{
-				Sender:  sample.Address(),
-				Account: sample.Address(),
+				Sender:  sample.Address(r),
+				Account: sample.Address(r),
 				Vouchers: sdk.NewCoins(
 					sdk.NewCoin("invalid/foo", sdk.NewInt(100)),
 				),
@@ -73,8 +73,8 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "empty vouchers",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(),
-				Account:    sample.Address(),
+				Sender:     sample.Address(r),
+				Account:    sample.Address(r),
 				Vouchers:   sdk.Coins{},
 				CampaignID: 0,
 			},
@@ -83,9 +83,9 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(),
-				Account:    sample.Address(),
-				Vouchers:   sample.Vouchers(0),
+				Sender:     sample.Address(r),
+				Account:    sample.Address(r),
+				Vouchers:   sample.Vouchers(r, 0),
 				CampaignID: 0,
 			},
 		},
@@ -94,7 +94,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr,
 				Account:    addr,
-				Vouchers:   sample.Vouchers(0),
+				Vouchers:   sample.Vouchers(r, 0),
 				CampaignID: 0,
 			},
 		},

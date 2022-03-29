@@ -24,7 +24,7 @@ func createNMainnetVestingAccountForCampaignID(
 ) []types.MainnetVestingAccount {
 	items := make([]types.MainnetVestingAccount, n)
 	for i := range items {
-		items[i] = sample.MainnetVestingAccount(campaignID, strconv.Itoa(i))
+		items[i] = sample.MainnetVestingAccount(r, campaignID, strconv.Itoa(i))
 		keeper.SetMainnetVestingAccount(ctx, items[i])
 	}
 	return items

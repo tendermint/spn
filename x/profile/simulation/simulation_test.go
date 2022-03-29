@@ -39,7 +39,7 @@ func TestFindCoordinatorAccount(t *testing.T) {
 	acc, _ := simulation.RandomAcc(r, accs)
 	tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       acc.Address.String(),
-		CoordinatorID: sample.Uint64(),
+		CoordinatorID: sample.Uint64(r),
 	})
 
 	t.Run("one coordinator account", func(t *testing.T) {

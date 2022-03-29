@@ -14,11 +14,11 @@ import (
 
 func TestKeeper_ReportBlockSignatures(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
-	valFoo, valBar, valBaz, valFred, valQux := sample.Validator(t),
-		sample.Validator(t),
-		sample.Validator(t),
-		sample.Validator(t),
-		sample.Validator(t)
+	valFoo, valBar, valBaz, valFred, valQux := sample.Validator(t, r),
+		sample.Validator(t, r),
+		sample.Validator(t, r),
+		sample.Validator(t, r),
+		sample.Validator(t, r)
 	consFoo, err := valFoo.GetConsAddr()
 	require.NoError(t, err)
 	consBar, err := valBar.GetConsAddr()
@@ -31,7 +31,7 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 	require.NoError(t, err)
 
 	// consensus address with no validator associated
-	consNoValidator := sample.ConsAddress()
+	consNoValidator := sample.ConsAddress(r)
 
 	// initialize staking validator set
 	tk.StakingKeeper.SetValidator(ctx, valFoo)

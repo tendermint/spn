@@ -22,7 +22,7 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 			msg: types.MsgSetRewards{
 				LaunchID:         1,
 				Provider:         "invalid address",
-				Coins:            sample.Coins(),
+				Coins:            sample.Coins(r),
 				LastRewardHeight: 50,
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -31,7 +31,7 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 			name: "invalid coins",
 			msg: types.MsgSetRewards{
 				LaunchID: 1,
-				Provider: sample.Address(),
+				Provider: sample.Address(r),
 				Coins: sdk.Coins{sdk.Coin{
 					Denom:  "invalid denom",
 					Amount: sdk.ZeroInt(),
@@ -44,8 +44,8 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 			name: "negative last reward height",
 			msg: types.MsgSetRewards{
 				LaunchID:         1,
-				Provider:         sample.Address(),
-				Coins:            sample.Coins(),
+				Provider:         sample.Address(r),
+				Coins:            sample.Coins(r),
 				LastRewardHeight: -1,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -54,8 +54,8 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 			name: "valid reward pool message",
 			msg: types.MsgSetRewards{
 				LaunchID:         1,
-				Provider:         sample.Address(),
-				Coins:            sample.Coins(),
+				Provider:         sample.Address(r),
+				Coins:            sample.Coins(r),
 				LastRewardHeight: 50,
 			},
 		},
@@ -63,7 +63,7 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 			name: "valid reward pool message with empty coins",
 			msg: types.MsgSetRewards{
 				LaunchID:         1,
-				Provider:         sample.Address(),
+				Provider:         sample.Address(r),
 				Coins:            sdk.NewCoins(),
 				LastRewardHeight: 50,
 			},

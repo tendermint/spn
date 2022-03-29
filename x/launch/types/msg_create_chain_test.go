@@ -11,14 +11,14 @@ import (
 )
 
 func TestMsgCreateChain_ValidateBasic(t *testing.T) {
-	invalidGenesisHash := sample.MsgCreateChain(sample.Address(), "foo.com", false, 0)
+	invalidGenesisHash := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
 	invalidGenesisHash.GenesisHash = "NoHash"
 
-	invalidGenesisChainID := sample.MsgCreateChain(sample.Address(), "", false, 0)
+	invalidGenesisChainID := sample.MsgCreateChain(r, sample.Address(r), "", false, 0)
 	invalidGenesisChainID.GenesisChainID = "invalid"
 
-	msgInvalidMetadataLen := sample.MsgCreateChain(sample.Address(), "foo.com", false, 0)
-	msgInvalidMetadataLen.Metadata = sample.Bytes(spntypes.MaxMetadataLength + 1)
+	msgInvalidMetadataLen := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
+	msgInvalidMetadataLen.Metadata = sample.Bytes(r, spntypes.MaxMetadataLength+1)
 
 	for _, tc := range []struct {
 		desc  string
@@ -27,17 +27,17 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 	}{
 		{
 			desc:  "valid message",
-			msg:   sample.MsgCreateChain(sample.Address(), "", false, 0),
+			msg:   sample.MsgCreateChain(r, sample.Address(r), "", false, 0),
 			valid: true,
 		},
 		{
 			desc:  "valid message with genesis URL",
-			msg:   sample.MsgCreateChain(sample.Address(), "foo.com", false, 0),
+			msg:   sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0),
 			valid: true,
 		},
 		{
 			desc:  "invalid address",
-			msg:   sample.MsgCreateChain("invalid", "", false, 0),
+			msg:   sample.MsgCreateChain(r, "invalid", "", false, 0),
 			valid: false,
 		},
 		{

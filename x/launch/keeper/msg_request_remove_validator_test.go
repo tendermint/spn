@@ -16,12 +16,12 @@ import (
 func TestMsgRequestRemoveValidator(t *testing.T) {
 	var (
 		invalidChain     = uint64(1000)
-		coordAddr        = sample.Address()
-		coordDisableAddr = sample.Address()
-		addr1            = sample.Address()
-		addr2            = sample.Address()
-		addr3            = sample.Address()
-		addr4            = sample.Address()
+		coordAddr        = sample.Address(r)
+		coordDisableAddr = sample.Address(r)
+		addr1            = sample.Address(r)
+		addr2            = sample.Address(r)
+		addr3            = sample.Address(r)
+		addr4            = sample.Address(r)
 		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
 		ctx              = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -165,8 +165,8 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			name: "fail if the coordinator of the chain is disabled",
 			msg: types.MsgRequestRemoveValidator{
 				LaunchID:         disableChain[0].LaunchID,
-				Creator:          sample.Address(),
-				ValidatorAddress: sample.Address(),
+				Creator:          sample.Address(r),
+				ValidatorAddress: sample.Address(r),
 			}, err: profiletypes.ErrCoordInactive,
 		},
 	}

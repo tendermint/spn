@@ -14,8 +14,8 @@ import (
 
 func TestMsgUpdateValidatorDescription(t *testing.T) {
 	var (
-		addr1          = sample.Address()
-		addr2          = sample.Address()
+		addr1          = sample.Address(r)
+		addr2          = sample.Address(r)
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)

@@ -10,7 +10,7 @@ import (
 )
 
 func TestMsgRevertLaunch_ValidateBasic(t *testing.T) {
-	addr := sample.Address()
+	addr := sample.Address(r)
 	launchID := uint64(0)
 
 	for _, tc := range []struct {

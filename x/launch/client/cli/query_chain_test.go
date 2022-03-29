@@ -19,12 +19,13 @@ import (
 
 func networkWithFooObjects(t *testing.T, n int) (*network.Network, []types.Chain) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		chain := sample.Chain(uint64(i), uint64(i))
+		chain := sample.Chain(r, uint64(i), uint64(i))
 		state.ChainList = append(
 			state.ChainList,
 			chain,

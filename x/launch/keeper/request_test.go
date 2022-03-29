@@ -26,7 +26,7 @@ func createRequestsFromSamples(
 ) []types.Request {
 	items := make([]types.Request, len(samples))
 	for i, s := range samples {
-		items[i] = sample.RequestWithContentAndCreator(launchID, s.Content, s.Creator)
+		items[i] = sample.RequestWithContentAndCreator(r, launchID, s.Content, s.Creator)
 		id := k.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
@@ -36,7 +36,7 @@ func createRequestsFromSamples(
 func createNRequest(k *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 	items := make([]types.Request, n)
 	for i := range items {
-		items[i] = sample.Request(0, sample.Address())
+		items[i] = sample.Request(r, 0, sample.Address(r))
 		id := k.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
@@ -87,12 +87,12 @@ func TestRequestCounter(t *testing.T) {
 
 func TestApplyRequest(t *testing.T) {
 	var (
-		genesisAcc     = sample.Address()
-		vestingAcc     = sample.Address()
-		validatorAcc   = sample.Address()
+		genesisAcc     = sample.Address(r)
+		vestingAcc     = sample.Address(r)
+		validatorAcc   = sample.Address(r)
 		ctx, tk, _     = testkeeper.NewTestSetup(t)
 		launchID       = uint64(10)
-		contents       = sample.AllRequestContents(launchID, genesisAcc, vestingAcc, validatorAcc)
+		contents       = sample.AllRequestContents(r, launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
 	)
 	tests := []struct {
@@ -102,49 +102,49 @@ func TestApplyRequest(t *testing.T) {
 	}{
 		{
 			name:    "test GenesisAccount content",
-			request: sample.RequestWithContent(launchID, contents[0]),
+			request: sample.RequestWithContent(r, launchID, contents[0]),
 		}, {
 			name:    "test duplicated GenesisAccount content",
-			request: sample.RequestWithContent(launchID, contents[0]),
+			request: sample.RequestWithContent(r, launchID, contents[0]),
 			wantErr: true,
 		}, {
 			name:    "test genesis AccountRemoval content",
-			request: sample.RequestWithContent(launchID, contents[1]),
+			request: sample.RequestWithContent(r, launchID, contents[1]),
 		}, {
 			name:    "test not found genesis AccountRemoval content",
-			request: sample.RequestWithContent(launchID, contents[1]),
+			request: sample.RequestWithContent(r, launchID, contents[1]),
 			wantErr: true,
 		}, {
 			name:    "test VestingAccount content",
-			request: sample.RequestWithContent(launchID, contents[2]),
+			request: sample.RequestWithContent(r, launchID, contents[2]),
 		}, {
 			name:    "test duplicated VestingAccount content",
-			request: sample.RequestWithContent(launchID, contents[2]),
+			request: sample.RequestWithContent(r, launchID, contents[2]),
 			wantErr: true,
 		}, {
 			name:    "test vesting AccountRemoval content",
-			request: sample.RequestWithContent(launchID, contents[3]),
+			request: sample.RequestWithContent(r, launchID, contents[3]),
 		}, {
 			name:    "test not found vesting AccountRemoval content",
-			request: sample.RequestWithContent(launchID, contents[3]),
+			request: sample.RequestWithContent(r, launchID, contents[3]),
 			wantErr: true,
 		}, {
 			name:    "test GenesisValidator content",
-			request: sample.RequestWithContent(launchID, contents[4]),
+			request: sample.RequestWithContent(r, launchID, contents[4]),
 		}, {
 			name:    "test duplicated GenesisValidator content",
-			request: sample.RequestWithContent(launchID, contents[4]),
+			request: sample.RequestWithContent(r, launchID, contents[4]),
 			wantErr: true,
 		}, {
 			name:    "test ValidatorRemoval content",
-			request: sample.RequestWithContent(launchID, contents[5]),
+			request: sample.RequestWithContent(r, launchID, contents[5]),
 		}, {
 			name:    "test not found ValidatorRemoval content",
-			request: sample.RequestWithContent(launchID, contents[5]),
+			request: sample.RequestWithContent(r, launchID, contents[5]),
 			wantErr: true,
 		}, {
 			name:    "test request with invalid parameters",
-			request: sample.RequestWithContent(launchID, invalidContent),
+			request: sample.RequestWithContent(r, launchID, invalidContent),
 			wantErr: true,
 		},
 	}
@@ -187,12 +187,12 @@ func TestApplyRequest(t *testing.T) {
 
 func TestCheckRequest(t *testing.T) {
 	var (
-		genesisAcc     = sample.Address()
-		vestingAcc     = sample.Address()
-		validatorAcc   = sample.Address()
+		genesisAcc     = sample.Address(r)
+		vestingAcc     = sample.Address(r)
+		validatorAcc   = sample.Address(r)
 		ctx, tk, _     = testkeeper.NewTestSetup(t)
 		launchID       = uint64(10)
-		contents       = sample.AllRequestContents(launchID, genesisAcc, vestingAcc, validatorAcc)
+		contents       = sample.AllRequestContents(r, launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
 	)
 	tests := []struct {
@@ -202,49 +202,49 @@ func TestCheckRequest(t *testing.T) {
 	}{
 		{
 			name:    "test GenesisAccount content",
-			request: sample.RequestWithContent(launchID, contents[0]),
+			request: sample.RequestWithContent(r, launchID, contents[0]),
 		}, {
 			name:    "test duplicated GenesisAccount content",
-			request: sample.RequestWithContent(launchID, contents[0]),
+			request: sample.RequestWithContent(r, launchID, contents[0]),
 			err:     types.ErrAccountAlreadyExist,
 		}, {
 			name:    "test genesis AccountRemoval content",
-			request: sample.RequestWithContent(launchID, contents[1]),
+			request: sample.RequestWithContent(r, launchID, contents[1]),
 		}, {
 			name:    "test not found genesis AccountRemoval content",
-			request: sample.RequestWithContent(launchID, contents[1]),
+			request: sample.RequestWithContent(r, launchID, contents[1]),
 			err:     types.ErrAccountNotFound,
 		}, {
 			name:    "test VestingAccount content",
-			request: sample.RequestWithContent(launchID, contents[2]),
+			request: sample.RequestWithContent(r, launchID, contents[2]),
 		}, {
 			name:    "test duplicated VestingAccount content",
-			request: sample.RequestWithContent(launchID, contents[2]),
+			request: sample.RequestWithContent(r, launchID, contents[2]),
 			err:     types.ErrAccountAlreadyExist,
 		}, {
 			name:    "test vesting AccountRemoval content",
-			request: sample.RequestWithContent(launchID, contents[3]),
+			request: sample.RequestWithContent(r, launchID, contents[3]),
 		}, {
 			name:    "test not found vesting AccountRemoval content",
-			request: sample.RequestWithContent(launchID, contents[3]),
+			request: sample.RequestWithContent(r, launchID, contents[3]),
 			err:     types.ErrAccountNotFound,
 		}, {
 			name:    "test GenesisValidator content",
-			request: sample.RequestWithContent(launchID, contents[4]),
+			request: sample.RequestWithContent(r, launchID, contents[4]),
 		}, {
 			name:    "test duplicated GenesisValidator content",
-			request: sample.RequestWithContent(launchID, contents[4]),
+			request: sample.RequestWithContent(r, launchID, contents[4]),
 			err:     types.ErrValidatorAlreadyExist,
 		}, {
 			name:    "test ValidatorRemoval content",
-			request: sample.RequestWithContent(launchID, contents[5]),
+			request: sample.RequestWithContent(r, launchID, contents[5]),
 		}, {
 			name:    "test not found ValidatorRemoval content",
-			request: sample.RequestWithContent(launchID, contents[5]),
+			request: sample.RequestWithContent(r, launchID, contents[5]),
 			err:     types.ErrValidatorNotFound,
 		}, {
 			name:    "test request with invalid parameters",
-			request: sample.RequestWithContent(launchID, invalidContent),
+			request: sample.RequestWithContent(r, launchID, invalidContent),
 			err:     spnerrors.ErrCritical,
 		},
 	}

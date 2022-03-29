@@ -25,7 +25,7 @@ func TestMsgWithdrawAllocations_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg: types.MsgWithdrawAllocations{
-				Participant: sample.Address(),
+				Participant: sample.Address(r),
 			},
 		},
 	}

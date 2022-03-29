@@ -13,7 +13,7 @@ import (
 
 func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 	var (
-		addr     = sample.Address()
+		addr     = sample.Address(r)
 		launchID = uint64(10)
 	)
 	tests := []struct {
@@ -25,26 +25,26 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: types.MsgRequestAddAccount{
 				Creator:  "invalid_address",
-				Address:  sample.Address(),
+				Address:  sample.Address(r),
 				LaunchID: launchID,
-				Coins:    sample.Coins(),
+				Coins:    sample.Coins(r),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid account address",
 			msg: types.MsgRequestAddAccount{
-				Creator:  sample.Address(),
+				Creator:  sample.Address(r),
 				Address:  "invalid_address",
 				LaunchID: launchID,
-				Coins:    sample.Coins(),
+				Coins:    sample.Coins(r),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "message without coins",
 			msg: types.MsgRequestAddAccount{
-				Creator:  sample.Address(),
+				Creator:  sample.Address(r),
 				Address:  addr,
 				LaunchID: launchID,
 				Coins:    sdk.NewCoins(),
@@ -54,7 +54,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "message with invalid coins",
 			msg: types.MsgRequestAddAccount{
-				Creator:  sample.Address(),
+				Creator:  sample.Address(r),
 				Address:  addr,
 				LaunchID: launchID,
 				Coins:    sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
@@ -64,10 +64,10 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgRequestAddAccount{
-				Creator:  sample.Address(),
-				Address:  sample.Address(),
+				Creator:  sample.Address(r),
+				Address:  sample.Address(r),
 				LaunchID: launchID,
-				Coins:    sample.Coins(),
+				Coins:    sample.Coins(r),
 			},
 		},
 		{
@@ -76,7 +76,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 				Creator:  addr,
 				Address:  addr,
 				LaunchID: launchID,
-				Coins:    sample.Coins(),
+				Coins:    sample.Coins(r),
 			},
 		},
 	}
