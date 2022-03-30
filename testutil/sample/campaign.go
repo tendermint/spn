@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 
@@ -62,8 +63,7 @@ func CampaignName(r *rand.Rand) string {
 
 // Campaign returns a sample campaign
 func Campaign(r *rand.Rand, id uint64) campaign.Campaign {
-	c := campaign.NewCampaign(id, CampaignName(r), Uint64(r), TotalSupply(r), Bool(r), Metadata(r, 20))
-	return c
+	return campaign.NewCampaign(id, CampaignName(r), Uint64(r), TotalSupply(r), Metadata(r, 20))
 }
 
 // MainnetAccount returns a sample MainnetAccount
@@ -121,6 +121,7 @@ func CampaignGenesisState(r *rand.Rand) campaign.GenesisState {
 			MainnetAccount(r, 0, Address(r)),
 			MainnetAccount(r, 1, Address(r)),
 		},
-		Params: CampaignParams(r),
+		TotalShares: spntypes.TotalShareNumber,
+		Params:      CampaignParams(r),
 	}
 }

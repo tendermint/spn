@@ -144,7 +144,8 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 			}
 
 			// convert all shares to find all vouchers denom
-			allVouchers, err := types.SharesToVouchers(campaign.GetTotalShares(), campaignID)
+			supplyCoin := campaign.GetTotalSupply()
+			allVouchers, err := types.SharesToVouchers(types.NewSharesFromCoins(supplyCoin), campaignID)
 			if err != nil {
 				return sdk.FormatInvariant(
 					types.ModuleName, campaignSharesRoute,

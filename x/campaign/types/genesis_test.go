@@ -1,8 +1,12 @@
 package types_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
+	tc2 "github.com/tendermint/spn/testutil/constructor"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -23,14 +27,10 @@ func TestGenesisState_Validate(t *testing.T) {
 	)
 	sharesCampaign1 := types.IncreaseShares(shares1, shares2)
 	campaign1.AllocatedShares = sharesCampaign1
-	campaign1.TotalShares = sharesCampaign1
-	campaign1.DynamicShares = true
 	campaign1.CoordinatorID = 0
 
 	sharesCampaign2 := types.IncreaseShares(shares3, shares4)
 	campaign2.AllocatedShares = sharesCampaign2
-	campaign2.TotalShares = sharesCampaign2
-	campaign2.DynamicShares = true
 	campaign2.CoordinatorID = 1
 
 	for _, tc := range []struct {
@@ -83,7 +83,8 @@ func TestGenesisState_Validate(t *testing.T) {
 						VestingOptions: *types.NewShareDelayedVesting(shares4, shares4, time.Now().Unix()),
 					},
 				},
-				Params: types.DefaultParams(),
+				TotalShares: spntypes.TotalShareNumber,
+				Params:      types.DefaultParams(),
 			},
 		},
 		{
@@ -223,7 +224,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "invalid campaign",
 			genState: &types.GenesisState{
 				CampaignList: []types.Campaign{
-					types.NewCampaign(0, invalidCampaignName, sample.Uint64(r), sample.TotalSupply(r), false, sample.Metadata(r, 20)),
+					types.NewCampaign(0, invalidCampaignName, sample.Uint64(r), sample.TotalSupply(r), sample.Metadata(r, 20)),
 				},
 				CampaignCounter: 1,
 			},
@@ -248,6 +249,31 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 			},
 			errorMessage: "duplicated index for mainnetAccount",
+		},
+		{
+			desc: "invalid allocations",
+			genState: &types.GenesisState{
+				CampaignList: []types.Campaign{
+					{
+						CampaignID:         0,
+						CampaignName:       "test",
+						CoordinatorID:      0,
+						MainnetID:          0,
+						MainnetInitialized: false,
+						TotalSupply:        nil,
+						AllocatedShares:    types.NewSharesFromCoins(tc2.Coins(t, fmt.Sprintf("%dstake", spntypes.TotalShareNumber+1))),
+						Metadata:           nil,
+					},
+				},
+				CampaignCounter: 1,
+				MainnetAccountList: []types.MainnetAccount{
+					{
+						CampaignID: 0,
+						Address:    "0",
+					},
+				},
+			},
+			errorMessage: "invalid campaign 0: more allocated shares than total shares",
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
