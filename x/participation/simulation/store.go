@@ -25,7 +25,7 @@ func RandomAccWithBalance(ctx sdk.Context, r *rand.Rand,
 
 	for _, acc := range accs {
 		balances := bk.GetAllBalances(ctx, acc.Address)
-		if balances.IsAllGT(desired) {
+		if balances.IsAllGTE(desired) {
 			return acc, balances, true
 		}
 	}
