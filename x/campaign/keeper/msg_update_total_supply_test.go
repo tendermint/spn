@@ -14,8 +14,8 @@ import (
 
 func TestMsgUpdateTotalSupply(t *testing.T) {
 	var (
-		coordAddr1     = sample.Address()
-		coordAddr2     = sample.Address()
+		coordAddr1     = sample.Address(r)
+		coordAddr2     = sample.Address(r)
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -23,22 +23,22 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 	// Create coordinators
 	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 
 	// Set a regular campaign and a campaign with an already initialized mainnet
-	campaign := sample.Campaign(0)
+	campaign := sample.Campaign(r, 0)
 	campaign.CoordinatorID = coordID
 	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
 
-	campaign = sample.Campaign(1)
+	campaign = sample.Campaign(r, 1)
 	campaign.CoordinatorID = coordID
 	campaign.MainnetInitialized = true
 	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
@@ -53,7 +53,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        0,
 				Coordinator:       coordAddr1,
-				TotalSupplyUpdate: sample.TotalSupply(),
+				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 		},
 		{
@@ -61,7 +61,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        0,
 				Coordinator:       coordAddr1,
-				TotalSupplyUpdate: sample.TotalSupply(),
+				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 		},
 		{
@@ -69,7 +69,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        100,
 				Coordinator:       coordAddr1,
-				TotalSupplyUpdate: sample.TotalSupply(),
+				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -77,8 +77,8 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			name: "non existing coordinator",
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        0,
-				Coordinator:       sample.Address(),
-				TotalSupplyUpdate: sample.TotalSupply(),
+				Coordinator:       sample.Address(r),
+				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -87,7 +87,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        0,
 				Coordinator:       coordAddr2,
-				TotalSupplyUpdate: sample.TotalSupply(),
+				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
@@ -96,7 +96,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        1,
 				Coordinator:       coordAddr1,
-				TotalSupplyUpdate: sample.TotalSupply(),
+				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 			err: types.ErrMainnetInitialized,
 		},
@@ -105,7 +105,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 			msg: types.MsgUpdateTotalSupply{
 				CampaignID:        0,
 				Coordinator:       coordAddr1,
-				TotalSupplyUpdate: sample.CoinsWithRange(10, 20),
+				TotalSupplyUpdate: sample.CoinsWithRange(r, 10, 20),
 			},
 			err: types.ErrInvalidTotalSupply,
 		},

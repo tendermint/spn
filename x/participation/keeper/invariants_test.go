@@ -14,7 +14,7 @@ import (
 func TestMismatchUsedAllocationsInvariant(t *testing.T) {
 	var (
 		ctx, tk, _        = testkeeper.NewTestSetup(t)
-		addr              = sample.Address()
+		addr              = sample.Address(r)
 		auctionUsedAllocs = []types.AuctionUsedAllocations{
 			{
 				Address:        addr,

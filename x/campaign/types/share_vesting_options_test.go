@@ -39,7 +39,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			name: "no total shares",
 			option: *types.NewShareDelayedVesting(
 				nil,
-				sample.Shares(),
+				sample.Shares(r),
 				time.Now().Unix(),
 			),
 			valid: false,
@@ -47,7 +47,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "no vesting",
 			option: *types.NewShareDelayedVesting(
-				sample.Shares(),
+				sample.Shares(r),
 				nil,
 				time.Now().Unix(),
 			),
@@ -56,7 +56,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "empty vesting",
 			option: *types.NewShareDelayedVesting(
-				sample.Shares(),
+				sample.Shares(r),
 				types.EmptyShares(),
 				time.Now().Unix(),
 			),
@@ -66,7 +66,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			name: "total shares with invalid coins",
 			option: *types.NewShareDelayedVesting(
 				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}}),
-				sample.Shares(),
+				sample.Shares(r),
 				time.Now().Unix(),
 			),
 			valid: false,
@@ -74,7 +74,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "vesting with invalid coins",
 			option: *types.NewShareDelayedVesting(
-				sample.Shares(),
+				sample.Shares(r),
 				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}}),
 				time.Now().Unix(),
 			),

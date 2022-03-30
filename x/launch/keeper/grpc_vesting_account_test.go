@@ -19,7 +19,7 @@ import (
 func createNVestingAccountForLaunchID(keeper *keeper.Keeper, ctx sdk.Context, n int, launchID uint64) []types.VestingAccount {
 	items := make([]types.VestingAccount, n)
 	for i := range items {
-		items[i] = sample.VestingAccount(launchID, strconv.Itoa(i))
+		items[i] = sample.VestingAccount(r, launchID, strconv.Itoa(i))
 		keeper.SetVestingAccount(ctx, items[i])
 	}
 	return items

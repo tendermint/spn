@@ -33,7 +33,7 @@ func TestCalculateRewards(t *testing.T) {
 			args: args{
 				blockRatio: tc.Dec(t, "1.000001"),
 				sigRatio:   sdk.ZeroDec(),
-				coins:      sample.Coins(),
+				coins:      sample.Coins(r),
 			},
 			wantErr: true,
 		},
@@ -42,7 +42,7 @@ func TestCalculateRewards(t *testing.T) {
 			args: args{
 				blockRatio: sdk.ZeroDec(),
 				sigRatio:   tc.Dec(t, "1.000001"),
-				coins:      sample.Coins(),
+				coins:      sample.Coins(r),
 			},
 			wantErr: true,
 		},
@@ -173,13 +173,13 @@ func TestCalculateRewards(t *testing.T) {
 func TestKeeper_DistributeRewards(t *testing.T) {
 	var (
 		ctx, tk, _      = testkeeper.NewTestSetup(t)
-		valFoo          = sample.Address()
-		valBar          = sample.Address()
-		valOpAddrFoo    = sample.Address()
-		valOpAddrBar    = sample.Address()
-		noProfileVal    = sample.Address()
-		notFoundValAddr = sample.Address()
-		provider        = sample.Address()
+		valFoo          = sample.Address(r)
+		valBar          = sample.Address(r)
+		valOpAddrFoo    = sample.Address(r)
+		valOpAddrBar    = sample.Address(r)
+		noProfileVal    = sample.Address(r)
+		notFoundValAddr = sample.Address(r)
+		provider        = sample.Address(r)
 	)
 
 	// set validator profiles
@@ -201,7 +201,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		OperatorAddress:  valOpAddrBar,
 	})
 	tk.ProfileKeeper.SetValidatorByOperatorAddress(ctx, profiletypes.ValidatorByOperatorAddress{
-		ValidatorAddress: sample.Address(),
+		ValidatorAddress: sample.Address(r),
 		OperatorAddress:  notFoundValAddr,
 	})
 

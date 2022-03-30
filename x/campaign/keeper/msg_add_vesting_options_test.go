@@ -1,13 +1,15 @@
 package keeper_test
 
 import (
+	"fmt"
 	"testing"
-
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+	tc "github.com/tendermint/spn/testutil/constructor"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -15,61 +17,54 @@ import (
 
 func TestMsgAddVestingOptions(t *testing.T) {
 	var (
-		addr1                          = sample.Address()
-		addr2                          = sample.Address()
-		coordAddr1                     = sample.Address()
-		coordAddr2                     = sample.Address()
-		coordAddrMainnetInitialized    = sample.Address()
-		campaign                       = sample.Campaign(0)
-		campaignInvalidAllocatedShares = sample.Campaign(2)
-		campaignMainnetInitialized     = sample.Campaign(1)
+		addr1                          = sample.Address(r)
+		addr2                          = sample.Address(r)
+		coordAddr1                     = sample.Address(r)
+		coordAddr2                     = sample.Address(r)
+		coordAddrMainnetInitialized    = sample.Address(r)
+		campaign                       = sample.Campaign(r, 0)
+		campaignInvalidAllocatedShares = sample.Campaign(r, 2)
+		campaignMainnetInitialized     = sample.Campaign(r, 1)
 
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	// create shares
-	allocatedShares, err := types.NewShares("999token")
-	require.NoError(t, err)
-	totalShares, err := types.NewShares("9999token")
-	require.NoError(t, err)
-	highShare, err := types.NewShares("9999token")
-	require.NoError(t, err)
-	lowShare, err := types.NewShares("8token")
-	require.NoError(t, err)
+	allocatedShares := tc.Shares(t, "91token")
+	invalidAllocatedShares := tc.Shares(t, fmt.Sprintf("%dtoken", spntypes.TotalShareNumber))
+	highShare := tc.Shares(t, "1000token")
+	lowShare := tc.Shares(t, "8token")
 
 	// Create a campaigns
 	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrMainnetInitialized,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	campaignMainnetInitialized.CoordinatorID = res.CoordinatorID
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.AllocatedShares = allocatedShares
-	campaignMainnetInitialized.TotalShares = totalShares
 	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	campaign.CoordinatorID = res.CoordinatorID
 	campaign.AllocatedShares = allocatedShares
-	campaign.TotalShares = totalShares
 	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
-	accShare := sample.MainnetVestingAccountWithShares(campaign.CampaignID, addr2, lowShare)
+	accShare := sample.MainnetVestingAccountWithShares(r, campaign.CampaignID, addr2, lowShare)
 	tk.CampaignKeeper.SetMainnetVestingAccount(sdkCtx, accShare)
 
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorID
-	campaignInvalidAllocatedShares.AllocatedShares = allocatedShares
-	campaignInvalidAllocatedShares.TotalShares = totalShares
+	campaignInvalidAllocatedShares.AllocatedShares = invalidAllocatedShares
 	campaignInvalidAllocatedShares.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignInvalidAllocatedShares)
 
 	for _, tc := range []struct {
@@ -84,7 +79,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				Coordinator:    coordAddr1,
 				CampaignID:     100,
 				Address:        addr1,
-				VestingOptions: sample.ShareVestingOptions(),
+				VestingOptions: sample.ShareVestingOptions(r),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -94,7 +89,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				Coordinator:    addr1,
 				CampaignID:     campaign.CampaignID,
 				Address:        addr1,
-				VestingOptions: sample.ShareVestingOptions(),
+				VestingOptions: sample.ShareVestingOptions(r),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -104,7 +99,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				Coordinator:    coordAddrMainnetInitialized,
 				CampaignID:     campaign.CampaignID,
 				Address:        addr1,
-				VestingOptions: sample.ShareVestingOptions(),
+				VestingOptions: sample.ShareVestingOptions(r),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
@@ -114,7 +109,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				Coordinator:    coordAddrMainnetInitialized,
 				CampaignID:     campaignMainnetInitialized.CampaignID,
 				Address:        addr1,
-				VestingOptions: sample.ShareVestingOptions(),
+				VestingOptions: sample.ShareVestingOptions(r),
 			},
 		},
 		{
@@ -123,7 +118,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				Coordinator:    coordAddr2,
 				CampaignID:     campaignInvalidAllocatedShares.CampaignID,
 				Address:        addr1,
-				VestingOptions: sample.CustomShareVestingOptions(highShare),
+				VestingOptions: sample.CustomShareVestingOptions(r, highShare),
 			},
 			err: types.ErrTotalSharesLimit,
 		},
@@ -133,7 +128,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				Coordinator:    coordAddr1,
 				CampaignID:     campaign.CampaignID,
 				Address:        addr1,
-				VestingOptions: sample.CustomShareVestingOptions(lowShare),
+				VestingOptions: sample.CustomShareVestingOptions(r, lowShare),
 			},
 		},
 		{
@@ -142,7 +137,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 				Coordinator:    coordAddr1,
 				CampaignID:     campaign.CampaignID,
 				Address:        addr2,
-				VestingOptions: sample.CustomShareVestingOptions(lowShare),
+				VestingOptions: sample.CustomShareVestingOptions(r, lowShare),
 			},
 		},
 	} {

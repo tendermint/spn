@@ -16,9 +16,9 @@ func TestMsgRevertLaunch(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.Address()
-	coordAddress2 := sample.Address()
-	coordNoExist := sample.Address()
+	coordAddress := sample.Address(r)
+	coordAddress2 := sample.Address(r)
+	coordNoExist := sample.Address(r)
 	chainIDNoExist := uint64(1000)
 
 	// Create coordinators
@@ -30,7 +30,7 @@ func TestMsgRevertLaunch(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create chains
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
+	msgCreateChain := sample.MsgCreateChain(r, coordAddress, "", false, 0)
 	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	notLaunched := res.LaunchID

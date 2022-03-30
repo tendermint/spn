@@ -15,7 +15,7 @@ import (
 func TestParamsQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	params := sample.ParticipationParams()
+	params := sample.ParticipationParams(r)
 	tk.ParticipationKeeper.SetParams(ctx, params)
 
 	response, err := tk.ParticipationKeeper.Params(wctx, &types.QueryParamsRequest{})

@@ -19,7 +19,7 @@ func TestMsgParticipate_ValidateBasic(t *testing.T) {
 		{
 			name: "valid address",
 			msg: types.MsgParticipate{
-				Participant: sample.Address(),
+				Participant: sample.Address(r),
 			},
 		},
 		{

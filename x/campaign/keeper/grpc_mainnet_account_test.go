@@ -24,7 +24,7 @@ func createNMainnetAccountForCampaignID(
 ) []types.MainnetAccount {
 	items := make([]types.MainnetAccount, n)
 	for i := range items {
-		items[i] = sample.MainnetAccount(campaignID, strconv.Itoa(i))
+		items[i] = sample.MainnetAccount(r, campaignID, strconv.Itoa(i))
 		keeper.SetMainnetAccount(ctx, items[i])
 	}
 	return items

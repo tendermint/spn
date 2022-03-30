@@ -22,15 +22,15 @@ func TestAvailableAllocationsGet(t *testing.T) {
 	params.AllocationPrice = allocationPrice
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
-	validAddress := sample.Address()
-	validAddressNoUse := sample.Address()
-	addressNegativeDelegations := sample.Address()
-	validAddressExtraUsed := sample.Address()
+	validAddress := sample.Address(r)
+	validAddressNoUse := sample.Address(r)
+	addressNegativeDelegations := sample.Address(r)
+	validAddressExtraUsed := sample.Address(r)
 
-	tk.DelegateN(sdkCtx, validAddress, 100, 10)
-	tk.DelegateN(sdkCtx, validAddressNoUse, 100, 10)
-	tk.DelegateN(sdkCtx, addressNegativeDelegations, -100, 10)
-	tk.DelegateN(sdkCtx, validAddressExtraUsed, 100, 10)
+	tk.DelegateN(sdkCtx, r, validAddress, 100, 10)
+	tk.DelegateN(sdkCtx, r, validAddressNoUse, 100, 10)
+	tk.DelegateN(sdkCtx, r, addressNegativeDelegations, -100, 10)
+	tk.DelegateN(sdkCtx, r, validAddressExtraUsed, 100, 10)
 
 	tk.ParticipationKeeper.SetUsedAllocations(sdkCtx, types.UsedAllocations{
 		Address:        validAddress,

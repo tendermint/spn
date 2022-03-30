@@ -33,7 +33,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	participationGenesis := types.GenesisState{
-		Params: sample.ParticipationParams(),
+		Params: sample.ParticipationParams(simState.Rand),
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&participationGenesis)
@@ -45,8 +45,8 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	participationParams := sample.ParticipationParams()
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+	participationParams := sample.ParticipationParams(r)
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyAllocationPrice), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(participationParams.AllocationPrice))

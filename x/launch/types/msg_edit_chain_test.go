@@ -13,14 +13,14 @@ import (
 func TestMsgEditChain_ValidateBasic(t *testing.T) {
 	launchID := uint64(0)
 
-	msgInvalidMetadataLen := sample.MsgEditChain(
-		sample.Address(),
+	msgInvalidMetadataLen := sample.MsgEditChain(r,
+		sample.Address(r),
 		launchID,
 		false,
 		0,
 		false,
 	)
-	msgInvalidMetadataLen.Metadata = sample.Bytes(spntypes.MaxMetadataLength + 1)
+	msgInvalidMetadataLen.Metadata = sample.Bytes(r, spntypes.MaxMetadataLength+1)
 
 	for _, tc := range []struct {
 		desc  string
@@ -29,8 +29,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 	}{
 		{
 			desc: "valid message",
-			msg: sample.MsgEditChain(
-				sample.Address(),
+			msg: sample.MsgEditChain(r,
+				sample.Address(r),
 				launchID,
 				true,
 				0,
@@ -40,8 +40,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new metadata",
-			msg: sample.MsgEditChain(
-				sample.Address(),
+			msg: sample.MsgEditChain(r,
+				sample.Address(r),
 				launchID,
 				false,
 				0,
@@ -51,8 +51,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new chain ID",
-			msg: sample.MsgEditChain(
-				sample.Address(),
+			msg: sample.MsgEditChain(r,
+				sample.Address(r),
 				launchID,
 				true,
 				0,
@@ -62,7 +62,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "invalid coordinator address",
-			msg: sample.MsgEditChain(
+			msg: sample.MsgEditChain(r,
 				"invalid",
 				launchID,
 				true,
@@ -73,8 +73,8 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "no value to edit",
-			msg: sample.MsgEditChain(
-				sample.Address(),
+			msg: sample.MsgEditChain(r,
+				sample.Address(r),
 				launchID,
 				false,
 				0,

@@ -50,7 +50,7 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 		// Select a random account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
-		desc := sample.ValidatorDescription(sample.String(50))
+		desc := sample.ValidatorDescription(sample.String(r, 50))
 		msg := types.NewMsgUpdateValidatorDescription(
 			simAccount.Address.String(),
 			desc.Identity,
@@ -103,9 +103,9 @@ func SimulateMsgCreateCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 
 		msg := types.NewMsgCreateCoordinator(
 			simAccount.Address.String(),
-			sample.String(30),
-			sample.String(30),
-			sample.String(30),
+			sample.String(r, 30),
+			sample.String(r, 30),
+			sample.String(r, 30),
 		)
 		txCtx := simulation.OperationInput{
 			R:               r,
@@ -137,7 +137,7 @@ func SimulateMsgUpdateCoordinatorDescription(ak types.AccountKeeper, bk types.Ba
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorDescription, "skip update coordinator description"), nil, nil
 		}
 
-		desc := sample.CoordinatorDescription()
+		desc := sample.CoordinatorDescription(r)
 		msg := types.NewMsgUpdateCoordinatorDescription(
 			simAccount.Address.String(),
 			desc.Identity,

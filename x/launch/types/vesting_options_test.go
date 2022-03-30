@@ -44,7 +44,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			name: "no total balance",
 			option: *types.NewDelayedVesting(
 				nil,
-				sample.Coins(),
+				sample.Coins(r),
 				time.Now().Unix(),
 			),
 			valid: false,
@@ -52,7 +52,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "no vesting",
 			option: *types.NewDelayedVesting(
-				sample.Coins(),
+				sample.Coins(r),
 				nil,
 				time.Now().Unix(),
 			),
@@ -62,7 +62,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			name: "vesting with invalid total balance",
 			option: *types.NewDelayedVesting(
 				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
-				sample.Coins(),
+				sample.Coins(r),
 				time.Now().Unix(),
 			),
 			valid: false,
@@ -70,7 +70,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "vesting with invalid vesting",
 			option: *types.NewDelayedVesting(
-				sample.Coins(),
+				sample.Coins(r),
 				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				time.Now().Unix(),
 			),

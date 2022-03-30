@@ -19,7 +19,7 @@ import (
 
 func Test_msgServer_CreateClient(t *testing.T) {
 	var (
-		coordAddr    = sample.Address()
+		coordAddr    = sample.Address(r)
 		invalidChain = uint64(1000)
 
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
@@ -52,23 +52,23 @@ func Test_msgServer_CreateClient(t *testing.T) {
 	resCreateChain, err := ts.LaunchSrv.CreateChain(ctx, launchtypes.NewMsgCreateChain(
 		coordAddr,
 		"orbit-1",
-		sample.String(10),
-		sample.String(10),
+		sample.String(r, 10),
+		sample.String(r, 10),
 		"",
 		"",
 		false,
 		0,
-		sample.Metadata(20),
+		sample.Metadata(r, 20),
 	))
 	require.NoError(t, err)
 	_, err = ts.LaunchSrv.RequestAddValidator(ctx, launchtypes.NewMsgRequestAddValidator(
 		coordAddr,
 		resCreateChain.LaunchID,
-		sample.Address(),
-		sample.Bytes(100),
+		sample.Address(r),
+		sample.Bytes(r, 100),
 		consPubKey,
 		selfDelegation,
-		sample.GenesisValidatorPeer(),
+		sample.GenesisValidatorPeer(r),
 	))
 	require.NoError(t, err)
 	_, err = ts.LaunchSrv.TriggerLaunch(ctx, launchtypes.NewMsgTriggerLaunch(
@@ -86,7 +86,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		{
 			name: "chain doesn't exist",
 			msg: *types.NewMsgCreateClient(
-				sample.Address(),
+				sample.Address(r),
 				invalidChain,
 				cs,
 				vs,
@@ -98,7 +98,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		{
 			name: "invalid validator set",
 			msg: *types.NewMsgCreateClient(
-				sample.Address(),
+				sample.Address(r),
 				resCreateChain.LaunchID,
 				sample.ConsensusState(0),
 				sample.ValidatorSet(1),
@@ -110,7 +110,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		{
 			name: "verified client should be created",
 			msg: *types.NewMsgCreateClient(
-				sample.Address(),
+				sample.Address(r),
 				resCreateChain.LaunchID,
 				cs,
 				vs,

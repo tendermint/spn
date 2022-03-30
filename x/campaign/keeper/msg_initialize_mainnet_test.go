@@ -19,8 +19,8 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		campaignMainnetInitializedID uint64 = 1
 		campaignIncorrectCoordID     uint64 = 2
 		campaignEmptySupplyID        uint64 = 3
-		coordAddr                           = sample.Address()
-		coordAddrNoCampaign                 = sample.Address()
+		coordAddr                           = sample.Address(r)
+		coordAddrNoCampaign                 = sample.Address(r)
 
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
@@ -29,32 +29,32 @@ func TestMsgInitializeMainnet(t *testing.T) {
 	// Create coordinators
 	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrNoCampaign,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 
 	// Set different campaigns
-	campaign := sample.Campaign(campaignID)
+	campaign := sample.Campaign(r, campaignID)
 	campaign.CoordinatorID = coordID
 	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
 
-	campaignMainnetInitialized := sample.Campaign(campaignMainnetInitializedID)
+	campaignMainnetInitialized := sample.Campaign(r, campaignMainnetInitializedID)
 	campaignMainnetInitialized.CoordinatorID = coordID
 	campaignMainnetInitialized.MainnetInitialized = true
 	tk.CampaignKeeper.SetCampaign(sdkCtx, campaignMainnetInitialized)
 
-	campaignEmptySupply := sample.Campaign(campaignEmptySupplyID)
+	campaignEmptySupply := sample.Campaign(r, campaignEmptySupplyID)
 	campaignEmptySupply.CoordinatorID = coordID
 	campaignEmptySupply.TotalSupply = sdk.NewCoins()
 	tk.CampaignKeeper.SetCampaign(sdkCtx, campaignEmptySupply)
 
-	campaignIncorrectCoord := sample.Campaign(campaignIncorrectCoordID)
+	campaignIncorrectCoord := sample.Campaign(r, campaignIncorrectCoordID)
 	campaignIncorrectCoord.CoordinatorID = coordID
 	tk.CampaignKeeper.SetCampaign(sdkCtx, campaignIncorrectCoord)
 
@@ -68,9 +68,9 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignID,
 				Coordinator:    coordAddr,
-				SourceHash:     sample.String(30),
-				SourceURL:      sample.String(20),
-				MainnetChainID: sample.GenesisChainID(),
+				SourceHash:     sample.String(r, 30),
+				SourceURL:      sample.String(r, 20),
+				MainnetChainID: sample.GenesisChainID(r),
 			},
 		},
 		{
@@ -78,9 +78,9 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     1000,
 				Coordinator:    coordAddr,
-				SourceHash:     sample.String(30),
-				SourceURL:      sample.String(20),
-				MainnetChainID: sample.GenesisChainID(),
+				SourceHash:     sample.String(r, 30),
+				SourceURL:      sample.String(r, 20),
+				MainnetChainID: sample.GenesisChainID(r),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -89,9 +89,9 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignMainnetInitializedID,
 				Coordinator:    coordAddr,
-				SourceHash:     sample.String(30),
-				SourceURL:      sample.String(20),
-				MainnetChainID: sample.GenesisChainID(),
+				SourceHash:     sample.String(r, 30),
+				SourceURL:      sample.String(r, 20),
+				MainnetChainID: sample.GenesisChainID(r),
 			},
 			err: types.ErrMainnetInitialized,
 		},
@@ -100,9 +100,9 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignEmptySupplyID,
 				Coordinator:    coordAddr,
-				SourceHash:     sample.String(30),
-				SourceURL:      sample.String(20),
-				MainnetChainID: sample.GenesisChainID(),
+				SourceHash:     sample.String(r, 30),
+				SourceURL:      sample.String(r, 20),
+				MainnetChainID: sample.GenesisChainID(r),
 			},
 			err: types.ErrInvalidTotalSupply,
 		},
@@ -110,10 +110,10 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			name: "non-existent coordinator",
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignIncorrectCoordID,
-				Coordinator:    sample.Address(),
-				SourceHash:     sample.String(30),
-				SourceURL:      sample.String(20),
-				MainnetChainID: sample.GenesisChainID(),
+				Coordinator:    sample.Address(r),
+				SourceHash:     sample.String(r, 30),
+				SourceURL:      sample.String(r, 20),
+				MainnetChainID: sample.GenesisChainID(r),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -122,9 +122,9 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignIncorrectCoordID,
 				Coordinator:    coordAddrNoCampaign,
-				SourceHash:     sample.String(30),
-				SourceURL:      sample.String(20),
-				MainnetChainID: sample.GenesisChainID(),
+				SourceHash:     sample.String(r, 30),
+				SourceURL:      sample.String(r, 20),
+				MainnetChainID: sample.GenesisChainID(r),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},

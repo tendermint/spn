@@ -19,7 +19,7 @@ import (
 func createNGenesisValidatorForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, n)
 	for i := range items {
-		items[i] = sample.GenesisValidator(chainID, strconv.Itoa(i))
+		items[i] = sample.GenesisValidator(r, chainID, strconv.Itoa(i))
 		keeper.SetGenesisValidator(ctx, items[i])
 	}
 	return items

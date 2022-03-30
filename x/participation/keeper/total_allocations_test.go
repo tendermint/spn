@@ -21,11 +21,11 @@ func TestTotalAllocationsGet(t *testing.T) {
 
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
-	validAddress := sample.Address()
-	addressNegativeDelegations := sample.Address()
+	validAddress := sample.Address(r)
+	addressNegativeDelegations := sample.Address(r)
 
-	tk.DelegateN(sdkCtx, validAddress, 100, 10)
-	tk.DelegateN(sdkCtx, addressNegativeDelegations, -100, 10)
+	tk.DelegateN(sdkCtx, r, validAddress, 100, 10)
+	tk.DelegateN(sdkCtx, r, addressNegativeDelegations, -100, 10)
 
 	for _, tc := range []struct {
 		desc       string

@@ -15,16 +15,16 @@ import (
 
 func TestMsgUpdateCampaignName(t *testing.T) {
 	var (
-		coordAddr           = sample.Address()
-		coordAddrNoCampaign = sample.Address()
-		campaign            = sample.Campaign(0)
+		coordAddr           = sample.Address(r)
+		coordAddrNoCampaign = sample.Address(r)
+		campaign            = sample.Campaign(r, 0)
 
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	campaign.CoordinatorID = res.CoordinatorID
@@ -32,7 +32,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrNoCampaign,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 
@@ -46,18 +46,18 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			msg: types.MsgEditCampaign{
 				Coordinator: coordAddr,
 				CampaignID:  100,
-				Name:        sample.CampaignName(),
-				Metadata:    sample.Metadata(20),
+				Name:        sample.CampaignName(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			err: types.ErrCampaignNotFound,
 		},
 		{
 			name: "invalid coordinator address",
 			msg: types.MsgEditCampaign{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  campaign.CampaignID,
-				Name:        sample.CampaignName(),
-				Metadata:    sample.Metadata(20),
+				Name:        sample.CampaignName(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -66,8 +66,8 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			msg: types.MsgEditCampaign{
 				Coordinator: coordAddrNoCampaign,
 				CampaignID:  campaign.CampaignID,
-				Name:        sample.CampaignName(),
-				Metadata:    sample.Metadata(20),
+				Name:        sample.CampaignName(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
@@ -76,8 +76,8 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			msg: types.MsgEditCampaign{
 				Coordinator: coordAddr,
 				CampaignID:  campaign.CampaignID,
-				Name:        sample.CampaignName(),
-				Metadata:    sample.Metadata(20),
+				Name:        sample.CampaignName(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 		},
 		{
@@ -85,7 +85,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			msg: types.MsgEditCampaign{
 				Coordinator: coordAddr,
 				CampaignID:  campaign.CampaignID,
-				Name:        sample.CampaignName(),
+				Name:        sample.CampaignName(r),
 				Metadata:    []byte{},
 			},
 		},
@@ -95,7 +95,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 				Coordinator: coordAddr,
 				CampaignID:  campaign.CampaignID,
 				Name:        "",
-				Metadata:    sample.Metadata(20),
+				Metadata:    sample.Metadata(r, 20),
 			},
 		},
 	} {

@@ -24,8 +24,8 @@ func TestShowAvailableAllocationsQuery(t *testing.T) {
 	params.AllocationPrice = allocationPrice
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
-	addr := sample.Address()
-	dels, _ := tk.DelegateN(sdkCtx, addr, 100, 10)
+	addr := sample.Address(r)
+	dels, _ := tk.DelegateN(sdkCtx, r, addr, 100, 10)
 
 	for _, tc := range []struct {
 		desc     string

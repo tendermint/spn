@@ -6,6 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -16,10 +17,10 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	var (
 		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
 		ctx                 = sdk.WrapSDKContext(sdkCtx)
-		auctioneer          = sample.Address()
-		validParticipant    = sample.Address()
-		invalidParticipant  = sample.Address()
-		auctionSellingCoin  = sample.Coin()
+		auctioneer          = sample.Address(r)
+		validParticipant    = sample.Address(r)
+		invalidParticipant  = sample.Address(r)
+		auctionSellingCoin  = sample.Coin(r)
 		auctionStartTime    = sdkCtx.BlockTime().Add(time.Hour)
 		auctionEndTime      = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
 		validWithdrawalTime = auctionStartTime.Add(time.Hour * 10)
@@ -32,18 +33,32 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
 	// delegate some coins so participant has some allocations to use
-	tk.DelegateN(sdkCtx, validParticipant, 100, 10)
+	tk.DelegateN(sdkCtx, r, validParticipant, 100, 10)
 
 	// initialize an auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(auctionSellingCoin))
-	auctionID := tk.CreateFixedPriceAuction(sdkCtx, auctioneer, auctionSellingCoin, auctionStartTime, auctionEndTime)
+	auctionID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, auctionSellingCoin, auctionStartTime, auctionEndTime)
 
-	// validParticipant participates to auction
+	// initialize another auction that will be set to `cancelled`
+	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(auctionSellingCoin))
+	cancelledAuctionID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, auctionSellingCoin, auctionStartTime, auctionEndTime)
+
+	// validParticipant participates to auctions
 	_, err := ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
 		Participant: validParticipant,
 		AuctionID:   auctionID,
 		TierID:      1,
 	})
+	require.NoError(t, err)
+	_, err = ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
+		Participant: validParticipant,
+		AuctionID:   cancelledAuctionID,
+		TierID:      1,
+	})
+	require.NoError(t, err)
+
+	// cancel auction
+	_, err = tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, cancelledAuctionID))
 	require.NoError(t, err)
 
 	// manually insert entry for invalidParticipant for later test
@@ -69,10 +84,18 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			blockTime: validWithdrawalTime,
 		},
 		{
+			name: "should allow to remove allocations if auction status is cancelled",
+			msg: &types.MsgWithdrawAllocations{
+				Participant: validParticipant,
+				AuctionID:   cancelledAuctionID,
+			},
+			blockTime: auctionStartTime,
+		},
+		{
 			name: "auction does not exist",
 			msg: &types.MsgWithdrawAllocations{
 				Participant: validParticipant,
-				AuctionID:   auctionID + 1,
+				AuctionID:   auctionID + 1000,
 			},
 			blockTime: validWithdrawalTime,
 			err:       types.ErrAuctionNotFound,
@@ -89,7 +112,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		{
 			name: "used allocations not found",
 			msg: &types.MsgWithdrawAllocations{
-				Participant: sample.Address(),
+				Participant: sample.Address(r),
 				AuctionID:   auctionID,
 			},
 			blockTime: validWithdrawalTime,
@@ -107,13 +130,13 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			preUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(sdkCtx, validParticipant)
+			preUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(sdkCtx, tt.msg.Participant)
 			if tt.err == nil {
 				// check if valid only when no error expected
 				require.True(t, found)
 			}
 
-			preAuctionUsedAllocations, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, validParticipant, auctionID)
+			preAuctionUsedAllocations, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, validParticipant, tt.msg.AuctionID)
 			if tt.err == nil {
 				// check if valid only when no error expected
 				require.True(t, found)

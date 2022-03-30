@@ -20,15 +20,16 @@ import (
 
 func networkWithMainnetVestingAccountObjects(t *testing.T, n int) (*network.Network, []types.MainnetVestingAccount) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	campaignID := uint64(5)
 	for i := 0; i < n; i++ {
-		state.MainnetVestingAccountList = append(state.MainnetVestingAccountList, sample.MainnetVestingAccount(
+		state.MainnetVestingAccountList = append(state.MainnetVestingAccountList, sample.MainnetVestingAccount(r,
 			campaignID,
-			sample.Address(),
+			sample.Address(r),
 		))
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)

@@ -19,9 +19,9 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 		{
 			name: "valid address",
 			msg: types.MsgAddShares{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
-				Shares:      sample.Shares(),
+				Shares:      sample.Shares(r),
 			},
 		},
 		{
@@ -29,14 +29,14 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 			msg: types.MsgAddShares{
 				Coordinator: "invalid_address",
 				CampaignID:  0,
-				Shares:      sample.Shares(),
+				Shares:      sample.Shares(r),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid shates",
 			msg: types.MsgAddShares{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
 				Shares:      invalidShares,
 			},
@@ -45,7 +45,7 @@ func TestMsgAddShares_ValidateBasic(t *testing.T) {
 		{
 			name: "empty shares",
 			msg: types.MsgAddShares{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
 				Shares:      types.Shares{},
 			},
