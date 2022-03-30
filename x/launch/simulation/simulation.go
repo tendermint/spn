@@ -217,8 +217,8 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 			launchID uint64
 		}
 
+		// build list of genesis and vesting accounts
 		accChainList := make([]accChain, 0)
-
 		genAccs := k.GetAllGenesisAccount(ctx)
 		for _, acc := range genAccs {
 			accChainList = append(accChainList, accChain{
@@ -233,6 +233,11 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 				launchID: acc.LaunchID,
 			})
 		}
+
+		// add entropy
+		r.Shuffle(len(accChainList), func(i, j int) {
+			accChainList[i], accChainList[j] = accChainList[j], accChainList[i]
+		})
 
 		var (
 			simAccount simtypes.Account
