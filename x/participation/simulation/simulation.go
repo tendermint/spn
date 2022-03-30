@@ -85,7 +85,7 @@ func SimulateCreateAuction(
 		params := fundraisingtypes.DefaultParams()
 		fk.SetParams(ctx, params)
 		fee := params.AuctionCreationFee
-		sellCoin := sample.Coin()
+		sellCoin := sample.Coin(r)
 
 		// choose custom fee that only uses the default bond denom
 		// otherwise the custom sellingCoin denom could be chosen
@@ -110,7 +110,7 @@ func SimulateCreateAuction(
 
 		startTime := ctx.BlockTime().Add(time.Hour * 24)
 		endTime := startTime.Add(time.Hour * 24 * 7)
-		msg := sample.MsgCreateFixedAuction(simAccount.Address.String(), sellCoin, startTime, endTime)
+		msg := sample.MsgCreateFixedAuction(r, simAccount.Address.String(), sellCoin, startTime, endTime)
 
 		mintAmt := sdk.NewCoins(msg.SellingCoin)
 		// must mint and send new coins to auctioneer
