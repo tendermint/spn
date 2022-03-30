@@ -25,6 +25,10 @@ func RandomAccWithBalance(ctx sdk.Context, r *rand.Rand,
 
 	for _, acc := range accs {
 		balances := bk.GetAllBalances(ctx, acc.Address)
+		if len(balances) == 0 {
+			continue
+		}
+
 		if balances.IsAllGTE(desired) {
 			return acc, balances, true
 		}
@@ -45,7 +49,7 @@ func RandomAuction(ctx sdk.Context, r *rand.Rand, fk fundraisingkeeper.Keeper) (
 
 	for _, a := range auctions {
 		// auction must not be started
-		if !a.IsAuctionStarted(ctx.BlockTime()) {
+		if a.GetStatus() != fundraisingtypes.AuctionStatusStarted {
 			return a, true
 		}
 	}
