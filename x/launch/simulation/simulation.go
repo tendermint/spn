@@ -212,15 +212,32 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		accsChain := make(map[string]uint64)
+		type accChain struct {
+			address  string
+			launchID uint64
+		}
+
+		// build list of genesis and vesting accounts
+		accChainList := make([]accChain, 0)
 		genAccs := k.GetAllGenesisAccount(ctx)
 		for _, acc := range genAccs {
-			accsChain[acc.Address] = acc.LaunchID
+			accChainList = append(accChainList, accChain{
+				address:  acc.Address,
+				launchID: acc.LaunchID,
+			})
 		}
 		vestAccs := k.GetAllVestingAccount(ctx)
 		for _, acc := range vestAccs {
-			accsChain[acc.Address] = acc.LaunchID
+			accChainList = append(accChainList, accChain{
+				address:  acc.Address,
+				launchID: acc.LaunchID,
+			})
 		}
+
+		// add entropy
+		r.Shuffle(len(accChainList), func(i, j int) {
+			accChainList[i], accChainList[j] = accChainList[j], accChainList[i]
+		})
 
 		var (
 			simAccount simtypes.Account
@@ -228,18 +245,18 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 			accChainID uint64
 		)
 		found := false
-		for acc, chainID := range accsChain {
-			if IsLaunchTriggeredChain(ctx, k, chainID) {
+		for _, accChain := range accChainList {
+			if IsLaunchTriggeredChain(ctx, k, accChain.launchID) {
 				continue
 			}
-			// get coordinator account for removal
+			// get coordinator account
 			var err error
-			simAccount, err = FindChainCoordinatorAccount(ctx, k, accs, chainID)
+			simAccount, err = FindChainCoordinatorAccount(ctx, k, accs, accChain.launchID)
 			if err != nil {
 				continue
 			}
-			accAddr = acc
-			accChainID = chainID
+			accAddr = accChain.address
+			accChainID = accChain.launchID
 			found = true
 			break
 		}
@@ -247,17 +264,18 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveAccount, "genesis account not found"), nil, nil
 		}
 
-		msg := sample.MsgRequestRemoveAccount(
+		msg := types.NewMsgRequestRemoveAccount(
 			simAccount.Address.String(),
-			accAddr,
 			accChainID,
+			accAddr,
 		)
+
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
 			Cdc:             nil,
-			Msg:             &msg,
+			Msg:             msg,
 			MsgType:         msg.Type(),
 			Context:         ctx,
 			SimAccount:      simAccount,

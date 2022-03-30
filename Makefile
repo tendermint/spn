@@ -69,7 +69,7 @@ SIM_COMMIT ?= true
 test-sim-nondeterminism:
 	@echo "Running non-determinism test..."
 	@VERSION=$(VERSION) go test -mod=readonly $(SIMAPP) -run TestAppStateDeterminism -Enabled=true \
-		-NumBlocks=10 -BlockSize=10 -Commit=true -Period=0 -v -timeout 24h
+		-NumBlocks=10 -BlockSize=100 -Commit=true -Period=0 -v -timeout 24h
 
 ## test-sim-ci: Run lightweight simulation for CI pipeline
 test-sim-ci:
