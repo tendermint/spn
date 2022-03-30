@@ -13,9 +13,10 @@ import (
 
 func TestTestKeepers_Mint(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
+	r := sample.Rand()
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	address := sample.Address()
-	coins, otherCoins := sample.Coins(), sample.Coins()
+	address := sample.Address(r)
+	coins, otherCoins := sample.Coins(r), sample.Coins(r)
 
 	getBalances := func(address string) sdk.Coins {
 		res, err := tk.BankKeeper.AllBalances(ctx, &banktypes.QueryAllBalancesRequest{

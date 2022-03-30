@@ -27,9 +27,9 @@ func TestMonitoringPacket_ValidateBasic(t *testing.T) {
 				SignatureCounts: types.SignatureCounts{
 					BlockCount: 100,
 					Counts: []types.SignatureCount{
-						tc.SignatureCount(t, sample.OperatorAddress(), "1"),
-						tc.SignatureCount(t, sample.OperatorAddress(), "0.5"),
-						tc.SignatureCount(t, sample.OperatorAddress(), "5.5"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "1"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "0.5"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "5.5"),
 					},
 				},
 			},
@@ -41,9 +41,9 @@ func TestMonitoringPacket_ValidateBasic(t *testing.T) {
 				SignatureCounts: types.SignatureCounts{
 					BlockCount: 100,
 					Counts: []types.SignatureCount{
-						tc.SignatureCount(t, sample.OperatorAddress(), "1"),
-						tc.SignatureCount(t, sample.OperatorAddress(), "0.5"),
-						tc.SignatureCount(t, sample.OperatorAddress(), "5.5"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "1"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "0.5"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "5.5"),
 					},
 				},
 			},
@@ -55,9 +55,9 @@ func TestMonitoringPacket_ValidateBasic(t *testing.T) {
 				SignatureCounts: types.SignatureCounts{
 					BlockCount: 1,
 					Counts: []types.SignatureCount{
-						tc.SignatureCount(t, sample.OperatorAddress(), "1"),
-						tc.SignatureCount(t, sample.OperatorAddress(), "0.5"),
-						tc.SignatureCount(t, sample.OperatorAddress(), "5.5"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "1"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "0.5"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "5.5"),
 					},
 				},
 			},
@@ -70,9 +70,9 @@ func TestMonitoringPacket_ValidateBasic(t *testing.T) {
 				SignatureCounts: types.SignatureCounts{
 					BlockCount: 100,
 					Counts: []types.SignatureCount{
-						tc.SignatureCount(t, sample.OperatorAddress(), "1"),
-						tc.SignatureCount(t, sample.OperatorAddress(), "0.5"),
-						tc.SignatureCount(t, sample.OperatorAddress(), "5.5"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "1"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "0.5"),
+						tc.SignatureCount(t, sample.OperatorAddress(r), "5.5"),
 					},
 				},
 			},

@@ -14,8 +14,8 @@ import (
 
 func TestMsgDisableCoordinator(t *testing.T) {
 	var (
-		addr           = sample.Address()
-		msgCoord       = sample.MsgCreateCoordinator(sample.Address())
+		addr           = sample.Address(r)
+		msgCoord       = sample.MsgCreateCoordinator(sample.Address(r))
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		wCtx           = sdk.WrapSDKContext(sdkCtx)
 	)

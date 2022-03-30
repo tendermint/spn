@@ -11,11 +11,11 @@ import (
 
 func TestValidator_AddValidatorOperatorAddress(t *testing.T) {
 	var (
-		operatorAddress   = sample.Address()
+		operatorAddress   = sample.Address(r)
 		operatorAddresses = []string{
-			sample.Address(),
-			sample.Address(),
-			sample.Address(),
+			sample.Address(r),
+			sample.Address(r),
+			sample.Address(r),
 		}
 	)
 	tests := []struct {
@@ -54,11 +54,11 @@ func TestValidator_AddValidatorOperatorAddress(t *testing.T) {
 
 func TestValidator_HasOperatorAddress(t *testing.T) {
 	var (
-		operatorAddress   = sample.Address()
+		operatorAddress   = sample.Address(r)
 		operatorAddresses = []string{
-			sample.Address(),
-			sample.Address(),
-			sample.Address(),
+			sample.Address(r),
+			sample.Address(r),
+			sample.Address(r),
 		}
 	)
 	tests := []struct {

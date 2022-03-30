@@ -15,7 +15,7 @@ import (
 func createNValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Validator {
 	items := make([]types.Validator, n)
 	for i := range items {
-		items[i].Address = sample.Address()
+		items[i].Address = sample.Address(r)
 		keeper.SetValidator(ctx, items[i])
 	}
 	return items

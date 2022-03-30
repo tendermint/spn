@@ -16,7 +16,7 @@ import (
 func createNValidatorByOperatorAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ValidatorByOperatorAddress {
 	items := make([]types.ValidatorByOperatorAddress, n)
 	for i := range items {
-		items[i].OperatorAddress = sample.Address()
+		items[i].OperatorAddress = sample.Address(r)
 		keeper.SetValidatorByOperatorAddress(ctx, items[i])
 	}
 	return items

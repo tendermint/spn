@@ -21,13 +21,14 @@ import (
 
 func networkWithUsedAllocationsObjects(t *testing.T, n int) (*network.Network, []types.UsedAllocations) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
 		usedAllocations := types.UsedAllocations{
-			Address: sample.Address(),
+			Address: sample.Address(r),
 		}
 		nullify.Fill(&usedAllocations)
 		state.UsedAllocationsList = append(state.UsedAllocationsList, usedAllocations)

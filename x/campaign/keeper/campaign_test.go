@@ -15,7 +15,7 @@ import (
 func createNCampaign(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.Campaign {
 	items := make([]types.Campaign, n)
 	for i := range items {
-		items[i] = sample.Campaign(0)
+		items[i] = sample.Campaign(r, 0)
 		items[i].CampaignID = keeper.AppendCampaign(ctx, items[i])
 	}
 	return items

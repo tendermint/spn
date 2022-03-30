@@ -13,16 +13,16 @@ import (
 
 var (
 	invalidCampaignName = "not_valid"
-	invalidCoins        = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
-	invalidShares       = campaign.Shares{sdk.Coin{Denom: "invalid denom", Amount: sdk.NewInt(0)}}
+	invalidCoins        = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.ZeroInt()}}
+	invalidShares       = campaign.Shares{sdk.Coin{Denom: "invalid denom", Amount: sdk.ZeroInt()}}
 )
 
 func TestNewCampaign(t *testing.T) {
-	campaignID := sample.Uint64()
-	campaignName := sample.CampaignName()
-	coordinator := sample.Uint64()
-	totalSupply := sample.TotalSupply()
-	metadata := sample.Metadata(20)
+	campaignID := sample.Uint64(r)
+	campaignName := sample.CampaignName(r)
+	coordinator := sample.Uint64(r)
+	totalSupply := sample.TotalSupply(r)
+	metadata := sample.Metadata(r, 20)
 
 	cmpn := campaign.NewCampaign(campaignID, campaignName, coordinator, totalSupply, metadata)
 	require.EqualValues(t, campaignID, cmpn.CampaignID)
@@ -36,10 +36,10 @@ func TestNewCampaign(t *testing.T) {
 func TestCampaign_Validate(t *testing.T) {
 	require.False(t, invalidCoins.IsValid())
 
-	invalidAllocatedShares := sample.Campaign(0)
+	invalidAllocatedShares := sample.Campaign(r, 0)
 	invalidAllocatedShares.AllocatedShares = campaign.NewSharesFromCoins(invalidCoins)
 
-	totalSharesReached := sample.Campaign(0)
+	totalSharesReached := sample.Campaign(r, 0)
 	totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
 		sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 	))
@@ -52,7 +52,7 @@ func TestCampaign_Validate(t *testing.T) {
 	}{
 		{
 			desc:     "valid campaign",
-			campaign: sample.Campaign(0),
+			campaign: sample.Campaign(r, 0),
 			valid:    true,
 		},
 		{
@@ -60,9 +60,9 @@ func TestCampaign_Validate(t *testing.T) {
 			campaign: campaign.NewCampaign(
 				0,
 				invalidCampaignName,
-				sample.Uint64(),
-				sample.TotalSupply(),
-				sample.Metadata(20),
+				sample.Uint64(r),
+				sample.TotalSupply(r),
+				sample.Metadata(r, 20),
 			),
 			valid: false,
 		},
@@ -70,10 +70,10 @@ func TestCampaign_Validate(t *testing.T) {
 			desc: "invalid total supply",
 			campaign: campaign.NewCampaign(
 				0,
-				sample.CampaignName(),
-				sample.Uint64(),
+				sample.CampaignName(r),
+				sample.Uint64(r),
 				invalidCoins,
-				sample.Metadata(20),
+				sample.Metadata(r, 20),
 			),
 			valid: false,
 		},
@@ -118,7 +118,7 @@ func TestCheckCampaignName(t *testing.T) {
 		},
 		{
 			desc:  "should not exceed max length",
-			name:  sample.String(campaign.CampaignNameMaxLength + 1),
+			name:  sample.String(r, campaign.CampaignNameMaxLength+1),
 			valid: false,
 		},
 	} {

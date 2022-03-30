@@ -17,11 +17,11 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 
-		accountAddr              = sample.Address()
-		account                  = sample.MainnetAccount(0, accountAddr)
+		accountAddr              = sample.Address(r)
+		account                  = sample.MainnetAccount(r, 0, accountAddr)
 		accountShare, _          = types.NewShares("30foo,30bar")
-		accountFewSharesAddr     = sample.Address()
-		accountFewShares         = sample.MainnetAccount(0, accountFewSharesAddr)
+		accountFewSharesAddr     = sample.Address(r)
+		accountFewShares         = sample.MainnetAccount(r, 0, accountFewSharesAddr)
 		accountFewSharesShare, _ = types.NewShares("30foo,15bar")
 
 		shares, _ = types.NewShares("10foo,10bar")
@@ -30,7 +30,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 	accountFewShares.Shares = accountFewSharesShare
 
 	// Create campaign
-	tk.CampaignKeeper.AppendCampaign(sdkCtx, sample.Campaign(0))
+	tk.CampaignKeeper.AppendCampaign(sdkCtx, sample.Campaign(r, 0))
 
 	// Create accounts
 	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, account)
@@ -94,7 +94,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 		{
 			name: "non existent account",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     sample.Address(),
+				Sender:     sample.Address(r),
 				CampaignID: 0,
 				Shares:     shares,
 			},

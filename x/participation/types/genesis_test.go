@@ -9,14 +9,14 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-var (
-	addr1      = sample.Address()
-	addr2      = sample.Address()
-	auctionID1 = uint64(0)
-	auctionID2 = uint64(1)
-)
-
 func TestGenesisState_Validate(t *testing.T) {
+	var (
+		addr1      = sample.Address(r)
+		addr2      = sample.Address(r)
+		auctionID1 = uint64(0)
+		auctionID2 = uint64(1)
+	)
+
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState

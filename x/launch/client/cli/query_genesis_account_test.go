@@ -20,6 +20,7 @@ import (
 
 func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []types.GenesisAccount) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
@@ -27,7 +28,7 @@ func networkWithGenesisAccountObjects(t *testing.T, n int) (*network.Network, []
 	for i := 0; i < n; i++ {
 		state.GenesisAccountList = append(
 			state.GenesisAccountList,
-			sample.GenesisAccount(uint64(0), strconv.Itoa(i)),
+			sample.GenesisAccount(r, uint64(0), strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)

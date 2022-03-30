@@ -17,14 +17,14 @@ import (
 
 func TestMsgAddShares(t *testing.T) {
 	var (
-		addr1                          = sample.Address()
-		addr2                          = sample.Address()
-		coordAddr1                     = sample.Address()
-		coordAddr2                     = sample.Address()
-		coordAddrMainnetInitialized    = sample.Address()
-		campaign                       = sample.Campaign(0)
-		campaignInvalidAllocatedShares = sample.Campaign(2)
-		campaignMainnetInitialized     = sample.Campaign(1)
+		addr1                          = sample.Address(r)
+		addr2                          = sample.Address(r)
+		coordAddr1                     = sample.Address(r)
+		coordAddr2                     = sample.Address(r)
+		coordAddrMainnetInitialized    = sample.Address(r)
+		campaign                       = sample.Campaign(r, 0)
+		campaignInvalidAllocatedShares = sample.Campaign(r, 2)
+		campaignMainnetInitialized     = sample.Campaign(r, 1)
 
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
@@ -36,10 +36,10 @@ func TestMsgAddShares(t *testing.T) {
 	highShare := tc.Shares(t, "1000token")
 	lowShare := tc.Shares(t, "8token")
 
-	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, sample.MainnetAccount(campaign.CampaignID, addr2))
+	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, sample.MainnetAccount(r, campaign.CampaignID, addr2))
 	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddrMainnetInitialized,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	campaignMainnetInitialized.CoordinatorID = res.CoordinatorID
@@ -49,7 +49,7 @@ func TestMsgAddShares(t *testing.T) {
 
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	campaign.CoordinatorID = res.CoordinatorID
@@ -58,7 +58,7 @@ func TestMsgAddShares(t *testing.T) {
 
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr2,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	campaignInvalidAllocatedShares.CoordinatorID = res.CoordinatorID
@@ -77,7 +77,7 @@ func TestMsgAddShares(t *testing.T) {
 				Coordinator: coordAddr1,
 				CampaignID:  100,
 				Address:     addr1,
-				Shares:      sample.Shares(),
+				Shares:      sample.Shares(r),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -87,7 +87,7 @@ func TestMsgAddShares(t *testing.T) {
 				Coordinator: addr1,
 				CampaignID:  campaign.CampaignID,
 				Address:     addr1,
-				Shares:      sample.Shares(),
+				Shares:      sample.Shares(r),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -97,7 +97,7 @@ func TestMsgAddShares(t *testing.T) {
 				Coordinator: coordAddrMainnetInitialized,
 				CampaignID:  campaign.CampaignID,
 				Address:     addr1,
-				Shares:      sample.Shares(),
+				Shares:      sample.Shares(r),
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
@@ -107,7 +107,7 @@ func TestMsgAddShares(t *testing.T) {
 				Coordinator: coordAddrMainnetInitialized,
 				CampaignID:  campaignMainnetInitialized.CampaignID,
 				Address:     addr1,
-				Shares:      sample.Shares(),
+				Shares:      sample.Shares(r),
 			},
 		},
 		{

@@ -13,8 +13,8 @@ import (
 
 func TestNewGenesisAccount(t *testing.T) {
 	launchID := uint64(0)
-	address := sample.Address()
-	coins := sample.Coins()
+	address := sample.Address(r)
+	coins := sample.Coins(r)
 	requestContent := types.NewGenesisAccount(launchID, address, coins)
 
 	genesisAccount := requestContent.GetGenesisAccount()
@@ -31,8 +31,8 @@ func TestNewGenesisAccount(t *testing.T) {
 
 func TestNewVestingAccount(t *testing.T) {
 	launchID := uint64(0)
-	address := sample.Address()
-	vestingOptions := sample.VestingOptions()
+	address := sample.Address(r)
+	vestingOptions := sample.VestingOptions(r)
 	requestContent := types.NewVestingAccount(launchID, address, vestingOptions)
 
 	vestingAccount := requestContent.GetVestingAccount()
@@ -49,11 +49,11 @@ func TestNewVestingAccount(t *testing.T) {
 
 func TestNewGenesisValidator(t *testing.T) {
 	launchID := uint64(0)
-	address := sample.Address()
-	gentTx := sample.Bytes(300)
-	consPubKey := sample.Bytes(30)
-	selfDelegation := sample.Coin()
-	peer := sample.GenesisValidatorPeer()
+	address := sample.Address(r)
+	gentTx := sample.Bytes(r, 300)
+	consPubKey := sample.Bytes(r, 30)
+	selfDelegation := sample.Coin(r)
+	peer := sample.GenesisValidatorPeer(r)
 	requestContent := types.NewGenesisValidator(
 		launchID,
 		address,
@@ -79,7 +79,7 @@ func TestNewGenesisValidator(t *testing.T) {
 }
 
 func TestNewAccountRemoval(t *testing.T) {
-	address := sample.Address()
+	address := sample.Address(r)
 	requestContent := types.NewAccountRemoval(address)
 
 	accountRemoval := requestContent.GetAccountRemoval()
@@ -93,7 +93,7 @@ func TestNewAccountRemoval(t *testing.T) {
 }
 
 func TestNewValidatorRemoval(t *testing.T) {
-	address := sample.Address()
+	address := sample.Address(r)
 	requestContent := types.NewValidatorRemoval(address)
 
 	validatorRemoval := requestContent.GetValidatorRemoval()
@@ -122,7 +122,7 @@ func TestAccountRemoval_Validate(t *testing.T) {
 		{
 			name: "valid content",
 			content: types.AccountRemoval{
-				Address: sample.Address(),
+				Address: sample.Address(r),
 			},
 		},
 	}
@@ -140,7 +140,7 @@ func TestAccountRemoval_Validate(t *testing.T) {
 
 func TestGenesisAccount_Validate(t *testing.T) {
 	var (
-		addr     = sample.Address()
+		addr     = sample.Address(r)
 		launchID = uint64(0)
 	)
 	tests := []struct {
@@ -153,7 +153,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 			content: types.GenesisAccount{
 				Address:  "invalid_address",
 				LaunchID: launchID,
-				Coins:    sample.Coins(),
+				Coins:    sample.Coins(r),
 			},
 			wantErr: true,
 		},
@@ -178,9 +178,9 @@ func TestGenesisAccount_Validate(t *testing.T) {
 		{
 			name: "valid request content",
 			content: types.GenesisAccount{
-				Address:  sample.Address(),
+				Address:  sample.Address(r),
 				LaunchID: launchID,
-				Coins:    sample.Coins(),
+				Coins:    sample.Coins(r),
 			},
 		},
 	}
@@ -198,7 +198,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 
 func TestGenesisValidator_Validate(t *testing.T) {
 	var (
-		addr     = sample.Address()
+		addr     = sample.Address(r)
 		launchID = uint64(0)
 	)
 	tests := []struct {
@@ -211,10 +211,10 @@ func TestGenesisValidator_Validate(t *testing.T) {
 			content: types.GenesisValidator{
 				LaunchID:       launchID,
 				Address:        addr,
-				GenTx:          sample.Bytes(500),
-				ConsPubKey:     sample.Bytes(30),
-				SelfDelegation: sample.Coin(),
-				Peer:           sample.GenesisValidatorPeer(),
+				GenTx:          sample.Bytes(r, 500),
+				ConsPubKey:     sample.Bytes(r, 30),
+				SelfDelegation: sample.Coin(r),
+				Peer:           sample.GenesisValidatorPeer(r),
 			},
 		},
 		{
@@ -222,10 +222,10 @@ func TestGenesisValidator_Validate(t *testing.T) {
 			content: types.GenesisValidator{
 				LaunchID:       launchID,
 				Address:        "invalid_address",
-				GenTx:          sample.Bytes(500),
-				ConsPubKey:     sample.Bytes(30),
-				SelfDelegation: sample.Coin(),
-				Peer:           sample.GenesisValidatorPeer(),
+				GenTx:          sample.Bytes(r, 500),
+				ConsPubKey:     sample.Bytes(r, 30),
+				SelfDelegation: sample.Coin(r),
+				Peer:           sample.GenesisValidatorPeer(r),
 			},
 			wantErr: true,
 		},
@@ -234,10 +234,10 @@ func TestGenesisValidator_Validate(t *testing.T) {
 			content: types.GenesisValidator{
 				LaunchID:       launchID,
 				Address:        addr,
-				GenTx:          sample.Bytes(500),
+				GenTx:          sample.Bytes(r, 500),
 				ConsPubKey:     nil,
-				SelfDelegation: sample.Coin(),
-				Peer:           sample.GenesisValidatorPeer(),
+				SelfDelegation: sample.Coin(r),
+				Peer:           sample.GenesisValidatorPeer(r),
 			},
 			wantErr: true,
 		},
@@ -247,9 +247,9 @@ func TestGenesisValidator_Validate(t *testing.T) {
 				LaunchID:       launchID,
 				Address:        addr,
 				GenTx:          nil,
-				ConsPubKey:     sample.Bytes(30),
-				SelfDelegation: sample.Coin(),
-				Peer:           sample.GenesisValidatorPeer(),
+				ConsPubKey:     sample.Bytes(r, 30),
+				SelfDelegation: sample.Coin(r),
+				Peer:           sample.GenesisValidatorPeer(r),
 			},
 			wantErr: true,
 		},
@@ -258,9 +258,9 @@ func TestGenesisValidator_Validate(t *testing.T) {
 			content: types.GenesisValidator{
 				LaunchID:       launchID,
 				Address:        addr,
-				GenTx:          sample.Bytes(500),
-				ConsPubKey:     sample.Bytes(30),
-				SelfDelegation: sample.Coin(),
+				GenTx:          sample.Bytes(r, 500),
+				ConsPubKey:     sample.Bytes(r, 30),
+				SelfDelegation: sample.Coin(r),
 				Peer:           types.Peer{},
 			},
 			wantErr: true,
@@ -270,13 +270,13 @@ func TestGenesisValidator_Validate(t *testing.T) {
 			content: types.GenesisValidator{
 				LaunchID:   launchID,
 				Address:    addr,
-				GenTx:      sample.Bytes(500),
-				ConsPubKey: sample.Bytes(30),
+				GenTx:      sample.Bytes(r, 500),
+				ConsPubKey: sample.Bytes(r, 30),
 				SelfDelegation: sdk.Coin{
 					Denom:  "",
 					Amount: sdk.NewInt(10),
 				},
-				Peer: sample.GenesisValidatorPeer(),
+				Peer: sample.GenesisValidatorPeer(r),
 			},
 			wantErr: true,
 		},
@@ -285,13 +285,13 @@ func TestGenesisValidator_Validate(t *testing.T) {
 			content: types.GenesisValidator{
 				LaunchID:   launchID,
 				Address:    addr,
-				GenTx:      sample.Bytes(500),
-				ConsPubKey: sample.Bytes(30),
+				GenTx:      sample.Bytes(r, 500),
+				ConsPubKey: sample.Bytes(r, 30),
 				SelfDelegation: sdk.Coin{
 					Denom:  "stake",
 					Amount: sdk.NewInt(0),
 				},
-				Peer: sample.GenesisValidatorPeer(),
+				Peer: sample.GenesisValidatorPeer(r),
 			},
 			wantErr: true,
 		},
@@ -324,7 +324,7 @@ func TestValidatorRemoval_Validate(t *testing.T) {
 		{
 			name: "valid request content",
 			content: types.ValidatorRemoval{
-				ValAddress: sample.Address(),
+				ValAddress: sample.Address(r),
 			},
 		},
 	}
@@ -362,11 +362,11 @@ func TestVestingAccount_Validate(t *testing.T) {
 		{
 			name: "invalid vesting option",
 			content: types.VestingAccount{
-				Address:  sample.Address(),
+				Address:  sample.Address(r),
 				LaunchID: launchID,
 				VestingOptions: *types.NewDelayedVesting(
-					sample.Coins(),
-					sample.Coins(),
+					sample.Coins(r),
+					sample.Coins(r),
 					0,
 				),
 			},
@@ -375,7 +375,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 		{
 			name: "valid request content",
 			content: types.VestingAccount{
-				Address:        sample.Address(),
+				Address:        sample.Address(r),
 				LaunchID:       launchID,
 				VestingOptions: option,
 			},

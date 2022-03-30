@@ -16,12 +16,12 @@ import (
 func TestMsgRequestAddVestingAccount(t *testing.T) {
 	var (
 		invalidChain     = uint64(1000)
-		coordAddr        = sample.Address()
-		coordDisableAddr = sample.Address()
-		addr1            = sample.Address()
-		addr2            = sample.Address()
-		addr3            = sample.Address()
-		addr4            = sample.Address()
+		coordAddr        = sample.Address(r)
+		coordDisableAddr = sample.Address(r)
+		addr1            = sample.Address(r)
+		addr2            = sample.Address(r)
+		addr3            = sample.Address(r)
+		addr4            = sample.Address(r)
 		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
 		ctx              = sdk.WrapSDKContext(sdkCtx)
 	)
@@ -54,67 +54,67 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 	}{
 		{
 			name: "invalid chain",
-			msg:  sample.MsgRequestAddVestingAccount(sample.Address(), addr1, invalidChain),
+			msg:  sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, invalidChain),
 			err:  types.ErrChainNotFound,
 		},
 		{
 			name: "launch triggered chain",
-			msg:  sample.MsgRequestAddVestingAccount(sample.Address(), addr1, chains[0].LaunchID),
+			msg:  sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[0].LaunchID),
 			err:  types.ErrTriggeredLaunch,
 		},
 		{
 			name: "coordinator not found",
-			msg:  sample.MsgRequestAddVestingAccount(sample.Address(), addr1, chains[1].LaunchID),
+			msg:  sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[1].LaunchID),
 			err:  types.ErrChainInactive,
 		},
 		{
 			name:   "add chain 3 request 1",
-			msg:    sample.MsgRequestAddVestingAccount(sample.Address(), addr1, chains[2].LaunchID),
+			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[2].LaunchID),
 			wantID: 1,
 		},
 		{
 			name:   "add chain 4 request 1",
-			msg:    sample.MsgRequestAddVestingAccount(sample.Address(), addr1, chains[3].LaunchID),
+			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[3].LaunchID),
 			wantID: 1,
 		},
 		{
 			name:   "add chain 4 request 2",
-			msg:    sample.MsgRequestAddVestingAccount(sample.Address(), addr2, chains[3].LaunchID),
+			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr2, chains[3].LaunchID),
 			wantID: 2,
 		},
 		{
 			name:   "add chain 5 request 1",
-			msg:    sample.MsgRequestAddVestingAccount(sample.Address(), addr1, chains[4].LaunchID),
+			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[4].LaunchID),
 			wantID: 1,
 		},
 		{
 			name:   "add chain 5 request 2",
-			msg:    sample.MsgRequestAddVestingAccount(sample.Address(), addr2, chains[4].LaunchID),
+			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr2, chains[4].LaunchID),
 			wantID: 2,
 		},
 		{
 			name:   "add chain 5 request 3",
-			msg:    sample.MsgRequestAddVestingAccount(sample.Address(), addr3, chains[4].LaunchID),
+			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr3, chains[4].LaunchID),
 			wantID: 3,
 		},
 		{
 			name:        "request from coordinator is pre-approved",
-			msg:         sample.MsgRequestAddVestingAccount(coordAddr, addr4, chains[4].LaunchID),
+			msg:         sample.MsgRequestAddVestingAccount(r, coordAddr, addr4, chains[4].LaunchID),
 			wantApprove: true,
 		},
 		{
 			name: "failing request from coordinator",
-			msg:  sample.MsgRequestAddVestingAccount(coordAddr, addr4, chains[4].LaunchID),
+			msg:  sample.MsgRequestAddVestingAccount(r, coordAddr, addr4, chains[4].LaunchID),
 			err:  types.ErrAccountAlreadyExist,
 		},
 		{
 			name: "is mainnet chain",
-			msg:  sample.MsgRequestAddVestingAccount(coordAddr, sample.Address(), chains[5].LaunchID),
+			msg:  sample.MsgRequestAddVestingAccount(r, coordAddr, sample.Address(r), chains[5].LaunchID),
 			err:  types.ErrAddMainnetVestingAccount,
 		},
 		{
 			name: "fail if the coordinator of the chain is disabled",
-			msg:  sample.MsgRequestAddVestingAccount(sample.Address(), sample.Address(), disableChain[0].LaunchID),
+			msg:  sample.MsgRequestAddVestingAccount(r, sample.Address(r), sample.Address(r), disableChain[0].LaunchID),
 			err:  profiletypes.ErrCoordInactive,
 		},
 	}

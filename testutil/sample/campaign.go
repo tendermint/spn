@@ -2,50 +2,49 @@ package sample
 
 import (
 	"math/rand"
-	"time"
-
-	spntypes "github.com/tendermint/spn/pkg/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 
 // Shares returns a sample shares
-func Shares() campaign.Shares {
-	return campaign.NewSharesFromCoins(Coins())
+func Shares(r *rand.Rand) campaign.Shares {
+	return campaign.NewSharesFromCoins(Coins(r))
 }
 
 // ShareVestingOptions returns a sample ShareVestingOptions
-func ShareVestingOptions() campaign.ShareVestingOptions {
+func ShareVestingOptions(r *rand.Rand) campaign.ShareVestingOptions {
 	// use vesting shares as total shares
-	vestingShares := Shares()
-	return *campaign.NewShareDelayedVesting(vestingShares, vestingShares, time.Now().Unix())
+	vestingShares := Shares(r)
+	return *campaign.NewShareDelayedVesting(vestingShares, vestingShares, Duration(r).Microseconds())
 }
 
 // Voucher returns a sample voucher structure
-func Voucher(campaignID uint64) sdk.Coin {
-	denom := campaign.VoucherDenom(campaignID, AlphaString(5))
-	return sdk.NewCoin(denom, sdk.NewInt(int64(rand.Intn(10000)+1)))
+func Voucher(r *rand.Rand, campaignID uint64) sdk.Coin {
+	denom := campaign.VoucherDenom(campaignID, AlphaString(r, 5))
+	return sdk.NewCoin(denom, sdk.NewInt(int64(r.Intn(10000)+1)))
 }
 
 // Vouchers returns a sample vouchers structure
-func Vouchers(campaignID uint64) sdk.Coins {
-	return sdk.NewCoins(Voucher(campaignID), Voucher(campaignID), Voucher(campaignID))
+func Vouchers(r *rand.Rand, campaignID uint64) sdk.Coins {
+	return sdk.NewCoins(Voucher(r, campaignID), Voucher(r, campaignID), Voucher(r, campaignID))
 }
 
 // CustomShareVestingOptions returns a sample ShareVestingOptions with shares
-func CustomShareVestingOptions(shares campaign.Shares) campaign.ShareVestingOptions {
-	return *campaign.NewShareDelayedVesting(shares, shares, time.Now().Unix())
+func CustomShareVestingOptions(r *rand.Rand, shares campaign.Shares) campaign.ShareVestingOptions {
+	return *campaign.NewShareDelayedVesting(shares, shares, Duration(r).Microseconds())
 }
 
 // MainnetVestingAccount returns a sample MainnetVestingAccount
-func MainnetVestingAccount(campaignID uint64, address string) campaign.MainnetVestingAccount {
-	return MainnetVestingAccountWithShares(campaignID, address, Shares())
+func MainnetVestingAccount(r *rand.Rand, campaignID uint64, address string) campaign.MainnetVestingAccount {
+	return MainnetVestingAccountWithShares(r, campaignID, address, Shares(r))
 }
 
 // MainnetVestingAccountWithShares returns a sample MainnetVestingAccount with custom shares
 func MainnetVestingAccountWithShares(
+	r *rand.Rand,
 	campaignID uint64,
 	address string,
 	shares campaign.Shares,
@@ -53,54 +52,53 @@ func MainnetVestingAccountWithShares(
 	return campaign.MainnetVestingAccount{
 		CampaignID:     campaignID,
 		Address:        address,
-		VestingOptions: CustomShareVestingOptions(shares),
+		VestingOptions: CustomShareVestingOptions(r, shares),
 	}
 }
 
 // CampaignName returns a sample campaign name
-func CampaignName() string {
-	return String(20)
+func CampaignName(r *rand.Rand) string {
+	return String(r, 20)
 }
 
 // Campaign returns a sample campaign
-func Campaign(id uint64) campaign.Campaign {
-	c := campaign.NewCampaign(id, CampaignName(), Uint64(), TotalSupply(), Metadata(20))
-	return c
+func Campaign(r *rand.Rand, id uint64) campaign.Campaign {
+	return campaign.NewCampaign(id, CampaignName(r), Uint64(r), TotalSupply(r), Metadata(r, 20))
 }
 
 // MainnetAccount returns a sample MainnetAccount
-func MainnetAccount(campaignID uint64, address string) campaign.MainnetAccount {
+func MainnetAccount(r *rand.Rand, campaignID uint64, address string) campaign.MainnetAccount {
 	return campaign.MainnetAccount{
 		CampaignID: campaignID,
 		Address:    address,
-		Shares:     Shares(),
+		Shares:     Shares(r),
 	}
 }
 
 // MsgCreateCampaign returns a sample MsgCreateCampaign
-func MsgCreateCampaign(coordAddr string) campaign.MsgCreateCampaign {
+func MsgCreateCampaign(r *rand.Rand, coordAddr string) campaign.MsgCreateCampaign {
 	return campaign.MsgCreateCampaign{
 		Coordinator:  coordAddr,
-		CampaignName: CampaignName(),
-		TotalSupply:  TotalSupply(),
+		CampaignName: CampaignName(r),
+		TotalSupply:  TotalSupply(r),
 	}
 }
 
 // CampaignParams returns a sample of params for the campaign module
-func CampaignParams() campaign.Params {
+func CampaignParams(r *rand.Rand) campaign.Params {
 	// no point in randomizing these values, using defaults
 	minTotalSupply := campaign.DefaultMinTotalSupply
 	maxTotalSupply := campaign.DefaultMaxTotalSupply
 
 	// assign random small amount of staking denom
-	campaignCreationFee := sdk.NewCoins(sdk.NewInt64Coin(BondDenom, rand.Int63n(100)+1))
+	campaignCreationFee := sdk.NewCoins(sdk.NewInt64Coin(BondDenom, r.Int63n(100)+1))
 
 	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee)
 }
 
 // CampaignGenesisState returns a sample genesis state for the campaign module
-func CampaignGenesisState() campaign.GenesisState {
-	campaign1, campaign2 := Campaign(0), Campaign(1)
+func CampaignGenesisState(r *rand.Rand) campaign.GenesisState {
+	campaign1, campaign2 := Campaign(r, 0), Campaign(r, 1)
 
 	return campaign.GenesisState{
 		CampaignList: []campaign.Campaign{
@@ -115,15 +113,15 @@ func CampaignGenesisState() campaign.GenesisState {
 			},
 		},
 		MainnetVestingAccountList: []campaign.MainnetVestingAccount{
-			MainnetVestingAccount(0, Address()),
-			MainnetVestingAccount(0, Address()),
-			MainnetVestingAccount(1, Address()),
+			MainnetVestingAccount(r, 0, Address(r)),
+			MainnetVestingAccount(r, 0, Address(r)),
+			MainnetVestingAccount(r, 1, Address(r)),
 		},
 		MainnetAccountList: []campaign.MainnetAccount{
-			MainnetAccount(0, Address()),
-			MainnetAccount(1, Address()),
+			MainnetAccount(r, 0, Address(r)),
+			MainnetAccount(r, 1, Address(r)),
 		},
 		TotalShares: spntypes.TotalShareNumber,
-		Params:      CampaignParams(),
+		Params:      CampaignParams(r),
 	}
 }

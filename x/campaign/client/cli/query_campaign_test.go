@@ -19,12 +19,13 @@ import (
 
 func networkWithCampaignObjects(t *testing.T, n int) (*network.Network, []types.Campaign) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.CampaignList = append(state.CampaignList, sample.Campaign(uint64(i)))
+		state.CampaignList = append(state.CampaignList, sample.Campaign(r, uint64(i)))
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
