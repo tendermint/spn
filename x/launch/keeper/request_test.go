@@ -85,6 +85,75 @@ func TestRequestCounter(t *testing.T) {
 	require.Equal(t, uint64(1), tk.LaunchKeeper.GetRequestCounter(ctx, 1))
 }
 
+func TestCheckAccount(t *testing.T) {
+	var (
+		genesisAcc = sample.Address(r)
+		vestingAcc = sample.Address(r)
+		dupAcc     = sample.Address(r)
+		notFound   = sample.Address(r)
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		launchID   = uint64(10)
+	)
+
+	ga := sample.GenesisAccount(
+		r,
+		launchID,
+		genesisAcc,
+	)
+	tk.LaunchKeeper.SetGenesisAccount(ctx, ga)
+
+	va := sample.VestingAccount(
+		r,
+		launchID,
+		vestingAcc,
+	)
+	tk.LaunchKeeper.SetVestingAccount(ctx, va)
+
+	// set duplicated entries
+	ga.Address = dupAcc
+	va.Address = dupAcc
+	tk.LaunchKeeper.SetGenesisAccount(ctx, ga)
+	tk.LaunchKeeper.SetVestingAccount(ctx, va)
+
+	tests := []struct {
+		name  string
+		addr  string
+		found bool
+		err   error
+	}{
+		{
+			name:  "account not found",
+			addr:  notFound,
+			found: false,
+		}, {
+			name:  "genesis account found",
+			addr:  genesisAcc,
+			found: true,
+		}, {
+			name:  "vesting account found",
+			addr:  vestingAcc,
+			found: true,
+		}, {
+			name: "critical error if duplicated accounts",
+			addr: dupAcc,
+			err:  spnerrors.ErrCritical,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			found, err := keeper.CheckAccount(ctx, *tk.LaunchKeeper, launchID, tt.addr)
+			if tt.err != nil {
+				require.Error(t, err)
+				require.ErrorIs(t, tt.err, err)
+				return
+			}
+
+			require.Equal(t, found, tt.found)
+		})
+	}
+}
+
 func TestApplyRequest(t *testing.T) {
 	var (
 		genesisAcc     = sample.Address(r)
