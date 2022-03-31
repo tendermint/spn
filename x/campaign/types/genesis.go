@@ -2,6 +2,8 @@ package types
 
 import (
 	"fmt"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
 // DefaultGenesis returns the default Capability genesis state
@@ -13,6 +15,7 @@ func DefaultGenesis() *GenesisState {
 		MainnetAccountList:        []MainnetAccount{},
 		MainnetVestingAccountList: []MainnetVestingAccount{},
 		Params:                    DefaultParams(),
+		TotalShares:               spntypes.TotalShareNumber,
 		// this line is used by starport scaffolding # genesis/types/default
 	}
 }
@@ -30,7 +33,7 @@ func (gs GenesisState) Validate() error {
 		if campaign.CampaignID >= campaignCounter {
 			return fmt.Errorf("campaign id should be lower or equal than the last id")
 		}
-		if err := campaign.Validate(); err != nil {
+		if err := campaign.Validate(gs.TotalShares); err != nil {
 			return fmt.Errorf("invalid campaign %d: %s", campaign.CampaignID, err.Error())
 		}
 		campaignIDMap[campaign.CampaignID] = struct{}{}

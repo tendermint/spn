@@ -22,11 +22,5 @@ message Campaign {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
-  bool dynamicShares = 8;
-  repeated cosmos.base.v1beta1.Coin totalShares = 9 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.castrepeated) = "Shares"
-  ];
-  bytes metadata = 10;
+  bytes metadata = 8;
 }

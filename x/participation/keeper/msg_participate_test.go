@@ -40,6 +40,12 @@ func Test_msgServer_Participate(t *testing.T) {
 	// initialize auction with edge case start time
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin2))
 	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin2, startTimeLowerRegistrationPeriod, endTime)
+	// initialize auction that will be set to `cancelled`
+	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
+	cancelledAuctionID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin1, startTime, endTime)
+	// cancel auction
+	_, err := tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, cancelledAuctionID))
+	require.NoError(t, err)
 
 	// add delegations
 	for i := 0; i < len(addrsWithDelsTier); i++ {
@@ -129,6 +135,16 @@ func Test_msgServer_Participate(t *testing.T) {
 				TierID:      1,
 			},
 			err:       types.ErrAuctionNotFound,
+			blockTime: validRegistrationTime,
+		},
+		{
+			name: "should prevent participating if auction cancelled",
+			msg: &types.MsgParticipate{
+				Participant: addrsWithDelsTier[1],
+				AuctionID:   cancelledAuctionID,
+				TierID:      1,
+			},
+			err:       types.ErrParticipationNotAllowed,
 			blockTime: validRegistrationTime,
 		},
 		{
