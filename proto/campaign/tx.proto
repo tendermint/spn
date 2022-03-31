@@ -13,7 +13,6 @@ service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   rpc EditCampaign(MsgEditCampaign) returns (MsgEditCampaignResponse);
   rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
-  rpc UpdateTotalShares(MsgUpdateTotalShares) returns (MsgUpdateTotalSharesResponse);
   rpc InitializeMainnet(MsgInitializeMainnet) returns (MsgInitializeMainnetResponse);
   rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
   rpc AddVestingOptions(MsgAddVestingOptions) returns (MsgAddVestingOptionsResponse);
@@ -59,18 +58,6 @@ message MsgUpdateTotalSupply {
 }
 
 message MsgUpdateTotalSupplyResponse {}
-
-message MsgUpdateTotalShares {
-  string coordinator = 1;
-  uint64 campaignID = 2;
-  repeated cosmos.base.v1beta1.Coin totalShares = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.castrepeated) = "Shares"
-  ];
-}
-
-message MsgUpdateTotalSharesResponse {}
 
 message MsgInitializeMainnet {
   string coordinator = 1;

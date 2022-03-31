@@ -3,7 +3,6 @@ package campaign
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -37,7 +36,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	k.SetParams(ctx, genState.Params)
 
 	// set maximum shares constant value
-	k.SetTotalShares(ctx, spntypes.TotalShareNumber)
+	k.SetTotalShares(ctx, genState.TotalShares)
 
 	// this line is used by starport scaffolding # genesis/module/init
 }

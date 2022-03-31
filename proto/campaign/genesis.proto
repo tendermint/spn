@@ -18,6 +18,7 @@ message GenesisState {
   repeated CampaignChains campaignChainsList = 3 [(gogoproto.nullable) = false];
   repeated MainnetAccount mainnetAccountList = 4 [(gogoproto.nullable) = false];
   repeated MainnetVestingAccount mainnetVestingAccountList = 5 [(gogoproto.nullable) = false];
-  Params params = 6 [(gogoproto.nullable) = false];
+  uint64 totalShares = 6;
+  Params params = 7 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }
