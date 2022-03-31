@@ -14,7 +14,7 @@ import (
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
-	"github.com/tendermint/spn/app/sim_util"
+	"github.com/tendermint/spn/app/simutil"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/keeper"
 	"github.com/tendermint/spn/x/participation/types"
@@ -87,7 +87,7 @@ func SimulateCreateAuction(
 		fk.SetParams(ctx, params)
 		fee := params.AuctionCreationFee
 		sellCoin := sample.Coin(r)
-		sellCoin.Denom = sim_util.AuctionCoinDenom
+		sellCoin.Denom = simutil.AuctionCoinDenom
 
 		// choose custom fee that only uses the default bond denom
 		// otherwise the custom sellingCoin denom could be chosen

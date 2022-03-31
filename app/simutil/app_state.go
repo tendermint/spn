@@ -1,4 +1,4 @@
-package sim_util
+package simutil
 
 import (
 	"encoding/json"

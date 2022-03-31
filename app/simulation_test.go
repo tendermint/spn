@@ -23,7 +23,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/tendermint/spn/app"
-	"github.com/tendermint/spn/app/sim_util"
+	"github.com/tendermint/spn/app/simutil"
 )
 
 func init() {
@@ -86,7 +86,7 @@ func BenchmarkSimulation(b *testing.B) {
 		b,
 		os.Stdout,
 		app.GetBaseApp(),
-		sim_util.CustomAppStateFn(app.AppCodec(), app.SimulationManager()),
+		simutil.CustomAppStateFn(app.AppCodec(), app.SimulationManager()),
 		simulationtypes.RandomAccounts,
 		simapp.SimulationOperations(app, app.AppCodec(), config),
 		app.ModuleAccountAddrs(),
@@ -157,7 +157,7 @@ func TestAppStateDeterminism(t *testing.T) {
 				t,
 				os.Stdout,
 				app.GetBaseApp(),
-				sim_util.CustomAppStateFn(app.AppCodec(), app.SimulationManager()),
+				simutil.CustomAppStateFn(app.AppCodec(), app.SimulationManager()),
 				simulationtypes.RandomAccounts,
 				simapp.SimulationOperations(app, app.AppCodec(), config),
 				app.ModuleAccountAddrs(),
