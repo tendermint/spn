@@ -422,7 +422,7 @@ func New(
 		app.GetSubspace(fundraisingtypes.ModuleName),
 		app.AuthKeeper,
 		app.BankKeeper,
-		make(map[string]bool),
+		app.DistrKeeper,
 	)
 
 	app.ProfileKeeper = *profilemodulekeeper.NewKeeper(
@@ -538,7 +538,7 @@ func New(
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		monitoringcModule,
 		rewardModule,
-		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),
+		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper, app.DistrKeeper),
 		participationModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)

@@ -45,6 +45,7 @@ end = dateNow + datetime.timedelta(seconds=60)
 setSaleJSON('v/1/orbit', '10000', 'uspn', '100', datef(start), datef(end))
 cmd('spnd tx fundraising create-fixed-price-auction sale.json --from alice -y')
 cmd('spnd tx participation participate 1 4 --from bob -y')
+
 cmd('spnd tx participation participate 1 4 --from carol -y')
 cmd('spnd tx participation participate 1 4 --from dave -y')
 
