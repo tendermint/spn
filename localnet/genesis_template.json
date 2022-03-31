@@ -170,7 +170,8 @@
           "minTotalSupply": "100"
         },
         "campaignCreationFee": []
-      }
+      },
+      "totalShares": "100000"
     },
     "capability": {
       "index": "1",
@@ -359,7 +360,7 @@
           }
         ],
         "registrationPeriod": "604800s",
-        "withdrawalDelay": "1209600s",
+        "withdrawalDelay": "1209600s"
       }
     },
     "profile": {
