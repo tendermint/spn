@@ -71,7 +71,7 @@ func (c ChannelMock) SendPacket(_ sdk.Context, _ *capabilitytypes.Capability, _ 
 }
 
 // WriteAcknowledgement implements ChannelKeeper
-func (c ChannelMock) WriteAcknowledgement(_ sdk.Context, _ *capabilitytypes.Capability, _ exported.PacketI, _ []byte) error {
+func (c ChannelMock) WriteAcknowledgement(_ sdk.Context, _ *capabilitytypes.Capability, _ exported.PacketI, _ exported.Acknowledgement) error {
 	return nil
 }
 
