@@ -88,6 +88,11 @@ func RandomAccWithAvailableAllocations(ctx sdk.Context, r *rand.Rand,
 	return simtypes.Account{}, 0, false
 }
 
-func RandomTierFromList(r *rand.Rand, tierList []types.Tier) uint64 {
-	return uint64(1 + r.Intn(len(tierList)))
+func RandomTierFromList(r *rand.Rand, tierList []types.Tier) (types.Tier, bool) {
+	if len(tierList) == 0 {
+		return types.Tier{}, false
+	}
+
+	index := r.Intn(len(tierList))
+	return tierList[index], true
 }

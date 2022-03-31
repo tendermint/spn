@@ -16,6 +16,27 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
+func TestRandomTierFromList(t *testing.T) {
+	r := sample.Rand()
+
+	// find the existing 1 tier
+	tierList := []types.Tier{
+		{
+			TierID:              1,
+			RequiredAllocations: 10,
+			Benefits:            types.TierBenefits{},
+		},
+	}
+
+	tier, found := participationsim.RandomTierFromList(r, tierList)
+	require.True(t, found)
+	require.Equal(t, tier, tierList[0])
+
+	// no tier found with empty list
+	_, found = participationsim.RandomTierFromList(r, []types.Tier{})
+	require.False(t, found)
+}
+
 func TestRandomAccWithBalance(t *testing.T) {
 	var (
 		ctx, tk, _ = testkeeper.NewTestSetup(t)

@@ -35,23 +35,20 @@ func SimulateMsgParticipate(
 		}
 
 		tierList := k.ParticipationTierList(ctx)
-		numTiers := len(tierList)
-		if numTiers == 0 {
+		tier, found := RandomTierFromList(r, tierList)
+		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no valid tiers"), nil, nil
 		}
 
-		tierID := RandomTierFromList(r, tierList)
-		tier, _ := types.GetTierFromID(tierList, tierID)
 		simAccount, _, found := RandomAccWithAvailableAllocations(ctx, r, k, accs, tier.RequiredAllocations, auction.GetId())
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no account with allocations"), nil, nil
-
 		}
 
 		msg = types.NewMsgParticipate(
 			simAccount.Address.String(),
 			auction.GetId(),
-			tierID,
+			tier.TierID,
 		)
 
 		txCtx := simulation.OperationInput{
