@@ -10,11 +10,11 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
+	"github.com/tendermint/spn/app/sim_util"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/keeper"
 	"github.com/tendermint/spn/x/participation/types"
@@ -83,9 +83,11 @@ func SimulateCreateAuction(
 		// fundraising simulation params must be set
 		// since the module is not included in the simulation manager
 		params := fundraisingtypes.DefaultParams()
+		params.AuctionCreationFee = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100_000)))
 		fk.SetParams(ctx, params)
 		fee := params.AuctionCreationFee
 		sellCoin := sample.Coin(r)
+		sellCoin.Denom = sim_util.AuctionCoinDenom
 
 		// choose custom fee that only uses the default bond denom
 		// otherwise the custom sellingCoin denom could be chosen
@@ -98,7 +100,8 @@ func SimulateCreateAuction(
 			}
 		}
 
-		simAccount, _, found := RandomAccWithBalance(ctx, r, bk, accs, fee.Add(customFee...))
+		desiredCoins := fee.Add(customFee...).Add(sellCoin)
+		simAccount, _, found := RandomAccWithBalance(ctx, r, bk, accs, desiredCoins)
 		if !found {
 			return simtypes.NoOpMsg(
 					types.ModuleName,
@@ -111,27 +114,6 @@ func SimulateCreateAuction(
 		startTime := ctx.BlockTime().Add(time.Hour * 24)
 		endTime := startTime.Add(time.Hour * 24 * 7)
 		msg := sample.MsgCreateFixedAuction(r, simAccount.Address.String(), sellCoin, startTime, endTime)
-
-		mintAmt := sdk.NewCoins(msg.SellingCoin)
-		// must mint and send new coins to auctioneer
-		err = bk.MintCoins(ctx, minttypes.ModuleName, mintAmt)
-		if err != nil {
-			return simtypes.NoOpMsg(
-					types.ModuleName,
-					fundraisingtypes.MsgCreateFixedPriceAuction{}.Type(),
-					"error setting up balance"),
-				nil,
-				nil
-		}
-		err = bk.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, simAccount.Address, mintAmt)
-		if err != nil {
-			return simtypes.NoOpMsg(
-					types.ModuleName,
-					fundraisingtypes.MsgCreateFixedPriceAuction{}.Type(),
-					"error setting up balance"),
-				nil,
-				nil
-		}
 
 		txCtx := simulation.OperationInput{
 			R:               r,
