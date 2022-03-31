@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/participation/types"
@@ -19,9 +20,12 @@ func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWith
 		return nil, sdkerrors.Wrapf(types.ErrAuctionNotFound, "auction %d not found", msg.AuctionID)
 	}
 
-	withdrawalDelay := k.WithdrawalDelay(ctx)
-	if !blockTime.After(auction.GetStartTime().Add(withdrawalDelay)) {
-		return nil, sdkerrors.Wrapf(types.ErrAllocationWithdrawalTimeNotReached, "withdrawal for auction %d not yet allowed", msg.AuctionID)
+	// only prevent time-based restrictions on withdrawals if the auction's status is not `CANCELLED`
+	if auction.GetStatus() != fundraisingtypes.AuctionStatusCancelled {
+		withdrawalDelay := k.WithdrawalDelay(ctx)
+		if !blockTime.After(auction.GetStartTime().Add(withdrawalDelay)) {
+			return nil, sdkerrors.Wrapf(types.ErrAllocationWithdrawalTimeNotReached, "withdrawal for auction %d not yet allowed", msg.AuctionID)
+		}
 	}
 
 	auctionUsedAllocations, found := k.GetAuctionUsedAllocations(ctx, msg.Participant, msg.AuctionID)
