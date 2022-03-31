@@ -27,6 +27,7 @@ import (
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
+	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
 	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
@@ -259,6 +260,8 @@ type App struct {
 	ParticipationKeeper participationmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
+	transferModule transfer.AppModule
+
 	// the module manager
 	mm *module.Manager
 
@@ -266,7 +269,7 @@ type App struct {
 	sm *module.SimulationManager
 }
 
-// New returns a reference to an initialized Gaia.
+// New returns a reference to an initialized spn app.
 func New(
 	logger log.Logger,
 	db dbm.DB,
@@ -401,7 +404,7 @@ func New(
 		app.IBCKeeper.ChannelKeeper, &app.IBCKeeper.PortKeeper,
 		app.AuthKeeper, app.BankKeeper, scopedTransferKeeper,
 	)
-	transferModule := transfer.NewAppModule(app.TransferKeeper)
+	app.transferModule = transfer.NewAppModule(app.TransferKeeper)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -449,7 +452,6 @@ func New(
 		app.ProfileKeeper,
 		app.LaunchKeeper,
 	)
-	rewardModule := rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper)
 
 	campaignKeeper := campaignmodulekeeper.NewKeeper(
 		appCodec,
@@ -480,8 +482,8 @@ func New(
 		app.LaunchKeeper,
 		app.RewardKeeper,
 	)
-	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
 	app.LaunchKeeper.SetMonitoringcKeeper(app.MonitoringcKeeper)
+	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
 
 	app.ParticipationKeeper = *participationmodulekeeper.NewKeeper(
 		appCodec,
@@ -491,19 +493,12 @@ func New(
 		app.FundraisingKeeper,
 		app.StakingKeeper,
 	)
-	participationModule := participationmodule.NewAppModule(
-		appCodec,
-		app.ParticipationKeeper,
-		app.AuthKeeper,
-		app.BankKeeper,
-		app.FundraisingKeeper,
-	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferModule)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, app.transferModule)
 	ibcRouter.AddRoute(monitoringcmoduletypes.ModuleName, monitoringcModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
@@ -538,14 +533,14 @@ func New(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
-		transferModule,
+		app.transferModule,
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		monitoringcModule,
-		rewardModule,
+		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
 		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),
-		participationModule,
+		participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper, app.FundraisingKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -561,17 +556,52 @@ func New(
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
 		stakingtypes.ModuleName,
+		vestingtypes.ModuleName,
 		ibchost.ModuleName,
+		ibctransfertypes.ModuleName,
+		authtypes.ModuleName,
+		banktypes.ModuleName,
+		govtypes.ModuleName,
+		crisistypes.ModuleName,
+		genutiltypes.ModuleName,
+		authz.ModuleName,
 		feegrant.ModuleName,
+		paramstypes.ModuleName,
+		profilemoduletypes.ModuleName,
+		fundraisingtypes.ModuleName,
+		rewardmoduletypes.ModuleName,
+		campaignmoduletypes.ModuleName,
+		monitoringcmoduletypes.ModuleName,
+		participationmoduletypes.ModuleName,
+		launchmoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
-		feegrant.ModuleName,
+		capabilitytypes.ModuleName,
+		authtypes.ModuleName,
+		banktypes.ModuleName,
+		distrtypes.ModuleName,
+		slashingtypes.ModuleName,
+		vestingtypes.ModuleName,
+		minttypes.ModuleName,
+		genutiltypes.ModuleName,
+		evidencetypes.ModuleName,
 		authz.ModuleName,
+		feegrant.ModuleName,
+		paramstypes.ModuleName,
+		upgradetypes.ModuleName,
+		ibchost.ModuleName,
+		ibctransfertypes.ModuleName,
+		profilemoduletypes.ModuleName,
 		fundraisingtypes.ModuleName,
+		rewardmoduletypes.ModuleName,
+		campaignmoduletypes.ModuleName,
+		monitoringcmoduletypes.ModuleName,
+		participationmoduletypes.ModuleName,
+		launchmoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -585,6 +615,7 @@ func New(
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
 		stakingtypes.ModuleName,
+		vestingtypes.ModuleName,
 		slashingtypes.ModuleName,
 		govtypes.ModuleName,
 		minttypes.ModuleName,
@@ -592,9 +623,11 @@ func New(
 		ibchost.ModuleName,
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
+		paramstypes.ModuleName,
+		upgradetypes.ModuleName,
 		ibctransfertypes.ModuleName,
-		feegrant.ModuleName,
 		authz.ModuleName,
+		feegrant.ModuleName,
 		profilemoduletypes.ModuleName,
 		launchmoduletypes.ModuleName,
 		campaignmoduletypes.ModuleName,
@@ -624,7 +657,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
-		transferModule,
+		app.transferModule,
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
@@ -723,7 +756,7 @@ func (app *App) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }
 
-// AppCodec returns Gaia's app codec.
+// AppCodec returns spn's app codec.
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
@@ -731,7 +764,7 @@ func (app *App) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
-// InterfaceRegistry returns Gaia's InterfaceRegistry
+// InterfaceRegistry returns spn's InterfaceRegistry
 func (app *App) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
