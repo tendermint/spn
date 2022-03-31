@@ -4,14 +4,14 @@ package types
 import (
 	"encoding/base64"
 	"fmt"
+	"gopkg.in/yaml.v2"
 	"os"
 	"strconv"
 
-	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
+	ibctmtypes "github.com/cosmos/ibc-go/v3/modules/light-clients/07-tendermint/types"
 	"github.com/pkg/errors"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 	tmtypes "github.com/tendermint/tendermint/types"
-	"gopkg.in/yaml.v2"
 )
 
 const TypeEd25519 = "tendermint/PubKeyEd25519"
