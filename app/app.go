@@ -269,7 +269,7 @@ type App struct {
 	sm *module.SimulationManager
 }
 
-// New returns a reference to an initialized spn.
+// New returns a reference to an initialized spn app.
 func New(
 	logger log.Logger,
 	db dbm.DB,
