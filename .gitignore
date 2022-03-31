@@ -16,6 +16,10 @@ localnet/node?/config/genesis.json
 localnet/node?/config/addrbook.json
 localnet/node?/config/write-file-atomic-*
 
+# Scripts
+scripts/test_fundraising/sale.json
+scripts/test_fundraising/auction.json
+
 # Generate report files
 *.out
 *.test

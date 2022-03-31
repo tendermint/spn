@@ -2,7 +2,7 @@ import json
 import subprocess
 import datetime
 
-saleTemplateFile = './saleTemplate.json'
+saleTemplateFile = './sale_template.json'
 saleFile = './sale.json'
 
 def setSale(sellingDenom, sellingAmount, payingDenom, price, startTime, endTime):
