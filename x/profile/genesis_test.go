@@ -17,8 +17,9 @@ import (
 
 func TestGenesis(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	r := sample.Rand()
 
-	genesisState := sample.ProfileGenesisState()
+	genesisState := sample.ProfileGenesisState(r)
 	profile.InitGenesis(ctx, *tk.ProfileKeeper, genesisState)
 	got := profile.ExportGenesis(ctx, *tk.ProfileKeeper)
 

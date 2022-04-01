@@ -17,7 +17,7 @@ import (
 func createNCoordinatorByAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.CoordinatorByAddress {
 	items := make([]types.CoordinatorByAddress, n)
 	for i := range items {
-		items[i].Address = sample.Address()
+		items[i].Address = sample.Address(r)
 		keeper.SetCoordinatorByAddress(ctx, items[i])
 	}
 	return items
@@ -27,7 +27,7 @@ func createNCoordinatorBoth(keeper *keeper.Keeper, ctx sdk.Context, n int) ([]ty
 	coordsByAddr := make([]types.CoordinatorByAddress, n)
 	coords := make([]types.Coordinator, n)
 	for i := range coords {
-		coordsByAddr[i].Address = sample.Address()
+		coordsByAddr[i].Address = sample.Address(r)
 		keeper.SetCoordinatorByAddress(ctx, coordsByAddr[i])
 
 		coords[i].Address = coordsByAddr[i].Address
@@ -73,7 +73,7 @@ func TestCoordinatorByAddressGetAll(t *testing.T) {
 
 func TestCoordinatorIDFromAddress(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	address := sample.Address()
+	address := sample.Address(r)
 	tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 		Address:       address,
 		CoordinatorID: 10,
@@ -88,13 +88,13 @@ func TestCoordinatorIDFromAddress(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, uint64(10), id)
 
-	_, err = tk.ProfileKeeper.CoordinatorIDFromAddress(ctx, sample.Address())
+	_, err = tk.ProfileKeeper.CoordinatorIDFromAddress(ctx, sample.Address(r))
 	require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 }
 
 func TestActiveCoordinatorByAddressGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	address := sample.Address()
+	address := sample.Address(r)
 
 	// set initial valid state
 	tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{

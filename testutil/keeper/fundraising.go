@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"math/rand"
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,12 +14,13 @@ import (
 // start time. Returns the ID of the created auction.
 func (tk TestKeepers) CreateFixedPriceAuction(
 	ctx sdk.Context,
+	r *rand.Rand,
 	auctioneer string,
 	sellingCoin sdk.Coin,
 	startTime,
 	endTime time.Time,
 ) uint64 {
-	res, err := tk.FundraisingKeeper.CreateFixedPriceAuction(ctx, sample.MsgCreateFixedAuction(
+	res, err := tk.FundraisingKeeper.CreateFixedPriceAuction(ctx, sample.MsgCreateFixedAuction(r,
 		auctioneer,
 		sellingCoin,
 		startTime,

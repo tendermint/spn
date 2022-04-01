@@ -3,11 +3,11 @@ package keeper_test
 import (
 	"testing"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -18,30 +18,30 @@ func TestMsgMintVouchers(t *testing.T) {
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 
-		coord           = sample.Address()
-		coordNoCampaign = sample.Address()
+		coord           = sample.Address(r)
+		coordNoCampaign = sample.Address(r)
 
 		shares, _    = types.NewShares("1000foo,500bar,300foobar")
 		sharesTooBig = types.NewSharesFromCoins(sdk.NewCoins(
-			sdk.NewCoin("foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
+			sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 		))
 	)
 
 	// Create coordinators
 	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coord,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordNoCampaign,
-		Description: sample.CoordinatorDescription(),
+		Description: sample.CoordinatorDescription(r),
 	})
 	require.NoError(t, err)
 
 	// Set campaign
-	campaign := sample.Campaign(0)
+	campaign := sample.Campaign(r, 0)
 	campaign.CoordinatorID = coordID
 	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 
@@ -71,7 +71,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
 				CampaignID:  0,
-				Shares:      sample.Shares(),
+				Shares:      sample.Shares(r),
 			},
 		},
 		{
@@ -95,7 +95,7 @@ func TestMsgMintVouchers(t *testing.T) {
 		{
 			name: "non existing coordinator",
 			msg: types.MsgMintVouchers{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
 				Shares:      shares,
 			},

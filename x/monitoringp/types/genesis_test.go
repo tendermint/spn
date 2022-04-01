@@ -73,7 +73,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						BlockCount: 1,
 						Counts: []spntypes.SignatureCount{
 							{
-								OpAddress:          sample.Address(),
+								OpAddress:          sample.Address(r),
 								RelativeSignatures: sdk.NewDec(10),
 							},
 						},

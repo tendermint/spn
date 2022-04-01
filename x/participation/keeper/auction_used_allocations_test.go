@@ -27,7 +27,7 @@ func createNAuctionUsedAllocations(keeper *keeper.Keeper, ctx sdk.Context, n int
 
 func createNAuctionUsedAllocationsWithSameAddress(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.AuctionUsedAllocations {
 	items := make([]types.AuctionUsedAllocations, n)
-	address := sample.Address()
+	address := sample.Address(r)
 	for i := range items {
 		items[i].Address = address
 		items[i].AuctionID = uint64(i)

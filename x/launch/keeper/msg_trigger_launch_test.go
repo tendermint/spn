@@ -16,9 +16,9 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.Address()
-	coordAddress2 := sample.Address()
-	coordNoExist := sample.Address()
+	coordAddress := sample.Address(r)
+	coordAddress2 := sample.Address(r)
+	coordNoExist := sample.Address(r)
 	chainIDNoExist := uint64(1000)
 
 	launchTimeTooLow := types.DefaultMinLaunchTime - 1
@@ -34,7 +34,7 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create chains
-	msgCreateChain := sample.MsgCreateChain(coordAddress, "", false, 0)
+	msgCreateChain := sample.MsgCreateChain(r, coordAddress, "", false, 0)
 	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
 	chainID := res.LaunchID
@@ -60,26 +60,26 @@ func TestMsgTriggerLaunch(t *testing.T) {
 	}{
 		{
 			name: "launch chain not launched",
-			msg:  sample.MsgTriggerLaunch(coordAddress, chainID),
+			msg:  sample.MsgTriggerLaunch(r, coordAddress, chainID),
 		},
 		{
 			name: "non existent chain id",
-			msg:  sample.MsgTriggerLaunch(coordAddress, chainIDNoExist),
+			msg:  sample.MsgTriggerLaunch(r, coordAddress, chainIDNoExist),
 			err:  types.ErrChainNotFound,
 		},
 		{
 			name: "non existent coordinator",
-			msg:  sample.MsgTriggerLaunch(coordNoExist, chainID2),
+			msg:  sample.MsgTriggerLaunch(r, coordNoExist, chainID2),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{
 			name: "invalid coordinator",
-			msg:  sample.MsgTriggerLaunch(coordAddress2, chainID2),
+			msg:  sample.MsgTriggerLaunch(r, coordAddress2, chainID2),
 			err:  profiletypes.ErrCoordInvalid,
 		},
 		{
 			name: "chain launch already triggered",
-			msg:  sample.MsgTriggerLaunch(coordAddress, alreadyLaunched),
+			msg:  sample.MsgTriggerLaunch(r, coordAddress, alreadyLaunched),
 			err:  types.ErrTriggeredLaunch,
 		},
 		{

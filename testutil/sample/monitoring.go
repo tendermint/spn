@@ -51,10 +51,10 @@ func ValidatorSet(nb int) types.ValidatorSet {
 }
 
 // MonitoringpParams returns a sample of params for the monitoring provider module
-func MonitoringpParams() monitoringp.Params {
-	lastBlockHeight := monitoringp.DefaultLastBlockHeight + rand.Int63n(10)
-	consumerUnbondingpPeriod := types.MinimalUnbondingPeriod + rand.Int63n(types.DefaultUnbondingPeriod)
-	consumerRevisionHeight := types.DefaultRevisionHeight + rand.Uint64()
+func MonitoringpParams(r *rand.Rand) monitoringp.Params {
+	lastBlockHeight := monitoringp.DefaultLastBlockHeight + r.Int63n(10)
+	consumerUnbondingpPeriod := types.MinimalUnbondingPeriod + r.Int63n(types.DefaultUnbondingPeriod)
+	consumerRevisionHeight := types.DefaultRevisionHeight + r.Uint64()
 	consumerChainID := monitoringp.DefaultConsumerChainID
 	consensusState := ConsensusState(0)
 

@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
+	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
@@ -17,10 +18,10 @@ func TestMsgBurnVouchers(t *testing.T) {
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 
 		ctx            = sdk.WrapSDKContext(sdkCtx)
-		campaign       = sample.Campaign(0)
-		addr           = sample.AccAddress()
+		campaign       = sample.Campaign(r, 0)
+		addr           = sample.AccAddress(r)
 		vouchersTooBig = sdk.NewCoins(
-			sdk.NewCoin("v/0/foo", sdk.NewInt(types.DefaultTotalShareNumber+1)),
+			sdk.NewCoin("v/0/foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 		)
 	)
 
@@ -52,7 +53,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
 				CampaignID: 1000,
-				Vouchers:   sample.Coins(),
+				Vouchers:   sample.Coins(r),
 			},
 			err: types.ErrCampaignNotFound,
 		},
@@ -61,7 +62,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			msg: types.MsgBurnVouchers{
 				Sender:     "invalid_address",
 				CampaignID: campaign.CampaignID,
-				Vouchers:   sample.Coins(),
+				Vouchers:   sample.Coins(r),
 			},
 			err: spnerrors.ErrCritical,
 		},

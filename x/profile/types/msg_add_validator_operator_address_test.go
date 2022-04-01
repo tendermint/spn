@@ -12,8 +12,8 @@ import (
 
 func TestMsgAddValidatorOperatorAddress_GetSigners(t *testing.T) {
 	// should contain two signers
-	valAddr := sample.AccAddress()
-	opAddr := sample.AccAddress()
+	valAddr := sample.AccAddress(r)
+	opAddr := sample.AccAddress(r)
 	msg := types.MsgAddValidatorOperatorAddress{
 		ValidatorAddress: valAddr.String(),
 		OperatorAddress:  opAddr.String(),
@@ -25,7 +25,7 @@ func TestMsgAddValidatorOperatorAddress_GetSigners(t *testing.T) {
 }
 
 func TestMsgAddValidatorOperatorAddress_ValidateBasic(t *testing.T) {
-	sampleAddr := sample.Address()
+	sampleAddr := sample.Address(r)
 
 	tests := []struct {
 		name string
@@ -35,8 +35,8 @@ func TestMsgAddValidatorOperatorAddress_ValidateBasic(t *testing.T) {
 		{
 			name: "should allow different addresses for SPN validator and operator address",
 			msg: types.MsgAddValidatorOperatorAddress{
-				ValidatorAddress: sample.Address(),
-				OperatorAddress:  sample.Address(),
+				ValidatorAddress: sample.Address(r),
+				OperatorAddress:  sample.Address(r),
 			},
 		},
 		{
@@ -51,14 +51,14 @@ func TestMsgAddValidatorOperatorAddress_ValidateBasic(t *testing.T) {
 			name: "should prevent invalid SPN validator address",
 			msg: types.MsgAddValidatorOperatorAddress{
 				ValidatorAddress: "invalid_address",
-				OperatorAddress:  sample.Address(),
+				OperatorAddress:  sample.Address(r),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "should prevent invalid operator address",
 			msg: types.MsgAddValidatorOperatorAddress{
-				ValidatorAddress: sample.Address(),
+				ValidatorAddress: sample.Address(r),
 				OperatorAddress:  "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,

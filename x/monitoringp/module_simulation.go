@@ -24,7 +24,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	monitoringpGenesis := types.GenesisState{
 		PortId: types.PortID,
-		Params: sample.MonitoringpParams(),
+		Params: sample.MonitoringpParams(simState.Rand),
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&monitoringpGenesis)
@@ -36,8 +36,8 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	monitoringpParams := sample.MonitoringpParams()
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+	monitoringpParams := sample.MonitoringpParams(r)
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyLastBlockHeight), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(monitoringpParams.LastBlockHeight))

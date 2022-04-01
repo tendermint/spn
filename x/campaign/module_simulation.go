@@ -3,12 +3,13 @@ package campaign
 import (
 	"math/rand"
 
+	"github.com/tendermint/spn/testutil/sample"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"github.com/tendermint/spn/testutil/sample"
 	campaignsim "github.com/tendermint/spn/x/campaign/simulation"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -16,7 +17,6 @@ import (
 const (
 	defaultWeightMsgCreateCampaign    = 25
 	defaultWeightMsgUpdateTotalSupply = 20
-	defaultWeightMsgUpdateTotalShares = 20
 	defaultWeightMsgInitializeMainnet = 5
 	defaultWeightMsgAddShares         = 20
 	defaultWeightMsgAddVestingOptions = 20
@@ -28,7 +28,6 @@ const (
 
 	opWeightMsgCreateCampaign    = "op_weight_msg_create_campaign"
 	opWeightMsgUpdateTotalSupply = "op_weight_msg_update_total_supply"
-	opWeightMsgUpdateTotalShares = "op_weight_msg_update_total_share"
 	opWeightMsgInitializeMainnet = "op_weight_msg_initialize_mainnet"
 	opWeightMsgAddShares         = "op_weight_msg_add_shares"
 	opWeightMsgAddVestingOptions = "op_weight_msg_add_vesting_options"
@@ -41,7 +40,7 @@ const (
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	campaignGenesis := sample.CampaignGenesisState()
+	campaignGenesis := sample.CampaignGenesisState(simState.Rand)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&campaignGenesis)
 }
 
@@ -52,7 +51,7 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
-	campaignParams := sample.CampaignParams()
+	campaignParams := types.DefaultParams()
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyTotalSupplyRange), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(campaignParams.TotalSupplyRange))
@@ -71,7 +70,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	var (
 		weightMsgCreateCampaign    int
 		weightMsgUpdateTotalSupply int
-		weightMsgUpdateTotalShares int
 		weightMsgInitializeMainnet int
 		weightMsgAddShares         int
 		weightMsgAddVestingOptions int
@@ -92,11 +90,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	appParams.GetOrGenerate(cdc, opWeightMsgUpdateTotalSupply, &weightMsgUpdateTotalSupply, nil,
 		func(_ *rand.Rand) {
 			weightMsgUpdateTotalSupply = defaultWeightMsgUpdateTotalSupply
-		},
-	)
-	appParams.GetOrGenerate(cdc, opWeightMsgUpdateTotalShares, &weightMsgUpdateTotalShares, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpdateTotalShares = defaultWeightMsgUpdateTotalShares
 		},
 	)
 	appParams.GetOrGenerate(cdc, opWeightMsgInitializeMainnet, &weightMsgInitializeMainnet, nil,
@@ -144,14 +137,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		simulation.NewWeightedOperation(
 			weightMsgCreateCampaign,
 			campaignsim.SimulateMsgCreateCampaign(am.keeper, am.accountKeeper, am.bankKeeper, am.profileKeeper),
-		),
-		simulation.NewWeightedOperation(
-			weightMsgUpdateTotalSupply,
-			campaignsim.SimulateMsgUpdateTotalSupply(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
-		),
-		simulation.NewWeightedOperation(
-			weightMsgUpdateTotalShares,
-			campaignsim.SimulateMsgUpdateTotalShares(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgInitializeMainnet,

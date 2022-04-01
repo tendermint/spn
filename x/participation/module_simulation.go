@@ -14,9 +14,10 @@ import (
 )
 
 const (
-	opWeightMsgParticipate = "op_weight_msg_participate"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgParticipate int = 100
+	opWeightMsgParticipate            = "op_weight_msg_participate"
+	defaultWeightMsgParticipate   int = 50
+	opWeightMsgCreateAuction          = "op_weight_create_auction"
+	defaultWeightMsgCreateAuction int = 20
 
 	opWeightMsgWithdrawAllocations          = "op_weight_withdraw_allocations"
 	defaultWeightMsgWithdrawAllocations int = 50
@@ -31,7 +32,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	participationGenesis := types.GenesisState{
-		Params: sample.ParticipationParams(),
+		Params: sample.ParticipationParams(simState.Rand),
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&participationGenesis)
@@ -43,8 +44,8 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	participationParams := sample.ParticipationParams()
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+	participationParams := sample.ParticipationParams(r)
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyAllocationPrice), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(participationParams.AllocationPrice))
@@ -68,7 +69,12 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgParticipate int
+	var (
+		weightMsgParticipate         int
+		weightMsgCreateAuction       int
+		weightMsgWithdrawAllocations int
+	)
+
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgParticipate, &weightMsgParticipate, nil,
 		func(_ *rand.Rand) {
 			weightMsgParticipate = defaultWeightMsgParticipate
@@ -76,10 +82,19 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgParticipate,
-		participationsim.SimulateMsgParticipate(am.accountKeeper, am.bankKeeper, am.keeper),
+		participationsim.SimulateMsgParticipate(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
 	))
 
-	var weightMsgWithdrawAllocations int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateAuction, &weightMsgCreateAuction, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateAuction = defaultWeightMsgCreateAuction
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateAuction,
+		participationsim.SimulateCreateAuction(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
+	))
+
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgWithdrawAllocations, &weightMsgWithdrawAllocations, nil,
 		func(_ *rand.Rand) {
 			weightMsgWithdrawAllocations = defaultWeightMsgWithdrawAllocations

@@ -15,10 +15,10 @@ import (
 func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
-		coord := sample.Coordinator(sample.Address())
+		coord := sample.Coordinator(r, sample.Address(r))
 		coord.CoordinatorID = tk.ProfileKeeper.AppendCoordinator(ctx, coord)
 		tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
-			Address:       sample.Address(),
+			Address:       sample.Address(r),
 			CoordinatorID: coord.CoordinatorID,
 		})
 		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)
@@ -27,7 +27,7 @@ func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 
 	t.Run("invalid case 1", func(t *testing.T) {
 		tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
-			Address:       sample.Address(),
+			Address:       sample.Address(r),
 			CoordinatorID: 10,
 		})
 		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)

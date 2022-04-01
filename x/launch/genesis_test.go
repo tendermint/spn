@@ -17,8 +17,8 @@ import (
 
 func TestGenesis(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-
-	genesisState := sample.LaunchGenesisState()
+	r := sample.Rand()
+	genesisState := sample.LaunchGenesisState(r)
 	launch.InitGenesis(ctx, *tk.LaunchKeeper, genesisState)
 	got := launch.ExportGenesis(ctx, *tk.LaunchKeeper)
 

@@ -46,7 +46,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 	}
-	launchGenesis := sample.LaunchGenesisState(accs...)
+	launchGenesis := sample.LaunchGenesisState(simState.Rand, accs...)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&launchGenesis)
 }
 
@@ -56,8 +56,8 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	launchParams := sample.LaunchParams()
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+	launchParams := sample.LaunchParams(r)
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyLaunchTimeRange), func(r *rand.Rand) string {
 			return string(types.Amino.MustMarshalJSON(launchParams.LaunchTimeRange))

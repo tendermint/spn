@@ -53,12 +53,12 @@ func TestMsgCreateCampaign(t *testing.T) {
 		coordMap            = make(map[string]uint64)
 		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
 		ctx                 = sdk.WrapSDKContext(sdkCtx)
-		campaignCreationFee = sample.Coins()
+		campaignCreationFee = sample.Coins(r)
 	)
 
 	// Create coordinators
 	for i := range coordAddrs {
-		addr := sample.Address()
+		addr := sample.Address(r)
 		coordAddrs[i] = addr
 		msgCreateCoordinator := sample.MsgCreateCoordinator(addr)
 		resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
@@ -79,50 +79,50 @@ func TestMsgCreateCampaign(t *testing.T) {
 		{
 			name: "create a campaign 1",
 			msg: types.MsgCreateCampaign{
-				CampaignName: sample.CampaignName(),
+				CampaignName: sample.CampaignName(r),
 				Coordinator:  coordAddrs[0],
-				TotalSupply:  sample.TotalSupply(),
-				Metadata:     sample.Metadata(20),
+				TotalSupply:  sample.TotalSupply(r),
+				Metadata:     sample.Metadata(r, 20),
 			},
 			expectedID: uint64(0),
 		},
 		{
 			name: "create a campaign from a different coordinator",
 			msg: types.MsgCreateCampaign{
-				CampaignName: sample.CampaignName(),
+				CampaignName: sample.CampaignName(r),
 				Coordinator:  coordAddrs[1],
-				TotalSupply:  sample.TotalSupply(),
-				Metadata:     sample.Metadata(20),
+				TotalSupply:  sample.TotalSupply(r),
+				Metadata:     sample.Metadata(r, 20),
 			},
 			expectedID: uint64(1),
 		},
 		{
 			name: "create a campaign from a non existing coordinator",
 			msg: types.MsgCreateCampaign{
-				CampaignName: sample.CampaignName(),
-				Coordinator:  sample.Address(),
-				TotalSupply:  sample.TotalSupply(),
-				Metadata:     sample.Metadata(20),
+				CampaignName: sample.CampaignName(r),
+				Coordinator:  sample.Address(r),
+				TotalSupply:  sample.TotalSupply(r),
+				Metadata:     sample.Metadata(r, 20),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
 			name: "create a campaign with an invalid token supply",
 			msg: types.MsgCreateCampaign{
-				CampaignName: sample.CampaignName(),
+				CampaignName: sample.CampaignName(r),
 				Coordinator:  coordAddrs[0],
-				TotalSupply:  sample.CoinsWithRange(10, 20),
-				Metadata:     sample.Metadata(20),
+				TotalSupply:  sample.CoinsWithRange(r, 10, 20),
+				Metadata:     sample.Metadata(r, 20),
 			},
 			err: types.ErrInvalidTotalSupply,
 		},
 		{
 			name: "insufficient balance to cover creation fee",
 			msg: types.MsgCreateCampaign{
-				CampaignName: sample.CampaignName(),
+				CampaignName: sample.CampaignName(r),
 				Coordinator:  coordAddrs[2],
-				TotalSupply:  sample.TotalSupply(),
-				Metadata:     sample.Metadata(20),
+				TotalSupply:  sample.TotalSupply(r),
+				Metadata:     sample.Metadata(r, 20),
 			},
 			err: sdkerrors.ErrInsufficientFunds,
 		},
@@ -148,10 +148,6 @@ func TestMsgCreateCampaign(t *testing.T) {
 			require.False(t, campaign.MainnetInitialized)
 			require.True(t, tc.msg.TotalSupply.IsEqual(campaign.TotalSupply))
 			require.EqualValues(t, types.EmptyShares(), campaign.AllocatedShares)
-			require.EqualValues(t, types.EmptyShares(), campaign.TotalShares)
-
-			// dynamic share is always disabled
-			require.EqualValues(t, false, campaign.DynamicShares)
 
 			// Empty list of campaign chains
 			campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, got.CampaignID)

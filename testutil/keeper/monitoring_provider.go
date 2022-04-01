@@ -11,12 +11,12 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
-	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
-
+	spntypes "github.com/tendermint/spn/pkg/types"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
+	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 	participationkeeper "github.com/tendermint/spn/x/participation/keeper"
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
@@ -55,8 +55,8 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, make(map[string]bool))
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 
@@ -87,6 +87,9 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
 	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
+
+	// set max shares - only set during app InitGenesis
+	campaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
 
 	return ctx, TestKeepers{
 			T:                        t,

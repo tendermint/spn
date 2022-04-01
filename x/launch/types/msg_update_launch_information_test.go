@@ -12,8 +12,8 @@ import (
 func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 	launchID := uint64(0)
 
-	msgInvalidGenesisHash := sample.MsgUpdateLaunchInformation(
-		sample.Address(),
+	msgInvalidGenesisHash := sample.MsgUpdateLaunchInformation(r,
+		sample.Address(r),
 		launchID,
 		false,
 		true,
@@ -23,8 +23,8 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 	genesisURL := types.NewGenesisURL("foo.com", "NoHash")
 	msgInvalidGenesisHash.InitialGenesis = &genesisURL
 
-	msgInvalidGenesisChainID := sample.MsgUpdateLaunchInformation(
-		sample.Address(),
+	msgInvalidGenesisChainID := sample.MsgUpdateLaunchInformation(r,
+		sample.Address(r),
 		launchID,
 		false,
 		true,
@@ -40,8 +40,8 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 	}{
 		{
 			desc: "valid message",
-			msg: sample.MsgUpdateLaunchInformation(
-				sample.Address(),
+			msg: sample.MsgUpdateLaunchInformation(r,
+				sample.Address(r),
 				launchID,
 				true,
 				true,
@@ -52,8 +52,8 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new genesis chain ID",
-			msg: sample.MsgUpdateLaunchInformation(
-				sample.Address(),
+			msg: sample.MsgUpdateLaunchInformation(r,
+				sample.Address(r),
 				launchID,
 				true,
 				false,
@@ -64,8 +64,8 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new source",
-			msg: sample.MsgUpdateLaunchInformation(
-				sample.Address(),
+			msg: sample.MsgUpdateLaunchInformation(r,
+				sample.Address(r),
 				launchID,
 				false,
 				true,
@@ -76,8 +76,8 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new genesis",
-			msg: sample.MsgUpdateLaunchInformation(
-				sample.Address(),
+			msg: sample.MsgUpdateLaunchInformation(r,
+				sample.Address(r),
 				launchID,
 				false,
 				false,
@@ -88,8 +88,8 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "valid message with new genesis with a custom genesis url",
-			msg: sample.MsgUpdateLaunchInformation(
-				sample.Address(),
+			msg: sample.MsgUpdateLaunchInformation(r,
+				sample.Address(r),
 				launchID,
 				false,
 				false,
@@ -100,7 +100,7 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "invalid coordinator address",
-			msg: sample.MsgUpdateLaunchInformation(
+			msg: sample.MsgUpdateLaunchInformation(r,
 				"invalid",
 				launchID,
 				false,
@@ -112,8 +112,8 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 		},
 		{
 			desc: "no value to edit",
-			msg: sample.MsgUpdateLaunchInformation(
-				sample.Address(),
+			msg: sample.MsgUpdateLaunchInformation(r,
+				sample.Address(r),
 				launchID,
 				false,
 				false,

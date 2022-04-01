@@ -19,9 +19,9 @@ func TestMsgMintVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "valid message",
 			msg: types.MsgMintVouchers{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
-				Shares:      sample.Shares(),
+				Shares:      sample.Shares(r),
 			},
 		},
 		{
@@ -29,14 +29,14 @@ func TestMsgMintVouchers_ValidateBasic(t *testing.T) {
 			msg: types.MsgMintVouchers{
 				Coordinator: "invalid_address",
 				CampaignID:  0,
-				Shares:      sample.Shares(),
+				Shares:      sample.Shares(r),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid shares",
 			msg: types.MsgMintVouchers{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
 				Shares:      invalidShares,
 			},
@@ -45,7 +45,7 @@ func TestMsgMintVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "empty shares",
 			msg: types.MsgMintVouchers{
-				Coordinator: sample.Address(),
+				Coordinator: sample.Address(r),
 				CampaignID:  0,
 				Shares:      types.EmptyShares(),
 			},

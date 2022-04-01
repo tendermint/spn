@@ -15,9 +15,9 @@ import (
 func TestMsgUpdateLaunchInformation(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.Address()
-	coordAddress2 := sample.Address()
-	coordNoExist := sample.Address()
+	coordAddress := sample.Address(r)
+	coordAddress2 := sample.Address(r)
+	coordNoExist := sample.Address(r)
 	launchIDNoExist := uint64(1000)
 
 	// Create coordinators
@@ -33,11 +33,11 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 
 	// Create a chain
 	launchID := uint64(1)
-	chain := sample.Chain(launchID, coordID)
+	chain := sample.Chain(r, launchID, coordID)
 	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
 	launchIDLaunchTriggered := uint64(2)
-	chain = sample.Chain(launchIDLaunchTriggered, coordID)
+	chain = sample.Chain(r, launchIDLaunchTriggered, coordID)
 	chain.LaunchTriggered = true
 	tk.LaunchKeeper.SetChain(sdkCtx, chain)
 
@@ -48,7 +48,9 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 	}{
 		{
 			name: "edit genesis chain ID",
-			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(r,
+				coordAddress,
+				launchID,
 				true,
 				false,
 				false,
@@ -57,7 +59,9 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 		},
 		{
 			name: "edit source",
-			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(r,
+				coordAddress,
+				launchID,
 				false,
 				true,
 				false,
@@ -66,7 +70,9 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 		},
 		{
 			name: "edit initial genesis with default genesis",
-			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(r,
+				coordAddress,
+				launchID,
 				false,
 				false,
 				true,
@@ -75,7 +81,9 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 		},
 		{
 			name: "edit initial genesis with genesis url",
-			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(r,
+				coordAddress,
+				launchID,
 				false,
 				false,
 				true,
@@ -84,7 +92,9 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 		},
 		{
 			name: "edit source and initial genesis",
-			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchID,
+			msg: sample.MsgUpdateLaunchInformation(r,
+				coordAddress,
+				launchID,
 				false,
 				true,
 				true,
@@ -93,7 +103,9 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 		},
 		{
 			name: "non existent launch id",
-			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchIDNoExist,
+			msg: sample.MsgUpdateLaunchInformation(r,
+				coordAddress,
+				launchIDNoExist,
 				false,
 				true,
 				false,
@@ -103,7 +115,9 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 		},
 		{
 			name: "non existent coordinator",
-			msg: sample.MsgUpdateLaunchInformation(coordNoExist, launchID,
+			msg: sample.MsgUpdateLaunchInformation(r,
+				coordNoExist,
+				launchID,
 				false,
 				true,
 				false,
@@ -113,7 +127,9 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 		},
 		{
 			name: "invalid coordinator",
-			msg: sample.MsgUpdateLaunchInformation(coordAddress2, launchID,
+			msg: sample.MsgUpdateLaunchInformation(r,
+				coordAddress2,
+				launchID,
 				false,
 				true,
 				false,
@@ -123,7 +139,9 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 		},
 		{
 			name: "launch triggered",
-			msg: sample.MsgUpdateLaunchInformation(coordAddress, launchIDLaunchTriggered,
+			msg: sample.MsgUpdateLaunchInformation(r,
+				coordAddress,
+				launchIDLaunchTriggered,
 				false,
 				true,
 				false,

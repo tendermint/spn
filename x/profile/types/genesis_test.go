@@ -44,12 +44,12 @@ func TestGenesisState_Validate(t *testing.T) {
 
 func TestGenesisStateValidateValidator(t *testing.T) {
 	var (
-		addr1   = sample.Address()
-		addr2   = sample.Address()
-		addr3   = sample.Address()
-		opAddr1 = sample.Address()
-		opAddr2 = sample.Address()
-		opAddr3 = sample.Address()
+		addr1   = sample.Address(r)
+		addr2   = sample.Address(r)
+		addr3   = sample.Address(r)
+		opAddr1 = sample.Address(r)
+		opAddr2 = sample.Address(r)
+		opAddr3 = sample.Address(r)
 	)
 	tests := []struct {
 		name     string
@@ -134,10 +134,10 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 
 func TestGenesisStateValidateCoordinator(t *testing.T) {
 	var (
-		addr1 = sample.Address()
-		addr2 = sample.Address()
-		addr3 = sample.Address()
-		addr4 = sample.Address()
+		addr1 = sample.Address(r)
+		addr2 = sample.Address(r)
+		addr3 = sample.Address(r)
+		addr4 = sample.Address(r)
 	)
 	tests := []struct {
 		name     string

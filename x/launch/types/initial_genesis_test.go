@@ -20,8 +20,8 @@ func TestNewDefaultInitialGenesis(t *testing.T) {
 }
 
 func TestNewGenesisURL(t *testing.T) {
-	url := sample.String(30)
-	hash := sample.GenesisHash()
+	url := sample.String(r, 30)
+	hash := sample.GenesisHash(r)
 	initialGenesis := types.NewGenesisURL(url, hash)
 
 	genesisURL := initialGenesis.GetGenesisURL()
@@ -40,15 +40,15 @@ func TestDefaultInitialGenesis_Validate(t *testing.T) {
 }
 
 func TestGenesisURL_Validate(t *testing.T) {
-	require.NoError(t, types.NewGenesisURL(sample.String(30), sample.GenesisHash()).Validate(),
+	require.NoError(t, types.NewGenesisURL(sample.String(r, 30), sample.GenesisHash(r)).Validate(),
 		" GenesisURL should be valid",
 	)
 
-	require.Error(t, types.NewGenesisURL("", sample.GenesisHash()).Validate(),
+	require.Error(t, types.NewGenesisURL("", sample.GenesisHash(r)).Validate(),
 		" GenesisURL must contain a url",
 	)
 
-	require.Error(t, types.NewGenesisURL(sample.String(30), sample.String(types.HashLength-1)).Validate(),
+	require.Error(t, types.NewGenesisURL(sample.String(r, 30), sample.String(r, types.HashLength-1)).Validate(),
 		" GenesisURL must contain a valid sha256 hash",
 	)
 }

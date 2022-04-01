@@ -11,7 +11,7 @@ import (
 )
 
 func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
-	addr := sample.Address()
+	addr := sample.Address(r)
 	tests := []struct {
 		name string
 		msg  profile.MsgUpdateCoordinatorAddress
@@ -21,13 +21,13 @@ func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: profile.MsgUpdateCoordinatorAddress{
 				Address:    "invalid address",
-				NewAddress: sample.Address(),
+				NewAddress: sample.Address(r),
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "invalid new address",
 			msg: profile.MsgUpdateCoordinatorAddress{
-				Address:    sample.Address(),
+				Address:    sample.Address(r),
 				NewAddress: "invalid address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
@@ -41,8 +41,8 @@ func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 		}, {
 			name: "valid addresses",
 			msg: profile.MsgUpdateCoordinatorAddress{
-				Address:    sample.Address(),
-				NewAddress: sample.Address(),
+				Address:    sample.Address(r),
+				NewAddress: sample.Address(r),
 			},
 		},
 	}

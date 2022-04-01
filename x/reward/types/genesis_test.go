@@ -24,8 +24,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				RewardPoolList: []types.RewardPool{
-					sample.RewardPool(1),
-					sample.RewardPool(2),
+					sample.RewardPool(r, 1),
+					sample.RewardPool(r, 2),
 				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
@@ -36,8 +36,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated rewardPool",
 			genState: &types.GenesisState{
 				RewardPoolList: []types.RewardPool{
-					sample.RewardPool(1),
-					sample.RewardPool(1),
+					sample.RewardPool(r, 1),
+					sample.RewardPool(r, 1),
 				},
 			},
 			valid: false,

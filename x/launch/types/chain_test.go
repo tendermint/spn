@@ -10,13 +10,13 @@ import (
 )
 
 func TestChain_Validate(t *testing.T) {
-	invalidGenesisChainID := sample.Chain(0, 0)
+	invalidGenesisChainID := sample.Chain(r, 0, 0)
 	invalidGenesisChainID.GenesisChainID = "invalid"
 
-	invalidLaunchTimestamp := sample.Chain(0, 0)
+	invalidLaunchTimestamp := sample.Chain(r, 0, 0)
 	invalidLaunchTimestamp.LaunchTriggered = true
 
-	mainnetWithoutCampaign := sample.Chain(0, 0)
+	mainnetWithoutCampaign := sample.Chain(r, 0, 0)
 	mainnetWithoutCampaign.IsMainnet = true
 
 	for _, tc := range []struct {
@@ -26,7 +26,7 @@ func TestChain_Validate(t *testing.T) {
 	}{
 		{
 			desc:  "valid chain",
-			chain: sample.Chain(0, 0),
+			chain: sample.Chain(r, 0, 0),
 			valid: true,
 		},
 		{
