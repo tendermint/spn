@@ -4,9 +4,10 @@ package types
 import (
 	"encoding/base64"
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"os"
 	"strconv"
+
+	"gopkg.in/yaml.v2"
 
 	ibctmtypes "github.com/cosmos/ibc-go/v3/modules/light-clients/07-tendermint/types"
 	"github.com/pkg/errors"
