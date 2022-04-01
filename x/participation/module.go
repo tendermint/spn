@@ -15,6 +15,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
+	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/tendermint/spn/x/participation/client/cli"
@@ -98,10 +99,10 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 // AppModule implements the AppModule interface for the capability module.
 type AppModule struct {
 	AppModuleBasic
-
-	keeper        keeper.Keeper
-	accountKeeper authkeeper.AccountKeeper
-	bankKeeper    bankkeeper.Keeper
+	keeper            keeper.Keeper
+	accountKeeper     authkeeper.AccountKeeper
+	bankKeeper        bankkeeper.Keeper
+	fundraisingKeeper fundraisingkeeper.Keeper
 }
 
 func NewAppModule(
@@ -109,12 +110,14 @@ func NewAppModule(
 	keeper keeper.Keeper,
 	accountKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
+	fundraisingkeeper fundraisingkeeper.Keeper,
 ) AppModule {
 	return AppModule{
-		AppModuleBasic: NewAppModuleBasic(cdc),
-		keeper:         keeper,
-		accountKeeper:  accountKeeper,
-		bankKeeper:     bankKeeper,
+		AppModuleBasic:    NewAppModuleBasic(cdc),
+		keeper:            keeper,
+		accountKeeper:     accountKeeper,
+		bankKeeper:        bankKeeper,
+		fundraisingKeeper: fundraisingkeeper,
 	}
 }
 

@@ -6,16 +6,12 @@ import (
 	"math/rand"
 	"os"
 	"testing"
-	"time"
-
-	"github.com/cosmos/cosmos-sdk/store"
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	"github.com/tendermint/tendermint/libs/log"
-	dbm "github.com/tendermint/tm-db"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"
+	"github.com/cosmos/cosmos-sdk/store"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simulationtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -23,10 +19,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
 	abci "github.com/tendermint/tendermint/abci/types"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	tmtypes "github.com/tendermint/tendermint/types"
+	"github.com/tendermint/tendermint/libs/log"
+	dbm "github.com/tendermint/tm-db"
 
 	"github.com/tendermint/spn/app"
+	"github.com/tendermint/spn/app/simutil"
 )
 
 func init() {
@@ -45,23 +42,6 @@ type SimApp interface {
 	EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
 	InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
 	LastCommitID() storetypes.CommitID
-}
-
-var defaultConsensusParams = &abci.ConsensusParams{
-	Block: &abci.BlockParams{
-		MaxBytes: 200000,
-		MaxGas:   2000000,
-	},
-	Evidence: &tmproto.EvidenceParams{
-		MaxAgeNumBlocks: 302400,
-		MaxAgeDuration:  504 * time.Hour, // 3 weeks is the max duration
-		MaxBytes:        10000,
-	},
-	Validator: &tmproto.ValidatorParams{
-		PubKeyTypes: []string{
-			tmtypes.ABCIPubKeyTypeEd25519,
-		},
-	},
 }
 
 // interBlockCacheOpt returns a BaseApp option function that sets the persistent
@@ -106,7 +86,7 @@ func BenchmarkSimulation(b *testing.B) {
 		b,
 		os.Stdout,
 		app.GetBaseApp(),
-		simapp.AppStateFn(app.AppCodec(), app.SimulationManager()),
+		simutil.CustomAppStateFn(app.AppCodec(), app.SimulationManager()),
 		simulationtypes.RandomAccounts,
 		simapp.SimulationOperations(app, app.AppCodec(), config),
 		app.ModuleAccountAddrs(),
@@ -177,7 +157,7 @@ func TestAppStateDeterminism(t *testing.T) {
 				t,
 				os.Stdout,
 				app.GetBaseApp(),
-				simapp.AppStateFn(app.AppCodec(), app.SimulationManager()),
+				simutil.CustomAppStateFn(app.AppCodec(), app.SimulationManager()),
 				simulationtypes.RandomAccounts,
 				simapp.SimulationOperations(app, app.AppCodec(), config),
 				app.ModuleAccountAddrs(),
