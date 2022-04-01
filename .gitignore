@@ -19,6 +19,7 @@ localnet/node?/config/write-file-atomic-*
 # Scripts
 scripts/test_fundraising/sale.json
 scripts/test_fundraising/auction.json
+scripts/test_fundraising/__pycache__/
 
 # Generate report files
 *.out
