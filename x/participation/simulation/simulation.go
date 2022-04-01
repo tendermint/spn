@@ -132,19 +132,43 @@ func SimulateCreateAuction(
 }
 
 func SimulateMsgWithdrawAllocations(
-	_ authkeeper.AccountKeeper,
-	_ bankkeeper.Keeper,
-	_ keeper.Keeper,
+	ak authkeeper.AccountKeeper,
+	bk bankkeeper.Keeper,
+	fk fundraisingkeeper.Keeper,
+	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgWithdrawAllocations{
-			Participant: simAccount.Address.String(),
+		msg := &types.MsgWithdrawAllocations{}
+		auction, found := RandomAuctionWithdrawEnabled(ctx, r, fk, k)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no valid auction found"), nil, nil
 		}
 
-		// TODO: Handling the WithdrawAllocations simulation
+		simAccount, found := RandomAccWithAuctionUsedAllocationsNotWithdrawn(ctx, r, k, accs, auction.GetId())
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no account with used allocations found"), nil, nil
+		}
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "WithdrawAllocations simulation not implemented"), nil, nil
+		msg = types.NewMsgWithdrawAllocations(
+			simAccount.Address.String(),
+			auction.GetId(),
+		)
+
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      simAccount,
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      fundraisingtypes.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }

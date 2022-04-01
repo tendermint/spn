@@ -14,13 +14,13 @@ import (
 )
 
 const (
-	opWeightMsgParticipate            = "op_weight_msg_participate"
-	defaultWeightMsgParticipate   int = 50
-	opWeightMsgCreateAuction          = "op_weight_create_auction"
-	defaultWeightMsgCreateAuction int = 20
-
-	opWeightMsgWithdrawAllocations          = "op_weight_withdraw_allocations"
+	defaultWeightMsgCreateAuction       int = 20
+	defaultWeightMsgParticipate         int = 50
 	defaultWeightMsgWithdrawAllocations int = 50
+
+	opWeightMsgCreateAuction       = "op_weight_create_auction"
+	opWeightMsgParticipate         = "op_weight_msg_participate"
+	opWeightMsgWithdrawAllocations = "op_weight_withdraw_allocations"
 
 	// this line is used by starport scaffolding # simapp/module/const
 )
@@ -102,7 +102,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgWithdrawAllocations,
-		participationsim.SimulateMsgWithdrawAllocations(am.accountKeeper, am.bankKeeper, am.FundraisingKeeper, am.keeper),
+		participationsim.SimulateMsgWithdrawAllocations(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

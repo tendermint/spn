@@ -3,13 +3,12 @@ package campaign
 import (
 	"math/rand"
 
-	"github.com/tendermint/spn/testutil/sample"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	"github.com/tendermint/spn/testutil/sample"
 	campaignsim "github.com/tendermint/spn/x/campaign/simulation"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -36,6 +35,8 @@ const (
 	opWeightMsgRedeemVouchers    = "op_weight_msg_redeem_vouchers"
 	opWeightMsgUnredeemVouchers  = "op_weight_msg_unredeem_vouchers"
 	opWeightMsgSendVouchers      = "op_weight_msg_send_vouchers"
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
