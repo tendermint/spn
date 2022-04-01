@@ -45,7 +45,7 @@ func ZeroLaunchTimestampInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
 		all := k.GetAllChain(ctx)
 		for _, chain := range all {
-			if chain.LaunchTimestamp == 0 {
+			if chain.LaunchTimestamp == 0 && chain.LaunchTriggered {
 				return sdk.FormatInvariant(
 					types.ModuleName, zeroLaunchTimestampRoute,
 					"LaunchTimestamp is not set while LaunchTriggered is set",
