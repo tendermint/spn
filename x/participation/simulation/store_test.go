@@ -148,7 +148,7 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	params.WithdrawalDelay = withdrawalDelay
 	tk.ParticipationKeeper.SetParams(ctx, params)
 
-	t.Run("no auctions ", func(t *testing.T) {
+	t.Run("no auctions", func(t *testing.T) {
 		_, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.False(t, found)
 	})
@@ -337,12 +337,7 @@ func TestRandomAccWithAuctionUsedAllocationsNotWithdrawn(t *testing.T) {
 			found:    false,
 		},
 		{
-			name:     "one account with no used allocations",
-			accounts: accs[:1],
-			found:    false,
-		},
-		{
-			name:     "one account with used allocations already withdrawn",
+			name:     "no account with used allocations that can be withdrawn",
 			accounts: accs[:2],
 			found:    false,
 		},
