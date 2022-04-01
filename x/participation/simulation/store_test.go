@@ -193,6 +193,7 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	t.Run("find auction where withdrawal delay has passed", func(t *testing.T) {
 		foundAuction, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.True(t, found)
+		require.Equal(t, validAuction, foundAuction)
 		require.True(t, ctx.BlockTime().After(foundAuction.GetStartTime().Add(withdrawalDelay)))
 	})
 
@@ -204,6 +205,7 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	t.Run("find cancelled auction", func(t *testing.T) {
 		foundAuction, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.True(t, found)
+		require.Equal(t, validAuction, foundAuction)
 		require.Equal(t, fundraisingtypes.AuctionStatusCancelled, foundAuction.GetStatus())
 	})
 }
