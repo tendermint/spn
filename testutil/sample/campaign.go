@@ -112,15 +112,6 @@ func CampaignGenesisState(r *rand.Rand) campaign.GenesisState {
 				Chains:     []uint64{0, 1},
 			},
 		},
-		MainnetVestingAccountList: []campaign.MainnetVestingAccount{
-			MainnetVestingAccount(r, 0, Address(r)),
-			MainnetVestingAccount(r, 0, Address(r)),
-			MainnetVestingAccount(r, 1, Address(r)),
-		},
-		MainnetAccountList: []campaign.MainnetAccount{
-			MainnetAccount(r, 0, Address(r)),
-			MainnetAccount(r, 1, Address(r)),
-		},
 		TotalShares: spntypes.TotalShareNumber,
 		Params:      CampaignParams(r),
 	}
