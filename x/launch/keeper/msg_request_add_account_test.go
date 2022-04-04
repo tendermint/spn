@@ -129,6 +129,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			require.NoError(t, err)
 			require.Equal(t, tt.wantID, got.RequestID)
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
+
 			request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 			require.True(t, found, "request not found")
 			content := request.Content.GetGenesisAccount()

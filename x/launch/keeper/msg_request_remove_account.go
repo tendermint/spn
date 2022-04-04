@@ -47,9 +47,6 @@ func (k msgServer) RequestRemoveAccount(
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)
 	}
 
-	var requestID uint64
-	approved := false
-
 	content := types.NewAccountRemoval(msg.Address)
 	request := types.Request{
 		LaunchID:  msg.LaunchID,
@@ -59,15 +56,18 @@ func (k msgServer) RequestRemoveAccount(
 		Status:    types.Request_PENDING,
 	}
 
+	var requestID uint64
+	approved := false
 	if msg.Creator == coord.Address {
 		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err
 		}
 		approved = true
-	} else {
-		requestID = k.AppendRequest(ctx, request)
+		request.Status = types.Request_APPROVED
 	}
+
+	requestID = k.AppendRequest(ctx, request)
 
 	return &types.MsgRequestRemoveAccountResponse{
 		RequestID:    requestID,

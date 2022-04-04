@@ -109,6 +109,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address:  addr1,
 			},
 			wantApprove: true,
+			wantID:      1,
 		},
 		{
 			name: "add chain 4 request 3",
@@ -117,7 +118,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Creator:  addr2,
 				Address:  addr2,
 			},
-			wantID: 1,
+			wantID: 2,
 		},
 		{
 			name: "add chain 5 request 1",
@@ -130,15 +131,6 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		},
 		{
 			name: "add chain 5 request 2",
-			msg: types.MsgRequestRemoveAccount{
-				LaunchID: chains[4].LaunchID,
-				Creator:  coordAddr,
-				Address:  addr2,
-			},
-			wantApprove: true,
-		},
-		{
-			name: "add chain 5 request 3",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[4].LaunchID,
 				Creator:  addr3,
@@ -154,6 +146,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address:  addr4,
 			},
 			wantApprove: true,
+			wantID:      3,
 		},
 		{
 			name: "failing request from coordinator",
@@ -194,20 +187,21 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			require.Equal(t, tt.wantID, got.RequestID)
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
-			if !tt.wantApprove {
-				request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
-				require.True(t, found, "request not found")
-				require.Equal(t, tt.wantID, request.RequestID)
-				require.Equal(t, types.Request_PENDING, request.Status)
+			request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
+			require.True(t, found, "request not found")
+			require.Equal(t, tt.wantID, request.RequestID)
+			content := request.Content.GetAccountRemoval()
+			require.NotNil(t, content)
+			require.Equal(t, tt.msg.Address, content.Address)
 
-				content := request.Content.GetAccountRemoval()
-				require.NotNil(t, content)
-				require.Equal(t, tt.msg.Address, content.Address)
+			if !tt.wantApprove {
+				require.Equal(t, types.Request_PENDING, request.Status)
 			} else {
 				_, foundGenesis := tk.LaunchKeeper.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.False(t, foundGenesis, "genesis account not removed")
 				_, foundVesting := tk.LaunchKeeper.GetVestingAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.False(t, foundVesting, "vesting account not removed")
+				require.Equal(t, types.Request_APPROVED, request.Status)
 			}
 		})
 	}

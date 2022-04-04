@@ -82,6 +82,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			name:        "request from coordinator is pre-approved",
 			msg:         sample.MsgRequestAddValidator(r, coordAddr, addr3, chains[3].LaunchID),
 			wantApprove: true,
+			wantID:      2,
 		},
 		{
 			name:        "failing request from coordinator",
@@ -105,24 +106,26 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			require.Equal(t, tc.wantID, got.RequestID)
 			require.Equal(t, tc.wantApprove, got.AutoApproved)
 
+			request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tc.msg.LaunchID, got.RequestID)
+			require.True(t, found, "request not found")
+			content := request.Content.GetGenesisValidator()
+			require.NotNil(t, content)
+			require.Equal(t, tc.msg.ValAddress, content.Address)
+			require.Equal(t, tc.msg.LaunchID, content.LaunchID)
+			require.True(t, tc.msg.SelfDelegation.Equal(content.SelfDelegation))
+			require.Equal(t, tc.msg.GenTx, content.GenTx)
+			require.Equal(t, tc.msg.Peer, content.Peer)
+			require.Equal(t, tc.msg.ConsPubKey, content.ConsPubKey)
+			require.Equal(t, tc.wantID, request.RequestID)
+			require.Equal(t, tc.msg.Creator, request.Creator)
+
 			if !tc.wantApprove {
-				request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tc.msg.LaunchID, got.RequestID)
-				require.True(t, found, "request not found")
-				require.Equal(t, tc.wantID, request.RequestID)
-				require.Equal(t, tc.msg.Creator, request.Creator)
 				require.Equal(t, types.Request_PENDING, request.Status)
 
-				content := request.Content.GetGenesisValidator()
-				require.NotNil(t, content)
-				require.Equal(t, tc.msg.ValAddress, content.Address)
-				require.Equal(t, tc.msg.LaunchID, content.LaunchID)
-				require.True(t, tc.msg.SelfDelegation.Equal(content.SelfDelegation))
-				require.Equal(t, tc.msg.GenTx, content.GenTx)
-				require.Equal(t, tc.msg.Peer, content.Peer)
-				require.Equal(t, tc.msg.ConsPubKey, content.ConsPubKey)
 			} else {
 				_, found := tk.LaunchKeeper.GetGenesisValidator(sdkCtx, tc.msg.LaunchID, tc.msg.ValAddress)
 				require.True(t, found, "genesis validator not found")
+				require.Equal(t, types.Request_APPROVED, request.Status)
 			}
 		})
 	}
