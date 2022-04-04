@@ -56,7 +56,7 @@ func BenchmarkSimulation(b *testing.B) {
 		b.Skip("skipping application simulation")
 	}
 
-	simapp.FlagSeedValue = 10
+	simapp.FlagSeedValue = 9
 	simapp.FlagVerboseValue = true
 
 	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
@@ -64,9 +64,11 @@ func BenchmarkSimulation(b *testing.B) {
 
 	config.InitialBlockHeight = 1
 	config.AllInvariants = true
+	config.OnOperation = true
 
 	b.Cleanup(func() {
-		db.Close()
+		err := db.Close()
+		require.NoError(b, err)
 		err = os.RemoveAll(dir)
 		require.NoError(b, err)
 	})
@@ -119,7 +121,7 @@ func TestAppStateDeterminism(t *testing.T) {
 	config := simapp.NewConfigFromFlags()
 	config.InitialBlockHeight = 1
 	config.ExportParamsPath = ""
-	config.OnOperation = false
+	config.OnOperation = true
 	config.AllInvariants = true
 
 	numSeeds := 3
