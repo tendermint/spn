@@ -22,8 +22,9 @@ func (k Keeper) AuctionUsedAllocationsAll(c context.Context, req *types.QueryAll
 
 	store := ctx.KVStore(k.storeKey)
 	auctionUsedAllocationsStore := prefix.NewStore(store, types.KeyPrefix(types.AuctionUsedAllocationsKeyPrefix))
+	addressAuctionUsedAllocationsStore := prefix.NewStore(auctionUsedAllocationsStore, types.KeyPrefix(req.Address))
 
-	pageRes, err := query.Paginate(auctionUsedAllocationsStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(addressAuctionUsedAllocationsStore, req.Pagination, func(key []byte, value []byte) error {
 		var auctionUsedAllocations types.AuctionUsedAllocations
 		if err := k.cdc.Unmarshal(value, &auctionUsedAllocations); err != nil {
 			return err
