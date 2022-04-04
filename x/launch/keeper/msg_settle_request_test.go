@@ -49,10 +49,11 @@ func TestMsgSettleRequest(t *testing.T) {
 	requests := createRequestsFromSamples(tk.LaunchKeeper, sdkCtx, chains[2].LaunchID, requestSamples)
 
 	tests := []struct {
-		name      string
-		msg       types.MsgSettleRequest
-		checkAddr string
-		err       error
+		name       string
+		msg        types.MsgSettleRequest
+		checkAddr  string
+		wantStatus types.Request_Status
+		err        error
 	}{
 		{
 			name: "invalid chain",
@@ -112,7 +113,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID: requests[0].RequestID,
 				Approve:   true,
 			},
-			checkAddr: requestSamples[0].Creator,
+			wantStatus: types.Request_APPROVED,
+			checkAddr:  requestSamples[0].Creator,
 		},
 		{
 			name: "coordinator can approve a second request for the same chain",
@@ -122,7 +124,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID: requests[1].RequestID,
 				Approve:   true,
 			},
-			checkAddr: requestSamples[1].Creator,
+			wantStatus: types.Request_APPROVED,
+			checkAddr:  requestSamples[1].Creator,
 		},
 		{
 			name: "coordinator can reject a request",
@@ -132,7 +135,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID: requests[2].RequestID,
 				Approve:   false,
 			},
-			checkAddr: requestSamples[2].Creator,
+			wantStatus: types.Request_REJECTED,
+			checkAddr:  requestSamples[2].Creator,
 		},
 		{
 			name: "request creator can reject their own request",
@@ -142,7 +146,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID: requests[3].RequestID,
 				Approve:   false,
 			},
-			checkAddr: requestSamples[3].Creator,
+			wantStatus: types.Request_REJECTED,
+			checkAddr:  requestSamples[3].Creator,
 		},
 		{
 			name: "should prevent rejecting a request if the signer is not the request creator",
@@ -184,8 +189,9 @@ func TestMsgSettleRequest(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			_, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, tt.msg.RequestID)
-			require.False(t, found, "request not removed")
+			request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, tt.msg.RequestID)
+			require.True(t, found, "request not found")
+			require.Equal(t, tt.wantStatus, request.Status)
 
 			_, found = tk.LaunchKeeper.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.checkAddr)
 			require.Equal(t, tt.msg.Approve, found, "request apply not performed")
