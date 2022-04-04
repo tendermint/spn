@@ -119,13 +119,22 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 			}
 
 			// read existing denoms from allocated shares of the campaign to check possible minted vouchers
-			allocatedShares := campaign.GetAllocatedShares()
+			allocated, err := types.SharesToVouchers(campaign.GetAllocatedShares(), campaignID)
+			if err != nil {
+				return sdk.FormatInvariant(
+					types.ModuleName, campaignSharesRoute,
+					fmt.Sprintf("campaign %d: allocated shares can't be converted to vouchers %s",
+						campaignID,
+						err.Error(),
+					),
+				), true
+			}
 
 			// get the supply for the circulating vouchers
 			vouchers := sdk.NewCoins()
-			for _, shares := range allocatedShares {
-				voucherSupply := k.bankKeeper.GetSupply(ctx, shares.Denom)
-				vouchers.Add(voucherSupply)
+			for _, a := range allocated {
+				voucherSupply := k.bankKeeper.GetSupply(ctx, a.Denom)
+				vouchers = vouchers.Add(voucherSupply)
 			}
 
 			// convert to shares and add to the campaign shares
@@ -138,10 +147,14 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 			}
 			expectedAllocatedSharesShares = types.IncreaseShares(expectedAllocatedSharesShares, vShares)
 
-			if !types.IsEqualShares(expectedAllocatedSharesShares, campaign.AllocatedShares) {
+			if !types.IsEqualShares(expectedAllocatedSharesShares, campaign.GetAllocatedShares()) {
 				return sdk.FormatInvariant(
 					types.ModuleName, campaignSharesRoute,
-					fmt.Sprintf("%s: %d", types.ErrInvalidShares, campaignID),
+					fmt.Sprintf("campaign %d: expected allocated shares: %s, actual allocated shares: %s",
+						campaignID,
+						expectedAllocatedSharesShares.String(),
+						campaign.GetAllocatedShares().String(),
+					),
 				), true
 			}
 		}
