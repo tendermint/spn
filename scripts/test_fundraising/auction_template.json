@@ -6,7 +6,8 @@
     "amount": ""
   },
   "paying_coin_denom": "",
-  "vesting_schedules": [],
   "start_time": "",
-  "end_time": ""
+  "end_times": [],
+  "max_extended_round": "3",
+  "extended_round_rate": "0.05"
 }

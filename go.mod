@@ -15,8 +15,8 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tendermint/fundraising v0.1.2-0.20220330100200-0863b616db9c
 	github.com/tendermint/starport v0.19.5
-    github.com/tendermint/tendermint v0.34.15
-    github.com/tendermint/tm-db v0.6.6
+	github.com/tendermint/tendermint v0.34.15
+	github.com/tendermint/tm-db v0.6.6
 	google.golang.org/genproto v0.0.0-20220317150908-0efb43f6373e
 	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.27.1
