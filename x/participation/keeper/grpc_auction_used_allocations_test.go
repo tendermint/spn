@@ -86,6 +86,12 @@ func TestAuctionUsedAllocationsQueryPaginated(t *testing.T) {
 			},
 		}
 	}
+	t.Run("EmptySet", func(t *testing.T) {
+		resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request("invalid", nil, 0, 0, true))
+		require.NoError(t, err)
+		require.Equal(t, 0, int(resp.Pagination.Total))
+		require.Nil(t, resp.AuctionUsedAllocations)
+	})
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
