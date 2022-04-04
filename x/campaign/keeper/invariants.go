@@ -9,7 +9,6 @@ import (
 )
 
 const (
-	campaignChainsWithoutCampaignRoute = "campaign-chains-without-campaign"
 	accountWithoutCampaignRoute        = "account-without-campaign"
 	vestingAccountWithoutCampaignRoute = "vesting-account-without-campaign"
 	campaignSharesRoute                = "campaign-shares"
@@ -17,8 +16,6 @@ const (
 
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
-	ir.RegisterRoute(types.ModuleName, campaignChainsWithoutCampaignRoute,
-		CampaignChainsWithoutCampaignInvariant(k))
 	ir.RegisterRoute(types.ModuleName, accountWithoutCampaignRoute,
 		AccountWithoutCampaignInvariant(k))
 	ir.RegisterRoute(types.ModuleName, vestingAccountWithoutCampaignRoute,
@@ -30,32 +27,11 @@ func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
 // AllInvariants runs all invariants of the module.
 func AllInvariants(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-		res, stop := CampaignChainsWithoutCampaignInvariant(k)(ctx)
-		if stop {
-			return res, stop
-		}
-		res, stop = AccountWithoutCampaignInvariant(k)(ctx)
+		res, stop := AccountWithoutCampaignInvariant(k)(ctx)
 		if stop {
 			return res, stop
 		}
 		return VestingAccountWithoutCampaignInvariant(k)(ctx)
-	}
-}
-
-// CampaignChainsWithoutCampaignInvariant invariant that checks if
-// the `CampaignChains` campaign exist.
-func CampaignChainsWithoutCampaignInvariant(k Keeper) sdk.Invariant {
-	return func(ctx sdk.Context) (string, bool) {
-		all := k.GetAllCampaignChains(ctx)
-		for _, chains := range all {
-			if _, found := k.GetCampaign(ctx, chains.CampaignID); !found {
-				return sdk.FormatInvariant(
-					types.ModuleName, campaignChainsWithoutCampaignRoute,
-					fmt.Sprintf("%s: %d", types.ErrCampaignNotFound, chains.CampaignID),
-				), true
-			}
-		}
-		return "", false
 	}
 }
 
