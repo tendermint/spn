@@ -50,6 +50,13 @@ func (k msgServer) SettleRequest(
 		)
 	}
 
+	if request.Status != types.Request_PENDING {
+		return nil, sdkerrors.Wrapf(types.ErrRequestSettled,
+			"request %d is not pending",
+			msg.RequestID,
+		)
+	}
+
 	if msg.Signer != request.Creator && msg.Signer != coord.Address {
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Signer)
 	}

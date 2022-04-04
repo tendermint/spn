@@ -15,6 +15,8 @@ import (
 )
 
 func TestMsgSettleRequest(t *testing.T) {
+	const numReq = 6
+
 	var (
 		coordinator1       = sample.Coordinator(r, sample.Address(r))
 		coordinator2       = sample.Coordinator(r, sample.Address(r))
@@ -38,14 +40,18 @@ func TestMsgSettleRequest(t *testing.T) {
 	chains[3].CoordinatorID = disableCoordinator.CoordinatorID
 	tk.LaunchKeeper.SetChain(sdkCtx, chains[3])
 
-	requestSamples := make([]RequestSample, 6)
-	for i := 0; i < 6; i++ {
+	requestSamples := make([]RequestSample, numReq)
+	for i := 0; i < numReq; i++ {
 		addr := sample.Address(r)
 		requestSamples[i] = RequestSample{
 			Content: sample.GenesisAccountContent(r, chains[2].LaunchID, addr),
 			Creator: addr,
+			Status:  types.Request_PENDING,
 		}
 	}
+
+	// set one request to a non-pending status
+	requestSamples[numReq-1].Status = types.Request_APPROVED
 	requests := createRequestsFromSamples(tk.LaunchKeeper, sdkCtx, chains[2].LaunchID, requestSamples)
 
 	tests := []struct {
@@ -94,6 +100,16 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:   true,
 			},
 			err: types.ErrNoAddressPermission,
+		},
+		{
+			name: "request already settled error",
+			msg: types.MsgSettleRequest{
+				LaunchID:  chains[2].LaunchID,
+				Signer:    coordinator1.Address,
+				RequestID: requests[numReq-1].RequestID,
+				Approve:   true,
+			},
+			err: types.ErrRequestSettled,
 		},
 		{
 			name: "should prevent approving an invalid request",
