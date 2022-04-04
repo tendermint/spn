@@ -13,6 +13,7 @@ import (
 	"github.com/tendermint/spn/x/participation/types"
 )
 
+// RandomAccWithBalance returns random account with the desired available balance
 func RandomAccWithBalance(ctx sdk.Context, r *rand.Rand,
 	bk bankkeeper.Keeper,
 	accs []simtypes.Account,
@@ -37,6 +38,7 @@ func RandomAccWithBalance(ctx sdk.Context, r *rand.Rand,
 	return simtypes.Account{}, sdk.NewCoins(), false
 }
 
+// RandomAuction returns random auction that is not started nor cancelled
 func RandomAuction(ctx sdk.Context, r *rand.Rand, fk fundraisingkeeper.Keeper) (auction fundraisingtypes.AuctionI, found bool) {
 	auctions := fk.GetAuctions(ctx)
 	if len(auctions) == 0 {
@@ -89,6 +91,8 @@ func RandomAuctionWithdrawEnabled(
 	return auction, false
 }
 
+// RandomAccWithAvailableAllocations returns random account that has at least the desired amount of available allocations
+// and can still participate in the specified auction
 func RandomAccWithAvailableAllocations(ctx sdk.Context, r *rand.Rand,
 	k keeper.Keeper,
 	accs []simtypes.Account,
