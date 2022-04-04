@@ -56,15 +56,16 @@ func BenchmarkSimulation(b *testing.B) {
 		b.Skip("skipping application simulation")
 	}
 
-	simapp.FlagSeedValue = 9
+	simapp.FlagSeedValue = 10
 	simapp.FlagVerboseValue = true
 
 	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
 	require.NoError(b, err, "simulation setup failed")
 
 	config.InitialBlockHeight = 1
-	config.AllInvariants = true
+	config.ExportParamsPath = ""
 	config.OnOperation = true
+	config.AllInvariants = true
 
 	b.Cleanup(func() {
 		err := db.Close()
