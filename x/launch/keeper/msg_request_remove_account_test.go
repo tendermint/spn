@@ -198,6 +198,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
+				require.Equal(t, types.Request_PENDING, request.Status)
 
 				content := request.Content.GetAccountRemoval()
 				require.NotNil(t, content)

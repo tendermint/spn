@@ -134,6 +134,7 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tt.wantID, request.RequestID)
 				require.Equal(t, tt.msg.Creator, request.Creator)
+				require.Equal(t, types.Request_PENDING, request.Status)
 
 				content := request.Content.GetVestingAccount()
 				require.NotNil(t, content)

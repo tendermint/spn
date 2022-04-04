@@ -51,6 +51,7 @@ func (k msgServer) RequestAddAccount(
 		Creator:   msg.Creator,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
+		Status:    types.Request_PENDING,
 	}
 
 	var requestID uint64

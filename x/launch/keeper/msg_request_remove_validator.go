@@ -49,6 +49,7 @@ func (k msgServer) RequestRemoveValidator(
 		Creator:   msg.ValidatorAddress,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
+		Status:    types.Request_PENDING,
 	}
 
 	if msg.Creator == coord.Address {

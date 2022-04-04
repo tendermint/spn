@@ -110,6 +110,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 				require.True(t, found, "request not found")
 				require.Equal(t, tc.wantID, request.RequestID)
 				require.Equal(t, tc.msg.Creator, request.Creator)
+				require.Equal(t, types.Request_PENDING, request.Status)
 
 				content := request.Content.GetGenesisValidator()
 				require.NotNil(t, content)

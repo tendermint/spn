@@ -56,6 +56,7 @@ func (k msgServer) RequestRemoveAccount(
 		Creator:   msg.Address,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
+		Status:    types.Request_PENDING,
 	}
 
 	if msg.Creator == coord.Address {
