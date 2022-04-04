@@ -109,7 +109,10 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 			)
 		}
 
-		for campaignID, expectedAllocatedSharesShares := range accountSharesByCampaign {
+		for _, campaign := range k.GetAllCampaign(ctx) {
+			campaignID := campaign.CampaignID
+			expectedAllocatedSharesShares := accountSharesByCampaign[campaignID]
+
 			campaign, found := k.GetCampaign(ctx, campaignID)
 			if !found {
 				return sdk.FormatInvariant(

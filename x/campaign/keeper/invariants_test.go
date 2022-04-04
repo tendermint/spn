@@ -115,4 +115,28 @@ func TestCampaignSharesInvariant(t *testing.T) {
 		mes, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
 		require.False(t, broken, mes)
 	})
+
+	t.Run("campaign with empty allocated share is valid", func(t *testing.T) {
+		tk.CampaignKeeper.SetCampaign(ctx, sample.Campaign(r, 3))
+
+		mes, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		require.False(t, broken, mes)
+	})
+
+	t.Run("invalid case", func(t *testing.T) {
+		campaignID := uint64(4)
+		campaign := sample.Campaign(r, campaignID)
+		campaign.AllocatedShares = types.IncreaseShares(
+			campaign.AllocatedShares,
+			tc.Shares(t, "100foo,200bar"),
+		)
+		tk.CampaignKeeper.SetCampaign(ctx, campaign)
+
+		// mint vouchers
+		voucherFoo, voucherBar := types.VoucherDenom(campaignID, "foo"), types.VoucherDenom(campaignID, "bar")
+		tk.Mint(ctx, sample.Address(r), tc.Coins(t, fmt.Sprintf("99%s,200%s", voucherFoo, voucherBar)))
+
+		mes, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		require.True(t, broken, mes)
+	})
 }
