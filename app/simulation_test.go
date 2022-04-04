@@ -52,20 +52,14 @@ func interBlockCacheOpt() func(*baseapp.BaseApp) {
 
 // go test ./app -v -benchmem -run=^$ -bench ^BenchmarkSimulation -Commit=true -cpuprofile cpu.out
 func BenchmarkSimulation(b *testing.B) {
-	if !simapp.FlagEnabledValue {
-		b.Skip("skipping application simulation")
-	}
-
 	simapp.FlagSeedValue = 10
 	simapp.FlagVerboseValue = true
+	simapp.FlagOnOperationValue = true
+	simapp.FlagAllInvariantsValue = true
+	simapp.FlagInitialBlockHeightValue = 1
 
 	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
 	require.NoError(b, err, "simulation setup failed")
-
-	config.InitialBlockHeight = 1
-	config.ExportParamsPath = ""
-	config.OnOperation = true
-	config.AllInvariants = true
 
 	b.Cleanup(func() {
 		err := db.Close()
@@ -83,7 +77,7 @@ func BenchmarkSimulation(b *testing.B) {
 		true,
 		map[int64]bool{},
 		app.DefaultNodeHome,
-		0,
+		simapp.FlagPeriodValue,
 		encoding,
 		simapp.EmptyAppOptions{},
 	)
