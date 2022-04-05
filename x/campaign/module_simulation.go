@@ -1,17 +1,14 @@
 package campaign
 
 import (
-	"fmt"
 	"math/rand"
-	"strings"
-
-	"github.com/tendermint/spn/testutil/sample"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	"github.com/tendermint/spn/testutil/sample"
 	campaignsim "github.com/tendermint/spn/x/campaign/simulation"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -38,6 +35,8 @@ const (
 	opWeightMsgRedeemVouchers    = "op_weight_msg_redeem_vouchers"
 	opWeightMsgUnredeemVouchers  = "op_weight_msg_unredeem_vouchers"
 	opWeightMsgSendVouchers      = "op_weight_msg_send_vouchers"
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -54,23 +53,12 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 	campaignParams := types.DefaultParams()
-	creationFee := make([]string, len(campaignParams.CampaignCreationFee))
-	for i := range campaignParams.CampaignCreationFee {
-		creationFee[i] = fmt.Sprintf(
-			"{\"denom\":\"%v\",\"amount\":\"%v\"}",
-			campaignParams.CampaignCreationFee[i].Denom,
-			campaignParams.CampaignCreationFee[i].Amount.String(),
-		)
-	}
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyTotalSupplyRange), func(r *rand.Rand) string {
-			return fmt.Sprintf(
-				"{\"minTotalSupply\":\"%v\",\"maxTotalSupply\":\"%v\"}",
-				campaignParams.TotalSupplyRange.MinTotalSupply,
-				campaignParams.TotalSupplyRange.MaxTotalSupply)
+			return string(types.Amino.MustMarshalJSON(campaignParams.TotalSupplyRange))
 		}),
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyCampaignCreationFee), func(r *rand.Rand) string {
-			return fmt.Sprintf("[%v]", strings.Join(creationFee, ","))
+			return string(types.Amino.MustMarshalJSON(campaignParams.CampaignCreationFee))
 		}),
 	}
 }

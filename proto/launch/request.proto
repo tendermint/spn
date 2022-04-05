@@ -14,6 +14,12 @@ message Request {
   string creator = 3;
   int64 createdAt = 4;
   RequestContent content = 5 [(gogoproto.nullable) = false];
+  enum Status {
+    PENDING = 0;
+    APPROVED = 1;
+    REJECTED = 2;
+  }
+  Status status = 6;
 }
 
 message RequestContent {
