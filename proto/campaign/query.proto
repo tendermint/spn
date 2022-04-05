@@ -68,11 +68,11 @@ service Query {
   }
 
   // Queries the TotalShares value
-	rpc TotalShares(QueryTotalSharesRequest) returns (QueryTotalSharesResponse) {
-		option (google.api.http).get = "/tendermint/spn/campaign/total_shares";
-	}
+  rpc TotalShares(QueryTotalSharesRequest) returns (QueryTotalSharesResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/total_shares";
+  }
 
-// this line is used by starport scaffolding # 2
+  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetCampaignRequest {

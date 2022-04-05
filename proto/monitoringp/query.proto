@@ -20,21 +20,21 @@ service Query {
   }
 
   // Queries a ConnectionChannelID by index.
-	rpc ConnectionChannelID(QueryGetConnectionChannelIDRequest) returns (QueryGetConnectionChannelIDResponse) {
-		option (google.api.http).get = "/tendermint/spn/monitoringp/connection_channel_id";
-	}
+  rpc ConnectionChannelID(QueryGetConnectionChannelIDRequest) returns (QueryGetConnectionChannelIDResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringp/connection_channel_id";
+  }
 
-	// Queries a MonitoringInfo by index.
-	rpc MonitoringInfo(QueryGetMonitoringInfoRequest) returns (QueryGetMonitoringInfoResponse) {
-		option (google.api.http).get = "/tendermint/spn/monitoringp/monitoring_info";
-	}
+  // Queries a MonitoringInfo by index.
+  rpc MonitoringInfo(QueryGetMonitoringInfoRequest) returns (QueryGetMonitoringInfoResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringp/monitoring_info";
+  }
 
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringp/params";
   }
 
-	// this line is used by starport scaffolding # 2
+  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetConsumerClientIDRequest {}
@@ -46,13 +46,13 @@ message QueryGetConsumerClientIDResponse {
 message QueryGetConnectionChannelIDRequest {}
 
 message QueryGetConnectionChannelIDResponse {
-	ConnectionChannelID ConnectionChannelID = 1 [(gogoproto.nullable) = false];
+  ConnectionChannelID ConnectionChannelID = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryGetMonitoringInfoRequest {}
 
 message QueryGetMonitoringInfoResponse {
-	MonitoringInfo MonitoringInfo = 1 [(gogoproto.nullable) = false];
+  MonitoringInfo MonitoringInfo = 1 [(gogoproto.nullable) = false];
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.

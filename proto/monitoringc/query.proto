@@ -40,17 +40,17 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id";
   }
 
-	// Queries a MonitoringHistory by launch id.
-	rpc MonitoringHistory(QueryGetMonitoringHistoryRequest) returns (QueryGetMonitoringHistoryResponse) {
-		option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history/{launchID}";
-	}
+  // Queries a MonitoringHistory by launch id.
+  rpc MonitoringHistory(QueryGetMonitoringHistoryRequest) returns (QueryGetMonitoringHistoryResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history/{launchID}";
+  }
 
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringc/params";
   }
 
-	// this line is used by starport scaffolding # 2
+  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetVerifiedClientIdsRequest {
@@ -96,11 +96,11 @@ message QueryAllLaunchIDFromChannelIDResponse {
 }
 
 message QueryGetMonitoringHistoryRequest {
-	  uint64 launchID = 1;
+  uint64 launchID = 1;
 }
 
 message QueryGetMonitoringHistoryResponse {
-	MonitoringHistory monitoringHistory = 1 [(gogoproto.nullable) = false];
+  MonitoringHistory monitoringHistory = 1 [(gogoproto.nullable) = false];
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.

@@ -9,7 +9,7 @@ option go_package = "github.com/tendermint/spn/x/participation/types";
 // Params defines the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
-  
+
   AllocationPrice allocationPrice = 1 [(gogoproto.nullable) = false];
   repeated Tier participationTierList = 2 [(gogoproto.nullable) = false];
   // Time frame before auction starts where MsgParticipate can be called
@@ -22,7 +22,7 @@ message AllocationPrice {
   // number of bonded tokens necessary to get one allocation
   string bonded = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
 }
 
@@ -37,6 +37,6 @@ message TierBenefits {
   // maximum amount an auction participant can bid
   string maxBidAmount = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
 }
