@@ -242,6 +242,7 @@ func (i initializer) Campaign(
 }
 
 func (i initializer) Reward(
+	authKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
 	profileKeeper *profilekeeper.Keeper,
 	launchKeeper *launchkeeper.Keeper,
@@ -261,6 +262,7 @@ func (i initializer) Reward(
 		storeKey,
 		memStoreKey,
 		subspace,
+		authKeeper,
 		bankKeeper,
 		profileKeeper,
 		launchKeeper,
