@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -42,7 +43,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 	if !creationFee.Empty() {
 		coordAddr, err := sdk.AccAddressFromBech32(msg.Coordinator)
 		if err != nil {
-			return nil, err
+			return nil, spnerrors.Criticalf("invalid coordinator bech32 address %s", err.Error())
 		}
 		if err = k.distrKeeper.FundCommunityPool(ctx, creationFee, coordAddr); err != nil {
 			return nil, err

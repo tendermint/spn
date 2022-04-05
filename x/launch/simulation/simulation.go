@@ -92,6 +92,10 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 
 		modify := r.Intn(100) < 50
 		setCampaignID := r.Intn(100) < 50
+		// do not set campaignID if already set
+		if chain.HasCampaign {
+			setCampaignID = false
+		}
 		// ensure there is always a value to edit
 		if !modify && !setCampaignID {
 			modify = true

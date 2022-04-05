@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	"errors"
 	"math/rand"
 	"time"
 
@@ -62,7 +63,7 @@ func SimulateMsgParticipate(
 			SimAccount:      simAccount,
 			AccountKeeper:   ak,
 			Bankkeeper:      bk,
-			ModuleName:      fundraisingtypes.ModuleName,
+			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
 		return simulation.GenAndDeliverTxWithRandFees(txCtx)
@@ -77,6 +78,8 @@ func SimulateCreateAuction(
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		msg := &fundraisingtypes.MsgCreateFixedPriceAuction{}
+
 		// fundraising simulation params must be set
 		// since the module is not included in the simulation manager
 		params := fundraisingtypes.DefaultParams()
@@ -102,7 +105,7 @@ func SimulateCreateAuction(
 		if !found {
 			return simtypes.NoOpMsg(
 					types.ModuleName,
-					fundraisingtypes.MsgCreateFixedPriceAuction{}.Type(),
+					msg.Type(),
 					"no account with balance found"),
 				nil,
 				nil
@@ -110,7 +113,7 @@ func SimulateCreateAuction(
 
 		startTime := ctx.BlockTime().Add(time.Hour * 24)
 		endTime := startTime.Add(time.Hour * 24 * 7)
-		msg := sample.MsgCreateFixedAuction(r, simAccount.Address.String(), sellCoin, startTime, endTime)
+		msg = sample.MsgCreateFixedAuction(r, simAccount.Address.String(), sellCoin, startTime, endTime)
 
 		txCtx := simulation.OperationInput{
 			R:               r,
@@ -132,19 +135,91 @@ func SimulateCreateAuction(
 }
 
 func SimulateMsgWithdrawAllocations(
-	_ authkeeper.AccountKeeper,
-	_ bankkeeper.Keeper,
-	_ keeper.Keeper,
+	ak authkeeper.AccountKeeper,
+	bk bankkeeper.Keeper,
+	fk fundraisingkeeper.Keeper,
+	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgWithdrawAllocations{
-			Participant: simAccount.Address.String(),
+		msg := &types.MsgWithdrawAllocations{}
+		auction, found := RandomAuctionWithdrawEnabled(ctx, r, fk, k)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no valid auction found"), nil, nil
 		}
 
-		// TODO: Handling the WithdrawAllocations simulation
+		simAccount, found := RandomAccWithAuctionUsedAllocationsNotWithdrawn(ctx, r, k, accs, auction.GetId())
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no account with used allocations found"), nil, nil
+		}
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "WithdrawAllocations simulation not implemented"), nil, nil
+		msg = types.NewMsgWithdrawAllocations(
+			simAccount.Address.String(),
+			auction.GetId(),
+		)
+
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      simAccount,
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      types.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+	}
+}
+
+func SimulateMsgCancelAuction(
+	ak authkeeper.AccountKeeper,
+	bk bankkeeper.Keeper,
+	fk fundraisingkeeper.Keeper,
+) simtypes.Operation {
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		var simAccount simtypes.Account
+		msg := &fundraisingtypes.MsgCancelAuction{}
+		auction, found := RandomAuction(ctx, r, fk)
+		if !found {
+			return simtypes.NoOpMsg(fundraisingtypes.ModuleName, msg.Type(), "no valid auction found"), nil, nil
+		}
+
+		// find account of auctioneer
+		found = false
+		for _, acc := range accs {
+			if acc.Address.Equals(auction.GetAuctioneer()) {
+				simAccount = acc
+				found = true
+				break
+			}
+		}
+		if !found {
+			// return error, this should never happen
+			return simtypes.OperationMsg{}, nil, errors.New("auctioneer not found within provided accounts")
+		}
+
+		msg = fundraisingtypes.NewMsgCancelAuction(simAccount.Address.String(), auction.GetId())
+
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      simAccount,
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      fundraisingtypes.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }

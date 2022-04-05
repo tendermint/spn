@@ -368,12 +368,27 @@ func TestFindRandomRequest(t *testing.T) {
 		require.False(t, gotFound)
 	})
 
-	t.Run("get a valid request", func(t *testing.T) {
+	t.Run("status non-pending", func(t *testing.T) {
 		msgCreateCoord := sample.MsgCreateCoordinator(sample.Address(r))
 		res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
 		require.NoError(t, err)
 
 		chainID := tk.LaunchKeeper.AppendChain(sdkCtx, sample.Chain(r, 0, res.CoordinatorID))
+		request := sample.Request(r, chainID, sample.Address(r))
+		request.Status = types.Request_APPROVED
+		tk.LaunchKeeper.AppendRequest(sdkCtx, request)
+
+		gotRequest, gotFound := launchsimulation.FindRandomRequest(r, sdkCtx, *tk.LaunchKeeper)
+		require.Equal(t, types.Request{}, gotRequest)
+		require.False(t, gotFound)
+	})
+
+	t.Run("get a valid request", func(t *testing.T) {
+		msgCreateCoord := sample.MsgCreateCoordinator(sample.Address(r))
+		res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
+		require.NoError(t, err)
+
+		chainID := tk.LaunchKeeper.AppendChain(sdkCtx, sample.Chain(r, 1, res.CoordinatorID))
 		request := sample.Request(r, chainID, sample.Address(r))
 		tk.LaunchKeeper.AppendRequest(sdkCtx, request)
 

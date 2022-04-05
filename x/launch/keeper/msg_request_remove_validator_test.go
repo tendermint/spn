@@ -99,16 +99,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			wantID: 1,
 		},
 		{
-			name: "add chain 3 request 1",
-			msg: types.MsgRequestRemoveValidator{
-				LaunchID:         chains[3].LaunchID,
-				Creator:          coordAddr,
-				ValidatorAddress: addr1,
-			},
-			wantApprove: true,
-		},
-		{
-			name: "add chain 4 request 2",
+			name: "add chain 4 request 1",
 			msg: types.MsgRequestRemoveValidator{
 				LaunchID:         chains[3].LaunchID,
 				Creator:          addr2,
@@ -133,6 +124,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				ValidatorAddress: addr2,
 			},
 			wantApprove: true,
+			wantID:      2,
 		},
 		{
 			name: "add chain 5 request 3",
@@ -141,7 +133,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				Creator:          addr3,
 				ValidatorAddress: addr3,
 			},
-			wantID: 2,
+			wantID: 3,
 		},
 		{
 			name: "request from coordinator is pre-approved",
@@ -151,6 +143,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				ValidatorAddress: addr4,
 			},
 			wantApprove: true,
+			wantID:      4,
 		},
 		{
 			name: "failing request from coordinator",
@@ -181,17 +174,21 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			require.Equal(t, tt.wantID, got.RequestID)
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
-			if !tt.wantApprove {
-				request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
-				require.True(t, found, "request not found")
-				require.Equal(t, tt.wantID, request.RequestID)
+			request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
+			require.True(t, found, "request not found")
+			require.Equal(t, tt.wantID, request.RequestID)
+			content := request.Content.GetValidatorRemoval()
+			require.NotNil(t, content)
+			require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
 
-				content := request.Content.GetValidatorRemoval()
-				require.NotNil(t, content)
-				require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
+			if !tt.wantApprove {
+
+				require.Equal(t, types.Request_PENDING, request.Status)
+
 			} else {
 				_, found := tk.LaunchKeeper.GetGenesisValidator(sdkCtx, tt.msg.LaunchID, tt.msg.ValidatorAddress)
 				require.False(t, found, "genesis validator not removed")
+				require.Equal(t, types.Request_APPROVED, request.Status)
 			}
 		})
 	}
