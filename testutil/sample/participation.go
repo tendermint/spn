@@ -2,6 +2,7 @@ package sample
 
 import (
 	"math/rand"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -34,7 +35,7 @@ func ParticipationParams(r *rand.Rand) participation.Params {
 	}
 
 	registrationPeriod := Duration(r)
-	withdrawalDelay := Duration(r)
+	withdrawalDelay := DurationFromRange(r, time.Minute, time.Minute*30)
 
 	return participation.NewParams(allocationPrice, tiers, registrationPeriod, withdrawalDelay)
 }
