@@ -18,11 +18,15 @@ func TestMissingVerifiedClientIDInvariant(t *testing.T) {
 		n := sample.Uint64(r)
 		launchID := sample.Uint64(r)
 		for i := uint64(0); i < n; i++ {
-			chanID := sample.AlphaString(r, 10)
-			tk.MonitoringConsumerKeeper.AddVerifiedClientID(ctx, launchID, chanID)
+			clientID := sample.AlphaString(r, 10)
+			tk.MonitoringConsumerKeeper.AddVerifiedClientID(ctx, launchID, clientID)
 			tk.MonitoringConsumerKeeper.SetLaunchIDFromVerifiedClientID(ctx, types.LaunchIDFromVerifiedClientID{
-				ClientID: chanID,
+				ClientID: clientID,
 				LaunchID: launchID,
+			})
+			tk.MonitoringConsumerKeeper.SetProviderClientID(ctx, types.ProviderClientID{
+				LaunchID: launchID,
+				ClientID: clientID,
 			})
 		}
 		mes, broken := keeper.MissingVerifiedClientIDInvariant(*tk.MonitoringConsumerKeeper)(ctx)
@@ -33,8 +37,11 @@ func TestMissingVerifiedClientIDInvariant(t *testing.T) {
 		n := sample.Uint64(r)
 		launchID := sample.Uint64(r)
 		for i := uint64(0); i < n; i++ {
-			chanID := sample.AlphaString(r, 10)
-			tk.MonitoringConsumerKeeper.AddVerifiedClientID(ctx, launchID, chanID)
+			clientID := sample.AlphaString(r, 10)
+			tk.MonitoringConsumerKeeper.SetLaunchIDFromVerifiedClientID(ctx, types.LaunchIDFromVerifiedClientID{
+				ClientID: clientID,
+				LaunchID: launchID,
+			})
 		}
 		mes, broken := keeper.MissingVerifiedClientIDInvariant(*tk.MonitoringConsumerKeeper)(ctx)
 		require.True(t, broken, mes)

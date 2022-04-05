@@ -72,7 +72,7 @@ func (gs GenesisState) Validate() error {
 		// Check if the client id exist
 		key := clientIDKey(elem.LaunchID, elem.ClientID)
 		if _, ok := clientIDMap[key]; !ok {
-			return fmt.Errorf("client id from launchIDFromVerifiedClientID not found")
+			return fmt.Errorf("client id from launchIDFromVerifiedClientIDList not found")
 		}
 		launchIDFromVerifiedClientIDIndexMap[index] = struct{}{}
 	}
