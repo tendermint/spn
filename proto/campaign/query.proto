@@ -164,8 +164,7 @@ message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryTotalSharesRequest {
-}
+message QueryTotalSharesRequest {}
 
 message QueryTotalSharesResponse {
   uint64 totalShares = 1;

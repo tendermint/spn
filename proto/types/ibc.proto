@@ -7,33 +7,33 @@ option go_package = "github.com/tendermint/spn/pkg/types";
 
 // MerkelRool represents a Merkel Root in ConsensusState
 message MerkelRool {
-    string hash = 1;
+  string hash = 1;
 }
 
 // ConsensusState represents a Consensus State
 // it is compatible with the dumped state from `appd q ibc client self-consensus-state` command
 message ConsensusState {
-    string nextValidatorsHash = 1;
-    string timestamp = 2;
-    MerkelRool root = 3 [(gogoproto.nullable) = false];
+  string nextValidatorsHash = 1;
+  string timestamp = 2;
+  MerkelRool root = 3 [(gogoproto.nullable) = false];
 }
 
 
 // PubKey represents a public key in Validator
 message PubKey {
-	string type = 1;
-	string value = 2;
+  string type = 1;
+  string value = 2;
 }
 
 // Validator represents a validator in ValSet
 message Validator {
-	string proposerPriority = 1;
-	string votingPower = 2;
-	PubKey pubKey = 3 [(gogoproto.nullable) = false];
+  string proposerPriority = 1;
+  string votingPower = 2;
+  PubKey pubKey = 3 [(gogoproto.nullable) = false];
 }
 
 // ValidatorSet represents a Validator Set
 // it is compatible with the dumped set from `appd q tendermint-validator-set n` command
 message ValidatorSet {
-    repeated Validator validators = 1 [(gogoproto.nullable) = false];
+  repeated Validator validators = 1 [(gogoproto.nullable) = false];
 }

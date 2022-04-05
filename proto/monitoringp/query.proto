@@ -14,23 +14,45 @@ option go_package = "github.com/tendermint/spn/x/monitoringp/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/tendermint/spn/monitoringp/params";
-  }
   // Queries a ConsumerClientID by index.
   rpc ConsumerClientID(QueryGetConsumerClientIDRequest) returns (QueryGetConsumerClientIDResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringp/consumer_client_id";
   }
+
   // Queries a ConnectionChannelID by index.
 	rpc ConnectionChannelID(QueryGetConnectionChannelIDRequest) returns (QueryGetConnectionChannelIDResponse) {
 		option (google.api.http).get = "/tendermint/spn/monitoringp/connection_channel_id";
 	}
-// Queries a MonitoringInfo by index.
+
+	// Queries a MonitoringInfo by index.
 	rpc MonitoringInfo(QueryGetMonitoringInfoRequest) returns (QueryGetMonitoringInfoResponse) {
 		option (google.api.http).get = "/tendermint/spn/monitoringp/monitoring_info";
 	}
-// this line is used by starport scaffolding # 2
+
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringp/params";
+  }
+
+	// this line is used by starport scaffolding # 2
+}
+
+message QueryGetConsumerClientIDRequest {}
+
+message QueryGetConsumerClientIDResponse {
+  ConsumerClientID ConsumerClientID = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetConnectionChannelIDRequest {}
+
+message QueryGetConnectionChannelIDResponse {
+	ConnectionChannelID ConnectionChannelID = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetMonitoringInfoRequest {}
+
+message QueryGetMonitoringInfoResponse {
+	MonitoringInfo MonitoringInfo = 1 [(gogoproto.nullable) = false];
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -42,19 +64,4 @@ message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryGetConsumerClientIDRequest {}
-
-message QueryGetConsumerClientIDResponse {
-  ConsumerClientID ConsumerClientID = 1 [(gogoproto.nullable) = false];
-}
-message QueryGetConnectionChannelIDRequest {}
-
-message QueryGetConnectionChannelIDResponse {
-	ConnectionChannelID ConnectionChannelID = 1 [(gogoproto.nullable) = false];
-}
-message QueryGetMonitoringInfoRequest {}
-
-message QueryGetMonitoringInfoResponse {
-	MonitoringInfo MonitoringInfo = 1 [(gogoproto.nullable) = false];
-}
 // this line is used by starport scaffolding # 3

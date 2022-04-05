@@ -15,11 +15,6 @@ option go_package = "github.com/tendermint/spn/x/monitoringc/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/tendermint/spn/monitoringc/params";
-  }
-
   // Queries a list of VerifiedClientIds items.
   rpc VerifiedClientIds(QueryGetVerifiedClientIdsRequest) returns (QueryGetVerifiedClientIdsResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringc/verified_client_ids/{launchID}";
@@ -50,16 +45,12 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history/{launchID}";
 	}
 
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/params";
+  }
+
 	// this line is used by starport scaffolding # 2
-}
-
-// QueryParamsRequest is request type for the Query/Params RPC method.
-message QueryParamsRequest {}
-
-// QueryParamsResponse is response type for the Query/Params RPC method.
-message QueryParamsResponse {
-  // params holds all the parameters of this module.
-  Params params = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryGetVerifiedClientIdsRequest {
@@ -110,6 +101,15 @@ message QueryGetMonitoringHistoryRequest {
 
 message QueryGetMonitoringHistoryResponse {
 	MonitoringHistory monitoringHistory = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
 }
 
 // this line is used by starport scaffolding # 3
