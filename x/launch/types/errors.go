@@ -39,4 +39,5 @@ var (
 	ErrAddChainToCampaign          = sdkerrors.Register(ModuleName, 30, "unable to add chain to campaign")
 	ErrRemainingTimeNotPositive    = sdkerrors.Register(ModuleName, 31, "invalid remaining time")
 	ErrChainMonitoringConnected    = sdkerrors.Register(ModuleName, 32, "chain is already connected to monitoring")
+	ErrRequestSettled              = sdkerrors.Register(ModuleName, 33, "request is already settled")
 )

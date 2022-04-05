@@ -145,6 +145,10 @@ func FindRandomRequest(
 		requests[i], requests[j] = requests[j], requests[i]
 	})
 	for _, req := range requests {
+		if req.Status != types.Request_PENDING {
+			continue
+		}
+
 		chain, chainFound := k.GetChain(ctx, req.LaunchID)
 		if !chainFound || chain.LaunchTriggered {
 			continue
