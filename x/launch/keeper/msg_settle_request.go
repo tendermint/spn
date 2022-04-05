@@ -50,18 +50,28 @@ func (k msgServer) SettleRequest(
 		)
 	}
 
+	if request.Status != types.Request_PENDING {
+		return nil, sdkerrors.Wrapf(types.ErrRequestSettled,
+			"request %d is not pending",
+			msg.RequestID,
+		)
+	}
+
 	if msg.Signer != request.Creator && msg.Signer != coord.Address {
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Signer)
 	}
 
-	// perform request action
-	k.RemoveRequest(ctx, msg.LaunchID, request.RequestID)
+	// apply request if approving and update status
 	if msg.Approve {
 		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
 		if err != nil {
 			return nil, err
 		}
+		request.Status = types.Request_APPROVED
+	} else {
+		request.Status = types.Request_REJECTED
 	}
+	k.SetRequest(ctx, request)
 
 	return &types.MsgSettleRequestResponse{}, nil
 }

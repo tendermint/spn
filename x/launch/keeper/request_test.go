@@ -16,6 +16,7 @@ import (
 type RequestSample struct {
 	Content types.RequestContent
 	Creator string
+	Status  types.Request_Status
 }
 
 func createRequestsFromSamples(
@@ -27,6 +28,7 @@ func createRequestsFromSamples(
 	items := make([]types.Request, len(samples))
 	for i, s := range samples {
 		items[i] = sample.RequestWithContentAndCreator(r, launchID, s.Content, s.Creator)
+		items[i].Status = s.Status
 		id := k.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
