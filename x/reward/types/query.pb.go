@@ -254,7 +254,6 @@ var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -362,7 +361,7 @@ type QueryClient interface {
 	RewardPool(ctx context.Context, in *QueryGetRewardPoolRequest, opts ...grpc.CallOption) (*QueryGetRewardPoolResponse, error)
 	// Queries a list of RewardPool items.
 	RewardPoolAll(ctx context.Context, in *QueryAllRewardPoolRequest, opts ...grpc.CallOption) (*QueryAllRewardPoolResponse, error)
-	// Parameters queries the parameters of the module.
+	// Params queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 }
 
@@ -407,7 +406,7 @@ type QueryServer interface {
 	RewardPool(context.Context, *QueryGetRewardPoolRequest) (*QueryGetRewardPoolResponse, error)
 	// Queries a list of RewardPool items.
 	RewardPoolAll(context.Context, *QueryAllRewardPoolRequest) (*QueryAllRewardPoolResponse, error)
-	// Parameters queries the parameters of the module.
+	// Params queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 }
 
