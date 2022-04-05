@@ -35,7 +35,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	if !creationFee.Empty() {
 		coordAddr, err := sdk.AccAddressFromBech32(msg.Coordinator)
 		if err != nil {
-			return nil, err
+			return nil, spnerrors.Criticalf("invalid coordinator bech32 address %s", err.Error())
 		}
 		if err = k.distrKeeper.FundCommunityPool(ctx, creationFee, coordAddr); err != nil {
 			return nil, err
