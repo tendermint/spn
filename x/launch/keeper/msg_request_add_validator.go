@@ -49,6 +49,7 @@ func (k msgServer) RequestAddValidator(
 		Creator:   msg.Creator,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
+		Status:    types.Request_PENDING,
 	}
 
 	var requestID uint64
@@ -59,9 +60,10 @@ func (k msgServer) RequestAddValidator(
 			return nil, err
 		}
 		approved = true
-	} else {
-		requestID = k.AppendRequest(ctx, request)
+		request.Status = types.Request_APPROVED
 	}
+
+	requestID = k.AppendRequest(ctx, request)
 
 	return &types.MsgRequestAddValidatorResponse{
 		RequestID:    requestID,
