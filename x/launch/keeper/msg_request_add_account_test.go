@@ -101,6 +101,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			name:        "request from coordinator is pre-approved",
 			msg:         sample.MsgRequestAddAccount(r, coordAddr, addr4, chains[4].LaunchID),
 			wantApprove: true,
+			wantID:      4,
 		},
 		{
 			name: "failing request from coordinator",
@@ -129,21 +130,24 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			require.Equal(t, tt.wantID, got.RequestID)
 			require.Equal(t, tt.wantApprove, got.AutoApproved)
 
-			if !tt.wantApprove {
-				request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
-				require.True(t, found, "request not found")
-				require.Equal(t, tt.wantID, request.RequestID)
-				require.Equal(t, tt.msg.Creator, request.Creator)
+			request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
+			require.True(t, found, "request not found")
+			content := request.Content.GetGenesisAccount()
+			require.NotNil(t, content)
+			require.Equal(t, tt.msg.Address, content.Address)
+			require.Equal(t, tt.msg.LaunchID, content.LaunchID)
+			require.Equal(t, tt.msg.Coins, content.Coins)
+			require.Equal(t, tt.wantID, request.RequestID)
+			require.Equal(t, tt.msg.Creator, request.Creator)
 
-				content := request.Content.GetGenesisAccount()
-				require.NotNil(t, content)
-				require.Equal(t, tt.msg.Address, content.Address)
-				require.Equal(t, tt.msg.LaunchID, content.LaunchID)
-				require.Equal(t, tt.msg.Coins, content.Coins)
+			if !tt.wantApprove {
+				require.Equal(t, types.Request_PENDING, request.Status)
 			} else {
 				_, found := tk.LaunchKeeper.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
 				require.True(t, found, "genesis account not found")
+				require.Equal(t, types.Request_APPROVED, request.Status)
 			}
+
 		})
 	}
 }
