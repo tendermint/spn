@@ -140,7 +140,9 @@ func GenesisAccountContent(r *rand.Rand, launchID uint64, address string) launch
 // Request returns a sample Request
 func Request(r *rand.Rand, launchID uint64, address string) launch.Request {
 	content := GenesisAccountContent(r, launchID, address)
-	return RequestWithContent(r, launchID, content)
+	req := RequestWithContent(r, launchID, content)
+	req.Status = launch.Request_PENDING // set to pending by default
+	return req
 }
 
 // MsgCreateChain returns a sample MsgCreateChain
