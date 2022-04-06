@@ -29,8 +29,8 @@ func TestMissingVerifiedClientIDInvariant(t *testing.T) {
 				ClientID: clientID,
 			})
 		}
-		mes, broken := keeper.MissingVerifiedClientIDInvariant(*tk.MonitoringConsumerKeeper)(ctx)
-		require.False(t, broken, mes)
+		msg, broken := keeper.MissingVerifiedClientIDInvariant(*tk.MonitoringConsumerKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
@@ -43,7 +43,7 @@ func TestMissingVerifiedClientIDInvariant(t *testing.T) {
 				LaunchID: launchID,
 			})
 		}
-		mes, broken := keeper.MissingVerifiedClientIDInvariant(*tk.MonitoringConsumerKeeper)(ctx)
-		require.True(t, broken, mes)
+		msg, broken := keeper.MissingVerifiedClientIDInvariant(*tk.MonitoringConsumerKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }

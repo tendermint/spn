@@ -33,15 +33,21 @@ func TestInvalidChainInvariant(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		chain := sample.Chain(r, 0, 0)
+		campaign := sample.Campaign(r, 0)
 		chain.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		chain.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
+		chain.HasCampaign = true
 		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
 		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		chain := sample.Chain(r, 0, 0)
-		chain.LaunchTriggered = true
-		chain.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		chain1 := sample.Chain(r, 0, 0)
+		chain1.LaunchTriggered = true
+		chain1.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain1)
+		chain2 := sample.Chain(r, 1, 0)
+		chain2.HasCampaign = true
+		chain2.CampaignID = 1000
 		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
 		require.True(t, broken, msg)
 	})

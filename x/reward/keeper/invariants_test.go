@@ -19,14 +19,14 @@ func TestInsufficientRewardsBalanceInvariant(t *testing.T) {
 		coins := pool.RemainingCoins
 		require.NoError(t, tk.BankKeeper.MintCoins(ctx, types.ModuleName, coins))
 		tk.RewardKeeper.SetRewardPool(ctx, pool)
-		mes, broken := keeper.InsufficientRewardsBalanceInvariant(*tk.RewardKeeper)(ctx)
-		require.False(t, broken, mes)
+		msg, broken := keeper.InsufficientRewardsBalanceInvariant(*tk.RewardKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
 		pool := sample.RewardPool(r, 1)
 		tk.RewardKeeper.SetRewardPool(ctx, pool)
-		mes, broken := keeper.InsufficientRewardsBalanceInvariant(*tk.RewardKeeper)(ctx)
-		require.True(t, broken, mes)
+		msg, broken := keeper.InsufficientRewardsBalanceInvariant(*tk.RewardKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
