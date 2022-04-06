@@ -69,7 +69,6 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 		}
 
 		simManager.GenerateGenesisStates(simState)
-
 		appState, err := json.Marshal(genesisState)
 		if err != nil {
 			panic(err)

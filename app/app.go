@@ -577,6 +577,7 @@ func New(
 	)
 
 	app.mm.SetOrderEndBlockers(
+		fundraisingtypes.ModuleName,
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
@@ -596,7 +597,6 @@ func New(
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		profilemoduletypes.ModuleName,
-		fundraisingtypes.ModuleName,
 		rewardmoduletypes.ModuleName,
 		campaignmoduletypes.ModuleName,
 		monitoringcmoduletypes.ModuleName,
