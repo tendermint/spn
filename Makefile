@@ -61,10 +61,10 @@ test: govet test-unit
 .PHONY: test test-unit test-race test-cover bench
 
 SIM_NUM_BLOCKS ?= 500
-SIM_BLOCK_SIZE ?= 200
+SIM_BLOCK_SIZE ?= 100
 SIM_CI_NUM_BLOCKS ?= 200
 SIM_CI_BLOCK_SIZE ?= 26
-SIM_PERIOD ?= 10
+SIM_PERIOD ?= 50
 SIM_COMMIT ?= true
 SIM_TIMEOUT ?= 24h
 
