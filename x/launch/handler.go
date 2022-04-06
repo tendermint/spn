@@ -22,12 +22,12 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		var err error
 		switch msg := msg.(type) {
 		// this line is used by starport scaffolding # 1
-		case *types.MsgUpdateLaunchInformation:
-			res, err = msgServer.UpdateLaunchInformation(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgCreateChain:
 			res, err = msgServer.CreateChain(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgEditChain:
 			res, err = msgServer.EditChain(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgUpdateLaunchInformation:
+			res, err = msgServer.UpdateLaunchInformation(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestAddAccount:
 			res, err = msgServer.RequestAddAccount(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestAddVestingAccount:
