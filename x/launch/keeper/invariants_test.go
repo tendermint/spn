@@ -16,35 +16,34 @@ func TestDuplicatedAccountInvariant(t *testing.T) {
 	t.Run("valid case", func(t *testing.T) {
 		tk.LaunchKeeper.SetVestingAccount(ctx, sample.VestingAccount(r, 0, sample.Address(r)))
 		tk.LaunchKeeper.SetGenesisAccount(ctx, sample.GenesisAccount(r, 0, sample.Address(r)))
-		_, isValid := keeper.DuplicatedAccountInvariant(*tk.LaunchKeeper)(ctx)
-		require.Equal(t, false, isValid)
+		msg, broken := keeper.DuplicatedAccountInvariant(*tk.LaunchKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
 		addr := sample.Address(r)
 		tk.LaunchKeeper.SetVestingAccount(ctx, sample.VestingAccount(r, 0, addr))
 		tk.LaunchKeeper.SetGenesisAccount(ctx, sample.GenesisAccount(r, 0, addr))
-		_, isValid := keeper.DuplicatedAccountInvariant(*tk.LaunchKeeper)(ctx)
-		require.Equal(t, true, isValid)
+		msg, broken := keeper.DuplicatedAccountInvariant(*tk.LaunchKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
 
-func TestZeroLaunchTimestampInvariant(t *testing.T) {
+func TestInvalidChainInvariant(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		chain := sample.Chain(r, 0, 0)
-		chain.LaunchTimestamp = 1000
 		chain.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain)
-		_, isValid := keeper.ZeroLaunchTimestampInvariant(*tk.LaunchKeeper)(ctx)
-		require.Equal(t, false, isValid)
+		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
 		chain := sample.Chain(r, 0, 0)
-		chain.LaunchTimestamp = 0
+		chain.LaunchTriggered = true
 		chain.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain)
-		_, isValid := keeper.ZeroLaunchTimestampInvariant(*tk.LaunchKeeper)(ctx)
-		require.Equal(t, true, isValid)
+		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
 
@@ -52,15 +51,15 @@ func TestUnknownRequestTypeInvariant(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
 		tk.LaunchKeeper.AppendRequest(ctx, sample.Request(r, 0, sample.Address(r)))
-		_, isValid := keeper.UnknownRequestTypeInvariant(*tk.LaunchKeeper)(ctx)
-		require.Equal(t, false, isValid)
+		msg, broken := keeper.UnknownRequestTypeInvariant(*tk.LaunchKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
 		tk.LaunchKeeper.AppendRequest(ctx, sample.RequestWithContent(r, 0,
 			sample.GenesisAccountContent(r, 0, "invalid"),
 		))
-		_, isValid := keeper.UnknownRequestTypeInvariant(*tk.LaunchKeeper)(ctx)
-		require.Equal(t, true, isValid)
+		msg, broken := keeper.UnknownRequestTypeInvariant(*tk.LaunchKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
