@@ -925,7 +925,6 @@ var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -1178,7 +1177,7 @@ type QueryClient interface {
 	CampaignSummary(ctx context.Context, in *QueryCampaignSummaryRequest, opts ...grpc.CallOption) (*QueryCampaignSummaryResponse, error)
 	// Queries a list of campaign summaries
 	CampaignSummaries(ctx context.Context, in *QueryCampaignSummariesRequest, opts ...grpc.CallOption) (*QueryCampaignSummariesResponse, error)
-	// Parameters queries the parameters of the module.
+	// Params queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Queries the TotalShares value
 	TotalShares(ctx context.Context, in *QueryTotalSharesRequest, opts ...grpc.CallOption) (*QueryTotalSharesResponse, error)
@@ -1311,7 +1310,7 @@ type QueryServer interface {
 	CampaignSummary(context.Context, *QueryCampaignSummaryRequest) (*QueryCampaignSummaryResponse, error)
 	// Queries a list of campaign summaries
 	CampaignSummaries(context.Context, *QueryCampaignSummariesRequest) (*QueryCampaignSummariesResponse, error)
-	// Parameters queries the parameters of the module.
+	// Params queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	// Queries the TotalShares value
 	TotalShares(context.Context, *QueryTotalSharesRequest) (*QueryTotalSharesResponse, error)
