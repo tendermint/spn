@@ -97,11 +97,11 @@ func BenchmarkSimulation(b *testing.B) {
 		config,
 		app.AppCodec(),
 	)
+	require.NoError(b, simErr)
 
 	// export state and simParams before the simulation error is checked
 	err = simapp.CheckExportSimulation(app, config, simParams)
 	require.NoError(b, err)
-	require.NoError(b, simErr)
 
 	if config.Commit {
 		simapp.PrintStats(db)
