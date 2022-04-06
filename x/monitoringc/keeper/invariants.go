@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tendermint/spn/x/monitoringc/types"
@@ -41,7 +42,7 @@ func MissingVerifiedClientIDInvariant(k Keeper) sdk.Invariant {
 			if _, ok := clientIDMap[clientIDKey(providerClientID.LaunchID, providerClientID.ClientID)]; !ok {
 				return sdk.FormatInvariant(
 					types.ModuleName, missingVerifiedClientIDRoute,
-					"client id from ProviderClientIDList not found",
+					"client id from providerClientID list not found",
 				), true
 			}
 		}
@@ -49,7 +50,7 @@ func MissingVerifiedClientIDInvariant(k Keeper) sdk.Invariant {
 			if _, ok := clientIDMap[clientIDKey(launchIDFromVerifiedClientID.LaunchID, launchIDFromVerifiedClientID.ClientID)]; !ok {
 				return sdk.FormatInvariant(
 					types.ModuleName, missingVerifiedClientIDRoute,
-					"client id from launchIDFromVerifiedClientIDList not found",
+					"client id from launchIDFromVerifiedClientID list not found",
 				), true
 			}
 		}
