@@ -3,12 +3,12 @@ package simutil
 import (
 	"encoding/json"
 	"fmt"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	"math/rand"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
