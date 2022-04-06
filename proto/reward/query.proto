@@ -13,10 +13,6 @@ option go_package = "github.com/tendermint/spn/x/reward/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/tendermint/spn/reward/params";
-  }
   // Queries a RewardPool by index.
   rpc RewardPool(QueryGetRewardPoolRequest) returns (QueryGetRewardPoolResponse) {
     option (google.api.http).get = "/tendermint/spn/reward/reward_pool/{launchID}";
@@ -27,16 +23,12 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/reward/reward_pool";
   }
 
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/tendermint/spn/reward/params";
+  }
+
   // this line is used by starport scaffolding # 2
-}
-
-// QueryParamsRequest is request type for the Query/Params RPC method.
-message QueryParamsRequest {}
-
-// QueryParamsResponse is response type for the Query/Params RPC method.
-message QueryParamsResponse {
-  // params holds all the parameters of this module.
-  Params params = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryGetRewardPoolRequest {
@@ -54,6 +46,14 @@ message QueryAllRewardPoolRequest {
 message QueryAllRewardPoolResponse {
   repeated RewardPool rewardPool = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
 }
 
 // this line is used by starport scaffolding # 3

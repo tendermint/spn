@@ -21,15 +21,15 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	}
 
 	cmd.AddCommand(
-		CmdListCampaign(),
 		CmdShowCampaign(),
+		CmdListCampaign(),
 		CmdShowCampaignChains(),
-		CmdListMainnetAccount(),
 		CmdShowMainnetAccount(),
-		CmdListMainnetVestingAccount(),
+		CmdListMainnetAccount(),
 		CmdShowMainnetVestingAccount(),
-		CmdListCampaignSummary(),
+		CmdListMainnetVestingAccount(),
 		CmdShowCampaignSummary(),
+		CmdListCampaignSummary(),
 		CmdQueryParams(),
 		CmdQueryTotalShares(),
 	)
