@@ -14,7 +14,7 @@ func RewardPool(r *rand.Rand, launchID uint64) reward.RewardPool {
 		initialCoins.GetDenomByIndex(0),
 		initialCoins.GetDenomByIndex(1),
 		initialCoins.GetDenomByIndex(2),
-		0,
+		1,
 		5000,
 	)
 

@@ -25,33 +25,24 @@ func AllInvariants(k Keeper) sdk.Invariant {
 	}
 }
 
-// MissingVerifiedClientIDInvariant checks if any of the clientIDs in `LaunchIDFromVerifiedClientID` or `ProviderClientID`
-// does not have a corresponding entry in `VerifiedClientID`
+// MissingVerifiedClientIDInvariant checks if any of the clientIDs in `VerifiedClientID` does not have a corresponding
+// entry in `LaunchIDFromVerifiedClientID`
 func MissingVerifiedClientIDInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
 		allVerifiedClientID := k.GetAllVerifiedClientID(ctx)
 		allLaunchIDFromVerifiedClientlID := k.GetAllLaunchIDFromVerifiedClientID(ctx)
-		allProviderClientID := k.GetAllProviderClientID(ctx)
-		clientIDMap := make(map[string]bool)
+		clientIDMap := make(map[string]struct{})
+		for _, launchIDFromVerifiedClientID := range allLaunchIDFromVerifiedClientlID {
+			clientIDMap[clientIDKey(launchIDFromVerifiedClientID.LaunchID, launchIDFromVerifiedClientID.ClientID)] = struct{}{}
+		}
 		for _, verifiedClientID := range allVerifiedClientID {
 			for _, clientID := range verifiedClientID.ClientIDs {
-				clientIDMap[clientIDKey(verifiedClientID.LaunchID, clientID)] = true
-			}
-		}
-		for _, providerClientID := range allProviderClientID {
-			if _, ok := clientIDMap[clientIDKey(providerClientID.LaunchID, providerClientID.ClientID)]; !ok {
-				return sdk.FormatInvariant(
-					types.ModuleName, missingVerifiedClientIDRoute,
-					"client id from providerClientID list not found",
-				), true
-			}
-		}
-		for _, launchIDFromVerifiedClientID := range allLaunchIDFromVerifiedClientlID {
-			if _, ok := clientIDMap[clientIDKey(launchIDFromVerifiedClientID.LaunchID, launchIDFromVerifiedClientID.ClientID)]; !ok {
-				return sdk.FormatInvariant(
-					types.ModuleName, missingVerifiedClientIDRoute,
-					"client id from launchIDFromVerifiedClientID list not found",
-				), true
+				if _, ok := clientIDMap[clientIDKey(verifiedClientID.LaunchID, clientID)]; !ok {
+					return sdk.FormatInvariant(
+						types.ModuleName, missingVerifiedClientIDRoute,
+						"client id from verifiedClient list not found in launchIDFromVerifiedClientID list",
+					), true
+				}
 			}
 		}
 		return "", false

@@ -41,13 +41,18 @@ func TestInvalidChainInvariant(t *testing.T) {
 		require.False(t, broken, msg)
 	})
 
-	t.Run("invalid case", func(t *testing.T) {
-		chain1 := sample.Chain(r, 0, 0)
-		chain1.LaunchTriggered = true
-		chain1.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain1)
-		chain2 := sample.Chain(r, 1, 0)
-		chain2.HasCampaign = true
-		chain2.CampaignID = 1000
+	t.Run("invalid case - chain already launched", func(t *testing.T) {
+		chain := sample.Chain(r, 0, 0)
+		chain.LaunchTriggered = true
+		chain.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
+		require.True(t, broken, msg)
+	})
+
+	t.Run("invalid case - chain does not have a valid associated campaign", func(t *testing.T) {
+		chain := sample.Chain(r, 0, 0)
+		chain.HasCampaign = true
+		chain.CampaignID = 1000
 		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
 		require.True(t, broken, msg)
 	})
