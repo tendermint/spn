@@ -21,16 +21,16 @@ func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 			Address:       sample.Address(r),
 			CoordinatorID: coord.CoordinatorID,
 		})
-		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)
-		require.Equal(t, false, isValid)
+		msg, broken := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
-	t.Run("invalid case 1", func(t *testing.T) {
+	t.Run("invalid case", func(t *testing.T) {
 		tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 			Address:       sample.Address(r),
 			CoordinatorID: 10,
 		})
-		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)
-		require.Equal(t, true, isValid)
+		msg, broken := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
