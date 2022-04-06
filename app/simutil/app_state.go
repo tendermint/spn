@@ -65,15 +65,17 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 			panic(err)
 		}
 
-		// add auction coins randomly to accounts
+		// add more coins randomly to accounts
 		totalNewCoins := sdk.NewCoins()
 		for i, balance := range bankState.Balances {
 			if r.Int63n(100) < 20 {
-				coinAmt := r.Int63n(999000000) + 1000000
-				auctionCoin := sdk.NewCoin(AuctionCoinDenom, sdk.NewInt(coinAmt))
-				newBalance := balance.Coins.Add(auctionCoin)
+				auctionCoinAmt := r.Int63n(999_000_000) + 1_000_000
+				bondCoinAmt := r.Int63n(999_000_000_000) + 1_000_000_000
+				auctionCoin := sdk.NewCoin(AuctionCoinDenom, sdk.NewInt(auctionCoinAmt))
+				bondCoin := sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(bondCoinAmt))
+				newBalance := balance.Coins.Add(auctionCoin, bondCoin)
 				bankState.Balances[i].Coins = newBalance
-				totalNewCoins = totalNewCoins.Add(auctionCoin)
+				totalNewCoins = totalNewCoins.Add(auctionCoin, bondCoin)
 			}
 		}
 

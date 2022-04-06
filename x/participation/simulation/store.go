@@ -51,7 +51,7 @@ func RandomAuction(ctx sdk.Context, r *rand.Rand, fk fundraisingkeeper.Keeper) (
 
 	for _, a := range auctions {
 		// auction must not be started and must not be cancelled
-		if !a.IsAuctionStarted(ctx.BlockTime()) && a.GetStatus() != fundraisingtypes.AuctionStatusCancelled {
+		if !a.ShouldAuctionStarted(ctx.BlockTime()) && a.GetStatus() != fundraisingtypes.AuctionStatusCancelled {
 			return a, true
 		}
 	}
@@ -157,5 +157,22 @@ func RandomTierFromList(r *rand.Rand, tierList []types.Tier) (types.Tier, bool) 
 	}
 
 	index := r.Intn(len(tierList))
+	return tierList[index], true
+}
+
+func FindLargestMaxBid(tierList []types.Tier) (types.Tier, bool) {
+	largestMaxBid := sdk.ZeroInt()
+	if len(tierList) == 0 {
+		return types.Tier{}, false
+	}
+
+	index := 0
+	for i, tier := range tierList {
+		if tier.Benefits.MaxBidAmount.GT(largestMaxBid) {
+			largestMaxBid = tier.Benefits.MaxBidAmount
+			index = i
+		}
+	}
+
 	return tierList[index], true
 }
