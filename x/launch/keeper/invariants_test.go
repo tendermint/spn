@@ -30,18 +30,32 @@ func TestDuplicatedAccountInvariant(t *testing.T) {
 }
 
 func TestInvalidChainInvariant(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		chain := sample.Chain(r, 0, 0)
-		chain.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		campaign := sample.Campaign(r, 0)
+		chain.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
+		chain.HasCampaign = true
+		_ = tk.LaunchKeeper.AppendChain(ctx, chain)
 		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
 		require.False(t, broken, msg)
 	})
 
-	t.Run("launch timestamp is 0, but launch not triggered", func(t *testing.T) {
+	t.Run("invalid case - chain already launched", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		chain := sample.Chain(r, 0, 0)
 		chain.LaunchTriggered = true
-		chain.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		_ = tk.LaunchKeeper.AppendChain(ctx, chain)
+		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
+		require.True(t, broken, msg)
+	})
+
+	t.Run("invalid case - chain does not have a valid associated campaign", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+		chain := sample.Chain(r, 0, 0)
+		chain.HasCampaign = true
+		chain.CampaignID = 1000
+		_ = tk.LaunchKeeper.AppendChain(ctx, chain)
 		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
 		require.True(t, broken, msg)
 	})
