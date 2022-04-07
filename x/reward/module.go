@@ -141,7 +141,9 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 }
 
 // RegisterInvariants registers the reward module's invariants.
-func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
+func (am AppModule) RegisterInvariants(ir sdk.InvariantRegistry) {
+	keeper.RegisterInvariants(ir, am.keeper)
+}
 
 // InitGenesis performs the reward module's genesis initialization It returns
 // no validator updates.
