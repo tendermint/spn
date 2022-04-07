@@ -19,14 +19,14 @@ func TestAccountWithoutCampaignInvariant(t *testing.T) {
 		campaign := sample.Campaign(r, 0)
 		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
 		tk.CampaignKeeper.SetMainnetAccount(ctx, sample.MainnetAccount(r, campaign.CampaignID, sample.Address(r)))
-		mes, broken := keeper.AccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
-		require.False(t, broken, mes)
+		msg, broken := keeper.AccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
 		tk.CampaignKeeper.SetMainnetAccount(ctx, sample.MainnetAccount(r, 100, sample.Address(r)))
-		mes, broken := keeper.AccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
-		require.True(t, broken, mes)
+		msg, broken := keeper.AccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
 
@@ -36,14 +36,14 @@ func TestVestingAccountWithoutCampaignInvariant(t *testing.T) {
 		campaign := sample.Campaign(r, 0)
 		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
 		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(r, campaign.CampaignID, sample.Address(r)))
-		mes, broken := keeper.VestingAccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
-		require.False(t, broken, mes)
+		msg, broken := keeper.VestingAccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
 		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(r, 10000, sample.Address(r)))
-		mes, broken := keeper.VestingAccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
-		require.True(t, broken, mes)
+		msg, broken := keeper.VestingAccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
 
@@ -112,15 +112,15 @@ func TestCampaignSharesInvariant(t *testing.T) {
 			),
 		})
 
-		mes, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
-		require.False(t, broken, mes)
+		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("campaign with empty allocated share is valid", func(t *testing.T) {
 		tk.CampaignKeeper.SetCampaign(ctx, sample.Campaign(r, 3))
 
-		mes, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
-		require.False(t, broken, mes)
+		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
@@ -136,7 +136,7 @@ func TestCampaignSharesInvariant(t *testing.T) {
 		voucherFoo, voucherBar := types.VoucherDenom(campaignID, "foo"), types.VoucherDenom(campaignID, "bar")
 		tk.Mint(ctx, sample.Address(r), tc.Coins(t, fmt.Sprintf("99%s,200%s", voucherFoo, voucherBar)))
 
-		mes, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
-		require.True(t, broken, mes)
+		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
