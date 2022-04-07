@@ -104,6 +104,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 		}, TestMsgServers{
+			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
 			CampaignSrv:      campaignSrv,
