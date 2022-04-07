@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
+
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -53,6 +55,11 @@ func TestMsgSettleRequest(t *testing.T) {
 	// set one request to a non-pending status
 	requestSamples[numReq-1].Status = types.Request_APPROVED
 	requests := createRequestsFromSamples(tk.LaunchKeeper, sdkCtx, chains[2].LaunchID, requestSamples)
+
+	invalidContentRequest := types.Request{
+		LaunchID: chains[2].LaunchID,
+	}
+	invalidContentRequestID := tk.LaunchKeeper.AppendRequest(sdkCtx, invalidContentRequest)
 
 	tests := []struct {
 		name       string
@@ -112,7 +119,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrRequestSettled,
 		},
 		{
-			name: "should prevent approving an invalid request",
+			name: "should prevent approving a request that does not exist",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    coordinator1.Address,
@@ -120,6 +127,16 @@ func TestMsgSettleRequest(t *testing.T) {
 				Approve:   true,
 			},
 			err: types.ErrRequestNotFound,
+		},
+		{
+			name: "should prevent applying a request with invalid contents",
+			msg: types.MsgSettleRequest{
+				LaunchID:  chains[2].LaunchID,
+				Signer:    coordinator1.Address,
+				RequestID: invalidContentRequestID,
+				Approve:   true,
+			},
+			err: spnerrors.ErrCritical,
 		},
 		{
 			name: "coordinator can approve a request",
@@ -165,6 +182,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			wantStatus: types.Request_REJECTED,
 			checkAddr:  requestSamples[3].Creator,
 		},
+
 		{
 			name: "should prevent rejecting a request if the signer is not the request creator",
 			msg: types.MsgSettleRequest{
