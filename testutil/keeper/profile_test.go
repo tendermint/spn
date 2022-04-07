@@ -17,5 +17,9 @@ func TestTestMsgServers_CreateCoordinator(t *testing.T) {
 	coord, found := tk.ProfileKeeper.GetCoordinator(sdkCtx, id)
 	require.True(t, found)
 	require.Equal(t, id, coord.CoordinatorID)
-	require.Equal(t, addr, coord.Address)
+	require.Equal(t, addr.String(), coord.Address)
+	coordByAddr, err := tk.ProfileKeeper.GetCoordinatorByAddress(sdkCtx, addr.String())
+	require.NoError(t, err)
+	require.Equal(t, id, coordByAddr.CoordinatorID)
+	require.Equal(t, addr.String(), coordByAddr.Address)
 }
