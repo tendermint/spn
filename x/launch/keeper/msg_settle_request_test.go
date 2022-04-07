@@ -3,17 +3,14 @@ package keeper_test
 import (
 	"testing"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
-
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
-	profiletypes "github.com/tendermint/spn/x/profile/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgSettleRequest(t *testing.T) {
