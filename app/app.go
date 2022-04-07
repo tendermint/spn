@@ -425,7 +425,7 @@ func New(
 		app.GetSubspace(fundraisingtypes.ModuleName),
 		app.AuthKeeper,
 		app.BankKeeper,
-		make(map[string]bool),
+		app.DistrKeeper,
 	)
 
 	app.ProfileKeeper = *profilemodulekeeper.NewKeeper(
@@ -540,7 +540,7 @@ func New(
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		monitoringcModule,
 		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
-		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),
+		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper, app.DistrKeeper),
 		participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper, app.FundraisingKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -578,6 +578,7 @@ func New(
 	)
 
 	app.mm.SetOrderEndBlockers(
+		fundraisingtypes.ModuleName,
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
@@ -597,7 +598,6 @@ func New(
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		profilemoduletypes.ModuleName,
-		fundraisingtypes.ModuleName,
 		rewardmoduletypes.ModuleName,
 		campaignmoduletypes.ModuleName,
 		monitoringcmoduletypes.ModuleName,
@@ -664,9 +664,7 @@ func New(
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
 		participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper, app.FundraisingKeeper),
-
-		// TODO: Include fundraising for simapp when available
-		// fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),
+		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper, app.DistrKeeper),
 	)
 	app.sm.RegisterStoreDecoders()
 

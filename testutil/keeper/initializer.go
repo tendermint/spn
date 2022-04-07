@@ -363,7 +363,7 @@ func (i initializer) Fundraising(
 	paramKeeper paramskeeper.Keeper,
 	authKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
-	blockedAddrs map[string]bool,
+	disKeeper distrkeeper.Keeper,
 ) *fundraisingkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(fundraisingtypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(fundraisingtypes.MemStoreKey)
@@ -381,7 +381,7 @@ func (i initializer) Fundraising(
 		subspace,
 		authKeeper,
 		bankKeeper,
-		blockedAddrs,
+		disKeeper,
 	)
 }
 
