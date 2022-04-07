@@ -2,11 +2,12 @@ package keeper
 
 import (
 	"context"
+	"math/rand"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/testutil/sample"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
-	"math/rand"
 )
 
 // CreateCoordinator creates a coordinator in the store and returns ID with associated address
