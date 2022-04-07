@@ -106,6 +106,11 @@ func TestValidateRevertDelay(t *testing.T) {
 			err:         errors.New("max parametrable revert delay reached"),
 		},
 		{
+			name:        "invalid interface - not positive value",
+			revertDelay: int64(0),
+			err:         errors.New("revert delay parameter must be positive"),
+		},
+		{
 			name:        "max revert delay",
 			revertDelay: MaxParametrableRevertDelay,
 		},
