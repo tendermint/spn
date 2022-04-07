@@ -50,8 +50,8 @@ func RandomAuction(ctx sdk.Context, r *rand.Rand, fk fundraisingkeeper.Keeper) (
 	})
 
 	for _, a := range auctions {
-		// auction must not be started and must not be cancelled
-		if !a.ShouldAuctionStarted(ctx.BlockTime()) && a.GetStatus() != fundraisingtypes.AuctionStatusCancelled {
+		// auction must be in standby status
+		if a.GetStatus() == fundraisingtypes.AuctionStatusStandBy {
 			return a, true
 		}
 	}
