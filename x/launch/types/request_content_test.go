@@ -11,10 +11,45 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
+func TestRequestContent_Validate(t *testing.T) {
+	launchID := uint64(0)
+	address := sample.Address(r)
+	coins := sample.Coins(r)
+	vestingOptions := sample.VestingOptions(r)
+	gentTx := sample.Bytes(r, 300)
+	consPubKey := sample.Bytes(r, 30)
+	selfDelegation := sample.Coin(r)
+	peer := sample.GenesisValidatorPeer(r)
+
+	requestContent := types.NewGenesisAccount(launchID, address, coins)
+	require.NoError(t, requestContent.Validate())
+
+	requestContent = types.NewVestingAccount(launchID, address, vestingOptions)
+	require.NoError(t, requestContent.Validate())
+
+	requestContent = types.NewGenesisValidator(
+		launchID,
+		address,
+		gentTx,
+		consPubKey,
+		selfDelegation,
+		peer,
+	)
+	require.NoError(t, requestContent.Validate())
+
+	requestContent = types.NewAccountRemoval(address)
+	require.NoError(t, requestContent.Validate())
+
+	requestContent = types.NewValidatorRemoval(address)
+	require.NoError(t, requestContent.Validate())
+
+}
+
 func TestNewGenesisAccount(t *testing.T) {
 	launchID := uint64(0)
 	address := sample.Address(r)
 	coins := sample.Coins(r)
+
 	requestContent := types.NewGenesisAccount(launchID, address, coins)
 
 	genesisAccount := requestContent.GetGenesisAccount()
