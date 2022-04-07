@@ -13,10 +13,11 @@ import (
 )
 
 func TestInsufficientRewardsBalanceInvariant(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+		denoms := []string{sample.AlphaString(r, 5), sample.AlphaString(r, 5), sample.AlphaString(r, 5)}
 		for i := uint64(0); i < uint64(10); i++ {
-			pool := sample.RewardPool(r, i)
+			pool := sample.RewardPoolWithCoinsRangeAmount(r, i, denoms[0], denoms[1], denoms[2], 1, 10000)
 			tk.MintModule(ctx, types.ModuleName, pool.RemainingCoins)
 			tk.RewardKeeper.SetRewardPool(ctx, pool)
 		}
@@ -25,15 +26,17 @@ func TestInsufficientRewardsBalanceInvariant(t *testing.T) {
 	})
 
 	t.Run("invalid case 1", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		// add some valid pools
+		denoms := []string{sample.AlphaString(r, 5), sample.AlphaString(r, 5), sample.AlphaString(r, 5)}
 		for i := uint64(0); i < uint64(10); i++ {
-			pool := sample.RewardPool(r, i)
+			pool := sample.RewardPoolWithCoinsRangeAmount(r, i, denoms[0], denoms[1], denoms[2], 1, 10000)
 			tk.MintModule(ctx, types.ModuleName, pool.RemainingCoins)
 			tk.RewardKeeper.SetRewardPool(ctx, pool)
 		}
 		// add some invalid pools - mint a bit less for some coins
 		for i := uint64(10); i < uint64(20); i++ {
-			pool := sample.RewardPool(r, i)
+			pool := sample.RewardPoolWithCoinsRangeAmount(r, i, denoms[0], denoms[1], denoms[2], 1, 10000)
 			mintCoins := pool.RemainingCoins
 			// decrease amount for coin at index 0 before minting
 			mintCoins = mintCoins.Sub(sdk.NewCoins(sdk.NewCoin(mintCoins.GetDenomByIndex(0), sdk.OneInt())))
@@ -45,9 +48,11 @@ func TestInsufficientRewardsBalanceInvariant(t *testing.T) {
 	})
 
 	t.Run("invalid case 2", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		// add some valid pools
+		denoms := []string{sample.AlphaString(r, 5), sample.AlphaString(r, 5), sample.AlphaString(r, 5)}
 		for i := uint64(0); i < uint64(10); i++ {
-			pool := sample.RewardPool(r, i)
+			pool := sample.RewardPoolWithCoinsRangeAmount(r, i, denoms[0], denoms[1], denoms[2], 1, 10000)
 			tk.MintModule(ctx, types.ModuleName, pool.RemainingCoins)
 			tk.RewardKeeper.SetRewardPool(ctx, pool)
 		}
