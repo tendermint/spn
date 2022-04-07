@@ -179,7 +179,6 @@ func TestMsgSettleRequest(t *testing.T) {
 			wantStatus: types.Request_REJECTED,
 			checkAddr:  requestSamples[3].Creator,
 		},
-
 		{
 			name: "should prevent rejecting a request if the signer is not the request creator",
 			msg: types.MsgSettleRequest{
