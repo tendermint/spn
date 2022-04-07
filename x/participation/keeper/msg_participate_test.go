@@ -44,7 +44,7 @@ func Test_msgServer_Participate(t *testing.T) {
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
 	cancelledAuctionID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin1, startTime, endTime)
 	// cancel auction
-	_, err := tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, cancelledAuctionID))
+	err := tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, cancelledAuctionID))
 	require.NoError(t, err)
 
 	// add delegations

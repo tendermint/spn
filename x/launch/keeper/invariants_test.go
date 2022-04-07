@@ -38,7 +38,7 @@ func TestInvalidChainInvariant(t *testing.T) {
 		require.False(t, broken, msg)
 	})
 
-	t.Run("invalid case", func(t *testing.T) {
+	t.Run("launch timestamp is 0, but launch not triggered", func(t *testing.T) {
 		chain := sample.Chain(r, 0, 0)
 		chain.LaunchTriggered = true
 		chain.LaunchID = tk.LaunchKeeper.AppendChain(ctx, chain)
