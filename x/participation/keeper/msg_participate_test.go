@@ -36,15 +36,23 @@ func Test_msgServer_Participate(t *testing.T) {
 
 	// initialize auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
-	auctionID1 := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin1, startTime, endTime)
-	// initialize auction with edge case start time
+	auctionRegistrationPeriodID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin1, startTime, endTime)
+	// initialize auction with edge case start time (forcefully set to status standby)
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin2))
-	auctionID2 := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin2, startTimeLowerRegistrationPeriod, endTime)
+	auctionLowerRegistrationPeriodID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin2, startTimeLowerRegistrationPeriod, endTime)
+	auctionLowerRegistrationPeriod, found := tk.FundraisingKeeper.GetAuction(sdkCtx, auctionLowerRegistrationPeriodID)
+	require.True(t, found)
+	err := auctionLowerRegistrationPeriod.SetStatus(fundraisingtypes.AuctionStatusStandBy)
+	require.NoError(t, err)
+	tk.FundraisingKeeper.SetAuction(sdkCtx, auctionLowerRegistrationPeriod)
+	// initialize auction that is already started
+	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
+	auctionStartedID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin1, sdkCtx.BlockTime(), endTime)
 	// initialize auction that will be set to `cancelled`
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
-	cancelledAuctionID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin1, startTime, endTime)
+	auctionCancelledID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, sellingCoin1, startTime, endTime)
 	// cancel auction
-	err := tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, cancelledAuctionID))
+	err = tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, auctionCancelledID))
 	require.NoError(t, err)
 
 	// add delegations
@@ -68,7 +76,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "valid message tier 1",
 			msg: &types.MsgParticipate{
 				Participant: addrsWithDelsTier[0],
-				AuctionID:   auctionID1,
+				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      1,
 			},
 			desiredUsedAlloc:      1,
@@ -79,7 +87,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "valid message tier 2",
 			msg: &types.MsgParticipate{
 				Participant: addrsWithDelsTier[1],
-				AuctionID:   auctionID1,
+				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      2,
 			},
 			desiredUsedAlloc:      2,
@@ -90,7 +98,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should allow participation when registration period is longer than range between Unix time 0 and auction's start time",
 			msg: &types.MsgParticipate{
 				Participant: addrsWithDelsTier[2],
-				AuctionID:   auctionID2,
+				AuctionID:   auctionLowerRegistrationPeriodID,
 				TierID:      1,
 			},
 			desiredUsedAlloc:      1,
@@ -101,7 +109,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent participating twice in the same auction",
 			msg: &types.MsgParticipate{
 				Participant: addrsWithDelsTier[0],
-				AuctionID:   auctionID1,
+				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      1,
 			},
 			err:       types.ErrAlreadyParticipating,
@@ -111,7 +119,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent if user has insufficient available allocations",
 			msg: &types.MsgParticipate{
 				Participant: sample.Address(r),
-				AuctionID:   auctionID1,
+				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      1,
 			},
 			err:       types.ErrInsufficientAllocations,
@@ -121,7 +129,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent participating using a non existent tier",
 			msg: &types.MsgParticipate{
 				Participant: sample.Address(r),
-				AuctionID:   auctionID1,
+				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      111,
 			},
 			err:       types.ErrTierNotFound,
@@ -131,7 +139,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent participating in a non existent auction",
 			msg: &types.MsgParticipate{
 				Participant: sample.Address(r),
-				AuctionID:   auctionID2 + 1000,
+				AuctionID:   auctionLowerRegistrationPeriodID + 1000,
 				TierID:      1,
 			},
 			err:       types.ErrAuctionNotFound,
@@ -141,7 +149,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent participating if auction cancelled",
 			msg: &types.MsgParticipate{
 				Participant: addrsWithDelsTier[1],
-				AuctionID:   cancelledAuctionID,
+				AuctionID:   auctionCancelledID,
 				TierID:      1,
 			},
 			err:       types.ErrParticipationNotAllowed,
@@ -151,7 +159,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent participating if auction started",
 			msg: &types.MsgParticipate{
 				Participant: addrsWithDelsTier[1],
-				AuctionID:   auctionID1,
+				AuctionID:   auctionStartedID,
 				TierID:      1,
 			},
 			err:       types.ErrParticipationNotAllowed,
@@ -161,7 +169,7 @@ func Test_msgServer_Participate(t *testing.T) {
 			name: "should prevent participating before registration period",
 			msg: &types.MsgParticipate{
 				Participant: addrsWithDelsTier[1],
-				AuctionID:   auctionID1,
+				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      2,
 			},
 			err:       types.ErrParticipationNotAllowed,

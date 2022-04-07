@@ -26,14 +26,9 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 		return nil, sdkerrors.Wrapf(types.ErrAuctionNotFound, "auction %d not found", msg.AuctionID)
 	}
 
-	// check if auction is cancelled
-	if auction.GetStatus() == fundraisingtypes.AuctionStatusCancelled {
-		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "auction %d is cancelled", msg.AuctionID)
-	}
-
-	// check if auction is already started
-	if auction.ShouldAuctionStarted(blockTime) {
-		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "auction %d is already started", msg.AuctionID)
+	// check if auction is not in standby
+	if auction.GetStatus() != fundraisingtypes.AuctionStatusStandBy {
+		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "auction %d is not in standby", msg.AuctionID)
 	}
 
 	// check if auction allows participation at this time
