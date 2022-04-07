@@ -2,6 +2,7 @@ package simulation
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 	"time"
 
@@ -74,20 +75,31 @@ func SimulateCreateAuction(
 	ak authkeeper.AccountKeeper,
 	bk bankkeeper.Keeper,
 	fk fundraisingkeeper.Keeper,
-	_ keeper.Keeper,
+	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		msg := &fundraisingtypes.MsgCreateFixedPriceAuction{}
 
 		// fundraising simulation params must be set
-		// since the module is not included in the simulation manager
+		// since they are not initially set
 		params := fundraisingtypes.DefaultParams()
 		params.AuctionCreationFee = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100_000)))
 		fk.SetParams(ctx, params)
 		fee := params.AuctionCreationFee
+
+		largestTier, found := FindLargestMaxBid(k.ParticipationTierList(ctx))
+		if !found {
+			return simtypes.OperationMsg{},
+				nil,
+				fmt.Errorf("no tier in list")
+
+		}
+		// create a selling coin that at least covers all tiers in the simulation param
+		requireAmt := sdk.NewCoin(simutil.AuctionCoinDenom, largestTier.Benefits.MaxBidAmount)
 		sellCoin := sample.Coin(r)
 		sellCoin.Denom = simutil.AuctionCoinDenom
+		sellCoin = sellCoin.Add(requireAmt)
 
 		// choose custom fee that only uses the default bond denom
 		// otherwise the custom sellingCoin denom could be chosen

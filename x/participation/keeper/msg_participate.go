@@ -32,7 +32,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	}
 
 	// check if auction is already started
-	if auction.IsAuctionStarted(blockTime) {
+	if auction.ShouldAuctionStarted(blockTime) {
 		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "auction %d is already started", msg.AuctionID)
 	}
 

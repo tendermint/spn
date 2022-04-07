@@ -13,7 +13,7 @@ require (
 	github.com/spf13/cast v1.4.1
 	github.com/spf13/cobra v1.3.0
 	github.com/stretchr/testify v1.7.0
-	github.com/tendermint/fundraising v0.1.1
+	github.com/tendermint/fundraising v0.1.2-0.20220406040803-d65fe31abb77
 	github.com/tendermint/starport v0.19.5
 	github.com/tendermint/tendermint v0.34.16
 	github.com/tendermint/tm-db v0.6.6
