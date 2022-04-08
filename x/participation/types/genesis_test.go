@@ -123,13 +123,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					{
 						Address:        addr1,
 						AuctionID:      auctionID1,
-						NumAllocations: 1,
-						Withdrawn:      false,
-					},
-					{
-						Address:        addr1,
-						AuctionID:      auctionID2,
-						NumAllocations: 1,
+						NumAllocations: 2,
 						Withdrawn:      false,
 					},
 					{
