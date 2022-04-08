@@ -31,11 +31,18 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 		LaunchTriggered: true,
 		GenesisChainID:  "spn-10",
 	})
+	monitoringConnectedLaunchID := tk.LaunchKeeper.AppendChain(ctx, types.Chain{
+		CoordinatorID:       0,
+		LaunchTriggered:     true,
+		GenesisChainID:      "spn-1",
+		MonitoringConnected: true,
+	})
 	launchID := tk.LaunchKeeper.AppendChain(ctx, types.Chain{
 		CoordinatorID:   0,
 		LaunchTriggered: true,
 		GenesisChainID:  "spn-1",
 	})
+
 	for _, validator := range validators {
 		addr := sdk.AccAddress(validator.Address().Bytes())
 		tk.LaunchKeeper.SetGenesisValidator(ctx, types.GenesisValidator{
@@ -89,6 +96,15 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 				validatorSet: validatorSet,
 			},
 			err: types.ErrInvalidGenesisChainID,
+		},
+		{
+			name: "chain is already connected to monitoring",
+			args: args{
+				launchID:     monitoringConnectedLaunchID,
+				chainID:      "spn-1",
+				validatorSet: validatorSet,
+			},
+			err: types.ErrChainMonitoringConnected,
 		},
 		{
 			name: "validator not found",
