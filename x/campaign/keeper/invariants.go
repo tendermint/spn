@@ -113,14 +113,6 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 			campaignID := campaign.CampaignID
 			expectedAllocatedSharesShares := accountSharesByCampaign[campaignID]
 
-			campaign, found := k.GetCampaign(ctx, campaignID)
-			if !found {
-				return sdk.FormatInvariant(
-					types.ModuleName, campaignSharesRoute,
-					fmt.Sprintf("%s: %d", types.ErrCampaignNotFound, campaignID),
-				), true
-			}
-
 			// read existing denoms from allocated shares of the campaign to check possible minted vouchers
 			allocated, err := types.SharesToVouchers(campaign.GetAllocatedShares(), campaignID)
 			if err != nil {
@@ -140,14 +132,9 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 				vouchers = vouchers.Add(voucherSupply)
 			}
 
-			// convert to shares and add to the campaign shares
-			vShares, err := types.VouchersToShares(vouchers, campaignID)
-			if err != nil {
-				return sdk.FormatInvariant(
-					types.ModuleName, campaignSharesRoute,
-					"fail to convert vouchers to shares",
-				), true
-			}
+			// convert to shares and add to the campaign shares - since we are converting shares to vouchers earlier,
+			// this conversion back to shares will never fail by design, thus we can ignore the error
+			vShares, _ := types.VouchersToShares(vouchers, campaignID)
 			expectedAllocatedSharesShares = types.IncreaseShares(expectedAllocatedSharesShares, vShares)
 
 			if !types.IsEqualShares(expectedAllocatedSharesShares, campaign.GetAllocatedShares()) {

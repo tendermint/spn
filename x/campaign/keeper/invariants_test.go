@@ -123,7 +123,36 @@ func TestCampaignSharesInvariant(t *testing.T) {
 		require.False(t, broken, msg)
 	})
 
-	t.Run("invalid case", func(t *testing.T) {
+	t.Run("mainnet vesting account has invalid total shares", func(t *testing.T) {
+		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, types.MainnetVestingAccount{
+			CampaignID:     0,
+			Address:        sample.Address(r),
+			VestingOptions: types.ShareVestingOptions{},
+		})
+
+		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		require.True(t, broken, msg)
+	})
+
+	t.Run("allocated shares cannot be converted to vouchers", func(t *testing.T) {
+		campaignID := uint64(4)
+		campaign := sample.Campaign(r, campaignID)
+		coins := tc.Coins(t, "100foo,200bar")
+		shares := make(types.Shares, len(coins))
+		for i, coin := range coins {
+			shares[i] = coin
+		}
+		campaign.AllocatedShares = types.IncreaseShares(
+			campaign.AllocatedShares,
+			shares,
+		)
+		tk.CampaignKeeper.SetCampaign(ctx, campaign)
+
+		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		require.True(t, broken, msg)
+	})
+
+	t.Run("invalid allocated shares", func(t *testing.T) {
 		campaignID := uint64(4)
 		campaign := sample.Campaign(r, campaignID)
 		campaign.AllocatedShares = types.IncreaseShares(
