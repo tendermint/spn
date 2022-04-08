@@ -116,6 +116,18 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
+			desc: "invalid address in auctionUsedAllocations",
+			genState: &types.GenesisState{
+				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
+					{
+						Address:   addr1,
+						AuctionID: auctionID1,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
 			desc: "mismatch between usedAllocations and auctionUsedAllocations",
 			genState: &types.GenesisState{
 				UsedAllocationsList: []types.UsedAllocations{
