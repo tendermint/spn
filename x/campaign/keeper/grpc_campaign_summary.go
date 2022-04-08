@@ -95,7 +95,7 @@ func (k Keeper) GetCampaignSummary(ctx sdk.Context, campaign types.Campaign) (cs
 			LaunchTriggered: chain.LaunchTriggered,
 			SourceURL:       chain.SourceURL,
 			SourceHash:      chain.SourceHash,
-			RequestNb:       k.launchKeeper.GetRequestCount(ctx, mostRecentLaunchID),
+			RequestNb:       k.launchKeeper.GetRequestCounter(ctx, mostRecentLaunchID),
 			ValidatorNb:     k.launchKeeper.GetGenesisValidatorCount(ctx, mostRecentLaunchID),
 		}
 
