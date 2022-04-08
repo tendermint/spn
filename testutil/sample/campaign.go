@@ -116,3 +116,36 @@ func CampaignGenesisState(r *rand.Rand) campaign.GenesisState {
 		Params:      CampaignParams(r),
 	}
 }
+
+// CampaignGenesisStateWithAccounts returns a sample genesis state for the campaign module that includes accounts
+func CampaignGenesisStateWithAccounts(r *rand.Rand) campaign.GenesisState {
+	campaign1, campaign2 := Campaign(r, 0), Campaign(r, 1)
+
+	return campaign.GenesisState{
+		CampaignList: []campaign.Campaign{
+			campaign1,
+			campaign2,
+		},
+		CampaignCounter: 2,
+		CampaignChainsList: []campaign.CampaignChains{
+			{
+				CampaignID: 0,
+				Chains:     []uint64{0, 1},
+			},
+		},
+		MainnetAccountList: []campaign.MainnetAccount{
+			MainnetAccount(r, 0, Address(r)),
+			MainnetAccount(r, 0, Address(r)),
+			MainnetAccount(r, 1, Address(r)),
+			MainnetAccount(r, 1, Address(r)),
+		},
+		MainnetVestingAccountList: []campaign.MainnetVestingAccount{
+			MainnetVestingAccount(r, 0, Address(r)),
+			MainnetVestingAccount(r, 0, Address(r)),
+			MainnetVestingAccount(r, 1, Address(r)),
+			MainnetVestingAccount(r, 1, Address(r)),
+		},
+		TotalShares: spntypes.TotalShareNumber,
+		Params:      CampaignParams(r),
+	}
+}
