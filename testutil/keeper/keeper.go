@@ -61,6 +61,7 @@ type TestKeepers struct {
 
 // TestMsgServers holds all message servers used during keeper tests for all modules
 type TestMsgServers struct {
+	T                testing.TB
 	ProfileSrv       profiletypes.MsgServer
 	LaunchSrv        launchtypes.MsgServer
 	CampaignSrv      campaigntypes.MsgServer
@@ -144,6 +145,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 		}, TestMsgServers{
+			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
 			CampaignSrv:      campaignSrv,
@@ -230,6 +232,7 @@ func NewTestSetupWithIBCMocks(
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 		}, TestMsgServers{
+			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
 			CampaignSrv:      campaignSrv,
