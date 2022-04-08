@@ -46,7 +46,7 @@ func TestShowAvailableAllocationsQuery(t *testing.T) {
 			request: &types.QueryGetAvailableAllocationsRequest{
 				Address: strconv.Itoa(100000),
 			},
-			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6"),
+			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6: invalid address"),
 		},
 		{
 			desc: "invalid request",
