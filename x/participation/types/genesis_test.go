@@ -97,6 +97,11 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated auctionUsedAllocations",
 			genState: &types.GenesisState{
+				UsedAllocationsList: []types.UsedAllocations{
+					{
+						Address: addr1,
+					},
+				},
 				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
 					{
 						Address:   addr1,

@@ -48,9 +48,8 @@ func TestVestingAccountWithoutCampaignInvariant(t *testing.T) {
 }
 
 func TestCampaignSharesInvariant(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
-
 	t.Run("valid case", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		// create campaigns with some allocated shares
 		campaignID1, campaignID2 := uint64(1), uint64(2)
 		campaign := sample.Campaign(r, campaignID1)
@@ -117,6 +116,7 @@ func TestCampaignSharesInvariant(t *testing.T) {
 	})
 
 	t.Run("campaign with empty allocated share is valid", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		tk.CampaignKeeper.SetCampaign(ctx, sample.Campaign(r, 3))
 
 		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
@@ -124,6 +124,7 @@ func TestCampaignSharesInvariant(t *testing.T) {
 	})
 
 	t.Run("mainnet vesting account has invalid total shares", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, types.MainnetVestingAccount{
 			CampaignID:     0,
 			Address:        sample.Address(r),
@@ -135,6 +136,7 @@ func TestCampaignSharesInvariant(t *testing.T) {
 	})
 
 	t.Run("allocated shares cannot be converted to vouchers", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		campaignID := uint64(4)
 		campaign := sample.Campaign(r, campaignID)
 		coins := tc.Coins(t, "100foo,200bar")
@@ -153,6 +155,7 @@ func TestCampaignSharesInvariant(t *testing.T) {
 	})
 
 	t.Run("invalid allocated shares", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		campaignID := uint64(4)
 		campaign := sample.Campaign(r, campaignID)
 		campaign.AllocatedShares = types.IncreaseShares(
