@@ -31,7 +31,11 @@ func AllInvariants(k Keeper) sdk.Invariant {
 		if stop {
 			return res, stop
 		}
-		return VestingAccountWithoutCampaignInvariant(k)(ctx)
+		res, stop = VestingAccountWithoutCampaignInvariant(k)(ctx)
+		if stop {
+			return res, stop
+		}
+		return CampaignSharesInvariant(k)(ctx)
 	}
 }
 
