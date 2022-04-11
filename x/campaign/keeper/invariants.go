@@ -138,7 +138,7 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 
 			// convert to shares and add to the campaign shares - since we are converting shares to vouchers earlier,
 			// this conversion back to shares will never fail by design, thus we can ignore the error
-			vShares, _ := types.VouchersToShares(vouchers, campaignID)
+			vShares, _ := types.VouchersToShares(vouchers, campaignID) //nolint
 			expectedAllocatedSharesShares = types.IncreaseShares(expectedAllocatedSharesShares, vShares)
 
 			if !types.IsEqualShares(expectedAllocatedSharesShares, campaign.GetAllocatedShares()) {
