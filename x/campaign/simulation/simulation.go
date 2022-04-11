@@ -54,35 +54,6 @@ func deliverSimTx(
 	return simulation.GenAndDeliverTxWithRandFees(txCtx)
 }
 
-// deliverSimTx delivers the tx for simulation from the provided message
-func deliverSimTxCustomFee(
-	r *rand.Rand,
-	app *baseapp.BaseApp,
-	ctx sdk.Context,
-	ak types.AccountKeeper,
-	bk types.BankKeeper,
-	simAccount simtypes.Account,
-	msg TypedMsg,
-	coinsSpent sdk.Coins,
-	customFee sdk.Coins,
-) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-	txCtx := simulation.OperationInput{
-		R:               r,
-		App:             app,
-		TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
-		Cdc:             nil,
-		Msg:             msg,
-		MsgType:         msg.Type(),
-		Context:         ctx,
-		SimAccount:      simAccount,
-		AccountKeeper:   ak,
-		Bankkeeper:      bk,
-		ModuleName:      types.ModuleName,
-		CoinsSpentInMsg: coinsSpent,
-	}
-	return simulation.GenAndDeliverTx(txCtx, customFee)
-}
-
 // GetCoordSimAccount finds an account associated with a coordinator profile from simulation accounts
 func GetCoordSimAccount(
 	r *rand.Rand,
