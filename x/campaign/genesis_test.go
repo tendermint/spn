@@ -20,7 +20,7 @@ func TestGenesis(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 
-	genesisState := sample.CampaignGenesisState(r)
+	genesisState := sample.CampaignGenesisStateWithAccounts(r)
 	campaign.InitGenesis(ctx, *tk.CampaignKeeper, genesisState)
 	got := *campaign.ExportGenesis(ctx, *tk.CampaignKeeper)
 

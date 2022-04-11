@@ -5,6 +5,7 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
@@ -25,7 +26,7 @@ func Test_msgServer_Participate(t *testing.T) {
 		endTime                          = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
 		validRegistrationTime            = sdkCtx.BlockTime().Add(time.Hour * 6)
 		allocationPrice                  = types.AllocationPrice{Bonded: sdk.NewInt(100)}
-		addrsWithDelsTier                = []string{sample.Address(r), sample.Address(r), sample.Address(r)}
+		addrsWithDelsTier                = []string{sample.Address(r), sample.Address(r), sample.Address(r), sample.Address(r)}
 		availableAllocsTier              = make([]uint64, len(addrsWithDelsTier))
 	)
 
@@ -106,6 +107,16 @@ func Test_msgServer_Participate(t *testing.T) {
 			blockTime:             time.Unix(1, 0),
 		},
 		{
+			name: "invalid message",
+			msg: &types.MsgParticipate{
+				Participant: "",
+				AuctionID:   auctionRegistrationPeriodID,
+				TierID:      1,
+			},
+			err:       sdkerrors.ErrInvalidAddress,
+			blockTime: validRegistrationTime,
+		},
+		{
 			name: "should prevent participating twice in the same auction",
 			msg: &types.MsgParticipate{
 				Participant: addrsWithDelsTier[0],
@@ -174,6 +185,16 @@ func Test_msgServer_Participate(t *testing.T) {
 			},
 			err:       types.ErrParticipationNotAllowed,
 			blockTime: sdkCtx.BlockTime(),
+		},
+		{
+			name: "should prevent participating if tier amount greater than auction max bid amount",
+			msg: &types.MsgParticipate{
+				Participant: addrsWithDelsTier[3],
+				AuctionID:   auctionRegistrationPeriodID,
+				TierID:      4,
+			},
+			err:       types.ErrInvalidBidder,
+			blockTime: validRegistrationTime,
 		},
 	}
 	for _, tt := range tests {
