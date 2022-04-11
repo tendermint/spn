@@ -290,3 +290,59 @@ func TestSharesIsAllLTE(t *testing.T) {
 		})
 	}
 }
+
+func TestSharesEmpty(t *testing.T) {
+	for _, tc := range []struct {
+		desc   string
+		shares campaign.Shares
+		empty  bool
+	}{
+		{
+			desc:   "empty is valid",
+			shares: campaign.EmptyShares(),
+			empty:  true,
+		},
+		{
+			desc:   "not empty is invalid",
+			shares: tc.Shares(t, "100foo"),
+			empty:  false,
+		},
+		{
+			desc:   "nil is valid",
+			shares: campaign.Shares(nil),
+			empty:  true,
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			require.Equal(t, tc.empty, tc.shares.Empty())
+		})
+	}
+}
+
+func TestSharesString(t *testing.T) {
+	for _, tc := range []struct {
+		desc   string
+		shares campaign.Shares
+		str    string
+	}{
+		{
+			desc:   "empty shares",
+			shares: campaign.EmptyShares(),
+			str:    "",
+		},
+		{
+			desc:   "one denom",
+			shares: tc.Shares(t, "100foo"),
+			str:    fmt.Sprintf("100%sfoo", campaign.SharePrefix),
+		},
+		{
+			desc:   "more denoms",
+			shares: tc.Shares(t, "100foo,100bar"),
+			str:    fmt.Sprintf("100%sbar,100%sfoo", campaign.SharePrefix, campaign.SharePrefix),
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			require.Equal(t, tc.str, tc.shares.String())
+		})
+	}
+}

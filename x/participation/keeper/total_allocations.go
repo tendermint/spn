@@ -4,6 +4,7 @@ import (
 	"math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tendermint/spn/x/participation/types"
 )
@@ -14,7 +15,7 @@ func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (uint64, er
 
 	accAddr, err := sdk.AccAddressFromBech32(address)
 	if err != nil {
-		return 0, err
+		return 0, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, err.Error())
 	}
 
 	// count total shares for account
