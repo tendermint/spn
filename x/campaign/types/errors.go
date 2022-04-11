@@ -22,5 +22,5 @@ var (
 	ErrInvalidCampaignName    = sdkerrors.Register(ModuleName, 13, "invalid campaign name")
 	ErrInvalidSupplyRange     = sdkerrors.Register(ModuleName, 14, "invalid total supply range")
 	ErrInvalidMetadataLength  = sdkerrors.Register(ModuleName, 15, "metadata field too long")
-	ErrMainnetLaunchTriggered = sdkerrors.Register(ModuleName, 4, "mainnet launch already triggered")
+	ErrMainnetLaunchTriggered = sdkerrors.Register(ModuleName, 16, "mainnet launch already triggered")
 )

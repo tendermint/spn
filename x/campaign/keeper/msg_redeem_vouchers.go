@@ -20,13 +20,13 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 	}
 
 	if campaign.MainnetInitialized {
-		mainnetLaunch, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
+		mainnetChain, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
 		if !found {
 			return nil, spnerrors.Criticalf("cannot find mainnet chain %d for campaign %d", campaign.MainnetID, campaign.CampaignID)
 		}
-		if mainnetLaunch.LaunchTriggered {
+		if mainnetChain.LaunchTriggered {
 			return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
-				"mainnet %d launched, cannot  add shares",
+				"mainnet %d is already launched, action prohibited",
 				campaign.MainnetID,
 			))
 		}

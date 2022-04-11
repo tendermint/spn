@@ -20,6 +20,19 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
+	if campaign.MainnetInitialized {
+		mainnetChain, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
+		if !found {
+			return nil, spnerrors.Criticalf("cannot find mainnet chain %d for campaign %d", campaign.MainnetID, campaign.CampaignID)
+		}
+		if mainnetChain.LaunchTriggered {
+			return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
+				"mainnet %d is already launched, action prohibited",
+				campaign.MainnetID,
+			))
+		}
+	}
+
 	// Get the coordinator ID associated to the sender address
 	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {
@@ -31,19 +44,6 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 			"coordinator of the campaign is %d",
 			campaign.CoordinatorID,
 		))
-	}
-
-	if campaign.MainnetInitialized {
-		mainnetLaunch, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
-		if !found {
-			return nil, spnerrors.Criticalf("cannot find mainnet chain %d for campaign %d", campaign.MainnetID, campaign.CampaignID)
-		}
-		if mainnetLaunch.LaunchTriggered {
-			return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
-				"mainnet %d launched, cannot  add shares",
-				campaign.MainnetID,
-			))
-		}
 	}
 
 	// check if the account already exists

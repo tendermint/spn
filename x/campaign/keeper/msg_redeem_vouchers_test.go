@@ -17,11 +17,12 @@ func TestMsgRedeemVouchers(t *testing.T) {
 	var (
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 
-		ctx            = sdk.WrapSDKContext(sdkCtx)
-		addr           = sample.AccAddress(r)
-		existAddr      = sample.AccAddress(r)
-		campaign       = sample.Campaign(r, 0)
-		vouchersTooBig = sdk.NewCoins(
+		ctx                     = sdk.WrapSDKContext(sdkCtx)
+		addr                    = sample.AccAddress(r)
+		existAddr               = sample.AccAddress(r)
+		campaign                = sample.Campaign(r, 0)
+		campaignMainnetLaunched = sample.Campaign(r, 1)
+		vouchersTooBig          = sdk.NewCoins(
 			sdk.NewCoin("v/0/foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
 		)
 	)
@@ -30,9 +31,16 @@ func TestMsgRedeemVouchers(t *testing.T) {
 	shares, err := types.NewShares("1000foo,500bar,300foobar")
 	require.NoError(t, err)
 
-	// Set campaign
+	// Set campaigns
 	campaign.AllocatedShares = shares
 	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
+
+	campaignMainnetLaunched.MainnetInitialized = true
+	campaignMainnetLaunched.AllocatedShares = shares
+	chainLaunched := sample.Chain(r, 0, 0)
+	chainLaunched.LaunchTriggered = true
+	campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
+	campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetLaunched)
 
 	// Create vouchers
 	vouchers, err := types.SharesToVouchers(shares, campaign.CampaignID)
@@ -154,6 +162,16 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
 			err: types.ErrInsufficientVouchers,
+		},
+		{
+			name: "campaign with launched mainnet",
+			msg: types.MsgRedeemVouchers{
+				Sender:     addr.String(),
+				Account:    addr.String(),
+				CampaignID: campaignMainnetLaunched.CampaignID,
+				Vouchers:   sample.Coins(r),
+			},
+			err: types.ErrMainnetLaunchTriggered,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
