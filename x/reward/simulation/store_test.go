@@ -88,6 +88,8 @@ func TestFindRandomChainWithCoordBalance(t *testing.T) {
 		require.True(t, found)
 		require.Equal(t, res.CoordinatorID, got.CoordinatorID)
 		require.Equal(t, hasRewardPoolID, got.LaunchID)
+		got, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, true, coordBalance.Add(sample.Coin(r)))
+		require.False(t, found)
 
 		got, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, false, false, sdk.NewCoins())
 		require.True(t, found)
@@ -97,5 +99,7 @@ func TestFindRandomChainWithCoordBalance(t *testing.T) {
 		require.True(t, found)
 		require.Equal(t, res.CoordinatorID, got.CoordinatorID)
 		require.Equal(t, norewardPoolID, got.LaunchID)
+		got, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, false, true, coordBalance.Add(sample.Coin(r)))
+		require.False(t, found)
 	})
 }
