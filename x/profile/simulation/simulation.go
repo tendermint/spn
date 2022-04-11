@@ -1,10 +1,11 @@
 package simulation
 
 import (
-	"errors"
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
+	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -15,31 +16,56 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// FindCoordinatorAccount find a sim account for a coordinator that exists or not
-func FindCoordinatorAccount(
-	r *rand.Rand,
-	ctx sdk.Context,
-	k keeper.Keeper,
-	accs []simtypes.Account,
-	exist bool,
-) (simtypes.Account, bool) {
-	// Randomize the set for coordinator operation entropy
-	r.Shuffle(len(accs), func(i, j int) {
-		accs[i], accs[j] = accs[j], accs[i]
-	})
+// generate a Tx with 2 signatures if validator account is not equal to operator address account
+func genAndDeliverTxWithRandFeesAddOpAddr(txCtx simulation.OperationInput, opSimAcc simtypes.Account) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+	account := txCtx.AccountKeeper.GetAccount(txCtx.Context, txCtx.SimAccount.Address)
+	spendable := txCtx.Bankkeeper.SpendableCoins(txCtx.Context, account.GetAddress())
+	opAccout := txCtx.AccountKeeper.GetAccount(txCtx.Context, opSimAcc.Address)
 
-	for _, acc := range accs {
-		coordByAddress, err := k.GetCoordinatorByAddress(ctx, acc.Address.String())
-		found := !errors.Is(err, types.ErrCoordAddressNotFound)
-		if found == exist {
-			coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorID)
-			if found && !coord.Active {
-				continue
-			}
-			return acc, true
-		}
+	accNumbers := []uint64{account.GetAccountNumber()}
+	accSequences := []uint64{account.GetSequence()}
+	privs := []cryptotypes.PrivKey{txCtx.SimAccount.PrivKey}
+
+	if account != opAccout {
+		accNumbers = append(accNumbers, opAccout.GetAccountNumber())
+		accSequences = append(accSequences, opAccout.GetSequence())
+		privs = append(privs, opSimAcc.PrivKey)
 	}
-	return simtypes.Account{}, false
+
+	var fees sdk.Coins
+	var err error
+
+	coins, hasNeg := spendable.SafeSub(txCtx.CoinsSpentInMsg)
+	if hasNeg {
+		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "message doesn't leave room for fees"), nil, err
+	}
+
+	fees, err = simtypes.RandomFees(txCtx.R, txCtx.Context, coins)
+	if err != nil {
+		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to generate fees"), nil, err
+	}
+
+	tx, err := helpers.GenTx(
+		txCtx.TxGen,
+		[]sdk.Msg{txCtx.Msg},
+		fees,
+		helpers.DefaultGenTxGas,
+		txCtx.Context.ChainID(),
+		accNumbers,
+		accSequences,
+		privs...,
+	)
+
+	if err != nil {
+		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to generate mock tx"), nil, err
+	}
+
+	_, _, err = txCtx.App.Deliver(txCtx.TxGen.TxEncoder(), tx)
+	if err != nil {
+		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to deliver tx"), nil, err
+	}
+
+	return simtypes.NewOperationMsg(txCtx.Msg, true, "", txCtx.Cdc), nil, nil
 }
 
 // SimulateMsgUpdateValidatorDescription simulates a MsgUpdateValidatorDescription message
@@ -81,11 +107,30 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 func SimulateMsgAddValidatorOperatorAddress(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		msg := &types.MsgAddValidatorOperatorAddress{}
 
-		// TODO: Handling the AddValidatorOperatorAddress simulation
+		simAccount, _ := simtypes.RandomAcc(r, accs)
+		opAddr, _ := simtypes.RandomAcc(r, accs)
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "AddValidatorOperatorAddress simulation not implemented"), nil, nil
+		msg := &types.MsgAddValidatorOperatorAddress{
+			ValidatorAddress: simAccount.Address.String(),
+			OperatorAddress:  opAddr.Address.String(),
+		}
+
+		txCtx := simulation.OperationInput{
+			R:               r,
+			App:             app,
+			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
+			Cdc:             nil,
+			Msg:             msg,
+			MsgType:         msg.Type(),
+			Context:         ctx,
+			SimAccount:      simAccount,
+			AccountKeeper:   ak,
+			Bankkeeper:      bk,
+			ModuleName:      types.ModuleName,
+			CoinsSpentInMsg: sdk.NewCoins(),
+		}
+		return genAndDeliverTxWithRandFeesAddOpAddr(txCtx, opAddr)
 	}
 }
 
