@@ -287,17 +287,7 @@ func SimulateMsgCreateCampaign(
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
 		}
 
-		// skip if account cannot cover creation fee
 		creationFee := k.CampaignCreationFee(ctx)
-		customFee, err := simtypes.RandomFees(r, ctx, creationFee)
-		if err != nil {
-			return simtypes.OperationMsg{},
-				nil,
-				err
-		}
-		if !creationFee.Empty() && !bk.SpendableCoins(ctx, simAccount.Address).IsAllGTE(creationFee.Add(customFee...)) {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateCampaign, "skip campaign creation"), nil, nil
-		}
 
 		msg := types.NewMsgCreateCampaign(
 			simAccount.Address.String(),
@@ -306,7 +296,7 @@ func SimulateMsgCreateCampaign(
 			sample.Metadata(r, 20),
 		)
 
-		return deliverSimTxCustomFee(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins(), customFee)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, creationFee)
 	}
 }
 
