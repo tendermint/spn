@@ -96,20 +96,6 @@ func (k Keeper) RemoveRequest(
 	))
 }
 
-// GetRequestCount returns the number of requests from a launch ID
-// TODO: add tests https://github.com/tendermint/spn/issues/642
-func (k Keeper) GetRequestCount(ctx sdk.Context, launchID uint64) (count uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), append(types.KeyPrefix(types.RequestKeyPrefix), types.RequestPoolKey(launchID)...))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
-
-	defer iterator.Close()
-	for ; iterator.Valid(); iterator.Next() {
-		count++
-	}
-
-	return count
-}
-
 // GetAllRequest returns all request
 func (k Keeper) GetAllRequest(ctx sdk.Context) (list []types.Request) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.RequestKeyPrefix))
@@ -169,8 +155,6 @@ func ApplyRequest(
 	case *types.RequestContent_ValidatorRemoval:
 		vr := requestContent.ValidatorRemoval
 		k.RemoveGenesisValidator(ctx, launchID, vr.ValAddress)
-	default:
-		return spnerrors.Critical("unknown request content type")
 	}
 	return nil
 }

@@ -3,16 +3,13 @@ package keeper_test
 import (
 	"testing"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/stretchr/testify/require"
 
 	tc "github.com/tendermint/spn/testutil/constructor"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/spn/x/reward/keeper"
@@ -21,22 +18,17 @@ import (
 
 func initRewardPool(
 	t *testing.T,
-	k *keeper.Keeper,
-	bk bankkeeper.Keeper,
-	lk *launchkeeper.Keeper,
 	sdkCtx sdk.Context,
-	psrv profiletypes.MsgServer,
+	tk testkeeper.TestKeepers,
+	ts testkeeper.TestMsgServers,
 ) types.RewardPool {
 	var (
-		provider = sample.AccAddress(r)
-		coins    = sample.Coins(r)
-		ctx      = sdk.WrapSDKContext(sdkCtx)
-		coordMsg = sample.MsgCreateCoordinator(provider.String())
+		ctx               = sdk.WrapSDKContext(sdkCtx)
+		coordID, provider = ts.CreateCoordinator(ctx, r)
+		coins             = sample.Coins(r)
 	)
 
-	res, err := psrv.CreateCoordinator(ctx, &coordMsg)
-	require.NoError(t, err)
-	launchID := lk.AppendChain(sdkCtx, sample.Chain(r, 1, res.CoordinatorID))
+	launchID := tk.LaunchKeeper.AppendChain(sdkCtx, sample.Chain(r, 1, coordID))
 	rewardPool := types.RewardPool{
 		Provider:            provider.String(),
 		LaunchID:            launchID,
@@ -46,11 +38,11 @@ func initRewardPool(
 		CurrentRewardHeight: 30,
 		Closed:              false,
 	}
-	k.SetRewardPool(sdkCtx, rewardPool)
+	tk.RewardKeeper.SetRewardPool(sdkCtx, rewardPool)
 
-	err = bk.MintCoins(sdkCtx, types.ModuleName, coins.Add(coins...))
+	err := tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, coins.Add(coins...))
 	require.NoError(t, err)
-	err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, coins)
+	err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, provider, coins)
 	require.NoError(t, err)
 
 	return rewardPool
@@ -67,16 +59,24 @@ func TestMsgSetRewards(t *testing.T) {
 	require.NoError(t, err)
 
 	var (
-		rewardPool                 = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
-		noBalanceRewardPool        = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
-		emptyCoinsRewardPool       = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
-		zeroRewardHeightRewardPool = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
-		launchedRewardPool         = initRewardPool(t, tk.RewardKeeper, tk.BankKeeper, tk.LaunchKeeper, sdkCtx, ts.ProfileSrv)
+		rewardPool                 = initRewardPool(t, sdkCtx, tk, ts)
+		noBalanceRewardPool        = initRewardPool(t, sdkCtx, tk, ts)
+		emptyCoinsRewardPool       = initRewardPool(t, sdkCtx, tk, ts)
+		zeroRewardHeightRewardPool = initRewardPool(t, sdkCtx, tk, ts)
+		launchedRewardPool         = initRewardPool(t, sdkCtx, tk, ts)
 	)
 	launchTriggeredChain, found := tk.LaunchKeeper.GetChain(sdkCtx, launchedRewardPool.LaunchID)
 	require.True(t, found)
 	launchTriggeredChain.LaunchTriggered = true
 	tk.LaunchKeeper.SetChain(sdkCtx, launchTriggeredChain)
+
+	// setup a chain with no reward pool
+	noPoolCoordID, noPoolCoordAddr := ts.CreateCoordinator(ctx, r)
+	noPoolChainID := tk.LaunchKeeper.AppendChain(sdkCtx, sample.Chain(r, 0, noPoolCoordID))
+	noPoolCoins := sample.Coins(r)
+	tk.Mint(sdkCtx, noPoolCoordAddr.String(), noPoolCoins)
+
+	noPoolInsufficientFundsChainID := tk.LaunchKeeper.AppendChain(sdkCtx, sample.Chain(r, 0, noPoolCoordID))
 
 	tests := []struct {
 		name string
@@ -84,7 +84,7 @@ func TestMsgSetRewards(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid chain",
+			name: "should prevent set rewards when chain not found",
 			msg: types.MsgSetRewards{
 				Provider:         rewardPool.Provider,
 				LaunchID:         9999,
@@ -94,7 +94,7 @@ func TestMsgSetRewards(t *testing.T) {
 			err: launchtypes.ErrChainNotFound,
 		},
 		{
-			name: "coordinator address not found",
+			name: "should prevent set rewards when coordinator address not found",
 			msg: types.MsgSetRewards{
 				Provider:         sample.Address(r),
 				LaunchID:         rewardPool.LaunchID,
@@ -104,7 +104,7 @@ func TestMsgSetRewards(t *testing.T) {
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "invalid coordinator id",
+			name: "should prevent set rewards when invalid coordinator id",
 			msg: types.MsgSetRewards{
 				Provider:         invalidCoord,
 				LaunchID:         rewardPool.LaunchID,
@@ -114,7 +114,7 @@ func TestMsgSetRewards(t *testing.T) {
 			err: types.ErrInvalidCoordinatorID,
 		},
 		{
-			name: "launch triggered chain",
+			name: "should prevent set rewards when launch is triggered for the chain",
 			msg: types.MsgSetRewards{
 				Provider:         launchedRewardPool.Provider,
 				LaunchID:         launchedRewardPool.LaunchID,
@@ -124,7 +124,7 @@ func TestMsgSetRewards(t *testing.T) {
 			err: launchtypes.ErrTriggeredLaunch,
 		},
 		{
-			name: "coordinator with insufficient funds",
+			name: "should prevent update rewards in existing pool when coordinator has insufficient funds",
 			msg: types.MsgSetRewards{
 				Provider:         noBalanceRewardPool.Provider,
 				LaunchID:         noBalanceRewardPool.LaunchID,
@@ -134,7 +134,17 @@ func TestMsgSetRewards(t *testing.T) {
 			err: sdkerrors.ErrInsufficientFunds,
 		},
 		{
-			name: "empty coins",
+			name: "should prevent set rewards for new pool when coordinator has insufficient funds",
+			msg: types.MsgSetRewards{
+				Provider:         noPoolCoordAddr.String(),
+				LaunchID:         noPoolInsufficientFundsChainID,
+				Coins:            sample.Coins(r),
+				LastRewardHeight: 1000,
+			},
+			err: sdkerrors.ErrInsufficientFunds,
+		},
+		{
+			name: "empty coins should remove the reward pool",
 			msg: types.MsgSetRewards{
 				Provider:         emptyCoinsRewardPool.Provider,
 				LaunchID:         emptyCoinsRewardPool.LaunchID,
@@ -143,7 +153,7 @@ func TestMsgSetRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "zero reward height",
+			name: "zero reward height should remove the reward pool",
 			msg: types.MsgSetRewards{
 				Provider:         zeroRewardHeightRewardPool.Provider,
 				LaunchID:         zeroRewardHeightRewardPool.LaunchID,
@@ -152,11 +162,20 @@ func TestMsgSetRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "valid message",
+			name: "should allows to update rewards in an existent pool",
 			msg: types.MsgSetRewards{
 				Provider:         rewardPool.Provider,
 				LaunchID:         rewardPool.LaunchID,
 				Coins:            rewardPool.RemainingCoins,
+				LastRewardHeight: 1000,
+			},
+		},
+		{
+			name: "should allows to set rewards for a new pool",
+			msg: types.MsgSetRewards{
+				Provider:         noPoolCoordAddr.String(),
+				LaunchID:         noPoolChainID,
+				Coins:            noPoolCoins,
 				LastRewardHeight: 1000,
 			},
 		},
