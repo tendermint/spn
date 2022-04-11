@@ -33,6 +33,19 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 		))
 	}
 
+	if campaign.MainnetInitialized {
+		mainnetLaunch, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
+		if !found {
+			return nil, spnerrors.Criticalf("cannot find mainnet chain %d for campaign %d", campaign.MainnetID, campaign.CampaignID)
+		}
+		if mainnetLaunch.LaunchTriggered {
+			return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
+				"mainnet %d launched, cannot  add shares",
+				campaign.MainnetID,
+			))
+		}
+	}
+
 	// check if the account already exists
 	oldAccount, foundAcc := k.GetMainnetVestingAccount(ctx, campaign.CampaignID, msg.Address)
 	if foundAcc {

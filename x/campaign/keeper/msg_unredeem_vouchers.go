@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -13,7 +14,7 @@ import (
 func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredeemVouchers) (*types.MsgUnredeemVouchersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	_, found := k.GetCampaign(ctx, msg.CampaignID)
+	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
@@ -21,6 +22,19 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 	account, found := k.GetMainnetAccount(ctx, msg.CampaignID, msg.Sender)
 	if !found {
 		return nil, sdkerrors.Wrap(types.ErrAccountNotFound, msg.Sender)
+	}
+
+	if campaign.MainnetInitialized {
+		mainnetLaunch, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
+		if !found {
+			return nil, spnerrors.Criticalf("cannot find mainnet chain %d for campaign %d", campaign.MainnetID, campaign.CampaignID)
+		}
+		if mainnetLaunch.LaunchTriggered {
+			return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
+				"mainnet %d launched, cannot  add shares",
+				campaign.MainnetID,
+			))
+		}
 	}
 
 	// Update the shares of the account

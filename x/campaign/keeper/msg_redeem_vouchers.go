@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -16,6 +17,19 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+	}
+
+	if campaign.MainnetInitialized {
+		mainnetLaunch, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
+		if !found {
+			return nil, spnerrors.Criticalf("cannot find mainnet chain %d for campaign %d", campaign.MainnetID, campaign.CampaignID)
+		}
+		if mainnetLaunch.LaunchTriggered {
+			return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
+				"mainnet %d launched, cannot  add shares",
+				campaign.MainnetID,
+			))
+		}
 	}
 
 	// Convert and validate vouchers first

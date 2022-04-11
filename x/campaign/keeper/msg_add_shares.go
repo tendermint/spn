@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -29,6 +31,19 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 			"coordinator of the campaign is %d",
 			campaign.CoordinatorID,
 		))
+	}
+
+	if campaign.MainnetInitialized {
+		mainnetLaunch, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
+		if !found {
+			return nil, spnerrors.Criticalf("cannot find mainnet chain %d for campaign %d", campaign.MainnetID, campaign.CampaignID)
+		}
+		if mainnetLaunch.LaunchTriggered {
+			return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
+				"mainnet %d launched, cannot  add shares",
+				campaign.MainnetID,
+			))
+		}
 	}
 
 	// check if the account already exists
