@@ -274,10 +274,10 @@ func GetAccountWithShares(
 
 // SimulateMsgCreateCampaign simulates a MsgCreateCampaign message
 func SimulateMsgCreateCampaign(
-	k keeper.Keeper,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	pk types.ProfileKeeper,
+	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
@@ -310,7 +310,42 @@ func SimulateMsgCreateCampaign(
 	}
 }
 
-// TODO add SimulateMsgEditCampaign
+// SimulateMsgEditCampaign simulates a MsgEditCampaign message
+func SimulateMsgEditCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+	return func(
+		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, true)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateTotalSupply, "skip update total supply"), nil, nil
+		}
+
+		var newName string
+		var newMetadata []byte
+
+		name := r.Intn(100) < 50
+		metadata := r.Intn(100) < 50
+		// ensure there is always a value to edit
+		if !name && !metadata {
+			metadata = true
+		}
+
+		if name {
+			newName = sample.CampaignName(r)
+		}
+		if metadata {
+			newMetadata = sample.Metadata(r, 20)
+		}
+
+		msg := types.NewMsgEditCampaign(
+			simAccount.Address.String(),
+			campID,
+			newName,
+			newMetadata,
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
+	}
+}
 
 // SimulateMsgUpdateTotalSupply simulates a MsgUpdateTotalSupply message
 func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {

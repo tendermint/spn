@@ -9,7 +9,7 @@ import (
 
 var _ sdk.Msg = &MsgEditCampaign{}
 
-func NewMsgEditCampaign(coordinator, name string, campaignID uint64, metadata []byte) *MsgEditCampaign {
+func NewMsgEditCampaign(coordinator string, campaignID uint64, name string, metadata []byte) *MsgEditCampaign {
 	return &MsgEditCampaign{
 		Coordinator: coordinator,
 		CampaignID:  campaignID,
