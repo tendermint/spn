@@ -148,10 +148,7 @@ func GetCoordSimAccountWithCampaignID(
 	if !requireNoMainnetInitialized && requireNoMainnetLaunchTriggered {
 		var campFound bool
 		for _, campaign := range campaigns {
-			launched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
-			if err != nil {
-				return simtypes.Account{}, 0, false
-			}
+			launched, _ := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
 			if !launched {
 				camp = campaign
 				campFound = true
