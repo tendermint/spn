@@ -14,5 +14,4 @@ func TestMaximumSharesGet(t *testing.T) {
 	tk.CampaignKeeper.SetTotalShares(ctx, value)
 	got := tk.CampaignKeeper.GetTotalShares(ctx)
 	require.Equal(t, value, got)
-
 }
