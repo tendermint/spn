@@ -236,7 +236,7 @@ func GetAccountWithShares(
 		if requireNoMainnetLaunchTriggered {
 			campaign, found := k.GetCampaign(ctx, mAcc.CampaignID)
 			if !found {
-				return 0, simtypes.Account{}, nil, false
+				continue
 			}
 			launched, _ := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
 			if launched {
