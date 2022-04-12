@@ -30,6 +30,22 @@ func TestParamsValidate(t *testing.T) {
 			err: errors.New("value for 'bonded' must be greater than zero"),
 		},
 		{
+			name: "invalid participation tier list",
+			params: NewParams(
+				DefaultAllocationPrice,
+				[]Tier{
+					{
+						TierID:              0,
+						RequiredAllocations: 1,
+						Benefits:            TierBenefits{MaxBidAmount: sdk.ZeroInt()},
+					},
+				},
+				DefaultRegistrationPeriod,
+				DefaultWithdrawalDelay,
+			),
+			err: errors.New("max bid amount must be greater than zero"),
+		},
+		{
 			name: "invalid registration period",
 			params: NewParams(
 				DefaultAllocationPrice,

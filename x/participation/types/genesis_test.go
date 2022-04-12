@@ -97,11 +97,28 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated auctionUsedAllocations",
 			genState: &types.GenesisState{
+				UsedAllocationsList: []types.UsedAllocations{
+					{
+						Address: addr1,
+					},
+				},
 				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
 					{
 						Address:   addr1,
 						AuctionID: auctionID1,
 					},
+					{
+						Address:   addr1,
+						AuctionID: auctionID1,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "invalid address in auctionUsedAllocations",
+			genState: &types.GenesisState{
+				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
 					{
 						Address:   addr1,
 						AuctionID: auctionID1,
@@ -123,13 +140,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					{
 						Address:        addr1,
 						AuctionID:      auctionID1,
-						NumAllocations: 1,
-						Withdrawn:      false,
-					},
-					{
-						Address:        addr1,
-						AuctionID:      auctionID2,
-						NumAllocations: 1,
+						NumAllocations: 2,
 						Withdrawn:      false,
 					},
 					{
