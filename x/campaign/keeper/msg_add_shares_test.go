@@ -47,7 +47,10 @@ func TestMsgAddShares(t *testing.T) {
 	campaignMainnetInitialized.CoordinatorID = res.CoordinatorID
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.AllocatedShares = allocatedShares
-	campaignMainnetInitialized.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, sample.Chain(r, 0, res.CoordinatorID))
+	chain := sample.Chain(r, 0, res.CoordinatorID)
+	chain.LaunchTriggered = false
+	chain.IsMainnet = true
+	campaignMainnetInitialized.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chain)
 	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
@@ -60,6 +63,7 @@ func TestMsgAddShares(t *testing.T) {
 	campaignMainnetLaunched.AllocatedShares = allocatedShares
 	chainLaunched := sample.Chain(r, 1, res.CoordinatorID)
 	chainLaunched.LaunchTriggered = true
+	chainLaunched.IsMainnet = true
 	campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
 	campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetLaunched)
 

@@ -47,7 +47,10 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaignMainnetInitialized.CoordinatorID = res.CoordinatorID
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.AllocatedShares = allocatedShares
-	campaignMainnetInitialized.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, sample.Chain(r, 0, res.CoordinatorID))
+	chain := sample.Chain(r, 0, res.CoordinatorID)
+	chain.IsMainnet = true
+	chain.LaunchTriggered = false
+	campaignMainnetInitialized.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chain)
 	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
 
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
@@ -59,6 +62,7 @@ func TestMsgAddVestingOptions(t *testing.T) {
 	campaignMainnetLaunched.MainnetInitialized = true
 	campaignMainnetLaunched.AllocatedShares = allocatedShares
 	chainLaunched := sample.Chain(r, 1, res.CoordinatorID)
+	chainLaunched.IsMainnet = true
 	chainLaunched.LaunchTriggered = true
 	campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
 	campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetLaunched)

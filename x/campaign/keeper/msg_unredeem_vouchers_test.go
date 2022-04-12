@@ -37,6 +37,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 	campaignMainnetLaunched.MainnetInitialized = true
 	chainLaunched := sample.Chain(r, 0, 0)
 	chainLaunched.LaunchTriggered = true
+	chainLaunched.IsMainnet = true
 	campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
 	campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetLaunched)
 
