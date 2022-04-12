@@ -218,7 +218,6 @@
             "denom": "uspn"
           }
         ],
-        "fee_collector_address": "spn1t2gp44cx86rt8gxv64lpt0dggveg98y4ma2wlnfqts7d4m4z70vqm6x5sp",
         "extended_period": 1
       },
       "vesting_queues": []
