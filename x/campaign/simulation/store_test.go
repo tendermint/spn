@@ -78,21 +78,52 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			*tk.CampaignKeeper,
 			accs,
 			false,
+			false,
 		)
 		require.False(t, found)
 	})
 
 	coords := populateCoordinators(t, r, ctx, *tk.ProfileKeeper, accs, 10)
 
-	t.Run("find a campaign", func(t *testing.T) {
+	t.Run("one campaign with mainnet launch triggered", func(t *testing.T) {
 		camp := campaigntypes.NewCampaign(
 			0,
+			sample.AlphaString(r, 5),
+			coords[1],
+			sample.TotalSupply(r),
+			sample.Metadata(r, 20),
+		)
+		camp.MainnetInitialized = true
+		chain := sample.Chain(r, 0, coords[1])
+		chain.LaunchTriggered = true
+		chain.IsMainnet = true
+		camp.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		tk.CampaignKeeper.AppendCampaign(ctx, camp)
+		_, _, found := simcampaign.GetCoordSimAccountWithCampaignID(
+			r,
+			ctx,
+			tk.ProfileKeeper,
+			*tk.CampaignKeeper,
+			accs,
+			false,
+			true,
+		)
+		require.False(t, found)
+	})
+
+	t.Run("find a campaign", func(t *testing.T) {
+		camp := campaigntypes.NewCampaign(
+			1,
 			sample.AlphaString(r, 5),
 			coords[0],
 			sample.TotalSupply(r),
 			sample.Metadata(r, 20),
 		)
 		camp.MainnetInitialized = true
+		chain := sample.Chain(r, 0, coords[1])
+		chain.LaunchTriggered = false
+		chain.IsMainnet = true
+		camp.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
 		tk.CampaignKeeper.AppendCampaign(ctx, camp)
 		acc, id, found := simcampaign.GetCoordSimAccountWithCampaignID(
 			r,
@@ -101,6 +132,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			*tk.CampaignKeeper,
 			accs,
 			false,
+			true,
 		)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
@@ -111,7 +143,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 
 	t.Run("find a campaign with no mainnet initialized", func(t *testing.T) {
 		camp := campaigntypes.NewCampaign(
-			1,
+			2,
 			sample.AlphaString(r, 5),
 			coords[1],
 			sample.TotalSupply(r),
@@ -125,6 +157,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 			*tk.CampaignKeeper,
 			accs,
 			true,
+			false,
 		)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
@@ -189,16 +222,36 @@ func TestGetAccountWithVouchers(t *testing.T) {
 	}
 
 	t.Run("no account", func(t *testing.T) {
-		_, _, _, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, accs)
+		_, _, _, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, false)
 		require.False(t, found)
+	})
+
+	t.Run("vouchers from an account for a campaign with launch triggered", func(t *testing.T) {
+		acc, _ := simtypes.RandomAcc(r, accs)
+		campaign := sample.Campaign(r, 0)
+		campaign.MainnetInitialized = true
+		chain := sample.Chain(r, 0, 0)
+		chain.LaunchTriggered = true
+		chain.IsMainnet = true
+		campaign.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
+		mint(acc.Address, sample.Vouchers(r, campaign.CampaignID))
+		campID, acc, coins, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, false)
+		require.True(t, found)
+		require.EqualValues(t, campaign.CampaignID, campID)
+		require.False(t, coins.Empty())
+		require.Contains(t, accs, acc)
 	})
 
 	t.Run("vouchers from an account", func(t *testing.T) {
 		acc, _ := simtypes.RandomAcc(r, accs)
-		mint(acc.Address, sample.Vouchers(r, 10))
-		campID, acc, coins, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, accs)
+		campaign := sample.Campaign(r, 1)
+		campaign.MainnetInitialized = false
+		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
+		mint(acc.Address, sample.Vouchers(r, campaign.CampaignID))
+		campID, acc, coins, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, true)
 		require.True(t, found)
-		require.EqualValues(t, 10, campID)
+		require.EqualValues(t, campaign.CampaignID, campID)
 		require.False(t, coins.Empty())
 		require.Contains(t, accs, acc)
 	})
@@ -210,7 +263,7 @@ func TestGetAccountWithShares(t *testing.T) {
 	accs := sample.SimAccounts()
 
 	t.Run("no account", func(t *testing.T) {
-		_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs)
+		_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs, false)
 		require.False(t, found)
 	})
 
@@ -221,23 +274,48 @@ func TestGetAccountWithShares(t *testing.T) {
 			Address:    sampleAddr,
 			Shares:     sample.Shares(r),
 		})
-		_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs)
+		_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs, false)
 		require.False(t, found)
 		tk.CampaignKeeper.RemoveMainnetAccount(ctx, 10, sampleAddr)
 	})
 
-	t.Run("account can be retrieved", func(t *testing.T) {
+	t.Run("account from campaign with launched mainnet can be retrieved", func(t *testing.T) {
 		acc, _ := simtypes.RandomAcc(r, accs)
+		campaign := sample.Campaign(r, 0)
+		campaign.MainnetInitialized = true
+		chain := sample.Chain(r, 0, 0)
+		chain.LaunchTriggered = true
+		chain.IsMainnet = true
+		campaign.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
 		share := sample.Shares(r)
 		tk.CampaignKeeper.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
-			CampaignID: 10,
+			CampaignID: campaign.CampaignID,
 			Address:    acc.Address.String(),
 			Shares:     share,
 		})
-		campID, acc, shareRetrieved, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs)
+		campID, acc, shareRetrieved, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs, false)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
-		require.EqualValues(t, uint64(10), campID)
+		require.EqualValues(t, campaign.CampaignID, campID)
+		require.EqualValues(t, share, shareRetrieved)
+	})
+
+	t.Run("account from campaign can be retrieved", func(t *testing.T) {
+		acc, _ := simtypes.RandomAcc(r, accs)
+		campaign := sample.Campaign(r, 1)
+		campaign.MainnetInitialized = false
+		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
+		share := sample.Shares(r)
+		tk.CampaignKeeper.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
+			CampaignID: campaign.CampaignID,
+			Address:    acc.Address.String(),
+			Shares:     share,
+		})
+		campID, acc, shareRetrieved, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs, true)
+		require.True(t, found)
+		require.Contains(t, accs, acc)
+		require.EqualValues(t, campaign.CampaignID, campID)
 		require.EqualValues(t, share, shareRetrieved)
 	})
 }
