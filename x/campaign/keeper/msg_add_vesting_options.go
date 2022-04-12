@@ -20,6 +20,17 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
+	mainnetLaunched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+	if err != nil {
+		return nil, spnerrors.Critical(err.Error())
+	}
+	if mainnetLaunched {
+		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
+			"mainnet %d launch is already triggered",
+			campaign.MainnetID,
+		))
+	}
+
 	// Get the coordinator ID associated to the sender address
 	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {
