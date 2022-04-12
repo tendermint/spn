@@ -107,7 +107,9 @@ func GetCoordSimAccount(
 	return simtypes.Account{}, 0, false
 }
 
-// GetCoordSimAccountWithCampaignID finds an account associated with a coordinator profile from simulation accounts and a campaign created by this coordinator
+// GetCoordSimAccountWithCampaignID finds an account associated with a coordinator profile from simulation accounts
+// and a campaign created by this coordinator. The boolean flag `requireNoMainnetLaunchTriggered` is ignored if
+// the flag `requireNoMainnetInitialized` is set to `true`
 func GetCoordSimAccountWithCampaignID(
 	r *rand.Rand,
 	ctx sdk.Context,
@@ -115,6 +117,7 @@ func GetCoordSimAccountWithCampaignID(
 	k keeper.Keeper,
 	accs []simtypes.Account,
 	requireNoMainnetInitialized bool,
+	requireNoMainnetLaunchTriggered bool,
 ) (simtypes.Account, uint64, bool) {
 	campaigns := k.GetAllCampaign(ctx)
 	campNb := len(campaigns)
@@ -122,12 +125,17 @@ func GetCoordSimAccountWithCampaignID(
 		return simtypes.Account{}, 0, false
 	}
 
-	var camp types.Campaign
+	r.Shuffle(campNb, func(i, j int) {
+		campaigns[i], campaigns[j] = campaigns[j], campaigns[i]
+	})
+
+	// select first campaign after shuffle
+	camp := campaigns[0]
+	// If a criteria is required for the campaign, we simply fetch the first one that satisfies the criteria
 	if requireNoMainnetInitialized {
-		// If a criteria is required for the campaign, we simply fetch the first on that satisfies the criteria
 		var campFound bool
 		for _, campaign := range campaigns {
-			if !requireNoMainnetInitialized || !campaign.MainnetInitialized {
+			if !campaign.MainnetInitialized {
 				camp = campaign
 				campFound = true
 				break
@@ -136,9 +144,23 @@ func GetCoordSimAccountWithCampaignID(
 		if !campFound {
 			return simtypes.Account{}, 0, false
 		}
-	} else {
-		// No criteria, choose a random campaign
-		camp = campaigns[r.Intn(campNb)]
+	}
+	if !requireNoMainnetInitialized && requireNoMainnetLaunchTriggered {
+		var campFound bool
+		for _, campaign := range campaigns {
+			launched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+			if err != nil {
+				return simtypes.Account{}, 0, false
+			}
+			if !launched {
+				camp = campaign
+				campFound = true
+				break
+			}
+		}
+		if !campFound {
+			return simtypes.Account{}, 0, false
+		}
 	}
 
 	// Find the sim account of the campaign coordinator
@@ -155,7 +177,7 @@ func GetCoordSimAccountWithCampaignID(
 	return simtypes.Account{}, 0, false
 }
 
-// GetSharesFromCampaign returns a small portion of shares that can be minted as vouchers or added to an accounts
+// GetSharesFromCampaign returns a small portion of shares that can be minted as vouchers or added to an account
 func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campID uint64) (types.Shares, bool) {
 	camp, found := k.GetCampaign(ctx, campID)
 	if !found {
@@ -188,7 +210,9 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 func GetAccountWithVouchers(
 	ctx sdk.Context,
 	bk types.BankKeeper,
+	k keeper.Keeper,
 	accs []simtypes.Account,
+	requireNoMainnetLaunchTriggered bool,
 ) (campID uint64, account simtypes.Account, coins sdk.Coins, found bool) {
 	var err error
 	var accountAddr sdk.AccAddress
@@ -198,6 +222,17 @@ func GetAccountWithVouchers(
 		campID, err = types.VoucherCampaign(coin.Denom)
 		if err != nil {
 			return false
+		}
+
+		if requireNoMainnetLaunchTriggered {
+			campaign, found := k.GetCampaign(ctx, campID)
+			if !found {
+				return false
+			}
+			launched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+			if err != nil || launched {
+				return false
+			}
 		}
 
 		// Look for accounts with at least 10 vouchers
@@ -252,6 +287,7 @@ func GetAccountWithShares(
 	ctx sdk.Context,
 	k keeper.Keeper,
 	accs []simtypes.Account,
+	requireNoMainnetLaunchTriggered bool,
 ) (uint64, simtypes.Account, types.Shares, bool) {
 	mainnetAccounts := k.GetAllMainnetAccount(ctx)
 	nb := len(mainnetAccounts)
@@ -261,7 +297,26 @@ func GetAccountWithShares(
 		return 0, simtypes.Account{}, nil, false
 	}
 
-	mainnetAccount := mainnetAccounts[r.Intn(nb)]
+	r.Shuffle(nb, func(i, j int) {
+		mainnetAccounts[i], mainnetAccounts[j] = mainnetAccounts[j], mainnetAccounts[i]
+	})
+
+	// select a mainnet account
+	var mainnetAccount types.MainnetAccount
+	for _, mAcc := range mainnetAccounts {
+		if requireNoMainnetLaunchTriggered {
+			campaign, found := k.GetCampaign(ctx, mAcc.CampaignID)
+			if !found {
+				return 0, simtypes.Account{}, nil, false
+			}
+			launched, _ := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+			if launched {
+				continue
+			}
+		}
+		mainnetAccount = mAcc
+		break
+	}
 
 	// Find the associated sim account
 	for _, acc := range accs {
@@ -313,11 +368,16 @@ func SimulateMsgCreateCampaign(
 // TODO add SimulateMsgEditCampaign
 
 // SimulateMsgUpdateTotalSupply simulates a MsgUpdateTotalSupply message
-func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgUpdateTotalSupply(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	pk types.ProfileKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, true)
+		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, true, true)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateTotalSupply, "skip update total supply"), nil, nil
 		}
@@ -332,11 +392,16 @@ func SimulateMsgUpdateTotalSupply(ak types.AccountKeeper, bk types.BankKeeper, p
 }
 
 // SimulateMsgInitializeMainnet simulates a MsgInitializeMainnet message
-func SimulateMsgInitializeMainnet(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgInitializeMainnet(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	pk types.ProfileKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, true)
+		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, true, true)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgInitializeMainnet, "skip initliaze mainnet"), nil, nil
 		}
@@ -353,11 +418,16 @@ func SimulateMsgInitializeMainnet(ak types.AccountKeeper, bk types.BankKeeper, p
 }
 
 // SimulateMsgAddShares simulates a MsgAddShares message
-func SimulateMsgAddShares(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgAddShares(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	pk types.ProfileKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false)
+		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false, true)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddShares, "skip add shares"), nil, nil
 		}
@@ -381,11 +451,16 @@ func SimulateMsgAddShares(ak types.AccountKeeper, bk types.BankKeeper, pk types.
 }
 
 // SimulateMsgAddVestingOptions simulates a MsgAddVestingOptions message
-func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgAddVestingOptions(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	pk types.ProfileKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false)
+		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false, true)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddVestingOptions, "skip add vesting options"), nil, nil
 		}
@@ -409,11 +484,15 @@ func SimulateMsgAddVestingOptions(ak types.AccountKeeper, bk types.BankKeeper, p
 }
 
 // SimulateMsgMintVouchers simulates a MsgMintVouchers message
-func SimulateMsgMintVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgMintVouchers(ak types.AccountKeeper,
+	bk types.BankKeeper,
+	pk types.ProfileKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false)
+		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false, false)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgMintVouchers, "skip mint vouchers"), nil, nil
 		}
@@ -433,11 +512,15 @@ func SimulateMsgMintVouchers(ak types.AccountKeeper, bk types.BankKeeper, pk typ
 }
 
 // SimulateMsgBurnVouchers simulates a MsgBurnVouchers message
-func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper) simtypes.Operation {
+func SimulateMsgBurnVouchers(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		campID, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, accs)
+		campID, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, false)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBurnVouchers, "skip burn vouchers"), nil, nil
 		}
@@ -452,11 +535,15 @@ func SimulateMsgBurnVouchers(ak types.AccountKeeper, bk types.BankKeeper) simtyp
 }
 
 // SimulateMsgRedeemVouchers simulates a MsgRedeemVouchers message
-func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper) simtypes.Operation {
+func SimulateMsgRedeemVouchers(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		campID, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, accs)
+		campID, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, true)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRedeemVouchers, "skip redeem vouchers"), nil, nil
 		}
@@ -475,12 +562,16 @@ func SimulateMsgRedeemVouchers(ak types.AccountKeeper, bk types.BankKeeper) simt
 }
 
 // SimulateMsgUnredeemVouchers simulates a MsgUnredeemVouchers message
-func SimulateMsgUnredeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+func SimulateMsgUnredeemVouchers(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		// Find a random account from a random campaign that contains shares
-		campID, simAccount, shares, found := GetAccountWithShares(r, ctx, k, accs)
+		campID, simAccount, shares, found := GetAccountWithShares(r, ctx, k, accs, true)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUnredeemVouchers, "skip unredeem vouchers"), nil, nil
 		}
@@ -496,11 +587,15 @@ func SimulateMsgUnredeemVouchers(ak types.AccountKeeper, bk types.BankKeeper, k 
 
 // SimulateMsgSendVouchers simulates a Msg message from the bank module with vouchers
 // TODO: This message constantly fails in simulation log, investigate why
-func SimulateMsgSendVouchers(ak types.AccountKeeper, bk types.BankKeeper) simtypes.Operation {
+func SimulateMsgSendVouchers(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		_, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, accs)
+		_, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, false)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, banktypes.TypeMsgSend, "skip send vouchers"), nil, nil
 		}

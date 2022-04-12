@@ -20,17 +20,15 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
-	if campaign.MainnetInitialized {
-		mainnetChain, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
-		if !found {
-			return nil, spnerrors.Criticalf("cannot find mainnet chain %d for campaign %d", campaign.MainnetID, campaign.CampaignID)
-		}
-		if mainnetChain.LaunchTriggered {
-			return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
-				"mainnet %d is already launched, action prohibited",
-				campaign.MainnetID,
-			))
-		}
+	mainnetLaunched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+	if err != nil {
+		return nil, spnerrors.Critical(err.Error())
+	}
+	if mainnetLaunched {
+		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
+			"mainnet %d is already launched, action prohibited",
+			campaign.MainnetID,
+		))
 	}
 
 	// Get the coordinator ID associated to the sender address
