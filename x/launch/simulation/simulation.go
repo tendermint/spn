@@ -37,18 +37,6 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 
 		// skip if account cannot cover creation fee
 		creationFee := k.ChainCreationFee(ctx)
-		customFee, err := simtypes.RandomFees(r, ctx, creationFee)
-		if err != nil {
-			if err != nil {
-				return simtypes.OperationMsg{},
-					nil,
-					err
-			}
-		}
-
-		if !creationFee.Empty() && !bk.SpendableCoins(ctx, simAccount.Address).IsAllGTE(creationFee.Add(customFee...)) {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateChain, "skip chain creation"), nil, nil
-		}
 
 		msg := sample.MsgCreateChain(r,
 			simAccount.Address.String(),
@@ -68,9 +56,9 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 			AccountKeeper:   ak,
 			Bankkeeper:      bk,
 			ModuleName:      types.ModuleName,
-			CoinsSpentInMsg: sdk.NewCoins(),
+			CoinsSpentInMsg: creationFee,
 		}
-		return simulation.GenAndDeliverTx(txCtx, customFee)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
 

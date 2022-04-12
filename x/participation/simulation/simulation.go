@@ -101,18 +101,7 @@ func SimulateCreateAuction(
 		sellCoin.Denom = simutil.AuctionCoinDenom
 		sellCoin = sellCoin.Add(requireAmt)
 
-		// choose custom fee that only uses the default bond denom
-		// otherwise the custom sellingCoin denom could be chosen
-		customFee, err := simtypes.RandomFees(r, ctx, fee)
-		if err != nil {
-			if err != nil {
-				return simtypes.OperationMsg{},
-					nil,
-					err
-			}
-		}
-
-		desiredCoins := fee.Add(customFee...).Add(sellCoin)
+		desiredCoins := fee.Add(sellCoin)
 		simAccount, _, found := RandomAccWithBalance(ctx, r, bk, accs, desiredCoins)
 		if !found {
 			return simtypes.NoOpMsg(
@@ -139,10 +128,10 @@ func SimulateCreateAuction(
 			AccountKeeper:   ak,
 			Bankkeeper:      bk,
 			ModuleName:      fundraisingtypes.ModuleName,
-			CoinsSpentInMsg: sdk.NewCoins(),
+			CoinsSpentInMsg: desiredCoins,
 		}
 
-		return simulation.GenAndDeliverTx(txCtx, customFee)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
 
