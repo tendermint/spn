@@ -38,8 +38,17 @@ func TestIsCampaignMainnetLaunchTriggered(t *testing.T) {
 		require.False(t, res)
 	})
 
+	t.Run("campaign with mainnnet not initialized", func(t *testing.T) {
+		campaignMainnetNotInitialized := sample.Campaign(r, 2)
+		campaignMainnetNotInitialized.MainnetInitialized = false
+		campaignMainnetNotInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaignMainnetNotInitialized)
+		res, err := tk.CampaignKeeper.IsCampaignMainnetLaunchTriggered(ctx, campaignMainnetNotInitialized.CampaignID)
+		require.NoError(t, err)
+		require.False(t, res)
+	})
+
 	t.Run("mainnet not found", func(t *testing.T) {
-		campaignMainnetNotFound := sample.Campaign(r, 2)
+		campaignMainnetNotFound := sample.Campaign(r, 3)
 		campaignMainnetNotFound.MainnetInitialized = true
 		campaignMainnetNotFound.MainnetID = 1000
 		campaignMainnetNotFound.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaignMainnetNotFound)
@@ -48,7 +57,7 @@ func TestIsCampaignMainnetLaunchTriggered(t *testing.T) {
 	})
 
 	t.Run("associated mainnet chain is not mainnet", func(t *testing.T) {
-		campaignInvalidMainnet := sample.Campaign(r, 3)
+		campaignInvalidMainnet := sample.Campaign(r, 4)
 		campaignInvalidMainnet.MainnetInitialized = true
 		chainNoMainnet := sample.Chain(r, 0, 0)
 		chainNoMainnet.LaunchTriggered = false

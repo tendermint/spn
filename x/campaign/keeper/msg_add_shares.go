@@ -4,11 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -27,7 +26,7 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 	}
 	if mainnetLaunched {
 		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
-			"mainnet %d is already launched, action prohibited",
+			"mainnet %d launch is already triggered",
 			campaign.MainnetID,
 		))
 	}

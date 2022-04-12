@@ -26,7 +26,7 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	}
 	if mainnetLaunched {
 		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
-			"mainnet %d is already launched, action prohibited",
+			"mainnet %d launch is already triggered",
 			campaign.MainnetID,
 		))
 	}
