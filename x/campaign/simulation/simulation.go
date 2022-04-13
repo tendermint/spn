@@ -82,9 +82,11 @@ func SimulateMsgEditCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk typ
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, true)
+		msg := &types.MsgEditCampaign{}
+
+		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false, false)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateTotalSupply, "skip update total supply"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "skip edit campaign"), nil, nil
 		}
 
 		var newName string
@@ -104,7 +106,7 @@ func SimulateMsgEditCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk typ
 			newMetadata = sample.Metadata(r, 20)
 		}
 
-		msg := types.NewMsgEditCampaign(
+		msg = types.NewMsgEditCampaign(
 			simAccount.Address.String(),
 			campID,
 			newName,

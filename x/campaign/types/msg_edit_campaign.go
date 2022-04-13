@@ -7,6 +7,8 @@ import (
 	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
+const TypeMsgEditCampaign = "edit_campaign"
+
 var _ sdk.Msg = &MsgEditCampaign{}
 
 func NewMsgEditCampaign(coordinator string, campaignID uint64, name string, metadata []byte) *MsgEditCampaign {
@@ -23,7 +25,7 @@ func (msg *MsgEditCampaign) Route() string {
 }
 
 func (msg *MsgEditCampaign) Type() string {
-	return "UpdateCampaignName"
+	return TypeMsgEditCampaign
 }
 
 func (msg *MsgEditCampaign) GetSigners() []sdk.AccAddress {

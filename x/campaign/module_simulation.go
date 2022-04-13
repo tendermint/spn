@@ -15,7 +15,7 @@ import (
 
 const (
 	defaultWeightMsgCreateCampaign    = 25
-	defaultWeightMsgEditCampaign      = 10
+	defaultWeightMsgEditCampaign      = 20
 	defaultWeightMsgUpdateTotalSupply = 20
 	defaultWeightMsgInitializeMainnet = 5
 	defaultWeightMsgAddShares         = 20
