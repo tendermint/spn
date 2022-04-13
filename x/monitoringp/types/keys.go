@@ -23,7 +23,7 @@ const (
 	Version = "monitoring-1"
 
 	// PortID is the default port id that module binds to
-	PortID = "monitoring"
+	PortID = "monitoringp"
 
 	// ConsumerClientIDKey allows to retrieve in the store the client ID used for the IBC communication with the Consumer Chain
 	ConsumerClientIDKey = "ConsumerClientID/value/"

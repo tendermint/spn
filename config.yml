@@ -53,6 +53,11 @@ genesis:
         auction_creation_fee:
           - "amount": "100"
             "denom": "uspn"
+    monitoringp:
+      params:
+        lastBlockHeight: "1"
+        consumerChainID: "orbit-1"
+        consumerUnbondingPeriod: "2"
     participation:
       params:
         allocationPrice:

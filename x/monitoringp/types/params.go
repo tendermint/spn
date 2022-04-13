@@ -119,7 +119,7 @@ func validateLastBlockHeight(i interface{}) error {
 	}
 
 	if lastBlockHeight <= 0 {
-		return errors.New("last block height can't be 0 or negative")
+		return errors.New("last block height can't 0 or negative")
 	}
 
 	return nil
@@ -182,7 +182,7 @@ func validateConsumerRevisionHeight(i interface{}) error {
 	}
 
 	if revisionHeight == 0 {
-		return fmt.Errorf("minimal unbonding period is %d", spntypes.MinimalUnbondingPeriod)
+		return fmt.Errorf("minimal revision height is %d", 1)
 	}
 
 	return nil
