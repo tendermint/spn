@@ -34,14 +34,14 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 		chainID = config.ChainID
 		appParams := make(simtypes.AppParams)
 
-		maxInitialStake := math.MaxInt64 / (numAccs + MaxNumBonded)
+		maxInitialCoin := math.MaxInt64 / (numAccs + MaxNumBonded)
 
 		// generate a random amount of initial stake coins and a random initial
 		// number of bonded accounts
 		var initialStake, numInitiallyBonded int64
 		appParams.GetOrGenerate(
 			cdc, simappparams.StakePerAccount, &initialStake, r,
-			func(r *rand.Rand) { initialStake = r.Int63n(maxInitialStake) },
+			func(r *rand.Rand) { initialStake = r.Int63n(maxInitialCoin) },
 		)
 		appParams.GetOrGenerate(
 			cdc, simappparams.InitiallyBondedValidators, &numInitiallyBonded, r,
@@ -119,7 +119,7 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 		totalNewCoins := sdk.NewCoins()
 		for i, balance := range bankState.Balances {
 			if r.Int63n(100) < 20 {
-				auctionCoinAmt := r.Int63n(999_000_000_000_000) + 1_000_000_000_000
+				auctionCoinAmt := r.Int63n(maxInitialCoin)
 				auctionCoin := sdk.NewCoin(AuctionCoinDenom, sdk.NewInt(auctionCoinAmt))
 				newBalance := balance.Coins.Add(auctionCoin)
 				bankState.Balances[i].Coins = newBalance
