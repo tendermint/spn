@@ -41,8 +41,8 @@ func CmdEditCampaign() *cobra.Command {
 
 			msg := types.NewMsgEditCampaign(
 				clientCtx.GetFromAddress().String(),
-				name,
 				campaignID,
+				name,
 				metadataBytes,
 			)
 
