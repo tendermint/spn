@@ -17,7 +17,7 @@ const (
 	defaultWeightMsgCreateCampaign    = 25
 	defaultWeightMsgEditCampaign      = 20
 	defaultWeightMsgUpdateTotalSupply = 20
-	defaultWeightMsgInitializeMainnet = 5
+	defaultWeightMsgInitializeMainnet = 15
 	defaultWeightMsgAddShares         = 20
 	defaultWeightMsgAddVestingOptions = 20
 	defaultWeightMsgMintVouchers      = 20
@@ -150,6 +150,10 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		simulation.NewWeightedOperation(
 			weightMsgEditCampaign,
 			campaignsim.SimulateMsgEditCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgUpdateTotalSupply,
+			campaignsim.SimulateMsgUpdateTotalSupply(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgInitializeMainnet,
