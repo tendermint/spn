@@ -3,6 +3,7 @@ package simutil
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"math/rand"
 	"time"
 
@@ -19,6 +20,7 @@ import (
 
 const (
 	AuctionCoinDenom = "auction"
+	MaxNumBonded     = 300
 )
 
 // CustomAppStateFn returns the initial application state using the simulation parameters.
@@ -32,16 +34,18 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 		chainID = config.ChainID
 		appParams := make(simtypes.AppParams)
 
+		maxInitialStake := math.MaxInt64 / (numAccs + MaxNumBonded)
+
 		// generate a random amount of initial stake coins and a random initial
 		// number of bonded accounts
 		var initialStake, numInitiallyBonded int64
 		appParams.GetOrGenerate(
 			cdc, simappparams.StakePerAccount, &initialStake, r,
-			func(r *rand.Rand) { initialStake = r.Int63n(1e16) },
+			func(r *rand.Rand) { initialStake = r.Int63n(maxInitialStake) },
 		)
 		appParams.GetOrGenerate(
 			cdc, simappparams.InitiallyBondedValidators, &numInitiallyBonded, r,
-			func(r *rand.Rand) { numInitiallyBonded = int64(r.Intn(300) + 200) },
+			func(r *rand.Rand) { numInitiallyBonded = r.Int63n(MaxNumBonded) },
 		)
 
 		if numInitiallyBonded > numAccs {
@@ -52,9 +56,10 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 			`Selected randomly generated parameters for simulated genesis:
 {
   stake_per_account: "%d",
-  initially_bonded_validators: "%d"
+  initially_bonded_validators: "%d",
+  num_accs: "%d"
 }
-`, initialStake, numInitiallyBonded,
+`, initialStake, numInitiallyBonded, numAccs,
 		)
 
 		simState := &module.SimulationState{

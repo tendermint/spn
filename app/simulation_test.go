@@ -52,7 +52,6 @@ func interBlockCacheOpt() func(*baseapp.BaseApp) {
 
 // go test ./app -v -benchmem -run=^$ -bench ^BenchmarkSimulation -Commit=true -cpuprofile cpu.out
 func BenchmarkSimulation(b *testing.B) {
-	simapp.FlagSeedValue = 10
 	simapp.FlagVerboseValue = true
 	simapp.FlagOnOperationValue = true
 	simapp.FlagAllInvariantsValue = true
