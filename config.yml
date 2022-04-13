@@ -58,6 +58,7 @@ genesis:
         lastBlockHeight: "1"
         consumerChainID: "orbit-1"
         consumerUnbondingPeriod: "2"
+        consumerRevisionHeight: "1"
     participation:
       params:
         allocationPrice:
