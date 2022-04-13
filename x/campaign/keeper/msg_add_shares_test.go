@@ -22,9 +22,11 @@ func TestMsgAddShares(t *testing.T) {
 		coordAddr1                     = sample.Address(r)
 		coordAddr2                     = sample.Address(r)
 		coordAddrMainnetInitialized    = sample.Address(r)
+		coordAddrMainnetLaunched       = sample.Address(r)
 		campaign                       = sample.Campaign(r, 0)
 		campaignInvalidAllocatedShares = sample.Campaign(r, 2)
 		campaignMainnetInitialized     = sample.Campaign(r, 1)
+		campaignMainnetLaunched        = sample.Campaign(r, 3)
 
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
@@ -45,7 +47,25 @@ func TestMsgAddShares(t *testing.T) {
 	campaignMainnetInitialized.CoordinatorID = res.CoordinatorID
 	campaignMainnetInitialized.MainnetInitialized = true
 	campaignMainnetInitialized.AllocatedShares = allocatedShares
+	chain := sample.Chain(r, 0, res.CoordinatorID)
+	chain.LaunchTriggered = false
+	chain.IsMainnet = true
+	campaignMainnetInitialized.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chain)
 	campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetInitialized)
+
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+		Address:     coordAddrMainnetLaunched,
+		Description: sample.CoordinatorDescription(r),
+	})
+	require.NoError(t, err)
+	campaignMainnetLaunched.CoordinatorID = res.CoordinatorID
+	campaignMainnetLaunched.MainnetInitialized = true
+	campaignMainnetLaunched.AllocatedShares = allocatedShares
+	chainLaunched := sample.Chain(r, 1, res.CoordinatorID)
+	chainLaunched.LaunchTriggered = true
+	chainLaunched.IsMainnet = true
+	campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
+	campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetLaunched)
 
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
 		Address:     coordAddr1,
@@ -109,6 +129,16 @@ func TestMsgAddShares(t *testing.T) {
 				Address:     addr1,
 				Shares:      sample.Shares(r),
 			},
+		},
+		{
+			name: "campaign with launched mainnet",
+			msg: types.MsgAddShares{
+				Coordinator: coordAddrMainnetLaunched,
+				CampaignID:  campaignMainnetLaunched.CampaignID,
+				Address:     addr1,
+				Shares:      sample.Shares(r),
+			},
+			err: types.ErrMainnetLaunchTriggered,
 		},
 		{
 			name: "allocated shares greater than total shares",

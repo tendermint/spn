@@ -169,11 +169,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		),
 		simulation.NewWeightedOperation(
 			weightMsgBurnVouchers,
-			campaignsim.SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper),
+			campaignsim.SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRedeemVouchers,
-			campaignsim.SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper),
+			campaignsim.SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUnredeemVouchers,
@@ -181,7 +181,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		),
 		simulation.NewWeightedOperation(
 			weightMsgSendVouchers,
-			campaignsim.SimulateMsgSendVouchers(am.accountKeeper, am.bankKeeper),
+			campaignsim.SimulateMsgSendVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }
