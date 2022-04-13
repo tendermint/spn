@@ -17,7 +17,7 @@ const (
 	defaultWeightMsgCreateCampaign    = 25
 	defaultWeightMsgEditCampaign      = 20
 	defaultWeightMsgUpdateTotalSupply = 20
-	defaultWeightMsgInitializeMainnet = 5
+	defaultWeightMsgInitializeMainnet = 15
 	defaultWeightMsgAddShares         = 20
 	defaultWeightMsgAddVestingOptions = 20
 	defaultWeightMsgMintVouchers      = 20
