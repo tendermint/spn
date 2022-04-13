@@ -140,6 +140,10 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			campaignsim.SimulateMsgCreateCampaign(am.keeper, am.accountKeeper, am.bankKeeper, am.profileKeeper),
 		),
 		simulation.NewWeightedOperation(
+			weightMsgUpdateTotalSupply,
+			campaignsim.SimulateMsgUpdateTotalSupply(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
 			weightMsgInitializeMainnet,
 			campaignsim.SimulateMsgInitializeMainnet(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
