@@ -335,7 +335,6 @@ func SimulateMsgUnredeemVouchers(
 }
 
 // SimulateMsgSendVouchers simulates a Msg message from the bank module with vouchers
-// TODO: This message constantly fails in simulation log, investigate why
 func SimulateMsgSendVouchers(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
@@ -346,7 +345,7 @@ func SimulateMsgSendVouchers(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		_, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, false)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, banktypes.TypeMsgSend, "skip send vouchers"), nil, nil
+			return simtypes.NoOpMsg(banktypes.ModuleName, banktypes.TypeMsgSend, "skip send vouchers"), nil, nil
 		}
 
 		// Select a random receiver account

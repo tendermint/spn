@@ -164,11 +164,6 @@ func GetAccountWithVouchers(
 			}
 		}
 
-		// Look for accounts with at least 10 vouchers
-		if coin.Amount.Int64() < 10 {
-			return false
-		}
-
 		found = true
 		accountAddr = addr
 		return true
@@ -179,19 +174,14 @@ func GetAccountWithVouchers(
 		return 0, account, coins, false
 	}
 
-	// Fetch all the vouchers of the campaign owned by the account
+	// Fetch from the vouchers of the campaign owned by the account
 	bk.IterateAccountBalances(ctx, accountAddr, func(coin sdk.Coin) bool {
 		coinCampID, err := types.VoucherCampaign(coin.Denom)
 		if err == nil && coinCampID == campID {
-
-			// Get a portion of the balance
-			// If the balance is 1, we don't include it in the vouchers
-			// There is a issue: insufficient fees that can occur when the whole balance for a voucher is sent
-			// TODO: Investigate this issue
-			if coin.Amount.Int64() > 1 {
-				coin.Amount = coin.Amount.Quo(sdk.NewInt(2))
-				coins = append(coins, coin)
-			}
+			// retain a random portion of the balance in the range [0, coin.Amount)
+			retainAmt := sdk.NewInt(rand.Int63n(coin.Amount.Int64()))
+			coin.Amount = coin.Amount.Sub(retainAmt)
+			coins = append(coins, coin)
 		}
 		return false
 	})
