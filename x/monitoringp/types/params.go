@@ -119,7 +119,7 @@ func validateLastBlockHeight(i interface{}) error {
 	}
 
 	if lastBlockHeight <= 0 {
-		return errors.New("last block height can't 0 or negative")
+		return errors.New("last block height can't be 0 or negative")
 	}
 
 	return nil
