@@ -15,8 +15,9 @@ import (
 
 const (
 	defaultWeightMsgCreateCampaign    = 25
+	defaultWeightMsgEditCampaign      = 20
 	defaultWeightMsgUpdateTotalSupply = 20
-	defaultWeightMsgInitializeMainnet = 5
+	defaultWeightMsgInitializeMainnet = 15
 	defaultWeightMsgAddShares         = 20
 	defaultWeightMsgAddVestingOptions = 20
 	defaultWeightMsgMintVouchers      = 20
@@ -26,6 +27,7 @@ const (
 	defaultWeightMsgSendVouchers      = 20
 
 	opWeightMsgCreateCampaign    = "op_weight_msg_create_campaign"
+	opWeightMsgEditCampaign      = "op_weight_msg_edit_campaign"
 	opWeightMsgUpdateTotalSupply = "op_weight_msg_update_total_supply"
 	opWeightMsgInitializeMainnet = "op_weight_msg_initialize_mainnet"
 	opWeightMsgAddShares         = "op_weight_msg_add_shares"
@@ -70,6 +72,7 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	var (
 		weightMsgCreateCampaign    int
+		weightMsgEditCampaign      int
 		weightMsgUpdateTotalSupply int
 		weightMsgInitializeMainnet int
 		weightMsgAddShares         int
@@ -86,6 +89,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	appParams.GetOrGenerate(cdc, opWeightMsgCreateCampaign, &weightMsgCreateCampaign, nil,
 		func(_ *rand.Rand) {
 			weightMsgCreateCampaign = defaultWeightMsgCreateCampaign
+		},
+	)
+	appParams.GetOrGenerate(cdc, opWeightMsgEditCampaign, &weightMsgEditCampaign, nil,
+		func(_ *rand.Rand) {
+			weightMsgEditCampaign = defaultWeightMsgEditCampaign
 		},
 	)
 	appParams.GetOrGenerate(cdc, opWeightMsgUpdateTotalSupply, &weightMsgUpdateTotalSupply, nil,
@@ -137,7 +145,15 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateCampaign,
-			campaignsim.SimulateMsgCreateCampaign(am.keeper, am.accountKeeper, am.bankKeeper, am.profileKeeper),
+			campaignsim.SimulateMsgCreateCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgEditCampaign,
+			campaignsim.SimulateMsgEditCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgUpdateTotalSupply,
+			campaignsim.SimulateMsgUpdateTotalSupply(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgInitializeMainnet,
