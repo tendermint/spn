@@ -145,6 +145,10 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 			})
 		}
 
+		// override bank parameters to always enable transfers
+		bankState.Params.SendEnabled = banktypes.SendEnabledParams{}
+		bankState.Params.DefaultSendEnabled = true
+
 		// change appState back
 		rawState[stakingtypes.ModuleName] = cdc.MustMarshalJSON(stakingState)
 		rawState[banktypes.ModuleName] = cdc.MustMarshalJSON(bankState)
