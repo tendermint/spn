@@ -108,12 +108,16 @@ func SimulateMsgAddValidatorOperatorAddress(ak types.AccountKeeper, bk types.Ban
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 
+		// choose two addresses that are not equal
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		opAddr, _ := simtypes.RandomAcc(r, accs)
+		opAccount, _ := simtypes.RandomAcc(r, accs)
+		for simAccount.Address.Equals(opAccount.Address) {
+			opAccount, _ = simtypes.RandomAcc(r, accs)
+		}
 
 		msg := &types.MsgAddValidatorOperatorAddress{
 			ValidatorAddress: simAccount.Address.String(),
-			OperatorAddress:  opAddr.Address.String(),
+			OperatorAddress:  opAccount.Address.String(),
 		}
 
 		txCtx := simulation.OperationInput{
@@ -130,7 +134,7 @@ func SimulateMsgAddValidatorOperatorAddress(ak types.AccountKeeper, bk types.Ban
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return genAndDeliverTxWithRandFeesAddOpAddr(txCtx, opAddr)
+		return genAndDeliverTxWithRandFeesAddOpAddr(txCtx, opAccount)
 	}
 }
 
