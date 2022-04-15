@@ -25,7 +25,7 @@ const (
 	Version = "monitoring-1"
 
 	// PortID is the default port id that module binds to
-	PortID = "monitoring"
+	PortID = "monitoringc"
 
 	// VerifiedClientIDKeyPrefix is the prefix to retrieve all VerifiedClientID
 	VerifiedClientIDKeyPrefix = "VerifiedClientID/value/"
