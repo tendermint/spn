@@ -40,10 +40,22 @@ func TestRewardPool_Validate(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "empty coins",
+			name: "empty initial coins",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            sample.Address(r),
+				LastRewardHeight:    50,
+				CurrentRewardHeight: 100,
+				Closed:              false,
+			},
+			wantErr: true,
+		},
+		{
+			name: "empty remaining coins",
+			rewardPool: types.RewardPool{
+				LaunchID:            1,
+				Provider:            sample.Address(r),
+				InitialCoins:        sample.Coins(r),
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
 				Closed:              false,
