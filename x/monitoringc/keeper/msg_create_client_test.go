@@ -140,6 +140,18 @@ func Test_msgServer_CreateClient(t *testing.T) {
 			err: launchtypes.ErrChainNotFound,
 		},
 		{
+			name: "empty validator set",
+			msg: *types.NewMsgCreateClient(
+				sample.Address(r),
+				resCreateChain.LaunchID,
+				sample.ConsensusState(0),
+				spntypes.ValidatorSet{},
+				spntypes.DefaultUnbondingPeriod,
+				spntypes.DefaultRevisionHeight,
+			),
+			err: spnerrors.ErrCritical,
+		},
+		{
 			name: "invalid validator set",
 			msg: *types.NewMsgCreateClient(
 				sample.Address(r),

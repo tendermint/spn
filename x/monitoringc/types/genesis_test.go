@@ -52,6 +52,13 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
+			desc: "invalid portID",
+			genState: &types.GenesisState{
+				PortId: "",
+			},
+			valid: false,
+		},
+		{
 			desc: "duplicated verifiedClientID",
 			genState: &types.GenesisState{
 				PortId: types.PortID,
