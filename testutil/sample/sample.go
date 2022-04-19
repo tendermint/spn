@@ -187,3 +187,8 @@ func TotalSupply(r *rand.Rand) sdk.Coins {
 func Duration(r *rand.Rand) time.Duration {
 	return time.Duration(r.Int63n(int64(time.Hour*24*21-time.Second))) + time.Second
 }
+
+// DurationFromRange returns a sample time.Duration between the min and max values provided
+func DurationFromRange(r *rand.Rand, min, max time.Duration) time.Duration {
+	return time.Duration(r.Int63n(int64(max-min))) + min
+}

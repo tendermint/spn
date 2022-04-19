@@ -18,6 +18,7 @@ type (
 		storeKey      sdk.StoreKey
 		memKey        sdk.StoreKey
 		paramstore    paramtypes.Subspace
+		authKeeper    types.AccountKeeper
 		bankKeeper    types.BankKeeper
 		profileKeeper types.ProfileKeeper
 		launchKeeper  types.LaunchKeeper
@@ -29,6 +30,7 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
+	authKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 	profileKeeper types.ProfileKeeper,
 	launchKeeper types.LaunchKeeper,
@@ -42,6 +44,7 @@ func NewKeeper(
 		storeKey:      storeKey,
 		memKey:        memKey,
 		paramstore:    ps,
+		authKeeper:    authKeeper,
 		bankKeeper:    bankKeeper,
 		profileKeeper: profileKeeper,
 		launchKeeper:  launchKeeper,
@@ -50,4 +53,14 @@ func NewKeeper(
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+// GetProfileKeeper gets the profile keeper interface of the module
+func (k *Keeper) GetProfileKeeper() types.ProfileKeeper {
+	return k.profileKeeper
+}
+
+// GetLaunchKeeper gets the profile keeper interface of the module
+func (k *Keeper) GetLaunchKeeper() types.LaunchKeeper {
+	return k.launchKeeper
 }

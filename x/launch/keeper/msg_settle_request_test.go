@@ -3,18 +3,19 @@ package keeper_test
 import (
 	"testing"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
-	profiletypes "github.com/tendermint/spn/x/profile/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgSettleRequest(t *testing.T) {
+	const numReq = 6
+
 	var (
 		coordinator1       = sample.Coordinator(r, sample.Address(r))
 		coordinator2       = sample.Coordinator(r, sample.Address(r))
@@ -38,21 +39,31 @@ func TestMsgSettleRequest(t *testing.T) {
 	chains[3].CoordinatorID = disableCoordinator.CoordinatorID
 	tk.LaunchKeeper.SetChain(sdkCtx, chains[3])
 
-	requestSamples := make([]RequestSample, 6)
-	for i := 0; i < 6; i++ {
+	requestSamples := make([]RequestSample, numReq)
+	for i := 0; i < numReq; i++ {
 		addr := sample.Address(r)
 		requestSamples[i] = RequestSample{
 			Content: sample.GenesisAccountContent(r, chains[2].LaunchID, addr),
 			Creator: addr,
+			Status:  types.Request_PENDING,
 		}
 	}
+
+	// set one request to a non-pending status
+	requestSamples[numReq-1].Status = types.Request_APPROVED
 	requests := createRequestsFromSamples(tk.LaunchKeeper, sdkCtx, chains[2].LaunchID, requestSamples)
 
+	invalidContentRequest := types.Request{
+		LaunchID: chains[2].LaunchID,
+	}
+	invalidContentRequestID := tk.LaunchKeeper.AppendRequest(sdkCtx, invalidContentRequest)
+
 	tests := []struct {
-		name      string
-		msg       types.MsgSettleRequest
-		checkAddr string
-		err       error
+		name       string
+		msg        types.MsgSettleRequest
+		checkAddr  string
+		wantStatus types.Request_Status
+		err        error
 	}{
 		{
 			name: "invalid chain",
@@ -95,7 +106,17 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrNoAddressPermission,
 		},
 		{
-			name: "should prevent approving an invalid request",
+			name: "request already settled error",
+			msg: types.MsgSettleRequest{
+				LaunchID:  chains[2].LaunchID,
+				Signer:    coordinator1.Address,
+				RequestID: requests[numReq-1].RequestID,
+				Approve:   true,
+			},
+			err: types.ErrRequestSettled,
+		},
+		{
+			name: "should prevent approving a request that does not exist",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    coordinator1.Address,
@@ -105,6 +126,16 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrRequestNotFound,
 		},
 		{
+			name: "should prevent applying a request with invalid contents",
+			msg: types.MsgSettleRequest{
+				LaunchID:  chains[2].LaunchID,
+				Signer:    coordinator1.Address,
+				RequestID: invalidContentRequestID,
+				Approve:   true,
+			},
+			err: spnerrors.ErrCritical,
+		},
+		{
 			name: "coordinator can approve a request",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
@@ -112,7 +143,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID: requests[0].RequestID,
 				Approve:   true,
 			},
-			checkAddr: requestSamples[0].Creator,
+			wantStatus: types.Request_APPROVED,
+			checkAddr:  requestSamples[0].Creator,
 		},
 		{
 			name: "coordinator can approve a second request for the same chain",
@@ -122,7 +154,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID: requests[1].RequestID,
 				Approve:   true,
 			},
-			checkAddr: requestSamples[1].Creator,
+			wantStatus: types.Request_APPROVED,
+			checkAddr:  requestSamples[1].Creator,
 		},
 		{
 			name: "coordinator can reject a request",
@@ -132,7 +165,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID: requests[2].RequestID,
 				Approve:   false,
 			},
-			checkAddr: requestSamples[2].Creator,
+			wantStatus: types.Request_REJECTED,
+			checkAddr:  requestSamples[2].Creator,
 		},
 		{
 			name: "request creator can reject their own request",
@@ -142,7 +176,8 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID: requests[3].RequestID,
 				Approve:   false,
 			},
-			checkAddr: requestSamples[3].Creator,
+			wantStatus: types.Request_REJECTED,
+			checkAddr:  requestSamples[3].Creator,
 		},
 		{
 			name: "should prevent rejecting a request if the signer is not the request creator",
@@ -184,8 +219,9 @@ func TestMsgSettleRequest(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			_, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, tt.msg.RequestID)
-			require.False(t, found, "request not removed")
+			request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, tt.msg.RequestID)
+			require.True(t, found, "request not found")
+			require.Equal(t, tt.wantStatus, request.Status)
 
 			_, found = tk.LaunchKeeper.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.checkAddr)
 			require.Equal(t, tt.msg.Approve, found, "request apply not performed")

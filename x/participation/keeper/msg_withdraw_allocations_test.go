@@ -58,7 +58,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	require.NoError(t, err)
 
 	// cancel auction
-	_, err = tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, cancelledAuctionID))
+	err = tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, cancelledAuctionID))
 	require.NoError(t, err)
 
 	// manually insert entry for invalidParticipant for later test

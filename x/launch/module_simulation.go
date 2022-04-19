@@ -1,9 +1,7 @@
 package launch
 
 import (
-	"fmt"
 	"math/rand"
-	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -11,12 +9,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
-	launchsimulation "github.com/tendermint/spn/x/launch/simulation"
+	launchsim "github.com/tendermint/spn/x/launch/simulation"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
 const (
-	// this line is used by starport scaffolding # simapp/module/const
 	defaultWeightMsgCreateChain              int = 50
 	defaultWeightMsgEditChain                int = 20
 	defaultWeightMsgRequestAddGenesisAccount int = 50
@@ -40,6 +37,8 @@ const (
 	opWeightMsgRevertLaunch             = "op_weight_msg_revert_launch"
 	opWeightMsgSettleRequest            = "op_weight_msg_settle_request"
 	opWeightMsgUpdateLaunchInformation  = "op_weight_msg_update_launch_information"
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -60,23 +59,12 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 	launchParams := sample.LaunchParams(r)
-	creationFee := make([]string, len(launchParams.ChainCreationFee))
-	for i := range launchParams.ChainCreationFee {
-		creationFee[i] = fmt.Sprintf(
-			"{\"denom\":\"%v\",\"amount\":\"%v\"}",
-			launchParams.ChainCreationFee[i].Denom,
-			launchParams.ChainCreationFee[i].Amount.String(),
-		)
-	}
 	return []simtypes.ParamChange{
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyLaunchTimeRange), func(r *rand.Rand) string {
-			return fmt.Sprintf(
-				"{\"minLaunchTime\":\"%v\",\"maxLaunchTime\":\"%v\"}",
-				launchParams.LaunchTimeRange.MinLaunchTime,
-				launchParams.LaunchTimeRange.MaxLaunchTime)
+			return string(types.Amino.MustMarshalJSON(launchParams.LaunchTimeRange))
 		}),
 		simulation.NewSimParamChange(types.ModuleName, string(types.KeyChainCreationFee), func(r *rand.Rand) string {
-			return fmt.Sprintf("[%v]", strings.Join(creationFee, ","))
+			return string(types.Amino.MustMarshalJSON(launchParams.ChainCreationFee))
 		}),
 	}
 }
@@ -168,47 +156,47 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateChain,
-			launchsimulation.SimulateMsgCreateChain(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgCreateChain(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgEditChain,
-			launchsimulation.SimulateMsgEditChain(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgEditChain(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddGenesisAccount,
-			launchsimulation.SimulateMsgRequestAddGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestAddGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddVestingAccount,
-			launchsimulation.SimulateMsgRequestAddVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestAddVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestRemoveAccount,
-			launchsimulation.SimulateMsgRequestRemoveAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestRemoveAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddValidator,
-			launchsimulation.SimulateMsgRequestAddValidator(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestAddValidator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestRemoveValidator,
-			launchsimulation.SimulateMsgRequestRemoveValidator(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestRemoveValidator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgTriggerLaunch,
-			launchsimulation.SimulateMsgTriggerLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgTriggerLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgSettleRequest,
-			launchsimulation.SimulateMsgSettleRequest(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgSettleRequest(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRevertLaunch,
-			launchsimulation.SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUpdateLaunchInformation,
-			launchsimulation.SimulateMsgUpdateLaunchInformation(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgUpdateLaunchInformation(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }

@@ -36,6 +36,11 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		valid  bool
 	}{
 		{
+			name:   "invalid share vesting options",
+			option: types.ShareVestingOptions{},
+			valid:  false,
+		},
+		{
 			name: "no total shares",
 			option: *types.NewShareDelayedVesting(
 				nil,

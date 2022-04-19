@@ -182,7 +182,7 @@ func validateConsumerRevisionHeight(i interface{}) error {
 	}
 
 	if revisionHeight == 0 {
-		return fmt.Errorf("minimal unbonding period is %d", spntypes.MinimalUnbondingPeriod)
+		return fmt.Errorf("minimal revision height is %d", 1)
 	}
 
 	return nil

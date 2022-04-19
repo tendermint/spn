@@ -242,6 +242,7 @@ func (i initializer) Campaign(
 }
 
 func (i initializer) Reward(
+	authKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
 	profileKeeper *profilekeeper.Keeper,
 	launchKeeper *launchkeeper.Keeper,
@@ -261,6 +262,7 @@ func (i initializer) Reward(
 		storeKey,
 		memStoreKey,
 		subspace,
+		authKeeper,
 		bankKeeper,
 		profileKeeper,
 		launchKeeper,
@@ -361,7 +363,7 @@ func (i initializer) Fundraising(
 	paramKeeper paramskeeper.Keeper,
 	authKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
-	blockedAddrs map[string]bool,
+	disKeeper distrkeeper.Keeper,
 ) *fundraisingkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(fundraisingtypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(fundraisingtypes.MemStoreKey)
@@ -379,7 +381,7 @@ func (i initializer) Fundraising(
 		subspace,
 		authKeeper,
 		bankKeeper,
-		blockedAddrs,
+		disKeeper,
 	)
 }
 

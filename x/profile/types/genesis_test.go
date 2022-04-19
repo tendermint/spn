@@ -12,6 +12,14 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
+	var (
+		addr1   = sample.Address(r)
+		addr2   = sample.Address(r)
+		addr3   = sample.Address(r)
+		opAddr1 = sample.Address(r)
+		opAddr2 = sample.Address(r)
+		opAddr3 = sample.Address(r)
+	)
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState
@@ -23,11 +31,45 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid:    true,
 		},
 		{
-			desc:     "valid genesis state",
+			desc: "valid genesis state",
 			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
+					{Address: addr2, OperatorAddresses: []string{opAddr2}},
+					{Address: addr3, OperatorAddresses: []string{opAddr3}},
+				},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
+					{OperatorAddress: opAddr3, ValidatorAddress: addr3},
+				},
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
+					{CoordinatorID: 0, Address: addr1},
+					{CoordinatorID: 1, Address: addr2},
+					{CoordinatorID: 2, Address: addr3},
+				},
+				CoordinatorList: []types.Coordinator{
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: true},
+					{CoordinatorID: 2, Address: addr3, Active: true},
+				},
+				CoordinatorCounter: 4,
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
+		},
+		{
+			desc: "invalid genesis state",
+			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
+				},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
+				},
+			},
+			valid: false,
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
@@ -101,6 +143,19 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 				},
 			},
 			err: errors.New("duplicated index for validatorByOperatorAddress"),
+		},
+		{
+			name: "missing validator address",
+			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
+				},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
+				},
+			},
+			err: errors.New("validator operator address not found for Validator"),
 		},
 		{
 			name: "missing operator address in the validator list",

@@ -2,11 +2,14 @@ package simutil
 
 import (
 	"encoding/json"
+	"fmt"
+	"math"
 	"math/rand"
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/simapp"
+	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -17,6 +20,7 @@ import (
 
 const (
 	AuctionCoinDenom = "auction"
+	MaxNumBonded     = 300
 )
 
 // CustomAppStateFn returns the initial application state using the simulation parameters.
@@ -25,12 +29,58 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 	) (appState json.RawMessage, simAccs []simtypes.Account, chainID string, genesisTimestamp time.Time) {
 		genesisTimestamp = simtypes.RandTimestamp(r)
 
+		numAccs := int64(len(accs))
+		genesisState := simapp.NewDefaultGenesisState(cdc)
 		chainID = config.ChainID
 		appParams := make(simtypes.AppParams)
-		appState, simAccs = simapp.AppStateRandomizedFn(simManager, r, cdc, accs, genesisTimestamp, appParams)
+
+		maxInitialCoin := math.MaxInt64 / (numAccs + MaxNumBonded)
+
+		// generate a random amount of initial stake coins and a random initial
+		// number of bonded accounts
+		var initialStake, numInitiallyBonded int64
+		appParams.GetOrGenerate(
+			cdc, simappparams.StakePerAccount, &initialStake, r,
+			func(r *rand.Rand) { initialStake = r.Int63n(maxInitialCoin) },
+		)
+		appParams.GetOrGenerate(
+			cdc, simappparams.InitiallyBondedValidators, &numInitiallyBonded, r,
+			func(r *rand.Rand) { numInitiallyBonded = r.Int63n(MaxNumBonded) },
+		)
+
+		if numInitiallyBonded > numAccs {
+			numInitiallyBonded = numAccs
+		}
+
+		fmt.Printf(
+			`Selected randomly generated parameters for simulated genesis:
+{
+  stake_per_account: "%d",
+  initially_bonded_validators: "%d",
+  num_accs: "%d"
+}
+`, initialStake, numInitiallyBonded, numAccs,
+		)
+
+		simState := &module.SimulationState{
+			AppParams:    appParams,
+			Cdc:          cdc,
+			Rand:         r,
+			GenState:     genesisState,
+			Accounts:     accs,
+			InitialStake: initialStake,
+			NumBonded:    numInitiallyBonded,
+			GenTimestamp: genesisTimestamp,
+		}
+
+		simManager.GenerateGenesisStates(simState)
+		appState, err := json.Marshal(genesisState)
+		if err != nil {
+			panic(err)
+		}
 
 		rawState := make(map[string]json.RawMessage)
-		err := json.Unmarshal(appState, &rawState)
+		err = json.Unmarshal(appState, &rawState)
 		if err != nil {
 			panic(err)
 		}
@@ -69,8 +119,8 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 		totalNewCoins := sdk.NewCoins()
 		for i, balance := range bankState.Balances {
 			if r.Int63n(100) < 20 {
-				coinAmt := r.Int63n(999000000) + 1000000
-				auctionCoin := sdk.NewCoin(AuctionCoinDenom, sdk.NewInt(coinAmt))
+				auctionCoinAmt := r.Int63n(maxInitialCoin)
+				auctionCoin := sdk.NewCoin(AuctionCoinDenom, sdk.NewInt(auctionCoinAmt))
 				newBalance := balance.Coins.Add(auctionCoin)
 				bankState.Balances[i].Coins = newBalance
 				totalNewCoins = totalNewCoins.Add(auctionCoin)
@@ -95,6 +145,10 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 			})
 		}
 
+		// override bank parameters to always enable transfers
+		bankState.Params.SendEnabled = banktypes.SendEnabledParams{}
+		bankState.Params.DefaultSendEnabled = true
+
 		// change appState back
 		rawState[stakingtypes.ModuleName] = cdc.MustMarshalJSON(stakingState)
 		rawState[banktypes.ModuleName] = cdc.MustMarshalJSON(bankState)
@@ -104,6 +158,6 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 		if err != nil {
 			panic(err)
 		}
-		return appState, simAccs, chainID, genesisTimestamp
+		return appState, accs, chainID, genesisTimestamp
 	}
 }

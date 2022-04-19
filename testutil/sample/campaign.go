@@ -112,16 +112,31 @@ func CampaignGenesisState(r *rand.Rand) campaign.GenesisState {
 				Chains:     []uint64{0, 1},
 			},
 		},
-		MainnetVestingAccountList: []campaign.MainnetVestingAccount{
-			MainnetVestingAccount(r, 0, Address(r)),
-			MainnetVestingAccount(r, 0, Address(r)),
-			MainnetVestingAccount(r, 1, Address(r)),
-		},
-		MainnetAccountList: []campaign.MainnetAccount{
-			MainnetAccount(r, 0, Address(r)),
-			MainnetAccount(r, 1, Address(r)),
-		},
 		TotalShares: spntypes.TotalShareNumber,
 		Params:      CampaignParams(r),
 	}
+}
+
+// CampaignGenesisStateWithAccounts returns a sample genesis state for the campaign module that includes accounts
+func CampaignGenesisStateWithAccounts(r *rand.Rand) campaign.GenesisState {
+	genState := CampaignGenesisState(r)
+	genState.MainnetAccountList = make([]campaign.MainnetAccount, 0)
+	genState.MainnetVestingAccountList = make([]campaign.MainnetVestingAccount, 0)
+
+	for i, c := range genState.CampaignList {
+		for j := 0; j < 5; j++ {
+			mainnetAccount := MainnetAccount(r, c.CampaignID, Address(r))
+			mainnetVestingAccount := MainnetVestingAccount(r, c.CampaignID, Address(r))
+			genState.MainnetAccountList = append(genState.MainnetAccountList, mainnetAccount)
+			genState.MainnetVestingAccountList = append(genState.MainnetVestingAccountList, mainnetVestingAccount)
+
+			// increase campaign allocated shares accordingly
+			c.AllocatedShares = campaign.IncreaseShares(c.AllocatedShares, mainnetAccount.Shares)
+			shares, _ := mainnetVestingAccount.GetTotalShares()
+			c.AllocatedShares = campaign.IncreaseShares(c.AllocatedShares, shares)
+		}
+		genState.CampaignList[i] = c
+	}
+
+	return genState
 }

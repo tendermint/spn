@@ -16,8 +16,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simulationtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
@@ -52,14 +52,17 @@ func interBlockCacheOpt() func(*baseapp.BaseApp) {
 
 // go test ./app -v -benchmem -run=^$ -bench ^BenchmarkSimulation -Commit=true -cpuprofile cpu.out
 func BenchmarkSimulation(b *testing.B) {
-	simapp.FlagSeedValue = 10
 	simapp.FlagVerboseValue = true
+	simapp.FlagOnOperationValue = true
+	simapp.FlagAllInvariantsValue = true
+	simapp.FlagInitialBlockHeightValue = 1
 
 	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
 	require.NoError(b, err, "simulation setup failed")
 
 	b.Cleanup(func() {
-		db.Close()
+		err := db.Close()
+		require.NoError(b, err)
 		err = os.RemoveAll(dir)
 		require.NoError(b, err)
 	})
@@ -73,7 +76,7 @@ func BenchmarkSimulation(b *testing.B) {
 		true,
 		map[int64]bool{},
 		app.DefaultNodeHome,
-		0,
+		simapp.FlagPeriodValue,
 		encoding,
 		simapp.EmptyAppOptions{},
 	)
@@ -93,11 +96,11 @@ func BenchmarkSimulation(b *testing.B) {
 		config,
 		app.AppCodec(),
 	)
+	require.NoError(b, simErr)
 
 	// export state and simParams before the simulation error is checked
 	err = simapp.CheckExportSimulation(app, config, simParams)
 	require.NoError(b, err)
-	require.NoError(b, simErr)
 
 	if config.Commit {
 		simapp.PrintStats(db)
@@ -112,8 +115,8 @@ func TestAppStateDeterminism(t *testing.T) {
 	config := simapp.NewConfigFromFlags()
 	config.InitialBlockHeight = 1
 	config.ExportParamsPath = ""
-	config.OnOperation = false
-	config.AllInvariants = false
+	config.OnOperation = true
+	config.AllInvariants = true
 
 	numSeeds := 3
 	numTimesToRunPerSeed := 5
