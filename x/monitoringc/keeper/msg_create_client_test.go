@@ -9,6 +9,7 @@ import (
 	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"github.com/stretchr/testify/require"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -42,7 +43,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 	require.NoError(t, err)
 
 	// create a coordinator and a chain with a genesis validator
-	_, err = ts.ProfileSrv.CreateCoordinator(ctx, profiletypes.NewMsgCreateCoordinator(
+	resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, profiletypes.NewMsgCreateCoordinator(
 		coordAddr,
 		"",
 		"",
@@ -61,6 +62,9 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		sample.Metadata(r, 20),
 	))
 	require.NoError(t, err)
+	chainWithInvalidChainID := sample.Chain(r, resCreateChain.LaunchID+1, resCoord.CoordinatorID)
+	chainWithInvalidChainID.GenesisChainID = "invalid_chain_id"
+	tk.LaunchKeeper.SetChain(sdkCtx, chainWithInvalidChainID)
 	_, err = ts.LaunchSrv.RequestAddValidator(ctx, launchtypes.NewMsgRequestAddValidator(
 		coordAddr,
 		resCreateChain.LaunchID,
@@ -83,6 +87,46 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		msg  types.MsgCreateClient
 		err  error
 	}{
+		{
+			name: "invalid chain ID",
+			msg: *types.NewMsgCreateClient(
+				sample.Address(r),
+				chainWithInvalidChainID.LaunchID,
+				cs,
+				vs,
+				spntypes.DefaultUnbondingPeriod,
+				spntypes.DefaultRevisionHeight,
+			),
+			err: types.ErrInvalidClientState,
+		},
+		{
+			name: "invalid client state",
+			msg: *types.NewMsgCreateClient(
+				sample.Address(r),
+				resCreateChain.LaunchID,
+				cs,
+				vs,
+				0,
+				spntypes.DefaultRevisionHeight,
+			),
+			err: types.ErrInvalidClientState,
+		},
+		{
+			name: "invalid consensus state",
+			msg: *types.NewMsgCreateClient(
+				sample.Address(r),
+				resCreateChain.LaunchID,
+				spntypes.NewConsensusState(
+					"",
+					"",
+					"",
+				),
+				vs,
+				spntypes.DefaultUnbondingPeriod,
+				spntypes.DefaultRevisionHeight,
+			),
+			err: spnerrors.ErrCritical,
+		},
 		{
 			name: "chain doesn't exist",
 			msg: *types.NewMsgCreateClient(

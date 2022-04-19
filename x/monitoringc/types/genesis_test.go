@@ -54,6 +54,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated verifiedClientID",
 			genState: &types.GenesisState{
+				PortId: types.PortID,
 				VerifiedClientIDList: []types.VerifiedClientID{
 					{
 						LaunchID:  0,
@@ -68,14 +69,36 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
+			desc: "duplicated clientID",
+			genState: &types.GenesisState{
+				PortId: types.PortID,
+				VerifiedClientIDList: []types.VerifiedClientID{
+					{
+						LaunchID:  0,
+						ClientIDs: []string{"0", "0"},
+					},
+				},
+			},
+			valid: false,
+		},
+		{
 			desc: "duplicated providerClientID",
 			genState: &types.GenesisState{
+				PortId: types.PortID,
+				VerifiedClientIDList: []types.VerifiedClientID{
+					{
+						LaunchID:  0,
+						ClientIDs: []string{"0"},
+					},
+				},
 				ProviderClientIDList: []types.ProviderClientID{
 					{
 						LaunchID: 0,
+						ClientID: "0",
 					},
 					{
 						LaunchID: 0,
+						ClientID: "0",
 					},
 				},
 			},
@@ -84,12 +107,21 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated launchIDFromVerifiedClientID",
 			genState: &types.GenesisState{
+				PortId: types.PortID,
+				VerifiedClientIDList: []types.VerifiedClientID{
+					{
+						LaunchID:  0,
+						ClientIDs: []string{"0"},
+					},
+				},
 				LaunchIDFromVerifiedClientIDList: []types.LaunchIDFromVerifiedClientID{
 					{
 						ClientID: "0",
+						LaunchID: 0,
 					},
 					{
 						ClientID: "0",
+						LaunchID: 0,
 					},
 				},
 			},
@@ -138,6 +170,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated launchIDFromChannelID",
 			genState: &types.GenesisState{
+				PortId: types.PortID,
 				LaunchIDFromChannelIDList: []types.LaunchIDFromChannelID{
 					{
 						ChannelID: "0",
@@ -152,6 +185,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated monitoringHistory",
 			genState: &types.GenesisState{
+				PortId: types.PortID,
 				MonitoringHistoryList: []types.MonitoringHistory{
 					{
 						LaunchID: 0,
