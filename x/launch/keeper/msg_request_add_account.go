@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 
@@ -72,7 +71,7 @@ func (k msgServer) RequestAddAccount(
 			GenesisAccount: *content.GetGenesisAccount(),
 		})
 		if err != nil {
-			return nil, spnerrors.Criticalf(err.Error())
+			return nil, err
 		}
 	}
 

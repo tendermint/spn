@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -72,7 +71,7 @@ func (k msgServer) RequestAddVestingAccount(
 			VestingAccount: *content.GetVestingAccount(),
 		})
 		if err != nil {
-			return nil, spnerrors.Criticalf(err.Error())
+			return nil, err
 		}
 	}
 

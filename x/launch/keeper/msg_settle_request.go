@@ -71,8 +71,8 @@ func (k msgServer) SettleRequest(
 	} else {
 		request.Status = types.Request_REJECTED
 	}
-	k.SetRequest(ctx, request)
 
+	k.SetRequest(ctx, request)
 	err := ctx.EventManager().EmitTypedEvent(&types.EventRequestSettled{
 		LaunchID:  msg.LaunchID,
 		RequestID: request.RequestID,
