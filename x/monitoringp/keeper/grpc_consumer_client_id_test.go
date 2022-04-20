@@ -16,17 +16,23 @@ import (
 func TestConsumerClientIDQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	item := createTestConsumerClientID(ctx, tk.MonitoringProviderKeeper)
 	for _, tc := range []struct {
 		desc     string
+		setItem  bool
 		request  *types.QueryGetConsumerClientIDRequest
 		response *types.QueryGetConsumerClientIDResponse
 		err      error
 	}{
 		{
-			desc:     "Valid Request",
-			request:  &types.QueryGetConsumerClientIDRequest{},
-			response: &types.QueryGetConsumerClientIDResponse{ConsumerClientID: item},
+			desc:    "object does not exist",
+			setItem: false,
+			request: &types.QueryGetConsumerClientIDRequest{},
+			err:     status.Error(codes.NotFound, "not found"),
+		},
+		{
+			desc:    "object exists",
+			setItem: true,
+			request: &types.QueryGetConsumerClientIDRequest{},
 		},
 		{
 			desc: "Invalid Request",
@@ -34,6 +40,10 @@ func TestConsumerClientIDQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
+			if tc.setItem {
+				item := createTestConsumerClientID(ctx, tk.MonitoringProviderKeeper)
+				tc.response = &types.QueryGetConsumerClientIDResponse{ConsumerClientID: item}
+			}
 			response, err := tk.MonitoringProviderKeeper.ConsumerClientID(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
