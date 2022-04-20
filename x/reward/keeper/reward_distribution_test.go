@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"fmt"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -370,6 +371,32 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
+			name: "clamp block height to 1 if ratio GT 1",
+			rewardPool: types.RewardPool{
+				LaunchID:            1,
+				Provider:            provider,
+				InitialCoins:        tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:      tc.Coins(t, "100aaa,100bbb"),
+				CurrentRewardHeight: 9,
+				LastRewardHeight:    10,
+				Closed:              false,
+			},
+			args: args{
+				launchID: 1,
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrBar, "0.5"),
+				),
+				lastBlockHeight: 11,
+				closeRewardPool: false,
+			},
+			wantBalances: map[string]sdk.Coins{
+				provider: sdk.NewCoins(),
+				valFoo:   tc.Coins(t, "50aaa,50bbb"),
+				valBar:   tc.Coins(t, "50aaa,50bbb"),
+			},
+		},
+		{
 			name: "rewards for validator with no profile should be distributed to the operator address",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
@@ -455,6 +482,49 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			wantBalances: map[string]sdk.Coins{
 				provider: tc.Coins(t, "50aaa,50bbb"),
 			},
+		},
+		{
+			name: "invalid signature counts yields critical error for negative reward pool",
+			rewardPool: types.RewardPool{
+				LaunchID:            1,
+				Provider:            provider,
+				InitialCoins:        tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:      tc.Coins(t, "100aaa,100bbb"),
+				CurrentRewardHeight: 10,
+				LastRewardHeight:    20,
+				Closed:              false,
+			},
+			args: args{
+				launchID: 1,
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrBar, "0.6"),
+				),
+				lastBlockHeight: 20,
+				closeRewardPool: false,
+			},
+			err: spnerrors.ErrCritical,
+		},
+		{
+			name: "critical error for signatureRatio GT 1",
+			rewardPool: types.RewardPool{
+				LaunchID:            1,
+				Provider:            provider,
+				InitialCoins:        tc.Coins(t, "100aaa,100bbb"),
+				RemainingCoins:      tc.Coins(t, "100aaa,100bbb"),
+				CurrentRewardHeight: 10,
+				LastRewardHeight:    20,
+				Closed:              false,
+			},
+			args: args{
+				launchID: 1,
+				signatureCounts: tc.SignatureCounts(1,
+					tc.SignatureCount(t, valOpAddrFoo, "1.0001"),
+				),
+				lastBlockHeight: 20,
+				closeRewardPool: false,
+			},
+			err: spnerrors.ErrCritical,
 		},
 		{
 			name: "should prevent distributing rewards with a non-existent reward pool",
