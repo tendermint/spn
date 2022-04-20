@@ -15,11 +15,6 @@ option go_package = "github.com/tendermint/spn/x/monitoringc/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/tendermint/spn/monitoringc/params";
-  }
-
   // Queries a list of VerifiedClientIds items.
   rpc VerifiedClientIds(QueryGetVerifiedClientIdsRequest) returns (QueryGetVerifiedClientIdsResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringc/verified_client_ids/{launchID}";
@@ -35,16 +30,6 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/monitoringc/provider_client_id";
   }
 
-  // Queries a LaunchIDFromVerifiedClientID by index.
-  rpc LaunchIDFromVerifiedClientID(QueryGetLaunchIDFromVerifiedClientIDRequest) returns (QueryGetLaunchIDFromVerifiedClientIDResponse) {
-    option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_verified_client_id/{clientID}";
-  }
-
-  // Queries a list of LaunchIDFromVerifiedClientID items.
-  rpc LaunchIDFromVerifiedClientIDAll(QueryAllLaunchIDFromVerifiedClientIDRequest) returns (QueryAllLaunchIDFromVerifiedClientIDResponse) {
-    option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_verified_client_id";
-  }
-
   // Queries a LaunchIDFromChannelID by index.
   rpc LaunchIDFromChannelID(QueryGetLaunchIDFromChannelIDRequest) returns (QueryGetLaunchIDFromChannelIDResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id/{channelID}";
@@ -55,26 +40,17 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/monitoringc/launch_id_from_channel_id";
   }
 
-	// Queries a MonitoringHistory by launch id.
-	rpc MonitoringHistory(QueryGetMonitoringHistoryRequest) returns (QueryGetMonitoringHistoryResponse) {
-		option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history/{launchID}";
-	}
+  // Queries a MonitoringHistory by launch id.
+  rpc MonitoringHistory(QueryGetMonitoringHistoryRequest) returns (QueryGetMonitoringHistoryResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history/{launchID}";
+  }
 
-	// Queries a list of MonitoringHistory items.
-	rpc MonitoringHistoryAll(QueryAllMonitoringHistoryRequest) returns (QueryAllMonitoringHistoryResponse) {
-		option (google.api.http).get = "/tendermint/spn/monitoringc/monitoring_history";
-	}
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/tendermint/spn/monitoringc/params";
+  }
 
-// this line is used by starport scaffolding # 2
-}
-
-// QueryParamsRequest is request type for the Query/Params RPC method.
-message QueryParamsRequest {}
-
-// QueryParamsResponse is response type for the Query/Params RPC method.
-message QueryParamsResponse {
-  // params holds all the parameters of this module.
-  Params params = 1 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetVerifiedClientIdsRequest {
@@ -102,23 +78,6 @@ message QueryAllProviderClientIDResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-message QueryGetLaunchIDFromVerifiedClientIDRequest {
-  string clientID = 1;
-}
-
-message QueryGetLaunchIDFromVerifiedClientIDResponse {
-  LaunchIDFromVerifiedClientID launchIDFromVerifiedClientID = 1 [(gogoproto.nullable) = false];
-}
-
-message QueryAllLaunchIDFromVerifiedClientIDRequest {
-  cosmos.base.query.v1beta1.PageRequest pagination = 1;
-}
-
-message QueryAllLaunchIDFromVerifiedClientIDResponse {
-  repeated LaunchIDFromVerifiedClientID launchIDFromVerifiedClientID = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
-
 message QueryGetLaunchIDFromChannelIDRequest {
   string channelID = 1;
 }
@@ -137,20 +96,19 @@ message QueryAllLaunchIDFromChannelIDResponse {
 }
 
 message QueryGetMonitoringHistoryRequest {
-	  uint64 launchID = 1;
+  uint64 launchID = 1;
 }
 
 message QueryGetMonitoringHistoryResponse {
-	MonitoringHistory monitoringHistory = 1 [(gogoproto.nullable) = false];
+  MonitoringHistory monitoringHistory = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryAllMonitoringHistoryRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
-}
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
 
-message QueryAllMonitoringHistoryResponse {
-	repeated MonitoringHistory monitoringHistory = 1 [(gogoproto.nullable) = false];
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
 }
 
 // this line is used by starport scaffolding # 3

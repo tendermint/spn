@@ -11,6 +11,8 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
+	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -19,6 +21,8 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v2/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
+	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
+	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	tmdb "github.com/tendermint/tm-db"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -30,6 +34,8 @@ import (
 	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
 	monitoringpmodulekeeper "github.com/tendermint/spn/x/monitoringp/keeper"
 	monitoringpmoduletypes "github.com/tendermint/spn/x/monitoringp/types"
+	participationkeeper "github.com/tendermint/spn/x/participation/keeper"
+	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 	rewardmodulekeeper "github.com/tendermint/spn/x/reward/keeper"
@@ -39,12 +45,14 @@ import (
 var (
 	moduleAccountPerms = map[string][]string{
 		authtypes.FeeCollectorName:     nil,
+		distrtypes.ModuleName:          nil,
 		minttypes.ModuleName:           {authtypes.Minter},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
 		campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
+		fundraisingtypes.ModuleName:    nil,
 	}
 )
 
@@ -65,6 +73,16 @@ func newInitializer() initializer {
 		DB:         db,
 		StateStore: stateStore,
 	}
+}
+
+// ModuleAccountAddrs returns all the app's module account addresses.
+func ModuleAccountAddrs(maccPerms map[string][]string) map[string]bool {
+	modAccAddrs := make(map[string]bool)
+	for acc := range maccPerms {
+		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
+	}
+
+	return modAccAddrs
 }
 
 func (i initializer) Param() paramskeeper.Keeper {
@@ -95,11 +113,7 @@ func (i initializer) Bank(paramKeeper paramskeeper.Keeper, authKeeper authkeeper
 	paramKeeper.Subspace(banktypes.ModuleName)
 	bankSubspace, _ := paramKeeper.GetSubspace(banktypes.ModuleName)
 
-	// module account addresses
-	modAccAddrs := make(map[string]bool)
-	for acc := range moduleAccountPerms {
-		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
-	}
+	modAccAddrs := ModuleAccountAddrs(moduleAccountPerms)
 
 	return bankkeeper.NewBaseKeeper(i.Codec, storeKey, authKeeper, bankSubspace, modAccAddrs)
 }
@@ -123,9 +137,9 @@ func (i initializer) Staking(
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 
 	paramKeeper.Subspace(stakingtypes.ModuleName)
-	statkingSubspace, _ := paramKeeper.GetSubspace(stakingtypes.ModuleName)
+	stakingSubspace, _ := paramKeeper.GetSubspace(stakingtypes.ModuleName)
 
-	return stakingkeeper.NewKeeper(i.Codec, storeKey, authKeeper, bankKeeper, statkingSubspace)
+	return stakingkeeper.NewKeeper(i.Codec, storeKey, authKeeper, bankKeeper, stakingSubspace)
 }
 
 func (i initializer) IBC(
@@ -147,6 +161,29 @@ func (i initializer) IBC(
 	)
 }
 
+func (i initializer) Distribution(
+	authKeeper authkeeper.AccountKeeper,
+	bankKeeper bankkeeper.Keeper,
+	stakingKeeper stakingkeeper.Keeper,
+	paramKeeper paramskeeper.Keeper,
+) distrkeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(distrtypes.StoreKey)
+	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
+
+	modAccAddrs := ModuleAccountAddrs(moduleAccountPerms)
+
+	return distrkeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		paramKeeper.Subspace(distrtypes.ModuleName),
+		authKeeper,
+		bankKeeper,
+		stakingKeeper,
+		authtypes.FeeCollectorName,
+		modAccAddrs,
+	)
+}
+
 func (i initializer) Profile() *profilekeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(profiletypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(profiletypes.MemStoreKey)
@@ -159,6 +196,7 @@ func (i initializer) Profile() *profilekeeper.Keeper {
 
 func (i initializer) Launch(
 	profileKeeper *profilekeeper.Keeper,
+	distrKeeper distrkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 ) *launchkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(launchtypes.StoreKey)
@@ -170,13 +208,16 @@ func (i initializer) Launch(
 	paramKeeper.Subspace(launchtypes.ModuleName)
 	launchSubspace, _ := paramKeeper.GetSubspace(launchtypes.ModuleName)
 
-	return launchkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, launchSubspace, profileKeeper)
+	return launchkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, launchSubspace, distrKeeper, profileKeeper)
 }
 
 func (i initializer) Campaign(
 	launchKeeper *launchkeeper.Keeper,
 	profileKeeper *profilekeeper.Keeper,
 	bankKeeper bankkeeper.Keeper,
+	distrKeeper distrkeeper.Keeper,
+	rewardKeeper rewardmodulekeeper.Keeper,
+	paramKeeper paramskeeper.Keeper,
 ) *campaignkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(campaigntypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(campaigntypes.MemStoreKey)
@@ -184,29 +225,44 @@ func (i initializer) Campaign(
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
 
-	return campaignkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, launchKeeper, bankKeeper, profileKeeper)
+	paramKeeper.Subspace(campaigntypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(campaigntypes.ModuleName)
+
+	return campaignkeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		memStoreKey,
+		subspace,
+		launchKeeper,
+		bankKeeper,
+		distrKeeper,
+		profileKeeper,
+		rewardKeeper,
+	)
 }
 
 func (i initializer) Reward(
+	authKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
 	profileKeeper *profilekeeper.Keeper,
 	launchKeeper *launchkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 ) *rewardmodulekeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(monitoringpmoduletypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(monitoringpmoduletypes.MemStoreKey)
+	storeKey := sdk.NewKVStoreKey(rewardmoduletypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(rewardmoduletypes.MemStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
 
-	paramKeeper.Subspace(monitoringpmoduletypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(monitoringpmoduletypes.ModuleName)
+	paramKeeper.Subspace(rewardmoduletypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(rewardmoduletypes.ModuleName)
 
 	return rewardmodulekeeper.NewKeeper(
 		i.Codec,
 		storeKey,
 		memStoreKey,
 		subspace,
+		authKeeper,
 		bankKeeper,
 		profileKeeper,
 		launchKeeper,
@@ -260,6 +316,7 @@ func (i initializer) Monitoringc(
 }
 
 func (i initializer) Monitoringp(
+	stakingKeeper stakingkeeper.Keeper,
 	ibcKeeper ibckeeper.Keeper,
 	capabilityKeeper capabilitykeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
@@ -293,10 +350,61 @@ func (i initializer) Monitoringp(
 		storeKey,
 		memStoreKey,
 		subspace,
+		stakingKeeper,
 		ibcKeeper.ClientKeeper,
 		connKeeper,
 		channelKeeper,
 		&ibcKeeper.PortKeeper,
 		scopedMonitoringKeeper,
+	)
+}
+
+func (i initializer) Fundraising(
+	paramKeeper paramskeeper.Keeper,
+	authKeeper authkeeper.AccountKeeper,
+	bankKeeper bankkeeper.Keeper,
+	disKeeper distrkeeper.Keeper,
+) *fundraisingkeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(fundraisingtypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(fundraisingtypes.MemStoreKey)
+
+	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
+	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
+
+	paramKeeper.Subspace(fundraisingtypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(fundraisingtypes.ModuleName)
+
+	return fundraisingkeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		memStoreKey,
+		subspace,
+		authKeeper,
+		bankKeeper,
+		disKeeper,
+	)
+}
+
+func (i initializer) Participation(
+	paramKeeper paramskeeper.Keeper,
+	fundraisingKeeper *fundraisingkeeper.Keeper,
+	stakingKeeper stakingkeeper.Keeper,
+) *participationkeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(participationtypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(participationtypes.MemStoreKey)
+
+	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
+	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
+
+	paramKeeper.Subspace(participationtypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(participationtypes.ModuleName)
+
+	return participationkeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		memStoreKey,
+		subspace,
+		fundraisingKeeper,
+		stakingKeeper,
 	)
 }

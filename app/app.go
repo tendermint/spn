@@ -27,6 +27,10 @@ import (
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/vesting"
+	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
+	"github.com/cosmos/cosmos-sdk/x/authz"
+	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
+	authzmodule "github.com/cosmos/cosmos-sdk/x/authz/module"
 	"github.com/cosmos/cosmos-sdk/x/bank"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -78,8 +82,8 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/v2/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
+	"github.com/ignite-hq/cli/ignite/pkg/openapiconsole"
 	"github.com/spf13/cast"
-	"github.com/tendermint/starport/starport/pkg/openapiconsole"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
@@ -87,6 +91,11 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/tendermint/spn/docs"
+	spntypes "github.com/tendermint/spn/pkg/types"
+
+	monitoringpmodule "github.com/tendermint/spn/x/monitoringp"
+	monitoringpmodulekeeper "github.com/tendermint/spn/x/monitoringp/keeper"
+	monitoringpmoduletypes "github.com/tendermint/spn/x/monitoringp/types"
 
 	monitoringcmodule "github.com/tendermint/spn/x/monitoringc"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -112,15 +121,13 @@ import (
 	rewardmodulekeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardmoduletypes "github.com/tendermint/spn/x/reward/types"
 
+	participationmodule "github.com/tendermint/spn/x/participation"
+	participationmodulekeeper "github.com/tendermint/spn/x/participation/keeper"
+	participationmoduletypes "github.com/tendermint/spn/x/participation/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
-	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
-)
-
-const (
-	AccountAddressPrefix = "spn"
-	Name                 = "spn"
-	DefaultChainID       = "spn-1"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -160,32 +167,37 @@ var (
 		crisis.AppModuleBasic{},
 		slashing.AppModuleBasic{},
 		feegrantmodule.AppModuleBasic{},
+		authzmodule.AppModuleBasic{},
 		ibc.AppModuleBasic{},
 		upgrade.AppModuleBasic{},
 		evidence.AppModuleBasic{},
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
+		participationmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		profilemodule.AppModuleBasic{},
 		launchmodule.AppModuleBasic{},
 		campaignmodule.AppModuleBasic{},
 		monitoringcmodule.AppModuleBasic{},
+		monitoringpmodule.AppModuleBasic{},
 		rewardmodule.AppModuleBasic{},
 		fundraisingmodule.AppModuleBasic{},
 	)
 
 	// module account permissions
 	maccPerms = map[string][]string{
-		authtypes.FeeCollectorName:     nil,
-		distrtypes.ModuleName:          nil,
-		minttypes.ModuleName:           {authtypes.Minter},
-		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:            {authtypes.Burner},
-		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		campaignmoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner},
-		rewardmoduletypes.ModuleName:   nil,
-		fundraisingtypes.ModuleName:    nil,
+		authtypes.FeeCollectorName:        nil,
+		distrtypes.ModuleName:             nil,
+		minttypes.ModuleName:              {authtypes.Minter},
+		stakingtypes.BondedPoolName:       {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:    {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:               {authtypes.Burner},
+		ibctransfertypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
+		campaignmoduletypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		rewardmoduletypes.ModuleName:      nil,
+		fundraisingtypes.ModuleName:       nil,
+		monitoringcmoduletypes.ModuleName: nil,
+		monitoringpmoduletypes.ModuleName: nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -202,7 +214,7 @@ func init() {
 		panic(err)
 	}
 
-	DefaultNodeHome = filepath.Join(userHomeDir, "."+Name)
+	DefaultNodeHome = filepath.Join(userHomeDir, "."+spntypes.Name)
 }
 
 // App extends an ABCI application, but with most of its parameters exported.
@@ -238,6 +250,7 @@ type App struct {
 	EvidenceKeeper    evidencekeeper.Keeper
 	TransferKeeper    ibctransferkeeper.Keeper
 	FeeGrantKeeper    feegrantkeeper.Keeper
+	AuthzKeeper       authzkeeper.Keeper
 	FundraisingKeeper fundraisingkeeper.Keeper
 
 	// make scoped keepers public for test purposes
@@ -246,12 +259,16 @@ type App struct {
 
 	ScopedMonitoringcKeeper capabilitykeeper.ScopedKeeper
 
-	ProfileKeeper     profilemodulekeeper.Keeper
-	LaunchKeeper      launchmodulekeeper.Keeper
-	CampaignKeeper    campaignmodulekeeper.Keeper
-	MonitoringcKeeper monitoringcmodulekeeper.Keeper
-	RewardKeeper      rewardmodulekeeper.Keeper
+	ProfileKeeper       profilemodulekeeper.Keeper
+	LaunchKeeper        launchmodulekeeper.Keeper
+	CampaignKeeper      campaignmodulekeeper.Keeper
+	MonitoringcKeeper   monitoringcmodulekeeper.Keeper
+	MonitoringpKeeper   monitoringpmodulekeeper.Keeper
+	RewardKeeper        rewardmodulekeeper.Keeper
+	ParticipationKeeper participationmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
+
+	transferModule transfer.AppModule
 
 	// the module manager
 	mm *module.Manager
@@ -260,7 +277,7 @@ type App struct {
 	sm *module.SimulationManager
 }
 
-// New returns a reference to an initialized Gaia.
+// New returns a reference to an initialized spn app.
 func New(
 	logger log.Logger,
 	db dbm.DB,
@@ -278,7 +295,7 @@ func New(
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
 
-	bApp := baseapp.NewBaseApp(Name, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
+	bApp := baseapp.NewBaseApp(spntypes.Name, logger, db, encodingConfig.TxConfig.TxDecoder(), baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
 	bApp.SetVersion(version.Version)
 	bApp.SetInterfaceRegistry(interfaceRegistry)
@@ -295,6 +312,7 @@ func New(
 		ibchost.StoreKey,
 		upgradetypes.StoreKey,
 		feegrant.StoreKey,
+		authzkeeper.StoreKey,
 		evidencetypes.StoreKey,
 		ibctransfertypes.StoreKey,
 		capabilitytypes.StoreKey,
@@ -302,8 +320,10 @@ func New(
 		launchmoduletypes.StoreKey,
 		campaignmoduletypes.StoreKey,
 		monitoringcmoduletypes.StoreKey,
+		monitoringpmoduletypes.StoreKey,
 		rewardmoduletypes.StoreKey,
 		fundraisingtypes.StoreKey,
+		participationmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -336,6 +356,11 @@ func New(
 	// add keepers
 	app.AuthKeeper = authkeeper.NewAccountKeeper(
 		appCodec, keys[authtypes.StoreKey], app.GetSubspace(authtypes.ModuleName), authtypes.ProtoBaseAccount, maccPerms,
+	)
+	app.AuthzKeeper = authzkeeper.NewKeeper(
+		keys[authzkeeper.StoreKey],
+		appCodec,
+		app.BaseApp.MsgServiceRouter(),
 	)
 	app.BankKeeper = bankkeeper.NewBaseKeeper(
 		appCodec, keys[banktypes.StoreKey], app.AuthKeeper, app.GetSubspace(banktypes.ModuleName), app.ModuleAccountAddrs(),
@@ -388,7 +413,7 @@ func New(
 		app.IBCKeeper.ChannelKeeper, &app.IBCKeeper.PortKeeper,
 		app.AuthKeeper, app.BankKeeper, scopedTransferKeeper,
 	)
-	transferModule := transfer.NewAppModule(app.TransferKeeper)
+	app.transferModule = transfer.NewAppModule(app.TransferKeeper)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -409,7 +434,7 @@ func New(
 		app.GetSubspace(fundraisingtypes.ModuleName),
 		app.AuthKeeper,
 		app.BankKeeper,
-		make(map[string]bool),
+		app.DistrKeeper,
 	)
 
 	app.ProfileKeeper = *profilemodulekeeper.NewKeeper(
@@ -423,30 +448,34 @@ func New(
 		keys[launchmoduletypes.StoreKey],
 		keys[launchmoduletypes.MemStoreKey],
 		app.GetSubspace(launchmoduletypes.ModuleName),
+		app.DistrKeeper,
 		app.ProfileKeeper,
 	)
-
-	campaignKeeper := campaignmodulekeeper.NewKeeper(
-		appCodec,
-		keys[campaignmoduletypes.StoreKey],
-		keys[campaignmoduletypes.MemStoreKey],
-		&app.LaunchKeeper,
-		app.BankKeeper,
-		app.ProfileKeeper,
-	)
-	app.CampaignKeeper = *campaignKeeper
-	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
 
 	app.RewardKeeper = *rewardmodulekeeper.NewKeeper(
 		appCodec,
 		keys[rewardmoduletypes.StoreKey],
 		keys[rewardmoduletypes.MemStoreKey],
 		app.GetSubspace(rewardmoduletypes.ModuleName),
+		app.AuthKeeper,
 		app.BankKeeper,
 		app.ProfileKeeper,
 		app.LaunchKeeper,
 	)
-	rewardModule := rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper)
+
+	campaignKeeper := campaignmodulekeeper.NewKeeper(
+		appCodec,
+		keys[campaignmoduletypes.StoreKey],
+		keys[campaignmoduletypes.MemStoreKey],
+		app.GetSubspace(campaignmoduletypes.ModuleName),
+		&app.LaunchKeeper,
+		app.BankKeeper,
+		app.DistrKeeper,
+		app.ProfileKeeper,
+		app.RewardKeeper,
+	)
+	app.CampaignKeeper = *campaignKeeper
+	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
 
 	scopedMonitoringcKeeper := app.CapabilityKeeper.ScopeToModule(monitoringcmoduletypes.ModuleName)
 	app.ScopedMonitoringcKeeper = scopedMonitoringcKeeper
@@ -463,14 +492,40 @@ func New(
 		app.LaunchKeeper,
 		app.RewardKeeper,
 	)
+	app.LaunchKeeper.SetMonitoringcKeeper(app.MonitoringcKeeper)
 	monitoringcModule := monitoringcmodule.NewAppModule(appCodec, app.MonitoringcKeeper, app.AuthKeeper, app.BankKeeper)
+
+	scopedMonitoringKeeper := app.CapabilityKeeper.ScopeToModule(monitoringpmoduletypes.ModuleName)
+	app.MonitoringpKeeper = *monitoringpmodulekeeper.NewKeeper(
+		appCodec,
+		keys[monitoringpmoduletypes.StoreKey],
+		keys[monitoringpmoduletypes.MemStoreKey],
+		app.GetSubspace(monitoringpmoduletypes.ModuleName),
+		app.StakingKeeper,
+		app.IBCKeeper.ClientKeeper,
+		app.IBCKeeper.ConnectionKeeper,
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		scopedMonitoringKeeper,
+	)
+	monitoringpModule := monitoringpmodule.NewAppModule(appCodec, app.MonitoringpKeeper)
+
+	app.ParticipationKeeper = *participationmodulekeeper.NewKeeper(
+		appCodec,
+		keys[participationmoduletypes.StoreKey],
+		keys[participationmoduletypes.MemStoreKey],
+		app.GetSubspace(participationmoduletypes.ModuleName),
+		app.FundraisingKeeper,
+		app.StakingKeeper,
+	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferModule)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, app.transferModule)
 	ibcRouter.AddRoute(monitoringcmoduletypes.ModuleName, monitoringcModule)
+	ibcRouter.AddRoute(monitoringpmoduletypes.ModuleName, monitoringpModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
@@ -493,6 +548,7 @@ func New(
 		bank.NewAppModule(appCodec, app.BankKeeper, app.AuthKeeper),
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
 		feegrantmodule.NewAppModule(appCodec, app.AuthKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
+		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AuthKeeper, app.BankKeeper, app.interfaceRegistry),
 		crisis.NewAppModule(&app.CrisisKeeper, skipGenesisInvariants),
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AuthKeeper, app.BankKeeper),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AuthKeeper),
@@ -503,13 +559,15 @@ func New(
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
-		transferModule,
+		app.transferModule,
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		monitoringcModule,
-		rewardModule,
-		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),
+		monitoringpModule,
+		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
+		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper, app.DistrKeeper),
+		participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper, app.FundraisingKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -525,16 +583,54 @@ func New(
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
 		stakingtypes.ModuleName,
+		vestingtypes.ModuleName,
 		ibchost.ModuleName,
+		ibctransfertypes.ModuleName,
+		authtypes.ModuleName,
+		banktypes.ModuleName,
+		govtypes.ModuleName,
+		crisistypes.ModuleName,
+		genutiltypes.ModuleName,
+		authz.ModuleName,
 		feegrant.ModuleName,
+		paramstypes.ModuleName,
+		profilemoduletypes.ModuleName,
+		fundraisingtypes.ModuleName,
+		rewardmoduletypes.ModuleName,
+		campaignmoduletypes.ModuleName,
+		monitoringcmoduletypes.ModuleName,
+		monitoringpmoduletypes.ModuleName,
+		participationmoduletypes.ModuleName,
+		launchmoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
+		fundraisingtypes.ModuleName,
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
+		capabilitytypes.ModuleName,
+		authtypes.ModuleName,
+		banktypes.ModuleName,
+		distrtypes.ModuleName,
+		slashingtypes.ModuleName,
+		vestingtypes.ModuleName,
+		minttypes.ModuleName,
+		genutiltypes.ModuleName,
+		evidencetypes.ModuleName,
+		authz.ModuleName,
 		feegrant.ModuleName,
-		fundraisingtypes.ModuleName,
+		paramstypes.ModuleName,
+		upgradetypes.ModuleName,
+		ibchost.ModuleName,
+		ibctransfertypes.ModuleName,
+		profilemoduletypes.ModuleName,
+		rewardmoduletypes.ModuleName,
+		campaignmoduletypes.ModuleName,
+		monitoringcmoduletypes.ModuleName,
+		monitoringpmoduletypes.ModuleName,
+		participationmoduletypes.ModuleName,
+		launchmoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -548,6 +644,7 @@ func New(
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
 		stakingtypes.ModuleName,
+		vestingtypes.ModuleName,
 		slashingtypes.ModuleName,
 		govtypes.ModuleName,
 		minttypes.ModuleName,
@@ -555,13 +652,19 @@ func New(
 		ibchost.ModuleName,
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
+		paramstypes.ModuleName,
+		upgradetypes.ModuleName,
 		ibctransfertypes.ModuleName,
+		authz.ModuleName,
+		feegrant.ModuleName,
 		profilemoduletypes.ModuleName,
 		launchmoduletypes.ModuleName,
 		campaignmoduletypes.ModuleName,
 		monitoringcmoduletypes.ModuleName,
+		monitoringpmoduletypes.ModuleName,
 		rewardmoduletypes.ModuleName,
 		fundraisingtypes.ModuleName,
+		participationmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -575,6 +678,7 @@ func New(
 		bank.NewAppModule(appCodec, app.BankKeeper, app.AuthKeeper),
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
 		feegrantmodule.NewAppModule(appCodec, app.AuthKeeper, app.BankKeeper, app.FeeGrantKeeper, app.interfaceRegistry),
+		authzmodule.NewAppModule(appCodec, app.AuthzKeeper, app.AuthKeeper, app.BankKeeper, app.interfaceRegistry),
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AuthKeeper, app.BankKeeper),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AuthKeeper),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AuthKeeper, app.BankKeeper),
@@ -583,14 +687,14 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
 		ibc.NewAppModule(app.IBCKeeper),
-		transferModule,
+		app.transferModule,
 		profilemodule.NewAppModule(appCodec, app.ProfileKeeper, app.AuthKeeper, app.BankKeeper),
 		launchmodule.NewAppModule(appCodec, app.LaunchKeeper, app.AuthKeeper, app.BankKeeper),
 		campaignmodule.NewAppModule(appCodec, app.CampaignKeeper, app.AuthKeeper, app.BankKeeper, app.ProfileKeeper),
 		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
-
-		// TODO: Include fundraising for simapp when available
-		// fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper),
+		participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper, app.FundraisingKeeper),
+		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper, app.DistrKeeper),
+		monitoringpModule,
 	)
 	app.sm.RegisterStoreDecoders()
 
@@ -681,7 +785,7 @@ func (app *App) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }
 
-// AppCodec returns Gaia's app codec.
+// AppCodec returns spn's app codec.
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
@@ -689,7 +793,7 @@ func (app *App) AppCodec() codec.Codec {
 	return app.appCodec
 }
 
-// InterfaceRegistry returns Gaia's InterfaceRegistry
+// InterfaceRegistry returns spn's InterfaceRegistry
 func (app *App) InterfaceRegistry() types.InterfaceRegistry {
 	return app.interfaceRegistry
 }
@@ -741,7 +845,7 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 
 	// register app's OpenAPI routes.
 	apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(http.FS(docs.Docs)))
-	apiSvr.Router.HandleFunc("/", openapiconsole.Handler(Name, "/static/openapi.yml"))
+	apiSvr.Router.HandleFunc("/", openapiconsole.Handler(spntypes.Name, "/static/openapi.yml"))
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.
@@ -781,8 +885,10 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(launchmoduletypes.ModuleName)
 	paramsKeeper.Subspace(campaignmoduletypes.ModuleName)
 	paramsKeeper.Subspace(monitoringcmoduletypes.ModuleName)
+	paramsKeeper.Subspace(monitoringpmoduletypes.ModuleName)
 	paramsKeeper.Subspace(rewardmoduletypes.ModuleName)
 	paramsKeeper.Subspace(fundraisingtypes.ModuleName)
+	paramsKeeper.Subspace(participationmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

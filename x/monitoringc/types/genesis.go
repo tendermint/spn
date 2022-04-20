@@ -6,9 +6,6 @@ import (
 	host "github.com/cosmos/ibc-go/v2/modules/core/24-host"
 )
 
-// DefaultIndex is the default capability global index
-const DefaultIndex uint64 = 1
-
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
@@ -60,7 +57,7 @@ func (gs GenesisState) Validate() error {
 		// Check if the client id exist
 		key := clientIDKey(elem.LaunchID, elem.ClientID)
 		if _, ok := clientIDMap[key]; !ok {
-			return fmt.Errorf("client id from ProviderClientIDList list not found")
+			return fmt.Errorf("client id from providerClientID list not found")
 		}
 		providerClientIDIndexMap[index] = struct{}{}
 	}
@@ -75,7 +72,7 @@ func (gs GenesisState) Validate() error {
 		// Check if the client id exist
 		key := clientIDKey(elem.LaunchID, elem.ClientID)
 		if _, ok := clientIDMap[key]; !ok {
-			return fmt.Errorf("client id from launchIDFromVerifiedClientID not found")
+			return fmt.Errorf("client id from launchIDFromVerifiedClientID list not found")
 		}
 		launchIDFromVerifiedClientIDIndexMap[index] = struct{}{}
 	}

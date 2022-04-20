@@ -39,7 +39,7 @@ func (k Keeper) OnRecvMonitoringPacket(
 		ctx,
 		lidFromCid.LaunchID,
 		data.SignatureCounts,
-		uint64(data.BlockHeight),
+		data.BlockHeight,
 		true,
 	)
 

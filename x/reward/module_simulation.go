@@ -3,31 +3,18 @@ package reward
 import (
 	"math/rand"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"github.com/tendermint/spn/testutil/sample"
 	rewardsimulation "github.com/tendermint/spn/x/reward/simulation"
 	"github.com/tendermint/spn/x/reward/types"
 )
 
-// avoid unused import issue
-var (
-	_ = sample.AccAddress
-	_ = rewardsimulation.FindAccount
-	_ = simappparams.StakePerAccount
-	_ = simulation.MsgEntryKind
-	_ = baseapp.Paramspace
-)
-
 const (
-	opWeightMsgSetRewards = "op_weight_msg_create_chain"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgSetRewards int = 100
+	opWeightMsgSetRewards          = "op_weight_msg_set_rewards"
+	defaultWeightMsgSetRewards int = 50
 
 	// this line is used by starport scaffolding # simapp/module/const
 )

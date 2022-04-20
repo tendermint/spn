@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -10,55 +12,68 @@ import (
 )
 
 func TestDuplicatedAccountInvariant(t *testing.T) {
-	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
-		k.SetVestingAccount(ctx, sample.VestingAccount(0, sample.Address()))
-		k.SetGenesisAccount(ctx, sample.GenesisAccount(0, sample.Address()))
-		_, isValid := keeper.DuplicatedAccountInvariant(*k)(ctx)
-		require.Equal(t, false, isValid)
+		tk.LaunchKeeper.SetVestingAccount(ctx, sample.VestingAccount(r, 0, sample.Address(r)))
+		tk.LaunchKeeper.SetGenesisAccount(ctx, sample.GenesisAccount(r, 0, sample.Address(r)))
+		msg, broken := keeper.DuplicatedAccountInvariant(*tk.LaunchKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		addr := sample.Address()
-		k.SetVestingAccount(ctx, sample.VestingAccount(0, addr))
-		k.SetGenesisAccount(ctx, sample.GenesisAccount(0, addr))
-		_, isValid := keeper.DuplicatedAccountInvariant(*k)(ctx)
-		require.Equal(t, true, isValid)
+		addr := sample.Address(r)
+		tk.LaunchKeeper.SetVestingAccount(ctx, sample.VestingAccount(r, 0, addr))
+		tk.LaunchKeeper.SetGenesisAccount(ctx, sample.GenesisAccount(r, 0, addr))
+		msg, broken := keeper.DuplicatedAccountInvariant(*tk.LaunchKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
 
-func TestZeroLaunchTimestampInvariant(t *testing.T) {
-	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
+func TestInvalidChainInvariant(t *testing.T) {
 	t.Run("valid case", func(t *testing.T) {
-		chain := sample.Chain(0, 0)
-		chain.LaunchTimestamp = 1000
-		chain.LaunchID = k.AppendChain(ctx, chain)
-		_, isValid := keeper.ZeroLaunchTimestampInvariant(*k)(ctx)
-		require.Equal(t, false, isValid)
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+		chain := sample.Chain(r, 0, 0)
+		campaign := sample.Campaign(r, 0)
+		chain.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
+		chain.HasCampaign = true
+		_ = tk.LaunchKeeper.AppendChain(ctx, chain)
+		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
-	t.Run("invalid case", func(t *testing.T) {
-		chain := sample.Chain(0, 0)
-		chain.LaunchTimestamp = 0
-		chain.LaunchID = k.AppendChain(ctx, chain)
-		_, isValid := keeper.ZeroLaunchTimestampInvariant(*k)(ctx)
-		require.Equal(t, true, isValid)
+	t.Run("invalid case - chain already launched", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+		chain := sample.Chain(r, 0, 0)
+		chain.LaunchTriggered = true
+		_ = tk.LaunchKeeper.AppendChain(ctx, chain)
+		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
+		require.True(t, broken, msg)
+	})
+
+	t.Run("invalid case - chain does not have a valid associated campaign", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+		chain := sample.Chain(r, 0, 0)
+		chain.HasCampaign = true
+		chain.CampaignID = 1000
+		_ = tk.LaunchKeeper.AppendChain(ctx, chain)
+		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }
 
 func TestUnknownRequestTypeInvariant(t *testing.T) {
-	k, _, _, _, _, _, ctx := setupMsgServer(t) //nolint
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
-		k.AppendRequest(ctx, sample.Request(0, sample.Address()))
-		_, isValid := keeper.UnknownRequestTypeInvariant(*k)(ctx)
-		require.Equal(t, false, isValid)
+		tk.LaunchKeeper.AppendRequest(ctx, sample.Request(r, 0, sample.Address(r)))
+		msg, broken := keeper.UnknownRequestTypeInvariant(*tk.LaunchKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		k.AppendRequest(ctx, sample.RequestWithContent(0,
-			sample.GenesisAccountContent(0, "invalid"),
+		tk.LaunchKeeper.AppendRequest(ctx, sample.RequestWithContent(r, 0,
+			sample.GenesisAccountContent(r, 0, "invalid"),
 		))
-		_, isValid := keeper.UnknownRequestTypeInvariant(*k)(ctx)
-		require.Equal(t, true, isValid)
+		msg, broken := keeper.UnknownRequestTypeInvariant(*tk.LaunchKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }

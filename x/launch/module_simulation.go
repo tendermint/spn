@@ -1,7 +1,6 @@
 package launch
 
 import (
-	"fmt"
 	"math/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -10,7 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
-	launchsimulation "github.com/tendermint/spn/x/launch/simulation"
+	launchsim "github.com/tendermint/spn/x/launch/simulation"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -25,6 +24,7 @@ const (
 	defaultWeightMsgSettleRequest            int = 50
 	defaultWeightMsgTriggerLaunch            int = 15
 	defaultWeightMsgRevertLaunch             int = 0
+	defaultWeightMsgUpdateLaunchInformation  int = 20
 
 	opWeightMsgCreateChain              = "op_weight_msg_create_chain"
 	opWeightMsgEditChain                = "op_weight_msg_edit_chain"
@@ -36,6 +36,9 @@ const (
 	opWeightMsgTriggerLaunch            = "op_weight_msg_trigger_launch"
 	opWeightMsgRevertLaunch             = "op_weight_msg_revert_launch"
 	opWeightMsgSettleRequest            = "op_weight_msg_settle_request"
+	opWeightMsgUpdateLaunchInformation  = "op_weight_msg_update_launch_information"
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -44,7 +47,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 	}
-	launchGenesis := sample.LaunchGenesisState(accs...)
+	launchGenesis := sample.LaunchGenesisState(simState.Rand, accs...)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&launchGenesis)
 }
 
@@ -54,14 +57,14 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-	launchParams := sample.LaunchParams()
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+	launchParams := sample.LaunchParams(r)
 	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMinLaunchTime), func(r *rand.Rand) string {
-			return fmt.Sprintf("\"%d\"", launchParams.MinLaunchTime)
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyLaunchTimeRange), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(launchParams.LaunchTimeRange))
 		}),
-		simulation.NewSimParamChange(types.ModuleName, string(types.KeyMaxLaunchTime), func(r *rand.Rand) string {
-			return fmt.Sprintf("\"%d\"", launchParams.MaxLaunchTime)
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyChainCreationFee), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(launchParams.ChainCreationFee))
 		}),
 	}
 }
@@ -71,6 +74,7 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+	// this line is used by starport scaffolding # simapp/module/operation
 	var (
 		weightMsgCreateChain              int
 		weightMsgEditChain                int
@@ -82,6 +86,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgTriggerLaunch            int
 		weightMsgRevertLaunch             int
 		weightMsgSettleRequest            int
+		weightMsgUpdateLaunchInformation  int
 	)
 
 	appParams := simState.AppParams
@@ -91,6 +96,12 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgCreateChain = defaultWeightMsgCreateChain
 		},
 	)
+	appParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateLaunchInformation, &weightMsgUpdateLaunchInformation, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateLaunchInformation = defaultWeightMsgUpdateLaunchInformation
+		},
+	)
+
 	appParams.GetOrGenerate(cdc, opWeightMsgEditChain, &weightMsgEditChain, nil,
 		func(_ *rand.Rand) {
 			weightMsgEditChain = defaultWeightMsgEditChain
@@ -145,43 +156,47 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateChain,
-			launchsimulation.SimulateMsgCreateChain(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgCreateChain(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgEditChain,
-			launchsimulation.SimulateMsgEditChain(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgEditChain(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddGenesisAccount,
-			launchsimulation.SimulateMsgRequestAddGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestAddGenesisAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddVestingAccount,
-			launchsimulation.SimulateMsgRequestAddVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestAddVestingAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestRemoveAccount,
-			launchsimulation.SimulateMsgRequestRemoveAccount(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestRemoveAccount(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestAddValidator,
-			launchsimulation.SimulateMsgRequestAddValidator(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestAddValidator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRequestRemoveValidator,
-			launchsimulation.SimulateMsgRequestRemoveValidator(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRequestRemoveValidator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgTriggerLaunch,
-			launchsimulation.SimulateMsgTriggerLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgTriggerLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgSettleRequest,
-			launchsimulation.SimulateMsgSettleRequest(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgSettleRequest(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRevertLaunch,
-			launchsimulation.SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+			launchsim.SimulateMsgRevertLaunch(am.accountKeeper, am.bankKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgUpdateLaunchInformation,
+			launchsim.SimulateMsgUpdateLaunchInformation(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }

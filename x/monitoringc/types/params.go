@@ -5,10 +5,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-var (
-	KeyDebugMode = []byte("DebugMode")
-)
-
 var _ paramtypes.ParamSet = (*Params)(nil)
 
 // ParamKeyTable the param key table for launch module
@@ -17,26 +13,18 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(debugMode bool) Params {
-	return Params{
-		DebugMode: debugMode,
-	}
+func NewParams() Params {
+	return Params{}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(false)
+	return NewParams()
 }
 
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(
-			KeyDebugMode,
-			&p.DebugMode,
-			func(i interface{}) error { return nil },
-		),
-	}
+	return paramtypes.ParamSetPairs{}
 }
 
 // Validate validates the set of params

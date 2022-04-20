@@ -33,6 +33,49 @@ func FindAccount(accs []simtypes.Account, address string) (simtypes.Account, err
 	return simAccount, nil
 }
 
+// FindCoordinatorCampaign finds a campaign associated with a coordinator
+// and returns if it is associated with a chain
+func FindCoordinatorCampaign(
+	r *rand.Rand,
+	ctx sdk.Context,
+	ck types.CampaignKeeper,
+	coordID uint64,
+	chainID uint64,
+) (uint64, bool) {
+	campaigns := ck.GetAllCampaign(ctx)
+
+	campNb := len(campaigns)
+	if campNb == 0 {
+		return 0, false
+	}
+
+	// Randomize the set
+	r.Shuffle(len(campaigns), func(i, j int) {
+		campaigns[i], campaigns[j] = campaigns[j], campaigns[i]
+	})
+
+	// check if campaign is already associated with chain
+	for _, campaign := range campaigns {
+		if campaign.CoordinatorID == coordID {
+			// get chain ids
+			campaignChains, hasChains := ck.GetCampaignChains(ctx, campaign.CampaignID)
+			if !hasChains {
+				return campaign.CampaignID, true
+			}
+
+			for _, campaignChain := range campaignChains.Chains {
+				if campaignChain == chainID {
+					return 0, false
+				}
+			}
+
+			return campaign.CampaignID, true
+		}
+	}
+
+	return 0, false
+}
+
 // FindChainCoordinatorAccount find coordinator account by chain id
 func FindChainCoordinatorAccount(
 	ctx sdk.Context,
@@ -45,11 +88,16 @@ func FindChainCoordinatorAccount(
 		// No message if no coordinator address
 		return simtypes.Account{}, fmt.Errorf("chain %d not found", chainID)
 	}
-	address, found := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
+	coord, found := k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
 	if !found {
 		return simtypes.Account{}, fmt.Errorf("coordinator %d not found", chain.CoordinatorID)
 	}
-	return FindAccount(accs, address)
+
+	if !coord.Active {
+		return simtypes.Account{}, fmt.Errorf("coordinator %d inactive", chain.CoordinatorID)
+	}
+
+	return FindAccount(accs, coord.Address)
 }
 
 // FindRandomChain find a random chain from store
@@ -72,12 +120,13 @@ func FindRandomChain(
 		if noMainnet && c.IsMainnet {
 			continue
 		}
-		// check if the coordinator is still in the store
-		_, found = k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, c.CoordinatorID)
-		if !found {
+		// check if the coordinator is still in the store and active
+		coord, coordFound := k.GetProfileKeeper().GetCoordinator(ctx, c.CoordinatorID)
+		if !coordFound || !coord.Active {
 			continue
 		}
 		chain = c
+		found = true
 		break
 	}
 	return chain, found
@@ -96,15 +145,20 @@ func FindRandomRequest(
 		requests[i], requests[j] = requests[j], requests[i]
 	})
 	for _, req := range requests {
+		if req.Status != types.Request_PENDING {
+			continue
+		}
+
 		chain, chainFound := k.GetChain(ctx, req.LaunchID)
 		if !chainFound || chain.LaunchTriggered {
 			continue
 		}
-		// check if the coordinator is still in the store
-		_, coordFound := k.GetProfileKeeper().GetCoordinatorAddressFromID(ctx, chain.CoordinatorID)
-		if !coordFound {
+		// check if the coordinator is still in the store and active
+		coord, coordFound := k.GetProfileKeeper().GetCoordinator(ctx, chain.CoordinatorID)
+		if !coordFound || !coord.Active {
 			continue
 		}
+
 		switch content := req.Content.Content.(type) {
 		case *types.RequestContent_ValidatorRemoval:
 			// if is validator removal, check if the validator exist
@@ -122,11 +176,11 @@ func FindRandomRequest(
 				continue
 			}
 		}
-		found = true
-		request = req
-		break
+
+		return req, true
 	}
-	return request, found
+
+	return request, false
 }
 
 // FindRandomValidator find a valid validator from store

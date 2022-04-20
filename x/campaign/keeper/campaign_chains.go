@@ -59,14 +59,6 @@ func (k Keeper) GetCampaignChains(ctx sdk.Context, campaignID uint64) (val types
 	return val, true
 }
 
-// RemoveCampaignChains removes a campaignChains from the store
-func (k Keeper) RemoveCampaignChains(ctx sdk.Context, campaignID uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignChainsKeyPrefix))
-	store.Delete(types.CampaignChainsKey(
-		campaignID,
-	))
-}
-
 // GetAllCampaignChains returns all campaignChains
 func (k Keeper) GetAllCampaignChains(ctx sdk.Context) (list []types.CampaignChains) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignChainsKeyPrefix))

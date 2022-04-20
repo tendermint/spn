@@ -3,25 +3,13 @@ package monitoringp
 import (
 	"math/rand"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
-	monitoringpsimulation "github.com/tendermint/spn/x/monitoringp/simulation"
 	"github.com/tendermint/spn/x/monitoringp/types"
-)
-
-// avoid unused import issue
-var (
-	_ = sample.AccAddress
-	_ = monitoringpsimulation.FindAccount
-	_ = simappparams.StakePerAccount
-	_ = simulation.MsgEntryKind
-	_ = baseapp.Paramspace
 )
 
 const (
@@ -35,6 +23,8 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	monitoringpGenesis := types.GenesisState{
+		PortId: types.PortID,
+		Params: sample.MonitoringpParams(simState.Rand),
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&monitoringpGenesis)
@@ -46,9 +36,25 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
-	return []simtypes.ParamChange{}
+func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+	monitoringpParams := sample.MonitoringpParams(r)
+	return []simtypes.ParamChange{
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyLastBlockHeight), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(monitoringpParams.LastBlockHeight))
+		}),
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyConsumerConsensusState), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(monitoringpParams.ConsumerConsensusState))
+		}),
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyConsumerChainID), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(monitoringpParams.ConsumerChainID))
+		}),
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyConsumerUnbondingPeriod), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(monitoringpParams.ConsumerUnbondingPeriod))
+		}),
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyConsumerRevisionHeight), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(monitoringpParams.ConsumerRevisionHeight))
+		}),
+	}
 }
 
 // RegisterStoreDecoder registers a decoder

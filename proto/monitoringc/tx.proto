@@ -19,6 +19,8 @@ message MsgCreateClient {
   uint64 launchID = 2;
   tendermint.spn.types.ConsensusState consensusState = 3 [(gogoproto.nullable) = false];
   tendermint.spn.types.ValidatorSet validatorSet = 4 [(gogoproto.nullable) = false];
+  int64 unbondingPeriod = 5;
+  uint64 revisionHeight = 6;
 }
 
 message MsgCreateClientResponse {

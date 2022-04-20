@@ -6,13 +6,13 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/keeper"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-func createNMonitoringHistory(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.MonitoringHistory {
+func createNMonitoringHistory(ctx sdk.Context, keeper *keeper.Keeper, n int) []types.MonitoringHistory {
 	items := make([]types.MonitoringHistory, n)
 	for i := range items {
 		items[i].LaunchID = uint64(i)
@@ -22,10 +22,10 @@ func createNMonitoringHistory(keeper *keeper.Keeper, ctx sdk.Context, n int) []t
 }
 
 func TestMonitoringHistoryGet(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNMonitoringHistory(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 10)
 	for _, item := range items {
-		rst, found := keeper.GetMonitoringHistory(ctx,
+		rst, found := tk.MonitoringConsumerKeeper.GetMonitoringHistory(ctx,
 			item.LaunchID,
 		)
 		require.True(t, found)
@@ -35,25 +35,12 @@ func TestMonitoringHistoryGet(t *testing.T) {
 		)
 	}
 }
-func TestMonitoringHistoryRemove(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNMonitoringHistory(keeper, ctx, 10)
-	for _, item := range items {
-		keeper.RemoveMonitoringHistory(ctx,
-			item.LaunchID,
-		)
-		_, found := keeper.GetMonitoringHistory(ctx,
-			item.LaunchID,
-		)
-		require.False(t, found)
-	}
-}
 
 func TestMonitoringHistoryGetAll(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNMonitoringHistory(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllMonitoringHistory(ctx)),
+		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllMonitoringHistory(ctx)),
 	)
 }

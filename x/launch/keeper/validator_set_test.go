@@ -15,30 +15,37 @@ import (
 
 func TestKeeper_CheckValidatorSet(t *testing.T) {
 	var (
-		k, ctx               = testkeeper.Launch(t)
-		validators           = []crypto.PubKey{sample.PubKey(), sample.PubKey(), sample.PubKey()}
+		ctx, tk, _           = testkeeper.NewTestSetup(t)
+		validators           = []crypto.PubKey{sample.PubKey(r), sample.PubKey(r), sample.PubKey(r)}
 		validatorSet         = tmtypes.ValidatorSet{}
 		validatorNotFoundSet = tmtypes.ValidatorSet{}
 		invalidValidatorSet  = tmtypes.ValidatorSet{}
 	)
-	notTriggeredLaunchID := k.AppendChain(ctx, types.Chain{
+	notTriggeredLaunchID := tk.LaunchKeeper.AppendChain(ctx, types.Chain{
 		CoordinatorID:   0,
 		LaunchTriggered: false,
 		GenesisChainID:  "spn-1",
 	})
-	invalidChainIDLaunchID := k.AppendChain(ctx, types.Chain{
+	invalidChainIDLaunchID := tk.LaunchKeeper.AppendChain(ctx, types.Chain{
 		CoordinatorID:   0,
 		LaunchTriggered: true,
 		GenesisChainID:  "spn-10",
 	})
-	launchID := k.AppendChain(ctx, types.Chain{
+	monitoringConnectedLaunchID := tk.LaunchKeeper.AppendChain(ctx, types.Chain{
+		CoordinatorID:       0,
+		LaunchTriggered:     true,
+		GenesisChainID:      "spn-1",
+		MonitoringConnected: true,
+	})
+	launchID := tk.LaunchKeeper.AppendChain(ctx, types.Chain{
 		CoordinatorID:   0,
 		LaunchTriggered: true,
 		GenesisChainID:  "spn-1",
 	})
+
 	for _, validator := range validators {
 		addr := sdk.AccAddress(validator.Address().Bytes())
-		k.SetGenesisValidator(ctx, types.GenesisValidator{
+		tk.LaunchKeeper.SetGenesisValidator(ctx, types.GenesisValidator{
 			LaunchID:       launchID,
 			Address:        addr.String(),
 			ConsPubKey:     validator.Bytes(),
@@ -50,7 +57,7 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 	}
 	validatorNotFoundSet.Validators = append(
 		validatorSet.Validators,
-		tmtypes.NewValidator(sample.PubKey(), 0),
+		tmtypes.NewValidator(sample.PubKey(r), 0),
 	)
 	invalidValidatorSet.Validators = validatorSet.Validators[:1]
 	type args struct {
@@ -91,6 +98,15 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 			err: types.ErrInvalidGenesisChainID,
 		},
 		{
+			name: "chain is already connected to monitoring",
+			args: args{
+				launchID:     monitoringConnectedLaunchID,
+				chainID:      "spn-1",
+				validatorSet: validatorSet,
+			},
+			err: types.ErrChainMonitoringConnected,
+		},
+		{
 			name: "validator not found",
 			args: args{
 				launchID:     launchID,
@@ -119,7 +135,7 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := k.CheckValidatorSet(ctx, tt.args.launchID, tt.args.chainID, tt.args.validatorSet)
+			err := tk.LaunchKeeper.CheckValidatorSet(ctx, tt.args.launchID, tt.args.chainID, tt.args.validatorSet)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return

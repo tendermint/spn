@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -11,15 +13,9 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func sharesStr(t *testing.T, str string) types.Shares {
-	shares, err := types.NewShares(str)
-	require.NoError(t, err)
-	return shares
-}
-
 func TestNewDelayedVesting(t *testing.T) {
-	totalShares := sharesStr(t, "1000foo,1000bar,500toto")
-	vesting := sharesStr(t, "1000foo,500bar")
+	totalShares := tc.Shares(t, "1000foo,1000bar,500toto")
+	vesting := tc.Shares(t, "1000foo,500bar")
 	endTime := time.Now().Unix()
 
 	vestingOptions := types.NewShareDelayedVesting(totalShares, vesting, endTime)
@@ -31,8 +27,8 @@ func TestNewDelayedVesting(t *testing.T) {
 }
 
 func TestDelayedVesting_Validate(t *testing.T) {
-	totalShares := sharesStr(t, "1000foo,1000bar,500toto")
-	vesting := sharesStr(t, "1000foo,500bar")
+	totalShares := tc.Shares(t, "1000foo,1000bar,500toto")
+	vesting := tc.Shares(t, "1000foo,500bar")
 
 	tests := []struct {
 		name   string
@@ -40,10 +36,15 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		valid  bool
 	}{
 		{
+			name:   "invalid share vesting options",
+			option: types.ShareVestingOptions{},
+			valid:  false,
+		},
+		{
 			name: "no total shares",
 			option: *types.NewShareDelayedVesting(
 				nil,
-				sample.Shares(),
+				sample.Shares(r),
 				time.Now().Unix(),
 			),
 			valid: false,
@@ -51,7 +52,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "no vesting",
 			option: *types.NewShareDelayedVesting(
-				sample.Shares(),
+				sample.Shares(r),
 				nil,
 				time.Now().Unix(),
 			),
@@ -60,7 +61,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "empty vesting",
 			option: *types.NewShareDelayedVesting(
-				sample.Shares(),
+				sample.Shares(r),
 				types.EmptyShares(),
 				time.Now().Unix(),
 			),
@@ -70,7 +71,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			name: "total shares with invalid coins",
 			option: *types.NewShareDelayedVesting(
 				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}}),
-				sample.Shares(),
+				sample.Shares(r),
 				time.Now().Unix(),
 			),
 			valid: false,
@@ -78,7 +79,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "vesting with invalid coins",
 			option: *types.NewShareDelayedVesting(
-				sample.Shares(),
+				sample.Shares(r),
 				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}}),
 				time.Now().Unix(),
 			),
@@ -87,8 +88,8 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "total shares smaller than vesting",
 			option: *types.NewShareDelayedVesting(
-				sharesStr(t, "1000foo,500bar,2000toto"),
-				sharesStr(t, "1000foo,501bar,2000toto"),
+				tc.Shares(t, "1000foo,500bar,2000toto"),
+				tc.Shares(t, "1000foo,501bar,2000toto"),
 				time.Now().Unix(),
 			),
 			valid: false,
@@ -96,8 +97,8 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "vesting denoms is not a subset of total shares",
 			option: *types.NewShareDelayedVesting(
-				sharesStr(t, "1000foo,500bar"),
-				sharesStr(t, "1000foo,500bar,2000toto"),
+				tc.Shares(t, "1000foo,500bar"),
+				tc.Shares(t, "1000foo,500bar,2000toto"),
 				time.Now().Unix(),
 			),
 			valid: false,

@@ -12,13 +12,14 @@ import (
 )
 
 var (
-	KeyLastBlockHeight        = []byte("LastBlockHeight")
-	KeyConsumerConsensusState = []byte("ConsumerConsensusState")
-	KeyConsumerChainID        = []byte("ConsumerChainID")
-	KeyDebugMode              = []byte("DebugMode")
+	KeyLastBlockHeight         = []byte("LastBlockHeight")
+	KeyConsumerConsensusState  = []byte("ConsumerConsensusState")
+	KeyConsumerChainID         = []byte("ConsumerChainID")
+	KeyConsumerUnbondingPeriod = []byte("ConsumerUnbondingPeriod")
+	KeyConsumerRevisionHeight  = []byte("RevisionHeight")
 
 	DefaultLastBlockHeight int64 = 1
-	DefautConsumerChainID        = "spn-1"
+	DefaultConsumerChainID       = "spn-1"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -29,18 +30,31 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(lastBlockHeight int64, consumerChainID string, ccs spntypes.ConsensusState, debugMode bool) Params {
+func NewParams(
+	lastBlockHeight int64,
+	consumerChainID string,
+	ccs spntypes.ConsensusState,
+	consumerUnbondingpPeriod int64,
+	consumerRevisionHeight uint64,
+) Params {
 	return Params{
-		LastBlockHeight:        lastBlockHeight,
-		ConsumerConsensusState: ccs,
-		ConsumerChainID:        consumerChainID,
-		DebugMode:              debugMode,
+		LastBlockHeight:         lastBlockHeight,
+		ConsumerConsensusState:  ccs,
+		ConsumerChainID:         consumerChainID,
+		ConsumerUnbondingPeriod: consumerUnbondingpPeriod,
+		ConsumerRevisionHeight:  consumerRevisionHeight,
 	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(DefaultLastBlockHeight, DefautConsumerChainID, spntypes.ConsensusState{}, false)
+	return NewParams(
+		DefaultLastBlockHeight,
+		DefaultConsumerChainID,
+		spntypes.ConsensusState{},
+		spntypes.DefaultUnbondingPeriod,
+		spntypes.DefaultRevisionHeight,
+	)
 }
 
 // ParamSetPairs get the params.ParamSet
@@ -62,9 +76,14 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			validateConsumerChainID,
 		),
 		paramtypes.NewParamSetPair(
-			KeyDebugMode,
-			&p.DebugMode,
-			func(i interface{}) error { return nil },
+			KeyConsumerUnbondingPeriod,
+			&p.ConsumerUnbondingPeriod,
+			validateConsumerUnbondingPeriod,
+		),
+		paramtypes.NewParamSetPair(
+			KeyConsumerRevisionHeight,
+			&p.ConsumerRevisionHeight,
+			validateConsumerRevisionHeight,
 		),
 	}
 }
@@ -77,7 +96,13 @@ func (p Params) Validate() error {
 	if err := validateConsumerChainID(p.ConsumerChainID); err != nil {
 		return err
 	}
-	return validateConsumerConsensusState(p.ConsumerConsensusState)
+	if err := validateConsumerConsensusState(p.ConsumerConsensusState); err != nil {
+		return err
+	}
+	if err := validateConsumerUnbondingPeriod(p.ConsumerUnbondingPeriod); err != nil {
+		return err
+	}
+	return validateConsumerRevisionHeight(p.ConsumerRevisionHeight)
 }
 
 // String implements the Stringer interface.
@@ -132,5 +157,33 @@ func validateConsumerChainID(i interface{}) error {
 	if err != nil {
 		return errors.Wrap(err, "invalid chain ID param")
 	}
+	return nil
+}
+
+// validateConsumerUnbondingPeriod validates consumer unbonding period
+func validateConsumerUnbondingPeriod(i interface{}) error {
+	unbondingPeriod, ok := i.(int64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if unbondingPeriod < spntypes.MinimalUnbondingPeriod {
+		return fmt.Errorf("minimal unbonding period is %d", spntypes.MinimalUnbondingPeriod)
+	}
+
+	return nil
+}
+
+// validateConsumerRevisionHeight validates consumer revision height
+func validateConsumerRevisionHeight(i interface{}) error {
+	revisionHeight, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if revisionHeight == 0 {
+		return fmt.Errorf("minimal revision height is %d", 1)
+	}
+
 	return nil
 }

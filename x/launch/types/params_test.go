@@ -3,8 +3,11 @@ package types
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"testing"
 	"time"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/stretchr/testify/require"
 )
@@ -16,19 +19,13 @@ func TestParamsValidate(t *testing.T) {
 		err    error
 	}{
 		{
-			name: "invalid range",
-			params: Params{
-				MinLaunchTime: DefaultMaxLaunchTime,
-				MaxLaunchTime: DefaultMinLaunchTime,
-			},
-			err: errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
+			name:   "invalid launch time range",
+			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
+			err:    errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
 		},
 		{
-			name: "valid range",
-			params: Params{
-				MinLaunchTime: DefaultMinLaunchTime,
-				MaxLaunchTime: DefaultMaxLaunchTime,
-			},
+			name:   "valid params",
+			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
 		},
 	}
 	for _, tt := range tests {
@@ -44,34 +41,128 @@ func TestParamsValidate(t *testing.T) {
 	}
 }
 
-func TestValidateLaunchTime(t *testing.T) {
+func TestValidateLaunchTimeRange(t *testing.T) {
 	tests := []struct {
-		name       string
-		launchTime interface{}
-		err        error
+		name            string
+		launchTimeRange interface{}
+		err             error
 	}{
 		{
-			name:       "invalid interface",
-			launchTime: "test",
-			err:        fmt.Errorf("invalid parameter type: string"),
+			name:            "invalid interface",
+			launchTimeRange: "test",
+			err:             fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:       "invalid interface",
-			launchTime: MaxParametrableLaunchTime + 1,
-			err:        errors.New("max parametrable launch time reached"),
+			name:            "invalid range - min is negative",
+			launchTimeRange: NewLaunchTimeRange(-1, 1),
+			err:             errors.New("MinLaunchTime can't be negative"),
 		},
 		{
-			name:       "max launch time",
-			launchTime: MaxParametrableLaunchTime,
+			name:            "invalid range - too high",
+			launchTimeRange: NewLaunchTimeRange(1, MaxParametrableLaunchTime+1),
+			err:             errors.New("max parametrable launch time reached"),
 		},
 		{
-			name:       "valid launch time",
-			launchTime: uint64(time.Hour.Seconds() * 24),
+			name:            "invalid range - max lower than min",
+			launchTimeRange: NewLaunchTimeRange(10, 1),
+			err:             errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
+		},
+		{
+			name:            "max launch time",
+			launchTimeRange: NewLaunchTimeRange(1, MaxParametrableLaunchTime),
+		},
+		{
+			name:            "valid launch time",
+			launchTimeRange: NewLaunchTimeRange(0, int64(time.Hour.Seconds()*24)),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateLaunchTime(tt.launchTime)
+			err := validateLaunchTimeRange(tt.launchTimeRange)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestValidateRevertDelay(t *testing.T) {
+	tests := []struct {
+		name        string
+		revertDelay interface{}
+		err         error
+	}{
+		{
+			name:        "invalid interface",
+			revertDelay: "test",
+			err:         fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:        "invalid interface - too high",
+			revertDelay: MaxParametrableRevertDelay + 1,
+			err:         errors.New("max parametrable revert delay reached"),
+		},
+		{
+			name:        "invalid interface - not positive value",
+			revertDelay: int64(0),
+			err:         errors.New("revert delay parameter must be positive"),
+		},
+		{
+			name:        "max revert delay",
+			revertDelay: MaxParametrableRevertDelay,
+		},
+		{
+			name:        "valid revert delay",
+			revertDelay: int64(time.Minute.Seconds() * 1),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateRevertDelay(tt.revertDelay)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestValidateChainCreationFee(t *testing.T) {
+	tests := []struct {
+		name        string
+		creationFee interface{}
+		err         error
+	}{
+		{
+			name:        "invalid interface",
+			creationFee: "test",
+			err:         fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:        "invalid coin",
+			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdk.NewInt(-1)}},
+			err:         errors.New("coin -1foo amount is not positive"),
+		},
+		{
+			name:        "valid empty param",
+			creationFee: DefaultChainCreationFee,
+		},
+		{
+			name: "valid param",
+			creationFee: sdk.NewCoins(
+				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
+				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),
+			),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateChainCreationFee(tt.creationFee)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)

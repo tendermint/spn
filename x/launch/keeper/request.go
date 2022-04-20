@@ -134,6 +134,38 @@ func ApplyRequest(
 	launchID uint64,
 	request types.Request,
 ) error {
+	if err := CheckRequest(ctx, k, launchID, request); err != nil {
+		return err
+	}
+
+	switch requestContent := request.Content.Content.(type) {
+	case *types.RequestContent_GenesisAccount:
+		ga := requestContent.GenesisAccount
+		k.SetGenesisAccount(ctx, *ga)
+	case *types.RequestContent_VestingAccount:
+		va := requestContent.VestingAccount
+		k.SetVestingAccount(ctx, *va)
+	case *types.RequestContent_AccountRemoval:
+		ar := requestContent.AccountRemoval
+		k.RemoveGenesisAccount(ctx, launchID, ar.Address)
+		k.RemoveVestingAccount(ctx, launchID, ar.Address)
+	case *types.RequestContent_GenesisValidator:
+		ga := requestContent.GenesisValidator
+		k.SetGenesisValidator(ctx, *ga)
+	case *types.RequestContent_ValidatorRemoval:
+		vr := requestContent.ValidatorRemoval
+		k.RemoveGenesisValidator(ctx, launchID, vr.ValAddress)
+	}
+	return nil
+}
+
+// CheckRequest verifies that a request can be applied
+func CheckRequest(
+	ctx sdk.Context,
+	k Keeper,
+	launchID uint64,
+	request types.Request,
+) error {
 	if err := request.Content.Validate(); err != nil {
 		return spnerrors.Critical(err.Error())
 	}
@@ -151,7 +183,6 @@ func ApplyRequest(
 				ga.Address, launchID,
 			)
 		}
-		k.SetGenesisAccount(ctx, *ga)
 	case *types.RequestContent_VestingAccount:
 		va := requestContent.VestingAccount
 		found, err := CheckAccount(ctx, k, launchID, va.Address)
@@ -164,7 +195,6 @@ func ApplyRequest(
 				va.Address, launchID,
 			)
 		}
-		k.SetVestingAccount(ctx, *va)
 	case *types.RequestContent_AccountRemoval:
 		ar := requestContent.AccountRemoval
 		found, err := CheckAccount(ctx, k, launchID, ar.Address)
@@ -177,8 +207,6 @@ func ApplyRequest(
 				ar.Address, launchID,
 			)
 		}
-		k.RemoveGenesisAccount(ctx, launchID, ar.Address)
-		k.RemoveVestingAccount(ctx, launchID, ar.Address)
 	case *types.RequestContent_GenesisValidator:
 		ga := requestContent.GenesisValidator
 		if _, found := k.GetGenesisValidator(ctx, launchID, ga.Address); found {
@@ -187,7 +215,6 @@ func ApplyRequest(
 				ga.Address, launchID,
 			)
 		}
-		k.SetGenesisValidator(ctx, *ga)
 	case *types.RequestContent_ValidatorRemoval:
 		vr := requestContent.ValidatorRemoval
 		if _, found := k.GetGenesisValidator(ctx, launchID, vr.ValAddress); !found {
@@ -196,9 +223,6 @@ func ApplyRequest(
 				vr.ValAddress, launchID,
 			)
 		}
-		k.RemoveGenesisValidator(ctx, launchID, vr.ValAddress)
-	default:
-		return spnerrors.Critical("unknown request content type")
 	}
 	return nil
 }

@@ -19,12 +19,13 @@ import (
 
 func networkWithCampaignObjects(t *testing.T, n int) (*network.Network, []types.Campaign) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
-		state.CampaignList = append(state.CampaignList, sample.Campaign(uint64(i)))
+		state.CampaignList = append(state.CampaignList, sample.Campaign(r, uint64(i)))
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
@@ -56,7 +57,7 @@ func TestShowCampaign(t *testing.T) {
 			desc: "not found",
 			id:   "not_found",
 			args: common,
-			err:  status.Error(codes.InvalidArgument, "not found"),
+			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
 		tc := tc
@@ -76,7 +77,6 @@ func TestShowCampaign(t *testing.T) {
 				// EmptyShares should be Shares(nil) however UnmarshalJSON returns Shares{}
 				// Both are empty shares, this allows to fix the tests
 				resp.Campaign.AllocatedShares = types.EmptyShares()
-				resp.Campaign.TotalShares = types.EmptyShares()
 
 				require.EqualValues(t, tc.obj, resp.Campaign)
 			}
@@ -90,7 +90,6 @@ func TestListCampaign(t *testing.T) {
 	nullify := func(campaigns []types.Campaign) {
 		for i := range campaigns {
 			campaigns[i].AllocatedShares = types.EmptyShares()
-			campaigns[i].TotalShares = types.EmptyShares()
 		}
 	}
 

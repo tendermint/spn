@@ -8,15 +8,16 @@ import (
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
+	"github.com/tendermint/spn/testutil/sample"
 	campaignsim "github.com/tendermint/spn/x/campaign/simulation"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
 const (
 	defaultWeightMsgCreateCampaign    = 25
+	defaultWeightMsgEditCampaign      = 20
 	defaultWeightMsgUpdateTotalSupply = 20
-	defaultWeightMsgUpdateTotalShares = 20
-	defaultWeightMsgInitializeMainnet = 5
+	defaultWeightMsgInitializeMainnet = 15
 	defaultWeightMsgAddShares         = 20
 	defaultWeightMsgAddVestingOptions = 20
 	defaultWeightMsgMintVouchers      = 20
@@ -26,8 +27,8 @@ const (
 	defaultWeightMsgSendVouchers      = 20
 
 	opWeightMsgCreateCampaign    = "op_weight_msg_create_campaign"
+	opWeightMsgEditCampaign      = "op_weight_msg_edit_campaign"
 	opWeightMsgUpdateTotalSupply = "op_weight_msg_update_total_supply"
-	opWeightMsgUpdateTotalShares = "op_weight_msg_update_total_share"
 	opWeightMsgInitializeMainnet = "op_weight_msg_initialize_mainnet"
 	opWeightMsgAddShares         = "op_weight_msg_add_shares"
 	opWeightMsgAddVestingOptions = "op_weight_msg_add_vesting_options"
@@ -36,11 +37,14 @@ const (
 	opWeightMsgRedeemVouchers    = "op_weight_msg_redeem_vouchers"
 	opWeightMsgUnredeemVouchers  = "op_weight_msg_unredeem_vouchers"
 	opWeightMsgSendVouchers      = "op_weight_msg_send_vouchers"
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
-	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(types.DefaultGenesis())
+	campaignGenesis := sample.CampaignGenesisState(simState.Rand)
+	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&campaignGenesis)
 }
 
 // ProposalContents doesn't return any content functions for governance proposals
@@ -50,7 +54,15 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
-	return []simtypes.ParamChange{}
+	campaignParams := types.DefaultParams()
+	return []simtypes.ParamChange{
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyTotalSupplyRange), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(campaignParams.TotalSupplyRange))
+		}),
+		simulation.NewSimParamChange(types.ModuleName, string(types.KeyCampaignCreationFee), func(r *rand.Rand) string {
+			return string(types.Amino.MustMarshalJSON(campaignParams.CampaignCreationFee))
+		}),
+	}
 }
 
 // RegisterStoreDecoder registers a decoder
@@ -60,8 +72,8 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	var (
 		weightMsgCreateCampaign    int
+		weightMsgEditCampaign      int
 		weightMsgUpdateTotalSupply int
-		weightMsgUpdateTotalShares int
 		weightMsgInitializeMainnet int
 		weightMsgAddShares         int
 		weightMsgAddVestingOptions int
@@ -79,14 +91,14 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgCreateCampaign = defaultWeightMsgCreateCampaign
 		},
 	)
+	appParams.GetOrGenerate(cdc, opWeightMsgEditCampaign, &weightMsgEditCampaign, nil,
+		func(_ *rand.Rand) {
+			weightMsgEditCampaign = defaultWeightMsgEditCampaign
+		},
+	)
 	appParams.GetOrGenerate(cdc, opWeightMsgUpdateTotalSupply, &weightMsgUpdateTotalSupply, nil,
 		func(_ *rand.Rand) {
 			weightMsgUpdateTotalSupply = defaultWeightMsgUpdateTotalSupply
-		},
-	)
-	appParams.GetOrGenerate(cdc, opWeightMsgUpdateTotalShares, &weightMsgUpdateTotalShares, nil,
-		func(_ *rand.Rand) {
-			weightMsgUpdateTotalShares = defaultWeightMsgUpdateTotalShares
 		},
 	)
 	appParams.GetOrGenerate(cdc, opWeightMsgInitializeMainnet, &weightMsgInitializeMainnet, nil,
@@ -133,15 +145,15 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
 			weightMsgCreateCampaign,
-			campaignsim.SimulateMsgCreateCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper),
+			campaignsim.SimulateMsgCreateCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgEditCampaign,
+			campaignsim.SimulateMsgEditCampaign(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUpdateTotalSupply,
 			campaignsim.SimulateMsgUpdateTotalSupply(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
-		),
-		simulation.NewWeightedOperation(
-			weightMsgUpdateTotalShares,
-			campaignsim.SimulateMsgUpdateTotalShares(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgInitializeMainnet,
@@ -161,11 +173,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		),
 		simulation.NewWeightedOperation(
 			weightMsgBurnVouchers,
-			campaignsim.SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper),
+			campaignsim.SimulateMsgBurnVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgRedeemVouchers,
-			campaignsim.SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper),
+			campaignsim.SimulateMsgRedeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgUnredeemVouchers,
@@ -173,7 +185,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		),
 		simulation.NewWeightedOperation(
 			weightMsgSendVouchers,
-			campaignsim.SimulateMsgSendVouchers(am.accountKeeper, am.bankKeeper),
+			campaignsim.SimulateMsgSendVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }

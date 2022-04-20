@@ -20,6 +20,7 @@ import (
 
 func networkWithVestingAccountObjects(t *testing.T, n int) (*network.Network, []types.VestingAccount) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
@@ -27,7 +28,7 @@ func networkWithVestingAccountObjects(t *testing.T, n int) (*network.Network, []
 	for i := 0; i < n; i++ {
 		state.VestingAccountList = append(
 			state.VestingAccountList,
-			sample.VestingAccount(0, strconv.Itoa(i)),
+			sample.VestingAccount(r, 0, strconv.Itoa(i)),
 		)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
@@ -66,7 +67,7 @@ func TestShowVestingAccount(t *testing.T) {
 			idAddress: strconv.Itoa(100000),
 
 			args: common,
-			err:  status.Error(codes.InvalidArgument, "not found"),
+			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
 		tc := tc

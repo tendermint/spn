@@ -13,25 +13,25 @@ import (
 )
 
 func TestKeeper_CreateNewChain(t *testing.T) {
-	k, _, campaignKeeper, _, profileSrv, campaignSrv, sdkCtx := setupMsgServer(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.Address()
-	coordNoCampaignAddress := sample.Address()
+	coordAddress := sample.Address(r)
+	coordNoCampaignAddress := sample.Address(r)
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
 
 	msgCreateCoordinator = sample.MsgCreateCoordinator(coordNoCampaignAddress)
-	res, err = profileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
 	coordNoCampaignID := res.CoordinatorID
 
 	// Create a campaign
-	msgCreateCampaign := sample.MsgCreateCampaign(coordAddress)
-	resCampaign, err := campaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	msgCreateCampaign := sample.MsgCreateCampaign(r, coordAddress)
+	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
 	require.NoError(t, err)
 	campaignID := resCampaign.CampaignID
 
@@ -46,98 +46,119 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 		hasCampaign    bool
 		campaignID     uint64
 		isMainnet      bool
+		metadata       []byte
 		wantedID       uint64
 		valid          bool
 	}{
 		{
 			name:           "creating a new chain",
 			coordinatorID:  coordID,
-			genesisChainID: sample.GenesisChainID(),
-			sourceURL:      sample.String(30),
-			sourceHash:     sample.String(20),
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
 			genesisURL:     "",
 			hasCampaign:    false,
+			metadata:       sample.Metadata(r, 20),
 			wantedID:       0,
 			valid:          true,
 		},
 		{
 			name:           "creating a chain associated to a campaign",
 			coordinatorID:  coordID,
-			genesisChainID: sample.GenesisChainID(),
-			sourceURL:      sample.String(30),
-			sourceHash:     sample.String(20),
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
 			genesisURL:     "",
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
+			metadata:       sample.Metadata(r, 20),
 			wantedID:       1,
 			valid:          true,
 		},
 		{
 			name:           "creating a mainnet chain",
 			coordinatorID:  coordID,
-			genesisChainID: sample.GenesisChainID(),
-			sourceURL:      sample.String(30),
-			sourceHash:     sample.String(20),
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
 			genesisURL:     "",
 			hasCampaign:    true,
 			campaignID:     0,
 			isMainnet:      true,
+			metadata:       sample.Metadata(r, 20),
 			wantedID:       2,
 			valid:          true,
 		},
 		{
 			name:           "creating a chain with a custom genesis",
 			coordinatorID:  coordID,
-			genesisChainID: sample.GenesisChainID(),
-			sourceURL:      sample.String(30),
-			sourceHash:     sample.String(20),
-			genesisURL:     sample.String(30),
-			genesisHash:    sample.GenesisHash(),
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
+			genesisURL:     sample.String(r, 30),
+			genesisHash:    sample.GenesisHash(r),
 			hasCampaign:    false,
+			metadata:       sample.Metadata(r, 20),
 			wantedID:       3,
+			valid:          true,
+		},
+		{
+			name:           "creating a chain with no metadata",
+			coordinatorID:  coordID,
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
+			genesisURL:     "",
+			hasCampaign:    true,
+			campaignID:     campaignID,
+			isMainnet:      false,
+			wantedID:       4,
 			valid:          true,
 		},
 		{
 			name:           "non-existent campaign ID",
 			coordinatorID:  coordID,
-			genesisChainID: sample.GenesisChainID(),
-			sourceURL:      sample.String(30),
-			sourceHash:     sample.String(20),
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
 			genesisURL:     "",
 			hasCampaign:    true,
 			campaignID:     1000,
+			metadata:       sample.Metadata(r, 20),
 			isMainnet:      false,
 			valid:          false,
 		},
 		{
 			name:           "invalid campaign coordinator",
 			coordinatorID:  coordNoCampaignID,
-			genesisChainID: sample.GenesisChainID(),
-			sourceURL:      sample.String(30),
-			sourceHash:     sample.String(20),
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
 			genesisURL:     "",
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
+			metadata:       sample.Metadata(r, 20),
 			wantedID:       1,
 			valid:          false,
 		},
 		{
 			name:           "invalid chain data (mainnet with campaign)",
 			coordinatorID:  coordID,
-			genesisChainID: sample.GenesisChainID(),
-			sourceURL:      sample.String(30),
-			sourceHash:     sample.String(20),
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
 			genesisURL:     "",
 			hasCampaign:    false,
 			campaignID:     0,
+			metadata:       sample.Metadata(r, 20),
 			isMainnet:      true,
 			valid:          false,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			id, err := k.CreateNewChain(
+			id, err := tk.LaunchKeeper.CreateNewChain(
 				sdkCtx,
 				tc.coordinatorID,
 				tc.genesisChainID,
@@ -148,6 +169,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 				tc.hasCampaign,
 				tc.campaignID,
 				tc.isMainnet,
+				tc.metadata,
 			)
 
 			if !tc.valid {
@@ -156,7 +178,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			}
 			require.EqualValues(t, tc.wantedID, id)
 
-			chain, found := k.GetChain(sdkCtx, id)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, id)
 			require.True(t, found)
 			require.EqualValues(t, tc.coordinatorID, chain.CoordinatorID)
 			require.EqualValues(t, tc.genesisChainID, chain.GenesisChainID)
@@ -165,6 +187,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			require.EqualValues(t, tc.hasCampaign, chain.HasCampaign)
 			require.EqualValues(t, tc.campaignID, chain.CampaignID)
 			require.EqualValues(t, tc.isMainnet, chain.IsMainnet)
+			require.EqualValues(t, tc.metadata, chain.Metadata)
 
 			// Compare initial genesis
 			if tc.genesisURL == "" {
@@ -179,7 +202,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 
 			// Check chain has been appended in the campaign
 			if tc.hasCampaign {
-				campaignChains, found := campaignKeeper.GetCampaignChains(sdkCtx, tc.campaignID)
+				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, tc.campaignID)
 				require.True(t, found)
 				require.Contains(t, campaignChains.Chains, id)
 			}
@@ -205,35 +228,46 @@ func createNChainForCoordinator(keeper *keeper.Keeper, ctx sdk.Context, coordina
 }
 
 func TestGetChain(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := keeper.GetChain(ctx, item.LaunchID)
+		rst, found := tk.LaunchKeeper.GetChain(ctx, item.LaunchID)
 		require.True(t, found)
 		require.Equal(t, item, rst)
 	}
 }
 
-func TestRemoveChain(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
-	for _, item := range items {
-		keeper.RemoveChain(ctx, item.LaunchID)
-		_, found := keeper.GetChain(ctx, item.LaunchID)
-		require.False(t, found)
-	}
+func TestEnableMonitoringConnection(t *testing.T) {
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	// if chain does not exist, throw error
+	err := tk.LaunchKeeper.EnableMonitoringConnection(ctx, 1)
+	require.ErrorIs(t, err, types.ErrChainNotFound)
+
+	validChain := types.Chain{}
+	validChainID := tk.LaunchKeeper.AppendChain(ctx, validChain)
+	err = tk.LaunchKeeper.EnableMonitoringConnection(ctx, validChainID)
+	require.NoError(t, err)
+	rst, found := tk.LaunchKeeper.GetChain(ctx, validChainID)
+	require.True(t, found)
+	validChain.MonitoringConnected = true
+	require.Equal(t, validChain, rst)
+
+	// try enabling again, but expect error since it is already enabled
+	err = tk.LaunchKeeper.EnableMonitoringConnection(ctx, validChainID)
+	require.ErrorIs(t, err, types.ErrChainMonitoringConnected)
 }
 
 func TestGetAllChain(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 
-	require.ElementsMatch(t, items, keeper.GetAllChain(ctx))
+	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllChain(ctx))
 }
 
 func TestChainCounter(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-	items := createNChain(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNChain(tk.LaunchKeeper, ctx, 10)
 	counter := uint64(len(items))
-	require.Equal(t, counter, keeper.GetChainCounter(ctx))
+	require.Equal(t, counter, tk.LaunchKeeper.GetChainCounter(ctx))
 }

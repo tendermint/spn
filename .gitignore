@@ -6,3 +6,20 @@ release/
 # IDE
 .idea
 .envrc
+.vscode
+
+# Localnet
+localnet/node?/data/*.db
+localnet/node?/data/snapshots
+localnet/node?/data/cs.wal
+localnet/node?/config/genesis.json
+localnet/node?/config/addrbook.json
+localnet/node?/config/write-file-atomic-*
+
+# Generate report files
+*.out
+*.test
+cover.html
+
+# Frontend
+ignite-ui

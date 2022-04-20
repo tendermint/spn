@@ -11,24 +11,22 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgUpdateValidatorDescription{}, "profile/UpdateValidatorDescription", nil)
-	cdc.RegisterConcrete(&MsgDeleteValidator{}, "profile/DeleteValidator", nil)
-	cdc.RegisterConcrete(&MsgSetValidatorConsAddress{}, "profile/SetValidatorConsAddress", nil)
+	cdc.RegisterConcrete(&MsgAddValidatorOperatorAddress{}, "profile/AddValidatorOperatorAddress", nil)
 	cdc.RegisterConcrete(&MsgCreateCoordinator{}, "profile/CreateCoordinator", nil)
 	cdc.RegisterConcrete(&MsgUpdateCoordinatorDescription{}, "profile/UpdateCoordinatorDescription", nil)
 	cdc.RegisterConcrete(&MsgUpdateCoordinatorAddress{}, "profile/UpdateCoordinatorAddress", nil)
-	cdc.RegisterConcrete(&MsgDeleteCoordinator{}, "profile/DeleteCoordinator", nil)
+	cdc.RegisterConcrete(&MsgDisableCoordinator{}, "profile/DisableCoordinator", nil)
 	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdateValidatorDescription{},
-		&MsgDeleteValidator{},
-		&MsgSetValidatorConsAddress{},
+		&MsgAddValidatorOperatorAddress{},
 		&MsgCreateCoordinator{},
 		&MsgUpdateCoordinatorDescription{},
 		&MsgUpdateCoordinatorAddress{},
-		&MsgDeleteCoordinator{},
+		&MsgDisableCoordinator{},
 	)
 	// this line is used by starport scaffolding # 3
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

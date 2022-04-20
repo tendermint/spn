@@ -22,6 +22,7 @@ func (k Keeper) CreateNewChain(
 	hasCampaign bool,
 	campaignID uint64,
 	isMainnet bool,
+	metadata []byte,
 ) (uint64, error) {
 	chain := types.Chain{
 		CoordinatorID:   coordinatorID,
@@ -34,6 +35,7 @@ func (k Keeper) CreateNewChain(
 		IsMainnet:       isMainnet,
 		LaunchTriggered: false,
 		LaunchTimestamp: 0,
+		Metadata:        metadata,
 	}
 
 	// Initialize initial genesis
@@ -123,6 +125,22 @@ func (k Keeper) SetChain(ctx sdk.Context, chain types.Chain) {
 	store.Set(types.ChainKey(chain.LaunchID), b)
 }
 
+// EnableMonitoringConnection sets a chain with MonitoringConnected set to true
+func (k Keeper) EnableMonitoringConnection(ctx sdk.Context, launchID uint64) error {
+	chain, found := k.GetChain(ctx, launchID)
+	if !found {
+		return types.ErrChainNotFound
+	}
+
+	if chain.MonitoringConnected {
+		return types.ErrChainMonitoringConnected
+	}
+
+	chain.MonitoringConnected = true
+	k.SetChain(ctx, chain)
+	return nil
+}
+
 // GetChain returns a chain from its index
 func (k Keeper) GetChain(ctx sdk.Context, launchID uint64) (val types.Chain, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
@@ -134,12 +152,6 @@ func (k Keeper) GetChain(ctx sdk.Context, launchID uint64) (val types.Chain, fou
 
 	k.cdc.MustUnmarshal(b, &val)
 	return val, true
-}
-
-// RemoveChain removes a chain from the store
-func (k Keeper) RemoveChain(ctx sdk.Context, launchID uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChainKeyPrefix))
-	store.Delete(types.ChainKey(launchID))
 }
 
 // GetAllChain returns all chain

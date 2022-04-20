@@ -12,7 +12,7 @@ import (
 func CmdShowVerifiedClientIds() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "verified-client-ids [launch-id]",
-		Short: "retrieves all verified client IDs for a launch ID",
+		Short: "Shows all verified client IDs for a launch",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)

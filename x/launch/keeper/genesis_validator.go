@@ -36,6 +36,20 @@ func (k Keeper) GetGenesisValidator(
 	return val, true
 }
 
+// GetGenesisValidatorCount returns the number of genesis validators from a launch ID
+// TODO: add tests https://github.com/tendermint/spn/issues/642
+func (k Keeper) GetGenesisValidatorCount(ctx sdk.Context, launchID uint64) (count uint64) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.GenesisValidatorAllKey(launchID))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		count++
+	}
+
+	return count
+}
+
 // RemoveGenesisValidator removes a genesisValidator from the store
 func (k Keeper) RemoveGenesisValidator(ctx sdk.Context, launchID uint64, address string) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisValidatorKeyPrefix))
@@ -70,7 +84,7 @@ func (k Keeper) GetValidatorsAndTotalDelegation(
 	defer iterator.Close()
 
 	validators := make(map[string]types.GenesisValidator)
-	totalDelegation := sdk.NewDec(0)
+	totalDelegation := sdk.ZeroDec()
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.GenesisValidator
 		k.cdc.MustUnmarshal(iterator.Value(), &val)

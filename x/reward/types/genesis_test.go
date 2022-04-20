@@ -16,7 +16,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		valid    bool
 	}{
 		{
-			desc:     "default is valid",
+			desc:     "default genesis is valid",
 			genState: types.DefaultGenesis(),
 			valid:    true,
 		},
@@ -24,24 +24,34 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				RewardPoolList: []types.RewardPool{
-					sample.RewardPool(1),
-					sample.RewardPool(2),
+					sample.RewardPool(r, 1),
+					sample.RewardPool(r, 2),
 				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
 		},
+		// this line is used by starport scaffolding # types/genesis/testcase
 		{
 			desc: "duplicated rewardPool",
 			genState: &types.GenesisState{
 				RewardPoolList: []types.RewardPool{
-					sample.RewardPool(1),
-					sample.RewardPool(1),
+					sample.RewardPool(r, 1),
+					sample.RewardPool(r, 1),
 				},
 			},
 			valid: false,
 		},
-		// this line is used by starport scaffolding # types/genesis/testcase
+		{
+			desc: "invalid rewardPool",
+			genState: &types.GenesisState{
+				RewardPoolList: []types.RewardPool{
+					sample.RewardPool(r, 1),
+					{}, // invalid reward pool
+				},
+			},
+			valid: false,
+		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()

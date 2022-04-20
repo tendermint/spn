@@ -4,6 +4,8 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
+	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -14,26 +16,56 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// FindCoordinatorAccount find a sim account for a coordinator that exists or not
-func FindCoordinatorAccount(
-	r *rand.Rand,
-	ctx sdk.Context,
-	k keeper.Keeper,
-	accs []simtypes.Account,
-	exist bool,
-) (simtypes.Account, bool) {
-	// Randomize the set for coordinator operation entropy
-	r.Shuffle(len(accs), func(i, j int) {
-		accs[i], accs[j] = accs[j], accs[i]
-	})
+// generate a Tx with 2 signatures if validator account is not equal to operator address account
+func genAndDeliverTxWithRandFeesAddOpAddr(txCtx simulation.OperationInput, opSimAcc simtypes.Account) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+	account := txCtx.AccountKeeper.GetAccount(txCtx.Context, txCtx.SimAccount.Address)
+	spendable := txCtx.Bankkeeper.SpendableCoins(txCtx.Context, account.GetAddress())
+	opAccout := txCtx.AccountKeeper.GetAccount(txCtx.Context, opSimAcc.Address)
 
-	for _, acc := range accs {
-		_, found := k.GetCoordinatorByAddress(ctx, acc.Address.String())
-		if found == exist {
-			return acc, true
-		}
+	accNumbers := []uint64{account.GetAccountNumber()}
+	accSequences := []uint64{account.GetSequence()}
+	privs := []cryptotypes.PrivKey{txCtx.SimAccount.PrivKey}
+
+	if account != opAccout {
+		accNumbers = append(accNumbers, opAccout.GetAccountNumber())
+		accSequences = append(accSequences, opAccout.GetSequence())
+		privs = append(privs, opSimAcc.PrivKey)
 	}
-	return simtypes.Account{}, false
+
+	var fees sdk.Coins
+	var err error
+
+	coins, hasNeg := spendable.SafeSub(txCtx.CoinsSpentInMsg)
+	if hasNeg {
+		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "message doesn't leave room for fees"), nil, err
+	}
+
+	fees, err = simtypes.RandomFees(txCtx.R, txCtx.Context, coins)
+	if err != nil {
+		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to generate fees"), nil, err
+	}
+
+	tx, err := helpers.GenTx(
+		txCtx.TxGen,
+		[]sdk.Msg{txCtx.Msg},
+		fees,
+		helpers.DefaultGenTxGas,
+		txCtx.Context.ChainID(),
+		accNumbers,
+		accSequences,
+		privs...,
+	)
+
+	if err != nil {
+		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to generate mock tx"), nil, err
+	}
+
+	_, _, err = txCtx.App.Deliver(txCtx.TxGen.TxEncoder(), tx)
+	if err != nil {
+		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to deliver tx"), nil, err
+	}
+
+	return simtypes.NewOperationMsg(txCtx.Msg, true, "", txCtx.Cdc), nil, nil
 }
 
 // SimulateMsgUpdateValidatorDescription simulates a MsgUpdateValidatorDescription message
@@ -44,7 +76,7 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 		// Select a random account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
-		desc := sample.ValidatorDescription(sample.String(50))
+		desc := sample.ValidatorDescription(sample.String(r, 50))
 		msg := types.NewMsgUpdateValidatorDescription(
 			simAccount.Address.String(),
 			desc.Identity,
@@ -71,35 +103,23 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 	}
 }
 
-// SimulateMsgDeleteValidator simulates a MsgUpdateValidatorDescription message
-func SimulateMsgDeleteValidator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
-	return func(
-		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+// SimulateMsgAddValidatorOperatorAddress simulates a MsgAddValidatorOperatorAddress message
+func SimulateMsgAddValidatorOperatorAddress(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		var (
-			found      bool
-			simAccount simtypes.Account
-		)
 
-		r.Shuffle(len(accs), func(i, j int) {
-			accs[i], accs[j] = accs[j], accs[i]
-		})
-
-		// Find an account with validator description
-		for i := 0; i < len(accs); i++ {
-			acc := accs[i]
-			_, found = k.GetValidator(ctx, acc.Address.String())
-			if found {
-				simAccount = acc
-				break
-			}
-		}
-		if !found {
-			// No message if no validator description
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDeleteValidator, "skip validator delete"), nil, nil
+		// choose two addresses that are not equal
+		simAccount, _ := simtypes.RandomAcc(r, accs)
+		opAccount, _ := simtypes.RandomAcc(r, accs)
+		for simAccount.Address.Equals(opAccount.Address) {
+			opAccount, _ = simtypes.RandomAcc(r, accs)
 		}
 
-		msg := types.NewMsgDeleteValidator(simAccount.Address.String())
+		msg := &types.MsgAddValidatorOperatorAddress{
+			ValidatorAddress: simAccount.Address.String(),
+			OperatorAddress:  opAccount.Address.String(),
+		}
+
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -114,19 +134,7 @@ func SimulateMsgDeleteValidator(ak types.AccountKeeper, bk types.BankKeeper, k k
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
-	}
-}
-
-// SimulateMsgSetValidatorConsAddress simulates a MsgSetValidatorConsAddress message
-func SimulateMsgSetValidatorConsAddress(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
-	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		msg := &types.MsgSetValidatorConsAddress{}
-
-		// TODO: Handling the SetValidatorConsAddress simulation
-
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "SetValidatorConsAddress simulation not implemented"), nil, nil
+		return genAndDeliverTxWithRandFeesAddOpAddr(txCtx, opAccount)
 	}
 }
 
@@ -144,9 +152,9 @@ func SimulateMsgCreateCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 
 		msg := types.NewMsgCreateCoordinator(
 			simAccount.Address.String(),
-			sample.String(30),
-			sample.String(30),
-			sample.String(30),
+			sample.String(r, 30),
+			sample.String(r, 30),
+			sample.String(r, 30),
 		)
 		txCtx := simulation.OperationInput{
 			R:               r,
@@ -178,7 +186,7 @@ func SimulateMsgUpdateCoordinatorDescription(ak types.AccountKeeper, bk types.Ba
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorDescription, "skip update coordinator description"), nil, nil
 		}
 
-		desc := sample.CoordinatorDescription()
+		desc := sample.CoordinatorDescription(r)
 		msg := types.NewMsgUpdateCoordinatorDescription(
 			simAccount.Address.String(),
 			desc.Identity,
@@ -238,8 +246,8 @@ func SimulateMsgUpdateCoordinatorAddress(ak types.AccountKeeper, bk types.BankKe
 	}
 }
 
-// SimulateMsgDeleteCoordinator simulates a MsgDeleteCoordinator message
-func SimulateMsgDeleteCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+// SimulateMsgDisableCoordinator simulates a MsgDisableCoordinator message
+func SimulateMsgDisableCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -248,10 +256,10 @@ func SimulateMsgDeleteCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 		simAccount, found := FindCoordinatorAccount(r, ctx, k, accs[3:], true)
 		if !found {
 			// No message if no coordinator
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDeleteCoordinator, "skip update coordinator delete"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgDisableCoordinator, "skip update coordinator delete"), nil, nil
 		}
 
-		msg := types.NewMsgDeleteCoordinator(simAccount.Address.String())
+		msg := types.NewMsgDisableCoordinator(simAccount.Address.String())
 		txCtx := simulation.OperationInput{
 			R:               r,
 			App:             app,

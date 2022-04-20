@@ -9,15 +9,15 @@ import (
 )
 
 const (
-	zeroLaunchTimestampRoute = "zero-launch-timestamp"
-	duplicatedAccountRoute   = "duplicated-account"
-	unknownRequestTypeRoute  = "unknown-request-type"
+	invalidChainRoute       = "invalid-chain"
+	duplicatedAccountRoute  = "duplicated-account"
+	unknownRequestTypeRoute = "unknown-request-type"
 )
 
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
-	ir.RegisterRoute(types.ModuleName, zeroLaunchTimestampRoute,
-		ZeroLaunchTimestampInvariant(k))
+	ir.RegisterRoute(types.ModuleName, invalidChainRoute,
+		InvalidChainInvariant(k))
 	ir.RegisterRoute(types.ModuleName, duplicatedAccountRoute,
 		DuplicatedAccountInvariant(k))
 	ir.RegisterRoute(types.ModuleName, unknownRequestTypeRoute,
@@ -35,21 +35,34 @@ func AllInvariants(k Keeper) sdk.Invariant {
 		if stop {
 			return res, stop
 		}
-		return ZeroLaunchTimestampInvariant(k)(ctx)
+		return InvalidChainInvariant(k)(ctx)
 	}
 }
 
-// ZeroLaunchTimestampInvariant invariant that checks if the
-// `LaunchTimestamp is zero
-func ZeroLaunchTimestampInvariant(k Keeper) sdk.Invariant {
+// InvalidChainInvariant invariant that checks all chain in the store are valid
+func InvalidChainInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-		all := k.GetAllChain(ctx)
-		for _, chain := range all {
-			if chain.LaunchTimestamp == 0 {
+		chains := k.GetAllChain(ctx)
+		for _, chain := range chains {
+			err := chain.Validate()
+			if err != nil {
 				return sdk.FormatInvariant(
-					types.ModuleName, zeroLaunchTimestampRoute,
-					"LaunchTimestamp is not set while LaunchTriggered is set",
+					types.ModuleName, invalidChainRoute,
+					fmt.Sprintf("chain %d is invalid: %s", chain.LaunchID, err.Error()),
 				), true
+			}
+			// if chain as an associated campaign, check that it exists
+			if chain.HasCampaign {
+				_, found := k.campaignKeeper.GetCampaign(ctx, chain.CampaignID)
+				if !found {
+					return sdk.FormatInvariant(
+						types.ModuleName, invalidChainRoute,
+						fmt.Sprintf("chain %d has an invalid associated campaign %d",
+							chain.LaunchID,
+							chain.CampaignID,
+						),
+					), true
+				}
 			}
 		}
 		return "", false

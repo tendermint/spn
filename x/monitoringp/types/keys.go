@@ -20,11 +20,19 @@ const (
 	MemStoreKey = "mem_monitoringp"
 
 	// Version defines the current version the IBC module supports
-	// TODO(492): set correct version
-	Version = ""
+	Version = "monitoring-1"
 
 	// PortID is the default port id that module binds to
-	PortID = "monitoring"
+	PortID = "monitoringp"
+
+	// ConsumerClientIDKey allows to retrieve in the store the client ID used for the IBC communication with the Consumer Chain
+	ConsumerClientIDKey = "ConsumerClientID/value/"
+
+	// ConnectionChannelIDKey allows to retrieve the connection channel ID that is the ID of the IBC channel used for monitoring packet transmission
+	ConnectionChannelIDKey = "ConnectionChannelID/value/"
+
+	// MonitoringInfoKey allows to retrieve moniroting info that contains information about the current state of monitoring
+	MonitoringInfoKey = "MonitoringInfo/value/"
 )
 
 var (
@@ -35,16 +43,3 @@ var (
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
-
-const (
-	// ConsumerClientIDKey allows to retrieve in the store the client ID used for the IBC communication with the Consumer Chain
-	ConsumerClientIDKey = "ConsumerClientID-value-"
-)
-
-const (
-	ConnectionChannelIDKey = "ConnectionChannelID-value-"
-)
-
-const (
-	MonitoringInfoKey = "MonitoringInfo-value-"
-)

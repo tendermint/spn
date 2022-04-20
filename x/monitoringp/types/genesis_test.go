@@ -49,7 +49,8 @@ func TestGenesisState_Validate(t *testing.T) {
 					1000,
 					"foo", // chain id should be <chain-name>-<revision-number>
 					sample.ConsensusState(0),
-					false,
+					spntypes.DefaultUnbondingPeriod,
+					1,
 				),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
@@ -72,7 +73,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						BlockCount: 1,
 						Counts: []spntypes.SignatureCount{
 							{
-								ConsAddress:        []byte("foo"),
+								OpAddress:          sample.Address(r),
 								RelativeSignatures: sdk.NewDec(10),
 							},
 						},

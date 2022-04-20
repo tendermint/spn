@@ -12,21 +12,29 @@ import (
 )
 
 func TestGetParams(t *testing.T) {
-	k, _, ctx := testkeeper.MonitoringpKeeper(t)
+	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	params := types.DefaultParams()
-	k.SetParams(ctx, params)
-	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, spntypes.ConsensusState{}, k.ConsumerConsensusState(ctx))
-	require.EqualValues(t, types.DefautConsumerChainID, k.ConsumerChainID(ctx))
-	require.EqualValues(t, false, k.DebugMode(ctx))
+	tk.MonitoringProviderKeeper.SetParams(ctx, params)
+	require.EqualValues(t, params, tk.MonitoringProviderKeeper.GetParams(ctx))
+	require.EqualValues(t, spntypes.ConsensusState{}, tk.MonitoringProviderKeeper.ConsumerConsensusState(ctx))
+	require.EqualValues(t, types.DefaultConsumerChainID, tk.MonitoringProviderKeeper.ConsumerChainID(ctx))
+	require.EqualValues(t, spntypes.DefaultUnbondingPeriod, tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx))
+	require.EqualValues(t, spntypes.DefaultRevisionHeight, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx))
 
-	chainID := sample.GenesisChainID()
+	chainID := sample.GenesisChainID(r)
 	cs := sample.ConsensusState(0)
-	params = types.NewParams(1000, chainID, cs, true)
-	k.SetParams(ctx, params)
-	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, cs, k.ConsumerConsensusState(ctx))
-	require.EqualValues(t, chainID, k.ConsumerChainID(ctx))
-	require.EqualValues(t, true, k.DebugMode(ctx))
-	require.EqualValues(t, 1000, k.LastBlockHeight(ctx))
+	params = types.NewParams(
+		1000,
+		chainID,
+		cs,
+		10,
+		20,
+	)
+	tk.MonitoringProviderKeeper.SetParams(ctx, params)
+	require.EqualValues(t, params, tk.MonitoringProviderKeeper.GetParams(ctx))
+	require.EqualValues(t, 1000, tk.MonitoringProviderKeeper.LastBlockHeight(ctx))
+	require.EqualValues(t, cs, tk.MonitoringProviderKeeper.ConsumerConsensusState(ctx))
+	require.EqualValues(t, chainID, tk.MonitoringProviderKeeper.ConsumerChainID(ctx))
+	require.EqualValues(t, 10, tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx))
+	require.EqualValues(t, 20, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx))
 }

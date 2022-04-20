@@ -1,3 +1,4 @@
+// Package network allows to programmatically spin up a local network for CLI tests
 package network
 
 import (
@@ -14,7 +15,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/testutil/network"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	"github.com/tendermint/starport/starport/pkg/cosmoscmd"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	tmrand "github.com/tendermint/tendermint/libs/rand"
 	tmdb "github.com/tendermint/tm-db"
 

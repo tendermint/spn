@@ -15,6 +15,7 @@ service Msg {
   // this line is used by starport scaffolding # proto/tx/rpc
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
+  rpc UpdateLaunchInformation(MsgUpdateLaunchInformation) returns (MsgUpdateLaunchInformationResponse);
   rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestAddAccountResponse);
   rpc RequestAddVestingAccount(MsgRequestAddVestingAccount) returns (MsgRequestAddVestingAccountResponse);
   rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
@@ -34,6 +35,7 @@ message MsgCreateChain {
   string genesisHash = 6;
   bool hasCampaign = 7;
   uint64 campaignID = 8;
+  bytes metadata = 9;
 }
 
 message MsgCreateChainResponse {
@@ -43,13 +45,23 @@ message MsgCreateChainResponse {
 message MsgEditChain {
   string coordinator = 1;
   uint64 launchID = 2;
+  bool setCampaignID = 3;
+  uint64 campaignID = 4;
+  bytes metadata = 5;
+}
+
+message MsgEditChainResponse {}
+
+message MsgUpdateLaunchInformation {
+  string coordinator = 1;
+  uint64 launchID = 2;
   string genesisChainID = 3;
   string sourceURL = 4;
   string sourceHash = 5;
   InitialGenesis initialGenesis = 6;
 }
 
-message MsgEditChainResponse {}
+message MsgUpdateLaunchInformationResponse {}
 
 message MsgRequestAddAccount {
   string creator = 1;
@@ -128,7 +140,7 @@ message MsgSettleRequestResponse {}
 message MsgTriggerLaunch {
   string coordinator = 1;
   uint64 launchID = 2;
-  uint64 remainingTime = 3;
+  int64 remainingTime = 3;
 }
 
 message MsgTriggerLaunchResponse {}

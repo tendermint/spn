@@ -2,25 +2,11 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"github.com/tendermint/spn/x/profile/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
-
-type LaunchKeeper interface {
-	CreateNewChain(
-		ctx sdk.Context,
-		coordinatorID uint64,
-		genesisChainID,
-		sourceURL,
-		sourceHash,
-		genesisURL,
-		genesisHash string,
-		hasCampaign bool,
-		campaignID uint64,
-		isMainnet bool,
-	) (uint64, error)
-}
 
 type BankKeeper interface {
 	GetSupply(ctx sdk.Context, denom string) sdk.Coin
@@ -34,11 +20,15 @@ type BankKeeper interface {
 }
 
 type ProfileKeeper interface {
-	GetAllCoordinator(ctx sdk.Context) []types.Coordinator
-	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, found bool)
-	GetCoordinatorAddressFromID(ctx sdk.Context, id uint64) (string, bool)
+	GetAllCoordinator(ctx sdk.Context) []profiletypes.Coordinator
+	GetCoordinator(ctx sdk.Context, id uint64) (val profiletypes.Coordinator, found bool)
+	CoordinatorIDFromAddress(ctx sdk.Context, address string) (id uint64, err error)
 }
 
 type AccountKeeper interface {
 	GetAccount(ctx sdk.Context, addr sdk.AccAddress) authtypes.AccountI
+}
+
+type DistributionKeeper interface {
+	FundCommunityPool(ctx sdk.Context, amount sdk.Coins, sender sdk.AccAddress) error
 }

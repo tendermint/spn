@@ -10,15 +10,13 @@ import (
 )
 
 func TestGetParams(t *testing.T) {
-	k, ctx := testkeeper.Monitoringc(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 	params := types.DefaultParams()
-	k.SetParams(ctx, params)
-	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, false, k.DebugMode(ctx))
+	tk.MonitoringConsumerKeeper.SetParams(ctx, params)
+	require.EqualValues(t, params, tk.MonitoringConsumerKeeper.GetParams(ctx))
 
-	params = types.NewParams(true)
-	k.SetParams(ctx, params)
-	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, true, k.DebugMode(ctx))
+	params = types.NewParams()
+	tk.MonitoringConsumerKeeper.SetParams(ctx, params)
+	require.EqualValues(t, params, tk.MonitoringConsumerKeeper.GetParams(ctx))
 }

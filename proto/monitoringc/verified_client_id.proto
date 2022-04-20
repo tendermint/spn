@@ -7,4 +7,3 @@ message VerifiedClientID {
   uint64 launchID = 1;
   repeated string clientIDs = 2;
 }
-

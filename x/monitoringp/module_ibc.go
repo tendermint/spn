@@ -20,7 +20,7 @@ func (am AppModule) OnChanOpenInit(
 	_ sdk.Context,
 	_ channeltypes.Order,
 	_ []string,
-	_ string,
+	_,
 	_ string,
 	_ *capabilitytypes.Capability,
 	_ channeltypes.Counterparty,
@@ -33,11 +33,11 @@ func (am AppModule) OnChanOpenInit(
 func (am AppModule) OnChanOpenTry(
 	ctx sdk.Context,
 	order channeltypes.Order,
-	connectionHops []string,
+	_ []string,
 	portID,
 	channelID string,
 	chanCap *capabilitytypes.Capability,
-	counterparty channeltypes.Counterparty,
+	_ channeltypes.Counterparty,
 	version,
 	counterpartyVersion string,
 ) error {
@@ -92,7 +92,7 @@ func (am AppModule) OnChanOpenAck(
 // OnChanOpenConfirm implements the IBCModule interface
 func (am AppModule) OnChanOpenConfirm(
 	ctx sdk.Context,
-	portID,
+	_,
 	channelID string,
 ) error {
 	// register channel ID as the connection for monitoring
@@ -105,9 +105,9 @@ func (am AppModule) OnChanOpenConfirm(
 
 // OnChanCloseInit implements the IBCModule interface
 func (am AppModule) OnChanCloseInit(
-	ctx sdk.Context,
-	portID,
-	channelID string,
+	_ sdk.Context,
+	_,
+	_ string,
 ) error {
 	// Disallow user-initiated channel closing for channels
 	return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "user cannot close channel")
@@ -115,9 +115,9 @@ func (am AppModule) OnChanCloseInit(
 
 // OnChanCloseConfirm implements the IBCModule interface
 func (am AppModule) OnChanCloseConfirm(
-	ctx sdk.Context,
-	portID,
-	channelID string,
+	_ sdk.Context,
+	_,
+	_ string,
 ) error {
 	return nil
 }
@@ -126,7 +126,7 @@ func (am AppModule) OnChanCloseConfirm(
 func (am AppModule) OnRecvPacket(
 	ctx sdk.Context,
 	modulePacket channeltypes.Packet,
-	relayer sdk.AccAddress,
+	_ sdk.AccAddress,
 ) ibcexported.Acknowledgement {
 	var ack channeltypes.Acknowledgement
 
@@ -173,7 +173,7 @@ func (am AppModule) OnAcknowledgementPacket(
 	ctx sdk.Context,
 	modulePacket channeltypes.Packet,
 	acknowledgement []byte,
-	relayer sdk.AccAddress,
+	_ sdk.AccAddress,
 ) error {
 	var ack channeltypes.Acknowledgement
 	if err := types.ModuleCdc.UnmarshalJSON(acknowledgement, &ack); err != nil {
@@ -235,7 +235,7 @@ func (am AppModule) OnAcknowledgementPacket(
 func (am AppModule) OnTimeoutPacket(
 	ctx sdk.Context,
 	modulePacket channeltypes.Packet,
-	relayer sdk.AccAddress,
+	_ sdk.AccAddress,
 ) error {
 	var modulePacketData spntypes.MonitoringPacketData
 	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &modulePacketData); err != nil {
@@ -259,14 +259,13 @@ func (am AppModule) OnTimeoutPacket(
 }
 
 // NegotiateAppVersion implements the IBCModule interface
-// TODO(492): implement correct logic
 func (am AppModule) NegotiateAppVersion(
-	ctx sdk.Context,
-	order channeltypes.Order,
-	connectionID string,
-	portID string,
-	counterparty channeltypes.Counterparty,
-	proposedVersion string,
+	_ sdk.Context,
+	_ channeltypes.Order,
+	_,
+	_ string,
+	_ channeltypes.Counterparty,
+	_ string,
 ) (version string, err error) {
 	return types.Version, nil
 }

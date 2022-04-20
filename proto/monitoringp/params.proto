@@ -13,5 +13,6 @@ message Params {
   int64 lastBlockHeight = 1;
   string consumerChainID = 2;
   tendermint.spn.types.ConsensusState consumerConsensusState = 3 [(gogoproto.nullable) = false];
-  bool debugMode = 4;
+  int64 consumerUnbondingPeriod = 4;
+  uint64 consumerRevisionHeight = 5;
 }

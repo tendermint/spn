@@ -20,6 +20,7 @@ import (
 
 func networkWithMainnetAccountObjects(t *testing.T, n int) (*network.Network, []types.MainnetAccount) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
@@ -28,9 +29,9 @@ func networkWithMainnetAccountObjects(t *testing.T, n int) (*network.Network, []
 	for i := 0; i < n; i++ {
 		state.MainnetAccountList = append(
 			state.MainnetAccountList,
-			sample.MainnetAccount(
+			sample.MainnetAccount(r,
 				campaignID,
-				sample.Address(),
+				sample.Address(r),
 			),
 		)
 	}
@@ -70,7 +71,7 @@ func TestShowMainnetAccount(t *testing.T) {
 			idAddress:    strconv.Itoa(100000),
 
 			args: common,
-			err:  status.Error(codes.InvalidArgument, "not found"),
+			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

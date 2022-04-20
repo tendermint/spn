@@ -7,13 +7,13 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/keeper"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-func createNLaunchIDFromChannelID(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.LaunchIDFromChannelID {
+func createNLaunchIDFromChannelID(ctx sdk.Context, keeper *keeper.Keeper, n int) []types.LaunchIDFromChannelID {
 	items := make([]types.LaunchIDFromChannelID, n)
 	for i := range items {
 		items[i].ChannelID = strconv.Itoa(i)
@@ -23,10 +23,10 @@ func createNLaunchIDFromChannelID(keeper *keeper.Keeper, ctx sdk.Context, n int)
 }
 
 func TestLaunchIDFromChannelIDGet(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNLaunchIDFromChannelID(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNLaunchIDFromChannelID(ctx, tk.MonitoringConsumerKeeper, 10)
 	for _, item := range items {
-		rst, found := keeper.GetLaunchIDFromChannelID(ctx,
+		rst, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromChannelID(ctx,
 			item.ChannelID,
 		)
 		require.True(t, found)
@@ -36,25 +36,12 @@ func TestLaunchIDFromChannelIDGet(t *testing.T) {
 		)
 	}
 }
-func TestLaunchIDFromChannelIDRemove(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNLaunchIDFromChannelID(keeper, ctx, 10)
-	for _, item := range items {
-		keeper.RemoveLaunchIDFromChannelID(ctx,
-			item.ChannelID,
-		)
-		_, found := keeper.GetLaunchIDFromChannelID(ctx,
-			item.ChannelID,
-		)
-		require.False(t, found)
-	}
-}
 
 func TestLaunchIDFromChannelIDGetAll(t *testing.T) {
-	keeper, ctx := keepertest.Monitoringc(t)
-	items := createNLaunchIDFromChannelID(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNLaunchIDFromChannelID(ctx, tk.MonitoringConsumerKeeper, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(keeper.GetAllLaunchIDFromChannelID(ctx)),
+		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllLaunchIDFromChannelID(ctx)),
 	)
 }

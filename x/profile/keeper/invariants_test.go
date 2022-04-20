@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -11,24 +13,24 @@ import (
 )
 
 func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
-	ctx, k, _ := setupMsgServer(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("valid case", func(t *testing.T) {
-		coord := sample.Coordinator(sample.Address())
-		coord.CoordinatorID = k.AppendCoordinator(ctx, coord)
-		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
-			Address:       sample.Address(),
+		coord := sample.Coordinator(r, sample.Address(r))
+		coord.CoordinatorID = tk.ProfileKeeper.AppendCoordinator(ctx, coord)
+		tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
+			Address:       sample.Address(r),
 			CoordinatorID: coord.CoordinatorID,
 		})
-		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*k)(ctx)
-		require.Equal(t, false, isValid)
+		msg, broken := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)
+		require.False(t, broken, msg)
 	})
 
 	t.Run("invalid case", func(t *testing.T) {
-		k.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
-			Address:       sample.Address(),
+		tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
+			Address:       sample.Address(r),
 			CoordinatorID: 10,
 		})
-		_, isValid := keeper.CoordinatorAddrNotFoundInvariant(*k)(ctx)
-		require.Equal(t, true, isValid)
+		msg, broken := keeper.CoordinatorAddrNotFoundInvariant(*tk.ProfileKeeper)(ctx)
+		require.True(t, broken, msg)
 	})
 }

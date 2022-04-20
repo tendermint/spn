@@ -40,5 +40,6 @@ linters:
 issues:
   exclude:
     - G404
+    - G101
   max-issues-per-linter: 10000
   max-same-issues: 10000

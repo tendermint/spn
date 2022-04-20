@@ -9,75 +9,75 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-var (
-	launchID1        = uint64(0)
-	launchID2        = uint64(1)
-	noExistLaunchID  = uint64(2)
-	addr1            = sample.Address()
-	addr2            = sample.Address()
-	vestingAddress   = sample.Address()
-	genesisValidator = sample.GenesisValidator(launchID1, addr1)
-	genesisChainID   = sample.GenesisChainID()
-
-	// Those are samples we can use for each fields when they are not the one to test
-	sampleChainList = []types.Chain{
-		{
-			LaunchID:       launchID1,
-			GenesisChainID: genesisChainID,
-		},
-		{
-			LaunchID:       launchID2,
-			GenesisChainID: genesisChainID,
-		},
-	}
-	sampleGenesisAccountList = []types.GenesisAccount{
-		{
-			LaunchID: launchID1,
-			Address:  addr1,
-		},
-		{
-			LaunchID: launchID1,
-			Address:  addr2,
-		},
-		{
-			LaunchID: launchID2,
-			Address:  addr1,
-		},
-		{
-			LaunchID: launchID2,
-			Address:  addr2,
-		},
-	}
-	sampleVestingAccountList = []types.VestingAccount{
-		{
-			LaunchID: launchID1,
-			Address:  vestingAddress,
-		},
-		{
-			LaunchID: launchID2,
-			Address:  vestingAddress,
-		},
-	}
-	sampleGenesisValidatorList = []types.GenesisValidator{genesisValidator}
-	sampleRequestList          = []types.Request{
-		{
-			LaunchID:  launchID1,
-			RequestID: 0,
-		},
-		{
-			LaunchID:  launchID1,
-			RequestID: 1,
-		},
-	}
-	sampleRequestCounterList = []types.RequestCounter{
-		{
-			LaunchID: launchID1,
-			Counter:  10,
-		},
-	}
-)
-
 func TestGenesisState_Validate(t *testing.T) {
+	var (
+		launchID1        = uint64(0)
+		launchID2        = uint64(1)
+		noExistLaunchID  = uint64(2)
+		addr1            = sample.Address(r)
+		addr2            = sample.Address(r)
+		vestingAddress   = sample.Address(r)
+		genesisValidator = sample.GenesisValidator(r, launchID1, addr1)
+		genesisChainID   = sample.GenesisChainID(r)
+
+		// Those are samples we can use for each fields when they are not the one to test
+		sampleChainList = []types.Chain{
+			{
+				LaunchID:       launchID1,
+				GenesisChainID: genesisChainID,
+			},
+			{
+				LaunchID:       launchID2,
+				GenesisChainID: genesisChainID,
+			},
+		}
+		sampleGenesisAccountList = []types.GenesisAccount{
+			{
+				LaunchID: launchID1,
+				Address:  addr1,
+			},
+			{
+				LaunchID: launchID1,
+				Address:  addr2,
+			},
+			{
+				LaunchID: launchID2,
+				Address:  addr1,
+			},
+			{
+				LaunchID: launchID2,
+				Address:  addr2,
+			},
+		}
+		sampleVestingAccountList = []types.VestingAccount{
+			{
+				LaunchID: launchID1,
+				Address:  vestingAddress,
+			},
+			{
+				LaunchID: launchID2,
+				Address:  vestingAddress,
+			},
+		}
+		sampleGenesisValidatorList = []types.GenesisValidator{genesisValidator}
+		sampleRequestList          = []types.Request{
+			{
+				LaunchID:  launchID1,
+				RequestID: 0,
+			},
+			{
+				LaunchID:  launchID1,
+				RequestID: 1,
+			},
+		}
+		sampleRequestCounterList = []types.RequestCounter{
+			{
+				LaunchID: launchID1,
+				Counter:  10,
+			},
+		}
+	)
+
 	for _, tc := range []struct {
 		desc          string
 		genState      *types.GenesisState
@@ -98,6 +98,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				GenesisValidatorList: sampleGenesisValidatorList,
 				RequestList:          sampleRequestList,
 				RequestCounterList:   sampleRequestCounterList,
+				Params:               types.DefaultParams(),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			shouldBeValid: true,
@@ -130,6 +131,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				ChainCounter: 10,
+				Params:       types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -143,6 +145,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				ChainCounter: 10,
+				Params:       types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -161,6 +164,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:  addr1,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -175,6 +179,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:  addr1,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -193,6 +198,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:  vestingAddress,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -227,6 +233,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:  addr1,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -236,8 +243,9 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:    sampleChainList,
 				ChainCounter: 10,
 				GenesisValidatorList: []types.GenesisValidator{
-					sample.GenesisValidator(noExistLaunchID, addr1),
+					sample.GenesisValidator(r, noExistLaunchID, addr1),
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -247,9 +255,10 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:    sampleChainList,
 				ChainCounter: 10,
 				GenesisValidatorList: []types.GenesisValidator{
-					sample.GenesisValidator(launchID1, addr1),
-					sample.GenesisValidator(launchID1, addr1),
+					sample.GenesisValidator(r, launchID1, addr1),
+					sample.GenesisValidator(r, launchID1, addr1),
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -259,8 +268,9 @@ func TestGenesisState_Validate(t *testing.T) {
 				ChainList:    sampleChainList,
 				ChainCounter: 10,
 				GenesisValidatorList: []types.GenesisValidator{
-					sample.GenesisValidator(noExistLaunchID, addr1),
+					sample.GenesisValidator(r, noExistLaunchID, addr1),
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -280,6 +290,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						RequestID: 0,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -295,6 +306,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						RequestID: 0,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -315,6 +327,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						RequestID: 0,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -333,6 +346,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Counter:  1,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -347,6 +361,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Counter:  0,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -367,6 +382,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						RequestID: 10,
 					},
 				},
+				Params: types.DefaultParams(),
 			},
 			shouldBeValid: false,
 		},
@@ -419,18 +435,18 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 		shouldBeValid bool
 	}{
 		{
-			desc: "max launch time above the max parametrable launch time",
+			desc: "should fail if params are invalid",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1),
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.MaxParametrableLaunchTime+1, types.DefaultRevertDelay, types.DefaultChainCreationFee),
 			},
 			shouldBeValid: false,
 		},
 		{
-			desc: "min launch time above max launch time",
+			desc: "valid params",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinLaunchTime+1, types.DefaultMinLaunchTime),
+				Params: types.NewParams(types.DefaultMinLaunchTime, types.DefaultMaxLaunchTime, types.DefaultRevertDelay, types.DefaultChainCreationFee),
 			},
-			shouldBeValid: false,
+			shouldBeValid: true,
 		},
 	} {
 		tc := tc

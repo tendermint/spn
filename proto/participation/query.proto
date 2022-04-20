@@ -1,0 +1,114 @@
+syntax = "proto3";
+package tendermint.spn.participation;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "participation/params.proto";
+import "participation/used_allocations.proto";
+import "participation/auction_used_allocations.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/tendermint/spn/x/participation/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Queries a UsedAllocations by address.
+  rpc UsedAllocations(QueryGetUsedAllocationsRequest) returns (QueryGetUsedAllocationsResponse) {
+    option (google.api.http).get = "/tendermint/spn/participation/used_allocations/{address}";
+  }
+
+  // Queries a list of UsedAllocations items.
+  rpc UsedAllocationsAll(QueryAllUsedAllocationsRequest) returns (QueryAllUsedAllocationsResponse) {
+    option (google.api.http).get = "/tendermint/spn/participation/used_allocations";
+  }
+
+  // Queries a AuctionUsedAllocations by address and auctionID.
+  rpc AuctionUsedAllocations(QueryGetAuctionUsedAllocationsRequest) returns (QueryGetAuctionUsedAllocationsResponse) {
+    option (google.api.http).get = "/tendermint/spn/participation/auction_used_allocations/{address}/{auctionID}";
+  }
+
+  // Queries a list of AuctionUsedAllocations items.
+  rpc AuctionUsedAllocationsAll(QueryAllAuctionUsedAllocationsRequest) returns (QueryAllAuctionUsedAllocationsResponse) {
+    option (google.api.http).get = "/tendermint/spn/participation/auction_used_allocations/{address}";
+  }
+
+  // Queries a TotalAllocation of address.
+  rpc TotalAllocations(QueryGetTotalAllocationsRequest) returns (QueryGetTotalAllocationsResponse) {
+    option (google.api.http).get = "/tendermint/spn/participation/total_allocations/{address}";
+  }
+
+  // Queries the AvailableAllocation of address.
+  rpc AvailableAllocations(QueryGetAvailableAllocationsRequest) returns (QueryGetAvailableAllocationsResponse) {
+    option (google.api.http).get = "/tendermint/spn/participation/available_allocations/{address}";
+  }
+
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/tendermint/spn/participation/params";
+  }
+
+  // this line is used by starport scaffolding # 2
+}
+
+message QueryGetUsedAllocationsRequest {
+  string address = 1;
+}
+
+message QueryGetUsedAllocationsResponse {
+  UsedAllocations usedAllocations = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllUsedAllocationsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllUsedAllocationsResponse {
+  repeated UsedAllocations usedAllocations = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetAuctionUsedAllocationsRequest {
+  string address = 1;
+  uint64 auctionID = 2;
+}
+
+message QueryGetAuctionUsedAllocationsResponse {
+  AuctionUsedAllocations auctionUsedAllocations = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllAuctionUsedAllocationsRequest {
+  string address = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllAuctionUsedAllocationsResponse {
+  repeated AuctionUsedAllocations auctionUsedAllocations = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetTotalAllocationsRequest {
+  string address = 1;
+}
+
+message QueryGetTotalAllocationsResponse {
+  uint64 totalAllocations = 1;
+}
+
+message QueryGetAvailableAllocationsRequest {
+  string address = 1;
+}
+
+message QueryGetAvailableAllocationsResponse {
+  uint64 availableAllocations = 1;
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+// this line is used by starport scaffolding # 3

@@ -12,6 +12,14 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
+	var (
+		addr1   = sample.Address(r)
+		addr2   = sample.Address(r)
+		addr3   = sample.Address(r)
+		opAddr1 = sample.Address(r)
+		opAddr2 = sample.Address(r)
+		opAddr3 = sample.Address(r)
+	)
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState
@@ -23,11 +31,45 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid:    true,
 		},
 		{
-			desc:     "valid genesis state",
+			desc: "valid genesis state",
 			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
+					{Address: addr2, OperatorAddresses: []string{opAddr2}},
+					{Address: addr3, OperatorAddresses: []string{opAddr3}},
+				},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
+					{OperatorAddress: opAddr3, ValidatorAddress: addr3},
+				},
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
+					{CoordinatorID: 0, Address: addr1},
+					{CoordinatorID: 1, Address: addr2},
+					{CoordinatorID: 2, Address: addr3},
+				},
+				CoordinatorList: []types.Coordinator{
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: true},
+					{CoordinatorID: 2, Address: addr3, Active: true},
+				},
+				CoordinatorCounter: 4,
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
+		},
+		{
+			desc: "invalid genesis state",
+			genState: &types.GenesisState{
+				ValidatorList: []types.Validator{
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
+				},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
+				},
+			},
+			valid: false,
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
@@ -44,12 +86,12 @@ func TestGenesisState_Validate(t *testing.T) {
 
 func TestGenesisStateValidateValidator(t *testing.T) {
 	var (
-		addr1     = sample.Address()
-		addr2     = sample.Address()
-		addr3     = sample.Address()
-		consAddr1 = sample.ConsAddress().Bytes()
-		consAddr2 = sample.ConsAddress().Bytes()
-		consAddr3 = sample.ConsAddress().Bytes()
+		addr1   = sample.Address(r)
+		addr2   = sample.Address(r)
+		addr3   = sample.Address(r)
+		opAddr1 = sample.Address(r)
+		opAddr2 = sample.Address(r)
+		opAddr3 = sample.Address(r)
 	)
 	tests := []struct {
 		name     string
@@ -64,19 +106,14 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			name: "valid custom genesis",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
-					{Address: addr2, ConsensusAddresses: [][]byte{consAddr2}},
-					{Address: addr3, ConsensusAddresses: [][]byte{consAddr3}},
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
+					{Address: addr2, OperatorAddresses: []string{opAddr2}},
+					{Address: addr3, OperatorAddresses: []string{opAddr3}},
 				},
-				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
-					{ConsensusAddress: consAddr2, ValidatorAddress: addr2},
-					{ConsensusAddress: consAddr3, ValidatorAddress: addr3},
-				},
-				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
-					{ConsensusAddress: consAddr1, Nonce: 0},
-					{ConsensusAddress: consAddr2, Nonce: 1},
-					{ConsensusAddress: consAddr3, Nonce: 3},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
+					{OperatorAddress: opAddr3, ValidatorAddress: addr3},
 				},
 			},
 		},
@@ -84,106 +121,55 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 			name: "duplicated validator by address",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
-					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
 				},
-				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
-					{ConsensusAddress: consAddr2, ValidatorAddress: addr2},
-				},
-				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
-					{ConsensusAddress: consAddr1, Nonce: 0},
-					{ConsensusAddress: consAddr2, Nonce: 1},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
 				},
 			},
 			err: errors.New("duplicated index for validator"),
 		},
 		{
-			name: "duplicated validator by consensus address",
+			name: "duplicated validator by operator address",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
 				},
-				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
-					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
 				},
 			},
-			err: errors.New("duplicated index for validatorByConsAddress"),
+			err: errors.New("duplicated index for validatorByOperatorAddress"),
 		},
 		{
-			name: "missing consensus address in the validator list",
+			name: "missing validator address",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddresses: [][]byte{}},
-					{Address: addr2, ConsensusAddresses: [][]byte{consAddr2}},
+					{Address: addr1, OperatorAddresses: []string{opAddr1}},
 				},
-				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
-					{ConsensusAddress: consAddr2, ValidatorAddress: addr2},
-				},
-				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
-					{ConsensusAddress: consAddr1, Nonce: 0},
-					{ConsensusAddress: consAddr2, Nonce: 1},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
 				},
 			},
-			err: errors.New("consensus address not found in the Validator consensus address list"),
+			err: errors.New("validator operator address not found for Validator"),
 		},
 		{
-			name: "duplicated validator consensus nonce",
+			name: "missing operator address in the validator list",
 			genState: &types.GenesisState{
 				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
+					{Address: addr1, OperatorAddresses: []string{}},
+					{Address: addr2, OperatorAddresses: []string{opAddr2}},
 				},
-				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
-				},
-				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
-					{ConsensusAddress: consAddr1, Nonce: 0},
-					{ConsensusAddress: consAddr1, Nonce: 1},
+				ValidatorByOperatorAddressList: []types.ValidatorByOperatorAddress{
+					{OperatorAddress: opAddr1, ValidatorAddress: addr1},
+					{OperatorAddress: opAddr2, ValidatorAddress: addr2},
 				},
 			},
-			err: errors.New("duplicated index for consensusKeyNonce"),
-		},
-		{
-			name: "missing validator by cons address",
-			genState: &types.GenesisState{
-				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
-					{Address: addr2, ConsensusAddresses: [][]byte{consAddr2}},
-					{Address: addr3, ConsensusAddresses: [][]byte{consAddr3}},
-				},
-				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
-					{ConsensusAddress: consAddr2, ValidatorAddress: addr2},
-				},
-				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
-					{ConsensusAddress: consAddr1, Nonce: 0},
-					{ConsensusAddress: consAddr2, Nonce: 1},
-					{ConsensusAddress: consAddr3, Nonce: 2},
-				},
-			},
-			err: errors.New("consensus key address not found for ValidatorByConsAddress"),
-		},
-		{
-			name: "missing validator by cons nonce",
-			genState: &types.GenesisState{
-				ValidatorList: []types.Validator{
-					{Address: addr1, ConsensusAddresses: [][]byte{consAddr1}},
-					{Address: addr2, ConsensusAddresses: [][]byte{consAddr2}},
-				},
-				ValidatorByConsAddressList: []types.ValidatorByConsAddress{
-					{ConsensusAddress: consAddr1, ValidatorAddress: addr1},
-					{ConsensusAddress: consAddr2, ValidatorAddress: addr2},
-					{ConsensusAddress: consAddr3, ValidatorAddress: addr3},
-				},
-				ConsensusKeyNonceList: []types.ConsensusKeyNonce{
-					{ConsensusAddress: consAddr1, Nonce: 0},
-					{ConsensusAddress: consAddr2, Nonce: 1},
-					{ConsensusAddress: consAddr3, Nonce: 1},
-				},
-			},
-			err: errors.New("validator consensus address not found for Validator"),
+			err: errors.New("operator address not found in the Validator operator address list"),
 		},
 	}
 	for _, tt := range tests {
@@ -203,10 +189,10 @@ func TestGenesisStateValidateValidator(t *testing.T) {
 
 func TestGenesisStateValidateCoordinator(t *testing.T) {
 	var (
-		addr1 = sample.Address()
-		addr2 = sample.Address()
-		addr3 = sample.Address()
-		addr4 = sample.Address()
+		addr1 = sample.Address(r)
+		addr2 = sample.Address(r)
+		addr3 = sample.Address(r)
+		addr4 = sample.Address(r)
 	)
 	tests := []struct {
 		name     string
@@ -227,12 +213,25 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 3, Address: addr4},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
-					{CoordinatorID: 1, Address: addr2},
-					{CoordinatorID: 2, Address: addr3},
-					{CoordinatorID: 3, Address: addr4},
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: true},
+					{CoordinatorID: 2, Address: addr3, Active: true},
+					{CoordinatorID: 3, Address: addr4, Active: true},
 				},
 				CoordinatorCounter: 4,
+			},
+		},
+		{
+			name: "valid with inactive coordinator",
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
+					{CoordinatorID: 0, Address: addr1},
+				},
+				CoordinatorList: []types.Coordinator{
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: false},
+				},
+				CoordinatorCounter: 2,
 			},
 		},
 		{
@@ -254,8 +253,8 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 0, Address: addr2},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
-					{CoordinatorID: 0, Address: addr2},
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 0, Address: addr2, Active: true},
 				},
 				CoordinatorCounter: 2,
 			},
@@ -268,8 +267,8 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 0, Address: addr1},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
-					{CoordinatorID: 1, Address: addr2},
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: true},
 				},
 				CoordinatorCounter: 2,
 			},
@@ -283,7 +282,7 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 1, Address: addr2},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
+					{CoordinatorID: 0, Address: addr1, Active: true},
 				},
 				CoordinatorCounter: 2,
 			},
@@ -297,12 +296,27 @@ func TestGenesisStateValidateCoordinator(t *testing.T) {
 					{CoordinatorID: 133, Address: addr2},
 				},
 				CoordinatorList: []types.Coordinator{
-					{CoordinatorID: 0, Address: addr1},
-					{CoordinatorID: 133, Address: addr2},
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 133, Address: addr2, Active: true},
 				},
 				CoordinatorCounter: 2,
 			},
 			err: errors.New("coordinator id should be lower or equal than the last id"),
+		},
+		{
+			name: "inactive coordinator associated to CoordinatorByAddress",
+			genState: &types.GenesisState{
+				CoordinatorByAddressList: []types.CoordinatorByAddress{
+					{CoordinatorID: 0, Address: addr1},
+					{CoordinatorID: 1, Address: addr2},
+				},
+				CoordinatorList: []types.Coordinator{
+					{CoordinatorID: 0, Address: addr1, Active: true},
+					{CoordinatorID: 1, Address: addr2, Active: false},
+				},
+				CoordinatorCounter: 2,
+			},
+			err: errors.New("coordinator found by CoordinatorByAddress should not be inactive"),
 		},
 	}
 	for _, tt := range tests {

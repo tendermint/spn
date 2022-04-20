@@ -21,10 +21,22 @@ message MsgSetRewards {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
-  uint64 lastRewardHeight = 4;
+  int64 lastRewardHeight = 4;
 }
 
 message MsgSetRewardsResponse {
+  repeated cosmos.base.v1beta1.Coin previousCoins = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+  int64 previousLastRewardHeight = 2;
+  repeated cosmos.base.v1beta1.Coin newCoins = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+  int64 newLastRewardHeight = 4;
 }
 
 // this line is used by starport scaffolding # proto/tx/message

@@ -10,12 +10,14 @@ import (
 )
 
 func Test_GetParams(t *testing.T) {
-	k, ctx := testkeeper.Launch(t)
-	params := sample.LaunchParams()
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	params := sample.LaunchParams(r)
 
-	k.SetParams(ctx, params)
+	tk.LaunchKeeper.SetParams(ctx, params)
 
-	require.EqualValues(t, params, k.GetParams(ctx))
-	require.EqualValues(t, params.MaxLaunchTime, k.MaxLaunchTime(ctx))
-	require.EqualValues(t, params.MinLaunchTime, k.MinLaunchTime(ctx))
+	require.EqualValues(t, params, tk.LaunchKeeper.GetParams(ctx))
+	require.EqualValues(t, params.LaunchTimeRange.MaxLaunchTime, tk.LaunchKeeper.LaunchTimeRange(ctx).MaxLaunchTime)
+	require.EqualValues(t, params.LaunchTimeRange.MinLaunchTime, tk.LaunchKeeper.LaunchTimeRange(ctx).MinLaunchTime)
+	require.EqualValues(t, params.RevertDelay, tk.LaunchKeeper.RevertDelay(ctx))
+	require.EqualValues(t, params.ChainCreationFee, tk.LaunchKeeper.ChainCreationFee(ctx))
 }

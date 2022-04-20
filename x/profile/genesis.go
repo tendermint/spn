@@ -7,7 +7,7 @@ import (
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-// InitGenesis initializes the capability module's state from a provided genesis
+// InitGenesis initializes the profile module's state from a provided genesis
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// this line is used by starport scaffolding # genesis/module/init
@@ -17,14 +17,9 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetValidator(ctx, elem)
 	}
 
-	// Set all the validatorByConsAddress
-	for _, elem := range genState.ValidatorByConsAddressList {
-		k.SetValidatorByConsAddress(ctx, elem)
-	}
-
-	// Set all the consensusKeyNonce
-	for _, elem := range genState.ConsensusKeyNonceList {
-		k.SetConsensusKeyNonce(ctx, elem)
+	// Set all the validatorByOperatorAddress
+	for _, elem := range genState.ValidatorByOperatorAddressList {
+		k.SetValidatorByOperatorAddress(ctx, elem)
 	}
 
 	// Set all the coordinator
@@ -41,7 +36,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	}
 }
 
-// ExportGenesis returns the capability module's exported genesis.
+// ExportGenesis returns the profile module's exported genesis.
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
@@ -49,8 +44,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.CoordinatorCounter = k.GetCoordinatorCounter(ctx)
 	genesis.CoordinatorByAddressList = k.GetAllCoordinatorByAddress(ctx)
 	genesis.ValidatorList = k.GetAllValidator(ctx)
-	genesis.ValidatorByConsAddressList = k.GetAllValidatorByConsAddress(ctx)
-	genesis.ConsensusKeyNonceList = k.GetAllConsensusKeyNonce(ctx)
+	genesis.ValidatorByOperatorAddressList = k.GetAllValidatorByOperatorAddress(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

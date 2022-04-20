@@ -26,6 +26,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			res, err = msgServer.CreateChain(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgEditChain:
 			res, err = msgServer.EditChain(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgUpdateLaunchInformation:
+			res, err = msgServer.UpdateLaunchInformation(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestAddAccount:
 			res, err = msgServer.RequestAddAccount(sdk.WrapSDKContext(ctx), msg)
 		case *types.MsgRequestAddVestingAccount:

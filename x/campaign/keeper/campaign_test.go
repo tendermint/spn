@@ -15,41 +15,31 @@ import (
 func createNCampaign(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.Campaign {
 	items := make([]types.Campaign, n)
 	for i := range items {
-		items[i] = sample.Campaign(0)
+		items[i] = sample.Campaign(r, 0)
 		items[i].CampaignID = keeper.AppendCampaign(ctx, items[i])
 	}
 	return items
 }
 
 func TestCampaignGet(t *testing.T) {
-	keeper, ctx := testkeeper.Campaign(t)
-	items := createNCampaign(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
 	for _, item := range items {
-		got, found := keeper.GetCampaign(ctx, item.CampaignID)
+		got, found := tk.CampaignKeeper.GetCampaign(ctx, item.CampaignID)
 		require.True(t, found)
 		require.Equal(t, item, got)
 	}
 }
 
-func TestCampaignRemove(t *testing.T) {
-	keeper, ctx := testkeeper.Campaign(t)
-	items := createNCampaign(keeper, ctx, 10)
-	for _, item := range items {
-		keeper.RemoveCampaign(ctx, item.CampaignID)
-		_, found := keeper.GetCampaign(ctx, item.CampaignID)
-		require.False(t, found)
-	}
-}
-
 func TestCampaignGetAll(t *testing.T) {
-	keeper, ctx := testkeeper.Campaign(t)
-	items := createNCampaign(keeper, ctx, 10)
-	require.ElementsMatch(t, items, keeper.GetAllCampaign(ctx))
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
+	require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllCampaign(ctx))
 }
 
 func TestCampaignCount(t *testing.T) {
-	keeper, ctx := testkeeper.Campaign(t)
-	items := createNCampaign(keeper, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
 	counter := uint64(len(items))
-	require.Equal(t, counter, keeper.GetCampaignCounter(ctx))
+	require.Equal(t, counter, tk.CampaignKeeper.GetCampaignCounter(ctx))
 }

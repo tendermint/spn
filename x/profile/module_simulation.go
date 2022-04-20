@@ -15,20 +15,18 @@ import (
 
 const (
 	defaultWeightMsgUpdateValidatorDescription   = 50
-	defaultWeightMsgDeleteValidator              = 10
-	defaultWeightMsgSetValidatorConsAddress      = 50
+	defaultWeightMsgAddValidatorOperatorAddress  = 50
 	defaultWeightMsgCreateCoordinator            = 50
 	defaultWeightMsgUpdateCoordinatorDescription = 20
 	defaultWeightMsgUpdateCoordinatorAddress     = 20
-	defaultWeightMsgDeleteCoordinator            = 5
+	defaultWeightMsgDisableCoordinator           = 5
 
 	opWeightMsgUpdateValidatorDescription   = "op_weight_msg_update_validator_description"
-	opWeightMsgDeleteValidator              = "op_weight_msg_delete_validator"
-	opWeightMsgSetValidatorConsAddress      = "op_weight_msg_create_chain"
+	opWeightMsgAddValidatorOperatorAddress  = "op_weight_msg_add_vaildator_operator_address"
 	opWeightMsgCreateCoordinator            = "op_weight_msg_create_coordinator"
 	opWeightMsgUpdateCoordinatorDescription = "op_weight_msg_update_coordinator_description"
 	opWeightMsgUpdateCoordinatorAddress     = "op_weight_msg_update_coordinator_address"
-	opWeightMsgDeleteCoordinator            = "op_weight_msg_delete_coordinator"
+	opWeightMsgDisableCoordinator           = "op_weight_msg_disable_coordinator"
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -37,7 +35,7 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 	}
-	profileGenesis := sample.ProfileGenesisState(accs...)
+	profileGenesis := sample.ProfileGenesisState(simState.Rand, accs...)
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&profileGenesis)
 }
 
@@ -58,12 +56,11 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	var (
 		weightMsgUpdateValidatorDescription   int
-		weightMsgDeleteValidator              int
 		weightMsgCreateCoordinator            int
 		weightMsgUpdateCoordinatorDescription int
 		weightMsgUpdateCoordinatorAddress     int
-		weightMsgDeleteCoordinator            int
-		weightMsgSetValidatorConsAddress      int
+		weightMsgDisableCoordinator           int
+		weightMsgAddValidatorOperatorAddress  int
 	)
 
 	appParams := simState.AppParams
@@ -73,14 +70,9 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgUpdateValidatorDescription = defaultWeightMsgUpdateValidatorDescription
 		},
 	)
-	appParams.GetOrGenerate(cdc, opWeightMsgDeleteValidator, &weightMsgDeleteValidator, nil,
+	appParams.GetOrGenerate(cdc, opWeightMsgAddValidatorOperatorAddress, &weightMsgAddValidatorOperatorAddress, nil,
 		func(_ *rand.Rand) {
-			weightMsgDeleteValidator = defaultWeightMsgDeleteValidator
-		},
-	)
-	appParams.GetOrGenerate(cdc, opWeightMsgSetValidatorConsAddress, &weightMsgSetValidatorConsAddress, nil,
-		func(_ *rand.Rand) {
-			weightMsgSetValidatorConsAddress = defaultWeightMsgSetValidatorConsAddress
+			weightMsgAddValidatorOperatorAddress = defaultWeightMsgAddValidatorOperatorAddress
 		},
 	)
 	appParams.GetOrGenerate(cdc, opWeightMsgCreateCoordinator, &weightMsgCreateCoordinator, nil,
@@ -98,9 +90,9 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgUpdateCoordinatorAddress = defaultWeightMsgUpdateCoordinatorAddress
 		},
 	)
-	appParams.GetOrGenerate(cdc, opWeightMsgDeleteCoordinator, &weightMsgDeleteCoordinator, nil,
+	appParams.GetOrGenerate(cdc, opWeightMsgDisableCoordinator, &weightMsgDisableCoordinator, nil,
 		func(_ *rand.Rand) {
-			weightMsgDeleteCoordinator = defaultWeightMsgDeleteCoordinator
+			weightMsgDisableCoordinator = defaultWeightMsgDisableCoordinator
 		},
 	)
 
@@ -110,12 +102,8 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			profilesimulation.SimulateMsgUpdateValidatorDescription(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
-			weightMsgDeleteValidator,
-			profilesimulation.SimulateMsgDeleteValidator(am.accountKeeper, am.bankKeeper, am.keeper),
-		),
-		simulation.NewWeightedOperation(
-			weightMsgSetValidatorConsAddress,
-			profilesimulation.SimulateMsgSetValidatorConsAddress(am.accountKeeper, am.bankKeeper, am.keeper),
+			weightMsgAddValidatorOperatorAddress,
+			profilesimulation.SimulateMsgAddValidatorOperatorAddress(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgCreateCoordinator,
@@ -130,8 +118,8 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			profilesimulation.SimulateMsgUpdateCoordinatorAddress(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
-			weightMsgDeleteCoordinator,
-			profilesimulation.SimulateMsgDeleteCoordinator(am.accountKeeper, am.bankKeeper, am.keeper),
+			weightMsgDisableCoordinator,
+			profilesimulation.SimulateMsgDisableCoordinator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }

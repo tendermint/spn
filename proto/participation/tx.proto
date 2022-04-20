@@ -1,0 +1,30 @@
+syntax = "proto3";
+package tendermint.spn.participation;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/tendermint/spn/x/participation/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc Participate(MsgParticipate) returns (MsgParticipateResponse);
+  rpc WithdrawAllocations(MsgWithdrawAllocations) returns (MsgWithdrawAllocationsResponse);
+  // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgParticipate {
+  string participant = 1;
+  uint64 auctionID = 2;
+  uint64 tierID = 3;
+}
+
+message MsgParticipateResponse {}
+
+message MsgWithdrawAllocations {
+  string participant = 1;
+  uint64 auctionID = 2;
+}
+
+message MsgWithdrawAllocationsResponse {}
+
+// this line is used by starport scaffolding # proto/tx/message

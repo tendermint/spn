@@ -13,12 +13,14 @@ import (
 
 type (
 	Keeper struct {
-		cdc            codec.BinaryCodec
-		storeKey       sdk.StoreKey
-		memKey         sdk.StoreKey
-		paramstore     paramtypes.Subspace
-		profileKeeper  types.ProfileKeeper
-		campaignKeeper types.CampaignKeeper
+		cdc               codec.BinaryCodec
+		storeKey          sdk.StoreKey
+		memKey            sdk.StoreKey
+		paramstore        paramtypes.Subspace
+		distrKeeper       types.DistributionKeeper
+		profileKeeper     types.ProfileKeeper
+		campaignKeeper    types.CampaignKeeper
+		monitoringcKeeper types.MonitoringConsumerKeeper
 	}
 )
 
@@ -27,6 +29,7 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
+	distrKeeper types.DistributionKeeper,
 	profileKeeper types.ProfileKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
@@ -39,6 +42,7 @@ func NewKeeper(
 		storeKey:      storeKey,
 		memKey:        memKey,
 		paramstore:    ps,
+		distrKeeper:   distrKeeper,
 		profileKeeper: profileKeeper,
 	}
 }
@@ -47,7 +51,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-// SetCampaignKeeper set the campaign keeper interface of the module
+// SetCampaignKeeper sets the campaign keeper interface of the module
 func (k *Keeper) SetCampaignKeeper(campaignKeeper types.CampaignKeeper) {
 	if k.campaignKeeper != nil {
 		panic("campaign keeper already set for launch module")
@@ -55,7 +59,25 @@ func (k *Keeper) SetCampaignKeeper(campaignKeeper types.CampaignKeeper) {
 	k.campaignKeeper = campaignKeeper
 }
 
-// GetProfileKeeper get the profile keeper interface of the module
+// GetCampaignKeeper gets the campaign keeper interface of the module
+func (k *Keeper) GetCampaignKeeper() types.CampaignKeeper {
+	return k.campaignKeeper
+}
+
+// SetMonitoringcKeeper sets the monitoring consumer keeper interface of the module
+func (k *Keeper) SetMonitoringcKeeper(monitoringcKeeper types.MonitoringConsumerKeeper) {
+	if k.monitoringcKeeper != nil {
+		panic("monitoring consumer keeper already set for launch module")
+	}
+	k.monitoringcKeeper = monitoringcKeeper
+}
+
+// GetMonitoringcKeeper gets the monitoring consumer keeper interface of the module
+func (k *Keeper) GetMonitoringcKeeper() types.MonitoringConsumerKeeper {
+	return k.monitoringcKeeper
+}
+
+// GetProfileKeeper gets the profile keeper interface of the module
 func (k *Keeper) GetProfileKeeper() types.ProfileKeeper {
 	return k.profileKeeper
 }

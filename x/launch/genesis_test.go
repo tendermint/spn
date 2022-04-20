@@ -16,11 +16,11 @@ import (
 */
 
 func TestGenesis(t *testing.T) {
-	keeper, ctx := testkeeper.Launch(t)
-
-	genesisState := sample.LaunchGenesisState()
-	launch.InitGenesis(ctx, *keeper, genesisState)
-	got := launch.ExportGenesis(ctx, *keeper)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	r := sample.Rand()
+	genesisState := sample.LaunchGenesisState(r)
+	launch.InitGenesis(ctx, *tk.LaunchKeeper, genesisState)
+	got := launch.ExportGenesis(ctx, *tk.LaunchKeeper)
 
 	// Compare lists
 	require.ElementsMatch(t, genesisState.ChainList, got.ChainList)

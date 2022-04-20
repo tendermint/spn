@@ -66,11 +66,7 @@ func (k Keeper) TransmitMonitoringPacket(
 		timeoutTimestamp,
 	)
 
-	if err := k.channelKeeper.SendPacket(ctx, channelCap, packet); err != nil {
-		return err
-	}
-
-	return nil
+	return k.channelKeeper.SendPacket(ctx, channelCap, packet)
 }
 
 // OnRecvMonitoringPacket processes packet reception
@@ -92,10 +88,6 @@ func (k Keeper) OnAcknowledgementMonitoringPacket(
 ) error {
 	switch dispatchedAck := ack.Response.(type) {
 	case *channeltypes.Acknowledgement_Error:
-
-		// TODO: failed acknowledgement logic
-		_ = dispatchedAck.Error
-
 		return nil
 	case *channeltypes.Acknowledgement_Result:
 		// Decode the packet acknowledgment
@@ -105,8 +97,6 @@ func (k Keeper) OnAcknowledgementMonitoringPacket(
 			// The counter-party module doesn't implement the correct acknowledgment format
 			return errors.New("cannot unmarshal acknowledgment")
 		}
-
-		// TODO: successful acknowledgement logic
 
 		return nil
 	default:
