@@ -50,11 +50,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		}
 	}
 
-	chain, found := k.GetChain(ctx, id)
-	if !found {
-		return nil, spnerrors.Criticalf("created chain not found: launch ID %d", id)
-	}
-
+	chain, _ := k.GetChain(ctx, id)
 	err = ctx.EventManager().EmitTypedEvent(&types.EventChainCreated{
 		Chain: chain,
 	})
