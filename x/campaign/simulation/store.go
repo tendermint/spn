@@ -137,6 +137,7 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 
 // GetAccountWithVouchers returns an account that has vouchers for a campaign
 func GetAccountWithVouchers(
+	r *rand.Rand,
 	ctx sdk.Context,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -178,10 +179,11 @@ func GetAccountWithVouchers(
 	bk.IterateAccountBalances(ctx, accountAddr, func(coin sdk.Coin) bool {
 		coinCampID, err := types.VoucherCampaign(coin.Denom)
 		if err == nil && coinCampID == campID {
-			// retain a random portion of the balance in the range [0, coin.Amount)
-			retainAmt := sdk.NewInt(rand.Int63n(coin.Amount.Int64()))
-			coin.Amount = coin.Amount.Sub(retainAmt)
-			coins = append(coins, coin)
+			// fetch a part of each voucher hold by the account
+			amt, err := simtypes.RandPositiveInt(r, coin.Amount)
+			if err == nil {
+				coins = append(coins, sdk.NewCoin(coin.Denom, amt))
+			}
 		}
 		return false
 	})
