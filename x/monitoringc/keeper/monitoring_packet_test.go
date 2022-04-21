@@ -137,3 +137,28 @@ func Test_OnRecvMonitoringPacket(t *testing.T) {
 		})
 	}
 }
+
+func Test_OnAcknowledgementMonitoringPacket(t *testing.T) {
+	var (
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+	)
+	err := tk.MonitoringConsumerKeeper.OnAcknowledgementMonitoringPacket(
+		ctx,
+		channeltypes.Packet{},
+		spntypes.MonitoringPacket{},
+		channeltypes.Acknowledgement{},
+	)
+	require.EqualError(t, err, "not implemented")
+}
+
+func Test_OnTimeoutMonitoringPacket(t *testing.T) {
+	var (
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+	)
+	err := tk.MonitoringConsumerKeeper.OnTimeoutMonitoringPacket(
+		ctx,
+		channeltypes.Packet{},
+		spntypes.MonitoringPacket{},
+	)
+	require.EqualError(t, err, "not implemented")
+}

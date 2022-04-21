@@ -23,7 +23,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MerkleRoot represents a Merkel Root in ConsensusState
+// MerkleRoot represents a Merkle Root in ConsensusState
 type MerkleRoot struct {
 	Hash string `protobuf:"bytes,1,opt,name=hash,proto3" json:"hash,omitempty"`
 }

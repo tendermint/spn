@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/tendermint/spn/pkg/types";
 
-// MerkleRoot represents a Merkel Root in ConsensusState
+// MerkleRoot represents a Merkle Root in ConsensusState
 message MerkleRoot {
   string hash = 1;
 }
