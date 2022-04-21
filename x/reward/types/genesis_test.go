@@ -42,6 +42,16 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 			valid: false,
 		},
+		{
+			desc: "invalid rewardPool",
+			genState: &types.GenesisState{
+				RewardPoolList: []types.RewardPool{
+					sample.RewardPool(r, 1),
+					{}, // invalid reward pool
+				},
+			},
+			valid: false,
+		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()
