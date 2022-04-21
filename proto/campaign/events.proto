@@ -1,0 +1,73 @@
+syntax = "proto3";
+package tendermint.spn.campaign;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "campaign/campaign.proto";
+import "campaign/mainnet_account.proto";
+import "campaign/mainnet_vesting_account.proto";
+
+option go_package = "github.com/tendermint/spn/x/campaign/types";
+
+message EventCampaignCreated {
+  Campaign campaign = 1 [(gogoproto.nullable) = false];
+}
+
+message EventCampaignUpdated {
+  Campaign campaign = 1 [(gogoproto.nullable) = false];
+}
+
+message EventMainnetInitialized {
+  uint64 campaignID = 1;
+  uint64 mainnetID = 2;
+}
+
+message EventMainnetAccountCreated {
+  MainnetAccount account = 1 [(gogoproto.nullable) = false];
+}
+
+message EventMainnetAccountUpdated {
+  MainnetAccount account = 1 [(gogoproto.nullable) = false];
+}
+
+message EventMainnetAccountRemoved{
+  uint64 campaignID = 1;
+  string address = 2;
+}
+
+message EventMainnetVestingAccountCreated {
+  MainnetVestingAccount account = 1 [(gogoproto.nullable) = false];
+}
+
+message EventMainnetVestingAccountUpdated {
+  MainnetVestingAccount account = 1 [(gogoproto.nullable) = false];
+}
+
+message EventVouchersMinted {
+  uint64 campaignID = 1;
+  repeated cosmos.base.v1beta1.Coin vouchers = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+
+message EventVouchersRedeemed {
+  uint64 campaignID = 1;
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin vouchers = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+
+message EventVouchersUnredeemed {
+  uint64 campaignID = 1;
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin vouchers = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
