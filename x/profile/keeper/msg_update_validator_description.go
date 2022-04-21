@@ -40,6 +40,9 @@ func (k msgServer) UpdateValidatorDescription(
 	}
 
 	k.SetValidator(ctx, validator)
+	err := ctx.EventManager().EmitTypedEvent(
+		&types.EventValidatorUpdated{
+			Validator: validator})
 
-	return &types.MsgUpdateValidatorDescriptionResponse{}, nil
+	return &types.MsgUpdateValidatorDescriptionResponse{}, err
 }

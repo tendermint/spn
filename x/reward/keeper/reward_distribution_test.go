@@ -2,8 +2,9 @@ package keeper_test
 
 import (
 	"fmt"
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"testing"
+
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"

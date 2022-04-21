@@ -48,5 +48,9 @@ func (k msgServer) UpdateCoordinatorDescription(
 	}
 
 	k.SetCoordinator(ctx, coord)
-	return &types.MsgUpdateCoordinatorDescriptionResponse{}, nil
+	err := ctx.EventManager().EmitTypedEvent(
+		&types.EventCoordinatorUpdated{
+			Coordinator: coord})
+
+	return &types.MsgUpdateCoordinatorDescriptionResponse{}, err
 }
