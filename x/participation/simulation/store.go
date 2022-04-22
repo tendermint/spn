@@ -38,8 +38,8 @@ func RandomAccWithBalance(ctx sdk.Context, r *rand.Rand,
 	return simtypes.Account{}, sdk.NewCoins(), false
 }
 
-// RandomAuction returns random auction that is not started nor cancelled
-func RandomAuction(ctx sdk.Context, r *rand.Rand, fk fundraisingkeeper.Keeper) (auction fundraisingtypes.AuctionI, found bool) {
+// RandomAuctionStandby returns random auction that is in standby
+func RandomAuctionStandby(ctx sdk.Context, r *rand.Rand, fk fundraisingkeeper.Keeper) (auction fundraisingtypes.AuctionI, found bool) {
 	auctions := fk.GetAuctions(ctx)
 	if len(auctions) == 0 {
 		return auction, false
@@ -57,6 +57,36 @@ func RandomAuction(ctx sdk.Context, r *rand.Rand, fk fundraisingkeeper.Keeper) (
 	}
 
 	return auction, false
+}
+
+// RandomAuctionParticipationEnabled returns random auction where participation is enabled
+func RandomAuctionParticipationEnabled(
+	ctx sdk.Context,
+	r *rand.Rand,
+	fk fundraisingkeeper.Keeper,
+	k keeper.Keeper,
+) (auction fundraisingtypes.AuctionI, found bool) {
+	auctions := fk.GetAuctions(ctx)
+	if len(auctions) == 0 {
+		return auction, false
+	}
+
+	r.Shuffle(len(auctions), func(i, j int) {
+		auctions[i], auctions[j] = auctions[j], auctions[i]
+	})
+
+	for _, a := range auctions {
+		if a.GetStatus() != fundraisingtypes.AuctionStatusStandBy {
+			continue
+		}
+		if !k.IsRegistrationEnabled(ctx, a.GetStartTime()) {
+			continue
+		}
+		auction = a
+		found = true
+	}
+
+	return
 }
 
 // RandomAuctionWithdrawEnabled returns random auction where used allocations can be withdrawn at blockTime
