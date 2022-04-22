@@ -10,9 +10,6 @@ import (
 )
 
 const (
-	// BondDenom defines the bond denom used in testing
-	BondDenom = "stake"
-
 	simAccountsNb = 100
 )
 
@@ -35,4 +32,30 @@ func SimAccounts() (accounts []simtypes.Account) {
 // Rand returns a sample Rand object for randomness
 func Rand() *rand.Rand {
 	return rand.New(rand.NewSource(time.Now().Unix()))
+}
+
+// Fees returns a random fee by selecting a random amount of bond denomination
+// from the account's available balance. If the user doesn't have enough funds for
+// paying fees, it returns empty coins.
+func Fees(r *rand.Rand, spendableCoins sdk.Coins) (sdk.Coins, error) {
+	if spendableCoins.Empty() {
+		return nil, nil
+	}
+
+	bondDenomAmt := spendableCoins.AmountOf(sdk.DefaultBondDenom)
+	if bondDenomAmt.IsZero() {
+		return nil, nil
+	}
+
+	amt, err := simtypes.RandPositiveInt(r, bondDenomAmt)
+	if err != nil {
+		return nil, err
+	}
+
+	if amt.IsZero() {
+		return nil, nil
+	}
+
+	fees := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, amt))
+	return fees, nil
 }
