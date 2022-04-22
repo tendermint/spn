@@ -75,5 +75,5 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		Chain: chain,
 	})
 
-	return &types.MsgEditChainResponse{}, nil
+	return &types.MsgEditChainResponse{}, err
 }

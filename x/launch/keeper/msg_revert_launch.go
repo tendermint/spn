@@ -61,5 +61,5 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 		LaunchID: msg.LaunchID,
 	})
 
-	return &types.MsgRevertLaunchResponse{}, nil
+	return &types.MsgRevertLaunchResponse{}, err
 }
