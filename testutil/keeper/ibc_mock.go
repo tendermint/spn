@@ -61,8 +61,9 @@ func (c ChannelMock) GetChannel(_ sdk.Context, _, channelID string) (channel cha
 }
 
 // GetNextSequenceSend implements ChannelKeeper
+// returns true for all cases
 func (c ChannelMock) GetNextSequenceSend(_ sdk.Context, _, _ string) (uint64, bool) {
-	return 0, false
+	return 0, true
 }
 
 // SendPacket implements ChannelKeeper
