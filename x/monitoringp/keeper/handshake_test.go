@@ -46,6 +46,15 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		require.NoError(t, err)
 	})
 
+	t.Run("should fail if channelClientID is not equal to consumerClientID", func(t *testing.T) {
+		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
+		tk.MonitoringProviderKeeper.SetConsumerClientID(ctx, types.ConsumerClientID{
+			ClientID: "notequal",
+		})
+		err := tk.MonitoringProviderKeeper.VerifyClientIDFromChannelID(ctx, "foo")
+		require.ErrorIs(t, err, types.ErrInvalidClient)
+	})
+
 	t.Run("should fail if channel doesn't exist", func(t *testing.T) {
 		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
 		tk.MonitoringProviderKeeper.SetConsumerClientID(ctx, types.ConsumerClientID{
