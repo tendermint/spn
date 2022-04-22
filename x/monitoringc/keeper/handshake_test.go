@@ -202,4 +202,19 @@ func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
 		err := tk.MonitoringConsumerKeeper.RegisterProviderClientIDFromChannelID(ctx, "foo")
 		require.ErrorIs(t, err, types.ErrConnectionAlreadyEstablished)
 	})
+
+	t.Run("should fail if monitoring connection already enabled on chain", func(t *testing.T) {
+		ctx, tk, _ := testSetupWithFooClient(t)
+		tk.MonitoringConsumerKeeper.SetLaunchIDFromVerifiedClientID(ctx, types.LaunchIDFromVerifiedClientID{
+			LaunchID: 1,
+			ClientID: "foo",
+		})
+		chain := launchtypes.Chain{
+			LaunchID:            1,
+			MonitoringConnected: true,
+		}
+		tk.LaunchKeeper.SetChain(ctx, chain)
+		err := tk.MonitoringConsumerKeeper.RegisterProviderClientIDFromChannelID(ctx, "foo")
+		require.ErrorIs(t, err, launchtypes.ErrChainMonitoringConnected)
+	})
 }

@@ -49,7 +49,7 @@ func NewConsensusState(timestamp, nextValHash, rootHash string) ConsensusState {
 	return ConsensusState{
 		NextValidatorsHash: nextValHash,
 		Timestamp:          timestamp,
-		Root: MerkelRool{
+		Root: MerkleRoot{
 			Hash: rootHash,
 		},
 	}
