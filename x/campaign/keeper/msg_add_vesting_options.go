@@ -82,5 +82,11 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	k.SetCampaign(ctx, campaign)
 	k.SetMainnetVestingAccount(ctx, account)
 
-	return &types.MsgAddVestingOptionsResponse{}, nil
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignUpdated{Campaign: campaign})
+	if err != nil {
+		return nil, err
+	}
+	err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetVestingAccountUpdated{Account: account})
+
+	return &types.MsgAddVestingOptionsResponse{}, err
 }

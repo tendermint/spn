@@ -43,5 +43,7 @@ func (k msgServer) BurnVouchers(goCtx context.Context, msg *types.MsgBurnVoucher
 	}
 	k.SetCampaign(ctx, campaign)
 
-	return &types.MsgBurnVouchersResponse{}, nil
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignUpdated{Campaign: campaign})
+
+	return &types.MsgBurnVouchersResponse{}, err
 }

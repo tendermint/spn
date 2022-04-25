@@ -65,5 +65,11 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 	k.SetCampaign(ctx, campaign)
 	k.SetMainnetAccount(ctx, account)
 
-	return &types.MsgAddSharesResponse{}, nil
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignUpdated{Campaign: campaign})
+	if err != nil {
+		return nil, err
+	}
+	err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{Account: account})
+
+	return &types.MsgAddSharesResponse{}, err
 }
