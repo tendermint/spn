@@ -324,7 +324,7 @@
     },
     "monitoringp": {
       "params": {
-        "lastBlockHeight": "1",
+        "lastBlockHeight": 1,
         "consumerChainID": "orbit-1",
         "consumerUnbondingPeriod": "2",
         "consumerRevisionHeight": 1
