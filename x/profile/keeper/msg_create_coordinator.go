@@ -17,11 +17,11 @@ func (k msgServer) CreateCoordinator(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the coordinator address is already in the store
-	coord, found := k.getCoordinatorByAddress(ctx, msg.Address)
+	coordByAddr, found := k.getCoordinatorByAddress(ctx, msg.Address)
 	if found {
 		return &types.MsgCreateCoordinatorResponse{},
 			sdkerrors.Wrap(types.ErrCoordAlreadyExist,
-				fmt.Sprintf("coordinatorId: %d", coord.CoordinatorID))
+				fmt.Sprintf("coordinatorId: %d", coordByAddr.CoordinatorID))
 	}
 
 	coordID := k.AppendCoordinator(ctx, types.Coordinator{
@@ -34,7 +34,12 @@ func (k msgServer) CreateCoordinator(
 		CoordinatorID: coordID,
 	})
 
+	coord, _ := k.GetCoordinator(ctx, coordID)
+	err := ctx.EventManager().EmitTypedEvent(
+		&types.EventCoordinatorCreated{
+			Coordinator: coord})
+
 	return &types.MsgCreateCoordinatorResponse{
 		CoordinatorID: coordID,
-	}, nil
+	}, err
 }
