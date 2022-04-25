@@ -42,32 +42,3 @@ message EventMainnetVestingAccountCreated {
 message EventMainnetVestingAccountUpdated {
   MainnetVestingAccount account = 1 [(gogoproto.nullable) = false];
 }
-
-message EventVouchersMinted {
-  uint64 campaignID = 1;
-  repeated cosmos.base.v1beta1.Coin vouchers = 2 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
-  ];
-}
-
-message EventVouchersRedeemed {
-  uint64 campaignID = 1;
-  string address = 2;
-  repeated cosmos.base.v1beta1.Coin vouchers = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
-  ];
-}
-
-message EventVouchersUnredeemed {
-  uint64 campaignID = 1;
-  string address = 2;
-  repeated cosmos.base.v1beta1.Coin vouchers = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
-  ];
-}
