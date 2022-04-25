@@ -69,6 +69,7 @@ func (k msgServer) RequestAddVestingAccount(
 
 		err = ctx.EventManager().EmitTypedEvent(&types.EventVestingAccountAdded{
 			VestingAccount: *content.GetVestingAccount(),
+			LaunchID:       msg.LaunchID,
 		})
 		if err != nil {
 			return nil, err

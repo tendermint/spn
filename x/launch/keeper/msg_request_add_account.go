@@ -69,6 +69,7 @@ func (k msgServer) RequestAddAccount(
 
 		err = ctx.EventManager().EmitTypedEvent(&types.EventGenesisAccountAdded{
 			GenesisAccount: *content.GetGenesisAccount(),
+			LaunchID:       msg.LaunchID,
 		})
 		if err != nil {
 			return nil, err

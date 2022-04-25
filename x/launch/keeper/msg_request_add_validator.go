@@ -67,6 +67,9 @@ func (k msgServer) RequestAddValidator(
 
 		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorAdded{
 			GenesisValidator: *content.GetGenesisValidator(),
+			LaunchID:         msg.LaunchID,
+			HasCampaign:      chain.HasCampaign,
+			CampaignID:       chain.CampaignID,
 		})
 		if err != nil {
 			return nil, err
