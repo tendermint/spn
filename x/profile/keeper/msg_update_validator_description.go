@@ -15,8 +15,8 @@ func (k msgServer) UpdateValidatorDescription(
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the validator address is already in the store
-	validator, found := k.GetValidator(ctx, msg.Address)
-	if !found {
+	validator, valfound := k.GetValidator(ctx, msg.Address)
+	if !valfound {
 		validator = types.Validator{
 			Address:     msg.Address,
 			Description: types.ValidatorDescription{},
@@ -40,6 +40,16 @@ func (k msgServer) UpdateValidatorDescription(
 	}
 
 	k.SetValidator(ctx, validator)
+	var err error
+	if valfound {
+		err = ctx.EventManager().EmitTypedEvent(
+			&types.EventValidatorUpdated{
+				Validator: validator})
+	} else {
+		err = ctx.EventManager().EmitTypedEvent(
+			&types.EventValidatorCreated{
+				Validator: validator})
+	}
 
-	return &types.MsgUpdateValidatorDescriptionResponse{}, nil
+	return &types.MsgUpdateValidatorDescriptionResponse{}, err
 }

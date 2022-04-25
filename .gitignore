@@ -8,6 +8,9 @@ release/
 .envrc
 .vscode
 
+# OS
+.DS_Store
+
 # Localnet
 localnet/node?/data/*.db
 localnet/node?/data/snapshots

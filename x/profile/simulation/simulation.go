@@ -9,15 +9,16 @@ import (
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
+	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/profile/keeper"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
 // generate a Tx with 2 signatures if validator account is not equal to operator address account
-func genAndDeliverTxWithRandFeesAddOpAddr(txCtx simulation.OperationInput, opSimAcc simtypes.Account) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+func genAndDeliverTxWithRandFeesAddOpAddr(txCtx sdksimulation.OperationInput, opSimAcc simtypes.Account) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 	account := txCtx.AccountKeeper.GetAccount(txCtx.Context, txCtx.SimAccount.Address)
 	spendable := txCtx.Bankkeeper.SpendableCoins(txCtx.Context, account.GetAddress())
 	opAccout := txCtx.AccountKeeper.GetAccount(txCtx.Context, opSimAcc.Address)
@@ -40,7 +41,7 @@ func genAndDeliverTxWithRandFeesAddOpAddr(txCtx simulation.OperationInput, opSim
 		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "message doesn't leave room for fees"), nil, err
 	}
 
-	fees, err = simtypes.RandomFees(txCtx.R, txCtx.Context, coins)
+	fees, err = sample.Fees(txCtx.R, coins)
 	if err != nil {
 		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to generate fees"), nil, err
 	}
@@ -85,7 +86,7 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 			desc.SecurityContact,
 			desc.Details,
 		)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -99,7 +100,7 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -120,7 +121,7 @@ func SimulateMsgAddValidatorOperatorAddress(ak types.AccountKeeper, bk types.Ban
 			OperatorAddress:  opAccount.Address.String(),
 		}
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -156,7 +157,7 @@ func SimulateMsgCreateCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 			sample.String(r, 30),
 			sample.String(r, 30),
 		)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -170,7 +171,7 @@ func SimulateMsgCreateCoordinator(ak types.AccountKeeper, bk types.BankKeeper, k
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -194,7 +195,7 @@ func SimulateMsgUpdateCoordinatorDescription(ak types.AccountKeeper, bk types.Ba
 			desc.Details,
 		)
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -208,7 +209,7 @@ func SimulateMsgUpdateCoordinatorDescription(ak types.AccountKeeper, bk types.Ba
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -228,7 +229,7 @@ func SimulateMsgUpdateCoordinatorAddress(ak types.AccountKeeper, bk types.BankKe
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateCoordinatorAddress, "skip update coordinator address"), nil, nil
 		}
 		msg := types.NewMsgUpdateCoordinatorAddress(coord.Address.String(), simAccount.Address.String())
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -242,7 +243,7 @@ func SimulateMsgUpdateCoordinatorAddress(ak types.AccountKeeper, bk types.BankKe
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -260,7 +261,7 @@ func SimulateMsgDisableCoordinator(ak types.AccountKeeper, bk types.BankKeeper, 
 		}
 
 		msg := types.NewMsgDisableCoordinator(simAccount.Address.String())
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -274,6 +275,6 @@ func SimulateMsgDisableCoordinator(ak types.AccountKeeper, bk types.BankKeeper, 
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
