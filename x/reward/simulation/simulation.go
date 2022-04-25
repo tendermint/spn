@@ -4,11 +4,13 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
+	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
+	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/reward/keeper"
 	"github.com/tendermint/spn/x/reward/types"
 )
@@ -84,7 +86,7 @@ func SimulateMsgSetRewards(
 			msg.Coins = sdk.NewCoins()
 		}
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -99,6 +101,6 @@ func SimulateMsgSetRewards(
 			CoinsSpentInMsg: wantCoin,
 		}
 
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }

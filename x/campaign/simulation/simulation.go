@@ -4,13 +4,15 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
+	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -32,7 +34,7 @@ func deliverSimTx(
 	msg TypedMsg,
 	coinsSpent sdk.Coins,
 ) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-	txCtx := simulation.OperationInput{
+	txCtx := sdksimulation.OperationInput{
 		R:               r,
 		App:             app,
 		TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -46,7 +48,7 @@ func deliverSimTx(
 		ModuleName:      types.ModuleName,
 		CoinsSpentInMsg: coinsSpent,
 	}
-	return simulation.GenAndDeliverTxWithRandFees(txCtx)
+	return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 }
 
 // SimulateMsgCreateCampaign simulates a MsgCreateCampaign message
@@ -269,7 +271,7 @@ func SimulateMsgBurnVouchers(
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		campID, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, false)
+		campID, simAccount, vouchers, found := GetAccountWithVouchers(r, ctx, bk, k, accs, false)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBurnVouchers, "skip burn vouchers"), nil, nil
 		}
@@ -292,7 +294,7 @@ func SimulateMsgRedeemVouchers(
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		campID, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, true)
+		campID, simAccount, vouchers, found := GetAccountWithVouchers(r, ctx, bk, k, accs, true)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRedeemVouchers, "skip redeem vouchers"), nil, nil
 		}
@@ -343,7 +345,7 @@ func SimulateMsgSendVouchers(
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		_, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, false)
+		_, simAccount, vouchers, found := GetAccountWithVouchers(r, ctx, bk, k, accs, false)
 		if !found {
 			return simtypes.NoOpMsg(banktypes.ModuleName, banktypes.TypeMsgSend, "skip send vouchers"), nil, nil
 		}

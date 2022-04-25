@@ -235,3 +235,111 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 		})
 	}
 }
+
+func TestKeeper_TransmitSignatures(t *testing.T) {
+	ctx, tk, _ := monitoringpKeeperWithFooClient(t)
+	valFoo, valBar, valBaz, valFred, valQux := sample.Validator(t, r),
+		sample.Validator(t, r),
+		sample.Validator(t, r),
+		sample.Validator(t, r),
+		sample.Validator(t, r)
+
+	// initialize staking validator set
+	tk.StakingKeeper.SetValidator(ctx, valFoo)
+	tk.StakingKeeper.SetValidator(ctx, valBar)
+	tk.StakingKeeper.SetValidator(ctx, valBaz)
+	tk.StakingKeeper.SetValidator(ctx, valFred)
+	tk.StakingKeeper.SetValidator(ctx, valQux)
+	err := tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFoo)
+	require.NoError(t, err)
+	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBar)
+	require.NoError(t, err)
+	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBaz)
+	require.NoError(t, err)
+	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFred)
+	require.NoError(t, err)
+	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valQux)
+	require.NoError(t, err)
+
+	tests := []struct {
+		name                        string
+		monitoringInfoExist         bool
+		inputMonitoringInfo         types.MonitoringInfo
+		lastBlockHeight             int64
+		currentBlockHeight          int64
+		channelIDExist              bool
+		channelID                   types.ConnectionChannelID
+		expectedMonitoringInfoFound bool
+		expectedMonitoringInfo      types.MonitoringInfo
+		wantErr                     bool
+	}{
+		{
+			name:                        "currentBlockHeight < lastBlockHeight returns nil",
+			monitoringInfoExist:         false,
+			lastBlockHeight:             11,
+			currentBlockHeight:          10,
+			channelIDExist:              false,
+			expectedMonitoringInfoFound: false,
+		},
+		{
+			name:                        "lastBlockHeight no channel ID set returns nil",
+			monitoringInfoExist:         false,
+			lastBlockHeight:             10,
+			currentBlockHeight:          11,
+			channelIDExist:              false,
+			expectedMonitoringInfoFound: false,
+		},
+		{
+			name:                        "no monitoring info found",
+			monitoringInfoExist:         false,
+			lastBlockHeight:             10,
+			currentBlockHeight:          11,
+			channelIDExist:              true,
+			channelID:                   types.ConnectionChannelID{ChannelID: "channelID"},
+			expectedMonitoringInfoFound: false,
+		},
+		{
+			name:                "monitoring info found with channel not found",
+			monitoringInfoExist: true,
+			inputMonitoringInfo: tc.MonitoringInfo(1,
+				tc.SignatureCount(t,
+					valFoo.OperatorAddress,
+					"1")),
+			lastBlockHeight:    10,
+			currentBlockHeight: 11,
+			channelIDExist:     true,
+			channelID:          types.ConnectionChannelID{ChannelID: "channelID"},
+			wantErr:            true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// set keeper values
+			params := tk.MonitoringProviderKeeper.GetParams(ctx)
+			params.LastBlockHeight = tt.lastBlockHeight
+			tk.MonitoringProviderKeeper.SetParams(ctx, params)
+			if tt.monitoringInfoExist {
+				tk.MonitoringProviderKeeper.SetMonitoringInfo(ctx, tt.inputMonitoringInfo)
+			} else {
+				tk.MonitoringProviderKeeper.RemoveMonitoringInfo(ctx)
+			}
+
+			if tt.channelIDExist {
+				tk.MonitoringProviderKeeper.SetConnectionChannelID(ctx, tt.channelID)
+			}
+
+			// report
+			err := tk.MonitoringProviderKeeper.TransmitSignatures(ctx, tt.currentBlockHeight)
+			if tt.wantErr {
+				require.Error(t, err)
+				return
+			}
+			require.NoError(t, err)
+
+			// check saved values
+			monitoringInfo, found := tk.MonitoringProviderKeeper.GetMonitoringInfo(ctx)
+			require.EqualValues(t, tt.expectedMonitoringInfoFound, found)
+			require.EqualValues(t, tt.expectedMonitoringInfo, monitoringInfo)
+		})
+	}
+}

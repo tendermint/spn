@@ -64,7 +64,7 @@ func TestRandomAccWithBalance(t *testing.T) {
 	}
 }
 
-func TestRandomAuction(t *testing.T) {
+func TestRandomAuctionStandby(t *testing.T) {
 	var (
 		r            = sample.Rand()
 		accs         = simulation.RandomAccounts(r, 5)
@@ -104,7 +104,7 @@ func TestRandomAuction(t *testing.T) {
 		auction = fundraisingtypes.NewFixedPriceAuction(ba)
 		tk.FundraisingKeeper.SetAuction(ctx, auction)
 
-		_, found := participationsim.RandomAuction(ctx, r, *tk.FundraisingKeeper)
+		_, found := participationsim.RandomAuctionStandby(ctx, r, *tk.FundraisingKeeper)
 		require.False(t, found)
 	})
 
@@ -119,7 +119,7 @@ func TestRandomAuction(t *testing.T) {
 		auction1, found := tk.FundraisingKeeper.GetAuction(ctx, auctionID1)
 		require.True(t, found)
 
-		got, found := participationsim.RandomAuction(ctx, r, *tk.FundraisingKeeper)
+		got, found := participationsim.RandomAuctionStandby(ctx, r, *tk.FundraisingKeeper)
 		require.True(t, found)
 		require.Equal(t, auction1, got)
 	})
@@ -127,8 +127,56 @@ func TestRandomAuction(t *testing.T) {
 	t.Run("no auctions", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-		_, found := participationsim.RandomAuction(ctx, r, *tk.FundraisingKeeper)
+		_, found := participationsim.RandomAuctionStandby(ctx, r, *tk.FundraisingKeeper)
 		require.False(t, found)
+	})
+}
+
+func TestRandomAuctionParticipationEnabled(t *testing.T) {
+	var (
+		r                  = sample.Rand()
+		accs               = simulation.RandomAccounts(r, 5)
+		sellingCoin        = sample.Coin(r)
+		ctx, tk, _         = testkeeper.NewTestSetup(t)
+		registrationPeriod = time.Hour
+	)
+
+	params := tk.ParticipationKeeper.GetParams(ctx)
+	params.RegistrationPeriod = registrationPeriod
+	tk.ParticipationKeeper.SetParams(ctx, params)
+
+	t.Run("no auctions", func(t *testing.T) {
+		_, found := participationsim.RandomAuctionParticipationEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		require.False(t, found)
+	})
+
+	t.Run("no auction to be found that satisfy requirements", func(t *testing.T) {
+		startTime := ctx.BlockTime().Add(time.Hour * 10)
+		endTime := ctx.BlockTime().Add(time.Hour * 24 * 7)
+
+		// initialize auction
+		tk.Mint(ctx, accs[0].Address.String(), sdk.NewCoins(sellingCoin))
+		auctionID := tk.CreateFixedPriceAuction(ctx, r, accs[0].Address.String(), sellingCoin, startTime, endTime)
+		_, found := tk.FundraisingKeeper.GetAuction(ctx, auctionID)
+		require.True(t, found)
+
+		_, found = participationsim.RandomAuctionParticipationEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		require.False(t, found)
+	})
+
+	t.Run("one auction to be found", func(t *testing.T) {
+		startTime := ctx.BlockTime().Add(time.Minute * 30)
+		endTime := ctx.BlockTime().Add(time.Hour * 24 * 7)
+
+		// initialize auction
+		tk.Mint(ctx, accs[0].Address.String(), sdk.NewCoins(sellingCoin))
+		auctionID := tk.CreateFixedPriceAuction(ctx, r, accs[0].Address.String(), sellingCoin, startTime, endTime)
+		auction, found := tk.FundraisingKeeper.GetAuction(ctx, auctionID)
+		require.True(t, found)
+
+		got, found := participationsim.RandomAuctionParticipationEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		require.True(t, found)
+		require.Equal(t, auction, got)
 	})
 }
 
