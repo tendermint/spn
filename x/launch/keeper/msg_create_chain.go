@@ -50,11 +50,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		}
 	}
 
-	chain, _ := k.GetChain(ctx, id)
-	err = ctx.EventManager().EmitTypedEvent(&types.EventChainCreated{
-		Chain: chain,
-	})
 	return &types.MsgCreateChainResponse{
 		LaunchID: id,
-	}, err
+	}, nil
 }
