@@ -131,10 +131,11 @@ func CheckAccount(ctx sdk.Context, k Keeper, launchID uint64, address string) (b
 func ApplyRequest(
 	ctx sdk.Context,
 	k Keeper,
-	launchID uint64,
+	chain types.Chain,
 	request types.Request,
 ) error {
-	if err := CheckRequest(ctx, k, launchID, request); err != nil {
+	err := CheckRequest(ctx, k, chain.LaunchID, request)
+	if err != nil {
 		return err
 	}
 
@@ -142,21 +143,48 @@ func ApplyRequest(
 	case *types.RequestContent_GenesisAccount:
 		ga := requestContent.GenesisAccount
 		k.SetGenesisAccount(ctx, *ga)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventGenesisAccountAdded{
+			GenesisAccount: *ga,
+			LaunchID:       chain.LaunchID,
+		})
+
 	case *types.RequestContent_VestingAccount:
 		va := requestContent.VestingAccount
 		k.SetVestingAccount(ctx, *va)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventVestingAccountAdded{
+			VestingAccount: *va,
+			LaunchID:       chain.LaunchID,
+		})
+
 	case *types.RequestContent_AccountRemoval:
 		ar := requestContent.AccountRemoval
-		k.RemoveGenesisAccount(ctx, launchID, ar.Address)
-		k.RemoveVestingAccount(ctx, launchID, ar.Address)
+		k.RemoveGenesisAccount(ctx, chain.LaunchID, ar.Address)
+		k.RemoveVestingAccount(ctx, chain.LaunchID, ar.Address)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventAccountRemoved{
+			Address:  ar.Address,
+			LaunchID: chain.LaunchID,
+		})
+
 	case *types.RequestContent_GenesisValidator:
 		ga := requestContent.GenesisValidator
 		k.SetGenesisValidator(ctx, *ga)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorAdded{
+			GenesisValidator: *ga,
+			LaunchID:         chain.LaunchID,
+			HasCampaign:      chain.HasCampaign,
+			CampaignID:       chain.CampaignID,
+		})
+
 	case *types.RequestContent_ValidatorRemoval:
 		vr := requestContent.ValidatorRemoval
-		k.RemoveGenesisValidator(ctx, launchID, vr.ValAddress)
+		k.RemoveGenesisValidator(ctx, chain.LaunchID, vr.ValAddress)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorRemoved{
+			GenesisValidatorAccount: vr.ValAddress,
+			LaunchID:                chain.LaunchID,
+		})
+
 	}
-	return nil
+	return err
 }
 
 // CheckRequest verifies that a request can be applied

@@ -166,6 +166,20 @@ func TestApplyRequest(t *testing.T) {
 		contents       = sample.AllRequestContents(r, launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
 	)
+
+	chain := types.Chain{
+		LaunchID:               launchID,
+		HasCampaign:            true,
+		CampaignID:             3,
+		IsMainnet:              false,
+		LaunchTriggered:        false,
+		LaunchTimestamp:        0,
+		ConsumerRevisionHeight: 0,
+		MonitoringConnected:    false,
+		Metadata:               nil,
+	}
+	tk.LaunchKeeper.SetChain(ctx, chain)
+
 	tests := []struct {
 		name    string
 		request types.Request
@@ -228,7 +242,7 @@ func TestApplyRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
+			err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, chain, tt.request)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -277,6 +291,19 @@ func TestCheckRequest(t *testing.T) {
 		duplicatedRequestVestingContent = types.NewVestingAccount(launchID, duplicatedAcc, sample.VestingOptions(r))
 		duplicatedRequestRemovalContent = types.NewAccountRemoval(duplicatedAcc)
 	)
+
+	chain := types.Chain{
+		LaunchID:               launchID,
+		HasCampaign:            true,
+		CampaignID:             3,
+		IsMainnet:              false,
+		LaunchTriggered:        false,
+		LaunchTimestamp:        0,
+		ConsumerRevisionHeight: 0,
+		MonitoringConnected:    false,
+		Metadata:               nil,
+	}
+	tk.LaunchKeeper.SetChain(ctx, chain)
 
 	tk.LaunchKeeper.SetGenesisAccount(ctx, types.GenesisAccount{
 		LaunchID: launchID,
@@ -364,7 +391,7 @@ func TestCheckRequest(t *testing.T) {
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
-				err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
+				err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, chain, tt.request)
 				require.NoError(t, err)
 			}
 		})

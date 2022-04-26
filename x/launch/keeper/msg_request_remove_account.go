@@ -59,7 +59,7 @@ func (k msgServer) RequestRemoveAccount(
 	var requestID uint64
 	approved := false
 	if msg.Creator == coord.Address {
-		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
+		err := ApplyRequest(ctx, k.Keeper, chain, request)
 		if err != nil {
 			return nil, err
 		}
@@ -67,8 +67,8 @@ func (k msgServer) RequestRemoveAccount(
 		request.Status = types.Request_APPROVED
 
 		err = ctx.EventManager().EmitTypedEvent(&types.EventAccountRemoved{
-			GenesisAccount: msg.Address,
-			LaunchID:       msg.LaunchID,
+			Address:  msg.Address,
+			LaunchID: msg.LaunchID,
 		})
 		if err != nil {
 			return nil, err

@@ -60,7 +60,7 @@ func (k msgServer) RequestAddAccount(
 	)
 	approved := false
 	if msg.Creator == coord.Address {
-		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
+		err := ApplyRequest(ctx, k.Keeper, chain, request)
 		if err != nil {
 			return nil, err
 		}

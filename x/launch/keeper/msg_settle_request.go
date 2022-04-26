@@ -63,7 +63,7 @@ func (k msgServer) SettleRequest(
 
 	// apply request if approving and update status
 	if msg.Approve {
-		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
+		err := ApplyRequest(ctx, k.Keeper, chain, request)
 		if err != nil {
 			return nil, err
 		}
