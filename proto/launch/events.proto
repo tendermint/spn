@@ -43,6 +43,7 @@ message EventValidatorAdded {
   uint64 launchID = 2;
   bool hasCampaign = 3;
   uint64 campaignID = 4;
+  string coordinatorAddress = 5;
 }
 
 message EventAccountRemoved {

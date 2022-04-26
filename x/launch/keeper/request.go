@@ -3,6 +3,7 @@ package keeper
 import (
 	"encoding/binary"
 	"fmt"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -133,6 +134,7 @@ func ApplyRequest(
 	k Keeper,
 	chain types.Chain,
 	request types.Request,
+	coord profiletypes.Coordinator,
 ) error {
 	err := CheckRequest(ctx, k, chain.LaunchID, request)
 	if err != nil {
@@ -169,10 +171,11 @@ func ApplyRequest(
 		ga := requestContent.GenesisValidator
 		k.SetGenesisValidator(ctx, *ga)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorAdded{
-			GenesisValidator: *ga,
-			LaunchID:         chain.LaunchID,
-			HasCampaign:      chain.HasCampaign,
-			CampaignID:       chain.CampaignID,
+			GenesisValidator:   *ga,
+			LaunchID:           chain.LaunchID,
+			HasCampaign:        chain.HasCampaign,
+			CampaignID:         chain.CampaignID,
+			CoordinatorAddress: coord.Address,
 		})
 
 	case *types.RequestContent_ValidatorRemoval:

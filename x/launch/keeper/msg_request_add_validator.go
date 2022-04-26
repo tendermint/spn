@@ -58,7 +58,7 @@ func (k msgServer) RequestAddValidator(
 	)
 	approved := false
 	if msg.Creator == coord.Address {
-		err := ApplyRequest(ctx, k.Keeper, chain, request)
+		err := ApplyRequest(ctx, k.Keeper, chain, request, coord)
 		if err != nil {
 			return nil, err
 		}
@@ -66,10 +66,11 @@ func (k msgServer) RequestAddValidator(
 		request.Status = types.Request_APPROVED
 
 		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorAdded{
-			GenesisValidator: *content.GetGenesisValidator(),
-			LaunchID:         msg.LaunchID,
-			HasCampaign:      chain.HasCampaign,
-			CampaignID:       chain.CampaignID,
+			GenesisValidator:   *content.GetGenesisValidator(),
+			LaunchID:           msg.LaunchID,
+			HasCampaign:        chain.HasCampaign,
+			CampaignID:         chain.CampaignID,
+			CoordinatorAddress: coord.Address,
 		})
 		if err != nil {
 			return nil, err

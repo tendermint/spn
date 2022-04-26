@@ -59,7 +59,7 @@ func (k msgServer) RequestRemoveAccount(
 	var requestID uint64
 	approved := false
 	if msg.Creator == coord.Address {
-		err := ApplyRequest(ctx, k.Keeper, chain, request)
+		err := ApplyRequest(ctx, k.Keeper, chain, request, coord)
 		if err != nil {
 			return nil, err
 		}
