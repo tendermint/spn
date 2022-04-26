@@ -58,14 +58,6 @@ func (k msgServer) RequestRemoveValidator(
 		}
 		approved = true
 		request.Status = types.Request_APPROVED
-
-		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorRemoved{
-			GenesisValidatorAccount: msg.ValidatorAddress,
-			LaunchID:                msg.LaunchID,
-		})
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	requestID = k.AppendRequest(ctx, request)

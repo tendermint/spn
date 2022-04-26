@@ -66,14 +66,6 @@ func (k msgServer) RequestAddVestingAccount(
 		}
 		approved = true
 		request.Status = types.Request_APPROVED
-
-		err = ctx.EventManager().EmitTypedEvent(&types.EventVestingAccountAdded{
-			VestingAccount: *content.GetVestingAccount(),
-			LaunchID:       msg.LaunchID,
-		})
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	requestID = k.AppendRequest(ctx, request)

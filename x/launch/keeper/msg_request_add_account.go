@@ -66,14 +66,6 @@ func (k msgServer) RequestAddAccount(
 		}
 		approved = true
 		request.Status = types.Request_APPROVED
-
-		err = ctx.EventManager().EmitTypedEvent(&types.EventGenesisAccountAdded{
-			GenesisAccount: *content.GetGenesisAccount(),
-			LaunchID:       msg.LaunchID,
-		})
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	requestID = k.AppendRequest(ctx, request)

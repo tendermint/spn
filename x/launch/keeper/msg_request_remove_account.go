@@ -65,14 +65,6 @@ func (k msgServer) RequestRemoveAccount(
 		}
 		approved = true
 		request.Status = types.Request_APPROVED
-
-		err = ctx.EventManager().EmitTypedEvent(&types.EventAccountRemoved{
-			Address:  msg.Address,
-			LaunchID: msg.LaunchID,
-		})
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	requestID = k.AppendRequest(ctx, request)

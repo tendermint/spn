@@ -64,17 +64,6 @@ func (k msgServer) RequestAddValidator(
 		}
 		approved = true
 		request.Status = types.Request_APPROVED
-
-		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorAdded{
-			GenesisValidator:   *content.GetGenesisValidator(),
-			LaunchID:           msg.LaunchID,
-			HasCampaign:        chain.HasCampaign,
-			CampaignID:         chain.CampaignID,
-			CoordinatorAddress: coord.Address,
-		})
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	requestID = k.AppendRequest(ctx, request)
