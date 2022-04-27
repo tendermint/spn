@@ -21,8 +21,5 @@ func (k Keeper) IsRegistrationEnabled(ctx sdk.Context, auctionStartTime time.Tim
 	}
 	// as commented in `Time.Sub()`: To compute t-d for a duration d, use t.Add(-d).
 	registrationStart := auctionStartTime.Add(-registrationPeriod)
-	if !blockTime.After(registrationStart) {
-		return false
-	}
-	return true
+	return blockTime.After(registrationStart)
 }
