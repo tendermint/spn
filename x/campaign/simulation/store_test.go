@@ -222,7 +222,7 @@ func TestGetAccountWithVouchers(t *testing.T) {
 	}
 
 	t.Run("no account", func(t *testing.T) {
-		_, _, _, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, false)
+		_, _, _, found := simcampaign.GetAccountWithVouchers(r, ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, false)
 		require.False(t, found)
 	})
 
@@ -236,7 +236,7 @@ func TestGetAccountWithVouchers(t *testing.T) {
 		campaign.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
 		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
 		mint(acc.Address, sample.Vouchers(r, campaign.CampaignID))
-		campID, acc, coins, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, false)
+		campID, acc, coins, found := simcampaign.GetAccountWithVouchers(r, ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, false)
 		require.True(t, found)
 		require.EqualValues(t, campaign.CampaignID, campID)
 		require.False(t, coins.Empty())
@@ -249,7 +249,7 @@ func TestGetAccountWithVouchers(t *testing.T) {
 		campaign.MainnetInitialized = false
 		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
 		mint(acc.Address, sample.Vouchers(r, campaign.CampaignID))
-		campID, acc, coins, found := simcampaign.GetAccountWithVouchers(ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, true)
+		campID, acc, coins, found := simcampaign.GetAccountWithVouchers(r, ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, true)
 		require.True(t, found)
 		require.EqualValues(t, campaign.CampaignID, campID)
 		require.False(t, coins.Empty())

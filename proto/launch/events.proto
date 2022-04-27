@@ -1,0 +1,70 @@
+syntax = "proto3";
+package tendermint.spn.launch;
+
+import "gogoproto/gogo.proto";
+import "launch/chain.proto";
+import "launch/request.proto";
+import "launch/genesis_account.proto";
+import "launch/vesting_account.proto";
+import "launch/genesis_validator.proto";
+
+option go_package = "github.com/tendermint/spn/x/launch/types";
+
+message EventChainCreated {
+  Chain chain = 1 [(gogoproto.nullable) = false];
+}
+
+message EventChainUpdated {
+  Chain chain = 1 [(gogoproto.nullable) = false];
+}
+
+message EventRequestCreated {
+  Request request = 1 [(gogoproto.nullable) = false];
+}
+
+message EventRequestSettled {
+  uint64 launchID = 1;
+  uint64 requestID = 2;
+  bool approved = 3;
+}
+
+message EventGenesisAccountAdded {
+  GenesisAccount genesisAccount = 1 [(gogoproto.nullable) = false];
+  uint64 launchID = 2;
+  string coordinatorAddress = 3;
+}
+
+message EventVestingAccountAdded {
+  VestingAccount vestingAccount = 1 [(gogoproto.nullable) = false];
+  uint64 launchID = 2;
+  string coordinatorAddress = 3;
+}
+
+message EventValidatorAdded {
+  GenesisValidator genesisValidator = 1 [(gogoproto.nullable) = false];
+  uint64 launchID = 2;
+  bool hasCampaign = 3;
+  uint64 campaignID = 4;
+  string coordinatorAddress = 5;
+}
+
+message EventAccountRemoved {
+  string address = 1;
+  uint64 launchID = 2;
+  string coordinatorAddress = 3;
+}
+
+message EventValidatorRemoved {
+  string genesisValidatorAccount = 1;
+  uint64 launchID = 2;
+  string coordinatorAddress = 3;
+}
+
+message EventLaunchTriggered {
+  uint64 launchID = 1;
+  int64 launchTimestamp = 2;
+}
+
+message EventLaunchReverted {
+  uint64 launchID = 1;
+}

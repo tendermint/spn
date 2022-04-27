@@ -74,7 +74,10 @@ func (k Keeper) CreateNewChain(
 		}
 	}
 
-	return launchID, nil
+	err := ctx.EventManager().EmitTypedEvent(&types.EventChainCreated{
+		Chain: chain,
+	})
+	return launchID, err
 }
 
 // GetChainCounter get the counter for chains

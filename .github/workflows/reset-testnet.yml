@@ -10,7 +10,7 @@ on:
 
 jobs:
   reset:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -20,6 +20,11 @@ jobs:
         with:
           config: ${{ secrets.KUBECONFIG_B64 }}
           command: scale nodeset spn-${{ github.event.inputs.testnet }} --replicas=0
+
+      - name: Sleep for 1 min
+        uses: whatnick/wait-action@master
+        with:
+          time: '1m'
 
       - name: Delete data
         uses: steebchen/kubectl@v2.0.0

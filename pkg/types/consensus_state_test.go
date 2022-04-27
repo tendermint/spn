@@ -14,7 +14,7 @@ import (
 func TestConsensusState_RootHash(t *testing.T) {
 	csf := types.ConsensusState{
 		NextValidatorsHash: "foo",
-		Root: types.MerkelRool{
+		Root: types.MerkleRoot{
 			Hash: "bar",
 		},
 		Timestamp: "foobar",

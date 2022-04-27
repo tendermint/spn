@@ -5,8 +5,8 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/tendermint/spn/pkg/types";
 
-// MerkelRool represents a Merkel Root in ConsensusState
-message MerkelRool {
+// MerkleRoot represents a Merkle Root in ConsensusState
+message MerkleRoot {
   string hash = 1;
 }
 
@@ -15,7 +15,7 @@ message MerkelRool {
 message ConsensusState {
   string nextValidatorsHash = 1;
   string timestamp = 2;
-  MerkelRool root = 3 [(gogoproto.nullable) = false];
+  MerkleRoot root = 3 [(gogoproto.nullable) = false];
 }
 
 
