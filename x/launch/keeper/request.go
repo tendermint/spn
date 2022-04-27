@@ -3,6 +3,7 @@ package keeper
 import (
 	"encoding/binary"
 	"fmt"
+
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
