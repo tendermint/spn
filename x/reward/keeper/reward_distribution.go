@@ -121,6 +121,13 @@ func (k Keeper) DistributeRewards(
 		if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, account, rewards); err != nil {
 			return spnerrors.Criticalf("send rewards error: %s", err.Error())
 		}
+		if err := ctx.EventManager().EmitTypedEvent(&types.EventRewardsDistributed{
+			LaunchID: launchID,
+			Receiver: address,
+			Rewards:  rewards,
+		}); err != nil {
+			return spnerrors.Criticalf("error emitting event: %s", err.Error())
+		}
 	}
 
 	// if the reward pool is closed or last reward height is reached
