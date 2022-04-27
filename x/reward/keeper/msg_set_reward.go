@@ -57,17 +57,23 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 		}
 	}
 
-	if msg.Coins.Empty() || msg.LastRewardHeight == 0 {
+	if (msg.Coins.Empty() || msg.LastRewardHeight == 0) && found {
 		rewardPool.InitialCoins = sdk.NewCoins()
 		rewardPool.RemainingCoins = sdk.NewCoins()
 		rewardPool.LastRewardHeight = 0
 		k.RemoveRewardPool(ctx, msg.LaunchID)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolRemoved{LaunchID: msg.LaunchID})
 	} else {
 		rewardPool.InitialCoins = msg.Coins
 		rewardPool.RemainingCoins = msg.Coins
 		rewardPool.Provider = msg.Provider
 		rewardPool.LastRewardHeight = msg.LastRewardHeight
 		k.SetRewardPool(ctx, rewardPool)
+		if found {
+			err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolUpdated{RewardPool: rewardPool})
+		} else {
+			err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolCreated{RewardPool: rewardPool})
+		}
 	}
 
 	return &types.MsgSetRewardsResponse{
@@ -75,7 +81,7 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 		PreviousLastRewardHeight: previousLastRewardHeight,
 		NewCoins:                 rewardPool.InitialCoins,
 		NewLastRewardHeight:      rewardPool.LastRewardHeight,
-	}, nil
+	}, err
 }
 
 // SetBalance set balance to Coins on the module account

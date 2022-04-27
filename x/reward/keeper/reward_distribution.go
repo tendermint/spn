@@ -138,7 +138,9 @@ func (k Keeper) DistributeRewards(
 		rewardPool.Closed = true
 		rewardPool.RemainingCoins = rewardPool.RemainingCoins.Sub(rewardPool.RemainingCoins) // sub coins transferred
 		k.SetRewardPool(ctx, rewardPool)
-		return nil
+
+		err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolUpdated{RewardPool: rewardPool})
+		return err
 	}
 
 	// Otherwise, the refund is relative to the block ratio and the reward pool is updated
@@ -173,7 +175,8 @@ func (k Keeper) DistributeRewards(
 	// update the current reward height for next reward
 	rewardPool.CurrentRewardHeight = lastBlockHeight
 	k.SetRewardPool(ctx, rewardPool)
-	return nil
+	err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolUpdated{RewardPool: rewardPool})
+	return err
 }
 
 // CalculateRewards calculates the reward relative to the signature and block ratio
