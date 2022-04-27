@@ -63,6 +63,20 @@ func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 	return counter
 }
 
+// GetRequestCount returns the number of request from a launch ID
+// TODO: add tests https://github.com/tendermint/spn/issues/642
+func (k Keeper) GetRequestCount(ctx sdk.Context, launchID uint64) (count uint64) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RequestPoolKey(launchID))
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		count++
+	}
+
+	return count
+}
+
 // GetRequest returns a request from its index
 func (k Keeper) GetRequest(
 	ctx sdk.Context,
