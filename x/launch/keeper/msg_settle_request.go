@@ -63,7 +63,7 @@ func (k msgServer) SettleRequest(
 
 	// apply request if approving and update status
 	if msg.Approve {
-		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
+		err := ApplyRequest(ctx, k.Keeper, chain, request, coord)
 		if err != nil {
 			return nil, err
 		}
@@ -71,7 +71,13 @@ func (k msgServer) SettleRequest(
 	} else {
 		request.Status = types.Request_REJECTED
 	}
-	k.SetRequest(ctx, request)
 
-	return &types.MsgSettleRequestResponse{}, nil
+	k.SetRequest(ctx, request)
+	err := ctx.EventManager().EmitTypedEvent(&types.EventRequestSettled{
+		LaunchID:  msg.LaunchID,
+		RequestID: request.RequestID,
+		Approved:  msg.Approve,
+	})
+
+	return &types.MsgSettleRequestResponse{}, err
 }
