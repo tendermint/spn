@@ -1,0 +1,19 @@
+syntax = "proto3";
+package tendermint.spn.reward;
+
+import "gogoproto/gogo.proto";
+import "reward/reward_pool.proto";
+
+option go_package = "github.com/tendermint/spn/x/reward/types";
+
+message EventRewardPoolCreated {
+  RewardPool rewardPool = 1 [(gogoproto.nullable) = false];
+}
+
+message EventRewardPoolUpdated {
+  RewardPool rewardPool = 1 [(gogoproto.nullable) = false];
+}
+
+message EventRewardPoolRemoved {
+  uint64 launchID = 1;
+}
