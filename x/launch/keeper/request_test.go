@@ -158,6 +158,8 @@ func TestCheckAccount(t *testing.T) {
 
 func TestApplyRequest(t *testing.T) {
 	var (
+		coord          = sample.Coordinator(r, sample.Address(r))
+		coordID        = uint64(3)
 		genesisAcc     = sample.Address(r)
 		vestingAcc     = sample.Address(r)
 		validatorAcc   = sample.Address(r)
@@ -166,6 +168,12 @@ func TestApplyRequest(t *testing.T) {
 		contents       = sample.AllRequestContents(r, launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
 	)
+
+	coord.CoordinatorID = coordID
+	tk.ProfileKeeper.SetCoordinator(ctx, coord)
+	chain := sample.Chain(r, launchID, coordID)
+	tk.LaunchKeeper.SetChain(ctx, chain)
+
 	tests := []struct {
 		name    string
 		request types.Request
@@ -228,7 +236,7 @@ func TestApplyRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
+			err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, chain, tt.request, coord)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -265,6 +273,8 @@ func TestApplyRequest(t *testing.T) {
 
 func TestCheckRequest(t *testing.T) {
 	var (
+		coord                           = sample.Coordinator(r, sample.Address(r))
+		coordID                         = uint64(3)
 		genesisAcc                      = sample.Address(r)
 		vestingAcc                      = sample.Address(r)
 		validatorAcc                    = sample.Address(r)
@@ -277,6 +287,11 @@ func TestCheckRequest(t *testing.T) {
 		duplicatedRequestVestingContent = types.NewVestingAccount(launchID, duplicatedAcc, sample.VestingOptions(r))
 		duplicatedRequestRemovalContent = types.NewAccountRemoval(duplicatedAcc)
 	)
+
+	coord.CoordinatorID = coordID
+	tk.ProfileKeeper.SetCoordinator(ctx, coord)
+	chain := sample.Chain(r, launchID, coordID)
+	tk.LaunchKeeper.SetChain(ctx, chain)
 
 	tk.LaunchKeeper.SetGenesisAccount(ctx, types.GenesisAccount{
 		LaunchID: launchID,
@@ -364,7 +379,7 @@ func TestCheckRequest(t *testing.T) {
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
-				err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
+				err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, chain, tt.request, coord)
 				require.NoError(t, err)
 			}
 		})

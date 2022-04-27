@@ -4,11 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -72,6 +71,9 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 	}
 
 	k.SetChain(ctx, chain)
+	err = ctx.EventManager().EmitTypedEvent(&types.EventChainUpdated{
+		Chain: chain,
+	})
 
-	return &types.MsgEditChainResponse{}, nil
+	return &types.MsgEditChainResponse{}, err
 }
