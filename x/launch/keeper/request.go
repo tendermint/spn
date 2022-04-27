@@ -146,16 +146,18 @@ func ApplyRequest(
 		ga := requestContent.GenesisAccount
 		k.SetGenesisAccount(ctx, *ga)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventGenesisAccountAdded{
-			GenesisAccount: *ga,
-			LaunchID:       chain.LaunchID,
+			GenesisAccount:     *ga,
+			LaunchID:           chain.LaunchID,
+			CoordinatorAddress: coord.Address,
 		})
 
 	case *types.RequestContent_VestingAccount:
 		va := requestContent.VestingAccount
 		k.SetVestingAccount(ctx, *va)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventVestingAccountAdded{
-			VestingAccount: *va,
-			LaunchID:       chain.LaunchID,
+			VestingAccount:     *va,
+			LaunchID:           chain.LaunchID,
+			CoordinatorAddress: coord.Address,
 		})
 
 	case *types.RequestContent_AccountRemoval:
@@ -163,8 +165,9 @@ func ApplyRequest(
 		k.RemoveGenesisAccount(ctx, chain.LaunchID, ar.Address)
 		k.RemoveVestingAccount(ctx, chain.LaunchID, ar.Address)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventAccountRemoved{
-			Address:  ar.Address,
-			LaunchID: chain.LaunchID,
+			Address:            ar.Address,
+			LaunchID:           chain.LaunchID,
+			CoordinatorAddress: coord.Address,
 		})
 
 	case *types.RequestContent_GenesisValidator:
@@ -184,6 +187,7 @@ func ApplyRequest(
 		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorRemoved{
 			GenesisValidatorAccount: vr.ValAddress,
 			LaunchID:                chain.LaunchID,
+			CoordinatorAddress:      coord.Address,
 		})
 
 	}

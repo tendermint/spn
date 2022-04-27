@@ -31,11 +31,13 @@ message EventRequestSettled {
 message EventGenesisAccountAdded {
   GenesisAccount genesisAccount = 1 [(gogoproto.nullable) = false];
   uint64 launchID = 2;
+  string coordinatorAddress = 3;
 }
 
 message EventVestingAccountAdded {
   VestingAccount vestingAccount = 1 [(gogoproto.nullable) = false];
   uint64 launchID = 2;
+  string coordinatorAddress = 3;
 }
 
 message EventValidatorAdded {
@@ -49,11 +51,13 @@ message EventValidatorAdded {
 message EventAccountRemoved {
   string address = 1;
   uint64 launchID = 2;
+  string coordinatorAddress = 3;
 }
 
 message EventValidatorRemoved {
   string genesisValidatorAccount = 1;
   uint64 launchID = 2;
+  string coordinatorAddress = 3;
 }
 
 message EventLaunchTriggered {
