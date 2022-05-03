@@ -162,7 +162,8 @@ func ApplyRequest(
 		ga := requestContent.GenesisAccount
 		k.SetGenesisAccount(ctx, *ga)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventGenesisAccountAdded{
-			GenesisAccount:     *ga,
+			Address:            ga.Address,
+			Coins:              ga.Coins,
 			LaunchID:           chain.LaunchID,
 			CoordinatorAddress: coord.Address,
 		})
@@ -171,7 +172,8 @@ func ApplyRequest(
 		va := requestContent.VestingAccount
 		k.SetVestingAccount(ctx, *va)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventVestingAccountAdded{
-			VestingAccount:     *va,
+			Address:            va.Address,
+			VestingOptions:     va.VestingOptions,
 			LaunchID:           chain.LaunchID,
 			CoordinatorAddress: coord.Address,
 		})
@@ -190,7 +192,11 @@ func ApplyRequest(
 		ga := requestContent.GenesisValidator
 		k.SetGenesisValidator(ctx, *ga)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorAdded{
-			GenesisValidator:   *ga,
+			Address:            ga.Address,
+			GenTx:              ga.GenTx,
+			ConsPubKey:         ga.ConsPubKey,
+			SelfDelegation:     ga.SelfDelegation,
+			Peer:               ga.Peer,
 			LaunchID:           chain.LaunchID,
 			HasCampaign:        chain.HasCampaign,
 			CampaignID:         chain.CampaignID,
