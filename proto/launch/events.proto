@@ -70,7 +70,9 @@ message EventAccountRemoved {
 message EventValidatorRemoved {
   string genesisValidatorAccount = 1;
   uint64 launchID = 2;
-  string coordinatorAddress = 3;
+  bool hasCampaign = 3;
+  uint64 campaignID = 4;
+  string coordinatorAddress = 5;
 }
 
 message EventLaunchTriggered {

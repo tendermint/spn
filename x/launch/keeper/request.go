@@ -209,6 +209,8 @@ func ApplyRequest(
 		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorRemoved{
 			GenesisValidatorAccount: vr.ValAddress,
 			LaunchID:                chain.LaunchID,
+			HasCampaign:             chain.HasCampaign,
+			CampaignID:              chain.CampaignID,
 			CoordinatorAddress:      coord.Address,
 		})
 
