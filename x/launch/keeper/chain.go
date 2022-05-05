@@ -75,7 +75,8 @@ func (k Keeper) CreateNewChain(
 	}
 
 	err := ctx.EventManager().EmitTypedEvent(&types.EventChainCreated{
-		Chain: chain,
+		CoordinatorID: coordinatorID,
+		Chain:         chain,
 	})
 	return launchID, err
 }

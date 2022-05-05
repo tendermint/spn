@@ -70,6 +70,7 @@ func (k msgServer) RequestAddAccount(
 
 	requestID = k.AppendRequest(ctx, request)
 	err = ctx.EventManager().EmitTypedEvent(&types.EventRequestCreated{
+		Creator: msg.Creator,
 		Request: request,
 	})
 

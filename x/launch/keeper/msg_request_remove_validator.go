@@ -62,6 +62,7 @@ func (k msgServer) RequestRemoveValidator(
 
 	requestID = k.AppendRequest(ctx, request)
 	err := ctx.EventManager().EmitTypedEvent(&types.EventRequestCreated{
+		Creator: msg.Creator,
 		Request: request,
 	})
 
