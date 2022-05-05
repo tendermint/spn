@@ -8,7 +8,6 @@ import (
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -333,38 +332,5 @@ func SimulateMsgUnredeemVouchers(
 			shares,
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
-	}
-}
-
-// SimulateMsgSendVouchers simulates a Msg message from the bank module with vouchers
-func SimulateMsgSendVouchers(
-	ak types.AccountKeeper,
-	bk types.BankKeeper,
-	k keeper.Keeper,
-) simtypes.Operation {
-	return func(
-		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
-	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		_, simAccount, vouchers, found := GetAccountWithVouchers(r, ctx, bk, k, accs, false)
-		if !found {
-			return simtypes.NoOpMsg(banktypes.ModuleName, banktypes.TypeMsgSend, "skip send vouchers"), nil, nil
-		}
-
-		// Select a random receiver account
-		accountNb := r.Intn(len(accs))
-		if accs[accountNb].Address.Equals(simAccount.Address) {
-			if accountNb == 0 {
-				accountNb++
-			} else {
-				accountNb--
-			}
-		}
-
-		msg := banktypes.NewMsgSend(
-			simAccount.Address,
-			accs[accountNb].Address,
-			vouchers,
-		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, vouchers)
 	}
 }
