@@ -24,7 +24,6 @@ const (
 	defaultWeightMsgBurnVouchers      = 20
 	defaultWeightMsgRedeemVouchers    = 20
 	defaultWeightMsgUnredeemVouchers  = 20
-	defaultWeightMsgSendVouchers      = 20
 
 	opWeightMsgCreateCampaign    = "op_weight_msg_create_campaign"
 	opWeightMsgEditCampaign      = "op_weight_msg_edit_campaign"
@@ -36,7 +35,6 @@ const (
 	opWeightMsgBurnVouchers      = "op_weight_msg_burn_vouchers"
 	opWeightMsgRedeemVouchers    = "op_weight_msg_redeem_vouchers"
 	opWeightMsgUnredeemVouchers  = "op_weight_msg_unredeem_vouchers"
-	opWeightMsgSendVouchers      = "op_weight_msg_send_vouchers"
 
 	// this line is used by starport scaffolding # simapp/module/const
 )
@@ -81,7 +79,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgBurnVouchers      int
 		weightMsgRedeemVouchers    int
 		weightMsgUnredeemVouchers  int
-		weightMsgSendVouchers      int
 	)
 
 	appParams := simState.AppParams
@@ -136,11 +133,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgUnredeemVouchers = defaultWeightMsgUnredeemVouchers
 		},
 	)
-	appParams.GetOrGenerate(cdc, opWeightMsgSendVouchers, &weightMsgSendVouchers, nil,
-		func(_ *rand.Rand) {
-			weightMsgSendVouchers = defaultWeightMsgSendVouchers
-		},
-	)
 
 	return []simtypes.WeightedOperation{
 		simulation.NewWeightedOperation(
@@ -182,10 +174,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		simulation.NewWeightedOperation(
 			weightMsgUnredeemVouchers,
 			campaignsim.SimulateMsgUnredeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
-		),
-		simulation.NewWeightedOperation(
-			weightMsgSendVouchers,
-			campaignsim.SimulateMsgSendVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 	}
 }
