@@ -181,8 +181,7 @@ func (k Keeper) DistributeRewards(
 	// update the current reward height for next reward
 	rewardPool.CurrentRewardHeight = lastBlockHeight
 	k.SetRewardPool(ctx, rewardPool)
-	err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolUpdated{RewardPool: rewardPool})
-	return err
+	return ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolUpdated{RewardPool: rewardPool})
 }
 
 // CalculateRewards calculates the reward relative to the signature and block ratio
