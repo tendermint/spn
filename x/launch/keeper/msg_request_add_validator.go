@@ -68,6 +68,7 @@ func (k msgServer) RequestAddValidator(
 
 	requestID = k.AppendRequest(ctx, request)
 	err = ctx.EventManager().EmitTypedEvent(&types.EventRequestCreated{
+		Creator: msg.Creator,
 		Request: request,
 	})
 
