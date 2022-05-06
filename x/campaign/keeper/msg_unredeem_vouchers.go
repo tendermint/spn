@@ -53,7 +53,9 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 	} else {
 		k.SetMainnetAccount(ctx, account)
 		if err := ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{
-			Account: account,
+			CampaignID: account.CampaignID,
+			Address:    account.Address,
+			Shares:     account.Shares,
 		}); err != nil {
 			return nil, err
 		}

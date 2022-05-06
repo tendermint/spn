@@ -84,14 +84,27 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 
 	if !foundAcc {
 		err = ctx.EventManager().EmitTypedEvents(
-			&types.EventCampaignUpdated{Campaign: campaign},
-			&types.EventMainnetVestingAccountCreated{Account: account},
+			&types.EventCampaignSharesUpdated{
+				CampaignID:         campaign.CampaignID,
+				CoordinatorAddress: msg.Coordinator,
+				AllocatedShares:    campaign.AllocatedShares,
+			}, &types.EventMainnetVestingAccountCreated{
+				CampaignID:     campaign.CampaignID,
+				Address:        msg.Address,
+				VestingOptions: msg.VestingOptions,
+			},
 		)
 	} else {
 		err = ctx.EventManager().EmitTypedEvents(
-			&types.EventCampaignUpdated{Campaign: campaign},
-			&types.EventMainnetVestingAccountUpdated{Account: account},
-		)
+			&types.EventCampaignSharesUpdated{
+				CampaignID:         campaign.CampaignID,
+				CoordinatorAddress: msg.Coordinator,
+				AllocatedShares:    campaign.AllocatedShares,
+			}, &types.EventMainnetVestingAccountUpdated{
+				CampaignID:     campaign.CampaignID,
+				Address:        msg.Address,
+				VestingOptions: msg.VestingOptions,
+			})
 	}
 
 	return &types.MsgAddVestingOptionsResponse{}, err

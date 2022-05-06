@@ -52,7 +52,10 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		Chains:     []uint64{},
 	})
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignCreated{Campaign: campaign})
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignCreated{
+		CampaignID:         campaignID,
+		CoordinatorAddress: msg.Coordinator,
+	})
 
 	return &types.MsgCreateCampaignResponse{CampaignID: campaignID}, err
 }

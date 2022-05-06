@@ -57,9 +57,17 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 			Address:    msg.Account,
 			Shares:     types.EmptyShares(),
 		}
-		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountCreated{Account: account})
+		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountCreated{
+			CampaignID: account.CampaignID,
+			Address:    account.Address,
+			Shares:     account.Shares,
+		})
 	} else {
-		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{Account: account})
+		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{
+			CampaignID: account.CampaignID,
+			Address:    account.Address,
+			Shares:     account.Shares,
+		})
 	}
 
 	// Increase the account shares

@@ -67,13 +67,27 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 
 	if !accountFound {
 		err = ctx.EventManager().EmitTypedEvents(
-			&types.EventCampaignUpdated{Campaign: campaign},
-			&types.EventMainnetAccountCreated{Account: account},
+			&types.EventCampaignSharesUpdated{
+				CampaignID:         campaign.CampaignID,
+				CoordinatorAddress: msg.Coordinator,
+				AllocatedShares:    campaign.AllocatedShares,
+			}, &types.EventMainnetAccountCreated{
+				CampaignID: campaign.CampaignID,
+				Address:    msg.Address,
+				Shares:     msg.Shares,
+			},
 		)
 	} else {
 		err = ctx.EventManager().EmitTypedEvents(
-			&types.EventCampaignUpdated{Campaign: campaign},
-			&types.EventMainnetAccountUpdated{Account: account},
+			&types.EventCampaignSharesUpdated{
+				CampaignID:         campaign.CampaignID,
+				CoordinatorAddress: msg.Coordinator,
+				AllocatedShares:    campaign.AllocatedShares,
+			}, &types.EventMainnetAccountUpdated{
+				CampaignID: campaign.CampaignID,
+				Address:    msg.Address,
+				Shares:     msg.Shares,
+			},
 		)
 	}
 

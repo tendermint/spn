@@ -10,25 +10,61 @@ import "campaign/mainnet_vesting_account.proto";
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 message EventCampaignCreated {
-  Campaign campaign = 1 [(gogoproto.nullable) = false];
-}
-
-message EventCampaignUpdated {
-  Campaign campaign = 1 [(gogoproto.nullable) = false];
-}
-
-message EventMainnetInitialized {
   uint64 campaignID = 1;
-  uint64 mainnetID = 2;
+  string coordinatorAddress = 2;
+}
+
+message EventCampaignInfoUpdated {
+  uint64 campaignID = 1;
+  string coordinatorAddress = 2;
+  string campaignName = 3;
+  bytes metadata = 4;
+}
+
+message EventCampaignSharesUpdated {
+  uint64 campaignID = 1;
+  string coordinatorAddress = 2;
+  repeated cosmos.base.v1beta1.Coin allocatedShares = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "Shares"
+  ];
+}
+
+message EventCampaignTotalSupplyUpdated {
+  uint64 campaignID = 1;
+  string coordinatorAddress = 2;
+  repeated cosmos.base.v1beta1.Coin totalSupply = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+}
+
+message EventCampaignMainnetInitialized {
+  uint64 campaignID = 1;
+  string coordinatorAddress = 2;
+  uint64 mainnetID = 3;
 }
 
 message EventMainnetAccountCreated {
-  MainnetAccount account = 1 [(gogoproto.nullable) = false];
+  uint64 campaignID = 1;
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin shares = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "Shares"
+  ];
 }
 
 message EventMainnetAccountUpdated {
-  MainnetAccount account = 1 [(gogoproto.nullable) = false];
-}
+  uint64 campaignID = 1;
+  string address = 2;
+  repeated cosmos.base.v1beta1.Coin shares = 3 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "Shares"
+  ];}
 
 message EventMainnetAccountRemoved{
   uint64 campaignID = 1;
@@ -36,9 +72,13 @@ message EventMainnetAccountRemoved{
 }
 
 message EventMainnetVestingAccountCreated {
-  MainnetVestingAccount account = 1 [(gogoproto.nullable) = false];
+  uint64 campaignID = 1;
+  string address = 2;
+  ShareVestingOptions vestingOptions = 3 [(gogoproto.nullable) = false];
 }
 
 message EventMainnetVestingAccountUpdated {
-  MainnetVestingAccount account = 1 [(gogoproto.nullable) = false];
+  uint64 campaignID = 1;
+  string address = 2;
+  ShareVestingOptions vestingOptions = 3 [(gogoproto.nullable) = false];
 }
