@@ -15,7 +15,7 @@ var _ = strconv.Itoa(0)
 func CmdAuctionsOfCampaign() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "auctions-of-campaign [campaign-id]",
-		Short: "List all auctions belonging to a campaign",
+		Short: "List IDs of all auctions belonging to a campaign",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			campaignID, err := strconv.ParseUint(args[0], 10, 64)
