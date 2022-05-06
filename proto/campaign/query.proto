@@ -39,7 +39,7 @@ service Query {
 
   // Queries a list of mainnetAccount items.
   rpc MainnetAccountAll(QueryAllMainnetAccountRequest) returns (QueryAllMainnetAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account";
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account/{campaignID}";
   }
 
   // Queries a mainnetVestingAccount by index.
@@ -49,7 +49,7 @@ service Query {
 
   // Queries a list of mainnetVestingAccount items.
   rpc MainnetVestingAccountAll(QueryAllMainnetVestingAccountRequest) returns (QueryAllMainnetVestingAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account";
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account/{campaignID}";
   }
 
   // Queries a campaign summary

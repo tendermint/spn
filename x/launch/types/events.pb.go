@@ -5,6 +5,8 @@ package types
 
 import (
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
@@ -24,7 +26,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type EventChainCreated struct {
-	Chain Chain `protobuf:"bytes,1,opt,name=chain,proto3" json:"chain"`
+	CoordinatorID uint64 `protobuf:"varint,1,opt,name=coordinatorID,proto3" json:"coordinatorID,omitempty"`
+	Chain         Chain  `protobuf:"bytes,2,opt,name=chain,proto3" json:"chain"`
 }
 
 func (m *EventChainCreated) Reset()         { *m = EventChainCreated{} }
@@ -59,6 +62,13 @@ func (m *EventChainCreated) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_EventChainCreated proto.InternalMessageInfo
+
+func (m *EventChainCreated) GetCoordinatorID() uint64 {
+	if m != nil {
+		return m.CoordinatorID
+	}
+	return 0
+}
 
 func (m *EventChainCreated) GetChain() Chain {
 	if m != nil {
@@ -112,7 +122,8 @@ func (m *EventChainUpdated) GetChain() Chain {
 }
 
 type EventRequestCreated struct {
-	Request Request `protobuf:"bytes,1,opt,name=request,proto3" json:"request"`
+	Creator string  `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Request Request `protobuf:"bytes,2,opt,name=request,proto3" json:"request"`
 }
 
 func (m *EventRequestCreated) Reset()         { *m = EventRequestCreated{} }
@@ -147,6 +158,13 @@ func (m *EventRequestCreated) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_EventRequestCreated proto.InternalMessageInfo
+
+func (m *EventRequestCreated) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
 
 func (m *EventRequestCreated) GetRequest() Request {
 	if m != nil {
@@ -216,9 +234,10 @@ func (m *EventRequestSettled) GetApproved() bool {
 }
 
 type EventGenesisAccountAdded struct {
-	GenesisAccount     GenesisAccount `protobuf:"bytes,1,opt,name=genesisAccount,proto3" json:"genesisAccount"`
-	LaunchID           uint64         `protobuf:"varint,2,opt,name=launchID,proto3" json:"launchID,omitempty"`
-	CoordinatorAddress string         `protobuf:"bytes,3,opt,name=coordinatorAddress,proto3" json:"coordinatorAddress,omitempty"`
+	LaunchID           uint64                                   `protobuf:"varint,1,opt,name=launchID,proto3" json:"launchID,omitempty"`
+	Address            string                                   `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	Coins              github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,3,rep,name=coins,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"coins"`
+	CoordinatorAddress string                                   `protobuf:"bytes,4,opt,name=coordinatorAddress,proto3" json:"coordinatorAddress,omitempty"`
 }
 
 func (m *EventGenesisAccountAdded) Reset()         { *m = EventGenesisAccountAdded{} }
@@ -254,18 +273,25 @@ func (m *EventGenesisAccountAdded) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EventGenesisAccountAdded proto.InternalMessageInfo
 
-func (m *EventGenesisAccountAdded) GetGenesisAccount() GenesisAccount {
-	if m != nil {
-		return m.GenesisAccount
-	}
-	return GenesisAccount{}
-}
-
 func (m *EventGenesisAccountAdded) GetLaunchID() uint64 {
 	if m != nil {
 		return m.LaunchID
 	}
 	return 0
+}
+
+func (m *EventGenesisAccountAdded) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+func (m *EventGenesisAccountAdded) GetCoins() github_com_cosmos_cosmos_sdk_types.Coins {
+	if m != nil {
+		return m.Coins
+	}
+	return nil
 }
 
 func (m *EventGenesisAccountAdded) GetCoordinatorAddress() string {
@@ -276,9 +302,10 @@ func (m *EventGenesisAccountAdded) GetCoordinatorAddress() string {
 }
 
 type EventVestingAccountAdded struct {
-	VestingAccount     VestingAccount `protobuf:"bytes,1,opt,name=vestingAccount,proto3" json:"vestingAccount"`
-	LaunchID           uint64         `protobuf:"varint,2,opt,name=launchID,proto3" json:"launchID,omitempty"`
-	CoordinatorAddress string         `protobuf:"bytes,3,opt,name=coordinatorAddress,proto3" json:"coordinatorAddress,omitempty"`
+	LaunchID           uint64         `protobuf:"varint,1,opt,name=launchID,proto3" json:"launchID,omitempty"`
+	Address            string         `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	VestingOptions     VestingOptions `protobuf:"bytes,3,opt,name=vestingOptions,proto3" json:"vestingOptions"`
+	CoordinatorAddress string         `protobuf:"bytes,4,opt,name=coordinatorAddress,proto3" json:"coordinatorAddress,omitempty"`
 }
 
 func (m *EventVestingAccountAdded) Reset()         { *m = EventVestingAccountAdded{} }
@@ -314,18 +341,25 @@ func (m *EventVestingAccountAdded) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EventVestingAccountAdded proto.InternalMessageInfo
 
-func (m *EventVestingAccountAdded) GetVestingAccount() VestingAccount {
-	if m != nil {
-		return m.VestingAccount
-	}
-	return VestingAccount{}
-}
-
 func (m *EventVestingAccountAdded) GetLaunchID() uint64 {
 	if m != nil {
 		return m.LaunchID
 	}
 	return 0
+}
+
+func (m *EventVestingAccountAdded) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+func (m *EventVestingAccountAdded) GetVestingOptions() VestingOptions {
+	if m != nil {
+		return m.VestingOptions
+	}
+	return VestingOptions{}
 }
 
 func (m *EventVestingAccountAdded) GetCoordinatorAddress() string {
@@ -336,11 +370,15 @@ func (m *EventVestingAccountAdded) GetCoordinatorAddress() string {
 }
 
 type EventValidatorAdded struct {
-	GenesisValidator   GenesisValidator `protobuf:"bytes,1,opt,name=genesisValidator,proto3" json:"genesisValidator"`
-	LaunchID           uint64           `protobuf:"varint,2,opt,name=launchID,proto3" json:"launchID,omitempty"`
-	HasCampaign        bool             `protobuf:"varint,3,opt,name=hasCampaign,proto3" json:"hasCampaign,omitempty"`
-	CampaignID         uint64           `protobuf:"varint,4,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
-	CoordinatorAddress string           `protobuf:"bytes,5,opt,name=coordinatorAddress,proto3" json:"coordinatorAddress,omitempty"`
+	LaunchID           uint64     `protobuf:"varint,1,opt,name=launchID,proto3" json:"launchID,omitempty"`
+	Address            string     `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+	GenTx              []byte     `protobuf:"bytes,3,opt,name=genTx,proto3" json:"genTx,omitempty"`
+	ConsPubKey         []byte     `protobuf:"bytes,4,opt,name=consPubKey,proto3" json:"consPubKey,omitempty"`
+	SelfDelegation     types.Coin `protobuf:"bytes,5,opt,name=selfDelegation,proto3" json:"selfDelegation"`
+	Peer               Peer       `protobuf:"bytes,6,opt,name=peer,proto3" json:"peer"`
+	HasCampaign        bool       `protobuf:"varint,7,opt,name=hasCampaign,proto3" json:"hasCampaign,omitempty"`
+	CampaignID         uint64     `protobuf:"varint,8,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	CoordinatorAddress string     `protobuf:"bytes,9,opt,name=coordinatorAddress,proto3" json:"coordinatorAddress,omitempty"`
 }
 
 func (m *EventValidatorAdded) Reset()         { *m = EventValidatorAdded{} }
@@ -376,18 +414,46 @@ func (m *EventValidatorAdded) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EventValidatorAdded proto.InternalMessageInfo
 
-func (m *EventValidatorAdded) GetGenesisValidator() GenesisValidator {
-	if m != nil {
-		return m.GenesisValidator
-	}
-	return GenesisValidator{}
-}
-
 func (m *EventValidatorAdded) GetLaunchID() uint64 {
 	if m != nil {
 		return m.LaunchID
 	}
 	return 0
+}
+
+func (m *EventValidatorAdded) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+func (m *EventValidatorAdded) GetGenTx() []byte {
+	if m != nil {
+		return m.GenTx
+	}
+	return nil
+}
+
+func (m *EventValidatorAdded) GetConsPubKey() []byte {
+	if m != nil {
+		return m.ConsPubKey
+	}
+	return nil
+}
+
+func (m *EventValidatorAdded) GetSelfDelegation() types.Coin {
+	if m != nil {
+		return m.SelfDelegation
+	}
+	return types.Coin{}
+}
+
+func (m *EventValidatorAdded) GetPeer() Peer {
+	if m != nil {
+		return m.Peer
+	}
+	return Peer{}
 }
 
 func (m *EventValidatorAdded) GetHasCampaign() bool {
@@ -474,7 +540,9 @@ func (m *EventAccountRemoved) GetCoordinatorAddress() string {
 type EventValidatorRemoved struct {
 	GenesisValidatorAccount string `protobuf:"bytes,1,opt,name=genesisValidatorAccount,proto3" json:"genesisValidatorAccount,omitempty"`
 	LaunchID                uint64 `protobuf:"varint,2,opt,name=launchID,proto3" json:"launchID,omitempty"`
-	CoordinatorAddress      string `protobuf:"bytes,3,opt,name=coordinatorAddress,proto3" json:"coordinatorAddress,omitempty"`
+	HasCampaign             bool   `protobuf:"varint,3,opt,name=hasCampaign,proto3" json:"hasCampaign,omitempty"`
+	CampaignID              uint64 `protobuf:"varint,4,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	CoordinatorAddress      string `protobuf:"bytes,5,opt,name=coordinatorAddress,proto3" json:"coordinatorAddress,omitempty"`
 }
 
 func (m *EventValidatorRemoved) Reset()         { *m = EventValidatorRemoved{} }
@@ -520,6 +588,20 @@ func (m *EventValidatorRemoved) GetGenesisValidatorAccount() string {
 func (m *EventValidatorRemoved) GetLaunchID() uint64 {
 	if m != nil {
 		return m.LaunchID
+	}
+	return 0
+}
+
+func (m *EventValidatorRemoved) GetHasCampaign() bool {
+	if m != nil {
+		return m.HasCampaign
+	}
+	return false
+}
+
+func (m *EventValidatorRemoved) GetCampaignID() uint64 {
+	if m != nil {
+		return m.CampaignID
 	}
 	return 0
 }
@@ -644,44 +726,56 @@ func init() {
 func init() { proto.RegisterFile("launch/events.proto", fileDescriptor_bb8579c84a3d4015) }
 
 var fileDescriptor_bb8579c84a3d4015 = []byte{
-	// 578 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0xdd, 0x8a, 0xd3, 0x40,
-	0x14, 0x6e, 0xf6, 0xc7, 0xdd, 0x9d, 0x05, 0x7f, 0xb2, 0x5d, 0x0c, 0xa5, 0xc4, 0x52, 0x10, 0x7b,
-	0x95, 0xa0, 0xde, 0xec, 0x95, 0xd0, 0x1f, 0x91, 0x82, 0xde, 0x64, 0x7f, 0x40, 0x11, 0x64, 0x36,
-	0x73, 0x48, 0x83, 0xcd, 0x24, 0x66, 0xa6, 0x41, 0xf1, 0x25, 0x7c, 0x01, 0x9f, 0xc4, 0x17, 0xd8,
-	0xcb, 0xbd, 0xf4, 0x4a, 0xa4, 0x7d, 0x0f, 0x91, 0xcc, 0x9c, 0xb4, 0x4d, 0xdc, 0x76, 0x2f, 0xec,
-	0xdd, 0xcc, 0x77, 0xe6, 0xfb, 0xe6, 0x3b, 0xdf, 0x1c, 0x86, 0x1c, 0x8d, 0xe9, 0x84, 0xfb, 0x23,
-	0x17, 0x32, 0xe0, 0x52, 0x38, 0x49, 0x1a, 0xcb, 0xd8, 0x3c, 0x96, 0xc0, 0x19, 0xa4, 0x51, 0xc8,
-	0xa5, 0x23, 0x12, 0xee, 0xe8, 0x33, 0x8d, 0x7a, 0x10, 0x07, 0xb1, 0x3a, 0xe1, 0xe6, 0x2b, 0x7d,
-	0xb8, 0x61, 0xa2, 0x82, 0x3f, 0xa2, 0x21, 0x47, 0xac, 0x8e, 0x58, 0x0a, 0x9f, 0x26, 0x20, 0x24,
-	0xa2, 0x4d, 0x44, 0x03, 0xe0, 0x20, 0x42, 0xf1, 0x81, 0xfa, 0x7e, 0x3c, 0xe1, 0xd5, 0x6a, 0x06,
-	0x42, 0x86, 0x3c, 0xa8, 0x54, 0xed, 0x0a, 0x37, 0xa3, 0xe3, 0x90, 0x51, 0x19, 0xa7, 0xba, 0xde,
-	0x7e, 0x43, 0x1e, 0xbc, 0xcc, 0x5b, 0xe8, 0xe7, 0x2e, 0xfa, 0x29, 0x50, 0x09, 0xcc, 0x3c, 0x21,
-	0xbb, 0xca, 0x95, 0x65, 0xb4, 0x8c, 0xce, 0xe1, 0xb3, 0xa6, 0x73, 0x63, 0x5f, 0x8e, 0xe2, 0xf4,
-	0x76, 0xae, 0x7e, 0x3d, 0xaa, 0x79, 0x9a, 0x50, 0x96, 0x3b, 0x4f, 0xd8, 0x7f, 0xca, 0x9d, 0x93,
-	0x23, 0x25, 0xe7, 0xe9, 0x3c, 0x0a, 0x7f, 0x2f, 0xc8, 0x1e, 0x26, 0x84, 0x92, 0xf6, 0x0a, 0x49,
-	0xe4, 0xa1, 0x68, 0x41, 0x6a, 0x7f, 0x2c, 0xcb, 0x9e, 0x82, 0x94, 0x63, 0x60, 0x66, 0x83, 0xec,
-	0x6b, 0xde, 0x70, 0xa0, 0x74, 0x77, 0xbc, 0xf9, 0xde, 0x6c, 0x92, 0x03, 0x64, 0x0f, 0x07, 0xd6,
-	0x96, 0x2a, 0x2e, 0x80, 0x9c, 0x49, 0x93, 0x24, 0x8d, 0x33, 0x60, 0xd6, 0x76, 0xcb, 0xe8, 0xec,
-	0x7b, 0xf3, 0x7d, 0xfb, 0x87, 0x41, 0x2c, 0x75, 0xdb, 0x2b, 0xfd, 0x04, 0x5d, 0xfd, 0x3e, 0x5d,
-	0xc6, 0x80, 0x99, 0xa7, 0xe4, 0x6e, 0x50, 0x82, 0xb1, 0xa1, 0xc7, 0x2b, 0x1a, 0x2a, 0x6b, 0x60,
-	0x5f, 0x15, 0x89, 0x52, 0x1f, 0x5b, 0x95, 0x3e, 0x1c, 0x62, 0xfa, 0x71, 0x9c, 0xb2, 0x90, 0xe7,
-	0x43, 0xd0, 0x65, 0x2c, 0x05, 0x21, 0x94, 0xe7, 0x03, 0xef, 0x86, 0xca, 0xc2, 0xfd, 0x85, 0x1e,
-	0xaf, 0xaa, 0xfb, 0xac, 0x04, 0xdf, 0xe2, 0xbe, 0xac, 0x51, 0xb8, 0x2f, 0x4b, 0x6c, 0xd4, 0xfd,
-	0x1f, 0x03, 0x5f, 0xfa, 0xa2, 0x18, 0x7b, 0x6d, 0xfc, 0x2d, 0xb9, 0x8f, 0x99, 0xcd, 0x0b, 0x68,
-	0xfd, 0xc9, 0xfa, 0xe0, 0xe7, 0xc7, 0xd1, 0xfc, 0x3f, 0x32, 0x6b, 0xed, 0xb7, 0xc8, 0xe1, 0x88,
-	0x8a, 0x3e, 0x8d, 0x12, 0x1a, 0x06, 0x1c, 0x27, 0x65, 0x19, 0x32, 0x6d, 0x42, 0x7c, 0x5c, 0x0f,
-	0x07, 0xd6, 0x8e, 0xe2, 0x2f, 0x21, 0x2b, 0x02, 0xd8, 0x5d, 0x19, 0xc0, 0x57, 0xec, 0x1f, 0xc3,
-	0xf5, 0x20, 0xca, 0x67, 0xd2, 0xb4, 0xc8, 0x1e, 0x45, 0xae, 0xa1, 0xb8, 0xc5, 0x76, 0xa3, 0xe9,
-	0x7f, 0x37, 0xc8, 0x71, 0x39, 0xfd, 0xe2, 0xfe, 0x13, 0xf2, 0xb0, 0x1a, 0xdc, 0xf2, 0x04, 0x1d,
-	0x78, 0xab, 0xca, 0x1b, 0xf5, 0xf7, 0x9e, 0xd4, 0x95, 0xbd, 0xd7, 0x4a, 0xe0, 0x2c, 0x0d, 0x83,
-	0x00, 0xd2, 0x5b, 0xfe, 0x81, 0x0e, 0xb9, 0xa7, 0xd7, 0x67, 0x61, 0x04, 0x42, 0xd2, 0x28, 0x51,
-	0x36, 0xb6, 0xbd, 0x2a, 0xdc, 0x7e, 0x8a, 0xd1, 0x6b, 0x75, 0x0f, 0x32, 0x48, 0xe5, 0x7a, 0xf1,
-	0x5e, 0xef, 0x6a, 0x6a, 0x1b, 0xd7, 0x53, 0xdb, 0xf8, 0x3d, 0xb5, 0x8d, 0x6f, 0x33, 0xbb, 0x76,
-	0x3d, 0xb3, 0x6b, 0x3f, 0x67, 0x76, 0xed, 0x5d, 0x27, 0x08, 0xe5, 0x68, 0x72, 0xe9, 0xf8, 0x71,
-	0xe4, 0x2e, 0x06, 0xd4, 0x15, 0x09, 0x77, 0x3f, 0xbb, 0xf8, 0xc5, 0xcb, 0x2f, 0x09, 0x88, 0xcb,
-	0x3b, 0xea, 0x5f, 0x7f, 0xfe, 0x37, 0x00, 0x00, 0xff, 0xff, 0x07, 0x4b, 0xfe, 0xf3, 0xa1, 0x06,
-	0x00, 0x00,
+	// 771 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0xcd, 0x6e, 0xd3, 0x40,
+	0x10, 0x8e, 0xf3, 0xd3, 0x34, 0xdb, 0x52, 0x84, 0x9b, 0x0a, 0x53, 0x2a, 0x37, 0x8a, 0x40, 0xe4,
+	0x82, 0xad, 0x16, 0x21, 0xf5, 0x84, 0xd4, 0x24, 0xa8, 0xaa, 0x00, 0x51, 0xb9, 0xa5, 0x07, 0x40,
+	0x42, 0x1b, 0x7b, 0x70, 0xac, 0x26, 0xbb, 0xc6, 0xbb, 0x89, 0x5a, 0xf1, 0x0a, 0x48, 0xf0, 0x1c,
+	0x3c, 0x49, 0x8f, 0xbd, 0x20, 0x71, 0x6a, 0x51, 0xfb, 0x08, 0xdc, 0x38, 0x21, 0xef, 0x6e, 0x52,
+	0xc7, 0xaa, 0xfb, 0x23, 0x38, 0x65, 0x77, 0x76, 0x66, 0xbe, 0xf9, 0xbe, 0xfd, 0xd6, 0x41, 0xf3,
+	0x3d, 0x3c, 0x20, 0x6e, 0xd7, 0x86, 0x21, 0x10, 0xce, 0xac, 0x30, 0xa2, 0x9c, 0xea, 0x0b, 0x1c,
+	0x88, 0x07, 0x51, 0x3f, 0x20, 0xdc, 0x62, 0x21, 0xb1, 0x64, 0xce, 0x62, 0xd5, 0xa7, 0x3e, 0x15,
+	0x19, 0x76, 0xbc, 0x92, 0xc9, 0x8b, 0xa6, 0x4b, 0x59, 0x9f, 0x32, 0xbb, 0x83, 0x19, 0xd8, 0xc3,
+	0x95, 0x0e, 0x70, 0xbc, 0x62, 0xbb, 0x34, 0x20, 0xea, 0x5c, 0x57, 0x08, 0x6e, 0x17, 0x8f, 0x63,
+	0x55, 0x15, 0x8b, 0xe0, 0xd3, 0x00, 0x18, 0x57, 0xd1, 0x25, 0x15, 0xf5, 0x81, 0x00, 0x0b, 0xd8,
+	0x07, 0xec, 0xba, 0x74, 0x40, 0xd2, 0xa7, 0x43, 0x60, 0x3c, 0x20, 0x7e, 0xea, 0xd4, 0x4c, 0xd5,
+	0x0e, 0x71, 0x2f, 0xf0, 0x30, 0xa7, 0x91, 0x3c, 0xaf, 0x33, 0x74, 0xe7, 0x79, 0x4c, 0xb1, 0x15,
+	0x4f, 0xd1, 0x8a, 0x00, 0x73, 0xf0, 0xf4, 0x07, 0xe8, 0x96, 0x4b, 0x69, 0xe4, 0x05, 0x24, 0xce,
+	0xdc, 0x6c, 0x1b, 0x5a, 0x4d, 0x6b, 0x14, 0x9d, 0xc9, 0xa0, 0xbe, 0x86, 0x4a, 0x62, 0x76, 0x23,
+	0x5f, 0xd3, 0x1a, 0x33, 0xab, 0x4b, 0xd6, 0x85, 0xea, 0x58, 0xa2, 0x73, 0xb3, 0x78, 0x78, 0xbc,
+	0x9c, 0x73, 0x64, 0x41, 0xfd, 0x55, 0x12, 0xf4, 0x4d, 0xe8, 0x09, 0xd0, 0x71, 0x3b, 0xed, 0xa6,
+	0xed, 0x28, 0x9a, 0x17, 0xed, 0x1c, 0xa9, 0xda, 0x88, 0x85, 0x81, 0xca, 0x6e, 0xbc, 0xa4, 0x91,
+	0x68, 0x59, 0x71, 0x46, 0x5b, 0xfd, 0x19, 0x2a, 0x2b, 0x85, 0xd5, 0xec, 0x66, 0x06, 0x98, 0xea,
+	0xa8, 0xe0, 0x46, 0x45, 0xf5, 0xbd, 0x49, 0xc0, 0x6d, 0xe0, 0xbc, 0x07, 0x9e, 0xbe, 0x88, 0xa6,
+	0x65, 0xdd, 0x58, 0xb1, 0xf1, 0x5e, 0x5f, 0x42, 0x15, 0x55, 0xbd, 0xd9, 0x16, 0xa0, 0x45, 0xe7,
+	0x3c, 0x10, 0x57, 0xe2, 0x30, 0x8c, 0xe8, 0x10, 0x3c, 0xa3, 0x50, 0xd3, 0x1a, 0xd3, 0xce, 0x78,
+	0x5f, 0xff, 0x9a, 0x47, 0x86, 0x40, 0xdb, 0x90, 0x57, 0xb8, 0x2e, 0xef, 0x77, 0xdd, 0xf3, 0xae,
+	0x80, 0x34, 0x50, 0x19, 0x7b, 0x5e, 0x04, 0x8c, 0x09, 0xc0, 0x8a, 0x33, 0xda, 0xea, 0x5f, 0x34,
+	0x54, 0x8a, 0x9d, 0xc8, 0x8c, 0x42, 0xad, 0xd0, 0x98, 0x59, 0xbd, 0x67, 0x49, 0xaf, 0x5a, 0xb1,
+	0x57, 0x2d, 0xe5, 0x55, 0xab, 0x45, 0x03, 0xd2, 0x7c, 0x17, 0x33, 0xff, 0x73, 0xbc, 0xfc, 0xc8,
+	0x0f, 0x78, 0x77, 0xd0, 0xb1, 0x5c, 0xda, 0xb7, 0x95, 0xb1, 0xe5, 0xcf, 0x63, 0xe6, 0xed, 0xd9,
+	0xfc, 0x20, 0x04, 0x26, 0x0a, 0xbe, 0x9f, 0x2c, 0x37, 0xae, 0x99, 0xca, 0x1c, 0x39, 0x84, 0x6e,
+	0x21, 0x3d, 0xe1, 0xac, 0x75, 0x35, 0x73, 0x51, 0xcc, 0x7c, 0xc1, 0x49, 0xfd, 0x87, 0xa6, 0x14,
+	0xd9, 0x95, 0x96, 0xff, 0x0f, 0x8a, 0x6c, 0xa3, 0x39, 0xf5, 0x7e, 0x5e, 0x87, 0x3c, 0xa0, 0x42,
+	0x99, 0xd8, 0x18, 0x0f, 0x33, 0x8c, 0xb1, 0x3b, 0x91, 0xac, 0xfc, 0x91, 0x6a, 0x71, 0x63, 0x5e,
+	0xbf, 0xf3, 0xca, 0x57, 0xbb, 0xa3, 0x47, 0xfa, 0x2f, 0x94, 0xaa, 0xa8, 0xe4, 0x03, 0xd9, 0xd9,
+	0x17, 0x4c, 0x66, 0x1d, 0xb9, 0xd1, 0x4d, 0x84, 0x5c, 0x4a, 0xd8, 0xd6, 0xa0, 0xf3, 0x02, 0x0e,
+	0xc4, 0x2c, 0xb3, 0x4e, 0x22, 0xa2, 0x6f, 0xa0, 0x39, 0x06, 0xbd, 0x8f, 0x6d, 0xe8, 0x81, 0x8f,
+	0x63, 0x1a, 0x46, 0x49, 0x08, 0x71, 0x89, 0x45, 0x14, 0xf9, 0xc9, 0x32, 0xfd, 0x29, 0x2a, 0x86,
+	0x00, 0x91, 0x31, 0x25, 0xca, 0xef, 0x67, 0xe8, 0xb8, 0x05, 0x10, 0xa9, 0x06, 0x22, 0x5d, 0xaf,
+	0xa1, 0x99, 0x2e, 0x66, 0x2d, 0xdc, 0x0f, 0x71, 0xe0, 0x13, 0xa3, 0x2c, 0x1e, 0x43, 0x32, 0x24,
+	0x18, 0xa8, 0xf5, 0x66, 0xdb, 0x98, 0x16, 0x7a, 0x24, 0x22, 0x19, 0xaa, 0x57, 0x32, 0x55, 0xff,
+	0xac, 0x44, 0x57, 0x2e, 0x72, 0xa0, 0x1f, 0x3f, 0xbb, 0xa4, 0xb0, 0xda, 0xa4, 0xb0, 0xc9, 0xeb,
+	0xc8, 0xa7, 0xae, 0xe3, 0x62, 0xf0, 0x42, 0x26, 0xf8, 0x89, 0x86, 0x16, 0x26, 0xaf, 0x7c, 0x84,
+	0xbf, 0x86, 0xee, 0xaa, 0x6f, 0xf6, 0xb9, 0x1b, 0xe4, 0x84, 0x6a, 0x9e, 0xac, 0xe3, 0x4b, 0xe7,
+	0x4b, 0xc9, 0x5b, 0xb8, 0x4a, 0xde, 0xe2, 0x35, 0xe5, 0x2d, 0x65, 0x32, 0x7c, 0x8f, 0xaa, 0x82,
+	0xe0, 0x4b, 0x31, 0xc2, 0x4e, 0x14, 0xf8, 0x3e, 0x44, 0x57, 0x98, 0xba, 0x81, 0x6e, 0xcb, 0xf5,
+	0x4e, 0xd0, 0x07, 0xc6, 0x71, 0x3f, 0x14, 0x44, 0x0a, 0x4e, 0x3a, 0x5c, 0x5f, 0x51, 0x97, 0x27,
+	0xbb, 0x3b, 0x30, 0x84, 0x88, 0x5f, 0xde, 0xbc, 0xd9, 0x3c, 0x3c, 0x35, 0xb5, 0xa3, 0x53, 0x53,
+	0xfb, 0x75, 0x6a, 0x6a, 0xdf, 0xce, 0xcc, 0xdc, 0xd1, 0x99, 0x99, 0xfb, 0x79, 0x66, 0xe6, 0xde,
+	0x26, 0x3f, 0x5c, 0xe7, 0x76, 0xb5, 0x59, 0x48, 0xec, 0x7d, 0x5b, 0xfd, 0x8f, 0x8a, 0xcf, 0x57,
+	0x67, 0x4a, 0xfc, 0x79, 0x3e, 0xf9, 0x1b, 0x00, 0x00, 0xff, 0xff, 0xf8, 0xec, 0x83, 0xcf, 0x26,
+	0x08, 0x00, 0x00,
 }
 
 func (m *EventChainCreated) Marshal() (dAtA []byte, err error) {
@@ -713,7 +807,12 @@ func (m *EventChainCreated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0xa
+	dAtA[i] = 0x12
+	if m.CoordinatorID != 0 {
+		i = encodeVarintEvents(dAtA, i, uint64(m.CoordinatorID))
+		i--
+		dAtA[i] = 0x8
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -779,7 +878,14 @@ func (m *EventRequestCreated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0xa
+	dAtA[i] = 0x12
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -851,23 +957,34 @@ func (m *EventGenesisAccountAdded) MarshalToSizedBuffer(dAtA []byte) (int, error
 		copy(dAtA[i:], m.CoordinatorAddress)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.CoordinatorAddress)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x22
+	}
+	if len(m.Coins) > 0 {
+		for iNdEx := len(m.Coins) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Coins[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintEvents(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x1a
+		}
+	}
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
 	}
 	if m.LaunchID != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.LaunchID))
 		i--
-		dAtA[i] = 0x10
+		dAtA[i] = 0x8
 	}
-	{
-		size, err := m.GenesisAccount.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintEvents(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -896,15 +1013,10 @@ func (m *EventVestingAccountAdded) MarshalToSizedBuffer(dAtA []byte) (int, error
 		copy(dAtA[i:], m.CoordinatorAddress)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.CoordinatorAddress)))
 		i--
-		dAtA[i] = 0x1a
-	}
-	if m.LaunchID != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.LaunchID))
-		i--
-		dAtA[i] = 0x10
+		dAtA[i] = 0x22
 	}
 	{
-		size, err := m.VestingAccount.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.VestingOptions.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -912,7 +1024,19 @@ func (m *EventVestingAccountAdded) MarshalToSizedBuffer(dAtA []byte) (int, error
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0xa
+	dAtA[i] = 0x1a
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.LaunchID != 0 {
+		i = encodeVarintEvents(dAtA, i, uint64(m.LaunchID))
+		i--
+		dAtA[i] = 0x8
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -941,12 +1065,12 @@ func (m *EventValidatorAdded) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.CoordinatorAddress)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.CoordinatorAddress)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x4a
 	}
 	if m.CampaignID != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.CampaignID))
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x40
 	}
 	if m.HasCampaign {
 		i--
@@ -956,15 +1080,10 @@ func (m *EventValidatorAdded) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0
 		}
 		i--
-		dAtA[i] = 0x18
-	}
-	if m.LaunchID != 0 {
-		i = encodeVarintEvents(dAtA, i, uint64(m.LaunchID))
-		i--
-		dAtA[i] = 0x10
+		dAtA[i] = 0x38
 	}
 	{
-		size, err := m.GenesisValidator.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.Peer.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -972,7 +1091,43 @@ func (m *EventValidatorAdded) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0xa
+	dAtA[i] = 0x32
+	{
+		size, err := m.SelfDelegation.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintEvents(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
+	if len(m.ConsPubKey) > 0 {
+		i -= len(m.ConsPubKey)
+		copy(dAtA[i:], m.ConsPubKey)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.ConsPubKey)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.GenTx) > 0 {
+		i -= len(m.GenTx)
+		copy(dAtA[i:], m.GenTx)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.GenTx)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.LaunchID != 0 {
+		i = encodeVarintEvents(dAtA, i, uint64(m.LaunchID))
+		i--
+		dAtA[i] = 0x8
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -1043,7 +1198,22 @@ func (m *EventValidatorRemoved) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.CoordinatorAddress)
 		i = encodeVarintEvents(dAtA, i, uint64(len(m.CoordinatorAddress)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x2a
+	}
+	if m.CampaignID != 0 {
+		i = encodeVarintEvents(dAtA, i, uint64(m.CampaignID))
+		i--
+		dAtA[i] = 0x20
+	}
+	if m.HasCampaign {
+		i--
+		if m.HasCampaign {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x18
 	}
 	if m.LaunchID != 0 {
 		i = encodeVarintEvents(dAtA, i, uint64(m.LaunchID))
@@ -1138,6 +1308,9 @@ func (m *EventChainCreated) Size() (n int) {
 	}
 	var l int
 	_ = l
+	if m.CoordinatorID != 0 {
+		n += 1 + sovEvents(uint64(m.CoordinatorID))
+	}
 	l = m.Chain.Size()
 	n += 1 + l + sovEvents(uint64(l))
 	return n
@@ -1160,6 +1333,10 @@ func (m *EventRequestCreated) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
 	l = m.Request.Size()
 	n += 1 + l + sovEvents(uint64(l))
 	return n
@@ -1189,10 +1366,18 @@ func (m *EventGenesisAccountAdded) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = m.GenesisAccount.Size()
-	n += 1 + l + sovEvents(uint64(l))
 	if m.LaunchID != 0 {
 		n += 1 + sovEvents(uint64(m.LaunchID))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	if len(m.Coins) > 0 {
+		for _, e := range m.Coins {
+			l = e.Size()
+			n += 1 + l + sovEvents(uint64(l))
+		}
 	}
 	l = len(m.CoordinatorAddress)
 	if l > 0 {
@@ -1207,11 +1392,15 @@ func (m *EventVestingAccountAdded) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = m.VestingAccount.Size()
-	n += 1 + l + sovEvents(uint64(l))
 	if m.LaunchID != 0 {
 		n += 1 + sovEvents(uint64(m.LaunchID))
 	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = m.VestingOptions.Size()
+	n += 1 + l + sovEvents(uint64(l))
 	l = len(m.CoordinatorAddress)
 	if l > 0 {
 		n += 1 + l + sovEvents(uint64(l))
@@ -1225,11 +1414,25 @@ func (m *EventValidatorAdded) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = m.GenesisValidator.Size()
-	n += 1 + l + sovEvents(uint64(l))
 	if m.LaunchID != 0 {
 		n += 1 + sovEvents(uint64(m.LaunchID))
 	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = len(m.GenTx)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = len(m.ConsPubKey)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	l = m.SelfDelegation.Size()
+	n += 1 + l + sovEvents(uint64(l))
+	l = m.Peer.Size()
+	n += 1 + l + sovEvents(uint64(l))
 	if m.HasCampaign {
 		n += 2
 	}
@@ -1275,6 +1478,12 @@ func (m *EventValidatorRemoved) Size() (n int) {
 	}
 	if m.LaunchID != 0 {
 		n += 1 + sovEvents(uint64(m.LaunchID))
+	}
+	if m.HasCampaign {
+		n += 2
+	}
+	if m.CampaignID != 0 {
+		n += 1 + sovEvents(uint64(m.CampaignID))
 	}
 	l = len(m.CoordinatorAddress)
 	if l > 0 {
@@ -1346,6 +1555,25 @@ func (m *EventChainCreated) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorID", wireType)
+			}
+			m.CoordinatorID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CoordinatorID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Chain", wireType)
 			}
@@ -1512,6 +1740,38 @@ func (m *EventRequestCreated) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Request", wireType)
 			}
@@ -1703,8 +1963,59 @@ func (m *EventGenesisAccountAdded) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LaunchID", wireType)
+			}
+			m.LaunchID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LaunchID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field GenesisAccount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Coins", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1731,30 +2042,12 @@ func (m *EventGenesisAccountAdded) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.GenesisAccount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Coins = append(m.Coins, github_com_cosmos_cosmos_sdk_types.Coin{})
+			if err := m.Coins[len(m.Coins)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LaunchID", wireType)
-			}
-			m.LaunchID = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.LaunchID |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorAddress", wireType)
 			}
@@ -1837,8 +2130,59 @@ func (m *EventVestingAccountAdded) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LaunchID", wireType)
+			}
+			m.LaunchID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LaunchID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field VestingAccount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field VestingOptions", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1865,30 +2209,11 @@ func (m *EventVestingAccountAdded) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.VestingAccount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.VestingOptions.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LaunchID", wireType)
-			}
-			m.LaunchID = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowEvents
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.LaunchID |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorAddress", wireType)
 			}
@@ -1971,8 +2296,127 @@ func (m *EventValidatorAdded) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LaunchID", wireType)
+			}
+			m.LaunchID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.LaunchID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field GenesisValidator", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GenTx", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GenTx = append(m.GenTx[:0], dAtA[iNdEx:postIndex]...)
+			if m.GenTx == nil {
+				m.GenTx = []byte{}
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ConsPubKey", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ConsPubKey = append(m.ConsPubKey[:0], dAtA[iNdEx:postIndex]...)
+			if m.ConsPubKey == nil {
+				m.ConsPubKey = []byte{}
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SelfDelegation", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1999,15 +2443,15 @@ func (m *EventValidatorAdded) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.GenesisValidator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.SelfDelegation.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field LaunchID", wireType)
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Peer", wireType)
 			}
-			m.LaunchID = 0
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowEvents
@@ -2017,12 +2461,26 @@ func (m *EventValidatorAdded) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.LaunchID |= uint64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-		case 3:
+			if msglen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Peer.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field HasCampaign", wireType)
 			}
@@ -2042,7 +2500,7 @@ func (m *EventValidatorAdded) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.HasCampaign = bool(v != 0)
-		case 4:
+		case 8:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
 			}
@@ -2061,7 +2519,7 @@ func (m *EventValidatorAdded) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 5:
+		case 9:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorAddress", wireType)
 			}
@@ -2328,6 +2786,45 @@ func (m *EventValidatorRemoved) Unmarshal(dAtA []byte) error {
 				}
 			}
 		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HasCampaign", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.HasCampaign = bool(v != 0)
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
+			}
+			m.CampaignID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CampaignID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorAddress", wireType)
 			}
