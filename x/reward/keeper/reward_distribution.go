@@ -146,8 +146,7 @@ func (k Keeper) DistributeRewards(
 		rewardPool.RemainingCoins = rewardPool.RemainingCoins.Sub(rewardPool.RemainingCoins) // sub coins transferred
 		k.SetRewardPool(ctx, rewardPool)
 
-		err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolUpdated{RewardPool: rewardPool})
-		return err
+		return ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolUpdated{RewardPool: rewardPool})
 	}
 
 	// Otherwise, the refund is relative to the block ratio and the reward pool is updated
