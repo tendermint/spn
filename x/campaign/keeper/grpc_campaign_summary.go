@@ -2,11 +2,9 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -23,7 +21,7 @@ func (k Keeper) CampaignSummary(goCtx context.Context, req *types.QueryCampaignS
 
 	campaign, found := k.GetCampaign(ctx, req.CampaignID)
 	if !found {
-		return nil, sdkerrors.ErrKeyNotFound
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 	campaignSummary, err := k.GetCampaignSummary(ctx, campaign)
 
@@ -69,13 +67,12 @@ func (k Keeper) CampaignSummaries(goCtx context.Context, req *types.QueryCampaig
 }
 
 // GetCampaignSummary returns the campaign with summary attached to it like most recent chain and rewards attached to it
-// TODO: add tests https://github.com/tendermint/spn/issues/650
 func (k Keeper) GetCampaignSummary(ctx sdk.Context, campaign types.Campaign) (cs types.CampaignSummary, err error) {
 	cs.Campaign = campaign
 
 	campaignChains, found := k.GetCampaignChains(ctx, campaign.CampaignID)
 	if !found {
-		return cs, status.Error(codes.NotFound, fmt.Sprintf("chain list not found for existing campaign %d", campaign.CampaignID))
+		return cs, status.Errorf(codes.NotFound, "chain list not found for existing campaign %d", campaign.CampaignID)
 	}
 
 	// retrieve information about most recent chain
@@ -87,7 +84,7 @@ func (k Keeper) GetCampaignSummary(ctx sdk.Context, campaign types.Campaign) (cs
 
 		chain, found := k.launchKeeper.GetChain(ctx, mostRecentLaunchID)
 		if !found {
-			return cs, status.Error(codes.NotFound, fmt.Sprintf("chain not found for campaign chain %d", mostRecentLaunchID))
+			return cs, status.Errorf(codes.NotFound, "chain not found for campaign chain %d", mostRecentLaunchID)
 		}
 
 		cs.MostRecentChain = types.MostRecentChain{
