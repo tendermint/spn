@@ -77,34 +77,31 @@ func TestRandomAuctionStandby(t *testing.T) {
 		endTime := ctx.BlockTime().Add(time.Hour * 24 * 7)
 
 		// set custom auction with status AuctionStarted
-		var allowedBidders []fundraisingtypes.AllowedBidder
 		endTimes := []time.Time{endTime}
 		ba := &fundraisingtypes.BaseAuction{
-			Id:             0,
-			Type:           fundraisingtypes.AuctionTypeFixedPrice,
-			AllowedBidders: allowedBidders,
-			Auctioneer:     accs[0].Address.String(),
-			StartTime:      startTime,
-			EndTimes:       endTimes,
-			Status:         fundraisingtypes.AuctionStatusStarted,
+			Id:         0,
+			Type:       fundraisingtypes.AuctionTypeFixedPrice,
+			Auctioneer: accs[0].Address.String(),
+			StartTime:  startTime,
+			EndTimes:   endTimes,
+			Status:     fundraisingtypes.AuctionStatusStarted,
 		}
-		auction := fundraisingtypes.NewFixedPriceAuction(ba)
+		auction := fundraisingtypes.NewFixedPriceAuction(ba, sample.Coin(r))
 		tk.FundraisingKeeper.SetAuction(ctx, auction)
 
 		// set custom auction with status AuctionCancelled
 		ba = &fundraisingtypes.BaseAuction{
-			Id:             1,
-			Type:           fundraisingtypes.AuctionTypeFixedPrice,
-			AllowedBidders: allowedBidders,
-			Auctioneer:     accs[0].Address.String(),
-			StartTime:      startTime,
-			EndTimes:       endTimes,
-			Status:         fundraisingtypes.AuctionStatusCancelled,
+			Id:         1,
+			Type:       fundraisingtypes.AuctionTypeFixedPrice,
+			Auctioneer: accs[0].Address.String(),
+			StartTime:  startTime,
+			EndTimes:   endTimes,
+			Status:     fundraisingtypes.AuctionStatusCancelled,
 		}
-		auction = fundraisingtypes.NewFixedPriceAuction(ba)
+		auction = fundraisingtypes.NewFixedPriceAuction(ba, sample.Coin(r))
 		tk.FundraisingKeeper.SetAuction(ctx, auction)
 
-		_, found := participationsim.RandomAuctionStandby(ctx, r, *tk.FundraisingKeeper)
+		_, found := participationsim.RandomAuctionStandby(ctx, r, tk.FundraisingKeeper)
 		require.False(t, found)
 	})
 
@@ -119,7 +116,7 @@ func TestRandomAuctionStandby(t *testing.T) {
 		auction1, found := tk.FundraisingKeeper.GetAuction(ctx, auctionID1)
 		require.True(t, found)
 
-		got, found := participationsim.RandomAuctionStandby(ctx, r, *tk.FundraisingKeeper)
+		got, found := participationsim.RandomAuctionStandby(ctx, r, tk.FundraisingKeeper)
 		require.True(t, found)
 		require.Equal(t, auction1, got)
 	})
@@ -127,7 +124,7 @@ func TestRandomAuctionStandby(t *testing.T) {
 	t.Run("no auctions", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-		_, found := participationsim.RandomAuctionStandby(ctx, r, *tk.FundraisingKeeper)
+		_, found := participationsim.RandomAuctionStandby(ctx, r, tk.FundraisingKeeper)
 		require.False(t, found)
 	})
 }
@@ -146,7 +143,7 @@ func TestRandomAuctionParticipationEnabled(t *testing.T) {
 	tk.ParticipationKeeper.SetParams(ctx, params)
 
 	t.Run("no auctions", func(t *testing.T) {
-		_, found := participationsim.RandomAuctionParticipationEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		_, found := participationsim.RandomAuctionParticipationEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.False(t, found)
 	})
 
@@ -160,7 +157,7 @@ func TestRandomAuctionParticipationEnabled(t *testing.T) {
 		_, found := tk.FundraisingKeeper.GetAuction(ctx, auctionID)
 		require.True(t, found)
 
-		_, found = participationsim.RandomAuctionParticipationEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		_, found = participationsim.RandomAuctionParticipationEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.False(t, found)
 	})
 
@@ -174,7 +171,7 @@ func TestRandomAuctionParticipationEnabled(t *testing.T) {
 		auction, found := tk.FundraisingKeeper.GetAuction(ctx, auctionID)
 		require.True(t, found)
 
-		got, found := participationsim.RandomAuctionParticipationEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		got, found := participationsim.RandomAuctionParticipationEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.True(t, found)
 		require.Equal(t, auction, got)
 	})
@@ -197,38 +194,36 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	tk.ParticipationKeeper.SetParams(ctx, params)
 
 	t.Run("no auctions", func(t *testing.T) {
-		_, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		_, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.False(t, found)
 	})
 
 	// populate keeper with some invalid auctions
-	var allowedBidders []fundraisingtypes.AllowedBidder
 	endTimes := []time.Time{endTime}
 	ba := &fundraisingtypes.BaseAuction{
-		Id:             0,
-		Type:           fundraisingtypes.AuctionTypeFixedPrice,
-		AllowedBidders: allowedBidders,
-		Auctioneer:     accs[0].Address.String(),
-		StartTime:      invalidStartTime, // started, but withdrawal delay not reached
-		EndTimes:       endTimes,
-		Status:         fundraisingtypes.AuctionStatusStarted,
+		Id:         0,
+		Type:       fundraisingtypes.AuctionTypeFixedPrice,
+		Auctioneer: accs[0].Address.String(),
+		StartTime:  invalidStartTime, // started, but withdrawal delay not reached
+		EndTimes:   endTimes,
+		Status:     fundraisingtypes.AuctionStatusStarted,
 	}
-	invalidAuction := fundraisingtypes.NewFixedPriceAuction(ba)
+	invalidAuction := fundraisingtypes.NewFixedPriceAuction(ba, sample.Coin(r))
 	tk.FundraisingKeeper.SetAuction(ctx, invalidAuction)
+
 	ba = &fundraisingtypes.BaseAuction{
-		Id:             1,
-		Type:           fundraisingtypes.AuctionTypeFixedPrice,
-		AllowedBidders: allowedBidders,
-		Auctioneer:     accs[0].Address.String(),
-		StartTime:      invalidStartTime.Add(time.Hour), // not yet started, but withdrawal delay not reached
-		EndTimes:       endTimes,
-		Status:         fundraisingtypes.AuctionStatusStandBy,
+		Id:         1,
+		Type:       fundraisingtypes.AuctionTypeFixedPrice,
+		Auctioneer: accs[0].Address.String(),
+		StartTime:  invalidStartTime.Add(time.Hour), // not yet started, but withdrawal delay not reached
+		EndTimes:   endTimes,
+		Status:     fundraisingtypes.AuctionStatusStandBy,
 	}
-	invalidAuction = fundraisingtypes.NewFixedPriceAuction(ba)
+	invalidAuction = fundraisingtypes.NewFixedPriceAuction(ba, sample.Coin(r))
 	tk.FundraisingKeeper.SetAuction(ctx, invalidAuction)
 
 	t.Run("no auction to be found that satisfy requirements", func(t *testing.T) {
-		_, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		_, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.False(t, found)
 	})
 
@@ -239,7 +234,7 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	require.True(t, found)
 
 	t.Run("find auction where withdrawal delay has passed", func(t *testing.T) {
-		foundAuction, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		foundAuction, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.True(t, found)
 		require.Equal(t, validAuction, foundAuction)
 		require.True(t, ctx.BlockTime().After(foundAuction.GetStartTime().Add(withdrawalDelay)))
@@ -251,7 +246,7 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	tk.FundraisingKeeper.SetAuction(ctx, validAuction)
 
 	t.Run("find cancelled auction", func(t *testing.T) {
-		foundAuction, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, *tk.FundraisingKeeper, *tk.ParticipationKeeper)
+		foundAuction, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.True(t, found)
 		require.Equal(t, validAuction, foundAuction)
 		require.Equal(t, fundraisingtypes.AuctionStatusCancelled, foundAuction.GetStatus())
