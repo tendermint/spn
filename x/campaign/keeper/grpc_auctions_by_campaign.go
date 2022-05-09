@@ -21,6 +21,10 @@ func (k Keeper) AuctionsOfCampaign(goCtx context.Context, req *types.QueryAuctio
 	reqCampaignID := req.CampaignID
 	resAuctionIDs := make([]uint64, 0)
 
+	if _, found := k.GetCampaign(ctx, reqCampaignID); !found {
+		return nil, status.Error(codes.NotFound, "campaign not found")
+	}
+
 	k.fundraisingKeeper.IterateAuctions(ctx, func(auction fundraisingtypes.AuctionI) (stop bool) {
 		sellingCoinDenom := auction.GetSellingCoin().Denom
 		campaignID, err := types.VoucherCampaign(sellingCoinDenom)

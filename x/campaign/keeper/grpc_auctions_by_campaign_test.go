@@ -62,6 +62,13 @@ func TestAuctionsOfCampaignGet(t *testing.T) {
 			},
 		},
 		{
+			desc: "campaign not found",
+			request: &types.QueryAuctionsOfCampaignRequest{
+				CampaignID: 10000,
+			},
+			err: status.Error(codes.NotFound, "campaign not found"),
+		},
+		{
 			desc: "InvalidRequest",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
