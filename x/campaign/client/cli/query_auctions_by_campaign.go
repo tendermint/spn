@@ -10,8 +10,6 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-var _ = strconv.Itoa(0)
-
 func CmdAuctionsOfCampaign() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "auctions-of-campaign [campaign-id]",

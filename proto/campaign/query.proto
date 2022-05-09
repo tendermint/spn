@@ -73,9 +73,9 @@ service Query {
   }
 
   // Queries a list of auction IDs of a campaign
-	rpc AuctionsOfCampaign(QueryAuctionsOfCampaignRequest) returns (QueryAuctionsOfCampaignResponse) {
-		option (google.api.http).get = "/tendermint/spn/campaign/auctions_of_campaign/{campaignID}";
-	}
+  rpc AuctionsOfCampaign(QueryAuctionsOfCampaignRequest) returns (QueryAuctionsOfCampaignResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/auctions_of_campaign/{campaignID}";
+  }
 
 // this line is used by starport scaffolding # 2
 }
