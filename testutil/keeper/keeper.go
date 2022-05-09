@@ -85,7 +85,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -174,7 +174,7 @@ func NewTestSetupWithIBCMocks(
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
