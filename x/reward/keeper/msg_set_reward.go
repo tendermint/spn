@@ -69,10 +69,11 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 		rewardPool.Provider = msg.Provider
 		rewardPool.LastRewardHeight = msg.LastRewardHeight
 		k.SetRewardPool(ctx, rewardPool)
-		if found {
-			err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolUpdated{RewardPool: rewardPool})
-		} else {
-			err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolCreated{RewardPool: rewardPool})
+		if !found {
+			err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolCreated{
+				LaunchID: rewardPool.LaunchID,
+				Provider: rewardPool.Provider,
+			})
 		}
 	}
 

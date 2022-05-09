@@ -8,11 +8,8 @@ import "cosmos/base/v1beta1/coin.proto";
 option go_package = "github.com/tendermint/spn/x/reward/types";
 
 message EventRewardPoolCreated {
-  RewardPool rewardPool = 1 [(gogoproto.nullable) = false];
-}
-
-message EventRewardPoolUpdated {
-  RewardPool rewardPool = 1 [(gogoproto.nullable) = false];
+  uint64 launchID = 1;
+  string provider = 2;
 }
 
 message EventRewardPoolRemoved {
