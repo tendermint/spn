@@ -218,7 +218,7 @@ func (i initializer) Campaign(
 	distrKeeper distrkeeper.Keeper,
 	rewardKeeper rewardmodulekeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
-	fundraisingKeeper *fundraisingkeeper.Keeper,
+	fundraisingKeeper fundraisingkeeper.Keeper,
 ) *campaignkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(campaigntypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(campaigntypes.MemStoreKey)
