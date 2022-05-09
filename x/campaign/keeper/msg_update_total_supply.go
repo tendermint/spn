@@ -50,5 +50,11 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 	campaign.TotalSupply = types.UpdateTotalSupply(campaign.TotalSupply, msg.TotalSupplyUpdate)
 	k.SetCampaign(ctx, campaign)
 
-	return &types.MsgUpdateTotalSupplyResponse{}, nil
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignTotalSupplyUpdated{
+		CampaignID:         campaign.CampaignID,
+		CoordinatorAddress: msg.Coordinator,
+		TotalSupply:        campaign.TotalSupply,
+	})
+
+	return &types.MsgUpdateTotalSupplyResponse{}, err
 }

@@ -44,8 +44,21 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 	// If the account no longer has shares, it can be removed from the store
 	if types.IsEqualShares(account.Shares, types.EmptyShares()) {
 		k.RemoveMainnetAccount(ctx, msg.CampaignID, msg.Sender)
+		if err := ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountRemoved{
+			CampaignID: campaign.CampaignID,
+			Address:    account.Address,
+		}); err != nil {
+			return nil, err
+		}
 	} else {
 		k.SetMainnetAccount(ctx, account)
+		if err := ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{
+			CampaignID: account.CampaignID,
+			Address:    account.Address,
+			Shares:     account.Shares,
+		}); err != nil {
+			return nil, err
+		}
 	}
 
 	// Mint vouchers from the removed shares and send them to sender balance

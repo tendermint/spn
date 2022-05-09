@@ -44,8 +44,8 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 	}
 
 	// check if the account already exists
-	account, found := k.GetMainnetAccount(ctx, campaign.CampaignID, msg.Address)
-	if !found {
+	account, accountFound := k.GetMainnetAccount(ctx, campaign.CampaignID, msg.Address)
+	if !accountFound {
 		// if not, create the account
 		account = types.MainnetAccount{
 			CampaignID: campaign.CampaignID,
@@ -65,5 +65,31 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 	k.SetCampaign(ctx, campaign)
 	k.SetMainnetAccount(ctx, account)
 
-	return &types.MsgAddSharesResponse{}, nil
+	if !accountFound {
+		err = ctx.EventManager().EmitTypedEvents(
+			&types.EventCampaignSharesUpdated{
+				CampaignID:         campaign.CampaignID,
+				CoordinatorAddress: msg.Coordinator,
+				AllocatedShares:    campaign.AllocatedShares,
+			}, &types.EventMainnetAccountCreated{
+				CampaignID: campaign.CampaignID,
+				Address:    msg.Address,
+				Shares:     msg.Shares,
+			},
+		)
+	} else {
+		err = ctx.EventManager().EmitTypedEvents(
+			&types.EventCampaignSharesUpdated{
+				CampaignID:         campaign.CampaignID,
+				CoordinatorAddress: msg.Coordinator,
+				AllocatedShares:    campaign.AllocatedShares,
+			}, &types.EventMainnetAccountUpdated{
+				CampaignID: campaign.CampaignID,
+				Address:    msg.Address,
+				Shares:     msg.Shares,
+			},
+		)
+	}
+
+	return &types.MsgAddSharesResponse{}, err
 }
