@@ -55,7 +55,7 @@ type TestKeepers struct {
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 	StakingKeeper            stakingkeeper.Keeper
-	FundraisingKeeper        *fundraisingkeeper.Keeper
+	FundraisingKeeper        fundraisingkeeper.Keeper
 	ParticipationKeeper      *participationkeeper.Keeper
 }
 
