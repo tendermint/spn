@@ -32,7 +32,10 @@ func (k Keeper) AddChainToCampaign(ctx sdk.Context, campaignID, launchID uint64)
 		campaignChains.Chains = append(campaignChains.Chains, launchID)
 	}
 	k.SetCampaignChains(ctx, campaignChains)
-	return nil
+	return ctx.EventManager().EmitTypedEvent(&types.EventCampaignChainAdded{
+		CampaignID: campaignID,
+		LaunchID:   launchID,
+	})
 }
 
 // SetCampaignChains set a specific campaignChains in the store from its index
