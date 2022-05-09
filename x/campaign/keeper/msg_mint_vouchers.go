@@ -59,5 +59,12 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 
 	k.SetCampaign(ctx, campaign)
 
-	return &types.MsgMintVouchersResponse{}, nil
+	err = ctx.EventManager().EmitTypedEvent(
+		&types.EventCampaignSharesUpdated{
+			CampaignID:         campaign.CampaignID,
+			CoordinatorAddress: msg.Coordinator,
+			AllocatedShares:    campaign.AllocatedShares,
+		})
+
+	return &types.MsgMintVouchersResponse{}, err
 }

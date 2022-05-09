@@ -57,10 +57,26 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 			Address:    msg.Account,
 			Shares:     types.EmptyShares(),
 		}
+
 	}
+
 	// Increase the account shares
 	account.Shares = types.IncreaseShares(account.Shares, shares)
 	k.SetMainnetAccount(ctx, account)
 
-	return &types.MsgRedeemVouchersResponse{}, nil
+	if !found {
+		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountCreated{
+			CampaignID: account.CampaignID,
+			Address:    account.Address,
+			Shares:     account.Shares,
+		})
+	} else {
+		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{
+			CampaignID: account.CampaignID,
+			Address:    account.Address,
+			Shares:     account.Shares,
+		})
+	}
+
+	return &types.MsgRedeemVouchersResponse{}, err
 }

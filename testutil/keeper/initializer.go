@@ -366,7 +366,7 @@ func (i initializer) Fundraising(
 	authKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
 	disKeeper distrkeeper.Keeper,
-) *fundraisingkeeper.Keeper {
+) fundraisingkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(fundraisingtypes.StoreKey)
 	memStoreKey := storetypes.NewMemoryStoreKey(fundraisingtypes.MemStoreKey)
 
@@ -389,7 +389,7 @@ func (i initializer) Fundraising(
 
 func (i initializer) Participation(
 	paramKeeper paramskeeper.Keeper,
-	fundraisingKeeper *fundraisingkeeper.Keeper,
+	fundraisingKeeper fundraisingkeeper.Keeper,
 	stakingKeeper stakingkeeper.Keeper,
 ) *participationkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(participationtypes.StoreKey)

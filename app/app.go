@@ -427,7 +427,7 @@ func New(
 		&stakingKeeper, govRouter,
 	)
 
-	app.FundraisingKeeper = *fundraisingkeeper.NewKeeper(
+	app.FundraisingKeeper = fundraisingkeeper.NewKeeper(
 		appCodec,
 		keys[fundraisingtypes.StoreKey],
 		keys[fundraisingtypes.MemStoreKey],

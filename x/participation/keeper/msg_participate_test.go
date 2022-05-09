@@ -216,9 +216,8 @@ func Test_msgServer_Participate(t *testing.T) {
 			require.True(t, found)
 
 			// check auction contains allowed bidder
-			auction, found := tk.FundraisingKeeper.GetAuction(tmpSdkCtx, tt.msg.AuctionID)
-			require.True(t, found)
-			require.Contains(t, auction.GetAllowedBidders(), fundraisingtypes.AllowedBidder{
+			allowedBidders := tk.FundraisingKeeper.GetAllowedBiddersByAuction(tmpSdkCtx, tt.msg.AuctionID)
+			require.Contains(t, allowedBidders, fundraisingtypes.AllowedBidder{
 				Bidder:       tt.msg.Participant,
 				MaxBidAmount: tier.Benefits.MaxBidAmount,
 			})
