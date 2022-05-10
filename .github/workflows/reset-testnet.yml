@@ -8,6 +8,9 @@ on:
         required: true
         default: 'nightly'
 
+env:
+  testnet: ${{ github.event.inputs.testnet }}
+
 jobs:
   reset:
     runs-on: ubuntu-latest
@@ -19,21 +22,42 @@ jobs:
         uses: steebchen/kubectl@v2.0.0
         with:
           config: ${{ secrets.KUBECONFIG_B64 }}
-          command: scale nodeset spn-${{ github.event.inputs.testnet }} --replicas=0
+          command: scale nodeset spn-${{ env.testnet }} --replicas=0
 
-      - name: Sleep for 1 min
-        uses: whatnick/wait-action@master
-        with:
-          time: '1m'
+      # - name: Sleep for 1 min
+      #   uses: whatnick/wait-action@master
+      #   with:
+      #     time: '1m'
 
-      - name: Delete data
+      - name: Ensure pods are down
         uses: steebchen/kubectl@v2.0.0
         with:
           config: ${{ secrets.KUBECONFIG_B64 }}
-          command: delete pvc spn-${{ github.event.inputs.testnet }}-0 spn-${{ github.event.inputs.testnet }}-1
+          command: delete pods spn-${{ env.testnet }}-0 spn-${{ env.testnet }}-0-validator spn-${{ env.testnet }}-1 spn-${{ env.testnet }}-1-validator --ignore-not-found --wait
+
+      # - name: Delete data
+      #   uses: steebchen/kubectl@v2.0.0
+      #   with:
+      #     config: ${{ secrets.KUBECONFIG_B64 }}
+      #     command: delete pvc spn-${{ env.testnet }}-0 spn-${{ env.testnet }}-1
+
+      # Hack to reset on new cosmos-sdk versions
+      - name: Reset node 0 data
+        uses: steebchen/kubectl@v2.0.0
+        with:
+          config: ${{ secrets.KUBECONFIG_B64 }}
+          command: run -it --rm --restart=Never --image=gcr.io/tendermint-dev/spn:develop --overrides='{"apiVersion":"v1","spec":{"containers":[{"args":["tendermint","unsafe-reset-all","--home","/home/nonroot"],"command":["spnd"],"image":"gcr.io/tendermint-dev/spn:develop","imagePullPolicy":"Always","name":"app","volumeMounts":[{"mountPath":"/home/nonroot/data","name":"data"}]}],"securityContext":{"fsGroup":65532},"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"spn-nightly-0"}}]}}' spn-nightly-0-reset
+
+      # Hack to reset on new cosmos-sdk versions
+      - name: Reset node 1 data
+        uses: steebchen/kubectl@v2.0.0
+        with:
+          config: ${{ secrets.KUBECONFIG_B64 }}
+          command: run -it --rm --restart=Never --image=gcr.io/tendermint-dev/spn:develop --overrides='{"apiVersion":"v1","spec":{"containers":[{"args":["tendermint","unsafe-reset-all","--home","/home/nonroot"],"command":["spnd"],"image":"gcr.io/tendermint-dev/spn:develop","imagePullPolicy":"Always","name":"app","volumeMounts":[{"mountPath":"/home/nonroot/data","name":"data"}]}],"securityContext":{"fsGroup":65532},"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"spn-nightly-1"}}]}}' spn-nightly-1-reset
+
 
       - name: Scale up nodeset
         uses: steebchen/kubectl@v2.0.0
         with:
           config: ${{ secrets.KUBECONFIG_B64 }}
-          command: scale nodeset spn-${{ github.event.inputs.testnet }} --replicas=2
+          command: scale nodeset spn-${{ env.testnet }} --replicas=2
