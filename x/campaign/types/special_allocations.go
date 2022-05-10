@@ -19,12 +19,10 @@ func EmptySpecialAllocations() SpecialAllocations {
 
 // Validate validates the special allocation structure
 func (sa SpecialAllocations) Validate() error {
-	err := CheckShares(sa.GenesisDistribution)
-	if err != nil {
+	if err := CheckShares(sa.GenesisDistribution); err != nil {
 		return errors.Wrap(err, "invalid genesis distribution")
 	}
-	err = CheckShares(sa.ClaimableAirdrop)
-	if err != nil {
+	if err := CheckShares(sa.ClaimableAirdrop); err != nil {
 		return errors.Wrap(err, "invalid claimable airdrop")
 	}
 	return nil
