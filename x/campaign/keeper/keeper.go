@@ -38,15 +38,16 @@ type RewardKeeper interface {
 
 type (
 	Keeper struct {
-		cdc           codec.BinaryCodec
-		storeKey      sdk.StoreKey
-		memKey        sdk.StoreKey
-		launchKeeper  LaunchKeeper
-		bankKeeper    types.BankKeeper
-		distrKeeper   types.DistributionKeeper
-		profileKeeper types.ProfileKeeper
-		rewardKeeper  RewardKeeper
-		paramSpace    paramtypes.Subspace
+		cdc               codec.BinaryCodec
+		storeKey          sdk.StoreKey
+		memKey            sdk.StoreKey
+		launchKeeper      LaunchKeeper
+		bankKeeper        types.BankKeeper
+		distrKeeper       types.DistributionKeeper
+		profileKeeper     types.ProfileKeeper
+		rewardKeeper      RewardKeeper
+		fundraisingKeeper types.FundraisingKeeper
+		paramSpace        paramtypes.Subspace
 	}
 )
 
@@ -60,6 +61,7 @@ func NewKeeper(
 	distrKeeper types.DistributionKeeper,
 	profileKeeper types.ProfileKeeper,
 	rewardKeeper RewardKeeper,
+	fundraisingKeeper types.FundraisingKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !paramSpace.HasKeyTable() {
@@ -67,15 +69,16 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:           cdc,
-		storeKey:      storeKey,
-		memKey:        memKey,
-		paramSpace:    paramSpace,
-		launchKeeper:  launchKeeper,
-		bankKeeper:    bankKeeper,
-		distrKeeper:   distrKeeper,
-		profileKeeper: profileKeeper,
-		rewardKeeper:  rewardKeeper,
+		cdc:               cdc,
+		storeKey:          storeKey,
+		memKey:            memKey,
+		paramSpace:        paramSpace,
+		launchKeeper:      launchKeeper,
+		bankKeeper:        bankKeeper,
+		distrKeeper:       distrKeeper,
+		profileKeeper:     profileKeeper,
+		rewardKeeper:      rewardKeeper,
+		fundraisingKeeper: fundraisingKeeper,
 	}
 }
 
