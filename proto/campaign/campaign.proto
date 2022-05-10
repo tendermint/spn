@@ -23,6 +23,6 @@ message Campaign {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
-  SpecialAllocations specialAllocations = 8;
+  SpecialAllocations specialAllocations = 8 [(gogoproto.nullable) = false];
   bytes metadata = 9;
 }
