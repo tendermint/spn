@@ -14,6 +14,11 @@ func Shares(r *rand.Rand) campaign.Shares {
 	return campaign.NewSharesFromCoins(Coins(r))
 }
 
+// SpecialAllocations returns a sample special allocations
+func SpecialAllocations(r *rand.Rand) campaign.SpecialAllocations {
+	return campaign.NewSpecialAllocations(Shares(r), Shares(r))
+}
+
 // ShareVestingOptions returns a sample ShareVestingOptions
 func ShareVestingOptions(r *rand.Rand) campaign.ShareVestingOptions {
 	// use vesting shares as total shares

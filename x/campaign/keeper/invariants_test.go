@@ -171,4 +171,14 @@ func TestCampaignSharesInvariant(t *testing.T) {
 		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
 		require.True(t, broken, msg)
 	})
+
+	t.Run("campaign with special allocations not tracked by allocated shares", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+		campaign := sample.Campaign(r, 3)
+		campaign.SpecialAllocations = sample.SpecialAllocations(r)
+		tk.CampaignKeeper.SetCampaign(ctx, campaign)
+
+		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		require.True(t, broken, msg)
+	})
 }

@@ -74,7 +74,9 @@ func VestingAccountWithoutCampaignInvariant(k Keeper) sdk.Invariant {
 }
 
 // CampaignSharesInvariant invariant that checks, for all campaigns, if the amount of allocated shares is equal to
-// the sum of `MainnetVestingAccount` and `MainnetAccount` shares plus the amount of vouchers in circulation
+// the sum of `MainnetVestingAccount` and `MainnetAccount` shares plus
+// the amount of vouchers in circulation plus
+// the total shares of special allocations
 func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
 		accountSharesByCampaign := make(map[uint64]types.Shares)
@@ -140,6 +142,12 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 			// this conversion back to shares will never fail by design, thus we can ignore the error
 			vShares, _ := types.VouchersToShares(vouchers, campaignID)
 			expectedAllocatedSharesShares = types.IncreaseShares(expectedAllocatedSharesShares, vShares)
+
+			// increase expected shares with special allocations
+			expectedAllocatedSharesShares = types.IncreaseShares(
+				expectedAllocatedSharesShares,
+				campaign.SpecialAllocations.TotalShares(),
+			)
 
 			if !types.IsEqualShares(expectedAllocatedSharesShares, campaign.GetAllocatedShares()) {
 				return sdk.FormatInvariant(
