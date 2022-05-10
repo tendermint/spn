@@ -55,10 +55,6 @@ func (k msgServer) UpdateLaunchInformation(
 	}
 
 	k.SetChain(ctx, chain)
-	err = ctx.EventManager().EmitTypedEvent(&types.EventChainUpdated{
-		Chain: chain,
-	})
-
-	return &types.MsgUpdateLaunchInformationResponse{}, err
+	return &types.MsgUpdateLaunchInformationResponse{}, nil
 
 }
