@@ -57,7 +57,7 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 		}
 	}
 
-	if (msg.Coins.Empty() || msg.LastRewardHeight == 0) {
+	if msg.Coins.Empty() || msg.LastRewardHeight == 0 {
 		rewardPool.InitialCoins = sdk.NewCoins()
 		rewardPool.RemainingCoins = sdk.NewCoins()
 		rewardPool.LastRewardHeight = 0
