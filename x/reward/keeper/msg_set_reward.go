@@ -15,8 +15,8 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// determine if the chain exists
-	chain, found := k.launchKeeper.GetChain(ctx, msg.LaunchID)
-	if !found {
+	chain, chainFound := k.launchKeeper.GetChain(ctx, msg.LaunchID)
+	if !chainFound {
 		return nil, sdkerrors.Wrapf(launchtypes.ErrChainNotFound, "%d", msg.LaunchID)
 	}
 	// check coordinator
@@ -42,8 +42,8 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 		previousCoins            sdk.Coins
 		previousLastRewardHeight int64
 	)
-	rewardPool, found := k.GetRewardPool(ctx, msg.LaunchID)
-	if !found {
+	rewardPool, poolFound := k.GetRewardPool(ctx, msg.LaunchID)
+	if !poolFound {
 		// create the reward pool and transfer tokens if not created yet
 		if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, provider, types.ModuleName, msg.Coins); err != nil {
 			return nil, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, err.Error())
@@ -69,7 +69,7 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 		rewardPool.Provider = msg.Provider
 		rewardPool.LastRewardHeight = msg.LastRewardHeight
 		k.SetRewardPool(ctx, rewardPool)
-		if !found {
+		if !poolFound {
 			err = ctx.EventManager().EmitTypedEvent(&types.EventRewardPoolCreated{
 				LaunchID: rewardPool.LaunchID,
 				Provider: rewardPool.Provider,
