@@ -51,5 +51,8 @@ func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWith
 	k.SetAuctionUsedAllocations(ctx, auctionUsedAllocations)
 	k.SetUsedAllocations(ctx, totalUsedAllocations)
 
-	return &types.MsgWithdrawAllocationsResponse{}, nil
+	return &types.MsgWithdrawAllocationsResponse{}, ctx.EventManager().EmitTypedEvent(&types.EventAllocationsWithdrawn{
+		Participant: msg.Participant,
+		AuctionID:   msg.AuctionID,
+	})
 }

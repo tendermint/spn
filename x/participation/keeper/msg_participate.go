@@ -87,5 +87,9 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 		Withdrawn:      false,
 	})
 
-	return &types.MsgParticipateResponse{}, nil
+	return &types.MsgParticipateResponse{}, ctx.EventManager().EmitTypedEvent(&types.EventAllocationsUsed{
+		Participant:    msg.Participant,
+		AuctionID:      msg.AuctionID,
+		NumAllocations: tier.RequiredAllocations,
+	})
 }
