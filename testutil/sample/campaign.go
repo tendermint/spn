@@ -68,7 +68,18 @@ func CampaignName(r *rand.Rand) string {
 
 // Campaign returns a sample campaign
 func Campaign(r *rand.Rand, id uint64) campaign.Campaign {
-	return campaign.NewCampaign(id, CampaignName(r), Uint64(r), TotalSupply(r), Metadata(r, 20))
+	genesisDistribution := Shares(r)
+	claimableAirdrop := Shares(r)
+	shares := campaign.IncreaseShares(genesisDistribution, claimableAirdrop)
+
+	campaign := campaign.NewCampaign(id, CampaignName(r), Uint64(r), TotalSupply(r), Metadata(r, 20))
+
+	// set random shares for special allocations
+	campaign.AllocatedShares = shares
+	campaign.SpecialAllocations.GenesisDistribution = genesisDistribution
+	campaign.SpecialAllocations.ClaimableAirdrop = claimableAirdrop
+
+	return campaign
 }
 
 // MainnetAccount returns a sample MainnetAccount
