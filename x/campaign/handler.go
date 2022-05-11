@@ -48,7 +48,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			// this line is used by starport scaffolding # 1
 
 		// disabled: https://github.com/tendermint/spn/issues/774
-		//case *types.MsgAddVestingOptions:
+		// case *types.MsgAddVestingOptions:
 		//	res, err := msgServer.AddVestingOptions(sdk.WrapSDKContext(ctx), msg)
 		//	return sdk.WrapServiceResult(ctx, res, err)
 
