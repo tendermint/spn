@@ -156,10 +156,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			campaignsim.SimulateMsgAddShares(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
-			weightMsgAddVestingOptions,
-			campaignsim.SimulateMsgAddVestingOptions(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
-		),
-		simulation.NewWeightedOperation(
 			weightMsgMintVouchers,
 			campaignsim.SimulateMsgMintVouchers(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
@@ -175,5 +171,10 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgUnredeemVouchers,
 			campaignsim.SimulateMsgUnredeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
+		// disabled: https://github.com/tendermint/spn/issues/774
+		//simulation.NewWeightedOperation(
+		//	weightMsgAddVestingOptions,
+		//	campaignsim.SimulateMsgAddVestingOptions(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
+		//),
 	}
 }
