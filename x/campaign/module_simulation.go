@@ -172,7 +172,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			campaignsim.SimulateMsgUnredeemVouchers(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		// disabled: https://github.com/tendermint/spn/issues/774
-		//simulation.NewWeightedOperation(
+		// simulation.NewWeightedOperation(
 		//	weightMsgAddVestingOptions,
 		//	campaignsim.SimulateMsgAddVestingOptions(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		//),
