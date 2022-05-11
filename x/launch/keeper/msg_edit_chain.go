@@ -13,6 +13,8 @@ import (
 )
 
 func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*types.MsgEditChainResponse, error) {
+	var err error
+
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	chain, found := k.GetChain(ctx, msg.LaunchID)
@@ -64,16 +66,12 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		chain.CampaignID = msg.CampaignID
 		chain.HasCampaign = true
 
-		err := k.campaignKeeper.AddChainToCampaign(ctx, chain.CampaignID, chain.LaunchID)
+		err = k.campaignKeeper.AddChainToCampaign(ctx, chain.CampaignID, chain.LaunchID)
 		if err != nil {
 			return nil, sdkerrors.Wrap(types.ErrAddChainToCampaign, err.Error())
 		}
 	}
 
 	k.SetChain(ctx, chain)
-	err = ctx.EventManager().EmitTypedEvent(&types.EventChainUpdated{
-		Chain: chain,
-	})
-
 	return &types.MsgEditChainResponse{}, err
 }

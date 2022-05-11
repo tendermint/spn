@@ -12,13 +12,9 @@ import "launch/genesis_validator.proto";
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 message EventChainCreated {
-  uint64 coordinatorID = 1;
-  Chain chain = 2 [(gogoproto.nullable) = false];
+  uint64 launchID = 1;
 }
 
-message EventChainUpdated {
-  Chain chain = 1 [(gogoproto.nullable) = false];
-}
 
 message EventRequestCreated {
   string creator = 1;

@@ -24,6 +24,7 @@ func (k Keeper) CreateNewChain(
 	isMainnet bool,
 	metadata []byte,
 ) (uint64, error) {
+
 	chain := types.Chain{
 		CoordinatorID:   coordinatorID,
 		GenesisChainID:  genesisChainID,
@@ -72,13 +73,12 @@ func (k Keeper) CreateNewChain(
 		if err := k.campaignKeeper.AddChainToCampaign(ctx, campaignID, launchID); err != nil {
 			return 0, err
 		}
+
 	}
 
-	err := ctx.EventManager().EmitTypedEvent(&types.EventChainCreated{
-		CoordinatorID: coordinatorID,
-		Chain:         chain,
+	return launchID, ctx.EventManager().EmitTypedEvent(&types.EventChainCreated{
+		LaunchID: launchID,
 	})
-	return launchID, err
 }
 
 // GetChainCounter get the counter for chains
