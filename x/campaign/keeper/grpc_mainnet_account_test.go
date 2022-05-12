@@ -217,7 +217,7 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 			err: status.Error(codes.NotFound, "account not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
