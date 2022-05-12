@@ -53,3 +53,35 @@ func (k Keeper) MainnetAccount(c context.Context, req *types.QueryGetMainnetAcco
 
 	return &types.QueryGetMainnetAccountResponse{MainnetAccount: val}, nil
 }
+
+func (k Keeper) MainnetAccountBalance(c context.Context, req *types.QueryGetMainnetAccountBalanceRequest) (*types.QueryGetMainnetAccountBalanceResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	totalShareNumber := k.GetTotalShares(ctx)
+
+	campaign, found := k.GetCampaign(ctx, req.CampaignID)
+	if !found {
+		return nil, status.Error(codes.NotFound, " campaign not found")
+	}
+
+	acc, found := k.GetMainnetAccount(ctx, req.CampaignID, req.Address)
+	if !found {
+		return nil, status.Error(codes.NotFound, "account not found")
+	}
+
+	balance, err := acc.Shares.CoinsFromTotalSupply(campaign.TotalSupply, totalShareNumber)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "balance can't be calculated: %s", err.Error())
+	}
+
+	mainnetAccountBalance := types.MainnetAccountBalance{
+		CampaignID: acc.CampaignID,
+		Address:    acc.Address,
+		Coins:      balance,
+	}
+
+	return &types.QueryGetMainnetAccountBalanceResponse{MainnetAccountBalance: mainnetAccountBalance}, nil
+}
