@@ -66,7 +66,7 @@ func (k Keeper) MainnetAccountBalanceAll(c context.Context, req *types.QueryAllM
 	totalShareNumber := k.GetTotalShares(ctx)
 	campaign, found := k.GetCampaign(ctx, req.CampaignID)
 	if !found {
-		return nil, status.Error(codes.NotFound, " campaign not found")
+		return nil, status.Error(codes.NotFound, "campaign not found")
 	}
 
 	// iterate accounts
@@ -110,7 +110,7 @@ func (k Keeper) MainnetAccountBalance(c context.Context, req *types.QueryGetMain
 	totalShareNumber := k.GetTotalShares(ctx)
 	campaign, found := k.GetCampaign(ctx, req.CampaignID)
 	if !found {
-		return nil, status.Error(codes.NotFound, " campaign not found")
+		return nil, status.Error(codes.NotFound, "campaign not found")
 	}
 
 	// get account balance
