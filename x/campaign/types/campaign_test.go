@@ -23,11 +23,20 @@ func TestNewCampaign(t *testing.T) {
 	coordinator := sample.Uint64(r)
 	totalSupply := sample.TotalSupply(r)
 	metadata := sample.Metadata(r, 20)
+	createdAt := sample.Duration(r).Milliseconds()
 
-	cmpn := campaign.NewCampaign(campaignID, campaignName, coordinator, totalSupply, metadata)
+	cmpn := campaign.NewCampaign(
+		campaignID,
+		campaignName,
+		coordinator,
+		totalSupply,
+		metadata,
+		createdAt,
+	)
 	require.EqualValues(t, campaignID, cmpn.CampaignID)
 	require.EqualValues(t, campaignName, cmpn.CampaignName)
 	require.EqualValues(t, coordinator, cmpn.CoordinatorID)
+	require.EqualValues(t, createdAt, cmpn.CreatedAt)
 	require.False(t, cmpn.MainnetInitialized)
 	require.True(t, totalSupply.IsEqual(cmpn.TotalSupply))
 	require.EqualValues(t, campaign.EmptyShares(), cmpn.AllocatedShares)
@@ -74,6 +83,7 @@ func TestCampaign_Validate(t *testing.T) {
 				sample.Uint64(r),
 				sample.TotalSupply(r),
 				sample.Metadata(r, 20),
+				sample.Duration(r).Milliseconds(),
 			),
 			valid: false,
 		},
@@ -85,6 +95,7 @@ func TestCampaign_Validate(t *testing.T) {
 				sample.Uint64(r),
 				invalidCoins,
 				sample.Metadata(r, 20),
+				sample.Duration(r).Milliseconds(),
 			),
 			valid: false,
 		},

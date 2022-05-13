@@ -11,18 +11,19 @@ message Campaign {
   uint64 campaignID = 1;
   string campaignName = 2;
   uint64 coordinatorID = 3;
-  uint64 mainnetID = 4;
-  bool mainnetInitialized = 5;
-  repeated cosmos.base.v1beta1.Coin totalSupply = 6 [
+  int64 createdAt = 4;
+  uint64 mainnetID = 5;
+  bool mainnetInitialized = 6;
+  repeated cosmos.base.v1beta1.Coin totalSupply = 7 [
     (gogoproto.nullable) = false,
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
-  repeated cosmos.base.v1beta1.Coin allocatedShares = 7 [
+  repeated cosmos.base.v1beta1.Coin allocatedShares = 8 [
     (gogoproto.nullable) = false,
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
-  SpecialAllocations specialAllocations = 8 [(gogoproto.nullable) = false];
-  bytes metadata = 9;
+  SpecialAllocations specialAllocations = 9 [(gogoproto.nullable) = false];
+  bytes metadata = 10;
 }

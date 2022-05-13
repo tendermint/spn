@@ -72,7 +72,14 @@ func Campaign(r *rand.Rand, id uint64) campaign.Campaign {
 	claimableAirdrop := Shares(r)
 	shares := campaign.IncreaseShares(genesisDistribution, claimableAirdrop)
 
-	campaign := campaign.NewCampaign(id, CampaignName(r), Uint64(r), TotalSupply(r), Metadata(r, 20))
+	campaign := campaign.NewCampaign(
+		id,
+		CampaignName(r),
+		Uint64(r),
+		TotalSupply(r),
+		Metadata(r, 20),
+		Duration(r).Milliseconds(),
+	)
 
 	// set random shares for special allocations
 	campaign.AllocatedShares = shares
