@@ -138,5 +138,5 @@ func (shares Shares) CoinsFromTotalSupply(totalSupply sdk.Coins, totalShareNumbe
 		}
 	}
 
-	return
+	return coins, nil
 }
