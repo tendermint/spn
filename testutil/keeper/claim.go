@@ -49,5 +49,5 @@ func ClaimKeeper(t testing.TB) (*keeper.Keeper, sdk.Context) {
 	// Initialize params
 	k.SetParams(ctx, types.DefaultParams())
 
-	return &k, ctx
+	return k, ctx
 }
