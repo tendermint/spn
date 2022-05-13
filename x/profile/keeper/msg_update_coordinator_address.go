@@ -54,9 +54,11 @@ func (k msgServer) UpdateCoordinatorAddress(
 		CoordinatorID: coord.CoordinatorID,
 	})
 	k.SetCoordinator(ctx, coord)
-	err := ctx.EventManager().EmitTypedEvent(
-		&types.EventCoordinatorUpdated{
-			Coordinator: coord})
 
-	return &types.MsgUpdateCoordinatorAddressResponse{}, err
+	return &types.MsgUpdateCoordinatorAddressResponse{},
+		ctx.EventManager().EmitTypedEvent(
+			&types.EventCoordinatorAddressUpdated{
+				CoordinatorID: coord.CoordinatorID,
+				NewAddress:    msg.NewAddress,
+			})
 }

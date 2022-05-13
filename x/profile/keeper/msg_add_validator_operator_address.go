@@ -39,12 +39,15 @@ func (k msgServer) AddValidatorOperatorAddress(
 	var err error
 	if valFound {
 		err = ctx.EventManager().EmitTypedEvent(
-			&types.EventValidatorUpdated{
-				Validator: validator})
+			&types.EventValidatorOperatorAddressesUpdated{
+				Address:           validator.Address,
+				OperatorAddresses: validator.OperatorAddresses})
 	} else {
 		err = ctx.EventManager().EmitTypedEvent(
 			&types.EventValidatorCreated{
-				Validator: validator})
+				Address:           validator.Address,
+				OperatorAddresses: validator.OperatorAddresses,
+			})
 	}
 
 	return &types.MsgAddValidatorOperatorAddressResponse{}, err
