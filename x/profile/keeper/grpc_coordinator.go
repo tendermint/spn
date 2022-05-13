@@ -5,7 +5,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -49,7 +48,7 @@ func (k Keeper) Coordinator(c context.Context, req *types.QueryGetCoordinatorReq
 	ctx := sdk.UnwrapSDKContext(c)
 	coordinator, found := k.GetCoordinator(ctx, req.CoordinatorID)
 	if !found {
-		return nil, sdkerrors.ErrKeyNotFound
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 	return &types.QueryGetCoordinatorResponse{Coordinator: coordinator}, nil
 }
