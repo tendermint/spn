@@ -23,7 +23,7 @@ func TestParamChangest(t *testing.T) {
 		{"mint/InflationMax", "InflationMax", "\"0.200000000000000000\"", "mint"},
 		{"mint/InflationMin", "InflationMin", "\"0.070000000000000000\"", "mint"},
 		{"mint/GoalBonded", "GoalBonded", "\"0.670000000000000000\"", "mint"},
-		{"mint/DistributionProportions", "DistributionProportions", "\"distribution_proportions\":{\"staking\":\"0.250000000000000000\",\"incentives\":\"0.210000000000000000\",\"community_pool\":\"0.540000000000000000\"}", "mint"},
+		{"mint/DistributionProportions", "DistributionProportions", "{\"staking\":\"0.250000000000000000\",\"incentives\":\"0.210000000000000000\",\"community_pool\":\"0.540000000000000000\"}", "mint"},
 	}
 
 	paramChanges := simulation.ParamChanges(r)

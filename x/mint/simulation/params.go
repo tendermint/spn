@@ -47,7 +47,7 @@ func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
 		simulation.NewSimParamChange(types.ModuleName, keyDistributionProportions,
 			func(r *rand.Rand) string {
 				proportions := GenDistributionProportions(r)
-				return fmt.Sprintf("\"distribution_proportions\":{\"staking\":\"%s\",\"incentives\":\"%s\",\"community_pool\":\"%s\"}",
+				return fmt.Sprintf("{\"staking\":\"%s\",\"incentives\":\"%s\",\"community_pool\":\"%s\"}",
 					proportions.Staking.String(), proportions.Incentives.String(), proportions.CommunityPool.String())
 			},
 		),
