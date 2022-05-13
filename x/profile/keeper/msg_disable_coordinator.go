@@ -41,11 +41,12 @@ func (k msgServer) DisableCoordinator(
 	coord.Active = false
 	k.SetCoordinator(ctx, coord)
 	k.RemoveCoordinatorByAddress(ctx, msg.Address)
-	err := ctx.EventManager().EmitTypedEvent(
-		&types.EventCoordinatorUpdated{
-			Coordinator: coord})
 
 	return &types.MsgDisableCoordinatorResponse{
-		CoordinatorID: coord.CoordinatorID,
-	}, err
+			CoordinatorID: coord.CoordinatorID,
+		}, ctx.EventManager().EmitTypedEvent(
+			&types.EventCoordinatorDisabled{
+				CoordinatorID: coord.CoordinatorID,
+				Address:       msg.Address,
+			})
 }

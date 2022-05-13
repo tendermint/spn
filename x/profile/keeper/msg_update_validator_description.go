@@ -41,14 +41,12 @@ func (k msgServer) UpdateValidatorDescription(
 
 	k.SetValidator(ctx, validator)
 	var err error
-	if valfound {
-		err = ctx.EventManager().EmitTypedEvent(
-			&types.EventValidatorUpdated{
-				Validator: validator})
-	} else {
+	if !valfound {
 		err = ctx.EventManager().EmitTypedEvent(
 			&types.EventValidatorCreated{
-				Validator: validator})
+				Address:           validator.Address,
+				OperatorAddresses: validator.OperatorAddresses,
+			})
 	}
 
 	return &types.MsgUpdateValidatorDescriptionResponse{}, err

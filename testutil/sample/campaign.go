@@ -63,7 +63,14 @@ func CampaignName(r *rand.Rand) string {
 
 // Campaign returns a sample campaign
 func Campaign(r *rand.Rand, id uint64) campaign.Campaign {
-	return campaign.NewCampaign(id, CampaignName(r), Uint64(r), TotalSupply(r), Metadata(r, 20))
+	return campaign.NewCampaign(
+		id,
+		CampaignName(r),
+		Uint64(r),
+		TotalSupply(r),
+		Metadata(r, 20),
+		Duration(r).Milliseconds(),
+	)
 }
 
 // MainnetAccount returns a sample MainnetAccount
