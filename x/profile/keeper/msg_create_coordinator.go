@@ -34,12 +34,11 @@ func (k msgServer) CreateCoordinator(
 		CoordinatorID: coordID,
 	})
 
-	coord, _ := k.GetCoordinator(ctx, coordID)
-	err := ctx.EventManager().EmitTypedEvent(
-		&types.EventCoordinatorCreated{
-			Coordinator: coord})
-
 	return &types.MsgCreateCoordinatorResponse{
-		CoordinatorID: coordID,
-	}, err
+			CoordinatorID: coordID,
+		}, ctx.EventManager().EmitTypedEvent(
+			&types.EventCoordinatorCreated{
+				CoordinatorID: coordID,
+				Address:       msg.Address,
+			})
 }
