@@ -125,6 +125,9 @@ import (
 	participationmodulekeeper "github.com/tendermint/spn/x/participation/keeper"
 	participationmoduletypes "github.com/tendermint/spn/x/participation/types"
 
+	claimmodule "github.com/tendermint/spn/x/claim"
+	claimmodulekeeper "github.com/tendermint/spn/x/claim/keeper"
+	claimmoduletypes "github.com/tendermint/spn/x/claim/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
@@ -174,6 +177,7 @@ var (
 		transfer.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		participationmodule.AppModuleBasic{},
+		claimmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		profilemodule.AppModuleBasic{},
 		launchmodule.AppModuleBasic{},
@@ -266,6 +270,7 @@ type App struct {
 	MonitoringpKeeper   monitoringpmodulekeeper.Keeper
 	RewardKeeper        rewardmodulekeeper.Keeper
 	ParticipationKeeper participationmodulekeeper.Keeper
+	ClaimKeeper         claimmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	transferModule transfer.AppModule
@@ -324,6 +329,7 @@ func New(
 		rewardmoduletypes.StoreKey,
 		fundraisingtypes.StoreKey,
 		participationmoduletypes.StoreKey,
+		claimmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -520,6 +526,14 @@ func New(
 		app.StakingKeeper,
 	)
 
+	app.ClaimKeeper = *claimmodulekeeper.NewKeeper(
+		appCodec,
+		keys[claimmoduletypes.StoreKey],
+		keys[claimmoduletypes.MemStoreKey],
+		app.GetSubspace(claimmoduletypes.ModuleName),
+		app.BankKeeper,
+	)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -569,6 +583,7 @@ func New(
 		rewardmodule.NewAppModule(appCodec, app.RewardKeeper, app.AuthKeeper, app.BankKeeper),
 		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper, app.DistrKeeper),
 		participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper, app.FundraisingKeeper),
+		claimmodule.NewAppModule(appCodec, app.ClaimKeeper, app.AuthKeeper, app.BankKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -603,6 +618,7 @@ func New(
 		monitoringpmoduletypes.ModuleName,
 		participationmoduletypes.ModuleName,
 		launchmoduletypes.ModuleName,
+		claimmoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -632,6 +648,7 @@ func New(
 		monitoringpmoduletypes.ModuleName,
 		participationmoduletypes.ModuleName,
 		launchmoduletypes.ModuleName,
+		claimmoduletypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -666,6 +683,7 @@ func New(
 		rewardmoduletypes.ModuleName,
 		fundraisingtypes.ModuleName,
 		participationmoduletypes.ModuleName,
+		claimmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -696,6 +714,7 @@ func New(
 		participationmodule.NewAppModule(appCodec, app.ParticipationKeeper, app.AuthKeeper, app.BankKeeper, app.FundraisingKeeper),
 		fundraisingmodule.NewAppModule(appCodec, app.FundraisingKeeper, app.AuthKeeper, app.BankKeeper, app.DistrKeeper),
 		monitoringpModule,
+		claimmodule.NewAppModule(appCodec, app.ClaimKeeper, app.AuthKeeper, app.BankKeeper),
 	)
 	app.sm.RegisterStoreDecoders()
 
@@ -890,6 +909,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(rewardmoduletypes.ModuleName)
 	paramsKeeper.Subspace(fundraisingtypes.ModuleName)
 	paramsKeeper.Subspace(participationmoduletypes.ModuleName)
+	paramsKeeper.Subspace(claimmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
