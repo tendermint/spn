@@ -224,7 +224,14 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "invalid campaign",
 			genState: &types.GenesisState{
 				CampaignList: []types.Campaign{
-					types.NewCampaign(0, invalidCampaignName, sample.Uint64(r), sample.TotalSupply(r), sample.Metadata(r, 20)),
+					types.NewCampaign(
+						0,
+						invalidCampaignName,
+						sample.Uint64(r),
+						sample.TotalSupply(r),
+						sample.Metadata(r, 20),
+						sample.Duration(r).Milliseconds(),
+					),
 				},
 				CampaignCounter: 1,
 			},
