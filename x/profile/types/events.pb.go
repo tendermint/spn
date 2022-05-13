@@ -24,7 +24,8 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type EventCoordinatorCreated struct {
-	Coordinator Coordinator `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator"`
+	CoordinatorID uint64 `protobuf:"varint,1,opt,name=coordinatorID,proto3" json:"coordinatorID,omitempty"`
+	Address       string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 }
 
 func (m *EventCoordinatorCreated) Reset()         { *m = EventCoordinatorCreated{} }
@@ -60,29 +61,37 @@ func (m *EventCoordinatorCreated) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EventCoordinatorCreated proto.InternalMessageInfo
 
-func (m *EventCoordinatorCreated) GetCoordinator() Coordinator {
+func (m *EventCoordinatorCreated) GetCoordinatorID() uint64 {
 	if m != nil {
-		return m.Coordinator
+		return m.CoordinatorID
 	}
-	return Coordinator{}
+	return 0
 }
 
-type EventCoordinatorUpdated struct {
-	Coordinator Coordinator `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator"`
+func (m *EventCoordinatorCreated) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
 }
 
-func (m *EventCoordinatorUpdated) Reset()         { *m = EventCoordinatorUpdated{} }
-func (m *EventCoordinatorUpdated) String() string { return proto.CompactTextString(m) }
-func (*EventCoordinatorUpdated) ProtoMessage()    {}
-func (*EventCoordinatorUpdated) Descriptor() ([]byte, []int) {
+type EventCoordinatorAddressUpdated struct {
+	CoordinatorID uint64 `protobuf:"varint,1,opt,name=coordinatorID,proto3" json:"coordinatorID,omitempty"`
+	NewAddress    string `protobuf:"bytes,2,opt,name=newAddress,proto3" json:"newAddress,omitempty"`
+}
+
+func (m *EventCoordinatorAddressUpdated) Reset()         { *m = EventCoordinatorAddressUpdated{} }
+func (m *EventCoordinatorAddressUpdated) String() string { return proto.CompactTextString(m) }
+func (*EventCoordinatorAddressUpdated) ProtoMessage()    {}
+func (*EventCoordinatorAddressUpdated) Descriptor() ([]byte, []int) {
 	return fileDescriptor_2f195f0d2c25dc7b, []int{1}
 }
-func (m *EventCoordinatorUpdated) XXX_Unmarshal(b []byte) error {
+func (m *EventCoordinatorAddressUpdated) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *EventCoordinatorUpdated) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EventCoordinatorAddressUpdated) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_EventCoordinatorUpdated.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EventCoordinatorAddressUpdated.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -92,34 +101,94 @@ func (m *EventCoordinatorUpdated) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *EventCoordinatorUpdated) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EventCoordinatorUpdated.Merge(m, src)
+func (m *EventCoordinatorAddressUpdated) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventCoordinatorAddressUpdated.Merge(m, src)
 }
-func (m *EventCoordinatorUpdated) XXX_Size() int {
+func (m *EventCoordinatorAddressUpdated) XXX_Size() int {
 	return m.Size()
 }
-func (m *EventCoordinatorUpdated) XXX_DiscardUnknown() {
-	xxx_messageInfo_EventCoordinatorUpdated.DiscardUnknown(m)
+func (m *EventCoordinatorAddressUpdated) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventCoordinatorAddressUpdated.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_EventCoordinatorUpdated proto.InternalMessageInfo
+var xxx_messageInfo_EventCoordinatorAddressUpdated proto.InternalMessageInfo
 
-func (m *EventCoordinatorUpdated) GetCoordinator() Coordinator {
+func (m *EventCoordinatorAddressUpdated) GetCoordinatorID() uint64 {
 	if m != nil {
-		return m.Coordinator
+		return m.CoordinatorID
 	}
-	return Coordinator{}
+	return 0
+}
+
+func (m *EventCoordinatorAddressUpdated) GetNewAddress() string {
+	if m != nil {
+		return m.NewAddress
+	}
+	return ""
+}
+
+type EventCoordinatorDisabled struct {
+	CoordinatorID uint64 `protobuf:"varint,1,opt,name=coordinatorID,proto3" json:"coordinatorID,omitempty"`
+	Address       string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
+}
+
+func (m *EventCoordinatorDisabled) Reset()         { *m = EventCoordinatorDisabled{} }
+func (m *EventCoordinatorDisabled) String() string { return proto.CompactTextString(m) }
+func (*EventCoordinatorDisabled) ProtoMessage()    {}
+func (*EventCoordinatorDisabled) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2f195f0d2c25dc7b, []int{2}
+}
+func (m *EventCoordinatorDisabled) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *EventCoordinatorDisabled) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_EventCoordinatorDisabled.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *EventCoordinatorDisabled) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventCoordinatorDisabled.Merge(m, src)
+}
+func (m *EventCoordinatorDisabled) XXX_Size() int {
+	return m.Size()
+}
+func (m *EventCoordinatorDisabled) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventCoordinatorDisabled.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_EventCoordinatorDisabled proto.InternalMessageInfo
+
+func (m *EventCoordinatorDisabled) GetCoordinatorID() uint64 {
+	if m != nil {
+		return m.CoordinatorID
+	}
+	return 0
+}
+
+func (m *EventCoordinatorDisabled) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
 }
 
 type EventValidatorCreated struct {
-	Validator Validator `protobuf:"bytes,1,opt,name=validator,proto3" json:"validator"`
+	Address           string   `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	OperatorAddresses []string `protobuf:"bytes,2,rep,name=operatorAddresses,proto3" json:"operatorAddresses,omitempty"`
 }
 
 func (m *EventValidatorCreated) Reset()         { *m = EventValidatorCreated{} }
 func (m *EventValidatorCreated) String() string { return proto.CompactTextString(m) }
 func (*EventValidatorCreated) ProtoMessage()    {}
 func (*EventValidatorCreated) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2f195f0d2c25dc7b, []int{2}
+	return fileDescriptor_2f195f0d2c25dc7b, []int{3}
 }
 func (m *EventValidatorCreated) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -148,29 +217,39 @@ func (m *EventValidatorCreated) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_EventValidatorCreated proto.InternalMessageInfo
 
-func (m *EventValidatorCreated) GetValidator() Validator {
+func (m *EventValidatorCreated) GetAddress() string {
 	if m != nil {
-		return m.Validator
+		return m.Address
 	}
-	return Validator{}
+	return ""
 }
 
-type EventValidatorUpdated struct {
-	Validator Validator `protobuf:"bytes,1,opt,name=validator,proto3" json:"validator"`
+func (m *EventValidatorCreated) GetOperatorAddresses() []string {
+	if m != nil {
+		return m.OperatorAddresses
+	}
+	return nil
 }
 
-func (m *EventValidatorUpdated) Reset()         { *m = EventValidatorUpdated{} }
-func (m *EventValidatorUpdated) String() string { return proto.CompactTextString(m) }
-func (*EventValidatorUpdated) ProtoMessage()    {}
-func (*EventValidatorUpdated) Descriptor() ([]byte, []int) {
-	return fileDescriptor_2f195f0d2c25dc7b, []int{3}
+type EventValidatorOperatorAddressesUpdated struct {
+	Address           string   `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
+	OperatorAddresses []string `protobuf:"bytes,2,rep,name=operatorAddresses,proto3" json:"operatorAddresses,omitempty"`
 }
-func (m *EventValidatorUpdated) XXX_Unmarshal(b []byte) error {
+
+func (m *EventValidatorOperatorAddressesUpdated) Reset() {
+	*m = EventValidatorOperatorAddressesUpdated{}
+}
+func (m *EventValidatorOperatorAddressesUpdated) String() string { return proto.CompactTextString(m) }
+func (*EventValidatorOperatorAddressesUpdated) ProtoMessage()    {}
+func (*EventValidatorOperatorAddressesUpdated) Descriptor() ([]byte, []int) {
+	return fileDescriptor_2f195f0d2c25dc7b, []int{4}
+}
+func (m *EventValidatorOperatorAddressesUpdated) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *EventValidatorUpdated) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *EventValidatorOperatorAddressesUpdated) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_EventValidatorUpdated.Marshal(b, m, deterministic)
+		return xxx_messageInfo_EventValidatorOperatorAddressesUpdated.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -180,53 +259,64 @@ func (m *EventValidatorUpdated) XXX_Marshal(b []byte, deterministic bool) ([]byt
 		return b[:n], nil
 	}
 }
-func (m *EventValidatorUpdated) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_EventValidatorUpdated.Merge(m, src)
+func (m *EventValidatorOperatorAddressesUpdated) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_EventValidatorOperatorAddressesUpdated.Merge(m, src)
 }
-func (m *EventValidatorUpdated) XXX_Size() int {
+func (m *EventValidatorOperatorAddressesUpdated) XXX_Size() int {
 	return m.Size()
 }
-func (m *EventValidatorUpdated) XXX_DiscardUnknown() {
-	xxx_messageInfo_EventValidatorUpdated.DiscardUnknown(m)
+func (m *EventValidatorOperatorAddressesUpdated) XXX_DiscardUnknown() {
+	xxx_messageInfo_EventValidatorOperatorAddressesUpdated.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_EventValidatorUpdated proto.InternalMessageInfo
+var xxx_messageInfo_EventValidatorOperatorAddressesUpdated proto.InternalMessageInfo
 
-func (m *EventValidatorUpdated) GetValidator() Validator {
+func (m *EventValidatorOperatorAddressesUpdated) GetAddress() string {
 	if m != nil {
-		return m.Validator
+		return m.Address
 	}
-	return Validator{}
+	return ""
+}
+
+func (m *EventValidatorOperatorAddressesUpdated) GetOperatorAddresses() []string {
+	if m != nil {
+		return m.OperatorAddresses
+	}
+	return nil
 }
 
 func init() {
 	proto.RegisterType((*EventCoordinatorCreated)(nil), "tendermint.spn.profile.EventCoordinatorCreated")
-	proto.RegisterType((*EventCoordinatorUpdated)(nil), "tendermint.spn.profile.EventCoordinatorUpdated")
+	proto.RegisterType((*EventCoordinatorAddressUpdated)(nil), "tendermint.spn.profile.EventCoordinatorAddressUpdated")
+	proto.RegisterType((*EventCoordinatorDisabled)(nil), "tendermint.spn.profile.EventCoordinatorDisabled")
 	proto.RegisterType((*EventValidatorCreated)(nil), "tendermint.spn.profile.EventValidatorCreated")
-	proto.RegisterType((*EventValidatorUpdated)(nil), "tendermint.spn.profile.EventValidatorUpdated")
+	proto.RegisterType((*EventValidatorOperatorAddressesUpdated)(nil), "tendermint.spn.profile.EventValidatorOperatorAddressesUpdated")
 }
 
 func init() { proto.RegisterFile("profile/events.proto", fileDescriptor_2f195f0d2c25dc7b) }
 
 var fileDescriptor_2f195f0d2c25dc7b = []byte{
-	// 257 bytes of a gzipped FileDescriptorProto
+	// 313 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x29, 0x28, 0xca, 0x4f,
 	0xcb, 0xcc, 0x49, 0xd5, 0x4f, 0x2d, 0x4b, 0xcd, 0x2b, 0x29, 0xd6, 0x2b, 0x28, 0xca, 0x2f, 0xc9,
 	0x17, 0x12, 0x2b, 0x49, 0xcd, 0x4b, 0x49, 0x2d, 0xca, 0xcd, 0xcc, 0x2b, 0xd1, 0x2b, 0x2e, 0xc8,
 	0xd3, 0x83, 0x2a, 0x92, 0x12, 0x49, 0xcf, 0x4f, 0xcf, 0x07, 0x2b, 0xd1, 0x07, 0xb1, 0x20, 0xaa,
 	0xa5, 0x24, 0x61, 0x66, 0x24, 0xe7, 0xe7, 0x17, 0xa5, 0x64, 0xe6, 0x25, 0x96, 0xe4, 0x17, 0x41,
-	0xa5, 0xc4, 0x61, 0x52, 0x65, 0x89, 0x39, 0x99, 0x29, 0x08, 0x09, 0xa5, 0x34, 0x2e, 0x71, 0x57,
-	0x90, 0x8d, 0xce, 0x08, 0x2d, 0xce, 0x45, 0xa9, 0x89, 0x25, 0xa9, 0x29, 0x42, 0xde, 0x5c, 0xdc,
-	0x48, 0x06, 0x49, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x1b, 0x29, 0xeb, 0x61, 0x77, 0x92, 0x1e, 0x92,
-	0x01, 0x4e, 0x2c, 0x27, 0xee, 0xc9, 0x33, 0x04, 0x21, 0xeb, 0xc6, 0x66, 0x4f, 0x68, 0x41, 0x0a,
-	0xf5, 0xed, 0x89, 0xe3, 0x12, 0x05, 0xdb, 0x13, 0x06, 0xf3, 0x27, 0xcc, 0x37, 0xae, 0x5c, 0x9c,
-	0x70, 0xbf, 0x43, 0xed, 0x50, 0xc4, 0x65, 0x07, 0x5c, 0x33, 0xd4, 0x06, 0x84, 0x4e, 0x4c, 0xf3,
-	0x61, 0xbe, 0xa0, 0x8e, 0xf9, 0x4e, 0xce, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8,
-	0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7,
-	0x10, 0xa5, 0x99, 0x9e, 0x59, 0x92, 0x51, 0x9a, 0xa4, 0x97, 0x9c, 0x9f, 0xab, 0x8f, 0x30, 0x57,
-	0xbf, 0xb8, 0x20, 0x4f, 0xbf, 0x42, 0x1f, 0x16, 0xbd, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c,
-	0xe0, 0xb8, 0x35, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x41, 0xa0, 0x83, 0x88, 0x55, 0x02, 0x00,
-	0x00,
+	0xa5, 0xc4, 0x61, 0x52, 0x65, 0x89, 0x39, 0x99, 0x29, 0x08, 0x09, 0xa5, 0x48, 0x2e, 0x71, 0x57,
+	0x90, 0x8d, 0xce, 0x08, 0x2d, 0xce, 0x45, 0xa9, 0x89, 0x25, 0xa9, 0x29, 0x42, 0x2a, 0x5c, 0xbc,
+	0x48, 0x06, 0x79, 0xba, 0x48, 0x30, 0x2a, 0x30, 0x6a, 0xb0, 0x04, 0xa1, 0x0a, 0x0a, 0x49, 0x70,
+	0xb1, 0x27, 0xa6, 0xa4, 0x14, 0xa5, 0x16, 0x17, 0x4b, 0x30, 0x29, 0x30, 0x6a, 0x70, 0x06, 0xc1,
+	0xb8, 0x4a, 0x69, 0x5c, 0x72, 0xe8, 0x46, 0x3b, 0x42, 0xa4, 0x42, 0x0b, 0x52, 0x48, 0xb0, 0x41,
+	0x8e, 0x8b, 0x2b, 0x2f, 0xb5, 0xdc, 0x11, 0xc5, 0x12, 0x24, 0x11, 0xa5, 0x28, 0x2e, 0x09, 0x74,
+	0x7b, 0x5c, 0x32, 0x8b, 0x13, 0x93, 0x72, 0xa8, 0xe0, 0x87, 0x78, 0x2e, 0x51, 0xb0, 0xd9, 0x61,
+	0xb0, 0x60, 0x83, 0x05, 0x0e, 0x92, 0x16, 0x46, 0x14, 0x2d, 0x42, 0x3a, 0x5c, 0x82, 0xf9, 0x05,
+	0xa9, 0x45, 0x48, 0xde, 0x4d, 0x05, 0x19, 0xcb, 0xac, 0xc1, 0x19, 0x84, 0x29, 0xa1, 0x54, 0xc0,
+	0xa5, 0x86, 0x6a, 0x81, 0x3f, 0xba, 0x12, 0x58, 0x60, 0x51, 0xc9, 0x46, 0x27, 0xe7, 0x13, 0x8f,
+	0xe4, 0x18, 0x2f, 0x3c, 0x92, 0x63, 0x7c, 0xf0, 0x48, 0x8e, 0x71, 0xc2, 0x63, 0x39, 0x86, 0x0b,
+	0x8f, 0xe5, 0x18, 0x6e, 0x3c, 0x96, 0x63, 0x88, 0xd2, 0x4c, 0xcf, 0x2c, 0xc9, 0x28, 0x4d, 0xd2,
+	0x4b, 0xce, 0xcf, 0xd5, 0x47, 0x24, 0x3c, 0xfd, 0xe2, 0x82, 0x3c, 0xfd, 0x0a, 0x7d, 0x58, 0x02,
+	0x2a, 0xa9, 0x2c, 0x48, 0x2d, 0x4e, 0x62, 0x03, 0xa7, 0x1e, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff,
+	0xff, 0xf0, 0x44, 0x9c, 0x49, 0xb7, 0x02, 0x00, 0x00,
 }
 
 func (m *EventCoordinatorCreated) Marshal() (dAtA []byte, err error) {
@@ -249,20 +339,22 @@ func (m *EventCoordinatorCreated) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	_ = i
 	var l int
 	_ = l
-	{
-		size, err := m.Coordinator.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintEvents(dAtA, i, uint64(size))
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
 	}
-	i--
-	dAtA[i] = 0xa
+	if m.CoordinatorID != 0 {
+		i = encodeVarintEvents(dAtA, i, uint64(m.CoordinatorID))
+		i--
+		dAtA[i] = 0x8
+	}
 	return len(dAtA) - i, nil
 }
 
-func (m *EventCoordinatorUpdated) Marshal() (dAtA []byte, err error) {
+func (m *EventCoordinatorAddressUpdated) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -272,26 +364,63 @@ func (m *EventCoordinatorUpdated) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *EventCoordinatorUpdated) MarshalTo(dAtA []byte) (int, error) {
+func (m *EventCoordinatorAddressUpdated) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *EventCoordinatorUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EventCoordinatorAddressUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	{
-		size, err := m.Coordinator.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintEvents(dAtA, i, uint64(size))
+	if len(m.NewAddress) > 0 {
+		i -= len(m.NewAddress)
+		copy(dAtA[i:], m.NewAddress)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.NewAddress)))
+		i--
+		dAtA[i] = 0x12
 	}
-	i--
-	dAtA[i] = 0xa
+	if m.CoordinatorID != 0 {
+		i = encodeVarintEvents(dAtA, i, uint64(m.CoordinatorID))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *EventCoordinatorDisabled) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *EventCoordinatorDisabled) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *EventCoordinatorDisabled) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.CoordinatorID != 0 {
+		i = encodeVarintEvents(dAtA, i, uint64(m.CoordinatorID))
+		i--
+		dAtA[i] = 0x8
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -315,20 +444,26 @@ func (m *EventValidatorCreated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	{
-		size, err := m.Validator.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
+	if len(m.OperatorAddresses) > 0 {
+		for iNdEx := len(m.OperatorAddresses) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.OperatorAddresses[iNdEx])
+			copy(dAtA[i:], m.OperatorAddresses[iNdEx])
+			i = encodeVarintEvents(dAtA, i, uint64(len(m.OperatorAddresses[iNdEx])))
+			i--
+			dAtA[i] = 0x12
 		}
-		i -= size
-		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
-	i--
-	dAtA[i] = 0xa
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
 	return len(dAtA) - i, nil
 }
 
-func (m *EventValidatorUpdated) Marshal() (dAtA []byte, err error) {
+func (m *EventValidatorOperatorAddressesUpdated) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -338,26 +473,32 @@ func (m *EventValidatorUpdated) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *EventValidatorUpdated) MarshalTo(dAtA []byte) (int, error) {
+func (m *EventValidatorOperatorAddressesUpdated) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *EventValidatorUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *EventValidatorOperatorAddressesUpdated) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	{
-		size, err := m.Validator.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
+	if len(m.OperatorAddresses) > 0 {
+		for iNdEx := len(m.OperatorAddresses) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.OperatorAddresses[iNdEx])
+			copy(dAtA[i:], m.OperatorAddresses[iNdEx])
+			i = encodeVarintEvents(dAtA, i, uint64(len(m.OperatorAddresses[iNdEx])))
+			i--
+			dAtA[i] = 0x12
 		}
-		i -= size
-		i = encodeVarintEvents(dAtA, i, uint64(size))
 	}
-	i--
-	dAtA[i] = 0xa
+	if len(m.Address) > 0 {
+		i -= len(m.Address)
+		copy(dAtA[i:], m.Address)
+		i = encodeVarintEvents(dAtA, i, uint64(len(m.Address)))
+		i--
+		dAtA[i] = 0xa
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -378,19 +519,45 @@ func (m *EventCoordinatorCreated) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = m.Coordinator.Size()
-	n += 1 + l + sovEvents(uint64(l))
+	if m.CoordinatorID != 0 {
+		n += 1 + sovEvents(uint64(m.CoordinatorID))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
 	return n
 }
 
-func (m *EventCoordinatorUpdated) Size() (n int) {
+func (m *EventCoordinatorAddressUpdated) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.Coordinator.Size()
-	n += 1 + l + sovEvents(uint64(l))
+	if m.CoordinatorID != 0 {
+		n += 1 + sovEvents(uint64(m.CoordinatorID))
+	}
+	l = len(m.NewAddress)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	return n
+}
+
+func (m *EventCoordinatorDisabled) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.CoordinatorID != 0 {
+		n += 1 + sovEvents(uint64(m.CoordinatorID))
+	}
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
 	return n
 }
 
@@ -400,19 +567,35 @@ func (m *EventValidatorCreated) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = m.Validator.Size()
-	n += 1 + l + sovEvents(uint64(l))
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	if len(m.OperatorAddresses) > 0 {
+		for _, s := range m.OperatorAddresses {
+			l = len(s)
+			n += 1 + l + sovEvents(uint64(l))
+		}
+	}
 	return n
 }
 
-func (m *EventValidatorUpdated) Size() (n int) {
+func (m *EventValidatorOperatorAddressesUpdated) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.Validator.Size()
-	n += 1 + l + sovEvents(uint64(l))
+	l = len(m.Address)
+	if l > 0 {
+		n += 1 + l + sovEvents(uint64(l))
+	}
+	if len(m.OperatorAddresses) > 0 {
+		for _, s := range m.OperatorAddresses {
+			l = len(s)
+			n += 1 + l + sovEvents(uint64(l))
+		}
+	}
 	return n
 }
 
@@ -452,10 +635,10 @@ func (m *EventCoordinatorCreated) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorID", wireType)
 			}
-			var msglen int
+			m.CoordinatorID = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowEvents
@@ -465,24 +648,42 @@ func (m *EventCoordinatorCreated) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				m.CoordinatorID |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthEvents
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthEvents
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Coordinator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
+			m.Address = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -505,7 +706,7 @@ func (m *EventCoordinatorCreated) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *EventCoordinatorUpdated) Unmarshal(dAtA []byte) error {
+func (m *EventCoordinatorAddressUpdated) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -528,17 +729,17 @@ func (m *EventCoordinatorUpdated) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: EventCoordinatorUpdated: wiretype end group for non-group")
+			return fmt.Errorf("proto: EventCoordinatorAddressUpdated: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EventCoordinatorUpdated: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EventCoordinatorAddressUpdated: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Coordinator", wireType)
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorID", wireType)
 			}
-			var msglen int
+			m.CoordinatorID = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowEvents
@@ -548,24 +749,143 @@ func (m *EventCoordinatorUpdated) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				m.CoordinatorID |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NewAddress", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthEvents
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthEvents
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Coordinator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.NewAddress = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipEvents(dAtA[iNdEx:])
+			if err != nil {
 				return err
 			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *EventCoordinatorDisabled) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowEvents
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: EventCoordinatorDisabled: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: EventCoordinatorDisabled: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorID", wireType)
+			}
+			m.CoordinatorID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.CoordinatorID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Address = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -619,9 +939,9 @@ func (m *EventValidatorCreated) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Validator", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
 			}
-			var msglen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowEvents
@@ -631,24 +951,55 @@ func (m *EventValidatorCreated) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthEvents
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthEvents
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Validator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OperatorAddresses", wireType)
 			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OperatorAddresses = append(m.OperatorAddresses, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -671,7 +1022,7 @@ func (m *EventValidatorCreated) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *EventValidatorUpdated) Unmarshal(dAtA []byte) error {
+func (m *EventValidatorOperatorAddressesUpdated) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -694,17 +1045,17 @@ func (m *EventValidatorUpdated) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: EventValidatorUpdated: wiretype end group for non-group")
+			return fmt.Errorf("proto: EventValidatorOperatorAddressesUpdated: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: EventValidatorUpdated: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: EventValidatorOperatorAddressesUpdated: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Validator", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Address", wireType)
 			}
-			var msglen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowEvents
@@ -714,24 +1065,55 @@ func (m *EventValidatorUpdated) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthEvents
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthEvents
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Validator.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
+			m.Address = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OperatorAddresses", wireType)
 			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowEvents
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthEvents
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthEvents
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OperatorAddresses = append(m.OperatorAddresses, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
