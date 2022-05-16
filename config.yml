@@ -31,7 +31,7 @@ genesis:
   app_state:
     bank:
       denom_metadata:
-        - description: "The native staking token of Starport network"
+        - description: "The native staking token of Starport Network"
           display: "spn"
           base: "uspn"
           name: "Starport Network"
