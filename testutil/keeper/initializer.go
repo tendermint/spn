@@ -13,7 +13,6 @@ import (
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
-	minttypes "github.com/cosmos/cosmos-sdk/x/mint/types"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
@@ -28,8 +27,11 @@ import (
 	"github.com/tendermint/spn/testutil/sample"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	claimkeeper "github.com/tendermint/spn/x/claim/keeper"
+	claimtypes "github.com/tendermint/spn/x/claim/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
+	minttypes "github.com/tendermint/spn/x/mint/types"
 	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
 	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
 	monitoringpmodulekeeper "github.com/tendermint/spn/x/monitoringp/keeper"
@@ -408,5 +410,27 @@ func (i initializer) Participation(
 		subspace,
 		fundraisingKeeper,
 		stakingKeeper,
+	)
+}
+
+func (i initializer) Claim(
+	paramKeeper paramskeeper.Keeper,
+	bankKeeper bankkeeper.Keeper,
+) *claimkeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(claimtypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(claimtypes.MemStoreKey)
+
+	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
+	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
+
+	paramKeeper.Subspace(claimtypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(participationtypes.ModuleName)
+
+	return claimkeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		memStoreKey,
+		subspace,
+		bankKeeper,
 	)
 }

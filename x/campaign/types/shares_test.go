@@ -2,8 +2,9 @@ package types_test
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/testutil/sample"
 	"testing"
+
+	"github.com/tendermint/spn/testutil/sample"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
