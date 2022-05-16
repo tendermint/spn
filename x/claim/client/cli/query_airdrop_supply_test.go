@@ -4,17 +4,15 @@ import (
 	"fmt"
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	"github.com/tendermint/spn/testutil/sample"
-
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/status"
 
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim/client/cli"
 	"github.com/tendermint/spn/x/claim/types"
 )

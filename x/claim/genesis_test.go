@@ -4,12 +4,11 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
-
 	"github.com/stretchr/testify/require"
 
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim"
 	"github.com/tendermint/spn/x/claim/types"
 )

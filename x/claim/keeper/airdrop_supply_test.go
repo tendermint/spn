@@ -3,13 +3,12 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	keepertest "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim/keeper"
 )
 
