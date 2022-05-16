@@ -24,8 +24,6 @@ func init() {
 }
 
 func TestGenesis(t *testing.T) {
-	supply := sample.Coin(r)
-
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
 
@@ -46,7 +44,7 @@ func TestGenesis(t *testing.T) {
 			},
 		},
 		MissionCount:  2,
-		AirdropSupply: &supply,
+		AirdropSupply: sample.Coin(r),
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 

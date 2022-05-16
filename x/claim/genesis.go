@@ -21,10 +21,8 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 
 	// Set mission count
 	k.SetMissionCount(ctx, genState.MissionCount)
-	// Set if defined
-	if genState.AirdropSupply != nil {
-		k.SetAirdropSupply(ctx, *genState.AirdropSupply)
-	}
+	k.SetAirdropSupply(ctx, genState.AirdropSupply)
+
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -34,14 +32,12 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
 
-	// TODO add airdrop supply
 	genesis.ClaimRecordList = k.GetAllClaimRecord(ctx)
 	genesis.MissionList = k.GetAllMission(ctx)
 	genesis.MissionCount = k.GetMissionCount(ctx)
-	// Get all airdropSupply
 	airdropSupply, found := k.GetAirdropSupply(ctx)
 	if found {
-		genesis.AirdropSupply = &airdropSupply
+		genesis.AirdropSupply = airdropSupply
 	}
 	// this line is used by starport scaffolding # genesis/module/export
 

@@ -24,12 +24,11 @@ func networkWithAirdropSupplyObjects(t *testing.T) (*network.Network, sdk.Coin) 
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-	airdropSupply := sample.Coin(r)
-	state.AirdropSupply = &airdropSupply
+	state.AirdropSupply = sample.Coin(r)
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), *state.AirdropSupply
+	return network.New(t, cfg), state.AirdropSupply
 }
 
 func TestShowAirdropSupply(t *testing.T) {

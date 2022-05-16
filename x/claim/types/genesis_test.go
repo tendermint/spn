@@ -10,8 +10,6 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	supply := sample.Coin(r)
-
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState
@@ -43,7 +41,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				MissionCount:  2,
-				AirdropSupply: &supply,
+				AirdropSupply: sample.Coin(r),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -53,10 +51,10 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				ClaimRecordList: []types.ClaimRecord{
 					{
-						Address: sample.Address(r),
+						Address: "duplicate",
 					},
 					{
-						Address: sample.Address(r),
+						Address: "duplicate",
 					},
 				},
 			},
