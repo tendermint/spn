@@ -43,9 +43,11 @@ func (msg *MsgUpdateSpecialAllocations) GetSignBytes() []byte {
 }
 
 func (msg *MsgUpdateSpecialAllocations) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
-	if err != nil {
+	if _, err := sdk.AccAddressFromBech32(msg.Coordinator); err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+	}
+	if err := msg.SpecialAllocations.Validate(); err != nil {
+		return sdkerrors.Wrapf(ErrInvalidSpecialAllocations, err.Error())
 	}
 	return nil
 }

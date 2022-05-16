@@ -1,6 +1,7 @@
-package types
+package types_test
 
 import (
+	"github.com/tendermint/spn/x/campaign/types"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -11,20 +12,34 @@ import (
 func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgUpdateSpecialAllocations
+		msg  types.MsgUpdateSpecialAllocations
 		err  error
 	}{
 		{
+			name: "valid message",
+			msg: types.MsgUpdateSpecialAllocations{
+				Coordinator:        sample.Address(r),
+				CampaignID:         1,
+				SpecialAllocations: sample.SpecialAllocations(r),
+			},
+		},
+		{
 			name: "invalid address",
-			msg: MsgUpdateSpecialAllocations{
-				Coordinator: "invalid_address",
+			msg: types.MsgUpdateSpecialAllocations{
+				Coordinator:        "invalid_address",
+				CampaignID:         1,
+				SpecialAllocations: sample.SpecialAllocations(r),
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg: MsgUpdateSpecialAllocations{
-				Coordinator: sample.AccAddress(),
+		},
+		{
+			name: "invalid special allocations",
+			msg: types.MsgUpdateSpecialAllocations{
+				Coordinator:        sample.Address(r),
+				CampaignID:         1,
+				SpecialAllocations: types.NewSpecialAllocations(invalidShares, sample.Shares(r)),
 			},
+			err: types.ErrInvalidSpecialAllocations,
 		},
 	}
 	for _, tt := range tests {
