@@ -22,18 +22,21 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated index in claimRecord
 	claimRecordIndexMap := make(map[string]struct{})
 
-	var claimSum :=
+	claimSum := sdk.ZeroInt()
 	for _, elem := range gs.ClaimRecordList {
 		index := string(ClaimRecordKey(elem.Address))
+		claimSum = claimSum.Add(elem.Claimable)
 		if _, ok := claimRecordIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for claimRecord")
 		}
 		claimRecordIndexMap[index] = struct{}{}
 	}
 	// Check for duplicated ID in mission
+	weightSum := sdk.ZeroDec()
 	missionIdMap := make(map[uint64]bool)
 	missionCount := gs.GetMissionCount()
 	for _, elem := range gs.MissionList {
+		weightSum = weightSum.Add(elem.Weight)
 		if _, ok := missionIdMap[elem.ID]; ok {
 			return fmt.Errorf("duplicated id for mission")
 		}
@@ -49,6 +52,16 @@ func (gs GenesisState) Validate() error {
 	}
 
 	// verify airdropSupply == sum of claimRecords
+	if !gs.AirdropSupply.Amount.Equal(claimSum) {
+		return fmt.Errorf("airdrop supply amount not equal to sum of claimable amounts")
+	}
+
+	// ensure mission weight sum is 1
+	if len(gs.MissionList) > 0 {
+		if !weightSum.Equal(sdk.OneDec()) {
+			return fmt.Errorf("sum of mission weights must be 1")
+		}
+	}
 
 	// this line is used by starport scaffolding # genesis/types/validate
 

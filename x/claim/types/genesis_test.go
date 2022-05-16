@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -10,6 +11,14 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
+	fiftyPercent, err := sdk.NewDecFromStr("0.5")
+	require.NoError(t, err)
+
+	claimAmts := []sdk.Int{
+		sdk.NewInt(r.Int63()),
+		sdk.NewInt(r.Int63()),
+	}
+
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState
@@ -26,22 +35,26 @@ func TestGenesisState_Validate(t *testing.T) {
 
 				ClaimRecordList: []types.ClaimRecord{
 					{
-						Address: sample.Address(r),
+						Address:   sample.Address(r),
+						Claimable: claimAmts[0],
 					},
 					{
-						Address: sample.Address(r),
+						Address:   sample.Address(r),
+						Claimable: claimAmts[1],
 					},
 				},
 				MissionList: []types.Mission{
 					{
-						ID: 0,
+						ID:     0,
+						Weight: fiftyPercent,
 					},
 					{
-						ID: 1,
+						ID:     1,
+						Weight: fiftyPercent,
 					},
 				},
 				MissionCount:  2,
-				AirdropSupply: sample.Coin(r),
+				AirdropSupply: sdk.NewCoin("denom", claimAmts[0].Add(claimAmts[1])),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -51,12 +64,41 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				ClaimRecordList: []types.ClaimRecord{
 					{
-						Address: "duplicate",
+						Address:   "duplicate",
+						Claimable: claimAmts[0],
 					},
 					{
-						Address: "duplicate",
+						Address:   "duplicate",
+						Claimable: claimAmts[1],
 					},
 				},
+				AirdropSupply: sdk.NewCoin("denom", claimAmts[0].Add(claimAmts[1])),
+			},
+
+			valid: false,
+		},
+		{
+			desc: "invalid claim amounts",
+			genState: &types.GenesisState{
+				ClaimRecordList: []types.ClaimRecord{
+					{
+						Address:   "duplicate",
+						Claimable: claimAmts[0],
+					},
+					{
+						Address:   "duplicate",
+						Claimable: sdk.ZeroInt(),
+					},
+				},
+				AirdropSupply: sdk.NewCoin("denom", claimAmts[0].Add(claimAmts[1])),
+			},
+
+			valid: false,
+		},
+		{
+			desc: "invalid genesis supply coin",
+			genState: &types.GenesisState{
+				AirdropSupply: sdk.Coin{},
 			},
 			valid: false,
 		},
@@ -65,10 +107,28 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				MissionList: []types.Mission{
 					{
-						ID: 0,
+						ID:     0,
+						Weight: fiftyPercent,
 					},
 					{
-						ID: 0,
+						ID:     0,
+						Weight: fiftyPercent,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "mission list weights are not equal to 1",
+			genState: &types.GenesisState{
+				MissionList: []types.Mission{
+					{
+						ID:     0,
+						Weight: fiftyPercent,
+					},
+					{
+						ID:     0,
+						Weight: sdk.ZeroDec(),
 					},
 				},
 			},
@@ -79,7 +139,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				MissionList: []types.Mission{
 					{
-						ID: 1,
+						ID:     1,
+						Weight: sdk.OneDec(),
 					},
 				},
 				MissionCount: 0,

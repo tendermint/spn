@@ -6,6 +6,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -13,19 +14,22 @@ import (
 
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim/client/cli"
 	"github.com/tendermint/spn/x/claim/types"
 )
 
 func networkWithMissionObjects(t *testing.T, n int) (*network.Network, []types.Mission) {
 	t.Helper()
+	r := sample.Rand()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
 		mission := types.Mission{
-			ID: uint64(i),
+			ID:     uint64(i),
+			Weight: sdk.NewDec(r.Int63()),
 		}
 		nullify.Fill(&mission)
 		state.MissionList = append(state.MissionList, mission)

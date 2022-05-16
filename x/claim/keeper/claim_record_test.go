@@ -16,6 +16,7 @@ func createNClaimRecord(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.C
 	items := make([]types.ClaimRecord, n)
 	for i := range items {
 		items[i].Address = sample.Address(r)
+		items[i].Claimable = sdk.NewInt(r.Int63())
 
 		keeper.SetClaimRecord(ctx, items[i])
 	}

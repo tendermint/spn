@@ -3,12 +3,12 @@ package tendermint.spn.claim;
 
 option go_package = "github.com/tendermint/spn/x/claim/types";
 
+import "gogoproto/gogo.proto";
+
 message ClaimRecord {
   string address = 1;
   string claimable = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false];
-  string completedMissions = 3;
-  
+  repeated uint64 completedMissions = 3;
 }
-

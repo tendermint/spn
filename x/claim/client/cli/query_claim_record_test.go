@@ -2,11 +2,11 @@ package cli_test
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -14,6 +14,7 @@ import (
 
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim/client/cli"
 	"github.com/tendermint/spn/x/claim/types"
 )
@@ -27,7 +28,8 @@ func networkWithClaimRecordObjects(t *testing.T, n int) (*network.Network, []typ
 
 	for i := 0; i < n; i++ {
 		claimRecord := types.ClaimRecord{
-			Address: sample.Address(r),
+			Address:   sample.Address(r),
+			Claimable: sdk.NewInt(r.Int63()),
 		}
 		nullify.Fill(&claimRecord)
 		state.ClaimRecordList = append(state.ClaimRecordList, claimRecord)

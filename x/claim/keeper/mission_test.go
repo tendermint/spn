@@ -14,7 +14,9 @@ import (
 func createNMission(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Mission {
 	items := make([]types.Mission, n)
 	for i := range items {
+		items[i].Weight = sdk.NewDec(r.Int63())
 		items[i].ID = keeper.AppendMission(ctx, items[i])
+
 	}
 	return items
 }
