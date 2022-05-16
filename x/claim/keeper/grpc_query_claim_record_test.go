@@ -31,21 +31,21 @@ func TestClaimRecordQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetClaimRecordRequest{
-				Index: msgs[0].Address,
+				Address: msgs[0].Address,
 			},
 			response: &types.QueryGetClaimRecordResponse{ClaimRecord: msgs[0]},
 		},
 		{
 			desc: "Second",
 			request: &types.QueryGetClaimRecordRequest{
-				Index: msgs[1].Address,
+				Address: msgs[1].Address,
 			},
 			response: &types.QueryGetClaimRecordResponse{ClaimRecord: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryGetClaimRecordRequest{
-				Index: strconv.Itoa(100000),
+				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
