@@ -22,6 +22,7 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated index in claimRecord
 	claimRecordIndexMap := make(map[string]struct{})
 
+	var claimSum :=
 	for _, elem := range gs.ClaimRecordList {
 		index := string(ClaimRecordKey(elem.Address))
 		if _, ok := claimRecordIndexMap[index]; ok {
@@ -46,6 +47,9 @@ func (gs GenesisState) Validate() error {
 	if err != nil {
 		return err
 	}
+
+	// verify airdropSupply == sum of claimRecords
+
 	// this line is used by starport scaffolding # genesis/types/validate
 
 	return gs.Params.Validate()

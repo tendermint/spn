@@ -5,7 +5,9 @@ option go_package = "github.com/tendermint/spn/x/claim/types";
 
 message Mission {
   uint64 ID = 1;
-  string description = 2; 
-  string weight = 3; 
+  string description = 2;
+  string weight = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false];
   
 }

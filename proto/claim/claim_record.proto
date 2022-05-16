@@ -5,7 +5,9 @@ option go_package = "github.com/tendermint/spn/x/claim/types";
 
 message ClaimRecord {
   string address = 1;
-  string claimable = 2;
+  string claimable = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false];
   string completedMissions = 3;
   
 }
