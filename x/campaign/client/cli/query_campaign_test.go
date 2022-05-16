@@ -74,9 +74,7 @@ func TestShowCampaign(t *testing.T) {
 				require.NoError(t, err)
 				var resp types.QueryGetCampaignResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				resp.Campaign.AllocatedShares = types.EmptyShares()
-				resp.Campaign.SpecialAllocations = types.EmptySpecialAllocations()
-				require.Equal(t, nullify.Fill(tc.obj), resp.Campaign)
+				require.Equal(t, nullify.Fill(tc.obj), nullify.Fill(resp.Campaign))
 			}
 		})
 	}
