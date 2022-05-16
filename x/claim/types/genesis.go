@@ -34,17 +34,17 @@ func (gs GenesisState) Validate() error {
 	}
 	// Check for duplicated ID in mission
 	weightSum := sdk.ZeroDec()
-	missionIdMap := make(map[uint64]bool)
+	missionIDMap := make(map[uint64]bool)
 	missionCount := gs.GetMissionCount()
 	for _, elem := range gs.MissionList {
 		weightSum = weightSum.Add(elem.Weight)
-		if _, ok := missionIdMap[elem.ID]; ok {
+		if _, ok := missionIDMap[elem.ID]; ok {
 			return fmt.Errorf("duplicated id for mission")
 		}
 		if elem.ID >= missionCount {
 			return fmt.Errorf("mission id should be lower or equal than the last id")
 		}
-		missionIdMap[elem.ID] = true
+		missionIDMap[elem.ID] = true
 	}
 
 	err := gs.AirdropSupply.Validate()
