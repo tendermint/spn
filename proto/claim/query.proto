@@ -20,7 +20,7 @@ service Query {
   }
   // Queries a ClaimRecord by index.
 	rpc ClaimRecord(QueryGetClaimRecordRequest) returns (QueryGetClaimRecordResponse) {
-		option (google.api.http).get = "/tendermint/spn/claim/claim_record/{index}";
+		option (google.api.http).get = "/tendermint/spn/claim/claim_record/{address}";
 	}
 
 	// Queries a list of ClaimRecord items.
@@ -30,7 +30,7 @@ service Query {
 
 // Queries a Mission by id.
 	rpc Mission(QueryGetMissionRequest) returns (QueryGetMissionResponse) {
-		option (google.api.http).get = "/tendermint/spn/claim/mission/{id}";
+		option (google.api.http).get = "/tendermint/spn/claim/mission/{ID}";
 	}
 
 	// Queries a list of Mission items.
@@ -55,7 +55,7 @@ message QueryParamsResponse {
 }
 
 message QueryGetClaimRecordRequest {
-	  string index = 1;
+	  string address = 1;
 
 }
 
@@ -73,7 +73,7 @@ message QueryAllClaimRecordResponse {
 }
 
 message QueryGetMissionRequest {
-	uint64 id = 1;
+	uint64 ID = 1;
 }
 
 message QueryGetMissionResponse {
