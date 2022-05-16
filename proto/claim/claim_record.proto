@@ -1,0 +1,12 @@
+syntax = "proto3";
+package tendermint.spn.claim;
+
+option go_package = "github.com/tendermint/spn/x/claim/types";
+
+message ClaimRecord {
+  string address = 1;
+  string claimable = 2;
+  string completedMissions = 3;
+  
+}
+
