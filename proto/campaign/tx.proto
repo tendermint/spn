@@ -5,6 +5,7 @@ package tendermint.spn.campaign;
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "campaign/mainnet_vesting_account.proto";
+import "campaign/special_allocations.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
@@ -20,7 +21,7 @@ service Msg {
   rpc BurnVouchers(MsgBurnVouchers) returns (MsgBurnVouchersResponse);
   rpc RedeemVouchers(MsgRedeemVouchers) returns (MsgRedeemVouchersResponse);
   rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
-    rpc UpdateSpecialAllocations(MsgUpdateSpecialAllocations) returns (MsgUpdateSpecialAllocationsResponse);
+  rpc UpdateSpecialAllocations(MsgUpdateSpecialAllocations) returns (MsgUpdateSpecialAllocationsResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -59,6 +60,14 @@ message MsgUpdateTotalSupply {
 }
 
 message MsgUpdateTotalSupplyResponse {}
+
+message MsgUpdateSpecialAllocations {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  SpecialAllocations specialAllocations = 3 [(gogoproto.nullable) = false];
+}
+
+message MsgUpdateSpecialAllocationsResponse {}
 
 message MsgInitializeMainnet {
   string coordinator = 1;
@@ -142,13 +151,5 @@ message MsgUnredeemVouchers {
 }
 
 message MsgUnredeemVouchersResponse {}
-
-message MsgUpdateSpecialAllocations {
-  string coordinator = 1;
-  uint64 campaignID = 2;
-}
-
-message MsgUpdateSpecialAllocationsResponse {
-}
 
 // this line is used by starport scaffolding # proto/tx/message

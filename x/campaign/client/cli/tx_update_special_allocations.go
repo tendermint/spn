@@ -15,9 +15,9 @@ var _ = strconv.Itoa(0)
 
 func CmdUpdateSpecialAllocations() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-special-allocations [campaign-id]",
+		Use:   "update-special-allocations [campaign-id] [genesis-distribution] [claimable-airdrop]",
 		Short: "update the special allocations for the campaign",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argCampaignID, err := cast.ToUint64E(args[0])
 			if err != nil {
@@ -29,9 +29,20 @@ func CmdUpdateSpecialAllocations() *cobra.Command {
 				return err
 			}
 
+			genesisDistribution, err := types.NewShares(args[1])
+			if err != nil {
+				return err
+			}
+
+			claimableAirdrop, err := types.NewShares(args[2])
+			if err != nil {
+				return err
+			}
+
 			msg := types.NewMsgUpdateSpecialAllocations(
 				clientCtx.GetFromAddress().String(),
 				argCampaignID,
+				types.NewSpecialAllocations(genesisDistribution, claimableAirdrop),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

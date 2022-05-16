@@ -9,10 +9,15 @@ const TypeMsgUpdateSpecialAllocations = "update_special_allocations"
 
 var _ sdk.Msg = &MsgUpdateSpecialAllocations{}
 
-func NewMsgUpdateSpecialAllocations(coordinator string, campaignID uint64) *MsgUpdateSpecialAllocations {
+func NewMsgUpdateSpecialAllocations(
+	coordinator string,
+	campaignID uint64,
+	specialAllocations SpecialAllocations,
+) *MsgUpdateSpecialAllocations {
 	return &MsgUpdateSpecialAllocations{
-		Coordinator: coordinator,
-		CampaignID:  campaignID,
+		Coordinator:        coordinator,
+		CampaignID:         campaignID,
+		SpecialAllocations: specialAllocations,
 	}
 }
 
