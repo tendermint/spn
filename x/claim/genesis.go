@@ -2,6 +2,7 @@ package claim
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/tendermint/spn/x/claim/keeper"
 	"github.com/tendermint/spn/x/claim/types"
 )

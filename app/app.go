@@ -128,6 +128,7 @@ import (
 	claimmodule "github.com/tendermint/spn/x/claim"
 	claimmodulekeeper "github.com/tendermint/spn/x/claim/keeper"
 	claimmoduletypes "github.com/tendermint/spn/x/claim/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
