@@ -4,13 +4,19 @@ package tendermint.spn.claim;
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "claim/params.proto";
+import "claim/claim_record.proto";
+import "claim/mission.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/tendermint/spn/x/claim/types";
 
 // GenesisState defines the claim module's genesis state.
 message GenesisState {
-  cosmos.base.v1beta1.Coin airdropSupply = 1 [(gogoproto.nullable) = false];
-  Params params = 2 [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin airdropSupply = 1;
+  repeated ClaimRecord claimRecordList = 2 [(gogoproto.nullable) = false];
+  repeated Mission missionList = 3 [(gogoproto.nullable) = false];
+  uint64 missionCount = 4;
+  Params params = 5 [(gogoproto.nullable) = false];
+
   // this line is used by starport scaffolding # genesis/proto/state
 }
