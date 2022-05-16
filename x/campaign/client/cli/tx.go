@@ -32,6 +32,7 @@ func GetTxCmd() *cobra.Command {
 		CmdRedeemVouchers(),
 	)
 
+	cmd.AddCommand(CmdUpdateSpecialAllocations())
 	// this line is used by starport scaffolding # 1
 
 	return cmd

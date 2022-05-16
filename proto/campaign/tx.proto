@@ -20,7 +20,8 @@ service Msg {
   rpc BurnVouchers(MsgBurnVouchers) returns (MsgBurnVouchersResponse);
   rpc RedeemVouchers(MsgRedeemVouchers) returns (MsgRedeemVouchersResponse);
   rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
+    rpc UpdateSpecialAllocations(MsgUpdateSpecialAllocations) returns (MsgUpdateSpecialAllocationsResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgCreateCampaign {
@@ -141,5 +142,13 @@ message MsgUnredeemVouchers {
 }
 
 message MsgUnredeemVouchersResponse {}
+
+message MsgUpdateSpecialAllocations {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+}
+
+message MsgUpdateSpecialAllocationsResponse {
+}
 
 // this line is used by starport scaffolding # proto/tx/message
