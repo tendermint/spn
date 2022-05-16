@@ -43,6 +43,10 @@ genesis:
     mint:
       params:
         mint_denom: "uspn"
+        distribution_proportions:
+          staking: "0.400000000000000000"
+          incentives: "0.400000000000000000"
+          community_pool: "0.200000000000000000"
     launch:
       params:
         revertDelay: "5"

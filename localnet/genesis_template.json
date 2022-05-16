@@ -309,7 +309,12 @@
         "inflation_max": "0.200000000000000000",
         "inflation_min": "0.070000000000000000",
         "inflation_rate_change": "0.130000000000000000",
-        "mint_denom": "uspn"
+        "mint_denom": "uspn",
+        "distribution_proportions": {
+          "staking": "0.400000000000000000",
+          "incentives": "0.400000000000000000",
+          "community_pool": "0.200000000000000000",
+        }
       }
     },
     "monitoringc": {
