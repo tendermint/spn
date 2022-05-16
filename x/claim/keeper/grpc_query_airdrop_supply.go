@@ -4,9 +4,10 @@ import (
 	"context"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/x/claim/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/tendermint/spn/x/claim/types"
 )
 
 func (k Keeper) AirdropSupply(c context.Context, req *types.QueryGetAirdropSupplyRequest) (*types.QueryGetAirdropSupplyResponse, error) {

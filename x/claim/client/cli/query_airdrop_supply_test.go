@@ -2,9 +2,11 @@ package cli_test
 
 import (
 	"fmt"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/spn/testutil/sample"
 	"testing"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/tendermint/spn/testutil/sample"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"

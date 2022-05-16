@@ -1,9 +1,10 @@
 package claim_test
 
 import (
-	"github.com/tendermint/spn/testutil/sample"
 	"math/rand"
 	"testing"
+
+	"github.com/tendermint/spn/testutil/sample"
 
 	"github.com/stretchr/testify/require"
 
