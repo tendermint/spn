@@ -35,8 +35,6 @@ type AppModuleBasic struct {
 	cdc codec.Codec
 }
 
-var _ module.AppModuleBasic = AppModuleBasic{}
-
 // Name returns the mint module's name.
 func (AppModuleBasic) Name() string {
 	return types.ModuleName
@@ -71,8 +69,7 @@ func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Rout
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the mint module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx))
-
+	types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)) // nolint
 }
 
 // GetTxCmd returns no root tx command for the mint module.
