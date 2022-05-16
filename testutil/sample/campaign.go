@@ -14,6 +14,11 @@ func Shares(r *rand.Rand) campaign.Shares {
 	return campaign.NewSharesFromCoins(Coins(r))
 }
 
+// SpecialAllocations returns a sample special allocations
+func SpecialAllocations(r *rand.Rand) campaign.SpecialAllocations {
+	return campaign.NewSpecialAllocations(Shares(r), Shares(r))
+}
+
 // ShareVestingOptions returns a sample ShareVestingOptions
 func ShareVestingOptions(r *rand.Rand) campaign.ShareVestingOptions {
 	// use vesting shares as total shares
@@ -63,7 +68,11 @@ func CampaignName(r *rand.Rand) string {
 
 // Campaign returns a sample campaign
 func Campaign(r *rand.Rand, id uint64) campaign.Campaign {
-	return campaign.NewCampaign(
+	genesisDistribution := Shares(r)
+	claimableAirdrop := Shares(r)
+	shares := campaign.IncreaseShares(genesisDistribution, claimableAirdrop)
+
+	campaign := campaign.NewCampaign(
 		id,
 		CampaignName(r),
 		Uint64(r),
@@ -71,6 +80,13 @@ func Campaign(r *rand.Rand, id uint64) campaign.Campaign {
 		Metadata(r, 20),
 		Duration(r).Milliseconds(),
 	)
+
+	// set random shares for special allocations
+	campaign.AllocatedShares = shares
+	campaign.SpecialAllocations.GenesisDistribution = genesisDistribution
+	campaign.SpecialAllocations.ClaimableAirdrop = claimableAirdrop
+
+	return campaign
 }
 
 // MainnetAccount returns a sample MainnetAccount

@@ -1,10 +1,10 @@
 package types
 
 import (
-	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -27,6 +27,7 @@ func NewCampaign(
 		MainnetInitialized: false,
 		TotalSupply:        totalSupply,
 		AllocatedShares:    EmptyShares(),
+		SpecialAllocations: EmptySpecialAllocations(),
 		Metadata:           metadata,
 		CreatedAt:          createdAt,
 	}
@@ -46,8 +47,11 @@ func (m Campaign) Validate(totalShareNumber uint64) error {
 	}
 
 	if IsTotalSharesReached(m.AllocatedShares, totalShareNumber) {
-
 		return errors.New("more allocated shares than total shares")
+	}
+
+	if err := m.SpecialAllocations.Validate(); err != nil {
+		return errors.Wrap(err, "invalid special allocations")
 	}
 
 	return nil

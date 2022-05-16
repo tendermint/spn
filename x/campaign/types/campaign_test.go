@@ -54,6 +54,17 @@ func TestCampaign_Validate(t *testing.T) {
 	))
 	require.True(t, campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares, spntypes.TotalShareNumber))
 
+	invalidSpecialAllocations := campaign.NewSpecialAllocations(
+		sample.Shares(r),
+		campaign.Shares(sdk.NewCoins(
+			sdk.NewCoin("foo", sdk.NewInt(100)),
+			sdk.NewCoin("s/bar", sdk.NewInt(200)),
+		)),
+	)
+	require.Error(t, invalidSpecialAllocations.Validate())
+	campaignInvalidSpecialAllocations := sample.Campaign(r, 0)
+	campaignInvalidSpecialAllocations.SpecialAllocations = invalidSpecialAllocations
+
 	for _, tc := range []struct {
 		desc     string
 		campaign campaign.Campaign
@@ -96,6 +107,11 @@ func TestCampaign_Validate(t *testing.T) {
 		{
 			desc:     "allocated shares bigger than total shares",
 			campaign: totalSharesReached,
+			valid:    false,
+		},
+		{
+			desc:     "invalid special allocations",
+			campaign: campaignInvalidSpecialAllocations,
 			valid:    false,
 		},
 	} {

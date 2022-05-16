@@ -14,6 +14,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/campaign/client/cli"
 	"github.com/tendermint/spn/x/campaign/types"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
@@ -30,9 +31,10 @@ func networkWithCampaignSummariesObjects(t *testing.T, n int) (*network.Network,
 
 	for i := 0; i < n; i++ {
 		campaign := types.Campaign{
-			CampaignID:      uint64(i),
-			TotalSupply:     sdk.NewCoins(),
-			AllocatedShares: types.Shares(sdk.NewCoins()),
+			CampaignID:         uint64(i),
+			TotalSupply:        sdk.NewCoins(),
+			AllocatedShares:    types.Shares(sdk.NewCoins()),
+			SpecialAllocations: types.EmptySpecialAllocations(),
 		}
 		campaignState.CampaignChainsList = append(campaignState.CampaignChainsList, types.CampaignChains{
 			CampaignID: uint64(i),
@@ -93,7 +95,7 @@ func TestListCampaignSummary(t *testing.T) {
 			var resp types.QueryCampaignSummariesResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.CampaignSummaries), step)
-			require.Subset(t, objs, resp.CampaignSummaries)
+			require.Subset(t, nullify.Fill(objs), nullify.Fill(resp.CampaignSummaries))
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -106,7 +108,7 @@ func TestListCampaignSummary(t *testing.T) {
 			var resp types.QueryCampaignSummariesResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.CampaignSummaries), step)
-			require.Subset(t, objs, resp.CampaignSummaries)
+			require.Subset(t, nullify.Fill(objs), nullify.Fill(resp.CampaignSummaries))
 			next = resp.Pagination.NextKey
 		}
 	})
@@ -118,7 +120,7 @@ func TestListCampaignSummary(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.ElementsMatch(t, objs, resp.CampaignSummaries)
+		require.ElementsMatch(t, nullify.Fill(objs), nullify.Fill(resp.CampaignSummaries))
 	})
 }
 

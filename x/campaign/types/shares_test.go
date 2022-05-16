@@ -58,6 +58,12 @@ func TestIncreaseShares(t *testing.T) {
 		expected  campaign.Shares
 	}{
 		{
+			desc:      "two empty set",
+			shares:    campaign.EmptyShares(),
+			newShares: campaign.EmptyShares(),
+			expected:  campaign.EmptyShares(),
+		},
+		{
 			desc:      "increase empty set",
 			shares:    campaign.EmptyShares(),
 			newShares: tc.Shares(t, "100foo,200bar"),

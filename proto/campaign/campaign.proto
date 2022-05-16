@@ -5,6 +5,7 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
+import "campaign/special_allocations.proto";
 
 message Campaign {
   uint64 campaignID = 1;
@@ -23,5 +24,6 @@ message Campaign {
     (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
-  bytes metadata = 9;
+  SpecialAllocations specialAllocations = 9 [(gogoproto.nullable) = false];
+  bytes metadata = 10;
 }
