@@ -1,14 +1,18 @@
 package keeper_test
 
 import (
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
+
+	spnerrors "github.com/tendermint/spn/pkg/errors"
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
-	"testing"
 )
 
 func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
@@ -63,6 +67,10 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 		mainnet  *launchtypes.Chain
 	}
 
+	campaignNoExistentMainnet := newCampaign(100, types.EmptyShares(), types.EmptySpecialAllocations())
+	campaignNoExistentMainnet.MainnetInitialized = true
+	campaignNoExistentMainnet.MainnetID = 100
+
 	tests := []struct {
 		name                    string
 		msg                     types.MsgUpdateSpecialAllocations
@@ -70,6 +78,122 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 		expectedAllocatedShares types.Shares
 		err                     error
 	}{
+		{
+			name: "empty should not update empty allocated shares",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				1,
+				types.EmptySpecialAllocations(),
+			),
+			state: inputState{
+				campaign: newCampaign(1, types.EmptyShares(), types.EmptySpecialAllocations()),
+				mainnet:  nil,
+			},
+			expectedAllocatedShares: types.EmptyShares(),
+		},
+		{
+			name: "new special allocations should increase allocated shares",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				2,
+				types.NewSpecialAllocations(tc.Shares(t, "50foo"), tc.Shares(t, "30foo")),
+			),
+			state: inputState{
+				campaign: newCampaign(2, types.EmptyShares(), types.EmptySpecialAllocations()),
+				mainnet:  nil,
+			},
+			expectedAllocatedShares: tc.Shares(t, "80foo"),
+		},
+		{
+			name: "removing special allocations should decrease allocated shares",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				3,
+				types.EmptySpecialAllocations(),
+			),
+			state: inputState{
+				campaign: newCampaign(3, tc.Shares(t, "200foo"),
+					types.NewSpecialAllocations(tc.Shares(t, "50foo"), tc.Shares(t, "30foo")),
+				),
+				mainnet: nil,
+			},
+			expectedAllocatedShares: tc.Shares(t, "120foo"),
+		},
+		{
+			name: "should update allocated shares relative to the new special allocations 1",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				4,
+				types.NewSpecialAllocations(tc.Shares(t, "200foo"), tc.Shares(t, "200bar")),
+			),
+			state: inputState{
+				campaign: newCampaign(4, tc.Shares(t, "1000foo,1000bar,1000baz"),
+					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
+				),
+				mainnet: nil,
+			},
+			expectedAllocatedShares: tc.Shares(t, "1000foo,1000bar,1000baz"),
+		},
+		{
+			name: "should update allocated shares relative to the new special allocations 2",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				5,
+				types.NewSpecialAllocations(tc.Shares(t, "100foo"), tc.Shares(t, "300bar, 500baz")),
+			),
+			state: inputState{
+				campaign: newCampaign(5, tc.Shares(t, "1000foo,1000bar,1000baz"),
+					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
+				),
+				mainnet: nil,
+			},
+			expectedAllocatedShares: tc.Shares(t, "900foo,1100bar,1500baz"),
+		},
+		{
+			name: "should update allocated shares relative to the new special allocations 3",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				6,
+				types.NewSpecialAllocations(tc.Shares(t, "200foo"), tc.Shares(t, "500baz")),
+			),
+			state: inputState{
+				campaign: newCampaign(6, tc.Shares(t, "1000foo,200bar"),
+					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
+				),
+				mainnet: nil,
+			},
+			expectedAllocatedShares: tc.Shares(t, "1000foo,500baz"),
+		},
+		{
+			name: "should set allocated shares to empty if allocated shares are special allocations and special allocations are removed",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				7,
+				types.EmptySpecialAllocations(),
+			),
+			state: inputState{
+				campaign: newCampaign(7, tc.Shares(t, "200foo,200bar"),
+					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
+				),
+				mainnet: nil,
+			},
+			expectedAllocatedShares: types.EmptyShares(),
+		},
+		{
+			name: "should allow updating special allocations if mainnet is not initialized",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				8,
+				types.NewSpecialAllocations(tc.Shares(t, "100foo"), tc.Shares(t, "300bar, 500baz")),
+			),
+			state: inputState{
+				campaign: newCampaign(8, tc.Shares(t, "1000foo,1000bar,1000baz"),
+					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
+				),
+				mainnet: newChain(1, false),
+			},
+			expectedAllocatedShares: tc.Shares(t, "900foo,1100bar,1500baz"),
+		},
 		{
 			name: "should fail if campaign doesn't exist",
 			msg: *types.NewMsgUpdateSpecialAllocations(
@@ -88,11 +212,11 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			name: "should fail if the coordinator doesn't exist",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				sample.Address(r),
-				1,
+				50,
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(1, types.EmptyShares(), types.EmptySpecialAllocations()),
+				campaign: newCampaign(50, types.EmptyShares(), types.EmptySpecialAllocations()),
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
@@ -102,11 +226,11 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			name: "should fail if the signer is not the coordinator of the campaign",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddrNoCampaign,
-				2,
+				51,
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(2, types.EmptyShares(), types.EmptySpecialAllocations()),
+				campaign: newCampaign(51, types.EmptyShares(), types.EmptySpecialAllocations()),
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
@@ -116,15 +240,45 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			name: "should fail if mainnet launch is triggered",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
-				3,
+				52,
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(3, types.EmptyShares(), types.EmptySpecialAllocations()),
-				mainnet:  newChain(1, true),
+				campaign: newCampaign(52, types.EmptyShares(), types.EmptySpecialAllocations()),
+				mainnet:  newChain(50, true),
 			},
 			expectedAllocatedShares: types.EmptyShares(),
 			err:                     types.ErrMainnetLaunchTriggered,
+		},
+		{
+			name: "should fails with critical error if current special allocations are bigger than allocated shares",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				53,
+				types.EmptySpecialAllocations(),
+			),
+			state: inputState{
+				campaign: newCampaign(53, tc.Shares(t, "1000foo"),
+					types.NewSpecialAllocations(tc.Shares(t, "600foo"), tc.Shares(t, "600foo")),
+				),
+				mainnet: nil,
+			},
+			expectedAllocatedShares: types.EmptyShares(),
+			err:                     spnerrors.ErrCritical,
+		},
+		{
+			name: "updating a campaign with a non-existent initialize mainnet should trigger a critical error",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				100,
+				types.EmptySpecialAllocations(),
+			),
+			state: inputState{
+				campaign: campaignNoExistentMainnet,
+				mainnet:  nil,
+			},
+			expectedAllocatedShares: types.EmptyShares(),
+			err:                     spnerrors.ErrCritical,
 		},
 	}
 	for _, tt := range tests {
@@ -183,7 +337,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			tt.state.campaign.SpecialAllocations = types.EmptySpecialAllocations()
 			camp.AllocatedShares = types.EmptyShares()
 			tt.state.campaign.AllocatedShares = types.EmptyShares()
-			require.EqualValues(t, tt.state.campaign, camp)
+			require.EqualValues(t, *tt.state.campaign, camp)
 		})
 	}
 }
