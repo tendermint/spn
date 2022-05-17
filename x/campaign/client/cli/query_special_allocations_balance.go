@@ -1,16 +1,13 @@
 package cli
 
 import (
-	"strconv"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
+
 	"github.com/tendermint/spn/x/campaign/types"
 )
-
-var _ = strconv.Itoa(0)
 
 func CmdSpecialAllocationsBalance() *cobra.Command {
 	cmd := &cobra.Command{
@@ -31,7 +28,6 @@ func CmdSpecialAllocationsBalance() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QuerySpecialAllocationsBalanceRequest{
-
 				CampaignID: reqCampaignID,
 			}
 
