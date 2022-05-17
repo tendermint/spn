@@ -14,7 +14,7 @@ import (
 func CmdListMission() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list-mission",
-		Short: "list all Mission",
+		Short: "list all missions to claim airdrop",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
