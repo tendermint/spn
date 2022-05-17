@@ -53,10 +53,8 @@ func CmdShowClaimRecord() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argAddress := args[0]
-
 			params := &types.QueryGetClaimRecordRequest{
-				Address: argAddress,
+				Address: args[0],
 			}
 
 			res, err := queryClient.ClaimRecord(context.Background(), params)
