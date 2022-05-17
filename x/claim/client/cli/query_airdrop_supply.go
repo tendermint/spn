@@ -13,7 +13,7 @@ import (
 func CmdShowAirdropSupply() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-airdrop-supply",
-		Short: "shows AirdropSupply",
+		Short: "shows the airdrop supply",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
