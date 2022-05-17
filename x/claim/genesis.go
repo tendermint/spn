@@ -11,16 +11,14 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// Set all the claimRecord
-	for _, elem := range genState.ClaimRecordList {
+	for _, elem := range genState.ClaimRecords {
 		k.SetClaimRecord(ctx, elem)
 	}
 	// Set all the mission
-	for _, elem := range genState.MissionList {
+	for _, elem := range genState.Missions {
 		k.SetMission(ctx, elem)
 	}
 
-	// Set mission count
-	k.SetMissionCount(ctx, genState.MissionCount)
 	k.SetAirdropSupply(ctx, genState.AirdropSupply)
 
 	// this line is used by starport scaffolding # genesis/module/init
@@ -32,12 +30,14 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 	genesis.Params = k.GetParams(ctx)
 
-	genesis.ClaimRecordList = k.GetAllClaimRecord(ctx)
-	genesis.MissionList = k.GetAllMission(ctx)
-	genesis.MissionCount = k.GetMissionCount(ctx)
+	genesis.ClaimRecords = k.GetAllClaimRecord(ctx)
+	genesis.Missions = k.GetAllMission(ctx)
 	airdropSupply, found := k.GetAirdropSupply(ctx)
 	if found {
 		genesis.AirdropSupply = airdropSupply
+	} else {
+		// set to 0uspn otherwise
+		genesis.AirdropSupply = types.DefaultGenesis().AirdropSupply
 	}
 	// this line is used by starport scaffolding # genesis/module/export
 

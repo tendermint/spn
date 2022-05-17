@@ -9,9 +9,9 @@ import (
 // DefaultGenesis returns the default claim genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		AirdropSupply:   sdk.NewCoin("uspn", sdk.ZeroInt()),
-		ClaimRecordList: []ClaimRecord{},
-		MissionList:     []Mission{},
+		AirdropSupply: sdk.NewCoin("uspn", sdk.ZeroInt()),
+		ClaimRecords:  []ClaimRecord{},
+		Missions:      []Mission{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -24,7 +24,7 @@ func (gs GenesisState) Validate() error {
 	claimRecordIndexMap := make(map[string]struct{})
 
 	claimSum := sdk.ZeroInt()
-	for _, elem := range gs.ClaimRecordList {
+	for _, elem := range gs.ClaimRecords {
 		index := string(ClaimRecordKey(elem.Address))
 		claimSum = claimSum.Add(elem.Claimable)
 		if _, ok := claimRecordIndexMap[index]; ok {
@@ -34,17 +34,13 @@ func (gs GenesisState) Validate() error {
 	}
 	// Check for duplicated ID in mission
 	weightSum := sdk.ZeroDec()
-	missionIDMap := make(map[uint64]bool)
-	missionCount := gs.GetMissionCount()
-	for _, elem := range gs.MissionList {
+	missionIDMap := make(map[uint64]struct{})
+	for _, elem := range gs.Missions {
 		weightSum = weightSum.Add(elem.Weight)
 		if _, ok := missionIDMap[elem.ID]; ok {
 			return fmt.Errorf("duplicated id for mission")
 		}
-		if elem.ID >= missionCount {
-			return fmt.Errorf("mission id should be lower or equal than the last id")
-		}
-		missionIDMap[elem.ID] = true
+		missionIDMap[elem.ID] = struct{}{}
 	}
 
 	err := gs.AirdropSupply.Validate()
@@ -58,7 +54,7 @@ func (gs GenesisState) Validate() error {
 	}
 
 	// ensure mission weight sum is 1
-	if len(gs.MissionList) > 0 {
+	if len(gs.Missions) > 0 {
 		if !weightSum.Equal(sdk.OneDec()) {
 			return fmt.Errorf("sum of mission weights must be 1")
 		}
