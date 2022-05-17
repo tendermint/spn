@@ -28,7 +28,7 @@ func (gs GenesisState) Validate() error {
 		index := string(ClaimRecordKey(elem.Address))
 		claimSum = claimSum.Add(elem.Claimable)
 		if _, ok := claimRecordIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for claimRecord")
+			return fmt.Errorf("duplicated address for claim record")
 		}
 		claimRecordIndexMap[index] = struct{}{}
 	}
