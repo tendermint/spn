@@ -47,7 +47,7 @@ func CmdListMission() *cobra.Command {
 func CmdShowMission() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show-mission [id]",
-		Short: "shows a Mission",
+		Short: "shows a mission to claim airdrop",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
