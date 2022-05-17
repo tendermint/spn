@@ -27,7 +27,7 @@ func TestGenesis(t *testing.T) {
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
 
-		ClaimRecordList: []types.ClaimRecord{
+		ClaimRecords: []types.ClaimRecord{
 			{
 				Address: sample.Address(r),
 			},
@@ -35,7 +35,7 @@ func TestGenesis(t *testing.T) {
 				Address: sample.Address(r),
 			},
 		},
-		MissionList: []types.Mission{
+		Missions: []types.Mission{
 			{
 				ID: 0,
 			},
@@ -43,7 +43,6 @@ func TestGenesis(t *testing.T) {
 				ID: 1,
 			},
 		},
-		MissionCount:  2,
 		AirdropSupply: sample.Coin(r),
 		// this line is used by starport scaffolding # genesis/test/state
 	}
@@ -56,9 +55,8 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(&genesisState)
 	nullify.Fill(got)
 
-	require.ElementsMatch(t, genesisState.ClaimRecordList, got.ClaimRecordList)
-	require.ElementsMatch(t, genesisState.MissionList, got.MissionList)
-	require.Equal(t, genesisState.MissionCount, got.MissionCount)
+	require.ElementsMatch(t, genesisState.ClaimRecords, got.ClaimRecords)
+	require.ElementsMatch(t, genesisState.Missions, got.Missions)
 	require.Equal(t, genesisState.AirdropSupply, got.AirdropSupply)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

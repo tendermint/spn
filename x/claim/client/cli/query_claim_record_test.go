@@ -32,12 +32,12 @@ func networkWithClaimRecordObjects(t *testing.T, n int) (*network.Network, []typ
 			Claimable: sdk.NewInt(r.Int63()),
 		}
 		nullify.Fill(&claimRecord)
-		state.ClaimRecordList = append(state.ClaimRecordList, claimRecord)
+		state.ClaimRecords = append(state.ClaimRecords, claimRecord)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.ClaimRecordList
+	return network.New(t, cfg), state.ClaimRecords
 }
 
 func TestShowClaimRecord(t *testing.T) {

@@ -18,7 +18,7 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/claim/params";
   }
-  // Queries a ClaimRecord by index.
+  // Queries a ClaimRecord by address.
 	rpc ClaimRecord(QueryGetClaimRecordRequest) returns (QueryGetClaimRecordResponse) {
 		option (google.api.http).get = "/tendermint/spn/claim/claim_record/{address}";
 	}
@@ -28,7 +28,7 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/claim/claim_record";
 	}
 
-// Queries a Mission by id.
+	// Queries a Mission by ID.
 	rpc Mission(QueryGetMissionRequest) returns (QueryGetMissionResponse) {
 		option (google.api.http).get = "/tendermint/spn/claim/mission/{ID}";
 	}
@@ -38,7 +38,7 @@ service Query {
 		option (google.api.http).get = "/tendermint/spn/claim/mission";
 	}
 
-// Queries a AirdropSupply by index.
+	// Queries a AirdropSupply by index.
 	rpc AirdropSupply(QueryGetAirdropSupplyRequest) returns (QueryGetAirdropSupplyResponse) {
 		option (google.api.http).get = "/tendermint/spn/claim/airdrop_supply";
 	}

@@ -643,11 +643,11 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
-	// Queries a ClaimRecord by index.
+	// Queries a ClaimRecord by address.
 	ClaimRecord(ctx context.Context, in *QueryGetClaimRecordRequest, opts ...grpc.CallOption) (*QueryGetClaimRecordResponse, error)
 	// Queries a list of ClaimRecord items.
 	ClaimRecordAll(ctx context.Context, in *QueryAllClaimRecordRequest, opts ...grpc.CallOption) (*QueryAllClaimRecordResponse, error)
-	// Queries a Mission by id.
+	// Queries a Mission by ID.
 	Mission(ctx context.Context, in *QueryGetMissionRequest, opts ...grpc.CallOption) (*QueryGetMissionResponse, error)
 	// Queries a list of Mission items.
 	MissionAll(ctx context.Context, in *QueryAllMissionRequest, opts ...grpc.CallOption) (*QueryAllMissionResponse, error)
@@ -721,11 +721,11 @@ func (c *queryClient) AirdropSupply(ctx context.Context, in *QueryGetAirdropSupp
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
-	// Queries a ClaimRecord by index.
+	// Queries a ClaimRecord by address.
 	ClaimRecord(context.Context, *QueryGetClaimRecordRequest) (*QueryGetClaimRecordResponse, error)
 	// Queries a list of ClaimRecord items.
 	ClaimRecordAll(context.Context, *QueryAllClaimRecordRequest) (*QueryAllClaimRecordResponse, error)
-	// Queries a Mission by id.
+	// Queries a Mission by ID.
 	Mission(context.Context, *QueryGetMissionRequest) (*QueryGetMissionResponse, error)
 	// Queries a list of Mission items.
 	MissionAll(context.Context, *QueryAllMissionRequest) (*QueryAllMissionResponse, error)

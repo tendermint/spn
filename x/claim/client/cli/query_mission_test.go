@@ -32,12 +32,12 @@ func networkWithMissionObjects(t *testing.T, n int) (*network.Network, []types.M
 			Weight: sdk.NewDec(r.Int63()),
 		}
 		nullify.Fill(&mission)
-		state.MissionList = append(state.MissionList, mission)
+		state.Missions = append(state.Missions, mission)
 	}
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.MissionList
+	return network.New(t, cfg), state.Missions
 }
 
 func TestShowMission(t *testing.T) {

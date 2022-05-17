@@ -33,7 +33,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 
-				ClaimRecordList: []types.ClaimRecord{
+				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
 						Claimable: claimAmts[0],
@@ -43,7 +43,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Claimable: claimAmts[1],
 					},
 				},
-				MissionList: []types.Mission{
+				Missions: []types.Mission{
 					{
 						ID:     0,
 						Weight: fiftyPercent,
@@ -53,7 +53,6 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight: fiftyPercent,
 					},
 				},
-				MissionCount:  2,
 				AirdropSupply: sdk.NewCoin("denom", claimAmts[0].Add(claimAmts[1])),
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
@@ -62,7 +61,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated claimRecord",
 			genState: &types.GenesisState{
-				ClaimRecordList: []types.ClaimRecord{
+				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   "duplicate",
 						Claimable: claimAmts[0],
@@ -80,7 +79,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "invalid claim amounts",
 			genState: &types.GenesisState{
-				ClaimRecordList: []types.ClaimRecord{
+				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   "duplicate",
 						Claimable: claimAmts[0],
@@ -105,7 +104,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated mission",
 			genState: &types.GenesisState{
-				MissionList: []types.Mission{
+				Missions: []types.Mission{
 					{
 						ID:     0,
 						Weight: fiftyPercent,
@@ -121,7 +120,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "mission list weights are not equal to 1",
 			genState: &types.GenesisState{
-				MissionList: []types.Mission{
+				Missions: []types.Mission{
 					{
 						ID:     0,
 						Weight: fiftyPercent,
@@ -131,19 +130,6 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight: sdk.ZeroDec(),
 					},
 				},
-			},
-			valid: false,
-		},
-		{
-			desc: "invalid mission count",
-			genState: &types.GenesisState{
-				MissionList: []types.Mission{
-					{
-						ID:     1,
-						Weight: sdk.OneDec(),
-					},
-				},
-				MissionCount: 0,
 			},
 			valid: false,
 		},
