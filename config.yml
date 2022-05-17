@@ -29,6 +29,24 @@ faucet:
 genesis:
   chain_id: spn-1
   app_state:
+    bank:
+      denom_metadata:
+        - description: "The native staking token of Starport Network"
+          display: "spn"
+          base: "uspn"
+          name: "Starport Network"
+          symbol: "SPN"
+          denom_units:
+            - denom: "uspn"
+              aliases:
+                - "millispn"
+              exponent: "0"
+            - denom: "mspn"
+              aliases:
+                - "microspn"
+              exponent: "3"
+            - denom: "spn"
+              exponent: "6"
     staking:
       params:
         bond_denom: "uspn"
