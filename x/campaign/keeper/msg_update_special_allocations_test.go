@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"fmt"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -22,6 +23,8 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
 		ctx                 = sdk.WrapSDKContext(sdkCtx)
 	)
+
+	totalShares := tk.CampaignKeeper.GetTotalShares(sdkCtx)
 
 	// Create two coordinators
 	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
@@ -195,6 +198,19 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			expectedAllocatedShares: tc.Shares(t, "900foo,1100bar,1500baz"),
 		},
 		{
+			name: "should allow to allocated all shares to special allocations",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				9,
+				types.NewSpecialAllocations(tc.Shares(t, fmt.Sprintf("%dfoo", totalShares)), tc.Shares(t, fmt.Sprintf("%dbar", totalShares))),
+			),
+			state: inputState{
+				campaign: newCampaign(9, types.EmptyShares(), types.EmptySpecialAllocations()),
+				mainnet:  nil,
+			},
+			expectedAllocatedShares: tc.Shares(t, fmt.Sprintf("%dfoo,%dbar", totalShares, totalShares)),
+		},
+		{
 			name: "should fail if campaign doesn't exist",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
@@ -251,14 +267,28 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			err:                     types.ErrMainnetLaunchTriggered,
 		},
 		{
-			name: "should fails with critical error if current special allocations are bigger than allocated shares",
+			name: "should fail if total shares is reached",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
 				53,
+				types.NewSpecialAllocations(tc.Shares(t, fmt.Sprintf("%dfoo", totalShares)), tc.Shares(t, "1foo")),
+			),
+			state: inputState{
+				campaign: newCampaign(53, types.EmptyShares(), types.EmptySpecialAllocations()),
+				mainnet:  nil,
+			},
+			expectedAllocatedShares: types.EmptyShares(),
+			err:                     types.ErrTotalSharesLimit,
+		},
+		{
+			name: "should fails with critical error if current special allocations are bigger than allocated shares",
+			msg: *types.NewMsgUpdateSpecialAllocations(
+				coordAddr,
+				54,
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(53, tc.Shares(t, "1000foo"),
+				campaign: newCampaign(54, tc.Shares(t, "1000foo"),
 					types.NewSpecialAllocations(tc.Shares(t, "600foo"), tc.Shares(t, "600foo")),
 				),
 				mainnet: nil,

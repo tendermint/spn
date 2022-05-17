@@ -53,6 +53,12 @@ func (k msgServer) UpdateSpecialAllocations(goCtx context.Context, msg *types.Ms
 
 	// increase with new special allocations
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.SpecialAllocations.TotalShares())
+
+	// check total is not reached
+	if types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx)) {
+		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
+	}
+
 	campaign.SpecialAllocations = msg.SpecialAllocations
 	k.SetCampaign(ctx, campaign)
 

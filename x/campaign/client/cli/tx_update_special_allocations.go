@@ -13,7 +13,7 @@ import (
 func CmdUpdateSpecialAllocations() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-special-allocations [campaign-id] [genesis-distribution] [claimable-airdrop]",
-		Short: "update the special allocations for the campaign",
+		Short: "Update the special allocations for the campaign",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argCampaignID, err := cast.ToUint64E(args[0])
