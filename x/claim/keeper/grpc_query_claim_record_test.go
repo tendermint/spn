@@ -15,9 +15,6 @@ import (
 	"github.com/tendermint/spn/x/claim/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func TestClaimRecordQuerySingle(t *testing.T) {
 	keeper, ctx := keepertest.ClaimKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
