@@ -61,6 +61,11 @@ func (k msgServer) UpdateSpecialAllocations(goCtx context.Context, msg *types.Ms
 
 	campaign.SpecialAllocations = msg.SpecialAllocations
 	k.SetCampaign(ctx, campaign)
-
-	return &types.MsgUpdateSpecialAllocationsResponse{}, nil
+	err = ctx.EventManager().EmitTypedEvents(
+		&types.EventCampaignSharesUpdated{
+			CampaignID:         campaign.CampaignID,
+			CoordinatorAddress: msg.Coordinator,
+			AllocatedShares:    campaign.AllocatedShares,
+		})
+	return &types.MsgUpdateSpecialAllocationsResponse{}, err
 }
