@@ -56,7 +56,6 @@ message QueryParamsResponse {
 
 message QueryGetClaimRecordRequest {
 	  string address = 1;
-
 }
 
 message QueryGetClaimRecordResponse {
