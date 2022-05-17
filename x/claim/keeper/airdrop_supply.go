@@ -26,9 +26,3 @@ func (k Keeper) GetAirdropSupply(ctx sdk.Context) (val sdk.Coin, found bool) {
 	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
-
-// RemoveAirdropSupply removes airdropSupply from the store
-func (k Keeper) RemoveAirdropSupply(ctx sdk.Context) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AirdropSupplyKey))
-	store.Delete([]byte{0})
-}

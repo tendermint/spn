@@ -28,11 +28,3 @@ func TestAirdropSupplyGet(t *testing.T) {
 		nullify.Fill(&rst),
 	)
 }
-
-func TestAirdropSupplyRemove(t *testing.T) {
-	k, ctx := keepertest.ClaimKeeper(t)
-	createTestAirdropSupply(k, ctx)
-	k.RemoveAirdropSupply(ctx)
-	_, found := k.GetAirdropSupply(ctx)
-	require.False(t, found)
-}

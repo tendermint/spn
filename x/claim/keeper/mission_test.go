@@ -15,9 +15,9 @@ import (
 func createNMission(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Mission {
 	items := make([]types.Mission, n)
 	for i := range items {
+		items[i].ID = uint64(i)
 		items[i].Weight = sdk.NewDec(r.Int63())
-		items[i].ID = keeper.AppendMission(ctx, items[i])
-
+		keeper.SetMission(ctx, items[i])
 	}
 	return items
 }
@@ -52,11 +52,4 @@ func TestMissionGetAll(t *testing.T) {
 		nullify.Fill(items),
 		nullify.Fill(k.GetAllMission(ctx)),
 	)
-}
-
-func TestMissionCount(t *testing.T) {
-	k, ctx := keepertest.ClaimKeeper(t)
-	items := createNMission(k, ctx, 10)
-	count := uint64(len(items))
-	require.Equal(t, count, k.GetMissionCount(ctx))
 }
