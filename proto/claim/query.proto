@@ -1,48 +1,51 @@
 syntax = "proto3";
+
 package tendermint.spn.claim;
 
-import "gogoproto/gogo.proto";
-import "google/api/annotations.proto";
-import "cosmos/base/v1beta1/coin.proto";
-import "cosmos/base/query/v1beta1/pagination.proto";
-import "claim/params.proto";
 import "claim/claim_record.proto";
 import "claim/mission.proto";
 // this line is used by starport scaffolding # 1
+
+import "claim/params.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
 
 option go_package = "github.com/tendermint/spn/x/claim/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
+  // Parameters queries the parameters of the module
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/claim/params";
   }
+
   // Queries a ClaimRecord by address.
-	rpc ClaimRecord(QueryGetClaimRecordRequest) returns (QueryGetClaimRecordResponse) {
-		option (google.api.http).get = "/tendermint/spn/claim/claim_record/{address}";
-	}
+  rpc ClaimRecord(QueryGetClaimRecordRequest) returns (QueryGetClaimRecordResponse) {
+    option (google.api.http).get = "/tendermint/spn/claim/claim_record/{address}";
+  }
 
-	// Queries a list of ClaimRecord items.
-	rpc ClaimRecordAll(QueryAllClaimRecordRequest) returns (QueryAllClaimRecordResponse) {
-		option (google.api.http).get = "/tendermint/spn/claim/claim_record";
-	}
+  // Queries a list of ClaimRecord items.
+  rpc ClaimRecordAll(QueryAllClaimRecordRequest) returns (QueryAllClaimRecordResponse) {
+    option (google.api.http).get = "/tendermint/spn/claim/claim_record";
+  }
 
-	// Queries a Mission by ID.
-	rpc Mission(QueryGetMissionRequest) returns (QueryGetMissionResponse) {
-		option (google.api.http).get = "/tendermint/spn/claim/mission/{ID}";
-	}
+  // Queries a Mission by ID.
+  rpc Mission(QueryGetMissionRequest) returns (QueryGetMissionResponse) {
+    option (google.api.http).get = "/tendermint/spn/claim/mission/{ID}";
+  }
 
-	// Queries a list of Mission items.
-	rpc MissionAll(QueryAllMissionRequest) returns (QueryAllMissionResponse) {
-		option (google.api.http).get = "/tendermint/spn/claim/mission";
-	}
+  // Queries a list of Mission items.
+  rpc MissionAll(QueryAllMissionRequest) returns (QueryAllMissionResponse) {
+    option (google.api.http).get = "/tendermint/spn/claim/mission";
+  }
 
-	// Queries a AirdropSupply by index.
-	rpc AirdropSupply(QueryGetAirdropSupplyRequest) returns (QueryGetAirdropSupplyResponse) {
-		option (google.api.http).get = "/tendermint/spn/claim/airdrop_supply";
-	}
-// this line is used by starport scaffolding # 2
+  // Queries a AirdropSupply by index.
+  rpc AirdropSupply(QueryGetAirdropSupplyRequest) returns (QueryGetAirdropSupplyResponse) {
+    option (google.api.http).get = "/tendermint/spn/claim/airdrop_supply";
+  }
+  // this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -55,42 +58,43 @@ message QueryParamsResponse {
 }
 
 message QueryGetClaimRecordRequest {
-	  string address = 1;
+  string address = 1;
 }
 
 message QueryGetClaimRecordResponse {
-	ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
+  ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllClaimRecordRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
 message QueryAllClaimRecordResponse {
-	repeated ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetMissionRequest {
-	uint64 ID = 1;
+  uint64 ID = 1;
 }
 
 message QueryGetMissionResponse {
-	Mission Mission = 1 [(gogoproto.nullable) = false];
+  Mission Mission = 1 [(gogoproto.nullable) = false];
 }
 
 message QueryAllMissionRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
 message QueryAllMissionResponse {
-	repeated Mission Mission = 1 [(gogoproto.nullable) = false];
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated Mission Mission = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryGetAirdropSupplyRequest {}
 
 message QueryGetAirdropSupplyResponse {
-	cosmos.base.v1beta1.Coin AirdropSupply = 1 [(gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin AirdropSupply = 1 [(gogoproto.nullable) = false];
 }
 // this line is used by starport scaffolding # 3
+
