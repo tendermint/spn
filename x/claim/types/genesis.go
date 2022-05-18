@@ -29,12 +29,17 @@ func (gs GenesisState) Validate() error {
 	claimSum := sdk.ZeroInt()
 	claimRecordIndexMap := make(map[string]struct{})
 	for _, elem := range gs.ClaimRecords {
-		index := string(ClaimRecordKey(elem.Address))
+		err := elem.Validate()
+		if err != nil {
+			return err
+		}
+
+		address := string(ClaimRecordKey(elem.Address))
 		claimSum = claimSum.Add(elem.Claimable)
-		if _, ok := claimRecordIndexMap[index]; ok {
+		if _, ok := claimRecordIndexMap[address]; ok {
 			return fmt.Errorf("duplicated address for claim record")
 		}
-		claimRecordIndexMap[index] = struct{}{}
+		claimRecordIndexMap[address] = struct{}{}
 	}
 
 	// verify airdropSupply == sum of claimRecords
@@ -46,6 +51,11 @@ func (gs GenesisState) Validate() error {
 	weightSum := sdk.ZeroDec()
 	missionIDMap := make(map[uint64]struct{})
 	for _, elem := range gs.Missions {
+		err := elem.Validate()
+		if err != nil {
+			return err
+		}
+
 		weightSum = weightSum.Add(elem.Weight)
 		if _, ok := missionIDMap[elem.MissionID]; ok {
 			return fmt.Errorf("duplicated id for mission")
