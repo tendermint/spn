@@ -27,7 +27,7 @@ func TestMission_Validate(t *testing.T) {
 		valid   bool
 	}{
 		{
-			desc:    "valid claim record",
+			desc:    "valid mission",
 			mission: sample.Mission(r),
 			valid:   true,
 		},
