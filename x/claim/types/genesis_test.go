@@ -45,12 +45,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				},
 				Missions: []types.Mission{
 					{
-						ID:     0,
-						Weight: fiftyPercent,
+						MissionID: 0,
+						Weight:    fiftyPercent,
 					},
 					{
-						ID:     1,
-						Weight: fiftyPercent,
+						MissionID: 1,
+						Weight:    fiftyPercent,
 					},
 				},
 				AirdropSupply: sdk.NewCoin("denom", claimAmts[0].Add(claimAmts[1])),
@@ -106,12 +106,12 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				Missions: []types.Mission{
 					{
-						ID:     0,
-						Weight: fiftyPercent,
+						MissionID: 0,
+						Weight:    fiftyPercent,
 					},
 					{
-						ID:     0,
-						Weight: fiftyPercent,
+						MissionID: 0,
+						Weight:    fiftyPercent,
 					},
 				},
 			},
@@ -122,12 +122,12 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				Missions: []types.Mission{
 					{
-						ID:     0,
-						Weight: fiftyPercent,
+						MissionID: 0,
+						Weight:    fiftyPercent,
 					},
 					{
-						ID:     0,
-						Weight: sdk.ZeroDec(),
+						MissionID: 0,
+						Weight:    sdk.ZeroDec(),
 					},
 				},
 			},

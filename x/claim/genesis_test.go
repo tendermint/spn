@@ -37,10 +37,10 @@ func TestGenesis(t *testing.T) {
 		},
 		Missions: []types.Mission{
 			{
-				ID: 0,
+				MissionID: 0,
 			},
 			{
-				ID: 1,
+				MissionID: 1,
 			},
 		},
 		AirdropSupply: sample.Coin(r),

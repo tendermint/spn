@@ -13,7 +13,7 @@ import (
 func (k Keeper) SetMission(ctx sdk.Context, mission types.Mission) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MissionKey))
 	b := k.cdc.MustMarshal(&mission)
-	store.Set(GetMissionIDBytes(mission.ID), b)
+	store.Set(GetMissionIDBytes(mission.MissionID), b)
 }
 
 // GetMission returns a mission from its id

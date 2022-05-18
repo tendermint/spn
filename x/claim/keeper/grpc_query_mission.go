@@ -47,7 +47,7 @@ func (k Keeper) Mission(c context.Context, req *types.QueryGetMissionRequest) (*
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	mission, found := k.GetMission(ctx, req.ID)
+	mission, found := k.GetMission(ctx, req.MissionID)
 	if !found {
 		return nil, sdkerrors.ErrKeyNotFound
 	}

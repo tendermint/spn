@@ -20,10 +20,14 @@ func DefaultGenesis() *GenesisState {
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
-	// Check for duplicated index in claimRecord
-	claimRecordIndexMap := make(map[string]struct{})
+	err := gs.AirdropSupply.Validate()
+	if err != nil {
+		return err
+	}
 
+	// Check for duplicated address in claimRecord
 	claimSum := sdk.ZeroInt()
+	claimRecordIndexMap := make(map[string]struct{})
 	for _, elem := range gs.ClaimRecords {
 		index := string(ClaimRecordKey(elem.Address))
 		claimSum = claimSum.Add(elem.Claimable)
@@ -32,25 +36,21 @@ func (gs GenesisState) Validate() error {
 		}
 		claimRecordIndexMap[index] = struct{}{}
 	}
+
+	// verify airdropSupply == sum of claimRecords
+	if !gs.AirdropSupply.Amount.Equal(claimSum) {
+		return fmt.Errorf("airdrop supply amount not equal to sum of claimable amounts")
+	}
+
 	// Check for duplicated ID in mission
 	weightSum := sdk.ZeroDec()
 	missionIDMap := make(map[uint64]struct{})
 	for _, elem := range gs.Missions {
 		weightSum = weightSum.Add(elem.Weight)
-		if _, ok := missionIDMap[elem.ID]; ok {
+		if _, ok := missionIDMap[elem.MissionID]; ok {
 			return fmt.Errorf("duplicated id for mission")
 		}
-		missionIDMap[elem.ID] = struct{}{}
-	}
-
-	err := gs.AirdropSupply.Validate()
-	if err != nil {
-		return err
-	}
-
-	// verify airdropSupply == sum of claimRecords
-	if !gs.AirdropSupply.Amount.Equal(claimSum) {
-		return fmt.Errorf("airdrop supply amount not equal to sum of claimable amounts")
+		missionIDMap[elem.MissionID] = struct{}{}
 	}
 
 	// ensure mission weight sum is 1

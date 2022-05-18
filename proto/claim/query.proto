@@ -33,7 +33,7 @@ service Query {
 
   // Queries a Mission by ID.
   rpc Mission(QueryGetMissionRequest) returns (QueryGetMissionResponse) {
-    option (google.api.http).get = "/tendermint/spn/claim/mission/{ID}";
+    option (google.api.http).get = "/tendermint/spn/claim/mission/{missionID}";
   }
 
   // Queries a list of Mission items.
@@ -75,7 +75,7 @@ message QueryAllClaimRecordResponse {
 }
 
 message QueryGetMissionRequest {
-  uint64 ID = 1;
+  uint64 missionID = 1;
 }
 
 message QueryGetMissionResponse {

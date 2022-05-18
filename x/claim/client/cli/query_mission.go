@@ -46,7 +46,7 @@ func CmdListMission() *cobra.Command {
 
 func CmdShowMission() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-mission [id]",
+		Use:   "show-mission [mission-id]",
 		Short: "shows a mission to claim airdrop",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -60,7 +60,7 @@ func CmdShowMission() *cobra.Command {
 			}
 
 			params := &types.QueryGetMissionRequest{
-				ID: id,
+				MissionID: id,
 			}
 
 			res, err := queryClient.Mission(context.Background(), params)

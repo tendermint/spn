@@ -28,8 +28,8 @@ func networkWithMissionObjects(t *testing.T, n int) (*network.Network, []types.M
 
 	for i := 0; i < n; i++ {
 		mission := types.Mission{
-			ID:     uint64(i),
-			Weight: sdk.NewDec(r.Int63()),
+			MissionID: uint64(i),
+			Weight:    sdk.NewDec(r.Int63()),
 		}
 		nullify.Fill(&mission)
 		state.Missions = append(state.Missions, mission)
@@ -56,7 +56,7 @@ func TestShowMission(t *testing.T) {
 	}{
 		{
 			desc: "found",
-			id:   fmt.Sprintf("%d", objs[0].ID),
+			id:   fmt.Sprintf("%d", objs[0].MissionID),
 			args: common,
 			obj:  objs[0],
 		},
