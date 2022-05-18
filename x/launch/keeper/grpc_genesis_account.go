@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -10,6 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
