@@ -285,3 +285,62 @@ func TestMainnetAccountBalanceQueryPaginated(t *testing.T) {
 		require.ErrorIs(t, err, status.Error(codes.NotFound, "campaign not found"))
 	})
 }
+
+func TestMainnetAccountBalanceAll(t *testing.T) {
+	var (
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+
+		campaignID  = uint64(5)
+		totalSupply = tc.Coins(t, "1000foo,1000bar")
+		totalShares = uint64(100)
+		addr1       = sample.Address(r)
+		addr2       = sample.Address(r)
+		addr3       = sample.Address(r)
+		campaign    = sample.Campaign(r, campaignID)
+	)
+
+	// set campaign and sample accounts
+	campaign.TotalSupply = totalSupply
+	tk.CampaignKeeper.SetCampaign(ctx, campaign)
+	tk.CampaignKeeper.SetTotalShares(ctx, totalShares)
+	tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
+		CampaignID: campaignID,
+		Address:    addr1,
+		Shares:     tc.Shares(t, "100foo"),
+	})
+	tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
+		CampaignID: campaignID,
+		Address:    addr2,
+		Shares:     tc.Shares(t, "100bar"),
+	})
+	tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
+		CampaignID: campaignID,
+		Address:    addr3,
+		Shares:     tc.Shares(t, "100baz"),
+	})
+
+	t.Run("accounts with empty balance are skipped", func(t *testing.T) {
+		accountBalances, err := tk.CampaignKeeper.MainnetAccountBalanceAll(wctx, &types.QueryAllMainnetAccountBalanceRequest{
+			CampaignID: campaignID,
+			Pagination: &query.PageRequest{
+				CountTotal: true,
+			},
+		})
+		require.NoError(t, err)
+
+		// Account 3 must not be included in balances since the total supply doesn't contains baz tokens
+		balances := accountBalances.MainnetAccountBalance
+		require.Len(t, balances, 2)
+		require.Contains(t, balances, types.MainnetAccountBalance{
+			CampaignID: campaignID,
+			Address:    addr1,
+			Coins:      tc.Coins(t, "1000foo"),
+		})
+		require.Contains(t, balances, types.MainnetAccountBalance{
+			CampaignID: campaignID,
+			Address:    addr2,
+			Coins:      tc.Coins(t, "1000bar"),
+		})
+	})
+}
