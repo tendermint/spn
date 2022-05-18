@@ -84,12 +84,16 @@ func (k Keeper) MainnetAccountBalanceAll(c context.Context, req *types.QueryAllM
 			return status.Errorf(codes.Internal, "balance can't be calculated for account %s: %s", acc.Address, err.Error())
 		}
 
-		mainnetAccountBalance := types.MainnetAccountBalance{
-			CampaignID: acc.CampaignID,
-			Address:    acc.Address,
-			Coins:      balance,
+		// add the balance if not zero
+		if !balance.IsZero() {
+			mainnetAccountBalance := types.MainnetAccountBalance{
+				CampaignID: acc.CampaignID,
+				Address:    acc.Address,
+				Coins:      balance,
+			}
+			mainnetAccountBalances = append(mainnetAccountBalances, mainnetAccountBalance)
 		}
-		mainnetAccountBalances = append(mainnetAccountBalances, mainnetAccountBalance)
+
 		return nil
 	})
 
