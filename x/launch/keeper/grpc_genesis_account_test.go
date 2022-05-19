@@ -1,8 +1,6 @@
 package keeper_test
 
 import (
-	tc "github.com/tendermint/spn/testutil/constructor"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,8 +9,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
