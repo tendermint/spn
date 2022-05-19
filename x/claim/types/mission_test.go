@@ -42,7 +42,6 @@ func TestMission_Validate(t *testing.T) {
 			valid:   false,
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			require.EqualValues(t, tc.valid, tc.mission.Validate() == nil)
 		})
