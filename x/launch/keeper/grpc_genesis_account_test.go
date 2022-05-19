@@ -146,6 +146,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 }
 
 // TODO: These tests must be refactored and use mocking to abstract campaign logic
+// https://github.com/tendermint/spn/issues/807
 func TestGenesisAccountMainnet(t *testing.T) {
 	var (
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
