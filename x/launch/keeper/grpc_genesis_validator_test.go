@@ -64,7 +64,6 @@ func TestGenesisValidatorQuerySingle(t *testing.T) {
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			response, err := tk.LaunchKeeper.GenesisValidator(wctx, tc.request)
 			if tc.err != nil {
