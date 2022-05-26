@@ -18,6 +18,7 @@ localnet/*/node?/data/cs.wal
 localnet/*/node?/config/genesis.json
 localnet/*/node?/config/addrbook.json
 localnet/*/node?/config/write-file-atomic-*
+localnet/__pycache__/
 
 # Generate report files
 *.out
