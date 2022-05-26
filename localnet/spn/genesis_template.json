@@ -177,6 +177,15 @@
       "index": "1",
       "owners": []
     },
+    "claim": {
+      "airdropSupply": {
+        "amount": "0",
+        "denom": "uspn"
+      },
+      "claimRecords": [],
+      "missions": [],
+      "params": {}
+    },
     "crisis": {
       "constant_fee": {
         "amount": "1000",
@@ -313,7 +322,7 @@
         "distribution_proportions": {
           "staking": "0.400000000000000000",
           "incentives": "0.400000000000000000",
-          "community_pool": "0.200000000000000000",
+          "community_pool": "0.200000000000000000"
         }
       }
     },
