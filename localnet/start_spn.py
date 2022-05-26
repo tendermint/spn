@@ -3,6 +3,7 @@ import json
 import subprocess
 import pathlib
 import yaml
+from clear import clearHome
 
 def saveGenesis(genesis):
     with open('spn/node1/config/genesis.json', 'w', encoding='utf-8') as f:
@@ -16,7 +17,7 @@ def startSPN():
     if pathlib.PurePath(os.getcwd()).name != 'localnet':
         print('script must be run from localnet folder')
         exit(1)
-    subprocess.run(["python3", "./clear.py"], check=True)
+    clearHome('spn')
 
     # Load config
     confFile = open('./conf.yml')
