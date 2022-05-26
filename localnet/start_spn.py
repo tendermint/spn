@@ -4,8 +4,9 @@ import subprocess
 import pathlib
 import yaml
 from clear import clear_home
+from utils import cmd_devnull
 
-def saveGenesis(genesis):
+def save_genesis(genesis):
     with open('./spn/node1/config/genesis.json', 'w', encoding='utf-8') as f:
         json.dump(genesis, f, ensure_ascii=False, indent=4)
     with open('./spn/node2/config/genesis.json', 'w', encoding='utf-8') as f:
@@ -29,7 +30,7 @@ def start_spn():
 
     # Each node's home must contain a valid genesis in order to generate a gentx
     # The initial genesis template is therefore first saved in each home
-    saveGenesis(genesis)
+    save_genesis(genesis)
 
     # Set timestamp
     genesis['genesis_time'] = "2022-02-10T10:29:59.410196Z"
@@ -49,14 +50,14 @@ def start_spn():
             chainID=conf['chain_id'],
             i=str(i+1),
         )
-        os.system(gentxCmd)
+        cmd_devnull(gentxCmd)
         gentxFile = open('./gentx.json')
         gentx = json.load(gentxFile)
         genesis['app_state']['genutil']['gen_txs'].append(gentx)
         os.remove('./gentx.json')
 
     # Save genesis
-    saveGenesis(genesis)
+    save_genesis(genesis)
 
     print('Starting the network')
     subprocess.Popen(["spnd", "start", "--home", "./spn/node2"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
