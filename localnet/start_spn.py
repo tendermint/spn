@@ -3,28 +3,28 @@ import json
 import subprocess
 import pathlib
 import yaml
-from clear import clearHome
+from clear import clear_home
 
 def saveGenesis(genesis):
-    with open('spn/node1/config/genesis.json', 'w', encoding='utf-8') as f:
+    with open('./spn/node1/config/genesis.json', 'w', encoding='utf-8') as f:
         json.dump(genesis, f, ensure_ascii=False, indent=4)
-    with open('spn/node2/config/genesis.json', 'w', encoding='utf-8') as f:
+    with open('./spn/node2/config/genesis.json', 'w', encoding='utf-8') as f:
         json.dump(genesis, f, ensure_ascii=False, indent=4)
-    with open('spn/node3/config/genesis.json', 'w', encoding='utf-8') as f:
+    with open('./spn/node3/config/genesis.json', 'w', encoding='utf-8') as f:
         json.dump(genesis, f, ensure_ascii=False, indent=4)
 
-def startSPN():
+def start_spn():
     if pathlib.PurePath(os.getcwd()).name != 'localnet':
         print('script must be run from localnet folder')
         exit(1)
-    clearHome('spn')
+    clear_home('spn')
 
     # Load config
     confFile = open('./conf.yml')
     conf = yaml.safe_load(confFile)
 
     # Open the genesis template
-    genesisFile = open('spn/genesis_template.json')
+    genesisFile = open('./spn/genesis_template.json')
     genesis = json.load(genesisFile)
 
     # Each node's home must contain a valid genesis in order to generate a gentx
@@ -43,7 +43,7 @@ def startSPN():
 
     # Create the gentxs
     for i in range(3):
-        gentxCmd = 'spnd gentx {valName} {selfDelegation} --chain-id {chainID} --moniker="{valName}" --home ./node{i} --output-document ./gentx.json'.format(
+        gentxCmd = 'spnd gentx {valName} {selfDelegation} --chain-id {chainID} --moniker="{valName}" --home ./spn/node{i} --output-document ./gentx.json'.format(
             valName=conf['validator_names'][i],
             selfDelegation=str(conf['validator_self_delegations'][i])+conf['staking_denom'],
             chainID=conf['chain_id'],
@@ -59,9 +59,9 @@ def startSPN():
     saveGenesis(genesis)
 
     print('Starting the network')
-    subprocess.Popen(["spnd", "start", "--home", "./node2"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.Popen(["spnd", "start", "--home", "./node3"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    subprocess.run(["spnd start --home ./node1"], shell=True, check=True)
+    subprocess.Popen(["spnd", "start", "--home", "./spn/node2"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.Popen(["spnd", "start", "--home", "./spn/node3"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["spnd start --home ./spn/node1"], shell=True, check=True)
 
 if __name__ == "__main__":
-    startSPN()
+    start_spn()
