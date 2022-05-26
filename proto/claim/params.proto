@@ -1,0 +1,11 @@
+syntax = "proto3";
+package tendermint.spn.claim;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/tendermint/spn/x/claim/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+}

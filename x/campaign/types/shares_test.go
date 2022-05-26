@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/tendermint/spn/testutil/sample"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -55,6 +57,12 @@ func TestIncreaseShares(t *testing.T) {
 		newShares campaign.Shares
 		expected  campaign.Shares
 	}{
+		{
+			desc:      "two empty set",
+			shares:    campaign.EmptyShares(),
+			newShares: campaign.EmptyShares(),
+			expected:  campaign.EmptyShares(),
+		},
 		{
 			desc:      "increase empty set",
 			shares:    campaign.EmptyShares(),
@@ -343,6 +351,113 @@ func TestSharesString(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			require.Equal(t, tc.str, tc.shares.String())
+		})
+	}
+}
+
+func TestShares_CoinsFromTotalSupply(t *testing.T) {
+	tests := []struct {
+		name             string
+		shares           campaign.Shares
+		totalSupply      sdk.Coins
+		totalShareNumber uint64
+		expected         sdk.Coins
+		wantErr          bool
+	}{
+		{
+			name:             "should returns empty for empty total supply",
+			shares:           sample.Shares(r),
+			totalSupply:      sdk.NewCoins(),
+			totalShareNumber: 10000,
+			expected:         sdk.NewCoins(),
+			wantErr:          false,
+		},
+		{
+			name:             "should returns empty for empty shares",
+			shares:           campaign.EmptyShares(),
+			totalSupply:      sample.Coins(r),
+			totalShareNumber: 10000,
+			expected:         sdk.NewCoins(),
+			wantErr:          false,
+		},
+		{
+			name:             "should returns total supply if all share 100%",
+			shares:           tc.Shares(t, "100foo,100bar,100baz"),
+			totalSupply:      tc.Coins(t, "1000foo,500bar,200baz"),
+			totalShareNumber: 100,
+			expected:         tc.Coins(t, "1000foo,500bar,200baz"),
+			wantErr:          false,
+		},
+		{
+			name:             "should omit coins with no share",
+			shares:           tc.Shares(t, "100foo,100baz"),
+			totalSupply:      tc.Coins(t, "1000foo,500bar,200baz"),
+			totalShareNumber: 100,
+			expected:         tc.Coins(t, "1000foo,200baz"),
+			wantErr:          false,
+		},
+		{
+			name:             "should omit coins with with share but no total supply",
+			shares:           tc.Shares(t, "100foo,100bar,100baz"),
+			totalSupply:      tc.Coins(t, "1000foo,200baz"),
+			totalShareNumber: 100,
+			expected:         tc.Coins(t, "1000foo,200baz"),
+			wantErr:          false,
+		},
+		{
+			name:             "should return coins total supply relative to the share",
+			shares:           tc.Shares(t, "5000foo,3000bar,8000baz"),
+			totalSupply:      tc.Coins(t, "100000foo,100000bar,100000baz"),
+			totalShareNumber: 10000,
+			expected:         tc.Coins(t, "50000foo,30000bar,80000baz"),
+			wantErr:          false,
+		},
+		{
+			name:             "should return cut decimal from coins",
+			shares:           tc.Shares(t, "5000foo"),
+			totalSupply:      tc.Coins(t, "11foo"),
+			totalShareNumber: 10000,
+			expected:         tc.Coins(t, "5foo"),
+			wantErr:          false,
+		},
+		{
+			name:             "should return no share if less than 1",
+			shares:           tc.Shares(t, "9999foo"),
+			totalSupply:      tc.Coins(t, "1foo"),
+			totalShareNumber: 10000,
+			expected:         sdk.NewCoins(),
+			wantErr:          false,
+		},
+		{
+			name:             "should prevent using total share number 0",
+			shares:           sample.Shares(r),
+			totalSupply:      sample.Coins(r),
+			totalShareNumber: 0,
+			expected:         sdk.NewCoins(),
+			wantErr:          true,
+		},
+		{
+			name:             "should prevent shares with amount greater than total share number",
+			shares:           tc.Shares(t, "5foo,100bar,5baz"),
+			totalSupply:      sample.Coins(r),
+			totalShareNumber: 10,
+			expected:         sdk.NewCoins(),
+			wantErr:          true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			coins, err := tt.shares.CoinsFromTotalSupply(tt.totalSupply, tt.totalShareNumber)
+			if tt.wantErr {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+				require.True(t, coins.IsEqual(tt.expected),
+					"%s should be %s",
+					coins.String(),
+					tt.expected.String(),
+				)
+			}
 		})
 	}
 }

@@ -42,7 +42,7 @@ func TestVerifiedClientIds(t *testing.T) {
 			request: &types.QueryGetVerifiedClientIdsRequest{
 				LaunchID: 100000,
 			},
-			err: status.Error(codes.Internal, "launch id not found 100000"),
+			err: status.Error(codes.NotFound, "launch id not found 100000"),
 		},
 		{
 			desc: "invalid request",

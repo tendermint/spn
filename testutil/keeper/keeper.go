@@ -22,6 +22,8 @@ import (
 	spntypes "github.com/tendermint/spn/pkg/types"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	claimkeeper "github.com/tendermint/spn/x/claim/keeper"
+	claimtypes "github.com/tendermint/spn/x/claim/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -55,8 +57,9 @@ type TestKeepers struct {
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 	StakingKeeper            stakingkeeper.Keeper
-	FundraisingKeeper        *fundraisingkeeper.Keeper
+	FundraisingKeeper        fundraisingkeeper.Keeper
 	ParticipationKeeper      *participationkeeper.Keeper
+	ClaimKeeper              *claimkeeper.Keeper
 }
 
 // TestMsgServers holds all message servers used during keeper tests for all modules
@@ -85,7 +88,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -98,6 +101,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 		[]Channel{},
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -120,6 +124,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	fundraisingKeeper.SetParams(ctx, fundraisingParams)
 	participationKeeper.SetParams(ctx, participationtypes.DefaultParams())
 	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
+	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
@@ -144,6 +149,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
+			ClaimKeeper:              claimKeeper,
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,
@@ -174,7 +180,7 @@ func NewTestSetupWithIBCMocks(
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -187,6 +193,7 @@ func NewTestSetupWithIBCMocks(
 		channelMock,
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -207,6 +214,7 @@ func NewTestSetupWithIBCMocks(
 	fundraisingKeeper.SetParams(ctx, fundraisingtypes.DefaultParams())
 	participationKeeper.SetParams(ctx, participationtypes.DefaultParams())
 	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
+	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
@@ -231,6 +239,7 @@ func NewTestSetupWithIBCMocks(
 			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
+			ClaimKeeper:              claimKeeper,
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,

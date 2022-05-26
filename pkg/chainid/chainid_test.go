@@ -64,7 +64,6 @@ func TestParseGenesisChainID(t *testing.T) {
 			valid:   false,
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			if tc.valid {
 				name, number, err := chainid.ParseGenesisChainID(tc.chainID)
@@ -124,7 +123,6 @@ func TestCheckChainName(t *testing.T) {
 			valid: false,
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			if tc.valid {
 				require.NoError(t, chainid.CheckChainName(tc.name))

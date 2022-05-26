@@ -42,5 +42,12 @@ func (k msgServer) EditCampaign(goCtx context.Context, msg *types.MsgEditCampaig
 
 	k.SetCampaign(ctx, campaign)
 
-	return &types.MsgEditCampaignResponse{}, nil
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignInfoUpdated{
+		CampaignID:         campaign.CampaignID,
+		CoordinatorAddress: msg.Coordinator,
+		CampaignName:       campaign.CampaignName,
+		Metadata:           campaign.Metadata,
+	})
+
+	return &types.MsgEditCampaignResponse{}, err
 }

@@ -45,7 +45,6 @@ func TestChain_Validate(t *testing.T) {
 			valid: false,
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.chain.Validate()
 			require.EqualValues(t, tc.valid, err == nil)

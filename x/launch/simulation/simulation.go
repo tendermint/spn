@@ -139,8 +139,29 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "non-triggered chain not found"), nil, nil
 		}
 
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
+		// Select a random account no in genesis
+		r.Shuffle(len(accs), func(i, j int) {
+			accs[i], accs[j] = accs[j], accs[i]
+		})
+		var simAccount simtypes.Account
+		var availableAccount bool
+		for _, acc := range accs {
+			_, found := k.GetGenesisAccount(ctx, chain.LaunchID, acc.Address.String())
+			if found {
+				continue
+			}
+			_, found = k.GetVestingAccount(ctx, chain.LaunchID, acc.Address.String())
+			if found {
+				continue
+			}
+			simAccount = acc
+			availableAccount = true
+			break
+		}
+		if !availableAccount {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "no available account"), nil, nil
+		}
+
 		msg := sample.MsgRequestAddAccount(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),
@@ -176,8 +197,29 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, "non-triggered chain not found"), nil, nil
 		}
 
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
+		// Select a random account no in genesis
+		r.Shuffle(len(accs), func(i, j int) {
+			accs[i], accs[j] = accs[j], accs[i]
+		})
+		var simAccount simtypes.Account
+		var availableAccount bool
+		for _, acc := range accs {
+			_, found := k.GetGenesisAccount(ctx, chain.LaunchID, acc.Address.String())
+			if found {
+				continue
+			}
+			_, found = k.GetVestingAccount(ctx, chain.LaunchID, acc.Address.String())
+			if found {
+				continue
+			}
+			simAccount = acc
+			availableAccount = true
+			break
+		}
+		if !availableAccount {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "no available account"), nil, nil
+		}
+
 		msg := sample.MsgRequestAddVestingAccount(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),

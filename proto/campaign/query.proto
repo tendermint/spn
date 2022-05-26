@@ -42,6 +42,16 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account/{campaignID}";
   }
 
+  // Queries a mainnetAccountBalance by index.
+  rpc MainnetAccountBalance(QueryGetMainnetAccountBalanceRequest) returns (QueryGetMainnetAccountBalanceResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account_balance/{campaignID}/{address}";
+  }
+
+  // Queries a list of mainnetAccountBalance items.
+  rpc MainnetAccountBalanceAll(QueryAllMainnetAccountBalanceRequest) returns (QueryAllMainnetAccountBalanceResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account_balance/{campaignID}";
+  }
+
   // Queries a mainnetVestingAccount by index.
   rpc MainnetVestingAccount(QueryGetMainnetVestingAccountRequest) returns (QueryGetMainnetVestingAccountResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account/{campaignID}/{address}";
@@ -72,7 +82,12 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/total_shares";
   }
 
-  // this line is used by starport scaffolding # 2
+  // Queries a list of auction IDs of a campaign
+  rpc AuctionsOfCampaign(QueryAuctionsOfCampaignRequest) returns (QueryAuctionsOfCampaignResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/auctions_of_campaign/{campaignID}";
+  }
+
+// this line is used by starport scaffolding # 2
 }
 
 message QueryGetCampaignRequest {
@@ -116,6 +131,25 @@ message QueryAllMainnetAccountRequest {
 
 message QueryAllMainnetAccountResponse {
   repeated MainnetAccount mainnetAccount = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetMainnetAccountBalanceRequest {
+  uint64 campaignID = 1;
+  string address = 2;
+}
+
+message QueryGetMainnetAccountBalanceResponse {
+  MainnetAccountBalance mainnetAccountBalance = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllMainnetAccountBalanceRequest {
+  uint64 campaignID = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllMainnetAccountBalanceResponse {
+  repeated MainnetAccountBalance mainnetAccountBalance = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -167,6 +201,14 @@ message QueryTotalSharesRequest {}
 
 message QueryTotalSharesResponse {
   uint64 totalShares = 1;
+}
+
+message QueryAuctionsOfCampaignRequest {
+  uint64 campaignID = 1;
+}
+
+message QueryAuctionsOfCampaignResponse {
+  repeated uint64 auctionIDs = 1;
 }
 
 // this line is used by starport scaffolding # 3

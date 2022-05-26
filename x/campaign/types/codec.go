@@ -18,10 +18,14 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgBurnVouchers{}, "campaign/BurnVouchers", nil)
 	cdc.RegisterConcrete(&MsgRedeemVouchers{}, "campaign/RedeemVouchers", nil)
 	cdc.RegisterConcrete(&MsgUnredeemVouchers{}, "campaign/UnredeemVouchers", nil)
+	cdc.RegisterConcrete(&MsgUpdateSpecialAllocations{}, "campaign/UpdateSpecialAllocations", nil)
 	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgUpdateSpecialAllocations{},
+	)
 	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateCampaign{},

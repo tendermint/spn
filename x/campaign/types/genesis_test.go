@@ -5,13 +5,11 @@ import (
 	"testing"
 	"time"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
-	tc2 "github.com/tendermint/spn/testutil/constructor"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/stretchr/testify/require"
 
+	spntypes "github.com/tendermint/spn/pkg/types"
+	tc2 "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -117,6 +115,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:    "9999",
 					},
 				},
+				TotalShares: spntypes.TotalShareNumber,
 			},
 			errorMessage: "campaign id 33333 doesn't exist for mainnet vesting account 33333",
 		},
@@ -139,6 +138,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				MainnetAccountList: []types.MainnetAccount{
 					sample.MainnetAccount(r, 330, "330"),
 				},
+				TotalShares: spntypes.TotalShareNumber,
 			},
 			errorMessage: "campaign id 330 doesn't exist for mainnet account 330",
 		},
@@ -158,6 +158,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(r, 88),
 				},
 				CampaignCounter: 100,
+				TotalShares:     spntypes.TotalShareNumber,
 			},
 			errorMessage: "campaign id 2 doesn't exist for chains",
 		},
@@ -176,6 +177,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						CampaignID: 0,
 					},
 				},
+				TotalShares: spntypes.TotalShareNumber,
 			},
 			errorMessage: "duplicated index for campaignChains",
 		},
@@ -196,6 +198,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:    "0",
 					},
 				},
+				TotalShares: spntypes.TotalShareNumber,
 			},
 			errorMessage: "duplicated index for mainnetVestingAccount",
 		},
@@ -207,6 +210,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(r, 0),
 				},
 				CampaignCounter: 2,
+				TotalShares:     spntypes.TotalShareNumber,
 			},
 			errorMessage: "duplicated id for campaign",
 		},
@@ -217,6 +221,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(r, 1),
 				},
 				CampaignCounter: 0,
+				TotalShares:     spntypes.TotalShareNumber,
 			},
 			errorMessage: "campaign id should be lower or equal than the last id",
 		},
@@ -224,9 +229,17 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "invalid campaign",
 			genState: &types.GenesisState{
 				CampaignList: []types.Campaign{
-					types.NewCampaign(0, invalidCampaignName, sample.Uint64(r), sample.TotalSupply(r), sample.Metadata(r, 20)),
+					types.NewCampaign(
+						0,
+						invalidCampaignName,
+						sample.Uint64(r),
+						sample.TotalSupply(r),
+						sample.Metadata(r, 20),
+						sample.Duration(r).Milliseconds(),
+					),
 				},
 				CampaignCounter: 1,
+				TotalShares:     spntypes.TotalShareNumber,
 			},
 			errorMessage: "invalid campaign 0: campaign name can only contain alphanumerical characters or hyphen",
 		},
@@ -247,6 +260,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:    "0",
 					},
 				},
+				TotalShares: spntypes.TotalShareNumber,
 			},
 			errorMessage: "duplicated index for mainnetAccount",
 		},
@@ -272,6 +286,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						Address:    "0",
 					},
 				},
+				TotalShares: spntypes.TotalShareNumber,
 			},
 			errorMessage: "invalid campaign 0: more allocated shares than total shares",
 		},
@@ -357,7 +372,6 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 			shouldBeValid: true,
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()
 			if tc.shouldBeValid {
