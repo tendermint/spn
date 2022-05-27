@@ -10,7 +10,10 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func (k Keeper) SpecialAllocationsBalance(goCtx context.Context, req *types.QuerySpecialAllocationsBalanceRequest) (*types.QuerySpecialAllocationsBalanceResponse, error) {
+func (k Keeper) SpecialAllocationsBalance(
+	goCtx context.Context,
+	req *types.QuerySpecialAllocationsBalanceRequest,
+) (*types.QuerySpecialAllocationsBalanceResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
