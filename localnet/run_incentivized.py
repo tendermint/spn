@@ -35,15 +35,15 @@ parser.add_argument('--max_validator',
                     help='Staking max validator set',
                     )
 parser.add_argument('--self_delegation_1',
-                    default='10000000stake',
+                    default='10000000uspn',
                     help='Self delegation for validator 1',
                     )
 parser.add_argument('--self_delegation_2',
-                    default='10000000stake',
+                    default='10000000uspn',
                     help='Self delegation for validator 2',
                     )
 parser.add_argument('--self_delegation_3',
-                    default='10000000stake',
+                    default='10000000uspn',
                     help='Self delegation for validator 3',
                     )
 parser.add_argument('--unbonding_time',
@@ -108,3 +108,5 @@ if __name__ == "__main__":
     # Perform IBC connection
     cmd('hermes -c ./hermes/config.toml create connection spn-1 --client-a 07-tendermint-0 --client-b 07-tendermint-0')
     cmd('hermes -c ./hermes/config.toml create channel spn-1 --connection-a connection-0 --port-a monitoring --port-b monitoring -o ordered --channel-version monitoring-1')
+
+    # hermes -c ./hermes/config.toml start
