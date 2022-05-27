@@ -11,15 +11,6 @@ import (
 )
 
 func TestClaimRecord_Validate(t *testing.T) {
-	invalidAddress := sample.ClaimRecord(r)
-	invalidAddress.Address = "invalid"
-
-	invalidClaimable := sample.ClaimRecord(r)
-	invalidClaimable.Claimable = sdk.NewInt(-1)
-
-	invalidCompletedMissions := sample.ClaimRecord(r)
-	invalidCompletedMissions.CompletedMissions = []uint64{0, 1, 2, 0}
-
 	for _, tc := range []struct {
 		desc        string
 		claimRecord claim.ClaimRecord
@@ -31,19 +22,40 @@ func TestClaimRecord_Validate(t *testing.T) {
 			valid:       true,
 		},
 		{
-			desc:        "invalid address",
-			claimRecord: invalidAddress,
-			valid:       false,
+			desc: "should prevent invalid address",
+			claimRecord: claim.ClaimRecord{
+				Address:           "invalid",
+				Claimable:         sdk.OneInt(),
+				CompletedMissions: []uint64{0, 1, 2},
+			},
+			valid: false,
 		},
 		{
-			desc:        "invalid claimable amount",
-			claimRecord: invalidClaimable,
-			valid:       false,
+			desc: "should prevent zero claimable amount",
+			claimRecord: claim.ClaimRecord{
+				Address:           sample.Address(r),
+				Claimable:         sdk.ZeroInt(),
+				CompletedMissions: []uint64{0, 1, 2},
+			},
+			valid: false,
 		},
 		{
-			desc:        "duplicate completed mission IDs",
-			claimRecord: invalidCompletedMissions,
-			valid:       false,
+			desc: "should prevent negative claimable amount",
+			claimRecord: claim.ClaimRecord{
+				Address:           sample.Address(r),
+				Claimable:         sdk.NewInt(-1),
+				CompletedMissions: []uint64{0, 1, 2},
+			},
+			valid: false,
+		},
+		{
+			desc: "should prevent duplicate completed mission IDs",
+			claimRecord: claim.ClaimRecord{
+				Address:           sample.Address(r),
+				Claimable:         sdk.OneInt(),
+				CompletedMissions: []uint64{0, 1, 2, 0},
+			},
+			valid: false,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

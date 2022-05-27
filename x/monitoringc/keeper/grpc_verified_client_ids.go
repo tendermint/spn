@@ -18,7 +18,7 @@ func (k Keeper) VerifiedClientIds(goCtx context.Context, req *types.QueryGetVeri
 
 	verifiedClientID, found := k.GetVerifiedClientID(ctx, req.LaunchID)
 	if !found {
-		return nil, status.Errorf(codes.Internal, "launch id not found %d", req.LaunchID)
+		return nil, status.Errorf(codes.NotFound, "launch id not found %d", req.LaunchID)
 	}
 
 	return &types.QueryGetVerifiedClientIdsResponse{

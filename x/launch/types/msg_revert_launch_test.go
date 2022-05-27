@@ -29,7 +29,6 @@ func TestMsgRevertLaunch_ValidateBasic(t *testing.T) {
 			valid: false,
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.msg.ValidateBasic()
 			if tc.valid {

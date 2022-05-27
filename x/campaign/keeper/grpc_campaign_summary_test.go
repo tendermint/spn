@@ -111,7 +111,6 @@ func TestCampaignSummaryQuerySingle(t *testing.T) {
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			response, err := tk.CampaignKeeper.CampaignSummary(wctx, tc.request)
 			if tc.err != nil {
@@ -208,7 +207,6 @@ func TestCampaignSummaryGet(t *testing.T) {
 			err:      status.Errorf(codes.NotFound, "chain not found for campaign chain 10000"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			res, err := tk.CampaignKeeper.GetCampaignSummary(ctx, tc.campaign)
 			if tc.err != nil {
