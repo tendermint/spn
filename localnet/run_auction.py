@@ -4,7 +4,7 @@ import datetime
 from utils import cmd_devnull, cmd, initialize_campaign, date_f
 
 auction_template_file = './auctions/auction_template.json'
-auction_file = './auction.json'
+auction_file = './auctions//auction.json'
 
 def set_sale_json(selling_denom, selling_amount, paying_denom, start_price, min_bid_price, start_time, end_time):
     f = open(auction_template_file)

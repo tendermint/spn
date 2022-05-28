@@ -5,7 +5,7 @@ import time
 from utils import cmd_devnull, cmd, initialize_campaign, date_f
 
 sale_template_file = './auctions/sale_template.json'
-sale_file = './sale.json'
+sale_file = './auctions/sale.json'
 
 def set_sale_json(selling_denom, selling_amount, paying_denom, price, start_time, end_time):
     f = open(sale_template_file)
@@ -29,8 +29,8 @@ if __name__ == "__main__":
 
     # Fundraising
     set_sale_json('v/1/orbit', '50000', 'uspn', '100', date_f(start), date_f(end))
-    os.remove(sale_file)
     cmd_devnull('spnd tx fundraising create-fixed-price-auction {} --from alice -y'.format(sale_file))
+    os.remove(sale_file)
     cmd_devnull('spnd tx participation participate 1 4 --from bob -y')
     cmd_devnull('spnd tx participation participate 1 4 --from carol -y')
     cmd_devnull('spnd tx participation participate 1 4 --from dave -y')
