@@ -19,9 +19,9 @@ localnet/*/node?/config/genesis.json
 localnet/*/node?/config/addrbook.json
 localnet/*/node?/config/write-file-atomic-*
 localnet/__pycache__/
-localnet/spncs.yaml/
-localnet/cs.yaml/
-localnet/vs.yaml/
+localnet/spncs.yaml
+localnet/cs.yaml
+localnet/vs.yaml
 
 # Generate report files
 *.out
