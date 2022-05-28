@@ -75,7 +75,7 @@ def start_testnet(
     clear_home('testnet')
 
     # Read SPN Consensus State
-    confFile = open('./testnet/spncs.yaml')
+    confFile = open('./spncs.yaml')
     conf = yaml.safe_load(confFile)
     nextValidatorHash = conf['next_validators_hash']
     rootHash = conf['root']['hash']

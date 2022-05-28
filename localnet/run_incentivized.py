@@ -11,9 +11,6 @@ parser.add_argument('--spn_chain_id',
 parser.add_argument('--orbit_chain_id',
                     help='Chain ID on Orbit',
                     default='orbit-1')
-parser.add_argument('--debug',
-                    action='store_true',
-                    help='Set debug mode for module')
 parser.add_argument('--spn_unbonding_period',
                     type=int,
                     default=1814400,
@@ -21,7 +18,7 @@ parser.add_argument('--spn_unbonding_period',
                     )
 parser.add_argument('--spn_revision_height',
                     type=int,
-                    default=2,
+                    default=10,
                     help='Revision height for SPN IBC client',
                     )
 parser.add_argument('--last_block_height',
@@ -47,7 +44,7 @@ parser.add_argument('--self_delegation_3',
                     help='Self delegation for validator 3',
                     )
 parser.add_argument('--unbonding_time',
-                    default=1000, # 21 days = 1814400 seconds
+                    default=1814400, # 21 days = 1814400 seconds
                     type=int,
                     help='Staking unbonding time (unbonding period)',
                     )
@@ -55,7 +52,6 @@ parser.add_argument('--unbonding_time',
 if __name__ == "__main__":
     # Parse params
     args = parser.parse_args()
-    debugMode = args.debug
     spnChainID = args.spn_chain_id
     chainID = args.orbit_chain_id
     spnUnbondingPeriod = args.spn_unbonding_period
@@ -77,12 +73,11 @@ if __name__ == "__main__":
     )
     print('rewards initialized')
 
-    cmd('spnd q ibc client self-consensus-state --height 2 > spncs.yaml')
+    cmd('spnd q ibc client self-consensus-state --height {} > spncs.yaml'.format(revisionHeight))
 
     # Start the testnet
     print('start network')
-    start(
-        debugMode,
+    start_testnet(
         spnChainID,
         chainID,
         spnUnbondingPeriod,
@@ -107,6 +102,6 @@ if __name__ == "__main__":
 
     # Perform IBC connection
     cmd('hermes -c ./hermes/config.toml create connection spn-1 --client-a 07-tendermint-0 --client-b 07-tendermint-0')
-    cmd('hermes -c ./hermes/config.toml create channel spn-1 --connection-a connection-0 --port-a monitoring --port-b monitoring -o ordered --channel-version monitoring-1')
+    cmd('hermes -c ./hermes/config.toml create channel spn-1 --connection-a connection-0 --port-a monitoringc --port-b monitoringp -o ordered --channel-version monitoring-1')
 
     # hermes -c ./hermes/config.toml start
