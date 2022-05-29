@@ -1,6 +1,6 @@
 import subprocess
 
-val_address = 'spnvaloper1ezptsm3npn54qx9vvpah4nymre59ykr9mx22g4'
+val_address = 'spnvaloper15rz2rwnlgr7nf6eauz52usezffwrxc0muf4z5n'
 
 def cmd(command):
     subprocess.run([command], shell=True, check=True)
