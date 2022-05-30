@@ -11,6 +11,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateCampaign{}, "campaign/CreateCampaign", nil)
 	cdc.RegisterConcrete(&MsgEditCampaign{}, "campaign/EditCampaign", nil)
 	cdc.RegisterConcrete(&MsgUpdateTotalSupply{}, "campaign/UpdateTotalSupply", nil)
+	cdc.RegisterConcrete(&MsgUpdateSpecialAllocations{}, "campaign/UpdateSpecialAllocations", nil)
 	cdc.RegisterConcrete(&MsgInitializeMainnet{}, "campaign/InitializeMainnet", nil)
 	cdc.RegisterConcrete(&MsgAddShares{}, "campaign/AddShares", nil)
 	cdc.RegisterConcrete(&MsgAddVestingOptions{}, "campaign/AddVestingOptions", nil)
@@ -18,19 +19,16 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgBurnVouchers{}, "campaign/BurnVouchers", nil)
 	cdc.RegisterConcrete(&MsgRedeemVouchers{}, "campaign/RedeemVouchers", nil)
 	cdc.RegisterConcrete(&MsgUnredeemVouchers{}, "campaign/UnredeemVouchers", nil)
-	cdc.RegisterConcrete(&MsgUpdateSpecialAllocations{}, "campaign/UpdateSpecialAllocations", nil)
 	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgUpdateSpecialAllocations{},
-	)
 	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateCampaign{},
 		&MsgEditCampaign{},
 		&MsgUpdateTotalSupply{},
+		&MsgUpdateSpecialAllocations{},
 		&MsgInitializeMainnet{},
 		&MsgAddShares{},
 		&MsgAddVestingOptions{},
