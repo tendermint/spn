@@ -2,6 +2,7 @@ syntax = "proto3";
 package tendermint.spn.campaign;
 
 import "google/api/annotations.proto";
+import "cosmos/base/v1beta1/coin.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
 import "campaign/campaign_chains.proto";
@@ -30,6 +31,11 @@ service Query {
   // Queries a campaignChains by index.
   rpc CampaignChains(QueryGetCampaignChainsRequest) returns (QueryGetCampaignChainsResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/campaign_chains/{campaignID}";
+  }
+
+  // Queries a list of SpecialAllocationsBalance items.
+  rpc SpecialAllocationsBalance(QuerySpecialAllocationsBalanceRequest) returns (QuerySpecialAllocationsBalanceResponse) {
+    option (google.api.http).get = "/tendermint/spn/campaign/special_allocations_balance/{campaignID}";
   }
 
   // Queries a mainnetAccount by index.
@@ -87,7 +93,7 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/auctions_of_campaign/{campaignID}";
   }
 
-// this line is used by starport scaffolding # 2
+  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetCampaignRequest {
@@ -113,6 +119,23 @@ message QueryGetCampaignChainsRequest {
 
 message QueryGetCampaignChainsResponse {
   CampaignChains campaignChains = 1 [(gogoproto.nullable) = false];
+}
+
+message QuerySpecialAllocationsBalanceRequest {
+  uint64 campaignID = 1;
+}
+
+message QuerySpecialAllocationsBalanceResponse {
+  repeated cosmos.base.v1beta1.Coin genesisDistribution = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+  repeated cosmos.base.v1beta1.Coin claimableAirdrop = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
 }
 
 message QueryGetMainnetAccountRequest {
