@@ -10,6 +10,7 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 message EventCampaignCreated {
   uint64 campaignID = 1;
   string coordinatorAddress = 2;
+  uint64 coordinatorID = 3;
 }
 
 message EventCampaignChainAdded {

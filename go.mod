@@ -17,9 +17,9 @@ require (
 	github.com/tendermint/fundraising v0.3.0
 	github.com/tendermint/tendermint v0.34.19
 	github.com/tendermint/tm-db v0.6.7
-	google.golang.org/genproto v0.0.0-20220317150908-0efb43f6373e
-	google.golang.org/grpc v1.45.0
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd
+	google.golang.org/grpc v1.46.2
+	google.golang.org/protobuf v1.28.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -79,6 +79,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/btree v1.0.0 // indirect
+	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/google/orderedcode v0.0.1 // indirect
 	github.com/gookit/color v1.5.0 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect

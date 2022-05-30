@@ -24,6 +24,10 @@ func (k Keeper) CreateNewChain(
 	isMainnet bool,
 	metadata []byte,
 ) (uint64, error) {
+	coord, found := k.profileKeeper.GetCoordinator(ctx, coordinatorID)
+	if !found {
+		return 0, fmt.Errorf("the coordinator %d doesn't exist", coordinatorID)
+	}
 
 	chain := types.Chain{
 		CoordinatorID:   coordinatorID,
@@ -73,11 +77,12 @@ func (k Keeper) CreateNewChain(
 		if err := k.campaignKeeper.AddChainToCampaign(ctx, campaignID, launchID); err != nil {
 			return 0, err
 		}
-
 	}
 
 	return launchID, ctx.EventManager().EmitTypedEvent(&types.EventChainCreated{
-		LaunchID: launchID,
+		LaunchID:           launchID,
+		CoordinatorAddress: coord.Address,
+		CoordinatorID:      coordinatorID,
 	})
 }
 
