@@ -243,39 +243,6 @@ func SimulateMsgAddShares(
 	}
 }
 
-// SimulateMsgAddVestingOptions simulates a MsgAddVestingOptions message
-func SimulateMsgAddVestingOptions(
-	ak types.AccountKeeper,
-	bk types.BankKeeper,
-	pk types.ProfileKeeper,
-	k keeper.Keeper,
-) simtypes.Operation {
-	return func(
-		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
-	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false, true)
-		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddVestingOptions, "skip add vesting options"), nil, nil
-		}
-
-		shares, getShares := GetSharesFromCampaign(r, ctx, k, campID)
-		if !getShares {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddVestingOptions, "skip add vesting options"), nil, nil
-		}
-
-		// Select a random account to give vesting options
-		accountNb := r.Intn(len(accs))
-
-		msg := types.NewMsgAddVestingOptions(
-			campID,
-			simAccount.Address.String(),
-			accs[accountNb].Address.String(),
-			*types.NewShareDelayedVesting(shares, shares, int64(sample.Duration(r))),
-		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
-	}
-}
-
 // SimulateMsgMintVouchers simulates a MsgMintVouchers message
 func SimulateMsgMintVouchers(ak types.AccountKeeper,
 	bk types.BankKeeper,
