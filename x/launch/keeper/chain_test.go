@@ -117,6 +117,18 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			valid:          true,
 		},
 		{
+			name:           "non-existent coordinator",
+			coordinatorID:  100000,
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
+			genesisURL:     "",
+			hasCampaign:    false,
+			metadata:       sample.Metadata(r, 20),
+			wantedID:       0,
+			valid:          false,
+		},
+		{
 			name:           "non-existent campaign ID",
 			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(r),

@@ -27,25 +27,28 @@ def undelegate_cmd(valNumber, amount):
 
     return cmd
 
-# Perform unbonding
-for s in sys.argv[1:]:
-    if not s.isnumeric():
-        print(s + ' must be a number')
-        exit(1)
+def undelegate(amounts):
+    # Perform unbonding
+    for s in amounts:
+        if not s.isnumeric():
+            print(s + ' must be a number')
+            exit(1)
 
-i = 0
-for s in sys.argv[1:]:
-    if int(s) > 0:
-        print(i)
-        cmd = undelegate_cmd(i, s)
-        print('running: ' + " ".join(cmd))
-        subprocess.run(cmd, check=True)
-    i += 1
+    i = 0
+    for s in amounts:
+        if int(s) > 0:
+            print(i)
+            cmd = undelegate_cmd(i, s)
+            print('running: ' + " ".join(cmd))
+            subprocess.run(cmd, check=True)
+        i += 1
 
-print()
-print()
-print('unbonding performed, to show validator set:')
-print('spnd q tendermint-validator-set')
-print()
-print('to show consensus state')
-print('spnd q ibc client self-consensus-state')
+if __name__ == "__main__":
+    undelegate(sys.argv[1:])
+
+    print()
+    print('unbonding performed, to show validator set:')
+    print('spnd q tendermint-validator-set')
+    print()
+    print('to show consensus state')
+    print('spnd q ibc client self-consensus-state')
