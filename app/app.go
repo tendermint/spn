@@ -79,6 +79,7 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/v3/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"github.com/ignite-hq/cli/ignite/pkg/openapiconsole"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -131,8 +132,6 @@ import (
 	minttypes "github.com/tendermint/spn/x/mint/types"
 
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-
-	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
