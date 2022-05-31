@@ -1,0 +1,12 @@
+{
+  "start_price": "",
+  "min_bid_price": "",
+  "selling_coin": {
+    "denom": "",
+    "amount": ""
+  },
+  "paying_coin_denom": "",
+  "vesting_schedules": [],
+  "start_time": "",
+  "end_time": ""
+}
