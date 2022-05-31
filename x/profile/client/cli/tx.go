@@ -21,12 +21,13 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		CmdUpdateValidatorDescription(),
+		CmdAddValidatorOperatorAddress(),
 		CmdCreateCoordinator(),
 		CmdUpdateCoordinatorDescription(),
 		CmdUpdateCoordinatorAddress(),
 		CmdDisableCoordinator(),
-		CmdAddValidatorOperatorAddress(),
 	)
+
 	// this line is used by starport scaffolding # 1
 
 	return cmd

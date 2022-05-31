@@ -19,4 +19,7 @@ func TestParamsQuery(t *testing.T) {
 	response, err := tk.MonitoringProviderKeeper.Params(wctx, &types.QueryParamsRequest{})
 	require.NoError(t, err)
 	require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
+
+	_, err = tk.MonitoringProviderKeeper.Params(wctx, nil)
+	require.Error(t, err)
 }

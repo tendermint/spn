@@ -16,6 +16,7 @@ import (
 type RequestSample struct {
 	Content types.RequestContent
 	Creator string
+	Status  types.Request_Status
 }
 
 func createRequestsFromSamples(
@@ -27,6 +28,7 @@ func createRequestsFromSamples(
 	items := make([]types.Request, len(samples))
 	for i, s := range samples {
 		items[i] = sample.RequestWithContentAndCreator(r, launchID, s.Content, s.Creator)
+		items[i].Status = s.Status
 		id := k.AppendRequest(ctx, items[i])
 		items[i].RequestID = id
 	}
@@ -156,6 +158,8 @@ func TestCheckAccount(t *testing.T) {
 
 func TestApplyRequest(t *testing.T) {
 	var (
+		coord          = sample.Coordinator(r, sample.Address(r))
+		coordID        = uint64(3)
 		genesisAcc     = sample.Address(r)
 		vestingAcc     = sample.Address(r)
 		validatorAcc   = sample.Address(r)
@@ -164,6 +168,12 @@ func TestApplyRequest(t *testing.T) {
 		contents       = sample.AllRequestContents(r, launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
 	)
+
+	coord.CoordinatorID = coordID
+	tk.ProfileKeeper.SetCoordinator(ctx, coord)
+	chain := sample.Chain(r, launchID, coordID)
+	tk.LaunchKeeper.SetChain(ctx, chain)
+
 	tests := []struct {
 		name    string
 		request types.Request
@@ -216,10 +226,17 @@ func TestApplyRequest(t *testing.T) {
 			request: sample.RequestWithContent(r, launchID, invalidContent),
 			wantErr: true,
 		},
+		{
+			name: "test request with no content",
+			request: types.Request{
+				Content: types.RequestContent{},
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
+			err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, chain, tt.request, coord)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -256,14 +273,38 @@ func TestApplyRequest(t *testing.T) {
 
 func TestCheckRequest(t *testing.T) {
 	var (
-		genesisAcc     = sample.Address(r)
-		vestingAcc     = sample.Address(r)
-		validatorAcc   = sample.Address(r)
-		ctx, tk, _     = testkeeper.NewTestSetup(t)
-		launchID       = uint64(10)
-		contents       = sample.AllRequestContents(r, launchID, genesisAcc, vestingAcc, validatorAcc)
-		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
+		coord                           = sample.Coordinator(r, sample.Address(r))
+		coordID                         = uint64(3)
+		genesisAcc                      = sample.Address(r)
+		vestingAcc                      = sample.Address(r)
+		validatorAcc                    = sample.Address(r)
+		duplicatedAcc                   = sample.Address(r)
+		ctx, tk, _                      = testkeeper.NewTestSetup(t)
+		launchID                        = uint64(10)
+		contents                        = sample.AllRequestContents(r, launchID, genesisAcc, vestingAcc, validatorAcc)
+		invalidContent                  = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
+		duplicatedRequestGenesisContent = types.NewGenesisAccount(launchID, duplicatedAcc, sample.Coins(r))
+		duplicatedRequestVestingContent = types.NewVestingAccount(launchID, duplicatedAcc, sample.VestingOptions(r))
+		duplicatedRequestRemovalContent = types.NewAccountRemoval(duplicatedAcc)
 	)
+
+	coord.CoordinatorID = coordID
+	tk.ProfileKeeper.SetCoordinator(ctx, coord)
+	chain := sample.Chain(r, launchID, coordID)
+	tk.LaunchKeeper.SetChain(ctx, chain)
+
+	tk.LaunchKeeper.SetGenesisAccount(ctx, types.GenesisAccount{
+		LaunchID: launchID,
+		Address:  duplicatedAcc,
+		Coins:    nil,
+	})
+
+	tk.LaunchKeeper.SetVestingAccount(ctx, types.VestingAccount{
+		LaunchID:       launchID,
+		Address:        duplicatedAcc,
+		VestingOptions: types.VestingOptions{},
+	})
+
 	tests := []struct {
 		name    string
 		request types.Request
@@ -316,6 +357,21 @@ func TestCheckRequest(t *testing.T) {
 			request: sample.RequestWithContent(r, launchID, invalidContent),
 			err:     spnerrors.ErrCritical,
 		},
+		{
+			name:    "duplicated genesis and vesting account cause critical error",
+			request: sample.RequestWithContent(r, launchID, duplicatedRequestGenesisContent),
+			err:     spnerrors.ErrCritical,
+		},
+		{
+			name:    "duplicated genesis and vesting account cause critical error",
+			request: sample.RequestWithContent(r, launchID, duplicatedRequestVestingContent),
+			err:     spnerrors.ErrCritical,
+		},
+		{
+			name:    "duplicated genesis and vesting account cause critical error",
+			request: sample.RequestWithContent(r, launchID, duplicatedRequestRemovalContent),
+			err:     spnerrors.ErrCritical,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -323,7 +379,7 @@ func TestCheckRequest(t *testing.T) {
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
-				err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
+				err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, chain, tt.request, coord)
 				require.NoError(t, err)
 			}
 		})

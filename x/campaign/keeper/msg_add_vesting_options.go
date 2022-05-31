@@ -20,6 +20,17 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
 	}
 
+	mainnetLaunched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+	if err != nil {
+		return nil, spnerrors.Critical(err.Error())
+	}
+	if mainnetLaunched {
+		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
+			"mainnet %d launch is already triggered",
+			campaign.MainnetID,
+		))
+	}
+
 	// Get the coordinator ID associated to the sender address
 	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {
@@ -71,5 +82,30 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 	k.SetCampaign(ctx, campaign)
 	k.SetMainnetVestingAccount(ctx, account)
 
-	return &types.MsgAddVestingOptionsResponse{}, nil
+	if !foundAcc {
+		err = ctx.EventManager().EmitTypedEvents(
+			&types.EventCampaignSharesUpdated{
+				CampaignID:         campaign.CampaignID,
+				CoordinatorAddress: msg.Coordinator,
+				AllocatedShares:    campaign.AllocatedShares,
+			}, &types.EventMainnetVestingAccountCreated{
+				CampaignID:     campaign.CampaignID,
+				Address:        msg.Address,
+				VestingOptions: msg.VestingOptions,
+			},
+		)
+	} else {
+		err = ctx.EventManager().EmitTypedEvents(
+			&types.EventCampaignSharesUpdated{
+				CampaignID:         campaign.CampaignID,
+				CoordinatorAddress: msg.Coordinator,
+				AllocatedShares:    campaign.AllocatedShares,
+			}, &types.EventMainnetVestingAccountUpdated{
+				CampaignID:     campaign.CampaignID,
+				Address:        msg.Address,
+				VestingOptions: msg.VestingOptions,
+			})
+	}
+
+	return &types.MsgAddVestingOptionsResponse{}, err
 }

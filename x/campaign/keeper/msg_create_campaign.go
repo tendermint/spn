@@ -35,7 +35,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	if !creationFee.Empty() {
 		coordAddr, err := sdk.AccAddressFromBech32(msg.Coordinator)
 		if err != nil {
-			return nil, err
+			return nil, spnerrors.Criticalf("invalid coordinator bech32 address %s", err.Error())
 		}
 		if err = k.distrKeeper.FundCommunityPool(ctx, creationFee, coordAddr); err != nil {
 			return nil, err
@@ -43,7 +43,14 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	}
 
 	// Append the new campaign
-	campaign := types.NewCampaign(0, msg.CampaignName, coordID, msg.TotalSupply, msg.Metadata)
+	campaign := types.NewCampaign(
+		0,
+		msg.CampaignName,
+		coordID,
+		msg.TotalSupply,
+		msg.Metadata,
+		ctx.BlockTime().Unix(),
+	)
 	campaignID := k.AppendCampaign(ctx, campaign)
 
 	// Initialize the list of campaign chains
@@ -52,5 +59,10 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		Chains:     []uint64{},
 	})
 
-	return &types.MsgCreateCampaignResponse{CampaignID: campaignID}, nil
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignCreated{
+		CampaignID:         campaignID,
+		CoordinatorAddress: msg.Coordinator,
+	})
+
+	return &types.MsgCreateCampaignResponse{CampaignID: campaignID}, err
 }

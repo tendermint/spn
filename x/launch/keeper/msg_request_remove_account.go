@@ -47,29 +47,34 @@ func (k msgServer) RequestRemoveAccount(
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)
 	}
 
-	var requestID uint64
-	approved := false
-
 	content := types.NewAccountRemoval(msg.Address)
 	request := types.Request{
 		LaunchID:  msg.LaunchID,
 		Creator:   msg.Address,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
+		Status:    types.Request_PENDING,
 	}
 
+	var requestID uint64
+	approved := false
 	if msg.Creator == coord.Address {
-		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
+		err := ApplyRequest(ctx, k.Keeper, chain, request, coord)
 		if err != nil {
 			return nil, err
 		}
 		approved = true
-	} else {
-		requestID = k.AppendRequest(ctx, request)
+		request.Status = types.Request_APPROVED
 	}
+
+	requestID = k.AppendRequest(ctx, request)
+	err := ctx.EventManager().EmitTypedEvent(&types.EventRequestCreated{
+		Creator: msg.Creator,
+		Request: request,
+	})
 
 	return &types.MsgRequestRemoveAccountResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
-	}, nil
+	}, err
 }

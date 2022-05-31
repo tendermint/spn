@@ -1053,7 +1053,6 @@ var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -1225,7 +1224,7 @@ type QueryClient interface {
 	Request(ctx context.Context, in *QueryGetRequestRequest, opts ...grpc.CallOption) (*QueryGetRequestResponse, error)
 	// Queries a list of request for a chain.
 	RequestAll(ctx context.Context, in *QueryAllRequestRequest, opts ...grpc.CallOption) (*QueryAllRequestResponse, error)
-	// Parameters queries the parameters of the module.
+	// Params queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 }
 
@@ -1358,7 +1357,7 @@ type QueryServer interface {
 	Request(context.Context, *QueryGetRequestRequest) (*QueryGetRequestResponse, error)
 	// Queries a list of request for a chain.
 	RequestAll(context.Context, *QueryAllRequestRequest) (*QueryAllRequestResponse, error)
-	// Parameters queries the parameters of the module.
+	// Params queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 }
 

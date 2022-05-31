@@ -2,6 +2,7 @@ package sample
 
 import (
 	"math/rand"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -34,16 +35,41 @@ func ParticipationParams(r *rand.Rand) participation.Params {
 	}
 
 	registrationPeriod := Duration(r)
-	withdrawalDelay := Duration(r)
+	withdrawalDelay := DurationFromRange(r, time.Minute, time.Minute*30)
 
 	return participation.NewParams(allocationPrice, tiers, registrationPeriod, withdrawalDelay)
 }
 
-// ParticipationGenesisState  returns a sample genesis state for the participation module
+// ParticipationGenesisState returns a sample genesis state for the participation module
 func ParticipationGenesisState(r *rand.Rand) participation.GenesisState {
 	return participation.GenesisState{
 		Params:                     ParticipationParams(r),
 		UsedAllocationsList:        []participation.UsedAllocations{},
 		AuctionUsedAllocationsList: []participation.AuctionUsedAllocations{},
 	}
+}
+
+// ParticipationGenesisStateWithAllocations returns a sample genesis state for the participation module with some
+// sample allocations
+func ParticipationGenesisStateWithAllocations(r *rand.Rand) participation.GenesisState {
+	genState := ParticipationGenesisState(r)
+	for i := 0; i < 10; i++ {
+		addr := Address(r)
+		usedAllocs := participation.UsedAllocations{
+			Address:        addr,
+			NumAllocations: 0,
+		}
+		for j := 0; j < 3; j++ {
+			auctionUsedAllocs := participation.AuctionUsedAllocations{
+				Address:        addr,
+				AuctionID:      uint64(j),
+				NumAllocations: uint64(r.Int63n(5) + 1),
+				Withdrawn:      false,
+			}
+			genState.AuctionUsedAllocationsList = append(genState.AuctionUsedAllocationsList, auctionUsedAllocs)
+			usedAllocs.NumAllocations += auctionUsedAllocs.NumAllocations
+		}
+		genState.UsedAllocationsList = append(genState.UsedAllocationsList, usedAllocs)
+	}
+	return genState
 }

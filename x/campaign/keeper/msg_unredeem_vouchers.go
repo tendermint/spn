@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -13,9 +14,20 @@ import (
 func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredeemVouchers) (*types.MsgUnredeemVouchersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	_, found := k.GetCampaign(ctx, msg.CampaignID)
+	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+	}
+
+	mainnetLaunched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+	if err != nil {
+		return nil, spnerrors.Critical(err.Error())
+	}
+	if mainnetLaunched {
+		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
+			"mainnet %d launch is already triggered",
+			campaign.MainnetID,
+		))
 	}
 
 	account, found := k.GetMainnetAccount(ctx, msg.CampaignID, msg.Sender)
@@ -24,7 +36,6 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 	}
 
 	// Update the shares of the account
-	var err error
 	account.Shares, err = types.DecreaseShares(account.Shares, msg.Shares)
 	if err != nil {
 		return nil, sdkerrors.Wrap(types.ErrSharesDecrease, err.Error())
@@ -33,8 +44,21 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 	// If the account no longer has shares, it can be removed from the store
 	if types.IsEqualShares(account.Shares, types.EmptyShares()) {
 		k.RemoveMainnetAccount(ctx, msg.CampaignID, msg.Sender)
+		if err := ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountRemoved{
+			CampaignID: campaign.CampaignID,
+			Address:    account.Address,
+		}); err != nil {
+			return nil, err
+		}
 	} else {
 		k.SetMainnetAccount(ctx, account)
+		if err := ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{
+			CampaignID: account.CampaignID,
+			Address:    account.Address,
+			Shares:     account.Shares,
+		}); err != nil {
+			return nil, err
+		}
 	}
 
 	// Mint vouchers from the removed shares and send them to sender balance

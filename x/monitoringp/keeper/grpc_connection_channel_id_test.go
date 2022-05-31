@@ -16,17 +16,23 @@ import (
 func TestConnectionChannelIDQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	item := createTestConnectionChannelID(ctx, tk.MonitoringProviderKeeper)
 	for _, tc := range []struct {
 		desc     string
+		setItem  bool
 		request  *types.QueryGetConnectionChannelIDRequest
 		response *types.QueryGetConnectionChannelIDResponse
 		err      error
 	}{
 		{
-			desc:     "Valid Request",
-			request:  &types.QueryGetConnectionChannelIDRequest{},
-			response: &types.QueryGetConnectionChannelIDResponse{ConnectionChannelID: item},
+			desc:    "object does not exist",
+			setItem: false,
+			request: &types.QueryGetConnectionChannelIDRequest{},
+			err:     status.Error(codes.NotFound, "not found"),
+		},
+		{
+			desc:    "object exists",
+			setItem: true,
+			request: &types.QueryGetConnectionChannelIDRequest{},
 		},
 		{
 			desc: "Invalid Request",
@@ -34,6 +40,10 @@ func TestConnectionChannelIDQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
+			if tc.setItem {
+				item := createTestConnectionChannelID(ctx, tk.MonitoringProviderKeeper)
+				tc.response = &types.QueryGetConnectionChannelIDResponse{ConnectionChannelID: item}
+			}
 			response, err := tk.MonitoringProviderKeeper.ConnectionChannelID(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)

@@ -22,8 +22,9 @@ func (k msgServer) AddValidatorOperatorAddress(
 		Description:       types.ValidatorDescription{},
 	}
 
-	// get the current validator to eventually overwrite description and remove existing operator address
-	if validatorStore, found := k.GetValidator(ctx, valAddr); found {
+	// get the current validator to eventually overwrite description and add opAddr
+	validatorStore, valFound := k.GetValidator(ctx, valAddr)
+	if valFound {
 		validator.Description = validatorStore.Description
 		validator = validatorStore.AddValidatorOperatorAddress(opAddr)
 	}
@@ -35,5 +36,19 @@ func (k msgServer) AddValidatorOperatorAddress(
 		ValidatorAddress: valAddr,
 	})
 
-	return &types.MsgAddValidatorOperatorAddressResponse{}, nil
+	var err error
+	if valFound {
+		err = ctx.EventManager().EmitTypedEvent(
+			&types.EventValidatorOperatorAddressesUpdated{
+				Address:           validator.Address,
+				OperatorAddresses: validator.OperatorAddresses})
+	} else {
+		err = ctx.EventManager().EmitTypedEvent(
+			&types.EventValidatorCreated{
+				Address:           validator.Address,
+				OperatorAddresses: validator.OperatorAddresses,
+			})
+	}
+
+	return &types.MsgAddValidatorOperatorAddressResponse{}, err
 }

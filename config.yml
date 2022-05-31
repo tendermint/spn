@@ -29,6 +29,24 @@ faucet:
 genesis:
   chain_id: spn-1
   app_state:
+    bank:
+      denom_metadata:
+        - description: "The native staking token of Starport Network"
+          display: "spn"
+          base: "uspn"
+          name: "Starport Network"
+          symbol: "SPN"
+          denom_units:
+            - denom: "uspn"
+              aliases:
+                - "millispn"
+              exponent: "0"
+            - denom: "mspn"
+              aliases:
+                - "microspn"
+              exponent: "3"
+            - denom: "spn"
+              exponent: "6"
     staking:
       params:
         bond_denom: "uspn"
@@ -43,6 +61,10 @@ genesis:
     mint:
       params:
         mint_denom: "uspn"
+        distribution_proportions:
+          staking: "0.400000000000000000"
+          incentives: "0.400000000000000000"
+          community_pool: "0.200000000000000000"
     launch:
       params:
         revertDelay: "5"
@@ -53,6 +75,12 @@ genesis:
         auction_creation_fee:
           - "amount": "100"
             "denom": "uspn"
+    monitoringp:
+      params:
+        lastBlockHeight: "1"
+        consumerChainID: "orbit-1"
+        consumerUnbondingPeriod: "2"
+        consumerRevisionHeight: "1"
     participation:
       params:
         allocationPrice:

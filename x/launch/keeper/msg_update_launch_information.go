@@ -55,6 +55,6 @@ func (k msgServer) UpdateLaunchInformation(
 	}
 
 	k.SetChain(ctx, chain)
-
 	return &types.MsgUpdateLaunchInformationResponse{}, nil
+
 }

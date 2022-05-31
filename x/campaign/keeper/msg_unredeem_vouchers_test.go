@@ -24,13 +24,22 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 		accountFewShares         = sample.MainnetAccount(r, 0, accountFewSharesAddr)
 		accountFewSharesShare, _ = types.NewShares("30foo,15bar")
 
-		shares, _ = types.NewShares("10foo,10bar")
+		campaign                = sample.Campaign(r, 0)
+		campaignMainnetLaunched = sample.Campaign(r, 1)
+		shares, _               = types.NewShares("10foo,10bar")
 	)
 	account.Shares = accountShare
 	accountFewShares.Shares = accountFewSharesShare
 
-	// Create campaign
-	tk.CampaignKeeper.AppendCampaign(sdkCtx, sample.Campaign(r, 0))
+	// Create campaigns
+	tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
+
+	campaignMainnetLaunched.MainnetInitialized = true
+	chainLaunched := sample.Chain(r, 0, 0)
+	chainLaunched.LaunchTriggered = true
+	chainLaunched.IsMainnet = true
+	campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
+	campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetLaunched)
 
 	// Create accounts
 	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, account)
@@ -99,6 +108,15 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 				Shares:     shares,
 			},
 			err: types.ErrAccountNotFound,
+		},
+		{
+			name: "campaign with launched mainnet",
+			msg: types.MsgUnredeemVouchers{
+				Sender:     accountAddr,
+				CampaignID: campaignMainnetLaunched.CampaignID,
+				Shares:     sample.Shares(r),
+			},
+			err: types.ErrMainnetLaunchTriggered,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

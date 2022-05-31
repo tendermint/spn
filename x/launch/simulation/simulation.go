@@ -4,12 +4,14 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
+	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -37,18 +39,6 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 
 		// skip if account cannot cover creation fee
 		creationFee := k.ChainCreationFee(ctx)
-		customFee, err := simtypes.RandomFees(r, ctx, creationFee)
-		if err != nil {
-			if err != nil {
-				return simtypes.OperationMsg{},
-					nil,
-					err
-			}
-		}
-
-		if !creationFee.Empty() && !bk.SpendableCoins(ctx, simAccount.Address).IsAllGTE(creationFee.Add(customFee...)) {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgCreateChain, "skip chain creation"), nil, nil
-		}
 
 		msg := sample.MsgCreateChain(r,
 			simAccount.Address.String(),
@@ -56,7 +46,7 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 			false,
 			0,
 		)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -68,9 +58,9 @@ func SimulateMsgCreateChain(ak types.AccountKeeper, bk types.BankKeeper, k keepe
 			AccountKeeper:   ak,
 			Bankkeeper:      bk,
 			ModuleName:      types.ModuleName,
-			CoinsSpentInMsg: sdk.NewCoins(),
+			CoinsSpentInMsg: creationFee,
 		}
-		return simulation.GenAndDeliverTx(txCtx, customFee)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -92,6 +82,10 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 
 		modify := r.Intn(100) < 50
 		setCampaignID := r.Intn(100) < 50
+		// do not set campaignID if already set
+		if chain.HasCampaign {
+			setCampaignID = false
+		}
 		// ensure there is always a value to edit
 		if !modify && !setCampaignID {
 			modify = true
@@ -115,7 +109,7 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			modify,
 		)
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -129,7 +123,7 @@ func SimulateMsgEditChain(ak types.AccountKeeper, bk types.BankKeeper, k keeper.
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -145,14 +139,35 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "non-triggered chain not found"), nil, nil
 		}
 
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
+		// Select a random account no in genesis
+		r.Shuffle(len(accs), func(i, j int) {
+			accs[i], accs[j] = accs[j], accs[i]
+		})
+		var simAccount simtypes.Account
+		var availableAccount bool
+		for _, acc := range accs {
+			_, found := k.GetGenesisAccount(ctx, chain.LaunchID, acc.Address.String())
+			if found {
+				continue
+			}
+			_, found = k.GetVestingAccount(ctx, chain.LaunchID, acc.Address.String())
+			if found {
+				continue
+			}
+			simAccount = acc
+			availableAccount = true
+			break
+		}
+		if !availableAccount {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "no available account"), nil, nil
+		}
+
 		msg := sample.MsgRequestAddAccount(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),
 			chain.LaunchID,
 		)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -166,7 +181,7 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -182,14 +197,35 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, "non-triggered chain not found"), nil, nil
 		}
 
-		// Select a random account
-		simAccount, _ := simtypes.RandomAcc(r, accs)
+		// Select a random account no in genesis
+		r.Shuffle(len(accs), func(i, j int) {
+			accs[i], accs[j] = accs[j], accs[i]
+		})
+		var simAccount simtypes.Account
+		var availableAccount bool
+		for _, acc := range accs {
+			_, found := k.GetGenesisAccount(ctx, chain.LaunchID, acc.Address.String())
+			if found {
+				continue
+			}
+			_, found = k.GetVestingAccount(ctx, chain.LaunchID, acc.Address.String())
+			if found {
+				continue
+			}
+			simAccount = acc
+			availableAccount = true
+			break
+		}
+		if !availableAccount {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "no available account"), nil, nil
+		}
+
 		msg := sample.MsgRequestAddVestingAccount(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),
 			chain.LaunchID,
 		)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -203,7 +239,7 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -270,7 +306,7 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 			accAddr,
 		)
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -284,7 +320,7 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -307,7 +343,7 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 			simAccount.Address.String(),
 			chain.LaunchID,
 		)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -321,7 +357,7 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -341,7 +377,7 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 			valAcc.Address,
 			valAcc.LaunchID,
 		)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -355,7 +391,7 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -377,7 +413,7 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, err.Error()), nil, nil
 		}
 		msg := sample.MsgTriggerLaunch(r, simAccount.Address.String(), chain.LaunchID)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -391,7 +427,7 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -425,7 +461,7 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			msg.Approve = false
 		}
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -439,7 +475,7 @@ func SimulateMsgSettleRequest(ak types.AccountKeeper, bk types.BankKeeper, k kee
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -466,7 +502,7 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, err.Error()), nil, nil
 		}
 		msg := sample.MsgRevertLaunch(simAccount.Address.String(), chain.LaunchID)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -480,7 +516,7 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -509,7 +545,7 @@ func SimulateMsgUpdateLaunchInformation(ak types.AccountKeeper, bk types.BankKee
 			modify,
 			!modify && r.Intn(100) < 50,
 		)
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -523,6 +559,6 @@ func SimulateMsgUpdateLaunchInformation(ak types.AccountKeeper, bk types.BankKee
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }

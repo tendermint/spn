@@ -40,29 +40,34 @@ func (k msgServer) RequestRemoveValidator(
 		return nil, sdkerrors.Wrap(types.ErrNoAddressPermission, msg.Creator)
 	}
 
-	var requestID uint64
-	approved := false
-
 	content := types.NewValidatorRemoval(msg.ValidatorAddress)
 	request := types.Request{
 		LaunchID:  msg.LaunchID,
 		Creator:   msg.ValidatorAddress,
 		CreatedAt: ctx.BlockTime().Unix(),
 		Content:   content,
+		Status:    types.Request_PENDING,
 	}
 
+	var requestID uint64
+	approved := false
 	if msg.Creator == coord.Address {
-		err := ApplyRequest(ctx, k.Keeper, msg.LaunchID, request)
+		err := ApplyRequest(ctx, k.Keeper, chain, request, coord)
 		if err != nil {
 			return nil, err
 		}
 		approved = true
-	} else {
-		requestID = k.AppendRequest(ctx, request)
+		request.Status = types.Request_APPROVED
 	}
+
+	requestID = k.AppendRequest(ctx, request)
+	err := ctx.EventManager().EmitTypedEvent(&types.EventRequestCreated{
+		Creator: msg.Creator,
+		Request: request,
+	})
 
 	return &types.MsgRequestRemoveValidatorResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
-	}, nil
+	}, err
 }

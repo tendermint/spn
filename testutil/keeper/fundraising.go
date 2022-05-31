@@ -28,6 +28,5 @@ func (tk TestKeepers) CreateFixedPriceAuction(
 	))
 	require.NoError(tk.T, err)
 	require.NotNil(tk.T, res)
-	require.NotNil(tk.T, res.BaseAuction)
-	return res.BaseAuction.Id
+	return res.GetId()
 }

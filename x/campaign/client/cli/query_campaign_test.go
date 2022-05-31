@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/tendermint/spn/testutil/network"
+	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/client/cli"
 	"github.com/tendermint/spn/x/campaign/types"
@@ -60,7 +61,6 @@ func TestShowCampaign(t *testing.T) {
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{tc.id}
 			args = append(args, tc.args...)
@@ -73,12 +73,7 @@ func TestShowCampaign(t *testing.T) {
 				require.NoError(t, err)
 				var resp types.QueryGetCampaignResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-
-				// EmptyShares should be Shares(nil) however UnmarshalJSON returns Shares{}
-				// Both are empty shares, this allows to fix the tests
-				resp.Campaign.AllocatedShares = types.EmptyShares()
-
-				require.EqualValues(t, tc.obj, resp.Campaign)
+				require.Equal(t, nullify.Fill(tc.obj), nullify.Fill(resp.Campaign))
 			}
 		})
 	}
@@ -86,12 +81,6 @@ func TestShowCampaign(t *testing.T) {
 
 func TestListCampaign(t *testing.T) {
 	net, objs := networkWithCampaignObjects(t, 5)
-
-	nullify := func(campaigns []types.Campaign) {
-		for i := range campaigns {
-			campaigns[i].AllocatedShares = types.EmptyShares()
-		}
-	}
 
 	ctx := net.Validators[0].ClientCtx
 	request := func(next []byte, offset, limit uint64, total bool) []string {
@@ -117,9 +106,8 @@ func TestListCampaign(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllCampaignResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			nullify(resp.Campaign)
 			require.LessOrEqual(t, len(resp.Campaign), step)
-			require.Subset(t, objs, resp.Campaign)
+			require.Subset(t, nullify.Fill(objs), nullify.Fill(resp.Campaign))
 		}
 	})
 	t.Run("ByKey", func(t *testing.T) {
@@ -131,9 +119,8 @@ func TestListCampaign(t *testing.T) {
 			require.NoError(t, err)
 			var resp types.QueryAllCampaignResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			nullify(resp.Campaign)
 			require.LessOrEqual(t, len(resp.Campaign), step)
-			require.Subset(t, objs, resp.Campaign)
+			require.Subset(t, nullify.Fill(objs), nullify.Fill(resp.Campaign))
 			next = resp.Pagination.NextKey
 		}
 	})
@@ -145,8 +132,6 @@ func TestListCampaign(t *testing.T) {
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
-
-		nullify(resp.Campaign)
-		require.ElementsMatch(t, objs, resp.Campaign)
+		require.ElementsMatch(t, nullify.Fill(objs), nullify.Fill(resp.Campaign))
 	})
 }

@@ -140,7 +140,9 @@ func GenesisAccountContent(r *rand.Rand, launchID uint64, address string) launch
 // Request returns a sample Request
 func Request(r *rand.Rand, launchID uint64, address string) launch.Request {
 	content := GenesisAccountContent(r, launchID, address)
-	return RequestWithContent(r, launchID, content)
+	req := RequestWithContent(r, launchID, content)
+	req.Status = launch.Request_PENDING // set to pending by default
+	return req
 }
 
 // MsgCreateChain returns a sample MsgCreateChain
@@ -317,7 +319,7 @@ func LaunchParams(r *rand.Rand) launch.Params {
 	minLaunchTime := r.Int63n(10) + launch.DefaultMinLaunchTime
 
 	// assign random small amount of staking denom
-	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(BondDenom, r.Int63n(100)+1))
+	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
 
 	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay, chainCreationFee)
 }

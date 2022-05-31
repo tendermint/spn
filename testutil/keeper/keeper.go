@@ -22,6 +22,8 @@ import (
 	spntypes "github.com/tendermint/spn/pkg/types"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	claimkeeper "github.com/tendermint/spn/x/claim/keeper"
+	claimtypes "github.com/tendermint/spn/x/claim/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -55,12 +57,14 @@ type TestKeepers struct {
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 	StakingKeeper            stakingkeeper.Keeper
-	FundraisingKeeper        *fundraisingkeeper.Keeper
+	FundraisingKeeper        fundraisingkeeper.Keeper
 	ParticipationKeeper      *participationkeeper.Keeper
+	ClaimKeeper              *claimkeeper.Keeper
 }
 
 // TestMsgServers holds all message servers used during keeper tests for all modules
 type TestMsgServers struct {
+	T                testing.TB
 	ProfileSrv       profiletypes.MsgServer
 	LaunchSrv        launchtypes.MsgServer
 	CampaignSrv      campaigntypes.MsgServer
@@ -80,11 +84,11 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
 	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
-	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, make(map[string]bool))
+	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, distrKeeper)
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
-	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper)
+	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -97,6 +101,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 		[]Channel{},
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -119,6 +124,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	fundraisingKeeper.SetParams(ctx, fundraisingParams)
 	participationKeeper.SetParams(ctx, participationtypes.DefaultParams())
 	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
+	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
@@ -143,7 +149,9 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
+			ClaimKeeper:              claimKeeper,
 		}, TestMsgServers{
+			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
 			CampaignSrv:      campaignSrv,
@@ -168,11 +176,11 @@ func NewTestSetupWithIBCMocks(
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
 	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
-	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, make(map[string]bool))
+	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, distrKeeper)
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
-	rewardKeeper := initializer.Reward(bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper)
+	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -185,6 +193,7 @@ func NewTestSetupWithIBCMocks(
 		channelMock,
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -205,6 +214,7 @@ func NewTestSetupWithIBCMocks(
 	fundraisingKeeper.SetParams(ctx, fundraisingtypes.DefaultParams())
 	participationKeeper.SetParams(ctx, participationtypes.DefaultParams())
 	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
+	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
@@ -229,7 +239,9 @@ func NewTestSetupWithIBCMocks(
 			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
+			ClaimKeeper:              claimKeeper,
 		}, TestMsgServers{
+			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
 			CampaignSrv:      campaignSrv,

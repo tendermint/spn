@@ -4,6 +4,8 @@ import (
 	"encoding/binary"
 	"fmt"
 
+	profiletypes "github.com/tendermint/spn/x/profile/types"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -63,6 +65,21 @@ func (k Keeper) AppendRequest(ctx sdk.Context, request types.Request) uint64 {
 	return counter
 }
 
+// GetRequestCount returns the number of request from a launch ID
+// TODO: add tests https://github.com/tendermint/spn/issues/642
+func (k Keeper) GetRequestCount(ctx sdk.Context, launchID uint64) (count uint64) {
+	requestPoolPrefix := append(types.KeyPrefix(types.RequestKeyPrefix), types.RequestPoolKey(launchID)...)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), requestPoolPrefix)
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+	for ; iterator.Valid(); iterator.Next() {
+		count++
+	}
+
+	return count
+}
+
 // GetRequest returns a request from its index
 func (k Keeper) GetRequest(
 	ctx sdk.Context,
@@ -94,20 +111,6 @@ func (k Keeper) RemoveRequest(
 		launchID,
 		requestID,
 	))
-}
-
-// GetRequestCount returns the number of requests from a launch ID
-// TODO: add tests https://github.com/tendermint/spn/issues/642
-func (k Keeper) GetRequestCount(ctx sdk.Context, launchID uint64) (count uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), append(types.KeyPrefix(types.RequestKeyPrefix), types.RequestPoolKey(launchID)...))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
-
-	defer iterator.Close()
-	for ; iterator.Valid(); iterator.Next() {
-		count++
-	}
-
-	return count
 }
 
 // GetAllRequest returns all request
@@ -145,10 +148,12 @@ func CheckAccount(ctx sdk.Context, k Keeper, launchID uint64, address string) (b
 func ApplyRequest(
 	ctx sdk.Context,
 	k Keeper,
-	launchID uint64,
+	chain types.Chain,
 	request types.Request,
+	coord profiletypes.Coordinator,
 ) error {
-	if err := CheckRequest(ctx, k, launchID, request); err != nil {
+	err := CheckRequest(ctx, k, chain.LaunchID, request)
+	if err != nil {
 		return err
 	}
 
@@ -156,23 +161,61 @@ func ApplyRequest(
 	case *types.RequestContent_GenesisAccount:
 		ga := requestContent.GenesisAccount
 		k.SetGenesisAccount(ctx, *ga)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventGenesisAccountAdded{
+			Address:            ga.Address,
+			Coins:              ga.Coins,
+			LaunchID:           chain.LaunchID,
+			CoordinatorAddress: coord.Address,
+		})
+
 	case *types.RequestContent_VestingAccount:
 		va := requestContent.VestingAccount
 		k.SetVestingAccount(ctx, *va)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventVestingAccountAdded{
+			Address:            va.Address,
+			VestingOptions:     va.VestingOptions,
+			LaunchID:           chain.LaunchID,
+			CoordinatorAddress: coord.Address,
+		})
+
 	case *types.RequestContent_AccountRemoval:
 		ar := requestContent.AccountRemoval
-		k.RemoveGenesisAccount(ctx, launchID, ar.Address)
-		k.RemoveVestingAccount(ctx, launchID, ar.Address)
+		k.RemoveGenesisAccount(ctx, chain.LaunchID, ar.Address)
+		k.RemoveVestingAccount(ctx, chain.LaunchID, ar.Address)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventAccountRemoved{
+			Address:            ar.Address,
+			LaunchID:           chain.LaunchID,
+			CoordinatorAddress: coord.Address,
+		})
+
 	case *types.RequestContent_GenesisValidator:
 		ga := requestContent.GenesisValidator
 		k.SetGenesisValidator(ctx, *ga)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorAdded{
+			Address:            ga.Address,
+			GenTx:              ga.GenTx,
+			ConsPubKey:         ga.ConsPubKey,
+			SelfDelegation:     ga.SelfDelegation,
+			Peer:               ga.Peer,
+			LaunchID:           chain.LaunchID,
+			HasCampaign:        chain.HasCampaign,
+			CampaignID:         chain.CampaignID,
+			CoordinatorAddress: coord.Address,
+		})
+
 	case *types.RequestContent_ValidatorRemoval:
 		vr := requestContent.ValidatorRemoval
-		k.RemoveGenesisValidator(ctx, launchID, vr.ValAddress)
-	default:
-		return spnerrors.Critical("unknown request content type")
+		k.RemoveGenesisValidator(ctx, chain.LaunchID, vr.ValAddress)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorRemoved{
+			GenesisValidatorAccount: vr.ValAddress,
+			LaunchID:                chain.LaunchID,
+			HasCampaign:             chain.HasCampaign,
+			CampaignID:              chain.CampaignID,
+			CoordinatorAddress:      coord.Address,
+		})
+
 	}
-	return nil
+	return err
 }
 
 // CheckRequest verifies that a request can be applied
