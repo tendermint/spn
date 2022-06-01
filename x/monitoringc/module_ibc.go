@@ -19,7 +19,7 @@ import (
 func (am AppModule) OnChanOpenInit(
 	ctx sdk.Context,
 	order channeltypes.Order,
-	_ []string,
+	connectionHops []string,
 	portID,
 	channelID string,
 	chanCap *capabilitytypes.Capability,
@@ -45,8 +45,15 @@ func (am AppModule) OnChanOpenInit(
 		return err
 	}
 
+	if len(connectionHops) != 1 {
+		return sdkerrors.Wrap(
+			channeltypes.ErrTooManyConnectionHops,
+			"must have direct connection to provider chain",
+		)
+	}
+
 	// Check if the client ID is a verified from MsgCreateClient
-	if err := am.keeper.VerifyClientIDFromChannelID(ctx, channelID); err != nil {
+	if err := am.keeper.VerifyClientIDFromConnID(ctx, connectionHops[0]); err != nil {
 		return sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
 	}
 

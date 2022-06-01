@@ -63,26 +63,6 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		require.ErrorIs(t, err, connectiontypes.ErrConnectionNotFound)
 	})
 
-	t.Run("should fail if the connection doesn't exist", func(t *testing.T) {
-		ctx, tk, _ := testkeeper.NewTestSetupWithIBCMocksMonitoringp(
-			t,
-			[]testkeeper.Connection{},
-			[]testkeeper.Channel{
-				{
-					ChannelID: "foo",
-					Channel: channeltypes.Channel{
-						ConnectionHops: []string{"foo"},
-					},
-				},
-			},
-		)
-		tk.MonitoringProviderKeeper.SetConsumerClientID(ctx, types.ConsumerClientID{
-			ClientID: "foo",
-		})
-		err := tk.MonitoringProviderKeeper.VerifyClientIDFromConnID(ctx, "foo")
-		require.ErrorIs(t, err, connectiontypes.ErrConnectionNotFound)
-	})
-
 	t.Run("should fail if the consumer client doesn't exist", func(t *testing.T) {
 		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
 		err := tk.MonitoringProviderKeeper.VerifyClientIDFromConnID(ctx, "foo")
