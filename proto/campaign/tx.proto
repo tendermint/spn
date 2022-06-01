@@ -16,7 +16,6 @@ service Msg {
   rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
   rpc UpdateSpecialAllocations(MsgUpdateSpecialAllocations) returns (MsgUpdateSpecialAllocationsResponse);
   rpc InitializeMainnet(MsgInitializeMainnet) returns (MsgInitializeMainnetResponse);
-  rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
   rpc AddVestingOptions(MsgAddVestingOptions) returns (MsgAddVestingOptionsResponse);
   rpc MintVouchers(MsgMintVouchers) returns (MsgMintVouchersResponse);
   rpc BurnVouchers(MsgBurnVouchers) returns (MsgBurnVouchersResponse);
