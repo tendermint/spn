@@ -167,6 +167,49 @@ func SimulateMsgInitializeMainnet(
 	}
 }
 
+// SimulateMsgUpdateSpecialAllocations simulates a MsgUpdateSpecialAllocations message
+func SimulateMsgUpdateSpecialAllocations(ak types.AccountKeeper,
+	bk types.BankKeeper,
+	pk types.ProfileKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
+	return func(
+		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false, true)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateSpecialAllocations, "skip update special allocations"), nil, nil
+		}
+
+		// get shares for both genesis distribution and claimable airdrop
+		genesisDistribution, getShares := GetSharesFromCampaign(r, ctx, k, campID)
+		if !getShares {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateSpecialAllocations, "skip update special allocations"), nil, nil
+		}
+		claimableAirdrop, getShares := GetSharesFromCampaign(r, ctx, k, campID)
+		if !getShares {
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateSpecialAllocations, "skip update special allocations"), nil, nil
+		}
+
+		// GetSharesFromCampaign returns a number of available shares for a campaign
+		// potentially genesisDistribution + claimableAirdrop can overflow the available shares
+		// we divide by two all amounts to avoid overflowing available shares
+		for i, s := range genesisDistribution {
+			genesisDistribution[i].Amount = s.Amount.QuoRaw(2)
+		}
+		for i, s := range claimableAirdrop {
+			claimableAirdrop[i].Amount = s.Amount.QuoRaw(2)
+		}
+
+		msg := types.NewMsgUpdateSpecialAllocations(
+			simAccount.Address.String(),
+			campID,
+			types.NewSpecialAllocations(genesisDistribution, claimableAirdrop),
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
+	}
+}
+
 // SimulateMsgAddShares simulates a MsgAddShares message
 func SimulateMsgAddShares(
 	ak types.AccountKeeper,
