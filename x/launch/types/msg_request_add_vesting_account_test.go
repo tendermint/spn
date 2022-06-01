@@ -12,9 +12,7 @@ import (
 )
 
 func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
-	var (
-		launchID = uint64(10)
-	)
+	launchID := uint64(10)
 
 	option := *types.NewDelayedVesting(
 		coinsStr(t, "1000foo500bar"),

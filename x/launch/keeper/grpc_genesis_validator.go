@@ -32,7 +32,6 @@ func (k Keeper) GenesisValidatorAll(c context.Context, req *types.QueryAllGenesi
 		genesisValidators = append(genesisValidators, genesisValidator)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

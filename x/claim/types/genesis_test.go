@@ -32,7 +32,6 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),

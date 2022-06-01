@@ -41,7 +41,8 @@ func (k msgServer) AddValidatorOperatorAddress(
 		err = ctx.EventManager().EmitTypedEvent(
 			&types.EventValidatorOperatorAddressesUpdated{
 				Address:           validator.Address,
-				OperatorAddresses: validator.OperatorAddresses})
+				OperatorAddresses: validator.OperatorAddresses,
+			})
 	} else {
 		err = ctx.EventManager().EmitTypedEvent(
 			&types.EventValidatorCreated{

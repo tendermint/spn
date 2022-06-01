@@ -13,9 +13,7 @@ import (
 	"github.com/tendermint/spn/x/claim/types"
 )
 
-var (
-	r *rand.Rand
-)
+var r *rand.Rand
 
 // initialize random generator
 func init() {

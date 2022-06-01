@@ -20,7 +20,6 @@ func (k Keeper) SetClaimRecord(ctx sdk.Context, claimRecord types.ClaimRecord) {
 func (k Keeper) GetClaimRecord(
 	ctx sdk.Context,
 	index string,
-
 ) (val types.ClaimRecord, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClaimRecordKeyPrefix))
 
@@ -39,7 +38,6 @@ func (k Keeper) GetClaimRecord(
 func (k Keeper) RemoveClaimRecord(
 	ctx sdk.Context,
 	index string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClaimRecordKeyPrefix))
 	store.Delete(types.ClaimRecordKey(

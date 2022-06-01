@@ -118,14 +118,16 @@ func TestRewardPool_Validate(t *testing.T) {
 			rewardPool: types.RewardPool{
 				LaunchID: 1,
 				Provider: sample.Address(r),
-				InitialCoins: sdk.Coins{sdk.Coin{
-					Denom:  "test",
-					Amount: sdk.NewInt(5),
-				},
+				InitialCoins: sdk.Coins{
+					sdk.Coin{
+						Denom:  "test",
+						Amount: sdk.NewInt(5),
+					},
 					sdk.Coin{
 						Denom:  "test1",
 						Amount: sdk.NewInt(5),
-					}},
+					},
+				},
 				RemainingCoins: sdk.Coins{sdk.Coin{
 					Denom:  "test",
 					Amount: sdk.NewInt(1),

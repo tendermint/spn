@@ -9,7 +9,6 @@ import (
 
 // Validate checks the claimRecord is valid
 func (m ClaimRecord) Validate() error {
-
 	if _, err := sdk.AccAddressFromBech32(m.Address); err != nil {
 		return err
 	}
