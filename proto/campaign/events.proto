@@ -3,8 +3,6 @@ package tendermint.spn.campaign;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
-import "campaign/campaign.proto";
-import "campaign/mainnet_account.proto";
 import "campaign/mainnet_vesting_account.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
@@ -12,6 +10,7 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 message EventCampaignCreated {
   uint64 campaignID = 1;
   string coordinatorAddress = 2;
+  uint64 coordinatorID = 3;
 }
 
 message EventCampaignChainAdded {

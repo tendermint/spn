@@ -27,6 +27,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgUpdateTotalSupply:
 			res, err := msgServer.UpdateTotalSupply(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgUpdateSpecialAllocations:
+			res, err := msgServer.UpdateSpecialAllocations(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgInitializeMainnet:
 			res, err := msgServer.InitializeMainnet(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)

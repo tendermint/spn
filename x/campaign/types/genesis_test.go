@@ -372,7 +372,6 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 			shouldBeValid: true,
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()
 			if tc.shouldBeValid {

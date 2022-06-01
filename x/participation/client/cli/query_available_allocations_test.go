@@ -46,7 +46,6 @@ func TestShowAvailableAllocations(t *testing.T) {
 			err:        status.Error(codes.InvalidArgument, "not found"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := []string{
 				tc.delAddress,

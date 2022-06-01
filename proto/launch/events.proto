@@ -13,6 +13,8 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 
 message EventChainCreated {
   uint64 launchID = 1;
+  string coordinatorAddress = 2;
+  uint64 coordinatorID = 3;
 }
 
 

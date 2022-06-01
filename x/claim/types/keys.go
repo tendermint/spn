@@ -20,3 +20,12 @@ const (
 func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
+
+const (
+	MissionKey      = "Mission-value-"
+	MissionCountKey = "Mission-count-"
+)
+
+const (
+	AirdropSupplyKey = "AirdropSupply-value-"
+)

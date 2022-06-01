@@ -24,6 +24,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdShowCampaign(),
 		CmdListCampaign(),
 		CmdShowCampaignChains(),
+		CmdSpecialAllocationsBalance(),
 		CmdShowMainnetAccount(),
 		CmdListMainnetAccount(),
 		CmdShowMainnetAccountBalance(),

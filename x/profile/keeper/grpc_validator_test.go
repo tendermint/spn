@@ -50,7 +50,6 @@ func TestValidatorQuerySingle(t *testing.T) {
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			response, err := tk.ProfileKeeper.Validator(wctx, tc.request)
 			if tc.err != nil {
