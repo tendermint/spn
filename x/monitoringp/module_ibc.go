@@ -33,7 +33,7 @@ func (am AppModule) OnChanOpenInit(
 func (am AppModule) OnChanOpenTry(
 	ctx sdk.Context,
 	order channeltypes.Order,
-	_ []string,
+	connectionHops []string,
 	portID,
 	channelID string,
 	chanCap *capabilitytypes.Capability,
@@ -65,8 +65,15 @@ func (am AppModule) OnChanOpenTry(
 		}
 	}
 
+	if len(connectionHops) != 1 {
+		return "", sdkerrors.Wrap(
+			channeltypes.ErrTooManyConnectionHops,
+			"must have direct connection to consumer chain",
+		)
+	}
+
 	// Check if the right consumer client ID is used
-	if err := am.keeper.VerifyClientIDFromChannelID(ctx, channelID); err != nil {
+	if err := am.keeper.VerifyClientIDFromConnID(ctx, connectionHops[0]); err != nil {
 		return "", sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
 	}
 
