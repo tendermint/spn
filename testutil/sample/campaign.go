@@ -42,25 +42,6 @@ func CustomShareVestingOptions(r *rand.Rand, shares campaign.Shares) campaign.Sh
 	return *campaign.NewShareDelayedVesting(shares, shares, Duration(r).Microseconds())
 }
 
-// MainnetVestingAccount returns a sample MainnetVestingAccount
-func MainnetVestingAccount(r *rand.Rand, campaignID uint64, address string) campaign.MainnetVestingAccount {
-	return MainnetVestingAccountWithShares(r, campaignID, address, Shares(r))
-}
-
-// MainnetVestingAccountWithShares returns a sample MainnetVestingAccount with custom shares
-func MainnetVestingAccountWithShares(
-	r *rand.Rand,
-	campaignID uint64,
-	address string,
-	shares campaign.Shares,
-) campaign.MainnetVestingAccount {
-	return campaign.MainnetVestingAccount{
-		CampaignID:     campaignID,
-		Address:        address,
-		VestingOptions: CustomShareVestingOptions(r, shares),
-	}
-}
-
 // CampaignName returns a sample campaign name
 func CampaignName(r *rand.Rand) string {
 	return String(r, 20)
