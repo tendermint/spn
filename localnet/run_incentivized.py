@@ -102,6 +102,6 @@ if __name__ == "__main__":
 
     # Perform IBC connection
     cmd('hermes -c ./hermes/config.toml create connection spn-1 --client-a 07-tendermint-0 --client-b 07-tendermint-0')
-    cmd('hermes -c ./hermes/config.toml create channel spn-1 --connection-a connection-0 --port-a monitoringc --port-b monitoringp -o ordered --channel-version monitoring-1')
+    cmd('hermes -c ./hermes/config.toml create channel --port-a monitoringc --port-b monitoringp spn-1 connection-0 -o ordered --channel-version monitoring-1')
 
     # hermes -c ./hermes/config.toml start
