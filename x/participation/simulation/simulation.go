@@ -95,7 +95,6 @@ func SimulateCreateAuction(
 			return simtypes.OperationMsg{},
 				nil,
 				fmt.Errorf("no tier in list")
-
 		}
 		// create a selling coin that at least covers all tiers in the simulation param
 		requireAmt := sdk.NewCoin(simutil.AuctionCoinDenom, largestTier.Benefits.MaxBidAmount)

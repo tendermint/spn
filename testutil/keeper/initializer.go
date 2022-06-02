@@ -44,19 +44,17 @@ import (
 	rewardmoduletypes "github.com/tendermint/spn/x/reward/types"
 )
 
-var (
-	moduleAccountPerms = map[string][]string{
-		authtypes.FeeCollectorName:     nil,
-		distrtypes.ModuleName:          nil,
-		minttypes.ModuleName:           {authtypes.Minter},
-		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
-		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
-		rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
-		fundraisingtypes.ModuleName:    nil,
-	}
-)
+var moduleAccountPerms = map[string][]string{
+	authtypes.FeeCollectorName:     nil,
+	distrtypes.ModuleName:          nil,
+	minttypes.ModuleName:           {authtypes.Minter},
+	ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+	campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
+	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
+	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+	rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
+	fundraisingtypes.ModuleName:    nil,
+}
 
 // initializer allows to initialize each module keeper
 type initializer struct {

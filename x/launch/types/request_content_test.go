@@ -47,7 +47,6 @@ func TestRequestContent_Validate(t *testing.T) {
 	// request with no content
 	requestContent = types.RequestContent{}
 	require.Equal(t, requestContent.Validate(), errors.New("unrecognized request content"))
-
 }
 
 func TestNewGenesisAccount(t *testing.T) {

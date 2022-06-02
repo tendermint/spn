@@ -72,5 +72,4 @@ func TestIsCampaignMainnetLaunchTriggered(t *testing.T) {
 		_, err := tk.CampaignKeeper.IsCampaignMainnetLaunchTriggered(ctx, 1000)
 		require.Error(t, err)
 	})
-
 }

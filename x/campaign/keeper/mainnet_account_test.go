@@ -34,6 +34,7 @@ func TestMainnetAccountGet(t *testing.T) {
 		require.Equal(t, item, rst)
 	}
 }
+
 func TestMainnetAccountRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)

@@ -147,7 +147,6 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				require.True(t, found, "genesis account not found")
 				require.Equal(t, types.Request_APPROVED, request.Status)
 			}
-
 		})
 	}
 }

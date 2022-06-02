@@ -32,7 +32,6 @@ func (k Keeper) GenesisAccountAll(c context.Context, req *types.QueryAllGenesisA
 		genesisAccounts = append(genesisAccounts, genesisAccount)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
