@@ -32,7 +32,6 @@ func (k Keeper) RewardPoolAll(c context.Context, req *types.QueryAllRewardPoolRe
 		rewardPools = append(rewardPools, rewardPool)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

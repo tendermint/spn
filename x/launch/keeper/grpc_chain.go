@@ -32,7 +32,6 @@ func (k Keeper) ChainAll(c context.Context, req *types.QueryAllChainRequest) (*t
 		chains = append(chains, chain)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

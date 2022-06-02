@@ -34,6 +34,7 @@ func TestVestingAccountGet(t *testing.T) {
 		require.Equal(t, item, rst)
 	}
 }
+
 func TestVestingAccountRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)

@@ -121,7 +121,6 @@ func TestMsgRequestAddValidator(t *testing.T) {
 
 			if !tc.wantApprove {
 				require.Equal(t, types.Request_PENDING, request.Status)
-
 			} else {
 				_, found := tk.LaunchKeeper.GetGenesisValidator(sdkCtx, tc.msg.LaunchID, tc.msg.ValAddress)
 				require.True(t, found, "genesis validator not found")

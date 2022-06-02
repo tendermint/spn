@@ -32,7 +32,6 @@ func (k Keeper) CoordinatorAll(c context.Context, req *types.QueryAllCoordinator
 		coordinators = append(coordinators, coordinator)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

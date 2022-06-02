@@ -34,6 +34,7 @@ func TestGenesisAccountGet(t *testing.T) {
 		require.Equal(t, item, rst)
 	}
 }
+
 func TestGenesisAccountRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNGenesisAccount(tk.LaunchKeeper, ctx, 10)

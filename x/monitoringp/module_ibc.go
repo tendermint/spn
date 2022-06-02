@@ -86,7 +86,6 @@ func (am AppModule) OnChanOpenAck(
 	_ string,
 ) error {
 	return sdkerrors.Wrap(types.ErrInvalidHandshake, "IBC handshake must be initiated by the consumer")
-
 }
 
 // OnChanOpenConfirm implements the IBCModule interface

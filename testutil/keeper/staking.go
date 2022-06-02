@@ -11,7 +11,6 @@ import (
 
 // DelegateN creates N delegations from the same address
 func (tk TestKeepers) DelegateN(ctx sdk.Context, r *rand.Rand, address string, shareAmt int64, n int) ([]stakingtypes.Delegation, sdk.Dec) {
-
 	items := make([]stakingtypes.Delegation, n)
 	totalShares := sdk.ZeroDec()
 

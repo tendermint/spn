@@ -33,7 +33,6 @@ func (k Keeper) RequestAll(c context.Context, req *types.QueryAllRequestRequest)
 		requests = append(requests, request)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
