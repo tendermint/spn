@@ -55,6 +55,7 @@ func TestCoordinatorByAddressInvalid(t *testing.T) {
 		require.ErrorIs(t, err, spnerrors.ErrCritical)
 	}
 }
+
 func TestCoordinatorByAddressRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)

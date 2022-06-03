@@ -86,5 +86,4 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 			}
 		})
 	}
-
 }

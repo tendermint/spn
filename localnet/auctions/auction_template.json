@@ -1,0 +1,13 @@
+{
+  "start_price": "",
+  "min_bid_price": "",
+  "selling_coin": {
+    "denom": "",
+    "amount": ""
+  },
+  "paying_coin_denom": "",
+  "start_time": "",
+  "end_time": "",
+  "max_extended_round": 0,
+  "extended_round_rate": "0.05"
+}

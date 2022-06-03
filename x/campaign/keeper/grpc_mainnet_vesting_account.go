@@ -32,7 +32,6 @@ func (k Keeper) MainnetVestingAccountAll(c context.Context, req *types.QueryAllM
 		mainnetVestingAccounts = append(mainnetVestingAccounts, mainnetVestingAccount)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

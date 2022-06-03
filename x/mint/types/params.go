@@ -36,7 +36,6 @@ func NewParams(
 	blocksPerYear uint64,
 	proportions DistributionProportions,
 ) Params {
-
 	return Params{
 		MintDenom:               mintDenom,
 		InflationRateChange:     inflationRateChange,

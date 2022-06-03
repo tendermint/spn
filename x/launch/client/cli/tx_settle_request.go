@@ -12,12 +12,10 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-var (
-	approveMap = map[string]bool{
-		"approve": true,
-		"reject":  false,
-	}
-)
+var approveMap = map[string]bool{
+	"approve": true,
+	"reject":  false,
+}
 
 func CmdSettleRequest() *cobra.Command {
 	cmd := &cobra.Command{

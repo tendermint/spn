@@ -32,7 +32,7 @@ starport chain build
 The localnet can be started from the following script:
 (must be run in `localnet` directory)
 ```
-python3 start.py
+python3 start_spn.py
 ```
 
 The logs of the Node 1 are printed in the console.
@@ -58,7 +58,7 @@ When `0` is provided for a validator, the delegation is not updated
 
 Run the localnet in a terminal
 ```
-python3 start.py
+python3 start_spn.py
 ```
 
 Show the validator set
@@ -148,3 +148,9 @@ validators:
     value: SIbr/rY/55BiXE6NBay7PmzBw25ADIrVtfVRqsqQBZM=
   voting_power: "10"
 ```
+
+### Other scripts
+
+- `run_incentivized.py`: start a testnet and connect it to SPN with the IBC monitoring module
+- `run_sale.py`: run a fixed-price auction
+- `run_auction.py` run a batch auction

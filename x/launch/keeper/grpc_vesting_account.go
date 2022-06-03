@@ -32,7 +32,6 @@ func (k Keeper) VestingAccountAll(c context.Context, req *types.QueryAllVestingA
 		vestingAccounts = append(vestingAccounts, vestingAccount)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

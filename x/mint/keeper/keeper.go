@@ -133,7 +133,7 @@ func (k Keeper) DistributeMintedCoins(ctx sdk.Context, mintedCoin sdk.Coin) erro
 
 	// allocate pool allocation ratio to incentives module account
 	incentivesCoins := sdk.NewCoins()
-	//TODO: uncomment once incentives module is in place
+	// TODO: uncomment once incentives module is in place
 	// incentivesCoins := sdk.NewCoins(k.GetProportions(ctx, mintedCoin, proportions.Incentives))
 	// err = k.bankKeeper.SendCoinsFromModuleToModule(ctx, types.ModuleName, incentivestypes.ModuleName, incentivesCoins)
 	// if err != nil {

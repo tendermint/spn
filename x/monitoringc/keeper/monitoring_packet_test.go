@@ -55,7 +55,6 @@ func Test_OnRecvMonitoringPacket(t *testing.T) {
 		OperatorAddresses: []string{valOpAddrFoo},
 	})
 	tk.ProfileKeeper.SetValidatorByOperatorAddress(ctx, profiletypes.ValidatorByOperatorAddress{
-
 		ValidatorAddress: valFoo,
 		OperatorAddress:  valOpAddrFoo,
 	})
@@ -139,9 +138,7 @@ func Test_OnRecvMonitoringPacket(t *testing.T) {
 }
 
 func Test_OnAcknowledgementMonitoringPacket(t *testing.T) {
-	var (
-		ctx, tk, _ = testkeeper.NewTestSetup(t)
-	)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	err := tk.MonitoringConsumerKeeper.OnAcknowledgementMonitoringPacket(
 		ctx,
 		channeltypes.Packet{},
@@ -152,9 +149,7 @@ func Test_OnAcknowledgementMonitoringPacket(t *testing.T) {
 }
 
 func Test_OnTimeoutMonitoringPacket(t *testing.T) {
-	var (
-		ctx, tk, _ = testkeeper.NewTestSetup(t)
-	)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	err := tk.MonitoringConsumerKeeper.OnTimeoutMonitoringPacket(
 		ctx,
 		channeltypes.Packet{},

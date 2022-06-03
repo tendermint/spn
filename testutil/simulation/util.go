@@ -42,7 +42,6 @@ func GenAndDeliverTx(txCtx sdksimulation.OperationInput, fees sdk.Coins, gas uin
 		[]uint64{account.GetSequence()},
 		txCtx.SimAccount.PrivKey,
 	)
-
 	if err != nil {
 		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to generate mock tx"), nil, err
 	}

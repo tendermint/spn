@@ -5,6 +5,7 @@ package tendermint.spn.campaign;
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "campaign/mainnet_vesting_account.proto";
+import "campaign/special_allocations.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
@@ -13,6 +14,7 @@ service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   rpc EditCampaign(MsgEditCampaign) returns (MsgEditCampaignResponse);
   rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
+  rpc UpdateSpecialAllocations(MsgUpdateSpecialAllocations) returns (MsgUpdateSpecialAllocationsResponse);
   rpc InitializeMainnet(MsgInitializeMainnet) returns (MsgInitializeMainnetResponse);
   rpc AddShares(MsgAddShares) returns (MsgAddSharesResponse);
   rpc AddVestingOptions(MsgAddVestingOptions) returns (MsgAddVestingOptionsResponse);
@@ -20,7 +22,7 @@ service Msg {
   rpc BurnVouchers(MsgBurnVouchers) returns (MsgBurnVouchersResponse);
   rpc RedeemVouchers(MsgRedeemVouchers) returns (MsgRedeemVouchersResponse);
   rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
+// this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgCreateCampaign {
@@ -58,6 +60,14 @@ message MsgUpdateTotalSupply {
 }
 
 message MsgUpdateTotalSupplyResponse {}
+
+message MsgUpdateSpecialAllocations {
+  string coordinator = 1;
+  uint64 campaignID = 2;
+  SpecialAllocations specialAllocations = 3 [(gogoproto.nullable) = false];
+}
+
+message MsgUpdateSpecialAllocationsResponse {}
 
 message MsgInitializeMainnet {
   string coordinator = 1;

@@ -51,7 +51,6 @@ func TestMsgDisableCoordinator(t *testing.T) {
 			coord, found := tk.ProfileKeeper.GetCoordinator(sdkCtx, got.CoordinatorID)
 			require.True(t, found)
 			require.EqualValues(t, false, coord.Active)
-
 		})
 	}
 }

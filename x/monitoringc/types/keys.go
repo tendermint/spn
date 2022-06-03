@@ -43,10 +43,8 @@ const (
 	MonitoringHistoryKeyPrefix = "MonitoringHistory/value/"
 )
 
-var (
-	// PortKey defines the key to store the port ID in store
-	PortKey = KeyPrefix("monitoringc-port-")
-)
+// PortKey defines the key to store the port ID in store
+var PortKey = KeyPrefix("monitoringc-port-")
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)

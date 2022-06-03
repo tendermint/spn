@@ -57,7 +57,6 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 			Address:    msg.Account,
 			Shares:     types.EmptyShares(),
 		}
-
 	}
 
 	// Increase the account shares
