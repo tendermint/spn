@@ -3,10 +3,13 @@ package networksuite
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/gogo/protobuf/proto"
 	"github.com/tendermint/spn/testutil/nullify"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 	claim "github.com/tendermint/spn/x/claim/types"
+	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	"math/rand"
+	"strconv"
 
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -18,10 +21,11 @@ import (
 // NetworkTestSuite is a test suite for query tests that initializes a network instance
 type NetworkTestSuite struct {
 	suite.Suite
-	Network       *network.Network
-	LaunchState   launch.GenesisState
-	CampaignState campaign.GenesisState
-	ClaimState    claim.GenesisState
+	Network          *network.Network
+	LaunchState      launch.GenesisState
+	CampaignState    campaign.GenesisState
+	ClaimState       claim.GenesisState
+	MonitoringcState monitoringc.GenesisState
 }
 
 // SetupSuite setups the local network with a genesis state
@@ -29,26 +33,31 @@ func (nts *NetworkTestSuite) SetupSuite() {
 	r := sample.Rand()
 	cfg := network.DefaultConfig()
 
+	updateConfigGenesisState := func(moduleName string, moduleState proto.Message) {
+		buf, err := cfg.Codec.MarshalJSON(moduleState)
+		require.NoError(nts.T(), err)
+		cfg.GenesisState[moduleName] = buf
+	}
+
 	// initialize launch
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[launch.ModuleName], &nts.LaunchState))
 	nts.LaunchState = populateLaunch(r, nts.LaunchState)
-	buf, err := cfg.Codec.MarshalJSON(&nts.LaunchState)
-	require.NoError(nts.T(), err)
-	cfg.GenesisState[launch.ModuleName] = buf
+	updateConfigGenesisState(launch.ModuleName, &nts.LaunchState)
 
 	// initialize campaign
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[campaign.ModuleName], &nts.CampaignState))
 	nts.CampaignState = populateCampaign(r, nts.CampaignState)
-	buf, err = cfg.Codec.MarshalJSON(&nts.CampaignState)
-	require.NoError(nts.T(), err)
-	cfg.GenesisState[campaign.ModuleName] = buf
+	updateConfigGenesisState(campaign.ModuleName, &nts.CampaignState)
 
 	// initialize claim
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[claim.ModuleName], &nts.ClaimState))
 	nts.ClaimState = populateClaim(r, nts.ClaimState)
-	buf, err = cfg.Codec.MarshalJSON(&nts.ClaimState)
-	require.NoError(nts.T(), err)
-	cfg.GenesisState[claim.ModuleName] = buf
+	updateConfigGenesisState(claim.ModuleName, &nts.ClaimState)
+
+	// initialize monitoring consumer
+	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[monitoringc.ModuleName], &nts.MonitoringcState))
+	nts.MonitoringcState = populateMonitoringc(r, nts.MonitoringcState)
+	updateConfigGenesisState(monitoringc.ModuleName, &nts.MonitoringcState)
 
 	nts.Network = network.New(nts.T(), cfg)
 }
@@ -150,4 +159,47 @@ func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisSta
 	}
 
 	return claimState
+}
+
+func populateMonitoringc(r *rand.Rand, monitoringcState monitoringc.GenesisState) monitoringc.GenesisState {
+	// add launch ID from channel ID
+	for i := 0; i < 5; i++ {
+		launchIDFromChannelID := monitoringc.LaunchIDFromChannelID{
+			ChannelID: strconv.Itoa(i),
+		}
+		nullify.Fill(&launchIDFromChannelID)
+		monitoringcState.LaunchIDFromChannelIDList = append(
+			monitoringcState.LaunchIDFromChannelIDList,
+			launchIDFromChannelID,
+		)
+	}
+
+	// add monitoring history
+	for i := 0; i < 5; i++ {
+		monitoringHistory := monitoringc.MonitoringHistory{
+			LaunchID: uint64(i),
+		}
+		nullify.Fill(&monitoringHistory)
+		monitoringcState.MonitoringHistoryList = append(monitoringcState.MonitoringHistoryList, monitoringHistory)
+	}
+
+	// add provider client ID
+	for i := 0; i < 5; i++ {
+		providerClientID := monitoringc.ProviderClientID{
+			LaunchID: uint64(i),
+		}
+		nullify.Fill(&providerClientID)
+		monitoringcState.ProviderClientIDList = append(monitoringcState.ProviderClientIDList, providerClientID)
+	}
+
+	// add verified client IDs
+	for i := 0; i < 5; i++ {
+		verifiedClientID := monitoringc.VerifiedClientID{
+			LaunchID: uint64(i),
+		}
+		nullify.Fill(&verifiedClientID)
+		monitoringcState.VerifiedClientIDList = append(monitoringcState.VerifiedClientIDList, verifiedClientID)
+	}
+
+	return monitoringcState
 }
