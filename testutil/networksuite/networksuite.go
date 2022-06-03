@@ -8,6 +8,7 @@ import (
 	campaign "github.com/tendermint/spn/x/campaign/types"
 	claim "github.com/tendermint/spn/x/claim/types"
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
+	participation "github.com/tendermint/spn/x/participation/types"
 	"math/rand"
 	"strconv"
 
@@ -21,11 +22,12 @@ import (
 // NetworkTestSuite is a test suite for query tests that initializes a network instance
 type NetworkTestSuite struct {
 	suite.Suite
-	Network          *network.Network
-	LaunchState      launch.GenesisState
-	CampaignState    campaign.GenesisState
-	ClaimState       claim.GenesisState
-	MonitoringcState monitoringc.GenesisState
+	Network            *network.Network
+	LaunchState        launch.GenesisState
+	CampaignState      campaign.GenesisState
+	ClaimState         claim.GenesisState
+	MonitoringcState   monitoringc.GenesisState
+	ParticipationState participation.GenesisState
 }
 
 // SetupSuite setups the local network with a genesis state
@@ -56,8 +58,13 @@ func (nts *NetworkTestSuite) SetupSuite() {
 
 	// initialize monitoring consumer
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[monitoringc.ModuleName], &nts.MonitoringcState))
-	nts.MonitoringcState = populateMonitoringc(r, nts.MonitoringcState)
+	nts.MonitoringcState = populateMonitoringc(nts.MonitoringcState)
 	updateConfigGenesisState(monitoringc.ModuleName, &nts.MonitoringcState)
+
+	// initialize participation
+	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[participation.ModuleName], &nts.ParticipationState))
+	nts.ParticipationState = populateParticipation(r, nts.ParticipationState)
+	updateConfigGenesisState(participation.ModuleName, &nts.ParticipationState)
 
 	nts.Network = network.New(nts.T(), cfg)
 }
@@ -161,7 +168,7 @@ func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisSta
 	return claimState
 }
 
-func populateMonitoringc(r *rand.Rand, monitoringcState monitoringc.GenesisState) monitoringc.GenesisState {
+func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.GenesisState {
 	// add launch ID from channel ID
 	for i := 0; i < 5; i++ {
 		launchIDFromChannelID := monitoringc.LaunchIDFromChannelID{
@@ -202,4 +209,28 @@ func populateMonitoringc(r *rand.Rand, monitoringcState monitoringc.GenesisState
 	}
 
 	return monitoringcState
+}
+
+func populateParticipation(r *rand.Rand, participationState participation.GenesisState) participation.GenesisState {
+	// add used allocations
+	for i := 0; i < 5; i++ {
+		usedAllocations := participation.UsedAllocations{
+			Address: sample.Address(r),
+		}
+		nullify.Fill(&usedAllocations)
+		participationState.UsedAllocationsList = append(participationState.UsedAllocationsList, usedAllocations)
+	}
+
+	// add auction used allocations
+	address := sample.Address(r)
+	for i := 0; i < 5; i++ {
+		auctionUsedAllocations := participation.AuctionUsedAllocations{
+			Address:   address,
+			AuctionID: uint64(i),
+		}
+		nullify.Fill(&auctionUsedAllocations)
+		participationState.AuctionUsedAllocationsList = append(participationState.AuctionUsedAllocationsList, auctionUsedAllocations)
+	}
+
+	return participationState
 }

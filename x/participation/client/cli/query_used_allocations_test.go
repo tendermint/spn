@@ -12,37 +12,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/participation/client/cli"
 	"github.com/tendermint/spn/x/participation/types"
 )
 
-func networkWithUsedAllocationsObjects(t *testing.T, n int) (*network.Network, []types.UsedAllocations) {
-	t.Helper()
-	r := sample.Rand()
-	cfg := network.DefaultConfig()
-	state := types.GenesisState{}
-	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
+func (suite *QueryTestSuite) TestShowUsedAllocations() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	objs := suite.ParticipationState.UsedAllocationsList
 
-	for i := 0; i < n; i++ {
-		usedAllocations := types.UsedAllocations{
-			Address: sample.Address(r),
-		}
-		nullify.Fill(&usedAllocations)
-		state.UsedAllocationsList = append(state.UsedAllocationsList, usedAllocations)
-	}
-	buf, err := cfg.Codec.MarshalJSON(&state)
-	require.NoError(t, err)
-	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.UsedAllocationsList
-}
-
-func TestShowUsedAllocations(t *testing.T) {
-	net, objs := networkWithUsedAllocationsObjects(t, 2)
-
-	ctx := net.Validators[0].ClientCtx
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
@@ -66,7 +44,7 @@ func TestShowUsedAllocations(t *testing.T) {
 			err:       status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.desc, func(t *testing.T) {
 			args := []string{
 				tc.idAddress,
 			}
@@ -79,7 +57,7 @@ func TestShowUsedAllocations(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp types.QueryGetUsedAllocationsResponse
-				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.UsedAllocations)
 				require.Equal(t,
 					nullify.Fill(&tc.obj),
@@ -90,10 +68,10 @@ func TestShowUsedAllocations(t *testing.T) {
 	}
 }
 
-func TestListUsedAllocations(t *testing.T) {
-	net, objs := networkWithUsedAllocationsObjects(t, 5)
+func (suite *QueryTestSuite) TestListUsedAllocations() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	objs := suite.ParticipationState.UsedAllocationsList
 
-	ctx := net.Validators[0].ClientCtx
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -109,14 +87,14 @@ func TestListUsedAllocations(t *testing.T) {
 		}
 		return args
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListUsedAllocations(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllUsedAllocationsResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.UsedAllocations), step)
 			require.Subset(t,
 				nullify.Fill(objs),
@@ -124,7 +102,7 @@ func TestListUsedAllocations(t *testing.T) {
 			)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	suite.T().Run("ByKey", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
@@ -132,7 +110,7 @@ func TestListUsedAllocations(t *testing.T) {
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListUsedAllocations(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllUsedAllocationsResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.UsedAllocations), step)
 			require.Subset(t,
 				nullify.Fill(objs),
@@ -141,12 +119,12 @@ func TestListUsedAllocations(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
+	suite.T().Run("Total", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListUsedAllocations(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllUsedAllocationsResponse
-		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+		require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
