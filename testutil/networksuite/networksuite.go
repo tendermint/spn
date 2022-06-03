@@ -9,6 +9,7 @@ import (
 	claim "github.com/tendermint/spn/x/claim/types"
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	participation "github.com/tendermint/spn/x/participation/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 	"math/rand"
 	"strconv"
 
@@ -28,6 +29,7 @@ type NetworkTestSuite struct {
 	ClaimState         claim.GenesisState
 	MonitoringcState   monitoringc.GenesisState
 	ParticipationState participation.GenesisState
+	ProfileState       profile.GenesisState
 }
 
 // SetupSuite setups the local network with a genesis state
@@ -65,6 +67,11 @@ func (nts *NetworkTestSuite) SetupSuite() {
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[participation.ModuleName], &nts.ParticipationState))
 	nts.ParticipationState = populateParticipation(r, nts.ParticipationState)
 	updateConfigGenesisState(participation.ModuleName, &nts.ParticipationState)
+
+	// initialize profile
+	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[profile.ModuleName], &nts.ProfileState))
+	nts.ProfileState = populateProfile(r, nts.ProfileState)
+	updateConfigGenesisState(profile.ModuleName, &nts.ProfileState)
 
 	nts.Network = network.New(nts.T(), cfg)
 }
@@ -233,4 +240,31 @@ func populateParticipation(r *rand.Rand, participationState participation.Genesi
 	}
 
 	return participationState
+}
+
+func populateProfile(r *rand.Rand, profileState profile.GenesisState) profile.GenesisState {
+	// add coordinators
+	for i := 0; i < 5; i++ {
+		profileState.CoordinatorList = append(
+			profileState.CoordinatorList,
+			profile.Coordinator{CoordinatorID: uint64(i)},
+		)
+	}
+
+	// add coordinator by address
+	for i := 0; i < 5; i++ {
+		profileState.CoordinatorByAddressList = append(
+			profileState.CoordinatorByAddressList,
+			profile.CoordinatorByAddress{Address: sample.Address(r)},
+		)
+	}
+
+	// add validator
+	for i := 0; i < 5; i++ {
+		profileState.ValidatorList = append(profileState.ValidatorList, profile.Validator{
+			Address: sample.Address(r),
+		})
+	}
+
+	return profileState
 }
