@@ -2,7 +2,10 @@
 package networksuite
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/tendermint/spn/testutil/nullify"
 	campaign "github.com/tendermint/spn/x/campaign/types"
+	claim "github.com/tendermint/spn/x/claim/types"
 	"math/rand"
 
 	"github.com/stretchr/testify/require"
@@ -18,6 +21,7 @@ type NetworkTestSuite struct {
 	Network       *network.Network
 	LaunchState   launch.GenesisState
 	CampaignState campaign.GenesisState
+	ClaimState    claim.GenesisState
 }
 
 // SetupSuite setups the local network with a genesis state
@@ -38,6 +42,13 @@ func (nts *NetworkTestSuite) SetupSuite() {
 	buf, err = cfg.Codec.MarshalJSON(&nts.CampaignState)
 	require.NoError(nts.T(), err)
 	cfg.GenesisState[campaign.ModuleName] = buf
+
+	// initialize claim
+	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[claim.ModuleName], &nts.ClaimState))
+	nts.ClaimState = populateClaim(r, nts.ClaimState)
+	buf, err = cfg.Codec.MarshalJSON(&nts.ClaimState)
+	require.NoError(nts.T(), err)
+	cfg.GenesisState[claim.ModuleName] = buf
 
 	nts.Network = network.New(nts.T(), cfg)
 }
@@ -113,4 +124,30 @@ func populateCampaign(r *rand.Rand, campaignState campaign.GenesisState) campaig
 	}
 
 	return campaignState
+}
+
+func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisState {
+	claimState.AirdropSupply = sample.Coin(r)
+
+	// add claim records
+	for i := 0; i < 5; i++ {
+		claimRecord := claim.ClaimRecord{
+			Address:   sample.Address(r),
+			Claimable: sdk.NewInt(r.Int63()),
+		}
+		nullify.Fill(&claimRecord)
+		claimState.ClaimRecords = append(claimState.ClaimRecords, claimRecord)
+	}
+
+	// add missions
+	for i := 0; i < 5; i++ {
+		mission := claim.Mission{
+			MissionID: uint64(i),
+			Weight:    sdk.NewDec(r.Int63()),
+		}
+		nullify.Fill(&mission)
+		claimState.Missions = append(claimState.Missions, mission)
+	}
+
+	return claimState
 }
