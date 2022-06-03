@@ -10,6 +10,7 @@ import (
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	participation "github.com/tendermint/spn/x/participation/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	reward "github.com/tendermint/spn/x/reward/types"
 	"math/rand"
 	"strconv"
 
@@ -30,6 +31,7 @@ type NetworkTestSuite struct {
 	MonitoringcState   monitoringc.GenesisState
 	ParticipationState participation.GenesisState
 	ProfileState       profile.GenesisState
+	RewardState        reward.GenesisState
 }
 
 // SetupSuite setups the local network with a genesis state
@@ -72,6 +74,11 @@ func (nts *NetworkTestSuite) SetupSuite() {
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[profile.ModuleName], &nts.ProfileState))
 	nts.ProfileState = populateProfile(r, nts.ProfileState)
 	updateConfigGenesisState(profile.ModuleName, &nts.ProfileState)
+
+	// initialize reward
+	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[reward.ModuleName], &nts.RewardState))
+	nts.RewardState = populateReward(nts.RewardState)
+	updateConfigGenesisState(reward.ModuleName, &nts.RewardState)
 
 	nts.Network = network.New(nts.T(), cfg)
 }
@@ -267,4 +274,17 @@ func populateProfile(r *rand.Rand, profileState profile.GenesisState) profile.Ge
 	}
 
 	return profileState
+}
+
+func populateReward(rewardState reward.GenesisState) reward.GenesisState {
+	// add reward pool
+	for i := 0; i < 5; i++ {
+		rewardPool := reward.RewardPool{
+			LaunchID: uint64(i),
+		}
+		nullify.Fill(&rewardPool)
+		rewardState.RewardPoolList = append(rewardState.RewardPoolList, rewardPool)
+	}
+
+	return rewardState
 }
