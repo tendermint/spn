@@ -25,6 +25,10 @@ func NewPeerConn(id, address string) Peer {
 	}
 }
 
+func NewPeerEmpty(id string) Peer {
+	return Peer{Id: id, Connection: &Peer_None{None: &Peer_EmptyConnection{}}}
+}
+
 // Validate check the Peer object
 func (m Peer) Validate() error {
 	if m.Id == "" {
@@ -42,6 +46,8 @@ func (m Peer) Validate() error {
 		if conn.HttpTunnel.Address == "" {
 			return errors.New("empty http tunnel peer address")
 		}
+	case *Peer_None:
+		return nil
 	default:
 		return errors.New("invalid peer connection")
 	}
