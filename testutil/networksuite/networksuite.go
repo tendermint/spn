@@ -2,23 +2,24 @@
 package networksuite
 
 import (
+	"math/rand"
+	"strconv"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/gogo/protobuf/proto"
+	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
+
+	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 	claim "github.com/tendermint/spn/x/claim/types"
+	launch "github.com/tendermint/spn/x/launch/types"
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	participation "github.com/tendermint/spn/x/participation/types"
 	profile "github.com/tendermint/spn/x/profile/types"
 	reward "github.com/tendermint/spn/x/reward/types"
-	"math/rand"
-	"strconv"
-
-	"github.com/stretchr/testify/require"
-	"github.com/stretchr/testify/suite"
-	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/testutil/sample"
-	launch "github.com/tendermint/spn/x/launch/types"
 )
 
 // NetworkTestSuite is a test suite for query tests that initializes a network instance
