@@ -2,6 +2,7 @@
 package networksuite
 
 import (
+	campaign "github.com/tendermint/spn/x/campaign/types"
 	"math/rand"
 
 	"github.com/stretchr/testify/require"
@@ -14,8 +15,9 @@ import (
 // NetworkTestSuite is a test suite for query tests that initializes a network instance
 type NetworkTestSuite struct {
 	suite.Suite
-	Network     *network.Network
-	LaunchState launch.GenesisState
+	Network       *network.Network
+	LaunchState   launch.GenesisState
+	CampaignState campaign.GenesisState
 }
 
 // SetupSuite setups the local network with a genesis state
@@ -24,17 +26,20 @@ func (nts *NetworkTestSuite) SetupSuite() {
 	cfg := network.DefaultConfig()
 
 	// initialize launch
-	launchState := launch.GenesisState{}
-	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[launch.ModuleName], &launchState))
-
-	launchState = populateLaunch(r, launchState)
-
-	buf, err := cfg.Codec.MarshalJSON(&launchState)
+	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[launch.ModuleName], &nts.LaunchState))
+	nts.LaunchState = populateLaunch(r, nts.LaunchState)
+	buf, err := cfg.Codec.MarshalJSON(&nts.LaunchState)
 	require.NoError(nts.T(), err)
 	cfg.GenesisState[launch.ModuleName] = buf
 
+	// initialize campaign
+	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[campaign.ModuleName], &nts.CampaignState))
+	nts.CampaignState = populateCampaign(r, nts.CampaignState)
+	buf, err = cfg.Codec.MarshalJSON(&nts.CampaignState)
+	require.NoError(nts.T(), err)
+	cfg.GenesisState[campaign.ModuleName] = buf
+
 	nts.Network = network.New(nts.T(), cfg)
-	nts.LaunchState = launchState
 }
 
 func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.GenesisState {
@@ -82,4 +87,30 @@ func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.Genesi
 	}
 
 	return launchState
+}
+
+func populateCampaign(r *rand.Rand, campaignState campaign.GenesisState) campaign.GenesisState {
+	// add campaigns
+	for i := 0; i < 5; i++ {
+		campaignState.CampaignList = append(campaignState.CampaignList, sample.Campaign(r, uint64(i)))
+	}
+
+	// add campaign chains
+	for i := 0; i < 5; i++ {
+		campaignState.CampaignChainsList = append(campaignState.CampaignChainsList, campaign.CampaignChains{
+			CampaignID: uint64(i),
+			Chains:     []uint64{uint64(i)},
+		})
+	}
+
+	// add mainnet accounts
+	campaignID := uint64(5)
+	for i := 0; i < 5; i++ {
+		campaignState.MainnetAccountList = append(
+			campaignState.MainnetAccountList,
+			sample.MainnetAccount(r, campaignID, sample.Address(r)),
+		)
+	}
+
+	return campaignState
 }
