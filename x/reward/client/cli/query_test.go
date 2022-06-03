@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/suite"
-	
+
 	"github.com/tendermint/spn/testutil/networksuite"
 )
 

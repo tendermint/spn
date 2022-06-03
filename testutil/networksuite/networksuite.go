@@ -134,7 +134,11 @@ func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.Genesi
 func populateCampaign(r *rand.Rand, campaignState campaign.GenesisState) campaign.GenesisState {
 	// add campaigns
 	for i := 0; i < 5; i++ {
-		campaignState.CampaignList = append(campaignState.CampaignList, sample.Campaign(r, uint64(i)))
+		camp := campaign.Campaign{
+			CampaignID: uint64(i),
+		}
+		nullify.Fill(&camp)
+		campaignState.CampaignList = append(campaignState.CampaignList, camp)
 	}
 
 	// add campaign chains

@@ -2,23 +2,22 @@ package cli_test
 
 import (
 	"fmt"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/campaign/client/cli"
 	"github.com/tendermint/spn/x/campaign/types"
+	tmcli "github.com/tendermint/tendermint/libs/cli"
 )
 
 func (suite *QueryTestSuite) TestShowCampaign() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	campaign := suite.CampaignState.CampaignList
+	campaigns := suite.CampaignState.CampaignList
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -32,9 +31,9 @@ func (suite *QueryTestSuite) TestShowCampaign() {
 	}{
 		{
 			desc: "found",
-			id:   fmt.Sprintf("%d", campaign[0].CampaignID),
+			id:   fmt.Sprintf("%d", campaigns[0].CampaignID),
 			args: common,
-			obj:  campaign[0],
+			obj:  campaigns[0],
 		},
 		{
 			desc: "not found",
@@ -55,6 +54,7 @@ func (suite *QueryTestSuite) TestShowCampaign() {
 				require.NoError(t, err)
 				var resp types.QueryGetCampaignResponse
 				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				tc.obj.Metadata = []uint8(nil)
 				require.Equal(t, nullify.Fill(tc.obj), nullify.Fill(resp.Campaign))
 			}
 		})
@@ -63,7 +63,7 @@ func (suite *QueryTestSuite) TestShowCampaign() {
 
 func (suite *QueryTestSuite) TestListCampaign() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	campaign := suite.CampaignState.CampaignList
+	campaigns := suite.CampaignState.CampaignList
 
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
@@ -82,38 +82,38 @@ func (suite *QueryTestSuite) TestListCampaign() {
 	}
 	suite.T().Run("ByOffset", func(t *testing.T) {
 		step := 2
-		for i := 0; i < len(campaign); i += step {
+		for i := 0; i < len(campaigns); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllCampaignResponse
 			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Campaign), step)
-			require.Subset(t, nullify.Fill(campaign), nullify.Fill(resp.Campaign))
+			require.Subset(t, nullify.Fill(campaigns), nullify.Fill(resp.Campaign))
 		}
 	})
 	suite.T().Run("ByKey", func(t *testing.T) {
 		step := 2
 		var next []byte
-		for i := 0; i < len(campaign); i += step {
+		for i := 0; i < len(campaigns); i += step {
 			args := request(next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllCampaignResponse
 			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Campaign), step)
-			require.Subset(t, nullify.Fill(campaign), nullify.Fill(resp.Campaign))
+			require.Subset(t, nullify.Fill(campaigns), nullify.Fill(resp.Campaign))
 			next = resp.Pagination.NextKey
 		}
 	})
 	suite.T().Run("Total", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(campaign)), true)
+		args := request(nil, 0, uint64(len(campaigns)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllCampaignResponse
 		require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
-		require.Equal(t, len(campaign), int(resp.Pagination.Total))
-		require.ElementsMatch(t, nullify.Fill(campaign), nullify.Fill(resp.Campaign))
+		require.Equal(t, len(campaigns), int(resp.Pagination.Total))
+		require.ElementsMatch(t, nullify.Fill(campaigns), nullify.Fill(resp.Campaign))
 	})
 }
