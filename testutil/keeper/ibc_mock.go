@@ -3,9 +3,9 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	connectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
-	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
-	"github.com/cosmos/ibc-go/v2/modules/core/exported"
+	connectiontypes "github.com/cosmos/ibc-go/v3/modules/core/03-connection/types"
+	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
+	"github.com/cosmos/ibc-go/v3/modules/core/exported"
 )
 
 // Connection is an IBC connection end associated to a connection ID
@@ -72,7 +72,7 @@ func (c ChannelMock) SendPacket(_ sdk.Context, _ *capabilitytypes.Capability, _ 
 }
 
 // WriteAcknowledgement implements ChannelKeeper
-func (c ChannelMock) WriteAcknowledgement(_ sdk.Context, _ *capabilitytypes.Capability, _ exported.PacketI, _ []byte) error {
+func (c ChannelMock) WriteAcknowledgement(_ sdk.Context, _ *capabilitytypes.Capability, _ exported.PacketI, _ exported.Acknowledgement) error {
 	return nil
 }
 

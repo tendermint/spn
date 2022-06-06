@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	connectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
-	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
+	connectiontypes "github.com/cosmos/ibc-go/v3/modules/core/03-connection/types"
+	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
 	"github.com/stretchr/testify/require"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
@@ -44,53 +44,19 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 			LaunchID: 1,
 			ClientID: "foo",
 		})
-		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromChannelID(ctx, "foo")
+		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromConnID(ctx, "foo")
 		require.NoError(t, err)
 	})
 
-	t.Run("should fail if channel doesn't exist", func(t *testing.T) {
+	t.Run("should fail if connection doesn't exist", func(t *testing.T) {
 		ctx, tk, _ := testSetupWithFooClient(t)
-		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromChannelID(ctx, "bar")
-		require.ErrorIs(t, err, channeltypes.ErrChannelNotFound)
-	})
-
-	t.Run("should fail if the channel has more than 1 hop connection", func(t *testing.T) {
-		ctx, tk, _ := testkeeper.NewTestSetupWithIBCMocks(
-			t,
-			[]testkeeper.Connection{},
-			[]testkeeper.Channel{
-				{
-					ChannelID: "foo",
-					Channel: channeltypes.Channel{
-						ConnectionHops: []string{"foo", "bar"},
-					},
-				},
-			},
-		)
-		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromChannelID(ctx, "foo")
-		require.ErrorIs(t, err, channeltypes.ErrTooManyConnectionHops)
-	})
-
-	t.Run("should fail if the connection doesn't exist", func(t *testing.T) {
-		ctx, tk, _ := testkeeper.NewTestSetupWithIBCMocks(
-			t,
-			[]testkeeper.Connection{},
-			[]testkeeper.Channel{
-				{
-					ChannelID: "foo",
-					Channel: channeltypes.Channel{
-						ConnectionHops: []string{"foo"},
-					},
-				},
-			},
-		)
-		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromChannelID(ctx, "foo")
+		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromConnID(ctx, "bar")
 		require.ErrorIs(t, err, connectiontypes.ErrConnectionNotFound)
 	})
 
 	t.Run("should fail if the client is not verified", func(t *testing.T) {
 		ctx, tk, _ := testSetupWithFooClient(t)
-		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromChannelID(ctx, "foo")
+		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromConnID(ctx, "foo")
 		require.ErrorIs(t, err, types.ErrClientNotVerified)
 	})
 
@@ -104,7 +70,7 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 			LaunchID: 1,
 			ClientID: "bar",
 		})
-		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromChannelID(ctx, "foo")
+		err := tk.MonitoringConsumerKeeper.VerifyClientIDFromConnID(ctx, "foo")
 		require.ErrorIs(t, err, types.ErrConnectionAlreadyEstablished)
 	})
 }
@@ -143,44 +109,10 @@ func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
 		require.EqualValues(t, "foo", launchIDFromChanID.ChannelID)
 	})
 
-	t.Run("should fail with critical error if channel doesn't exist", func(t *testing.T) {
+	t.Run("should fail if the channel doesn't exist", func(t *testing.T) {
 		ctx, tk, _ := testSetupWithFooClient(t)
 		err := tk.MonitoringConsumerKeeper.RegisterProviderClientIDFromChannelID(ctx, "bar")
-		require.ErrorIs(t, err, spnerrors.ErrCritical)
-	})
-
-	t.Run("should fail with critical error if the channel has more than 1 hop connection", func(t *testing.T) {
-		ctx, tk, _ := testkeeper.NewTestSetupWithIBCMocks(
-			t,
-			[]testkeeper.Connection{},
-			[]testkeeper.Channel{
-				{
-					ChannelID: "foo",
-					Channel: channeltypes.Channel{
-						ConnectionHops: []string{"foo", "bar"},
-					},
-				},
-			},
-		)
-		err := tk.MonitoringConsumerKeeper.RegisterProviderClientIDFromChannelID(ctx, "foo")
-		require.ErrorIs(t, err, spnerrors.ErrCritical)
-	})
-
-	t.Run("should fail with critical error if the connection doesn't exist", func(t *testing.T) {
-		ctx, tk, _ := testkeeper.NewTestSetupWithIBCMocks(
-			t,
-			[]testkeeper.Connection{},
-			[]testkeeper.Channel{
-				{
-					ChannelID: "foo",
-					Channel: channeltypes.Channel{
-						ConnectionHops: []string{"foo"},
-					},
-				},
-			},
-		)
-		err := tk.MonitoringConsumerKeeper.RegisterProviderClientIDFromChannelID(ctx, "foo")
-		require.ErrorIs(t, err, spnerrors.ErrCritical)
+		require.ErrorIs(t, err, channeltypes.ErrChannelNotFound)
 	})
 
 	t.Run("should fail with critical error if the client is not verified", func(t *testing.T) {
@@ -216,5 +148,39 @@ func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
 		tk.LaunchKeeper.SetChain(ctx, chain)
 		err := tk.MonitoringConsumerKeeper.RegisterProviderClientIDFromChannelID(ctx, "foo")
 		require.ErrorIs(t, err, launchtypes.ErrChainMonitoringConnected)
+	})
+
+	t.Run("should fail if the channel has more than 1 hop connection", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetupWithIBCMocks(
+			t,
+			[]testkeeper.Connection{},
+			[]testkeeper.Channel{
+				{
+					ChannelID: "foo",
+					Channel: channeltypes.Channel{
+						ConnectionHops: []string{"foo", "bar"},
+					},
+				},
+			},
+		)
+		err := tk.MonitoringConsumerKeeper.RegisterProviderClientIDFromChannelID(ctx, "foo")
+		require.ErrorIs(t, err, channeltypes.ErrTooManyConnectionHops)
+	})
+
+	t.Run("should fail if the connection doesn't exist", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetupWithIBCMocks(
+			t,
+			[]testkeeper.Connection{},
+			[]testkeeper.Channel{
+				{
+					ChannelID: "foo",
+					Channel: channeltypes.Channel{
+						ConnectionHops: []string{"foo"},
+					},
+				},
+			},
+		)
+		err := tk.MonitoringConsumerKeeper.RegisterProviderClientIDFromChannelID(ctx, "foo")
+		require.ErrorIs(t, err, connectiontypes.ErrConnectionNotFound)
 	})
 }
