@@ -55,7 +55,6 @@ func (k Keeper) CampaignSummaries(goCtx context.Context, req *types.QueryCampaig
 		campaignSummaries = append(campaignSummaries, campaignSummary)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

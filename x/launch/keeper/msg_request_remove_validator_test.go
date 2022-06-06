@@ -182,9 +182,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 			require.Equal(t, tt.msg.ValidatorAddress, content.ValAddress)
 
 			if !tt.wantApprove {
-
 				require.Equal(t, types.Request_PENDING, request.Status)
-
 			} else {
 				_, found := tk.LaunchKeeper.GetGenesisValidator(sdkCtx, tt.msg.LaunchID, tt.msg.ValidatorAddress)
 				require.False(t, found, "genesis validator not removed")

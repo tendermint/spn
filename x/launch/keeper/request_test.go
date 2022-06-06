@@ -57,6 +57,7 @@ func TestRequestGet(t *testing.T) {
 		require.Equal(t, item, rst)
 	}
 }
+
 func TestRequestRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
@@ -182,46 +183,58 @@ func TestApplyRequest(t *testing.T) {
 		{
 			name:    "test GenesisAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[0]),
-		}, {
+		},
+		{
 			name:    "test duplicated GenesisAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[0]),
 			wantErr: true,
-		}, {
+		},
+		{
 			name:    "test genesis AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[1]),
-		}, {
+		},
+		{
 			name:    "test not found genesis AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[1]),
 			wantErr: true,
-		}, {
+		},
+		{
 			name:    "test VestingAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[2]),
-		}, {
+		},
+		{
 			name:    "test duplicated VestingAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[2]),
 			wantErr: true,
-		}, {
+		},
+		{
 			name:    "test vesting AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[3]),
-		}, {
+		},
+		{
 			name:    "test not found vesting AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[3]),
 			wantErr: true,
-		}, {
+		},
+		{
 			name:    "test GenesisValidator content",
 			request: sample.RequestWithContent(r, launchID, contents[4]),
-		}, {
+		},
+		{
 			name:    "test duplicated GenesisValidator content",
 			request: sample.RequestWithContent(r, launchID, contents[4]),
 			wantErr: true,
-		}, {
+		},
+		{
 			name:    "test ValidatorRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[5]),
-		}, {
+		},
+		{
 			name:    "test not found ValidatorRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[5]),
 			wantErr: true,
-		}, {
+		},
+		{
 			name:    "test request with invalid parameters",
 			request: sample.RequestWithContent(r, launchID, invalidContent),
 			wantErr: true,
@@ -313,46 +326,58 @@ func TestCheckRequest(t *testing.T) {
 		{
 			name:    "test GenesisAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[0]),
-		}, {
+		},
+		{
 			name:    "test duplicated GenesisAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[0]),
 			err:     types.ErrAccountAlreadyExist,
-		}, {
+		},
+		{
 			name:    "test genesis AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[1]),
-		}, {
+		},
+		{
 			name:    "test not found genesis AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[1]),
 			err:     types.ErrAccountNotFound,
-		}, {
+		},
+		{
 			name:    "test VestingAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[2]),
-		}, {
+		},
+		{
 			name:    "test duplicated VestingAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[2]),
 			err:     types.ErrAccountAlreadyExist,
-		}, {
+		},
+		{
 			name:    "test vesting AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[3]),
-		}, {
+		},
+		{
 			name:    "test not found vesting AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[3]),
 			err:     types.ErrAccountNotFound,
-		}, {
+		},
+		{
 			name:    "test GenesisValidator content",
 			request: sample.RequestWithContent(r, launchID, contents[4]),
-		}, {
+		},
+		{
 			name:    "test duplicated GenesisValidator content",
 			request: sample.RequestWithContent(r, launchID, contents[4]),
 			err:     types.ErrValidatorAlreadyExist,
-		}, {
+		},
+		{
 			name:    "test ValidatorRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[5]),
-		}, {
+		},
+		{
 			name:    "test not found ValidatorRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[5]),
 			err:     types.ErrValidatorNotFound,
-		}, {
+		},
+		{
 			name:    "test request with invalid parameters",
 			request: sample.RequestWithContent(r, launchID, invalidContent),
 			err:     spnerrors.ErrCritical,

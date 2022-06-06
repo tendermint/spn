@@ -28,7 +28,6 @@ func (k Keeper) ClearVerifiedClientIDs(ctx sdk.Context, launchID uint64) {
 		store = prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.LaunchIDFromVerifiedClientIDKeyPrefix))
 		store.Delete(types.LaunchIDFromChannelIDKey(id))
 	}
-
 }
 
 // GetVerifiedClientID returns a verifiedClientID from its launch id

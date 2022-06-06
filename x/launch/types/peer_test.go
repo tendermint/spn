@@ -26,6 +26,11 @@ func TestPeer_Validate(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name:    "validate new peer empty",
+			peer:    types.NewPeerEmpty(sample.String(r, 3)),
+			wantErr: false,
+		},
+		{
 			name:    "invalid peer",
 			peer:    types.Peer{},
 			wantErr: true,

@@ -32,7 +32,6 @@ func (k Keeper) MainnetAccountAll(c context.Context, req *types.QueryAllMainnetA
 		mainnetAccounts = append(mainnetAccounts, mainnetAccount)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -96,7 +95,6 @@ func (k Keeper) MainnetAccountBalanceAll(c context.Context, req *types.QueryAllM
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

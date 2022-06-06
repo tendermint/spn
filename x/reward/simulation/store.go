@@ -20,7 +20,6 @@ func FindRandomChainWithCoordBalance(
 	checkBalance bool,
 	wantCoins sdk.Coins,
 ) (chain launchtypes.Chain, found bool) {
-
 	chains := k.GetLaunchKeeper().GetAllChain(ctx)
 	r.Shuffle(len(chains), func(i, j int) {
 		chains[i], chains[j] = chains[j], chains[i]
