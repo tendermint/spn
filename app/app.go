@@ -130,7 +130,6 @@ import (
 	"github.com/tendermint/spn/x/mint"
 	mintkeeper "github.com/tendermint/spn/x/mint/keeper"
 	minttypes "github.com/tendermint/spn/x/mint/types"
-
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
