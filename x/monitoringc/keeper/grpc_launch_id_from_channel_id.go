@@ -32,7 +32,6 @@ func (k Keeper) LaunchIDFromChannelIDAll(c context.Context, req *types.QueryAllL
 		launchIDFromChannelIDs = append(launchIDFromChannelIDs, launchIDFromChannelID)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

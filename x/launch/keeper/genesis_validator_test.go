@@ -44,6 +44,7 @@ func TestGenesisValidatorGet(t *testing.T) {
 		require.Equal(t, item, rst)
 	}
 }
+
 func TestGenesisValidatorRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)

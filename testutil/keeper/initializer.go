@@ -17,9 +17,9 @@ import (
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibctransfertypes "github.com/cosmos/ibc-go/v2/modules/apps/transfer/types"
-	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
-	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
+	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
+	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
+	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	tmdb "github.com/tendermint/tm-db"
@@ -44,19 +44,17 @@ import (
 	rewardmoduletypes "github.com/tendermint/spn/x/reward/types"
 )
 
-var (
-	moduleAccountPerms = map[string][]string{
-		authtypes.FeeCollectorName:     nil,
-		distrtypes.ModuleName:          nil,
-		minttypes.ModuleName:           {authtypes.Minter},
-		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-		campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
-		stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
-		rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
-		fundraisingtypes.ModuleName:    nil,
-	}
-)
+var moduleAccountPerms = map[string][]string{
+	authtypes.FeeCollectorName:     nil,
+	distrtypes.ModuleName:          nil,
+	minttypes.ModuleName:           {authtypes.Minter},
+	ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+	campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
+	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
+	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+	rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
+	fundraisingtypes.ModuleName:    nil,
+}
 
 // initializer allows to initialize each module keeper
 type initializer struct {

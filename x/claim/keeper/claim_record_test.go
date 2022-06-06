@@ -38,6 +38,7 @@ func TestClaimRecordGet(t *testing.T) {
 		)
 	}
 }
+
 func TestClaimRecordRemove(t *testing.T) {
 	k, ctx := keepertest.ClaimKeeper(t)
 	items := createNClaimRecord(k, ctx, 10)

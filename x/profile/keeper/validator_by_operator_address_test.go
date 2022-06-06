@@ -36,6 +36,7 @@ func TestValidatorByOperatorAddressGet(t *testing.T) {
 		)
 	}
 }
+
 func TestValidatorByOperatorAddressRemove(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNValidatorByOperatorAddress(tk.ProfileKeeper, sdkCtx, 10)

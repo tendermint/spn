@@ -1,10 +1,9 @@
 package types
 
 import (
-	"errors"
-
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 )
 
 const HashLength = 64

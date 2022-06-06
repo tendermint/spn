@@ -108,7 +108,6 @@ func FindRandomChain(
 	launchTriggered,
 	noMainnet bool,
 ) (chain types.Chain, found bool) {
-
 	chains := k.GetAllChain(ctx)
 	r.Shuffle(len(chains), func(i, j int) {
 		chains[i], chains[j] = chains[j], chains[i]
@@ -138,7 +137,6 @@ func FindRandomRequest(
 	ctx sdk.Context,
 	k keeper.Keeper,
 ) (request types.Request, found bool) {
-
 	// Select a random request without launch triggered
 	requests := k.GetAllRequest(ctx)
 	r.Shuffle(len(requests), func(i, j int) {

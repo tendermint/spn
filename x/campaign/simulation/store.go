@@ -10,10 +10,8 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-var (
-	// ShareDenoms are the denom used for the shares in the simulation
-	ShareDenoms = []string{"s/foo", "s/bar", "s/toto"}
-)
+// ShareDenoms are the denom used for the shares in the simulation
+var ShareDenoms = []string{"s/foo", "s/bar", "s/toto"}
 
 // GetCoordSimAccount finds an account associated with a coordinator profile from simulation accounts
 func GetCoordSimAccount(
