@@ -74,7 +74,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 
 	// prepare addresses
 	var addr []string
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 20; i++ {
 		addr = append(addr, sample.Address(r))
 	}
 
@@ -177,6 +177,109 @@ func TestKeeper_CompleteMission(t *testing.T) {
 			missionID: 1,
 			address:   "invalid",
 			err:       spnerrors.ErrCritical,
+		},
+		{
+			name: "should allow distributing full airdrop to one account, one mission",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    sdk.OneDec(),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[3],
+					Claimable: sdk.NewIntFromUint64(1000),
+				},
+			},
+			missionID:       1,
+			address:         addr[3],
+			expectedBalance: tc.Coin(t, "1000foo"),
+		},
+		{
+			name: "should allow distributing no fund for mission with 0 weight",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    sdk.ZeroDec(),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[4],
+					Claimable: sdk.NewIntFromUint64(1000),
+				},
+			},
+			missionID:       1,
+			address:         addr[4],
+			expectedBalance: tc.Coin(t, "0foo"),
+		},
+		{
+			name: "should allow distributing half for mission with 0.5 weight",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[5],
+					Claimable: sdk.NewIntFromUint64(500),
+				},
+			},
+			missionID:       1,
+			address:         addr[5],
+			expectedBalance: tc.Coin(t, "250foo"),
+		},
+		{
+			name: "should allow distributing half for mission with 0.5 weight and truncate decimal",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[6],
+					Claimable: sdk.NewIntFromUint64(201),
+				},
+			},
+			missionID:       1,
+			address:         addr[6],
+			expectedBalance: tc.Coin(t, "100foo"),
+		},
+		{
+			name: "should allow distributing no fund for empty claim record",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[7],
+					Claimable: sdk.ZeroInt(),
+				},
+			},
+			missionID:       1,
+			address:         addr[7],
+			expectedBalance: tc.Coin(t, "0foo"),
+		},
+		{
+			name: "should allow distributing airdrop with other already completed missions",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "10000bar"),
+				mission: types.Mission{
+					MissionID: 3,
+					Weight:    tc.Dec(t, "0.3"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:           addr[8],
+					Claimable:         sdk.NewIntFromUint64(10000),
+					CompletedMissions: []uint64{0, 1, 2, 4, 5, 6},
+				},
+			},
+			missionID:       3,
+			address:         addr[8],
+			expectedBalance: tc.Coin(t, "3000bar"),
 		},
 	}
 	for _, tt := range tests {
