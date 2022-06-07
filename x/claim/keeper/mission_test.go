@@ -45,3 +45,32 @@ func TestMissionGetAll(t *testing.T) {
 		nullify.Fill(tk.ClaimKeeper.GetAllMission(ctx)),
 	)
 }
+
+func TestMissionRemove(t *testing.T) {
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	items := createNMission(tk.ClaimKeeper, ctx, 10)
+	for _, item := range items {
+		tk.ClaimKeeper.RemoveMission(ctx, item.MissionID)
+		_, found := tk.ClaimKeeper.GetMission(ctx, item.MissionID)
+		require.False(t, found)
+	}
+}
+
+func TestKeeper_CompleteMission(t *testing.T) {
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	tests := []struct {
+		name            string
+		missionID       uint64
+		address         string
+		expectedBalance sdk.Coins
+	}{
+		{},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+		})
+	}
+}

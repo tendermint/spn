@@ -29,6 +29,17 @@ func (k Keeper) GetClaimRecord(ctx sdk.Context, address string) (val types.Claim
 	return val, true
 }
 
+// RemoveClaimRecord removes a claimRecord from the store
+func (k Keeper) RemoveClaimRecord(
+	ctx sdk.Context,
+	index string,
+) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClaimRecordKeyPrefix))
+	store.Delete(types.ClaimRecordKey(
+		index,
+	))
+}
+
 // GetAllClaimRecord returns all claimRecord
 func (k Keeper) GetAllClaimRecord(ctx sdk.Context) (list []types.ClaimRecord) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClaimRecordKeyPrefix))

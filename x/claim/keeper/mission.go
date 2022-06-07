@@ -29,6 +29,12 @@ func (k Keeper) GetMission(ctx sdk.Context, id uint64) (val types.Mission, found
 	return val, true
 }
 
+// RemoveMission removes a mission from the store
+func (k Keeper) RemoveMission(ctx sdk.Context, id uint64) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MissionKey))
+	store.Delete(GetMissionIDBytes(id))
+}
+
 // GetAllMission returns all mission
 func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MissionKey))
