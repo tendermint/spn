@@ -204,6 +204,7 @@ var (
 		fundraisingtypes.ModuleName:       nil,
 		monitoringcmoduletypes.ModuleName: nil,
 		monitoringpmoduletypes.ModuleName: nil,
+		claimmoduletypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
