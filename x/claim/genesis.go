@@ -19,7 +19,9 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetMission(ctx, elem)
 	}
 
-	k.InitializeAirdropSupply(ctx, genState.AirdropSupply)
+	if err := k.InitializeAirdropSupply(ctx, genState.AirdropSupply); err != nil {
+		panic("airdrop supply failed to initialize: " + err.Error())
+	}
 
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
