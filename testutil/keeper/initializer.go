@@ -54,6 +54,7 @@ var moduleAccountPerms = map[string][]string{
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
 	fundraisingtypes.ModuleName:    nil,
+	claimtypes.ModuleName:          {authtypes.Minter, authtypes.Burner},
 }
 
 // initializer allows to initialize each module keeper

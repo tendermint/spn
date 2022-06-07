@@ -2,6 +2,7 @@
 package keeper
 
 import (
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	"testing"
 	"time"
 
@@ -54,6 +55,7 @@ type TestKeepers struct {
 	RewardKeeper             *rewardkeeper.Keeper
 	MonitoringConsumerKeeper *monitoringckeeper.Keeper
 	MonitoringProviderKeeper *monitoringpkeeper.Keeper
+	AccountKeeper            authkeeper.AccountKeeper
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 	StakingKeeper            stakingkeeper.Keeper
@@ -144,6 +146,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
+			AccountKeeper:            authKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
 			StakingKeeper:            stakingKeeper,
@@ -234,6 +237,7 @@ func NewTestSetupWithIBCMocks(
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
+			AccountKeeper:            authKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
 			StakingKeeper:            stakingKeeper,
