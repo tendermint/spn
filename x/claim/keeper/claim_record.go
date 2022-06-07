@@ -35,9 +35,7 @@ func (k Keeper) RemoveClaimRecord(
 	index string,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClaimRecordKeyPrefix))
-	store.Delete(types.ClaimRecordKey(
-		index,
-	))
+	store.Delete(types.ClaimRecordKey(index))
 }
 
 // GetAllClaimRecord returns all claimRecord

@@ -28,6 +28,12 @@ func (k Keeper) GetAirdropSupply(ctx sdk.Context) (val sdk.Coin, found bool) {
 	return val, true
 }
 
+// RemoveAirdropSupply removes the AirdropSupply from the store
+func (k Keeper) RemoveAirdropSupply(ctx sdk.Context) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AirdropSupplyKey))
+	store.Delete([]byte{0})
+}
+
 // InitializeAirdropSupply set the airdrop supply in the store and set the module balance
 func (k Keeper) InitializeAirdropSupply(ctx sdk.Context, airdropSupply sdk.Coin) error {
 	// get the eventual existing balance of the module for the airdrop supply

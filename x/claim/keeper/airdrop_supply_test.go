@@ -27,6 +27,17 @@ func TestAirdropSupplyGet(t *testing.T) {
 	)
 }
 
+func TestAirdropSupplyRemove(t *testing.T) {
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	tk.ClaimKeeper.SetAirdropSupply(ctx, sample.Coin(r))
+	_, found := tk.ClaimKeeper.GetAirdropSupply(ctx)
+	require.True(t, found)
+	tk.ClaimKeeper.RemoveAirdropSupply(ctx)
+	_, found = tk.ClaimKeeper.GetAirdropSupply(ctx)
+	require.False(t, found)
+}
+
 func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 	// TODO: use mock for bank module to test critical errors
 	ctx, tk, _ := testkeeper.NewTestSetup(t)

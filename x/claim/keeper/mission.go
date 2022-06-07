@@ -11,6 +11,13 @@ import (
 	"github.com/tendermint/spn/x/claim/types"
 )
 
+// GetMissionIDBytes returns the byte representation of the ID
+func GetMissionIDBytes(id uint64) []byte {
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, id)
+	return bz
+}
+
 // SetMission set a specific mission in the store
 func (k Keeper) SetMission(ctx sdk.Context, mission types.Mission) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MissionKey))
@@ -54,6 +61,11 @@ func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 // CompleteMission triggers the completion of the mission and distribute the claimable portion of airdrop to the user
 // the method fails if the mission has already been completed
 func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address string) error {
+	airdropSupply, found := k.GetAirdropSupply(ctx)
+	if !found {
+		return sdkerrors.Wrapf(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined")
+	}
+
 	// retrieve mission
 	mission, found := k.GetMission(ctx, missionID)
 	if !found {
@@ -78,10 +90,6 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 	claimRecord.CompletedMissions = append(claimRecord.CompletedMissions, missionID)
 
 	// calculate claimable from mission weight and claim
-	airdropSupply, found := k.GetAirdropSupply(ctx)
-	if !found {
-		return sdkerrors.Wrapf(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined")
-	}
 	claimableAmount := mission.Weight.Mul(claimRecord.Claimable.ToDec()).TruncateInt()
 	claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
 
@@ -105,11 +113,4 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 	k.SetClaimRecord(ctx, claimRecord)
 
 	return nil
-}
-
-// GetMissionIDBytes returns the byte representation of the ID
-func GetMissionIDBytes(id uint64) []byte {
-	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, id)
-	return bz
 }
