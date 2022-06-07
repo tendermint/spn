@@ -35,16 +35,6 @@ func TestMissionGet(t *testing.T) {
 	}
 }
 
-func TestMissionRemove(t *testing.T) {
-	k, ctx := keepertest.ClaimKeeper(t)
-	items := createNMission(k, ctx, 10)
-	for _, item := range items {
-		k.RemoveMission(ctx, item.MissionID)
-		_, found := k.GetMission(ctx, item.MissionID)
-		require.False(t, found)
-	}
-}
-
 func TestMissionGetAll(t *testing.T) {
 	k, ctx := keepertest.ClaimKeeper(t)
 	items := createNMission(k, ctx, 10)
