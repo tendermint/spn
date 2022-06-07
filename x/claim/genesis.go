@@ -19,7 +19,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetMission(ctx, elem)
 	}
 
-	k.SetAirdropSupply(ctx, genState.AirdropSupply)
+	k.InitializeAirdropSupply(ctx, genState.AirdropSupply)
 
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)

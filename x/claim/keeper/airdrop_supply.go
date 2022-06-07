@@ -3,6 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 
 	"github.com/tendermint/spn/x/claim/types"
 )
@@ -25,4 +26,29 @@ func (k Keeper) GetAirdropSupply(ctx sdk.Context) (val sdk.Coin, found bool) {
 
 	k.cdc.MustUnmarshal(b, &val)
 	return val, true
+}
+
+// InitializeAirdropSupply set the airdrop supply in the store and set the module balance
+func (k Keeper) InitializeAirdropSupply(ctx sdk.Context, airdropSupply sdk.Coin) error {
+	// get the eventual existing balance of the module for the airdrop supply
+	moduleBalance := k.bankKeeper.GetBalance(
+		ctx,
+		k.accountKeeper.GetModuleAddress(types.ModuleName),
+		airdropSupply.Denom,
+	)
+
+	// if the module has an existing balance, we burn the entire balance
+	if moduleBalance.IsPositive() {
+		if err := k.bankKeeper.BurnCoins(ctx, types.ModuleName, sdk.NewCoins(moduleBalance)); err != nil {
+			return spnerrors.Criticalf("can't burn module balance %s", err.Error())
+		}
+	}
+
+	// set the module balance with the airdrop supply
+	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, sdk.NewCoins(airdropSupply)); err != nil {
+		return spnerrors.Criticalf("can't mint airdrop suply into module balance %s", err.Error())
+	}
+
+	k.SetAirdropSupply(ctx, airdropSupply)
+	return nil
 }
