@@ -35,6 +35,13 @@ func LastCommitInfo(votes ...Vote) abci.LastCommitInfo {
 	return lci
 }
 
+// Coin returns a sdk.Coin from a string
+func Coin(t testing.TB, str string) sdk.Coin {
+	coin, err := sdk.ParseCoinNormalized(str)
+	require.NoError(t, err)
+	return coin
+}
+
 // Coins returns a sdk.Coins from a string
 func Coins(t testing.TB, str string) sdk.Coins {
 	coins, err := sdk.ParseCoinsNormalized(str)

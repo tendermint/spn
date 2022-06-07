@@ -97,7 +97,7 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 	// update store
 	k.SetAirdropSupply(ctx, airdropSupply)
 	k.SetClaimRecord(ctx, claimRecord)
-	
+
 	return nil
 }
 

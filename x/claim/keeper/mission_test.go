@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/claim/keeper"
 	"github.com/tendermint/spn/x/claim/types"
@@ -23,10 +23,11 @@ func createNMission(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Missi
 }
 
 func TestMissionGet(t *testing.T) {
-	k, ctx := keepertest.ClaimKeeper(t)
-	items := createNMission(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	items := createNMission(tk.ClaimKeeper, ctx, 10)
 	for _, item := range items {
-		got, found := k.GetMission(ctx, item.MissionID)
+		got, found := tk.ClaimKeeper.GetMission(ctx, item.MissionID)
 		require.True(t, found)
 		require.Equal(t,
 			nullify.Fill(&item),
@@ -36,10 +37,11 @@ func TestMissionGet(t *testing.T) {
 }
 
 func TestMissionGetAll(t *testing.T) {
-	k, ctx := keepertest.ClaimKeeper(t)
-	items := createNMission(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	items := createNMission(tk.ClaimKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(k.GetAllMission(ctx)),
+		nullify.Fill(tk.ClaimKeeper.GetAllMission(ctx)),
 	)
 }
