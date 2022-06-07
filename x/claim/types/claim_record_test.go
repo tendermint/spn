@@ -22,6 +22,15 @@ func TestClaimRecord_Validate(t *testing.T) {
 			valid:       true,
 		},
 		{
+			desc: "claim record with no completed mission is valid",
+			claimRecord: claim.ClaimRecord{
+				Address:           sample.Address(r),
+				Claimable:         sdk.OneInt(),
+				CompletedMissions: []uint64{},
+			},
+			valid: true,
+		},
+		{
 			desc: "should prevent invalid address",
 			claimRecord: claim.ClaimRecord{
 				Address:           "invalid",
@@ -62,4 +71,30 @@ func TestClaimRecord_Validate(t *testing.T) {
 			require.EqualValues(t, tc.valid, tc.claimRecord.Validate() == nil)
 		})
 	}
+}
+
+func TestClaimRecord_IsMissionCompleted(t *testing.T) {
+	require.False(t, claim.ClaimRecord{
+		Address:           sample.Address(r),
+		Claimable:         sdk.OneInt(),
+		CompletedMissions: []uint64{},
+	}.IsMissionCompleted(0))
+
+	require.False(t, claim.ClaimRecord{
+		Address:           sample.Address(r),
+		Claimable:         sdk.OneInt(),
+		CompletedMissions: []uint64{1, 2, 3},
+	}.IsMissionCompleted(0))
+
+	require.True(t, claim.ClaimRecord{
+		Address:           sample.Address(r),
+		Claimable:         sdk.OneInt(),
+		CompletedMissions: []uint64{0, 1, 2, 3},
+	}.IsMissionCompleted(0))
+
+	require.True(t, claim.ClaimRecord{
+		Address:           sample.Address(r),
+		Claimable:         sdk.OneInt(),
+		CompletedMissions: []uint64{0, 1, 2, 3},
+	}.IsMissionCompleted(3))
 }

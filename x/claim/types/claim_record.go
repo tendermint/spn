@@ -27,3 +27,13 @@ func (m ClaimRecord) Validate() error {
 
 	return nil
 }
+
+// IsMissionCompleted checks if the specified mission ID is completed for the claim record
+func (m ClaimRecord) IsMissionCompleted(missionID uint64) bool {
+	for _, completed := range m.CompletedMissions {
+		if completed == missionID {
+			return true
+		}
+	}
+	return false
+}
