@@ -101,7 +101,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 		[]Channel{},
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
-	claimKeeper := initializer.Claim(paramKeeper, bankKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, authKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -193,7 +193,7 @@ func NewTestSetupWithIBCMocks(
 		channelMock,
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
-	claimKeeper := initializer.Claim(paramKeeper, bankKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, authKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp

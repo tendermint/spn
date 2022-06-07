@@ -534,6 +534,7 @@ func New(
 		keys[claimmoduletypes.StoreKey],
 		keys[claimmoduletypes.MemStoreKey],
 		app.GetSubspace(claimmoduletypes.ModuleName),
+		app.AuthKeeper,
 		app.BankKeeper,
 	)
 

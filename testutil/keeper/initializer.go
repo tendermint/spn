@@ -413,6 +413,7 @@ func (i initializer) Participation(
 
 func (i initializer) Claim(
 	paramKeeper paramskeeper.Keeper,
+	accountKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
 ) *claimkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(claimtypes.StoreKey)
@@ -429,6 +430,7 @@ func (i initializer) Claim(
 		storeKey,
 		memStoreKey,
 		subspace,
+		accountKeeper,
 		bankKeeper,
 	)
 }
