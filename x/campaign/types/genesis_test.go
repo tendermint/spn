@@ -2,11 +2,9 @@ package types_test
 
 import (
 	"fmt"
-	"testing"
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+	"testing"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	tc2 "github.com/tendermint/spn/testutil/constructor"
@@ -69,18 +67,6 @@ func TestGenesisState_Validate(t *testing.T) {
 						Shares:     shares3,
 					},
 				},
-				MainnetVestingAccountList: []types.MainnetVestingAccount{
-					{
-						CampaignID:     campaign1.CampaignID,
-						Address:        sample.Address(r),
-						VestingOptions: *types.NewShareDelayedVesting(shares2, shares2, time.Now().Unix()),
-					},
-					{
-						CampaignID:     campaign2.CampaignID,
-						Address:        sample.Address(r),
-						VestingOptions: *types.NewShareDelayedVesting(shares4, shares4, time.Now().Unix()),
-					},
-				},
 				TotalShares: spntypes.TotalShareNumber,
 				Params:      types.DefaultParams(),
 			},
@@ -104,16 +90,6 @@ func TestGenesisState_Validate(t *testing.T) {
 				MainnetAccountList: []types.MainnetAccount{
 					sample.MainnetAccount(r, 0, sample.Address(r)),
 					sample.MainnetAccount(r, 1, sample.Address(r)),
-				},
-				MainnetVestingAccountList: []types.MainnetVestingAccount{
-					{
-						CampaignID: 33333,
-						Address:    "33333",
-					},
-					{
-						CampaignID: 9999,
-						Address:    "9999",
-					},
 				},
 				TotalShares: spntypes.TotalShareNumber,
 			},
@@ -188,17 +164,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Campaign(r, 0),
 				},
 				CampaignCounter: 1,
-				MainnetVestingAccountList: []types.MainnetVestingAccount{
-					{
-						CampaignID: 0,
-						Address:    "0",
-					},
-					{
-						CampaignID: 0,
-						Address:    "0",
-					},
-				},
-				TotalShares: spntypes.TotalShareNumber,
+				TotalShares:     spntypes.TotalShareNumber,
 			},
 			errorMessage: "duplicated index for mainnetVestingAccount",
 		},
@@ -319,24 +285,6 @@ func TestGenesisState_Validate(t *testing.T) {
 				shares[acc.CampaignID] = types.IncreaseShares(
 					shares[acc.CampaignID],
 					acc.Shares,
-				)
-			}
-
-			for _, acc := range tc.genState.MainnetVestingAccountList {
-				// check if the campaign exists for mainnet accounts
-				_, ok := campaignIDMap[acc.CampaignID]
-				require.True(t, ok)
-
-				// sum mainnet account shares
-				if _, ok := shares[acc.CampaignID]; !ok {
-					shares[acc.CampaignID] = types.EmptyShares()
-				}
-				totalShares, err := acc.GetTotalShares()
-				require.NoError(t, err)
-
-				shares[acc.CampaignID] = types.IncreaseShares(
-					shares[acc.CampaignID],
-					totalShares,
 				)
 			}
 
