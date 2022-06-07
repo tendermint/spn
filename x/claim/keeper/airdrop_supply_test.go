@@ -1,16 +1,16 @@
 package keeper_test
 
 import (
-	tc "github.com/tendermint/spn/testutil/constructor"
-	claim "github.com/tendermint/spn/x/claim/types"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
+	claim "github.com/tendermint/spn/x/claim/types"
 )
 
 func TestAirdropSupplyGet(t *testing.T) {
