@@ -39,20 +39,6 @@ func TestClaimRecordGet(t *testing.T) {
 	}
 }
 
-func TestClaimRecordRemove(t *testing.T) {
-	k, ctx := keepertest.ClaimKeeper(t)
-	items := createNClaimRecord(k, ctx, 10)
-	for _, item := range items {
-		k.RemoveClaimRecord(ctx,
-			item.Address,
-		)
-		_, found := k.GetClaimRecord(ctx,
-			item.Address,
-		)
-		require.False(t, found)
-	}
-}
-
 func TestClaimRecordGetAll(t *testing.T) {
 	k, ctx := keepertest.ClaimKeeper(t)
 	items := createNClaimRecord(k, ctx, 10)

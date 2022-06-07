@@ -17,32 +17,16 @@ func (k Keeper) SetClaimRecord(ctx sdk.Context, claimRecord types.ClaimRecord) {
 }
 
 // GetClaimRecord returns a claimRecord from its index
-func (k Keeper) GetClaimRecord(
-	ctx sdk.Context,
-	index string,
-) (val types.ClaimRecord, found bool) {
+func (k Keeper) GetClaimRecord(ctx sdk.Context, address string) (val types.ClaimRecord, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClaimRecordKeyPrefix))
 
-	b := store.Get(types.ClaimRecordKey(
-		index,
-	))
+	b := store.Get(types.ClaimRecordKey(address))
 	if b == nil {
 		return val, false
 	}
 
 	k.cdc.MustUnmarshal(b, &val)
 	return val, true
-}
-
-// RemoveClaimRecord removes a claimRecord from the store
-func (k Keeper) RemoveClaimRecord(
-	ctx sdk.Context,
-	index string,
-) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClaimRecordKeyPrefix))
-	store.Delete(types.ClaimRecordKey(
-		index,
-	))
 }
 
 // GetAllClaimRecord returns all claimRecord
