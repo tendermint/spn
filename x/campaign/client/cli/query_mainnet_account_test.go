@@ -12,39 +12,14 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/client/cli"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-func networkWithMainnetAccountObjects(t *testing.T, n int) (*network.Network, []types.MainnetAccount) {
-	t.Helper()
-	r := sample.Rand()
-	cfg := network.DefaultConfig()
-	state := types.GenesisState{}
-	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
+func (suite *QueryTestSuite) TestShowMainnetAccount() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	accs := suite.CampaignState.MainnetAccountList
 
-	campaignID := uint64(5)
-	for i := 0; i < n; i++ {
-		state.MainnetAccountList = append(
-			state.MainnetAccountList,
-			sample.MainnetAccount(r,
-				campaignID,
-				sample.Address(r),
-			),
-		)
-	}
-	buf, err := cfg.Codec.MarshalJSON(&state)
-	require.NoError(t, err)
-	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.MainnetAccountList
-}
-
-func TestShowMainnetAccount(t *testing.T) {
-	net, objs := networkWithMainnetAccountObjects(t, 2)
-
-	ctx := net.Validators[0].ClientCtx
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
@@ -59,11 +34,11 @@ func TestShowMainnetAccount(t *testing.T) {
 	}{
 		{
 			desc:         "found",
-			idCampaignID: objs[0].CampaignID,
-			idAddress:    objs[0].Address,
+			idCampaignID: accs[0].CampaignID,
+			idAddress:    accs[0].Address,
 
 			args: common,
-			obj:  objs[0],
+			obj:  accs[0],
 		},
 		{
 			desc:         "not found",
@@ -74,7 +49,7 @@ func TestShowMainnetAccount(t *testing.T) {
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.desc, func(t *testing.T) {
 			args := []string{
 				strconv.Itoa(int(tc.idCampaignID)),
 				tc.idAddress,
@@ -88,7 +63,7 @@ func TestShowMainnetAccount(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp types.QueryGetMainnetAccountResponse
-				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.MainnetAccount)
 				require.Equal(t, tc.obj, resp.MainnetAccount)
 			}
@@ -96,11 +71,11 @@ func TestShowMainnetAccount(t *testing.T) {
 	}
 }
 
-func TestListMainnetAccount(t *testing.T) {
-	net, objs := networkWithMainnetAccountObjects(t, 5)
+func (suite *QueryTestSuite) TestListMainnetAccount() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	accs := suite.CampaignState.MainnetAccountList
 
-	campaignID := objs[0].CampaignID
-	ctx := net.Validators[0].ClientCtx
+	campaignID := accs[0].CampaignID
 	request := func(campaignID uint64, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
 			strconv.FormatUint(campaignID, 10),
@@ -117,40 +92,40 @@ func TestListMainnetAccount(t *testing.T) {
 		}
 		return args
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("ByOffset", func(t *testing.T) {
 		step := 2
-		for i := 0; i < len(objs); i += step {
+		for i := 0; i < len(accs); i += step {
 			args := request(campaignID, nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllMainnetAccountResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.MainnetAccount), step)
-			require.Subset(t, objs, resp.MainnetAccount)
+			require.Subset(t, accs, resp.MainnetAccount)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	suite.T().Run("ByKey", func(t *testing.T) {
 		step := 2
 		var next []byte
-		for i := 0; i < len(objs); i += step {
+		for i := 0; i < len(accs); i += step {
 			args := request(campaignID, next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllMainnetAccountResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.MainnetAccount), step)
-			require.Subset(t, objs, resp.MainnetAccount)
+			require.Subset(t, accs, resp.MainnetAccount)
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
-		args := request(campaignID, nil, 0, uint64(len(objs)), true)
+	suite.T().Run("Total", func(t *testing.T) {
+		args := request(campaignID, nil, 0, uint64(len(accs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllMainnetAccountResponse
-		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+		require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
-		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.ElementsMatch(t, objs, resp.MainnetAccount)
+		require.Equal(t, len(accs), int(resp.Pagination.Total))
+		require.ElementsMatch(t, accs, resp.MainnetAccount)
 	})
 }
