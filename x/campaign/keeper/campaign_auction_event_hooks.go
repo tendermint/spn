@@ -6,37 +6,47 @@ import (
 	"time"
 )
 
-type CampaignAuctionEventHooks struct{}
+// CampaignAuctionEventHooks returns a CampaignAuctionEventHooks associated with the campaign keeper
+func (k Keeper) CampaignAuctionEventHooks() CampaignAuctionEventHooks {
+	return CampaignAuctionEventHooks{
+		campaignKeeper: k,
+	}
+}
+
+// CampaignAuctionEventHooks implements fundraising hooks and emit events on auction creation
+type CampaignAuctionEventHooks struct {
+	campaignKeeper Keeper
+}
 
 // Implements FundraisingHooks interface
 var _ types.FundraisingHooks = CampaignAuctionEventHooks{}
 
 // BeforeFixedPriceAuctionCreated emits a CampaignAuctionCreated event
 func (h CampaignAuctionEventHooks) BeforeFixedPriceAuctionCreated(
-	ctx sdk.Context,
-	auctioneer string,
-	startPrice sdk.Dec,
-	sellingCoin sdk.Coin,
-	payingCoinDenom string,
-	vestingSchedules []types.VestingSchedule,
-	startTime time.Time,
-	endTime time.Time,
+	_ sdk.Context,
+	_ string,
+	_ sdk.Dec,
+	_ sdk.Coin,
+	_ string,
+	_ []types.VestingSchedule,
+	_ time.Time,
+	_ time.Time,
 ) {
 }
 
 // BeforeBatchAuctionCreated emits a CampaignAuctionCreated event
 func (h CampaignAuctionEventHooks) BeforeBatchAuctionCreated(
-	ctx sdk.Context,
-	auctioneer string,
-	startPrice sdk.Dec,
-	minBidPrice sdk.Dec,
-	sellingCoin sdk.Coin,
-	payingCoinDenom string,
-	vestingSchedules []types.VestingSchedule,
-	maxExtendedRound uint32,
-	extendedRoundRate sdk.Dec,
-	startTime time.Time,
-	endTime time.Time,
+	_ sdk.Context,
+	_ string,
+	_ sdk.Dec,
+	_ sdk.Dec,
+	_ sdk.Coin,
+	_ string,
+	_ []types.VestingSchedule,
+	_ uint32,
+	_ sdk.Dec,
+	_ time.Time,
+	_ time.Time,
 ) {
 }
 

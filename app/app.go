@@ -536,6 +536,11 @@ func New(
 		app.BankKeeper,
 	)
 
+	// set fundraising hooks
+	app.FundraisingKeeper = *app.FundraisingKeeper.SetHooks(
+		app.CampaignKeeper.CampaignAuctionEventHooks(),
+	)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
