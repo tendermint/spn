@@ -19,7 +19,6 @@ const (
 	defaultWeightMsgUpdateTotalSupply        = 20
 	defaultWeightMsgInitializeMainnet        = 15
 	defaultWeightMsgUpdateSpecialAllocations = 20
-	defaultWeightMsgAddShares                = 20
 	defaultWeightMsgMintVouchers             = 20
 	defaultWeightMsgBurnVouchers             = 20
 	defaultWeightMsgRedeemVouchers           = 20
@@ -30,7 +29,6 @@ const (
 	opWeightMsgUpdateTotalSupply        = "op_weight_msg_update_total_supply"
 	opWeightMsgInitializeMainnet        = "op_weight_msg_initialize_mainnet"
 	opWeightMsgUpdateSpecialAllocations = "op_weight_msg_update_special_allocations"
-	opWeightMsgAddShares                = "op_weight_msg_add_shares"
 	opWeightMsgMintVouchers             = "op_weight_msg_mint_vouchers"
 	opWeightMsgBurnVouchers             = "op_weight_msg_burn_vouchers"
 	opWeightMsgRedeemVouchers           = "op_weight_msg_redeem_vouchers"
@@ -74,7 +72,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgUpdateTotalSupply        int
 		weightMsgInitializeMainnet        int
 		weightMsgUpdateSpecialAllocations int
-		weightMsgAddShares                int
 		weightMsgMintVouchers             int
 		weightMsgBurnVouchers             int
 		weightMsgRedeemVouchers           int
@@ -106,11 +103,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	appParams.GetOrGenerate(cdc, opWeightMsgUpdateSpecialAllocations, &weightMsgUpdateSpecialAllocations, nil,
 		func(_ *rand.Rand) {
 			weightMsgInitializeMainnet = defaultWeightMsgUpdateSpecialAllocations
-		},
-	)
-	appParams.GetOrGenerate(cdc, opWeightMsgAddShares, &weightMsgAddShares, nil,
-		func(_ *rand.Rand) {
-			weightMsgAddShares = defaultWeightMsgAddShares
 		},
 	)
 	appParams.GetOrGenerate(cdc, opWeightMsgMintVouchers, &weightMsgMintVouchers, nil,
@@ -152,11 +144,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			campaignsim.SimulateMsgInitializeMainnet(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
-			weightMsgAddShares,
-			campaignsim.SimulateMsgAddShares(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
-		),
-		simulation.NewWeightedOperation(
-			weightMsgAddShares,
+			weightMsgUpdateSpecialAllocations,
 			campaignsim.SimulateMsgUpdateSpecialAllocations(am.accountKeeper, am.bankKeeper, am.profileKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(

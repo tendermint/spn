@@ -189,7 +189,6 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 		OperatorAddresses: []string{valOpAddrFoo},
 	})
 	tk.ProfileKeeper.SetValidatorByOperatorAddress(ctx, profiletypes.ValidatorByOperatorAddress{
-
 		ValidatorAddress: valFoo,
 		OperatorAddress:  valOpAddrFoo,
 	})

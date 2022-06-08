@@ -32,7 +32,6 @@ func (k Keeper) ClaimRecordAll(c context.Context, req *types.QueryAllClaimRecord
 		claimRecords = append(claimRecords, claimRecord)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

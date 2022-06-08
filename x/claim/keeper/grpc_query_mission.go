@@ -33,7 +33,6 @@ func (k Keeper) MissionAll(c context.Context, req *types.QueryAllMissionRequest)
 		missions = append(missions, mission)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

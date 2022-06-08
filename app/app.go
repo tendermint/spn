@@ -71,14 +71,17 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	"github.com/cosmos/ibc-go/v2/modules/apps/transfer"
-	ibctransferkeeper "github.com/cosmos/ibc-go/v2/modules/apps/transfer/keeper"
-	ibctransfertypes "github.com/cosmos/ibc-go/v2/modules/apps/transfer/types"
-	ibc "github.com/cosmos/ibc-go/v2/modules/core"
-	ibcclient "github.com/cosmos/ibc-go/v2/modules/core/02-client"
-	ibcporttypes "github.com/cosmos/ibc-go/v2/modules/core/05-port/types"
-	ibchost "github.com/cosmos/ibc-go/v2/modules/core/24-host"
-	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
+
+	"github.com/cosmos/ibc-go/v3/modules/apps/transfer"
+	ibctransferkeeper "github.com/cosmos/ibc-go/v3/modules/apps/transfer/keeper"
+	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
+	ibc "github.com/cosmos/ibc-go/v3/modules/core"
+	ibcclient "github.com/cosmos/ibc-go/v3/modules/core/02-client"
+	ibcporttypes "github.com/cosmos/ibc-go/v3/modules/core/05-port/types"
+	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
+	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
+
+	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 	"github.com/ignite-hq/cli/ignite/pkg/openapiconsole"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -129,10 +132,7 @@ import (
 	"github.com/tendermint/spn/x/mint"
 	mintkeeper "github.com/tendermint/spn/x/mint/keeper"
 	minttypes "github.com/tendermint/spn/x/mint/types"
-
 	// this line is used by starport scaffolding # stargate/app/moduleImport
-
-	"github.com/ignite-hq/cli/ignite/pkg/cosmoscmd"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -297,7 +297,6 @@ func New(
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) cosmoscmd.App {
-
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -418,10 +417,11 @@ func New(
 	// Create Transfer Keepers
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec, keys[ibctransfertypes.StoreKey], app.GetSubspace(ibctransfertypes.ModuleName),
-		app.IBCKeeper.ChannelKeeper, &app.IBCKeeper.PortKeeper,
+		app.IBCKeeper.ChannelKeeper, app.IBCKeeper.ChannelKeeper, &app.IBCKeeper.PortKeeper,
 		app.AuthKeeper, app.BankKeeper, scopedTransferKeeper,
 	)
 	app.transferModule = transfer.NewAppModule(app.TransferKeeper)
+	transferIBCModule := transfer.NewIBCModule(app.TransferKeeper)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
@@ -540,7 +540,7 @@ func New(
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
-	ibcRouter.AddRoute(ibctransfertypes.ModuleName, app.transferModule)
+	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
 	ibcRouter.AddRoute(monitoringcmoduletypes.ModuleName, monitoringcModule)
 	ibcRouter.AddRoute(monitoringpmoduletypes.ModuleName, monitoringpModule)
 	// this line is used by starport scaffolding # ibc/app/router
@@ -550,7 +550,7 @@ func New(
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
 	// we prefer to be more strict in what arguments the modules expect.
-	var skipGenesisInvariants = cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
+	skipGenesisInvariants := cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
 
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.

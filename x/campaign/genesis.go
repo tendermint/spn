@@ -20,7 +20,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// Set all the campaignChains
 	for _, elem := range genState.CampaignChainsList {
 		k.SetCampaignChains(ctx, elem)
-
 	}
 
 	// Set all the mainnetAccount

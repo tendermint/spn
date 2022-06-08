@@ -56,7 +56,6 @@ func genAndDeliverTxWithRandFeesAddOpAddr(txCtx sdksimulation.OperationInput, op
 		accSequences,
 		privs...,
 	)
-
 	if err != nil {
 		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to generate mock tx"), nil, err
 	}
@@ -108,7 +107,6 @@ func SimulateMsgUpdateValidatorDescription(ak types.AccountKeeper, bk types.Bank
 func SimulateMsgAddValidatorOperatorAddress(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-
 		// choose two addresses that are not equal
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		opAccount, _ := simtypes.RandomAcc(r, accs)

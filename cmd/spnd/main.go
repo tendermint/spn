@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-
 	rootCmd, _ := cosmoscmd.NewRootCmd(
 		spntypes.Name,
 		spntypes.AccountAddressPrefix,

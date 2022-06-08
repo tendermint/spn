@@ -32,7 +32,6 @@ func (k Keeper) CampaignAll(c context.Context, req *types.QueryAllCampaignReques
 		campaigns = append(campaigns, campaign)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

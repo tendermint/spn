@@ -20,7 +20,6 @@ func CmdCreateCampaign() *cobra.Command {
 		Short: "Create a new campaign",
 		Args:  cobra.RangeArgs(1, 2),
 		RunE: func(cmd *cobra.Command, args []string) error {
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err

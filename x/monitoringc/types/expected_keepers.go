@@ -4,9 +4,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	connectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
-	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
-	"github.com/cosmos/ibc-go/v2/modules/core/exported"
+	connectiontypes "github.com/cosmos/ibc-go/v3/modules/core/03-connection/types"
+	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
+	"github.com/cosmos/ibc-go/v3/modules/core/exported"
 	tmtypes "github.com/tendermint/tendermint/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -61,7 +61,7 @@ type ChannelKeeper interface {
 	GetChannel(ctx sdk.Context, srcPort, srcChan string) (channeltypes.Channel, bool)
 	GetNextSequenceSend(ctx sdk.Context, portID, channelID string) (uint64, bool)
 	SendPacket(ctx sdk.Context, channelCap *capabilitytypes.Capability, packet exported.PacketI) error
-	WriteAcknowledgement(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet exported.PacketI, acknowledgement []byte) error
+	WriteAcknowledgement(ctx sdk.Context, chanCap *capabilitytypes.Capability, packet exported.PacketI, acknowledgement exported.Acknowledgement) error
 	ChanCloseInit(ctx sdk.Context, portID, channelID string, chanCap *capabilitytypes.Capability) error
 }
 

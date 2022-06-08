@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -16,7 +15,8 @@ import (
 func createNGenesisAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.GenesisAccount {
 	items := make([]types.GenesisAccount, n)
 	for i := range items {
-		items[i] = sample.GenesisAccount(r, uint64(i), strconv.Itoa(i))
+		keeper.SetChain(ctx, sample.Chain(r, uint64(i), sample.Uint64(r)))
+		items[i] = sample.GenesisAccount(r, uint64(i), sample.Address(r))
 		keeper.SetGenesisAccount(ctx, items[i])
 	}
 	return items
@@ -34,6 +34,7 @@ func TestGenesisAccountGet(t *testing.T) {
 		require.Equal(t, item, rst)
 	}
 }
+
 func TestGenesisAccountRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNGenesisAccount(tk.LaunchKeeper, ctx, 10)
