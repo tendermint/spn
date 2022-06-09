@@ -32,47 +32,47 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 		valid bool
 	}{
 		{
-			name:  "valid message",
+			name:  "should validate valid message",
 			msg:   validMsg,
 			valid: true,
 		},
 		{
-			name:  "same creator and validator",
+			name:  "should validate valid message with same creator and validator",
 			msg:   sample.MsgRequestAddValidator(r, addr, addr, launchID),
 			valid: true,
 		},
 		{
-			name:  "invalid creator address",
+			name:  "should prevent validate message with invalid creator address",
 			msg:   sample.MsgRequestAddValidator(r, "invalid", sample.Address(r), launchID),
 			valid: false,
 		},
 		{
-			name:  "invalid validator address",
+			name:  "should prevent validate message with invalid validator address",
 			msg:   sample.MsgRequestAddValidator(r, sample.Address(r), "invalid", launchID),
 			valid: false,
 		},
 		{
-			name:  "empty consensus public key",
+			name:  "should prevent validate message with empty consensus public key",
 			msg:   emptyConsPubKey,
 			valid: false,
 		},
 		{
-			name:  "empty gentx",
+			name:  "should prevent validate message with empty gentx",
 			msg:   emptyGentx,
 			valid: false,
 		},
 		{
-			name:  "empty peer",
+			name:  "should prevent validate message with empty peer",
 			msg:   emptyPeer,
 			valid: false,
 		},
 		{
-			name:  "invalid self delegation",
+			name:  "should prevent validate message with invalid self delegation",
 			msg:   invalidSelfDelegation,
 			valid: false,
 		},
 		{
-			name:  "zero self delegation",
+			name:  "should prevent validate message with zero self delegation",
 			msg:   zeroDelegation,
 			valid: false,
 		},

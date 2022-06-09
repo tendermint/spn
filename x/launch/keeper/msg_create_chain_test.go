@@ -95,42 +95,42 @@ func TestMsgCreateChain(t *testing.T) {
 		err           error
 	}{
 		{
-			name:          "valid message",
+			name:          "should create a chain",
 			msg:           sample.MsgCreateChain(r, coordAddrs[0], "", false, campMap[coordAddrs[0]]),
 			wantedChainID: 0,
 		},
 		{
-			name:          "creates a unique chain ID",
+			name:          "should allow creating a chain with a unique chain ID",
 			msg:           sample.MsgCreateChain(r, coordAddrs[1], "", false, campMap[coordAddrs[1]]),
 			wantedChainID: 1,
 		},
 		{
-			name:          "valid message with genesis url",
+			name:          "should allow creating a chain with genesis url",
 			msg:           sample.MsgCreateChain(r, coordAddrs[2], "foo.com", false, campMap[coordAddrs[2]]),
 			wantedChainID: 2,
 		},
 		{
-			name:          "creates message with campaign",
+			name:          "should allow creating a chain with campaign",
 			msg:           sample.MsgCreateChain(r, coordAddrs[3], "", true, campMap[coordAddrs[3]]),
 			wantedChainID: 3,
 		},
 		{
-			name: "coordinator doesn't exist for the chain",
+			name: "should prevent creating a chain where coordinator doesn't exist for the chain",
 			msg:  sample.MsgCreateChain(r, sample.Address(r), "", false, 0),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "invalid campaign id",
+			name: "should prevent creating a chain with invalid campaign id",
 			msg:  sample.MsgCreateChain(r, coordAddrs[0], "", true, 1000),
 			err:  types.ErrCreateChainFail,
 		},
 		{
-			name: "invalid coordinator address",
+			name: "should prevent creating a chain with invalid coordinator address",
 			msg:  sample.MsgCreateChain(r, invalidCoordAddress, "", true, 1000),
 			err:  types.ErrCreateChainFail,
 		},
 		{
-			name: "insufficient balance to cover creation fee",
+			name: "should prevent creating a chain with insufficient balance to cover creation fee",
 			msg:  sample.MsgCreateChain(r, coordAddrs[4], "", false, campMap[coordAddrs[4]]),
 			err:  sdkerrors.ErrInsufficientFunds,
 		},

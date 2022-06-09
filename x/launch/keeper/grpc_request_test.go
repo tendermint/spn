@@ -24,7 +24,7 @@ func TestRequestQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc: "First",
+			desc: "should allow querying first request",
 			request: &types.QueryGetRequestRequest{
 				LaunchID:  msgs[0].LaunchID,
 				RequestID: msgs[0].RequestID,
@@ -32,7 +32,7 @@ func TestRequestQuerySingle(t *testing.T) {
 			response: &types.QueryGetRequestResponse{Request: msgs[0]},
 		},
 		{
-			desc: "Second",
+			desc: "should allow querying second request",
 			request: &types.QueryGetRequestRequest{
 				LaunchID:  msgs[1].LaunchID,
 				RequestID: msgs[1].RequestID,
@@ -40,7 +40,7 @@ func TestRequestQuerySingle(t *testing.T) {
 			response: &types.QueryGetRequestResponse{Request: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "should prevent querying non existing request",
 			request: &types.QueryGetRequestRequest{
 				LaunchID:  uint64(100000),
 				RequestID: 100000,
@@ -48,7 +48,7 @@ func TestRequestQuerySingle(t *testing.T) {
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "should prevent querying a request with invalid query request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
@@ -79,7 +79,7 @@ func TestRequestQueryPaginated(t *testing.T) {
 			},
 		}
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	t.Run("should allow querying requests by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
 			resp, err := tk.LaunchKeeper.RequestAll(wctx, request(nil, uint64(i), uint64(step), false))
@@ -88,7 +88,7 @@ func TestRequestQueryPaginated(t *testing.T) {
 			require.Subset(t, msgs, resp.Request)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	t.Run("should allow querying requests by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
@@ -99,13 +99,13 @@ func TestRequestQueryPaginated(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
+	t.Run("should allow querying all requests", func(t *testing.T) {
 		resp, err := tk.LaunchKeeper.RequestAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.Request)
 	})
-	t.Run("InvalidRequest", func(t *testing.T) {
+	t.Run("should prevent querying requests with invalid query request", func(t *testing.T) {
 		_, err := tk.LaunchKeeper.RequestAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})

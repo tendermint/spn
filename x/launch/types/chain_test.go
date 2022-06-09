@@ -25,22 +25,22 @@ func TestChain_Validate(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc:  "valid chain",
+			desc:  "should validate valid chain",
 			chain: sample.Chain(r, 0, 0),
 			valid: true,
 		},
 		{
-			desc:  "invalid genesis chain ID",
+			desc:  "should prevent validate invalid genesis chain ID",
 			chain: invalidGenesisChainID,
 			valid: false,
 		},
 		{
-			desc:  "invalid launch timestamp",
+			desc:  "should prevent validate invalid launch timestamp",
 			chain: invalidLaunchTimestamp,
 			valid: false,
 		},
 		{
-			desc:  "mainnet without campaign",
+			desc:  "should prevent validate mainnet chain without associated campaign ID",
 			chain: mainnetWithoutCampaign,
 			valid: false,
 		},

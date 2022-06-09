@@ -7,33 +7,30 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func coinsStr(t *testing.T, str string) sdk.Coins {
-	coins, err := sdk.ParseCoinsNormalized(str)
-	require.NoError(t, err)
-	return coins
-}
-
 func TestNewDelayedVesting(t *testing.T) {
-	totalBalance := coinsStr(t, "1000foo,500bar,2000toto")
-	vesting := coinsStr(t, "500foo,500bar")
+	totalBalance := tc.Coins(t, "1000foo,500bar,2000toto")
+	vesting := tc.Coins(t, "500foo,500bar")
 	endTime := time.Now().Unix()
 
-	vestingOptions := types.NewDelayedVesting(totalBalance, vesting, endTime)
+	t.Run("should return valid delayed vesting", func(t *testing.T) {
+		vestingOptions := types.NewDelayedVesting(totalBalance, vesting, endTime)
 
-	delayedVesting := vestingOptions.GetDelayedVesting()
-	require.NotNil(t, delayedVesting)
-	require.True(t, vesting.IsEqual(delayedVesting.Vesting))
-	require.True(t, totalBalance.IsEqual(delayedVesting.TotalBalance))
-	require.EqualValues(t, endTime, delayedVesting.EndTime)
+		delayedVesting := vestingOptions.GetDelayedVesting()
+		require.NotNil(t, delayedVesting)
+		require.True(t, vesting.IsEqual(delayedVesting.Vesting))
+		require.True(t, totalBalance.IsEqual(delayedVesting.TotalBalance))
+		require.EqualValues(t, endTime, delayedVesting.EndTime)
+	})
 }
 
 func TestDelayedVesting_Validate(t *testing.T) {
-	sampleTotalBalance := coinsStr(t, "1000foo,500bar,1000toto")
-	sampleVesting := coinsStr(t, "500foo,500bar")
+	sampleTotalBalance := tc.Coins(t, "1000foo,500bar,1000toto")
+	sampleVesting := tc.Coins(t, "500foo,500bar")
 
 	tests := []struct {
 		name   string
@@ -41,7 +38,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		valid  bool
 	}{
 		{
-			name: "no total balance",
+			name: "should prevent validate delayed vesting with no total balance",
 			option: *types.NewDelayedVesting(
 				nil,
 				sample.Coins(r),
@@ -50,7 +47,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			name: "no vesting",
+			name: "should prevent validate delayed vesting with no vesting",
 			option: *types.NewDelayedVesting(
 				sample.Coins(r),
 				nil,
@@ -59,7 +56,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			name: "vesting with invalid total balance",
+			name: "should prevent validate delayed vesting with invalid total balance",
 			option: *types.NewDelayedVesting(
 				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
 				sample.Coins(r),
@@ -68,7 +65,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			name: "vesting with invalid vesting",
+			name: "should prevent validate delayed vesting with invalid vesting",
 			option: *types.NewDelayedVesting(
 				sample.Coins(r),
 				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
@@ -77,25 +74,25 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			name: "vesting with total balance smaller than vesting",
+			name: "should prevent validate delayed vesting with total balance smaller than vesting",
 			option: *types.NewDelayedVesting(
-				coinsStr(t, "1000foo,500bar,2000toto"),
-				coinsStr(t, "1000foo,501bar,2000toto"),
+				tc.Coins(t, "1000foo,500bar,2000toto"),
+				tc.Coins(t, "1000foo,501bar,2000toto"),
 				time.Now().Unix(),
 			),
 			valid: false,
 		},
 		{
-			name: "vesting denoms is not a subset of total balance",
+			name: "should prevent validate delayed vesting with vesting denoms not being a subset of total balance",
 			option: *types.NewDelayedVesting(
-				coinsStr(t, "1000foo,500bar"),
-				coinsStr(t, "1000foo,500bar,2000toto"),
+				tc.Coins(t, "1000foo,500bar"),
+				tc.Coins(t, "1000foo,500bar,2000toto"),
 				time.Now().Unix(),
 			),
 			valid: false,
 		},
 		{
-			name: "vesting with invalid timestamp",
+			name: "should prevent validate delayed vesting with invalid timestamp",
 			option: *types.NewDelayedVesting(
 				sampleTotalBalance,
 				sampleVesting,
@@ -104,7 +101,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			name: "valid account vesting",
+			name: "should validate valid delayed vesting",
 			option: *types.NewDelayedVesting(
 				sampleTotalBalance,
 				sampleVesting,
@@ -113,7 +110,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			name: "vesting is equal to total balance",
+			name: "should validate delayed vesting with vesting equal to total balance",
 			option: *types.NewDelayedVesting(
 				sampleVesting,
 				sampleVesting,
