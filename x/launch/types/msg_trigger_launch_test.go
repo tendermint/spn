@@ -19,17 +19,17 @@ func TestMsgTriggerLaunch_ValidateBasic(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc:  "valid message",
+			desc:  "should validate valid message",
 			msg:   *types.NewMsgTriggerLaunch(addr, launchID, 1000),
 			valid: true,
 		},
 		{
-			desc:  "invalid coordinator address",
+			desc:  "should prevent validate message with invalid coordinator address",
 			msg:   *types.NewMsgTriggerLaunch("invalid", launchID, 1000),
 			valid: false,
 		},
 		{
-			desc:  "remaining time less than 0",
+			desc:  "should prevent validate message with remaining time less than 0",
 			msg:   *types.NewMsgTriggerLaunch(addr, launchID, 0),
 			valid: false,
 		},
