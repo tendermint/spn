@@ -36,7 +36,7 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc: "First",
+			desc: "should allow querying first vesting account",
 			request: &types.QueryGetVestingAccountRequest{
 				LaunchID: msgs[0].LaunchID,
 				Address:  msgs[0].Address,
@@ -44,7 +44,7 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 			response: &types.QueryGetVestingAccountResponse{VestingAccount: msgs[0]},
 		},
 		{
-			desc: "Second",
+			desc: "should allow querying second vesting account",
 			request: &types.QueryGetVestingAccountRequest{
 				LaunchID: msgs[1].LaunchID,
 				Address:  msgs[1].Address,
@@ -52,7 +52,7 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 			response: &types.QueryGetVestingAccountResponse{VestingAccount: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "should prevent querying non existing vesting account",
 			request: &types.QueryGetVestingAccountRequest{
 				LaunchID: uint64(100000),
 				Address:  strconv.Itoa(100000),
@@ -60,7 +60,7 @@ func TestVestingAccountQuerySingle(t *testing.T) {
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "should prevent querying a vesting account with invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
@@ -95,7 +95,7 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 			},
 		}
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	t.Run("should allow querying vesting accounts by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
 			resp, err := tk.LaunchKeeper.VestingAccountAll(wctx, request(launchID, nil, uint64(i), uint64(step), false))
@@ -104,7 +104,7 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 			require.Subset(t, msgs, resp.VestingAccount)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	t.Run("should allow querying vesting accounts by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
@@ -115,13 +115,13 @@ func TestVestingAccountQueryPaginated(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
+	t.Run("should allow querying all vesting accounts", func(t *testing.T) {
 		resp, err := tk.LaunchKeeper.VestingAccountAll(wctx, request(launchID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.VestingAccount)
 	})
-	t.Run("InvalidRequest", func(t *testing.T) {
+	t.Run("should prevent querying vesting accounts with invalid request", func(t *testing.T) {
 		_, err := tk.LaunchKeeper.VestingAccountAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})

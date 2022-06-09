@@ -39,7 +39,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc: "first",
+			desc: "should allow querying first genesis account",
 			request: &types.QueryGetGenesisAccountRequest{
 				LaunchID: msgs[0].LaunchID,
 				Address:  msgs[0].Address,
@@ -47,7 +47,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: msgs[0]},
 		},
 		{
-			desc: "second",
+			desc: "should allow querying second genesis account",
 			request: &types.QueryGetGenesisAccountRequest{
 				LaunchID: msgs[1].LaunchID,
 				Address:  msgs[1].Address,
@@ -55,7 +55,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 			response: &types.QueryGetGenesisAccountResponse{GenesisAccount: msgs[1]},
 		},
 		{
-			desc: "chain not found",
+			desc: "should prevent querying genesis account with non existing chain",
 			request: &types.QueryGetGenesisAccountRequest{
 				LaunchID: 100000,
 				Address:  msgs[0].Address,
@@ -63,7 +63,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 			err: status.Error(codes.NotFound, "chain not found"),
 		},
 		{
-			desc: "account not found",
+			desc: "hould prevent querying non existing genesis account",
 			request: &types.QueryGetGenesisAccountRequest{
 				LaunchID: msgs[1].LaunchID,
 				Address:  "foo",
@@ -71,7 +71,7 @@ func TestGenesisAccountQuerySingle(t *testing.T) {
 			err: status.Error(codes.NotFound, "account not found"),
 		},
 		{
-			desc: "invalid request",
+			desc: "should prevent querying a genesis account with invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
@@ -106,7 +106,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 			},
 		}
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	t.Run("should allow querying genesis account by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
 			resp, err := tk.LaunchKeeper.GenesisAccountAll(wctx, request(chainID, nil, uint64(i), uint64(step), false))
@@ -115,7 +115,7 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 			require.Subset(t, msgs, resp.GenesisAccount)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	t.Run("should allow querying genesis account by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
@@ -126,19 +126,19 @@ func TestGenesisAccountQueryPaginated(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("total", func(t *testing.T) {
+	t.Run("should allow querying all genesis accounts", func(t *testing.T) {
 		resp, err := tk.LaunchKeeper.GenesisAccountAll(wctx, request(chainID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.GenesisAccount)
 	})
-	t.Run("chain not found", func(t *testing.T) {
+	t.Run("should prevent querying genesis accounts with non existing chain", func(t *testing.T) {
 		_, err := tk.LaunchKeeper.GenesisAccountAll(wctx, &types.QueryAllGenesisAccountRequest{
 			LaunchID: 10000,
 		})
 		require.ErrorIs(t, err, status.Error(codes.NotFound, "chain not found"))
 	})
-	t.Run("invalid request", func(t *testing.T) {
+	t.Run("should prevent querying genesis accounts with invalid request", func(t *testing.T) {
 		_, err := tk.LaunchKeeper.GenesisAccountAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
@@ -179,7 +179,7 @@ func TestGenesisAccountMainnet(t *testing.T) {
 	chain.CampaignID = campaignID
 	tk.LaunchKeeper.SetChain(ctx, chain)
 
-	t.Run("single account", func(t *testing.T) {
+	t.Run("should allow querying a single genesis account for a mainnet", func(t *testing.T) {
 		res, err := tk.LaunchKeeper.GenesisAccount(wctx, &types.QueryGetGenesisAccountRequest{
 			LaunchID: launchID,
 			Address:  addr1,
@@ -191,7 +191,7 @@ func TestGenesisAccountMainnet(t *testing.T) {
 			Coins:    tc.Coins(t, "600foo"),
 		}, res.GenesisAccount)
 	})
-	t.Run("account list", func(t *testing.T) {
+	t.Run("should allow querying all genesis accounts for a mainnet", func(t *testing.T) {
 		res, err := tk.LaunchKeeper.GenesisAccountAll(wctx, &types.QueryAllGenesisAccountRequest{
 			LaunchID: launchID,
 			Pagination: &query.PageRequest{

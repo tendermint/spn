@@ -48,6 +48,10 @@ func createNRequest(k *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 func TestRequestGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
+
+	t.Run("should ", func(t *testing.T) {
+	})
+
 	for _, item := range items {
 		rst, found := tk.LaunchKeeper.GetRequest(ctx,
 			item.LaunchID,
@@ -61,6 +65,10 @@ func TestRequestGet(t *testing.T) {
 func TestRequestRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
+
+	t.Run("should ", func(t *testing.T) {
+	})
+
 	for _, item := range items {
 		tk.LaunchKeeper.RemoveRequest(ctx,
 			item.LaunchID,
@@ -77,12 +85,20 @@ func TestRequestRemove(t *testing.T) {
 func TestRequestGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
+
+	t.Run("should ", func(t *testing.T) {
+	})
+
 	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllRequest(ctx))
 }
 
 func TestRequestCounter(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
+
+	t.Run("should ", func(t *testing.T) {
+	})
+
 	counter := uint64(len(items)) + 1
 	require.Equal(t, counter, tk.LaunchKeeper.GetRequestCounter(ctx, 0))
 	require.Equal(t, uint64(1), tk.LaunchKeeper.GetRequestCounter(ctx, 1))
