@@ -33,7 +33,7 @@ func (suite *QueryTestSuite) TestShowVestingAccount() {
 		obj  types.VestingAccount
 	}{
 		{
-			desc:      "found",
+			desc:      "should show an existing vesting account",
 			idChainID: strconv.Itoa(int(accs[0].LaunchID)),
 			idAddress: accs[0].Address,
 
@@ -41,7 +41,7 @@ func (suite *QueryTestSuite) TestShowVestingAccount() {
 			obj:  accs[0],
 		},
 		{
-			desc:      "not found",
+			desc:      "should send error for a non existing vesting account",
 			idChainID: strconv.Itoa(100000),
 			idAddress: strconv.Itoa(100000),
 
@@ -92,7 +92,7 @@ func (suite *QueryTestSuite) TestListVestingAccount() {
 		}
 		return args
 	}
-	suite.T().Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("should allow listing vesting accounts by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(accs); i += step {
 			args := request(chainID, nil, uint64(i), uint64(step), false)
@@ -104,7 +104,7 @@ func (suite *QueryTestSuite) TestListVestingAccount() {
 			require.Subset(t, accs, resp.VestingAccount)
 		}
 	})
-	suite.T().Run("ByKey", func(t *testing.T) {
+	suite.T().Run("should allow listing vesting accounts by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(accs); i += step {
@@ -118,7 +118,7 @@ func (suite *QueryTestSuite) TestListVestingAccount() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("Total", func(t *testing.T) {
+	suite.T().Run("should allow listing all vesting accounts", func(t *testing.T) {
 		args := request(chainID, nil, 0, uint64(len(accs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListVestingAccount(), args)
 		require.NoError(t, err)
