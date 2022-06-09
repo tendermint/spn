@@ -12,37 +12,14 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/client/cli"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func networkWithRequestObjects(t *testing.T, n int) (*network.Network, []types.Request) {
-	t.Helper()
-	r := sample.Rand()
-	cfg := network.DefaultConfig()
-	state := types.GenesisState{}
-	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
+func (suite *QueryTestSuite) TestShowRequest() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	requests := suite.LaunchState.RequestList
 
-	for i := 0; i < n; i++ {
-		request := sample.Request(r, 0, sample.Address(r))
-		request.RequestID = uint64(i)
-		state.RequestList = append(
-			state.RequestList,
-			request,
-		)
-	}
-	buf, err := cfg.Codec.MarshalJSON(&state)
-	require.NoError(t, err)
-	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.RequestList
-}
-
-func TestShowRequest(t *testing.T) {
-	net, objs := networkWithRequestObjects(t, 2)
-
-	ctx := net.Validators[0].ClientCtx
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
@@ -57,11 +34,11 @@ func TestShowRequest(t *testing.T) {
 	}{
 		{
 			desc:        "found",
-			idLaunchID:  strconv.Itoa(int(objs[0].LaunchID)),
-			idRequestID: objs[0].RequestID,
+			idLaunchID:  strconv.Itoa(int(requests[0].LaunchID)),
+			idRequestID: requests[0].RequestID,
 
 			args: common,
-			obj:  objs[0],
+			obj:  requests[0],
 		},
 		{
 			desc:        "not found",
@@ -72,7 +49,7 @@ func TestShowRequest(t *testing.T) {
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.desc, func(t *testing.T) {
 			args := []string{
 				tc.idLaunchID,
 				strconv.Itoa(int(tc.idRequestID)),
@@ -86,7 +63,7 @@ func TestShowRequest(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp types.QueryGetRequestResponse
-				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.Request)
 				require.Equal(t, tc.obj, resp.Request)
 			}
@@ -94,10 +71,10 @@ func TestShowRequest(t *testing.T) {
 	}
 }
 
-func TestListRequest(t *testing.T) {
-	net, objs := networkWithRequestObjects(t, 5)
+func (suite *QueryTestSuite) TestListRequest() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	requests := suite.LaunchState.RequestList
 
-	ctx := net.Validators[0].ClientCtx
 	request := func(launchID string, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
 			launchID,
@@ -114,40 +91,40 @@ func TestListRequest(t *testing.T) {
 		}
 		return args
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("ByOffset", func(t *testing.T) {
 		step := 2
-		for i := 0; i < len(objs); i += step {
+		for i := 0; i < len(requests); i += step {
 			args := request("0", nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListRequest(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllRequestResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Request), step)
-			require.Subset(t, objs, resp.Request)
+			require.Subset(t, requests, resp.Request)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	suite.T().Run("ByKey", func(t *testing.T) {
 		step := 2
 		var next []byte
-		for i := 0; i < len(objs); i += step {
+		for i := 0; i < len(requests); i += step {
 			args := request("0", next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListRequest(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllRequestResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Request), step)
-			require.Subset(t, objs, resp.Request)
+			require.Subset(t, requests, resp.Request)
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
-		args := request("0", nil, 0, uint64(len(objs)), true)
+	suite.T().Run("Total", func(t *testing.T) {
+		args := request("0", nil, 0, uint64(len(requests)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListRequest(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllRequestResponse
-		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+		require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
-		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.ElementsMatch(t, objs, resp.Request)
+		require.Equal(t, len(requests), int(resp.Pagination.Total))
+		require.ElementsMatch(t, requests, resp.Request)
 	})
 }

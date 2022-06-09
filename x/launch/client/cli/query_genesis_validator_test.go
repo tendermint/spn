@@ -12,35 +12,14 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/testutil/network"
-	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/client/cli"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func networkWithGenesisValidatorObjects(t *testing.T, n int) (*network.Network, []types.GenesisValidator) {
-	t.Helper()
-	r := sample.Rand()
-	cfg := network.DefaultConfig()
-	state := types.GenesisState{}
-	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
+func (suite *QueryTestSuite) TestShowGenesisValidator() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	accs := suite.LaunchState.GenesisValidatorList
 
-	for i := 0; i < n; i++ {
-		state.GenesisValidatorList = append(
-			state.GenesisValidatorList,
-			sample.GenesisValidator(r, uint64(0), strconv.Itoa(i)),
-		)
-	}
-	buf, err := cfg.Codec.MarshalJSON(&state)
-	require.NoError(t, err)
-	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.GenesisValidatorList
-}
-
-func TestShowGenesisValidator(t *testing.T) {
-	net, objs := networkWithGenesisValidatorObjects(t, 2)
-
-	ctx := net.Validators[0].ClientCtx
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
@@ -55,11 +34,11 @@ func TestShowGenesisValidator(t *testing.T) {
 	}{
 		{
 			desc:      "found",
-			idChainID: strconv.Itoa(int(objs[0].LaunchID)),
-			idAddress: objs[0].Address,
+			idChainID: strconv.Itoa(int(accs[0].LaunchID)),
+			idAddress: accs[0].Address,
 
 			args: common,
-			obj:  objs[0],
+			obj:  accs[0],
 		},
 		{
 			desc:      "not found",
@@ -70,7 +49,7 @@ func TestShowGenesisValidator(t *testing.T) {
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.desc, func(t *testing.T) {
 			args := []string{
 				tc.idChainID,
 				tc.idAddress,
@@ -84,7 +63,7 @@ func TestShowGenesisValidator(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp types.QueryGetGenesisValidatorResponse
-				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.GenesisValidator)
 				require.Equal(t, tc.obj, resp.GenesisValidator)
 			}
@@ -92,11 +71,11 @@ func TestShowGenesisValidator(t *testing.T) {
 	}
 }
 
-func TestListGenesisValidator(t *testing.T) {
-	net, objs := networkWithGenesisValidatorObjects(t, 5)
+func (suite *QueryTestSuite) TestListGenesisValidator() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	accs := suite.LaunchState.GenesisValidatorList
 
-	chainID := objs[0].LaunchID
-	ctx := net.Validators[0].ClientCtx
+	chainID := accs[0].LaunchID
 	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
 			strconv.Itoa(int(chainID)),
@@ -113,40 +92,40 @@ func TestListGenesisValidator(t *testing.T) {
 		}
 		return args
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("ByOffset", func(t *testing.T) {
 		step := 2
-		for i := 0; i < len(objs); i += step {
+		for i := 0; i < len(accs); i += step {
 			args := request(chainID, nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisValidator(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllGenesisValidatorResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.GenesisValidator), step)
-			require.Subset(t, objs, resp.GenesisValidator)
+			require.Subset(t, accs, resp.GenesisValidator)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	suite.T().Run("ByKey", func(t *testing.T) {
 		step := 2
 		var next []byte
-		for i := 0; i < len(objs); i += step {
+		for i := 0; i < len(accs); i += step {
 			args := request(chainID, next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisValidator(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllGenesisValidatorResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.GenesisValidator), step)
-			require.Subset(t, objs, resp.GenesisValidator)
+			require.Subset(t, accs, resp.GenesisValidator)
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
-		args := request(chainID, nil, 0, uint64(len(objs)), true)
+	suite.T().Run("Total", func(t *testing.T) {
+		args := request(chainID, nil, 0, uint64(len(accs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisValidator(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllGenesisValidatorResponse
-		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+		require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
-		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.ElementsMatch(t, objs, resp.GenesisValidator)
+		require.Equal(t, len(accs), int(resp.Pagination.Total))
+		require.ElementsMatch(t, accs, resp.GenesisValidator)
 	})
 }
