@@ -137,7 +137,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 				Address:  addr4,
 			},
 			wantApprove: true,
-			wantID:      3,
+			wantID:      2,
 		},
 		{
 			name: "should prevent requesting account removal from coordinator if no account to remove",

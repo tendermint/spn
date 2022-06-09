@@ -133,7 +133,7 @@ func TestMsgRequestRemoveValidator(t *testing.T) {
 				ValidatorAddress: addr4,
 			},
 			wantApprove: true,
-			wantID:      4,
+			wantID:      2,
 		},
 		{
 			name: "should prevent requesting validator removal from coordinator if no validator to remove",
