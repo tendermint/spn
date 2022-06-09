@@ -26,32 +26,32 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc:  "valid message",
+			desc:  "should validate valid message",
 			msg:   sample.MsgCreateChain(r, sample.Address(r), "", false, 0),
 			valid: true,
 		},
 		{
-			desc:  "valid message with genesis URL",
+			desc:  "should validate valid message with genesis URL",
 			msg:   sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0),
 			valid: true,
 		},
 		{
-			desc:  "invalid address",
+			desc:  "should prevent validate message with invalid address",
 			msg:   sample.MsgCreateChain(r, "invalid", "", false, 0),
 			valid: false,
 		},
 		{
-			desc:  "invalid genesis hash for custom genesis",
+			desc:  "should prevent validate message with invalid genesis hash for custom genesis",
 			msg:   invalidGenesisHash,
 			valid: false,
 		},
 		{
-			desc:  "invalid genesis chain ID",
+			desc:  "should prevent validate message with invalid genesis chain ID",
 			msg:   invalidGenesisChainID,
 			valid: false,
 		},
 		{
-			desc:  "invalid metadata length",
+			desc:  "should prevent validate message with invalid metadata length",
 			msg:   msgInvalidMetadataLen,
 			valid: false,
 		},

@@ -30,13 +30,13 @@ func (suite *QueryTestSuite) TestShowChain() {
 		obj  types.Chain
 	}{
 		{
-			desc: "found",
+			desc: "should show an existing chain",
 			id:   fmt.Sprintf("%d", chains[0].LaunchID),
 			args: common,
 			obj:  chains[0],
 		},
 		{
-			desc: "not found",
+			desc: "should send error for a non existing chain",
 			id:   "10",
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
@@ -61,7 +61,7 @@ func (suite *QueryTestSuite) TestShowChain() {
 	}
 }
 
-func (suite *QueryTestSuite) TestListFoo() {
+func (suite *QueryTestSuite) TestListChain() {
 	ctx := suite.Network.Validators[0].ClientCtx
 	chains := suite.LaunchState.ChainList
 
@@ -80,7 +80,7 @@ func (suite *QueryTestSuite) TestListFoo() {
 		}
 		return args
 	}
-	suite.T().Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("should allow listing chains by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(chains); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
@@ -92,7 +92,7 @@ func (suite *QueryTestSuite) TestListFoo() {
 			require.Subset(t, chains, resp.Chain)
 		}
 	})
-	suite.T().Run("ByKey", func(t *testing.T) {
+	suite.T().Run("should allow listing chains by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(chains); i += step {
@@ -106,7 +106,7 @@ func (suite *QueryTestSuite) TestListFoo() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("Total", func(t *testing.T) {
+	suite.T().Run("should allow listing all chains", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(chains)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListChain(), args)
 		require.NoError(t, err)

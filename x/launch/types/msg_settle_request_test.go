@@ -18,7 +18,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid coordinator address",
+			name: "should prevent validate message with invalid coordinator address",
 			msg: types.MsgSettleRequest{
 				Signer:    "invalid_address",
 				LaunchID:  launchID,
@@ -28,7 +28,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "valid message",
+			name: "should validate valid message",
 			msg: types.MsgSettleRequest{
 				Signer:    sample.Address(r),
 				LaunchID:  launchID,

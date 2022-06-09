@@ -46,17 +46,17 @@ func TestFindAccount(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "invalid address",
+			name:    "should prevent finding account from invalid address",
 			address: "invalid_address",
 			wantErr: true,
 		},
 		{
-			name:    "first account",
+			name:    "should find first account",
 			address: accs[0].Address.String(),
 			want:    accs[0],
 		},
 		{
-			name:    "last account",
+			name:    "should find last account",
 			address: accs[len(accs)-1].Address.String(),
 			want:    accs[len(accs)-1],
 		},
@@ -115,22 +115,22 @@ func TestFindChainCoordinatorAccount(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "valid chain coordinator",
+			name:    "should find valid chain coordinator",
 			chainID: chainID,
 			want:    accs[0],
 		},
 		{
-			name:    "chain without coordinator",
+			name:    "should prevent finding chain without coordinator",
 			chainID: chainWithoutCoordID,
 			wantErr: true,
 		},
 		{
-			name:    "chain with disabled coordinator",
+			name:    "should prevent finding chain with disabled coordinator",
 			chainID: chainWithDisableCoord,
 			wantErr: true,
 		},
 		{
-			name:    "not found chain",
+			name:    "should prevent finding non existing chain",
 			chainID: 1000,
 			wantErr: true,
 		},
@@ -165,11 +165,11 @@ func TestIsLaunchTriggeredChain(t *testing.T) {
 		IsTriggered bool
 	}{
 		{
-			name:        "is launch triggered chain",
+			name:        "should return true for launch triggered chain",
 			IsTriggered: true,
 		},
 		{
-			name:        "is not launch triggered chain",
+			name:        "should return false for chain with launch not triggered",
 			IsTriggered: false,
 		},
 	}
@@ -194,7 +194,7 @@ func TestFindRandomChain(t *testing.T) {
 		msgCreateCoord = sample.MsgCreateCoordinator(sample.Address(r))
 	)
 
-	t.Run("no chains", func(t *testing.T) {
+	t.Run("should prevent finding chain if no chain", func(t *testing.T) {
 		_, found := launchsimulation.FindRandomChain(r, sdkCtx, *tk.LaunchKeeper, true, false)
 		require.False(t, found)
 		_, found = launchsimulation.FindRandomChain(r, sdkCtx, *tk.LaunchKeeper, false, false)
@@ -205,7 +205,7 @@ func TestFindRandomChain(t *testing.T) {
 	res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
 	require.NoError(t, err)
 
-	t.Run("chain without coordinator", func(t *testing.T) {
+	t.Run("should prevent finding chain without coordinator", func(t *testing.T) {
 		tk.LaunchKeeper.AppendChain(sdkCtx, types.Chain{
 			CoordinatorID:   1000,
 			LaunchTriggered: true,
@@ -214,7 +214,7 @@ func TestFindRandomChain(t *testing.T) {
 		require.False(t, found)
 	})
 
-	t.Run("chain with no mainnet", func(t *testing.T) {
+	t.Run("should allow filtering finding chain with no mainnet", func(t *testing.T) {
 		tk.LaunchKeeper.AppendChain(sdkCtx, types.Chain{
 			CoordinatorID: res.CoordinatorID,
 			IsMainnet:     true,
@@ -230,7 +230,7 @@ func TestFindRandomChain(t *testing.T) {
 		require.False(t, c.IsMainnet)
 	})
 
-	t.Run("not launch triggered chain", func(t *testing.T) {
+	t.Run("should allow filtering finding chain with launch not triggered", func(t *testing.T) {
 		tk.LaunchKeeper.AppendChain(sdkCtx, types.Chain{
 			CoordinatorID:   res.CoordinatorID,
 			LaunchTriggered: false,
@@ -242,7 +242,7 @@ func TestFindRandomChain(t *testing.T) {
 		require.Equal(t, res.CoordinatorID, got.CoordinatorID)
 	})
 
-	t.Run("found chain", func(t *testing.T) {
+	t.Run("should allow finding an existing chain", func(t *testing.T) {
 		tk.LaunchKeeper.AppendChain(sdkCtx, types.Chain{
 			CoordinatorID:   res.CoordinatorID,
 			LaunchTriggered: true,
@@ -265,7 +265,7 @@ func TestFindRandomValidator(t *testing.T) {
 		accs = simulation.RandomAccounts(r, 2)
 	)
 
-	t.Run("empty validators", func(t *testing.T) {
+	t.Run("should prevent finding validator when no validator", func(t *testing.T) {
 		gotSimAcc, gotVal, gotFound := launchsimulation.FindRandomValidator(r, sdkCtx, *tk.LaunchKeeper, accs)
 
 		require.False(t, gotFound)
@@ -273,7 +273,7 @@ func TestFindRandomValidator(t *testing.T) {
 		require.Equal(t, types.GenesisValidator{}, gotVal)
 	})
 
-	t.Run("chain triggered launch", func(t *testing.T) {
+	t.Run("should prevent finding validator for chain with launch triggered", func(t *testing.T) {
 		chainID := tk.LaunchKeeper.AppendChain(sdkCtx, types.Chain{
 			LaunchTriggered: true,
 		})
@@ -285,7 +285,7 @@ func TestFindRandomValidator(t *testing.T) {
 		require.Equal(t, types.GenesisValidator{}, gotVal)
 	})
 
-	t.Run("chain without coordinator", func(t *testing.T) {
+	t.Run("should prevent finding validator for chain without coordinator", func(t *testing.T) {
 		chainID := tk.LaunchKeeper.AppendChain(sdkCtx, sample.Chain(r, 0, 1000))
 		tk.LaunchKeeper.SetGenesisValidator(sdkCtx, sample.GenesisValidator(r, chainID, sample.Address(r)))
 
@@ -295,7 +295,7 @@ func TestFindRandomValidator(t *testing.T) {
 		require.Equal(t, types.GenesisValidator{}, gotVal)
 	})
 
-	t.Run("chain without coordinator account", func(t *testing.T) {
+	t.Run("should prevent finding validator for chain without coordinator account", func(t *testing.T) {
 		msgCreateCoord := sample.MsgCreateCoordinator(sample.Address(r))
 		res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
 		require.NoError(t, err)
@@ -308,7 +308,7 @@ func TestFindRandomValidator(t *testing.T) {
 		require.Equal(t, types.GenesisValidator{}, gotVal)
 	})
 
-	t.Run("got a valid validator", func(t *testing.T) {
+	t.Run("should allow finding a validator from a chain", func(t *testing.T) {
 		msgCreateCoord := sample.MsgCreateCoordinator(accs[0].Address.String())
 		res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
 		require.NoError(t, err)
@@ -331,13 +331,13 @@ func TestFindRandomRequest(t *testing.T) {
 		ctx = sdk.WrapSDKContext(sdkCtx)
 	)
 
-	t.Run("empty requests", func(t *testing.T) {
+	t.Run("should prevent finding request when no request", func(t *testing.T) {
 		gotRequest, gotFound := launchsimulation.FindRandomRequest(r, sdkCtx, *tk.LaunchKeeper)
 		require.Equal(t, types.Request{}, gotRequest)
 		require.False(t, gotFound)
 	})
 
-	t.Run("no chain request", func(t *testing.T) {
+	t.Run("should prevent finding request with request with no chain", func(t *testing.T) {
 		tk.LaunchKeeper.AppendRequest(sdkCtx, types.Request{
 			LaunchID: 10000,
 			Creator:  sample.Address(r),
@@ -347,7 +347,7 @@ func TestFindRandomRequest(t *testing.T) {
 		require.False(t, gotFound)
 	})
 
-	t.Run("launch triggered chain request", func(t *testing.T) {
+	t.Run("should prevent finding request from launch triggered chain", func(t *testing.T) {
 		chainID := tk.LaunchKeeper.AppendChain(sdkCtx, types.Chain{
 			LaunchTriggered: true,
 		})
@@ -357,7 +357,7 @@ func TestFindRandomRequest(t *testing.T) {
 		require.False(t, gotFound)
 	})
 
-	t.Run("chain without coordinator", func(t *testing.T) {
+	t.Run("should prevent finding request from chain without coordinator", func(t *testing.T) {
 		chainID := tk.LaunchKeeper.AppendChain(sdkCtx, types.Chain{
 			CoordinatorID:   10000,
 			LaunchTriggered: true,
@@ -368,7 +368,7 @@ func TestFindRandomRequest(t *testing.T) {
 		require.False(t, gotFound)
 	})
 
-	t.Run("status non-pending", func(t *testing.T) {
+	t.Run("should prevent finding request with status non-pending", func(t *testing.T) {
 		msgCreateCoord := sample.MsgCreateCoordinator(sample.Address(r))
 		res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
 		require.NoError(t, err)
@@ -383,7 +383,7 @@ func TestFindRandomRequest(t *testing.T) {
 		require.False(t, gotFound)
 	})
 
-	t.Run("get a valid request", func(t *testing.T) {
+	t.Run("should allow finding a valid request", func(t *testing.T) {
 		msgCreateCoord := sample.MsgCreateCoordinator(sample.Address(r))
 		res, err := profileSrv.CreateCoordinator(ctx, &msgCreateCoord)
 		require.NoError(t, err)

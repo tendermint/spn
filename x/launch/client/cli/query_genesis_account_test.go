@@ -33,7 +33,7 @@ func (suite *QueryTestSuite) TestShowGenesisAccount() {
 		obj  types.GenesisAccount
 	}{
 		{
-			desc:       "found",
+			desc:       "should show an existing genesis account",
 			idLaunchID: strconv.Itoa(int(accs[0].LaunchID)),
 			idAddress:  accs[0].Address,
 
@@ -41,7 +41,7 @@ func (suite *QueryTestSuite) TestShowGenesisAccount() {
 			obj:  accs[0],
 		},
 		{
-			desc:       "not found",
+			desc:       "should send error for a non existing genesis account",
 			idLaunchID: strconv.Itoa(100000),
 			idAddress:  strconv.Itoa(100000),
 
@@ -92,7 +92,7 @@ func (suite *QueryTestSuite) TestListGenesisAccount() {
 		}
 		return args
 	}
-	suite.T().Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("should allow listing genesis accounts by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(accs); i += step {
 			args := request(chainID, nil, uint64(i), uint64(step), false)
@@ -104,7 +104,7 @@ func (suite *QueryTestSuite) TestListGenesisAccount() {
 			require.Subset(t, accs, resp.GenesisAccount)
 		}
 	})
-	suite.T().Run("ByKey", func(t *testing.T) {
+	suite.T().Run("should allow listing genesis accounts by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(accs); i += step {
@@ -118,7 +118,7 @@ func (suite *QueryTestSuite) TestListGenesisAccount() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("Total", func(t *testing.T) {
+	suite.T().Run("should allow listing all genesis accounts", func(t *testing.T) {
 		args := request(chainID, nil, 0, uint64(len(accs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListGenesisAccount(), args)
 		require.NoError(t, err)
