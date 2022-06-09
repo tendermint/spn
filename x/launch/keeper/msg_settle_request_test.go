@@ -66,7 +66,7 @@ func TestMsgSettleRequest(t *testing.T) {
 		err        error
 	}{
 		{
-			name: "invalid chain",
+			name: "should prevent settling request for non existing chain",
 			msg: types.MsgSettleRequest{
 				LaunchID:  invalidChain,
 				Signer:    coordinator1.Address,
@@ -76,7 +76,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrChainNotFound,
 		},
 		{
-			name: "launch triggered chain",
+			name: "should prevent settling request with launch triggered chain",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[0].LaunchID,
 				Signer:    coordinator1.Address,
@@ -86,7 +86,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrTriggeredLaunch,
 		},
 		{
-			name: "coordinator not found",
+			name: "should prevent settling request with coordinator not found",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[1].LaunchID,
 				Signer:    coordinator1.Address,
@@ -96,7 +96,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrChainInactive,
 		},
 		{
-			name: "no permission error",
+			name: "should prevent setting request if no address permission",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    coordinator2.Address,
@@ -106,7 +106,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrNoAddressPermission,
 		},
 		{
-			name: "request already settled error",
+			name: "should prevent setting request if request already settled",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    coordinator1.Address,
@@ -136,7 +136,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: spnerrors.ErrCritical,
 		},
 		{
-			name: "coordinator can approve a request",
+			name: "should allow approving request from coordinator",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    coordinator1.Address,
@@ -147,7 +147,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			checkAddr:  requestSamples[0].Creator,
 		},
 		{
-			name: "coordinator can approve a second request for the same chain",
+			name: "should allow approving a second request from coordinator",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    coordinator1.Address,
@@ -158,7 +158,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			checkAddr:  requestSamples[1].Creator,
 		},
 		{
-			name: "coordinator can reject a request",
+			name: "should allow rejecting request from coordinator",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    coordinator1.Address,
@@ -169,7 +169,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			checkAddr:  requestSamples[2].Creator,
 		},
 		{
-			name: "request creator can reject their own request",
+			name: "should allow rejecting request from request creator",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    requestSamples[3].Creator,
@@ -180,7 +180,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			checkAddr:  requestSamples[3].Creator,
 		},
 		{
-			name: "should prevent rejecting a request if the signer is not the request creator",
+			name: "should prevent rejecting a request from an account other than coordinator and request creator",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    requestSamples[3].Creator,
@@ -190,7 +190,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrNoAddressPermission,
 		},
 		{
-			name: "request creator if not the coordinator, should not be able to approve their own chain request 8",
+			name: "should prevent approving a request from an account other than coordinator",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[2].LaunchID,
 				Signer:    requestSamples[5].Creator,
@@ -200,7 +200,7 @@ func TestMsgSettleRequest(t *testing.T) {
 			err: types.ErrNoAddressPermission,
 		},
 		{
-			name: "fail if the coordinator of the chain is disabled",
+			name: "should prevent settling request from a disabled coordinator",
 			msg: types.MsgSettleRequest{
 				LaunchID:  chains[3].LaunchID,
 				Signer:    disableCoordinator.Address,

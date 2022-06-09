@@ -15,6 +15,7 @@ import (
 
 func createNVestingAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.VestingAccount {
 	items := make([]types.VestingAccount, n)
+
 	for i := range items {
 		items[i] = sample.VestingAccount(r, uint64(i), strconv.Itoa(i))
 		keeper.SetVestingAccount(ctx, items[i])
@@ -25,34 +26,43 @@ func createNVestingAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 func TestVestingAccountGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
-	for _, item := range items {
-		rst, found := tk.LaunchKeeper.GetVestingAccount(ctx,
-			item.LaunchID,
-			item.Address,
-		)
-		require.True(t, found)
-		require.Equal(t, item, rst)
-	}
+
+	t.Run("should get a vesting account", func(t *testing.T) {
+		for _, item := range items {
+			rst, found := tk.LaunchKeeper.GetVestingAccount(ctx,
+				item.LaunchID,
+				item.Address,
+			)
+			require.True(t, found)
+			require.Equal(t, item, rst)
+		}
+	})
 }
 
 func TestVestingAccountRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
-	for _, item := range items {
-		tk.LaunchKeeper.RemoveVestingAccount(ctx,
-			item.LaunchID,
-			item.Address,
-		)
-		_, found := tk.LaunchKeeper.GetVestingAccount(ctx,
-			item.LaunchID,
-			item.Address,
-		)
-		require.False(t, found)
-	}
+
+	t.Run("should remove a vesting account", func(t *testing.T) {
+		for _, item := range items {
+			tk.LaunchKeeper.RemoveVestingAccount(ctx,
+				item.LaunchID,
+				item.Address,
+			)
+			_, found := tk.LaunchKeeper.GetVestingAccount(ctx,
+				item.LaunchID,
+				item.Address,
+			)
+			require.False(t, found)
+		}
+	})
 }
 
 func TestVestingAccountGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
-	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllVestingAccount(ctx))
+
+	t.Run("should get all vesting accounts", func(t *testing.T) {
+		items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
+		require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllVestingAccount(ctx))
+	})
 }

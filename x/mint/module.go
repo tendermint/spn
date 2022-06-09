@@ -18,7 +18,6 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/tendermint/spn/x/mint/client/cli"
-	"github.com/tendermint/spn/x/mint/client/rest"
 	"github.com/tendermint/spn/x/mint/keeper"
 	"github.com/tendermint/spn/x/mint/simulation"
 	"github.com/tendermint/spn/x/mint/types"
@@ -63,8 +62,7 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncod
 }
 
 // RegisterRESTRoutes registers the REST routes for the mint module.
-func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {
-	rest.RegisterRoutes(clientCtx, rtr)
+func (AppModuleBasic) RegisterRESTRoutes(_ client.Context, _ *mux.Router) {
 }
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the mint module.
