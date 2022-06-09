@@ -16,10 +16,12 @@ import (
 )
 
 func TestClaimRecordQuerySingle(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	var (
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		msgs       = createNClaimRecord(tk.ClaimKeeper, ctx, 2)
+	)
 
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNClaimRecord(tk.ClaimKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetClaimRecordRequest
@@ -68,10 +70,11 @@ func TestClaimRecordQuerySingle(t *testing.T) {
 }
 
 func TestClaimRecordQueryPaginated(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
-
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNClaimRecord(tk.ClaimKeeper, ctx, 5)
+	var (
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		msgs       = createNClaimRecord(tk.ClaimKeeper, ctx, 5)
+	)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllClaimRecordRequest {
 		return &types.QueryAllClaimRecordRequest{

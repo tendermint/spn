@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"github.com/tendermint/spn/testutil/sample"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -11,14 +10,16 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim/types"
 )
 
 func TestAirdropSupplyQuery(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
-
-	wctx := sdk.WrapSDKContext(ctx)
-	sampleSupply := sample.Coin(r)
+	var (
+		ctx, tk, _   = testkeeper.NewTestSetup(t)
+		wctx         = sdk.WrapSDKContext(ctx)
+		sampleSupply = sample.Coin(r)
+	)
 	tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
 
 	for _, tc := range []struct {
