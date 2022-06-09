@@ -27,45 +27,42 @@ func TestVestingAccountGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
 
-	t.Run("should ", func(t *testing.T) {
+	t.Run("should get a vesting account", func(t *testing.T) {
+		for _, item := range items {
+			rst, found := tk.LaunchKeeper.GetVestingAccount(ctx,
+				item.LaunchID,
+				item.Address,
+			)
+			require.True(t, found)
+			require.Equal(t, item, rst)
+		}
 	})
-
-	for _, item := range items {
-		rst, found := tk.LaunchKeeper.GetVestingAccount(ctx,
-			item.LaunchID,
-			item.Address,
-		)
-		require.True(t, found)
-		require.Equal(t, item, rst)
-	}
 }
 
 func TestVestingAccountRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
 
-	t.Run("should ", func(t *testing.T) {
+	t.Run("should remove a vesting account", func(t *testing.T) {
+		for _, item := range items {
+			tk.LaunchKeeper.RemoveVestingAccount(ctx,
+				item.LaunchID,
+				item.Address,
+			)
+			_, found := tk.LaunchKeeper.GetVestingAccount(ctx,
+				item.LaunchID,
+				item.Address,
+			)
+			require.False(t, found)
+		}
 	})
-
-	for _, item := range items {
-		tk.LaunchKeeper.RemoveVestingAccount(ctx,
-			item.LaunchID,
-			item.Address,
-		)
-		_, found := tk.LaunchKeeper.GetVestingAccount(ctx,
-			item.LaunchID,
-			item.Address,
-		)
-		require.False(t, found)
-	}
 }
 
 func TestVestingAccountGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	t.Run("should ", func(t *testing.T) {
+	t.Run("should get all vesting accounts", func(t *testing.T) {
+		items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
+		require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllVestingAccount(ctx))
 	})
-
-	items := createNVestingAccount(tk.LaunchKeeper, ctx, 10)
-	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllVestingAccount(ctx))
 }
