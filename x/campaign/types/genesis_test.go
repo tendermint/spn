@@ -72,30 +72,6 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 		},
 		{
-			desc: "non existing campaign for mainnet vesting account",
-			genState: &types.GenesisState{
-				CampaignChainsList: []types.CampaignChains{
-					{
-						CampaignID: 0,
-					},
-					{
-						CampaignID: 1,
-					},
-				},
-				CampaignList: []types.Campaign{
-					sample.Campaign(r, 0),
-					sample.Campaign(r, 1),
-				},
-				CampaignCounter: 2,
-				MainnetAccountList: []types.MainnetAccount{
-					sample.MainnetAccount(r, 0, sample.Address(r)),
-					sample.MainnetAccount(r, 1, sample.Address(r)),
-				},
-				TotalShares: spntypes.TotalShareNumber,
-			},
-			errorMessage: "campaign id 33333 doesn't exist for mainnet vesting account 33333",
-		},
-		{
 			desc: "non existing campaign for mainnet account",
 			genState: &types.GenesisState{
 				CampaignChainsList: []types.CampaignChains{
@@ -156,17 +132,6 @@ func TestGenesisState_Validate(t *testing.T) {
 				TotalShares: spntypes.TotalShareNumber,
 			},
 			errorMessage: "duplicated index for campaignChains",
-		},
-		{
-			desc: "duplicated mainnetVestingAccount",
-			genState: &types.GenesisState{
-				CampaignList: []types.Campaign{
-					sample.Campaign(r, 0),
-				},
-				CampaignCounter: 1,
-				TotalShares:     spntypes.TotalShareNumber,
-			},
-			errorMessage: "duplicated index for mainnetVestingAccount",
 		},
 		{
 			desc: "duplicated campaign",
