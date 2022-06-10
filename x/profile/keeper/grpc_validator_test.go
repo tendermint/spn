@@ -25,28 +25,28 @@ func TestValidatorQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc: "First",
+			desc: "should allow querying first validator",
 			request: &types.QueryGetValidatorRequest{
 				Address: msgs[0].Address,
 			},
 			response: &types.QueryGetValidatorResponse{Validator: msgs[0]},
 		},
 		{
-			desc: "Second",
+			desc: "should allow querying second validator",
 			request: &types.QueryGetValidatorRequest{
 				Address: msgs[1].Address,
 			},
 			response: &types.QueryGetValidatorResponse{Validator: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "should prevent querying non existing validator",
 			request: &types.QueryGetValidatorRequest{
 				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "should prevent querying with invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
@@ -76,7 +76,7 @@ func TestValidatorQueryPaginated(t *testing.T) {
 			},
 		}
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	t.Run("should allow querying validators by offsets", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
 			resp, err := tk.ProfileKeeper.ValidatorAll(wctx, request(nil, uint64(i), uint64(step), false))
@@ -85,7 +85,7 @@ func TestValidatorQueryPaginated(t *testing.T) {
 			require.Subset(t, msgs, resp.Validator)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	t.Run("should allow querying validators by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
@@ -96,13 +96,13 @@ func TestValidatorQueryPaginated(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
+	t.Run("should allow querying all validators", func(t *testing.T) {
 		resp, err := tk.ProfileKeeper.ValidatorAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.Validator)
 	})
-	t.Run("InvalidRequest", func(t *testing.T) {
+	t.Run("should prevent querying with invalid request", func(t *testing.T) {
 		_, err := tk.ProfileKeeper.ValidatorAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})

@@ -25,28 +25,28 @@ func TestValidatorByOperatorAddressQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc: "First",
+			desc: "should allow querying first validator by operator address",
 			request: &types.QueryGetValidatorByOperatorAddressRequest{
 				OperatorAddress: msgs[0].OperatorAddress,
 			},
 			response: &types.QueryGetValidatorByOperatorAddressResponse{ValidatorByOperatorAddress: msgs[0]},
 		},
 		{
-			desc: "Second",
+			desc: "should allow querying second validator by operator address",
 			request: &types.QueryGetValidatorByOperatorAddressRequest{
 				OperatorAddress: msgs[1].OperatorAddress,
 			},
 			response: &types.QueryGetValidatorByOperatorAddressResponse{ValidatorByOperatorAddress: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			desc: "should prevent querying non existing validator by operator address",
 			request: &types.QueryGetValidatorByOperatorAddressRequest{
 				OperatorAddress: sample.Address(r),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "should prevent querying with invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {

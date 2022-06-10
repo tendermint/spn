@@ -40,36 +40,49 @@ func createNCoordinatorBoth(keeper *keeper.Keeper, ctx sdk.Context, n int) ([]ty
 func TestCoordinatorByAddressGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items, _ := createNCoordinatorBoth(tk.ProfileKeeper, ctx, 10)
-	for _, item := range items {
-		rst, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
-		require.NoError(t, err)
-		require.Equal(t, item, rst)
-	}
+
+	t.Run("should allow getting coordinator by address", func(t *testing.T) {
+		for _, item := range items {
+			rst, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
+			require.NoError(t, err)
+			require.Equal(t, item, rst)
+		}
+	})
 }
 
 func TestCoordinatorByAddressInvalid(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)
-	for _, item := range items {
-		_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
-		require.ErrorIs(t, err, spnerrors.ErrCritical)
-	}
+
+	t.Run("should prevent finding coordinator by address if no associated coordinator exist", func(t *testing.T) {
+		for _, item := range items {
+			_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
+			require.ErrorIs(t, err, spnerrors.ErrCritical)
+		}
+	})
 }
 
 func TestCoordinatorByAddressRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)
-	for _, item := range items {
-		tk.ProfileKeeper.RemoveCoordinatorByAddress(ctx, item.Address)
-		_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
-		require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
-	}
+
+	t.Run("should allow removing coordinator by address", func(t *testing.T) {
+		for _, item := range items {
+			tk.ProfileKeeper.RemoveCoordinatorByAddress(ctx, item.Address)
+			_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
+			require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
+		}
+	})
 }
 
 func TestCoordinatorByAddressGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCoordinatorByAddress(tk.ProfileKeeper, ctx, 10)
-	require.ElementsMatch(t, items, tk.ProfileKeeper.GetAllCoordinatorByAddress(ctx))
+
+	t.Run("should allow getting all coordinator by address", func(t *testing.T) {
+		require.ElementsMatch(t, items, tk.ProfileKeeper.GetAllCoordinatorByAddress(ctx))
+
+	})
 }
 
 func TestCoordinatorIDFromAddress(t *testing.T) {
@@ -85,12 +98,16 @@ func TestCoordinatorIDFromAddress(t *testing.T) {
 		Active:        true,
 	})
 
-	id, err := tk.ProfileKeeper.CoordinatorIDFromAddress(ctx, address)
-	require.NoError(t, err)
-	require.Equal(t, uint64(10), id)
+	t.Run("should allow retrieving coordinator ID from address", func(t *testing.T) {
+		id, err := tk.ProfileKeeper.CoordinatorIDFromAddress(ctx, address)
+		require.NoError(t, err)
+		require.Equal(t, uint64(10), id)
+	})
 
-	_, err = tk.ProfileKeeper.CoordinatorIDFromAddress(ctx, sample.Address(r))
-	require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
+	t.Run("should prevent retrieving coordinator ID if address doesn't exist", func(t *testing.T) {
+		_, err := tk.ProfileKeeper.CoordinatorIDFromAddress(ctx, sample.Address(r))
+		require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
+	})
 }
 
 func TestActiveCoordinatorByAddressGet(t *testing.T) {
@@ -108,10 +125,12 @@ func TestActiveCoordinatorByAddressGet(t *testing.T) {
 		Active:        true,
 	})
 
-	rst, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
-	require.NoError(t, err)
-	require.Equal(t, uint64(10), rst.CoordinatorID)
-	require.Equal(t, address, rst.Address)
+	t.Run("should allow getting active validator by address", func(t *testing.T) {
+		rst, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
+		require.NoError(t, err)
+		require.Equal(t, uint64(10), rst.CoordinatorID)
+		require.Equal(t, address, rst.Address)
+	})
 
 	// set invalid critical error state
 	tk.ProfileKeeper.SetCoordinator(ctx, types.Coordinator{
@@ -120,11 +139,14 @@ func TestActiveCoordinatorByAddressGet(t *testing.T) {
 		Active:        false,
 	})
 
-	rst, err = tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
-	require.ErrorIs(t, err, spnerrors.ErrCritical)
+	t.Run("should prevent getting inactive validator by address", func(t *testing.T) {
+		_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
+		require.ErrorIs(t, err, spnerrors.ErrCritical)
 
-	// set valid state where coordinator is disabled
-	tk.ProfileKeeper.RemoveCoordinatorByAddress(ctx, address)
-	rst, err = tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
-	require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
+		// set valid state where coordinator is disabled
+		tk.ProfileKeeper.RemoveCoordinatorByAddress(ctx, address)
+		_, err = tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
+		require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
+	})
+
 }
