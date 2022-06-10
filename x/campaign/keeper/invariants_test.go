@@ -66,12 +66,12 @@ func TestCampaignSharesInvariant(t *testing.T) {
 		tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 			CampaignID: campaignID1,
 			Address:    sample.Address(r),
-			Shares:     tc.Shares(t, "20foo,40bar"),
+			Shares:     tc.Shares(t, "30foo,60bar"),
 		})
 		tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 			CampaignID: campaignID2,
 			Address:    sample.Address(r),
-			Shares:     tc.Shares(t, "2500foo"),
+			Shares:     tc.Shares(t, "5000foo"),
 		})
 
 		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
