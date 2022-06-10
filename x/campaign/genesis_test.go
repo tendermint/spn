@@ -30,7 +30,6 @@ func TestGenesis(t *testing.T) {
 	require.Equal(t, genesisState.CampaignCounter, got.CampaignCounter)
 
 	require.ElementsMatch(t, genesisState.MainnetAccountList, got.MainnetAccountList)
-	require.ElementsMatch(t, genesisState.MainnetVestingAccountList, got.MainnetVestingAccountList)
 
 	require.Equal(t, genesisState.Params, got.Params)
 

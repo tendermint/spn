@@ -27,11 +27,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetMainnetAccount(ctx, elem)
 	}
 
-	// Set all the mainnetVestingAccount
-	for _, elem := range genState.MainnetVestingAccountList {
-		k.SetMainnetVestingAccount(ctx, elem)
-	}
-
 	k.SetParams(ctx, genState.Params)
 
 	// set maximum shares constant value
@@ -48,7 +43,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.CampaignCounter = k.GetCampaignCounter(ctx)
 	genesis.CampaignChainsList = k.GetAllCampaignChains(ctx)
 	genesis.MainnetAccountList = k.GetAllMainnetAccount(ctx)
-	genesis.MainnetVestingAccountList = k.GetAllMainnetVestingAccount(ctx)
 	genesis.Params = k.GetParams(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
