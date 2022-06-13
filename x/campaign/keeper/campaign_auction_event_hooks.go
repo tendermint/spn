@@ -2,7 +2,8 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/tendermint/fundraising/x/fundraising/types"
+	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+	"github.com/tendermint/spn/x/campaign/types"
 	"time"
 )
 
@@ -19,23 +20,50 @@ type CampaignAuctionEventHooks struct {
 }
 
 // Implements FundraisingHooks interface
-var _ types.FundraisingHooks = CampaignAuctionEventHooks{}
+var _ fundraisingtypes.FundraisingHooks = CampaignAuctionEventHooks{}
 
-// AfterFixedPriceAuctionCreated emits a CampaignAuctionCreated event
+// AfterFixedPriceAuctionCreated emits a CampaignAuctionCreated event if created for a campaign
 func (h CampaignAuctionEventHooks) AfterFixedPriceAuctionCreated(
 	ctx sdk.Context,
 	auctionId uint64,
 	auctioneer string,
-	startPrice sdk.Dec,
+	_ sdk.Dec,
 	sellingCoin sdk.Coin,
-	payingCoinDenom string,
-	vestingSchedules []types.VestingSchedule,
-	startTime time.Time,
-	endTime time.Time,
+	_ string,
+	_ []fundraisingtypes.VestingSchedule,
+	_ time.Time,
+	_ time.Time,
 ) {
+	campaignID, err := types.VoucherCampaign(sellingCoin.Denom)
+	if err != nil {
+		// not a campaign auction
+		return
+	}
+
+	// verify the auctioneer is the coordinator of the campaign
+	campaign, found := h.campaignKeeper.GetCampaign(ctx, campaignID)
+	if !found {
+		return
+	}
+	coord, found := h.campaignKeeper.profileKeeper.GetCoordinator(ctx, campaign.CoordinatorID)
+	if !found {
+		return
+	}
+
+	// if the coordinator if the auctioneer, we emit a CampaignAuctionCreated event
+	if coord.Address == auctioneer {
+		_ = ctx.EventManager().EmitTypedEvents(
+			&types.EventCampaignAuctionCreated{
+				CampaignID: campaignID,
+				AuctionID:  auctionId,
+			},
+		)
+	}
+
+	return
 }
 
-// AfterBatchAuctionCreated emits a CampaignAuctionCreated event
+// AfterBatchAuctionCreated emits a CampaignAuctionCreated event if created for a campaign
 func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
 	ctx sdk.Context,
 	auctionId uint64,
@@ -44,7 +72,7 @@ func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
 	minBidPrice sdk.Dec,
 	sellingCoin sdk.Coin,
 	payingCoinDenom string,
-	vestingSchedules []types.VestingSchedule,
+	vestingSchedules []fundraisingtypes.VestingSchedule,
 	maxExtendedRound uint32,
 	extendedRoundRate sdk.Dec,
 	startTime time.Time,
@@ -52,20 +80,20 @@ func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
 ) {
 }
 
-// BeforeFixedPriceAuctionCreated emits a CampaignAuctionCreated event
+// BeforeFixedPriceAuctionCreated implements FundraisingHooks
 func (h CampaignAuctionEventHooks) BeforeFixedPriceAuctionCreated(
 	_ sdk.Context,
 	_ string,
 	_ sdk.Dec,
 	_ sdk.Coin,
 	_ string,
-	_ []types.VestingSchedule,
+	_ []fundraisingtypes.VestingSchedule,
 	_ time.Time,
 	_ time.Time,
 ) {
 }
 
-// BeforeBatchAuctionCreated emits a CampaignAuctionCreated event
+// BeforeBatchAuctionCreated implements FundraisingHooks
 func (h CampaignAuctionEventHooks) BeforeBatchAuctionCreated(
 	_ sdk.Context,
 	_ string,
@@ -73,7 +101,7 @@ func (h CampaignAuctionEventHooks) BeforeBatchAuctionCreated(
 	_ sdk.Dec,
 	_ sdk.Coin,
 	_ string,
-	_ []types.VestingSchedule,
+	_ []fundraisingtypes.VestingSchedule,
 	_ uint32,
 	_ sdk.Dec,
 	_ time.Time,
@@ -95,7 +123,7 @@ func (h CampaignAuctionEventHooks) BeforeBidPlaced(
 	_ uint64,
 	_ uint64,
 	_ string,
-	_ types.BidType,
+	_ fundraisingtypes.BidType,
 	_ sdk.Dec,
 	_ sdk.Coin,
 ) {
@@ -107,7 +135,7 @@ func (h CampaignAuctionEventHooks) BeforeBidModified(
 	_ uint64,
 	_ uint64,
 	_ string,
-	_ types.BidType,
+	_ fundraisingtypes.BidType,
 	_ sdk.Dec,
 	_ sdk.Coin,
 ) {
@@ -116,7 +144,7 @@ func (h CampaignAuctionEventHooks) BeforeBidModified(
 // BeforeAllowedBiddersAdded implements FundraisingHooks
 func (h CampaignAuctionEventHooks) BeforeAllowedBiddersAdded(
 	_ sdk.Context,
-	_ []types.AllowedBidder,
+	_ []fundraisingtypes.AllowedBidder,
 ) {
 }
 
