@@ -19,16 +19,18 @@ func TestGenesis(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 
-	genesisState := sample.ProfileGenesisState(r)
-	profile.InitGenesis(ctx, *tk.ProfileKeeper, genesisState)
-	got := profile.ExportGenesis(ctx, *tk.ProfileKeeper)
+	t.Run("should allow import and export the genesis state", func(t *testing.T) {
+		genesisState := sample.ProfileGenesisState(r)
+		profile.InitGenesis(ctx, *tk.ProfileKeeper, genesisState)
+		got := profile.ExportGenesis(ctx, *tk.ProfileKeeper)
 
-	// Compare lists
-	require.ElementsMatch(t, genesisState.ValidatorList, got.ValidatorList)
-	require.ElementsMatch(t, genesisState.ValidatorByOperatorAddressList, got.ValidatorByOperatorAddressList)
-	require.ElementsMatch(t, genesisState.CoordinatorList, got.CoordinatorList)
-	require.ElementsMatch(t, genesisState.CoordinatorByAddressList, got.CoordinatorByAddressList)
-	require.Equal(t, genesisState.CoordinatorCounter, got.CoordinatorCounter)
+		// Compare lists
+		require.ElementsMatch(t, genesisState.ValidatorList, got.ValidatorList)
+		require.ElementsMatch(t, genesisState.ValidatorByOperatorAddressList, got.ValidatorByOperatorAddressList)
+		require.ElementsMatch(t, genesisState.CoordinatorList, got.CoordinatorList)
+		require.ElementsMatch(t, genesisState.CoordinatorByAddressList, got.CoordinatorByAddressList)
+		require.Equal(t, genesisState.CoordinatorCounter, got.CoordinatorCounter)
+	})
 
 	// this line is used by starport scaffolding # genesis/test/assert
 }
