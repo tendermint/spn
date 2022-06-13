@@ -39,11 +39,11 @@ genesis:
           denom_units:
             - denom: "uspn"
               aliases:
-                - "millispn"
+                - "microspn"
               exponent: "0"
             - denom: "mspn"
               aliases:
-                - "microspn"
+                - "millispn"
               exponent: "3"
             - denom: "spn"
               exponent: "6"
