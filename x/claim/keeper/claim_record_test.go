@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim/keeper"
@@ -25,10 +25,11 @@ func createNClaimRecord(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.C
 }
 
 func TestClaimRecordGet(t *testing.T) {
-	k, ctx := keepertest.ClaimKeeper(t)
-	items := createNClaimRecord(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	items := createNClaimRecord(tk.ClaimKeeper, ctx, 10)
 	for _, item := range items {
-		rst, found := k.GetClaimRecord(ctx,
+		rst, found := tk.ClaimKeeper.GetClaimRecord(ctx,
 			item.Address,
 		)
 		require.True(t, found)
@@ -40,13 +41,14 @@ func TestClaimRecordGet(t *testing.T) {
 }
 
 func TestClaimRecordRemove(t *testing.T) {
-	k, ctx := keepertest.ClaimKeeper(t)
-	items := createNClaimRecord(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	items := createNClaimRecord(tk.ClaimKeeper, ctx, 10)
 	for _, item := range items {
-		k.RemoveClaimRecord(ctx,
+		tk.ClaimKeeper.RemoveClaimRecord(ctx,
 			item.Address,
 		)
-		_, found := k.GetClaimRecord(ctx,
+		_, found := tk.ClaimKeeper.GetClaimRecord(ctx,
 			item.Address,
 		)
 		require.False(t, found)
@@ -54,10 +56,11 @@ func TestClaimRecordRemove(t *testing.T) {
 }
 
 func TestClaimRecordGetAll(t *testing.T) {
-	k, ctx := keepertest.ClaimKeeper(t)
-	items := createNClaimRecord(k, ctx, 10)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
+	items := createNClaimRecord(tk.ClaimKeeper, ctx, 10)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(k.GetAllClaimRecord(ctx)),
+		nullify.Fill(tk.ClaimKeeper.GetAllClaimRecord(ctx)),
 	)
 }
