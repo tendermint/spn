@@ -21,6 +21,37 @@ type CampaignAuctionEventHooks struct {
 // Implements FundraisingHooks interface
 var _ types.FundraisingHooks = CampaignAuctionEventHooks{}
 
+// AfterFixedPriceAuctionCreated emits a CampaignAuctionCreated event
+func (h CampaignAuctionEventHooks) AfterFixedPriceAuctionCreated(
+	ctx sdk.Context,
+	auctionId uint64,
+	auctioneer string,
+	startPrice sdk.Dec,
+	sellingCoin sdk.Coin,
+	payingCoinDenom string,
+	vestingSchedules []types.VestingSchedule,
+	startTime time.Time,
+	endTime time.Time,
+) {
+}
+
+// AfterBatchAuctionCreated emits a CampaignAuctionCreated event
+func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
+	ctx sdk.Context,
+	auctionId uint64,
+	auctioneer string,
+	startPrice sdk.Dec,
+	minBidPrice sdk.Dec,
+	sellingCoin sdk.Coin,
+	payingCoinDenom string,
+	vestingSchedules []types.VestingSchedule,
+	maxExtendedRound uint32,
+	extendedRoundRate sdk.Dec,
+	startTime time.Time,
+	endTime time.Time,
+) {
+}
+
 // BeforeFixedPriceAuctionCreated emits a CampaignAuctionCreated event
 func (h CampaignAuctionEventHooks) BeforeFixedPriceAuctionCreated(
 	_ sdk.Context,
