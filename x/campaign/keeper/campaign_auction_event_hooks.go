@@ -88,6 +88,7 @@ func (h CampaignAuctionEventHooks) AfterFixedPriceAuctionCreated(
 	_ time.Time,
 ) {
 	// TODO: investigate error handling for hooks
+	// https://github.com/tendermint/spn/issues/869
 	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionID, auctioneer, sellingCoin)
 }
 
@@ -107,6 +108,7 @@ func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
 	_ time.Time,
 ) {
 	// TODO: investigate error handling for hooks
+	// https://github.com/tendermint/spn/issues/869
 	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionID, auctioneer, sellingCoin)
 }
 
