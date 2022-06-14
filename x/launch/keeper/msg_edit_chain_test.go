@@ -82,7 +82,7 @@ func TestMsgEditChain(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "set campaign ID",
+			name: "should allow setting a campaign ID",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchID,
@@ -92,7 +92,7 @@ func TestMsgEditChain(t *testing.T) {
 			),
 		},
 		{
-			name: "edit metadata",
+			name: "should allow editing metadata",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchID,
@@ -102,7 +102,7 @@ func TestMsgEditChain(t *testing.T) {
 			),
 		},
 		{
-			name: "non existent launch id",
+			name: "should prevent editing chain from non existent launch id",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchIDNoExist,
@@ -113,7 +113,7 @@ func TestMsgEditChain(t *testing.T) {
 			err: types.ErrChainNotFound,
 		},
 		{
-			name: "non existent coordinator",
+			name: "should prevent editing chain with non existent coordinator",
 			msg: sample.MsgEditChain(r,
 				coordNoExist,
 				launchID,
@@ -124,7 +124,7 @@ func TestMsgEditChain(t *testing.T) {
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "invalid coordinator",
+			name: "should prevent editing chain with invalid coordinator",
 			msg: sample.MsgEditChain(r,
 				coordAddress2,
 				launchID,
@@ -135,7 +135,7 @@ func TestMsgEditChain(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "chain already has campaign",
+			name: "should prevent setting campaign id for chain with a campaign",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchIDHasCampaign,
@@ -146,7 +146,7 @@ func TestMsgEditChain(t *testing.T) {
 			err: types.ErrChainHasCampaign,
 		},
 		{
-			name: "campaign does not exist",
+			name: "should prevent setting campaign id where campaign does not exist",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchID2,
@@ -157,7 +157,7 @@ func TestMsgEditChain(t *testing.T) {
 			err: campaigntypes.ErrCampaignNotFound,
 		},
 		{
-			name: "campaign has a different coordinator",
+			name: "should prevent setting campaign id where campaign has a different coordinator",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchID2,
@@ -168,7 +168,7 @@ func TestMsgEditChain(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "campaign chain entry is duplicated",
+			name: "should prevent setting campaign id where campaign chain entry is duplicated",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchID2,

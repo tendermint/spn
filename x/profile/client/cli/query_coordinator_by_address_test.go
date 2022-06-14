@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"strconv"
 	"testing"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
@@ -11,30 +10,14 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/x/profile/client/cli"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
-func networkWithCoordinatorByAddressObjects(t *testing.T, n int) (*network.Network, []types.CoordinatorByAddress) {
-	t.Helper()
-	cfg := network.DefaultConfig()
-	state := types.GenesisState{}
-	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
+func (suite *QueryTestSuite) TestShowCoordinatorByAddress() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	objs := suite.ProfileState.CoordinatorByAddressList
 
-	for i := 0; i < n; i++ {
-		state.CoordinatorByAddressList = append(state.CoordinatorByAddressList, types.CoordinatorByAddress{Address: "cosmos" + strconv.Itoa(i)})
-	}
-	buf, err := cfg.Codec.MarshalJSON(&state)
-	require.NoError(t, err)
-	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.CoordinatorByAddressList
-}
-
-func TestShowCoordinatorByAddress(t *testing.T) {
-	net, objs := networkWithCoordinatorByAddressObjects(t, 2)
-
-	ctx := net.Validators[0].ClientCtx
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
@@ -46,19 +29,19 @@ func TestShowCoordinatorByAddress(t *testing.T) {
 		obj  types.CoordinatorByAddress
 	}{
 		{
-			desc: "found",
+			desc: "should show an existing coordinator from address",
 			id:   objs[0].Address,
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc: "not found",
+			desc: "should send error for a non existing coordinator",
 			id:   "not_found",
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.desc, func(t *testing.T) {
 			args := []string{tc.id}
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowCoordinatorByAddress(), args)
@@ -69,7 +52,7 @@ func TestShowCoordinatorByAddress(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp types.QueryGetCoordinatorByAddressResponse
-				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.CoordinatorByAddress)
 				require.Equal(t, tc.obj, resp.CoordinatorByAddress)
 			}

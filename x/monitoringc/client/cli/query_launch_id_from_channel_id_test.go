@@ -12,35 +12,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/client/cli"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-func networkWithLaunchIDFromChannelIDObjects(t *testing.T, n int) (*network.Network, []types.LaunchIDFromChannelID) {
-	t.Helper()
-	cfg := network.DefaultConfig()
-	state := types.GenesisState{}
-	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
+func (suite *QueryTestSuite) TestShowLaunchIDFromChannelID() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	objs := suite.MonitoringcState.LaunchIDFromChannelIDList
 
-	for i := 0; i < n; i++ {
-		launchIDFromChannelID := types.LaunchIDFromChannelID{
-			ChannelID: strconv.Itoa(i),
-		}
-		nullify.Fill(&launchIDFromChannelID)
-		state.LaunchIDFromChannelIDList = append(state.LaunchIDFromChannelIDList, launchIDFromChannelID)
-	}
-	buf, err := cfg.Codec.MarshalJSON(&state)
-	require.NoError(t, err)
-	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.LaunchIDFromChannelIDList
-}
-
-func TestShowLaunchIDFromChannelID(t *testing.T) {
-	net, objs := networkWithLaunchIDFromChannelIDObjects(t, 2)
-
-	ctx := net.Validators[0].ClientCtx
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
@@ -67,7 +47,7 @@ func TestShowLaunchIDFromChannelID(t *testing.T) {
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.desc, func(t *testing.T) {
 			args := []string{
 				tc.idChannelID,
 			}
@@ -80,7 +60,7 @@ func TestShowLaunchIDFromChannelID(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp types.QueryGetLaunchIDFromChannelIDResponse
-				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.LaunchIDFromChannelID)
 				require.Equal(t,
 					nullify.Fill(&tc.obj),
@@ -91,10 +71,10 @@ func TestShowLaunchIDFromChannelID(t *testing.T) {
 	}
 }
 
-func TestListLaunchIDFromChannelID(t *testing.T) {
-	net, objs := networkWithLaunchIDFromChannelIDObjects(t, 5)
+func (suite *QueryTestSuite) TestListLaunchIDFromChannelID() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	objs := suite.MonitoringcState.LaunchIDFromChannelIDList
 
-	ctx := net.Validators[0].ClientCtx
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -110,14 +90,14 @@ func TestListLaunchIDFromChannelID(t *testing.T) {
 		}
 		return args
 	}
-	t.Run("by offset", func(t *testing.T) {
+	suite.T().Run("by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListLaunchIDFromChannelID(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllLaunchIDFromChannelIDResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.LaunchIDFromChannelID), step)
 			require.Subset(t,
 				nullify.Fill(objs),
@@ -125,7 +105,7 @@ func TestListLaunchIDFromChannelID(t *testing.T) {
 			)
 		}
 	})
-	t.Run("by key", func(t *testing.T) {
+	suite.T().Run("by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
@@ -133,7 +113,7 @@ func TestListLaunchIDFromChannelID(t *testing.T) {
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListLaunchIDFromChannelID(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllLaunchIDFromChannelIDResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.LaunchIDFromChannelID), step)
 			require.Subset(t,
 				nullify.Fill(objs),
@@ -142,12 +122,12 @@ func TestListLaunchIDFromChannelID(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("total", func(t *testing.T) {
+	suite.T().Run("total", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListLaunchIDFromChannelID(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllLaunchIDFromChannelIDResponse
-		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+		require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,

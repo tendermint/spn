@@ -10,15 +10,18 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/claim/types"
 )
 
 func TestClaimRecordQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.ClaimKeeper(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNClaimRecord(keeper, ctx, 2)
+	var (
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		msgs       = createNClaimRecord(tk.ClaimKeeper, ctx, 2)
+	)
+
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetClaimRecordRequest
@@ -52,7 +55,7 @@ func TestClaimRecordQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.ClaimRecord(wctx, tc.request)
+			response, err := tk.ClaimKeeper.ClaimRecord(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -67,9 +70,11 @@ func TestClaimRecordQuerySingle(t *testing.T) {
 }
 
 func TestClaimRecordQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.ClaimKeeper(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNClaimRecord(keeper, ctx, 5)
+	var (
+		ctx, tk, _ = testkeeper.NewTestSetup(t)
+		wctx       = sdk.WrapSDKContext(ctx)
+		msgs       = createNClaimRecord(tk.ClaimKeeper, ctx, 5)
+	)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllClaimRecordRequest {
 		return &types.QueryAllClaimRecordRequest{
@@ -84,7 +89,7 @@ func TestClaimRecordQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.ClaimRecordAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.ClaimKeeper.ClaimRecordAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.ClaimRecord), step)
 			require.Subset(t,
@@ -97,7 +102,7 @@ func TestClaimRecordQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.ClaimRecordAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := tk.ClaimKeeper.ClaimRecordAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.ClaimRecord), step)
 			require.Subset(t,
@@ -108,7 +113,7 @@ func TestClaimRecordQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.ClaimRecordAll(wctx, request(nil, 0, 0, true))
+		resp, err := tk.ClaimKeeper.ClaimRecordAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
@@ -117,7 +122,7 @@ func TestClaimRecordQueryPaginated(t *testing.T) {
 		)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.ClaimRecordAll(wctx, nil)
+		_, err := tk.ClaimKeeper.ClaimRecordAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

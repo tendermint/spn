@@ -39,7 +39,7 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc: "valid message",
+			desc: "should validate valid message",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				sample.Address(r),
 				launchID,
@@ -51,7 +51,7 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "valid message with new genesis chain ID",
+			desc: "should validate valid message with new genesis chain ID",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				sample.Address(r),
 				launchID,
@@ -63,7 +63,7 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "valid message with new source",
+			desc: "should validate valid message with new source",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				sample.Address(r),
 				launchID,
@@ -75,7 +75,7 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "valid message with new genesis",
+			desc: "should validate valid message with new genesis",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				sample.Address(r),
 				launchID,
@@ -87,7 +87,7 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "valid message with new genesis with a custom genesis url",
+			desc: "should validate valid message with new genesis with a custom genesis url",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				sample.Address(r),
 				launchID,
@@ -99,7 +99,7 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "invalid coordinator address",
+			desc: "should prevent validate message with invalid coordinator address",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				"invalid",
 				launchID,
@@ -111,7 +111,7 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "no value to edit",
+			desc: "should prevent validate message with no value to edit",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				sample.Address(r),
 				launchID,
@@ -123,12 +123,12 @@ func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc:  "invalid initial genesis hash",
+			desc:  "should prevent validate message with invalid initial genesis hash",
 			msg:   msgInvalidGenesisHash,
 			valid: false,
 		},
 		{
-			desc:  "invalid initial genesis chain ID",
+			desc:  "should prevent validate message with invalid initial genesis chain ID",
 			msg:   msgInvalidGenesisChainID,
 			valid: false,
 		},

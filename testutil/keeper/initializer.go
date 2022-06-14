@@ -54,6 +54,7 @@ var moduleAccountPerms = map[string][]string{
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
 	fundraisingtypes.ModuleName:    nil,
+	claimtypes.ModuleName:          {authtypes.Minter, authtypes.Burner},
 }
 
 // initializer allows to initialize each module keeper
@@ -413,6 +414,7 @@ func (i initializer) Participation(
 
 func (i initializer) Claim(
 	paramKeeper paramskeeper.Keeper,
+	accountKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
 ) *claimkeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(claimtypes.StoreKey)
@@ -429,6 +431,7 @@ func (i initializer) Claim(
 		storeKey,
 		memStoreKey,
 		subspace,
+		accountKeeper,
 		bankKeeper,
 	)
 }

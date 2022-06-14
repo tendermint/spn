@@ -10,15 +10,16 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/claim/types"
 )
 
 func TestMissionQuerySingle(t *testing.T) {
-	keeper, ctx := keepertest.ClaimKeeper(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNMission(keeper, ctx, 2)
+	msgs := createNMission(tk.ClaimKeeper, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetMissionRequest
@@ -46,7 +47,7 @@ func TestMissionQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.Mission(wctx, tc.request)
+			response, err := tk.ClaimKeeper.Mission(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -61,9 +62,10 @@ func TestMissionQuerySingle(t *testing.T) {
 }
 
 func TestMissionQueryPaginated(t *testing.T) {
-	keeper, ctx := keepertest.ClaimKeeper(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNMission(keeper, ctx, 5)
+	msgs := createNMission(tk.ClaimKeeper, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllMissionRequest {
 		return &types.QueryAllMissionRequest{
@@ -78,7 +80,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.MissionAll(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := tk.ClaimKeeper.MissionAll(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Mission), step)
 			require.Subset(t,
@@ -91,7 +93,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := keeper.MissionAll(wctx, request(next, 0, uint64(step), false))
+			resp, err := tk.ClaimKeeper.MissionAll(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Mission), step)
 			require.Subset(t,
@@ -102,7 +104,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := keeper.MissionAll(wctx, request(nil, 0, 0, true))
+		resp, err := tk.ClaimKeeper.MissionAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
@@ -111,7 +113,7 @@ func TestMissionQueryPaginated(t *testing.T) {
 		)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := keeper.MissionAll(wctx, nil)
+		_, err := tk.ClaimKeeper.MissionAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }

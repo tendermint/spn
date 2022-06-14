@@ -18,20 +18,22 @@ func TestMsgUpdateCoordinatorDescription_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "should prevent validate invalid coordinator address",
 			msg: profile.MsgUpdateCoordinatorDescription{
 				Address: "invalid address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid address and empty description",
+		},
+		{
+			name: "should prevent validate empty description",
 			msg: profile.MsgUpdateCoordinatorDescription{
 				Address:     addr,
 				Description: profile.CoordinatorDescription{},
 			},
 			err: profile.ErrEmptyDescription,
-		}, {
-			name: "valid address and description",
+		},
+		{
+			name: "should validate valid message",
 			msg: profile.MsgUpdateCoordinatorDescription{
 				Address: sample.Address(r),
 				Description: profile.CoordinatorDescription{

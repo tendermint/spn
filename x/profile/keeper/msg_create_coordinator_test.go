@@ -26,15 +26,17 @@ func TestMsgCreateCoordinator(t *testing.T) {
 		err    error
 	}{
 		{
-			name:   "valid coordinator 1",
+			name:   "should allow creating a coordinator",
 			msg:    msg1,
 			wantId: 0,
-		}, {
-			name:   "valid coordinator 2",
+		},
+		{
+			name:   "should allow creating a second coordinator",
 			msg:    msg2,
 			wantId: 1,
-		}, {
-			name: "already exist address",
+		},
+		{
+			name: "should prevent creating with an existing coordinator address",
 			msg:  msg2,
 			err:  types.ErrCoordAlreadyExist,
 		},

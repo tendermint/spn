@@ -22,7 +22,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "should prevent validate message with invalid address",
 			msg: types.MsgRequestAddAccount{
 				Creator:  "invalid_address",
 				Address:  sample.Address(r),
@@ -32,7 +32,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid account address",
+			name: "should prevent validate message with invalid account address",
 			msg: types.MsgRequestAddAccount{
 				Creator:  sample.Address(r),
 				Address:  "invalid_address",
@@ -42,7 +42,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "message without coins",
+			name: "should prevent validate message without coins",
 			msg: types.MsgRequestAddAccount{
 				Creator:  sample.Address(r),
 				Address:  addr,
@@ -52,7 +52,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidCoins,
 		},
 		{
-			name: "message with invalid coins",
+			name: "should prevent validate message with invalid coins",
 			msg: types.MsgRequestAddAccount{
 				Creator:  sample.Address(r),
 				Address:  addr,
@@ -62,7 +62,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidCoins,
 		},
 		{
-			name: "valid message",
+			name: "should validate valid message",
 			msg: types.MsgRequestAddAccount{
 				Creator:  sample.Address(r),
 				Address:  sample.Address(r),
@@ -71,7 +71,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			},
 		},
 		{
-			name: "same creator and account",
+			name: "should validate valid message with same creator and account",
 			msg: types.MsgRequestAddAccount{
 				Creator:  addr,
 				Address:  addr,

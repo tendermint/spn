@@ -25,8 +25,6 @@ func GetTxCmd() *cobra.Command {
 		CmdUpdateTotalSupply(),
 		CmdUpdateSpecialAllocations(),
 		CmdInitializeMainnet(),
-		CmdAddShares(),
-		CmdAddVestingOptions(),
 		CmdMintVouchers(),
 		CmdBurnVouchers(),
 		CmdUnredeemVouchers(),

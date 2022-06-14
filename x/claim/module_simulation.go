@@ -35,7 +35,8 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		accs[i] = acc.Address.String()
 	}
 	claimGenesis := types.GenesisState{
-		Params: types.DefaultParams(),
+		//Params:        types.DefaultParams(),
+		AirdropSupply: sdk.NewCoin("foo", sdk.ZeroInt()),
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&claimGenesis)

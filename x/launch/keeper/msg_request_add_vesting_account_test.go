@@ -53,68 +53,68 @@ func TestMsgRequestAddVestingAccount(t *testing.T) {
 		err         error
 	}{
 		{
-			name: "invalid chain",
+			name: "should prevent requesting a vesting account for a non existing chain",
 			msg:  sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, invalidChain),
 			err:  types.ErrChainNotFound,
 		},
 		{
-			name: "launch triggered chain",
+			name: "should prevent requesting a vesting account for a launch triggered chain",
 			msg:  sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[0].LaunchID),
 			err:  types.ErrTriggeredLaunch,
 		},
 		{
-			name: "coordinator not found",
+			name: "should prevent requesting a vesting account for a chain where coordinator not found",
 			msg:  sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[1].LaunchID),
 			err:  types.ErrChainInactive,
 		},
 		{
-			name:   "add chain 3 request 1",
+			name:   "should allow requesting a vesting account to an existing chain",
 			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[2].LaunchID),
 			wantID: 1,
 		},
 		{
-			name:   "add chain 4 request 1",
+			name:   "should allow requesting a vesting account to a second chain",
 			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[3].LaunchID),
 			wantID: 1,
 		},
 		{
-			name:   "add chain 4 request 2",
+			name:   "should allow requesting a second vesting account to a second chain",
 			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr2, chains[3].LaunchID),
 			wantID: 2,
 		},
 		{
-			name:   "add chain 5 request 1",
+			name:   "should allow requesting a vesting account to a third chain",
 			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr1, chains[4].LaunchID),
 			wantID: 1,
 		},
 		{
-			name:   "add chain 5 request 2",
+			name:   "should allow requesting a second vesting account to a third chain",
 			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr2, chains[4].LaunchID),
 			wantID: 2,
 		},
 		{
-			name:   "add chain 5 request 3",
+			name:   "should allow requesting a third vesting account to a third chain",
 			msg:    sample.MsgRequestAddVestingAccount(r, sample.Address(r), addr3, chains[4].LaunchID),
 			wantID: 3,
 		},
 		{
-			name:        "request from coordinator is pre-approved",
+			name:        "should allow requesting and approving a vesting account from the coordinator",
 			msg:         sample.MsgRequestAddVestingAccount(r, coordAddr, addr4, chains[4].LaunchID),
 			wantApprove: true,
 			wantID:      4,
 		},
 		{
-			name: "failing request from coordinator",
+			name: "should prevent requesting a vesting account from coordinator if vesting account already exist",
 			msg:  sample.MsgRequestAddVestingAccount(r, coordAddr, addr4, chains[4].LaunchID),
 			err:  types.ErrAccountAlreadyExist,
 		},
 		{
-			name: "is mainnet chain",
+			name: "should prevent requesting a vesting account for a mainnet chain",
 			msg:  sample.MsgRequestAddVestingAccount(r, coordAddr, sample.Address(r), chains[5].LaunchID),
 			err:  types.ErrAddMainnetVestingAccount,
 		},
 		{
-			name: "fail if the coordinator of the chain is disabled",
+			name: "should prevent requesting a vesting account for a chain where the coordinator of the chain is disabled",
 			msg:  sample.MsgRequestAddVestingAccount(r, sample.Address(r), sample.Address(r), disableChain[0].LaunchID),
 			err:  profiletypes.ErrCoordInactive,
 		},

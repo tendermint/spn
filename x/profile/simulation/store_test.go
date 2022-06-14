@@ -19,14 +19,14 @@ func TestFindCoordinatorAccount(t *testing.T) {
 		accs       = simulation.RandomAccounts(r, 20)
 	)
 
-	t.Run("false for empty set", func(t *testing.T) {
+	t.Run("should prevent finding coordinator from empty account list", func(t *testing.T) {
 		_, found := profilesim.FindCoordinatorAccount(r, ctx, *tk.ProfileKeeper, []simulation.Account{}, false)
 		require.False(t, found)
 		_, found = profilesim.FindCoordinatorAccount(r, ctx, *tk.ProfileKeeper, []simulation.Account{}, true)
 		require.False(t, found)
 	})
 
-	t.Run("no existing coordinator account", func(t *testing.T) {
+	t.Run("should prevent finding coordinator if no coordinator in store", func(t *testing.T) {
 		_, found := profilesim.FindCoordinatorAccount(r, ctx, *tk.ProfileKeeper, accs, true)
 		require.False(t, found)
 
@@ -42,7 +42,7 @@ func TestFindCoordinatorAccount(t *testing.T) {
 		CoordinatorID: sample.Uint64(r),
 	})
 
-	t.Run("one coordinator account", func(t *testing.T) {
+	t.Run("should allow finding one coordinator", func(t *testing.T) {
 		acc, found := profilesim.FindCoordinatorAccount(r, ctx, *tk.ProfileKeeper, accs, true)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
@@ -52,7 +52,7 @@ func TestFindCoordinatorAccount(t *testing.T) {
 		require.Contains(t, accs, acc)
 	})
 
-	t.Run("all coordinator account", func(t *testing.T) {
+	t.Run("should allow finding all coordinators", func(t *testing.T) {
 		_, found := profilesim.FindCoordinatorAccount(r, ctx, *tk.ProfileKeeper, []simulation.Account{acc}, false)
 		require.False(t, found)
 
