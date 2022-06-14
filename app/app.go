@@ -540,7 +540,7 @@ func New(
 		stakingtypes.NewMultiStakingHooks(
 			app.DistrKeeper.Hooks(),
 			app.SlashingKeeper.Hooks(),
-			app.ClaimKeeper.NewHMissionDelegationHooks(1),
+			app.ClaimKeeper.NewMissionDelegationHooks(1),
 		),
 	)
 
