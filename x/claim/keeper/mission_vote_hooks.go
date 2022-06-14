@@ -11,8 +11,8 @@ type MissionVoteHooks struct {
 }
 
 // NewMissionVoteHooks returns a GovHooks that triggers mission completion on voting for a proposal
-func (k Keeper) NewMissionVoteHooks(missionID uint64) MissionDelegationHooks {
-	return MissionDelegationHooks{k, missionID}
+func (k Keeper) NewMissionVoteHooks(missionID uint64) MissionVoteHooks {
+	return MissionVoteHooks{k, missionID}
 }
 
 var _ govtypes.GovHooks = MissionVoteHooks{}
