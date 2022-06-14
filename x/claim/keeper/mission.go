@@ -112,5 +112,10 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 	k.SetAirdropSupply(ctx, airdropSupply)
 	k.SetClaimRecord(ctx, claimRecord)
 
-	return nil
+	err = ctx.EventManager().EmitTypedEvent(&types.EventMissionCompleted{
+		MissionID: missionID,
+		Claimer:   address,
+	})
+
+	return err
 }
