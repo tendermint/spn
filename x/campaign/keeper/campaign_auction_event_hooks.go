@@ -1,12 +1,13 @@
 package keeper
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
-	"time"
 )
 
 // EmitCampaignAuctionCreated emits EventCampaignAuctionCreated event if an auction is created for a campaign from a coordinator
