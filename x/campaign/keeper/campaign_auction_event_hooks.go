@@ -78,7 +78,7 @@ var _ fundraisingtypes.FundraisingHooks = CampaignAuctionEventHooks{}
 // AfterFixedPriceAuctionCreated emits a CampaignAuctionCreated event if created for a campaign
 func (h CampaignAuctionEventHooks) AfterFixedPriceAuctionCreated(
 	ctx sdk.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 	_ sdk.Dec,
 	sellingCoin sdk.Coin,
@@ -88,13 +88,13 @@ func (h CampaignAuctionEventHooks) AfterFixedPriceAuctionCreated(
 	_ time.Time,
 ) {
 	// TODO: investigate error handling for hooks
-	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionId, auctioneer, sellingCoin)
+	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionID, auctioneer, sellingCoin)
 }
 
 // AfterBatchAuctionCreated emits a CampaignAuctionCreated event if created for a campaign
 func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
 	ctx sdk.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 	_ sdk.Dec,
 	_ sdk.Dec,
@@ -107,7 +107,7 @@ func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
 	_ time.Time,
 ) {
 	// TODO: investigate error handling for hooks
-	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionId, auctioneer, sellingCoin)
+	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionID, auctioneer, sellingCoin)
 }
 
 // BeforeFixedPriceAuctionCreated implements FundraisingHooks
