@@ -2,8 +2,10 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/spn/x/campaign/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"time"
 )
 
@@ -13,26 +15,35 @@ func (k Keeper) EmitCampaignAuctionCreated(
 	auctionId uint64,
 	auctioneer string,
 	sellingCoin sdk.Coin,
-) bool {
+) (bool, error) {
 	campaignID, err := types.VoucherCampaign(sellingCoin.Denom)
 	if err != nil {
 		// not a campaign auction
-		return false
+		return false, nil
 	}
 
 	// verify the auctioneer is the coordinator of the campaign
 	campaign, found := k.GetCampaign(ctx, campaignID)
 	if !found {
-		return false
+		return false, sdkerrors.Wrapf(types.ErrCampaignNotFound,
+			"voucher %s is associated to an non-existing campaign %d",
+			sellingCoin.Denom,
+			campaignID,
+		)
+
 	}
 	coord, found := k.profileKeeper.GetCoordinator(ctx, campaign.CoordinatorID)
 	if !found {
-		return false
+		return false, sdkerrors.Wrapf(profiletypes.ErrCoordInvalid,
+			"campaign %d coordinator doesn't exist %d",
+			campaignID,
+			campaign.CoordinatorID,
+		)
 	}
 
 	// if the coordinator if the auctioneer, we emit a CampaignAuctionCreated event
 	if coord.Address != auctioneer {
-		return false
+		return false, nil
 	}
 
 	err = ctx.EventManager().EmitTypedEvents(
@@ -42,10 +53,10 @@ func (k Keeper) EmitCampaignAuctionCreated(
 		},
 	)
 	if err != nil {
-		return false
+		return false, err
 	}
 
-	return true
+	return true, nil
 }
 
 // CampaignAuctionEventHooks returns a CampaignAuctionEventHooks associated with the campaign keeper
@@ -75,7 +86,8 @@ func (h CampaignAuctionEventHooks) AfterFixedPriceAuctionCreated(
 	_ time.Time,
 	_ time.Time,
 ) {
-	_ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionId, auctioneer, sellingCoin)
+	// TODO: investigate error handling for hooks
+	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionId, auctioneer, sellingCoin)
 }
 
 // AfterBatchAuctionCreated emits a CampaignAuctionCreated event if created for a campaign
@@ -93,7 +105,8 @@ func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
 	_ time.Time,
 	_ time.Time,
 ) {
-	_ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionId, auctioneer, sellingCoin)
+	// TODO: investigate error handling for hooks
+	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionId, auctioneer, sellingCoin)
 }
 
 // BeforeFixedPriceAuctionCreated implements FundraisingHooks
