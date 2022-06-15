@@ -43,7 +43,8 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
+	upgradeKeeper := initializer.Upgrade()
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper, upgradeKeeper)
 	monitoringProviderKeeper := initializer.Monitoringp(
 		stakingKeeper,
 		*ibcKeeper,

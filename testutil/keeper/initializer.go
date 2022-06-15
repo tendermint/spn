@@ -17,6 +17,8 @@ import (
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
+	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
@@ -129,6 +131,24 @@ func (i initializer) Capability() *capabilitykeeper.Keeper {
 	return capabilitykeeper.NewKeeper(i.Codec, storeKey, memStoreKey)
 }
 
+// create mock ProtocolVersionSetter for UpgradeKeeper
+
+type ProtocolVersionSetter struct{}
+
+func (vs ProtocolVersionSetter) SetProtocolVersion(uint64) {
+	return
+}
+
+func (i initializer) Upgrade() upgradekeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(upgradetypes.StoreKey)
+	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
+
+	skipUpgradeHeights := make(map[int64]bool)
+	vs := ProtocolVersionSetter{}
+
+	return upgradekeeper.NewKeeper(skipUpgradeHeights, storeKey, i.Codec, "", vs)
+}
+
 func (i initializer) Staking(
 	authKeeper authkeeper.AccountKeeper,
 	bankKeeper bankkeeper.Keeper,
@@ -147,6 +167,7 @@ func (i initializer) IBC(
 	paramKeeper paramskeeper.Keeper,
 	stakingKeeper stakingkeeper.Keeper,
 	capabilityKeeper capabilitykeeper.Keeper,
+	upgradeKeeper upgradekeeper.Keeper,
 ) *ibckeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(ibchost.StoreKey)
 
@@ -157,7 +178,7 @@ func (i initializer) IBC(
 		storeKey,
 		paramKeeper.Subspace(ibchost.ModuleName),
 		stakingKeeper,
-		nil,
+		upgradeKeeper,
 		capabilityKeeper.ScopeToModule(ibchost.ModuleName),
 	)
 }
