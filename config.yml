@@ -56,7 +56,7 @@ genesis:
     gov:
       deposit_params:
         min_deposit:
-          - "amount": "10000000"
+          - "amount": "1"
             "denom": "uspn"
     mint:
       params:
