@@ -18,21 +18,23 @@ import (
 func TestGenesis(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
-	genesisState := sample.LaunchGenesisState(r)
-	launch.InitGenesis(ctx, *tk.LaunchKeeper, genesisState)
-	got := launch.ExportGenesis(ctx, *tk.LaunchKeeper)
 
-	// Compare lists
-	require.ElementsMatch(t, genesisState.ChainList, got.ChainList)
-	require.Equal(t, genesisState.ChainCounter, got.ChainCounter)
+	t.Run("should allow import and export the genesis state", func(t *testing.T) {
+		genesisState := sample.LaunchGenesisState(r)
+		launch.InitGenesis(ctx, *tk.LaunchKeeper, genesisState)
+		got := launch.ExportGenesis(ctx, *tk.LaunchKeeper)
 
-	require.ElementsMatch(t, genesisState.GenesisAccountList, got.GenesisAccountList)
-	require.ElementsMatch(t, genesisState.VestingAccountList, got.VestingAccountList)
-	require.ElementsMatch(t, genesisState.GenesisValidatorList, got.GenesisValidatorList)
-	require.ElementsMatch(t, genesisState.RequestList, got.RequestList)
-	require.ElementsMatch(t, genesisState.RequestCounterList, got.RequestCounterList)
+		// Compare lists
+		require.ElementsMatch(t, genesisState.ChainList, got.ChainList)
+		require.Equal(t, genesisState.ChainCounter, got.ChainCounter)
 
-	require.Equal(t, genesisState.Params, got.Params)
+		require.ElementsMatch(t, genesisState.GenesisAccountList, got.GenesisAccountList)
+		require.ElementsMatch(t, genesisState.VestingAccountList, got.VestingAccountList)
+		require.ElementsMatch(t, genesisState.GenesisValidatorList, got.GenesisValidatorList)
+		require.ElementsMatch(t, genesisState.RequestList, got.RequestList)
+		require.ElementsMatch(t, genesisState.RequestCounterList, got.RequestCounterList)
 
+		require.Equal(t, genesisState.Params, got.Params)
+	})
 	// this line is used by starport scaffolding # genesis/test/assert
 }

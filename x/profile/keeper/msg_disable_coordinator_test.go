@@ -28,12 +28,12 @@ func TestMsgDisableCoordinator(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "not found coordinator address",
+			name: "should prevent disabling a non existing coordinator",
 			msg:  types.MsgDisableCoordinator{Address: addr},
 			err:  types.ErrCoordAddressNotFound,
 		},
 		{
-			name: "successfully disable coordinator",
+			name: "should allow disabling an active coordinator",
 			msg:  types.MsgDisableCoordinator{Address: msgCoord.Address},
 		},
 	}

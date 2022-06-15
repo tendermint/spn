@@ -47,7 +47,7 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "edit genesis chain ID",
+			name: "should allow updating genesis chain ID",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				coordAddress,
 				launchID,
@@ -58,7 +58,7 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 			),
 		},
 		{
-			name: "edit source",
+			name: "should allow updating source",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				coordAddress,
 				launchID,
@@ -69,7 +69,7 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 			),
 		},
 		{
-			name: "edit initial genesis with default genesis",
+			name: "should allow updating initial genesis with default genesis",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				coordAddress,
 				launchID,
@@ -80,7 +80,7 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 			),
 		},
 		{
-			name: "edit initial genesis with genesis url",
+			name: "should allow updating initial genesis with genesis url",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				coordAddress,
 				launchID,
@@ -91,7 +91,7 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 			),
 		},
 		{
-			name: "edit source and initial genesis",
+			name: "should allow updating source and initial genesis",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				coordAddress,
 				launchID,
@@ -102,7 +102,7 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 			),
 		},
 		{
-			name: "non existent launch id",
+			name: "should prevent updating for non existent launch id",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				coordAddress,
 				launchIDNoExist,
@@ -114,7 +114,7 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 			err: types.ErrChainNotFound,
 		},
 		{
-			name: "non existent coordinator",
+			name: "should prevent updating from non existent coordinator",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				coordNoExist,
 				launchID,
@@ -126,7 +126,7 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "invalid coordinator",
+			name: "should prevent updating from invalid coordinator",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				coordAddress2,
 				launchID,
@@ -138,7 +138,7 @@ func TestMsgUpdateLaunchInformation(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "launch triggered",
+			name: "should prevent updating if chain launch already triggered",
 			msg: sample.MsgUpdateLaunchInformation(r,
 				coordAddress,
 				launchIDLaunchTriggered,

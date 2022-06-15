@@ -24,17 +24,23 @@ func createNValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Val
 func TestValidatorGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNValidator(tk.ProfileKeeper, ctx, 10)
-	for _, item := range items {
-		rst, found := tk.ProfileKeeper.GetValidator(ctx,
-			item.Address,
-		)
-		require.True(t, found)
-		require.Equal(t, item, rst)
-	}
+
+	t.Run("should allow getting validator", func(t *testing.T) {
+		for _, item := range items {
+			rst, found := tk.ProfileKeeper.GetValidator(ctx,
+				item.Address,
+			)
+			require.True(t, found)
+			require.Equal(t, item, rst)
+		}
+	})
 }
 
 func TestValidatorGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNValidator(tk.ProfileKeeper, ctx, 10)
-	require.ElementsMatch(t, items, tk.ProfileKeeper.GetAllValidator(ctx))
+
+	t.Run("should allow getting all validators", func(t *testing.T) {
+		require.ElementsMatch(t, items, tk.ProfileKeeper.GetAllValidator(ctx))
+	})
 }

@@ -29,8 +29,6 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdListMainnetAccount(),
 		CmdShowMainnetAccountBalance(),
 		CmdListMainnetAccountBalance(),
-		CmdShowMainnetVestingAccount(),
-		CmdListMainnetVestingAccount(),
 		CmdShowCampaignSummary(),
 		CmdListCampaignSummary(),
 		CmdQueryParams(),

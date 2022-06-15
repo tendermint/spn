@@ -19,12 +19,12 @@ func TestParamsValidate(t *testing.T) {
 		err    error
 	}{
 		{
-			name:   "invalid launch time range",
+			name:   "should prevent validate params with invalid launch time range",
 			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
 			err:    errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
 		},
 		{
-			name:   "valid params",
+			name:   "should validate valid params",
 			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
 		},
 	}
@@ -48,31 +48,31 @@ func TestValidateLaunchTimeRange(t *testing.T) {
 		err             error
 	}{
 		{
-			name:            "invalid interface",
+			name:            "should prevent validate launch time range with invalid interface",
 			launchTimeRange: "test",
 			err:             fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:            "invalid range - min is negative",
+			name:            "should prevent validate launch time range where min is negative",
 			launchTimeRange: NewLaunchTimeRange(-1, 1),
 			err:             errors.New("MinLaunchTime can't be negative"),
 		},
 		{
-			name:            "invalid range - too high",
+			name:            "should prevent validate launch time range where max is too high",
 			launchTimeRange: NewLaunchTimeRange(1, MaxParametrableLaunchTime+1),
 			err:             errors.New("max parametrable launch time reached"),
 		},
 		{
-			name:            "invalid range - max lower than min",
+			name:            "should prevent validate launch time range where max lower than min",
 			launchTimeRange: NewLaunchTimeRange(10, 1),
 			err:             errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
 		},
 		{
-			name:            "max launch time",
+			name:            "should validate launch time range with max launch time",
 			launchTimeRange: NewLaunchTimeRange(1, MaxParametrableLaunchTime),
 		},
 		{
-			name:            "valid launch time",
+			name:            "should validate valid launch time range",
 			launchTimeRange: NewLaunchTimeRange(0, int64(time.Hour.Seconds()*24)),
 		},
 	}
@@ -96,26 +96,26 @@ func TestValidateRevertDelay(t *testing.T) {
 		err         error
 	}{
 		{
-			name:        "invalid interface",
+			name:        "should prevent validate revert delay with invalid interface",
 			revertDelay: "test",
 			err:         fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:        "invalid interface - too high",
+			name:        "should prevent validate revert delay too high",
 			revertDelay: MaxParametrableRevertDelay + 1,
 			err:         errors.New("max parametrable revert delay reached"),
 		},
 		{
-			name:        "invalid interface - not positive value",
+			name:        "should prevent validate revert delay not positive",
 			revertDelay: int64(0),
 			err:         errors.New("revert delay parameter must be positive"),
 		},
 		{
-			name:        "max revert delay",
+			name:        "should validate max revert delay",
 			revertDelay: MaxParametrableRevertDelay,
 		},
 		{
-			name:        "valid revert delay",
+			name:        "should validate valid revert delay",
 			revertDelay: int64(time.Minute.Seconds() * 1),
 		},
 	}
@@ -139,21 +139,21 @@ func TestValidateChainCreationFee(t *testing.T) {
 		err         error
 	}{
 		{
-			name:        "invalid interface",
+			name:        "should prevent validate creation fee with invalid interface",
 			creationFee: "test",
 			err:         fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:        "invalid coin",
+			name:        "should prevent validate creation fee with invalid coin",
 			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdk.NewInt(-1)}},
 			err:         errors.New("coin -1foo amount is not positive"),
 		},
 		{
-			name:        "valid empty param",
+			name:        "should validate empty fee",
 			creationFee: DefaultChainCreationFee,
 		},
 		{
-			name: "valid param",
+			name: "should validate valid fee",
 			creationFee: sdk.NewCoins(
 				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
 				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),

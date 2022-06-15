@@ -8,7 +8,7 @@ import "gogoproto/gogo.proto";
 import "campaign/campaign_chains.proto";
 import "campaign/campaign_summary.proto";
 import "campaign/campaign.proto";
-import "campaign/mainnet_vesting_account.proto";
+import "campaign/vesting.proto";
 import "campaign/mainnet_account.proto";
 import "campaign/params.proto";
 // this line is used by starport scaffolding # 1
@@ -56,16 +56,6 @@ service Query {
   // Queries a list of mainnetAccountBalance items.
   rpc MainnetAccountBalanceAll(QueryAllMainnetAccountBalanceRequest) returns (QueryAllMainnetAccountBalanceResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/mainnet_account_balance/{campaignID}";
-  }
-
-  // Queries a mainnetVestingAccount by index.
-  rpc MainnetVestingAccount(QueryGetMainnetVestingAccountRequest) returns (QueryGetMainnetVestingAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account/{campaignID}/{address}";
-  }
-
-  // Queries a list of mainnetVestingAccount items.
-  rpc MainnetVestingAccountAll(QueryAllMainnetVestingAccountRequest) returns (QueryAllMainnetVestingAccountResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/mainnet_vesting_account/{campaignID}";
   }
 
   // Queries a campaign summary
@@ -173,25 +163,6 @@ message QueryAllMainnetAccountBalanceRequest {
 
 message QueryAllMainnetAccountBalanceResponse {
   repeated MainnetAccountBalance mainnetAccountBalance = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
-}
-
-message QueryGetMainnetVestingAccountRequest {
-  uint64 campaignID = 1;
-  string address = 2;
-}
-
-message QueryGetMainnetVestingAccountResponse {
-  MainnetVestingAccount mainnetVestingAccount = 1 [(gogoproto.nullable) = false];
-}
-
-message QueryAllMainnetVestingAccountRequest {
-  uint64 campaignID = 1;
-  cosmos.base.query.v1beta1.PageRequest pagination = 2;
-}
-
-message QueryAllMainnetVestingAccountResponse {
-  repeated MainnetVestingAccount mainnetVestingAccount = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

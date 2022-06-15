@@ -25,19 +25,19 @@ func TestMsgUpdateValidatorDescription(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "update and create a new validator",
+			name: "should allow creating a new validator if doesn't exist",
 			msg: types.MsgUpdateValidatorDescription{
 				Address:     addr1,
 				Description: sample.ValidatorDescription(addr1),
 			},
 		}, {
-			name: "update a existing validator",
+			name: "should allow updating an existing validator",
 			msg: types.MsgUpdateValidatorDescription{
 				Address:     addr1,
 				Description: sample.ValidatorDescription(addr2),
 			},
 		}, {
-			name: "update and create another validator",
+			name: "should allow creating a second validator",
 			msg: types.MsgUpdateValidatorDescription{
 				Address:     addr2,
 				Description: sample.ValidatorDescription(addr2),

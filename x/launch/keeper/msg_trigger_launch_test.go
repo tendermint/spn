@@ -59,36 +59,36 @@ func TestMsgTriggerLaunch(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "launch chain not launched",
+			name: "should allow triggering a chain launch",
 			msg:  sample.MsgTriggerLaunch(r, coordAddress, chainID),
 		},
 		{
-			name: "non existent chain id",
+			name: "should prevent triggering a chain launch from a non existing chain",
 			msg:  sample.MsgTriggerLaunch(r, coordAddress, chainIDNoExist),
 			err:  types.ErrChainNotFound,
 		},
 		{
-			name: "non existent coordinator",
+			name: "should prevent triggering a chain launch from a non existent coordinator",
 			msg:  sample.MsgTriggerLaunch(r, coordNoExist, chainID2),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "invalid coordinator",
+			name: "should prevent triggering a chain launch from an invalid coordinator",
 			msg:  sample.MsgTriggerLaunch(r, coordAddress2, chainID2),
 			err:  profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "chain launch already triggered",
+			name: "should prevent triggering a chain launch with chain launch already triggered",
 			msg:  sample.MsgTriggerLaunch(r, coordAddress, alreadyLaunched),
 			err:  types.ErrTriggeredLaunch,
 		},
 		{
-			name: "launch time too low",
+			name: "should prevent triggering a chain launch with launch time too low",
 			msg:  *types.NewMsgTriggerLaunch(coordAddress, chainID2, launchTimeTooLow),
 			err:  types.ErrLaunchTimeTooLow,
 		},
 		{
-			name: "launch time too high",
+			name: "should prevent triggering a chain launch with launch time too high",
 			msg:  *types.NewMsgTriggerLaunch(coordAddress, chainID2, launchTimeTooHigh),
 			err:  types.ErrLaunchTimeTooHigh,
 		},
