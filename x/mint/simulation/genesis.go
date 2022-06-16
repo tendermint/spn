@@ -69,11 +69,13 @@ func GenDistributionProportions(r *rand.Rand) types.DistributionProportions {
 }
 
 func GenDevelopmentFundRecipients(r *rand.Rand) []types.WeightedAddress {
-	numAddrs := r.Intn(51)
-	addrs := make([]types.WeightedAddress, 0)
-	remainWeight := sdk.NewDec(1)
-	maxRandWeight := sdk.NewDecWithPrec(15, 3)
-	minRandWeight := sdk.NewDecWithPrec(5, 3)
+	var (
+		addrs         = make([]types.WeightedAddress, 0)
+		numAddrs      = r.Intn(51)
+		remainWeight  = sdk.NewDec(1)
+		maxRandWeight = sdk.NewDecWithPrec(15, 3)
+		minRandWeight = sdk.NewDecWithPrec(5, 3)
+	)
 	for i := 0; i < numAddrs; i++ {
 		// each address except the last can have a max of 2% weight and a min of 0.5%
 		weight := simtypes.RandomDecAmount(r, maxRandWeight).Add(minRandWeight)

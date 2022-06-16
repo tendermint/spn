@@ -4,6 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/tendermint/spn/x/mint/types"
@@ -144,8 +145,11 @@ func (k Keeper) DistributeMintedCoins(ctx sdk.Context, mintedCoin sdk.Coin) erro
 	devFundCoins := sdk.NewCoins(devFundCoin)
 	if len(params.DevelopmentFundRecipients) == 0 {
 		// fund community pool when rewards address is empty
-		err = k.distrKeeper.FundCommunityPool(ctx, devFundCoins, k.accountKeeper.GetModuleAddress(types.ModuleName))
-		if err != nil {
+		if err = k.distrKeeper.FundCommunityPool(
+			ctx,
+			devFundCoins,
+			k.accountKeeper.GetModuleAddress(types.ModuleName),
+		); err != nil {
 			return err
 		}
 	} else {
@@ -154,7 +158,7 @@ func (k Keeper) DistributeMintedCoins(ctx sdk.Context, mintedCoin sdk.Coin) erro
 			devFundPortionCoins := sdk.NewCoins(k.GetProportions(ctx, devFundCoin, w.Weight))
 			devAddr, err := sdk.AccAddressFromBech32(w.Address)
 			if err != nil {
-				return err
+				return spnerrors.Critical(err.Error())
 			}
 			err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, devAddr, devFundPortionCoins)
 			if err != nil {

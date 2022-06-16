@@ -40,13 +40,15 @@ func TestRandomizedGenState(t *testing.T) {
 	var mintGenesis types.GenesisState
 	simState.Cdc.MustUnmarshalJSON(simState.GenState[types.ModuleName], &mintGenesis)
 
-	dec1 := sdk.MustNewDecFromStr("0.670000000000000000")
-	dec2 := sdk.MustNewDecFromStr("0.200000000000000000")
-	dec3 := sdk.MustNewDecFromStr("0.070000000000000000")
-	dec4 := sdk.MustNewDecFromStr("0.170000000000000000")
-	dec5 := sdk.MustNewDecFromStr("0.700000000000000000")
-	dec6 := sdk.MustNewDecFromStr("0.060000000000000000")
-	dec7 := sdk.MustNewDecFromStr("0.070000000000000000")
+	var (
+		dec1 = sdk.MustNewDecFromStr("0.670000000000000000")
+		dec2 = sdk.MustNewDecFromStr("0.200000000000000000")
+		dec3 = sdk.MustNewDecFromStr("0.070000000000000000")
+		dec4 = sdk.MustNewDecFromStr("0.170000000000000000")
+		dec5 = sdk.MustNewDecFromStr("0.700000000000000000")
+		dec6 = sdk.MustNewDecFromStr("0.060000000000000000")
+		dec7 = sdk.MustNewDecFromStr("0.070000000000000000")
+	)
 
 	weightedAddresses := []types.WeightedAddress{
 		{
