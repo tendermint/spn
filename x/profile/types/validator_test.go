@@ -25,19 +25,19 @@ func TestValidator_AddValidatorOperatorAddress(t *testing.T) {
 		want              []string
 	}{
 		{
-			name:              "valid case",
+			name:              "should allow adding an operator address in an existing list",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: operatorAddresses,
 			want:              append(operatorAddresses, operatorAddress),
 		},
 		{
-			name:              "empty operator address list",
+			name:              "should allow add an operator address in an empty list",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: []string{},
 			want:              []string{operatorAddress},
 		},
 		{
-			name:              "already existing operator address case",
+			name:              "should prevent adding duplicated operator addresses",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: append(operatorAddresses, operatorAddress),
 			want:              append(operatorAddresses, operatorAddress),
@@ -68,31 +68,31 @@ func TestValidator_HasOperatorAddress(t *testing.T) {
 		want              bool
 	}{
 		{
-			name:              "hasn't the operator address",
+			name:              "should return false if address not found",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: operatorAddresses,
 			want:              false,
 		},
 		{
-			name:              "only the operator address",
+			name:              "should return true if only this address present",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: []string{operatorAddress},
 			want:              true,
 		},
 		{
-			name:              "empty operator address list",
+			name:              "should return false for empty list",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: []string{},
 			want:              false,
 		},
 		{
-			name:              "nil operator address list",
+			name:              "should return false for nil",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: nil,
 			want:              false,
 		},
 		{
-			name:              "has the operator address",
+			name:              "should return true if address found in a list",
 			operatorAddress:   operatorAddress,
 			operatorAddresses: append(operatorAddresses, operatorAddress),
 			want:              true,

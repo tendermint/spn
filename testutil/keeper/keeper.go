@@ -6,6 +6,7 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
@@ -54,6 +55,7 @@ type TestKeepers struct {
 	RewardKeeper             *rewardkeeper.Keeper
 	MonitoringConsumerKeeper *monitoringckeeper.Keeper
 	MonitoringProviderKeeper *monitoringpkeeper.Keeper
+	AccountKeeper            authkeeper.AccountKeeper
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 	StakingKeeper            stakingkeeper.Keeper
@@ -83,7 +85,8 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
+	upgradeKeeper := initializer.Upgrade()
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper, upgradeKeeper)
 	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, distrKeeper)
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
@@ -101,7 +104,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 		[]Channel{},
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
-	claimKeeper := initializer.Claim(paramKeeper, bankKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, authKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -144,6 +147,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
+			AccountKeeper:            authKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
 			StakingKeeper:            stakingKeeper,
@@ -175,7 +179,8 @@ func NewTestSetupWithIBCMocks(
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
+	upgradeKeeper := initializer.Upgrade()
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper, upgradeKeeper)
 	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, distrKeeper)
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
@@ -193,7 +198,7 @@ func NewTestSetupWithIBCMocks(
 		channelMock,
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
-	claimKeeper := initializer.Claim(paramKeeper, bankKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, authKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -234,6 +239,7 @@ func NewTestSetupWithIBCMocks(
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
+			AccountKeeper:            authKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
 			StakingKeeper:            stakingKeeper,

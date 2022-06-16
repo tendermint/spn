@@ -3,7 +3,7 @@ package tendermint.spn.campaign;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
-import "campaign/mainnet_vesting_account.proto";
+import "campaign/vesting.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 

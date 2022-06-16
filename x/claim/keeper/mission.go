@@ -5,9 +5,18 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/claim/types"
 )
+
+// GetMissionIDBytes returns the byte representation of the ID
+func GetMissionIDBytes(id uint64) []byte {
+	bz := make([]byte, 8)
+	binary.BigEndian.PutUint64(bz, id)
+	return bz
+}
 
 // SetMission set a specific mission in the store
 func (k Keeper) SetMission(ctx sdk.Context, mission types.Mission) {
@@ -49,14 +58,64 @@ func (k Keeper) GetAllMission(ctx sdk.Context) (list []types.Mission) {
 	return
 }
 
-// GetMissionIDBytes returns the byte representation of the ID
-func GetMissionIDBytes(id uint64) []byte {
-	bz := make([]byte, 8)
-	binary.BigEndian.PutUint64(bz, id)
-	return bz
-}
+// CompleteMission triggers the completion of the mission and distribute the claimable portion of airdrop to the user
+// the method fails if the mission has already been completed
+func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address string) error {
+	airdropSupply, found := k.GetAirdropSupply(ctx)
+	if !found {
+		return sdkerrors.Wrapf(types.ErrAirdropSupplyNotFound, "airdrop supply is not defined")
+	}
 
-// GetMissionIDFromBytes returns ID in uint64 format from a byte array
-func GetMissionIDFromBytes(bz []byte) uint64 {
-	return binary.BigEndian.Uint64(bz)
+	// retrieve mission
+	mission, found := k.GetMission(ctx, missionID)
+	if !found {
+		return sdkerrors.Wrapf(types.ErrMissionNotFound, "mission %d not found", missionID)
+	}
+
+	// retrieve claim record of the user
+	claimRecord, found := k.GetClaimRecord(ctx, address)
+	if !found {
+		return sdkerrors.Wrapf(types.ErrClaimRecordNotFound, "claim record not found for address %s", address)
+	}
+
+	// check if the mission is already complted for the claim record
+	if claimRecord.IsMissionCompleted(missionID) {
+		return sdkerrors.Wrapf(
+			types.ErrMissionCompleted,
+			"mission %d completed for address %s",
+			missionID,
+			address,
+		)
+	}
+	claimRecord.CompletedMissions = append(claimRecord.CompletedMissions, missionID)
+
+	// calculate claimable from mission weight and claim
+	claimableAmount := mission.Weight.Mul(claimRecord.Claimable.ToDec()).TruncateInt()
+	claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
+
+	// decrease airdrop supply
+	airdropSupply.Amount = airdropSupply.Amount.Sub(claimableAmount)
+	if airdropSupply.Amount.IsNegative() {
+		return spnerrors.Critical("airdrop supply is lower than total claimable")
+	}
+
+	// send claimable to the user
+	claimer, err := sdk.AccAddressFromBech32(address)
+	if err != nil {
+		return spnerrors.Criticalf("invalid claimer address %s", err.Error())
+	}
+	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, claimer, claimable); err != nil {
+		return spnerrors.Criticalf("can't send claimable coins %s", err.Error())
+	}
+
+	// update store
+	k.SetAirdropSupply(ctx, airdropSupply)
+	k.SetClaimRecord(ctx, claimRecord)
+
+	err = ctx.EventManager().EmitTypedEvent(&types.EventMissionCompleted{
+		MissionID: missionID,
+		Claimer:   address,
+	})
+
+	return err
 }

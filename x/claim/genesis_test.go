@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim"
@@ -45,9 +45,9 @@ func TestGenesis(t *testing.T) {
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
-	k, ctx := keepertest.ClaimKeeper(t)
-	claim.InitGenesis(ctx, *k, genesisState)
-	got := claim.ExportGenesis(ctx, *k)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	claim.InitGenesis(ctx, *tk.ClaimKeeper, genesisState)
+	got := claim.ExportGenesis(ctx, *tk.ClaimKeeper)
 	require.NotNil(t, got)
 
 	nullify.Fill(&genesisState)

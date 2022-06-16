@@ -4,7 +4,7 @@ package tendermint.spn.campaign;
 // this line is used by starport scaffolding # genesis/proto/import
 import "gogoproto/gogo.proto";
 import "campaign/campaign_chains.proto";
-import "campaign/mainnet_vesting_account.proto";
+import "campaign/vesting.proto";
 import "campaign/campaign.proto";
 import "campaign/mainnet_account.proto";
 import "campaign/params.proto";
@@ -17,8 +17,7 @@ message GenesisState {
   uint64 campaignCounter = 2;
   repeated CampaignChains campaignChainsList = 3 [(gogoproto.nullable) = false];
   repeated MainnetAccount mainnetAccountList = 4 [(gogoproto.nullable) = false];
-  repeated MainnetVestingAccount mainnetVestingAccountList = 5 [(gogoproto.nullable) = false];
-  uint64 totalShares = 6;
-  Params params = 7 [(gogoproto.nullable) = false];
+  uint64 totalShares = 5;
+  Params params = 6 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

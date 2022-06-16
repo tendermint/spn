@@ -29,13 +29,13 @@ func (suite *QueryTestSuite) TestShowCoordinatorByAddress() {
 		obj  types.CoordinatorByAddress
 	}{
 		{
-			desc: "found",
+			desc: "should show an existing coordinator from address",
 			id:   objs[0].Address,
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc: "not found",
+			desc: "should send error for a non existing coordinator",
 			id:   "not_found",
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),

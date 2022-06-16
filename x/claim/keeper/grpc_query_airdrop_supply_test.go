@@ -8,15 +8,20 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
+	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim/types"
 )
 
 func TestAirdropSupplyQuery(t *testing.T) {
-	keeper, ctx := keepertest.ClaimKeeper(t)
-	wctx := sdk.WrapSDKContext(ctx)
-	item := createTestAirdropSupply(keeper, ctx)
+	var (
+		ctx, tk, _   = testkeeper.NewTestSetup(t)
+		wctx         = sdk.WrapSDKContext(ctx)
+		sampleSupply = sample.Coin(r)
+	)
+	tk.ClaimKeeper.SetAirdropSupply(ctx, sampleSupply)
+
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetAirdropSupplyRequest
@@ -26,7 +31,7 @@ func TestAirdropSupplyQuery(t *testing.T) {
 		{
 			desc:     "First",
 			request:  &types.QueryGetAirdropSupplyRequest{},
-			response: &types.QueryGetAirdropSupplyResponse{AirdropSupply: item},
+			response: &types.QueryGetAirdropSupplyResponse{AirdropSupply: sampleSupply},
 		},
 		{
 			desc: "InvalidRequest",
@@ -34,7 +39,7 @@ func TestAirdropSupplyQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.AirdropSupply(wctx, tc.request)
+			response, err := tk.ClaimKeeper.AirdropSupply(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

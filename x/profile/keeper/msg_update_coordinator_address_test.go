@@ -31,33 +31,33 @@ func TestMsgUpdateCoordinatorAddress(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "not found address",
+			name: "should prevent updating a non existing coordinator",
 			msg: types.MsgUpdateCoordinatorAddress{
 				Address:    addr,
 				NewAddress: addr,
 			},
 			err: types.ErrCoordAddressNotFound,
 		}, {
-			name: "new address already exist",
+			name: "should prevent updating with an address already associated to a coordinator",
 			msg: types.MsgUpdateCoordinatorAddress{
 				Address:    coord1.Address,
 				NewAddress: coord2.Address,
 			},
 			err: types.ErrCoordAlreadyExist,
 		}, {
-			name: "update first coordinator address update",
+			name: "should allow updating coordinator address",
 			msg: types.MsgUpdateCoordinatorAddress{
 				Address:    coord1.Address,
 				NewAddress: addr,
 			},
 		}, {
-			name: "update second coordinator address update",
+			name: "should allow updating coordinator address a second time",
 			msg: types.MsgUpdateCoordinatorAddress{
 				Address:    coord2.Address,
 				NewAddress: coord1.Address,
 			},
 		}, {
-			name: "new address already updated",
+			name: "should prevent updating from previous coordinator address",
 			msg: types.MsgUpdateCoordinatorAddress{
 				Address:    addr,
 				NewAddress: coord1.Address,

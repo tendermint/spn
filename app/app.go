@@ -204,6 +204,7 @@ var (
 		fundraisingtypes.ModuleName:       nil,
 		monitoringcmoduletypes.ModuleName: nil,
 		monitoringpmoduletypes.ModuleName: nil,
+		claimmoduletypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -393,17 +394,11 @@ func New(
 	app.FeeGrantKeeper = feegrantkeeper.NewKeeper(appCodec, keys[feegrant.StoreKey], app.AuthKeeper)
 	app.UpgradeKeeper = upgradekeeper.NewKeeper(skipUpgradeHeights, keys[upgradetypes.StoreKey], appCodec, homePath, app.BaseApp)
 
-	// register the staking hooks
-	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
-	app.StakingKeeper = *stakingKeeper.SetHooks(
-		stakingtypes.NewMultiStakingHooks(app.DistrKeeper.Hooks(), app.SlashingKeeper.Hooks()),
-	)
-
 	// ... other modules keepers
 
 	// Create IBC Keeper
 	app.IBCKeeper = ibckeeper.NewKeeper(
-		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), app.StakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
+		appCodec, keys[ibchost.StoreKey], app.GetSubspace(ibchost.ModuleName), stakingKeeper, app.UpgradeKeeper, scopedIBCKeeper,
 	)
 
 	// register the proposal types
@@ -425,7 +420,7 @@ func New(
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
 	evidenceKeeper := evidencekeeper.NewKeeper(
-		appCodec, keys[evidencetypes.StoreKey], &app.StakingKeeper, app.SlashingKeeper,
+		appCodec, keys[evidencetypes.StoreKey], &stakingKeeper, app.SlashingKeeper,
 	)
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
@@ -510,7 +505,7 @@ func New(
 		keys[monitoringpmoduletypes.StoreKey],
 		keys[monitoringpmoduletypes.MemStoreKey],
 		app.GetSubspace(monitoringpmoduletypes.ModuleName),
-		app.StakingKeeper,
+		stakingKeeper,
 		app.IBCKeeper.ClientKeeper,
 		app.IBCKeeper.ConnectionKeeper,
 		app.IBCKeeper.ChannelKeeper,
@@ -525,7 +520,7 @@ func New(
 		keys[participationmoduletypes.MemStoreKey],
 		app.GetSubspace(participationmoduletypes.ModuleName),
 		app.FundraisingKeeper,
-		app.StakingKeeper,
+		stakingKeeper,
 	)
 
 	app.ClaimKeeper = *claimmodulekeeper.NewKeeper(
@@ -533,10 +528,28 @@ func New(
 		keys[claimmoduletypes.StoreKey],
 		keys[claimmoduletypes.MemStoreKey],
 		app.GetSubspace(claimmoduletypes.ModuleName),
+		app.AuthKeeper,
 		app.BankKeeper,
 	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
+
+	// register the staking hooks
+	// NOTE: stakingKeeper above is passed by reference, so that it will contain these hooks
+	app.StakingKeeper = *stakingKeeper.SetHooks(
+		stakingtypes.NewMultiStakingHooks(
+			app.DistrKeeper.Hooks(),
+			app.SlashingKeeper.Hooks(),
+			app.ClaimKeeper.NewMissionDelegationHooks(1),
+		),
+	)
+
+	// register the gov hooks
+	app.GovKeeper = *app.GovKeeper.SetHooks(
+		govtypes.NewMultiGovHooks(
+			app.ClaimKeeper.NewMissionVoteHooks(2),
+		),
+	)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
