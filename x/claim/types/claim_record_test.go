@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -97,4 +98,73 @@ func TestClaimRecord_IsMissionCompleted(t *testing.T) {
 		Claimable:         sdk.OneInt(),
 		CompletedMissions: []uint64{0, 1, 2, 3},
 	}.IsMissionCompleted(3))
+}
+
+func TestClaimRecord_ClaimableFromMission(t *testing.T) {
+	for _, tt := range []struct {
+		desc        string
+		claimRecord claim.ClaimRecord
+		mission     claim.Mission
+		expected    sdk.Int
+	}{
+		{
+			desc: "should allow get claimable from mission with full weight",
+			claimRecord: claim.ClaimRecord{
+				Claimable: sdk.NewIntFromUint64(100),
+			},
+			mission: claim.Mission{
+				Weight: sdk.OneDec(),
+			},
+			expected: sdk.NewIntFromUint64(100),
+		},
+		{
+			desc: "should allow get claimable from mission with empty weight",
+			claimRecord: claim.ClaimRecord{
+				Claimable: sdk.NewIntFromUint64(100),
+			},
+			mission: claim.Mission{
+				Weight: sdk.ZeroDec(),
+			},
+			expected: sdk.ZeroInt(),
+		},
+		{
+			desc: "should allow get claimable from mission with half weight",
+			claimRecord: claim.ClaimRecord{
+				Claimable: sdk.NewIntFromUint64(100),
+			},
+			mission: claim.Mission{
+				Weight: tc.Dec(t, "0.5"),
+			},
+			expected: sdk.NewIntFromUint64(50),
+		},
+		{
+			desc: "should allow get claimable and cut decimal",
+			claimRecord: claim.ClaimRecord{
+				Claimable: sdk.NewIntFromUint64(201),
+			},
+			mission: claim.Mission{
+				Weight: tc.Dec(t, "0.5"),
+			},
+			expected: sdk.NewIntFromUint64(100),
+		},
+		{
+			desc: "should return no claimable if decimal cut",
+			claimRecord: claim.ClaimRecord{
+				Claimable: sdk.NewIntFromUint64(1),
+			},
+			mission: claim.Mission{
+				Weight: tc.Dec(t, "0.99"),
+			},
+			expected: sdk.NewIntFromUint64(0),
+		},
+	} {
+		t.Run(tt.desc, func(t *testing.T) {
+			got := tt.claimRecord.ClaimableFromMission(tt.mission)
+			require.True(t, got.Equal(tt.expected),
+				"expected: %s, got %s",
+				tt.expected.String(),
+				got.String(),
+			)
+		})
+	}
 }
