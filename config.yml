@@ -62,9 +62,17 @@ genesis:
       params:
         mint_denom: "uspn"
         distribution_proportions:
-          staking: "0.400000000000000000"
+          staking: "0.300000000000000000"
           incentives: "0.400000000000000000"
-          community_pool: "0.200000000000000000"
+          development_fund: "0.200000000000000000"
+          community_pool: "0.100000000000000000"
+        development_fund_recipients:
+          - address: "spn1ezptsm3npn54qx9vvpah4nymre59ykr9exx2ul" # alice
+            weight: "0.400000000000000000"
+          - address: "spn1aqn8ynvr3jmq67879qulzrwhchq5dtrvtx0nhe" # bob
+            weight: "0.300000000000000000"
+          - address: "spn1pkdk6m2nh77nlaep84cylmkhjder3arey7rll5" # carol
+            weight: "0.300000000000000000"
     launch:
       params:
         revertDelay: "5"
@@ -73,8 +81,8 @@ genesis:
     fundraising:
       params:
         auction_creation_fee:
-          - "amount": "100"
-            "denom": "uspn"
+          - amount: "100"
+            denom: "uspn"
     monitoringp:
       params:
         lastBlockHeight: "1"
