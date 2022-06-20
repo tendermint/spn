@@ -116,6 +116,93 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
+			desc: "should allow claim record with completed missions",
+			genState: &types.GenesisState{
+				ClaimRecords: []types.ClaimRecord{
+					{
+						Address:           sample.Address(r),
+						Claimable:         sdk.NewIntFromUint64(10),
+						CompletedMissions: []uint64{0},
+					},
+					{
+						Address:           sample.Address(r),
+						Claimable:         sdk.NewIntFromUint64(10),
+						CompletedMissions: []uint64{1},
+					},
+				},
+				Missions: []types.Mission{
+					{
+						MissionID: 0,
+						Weight:    tc.Dec(t, "0.4"),
+					},
+					{
+						MissionID: 1,
+						Weight:    tc.Dec(t, "0.6"),
+					},
+				},
+				AirdropSupply: tc.Coin(t, "10foo"),
+			},
+			valid: true,
+		},
+		{
+			desc: "should allow claim record with missions all completed",
+			genState: &types.GenesisState{
+				ClaimRecords: []types.ClaimRecord{
+					{
+						Address:           sample.Address(r),
+						Claimable:         sdk.NewIntFromUint64(10),
+						CompletedMissions: []uint64{0},
+					},
+					{
+						Address:           sample.Address(r),
+						Claimable:         sdk.NewIntFromUint64(10),
+						CompletedMissions: []uint64{0, 1},
+					},
+				},
+				Missions: []types.Mission{
+					{
+						MissionID: 0,
+						Weight:    tc.Dec(t, "0.4"),
+					},
+					{
+						MissionID: 1,
+						Weight:    tc.Dec(t, "0.6"),
+					},
+				},
+				AirdropSupply: tc.Coin(t, "6foo"),
+			},
+			valid: true,
+		},
+		{
+			desc: "should allow claim record with zero weight mission completed",
+			genState: &types.GenesisState{
+				ClaimRecords: []types.ClaimRecord{
+					{
+						Address:           sample.Address(r),
+						Claimable:         sdk.NewIntFromUint64(10),
+						CompletedMissions: []uint64{1},
+					},
+					{
+						Address:           sample.Address(r),
+						Claimable:         sdk.NewIntFromUint64(10),
+						CompletedMissions: []uint64{1},
+					},
+				},
+				Missions: []types.Mission{
+					{
+						MissionID: 0,
+						Weight:    sdk.OneDec(),
+					},
+					{
+						MissionID: 1,
+						Weight:    sdk.ZeroDec(),
+					},
+				},
+				AirdropSupply: tc.Coin(t, "20foo"),
+			},
+			valid: true,
+		},
+		{
 			desc: "should prevent validate duplicated claimRecord",
 			genState: &types.GenesisState{
 				ClaimRecords: []types.ClaimRecord{
@@ -139,7 +226,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "should allow claim record with non positive allocation",
+			desc: "should prevent validate claim record with non positive allocation",
 			genState: &types.GenesisState{
 				ClaimRecords: []types.ClaimRecord{
 					{
@@ -204,6 +291,58 @@ func TestGenesisState_Validate(t *testing.T) {
 						Weight:    sdk.OneDec(),
 					},
 				},
+			},
+			valid: false,
+		},
+		{
+			desc: "should prevent validate invalid airdrop supply with records with completed missions",
+			genState: &types.GenesisState{
+				ClaimRecords: []types.ClaimRecord{
+					{
+						Address:           sample.Address(r),
+						Claimable:         sdk.NewIntFromUint64(10),
+						CompletedMissions: []uint64{0},
+					},
+					{
+						Address:   sample.Address(r),
+						Claimable: sdk.NewIntFromUint64(10),
+					},
+				},
+				Missions: []types.Mission{
+					{
+						MissionID: 0,
+						Weight:    tc.Dec(t, "0.4"),
+					},
+					{
+						MissionID: 1,
+						Weight:    tc.Dec(t, "0.6"),
+					},
+				},
+				AirdropSupply: tc.Coin(t, "20foo"),
+			},
+			valid: false,
+		},
+		{
+			desc: "should prevent validate claim record with non existing mission",
+			genState: &types.GenesisState{
+				ClaimRecords: []types.ClaimRecord{
+					{
+						Address:           sample.Address(r),
+						Claimable:         sdk.NewIntFromUint64(10),
+						CompletedMissions: []uint64{0},
+					},
+					{
+						Address:   sample.Address(r),
+						Claimable: sdk.NewIntFromUint64(10),
+					},
+				},
+				Missions: []types.Mission{
+					{
+						MissionID: 1,
+						Weight:    sdk.OneDec(),
+					},
+				},
+				AirdropSupply: tc.Coin(t, "20foo"),
 			},
 			valid: false,
 		},
