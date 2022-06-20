@@ -1,12 +1,12 @@
 package types_test
 
 import (
-	tc "github.com/tendermint/spn/testutil/constructor"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/claim/types"
 )
@@ -68,6 +68,23 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				AirdropSupply: tc.Coin(t, "0foo"),
+			},
+			valid: true,
+		},
+		{
+			desc: "should allow genesis state with no mission",
+			genState: &types.GenesisState{
+				ClaimRecords: []types.ClaimRecord{
+					{
+						Address:   sample.Address(r),
+						Claimable: sdk.NewIntFromUint64(10),
+					},
+					{
+						Address:   sample.Address(r),
+						Claimable: sdk.NewIntFromUint64(10),
+					},
+				},
+				AirdropSupply: tc.Coin(t, "20foo"),
 			},
 			valid: true,
 		},
