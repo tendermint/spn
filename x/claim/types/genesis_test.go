@@ -25,12 +25,12 @@ func TestGenesisState_Validate(t *testing.T) {
 		valid    bool
 	}{
 		{
-			desc:     "default is valid",
+			desc:     "shoudl validate default",
 			genState: types.DefaultGenesis(),
 			valid:    true,
 		},
 		{
-			desc: "valid genesis state",
+			desc: "should validate valid genesis state",
 			genState: &types.GenesisState{
 				ClaimRecords: []types.ClaimRecord{
 					{
@@ -58,7 +58,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "duplicated claimRecord",
+			desc: "should prevent validate duplicated claimRecord",
 			genState: &types.GenesisState{
 				ClaimRecords: []types.ClaimRecord{
 					{
@@ -76,32 +76,31 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "invalid claim amounts",
+			desc: "should prevent validate invalid claim amounts",
 			genState: &types.GenesisState{
 				ClaimRecords: []types.ClaimRecord{
 					{
-						Address:   "duplicate",
+						Address:   sample.Address(r),
 						Claimable: claimAmts[0],
 					},
 					{
-						Address:   "duplicate",
+						Address:   sample.Address(r),
 						Claimable: sdk.ZeroInt(),
 					},
 				},
 				AirdropSupply: sdk.NewCoin("denom", claimAmts[0].Add(claimAmts[1])),
 			},
-
 			valid: false,
 		},
 		{
-			desc: "invalid genesis supply coin",
+			desc: "should prevent validate invalid genesis supply coin",
 			genState: &types.GenesisState{
 				AirdropSupply: sdk.Coin{},
 			},
 			valid: false,
 		},
 		{
-			desc: "duplicated mission",
+			desc: "should prevent validate duplicated mission",
 			genState: &types.GenesisState{
 				Missions: []types.Mission{
 					{
@@ -117,7 +116,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "mission list weights are not equal to 1",
+			desc: "should prevent validate mission list weights are not equal to 1",
 			genState: &types.GenesisState{
 				Missions: []types.Mission{
 					{
