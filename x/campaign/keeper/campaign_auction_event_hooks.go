@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -13,7 +14,7 @@ import (
 // EmitCampaignAuctionCreated emits EventCampaignAuctionCreated event if an auction is created for a campaign from a coordinator
 func (k Keeper) EmitCampaignAuctionCreated(
 	ctx sdk.Context,
-	auctionId uint64,
+	auctionID uint64,
 	auctioneer string,
 	sellingCoin sdk.Coin,
 ) (bool, error) {
@@ -50,7 +51,7 @@ func (k Keeper) EmitCampaignAuctionCreated(
 	err = ctx.EventManager().EmitTypedEvents(
 		&types.EventCampaignAuctionCreated{
 			CampaignID: campaignID,
-			AuctionID:  auctionId,
+			AuctionID:  auctionID,
 		},
 	)
 	if err != nil {
