@@ -126,12 +126,18 @@ genesis:
         - address: "spn1pkdk6m2nh77nlaep84cylmkhjder3arey7rll5" # carol
           claimable: "100"
       missions:
+        - missionID: "0"
+          description: "initial claim"
+          weight: "0.2"
         - missionID: "1"
           description: "staking"
-          weight: "0.6"
+          weight: "0.5"
         - missionID: "2"
           description: "voting"
-          weight: "0.4"
+          weight: "0.3"
+      initialClaim:
+        enabled: true
+        missionID: "0"
 client:
   typescript:
     path: "ignite-ui/src/generated"
