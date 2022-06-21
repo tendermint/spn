@@ -14,5 +14,5 @@ var (
 	ErrAirdropSupplyNotFound  = sdkerrors.Register(ModuleName, 5, "airdrop supply not found")
 	ErrInitialClaimNotFound   = sdkerrors.Register(ModuleName, 6, "initial claim information not found")
 	ErrInitialClaimNotEnabled = sdkerrors.Register(ModuleName, 7, "initial claim not enabled")
-	ErrMissionCompleteFailure = sdkerrors.Register(ModuleName, 7, "mission failed to complete")
+	ErrMissionCompleteFailure = sdkerrors.Register(ModuleName, 8, "mission failed to complete")
 )

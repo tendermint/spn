@@ -73,6 +73,7 @@ type TestMsgServers struct {
 	RewardSrv        rewardtypes.MsgServer
 	MonitoringcSrv   monitoringctypes.MsgServer
 	ParticipationSrv participationtypes.MsgServer
+	ClaimSrv         claimtypes.MsgServer
 }
 
 // NewTestSetup returns initialized instances of all the keepers and message servers of the modules
@@ -136,6 +137,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
 	monitoringcSrv := monitoringckeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
+	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)
 
 	// set max shares - only set during app InitGenesis
 	campaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
@@ -162,6 +164,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			RewardSrv:        rewardSrv,
 			MonitoringcSrv:   monitoringcSrv,
 			ParticipationSrv: participationSrv,
+			ClaimSrv:         claimSrv,
 		}
 }
 
