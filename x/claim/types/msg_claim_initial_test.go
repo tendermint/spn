@@ -16,13 +16,13 @@ func TestMsgClaimInitial_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "should prevent validate invalid claimer address",
 			msg: types.MsgClaimInitial{
 				Claimer: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
-			name: "valid address",
+			name: "should validate valid claimer address",
 			msg: types.MsgClaimInitial{
 				Claimer: sample.Address(r),
 			},
