@@ -3,13 +3,10 @@ package types_test
 import (
 	"testing"
 
-	tc "github.com/tendermint/spn/testutil/constructor"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/stretchr/testify/require"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
 	claim "github.com/tendermint/spn/x/claim/types"
 )
