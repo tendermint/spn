@@ -86,3 +86,8 @@ message EventMainnetVestingAccountUpdated {
   string address = 2;
   ShareVestingOptions vestingOptions = 3 [(gogoproto.nullable) = false];
 }
+
+message EventCampaignAuctionCreated {
+  uint64 campaignID = 1;
+  uint64 auctionID = 2;
+}
