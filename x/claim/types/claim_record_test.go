@@ -6,6 +6,8 @@ import (
 	tc "github.com/tendermint/spn/testutil/constructor"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
