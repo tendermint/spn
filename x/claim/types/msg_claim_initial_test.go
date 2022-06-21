@@ -1,6 +1,7 @@
-package types
+package types_test
 
 import (
+	"github.com/tendermint/spn/x/claim/types"
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -11,19 +12,19 @@ import (
 func TestMsgClaimInitial_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgClaimInitial
+		msg  types.MsgClaimInitial
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgClaimInitial{
+			msg: types.MsgClaimInitial{
 				Claimer: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgClaimInitial{
-				Claimer: sample.AccAddress(),
+			msg: types.MsgClaimInitial{
+				Claimer: sample.Address(r),
 			},
 		},
 	}
