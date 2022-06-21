@@ -23,6 +23,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		panic("airdrop supply failed to initialize: " + err.Error())
 	}
 
+	// Set if defined
+	if genState.InitialClaim != nil {
+		k.SetInitialClaim(ctx, *genState.InitialClaim)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -40,6 +44,11 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	} else {
 		// set to 0uspn otherwise
 		genesis.AirdropSupply = types.DefaultGenesis().AirdropSupply
+	}
+	// Get all initialClaim
+	initialClaim, found := k.GetInitialClaim(ctx)
+	if found {
+		genesis.InitialClaim = &initialClaim
 	}
 	// this line is used by starport scaffolding # genesis/module/export
 

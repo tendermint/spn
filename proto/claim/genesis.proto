@@ -6,6 +6,7 @@ import "cosmos/base/v1beta1/coin.proto";
 import "claim/params.proto";
 import "claim/claim_record.proto";
 import "claim/mission.proto";
+import "claim/initial_claim.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/tendermint/spn/x/claim/types";
@@ -17,5 +18,6 @@ message GenesisState {
   repeated Mission missions = 3 [(gogoproto.nullable) = false];
   Params params = 4 [(gogoproto.nullable) = false];
 
+  InitialClaim initialClaim = 5;
   // this line is used by starport scaffolding # genesis/proto/state
 }

@@ -53,6 +53,10 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				AirdropSupply: sdk.NewCoin("denom", claimAmts[0].Add(claimAmts[1])),
+				InitialClaim: &types.InitialClaim{
+					Enabled:   true,
+					MissionID: 21,
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
