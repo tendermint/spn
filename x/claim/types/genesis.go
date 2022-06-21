@@ -1,6 +1,7 @@
 package types
 
 import (
+	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,62 +14,84 @@ func DefaultGenesis() *GenesisState {
 		ClaimRecords:  []ClaimRecord{},
 		Missions:      []Mission{},
 		InitialClaim:  InitialClaim{},
+		Params:        DefaultParams(),
 		// this line is used by starport scaffolding # genesis/types/default
-		Params: DefaultParams(),
 	}
 }
 
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
+	// check airdrop supply
 	err := gs.AirdropSupply.Validate()
 	if err != nil {
 		return err
 	}
 
-	// Check for duplicated address in claimRecord
-	claimSum := sdk.ZeroInt()
-	claimRecordIndexMap := make(map[string]struct{})
-	for _, elem := range gs.ClaimRecords {
-		err := elem.Validate()
-		if err != nil {
-			return err
-		}
-
-		address := string(ClaimRecordKey(elem.Address))
-		claimSum = claimSum.Add(elem.Claimable)
-		if _, ok := claimRecordIndexMap[address]; ok {
-			return fmt.Errorf("duplicated address for claim record")
-		}
-		claimRecordIndexMap[address] = struct{}{}
-	}
-
-	// verify airdropSupply == sum of claimRecords
-	if !gs.AirdropSupply.Amount.Equal(claimSum) {
-		return fmt.Errorf("airdrop supply amount not equal to sum of claimable amounts")
-	}
-
-	// Check for duplicated ID in mission
+	// check missions
 	weightSum := sdk.ZeroDec()
-	missionIDMap := make(map[uint64]struct{})
-	for _, elem := range gs.Missions {
-		err := elem.Validate()
+	missionMap := make(map[uint64]Mission)
+	for _, mission := range gs.Missions {
+		err := mission.Validate()
 		if err != nil {
 			return err
 		}
 
-		weightSum = weightSum.Add(elem.Weight)
-		if _, ok := missionIDMap[elem.MissionID]; ok {
-			return fmt.Errorf("duplicated id for mission")
+		weightSum = weightSum.Add(mission.Weight)
+		if _, ok := missionMap[mission.MissionID]; ok {
+			return errors.New("duplicated id for mission")
 		}
-		missionIDMap[elem.MissionID] = struct{}{}
+		missionMap[mission.MissionID] = mission
 	}
 
 	// ensure mission weight sum is 1
 	if len(gs.Missions) > 0 {
 		if !weightSum.Equal(sdk.OneDec()) {
-			return fmt.Errorf("sum of mission weights must be 1")
+			return errors.New("sum of mission weights must be 1")
 		}
+	}
+
+	// check initial claim mission exist if enabled
+	if gs.InitialClaim.Enabled {
+		if _, ok := missionMap[gs.InitialClaim.MissionID]; !ok {
+			return errors.New("initial claim mission doesn't exist")
+		}
+	}
+
+	// check claim records
+	claimSum := sdk.ZeroInt()
+	claimRecordMap := make(map[string]struct{})
+	for _, claimRecord := range gs.ClaimRecords {
+		err := claimRecord.Validate()
+		if err != nil {
+			return err
+		}
+
+		// check claim record completed missions
+		claimable := claimRecord.Claimable
+		for _, completedMission := range claimRecord.CompletedMissions {
+			mission, ok := missionMap[completedMission]
+			if !ok {
+				return fmt.Errorf("address %s completed a non existing mission %d",
+					claimRecord.Address,
+					completedMission,
+				)
+			}
+
+			// reduce claimable with already claimed funds
+			claimable = claimable.Sub(claimRecord.ClaimableFromMission(mission))
+		}
+
+		claimSum = claimSum.Add(claimable)
+		if _, ok := claimRecordMap[claimRecord.Address]; ok {
+			return errors.New("duplicated address for claim record")
+		}
+		claimRecordMap[claimRecord.Address] = struct{}{}
+	}
+
+	// verify airdropSupply == sum of claimRecords
+	if !gs.AirdropSupply.Amount.Equal(claimSum) {
+		return errors.New("airdrop supply amount not equal to sum of claimable amounts")
 	}
 
 	// this line is used by starport scaffolding # genesis/types/validate

@@ -90,7 +90,7 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 	claimRecord.CompletedMissions = append(claimRecord.CompletedMissions, missionID)
 
 	// calculate claimable from mission weight and claim
-	claimableAmount := mission.Weight.Mul(claimRecord.Claimable.ToDec()).TruncateInt()
+	claimableAmount := claimRecord.ClaimableFromMission(mission)
 	claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
 
 	// decrease airdrop supply
