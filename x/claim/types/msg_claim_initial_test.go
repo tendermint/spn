@@ -1,11 +1,13 @@
 package types_test
 
 import (
-	"github.com/tendermint/spn/x/claim/types"
 	"testing"
+
+	"github.com/tendermint/spn/x/claim/types"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/testutil/sample"
 )
 
