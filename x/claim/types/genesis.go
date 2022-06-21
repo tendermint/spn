@@ -12,7 +12,7 @@ func DefaultGenesis() *GenesisState {
 		AirdropSupply: sdk.NewCoin("uspn", sdk.ZeroInt()),
 		ClaimRecords:  []ClaimRecord{},
 		Missions:      []Mission{},
-		InitialClaim:  nil,
+		InitialClaim:  InitialClaim{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}

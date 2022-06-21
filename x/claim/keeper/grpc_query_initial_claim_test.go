@@ -8,15 +8,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	keepertest "github.com/tendermint/spn/testutil/keeper"
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/claim/types"
 )
 
 func TestInitialClaimQuery(t *testing.T) {
-	keeper, ctx := keepertest.ClaimKeeper(t)
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	item := createTestInitialClaim(keeper, ctx)
+	item := createTestInitialClaim(tk.ClaimKeeper, ctx)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryGetInitialClaimRequest
@@ -34,7 +34,7 @@ func TestInitialClaimQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := keeper.InitialClaim(wctx, tc.request)
+			response, err := tk.ClaimKeeper.InitialClaim(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

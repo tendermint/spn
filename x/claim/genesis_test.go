@@ -41,7 +41,7 @@ func TestGenesis(t *testing.T) {
 			},
 		},
 		AirdropSupply: sample.Coin(r),
-		InitialClaim: &types.InitialClaim{
+		InitialClaim: types.InitialClaim{
 			Enabled:   true,
 			MissionID: 35,
 		},
