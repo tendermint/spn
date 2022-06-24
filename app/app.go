@@ -532,6 +532,11 @@ func New(
 		app.BankKeeper,
 	)
 
+	// set fundraising hooks
+	app.FundraisingKeeper = *app.FundraisingKeeper.SetHooks(
+		app.CampaignKeeper.CampaignAuctionEventHooks(),
+	)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// register the staking hooks

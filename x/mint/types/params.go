@@ -13,13 +13,14 @@ import (
 
 // Parameter store keys
 var (
-	KeyMintDenom               = []byte("MintDenom")
-	KeyInflationRateChange     = []byte("InflationRateChange")
-	KeyInflationMax            = []byte("InflationMax")
-	KeyInflationMin            = []byte("InflationMin")
-	KeyGoalBonded              = []byte("GoalBonded")
-	KeyBlocksPerYear           = []byte("BlocksPerYear")
-	KeyDistributionProportions = []byte("DistributionProportions")
+	KeyMintDenom                 = []byte("MintDenom")
+	KeyInflationRateChange       = []byte("InflationRateChange")
+	KeyInflationMax              = []byte("InflationMax")
+	KeyInflationMin              = []byte("InflationMin")
+	KeyGoalBonded                = []byte("GoalBonded")
+	KeyBlocksPerYear             = []byte("BlocksPerYear")
+	KeyDistributionProportions   = []byte("DistributionProportions")
+	KeyDevelopmentFundRecipients = []byte("DevelopmentFundRecipients")
 )
 
 // ParamTable for minting module.
@@ -35,15 +36,17 @@ func NewParams(
 	goalBonded sdk.Dec,
 	blocksPerYear uint64,
 	proportions DistributionProportions,
+	devAddrs []WeightedAddress,
 ) Params {
 	return Params{
-		MintDenom:               mintDenom,
-		InflationRateChange:     inflationRateChange,
-		InflationMax:            inflationMax,
-		InflationMin:            inflationMin,
-		GoalBonded:              goalBonded,
-		BlocksPerYear:           blocksPerYear,
-		DistributionProportions: proportions,
+		MintDenom:                 mintDenom,
+		InflationRateChange:       inflationRateChange,
+		InflationMax:              inflationMax,
+		InflationMin:              inflationMin,
+		GoalBonded:                goalBonded,
+		BlocksPerYear:             blocksPerYear,
+		DistributionProportions:   proportions,
+		DevelopmentFundRecipients: devAddrs,
 	}
 }
 
@@ -55,12 +58,14 @@ func DefaultParams() Params {
 		InflationMax:        sdk.NewDecWithPrec(20, 2),
 		InflationMin:        sdk.NewDecWithPrec(7, 2),
 		GoalBonded:          sdk.NewDecWithPrec(67, 2),
-		BlocksPerYear:       uint64(60 * 60 * 8766 / 5), // assuming 5 second block times
+		BlocksPerYear:       uint64(60 * 60 * 8766 / 5), // assuming 5 seconds block times
 		DistributionProportions: DistributionProportions{
-			Staking:       sdk.NewDecWithPrec(4, 1), // 0.4
-			Incentives:    sdk.NewDecWithPrec(4, 1), // 0.4
-			CommunityPool: sdk.NewDecWithPrec(2, 1), // 0.2
+			Staking:         sdk.NewDecWithPrec(3, 1), // 0.3
+			Incentives:      sdk.NewDecWithPrec(4, 1), // 0.4
+			DevelopmentFund: sdk.NewDecWithPrec(2, 1), // 0.2
+			CommunityPool:   sdk.NewDecWithPrec(1, 1), // 0.1
 		},
+		DevelopmentFundRecipients: []WeightedAddress{},
 	}
 }
 
@@ -90,7 +95,10 @@ func (p Params) Validate() error {
 			p.InflationMax, p.InflationMin,
 		)
 	}
-	return validateDistributionProportions(p.DistributionProportions)
+	if err := validateDistributionProportions(p.DistributionProportions); err != nil {
+		return err
+	}
+	return validateWeightedAddresses(p.DevelopmentFundRecipients)
 }
 
 // String implements the Stringer interface.
@@ -109,6 +117,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyGoalBonded, &p.GoalBonded, validateGoalBonded),
 		paramtypes.NewParamSetPair(KeyBlocksPerYear, &p.BlocksPerYear, validateBlocksPerYear),
 		paramtypes.NewParamSetPair(KeyDistributionProportions, &p.DistributionProportions, validateDistributionProportions),
+		paramtypes.NewParamSetPair(KeyDevelopmentFundRecipients, &p.DevelopmentFundRecipients, validateWeightedAddresses),
 	}
 }
 
@@ -219,14 +228,50 @@ func validateDistributionProportions(i interface{}) error {
 		return errors.New("pool incentives distribution ratio should not be negative")
 	}
 
+	if v.DevelopmentFund.IsNegative() {
+		return errors.New("development fund distribution ratio should not be negative")
+	}
+
 	if v.CommunityPool.IsNegative() {
 		return errors.New("community pool distribution ratio should not be negative")
 	}
 
-	totalProportions := v.Staking.Add(v.Incentives).Add(v.CommunityPool)
+	totalProportions := v.Staking.Add(v.Incentives).Add(v.DevelopmentFund).Add(v.CommunityPool)
 
 	if !totalProportions.Equal(sdk.NewDec(1)) {
 		return errors.New("total distributions ratio should be 1")
+	}
+
+	return nil
+}
+
+func validateWeightedAddresses(i interface{}) error {
+	v, ok := i.([]WeightedAddress)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if len(v) == 0 {
+		return nil
+	}
+
+	weightSum := sdk.NewDec(0)
+	for i, w := range v {
+		_, err := sdk.AccAddressFromBech32(w.Address)
+		if err != nil {
+			return fmt.Errorf("invalid address at index %d", i)
+		}
+		if !w.Weight.IsPositive() {
+			return fmt.Errorf("non-positive weight at index %d", i)
+		}
+		if w.Weight.GT(sdk.NewDec(1)) {
+			return fmt.Errorf("more than 1 weight at index %d", i)
+		}
+		weightSum = weightSum.Add(w.Weight)
+	}
+
+	if !weightSum.Equal(sdk.NewDec(1)) {
+		return fmt.Errorf("invalid weight sum: %s", weightSum.String())
 	}
 
 	return nil

@@ -31,6 +31,16 @@ func TestCampaignGet(t *testing.T) {
 	}
 }
 
+func TestCampaignRemove(t *testing.T) {
+	ctx, tk, _ := testkeeper.NewTestSetup(t)
+	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
+	for _, item := range items {
+		tk.CampaignKeeper.RemoveCampaign(ctx, item.CampaignID)
+		_, found := tk.CampaignKeeper.GetCampaign(ctx, item.CampaignID)
+		require.False(t, found)
+	}
+}
+
 func TestCampaignGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
