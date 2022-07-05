@@ -59,7 +59,7 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("campaign id %d doesn't exist for mainnet account %s",
 				elem.CampaignID, elem.Address)
 		}
-		index := string(MainnetAccountKey(elem.CampaignID, elem.Address))
+		index := string(AccountKeyPath(elem.CampaignID, elem.Address))
 		if _, ok := mainnetAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for mainnetAccount")
 		}
@@ -73,7 +73,7 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("campaign id %d doesn't exist for mainnet vesting account %s",
 				elem.CampaignID, elem.Address)
 		}
-		index := string(MainnetVestingAccountKey(elem.CampaignID, elem.Address))
+		index := string(AccountKeyPath(elem.CampaignID, elem.Address))
 		if _, ok := mainnetVestingAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for mainnetVestingAccount")
 		}
