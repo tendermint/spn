@@ -44,8 +44,8 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 	clientID, err := k.getClientIDFromChannelID(ctx, channelID)
 	if err != nil {
 		return spnerrors.Criticalf(
-			"client ID %s should be retrieved during registration, got error: %s",
-			clientID,
+			"client ID should be retrieved from channel ID %s during registration, got error: %s",
+			channelID,
 			err.Error(),
 		)
 	}
