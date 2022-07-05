@@ -49,8 +49,8 @@ func ChainKey(launchID uint64) []byte {
 	return append(spntypes.UintBytes(launchID), byte('/'))
 }
 
-// GenesisAccountKey returns the store key to retrieve a GenesisAccount from the index fields
-func GenesisAccountKey(launchID uint64, address string) []byte {
+// AccountKeyPath returns the store key path with prefix for an account defined by a launch ID and an address
+func AccountKeyPath(launchID uint64, address string) []byte {
 	launchIDBytes := append(spntypes.UintBytes(launchID), byte('/'))
 	addressBytes := append([]byte(address), byte('/'))
 	return append(launchIDBytes, addressBytes...)
@@ -63,25 +63,11 @@ func GenesisAccountAllKey(launchID uint64) []byte {
 	return append(prefixBytes, launchIDBytes...)
 }
 
-// VestingAccountKey returns the store key to retrieve a VestingAccount from the index fields
-func VestingAccountKey(launchID uint64, address string) []byte {
-	launchIDBytes := append(spntypes.UintBytes(launchID), byte('/'))
-	addressBytes := append([]byte(address), byte('/'))
-	return append(launchIDBytes, addressBytes...)
-}
-
 // VestingAccountAllKey returns the store key to retrieve all VestingAccount by launchID
 func VestingAccountAllKey(launchID uint64) []byte {
 	prefixBytes := []byte(VestingAccountKeyPrefix)
 	launchIDBytes := append(spntypes.UintBytes(launchID), byte('/'))
 	return append(prefixBytes, launchIDBytes...)
-}
-
-// GenesisValidatorKey returns the store key to retrieve a GenesisValidator from the index fields
-func GenesisValidatorKey(launchID uint64, address string) []byte {
-	launchIDBytes := append(spntypes.UintBytes(launchID), byte('/'))
-	addressBytes := append([]byte(address), byte('/'))
-	return append(launchIDBytes, addressBytes...)
 }
 
 // GenesisValidatorAllKey returns the store key to retrieve all GenesisValidator by launchID
