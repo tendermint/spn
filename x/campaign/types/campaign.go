@@ -1,10 +1,10 @@
 package types
 
 import (
-	"errors"
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -33,12 +33,12 @@ func (m Campaign) Validate(totalShareNumber uint64) error {
 	if !m.TotalSupply.IsValid() {
 		return errors.New("invalid total supply")
 	}
-	if !sdk.Coins(m.AllocatedShares).IsValid() {
-		return errors.New("invalid allocated shares")
+
+	reached, err := IsTotalSharesReached(m.AllocatedShares, totalShareNumber)
+	if err != nil {
+		return errors.Wrap(err, "invalid allocated shares")
 	}
-
-	if IsTotalSharesReached(m.AllocatedShares, totalShareNumber) {
-
+	if reached {
 		return errors.New("more allocated shares than total shares")
 	}
 
