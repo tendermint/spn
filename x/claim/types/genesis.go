@@ -13,21 +13,22 @@ func DefaultGenesis() *GenesisState {
 		AirdropSupply: sdk.NewCoin("uspn", sdk.ZeroInt()),
 		ClaimRecords:  []ClaimRecord{},
 		Missions:      []Mission{},
+		InitialClaim:  InitialClaim{},
+		Params:        DefaultParams(),
 		// this line is used by starport scaffolding # genesis/types/default
-		Params: DefaultParams(),
 	}
 }
 
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
-	// Check airdrop supply
+	// check airdrop supply
 	err := gs.AirdropSupply.Validate()
 	if err != nil {
 		return err
 	}
 
-	// Check missions
+	// check missions
 	weightSum := sdk.ZeroDec()
 	missionMap := make(map[uint64]Mission)
 	for _, mission := range gs.Missions {
@@ -50,7 +51,14 @@ func (gs GenesisState) Validate() error {
 		}
 	}
 
-	// Check claim records
+	// check initial claim mission exist if enabled
+	if gs.InitialClaim.Enabled {
+		if _, ok := missionMap[gs.InitialClaim.MissionID]; !ok {
+			return errors.New("initial claim mission doesn't exist")
+		}
+	}
+
+	// check claim records
 	claimSum := sdk.ZeroInt()
 	claimRecordMap := make(map[string]struct{})
 	for _, claimRecord := range gs.ClaimRecords {
@@ -59,7 +67,7 @@ func (gs GenesisState) Validate() error {
 			return err
 		}
 
-		// Check claim record completed missions
+		// check claim record completed missions
 		claimable := claimRecord.Claimable
 		for _, completedMission := range claimRecord.CompletedMissions {
 			mission, ok := missionMap[completedMission]
@@ -70,7 +78,7 @@ func (gs GenesisState) Validate() error {
 				)
 			}
 
-			// Reduce clamaible with already claimed funds
+			// reduce claimable with already claimed funds
 			claimable = claimable.Sub(claimRecord.ClaimableFromMission(mission))
 		}
 

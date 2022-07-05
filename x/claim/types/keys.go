@@ -29,3 +29,7 @@ const (
 const (
 	AirdropSupplyKey = "AirdropSupply-value-"
 )
+
+const (
+	InitialClaimKey = "InitialClaim-value-"
+)

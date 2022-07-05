@@ -54,6 +54,10 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				AirdropSupply: sdk.NewCoin("foo", claimAmts[0].Add(claimAmts[1])),
+				InitialClaim: types.InitialClaim{
+					Enabled:   false,
+					MissionID: 21,
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -199,6 +203,33 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
+			},
+			valid: true,
+		},
+		{
+			desc: "should validate genesis state with initial claim enabled",
+			genState: &types.GenesisState{
+				ClaimRecords: []types.ClaimRecord{
+					{
+						Address:   sample.Address(r),
+						Claimable: sdk.NewIntFromUint64(10),
+					},
+					{
+						Address:   sample.Address(r),
+						Claimable: sdk.NewIntFromUint64(10),
+					},
+				},
+				Missions: []types.Mission{
+					{
+						MissionID: 0,
+						Weight:    sdk.OneDec(),
+					},
+				},
+				AirdropSupply: tc.Coin(t, "20foo"),
+				InitialClaim: types.InitialClaim{
+					Enabled:   true,
+					MissionID: 0,
+				},
 			},
 			valid: true,
 		},
@@ -387,6 +418,27 @@ func TestGenesisState_Validate(t *testing.T) {
 						MissionID: 0,
 						Weight:    sdk.ZeroDec(),
 					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "should prevent validate initial claim enabled with non existing mission",
+			genState: &types.GenesisState{
+				ClaimRecords: []types.ClaimRecord{
+					{
+						Address:   sample.Address(r),
+						Claimable: sdk.NewIntFromUint64(10),
+					},
+					{
+						Address:   sample.Address(r),
+						Claimable: sdk.NewIntFromUint64(10),
+					},
+				},
+				AirdropSupply: tc.Coin(t, "20foo"),
+				InitialClaim: types.InitialClaim{
+					Enabled:   true,
+					MissionID: 0,
 				},
 			},
 			valid: false,

@@ -42,6 +42,10 @@ func TestGenesis(t *testing.T) {
 			},
 		},
 		AirdropSupply: sample.Coin(r),
+		InitialClaim: types.InitialClaim{
+			Enabled:   true,
+			MissionID: 35,
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -56,5 +60,6 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.ClaimRecords, got.ClaimRecords)
 	require.ElementsMatch(t, genesisState.Missions, got.Missions)
 	require.Equal(t, genesisState.AirdropSupply, got.AirdropSupply)
+	require.Equal(t, genesisState.InitialClaim, got.InitialClaim)
 	// this line is used by starport scaffolding # genesis/test/assert
 }
