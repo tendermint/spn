@@ -11,7 +11,7 @@ import (
 func (k Keeper) SetMainnetAccount(ctx sdk.Context, mainnetAccount types.MainnetAccount) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetAccountKeyPrefix))
 	b := k.cdc.MustMarshal(&mainnetAccount)
-	store.Set(types.MainnetAccountKey(
+	store.Set(types.AccountKeyPath(
 		mainnetAccount.CampaignID,
 		mainnetAccount.Address,
 	), b)
@@ -25,7 +25,7 @@ func (k Keeper) GetMainnetAccount(
 ) (val types.MainnetAccount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetAccountKeyPrefix))
 
-	b := store.Get(types.MainnetAccountKey(campaignID, address))
+	b := store.Get(types.AccountKeyPath(campaignID, address))
 	if b == nil {
 		return val, false
 	}
@@ -41,7 +41,7 @@ func (k Keeper) RemoveMainnetAccount(
 	address string,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetAccountKeyPrefix))
-	store.Delete(types.MainnetAccountKey(
+	store.Delete(types.AccountKeyPath(
 		campaignID,
 		address,
 	))

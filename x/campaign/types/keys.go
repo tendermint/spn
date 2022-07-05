@@ -46,8 +46,8 @@ func CampaignChainsKey(campaignID uint64) []byte {
 	return append(spntypes.UintBytes(campaignID), byte('/'))
 }
 
-// MainnetAccountKey returns the store key to retrieve a MainnetAccount from the index fields
-func MainnetAccountKey(campaignID uint64, address string) []byte {
+// AccountKeyPath returns the store key path without prefix for an account defined by a campaign ID and an address
+func AccountKeyPath(campaignID uint64, address string) []byte {
 	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
 	addressBytes := append([]byte(address), byte('/'))
 	return append(campaignIDBytes, addressBytes...)
@@ -58,13 +58,6 @@ func MainnetAccountAllKey(campaignID uint64) []byte {
 	prefixBytes := []byte(MainnetAccountKeyPrefix)
 	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
 	return append(prefixBytes, campaignIDBytes...)
-}
-
-// MainnetVestingAccountKey returns the store key to retrieve a MainnetVestingAccount from the index fields
-func MainnetVestingAccountKey(campaignID uint64, address string) []byte {
-	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
-	addressBytes := append([]byte(address), byte('/'))
-	return append(campaignIDBytes, addressBytes...)
 }
 
 // MainnetVestingAccountAllKey returns the store key to retrieve all MainnetVestingAccount by campaign id

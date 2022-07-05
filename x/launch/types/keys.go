@@ -49,7 +49,7 @@ func ChainKey(launchID uint64) []byte {
 	return append(spntypes.UintBytes(launchID), byte('/'))
 }
 
-// AccountKeyPath returns the store key path with prefix for an account defined by a launch ID and an address
+// AccountKeyPath returns the store key path without prefix for an account defined by a launch ID and an address
 func AccountKeyPath(launchID uint64, address string) []byte {
 	launchIDBytes := append(spntypes.UintBytes(launchID), byte('/'))
 	addressBytes := append([]byte(address), byte('/'))
