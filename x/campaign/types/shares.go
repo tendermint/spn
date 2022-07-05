@@ -1,11 +1,11 @@
 package types
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/pkg/errors"
 )
 
 // Shares represents the portion of a supply
@@ -73,14 +73,21 @@ func DecreaseShares(shares, toDecrease Shares) (Shares, error) {
 }
 
 // IsTotalSharesReached checks if the provided shares overflow the total number of shares
-func IsTotalSharesReached(shares Shares, maximumTotalShareNumber uint64) bool {
+func IsTotalSharesReached(shares Shares, maximumTotalShareNumber uint64) (bool, error) {
+	if err := sdk.Coins(shares).Validate(); err != nil {
+		return false, errors.Wrap(err, "invalid share")
+	}
+	if err := CheckShares(shares); err != nil {
+		return false, errors.Wrap(err, "invalid share format")
+	}
+
 	for _, coin := range shares {
 		if coin.Amount.Uint64() > maximumTotalShareNumber {
-			return true
+			return true, nil
 		}
 	}
 
-	return false
+	return false, nil
 }
 
 // IsAllLTE returns true iff for every denom in shares, the denom is present at
