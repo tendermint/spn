@@ -58,7 +58,11 @@ func (k msgServer) AddShares(goCtx context.Context, msg *types.MsgAddShares) (*t
 
 	// increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
-	if types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx)) {
+	reached, err := types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx))
+	if err != nil {
+		return nil, spnerrors.Criticalf("verified shares are invalid %s", err.Error())
+	}
+	if reached {
 		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
 	}
 

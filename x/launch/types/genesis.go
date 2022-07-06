@@ -117,7 +117,7 @@ func validateAccounts(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 	// Check for duplicated index in genesisAccount
 	genesisAccountIndexMap := make(map[string]struct{})
 	for _, elem := range gs.GenesisAccountList {
-		index := string(GenesisAccountKey(elem.LaunchID, elem.Address))
+		index := string(AccountKeyPath(elem.LaunchID, elem.Address))
 		if _, ok := genesisAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for genesisAccount")
 		}
@@ -135,7 +135,7 @@ func validateAccounts(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 	// Check for duplicated index in vestingAccount
 	vestingAccountIndexMap := make(map[string]struct{})
 	for _, elem := range gs.VestingAccountList {
-		index := string(VestingAccountKey(elem.LaunchID, elem.Address))
+		index := string(AccountKeyPath(elem.LaunchID, elem.Address))
 		if _, ok := vestingAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for vestingAccount")
 		}
@@ -150,7 +150,7 @@ func validateAccounts(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 		}
 
 		// An address cannot be defined as a genesis account and a vesting account for the same chain
-		accountIndex := GenesisAccountKey(elem.LaunchID, elem.Address)
+		accountIndex := AccountKeyPath(elem.LaunchID, elem.Address)
 		if _, ok := genesisAccountIndexMap[string(accountIndex)]; ok {
 			return fmt.Errorf("account %s can't be a genesis account and a vesting account at the same time for the chain: %d",
 				elem.Address,
@@ -162,7 +162,7 @@ func validateAccounts(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 	// Check for duplicated index in genesisValidator
 	genesisValidatorIndexMap := make(map[string]struct{})
 	for _, elem := range gs.GenesisValidatorList {
-		index := string(GenesisValidatorKey(elem.LaunchID, elem.Address))
+		index := string(AccountKeyPath(elem.LaunchID, elem.Address))
 		if _, ok := genesisValidatorIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for genesisValidator")
 		}

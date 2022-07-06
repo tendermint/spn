@@ -75,7 +75,11 @@ func (k msgServer) AddVestingOptions(goCtx context.Context, msg *types.MsgAddVes
 
 	// increase the campaign shares
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, totalShares)
-	if types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx)) {
+	reached, err := types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx))
+	if err != nil {
+		return nil, spnerrors.Criticalf("verified shares are invalid %s", err.Error())
+	}
+	if reached {
 		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
 	}
 

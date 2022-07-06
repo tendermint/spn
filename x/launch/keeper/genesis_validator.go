@@ -13,7 +13,7 @@ import (
 func (k Keeper) SetGenesisValidator(ctx sdk.Context, genesisValidator types.GenesisValidator) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisValidatorKeyPrefix))
 	b := k.cdc.MustMarshal(&genesisValidator)
-	store.Set(types.GenesisValidatorKey(
+	store.Set(types.AccountKeyPath(
 		genesisValidator.LaunchID,
 		genesisValidator.Address,
 	), b)
@@ -27,7 +27,7 @@ func (k Keeper) GetGenesisValidator(
 ) (val types.GenesisValidator, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisValidatorKeyPrefix))
 
-	b := store.Get(types.GenesisValidatorKey(launchID, address))
+	b := store.Get(types.AccountKeyPath(launchID, address))
 	if b == nil {
 		return val, false
 	}
@@ -53,7 +53,7 @@ func (k Keeper) GetGenesisValidatorCount(ctx sdk.Context, launchID uint64) (coun
 // RemoveGenesisValidator removes a genesisValidator from the store
 func (k Keeper) RemoveGenesisValidator(ctx sdk.Context, launchID uint64, address string) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisValidatorKeyPrefix))
-	store.Delete(types.GenesisValidatorKey(launchID, address))
+	store.Delete(types.AccountKeyPath(launchID, address))
 }
 
 // GetAllGenesisValidator returns all genesisValidator

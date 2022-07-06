@@ -11,7 +11,7 @@ import (
 func (k Keeper) SetMainnetVestingAccount(ctx sdk.Context, mainnetVestingAccount types.MainnetVestingAccount) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetVestingAccountKeyPrefix))
 	b := k.cdc.MustMarshal(&mainnetVestingAccount)
-	store.Set(types.MainnetVestingAccountKey(
+	store.Set(types.AccountKeyPath(
 		mainnetVestingAccount.CampaignID,
 		mainnetVestingAccount.Address,
 	), b)
@@ -25,7 +25,7 @@ func (k Keeper) GetMainnetVestingAccount(
 ) (val types.MainnetVestingAccount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetVestingAccountKeyPrefix))
 
-	b := store.Get(types.MainnetVestingAccountKey(campaignID, address))
+	b := store.Get(types.AccountKeyPath(campaignID, address))
 	if b == nil {
 		return val, false
 	}
@@ -41,7 +41,7 @@ func (k Keeper) RemoveMainnetVestingAccount(
 	address string,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetVestingAccountKeyPrefix))
-	store.Delete(types.MainnetVestingAccountKey(campaignID, address))
+	store.Delete(types.AccountKeyPath(campaignID, address))
 }
 
 // GetAllMainnetVestingAccount returns all mainnetVestingAccount
