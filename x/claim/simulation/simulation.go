@@ -18,18 +18,23 @@ import (
 func SimulateMsgClaimInitial(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
-	_ keeper.Keeper,
+	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		msg := &types.MsgClaimInitial{}
-
-		return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgClaimInitial, "skip"), nil, nil
-
+		
+		// find an account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		//if !found {
-		//	return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "simulation account not found"), nil, nil
-		//}
+
+		// check the account has a claim record and initial claim has not been completed
+		cr, found := k.GetClaimRecord(ctx, simAccount.Address.String())
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account has no claim record"), nil, nil
+		}
+		if cr.IsMissionCompleted(1) {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account already completed initial claim"), nil, nil
+		}
 
 		// initialize basic message
 		msg = &types.MsgClaimInitial{

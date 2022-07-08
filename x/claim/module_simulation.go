@@ -13,6 +13,8 @@ import (
 )
 
 const (
+	airdropDenom = "drop"
+
 	opWeightMsgClaimInitial          = "op_weight_msg_claim_initial"
 	defaultWeightMsgClaimInitial int = 50
 
@@ -22,12 +24,35 @@ const (
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	accs := make([]string, len(simState.Accounts))
+	claimRecords := make([]types.ClaimRecord, len(simState.Accounts))
+	totalSupply := sdk.ZeroInt()
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
+
+		// fill claim records from simulation accounts
+		accSupply := sdk.NewIntFromUint64(simState.Rand.Uint64() % 1000)
+		claimRecords[i] = types.ClaimRecord{
+			Claimable: accSupply,
+			Address:   acc.Address.String(),
+		}
+		totalSupply = totalSupply.Add(accSupply)
 	}
+
 	claimGenesis := types.GenesisState{
-		//Params:        types.DefaultParams(),
-		AirdropSupply: sdk.NewCoin("foo", sdk.ZeroInt()),
+		Params:        types.DefaultParams(),
+		AirdropSupply: sdk.NewCoin(airdropDenom, totalSupply),
+		Missions: []types.Mission{
+			{
+				MissionID:   1,
+				Description: "initial claim",
+				Weight:      sdk.OneDec(),
+			},
+		},
+		InitialClaim: types.InitialClaim{
+			Enabled:   true,
+			MissionID: 1,
+		},
+		ClaimRecords: claimRecords,
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&claimGenesis)
