@@ -3,40 +3,56 @@ package claim
 import (
 	"math/rand"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"github.com/tendermint/spn/testutil/sample"
 	claimsimulation "github.com/tendermint/spn/x/claim/simulation"
 	"github.com/tendermint/spn/x/claim/types"
 )
 
-// avoid unused import issue
-var (
-	_ = sample.AccAddress
-	_ = claimsimulation.FindAccount
-	_ = simappparams.StakePerAccount
-	_ = simulation.MsgEntryKind
-	_ = baseapp.Paramspace
-)
-
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	airdropDenom = "drop"
+
+	opWeightMsgClaimInitial          = "op_weight_msg_claim_initial"
+	defaultWeightMsgClaimInitial int = 50
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	accs := make([]string, len(simState.Accounts))
+	claimRecords := make([]types.ClaimRecord, len(simState.Accounts))
+	totalSupply := sdk.ZeroInt()
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
+
+		// fill claim records from simulation accounts
+		accSupply := sdk.NewIntFromUint64(simState.Rand.Uint64() % 1000)
+		claimRecords[i] = types.ClaimRecord{
+			Claimable: accSupply,
+			Address:   acc.Address.String(),
+		}
+		totalSupply = totalSupply.Add(accSupply)
 	}
+
 	claimGenesis := types.GenesisState{
-		//Params:        types.DefaultParams(),
-		AirdropSupply: sdk.NewCoin("foo", sdk.ZeroInt()),
+		Params:        types.DefaultParams(),
+		AirdropSupply: sdk.NewCoin(airdropDenom, totalSupply),
+		Missions: []types.Mission{
+			{
+				MissionID:   1,
+				Description: "initial claim",
+				Weight:      sdk.OneDec(),
+			},
+		},
+		InitialClaim: types.InitialClaim{
+			Enabled:   true,
+			MissionID: 1,
+		},
+		ClaimRecords: claimRecords,
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&claimGenesis)
@@ -58,6 +74,17 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
+
+	var weightMsgClaimInitial int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgClaimInitial, &weightMsgClaimInitial, nil,
+		func(_ *rand.Rand) {
+			weightMsgClaimInitial = defaultWeightMsgClaimInitial
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgClaimInitial,
+		claimsimulation.SimulateMsgClaimInitial(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
 
