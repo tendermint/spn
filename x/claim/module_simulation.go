@@ -3,29 +3,20 @@ package claim
 import (
 	"math/rand"
 
-	"github.com/cosmos/cosmos-sdk/baseapp"
-	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 
-	"github.com/tendermint/spn/testutil/sample"
 	claimsimulation "github.com/tendermint/spn/x/claim/simulation"
 	"github.com/tendermint/spn/x/claim/types"
 )
 
-// avoid unused import issue
-var (
-	_ = sample.AccAddress
-	_ = claimsimulation.FindAccount
-	_ = simappparams.StakePerAccount
-	_ = simulation.MsgEntryKind
-	_ = baseapp.Paramspace
-)
-
 const (
-// this line is used by starport scaffolding # simapp/module/const
+	opWeightMsgClaimInitial          = "op_weight_msg_claim_initial"
+	defaultWeightMsgClaimInitial int = 50
+
+	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -58,6 +49,17 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
+
+	var weightMsgClaimInitial int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgClaimInitial, &weightMsgClaimInitial, nil,
+		func(_ *rand.Rand) {
+			weightMsgClaimInitial = defaultWeightMsgClaimInitial
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgClaimInitial,
+		claimsimulation.SimulateMsgClaimInitial(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
 
