@@ -81,7 +81,6 @@ func TestCoordinatorByAddressGetAll(t *testing.T) {
 
 	t.Run("should allow getting all coordinator by address", func(t *testing.T) {
 		require.ElementsMatch(t, items, tk.ProfileKeeper.GetAllCoordinatorByAddress(ctx))
-
 	})
 }
 
@@ -148,5 +147,4 @@ func TestActiveCoordinatorByAddressGet(t *testing.T) {
 		_, err = tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
 		require.ErrorIs(t, err, types.ErrCoordAddressNotFound)
 	})
-
 }

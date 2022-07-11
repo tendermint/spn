@@ -34,16 +34,16 @@ import (
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	minttypes "github.com/tendermint/spn/x/mint/types"
-	monitoringcmodulekeeper "github.com/tendermint/spn/x/monitoringc/keeper"
-	monitoringcmoduletypes "github.com/tendermint/spn/x/monitoringc/types"
-	monitoringpmodulekeeper "github.com/tendermint/spn/x/monitoringp/keeper"
-	monitoringpmoduletypes "github.com/tendermint/spn/x/monitoringp/types"
+	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
+	monitoringctypes "github.com/tendermint/spn/x/monitoringc/types"
+	monitoringpkeeper "github.com/tendermint/spn/x/monitoringp/keeper"
+	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 	participationkeeper "github.com/tendermint/spn/x/participation/keeper"
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
-	rewardmodulekeeper "github.com/tendermint/spn/x/reward/keeper"
-	rewardmoduletypes "github.com/tendermint/spn/x/reward/types"
+	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
+	rewardtypes "github.com/tendermint/spn/x/reward/types"
 )
 
 var moduleAccountPerms = map[string][]string{
@@ -54,7 +54,7 @@ var moduleAccountPerms = map[string][]string{
 	campaigntypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
 	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
-	rewardmoduletypes.ModuleName:   {authtypes.Minter, authtypes.Burner},
+	rewardtypes.ModuleName:         {authtypes.Minter, authtypes.Burner},
 	fundraisingtypes.ModuleName:    nil,
 	claimtypes.ModuleName:          {authtypes.Minter, authtypes.Burner},
 }
@@ -238,7 +238,7 @@ func (i initializer) Campaign(
 	profileKeeper *profilekeeper.Keeper,
 	bankKeeper bankkeeper.Keeper,
 	distrKeeper distrkeeper.Keeper,
-	rewardKeeper rewardmodulekeeper.Keeper,
+	rewardKeeper rewardkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 	fundraisingKeeper fundraisingkeeper.Keeper,
 ) *campaignkeeper.Keeper {
@@ -271,17 +271,17 @@ func (i initializer) Reward(
 	profileKeeper *profilekeeper.Keeper,
 	launchKeeper *launchkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
-) *rewardmodulekeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(rewardmoduletypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(rewardmoduletypes.MemStoreKey)
+) *rewardkeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(rewardtypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(rewardtypes.MemStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
 
-	paramKeeper.Subspace(rewardmoduletypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(rewardmoduletypes.ModuleName)
+	paramKeeper.Subspace(rewardtypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(rewardtypes.ModuleName)
 
-	return rewardmodulekeeper.NewKeeper(
+	return rewardkeeper.NewKeeper(
 		i.Codec,
 		storeKey,
 		memStoreKey,
@@ -297,25 +297,25 @@ func (i initializer) Monitoringc(
 	ibcKeeper ibckeeper.Keeper,
 	capabilityKeeper capabilitykeeper.Keeper,
 	launchKeeper *launchkeeper.Keeper,
-	rewardKeeper *rewardmodulekeeper.Keeper,
+	rewardKeeper *rewardkeeper.Keeper,
 	paramKeeper paramskeeper.Keeper,
 	connectionMock []Connection,
 	channelMock []Channel,
-) *monitoringcmodulekeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(monitoringcmoduletypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(monitoringcmoduletypes.MemStoreKey)
+) *monitoringckeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(monitoringctypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(monitoringctypes.MemStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
 
-	paramKeeper.Subspace(monitoringcmoduletypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(monitoringcmoduletypes.ModuleName)
-	scopedMonitoringKeeper := capabilityKeeper.ScopeToModule(monitoringcmoduletypes.ModuleName)
+	paramKeeper.Subspace(monitoringctypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(monitoringctypes.ModuleName)
+	scopedMonitoringKeeper := capabilityKeeper.ScopeToModule(monitoringctypes.ModuleName)
 
 	// check if ibc mocks should be used for connection and channel
 	var (
-		connKeeper    monitoringcmoduletypes.ConnectionKeeper = ibcKeeper.ConnectionKeeper
-		channelKeeper monitoringcmoduletypes.ChannelKeeper    = ibcKeeper.ChannelKeeper
+		connKeeper    monitoringctypes.ConnectionKeeper = ibcKeeper.ConnectionKeeper
+		channelKeeper monitoringctypes.ChannelKeeper    = ibcKeeper.ChannelKeeper
 	)
 	if len(connectionMock) != 0 {
 		connKeeper = NewConnectionMock(connectionMock)
@@ -324,7 +324,7 @@ func (i initializer) Monitoringc(
 		channelKeeper = NewChannelMock(channelMock)
 	}
 
-	return monitoringcmodulekeeper.NewKeeper(
+	return monitoringckeeper.NewKeeper(
 		i.Codec,
 		storeKey,
 		memStoreKey,
@@ -346,21 +346,21 @@ func (i initializer) Monitoringp(
 	paramKeeper paramskeeper.Keeper,
 	connectionMock []Connection,
 	channelMock []Channel,
-) *monitoringpmodulekeeper.Keeper {
-	storeKey := sdk.NewKVStoreKey(monitoringpmoduletypes.StoreKey)
-	memStoreKey := storetypes.NewMemoryStoreKey(monitoringpmoduletypes.MemStoreKey)
+) *monitoringpkeeper.Keeper {
+	storeKey := sdk.NewKVStoreKey(monitoringptypes.StoreKey)
+	memStoreKey := storetypes.NewMemoryStoreKey(monitoringptypes.MemStoreKey)
 
 	i.StateStore.MountStoreWithDB(storeKey, sdk.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, sdk.StoreTypeMemory, nil)
 
-	paramKeeper.Subspace(monitoringpmoduletypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(monitoringpmoduletypes.ModuleName)
-	scopedMonitoringKeeper := capabilityKeeper.ScopeToModule(monitoringpmoduletypes.ModuleName)
+	paramKeeper.Subspace(monitoringptypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(monitoringptypes.ModuleName)
+	scopedMonitoringKeeper := capabilityKeeper.ScopeToModule(monitoringptypes.ModuleName)
 
 	// check if ibc mocks should be used for connection and channel
 	var (
-		connKeeper    monitoringcmoduletypes.ConnectionKeeper = ibcKeeper.ConnectionKeeper
-		channelKeeper monitoringcmoduletypes.ChannelKeeper    = ibcKeeper.ChannelKeeper
+		connKeeper    monitoringctypes.ConnectionKeeper = ibcKeeper.ConnectionKeeper
+		channelKeeper monitoringctypes.ChannelKeeper    = ibcKeeper.ChannelKeeper
 	)
 	if len(connectionMock) != 0 {
 		connKeeper = NewConnectionMock(connectionMock)
@@ -369,7 +369,7 @@ func (i initializer) Monitoringp(
 		channelKeeper = NewChannelMock(channelMock)
 	}
 
-	return monitoringpmodulekeeper.NewKeeper(
+	return monitoringpkeeper.NewKeeper(
 		i.Codec,
 		storeKey,
 		memStoreKey,

@@ -33,7 +33,6 @@ func (k Keeper) EmitCampaignAuctionCreated(
 			sellingCoin.Denom,
 			campaignID,
 		)
-
 	}
 	coord, found := k.profileKeeper.GetCoordinator(ctx, campaign.CoordinatorID)
 	if !found {
