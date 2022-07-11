@@ -31,7 +31,6 @@ func TestRequestContent_Validate(t *testing.T) {
 	t.Run("should validate request with valid vesting account", func(t *testing.T) {
 		requestContent := types.NewVestingAccount(launchID, address, vestingOptions)
 		require.NoError(t, requestContent.Validate())
-
 	})
 
 	t.Run("should validate request with valid genesis validator", func(t *testing.T) {
@@ -54,7 +53,6 @@ func TestRequestContent_Validate(t *testing.T) {
 	t.Run("should validate request with valid validator removal", func(t *testing.T) {
 		requestContent := types.NewValidatorRemoval(address)
 		require.NoError(t, requestContent.Validate())
-
 	})
 
 	t.Run("should prevent validate request with unrecognized content", func(t *testing.T) {
