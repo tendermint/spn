@@ -78,11 +78,6 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/campaign/total_shares";
   }
 
-  // Queries a list of auction IDs of a campaign
-  rpc AuctionsOfCampaign(QueryAuctionsOfCampaignRequest) returns (QueryAuctionsOfCampaignResponse) {
-    option (google.api.http).get = "/tendermint/spn/campaign/auctions_of_campaign/{campaignID}";
-  }
-
   // this line is used by starport scaffolding # 2
 }
 
@@ -195,14 +190,6 @@ message QueryTotalSharesRequest {}
 
 message QueryTotalSharesResponse {
   uint64 totalShares = 1;
-}
-
-message QueryAuctionsOfCampaignRequest {
-  uint64 campaignID = 1;
-}
-
-message QueryAuctionsOfCampaignResponse {
-  repeated uint64 auctionIDs = 1;
 }
 
 // this line is used by starport scaffolding # 3
