@@ -33,7 +33,6 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdListCampaignSummary(),
 		CmdQueryParams(),
 		CmdQueryTotalShares(),
-		CmdAuctionsOfCampaign(),
 	)
 
 	// this line is used by starport scaffolding # 1
