@@ -261,7 +261,6 @@ func (i initializer) Campaign(
 		distrKeeper,
 		profileKeeper,
 		rewardKeeper,
-		fundraisingKeeper,
 	)
 }
 
