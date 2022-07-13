@@ -3,7 +3,6 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -31,8 +30,4 @@ type AccountKeeper interface {
 
 type DistributionKeeper interface {
 	FundCommunityPool(ctx sdk.Context, amount sdk.Coins, sender sdk.AccAddress) error
-}
-
-type FundraisingKeeper interface {
-	IterateAuctions(ctx sdk.Context, cb func(auction fundraisingtypes.AuctionI) (stop bool))
 }
