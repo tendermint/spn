@@ -32,7 +32,9 @@ func SimulateMsgClaimInitial(
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account has no claim record"), nil, nil
 		}
-		if cr.IsMissionCompleted(1) {
+
+		// verify if initial claim mission is completed
+		if cr.IsMissionCompleted(0) {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "account already completed initial claim"), nil, nil
 		}
 

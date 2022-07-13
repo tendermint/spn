@@ -38,19 +38,39 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 		totalSupply = totalSupply.Add(accSupply)
 	}
 
+	// define some decimal numbers for mission weights
+	dec1, err := sdk.NewDecFromStr("0.4")
+	if err != nil {
+		panic(err)
+	}
+	dec2, err := sdk.NewDecFromStr("0.3")
+	if err != nil {
+		panic(err)
+	}
+
 	claimGenesis := types.GenesisState{
 		Params:        types.DefaultParams(),
 		AirdropSupply: sdk.NewCoin(airdropDenom, totalSupply),
 		Missions: []types.Mission{
 			{
-				MissionID:   1,
+				MissionID:   0,
 				Description: "initial claim",
-				Weight:      sdk.OneDec(),
+				Weight:      dec1,
+			},
+			{
+				MissionID:   1,
+				Description: "mission 1",
+				Weight:      dec2,
+			},
+			{
+				MissionID:   2,
+				Description: "mission 2",
+				Weight:      dec2,
 			},
 		},
 		InitialClaim: types.InitialClaim{
 			Enabled:   true,
-			MissionID: 1,
+			MissionID: 0,
 		},
 		ClaimRecords: claimRecords,
 		// this line is used by starport scaffolding # simapp/module/genesisState

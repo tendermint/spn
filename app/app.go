@@ -126,6 +126,14 @@ import (
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 
+const (
+	// mission ID for staking mission to claim airdrop
+	MISSION_ID_STAKING = 1
+
+	// mission ID for voting mission to claim airdrop
+	MISSION_ID_VOTING = 2
+)
+
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
 
 func getGovProposalHandlers() []govclient.ProposalHandler {
@@ -535,14 +543,14 @@ func New(
 		stakingtypes.NewMultiStakingHooks(
 			app.DistrKeeper.Hooks(),
 			app.SlashingKeeper.Hooks(),
-			app.ClaimKeeper.NewMissionDelegationHooks(1),
+			app.ClaimKeeper.NewMissionDelegationHooks(MISSION_ID_STAKING),
 		),
 	)
 
 	// register the gov hooks
 	app.GovKeeper = *app.GovKeeper.SetHooks(
 		govtypes.NewMultiGovHooks(
-			app.ClaimKeeper.NewMissionVoteHooks(2),
+			app.ClaimKeeper.NewMissionVoteHooks(MISSION_ID_VOTING),
 		),
 	)
 
