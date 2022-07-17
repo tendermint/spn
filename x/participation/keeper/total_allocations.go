@@ -25,10 +25,10 @@ func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (uint64, er
 		totalDel = totalDel.Add(del.GetShares())
 	}
 
-	numAlloc := totalDel.Quo(allocationPriceBondedDec).TruncateInt64()
-	if numAlloc < 0 {
+	numAlloc := totalDel.Quo(allocationPriceBondedDec)
+	if numAlloc.IsNegative() {
 		return 0, types.ErrInvalidAllocationAmount
 	}
 
-	return uint64(numAlloc), nil
+	return uint64(numAlloc.TruncateInt64()), nil
 }
