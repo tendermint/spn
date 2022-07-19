@@ -127,10 +127,10 @@ import (
 )
 
 const (
-	// missionIdStaking is the mission ID for staking mission to claim airdrop
+	// missionIDStaking is the mission ID for staking mission to claim airdrop
 	missionIDStaking = 1
 
-	// missionIdVoting is the mission ID for voting mission to claim airdrop
+	// missionIDVoting is the mission ID for voting mission to claim airdrop
 	missionIDVoting = 2
 )
 
