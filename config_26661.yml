@@ -1,3 +1,6 @@
+# This configuration file includes the options from config.yml but exposes different ports for the server
+# So another chain can be served with default ports on the same machine (ex: using local `ignite network` commands)
+
 accounts:
   - name: alice
     mnemonic: "slide moment original seven milk crawl help text kick fluid boring awkward doll wonder sure fragile plate grid hard next casual expire okay body"
