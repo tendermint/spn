@@ -18,8 +18,6 @@ func Test_msgServer_Participate(t *testing.T) {
 	var (
 		sdkCtx, tk, ts                   = testkeeper.NewTestSetup(t)
 		auctioneer                       = sample.Address(r)
-		sellingCoin1                     = sample.Coin(r)
-		sellingCoin2                     = sample.Coin(r)
 		registrationPeriod               = time.Hour * 5 // 5 hours before start
 		startTime                        = sdkCtx.BlockTime().Add(time.Hour * 10)
 		startTimeLowerRegistrationPeriod = time.Unix(int64((registrationPeriod - time.Hour).Seconds()), 0)
@@ -34,6 +32,12 @@ func Test_msgServer_Participate(t *testing.T) {
 	params.AllocationPrice = allocationPrice
 	params.RegistrationPeriod = registrationPeriod
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
+
+	sellingCoin1 := sample.CoinWithRange(r, params.ParticipationTierList[1].Benefits.MaxBidAmount.Int64(),
+		params.ParticipationTierList[1].Benefits.MaxBidAmount.Int64()+1000)
+
+	sellingCoin2 := sample.CoinWithRange(r, params.ParticipationTierList[1].Benefits.MaxBidAmount.Int64(),
+		params.ParticipationTierList[1].Benefits.MaxBidAmount.Int64()+1000)
 
 	// initialize auction
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(sellingCoin1))
