@@ -171,7 +171,6 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 				return
 			}
 			require.Equal(t, calculated, postUsedAllocations.NumAllocations)
-
 		})
 	}
 }
