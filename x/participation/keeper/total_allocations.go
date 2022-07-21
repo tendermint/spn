@@ -10,12 +10,12 @@ import (
 )
 
 // GetTotalAllocations returns the number of available allocations based on delegations
-func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (uint64, error) {
+func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (sdk.Int, error) {
 	allocationPriceBondedDec := k.AllocationPrice(ctx).Bonded.ToDec()
 
 	accAddr, err := sdk.AccAddressFromBech32(address)
 	if err != nil {
-		return 0, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, err.Error())
+		return sdk.ZeroInt(), sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, err.Error())
 	}
 
 	// count total shares for account
@@ -27,8 +27,8 @@ func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (uint64, er
 
 	numAlloc := totalDel.Quo(allocationPriceBondedDec)
 	if numAlloc.IsNegative() {
-		return 0, types.ErrInvalidAllocationAmount
+		return sdk.ZeroInt(), types.ErrInvalidAllocationAmount
 	}
 
-	return uint64(numAlloc.TruncateInt64()), nil
+	return numAlloc.TruncateInt(), nil
 }

@@ -65,7 +65,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(sdkCtx, types.AuctionUsedAllocations{
 		Address:        invalidParticipant,
 		AuctionID:      auctionID,
-		NumAllocations: 1,
+		NumAllocations: sdk.OneInt(),
 		Withdrawn:      true, // set withdrawn to true
 	})
 
@@ -165,7 +165,13 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			// check usedAllocationEntry is correctly decreased
 			postUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(tmpSdkCtx, tt.msg.Participant)
 			require.True(t, found)
-			require.Equal(t, preUsedAllocations.NumAllocations-preAuctionUsedAllocations.NumAllocations, postUsedAllocations.NumAllocations)
+			calculated := preUsedAllocations.NumAllocations.Sub(preAuctionUsedAllocations.NumAllocations)
+			if calculated.IsZero() {
+				require.True(t, postUsedAllocations.NumAllocations.IsZero())
+				return
+			}
+			require.Equal(t, calculated, postUsedAllocations.NumAllocations)
+
 		})
 	}
 }

@@ -126,9 +126,9 @@ func RandomAuctionWithdrawEnabled(
 func RandomAccWithAvailableAllocations(ctx sdk.Context, r *rand.Rand,
 	k keeper.Keeper,
 	accs []simtypes.Account,
-	desired uint64,
+	desired sdk.Int,
 	auctionID uint64,
-) (simtypes.Account, uint64, bool) {
+) (simtypes.Account, sdk.Int, bool) {
 	// Randomize the set
 	r.Shuffle(len(accs), func(i, j int) {
 		accs[i], accs[j] = accs[j], accs[i]
@@ -141,7 +141,7 @@ func RandomAccWithAvailableAllocations(ctx sdk.Context, r *rand.Rand,
 			continue
 		}
 
-		if amt >= desired {
+		if amt.GTE(desired) {
 			_, found := k.GetAuctionUsedAllocations(ctx, acc.Address.String(), auctionID)
 			if found {
 				continue
@@ -151,7 +151,7 @@ func RandomAccWithAvailableAllocations(ctx sdk.Context, r *rand.Rand,
 		}
 	}
 
-	return simtypes.Account{}, 0, false
+	return simtypes.Account{}, sdk.ZeroInt(), false
 }
 
 // RandomAccWithAuctionUsedAllocationsNotWithdrawn returns random account that has used allocations for the given
