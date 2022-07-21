@@ -92,7 +92,10 @@ message QueryGetTotalAllocationsRequest {
 }
 
 message QueryGetTotalAllocationsResponse {
-  uint64 totalAllocations = 1;
+  string totalAllocations = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 message QueryGetAvailableAllocationsRequest {
@@ -100,7 +103,10 @@ message QueryGetAvailableAllocationsRequest {
 }
 
 message QueryGetAvailableAllocationsResponse {
-  uint64 availableAllocations = 1;
+  string availableAllocations = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
