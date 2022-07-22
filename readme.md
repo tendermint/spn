@@ -26,8 +26,6 @@
     <img alt="Lint Status" src="https://github.com/tendermint/spn/workflows/Lint/badge.svg" />
 </div>
 
-> This branch contains the source code for the 1.0 version of Starport Network. To access the source code of the currently deployed proof of concept, visit the [`master-legacy`](https://github.com/tendermint/spn/tree/master-legacy) branch.
-
 **spn** is a blockchain built using Cosmos SDK and Tendermint and created with [Ignite](https://github.com/ignite/cli).
 
 ## Get started
