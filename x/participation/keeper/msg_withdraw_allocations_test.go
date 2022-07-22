@@ -168,11 +168,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			postUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(tmpSdkCtx, tt.msg.Participant)
 			require.True(t, found)
 			calculated := preUsedAllocations.NumAllocations.Sub(preAuctionUsedAllocations.NumAllocations)
-			if calculated.IsZero() {
-				require.True(t, postUsedAllocations.NumAllocations.IsZero())
-				return
-			}
-			require.Equal(t, calculated, postUsedAllocations.NumAllocations)
+			require.True(t, postUsedAllocations.NumAllocations.Equal(calculated), "numAlloc %s not equal to calculated %s", postUsedAllocations.NumAllocations, calculated)
 		})
 	}
 }
