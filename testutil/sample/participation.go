@@ -67,7 +67,7 @@ func ParticipationGenesisStateWithAllocations(r *rand.Rand) participation.Genesi
 				Withdrawn:      false,
 			}
 			genState.AuctionUsedAllocationsList = append(genState.AuctionUsedAllocationsList, auctionUsedAllocs)
-			usedAllocs.NumAllocations = usedAllocs.NumAllocations.Add(auctionUsedAllocs.NumAllocations)
+			usedAllocs.NumAllocations = usedAllocs.NumAllocations.Mul(sdk.NewInt(2))
 		}
 		genState.UsedAllocationsList = append(genState.UsedAllocationsList, usedAllocs)
 	}
