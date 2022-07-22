@@ -16,8 +16,8 @@ func TestGenesisState_Validate(t *testing.T) {
 	require.NoError(t, err)
 
 	claimAmts := []sdk.Int{
-		sdk.NewInt(r.Int63()),
-		sdk.NewInt(r.Int63()),
+		sample.Int(r),
+		sample.Int(r),
 	}
 
 	for _, tt := range []struct {

@@ -192,3 +192,8 @@ func Duration(r *rand.Rand) time.Duration {
 func DurationFromRange(r *rand.Rand, min, max time.Duration) time.Duration {
 	return time.Duration(r.Int63n(int64(max-min))) + min
 }
+
+// Int returns a sample sdk.Int
+func Int(r *rand.Rand) sdk.Int {
+	return sdk.NewInt(r.Int63())
+}

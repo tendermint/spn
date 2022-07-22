@@ -168,7 +168,7 @@ func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisSta
 	for i := 0; i < 5; i++ {
 		claimRecord := claim.ClaimRecord{
 			Address:   sample.Address(r),
-			Claimable: sdk.NewInt(r.Int63()),
+			Claimable: sample.Int(r),
 		}
 		nullify.Fill(&claimRecord)
 		claimState.ClaimRecords = append(claimState.ClaimRecords, claimRecord)
@@ -235,7 +235,7 @@ func populateParticipation(r *rand.Rand, participationState participation.Genesi
 	for i := 0; i < 5; i++ {
 		usedAllocations := participation.UsedAllocations{
 			Address:        sample.Address(r),
-			NumAllocations: sdk.NewInt(r.Int63()),
+			NumAllocations: sample.Int(r),
 		}
 		nullify.Fill(&usedAllocations)
 		participationState.UsedAllocationsList = append(participationState.UsedAllocationsList, usedAllocations)
@@ -247,7 +247,7 @@ func populateParticipation(r *rand.Rand, participationState participation.Genesi
 		auctionUsedAllocations := participation.AuctionUsedAllocations{
 			Address:        address,
 			AuctionID:      uint64(i),
-			NumAllocations: sdk.NewInt(r.Int63()),
+			NumAllocations: sample.Int(r),
 		}
 		nullify.Fill(&auctionUsedAllocations)
 		participationState.AuctionUsedAllocationsList = append(participationState.AuctionUsedAllocationsList, auctionUsedAllocations)
