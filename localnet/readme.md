@@ -26,7 +26,7 @@ p2p: 26654
 
 Before running any scripts, `spnd` must be built for the current branch
 ```
-starport chain build
+ignite chain build
 ```
 
 The localnet can be started from the following script:

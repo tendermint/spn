@@ -163,7 +163,6 @@
       "campaignCounter": "1",
       "campaignList": [],
       "mainnetAccountList": [],
-      "mainnetVestingAccountList": [],
       "params": {
         "totalSupplyRange": {
           "maxTotalSupply": "1000000000000000",
@@ -314,16 +313,18 @@
       },
       "params": {
         "blocks_per_year": "6311520",
+        "development_fund_recipients": [],
+        "distribution_proportions": {
+          "community_pool": "0.100000000000000000",
+          "development_fund": "0.200000000000000000",
+          "incentives": "0.400000000000000000",
+          "staking": "0.300000000000000000"
+        },
         "goal_bonded": "0.670000000000000000",
         "inflation_max": "0.200000000000000000",
         "inflation_min": "0.070000000000000000",
         "inflation_rate_change": "0.130000000000000000",
-        "mint_denom": "uspn",
-        "distribution_proportions": {
-          "staking": "0.400000000000000000",
-          "incentives": "0.400000000000000000",
-          "community_pool": "0.200000000000000000"
-        }
+        "mint_denom": "uspn"
       }
     },
     "monitoringc": {
