@@ -260,7 +260,6 @@ func (i initializer) Campaign(
 		bankKeeper,
 		distrKeeper,
 		profileKeeper,
-		rewardKeeper,
 	)
 }
 
