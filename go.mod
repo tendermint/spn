@@ -3,6 +3,7 @@ module github.com/tendermint/spn
 go 1.18
 
 require (
+	cosmossdk.io/math v1.0.0-beta.2
 	github.com/cosmos/cosmos-sdk v0.46.0-rc3
 	github.com/cosmos/ibc-go/v5 v5.0.0
 	github.com/gogo/protobuf v1.3.3
@@ -30,7 +31,6 @@ require (
 	cloud.google.com/go/storage v1.14.0 // indirect
 	cosmossdk.io/api v0.1.0-alpha8 // indirect
 	cosmossdk.io/errors v1.0.0-beta.7 // indirect
-	cosmossdk.io/math v1.0.0-beta.2 // indirect
 	filippo.io/edwards25519 v1.0.0-rc.1 // indirect
 	github.com/99designs/keyring v1.1.6 // indirect
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d // indirect
@@ -200,5 +200,5 @@ replace (
 	github.com/cosmos/ibc-go/v5 => github.com/aljo242/ibc-go/v5 v5.0.0
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 	github.com/keybase/go-keychain => github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4
-	github.com/tendermint/fundraising => github.com/aljo242/fundraising v0.1.2-0.20220725190617-903de6010ddd
+	github.com/tendermint/fundraising => github.com/aljo242/fundraising v0.1.2-0.20220725194942-482063da3a1c
 )

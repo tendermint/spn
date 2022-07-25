@@ -208,8 +208,8 @@ github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4/go.mod h1:ybxpYRF
 github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d/go.mod h1:rBZYJk541a8SKzHPHnH3zbiI+7dagKZ0cgpgrD7Fyho=
 github.com/alexflint/go-filemutex v0.0.0-20171022225611-72bdc8eae2ae/go.mod h1:CgnQgUtFrFz9mxFNtED3jI5tLDjKlOM+oUF/sTk6ps0=
 github.com/alexkohler/prealloc v1.0.0/go.mod h1:VetnK3dIgFBBKmg0YnD9F9x6Icjd+9cvfHR56wJVlKE=
-github.com/aljo242/fundraising v0.1.2-0.20220725190617-903de6010ddd h1:UpxLPDWGppcVVfLvWqouDc/9LjWp0o5+bKZ1NIH6cUE=
-github.com/aljo242/fundraising v0.1.2-0.20220725190617-903de6010ddd/go.mod h1:Rk9QFmQBuWhOJ21mgTK0E1kGWIZZjv5GbOfbFr+InxU=
+github.com/aljo242/fundraising v0.1.2-0.20220725194942-482063da3a1c h1:FDgMM1O6Nk2J/52frwUNB1uhMkx/awaNFAXf1Kai1Z8=
+github.com/aljo242/fundraising v0.1.2-0.20220725194942-482063da3a1c/go.mod h1:Rk9QFmQBuWhOJ21mgTK0E1kGWIZZjv5GbOfbFr+InxU=
 github.com/aljo242/ibc-go/v5 v5.0.0 h1:bSz0B5pnCngQF5acJ0jBXqE8kebcRjtuZRXorMzWAUU=
 github.com/aljo242/ibc-go/v5 v5.0.0/go.mod h1:COkQ6hdC/9zzkwaQ223+br+NI9kRhck3moC7Sp68J20=
 github.com/allegro/bigcache v1.2.1-0.20190218064605-e24eb225f156/go.mod h1:Cb/ax3seSYIx7SuZdm2G2xzfwmv3TPSk2ucNfQESPXM=
