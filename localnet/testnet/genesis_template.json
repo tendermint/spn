@@ -362,7 +362,7 @@
         "participationTierList": [
           {
             "tierID": 1,
-            "requiredAllocations": 1,
+            "requiredAllocations": "1",
             "benefits": {
               "maxBidAmount": "1000"
             }
