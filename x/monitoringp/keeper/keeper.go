@@ -2,13 +2,14 @@ package keeper
 
 import (
 	"fmt"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	host "github.com/cosmos/ibc-go/v3/modules/core/24-host"
+	host "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/tendermint/spn/x/monitoringp/types"
@@ -18,8 +19,8 @@ type (
 	Keeper struct {
 		cdc              codec.BinaryCodec
 		portKey          []byte
-		storeKey         sdk.StoreKey
-		memKey           sdk.StoreKey
+		storeKey         storetypes.StoreKey
+		memKey           storetypes.StoreKey
 		paramstore       paramtypes.Subspace
 		stakingKeeper    types.StakingKeeper
 		scopedKeeper     capabilitykeeper.ScopedKeeper
@@ -33,7 +34,7 @@ type (
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey,
-	memKey sdk.StoreKey,
+	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
 	stakingKeeper types.StakingKeeper,
 	clientKeeper types.ClientKeeper,

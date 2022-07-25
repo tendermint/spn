@@ -1,6 +1,7 @@
 package types
 
 import (
+	"cosmossdk.io/math"
 	"errors"
 	"fmt"
 
@@ -39,6 +40,6 @@ func (m ClaimRecord) IsMissionCompleted(missionID uint64) bool {
 }
 
 // ClaimableFromMission returns the amount claimable for this claim record from the provided mission completion
-func (m ClaimRecord) ClaimableFromMission(mission Mission) sdk.Int {
-	return mission.Weight.Mul(m.Claimable.ToDec()).TruncateInt()
+func (m ClaimRecord) ClaimableFromMission(mission Mission) math.Int {
+	return mission.Weight.Mul(sdk.NewDecFromInt(m.Claimable)).TruncateInt()
 }

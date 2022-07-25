@@ -105,7 +105,7 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 		desc        string
 		claimRecord claim.ClaimRecord
 		mission     claim.Mission
-		expected    sdk.Int
+		expected    math.Int
 	}{
 		{
 			desc: "should allow get claimable from mission with full weight",

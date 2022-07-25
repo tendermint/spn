@@ -118,12 +118,12 @@ func TestTotalSupplyRange_ValidateBasic(t *testing.T) {
 		},
 		{
 			name:        "should prevent uninitialized min total supply",
-			supplyRange: campaign.NewTotalSupplyRange(sdk.Int{}, sdk.OneInt()),
+			supplyRange: campaign.NewTotalSupplyRange(math.Int{}, sdk.OneInt()),
 			valid:       false,
 		},
 		{
 			name:        "should prevent uninitialized max total supply",
-			supplyRange: campaign.NewTotalSupplyRange(sdk.OneInt(), sdk.Int{}),
+			supplyRange: campaign.NewTotalSupplyRange(sdk.OneInt(), math.Int{}),
 			valid:       false,
 		},
 		{

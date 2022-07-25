@@ -101,7 +101,7 @@ func TestValidateAllocationPrice(t *testing.T) {
 		},
 		{
 			name:            "uninitialized bonded amount",
-			allocationPrice: AllocationPrice{Bonded: sdk.Int{}},
+			allocationPrice: AllocationPrice{Bonded: math.Int{}},
 			err:             errors.New("value for 'bonded' should be set"),
 		},
 		{
@@ -217,7 +217,7 @@ func TestValidateTierBenefits(t *testing.T) {
 	}{
 		{
 			name:         "uninitialized max bid amount",
-			tierBenefits: TierBenefits{MaxBidAmount: sdk.Int{}},
+			tierBenefits: TierBenefits{MaxBidAmount: math.Int{}},
 			err:          errors.New("max bid amount should be set"),
 		},
 		{

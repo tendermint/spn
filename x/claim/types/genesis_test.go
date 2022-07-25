@@ -15,7 +15,7 @@ func TestGenesisState_Validate(t *testing.T) {
 	fiftyPercent, err := sdk.NewDecFromStr("0.5")
 	require.NoError(t, err)
 
-	claimAmts := []sdk.Int{
+	claimAmts := []math.Int{
 		sdk.NewInt(r.Int63()),
 		sdk.NewInt(r.Int63()),
 	}

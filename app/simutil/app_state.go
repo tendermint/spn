@@ -1,6 +1,7 @@
 package simutil
 
 import (
+	sdkmath "cosmossdk.io/math"
 	"encoding/json"
 	"fmt"
 	"math"
@@ -68,7 +69,7 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 			Rand:         r,
 			GenState:     genesisState,
 			Accounts:     accs,
-			InitialStake: initialStake,
+			InitialStake: sdkmath.NewInt(initialStake),
 			NumBonded:    numInitiallyBonded,
 			GenTimestamp: genesisTimestamp,
 		}

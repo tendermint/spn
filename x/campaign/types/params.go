@@ -1,6 +1,7 @@
 package types
 
 import (
+	"cosmossdk.io/math"
 	"errors"
 	"fmt"
 
@@ -25,7 +26,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewTotalSupplyRange creates a new TotalSupplyRange instance
-func NewTotalSupplyRange(minTotalSupply, maxTotalSupply sdk.Int) TotalSupplyRange {
+func NewTotalSupplyRange(minTotalSupply, maxTotalSupply math.Int) TotalSupplyRange {
 	return TotalSupplyRange{
 		MinTotalSupply: minTotalSupply,
 		MaxTotalSupply: maxTotalSupply,
@@ -33,7 +34,7 @@ func NewTotalSupplyRange(minTotalSupply, maxTotalSupply sdk.Int) TotalSupplyRang
 }
 
 // NewParams creates a new Params instance
-func NewParams(minTotalSupply, maxTotalSupply sdk.Int, campaignCreationFee sdk.Coins) Params {
+func NewParams(minTotalSupply, maxTotalSupply math.Int, campaignCreationFee sdk.Coins) Params {
 	return Params{
 		TotalSupplyRange:    NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
 		CampaignCreationFee: campaignCreationFee,

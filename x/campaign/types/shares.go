@@ -1,6 +1,7 @@
 package types
 
 import (
+	"cosmossdk.io/math"
 	"errors"
 	"fmt"
 	"strings"
@@ -64,7 +65,7 @@ func IncreaseShares(shares, newShares Shares) Shares {
 
 // DecreaseShares decreases the number of shares or returns a error if shares can't be decreased
 func DecreaseShares(shares, toDecrease Shares) (Shares, error) {
-	decreasedCoins, negative := sdk.Coins(shares).SafeSub(sdk.Coins(toDecrease))
+	decreasedCoins, negative := sdk.Coins(shares).SafeSub(sdk.Coins(toDecrease)...)
 	if negative {
 		return nil, errors.New("shares cannot be decreased to negative")
 	}
@@ -111,7 +112,7 @@ func (shares Shares) CoinsFromTotalSupply(totalSupply sdk.Coins, totalShareNumbe
 	}
 
 	// set map for performance
-	sharesMap := make(map[string]sdk.Int)
+	sharesMap := make(map[string]math.Int)
 	for _, share := range shares {
 		if share.Amount.Uint64() > totalShareNumber {
 			return coins, fmt.Errorf(
