@@ -474,7 +474,6 @@ func New(
 		app.BankKeeper,
 		app.DistrKeeper,
 		app.ProfileKeeper,
-		app.RewardKeeper,
 	)
 	app.CampaignKeeper = *campaignKeeper
 	app.LaunchKeeper.SetCampaignKeeper(campaignKeeper)
