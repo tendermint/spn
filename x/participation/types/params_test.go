@@ -1,12 +1,13 @@
 package types
 
 import (
-	"cosmossdk.io/math"
 	"errors"
 	"fmt"
 	"math/rand"
 	"testing"
 	"time"
+
+	"cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"

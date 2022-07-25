@@ -1,10 +1,11 @@
 package simulation_test
 
 import (
-	"cosmossdk.io/math"
 	"encoding/json"
 	"math/rand"
 	"testing"
+
+	"cosmossdk.io/math"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"

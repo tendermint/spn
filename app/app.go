@@ -1,13 +1,14 @@
 package app
 
 import (
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
-	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"

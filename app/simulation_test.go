@@ -3,11 +3,12 @@ package app_test
 import (
 	"encoding/json"
 	"fmt"
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"math/rand"
 	"os"
 	"testing"
 	"time"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"

@@ -1,9 +1,10 @@
 package types
 
 import (
-	"cosmossdk.io/math"
 	"errors"
 	"fmt"
+
+	"cosmossdk.io/math"
 
 	"gopkg.in/yaml.v2"
 

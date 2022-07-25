@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"encoding/json"
+
 	spntypes "github.com/tendermint/spn/pkg/types"
 
 	"github.com/cosmos/cosmos-sdk/simapp"
