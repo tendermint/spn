@@ -21,10 +21,13 @@ message Peer {
   oneof connection {
     string tcpAddress = 2;  // use a TCP address
     HTTPTunnel httpTunnel = 3; // or use an HTTP tunnel
+    EmptyConnection none = 4; // or don't provide any connection
   }
 
   message HTTPTunnel {
     string name = 1;  // e.g.: chisel (https://github.com/jpillora/chisel)
     string address = 2;  // for chisel running on Gitpod, e.g.: https://3475-chocolate-capybara-kkiztq32.ws-eu21.gitpod.io/
   }
+
+  message EmptyConnection {}
 }

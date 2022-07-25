@@ -25,7 +25,7 @@ const (
 	Version = "monitoring-1"
 
 	// PortID is the default port id that module binds to
-	PortID = "monitoring"
+	PortID = "monitoringc"
 
 	// VerifiedClientIDKeyPrefix is the prefix to retrieve all VerifiedClientID
 	VerifiedClientIDKeyPrefix = "VerifiedClientID/value/"
@@ -43,10 +43,8 @@ const (
 	MonitoringHistoryKeyPrefix = "MonitoringHistory/value/"
 )
 
-var (
-	// PortKey defines the key to store the port ID in store
-	PortKey = KeyPrefix("monitoringc-port-")
-)
+// PortKey defines the key to store the port ID in store
+var PortKey = KeyPrefix("monitoringc-port-")
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)

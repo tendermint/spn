@@ -35,6 +35,7 @@ func TestRewardPoolGet(t *testing.T) {
 		)
 	}
 }
+
 func TestRewardPoolRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRewardPool(tk.RewardKeeper, ctx, 10)

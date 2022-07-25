@@ -7,18 +7,17 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
 func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
-	var (
-		launchID = uint64(10)
-	)
+	launchID := uint64(10)
 
 	option := *types.NewDelayedVesting(
-		coinsStr(t, "1000foo500bar"),
-		coinsStr(t, "500foo500bar"),
+		tc.Coins(t, "1000foo500bar"),
+		tc.Coins(t, "500foo500bar"),
 		time.Now().Unix(),
 	)
 
@@ -28,7 +27,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid creator address",
+			name: "should prevent validate message with invalid creator address",
 			msg: types.MsgRequestAddVestingAccount{
 				Creator:  "invalid_address",
 				Address:  sample.Address(r),
@@ -38,7 +37,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid account address",
+			name: "should prevent validate message with invalid account address",
 			msg: types.MsgRequestAddVestingAccount{
 				Creator:  sample.Address(r),
 				Address:  "invalid_address",
@@ -48,7 +47,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid vesting option",
+			name: "should prevent validate message with invalid vesting option",
 			msg: types.MsgRequestAddVestingAccount{
 				Creator:  sample.Address(r),
 				Address:  sample.Address(r),
@@ -58,7 +57,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidVestingOption,
 		},
 		{
-			name: "valid message",
+			name: "should validate valid message",
 			msg: types.MsgRequestAddVestingAccount{
 				Creator:  sample.Address(r),
 				Address:  sample.Address(r),

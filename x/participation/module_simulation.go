@@ -14,14 +14,10 @@ import (
 )
 
 const (
-	defaultWeightMsgCreateAuction       int = 20
 	defaultWeightMsgParticipate         int = 50
-	defaultWeightMsgCancelAuction       int = 20
 	defaultWeightMsgWithdrawAllocations int = 50
 
-	opWeightMsgCreateAuction       = "op_weight_create_auction"
 	opWeightMsgParticipate         = "op_weight_msg_participate"
-	opWeightMsgCancelAuction       = "op_weight_cancel_auction"
 	opWeightMsgWithdrawAllocations = "op_weight_withdraw_allocations"
 
 	// this line is used by starport scaffolding # simapp/module/const
@@ -69,13 +65,9 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
-	operations := make([]simtypes.WeightedOperation, 0)
-
 	var (
 		weightMsgParticipate         int
-		weightMsgCreateAuction       int
 		weightMsgWithdrawAllocations int
-		weightMsgCancelAuction       int
 	)
 
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgParticipate, &weightMsgParticipate, nil,
@@ -83,42 +75,22 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgParticipate = defaultWeightMsgParticipate
 		},
 	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgParticipate,
-		participationsim.SimulateMsgParticipate(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
-	))
-
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateAuction, &weightMsgCreateAuction, nil,
-		func(_ *rand.Rand) {
-			weightMsgCreateAuction = defaultWeightMsgCreateAuction
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgCreateAuction,
-		participationsim.SimulateCreateAuction(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
-	))
-
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgWithdrawAllocations, &weightMsgWithdrawAllocations, nil,
 		func(_ *rand.Rand) {
 			weightMsgWithdrawAllocations = defaultWeightMsgWithdrawAllocations
 		},
 	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgWithdrawAllocations,
-		participationsim.SimulateMsgWithdrawAllocations(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
-	))
-
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCancelAuction, &weightMsgCancelAuction, nil,
-		func(_ *rand.Rand) {
-			weightMsgCancelAuction = defaultWeightMsgCancelAuction
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgCancelAuction,
-		participationsim.SimulateMsgCancelAuction(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper),
-	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
 
-	return operations
+	return []simtypes.WeightedOperation{
+		simulation.NewWeightedOperation(
+			weightMsgParticipate,
+			participationsim.SimulateMsgParticipate(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
+		),
+		simulation.NewWeightedOperation(
+			weightMsgWithdrawAllocations,
+			participationsim.SimulateMsgWithdrawAllocations(am.accountKeeper, am.bankKeeper, am.fundraisingKeeper, am.keeper),
+		),
+	}
 }

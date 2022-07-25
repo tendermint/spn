@@ -64,7 +64,13 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 	campaign.MainnetInitialized = true
 	k.SetCampaign(ctx, campaign)
 
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignMainnetInitialized{
+		CampaignID:         campaign.CampaignID,
+		CoordinatorAddress: msg.Coordinator,
+		MainnetID:          campaign.MainnetID,
+	})
+
 	return &types.MsgInitializeMainnetResponse{
 		MainnetID: mainnetID,
-	}, nil
+	}, err
 }

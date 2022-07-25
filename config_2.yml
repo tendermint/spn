@@ -1,0 +1,53 @@
+# This configuration file includes the options from config.yml but exposes different ports for the server
+# So another chain can be served with default ports on the same machine (ex: using local `ignite network` commands)
+
+accounts:
+  - name: alice
+    mnemonic: "slide moment original seven milk crawl help text kick fluid boring awkward doll wonder sure fragile plate grid hard next casual expire okay body"
+    coins: ["200000000uspn"]
+  - name: bob
+    mnemonic: "trap possible liquid elite embody host segment fantasy swim cable digital eager tiny broom burden diary earn hen grow engine pigeon fringe claim program"
+    coins: ["200000000uspn"]
+validator:
+  name: alice
+  staked: "100000000uspn"
+faucet:
+  name: bob
+  coins: ["100000uspn"]
+  port: 4502
+genesis:
+  chain_id: spn-1
+  app_state:
+    staking:
+      params:
+        bond_denom: "uspn"
+    crisis:
+      constant_fee:
+        denom: "uspn"
+    gov:
+      deposit_params:
+        min_deposit:
+          - "amount": "1"
+            "denom": "uspn"
+    mint:
+      params:
+        mint_denom: "uspn"
+    launch:
+      params:
+        revertDelay: "5"
+        launchTimeRange:
+          minLaunchTime: "5"
+    monitoringp:
+      params:
+        lastBlockHeight: "1"
+        consumerChainID: "orbit-1"
+        consumerUnbondingPeriod: "2"
+        consumerRevisionHeight: "1"
+host:
+  rpc: ":26661"
+  p2p: ":26660"
+  prof: ":6062"
+  grpc: ":9094"
+  grpc-web: ":9095"
+  api: ":1319"
+  

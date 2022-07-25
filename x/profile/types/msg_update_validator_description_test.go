@@ -18,20 +18,20 @@ func TestMsgUpdateValidatorDescription_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "should prevent validate invalid validator address",
 			msg: profile.MsgUpdateValidatorDescription{
 				Address: "invalid address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
-			name: "valid address and empty description",
+			name: "should prevent validate emtpy description",
 			msg: profile.MsgUpdateValidatorDescription{
 				Address:     addr,
 				Description: profile.ValidatorDescription{},
 			},
 			err: profile.ErrEmptyDescription,
 		}, {
-			name: "valid address and description",
+			name: "should validate valid message",
 			msg: profile.MsgUpdateValidatorDescription{
 				Address: sample.Address(r),
 				Description: profile.ValidatorDescription{

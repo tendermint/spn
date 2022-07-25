@@ -30,23 +30,6 @@ func TestAccountWithoutCampaignInvariant(t *testing.T) {
 	})
 }
 
-func TestVestingAccountWithoutCampaignInvariant(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	t.Run("valid case", func(t *testing.T) {
-		campaign := sample.Campaign(r, 0)
-		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
-		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(r, campaign.CampaignID, sample.Address(r)))
-		msg, broken := keeper.VestingAccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
-		require.False(t, broken, msg)
-	})
-
-	t.Run("invalid case", func(t *testing.T) {
-		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, sample.MainnetVestingAccount(r, 10000, sample.Address(r)))
-		msg, broken := keeper.VestingAccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
-		require.True(t, broken, msg)
-	})
-}
-
 func TestCampaignSharesInvariant(t *testing.T) {
 	t.Run("valid case", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
@@ -83,32 +66,12 @@ func TestCampaignSharesInvariant(t *testing.T) {
 		tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 			CampaignID: campaignID1,
 			Address:    sample.Address(r),
-			Shares:     tc.Shares(t, "20foo,40bar"),
+			Shares:     tc.Shares(t, "30foo,60bar"),
 		})
 		tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 			CampaignID: campaignID2,
 			Address:    sample.Address(r),
-			Shares:     tc.Shares(t, "2500foo"),
-		})
-
-		// add vesting accounts with shares
-		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, types.MainnetVestingAccount{
-			CampaignID: campaignID1,
-			Address:    sample.Address(r),
-			VestingOptions: *types.NewShareDelayedVesting(
-				tc.Shares(t, "10foo,20bar"),
-				types.EmptyShares(),
-				1,
-			),
-		})
-		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, types.MainnetVestingAccount{
-			CampaignID: campaignID2,
-			Address:    sample.Address(r),
-			VestingOptions: *types.NewShareDelayedVesting(
-				tc.Shares(t, "2500foo"),
-				types.EmptyShares(),
-				1,
-			),
+			Shares:     tc.Shares(t, "5000foo"),
 		})
 
 		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
@@ -121,18 +84,6 @@ func TestCampaignSharesInvariant(t *testing.T) {
 
 		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
 		require.False(t, broken, msg)
-	})
-
-	t.Run("mainnet vesting account has invalid total shares", func(t *testing.T) {
-		ctx, tk, _ := testkeeper.NewTestSetup(t)
-		tk.CampaignKeeper.SetMainnetVestingAccount(ctx, types.MainnetVestingAccount{
-			CampaignID:     0,
-			Address:        sample.Address(r),
-			VestingOptions: types.ShareVestingOptions{},
-		})
-
-		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
-		require.True(t, broken, msg)
 	})
 
 	t.Run("allocated shares cannot be converted to vouchers", func(t *testing.T) {
@@ -167,6 +118,19 @@ func TestCampaignSharesInvariant(t *testing.T) {
 		// mint vouchers
 		voucherFoo, voucherBar := types.VoucherDenom(campaignID, "foo"), types.VoucherDenom(campaignID, "bar")
 		tk.Mint(ctx, sample.Address(r), tc.Coins(t, fmt.Sprintf("99%s,200%s", voucherFoo, voucherBar)))
+
+		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		require.True(t, broken, msg)
+	})
+
+	t.Run("campaign with special allocations not tracked by allocated shares", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+		campaign := sample.Campaign(r, 3)
+		campaign.SpecialAllocations.GenesisDistribution = types.IncreaseShares(
+			campaign.SpecialAllocations.GenesisDistribution,
+			sample.Shares(r),
+		)
+		tk.CampaignKeeper.SetCampaign(ctx, campaign)
 
 		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
 		require.True(t, broken, msg)

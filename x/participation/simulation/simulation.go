@@ -7,17 +7,19 @@ import (
 	"time"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
+	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
 	"github.com/tendermint/spn/app/simutil"
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/participation/keeper"
 	"github.com/tendermint/spn/x/participation/types"
 )
@@ -31,7 +33,7 @@ func SimulateMsgParticipate(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		msg := &types.MsgParticipate{}
-		auction, found := RandomAuction(ctx, r, fk)
+		auction, found := RandomAuctionParticipationEnabled(ctx, r, fk, k)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no valid auction found"), nil, nil
 		}
@@ -53,7 +55,7 @@ func SimulateMsgParticipate(
 			tier.TierID,
 		)
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -67,7 +69,7 @@ func SimulateMsgParticipate(
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -93,7 +95,6 @@ func SimulateCreateAuction(
 			return simtypes.OperationMsg{},
 				nil,
 				fmt.Errorf("no tier in list")
-
 		}
 		// create a selling coin that at least covers all tiers in the simulation param
 		requireAmt := sdk.NewCoin(simutil.AuctionCoinDenom, largestTier.Benefits.MaxBidAmount)
@@ -116,7 +117,7 @@ func SimulateCreateAuction(
 		endTime := startTime.Add(time.Hour * 24 * 7)
 		msg = sample.MsgCreateFixedAuction(r, simAccount.Address.String(), sellCoin, startTime, endTime)
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -131,7 +132,7 @@ func SimulateCreateAuction(
 			CoinsSpentInMsg: desiredCoins,
 		}
 
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -159,7 +160,7 @@ func SimulateMsgWithdrawAllocations(
 			auction.GetId(),
 		)
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -173,7 +174,7 @@ func SimulateMsgWithdrawAllocations(
 			ModuleName:      types.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }
 
@@ -186,7 +187,7 @@ func SimulateMsgCancelAuction(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		var simAccount simtypes.Account
 		msg := &fundraisingtypes.MsgCancelAuction{}
-		auction, found := RandomAuction(ctx, r, fk)
+		auction, found := RandomAuctionStandby(ctx, r, fk)
 		if !found {
 			return simtypes.NoOpMsg(fundraisingtypes.ModuleName, msg.Type(), "no valid auction found"), nil, nil
 		}
@@ -207,7 +208,7 @@ func SimulateMsgCancelAuction(
 
 		msg = fundraisingtypes.NewMsgCancelAuction(simAccount.Address.String(), auction.GetId())
 
-		txCtx := simulation.OperationInput{
+		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
 			TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -221,6 +222,6 @@ func SimulateMsgCancelAuction(
 			ModuleName:      fundraisingtypes.ModuleName,
 			CoinsSpentInMsg: sdk.NewCoins(),
 		}
-		return simulation.GenAndDeliverTxWithRandFees(txCtx)
+		return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 	}
 }

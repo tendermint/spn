@@ -81,8 +81,8 @@ func IsTotalSharesReached(shares Shares, maximumTotalShareNumber uint64) (bool, 
 		return false, errors.Wrap(err, "invalid share format")
 	}
 
-	for _, coin := range shares {
-		if coin.Amount.Uint64() > maximumTotalShareNumber {
+	for _, share := range shares {
+		if share.Amount.Uint64() > maximumTotalShareNumber {
 			return true, nil
 		}
 	}
@@ -106,7 +106,44 @@ func (shares Shares) Empty() bool {
 	return sdk.Coins(shares).Empty()
 }
 
-// String returns all coins comma separated
+// String returns all shares comma separated
 func (shares Shares) String() string {
 	return sdk.Coins(shares).String()
+}
+
+// CoinsFromTotalSupply returns the coins from a total supply reflected by the shares
+func (shares Shares) CoinsFromTotalSupply(totalSupply sdk.Coins, totalShareNumber uint64) (coins sdk.Coins, err error) {
+	if totalShareNumber == 0 {
+		return coins, errors.New("total share number can't be 0")
+	}
+
+	// set map for performance
+	sharesMap := make(map[string]sdk.Int)
+	for _, share := range shares {
+		if share.Amount.Uint64() > totalShareNumber {
+			return coins, fmt.Errorf(
+				"share %s amount is greater than total share number %d > %d",
+				share.Denom,
+				share.Amount.Uint64(),
+				totalShareNumber,
+			)
+		}
+
+		sharesMap[share.Denom] = share.Amount
+	}
+
+	// check all coins from total supply
+	for _, supply := range totalSupply {
+		shareDenom := SharePrefix + supply.Denom
+		if amount, ok := sharesMap[shareDenom]; ok {
+			// coin balance = (supply * share) / total share
+			coinBalance := (supply.Amount.Mul(amount)).Quo(sdk.NewIntFromUint64(totalShareNumber))
+
+			if !coinBalance.IsZero() {
+				coins = append(coins, sdk.NewCoin(supply.Denom, coinBalance))
+			}
+		}
+	}
+
+	return coins, nil
 }

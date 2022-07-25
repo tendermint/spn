@@ -17,10 +17,14 @@ func TestParamsQuery(t *testing.T) {
 	params := sample.LaunchParams(r)
 	tk.LaunchKeeper.SetParams(ctx, params)
 
-	response, err := tk.LaunchKeeper.Params(wctx, &types.QueryParamsRequest{})
-	require.NoError(t, err)
-	require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
+	t.Run("should allow querying params", func(t *testing.T) {
+		response, err := tk.LaunchKeeper.Params(wctx, &types.QueryParamsRequest{})
+		require.NoError(t, err)
+		require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
+	})
 
-	_, err = tk.LaunchKeeper.Params(wctx, nil)
-	require.Error(t, err)
+	t.Run("should prevent querying params with invalid request", func(t *testing.T) {
+		_, err := tk.LaunchKeeper.Params(wctx, nil)
+		require.Error(t, err)
+	})
 }

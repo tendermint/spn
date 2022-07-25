@@ -23,7 +23,7 @@ const (
 	Version = "monitoring-1"
 
 	// PortID is the default port id that module binds to
-	PortID = "monitoring"
+	PortID = "monitoringp"
 
 	// ConsumerClientIDKey allows to retrieve in the store the client ID used for the IBC communication with the Consumer Chain
 	ConsumerClientIDKey = "ConsumerClientID/value/"
@@ -35,10 +35,8 @@ const (
 	MonitoringInfoKey = "MonitoringInfo/value/"
 )
 
-var (
-	// PortKey defines the key to store the port ID in store
-	PortKey = KeyPrefix("monitoringp-port-")
-)
+// PortKey defines the key to store the port ID in store
+var PortKey = KeyPrefix("monitoringp-port-")
 
 func KeyPrefix(p string) []byte {
 	return []byte(p)

@@ -57,7 +57,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 		err         error
 	}{
 		{
-			name: "invalid chain",
+			name: "should prevent requesting account removal for a non existing chain",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: invalidChain,
 				Creator:  addr1,
@@ -66,7 +66,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			err: types.ErrChainNotFound,
 		},
 		{
-			name: "launch triggered chain",
+			name: "should prevent requesting account removal for a launch triggered chain",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[0].LaunchID,
 				Creator:  addr1,
@@ -75,7 +75,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			err: types.ErrTriggeredLaunch,
 		},
 		{
-			name: "coordinator not found",
+			name: "should prevent requesting account removal for a chain where coordinator not found",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[1].LaunchID,
 				Creator:  addr1,
@@ -84,7 +84,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			err: types.ErrChainInactive,
 		},
 		{
-			name: "no permission error",
+			name: "should prevent requesting account removal without address permission",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[2].LaunchID,
 				Creator:  addr1,
@@ -93,7 +93,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			err: types.ErrNoAddressPermission,
 		},
 		{
-			name: "add chain 3 request 1",
+			name: "should allow requesting account removal to an existing chain",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[2].LaunchID,
 				Creator:  addr1,
@@ -102,7 +102,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			wantID: 1,
 		},
 		{
-			name: "add chain 4 request 2",
+			name: "should allow requesting account removal to a second chain",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[3].LaunchID,
 				Creator:  coordAddr,
@@ -112,7 +112,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			wantID:      1,
 		},
 		{
-			name: "add chain 4 request 3",
+			name: "should allow requesting second account removal to a second chain",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[3].LaunchID,
 				Creator:  addr2,
@@ -121,7 +121,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			wantID: 2,
 		},
 		{
-			name: "add chain 5 request 1",
+			name: "should allow requesting account removal to a third chain",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[4].LaunchID,
 				Creator:  addr1,
@@ -130,26 +130,17 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			wantID: 1,
 		},
 		{
-			name: "add chain 5 request 2",
-			msg: types.MsgRequestRemoveAccount{
-				LaunchID: chains[4].LaunchID,
-				Creator:  addr3,
-				Address:  addr3,
-			},
-			wantID: 2,
-		},
-		{
-			name: "request from coordinator is pre-approved",
+			name: "should allow requesting and approving an account removal from the coordinator",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[4].LaunchID,
 				Creator:  coordAddr,
 				Address:  addr4,
 			},
 			wantApprove: true,
-			wantID:      3,
+			wantID:      2,
 		},
 		{
-			name: "failing request from coordinator",
+			name: "should prevent requesting account removal from coordinator if no account to remove",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[4].LaunchID,
 				Creator:  coordAddr,
@@ -158,7 +149,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			err: types.ErrAccountNotFound,
 		},
 		{
-			name: "is mainnet chain",
+			name: "should prevent requesting account removal for a mainnet chain",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: chains[5].LaunchID,
 				Creator:  coordAddr,
@@ -167,7 +158,7 @@ func TestMsgRequestRemoveAccount(t *testing.T) {
 			err: types.ErrRemoveMainnetAccount,
 		},
 		{
-			name: "fail if the coordinator of the chain is disabled",
+			name: "should prevent requesting account removal for a chain where the coordinator of the chain is disabled",
 			msg: types.MsgRequestRemoveAccount{
 				LaunchID: disableChain[0].LaunchID,
 				Creator:  sample.Address(r),

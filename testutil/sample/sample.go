@@ -15,7 +15,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibctypes "github.com/cosmos/ibc-go/v2/modules/core/types"
+	ibctypes "github.com/cosmos/ibc-go/v3/modules/core/types"
 	"github.com/stretchr/testify/require"
 	fundraising "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/tendermint/crypto"
@@ -69,7 +69,7 @@ func Uint64(r *rand.Rand) uint64 {
 
 // String returns a random string of length n
 func String(r *rand.Rand, n int) string {
-	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	letter := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
 	randomString := make([]rune, n)
 	for i := range randomString {
@@ -80,7 +80,7 @@ func String(r *rand.Rand, n int) string {
 
 // AlphaString returns a random string with lowercase alpha char of length n
 func AlphaString(r *rand.Rand, n int) string {
-	var letter = []rune("abcdefghijklmnopqrstuvwxyz")
+	letter := []rune("abcdefghijklmnopqrstuvwxyz")
 
 	randomString := make([]rune, n)
 	for i := range randomString {

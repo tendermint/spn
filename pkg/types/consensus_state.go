@@ -7,9 +7,10 @@ import (
 	"os"
 	"time"
 
-	committypes "github.com/cosmos/ibc-go/v2/modules/core/23-commitment/types"
-	ibctmtypes "github.com/cosmos/ibc-go/v2/modules/light-clients/07-tendermint/types"
 	"gopkg.in/yaml.v2"
+
+	committypes "github.com/cosmos/ibc-go/v3/modules/core/23-commitment/types"
+	ibctmtypes "github.com/cosmos/ibc-go/v3/modules/light-clients/07-tendermint/types"
 )
 
 // consensusStateFile represents dumped consensus state from
@@ -49,7 +50,7 @@ func NewConsensusState(timestamp, nextValHash, rootHash string) ConsensusState {
 	return ConsensusState{
 		NextValidatorsHash: nextValHash,
 		Timestamp:          timestamp,
-		Root: MerkelRool{
+		Root: MerkleRoot{
 			Hash: rootHash,
 		},
 	}

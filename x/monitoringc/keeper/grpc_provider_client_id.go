@@ -32,7 +32,6 @@ func (k Keeper) ProviderClientIDAll(c context.Context, req *types.QueryAllProvid
 		providerClientIDs = append(providerClientIDs, providerClientID)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

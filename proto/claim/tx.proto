@@ -1,0 +1,21 @@
+syntax = "proto3";
+package tendermint.spn.claim;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/tendermint/spn/x/claim/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc ClaimInitial(MsgClaimInitial) returns (MsgClaimInitialResponse);
+  // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgClaimInitial {
+  string claimer = 1;
+}
+
+message MsgClaimInitialResponse {
+}
+
+// this line is used by starport scaffolding # proto/tx/message

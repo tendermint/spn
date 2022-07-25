@@ -12,7 +12,14 @@ const (
 )
 
 // NewCampaign returns a new initialized campaign
-func NewCampaign(campaignID uint64, campaignName string, coordinatorID uint64, totalSupply sdk.Coins, metadata []byte) Campaign {
+func NewCampaign(
+	campaignID uint64,
+	campaignName string,
+	coordinatorID uint64,
+	totalSupply sdk.Coins,
+	metadata []byte,
+	createdAt int64,
+) Campaign {
 	return Campaign{
 		CampaignID:         campaignID,
 		CampaignName:       campaignName,
@@ -20,7 +27,9 @@ func NewCampaign(campaignID uint64, campaignName string, coordinatorID uint64, t
 		MainnetInitialized: false,
 		TotalSupply:        totalSupply,
 		AllocatedShares:    EmptyShares(),
+		SpecialAllocations: EmptySpecialAllocations(),
 		Metadata:           metadata,
+		CreatedAt:          createdAt,
 	}
 }
 
@@ -40,6 +49,10 @@ func (m Campaign) Validate(totalShareNumber uint64) error {
 	}
 	if reached {
 		return errors.New("more allocated shares than total shares")
+	}
+
+	if err := m.SpecialAllocations.Validate(); err != nil {
+		return errors.Wrap(err, "invalid special allocations")
 	}
 
 	return nil

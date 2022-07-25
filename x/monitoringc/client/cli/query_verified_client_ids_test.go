@@ -11,35 +11,15 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/x/monitoringc/client/cli"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-func networkWithRewardPoolObjects(t *testing.T, n int) (*network.Network, []types.VerifiedClientID) {
-	t.Helper()
-	cfg := network.DefaultConfig()
-	state := types.GenesisState{}
-	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
+func (suite *QueryTestSuite) TestShowVerifiedClientIds() {
+	ctx := suite.Network.Validators[0].ClientCtx
+	objs := suite.MonitoringcState.VerifiedClientIDList
 
-	for i := 0; i < n; i++ {
-		rewardPool := types.VerifiedClientID{
-			LaunchID: uint64(i),
-		}
-		nullify.Fill(&rewardPool)
-		state.VerifiedClientIDList = append(state.VerifiedClientIDList, rewardPool)
-	}
-	buf, err := cfg.Codec.MarshalJSON(&state)
-	require.NoError(t, err)
-	cfg.GenesisState[types.ModuleName] = buf
-	return network.New(t, cfg), state.VerifiedClientIDList
-}
-
-func TestShowRewardPool(t *testing.T) {
-	net, objs := networkWithRewardPoolObjects(t, 2)
-
-	ctx := net.Validators[0].ClientCtx
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
@@ -66,8 +46,7 @@ func TestShowRewardPool(t *testing.T) {
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		tc := tc
-		t.Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.desc, func(t *testing.T) {
 			args := []string{
 				strconv.Itoa(int(tc.idLaunchID)),
 			}
@@ -80,7 +59,7 @@ func TestShowRewardPool(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				var resp types.QueryGetVerifiedClientIdsResponse
-				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.ClientIds)
 				require.Equal(t,
 					nullify.Fill(&tc.obj.ClientIDs),

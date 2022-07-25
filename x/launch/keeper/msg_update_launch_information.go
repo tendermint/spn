@@ -15,7 +15,6 @@ func (k msgServer) UpdateLaunchInformation(
 	goCtx context.Context,
 	msg *types.MsgUpdateLaunchInformation,
 ) (*types.MsgUpdateLaunchInformationResponse, error) {
-
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	chain, found := k.GetChain(ctx, msg.LaunchID)
@@ -55,6 +54,5 @@ func (k msgServer) UpdateLaunchInformation(
 	}
 
 	k.SetChain(ctx, chain)
-
 	return &types.MsgUpdateLaunchInformationResponse{}, nil
 }

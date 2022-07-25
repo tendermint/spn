@@ -3,18 +3,18 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	connectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
-	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
+	connectiontypes "github.com/cosmos/ibc-go/v3/modules/core/03-connection/types"
+	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
-// VerifyClientIDFromChannelID verifies if the client ID associated with the provided channel ID
+// VerifyClientIDFromConnID verifies if the client ID associated with the provided connection ID
 // is a verified client ID and if no connection is yet established with the provider chain
 // this operation should be performed at OnChanOpenInit handshake phase
-func (k Keeper) VerifyClientIDFromChannelID(ctx sdk.Context, channelID string) error {
-	clientID, err := k.getClientIDFromChannelID(ctx, channelID)
+func (k Keeper) VerifyClientIDFromConnID(ctx sdk.Context, connID string) error {
+	clientID, err := k.getClientIDFromConnID(ctx, connID)
 	if err != nil {
 		return err
 	}
@@ -41,13 +41,14 @@ func (k Keeper) VerifyClientIDFromChannelID(ctx sdk.Context, channelID string) e
 // RegisterProviderClientIDFromChannelID registers the verified client ID for the provider
 // this operation should be performed at OnChanOpenAck
 func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID string) error {
-	clientID, err := k.getClientIDFromChannelID(ctx, channelID)
+	connID, err := k.getConnIDFromChannelID(ctx, channelID)
 	if err != nil {
-		return spnerrors.Criticalf(
-			"client ID should be retrieved from channel ID %s during registration, got error: %s",
-			channelID,
-			err.Error(),
-		)
+		return err
+	}
+
+	clientID, err := k.getClientIDFromConnID(ctx, connID)
+	if err != nil {
+		return err
 	}
 
 	// get the launch ID from the client ID
@@ -89,8 +90,21 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 	return nil
 }
 
-// getClientIDFromChannelID retrieves the client ID associated with the provided channel ID
-func (k Keeper) getClientIDFromChannelID(ctx sdk.Context, channelID string) (string, error) {
+// getClientIDFromConnID retrieves the client ID associated with a connection ID
+func (k Keeper) getClientIDFromConnID(ctx sdk.Context, connID string) (string, error) {
+	conn, ok := k.connectionKeeper.GetConnection(ctx, connID)
+	if !ok {
+		return "", sdkerrors.Wrapf(
+			connectiontypes.ErrConnectionNotFound,
+			"connection not found for connection ID: %s",
+			connID,
+		)
+	}
+	return conn.GetClientID(), nil
+}
+
+// getConnIDFromChannelID retrieves the connection ID associated with the provided channel ID
+func (k Keeper) getConnIDFromChannelID(ctx sdk.Context, channelID string) (string, error) {
 	// retrieve the client ID from the channel
 	channel, ok := k.channelKeeper.GetChannel(ctx, types.PortID, channelID)
 	if !ok {
@@ -103,17 +117,8 @@ func (k Keeper) getClientIDFromChannelID(ctx sdk.Context, channelID string) (str
 	if len(channel.ConnectionHops) != 1 {
 		return "", sdkerrors.Wrap(
 			channeltypes.ErrTooManyConnectionHops,
-			"must have direct connection to baby chain",
+			"must have direct connection to consumer chain",
 		)
 	}
-	connectionID := channel.ConnectionHops[0]
-	conn, ok := k.connectionKeeper.GetConnection(ctx, connectionID)
-	if !ok {
-		return "", sdkerrors.Wrapf(
-			connectiontypes.ErrConnectionNotFound,
-			"connection not found for connection ID: %s",
-			connectionID,
-		)
-	}
-	return conn.GetClientID(), nil
+	return channel.ConnectionHops[0], nil
 }

@@ -29,6 +29,24 @@ faucet:
 genesis:
   chain_id: spn-1
   app_state:
+    bank:
+      denom_metadata:
+        - description: "The native staking token of Starport Network"
+          display: "spn"
+          base: "uspn"
+          name: "Starport Network"
+          symbol: "SPN"
+          denom_units:
+            - denom: "uspn"
+              aliases:
+                - "microspn"
+              exponent: "0"
+            - denom: "mspn"
+              aliases:
+                - "millispn"
+              exponent: "3"
+            - denom: "spn"
+              exponent: "6"
     staking:
       params:
         bond_denom: "uspn"
@@ -38,11 +56,23 @@ genesis:
     gov:
       deposit_params:
         min_deposit:
-          - "amount": "10000000"
+          - "amount": "1"
             "denom": "uspn"
     mint:
       params:
         mint_denom: "uspn"
+        distribution_proportions:
+          staking: "0.300000000000000000"
+          incentives: "0.400000000000000000"
+          development_fund: "0.200000000000000000"
+          community_pool: "0.100000000000000000"
+        development_fund_recipients:
+          - address: "spn1ezptsm3npn54qx9vvpah4nymre59ykr9exx2ul" # alice
+            weight: "0.400000000000000000"
+          - address: "spn1aqn8ynvr3jmq67879qulzrwhchq5dtrvtx0nhe" # bob
+            weight: "0.300000000000000000"
+          - address: "spn1pkdk6m2nh77nlaep84cylmkhjder3arey7rll5" # carol
+            weight: "0.300000000000000000"
     launch:
       params:
         revertDelay: "5"
@@ -51,8 +81,14 @@ genesis:
     fundraising:
       params:
         auction_creation_fee:
-          - "amount": "100"
-            "denom": "uspn"
+          - amount: "100"
+            denom: "uspn"
+    monitoringp:
+      params:
+        lastBlockHeight: "1"
+        consumerChainID: "orbit-1"
+        consumerUnbondingPeriod: "2"
+        consumerRevisionHeight: "1"
     participation:
       params:
         allocationPrice:
@@ -74,10 +110,34 @@ genesis:
             requiredAllocations: "10"
             benefits:
               maxBidAmount: "30000"
-        # 1/3 of the default unbonding period (21 days): one week
+        # represents 1/3 of the default unbonding period (21 days): one week
         registrationPeriod: "604800s"
-        # 2/3 of the default unbonding period (21 days): two weeks
+        # represents 2/3 of the default unbonding period (21 days): two weeks
         withdrawalDelay: "1209600s"
+    claim:
+      airdropSupply:
+        amount: "1000"
+        denom: "drop"
+      claimRecords:
+        - address: "spn1ezptsm3npn54qx9vvpah4nymre59ykr9exx2ul" # alice
+          claimable: "400"
+        - address: "spn1aqn8ynvr3jmq67879qulzrwhchq5dtrvtx0nhe" # bob
+          claimable: "500"
+        - address: "spn1pkdk6m2nh77nlaep84cylmkhjder3arey7rll5" # carol
+          claimable: "100"
+      missions:
+        - missionID: "0"
+          description: "initial claim"
+          weight: "0.2"
+        - missionID: "1"
+          description: "staking"
+          weight: "0.5"
+        - missionID: "2"
+          description: "voting"
+          weight: "0.3"
+      initialClaim:
+        enabled: true
+        missionID: "0"
 client:
   typescript:
     path: "ignite-ui/src/generated"

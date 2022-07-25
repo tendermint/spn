@@ -27,14 +27,11 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgUpdateTotalSupply:
 			res, err := msgServer.UpdateTotalSupply(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgUpdateSpecialAllocations:
+			res, err := msgServer.UpdateSpecialAllocations(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgInitializeMainnet:
 			res, err := msgServer.InitializeMainnet(sdk.WrapSDKContext(ctx), msg)
-			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgAddShares:
-			res, err := msgServer.AddShares(sdk.WrapSDKContext(ctx), msg)
-			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgAddVestingOptions:
-			res, err := msgServer.AddVestingOptions(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgMintVouchers:
 			res, err := msgServer.MintVouchers(sdk.WrapSDKContext(ctx), msg)

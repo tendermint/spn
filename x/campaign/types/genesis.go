@@ -9,13 +9,12 @@ import (
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		CampaignList:              []Campaign{},
-		CampaignCounter:           1,
-		CampaignChainsList:        []CampaignChains{},
-		MainnetAccountList:        []MainnetAccount{},
-		MainnetVestingAccountList: []MainnetVestingAccount{},
-		Params:                    DefaultParams(),
-		TotalShares:               spntypes.TotalShareNumber,
+		CampaignList:       []Campaign{},
+		CampaignCounter:    1,
+		CampaignChainsList: []CampaignChains{},
+		MainnetAccountList: []MainnetAccount{},
+		Params:             DefaultParams(),
+		TotalShares:        spntypes.TotalShareNumber,
 		// this line is used by starport scaffolding # genesis/types/default
 	}
 }
@@ -64,21 +63,6 @@ func (gs GenesisState) Validate() error {
 			return fmt.Errorf("duplicated index for mainnetAccount")
 		}
 		mainnetAccountIndexMap[index] = struct{}{}
-	}
-
-	// Check for duplicated index in mainnetVestingAccount
-	mainnetVestingAccountIndexMap := make(map[string]struct{})
-	for _, elem := range gs.MainnetVestingAccountList {
-		if _, ok := campaignIDMap[elem.CampaignID]; !ok {
-			return fmt.Errorf("campaign id %d doesn't exist for mainnet vesting account %s",
-				elem.CampaignID, elem.Address)
-		}
-		index := string(AccountKeyPath(elem.CampaignID, elem.Address))
-		if _, ok := mainnetVestingAccountIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for mainnetVestingAccount")
-		}
-
-		mainnetVestingAccountIndexMap[index] = struct{}{}
 	}
 
 	// this line is used by starport scaffolding # genesis/types/validate

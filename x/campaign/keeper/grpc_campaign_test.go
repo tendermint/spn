@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
@@ -35,16 +34,15 @@ func TestCampaignQuerySingle(t *testing.T) {
 			response: &types.QueryGetCampaignResponse{Campaign: msgs[1]},
 		},
 		{
-			desc:    "KeyNotFound",
+			desc:    "Campaign not found",
 			request: &types.QueryGetCampaignRequest{CampaignID: uint64(len(msgs))},
-			err:     sdkerrors.ErrKeyNotFound,
+			err:     status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "Invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			response, err := tk.CampaignKeeper.Campaign(wctx, tc.request)
 			if tc.err != nil {

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -13,7 +12,6 @@ import (
 
 func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate) (*types.MsgParticipateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	blockTime := ctx.BlockTime()
 
 	availableAlloc, err := k.GetAvailableAllocations(ctx, msg.Participant)
 	if err != nil {
@@ -32,16 +30,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	}
 
 	// check if auction allows participation at this time
-	registrationPeriod := k.RegistrationPeriod(ctx)
-	auctionStartTime := auction.GetStartTime()
-	if auctionStartTime.Unix() < int64(registrationPeriod.Seconds()) {
-		// subtraction would result in negative value, clamp the result to ~0
-		// by making registrationPeriod ~= auctionStartTime
-		registrationPeriod = time.Duration(auctionStartTime.Unix()) * time.Second
-	}
-	// as commented in `Time.Sub()`: To compute t-d for a duration d, use t.Add(-d).
-	registrationStart := auctionStartTime.Add(-registrationPeriod)
-	if !blockTime.After(registrationStart) {
+	if !k.IsRegistrationEnabled(ctx, auction.GetStartTime()) {
 		return nil, sdkerrors.Wrapf(types.ErrParticipationNotAllowed, "participation period for auction %d not yet started", msg.AuctionID)
 	}
 
@@ -98,5 +87,9 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 		Withdrawn:      false,
 	})
 
-	return &types.MsgParticipateResponse{}, nil
+	return &types.MsgParticipateResponse{}, ctx.EventManager().EmitTypedEvent(&types.EventAllocationsUsed{
+		Participant:    msg.Participant,
+		AuctionID:      msg.AuctionID,
+		NumAllocations: tier.RequiredAllocations,
+	})
 }

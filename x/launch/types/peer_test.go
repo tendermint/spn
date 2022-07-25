@@ -16,37 +16,42 @@ func TestPeer_Validate(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "validate new peer connection",
+			name:    "should validate valid new peer connection",
 			peer:    types.NewPeerConn(sample.String(r, 3), sample.String(r, 10)),
 			wantErr: false,
 		},
 		{
-			name:    "validate new peer tunnel",
+			name:    "should validate valid  new peer tunnel",
 			peer:    types.NewPeerTunnel(sample.String(r, 3), sample.String(r, 5), sample.String(r, 10)),
 			wantErr: false,
 		},
 		{
-			name:    "invalid peer",
+			name:    "should validate valid new peer empty",
+			peer:    types.NewPeerEmpty(sample.String(r, 3)),
+			wantErr: false,
+		},
+		{
+			name:    "should prevent validate invalid peer",
 			peer:    types.Peer{},
 			wantErr: true,
 		},
 		{
-			name:    "empty peer id",
+			name:    "should prevent validate peer with empty peer id",
 			peer:    types.NewPeerConn("", sample.String(r, 10)),
 			wantErr: true,
 		},
 		{
-			name:    "empty new peer connection address",
+			name:    "should prevent validate empty new peer connection address",
 			peer:    types.NewPeerConn(sample.String(r, 3), ""),
 			wantErr: true,
 		},
 		{
-			name:    "empty new peer tunnel address",
+			name:    "should prevent validate empty new peer tunnel address",
 			peer:    types.NewPeerTunnel(sample.String(r, 3), "", sample.String(r, 10)),
 			wantErr: true,
 		},
 		{
-			name:    "empty new peer tunnel name",
+			name:    "should prevent validate empty new peer tunnel name",
 			peer:    types.NewPeerTunnel(sample.String(r, 3), sample.String(r, 10), ""),
 			wantErr: true,
 		},

@@ -1,0 +1,28 @@
+syntax = "proto3";
+package tendermint.spn.campaign;
+
+option go_package = "github.com/tendermint/spn/x/campaign/types";
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+message ShareVestingOptions {
+  oneof options {ShareDelayedVesting delayedVesting = 1;}
+}
+
+// ShareDelayedVesting represents options for share delayed vesting
+// Delayed vesting is the type of vesting where all vesting coins are vested
+// once end time is reached
+message ShareDelayedVesting {
+  repeated cosmos.base.v1beta1.Coin totalShares = 1 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "Shares"
+  ];
+  repeated cosmos.base.v1beta1.Coin vesting = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "Shares"
+  ];
+  int64 endTime = 3;
+}

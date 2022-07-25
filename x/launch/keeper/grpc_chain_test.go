@@ -24,26 +24,25 @@ func TestChainQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc:     "First",
+			desc:     "should allow querying first chain",
 			request:  &types.QueryGetChainRequest{LaunchID: msgs[0].LaunchID},
 			response: &types.QueryGetChainResponse{Chain: msgs[0]},
 		},
 		{
-			desc:     "Second",
+			desc:     "should allow querying second chain",
 			request:  &types.QueryGetChainRequest{LaunchID: msgs[1].LaunchID},
 			response: &types.QueryGetChainResponse{Chain: msgs[1]},
 		},
 		{
-			desc:    "KeyNotFound",
+			desc:    "should prevent querying non existing chain",
 			request: &types.QueryGetChainRequest{LaunchID: uint64(1000)},
 			err:     status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "should prevent querying a chain with invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			response, err := tk.LaunchKeeper.Chain(wctx, tc.request)
 			if tc.err != nil {
@@ -56,7 +55,7 @@ func TestChainQuerySingle(t *testing.T) {
 	}
 }
 
-func TestFooQueryPaginated(t *testing.T) {
+func TestChainQueryPaginated(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNChain(tk.LaunchKeeper, ctx, 5)
@@ -71,7 +70,7 @@ func TestFooQueryPaginated(t *testing.T) {
 			},
 		}
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	t.Run("should allow querying chains by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
 			resp, err := tk.LaunchKeeper.ChainAll(wctx, request(nil, uint64(i), uint64(step), false))
@@ -80,7 +79,7 @@ func TestFooQueryPaginated(t *testing.T) {
 			require.Subset(t, msgs, resp.Chain)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	t.Run("should allow querying chains by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
@@ -91,13 +90,13 @@ func TestFooQueryPaginated(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
+	t.Run("should allow querying all chains", func(t *testing.T) {
 		resp, err := tk.LaunchKeeper.ChainAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.Chain)
 	})
-	t.Run("InvalidRequest", func(t *testing.T) {
+	t.Run("should prevent querying chains with invalid request", func(t *testing.T) {
 		_, err := tk.LaunchKeeper.ChainAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})

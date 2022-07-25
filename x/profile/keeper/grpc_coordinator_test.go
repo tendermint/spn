@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
@@ -25,26 +24,25 @@ func TestCoordinatorQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc:     "First",
+			desc:     "should allow querying first coordinator",
 			request:  &types.QueryGetCoordinatorRequest{CoordinatorID: msgs[0].CoordinatorID},
 			response: &types.QueryGetCoordinatorResponse{Coordinator: msgs[0]},
 		},
 		{
-			desc:     "Second",
+			desc:     "should allow querying second coordinator",
 			request:  &types.QueryGetCoordinatorRequest{CoordinatorID: msgs[1].CoordinatorID},
 			response: &types.QueryGetCoordinatorResponse{Coordinator: msgs[1]},
 		},
 		{
-			desc:    "KeyNotFound",
+			desc:    "should prevent querying non existing coordinator",
 			request: &types.QueryGetCoordinatorRequest{CoordinatorID: uint64(len(msgs))},
-			err:     sdkerrors.ErrKeyNotFound,
+			err:     status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "should prevent querying with invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			response, err := tk.ProfileKeeper.Coordinator(wctx, tc.request)
 			if tc.err != nil {
@@ -71,7 +69,7 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 			},
 		}
 	}
-	t.Run("ByOffset", func(t *testing.T) {
+	t.Run("should allow querying coordinators by offsets", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
 			resp, err := tk.ProfileKeeper.CoordinatorAll(wctx, request(nil, uint64(i), uint64(step), false))
@@ -80,7 +78,7 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 			require.Subset(t, msgs, resp.Coordinator)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	t.Run("should allow querying coordinators by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
@@ -91,13 +89,13 @@ func TestCoordinatorQueryPaginated(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
+	t.Run("should allow querying all coordinators", func(t *testing.T) {
 		resp, err := tk.ProfileKeeper.CoordinatorAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.Coordinator)
 	})
-	t.Run("InvalidRequest", func(t *testing.T) {
+	t.Run("should prevent querying with invalid request", func(t *testing.T) {
 		_, err := tk.ProfileKeeper.CoordinatorAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})

@@ -32,7 +32,6 @@ func (k Keeper) UsedAllocationsAll(c context.Context, req *types.QueryAllUsedAll
 		usedAllocationss = append(usedAllocationss, usedAllocations)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

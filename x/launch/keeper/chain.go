@@ -24,6 +24,11 @@ func (k Keeper) CreateNewChain(
 	isMainnet bool,
 	metadata []byte,
 ) (uint64, error) {
+	coord, found := k.profileKeeper.GetCoordinator(ctx, coordinatorID)
+	if !found {
+		return 0, fmt.Errorf("the coordinator %d doesn't exist", coordinatorID)
+	}
+
 	chain := types.Chain{
 		CoordinatorID:   coordinatorID,
 		GenesisChainID:  genesisChainID,
@@ -74,7 +79,11 @@ func (k Keeper) CreateNewChain(
 		}
 	}
 
-	return launchID, nil
+	return launchID, ctx.EventManager().EmitTypedEvent(&types.EventChainCreated{
+		LaunchID:           launchID,
+		CoordinatorAddress: coord.Address,
+		CoordinatorID:      coordinatorID,
+	})
 }
 
 // GetChainCounter get the counter for chains

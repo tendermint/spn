@@ -49,37 +49,37 @@ func TestMsgRequestAddValidator(t *testing.T) {
 		err         error
 	}{
 		{
-			name: "invalid chain",
+			name: "should prevent requesting a validator for a non existing chain",
 			msg:  sample.MsgRequestAddValidator(r, sample.Address(r), addr1, invalidChain),
 			err:  types.ErrChainNotFound,
 		},
 		{
-			name: "chain with triggered launch",
+			name: "should prevent requesting a validator for a launch triggered chain",
 			msg:  sample.MsgRequestAddValidator(r, sample.Address(r), addr1, chains[0].LaunchID),
 			err:  types.ErrTriggeredLaunch,
 		},
 		{
-			name: "chain without coordinator",
+			name: "should prevent requesting a validator for a chain where coordinator not found",
 			msg:  sample.MsgRequestAddValidator(r, sample.Address(r), addr1, chains[1].LaunchID),
 			err:  types.ErrChainInactive,
 		},
 		{
-			name:   "request to a chain 3",
+			name:   "should allow requesting a validator to an existing chain",
 			msg:    sample.MsgRequestAddValidator(r, sample.Address(r), addr1, chains[2].LaunchID),
 			wantID: 1,
 		},
 		{
-			name:   "second request to a chain 3",
+			name:   "should allow requesting a second validator to an existing chain",
 			msg:    sample.MsgRequestAddValidator(r, sample.Address(r), addr2, chains[2].LaunchID),
 			wantID: 2,
 		},
 		{
-			name:   "request to a chain 4",
+			name:   "should allow requesting a validator to a second chain",
 			msg:    sample.MsgRequestAddValidator(r, sample.Address(r), addr1, chains[3].LaunchID),
 			wantID: 1,
 		},
 		{
-			name:        "request from coordinator is pre-approved",
+			name:        "should allow requesting and approving a validator from the coordinator",
 			msg:         sample.MsgRequestAddValidator(r, coordAddr, addr3, chains[3].LaunchID),
 			wantApprove: true,
 			wantID:      2,
@@ -91,7 +91,7 @@ func TestMsgRequestAddValidator(t *testing.T) {
 			wantApprove: true,
 		},
 		{
-			name: "fail if the coordinator of the chain is disabled",
+			name: "should prevent requesting a validator from coordinator if validator already exist",
 			msg:  sample.MsgRequestAddValidator(r, sample.Address(r), sample.Address(r), disableChain[0].LaunchID),
 			err:  profiletypes.ErrCoordInactive,
 		},
@@ -121,7 +121,6 @@ func TestMsgRequestAddValidator(t *testing.T) {
 
 			if !tc.wantApprove {
 				require.Equal(t, types.Request_PENDING, request.Status)
-
 			} else {
 				_, found := tk.LaunchKeeper.GetGenesisValidator(sdkCtx, tc.msg.LaunchID, tc.msg.ValAddress)
 				require.True(t, found, "genesis validator not found")

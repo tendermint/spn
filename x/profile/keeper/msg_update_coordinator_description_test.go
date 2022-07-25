@@ -28,12 +28,12 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "not found address",
+			name: "should prevent updating description of non existing coordinator",
 			msg:  sample.MsgUpdateCoordinatorDescription(addr),
 			err:  types.ErrCoordAddressNotFound,
 		},
 		{
-			name: "update one value",
+			name: "should allow updating one value of coordinator description",
 			msg: types.MsgUpdateCoordinatorDescription{
 				Address: msgCoord.Address,
 				Description: types.CoordinatorDescription{
@@ -42,7 +42,7 @@ func TestMsgUpdateCoordinatorDescription(t *testing.T) {
 			},
 		},
 		{
-			name: "update all values",
+			name: "should allow updating all values of coordinator description",
 			msg:  sample.MsgUpdateCoordinatorDescription(msgCoord.Address),
 		},
 	}

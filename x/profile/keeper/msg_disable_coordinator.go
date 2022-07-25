@@ -43,6 +43,10 @@ func (k msgServer) DisableCoordinator(
 	k.RemoveCoordinatorByAddress(ctx, msg.Address)
 
 	return &types.MsgDisableCoordinatorResponse{
-		CoordinatorID: coord.CoordinatorID,
-	}, nil
+			CoordinatorID: coord.CoordinatorID,
+		}, ctx.EventManager().EmitTypedEvent(
+			&types.EventCoordinatorDisabled{
+				CoordinatorID: coord.CoordinatorID,
+				Address:       msg.Address,
+			})
 }

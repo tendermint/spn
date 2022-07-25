@@ -4,13 +4,14 @@ import (
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
+	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/cosmos-sdk/x/simulation"
+	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -32,7 +33,7 @@ func deliverSimTx(
 	msg TypedMsg,
 	coinsSpent sdk.Coins,
 ) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-	txCtx := simulation.OperationInput{
+	txCtx := sdksimulation.OperationInput{
 		R:               r,
 		App:             app,
 		TxGen:           simappparams.MakeTestEncodingConfig().TxConfig,
@@ -46,15 +47,15 @@ func deliverSimTx(
 		ModuleName:      types.ModuleName,
 		CoinsSpentInMsg: coinsSpent,
 	}
-	return simulation.GenAndDeliverTxWithRandFees(txCtx)
+	return simulation.GenAndDeliverTxWithRandFees(txCtx, helpers.DefaultGenTxGas)
 }
 
 // SimulateMsgCreateCampaign simulates a MsgCreateCampaign message
 func SimulateMsgCreateCampaign(
-	k keeper.Keeper,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	pk types.ProfileKeeper,
+	k keeper.Keeper,
 ) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
@@ -77,7 +78,44 @@ func SimulateMsgCreateCampaign(
 	}
 }
 
-// TODO add SimulateMsgEditCampaign
+// SimulateMsgEditCampaign simulates a MsgEditCampaign message
+func SimulateMsgEditCampaign(ak types.AccountKeeper, bk types.BankKeeper, pk types.ProfileKeeper, k keeper.Keeper) simtypes.Operation {
+	return func(
+		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		msg := &types.MsgEditCampaign{}
+
+		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false, false)
+		if !found {
+			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "skip edit campaign"), nil, nil
+		}
+
+		var newName string
+		var newMetadata []byte
+
+		name := r.Intn(100) < 50
+		metadata := r.Intn(100) < 50
+		// ensure there is always a value to edit
+		if !name && !metadata {
+			metadata = true
+		}
+
+		if name {
+			newName = sample.CampaignName(r)
+		}
+		if metadata {
+			newMetadata = sample.Metadata(r, 20)
+		}
+
+		msg = types.NewMsgEditCampaign(
+			simAccount.Address.String(),
+			campID,
+			newName,
+			newMetadata,
+		)
+		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
+	}
+}
 
 // SimulateMsgUpdateTotalSupply simulates a MsgUpdateTotalSupply message
 func SimulateMsgUpdateTotalSupply(
@@ -129,9 +167,8 @@ func SimulateMsgInitializeMainnet(
 	}
 }
 
-// SimulateMsgAddShares simulates a MsgAddShares message
-func SimulateMsgAddShares(
-	ak types.AccountKeeper,
+// SimulateMsgUpdateSpecialAllocations simulates a MsgUpdateSpecialAllocations message
+func SimulateMsgUpdateSpecialAllocations(ak types.AccountKeeper,
 	bk types.BankKeeper,
 	pk types.ProfileKeeper,
 	k keeper.Keeper,
@@ -141,55 +178,33 @@ func SimulateMsgAddShares(
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false, true)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddShares, "skip add shares"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateSpecialAllocations, "skip update special allocations"), nil, nil
 		}
 
-		shares, getShares := GetSharesFromCampaign(r, ctx, k, campID)
+		// get shares for both genesis distribution and claimable airdrop
+		genesisDistribution, getShares := GetSharesFromCampaign(r, ctx, k, campID)
 		if !getShares {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddShares, "skip add shares"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateSpecialAllocations, "skip update special allocations"), nil, nil
 		}
-
-		// Select a random account to give shares
-		accountNb := r.Intn(len(accs))
-
-		msg := types.NewMsgAddShares(
-			campID,
-			simAccount.Address.String(),
-			accs[accountNb].Address.String(),
-			shares,
-		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
-	}
-}
-
-// SimulateMsgAddVestingOptions simulates a MsgAddVestingOptions message
-func SimulateMsgAddVestingOptions(
-	ak types.AccountKeeper,
-	bk types.BankKeeper,
-	pk types.ProfileKeeper,
-	k keeper.Keeper,
-) simtypes.Operation {
-	return func(
-		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
-	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, campID, found := GetCoordSimAccountWithCampaignID(r, ctx, pk, k, accs, false, true)
-		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddVestingOptions, "skip add vesting options"), nil, nil
-		}
-
-		shares, getShares := GetSharesFromCampaign(r, ctx, k, campID)
+		claimableAirdrop, getShares := GetSharesFromCampaign(r, ctx, k, campID)
 		if !getShares {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgAddVestingOptions, "skip add vesting options"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgUpdateSpecialAllocations, "skip update special allocations"), nil, nil
 		}
 
-		// Select a random account to give vesting options
-		accountNb := r.Intn(len(accs))
+		// GetSharesFromCampaign returns a number of available shares for a campaign
+		// potentially genesisDistribution + claimableAirdrop can overflow the available shares
+		// we divide by two all amounts to avoid overflowing available shares
+		for i, s := range genesisDistribution {
+			genesisDistribution[i].Amount = s.Amount.QuoRaw(2)
+		}
+		for i, s := range claimableAirdrop {
+			claimableAirdrop[i].Amount = s.Amount.QuoRaw(2)
+		}
 
-		msg := types.NewMsgAddVestingOptions(
-			campID,
+		msg := types.NewMsgUpdateSpecialAllocations(
 			simAccount.Address.String(),
-			accs[accountNb].Address.String(),
-			*types.NewShareDelayedVesting(shares, shares, int64(sample.Duration(r))),
+			campID,
+			types.NewSpecialAllocations(genesisDistribution, claimableAirdrop),
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
 	}
@@ -232,7 +247,7 @@ func SimulateMsgBurnVouchers(
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		campID, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, false)
+		campID, simAccount, vouchers, found := GetAccountWithVouchers(r, ctx, bk, k, accs, false)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgBurnVouchers, "skip burn vouchers"), nil, nil
 		}
@@ -255,7 +270,7 @@ func SimulateMsgRedeemVouchers(
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		campID, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, true)
+		campID, simAccount, vouchers, found := GetAccountWithVouchers(r, ctx, bk, k, accs, true)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRedeemVouchers, "skip redeem vouchers"), nil, nil
 		}
@@ -294,39 +309,5 @@ func SimulateMsgUnredeemVouchers(
 			shares,
 		)
 		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, sdk.NewCoins())
-	}
-}
-
-// SimulateMsgSendVouchers simulates a Msg message from the bank module with vouchers
-// TODO: This message constantly fails in simulation log, investigate why
-func SimulateMsgSendVouchers(
-	ak types.AccountKeeper,
-	bk types.BankKeeper,
-	k keeper.Keeper,
-) simtypes.Operation {
-	return func(
-		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
-	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		_, simAccount, vouchers, found := GetAccountWithVouchers(ctx, bk, k, accs, false)
-		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, banktypes.TypeMsgSend, "skip send vouchers"), nil, nil
-		}
-
-		// Select a random receiver account
-		accountNb := r.Intn(len(accs))
-		if accs[accountNb].Address.Equals(simAccount.Address) {
-			if accountNb == 0 {
-				accountNb++
-			} else {
-				accountNb--
-			}
-		}
-
-		msg := banktypes.NewMsgSend(
-			simAccount.Address,
-			accs[accountNb].Address,
-			vouchers,
-		)
-		return deliverSimTx(r, app, ctx, ak, bk, simAccount, msg, vouchers)
 	}
 }

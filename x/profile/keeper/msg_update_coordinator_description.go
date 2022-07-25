@@ -48,5 +48,6 @@ func (k msgServer) UpdateCoordinatorDescription(
 	}
 
 	k.SetCoordinator(ctx, coord)
+
 	return &types.MsgUpdateCoordinatorDescriptionResponse{}, nil
 }

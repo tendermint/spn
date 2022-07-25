@@ -6,13 +6,14 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibcclienttypes "github.com/cosmos/ibc-go/v2/modules/core/02-client/types"
-	ibcconnectiontypes "github.com/cosmos/ibc-go/v2/modules/core/03-connection/types"
-	ibckeeper "github.com/cosmos/ibc-go/v2/modules/core/keeper"
+	ibcclienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
+	ibcconnectiontypes "github.com/cosmos/ibc-go/v3/modules/core/03-connection/types"
+	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	"github.com/stretchr/testify/require"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
@@ -22,6 +23,8 @@ import (
 	spntypes "github.com/tendermint/spn/pkg/types"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	claimkeeper "github.com/tendermint/spn/x/claim/keeper"
+	claimtypes "github.com/tendermint/spn/x/claim/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -52,11 +55,13 @@ type TestKeepers struct {
 	RewardKeeper             *rewardkeeper.Keeper
 	MonitoringConsumerKeeper *monitoringckeeper.Keeper
 	MonitoringProviderKeeper *monitoringpkeeper.Keeper
+	AccountKeeper            authkeeper.AccountKeeper
 	BankKeeper               bankkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 	StakingKeeper            stakingkeeper.Keeper
-	FundraisingKeeper        *fundraisingkeeper.Keeper
+	FundraisingKeeper        fundraisingkeeper.Keeper
 	ParticipationKeeper      *participationkeeper.Keeper
+	ClaimKeeper              *claimkeeper.Keeper
 }
 
 // TestMsgServers holds all message servers used during keeper tests for all modules
@@ -68,6 +73,7 @@ type TestMsgServers struct {
 	RewardSrv        rewardtypes.MsgServer
 	MonitoringcSrv   monitoringctypes.MsgServer
 	ParticipationSrv participationtypes.MsgServer
+	ClaimSrv         claimtypes.MsgServer
 }
 
 // NewTestSetup returns initialized instances of all the keepers and message servers of the modules
@@ -80,12 +86,13 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
+	upgradeKeeper := initializer.Upgrade()
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper, upgradeKeeper)
 	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, distrKeeper)
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -98,6 +105,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 		[]Channel{},
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, authKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -120,6 +128,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	fundraisingKeeper.SetParams(ctx, fundraisingParams)
 	participationKeeper.SetParams(ctx, participationtypes.DefaultParams())
 	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
+	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
@@ -128,6 +137,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
 	monitoringcSrv := monitoringckeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
+	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)
 
 	// set max shares - only set during app InitGenesis
 	campaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
@@ -139,11 +149,13 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
+			AccountKeeper:            authKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
 			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
+			ClaimKeeper:              claimKeeper,
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,
@@ -152,6 +164,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			RewardSrv:        rewardSrv,
 			MonitoringcSrv:   monitoringcSrv,
 			ParticipationSrv: participationSrv,
+			ClaimSrv:         claimSrv,
 		}
 }
 
@@ -169,12 +182,13 @@ func NewTestSetupWithIBCMocks(
 	bankKeeper := initializer.Bank(paramKeeper, authKeeper)
 	stakingKeeper := initializer.Staking(authKeeper, bankKeeper, paramKeeper)
 	distrKeeper := initializer.Distribution(authKeeper, bankKeeper, stakingKeeper, paramKeeper)
-	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper)
+	upgradeKeeper := initializer.Upgrade()
+	ibcKeeper := initializer.IBC(paramKeeper, stakingKeeper, *capabilityKeeper, upgradeKeeper)
 	fundraisingKeeper := initializer.Fundraising(paramKeeper, authKeeper, bankKeeper, distrKeeper)
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper)
+	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
 	launchKeeper.SetCampaignKeeper(campaignKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
@@ -187,6 +201,7 @@ func NewTestSetupWithIBCMocks(
 		channelMock,
 	)
 	launchKeeper.SetMonitoringcKeeper(monitoringConsumerKeeper)
+	claimKeeper := initializer.Claim(paramKeeper, authKeeper, bankKeeper)
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
 	// Create a context using a custom timestamp
@@ -207,6 +222,7 @@ func NewTestSetupWithIBCMocks(
 	fundraisingKeeper.SetParams(ctx, fundraisingtypes.DefaultParams())
 	participationKeeper.SetParams(ctx, participationtypes.DefaultParams())
 	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
+	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
@@ -226,11 +242,13 @@ func NewTestSetupWithIBCMocks(
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
+			AccountKeeper:            authKeeper,
 			BankKeeper:               bankKeeper,
 			IBCKeeper:                ibcKeeper,
 			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
+			ClaimKeeper:              claimKeeper,
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,

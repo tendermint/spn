@@ -74,37 +74,37 @@ func TestMsgRevertLaunch(t *testing.T) {
 		err      error
 	}{
 		{
-			name:     "revert delay reached",
+			name:     "should allow reverting launch if revert delay reached",
 			msg:      *types.NewMsgRevertLaunch(coordAddress, delayReached),
 			clientID: testClientID,
 		},
 		{
-			name: "revert delay not reached",
+			name: "should prevent reverting launch if revert delay not reached",
 			msg:  *types.NewMsgRevertLaunch(coordAddress, delayNotReached),
 			err:  types.ErrRevertDelayNotReached,
 		},
 		{
-			name: "launch chain not launched",
+			name: "should prevent reverting launch if chain not launched",
 			msg:  *types.NewMsgRevertLaunch(coordAddress, notLaunched),
 			err:  types.ErrNotTriggeredLaunch,
 		},
 		{
-			name: "non existent coordinator",
+			name: "should prevent reverting launch with non existent coordinator",
 			msg:  *types.NewMsgRevertLaunch(coordNoExist, delayReached),
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "invalid coordinator",
+			name: "should prevent reverting launch with invalid coordinator",
 			msg:  *types.NewMsgRevertLaunch(coordAddress2, delayReached),
 			err:  profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "chain is already ibc connected",
+			name: "should prevent reverting launch if chain is already ibc connected",
 			msg:  *types.NewMsgRevertLaunch(coordAddress, ibcConnected),
 			err:  types.ErrChainMonitoringConnected,
 		},
 		{
-			name: "non existent chain id",
+			name: "should prevent reverting launch with non existent chain id",
 			msg:  *types.NewMsgRevertLaunch(coordAddress, chainIDNoExist),
 			err:  types.ErrChainNotFound,
 		},

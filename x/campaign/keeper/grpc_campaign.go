@@ -5,7 +5,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -33,7 +32,6 @@ func (k Keeper) CampaignAll(c context.Context, req *types.QueryAllCampaignReques
 		campaigns = append(campaigns, campaign)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -49,7 +47,7 @@ func (k Keeper) Campaign(c context.Context, req *types.QueryGetCampaignRequest) 
 	ctx := sdk.UnwrapSDKContext(c)
 	campaign, found := k.GetCampaign(ctx, req.CampaignID)
 	if !found {
-		return nil, sdkerrors.ErrKeyNotFound
+		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	return &types.QueryGetCampaignResponse{Campaign: campaign}, nil

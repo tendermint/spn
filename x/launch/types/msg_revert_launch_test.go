@@ -19,17 +19,16 @@ func TestMsgRevertLaunch_ValidateBasic(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc:  "valid message",
+			desc:  "should validate valid message",
 			msg:   *types.NewMsgRevertLaunch(addr, launchID),
 			valid: true,
 		},
 		{
-			desc:  "invalid coordinator address",
+			desc:  "should prevent validate message with invalid coordinator address",
 			msg:   *types.NewMsgRevertLaunch("invalid", launchID),
 			valid: false,
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.msg.ValidateBasic()
 			if tc.valid {

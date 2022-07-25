@@ -14,7 +14,7 @@ import (
 
 func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	t.Run("valid case", func(t *testing.T) {
+	t.Run("should not break with valid state", func(t *testing.T) {
 		coord := sample.Coordinator(r, sample.Address(r))
 		coord.CoordinatorID = tk.ProfileKeeper.AppendCoordinator(ctx, coord)
 		tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
@@ -25,7 +25,7 @@ func TestCoordinatorAddrNotFoundInvariant(t *testing.T) {
 		require.False(t, broken, msg)
 	})
 
-	t.Run("invalid case", func(t *testing.T) {
+	t.Run("should not break with coordinator not found from coordinator by address", func(t *testing.T) {
 		tk.ProfileKeeper.SetCoordinatorByAddress(ctx, types.CoordinatorByAddress{
 			Address:       sample.Address(r),
 			CoordinatorID: 10,

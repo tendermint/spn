@@ -25,6 +25,7 @@ func createNGenesisValidator(keeper *keeper.Keeper, ctx sdk.Context, n int) []ty
 
 func createNGenesisValidatorByLaunchID(keeper *keeper.Keeper, ctx sdk.Context, launchID int) []types.GenesisValidator {
 	items := make([]types.GenesisValidator, launchID)
+
 	for i := range items {
 		items[i] = sample.GenesisValidator(r, uint64(launchID), strconv.Itoa(i))
 		keeper.SetGenesisValidator(ctx, items[i])
@@ -35,35 +36,45 @@ func createNGenesisValidatorByLaunchID(keeper *keeper.Keeper, ctx sdk.Context, l
 func TestGenesisValidatorGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)
-	for _, item := range items {
-		rst, found := tk.LaunchKeeper.GetGenesisValidator(ctx,
-			item.LaunchID,
-			item.Address,
-		)
-		require.True(t, found)
-		require.Equal(t, item, rst)
-	}
+
+	t.Run("should get a genesis validator", func(t *testing.T) {
+		for _, item := range items {
+			rst, found := tk.LaunchKeeper.GetGenesisValidator(ctx,
+				item.LaunchID,
+				item.Address,
+			)
+			require.True(t, found)
+			require.Equal(t, item, rst)
+		}
+	})
 }
+
 func TestGenesisValidatorRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)
-	for _, item := range items {
-		tk.LaunchKeeper.RemoveGenesisValidator(ctx,
-			item.LaunchID,
-			item.Address,
-		)
-		_, found := tk.LaunchKeeper.GetGenesisValidator(ctx,
-			item.LaunchID,
-			item.Address,
-		)
-		require.False(t, found)
-	}
+
+	t.Run("should remove a genesis validator", func(t *testing.T) {
+		for _, item := range items {
+			tk.LaunchKeeper.RemoveGenesisValidator(ctx,
+				item.LaunchID,
+				item.Address,
+			)
+			_, found := tk.LaunchKeeper.GetGenesisValidator(ctx,
+				item.LaunchID,
+				item.Address,
+			)
+			require.False(t, found)
+		}
+	})
 }
 
 func TestGenesisValidatorGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNGenesisValidator(tk.LaunchKeeper, ctx, 10)
-	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllGenesisValidator(ctx))
+
+	t.Run("should get all genesis validator", func(t *testing.T) {
+		require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllGenesisValidator(ctx))
+	})
 }
 
 func TestKeeper_GetValidatorsAndTotalDelegation(t *testing.T) {
@@ -77,7 +88,10 @@ func TestKeeper_GetValidatorsAndTotalDelegation(t *testing.T) {
 		validatorMap[consPubKey] = validator
 		totalSelfDelegation = totalSelfDelegation.Add(validator.SelfDelegation.Amount.ToDec())
 	}
-	val, got := tk.LaunchKeeper.GetValidatorsAndTotalDelegation(ctx, uint64(launchID))
-	require.Equal(t, totalSelfDelegation, got)
-	require.EqualValues(t, validatorMap, val)
+
+	t.Run("should get a map of genesis validator and the total delegation", func(t *testing.T) {
+		val, got := tk.LaunchKeeper.GetValidatorsAndTotalDelegation(ctx, uint64(launchID))
+		require.Equal(t, totalSelfDelegation, got)
+		require.EqualValues(t, validatorMap, val)
+	})
 }

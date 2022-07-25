@@ -14,7 +14,7 @@ import (
 func TestConsensusState_RootHash(t *testing.T) {
 	csf := types.ConsensusState{
 		NextValidatorsHash: "foo",
-		Root: types.MerkelRool{
+		Root: types.MerkleRoot{
 			Hash: "bar",
 		},
 		Timestamp: "foobar",
@@ -100,7 +100,6 @@ timestamp: "2022-01-12T07:56:35.394367Z"
 		require.EqualValues(t, "2022-01-12T07:56:35.394367Z", csf.Timestamp)
 		require.EqualValues(t, "DD388ED4B9DED48DEDF7C4A781AB656DD5C56D50655A662A92B516B33EA97EA2", csf.NextValidatorsHash)
 		require.EqualValues(t, "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=", csf.RootHash())
-
 	})
 
 	t.Run("non-existent file", func(t *testing.T) {

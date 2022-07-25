@@ -43,7 +43,14 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	}
 
 	// Append the new campaign
-	campaign := types.NewCampaign(0, msg.CampaignName, coordID, msg.TotalSupply, msg.Metadata)
+	campaign := types.NewCampaign(
+		0,
+		msg.CampaignName,
+		coordID,
+		msg.TotalSupply,
+		msg.Metadata,
+		ctx.BlockTime().Unix(),
+	)
 	campaignID := k.AppendCampaign(ctx, campaign)
 
 	// Initialize the list of campaign chains
@@ -52,5 +59,11 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		Chains:     []uint64{},
 	})
 
-	return &types.MsgCreateCampaignResponse{CampaignID: campaignID}, nil
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignCreated{
+		CampaignID:         campaignID,
+		CoordinatorAddress: msg.Coordinator,
+		CoordinatorID:      coordID,
+	})
+
+	return &types.MsgCreateCampaignResponse{CampaignID: campaignID}, err
 }

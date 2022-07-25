@@ -48,43 +48,56 @@ func createNRequest(k *keeper.Keeper, ctx sdk.Context, n int) []types.Request {
 func TestRequestGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
-	for _, item := range items {
-		rst, found := tk.LaunchKeeper.GetRequest(ctx,
-			item.LaunchID,
-			item.RequestID,
-		)
-		require.True(t, found)
-		require.Equal(t, item, rst)
-	}
+
+	t.Run("should get a request", func(t *testing.T) {
+		for _, item := range items {
+			rst, found := tk.LaunchKeeper.GetRequest(ctx,
+				item.LaunchID,
+				item.RequestID,
+			)
+			require.True(t, found)
+			require.Equal(t, item, rst)
+		}
+	})
 }
+
 func TestRequestRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
-	for _, item := range items {
-		tk.LaunchKeeper.RemoveRequest(ctx,
-			item.LaunchID,
-			item.RequestID,
-		)
-		_, found := tk.LaunchKeeper.GetRequest(ctx,
-			item.LaunchID,
-			item.RequestID,
-		)
-		require.False(t, found)
-	}
+
+	t.Run("should remove a request", func(t *testing.T) {
+		for _, item := range items {
+			tk.LaunchKeeper.RemoveRequest(ctx,
+				item.LaunchID,
+				item.RequestID,
+			)
+			_, found := tk.LaunchKeeper.GetRequest(ctx,
+				item.LaunchID,
+				item.RequestID,
+			)
+			require.False(t, found)
+		}
+	})
 }
 
 func TestRequestGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
-	require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllRequest(ctx))
+
+	t.Run("should get all requests", func(t *testing.T) {
+		require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllRequest(ctx))
+	})
 }
 
 func TestRequestCounter(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNRequest(tk.LaunchKeeper, ctx, 10)
-	counter := uint64(len(items)) + 1
-	require.Equal(t, counter, tk.LaunchKeeper.GetRequestCounter(ctx, 0))
-	require.Equal(t, uint64(1), tk.LaunchKeeper.GetRequestCounter(ctx, 1))
+
+	t.Run("should get request counter", func(t *testing.T) {
+		counter := uint64(len(items)) + 1
+		require.Equal(t, counter, tk.LaunchKeeper.GetRequestCounter(ctx, 0))
+		require.Equal(t, uint64(1), tk.LaunchKeeper.GetRequestCounter(ctx, 1))
+	})
 }
 
 func TestCheckAccount(t *testing.T) {
@@ -124,19 +137,19 @@ func TestCheckAccount(t *testing.T) {
 		err   error
 	}{
 		{
-			name:  "account not found",
+			name:  "should return false if genesis or vesting account is not found",
 			addr:  notFound,
 			found: false,
 		}, {
-			name:  "genesis account found",
+			name:  "should return true if genesis account found",
 			addr:  genesisAcc,
 			found: true,
 		}, {
-			name:  "vesting account found",
+			name:  "vesting return true if account found",
 			addr:  vestingAcc,
 			found: true,
 		}, {
-			name: "critical error if duplicated accounts",
+			name: "should return critical error if duplicated genesis and vesting accounts",
 			addr: dupAcc,
 			err:  spnerrors.ErrCritical,
 		},
@@ -158,6 +171,8 @@ func TestCheckAccount(t *testing.T) {
 
 func TestApplyRequest(t *testing.T) {
 	var (
+		coord          = sample.Coordinator(r, sample.Address(r))
+		coordID        = uint64(3)
 		genesisAcc     = sample.Address(r)
 		vestingAcc     = sample.Address(r)
 		validatorAcc   = sample.Address(r)
@@ -166,60 +181,78 @@ func TestApplyRequest(t *testing.T) {
 		contents       = sample.AllRequestContents(r, launchID, genesisAcc, vestingAcc, validatorAcc)
 		invalidContent = types.NewGenesisAccount(launchID, "", sdk.NewCoins())
 	)
+
+	coord.CoordinatorID = coordID
+	tk.ProfileKeeper.SetCoordinator(ctx, coord)
+	chain := sample.Chain(r, launchID, coordID)
+	tk.LaunchKeeper.SetChain(ctx, chain)
+
 	tests := []struct {
 		name    string
 		request types.Request
 		wantErr bool
 	}{
 		{
-			name:    "test GenesisAccount content",
+			name:    "should allow applying GenesisAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[0]),
-		}, {
-			name:    "test duplicated GenesisAccount content",
+		},
+		{
+			name:    "should prevent applying duplicated GenesisAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[0]),
 			wantErr: true,
-		}, {
-			name:    "test genesis AccountRemoval content",
+		},
+		{
+			name:    "should allow applying genesis AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[1]),
-		}, {
-			name:    "test not found genesis AccountRemoval content",
+		},
+		{
+			name:    "should prevent applying AccountRemoval when account not found",
 			request: sample.RequestWithContent(r, launchID, contents[1]),
 			wantErr: true,
-		}, {
-			name:    "test VestingAccount content",
+		},
+		{
+			name:    "should allow applying VestingAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[2]),
-		}, {
-			name:    "test duplicated VestingAccount content",
+		},
+		{
+			name:    "should prevent applying duplicated VestingAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[2]),
 			wantErr: true,
-		}, {
-			name:    "test vesting AccountRemoval content",
+		},
+		{
+			name:    "should allow applying vesting AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[3]),
-		}, {
-			name:    "test not found vesting AccountRemoval content",
+		},
+		{
+			name:    "should prevent applying vesting AccountRemoval content when account not found",
 			request: sample.RequestWithContent(r, launchID, contents[3]),
 			wantErr: true,
-		}, {
-			name:    "test GenesisValidator content",
+		},
+		{
+			name:    "should allow applying GenesisValidator content",
 			request: sample.RequestWithContent(r, launchID, contents[4]),
-		}, {
-			name:    "test duplicated GenesisValidator content",
+		},
+		{
+			name:    "should prevent applying duplicated GenesisValidator content",
 			request: sample.RequestWithContent(r, launchID, contents[4]),
 			wantErr: true,
-		}, {
-			name:    "test ValidatorRemoval content",
+		},
+		{
+			name:    "should allow applying ValidatorRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[5]),
-		}, {
-			name:    "test not found ValidatorRemoval content",
+		},
+		{
+			name:    "should prevent applying ValidatorRemoval when validator not found",
 			request: sample.RequestWithContent(r, launchID, contents[5]),
 			wantErr: true,
-		}, {
-			name:    "test request with invalid parameters",
+		},
+		{
+			name:    "should prevent applying invalid request content",
 			request: sample.RequestWithContent(r, launchID, invalidContent),
 			wantErr: true,
 		},
 		{
-			name: "test request with no content",
+			name: "should prevent applying empty request content",
 			request: types.Request{
 				Content: types.RequestContent{},
 			},
@@ -228,7 +261,7 @@ func TestApplyRequest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
+			err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, chain, tt.request, coord)
 			if tt.wantErr {
 				require.Error(t, err)
 				return
@@ -265,6 +298,8 @@ func TestApplyRequest(t *testing.T) {
 
 func TestCheckRequest(t *testing.T) {
 	var (
+		coord                           = sample.Coordinator(r, sample.Address(r))
+		coordID                         = uint64(3)
 		genesisAcc                      = sample.Address(r)
 		vestingAcc                      = sample.Address(r)
 		validatorAcc                    = sample.Address(r)
@@ -277,6 +312,11 @@ func TestCheckRequest(t *testing.T) {
 		duplicatedRequestVestingContent = types.NewVestingAccount(launchID, duplicatedAcc, sample.VestingOptions(r))
 		duplicatedRequestRemovalContent = types.NewAccountRemoval(duplicatedAcc)
 	)
+
+	coord.CoordinatorID = coordID
+	tk.ProfileKeeper.SetCoordinator(ctx, coord)
+	chain := sample.Chain(r, launchID, coordID)
+	tk.LaunchKeeper.SetChain(ctx, chain)
 
 	tk.LaunchKeeper.SetGenesisAccount(ctx, types.GenesisAccount{
 		LaunchID: launchID,
@@ -296,64 +336,76 @@ func TestCheckRequest(t *testing.T) {
 		err     error
 	}{
 		{
-			name:    "test GenesisAccount content",
+			name:    "should validate valid GenesisAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[0]),
-		}, {
-			name:    "test duplicated GenesisAccount content",
+		},
+		{
+			name:    "should prevent validate duplicated GenesisAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[0]),
 			err:     types.ErrAccountAlreadyExist,
-		}, {
-			name:    "test genesis AccountRemoval content",
+		},
+		{
+			name:    "should validate valid genesis AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[1]),
-		}, {
-			name:    "test not found genesis AccountRemoval content",
+		},
+		{
+			name:    "should prevent validate AccountRemoval with no account",
 			request: sample.RequestWithContent(r, launchID, contents[1]),
 			err:     types.ErrAccountNotFound,
-		}, {
-			name:    "test VestingAccount content",
+		},
+		{
+			name:    "should validate valid VestingAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[2]),
-		}, {
-			name:    "test duplicated VestingAccount content",
+		},
+		{
+			name:    "should prevent validate duplicated VestingAccount content",
 			request: sample.RequestWithContent(r, launchID, contents[2]),
 			err:     types.ErrAccountAlreadyExist,
-		}, {
-			name:    "test vesting AccountRemoval content",
+		},
+		{
+			name:    "should validate valid vesting AccountRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[3]),
-		}, {
-			name:    "test not found vesting AccountRemoval content",
+		},
+		{
+			name:    "should validate vesting AccountRemoval content with vesting account not found",
 			request: sample.RequestWithContent(r, launchID, contents[3]),
 			err:     types.ErrAccountNotFound,
-		}, {
-			name:    "test GenesisValidator content",
+		},
+		{
+			name:    "should validate valid GenesisValidator content",
 			request: sample.RequestWithContent(r, launchID, contents[4]),
-		}, {
-			name:    "test duplicated GenesisValidator content",
+		},
+		{
+			name:    "should prevent validate duplicated GenesisValidator content",
 			request: sample.RequestWithContent(r, launchID, contents[4]),
 			err:     types.ErrValidatorAlreadyExist,
-		}, {
-			name:    "test ValidatorRemoval content",
+		},
+		{
+			name:    "should validate valid ValidatorRemoval content",
 			request: sample.RequestWithContent(r, launchID, contents[5]),
-		}, {
-			name:    "test not found ValidatorRemoval content",
+		},
+		{
+			name:    "should prevent validate ValidatorRemoval content with no validator to remove",
 			request: sample.RequestWithContent(r, launchID, contents[5]),
 			err:     types.ErrValidatorNotFound,
-		}, {
-			name:    "test request with invalid parameters",
+		},
+		{
+			name:    "should prevent validate request content with invalid parameters",
 			request: sample.RequestWithContent(r, launchID, invalidContent),
 			err:     spnerrors.ErrCritical,
 		},
 		{
-			name:    "duplicated genesis and vesting account cause critical error",
+			name:    "should prevent validate with critical error genesis account request content with genesis and vesting account",
 			request: sample.RequestWithContent(r, launchID, duplicatedRequestGenesisContent),
 			err:     spnerrors.ErrCritical,
 		},
 		{
-			name:    "duplicated genesis and vesting account cause critical error",
+			name:    "should prevent validate with critical error vesting account request content with genesis and vesting account",
 			request: sample.RequestWithContent(r, launchID, duplicatedRequestVestingContent),
 			err:     spnerrors.ErrCritical,
 		},
 		{
-			name:    "duplicated genesis and vesting account cause critical error",
+			name:    "should prevent validate with critical error account removal request content with genesis and vesting account",
 			request: sample.RequestWithContent(r, launchID, duplicatedRequestRemovalContent),
 			err:     spnerrors.ErrCritical,
 		},
@@ -364,7 +416,7 @@ func TestCheckRequest(t *testing.T) {
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 			} else {
-				err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, launchID, tt.request)
+				err := keeper.ApplyRequest(ctx, *tk.LaunchKeeper, chain, tt.request, coord)
 				require.NoError(t, err)
 			}
 		})

@@ -39,14 +39,14 @@ func TestMsgAddValidatorOperatorAddress(t *testing.T) {
 			},
 		},
 		{
-			name: "should allow to associate the same address",
+			name: "should allow associating the same address",
 			msg: &types.MsgAddValidatorOperatorAddress{
 				ValidatorAddress: valAddr,
 				OperatorAddress:  valAddr,
 			},
 		},
 		{
-			name: "should create a validator is it doesn't exist",
+			name: "should allow creating a new validator if it doesn't exist",
 			msg: &types.MsgAddValidatorOperatorAddress{
 				ValidatorAddress: sample.Address(r),
 				OperatorAddress:  sample.Address(r),

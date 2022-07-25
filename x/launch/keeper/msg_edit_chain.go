@@ -4,16 +4,17 @@ import (
 	"context"
 	"fmt"
 
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*types.MsgEditChainResponse, error) {
+	var err error
+
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	chain, found := k.GetChain(ctx, msg.LaunchID)
@@ -65,13 +66,12 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		chain.CampaignID = msg.CampaignID
 		chain.HasCampaign = true
 
-		err := k.campaignKeeper.AddChainToCampaign(ctx, chain.CampaignID, chain.LaunchID)
+		err = k.campaignKeeper.AddChainToCampaign(ctx, chain.CampaignID, chain.LaunchID)
 		if err != nil {
 			return nil, sdkerrors.Wrap(types.ErrAddChainToCampaign, err.Error())
 		}
 	}
 
 	k.SetChain(ctx, chain)
-
-	return &types.MsgEditChainResponse{}, nil
+	return &types.MsgEditChainResponse{}, err
 }

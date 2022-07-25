@@ -28,7 +28,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc: "valid message",
+			desc: "should validate valid message",
 			msg: sample.MsgEditChain(r,
 				sample.Address(r),
 				launchID,
@@ -39,7 +39,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "valid message with new metadata",
+			desc: "should validate valid message with new metadata",
 			msg: sample.MsgEditChain(r,
 				sample.Address(r),
 				launchID,
@@ -50,7 +50,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "valid message with new chain ID",
+			desc: "should validate valid message with new chain ID",
 			msg: sample.MsgEditChain(r,
 				sample.Address(r),
 				launchID,
@@ -61,7 +61,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "invalid coordinator address",
+			desc: "should prevent validate message with invalid coordinator address",
 			msg: sample.MsgEditChain(r,
 				"invalid",
 				launchID,
@@ -72,7 +72,7 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "no value to edit",
+			desc: "should prevent validate message with no value to edit",
 			msg: sample.MsgEditChain(r,
 				sample.Address(r),
 				launchID,
@@ -83,12 +83,11 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc:  "invalid metadata length",
+			desc:  "should prevent validate message with invalid metadata length",
 			msg:   msgInvalidMetadataLen,
 			valid: false,
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.msg.ValidateBasic()
 			if tc.valid {

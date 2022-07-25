@@ -6,10 +6,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
-	channeltypes "github.com/cosmos/ibc-go/v2/modules/core/04-channel/types"
-	porttypes "github.com/cosmos/ibc-go/v2/modules/core/05-port/types"
-	host "github.com/cosmos/ibc-go/v2/modules/core/24-host"
-	ibcexported "github.com/cosmos/ibc-go/v2/modules/core/exported"
+	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
+	porttypes "github.com/cosmos/ibc-go/v3/modules/core/05-port/types"
+	host "github.com/cosmos/ibc-go/v3/modules/core/24-host"
+	ibcexported "github.com/cosmos/ibc-go/v3/modules/core/exported"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
@@ -19,7 +19,7 @@ import (
 func (am AppModule) OnChanOpenInit(
 	ctx sdk.Context,
 	order channeltypes.Order,
-	_ []string,
+	connectionHops []string,
 	portID,
 	channelID string,
 	chanCap *capabilitytypes.Capability,
@@ -45,8 +45,15 @@ func (am AppModule) OnChanOpenInit(
 		return err
 	}
 
+	if len(connectionHops) != 1 {
+		return sdkerrors.Wrap(
+			channeltypes.ErrTooManyConnectionHops,
+			"must have direct connection to provider chain",
+		)
+	}
+
 	// Check if the client ID is a verified from MsgCreateClient
-	if err := am.keeper.VerifyClientIDFromChannelID(ctx, channelID); err != nil {
+	if err := am.keeper.VerifyClientIDFromConnID(ctx, connectionHops[0]); err != nil {
 		return sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
 	}
 
@@ -62,10 +69,9 @@ func (am AppModule) OnChanOpenTry(
 	_ string,
 	_ *capabilitytypes.Capability,
 	_ channeltypes.Counterparty,
-	_,
 	_ string,
-) error {
-	return sdkerrors.Wrap(types.ErrInvalidHandshake, "IBC handshake must be initiated by the consumer")
+) (string, error) {
+	return "", sdkerrors.Wrap(types.ErrInvalidHandshake, "IBC handshake must be initiated by the consumer")
 }
 
 // OnChanOpenAck implements the IBCModule interface
@@ -73,6 +79,7 @@ func (am AppModule) OnChanOpenAck(
 	ctx sdk.Context,
 	_,
 	channelID string,
+	_,
 	counterpartyVersion string,
 ) error {
 	if counterpartyVersion != types.Version {
@@ -249,16 +256,4 @@ func (am AppModule) OnTimeoutPacket(
 	}
 
 	return nil
-}
-
-// NegotiateAppVersion implements the IBCModule interface
-func (am AppModule) NegotiateAppVersion(
-	_ sdk.Context,
-	_ channeltypes.Order,
-	_,
-	_ string,
-	_ channeltypes.Counterparty,
-	_ string,
-) (version string, err error) {
-	return types.Version, nil
 }

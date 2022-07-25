@@ -23,26 +23,25 @@ func TestCoordinatorByAddressQuerySingle(t *testing.T) {
 		err      error
 	}{
 		{
-			desc:     "First",
+			desc:     "should allow querying first coordinator by address",
 			request:  &types.QueryGetCoordinatorByAddressRequest{Address: msgs[0].Address},
 			response: &types.QueryGetCoordinatorByAddressResponse{CoordinatorByAddress: msgs[0]},
 		},
 		{
-			desc:     "Second",
+			desc:     "should allow querying second coordinator by address",
 			request:  &types.QueryGetCoordinatorByAddressRequest{Address: msgs[1].Address},
 			response: &types.QueryGetCoordinatorByAddressResponse{CoordinatorByAddress: msgs[1]},
 		},
 		{
-			desc:    "KeyNotFound",
+			desc:    "should prevent querying non existing coordinator by address",
 			request: &types.QueryGetCoordinatorByAddressRequest{Address: "missing"},
 			err:     status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			desc: "should prevent querying with invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			response, err := tk.ProfileKeeper.CoordinatorByAddress(wctx, tc.request)
 			if tc.err != nil {
