@@ -2,10 +2,10 @@ package keeper_test
 
 import (
 	"encoding/json"
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ignite/cli/ignite/pkg/cosmoscmd"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -50,7 +50,7 @@ func setup(isCheckTx bool) *spnapp.App {
 
 func genApp(withGenesis bool, invCheckPeriod uint) (*spnapp.App, spnapp.GenesisState) {
 	db := dbm.NewMemDB()
-	encCdc := cosmoscmd.MakeEncodingConfig(spnapp.ModuleBasics)
+	encCdc := spntypes.MakeEncodingConfig(spnapp.ModuleBasics)
 	app := spnapp.New(
 		log.NewNopLogger(),
 		db,
