@@ -10,13 +10,10 @@ import (
 
 	"github.com/tendermint/spn/x/campaign/types"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
-	rewardtypes "github.com/tendermint/spn/x/reward/types"
 )
 
 type LaunchKeeper interface {
 	GetChain(ctx sdk.Context, launchID uint64) (val launchtypes.Chain, found bool)
-	GetRequestCount(ctx sdk.Context, launchID uint64) (count uint64)
-	GetGenesisValidatorCount(ctx sdk.Context, launchID uint64) (count uint64)
 	CreateNewChain(
 		ctx sdk.Context,
 		coordinatorID uint64,
@@ -32,10 +29,6 @@ type LaunchKeeper interface {
 	) (uint64, error)
 }
 
-type RewardKeeper interface {
-	GetRewardPool(ctx sdk.Context, launchID uint64) (val rewardtypes.RewardPool, found bool)
-}
-
 type (
 	Keeper struct {
 		cdc           codec.BinaryCodec
@@ -45,7 +38,6 @@ type (
 		bankKeeper    types.BankKeeper
 		distrKeeper   types.DistributionKeeper
 		profileKeeper types.ProfileKeeper
-		rewardKeeper  RewardKeeper
 		paramSpace    paramtypes.Subspace
 	}
 )
@@ -59,7 +51,6 @@ func NewKeeper(
 	bankKeeper types.BankKeeper,
 	distrKeeper types.DistributionKeeper,
 	profileKeeper types.ProfileKeeper,
-	rewardKeeper RewardKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !paramSpace.HasKeyTable() {
@@ -75,7 +66,6 @@ func NewKeeper(
 		bankKeeper:    bankKeeper,
 		distrKeeper:   distrKeeper,
 		profileKeeper: profileKeeper,
-		rewardKeeper:  rewardKeeper,
 	}
 }
 
