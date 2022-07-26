@@ -86,7 +86,7 @@ func TestKeeper_GetValidatorsAndTotalDelegation(t *testing.T) {
 	for _, validator := range validators {
 		consPubKey := base64.StdEncoding.EncodeToString(validator.ConsPubKey)
 		validatorMap[consPubKey] = validator
-		totalSelfDelegation = totalSelfDelegation.Add(validator.SelfDelegation.Amount.ToDec())
+		totalSelfDelegation = totalSelfDelegation.Add(sdk.NewDecFromInt(validator.SelfDelegation.Amount))
 	}
 
 	t.Run("should get a map of genesis validator and the total delegation", func(t *testing.T) {

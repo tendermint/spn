@@ -49,7 +49,7 @@ func (k Keeper) CheckValidatorSet(
 				validator.PubKey.Address().String(),
 			)
 		}
-		valSetSelfDelegation = valSetSelfDelegation.Add(launchValidator.SelfDelegation.Amount.ToDec())
+		valSetSelfDelegation = valSetSelfDelegation.Add(sdk.NewDecFromInt(launchValidator.SelfDelegation.Amount))
 	}
 
 	// check if 2/3 of total self-delegation is reached from the provided validator set
