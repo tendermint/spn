@@ -34,35 +34,35 @@ func TestAvailableAllocationsGet(t *testing.T) {
 
 	tk.ParticipationKeeper.SetUsedAllocations(sdkCtx, types.UsedAllocations{
 		Address:        validAddress,
-		NumAllocations: 2,
+		NumAllocations: sdk.NewInt(2),
 	})
 
 	// set used allocations to be greater than totalAllocations
 	tk.ParticipationKeeper.SetUsedAllocations(sdkCtx, types.UsedAllocations{
 		Address:        validAddressExtraUsed,
-		NumAllocations: 11,
+		NumAllocations: sdk.NewInt(11),
 	})
 
 	for _, tc := range []struct {
 		desc       string
 		address    string
-		allocation uint64
+		allocation sdk.Int
 		wantError  bool
 	}{
 		{
 			desc:       "valid address with used allocations",
 			address:    validAddress,
-			allocation: 8, // (100 * 10 / 100) - 2 = 8
+			allocation: sdk.NewInt(8), // (100 * 10 / 100) - 2 = 8
 		},
 		{
 			desc:       "valid address with no used allocations",
 			address:    validAddressNoUse,
-			allocation: 10, // (100 * 10 / 100) - 0 = 10
+			allocation: sdk.NewInt(10), // (100 * 10 / 100) - 0 = 10
 		},
 		{
 			desc:       "return 0 when usedAllocations > totalAllocations",
 			address:    validAddressExtraUsed,
-			allocation: 0, // 11 > 10 - > return 0
+			allocation: sdk.NewInt(0), // 11 > 10 - > return 0
 		},
 		{
 			desc:      "invalid address returns error",

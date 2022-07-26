@@ -29,7 +29,10 @@ message AllocationPrice {
 // Matches a number of required allocations with benefits
 message Tier {
   uint64 tierID = 1;
-  uint64 requiredAllocations = 2;
+  string requiredAllocations = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
   TierBenefits benefits = 3 [(gogoproto.nullable) = false];
 }
 

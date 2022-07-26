@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/stretchr/testify/require"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -19,29 +21,29 @@ func TestMismatchUsedAllocationsInvariant(t *testing.T) {
 			{
 				Address:        addr,
 				AuctionID:      1,
-				NumAllocations: 1,
+				NumAllocations: sdk.OneInt(),
 				Withdrawn:      false,
 			},
 			{
 				Address:        addr,
 				AuctionID:      2,
-				NumAllocations: 1,
+				NumAllocations: sdk.OneInt(),
 				Withdrawn:      false,
 			},
 			{
 				Address:        addr,
 				AuctionID:      3,
-				NumAllocations: 5,
+				NumAllocations: sdk.NewInt(5),
 				Withdrawn:      true,
 			},
 		}
 		invalidUsedAllocs = types.UsedAllocations{
 			Address:        addr,
-			NumAllocations: 7,
+			NumAllocations: sdk.NewInt(7),
 		}
 		validUsedAllocs = types.UsedAllocations{
 			Address:        addr,
-			NumAllocations: 2,
+			NumAllocations: sdk.NewInt(2),
 		}
 	)
 

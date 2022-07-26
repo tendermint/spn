@@ -57,7 +57,7 @@ func (k Keeper) UsedAllocations(c context.Context, req *types.QueryGetUsedAlloca
 		return &types.QueryGetUsedAllocationsResponse{
 			UsedAllocations: types.UsedAllocations{
 				Address:        req.Address,
-				NumAllocations: 0,
+				NumAllocations: sdk.ZeroInt(),
 			},
 		}, nil
 	}
