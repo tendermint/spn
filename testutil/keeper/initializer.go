@@ -156,9 +156,7 @@ func (i initializer) Capability() *capabilitykeeper.Keeper {
 
 type ProtocolVersionSetter struct{}
 
-func (vs ProtocolVersionSetter) SetProtocolVersion(uint64) {
-	return
-}
+func (vs ProtocolVersionSetter) SetProtocolVersion(uint64) {}
 
 func (i initializer) Upgrade() upgradekeeper.Keeper {
 	storeKey := sdk.NewKVStoreKey(upgradetypes.StoreKey)

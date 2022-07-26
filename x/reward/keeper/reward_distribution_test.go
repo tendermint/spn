@@ -673,7 +673,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			}
 
 			// assert currentRemainingCoins = previousRemainingCoins - distributedRewards
-			expectedRemainingCoins, neg := tt.rewardPool.RemainingCoins.SafeSub(totalDistributedBalances)
+			expectedRemainingCoins, neg := tt.rewardPool.RemainingCoins.SafeSub(totalDistributedBalances...)
 			require.False(t, neg, "more coins have been distributed than coins in remaining coins %s > %s",
 				totalDistributedBalances.String(),
 				tt.rewardPool.RemainingCoins.String(),

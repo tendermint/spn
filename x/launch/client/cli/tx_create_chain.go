@@ -92,11 +92,11 @@ func CmdCreateChain() *cobra.Command {
 // getHashFromURL fetches content from url and returns the hash based on the genesis hash method
 func getHashFromURL(ctx context.Context, url string) (string, error) {
 	// check url port
-	parsedUrl, err := neturl.Parse(url)
+	parsedURL, err := neturl.Parse(url)
 	if err != nil {
 		return "", err
 	}
-	_, port, err := net.SplitHostPort(parsedUrl.Host)
+	_, port, err := net.SplitHostPort(parsedURL.Host)
 	if err != nil {
 		return "", err
 	}
