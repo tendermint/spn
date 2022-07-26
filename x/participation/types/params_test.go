@@ -36,7 +36,7 @@ func TestParamsValidate(t *testing.T) {
 				[]Tier{
 					{
 						TierID:              0,
-						RequiredAllocations: 1,
+						RequiredAllocations: sdk.OneInt(),
 						Benefits:            TierBenefits{MaxBidAmount: sdk.ZeroInt()},
 					},
 				},
@@ -143,12 +143,12 @@ func TestValidateParticipationTierList(t *testing.T) {
 			participationTierList: []Tier{
 				{
 					TierID:              0,
-					RequiredAllocations: 1,
+					RequiredAllocations: sdk.OneInt(),
 					Benefits:            TierBenefits{MaxBidAmount: sdk.OneInt()},
 				},
 				{
 					TierID:              0,
-					RequiredAllocations: 2,
+					RequiredAllocations: sdk.NewInt(2),
 					Benefits:            TierBenefits{MaxBidAmount: sdk.NewInt(2)},
 				},
 			},
@@ -159,7 +159,7 @@ func TestValidateParticipationTierList(t *testing.T) {
 			participationTierList: []Tier{
 				{
 					TierID:              0,
-					RequiredAllocations: 0,
+					RequiredAllocations: sdk.ZeroInt(),
 					Benefits:            TierBenefits{MaxBidAmount: sdk.OneInt()},
 				},
 			},
@@ -170,7 +170,7 @@ func TestValidateParticipationTierList(t *testing.T) {
 			participationTierList: []Tier{
 				{
 					TierID:              0,
-					RequiredAllocations: 1,
+					RequiredAllocations: sdk.OneInt(),
 					Benefits:            TierBenefits{MaxBidAmount: sdk.ZeroInt()},
 				},
 			},
@@ -185,12 +185,12 @@ func TestValidateParticipationTierList(t *testing.T) {
 			participationTierList: []Tier{
 				{
 					TierID:              0,
-					RequiredAllocations: 1,
+					RequiredAllocations: sdk.OneInt(),
 					Benefits:            TierBenefits{MaxBidAmount: sdk.OneInt()},
 				},
 				{
 					TierID:              1,
-					RequiredAllocations: 2,
+					RequiredAllocations: sdk.NewInt(2),
 					Benefits:            TierBenefits{MaxBidAmount: sdk.NewInt(2)},
 				},
 			},

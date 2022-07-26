@@ -24,28 +24,28 @@ var (
 	DefaultParticipationTierList = []Tier{
 		{
 			TierID:              1,
-			RequiredAllocations: 1,
+			RequiredAllocations: sdk.NewInt(1),
 			Benefits: TierBenefits{
 				MaxBidAmount: sdk.NewInt(1000),
 			},
 		},
 		{
 			TierID:              2,
-			RequiredAllocations: 2,
+			RequiredAllocations: sdk.NewInt(2),
 			Benefits: TierBenefits{
 				MaxBidAmount: sdk.NewInt(2000),
 			},
 		},
 		{
 			TierID:              3,
-			RequiredAllocations: 5,
+			RequiredAllocations: sdk.NewInt(5),
 			Benefits: TierBenefits{
 				MaxBidAmount: sdk.NewInt(10000),
 			},
 		},
 		{
 			TierID:              4,
-			RequiredAllocations: 10,
+			RequiredAllocations: sdk.NewInt(10),
 			Benefits: TierBenefits{
 				MaxBidAmount: sdk.NewInt(30000),
 			},
@@ -155,7 +155,7 @@ func validateParticipationTierList(v interface{}) error {
 		}
 		tiersIndexMap[tier.TierID] = struct{}{}
 
-		if tier.RequiredAllocations <= 0 {
+		if tier.RequiredAllocations.LTE(sdk.ZeroInt()) {
 			return errors.New("required allocations must be greater than zero")
 		}
 

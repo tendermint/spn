@@ -30,13 +30,13 @@ func MismatchUsedAllocationsInvariant(k Keeper) sdk.Invariant {
 		all := k.GetAllUsedAllocations(ctx)
 		for _, usedAllocs := range all {
 			auctionUsedAllocs := k.GetAllAuctionUsedAllocationsByAddress(ctx, usedAllocs.Address)
-			sum := uint64(0)
+			sum := sdk.ZeroInt()
 			for _, auction := range auctionUsedAllocs {
 				if !auction.Withdrawn {
-					sum += auction.NumAllocations
+					sum = sum.Add(auction.NumAllocations)
 				}
 			}
-			if sum != usedAllocs.NumAllocations {
+			if !sum.Equal(usedAllocs.NumAllocations) {
 				return sdk.FormatInvariant(
 					types.ModuleName, mismatchUsedAllocationsRoute,
 					"total used allocations not equal to sum of per-auction used allocations",

@@ -30,13 +30,13 @@ func TestTotalAllocationsGet(t *testing.T) {
 	for _, tc := range []struct {
 		desc       string
 		address    string
-		allocation uint64
+		allocation sdk.Int
 		wantError  bool
 	}{
 		{
 			desc:       "valid address",
 			address:    validAddress,
-			allocation: 10, // 100 * 10 / 100 = 10
+			allocation: sdk.NewInt(10), // 100 * 10 / 100 = 10
 		},
 		{
 			desc:      "invalid address returns error",

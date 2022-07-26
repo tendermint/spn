@@ -19,7 +19,7 @@ func createNAuctionUsedAllocations(keeper *keeper.Keeper, ctx sdk.Context, n int
 	for i := range items {
 		items[i].Address = strconv.Itoa(i)
 		items[i].AuctionID = uint64(i)
-
+		items[i].NumAllocations = sample.Int(r)
 		keeper.SetAuctionUsedAllocations(ctx, items[i])
 	}
 	return items
@@ -31,6 +31,7 @@ func createNAuctionUsedAllocationsWithSameAddress(keeper *keeper.Keeper, ctx sdk
 	for i := range items {
 		items[i].Address = address
 		items[i].AuctionID = uint64(i)
+		items[i].NumAllocations = sample.Int(r)
 
 		keeper.SetAuctionUsedAllocations(ctx, items[i])
 	}
