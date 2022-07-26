@@ -11,7 +11,7 @@ import (
 func (k Keeper) SetGenesisAccount(ctx sdk.Context, genesisAccount types.GenesisAccount) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisAccountKeyPrefix))
 	b := k.cdc.MustMarshal(&genesisAccount)
-	store.Set(types.GenesisAccountKey(
+	store.Set(types.AccountKeyPath(
 		genesisAccount.LaunchID,
 		genesisAccount.Address,
 	), b)
@@ -25,7 +25,7 @@ func (k Keeper) GetGenesisAccount(
 ) (val types.GenesisAccount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisAccountKeyPrefix))
 
-	b := store.Get(types.GenesisAccountKey(launchID, address))
+	b := store.Get(types.AccountKeyPath(launchID, address))
 	if b == nil {
 		return val, false
 	}
@@ -41,7 +41,7 @@ func (k Keeper) RemoveGenesisAccount(
 	address string,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.GenesisAccountKeyPrefix))
-	store.Delete(types.GenesisAccountKey(launchID, address))
+	store.Delete(types.AccountKeyPath(launchID, address))
 }
 
 // GetAllGenesisAccount returns all genesisAccount
