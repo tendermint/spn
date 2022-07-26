@@ -10,7 +10,7 @@ import (
 )
 
 // GetTotalAllocations returns the number of available allocations based on delegations
-func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (uint64, error) {
+func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (sdk.Int, error) {
 	allocationPriceBondedDec := sdk.NewDecFromInt(k.AllocationPrice(ctx).Bonded)
 
 	accAddr, err := sdk.AccAddressFromBech32(address)
