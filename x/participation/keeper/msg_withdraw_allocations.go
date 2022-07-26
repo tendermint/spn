@@ -42,10 +42,10 @@ func (k msgServer) WithdrawAllocations(goCtx context.Context, msg *types.MsgWith
 	}
 
 	// decrease totalUsedAllocations making sure subtraction is feasible
-	if totalUsedAllocations.NumAllocations < auctionUsedAllocations.NumAllocations {
+	if totalUsedAllocations.NumAllocations.LT(auctionUsedAllocations.NumAllocations) {
 		return nil, spnerrors.Critical("number of total used allocations cannot become negative")
 	}
-	totalUsedAllocations.NumAllocations -= auctionUsedAllocations.NumAllocations
+	totalUsedAllocations.NumAllocations = totalUsedAllocations.NumAllocations.Sub(auctionUsedAllocations.NumAllocations)
 
 	auctionUsedAllocations.Withdrawn = true
 	k.SetAuctionUsedAllocations(ctx, auctionUsedAllocations)

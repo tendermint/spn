@@ -2,6 +2,8 @@ package types
 
 import (
 	"fmt"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // DefaultIndex is the default capability global index
@@ -32,10 +34,14 @@ func (gs GenesisState) Validate() error {
 	}
 
 	auctionUsedAllocationsIndexMap := make(map[string]struct{})
-	auctionUsedAllocationsSum := make(map[string]uint64)
+	auctionUsedAllocationsSum := make(map[string]sdk.Int)
 	for _, elem := range gs.AuctionUsedAllocationsList {
 		index := string(AuctionUsedAllocationsKey(elem.Address, elem.AuctionID))
 		address := elem.Address
+		_, ok := auctionUsedAllocationsSum[address]
+		if !ok {
+			auctionUsedAllocationsSum[address] = sdk.ZeroInt()
+		}
 
 		// Check for duplicated address in auctionUsedAllocations
 		if _, ok := auctionUsedAllocationsIndexMap[index]; ok {
@@ -50,13 +56,13 @@ func (gs GenesisState) Validate() error {
 
 		// update total used allocations for address
 		if !elem.Withdrawn {
-			auctionUsedAllocationsSum[address] += elem.NumAllocations
+			auctionUsedAllocationsSum[address] = auctionUsedAllocationsSum[address].Add(elem.NumAllocations)
 		}
 	}
 
 	// check for consistency between UsedAllocationsList and AuctionUsedAllocationsList
 	for _, elem := range gs.UsedAllocationsList {
-		if elem.NumAllocations != auctionUsedAllocationsSum[elem.Address] {
+		if !elem.NumAllocations.Equal(auctionUsedAllocationsSum[elem.Address]) {
 			return fmt.Errorf("inconsistent total used auction allocations for address %v", elem.Address)
 		}
 	}

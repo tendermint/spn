@@ -5,10 +5,10 @@ import (
 )
 
 // GetAvailableAllocations returns the number of allocations that are unused
-func (k Keeper) GetAvailableAllocations(ctx sdk.Context, address string) (uint64, error) {
+func (k Keeper) GetAvailableAllocations(ctx sdk.Context, address string) (sdk.Int, error) {
 	numTotalAlloc, err := k.GetTotalAllocations(ctx, address)
 	if err != nil {
-		return 0, err
+		return sdk.ZeroInt(), err
 	}
 
 	usedAlloc, found := k.GetUsedAllocations(ctx, address)
@@ -17,11 +17,11 @@ func (k Keeper) GetAvailableAllocations(ctx sdk.Context, address string) (uint64
 	}
 
 	// return 0 if result would be negative
-	if usedAlloc.NumAllocations > numTotalAlloc {
-		return 0, nil
+	if usedAlloc.NumAllocations.GT(numTotalAlloc) {
+		return sdk.ZeroInt(), nil
 	}
 
-	availableAlloc := numTotalAlloc - usedAlloc.NumAllocations
+	availableAlloc := numTotalAlloc.Sub(usedAlloc.NumAllocations)
 
 	return availableAlloc, nil
 }

@@ -271,38 +271,38 @@ func TestRandomAccWithAvailableAllocations(t *testing.T) {
 
 	tk.ParticipationKeeper.SetUsedAllocations(ctx, types.UsedAllocations{
 		Address:        accs[1].Address.String(),
-		NumAllocations: 2,
+		NumAllocations: sdk.NewInt(2),
 	})
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(ctx, types.AuctionUsedAllocations{
 		Address:        accs[1].Address.String(),
 		AuctionID:      auctionID,
-		NumAllocations: 2,
+		NumAllocations: sdk.NewInt(2),
 		Withdrawn:      false,
 	})
 
 	tests := []struct {
 		name               string
 		accounts           []simulation.Account
-		desiredAllocations uint64
+		desiredAllocations sdk.Int
 		wantAccount        simulation.Account
 		found              bool
 	}{
 		{
 			name:               "no accounts with allocations",
 			accounts:           accs[2:],
-			desiredAllocations: 10,
+			desiredAllocations: sdk.NewInt(10),
 			found:              false,
 		},
 		{
 			name:               "one account with insufficient allocations",
 			accounts:           accs[1:],
-			desiredAllocations: 10,
+			desiredAllocations: sdk.NewInt(10),
 			found:              false,
 		},
 		{
 			name:               "one account has sufficient allocations",
 			accounts:           accs,
-			desiredAllocations: 10,
+			desiredAllocations: sdk.NewInt(10),
 			wantAccount:        accs[0],
 			found:              true,
 		},
@@ -349,24 +349,24 @@ func TestRandomAccWithAuctionUsedAllocationsNotWithdrawn(t *testing.T) {
 	// add withdrawn allocations for accs[1]
 	tk.ParticipationKeeper.SetUsedAllocations(ctx, types.UsedAllocations{
 		Address:        accs[1].Address.String(),
-		NumAllocations: 2,
+		NumAllocations: sdk.NewInt(2),
 	})
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(ctx, types.AuctionUsedAllocations{
 		Address:        accs[1].Address.String(),
 		AuctionID:      auctionID,
-		NumAllocations: 2,
+		NumAllocations: sdk.NewInt(2),
 		Withdrawn:      true,
 	})
 
 	// add used allocations not yet withdrawn for accs[2]
 	tk.ParticipationKeeper.SetUsedAllocations(ctx, types.UsedAllocations{
 		Address:        accs[2].Address.String(),
-		NumAllocations: 2,
+		NumAllocations: sdk.NewInt(2),
 	})
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(ctx, types.AuctionUsedAllocations{
 		Address:        accs[2].Address.String(),
 		AuctionID:      auctionID,
-		NumAllocations: 2,
+		NumAllocations: sdk.NewInt(2),
 		Withdrawn:      false,
 	})
 
@@ -419,7 +419,7 @@ func TestRandomTierFromList(t *testing.T) {
 	tierList := []types.Tier{
 		{
 			TierID:              1,
-			RequiredAllocations: 10,
+			RequiredAllocations: sdk.NewInt(10),
 			Benefits:            types.TierBenefits{},
 		},
 	}

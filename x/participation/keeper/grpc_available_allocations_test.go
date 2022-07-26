@@ -38,7 +38,7 @@ func TestShowAvailableAllocationsQuery(t *testing.T) {
 			request: &types.QueryGetAvailableAllocationsRequest{
 				Address: dels[0].DelegatorAddress,
 			},
-			response: &types.QueryGetAvailableAllocationsResponse{AvailableAllocations: 10},
+			response: &types.QueryGetAvailableAllocationsResponse{AvailableAllocations: sdk.NewInt(10)},
 		},
 
 		{

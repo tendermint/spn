@@ -24,6 +24,7 @@ func (k Keeper) GetUsedAllocations(ctx sdk.Context, address string) (val types.U
 	}
 
 	k.cdc.MustUnmarshal(b, &val)
+
 	return val, true
 }
 

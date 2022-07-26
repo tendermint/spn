@@ -20,7 +20,6 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 		auctioneer          = sample.Address(r)
 		validParticipant    = sample.Address(r)
 		invalidParticipant  = sample.Address(r)
-		auctionSellingCoin  = sample.Coin(r)
 		auctionStartTime    = sdkCtx.BlockTime().Add(time.Hour)
 		auctionEndTime      = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
 		validWithdrawalTime = auctionStartTime.Add(time.Hour * 10)
@@ -31,6 +30,9 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	params.WithdrawalDelay = withdrawalDelay
 	params.AllocationPrice = types.AllocationPrice{Bonded: sdk.NewInt(100)}
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
+
+	auctionSellingCoin := sample.CoinWithRange(r, params.ParticipationTierList[1].Benefits.MaxBidAmount.Int64(),
+		params.ParticipationTierList[1].Benefits.MaxBidAmount.Int64()+1000)
 
 	// delegate some coins so participant has some allocations to use
 	tk.DelegateN(sdkCtx, r, validParticipant, 100, 10)
@@ -65,7 +67,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(sdkCtx, types.AuctionUsedAllocations{
 		Address:        invalidParticipant,
 		AuctionID:      auctionID,
-		NumAllocations: 1,
+		NumAllocations: sdk.OneInt(),
 		Withdrawn:      true, // set withdrawn to true
 	})
 
@@ -165,7 +167,8 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			// check usedAllocationEntry is correctly decreased
 			postUsedAllocations, found := tk.ParticipationKeeper.GetUsedAllocations(tmpSdkCtx, tt.msg.Participant)
 			require.True(t, found)
-			require.Equal(t, preUsedAllocations.NumAllocations-preAuctionUsedAllocations.NumAllocations, postUsedAllocations.NumAllocations)
+			calculated := preUsedAllocations.NumAllocations.Sub(preAuctionUsedAllocations.NumAllocations)
+			require.True(t, postUsedAllocations.NumAllocations.Equal(calculated), "numAlloc %s not equal to calculated %s", postUsedAllocations.NumAllocations, calculated)
 		})
 	}
 }

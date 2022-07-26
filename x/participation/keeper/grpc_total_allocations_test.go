@@ -38,7 +38,7 @@ func TestShowTotalAllocationsQuery(t *testing.T) {
 			request: &types.QueryGetTotalAllocationsRequest{
 				Address: dels[0].DelegatorAddress,
 			},
-			response: &types.QueryGetTotalAllocationsResponse{TotalAllocations: 10},
+			response: &types.QueryGetTotalAllocationsResponse{TotalAllocations: sdk.NewInt(10)},
 		},
 
 		{

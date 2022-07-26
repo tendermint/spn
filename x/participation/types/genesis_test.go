@@ -3,6 +3,8 @@ package types_test
 import (
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -33,20 +35,24 @@ func TestGenesisState_Validate(t *testing.T) {
 				Params: types.DefaultParams(),
 				UsedAllocationsList: []types.UsedAllocations{
 					{
-						Address: addr1,
+						Address:        addr1,
+						NumAllocations: sdk.ZeroInt(),
 					},
 					{
-						Address: addr2,
+						Address:        addr2,
+						NumAllocations: sdk.ZeroInt(),
 					},
 				},
 				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
 					{
-						Address:   addr1,
-						AuctionID: auctionID1,
+						Address:        addr1,
+						AuctionID:      auctionID1,
+						NumAllocations: sdk.ZeroInt(),
 					},
 					{
-						Address:   addr2,
-						AuctionID: auctionID2,
+						Address:        addr2,
+						AuctionID:      auctionID2,
+						NumAllocations: sdk.ZeroInt(),
 					},
 				},
 				// this line is used by starport scaffolding # types/genesis/validField
@@ -60,20 +66,20 @@ func TestGenesisState_Validate(t *testing.T) {
 				UsedAllocationsList: []types.UsedAllocations{
 					{
 						Address:        addr1,
-						NumAllocations: 5,
+						NumAllocations: sdk.NewInt(5),
 					},
 				},
 				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
 					{
 						Address:        addr1,
 						AuctionID:      auctionID1,
-						NumAllocations: 2,
+						NumAllocations: sdk.NewInt(2),
 						Withdrawn:      false,
 					},
 					{
 						Address:        addr1,
 						AuctionID:      auctionID2,
-						NumAllocations: 3,
+						NumAllocations: sdk.NewInt(3),
 						Withdrawn:      false,
 					},
 				},
@@ -85,10 +91,12 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				UsedAllocationsList: []types.UsedAllocations{
 					{
-						Address: addr1,
+						Address:        addr1,
+						NumAllocations: sdk.ZeroInt(),
 					},
 					{
-						Address: addr1,
+						Address:        addr1,
+						NumAllocations: sdk.ZeroInt(),
 					},
 				},
 			},
@@ -99,17 +107,20 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				UsedAllocationsList: []types.UsedAllocations{
 					{
-						Address: addr1,
+						Address:        addr1,
+						NumAllocations: sdk.ZeroInt(),
 					},
 				},
 				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
 					{
-						Address:   addr1,
-						AuctionID: auctionID1,
+						Address:        addr1,
+						AuctionID:      auctionID1,
+						NumAllocations: sdk.ZeroInt(),
 					},
 					{
-						Address:   addr1,
-						AuctionID: auctionID1,
+						Address:        addr1,
+						AuctionID:      auctionID1,
+						NumAllocations: sdk.ZeroInt(),
 					},
 				},
 			},
@@ -133,20 +144,20 @@ func TestGenesisState_Validate(t *testing.T) {
 				UsedAllocationsList: []types.UsedAllocations{
 					{
 						Address:        addr1,
-						NumAllocations: 10,
+						NumAllocations: sdk.NewInt(10),
 					},
 				},
 				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
 					{
 						Address:        addr1,
 						AuctionID:      auctionID1,
-						NumAllocations: 2,
+						NumAllocations: sdk.NewInt(2),
 						Withdrawn:      false,
 					},
 					{
 						Address:        addr1,
 						AuctionID:      auctionID2,
-						NumAllocations: 8,
+						NumAllocations: sdk.NewInt(8),
 						Withdrawn:      true,
 					},
 				},
