@@ -22,10 +22,9 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/spn/cmd"
-
 	"github.com/tendermint/spn/app"
 	"github.com/tendermint/spn/app/simutil"
+	"github.com/tendermint/spn/cmd"
 )
 
 func init() {

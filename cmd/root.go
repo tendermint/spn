@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"errors"
+	"io"
 	"os"
 	"path/filepath"
 
@@ -27,12 +29,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
-	dbm "github.com/tendermint/tm-db"
-
-	"errors"
-	"io"
-
 	"github.com/tendermint/tendermint/libs/log"
+	dbm "github.com/tendermint/tm-db"
 )
 
 type (

@@ -3,8 +3,6 @@ package keeper_test
 import (
 	"encoding/json"
 
-	"github.com/tendermint/spn/cmd"
-
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -13,6 +11,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	spnapp "github.com/tendermint/spn/app"
+	"github.com/tendermint/spn/cmd"
 	"github.com/tendermint/spn/x/mint/types"
 )
 

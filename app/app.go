@@ -6,8 +6,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tendermint/spn/cmd"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
@@ -92,6 +90,7 @@ import (
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
+	"github.com/tendermint/spn/cmd"
 	"github.com/tendermint/spn/docs"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/campaign"

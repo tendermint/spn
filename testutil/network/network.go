@@ -6,8 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tendermint/spn/cmd"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
@@ -21,6 +19,7 @@ import (
 	tmdb "github.com/tendermint/tm-db"
 
 	"github.com/tendermint/spn/app"
+	"github.com/tendermint/spn/cmd"
 )
 
 type (
