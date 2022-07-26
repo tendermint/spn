@@ -2,9 +2,12 @@ package cli
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"net"
 	"net/http"
+	neturl "net/url"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -88,6 +91,19 @@ func CmdCreateChain() *cobra.Command {
 
 // getHashFromURL fetches content from url and returns the hash based on the genesis hash method
 func getHashFromURL(ctx context.Context, url string) (string, error) {
+	// check url port
+	parsedUrl, err := neturl.Parse(url)
+	if err != nil {
+		return "", err
+	}
+	_, port, err := net.SplitHostPort(parsedUrl.Host)
+	if err != nil {
+		return "", err
+	}
+	if port != "443" {
+		return "", errors.New("port must be 443")
+	}
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return "", err

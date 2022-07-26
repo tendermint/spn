@@ -133,28 +133,61 @@ func TestDecreaseShares(t *testing.T) {
 
 func TestShareIsTotalReached(t *testing.T) {
 	for _, tc := range []struct {
-		desc    string
-		shares  campaign.Shares
-		reached bool
+		desc           string
+		shares         campaign.Shares
+		maxTotalShares uint64
+		reached        bool
+		isValid        bool
 	}{
 		{
-			desc:    "empty is false",
-			shares:  campaign.EmptyShares(),
-			reached: false,
+			desc:           "should return false with empty shares",
+			shares:         campaign.EmptyShares(),
+			maxTotalShares: 0,
+			reached:        false,
+			isValid:        true,
 		},
 		{
-			desc:    "no default total is reached",
-			shares:  tc.Shares(t, fmt.Sprintf("%dfoo,100bar", spntypes.TotalShareNumber)),
-			reached: false,
+			desc:           "should return false when total not reached",
+			shares:         tc.Shares(t, "1000foo,100bar"),
+			maxTotalShares: 1000,
+			reached:        false,
+			isValid:        true,
 		},
 		{
-			desc:    "a default total is reached",
-			shares:  tc.Shares(t, fmt.Sprintf("%dfoo,100bar", spntypes.TotalShareNumber+1)),
-			reached: true,
+			desc:           "should return true when total reached",
+			shares:         tc.Shares(t, "1001foo,100bar"),
+			maxTotalShares: 1000,
+			reached:        true,
+			isValid:        true,
+		},
+		{
+			desc: "should return error if shares are invalid",
+			shares: campaign.NewSharesFromCoins(sdk.Coins{
+				sdk.NewCoin("foo", sdk.NewIntFromUint64(500)),
+				sdk.NewCoin("foo", sdk.NewIntFromUint64(500)),
+			}),
+			maxTotalShares: 1000,
+			reached:        false,
+			isValid:        false,
+		},
+		{
+			desc: "should return error if shares have invalid format",
+			shares: campaign.Shares(sdk.Coins{
+				sdk.NewCoin("foo", sdk.NewIntFromUint64(500)),
+			}),
+			maxTotalShares: 1000,
+			reached:        false,
+			isValid:        false,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			require.Equal(t, tc.reached, campaign.IsTotalSharesReached(tc.shares, spntypes.TotalShareNumber))
+			reached, err := campaign.IsTotalSharesReached(tc.shares, tc.maxTotalShares)
+			if tc.isValid {
+				require.NoError(t, err)
+				require.True(t, tc.reached == reached)
+			} else {
+				require.Error(t, err)
+			}
 		})
 	}
 }
