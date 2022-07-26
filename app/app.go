@@ -1,11 +1,12 @@
 package app
 
 import (
-	"github.com/tendermint/spn/cmd"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/tendermint/spn/cmd"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"

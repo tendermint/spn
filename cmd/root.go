@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"os"
+	"path/filepath"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/config"
@@ -25,12 +28,11 @@ import (
 	"github.com/spf13/pflag"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	dbm "github.com/tendermint/tm-db"
-	"os"
-	"path/filepath"
 
 	"errors"
-	"github.com/tendermint/tendermint/libs/log"
 	"io"
+
+	"github.com/tendermint/tendermint/libs/log"
 )
 
 type (

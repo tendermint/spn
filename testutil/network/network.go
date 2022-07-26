@@ -3,9 +3,10 @@ package network
 
 import (
 	"fmt"
-	"github.com/tendermint/spn/cmd"
 	"testing"
 	"time"
+
+	"github.com/tendermint/spn/cmd"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
