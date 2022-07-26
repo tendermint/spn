@@ -202,7 +202,7 @@ func CalculateRewards(blockRatio, signatureRatio sdk.Dec, coins sdk.Coins) (sdk.
 	// calculate rewards
 	rewards := sdk.NewCoins()
 	for _, coin := range coins {
-		amount := blockRatio.Mul(signatureRatio).Mul(coin.Amount.ToDec())
+		amount := blockRatio.Mul(signatureRatio).Mul(sdk.NewDecFromInt(coin.Amount))
 		coin.Amount = amount.TruncateInt()
 		rewards = rewards.Add(coin)
 	}

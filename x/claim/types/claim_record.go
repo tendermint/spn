@@ -40,5 +40,5 @@ func (m ClaimRecord) IsMissionCompleted(missionID uint64) bool {
 
 // ClaimableFromMission returns the amount claimable for this claim record from the provided mission completion
 func (m ClaimRecord) ClaimableFromMission(mission Mission) sdk.Int {
-	return mission.Weight.Mul(m.Claimable.ToDec()).TruncateInt()
+	return mission.Weight.Mul(sdk.NewDecFromInt(m.Claimable)).TruncateInt()
 }
