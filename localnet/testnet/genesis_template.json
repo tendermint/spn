@@ -369,21 +369,21 @@
           },
           {
             "tierID": 2,
-            "requiredAllocations": 2,
+            "requiredAllocations": "2",
             "benefits": {
               "maxBidAmount": "1000"
             }
           },
           {
             "tierID": 3,
-            "requiredAllocations": 5,
+            "requiredAllocations": "5",
             "benefits": {
               "maxBidAmount": "1000"
             }
           },
           {
             "tierID": 4,
-            "requiredAllocations": 10,
+            "requiredAllocations": "10",
             "benefits": {
               "maxBidAmount": "1000"
             }
