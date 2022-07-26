@@ -13,6 +13,7 @@ import (
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
@@ -25,6 +26,8 @@ import (
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 	tmdb "github.com/tendermint/tm-db"
+
+	spntypes "github.com/tendermint/spn/pkg/types"
 
 	"github.com/tendermint/spn/testutil/sample"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
@@ -95,7 +98,12 @@ func (i initializer) Param() paramskeeper.Keeper {
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(tkeys, storetypes.StoreTypeTransient, i.DB)
 
-	return paramskeeper.NewKeeper(i.Codec, launchtypes.Amino, storeKey, tkeys)
+	return paramskeeper.NewKeeper(
+		i.Codec,
+		launchtypes.Amino,
+		storeKey,
+		tkeys,
+	)
 }
 
 func (i initializer) Auth(paramKeeper paramskeeper.Keeper) authkeeper.AccountKeeper {
@@ -106,7 +114,14 @@ func (i initializer) Auth(paramKeeper paramskeeper.Keeper) authkeeper.AccountKee
 	paramKeeper.Subspace(authtypes.ModuleName)
 	authSubspace, _ := paramKeeper.GetSubspace(authtypes.ModuleName)
 
-	return authkeeper.NewAccountKeeper(i.Codec, storeKey, authSubspace, authtypes.ProtoBaseAccount, moduleAccountPerms)
+	return authkeeper.NewAccountKeeper(
+		i.Codec,
+		storeKey,
+		authSubspace,
+		authtypes.ProtoBaseAccount,
+		moduleAccountPerms,
+		spntypes.AccountAddressPrefix,
+	)
 }
 
 func (i initializer) Bank(paramKeeper paramskeeper.Keeper, authKeeper authkeeper.AccountKeeper) bankkeeper.Keeper {
@@ -118,7 +133,13 @@ func (i initializer) Bank(paramKeeper paramskeeper.Keeper, authKeeper authkeeper
 
 	modAccAddrs := ModuleAccountAddrs(moduleAccountPerms)
 
-	return bankkeeper.NewBaseKeeper(i.Codec, storeKey, authKeeper, bankSubspace, modAccAddrs)
+	return bankkeeper.NewBaseKeeper(
+		i.Codec,
+		storeKey,
+		authKeeper,
+		bankSubspace,
+		modAccAddrs,
+	)
 }
 
 func (i initializer) Capability() *capabilitykeeper.Keeper {
@@ -146,7 +167,14 @@ func (i initializer) Upgrade() upgradekeeper.Keeper {
 	skipUpgradeHeights := make(map[int64]bool)
 	vs := ProtocolVersionSetter{}
 
-	return upgradekeeper.NewKeeper(skipUpgradeHeights, storeKey, i.Codec, "", vs)
+	return upgradekeeper.NewKeeper(
+		skipUpgradeHeights,
+		storeKey,
+		i.Codec,
+		"",
+		vs,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+	)
 }
 
 func (i initializer) Staking(
@@ -160,7 +188,13 @@ func (i initializer) Staking(
 	paramKeeper.Subspace(stakingtypes.ModuleName)
 	stakingSubspace, _ := paramKeeper.GetSubspace(stakingtypes.ModuleName)
 
-	return stakingkeeper.NewKeeper(i.Codec, storeKey, authKeeper, bankKeeper, stakingSubspace)
+	return stakingkeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		authKeeper,
+		bankKeeper,
+		stakingSubspace,
+	)
 }
 
 func (i initializer) IBC(
@@ -192,8 +226,6 @@ func (i initializer) Distribution(
 	storeKey := sdk.NewKVStoreKey(distrtypes.StoreKey)
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 
-	modAccAddrs := ModuleAccountAddrs(moduleAccountPerms)
-
 	return distrkeeper.NewKeeper(
 		i.Codec,
 		storeKey,
@@ -202,7 +234,6 @@ func (i initializer) Distribution(
 		bankKeeper,
 		stakingKeeper,
 		authtypes.FeeCollectorName,
-		modAccAddrs,
 	)
 }
 
@@ -213,7 +244,11 @@ func (i initializer) Profile() *profilekeeper.Keeper {
 	i.StateStore.MountStoreWithDB(storeKey, storetypes.StoreTypeIAVL, i.DB)
 	i.StateStore.MountStoreWithDB(memStoreKey, storetypes.StoreTypeMemory, nil)
 
-	return profilekeeper.NewKeeper(i.Codec, storeKey, memStoreKey)
+	return profilekeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		memStoreKey,
+	)
 }
 
 func (i initializer) Launch(
@@ -230,7 +265,14 @@ func (i initializer) Launch(
 	paramKeeper.Subspace(launchtypes.ModuleName)
 	launchSubspace, _ := paramKeeper.GetSubspace(launchtypes.ModuleName)
 
-	return launchkeeper.NewKeeper(i.Codec, storeKey, memStoreKey, launchSubspace, distrKeeper, profileKeeper)
+	return launchkeeper.NewKeeper(
+		i.Codec,
+		storeKey,
+		memStoreKey,
+		launchSubspace,
+		distrKeeper,
+		profileKeeper,
+	)
 }
 
 func (i initializer) Campaign(
