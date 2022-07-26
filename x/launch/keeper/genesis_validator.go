@@ -76,7 +76,7 @@ func (k Keeper) GetValidatorsAndTotalDelegation(
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		consPubKey := base64.StdEncoding.EncodeToString(val.ConsPubKey)
 		validators[consPubKey] = val
-		totalDelegation = totalDelegation.Add(val.SelfDelegation.Amount.ToDec())
+		totalDelegation = totalDelegation.Add(sdk.NewDecFromInt(val.SelfDelegation.Amount))
 	}
 	return validators, totalDelegation
 }
