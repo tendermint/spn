@@ -70,7 +70,7 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 					return fmt.Errorf("failed to get address from Keybase: %w", err)
 				}
 
-				_, err = info.GetAddress()
+				addr, err = info.GetAddress()
 				if err != nil {
 					return fmt.Errorf("failed to get address from Keybase: %w", err)
 				}
