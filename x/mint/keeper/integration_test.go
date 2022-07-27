@@ -5,13 +5,13 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ignite/cli/ignite/pkg/cosmoscmd"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
 
 	spnapp "github.com/tendermint/spn/app"
+	"github.com/tendermint/spn/cmd"
 	"github.com/tendermint/spn/x/mint/types"
 )
 
@@ -50,7 +50,7 @@ func setup(isCheckTx bool) *spnapp.App {
 
 func genApp(withGenesis bool, invCheckPeriod uint) (*spnapp.App, spnapp.GenesisState) {
 	db := dbm.NewMemDB()
-	encCdc := cosmoscmd.MakeEncodingConfig(spnapp.ModuleBasics)
+	encCdc := cmd.MakeEncodingConfig(spnapp.ModuleBasics)
 	app := spnapp.New(
 		log.NewNopLogger(),
 		db,
