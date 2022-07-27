@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/x/claim/types"
 	"testing"
@@ -56,6 +57,29 @@ func TestDecayInformation_Validate(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 			}
+		})
+	}
+}
+
+func TestDecayInformation_ApplyDecayFactor(t *testing.T) {
+	tests := []struct {
+		name          string
+		decayInfo     types.DecayInformation
+		coins         sdk.Coins
+		currentTime   time.Time
+		expectedCoins sdk.Coins
+	}{
+		{},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			newCoins := tt.decayInfo.ApplyDecayFactor(tt.coins, tt.currentTime)
+
+			require.True(t, newCoins.IsEqual(tt.expectedCoins),
+				"new coins are not equal to expected coins, %s != %s",
+				newCoins.String(),
+				tt.expectedCoins.String(),
+			)
 		})
 	}
 }
