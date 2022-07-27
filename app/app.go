@@ -73,7 +73,6 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-
 	"github.com/cosmos/ibc-go/v5/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v5/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
@@ -82,7 +81,6 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/v5/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
-
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
