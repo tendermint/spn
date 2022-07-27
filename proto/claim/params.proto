@@ -2,7 +2,7 @@ syntax = "proto3";
 package tendermint.spn.claim;
 
 import "gogoproto/gogo.proto";
-import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/tendermint/spn/x/claim/types";
 
@@ -15,6 +15,6 @@ message Params {
 // DecayInformation defines the information about decay for the airdrop
 // when claimable airdrop amount starts to decrease and when it ends
 message DecayInformation {
-  google.protobuf.Duration decayStart = 1 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
-  google.protobuf.Duration decayEnd = 2 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
+  google.protobuf.Timestamp decayStart = 1 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+  google.protobuf.Timestamp decayEnd = 2 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
 }
