@@ -24,7 +24,7 @@ func (m DecayInformation) ApplyDecayFactor(coins sdk.Coins, currentTime time.Tim
 	}
 
 	// coins reduced to 0 if decay ended
-	if currentTime.After(m.DecayEnd) {
+	if currentTime.Equal(m.DecayEnd) || currentTime.After(m.DecayEnd) {
 		return sdk.NewCoins()
 	}
 
@@ -44,11 +44,13 @@ func (m DecayInformation) ApplyDecayFactor(coins sdk.Coins, currentTime time.Tim
 		amountDec := sdk.NewDecFromInt(coin.Amount)
 		newAmount := amountDec.Mul(decayFactor).TruncateInt()
 
-		newCoins = append(newCoins, sdk.NewCoin(
-			coin.Denom,
-			newAmount,
-		))
+		if !newAmount.IsZero() {
+			newCoins = append(newCoins, sdk.NewCoin(
+				coin.Denom,
+				newAmount,
+			))
+		}
 	}
 
-	return newCoins
+	return newCoins.Sort()
 }
