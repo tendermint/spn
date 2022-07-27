@@ -15,6 +15,7 @@ message Params {
 // DecayInformation defines the information about decay for the airdrop
 // when claimable airdrop amount starts to decrease and when it ends
 message DecayInformation {
-  google.protobuf.Timestamp decayStart = 1 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
-  google.protobuf.Timestamp decayEnd = 2 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+  bool enabled = 1;
+  google.protobuf.Timestamp decayStart = 2 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+  google.protobuf.Timestamp decayEnd = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
 }
