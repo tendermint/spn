@@ -83,8 +83,6 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 
-	"github.com/ignite/cli/ignite/pkg/cosmoscmd"
-	"github.com/ignite/cli/ignite/pkg/openapiconsole"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -96,6 +94,7 @@ import (
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
+	"github.com/tendermint/spn/cmd"
 	"github.com/tendermint/spn/docs"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/campaign"
@@ -211,7 +210,7 @@ var (
 )
 
 var (
-	_ cosmoscmd.App           = (*App)(nil)
+	_ cmd.App                 = (*App)(nil)
 	_ servertypes.Application = (*App)(nil)
 	_ simapp.App              = (*App)(nil)
 )
@@ -295,10 +294,10 @@ func New(
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 	invCheckPeriod uint,
-	encodingConfig cosmoscmd.EncodingConfig,
+	encodingConfig cmd.EncodingConfig,
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
-) cosmoscmd.App {
+) cmd.App {
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -695,6 +694,7 @@ func New(
 		distrtypes.ModuleName,
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
+		claimtypes.ModuleName,
 		stakingtypes.ModuleName,
 		vestingtypes.ModuleName,
 		ibchost.ModuleName,
@@ -715,13 +715,13 @@ func New(
 		monitoringptypes.ModuleName,
 		participationtypes.ModuleName,
 		launchtypes.ModuleName,
-		claimtypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
 		fundraisingtypes.ModuleName,
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
+		claimtypes.ModuleName,
 		stakingtypes.ModuleName,
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
@@ -745,7 +745,6 @@ func New(
 		monitoringptypes.ModuleName,
 		participationtypes.ModuleName,
 		launchtypes.ModuleName,
-		claimtypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -758,6 +757,7 @@ func New(
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
+		claimtypes.ModuleName,
 		stakingtypes.ModuleName,
 		vestingtypes.ModuleName,
 		slashingtypes.ModuleName,
@@ -780,7 +780,6 @@ func New(
 		rewardtypes.ModuleName,
 		fundraisingtypes.ModuleName,
 		participationtypes.ModuleName,
-		claimtypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -958,7 +957,7 @@ func (app *App) RegisterAPIRoutes(apiSvr *api.Server, apiConfig config.APIConfig
 
 	// register app's OpenAPI routes.
 	apiSvr.Router.Handle("/static/openapi.yml", http.FileServer(http.FS(docs.Docs)))
-	apiSvr.Router.HandleFunc("/", openapiconsole.Handler(spntypes.Name, "/static/openapi.yml"))
+	// apiSvr.Router.HandleFunc("/", openapiconsole.Handler(spntypes.Name, "/static/openapi.yml"))
 }
 
 // RegisterTxService implements the Application.RegisterTxService method.

@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/gogo/protobuf/proto"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -164,15 +165,18 @@ func populateCampaign(r *rand.Rand, campaignState campaign.GenesisState) campaig
 func populateClaim(r *rand.Rand, claimState claim.GenesisState) claim.GenesisState {
 	claimState.AirdropSupply = sample.Coin(r)
 
-	// add claim records
-	for i := 0; i < 5; i++ {
-		claimRecord := claim.ClaimRecord{
-			Address:   sample.Address(r),
-			Claimable: sample.Int(r),
+	/*
+		// add claim records
+		for i := 0; i < 5; i++ {
+			claimRecord := claim.ClaimRecord{
+				Address:   sample.Address(r),
+				Claimable: sample.Int(r),
+			}
+			nullify.Fill(&claimRecord)
+			claimState.ClaimRecords = append(claimState.ClaimRecords, claimRecord)
 		}
-		nullify.Fill(&claimRecord)
-		claimState.ClaimRecords = append(claimState.ClaimRecords, claimRecord)
-	}
+
+	*/
 
 	// add missions
 	for i := 0; i < 5; i++ {
