@@ -6,6 +6,16 @@ import (
 	"time"
 )
 
+// NewEnabledDecay returns decay information with a decay start and end
+func NewEnabledDecay(start, end time.Time) DecayInformation {
+	// convert all time to UTC
+	return DecayInformation{
+		Enabled:    true,
+		DecayStart: start.UTC(),
+		DecayEnd:   end.UTC(),
+	}
+}
+
 // Validate validates the decay information
 func (m DecayInformation) Validate() error {
 	if m.Enabled && m.DecayStart.After(m.DecayEnd) {
