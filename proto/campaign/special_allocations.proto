@@ -8,13 +8,13 @@ import "cosmos/base/v1beta1/coin.proto";
 
 message SpecialAllocations {
   repeated cosmos.base.v1beta1.Coin genesisDistribution = 1 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
   repeated cosmos.base.v1beta1.Coin claimableAirdrop = 2 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
 }

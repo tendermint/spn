@@ -14,15 +14,15 @@ service Msg {
 
 message MsgParticipate {
   string participant = 1;
-  uint64 auctionID = 2;
-  uint64 tierID = 3;
+  uint64 auctionID   = 2;
+  uint64 tierID      = 3;
 }
 
 message MsgParticipateResponse {}
 
 message MsgWithdrawAllocations {
   string participant = 1;
-  uint64 auctionID = 2;
+  uint64 auctionID   = 2;
 }
 
 message MsgWithdrawAllocationsResponse {}

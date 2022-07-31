@@ -12,70 +12,69 @@ import "launch/genesis_validator.proto";
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 message EventChainCreated {
-  uint64 launchID = 1;
+  uint64 launchID           = 1;
   string coordinatorAddress = 2;
-  uint64 coordinatorID = 3;
+  uint64 coordinatorID      = 3;
 }
 
-
 message EventRequestCreated {
-  string creator = 1;
+  string  creator = 1;
   Request request = 2 [(gogoproto.nullable) = false];
 }
 
 message EventRequestSettled {
-  uint64 launchID = 1;
+  uint64 launchID  = 1;
   uint64 requestID = 2;
-  bool approved = 3;
+  bool   approved  = 3;
 }
 
 message EventGenesisAccountAdded {
-  uint64 launchID = 1;
-  string address = 2;
+  uint64   launchID                       = 1;
+  string   address                        = 2;
   repeated cosmos.base.v1beta1.Coin coins = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
   string coordinatorAddress = 4;
 }
 
 message EventVestingAccountAdded {
-  uint64 launchID = 1;
-  string address = 2;
-  VestingOptions vestingOptions = 3 [(gogoproto.nullable) = false];
-  string coordinatorAddress = 4;
+  uint64         launchID           = 1;
+  string         address            = 2;
+  VestingOptions vestingOptions     = 3 [(gogoproto.nullable) = false];
+  string         coordinatorAddress = 4;
 }
 
 message EventValidatorAdded {
-  uint64 launchID = 1;
-  string address = 2;
-  bytes genTx = 3;
-  bytes consPubKey = 4;
-  cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
-  Peer peer = 6 [(gogoproto.nullable) = false];
-  bool hasCampaign = 7;
-  uint64 campaignID = 8;
-  string coordinatorAddress = 9;
+  uint64                   launchID           = 1;
+  string                   address            = 2;
+  bytes                    genTx              = 3;
+  bytes                    consPubKey         = 4;
+  cosmos.base.v1beta1.Coin selfDelegation     = 5 [(gogoproto.nullable) = false];
+  Peer                     peer               = 6 [(gogoproto.nullable) = false];
+  bool                     hasCampaign        = 7;
+  uint64                   campaignID         = 8;
+  string                   coordinatorAddress = 9;
 }
 
 message EventAccountRemoved {
-  string address = 1;
-  uint64 launchID = 2;
+  string address            = 1;
+  uint64 launchID           = 2;
   string coordinatorAddress = 3;
 }
 
 message EventValidatorRemoved {
   string genesisValidatorAccount = 1;
-  uint64 launchID = 2;
-  bool hasCampaign = 3;
-  uint64 campaignID = 4;
-  string coordinatorAddress = 5;
+  uint64 launchID                = 2;
+  bool   hasCampaign             = 3;
+  uint64 campaignID              = 4;
+  string coordinatorAddress      = 5;
 }
 
 message EventLaunchTriggered {
-  uint64 launchID = 1;
-  int64 launchTimestamp = 2;
+  uint64 launchID        = 1;
+  int64  launchTimestamp = 2;
 }
 
 message EventLaunchReverted {

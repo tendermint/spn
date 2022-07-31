@@ -9,13 +9,13 @@ import "launch/genesis_validator.proto";
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 message Request {
-  uint64 launchID = 1;
-  uint64 requestID = 2;
-  string creator = 3;
-  int64 createdAt = 4;
-  RequestContent content = 5 [(gogoproto.nullable) = false];
+  uint64         launchID  = 1;
+  uint64         requestID = 2;
+  string         creator   = 3;
+  int64          createdAt = 4;
+  RequestContent content   = 5 [(gogoproto.nullable) = false];
   enum Status {
-    PENDING = 0;
+    PENDING  = 0;
     APPROVED = 1;
     REJECTED = 2;
   }
@@ -24,10 +24,10 @@ message Request {
 
 message RequestContent {
   oneof content {
-    GenesisAccount genesisAccount = 1;
-    VestingAccount vestingAccount = 2;
+    GenesisAccount   genesisAccount   = 1;
+    VestingAccount   vestingAccount   = 2;
     GenesisValidator genesisValidator = 3;
-    AccountRemoval accountRemoval = 4;
+    AccountRemoval   accountRemoval   = 4;
     ValidatorRemoval validatorRemoval = 5;
   }
 }

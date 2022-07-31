@@ -20,7 +20,7 @@ service Msg {
 }
 
 message MsgUpdateValidatorDescription {
-  string address = 1;
+  string               address     = 1;
   ValidatorDescription description = 2 [(gogoproto.nullable) = false];
 }
 
@@ -28,13 +28,13 @@ message MsgUpdateValidatorDescriptionResponse {}
 
 message MsgAddValidatorOperatorAddress {
   string validatorAddress = 1;
-  string operatorAddress = 2;
+  string operatorAddress  = 2;
 }
 
 message MsgAddValidatorOperatorAddressResponse {}
 
 message MsgCreateCoordinator {
-  string address = 1;
+  string                 address     = 1;
   CoordinatorDescription description = 2 [(gogoproto.nullable) = false];
 }
 
@@ -43,14 +43,14 @@ message MsgCreateCoordinatorResponse {
 }
 
 message MsgUpdateCoordinatorDescription {
-  string address = 1;
+  string                 address     = 1;
   CoordinatorDescription description = 2 [(gogoproto.nullable) = false];
 }
 
 message MsgUpdateCoordinatorDescriptionResponse {}
 
 message MsgUpdateCoordinatorAddress {
-  string address = 1;
+  string address    = 1;
   string newAddress = 2;
 }
 

@@ -7,9 +7,7 @@ option go_package = "github.com/tendermint/spn/x/participation/types";
 
 // Describes the number of allocations already used by a user for existing auctions
 message UsedAllocations {
-  string address = 1;
-  string numAllocations = 2 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
+  string address        = 1;
+  string numAllocations = 2
+      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
 }

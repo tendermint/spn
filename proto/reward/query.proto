@@ -44,7 +44,7 @@ message QueryAllRewardPoolRequest {
 }
 
 message QueryAllRewardPoolResponse {
-  repeated RewardPool rewardPool = 1 [(gogoproto.nullable) = false];
+  repeated RewardPool                    rewardPool = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 

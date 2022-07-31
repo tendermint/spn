@@ -25,7 +25,8 @@ service Query {
   }
 
   // Queries a ValidatorByConsAddress by consensus address.
-  rpc ValidatorByOperatorAddress(QueryGetValidatorByOperatorAddressRequest) returns (QueryGetValidatorByOperatorAddressResponse) {
+  rpc ValidatorByOperatorAddress(QueryGetValidatorByOperatorAddressRequest)
+      returns (QueryGetValidatorByOperatorAddressResponse) {
     option (google.api.http).get = "/tendermint/spn/profile/validator_by_operator_address/{operatorAddress}";
   }
 
@@ -60,7 +61,7 @@ message QueryAllValidatorRequest {
 }
 
 message QueryAllValidatorResponse {
-  repeated Validator validator = 1 [(gogoproto.nullable) = false];
+  repeated Validator                     validator  = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -85,8 +86,8 @@ message QueryAllCoordinatorRequest {
 }
 
 message QueryAllCoordinatorResponse {
-  repeated Coordinator coordinator = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated Coordinator                   coordinator = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination  = 2;
 }
 
 message QueryGetCoordinatorByAddressRequest {

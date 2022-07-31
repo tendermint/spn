@@ -7,26 +7,27 @@ import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 message GenesisValidator {
-  uint64 launchID = 1;
-  string address = 2;
-  bytes genTx = 3;
-  bytes consPubKey = 4;
+  uint64                   launchID       = 1;
+  string                   address        = 2;
+  bytes                    genTx          = 3;
+  bytes                    consPubKey     = 4;
   cosmos.base.v1beta1.Coin selfDelegation = 5 [(gogoproto.nullable) = false];
-  Peer peer = 6 [(gogoproto.nullable) = false];
+  Peer                     peer           = 6 [(gogoproto.nullable) = false];
 }
 
 message Peer {
   string id = 1; // e.g.: 7786ace6ddb3d771024792a46540c88587e0e8cc
 
   oneof connection {
-    string tcpAddress = 2;  // use a TCP address
-    HTTPTunnel httpTunnel = 3; // or use an HTTP tunnel
-    EmptyConnection none = 4; // or don't provide any connection
+    string          tcpAddress = 2; // use a TCP address
+    HTTPTunnel      httpTunnel = 3; // or use an HTTP tunnel
+    EmptyConnection none       = 4; // or don't provide any connection
   }
 
   message HTTPTunnel {
-    string name = 1;  // e.g.: chisel (https://github.com/jpillora/chisel)
-    string address = 2;  // for chisel running on Gitpod, e.g.: https://3475-chocolate-capybara-kkiztq32.ws-eu21.gitpod.io/
+    string name = 1; // e.g.: chisel (https://github.com/jpillora/chisel)
+    string address =
+        2; // for chisel running on Gitpod, e.g.: https://3475-chocolate-capybara-kkiztq32.ws-eu21.gitpod.io/
   }
 
   message EmptyConnection {}

@@ -18,8 +18,7 @@ option go_package = "github.com/tendermint/spn/x/campaign/types";
 service Query {
   // Queries a campaign by id.
   rpc Campaign(QueryGetCampaignRequest) returns (QueryGetCampaignResponse) {
-    option (google.api.http).get =
-        "/tendermint/spn/campaign/campaign/{campaignID}";
+    option (google.api.http).get = "/tendermint/spn/campaign/campaign/{campaignID}";
   }
 
   // Queries a list of campaign items.
@@ -33,7 +32,8 @@ service Query {
   }
 
   // Queries a list of SpecialAllocationsBalance items.
-  rpc SpecialAllocationsBalance(QuerySpecialAllocationsBalanceRequest) returns (QuerySpecialAllocationsBalanceResponse) {
+  rpc SpecialAllocationsBalance(QuerySpecialAllocationsBalanceRequest)
+      returns (QuerySpecialAllocationsBalanceResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/special_allocations_balance/{campaignID}";
   }
 
@@ -83,7 +83,7 @@ message QueryAllCampaignRequest {
 }
 
 message QueryAllCampaignResponse {
-  repeated Campaign campaign = 1 [(gogoproto.nullable) = false];
+  repeated Campaign                      campaign   = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -101,20 +101,20 @@ message QuerySpecialAllocationsBalanceRequest {
 
 message QuerySpecialAllocationsBalanceResponse {
   repeated cosmos.base.v1beta1.Coin genesisDistribution = 1 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
   repeated cosmos.base.v1beta1.Coin claimableAirdrop = 2 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
 }
 
 message QueryGetMainnetAccountRequest {
   uint64 campaignID = 1;
-  string address = 2;
+  string address    = 2;
 }
 
 message QueryGetMainnetAccountResponse {
@@ -122,18 +122,18 @@ message QueryGetMainnetAccountResponse {
 }
 
 message QueryAllMainnetAccountRequest {
-  uint64 campaignID = 1;
+  uint64                                campaignID = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryAllMainnetAccountResponse {
-  repeated MainnetAccount mainnetAccount = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated MainnetAccount                mainnetAccount = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination     = 2;
 }
 
 message QueryGetMainnetAccountBalanceRequest {
   uint64 campaignID = 1;
-  string address = 2;
+  string address    = 2;
 }
 
 message QueryGetMainnetAccountBalanceResponse {
@@ -141,13 +141,13 @@ message QueryGetMainnetAccountBalanceResponse {
 }
 
 message QueryAllMainnetAccountBalanceRequest {
-  uint64 campaignID = 1;
+  uint64                                campaignID = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryAllMainnetAccountBalanceResponse {
-  repeated MainnetAccountBalance mainnetAccountBalance = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated MainnetAccountBalance         mainnetAccountBalance = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination            = 2;
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.

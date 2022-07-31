@@ -15,7 +15,6 @@ message MsgClaimInitial {
   string claimer = 1;
 }
 
-message MsgClaimInitialResponse {
-}
+message MsgClaimInitialResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message
