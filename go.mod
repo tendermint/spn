@@ -154,5 +154,5 @@ require (
 replace (
 	github.com/cosmos/ibc-go/v5 => github.com/aljo242/ibc-go/v5 v5.1.0
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
-	github.com/tendermint/fundraising => github.com/aljo242/fundraising v0.1.2-0.20220726203752-c39abf16b02d
+	github.com/tendermint/fundraising => github.com/aljo242/fundraising v0.1.2-0.20220731225846-8ed903159a92
 )
