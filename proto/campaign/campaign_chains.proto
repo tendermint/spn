@@ -4,6 +4,6 @@ package tendermint.spn.campaign;
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 message CampaignChains {
-  uint64 campaignID = 1;
-  repeated uint64 chains = 2;
+  uint64          campaignID = 1;
+  repeated uint64 chains     = 2;
 }

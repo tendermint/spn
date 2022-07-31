@@ -29,7 +29,8 @@ service Query {
   }
 
   // Queries a list of AuctionUsedAllocations items.
-  rpc AuctionUsedAllocationsAll(QueryAllAuctionUsedAllocationsRequest) returns (QueryAllAuctionUsedAllocationsResponse) {
+  rpc AuctionUsedAllocationsAll(QueryAllAuctionUsedAllocationsRequest)
+      returns (QueryAllAuctionUsedAllocationsResponse) {
     option (google.api.http).get = "/tendermint/spn/participation/auction_used_allocations/{address}";
   }
 
@@ -64,12 +65,12 @@ message QueryAllUsedAllocationsRequest {
 }
 
 message QueryAllUsedAllocationsResponse {
-  repeated UsedAllocations usedAllocations = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated UsedAllocations               usedAllocations = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination      = 2;
 }
 
 message QueryGetAuctionUsedAllocationsRequest {
-  string address = 1;
+  string address   = 1;
   uint64 auctionID = 2;
 }
 
@@ -78,13 +79,13 @@ message QueryGetAuctionUsedAllocationsResponse {
 }
 
 message QueryAllAuctionUsedAllocationsRequest {
-  string address = 1;
+  string                                address    = 1;
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
 message QueryAllAuctionUsedAllocationsResponse {
-  repeated AuctionUsedAllocations auctionUsedAllocations = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated AuctionUsedAllocations        auctionUsedAllocations = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination             = 2;
 }
 
 message QueryGetTotalAllocationsRequest {
@@ -92,10 +93,8 @@ message QueryGetTotalAllocationsRequest {
 }
 
 message QueryGetTotalAllocationsResponse {
-  string totalAllocations = 1 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
+  string totalAllocations = 1
+      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
 }
 
 message QueryGetAvailableAllocationsRequest {
@@ -103,10 +102,8 @@ message QueryGetAvailableAllocationsRequest {
 }
 
 message QueryGetAvailableAllocationsResponse {
-  string availableAllocations = 1 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
+  string availableAllocations = 1
+      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
