@@ -3,6 +3,7 @@
 PACKAGES=$(shell go list ./...)
 VERSION := $(shell echo $(shell git describe --tags 2> /dev/null || echo "dev-$(shell git describe --always)") | sed 's/^v//')
 SIMAPP = ./app
+DOCKER := $(shell which docker)
 COVER_FILE := coverage.txt
 COVER_HTML_FILE := cover.html
 
@@ -59,6 +60,24 @@ bench:
 test: govet test-unit
 
 .PHONY: test test-unit test-race test-cover bench
+
+proto-all: proto-format proto-gen
+
+protoVer=v0.7
+protoImageName=tendermintdev/sdk-proto-gen:$(protoVer)
+containerProtoGen=ignite-spn-proto-gen-$(protoVer)
+containerProtoFmt=ignite-spn-proto-fmt-$(protoVer)
+
+proto-gen:
+	@echo "Generating Protobuf files"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
+		sh ./scripts/protocgen.sh; fi
+
+proto-format:
+	@echo "Formatting Protobuf files"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
+		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+
 
 SIM_NUM_BLOCKS ?= 500
 SIM_BLOCK_SIZE ?= 100
