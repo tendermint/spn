@@ -96,9 +96,9 @@ message QueryGetTotalAllocationsRequest {
 
 message QueryGetTotalAllocationsResponse {
   string totalAllocations = 1 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (cosmos_proto.scalar) = "cosmos.Int"
+    (cosmos_proto.scalar)  = "cosmos.Int"
   ];
 }
 
@@ -108,9 +108,9 @@ message QueryGetAvailableAllocationsRequest {
 
 message QueryGetAvailableAllocationsResponse {
   string availableAllocations = 1 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (cosmos_proto.scalar) = "cosmos.Int"
+    (cosmos_proto.scalar)  = "cosmos.Int"
   ];
 }
 

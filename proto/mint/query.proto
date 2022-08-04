@@ -44,9 +44,9 @@ message QueryInflationRequest {}
 message QueryInflationResponse {
   // inflation is the current minting inflation value.
   bytes inflation = 1 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (cosmos_proto.scalar) = "cosmos.Dec"
+    (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
 }
 
@@ -59,8 +59,8 @@ message QueryAnnualProvisionsRequest {}
 message QueryAnnualProvisionsResponse {
   // annual_provisions is the current minting annual provisions value.
   bytes annual_provisions = 1 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (cosmos_proto.scalar) = "cosmos.Dec"
+    (cosmos_proto.scalar)  = "cosmos.Dec"
   ];
 }

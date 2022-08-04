@@ -12,8 +12,8 @@ message AuctionUsedAllocations {
   uint64 auctionID      = 2;
   bool   withdrawn      = 3;
   string numAllocations = 4 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (cosmos_proto.scalar) = "cosmos.Int"
+    (cosmos_proto.scalar)  = "cosmos.Int"
   ];
 }

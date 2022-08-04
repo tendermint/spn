@@ -22,9 +22,9 @@ message Params {
 message AllocationPrice {
   // number of bonded tokens necessary to get one allocation
   string bonded = 1 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (cosmos_proto.scalar) = "cosmos.Int"
+    (cosmos_proto.scalar)  = "cosmos.Int"
   ];
 }
 
@@ -32,9 +32,9 @@ message AllocationPrice {
 message Tier {
   uint64 tierID              = 1;
   string requiredAllocations = 2 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (cosmos_proto.scalar) = "cosmos.Int"
+    (cosmos_proto.scalar)  = "cosmos.Int"
   ];
   TierBenefits benefits = 3 [(gogoproto.nullable) = false];
 }
@@ -42,8 +42,8 @@ message Tier {
 message TierBenefits {
   // maximum amount an auction participant can bid
   string maxBidAmount = 1 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (cosmos_proto.scalar) = "cosmos.Int"
+    (cosmos_proto.scalar)  = "cosmos.Int"
   ];
 }

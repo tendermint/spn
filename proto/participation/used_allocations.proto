@@ -10,8 +10,8 @@ option go_package = "github.com/tendermint/spn/x/participation/types";
 message UsedAllocations {
   string address        = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   string numAllocations = 2 [
-    (gogoproto.nullable) = false,
+    (gogoproto.nullable)   = false,
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (cosmos_proto.scalar) = "cosmos.Int"
+    (cosmos_proto.scalar)  = "cosmos.Int"
   ];
 }
