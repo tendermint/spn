@@ -4,6 +4,8 @@ package tendermint.spn.launch;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+
 // this line is used by starport scaffolding # 1
 import "launch/request.proto";
 import "launch/vesting_account.proto";
@@ -89,7 +91,7 @@ message QueryAllChainResponse {
 
 message QueryGetGenesisAccountRequest {
   uint64 launchID = 1;
-  string address  = 2;
+  string address  = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message QueryGetGenesisAccountResponse {
@@ -108,7 +110,7 @@ message QueryAllGenesisAccountResponse {
 
 message QueryGetVestingAccountRequest {
   uint64 launchID = 1;
-  string address  = 2;
+  string address  = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message QueryGetVestingAccountResponse {
@@ -127,7 +129,7 @@ message QueryAllVestingAccountResponse {
 
 message QueryGetGenesisValidatorRequest {
   uint64 launchID = 1;
-  string address  = 2;
+  string address  = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message QueryGetGenesisValidatorResponse {

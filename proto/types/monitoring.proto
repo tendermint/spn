@@ -2,6 +2,7 @@ syntax = "proto3";
 package tendermint.spn.types;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/tendermint/spn/pkg/types";
 
@@ -32,6 +33,9 @@ message SignatureCounts {
 // RelativeSignatures is the sum of all signatures relative to the validator set size
 message SignatureCount {
   string opAddress          = 1;
-  string RelativeSignatures = 2
-      [(gogoproto.nullable) = false, (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec"];
+  string RelativeSignatures = 2 [
+    (gogoproto.nullable) = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar) = "cosmos.Dec"
+  ];
 }
