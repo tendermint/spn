@@ -105,7 +105,7 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 	}
 
 	// decrease airdrop supply
-	airdropSupply.Amount = airdropSupply.Amount.Sub(claimableAmount)
+	airdropSupply.Amount = airdropSupply.Amount.Sub(claimable.AmountOf(airdropSupply.Denom))
 	if airdropSupply.Amount.IsNegative() {
 		return spnerrors.Critical("airdrop supply is lower than total claimable")
 	}
