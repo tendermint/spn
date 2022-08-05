@@ -95,9 +95,7 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 
 	// calculate claimable after decay factor
 	decayInfo := k.DecayInformation(ctx)
-	if decayInfo.Enabled {
-		claimable = decayInfo.ApplyDecayFactor(claimable, ctx.BlockTime())
-	}
+	claimable = decayInfo.ApplyDecayFactor(claimable, ctx.BlockTime())
 
 	// check final claimable non-zero
 	if claimable.Empty() {
