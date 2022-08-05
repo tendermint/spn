@@ -3,13 +3,15 @@ package tendermint.spn.campaign;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
+import "cosmos_proto/cosmos.proto";
+
 import "campaign/vesting.proto";
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 message EventCampaignCreated {
   uint64 campaignID         = 1;
-  string coordinatorAddress = 2;
+  string coordinatorAddress = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   uint64 coordinatorID      = 3;
 }
 
@@ -20,14 +22,14 @@ message EventCampaignChainAdded {
 
 message EventCampaignInfoUpdated {
   uint64 campaignID         = 1;
-  string coordinatorAddress = 2;
+  string coordinatorAddress = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   string campaignName       = 3;
   bytes  metadata           = 4;
 }
 
 message EventCampaignSharesUpdated {
   uint64   campaignID                               = 1;
-  string   coordinatorAddress                       = 2;
+  string   coordinatorAddress                       = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   repeated cosmos.base.v1beta1.Coin allocatedShares = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -37,7 +39,7 @@ message EventCampaignSharesUpdated {
 
 message EventCampaignTotalSupplyUpdated {
   uint64   campaignID                           = 1;
-  string   coordinatorAddress                   = 2;
+  string   coordinatorAddress                   = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   repeated cosmos.base.v1beta1.Coin totalSupply = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -47,13 +49,13 @@ message EventCampaignTotalSupplyUpdated {
 
 message EventCampaignMainnetInitialized {
   uint64 campaignID         = 1;
-  string coordinatorAddress = 2;
+  string coordinatorAddress = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   uint64 mainnetID          = 3;
 }
 
 message EventMainnetAccountCreated {
   uint64   campaignID                      = 1;
-  string   address                         = 2;
+  string   address                         = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   repeated cosmos.base.v1beta1.Coin shares = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -63,7 +65,7 @@ message EventMainnetAccountCreated {
 
 message EventMainnetAccountUpdated {
   uint64   campaignID                      = 1;
-  string   address                         = 2;
+  string   address                         = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   repeated cosmos.base.v1beta1.Coin shares = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -73,18 +75,18 @@ message EventMainnetAccountUpdated {
 
 message EventMainnetAccountRemoved {
   uint64 campaignID = 1;
-  string address    = 2;
+  string address    = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message EventMainnetVestingAccountCreated {
   uint64              campaignID     = 1;
-  string              address        = 2;
+  string              address        = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   ShareVestingOptions vestingOptions = 3 [(gogoproto.nullable) = false];
 }
 
 message EventMainnetVestingAccountUpdated {
   uint64              campaignID     = 1;
-  string              address        = 2;
+  string              address        = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   ShareVestingOptions vestingOptions = 3 [(gogoproto.nullable) = false];
 }
 

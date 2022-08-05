@@ -4,10 +4,14 @@ package tendermint.spn.claim;
 option go_package = "github.com/tendermint/spn/x/claim/types";
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 message ClaimRecord {
-  string address   = 1;
-  string claimable = 2
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int", (gogoproto.nullable) = false];
+  string address   = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string claimable = 2 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (cosmos_proto.scalar)  = "cosmos.Int"
+  ];
   repeated uint64 completedMissions = 3;
 }

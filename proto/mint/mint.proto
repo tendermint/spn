@@ -4,38 +4,62 @@ package tendermint.spn.mint;
 option go_package = "github.com/tendermint/spn/x/mint/types";
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 // Minter represents the minting state.
 message Minter {
   // current annual inflation rate
-  string inflation = 1
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string inflation = 1 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
   // current annual expected provisions
-  string annual_provisions = 2
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string annual_provisions = 2 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
 }
 
 message WeightedAddress {
-  string address = 1;
-  string weight  = 2 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  string weight  = 2 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
 }
 
 message DistributionProportions {
   // staking defines the proportion of the minted minted_denom that is to be
   // allocated as staking rewards.
-  string staking = 1 [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string staking = 1 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
   // incentives defines the proportion of the minted minted_denom that is
   // to be allocated as incentives.
-  string incentives = 2
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string incentives = 2 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
   // development_fund defines the proportion of the minted minted_denom that is
   // to be allocated for development funding.
-  string development_fund = 3
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string development_fund = 3 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
   // community_pool defines the proportion of the minted minted_denom that is
   // to be allocated to the community pool.
-  string community_pool = 4
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string community_pool = 4 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
 }
 
 // Params holds parameters for the mint module.
@@ -45,17 +69,29 @@ message Params {
   // type of coin to mint
   string mint_denom = 1;
   // maximum annual change in inflation rate
-  string inflation_rate_change = 2
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string inflation_rate_change = 2 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
   // maximum inflation rate
-  string inflation_max = 3
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string inflation_max = 3 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
   // minimum inflation rate
-  string inflation_min = 4
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string inflation_min = 4 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
   // goal of percent bonded atoms
-  string goal_bonded = 5
-      [(gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec", (gogoproto.nullable) = false];
+  string goal_bonded = 5 [
+    (gogoproto.nullable)   = false,
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (cosmos_proto.scalar)  = "cosmos.Dec"
+  ];
   // expected blocks per year
   uint64 blocks_per_year = 6;
   // distribution_proportions defines the proportion of the minted denom
