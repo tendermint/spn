@@ -57,7 +57,7 @@ func (am AppModule) OnChanOpenInit(
 		return "", sdkerrors.Wrap(types.ErrInvalidHandshake, err.Error())
 	}
 
-	return "", nil
+	return version, nil
 }
 
 // OnChanOpenTry implements the IBCModule interface
