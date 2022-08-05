@@ -2,9 +2,20 @@ package types
 
 import (
 	"fmt"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"time"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
+
+// NewDisabledDecay returns decay information with disabled decay
+func NewDisabledDecay() DecayInformation {
+	// convert all time to UTC
+	return DecayInformation{
+		Enabled:    false,
+		DecayStart: time.UnixMilli(0).UTC(),
+		DecayEnd:   time.UnixMilli(0).UTC(),
+	}
+}
 
 // NewEnabledDecay returns decay information with a decay start and end
 func NewEnabledDecay(start, end time.Time) DecayInformation {

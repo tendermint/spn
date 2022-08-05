@@ -4,7 +4,6 @@ import (
 	"fmt"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
-	"time"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -27,11 +26,7 @@ func NewParams(di DecayInformation) Params {
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams(DecayInformation{
-		Enabled:    false,
-		DecayStart: time.UnixMilli(0),
-		DecayEnd:   time.UnixMilli(0),
-	})
+	return NewParams(NewDisabledDecay())
 }
 
 // ParamSetPairs get the params.ParamSet

@@ -9,6 +9,20 @@ import (
 	"time"
 )
 
+func TestNewDisabledDecay(t *testing.T) {
+	decayInfo := types.NewDisabledDecay()
+	require.False(t, decayInfo.Enabled)
+}
+
+func TestNewEnabledDecay(t *testing.T) {
+	start := time.UnixMilli(1000)
+	end := time.UnixMilli(2000)
+	decayInfo := types.NewEnabledDecay(start, end)
+	require.True(t, decayInfo.Enabled)
+	require.True(t, decayInfo.DecayStart.Equal(start))
+	require.True(t, decayInfo.DecayEnd.Equal(end))
+}
+
 func TestDecayInformation_Validate(t *testing.T) {
 	tests := []struct {
 		name      string
