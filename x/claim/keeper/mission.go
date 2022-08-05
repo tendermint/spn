@@ -93,6 +93,17 @@ func (k Keeper) CompleteMission(ctx sdk.Context, missionID uint64, address strin
 	claimableAmount := claimRecord.ClaimableFromMission(mission)
 	claimable := sdk.NewCoins(sdk.NewCoin(airdropSupply.Denom, claimableAmount))
 
+	// calculate claimable after decay factor
+	decayInfo := k.DecayInformation(ctx)
+	if decayInfo.Enabled {
+		claimable = decayInfo.ApplyDecayFactor(claimable, ctx.BlockTime())
+	}
+
+	// check final claimable non-zero
+	if claimable.Empty() {
+		return types.ErrNoClaimable
+	}
+
 	// decrease airdrop supply
 	airdropSupply.Amount = airdropSupply.Amount.Sub(claimableAmount)
 	if airdropSupply.Amount.IsNegative() {
