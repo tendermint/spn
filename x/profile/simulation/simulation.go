@@ -36,7 +36,7 @@ func genAndDeliverTxWithRandFeesAddOpAddr(txCtx sdksimulation.OperationInput, op
 	var fees sdk.Coins
 	var err error
 
-	coins, hasNeg := spendable.SafeSub(txCtx.CoinsSpentInMsg)
+	coins, hasNeg := spendable.SafeSub(txCtx.CoinsSpentInMsg...)
 	if hasNeg {
 		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "message doesn't leave room for fees"), nil, err
 	}
@@ -46,7 +46,8 @@ func genAndDeliverTxWithRandFeesAddOpAddr(txCtx sdksimulation.OperationInput, op
 		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to generate fees"), nil, err
 	}
 
-	tx, err := helpers.GenTx(
+	tx, err := helpers.GenSignedMockTx(
+		txCtx.R,
 		txCtx.TxGen,
 		[]sdk.Msg{txCtx.Msg},
 		fees,
@@ -60,7 +61,7 @@ func genAndDeliverTxWithRandFeesAddOpAddr(txCtx sdksimulation.OperationInput, op
 		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to generate mock tx"), nil, err
 	}
 
-	_, _, err = txCtx.App.Deliver(txCtx.TxGen.TxEncoder(), tx)
+	_, _, err = txCtx.App.SimDeliver(txCtx.TxGen.TxEncoder(), tx)
 	if err != nil {
 		return simtypes.NoOpMsg(txCtx.ModuleName, txCtx.MsgType, "unable to deliver tx"), nil, err
 	}

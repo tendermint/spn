@@ -107,7 +107,7 @@ func (k Keeper) DistributeRewards(
 
 	// distribute the rewards to validators
 	for address, rewards := range rewardsToDistribute {
-		coins, isNegative := rewardPool.RemainingCoins.SafeSub(rewards)
+		coins, isNegative := rewardPool.RemainingCoins.SafeSub(rewards...)
 		if isNegative {
 			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.RemainingCoins.String())
 		}
@@ -143,7 +143,7 @@ func (k Keeper) DistributeRewards(
 
 		// close the pool
 		rewardPool.Closed = true
-		rewardPool.RemainingCoins = rewardPool.RemainingCoins.Sub(rewardPool.RemainingCoins) // sub coins transferred
+		rewardPool.RemainingCoins = rewardPool.RemainingCoins.Sub(rewardPool.RemainingCoins...) // sub coins transferred
 		k.SetRewardPool(ctx, rewardPool)
 
 		return nil
@@ -162,7 +162,7 @@ func (k Keeper) DistributeRewards(
 
 	// if refund is non-null, refund is sent to the provider
 	if !refund.IsZero() {
-		coins, isNegative := rewardPool.RemainingCoins.SafeSub(refund)
+		coins, isNegative := rewardPool.RemainingCoins.SafeSub(refund...)
 		if isNegative {
 			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.RemainingCoins.String())
 		}

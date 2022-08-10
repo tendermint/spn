@@ -2,16 +2,17 @@ syntax = "proto3";
 
 package tendermint.spn.claim;
 
-import "claim/claim_record.proto";
-import "claim/mission.proto";
-import "claim/initial_claim.proto";
-// this line is used by starport scaffolding # 1
-
-import "claim/params.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "cosmos_proto/cosmos.proto";
+
+import "claim/params.proto";
+import "claim/claim_record.proto";
+import "claim/mission.proto";
+import "claim/initial_claim.proto";
+// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/claim/types";
 
@@ -47,10 +48,10 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/claim/airdrop_supply";
   }
   // Queries a InitialClaim by index.
-	rpc InitialClaim(QueryGetInitialClaimRequest) returns (QueryGetInitialClaimResponse) {
-		option (google.api.http).get = "/tendermint/spn/claim/initial_claim";
-	}
-// this line is used by starport scaffolding # 2
+  rpc InitialClaim(QueryGetInitialClaimRequest) returns (QueryGetInitialClaimResponse) {
+    option (google.api.http).get = "/tendermint/spn/claim/initial_claim";
+  }
+  // this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -63,7 +64,7 @@ message QueryParamsResponse {
 }
 
 message QueryGetClaimRecordRequest {
-  string address = 1;
+  string address = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message QueryGetClaimRecordResponse {
@@ -75,8 +76,8 @@ message QueryAllClaimRecordRequest {
 }
 
 message QueryAllClaimRecordResponse {
-  repeated ClaimRecord claimRecord = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated ClaimRecord                   claimRecord = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination  = 2;
 }
 
 message QueryGetMissionRequest {
@@ -92,7 +93,7 @@ message QueryAllMissionRequest {
 }
 
 message QueryAllMissionResponse {
-  repeated Mission Mission = 1 [(gogoproto.nullable) = false];
+  repeated Mission                       Mission    = 1 [(gogoproto.nullable) = false];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -104,7 +105,6 @@ message QueryGetAirdropSupplyResponse {
 message QueryGetInitialClaimRequest {}
 
 message QueryGetInitialClaimResponse {
-	InitialClaim InitialClaim = 1 [(gogoproto.nullable) = false];
+  InitialClaim InitialClaim = 1 [(gogoproto.nullable) = false];
 }
 // this line is used by starport scaffolding # 3
-

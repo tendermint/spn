@@ -68,7 +68,7 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 			Rand:         r,
 			GenState:     genesisState,
 			Accounts:     accs,
-			InitialStake: initialStake,
+			InitialStake: sdk.NewInt(initialStake),
 			NumBonded:    numInitiallyBonded,
 			GenTimestamp: genesisTimestamp,
 		}

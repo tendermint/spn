@@ -3,6 +3,8 @@ package keeper
 import (
 	"fmt"
 
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -32,8 +34,8 @@ type LaunchKeeper interface {
 type (
 	Keeper struct {
 		cdc           codec.BinaryCodec
-		storeKey      sdk.StoreKey
-		memKey        sdk.StoreKey
+		storeKey      storetypes.StoreKey
+		memKey        storetypes.StoreKey
 		launchKeeper  LaunchKeeper
 		bankKeeper    types.BankKeeper
 		distrKeeper   types.DistributionKeeper
@@ -45,7 +47,7 @@ type (
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey,
-	memKey sdk.StoreKey,
+	memKey storetypes.StoreKey,
 	paramSpace paramtypes.Subspace,
 	launchKeeper LaunchKeeper,
 	bankKeeper types.BankKeeper,

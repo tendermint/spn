@@ -50,4 +50,5 @@ host:
   grpc: ":9094"
   grpc-web: ":9095"
   api: ":1319"
-  
+build:
+  binary: "spn2d"

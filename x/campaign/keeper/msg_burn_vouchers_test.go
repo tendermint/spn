@@ -164,7 +164,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 
 			// Check coordinator balance
 			balance := tk.BankKeeper.GetAllBalances(sdkCtx, creatorAddr)
-			expectedBalance := previousBalance.Sub(tc.msg.Vouchers)
+			expectedBalance := previousBalance.Sub(tc.msg.Vouchers...)
 			require.True(t, balance.IsEqual(expectedBalance))
 		})
 	}

@@ -17,11 +17,11 @@ message EventRewardPoolRemoved {
 }
 
 message EventRewardsDistributed {
-  uint64 launchID = 1;
-  string receiver = 2;
+  uint64   launchID                         = 1;
+  string   receiver                         = 2;
   repeated cosmos.base.v1beta1.Coin rewards = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
 }

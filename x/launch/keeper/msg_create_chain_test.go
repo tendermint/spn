@@ -184,7 +184,7 @@ func TestMsgCreateChain(t *testing.T) {
 
 			// check fee deduction
 			postBalance := tk.BankKeeper.SpendableCoins(sdkCtx, accAddr)
-			require.True(t, preBalance.Sub(chainCreationFee).IsEqual(postBalance))
+			require.True(t, preBalance.Sub(chainCreationFee...).IsEqual(postBalance))
 		})
 	}
 }

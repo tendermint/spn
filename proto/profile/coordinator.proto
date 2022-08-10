@@ -4,21 +4,22 @@ package tendermint.spn.profile;
 option go_package = "github.com/tendermint/spn/x/profile/types";
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 message Coordinator {
-  uint64 coordinatorID = 1;
-  string address = 2;
-  CoordinatorDescription description = 3 [(gogoproto.nullable) = false];
-  bool active = 4;
+  uint64                 coordinatorID = 1;
+  string                 address       = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+  CoordinatorDescription description   = 3 [(gogoproto.nullable) = false];
+  bool                   active        = 4;
 }
 
 message CoordinatorDescription {
   string identity = 1;
-  string website = 2;
-  string details = 3;
+  string website  = 2;
+  string details  = 3;
 }
 
 message CoordinatorByAddress {
-  string address = 1;
+  string address       = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   uint64 coordinatorID = 2;
 }

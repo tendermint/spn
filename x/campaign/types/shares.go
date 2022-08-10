@@ -64,7 +64,7 @@ func IncreaseShares(shares, newShares Shares) Shares {
 
 // DecreaseShares decreases the number of shares or returns a error if shares can't be decreased
 func DecreaseShares(shares, toDecrease Shares) (Shares, error) {
-	decreasedCoins, negative := sdk.Coins(shares).SafeSub(sdk.Coins(toDecrease))
+	decreasedCoins, negative := sdk.Coins(shares).SafeSub(sdk.Coins(toDecrease)...)
 	if negative {
 		return nil, errors.New("shares cannot be decreased to negative")
 	}

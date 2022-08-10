@@ -14,10 +14,10 @@ option go_package = "github.com/tendermint/spn/x/claim/types";
 // GenesisState defines the claim module's genesis state.
 message GenesisState {
   cosmos.base.v1beta1.Coin airdropSupply = 1 [(gogoproto.nullable) = false];
-  repeated ClaimRecord claimRecords = 2 [(gogoproto.nullable) = false];
-  repeated Mission missions = 3 [(gogoproto.nullable) = false];
-  InitialClaim initialClaim = 4 [(gogoproto.nullable) = false];
-  Params params = 5 [(gogoproto.nullable) = false];
+  repeated ClaimRecord     claimRecords  = 2 [(gogoproto.nullable) = false];
+  repeated Mission         missions      = 3 [(gogoproto.nullable) = false];
+  InitialClaim             initialClaim  = 4 [(gogoproto.nullable) = false];
+  Params                   params        = 5 [(gogoproto.nullable) = false];
 
   // this line is used by starport scaffolding # genesis/proto/state
 }
