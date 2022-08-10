@@ -35,7 +35,7 @@ func CmdAddValidatorOperatorAddress() *cobra.Command {
 
 			// initialize tx
 			txf := tx.NewFactoryCLI(clientCtx, cmd.Flags())
-			txBuilder, err := tx.BuildUnsignedTx(txf, msg)
+			txBuilder, err := txf.BuildUnsignedTx(msg)
 			if err != nil {
 				return err
 			}
@@ -80,7 +80,7 @@ func addSignature(
 	txBuilder client.TxBuilder,
 	addr string,
 ) error {
-	fromAddr, fromName, _, err := client.GetFromFields(clientCtx.Keyring, addr, clientCtx.GenerateOnly)
+	fromAddr, fromName, _, err := client.GetFromFields(clientCtx, clientCtx.Keyring, addr)
 	if err != nil {
 		return err
 	}

@@ -2,33 +2,34 @@ syntax = "proto3";
 package tendermint.spn.profile;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
 import "profile/coordinator.proto";
 import "profile/validator.proto";
-
 
 option go_package = "github.com/tendermint/spn/x/profile/types";
 
 message EventCoordinatorCreated {
   uint64 coordinatorID = 1;
-  string address = 2;
+  string address       = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message EventCoordinatorAddressUpdated {
   uint64 coordinatorID = 1;
-  string newAddress = 2;
+  string newAddress    = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message EventCoordinatorDisabled {
   uint64 coordinatorID = 1;
-  string address = 2;
+  string address       = 2 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
 message EventValidatorCreated {
-  string address = 1;
+  string          address           = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   repeated string operatorAddresses = 2;
 }
 
 message EventValidatorOperatorAddressesUpdated {
-  string address = 1;
+  string          address           = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
   repeated string operatorAddresses = 2;
 }

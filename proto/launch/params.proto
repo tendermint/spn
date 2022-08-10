@@ -10,11 +10,11 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  LaunchTimeRange launchTimeRange = 1 [(gogoproto.nullable) = false];
-  int64 revertDelay = 2;
+  LaunchTimeRange launchTimeRange                    = 1 [(gogoproto.nullable) = false];
+  int64           revertDelay                        = 2;
   repeated cosmos.base.v1beta1.Coin chainCreationFee = 3 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
 }

@@ -7,7 +7,9 @@ import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 message ShareVestingOptions {
-  oneof options {ShareDelayedVesting delayedVesting = 1;}
+  oneof options {
+    ShareDelayedVesting delayedVesting = 1;
+  }
 }
 
 // ShareDelayedVesting represents options for share delayed vesting
@@ -15,13 +17,13 @@ message ShareVestingOptions {
 // once end time is reached
 message ShareDelayedVesting {
   repeated cosmos.base.v1beta1.Coin totalShares = 1 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
   repeated cosmos.base.v1beta1.Coin vesting = 2 [
-    (gogoproto.nullable) = false,
-    (gogoproto.casttype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
   int64 endTime = 3;

@@ -74,8 +74,8 @@ message QueryAllProviderClientIDRequest {
 }
 
 message QueryAllProviderClientIDResponse {
-  repeated ProviderClientID providerClientID = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated ProviderClientID              providerClientID = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination       = 2;
 }
 
 message QueryGetLaunchIDFromChannelIDRequest {
@@ -91,8 +91,8 @@ message QueryAllLaunchIDFromChannelIDRequest {
 }
 
 message QueryAllLaunchIDFromChannelIDResponse {
-  repeated LaunchIDFromChannelID launchIDFromChannelID = 1 [(gogoproto.nullable) = false];
-  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated LaunchIDFromChannelID         launchIDFromChannelID = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination            = 2;
 }
 
 message QueryGetMonitoringHistoryRequest {

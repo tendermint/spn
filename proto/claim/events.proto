@@ -5,5 +5,5 @@ option go_package = "github.com/tendermint/spn/x/claim/types";
 
 message EventMissionCompleted {
   uint64 missionID = 1;
-  string claimer = 2;
+  string claimer   = 2;
 }

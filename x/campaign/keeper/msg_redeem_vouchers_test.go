@@ -217,7 +217,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			expectedVouchers := sdk.Coins{}
 			if foundAccount {
 				var negative bool
-				expectedVouchers, negative = previousBalance.SafeSub(tc.msg.Vouchers)
+				expectedVouchers, negative = previousBalance.SafeSub(tc.msg.Vouchers...)
 				require.False(t, negative)
 			}
 			balance := tk.BankKeeper.GetAllBalances(sdkCtx, accountAddr)

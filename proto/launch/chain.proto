@@ -6,21 +6,21 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
 message Chain {
-  uint64 launchID = 1;
-  uint64 coordinatorID = 2;
+  uint64 launchID       = 1;
+  uint64 coordinatorID  = 2;
   string genesisChainID = 3;
-  int64 createdAt = 4;
+  int64  createdAt      = 4;
 
-  string sourceURL = 5;
+  string sourceURL  = 5;
   string sourceHash = 6;
 
   InitialGenesis initialGenesis = 7 [(gogoproto.nullable) = false];
 
-  bool hasCampaign = 8;
-  uint64 campaignID = 9;
-  bool isMainnet = 10;
+  bool   hasCampaign = 8;
+  uint64 campaignID  = 9;
+  bool   isMainnet   = 10;
 
-  bool launchTriggered = 11;
+  bool  launchTriggered = 11;
   int64 launchTimestamp = 12;
 
   int64 consumerRevisionHeight = 13;
@@ -33,7 +33,7 @@ message Chain {
 message InitialGenesis {
   oneof source {
     DefaultInitialGenesis defaultInitialGenesis = 1;
-    GenesisURL genesisURL = 2;
+    GenesisURL            genesisURL            = 2;
   }
 }
 
@@ -43,6 +43,6 @@ message DefaultInitialGenesis {}
 
 // GenesisURL specifies using a custom genesis from a URL as the initial genesis
 message GenesisURL {
-  string url = 1;
+  string url  = 1;
   string hash = 2;
 }

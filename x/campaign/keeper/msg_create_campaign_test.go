@@ -157,7 +157,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 
 			// check fee deduction
 			postBalance := tk.BankKeeper.SpendableCoins(sdkCtx, accAddr)
-			require.True(t, preBalance.Sub(campaignCreationFee).IsEqual(postBalance))
+			require.True(t, preBalance.Sub(campaignCreationFee...).IsEqual(postBalance))
 		})
 	}
 }
