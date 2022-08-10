@@ -1,12 +1,14 @@
 package types_test
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/stretchr/testify/require"
-	tc "github.com/tendermint/spn/testutil/constructor"
-	"github.com/tendermint/spn/x/claim/types"
 	"testing"
 	"time"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
+
+	tc "github.com/tendermint/spn/testutil/constructor"
+	"github.com/tendermint/spn/x/claim/types"
 )
 
 func TestNewDisabledDecay(t *testing.T) {
