@@ -15,4 +15,5 @@ var (
 	ErrInitialClaimNotFound   = sdkerrors.Register(ModuleName, 6, "initial claim information not found")
 	ErrInitialClaimNotEnabled = sdkerrors.Register(ModuleName, 7, "initial claim not enabled")
 	ErrMissionCompleteFailure = sdkerrors.Register(ModuleName, 8, "mission failed to complete")
+	ErrNoClaimable            = sdkerrors.Register(ModuleName, 9, "no amount to be claimed")
 )

@@ -2,6 +2,7 @@ package types_test
 
 import (
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -33,6 +34,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should validate airdrop supply sum of claim amounts",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
@@ -65,6 +67,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should allow genesis state with no airdrop supply",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
@@ -78,6 +81,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should allow genesis state with no mission",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
@@ -95,6 +99,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should allow mission with 0 weight",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
@@ -122,6 +127,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should allow claim record with completed missions",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
@@ -151,6 +157,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should allow claim record with missions all completed",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
@@ -180,6 +187,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should allow claim record with zero weight mission completed",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
@@ -209,6 +217,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should validate genesis state with initial claim enabled",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
@@ -236,6 +245,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate duplicated claimRecord",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   "duplicate",
@@ -259,6 +269,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate claim record with non positive allocation",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
@@ -282,6 +293,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate airdrop supply higher than sum of claim amounts",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
@@ -305,6 +317,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate airdrop supply lower than sum of claim amounts",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
@@ -328,6 +341,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate invalid airdrop supply with records with completed missions",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
@@ -356,6 +370,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate claim record with non existing mission",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
@@ -380,6 +395,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate invalid genesis supply coin",
 			genState: &types.GenesisState{
+				Params:        types.DefaultParams(),
 				AirdropSupply: sdk.Coin{},
 				Missions: []types.Mission{
 					{
@@ -393,6 +409,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate duplicated mission",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
@@ -409,6 +426,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate mission list weights are not equal to 1",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				Missions: []types.Mission{
 					{
 						MissionID: 0,
@@ -425,6 +443,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "should prevent validate initial claim enabled with non existing mission",
 			genState: &types.GenesisState{
+				Params: types.DefaultParams(),
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
@@ -440,6 +459,24 @@ func TestGenesisState_Validate(t *testing.T) {
 					Enabled:   true,
 					MissionID: 0,
 				},
+			},
+			valid: false,
+		},
+		{
+			desc: "should prevent validate genesis state with invalid param",
+			genState: &types.GenesisState{
+				Params: types.NewParams(types.DecayInformation{
+					Enabled:    true,
+					DecayStart: time.UnixMilli(1001),
+					DecayEnd:   time.UnixMilli(1000),
+				}),
+				Missions: []types.Mission{
+					{
+						MissionID: 0,
+						Weight:    sdk.OneDec(),
+					},
+				},
+				AirdropSupply: tc.Coin(t, "0foo"),
 			},
 			valid: false,
 		},

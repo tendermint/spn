@@ -483,7 +483,7 @@ func (i initializer) Claim(
 	i.StateStore.MountStoreWithDB(memStoreKey, storetypes.StoreTypeMemory, nil)
 
 	paramKeeper.Subspace(claimtypes.ModuleName)
-	subspace, _ := paramKeeper.GetSubspace(participationtypes.ModuleName)
+	subspace, _ := paramKeeper.GetSubspace(claimtypes.ModuleName)
 
 	return claimkeeper.NewKeeper(
 		i.Codec,

@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -70,6 +71,8 @@ func TestKeeper_CompleteMission(t *testing.T) {
 		airdropSupply   sdk.Coin
 		mission         types.Mission
 		claimRecord     types.ClaimRecord
+		params          types.Params
+		blockTime       time.Time
 	}
 
 	// prepare addresses
@@ -92,6 +95,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				noAirdropSupply: true,
 				claimRecord:     sample.ClaimRecord(r),
 				mission:         sample.Mission(r),
+				params:          types.DefaultParams(),
 			},
 			missionID: 1,
 			address:   sample.Address(r),
@@ -107,6 +111,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Claimable:         sdk.OneInt(),
 					CompletedMissions: []uint64{1},
 				},
+				params: types.DefaultParams(),
 			},
 			missionID: 1,
 			address:   addr[0],
@@ -121,6 +126,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					MissionID: 1,
 					Weight:    sdk.OneDec(),
 				},
+				params: types.DefaultParams(),
 			},
 			missionID: 1,
 			address:   sample.Address(r),
@@ -139,6 +145,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Claimable:         sdk.OneInt(),
 					CompletedMissions: []uint64{1},
 				},
+				params: types.DefaultParams(),
 			},
 			missionID: 1,
 			address:   addr[1],
@@ -156,6 +163,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Address:   addr[2],
 					Claimable: sdk.NewIntFromUint64(10000),
 				},
+				params: types.DefaultParams(),
 			},
 			missionID: 1,
 			address:   addr[2],
@@ -173,6 +181,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Address:   "invalid",
 					Claimable: sdk.OneInt(),
 				},
+				params: types.DefaultParams(),
 			},
 			missionID: 1,
 			address:   "invalid",
@@ -190,13 +199,14 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Address:   addr[3],
 					Claimable: sdk.NewIntFromUint64(1000),
 				},
+				params: types.DefaultParams(),
 			},
 			missionID:       1,
 			address:         addr[3],
 			expectedBalance: tc.Coin(t, "1000foo"),
 		},
 		{
-			name: "should allow distributing no fund for mission with 0 weight",
+			name: "should prevent distributing fund for mission with 0 weight",
 			inputState: inputState{
 				airdropSupply: tc.Coin(t, "1000foo"),
 				mission: types.Mission{
@@ -207,10 +217,11 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Address:   addr[4],
 					Claimable: sdk.NewIntFromUint64(1000),
 				},
+				params: types.DefaultParams(),
 			},
-			missionID:       1,
-			address:         addr[4],
-			expectedBalance: tc.Coin(t, "0foo"),
+			missionID: 1,
+			address:   addr[4],
+			err:       types.ErrNoClaimable,
 		},
 		{
 			name: "should allow distributing half for mission with 0.5 weight",
@@ -224,6 +235,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Address:   addr[5],
 					Claimable: sdk.NewIntFromUint64(500),
 				},
+				params: types.DefaultParams(),
 			},
 			missionID:       1,
 			address:         addr[5],
@@ -241,13 +253,14 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Address:   addr[6],
 					Claimable: sdk.NewIntFromUint64(201),
 				},
+				params: types.DefaultParams(),
 			},
 			missionID:       1,
 			address:         addr[6],
 			expectedBalance: tc.Coin(t, "100foo"),
 		},
 		{
-			name: "should allow distributing no fund for empty claim record",
+			name: "should prevent distributing fund for empty claim record",
 			inputState: inputState{
 				airdropSupply: tc.Coin(t, "1000foo"),
 				mission: types.Mission{
@@ -258,10 +271,11 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Address:   addr[7],
 					Claimable: sdk.ZeroInt(),
 				},
+				params: types.DefaultParams(),
 			},
-			missionID:       1,
-			address:         addr[7],
-			expectedBalance: tc.Coin(t, "0foo"),
+			missionID: 1,
+			address:   addr[7],
+			err:       types.ErrNoClaimable,
 		},
 		{
 			name: "should allow distributing airdrop with other already completed missions",
@@ -276,15 +290,84 @@ func TestKeeper_CompleteMission(t *testing.T) {
 					Claimable:         sdk.NewIntFromUint64(10000),
 					CompletedMissions: []uint64{0, 1, 2, 4, 5, 6},
 				},
+				params: types.DefaultParams(),
 			},
 			missionID:       3,
 			address:         addr[8],
 			expectedBalance: tc.Coin(t, "3000bar"),
 		},
+		{
+			name: "should allow applying decay factor if enabled",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[9],
+					Claimable: sdk.NewIntFromUint64(1000),
+				},
+				params: types.NewParams(types.NewEnabledDecay(
+					time.Unix(1000, 0),
+					time.Unix(2000, 0),
+				)),
+				blockTime: time.Unix(1500, 0),
+			},
+			missionID:       1,
+			address:         addr[9],
+			expectedBalance: tc.Coin(t, "250foo"),
+		},
+		{
+			name: "should allow distributing all funds if decay factor if enabled and decay not started",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[10],
+					Claimable: sdk.NewIntFromUint64(1000),
+				},
+				params: types.NewParams(types.NewEnabledDecay(
+					time.Unix(1000, 0),
+					time.Unix(2000, 0),
+				)),
+				blockTime: time.Unix(999, 0),
+			},
+			missionID:       1,
+			address:         addr[10],
+			expectedBalance: tc.Coin(t, "500foo"),
+		},
+		{
+			name: "should prevent distributing funds if decay ended",
+			inputState: inputState{
+				airdropSupply: tc.Coin(t, "1000foo"),
+				mission: types.Mission{
+					MissionID: 1,
+					Weight:    tc.Dec(t, "0.5"),
+				},
+				claimRecord: types.ClaimRecord{
+					Address:   addr[11],
+					Claimable: sdk.NewIntFromUint64(1000),
+				},
+				params: types.NewParams(types.NewEnabledDecay(
+					time.Unix(1000, 0),
+					time.Unix(2000, 0),
+				)),
+				blockTime: time.Unix(2001, 0),
+			},
+			missionID: 1,
+			address:   addr[11],
+			err:       types.ErrNoClaimable,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// initialize input state
+			require.NoError(t, tt.inputState.params.Validate())
+			tk.ClaimKeeper.SetParams(ctx, tt.inputState.params)
 			if !tt.inputState.noAirdropSupply {
 				err := tk.ClaimKeeper.InitializeAirdropSupply(ctx, tt.inputState.airdropSupply)
 				require.NoError(t, err)
@@ -294,6 +377,9 @@ func TestKeeper_CompleteMission(t *testing.T) {
 			}
 			if !tt.inputState.noClaimRecord {
 				tk.ClaimKeeper.SetClaimRecord(ctx, tt.inputState.claimRecord)
+			}
+			if !tt.inputState.blockTime.IsZero() {
+				ctx = ctx.WithBlockTime(tt.inputState.blockTime)
 			}
 
 			err := tk.ClaimKeeper.CompleteMission(ctx, tt.missionID, tt.address)

@@ -13,11 +13,12 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	spnapp "github.com/tendermint/spn/app"
-	"github.com/tendermint/spn/cmd"
 	"github.com/tendermint/tendermint/libs/log"
 	tmtypes "github.com/tendermint/tendermint/types"
 	dbm "github.com/tendermint/tm-db"
+
+	spnapp "github.com/tendermint/spn/app"
+	"github.com/tendermint/spn/cmd"
 )
 
 func GenApp(withGenesis bool, invCheckPeriod uint) (*spnapp.App, spnapp.GenesisState) {
