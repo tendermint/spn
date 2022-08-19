@@ -2,7 +2,7 @@
 
 Closes #<issue number>. _in case of a bug fix, this should point to a bug or any other related issue(s)_
 
-### What does this PR does?
+### What does this PR do?
 
 <!-- Describe your changes here - ideally you can get that description straight from
 your descriptive commit message(s)! -->
