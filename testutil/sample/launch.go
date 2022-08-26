@@ -27,15 +27,16 @@ func GenesisChainID(r *rand.Rand) string {
 // Chain returns a sample Chain
 func Chain(r *rand.Rand, id, coordinatorID uint64) launch.Chain {
 	return launch.Chain{
-		LaunchID:        id,
-		CoordinatorID:   coordinatorID,
-		GenesisChainID:  GenesisChainID(r),
-		CreatedAt:       Duration(r).Milliseconds(),
-		SourceURL:       String(r, 10),
-		SourceHash:      String(r, 10),
-		LaunchTriggered: false,
-		InitialGenesis:  launch.NewDefaultInitialGenesis(),
-		Metadata:        Metadata(r, 20),
+		LaunchID:              id,
+		CoordinatorID:         coordinatorID,
+		GenesisChainID:        GenesisChainID(r),
+		CreatedAt:             Duration(r).Milliseconds(),
+		SourceURL:             String(r, 10),
+		SourceHash:            String(r, 10),
+		LaunchTriggered:       false,
+		InitialGenesis:        launch.NewDefaultInitialGenesis(),
+		DefaultAccountBalance: Coins(r),
+		Metadata:              Metadata(r, 20),
 	}
 }
 
