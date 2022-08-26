@@ -1,6 +1,7 @@
 package types_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -18,6 +19,10 @@ func TestChain_Validate(t *testing.T) {
 
 	mainnetWithoutCampaign := sample.Chain(r, 0, 0)
 	mainnetWithoutCampaign.IsMainnet = true
+
+	invalidCoins := sample.Chain(r, 0, 0)
+	// add invalid coin amount
+	invalidCoins.DefaultAccountBalance = sdk.Coins{sdk.Coin{Denom: "invalid", Amount: sdk.NewInt(-1)}}
 
 	for _, tc := range []struct {
 		desc  string
@@ -42,6 +47,11 @@ func TestChain_Validate(t *testing.T) {
 		{
 			desc:  "should prevent validate mainnet chain without associated campaign ID",
 			chain: mainnetWithoutCampaign,
+			valid: false,
+		},
+		{
+			desc:  "should prevent chain with invalid coins structure",
+			chain: invalidCoins,
 			valid: false,
 		},
 	} {
