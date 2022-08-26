@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -18,8 +19,9 @@ import (
 )
 
 const (
-	flagGenesisURL = "genesis-url"
-	flagCampaignID = "campaign-id"
+	flagGenesisURL            = "genesis-url"
+	flagCampaignID            = "campaign-id"
+	flagDefaultAccountBalance = "default-account-balance"
 )
 
 func CmdCreateChain() *cobra.Command {
@@ -63,6 +65,19 @@ func CmdCreateChain() *cobra.Command {
 			}
 			metadataBytes := []byte(metadata)
 
+			balanceCoins := sdk.NewCoins()
+			balance, err := cmd.Flags().GetString(flagDefaultAccountBalance)
+			if err != nil {
+				return err
+			}
+			if balance != "" {
+				// parse coins argument
+				balanceCoins, err = sdk.ParseCoinsNormalized(balance)
+				if err != nil {
+					return err
+				}
+			}
+
 			msg := types.NewMsgCreateChain(
 				clientCtx.GetFromAddress().String(),
 				args[0],
@@ -72,6 +87,7 @@ func CmdCreateChain() *cobra.Command {
 				genesisHash,
 				hasCampaign,
 				campaignID,
+				balanceCoins,
 				metadataBytes,
 			)
 			if err := msg.ValidateBasic(); err != nil {
@@ -84,6 +100,8 @@ func CmdCreateChain() *cobra.Command {
 	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
 	cmd.Flags().Int64(flagCampaignID, -1, "The campaign id")
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
+	cmd.Flags().String(flagDefaultAccountBalance, "", "Set the default account coin balance")
+
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd
