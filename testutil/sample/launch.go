@@ -162,6 +162,7 @@ func MsgCreateChain(r *rand.Rand, coordAddress, genesisURL string, hasCampaign b
 		genesisHash,
 		hasCampaign,
 		campaignID,
+		Coins(r),
 		Metadata(r, 20),
 	)
 }
