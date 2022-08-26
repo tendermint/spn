@@ -53,6 +53,7 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		true,
 		msg.CampaignID,
 		true,
+		sdk.NewCoins(), // no enforced default for mainnet
 		[]byte{},
 	)
 	if err != nil {

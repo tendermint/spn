@@ -32,6 +32,7 @@ func (k msgServer) CreateChain(goCtx context.Context, msg *types.MsgCreateChain)
 		msg.HasCampaign,
 		msg.CampaignID,
 		false,
+		msg.DefaultAccountBalance,
 		msg.Metadata,
 	)
 	if err != nil {

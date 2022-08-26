@@ -46,6 +46,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 		hasCampaign    bool
 		campaignID     uint64
 		isMainnet      bool
+		balance        sdk.Coins
 		metadata       []byte
 		wantedID       uint64
 		valid          bool
@@ -58,6 +59,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceHash:     sample.String(r, 20),
 			genesisURL:     "",
 			hasCampaign:    false,
+			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       0,
 			valid:          true,
@@ -72,6 +74,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
+			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       1,
 			valid:          true,
@@ -86,6 +89,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			hasCampaign:    true,
 			campaignID:     0,
 			isMainnet:      true,
+			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       2,
 			valid:          true,
@@ -99,6 +103,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisURL:     sample.String(r, 30),
 			genesisHash:    sample.GenesisHash(r),
 			hasCampaign:    false,
+			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       3,
 			valid:          true,
@@ -113,6 +118,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
+			balance:        sample.Coins(r),
 			wantedID:       4,
 			valid:          true,
 		},
@@ -124,6 +130,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceHash:     sample.String(r, 20),
 			genesisURL:     "",
 			hasCampaign:    false,
+			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       0,
 			valid:          false,
@@ -137,6 +144,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisURL:     "",
 			hasCampaign:    true,
 			campaignID:     1000,
+			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			isMainnet:      false,
 			valid:          false,
@@ -151,6 +159,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
+			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       1,
 			valid:          false,
@@ -164,6 +173,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisURL:     "",
 			hasCampaign:    false,
 			campaignID:     0,
+			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			isMainnet:      true,
 			valid:          false,
@@ -181,6 +191,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 				tc.hasCampaign,
 				tc.campaignID,
 				tc.isMainnet,
+				tc.balance,
 				tc.metadata,
 			)
 

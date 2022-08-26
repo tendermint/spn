@@ -3,7 +3,6 @@ package keeper
 import (
 	"encoding/binary"
 	"fmt"
-
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
@@ -145,6 +144,9 @@ func ApplyRequest(
 	switch requestContent := request.Content.Content.(type) {
 	case *types.RequestContent_GenesisAccount:
 		ga := requestContent.GenesisAccount
+		if !chain.DefaultAccountBalance.Empty() {
+			ga.Coins = chain.DefaultAccountBalance
+		}
 		k.SetGenesisAccount(ctx, *ga)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventGenesisAccountAdded{
 			Address:            ga.Address,
@@ -155,6 +157,21 @@ func ApplyRequest(
 
 	case *types.RequestContent_VestingAccount:
 		va := requestContent.VestingAccount
+		if !chain.DefaultAccountBalance.Empty() {
+			switch opt := va.VestingOptions.Options.(type) {
+			case *types.VestingOptions_DelayedVesting:
+				dv := opt.DelayedVesting
+				va = &types.VestingAccount{
+					Address:  va.Address,
+					LaunchID: va.LaunchID,
+					VestingOptions: *types.NewDelayedVesting(
+						chain.DefaultAccountBalance,
+						chain.DefaultAccountBalance,
+						dv.EndTime,
+					),
+				}
+			}
+		}
 		k.SetVestingAccount(ctx, *va)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventVestingAccountAdded{
 			Address:            va.Address,
