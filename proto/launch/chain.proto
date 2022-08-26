@@ -2,6 +2,7 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -27,7 +28,13 @@ message Chain {
 
   bool monitoringConnected = 14;
 
-  bytes metadata = 15;
+  repeated cosmos.base.v1beta1.Coin defaultAccountBalance = 15 [
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+
+  bytes metadata = 16;
 }
 
 message InitialGenesis {
