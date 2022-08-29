@@ -3,8 +3,8 @@ package keeper
 import (
 	"encoding/base64"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	tmtypes "github.com/tendermint/tendermint/types"
 
 	"github.com/tendermint/spn/x/launch/types"

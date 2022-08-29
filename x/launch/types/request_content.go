@@ -3,8 +3,8 @@ package types
 import (
 	"errors"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 func (m RequestContent) Validate() error {

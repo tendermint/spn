@@ -5,8 +5,8 @@ import (
 
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tendermint/spn/x/launch/types"
 )
