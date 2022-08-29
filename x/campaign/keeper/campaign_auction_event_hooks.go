@@ -3,10 +3,8 @@ package keeper
 import (
 	"time"
 
-
-	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"

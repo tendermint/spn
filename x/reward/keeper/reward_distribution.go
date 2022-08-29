@@ -3,8 +3,8 @@ package keeper
 import (
 	"fmt"
 
-	sdkmath "cosmossdk.io/math"
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
