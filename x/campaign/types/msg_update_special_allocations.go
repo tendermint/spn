@@ -1,8 +1,9 @@
 package types
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const TypeMsgUpdateSpecialAllocations = "update_special_allocations"
@@ -44,7 +45,7 @@ func (msg *MsgUpdateSpecialAllocations) GetSignBytes() []byte {
 
 func (msg *MsgUpdateSpecialAllocations) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Coordinator); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 	if err := msg.SpecialAllocations.Validate(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidSpecialAllocations, err.Error())

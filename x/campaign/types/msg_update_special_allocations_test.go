@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -31,7 +31,7 @@ func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 				CampaignID:         1,
 				SpecialAllocations: sample.SpecialAllocations(r),
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid special allocations",

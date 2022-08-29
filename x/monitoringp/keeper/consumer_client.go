@@ -3,8 +3,8 @@ package keeper
 import (
 	"time"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	clienttypes "github.com/cosmos/ibc-go/v5/modules/core/02-client/types"
 	committypes "github.com/cosmos/ibc-go/v5/modules/core/23-commitment/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v5/modules/light-clients/07-tendermint/types"

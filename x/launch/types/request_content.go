@@ -3,8 +3,9 @@ package types
 import (
 	"errors"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 func (m RequestContent) Validate() error {
@@ -41,7 +42,7 @@ func NewGenesisAccount(launchID uint64, address string, coins sdk.Coins) Request
 func (m GenesisAccount) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
 
 	if !m.Coins.IsValid() || m.Coins.Empty() {
@@ -67,7 +68,7 @@ func NewVestingAccount(launchID uint64, address string, vestingOptions VestingOp
 func (m VestingAccount) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 
 	if err := m.VestingOptions.Validate(); err != nil {
@@ -103,7 +104,7 @@ func NewGenesisValidator(
 func (m GenesisValidator) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
 
 	if len(m.GenTx) == 0 {
@@ -143,7 +144,7 @@ func NewAccountRemoval(address string) RequestContent {
 func (m AccountRemoval) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
 	return nil
 }
@@ -163,7 +164,7 @@ func NewValidatorRemoval(address string) RequestContent {
 func (m ValidatorRemoval) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.ValAddress)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 	return nil
 }

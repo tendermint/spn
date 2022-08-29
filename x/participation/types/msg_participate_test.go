@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -27,7 +27,7 @@ func TestMsgParticipate_ValidateBasic(t *testing.T) {
 			msg: types.MsgParticipate{
 				Participant: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 	}
 	for _, tt := range tests {

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -25,7 +25,7 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 				Coins:            sample.Coins(r),
 				LastRewardHeight: 50,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid coins",
@@ -48,7 +48,7 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 				Coins:            sample.Coins(r),
 				LastRewardHeight: -1,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrortypes.ErrInvalidRequest,
 		},
 		{
 			name: "valid reward pool message",

@@ -4,14 +4,13 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/stretchr/testify/require"
 
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
-
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
+	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -132,7 +131,7 @@ func TestMsgCreateChain(t *testing.T) {
 		{
 			name: "should prevent creating a chain with insufficient balance to cover creation fee",
 			msg:  sample.MsgCreateChain(r, coordAddrs[4], "", false, campMap[coordAddrs[4]]),
-			err:  sdkerrors.ErrInsufficientFunds,
+			err:  sdkerrortypes.ErrInsufficientFunds,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
