@@ -83,7 +83,7 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 
 	// Coins must be valid
 	if !msg.DefaultAccountBalance.IsValid() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidCoins, "default account balance sdk.Coins is not valid")
+		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidCoins, "default account balance sdk.Coins is not valid")
 	}
 
 	return nil
