@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -35,7 +35,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: sample.GenesisChainID(r),
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "empty source URL",
@@ -46,7 +46,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: sample.GenesisChainID(r),
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrortypes.ErrInvalidRequest,
 		},
 		{
 			name: "empty source hash",
@@ -57,7 +57,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 				SourceHash:     "",
 				MainnetChainID: sample.GenesisChainID(r),
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrortypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid chain id",
@@ -68,7 +68,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: "invalid_chain_id",
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrortypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {

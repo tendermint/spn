@@ -1,8 +1,9 @@
 package types
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tendermint/spn/pkg/chainid"
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -62,7 +63,7 @@ func (msg *MsgCreateChain) GetSignBytes() []byte {
 func (msg *MsgCreateChain) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
 	if _, _, err := chainid.ParseGenesisChainID(msg.GenesisChainID); err != nil {
