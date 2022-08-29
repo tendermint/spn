@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	neturl "net/url"
@@ -117,7 +117,7 @@ func getHashFromURL(ctx context.Context, url string) (string, error) {
 	if res.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("genesis url fetch error %s", res.Status)
 	}
-	initialGenesis, err := ioutil.ReadAll(res.Body)
+	initialGenesis, err := io.ReadAll(res.Body)
 	if err != nil {
 		return "", err
 	}
