@@ -3,12 +3,11 @@ package types_test
 import (
 	"testing"
 
-	"github.com/tendermint/spn/x/claim/types"
-
-	sdkerrors "cosmossdk.io/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
+	"github.com/tendermint/spn/x/claim/types"
 )
 
 func TestMsgClaimInitial_ValidateBasic(t *testing.T) {

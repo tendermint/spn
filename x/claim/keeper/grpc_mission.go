@@ -3,9 +3,9 @@ package keeper
 import (
 	"context"
 
-	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -48,7 +48,7 @@ func (k Keeper) Mission(c context.Context, req *types.QueryGetMissionRequest) (*
 	ctx := sdk.UnwrapSDKContext(c)
 	mission, found := k.GetMission(ctx, req.MissionID)
 	if !found {
-		return nil, sdkerrors.ErrKeyNotFound
+		return nil, sdkerrortypes.ErrKeyNotFound
 	}
 
 	return &types.QueryGetMissionResponse{Mission: mission}, nil

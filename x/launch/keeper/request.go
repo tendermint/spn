@@ -4,14 +4,13 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	profiletypes "github.com/tendermint/spn/x/profile/types"
-
 	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 // GetRequestCounter get request counter for a specific chain ID
