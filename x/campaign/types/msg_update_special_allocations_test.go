@@ -31,7 +31,7 @@ func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 				CampaignID:         1,
 				SpecialAllocations: sample.SpecialAllocations(r),
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid special allocations",

@@ -31,7 +31,7 @@ func TestMsgMintVouchers_ValidateBasic(t *testing.T) {
 				CampaignID:  0,
 				Shares:      sample.Shares(r),
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid shares",

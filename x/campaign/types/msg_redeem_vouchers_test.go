@@ -26,7 +26,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 				Vouchers:   sample.Vouchers(r, 0),
 				CampaignID: 0,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid account address",
@@ -36,7 +36,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 				Vouchers:   sample.Vouchers(r, 0),
 				CampaignID: 0,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid coin voucher",

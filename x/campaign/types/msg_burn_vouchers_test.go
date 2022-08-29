@@ -24,7 +24,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 				CampaignID: 0,
 				Vouchers:   sample.Coins(r),
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid message",

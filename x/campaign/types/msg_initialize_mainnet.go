@@ -51,17 +51,17 @@ func (msg *MsgInitializeMainnet) GetSignBytes() []byte {
 func (msg *MsgInitializeMainnet) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
 	if msg.SourceURL == "" {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "empty source URL")
+		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "empty source URL")
 	}
 	if msg.SourceHash == "" {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "empty source hash")
+		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "empty source hash")
 	}
 	if _, _, err := chainid.ParseGenesisChainID(msg.MainnetChainID); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, err.Error())
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidRequest, err.Error())
 	}
 
 	return nil

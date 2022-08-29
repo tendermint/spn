@@ -41,7 +41,7 @@ func (msg *MsgUpdateTotalSupply) GetSignBytes() []byte {
 func (msg *MsgUpdateTotalSupply) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
 	if !msg.TotalSupplyUpdate.IsValid() {

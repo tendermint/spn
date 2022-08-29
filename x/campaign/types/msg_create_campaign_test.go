@@ -35,7 +35,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 				TotalSupply:  sample.TotalSupply(r),
 				Metadata:     sample.Metadata(r, 20),
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid campaign name",

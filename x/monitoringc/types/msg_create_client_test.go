@@ -38,7 +38,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 				UnbondingPeriod: spntypes.DefaultUnbondingPeriod,
 				RevisionHeight:  spntypes.DefaultRevisionHeight,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid consensus state",

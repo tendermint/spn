@@ -42,7 +42,7 @@ func (msg *MsgSettleRequest) GetSignBytes() []byte {
 func (msg *MsgSettleRequest) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Signer)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid settler address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid settler address (%s)", err)
 	}
 
 	return nil

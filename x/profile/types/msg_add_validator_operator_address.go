@@ -52,10 +52,10 @@ func (msg *MsgAddValidatorOperatorAddress) ValidateBasic() error {
 	}
 
 	if _, err := sdk.AccAddressFromBech32(msg.ValidatorAddress); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 	if _, err := sdk.AccAddressFromBech32(msg.OperatorAddress); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator operator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator operator address (%s)", err)
 	}
 
 	return nil

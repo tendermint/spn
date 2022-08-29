@@ -52,7 +52,7 @@ func (k Keeper) TransmitMonitoringPacket(
 
 	packetBytes, err := types.ModuleCdc.MarshalJSON(&modulePacket)
 	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, "cannot marshal the packet: "+err.Error())
+		return sdkerrors.Wrap(sdkerrortypes.ErrJSONMarshal, "cannot marshal the packet: "+err.Error())
 	}
 
 	packet := channeltypes.NewPacket(

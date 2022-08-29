@@ -42,12 +42,12 @@ func (msg *MsgRedeemVouchers) GetSignBytes() []byte {
 func (msg *MsgRedeemVouchers) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid sender address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid sender address (%s)", err)
 	}
 
 	_, err = sdk.AccAddressFromBech32(msg.Account)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
 
 	if !msg.Vouchers.IsValid() {

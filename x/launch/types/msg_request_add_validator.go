@@ -52,11 +52,11 @@ func (msg *MsgRequestAddValidator) GetSignBytes() []byte {
 
 func (msg *MsgRequestAddValidator) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
 	if _, err := sdk.AccAddressFromBech32(msg.ValAddress); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid validator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
 
 	if len(msg.GenTx) == 0 {

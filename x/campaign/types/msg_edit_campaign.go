@@ -44,11 +44,11 @@ func (msg *MsgEditCampaign) GetSignBytes() []byte {
 func (msg *MsgEditCampaign) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
 	if len(msg.Name) == 0 && len(msg.Metadata) == 0 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "must modify at least one field (name or metadata)")
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidRequest, "must modify at least one field (name or metadata)")
 	}
 
 	if len(msg.Name) != 0 {

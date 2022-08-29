@@ -25,7 +25,7 @@ func TestMsgSettleRequest_ValidateBasic(t *testing.T) {
 				RequestID: 10,
 				Approve:   true,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should validate valid message",

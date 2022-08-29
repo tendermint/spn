@@ -24,7 +24,7 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 				Address:  sample.Address(r),
 				LaunchID: launchID,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should prevent validate message with invalid address",
@@ -33,7 +33,7 @@ func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
 				Address:  "invalid_address",
 				LaunchID: launchID,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should validate valid message",

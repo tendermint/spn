@@ -27,7 +27,7 @@ func TestMsgParticipate_ValidateBasic(t *testing.T) {
 			msg: types.MsgParticipate{
 				Participant: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 	}
 	for _, tt := range tests {

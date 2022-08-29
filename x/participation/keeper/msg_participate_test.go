@@ -117,7 +117,7 @@ func Test_msgServer_Participate(t *testing.T) {
 				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      1,
 			},
-			err:       sdkerrors.ErrInvalidAddress,
+			err:       sdkerrortypes.ErrInvalidAddress,
 			blockTime: validRegistrationTime,
 		},
 		{

@@ -51,11 +51,11 @@ func (msg *MsgEditChain) GetSignBytes() []byte {
 func (msg *MsgEditChain) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
 	if len(msg.Metadata) == 0 && !msg.SetCampaignID {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "no value to edit")
+		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "no value to edit")
 	}
 
 	// TODO parameterize

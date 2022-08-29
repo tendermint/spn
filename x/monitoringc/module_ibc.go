@@ -110,7 +110,7 @@ func (am AppModule) OnChanCloseInit(
 	_ string,
 ) error {
 	// Disallow user-initiated channel closing for channels
-	return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "user cannot close channel")
+	return sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "user cannot close channel")
 }
 
 // OnChanCloseConfirm implements the IBCModule interface
@@ -147,7 +147,7 @@ func (am AppModule) OnRecvPacket(
 			// Encode packet acknowledgment
 			packetAckBytes, err := types.ModuleCdc.MarshalJSON(&packetAck)
 			if err != nil {
-				return channeltypes.NewErrorAcknowledgement(sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error()))
+				return channeltypes.NewErrorAcknowledgement(sdkerrors.Wrap(sdkerrortypes.ErrJSONMarshal, err.Error()))
 			}
 			ack = channeltypes.NewResultAcknowledgement(sdk.MustSortJSON(packetAckBytes))
 		}

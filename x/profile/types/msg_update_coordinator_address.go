@@ -40,14 +40,14 @@ func (msg *MsgUpdateCoordinatorAddress) GetSignBytes() []byte {
 func (msg *MsgUpdateCoordinatorAddress) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid address (%s)", err)
 	}
 	_, err = sdk.AccAddressFromBech32(msg.NewAddress)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid new address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid new address (%s)", err)
 	}
 	if msg.Address == msg.NewAddress {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress,
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress,
 			"address are equal of new address (%s)", msg.Address)
 	}
 	return nil

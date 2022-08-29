@@ -32,7 +32,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 				CampaignID:        0,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid total supply",

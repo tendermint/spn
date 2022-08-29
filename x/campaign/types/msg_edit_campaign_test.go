@@ -5,7 +5,6 @@ import (
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 
-	sdkerrors "cosmossdk.io/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -36,7 +35,7 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 				Name:        sample.CampaignName(r),
 				Metadata:    sample.Metadata(r, 20),
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid message - both modified",
@@ -83,7 +82,7 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 				Name:        "",
 				Metadata:    []byte{},
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrortypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {

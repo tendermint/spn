@@ -21,7 +21,7 @@ func TestMsgCreateCoordinator_ValidateBasic(t *testing.T) {
 			msg: profile.MsgCreateCoordinator{
 				Address: "invalid address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should validate valid message",

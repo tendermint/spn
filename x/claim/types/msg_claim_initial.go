@@ -39,7 +39,7 @@ func (msg *MsgClaimInitial) GetSignBytes() []byte {
 func (msg *MsgClaimInitial) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Claimer)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid claimer address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid claimer address (%s)", err)
 	}
 	return nil
 }

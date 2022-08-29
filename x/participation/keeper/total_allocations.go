@@ -15,7 +15,7 @@ func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (sdk.Int, e
 
 	accAddr, err := sdk.AccAddressFromBech32(address)
 	if err != nil {
-		return sdk.ZeroInt(), sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, err.Error())
+		return sdk.ZeroInt(), sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, err.Error())
 	}
 
 	// count total shares for account

@@ -34,7 +34,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 				LaunchID: launchID,
 				Options:  option,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should prevent validate message with invalid account address",
@@ -44,7 +44,7 @@ func TestMsgRequestAddVestingAccount_ValidateBasic(t *testing.T) {
 				LaunchID: launchID,
 				Options:  option,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should prevent validate message with invalid vesting option",

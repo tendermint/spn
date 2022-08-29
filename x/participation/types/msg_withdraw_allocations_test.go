@@ -21,7 +21,7 @@ func TestMsgWithdrawAllocations_ValidateBasic(t *testing.T) {
 			msg: types.MsgWithdrawAllocations{
 				Participant: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		}, {
 			name: "valid address",
 			msg: types.MsgWithdrawAllocations{

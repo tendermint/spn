@@ -41,14 +41,14 @@ func (msg *MsgSetRewards) GetSignBytes() []byte {
 
 func (msg *MsgSetRewards) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Provider); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid provider address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid provider address (%s)", err)
 	}
 	if err := msg.Coins.Validate(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidRewardPoolCoins, "invalid reward pool coins (%s)", err)
 	}
 
 	if msg.LastRewardHeight < 0 {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "last reward height must be non-negative")
+		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "last reward height must be non-negative")
 	}
 
 	return nil

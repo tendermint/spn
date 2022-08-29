@@ -46,11 +46,11 @@ func (msg *MsgRequestAddVestingAccount) GetSignBytes() []byte {
 
 func (msg *MsgRequestAddVestingAccount) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
 	if _, err := sdk.AccAddressFromBech32(msg.Address); err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid account address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
 	}
 
 	if err := msg.Options.Validate(); err != nil {
