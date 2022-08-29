@@ -22,20 +22,20 @@ func NewMsgCreateChain(
 	genesisHash string,
 	hasCampaign bool,
 	campaignID uint64,
-	defaultAccountBalance sdk.Coins,
+	accountBalance sdk.Coins,
 	metadata []byte,
 ) *MsgCreateChain {
 	return &MsgCreateChain{
-		Coordinator:           coordinator,
-		GenesisChainID:        genesisChainID,
-		SourceURL:             sourceURL,
-		SourceHash:            sourceHash,
-		GenesisURL:            genesisURL,
-		GenesisHash:           genesisHash,
-		HasCampaign:           hasCampaign,
-		CampaignID:            campaignID,
-		DefaultAccountBalance: defaultAccountBalance,
-		Metadata:              metadata,
+		Coordinator:    coordinator,
+		GenesisChainID: genesisChainID,
+		SourceURL:      sourceURL,
+		SourceHash:     sourceHash,
+		GenesisURL:     genesisURL,
+		GenesisHash:    genesisHash,
+		HasCampaign:    hasCampaign,
+		CampaignID:     campaignID,
+		AccountBalance: accountBalance,
+		Metadata:       metadata,
 	}
 }
 
@@ -82,7 +82,7 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 	}
 
 	// Coins must be valid
-	if !msg.DefaultAccountBalance.IsValid() {
+	if !msg.AccountBalance.IsValid() {
 		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidCoins, "default account balance sdk.Coins is not valid")
 	}
 

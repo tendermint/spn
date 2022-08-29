@@ -23,7 +23,7 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 	msgInvalidMetadataLen.Metadata = sample.Bytes(r, spntypes.MaxMetadataLength+1)
 
 	msgInvalidCoins := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
-	msgInvalidCoins.DefaultAccountBalance = sdk.Coins{sdk.Coin{Denom: "invalid", Amount: sdk.NewInt(-1)}}
+	msgInvalidCoins.AccountBalance = sdk.Coins{sdk.Coin{Denom: "invalid", Amount: sdk.NewInt(-1)}}
 
 	for _, tc := range []struct {
 		desc  string
