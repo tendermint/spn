@@ -4,11 +4,11 @@ import (
 	"errors"
 	"testing"
 
-	tc "github.com/tendermint/spn/testutil/constructor"
-
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 

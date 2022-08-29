@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -8,7 +9,6 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
-
 	"github.com/tendermint/spn/x/mint/types"
 )
 

@@ -3,6 +3,7 @@ package sample
 import (
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -95,7 +96,7 @@ func CampaignParams(r *rand.Rand) campaign.Params {
 	maxTotalSupply := campaign.DefaultMaxTotalSupply
 
 	// assign random small amount of staking denom
-	campaignCreationFee := sdk.NewCoins(sdkmath.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
+	campaignCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
 
 	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee)
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	sdkmath "cosmossdk.io/math"
 	"gopkg.in/yaml.v2"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"

@@ -4,6 +4,7 @@ package types
 import (
 	"fmt"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 	"github.com/pkg/errors"
 

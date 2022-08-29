@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -24,7 +24,7 @@ var (
 	DefaultParticipationTierList = []Tier{
 		{
 			TierID:              1,
-			RequiredAllocations: sdkmath.NewInt(1),
+			RequiredAllocations: sdkmath.OneInt(),
 			Benefits: TierBenefits{
 				MaxBidAmount: sdkmath.NewInt(1000),
 			},

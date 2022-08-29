@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 )
@@ -112,8 +113,8 @@ func TestValidateCampaignCreationFee(t *testing.T) {
 		{
 			name: "valid param",
 			creationFee: sdk.NewCoins(
-				sdkmath.NewInt64Coin("foo", rand.Int63n(1000)+1),
-				sdkmath.NewInt64Coin("bar", rand.Int63n(1000)+1),
+				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
+				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),
 			),
 		},
 	}

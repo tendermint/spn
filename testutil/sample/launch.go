@@ -319,7 +319,7 @@ func LaunchParams(r *rand.Rand) launch.Params {
 	minLaunchTime := r.Int63n(10) + launch.DefaultMinLaunchTime
 
 	// assign random small amount of staking denom
-	chainCreationFee := sdk.NewCoins(sdkmath.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
+	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
 
 	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay, chainCreationFee)
 }

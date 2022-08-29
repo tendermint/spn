@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdkmath "cosmossdk.io/math"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -155,8 +156,8 @@ func TestValidateChainCreationFee(t *testing.T) {
 		{
 			name: "should validate valid fee",
 			creationFee: sdk.NewCoins(
-				sdkmath.NewInt64Coin("foo", rand.Int63n(1000)+1),
-				sdkmath.NewInt64Coin("bar", rand.Int63n(1000)+1),
+				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
+				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),
 			),
 		},
 	}

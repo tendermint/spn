@@ -3,6 +3,7 @@ package sample
 import (
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	claim "github.com/tendermint/spn/x/claim/types"

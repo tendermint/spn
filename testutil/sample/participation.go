@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 
 	participation "github.com/tendermint/spn/x/participation/types"
 )
