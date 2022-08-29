@@ -37,7 +37,7 @@ message MsgCreateChain {
   string   genesisHash                                    = 6;
   bool     hasCampaign                                    = 7;
   uint64   campaignID                                     = 8;
-  repeated cosmos.base.v1beta1.Coin defaultAccountBalance = 9 [
+  repeated cosmos.base.v1beta1.Coin AccountBalance = 9 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
@@ -54,12 +54,7 @@ message MsgEditChain {
   uint64   launchID                                       = 2;
   bool     setCampaignID                                  = 3;
   uint64   campaignID                                     = 4;
-  repeated cosmos.base.v1beta1.Coin defaultAccountBalance = 5 [
-    (gogoproto.nullable)     = false,
-    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
-  ];
-  bytes metadata = 6;
+  bytes metadata = 5;
 }
 
 message MsgEditChainResponse {}
