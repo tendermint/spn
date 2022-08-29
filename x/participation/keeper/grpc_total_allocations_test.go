@@ -20,7 +20,7 @@ func TestShowTotalAllocationsQuery(t *testing.T) {
 	wctx := sdk.WrapSDKContext(sdkCtx)
 
 	params := types.DefaultParams()
-	params.AllocationPrice = types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	params.AllocationPrice = types.AllocationPrice{Bonded: sdkmath.NewInt(100)}
 
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
@@ -38,7 +38,7 @@ func TestShowTotalAllocationsQuery(t *testing.T) {
 			request: &types.QueryGetTotalAllocationsRequest{
 				Address: dels[0].DelegatorAddress,
 			},
-			response: &types.QueryGetTotalAllocationsResponse{TotalAllocations: sdk.NewInt(10)},
+			response: &types.QueryGetTotalAllocationsResponse{TotalAllocations: sdkmath.NewInt(10)},
 		},
 
 		{

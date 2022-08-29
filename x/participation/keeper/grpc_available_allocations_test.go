@@ -19,7 +19,7 @@ func TestShowAvailableAllocationsQuery(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(sdkCtx)
 
-	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	allocationPrice := types.AllocationPrice{Bonded: sdkmath.NewInt(100)}
 	params := types.DefaultParams()
 	params.AllocationPrice = allocationPrice
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
@@ -38,7 +38,7 @@ func TestShowAvailableAllocationsQuery(t *testing.T) {
 			request: &types.QueryGetAvailableAllocationsRequest{
 				Address: dels[0].DelegatorAddress,
 			},
-			response: &types.QueryGetAvailableAllocationsResponse{AvailableAllocations: sdk.NewInt(10)},
+			response: &types.QueryGetAvailableAllocationsResponse{AvailableAllocations: sdkmath.NewInt(10)},
 		},
 
 		{

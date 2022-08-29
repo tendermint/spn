@@ -86,7 +86,7 @@ func SimulateCreateAuction(
 		// fundraising simulation params must be set
 		// since they are not initially set
 		params := fundraisingtypes.DefaultParams()
-		params.AuctionCreationFee = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100_000)))
+		params.AuctionCreationFee = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(100_000)))
 		fk.SetParams(ctx, params)
 		fee := params.AuctionCreationFee
 

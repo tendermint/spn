@@ -21,7 +21,7 @@ func TestParamsValidate(t *testing.T) {
 			name: "invalid allocation price",
 			params: NewParams(
 				AllocationPrice{
-					Bonded: sdk.NewInt(-1),
+					Bonded: sdkmath.NewInt(-1),
 				},
 				DefaultParticipationTierList,
 				DefaultRegistrationPeriod,
@@ -36,8 +36,8 @@ func TestParamsValidate(t *testing.T) {
 				[]Tier{
 					{
 						TierID:              0,
-						RequiredAllocations: sdk.OneInt(),
-						Benefits:            TierBenefits{MaxBidAmount: sdk.ZeroInt()},
+						RequiredAllocations: sdkmath.OneInt(),
+						Benefits:            TierBenefits{MaxBidAmount: sdkmath.ZeroInt()},
 					},
 				},
 				DefaultRegistrationPeriod,
@@ -101,17 +101,17 @@ func TestValidateAllocationPrice(t *testing.T) {
 		},
 		{
 			name:            "uninitialized bonded amount",
-			allocationPrice: AllocationPrice{Bonded: sdk.Int{}},
+			allocationPrice: AllocationPrice{Bonded: sdkmath.Int{}},
 			err:             errors.New("value for 'bonded' should be set"),
 		},
 		{
 			name:            "bonded amount lower or equal than zero",
-			allocationPrice: AllocationPrice{Bonded: sdk.ZeroInt()},
+			allocationPrice: AllocationPrice{Bonded: sdkmath.ZeroInt()},
 			err:             errors.New("value for 'bonded' must be greater than zero"),
 		},
 		{
 			name:            "valid allocation price",
-			allocationPrice: AllocationPrice{Bonded: sdk.OneInt()},
+			allocationPrice: AllocationPrice{Bonded: sdkmath.OneInt()},
 		},
 	}
 	for _, tt := range tests {
@@ -143,13 +143,13 @@ func TestValidateParticipationTierList(t *testing.T) {
 			participationTierList: []Tier{
 				{
 					TierID:              0,
-					RequiredAllocations: sdk.OneInt(),
-					Benefits:            TierBenefits{MaxBidAmount: sdk.OneInt()},
+					RequiredAllocations: sdkmath.OneInt(),
+					Benefits:            TierBenefits{MaxBidAmount: sdkmath.OneInt()},
 				},
 				{
 					TierID:              0,
-					RequiredAllocations: sdk.NewInt(2),
-					Benefits:            TierBenefits{MaxBidAmount: sdk.NewInt(2)},
+					RequiredAllocations: sdkmath.NewInt(2),
+					Benefits:            TierBenefits{MaxBidAmount: sdkmath.NewInt(2)},
 				},
 			},
 			err: errors.New("duplicated tier ID: 0"),
@@ -159,8 +159,8 @@ func TestValidateParticipationTierList(t *testing.T) {
 			participationTierList: []Tier{
 				{
 					TierID:              0,
-					RequiredAllocations: sdk.ZeroInt(),
-					Benefits:            TierBenefits{MaxBidAmount: sdk.OneInt()},
+					RequiredAllocations: sdkmath.ZeroInt(),
+					Benefits:            TierBenefits{MaxBidAmount: sdkmath.OneInt()},
 				},
 			},
 			err: errors.New("required allocations must be greater than zero"),
@@ -170,8 +170,8 @@ func TestValidateParticipationTierList(t *testing.T) {
 			participationTierList: []Tier{
 				{
 					TierID:              0,
-					RequiredAllocations: sdk.OneInt(),
-					Benefits:            TierBenefits{MaxBidAmount: sdk.ZeroInt()},
+					RequiredAllocations: sdkmath.OneInt(),
+					Benefits:            TierBenefits{MaxBidAmount: sdkmath.ZeroInt()},
 				},
 			},
 			err: errors.New("max bid amount must be greater than zero"),
@@ -185,13 +185,13 @@ func TestValidateParticipationTierList(t *testing.T) {
 			participationTierList: []Tier{
 				{
 					TierID:              0,
-					RequiredAllocations: sdk.OneInt(),
-					Benefits:            TierBenefits{MaxBidAmount: sdk.OneInt()},
+					RequiredAllocations: sdkmath.OneInt(),
+					Benefits:            TierBenefits{MaxBidAmount: sdkmath.OneInt()},
 				},
 				{
 					TierID:              1,
-					RequiredAllocations: sdk.NewInt(2),
-					Benefits:            TierBenefits{MaxBidAmount: sdk.NewInt(2)},
+					RequiredAllocations: sdkmath.NewInt(2),
+					Benefits:            TierBenefits{MaxBidAmount: sdkmath.NewInt(2)},
 				},
 			},
 		},
@@ -217,17 +217,17 @@ func TestValidateTierBenefits(t *testing.T) {
 	}{
 		{
 			name:         "uninitialized max bid amount",
-			tierBenefits: TierBenefits{MaxBidAmount: sdk.Int{}},
+			tierBenefits: TierBenefits{MaxBidAmount: sdkmath.Int{}},
 			err:          errors.New("max bid amount should be set"),
 		},
 		{
 			name:         "max bid amount lower than zero",
-			tierBenefits: TierBenefits{MaxBidAmount: sdk.NewInt(-1)},
+			tierBenefits: TierBenefits{MaxBidAmount: sdkmath.NewInt(-1)},
 			err:          errors.New("max bid amount must be greater than zero"),
 		},
 		{
 			name:         "valid tier benefits",
-			tierBenefits: TierBenefits{MaxBidAmount: sdk.OneInt()},
+			tierBenefits: TierBenefits{MaxBidAmount: sdkmath.OneInt()},
 		},
 	}
 	for _, tt := range tests {

@@ -23,9 +23,9 @@ func Test_msgServer_Participate(t *testing.T) {
 		startTimeLowerRegistrationPeriod = time.Unix(int64((registrationPeriod - time.Hour).Seconds()), 0)
 		endTime                          = sdkCtx.BlockTime().Add(time.Hour * 24 * 7)
 		validRegistrationTime            = sdkCtx.BlockTime().Add(time.Hour * 6)
-		allocationPrice                  = types.AllocationPrice{Bonded: sdk.NewInt(100)}
+		allocationPrice                  = types.AllocationPrice{Bonded: sdkmath.NewInt(100)}
 		addrsWithDelsTier                = []string{sample.Address(r), sample.Address(r), sample.Address(r), sample.Address(r)}
-		availableAllocsTier              = make([]sdk.Int, len(addrsWithDelsTier))
+		availableAllocsTier              = make([]sdkmath.Int, len(addrsWithDelsTier))
 	)
 
 	params := types.DefaultParams()
@@ -66,14 +66,14 @@ func Test_msgServer_Participate(t *testing.T) {
 		var err error
 		availableAllocsTier[i], err = tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, addrsWithDelsTier[i])
 		require.NoError(t, err)
-		require.EqualValues(t, sdk.NewInt(10), availableAllocsTier[i])
+		require.EqualValues(t, sdkmath.NewInt(10), availableAllocsTier[i])
 	}
 
 	tests := []struct {
 		name                  string
 		msg                   *types.MsgParticipate
-		desiredUsedAlloc      sdk.Int
-		currentAvailableAlloc sdk.Int
+		desiredUsedAlloc      sdkmath.Int
+		currentAvailableAlloc sdkmath.Int
 		blockTime             time.Time
 		err                   error
 	}{
@@ -84,7 +84,7 @@ func Test_msgServer_Participate(t *testing.T) {
 				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      1,
 			},
-			desiredUsedAlloc:      sdk.OneInt(),
+			desiredUsedAlloc:      sdkmath.OneInt(),
 			currentAvailableAlloc: availableAllocsTier[0],
 			blockTime:             validRegistrationTime,
 		},
@@ -95,7 +95,7 @@ func Test_msgServer_Participate(t *testing.T) {
 				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      2,
 			},
-			desiredUsedAlloc:      sdk.NewInt(2),
+			desiredUsedAlloc:      sdkmath.NewInt(2),
 			currentAvailableAlloc: availableAllocsTier[1],
 			blockTime:             validRegistrationTime,
 		},
@@ -106,7 +106,7 @@ func Test_msgServer_Participate(t *testing.T) {
 				AuctionID:   auctionLowerRegistrationPeriodID,
 				TierID:      1,
 			},
-			desiredUsedAlloc:      sdk.OneInt(),
+			desiredUsedAlloc:      sdkmath.OneInt(),
 			currentAvailableAlloc: availableAllocsTier[2],
 			blockTime:             time.Unix(1, 0),
 		},

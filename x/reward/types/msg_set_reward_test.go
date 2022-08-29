@@ -34,7 +34,7 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 				Provider: sample.Address(r),
 				Coins: sdk.Coins{sdk.Coin{
 					Denom:  "invalid denom",
-					Amount: sdk.ZeroInt(),
+					Amount: sdkmath.ZeroInt(),
 				}},
 				LastRewardHeight: 50,
 			},

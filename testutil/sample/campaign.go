@@ -29,7 +29,7 @@ func ShareVestingOptions(r *rand.Rand) campaign.ShareVestingOptions {
 // Voucher returns a sample voucher structure
 func Voucher(r *rand.Rand, campaignID uint64) sdk.Coin {
 	denom := campaign.VoucherDenom(campaignID, AlphaString(r, 5))
-	return sdk.NewCoin(denom, sdk.NewInt(int64(r.Intn(10000)+1)))
+	return sdk.NewCoin(denom, sdkmath.NewInt(int64(r.Intn(10000)+1)))
 }
 
 // Vouchers returns a sample vouchers structure
@@ -95,7 +95,7 @@ func CampaignParams(r *rand.Rand) campaign.Params {
 	maxTotalSupply := campaign.DefaultMaxTotalSupply
 
 	// assign random small amount of staking denom
-	campaignCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
+	campaignCreationFee := sdk.NewCoins(sdkmath.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
 
 	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee)
 }

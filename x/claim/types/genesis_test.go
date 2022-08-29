@@ -16,7 +16,7 @@ func TestGenesisState_Validate(t *testing.T) {
 	fiftyPercent, err := sdk.NewDecFromStr("0.5")
 	require.NoError(t, err)
 
-	claimAmts := []sdk.Int{
+	claimAmts := []sdkmath.Int{
 		sample.Int(r),
 		sample.Int(r),
 	}
@@ -85,11 +85,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
@@ -103,11 +103,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				Missions: []types.Mission{
@@ -131,12 +131,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
-						Claimable:         sdk.NewIntFromUint64(10),
+						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0},
 					},
 					{
 						Address:           sample.Address(r),
-						Claimable:         sdk.NewIntFromUint64(10),
+						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{1},
 					},
 				},
@@ -161,12 +161,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
-						Claimable:         sdk.NewIntFromUint64(10),
+						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0},
 					},
 					{
 						Address:           sample.Address(r),
-						Claimable:         sdk.NewIntFromUint64(10),
+						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0, 1},
 					},
 				},
@@ -191,12 +191,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
-						Claimable:         sdk.NewIntFromUint64(10),
+						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{1},
 					},
 					{
 						Address:           sample.Address(r),
-						Claimable:         sdk.NewIntFromUint64(10),
+						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{1},
 					},
 				},
@@ -221,11 +221,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				Missions: []types.Mission{
@@ -249,11 +249,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   "duplicate",
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
 						Address:   "duplicate",
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				Missions: []types.Mission{
@@ -273,11 +273,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(20),
+						Claimable: sdkmath.NewIntFromUint64(20),
 					},
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.ZeroInt(),
+						Claimable: sdkmath.ZeroInt(),
 					},
 				},
 				Missions: []types.Mission{
@@ -297,11 +297,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(9),
+						Claimable: sdkmath.NewIntFromUint64(9),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
@@ -321,11 +321,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(11),
+						Claimable: sdkmath.NewIntFromUint64(11),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),
@@ -345,12 +345,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
-						Claimable:         sdk.NewIntFromUint64(10),
+						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0},
 					},
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				Missions: []types.Mission{
@@ -374,12 +374,12 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:           sample.Address(r),
-						Claimable:         sdk.NewIntFromUint64(10),
+						Claimable:         sdkmath.NewIntFromUint64(10),
 						CompletedMissions: []uint64{0},
 					},
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				Missions: []types.Mission{
@@ -447,11 +447,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				ClaimRecords: []types.ClaimRecord{
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 					{
 						Address:   sample.Address(r),
-						Claimable: sdk.NewIntFromUint64(10),
+						Claimable: sdkmath.NewIntFromUint64(10),
 					},
 				},
 				AirdropSupply: tc.Coin(t, "20foo"),

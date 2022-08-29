@@ -63,7 +63,7 @@ func (sr TotalSupplyRange) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidSupplyRange, "maximum total supply should be set")
 	}
 
-	if sr.MinTotalSupply.LT(sdk.OneInt()) {
+	if sr.MinTotalSupply.LT(sdkmath.OneInt()) {
 		return sdkerrors.Wrap(ErrInvalidSupplyRange, "minimum total supply should be greater than one")
 	}
 

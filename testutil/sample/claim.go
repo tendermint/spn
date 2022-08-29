@@ -11,7 +11,7 @@ import (
 func ClaimRecord(r *rand.Rand) claim.ClaimRecord {
 	return claim.ClaimRecord{
 		Address:           Address(r),
-		Claimable:         sdk.NewInt(r.Int63n(100000)),
+		Claimable:         sdkmath.NewInt(r.Int63n(100000)),
 		CompletedMissions: uint64Sequence(r),
 	}
 }

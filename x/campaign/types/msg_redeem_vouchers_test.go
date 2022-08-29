@@ -64,7 +64,7 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 				Sender:  sample.Address(r),
 				Account: sample.Address(r),
 				Vouchers: sdk.NewCoins(
-					sdk.NewCoin("invalid/foo", sdk.NewInt(100)),
+					sdk.NewCoin("invalid/foo", sdkmath.NewInt(100)),
 				),
 				CampaignID: 0,
 			},

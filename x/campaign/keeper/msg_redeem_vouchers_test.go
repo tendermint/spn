@@ -23,7 +23,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		campaign                = sample.Campaign(r, 0)
 		campaignMainnetLaunched = sample.Campaign(r, 1)
 		vouchersTooBig          = sdk.NewCoins(
-			sdk.NewCoin("v/0/foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
+			sdk.NewCoin("v/0/foo", sdkmath.NewInt(spntypes.TotalShareNumber+1)),
 		)
 	)
 

@@ -17,7 +17,7 @@ func TestTotalAllocationsGet(t *testing.T) {
 
 	invalidAddress := strconv.Itoa(1)
 	params := types.DefaultParams()
-	params.AllocationPrice = types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	params.AllocationPrice = types.AllocationPrice{Bonded: sdkmath.NewInt(100)}
 
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
@@ -30,13 +30,13 @@ func TestTotalAllocationsGet(t *testing.T) {
 	for _, tc := range []struct {
 		desc       string
 		address    string
-		allocation sdk.Int
+		allocation sdkmath.Int
 		wantError  bool
 	}{
 		{
 			desc:       "valid address",
 			address:    validAddress,
-			allocation: sdk.NewInt(10), // 100 * 10 / 100 = 10
+			allocation: sdkmath.NewInt(10), // 100 * 10 / 100 = 10
 		},
 		{
 			desc:      "invalid address returns error",

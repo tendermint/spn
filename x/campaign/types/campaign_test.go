@@ -13,8 +13,8 @@ import (
 
 var (
 	invalidCampaignName = "not_valid"
-	invalidCoins        = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdk.ZeroInt()}}
-	invalidShares       = campaign.Shares{sdk.Coin{Denom: "invalid denom", Amount: sdk.ZeroInt()}}
+	invalidCoins        = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdkmath.ZeroInt()}}
+	invalidShares       = campaign.Shares{sdk.Coin{Denom: "invalid denom", Amount: sdkmath.ZeroInt()}}
 )
 
 func TestNewCampaign(t *testing.T) {
@@ -50,7 +50,7 @@ func TestCampaign_Validate(t *testing.T) {
 
 	totalSharesReached := sample.Campaign(r, 0)
 	totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
-		sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
+		sdk.NewCoin("foo", sdkmath.NewInt(spntypes.TotalShareNumber+1)),
 	))
 	reached, err := campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares, spntypes.TotalShareNumber)
 	require.NoError(t, err)
@@ -59,8 +59,8 @@ func TestCampaign_Validate(t *testing.T) {
 	invalidSpecialAllocations := campaign.NewSpecialAllocations(
 		sample.Shares(r),
 		campaign.Shares(sdk.NewCoins(
-			sdk.NewCoin("foo", sdk.NewInt(100)),
-			sdk.NewCoin("s/bar", sdk.NewInt(200)),
+			sdk.NewCoin("foo", sdkmath.NewInt(100)),
+			sdk.NewCoin("s/bar", sdkmath.NewInt(200)),
 		)),
 	)
 	require.Error(t, invalidSpecialAllocations.Validate())

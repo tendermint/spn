@@ -69,7 +69,7 @@ func TestRewardPool_Validate(t *testing.T) {
 				Provider: sample.Address(r),
 				InitialCoins: sdk.Coins{sdk.Coin{
 					Denom:  "invalid denom",
-					Amount: sdk.ZeroInt(),
+					Amount: sdkmath.ZeroInt(),
 				}},
 				RemainingCoins:      sample.CoinsWithRange(r, 0, remainingCoinMax),
 				LastRewardHeight:    50,
@@ -86,7 +86,7 @@ func TestRewardPool_Validate(t *testing.T) {
 				InitialCoins: sample.CoinsWithRange(r, remainingCoinMax, initialCoinMax),
 				RemainingCoins: sdk.Coins{sdk.Coin{
 					Denom:  "invalid denom",
-					Amount: sdk.ZeroInt(),
+					Amount: sdkmath.ZeroInt(),
 				}},
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
@@ -101,11 +101,11 @@ func TestRewardPool_Validate(t *testing.T) {
 				Provider: sample.Address(r),
 				InitialCoins: sdk.Coins{sdk.Coin{
 					Denom:  "test",
-					Amount: sdk.NewInt(5),
+					Amount: sdkmath.NewInt(5),
 				}},
 				RemainingCoins: sdk.Coins{sdk.Coin{
 					Denom:  "test",
-					Amount: sdk.NewInt(6),
+					Amount: sdkmath.NewInt(6),
 				}},
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
@@ -121,16 +121,16 @@ func TestRewardPool_Validate(t *testing.T) {
 				InitialCoins: sdk.Coins{
 					sdk.Coin{
 						Denom:  "test",
-						Amount: sdk.NewInt(5),
+						Amount: sdkmath.NewInt(5),
 					},
 					sdk.Coin{
 						Denom:  "test1",
-						Amount: sdk.NewInt(5),
+						Amount: sdkmath.NewInt(5),
 					},
 				},
 				RemainingCoins: sdk.Coins{sdk.Coin{
 					Denom:  "test",
-					Amount: sdk.NewInt(1),
+					Amount: sdkmath.NewInt(1),
 				}},
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,
@@ -145,11 +145,11 @@ func TestRewardPool_Validate(t *testing.T) {
 				Provider: sample.Address(r),
 				InitialCoins: sdk.Coins{sdk.Coin{
 					Denom:  "test2",
-					Amount: sdk.NewInt(5),
+					Amount: sdkmath.NewInt(5),
 				}},
 				RemainingCoins: sdk.Coins{sdk.Coin{
 					Denom:  "test1",
-					Amount: sdk.NewInt(1),
+					Amount: sdkmath.NewInt(1),
 				}},
 				LastRewardHeight:    50,
 				CurrentRewardHeight: 100,

@@ -145,7 +145,7 @@ func TestValidateChainCreationFee(t *testing.T) {
 		},
 		{
 			name:        "should prevent validate creation fee with invalid coin",
-			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdk.NewInt(-1)}},
+			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdkmath.NewInt(-1)}},
 			err:         errors.New("coin -1foo amount is not positive"),
 		},
 		{
@@ -155,8 +155,8 @@ func TestValidateChainCreationFee(t *testing.T) {
 		{
 			name: "should validate valid fee",
 			creationFee: sdk.NewCoins(
-				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
-				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),
+				sdkmath.NewInt64Coin("foo", rand.Int63n(1000)+1),
+				sdkmath.NewInt64Coin("bar", rand.Int63n(1000)+1),
 			),
 		},
 	}

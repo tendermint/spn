@@ -68,7 +68,7 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 			Rand:         r,
 			GenState:     genesisState,
 			Accounts:     accs,
-			InitialStake: sdk.NewInt(initialStake),
+			InitialStake: sdkmath.NewInt(initialStake),
 			NumBonded:    numInitiallyBonded,
 			GenTimestamp: genesisTimestamp,
 		}
@@ -96,7 +96,7 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 			panic(err)
 		}
 		// compute not bonded balance
-		notBondedTokens := sdk.ZeroInt()
+		notBondedTokens := sdkmath.ZeroInt()
 		for _, val := range stakingState.Validators {
 			if val.Status != stakingtypes.Unbonded {
 				continue
@@ -120,7 +120,7 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 		for i, balance := range bankState.Balances {
 			if r.Int63n(100) < 20 {
 				auctionCoinAmt := r.Int63n(maxInitialCoin)
-				auctionCoin := sdk.NewCoin(AuctionCoinDenom, sdk.NewInt(auctionCoinAmt))
+				auctionCoin := sdk.NewCoin(AuctionCoinDenom, sdkmath.NewInt(auctionCoinAmt))
 				newBalance := balance.Coins.Add(auctionCoin)
 				bankState.Balances[i].Coins = newBalance
 				totalNewCoins = totalNewCoins.Add(auctionCoin)

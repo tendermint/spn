@@ -95,7 +95,7 @@ func (k Keeper) DistributeRewards(
 		// compute reward relative to the signature and block count
 		// and update reward pool
 		signatureRatio := signatureCount.RelativeSignatures.Quo(
-			sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount)),
+			sdk.NewDecFromInt(sdkmath.NewIntFromUint64(signatureCounts.BlockCount)),
 		)
 		rewards, err := CalculateRewards(blockRatio, signatureRatio, rewardPool.RemainingCoins)
 		if err != nil {
@@ -152,7 +152,7 @@ func (k Keeper) DistributeRewards(
 	// Otherwise, the refund is relative to the block ratio and the reward pool is updated
 	// refundRatio is blockCount.
 	// This is sum of signaturesRelative values from validator to compute refund
-	blockCount := sdk.NewDecFromInt(sdk.NewIntFromUint64(signatureCounts.BlockCount))
+	blockCount := sdk.NewDecFromInt(sdkmath.NewIntFromUint64(signatureCounts.BlockCount))
 	refundRatioNumerator := blockCount.Sub(totalRelativeSignaturesDistributed)
 	refundRatio := refundRatioNumerator.Quo(blockCount)
 	refund, err := CalculateRewards(blockRatio, refundRatio, rewardPool.RemainingCoins)

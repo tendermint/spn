@@ -34,13 +34,13 @@ func (gs GenesisState) Validate() error {
 	}
 
 	auctionUsedAllocationsIndexMap := make(map[string]struct{})
-	auctionUsedAllocationsSum := make(map[string]sdk.Int)
+	auctionUsedAllocationsSum := make(map[string]sdkmath.Int)
 	for _, elem := range gs.AuctionUsedAllocationsList {
 		index := string(AuctionUsedAllocationsKey(elem.Address, elem.AuctionID))
 		address := elem.Address
 		_, ok := auctionUsedAllocationsSum[address]
 		if !ok {
-			auctionUsedAllocationsSum[address] = sdk.ZeroInt()
+			auctionUsedAllocationsSum[address] = sdkmath.ZeroInt()
 		}
 
 		// Check for duplicated address in auctionUsedAllocations

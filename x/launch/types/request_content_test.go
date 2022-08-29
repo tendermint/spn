@@ -235,7 +235,7 @@ func TestGenesisAccount_Validate(t *testing.T) {
 			content: types.GenesisAccount{
 				Address:  addr,
 				LaunchID: launchID,
-				Coins:    sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
+				Coins:    sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}},
 			},
 			wantErr: true,
 		},
@@ -338,7 +338,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 				ConsPubKey: sample.Bytes(r, 30),
 				SelfDelegation: sdk.Coin{
 					Denom:  "",
-					Amount: sdk.NewInt(10),
+					Amount: sdkmath.NewInt(10),
 				},
 				Peer: sample.GenesisValidatorPeer(r),
 			},
@@ -353,7 +353,7 @@ func TestGenesisValidator_Validate(t *testing.T) {
 				ConsPubKey: sample.Bytes(r, 30),
 				SelfDelegation: sdk.Coin{
 					Denom:  "stake",
-					Amount: sdk.NewInt(0),
+					Amount: sdkmath.ZeroInt(),
 				},
 				Peer: sample.GenesisValidatorPeer(r),
 			},

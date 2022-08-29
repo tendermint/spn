@@ -24,7 +24,7 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 	invalidSelfDelegation := validMsg
 	invalidSelfDelegation.SelfDelegation.Denom = ""
 	zeroDelegation := validMsg
-	zeroDelegation.SelfDelegation.Amount = sdk.NewInt(0)
+	zeroDelegation.SelfDelegation.Amount = sdkmath.NewInt(0)
 
 	for _, tc := range []struct {
 		name  string

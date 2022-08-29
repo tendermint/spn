@@ -49,7 +49,7 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 			LaunchID:       launchID,
 			Address:        addr.String(),
 			ConsPubKey:     validator.Bytes(),
-			SelfDelegation: sdk.NewCoin("spn", sdk.NewInt(1000)),
+			SelfDelegation: sdk.NewCoin("spn", sdkmath.NewInt(1000)),
 		})
 		validatorSet.Validators = append(validatorSet.Validators,
 			tmtypes.NewValidator(validator, 0),

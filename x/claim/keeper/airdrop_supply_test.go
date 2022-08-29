@@ -61,7 +61,7 @@ func TestKeeper_InitializeAirdropSupply(t *testing.T) {
 		},
 		{
 			name:          "should allows setting airdrop supply to zero",
-			airdropSupply: sdk.NewCoin("foo", sdk.ZeroInt()),
+			airdropSupply: sdk.NewCoin("foo", sdkmath.ZeroInt()),
 		},
 	}
 	for _, tt := range tests {

@@ -122,7 +122,7 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 		if shareNb > remaining {
 			shareNb = remaining
 		}
-		shares = append(shares, sdk.NewCoin(share, sdk.NewInt(shareNb)))
+		shares = append(shares, sdk.NewCoin(share, sdkmath.NewInt(shareNb)))
 	}
 
 	// No shares can be distributed

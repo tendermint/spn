@@ -24,7 +24,7 @@ func TestRandomAccWithBalance(t *testing.T) {
 	)
 
 	// give one account balance
-	newCoins := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(1000)))
+	newCoins := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000)))
 	err := tk.BankKeeper.MintCoins(ctx, minttypes.ModuleName, newCoins)
 	require.NoError(t, err)
 	err = tk.BankKeeper.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, accs[0].Address, newCoins)
@@ -261,7 +261,7 @@ func TestRandomAccWithAvailableAllocations(t *testing.T) {
 		auctionID  uint64 = 0
 	)
 
-	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	allocationPrice := types.AllocationPrice{Bonded: sdkmath.NewInt(100)}
 	params := types.DefaultParams()
 	params.AllocationPrice = allocationPrice
 	tk.ParticipationKeeper.SetParams(ctx, params)
@@ -271,38 +271,38 @@ func TestRandomAccWithAvailableAllocations(t *testing.T) {
 
 	tk.ParticipationKeeper.SetUsedAllocations(ctx, types.UsedAllocations{
 		Address:        accs[1].Address.String(),
-		NumAllocations: sdk.NewInt(2),
+		NumAllocations: sdkmath.NewInt(2),
 	})
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(ctx, types.AuctionUsedAllocations{
 		Address:        accs[1].Address.String(),
 		AuctionID:      auctionID,
-		NumAllocations: sdk.NewInt(2),
+		NumAllocations: sdkmath.NewInt(2),
 		Withdrawn:      false,
 	})
 
 	tests := []struct {
 		name               string
 		accounts           []simulation.Account
-		desiredAllocations sdk.Int
+		desiredAllocations sdkmath.Int
 		wantAccount        simulation.Account
 		found              bool
 	}{
 		{
 			name:               "no accounts with allocations",
 			accounts:           accs[2:],
-			desiredAllocations: sdk.NewInt(10),
+			desiredAllocations: sdkmath.NewInt(10),
 			found:              false,
 		},
 		{
 			name:               "one account with insufficient allocations",
 			accounts:           accs[1:],
-			desiredAllocations: sdk.NewInt(10),
+			desiredAllocations: sdkmath.NewInt(10),
 			found:              false,
 		},
 		{
 			name:               "one account has sufficient allocations",
 			accounts:           accs,
-			desiredAllocations: sdk.NewInt(10),
+			desiredAllocations: sdkmath.NewInt(10),
 			wantAccount:        accs[0],
 			found:              true,
 		},
@@ -336,7 +336,7 @@ func TestRandomAccWithAuctionUsedAllocationsNotWithdrawn(t *testing.T) {
 		auctionID  uint64 = 0
 	)
 
-	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	allocationPrice := types.AllocationPrice{Bonded: sdkmath.NewInt(100)}
 	params := types.DefaultParams()
 	params.AllocationPrice = allocationPrice
 	tk.ParticipationKeeper.SetParams(ctx, params)
@@ -349,24 +349,24 @@ func TestRandomAccWithAuctionUsedAllocationsNotWithdrawn(t *testing.T) {
 	// add withdrawn allocations for accs[1]
 	tk.ParticipationKeeper.SetUsedAllocations(ctx, types.UsedAllocations{
 		Address:        accs[1].Address.String(),
-		NumAllocations: sdk.NewInt(2),
+		NumAllocations: sdkmath.NewInt(2),
 	})
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(ctx, types.AuctionUsedAllocations{
 		Address:        accs[1].Address.String(),
 		AuctionID:      auctionID,
-		NumAllocations: sdk.NewInt(2),
+		NumAllocations: sdkmath.NewInt(2),
 		Withdrawn:      true,
 	})
 
 	// add used allocations not yet withdrawn for accs[2]
 	tk.ParticipationKeeper.SetUsedAllocations(ctx, types.UsedAllocations{
 		Address:        accs[2].Address.String(),
-		NumAllocations: sdk.NewInt(2),
+		NumAllocations: sdkmath.NewInt(2),
 	})
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(ctx, types.AuctionUsedAllocations{
 		Address:        accs[2].Address.String(),
 		AuctionID:      auctionID,
-		NumAllocations: sdk.NewInt(2),
+		NumAllocations: sdkmath.NewInt(2),
 		Withdrawn:      false,
 	})
 
@@ -419,7 +419,7 @@ func TestRandomTierFromList(t *testing.T) {
 	tierList := []types.Tier{
 		{
 			TierID:              1,
-			RequiredAllocations: sdk.NewInt(10),
+			RequiredAllocations: sdkmath.NewInt(10),
 			Benefits:            types.TierBenefits{},
 		},
 	}

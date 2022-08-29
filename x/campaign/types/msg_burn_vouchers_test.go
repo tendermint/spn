@@ -58,7 +58,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 				Sender:     sample.Address(r),
 				CampaignID: 0,
 				Vouchers: sdk.NewCoins(
-					sdk.NewCoin("invalid/foo", sdk.NewInt(100)),
+					sdk.NewCoin("invalid/foo", sdkmath.NewInt(100)),
 				),
 			},
 			err: types.ErrNoMatchVouchers,

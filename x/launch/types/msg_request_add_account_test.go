@@ -57,7 +57,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 				Creator:  sample.Address(r),
 				Address:  addr,
 				LaunchID: launchID,
-				Coins:    sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
+				Coins:    sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}},
 			},
 			err: types.ErrInvalidCoins,
 		},

@@ -18,7 +18,7 @@ func TestParamsValidateBasic(t *testing.T) {
 	}{
 		{
 			name:   "invalid min total supply",
-			params: NewParams(sdk.ZeroInt(), DefaultMaxTotalSupply, DefaultCampaignCreationFee),
+			params: NewParams(sdkmath.ZeroInt(), DefaultMaxTotalSupply, DefaultCampaignCreationFee),
 			err:    errors.New("minimum total supply should be greater than one: invalid total supply range"),
 		},
 		{
@@ -28,7 +28,7 @@ func TestParamsValidateBasic(t *testing.T) {
 		},
 		{
 			name:   "invalid coins for campaign creation fee",
-			params: NewParams(DefaultMinTotalSupply, DefaultMaxTotalSupply, sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdk.NewInt(-1)}}),
+			params: NewParams(DefaultMinTotalSupply, DefaultMaxTotalSupply, sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdkmath.NewInt(-1)}}),
 			err:    errors.New("coin -1foo amount is not positive"),
 		},
 		{
@@ -72,7 +72,7 @@ func TestValidateTotalSupplyRange(t *testing.T) {
 			name: "valid range",
 			supplyRange: TotalSupplyRange{
 				MinTotalSupply: DefaultMinTotalSupply,
-				MaxTotalSupply: DefaultMinTotalSupply.Add(sdk.OneInt()),
+				MaxTotalSupply: DefaultMinTotalSupply.Add(sdkmath.OneInt()),
 			},
 		},
 	}
@@ -102,7 +102,7 @@ func TestValidateCampaignCreationFee(t *testing.T) {
 		},
 		{
 			name:        "invalid coin",
-			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdk.NewInt(-1)}},
+			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdkmath.NewInt(-1)}},
 			err:         errors.New("coin -1foo amount is not positive"),
 		},
 		{
@@ -112,8 +112,8 @@ func TestValidateCampaignCreationFee(t *testing.T) {
 		{
 			name: "valid param",
 			creationFee: sdk.NewCoins(
-				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
-				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),
+				sdkmath.NewInt64Coin("foo", rand.Int63n(1000)+1),
+				sdkmath.NewInt64Coin("bar", rand.Int63n(1000)+1),
 			),
 		},
 	}

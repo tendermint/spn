@@ -11,9 +11,9 @@ import (
 )
 
 var (
-	DefaultMinTotalSupply      = sdk.NewInt(100)                   // One hundred
-	DefaultMaxTotalSupply      = sdk.NewInt(1_000_000_000_000_000) // One Quadrillion
-	DefaultCampaignCreationFee = sdk.Coins(nil)                    // EmptyCoins
+	DefaultMinTotalSupply      = sdkmath.NewInt(100)                   // One hundred
+	DefaultMaxTotalSupply      = sdkmath.NewInt(1_000_000_000_000_000) // One Quadrillion
+	DefaultCampaignCreationFee = sdk.Coins(nil)                        // EmptyCoins
 
 	KeyTotalSupplyRange    = []byte("TotalSupplyRange")
 	KeyCampaignCreationFee = []byte("CampaignCreationFee")
@@ -25,7 +25,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewTotalSupplyRange creates a new TotalSupplyRange instance
-func NewTotalSupplyRange(minTotalSupply, maxTotalSupply sdk.Int) TotalSupplyRange {
+func NewTotalSupplyRange(minTotalSupply, maxTotalSupply sdkmath.Int) TotalSupplyRange {
 	return TotalSupplyRange{
 		MinTotalSupply: minTotalSupply,
 		MaxTotalSupply: maxTotalSupply,
@@ -33,7 +33,7 @@ func NewTotalSupplyRange(minTotalSupply, maxTotalSupply sdk.Int) TotalSupplyRang
 }
 
 // NewParams creates a new Params instance
-func NewParams(minTotalSupply, maxTotalSupply sdk.Int, campaignCreationFee sdk.Coins) Params {
+func NewParams(minTotalSupply, maxTotalSupply sdkmath.Int, campaignCreationFee sdk.Coins) Params {
 	return Params{
 		TotalSupplyRange:    NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
 		CampaignCreationFee: campaignCreationFee,

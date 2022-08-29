@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -274,14 +273,14 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 		{
 			desc: "max total supply below min total supply",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Sub(sdk.OneInt()), types.DefaultCampaignCreationFee),
+				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Sub(sdkmath.OneInt()), types.DefaultCampaignCreationFee),
 			},
 			shouldBeValid: false,
 		},
 		{
 			desc: "valid parameters",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdk.OneInt()), types.DefaultCampaignCreationFee),
+				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdkmath.OneInt()), types.DefaultCampaignCreationFee),
 			},
 			shouldBeValid: true,
 		},

@@ -67,7 +67,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	}
 
 	// set used allocations
-	numUsedAllocations := sdk.ZeroInt()
+	numUsedAllocations := sdkmath.ZeroInt()
 	used, found := k.GetUsedAllocations(ctx, msg.Participant)
 	if found {
 		numUsedAllocations = used.NumAllocations

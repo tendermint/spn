@@ -51,7 +51,7 @@ func (m DecayInformation) ApplyDecayFactor(coins sdk.Coins, currentTime time.Tim
 
 	// calculate decay factor
 	timeToDec := func(t time.Time) sdk.Dec {
-		return sdk.NewDecFromInt(sdk.NewInt(t.Unix()))
+		return sdk.NewDecFromInt(sdkmath.NewInt(t.Unix()))
 	}
 
 	current, start, end := timeToDec(currentTime), timeToDec(m.DecayStart), timeToDec(m.DecayEnd)

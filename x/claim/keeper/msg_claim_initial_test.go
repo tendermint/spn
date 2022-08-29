@@ -88,7 +88,7 @@ func Test_msgServer_ClaimInitial(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   claimer,
-					Claimable: sdk.NewIntFromUint64(1000),
+					Claimable: sdkmath.NewIntFromUint64(1000),
 				},
 			},
 			// will fail because no claim record associated
