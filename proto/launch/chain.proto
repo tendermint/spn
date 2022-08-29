@@ -28,7 +28,10 @@ message Chain {
 
   bool monitoringConnected = 14;
 
-  repeated cosmos.base.v1beta1.Coin defaultAccountBalance = 15 [
+  // account balance is the balance given to approved accounts
+  // for this chain.  If not set, the balances used will be those
+  // contained in the requests
+  repeated cosmos.base.v1beta1.Coin accountBalance = 15 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
