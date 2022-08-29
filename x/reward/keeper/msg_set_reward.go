@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	spnerrors "github.com/tendermint/spn/pkg/errors"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
@@ -46,7 +47,7 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 	if !poolFound {
 		// create the reward pool and transfer tokens if not created yet
 		if err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, provider, types.ModuleName, msg.Coins); err != nil {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, err.Error())
+			return nil, sdkerrors.Wrap(sdkerrortypes.ErrInsufficientFunds, err.Error())
 		}
 		rewardPool = types.NewRewardPool(msg.LaunchID, 0)
 	} else {
@@ -114,7 +115,7 @@ func SetBalance(
 			types.ModuleName,
 			coins,
 		); err != nil {
-			return sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, err.Error())
+			return sdkerrors.Wrap(sdkerrortypes.ErrInsufficientFunds, err.Error())
 		}
 	}
 	return nil

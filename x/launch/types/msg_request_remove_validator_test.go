@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -24,7 +24,7 @@ func TestMsgRequestRemoveValidator_ValidateBasic(t *testing.T) {
 				ValidatorAddress: sample.Address(r),
 				LaunchID:         launchID,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should prevent validate message with invalid validator address",
@@ -33,7 +33,7 @@ func TestMsgRequestRemoveValidator_ValidateBasic(t *testing.T) {
 				ValidatorAddress: "invalid_address",
 				LaunchID:         launchID,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should validate valid message",

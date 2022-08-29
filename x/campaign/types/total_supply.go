@@ -3,9 +3,10 @@ package types
 import (
 	"fmt"
 
+
 	sdkmath "cosmossdk.io/math"
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // UpdateTotalSupply returns updated total supply by adding new denoms and replacing existing ones

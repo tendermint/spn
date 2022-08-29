@@ -3,7 +3,8 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrors "cosmossdk.io/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -23,7 +24,7 @@ func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 				Address:    "invalid address",
 				NewAddress: sample.Address(r),
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should prevent validate invalid new address",
@@ -31,7 +32,7 @@ func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 				Address:    sample.Address(r),
 				NewAddress: "invalid address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should prevent validate similar new address",
@@ -39,7 +40,7 @@ func TestMsgUpdateCoordinatorAddress_ValidateBasic(t *testing.T) {
 				Address:    addr,
 				NewAddress: addr,
 			},
-			err: sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "address are equal of new address (%s)", addr),
+			err: sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "address are equal of new address (%s)", addr),
 		},
 		{
 			name: "should validate different addresses",

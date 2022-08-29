@@ -3,13 +3,12 @@ package keeper_test
 import (
 	"testing"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/stretchr/testify/require"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/keeper"
 	"github.com/tendermint/spn/x/campaign/types"
@@ -124,7 +123,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 				TotalSupply:  sample.TotalSupply(r),
 				Metadata:     sample.Metadata(r, 20),
 			},
-			err: sdkerrors.ErrInsufficientFunds,
+			err: sdkerrortypes.ErrInsufficientFunds,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
