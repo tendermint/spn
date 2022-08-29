@@ -144,8 +144,8 @@ func ApplyRequest(
 	switch requestContent := request.Content.Content.(type) {
 	case *types.RequestContent_GenesisAccount:
 		ga := requestContent.GenesisAccount
-		if !chain.DefaultAccountBalance.Empty() {
-			ga.Coins = chain.DefaultAccountBalance
+		if !chain.AccountBalance.Empty() {
+			ga.Coins = chain.AccountBalance
 		}
 		k.SetGenesisAccount(ctx, *ga)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventGenesisAccountAdded{
@@ -157,7 +157,7 @@ func ApplyRequest(
 
 	case *types.RequestContent_VestingAccount:
 		va := requestContent.VestingAccount
-		if !chain.DefaultAccountBalance.Empty() {
+		if !chain.AccountBalance.Empty() {
 			switch opt := va.VestingOptions.Options.(type) {
 			case *types.VestingOptions_DelayedVesting:
 				dv := opt.DelayedVesting
@@ -165,8 +165,8 @@ func ApplyRequest(
 					Address:  va.Address,
 					LaunchID: va.LaunchID,
 					VestingOptions: *types.NewDelayedVesting(
-						chain.DefaultAccountBalance,
-						chain.DefaultAccountBalance,
+						chain.AccountBalance,
+						chain.AccountBalance,
 						dv.EndTime,
 					),
 				}

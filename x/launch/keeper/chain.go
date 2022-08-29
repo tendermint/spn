@@ -31,18 +31,18 @@ func (k Keeper) CreateNewChain(
 	}
 
 	chain := types.Chain{
-		CoordinatorID:         coordinatorID,
-		GenesisChainID:        genesisChainID,
-		CreatedAt:             ctx.BlockTime().Unix(),
-		SourceURL:             sourceURL,
-		SourceHash:            sourceHash,
-		HasCampaign:           hasCampaign,
-		CampaignID:            campaignID,
-		IsMainnet:             isMainnet,
-		LaunchTriggered:       false,
-		LaunchTimestamp:       0,
-		DefaultAccountBalance: defaultAccountBalance,
-		Metadata:              metadata,
+		CoordinatorID:   coordinatorID,
+		GenesisChainID:  genesisChainID,
+		CreatedAt:       ctx.BlockTime().Unix(),
+		SourceURL:       sourceURL,
+		SourceHash:      sourceHash,
+		HasCampaign:     hasCampaign,
+		CampaignID:      campaignID,
+		IsMainnet:       isMainnet,
+		LaunchTriggered: false,
+		LaunchTimestamp: 0,
+		AccountBalance:  defaultAccountBalance,
+		Metadata:        metadata,
 	}
 
 	// Initialize initial genesis

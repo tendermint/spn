@@ -23,7 +23,7 @@ func (m Chain) Validate() error {
 	}
 
 	// Coins must be valid
-	if !m.DefaultAccountBalance.IsValid() {
+	if !m.AccountBalance.IsValid() {
 		return errors.New("default account balance sdk.Coins is not valid")
 	}
 

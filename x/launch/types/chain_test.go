@@ -23,7 +23,7 @@ func TestChain_Validate(t *testing.T) {
 
 	invalidCoins := sample.Chain(r, 0, 0)
 	// add invalid coin amount
-	invalidCoins.DefaultAccountBalance = sdk.Coins{sdk.Coin{Denom: "invalid", Amount: sdk.NewInt(-1)}}
+	invalidCoins.AccountBalance = sdk.Coins{sdk.Coin{Denom: "invalid", Amount: sdk.NewInt(-1)}}
 
 	for _, tc := range []struct {
 		desc  string
