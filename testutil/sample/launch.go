@@ -4,9 +4,9 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"math/rand"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"math/rand"
+	"time"
 
 	"github.com/tendermint/spn/pkg/chainid"
 	launch "github.com/tendermint/spn/x/launch/types"
@@ -33,6 +33,7 @@ func Chain(r *rand.Rand, id, coordinatorID uint64) launch.Chain {
 		CreatedAt:       Duration(r).Milliseconds(),
 		SourceURL:       String(r, 10),
 		SourceHash:      String(r, 10),
+		LaunchTime:      ZeroTime(),
 		LaunchTriggered: false,
 		InitialGenesis:  launch.NewDefaultInitialGenesis(),
 		Metadata:        Metadata(r, 20),
@@ -287,13 +288,16 @@ func MsgRevertLaunch(coordinator string, launchID uint64) launch.MsgRevertLaunch
 }
 
 // MsgTriggerLaunch returns a sample MsgTriggerLaunch
-func MsgTriggerLaunch(r *rand.Rand, coordinator string, launchID uint64) launch.MsgTriggerLaunch {
+func MsgTriggerLaunch(r *rand.Rand, coordinator string, launchID uint64, currentTime time.Time) launch.MsgTriggerLaunch {
 	launchTimeRange := launch.DefaultMaxLaunchTime - launch.DefaultMinLaunchTime
-	launchTime := r.Int63n(launchTimeRange) + launch.DefaultMinLaunchTime
+	remainingTime := r.Int63n(launchTimeRange) + launch.DefaultMinLaunchTime
+
+	// TODO: transform to duration
+
 	return *launch.NewMsgTriggerLaunch(
 		coordinator,
 		launchID,
-		launchTime,
+		currentTime,
 	)
 }
 
