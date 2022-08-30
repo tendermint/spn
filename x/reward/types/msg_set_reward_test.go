@@ -3,6 +3,7 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
@@ -34,7 +35,7 @@ func TestMsgSetRewards_ValidateBasic(t *testing.T) {
 				Provider: sample.Address(r),
 				Coins: sdk.Coins{sdk.Coin{
 					Denom:  "invalid denom",
-					Amount: sdk.ZeroInt(),
+					Amount: sdkmath.ZeroInt(),
 				}},
 				LastRewardHeight: 50,
 			},

@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -58,7 +59,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "should prevent validate delayed vesting with invalid total balance",
 			option: *types.NewDelayedVesting(
-				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
+				sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}},
 				sample.Coins(r),
 				time.Now().Unix(),
 			),
@@ -68,7 +69,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			name: "should prevent validate delayed vesting with invalid vesting",
 			option: *types.NewDelayedVesting(
 				sample.Coins(r),
-				sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}},
+				sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}},
 				time.Now().Unix(),
 			),
 			valid: false,

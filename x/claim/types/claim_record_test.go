@@ -3,6 +3,7 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -26,7 +27,7 @@ func TestClaimRecord_Validate(t *testing.T) {
 			desc: "claim record with no completed mission is valid",
 			claimRecord: claim.ClaimRecord{
 				Address:           sample.Address(r),
-				Claimable:         sdk.OneInt(),
+				Claimable:         sdkmath.OneInt(),
 				CompletedMissions: []uint64{},
 			},
 			valid: true,
@@ -35,7 +36,7 @@ func TestClaimRecord_Validate(t *testing.T) {
 			desc: "should prevent invalid address",
 			claimRecord: claim.ClaimRecord{
 				Address:           "invalid",
-				Claimable:         sdk.OneInt(),
+				Claimable:         sdkmath.OneInt(),
 				CompletedMissions: []uint64{0, 1, 2},
 			},
 			valid: false,
@@ -44,7 +45,7 @@ func TestClaimRecord_Validate(t *testing.T) {
 			desc: "should prevent zero claimable amount",
 			claimRecord: claim.ClaimRecord{
 				Address:           sample.Address(r),
-				Claimable:         sdk.ZeroInt(),
+				Claimable:         sdkmath.ZeroInt(),
 				CompletedMissions: []uint64{0, 1, 2},
 			},
 			valid: false,
@@ -53,7 +54,7 @@ func TestClaimRecord_Validate(t *testing.T) {
 			desc: "should prevent negative claimable amount",
 			claimRecord: claim.ClaimRecord{
 				Address:           sample.Address(r),
-				Claimable:         sdk.NewInt(-1),
+				Claimable:         sdkmath.NewInt(-1),
 				CompletedMissions: []uint64{0, 1, 2},
 			},
 			valid: false,
@@ -62,7 +63,7 @@ func TestClaimRecord_Validate(t *testing.T) {
 			desc: "should prevent duplicate completed mission IDs",
 			claimRecord: claim.ClaimRecord{
 				Address:           sample.Address(r),
-				Claimable:         sdk.OneInt(),
+				Claimable:         sdkmath.OneInt(),
 				CompletedMissions: []uint64{0, 1, 2, 0},
 			},
 			valid: false,
@@ -77,25 +78,25 @@ func TestClaimRecord_Validate(t *testing.T) {
 func TestClaimRecord_IsMissionCompleted(t *testing.T) {
 	require.False(t, claim.ClaimRecord{
 		Address:           sample.Address(r),
-		Claimable:         sdk.OneInt(),
+		Claimable:         sdkmath.OneInt(),
 		CompletedMissions: []uint64{},
 	}.IsMissionCompleted(0))
 
 	require.False(t, claim.ClaimRecord{
 		Address:           sample.Address(r),
-		Claimable:         sdk.OneInt(),
+		Claimable:         sdkmath.OneInt(),
 		CompletedMissions: []uint64{1, 2, 3},
 	}.IsMissionCompleted(0))
 
 	require.True(t, claim.ClaimRecord{
 		Address:           sample.Address(r),
-		Claimable:         sdk.OneInt(),
+		Claimable:         sdkmath.OneInt(),
 		CompletedMissions: []uint64{0, 1, 2, 3},
 	}.IsMissionCompleted(0))
 
 	require.True(t, claim.ClaimRecord{
 		Address:           sample.Address(r),
-		Claimable:         sdk.OneInt(),
+		Claimable:         sdkmath.OneInt(),
 		CompletedMissions: []uint64{0, 1, 2, 3},
 	}.IsMissionCompleted(3))
 }
@@ -105,57 +106,57 @@ func TestClaimRecord_ClaimableFromMission(t *testing.T) {
 		desc        string
 		claimRecord claim.ClaimRecord
 		mission     claim.Mission
-		expected    sdk.Int
+		expected    sdkmath.Int
 	}{
 		{
 			desc: "should allow get claimable from mission with full weight",
 			claimRecord: claim.ClaimRecord{
-				Claimable: sdk.NewIntFromUint64(100),
+				Claimable: sdkmath.NewIntFromUint64(100),
 			},
 			mission: claim.Mission{
 				Weight: sdk.OneDec(),
 			},
-			expected: sdk.NewIntFromUint64(100),
+			expected: sdkmath.NewIntFromUint64(100),
 		},
 		{
 			desc: "should allow get claimable from mission with empty weight",
 			claimRecord: claim.ClaimRecord{
-				Claimable: sdk.NewIntFromUint64(100),
+				Claimable: sdkmath.NewIntFromUint64(100),
 			},
 			mission: claim.Mission{
 				Weight: sdk.ZeroDec(),
 			},
-			expected: sdk.ZeroInt(),
+			expected: sdkmath.ZeroInt(),
 		},
 		{
 			desc: "should allow get claimable from mission with half weight",
 			claimRecord: claim.ClaimRecord{
-				Claimable: sdk.NewIntFromUint64(100),
+				Claimable: sdkmath.NewIntFromUint64(100),
 			},
 			mission: claim.Mission{
 				Weight: tc.Dec(t, "0.5"),
 			},
-			expected: sdk.NewIntFromUint64(50),
+			expected: sdkmath.NewIntFromUint64(50),
 		},
 		{
 			desc: "should allow get claimable and cut decimal",
 			claimRecord: claim.ClaimRecord{
-				Claimable: sdk.NewIntFromUint64(201),
+				Claimable: sdkmath.NewIntFromUint64(201),
 			},
 			mission: claim.Mission{
 				Weight: tc.Dec(t, "0.5"),
 			},
-			expected: sdk.NewIntFromUint64(100),
+			expected: sdkmath.NewIntFromUint64(100),
 		},
 		{
 			desc: "should return no claimable if decimal cut",
 			claimRecord: claim.ClaimRecord{
-				Claimable: sdk.NewIntFromUint64(1),
+				Claimable: sdkmath.NewIntFromUint64(1),
 			},
 			mission: claim.Mission{
 				Weight: tc.Dec(t, "0.99"),
 			},
-			expected: sdk.NewIntFromUint64(0),
+			expected: sdkmath.NewIntFromUint64(0),
 		},
 	} {
 		t.Run(tt.desc, func(t *testing.T) {

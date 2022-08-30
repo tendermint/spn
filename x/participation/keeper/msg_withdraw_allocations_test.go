@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
@@ -28,7 +29,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 
 	params := types.DefaultParams()
 	params.WithdrawalDelay = withdrawalDelay
-	params.AllocationPrice = types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	params.AllocationPrice = types.AllocationPrice{Bonded: sdkmath.NewInt(100)}
 	tk.ParticipationKeeper.SetParams(sdkCtx, params)
 
 	auctionSellingCoin := sample.CoinWithRange(r, params.ParticipationTierList[1].Benefits.MaxBidAmount.Int64(),
@@ -67,7 +68,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(sdkCtx, types.AuctionUsedAllocations{
 		Address:        invalidParticipant,
 		AuctionID:      auctionID,
-		NumAllocations: sdk.OneInt(),
+		NumAllocations: sdkmath.OneInt(),
 		Withdrawn:      true, // set withdrawn to true
 	})
 

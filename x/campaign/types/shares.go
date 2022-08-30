@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/pkg/errors"
 )
@@ -118,7 +119,7 @@ func (shares Shares) CoinsFromTotalSupply(totalSupply sdk.Coins, totalShareNumbe
 	}
 
 	// set map for performance
-	sharesMap := make(map[string]sdk.Int)
+	sharesMap := make(map[string]sdkmath.Int)
 	for _, share := range shares {
 		if share.Amount.Uint64() > totalShareNumber {
 			return coins, fmt.Errorf(
@@ -137,7 +138,7 @@ func (shares Shares) CoinsFromTotalSupply(totalSupply sdk.Coins, totalShareNumbe
 		shareDenom := SharePrefix + supply.Denom
 		if amount, ok := sharesMap[shareDenom]; ok {
 			// coin balance = (supply * share) / total share
-			coinBalance := (supply.Amount.Mul(amount)).Quo(sdk.NewIntFromUint64(totalShareNumber))
+			coinBalance := (supply.Amount.Mul(amount)).Quo(sdkmath.NewIntFromUint64(totalShareNumber))
 
 			if !coinBalance.IsZero() {
 				coins = append(coins, sdk.NewCoin(supply.Denom, coinBalance))

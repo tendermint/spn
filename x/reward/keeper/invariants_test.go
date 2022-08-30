@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -39,7 +40,7 @@ func TestInsufficientRewardsBalanceInvariant(t *testing.T) {
 			pool := sample.RewardPoolWithCoinsRangeAmount(r, i, denoms[0], denoms[1], denoms[2], 1, 10000)
 			mintCoins := pool.RemainingCoins
 			// decrease amount for coin at index 0 before minting
-			mintCoins = mintCoins.Sub(sdk.NewCoins(sdk.NewCoin(mintCoins.GetDenomByIndex(0), sdk.OneInt()))...)
+			mintCoins = mintCoins.Sub(sdk.NewCoins(sdk.NewCoin(mintCoins.GetDenomByIndex(0), sdkmath.OneInt()))...)
 			tk.MintModule(ctx, types.ModuleName, mintCoins)
 			tk.RewardKeeper.SetRewardPool(ctx, pool)
 		}

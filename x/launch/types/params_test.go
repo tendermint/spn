@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/stretchr/testify/require"
@@ -145,7 +147,7 @@ func TestValidateChainCreationFee(t *testing.T) {
 		},
 		{
 			name:        "should prevent validate creation fee with invalid coin",
-			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdk.NewInt(-1)}},
+			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdkmath.NewInt(-1)}},
 			err:         errors.New("coin -1foo amount is not positive"),
 		},
 		{

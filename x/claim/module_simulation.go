@@ -3,6 +3,7 @@ package claim
 import (
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
@@ -25,12 +26,12 @@ const (
 func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	accs := make([]string, len(simState.Accounts))
 	claimRecords := make([]types.ClaimRecord, len(simState.Accounts))
-	totalSupply := sdk.ZeroInt()
+	totalSupply := sdkmath.ZeroInt()
 	for i, acc := range simState.Accounts {
 		accs[i] = acc.Address.String()
 
 		// fill claim records from simulation accounts
-		accSupply := sdk.NewIntFromUint64(simState.Rand.Uint64() % 1000)
+		accSupply := sdkmath.NewIntFromUint64(simState.Rand.Uint64() % 1000)
 		claimRecords[i] = types.ClaimRecord{
 			Claimable: accSupply,
 			Address:   acc.Address.String(),

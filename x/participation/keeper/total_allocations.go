@@ -4,6 +4,7 @@ import (
 	"math"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -11,12 +12,12 @@ import (
 )
 
 // GetTotalAllocations returns the number of available allocations based on delegations
-func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (sdk.Int, error) {
+func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (sdkmath.Int, error) {
 	allocationPriceBondedDec := sdk.NewDecFromInt(k.AllocationPrice(ctx).Bonded)
 
 	accAddr, err := sdk.AccAddressFromBech32(address)
 	if err != nil {
-		return sdk.ZeroInt(), sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, err.Error())
+		return sdkmath.ZeroInt(), sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, err.Error())
 	}
 
 	// count total shares for account
@@ -28,7 +29,7 @@ func (k Keeper) GetTotalAllocations(ctx sdk.Context, address string) (sdk.Int, e
 
 	numAlloc := totalDel.Quo(allocationPriceBondedDec)
 	if numAlloc.IsNegative() {
-		return sdk.ZeroInt(), types.ErrInvalidAllocationAmount
+		return sdkmath.ZeroInt(), types.ErrInvalidAllocationAmount
 	}
 
 	return numAlloc.TruncateInt(), nil

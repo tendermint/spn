@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -23,7 +24,7 @@ func TestMsgMintVouchers(t *testing.T) {
 
 		shares, _    = types.NewShares("1000foo,500bar,300foobar")
 		sharesTooBig = types.NewSharesFromCoins(sdk.NewCoins(
-			sdk.NewCoin("foo", sdk.NewInt(spntypes.TotalShareNumber+1)),
+			sdk.NewCoin("foo", sdkmath.NewInt(spntypes.TotalShareNumber+1)),
 		))
 	)
 

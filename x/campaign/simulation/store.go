@@ -3,6 +3,7 @@ package simulation
 import (
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
@@ -122,7 +123,7 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 		if shareNb > remaining {
 			shareNb = remaining
 		}
-		shares = append(shares, sdk.NewCoin(share, sdk.NewInt(shareNb)))
+		shares = append(shares, sdk.NewCoin(share, sdkmath.NewInt(shareNb)))
 	}
 
 	// No shares can be distributed
