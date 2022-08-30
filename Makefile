@@ -12,17 +12,20 @@ govet:
 	@echo Running go vet...
 	@go vet ./...
 
-FIND_ARGS := -name '*.go' -type f -not -name '*.pb.go'
+FIND_ARGS := -name '*.go' -type f -not -name '*.pb.go' -not -name '*.pb.gw.go'
 
 ## format: Run gofmt and goimports.
 format:
 	@echo Formatting...
-	@find . $(FIND_ARGS) | xargs gofmt -d -s
+	@go install mvdan.cc/gofumpt
+	@go install golang.org/x/tools/cmd/goimports
+	@find . $(FIND_ARGS) | xargs gofumpt -w .
 	@find . $(FIND_ARGS) | xargs goimports -w -local github.com/tendermint/spn
 
 ## lint: Run Golang CI Lint.
 lint:
 	@echo Running gocilint...
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint
 	@golangci-lint run --out-format=tab --issues-exit-code=0
 
 help: Makefile
