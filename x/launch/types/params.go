@@ -42,7 +42,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewLaunchTimeRange creates a new LaunchTimeRange instance
-func NewLaunchTimeRange(minLaunchTime, maxLaunchTime int64) LaunchTimeRange {
+func NewLaunchTimeRange(minLaunchTime, maxLaunchTime time.Duration) LaunchTimeRange {
 	return LaunchTimeRange{
 		MinLaunchTime: minLaunchTime,
 		MaxLaunchTime: maxLaunchTime,
