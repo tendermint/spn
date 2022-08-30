@@ -13,7 +13,7 @@ func (m Chain) Validate() error {
 	}
 
 	// LaunchTriggered means a non zera launch timestamp is defined
-	if m.LaunchTriggered && m.LaunchTimestamp == 0 {
+	if m.LaunchTriggered && m.LaunchTime.IsZero() {
 		return errors.New("launch timestamp must be defined when launch is triggered")
 	}
 
