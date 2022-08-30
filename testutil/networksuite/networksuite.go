@@ -12,6 +12,7 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	claim "github.com/ignite/modules/x/claim/types"
+
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
