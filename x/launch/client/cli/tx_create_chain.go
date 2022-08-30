@@ -20,9 +20,9 @@ import (
 )
 
 const (
-	flagGenesisURL            = "genesis-url"
-	flagCampaignID            = "campaign-id"
-	flagDefaultAccountBalance = "default-account-balance"
+	flagGenesisURL     = "genesis-url"
+	flagCampaignID     = "campaign-id"
+	flagAccountBalance = "account-balance"
 )
 
 func CmdCreateChain() *cobra.Command {
@@ -67,7 +67,7 @@ func CmdCreateChain() *cobra.Command {
 			metadataBytes := []byte(metadata)
 
 			balanceCoins := sdk.NewCoins()
-			balance, err := cmd.Flags().GetString(flagDefaultAccountBalance)
+			balance, err := cmd.Flags().GetString(flagAccountBalance)
 			if err != nil {
 				return err
 			}
@@ -101,7 +101,7 @@ func CmdCreateChain() *cobra.Command {
 	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
 	cmd.Flags().Int64(flagCampaignID, -1, "The campaign id")
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
-	cmd.Flags().String(flagDefaultAccountBalance, "", "Set the default account coin balance")
+	cmd.Flags().String(flagAccountBalance, "", "Set the chain account coin balance")
 
 	flags.AddTxFlagsToCmd(cmd)
 

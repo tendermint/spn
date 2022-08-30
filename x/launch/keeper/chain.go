@@ -22,7 +22,7 @@ func (k Keeper) CreateNewChain(
 	hasCampaign bool,
 	campaignID uint64,
 	isMainnet bool,
-	defaultAccountBalance sdk.Coins,
+	accountBalance sdk.Coins,
 	metadata []byte,
 ) (uint64, error) {
 	coord, found := k.profileKeeper.GetCoordinator(ctx, coordinatorID)
@@ -41,7 +41,7 @@ func (k Keeper) CreateNewChain(
 		IsMainnet:       isMainnet,
 		LaunchTriggered: false,
 		LaunchTimestamp: 0,
-		AccountBalance:  defaultAccountBalance,
+		AccountBalance:  accountBalance,
 		Metadata:        metadata,
 	}
 

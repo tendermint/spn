@@ -27,7 +27,7 @@ type LaunchKeeper interface {
 		hasCampaign bool,
 		campaignID uint64,
 		isMainnet bool,
-		defaultAccountBalance sdk.Coins,
+		accountBalance sdk.Coins,
 		metadata []byte,
 	) (uint64, error)
 }
