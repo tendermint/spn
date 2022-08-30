@@ -6,8 +6,8 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -56,7 +56,7 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		[]byte{},
 	)
 	if err != nil {
-		return nil, spnerrors.Criticalf("cannot create the mainnet: %s", err.Error())
+		return nil, ignterrors.Criticalf("cannot create the mainnet: %s", err.Error())
 	}
 
 	// Set mainnet as initialized and save the change

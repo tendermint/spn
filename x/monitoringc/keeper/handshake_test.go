@@ -6,9 +6,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	connectiontypes "github.com/cosmos/ibc-go/v5/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
+	ignterrors "github.com/ignite/modules/errors"
 	"github.com/stretchr/testify/require"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/monitoringc/types"
@@ -118,7 +118,7 @@ func TestKeeper_RegisterProviderClientIDFromChannelID(t *testing.T) {
 	t.Run("should fail with critical error if the client is not verified", func(t *testing.T) {
 		ctx, tk, _ := testSetupWithFooClient(t)
 		err := tk.MonitoringConsumerKeeper.RegisterProviderClientIDFromChannelID(ctx, "foo")
-		require.ErrorIs(t, err, spnerrors.ErrCritical)
+		require.ErrorIs(t, err, ignterrors.ErrCritical)
 	})
 
 	t.Run("should fail if the provider already has an established connection", func(t *testing.T) {

@@ -6,8 +6,8 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -36,7 +36,7 @@ func (k msgServer) UpdateSpecialAllocations(goCtx context.Context, msg *types.Ms
 	// verify mainnet launch is not triggered
 	mainnetLaunched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
 	if err != nil {
-		return nil, spnerrors.Critical(err.Error())
+		return nil, ignterrors.Critical(err.Error())
 	}
 	if mainnetLaunched {
 		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
@@ -48,7 +48,7 @@ func (k msgServer) UpdateSpecialAllocations(goCtx context.Context, msg *types.Ms
 	// decrease allocated shares from current special allocations
 	campaign.AllocatedShares, err = types.DecreaseShares(campaign.AllocatedShares, campaign.SpecialAllocations.TotalShares())
 	if err != nil {
-		return nil, spnerrors.Critical("campaign allocated shares should be bigger than current special allocations" + err.Error())
+		return nil, ignterrors.Critical("campaign allocated shares should be bigger than current special allocations" + err.Error())
 	}
 
 	// increase with new special allocations
@@ -57,7 +57,7 @@ func (k msgServer) UpdateSpecialAllocations(goCtx context.Context, msg *types.Ms
 	// increase the campaign shares
 	reached, err := types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx))
 	if err != nil {
-		return nil, spnerrors.Criticalf("verified shares are invalid %s", err.Error())
+		return nil, ignterrors.Criticalf("verified shares are invalid %s", err.Error())
 	}
 	if reached {
 		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)

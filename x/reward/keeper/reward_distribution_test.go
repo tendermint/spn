@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 	"github.com/stretchr/testify/require"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	tc "github.com/tendermint/spn/testutil/constructor"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -502,7 +502,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 20,
 				closeRewardPool: false,
 			},
-			err: spnerrors.ErrCritical,
+			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "critical error for signatureRatio GT 1",
@@ -523,7 +523,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 				lastBlockHeight: 20,
 				closeRewardPool: false,
 			},
-			err: spnerrors.ErrCritical,
+			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "should prevent distributing rewards with a non-existent reward pool",

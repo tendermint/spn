@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 	"github.com/stretchr/testify/require"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	tc "github.com/tendermint/spn/testutil/constructor"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -294,7 +294,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				mainnet: nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
-			err:                     spnerrors.ErrCritical,
+			err:                     ignterrors.ErrCritical,
 		},
 		{
 			name: "updating a campaign with a non-existent initialize mainnet should trigger a critical error",
@@ -308,7 +308,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
-			err:                     spnerrors.ErrCritical,
+			err:                     ignterrors.ErrCritical,
 		},
 	}
 	for _, tt := range tests {
