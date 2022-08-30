@@ -4,13 +4,14 @@ import (
 	"errors"
 	"fmt"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // DefaultGenesis returns the default claim genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		AirdropSupply: sdk.NewCoin("uspn", sdk.ZeroInt()),
+		AirdropSupply: sdk.NewCoin("uspn", sdkmath.ZeroInt()),
 		ClaimRecords:  []ClaimRecord{},
 		Missions:      []Mission{},
 		InitialClaim:  InitialClaim{},
@@ -59,7 +60,7 @@ func (gs GenesisState) Validate() error {
 	}
 
 	// check claim records
-	claimSum := sdk.ZeroInt()
+	claimSum := sdkmath.ZeroInt()
 	claimRecordMap := make(map[string]struct{})
 	for _, claimRecord := range gs.ClaimRecords {
 		err := claimRecord.Validate()

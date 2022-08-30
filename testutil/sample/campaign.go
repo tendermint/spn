@@ -3,6 +3,7 @@ package sample
 import (
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -29,7 +30,7 @@ func ShareVestingOptions(r *rand.Rand) campaign.ShareVestingOptions {
 // Voucher returns a sample voucher structure
 func Voucher(r *rand.Rand, campaignID uint64) sdk.Coin {
 	denom := campaign.VoucherDenom(campaignID, AlphaString(r, 5))
-	return sdk.NewCoin(denom, sdk.NewInt(int64(r.Intn(10000)+1)))
+	return sdk.NewCoin(denom, sdkmath.NewInt(int64(r.Intn(10000)+1)))
 }
 
 // Vouchers returns a sample vouchers structure

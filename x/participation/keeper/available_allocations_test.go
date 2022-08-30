@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -16,7 +16,7 @@ func TestAvailableAllocationsGet(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
 
 	invalidAddress := strconv.Itoa(1)
-	allocationPrice := types.AllocationPrice{Bonded: sdk.NewInt(100)}
+	allocationPrice := types.AllocationPrice{Bonded: sdkmath.NewInt(100)}
 
 	params := types.DefaultParams()
 	params.AllocationPrice = allocationPrice
@@ -34,35 +34,35 @@ func TestAvailableAllocationsGet(t *testing.T) {
 
 	tk.ParticipationKeeper.SetUsedAllocations(sdkCtx, types.UsedAllocations{
 		Address:        validAddress,
-		NumAllocations: sdk.NewInt(2),
+		NumAllocations: sdkmath.NewInt(2),
 	})
 
 	// set used allocations to be greater than totalAllocations
 	tk.ParticipationKeeper.SetUsedAllocations(sdkCtx, types.UsedAllocations{
 		Address:        validAddressExtraUsed,
-		NumAllocations: sdk.NewInt(11),
+		NumAllocations: sdkmath.NewInt(11),
 	})
 
 	for _, tc := range []struct {
 		desc       string
 		address    string
-		allocation sdk.Int
+		allocation sdkmath.Int
 		wantError  bool
 	}{
 		{
 			desc:       "valid address with used allocations",
 			address:    validAddress,
-			allocation: sdk.NewInt(8), // (100 * 10 / 100) - 2 = 8
+			allocation: sdkmath.NewInt(8), // (100 * 10 / 100) - 2 = 8
 		},
 		{
 			desc:       "valid address with no used allocations",
 			address:    validAddressNoUse,
-			allocation: sdk.NewInt(10), // (100 * 10 / 100) - 0 = 10
+			allocation: sdkmath.NewInt(10), // (100 * 10 / 100) - 0 = 10
 		},
 		{
 			desc:       "return 0 when usedAllocations > totalAllocations",
 			address:    validAddressExtraUsed,
-			allocation: sdk.NewInt(0), // 11 > 10 - > return 0
+			allocation: sdkmath.ZeroInt(), // 11 > 10 - > return 0
 		},
 		{
 			desc:      "invalid address returns error",

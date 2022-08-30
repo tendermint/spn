@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/tendermint/crypto"
@@ -49,7 +50,7 @@ func TestKeeper_CheckValidatorSet(t *testing.T) {
 			LaunchID:       launchID,
 			Address:        addr.String(),
 			ConsPubKey:     validator.Bytes(),
-			SelfDelegation: sdk.NewCoin("spn", sdk.NewInt(1000)),
+			SelfDelegation: sdk.NewCoin("spn", sdkmath.NewInt(1000)),
 		})
 		validatorSet.Validators = append(validatorSet.Validators,
 			tmtypes.NewValidator(validator, 0),

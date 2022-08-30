@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -88,7 +89,7 @@ func Test_msgServer_ClaimInitial(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   claimer,
-					Claimable: sdk.NewIntFromUint64(1000),
+					Claimable: sdkmath.NewIntFromUint64(1000),
 				},
 			},
 			// will fail because no claim record associated

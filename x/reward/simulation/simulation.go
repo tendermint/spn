@@ -3,6 +3,7 @@ package simulation
 import (
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -45,7 +46,7 @@ func SimulateMsgSetRewards(
 			action = ActionEdit
 		}
 
-		wantCoin := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(r.Int63n(1_000_000))))
+		wantCoin := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(r.Int63n(1_000_000))))
 		chain, found := FindRandomChainWithCoordBalance(r, ctx, k, bk, createRewardPool, checkBalance, wantCoin)
 		if !found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "no viable chain to be found"), nil, nil

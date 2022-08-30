@@ -3,6 +3,7 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -66,25 +67,25 @@ func TestValidateTotalSupply(t *testing.T) {
 		{
 			name:        "invalid supply range",
 			coins:       tc.Coins(t, "1000foo,1000bar"),
-			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1_000), sdk.NewInt(100)),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(1_000), sdkmath.NewInt(100)),
 			valid:       false,
 		},
 		{
 			name:        "total supply less than min",
 			coins:       tc.Coins(t, "100foo,1000bar"),
-			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1000), sdk.NewInt(10_000)),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(1000), sdkmath.NewInt(10_000)),
 			valid:       false,
 		},
 		{
 			name:        "total supply more than max",
 			coins:       tc.Coins(t, "1000foo,10000bar"),
-			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(1000), sdk.NewInt(1000)),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(1000), sdkmath.NewInt(1000)),
 			valid:       false,
 		},
 		{
 			name:        "valid supply",
 			coins:       tc.Coins(t, "1000foo,1000bar"),
-			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(100), sdk.NewInt(1000)),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(100), sdkmath.NewInt(1000)),
 			valid:       true,
 		},
 	}
@@ -108,27 +109,27 @@ func TestTotalSupplyRange_ValidateBasic(t *testing.T) {
 	}{
 		{
 			name:        "min total supply lower than one",
-			supplyRange: campaign.NewTotalSupplyRange(sdk.ZeroInt(), sdk.OneInt()),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.ZeroInt(), sdkmath.OneInt()),
 			valid:       false,
 		},
 		{
 			name:        "min total supply greater than max total supply",
-			supplyRange: campaign.NewTotalSupplyRange(sdk.NewInt(2), sdk.OneInt()),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(2), sdkmath.OneInt()),
 			valid:       false,
 		},
 		{
 			name:        "should prevent uninitialized min total supply",
-			supplyRange: campaign.NewTotalSupplyRange(sdk.Int{}, sdk.OneInt()),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.Int{}, sdkmath.OneInt()),
 			valid:       false,
 		},
 		{
 			name:        "should prevent uninitialized max total supply",
-			supplyRange: campaign.NewTotalSupplyRange(sdk.OneInt(), sdk.Int{}),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.OneInt(), sdkmath.Int{}),
 			valid:       false,
 		},
 		{
 			name:        "valid total supply range",
-			supplyRange: campaign.NewTotalSupplyRange(sdk.OneInt(), sdk.OneInt()),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.OneInt(), sdkmath.OneInt()),
 			valid:       true,
 		},
 	}

@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
@@ -57,7 +58,7 @@ func (k Keeper) UsedAllocations(c context.Context, req *types.QueryGetUsedAlloca
 		return &types.QueryGetUsedAllocationsResponse{
 			UsedAllocations: types.UsedAllocations{
 				Address:        req.Address,
-				NumAllocations: sdk.ZeroInt(),
+				NumAllocations: sdkmath.ZeroInt(),
 			},
 		}, nil
 	}

@@ -3,6 +3,7 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -27,8 +28,8 @@ func TestEmptySpecialAllocations(t *testing.T) {
 
 func TestSpecialAllocations_Validate(t *testing.T) {
 	invalidShares := types.Shares(sdk.NewCoins(
-		sdk.NewCoin("foo", sdk.NewInt(100)),
-		sdk.NewCoin("s/bar", sdk.NewInt(200)),
+		sdk.NewCoin("foo", sdkmath.NewInt(100)),
+		sdk.NewCoin("s/bar", sdkmath.NewInt(200)),
 	))
 	require.Error(t, types.CheckShares(invalidShares))
 

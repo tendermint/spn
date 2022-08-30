@@ -4,11 +4,11 @@ import (
 	"errors"
 	"testing"
 
-	tc "github.com/tendermint/spn/testutil/constructor"
-
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 
@@ -29,23 +29,23 @@ func TestCheckVouchers(t *testing.T) {
 			name:       "one valid coin",
 			campaignID: campaignID,
 			vouchers: sdk.NewCoins(
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
+				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 			),
 		},
 		{
 			name:       "two valid coins",
 			campaignID: campaignID,
 			vouchers: sdk.NewCoins(
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
-				sdk.NewCoin(prefixedVoucherBar, sdk.NewInt(200)),
+				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
+				sdk.NewCoin(prefixedVoucherBar, sdkmath.NewInt(200)),
 			),
 		},
 		{
 			name:       "one valid and one invalid coins",
 			campaignID: campaignID,
 			vouchers: sdk.NewCoins(
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(100)),
-				sdk.NewCoin("foo", sdk.NewInt(200)),
+				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
+				sdk.NewCoin("foo", sdkmath.NewInt(200)),
 			),
 			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
 		},
@@ -53,7 +53,7 @@ func TestCheckVouchers(t *testing.T) {
 			name:       "one invalid coin",
 			campaignID: campaignID,
 			vouchers: sdk.NewCoins(
-				sdk.NewCoin("foo", sdk.NewInt(200)),
+				sdk.NewCoin("foo", sdkmath.NewInt(200)),
 			),
 			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
 		},
@@ -61,7 +61,7 @@ func TestCheckVouchers(t *testing.T) {
 			name:       "invalid campaign id",
 			campaignID: 1000,
 			vouchers: sdk.NewCoins(
-				sdk.NewCoin(prefixedVoucherFoo, sdk.NewInt(200)),
+				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(200)),
 			),
 			err: errors.New("v/10/foo doesn't contain the voucher prefix v/1000/"),
 		},

@@ -3,6 +3,7 @@ package sample
 import (
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	claim "github.com/tendermint/spn/x/claim/types"
@@ -11,7 +12,7 @@ import (
 func ClaimRecord(r *rand.Rand) claim.ClaimRecord {
 	return claim.ClaimRecord{
 		Address:           Address(r),
-		Claimable:         sdk.NewInt(r.Int63n(100000)),
+		Claimable:         sdkmath.NewInt(r.Int63n(100000)),
 		CompletedMissions: uint64Sequence(r),
 	}
 }

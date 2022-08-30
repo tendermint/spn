@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -19,35 +19,35 @@ var (
 	KeyWithdrawalDelay       = []byte("WithdrawalDelay")
 
 	DefaultAllocationPrice = AllocationPrice{
-		Bonded: sdk.NewInt(1000),
+		Bonded: sdkmath.NewInt(1000),
 	}
 	DefaultParticipationTierList = []Tier{
 		{
 			TierID:              1,
-			RequiredAllocations: sdk.NewInt(1),
+			RequiredAllocations: sdkmath.OneInt(),
 			Benefits: TierBenefits{
-				MaxBidAmount: sdk.NewInt(1000),
+				MaxBidAmount: sdkmath.NewInt(1000),
 			},
 		},
 		{
 			TierID:              2,
-			RequiredAllocations: sdk.NewInt(2),
+			RequiredAllocations: sdkmath.NewInt(2),
 			Benefits: TierBenefits{
-				MaxBidAmount: sdk.NewInt(2000),
+				MaxBidAmount: sdkmath.NewInt(2000),
 			},
 		},
 		{
 			TierID:              3,
-			RequiredAllocations: sdk.NewInt(5),
+			RequiredAllocations: sdkmath.NewInt(5),
 			Benefits: TierBenefits{
-				MaxBidAmount: sdk.NewInt(10000),
+				MaxBidAmount: sdkmath.NewInt(10000),
 			},
 		},
 		{
 			TierID:              4,
-			RequiredAllocations: sdk.NewInt(10),
+			RequiredAllocations: sdkmath.NewInt(10),
 			Benefits: TierBenefits{
-				MaxBidAmount: sdk.NewInt(30000),
+				MaxBidAmount: sdkmath.NewInt(30000),
 			},
 		},
 	}
@@ -155,7 +155,7 @@ func validateParticipationTierList(v interface{}) error {
 		}
 		tiersIndexMap[tier.TierID] = struct{}{}
 
-		if tier.RequiredAllocations.LTE(sdk.ZeroInt()) {
+		if tier.RequiredAllocations.LTE(sdkmath.ZeroInt()) {
 			return errors.New("required allocations must be greater than zero")
 		}
 
