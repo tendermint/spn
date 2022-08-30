@@ -835,7 +835,6 @@ func New(
 	}
 
 	app.SetAnteHandler(anteHandler)
-
 	app.SetEndBlocker(app.EndBlocker)
 
 	if loadLatest {
