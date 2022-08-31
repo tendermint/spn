@@ -36,17 +36,16 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 		return nil, sdkerrors.Wrapf(types.ErrTriggeredLaunch, "%d", msg.LaunchID)
 	}
 
-	if msg.RemainingTime < k.LaunchTimeRange(ctx).MinLaunchTime {
-		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooLow, "%d", msg.RemainingTime)
+	if msg.LaunchTime.Before(ctx.BlockTime().Add(k.LaunchTimeRange(ctx).MinLaunchTime)) {
+		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooLow, "%s", msg.LaunchTime.String())
 	}
-	if msg.RemainingTime > k.LaunchTimeRange(ctx).MaxLaunchTime {
-		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooHigh, "%d", msg.RemainingTime)
+	if msg.LaunchTime.After(ctx.BlockTime().Add(k.LaunchTimeRange(ctx).MaxLaunchTime)) {
+		return nil, sdkerrors.Wrapf(types.ErrLaunchTimeTooHigh, "%s", msg.LaunchTime.String())
 	}
 
 	// set launch timestamp
 	chain.LaunchTriggered = true
-	timestamp := ctx.BlockTime().Unix() + msg.RemainingTime
-	chain.LaunchTimestamp = timestamp
+	chain.LaunchTime = msg.LaunchTime
 
 	// set revision height for monitoring IBC client
 	chain.ConsumerRevisionHeight = ctx.BlockHeight()
@@ -55,7 +54,7 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 
 	err = ctx.EventManager().EmitTypedEvent(&types.EventLaunchTriggered{
 		LaunchID:        msg.LaunchID,
-		LaunchTimestamp: timestamp,
+		LaunchTimestamp: chain.LaunchTime.Unix(),
 	})
 
 	return &types.MsgTriggerLaunchResponse{}, err

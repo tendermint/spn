@@ -2,11 +2,11 @@ package keeper
 
 import (
 	"context"
+	"time"
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -41,18 +41,13 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 		return nil, sdkerrors.Wrapf(types.ErrChainMonitoringConnected, "%d", msg.LaunchID)
 	}
 
-	// The LaunchTimestamp must always be a non-zero value if LaunchTriggered is set
-	if chain.LaunchTimestamp == 0 {
-		return nil, spnerrors.Critical("LaunchTimestamp is not set while LaunchTriggered is set")
-	}
-
 	// We must wait for a specific delay once the chain is launched before being able to revert it
-	if ctx.BlockTime().Unix() < chain.LaunchTimestamp+k.RevertDelay(ctx) {
+	if ctx.BlockTime().Before(chain.LaunchTime.Add(k.RevertDelay(ctx))) {
 		return nil, sdkerrors.Wrapf(types.ErrRevertDelayNotReached, "%d", msg.LaunchID)
 	}
 
 	chain.LaunchTriggered = false
-	chain.LaunchTimestamp = 0
+	chain.LaunchTime = time.Unix(0, 0).UTC()
 	k.SetChain(ctx, chain)
 
 	// clear associated client IDs from monitoring
