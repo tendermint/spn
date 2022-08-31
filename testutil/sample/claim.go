@@ -6,7 +6,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	claim "github.com/tendermint/spn/x/claim/types"
+	claim "github.com/ignite/modules/x/claim/types"
 )
 
 func ClaimRecord(r *rand.Rand) claim.ClaimRecord {

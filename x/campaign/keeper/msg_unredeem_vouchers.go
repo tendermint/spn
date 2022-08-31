@@ -6,8 +6,8 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
@@ -21,7 +21,7 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 
 	mainnetLaunched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
 	if err != nil {
-		return nil, spnerrors.Critical(err.Error())
+		return nil, ignterrors.Critical(err.Error())
 	}
 	if mainnetLaunched {
 		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
@@ -64,7 +64,7 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 	// Mint vouchers from the removed shares and send them to sender balance
 	vouchers, err := types.SharesToVouchers(msg.Shares, msg.CampaignID)
 	if err != nil {
-		return nil, spnerrors.Criticalf("verified shares are invalid %s", err.Error())
+		return nil, ignterrors.Criticalf("verified shares are invalid %s", err.Error())
 	}
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, vouchers); err != nil {
 		return nil, sdkerrors.Wrap(types.ErrVouchersMinting, err.Error())
@@ -72,11 +72,11 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 
 	receiver, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
-		return nil, spnerrors.Criticalf("can't parse sender address %s", err.Error())
+		return nil, ignterrors.Criticalf("can't parse sender address %s", err.Error())
 	}
 
 	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, vouchers); err != nil {
-		return nil, spnerrors.Criticalf("can't send minted coins %s", err.Error())
+		return nil, ignterrors.Criticalf("can't send minted coins %s", err.Error())
 	}
 
 	return &types.MsgUnredeemVouchersResponse{}, nil

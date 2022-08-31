@@ -5,9 +5,9 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 	"github.com/stretchr/testify/require"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -65,7 +65,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 				CampaignID: campaign.CampaignID,
 				Vouchers:   sample.Coins(r),
 			},
-			err: spnerrors.ErrCritical,
+			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "should not burn more than allocated shares",

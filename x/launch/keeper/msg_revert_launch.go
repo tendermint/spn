@@ -6,7 +6,6 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -40,7 +39,7 @@ func (k msgServer) RevertLaunch(goCtx context.Context, msg *types.MsgRevertLaunc
 	if chain.MonitoringConnected {
 		return nil, sdkerrors.Wrapf(types.ErrChainMonitoringConnected, "%d", msg.LaunchID)
 	}
-
+	
 	// We must wait for a specific delay once the chain is launched before being able to revert it
 	if ctx.BlockTime().Before(chain.LaunchTime.Add(k.RevertDelay(ctx))) {
 		return nil, sdkerrors.Wrapf(types.ErrRevertDelayNotReached, "%d", msg.LaunchID)

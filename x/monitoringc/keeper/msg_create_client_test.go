@@ -7,9 +7,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v5/modules/light-clients/07-tendermint/types"
+	ignterrors "github.com/ignite/modules/errors"
 	"github.com/stretchr/testify/require"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -125,7 +125,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 				spntypes.DefaultUnbondingPeriod,
 				spntypes.DefaultRevisionHeight,
 			),
-			err: spnerrors.ErrCritical,
+			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "chain doesn't exist",
@@ -149,7 +149,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 				spntypes.DefaultUnbondingPeriod,
 				spntypes.DefaultRevisionHeight,
 			),
-			err: spnerrors.ErrCritical,
+			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "invalid validator set",
