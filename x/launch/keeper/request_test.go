@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 	"github.com/stretchr/testify/require"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/keeper"
@@ -151,7 +151,7 @@ func TestCheckAccount(t *testing.T) {
 		}, {
 			name: "should return critical error if duplicated genesis and vesting accounts",
 			addr: dupAcc,
-			err:  spnerrors.ErrCritical,
+			err:  ignterrors.ErrCritical,
 		},
 	}
 
@@ -392,22 +392,22 @@ func TestCheckRequest(t *testing.T) {
 		{
 			name:    "should prevent validate request content with invalid parameters",
 			request: sample.RequestWithContent(r, launchID, invalidContent),
-			err:     spnerrors.ErrCritical,
+			err:     ignterrors.ErrCritical,
 		},
 		{
 			name:    "should prevent validate with critical error genesis account request content with genesis and vesting account",
 			request: sample.RequestWithContent(r, launchID, duplicatedRequestGenesisContent),
-			err:     spnerrors.ErrCritical,
+			err:     ignterrors.ErrCritical,
 		},
 		{
 			name:    "should prevent validate with critical error vesting account request content with genesis and vesting account",
 			request: sample.RequestWithContent(r, launchID, duplicatedRequestVestingContent),
-			err:     spnerrors.ErrCritical,
+			err:     ignterrors.ErrCritical,
 		},
 		{
 			name:    "should prevent validate with critical error account removal request content with genesis and vesting account",
 			request: sample.RequestWithContent(r, launchID, duplicatedRequestRemovalContent),
-			err:     spnerrors.ErrCritical,
+			err:     ignterrors.ErrCritical,
 		},
 	}
 	for _, tt := range tests {

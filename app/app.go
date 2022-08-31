@@ -88,6 +88,12 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
+	"github.com/ignite/modules/x/claim"
+	claimkeeper "github.com/ignite/modules/x/claim/keeper"
+	claimtypes "github.com/ignite/modules/x/claim/types"
+	"github.com/ignite/modules/x/mint"
+	mintkeeper "github.com/ignite/modules/x/mint/keeper"
+	minttypes "github.com/ignite/modules/x/mint/types"
 	"github.com/tendermint/fundraising/x/fundraising"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
@@ -98,15 +104,9 @@ import (
 	"github.com/tendermint/spn/x/campaign"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
-	"github.com/tendermint/spn/x/claim"
-	claimkeeper "github.com/tendermint/spn/x/claim/keeper"
-	claimtypes "github.com/tendermint/spn/x/claim/types"
 	"github.com/tendermint/spn/x/launch"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
-	"github.com/tendermint/spn/x/mint"
-	mintkeeper "github.com/tendermint/spn/x/mint/keeper"
-	minttypes "github.com/tendermint/spn/x/mint/types"
 	"github.com/tendermint/spn/x/monitoringc"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
 	monitoringctypes "github.com/tendermint/spn/x/monitoringc/types"
@@ -835,7 +835,6 @@ func New(
 	}
 
 	app.SetAnteHandler(anteHandler)
-
 	app.SetEndBlocker(app.EndBlocker)
 
 	if loadLatest {

@@ -6,8 +6,8 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/reward/types"
 )
@@ -42,7 +42,7 @@ func (k Keeper) DistributeRewards(
 
 	provider, err := sdk.AccAddressFromBech32(rewardPool.Provider)
 	if err != nil {
-		return spnerrors.Criticalf("can't parse the provider address %s", err.Error())
+		return ignterrors.Criticalf("can't parse the provider address %s", err.Error())
 	}
 
 	// lastBlockHeight must be strictly greater than the current reward height for the pool
@@ -75,7 +75,7 @@ func (k Keeper) DistributeRewards(
 		// get the operator address of the signature counts with the chain prefix
 		config := sdk.GetConfig()
 		if config == nil {
-			return spnerrors.Critical("SDK config not set")
+			return ignterrors.Critical("SDK config not set")
 		}
 		opAddr, err := signatureCount.GetOperatorAddress(config.GetBech32AccountAddrPrefix())
 		if err != nil {
@@ -100,7 +100,7 @@ func (k Keeper) DistributeRewards(
 		)
 		rewards, err := CalculateRewards(blockRatio, signatureRatio, rewardPool.RemainingCoins)
 		if err != nil {
-			return spnerrors.Criticalf("invalid reward: %s", err.Error())
+			return ignterrors.Criticalf("invalid reward: %s", err.Error())
 		}
 		rewardsToDistribute[valAddr] = rewards
 
@@ -110,24 +110,24 @@ func (k Keeper) DistributeRewards(
 	for address, rewards := range rewardsToDistribute {
 		coins, isNegative := rewardPool.RemainingCoins.SafeSub(rewards...)
 		if isNegative {
-			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.RemainingCoins.String())
+			return ignterrors.Criticalf("negative reward pool: %s", rewardPool.RemainingCoins.String())
 		}
 		rewardPool.RemainingCoins = coins
 
 		// send rewards to the address
 		account, err := sdk.AccAddressFromBech32(address)
 		if err != nil {
-			return spnerrors.Criticalf("can't parse address %s", err.Error())
+			return ignterrors.Criticalf("can't parse address %s", err.Error())
 		}
 		if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, account, rewards); err != nil {
-			return spnerrors.Criticalf("send rewards error: %s", err.Error())
+			return ignterrors.Criticalf("send rewards error: %s", err.Error())
 		}
 		if err := ctx.EventManager().EmitTypedEvent(&types.EventRewardsDistributed{
 			LaunchID: launchID,
 			Receiver: address,
 			Rewards:  rewards,
 		}); err != nil {
-			return spnerrors.Criticalf("error emitting event: %s", err.Error())
+			return ignterrors.Criticalf("error emitting event: %s", err.Error())
 		}
 	}
 
@@ -139,7 +139,7 @@ func (k Keeper) DistributeRewards(
 			types.ModuleName,
 			provider,
 			rewardPool.RemainingCoins); err != nil {
-			return spnerrors.Criticalf("send rewards error: %s", err.Error())
+			return ignterrors.Criticalf("send rewards error: %s", err.Error())
 		}
 
 		// close the pool
@@ -158,14 +158,14 @@ func (k Keeper) DistributeRewards(
 	refundRatio := refundRatioNumerator.Quo(blockCount)
 	refund, err := CalculateRewards(blockRatio, refundRatio, rewardPool.RemainingCoins)
 	if err != nil {
-		return spnerrors.Criticalf("invalid reward: %s", err.Error())
+		return ignterrors.Criticalf("invalid reward: %s", err.Error())
 	}
 
 	// if refund is non-null, refund is sent to the provider
 	if !refund.IsZero() {
 		coins, isNegative := rewardPool.RemainingCoins.SafeSub(refund...)
 		if isNegative {
-			return spnerrors.Criticalf("negative reward pool: %s", rewardPool.RemainingCoins.String())
+			return ignterrors.Criticalf("negative reward pool: %s", rewardPool.RemainingCoins.String())
 		}
 		rewardPool.RemainingCoins = coins
 
@@ -175,7 +175,7 @@ func (k Keeper) DistributeRewards(
 			types.ModuleName,
 			provider,
 			rewardPool.RemainingCoins); err != nil {
-			return spnerrors.Criticalf("send rewards error: %s", err.Error())
+			return ignterrors.Criticalf("send rewards error: %s", err.Error())
 		}
 	}
 

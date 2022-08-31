@@ -6,8 +6,8 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
@@ -24,7 +24,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	totalSupplyRange := k.TotalSupplyRange(ctx)
 	if err := types.ValidateTotalSupply(msg.TotalSupply, totalSupplyRange); err != nil {
 		if errors.Is(err, types.ErrInvalidSupplyRange) {
-			return nil, spnerrors.Critical(err.Error())
+			return nil, ignterrors.Critical(err.Error())
 		}
 
 		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, err.Error())
@@ -35,7 +35,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	if !creationFee.Empty() {
 		coordAddr, err := sdk.AccAddressFromBech32(msg.Coordinator)
 		if err != nil {
-			return nil, spnerrors.Criticalf("invalid coordinator bech32 address %s", err.Error())
+			return nil, ignterrors.Criticalf("invalid coordinator bech32 address %s", err.Error())
 		}
 		if err = k.distrKeeper.FundCommunityPool(ctx, creationFee, coordAddr); err != nil {
 			return nil, err

@@ -6,8 +6,8 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -37,7 +37,7 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
 	reached, err := types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx))
 	if err != nil {
-		return nil, spnerrors.Criticalf("verified shares are invalid %s", err.Error())
+		return nil, ignterrors.Criticalf("verified shares are invalid %s", err.Error())
 	}
 	if reached {
 		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
@@ -46,7 +46,7 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 	// Mint vouchers to the coordinator account
 	vouchers, err := types.SharesToVouchers(msg.Shares, msg.CampaignID)
 	if err != nil {
-		return nil, spnerrors.Criticalf("verified shares are invalid %s", err.Error())
+		return nil, ignterrors.Criticalf("verified shares are invalid %s", err.Error())
 	}
 	if err := k.bankKeeper.MintCoins(ctx, types.ModuleName, vouchers); err != nil {
 		return nil, sdkerrors.Wrap(types.ErrVouchersMinting, err.Error())
@@ -54,11 +54,11 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 
 	receiver, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return nil, spnerrors.Criticalf("can't parse coordinator address %s", err.Error())
+		return nil, ignterrors.Criticalf("can't parse coordinator address %s", err.Error())
 	}
 
 	if err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, receiver, vouchers); err != nil {
-		return nil, spnerrors.Criticalf("can't send minted coins %s", err.Error())
+		return nil, ignterrors.Criticalf("can't send minted coins %s", err.Error())
 	}
 
 	k.SetCampaign(ctx, campaign)

@@ -4,9 +4,9 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 	"github.com/stretchr/testify/require"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
@@ -133,7 +133,7 @@ func TestMsgSettleRequest(t *testing.T) {
 				RequestID: invalidContentRequestID,
 				Approve:   true,
 			},
-			err: spnerrors.ErrCritical,
+			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "should allow approving request from coordinator",
