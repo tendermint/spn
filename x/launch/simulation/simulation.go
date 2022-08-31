@@ -412,7 +412,7 @@ func SimulateMsgTriggerLaunch(ak types.AccountKeeper, bk types.BankKeeper, k kee
 		if err != nil {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgTriggerLaunch, err.Error()), nil, nil
 		}
-		msg := sample.MsgTriggerLaunch(r, simAccount.Address.String(), chain.LaunchID)
+		msg := sample.MsgTriggerLaunch(r, simAccount.Address.String(), chain.LaunchID, ctx.BlockTime())
 		txCtx := sdksimulation.OperationInput{
 			R:               r,
 			App:             app,
@@ -492,7 +492,7 @@ func SimulateMsgRevertLaunch(ak types.AccountKeeper, bk types.BankKeeper, k keep
 		}
 
 		// Wait for a specific delay once the chain is launched
-		if ctx.BlockTime().Unix() < chain.LaunchTimestamp+k.RevertDelay(ctx) {
+		if ctx.BlockTime().Before(chain.LaunchTime.Add(k.RevertDelay(ctx))) {
 			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRevertLaunch, "invalid chain launch timestamp"), nil, nil
 		}
 

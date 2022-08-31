@@ -3,6 +3,7 @@ package keeper
 import (
 	"encoding/binary"
 	"fmt"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -39,7 +40,7 @@ func (k Keeper) CreateNewChain(
 		CampaignID:      campaignID,
 		IsMainnet:       isMainnet,
 		LaunchTriggered: false,
-		LaunchTimestamp: 0,
+		LaunchTime:      time.Unix(0, 0).UTC(),
 		Metadata:        metadata,
 	}
 
