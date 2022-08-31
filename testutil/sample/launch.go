@@ -289,15 +289,14 @@ func MsgRevertLaunch(coordinator string, launchID uint64) launch.MsgRevertLaunch
 
 // MsgTriggerLaunch returns a sample MsgTriggerLaunch
 func MsgTriggerLaunch(r *rand.Rand, coordinator string, launchID uint64, currentTime time.Time) launch.MsgTriggerLaunch {
-	launchTimeRange := launch.DefaultMaxLaunchTime - launch.DefaultMinLaunchTime
-	remainingTime := r.Int63n(launchTimeRange) + launch.DefaultMinLaunchTime
-
-	// TODO: transform to duration
+	// Get a random duration between min and max launch time
+	launchTimeRange := launch.DefaultMaxLaunchTime.Milliseconds() - launch.DefaultMinLaunchTime.Milliseconds()
+	remainingTime := launch.DefaultMinLaunchTime + time.Millisecond*time.Duration(r.Int63n(launchTimeRange))
 
 	return *launch.NewMsgTriggerLaunch(
 		coordinator,
 		launchID,
-		currentTime,
+		currentTime.Add(remainingTime),
 	)
 }
 
@@ -319,8 +318,8 @@ func GenesisHash(r *rand.Rand) string {
 
 // LaunchParams returns a sample of params for the launch module
 func LaunchParams(r *rand.Rand) launch.Params {
-	maxLaunchTime := launch.DefaultMaxLaunchTime - r.Int63n(10)
-	minLaunchTime := r.Int63n(10) + launch.DefaultMinLaunchTime
+	maxLaunchTime := launch.DefaultMaxLaunchTime - time.Second*time.Duration(r.Int63n(10))
+	minLaunchTime := launch.DefaultMinLaunchTime + time.Second*time.Duration(r.Int63n(10))
 
 	// assign random small amount of staking denom
 	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))

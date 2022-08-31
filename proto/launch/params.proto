@@ -12,7 +12,7 @@ message Params {
   option (gogoproto.goproto_stringer) = false;
 
   LaunchTimeRange launchTimeRange                    = 1 [(gogoproto.nullable) = false];
-  int64           revertDelay                        = 2;
+  google.protobuf.Duration revertDelay               = 2 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
   repeated cosmos.base.v1beta1.Coin chainCreationFee = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",

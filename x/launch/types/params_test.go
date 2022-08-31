@@ -75,7 +75,7 @@ func TestValidateLaunchTimeRange(t *testing.T) {
 		},
 		{
 			name:            "should validate valid launch time range",
-			launchTimeRange: NewLaunchTimeRange(0, int64(time.Hour.Seconds()*24)),
+			launchTimeRange: NewLaunchTimeRange(0, time.Hour*24),
 		},
 	}
 	for _, tt := range tests {
@@ -109,7 +109,7 @@ func TestValidateRevertDelay(t *testing.T) {
 		},
 		{
 			name:        "should prevent validate revert delay not positive",
-			revertDelay: int64(0),
+			revertDelay: time.Duration(0),
 			err:         errors.New("revert delay parameter must be positive"),
 		},
 		{
@@ -118,7 +118,7 @@ func TestValidateRevertDelay(t *testing.T) {
 		},
 		{
 			name:        "should validate valid revert delay",
-			revertDelay: int64(time.Minute.Seconds() * 1),
+			revertDelay: time.Minute,
 		},
 	}
 	for _, tt := range tests {
