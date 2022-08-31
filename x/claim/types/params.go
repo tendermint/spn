@@ -9,9 +9,7 @@ import (
 
 var _ paramtypes.ParamSet = (*Params)(nil)
 
-var (
-	KeyDecayInformation = []byte("DecayInformation")
-)
+var KeyDecayInformation = []byte("DecayInformation")
 
 // ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {
