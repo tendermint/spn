@@ -2,7 +2,7 @@ package cli
 
 import (
 	"encoding/base64"
-	"io/ioutil"
+	"os"
 	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -31,7 +31,7 @@ func CmdRequestAddValidator() *cobra.Command {
 			}
 
 			// Read gentxFile
-			gentxBytes, err := ioutil.ReadFile(args[1])
+			gentxBytes, err := os.ReadFile(args[1])
 			if err != nil {
 				return err
 			}

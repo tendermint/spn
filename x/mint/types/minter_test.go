@@ -4,9 +4,9 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNextInflation(t *testing.T) {
@@ -78,7 +78,7 @@ func TestBlockProvision(t *testing.T) {
 		provisions := minter.BlockProvision(params)
 
 		expProvisions := sdk.NewCoin(params.MintDenom,
-			sdk.NewInt(tc.expProvisions))
+			sdkmath.NewInt(tc.expProvisions))
 
 		require.True(t, expProvisions.IsEqual(provisions),
 			"test: %v\n\tExp: %v\n\tGot: %v\n",
@@ -87,7 +87,7 @@ func TestBlockProvision(t *testing.T) {
 }
 
 // Benchmarking :)
-// previously using sdk.Int operations:
+// previously using sdkerrortypes.ErrKey operations:
 // BenchmarkBlockProvision-4 5000000 220 ns/op
 //
 // using sdk.Dec operations: (current implementation)
@@ -127,7 +127,7 @@ func BenchmarkNextAnnualProvisions(b *testing.B) {
 	b.ReportAllocs()
 	minter := InitialMinter(sdk.NewDecWithPrec(1, 1))
 	params := DefaultParams()
-	totalSupply := sdk.NewInt(100000000000000)
+	totalSupply := sdkmath.NewInt(100000000000000)
 
 	// run the NextAnnualProvisions function b.N times
 	for n := 0; n < b.N; n++ {

@@ -1,8 +1,9 @@
 package types
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const TypeMsgRevertLaunch = "revert_launch"
@@ -40,7 +41,7 @@ func (msg *MsgRevertLaunch) GetSignBytes() []byte {
 func (msg *MsgRevertLaunch) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
 	return nil

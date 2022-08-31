@@ -1,8 +1,8 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	connectiontypes "github.com/cosmos/ibc-go/v5/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
 

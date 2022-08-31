@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -108,7 +109,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				airdropSupply: sample.Coin(r),
 				claimRecord: types.ClaimRecord{
 					Address:           addr[0],
-					Claimable:         sdk.OneInt(),
+					Claimable:         sdkmath.OneInt(),
 					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
@@ -142,7 +143,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[1],
-					Claimable:         sdk.OneInt(),
+					Claimable:         sdkmath.OneInt(),
 					CompletedMissions: []uint64{1},
 				},
 				params: types.DefaultParams(),
@@ -161,7 +162,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[2],
-					Claimable: sdk.NewIntFromUint64(10000),
+					Claimable: sdkmath.NewIntFromUint64(10000),
 				},
 				params: types.DefaultParams(),
 			},
@@ -179,7 +180,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   "invalid",
-					Claimable: sdk.OneInt(),
+					Claimable: sdkmath.OneInt(),
 				},
 				params: types.DefaultParams(),
 			},
@@ -197,7 +198,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[3],
-					Claimable: sdk.NewIntFromUint64(1000),
+					Claimable: sdkmath.NewIntFromUint64(1000),
 				},
 				params: types.DefaultParams(),
 			},
@@ -215,7 +216,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[4],
-					Claimable: sdk.NewIntFromUint64(1000),
+					Claimable: sdkmath.NewIntFromUint64(1000),
 				},
 				params: types.DefaultParams(),
 			},
@@ -233,7 +234,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[5],
-					Claimable: sdk.NewIntFromUint64(500),
+					Claimable: sdkmath.NewIntFromUint64(500),
 				},
 				params: types.DefaultParams(),
 			},
@@ -251,7 +252,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[6],
-					Claimable: sdk.NewIntFromUint64(201),
+					Claimable: sdkmath.NewIntFromUint64(201),
 				},
 				params: types.DefaultParams(),
 			},
@@ -269,7 +270,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[7],
-					Claimable: sdk.ZeroInt(),
+					Claimable: sdkmath.ZeroInt(),
 				},
 				params: types.DefaultParams(),
 			},
@@ -287,7 +288,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:           addr[8],
-					Claimable:         sdk.NewIntFromUint64(10000),
+					Claimable:         sdkmath.NewIntFromUint64(10000),
 					CompletedMissions: []uint64{0, 1, 2, 4, 5, 6},
 				},
 				params: types.DefaultParams(),
@@ -306,7 +307,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[9],
-					Claimable: sdk.NewIntFromUint64(1000),
+					Claimable: sdkmath.NewIntFromUint64(1000),
 				},
 				params: types.NewParams(types.NewEnabledDecay(
 					time.Unix(1000, 0),
@@ -328,7 +329,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[10],
-					Claimable: sdk.NewIntFromUint64(1000),
+					Claimable: sdkmath.NewIntFromUint64(1000),
 				},
 				params: types.NewParams(types.NewEnabledDecay(
 					time.Unix(1000, 0),
@@ -350,7 +351,7 @@ func TestKeeper_CompleteMission(t *testing.T) {
 				},
 				claimRecord: types.ClaimRecord{
 					Address:   addr[11],
-					Claimable: sdk.NewIntFromUint64(1000),
+					Claimable: sdkmath.NewIntFromUint64(1000),
 				},
 				params: types.NewParams(types.NewEnabledDecay(
 					time.Unix(1000, 0),

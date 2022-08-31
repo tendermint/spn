@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/tendermint/spn/testutil/sample"
-
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	tc "github.com/tendermint/spn/testutil/constructor"
+	"github.com/tendermint/spn/testutil/sample"
 	campaign "github.com/tendermint/spn/x/campaign/types"
 )
 
@@ -36,8 +36,8 @@ func TestNewShares(t *testing.T) {
 
 func TestNewSharesFromCoins(t *testing.T) {
 	shares := campaign.NewSharesFromCoins(sdk.NewCoins(
-		sdk.NewCoin("foo", sdk.NewInt(100)),
-		sdk.NewCoin("bar", sdk.NewInt(200)),
+		sdk.NewCoin("foo", sdkmath.NewInt(100)),
+		sdk.NewCoin("bar", sdkmath.NewInt(200)),
 	))
 	require.Equal(t, shares, tc.Shares(t, "100foo,200bar"))
 }
@@ -45,8 +45,8 @@ func TestNewSharesFromCoins(t *testing.T) {
 func TestCheckShares(t *testing.T) {
 	require.NoError(t, campaign.CheckShares(tc.Shares(t, "100foo,200bar")))
 	require.Error(t, campaign.CheckShares(campaign.Shares(sdk.NewCoins(
-		sdk.NewCoin("foo", sdk.NewInt(100)),
-		sdk.NewCoin("s/bar", sdk.NewInt(200)),
+		sdk.NewCoin("foo", sdkmath.NewInt(100)),
+		sdk.NewCoin("s/bar", sdkmath.NewInt(200)),
 	))))
 }
 
@@ -163,8 +163,8 @@ func TestShareIsTotalReached(t *testing.T) {
 		{
 			desc: "should return error if shares are invalid",
 			shares: campaign.NewSharesFromCoins(sdk.Coins{
-				sdk.NewCoin("foo", sdk.NewIntFromUint64(500)),
-				sdk.NewCoin("foo", sdk.NewIntFromUint64(500)),
+				sdk.NewCoin("foo", sdkmath.NewIntFromUint64(500)),
+				sdk.NewCoin("foo", sdkmath.NewIntFromUint64(500)),
 			}),
 			maxTotalShares: 1000,
 			reached:        false,
@@ -173,7 +173,7 @@ func TestShareIsTotalReached(t *testing.T) {
 		{
 			desc: "should return error if shares have invalid format",
 			shares: campaign.Shares(sdk.Coins{
-				sdk.NewCoin("foo", sdk.NewIntFromUint64(500)),
+				sdk.NewCoin("foo", sdkmath.NewIntFromUint64(500)),
 			}),
 			maxTotalShares: 1000,
 			reached:        false,

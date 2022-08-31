@@ -1,8 +1,9 @@
 package types
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const TypeMsgParticipate = "participate"
@@ -41,7 +42,7 @@ func (msg *MsgParticipate) GetSignBytes() []byte {
 func (msg *MsgParticipate) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Participant)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid participant address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid participant address (%s)", err)
 	}
 	return nil
 }

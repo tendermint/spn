@@ -1,9 +1,11 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"time"
+
+	sdkerrors "cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const TypeMsgTriggerLaunch = "trigger_launch"
@@ -42,7 +44,7 @@ func (msg *MsgTriggerLaunch) GetSignBytes() []byte {
 func (msg *MsgTriggerLaunch) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
 	if msg.LaunchTime.IsZero() {

@@ -3,7 +3,7 @@ package types_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -24,7 +24,7 @@ func TestMsgRequestAddValidator_ValidateBasic(t *testing.T) {
 	invalidSelfDelegation := validMsg
 	invalidSelfDelegation.SelfDelegation.Denom = ""
 	zeroDelegation := validMsg
-	zeroDelegation.SelfDelegation.Amount = sdk.NewInt(0)
+	zeroDelegation.SelfDelegation.Amount = sdkmath.ZeroInt()
 
 	for _, tc := range []struct {
 		name  string

@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
 	"github.com/tendermint/spn/x/participation/types"
@@ -67,7 +68,7 @@ func (k msgServer) Participate(goCtx context.Context, msg *types.MsgParticipate)
 	}
 
 	// set used allocations
-	numUsedAllocations := sdk.ZeroInt()
+	numUsedAllocations := sdkmath.ZeroInt()
 	used, found := k.GetUsedAllocations(ctx, msg.Participant)
 	if found {
 		numUsedAllocations = used.NumAllocations

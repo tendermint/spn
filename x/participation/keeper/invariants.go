@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tendermint/spn/x/participation/types"
@@ -30,7 +31,7 @@ func MismatchUsedAllocationsInvariant(k Keeper) sdk.Invariant {
 		all := k.GetAllUsedAllocations(ctx)
 		for _, usedAllocs := range all {
 			auctionUsedAllocs := k.GetAllAuctionUsedAllocationsByAddress(ctx, usedAllocs.Address)
-			sum := sdk.ZeroInt()
+			sum := sdkmath.ZeroInt()
 			for _, auction := range auctionUsedAllocs {
 				if !auction.Withdrawn {
 					sum = sum.Add(auction.NumAllocations)

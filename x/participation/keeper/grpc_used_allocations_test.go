@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/stretchr/testify/require"
@@ -46,7 +47,7 @@ func TestUsedAllocationsQuerySingle(t *testing.T) {
 			request: &types.QueryGetUsedAllocationsRequest{
 				Address: validAddr,
 			},
-			response: &types.QueryGetUsedAllocationsResponse{UsedAllocations: types.UsedAllocations{Address: validAddr, NumAllocations: sdk.ZeroInt()}},
+			response: &types.QueryGetUsedAllocationsResponse{UsedAllocations: types.UsedAllocations{Address: validAddr, NumAllocations: sdkmath.ZeroInt()}},
 		},
 		{
 			desc: "InvalidAddress",

@@ -4,11 +4,11 @@ import (
 	"testing"
 	"time"
 
-	tc "github.com/tendermint/spn/testutil/constructor"
-
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 )
@@ -70,7 +70,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 		{
 			name: "total shares with invalid coins",
 			option: *types.NewShareDelayedVesting(
-				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}}),
+				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}}),
 				sample.Shares(r),
 				time.Now().Unix(),
 			),
@@ -80,7 +80,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			name: "vesting with invalid coins",
 			option: *types.NewShareDelayedVesting(
 				sample.Shares(r),
-				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdk.NewInt(10)}}),
+				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}}),
 				time.Now().Unix(),
 			),
 			valid: false,

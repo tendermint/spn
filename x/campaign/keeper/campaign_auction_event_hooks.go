@@ -3,8 +3,9 @@ package keeper
 import (
 	"time"
 
+	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
@@ -186,7 +187,7 @@ func (h CampaignAuctionEventHooks) BeforeAllowedBidderUpdated(
 	_ sdk.Context,
 	_ uint64,
 	_ sdk.AccAddress,
-	_ sdk.Int,
+	_ sdkmath.Int,
 ) {
 }
 
@@ -194,7 +195,7 @@ func (h CampaignAuctionEventHooks) BeforeAllowedBidderUpdated(
 func (h CampaignAuctionEventHooks) BeforeSellingCoinsAllocated(
 	_ sdk.Context,
 	_ uint64,
-	_ map[string]sdk.Int,
-	_ map[string]sdk.Int,
+	_ map[string]sdkmath.Int,
+	_ map[string]sdkmath.Int,
 ) {
 }

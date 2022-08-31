@@ -3,8 +3,9 @@ package keeper
 import (
 	"errors"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	clienttypes "github.com/cosmos/ibc-go/v5/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v5/modules/core/24-host"
@@ -52,7 +53,7 @@ func (k Keeper) TransmitMonitoringPacket(
 
 	packetBytes, err := types.ModuleCdc.MarshalJSON(&modulePacket)
 	if err != nil {
-		return sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, "cannot marshal the packet: "+err.Error())
+		return sdkerrors.Wrap(sdkerrortypes.ErrJSONMarshal, "cannot marshal the packet: "+err.Error())
 	}
 
 	packet := channeltypes.NewPacket(
