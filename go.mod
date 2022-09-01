@@ -5,11 +5,8 @@ go 1.18
 require (
 	cosmossdk.io/errors v1.0.0-beta.7
 	cosmossdk.io/math v1.0.0-beta.3
-<<<<<<< HEAD
 	github.com/aws/smithy-go v1.8.0
-=======
 	github.com/cosmos/cosmos-proto v1.0.0-alpha7
->>>>>>> develop
 	github.com/cosmos/cosmos-sdk v0.46.1
 	github.com/cosmos/ibc-go/v5 v5.0.0-rc0
 	github.com/gogo/protobuf v1.3.3

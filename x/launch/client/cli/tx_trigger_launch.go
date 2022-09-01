@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/aws/smithy-go/time"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
