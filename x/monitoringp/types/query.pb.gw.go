@@ -328,13 +328,13 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_ConsumerClientID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringp", "consumer_client_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ConsumerClientID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringp", "consumer_client_id"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_ConnectionChannelID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringp", "connection_channel_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ConnectionChannelID_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringp", "connection_channel_id"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_MonitoringInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringp", "monitoring_info"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MonitoringInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringp", "monitoring_info"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringp", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "monitoringp", "params"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (

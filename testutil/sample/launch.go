@@ -37,6 +37,7 @@ func Chain(r *rand.Rand, id, coordinatorID uint64) launch.Chain {
 		LaunchTime:      ZeroTime(),
 		LaunchTriggered: false,
 		InitialGenesis:  launch.NewDefaultInitialGenesis(),
+		AccountBalance:  Coins(r),
 		Metadata:        Metadata(r, 20),
 	}
 }
@@ -163,6 +164,7 @@ func MsgCreateChain(r *rand.Rand, coordAddress, genesisURL string, hasCampaign b
 		genesisHash,
 		hasCampaign,
 		campaignID,
+		Coins(r),
 		Metadata(r, 20),
 	)
 }
