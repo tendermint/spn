@@ -47,8 +47,5 @@ func (msg *MsgTriggerLaunch) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
-	if msg.LaunchTime.IsZero() {
-		return sdkerrors.Wrap(ErrInvalidLaunchTime, "launch time must be positive")
-	}
 	return nil
 }

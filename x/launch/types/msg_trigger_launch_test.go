@@ -28,11 +28,6 @@ func TestMsgTriggerLaunch_ValidateBasic(t *testing.T) {
 			msg:   *types.NewMsgTriggerLaunch("invalid", launchID, sample.Time(r)),
 			valid: false,
 		},
-		{
-			desc:  "should prevent validate message with remaining time less than 0",
-			msg:   *types.NewMsgTriggerLaunch(addr, launchID, sample.ZeroTime()),
-			valid: false,
-		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.msg.ValidateBasic()

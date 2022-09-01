@@ -57,7 +57,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 		chain := sample.Chain(r, launchID, coordID)
 		chain.LaunchTriggered = launchTriggered
 		if launchTriggered {
-			chain.LaunchTimestamp = sample.Duration(r).Milliseconds()
+			chain.LaunchTime = sample.Time(r)
 		}
 		return &chain
 	}

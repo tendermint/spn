@@ -12,11 +12,6 @@ func (m Chain) Validate() error {
 		return err
 	}
 
-	// LaunchTriggered means a non zera launch timestamp is defined
-	if m.LaunchTriggered && m.LaunchTime.IsZero() {
-		return errors.New("launch timestamp must be defined when launch is triggered")
-	}
-
 	// A chain that is a mainnet is always associated to a campaign
 	if m.IsMainnet && !m.HasCampaign {
 		return errors.New("chain is a mainnet but not associated to a campaign")
