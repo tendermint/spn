@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/rand"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -33,6 +34,7 @@ func Chain(r *rand.Rand, id, coordinatorID uint64) launch.Chain {
 		CreatedAt:       Duration(r).Milliseconds(),
 		SourceURL:       String(r, 10),
 		SourceHash:      String(r, 10),
+		LaunchTime:      ZeroTime(),
 		LaunchTriggered: false,
 		InitialGenesis:  launch.NewDefaultInitialGenesis(),
 		AccountBalance:  Coins(r),
@@ -289,13 +291,15 @@ func MsgRevertLaunch(coordinator string, launchID uint64) launch.MsgRevertLaunch
 }
 
 // MsgTriggerLaunch returns a sample MsgTriggerLaunch
-func MsgTriggerLaunch(r *rand.Rand, coordinator string, launchID uint64) launch.MsgTriggerLaunch {
-	launchTimeRange := launch.DefaultMaxLaunchTime - launch.DefaultMinLaunchTime
-	launchTime := r.Int63n(launchTimeRange) + launch.DefaultMinLaunchTime
+func MsgTriggerLaunch(r *rand.Rand, coordinator string, launchID uint64, currentTime time.Time) launch.MsgTriggerLaunch {
+	// Get a random duration between min and max launch time
+	launchTimeRange := launch.DefaultMaxLaunchTime.Milliseconds() - launch.DefaultMinLaunchTime.Milliseconds()
+	remainingTime := launch.DefaultMinLaunchTime + time.Millisecond*time.Duration(r.Int63n(launchTimeRange))
+
 	return *launch.NewMsgTriggerLaunch(
 		coordinator,
 		launchID,
-		launchTime,
+		currentTime.Add(remainingTime),
 	)
 }
 
@@ -317,8 +321,8 @@ func GenesisHash(r *rand.Rand) string {
 
 // LaunchParams returns a sample of params for the launch module
 func LaunchParams(r *rand.Rand) launch.Params {
-	maxLaunchTime := launch.DefaultMaxLaunchTime - r.Int63n(10)
-	minLaunchTime := r.Int63n(10) + launch.DefaultMinLaunchTime
+	maxLaunchTime := launch.DefaultMaxLaunchTime - time.Second*time.Duration(r.Int63n(10))
+	minLaunchTime := launch.DefaultMinLaunchTime + time.Second*time.Duration(r.Int63n(10))
 
 	// assign random small amount of staking denom
 	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))

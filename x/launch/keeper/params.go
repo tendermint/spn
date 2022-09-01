@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tendermint/spn/x/launch/types"
@@ -13,7 +15,7 @@ func (k Keeper) LaunchTimeRange(ctx sdk.Context) (res types.LaunchTimeRange) {
 }
 
 // RevertDelay returns the revert delay param
-func (k Keeper) RevertDelay(ctx sdk.Context) (res int64) {
+func (k Keeper) RevertDelay(ctx sdk.Context) (res time.Duration) {
 	k.paramstore.Get(ctx, types.KeyRevertDelay, &res)
 	return
 }

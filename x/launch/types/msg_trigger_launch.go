@@ -1,6 +1,8 @@
 package types
 
 import (
+	"time"
+
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
@@ -10,11 +12,11 @@ const TypeMsgTriggerLaunch = "trigger_launch"
 
 var _ sdk.Msg = &MsgTriggerLaunch{}
 
-func NewMsgTriggerLaunch(coordinator string, launchID uint64, remainingTime int64) *MsgTriggerLaunch {
+func NewMsgTriggerLaunch(coordinator string, launchID uint64, launchTime time.Time) *MsgTriggerLaunch {
 	return &MsgTriggerLaunch{
-		Coordinator:   coordinator,
-		LaunchID:      launchID,
-		RemainingTime: remainingTime,
+		Coordinator: coordinator,
+		LaunchID:    launchID,
+		LaunchTime:  launchTime,
 	}
 }
 
@@ -45,8 +47,5 @@ func (msg *MsgTriggerLaunch) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
 	}
 
-	if msg.RemainingTime <= 0 {
-		return sdkerrors.Wrapf(ErrRemainingTimeNotPositive, "value must be greater than 0, %v <= 0", msg.RemainingTime)
-	}
 	return nil
 }

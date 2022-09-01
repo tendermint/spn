@@ -2,8 +2,8 @@ package keeper_test
 
 import (
 	"testing"
+	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -15,99 +15,207 @@ import (
 func TestMsgTriggerLaunch(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 
-	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.Address(r)
-	coordAddress2 := sample.Address(r)
-	coordNoExist := sample.Address(r)
-	chainIDNoExist := uint64(1000)
+	type inputState struct {
+		noChain       bool
+		noCoordinator bool
+		chain         types.Chain
+		coordinator   profiletypes.Coordinator
+		blockTime     time.Time
+		blockHeight   int64
+	}
+	sampleTime := sample.Time(r)
+	sampleAddr := sample.Address(r)
 
-	launchTimeTooLow := types.DefaultMinLaunchTime - 1
-	launchTimeTooHigh := types.DefaultMaxLaunchTime + 1
-
-	// Create coordinators
-	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
-	_, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordAddress2)
-	_, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-	require.NoError(t, err)
-
-	// Create chains
-	msgCreateChain := sample.MsgCreateChain(r, coordAddress, "", false, 0)
-	res, err := ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	chainID := res.LaunchID
-
-	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	chainID2 := res.LaunchID
-
-	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
-	require.NoError(t, err)
-	alreadyLaunched := res.LaunchID
-
-	// Set a chain as already launched
-	chain, found := tk.LaunchKeeper.GetChain(sdkCtx, alreadyLaunched)
-	require.True(t, found)
-	chain.LaunchTriggered = true
-	tk.LaunchKeeper.SetChain(sdkCtx, chain)
-
-	for _, tc := range []struct {
-		name string
-		msg  types.MsgTriggerLaunch
-		err  error
+	for _, tt := range []struct {
+		name       string
+		inputState inputState
+		msg        types.MsgTriggerLaunch
+		err        error
 	}{
 		{
 			name: "should allow triggering a chain launch",
-			msg:  sample.MsgTriggerLaunch(r, coordAddress, chainID),
+			inputState: inputState{
+				chain: sample.Chain(r, 0, 0),
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 0,
+					Address:       sampleAddr,
+					Active:        true,
+				},
+				blockTime:   sampleTime,
+				blockHeight: 100,
+			},
+			msg: types.MsgTriggerLaunch{
+				LaunchID:    0,
+				LaunchTime:  sampleTime.Add(types.DefaultMinLaunchTime),
+				Coordinator: sampleAddr,
+			},
+		},
+		{
+			name: "should allow triggering a chain launch  with maximum launch time",
+			inputState: inputState{
+				chain: sample.Chain(r, 10, 10),
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 10,
+					Address:       sampleAddr,
+					Active:        true,
+				},
+				blockTime:   sampleTime,
+				blockHeight: 5000,
+			},
+			msg: types.MsgTriggerLaunch{
+				LaunchID:    10,
+				LaunchTime:  sampleTime.Add(types.DefaultMaxLaunchTime),
+				Coordinator: sampleAddr,
+			},
 		},
 		{
 			name: "should prevent triggering a chain launch from a non existing chain",
-			msg:  sample.MsgTriggerLaunch(r, coordAddress, chainIDNoExist),
-			err:  types.ErrChainNotFound,
+			inputState: inputState{
+				noChain: true,
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 1,
+					Address:       sampleAddr,
+					Active:        true,
+				},
+				blockTime:   sampleTime,
+				blockHeight: 100,
+			},
+			msg: types.MsgTriggerLaunch{
+				LaunchID:    1000,
+				LaunchTime:  sampleTime.Add(types.DefaultMinLaunchTime),
+				Coordinator: sampleAddr,
+			},
+			err: types.ErrChainNotFound,
 		},
 		{
 			name: "should prevent triggering a chain launch from a non existent coordinator",
-			msg:  sample.MsgTriggerLaunch(r, coordNoExist, chainID2),
-			err:  profiletypes.ErrCoordAddressNotFound,
+			inputState: inputState{
+				chain:         sample.Chain(r, 2, 2),
+				noCoordinator: true,
+				blockTime:     sampleTime,
+				blockHeight:   100,
+			},
+			msg: types.MsgTriggerLaunch{
+				LaunchID:    2,
+				LaunchTime:  sampleTime.Add(types.DefaultMinLaunchTime),
+				Coordinator: sample.Address(r),
+			},
+			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
 			name: "should prevent triggering a chain launch from an invalid coordinator",
-			msg:  sample.MsgTriggerLaunch(r, coordAddress2, chainID2),
-			err:  profiletypes.ErrCoordInvalid,
+			inputState: inputState{
+				chain: sample.Chain(r, 3, 1000),
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 3,
+					Address:       sampleAddr,
+					Active:        true,
+				},
+				blockTime:   sampleTime,
+				blockHeight: 100,
+			},
+			msg: types.MsgTriggerLaunch{
+				LaunchID:    3,
+				LaunchTime:  sampleTime.Add(types.DefaultMinLaunchTime),
+				Coordinator: sampleAddr,
+			},
+			err: profiletypes.ErrCoordInvalid,
 		},
 		{
 			name: "should prevent triggering a chain launch with chain launch already triggered",
-			msg:  sample.MsgTriggerLaunch(r, coordAddress, alreadyLaunched),
-			err:  types.ErrTriggeredLaunch,
+			inputState: inputState{
+				chain: types.Chain{
+					LaunchID:        5,
+					CoordinatorID:   5,
+					LaunchTriggered: true,
+				},
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 5,
+					Address:       sampleAddr,
+					Active:        true,
+				},
+				blockTime:   sampleTime,
+				blockHeight: 100,
+			},
+			msg: types.MsgTriggerLaunch{
+				LaunchID:    5,
+				LaunchTime:  sampleTime.Add(types.DefaultMinLaunchTime),
+				Coordinator: sampleAddr,
+			},
+			err: types.ErrTriggeredLaunch,
 		},
 		{
 			name: "should prevent triggering a chain launch with launch time too low",
-			msg:  *types.NewMsgTriggerLaunch(coordAddress, chainID2, launchTimeTooLow),
-			err:  types.ErrLaunchTimeTooLow,
+			inputState: inputState{
+				chain: sample.Chain(r, 6, 6),
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 6,
+					Address:       sampleAddr,
+					Active:        true,
+				},
+				blockTime:   sampleTime,
+				blockHeight: 100,
+			},
+			msg: types.MsgTriggerLaunch{
+				LaunchID:    6,
+				LaunchTime:  sampleTime.Add(types.DefaultMinLaunchTime - time.Second),
+				Coordinator: sampleAddr,
+			},
+			err: types.ErrLaunchTimeTooLow,
 		},
 		{
 			name: "should prevent triggering a chain launch with launch time too high",
-			msg:  *types.NewMsgTriggerLaunch(coordAddress, chainID2, launchTimeTooHigh),
-			err:  types.ErrLaunchTimeTooHigh,
+			inputState: inputState{
+				chain: sample.Chain(r, 7, 7),
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 7,
+					Address:       sampleAddr,
+					Active:        true,
+				},
+				blockTime:   sampleTime,
+				blockHeight: 100,
+			},
+			msg: types.MsgTriggerLaunch{
+				LaunchID:    7,
+				LaunchTime:  sampleTime.Add(types.DefaultMaxLaunchTime + time.Second),
+				Coordinator: sampleAddr,
+			},
+			err: types.ErrLaunchTimeTooHigh,
 		},
 	} {
-		t.Run(tc.name, func(t *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
+			// initialize input state
+			if !tt.inputState.noChain {
+				tk.LaunchKeeper.SetChain(sdkCtx, tt.inputState.chain)
+			}
+			if !tt.inputState.noCoordinator {
+				tk.ProfileKeeper.SetCoordinator(sdkCtx, tt.inputState.coordinator)
+				tk.ProfileKeeper.SetCoordinatorByAddress(sdkCtx, profiletypes.CoordinatorByAddress{
+					Address:       tt.inputState.coordinator.Address,
+					CoordinatorID: tt.inputState.coordinator.CoordinatorID,
+				})
+			}
+			if !tt.inputState.blockTime.IsZero() {
+				sdkCtx = sdkCtx.WithBlockTime(tt.inputState.blockTime)
+			}
+			if tt.inputState.blockHeight > 0 {
+				sdkCtx = sdkCtx.WithBlockHeight(tt.inputState.blockHeight)
+			}
+
 			// Send the message
-			_, err := ts.LaunchSrv.TriggerLaunch(ctx, &tc.msg)
-			if tc.err != nil {
-				require.ErrorIs(t, err, tc.err)
+			_, err := ts.LaunchSrv.TriggerLaunch(sdkCtx, &tt.msg)
+			if tt.err != nil {
+				require.ErrorIs(t, err, tt.err)
 				return
 			}
 			require.NoError(t, err)
 
-			// Check value
-			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, tc.msg.LaunchID)
+			// Check values
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, tt.msg.LaunchID)
 			require.True(t, found)
 			require.True(t, chain.LaunchTriggered)
-			require.EqualValues(t, testkeeper.ExampleTimestamp.Unix()+tc.msg.RemainingTime, chain.LaunchTimestamp)
-			require.EqualValues(t, testkeeper.ExampleHeight, chain.ConsumerRevisionHeight)
+			require.EqualValues(t, tt.msg.LaunchTime, chain.LaunchTime)
+			require.EqualValues(t, tt.inputState.blockHeight, chain.ConsumerRevisionHeight)
 		})
 	}
 }

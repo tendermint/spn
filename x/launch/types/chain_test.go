@@ -15,9 +15,6 @@ func TestChain_Validate(t *testing.T) {
 	invalidGenesisChainID := sample.Chain(r, 0, 0)
 	invalidGenesisChainID.GenesisChainID = "invalid"
 
-	invalidLaunchTimestamp := sample.Chain(r, 0, 0)
-	invalidLaunchTimestamp.LaunchTriggered = true
-
 	mainnetWithoutCampaign := sample.Chain(r, 0, 0)
 	mainnetWithoutCampaign.IsMainnet = true
 
@@ -38,11 +35,6 @@ func TestChain_Validate(t *testing.T) {
 		{
 			desc:  "should prevent validate invalid genesis chain ID",
 			chain: invalidGenesisChainID,
-			valid: false,
-		},
-		{
-			desc:  "should prevent validate invalid launch timestamp",
-			chain: invalidLaunchTimestamp,
 			valid: false,
 		},
 		{

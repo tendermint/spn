@@ -34,9 +34,9 @@ genesis:
         mint_denom: "uspn"
     launch:
       params:
-        revertDelay: "5"
+        revertDelay: "5s"
         launchTimeRange:
-          minLaunchTime: "5"
+          minLaunchTime: "5s"
     monitoringp:
       params:
         lastBlockHeight: "1"

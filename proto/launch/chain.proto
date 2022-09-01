@@ -2,6 +2,7 @@ syntax = "proto3";
 package tendermint.spn.launch;
 
 import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
 import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
@@ -22,7 +23,8 @@ message Chain {
   bool   isMainnet   = 10;
 
   bool  launchTriggered = 11;
-  int64 launchTimestamp = 12;
+  google.protobuf.Timestamp launchTime = 12 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
+
 
   int64 consumerRevisionHeight = 13;
 

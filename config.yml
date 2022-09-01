@@ -74,9 +74,9 @@ genesis:
             weight: "0.300000000000000000"
     launch:
       params:
-        revertDelay: "5"
+        revertDelay: "5s"
         launchTimeRange:
-          minLaunchTime: "5"
+          minLaunchTime: "5s"
     fundraising:
       params:
         auction_creation_fee:

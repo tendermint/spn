@@ -3,6 +3,7 @@ package cli
 import (
 	"strconv"
 
+	"github.com/aws/smithy-go/time"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -13,11 +14,14 @@ import (
 
 func CmdTriggerLaunch() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "trigger-launch [launch-id] [remaining-time]",
+		Use:   "trigger-launch [launch-id] [launch-time]",
 		Short: "Trigger the launch of a chain",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			remainingTime, _ := strconv.ParseInt(args[1], 10, 64)
+			launchtime, err := time.ParseDateTime(args[1])
+			if err != nil {
+				return err
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -29,7 +33,7 @@ func CmdTriggerLaunch() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgTriggerLaunch(clientCtx.GetFromAddress().String(), launchID, remainingTime)
+			msg := types.NewMsgTriggerLaunch(clientCtx.GetFromAddress().String(), launchID, launchtime)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

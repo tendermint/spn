@@ -198,3 +198,13 @@ func DurationFromRange(r *rand.Rand, min, max time.Duration) time.Duration {
 func Int(r *rand.Rand) sdkmath.Int {
 	return sdkmath.NewInt(r.Int63())
 }
+
+// Time returns a sample time
+func Time(r *rand.Rand) time.Time {
+	return time.UnixMilli(r.Int63n(1000) + 1).UTC()
+}
+
+// ZeroTime returns time.Time that represents 0
+func ZeroTime() time.Time {
+	return time.UnixMilli(0).UTC()
+}

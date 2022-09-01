@@ -3,6 +3,7 @@ package tendermint.spn.launch;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
+import "google/protobuf/duration.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -11,7 +12,7 @@ message Params {
   option (gogoproto.goproto_stringer) = false;
 
   LaunchTimeRange launchTimeRange                    = 1 [(gogoproto.nullable) = false];
-  int64           revertDelay                        = 2;
+  google.protobuf.Duration revertDelay               = 2 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
   repeated cosmos.base.v1beta1.Coin chainCreationFee = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -20,6 +21,7 @@ message Params {
 }
 
 message LaunchTimeRange {
-  int64 minLaunchTime = 1;
-  int64 maxLaunchTime = 2;
+  google.protobuf.Duration minLaunchTime = 1 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
+  google.protobuf.Duration maxLaunchTime = 2 [(gogoproto.nullable) = false, (gogoproto.stdduration) = true];
 }
+

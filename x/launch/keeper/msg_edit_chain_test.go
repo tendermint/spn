@@ -203,7 +203,7 @@ func TestMsgEditChain(t *testing.T) {
 			// Unchanged values
 			require.EqualValues(t, previousChain.CoordinatorID, chain.CoordinatorID)
 			require.EqualValues(t, previousChain.CreatedAt, chain.CreatedAt)
-			require.EqualValues(t, previousChain.LaunchTimestamp, chain.LaunchTimestamp)
+			require.EqualValues(t, previousChain.LaunchTime, chain.LaunchTime)
 			require.EqualValues(t, previousChain.LaunchTriggered, chain.LaunchTriggered)
 
 			if len(tc.msg.Metadata) > 0 {
