@@ -1,8 +1,9 @@
 package cli
 
 import (
-	"github.com/aws/smithy-go/time"
 	"strconv"
+
+	"github.com/aws/smithy-go/time"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
