@@ -197,7 +197,8 @@ func TestMsgTriggerLaunch(t *testing.T) {
 			}
 			if !tt.inputState.blockTime.IsZero() {
 				sdkCtx = sdkCtx.WithBlockTime(tt.inputState.blockTime)
-
+			}
+			if tt.inputState.blockHeight > 0 {
 				sdkCtx = sdkCtx.WithBlockHeight(tt.inputState.blockHeight)
 			}
 
