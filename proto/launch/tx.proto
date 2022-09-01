@@ -29,15 +29,20 @@ service Msg {
 }
 
 message MsgCreateChain {
-  string coordinator    = 1;
-  string genesisChainID = 2;
-  string sourceURL      = 3;
-  string sourceHash     = 4;
-  string genesisURL     = 5;
-  string genesisHash    = 6;
-  bool   hasCampaign    = 7;
-  uint64 campaignID     = 8;
-  bytes  metadata       = 9;
+  string   coordinator                                    = 1;
+  string   genesisChainID                                 = 2;
+  string   sourceURL                                      = 3;
+  string   sourceHash                                     = 4;
+  string   genesisURL                                     = 5;
+  string   genesisHash                                    = 6;
+  bool     hasCampaign                                    = 7;
+  uint64   campaignID                                     = 8;
+  repeated cosmos.base.v1beta1.Coin AccountBalance = 9 [
+    (gogoproto.nullable)     = false,
+    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
+  ];
+  bytes metadata = 10;
 }
 
 message MsgCreateChainResponse {
@@ -45,11 +50,11 @@ message MsgCreateChainResponse {
 }
 
 message MsgEditChain {
-  string coordinator   = 1;
-  uint64 launchID      = 2;
-  bool   setCampaignID = 3;
-  uint64 campaignID    = 4;
-  bytes  metadata      = 5;
+  string   coordinator                                    = 1;
+  uint64   launchID                                       = 2;
+  bool     setCampaignID                                  = 3;
+  uint64   campaignID                                     = 4;
+  bytes metadata = 5;
 }
 
 message MsgEditChainResponse {}

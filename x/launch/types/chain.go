@@ -22,5 +22,10 @@ func (m Chain) Validate() error {
 		return errors.New("chain is a mainnet but not associated to a campaign")
 	}
 
+	// Coins must be valid
+	if !m.AccountBalance.IsValid() {
+		return errors.New("default account balance sdk.Coins is not valid")
+	}
+
 	return nil
 }

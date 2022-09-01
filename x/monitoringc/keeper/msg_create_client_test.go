@@ -59,6 +59,7 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		"",
 		false,
 		0,
+		sample.Coins(r),
 		sample.Metadata(r, 20),
 	))
 	require.NoError(t, err)

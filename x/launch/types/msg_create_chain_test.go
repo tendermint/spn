@@ -3,6 +3,8 @@ package types_test
 import (
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -19,6 +21,9 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 
 	msgInvalidMetadataLen := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
 	msgInvalidMetadataLen.Metadata = sample.Bytes(r, spntypes.MaxMetadataLength+1)
+
+	msgInvalidCoins := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
+	msgInvalidCoins.AccountBalance = sdk.Coins{sdk.Coin{Denom: "invalid", Amount: sdk.NewInt(-1)}}
 
 	for _, tc := range []struct {
 		desc  string
@@ -53,6 +58,11 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 		{
 			desc:  "should prevent validate message with invalid metadata length",
 			msg:   msgInvalidMetadataLen,
+			valid: false,
+		},
+		{
+			desc:  "should prevent chain with invalid coins structure",
+			msg:   msgInvalidCoins,
 			valid: false,
 		},
 	} {
