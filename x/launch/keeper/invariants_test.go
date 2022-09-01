@@ -44,7 +44,7 @@ func TestInvalidChainInvariant(t *testing.T) {
 	t.Run("should break with an invalid chain", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		chain := sample.Chain(r, 0, 0)
-		chain.LaunchTriggered = true
+		chain.GenesisChainID = "_invalid_"
 		_ = tk.LaunchKeeper.AppendChain(ctx, chain)
 		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
 		require.True(t, broken, msg)
