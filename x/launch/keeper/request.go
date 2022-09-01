@@ -7,8 +7,8 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
@@ -119,7 +119,7 @@ func CheckAccount(ctx sdk.Context, k Keeper, launchID uint64, address string) (b
 	_, foundGenesis := k.GetGenesisAccount(ctx, launchID, address)
 	_, foundVesting := k.GetVestingAccount(ctx, launchID, address)
 	if foundGenesis && foundVesting {
-		return false, spnerrors.Critical(
+		return false, ignterrors.Critical(
 			fmt.Sprintf("account %s for chain %d found in vesting and genesis accounts",
 				address, launchID),
 		)
@@ -228,7 +228,7 @@ func CheckRequest(
 	request types.Request,
 ) error {
 	if err := request.Content.Validate(); err != nil {
-		return spnerrors.Critical(err.Error())
+		return ignterrors.Critical(err.Error())
 	}
 
 	switch requestContent := request.Content.Content.(type) {

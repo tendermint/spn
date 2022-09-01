@@ -6,9 +6,9 @@ import (
 	sdkmath "cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 	"github.com/stretchr/testify/require"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
@@ -88,7 +88,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				CampaignID: campaign.CampaignID,
 				Vouchers:   sample.Coins(r),
 			},
-			err: spnerrors.ErrCritical,
+			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "invalid sender address",
@@ -98,7 +98,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				CampaignID: campaign.CampaignID,
 				Vouchers:   vouchers,
 			},
-			err: spnerrors.ErrCritical,
+			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "insufficient funds",

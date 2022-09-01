@@ -5,8 +5,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	connectiontypes "github.com/cosmos/ibc-go/v5/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/monitoringc/types"
 )
 
@@ -55,7 +55,7 @@ func (k Keeper) RegisterProviderClientIDFromChannelID(ctx sdk.Context, channelID
 	lidFromCid, found := k.GetLaunchIDFromVerifiedClientID(ctx, clientID)
 	if !found {
 		// client should be verified at this phase, so a critical error is returned
-		return spnerrors.Criticalf("client ID %s should be verified during registration", clientID)
+		return ignterrors.Criticalf("client ID %s should be verified during registration", clientID)
 	}
 
 	// another connection could have been established between OnChanOpenInit and OnChanOpenAck

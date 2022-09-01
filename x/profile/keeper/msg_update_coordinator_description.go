@@ -5,8 +5,8 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -26,14 +26,14 @@ func (k msgServer) UpdateCoordinatorDescription(
 	coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorID)
 	if !found {
 		return &types.MsgUpdateCoordinatorDescriptionResponse{},
-			spnerrors.Criticalf("a coordinator address is associated to a non-existent coordinator ID: %d",
+			ignterrors.Criticalf("a coordinator address is associated to a non-existent coordinator ID: %d",
 				coordByAddress.CoordinatorID)
 	}
 
 	// Check if the coordinator is inactive
 	if !coord.Active {
 		return &types.MsgUpdateCoordinatorDescriptionResponse{},
-			spnerrors.Criticalf("inactive coordinator address should not exist in store, ID: %d",
+			ignterrors.Criticalf("inactive coordinator address should not exist in store, ID: %d",
 				coordByAddress.CoordinatorID)
 	}
 

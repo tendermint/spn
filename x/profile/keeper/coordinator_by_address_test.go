@@ -3,9 +3,8 @@ package keeper_test
 import (
 	"testing"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 	"github.com/stretchr/testify/require"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -57,7 +56,7 @@ func TestCoordinatorByAddressInvalid(t *testing.T) {
 	t.Run("should prevent finding coordinator by address if no associated coordinator exist", func(t *testing.T) {
 		for _, item := range items {
 			_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, item.Address)
-			require.ErrorIs(t, err, spnerrors.ErrCritical)
+			require.ErrorIs(t, err, ignterrors.ErrCritical)
 		}
 	})
 }
@@ -140,7 +139,7 @@ func TestActiveCoordinatorByAddressGet(t *testing.T) {
 
 	t.Run("should prevent getting inactive validator by address", func(t *testing.T) {
 		_, err := tk.ProfileKeeper.GetCoordinatorByAddress(ctx, address)
-		require.ErrorIs(t, err, spnerrors.ErrCritical)
+		require.ErrorIs(t, err, ignterrors.ErrCritical)
 
 		// set valid state where coordinator is disabled
 		tk.ProfileKeeper.RemoveCoordinatorByAddress(ctx, address)

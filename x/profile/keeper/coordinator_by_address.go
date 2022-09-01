@@ -4,8 +4,8 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	"github.com/tendermint/spn/x/profile/types"
 )
 
@@ -78,13 +78,13 @@ func (k Keeper) GetCoordinatorByAddress(ctx sdk.Context, address string) (types.
 	coord, found := k.GetCoordinator(ctx, coordByAddress.CoordinatorID)
 	if !found {
 		// return critical error
-		return types.CoordinatorByAddress{}, spnerrors.Criticalf("a coordinator address is associated to a non-existent coordinator ID: %d",
+		return types.CoordinatorByAddress{}, ignterrors.Criticalf("a coordinator address is associated to a non-existent coordinator ID: %d",
 			coordByAddress.CoordinatorID)
 	}
 
 	if !coord.Active {
 		// return critical error
-		return types.CoordinatorByAddress{}, spnerrors.Criticalf("a coordinator address is inactive and should not exist in the store: ID: %d",
+		return types.CoordinatorByAddress{}, ignterrors.Criticalf("a coordinator address is inactive and should not exist in the store: ID: %d",
 			coordByAddress.CoordinatorID)
 	}
 

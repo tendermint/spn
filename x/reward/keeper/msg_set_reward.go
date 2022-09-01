@@ -6,8 +6,8 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+	ignterrors "github.com/ignite/modules/errors"
 
-	spnerrors "github.com/tendermint/spn/pkg/errors"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/reward/types"
 )
@@ -36,7 +36,7 @@ func (k msgServer) SetRewards(goCtx context.Context, msg *types.MsgSetRewards) (
 
 	provider, err := sdk.AccAddressFromBech32(msg.Provider)
 	if err != nil {
-		return nil, spnerrors.Criticalf("can't parse provider address %s", err.Error())
+		return nil, ignterrors.Criticalf("can't parse provider address %s", err.Error())
 	}
 
 	var (
@@ -105,7 +105,7 @@ func SetBalance(
 			provider,
 			poolCoins,
 		); err != nil {
-			return spnerrors.Critical(err.Error())
+			return ignterrors.Critical(err.Error())
 		}
 	}
 	if coins != nil && !coins.IsZero() {
