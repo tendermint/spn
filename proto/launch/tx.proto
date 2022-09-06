@@ -8,8 +8,7 @@ import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
 
 import "launch/chain.proto";
-import "launch/vesting_account.proto";
-import "launch/genesis_validator.proto";
+import "launch/request.proto";
 
 option go_package = "github.com/tendermint/spn/x/launch/types";
 
@@ -19,11 +18,7 @@ service Msg {
   rpc CreateChain(MsgCreateChain) returns (MsgCreateChainResponse);
   rpc EditChain(MsgEditChain) returns (MsgEditChainResponse);
   rpc UpdateLaunchInformation(MsgUpdateLaunchInformation) returns (MsgUpdateLaunchInformationResponse);
-  rpc RequestAddAccount(MsgRequestAddAccount) returns (MsgRequestAddAccountResponse);
-  rpc RequestAddVestingAccount(MsgRequestAddVestingAccount) returns (MsgRequestAddVestingAccountResponse);
-  rpc RequestRemoveAccount(MsgRequestRemoveAccount) returns (MsgRequestRemoveAccountResponse);
-  rpc RequestAddValidator(MsgRequestAddValidator) returns (MsgRequestAddValidatorResponse);
-  rpc RequestRemoveValidator(MsgRequestRemoveValidator) returns (MsgRequestRemoveValidatorResponse);
+  rpc SendRequest(MsgSendRequest) returns (MsgSendRequestResponse);
   rpc SettleRequest(MsgSettleRequest) returns (MsgSettleRequestResponse);
   rpc TriggerLaunch(MsgTriggerLaunch) returns (MsgTriggerLaunchResponse);
   rpc RevertLaunch(MsgRevertLaunch) returns (MsgRevertLaunchResponse);
@@ -71,67 +66,13 @@ message MsgUpdateLaunchInformation {
 
 message MsgUpdateLaunchInformationResponse {}
 
-message MsgRequestAddAccount {
-  string   creator                        = 1;
-  uint64   launchID                       = 2;
-  string   address                        = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  repeated cosmos.base.v1beta1.Coin coins = 4 [
-    (gogoproto.nullable)     = false,
-    (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
-  ];
+message MsgSendRequest {
+  string   creator         = 1;
+  uint64   launchID        = 2;
+  RequestContent content   = 3 [(gogoproto.nullable) = false];
 }
 
-message MsgRequestAddAccountResponse {
-  uint64 requestID    = 1;
-  bool   autoApproved = 2;
-}
-
-message MsgRequestAddVestingAccount {
-  string         creator  = 1;
-  uint64         launchID = 2;
-  string         address  = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  VestingOptions options  = 4 [(gogoproto.nullable) = false];
-}
-
-message MsgRequestAddVestingAccountResponse {
-  uint64 requestID    = 1;
-  bool   autoApproved = 2;
-}
-
-message MsgRequestRemoveAccount {
-  string creator  = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  uint64 launchID = 2;
-  string address  = 3 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-}
-
-message MsgRequestRemoveAccountResponse {
-  uint64 requestID    = 1;
-  bool   autoApproved = 2;
-}
-
-message MsgRequestAddValidator {
-  string                   creator        = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  uint64                   launchID       = 2;
-  string                   valAddress     = 3;
-  bytes                    genTx          = 4;
-  bytes                    consPubKey     = 5;
-  cosmos.base.v1beta1.Coin selfDelegation = 6 [(gogoproto.nullable) = false];
-  Peer                     peer           = 7 [(gogoproto.nullable) = false];
-}
-
-message MsgRequestAddValidatorResponse {
-  uint64 requestID    = 1;
-  bool   autoApproved = 2;
-}
-
-message MsgRequestRemoveValidator {
-  string creator          = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
-  uint64 launchID         = 2;
-  string validatorAddress = 3;
-}
-
-message MsgRequestRemoveValidatorResponse {
+message MsgSendRequestResponse {
   uint64 requestID    = 1;
   bool   autoApproved = 2;
 }

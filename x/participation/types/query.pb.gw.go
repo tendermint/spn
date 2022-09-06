@@ -749,19 +749,19 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_UsedAllocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "participation", "used_allocations", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_UsedAllocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "participation", "used_allocations", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_UsedAllocationsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "participation", "used_allocations"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_UsedAllocationsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "participation", "used_allocations"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_AuctionUsedAllocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "participation", "auction_used_allocations", "address", "auctionID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_AuctionUsedAllocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "participation", "auction_used_allocations", "address", "auctionID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_AuctionUsedAllocationsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "participation", "auction_used_allocations", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_AuctionUsedAllocationsAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "participation", "auction_used_allocations", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_TotalAllocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "participation", "total_allocations", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_TotalAllocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "participation", "total_allocations", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_AvailableAllocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "participation", "available_allocations", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_AvailableAllocations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "participation", "available_allocations", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "participation", "params"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "participation", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
