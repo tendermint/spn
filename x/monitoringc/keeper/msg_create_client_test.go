@@ -66,14 +66,17 @@ func Test_msgServer_CreateClient(t *testing.T) {
 	chainWithInvalidChainID := sample.Chain(r, resCreateChain.LaunchID+1, resCoord.CoordinatorID)
 	chainWithInvalidChainID.GenesisChainID = "invalid_chain_id"
 	tk.LaunchKeeper.SetChain(sdkCtx, chainWithInvalidChainID)
-	_, err = ts.LaunchSrv.RequestAddValidator(ctx, launchtypes.NewMsgRequestAddValidator(
+	_, err = ts.LaunchSrv.SendRequest(ctx, launchtypes.NewMsgSendRequest(
 		coordAddr,
 		resCreateChain.LaunchID,
-		sample.Address(r),
-		sample.Bytes(r, 100),
-		consPubKey,
-		selfDelegation,
-		sample.GenesisValidatorPeer(r),
+		launchtypes.NewGenesisValidator(
+			resCreateChain.LaunchID,
+			sample.Address(r),
+			sample.Bytes(r, 100),
+			consPubKey,
+			selfDelegation,
+			sample.GenesisValidatorPeer(r),
+		),
 	))
 	require.NoError(t, err)
 	_, err = ts.LaunchSrv.TriggerLaunch(ctx, launchtypes.NewMsgTriggerLaunch(
