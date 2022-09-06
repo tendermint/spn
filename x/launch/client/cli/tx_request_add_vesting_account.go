@@ -48,7 +48,7 @@ func CmdRequestAddVestingAccount() *cobra.Command {
 			if accountAddr == "" {
 				accountAddr = fromAddr
 			}
-			
+
 			msg := types.NewMsgSendRequest(
 				fromAddr,
 				launchID,

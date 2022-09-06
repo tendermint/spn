@@ -83,7 +83,6 @@ func TestRequestContent_IsValidForMainnet(t *testing.T) {
 			peer,
 		)
 		require.NoError(t, requestContent.IsValidForMainnet())
-
 	})
 
 	t.Run("should validate RemoveValidator request", func(t *testing.T) {

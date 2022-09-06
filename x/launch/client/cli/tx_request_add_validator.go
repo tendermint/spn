@@ -66,7 +66,7 @@ func CmdRequestAddValidator() *cobra.Command {
 			} else {
 				peer = types.NewPeerConn(args[4], args[5])
 			}
-			
+
 			msg := types.NewMsgSendRequest(
 				fromAddr,
 				launchID,

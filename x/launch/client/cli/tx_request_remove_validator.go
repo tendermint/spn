@@ -32,7 +32,7 @@ func CmdRequestRemoveValidator() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			
+
 			msg := types.NewMsgSendRequest(
 				creator,
 				launchID,

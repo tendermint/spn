@@ -54,9 +54,7 @@ func (k msgServer) SendRequest(
 		Status:    types.Request_PENDING,
 	}
 
-	var (
-		requestID uint64
-	)
+	var requestID uint64
 	approved := false
 	if msg.Creator == coord.Address {
 		err := ApplyRequest(ctx, k.Keeper, chain, request, coord)
