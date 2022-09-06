@@ -26,7 +26,7 @@ func (m RequestContent) Validate() error {
 }
 
 func (m RequestContent) IsValidForMainnet() error {
-	switch _ := m.Content.(type) {
+	switch m.Content.(type) {
 	case *RequestContent_GenesisAccount:
 		return errors.New("GenesisAccount request can't be used for mainnet")
 	case *RequestContent_VestingAccount:

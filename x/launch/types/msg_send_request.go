@@ -49,7 +49,7 @@ func (msg *MsgSendRequest) ValidateBasic() error {
 	}
 
 	if err := msg.Content.Validate(); err != nil {
-		return sdkerrors.Wrapf(ErrInvalidRequest, err.Error())
+		return sdkerrors.Wrapf(ErrInvalidRequestContent, err.Error())
 	}
 
 	return nil

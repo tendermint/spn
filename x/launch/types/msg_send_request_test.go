@@ -40,7 +40,7 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 				LaunchID: sample.Uint64(r),
 				Content:  types.NewAccountRemoval("invalid_address"),
 			},
-			err: sdkerrortypes.ErrInvalidRequest,
+			err: types.ErrInvalidRequestContent,
 		},
 	}
 	for _, tt := range tests {

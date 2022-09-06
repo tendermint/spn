@@ -161,7 +161,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				5,
 				types.NewAccountRemoval(sample.Address(r)),
 			),
-			wantID:      0,
+			wantID:      1,
 			wantApprove: false,
 		},
 		{
@@ -172,7 +172,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				noChain:       true,
 			},
 			msg:         sample.MsgSendRequestWithAddAccount(r, coordAddr, sample.Address(r), 5),
-			wantID:      1,
+			wantID:      2,
 			wantApprove: true,
 		},
 		{
@@ -196,7 +196,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				6,
 				types.NewValidatorRemoval(sample.Address(r)),
 			),
-			wantID:      0,
+			wantID:      1,
 			wantApprove: false,
 		},
 	}

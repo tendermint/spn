@@ -92,7 +92,7 @@ func TestRequestContent_IsValidForMainnet(t *testing.T) {
 
 	t.Run("should prevent validate GenesisAccount request", func(t *testing.T) {
 		requestContent := types.NewGenesisAccount(launchID, address, coins)
-		require.NoError(t, requestContent.IsValidForMainnet())
+		require.Error(t, requestContent.IsValidForMainnet())
 	})
 
 	t.Run("should prevent validate VestingAccount request", func(t *testing.T) {

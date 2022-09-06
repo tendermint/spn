@@ -36,7 +36,7 @@ var (
 	ErrAddChainToCampaign          = sdkerrors.Register(ModuleName, 27, "unable to add chain to campaign")
 	ErrChainMonitoringConnected    = sdkerrors.Register(ModuleName, 28, "chain is already connected to monitoring")
 	ErrRequestSettled              = sdkerrors.Register(ModuleName, 29, "request is already settled")
-	ErrInvalidRequest              = sdkerrors.Register(ModuleName, 30, "request is invalid")
+	ErrInvalidRequestContent       = sdkerrors.Register(ModuleName, 30, "request content is invalid")
 	ErrInvalidRequestForMainnet    = sdkerrors.Register(ModuleName, 31, "request is invalid for mainnet")
 	ErrRequestApplicationFailure   = sdkerrors.Register(ModuleName, 32, "request failed to be applied")
 )

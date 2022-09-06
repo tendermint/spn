@@ -10,11 +10,7 @@ import (
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateChain{}, "launch/CreateChain", nil)
 	cdc.RegisterConcrete(&MsgEditChain{}, "launch/EditChain", nil)
-	cdc.RegisterConcrete(&MsgRequestAddAccount{}, "launch/RequestAddAccount", nil)
-	cdc.RegisterConcrete(&MsgRequestAddVestingAccount{}, "launch/RequestAddVestingdAccount", nil)
-	cdc.RegisterConcrete(&MsgRequestRemoveAccount{}, "launch/RequestRemoveAccount", nil)
-	cdc.RegisterConcrete(&MsgRequestAddValidator{}, "launch/RequestAddValidator", nil)
-	cdc.RegisterConcrete(&MsgRequestRemoveValidator{}, "launch/RequestRemoveValidator", nil)
+	cdc.RegisterConcrete(&MsgSendRequest{}, "launch/SendRequest", nil)
 	cdc.RegisterConcrete(&MsgSettleRequest{}, "launch/SettleRequest", nil)
 	cdc.RegisterConcrete(&MsgTriggerLaunch{}, "launch/TriggerLaunch", nil)
 	cdc.RegisterConcrete(&MsgRevertLaunch{}, "launch/RevertLaunch", nil)
@@ -27,11 +23,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgCreateChain{},
 		&MsgEditChain{},
 		&MsgUpdateLaunchInformation{},
-		&MsgRequestAddAccount{},
-		&MsgRequestAddVestingAccount{},
-		&MsgRequestRemoveAccount{},
-		&MsgRequestAddValidator{},
-		&MsgRequestRemoveValidator{},
+		&MsgSendRequest{},
 		&MsgSettleRequest{},
 		&MsgTriggerLaunch{},
 		&MsgRevertLaunch{},
