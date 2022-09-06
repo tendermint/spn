@@ -123,6 +123,11 @@ func RequestWithContentAndCreator(r *rand.Rand, launchID uint64, content launch.
 	}
 }
 
+// RequestContent returns a request content with Genesis Account
+func RequestContent(r *rand.Rand) launch.RequestContent {
+	return launch.NewGenesisAccount(Uint64(r), Address(r), Coins(r))
+}
+
 // AllRequestContents creates all contents types for request
 func AllRequestContents(r *rand.Rand, launchID uint64, genesis, vesting, validator string) []launch.RequestContent {
 	return []launch.RequestContent{
