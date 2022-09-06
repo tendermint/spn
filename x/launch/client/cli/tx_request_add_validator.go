@@ -66,15 +66,11 @@ func CmdRequestAddValidator() *cobra.Command {
 			} else {
 				peer = types.NewPeerConn(args[4], args[5])
 			}
-
-			msg := types.NewMsgRequestAddValidator(
-				clientCtx.GetFromAddress().String(),
+			
+			msg := types.NewMsgSendRequest(
+				fromAddr,
 				launchID,
-				valAddr,
-				gentxBytes,
-				consPubKey,
-				selfDelegation,
-				peer,
+				types.NewGenesisValidator(launchID, valAddr, gentxBytes, consPubKey, selfDelegation, peer),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

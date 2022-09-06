@@ -44,11 +44,10 @@ func CmdRequestAddAccount() *cobra.Command {
 				accountAddr = fromAddr
 			}
 
-			msg := types.NewMsgRequestAddAccount(
+			msg := types.NewMsgSendRequest(
 				fromAddr,
 				launchID,
-				accountAddr,
-				coins,
+				types.NewGenesisAccount(launchID, accountAddr, coins),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
