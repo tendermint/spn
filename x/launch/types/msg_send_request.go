@@ -48,7 +48,7 @@ func (msg *MsgSendRequest) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
-	if err := msg.Content.Validate(); err != nil {
+	if err := msg.Content.Validate(msg.LaunchID); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidRequestContent, err.Error())
 	}
 

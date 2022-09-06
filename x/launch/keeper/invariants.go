@@ -109,7 +109,7 @@ func UnknownRequestTypeInvariant(k Keeper) sdk.Invariant {
 					"unknown request content type",
 				), true
 			}
-			if err := request.Content.Validate(); err != nil {
+			if err := request.Content.Validate(request.LaunchID); err != nil {
 				return sdk.FormatInvariant(
 					types.ModuleName, unknownRequestTypeRoute,
 					"invalid request",

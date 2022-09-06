@@ -8,14 +8,14 @@ import (
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-func (m RequestContent) Validate() error {
+func (m RequestContent) Validate(launchID uint64) error {
 	switch requestContent := m.Content.(type) {
 	case *RequestContent_GenesisAccount:
-		return requestContent.GenesisAccount.Validate()
+		return requestContent.GenesisAccount.Validate(launchID)
 	case *RequestContent_VestingAccount:
-		return requestContent.VestingAccount.Validate()
+		return requestContent.VestingAccount.Validate(launchID)
 	case *RequestContent_GenesisValidator:
-		return requestContent.GenesisValidator.Validate()
+		return requestContent.GenesisValidator.Validate(launchID)
 	case *RequestContent_AccountRemoval:
 		return requestContent.AccountRemoval.Validate()
 	case *RequestContent_ValidatorRemoval:
@@ -51,7 +51,7 @@ func NewGenesisAccount(launchID uint64, address string, coins sdk.Coins) Request
 }
 
 // Validate implements GenesisAccount validation
-func (m GenesisAccount) Validate() error {
+func (m GenesisAccount) Validate(launchID uint64) error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
@@ -60,6 +60,11 @@ func (m GenesisAccount) Validate() error {
 	if !m.Coins.IsValid() || m.Coins.Empty() {
 		return sdkerrors.Wrap(ErrInvalidCoins, m.Address)
 	}
+
+	if m.LaunchID != launchID {
+		return ErrInvalidLaunchID
+	}
+
 	return nil
 }
 
@@ -77,7 +82,7 @@ func NewVestingAccount(launchID uint64, address string, vestingOptions VestingOp
 }
 
 // Validate implements VestingAccount validation
-func (m VestingAccount) Validate() error {
+func (m VestingAccount) Validate(launchID uint64) error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
@@ -86,6 +91,11 @@ func (m VestingAccount) Validate() error {
 	if err := m.VestingOptions.Validate(); err != nil {
 		return sdkerrors.Wrapf(ErrInvalidVestingOption, err.Error())
 	}
+
+	if m.LaunchID != launchID {
+		return ErrInvalidLaunchID
+	}
+
 	return nil
 }
 
@@ -113,7 +123,7 @@ func NewGenesisValidator(
 }
 
 // Validate implements GenesisValidator validation
-func (m GenesisValidator) Validate() error {
+func (m GenesisValidator) Validate(launchID uint64) error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
@@ -128,7 +138,7 @@ func (m GenesisValidator) Validate() error {
 	}
 
 	if !m.SelfDelegation.IsValid() {
-		return sdkerrors.Wrap(ErrInvalidSelfDelegation, "")
+		return ErrInvalidSelfDelegation
 	}
 
 	if m.SelfDelegation.IsZero() {
@@ -138,6 +148,11 @@ func (m GenesisValidator) Validate() error {
 	if err := m.Peer.Validate(); err != nil {
 		return sdkerrors.Wrap(ErrInvalidPeer, err.Error())
 	}
+
+	if m.LaunchID != launchID {
+		return ErrInvalidLaunchID
+	}
+
 	return nil
 }
 

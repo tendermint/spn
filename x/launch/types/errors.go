@@ -39,4 +39,5 @@ var (
 	ErrInvalidRequestContent       = sdkerrors.Register(ModuleName, 30, "request content is invalid")
 	ErrInvalidRequestForMainnet    = sdkerrors.Register(ModuleName, 31, "request is invalid for mainnet")
 	ErrRequestApplicationFailure   = sdkerrors.Register(ModuleName, 32, "request failed to be applied")
+	ErrInvalidLaunchID             = sdkerrors.Register(ModuleName, 33, "invalid launch ID")
 )
