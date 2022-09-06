@@ -1,11 +1,11 @@
 package keeper_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"testing"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -14,114 +14,209 @@ import (
 )
 
 func TestMsgRequestAddAccount(t *testing.T) {
-	var (
-		invalidChain     = uint64(1000)
-		coordAddr        = sample.Address(r)
-		coordDisableAddr = sample.Address(r)
-		addr1            = sample.Address(r)
-		addr2            = sample.Address(r)
-		addr3            = sample.Address(r)
-		addr4            = sample.Address(r)
-		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
-		ctx              = sdk.WrapSDKContext(sdkCtx)
-	)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
+	ctx := sdk.WrapSDKContext(sdkCtx)
+	coordAddr, addr := sample.Address(r), sample.Address(r)
 
-	coordID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
-		Address: coordAddr,
-		Active:  true,
-	})
-	chains := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordID, 6)
-	chains[0].LaunchTriggered = true
-	tk.LaunchKeeper.SetChain(sdkCtx, chains[0])
-	chains[1].CoordinatorID = 99999
-	tk.LaunchKeeper.SetChain(sdkCtx, chains[1])
-	chains[5].IsMainnet = true
-	chains[5].HasCampaign = true
-	tk.LaunchKeeper.SetChain(sdkCtx, chains[5])
-
-	coordDisableID := tk.ProfileKeeper.AppendCoordinator(sdkCtx, profiletypes.Coordinator{
-		Address: coordDisableAddr,
-		Active:  false,
-	})
-	disabledChain := createNChainForCoordinator(tk.LaunchKeeper, sdkCtx, coordDisableID, 1)
+	type inputState struct {
+		noCoordinator bool
+		noChain       bool
+		noAccount     bool
+		coordinator   profiletypes.Coordinator
+		chain         types.Chain
+		account       types.GenesisAccount
+	}
 
 	tests := []struct {
 		name        string
-		msg         types.MsgRequestAddAccount
+		inputState  inputState
+		msg         types.MsgSendRequest
 		wantID      uint64
 		wantApprove bool
 		err         error
 	}{
 		{
-			name: "should prevent requesting an account for a non existing chain",
-			msg:  sample.MsgRequestAddAccount(r, sample.Address(r), sample.Address(r), invalidChain),
-			err:  types.ErrChainNotFound,
+			name: "should prevent sending a request for a non existing chain",
+			inputState: inputState{
+				noAccount:     true,
+				noChain:       true,
+				noCoordinator: true,
+			},
+			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 10000),
+			err: types.ErrChainNotFound,
 		},
 		{
-			name: "should prevent requesting an account for a launch triggered chain",
-			msg:  sample.MsgRequestAddAccount(r, sample.Address(r), addr1, chains[0].LaunchID),
-			err:  types.ErrTriggeredLaunch,
+			name: "should prevent sending a request for a launch triggered chain",
+			inputState: inputState{
+				noAccount: true,
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 0,
+					Address:       sample.Address(r),
+					Active:        true,
+				},
+				chain: types.Chain{
+					LaunchID:        0,
+					LaunchTriggered: true,
+					IsMainnet:       false,
+					CoordinatorID:   0,
+				},
+			},
+			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 0),
+			err: types.ErrTriggeredLaunch,
 		},
 		{
-			name: "should prevent requesting an account for a chain where coordinator not found",
-			msg:  sample.MsgRequestAddAccount(r, sample.Address(r), addr1, chains[1].LaunchID),
-			err:  types.ErrChainInactive,
+			name: "should prevent sending a request not valid for mainnet for a mainnet chain",
+			inputState: inputState{
+				noAccount: true,
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 0,
+					Address:       sample.Address(r),
+					Active:        true,
+				},
+				chain: types.Chain{
+					LaunchID:        1,
+					LaunchTriggered: false,
+					IsMainnet:       true,
+					CoordinatorID:   1,
+				},
+			},
+			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 1),
+			err: types.ErrInvalidRequestForMainnet,
 		},
 		{
-			name:   "should allow requesting an account to an existing chain",
-			msg:    sample.MsgRequestAddAccount(r, sample.Address(r), addr1, chains[2].LaunchID),
-			wantID: 1,
+			name: "should prevent sending a request for a chain where coordinator is not found",
+			inputState: inputState{
+				noAccount:     true,
+				noCoordinator: true,
+				chain: types.Chain{
+					LaunchID:        2,
+					LaunchTriggered: false,
+					IsMainnet:       false,
+					CoordinatorID:   2,
+				},
+			},
+			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 2),
+			err: types.ErrChainInactive,
 		},
 		{
-			name:   "should allow requesting an account to a second chain",
-			msg:    sample.MsgRequestAddAccount(r, sample.Address(r), addr1, chains[3].LaunchID),
-			wantID: 1,
+			name: "should prevent sending a request if it is sent by coordinator and can't be applied",
+			inputState: inputState{
+				account: types.GenesisAccount{
+					Address:  addr,
+					LaunchID: 3,
+				},
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 3,
+					Address:       coordAddr,
+					Active:        true,
+				},
+				chain: types.Chain{
+					LaunchID:        3,
+					LaunchTriggered: false,
+					IsMainnet:       false,
+					CoordinatorID:   3,
+				},
+			},
+			msg: sample.MsgSendRequestWithAddAccount(r, coordAddr, addr, 3),
+			err: types.ErrRequestApplicationFailure,
 		},
 		{
-			name:   "should allow requesting an second account to a second chain",
-			msg:    sample.MsgRequestAddAccount(r, sample.Address(r), addr2, chains[3].LaunchID),
-			wantID: 2,
+			name: "should prevent sending a request for chain with inactive coordinator",
+			inputState: inputState{
+				noAccount: true,
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 4,
+					Address:       sample.Address(r),
+					Active:        false,
+				},
+				chain: types.Chain{
+					LaunchID:        4,
+					LaunchTriggered: false,
+					IsMainnet:       false,
+					CoordinatorID:   4,
+				},
+			},
+			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 4),
+			err: profiletypes.ErrCoordInactive,
 		},
 		{
-			name:   "should allow requesting an account to a third chain",
-			msg:    sample.MsgRequestAddAccount(r, sample.Address(r), addr1, chains[4].LaunchID),
-			wantID: 1,
+			name: "should allow send a new request",
+			inputState: inputState{
+				noAccount: true,
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 5,
+					Address:       coordAddr,
+					Active:        true,
+				},
+				chain: types.Chain{
+					LaunchID:        5,
+					LaunchTriggered: false,
+					IsMainnet:       false,
+					CoordinatorID:   5,
+				},
+			},
+			msg: *types.NewMsgSendRequest(
+				sample.Address(r),
+				5,
+				types.NewAccountRemoval(sample.Address(r)),
+			),
+			wantID:      0,
+			wantApprove: false,
 		},
 		{
-			name:   "should allow requesting a second account to a third chain",
-			msg:    sample.MsgRequestAddAccount(r, sample.Address(r), addr2, chains[4].LaunchID),
-			wantID: 2,
-		},
-		{
-			name:   "should allow requesting a third account to a third chain",
-			msg:    sample.MsgRequestAddAccount(r, sample.Address(r), addr3, chains[4].LaunchID),
-			wantID: 3,
-		},
-		{
-			name:        "should allow requesting and approving an account from the coordinator",
-			msg:         sample.MsgRequestAddAccount(r, coordAddr, addr4, chains[4].LaunchID),
+			name: "should allow send a new request from the coordinator and apply it",
+			inputState: inputState{
+				noAccount:     true,
+				noCoordinator: true,
+				noChain:       true,
+			},
+			msg:         sample.MsgSendRequestWithAddAccount(r, coordAddr, sample.Address(r), 5),
+			wantID:      1,
 			wantApprove: true,
-			wantID:      4,
 		},
 		{
-			name: "should prevent requesting an account from coordinator if account already exist",
-			msg:  sample.MsgRequestAddAccount(r, coordAddr, addr4, chains[4].LaunchID),
-			err:  types.ErrAccountAlreadyExist,
-		},
-		{
-			name: "should prevent requesting an account for a mainnet chain",
-			msg:  sample.MsgRequestAddAccount(r, coordAddr, sample.Address(r), chains[5].LaunchID),
-			err:  types.ErrAddMainnetAccount,
-		},
-		{
-			name: "should prevent requesting an account for a chain where the coordinator of the chain is disabled",
-			msg:  sample.MsgRequestAddAccount(r, sample.Address(r), sample.Address(r), disabledChain[0].LaunchID),
-			err:  profiletypes.ErrCoordInactive,
+			name: "should allow send a new valid request for a mainnet chain",
+			inputState: inputState{
+				noAccount: true,
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 6,
+					Address:       sample.Address(r),
+					Active:        true,
+				},
+				chain: types.Chain{
+					LaunchID:        6,
+					LaunchTriggered: false,
+					IsMainnet:       true,
+					CoordinatorID:   6,
+				},
+			},
+			msg: *types.NewMsgSendRequest(
+				sample.Address(r),
+				6,
+				types.NewValidatorRemoval(sample.Address(r)),
+			),
+			wantID:      0,
+			wantApprove: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ts.LaunchSrv.RequestAddAccount(ctx, &tt.msg)
+			// initialize input state
+			if !tt.inputState.noCoordinator {
+				tk.ProfileKeeper.SetCoordinator(sdkCtx, tt.inputState.coordinator)
+				tk.ProfileKeeper.SetCoordinatorByAddress(sdkCtx, profiletypes.CoordinatorByAddress{
+					CoordinatorID: tt.inputState.coordinator.CoordinatorID,
+					Address:       tt.inputState.coordinator.Address,
+				})
+			}
+			if !tt.inputState.noChain {
+				tk.LaunchKeeper.SetChain(sdkCtx, tt.inputState.chain)
+			}
+			if !tt.inputState.noAccount {
+				tk.LaunchKeeper.SetGenesisAccount(sdkCtx, tt.inputState.account)
+			}
+
+			got, err := ts.LaunchSrv.SendRequest(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
@@ -132,19 +227,10 @@ func TestMsgRequestAddAccount(t *testing.T) {
 
 			request, found := tk.LaunchKeeper.GetRequest(sdkCtx, tt.msg.LaunchID, got.RequestID)
 			require.True(t, found, "request not found")
-			content := request.Content.GetGenesisAccount()
-			require.NotNil(t, content)
-			require.Equal(t, tt.msg.Address, content.Address)
-			require.Equal(t, tt.msg.LaunchID, content.LaunchID)
-			require.Equal(t, tt.msg.Coins, content.Coins)
-			require.Equal(t, tt.wantID, request.RequestID)
-			require.Equal(t, tt.msg.Creator, request.Creator)
 
 			if !tt.wantApprove {
 				require.Equal(t, types.Request_PENDING, request.Status)
 			} else {
-				_, found := tk.LaunchKeeper.GetGenesisAccount(sdkCtx, tt.msg.LaunchID, tt.msg.Address)
-				require.True(t, found, "genesis account not found")
 				require.Equal(t, types.Request_APPROVED, request.Status)
 			}
 		})

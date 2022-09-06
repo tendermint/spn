@@ -41,4 +41,6 @@ var (
 	ErrChainMonitoringConnected    = sdkerrors.Register(ModuleName, 32, "chain is already connected to monitoring")
 	ErrRequestSettled              = sdkerrors.Register(ModuleName, 33, "request is already settled")
 	ErrInvalidRequest              = sdkerrors.Register(ModuleName, 34, "request is invalid")
+	ErrInvalidRequestForMainnet    = sdkerrors.Register(ModuleName, 35, "request is invalid for mainnet")
+	ErrRequestApplicationFailure   = sdkerrors.Register(ModuleName, 36, "request failed to be applied")
 )

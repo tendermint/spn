@@ -25,6 +25,18 @@ func (m RequestContent) Validate() error {
 	}
 }
 
+func (m RequestContent) IsValidForMainnet() error {
+	switch _ := m.Content.(type) {
+	case *RequestContent_GenesisAccount:
+		return errors.New("GenesisAccount request can't be used for mainnet")
+	case *RequestContent_VestingAccount:
+		return errors.New("VestingAccount request can't be used for mainnet")
+	case *RequestContent_AccountRemoval:
+		return errors.New("AccountRemoval request can't be used for mainnet")
+	}
+	return nil
+}
+
 // NewGenesisAccount returns a RequestContent containing an GenesisAccount
 func NewGenesisAccount(launchID uint64, address string, coins sdk.Coins) RequestContent {
 	return RequestContent{

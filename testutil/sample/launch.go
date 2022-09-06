@@ -236,13 +236,12 @@ func MsgUpdateLaunchInformation(
 	)
 }
 
-// MsgRequestAddAccount returns a sample MsgRequestAddAccount
-func MsgRequestAddAccount(r *rand.Rand, creator, address string, launchID uint64) launch.MsgRequestAddAccount {
-	return *launch.NewMsgRequestAddAccount(
+// MsgSendRequestWithAddAccount returns a sample MsgSendRequest with AddAccount request content
+func MsgSendRequestWithAddAccount(r *rand.Rand, creator, address string, launchID uint64) launch.MsgSendRequest {
+	return *launch.NewMsgSendRequest(
 		creator,
 		launchID,
-		address,
-		Coins(r),
+		launch.NewGenesisAccount(launchID, address, Coins(r)),
 	)
 }
 

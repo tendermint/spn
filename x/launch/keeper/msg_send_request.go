@@ -23,12 +23,9 @@ func (k msgServer) SendRequest(
 	}
 
 	// check if request is valid for mainnet
-	if chain.IsMainnet {
-		return nil, sdkerrors.Wrapf(
-			types.ErrAddMainnetAccount,
-			"the chain %d is a mainnet",
-			msg.LaunchID,
-		)
+	err := msg.Content.IsValidForMainnet()
+	if err != nil && chain.IsMainnet {
+		return nil, sdkerrors.Wrap(types.ErrInvalidRequestForMainnet, err.Error())
 	}
 
 	// no request can be sent if the launch of the chain is triggered
@@ -59,13 +56,12 @@ func (k msgServer) SendRequest(
 
 	var (
 		requestID uint64
-		err       error
 	)
 	approved := false
 	if msg.Creator == coord.Address {
 		err := ApplyRequest(ctx, k.Keeper, chain, request, coord)
 		if err != nil {
-			return nil, err
+			return nil, sdkerrors.Wrap(types.ErrRequestApplicationFailure, err.Error())
 		}
 		approved = true
 		request.Status = types.Request_APPROVED
