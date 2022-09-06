@@ -94,13 +94,6 @@ func GenesisValidatorPeer(r *rand.Rand) launch.Peer {
 	}
 }
 
-// ValidatorRemoval returns a sample ValidatorRemoval
-func ValidatorRemoval(address string) launch.ValidatorRemoval {
-	return launch.ValidatorRemoval{
-		ValAddress: address,
-	}
-}
-
 // RequestWithContent creates a launch request object with launch id and content
 func RequestWithContent(r *rand.Rand, launchID uint64, content launch.RequestContent) launch.Request {
 	return launch.Request{
@@ -245,44 +238,46 @@ func MsgSendRequestWithAddAccount(r *rand.Rand, creator, address string, launchI
 	)
 }
 
-// MsgRequestAddVestingAccount returns a sample MsgRequestAddVestingAccount
-func MsgRequestAddVestingAccount(r *rand.Rand, creator, address string, launchID uint64) launch.MsgRequestAddVestingAccount {
-	return *launch.NewMsgRequestAddVestingAccount(
+// MsgSendRequestWithAddVestingAccount returns a sample MsgSendRequest with AddVestingAccount request content
+func MsgSendRequestWithAddVestingAccount(r *rand.Rand, creator, address string, launchID uint64) launch.MsgSendRequest {
+	return *launch.NewMsgSendRequest(
 		creator,
 		launchID,
-		address,
-		VestingOptions(r),
+		launch.NewVestingAccount(launchID, address, VestingOptions(r)),
 	)
 }
 
-// MsgRequestRemoveAccount returns a sample MsgRequestRemoveAccount
-func MsgRequestRemoveAccount(creator, address string, launchID uint64) launch.MsgRequestRemoveAccount {
-	return *launch.NewMsgRequestRemoveAccount(
+// MsgSendRequestWithRemoveAccount returns a sample MsgSendRequest with RemoveAccount request content
+func MsgSendRequestWithRemoveAccount(creator, address string, launchID uint64) launch.MsgSendRequest {
+	return *launch.NewMsgSendRequest(
 		creator,
 		launchID,
-		address,
+		launch.NewAccountRemoval(address),
 	)
 }
 
-// MsgRequestRemoveValidator returns a sample MsgRequestRemoveValidator
-func MsgRequestRemoveValidator(creator, validatorAddr string, launchID uint64) launch.MsgRequestRemoveValidator {
-	return *launch.NewMsgRequestRemoveValidator(
+// MsgSendRequestWithRemoveValidator returns a sample MsgSendRequest with RemoveValidator request content
+func MsgSendRequestWithRemoveValidator(creator, validatorAddr string, launchID uint64) launch.MsgSendRequest {
+	return *launch.NewMsgSendRequest(
 		creator,
 		launchID,
-		validatorAddr,
+		launch.NewValidatorRemoval(validatorAddr),
 	)
 }
 
-// MsgRequestAddValidator returns a sample MsgRequestAddValidator
-func MsgRequestAddValidator(r *rand.Rand, creator, address string, launchID uint64) launch.MsgRequestAddValidator {
-	return *launch.NewMsgRequestAddValidator(
+// MsgSendRequestWithAddValidator returns a sample MsgSendRequest with AddValidator request content
+func MsgSendRequestWithAddValidator(r *rand.Rand, creator, address string, launchID uint64) launch.MsgSendRequest {
+	return *launch.NewMsgSendRequest(
 		creator,
 		launchID,
-		address,
-		Bytes(r, 500),
-		Bytes(r, 30),
-		Coin(r),
-		GenesisValidatorPeer(r),
+		launch.NewGenesisValidator(
+			launchID,
+			address,
+			Bytes(r, 500),
+			Bytes(r, 30),
+			Coin(r),
+			GenesisValidatorPeer(r),
+		),
 	)
 }
 
