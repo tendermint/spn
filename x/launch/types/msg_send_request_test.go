@@ -10,7 +10,9 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
+func TestMsgSendRequest_ValidateBasic(t *testing.T) {
+	launchID := sample.Uint64(r)
+
 	tests := []struct {
 		name string
 		msg  types.MsgSendRequest
@@ -20,16 +22,16 @@ func TestMsgRequestAddAccount_ValidateBasic(t *testing.T) {
 			name: "should validate valid message",
 			msg: types.MsgSendRequest{
 				Creator:  sample.Address(r),
-				LaunchID: sample.Uint64(r),
-				Content:  sample.RequestContent(r),
+				LaunchID: launchID,
+				Content:  sample.RequestContent(r, launchID),
 			},
 		},
 		{
 			name: "should prevent validate message with invalid address",
 			msg: types.MsgSendRequest{
 				Creator:  "invalid_address",
-				LaunchID: sample.Uint64(r),
-				Content:  sample.RequestContent(r),
+				LaunchID: launchID,
+				Content:  sample.RequestContent(r, launchID),
 			},
 			err: sdkerrortypes.ErrInvalidAddress,
 		},
