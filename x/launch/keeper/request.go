@@ -227,7 +227,7 @@ func CheckRequest(
 	launchID uint64,
 	request types.Request,
 ) error {
-	if err := request.Content.Validate(); err != nil {
+	if err := request.Content.Validate(launchID); err != nil {
 		return ignterrors.Critical(err.Error())
 	}
 
