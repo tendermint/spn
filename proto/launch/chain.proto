@@ -22,9 +22,8 @@ message Chain {
   uint64 campaignID  = 9;
   bool   isMainnet   = 10;
 
-  bool  launchTriggered = 11;
-  google.protobuf.Timestamp launchTime = 12 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
-
+  bool                      launchTriggered = 11;
+  google.protobuf.Timestamp launchTime      = 12 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
 
   int64 consumerRevisionHeight = 13;
 

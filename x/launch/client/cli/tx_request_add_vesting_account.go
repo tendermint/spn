@@ -49,12 +49,12 @@ func CmdRequestAddVestingAccount() *cobra.Command {
 				accountAddr = fromAddr
 			}
 
-			msg := types.NewMsgRequestAddVestingAccount(
+			msg := types.NewMsgSendRequest(
 				fromAddr,
 				launchID,
-				accountAddr,
-				delayedVesting,
+				types.NewVestingAccount(launchID, accountAddr, delayedVesting),
 			)
+
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}

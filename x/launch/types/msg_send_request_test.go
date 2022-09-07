@@ -10,38 +10,39 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func TestMsgRequestRemoveAccount_ValidateBasic(t *testing.T) {
-	launchID := uint64(10)
+func TestMsgSendRequest_ValidateBasic(t *testing.T) {
+	launchID := sample.Uint64(r)
+
 	tests := []struct {
 		name string
-		msg  types.MsgRequestRemoveAccount
+		msg  types.MsgSendRequest
 		err  error
 	}{
 		{
-			name: "should prevent validate message with invalid creator address",
-			msg: types.MsgRequestRemoveAccount{
-				Creator:  "invalid_address",
-				Address:  sample.Address(r),
+			name: "should validate valid message",
+			msg: types.MsgSendRequest{
+				Creator:  sample.Address(r),
 				LaunchID: launchID,
+				Content:  sample.RequestContent(r, launchID),
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
 			name: "should prevent validate message with invalid address",
-			msg: types.MsgRequestRemoveAccount{
-				Creator:  sample.Address(r),
-				Address:  "invalid_address",
+			msg: types.MsgSendRequest{
+				Creator:  "invalid_address",
 				LaunchID: launchID,
+				Content:  sample.RequestContent(r, launchID),
 			},
 			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
-			name: "should validate valid message",
-			msg: types.MsgRequestRemoveAccount{
+			name: "should prevent validate message with invalid request content",
+			msg: types.MsgSendRequest{
 				Creator:  sample.Address(r),
-				Address:  sample.Address(r),
-				LaunchID: launchID,
+				LaunchID: sample.Uint64(r),
+				Content:  types.NewAccountRemoval("invalid_address"),
 			},
+			err: types.ErrInvalidRequestContent,
 		},
 	}
 	for _, tt := range tests {

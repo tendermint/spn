@@ -136,7 +136,7 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 		chain, found := FindRandomChain(r, ctx, k, false, true)
 		if !found {
 			// No message if no non-triggered chain
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "non-triggered chain not found"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSendRequest, "non-triggered chain not found"), nil, nil
 		}
 
 		// Select a random account no in genesis
@@ -159,10 +159,10 @@ func SimulateMsgRequestAddGenesisAccount(ak types.AccountKeeper, bk types.BankKe
 			break
 		}
 		if !availableAccount {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "no available account"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSendRequest, "no available account"), nil, nil
 		}
 
-		msg := sample.MsgRequestAddAccount(r,
+		msg := sample.MsgSendRequestWithAddAccount(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),
 			chain.LaunchID,
@@ -217,10 +217,10 @@ func SimulateMsgRequestAddVestingAccount(ak types.AccountKeeper, bk types.BankKe
 			break
 		}
 		if !availableAccount {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddAccount, "no available account"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSendRequest, "no available account"), nil, nil
 		}
 
-		msg := sample.MsgRequestAddVestingAccount(r,
+		msg := sample.MsgSendRequestWithAddVestingAccount(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),
 			chain.LaunchID,
@@ -297,13 +297,13 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 			break
 		}
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveAccount, "genesis account not found"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSendRequest, "genesis account not found"), nil, nil
 		}
 
-		msg := types.NewMsgRequestRemoveAccount(
+		msg := types.NewMsgSendRequest(
 			simAccount.Address.String(),
 			accChainID,
-			accAddr,
+			types.NewAccountRemoval(accAddr),
 		)
 
 		txCtx := sdksimulation.OperationInput{
@@ -333,12 +333,12 @@ func SimulateMsgRequestAddValidator(ak types.AccountKeeper, bk types.BankKeeper,
 		chain, found := FindRandomChain(r, ctx, k, false, false)
 		if !found {
 			// No message if no non-triggered chain
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestAddValidator, "non-triggered chain not found"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSendRequest, "non-triggered chain not found"), nil, nil
 		}
 		// Select a random account
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		// Select between new address or coordinator address randomly
-		msg := sample.MsgRequestAddValidator(r,
+		msg := sample.MsgSendRequestWithAddValidator(r,
 			simAccount.Address.String(),
 			simAccount.Address.String(),
 			chain.LaunchID,
@@ -369,10 +369,10 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 		// Select a validator
 		simAccount, valAcc, found := FindRandomValidator(r, ctx, k, accs)
 		if !found {
-			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgRequestRemoveValidator, "validator not found"), nil, nil
+			return simtypes.NoOpMsg(types.ModuleName, types.TypeMsgSendRequest, "validator not found"), nil, nil
 		}
 
-		msg := sample.MsgRequestRemoveValidator(
+		msg := sample.MsgSendRequestWithRemoveValidator(
 			simAccount.Address.String(),
 			valAcc.Address,
 			valAcc.LaunchID,

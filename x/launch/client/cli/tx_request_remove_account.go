@@ -33,7 +33,12 @@ func CmdRequestRemoveAccount() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgRequestRemoveAccount(creator, launchID, address)
+			msg := types.NewMsgSendRequest(
+				creator,
+				launchID,
+				types.NewAccountRemoval(address),
+			)
+
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
