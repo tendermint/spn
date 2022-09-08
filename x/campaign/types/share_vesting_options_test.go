@@ -108,7 +108,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				totalShares,
 				vesting,
-				time.Time{}, // empty struct represents 0 time
+				time.Time{},
 			),
 			valid: false,
 		},

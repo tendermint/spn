@@ -16,7 +16,7 @@ import (
 func TestNewDelayedVesting(t *testing.T) {
 	totalBalance := tc.Coins(t, "1000foo,500bar,2000toto")
 	vesting := tc.Coins(t, "500foo,500bar")
-	endTime := time.Now().Unix()
+	endTime := time.Now()
 
 	t.Run("should return valid delayed vesting", func(t *testing.T) {
 		vestingOptions := types.NewDelayedVesting(totalBalance, vesting, endTime)
@@ -43,7 +43,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewDelayedVesting(
 				nil,
 				sample.Coins(r),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -52,7 +52,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewDelayedVesting(
 				sample.Coins(r),
 				nil,
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -61,7 +61,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewDelayedVesting(
 				sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}},
 				sample.Coins(r),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -70,7 +70,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewDelayedVesting(
 				sample.Coins(r),
 				sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}},
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -79,7 +79,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewDelayedVesting(
 				tc.Coins(t, "1000foo,500bar,2000toto"),
 				tc.Coins(t, "1000foo,501bar,2000toto"),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -88,7 +88,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewDelayedVesting(
 				tc.Coins(t, "1000foo,500bar"),
 				tc.Coins(t, "1000foo,500bar,2000toto"),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -97,7 +97,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewDelayedVesting(
 				sampleTotalBalance,
 				sampleVesting,
-				0,
+				time.Time{},
 			),
 			valid: false,
 		},
@@ -106,7 +106,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewDelayedVesting(
 				sampleTotalBalance,
 				sampleVesting,
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: true,
 		},
@@ -115,7 +115,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewDelayedVesting(
 				sampleVesting,
 				sampleVesting,
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: true,
 		},

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/aws/smithy-go/time"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -34,9 +36,12 @@ func CmdRequestAddVestingAccount() *cobra.Command {
 				return fmt.Errorf("failed to parse coins: %w", err)
 			}
 
-			endTime, _ := strconv.ParseUint(args[3], 10, 64)
+			endTime, err := time.ParseDateTime(args[3])
+			if err != nil {
+				return err
+			}
 
-			delayedVesting := *types.NewDelayedVesting(totalBalance, vestingCoins, int64(endTime))
+			delayedVesting := *types.NewDelayedVesting(totalBalance, vestingCoins, endTime)
 
 			launchID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {

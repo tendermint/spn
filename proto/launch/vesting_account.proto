@@ -6,6 +6,7 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
+import "google/protobuf/timestamp.proto";
 
 message VestingAccount {
   uint64         launchID       = 1;
@@ -33,5 +34,5 @@ message DelayedVesting {
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
-  int64 endTime = 3;
+  google.protobuf.Timestamp endTime = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
 }
