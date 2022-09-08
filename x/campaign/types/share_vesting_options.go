@@ -3,12 +3,13 @@ package types
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // NewShareDelayedVesting return the ShareVestingOptions
-func NewShareDelayedVesting(totalShare, vesting Shares, endTime int64) *ShareVestingOptions {
+func NewShareDelayedVesting(totalShare, vesting Shares, endTime time.Time) *ShareVestingOptions {
 	return &ShareVestingOptions{
 		Options: &ShareVestingOptions_DelayedVesting{
 			DelayedVesting: &ShareDelayedVesting{
@@ -46,7 +47,7 @@ func (m ShareVestingOptions) Validate() error {
 			return errors.New("vesting is not a subset of the total shares")
 		}
 
-		if vestionOptions.DelayedVesting.EndTime == 0 {
+		if vestionOptions.DelayedVesting.EndTime.IsZero() {
 			return errors.New("end time for DelayedVesting cannot be 0")
 		}
 	default:

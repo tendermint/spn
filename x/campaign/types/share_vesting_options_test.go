@@ -16,7 +16,7 @@ import (
 func TestNewDelayedVesting(t *testing.T) {
 	totalShares := tc.Shares(t, "1000foo,1000bar,500toto")
 	vesting := tc.Shares(t, "1000foo,500bar")
-	endTime := time.Now().Unix()
+	endTime := time.Now()
 
 	vestingOptions := types.NewShareDelayedVesting(totalShares, vesting, endTime)
 
@@ -45,7 +45,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				nil,
 				sample.Shares(r),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -54,7 +54,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				sample.Shares(r),
 				nil,
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -63,7 +63,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				sample.Shares(r),
 				types.EmptyShares(),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -72,7 +72,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}}),
 				sample.Shares(r),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -81,7 +81,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				sample.Shares(r),
 				types.NewSharesFromCoins(sdk.Coins{sdk.Coin{Denom: "", Amount: sdkmath.NewInt(10)}}),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -90,7 +90,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				tc.Shares(t, "1000foo,500bar,2000toto"),
 				tc.Shares(t, "1000foo,501bar,2000toto"),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -99,7 +99,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				tc.Shares(t, "1000foo,500bar"),
 				tc.Shares(t, "1000foo,500bar,2000toto"),
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: false,
 		},
@@ -108,7 +108,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				totalShares,
 				vesting,
-				0,
+				time.Time{}, // empty struct represents 0 time
 			),
 			valid: false,
 		},
@@ -117,7 +117,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				totalShares,
 				vesting,
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: true,
 		},
@@ -126,7 +126,7 @@ func TestDelayedVesting_Validate(t *testing.T) {
 			option: *types.NewShareDelayedVesting(
 				totalShares,
 				vesting,
-				time.Now().Unix(),
+				time.Now(),
 			),
 			valid: true,
 		},
