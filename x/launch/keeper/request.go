@@ -158,7 +158,7 @@ func ApplyRequest(
 	case *types.RequestContent_VestingAccount:
 		va := requestContent.VestingAccount
 		if !chain.AccountBalance.Empty() {
-			switch opt := va.VestingOptions.Options.(type) {
+			switch opt := va.VestingOptions.Options.(type) { //nolint:gocritic
 			case *types.VestingOptions_DelayedVesting:
 				dv := opt.DelayedVesting
 				va = &types.VestingAccount{

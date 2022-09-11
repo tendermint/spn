@@ -3,11 +3,12 @@ package types
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func NewDelayedVesting(totalBalance, vesting sdk.Coins, endTime int64) *VestingOptions {
+func NewDelayedVesting(totalBalance, vesting sdk.Coins, endTime time.Time) *VestingOptions {
 	return &VestingOptions{
 		Options: &VestingOptions_DelayedVesting{
 			DelayedVesting: &DelayedVesting{
@@ -39,7 +40,7 @@ func (m VestingOptions) Validate() error {
 			return errors.New("vesting is not a subset of the total balance")
 		}
 
-		if dv.EndTime == 0 {
+		if dv.EndTime.IsZero() {
 			return errors.New("end time for DelayedVesting cannot be 0")
 		}
 	default:

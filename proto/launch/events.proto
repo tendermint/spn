@@ -4,6 +4,7 @@ package tendermint.spn.launch;
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "cosmos_proto/cosmos.proto";
+import "google/protobuf/timestamp.proto";
 
 import "launch/chain.proto";
 import "launch/request.proto";
@@ -75,8 +76,8 @@ message EventValidatorRemoved {
 }
 
 message EventLaunchTriggered {
-  uint64 launchID        = 1;
-  int64  launchTimestamp = 2;
+  uint64                    launchID        = 1;
+  google.protobuf.Timestamp launchTimeStamp = 2 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
 }
 
 message EventLaunchReverted {

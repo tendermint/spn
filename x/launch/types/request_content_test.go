@@ -490,7 +490,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 	option := *types.NewDelayedVesting(
 		tc.Coins(t, "1000foo500bar"),
 		tc.Coins(t, "500foo500bar"),
-		time.Now().Unix(),
+		time.Now(),
 	)
 
 	tests := []struct {
@@ -517,7 +517,7 @@ func TestVestingAccount_Validate(t *testing.T) {
 				VestingOptions: *types.NewDelayedVesting(
 					sample.Coins(r),
 					sample.Coins(r),
-					0,
+					sample.ZeroTime(),
 				),
 			},
 			launchID: launchID,

@@ -54,7 +54,7 @@ func (k msgServer) TriggerLaunch(goCtx context.Context, msg *types.MsgTriggerLau
 
 	err = ctx.EventManager().EmitTypedEvent(&types.EventLaunchTriggered{
 		LaunchID:        msg.LaunchID,
-		LaunchTimestamp: chain.LaunchTime.Unix(),
+		LaunchTimeStamp: chain.LaunchTime,
 	})
 
 	return &types.MsgTriggerLaunchResponse{}, err

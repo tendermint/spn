@@ -54,7 +54,7 @@ func GenesisAccount(r *rand.Rand, launchID uint64, address string) launch.Genesi
 // VestingOptions returns a sample VestingOptions
 func VestingOptions(r *rand.Rand) launch.VestingOptions {
 	balance := Coins(r)
-	return *launch.NewDelayedVesting(balance, balance, Duration(r).Milliseconds())
+	return *launch.NewDelayedVesting(balance, balance, Time(r))
 }
 
 // VestingAccount returns a sample VestingAccount

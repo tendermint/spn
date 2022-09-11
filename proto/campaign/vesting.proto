@@ -1,6 +1,8 @@
 syntax = "proto3";
 package tendermint.spn.campaign;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
 import "gogoproto/gogo.proto";
@@ -26,5 +28,5 @@ message ShareDelayedVesting {
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "Shares"
   ];
-  int64 endTime = 3;
+  google.protobuf.Timestamp endTime = 3 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];
 }

@@ -24,7 +24,7 @@ func SpecialAllocations(r *rand.Rand) campaign.SpecialAllocations {
 func ShareVestingOptions(r *rand.Rand) campaign.ShareVestingOptions {
 	// use vesting shares as total shares
 	vestingShares := Shares(r)
-	return *campaign.NewShareDelayedVesting(vestingShares, vestingShares, Duration(r).Microseconds())
+	return *campaign.NewShareDelayedVesting(vestingShares, vestingShares, Time(r))
 }
 
 // Voucher returns a sample voucher structure
@@ -40,7 +40,7 @@ func Vouchers(r *rand.Rand, campaignID uint64) sdk.Coins {
 
 // CustomShareVestingOptions returns a sample ShareVestingOptions with shares
 func CustomShareVestingOptions(r *rand.Rand, shares campaign.Shares) campaign.ShareVestingOptions {
-	return *campaign.NewShareDelayedVesting(shares, shares, Duration(r).Microseconds())
+	return *campaign.NewShareDelayedVesting(shares, shares, Time(r))
 }
 
 // CampaignName returns a sample campaign name
