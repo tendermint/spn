@@ -3,14 +3,12 @@ package keeper
 import (
 	"context"
 
-	ignterrors "github.com/ignite/modules/errors"
-
-	profiletypes "github.com/tendermint/spn/x/profile/types"
-
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/errors"
 
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func (k msgServer) SendRequest(
