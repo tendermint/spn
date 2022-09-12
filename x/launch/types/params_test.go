@@ -164,7 +164,7 @@ func TestValidateFee(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validatenFee(tt.fee)
+			err := validateFee(tt.fee)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)

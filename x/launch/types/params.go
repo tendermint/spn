@@ -76,8 +76,8 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyLaunchTimeRange, &p.LaunchTimeRange, validateLaunchTimeRange),
 		paramtypes.NewParamSetPair(KeyRevertDelay, &p.RevertDelay, validateRevertDelay),
-		paramtypes.NewParamSetPair(KeyChainCreationFee, &p.ChainCreationFee, validatenFee),
-		paramtypes.NewParamSetPair(KeyRequestFee, &p.RequestFee, validatenFee),
+		paramtypes.NewParamSetPair(KeyChainCreationFee, &p.ChainCreationFee, validateFee),
+		paramtypes.NewParamSetPair(KeyRequestFee, &p.RequestFee, validateFee),
 	}
 }
 
@@ -89,7 +89,10 @@ func (p Params) Validate() error {
 	if err := validateRevertDelay(p.RevertDelay); err != nil {
 		return err
 	}
-	return p.ChainCreationFee.Validate()
+	if err := p.ChainCreationFee.Validate(); err != nil {
+		return err
+	}
+	return p.RequestFee.Validate()
 }
 
 // String implements the Stringer interface.
@@ -137,7 +140,7 @@ func validateRevertDelay(i interface{}) error {
 	return nil
 }
 
-func validatenFee(i interface{}) error {
+func validateFee(i interface{}) error {
 	v, ok := i.(sdk.Coins)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
