@@ -325,8 +325,9 @@ func LaunchParams(r *rand.Rand) launch.Params {
 
 	// assign random small amount of staking denom
 	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
+	requestFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
 
-	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay, chainCreationFee)
+	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay, chainCreationFee, requestFee)
 }
 
 // LaunchGenesisState returns a sample genesis state for the launch module
