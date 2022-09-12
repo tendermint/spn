@@ -2,9 +2,10 @@
 package keeper
 
 import (
-	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	"testing"
 	"time"
+
+	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"

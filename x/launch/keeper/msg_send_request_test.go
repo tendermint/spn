@@ -1,9 +1,10 @@
 package keeper_test
 
 import (
+	"testing"
+
 	sdkmath "cosmossdk.io/math"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
-	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 

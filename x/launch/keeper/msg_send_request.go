@@ -2,7 +2,9 @@ package keeper
 
 import (
 	"context"
+
 	ignterrors "github.com/ignite/modules/errors"
+
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	sdkerrors "cosmossdk.io/errors"
