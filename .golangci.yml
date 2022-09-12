@@ -12,7 +12,7 @@ linters:
     - errcheck
     - goconst
     - gocritic
-    - gofumptt
+    - gofumpt
     - goimports
     - revive
     - gosec
