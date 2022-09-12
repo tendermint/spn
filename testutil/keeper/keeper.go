@@ -2,6 +2,7 @@
 package keeper
 
 import (
+	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	"testing"
 	"time"
 
@@ -57,6 +58,7 @@ type TestKeepers struct {
 	MonitoringProviderKeeper *monitoringpkeeper.Keeper
 	AccountKeeper            authkeeper.AccountKeeper
 	BankKeeper               bankkeeper.Keeper
+	DistrKeeper              distrkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 	StakingKeeper            stakingkeeper.Keeper
 	FundraisingKeeper        fundraisingkeeper.Keeper
@@ -151,6 +153,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
 			AccountKeeper:            authKeeper,
 			BankKeeper:               bankKeeper,
+			DistrKeeper:              distrKeeper,
 			IBCKeeper:                ibcKeeper,
 			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,

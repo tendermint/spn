@@ -2,7 +2,7 @@ package keeper
 
 import (
 	"context"
-
+	ignterrors "github.com/ignite/modules/errors"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 
 	sdkerrors "cosmossdk.io/errors"
@@ -63,6 +63,18 @@ func (k msgServer) SendRequest(
 		}
 		approved = true
 		request.Status = types.Request_APPROVED
+	}
+
+	// deduct request fee if set
+	requestFee := k.RequestFee(ctx)
+	if !requestFee.Empty() {
+		sender, err := sdk.AccAddressFromBech32(msg.Creator)
+		if err != nil {
+			return nil, ignterrors.Criticalf("invalid coordinator bech32 address %s", err.Error())
+		}
+		if err = k.distrKeeper.FundCommunityPool(ctx, requestFee, sender); err != nil {
+			return nil, err
+		}
 	}
 
 	requestID = k.AppendRequest(ctx, request)
