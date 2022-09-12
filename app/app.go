@@ -603,6 +603,7 @@ func New(
 		keys[claimtypes.MemStoreKey],
 		app.GetSubspace(claimtypes.ModuleName),
 		app.AuthKeeper,
+		app.DistrKeeper,
 		app.BankKeeper,
 	)
 

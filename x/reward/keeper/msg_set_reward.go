@@ -6,7 +6,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
-	ignterrors "github.com/ignite/modules/errors"
+	ignterrors "github.com/ignite/modules/pkg/errors"
 
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/spn/x/reward/types"
