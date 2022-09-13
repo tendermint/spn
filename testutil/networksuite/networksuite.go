@@ -266,23 +266,23 @@ func populateParticipation(r *rand.Rand, participationState participation.Genesi
 func populateProfile(r *rand.Rand, profileState profile.GenesisState) profile.GenesisState {
 	// add coordinators
 	for i := 0; i < 5; i++ {
-		profileState.CoordinatorList = append(
-			profileState.CoordinatorList,
+		profileState.Coordinators = append(
+			profileState.Coordinators,
 			profile.Coordinator{CoordinatorID: uint64(i)},
 		)
 	}
 
 	// add coordinator by address
 	for i := 0; i < 5; i++ {
-		profileState.CoordinatorByAddressList = append(
-			profileState.CoordinatorByAddressList,
+		profileState.CoordinatorByAddresses = append(
+			profileState.CoordinatorByAddresses,
 			profile.CoordinatorByAddress{Address: sample.Address(r)},
 		)
 	}
 
 	// add validator
 	for i := 0; i < 5; i++ {
-		profileState.ValidatorList = append(profileState.ValidatorList, profile.Validator{
+		profileState.Validators = append(profileState.Validators, profile.Validator{
 			Address: sample.Address(r),
 		})
 	}

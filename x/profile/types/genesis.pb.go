@@ -25,11 +25,11 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the profile module's genesis state.
 type GenesisState struct {
-	ValidatorList                  []Validator                  `protobuf:"bytes,1,rep,name=validatorList,proto3" json:"validatorList"`
-	ValidatorByOperatorAddressList []ValidatorByOperatorAddress `protobuf:"bytes,2,rep,name=validatorByOperatorAddressList,proto3" json:"validatorByOperatorAddressList"`
-	CoordinatorList                []Coordinator                `protobuf:"bytes,3,rep,name=coordinatorList,proto3" json:"coordinatorList"`
-	CoordinatorCounter             uint64                       `protobuf:"varint,4,opt,name=coordinatorCounter,proto3" json:"coordinatorCounter,omitempty"`
-	CoordinatorByAddressList       []CoordinatorByAddress       `protobuf:"bytes,5,rep,name=coordinatorByAddressList,proto3" json:"coordinatorByAddressList"`
+	Validators                   []Validator                  `protobuf:"bytes,1,rep,name=validators,proto3" json:"validators"`
+	ValidatorByOperatorAddresses []ValidatorByOperatorAddress `protobuf:"bytes,2,rep,name=validatorByOperatorAddresses,proto3" json:"validatorByOperatorAddresses"`
+	Coordinators                 []Coordinator                `protobuf:"bytes,3,rep,name=coordinators,proto3" json:"coordinators"`
+	CoordinatorCounter           uint64                       `protobuf:"varint,4,opt,name=coordinatorCounter,proto3" json:"coordinatorCounter,omitempty"`
+	CoordinatorByAddresses       []CoordinatorByAddress       `protobuf:"bytes,5,rep,name=coordinatorByAddresses,proto3" json:"coordinatorByAddresses"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -65,23 +65,23 @@ func (m *GenesisState) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GenesisState proto.InternalMessageInfo
 
-func (m *GenesisState) GetValidatorList() []Validator {
+func (m *GenesisState) GetValidators() []Validator {
 	if m != nil {
-		return m.ValidatorList
+		return m.Validators
 	}
 	return nil
 }
 
-func (m *GenesisState) GetValidatorByOperatorAddressList() []ValidatorByOperatorAddress {
+func (m *GenesisState) GetValidatorByOperatorAddresses() []ValidatorByOperatorAddress {
 	if m != nil {
-		return m.ValidatorByOperatorAddressList
+		return m.ValidatorByOperatorAddresses
 	}
 	return nil
 }
 
-func (m *GenesisState) GetCoordinatorList() []Coordinator {
+func (m *GenesisState) GetCoordinators() []Coordinator {
 	if m != nil {
-		return m.CoordinatorList
+		return m.Coordinators
 	}
 	return nil
 }
@@ -93,9 +93,9 @@ func (m *GenesisState) GetCoordinatorCounter() uint64 {
 	return 0
 }
 
-func (m *GenesisState) GetCoordinatorByAddressList() []CoordinatorByAddress {
+func (m *GenesisState) GetCoordinatorByAddresses() []CoordinatorByAddress {
 	if m != nil {
-		return m.CoordinatorByAddressList
+		return m.CoordinatorByAddresses
 	}
 	return nil
 }
@@ -107,28 +107,27 @@ func init() {
 func init() { proto.RegisterFile("profile/genesis.proto", fileDescriptor_db4bc1562021cf42) }
 
 var fileDescriptor_db4bc1562021cf42 = []byte{
-	// 321 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2d, 0x28, 0xca, 0x4f,
-	0xcb, 0xcc, 0x49, 0xd5, 0x4f, 0x4f, 0xcd, 0x4b, 0x2d, 0xce, 0x2c, 0xd6, 0x2b, 0x28, 0xca, 0x2f,
-	0xc9, 0x17, 0x12, 0x2b, 0x49, 0xcd, 0x4b, 0x49, 0x2d, 0xca, 0xcd, 0xcc, 0x2b, 0xd1, 0x2b, 0x2e,
-	0xc8, 0xd3, 0x83, 0xaa, 0x92, 0x12, 0x49, 0xcf, 0x4f, 0xcf, 0x07, 0x2b, 0xd1, 0x07, 0xb1, 0x20,
-	0xaa, 0xa5, 0xc4, 0x61, 0x86, 0x94, 0x25, 0xe6, 0x64, 0xa6, 0x24, 0x96, 0xe4, 0x17, 0x41, 0x25,
-	0x24, 0x61, 0x12, 0xc9, 0xf9, 0xf9, 0x45, 0x29, 0x99, 0x79, 0x08, 0x29, 0xa5, 0xab, 0xcc, 0x5c,
-	0x3c, 0xee, 0x10, 0x3b, 0x83, 0x4b, 0x12, 0x4b, 0x52, 0x85, 0x7c, 0xb9, 0x78, 0xe1, 0xda, 0x7d,
-	0x32, 0x8b, 0x4b, 0x24, 0x18, 0x15, 0x98, 0x35, 0xb8, 0x8d, 0x14, 0xf5, 0xb0, 0x3b, 0x45, 0x2f,
-	0x0c, 0xa6, 0xd8, 0x89, 0xe5, 0xc4, 0x3d, 0x79, 0x86, 0x20, 0x54, 0xdd, 0x42, 0x0d, 0x8c, 0x5c,
-	0x72, 0x70, 0x11, 0xa7, 0x4a, 0xff, 0x82, 0xd4, 0x22, 0x10, 0xcb, 0x31, 0x25, 0xa5, 0x28, 0xb5,
-	0xb8, 0x18, 0x6c, 0x01, 0x13, 0xd8, 0x02, 0x23, 0xc2, 0x16, 0xa0, 0xeb, 0x86, 0xda, 0x48, 0xc0,
-	0x7c, 0xa1, 0x60, 0x2e, 0x7e, 0x24, 0x7f, 0x83, 0xad, 0x64, 0x06, 0x5b, 0xa9, 0x8c, 0xcb, 0x4a,
-	0x67, 0x84, 0x72, 0xa8, 0x1d, 0xe8, 0x26, 0x08, 0xe9, 0x71, 0x09, 0x21, 0x09, 0x39, 0xe7, 0x97,
-	0xe6, 0x95, 0xa4, 0x16, 0x49, 0xb0, 0x28, 0x30, 0x6a, 0xb0, 0x04, 0x61, 0x91, 0x11, 0xca, 0xe3,
-	0x92, 0x40, 0x12, 0x75, 0xaa, 0x44, 0x0e, 0x00, 0x56, 0xb0, 0x6b, 0x74, 0x88, 0x71, 0x4d, 0x25,
-	0xaa, 0xd7, 0x71, 0x9a, 0xe9, 0xe4, 0x7c, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f,
-	0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c,
-	0x51, 0x9a, 0xe9, 0x99, 0x25, 0x19, 0xa5, 0x49, 0x7a, 0xc9, 0xf9, 0xb9, 0xfa, 0x08, 0x1b, 0xf5,
-	0x8b, 0x0b, 0xf2, 0xf4, 0x2b, 0xf4, 0x61, 0x09, 0xa5, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d,
-	0x9c, 0x46, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x9d, 0x21, 0xcb, 0x65, 0x9e, 0x02, 0x00,
-	0x00,
+	// 316 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x52, 0xcf, 0x4a, 0xc3, 0x30,
+	0x18, 0x6f, 0x6d, 0xf5, 0x10, 0x77, 0x0a, 0x3a, 0xeb, 0x90, 0x38, 0xf5, 0x32, 0x41, 0x12, 0x98,
+	0x4f, 0x60, 0x7b, 0xd8, 0x49, 0x84, 0x09, 0x1e, 0xbc, 0x75, 0x6b, 0xac, 0x91, 0x2d, 0x09, 0x49,
+	0x26, 0x16, 0x7c, 0x08, 0x1f, 0xc9, 0xe3, 0x8e, 0x3b, 0x7a, 0x12, 0x69, 0x5f, 0x44, 0xd6, 0xb5,
+	0x6b, 0x27, 0x9b, 0x7a, 0xcb, 0x97, 0xdf, 0xbf, 0xef, 0x07, 0x1f, 0xd8, 0x97, 0x4a, 0x3c, 0xb0,
+	0x11, 0x25, 0x31, 0xe5, 0x54, 0x33, 0x8d, 0xa5, 0x12, 0x46, 0xc0, 0xa6, 0xa1, 0x3c, 0xa2, 0x6a,
+	0xcc, 0xb8, 0xc1, 0x5a, 0x72, 0x5c, 0xb0, 0x5a, 0x7b, 0xb1, 0x88, 0x45, 0x4e, 0x21, 0xf3, 0xd7,
+	0x82, 0xdd, 0x3a, 0x28, 0x4d, 0x9e, 0xc3, 0x11, 0x8b, 0x42, 0x23, 0x54, 0x01, 0x1c, 0x96, 0xc0,
+	0x50, 0x08, 0x15, 0x31, 0x5e, 0x41, 0xa7, 0xef, 0x0e, 0x68, 0xf4, 0x16, 0x99, 0xb7, 0x26, 0x34,
+	0x14, 0xf6, 0x00, 0x58, 0xca, 0xb5, 0x67, 0xb7, 0x9d, 0xce, 0x6e, 0xf7, 0x04, 0xaf, 0xdf, 0x03,
+	0xdf, 0x95, 0x4c, 0xdf, 0x9d, 0x7e, 0x1e, 0x5b, 0xfd, 0x9a, 0x14, 0xbe, 0x82, 0xa3, 0xe5, 0xe4,
+	0x27, 0x37, 0x92, 0xaa, 0xf9, 0xeb, 0x2a, 0x8a, 0x14, 0xd5, 0x9a, 0x6a, 0x6f, 0x2b, 0xb7, 0xee,
+	0xfe, 0x6d, 0xfd, 0x53, 0x5b, 0x64, 0xfd, 0xea, 0x0e, 0xaf, 0x41, 0xa3, 0x56, 0x56, 0x7b, 0x4e,
+	0x9e, 0x76, 0xb6, 0x29, 0x2d, 0xa8, 0xb8, 0x85, 0xfd, 0x8a, 0x1c, 0x62, 0x00, 0x6b, 0x73, 0x20,
+	0x26, 0xdc, 0x50, 0xe5, 0xb9, 0x6d, 0xbb, 0xe3, 0xf6, 0xd7, 0x20, 0xf0, 0x09, 0x34, 0x6b, 0xbf,
+	0x7e, 0x52, 0xd5, 0xde, 0xce, 0x17, 0xb9, 0xf8, 0xcf, 0x22, 0xc9, 0x6a, 0xe1, 0x0d, 0x8e, 0x7e,
+	0x30, 0x4d, 0x91, 0x3d, 0x4b, 0x91, 0xfd, 0x95, 0x22, 0xfb, 0x2d, 0x43, 0xd6, 0x2c, 0x43, 0xd6,
+	0x47, 0x86, 0xac, 0xfb, 0xf3, 0x98, 0x99, 0xc7, 0xc9, 0x00, 0x0f, 0xc5, 0x98, 0x54, 0x79, 0x44,
+	0x4b, 0x4e, 0x5e, 0x48, 0x79, 0x13, 0x26, 0x91, 0x54, 0x0f, 0x76, 0xf2, 0x73, 0xb8, 0xfc, 0x0e,
+	0x00, 0x00, 0xff, 0xff, 0xde, 0x15, 0x34, 0xcf, 0x89, 0x02, 0x00, 0x00,
 }
 
 func (m *GenesisState) Marshal() (dAtA []byte, err error) {
@@ -151,10 +150,10 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.CoordinatorByAddressList) > 0 {
-		for iNdEx := len(m.CoordinatorByAddressList) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.CoordinatorByAddresses) > 0 {
+		for iNdEx := len(m.CoordinatorByAddresses) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.CoordinatorByAddressList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.CoordinatorByAddresses[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -170,10 +169,10 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x20
 	}
-	if len(m.CoordinatorList) > 0 {
-		for iNdEx := len(m.CoordinatorList) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.Coordinators) > 0 {
+		for iNdEx := len(m.Coordinators) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.CoordinatorList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.Coordinators[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -184,10 +183,10 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x1a
 		}
 	}
-	if len(m.ValidatorByOperatorAddressList) > 0 {
-		for iNdEx := len(m.ValidatorByOperatorAddressList) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.ValidatorByOperatorAddresses) > 0 {
+		for iNdEx := len(m.ValidatorByOperatorAddresses) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.ValidatorByOperatorAddressList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.ValidatorByOperatorAddresses[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -198,10 +197,10 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x12
 		}
 	}
-	if len(m.ValidatorList) > 0 {
-		for iNdEx := len(m.ValidatorList) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.Validators) > 0 {
+		for iNdEx := len(m.Validators) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.ValidatorList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.Validators[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -232,20 +231,20 @@ func (m *GenesisState) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if len(m.ValidatorList) > 0 {
-		for _, e := range m.ValidatorList {
+	if len(m.Validators) > 0 {
+		for _, e := range m.Validators {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
 	}
-	if len(m.ValidatorByOperatorAddressList) > 0 {
-		for _, e := range m.ValidatorByOperatorAddressList {
+	if len(m.ValidatorByOperatorAddresses) > 0 {
+		for _, e := range m.ValidatorByOperatorAddresses {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
 	}
-	if len(m.CoordinatorList) > 0 {
-		for _, e := range m.CoordinatorList {
+	if len(m.Coordinators) > 0 {
+		for _, e := range m.Coordinators {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
@@ -253,8 +252,8 @@ func (m *GenesisState) Size() (n int) {
 	if m.CoordinatorCounter != 0 {
 		n += 1 + sovGenesis(uint64(m.CoordinatorCounter))
 	}
-	if len(m.CoordinatorByAddressList) > 0 {
-		for _, e := range m.CoordinatorByAddressList {
+	if len(m.CoordinatorByAddresses) > 0 {
+		for _, e := range m.CoordinatorByAddresses {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
@@ -299,7 +298,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorList", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Validators", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -326,14 +325,14 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ValidatorList = append(m.ValidatorList, Validator{})
-			if err := m.ValidatorList[len(m.ValidatorList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Validators = append(m.Validators, Validator{})
+			if err := m.Validators[len(m.Validators)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorByOperatorAddressList", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ValidatorByOperatorAddresses", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -360,14 +359,14 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ValidatorByOperatorAddressList = append(m.ValidatorByOperatorAddressList, ValidatorByOperatorAddress{})
-			if err := m.ValidatorByOperatorAddressList[len(m.ValidatorByOperatorAddressList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.ValidatorByOperatorAddresses = append(m.ValidatorByOperatorAddresses, ValidatorByOperatorAddress{})
+			if err := m.ValidatorByOperatorAddresses[len(m.ValidatorByOperatorAddresses)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorList", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Coordinators", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -394,8 +393,8 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.CoordinatorList = append(m.CoordinatorList, Coordinator{})
-			if err := m.CoordinatorList[len(m.CoordinatorList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.Coordinators = append(m.Coordinators, Coordinator{})
+			if err := m.Coordinators[len(m.Coordinators)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -420,7 +419,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			}
 		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorByAddressList", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field CoordinatorByAddresses", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -447,8 +446,8 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.CoordinatorByAddressList = append(m.CoordinatorByAddressList, CoordinatorByAddress{})
-			if err := m.CoordinatorByAddressList[len(m.CoordinatorByAddressList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.CoordinatorByAddresses = append(m.CoordinatorByAddresses, CoordinatorByAddress{})
+			if err := m.CoordinatorByAddresses[len(m.CoordinatorByAddresses)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
