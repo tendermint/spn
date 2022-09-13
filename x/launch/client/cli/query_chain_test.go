@@ -17,7 +17,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowChain() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	chains := suite.LaunchState.ChainList
+	chains := suite.LaunchState.Chains
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -63,7 +63,7 @@ func (suite *QueryTestSuite) TestShowChain() {
 
 func (suite *QueryTestSuite) TestListChain() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	chains := suite.LaunchState.ChainList
+	chains := suite.LaunchState.Chains
 
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{

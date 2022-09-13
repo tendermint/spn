@@ -25,14 +25,14 @@ func TestGenesis(t *testing.T) {
 		got := launch.ExportGenesis(ctx, *tk.LaunchKeeper)
 
 		// Compare lists
-		require.ElementsMatch(t, genesisState.ChainList, got.ChainList)
+		require.ElementsMatch(t, genesisState.Chains, got.Chains)
 		require.Equal(t, genesisState.ChainCounter, got.ChainCounter)
 
-		require.ElementsMatch(t, genesisState.GenesisAccountList, got.GenesisAccountList)
-		require.ElementsMatch(t, genesisState.VestingAccountList, got.VestingAccountList)
-		require.ElementsMatch(t, genesisState.GenesisValidatorList, got.GenesisValidatorList)
-		require.ElementsMatch(t, genesisState.RequestList, got.RequestList)
-		require.ElementsMatch(t, genesisState.RequestCounterList, got.RequestCounterList)
+		require.ElementsMatch(t, genesisState.GenesisAccounts, got.GenesisAccounts)
+		require.ElementsMatch(t, genesisState.VestingAccounts, got.VestingAccounts)
+		require.ElementsMatch(t, genesisState.GenesisValidators, got.GenesisValidators)
+		require.ElementsMatch(t, genesisState.Requests, got.Requests)
+		require.ElementsMatch(t, genesisState.RequestCounters, got.RequestCounters)
 
 		require.Equal(t, genesisState.Params, got.Params)
 	})

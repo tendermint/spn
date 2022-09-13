@@ -92,32 +92,32 @@ func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.Genesi
 	// add chains
 	for i := 0; i < 5; i++ {
 		chain := sample.Chain(r, uint64(i), uint64(i))
-		launchState.ChainList = append(
-			launchState.ChainList,
+		launchState.Chains = append(
+			launchState.Chains,
 			chain,
 		)
 	}
 
 	// add genesis accounts
 	for i := 0; i < 5; i++ {
-		launchState.GenesisAccountList = append(
-			launchState.GenesisAccountList,
+		launchState.GenesisAccounts = append(
+			launchState.GenesisAccounts,
 			sample.GenesisAccount(r, 0, sample.Address(r)),
 		)
 	}
 
 	// add vesting accounts
 	for i := 0; i < 5; i++ {
-		launchState.VestingAccountList = append(
-			launchState.VestingAccountList,
+		launchState.VestingAccounts = append(
+			launchState.VestingAccounts,
 			sample.VestingAccount(r, 0, sample.Address(r)),
 		)
 	}
 
 	// add genesis validators
 	for i := 0; i < 5; i++ {
-		launchState.GenesisValidatorList = append(
-			launchState.GenesisValidatorList,
+		launchState.GenesisValidators = append(
+			launchState.GenesisValidators,
 			sample.GenesisValidator(r, uint64(0), sample.Address(r)),
 		)
 	}
@@ -126,8 +126,8 @@ func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.Genesi
 	for i := 0; i < 5; i++ {
 		request := sample.Request(r, 0, sample.Address(r))
 		request.RequestID = uint64(i)
-		launchState.RequestList = append(
-			launchState.RequestList,
+		launchState.Requests = append(
+			launchState.Requests,
 			request,
 		)
 	}
