@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	ignterrors "github.com/ignite/modules/errors"
+	ignterrors "github.com/ignite/modules/pkg/errors"
 	"github.com/stretchr/testify/require"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"

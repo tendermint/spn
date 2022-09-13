@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	connectiontypes "github.com/cosmos/ibc-go/v5/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
-	ignterrors "github.com/ignite/modules/errors"
+	ignterrors "github.com/ignite/modules/pkg/errors"
 	"github.com/stretchr/testify/require"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
