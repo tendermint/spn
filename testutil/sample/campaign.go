@@ -106,12 +106,12 @@ func CampaignGenesisState(r *rand.Rand) campaign.GenesisState {
 	campaign1, campaign2 := Campaign(r, 0), Campaign(r, 1)
 
 	return campaign.GenesisState{
-		CampaignList: []campaign.Campaign{
+		Campaigns: []campaign.Campaign{
 			campaign1,
 			campaign2,
 		},
 		CampaignCounter: 2,
-		CampaignChainsList: []campaign.CampaignChains{
+		CampaignChains: []campaign.CampaignChains{
 			{
 				CampaignID: 0,
 				Chains:     []uint64{0, 1},
@@ -125,17 +125,17 @@ func CampaignGenesisState(r *rand.Rand) campaign.GenesisState {
 // CampaignGenesisStateWithAccounts returns a sample genesis state for the campaign module that includes accounts
 func CampaignGenesisStateWithAccounts(r *rand.Rand) campaign.GenesisState {
 	genState := CampaignGenesisState(r)
-	genState.MainnetAccountList = make([]campaign.MainnetAccount, 0)
+	genState.MainnetAccounts = make([]campaign.MainnetAccount, 0)
 
-	for i, c := range genState.CampaignList {
+	for i, c := range genState.Campaigns {
 		for j := 0; j < 5; j++ {
 			mainnetAccount := MainnetAccount(r, c.CampaignID, Address(r))
-			genState.MainnetAccountList = append(genState.MainnetAccountList, mainnetAccount)
+			genState.MainnetAccounts = append(genState.MainnetAccounts, mainnetAccount)
 
 			// increase campaign allocated shares accordingly
 			c.AllocatedShares = campaign.IncreaseShares(c.AllocatedShares, mainnetAccount.Shares)
 		}
-		genState.CampaignList[i] = c
+		genState.Campaigns[i] = c
 	}
 
 	return genState

@@ -142,12 +142,12 @@ func populateCampaign(r *rand.Rand, campaignState campaign.GenesisState) campaig
 			CampaignID: uint64(i),
 		}
 		nullify.Fill(&camp)
-		campaignState.CampaignList = append(campaignState.CampaignList, camp)
+		campaignState.Campaigns = append(campaignState.Campaigns, camp)
 	}
 
 	// add campaign chains
 	for i := 0; i < 5; i++ {
-		campaignState.CampaignChainsList = append(campaignState.CampaignChainsList, campaign.CampaignChains{
+		campaignState.CampaignChains = append(campaignState.CampaignChains, campaign.CampaignChains{
 			CampaignID: uint64(i),
 			Chains:     []uint64{uint64(i)},
 		})
@@ -156,8 +156,8 @@ func populateCampaign(r *rand.Rand, campaignState campaign.GenesisState) campaig
 	// add mainnet accounts
 	campaignID := uint64(5)
 	for i := 0; i < 5; i++ {
-		campaignState.MainnetAccountList = append(
-			campaignState.MainnetAccountList,
+		campaignState.MainnetAccounts = append(
+			campaignState.MainnetAccounts,
 			sample.MainnetAccount(r, campaignID, sample.Address(r)),
 		)
 	}
