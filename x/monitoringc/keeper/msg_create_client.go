@@ -9,7 +9,7 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v5/modules/core/02-client/types"
 	committypes "github.com/cosmos/ibc-go/v5/modules/core/23-commitment/types"
 	ibctmtypes "github.com/cosmos/ibc-go/v5/modules/light-clients/07-tendermint/types"
-	ignterrors "github.com/ignite/modules/errors"
+	ignterrors "github.com/ignite/modules/pkg/errors"
 	"github.com/tendermint/tendermint/light"
 
 	"github.com/tendermint/spn/pkg/chainid"
