@@ -10,7 +10,7 @@ option go_package = "github.com/tendermint/spn/x/reward/types";
 
 // GenesisState defines the reward module's genesis state.
 message GenesisState {
-  repeated RewardPool rewardPoolList = 1 [(gogoproto.nullable) = false];
+  repeated RewardPool rewardPools = 1 [(gogoproto.nullable) = false];
   Params              params         = 2 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }

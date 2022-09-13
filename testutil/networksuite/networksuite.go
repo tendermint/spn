@@ -297,7 +297,7 @@ func populateReward(rewardState reward.GenesisState) reward.GenesisState {
 			LaunchID: uint64(i),
 		}
 		nullify.Fill(&rewardPool)
-		rewardState.RewardPoolList = append(rewardState.RewardPoolList, rewardPool)
+		rewardState.RewardPools = append(rewardState.RewardPools, rewardPool)
 	}
 
 	return rewardState

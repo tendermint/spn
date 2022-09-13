@@ -7,7 +7,7 @@ import (
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		RewardPoolList: []RewardPool{},
+		RewardPools: []RewardPool{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -19,7 +19,7 @@ func (gs GenesisState) Validate() error {
 	// Check for duplicated index in rewardPool
 	rewardPoolIndexMap := make(map[string]struct{})
 
-	for _, elem := range gs.RewardPoolList {
+	for _, elem := range gs.RewardPools {
 		if err := elem.Validate(); err != nil {
 			return err
 		}
