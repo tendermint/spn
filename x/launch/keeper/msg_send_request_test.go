@@ -240,31 +240,6 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			err:         sdkerrortypes.ErrInsufficientFunds,
 		},
 		{
-			name: "should prevent send a new request if sender has no balance",
-			inputState: inputState{
-				noAccount: true,
-				coordinator: profiletypes.Coordinator{
-					CoordinatorID: 5,
-					Address:       coordAddr,
-					Active:        true,
-				},
-				chain: types.Chain{
-					LaunchID:        5,
-					LaunchTriggered: false,
-					IsMainnet:       false,
-					CoordinatorID:   5,
-				},
-				fee: fee,
-			},
-			msg: *types.NewMsgSendRequest(
-				sample.Address(r),
-				5,
-				types.NewAccountRemoval(sample.Address(r)),
-			),
-			wantApprove: false,
-			err:         sdkerrortypes.ErrInsufficientFunds,
-		},
-		{
 			name: "should allow send a new request if sender sufficient balance",
 			inputState: inputState{
 				noAccount: true,
