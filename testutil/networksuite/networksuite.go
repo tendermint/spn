@@ -201,8 +201,8 @@ func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.
 			ChannelID: strconv.Itoa(i),
 		}
 		nullify.Fill(&launchIDFromChannelID)
-		monitoringcState.LaunchIDFromChannelIDList = append(
-			monitoringcState.LaunchIDFromChannelIDList,
+		monitoringcState.LaunchIDFromChannelIDs = append(
+			monitoringcState.LaunchIDFromChannelIDs,
 			launchIDFromChannelID,
 		)
 	}
@@ -222,7 +222,7 @@ func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.
 			LaunchID: uint64(i),
 		}
 		nullify.Fill(&providerClientID)
-		monitoringcState.ProviderClientIDList = append(monitoringcState.ProviderClientIDList, providerClientID)
+		monitoringcState.ProviderClientIDs = append(monitoringcState.ProviderClientIDs, providerClientID)
 	}
 
 	// add verified client IDs
@@ -231,7 +231,7 @@ func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.
 			LaunchID: uint64(i),
 		}
 		nullify.Fill(&verifiedClientID)
-		monitoringcState.VerifiedClientIDList = append(monitoringcState.VerifiedClientIDList, verifiedClientID)
+		monitoringcState.VerifiedClientIDs = append(monitoringcState.VerifiedClientIDs, verifiedClientID)
 	}
 
 	return monitoringcState

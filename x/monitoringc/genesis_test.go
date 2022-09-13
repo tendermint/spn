@@ -15,7 +15,7 @@ func TestGenesis(t *testing.T) {
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
 		PortId: types.PortID,
-		VerifiedClientIDList: []types.VerifiedClientID{
+		VerifiedClientIDs: []types.VerifiedClientID{
 			{
 				LaunchID:  0,
 				ClientIDs: []string{"0"},
@@ -25,7 +25,7 @@ func TestGenesis(t *testing.T) {
 				ClientIDs: []string{"0"},
 			},
 		},
-		ProviderClientIDList: []types.ProviderClientID{
+		ProviderClientIDs: []types.ProviderClientID{
 			{
 				LaunchID: 0,
 			},
@@ -33,7 +33,7 @@ func TestGenesis(t *testing.T) {
 				LaunchID: 1,
 			},
 		},
-		LaunchIDFromVerifiedClientIDList: []types.LaunchIDFromVerifiedClientID{
+		LaunchIDFromVerifiedClientIDs: []types.LaunchIDFromVerifiedClientID{
 			{
 				ClientID: "0",
 			},
@@ -41,7 +41,7 @@ func TestGenesis(t *testing.T) {
 				ClientID: "1",
 			},
 		},
-		LaunchIDFromChannelIDList: []types.LaunchIDFromChannelID{
+		LaunchIDFromChannelIDs: []types.LaunchIDFromChannelID{
 			{
 				ChannelID: "0",
 			},
@@ -70,10 +70,10 @@ func TestGenesis(t *testing.T) {
 
 	require.Equal(t, genesisState.PortId, got.PortId)
 
-	require.ElementsMatch(t, genesisState.VerifiedClientIDList, got.VerifiedClientIDList)
-	require.ElementsMatch(t, genesisState.ProviderClientIDList, got.ProviderClientIDList)
-	require.ElementsMatch(t, genesisState.LaunchIDFromVerifiedClientIDList, got.LaunchIDFromVerifiedClientIDList)
-	require.ElementsMatch(t, genesisState.LaunchIDFromChannelIDList, got.LaunchIDFromChannelIDList)
+	require.ElementsMatch(t, genesisState.VerifiedClientIDs, got.VerifiedClientIDs)
+	require.ElementsMatch(t, genesisState.ProviderClientIDs, got.ProviderClientIDs)
+	require.ElementsMatch(t, genesisState.LaunchIDFromVerifiedClientIDs, got.LaunchIDFromVerifiedClientIDs)
+	require.ElementsMatch(t, genesisState.LaunchIDFromChannelIDs, got.LaunchIDFromChannelIDs)
 	require.ElementsMatch(t, genesisState.MonitoringHistoryList, got.MonitoringHistoryList)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

@@ -11,19 +11,19 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// Set all the verifiedClientID
-	for _, elem := range genState.VerifiedClientIDList {
+	for _, elem := range genState.VerifiedClientIDs {
 		k.SetVerifiedClientID(ctx, elem)
 	}
 	// Set all the providerClientID
-	for _, elem := range genState.ProviderClientIDList {
+	for _, elem := range genState.ProviderClientIDs {
 		k.SetProviderClientID(ctx, elem)
 	}
 	// Set all the launchIDFromVerifiedClientID
-	for _, elem := range genState.LaunchIDFromVerifiedClientIDList {
+	for _, elem := range genState.LaunchIDFromVerifiedClientIDs {
 		k.SetLaunchIDFromVerifiedClientID(ctx, elem)
 	}
 	// Set all the launchIDFromChannelID
-	for _, elem := range genState.LaunchIDFromChannelIDList {
+	for _, elem := range genState.LaunchIDFromChannelIDs {
 		k.SetLaunchIDFromChannelID(ctx, elem)
 	}
 	// Set all the monitoringHistory
@@ -51,10 +51,10 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.PortId = k.GetPort(ctx)
-	genesis.VerifiedClientIDList = k.GetAllVerifiedClientID(ctx)
-	genesis.ProviderClientIDList = k.GetAllProviderClientID(ctx)
-	genesis.LaunchIDFromVerifiedClientIDList = k.GetAllLaunchIDFromVerifiedClientID(ctx)
-	genesis.LaunchIDFromChannelIDList = k.GetAllLaunchIDFromChannelID(ctx)
+	genesis.VerifiedClientIDs = k.GetAllVerifiedClientID(ctx)
+	genesis.ProviderClientIDs = k.GetAllProviderClientID(ctx)
+	genesis.LaunchIDFromVerifiedClientIDs = k.GetAllLaunchIDFromVerifiedClientID(ctx)
+	genesis.LaunchIDFromChannelIDs = k.GetAllLaunchIDFromChannelID(ctx)
 	genesis.MonitoringHistoryList = k.GetAllMonitoringHistory(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 

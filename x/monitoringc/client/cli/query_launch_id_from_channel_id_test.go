@@ -19,7 +19,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowLaunchIDFromChannelID() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.MonitoringcState.LaunchIDFromChannelIDList
+	objs := suite.MonitoringcState.LaunchIDFromChannelIDs
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -73,7 +73,7 @@ func (suite *QueryTestSuite) TestShowLaunchIDFromChannelID() {
 
 func (suite *QueryTestSuite) TestListLaunchIDFromChannelID() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.MonitoringcState.LaunchIDFromChannelIDList
+	objs := suite.MonitoringcState.LaunchIDFromChannelIDs
 
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{

@@ -15,10 +15,10 @@ option go_package = "github.com/tendermint/spn/x/monitoringc/types";
 // GenesisState defines the monitoringc module's genesis state.
 message GenesisState {
   string                                port_id                          = 1;
-  repeated VerifiedClientID             verifiedClientIDList             = 2 [(gogoproto.nullable) = false];
-  repeated ProviderClientID             providerClientIDList             = 3 [(gogoproto.nullable) = false];
-  repeated LaunchIDFromVerifiedClientID launchIDFromVerifiedClientIDList = 4 [(gogoproto.nullable) = false];
-  repeated LaunchIDFromChannelID        launchIDFromChannelIDList        = 5 [(gogoproto.nullable) = false];
+  repeated VerifiedClientID             verifiedClientIDs             = 2 [(gogoproto.nullable) = false];
+  repeated ProviderClientID             providerClientIDs             = 3 [(gogoproto.nullable) = false];
+  repeated LaunchIDFromVerifiedClientID launchIDFromVerifiedClientIDs = 4 [(gogoproto.nullable) = false];
+  repeated LaunchIDFromChannelID        launchIDFromChannelIDs        = 5 [(gogoproto.nullable) = false];
   repeated MonitoringHistory            monitoringHistoryList            = 6 [(gogoproto.nullable) = false];
   Params                                params                           = 7 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
