@@ -3,12 +3,12 @@ package keeper
 import (
 	"context"
 
-	profiletypes "github.com/tendermint/spn/x/profile/types"
-
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	ignterrors "github.com/ignite/modules/pkg/errors"
 
 	"github.com/tendermint/spn/x/launch/types"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func (k msgServer) SendRequest(
@@ -63,6 +63,18 @@ func (k msgServer) SendRequest(
 		}
 		approved = true
 		request.Status = types.Request_APPROVED
+	}
+
+	// deduct request fee if set
+	requestFee := k.RequestFee(ctx)
+	if !requestFee.Empty() {
+		sender, err := sdk.AccAddressFromBech32(msg.Creator)
+		if err != nil {
+			return nil, ignterrors.Criticalf("invalid sender bech32 address %s", err.Error())
+		}
+		if err = k.distrKeeper.FundCommunityPool(ctx, requestFee, sender); err != nil {
+			return nil, err
+		}
 	}
 
 	requestID = k.AppendRequest(ctx, request)

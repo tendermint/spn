@@ -8,6 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
+	distrkeeper "github.com/cosmos/cosmos-sdk/x/distribution/keeper"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -57,6 +58,7 @@ type TestKeepers struct {
 	MonitoringProviderKeeper *monitoringpkeeper.Keeper
 	AccountKeeper            authkeeper.AccountKeeper
 	BankKeeper               bankkeeper.Keeper
+	DistrKeeper              distrkeeper.Keeper
 	IBCKeeper                *ibckeeper.Keeper
 	StakingKeeper            stakingkeeper.Keeper
 	FundraisingKeeper        fundraisingkeeper.Keeper
@@ -151,6 +153,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			MonitoringConsumerKeeper: monitoringConsumerKeeper,
 			AccountKeeper:            authKeeper,
 			BankKeeper:               bankKeeper,
+			DistrKeeper:              distrKeeper,
 			IBCKeeper:                ibcKeeper,
 			StakingKeeper:            stakingKeeper,
 			FundraisingKeeper:        fundraisingKeeper,

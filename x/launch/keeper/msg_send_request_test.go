@@ -3,12 +3,12 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -19,6 +19,10 @@ func TestMsgRequestAddAccount(t *testing.T) {
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddr, addr := sample.Address(r), sample.Address(r)
 
+	fee := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000)))
+	hasFeeAddr := sample.Address(r)
+	tk.Mint(sdkCtx, hasFeeAddr, fee)
+
 	type inputState struct {
 		noCoordinator bool
 		noChain       bool
@@ -26,15 +30,17 @@ func TestMsgRequestAddAccount(t *testing.T) {
 		coordinator   profiletypes.Coordinator
 		chain         types.Chain
 		account       types.GenesisAccount
+		fee           sdk.Coins
 	}
 
 	tests := []struct {
-		name        string
-		inputState  inputState
-		msg         types.MsgSendRequest
-		wantID      uint64
-		wantApprove bool
-		err         error
+		name                     string
+		inputState               inputState
+		msg                      types.MsgSendRequest
+		wantID                   uint64
+		wantApprove              bool
+		expectedCommunityPoolAmt sdk.Coin
+		err                      error
 	}{
 		{
 			name: "should prevent sending a request for a non existing chain",
@@ -42,6 +48,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				noAccount:     true,
 				noChain:       true,
 				noCoordinator: true,
+				fee:           sdk.Coins(nil),
 			},
 			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 10000),
 			err: types.ErrChainNotFound,
@@ -61,6 +68,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 					IsMainnet:       false,
 					CoordinatorID:   0,
 				},
+				fee: sdk.Coins(nil),
 			},
 			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 0),
 			err: types.ErrTriggeredLaunch,
@@ -80,6 +88,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 					IsMainnet:       true,
 					CoordinatorID:   1,
 				},
+				fee: sdk.Coins(nil),
 			},
 			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 1),
 			err: types.ErrInvalidRequestForMainnet,
@@ -95,6 +104,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 					IsMainnet:       false,
 					CoordinatorID:   2,
 				},
+				fee: sdk.Coins(nil),
 			},
 			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 2),
 			err: types.ErrChainInactive,
@@ -117,6 +127,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 					IsMainnet:       false,
 					CoordinatorID:   3,
 				},
+				fee: sdk.Coins(nil),
 			},
 			msg: sample.MsgSendRequestWithAddAccount(r, coordAddr, addr, 3),
 			err: types.ErrRequestApplicationFailure,
@@ -136,6 +147,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 					IsMainnet:       false,
 					CoordinatorID:   4,
 				},
+				fee: sdk.Coins(nil),
 			},
 			msg: sample.MsgSendRequestWithAddAccount(r, sample.Address(r), sample.Address(r), 4),
 			err: profiletypes.ErrCoordInactive,
@@ -155,6 +167,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 					IsMainnet:       false,
 					CoordinatorID:   5,
 				},
+				fee: sdk.Coins(nil),
 			},
 			msg: *types.NewMsgSendRequest(
 				sample.Address(r),
@@ -170,6 +183,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				noAccount:     true,
 				noCoordinator: true,
 				noChain:       true,
+				fee:           sdk.Coins(nil),
 			},
 			msg:         sample.MsgSendRequestWithAddAccount(r, coordAddr, sample.Address(r), 5),
 			wantID:      2,
@@ -190,6 +204,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 					IsMainnet:       true,
 					CoordinatorID:   6,
 				},
+				fee: sdk.Coins(nil),
 			},
 			msg: *types.NewMsgSendRequest(
 				sample.Address(r),
@@ -198,6 +213,57 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			),
 			wantID:      1,
 			wantApprove: false,
+		},
+		{
+			name: "should prevent send a new request if sender has no balance",
+			inputState: inputState{
+				noAccount: true,
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 5,
+					Address:       coordAddr,
+					Active:        true,
+				},
+				chain: types.Chain{
+					LaunchID:        5,
+					LaunchTriggered: false,
+					IsMainnet:       false,
+					CoordinatorID:   5,
+				},
+				fee: sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000))),
+			},
+			msg: *types.NewMsgSendRequest(
+				sample.Address(r),
+				5,
+				types.NewAccountRemoval(sample.Address(r)),
+			),
+			wantApprove: false,
+			err:         sdkerrortypes.ErrInsufficientFunds,
+		},
+		{
+			name: "should allow send a new request if sender sufficient balance",
+			inputState: inputState{
+				noAccount: true,
+				coordinator: profiletypes.Coordinator{
+					CoordinatorID: 5,
+					Address:       coordAddr,
+					Active:        true,
+				},
+				chain: types.Chain{
+					LaunchID:        5,
+					LaunchTriggered: false,
+					IsMainnet:       false,
+					CoordinatorID:   5,
+				},
+				fee: fee,
+			},
+			msg: *types.NewMsgSendRequest(
+				hasFeeAddr,
+				5,
+				types.NewAccountRemoval(sample.Address(r)),
+			),
+			wantID:                   3,
+			expectedCommunityPoolAmt: sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000)),
+			wantApprove:              false,
 		},
 	}
 	for _, tt := range tests {
@@ -216,6 +282,11 @@ func TestMsgRequestAddAccount(t *testing.T) {
 			if !tt.inputState.noAccount {
 				tk.LaunchKeeper.SetGenesisAccount(sdkCtx, tt.inputState.account)
 			}
+			if !tt.inputState.fee.Empty() {
+				params := tk.LaunchKeeper.GetParams(sdkCtx)
+				params.RequestFee = tt.inputState.fee
+				tk.LaunchKeeper.SetParams(sdkCtx, params)
+			}
 
 			got, err := ts.LaunchSrv.SendRequest(ctx, &tt.msg)
 			if tt.err != nil {
@@ -233,6 +304,14 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				require.Equal(t, types.Request_PENDING, request.Status)
 			} else {
 				require.Equal(t, types.Request_APPROVED, request.Status)
+			}
+
+			if !tt.inputState.fee.Empty() {
+				feePool := tk.DistrKeeper.GetFeePool(sdkCtx)
+				for _, decCoin := range feePool.CommunityPool {
+					coin := sdk.NewCoin(decCoin.Denom, decCoin.Amount.TruncateInt())
+					require.Equal(t, tt.expectedCommunityPoolAmt, coin)
+				}
 			}
 		})
 	}
