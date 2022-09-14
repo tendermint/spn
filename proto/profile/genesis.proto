@@ -14,6 +14,6 @@ message GenesisState {
   repeated ValidatorByOperatorAddress validatorByOperatorAddresses = 2 [(gogoproto.nullable) = false];
   repeated Coordinator                coordinators                 = 3 [(gogoproto.nullable) = false];
   uint64                              coordinatorCounter           = 4;
-  repeated CoordinatorByAddress       coordinatorByAddresses       = 5 [(gogoproto.nullable) = false];
+  repeated CoordinatorByAddress       coordinatorsByAddress       = 5 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }
