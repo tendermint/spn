@@ -201,8 +201,8 @@ func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.
 			ChannelID: strconv.Itoa(i),
 		}
 		nullify.Fill(&launchIDFromChannelID)
-		monitoringcState.LaunchIDFromChannelIDs = append(
-			monitoringcState.LaunchIDFromChannelIDs,
+		monitoringcState.LaunchIDsFromChannelID = append(
+			monitoringcState.LaunchIDsFromChannelID,
 			launchIDFromChannelID,
 		)
 	}
@@ -274,8 +274,8 @@ func populateProfile(r *rand.Rand, profileState profile.GenesisState) profile.Ge
 
 	// add coordinator by address
 	for i := 0; i < 5; i++ {
-		profileState.CoordinatorByAddresses = append(
-			profileState.CoordinatorByAddresses,
+		profileState.CoordinatorsByAddress = append(
+			profileState.CoordinatorsByAddress,
 			profile.CoordinatorByAddress{Address: sample.Address(r)},
 		)
 	}

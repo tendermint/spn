@@ -9,11 +9,11 @@ import (
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # genesis/types/default
-		Validators:                   []Validator{},
-		ValidatorByOperatorAddresses: []ValidatorByOperatorAddress{},
-		Coordinators:                 []Coordinator{},
-		CoordinatorCounter:           1,
-		CoordinatorByAddresses:       []CoordinatorByAddress{},
+		Validators:                  []Validator{},
+		ValidatorsByOperatorAddress: []ValidatorByOperatorAddress{},
+		Coordinators:                []Coordinator{},
+		CoordinatorCounter:          1,
+		CoordinatorsByAddress:       []CoordinatorByAddress{},
 	}
 }
 
@@ -42,7 +42,7 @@ func (gs GenesisState) ValidateValidators() error {
 
 	// Check for duplicated index in validatorByOperatorAddress
 	validatorByOperatorAddressIndexMap := make(map[string]struct{})
-	for _, elem := range gs.ValidatorByOperatorAddresses {
+	for _, elem := range gs.ValidatorsByOperatorAddress {
 		index := string(CoordinatorByAddressKey(elem.OperatorAddress))
 		if _, ok := validatorByOperatorAddressIndexMap[index]; ok {
 			return errors.New("duplicated index for validatorByOperatorAddress")
@@ -64,7 +64,7 @@ func (gs GenesisState) ValidateValidators() error {
 func (gs GenesisState) ValidateCoordinators() error {
 	// Check for duplicated index in coordinatorByAddress
 	coordinatorByAddressIndexMap := make(map[string]uint64)
-	for _, elem := range gs.CoordinatorByAddresses {
+	for _, elem := range gs.CoordinatorsByAddress {
 		index := string(CoordinatorByAddressKey(elem.Address))
 		if _, ok := coordinatorByAddressIndexMap[index]; ok {
 			return errors.New("duplicated index for coordinatorByAddress")

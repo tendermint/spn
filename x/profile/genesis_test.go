@@ -26,9 +26,9 @@ func TestGenesis(t *testing.T) {
 
 		// Compare lists
 		require.ElementsMatch(t, genesisState.Validators, got.Validators)
-		require.ElementsMatch(t, genesisState.ValidatorByOperatorAddresses, got.ValidatorByOperatorAddresses)
+		require.ElementsMatch(t, genesisState.ValidatorsByOperatorAddress, got.ValidatorsByOperatorAddress)
 		require.ElementsMatch(t, genesisState.Coordinators, got.Coordinators)
-		require.ElementsMatch(t, genesisState.CoordinatorByAddresses, got.CoordinatorByAddresses)
+		require.ElementsMatch(t, genesisState.CoordinatorsByAddress, got.CoordinatorsByAddress)
 		require.Equal(t, genesisState.CoordinatorCounter, got.CoordinatorCounter)
 	})
 

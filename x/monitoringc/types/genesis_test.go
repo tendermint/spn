@@ -35,7 +35,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					{LaunchID: 0, ClientID: "0"},
 					{LaunchID: 1, ClientID: "1"},
 				},
-				LaunchIDFromChannelIDs: []types.LaunchIDFromChannelID{
+				LaunchIDsFromChannelID: []types.LaunchIDFromChannelID{
 					{LaunchID: 0, ChannelID: "0"},
 					{LaunchID: 1, ChannelID: "1"},
 				},
@@ -178,7 +178,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated launchIDFromChannelID",
 			genState: &types.GenesisState{
 				PortId: types.PortID,
-				LaunchIDFromChannelIDs: []types.LaunchIDFromChannelID{
+				LaunchIDsFromChannelID: []types.LaunchIDFromChannelID{
 					{
 						ChannelID: "0",
 					},

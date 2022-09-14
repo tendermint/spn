@@ -16,7 +16,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowCoordinatorByAddress() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.ProfileState.CoordinatorByAddresses
+	objs := suite.ProfileState.CoordinatorsByAddress
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
