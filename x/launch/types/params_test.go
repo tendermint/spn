@@ -22,12 +22,12 @@ func TestParamsValidate(t *testing.T) {
 	}{
 		{
 			name:   "should prevent validate params with invalid launch time range",
-			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
+			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay, DefaultFee, DefaultFee),
 			err:    errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
 		},
 		{
 			name:   "should validate valid params",
-			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay, DefaultChainCreationFee),
+			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay, DefaultFee, DefaultFee),
 		},
 	}
 	for _, tt := range tests {
@@ -134,29 +134,29 @@ func TestValidateRevertDelay(t *testing.T) {
 	}
 }
 
-func TestValidateChainCreationFee(t *testing.T) {
+func TestValidateFee(t *testing.T) {
 	tests := []struct {
-		name        string
-		creationFee interface{}
-		err         error
+		name string
+		fee  interface{}
+		err  error
 	}{
 		{
-			name:        "should prevent validate creation fee with invalid interface",
-			creationFee: "test",
-			err:         fmt.Errorf("invalid parameter type: string"),
+			name: "should prevent validate creation fee with invalid interface",
+			fee:  "test",
+			err:  fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:        "should prevent validate creation fee with invalid coin",
-			creationFee: sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdkmath.NewInt(-1)}},
-			err:         errors.New("coin -1foo amount is not positive"),
+			name: "should prevent validate creation fee with invalid coin",
+			fee:  sdk.Coins{sdk.Coin{Denom: "foo", Amount: sdkmath.NewInt(-1)}},
+			err:  errors.New("coin -1foo amount is not positive"),
 		},
 		{
-			name:        "should validate empty fee",
-			creationFee: DefaultChainCreationFee,
+			name: "should validate empty fee",
+			fee:  DefaultFee,
 		},
 		{
 			name: "should validate valid fee",
-			creationFee: sdk.NewCoins(
+			fee: sdk.NewCoins(
 				sdk.NewInt64Coin("foo", rand.Int63n(1000)+1),
 				sdk.NewInt64Coin("bar", rand.Int63n(1000)+1),
 			),
@@ -164,7 +164,7 @@ func TestValidateChainCreationFee(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateChainCreationFee(tt.creationFee)
+			err := validateFee(tt.fee)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)

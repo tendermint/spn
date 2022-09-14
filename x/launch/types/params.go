@@ -24,7 +24,7 @@ var (
 	// This currently corresponds to 1 hour
 	DefaultRevertDelay = time.Hour
 
-	DefaultChainCreationFee = sdk.Coins(nil) // EmptyCoins
+	DefaultFee = sdk.Coins(nil) // EmptyCoins
 
 	MaxParametrableLaunchTime  = time.Hour * 24 * 31
 	MaxParametrableRevertDelay = time.Hour * 24
@@ -32,6 +32,7 @@ var (
 	KeyLaunchTimeRange  = []byte("LaunchTimeRange")
 	KeyRevertDelay      = []byte("RevertDelay")
 	KeyChainCreationFee = []byte("ChainCreationFee")
+	KeyRequestFee       = []byte("RequestFee")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -50,11 +51,12 @@ func NewLaunchTimeRange(minLaunchTime, maxLaunchTime time.Duration) LaunchTimeRa
 }
 
 // NewParams creates a new Params instance
-func NewParams(minLaunchTime, maxLaunchTime, revertDelay time.Duration, chainCreationFee sdk.Coins) Params {
+func NewParams(minLaunchTime, maxLaunchTime, revertDelay time.Duration, chainCreationFee, requestFee sdk.Coins) Params {
 	return Params{
 		LaunchTimeRange:  NewLaunchTimeRange(minLaunchTime, maxLaunchTime),
 		RevertDelay:      revertDelay,
 		ChainCreationFee: chainCreationFee,
+		RequestFee:       requestFee,
 	}
 }
 
@@ -64,7 +66,8 @@ func DefaultParams() Params {
 		DefaultMinLaunchTime,
 		DefaultMaxLaunchTime,
 		DefaultRevertDelay,
-		DefaultChainCreationFee,
+		DefaultFee,
+		DefaultFee,
 	)
 }
 
@@ -73,7 +76,8 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyLaunchTimeRange, &p.LaunchTimeRange, validateLaunchTimeRange),
 		paramtypes.NewParamSetPair(KeyRevertDelay, &p.RevertDelay, validateRevertDelay),
-		paramtypes.NewParamSetPair(KeyChainCreationFee, &p.ChainCreationFee, validateChainCreationFee),
+		paramtypes.NewParamSetPair(KeyChainCreationFee, &p.ChainCreationFee, validateFee),
+		paramtypes.NewParamSetPair(KeyRequestFee, &p.RequestFee, validateFee),
 	}
 }
 
@@ -85,7 +89,10 @@ func (p Params) Validate() error {
 	if err := validateRevertDelay(p.RevertDelay); err != nil {
 		return err
 	}
-	return p.ChainCreationFee.Validate()
+	if err := p.ChainCreationFee.Validate(); err != nil {
+		return err
+	}
+	return p.RequestFee.Validate()
 }
 
 // String implements the Stringer interface.
@@ -133,7 +140,7 @@ func validateRevertDelay(i interface{}) error {
 	return nil
 }
 
-func validateChainCreationFee(i interface{}) error {
+func validateFee(i interface{}) error {
 	v, ok := i.(sdk.Coins)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
