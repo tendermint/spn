@@ -1257,27 +1257,27 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Chain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "chain", "launchID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Chain_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "chain", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ChainAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "chain"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_ChainAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "chain"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_GenesisAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "genesis_account", "launchID", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_GenesisAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "genesis_account", "launchID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_GenesisAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "genesis_account", "launchID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_GenesisAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "genesis_account", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_VestingAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "vesting_account", "launchID", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_VestingAccount_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "vesting_account", "launchID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_VestingAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "vesting_account", "launchID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_VestingAccountAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "vesting_account", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_GenesisValidator_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "genesis_validator", "launchID", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_GenesisValidator_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "genesis_validator", "launchID", "address"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_GenesisValidatorAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "genesis_validator", "launchID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_GenesisValidatorAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "genesis_validator", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Request_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "request", "launchID", "requestID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Request_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"tendermint", "spn", "launch", "request", "launchID", "requestID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_RequestAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "request", "launchID"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_RequestAll_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"tendermint", "spn", "launch", "request", "launchID"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "params"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"tendermint", "spn", "launch", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
