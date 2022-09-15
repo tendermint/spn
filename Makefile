@@ -64,17 +64,11 @@ test: govet test-unit
 
 .PHONY: test test-unit test-race test-cover bench
 
-proto-all: proto-format proto-gen
+proto-all: proto-format
 
 protoVer=v0.7
 protoImageName=tendermintdev/sdk-proto-gen:$(protoVer)
-containerProtoGen=ignite-spn-proto-gen-$(protoVer)
 containerProtoFmt=ignite-spn-proto-fmt-$(protoVer)
-
-proto-gen:
-	@echo "Generating Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protocgen.sh; fi
 
 proto-format:
 	@echo "Formatting Protobuf files"
