@@ -20,6 +20,8 @@ func (m RequestContent) Validate(launchID uint64) error {
 		return requestContent.AccountRemoval.Validate()
 	case *RequestContent_ValidatorRemoval:
 		return requestContent.ValidatorRemoval.Validate()
+	case *RequestContent_ChangeParam:
+		return requestContent.ChangeParam.Validate()
 	default:
 		return errors.New("unrecognized request content")
 	}
@@ -193,5 +195,23 @@ func (m ValidatorRemoval) Validate() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
+	return nil
+}
+
+// NewChangeParam returns a RequestContent containing a ChangeParam
+func NewChangeParam(module, param string, value []byte) RequestContent {
+	return RequestContent{
+		Content: &RequestContent_ChangeParam{
+			ChangeParam: &ChangeParam{
+				Module: module,
+				Param:  param,
+				Value:  value,
+			},
+		},
+	}
+}
+
+// Validate implements ChangeParam validation
+func (m ChangeParam) Validate() error {
 	return nil
 }

@@ -9,8 +9,8 @@ import (
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	_ "github.com/gogo/protobuf/types"
 	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
+	_ "google.golang.org/protobuf/types/known/timestamppb"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -198,6 +198,7 @@ func (m *Chain) GetMetadata() []byte {
 
 type InitialGenesis struct {
 	// Types that are valid to be assigned to Source:
+	//
 	//	*InitialGenesis_DefaultInitialGenesis
 	//	*InitialGenesis_GenesisURL
 	Source isInitialGenesis_Source `protobuf_oneof:"source"`
