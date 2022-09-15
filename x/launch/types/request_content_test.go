@@ -554,3 +554,50 @@ func TestVestingAccount_Validate(t *testing.T) {
 		})
 	}
 }
+
+func TestChangeParam_Validate(t *testing.T) {
+	tests := []struct {
+		name     string
+		content  types.ChangeParam
+		launchID uint64
+		err      error
+	}{
+		{
+			name: "should prevent validate change param with empty module string",
+			content: types.ChangeParam{
+				Module: "",
+				Param:  sample.String(r, 10),
+				Value:  sample.Bytes(r, 10),
+			},
+			err: types.ErrInvalidRequestContent,
+		},
+		{
+			name: "should prevent validate change param with empty param string",
+			content: types.ChangeParam{
+				Module: sample.String(r, 10),
+				Param:  "",
+				Value:  sample.Bytes(r, 10),
+			},
+			err: types.ErrInvalidRequestContent,
+		},
+		{
+			name: "should validate valid change param",
+			content: types.ChangeParam{
+				Module: sample.String(r, 10),
+				Param:  sample.String(r, 10),
+				Value:  sample.Bytes(r, 10),
+			},
+			err: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.content.Validate()
+			if tt.err != nil {
+				require.ErrorIs(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}

@@ -213,5 +213,9 @@ func NewChangeParam(module, param string, value []byte) RequestContent {
 
 // Validate implements ChangeParam validation
 func (m ChangeParam) Validate() error {
+	if m.Module == "" || m.Param == "" {
+		return ErrInvalidRequestContent
+	}
+
 	return nil
 }

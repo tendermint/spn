@@ -28,6 +28,7 @@ func GetTxCmd() *cobra.Command {
 		CmdRequestRemoveAccount(),
 		CmdRequestAddValidator(),
 		CmdRequestRemoveValidator(),
+		CmdRequestChangeParam(),
 		CmdSettleRequest(),
 		CmdTriggerLaunch(),
 		CmdRevertLaunch(),
