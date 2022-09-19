@@ -284,6 +284,9 @@ func CheckRequest(
 				vr.ValAddress, launchID,
 			)
 		}
+	case *types.RequestContent_ChangeParam:
+		// currently no stateful checks can be performed on param
 	}
+
 	return nil
 }

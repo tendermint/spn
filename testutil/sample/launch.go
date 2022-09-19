@@ -73,6 +73,15 @@ func AccountRemoval(address string) *launch.AccountRemoval {
 	}
 }
 
+// ChangeParam returns a sample ChangeParam
+func ChangeParam(r *rand.Rand) launch.ChangeParam {
+	return launch.ChangeParam{
+		Module: String(r, 5),
+		Param:  String(r, 5),
+		Value:  Bytes(r, 5),
+	}
+}
+
 // GenesisValidator returns a sample GenesisValidator
 func GenesisValidator(r *rand.Rand, launchID uint64, address string) launch.GenesisValidator {
 	return launch.GenesisValidator{
