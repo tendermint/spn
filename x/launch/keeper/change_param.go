@@ -34,16 +34,6 @@ func (k Keeper) GetChangeParam(
 	return val, true
 }
 
-// RemoveChangeParam removes a changeParam from the store
-func (k Keeper) RemoveChangeParam(
-	ctx sdk.Context,
-	module,
-	param string,
-) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChangeParamKeyPrefix))
-	store.Delete(types.ChangeParamPath(module, param))
-}
-
 // GetAllChangeParam returns all changeParam
 func (k Keeper) GetAllChangeParam(ctx sdk.Context) (list []types.ChangeParam) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChangeParamKeyPrefix))

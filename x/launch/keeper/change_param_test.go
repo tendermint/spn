@@ -38,25 +38,6 @@ func TestChangeParamGet(t *testing.T) {
 	})
 }
 
-func TestChangeParamRemove(t *testing.T) {
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNChangeParam(tk.LaunchKeeper, ctx, 10)
-
-	t.Run("should remove a change param", func(t *testing.T) {
-		for _, item := range items {
-			tk.LaunchKeeper.RemoveChangeParam(ctx,
-				item.Module,
-				item.Param,
-			)
-			_, found := tk.LaunchKeeper.GetChangeParam(ctx,
-				item.Module,
-				item.Param,
-			)
-			require.False(t, found)
-		}
-	})
-}
-
 func TestChangeParamGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNChangeParam(tk.LaunchKeeper, ctx, 10)

@@ -216,6 +216,16 @@ func ApplyRequest(
 			CoordinatorAddress:      coord.Address,
 		})
 
+	case *types.RequestContent_ChangeParam:
+		cp := requestContent.ChangeParam
+		k.SetChangeParam(ctx, *cp)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventParamChanged{
+			LaunchID: chain.LaunchID,
+			Module:   cp.Module,
+			Param:    cp.Param,
+			Value:    cp.Value,
+		})
+
 	}
 	return err
 }
@@ -285,7 +295,7 @@ func CheckRequest(
 			)
 		}
 	case *types.RequestContent_ChangeParam:
-		// currently no stateful checks can be performed on param
+		// currently no stateful checks can be performed on change param
 	}
 
 	return nil
