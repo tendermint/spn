@@ -23,7 +23,7 @@ SpndCommand () {
 }
 
 # install keys
-echo "adding keys"
+echo "adding keys..."
 CreateAccount alice "slide moment original seven milk crawl help text kick fluid boring awkward doll wonder sure fragile plate grid hard next casual expire okay body"
 CreateAccount bob "trap possible liquid elite embody host segment fantasy swim cable digital eager tiny broom burden diary earn hen grow engine pigeon fringe claim program"
 CreateAccount carol "great immense still pill defense fetch pencil slow purchase symptom speed arm shoot fence have divorce cigar rapid hen vehicle pear evolve correct nerve"
