@@ -48,7 +48,7 @@ SpndCommand 'launch create-chain mars-1 https://github.com/lubtd/planet.git 0xbb
 SpndCommand 'launch create-chain spn-11 https://github.com/tendermint/spn.git 0xccc' carol
 SpndCommand 'launch create-chain spn-11 https://github.com/tendermint/spn.git 0xccc --account-balance 10000foo' carol
 
-echo "add requests to chain 1"
+echo "add requests to chain 1..."
 SpndCommand 'launch request-add-account 1 1000foo,500bar' alice
 SpndCommand 'launch request-add-account 1 10000foo,5500bar' bob
 SpndCommand 'launch request-add-account 1 1000foo' carol
