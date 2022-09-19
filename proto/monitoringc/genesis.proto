@@ -17,7 +17,7 @@ message GenesisState {
   string                                port_id                       = 1;
   repeated VerifiedClientID             verifiedClientIDs             = 2 [(gogoproto.nullable) = false];
   repeated ProviderClientID             providerClientIDs             = 3 [(gogoproto.nullable) = false];
-  repeated LaunchIDFromVerifiedClientID launchIDFromVerifiedClientIDs = 4 [(gogoproto.nullable) = false];
+  repeated LaunchIDFromVerifiedClientID launchIDsFromVerifiedClientID = 4 [(gogoproto.nullable) = false];
   repeated LaunchIDFromChannelID        launchIDsFromChannelID        = 5 [(gogoproto.nullable) = false];
   repeated MonitoringHistory            monitoringHistoryList         = 6 [(gogoproto.nullable) = false];
   Params                                params                        = 7 [(gogoproto.nullable) = false];
