@@ -33,7 +33,7 @@ CreateAccount steve "initial aisle blush gift shuffle hat solar dove dwarf soup 
 CreateAccount olivia "dinosaur submit around jacket movie garden crash weather matter option time cabbage butter mind skin nature ride mosquito seat lock elephant merit empower come"
 
 # commands
-echo "creating coordinators"
+echo "creating coordinators..."
 SpndCommand "profile create-coordinator" alice
 SpndCommand "profile create-coordinator" bob
 SpndCommand "profile create-coordinator" carol
