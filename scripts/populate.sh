@@ -8,7 +8,7 @@ fi
 # check spnd is installed
 spnd > /dev/null
 if [ $? != 0 ]; then
-   echo "spnd binary not install"
+   echo "spnd binary not installed"
    exit 1
 fi
 
