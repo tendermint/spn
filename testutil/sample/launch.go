@@ -274,6 +274,17 @@ func MsgSendRequestWithRemoveValidator(creator, validatorAddr string, launchID u
 	)
 }
 
+// MsgSendRequestWithChangeParam returns a sample MsgSendRequest with ChangeParam request content
+func MsgSendRequestWithChangeParam(r *rand.Rand, creator string, launchID uint64) launch.MsgSendRequest {
+	cp := ChangeParam(r)
+
+	return *launch.NewMsgSendRequest(
+		creator,
+		launchID,
+		launch.NewChangeParam(cp.Module, cp.Param, cp.Value),
+	)
+}
+
 // MsgSendRequestWithAddValidator returns a sample MsgSendRequest with AddValidator request content
 func MsgSendRequestWithAddValidator(r *rand.Rand, creator, address string, launchID uint64) launch.MsgSendRequest {
 	return *launch.NewMsgSendRequest(
