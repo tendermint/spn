@@ -213,7 +213,7 @@ func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.
 			LaunchID: uint64(i),
 		}
 		nullify.Fill(&monitoringHistory)
-		monitoringcState.MonitoringHistoryList = append(monitoringcState.MonitoringHistoryList, monitoringHistory)
+		monitoringcState.MonitoringHistories = append(monitoringcState.MonitoringHistories, monitoringHistory)
 	}
 
 	// add provider client ID

@@ -12,9 +12,9 @@ func DefaultGenesis() *GenesisState {
 		PortId:                        PortID,
 		VerifiedClientIDs:             []VerifiedClientID{},
 		ProviderClientIDs:             []ProviderClientID{},
-		LaunchIDFromVerifiedClientIDs: []LaunchIDFromVerifiedClientID{},
+		LaunchIDsFromVerifiedClientID: []LaunchIDFromVerifiedClientID{},
 		LaunchIDsFromChannelID:        []LaunchIDFromChannelID{},
-		MonitoringHistoryList:         []MonitoringHistory{},
+		MonitoringHistories:           []MonitoringHistory{},
 		// this line is used by starport scaffolding # genesis/types/default
 		Params: DefaultParams(),
 	}
@@ -64,7 +64,7 @@ func (gs GenesisState) Validate() error {
 
 	// Check for duplicated index in launchIDFromVerifiedClientID
 	launchIDFromVerifiedClientIDIndexMap := make(map[string]struct{})
-	for _, elem := range gs.LaunchIDFromVerifiedClientIDs {
+	for _, elem := range gs.LaunchIDsFromVerifiedClientID {
 		index := string(LaunchIDFromVerifiedClientIDKey(elem.ClientID))
 		if _, ok := launchIDFromVerifiedClientIDIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for launchIDFromVerifiedClientID")
@@ -89,7 +89,7 @@ func (gs GenesisState) Validate() error {
 
 	// Check for duplicated index in monitoringHistory
 	monitoringHistoryIndexMap := make(map[string]struct{})
-	for _, elem := range gs.MonitoringHistoryList {
+	for _, elem := range gs.MonitoringHistories {
 		index := string(MonitoringHistoryKey(elem.LaunchID))
 		if _, ok := monitoringHistoryIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for monitoringHistory")

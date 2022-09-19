@@ -31,7 +31,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					{LaunchID: 0, ClientID: "0"},
 					{LaunchID: 1, ClientID: "2"},
 				},
-				LaunchIDFromVerifiedClientIDs: []types.LaunchIDFromVerifiedClientID{
+				LaunchIDsFromVerifiedClientID: []types.LaunchIDFromVerifiedClientID{
 					{LaunchID: 0, ClientID: "0"},
 					{LaunchID: 1, ClientID: "1"},
 				},
@@ -39,7 +39,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					{LaunchID: 0, ChannelID: "0"},
 					{LaunchID: 1, ChannelID: "1"},
 				},
-				MonitoringHistoryList: []types.MonitoringHistory{
+				MonitoringHistories: []types.MonitoringHistory{
 					{
 						LaunchID: 0,
 					},
@@ -121,7 +121,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						ClientIDs: []string{"0"},
 					},
 				},
-				LaunchIDFromVerifiedClientIDs: []types.LaunchIDFromVerifiedClientID{
+				LaunchIDsFromVerifiedClientID: []types.LaunchIDFromVerifiedClientID{
 					{
 						ClientID: "0",
 						LaunchID: 0,
@@ -146,7 +146,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					{LaunchID: 0, ClientID: "0"},
 					{LaunchID: 1, ClientID: "3"},
 				},
-				LaunchIDFromVerifiedClientIDs: []types.LaunchIDFromVerifiedClientID{
+				LaunchIDsFromVerifiedClientID: []types.LaunchIDFromVerifiedClientID{
 					{LaunchID: 0, ClientID: "0"},
 					{LaunchID: 1, ClientID: "2"},
 				},
@@ -166,7 +166,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					{LaunchID: 0, ClientID: "0"},
 					{LaunchID: 1, ClientID: "2"},
 				},
-				LaunchIDFromVerifiedClientIDs: []types.LaunchIDFromVerifiedClientID{
+				LaunchIDsFromVerifiedClientID: []types.LaunchIDFromVerifiedClientID{
 					{LaunchID: 0, ClientID: "1"},
 					{LaunchID: 1, ClientID: "1"},
 				},
@@ -193,7 +193,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated monitoringHistory",
 			genState: &types.GenesisState{
 				PortId: types.PortID,
-				MonitoringHistoryList: []types.MonitoringHistory{
+				MonitoringHistories: []types.MonitoringHistory{
 					{
 						LaunchID: 0,
 					},
