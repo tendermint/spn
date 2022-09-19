@@ -42,7 +42,7 @@ SpndCommand "profile create-coordinator" joe
 SpndCommand "profile create-coordinator" steve
 SpndCommand "profile create-coordinator" olivia
 
-echo "creating chains"
+echo "creating chains..."
 SpndCommand 'launch create-chain spn-10 https://github.com/tendermint/spn.git 0xaaa' alice
 SpndCommand 'launch create-chain mars-1 https://github.com/lubtd/planet.git 0xbbb' bob
 SpndCommand 'launch create-chain spn-11 https://github.com/tendermint/spn.git 0xccc' carol
