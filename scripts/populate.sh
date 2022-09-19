@@ -64,7 +64,7 @@ rm gentx.json
 SpndCommand 'launch request-remove-validator 1 spn1aqn8ynvr3jmq67879qulzrwhchq5dtrvtx0nhe' dave
 SpndCommand 'launch request-remove-account 1 spn1aqn8ynvr3jmq67879qulzrwhchq5dtrvtx0nhe' steve
 
-echo "settle requests for chain 1"
+echo "settling requests for chain 1..."
 SpndCommand 'launch settle-request approve 1 2' alice
 SpndCommand 'launch settle-request approve 1 3' alice
 SpndCommand 'launch settle-request reject 1 4' alice
