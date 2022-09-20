@@ -17,7 +17,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowCampaignChains() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.CampaignState.CampaignChainsList
+	objs := suite.CampaignState.CampaignChains
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),

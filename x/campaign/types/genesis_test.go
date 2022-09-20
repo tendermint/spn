@@ -43,7 +43,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				// this line is used by starport scaffolding # types/genesis/validField
-				CampaignChainsList: []types.CampaignChains{
+				CampaignChains: []types.CampaignChains{
 					{
 						CampaignID: campaign1.CampaignID,
 					},
@@ -51,12 +51,12 @@ func TestGenesisState_Validate(t *testing.T) {
 						CampaignID: campaign2.CampaignID,
 					},
 				},
-				CampaignList: []types.Campaign{
+				Campaigns: []types.Campaign{
 					campaign1,
 					campaign2,
 				},
 				CampaignCounter: 2,
-				MainnetAccountList: []types.MainnetAccount{
+				MainnetAccounts: []types.MainnetAccount{
 					{
 						CampaignID: campaign1.CampaignID,
 						Address:    sample.Address(r),
@@ -75,7 +75,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "non existing campaign for mainnet account",
 			genState: &types.GenesisState{
-				CampaignChainsList: []types.CampaignChains{
+				CampaignChains: []types.CampaignChains{
 					{
 						CampaignID: 0,
 					},
@@ -83,12 +83,12 @@ func TestGenesisState_Validate(t *testing.T) {
 						CampaignID: 1,
 					},
 				},
-				CampaignList: []types.Campaign{
+				Campaigns: []types.Campaign{
 					sample.Campaign(r, 0),
 					sample.Campaign(r, 1),
 				},
 				CampaignCounter: 2,
-				MainnetAccountList: []types.MainnetAccount{
+				MainnetAccounts: []types.MainnetAccount{
 					sample.MainnetAccount(r, 330, "330"),
 				},
 				TotalShares: spntypes.TotalShareNumber,
@@ -98,7 +98,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "non existing campaign for chains",
 			genState: &types.GenesisState{
-				CampaignChainsList: []types.CampaignChains{
+				CampaignChains: []types.CampaignChains{
 					{
 						CampaignID: 2,
 					},
@@ -106,7 +106,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						CampaignID: 4,
 					},
 				},
-				CampaignList: []types.Campaign{
+				Campaigns: []types.Campaign{
 					sample.Campaign(r, 99),
 					sample.Campaign(r, 88),
 				},
@@ -118,11 +118,11 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated campaignChains",
 			genState: &types.GenesisState{
-				CampaignList: []types.Campaign{
+				Campaigns: []types.Campaign{
 					sample.Campaign(r, 0),
 				},
 				CampaignCounter: 1,
-				CampaignChainsList: []types.CampaignChains{
+				CampaignChains: []types.CampaignChains{
 					{
 						CampaignID: 0,
 					},
@@ -137,7 +137,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated campaign",
 			genState: &types.GenesisState{
-				CampaignList: []types.Campaign{
+				Campaigns: []types.Campaign{
 					sample.Campaign(r, 0),
 					sample.Campaign(r, 0),
 				},
@@ -149,7 +149,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "invalid campaign count",
 			genState: &types.GenesisState{
-				CampaignList: []types.Campaign{
+				Campaigns: []types.Campaign{
 					sample.Campaign(r, 1),
 				},
 				CampaignCounter: 0,
@@ -160,7 +160,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "invalid campaign",
 			genState: &types.GenesisState{
-				CampaignList: []types.Campaign{
+				Campaigns: []types.Campaign{
 					types.NewCampaign(
 						0,
 						invalidCampaignName,
@@ -178,11 +178,11 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated mainnetAccount",
 			genState: &types.GenesisState{
-				CampaignList: []types.Campaign{
+				Campaigns: []types.Campaign{
 					sample.Campaign(r, 0),
 				},
 				CampaignCounter: 1,
-				MainnetAccountList: []types.MainnetAccount{
+				MainnetAccounts: []types.MainnetAccount{
 					{
 						CampaignID: 0,
 						Address:    "0",
@@ -199,7 +199,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "invalid allocations",
 			genState: &types.GenesisState{
-				CampaignList: []types.Campaign{
+				Campaigns: []types.Campaign{
 					{
 						CampaignID:         0,
 						CampaignName:       "test",
@@ -212,7 +212,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 				CampaignCounter: 1,
-				MainnetAccountList: []types.MainnetAccount{
+				MainnetAccounts: []types.MainnetAccount{
 					{
 						CampaignID: 0,
 						Address:    "0",
@@ -234,12 +234,12 @@ func TestGenesisState_Validate(t *testing.T) {
 			require.NoError(t, err)
 
 			campaignIDMap := make(map[uint64]types.Shares)
-			for _, elem := range tc.genState.CampaignList {
+			for _, elem := range tc.genState.Campaigns {
 				campaignIDMap[elem.CampaignID] = elem.AllocatedShares
 			}
 			shares := make(map[uint64]types.Shares)
 
-			for _, acc := range tc.genState.MainnetAccountList {
+			for _, acc := range tc.genState.MainnetAccounts {
 				// check if the campaign exists for mainnet accounts
 				_, ok := campaignIDMap[acc.CampaignID]
 				require.True(t, ok)

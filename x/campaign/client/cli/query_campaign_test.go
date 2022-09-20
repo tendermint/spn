@@ -19,7 +19,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowCampaign() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	campaigns := suite.CampaignState.CampaignList
+	campaigns := suite.CampaignState.Campaigns
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -65,7 +65,7 @@ func (suite *QueryTestSuite) TestShowCampaign() {
 
 func (suite *QueryTestSuite) TestListCampaign() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	campaigns := suite.CampaignState.CampaignList
+	campaigns := suite.CampaignState.Campaigns
 
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{

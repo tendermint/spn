@@ -23,7 +23,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-				RewardPoolList: []types.RewardPool{
+				RewardPools: []types.RewardPool{
 					sample.RewardPool(r, 1),
 					sample.RewardPool(r, 2),
 				},
@@ -35,7 +35,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated rewardPool",
 			genState: &types.GenesisState{
-				RewardPoolList: []types.RewardPool{
+				RewardPools: []types.RewardPool{
 					sample.RewardPool(r, 1),
 					sample.RewardPool(r, 1),
 				},
@@ -45,7 +45,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "invalid rewardPool",
 			genState: &types.GenesisState{
-				RewardPoolList: []types.RewardPool{
+				RewardPools: []types.RewardPool{
 					sample.RewardPool(r, 1),
 					{}, // invalid reward pool
 				},

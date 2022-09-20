@@ -19,7 +19,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowRewardPool() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.RewardState.RewardPoolList
+	objs := suite.RewardState.RewardPools
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -73,7 +73,7 @@ func (suite *QueryTestSuite) TestShowRewardPool() {
 
 func (suite *QueryTestSuite) TestListRewardPool() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.RewardState.RewardPoolList
+	objs := suite.RewardState.RewardPools
 
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{

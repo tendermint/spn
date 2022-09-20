@@ -18,7 +18,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowVerifiedClientIds() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.MonitoringcState.VerifiedClientIDList
+	objs := suite.MonitoringcState.VerifiedClientIDs
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),

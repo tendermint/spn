@@ -13,17 +13,17 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// this line is used by starport scaffolding # genesis/module/init
 
 	// Set all the validator
-	for _, elem := range genState.ValidatorList {
+	for _, elem := range genState.Validators {
 		k.SetValidator(ctx, elem)
 	}
 
 	// Set all the validatorByOperatorAddress
-	for _, elem := range genState.ValidatorByOperatorAddressList {
+	for _, elem := range genState.ValidatorsByOperatorAddress {
 		k.SetValidatorByOperatorAddress(ctx, elem)
 	}
 
 	// Set all the coordinator
-	for _, elem := range genState.CoordinatorList {
+	for _, elem := range genState.Coordinators {
 		k.SetCoordinator(ctx, elem)
 	}
 
@@ -31,7 +31,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	k.SetCoordinatorCounter(ctx, genState.CoordinatorCounter)
 
 	// Set all the coordinatorByAddress
-	for _, elem := range genState.CoordinatorByAddressList {
+	for _, elem := range genState.CoordinatorsByAddress {
 		k.SetCoordinatorByAddress(ctx, elem)
 	}
 }
@@ -40,11 +40,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
-	genesis.CoordinatorList = k.GetAllCoordinator(ctx)
+	genesis.Coordinators = k.GetAllCoordinator(ctx)
 	genesis.CoordinatorCounter = k.GetCoordinatorCounter(ctx)
-	genesis.CoordinatorByAddressList = k.GetAllCoordinatorByAddress(ctx)
-	genesis.ValidatorList = k.GetAllValidator(ctx)
-	genesis.ValidatorByOperatorAddressList = k.GetAllValidatorByOperatorAddress(ctx)
+	genesis.CoordinatorsByAddress = k.GetAllCoordinatorByAddress(ctx)
+	genesis.Validators = k.GetAllValidator(ctx)
+	genesis.ValidatorsByOperatorAddress = k.GetAllValidatorByOperatorAddress(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

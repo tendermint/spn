@@ -24,12 +24,12 @@ func TestGenesis(t *testing.T) {
 	campaign.InitGenesis(ctx, *tk.CampaignKeeper, genesisState)
 	got := *campaign.ExportGenesis(ctx, *tk.CampaignKeeper)
 
-	require.ElementsMatch(t, genesisState.CampaignChainsList, got.CampaignChainsList)
+	require.ElementsMatch(t, genesisState.CampaignChains, got.CampaignChains)
 
-	require.ElementsMatch(t, genesisState.CampaignList, got.CampaignList)
+	require.ElementsMatch(t, genesisState.Campaigns, got.Campaigns)
 	require.Equal(t, genesisState.CampaignCounter, got.CampaignCounter)
 
-	require.ElementsMatch(t, genesisState.MainnetAccountList, got.MainnetAccountList)
+	require.ElementsMatch(t, genesisState.MainnetAccounts, got.MainnetAccounts)
 
 	require.Equal(t, genesisState.Params, got.Params)
 

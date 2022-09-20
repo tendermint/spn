@@ -9,8 +9,8 @@ import (
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	_ "github.com/gogo/protobuf/types"
 	github_com_gogo_protobuf_types "github.com/gogo/protobuf/types"
+	_ "google.golang.org/protobuf/types/known/durationpb"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -34,7 +34,8 @@ type Params struct {
 	LaunchTimeRange  LaunchTimeRange                          `protobuf:"bytes,1,opt,name=launchTimeRange,proto3" json:"launchTimeRange"`
 	RevertDelay      time.Duration                            `protobuf:"bytes,2,opt,name=revertDelay,proto3,stdduration" json:"revertDelay"`
 	ChainCreationFee github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,3,rep,name=chainCreationFee,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"chainCreationFee"`
-	RequestFee       github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,4,rep,name=requestFee,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"requestFee"`
+	// requestFee is the fee for making a request to a chain
+	RequestFee github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,4,rep,name=requestFee,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"requestFee"`
 }
 
 func (m *Params) Reset()      { *m = Params{} }

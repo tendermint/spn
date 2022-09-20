@@ -18,7 +18,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowMonitoringHistory() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.MonitoringcState.MonitoringHistoryList
+	objs := suite.MonitoringcState.MonitoringHistories
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),

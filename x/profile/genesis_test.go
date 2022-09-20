@@ -25,10 +25,10 @@ func TestGenesis(t *testing.T) {
 		got := profile.ExportGenesis(ctx, *tk.ProfileKeeper)
 
 		// Compare lists
-		require.ElementsMatch(t, genesisState.ValidatorList, got.ValidatorList)
-		require.ElementsMatch(t, genesisState.ValidatorByOperatorAddressList, got.ValidatorByOperatorAddressList)
-		require.ElementsMatch(t, genesisState.CoordinatorList, got.CoordinatorList)
-		require.ElementsMatch(t, genesisState.CoordinatorByAddressList, got.CoordinatorByAddressList)
+		require.ElementsMatch(t, genesisState.Validators, got.Validators)
+		require.ElementsMatch(t, genesisState.ValidatorsByOperatorAddress, got.ValidatorsByOperatorAddress)
+		require.ElementsMatch(t, genesisState.Coordinators, got.Coordinators)
+		require.ElementsMatch(t, genesisState.CoordinatorsByAddress, got.CoordinatorsByAddress)
 		require.Equal(t, genesisState.CoordinatorCounter, got.CoordinatorCounter)
 	})
 
