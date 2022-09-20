@@ -60,10 +60,13 @@ func AccountKeyPath(launchID uint64, address string) []byte {
 }
 
 // ParamChangePath returns the store key path without prefix for a param change defined by a module and param path
-func ParamChangePath(module, param string) []byte {
+func ParamChangePath(launchID uint64, module, param string) []byte {
+	launchIDBytes := append(spntypes.UintBytes(launchID), byte('/'))
 	moduleBytes := append([]byte(module), byte('/'))
 	paramBytes := append([]byte(param), byte('/'))
-	return append(moduleBytes, paramBytes...)
+	bz := append(launchIDBytes, moduleBytes...)
+
+	return append(bz, paramBytes...)
 }
 
 // GenesisAccountAllKey returns the store key to retrieve all GenesisAccount by launchID

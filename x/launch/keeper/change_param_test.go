@@ -17,7 +17,7 @@ func createNParamChange(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.P
 	for i := range items {
 		keeper.SetChain(ctx, sample.Chain(r, uint64(i), sample.Uint64(r)))
 		items[i] = sample.ParamChange(r)
-		keeper.SetParamChange(ctx, items[i])
+		keeper.SetParamChange(ctx, uint64(i), items[i])
 	}
 	return items
 }
@@ -27,8 +27,9 @@ func TestParamChangeGet(t *testing.T) {
 	items := createNParamChange(tk.LaunchKeeper, ctx, 10)
 
 	t.Run("should get a change param", func(t *testing.T) {
-		for _, item := range items {
+		for i, item := range items {
 			rst, found := tk.LaunchKeeper.GetParamChange(ctx,
+				uint64(i),
 				item.Module,
 				item.Param,
 			)
