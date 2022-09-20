@@ -143,7 +143,7 @@ type RequestContent struct {
 	//	*RequestContent_GenesisValidator
 	//	*RequestContent_AccountRemoval
 	//	*RequestContent_ValidatorRemoval
-	//	*RequestContent_ChangeParam
+	//	*RequestContent_ParamChange
 	Content isRequestContent_Content `protobuf_oneof:"content"`
 }
 
@@ -201,8 +201,8 @@ type RequestContent_AccountRemoval struct {
 type RequestContent_ValidatorRemoval struct {
 	ValidatorRemoval *ValidatorRemoval `protobuf:"bytes,5,opt,name=validatorRemoval,proto3,oneof" json:"validatorRemoval,omitempty"`
 }
-type RequestContent_ChangeParam struct {
-	ChangeParam *ChangeParam `protobuf:"bytes,6,opt,name=changeParam,proto3,oneof" json:"changeParam,omitempty"`
+type RequestContent_ParamChange struct {
+	ParamChange *ParamChange `protobuf:"bytes,6,opt,name=paramChange,proto3,oneof" json:"paramChange,omitempty"`
 }
 
 func (*RequestContent_GenesisAccount) isRequestContent_Content()   {}
@@ -210,7 +210,7 @@ func (*RequestContent_VestingAccount) isRequestContent_Content()   {}
 func (*RequestContent_GenesisValidator) isRequestContent_Content() {}
 func (*RequestContent_AccountRemoval) isRequestContent_Content()   {}
 func (*RequestContent_ValidatorRemoval) isRequestContent_Content() {}
-func (*RequestContent_ChangeParam) isRequestContent_Content()      {}
+func (*RequestContent_ParamChange) isRequestContent_Content()      {}
 
 func (m *RequestContent) GetContent() isRequestContent_Content {
 	if m != nil {
@@ -254,9 +254,9 @@ func (m *RequestContent) GetValidatorRemoval() *ValidatorRemoval {
 	return nil
 }
 
-func (m *RequestContent) GetChangeParam() *ChangeParam {
-	if x, ok := m.GetContent().(*RequestContent_ChangeParam); ok {
-		return x.ChangeParam
+func (m *RequestContent) GetParamChange() *ParamChange {
+	if x, ok := m.GetContent().(*RequestContent_ParamChange); ok {
+		return x.ParamChange
 	}
 	return nil
 }
@@ -269,7 +269,7 @@ func (*RequestContent) XXX_OneofWrappers() []interface{} {
 		(*RequestContent_GenesisValidator)(nil),
 		(*RequestContent_AccountRemoval)(nil),
 		(*RequestContent_ValidatorRemoval)(nil),
-		(*RequestContent_ChangeParam)(nil),
+		(*RequestContent_ParamChange)(nil),
 	}
 }
 
@@ -361,24 +361,24 @@ func (m *ValidatorRemoval) GetValAddress() string {
 	return ""
 }
 
-type ChangeParam struct {
+type ParamChange struct {
 	Module string `protobuf:"bytes,1,opt,name=module,proto3" json:"module,omitempty"`
 	Param  string `protobuf:"bytes,2,opt,name=param,proto3" json:"param,omitempty"`
 	Value  []byte `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
 }
 
-func (m *ChangeParam) Reset()         { *m = ChangeParam{} }
-func (m *ChangeParam) String() string { return proto.CompactTextString(m) }
-func (*ChangeParam) ProtoMessage()    {}
-func (*ChangeParam) Descriptor() ([]byte, []int) {
+func (m *ParamChange) Reset()         { *m = ParamChange{} }
+func (m *ParamChange) String() string { return proto.CompactTextString(m) }
+func (*ParamChange) ProtoMessage()    {}
+func (*ParamChange) Descriptor() ([]byte, []int) {
 	return fileDescriptor_028e4b0ce31bf039, []int{4}
 }
-func (m *ChangeParam) XXX_Unmarshal(b []byte) error {
+func (m *ParamChange) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *ChangeParam) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *ParamChange) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_ChangeParam.Marshal(b, m, deterministic)
+		return xxx_messageInfo_ParamChange.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -388,33 +388,33 @@ func (m *ChangeParam) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 		return b[:n], nil
 	}
 }
-func (m *ChangeParam) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ChangeParam.Merge(m, src)
+func (m *ParamChange) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ParamChange.Merge(m, src)
 }
-func (m *ChangeParam) XXX_Size() int {
+func (m *ParamChange) XXX_Size() int {
 	return m.Size()
 }
-func (m *ChangeParam) XXX_DiscardUnknown() {
-	xxx_messageInfo_ChangeParam.DiscardUnknown(m)
+func (m *ParamChange) XXX_DiscardUnknown() {
+	xxx_messageInfo_ParamChange.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_ChangeParam proto.InternalMessageInfo
+var xxx_messageInfo_ParamChange proto.InternalMessageInfo
 
-func (m *ChangeParam) GetModule() string {
+func (m *ParamChange) GetModule() string {
 	if m != nil {
 		return m.Module
 	}
 	return ""
 }
 
-func (m *ChangeParam) GetParam() string {
+func (m *ParamChange) GetParam() string {
 	if m != nil {
 		return m.Param
 	}
 	return ""
 }
 
-func (m *ChangeParam) GetValue() []byte {
+func (m *ParamChange) GetValue() []byte {
 	if m != nil {
 		return m.Value
 	}
@@ -427,7 +427,7 @@ func init() {
 	proto.RegisterType((*RequestContent)(nil), "tendermint.spn.launch.RequestContent")
 	proto.RegisterType((*AccountRemoval)(nil), "tendermint.spn.launch.AccountRemoval")
 	proto.RegisterType((*ValidatorRemoval)(nil), "tendermint.spn.launch.ValidatorRemoval")
-	proto.RegisterType((*ChangeParam)(nil), "tendermint.spn.launch.ChangeParam")
+	proto.RegisterType((*ParamChange)(nil), "tendermint.spn.launch.ParamChange")
 }
 
 func init() { proto.RegisterFile("launch/request.proto", fileDescriptor_028e4b0ce31bf039) }
@@ -460,18 +460,18 @@ var fileDescriptor_028e4b0ce31bf039 = []byte{
 	0xe4, 0xba, 0xda, 0xa3, 0xa7, 0xf7, 0x7b, 0x5c, 0xc1, 0x0f, 0x0c, 0xf4, 0x87, 0x44, 0xee, 0x53,
 	0xdf, 0x1c, 0x22, 0x09, 0x5b, 0xe2, 0x58, 0xee, 0xf9, 0x6e, 0x9f, 0xe3, 0x12, 0x38, 0xf7, 0x59,
 	0xa6, 0xe7, 0x3e, 0x57, 0x67, 0x5a, 0x48, 0x6e, 0xde, 0xeb, 0x73, 0x5e, 0x81, 0xe7, 0x3e, 0xab,
-	0x12, 0xf0, 0x35, 0x68, 0xfb, 0xe7, 0x98, 0x86, 0x64, 0x86, 0x53, 0x9c, 0xc8, 0x53, 0x69, 0x8f,
-	0x9c, 0x3b, 0x14, 0xf7, 0xd6, 0xc8, 0x03, 0x03, 0xdd, 0x26, 0x4e, 0x5a, 0xab, 0xa3, 0x75, 0xa6,
-	0xa0, 0x53, 0xee, 0x06, 0x8e, 0x40, 0x13, 0x07, 0x41, 0x4a, 0x38, 0x97, 0xeb, 0x6f, 0x4d, 0xac,
-	0xef, 0x17, 0xcf, 0x7a, 0xfa, 0xef, 0x3c, 0x56, 0x95, 0x13, 0x91, 0x46, 0x34, 0x44, 0x05, 0xd0,
-	0x79, 0x0b, 0xba, 0xd5, 0x06, 0xe0, 0x4b, 0x00, 0x96, 0x38, 0x1e, 0xff, 0xa7, 0xd4, 0x2d, 0xac,
-	0xf3, 0x0e, 0xb4, 0x6f, 0x99, 0x87, 0x0f, 0x41, 0x23, 0x61, 0x41, 0x16, 0x13, 0x25, 0x82, 0x74,
-	0x04, 0x7b, 0x60, 0x73, 0x21, 0xe7, 0x50, 0x93, 0x69, 0x15, 0xe4, 0xd9, 0x25, 0x8e, 0x33, 0x22,
-	0xef, 0x62, 0x1b, 0xa9, 0x60, 0x32, 0xb9, 0xbc, 0xb6, 0xcd, 0xab, 0x6b, 0xdb, 0xfc, 0x75, 0x6d,
-	0x9b, 0xdf, 0x6e, 0x6c, 0xe3, 0xea, 0xc6, 0x36, 0x7e, 0xdc, 0xd8, 0xc6, 0xc7, 0x41, 0x18, 0x89,
-	0xf3, 0xec, 0xcc, 0xf5, 0x59, 0x32, 0x5c, 0x0f, 0x72, 0xc8, 0x17, 0x74, 0xf8, 0x79, 0xa8, 0x9f,
-	0x1e, 0xf1, 0x65, 0x41, 0xf8, 0x59, 0x43, 0xbe, 0x37, 0x2f, 0x7e, 0x07, 0x00, 0x00, 0xff, 0xff,
-	0xf1, 0x16, 0x12, 0x30, 0x2b, 0x05, 0x00, 0x00,
+	0x12, 0xf0, 0x35, 0x68, 0x2f, 0x70, 0x8a, 0x93, 0xbd, 0x73, 0x4c, 0x43, 0x22, 0x4f, 0xa5, 0x3d,
+	0x72, 0xee, 0x50, 0x9c, 0xad, 0x91, 0x07, 0x06, 0xba, 0x4d, 0x9c, 0xb4, 0x56, 0x47, 0xeb, 0x4c,
+	0x41, 0xa7, 0xdc, 0x0d, 0x1c, 0x81, 0x26, 0x0e, 0x82, 0x94, 0x70, 0x2e, 0xd7, 0xdf, 0x9a, 0x58,
+	0xdf, 0x2f, 0x9e, 0xf5, 0xf4, 0xdf, 0x79, 0xac, 0x2a, 0x27, 0x22, 0x8d, 0x68, 0x88, 0x0a, 0xa0,
+	0xf3, 0x16, 0x74, 0xab, 0x0d, 0xc0, 0x97, 0x00, 0x2c, 0x71, 0x3c, 0xfe, 0x4f, 0xa9, 0x5b, 0x58,
+	0xe7, 0x1d, 0x68, 0xdf, 0x32, 0x0f, 0x1f, 0x82, 0x46, 0xc2, 0x82, 0x2c, 0x26, 0x4a, 0x04, 0xe9,
+	0x08, 0xf6, 0xc0, 0xa6, 0x6c, 0x4a, 0x1e, 0x55, 0x0b, 0xa9, 0x20, 0xcf, 0x2e, 0x71, 0x9c, 0x11,
+	0x79, 0x17, 0xdb, 0x48, 0x05, 0x93, 0xc9, 0xe5, 0xb5, 0x6d, 0x5e, 0x5d, 0xdb, 0xe6, 0xaf, 0x6b,
+	0xdb, 0xfc, 0x76, 0x63, 0x1b, 0x57, 0x37, 0xb6, 0xf1, 0xe3, 0xc6, 0x36, 0x3e, 0x0e, 0xc2, 0x48,
+	0x9c, 0x67, 0x67, 0xae, 0xcf, 0x92, 0xe1, 0x7a, 0x90, 0x43, 0xbe, 0xa0, 0xc3, 0xcf, 0x43, 0xfd,
+	0xf4, 0x88, 0x2f, 0x0b, 0xc2, 0xcf, 0x1a, 0xf2, 0xbd, 0x79, 0xf1, 0x3b, 0x00, 0x00, 0xff, 0xff,
+	0xf4, 0xad, 0x8a, 0xb6, 0x2b, 0x05, 0x00, 0x00,
 }
 
 func (m *Request) Marshal() (dAtA []byte, err error) {
@@ -671,16 +671,16 @@ func (m *RequestContent_ValidatorRemoval) MarshalToSizedBuffer(dAtA []byte) (int
 	}
 	return len(dAtA) - i, nil
 }
-func (m *RequestContent_ChangeParam) MarshalTo(dAtA []byte) (int, error) {
+func (m *RequestContent_ParamChange) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *RequestContent_ChangeParam) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *RequestContent_ParamChange) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
-	if m.ChangeParam != nil {
+	if m.ParamChange != nil {
 		{
-			size, err := m.ChangeParam.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.ParamChange.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -752,7 +752,7 @@ func (m *ValidatorRemoval) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *ChangeParam) Marshal() (dAtA []byte, err error) {
+func (m *ParamChange) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -762,12 +762,12 @@ func (m *ChangeParam) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *ChangeParam) MarshalTo(dAtA []byte) (int, error) {
+func (m *ParamChange) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *ChangeParam) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *ParamChange) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -906,14 +906,14 @@ func (m *RequestContent_ValidatorRemoval) Size() (n int) {
 	}
 	return n
 }
-func (m *RequestContent_ChangeParam) Size() (n int) {
+func (m *RequestContent_ParamChange) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.ChangeParam != nil {
-		l = m.ChangeParam.Size()
+	if m.ParamChange != nil {
+		l = m.ParamChange.Size()
 		n += 1 + l + sovRequest(uint64(l))
 	}
 	return n
@@ -944,7 +944,7 @@ func (m *ValidatorRemoval) Size() (n int) {
 	return n
 }
 
-func (m *ChangeParam) Size() (n int) {
+func (m *ParamChange) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1368,7 +1368,7 @@ func (m *RequestContent) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ChangeParam", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParamChange", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1395,11 +1395,11 @@ func (m *RequestContent) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			v := &ChangeParam{}
+			v := &ParamChange{}
 			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
-			m.Content = &RequestContent_ChangeParam{v}
+			m.Content = &RequestContent_ParamChange{v}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1586,7 +1586,7 @@ func (m *ValidatorRemoval) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *ChangeParam) Unmarshal(dAtA []byte) error {
+func (m *ParamChange) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1609,10 +1609,10 @@ func (m *ChangeParam) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: ChangeParam: wiretype end group for non-group")
+			return fmt.Errorf("proto: ParamChange: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ChangeParam: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: ParamChange: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

@@ -555,16 +555,16 @@ func TestVestingAccount_Validate(t *testing.T) {
 	}
 }
 
-func TestChangeParam_Validate(t *testing.T) {
+func TestParamChange_Validate(t *testing.T) {
 	tests := []struct {
 		name     string
-		content  types.ChangeParam
+		content  types.ParamChange
 		launchID uint64
 		err      error
 	}{
 		{
 			name: "should prevent validate change param with empty module string",
-			content: types.ChangeParam{
+			content: types.ParamChange{
 				Module: "",
 				Param:  sample.String(r, 10),
 				Value:  sample.Bytes(r, 10),
@@ -573,7 +573,7 @@ func TestChangeParam_Validate(t *testing.T) {
 		},
 		{
 			name: "should prevent validate change param with empty param string",
-			content: types.ChangeParam{
+			content: types.ParamChange{
 				Module: sample.String(r, 10),
 				Param:  "",
 				Value:  sample.Bytes(r, 10),
@@ -582,7 +582,7 @@ func TestChangeParam_Validate(t *testing.T) {
 		},
 		{
 			name: "should validate valid change param",
-			content: types.ChangeParam{
+			content: types.ParamChange{
 				Module: sample.String(r, 10),
 				Param:  sample.String(r, 10),
 				Value:  sample.Bytes(r, 10),

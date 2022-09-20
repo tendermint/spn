@@ -20,8 +20,8 @@ func (m RequestContent) Validate(launchID uint64) error {
 		return requestContent.AccountRemoval.Validate()
 	case *RequestContent_ValidatorRemoval:
 		return requestContent.ValidatorRemoval.Validate()
-	case *RequestContent_ChangeParam:
-		return requestContent.ChangeParam.Validate()
+	case *RequestContent_ParamChange:
+		return requestContent.ParamChange.Validate()
 	default:
 		return errors.New("unrecognized request content")
 	}
@@ -198,11 +198,11 @@ func (m ValidatorRemoval) Validate() error {
 	return nil
 }
 
-// NewChangeParam returns a RequestContent containing a ChangeParam
-func NewChangeParam(module, param string, value []byte) RequestContent {
+// NewParamChange returns a RequestContent containing a ParamChange
+func NewParamChange(module, param string, value []byte) RequestContent {
 	return RequestContent{
-		Content: &RequestContent_ChangeParam{
-			ChangeParam: &ChangeParam{
+		Content: &RequestContent_ParamChange{
+			ParamChange: &ParamChange{
 				Module: module,
 				Param:  param,
 				Value:  value,
@@ -211,8 +211,8 @@ func NewChangeParam(module, param string, value []byte) RequestContent {
 	}
 }
 
-// Validate implements ChangeParam validation
-func (m ChangeParam) Validate() error {
+// Validate implements ParamChange validation
+func (m ParamChange) Validate() error {
 	if m.Module == "" || m.Param == "" {
 		return ErrInvalidRequestContent
 	}

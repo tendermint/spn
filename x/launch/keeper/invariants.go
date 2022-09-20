@@ -103,7 +103,7 @@ func UnknownRequestTypeInvariant(k Keeper) sdk.Invariant {
 				*types.RequestContent_AccountRemoval,
 				*types.RequestContent_GenesisValidator,
 				*types.RequestContent_ValidatorRemoval,
-				*types.RequestContent_ChangeParam:
+				*types.RequestContent_ParamChange:
 			default:
 				return sdk.FormatInvariant(
 					types.ModuleName, unknownRequestTypeRoute,

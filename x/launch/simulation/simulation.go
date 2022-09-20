@@ -405,8 +405,8 @@ func SimulateMsgRequestRemoveValidator(ak types.AccountKeeper, bk types.BankKeep
 	}
 }
 
-// SimulateMsgRequestChangeParam simulates a MsgSendRequest message with ChangeParam content
-func SimulateMsgRequestChangeParam(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
+// SimulateMsgRequestParamChange simulates a MsgSendRequest message with ParamChange content
+func SimulateMsgRequestParamChange(ak types.AccountKeeper, bk types.BankKeeper, k keeper.Keeper) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
@@ -420,7 +420,7 @@ func SimulateMsgRequestChangeParam(ak types.AccountKeeper, bk types.BankKeeper, 
 		}
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
-		msg := sample.MsgSendRequestWithChangeParam(
+		msg := sample.MsgSendRequestWithParamChange(
 			r,
 			simAccount.Address.String(),
 			chain.LaunchID,

@@ -27,8 +27,8 @@ const (
 	// GenesisAccountKeyPrefix is the prefix to retrieve all GenesisAccount
 	GenesisAccountKeyPrefix = "GenesisAccount/value/"
 
-	// ChangeParamKeyPrefix is the prefix to retrieve all ChangeParam
-	ChangeParamKeyPrefix = "ChangeParam/value/"
+	// ParamChangeKeyPrefix is the prefix to retrieve all ParamChange
+	ParamChangeKeyPrefix = "ParamChange/value/"
 
 	// VestingAccountKeyPrefix is the prefix to retrieve all VestingAccount
 	VestingAccountKeyPrefix = "VestingAccount/value/"
@@ -59,8 +59,8 @@ func AccountKeyPath(launchID uint64, address string) []byte {
 	return append(launchIDBytes, addressBytes...)
 }
 
-// ChangeParamPath returns the store key path without prefix for a param change defined by a module and param path
-func ChangeParamPath(module, param string) []byte {
+// ParamChangePath returns the store key path without prefix for a param change defined by a module and param path
+func ParamChangePath(module, param string) []byte {
 	moduleBytes := append([]byte(module), byte('/'))
 	paramBytes := append([]byte(param), byte('/'))
 	return append(moduleBytes, paramBytes...)

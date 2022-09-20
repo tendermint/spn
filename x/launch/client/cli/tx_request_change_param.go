@@ -11,7 +11,7 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func CmdRequestChangeParam() *cobra.Command {
+func CmdRequestParamChange() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "request-change-param [launch-ID] [module] [param] [value]",
 		Short: "Send a request for a module param change",
@@ -35,7 +35,7 @@ func CmdRequestChangeParam() *cobra.Command {
 			msg := types.NewMsgSendRequest(
 				fromAddr,
 				launchID,
-				types.NewChangeParam(module, param, value),
+				types.NewParamChange(module, param, value),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

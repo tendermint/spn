@@ -7,25 +7,25 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-// SetChangeParam set a specific changeParam in the store from its index
-func (k Keeper) SetChangeParam(ctx sdk.Context, changeParam types.ChangeParam) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChangeParamKeyPrefix))
-	b := k.cdc.MustMarshal(&changeParam)
-	store.Set(types.ChangeParamPath(
-		changeParam.Module,
-		changeParam.Param,
+// SetParamChange set a specific ParamChange in the store from its index
+func (k Keeper) SetParamChange(ctx sdk.Context, ParamChange types.ParamChange) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ParamChangeKeyPrefix))
+	b := k.cdc.MustMarshal(&ParamChange)
+	store.Set(types.ParamChangePath(
+		ParamChange.Module,
+		ParamChange.Param,
 	), b)
 }
 
-// GetChangeParam returns a changeParam from its index
-func (k Keeper) GetChangeParam(
+// GetParamChange returns a ParamChange from its index
+func (k Keeper) GetParamChange(
 	ctx sdk.Context,
 	module,
 	param string,
-) (val types.ChangeParam, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChangeParamKeyPrefix))
+) (val types.ParamChange, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ParamChangeKeyPrefix))
 
-	b := store.Get(types.ChangeParamPath(module, param))
+	b := store.Get(types.ParamChangePath(module, param))
 	if b == nil {
 		return val, false
 	}
@@ -34,15 +34,15 @@ func (k Keeper) GetChangeParam(
 	return val, true
 }
 
-// GetAllChangeParam returns all changeParam
-func (k Keeper) GetAllChangeParam(ctx sdk.Context) (list []types.ChangeParam) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ChangeParamKeyPrefix))
+// GetAllParamChange returns all ParamChange
+func (k Keeper) GetAllParamChange(ctx sdk.Context) (list []types.ParamChange) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ParamChangeKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.ChangeParam
+		var val types.ParamChange
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}

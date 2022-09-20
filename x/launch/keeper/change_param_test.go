@@ -12,23 +12,23 @@ import (
 	"github.com/tendermint/spn/x/launch/types"
 )
 
-func createNChangeParam(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ChangeParam {
-	items := make([]types.ChangeParam, n)
+func createNParamChange(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.ParamChange {
+	items := make([]types.ParamChange, n)
 	for i := range items {
 		keeper.SetChain(ctx, sample.Chain(r, uint64(i), sample.Uint64(r)))
-		items[i] = sample.ChangeParam(r)
-		keeper.SetChangeParam(ctx, items[i])
+		items[i] = sample.ParamChange(r)
+		keeper.SetParamChange(ctx, items[i])
 	}
 	return items
 }
 
-func TestChangeParamGet(t *testing.T) {
+func TestParamChangeGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNChangeParam(tk.LaunchKeeper, ctx, 10)
+	items := createNParamChange(tk.LaunchKeeper, ctx, 10)
 
 	t.Run("should get a change param", func(t *testing.T) {
 		for _, item := range items {
-			rst, found := tk.LaunchKeeper.GetChangeParam(ctx,
+			rst, found := tk.LaunchKeeper.GetParamChange(ctx,
 				item.Module,
 				item.Param,
 			)
@@ -38,11 +38,11 @@ func TestChangeParamGet(t *testing.T) {
 	})
 }
 
-func TestChangeParamGetAll(t *testing.T) {
+func TestParamChangeGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNChangeParam(tk.LaunchKeeper, ctx, 10)
+	items := createNParamChange(tk.LaunchKeeper, ctx, 10)
 
 	t.Run("should get all change param", func(t *testing.T) {
-		require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllChangeParam(ctx))
+		require.ElementsMatch(t, items, tk.LaunchKeeper.GetAllParamChange(ctx))
 	})
 }

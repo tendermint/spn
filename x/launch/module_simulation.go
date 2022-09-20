@@ -21,7 +21,7 @@ const (
 	defaultWeightMsgRequestRemoveAccount     int = 15
 	defaultWeightMsgRequestAddValidator      int = 50
 	defaultWeightMsgRequestRemoveValidator   int = 15
-	defaultWeightMsgRequestChangeParam       int = 15
+	defaultWeightMsgRequestParamChange       int = 15
 	defaultWeightMsgSettleRequest            int = 50
 	defaultWeightMsgTriggerLaunch            int = 15
 	defaultWeightMsgRevertLaunch             int = 0
@@ -34,7 +34,7 @@ const (
 	opWeightMsgRequestRemoveAccount     = "op_weight_msg_request_remove_account"
 	opWeightMsgRequestAddValidator      = "op_weight_msg_request_add_validator"
 	opWeightMsgRequestRemoveValidator   = "op_weight_msg_request_remove_validator"
-	opWeightMsgRequestChangeParam       = "op_weight_msg_request_change_param"
+	opWeightMsgRequestParamChange       = "op_weight_msg_request_change_param"
 	opWeightMsgTriggerLaunch            = "op_weight_msg_trigger_launch"
 	opWeightMsgRevertLaunch             = "op_weight_msg_revert_launch"
 	opWeightMsgSettleRequest            = "op_weight_msg_settle_request"
@@ -85,7 +85,7 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgRequestRemoveAccount     int
 		weightMsgRequestAddValidator      int
 		weightMsgRequestRemoveValidator   int
-		weightMsgRequestChangeParam       int
+		weightMsgRequestParamChange       int
 		weightMsgTriggerLaunch            int
 		weightMsgRevertLaunch             int
 		weightMsgSettleRequest            int
@@ -140,9 +140,9 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			weightMsgRequestRemoveValidator = defaultWeightMsgRequestRemoveValidator
 		},
 	)
-	appParams.GetOrGenerate(cdc, opWeightMsgRequestChangeParam, &weightMsgRequestChangeParam, nil,
+	appParams.GetOrGenerate(cdc, opWeightMsgRequestParamChange, &weightMsgRequestParamChange, nil,
 		func(_ *rand.Rand) {
-			weightMsgRequestChangeParam = defaultWeightMsgRequestChangeParam
+			weightMsgRequestParamChange = defaultWeightMsgRequestParamChange
 		},
 	)
 	appParams.GetOrGenerate(cdc, opWeightMsgTriggerLaunch, &weightMsgTriggerLaunch, nil,
@@ -191,8 +191,8 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 			launchsim.SimulateMsgRequestRemoveValidator(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
-			weightMsgRequestChangeParam,
-			launchsim.SimulateMsgRequestChangeParam(am.accountKeeper, am.bankKeeper, am.keeper),
+			weightMsgRequestParamChange,
+			launchsim.SimulateMsgRequestParamChange(am.accountKeeper, am.bankKeeper, am.keeper),
 		),
 		simulation.NewWeightedOperation(
 			weightMsgTriggerLaunch,
