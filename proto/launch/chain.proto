@@ -45,6 +45,7 @@ message InitialGenesis {
   oneof source {
     DefaultInitialGenesis defaultInitialGenesis = 1;
     GenesisURL            genesisURL            = 2;
+    ConfigGenesis         configGenesis         = 3;
   }
 }
 
@@ -56,4 +57,10 @@ message DefaultInitialGenesis {}
 message GenesisURL {
   string url  = 1;
   string hash = 2;
+}
+
+// ConfigGenesis specifies using a custom genesis from a starport config file
+// the file is located in the root specified by sourceURL
+message ConfigGenesis {
+  string file = 1;
 }
