@@ -31,7 +31,7 @@ message RequestContent {
     GenesisValidator genesisValidator = 3;
     AccountRemoval   accountRemoval   = 4;
     ValidatorRemoval validatorRemoval = 5;
-    ChangeParam      changeParam      = 6;
+   ParamChange      changeParam      = 6;
   }
 }
 
