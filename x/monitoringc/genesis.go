@@ -11,23 +11,23 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// Set all the verifiedClientID
-	for _, elem := range genState.VerifiedClientIDList {
+	for _, elem := range genState.VerifiedClientIDs {
 		k.SetVerifiedClientID(ctx, elem)
 	}
 	// Set all the providerClientID
-	for _, elem := range genState.ProviderClientIDList {
+	for _, elem := range genState.ProviderClientIDs {
 		k.SetProviderClientID(ctx, elem)
 	}
 	// Set all the launchIDFromVerifiedClientID
-	for _, elem := range genState.LaunchIDFromVerifiedClientIDList {
+	for _, elem := range genState.LaunchIDsFromVerifiedClientID {
 		k.SetLaunchIDFromVerifiedClientID(ctx, elem)
 	}
 	// Set all the launchIDFromChannelID
-	for _, elem := range genState.LaunchIDFromChannelIDList {
+	for _, elem := range genState.LaunchIDsFromChannelID {
 		k.SetLaunchIDFromChannelID(ctx, elem)
 	}
 	// Set all the monitoringHistory
-	for _, elem := range genState.MonitoringHistoryList {
+	for _, elem := range genState.MonitoringHistories {
 		k.SetMonitoringHistory(ctx, elem)
 	}
 	// this line is used by starport scaffolding # genesis/module/init
@@ -51,11 +51,11 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.PortId = k.GetPort(ctx)
-	genesis.VerifiedClientIDList = k.GetAllVerifiedClientID(ctx)
-	genesis.ProviderClientIDList = k.GetAllProviderClientID(ctx)
-	genesis.LaunchIDFromVerifiedClientIDList = k.GetAllLaunchIDFromVerifiedClientID(ctx)
-	genesis.LaunchIDFromChannelIDList = k.GetAllLaunchIDFromChannelID(ctx)
-	genesis.MonitoringHistoryList = k.GetAllMonitoringHistory(ctx)
+	genesis.VerifiedClientIDs = k.GetAllVerifiedClientID(ctx)
+	genesis.ProviderClientIDs = k.GetAllProviderClientID(ctx)
+	genesis.LaunchIDsFromVerifiedClientID = k.GetAllLaunchIDFromVerifiedClientID(ctx)
+	genesis.LaunchIDsFromChannelID = k.GetAllLaunchIDFromChannelID(ctx)
+	genesis.MonitoringHistories = k.GetAllMonitoringHistory(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

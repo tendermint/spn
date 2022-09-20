@@ -19,7 +19,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowProviderClientID() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.MonitoringcState.ProviderClientIDList
+	objs := suite.MonitoringcState.ProviderClientIDs
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -73,7 +73,7 @@ func (suite *QueryTestSuite) TestShowProviderClientID() {
 
 func (suite *QueryTestSuite) TestListProviderClientID() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.MonitoringcState.ProviderClientIDList
+	objs := suite.MonitoringcState.ProviderClientIDs
 
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{

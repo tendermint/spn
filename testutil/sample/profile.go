@@ -69,7 +69,7 @@ func ProfileGenesisState(r *rand.Rand, addresses ...string) profile.GenesisState
 	}
 	operatorAddresses := []string{OperatorAddress(r), OperatorAddress(r)}
 	return profile.GenesisState{
-		CoordinatorList: []profile.Coordinator{
+		Coordinators: []profile.Coordinator{
 			{
 				CoordinatorID: 0,
 				Address:       addresses[0],
@@ -101,7 +101,7 @@ func ProfileGenesisState(r *rand.Rand, addresses ...string) profile.GenesisState
 				Active:        true,
 			},
 		},
-		CoordinatorByAddressList: []profile.CoordinatorByAddress{
+		CoordinatorsByAddress: []profile.CoordinatorByAddress{
 			{
 				Address:       addresses[0],
 				CoordinatorID: 0,
@@ -124,7 +124,7 @@ func ProfileGenesisState(r *rand.Rand, addresses ...string) profile.GenesisState
 			},
 		},
 		CoordinatorCounter: 5,
-		ValidatorList: []profile.Validator{
+		Validators: []profile.Validator{
 			{
 				Address:           addresses[5],
 				Description:       ValidatorDescription(String(r, 10)),
@@ -136,7 +136,7 @@ func ProfileGenesisState(r *rand.Rand, addresses ...string) profile.GenesisState
 				OperatorAddresses: []string{operatorAddresses[1]},
 			},
 		},
-		ValidatorByOperatorAddressList: []profile.ValidatorByOperatorAddress{
+		ValidatorsByOperatorAddress: []profile.ValidatorByOperatorAddress{
 			{
 				OperatorAddress:  operatorAddresses[0],
 				ValidatorAddress: addresses[5],

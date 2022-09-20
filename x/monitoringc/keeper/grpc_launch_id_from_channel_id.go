@@ -17,26 +17,26 @@ func (k Keeper) LaunchIDFromChannelIDAll(c context.Context, req *types.QueryAllL
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var launchIDFromChannelIDs []types.LaunchIDFromChannelID
+	var LaunchIDsFromChannelID []types.LaunchIDFromChannelID
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	launchIDFromChannelIDStore := prefix.NewStore(store, types.KeyPrefix(types.LaunchIDFromChannelIDKeyPrefix))
+	LaunchIDsFromChannelIDtore := prefix.NewStore(store, types.KeyPrefix(types.LaunchIDFromChannelIDKeyPrefix))
 
-	pageRes, err := query.Paginate(launchIDFromChannelIDStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(LaunchIDsFromChannelIDtore, req.Pagination, func(key []byte, value []byte) error {
 		var launchIDFromChannelID types.LaunchIDFromChannelID
 		if err := k.cdc.Unmarshal(value, &launchIDFromChannelID); err != nil {
 			return err
 		}
 
-		launchIDFromChannelIDs = append(launchIDFromChannelIDs, launchIDFromChannelID)
+		LaunchIDsFromChannelID = append(LaunchIDsFromChannelID, launchIDFromChannelID)
 		return nil
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllLaunchIDFromChannelIDResponse{LaunchIDFromChannelID: launchIDFromChannelIDs, Pagination: pageRes}, nil
+	return &types.QueryAllLaunchIDFromChannelIDResponse{LaunchIDFromChannelID: LaunchIDsFromChannelID, Pagination: pageRes}, nil
 }
 
 func (k Keeper) LaunchIDFromChannelID(c context.Context, req *types.QueryGetLaunchIDFromChannelIDRequest) (*types.QueryGetLaunchIDFromChannelIDResponse, error) {

@@ -356,31 +356,31 @@ func LaunchGenesisState(r *rand.Rand, addresses ...string) launch.GenesisState {
 		addresses = append(addresses, Address(r))
 	}
 	return launch.GenesisState{
-		ChainList: []launch.Chain{
+		Chains: []launch.Chain{
 			Chain(r, 0, 0),
 			Chain(r, 1, 1),
 		},
 		ChainCounter: 2,
-		GenesisAccountList: []launch.GenesisAccount{
+		GenesisAccounts: []launch.GenesisAccount{
 			GenesisAccount(r, 0, addresses[0]),
 			GenesisAccount(r, 0, addresses[1]),
 			GenesisAccount(r, 1, addresses[2]),
 		},
-		VestingAccountList: []launch.VestingAccount{
+		VestingAccounts: []launch.VestingAccount{
 			VestingAccount(r, 0, addresses[3]),
 			VestingAccount(r, 0, addresses[4]),
 			VestingAccount(r, 1, addresses[5]),
 		},
-		GenesisValidatorList: []launch.GenesisValidator{
+		GenesisValidators: []launch.GenesisValidator{
 			GenesisValidator(r, 0, addresses[6]),
 			GenesisValidator(r, 0, addresses[7]),
 			GenesisValidator(r, 1, addresses[8]),
 		},
-		RequestList: []launch.Request{
+		Requests: []launch.Request{
 			Request(r, 0, addresses[9]),
 			Request(r, 1, addresses[10]),
 		},
-		RequestCounterList: []launch.RequestCounter{
+		RequestCounters: []launch.RequestCounter{
 			{
 				LaunchID: 0,
 				Counter:  1,

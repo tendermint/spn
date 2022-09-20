@@ -18,7 +18,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowMainnetAccount() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	accs := suite.CampaignState.MainnetAccountList
+	accs := suite.CampaignState.MainnetAccounts
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -73,7 +73,7 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 
 func (suite *QueryTestSuite) TestListMainnetAccount() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	accs := suite.CampaignState.MainnetAccountList
+	accs := suite.CampaignState.MainnetAccounts
 
 	campaignID := accs[0].CampaignID
 	request := func(campaignID uint64, next []byte, offset, limit uint64, total bool) []string {

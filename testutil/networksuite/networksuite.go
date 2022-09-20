@@ -92,32 +92,32 @@ func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.Genesi
 	// add chains
 	for i := 0; i < 5; i++ {
 		chain := sample.Chain(r, uint64(i), uint64(i))
-		launchState.ChainList = append(
-			launchState.ChainList,
+		launchState.Chains = append(
+			launchState.Chains,
 			chain,
 		)
 	}
 
 	// add genesis accounts
 	for i := 0; i < 5; i++ {
-		launchState.GenesisAccountList = append(
-			launchState.GenesisAccountList,
+		launchState.GenesisAccounts = append(
+			launchState.GenesisAccounts,
 			sample.GenesisAccount(r, 0, sample.Address(r)),
 		)
 	}
 
 	// add vesting accounts
 	for i := 0; i < 5; i++ {
-		launchState.VestingAccountList = append(
-			launchState.VestingAccountList,
+		launchState.VestingAccounts = append(
+			launchState.VestingAccounts,
 			sample.VestingAccount(r, 0, sample.Address(r)),
 		)
 	}
 
 	// add genesis validators
 	for i := 0; i < 5; i++ {
-		launchState.GenesisValidatorList = append(
-			launchState.GenesisValidatorList,
+		launchState.GenesisValidators = append(
+			launchState.GenesisValidators,
 			sample.GenesisValidator(r, uint64(0), sample.Address(r)),
 		)
 	}
@@ -126,8 +126,8 @@ func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.Genesi
 	for i := 0; i < 5; i++ {
 		request := sample.Request(r, 0, sample.Address(r))
 		request.RequestID = uint64(i)
-		launchState.RequestList = append(
-			launchState.RequestList,
+		launchState.Requests = append(
+			launchState.Requests,
 			request,
 		)
 	}
@@ -142,12 +142,12 @@ func populateCampaign(r *rand.Rand, campaignState campaign.GenesisState) campaig
 			CampaignID: uint64(i),
 		}
 		nullify.Fill(&camp)
-		campaignState.CampaignList = append(campaignState.CampaignList, camp)
+		campaignState.Campaigns = append(campaignState.Campaigns, camp)
 	}
 
 	// add campaign chains
 	for i := 0; i < 5; i++ {
-		campaignState.CampaignChainsList = append(campaignState.CampaignChainsList, campaign.CampaignChains{
+		campaignState.CampaignChains = append(campaignState.CampaignChains, campaign.CampaignChains{
 			CampaignID: uint64(i),
 			Chains:     []uint64{uint64(i)},
 		})
@@ -156,8 +156,8 @@ func populateCampaign(r *rand.Rand, campaignState campaign.GenesisState) campaig
 	// add mainnet accounts
 	campaignID := uint64(5)
 	for i := 0; i < 5; i++ {
-		campaignState.MainnetAccountList = append(
-			campaignState.MainnetAccountList,
+		campaignState.MainnetAccounts = append(
+			campaignState.MainnetAccounts,
 			sample.MainnetAccount(r, campaignID, sample.Address(r)),
 		)
 	}
@@ -201,8 +201,8 @@ func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.
 			ChannelID: strconv.Itoa(i),
 		}
 		nullify.Fill(&launchIDFromChannelID)
-		monitoringcState.LaunchIDFromChannelIDList = append(
-			monitoringcState.LaunchIDFromChannelIDList,
+		monitoringcState.LaunchIDsFromChannelID = append(
+			monitoringcState.LaunchIDsFromChannelID,
 			launchIDFromChannelID,
 		)
 	}
@@ -213,7 +213,7 @@ func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.
 			LaunchID: uint64(i),
 		}
 		nullify.Fill(&monitoringHistory)
-		monitoringcState.MonitoringHistoryList = append(monitoringcState.MonitoringHistoryList, monitoringHistory)
+		monitoringcState.MonitoringHistories = append(monitoringcState.MonitoringHistories, monitoringHistory)
 	}
 
 	// add provider client ID
@@ -222,7 +222,7 @@ func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.
 			LaunchID: uint64(i),
 		}
 		nullify.Fill(&providerClientID)
-		monitoringcState.ProviderClientIDList = append(monitoringcState.ProviderClientIDList, providerClientID)
+		monitoringcState.ProviderClientIDs = append(monitoringcState.ProviderClientIDs, providerClientID)
 	}
 
 	// add verified client IDs
@@ -231,7 +231,7 @@ func populateMonitoringc(monitoringcState monitoringc.GenesisState) monitoringc.
 			LaunchID: uint64(i),
 		}
 		nullify.Fill(&verifiedClientID)
-		monitoringcState.VerifiedClientIDList = append(monitoringcState.VerifiedClientIDList, verifiedClientID)
+		monitoringcState.VerifiedClientIDs = append(monitoringcState.VerifiedClientIDs, verifiedClientID)
 	}
 
 	return monitoringcState
@@ -266,23 +266,23 @@ func populateParticipation(r *rand.Rand, participationState participation.Genesi
 func populateProfile(r *rand.Rand, profileState profile.GenesisState) profile.GenesisState {
 	// add coordinators
 	for i := 0; i < 5; i++ {
-		profileState.CoordinatorList = append(
-			profileState.CoordinatorList,
+		profileState.Coordinators = append(
+			profileState.Coordinators,
 			profile.Coordinator{CoordinatorID: uint64(i)},
 		)
 	}
 
 	// add coordinator by address
 	for i := 0; i < 5; i++ {
-		profileState.CoordinatorByAddressList = append(
-			profileState.CoordinatorByAddressList,
+		profileState.CoordinatorsByAddress = append(
+			profileState.CoordinatorsByAddress,
 			profile.CoordinatorByAddress{Address: sample.Address(r)},
 		)
 	}
 
 	// add validator
 	for i := 0; i < 5; i++ {
-		profileState.ValidatorList = append(profileState.ValidatorList, profile.Validator{
+		profileState.Validators = append(profileState.Validators, profile.Validator{
 			Address: sample.Address(r),
 		})
 	}
@@ -297,7 +297,7 @@ func populateReward(rewardState reward.GenesisState) reward.GenesisState {
 			LaunchID: uint64(i),
 		}
 		nullify.Fill(&rewardPool)
-		rewardState.RewardPoolList = append(rewardState.RewardPoolList, rewardPool)
+		rewardState.RewardPools = append(rewardState.RewardPools, rewardPool)
 	}
 
 	return rewardState

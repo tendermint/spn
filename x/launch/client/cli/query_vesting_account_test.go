@@ -18,7 +18,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowVestingAccount() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	accs := suite.LaunchState.VestingAccountList
+	accs := suite.LaunchState.VestingAccounts
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -73,7 +73,7 @@ func (suite *QueryTestSuite) TestShowVestingAccount() {
 
 func (suite *QueryTestSuite) TestListVestingAccount() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	accs := suite.LaunchState.VestingAccountList
+	accs := suite.LaunchState.VestingAccounts
 
 	chainID := strconv.Itoa(int(accs[0].LaunchID))
 	request := func(chainID string, next []byte, offset, limit uint64, total bool) []string {
