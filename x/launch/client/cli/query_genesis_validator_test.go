@@ -18,7 +18,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowGenesisValidator() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	accs := suite.LaunchState.GenesisValidatorList
+	accs := suite.LaunchState.GenesisValidators
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -73,7 +73,7 @@ func (suite *QueryTestSuite) TestShowGenesisValidator() {
 
 func (suite *QueryTestSuite) TestListGenesisValidator() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	accs := suite.LaunchState.GenesisValidatorList
+	accs := suite.LaunchState.GenesisValidators
 
 	chainID := accs[0].LaunchID
 	request := func(chainID uint64, next []byte, offset, limit uint64, total bool) []string {

@@ -6,14 +6,14 @@ import "fmt"
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		// this line is used by starport scaffolding # genesis/types/default
-		ChainList:            []Chain{},
-		ChainCounter:         1,
-		GenesisAccountList:   []GenesisAccount{},
-		VestingAccountList:   []VestingAccount{},
-		GenesisValidatorList: []GenesisValidator{},
-		RequestList:          []Request{},
-		RequestCounterList:   []RequestCounter{},
-		Params:               DefaultParams(),
+		Chains:            []Chain{},
+		ChainCounter:      1,
+		GenesisAccounts:   []GenesisAccount{},
+		VestingAccounts:   []VestingAccount{},
+		GenesisValidators: []GenesisValidator{},
+		Requests:          []Request{},
+		RequestCounters:   []RequestCounter{},
+		Params:            DefaultParams(),
 	}
 }
 
@@ -41,7 +41,7 @@ func validateChains(gs GenesisState) (map[uint64]struct{}, error) {
 	// Check for duplicated index in chain
 	counter := gs.GetChainCounter()
 	launchIDMap := make(map[uint64]struct{})
-	for _, elem := range gs.ChainList {
+	for _, elem := range gs.Chains {
 		if err := elem.Validate(); err != nil {
 			return nil, fmt.Errorf("invalid chain %d: %s", elem.LaunchID, err.Error())
 		}
@@ -64,7 +64,7 @@ func validateChains(gs GenesisState) (map[uint64]struct{}, error) {
 func validateRequests(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 	// We checkout request counts to perform verification
 	requestCounterMap := make(map[uint64]uint64)
-	for _, elem := range gs.RequestCounterList {
+	for _, elem := range gs.RequestCounters {
 		if _, ok := requestCounterMap[elem.LaunchID]; ok {
 			return fmt.Errorf("duplicated request counter")
 		}
@@ -80,7 +80,7 @@ func validateRequests(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 
 	// Check for duplicated index in request
 	requestIndexMap := make(map[string]struct{})
-	for _, elem := range gs.RequestList {
+	for _, elem := range gs.Requests {
 		index := string(RequestKey(elem.LaunchID, elem.RequestID))
 		if _, ok := requestIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for request")
@@ -116,7 +116,7 @@ func validateRequests(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 func validateAccounts(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 	// Check for duplicated index in genesisAccount
 	genesisAccountIndexMap := make(map[string]struct{})
-	for _, elem := range gs.GenesisAccountList {
+	for _, elem := range gs.GenesisAccounts {
 		index := string(AccountKeyPath(elem.LaunchID, elem.Address))
 		if _, ok := genesisAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for genesisAccount")
@@ -134,7 +134,7 @@ func validateAccounts(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 
 	// Check for duplicated index in vestingAccount
 	vestingAccountIndexMap := make(map[string]struct{})
-	for _, elem := range gs.VestingAccountList {
+	for _, elem := range gs.VestingAccounts {
 		index := string(AccountKeyPath(elem.LaunchID, elem.Address))
 		if _, ok := vestingAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for vestingAccount")
@@ -161,7 +161,7 @@ func validateAccounts(gs GenesisState, launchIDMap map[uint64]struct{}) error {
 
 	// Check for duplicated index in genesisValidator
 	genesisValidatorIndexMap := make(map[string]struct{})
-	for _, elem := range gs.GenesisValidatorList {
+	for _, elem := range gs.GenesisValidators {
 		index := string(AccountKeyPath(elem.LaunchID, elem.Address))
 		if _, ok := genesisValidatorIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for genesisValidator")

@@ -11,19 +11,19 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// Set all the campaign
-	for _, elem := range genState.CampaignList {
+	for _, elem := range genState.Campaigns {
 		k.SetCampaign(ctx, elem)
 	}
 	// Set campaign counter
 	k.SetCampaignCounter(ctx, genState.CampaignCounter)
 
 	// Set all the campaignChains
-	for _, elem := range genState.CampaignChainsList {
+	for _, elem := range genState.CampaignChains {
 		k.SetCampaignChains(ctx, elem)
 	}
 
 	// Set all the mainnetAccount
-	for _, elem := range genState.MainnetAccountList {
+	for _, elem := range genState.MainnetAccounts {
 		k.SetMainnetAccount(ctx, elem)
 	}
 
@@ -39,10 +39,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
-	genesis.CampaignList = k.GetAllCampaign(ctx)
+	genesis.Campaigns = k.GetAllCampaign(ctx)
 	genesis.CampaignCounter = k.GetCampaignCounter(ctx)
-	genesis.CampaignChainsList = k.GetAllCampaignChains(ctx)
-	genesis.MainnetAccountList = k.GetAllMainnetAccount(ctx)
+	genesis.CampaignChains = k.GetAllCampaignChains(ctx)
+	genesis.MainnetAccounts = k.GetAllMainnetAccount(ctx)
 	genesis.Params = k.GetParams(ctx)
 	// this line is used by starport scaffolding # genesis/module/export
 

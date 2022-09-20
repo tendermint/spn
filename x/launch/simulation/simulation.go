@@ -254,25 +254,25 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 		}
 
 		// build list of genesis and vesting accounts
-		accChainList := make([]accChain, 0)
+		accChains := make([]accChain, 0)
 		genAccs := k.GetAllGenesisAccount(ctx)
 		for _, acc := range genAccs {
-			accChainList = append(accChainList, accChain{
+			accChains = append(accChains, accChain{
 				address:  acc.Address,
 				launchID: acc.LaunchID,
 			})
 		}
 		vestAccs := k.GetAllVestingAccount(ctx)
 		for _, acc := range vestAccs {
-			accChainList = append(accChainList, accChain{
+			accChains = append(accChains, accChain{
 				address:  acc.Address,
 				launchID: acc.LaunchID,
 			})
 		}
 
 		// add entropy
-		r.Shuffle(len(accChainList), func(i, j int) {
-			accChainList[i], accChainList[j] = accChainList[j], accChainList[i]
+		r.Shuffle(len(accChains), func(i, j int) {
+			accChains[i], accChains[j] = accChains[j], accChains[i]
 		})
 
 		var (
@@ -281,7 +281,7 @@ func SimulateMsgRequestRemoveAccount(ak types.AccountKeeper, bk types.BankKeeper
 			accChainID uint64
 		)
 		found := false
-		for _, accChain := range accChainList {
+		for _, accChain := range accChains {
 			if IsLaunchTriggeredChain(ctx, k, accChain.launchID) {
 				continue
 			}

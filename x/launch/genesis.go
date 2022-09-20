@@ -12,34 +12,34 @@ import (
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// this line is used by starport scaffolding # genesis/module/init
 	// Set all the chain
-	for _, elem := range genState.ChainList {
+	for _, elem := range genState.Chains {
 		k.SetChain(ctx, elem)
 	}
 
 	k.SetChainCounter(ctx, genState.ChainCounter)
 
 	// Set all the genesisAccount
-	for _, elem := range genState.GenesisAccountList {
+	for _, elem := range genState.GenesisAccounts {
 		k.SetGenesisAccount(ctx, elem)
 	}
 
 	// Set all the vestingAccount
-	for _, elem := range genState.VestingAccountList {
+	for _, elem := range genState.VestingAccounts {
 		k.SetVestingAccount(ctx, elem)
 	}
 
 	// Set all the genesisValidator
-	for _, elem := range genState.GenesisValidatorList {
+	for _, elem := range genState.GenesisValidators {
 		k.SetGenesisValidator(ctx, elem)
 	}
 
 	// Set all the request
-	for _, elem := range genState.RequestList {
+	for _, elem := range genState.Requests {
 		k.SetRequest(ctx, elem)
 	}
 
 	// Set all request counter
-	for _, elem := range genState.RequestCounterList {
+	for _, elem := range genState.RequestCounters {
 		k.SetRequestCounter(ctx, elem.LaunchID, elem.Counter)
 	}
 
@@ -50,19 +50,19 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
-	genesis.ChainList = k.GetAllChain(ctx)
+	genesis.Chains = k.GetAllChain(ctx)
 	genesis.ChainCounter = k.GetChainCounter(ctx)
-	genesis.GenesisAccountList = k.GetAllGenesisAccount(ctx)
-	genesis.VestingAccountList = k.GetAllVestingAccount(ctx)
-	genesis.GenesisValidatorList = k.GetAllGenesisValidator(ctx)
-	genesis.RequestList = k.GetAllRequest(ctx)
+	genesis.GenesisAccounts = k.GetAllGenesisAccount(ctx)
+	genesis.VestingAccounts = k.GetAllVestingAccount(ctx)
+	genesis.GenesisValidators = k.GetAllGenesisValidator(ctx)
+	genesis.Requests = k.GetAllRequest(ctx)
 	genesis.Params = k.GetParams(ctx)
 
 	// Get request counts
-	for _, elem := range genesis.ChainList {
+	for _, elem := range genesis.Chains {
 		// Get request count
 		counter := k.GetRequestCounter(ctx, elem.LaunchID)
-		genesis.RequestCounterList = append(genesis.RequestCounterList, types.RequestCounter{
+		genesis.RequestCounters = append(genesis.RequestCounters, types.RequestCounter{
 			LaunchID: elem.LaunchID,
 			Counter:  counter,
 		})

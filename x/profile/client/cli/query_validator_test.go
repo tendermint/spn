@@ -20,7 +20,7 @@ import (
 
 func (suite *QueryTestSuite) TestShowValidator() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.ProfileState.ValidatorList
+	objs := suite.ProfileState.Validators
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -71,7 +71,7 @@ func (suite *QueryTestSuite) TestShowValidator() {
 
 func (suite *QueryTestSuite) TestListValidator() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	objs := suite.ProfileState.ValidatorList
+	objs := suite.ProfileState.Validators
 
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
