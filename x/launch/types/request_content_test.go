@@ -566,7 +566,7 @@ func TestParamChange_Validate(t *testing.T) {
 			name: "should prevent validate change param with empty module string",
 			content: types.ParamChange{
 				Module: "",
-				Param:  sample.String(r, 10),
+				Param:  sample.AlphaString(r, 10),
 				Value:  sample.Bytes(r, 10),
 			},
 			err: types.ErrInvalidRequestContent,
@@ -574,8 +574,26 @@ func TestParamChange_Validate(t *testing.T) {
 		{
 			name: "should prevent validate change param with empty param string",
 			content: types.ParamChange{
-				Module: sample.String(r, 10),
+				Module: sample.AlphaString(r, 10),
 				Param:  "",
+				Value:  sample.Bytes(r, 10),
+			},
+			err: types.ErrInvalidRequestContent,
+		},
+		{
+			name: "should prevent validate change param with non alpha module string",
+			content: types.ParamChange{
+				Module: sample.NonAlphaString(r, 10),
+				Param:  sample.AlphaString(r, 10),
+				Value:  sample.Bytes(r, 10),
+			},
+			err: types.ErrInvalidRequestContent,
+		},
+		{
+			name: "should prevent validate change param with non alpha param string",
+			content: types.ParamChange{
+				Module: sample.AlphaString(r, 10),
+				Param:  sample.NonAlphaString(r, 10),
 				Value:  sample.Bytes(r, 10),
 			},
 			err: types.ErrInvalidRequestContent,
@@ -583,8 +601,8 @@ func TestParamChange_Validate(t *testing.T) {
 		{
 			name: "should validate valid change param",
 			content: types.ParamChange{
-				Module: sample.String(r, 10),
-				Param:  sample.String(r, 10),
+				Module: sample.AlphaString(r, 10),
+				Param:  sample.AlphaString(r, 10),
 				Value:  sample.Bytes(r, 10),
 			},
 			err: nil,

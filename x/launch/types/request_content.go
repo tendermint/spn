@@ -2,11 +2,14 @@ package types
 
 import (
 	"errors"
+	"regexp"
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
+
+var isStringAlphabetic = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
 
 func (m RequestContent) Validate(launchID uint64) error {
 	switch requestContent := m.Content.(type) {
@@ -214,6 +217,10 @@ func NewParamChange(module, param string, value []byte) RequestContent {
 // Validate implements ParamChange validation
 func (m ParamChange) Validate() error {
 	if m.Module == "" || m.Param == "" {
+		return ErrInvalidRequestContent
+	}
+
+	if !isStringAlphabetic(m.Module) || !isStringAlphabetic(m.Param) {
 		return ErrInvalidRequestContent
 	}
 

@@ -2,6 +2,8 @@ package simulation
 
 import (
 	"errors"
+	"math/rand"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -12,7 +14,6 @@ import (
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
-	"math/rand"
 
 	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/participation/keeper"
