@@ -29,6 +29,17 @@ func NewGenesisURL(url, hash string) InitialGenesis {
 	}
 }
 
+// NewConfigGenesis returns a InitialGenesis containing a ConfigGenesis file
+func NewConfigGenesis(file string) InitialGenesis {
+	return InitialGenesis{
+		Source: &InitialGenesis_ConfigGenesis{
+			ConfigGenesis: &ConfigGenesis{
+				File: file,
+			},
+		},
+	}
+}
+
 // Validate verifies the initial genesis is valid
 func (m InitialGenesis) Validate() error {
 	switch initialGenesis := m.Source.(type) {

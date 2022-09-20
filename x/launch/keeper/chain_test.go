@@ -41,8 +41,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 		genesisChainID string
 		sourceURL      string
 		sourceHash     string
-		genesisURL     string
-		genesisHash    string
+		initialGenesis types.InitialGenesis
 		hasCampaign    bool
 		campaignID     uint64
 		isMainnet      bool
@@ -57,7 +56,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			genesisURL:     "",
+			initialGenesis: types.NewDefaultInitialGenesis(),
 			hasCampaign:    false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
@@ -70,7 +69,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			genesisURL:     "",
+			initialGenesis: types.NewDefaultInitialGenesis(),
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
@@ -85,7 +84,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			genesisURL:     "",
+			initialGenesis: types.NewDefaultInitialGenesis(),
 			hasCampaign:    true,
 			campaignID:     0,
 			isMainnet:      true,
@@ -95,17 +94,29 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			valid:          true,
 		},
 		{
-			name:           "should allow creating a chain with a custom genesis",
+			name:           "should allow creating a chain with a custom genesis url",
 			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			genesisURL:     sample.String(r, 30),
-			genesisHash:    sample.GenesisHash(r),
+			initialGenesis: types.NewGenesisURL(sample.String(r, 30), sample.GenesisHash(r)),
 			hasCampaign:    false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       3,
+			valid:          true,
+		},
+		{
+			name:           "should allow creating a chain with a custom genesis config file",
+			coordinatorID:  coordID,
+			genesisChainID: sample.GenesisChainID(r),
+			sourceURL:      sample.String(r, 30),
+			sourceHash:     sample.String(r, 20),
+			initialGenesis: types.NewConfigGenesis(sample.String(r, 30)),
+			hasCampaign:    false,
+			balance:        sample.Coins(r),
+			metadata:       sample.Metadata(r, 20),
+			wantedID:       4,
 			valid:          true,
 		},
 		{
@@ -114,12 +125,12 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			genesisURL:     "",
+			initialGenesis: types.NewDefaultInitialGenesis(),
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
 			balance:        sample.Coins(r),
-			wantedID:       4,
+			wantedID:       5,
 			valid:          true,
 		},
 		{
@@ -128,7 +139,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			genesisURL:     "",
+			initialGenesis: types.NewDefaultInitialGenesis(),
 			hasCampaign:    false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
@@ -141,7 +152,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			genesisURL:     "",
+			initialGenesis: types.NewDefaultInitialGenesis(),
 			hasCampaign:    true,
 			campaignID:     1000,
 			balance:        sample.Coins(r),
@@ -155,7 +166,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			genesisURL:     "",
+			initialGenesis: types.NewDefaultInitialGenesis(),
 			hasCampaign:    true,
 			campaignID:     campaignID,
 			isMainnet:      false,
@@ -170,7 +181,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			genesisURL:     "",
+			initialGenesis: types.NewDefaultInitialGenesis(),
 			hasCampaign:    false,
 			campaignID:     0,
 			balance:        sample.Coins(r),
@@ -186,8 +197,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 				tc.genesisChainID,
 				tc.sourceURL,
 				tc.sourceHash,
-				tc.genesisURL,
-				tc.genesisHash,
+				&tc.initialGenesis,
 				tc.hasCampaign,
 				tc.campaignID,
 				tc.isMainnet,
@@ -211,17 +221,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			require.EqualValues(t, tc.campaignID, chain.CampaignID)
 			require.EqualValues(t, tc.isMainnet, chain.IsMainnet)
 			require.EqualValues(t, tc.metadata, chain.Metadata)
-
-			// Compare initial genesis
-			if tc.genesisURL == "" {
-				require.Equal(t, types.NewDefaultInitialGenesis(), chain.InitialGenesis)
-			} else {
-				require.Equal(
-					t,
-					types.NewGenesisURL(tc.genesisURL, tc.genesisHash),
-					chain.InitialGenesis,
-				)
-			}
+			require.EqualValues(t, tc.initialGenesis, chain.InitialGenesis)
 
 			// Check chain has been appended in the campaign
 			if tc.hasCampaign {

@@ -48,6 +48,8 @@ func CmdCreateChain() *cobra.Command {
 				campaignID = uint64(argCampaignID)
 			}
 
+			var initialGenesis *types.InitialGenesis
+
 			genesisURL, err := cmd.Flags().GetString(flagGenesisURL)
 			if err != nil {
 				return err
@@ -58,6 +60,8 @@ func CmdCreateChain() *cobra.Command {
 				if err != nil {
 					return err
 				}
+				ig := types.NewGenesisURL(genesisURL, genesisHash)
+				initialGenesis = &ig
 			}
 
 			metadata, err := cmd.Flags().GetString(flagMetadata)
@@ -84,8 +88,7 @@ func CmdCreateChain() *cobra.Command {
 				args[0],
 				args[1],
 				args[2],
-				genesisURL,
-				genesisHash,
+				initialGenesis,
 				hasCampaign,
 				campaignID,
 				balanceCoins,
