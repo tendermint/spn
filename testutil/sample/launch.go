@@ -76,8 +76,8 @@ func AccountRemoval(address string) *launch.AccountRemoval {
 // ParamChange returns a sample ParamChange
 func ParamChange(r *rand.Rand) launch.ParamChange {
 	return launch.ParamChange{
-		Module: String(r, 5),
-		Param:  String(r, 5),
+		Module: AlphaString(r, 5),
+		Param:  AlphaString(r, 5),
 		Value:  Bytes(r, 5),
 	}
 }
@@ -276,12 +276,12 @@ func MsgSendRequestWithRemoveValidator(creator, validatorAddr string, launchID u
 
 // MsgSendRequestWithParamChange returns a sample MsgSendRequest with ParamChange request content
 func MsgSendRequestWithParamChange(r *rand.Rand, creator string, launchID uint64) launch.MsgSendRequest {
-	cp := ParamChange(r)
+	pc := ParamChange(r)
 
 	return *launch.NewMsgSendRequest(
 		creator,
 		launchID,
-		launch.NewParamChange(cp.Module, cp.Param, cp.Value),
+		launch.NewParamChange(pc.Module, pc.Param, pc.Value),
 	)
 }
 
