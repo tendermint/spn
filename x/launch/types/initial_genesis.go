@@ -40,6 +40,10 @@ func (m InitialGenesis) Validate() error {
 		if len(initialGenesis.GenesisURL.Hash) != HashLength {
 			return errors.New("hash must be sha256")
 		}
+	case *InitialGenesis_ConfigGenesis:
+		if initialGenesis.ConfigGenesis.File == "" {
+			return errors.New("no file provided")
+		}
 	default:
 		return errors.New("unrecognized initial genesis")
 	}
