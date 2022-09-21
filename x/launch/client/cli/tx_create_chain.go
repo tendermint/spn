@@ -71,12 +71,10 @@ func CmdCreateChain() *cobra.Command {
 				return err
 			}
 			if genesisConfigFile != "" {
-				if args[1] == "" {
-					return errors.New("genesis config file requires a source url to be set")
-				}
 				initialGenesis = types.NewConfigGenesis(genesisConfigFile)
 			}
 
+			// ensure genesisURL and config not being used simultaneously
 			if genesisURL != "" && genesisConfigFile != "" {
 				return errors.New("cannot use genesisURL and genesis config file")
 			}
