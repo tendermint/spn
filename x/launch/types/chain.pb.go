@@ -198,7 +198,6 @@ func (m *Chain) GetMetadata() []byte {
 
 type InitialGenesis struct {
 	// Types that are valid to be assigned to Source:
-	//
 	//	*InitialGenesis_DefaultInitialGenesis
 	//	*InitialGenesis_GenesisURL
 	Source isInitialGenesis_Source `protobuf_oneof:"source"`
