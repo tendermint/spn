@@ -29,7 +29,7 @@ message MsgCreateChain {
   string         genesisChainID                    = 2;
   string         sourceURL                         = 3;
   string         sourceHash                        = 4;
-  InitialGenesis initialGenesis                    = 5;
+  InitialGenesis initialGenesis                    = 5 [(gogoproto.nullable) = false];
   bool           hasCampaign                       = 6;
   uint64         campaignID                        = 7;
   repeated cosmos.base.v1beta1.Coin AccountBalance = 8 [

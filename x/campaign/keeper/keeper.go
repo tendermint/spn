@@ -22,7 +22,7 @@ type LaunchKeeper interface {
 		genesisChainID,
 		sourceURL,
 		sourceHash string,
-		initialGenesis *launchtypes.InitialGenesis,
+		initialGenesis launchtypes.InitialGenesis,
 		hasCampaign bool,
 		campaignID uint64,
 		isMainnet bool,

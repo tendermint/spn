@@ -18,7 +18,7 @@ func NewMsgCreateChain(
 	genesisChainID,
 	sourceURL,
 	sourceHash string,
-	initialGenesis *InitialGenesis,
+	initialGenesis InitialGenesis,
 	hasCampaign bool,
 	campaignID uint64,
 	accountBalance sdk.Coins,

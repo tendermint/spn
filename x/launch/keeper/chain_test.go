@@ -197,7 +197,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 				tc.genesisChainID,
 				tc.sourceURL,
 				tc.sourceHash,
-				&tc.initialGenesis,
+				tc.initialGenesis,
 				tc.hasCampaign,
 				tc.campaignID,
 				tc.isMainnet,

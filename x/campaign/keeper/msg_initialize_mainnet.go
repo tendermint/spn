@@ -53,7 +53,7 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		msg.MainnetChainID,
 		msg.SourceURL,
 		msg.SourceHash,
-		&initialGenesis,
+		initialGenesis,
 		true,
 		msg.CampaignID,
 		true,
