@@ -50,13 +50,13 @@ func Test_msgServer_CreateClient(t *testing.T) {
 		"",
 	))
 	require.NoError(t, err)
+	initialGenesis := launchtypes.NewDefaultInitialGenesis()
 	resCreateChain, err := ts.LaunchSrv.CreateChain(ctx, launchtypes.NewMsgCreateChain(
 		coordAddr,
 		"orbit-1",
 		sample.String(r, 10),
 		sample.String(r, 10),
-		"",
-		"",
+		initialGenesis,
 		false,
 		0,
 		sample.Coins(r),

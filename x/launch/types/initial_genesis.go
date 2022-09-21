@@ -29,6 +29,17 @@ func NewGenesisURL(url, hash string) InitialGenesis {
 	}
 }
 
+// NewConfigGenesis returns a InitialGenesis containing a ConfigGenesis file
+func NewConfigGenesis(file string) InitialGenesis {
+	return InitialGenesis{
+		Source: &InitialGenesis_ConfigGenesis{
+			ConfigGenesis: &ConfigGenesis{
+				File: file,
+			},
+		},
+	}
+}
+
 // Validate verifies the initial genesis is valid
 func (m InitialGenesis) Validate() error {
 	switch initialGenesis := m.Source.(type) {
@@ -39,6 +50,10 @@ func (m InitialGenesis) Validate() error {
 		}
 		if len(initialGenesis.GenesisURL.Hash) != HashLength {
 			return errors.New("hash must be sha256")
+		}
+	case *InitialGenesis_ConfigGenesis:
+		if initialGenesis.ConfigGenesis.File == "" {
+			return errors.New("no file provided")
 		}
 	default:
 		return errors.New("unrecognized initial genesis")
