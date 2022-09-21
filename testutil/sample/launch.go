@@ -164,7 +164,7 @@ func MsgCreateChain(r *rand.Rand, coordAddress, genesisURL string, hasCampaign b
 		GenesisChainID(r),
 		String(r, 10),
 		String(r, 10),
-		&initialGenesis,
+		initialGenesis,
 		hasCampaign,
 		campaignID,
 		Coins(r),

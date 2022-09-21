@@ -198,7 +198,6 @@ func (m *Chain) GetMetadata() []byte {
 
 type InitialGenesis struct {
 	// Types that are valid to be assigned to Source:
-	//
 	//	*InitialGenesis_DefaultInitialGenesis
 	//	*InitialGenesis_GenesisURL
 	//	*InitialGenesis_ConfigGenesis
@@ -386,7 +385,7 @@ func (m *GenesisURL) GetHash() string {
 	return ""
 }
 
-// ConfigGenesis specifies using a custom genesis from a starport config file
+// ConfigGenesis specifies using a custom genesis from a Ignite CLI config file
 // the file is located in the root specified by sourceURL
 type ConfigGenesis struct {
 	File string `protobuf:"bytes,1,opt,name=file,proto3" json:"file,omitempty"`

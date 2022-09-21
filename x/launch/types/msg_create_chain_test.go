@@ -15,11 +15,11 @@ import (
 func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 	invalidGenesisHash := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
 	invalidInitialGenesis := types.NewGenesisURL("foo.com", "NoHash")
-	invalidGenesisHash.InitialGenesis = &invalidInitialGenesis
+	invalidGenesisHash.InitialGenesis = invalidInitialGenesis
 
 	invalidConfigFile := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
 	invalidInitialGenesis = types.NewConfigGenesis("")
-	invalidConfigFile.InitialGenesis = &invalidInitialGenesis
+	invalidConfigFile.InitialGenesis = invalidInitialGenesis
 
 	invalidGenesisChainID := sample.MsgCreateChain(r, sample.Address(r), "", false, 0)
 	invalidGenesisChainID.GenesisChainID = "invalid"

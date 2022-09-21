@@ -157,7 +157,7 @@ func TestMsgCreateChain(t *testing.T) {
 			require.EqualValues(t, tc.msg.SourceURL, chain.SourceURL)
 			require.EqualValues(t, tc.msg.SourceHash, chain.SourceHash)
 			require.EqualValues(t, tc.msg.Metadata, chain.Metadata)
-			require.EqualValues(t, *tc.msg.InitialGenesis, chain.InitialGenesis)
+			require.EqualValues(t, tc.msg.InitialGenesis, chain.InitialGenesis)
 
 			// Chain created from MsgCreateChain is never a mainnet
 			require.False(t, chain.IsMainnet)
