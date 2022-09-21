@@ -21,7 +21,7 @@ import (
 
 const (
 	flagGenesisURL        = "genesis-url"
-	flagGenesisConfigFile = "genesis-config file"
+	flagGenesisConfigFile = "genesis-config"
 	flagCampaignID        = "campaign-id"
 	flagAccountBalance    = "account-balance"
 )
