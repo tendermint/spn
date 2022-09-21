@@ -17,9 +17,8 @@ func (k Keeper) CreateNewChain(
 	coordinatorID uint64,
 	genesisChainID,
 	sourceURL,
-	sourceHash,
-	genesisURL,
-	genesisHash string,
+	sourceHash string,
+	initialGenesis *types.InitialGenesis,
 	hasCampaign bool,
 	campaignID uint64,
 	isMainnet bool,
@@ -37,6 +36,7 @@ func (k Keeper) CreateNewChain(
 		CreatedAt:       ctx.BlockTime().Unix(),
 		SourceURL:       sourceURL,
 		SourceHash:      sourceHash,
+		InitialGenesis:  *initialGenesis,
 		HasCampaign:     hasCampaign,
 		CampaignID:      campaignID,
 		IsMainnet:       isMainnet,
@@ -44,13 +44,6 @@ func (k Keeper) CreateNewChain(
 		LaunchTime:      time.Unix(0, 0).UTC(),
 		AccountBalance:  accountBalance,
 		Metadata:        metadata,
-	}
-
-	// Initialize initial genesis
-	if genesisURL == "" {
-		chain.InitialGenesis = types.NewDefaultInitialGenesis()
-	} else {
-		chain.InitialGenesis = types.NewGenesisURL(genesisURL, genesisHash)
 	}
 
 	if err := chain.Validate(); err != nil {

@@ -148,9 +148,15 @@ func Request(r *rand.Rand, launchID uint64, address string) launch.Request {
 
 // MsgCreateChain returns a sample MsgCreateChain
 func MsgCreateChain(r *rand.Rand, coordAddress, genesisURL string, hasCampaign bool, campaignID uint64) launch.MsgCreateChain {
+	initialGenesis := launch.NewDefaultInitialGenesis()
 	var genesisHash string
 	if len(genesisURL) > 0 {
 		genesisHash = GenesisHash(r)
+		ig := launch.NewGenesisURL(
+			genesisURL,
+			genesisHash,
+		)
+		initialGenesis = ig
 	}
 
 	return *launch.NewMsgCreateChain(
@@ -158,8 +164,7 @@ func MsgCreateChain(r *rand.Rand, coordAddress, genesisURL string, hasCampaign b
 		GenesisChainID(r),
 		String(r, 10),
 		String(r, 10),
-		genesisURL,
-		genesisHash,
+		&initialGenesis,
 		hasCampaign,
 		campaignID,
 		Coins(r),
