@@ -295,7 +295,7 @@ func CheckRequest(
 			)
 		}
 	case *types.RequestContent_ParamChange:
-		// currently no stateful checks can be performed on change param
+		// currently no on-chain checks can be performed on change param
 	}
 
 	return nil
