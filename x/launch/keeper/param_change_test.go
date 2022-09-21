@@ -16,8 +16,8 @@ func createNParamChange(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.P
 	items := make([]types.ParamChange, n)
 	for i := range items {
 		keeper.SetChain(ctx, sample.Chain(r, uint64(i), sample.Uint64(r)))
-		items[i] = sample.ParamChange(r)
-		keeper.SetParamChange(ctx, uint64(i), items[i])
+		items[i] = sample.ParamChange(r, uint64(i))
+		keeper.SetParamChange(ctx, items[i])
 	}
 	return items
 }

@@ -35,7 +35,7 @@ func CmdRequestParamChange() *cobra.Command {
 			msg := types.NewMsgSendRequest(
 				fromAddr,
 				launchID,
-				types.NewParamChange(module, param, value),
+				types.NewParamChange(launchID, module, param, value),
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

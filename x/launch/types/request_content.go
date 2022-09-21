@@ -24,7 +24,7 @@ func (m RequestContent) Validate(launchID uint64) error {
 	case *RequestContent_ValidatorRemoval:
 		return requestContent.ValidatorRemoval.Validate()
 	case *RequestContent_ParamChange:
-		return requestContent.ParamChange.Validate()
+		return requestContent.ParamChange.Validate(launchID)
 	default:
 		return errors.New("unrecognized request content")
 	}
@@ -202,26 +202,31 @@ func (m ValidatorRemoval) Validate() error {
 }
 
 // NewParamChange returns a RequestContent containing a ParamChange
-func NewParamChange(module, param string, value []byte) RequestContent {
+func NewParamChange(launchID uint64, module, param string, value []byte) RequestContent {
 	return RequestContent{
 		Content: &RequestContent_ParamChange{
 			ParamChange: &ParamChange{
-				Module: module,
-				Param:  param,
-				Value:  value,
+				LaunchID: launchID,
+				Module:   module,
+				Param:    param,
+				Value:    value,
 			},
 		},
 	}
 }
 
 // Validate implements ParamChange validation
-func (m ParamChange) Validate() error {
+func (m ParamChange) Validate(launchID uint64) error {
 	if m.Module == "" || m.Param == "" {
 		return ErrInvalidRequestContent
 	}
 
 	if !isStringAlphabetic(m.Module) || !isStringAlphabetic(m.Param) {
 		return ErrInvalidRequestContent
+	}
+
+	if m.LaunchID != launchID {
+		return ErrInvalidLaunchID
 	}
 
 	return nil

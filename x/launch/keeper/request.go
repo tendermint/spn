@@ -218,9 +218,9 @@ func ApplyRequest(
 
 	case *types.RequestContent_ParamChange:
 		cp := requestContent.ParamChange
-		k.SetParamChange(ctx, chain.LaunchID, *cp)
+		k.SetParamChange(ctx, *cp)
 		err = ctx.EventManager().EmitTypedEvent(&types.EventParamChanged{
-			LaunchID: chain.LaunchID,
+			LaunchID: cp.LaunchID,
 			Module:   cp.Module,
 			Param:    cp.Param,
 			Value:    cp.Value,

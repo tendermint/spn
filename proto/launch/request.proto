@@ -44,7 +44,8 @@ message ValidatorRemoval {
 }
 
 message ParamChange {
-  string module = 1;
-  string param  = 2;
-  bytes  value  = 3;
+  uint64 launchID = 1;
+  string module   = 2;
+  string param    = 3;
+  bytes  value    = 4;
 }

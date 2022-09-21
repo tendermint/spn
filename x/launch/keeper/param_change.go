@@ -8,11 +8,11 @@ import (
 )
 
 // SetParamChange set a specific ParamChange in the store from its index
-func (k Keeper) SetParamChange(ctx sdk.Context, launchID uint64, paramChange types.ParamChange) {
+func (k Keeper) SetParamChange(ctx sdk.Context, paramChange types.ParamChange) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ParamChangeKeyPrefix))
 	b := k.cdc.MustMarshal(&paramChange)
 	store.Set(types.ParamChangePath(
-		launchID,
+		paramChange.LaunchID,
 		paramChange.Module,
 		paramChange.Param,
 	), b)

@@ -33,6 +33,11 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		k.SetGenesisValidator(ctx, elem)
 	}
 
+	// Set all the paramChange
+	for _, elem := range genState.ParamChanges {
+		k.SetParamChange(ctx, elem)
+	}
+
 	// Set all the request
 	for _, elem := range genState.Requests {
 		k.SetRequest(ctx, elem)
@@ -55,6 +60,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.GenesisAccounts = k.GetAllGenesisAccount(ctx)
 	genesis.VestingAccounts = k.GetAllVestingAccount(ctx)
 	genesis.GenesisValidators = k.GetAllGenesisValidator(ctx)
+	genesis.ParamChanges = k.GetAllParamChange(ctx)
 	genesis.Requests = k.GetAllRequest(ctx)
 	genesis.Params = k.GetParams(ctx)
 

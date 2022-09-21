@@ -556,6 +556,8 @@ func TestVestingAccount_Validate(t *testing.T) {
 }
 
 func TestParamChange_Validate(t *testing.T) {
+	launchID := uint64(0)
+
 	tests := []struct {
 		name     string
 		content  types.ParamChange
@@ -565,52 +567,73 @@ func TestParamChange_Validate(t *testing.T) {
 		{
 			name: "should prevent validate change param with empty module string",
 			content: types.ParamChange{
-				Module: "",
-				Param:  sample.AlphaString(r, 10),
-				Value:  sample.Bytes(r, 10),
+				LaunchID: launchID,
+				Module:   "",
+				Param:    sample.AlphaString(r, 10),
+				Value:    sample.Bytes(r, 10),
 			},
-			err: types.ErrInvalidRequestContent,
+			launchID: launchID,
+			err:      types.ErrInvalidRequestContent,
 		},
 		{
 			name: "should prevent validate change param with empty param string",
 			content: types.ParamChange{
-				Module: sample.AlphaString(r, 10),
-				Param:  "",
-				Value:  sample.Bytes(r, 10),
+				LaunchID: launchID,
+				Module:   sample.AlphaString(r, 10),
+				Param:    "",
+				Value:    sample.Bytes(r, 10),
 			},
-			err: types.ErrInvalidRequestContent,
+			launchID: launchID,
+			err:      types.ErrInvalidRequestContent,
 		},
 		{
 			name: "should prevent validate change param with non alpha module string",
 			content: types.ParamChange{
-				Module: sample.NonAlphaString(r, 10),
-				Param:  sample.AlphaString(r, 10),
-				Value:  sample.Bytes(r, 10),
+				LaunchID: launchID,
+				Module:   sample.NonAlphaString(r, 10),
+				Param:    sample.AlphaString(r, 10),
+				Value:    sample.Bytes(r, 10),
 			},
-			err: types.ErrInvalidRequestContent,
+			launchID: launchID,
+			err:      types.ErrInvalidRequestContent,
 		},
 		{
 			name: "should prevent validate change param with non alpha param string",
 			content: types.ParamChange{
-				Module: sample.AlphaString(r, 10),
-				Param:  sample.NonAlphaString(r, 10),
-				Value:  sample.Bytes(r, 10),
+				LaunchID: launchID,
+				Module:   sample.AlphaString(r, 10),
+				Param:    sample.NonAlphaString(r, 10),
+				Value:    sample.Bytes(r, 10),
 			},
-			err: types.ErrInvalidRequestContent,
+			launchID: launchID,
+			err:      types.ErrInvalidRequestContent,
+		},
+		{
+			name: "should prevent validate change param with invalid launchID",
+			content: types.ParamChange{
+				LaunchID: launchID,
+				Module:   sample.AlphaString(r, 10),
+				Param:    sample.AlphaString(r, 10),
+				Value:    sample.Bytes(r, 10),
+			},
+			launchID: launchID + 1,
+			err:      types.ErrInvalidLaunchID,
 		},
 		{
 			name: "should validate valid change param",
 			content: types.ParamChange{
-				Module: sample.AlphaString(r, 10),
-				Param:  sample.AlphaString(r, 10),
-				Value:  sample.Bytes(r, 10),
+				LaunchID: launchID,
+				Module:   sample.AlphaString(r, 10),
+				Param:    sample.AlphaString(r, 10),
+				Value:    sample.Bytes(r, 10),
 			},
-			err: nil,
+			launchID: launchID,
+			err:      nil,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.content.Validate()
+			err := tt.content.Validate(tt.launchID)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
