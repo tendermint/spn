@@ -57,6 +57,11 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/launch/genesis_validator/{launchID}";
   }
 
+  // Queries a list of ParamChange items.
+  rpc ParamChangeAll(QueryAllParamChangeRequest) returns (QueryAllParamChangeResponse) {
+    option (google.api.http).get = "/tendermint/spn/launch/paramChange/{launchID}";
+  }
+
   // Queries a request by index.
   rpc Request(QueryGetRequestRequest) returns (QueryGetRequestResponse) {
     option (google.api.http).get = "/tendermint/spn/launch/request/{launchID}/{requestID}";
@@ -171,6 +176,16 @@ message QueryParamsRequest {}
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllParamChangeRequest {
+  uint64                                launchID   = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllParamChangeResponse {
+  repeated ParamChange                   paramChanges = 1 [(gogoproto.nullable) = false];
+  cosmos.base.query.v1beta1.PageResponse pagination   = 2;
 }
 
 // this line is used by starport scaffolding # 3

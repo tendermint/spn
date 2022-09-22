@@ -122,6 +122,14 @@ func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.Genesi
 		)
 	}
 
+	// add param chagne
+	for i := 0; i < 5; i++ {
+		launchState.ParamChanges = append(
+			launchState.ParamChanges,
+			sample.ParamChange(r, uint64(0)),
+		)
+	}
+
 	// add request
 	for i := 0; i < 5; i++ {
 		request := sample.Request(r, 0, sample.Address(r))
