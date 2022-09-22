@@ -5,8 +5,11 @@ import (
 	"fmt"
 
 	sdkerrors "cosmossdk.io/errors"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ignterrors "github.com/ignite/modules/pkg/errors"
+
+	launchtypes "github.com/tendermint/spn/x/launch/types"
 
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -41,6 +44,8 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		))
 	}
 
+	initialGenesis := launchtypes.NewDefaultInitialGenesis()
+
 	// Create the mainnet chain for launch
 	mainnetID, err := k.launchKeeper.CreateNewChain(
 		ctx,
@@ -48,8 +53,7 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		msg.MainnetChainID,
 		msg.SourceURL,
 		msg.SourceHash,
-		"",
-		"",
+		initialGenesis,
 		true,
 		msg.CampaignID,
 		true,

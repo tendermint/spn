@@ -20,9 +20,10 @@ import (
 )
 
 const (
-	flagGenesisURL     = "genesis-url"
-	flagCampaignID     = "campaign-id"
-	flagAccountBalance = "account-balance"
+	flagGenesisURL        = "genesis-url"
+	flagGenesisConfigFile = "genesis-config"
+	flagCampaignID        = "campaign-id"
+	flagAccountBalance    = "account-balance"
 )
 
 func CmdCreateChain() *cobra.Command {
@@ -48,6 +49,9 @@ func CmdCreateChain() *cobra.Command {
 				campaignID = uint64(argCampaignID)
 			}
 
+			initialGenesis := types.NewDefaultInitialGenesis()
+
+			// parse genesis url for initialGenesis
 			genesisURL, err := cmd.Flags().GetString(flagGenesisURL)
 			if err != nil {
 				return err
@@ -58,6 +62,21 @@ func CmdCreateChain() *cobra.Command {
 				if err != nil {
 					return err
 				}
+				initialGenesis = types.NewGenesisURL(genesisURL, genesisHash)
+			}
+
+			// parse genesis config file for initialGenesis
+			genesisConfigFile, err := cmd.Flags().GetString(flagGenesisConfigFile)
+			if err != nil {
+				return err
+			}
+			if genesisConfigFile != "" {
+				initialGenesis = types.NewConfigGenesis(genesisConfigFile)
+			}
+
+			// ensure genesisURL and config not being used simultaneously
+			if genesisURL != "" && genesisConfigFile != "" {
+				return errors.New("cannot use genesisURL and genesis config file")
 			}
 
 			metadata, err := cmd.Flags().GetString(flagMetadata)
@@ -84,8 +103,7 @@ func CmdCreateChain() *cobra.Command {
 				args[0],
 				args[1],
 				args[2],
-				genesisURL,
-				genesisHash,
+				initialGenesis,
 				hasCampaign,
 				campaignID,
 				balanceCoins,
@@ -99,6 +117,7 @@ func CmdCreateChain() *cobra.Command {
 	}
 
 	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
+	cmd.Flags().String(flagGenesisConfigFile, "", "config file for a custom genesis")
 	cmd.Flags().Int64(flagCampaignID, -1, "The campaign id")
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
 	cmd.Flags().String(flagAccountBalance, "", "Set the chain account coin balance")
