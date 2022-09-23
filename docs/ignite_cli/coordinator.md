@@ -28,20 +28,20 @@ ignite n publish https://github.com/lubtd/planet
 
 ## List all published chains
 
-```shell
+```
 ignite n chain list
 ```
 
 ### Output
 
-```shell
+```
 Launch Id 	Chain Id 	Source ...
-6 		      planet-1 	https://github.com/lubtd/planet
-5 		      spn-11 		https://github.com/tendermint/spn.git
-4 		      spn-11 		https://github.com/tendermint/spn.git
-3 		      mars-1 		https://github.com/lubtd/planet.git
-2 		      spn-10 		https://github.com/tendermint/spn.git
-1 		      spn-1 		https://github.com/tendermint/spn
+6 	        planet-1 	https://github.com/lubtd/planet
+5 	        spn-11 		https://github.com/tendermint/spn.git
+4 		spn-11 		https://github.com/tendermint/spn.git
+3 		mars-1 		https://github.com/lubtd/planet.git
+2 		spn-10 		https://github.com/tendermint/spn.git
+1 	        spn-1 		https://github.com/tendermint/spn
 ```
 
 ---
@@ -50,7 +50,7 @@ Launch Id 	Chain Id 	Source ...
 
 First, list requests:
 
-```shell
+```
 ignite n request list 6
 ```
 
@@ -58,7 +58,7 @@ ignite n request list 6
 
 #### Output
 
-```shell
+```
 Id 	Status 		Type 			Content
 1 	APPROVED 	Add Genesis Account 	spn1daefnhnupn85e8vv0yc5epmnkcr5epkqncn2le, 100000000stake
 2 	APPROVED 	Add Genesis Validator 	e3d3ca59d8214206839985712282967aaeddfb01@84.118.211.157:26656, spn1daefnhnupn85e8vv0yc5epmnkcr5epkqncn2le, 95000000stake
@@ -68,13 +68,13 @@ Id 	Status 		Type 			Content
 
 Approve the requests.  Both syntaxes can be used: `1,2,3,4` and `1-3,4`.
 
-```shell
+```
 ignite n request approve 6 3,4
 ```
 
 #### Output
 
-```shell
+```
 ✔ Source code fetched
 ✔ Blockchain set up
 ✔ Requests format verified
@@ -90,13 +90,13 @@ ignite n request approve 6 3,4
 
 ## Initiate the launch of a chain
 
-```shell
+```
 ignite n chain launch 6
 ```
 
 #### Output
 
-```shell
+```
 ✔ Chain 6 will be launched on 2022-09-21 09:54:28.145824 +0200 CEST m=+35.148432288
 ```
 

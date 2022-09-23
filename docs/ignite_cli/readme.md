@@ -15,6 +15,6 @@ connect to `spn` can be accessed using:
 
 ## Installing Ignite CLI
 
-```shell
+```
 curl https://get.ignite.com/cli! | bash
 ```

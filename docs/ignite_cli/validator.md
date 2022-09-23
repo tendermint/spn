@@ -6,20 +6,20 @@ Validators are Cosmos SDK blockchain validators using `spn`
 
 ## List all published chains
 
-```shell
+```
 ignite n chain list
 ```
 
 ### Output
 
-```shell
+```
 Launch Id 	Chain Id 	Source ...
-6 		      planet-1 	https://github.com/lubtd/planet
-5 		      spn-11 		https://github.com/tendermint/spn.git
-4 		      spn-11 		https://github.com/tendermint/spn.git
-3 		      mars-1 		https://github.com/lubtd/planet.git
-2 		      spn-10 		https://github.com/tendermint/spn.git
-1 		      spn-1 		https://github.com/tendermint/spn
+6 	        planet-1 	https://github.com/lubtd/planet
+5 		spn-11 		https://github.com/tendermint/spn.git
+4 		spn-11 		https://github.com/tendermint/spn.git
+3 		mars-1 		https://github.com/lubtd/planet.git
+2 		spn-10 		https://github.com/tendermint/spn.git
+1 		spn-1 		https://github.com/tendermint/spn
 ```
 
 ---
@@ -31,7 +31,7 @@ Launch Id 	Chain Id 	Source ...
 
 `ignite` can handle validator setup automatically.  Initialize the node and generate a gentx file with default values:
 
-```shell
+```
 ignite n chain init 6
 ```
 
@@ -39,7 +39,7 @@ ignite n chain init 6
 
 #### Output
 
-```shell
+```
 ✔ Source code fetched
 ✔ Blockchain set up
 ✔ Blockchain initialized
@@ -53,7 +53,7 @@ ignite n chain init 6
 
 Now, create and broadcast a request to join a chain as a validator:
 
-```shell
+```
 ignite n chain join 6 --amount 100000000stake
 ```
 
@@ -62,7 +62,7 @@ command will broadcast a request to add the validator’s address as an account 
 
 #### Output
 
-```shell
+```
 ? Peer's address 84.118.211.157:26656
 ✔ Source code fetched
 ✔ Blockchain set up
@@ -77,7 +77,7 @@ command will broadcast a request to add the validator’s address as an account 
 Using a more advanced setup (e.g. custom `gentx`), validators must provide an additional flag to their command
 to point to the custom file:
 
-```shell
+```
 ignite n chain join 6 --amount 100000000stake --gentx ~/chain/config/gentx/gentx.json
 ```
 
@@ -91,13 +91,13 @@ ignite n chain join 6 --amount 100000000stake --gentx ~/chain/config/gentx/gentx
 
 Generate the final genesis and config of the node:
 
-```shell
+```
 ignite n chain prepare 6
 ```
 
 #### Output
 
-```shell
+```
 ✔ Source code fetched
 ✔ Blockchain set up
 ✔ Chain's binary built
@@ -108,7 +108,7 @@ ignite n chain prepare 6
 
 Next, start the node:
 
-```shell
+```
 planetd start --home ~/spn/6
 ```
 
@@ -119,13 +119,13 @@ planetd start --home ~/spn/6
 
 Fetch the final genesis for the chain:
 
-```shell
+```
 ignite n chain show genesis 6
 ```
 
 #### Output
 
-```shell
+```
 ✔ Source code fetched
 ✔ Blockchain set up
 ✔ Blockchain initialized
@@ -136,13 +136,13 @@ ignite n chain show genesis 6
 
 Next, fetch the persistent peer list:
 
-```shell
+```
 ignite n chain show peers 6
 ```
 
 #### Output
 
-```shell
+```
 ⋆ Peer list generated: ./peers.txt
 ```
 
