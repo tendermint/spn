@@ -34,6 +34,10 @@
 ignite chain serve
 ```
 
+## Launching chains with Ignite CLI
+
+Please read our [guides](./docs/ignite_cli/readme.md) for using `spn` with Ignite CLI.
+
 ## Learn more
 
 Starport Network (SPN) is a free and open source product maintained by [Ignite](https://ignite.com). Here's where you can find us. Stay in touch.
