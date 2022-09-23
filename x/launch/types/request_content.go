@@ -2,11 +2,14 @@ package types
 
 import (
 	"errors"
+	"regexp"
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
+
+var isStringAlphabetic = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
 
 func (m RequestContent) Validate(launchID uint64) error {
 	switch requestContent := m.Content.(type) {
@@ -20,6 +23,8 @@ func (m RequestContent) Validate(launchID uint64) error {
 		return requestContent.AccountRemoval.Validate()
 	case *RequestContent_ValidatorRemoval:
 		return requestContent.ValidatorRemoval.Validate()
+	case *RequestContent_ParamChange:
+		return requestContent.ParamChange.Validate(launchID)
 	default:
 		return errors.New("unrecognized request content")
 	}
@@ -193,5 +198,36 @@ func (m ValidatorRemoval) Validate() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
 	}
+	return nil
+}
+
+// NewParamChange returns a RequestContent containing a ParamChange
+func NewParamChange(launchID uint64, module, param string, value []byte) RequestContent {
+	return RequestContent{
+		Content: &RequestContent_ParamChange{
+			ParamChange: &ParamChange{
+				LaunchID: launchID,
+				Module:   module,
+				Param:    param,
+				Value:    value,
+			},
+		},
+	}
+}
+
+// Validate implements ParamChange validation
+func (m ParamChange) Validate(launchID uint64) error {
+	if m.Module == "" || m.Param == "" {
+		return ErrInvalidRequestContent
+	}
+
+	if !isStringAlphabetic(m.Module) || !isStringAlphabetic(m.Param) {
+		return ErrInvalidRequestContent
+	}
+
+	if m.LaunchID != launchID {
+		return ErrInvalidLaunchID
+	}
+
 	return nil
 }

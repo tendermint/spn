@@ -90,6 +90,17 @@ func AlphaString(r *rand.Rand, n int) string {
 	return string(randomString)
 }
 
+// NonAlphaString returns a random string with non alpha char of length n
+func NonAlphaString(r *rand.Rand, n int) string {
+	letter := []rune("0123456789!@#$%^&*()_+")
+
+	randomString := make([]rune, n)
+	for i := range randomString {
+		randomString[i] = letter[r.Intn(len(letter))]
+	}
+	return string(randomString)
+}
+
 // PubKey returns a sample account PubKey
 func PubKey(r *rand.Rand) crypto.PubKey {
 	seed := []byte(strconv.Itoa(r.Int()))

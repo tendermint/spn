@@ -20,9 +20,10 @@ message GenesisState {
   repeated GenesisAccount   genesisAccounts   = 3 [(gogoproto.nullable) = false];
   repeated VestingAccount   vestingAccounts   = 4 [(gogoproto.nullable) = false];
   repeated GenesisValidator genesisValidators = 5 [(gogoproto.nullable) = false];
-  repeated Request          requests          = 6 [(gogoproto.nullable) = false];
-  repeated RequestCounter   requestCounters   = 7 [(gogoproto.nullable) = false];
-  Params                    params            = 8 [(gogoproto.nullable) = false];
+  repeated ParamChange      paramChanges      = 6 [(gogoproto.nullable) = false];
+  repeated Request          requests          = 7 [(gogoproto.nullable) = false];
+  repeated RequestCounter   requestCounters   = 8 [(gogoproto.nullable) = false];
+  Params                    params            = 9 [(gogoproto.nullable) = false];
 }
 
 message RequestCounter {
