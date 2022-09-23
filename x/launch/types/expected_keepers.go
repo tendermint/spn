@@ -3,6 +3,8 @@ package types
 import (
 	"context"
 
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
@@ -40,6 +42,10 @@ type AccountKeeper interface {
 
 type BankKeeper interface {
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
+	ValidateBalance(ctx sdk.Context, addr sdk.AccAddress) error
+	HasBalance(ctx sdk.Context, addr sdk.AccAddress, amt sdk.Coin) bool
+	GetAllBalances(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
+	GetAccountsBalances(ctx sdk.Context) []banktypes.Balance
 }
 
 type DistributionKeeper interface {

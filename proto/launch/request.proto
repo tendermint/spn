@@ -31,6 +31,7 @@ message RequestContent {
     GenesisValidator genesisValidator = 3;
     AccountRemoval   accountRemoval   = 4;
     ValidatorRemoval validatorRemoval = 5;
+    ParamChange      paramChange      = 6;
   }
 }
 
@@ -40,4 +41,11 @@ message AccountRemoval {
 
 message ValidatorRemoval {
   string valAddress = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+}
+
+message ParamChange {
+  uint64 launchID = 1;
+  string module   = 2;
+  string param    = 3;
+  bytes  value    = 4;
 }

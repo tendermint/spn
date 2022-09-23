@@ -75,6 +75,13 @@ message EventValidatorRemoved {
   string coordinatorAddress      = 5 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
+message EventParamChanged {
+  uint64 launchID = 1;
+  string module   = 2;
+  string param    = 3;
+  bytes  value    = 4;
+}
+
 message EventLaunchTriggered {
   uint64                    launchID        = 1;
   google.protobuf.Timestamp launchTimeStamp = 2 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];

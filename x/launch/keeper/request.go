@@ -216,6 +216,16 @@ func ApplyRequest(
 			CoordinatorAddress:      coord.Address,
 		})
 
+	case *types.RequestContent_ParamChange:
+		cp := requestContent.ParamChange
+		k.SetParamChange(ctx, *cp)
+		err = ctx.EventManager().EmitTypedEvent(&types.EventParamChanged{
+			LaunchID: cp.LaunchID,
+			Module:   cp.Module,
+			Param:    cp.Param,
+			Value:    cp.Value,
+		})
+
 	}
 	return err
 }
@@ -284,6 +294,9 @@ func CheckRequest(
 				vr.ValAddress, launchID,
 			)
 		}
+	case *types.RequestContent_ParamChange:
+		// currently no on-chain checks can be performed on change param
 	}
+
 	return nil
 }

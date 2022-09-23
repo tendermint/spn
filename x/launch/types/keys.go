@@ -27,6 +27,9 @@ const (
 	// GenesisAccountKeyPrefix is the prefix to retrieve all GenesisAccount
 	GenesisAccountKeyPrefix = "GenesisAccount/value/"
 
+	// ParamChangeKeyPrefix is the prefix to retrieve all ParamChange
+	ParamChangeKeyPrefix = "ParamChange/value/"
+
 	// VestingAccountKeyPrefix is the prefix to retrieve all VestingAccount
 	VestingAccountKeyPrefix = "VestingAccount/value/"
 
@@ -54,6 +57,23 @@ func AccountKeyPath(launchID uint64, address string) []byte {
 	launchIDBytes := append(spntypes.UintBytes(launchID), byte('/'))
 	addressBytes := append([]byte(address), byte('/'))
 	return append(launchIDBytes, addressBytes...)
+}
+
+// ParamChangePath returns the store key path without prefix for a param change defined by a module and param path
+func ParamChangePath(launchID uint64, module, param string) []byte {
+	launchIDBytes := append(spntypes.UintBytes(launchID), byte('/'))
+	moduleBytes := append([]byte(module), byte('/'))
+	paramBytes := append([]byte(param), byte('/'))
+	launchIDBytes = append(launchIDBytes, moduleBytes...)
+
+	return append(launchIDBytes, paramBytes...)
+}
+
+// ParamChangeAllKey returns the store key to retrieve all ParamChange by launchID
+func ParamChangeAllKey(launchID uint64) []byte {
+	prefixBytes := []byte(ParamChangeKeyPrefix)
+	launchIDBytes := append(spntypes.UintBytes(launchID), byte('/'))
+	return append(prefixBytes, launchIDBytes...)
 }
 
 // GenesisAccountAllKey returns the store key to retrieve all GenesisAccount by launchID

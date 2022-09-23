@@ -73,6 +73,16 @@ func AccountRemoval(address string) *launch.AccountRemoval {
 	}
 }
 
+// ParamChange returns a sample ParamChange
+func ParamChange(r *rand.Rand, launchID uint64) launch.ParamChange {
+	return launch.ParamChange{
+		LaunchID: launchID,
+		Module:   AlphaString(r, 5),
+		Param:    AlphaString(r, 5),
+		Value:    Bytes(r, 5),
+	}
+}
+
 // GenesisValidator returns a sample GenesisValidator
 func GenesisValidator(r *rand.Rand, launchID uint64, address string) launch.GenesisValidator {
 	return launch.GenesisValidator{
@@ -267,6 +277,17 @@ func MsgSendRequestWithRemoveValidator(creator, validatorAddr string, launchID u
 		creator,
 		launchID,
 		launch.NewValidatorRemoval(validatorAddr),
+	)
+}
+
+// MsgSendRequestWithParamChange returns a sample MsgSendRequest with ParamChange request content
+func MsgSendRequestWithParamChange(r *rand.Rand, creator string, launchID uint64) launch.MsgSendRequest {
+	pc := ParamChange(r, launchID)
+
+	return *launch.NewMsgSendRequest(
+		creator,
+		launchID,
+		launch.NewParamChange(pc.LaunchID, pc.Module, pc.Param, pc.Value),
 	)
 }
 
