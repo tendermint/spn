@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	campaignID         = uint64(10)
-	prefixedVoucherFoo = campaign.VoucherDenom(campaignID, "foo")
-	prefixedVoucherBar = campaign.VoucherDenom(campaignID, "bar")
+	voucherCampaignID  = uint64(10)
+	prefixedVoucherFoo = campaign.VoucherDenom(voucherCampaignID, "foo")
+	prefixedVoucherBar = campaign.VoucherDenom(voucherCampaignID, "bar")
 )
 
 func TestCheckVouchers(t *testing.T) {
@@ -26,23 +26,23 @@ func TestCheckVouchers(t *testing.T) {
 		err        error
 	}{
 		{
-			name:       "one valid coin",
-			campaignID: campaignID,
+			name:       "should allow check with one valid coin",
+			campaignID: voucherCampaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 			),
 		},
 		{
-			name:       "two valid coins",
-			campaignID: campaignID,
+			name:       "should allow check with two valid coins",
+			campaignID: voucherCampaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 				sdk.NewCoin(prefixedVoucherBar, sdkmath.NewInt(200)),
 			),
 		},
 		{
-			name:       "one valid and one invalid coins",
-			campaignID: campaignID,
+			name:       "should prevent check with one valid and one invalid coins",
+			campaignID: voucherCampaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 				sdk.NewCoin("foo", sdkmath.NewInt(200)),
@@ -50,15 +50,15 @@ func TestCheckVouchers(t *testing.T) {
 			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
 		},
 		{
-			name:       "one invalid coin",
-			campaignID: campaignID,
+			name:       "should prevent check with one invalid coin",
+			campaignID: voucherCampaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin("foo", sdkmath.NewInt(200)),
 			),
 			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
 		},
 		{
-			name:       "invalid campaign id",
+			name:       "should prevent check with invalid campaign id",
 			campaignID: 1000,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(200)),
@@ -89,15 +89,15 @@ func TestSharesToVouchers(t *testing.T) {
 	}{
 		{
 			name:       "test one share",
-			campaignID: campaignID,
+			campaignID: voucherCampaignID,
 			shares:     tc.Shares(t, "10foo"),
-			want:       tc.Vouchers(t, "10foo", campaignID),
+			want:       tc.Vouchers(t, "10foo", voucherCampaignID),
 		},
 		{
 			name:       "test two shares",
-			campaignID: campaignID,
+			campaignID: voucherCampaignID,
 			shares:     tc.Shares(t, "10foo,11bar"),
-			want:       tc.Vouchers(t, "10foo,11bar", campaignID),
+			want:       tc.Vouchers(t, "10foo,11bar", voucherCampaignID),
 		},
 		{
 			name:       "another campaign id",
@@ -170,14 +170,14 @@ func TestVouchersToShares(t *testing.T) {
 	}{
 		{
 			name:       "test one voucher",
-			campaignID: campaignID,
-			vouchers:   tc.Vouchers(t, "10foo", campaignID),
+			campaignID: voucherCampaignID,
+			vouchers:   tc.Vouchers(t, "10foo", voucherCampaignID),
 			want:       tc.Shares(t, "10foo"),
 		},
 		{
 			name:       "test two vouchers",
-			campaignID: campaignID,
-			vouchers:   tc.Vouchers(t, "10foo,11bar", campaignID),
+			campaignID: voucherCampaignID,
+			vouchers:   tc.Vouchers(t, "10foo,11bar", voucherCampaignID),
 			want:       tc.Shares(t, "10foo,11bar"),
 		},
 		{

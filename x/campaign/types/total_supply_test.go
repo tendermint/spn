@@ -19,31 +19,31 @@ func TestUpdateTotalSupply(t *testing.T) {
 		wantedCoins   sdk.Coins
 	}{
 		{
-			name:          "no update",
+			name:          "should perform no update",
 			previousCoins: tc.Coins(t, "1000foo,1000bar"),
 			updatedCoins:  sdk.NewCoins(),
 			wantedCoins:   tc.Coins(t, "1000foo,1000bar"),
 		},
 		{
-			name:          "update from empty set",
+			name:          "should update from empty set",
 			previousCoins: sdk.NewCoins(),
 			updatedCoins:  tc.Coins(t, "1000foo,1000bar"),
 			wantedCoins:   tc.Coins(t, "1000foo,1000bar"),
 		},
 		{
-			name:          "update existing",
+			name:          "should update existing coins",
 			previousCoins: tc.Coins(t, "3000foo,4000bar"),
 			updatedCoins:  tc.Coins(t, "1000foo,2000bar"),
 			wantedCoins:   tc.Coins(t, "1000foo,2000bar"),
 		},
 		{
-			name:          "disjoint set",
+			name:          "should update disjoint coin set",
 			previousCoins: tc.Coins(t, "3000toto,4000tata"),
 			updatedCoins:  tc.Coins(t, "1000foo,2000bar"),
 			wantedCoins:   tc.Coins(t, "3000toto,4000tata,1000foo,2000bar"),
 		},
 		{
-			name:          "new values",
+			name:          "should add new values",
 			previousCoins: tc.Coins(t, "3000toto,4000tata"),
 			updatedCoins:  tc.Coins(t, "1000foo,2000bar,5000toto,6000tata"),
 			wantedCoins:   tc.Coins(t, "5000toto,6000tata,1000foo,2000bar"),
@@ -65,28 +65,28 @@ func TestValidateTotalSupply(t *testing.T) {
 		valid       bool
 	}{
 		{
-			name:        "invalid supply range",
+			name:        "should allow validation for valid supply",
+			coins:       tc.Coins(t, "1000foo,1000bar"),
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(100), sdkmath.NewInt(1000)),
+			valid:       true,
+		},
+		{
+			name:        "should prevent validation of invalid supply range",
 			coins:       tc.Coins(t, "1000foo,1000bar"),
 			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(1_000), sdkmath.NewInt(100)),
 			valid:       false,
 		},
 		{
-			name:        "total supply less than min",
+			name:        "should prevent validation of total supply less than min",
 			coins:       tc.Coins(t, "100foo,1000bar"),
 			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(1000), sdkmath.NewInt(10_000)),
 			valid:       false,
 		},
 		{
-			name:        "total supply more than max",
+			name:        "should prevent validation of total supply greater than max",
 			coins:       tc.Coins(t, "1000foo,10000bar"),
 			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(1000), sdkmath.NewInt(1000)),
 			valid:       false,
-		},
-		{
-			name:        "valid supply",
-			coins:       tc.Coins(t, "1000foo,1000bar"),
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(100), sdkmath.NewInt(1000)),
-			valid:       true,
 		},
 	}
 	for _, tt := range tests {
@@ -108,29 +108,29 @@ func TestTotalSupplyRange_ValidateBasic(t *testing.T) {
 		valid       bool
 	}{
 		{
-			name:        "min total supply lower than one",
+			name:        "should allow validation with valid total supply range",
+			supplyRange: campaign.NewTotalSupplyRange(sdkmath.OneInt(), sdkmath.OneInt()),
+			valid:       true,
+		},
+		{
+			name:        "should prevent validation with min total supply less than one",
 			supplyRange: campaign.NewTotalSupplyRange(sdkmath.ZeroInt(), sdkmath.OneInt()),
 			valid:       false,
 		},
 		{
-			name:        "min total supply greater than max total supply",
+			name:        "should prevent validation with min total supply greater than max total supply",
 			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(2), sdkmath.OneInt()),
 			valid:       false,
 		},
 		{
-			name:        "should prevent uninitialized min total supply",
+			name:        "should prevent validation with uninitialized min total supply",
 			supplyRange: campaign.NewTotalSupplyRange(sdkmath.Int{}, sdkmath.OneInt()),
 			valid:       false,
 		},
 		{
-			name:        "should prevent uninitialized max total supply",
+			name:        "should prevent validation with prevent uninitialized max total supply",
 			supplyRange: campaign.NewTotalSupplyRange(sdkmath.OneInt(), sdkmath.Int{}),
 			valid:       false,
-		},
-		{
-			name:        "valid total supply range",
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.OneInt(), sdkmath.OneInt()),
-			valid:       true,
 		},
 	}
 	for _, tt := range tests {

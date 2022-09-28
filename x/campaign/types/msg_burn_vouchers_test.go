@@ -13,13 +13,23 @@ import (
 )
 
 func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
+	invalidCoins := sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdkmath.ZeroInt()}}
+
 	tests := []struct {
 		name string
 		msg  types.MsgBurnVouchers
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "should allow validation of valid msg",
+			msg: types.MsgBurnVouchers{
+				Sender:     sample.Address(r),
+				CampaignID: 0,
+				Vouchers:   sample.Vouchers(r, 0),
+			},
+		},
+		{
+			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgBurnVouchers{
 				Sender:     "invalid_address",
 				CampaignID: 0,
@@ -28,15 +38,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
-			name: "valid message",
-			msg: types.MsgBurnVouchers{
-				Sender:     sample.Address(r),
-				CampaignID: 0,
-				Vouchers:   sample.Vouchers(r, 0),
-			},
-		},
-		{
-			name: "invalid vouchers",
+			name: "should prevent validation of msg with invalid vouchers",
 			msg: types.MsgBurnVouchers{
 				Sender:     sample.Address(r),
 				CampaignID: 0,
@@ -45,7 +47,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidVouchers,
 		},
 		{
-			name: "empty vouchers",
+			name: "should prevent validation of msg with empty vouchers",
 			msg: types.MsgBurnVouchers{
 				Sender:     sample.Address(r),
 				CampaignID: 0,
@@ -54,7 +56,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidVouchers,
 		},
 		{
-			name: "vouchers don't match to campaign",
+			name: "should prevent validation of msg with vouchers not matching campaign",
 			msg: types.MsgBurnVouchers{
 				Sender:     sample.Address(r),
 				CampaignID: 0,
