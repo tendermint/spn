@@ -24,14 +24,18 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		existAddr               = sample.AccAddress(r)
 		campaign                = sample.Campaign(r, 0)
 		campaignMainnetLaunched = sample.Campaign(r, 1)
+		shares                  types.Shares
+		vouchers                sdk.Coins
+		err                     error
 		vouchersTooBig          = sdk.NewCoins(
 			sdk.NewCoin("v/0/foo", sdkmath.NewInt(spntypes.TotalShareNumber+1)),
 		)
 	)
 
-	// Create shares
-	shares, err := types.NewShares("1000foo,500bar,300foobar")
-	require.NoError(t, err)
+	t.Run("should allow creation of valid shares", func(t *testing.T) {
+		shares, err = types.NewShares("1000foo,500bar,300foobar")
+		require.NoError(t, err)
+	})
 
 	// Set campaigns
 	campaign.AllocatedShares = shares
@@ -45,25 +49,27 @@ func TestMsgRedeemVouchers(t *testing.T) {
 	campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
 	campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetLaunched)
 
-	// Create vouchers
-	vouchers, err := types.SharesToVouchers(shares, campaign.CampaignID)
-	require.NoError(t, err)
-
-	// Send coins to account
-	err = tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
-	require.NoError(t, err)
-	err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, addr, vouchers)
-	require.NoError(t, err)
-
-	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, types.MainnetAccount{
-		CampaignID: campaign.CampaignID,
-		Address:    existAddr.String(),
-		Shares:     shares,
+	t.Run("should allow creation of valid vouchers", func(t *testing.T) {
+		vouchers, err = types.SharesToVouchers(shares, campaign.CampaignID)
+		require.NoError(t, err)
 	})
-	err = tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
-	require.NoError(t, err)
-	err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, existAddr, vouchers)
-	require.NoError(t, err)
+
+	t.Run("should allow setting test balances", func(t *testing.T) {
+		err = tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
+		require.NoError(t, err)
+		err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, addr, vouchers)
+		require.NoError(t, err)
+
+		tk.CampaignKeeper.SetMainnetAccount(sdkCtx, types.MainnetAccount{
+			CampaignID: campaign.CampaignID,
+			Address:    existAddr.String(),
+			Shares:     shares,
+		})
+		err = tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
+		require.NoError(t, err)
+		err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, existAddr, vouchers)
+		require.NoError(t, err)
+	})
 
 	for _, tc := range []struct {
 		name string
@@ -71,7 +77,43 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "non existing campaign",
+			name: "should allow redeem voucher one",
+			msg: types.MsgRedeemVouchers{
+				Sender:     existAddr.String(),
+				Account:    existAddr.String(),
+				CampaignID: campaign.CampaignID,
+				Vouchers:   sdk.NewCoins(vouchers[0]),
+			},
+		},
+		{
+			name: "should allow redeem voucher two",
+			msg: types.MsgRedeemVouchers{
+				Sender:     existAddr.String(),
+				Account:    existAddr.String(),
+				CampaignID: campaign.CampaignID,
+				Vouchers:   sdk.NewCoins(vouchers[1]),
+			},
+		},
+		{
+			name: "should allow redeem voucher three",
+			msg: types.MsgRedeemVouchers{
+				Sender:     existAddr.String(),
+				Account:    existAddr.String(),
+				CampaignID: campaign.CampaignID,
+				Vouchers:   sdk.NewCoins(vouchers[2]),
+			},
+		},
+		{
+			name: "should allow redeem all",
+			msg: types.MsgRedeemVouchers{
+				Sender:     addr.String(),
+				Account:    sample.Address(r),
+				CampaignID: campaign.CampaignID,
+				Vouchers:   vouchers,
+			},
+		},
+		{
+			name: "should fail with non existing campaign",
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),
@@ -81,7 +123,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			err: types.ErrCampaignNotFound,
 		},
 		{
-			name: "invalid vouchers",
+			name: "should fail with invalid vouchers",
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),
@@ -91,7 +133,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			err: ignterrors.ErrCritical,
 		},
 		{
-			name: "invalid sender address",
+			name: "should fail with invalid sender address",
 			msg: types.MsgRedeemVouchers{
 				Sender:     "invalid_address",
 				Account:    addr.String(),
@@ -101,7 +143,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			err: ignterrors.ErrCritical,
 		},
 		{
-			name: "insufficient funds",
+			name: "should fail with insufficient funds",
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),
@@ -110,44 +152,9 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			},
 			err: types.ErrInsufficientVouchers,
 		},
+
 		{
-			name: "new account redeem all",
-			msg: types.MsgRedeemVouchers{
-				Sender:     addr.String(),
-				Account:    sample.Address(r),
-				CampaignID: campaign.CampaignID,
-				Vouchers:   vouchers,
-			},
-		},
-		{
-			name: "exist account redeem voucher one",
-			msg: types.MsgRedeemVouchers{
-				Sender:     existAddr.String(),
-				Account:    existAddr.String(),
-				CampaignID: campaign.CampaignID,
-				Vouchers:   sdk.NewCoins(vouchers[0]),
-			},
-		},
-		{
-			name: "exist account redeem voucher two",
-			msg: types.MsgRedeemVouchers{
-				Sender:     existAddr.String(),
-				Account:    existAddr.String(),
-				CampaignID: campaign.CampaignID,
-				Vouchers:   sdk.NewCoins(vouchers[1]),
-			},
-		},
-		{
-			name: "exist account redeem voucher three",
-			msg: types.MsgRedeemVouchers{
-				Sender:     existAddr.String(),
-				Account:    existAddr.String(),
-				CampaignID: campaign.CampaignID,
-				Vouchers:   sdk.NewCoins(vouchers[2]),
-			},
-		},
-		{
-			name: "account without funds for vouchers",
+			name: "should fail with account without funds for vouchers",
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
@@ -157,7 +164,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			err: types.ErrInsufficientVouchers,
 		},
 		{
-			name: "account without funds for voucher one",
+			name: "should fail with account without funds for voucher one",
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
@@ -167,7 +174,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			err: types.ErrInsufficientVouchers,
 		},
 		{
-			name: "campaign with launched mainnet",
+			name: "should fail with campaign with launched mainnet",
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),

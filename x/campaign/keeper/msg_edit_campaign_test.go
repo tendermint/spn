@@ -22,19 +22,22 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
-	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     coordAddr,
-		Description: sample.CoordinatorDescription(r),
-	})
-	require.NoError(t, err)
-	campaign.CoordinatorID = res.CoordinatorID
-	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
 
-	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     coordAddrNoCampaign,
-		Description: sample.CoordinatorDescription(r),
+	t.Run("should allow creation of coordinators", func(t *testing.T) {
+		res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+			Address:     coordAddr,
+			Description: sample.CoordinatorDescription(r),
+		})
+		require.NoError(t, err)
+		campaign.CoordinatorID = res.CoordinatorID
+		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
+
+		res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+			Address:     coordAddrNoCampaign,
+			Description: sample.CoordinatorDescription(r),
+		})
+		require.NoError(t, err)
 	})
-	require.NoError(t, err)
 
 	for _, tc := range []struct {
 		name string
@@ -42,7 +45,34 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid campaign id",
+			name: "should allow edit name and metadata",
+			msg: types.MsgEditCampaign{
+				Coordinator: coordAddr,
+				CampaignID:  campaign.CampaignID,
+				Name:        sample.CampaignName(r),
+				Metadata:    sample.Metadata(r, 20),
+			},
+		},
+		{
+			name: "should allow edit name",
+			msg: types.MsgEditCampaign{
+				Coordinator: coordAddr,
+				CampaignID:  campaign.CampaignID,
+				Name:        sample.CampaignName(r),
+				Metadata:    []byte{},
+			},
+		},
+		{
+			name: "should allow edit metadata",
+			msg: types.MsgEditCampaign{
+				Coordinator: coordAddr,
+				CampaignID:  campaign.CampaignID,
+				Name:        "",
+				Metadata:    sample.Metadata(r, 20),
+			},
+		},
+		{
+			name: "should fail if invalid campaign id",
 			msg: types.MsgEditCampaign{
 				Coordinator: coordAddr,
 				CampaignID:  100,
@@ -52,7 +82,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			err: types.ErrCampaignNotFound,
 		},
 		{
-			name: "invalid coordinator address",
+			name: "should fail with invalid coordinator address",
 			msg: types.MsgEditCampaign{
 				Coordinator: sample.Address(r),
 				CampaignID:  campaign.CampaignID,
@@ -62,7 +92,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "wrong coordinator id",
+			name: "should fail with wrong coordinator id",
 			msg: types.MsgEditCampaign{
 				Coordinator: coordAddrNoCampaign,
 				CampaignID:  campaign.CampaignID,
@@ -70,33 +100,6 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 				Metadata:    sample.Metadata(r, 20),
 			},
 			err: profiletypes.ErrCoordInvalid,
-		},
-		{
-			name: "valid transaction - both modified",
-			msg: types.MsgEditCampaign{
-				Coordinator: coordAddr,
-				CampaignID:  campaign.CampaignID,
-				Name:        sample.CampaignName(r),
-				Metadata:    sample.Metadata(r, 20),
-			},
-		},
-		{
-			name: "valid transaction - unmodified metadata",
-			msg: types.MsgEditCampaign{
-				Coordinator: coordAddr,
-				CampaignID:  campaign.CampaignID,
-				Name:        sample.CampaignName(r),
-				Metadata:    []byte{},
-			},
-		},
-		{
-			name: "valid transaction - unmodified name",
-			msg: types.MsgEditCampaign{
-				Coordinator: coordAddr,
-				CampaignID:  campaign.CampaignID,
-				Name:        "",
-				Metadata:    sample.Metadata(r, 20),
-			},
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
