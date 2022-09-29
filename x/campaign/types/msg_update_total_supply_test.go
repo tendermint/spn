@@ -4,11 +4,11 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
@@ -32,7 +32,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 				CampaignID:        0,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: profile.ErrInvalidCoordAddress,
 		},
 		{
 			name: "invalid total supply",

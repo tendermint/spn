@@ -3,12 +3,12 @@ package types_test
 import (
 	"testing"
 
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
@@ -34,7 +34,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 				TotalSupply:  sample.TotalSupply(r),
 				Metadata:     sample.Metadata(r, 20),
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: profile.ErrInvalidCoordAddress,
 		},
 		{
 			name: "invalid campaign name",

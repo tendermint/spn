@@ -24,4 +24,7 @@ var (
 	ErrInvalidMetadataLength     = sdkerrors.Register(ModuleName, 15, "metadata field too long")
 	ErrMainnetLaunchTriggered    = sdkerrors.Register(ModuleName, 16, "mainnet launch already triggered")
 	ErrInvalidSpecialAllocations = sdkerrors.Register(ModuleName, 17, "invalid special allocations")
+	ErrInvalidMainnetInfo        = sdkerrors.Register(ModuleName, 18, "invalid mainnet info")
+	ErrCannotUpdateCampaign      = sdkerrors.Register(ModuleName, 19, "cannot update campaign")
+	ErrInvalidVoucherAddress     = sdkerrors.Register(ModuleName, 20, "invalid address for voucher operation")
 )

@@ -3,7 +3,6 @@ package types_test
 import (
 	"testing"
 
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -31,8 +30,7 @@ func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 				CampaignID: 0,
 				Shares:     sample.Shares(r),
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
-		},
+			err: types.ErrInvalidVoucherAddress},
 		{
 			name: "invalid shares",
 			msg: types.MsgUnredeemVouchers{

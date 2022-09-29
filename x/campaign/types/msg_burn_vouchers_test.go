@@ -5,7 +5,6 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -25,7 +24,7 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 				CampaignID: 0,
 				Vouchers:   sample.Coins(r),
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: types.ErrInvalidVoucherAddress,
 		},
 		{
 			name: "valid message",

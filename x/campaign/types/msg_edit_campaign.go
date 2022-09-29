@@ -3,7 +3,7 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+	profile "github.com/tendermint/spn/x/profile/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 )
@@ -45,11 +45,11 @@ func (msg *MsgEditCampaign) GetSignBytes() []byte {
 func (msg *MsgEditCampaign) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrap(profile.ErrInvalidCoordAddress, err.Error())
 	}
 
 	if len(msg.Name) == 0 && len(msg.Metadata) == 0 {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidRequest, "must modify at least one field (name or metadata)")
+		return sdkerrors.Wrap(ErrCannotUpdateCampaign, "must modify at least one field (name or metadata)")
 	}
 
 	if len(msg.Name) != 0 {
