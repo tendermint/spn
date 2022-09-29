@@ -43,4 +43,6 @@ var (
 	ErrInvalidGenesisAddress       = sdkerrors.Register(ModuleName, 34, "invalid genesis account address")
 	ErrInvalidVestingAddress       = sdkerrors.Register(ModuleName, 35, "invalid vesting account address")
 	ErrInvalidValidatorAddress     = sdkerrors.Register(ModuleName, 36, "invalid validator account address")
+	ErrInvalidRequesterAddress     = sdkerrors.Register(ModuleName, 37, "invalid requester account address")
+	ErrCannotUpdateChain           = sdkerrors.Register(ModuleName, 38, "cannot update chain")
 )
