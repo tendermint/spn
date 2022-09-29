@@ -4,6 +4,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+	profile "github.com/tendermint/spn/x/profile/types"
 
 	"github.com/tendermint/spn/pkg/chainid"
 )
@@ -54,7 +55,7 @@ func (msg *MsgUpdateLaunchInformation) GetSignBytes() []byte {
 func (msg *MsgUpdateLaunchInformation) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrap(profile.ErrInvalidCoordAddress, err.Error())
 	}
 
 	if msg.GenesisChainID != "" {

@@ -40,4 +40,7 @@ var (
 	ErrInvalidRequestForMainnet    = sdkerrors.Register(ModuleName, 31, "request is invalid for mainnet")
 	ErrRequestApplicationFailure   = sdkerrors.Register(ModuleName, 32, "request failed to be applied")
 	ErrInvalidLaunchID             = sdkerrors.Register(ModuleName, 33, "invalid launch ID")
+	ErrInvalidGenesisAddress       = sdkerrors.Register(ModuleName, 34, "invalid genesis account address")
+	ErrInvalidVestingAddress       = sdkerrors.Register(ModuleName, 35, "invalid vesting account address")
+	ErrInvalidValidatorAddress     = sdkerrors.Register(ModuleName, 36, "invalid validator account address")
 )

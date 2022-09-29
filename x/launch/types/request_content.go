@@ -6,7 +6,6 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 var isStringAlphabetic = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
@@ -59,7 +58,7 @@ func NewGenesisAccount(launchID uint64, address string, coins sdk.Coins) Request
 func (m GenesisAccount) Validate(launchID uint64) error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
+		return sdkerrors.Wrap(ErrInvalidGenesisAddress, err.Error())
 	}
 
 	if !m.Coins.IsValid() || m.Coins.Empty() {
@@ -90,7 +89,7 @@ func NewVestingAccount(launchID uint64, address string, vestingOptions VestingOp
 func (m VestingAccount) Validate(launchID uint64) error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
+		return sdkerrors.Wrap(ErrInvalidVestingAddress, err.Error())
 	}
 
 	if err := m.VestingOptions.Validate(); err != nil {
@@ -131,7 +130,7 @@ func NewGenesisValidator(
 func (m GenesisValidator) Validate(launchID uint64) error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
+		return sdkerrors.Wrap(ErrInvalidValidatorAddress, err.Error())
 	}
 
 	if len(m.GenTx) == 0 {
@@ -176,7 +175,7 @@ func NewAccountRemoval(address string) RequestContent {
 func (m AccountRemoval) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
+		return sdkerrors.Wrap(ErrInvalidGenesisAddress, err.Error())
 	}
 	return nil
 }
@@ -196,7 +195,7 @@ func NewValidatorRemoval(address string) RequestContent {
 func (m ValidatorRemoval) Validate() error {
 	_, err := sdk.AccAddressFromBech32(m.ValAddress)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
+		return sdkerrors.Wrap(ErrInvalidValidatorAddress, err.Error())
 	}
 	return nil
 }
