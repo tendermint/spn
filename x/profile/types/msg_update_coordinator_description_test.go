@@ -3,7 +3,6 @@ package types_test
 import (
 	"testing"
 
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -22,7 +21,7 @@ func TestMsgUpdateCoordinatorDescription_ValidateBasic(t *testing.T) {
 			msg: profile.MsgUpdateCoordinatorDescription{
 				Address: "invalid address",
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: profile.ErrInvalidCoordAddress,
 		},
 		{
 			name: "should prevent validate empty description",
