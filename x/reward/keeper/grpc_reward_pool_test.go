@@ -19,38 +19,38 @@ func TestRewardPoolQuerySingle(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNRewardPool(tk.RewardKeeper, ctx, 2)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetRewardPoolRequest
 		response *types.QueryGetRewardPoolResponse
 		err      error
 	}{
 		{
-			desc: "First",
+			name: "should allow valid query 1",
 			request: &types.QueryGetRewardPoolRequest{
 				LaunchID: msgs[0].LaunchID,
 			},
 			response: &types.QueryGetRewardPoolResponse{RewardPool: msgs[0]},
 		},
 		{
-			desc: "Second",
+			name: "should allow valid query 2",
 			request: &types.QueryGetRewardPoolRequest{
 				LaunchID: msgs[1].LaunchID,
 			},
 			response: &types.QueryGetRewardPoolResponse{RewardPool: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			name: "should return KeyNotFound",
 			request: &types.QueryGetRewardPoolRequest{
 				LaunchID: 100000,
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			name: "should return InvalidRequest",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.RewardKeeper.RewardPool(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
