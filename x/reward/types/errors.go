@@ -13,4 +13,6 @@ var (
 	ErrRewardPoolClosed       = sdkerrors.Register(ModuleName, 5, "reward pool is closed")
 	ErrInvalidSignatureCounts = sdkerrors.Register(ModuleName, 6, "invalid signature counts")
 	ErrInvalidLastBlockHeight = sdkerrors.Register(ModuleName, 7, "invalid last block height")
+	ErrInvalidRewardHeight    = sdkerrors.Register(ModuleName, 8, "invalid reward height")
+	ErrInvalidProviderAddress = sdkerrors.Register(ModuleName, 9, "invalid provider address")
 )
