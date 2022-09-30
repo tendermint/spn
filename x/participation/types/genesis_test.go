@@ -19,17 +19,17 @@ func TestGenesisState_Validate(t *testing.T) {
 	)
 
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		genState *types.GenesisState
 		valid    bool
 	}{
 		{
-			desc:     "default is valid",
+			name:     "should validate default genesis state",
 			genState: types.DefaultGenesis(),
 			valid:    true,
 		},
 		{
-			desc: "valid genesis state",
+			name: "should validate valid genesis state",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				UsedAllocationsList: []types.UsedAllocations{
@@ -59,7 +59,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "matching usedAllocations and auctionUsedAllocations",
+			name: "should validate with matching usedAllocations and auctionUsedAllocations",
 			genState: &types.GenesisState{
 				Params: types.DefaultParams(),
 				UsedAllocationsList: []types.UsedAllocations{
@@ -86,7 +86,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "duplicated usedAllocations",
+			name: "should prevent duplicated usedAllocations",
 			genState: &types.GenesisState{
 				UsedAllocationsList: []types.UsedAllocations{
 					{
@@ -102,7 +102,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "duplicated auctionUsedAllocations",
+			name: "should prevent duplicated auctionUsedAllocations",
 			genState: &types.GenesisState{
 				UsedAllocationsList: []types.UsedAllocations{
 					{
@@ -126,7 +126,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "invalid address in auctionUsedAllocations",
+			name: "should prevent invalid address in auctionUsedAllocations",
 			genState: &types.GenesisState{
 				AuctionUsedAllocationsList: []types.AuctionUsedAllocations{
 					{
@@ -138,7 +138,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "mismatch between usedAllocations and auctionUsedAllocations",
+			name: "should prevent mismatch between usedAllocations and auctionUsedAllocations",
 			genState: &types.GenesisState{
 				UsedAllocationsList: []types.UsedAllocations{
 					{
@@ -165,7 +165,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			err := tc.genState.Validate()
 			if tc.valid {
 				require.NoError(t, err)

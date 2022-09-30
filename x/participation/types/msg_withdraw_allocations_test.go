@@ -17,16 +17,17 @@ func TestMsgWithdrawAllocations_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid address",
+			name: "should allow valid address",
+			msg: types.MsgWithdrawAllocations{
+				Participant: sample.Address(r),
+			},
+		},
+		{
+			name: "should prevent invalid address",
 			msg: types.MsgWithdrawAllocations{
 				Participant: "invalid_address",
 			},
 			err: sdkerrortypes.ErrInvalidAddress,
-		}, {
-			name: "valid address",
-			msg: types.MsgWithdrawAllocations{
-				Participant: sample.Address(r),
-			},
 		},
 	}
 	for _, tt := range tests {
