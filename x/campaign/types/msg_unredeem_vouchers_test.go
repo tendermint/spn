@@ -30,7 +30,8 @@ func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 				CampaignID: 0,
 				Shares:     sample.Shares(r),
 			},
-			err: types.ErrInvalidVoucherAddress},
+			err: types.ErrInvalidVoucherAddress,
+		},
 		{
 			name: "invalid shares",
 			msg: types.MsgUnredeemVouchers{

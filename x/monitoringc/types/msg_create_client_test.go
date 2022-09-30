@@ -3,7 +3,6 @@ package types_test
 import (
 	"testing"
 
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -38,7 +37,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 				UnbondingPeriod: spntypes.DefaultUnbondingPeriod,
 				RevisionHeight:  spntypes.DefaultRevisionHeight,
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: types.ErrInvalidClientCreatorAddress,
 		},
 		{
 			name: "invalid consensus state",

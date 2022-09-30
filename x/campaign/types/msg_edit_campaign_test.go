@@ -1,8 +1,9 @@
 package types_test
 
 import (
-	profile "github.com/tendermint/spn/x/profile/types"
 	"testing"
+
+	profile "github.com/tendermint/spn/x/profile/types"
 
 	"github.com/stretchr/testify/require"
 

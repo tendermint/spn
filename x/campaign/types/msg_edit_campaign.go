@@ -3,6 +3,7 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	profile "github.com/tendermint/spn/x/profile/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
