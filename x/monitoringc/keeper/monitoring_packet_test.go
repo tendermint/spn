@@ -3,11 +3,12 @@ package keeper_test
 import (
 	"testing"
 
+	tc "github.com/tendermint/spn/testutil/constructor"
+
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	tc "github.com/tendermint/spn/testutil/constructor"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/monitoringc/types"
@@ -38,16 +39,18 @@ func Test_OnRecvMonitoringPacket(t *testing.T) {
 		LaunchID:  chain.LaunchID,
 	})
 
-	tk.RewardKeeper.SetRewardPool(ctx, rewardtypes.RewardPool{
-		LaunchID:         chain.LaunchID,
-		Provider:         sample.Address(r),
-		InitialCoins:     coins,
-		RemainingCoins:   coins,
-		LastRewardHeight: 1,
-		Closed:           false,
+	t.Run("should allow set reward pool", func(t *testing.T) {
+		tk.RewardKeeper.SetRewardPool(ctx, rewardtypes.RewardPool{
+			LaunchID:         chain.LaunchID,
+			Provider:         sample.Address(r),
+			InitialCoins:     coins,
+			RemainingCoins:   coins,
+			LastRewardHeight: 1,
+			Closed:           false,
+		})
+		err := tk.BankKeeper.MintCoins(ctx, rewardtypes.ModuleName, coins)
+		require.NoError(t, err)
 	})
-	err := tk.BankKeeper.MintCoins(ctx, rewardtypes.ModuleName, coins)
-	require.NoError(t, err)
 
 	// set validator profiles
 	tk.ProfileKeeper.SetValidator(ctx, profiletypes.Validator{
@@ -74,7 +77,21 @@ func Test_OnRecvMonitoringPacket(t *testing.T) {
 		valid  bool
 	}{
 		{
-			name:   "invalid data",
+			name: "should successfully distribute rewards",
+			packet: channeltypes.Packet{
+				DestinationChannel: validChannel,
+			},
+			data: spntypes.MonitoringPacket{
+				BlockHeight: 10,
+				SignatureCounts: tc.SignatureCounts(10,
+					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
+					tc.SignatureCount(t, valOpAddrBar, "0.5"),
+				),
+			},
+			valid: true,
+		},
+		{
+			name:   "should prevent invalid data",
 			packet: channeltypes.Packet{},
 			data: spntypes.MonitoringPacket{
 				BlockHeight: 0,
@@ -85,7 +102,7 @@ func Test_OnRecvMonitoringPacket(t *testing.T) {
 			valid: false,
 		},
 		{
-			name: "no launch ID associated to channel ID",
+			name: "should prevent no launch ID associated to channel ID",
 			packet: channeltypes.Packet{
 				DestinationChannel: "invalid",
 			},
@@ -110,20 +127,6 @@ func Test_OnRecvMonitoringPacket(t *testing.T) {
 			},
 			valid: false,
 		},
-		{
-			name: "should successfully distribute rewards",
-			packet: channeltypes.Packet{
-				DestinationChannel: validChannel,
-			},
-			data: spntypes.MonitoringPacket{
-				BlockHeight: 10,
-				SignatureCounts: tc.SignatureCounts(10,
-					tc.SignatureCount(t, valOpAddrFoo, "0.5"),
-					tc.SignatureCount(t, valOpAddrBar, "0.5"),
-				),
-			},
-			valid: true,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -139,21 +142,27 @@ func Test_OnRecvMonitoringPacket(t *testing.T) {
 
 func Test_OnAcknowledgementMonitoringPacket(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	err := tk.MonitoringConsumerKeeper.OnAcknowledgementMonitoringPacket(
-		ctx,
-		channeltypes.Packet{},
-		spntypes.MonitoringPacket{},
-		channeltypes.Acknowledgement{},
-	)
-	require.EqualError(t, err, "not implemented")
+
+	t.Run("should return not implemented", func(t *testing.T) {
+		err := tk.MonitoringConsumerKeeper.OnAcknowledgementMonitoringPacket(
+			ctx,
+			channeltypes.Packet{},
+			spntypes.MonitoringPacket{},
+			channeltypes.Acknowledgement{},
+		)
+		require.EqualError(t, err, "not implemented")
+	})
 }
 
 func Test_OnTimeoutMonitoringPacket(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	err := tk.MonitoringConsumerKeeper.OnTimeoutMonitoringPacket(
-		ctx,
-		channeltypes.Packet{},
-		spntypes.MonitoringPacket{},
-	)
-	require.EqualError(t, err, "not implemented")
+
+	t.Run("should return not implemented", func(t *testing.T) {
+		err := tk.MonitoringConsumerKeeper.OnTimeoutMonitoringPacket(
+			ctx,
+			channeltypes.Packet{},
+			spntypes.MonitoringPacket{},
+		)
+		require.EqualError(t, err, "not implemented")
+	})
 }

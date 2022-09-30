@@ -14,7 +14,7 @@ import (
 
 func TestMissingVerifiedClientIDInvariant(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	t.Run("valid case", func(t *testing.T) {
+	t.Run("should allow valid case", func(t *testing.T) {
 		n := sample.Uint64(r)
 		launchID := sample.Uint64(r)
 		for i := uint64(0); i < n; i++ {
@@ -29,7 +29,7 @@ func TestMissingVerifiedClientIDInvariant(t *testing.T) {
 		require.False(t, broken, msg)
 	})
 
-	t.Run("invalid case", func(t *testing.T) {
+	t.Run("should prevent invalid case", func(t *testing.T) {
 		n := sample.Uint64(r)
 		launchID := sample.Uint64(r)
 		for i := uint64(0); i < n; i++ {
