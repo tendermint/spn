@@ -13,13 +13,14 @@ import (
 func TestParamsQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	params := types.DefaultParams()
-	tk.MonitoringProviderKeeper.SetParams(ctx, params)
 
-	response, err := tk.MonitoringProviderKeeper.Params(wctx, &types.QueryParamsRequest{})
-	require.NoError(t, err)
-	require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
-
-	_, err = tk.MonitoringProviderKeeper.Params(wctx, nil)
-	require.Error(t, err)
+	t.Run("should allow params get", func(t *testing.T) {
+		params := types.DefaultParams()
+		tk.MonitoringProviderKeeper.SetParams(ctx, params)
+		response, err := tk.MonitoringProviderKeeper.Params(wctx, &types.QueryParamsRequest{})
+		require.NoError(t, err)
+		require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
+		_, err = tk.MonitoringProviderKeeper.Params(wctx, nil)
+		require.Error(t, err)
+	})
 }

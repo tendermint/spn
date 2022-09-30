@@ -17,29 +17,29 @@ func TestMonitoringInfoQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		setItem  bool
 		request  *types.QueryGetMonitoringInfoRequest
 		response *types.QueryGetMonitoringInfoResponse
 		err      error
 	}{
 		{
-			desc:    "object does not exist",
+			name:    "should return Not Found",
 			setItem: false,
 			request: &types.QueryGetMonitoringInfoRequest{},
 			err:     status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc:    "object exists",
+			name: "should return Invalid Request",
+			err:  status.Error(codes.InvalidArgument, "invalid request"),
+		},
+		{
+			name:    "should allow valid query",
 			setItem: true,
 			request: &types.QueryGetMonitoringInfoRequest{},
 		},
-		{
-			desc: "Invalid Request",
-			err:  status.Error(codes.InvalidArgument, "invalid request"),
-		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			if tc.setItem {
 				item := createTestMonitoringInfo(ctx, tk.MonitoringProviderKeeper)
 				tc.response = &types.QueryGetMonitoringInfoResponse{MonitoringInfo: item}

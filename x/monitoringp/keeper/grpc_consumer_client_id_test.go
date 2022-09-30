@@ -17,29 +17,29 @@ func TestConsumerClientIDQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		setItem  bool
 		request  *types.QueryGetConsumerClientIDRequest
 		response *types.QueryGetConsumerClientIDResponse
 		err      error
 	}{
 		{
-			desc:    "object does not exist",
+			name:    "should return Not Found",
 			setItem: false,
 			request: &types.QueryGetConsumerClientIDRequest{},
 			err:     status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc:    "object exists",
+			name: "should return Invalid Request",
+			err:  status.Error(codes.InvalidArgument, "invalid request"),
+		},
+		{
+			name:    "should allow valid query",
 			setItem: true,
 			request: &types.QueryGetConsumerClientIDRequest{},
 		},
-		{
-			desc: "Invalid Request",
-			err:  status.Error(codes.InvalidArgument, "invalid request"),
-		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			if tc.setItem {
 				item := createTestConsumerClientID(ctx, tk.MonitoringProviderKeeper)
 				tc.response = &types.QueryGetConsumerClientIDResponse{ConsumerClientID: item}
