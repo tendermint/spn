@@ -6,7 +6,6 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
@@ -118,7 +117,7 @@ func Test_msgServer_Participate(t *testing.T) {
 				AuctionID:   auctionRegistrationPeriodID,
 				TierID:      1,
 			},
-			err:       sdkerrortypes.ErrInvalidAddress,
+			err:       types.ErrInvalidAddress,
 			blockTime: validRegistrationTime,
 		},
 		{
