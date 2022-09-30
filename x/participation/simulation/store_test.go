@@ -291,13 +291,6 @@ func TestRandomAccWithAvailableAllocations(t *testing.T) {
 		found              bool
 	}{
 		{
-			name:               "should find one account with sufficient allocations",
-			accounts:           accs,
-			desiredAllocations: sdkmath.NewInt(10),
-			wantAccount:        accs[0],
-			found:              true,
-		},
-		{
 			name:               "should find no accounts with allocations",
 			accounts:           accs[2:],
 			desiredAllocations: sdkmath.NewInt(10),
@@ -308,6 +301,13 @@ func TestRandomAccWithAvailableAllocations(t *testing.T) {
 			accounts:           accs[1:],
 			desiredAllocations: sdkmath.NewInt(10),
 			found:              false,
+		},
+		{
+			name:               "should find one account with sufficient allocations",
+			accounts:           accs,
+			desiredAllocations: sdkmath.NewInt(10),
+			wantAccount:        accs[0],
+			found:              true,
 		},
 	}
 	for _, tt := range tests {
@@ -380,7 +380,7 @@ func TestRandomAccWithAuctionUsedAllocationsNotWithdrawn(t *testing.T) {
 		found       bool
 	}{
 		{
-			name:        "shound find one account has allocations that can be withdrawn",
+			name:        "should find one account has allocations that can be withdrawn",
 			accounts:    accs,
 			wantAccount: accs[2],
 			found:       true,
