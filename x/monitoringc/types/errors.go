@@ -24,5 +24,5 @@ var (
 	ErrCannotCloseChannel           = sdkerrors.Register(ModuleName, 15, "user cannot close channel")
 	ErrJSONUnmarshal                = sdkerrors.Register(ModuleName, 16, "failed to unmarshal JSON")
 	ErrJSONMarshal                  = sdkerrors.Register(ModuleName, 17, "failed to marshal JSON")
-	ErrUnrecognizedPacketType       = sdkerrors.Register(ModuleName, 18, "unrecognized packat type")
+	ErrUnrecognizedPacketType       = sdkerrors.Register(ModuleName, 18, "unrecognized packet type")
 )
