@@ -38,7 +38,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 			return nil, ignterrors.Criticalf("invalid coordinator bech32 address %s", err.Error())
 		}
 		if err = k.distrKeeper.FundCommunityPool(ctx, creationFee, coordAddr); err != nil {
-			return nil, err
+			return nil, sdkerrors.Wrap(types.ErrFundCommunityPool, err.Error())
 		}
 	}
 

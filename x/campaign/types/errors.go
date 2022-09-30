@@ -27,4 +27,5 @@ var (
 	ErrInvalidMainnetInfo        = sdkerrors.Register(ModuleName, 18, "invalid mainnet info")
 	ErrCannotUpdateCampaign      = sdkerrors.Register(ModuleName, 19, "cannot update campaign")
 	ErrInvalidVoucherAddress     = sdkerrors.Register(ModuleName, 20, "invalid address for voucher operation")
+	ErrFundCommunityPool         = sdkerrors.Register(ModuleName, 21, "unable to fund community pool")
 )

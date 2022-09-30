@@ -5,7 +5,6 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
@@ -237,7 +236,7 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				types.NewAccountRemoval(sample.Address(r)),
 			),
 			wantApprove: false,
-			err:         sdkerrortypes.ErrInsufficientFunds,
+			err:         types.ErrFundCommunityPool,
 		},
 		{
 			name: "should allow send a new request if sender sufficient balance",
