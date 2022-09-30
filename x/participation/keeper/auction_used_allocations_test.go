@@ -40,32 +40,41 @@ func createNAuctionUsedAllocationsWithSameAddress(keeper *keeper.Keeper, ctx sdk
 
 func TestAuctionUsedAllocationsGet(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNAuctionUsedAllocations(tk.ParticipationKeeper, sdkCtx, 10)
-	for _, item := range items {
-		rst, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, item.Address, item.AuctionID)
-		require.True(t, found)
-		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
-		)
-	}
+
+	t.Run("should allow get", func(t *testing.T) {
+		items := createNAuctionUsedAllocations(tk.ParticipationKeeper, sdkCtx, 10)
+		for _, item := range items {
+			rst, found := tk.ParticipationKeeper.GetAuctionUsedAllocations(sdkCtx, item.Address, item.AuctionID)
+			require.True(t, found)
+			require.Equal(t,
+				nullify.Fill(&item),
+				nullify.Fill(&rst),
+			)
+		}
+	})
 }
 
 func TestAuctionUsedAllocationsGetAllByAddress(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNAuctionUsedAllocationsWithSameAddress(tk.ParticipationKeeper, sdkCtx, 10)
-	address := items[0].Address
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(tk.ParticipationKeeper.GetAllAuctionUsedAllocationsByAddress(sdkCtx, address)),
-	)
+
+	t.Run("should allow get all by address", func(t *testing.T) {
+		items := createNAuctionUsedAllocationsWithSameAddress(tk.ParticipationKeeper, sdkCtx, 10)
+		address := items[0].Address
+		require.ElementsMatch(t,
+			nullify.Fill(items),
+			nullify.Fill(tk.ParticipationKeeper.GetAllAuctionUsedAllocationsByAddress(sdkCtx, address)),
+		)
+	})
 }
 
 func TestAuctionUsedAllocationsGetAll(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNAuctionUsedAllocations(tk.ParticipationKeeper, sdkCtx, 10)
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(tk.ParticipationKeeper.GetAllAuctionUsedAllocations(sdkCtx)),
-	)
+
+	t.Run("should allow get all", func(t *testing.T) {
+		items := createNAuctionUsedAllocations(tk.ParticipationKeeper, sdkCtx, 10)
+		require.ElementsMatch(t,
+			nullify.Fill(items),
+			nullify.Fill(tk.ParticipationKeeper.GetAllAuctionUsedAllocations(sdkCtx)),
+		)
+	})
 }

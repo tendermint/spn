@@ -29,13 +29,13 @@ func TestShowAvailableAllocationsQuery(t *testing.T) {
 	dels, _ := tk.DelegateN(sdkCtx, r, addr, 100, 10)
 
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetAvailableAllocationsRequest
 		response *types.QueryGetAvailableAllocationsResponse
 		err      error
 	}{
 		{
-			desc: "valid case",
+			name: "should allow valid case",
 			request: &types.QueryGetAvailableAllocationsRequest{
 				Address: dels[0].DelegatorAddress,
 			},
@@ -43,18 +43,18 @@ func TestShowAvailableAllocationsQuery(t *testing.T) {
 		},
 
 		{
-			desc: "invalid address",
+			name: "should prevent invalid address",
 			request: &types.QueryGetAvailableAllocationsRequest{
 				Address: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6: invalid address"),
 		},
 		{
-			desc: "invalid request",
+			name: "should return invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.ParticipationKeeper.AvailableAllocations(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)

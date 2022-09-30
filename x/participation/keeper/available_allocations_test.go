@@ -44,38 +44,38 @@ func TestAvailableAllocationsGet(t *testing.T) {
 	})
 
 	for _, tc := range []struct {
-		desc       string
+		name       string
 		address    string
 		allocation sdkmath.Int
 		wantError  bool
 	}{
 		{
-			desc:       "valid address with used allocations",
+			name:       "should allow with valid address with used allocations",
 			address:    validAddress,
 			allocation: sdkmath.NewInt(8), // (100 * 10 / 100) - 2 = 8
 		},
 		{
-			desc:       "valid address with no used allocations",
+			name:       "should allow with valid address with no used allocations",
 			address:    validAddressNoUse,
 			allocation: sdkmath.NewInt(10), // (100 * 10 / 100) - 0 = 10
 		},
 		{
-			desc:       "return 0 when usedAllocations > totalAllocations",
+			name:       "should return 0 when usedAllocations > totalAllocations",
 			address:    validAddressExtraUsed,
 			allocation: sdkmath.ZeroInt(), // 11 > 10 - > return 0
 		},
 		{
-			desc:      "invalid address returns error",
+			name:      "should prevent with invalid address",
 			address:   invalidAddress,
 			wantError: true,
 		},
 		{
-			desc:      "negative delegations will yield invalid allocation",
+			name:      "should prevent with negative delegations",
 			address:   addressNegativeDelegations,
 			wantError: true,
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			alloc, err := tk.ParticipationKeeper.GetAvailableAllocations(sdkCtx, tc.address)
 			if tc.wantError {
 				require.Error(t, err)
