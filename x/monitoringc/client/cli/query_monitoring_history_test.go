@@ -32,14 +32,14 @@ func (suite *QueryTestSuite) TestShowMonitoringHistory() {
 		obj  types.MonitoringHistory
 	}{
 		{
-			desc:       "found",
+			desc:       "should allow valid query",
 			idLaunchID: objs[0].LaunchID,
 
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc:       "not found",
+			desc:       "should fail if not found",
 			idLaunchID: 100000,
 
 			args: common,
