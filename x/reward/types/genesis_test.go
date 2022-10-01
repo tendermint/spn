@@ -11,17 +11,17 @@ import (
 
 func TestGenesisState_Validate(t *testing.T) {
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		genState *types.GenesisState
 		valid    bool
 	}{
 		{
-			desc:     "default genesis is valid",
+			name:     "should allow valid default genesis",
 			genState: types.DefaultGenesis(),
 			valid:    true,
 		},
 		{
-			desc: "valid genesis state",
+			name: "should allow valid genesis state",
 			genState: &types.GenesisState{
 				RewardPools: []types.RewardPool{
 					sample.RewardPool(r, 1),
@@ -33,7 +33,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 		{
-			desc: "duplicated rewardPool",
+			name: "should prevent duplicated rewardPool",
 			genState: &types.GenesisState{
 				RewardPools: []types.RewardPool{
 					sample.RewardPool(r, 1),
@@ -43,7 +43,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "invalid rewardPool",
+			name: "should prevent invalid rewardPool",
 			genState: &types.GenesisState{
 				RewardPools: []types.RewardPool{
 					sample.RewardPool(r, 1),
@@ -53,7 +53,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			err := tc.genState.Validate()
 			if tc.valid {
 				require.NoError(t, err)

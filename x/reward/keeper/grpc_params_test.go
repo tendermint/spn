@@ -14,12 +14,14 @@ func TestParamsQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	params := types.DefaultParams()
-	tk.RewardKeeper.SetParams(ctx, params)
 
-	response, err := tk.RewardKeeper.Params(wctx, &types.QueryParamsRequest{})
-	require.NoError(t, err)
-	require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
+	t.Run("should allow query for params", func(t *testing.T) {
+		tk.RewardKeeper.SetParams(ctx, params)
+		response, err := tk.RewardKeeper.Params(wctx, &types.QueryParamsRequest{})
+		require.NoError(t, err)
+		require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
 
-	_, err = tk.RewardKeeper.Params(wctx, nil)
-	require.Error(t, err)
+		_, err = tk.RewardKeeper.Params(wctx, nil)
+		require.Error(t, err)
+	})
 }
