@@ -33,14 +33,14 @@ func (suite *QueryTestSuite) TestShowProviderClientID() {
 		obj  types.ProviderClientID
 	}{
 		{
-			desc:       "found",
+			desc:       "should allow valid query",
 			idLaunchID: objs[0].LaunchID,
 
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc:       "not found",
+			desc:       "should fail if not found",
 			idLaunchID: 100000,
 
 			args: common,
@@ -90,7 +90,7 @@ func (suite *QueryTestSuite) TestListProviderClientID() {
 		}
 		return args
 	}
-	suite.T().Run("by offset", func(t *testing.T) {
+	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
@@ -105,7 +105,7 @@ func (suite *QueryTestSuite) TestListProviderClientID() {
 			)
 		}
 	})
-	suite.T().Run("by key", func(t *testing.T) {
+	suite.T().Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
@@ -122,7 +122,7 @@ func (suite *QueryTestSuite) TestListProviderClientID() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("total", func(t *testing.T) {
+	suite.T().Run("should paginate all", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListProviderClientID(), args)
 		require.NoError(t, err)

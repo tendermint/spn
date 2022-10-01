@@ -12,11 +12,13 @@ import (
 func TestGetParams(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	params := types.DefaultParams()
-	tk.MonitoringConsumerKeeper.SetParams(ctx, params)
-	require.EqualValues(t, params, tk.MonitoringConsumerKeeper.GetParams(ctx))
+	t.Run("should allow get", func(t *testing.T) {
+		params := types.DefaultParams()
+		tk.MonitoringConsumerKeeper.SetParams(ctx, params)
+		require.EqualValues(t, params, tk.MonitoringConsumerKeeper.GetParams(ctx))
 
-	params = types.NewParams()
-	tk.MonitoringConsumerKeeper.SetParams(ctx, params)
-	require.EqualValues(t, params, tk.MonitoringConsumerKeeper.GetParams(ctx))
+		params = types.NewParams()
+		tk.MonitoringConsumerKeeper.SetParams(ctx, params)
+		require.EqualValues(t, params, tk.MonitoringConsumerKeeper.GetParams(ctx))
+	})
 }
