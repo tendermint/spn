@@ -14,7 +14,7 @@ import (
 )
 
 func TestInsufficientRewardsBalanceInvariant(t *testing.T) {
-	t.Run("valid case", func(t *testing.T) {
+	t.Run("should allow valid case", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		denoms := []string{sample.AlphaString(r, 5), sample.AlphaString(r, 5), sample.AlphaString(r, 5)}
 		for i := uint64(0); i < uint64(10); i++ {
@@ -26,7 +26,7 @@ func TestInsufficientRewardsBalanceInvariant(t *testing.T) {
 		require.False(t, broken, msg)
 	})
 
-	t.Run("invalid case 1", func(t *testing.T) {
+	t.Run("should prevent case with invalid coins", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		// add some valid pools
 		denoms := []string{sample.AlphaString(r, 5), sample.AlphaString(r, 5), sample.AlphaString(r, 5)}
@@ -48,7 +48,7 @@ func TestInsufficientRewardsBalanceInvariant(t *testing.T) {
 		require.True(t, broken, msg)
 	})
 
-	t.Run("invalid case 2", func(t *testing.T) {
+	t.Run("should prevent case with invalid pools", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		// add some valid pools
 		denoms := []string{sample.AlphaString(r, 5), sample.AlphaString(r, 5), sample.AlphaString(r, 5)}
