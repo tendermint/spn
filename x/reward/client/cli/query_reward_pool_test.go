@@ -122,7 +122,7 @@ func (suite *QueryTestSuite) TestListRewardPool() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("chould paginate all", func(t *testing.T) {
+	suite.T().Run("should paginate all", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListRewardPool(), args)
 		require.NoError(t, err)
