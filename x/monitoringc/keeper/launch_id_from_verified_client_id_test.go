@@ -24,24 +24,30 @@ func createNLaunchIDFromVerifiedClientID(keeper *keeper.Keeper, ctx sdk.Context,
 
 func TestLaunchIDFromVerifiedClientIDGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNLaunchIDFromVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
-	for _, item := range items {
-		rst, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromVerifiedClientID(ctx,
-			item.ClientID,
-		)
-		require.True(t, found)
-		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
-		)
-	}
+
+	t.Run("should allow get", func(t *testing.T) {
+		items := createNLaunchIDFromVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
+		for _, item := range items {
+			rst, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromVerifiedClientID(ctx,
+				item.ClientID,
+			)
+			require.True(t, found)
+			require.Equal(t,
+				nullify.Fill(&item),
+				nullify.Fill(&rst),
+			)
+		}
+	})
 }
 
 func TestLaunchIDFromVerifiedClientIDGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNLaunchIDFromVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllLaunchIDFromVerifiedClientID(ctx)),
-	)
+
+	t.Run("should allow get all", func(t *testing.T) {
+		items := createNLaunchIDFromVerifiedClientID(tk.MonitoringConsumerKeeper, ctx, 10)
+		require.ElementsMatch(t,
+			nullify.Fill(items),
+			nullify.Fill(tk.MonitoringConsumerKeeper.GetAllLaunchIDFromVerifiedClientID(ctx)),
+		)
+	})
 }

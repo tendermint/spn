@@ -3,6 +3,8 @@ package keeper_test
 import (
 	"testing"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/stretchr/testify/require"
 	abci "github.com/tendermint/tendermint/abci/types"
 
@@ -14,21 +16,34 @@ import (
 
 func TestKeeper_ReportBlockSignatures(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
-	valFoo, valBar, valBaz, valFred, valQux := sample.Validator(t, r),
-		sample.Validator(t, r),
-		sample.Validator(t, r),
-		sample.Validator(t, r),
-		sample.Validator(t, r)
-	consFoo, err := valFoo.GetConsAddr()
-	require.NoError(t, err)
-	consBar, err := valBar.GetConsAddr()
-	require.NoError(t, err)
-	consBaz, err := valBaz.GetConsAddr()
-	require.NoError(t, err)
-	consFred, err := valFred.GetConsAddr()
-	require.NoError(t, err)
-	consQux, err := valQux.GetConsAddr()
-	require.NoError(t, err)
+
+	var (
+		valFoo  = sample.Validator(t, r)
+		valBar  = sample.Validator(t, r)
+		valBaz  = sample.Validator(t, r)
+		valFred = sample.Validator(t, r)
+		valQux  = sample.Validator(t, r)
+
+		consFoo  sdk.ConsAddress
+		consBar  sdk.ConsAddress
+		consBaz  sdk.ConsAddress
+		consFred sdk.ConsAddress
+		consQux  sdk.ConsAddress
+		err      error
+	)
+
+	t.Run("should get consensus addresses", func(t *testing.T) {
+		consFoo, err = valFoo.GetConsAddr()
+		require.NoError(t, err)
+		consBar, err = valBar.GetConsAddr()
+		require.NoError(t, err)
+		consBaz, err = valBaz.GetConsAddr()
+		require.NoError(t, err)
+		consFred, err = valFred.GetConsAddr()
+		require.NoError(t, err)
+		consQux, err = valQux.GetConsAddr()
+		require.NoError(t, err)
+	})
 
 	// consensus address with no validator associated
 	consNoValidator := sample.ConsAddress(r)
@@ -39,16 +54,19 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 	tk.StakingKeeper.SetValidator(ctx, valBaz)
 	tk.StakingKeeper.SetValidator(ctx, valFred)
 	tk.StakingKeeper.SetValidator(ctx, valQux)
-	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFoo)
-	require.NoError(t, err)
-	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBar)
-	require.NoError(t, err)
-	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBaz)
-	require.NoError(t, err)
-	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFred)
-	require.NoError(t, err)
-	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valQux)
-	require.NoError(t, err)
+
+	t.Run("should set validators by consensus address", func(t *testing.T) {
+		err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFoo)
+		require.NoError(t, err)
+		err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBar)
+		require.NoError(t, err)
+		err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBaz)
+		require.NoError(t, err)
+		err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFred)
+		require.NoError(t, err)
+		err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valQux)
+		require.NoError(t, err)
+	})
 
 	tests := []struct {
 		name                        string
@@ -62,21 +80,22 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 		wantErr                     bool
 	}{
 		{
-			name:                        "lastBlockHeight reached doesn't create a non existent monitoring info",
+			name:                        "should not create monitoring info with lastBlockHeight reached",
 			monitoringInfoExist:         false,
 			lastBlockHeight:             10,
 			currentBlockHeight:          11,
 			expectedMonitoringInfoFound: false,
 		},
 		{
-			name:                        "no monitoring info created because counting skipped if blockHeight == 1",
+			name: "should not create monitoring info created " +
+				"because counting skipped if blockHeight == 1",
 			monitoringInfoExist:         false,
 			lastBlockHeight:             1,
 			currentBlockHeight:          1,
 			expectedMonitoringInfoFound: false,
 		},
 		{
-			name:                "lastBlockHeight reached doesn't update an existent monitoring info",
+			name:                "should not update with lastBlockHeight reached",
 			monitoringInfoExist: true,
 			inputMonitoringInfo: tc.MonitoringInfo(10,
 				tc.SignatureCount(t,
@@ -109,7 +128,8 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 			),
 		},
 		{
-			name:                "if monitoring info doesn't exists, the structure is created with block count to 1 and signatures from commit",
+			name: "should create structure if monitoring info doesn't exist with " +
+				"block count to 1 and signatures from commit",
 			monitoringInfoExist: false,
 			lastBlockHeight:     10,
 			lastCommitInfo: tc.LastCommitInfo(
@@ -128,7 +148,7 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 			),
 		},
 		{
-			name:                "monitoring info should be updated following signatures in the last commit",
+			name:                "should update monitoring info following signatures in the last commit",
 			monitoringInfoExist: true,
 			inputMonitoringInfo: tc.MonitoringInfo(50,
 				tc.SignatureCount(t,
@@ -250,16 +270,19 @@ func TestKeeper_TransmitSignatures(t *testing.T) {
 	tk.StakingKeeper.SetValidator(ctx, valBaz)
 	tk.StakingKeeper.SetValidator(ctx, valFred)
 	tk.StakingKeeper.SetValidator(ctx, valQux)
-	err := tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFoo)
-	require.NoError(t, err)
-	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBar)
-	require.NoError(t, err)
-	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBaz)
-	require.NoError(t, err)
-	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFred)
-	require.NoError(t, err)
-	err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valQux)
-	require.NoError(t, err)
+
+	t.Run("should set validators by consensus address", func(t *testing.T) {
+		err := tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFoo)
+		require.NoError(t, err)
+		err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBar)
+		require.NoError(t, err)
+		err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valBaz)
+		require.NoError(t, err)
+		err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valFred)
+		require.NoError(t, err)
+		err = tk.StakingKeeper.SetValidatorByConsAddr(ctx, valQux)
+		require.NoError(t, err)
+	})
 
 	tests := []struct {
 		name                        string
@@ -274,32 +297,7 @@ func TestKeeper_TransmitSignatures(t *testing.T) {
 		wantErr                     bool
 	}{
 		{
-			name:                        "currentBlockHeight < lastBlockHeight returns nil",
-			monitoringInfoExist:         false,
-			lastBlockHeight:             11,
-			currentBlockHeight:          10,
-			channelIDExist:              false,
-			expectedMonitoringInfoFound: false,
-		},
-		{
-			name:                        "lastBlockHeight no channel ID set returns nil",
-			monitoringInfoExist:         false,
-			lastBlockHeight:             10,
-			currentBlockHeight:          11,
-			channelIDExist:              false,
-			expectedMonitoringInfoFound: false,
-		},
-		{
-			name:                        "no monitoring info found",
-			monitoringInfoExist:         false,
-			lastBlockHeight:             10,
-			currentBlockHeight:          11,
-			channelIDExist:              true,
-			channelID:                   types.ConnectionChannelID{ChannelID: "channelID"},
-			expectedMonitoringInfoFound: false,
-		},
-		{
-			name:                "monitoring info found with channel not found",
+			name:                "should return monitoring info with channel not found",
 			monitoringInfoExist: true,
 			inputMonitoringInfo: tc.MonitoringInfo(1,
 				tc.SignatureCount(t,
@@ -310,6 +308,31 @@ func TestKeeper_TransmitSignatures(t *testing.T) {
 			channelIDExist:     true,
 			channelID:          types.ConnectionChannelID{ChannelID: "channelID"},
 			wantErr:            true,
+		},
+		{
+			name:                        "should return nil for currentBlockHeight < lastBlockHeight",
+			monitoringInfoExist:         false,
+			lastBlockHeight:             11,
+			currentBlockHeight:          10,
+			channelIDExist:              false,
+			expectedMonitoringInfoFound: false,
+		},
+		{
+			name:                        "should return nil for lastBlockHeight no channel ID set",
+			monitoringInfoExist:         false,
+			lastBlockHeight:             10,
+			currentBlockHeight:          11,
+			channelIDExist:              false,
+			expectedMonitoringInfoFound: false,
+		},
+		{
+			name:                        "should return nil for no monitoring info found",
+			monitoringInfoExist:         false,
+			lastBlockHeight:             10,
+			currentBlockHeight:          11,
+			channelIDExist:              true,
+			channelID:                   types.ConnectionChannelID{ChannelID: "channelID"},
+			expectedMonitoringInfoFound: false,
 		},
 	}
 	for _, tt := range tests {

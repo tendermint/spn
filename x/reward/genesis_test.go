@@ -26,14 +26,16 @@ func TestGenesis(t *testing.T) {
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
-	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	reward.InitGenesis(ctx, *tk.RewardKeeper, genesisState)
-	got := reward.ExportGenesis(ctx, *tk.RewardKeeper)
-	require.NotNil(t, got)
+	t.Run("should allow importing and exporting genesis", func(t *testing.T) {
+		ctx, tk, _ := testkeeper.NewTestSetup(t)
+		reward.InitGenesis(ctx, *tk.RewardKeeper, genesisState)
+		got := reward.ExportGenesis(ctx, *tk.RewardKeeper)
+		require.NotNil(t, got)
 
-	nullify.Fill(&genesisState)
-	nullify.Fill(got)
+		nullify.Fill(&genesisState)
+		nullify.Fill(got)
 
-	require.ElementsMatch(t, genesisState.RewardPools, got.RewardPools)
+		require.ElementsMatch(t, genesisState.RewardPools, got.RewardPools)
+	})
 	// this line is used by starport scaffolding # genesis/test/assert
 }

@@ -25,7 +25,7 @@ func (suite *QueryTestSuite) TestShowLaunchIDFromChannelID() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc        string
+		name        string
 		idChannelID string
 
 		args []string
@@ -33,21 +33,21 @@ func (suite *QueryTestSuite) TestShowLaunchIDFromChannelID() {
 		obj  types.LaunchIDFromChannelID
 	}{
 		{
-			desc:        "found",
+			name:        "should allow valid query",
 			idChannelID: objs[0].ChannelID,
 
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc:        "not found",
+			name:        "should fail if not found",
 			idChannelID: strconv.Itoa(100000),
 
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		suite.T().Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.name, func(t *testing.T) {
 			args := []string{
 				tc.idChannelID,
 			}
@@ -90,7 +90,7 @@ func (suite *QueryTestSuite) TestListLaunchIDFromChannelID() {
 		}
 		return args
 	}
-	suite.T().Run("by offset", func(t *testing.T) {
+	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
@@ -105,7 +105,7 @@ func (suite *QueryTestSuite) TestListLaunchIDFromChannelID() {
 			)
 		}
 	})
-	suite.T().Run("by key", func(t *testing.T) {
+	suite.T().Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
@@ -122,7 +122,7 @@ func (suite *QueryTestSuite) TestListLaunchIDFromChannelID() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("total", func(t *testing.T) {
+	suite.T().Run("should paginate all", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListLaunchIDFromChannelID(), args)
 		require.NoError(t, err)

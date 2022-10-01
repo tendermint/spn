@@ -29,11 +29,11 @@ func TestParamsValidate(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:   "default is valid",
+			name:   "should allow valid default params",
 			params: DefaultParams(),
 		},
 		{
-			name: "valid consumer consensus state",
+			name: "should allow valid consumer consensus state",
 			params: Params{
 				LastBlockHeight:         1000,
 				ConsumerChainID:         chainID,
@@ -109,21 +109,21 @@ func TestParamsValidate(t *testing.T) {
 		})
 	}
 
-	t.Run("validateConsumerChainID expect a string", func(t *testing.T) {
+	t.Run("should prevent with wrong type", func(t *testing.T) {
 		require.Error(t, validateConsumerConsensusState(100))
 	})
 }
 
 func TestValidateLastBlockHeight(t *testing.T) {
 	require.Error(t, validateLastBlockHeight("foo"), "should expect a int64")
-	require.Error(t, validateLastBlockHeight(int64(0)), "prevent using 0")
+	require.Error(t, validateLastBlockHeight(int64(0)), "should prevent using 0")
 	require.NoError(t, validateLastBlockHeight(int64(1)))
 }
 
 func TestValidateConsumerConsensusState(t *testing.T) {
 	require.Error(t, validateConsumerConsensusState(100), "should expect a ConsensusState")
 	require.Error(t, validateConsumerConsensusState(invalidConsensusState), "should prevent invalid ConsensusState")
-	require.NoError(t, validateConsumerConsensusState(spntypes.ConsensusState{}), "empty is valid")
+	require.NoError(t, validateConsumerConsensusState(spntypes.ConsensusState{}), "should allow empty")
 	require.NoError(t, validateConsumerConsensusState(consensusState))
 }
 

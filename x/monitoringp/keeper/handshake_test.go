@@ -36,7 +36,7 @@ func monitoringpKeeperWithFooClient(t *testing.T) (sdk.Context, testkeeper.TestK
 }
 
 func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
-	t.Run("should returns no error if the client exists and no connection is established", func(t *testing.T) {
+	t.Run("should return no error if the client exists and no connection is established", func(t *testing.T) {
 		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
 		tk.MonitoringProviderKeeper.SetConsumerClientID(ctx, types.ConsumerClientID{
 			ClientID: "foo",
@@ -69,7 +69,7 @@ func TestKeeper_VerifyClientIDFromChannelID(t *testing.T) {
 		require.ErrorIs(t, err, types.ErrNoConsumerClient)
 	})
 
-	t.Run("should fails if connection has already been established", func(t *testing.T) {
+	t.Run("should fail if connection has already been established", func(t *testing.T) {
 		ctx, tk, _ := monitoringpKeeperWithFooClient(t)
 		tk.MonitoringProviderKeeper.SetConsumerClientID(ctx, types.ConsumerClientID{
 			ClientID: "foo",
