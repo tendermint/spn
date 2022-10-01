@@ -18,32 +18,27 @@ func TestCampaignQuerySingle(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCampaign(tk.CampaignKeeper, ctx, 2)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetCampaignRequest
 		response *types.QueryGetCampaignResponse
 		err      error
 	}{
 		{
-			desc:     "First",
+			name:     "should allow valid query",
 			request:  &types.QueryGetCampaignRequest{CampaignID: msgs[0].CampaignID},
 			response: &types.QueryGetCampaignResponse{Campaign: msgs[0]},
 		},
 		{
-			desc:     "Second",
-			request:  &types.QueryGetCampaignRequest{CampaignID: msgs[1].CampaignID},
-			response: &types.QueryGetCampaignResponse{Campaign: msgs[1]},
-		},
-		{
-			desc:    "Campaign not found",
+			name:    "should return campaign not found",
 			request: &types.QueryGetCampaignRequest{CampaignID: uint64(len(msgs))},
 			err:     status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "Invalid request",
+			name: "should return invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.CampaignKeeper.Campaign(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)

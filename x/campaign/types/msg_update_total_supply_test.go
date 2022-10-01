@@ -3,6 +3,7 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
@@ -12,13 +13,15 @@ import (
 )
 
 func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
+	invalidCoins := sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdkmath.ZeroInt()}}
+
 	tests := []struct {
 		name string
 		msg  types.MsgUpdateTotalSupply
 		err  error
 	}{
 		{
-			name: "valid address",
+			name: "should allow validation of valid msg",
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator:       sample.Address(r),
 				CampaignID:        0,
@@ -26,7 +29,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid address",
+			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator:       "invalid_address",
 				CampaignID:        0,
@@ -35,7 +38,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
-			name: "invalid total supply",
+			name: "should prevent validation of msg with invalid total supply",
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator:       sample.Address(r),
 				CampaignID:        0,
@@ -44,7 +47,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidTotalSupply,
 		},
 		{
-			name: "empty total supply",
+			name: "should prevent validation of msg with empty total supply",
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator:       sample.Address(r),
 				CampaignID:        0,

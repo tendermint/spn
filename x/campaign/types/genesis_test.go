@@ -31,16 +31,16 @@ func TestGenesisState_Validate(t *testing.T) {
 	campaign2.CoordinatorID = 1
 
 	for _, tc := range []struct {
-		desc         string
+		name         string
 		genState     *types.GenesisState
 		errorMessage string
 	}{
 		{
-			desc:     "default is valid",
+			name:     "should allow validation of valid default genesis",
 			genState: types.DefaultGenesis(),
 		},
 		{
-			desc: "valid genesis state",
+			name: "should allow validation of valid genesis",
 			genState: &types.GenesisState{
 				// this line is used by starport scaffolding # types/genesis/validField
 				CampaignChains: []types.CampaignChains{
@@ -73,7 +73,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 		},
 		{
-			desc: "non existing campaign for mainnet account",
+			name: "should prevent validation of genesis with non existing campaign for mainnet account",
 			genState: &types.GenesisState{
 				CampaignChains: []types.CampaignChains{
 					{
@@ -96,7 +96,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			errorMessage: "campaign id 330 doesn't exist for mainnet account 330",
 		},
 		{
-			desc: "non existing campaign for chains",
+			name: "should prevent validation of genesis with non existing campaign for chains",
 			genState: &types.GenesisState{
 				CampaignChains: []types.CampaignChains{
 					{
@@ -116,7 +116,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			errorMessage: "campaign id 2 doesn't exist for chains",
 		},
 		{
-			desc: "duplicated campaignChains",
+			name: "should prevent validation of genesis with duplicated campaignChains",
 			genState: &types.GenesisState{
 				Campaigns: []types.Campaign{
 					sample.Campaign(r, 0),
@@ -135,7 +135,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			errorMessage: "duplicated index for campaignChains",
 		},
 		{
-			desc: "duplicated campaign",
+			name: "should prevent validation of genesis with duplicated campaign",
 			genState: &types.GenesisState{
 				Campaigns: []types.Campaign{
 					sample.Campaign(r, 0),
@@ -147,7 +147,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			errorMessage: "duplicated id for campaign",
 		},
 		{
-			desc: "invalid campaign count",
+			name: "should prevent validation of genesis with invalid campaign count",
 			genState: &types.GenesisState{
 				Campaigns: []types.Campaign{
 					sample.Campaign(r, 1),
@@ -158,7 +158,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			errorMessage: "campaign id should be lower or equal than the last id",
 		},
 		{
-			desc: "invalid campaign",
+			name: "should prevent validation of genesis with invalid campaign",
 			genState: &types.GenesisState{
 				Campaigns: []types.Campaign{
 					types.NewCampaign(
@@ -176,7 +176,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			errorMessage: "invalid campaign 0: campaign name can only contain alphanumerical characters or hyphen",
 		},
 		{
-			desc: "duplicated mainnetAccount",
+			name: "should prevent validation of genesis with duplicated mainnetAccount",
 			genState: &types.GenesisState{
 				Campaigns: []types.Campaign{
 					sample.Campaign(r, 0),
@@ -197,7 +197,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			errorMessage: "duplicated index for mainnetAccount",
 		},
 		{
-			desc: "invalid allocations",
+			name: "should prevent validation of genesis with invalid allocations",
 			genState: &types.GenesisState{
 				Campaigns: []types.Campaign{
 					{
@@ -224,7 +224,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			err := tc.genState.Validate()
 			if tc.errorMessage != "" {
 				require.Error(t, err)
@@ -267,28 +267,28 @@ func TestGenesisState_Validate(t *testing.T) {
 
 func TestGenesisState_ValidateParams(t *testing.T) {
 	for _, tc := range []struct {
-		desc          string
-		genState      types.GenesisState
-		shouldBeValid bool
+		name     string
+		genState types.GenesisState
+		valid    bool
 	}{
 		{
-			desc: "max total supply below min total supply",
+			name: "should prevent validation of genesis with max total supply below min total supply",
 			genState: types.GenesisState{
 				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Sub(sdkmath.OneInt()), types.DefaultCampaignCreationFee),
 			},
-			shouldBeValid: false,
+			valid: false,
 		},
 		{
-			desc: "valid parameters",
+			name: "should prevent validation of genesis with valid parameters",
 			genState: types.GenesisState{
 				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdkmath.OneInt()), types.DefaultCampaignCreationFee),
 			},
-			shouldBeValid: true,
+			valid: true,
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			err := tc.genState.Validate()
-			if tc.shouldBeValid {
+			if tc.valid {
 				require.NoError(t, err)
 			} else {
 				require.Error(t, err)

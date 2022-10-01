@@ -15,28 +15,34 @@ import (
 func TestKeeper_AddChainToCampaign(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	// Fail if campaign doesn't exist
-	err := tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 0)
-	require.Error(t, err)
+	t.Run("should fail if campaign does not exist", func(t *testing.T) {
+		err := tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 0)
+		require.Error(t, err)
+	})
 
 	// Chains can be added
-	tk.CampaignKeeper.SetCampaign(ctx, sample.Campaign(r, 0))
-	err = tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 0)
-	require.NoError(t, err)
-	err = tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 1)
-	require.NoError(t, err)
-	err = tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 2)
-	require.NoError(t, err)
+	t.Run("should allow adding chains to campaign", func(t *testing.T) {
+		tk.CampaignKeeper.SetCampaign(ctx, sample.Campaign(r, 0))
+		err := tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 0)
+		require.NoError(t, err)
+		err = tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 1)
+		require.NoError(t, err)
+		err = tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 2)
+		require.NoError(t, err)
 
-	campainChains, found := tk.CampaignKeeper.GetCampaignChains(ctx, 0)
-	require.True(t, found)
-	require.EqualValues(t, campainChains.CampaignID, uint64(0))
-	require.Len(t, campainChains.Chains, 3)
-	require.EqualValues(t, []uint64{0, 1, 2}, campainChains.Chains)
+		campainChains, found := tk.CampaignKeeper.GetCampaignChains(ctx, 0)
+		require.True(t, found)
+		require.EqualValues(t, campainChains.CampaignID, uint64(0))
+		require.Len(t, campainChains.Chains, 3)
+		require.EqualValues(t, []uint64{0, 1, 2}, campainChains.Chains)
+	})
 
 	// Can't add an existing chain
-	err = tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 0)
-	require.Error(t, err)
+	t.Run("should prevent adding existing chain to campaign", func(t *testing.T) {
+		err := tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 0)
+		require.Error(t, err)
+	})
+
 }
 
 func createNCampaignChains(k *keeper.Keeper, ctx sdk.Context, n int) []types.CampaignChains {
@@ -50,18 +56,24 @@ func createNCampaignChains(k *keeper.Keeper, ctx sdk.Context, n int) []types.Cam
 
 func TestCampaignChainsGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNCampaignChains(tk.CampaignKeeper, ctx, 10)
-	for _, item := range items {
-		rst, found := tk.CampaignKeeper.GetCampaignChains(ctx,
-			item.CampaignID,
-		)
-		require.True(t, found)
-		require.Equal(t, item, rst)
-	}
+
+	t.Run("should get all campaigns", func(t *testing.T) {
+		items := createNCampaignChains(tk.CampaignKeeper, ctx, 10)
+		for _, item := range items {
+			rst, found := tk.CampaignKeeper.GetCampaignChains(ctx,
+				item.CampaignID,
+			)
+			require.True(t, found)
+			require.Equal(t, item, rst)
+		}
+	})
 }
 
 func TestCampaignChainsGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNCampaignChains(tk.CampaignKeeper, ctx, 10)
-	require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllCampaignChains(ctx))
+
+	t.Run("should get all campaigns", func(t *testing.T) {
+		items := createNCampaignChains(tk.CampaignKeeper, ctx, 10)
+		require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllCampaignChains(ctx))
+	})
 }

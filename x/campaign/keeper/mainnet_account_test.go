@@ -24,35 +24,44 @@ func createNMainnetAccount(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 
 func TestMainnetAccountGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
-	for _, item := range items {
-		rst, found := tk.CampaignKeeper.GetMainnetAccount(ctx,
-			item.CampaignID,
-			item.Address,
-		)
-		require.True(t, found)
-		require.Equal(t, item, rst)
-	}
+
+	t.Run("should get accounts", func(t *testing.T) {
+		items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
+		for _, item := range items {
+			rst, found := tk.CampaignKeeper.GetMainnetAccount(ctx,
+				item.CampaignID,
+				item.Address,
+			)
+			require.True(t, found)
+			require.Equal(t, item, rst)
+		}
+	})
 }
 
 func TestMainnetAccountRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
-	for _, item := range items {
-		tk.CampaignKeeper.RemoveMainnetAccount(ctx,
-			item.CampaignID,
-			item.Address,
-		)
-		_, found := tk.CampaignKeeper.GetMainnetAccount(ctx,
-			item.CampaignID,
-			item.Address,
-		)
-		require.False(t, found)
-	}
+
+	t.Run("should remove accounts", func(t *testing.T) {
+		items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
+		for _, item := range items {
+			tk.CampaignKeeper.RemoveMainnetAccount(ctx,
+				item.CampaignID,
+				item.Address,
+			)
+			_, found := tk.CampaignKeeper.GetMainnetAccount(ctx,
+				item.CampaignID,
+				item.Address,
+			)
+			require.False(t, found)
+		}
+	})
 }
 
 func TestMainnetAccountGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
-	require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllMainnetAccount(ctx))
+
+	t.Run("should get all accounts", func(t *testing.T) {
+		items := createNMainnetAccount(tk.CampaignKeeper, ctx, 10)
+		require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllMainnetAccount(ctx))
+	})
 }

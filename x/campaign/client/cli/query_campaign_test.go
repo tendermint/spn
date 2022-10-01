@@ -25,26 +25,26 @@ func (suite *QueryTestSuite) TestShowCampaign() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc string
+		name string
 		id   string
 		args []string
 		err  error
 		obj  types.Campaign
 	}{
 		{
-			desc: "found",
+			name: "should allow valid query",
 			id:   fmt.Sprintf("%d", campaigns[0].CampaignID),
 			args: common,
 			obj:  campaigns[0],
 		},
 		{
-			desc: "not found",
+			name: "should fail if not found",
 			id:   "not_found",
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		suite.T().Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.name, func(t *testing.T) {
 			args := []string{tc.id}
 			args = append(args, tc.args...)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowCampaign(), args)
@@ -82,7 +82,7 @@ func (suite *QueryTestSuite) TestListCampaign() {
 		}
 		return args
 	}
-	suite.T().Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(campaigns); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
@@ -94,7 +94,7 @@ func (suite *QueryTestSuite) TestListCampaign() {
 			require.Subset(t, nullify.Fill(campaigns), nullify.Fill(resp.Campaign))
 		}
 	})
-	suite.T().Run("ByKey", func(t *testing.T) {
+	suite.T().Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(campaigns); i += step {
@@ -108,7 +108,7 @@ func (suite *QueryTestSuite) TestListCampaign() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("Total", func(t *testing.T) {
+	suite.T().Run("should paginate all", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(campaigns)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
 		require.NoError(t, err)

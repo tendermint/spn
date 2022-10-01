@@ -17,38 +17,31 @@ func TestCampaignChainsQuerySingle(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCampaignChains(tk.CampaignKeeper, ctx, 2)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetCampaignChainsRequest
 		response *types.QueryGetCampaignChainsResponse
 		err      error
 	}{
 		{
-			desc: "First",
+			name: "should allow valid query",
 			request: &types.QueryGetCampaignChainsRequest{
 				CampaignID: msgs[0].CampaignID,
 			},
 			response: &types.QueryGetCampaignChainsResponse{CampaignChains: msgs[0]},
 		},
 		{
-			desc: "Second",
-			request: &types.QueryGetCampaignChainsRequest{
-				CampaignID: msgs[1].CampaignID,
-			},
-			response: &types.QueryGetCampaignChainsResponse{CampaignChains: msgs[1]},
-		},
-		{
-			desc: "KeyNotFound",
+			name: "should return KeyNotFound",
 			request: &types.QueryGetCampaignChainsRequest{
 				CampaignID: 100000,
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			name: "should return InvalidRequest",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.CampaignKeeper.CampaignChains(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)

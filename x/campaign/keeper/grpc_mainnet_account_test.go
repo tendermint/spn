@@ -76,13 +76,13 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 		msgs       = createNMainnetAccount(tk.CampaignKeeper, ctx, 2)
 	)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetMainnetAccountRequest
 		response *types.QueryGetMainnetAccountResponse
 		err      error
 	}{
 		{
-			desc: "First",
+			name: "should allow valid query",
 			request: &types.QueryGetMainnetAccountRequest{
 				CampaignID: msgs[0].CampaignID,
 				Address:    msgs[0].Address,
@@ -90,15 +90,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 			response: &types.QueryGetMainnetAccountResponse{MainnetAccount: msgs[0]},
 		},
 		{
-			desc: "Second",
-			request: &types.QueryGetMainnetAccountRequest{
-				CampaignID: msgs[1].CampaignID,
-				Address:    msgs[1].Address,
-			},
-			response: &types.QueryGetMainnetAccountResponse{MainnetAccount: msgs[1]},
-		},
-		{
-			desc: "KeyNotFound",
+			name: "should return KeyNotFound",
 			request: &types.QueryGetMainnetAccountRequest{
 				CampaignID: 100000,
 				Address:    strconv.Itoa(100000),
@@ -106,11 +98,11 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			name: "should return InvalidRequest",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.CampaignKeeper.MainnetAccount(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
