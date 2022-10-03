@@ -20,21 +20,19 @@ func TestGenesis(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 
-	genesisState := sample.CampaignGenesisStateWithAccounts(r)
-	campaign.InitGenesis(ctx, *tk.CampaignKeeper, genesisState)
-	got := *campaign.ExportGenesis(ctx, *tk.CampaignKeeper)
+	t.Run("should allow importing and exporting genesis", func(t *testing.T) {
+		genesisState := sample.CampaignGenesisStateWithAccounts(r)
+		campaign.InitGenesis(ctx, *tk.CampaignKeeper, genesisState)
+		got := *campaign.ExportGenesis(ctx, *tk.CampaignKeeper)
 
-	require.ElementsMatch(t, genesisState.CampaignChains, got.CampaignChains)
-
-	require.ElementsMatch(t, genesisState.Campaigns, got.Campaigns)
-	require.Equal(t, genesisState.CampaignCounter, got.CampaignCounter)
-
-	require.ElementsMatch(t, genesisState.MainnetAccounts, got.MainnetAccounts)
-
-	require.Equal(t, genesisState.Params, got.Params)
-
-	maxShares := tk.CampaignKeeper.GetTotalShares(ctx)
-	require.Equal(t, uint64(spntypes.TotalShareNumber), maxShares)
+		require.ElementsMatch(t, genesisState.CampaignChains, got.CampaignChains)
+		require.ElementsMatch(t, genesisState.Campaigns, got.Campaigns)
+		require.Equal(t, genesisState.CampaignCounter, got.CampaignCounter)
+		require.ElementsMatch(t, genesisState.MainnetAccounts, got.MainnetAccounts)
+		require.Equal(t, genesisState.Params, got.Params)
+		maxShares := tk.CampaignKeeper.GetTotalShares(ctx)
+		require.Equal(t, uint64(spntypes.TotalShareNumber), maxShares)
+	})
 
 	// this line is used by starport scaffolding # genesis/test/assert
 }

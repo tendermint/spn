@@ -20,11 +20,14 @@ func createTestConsumerClientID(ctx sdk.Context, keeper *keeper.Keeper) types.Co
 
 func TestConsumerClientIDGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
-	item := createTestConsumerClientID(ctx, tk.MonitoringProviderKeeper)
-	rst, found := tk.MonitoringProviderKeeper.GetConsumerClientID(ctx)
-	require.True(t, found)
-	require.Equal(t,
-		nullify.Fill(&item),
-		nullify.Fill(&rst),
-	)
+
+	t.Run("should allow get", func(t *testing.T) {
+		item := createTestConsumerClientID(ctx, tk.MonitoringProviderKeeper)
+		rst, found := tk.MonitoringProviderKeeper.GetConsumerClientID(ctx)
+		require.True(t, found)
+		require.Equal(t,
+			nullify.Fill(&item),
+			nullify.Fill(&rst),
+		)
+	})
 }

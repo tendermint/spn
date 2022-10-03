@@ -3,6 +3,8 @@ package simulation_test
 import (
 	"testing"
 
+	profiletypes "github.com/tendermint/spn/x/profile/types"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
@@ -16,45 +18,48 @@ import (
 func TestFindRandomChainWithCoordBalance(t *testing.T) {
 	var (
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
-
 		r              = sample.Rand()
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 		msgCreateCoord = sample.MsgCreateCoordinator(sample.Address(r))
+		coordBalance   = sample.Coins(r)
+		res            *profiletypes.MsgCreateCoordinatorResponse
+		coord          profiletypes.Coordinator
+		chain          launchtypes.Chain
+		found          bool
+		err            error
 	)
 
-	t.Run("no chains", func(t *testing.T) {
-		_, found := rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, false, sdk.NewCoins())
+	t.Run("should find no chains", func(t *testing.T) {
+		_, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, false, sdk.NewCoins())
 		require.False(t, found)
 		_, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, true, sample.Coins(r))
 		require.False(t, found)
 	})
 
-	// Create coordinator
-	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoord)
-	require.NoError(t, err)
+	t.Run("should allow create coordinator and set balance", func(t *testing.T) {
+		res, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoord)
+		require.NoError(t, err)
+		coord, found = tk.ProfileKeeper.GetCoordinator(sdkCtx, res.CoordinatorID)
+		require.True(t, found)
+		// set balance
+		tk.Mint(sdkCtx, coord.Address, coordBalance)
+	})
 
-	coord, found := tk.ProfileKeeper.GetCoordinator(sdkCtx, res.CoordinatorID)
-	require.True(t, found)
-
-	// set balance
-	coordBalance := sample.Coins(r)
-	tk.Mint(sdkCtx, coord.Address, coordBalance)
-
-	t.Run("chain without coordinator", func(t *testing.T) {
+	t.Run("should find no chain with non existing coordinator", func(t *testing.T) {
 		tk.LaunchKeeper.AppendChain(sdkCtx, launchtypes.Chain{
 			CoordinatorID:   1000,
 			LaunchTriggered: true,
 		})
-		_, found := rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, false, sdk.NewCoins())
+		_, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, false, sdk.NewCoins())
 		require.False(t, found)
 	})
 
-	t.Run("chain with launch triggered", func(t *testing.T) {
+	t.Run("should find chain with launch triggered", func(t *testing.T) {
 		tk.LaunchKeeper.AppendChain(sdkCtx, launchtypes.Chain{
 			CoordinatorID:   res.CoordinatorID,
 			LaunchTriggered: true,
 		})
-		_, found := rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, false, sdk.NewCoins())
+		_, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, false, sdk.NewCoins())
 		require.False(t, found)
 		_, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, true, coordBalance)
 		require.False(t, found)
@@ -64,7 +69,7 @@ func TestFindRandomChainWithCoordBalance(t *testing.T) {
 		require.False(t, found)
 	})
 
-	t.Run("valid chains", func(t *testing.T) {
+	t.Run("should find multiple valid chains", func(t *testing.T) {
 		norewardPoolID := tk.LaunchKeeper.AppendChain(sdkCtx, launchtypes.Chain{
 			CoordinatorID:   res.CoordinatorID,
 			LaunchTriggered: false,
@@ -80,26 +85,26 @@ func TestFindRandomChainWithCoordBalance(t *testing.T) {
 			Provider: coord.Address,
 		})
 
-		got, found := rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, false, sdk.NewCoins())
+		chain, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, false, sdk.NewCoins())
 		require.True(t, found)
-		require.Equal(t, res.CoordinatorID, got.CoordinatorID)
-		require.Equal(t, hasRewardPoolID, got.LaunchID)
-		got, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, true, coordBalance)
+		require.Equal(t, res.CoordinatorID, chain.CoordinatorID)
+		require.Equal(t, hasRewardPoolID, chain.LaunchID)
+		chain, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, true, coordBalance)
 		require.True(t, found)
-		require.Equal(t, res.CoordinatorID, got.CoordinatorID)
-		require.Equal(t, hasRewardPoolID, got.LaunchID)
-		got, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, true, coordBalance.Add(sample.Coin(r)))
+		require.Equal(t, res.CoordinatorID, chain.CoordinatorID)
+		require.Equal(t, hasRewardPoolID, chain.LaunchID)
+		chain, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, true, true, coordBalance.Add(sample.Coin(r)))
 		require.False(t, found)
 
-		got, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, false, false, sdk.NewCoins())
+		chain, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, false, false, sdk.NewCoins())
 		require.True(t, found)
-		require.Equal(t, res.CoordinatorID, got.CoordinatorID)
-		require.Equal(t, norewardPoolID, got.LaunchID)
-		got, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, false, true, coordBalance)
+		require.Equal(t, res.CoordinatorID, chain.CoordinatorID)
+		require.Equal(t, norewardPoolID, chain.LaunchID)
+		chain, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, false, true, coordBalance)
 		require.True(t, found)
-		require.Equal(t, res.CoordinatorID, got.CoordinatorID)
-		require.Equal(t, norewardPoolID, got.LaunchID)
-		got, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, false, true, coordBalance.Add(sample.Coin(r)))
+		require.Equal(t, res.CoordinatorID, chain.CoordinatorID)
+		require.Equal(t, norewardPoolID, chain.LaunchID)
+		chain, found = rewardsimulation.FindRandomChainWithCoordBalance(r, sdkCtx, *tk.RewardKeeper, tk.BankKeeper, false, true, coordBalance.Add(sample.Coin(r)))
 		require.False(t, found)
 	})
 }

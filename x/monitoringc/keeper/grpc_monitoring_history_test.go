@@ -18,38 +18,38 @@ func TestMonitoringHistoryQuerySingle(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 2)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetMonitoringHistoryRequest
 		response *types.QueryGetMonitoringHistoryResponse
 		err      error
 	}{
 		{
-			desc: "first",
+			name: "should allow valid first query",
 			request: &types.QueryGetMonitoringHistoryRequest{
 				LaunchID: items[0].LaunchID,
 			},
 			response: &types.QueryGetMonitoringHistoryResponse{MonitoringHistory: items[0]},
 		},
 		{
-			desc: "second",
+			name: "should allow valid second query",
 			request: &types.QueryGetMonitoringHistoryRequest{
 				LaunchID: items[1].LaunchID,
 			},
 			response: &types.QueryGetMonitoringHistoryResponse{MonitoringHistory: items[1]},
 		},
 		{
-			desc: "key not found",
+			name: "should return key not found",
 			request: &types.QueryGetMonitoringHistoryRequest{
 				LaunchID: 100000,
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "invalid request",
+			name: "should return invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.MonitoringConsumerKeeper.MonitoringHistory(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)

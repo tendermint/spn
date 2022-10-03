@@ -20,7 +20,34 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "invalid campaign name",
+			name: "should allow validation of msg with both name and metadata modified",
+			msg: types.MsgEditCampaign{
+				CampaignID:  0,
+				Coordinator: sample.Address(r),
+				Name:        sample.CampaignName(r),
+				Metadata:    sample.Metadata(r, 20),
+			},
+		},
+		{
+			name: "should allow validation of msg with name modified",
+			msg: types.MsgEditCampaign{
+				CampaignID:  0,
+				Coordinator: sample.Address(r),
+				Name:        sample.CampaignName(r),
+				Metadata:    []byte{},
+			},
+		},
+		{
+			name: "should allow validation of msg with metadata modified",
+			msg: types.MsgEditCampaign{
+				CampaignID:  0,
+				Coordinator: sample.Address(r),
+				Name:        "",
+				Metadata:    sample.Metadata(r, 20),
+			},
+		},
+		{
+			name: "should prevent validation of msg with invalid campaign name",
 			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: sample.Address(r),
@@ -30,7 +57,7 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidCampaignName,
 		},
 		{
-			name: "invalid coordinator address",
+			name: "should prevent validation of msg with invalid coordinator address",
 			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: "invalid_address",
@@ -40,34 +67,7 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 			err: profile.ErrInvalidCoordAddress,
 		},
 		{
-			name: "valid message - both modified",
-			msg: types.MsgEditCampaign{
-				CampaignID:  0,
-				Coordinator: sample.Address(r),
-				Name:        sample.CampaignName(r),
-				Metadata:    sample.Metadata(r, 20),
-			},
-		},
-		{
-			name: "valid message - name modified",
-			msg: types.MsgEditCampaign{
-				CampaignID:  0,
-				Coordinator: sample.Address(r),
-				Name:        sample.CampaignName(r),
-				Metadata:    []byte{},
-			},
-		},
-		{
-			name: "valid message - metadata modified",
-			msg: types.MsgEditCampaign{
-				CampaignID:  0,
-				Coordinator: sample.Address(r),
-				Name:        "",
-				Metadata:    sample.Metadata(r, 20),
-			},
-		},
-		{
-			name: "invalid metadata length",
+			name: "should prevent validation of msg with invalid metadata length",
 			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: sample.Address(r),
@@ -77,7 +77,7 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidMetadataLength,
 		},
 		{
-			name: "no fields modified",
+			name: "should prevent validation of msg with no fields modified",
 			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: sample.Address(r),

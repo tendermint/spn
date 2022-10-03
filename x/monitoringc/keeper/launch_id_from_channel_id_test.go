@@ -24,24 +24,30 @@ func createNLaunchIDFromChannelID(ctx sdk.Context, keeper *keeper.Keeper, n int)
 
 func TestLaunchIDFromChannelIDGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNLaunchIDFromChannelID(ctx, tk.MonitoringConsumerKeeper, 10)
-	for _, item := range items {
-		rst, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromChannelID(ctx,
-			item.ChannelID,
-		)
-		require.True(t, found)
-		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
-		)
-	}
+
+	t.Run("should allow get", func(t *testing.T) {
+		items := createNLaunchIDFromChannelID(ctx, tk.MonitoringConsumerKeeper, 10)
+		for _, item := range items {
+			rst, found := tk.MonitoringConsumerKeeper.GetLaunchIDFromChannelID(ctx,
+				item.ChannelID,
+			)
+			require.True(t, found)
+			require.Equal(t,
+				nullify.Fill(&item),
+				nullify.Fill(&rst),
+			)
+		}
+	})
 }
 
 func TestLaunchIDFromChannelIDGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNLaunchIDFromChannelID(ctx, tk.MonitoringConsumerKeeper, 10)
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllLaunchIDFromChannelID(ctx)),
-	)
+
+	t.Run("should allow get all", func(t *testing.T) {
+		items := createNLaunchIDFromChannelID(ctx, tk.MonitoringConsumerKeeper, 10)
+		require.ElementsMatch(t,
+			nullify.Fill(items),
+			nullify.Fill(tk.MonitoringConsumerKeeper.GetAllLaunchIDFromChannelID(ctx)),
+		)
+	})
 }

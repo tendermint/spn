@@ -49,14 +49,14 @@ func TestGetCoordSimAccount(t *testing.T) {
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
-	t.Run("no coordinator", func(t *testing.T) {
+	t.Run("should return no coordinator", func(t *testing.T) {
 		_, _, found := simcampaign.GetCoordSimAccount(r, ctx, tk.ProfileKeeper, accs)
 		require.False(t, found)
 	})
 
 	populateCoordinators(t, r, ctx, *tk.ProfileKeeper, accs, 10)
 
-	t.Run("find coordinators", func(t *testing.T) {
+	t.Run("should find coordinators", func(t *testing.T) {
 		acc, coordID, found := simcampaign.GetCoordSimAccount(r, ctx, tk.ProfileKeeper, accs)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
@@ -70,7 +70,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
-	t.Run("no campaign", func(t *testing.T) {
+	t.Run("should find no campaign", func(t *testing.T) {
 		_, _, found := simcampaign.GetCoordSimAccountWithCampaignID(
 			r,
 			ctx,
@@ -85,7 +85,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 
 	coords := populateCoordinators(t, r, ctx, *tk.ProfileKeeper, accs, 10)
 
-	t.Run("one campaign with mainnet launch triggered", func(t *testing.T) {
+	t.Run("should find one campaign with mainnet launch triggered", func(t *testing.T) {
 		camp := campaigntypes.NewCampaign(
 			0,
 			sample.AlphaString(r, 5),
@@ -112,7 +112,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 		require.False(t, found)
 	})
 
-	t.Run("find a campaign", func(t *testing.T) {
+	t.Run("should find a campaign", func(t *testing.T) {
 		camp := campaigntypes.NewCampaign(
 			1,
 			sample.AlphaString(r, 5),
@@ -143,7 +143,7 @@ func TestGetCoordSimAccountWithCampaignID(t *testing.T) {
 		require.EqualValues(t, id, camp.CampaignID)
 	})
 
-	t.Run("find a campaign with no mainnet initialized", func(t *testing.T) {
+	t.Run("should find a campaign with no mainnet initialized", func(t *testing.T) {
 		camp := campaigntypes.NewCampaign(
 			2,
 			sample.AlphaString(r, 5),
@@ -176,12 +176,12 @@ func TestGetSharesFromCampaign(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 
-	t.Run("no campaign", func(t *testing.T) {
+	t.Run("should find no campaign", func(t *testing.T) {
 		_, found := simcampaign.GetSharesFromCampaign(r, ctx, *tk.CampaignKeeper, 0)
 		require.False(t, found)
 	})
 
-	t.Run("no shares remains for the campaign", func(t *testing.T) {
+	t.Run("should find no shares remaining for the campaign", func(t *testing.T) {
 		camp := campaigntypes.NewCampaign(
 			0,
 			sample.AlphaString(r, 5),
@@ -201,7 +201,7 @@ func TestGetSharesFromCampaign(t *testing.T) {
 		require.False(t, found)
 	})
 
-	t.Run("campaign with available shares", func(t *testing.T) {
+	t.Run("should find campaign with available shares", func(t *testing.T) {
 		campID := tk.CampaignKeeper.AppendCampaign(ctx, campaigntypes.NewCampaign(
 			1,
 			sample.AlphaString(r, 5),
@@ -226,12 +226,12 @@ func TestGetAccountWithVouchers(t *testing.T) {
 		require.NoError(t, tk.BankKeeper.SendCoinsFromModuleToAccount(ctx, campaigntypes.ModuleName, addr, coins))
 	}
 
-	t.Run("no account", func(t *testing.T) {
+	t.Run("should find no account", func(t *testing.T) {
 		_, _, _, found := simcampaign.GetAccountWithVouchers(r, ctx, tk.BankKeeper, *tk.CampaignKeeper, accs, false)
 		require.False(t, found)
 	})
 
-	t.Run("vouchers from an account for a campaign with launch triggered", func(t *testing.T) {
+	t.Run("should find account with vouchers for a campaign with launch triggered", func(t *testing.T) {
 		acc, _ := simtypes.RandomAcc(r, accs)
 		campaign := sample.Campaign(r, 0)
 		campaign.MainnetInitialized = true
@@ -248,7 +248,7 @@ func TestGetAccountWithVouchers(t *testing.T) {
 		require.Contains(t, accs, acc)
 	})
 
-	t.Run("vouchers from an account", func(t *testing.T) {
+	t.Run("should find account with vouchers", func(t *testing.T) {
 		acc, _ := simtypes.RandomAcc(r, accs)
 		campaign := sample.Campaign(r, 1)
 		campaign.MainnetInitialized = false
@@ -267,12 +267,12 @@ func TestGetAccountWithShares(t *testing.T) {
 	r := sample.Rand()
 	accs := sample.SimAccounts()
 
-	t.Run("no account", func(t *testing.T) {
+	t.Run("should find no account", func(t *testing.T) {
 		_, _, _, found := simcampaign.GetAccountWithShares(r, ctx, *tk.CampaignKeeper, accs, false)
 		require.False(t, found)
 	})
 
-	t.Run("account not part of sim accounts", func(t *testing.T) {
+	t.Run("should not find account not part of sim accounts", func(t *testing.T) {
 		sampleAddr := sample.Address(r)
 		tk.CampaignKeeper.SetMainnetAccount(ctx, campaigntypes.MainnetAccount{
 			CampaignID: 10,
@@ -284,7 +284,7 @@ func TestGetAccountWithShares(t *testing.T) {
 		tk.CampaignKeeper.RemoveMainnetAccount(ctx, 10, sampleAddr)
 	})
 
-	t.Run("account from campaign with launched mainnet can be retrieved", func(t *testing.T) {
+	t.Run("should find account from campaign with launched mainnet can be retrieved", func(t *testing.T) {
 		acc, _ := simtypes.RandomAcc(r, accs)
 		campaign := sample.Campaign(r, 0)
 		campaign.MainnetInitialized = true
@@ -306,7 +306,7 @@ func TestGetAccountWithShares(t *testing.T) {
 		require.EqualValues(t, share, shareRetrieved)
 	})
 
-	t.Run("account from campaign can be retrieved", func(t *testing.T) {
+	t.Run("should find account from campaign", func(t *testing.T) {
 		acc, _ := simtypes.RandomAcc(r, accs)
 		campaign := sample.Campaign(r, 1)
 		campaign.MainnetInitialized = false

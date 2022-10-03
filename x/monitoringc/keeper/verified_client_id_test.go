@@ -25,20 +25,23 @@ func createNVerifiedClientID(ctx sdk.Context, keeper *keeper.Keeper, n int) []ty
 
 func TestVerifiedClientIDGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 10)
-	for _, item := range items {
-		rst, found := tk.MonitoringConsumerKeeper.GetVerifiedClientID(ctx, item.LaunchID)
-		require.True(t, found)
-		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
-		)
-	}
+
+	t.Run("should allow get", func(t *testing.T) {
+		items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 10)
+		for _, item := range items {
+			rst, found := tk.MonitoringConsumerKeeper.GetVerifiedClientID(ctx, item.LaunchID)
+			require.True(t, found)
+			require.Equal(t,
+				nullify.Fill(&item),
+				nullify.Fill(&rst),
+			)
+		}
+	})
 }
 
 func TestVerifiedClientIDClear(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	t.Run("successfully clear entries", func(t *testing.T) {
+	t.Run("should successfully clear entries", func(t *testing.T) {
 		items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 1)
 		launchID := items[0].LaunchID
 		clientID := items[0].ClientIDs[0]
@@ -65,16 +68,19 @@ func TestVerifiedClientIDClear(t *testing.T) {
 
 func TestVerifiedClientIDGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 10)
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllVerifiedClientID(ctx)),
-	)
+
+	t.Run("should allow get all", func(t *testing.T) {
+		items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 10)
+		require.ElementsMatch(t,
+			nullify.Fill(items),
+			nullify.Fill(tk.MonitoringConsumerKeeper.GetAllVerifiedClientID(ctx)),
+		)
+	})
 }
 
 func TestAddVerifiedClientID(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	t.Run("update a verified client id", func(t *testing.T) {
+	t.Run("should update a verified client id", func(t *testing.T) {
 		var (
 			launchID         = uint64(1)
 			newClientID      = "2"
@@ -91,7 +97,7 @@ func TestAddVerifiedClientID(t *testing.T) {
 		require.Equal(t, verifiedClientID, got)
 	})
 
-	t.Run("update a duplicated verified client id", func(t *testing.T) {
+	t.Run("should update a duplicated verified client id", func(t *testing.T) {
 		var (
 			launchID         = uint64(2)
 			newClientID      = "2"
@@ -107,7 +113,7 @@ func TestAddVerifiedClientID(t *testing.T) {
 		require.Equal(t, verifiedClientID, got)
 	})
 
-	t.Run("update a non exiting verified client id", func(t *testing.T) {
+	t.Run("should update a non exiting verified client id", func(t *testing.T) {
 		verifiedClientID := types.VerifiedClientID{
 			LaunchID:  3,
 			ClientIDs: []string{"1"},

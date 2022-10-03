@@ -13,9 +13,8 @@ import (
 )
 
 var (
-	invalidCampaignName = "not_valid"
-	invalidCoins        = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdkmath.ZeroInt()}}
-	invalidShares       = campaign.Shares{sdk.Coin{Denom: "invalid denom", Amount: sdkmath.ZeroInt()}}
+	invalidCampaignName  = "not_valid"
+	invalidCampaignCoins = sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdkmath.ZeroInt()}}
 )
 
 func TestNewCampaign(t *testing.T) {
@@ -26,47 +25,60 @@ func TestNewCampaign(t *testing.T) {
 	metadata := sample.Metadata(r, 20)
 	createdAt := sample.Duration(r).Milliseconds()
 
-	cmpn := campaign.NewCampaign(
-		campaignID,
-		campaignName,
-		coordinator,
-		totalSupply,
-		metadata,
-		createdAt,
-	)
-	require.EqualValues(t, campaignID, cmpn.CampaignID)
-	require.EqualValues(t, campaignName, cmpn.CampaignName)
-	require.EqualValues(t, coordinator, cmpn.CoordinatorID)
-	require.EqualValues(t, createdAt, cmpn.CreatedAt)
-	require.False(t, cmpn.MainnetInitialized)
-	require.True(t, totalSupply.IsEqual(cmpn.TotalSupply))
-	require.EqualValues(t, campaign.EmptyShares(), cmpn.AllocatedShares)
+	t.Run("should allow creation of campaign", func(t *testing.T) {
+		c := campaign.NewCampaign(
+			campaignID,
+			campaignName,
+			coordinator,
+			totalSupply,
+			metadata,
+			createdAt,
+		)
+		require.EqualValues(t, campaignID, c.CampaignID)
+		require.EqualValues(t, campaignName, c.CampaignName)
+		require.EqualValues(t, coordinator, c.CoordinatorID)
+		require.EqualValues(t, createdAt, c.CreatedAt)
+		require.False(t, c.MainnetInitialized)
+		require.True(t, totalSupply.IsEqual(c.TotalSupply))
+		require.EqualValues(t, campaign.EmptyShares(), c.AllocatedShares)
+	})
 }
 
 func TestCampaign_Validate(t *testing.T) {
-	require.False(t, invalidCoins.IsValid())
-
-	invalidAllocatedShares := sample.Campaign(r, 0)
-	invalidAllocatedShares.AllocatedShares = campaign.NewSharesFromCoins(invalidCoins)
-
-	totalSharesReached := sample.Campaign(r, 0)
-	totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
-		sdk.NewCoin("foo", sdkmath.NewInt(spntypes.TotalShareNumber+1)),
-	))
-	reached, err := campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares, spntypes.TotalShareNumber)
-	require.NoError(t, err)
-	require.True(t, reached)
-
-	invalidSpecialAllocations := campaign.NewSpecialAllocations(
-		sample.Shares(r),
-		campaign.Shares(sdk.NewCoins(
-			sdk.NewCoin("foo", sdkmath.NewInt(100)),
-			sdk.NewCoin("s/bar", sdkmath.NewInt(200)),
-		)),
+	var (
+		invalidAllocatedShares            campaign.Campaign
+		totalSharesReached                campaign.Campaign
+		campaignInvalidSpecialAllocations campaign.Campaign
 	)
-	require.Error(t, invalidSpecialAllocations.Validate())
-	campaignInvalidSpecialAllocations := sample.Campaign(r, 0)
-	campaignInvalidSpecialAllocations.SpecialAllocations = invalidSpecialAllocations
+
+	t.Run("should verify that invalid coins is invalid", func(t *testing.T) {
+		require.False(t, invalidCampaignCoins.IsValid())
+	})
+
+	t.Run("should allow creation of valid allocations with totalshares reached", func(t *testing.T) {
+		invalidAllocatedShares = sample.Campaign(r, 0)
+		invalidAllocatedShares.AllocatedShares = campaign.NewSharesFromCoins(invalidCampaignCoins)
+		totalSharesReached = sample.Campaign(r, 0)
+		totalSharesReached.AllocatedShares = campaign.NewSharesFromCoins(sdk.NewCoins(
+			sdk.NewCoin("foo", sdkmath.NewInt(spntypes.TotalShareNumber+1)),
+		))
+		reached, err := campaign.IsTotalSharesReached(totalSharesReached.AllocatedShares, spntypes.TotalShareNumber)
+		require.NoError(t, err)
+		require.True(t, reached)
+	})
+
+	t.Run("should allow creation of campaign with invalid special allocations", func(t *testing.T) {
+		invalidSpecialAllocations := campaign.NewSpecialAllocations(
+			sample.Shares(r),
+			campaign.Shares(sdk.NewCoins(
+				sdk.NewCoin("foo", sdkmath.NewInt(100)),
+				sdk.NewCoin("s/bar", sdkmath.NewInt(200)),
+			)),
+		)
+		require.Error(t, invalidSpecialAllocations.Validate())
+		campaignInvalidSpecialAllocations = sample.Campaign(r, 0)
+		campaignInvalidSpecialAllocations.SpecialAllocations = invalidSpecialAllocations
+	})
 
 	for _, tc := range []struct {
 		desc     string
@@ -74,7 +86,7 @@ func TestCampaign_Validate(t *testing.T) {
 		valid    bool
 	}{
 		{
-			desc:     "valid campaign",
+			desc:     "should allow validation of valid campaign",
 			campaign: sample.Campaign(r, 0),
 			valid:    true,
 		},
@@ -91,29 +103,29 @@ func TestCampaign_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "invalid total supply",
+			desc: "should prevent validation of campaign with invalid total supply",
 			campaign: campaign.NewCampaign(
 				0,
 				sample.CampaignName(r),
 				sample.Uint64(r),
-				invalidCoins,
+				invalidCampaignCoins,
 				sample.Metadata(r, 20),
 				sample.Duration(r).Milliseconds(),
 			),
 			valid: false,
 		},
 		{
-			desc:     "invalid allocated shares",
+			desc:     "should prevent validation of campaign with invalid allocated shares",
 			campaign: invalidAllocatedShares,
 			valid:    false,
 		},
 		{
-			desc:     "allocated shares bigger than total shares",
+			desc:     "should prevent validation of campaign with allocated shares greater than total shares",
 			campaign: totalSharesReached,
 			valid:    false,
 		},
 		{
-			desc:     "invalid special allocations",
+			desc:     "should prevent validation of campaign with invalid special allocations",
 			campaign: campaignInvalidSpecialAllocations,
 			valid:    false,
 		},
@@ -131,22 +143,22 @@ func TestCheckCampaignName(t *testing.T) {
 		valid bool
 	}{
 		{
-			desc:  "valid name",
+			desc:  "should allow check of campaign with valid name",
 			name:  "ThisIs-a-ValidCampaignName123",
 			valid: true,
 		},
 		{
-			desc:  "should not contain special character outside hyphen",
+			desc:  "should prevent check of campaign with special character outside hyphen",
 			name:  invalidCampaignName,
 			valid: false,
 		},
 		{
-			desc:  "should not be empty",
+			desc:  "should prevent check of campaign with empty name",
 			name:  "",
 			valid: false,
 		},
 		{
-			desc:  "should not exceed max length",
+			desc:  "should prevent check of campaign with name exceeding max length",
 			name:  sample.String(r, campaign.CampaignNameMaxLength+1),
 			valid: false,
 		},

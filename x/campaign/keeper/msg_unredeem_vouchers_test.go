@@ -51,7 +51,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "unredeem vouchers",
+			name: "should allow unredeem vouchers",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
 				CampaignID: 0,
@@ -59,7 +59,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			},
 		},
 		{
-			name: "unredeem vouchers a second time",
+			name: "should allow unredeem vouchers a second time",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
 				CampaignID: 0,
@@ -67,7 +67,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			},
 		},
 		{
-			name: "unredeem vouchers to zero",
+			name: "should allow unredeem vouchers to zero",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
 				CampaignID: 0,
@@ -75,7 +75,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			},
 		},
 		{
-			name: "unredeem vouchers from another account",
+			name: "should allow unredeem vouchers from another account",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountFewSharesAddr,
 				CampaignID: 0,
@@ -83,7 +83,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			},
 		},
 		{
-			name: "not enough shares in balance",
+			name: "should prevent if not enough shares in balance",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountFewSharesAddr,
 				CampaignID: 0,
@@ -92,7 +92,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			err: types.ErrSharesDecrease,
 		},
 		{
-			name: "non existent campaign",
+			name: "should prevent for non existent campaign",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
 				CampaignID: 1000,
@@ -101,7 +101,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			err: types.ErrCampaignNotFound,
 		},
 		{
-			name: "non existent account",
+			name: "should prevent for non existent account",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     sample.Address(r),
 				CampaignID: 0,
@@ -110,7 +110,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			err: types.ErrAccountNotFound,
 		},
 		{
-			name: "campaign with launched mainnet",
+			name: "should prevent for campaign with launched mainnet",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
 				CampaignID: campaignMainnetLaunched.CampaignID,

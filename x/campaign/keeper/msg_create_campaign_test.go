@@ -34,15 +34,17 @@ func initCreationFeeAndFundCoordAccounts(
 		coins = coins.Add(coin)
 	}
 
-	// add `coins` to balance of each coordinator address
-	for _, addr := range addrs {
-		accAddr, err := sdk.AccAddressFromBech32(addr)
-		require.NoError(t, err)
-		err = bk.MintCoins(sdkCtx, types.ModuleName, coins)
-		require.NoError(t, err)
-		err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, accAddr, coins)
-		require.NoError(t, err)
-	}
+	t.Run("should add coins to balance of each coordinator address", func(t *testing.T) {
+		for _, addr := range addrs {
+			accAddr, err := sdk.AccAddressFromBech32(addr)
+			require.NoError(t, err)
+			err = bk.MintCoins(sdkCtx, types.ModuleName, coins)
+			require.NoError(t, err)
+			err = bk.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, accAddr, coins)
+			require.NoError(t, err)
+		}
+	})
+
 }
 
 func TestMsgCreateCampaign(t *testing.T) {
@@ -54,15 +56,16 @@ func TestMsgCreateCampaign(t *testing.T) {
 		campaignCreationFee = sample.Coins(r)
 	)
 
-	// Create coordinators
-	for i := range coordAddrs {
-		addr := sample.Address(r)
-		coordAddrs[i] = addr
-		msgCreateCoordinator := sample.MsgCreateCoordinator(addr)
-		resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
-		require.NoError(t, err)
-		coordMap[addr] = resCoord.CoordinatorID
-	}
+	t.Run("should allow creation of coordinators", func(t *testing.T) {
+		for i := range coordAddrs {
+			addr := sample.Address(r)
+			coordAddrs[i] = addr
+			msgCreateCoordinator := sample.MsgCreateCoordinator(addr)
+			resCoord, err := ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
+			require.NoError(t, err)
+			coordMap[addr] = resCoord.CoordinatorID
+		}
+	})
 
 	// assign random sdk.Coins to `campaignCreationFee` param and provide balance to coordinators
 	// coordAddrs[2] is not funded
@@ -75,7 +78,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 		err        error
 	}{
 		{
-			name: "create a campaign 1",
+			name: "should allow create a campaign 1",
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(r),
 				Coordinator:  coordAddrs[0],
@@ -85,7 +88,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			expectedID: uint64(0),
 		},
 		{
-			name: "create a campaign from a different coordinator",
+			name: "should allow create a campaign from a different coordinator",
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(r),
 				Coordinator:  coordAddrs[1],
@@ -95,7 +98,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			expectedID: uint64(1),
 		},
 		{
-			name: "create a campaign from a non existing coordinator",
+			name: "should allow create a campaign from a non existing coordinator",
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(r),
 				Coordinator:  sample.Address(r),
@@ -105,7 +108,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "create a campaign with an invalid token supply",
+			name: "should allow create a campaign with an invalid token supply",
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(r),
 				Coordinator:  coordAddrs[0],
@@ -115,7 +118,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 			err: types.ErrInvalidTotalSupply,
 		},
 		{
-			name: "insufficient balance to cover creation fee",
+			name: "should fail for insufficient balance to cover creation fee",
 			msg: types.MsgCreateCampaign{
 				CampaignName: sample.CampaignName(r),
 				Coordinator:  coordAddrs[2],

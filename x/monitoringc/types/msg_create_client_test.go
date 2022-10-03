@@ -17,7 +17,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "valid message",
+			name: "should validate valid message",
 			msg: types.MsgCreateClient{
 				Creator:         sample.Address(r),
 				LaunchID:        0,
@@ -28,7 +28,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid address",
+			name: "should prevent invalid address",
 			msg: types.MsgCreateClient{
 				Creator:         "invalid_address",
 				LaunchID:        0,
@@ -40,7 +40,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidClientCreatorAddress,
 		},
 		{
-			name: "invalid consensus state",
+			name: "should prevent invalid consensus state",
 			msg: types.MsgCreateClient{
 				Creator:  sample.Address(r),
 				LaunchID: 0,
@@ -56,7 +56,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidConsensusState,
 		},
 		{
-			name: "invalid validator set",
+			name: "should prevent invalid validator set",
 			msg: types.MsgCreateClient{
 				Creator:        sample.Address(r),
 				LaunchID:       0,
@@ -74,7 +74,7 @@ func TestMsgCreateClient_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidValidatorSet,
 		},
 		{
-			name: "validator set not matching consensus state",
+			name: "should prevent validator set not matching consensus state",
 			msg: types.MsgCreateClient{
 				Creator:         sample.Address(r),
 				LaunchID:        0,

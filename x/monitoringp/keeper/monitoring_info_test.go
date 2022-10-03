@@ -20,20 +20,26 @@ func createTestMonitoringInfo(ctx sdk.Context, keeper *keeper.Keeper) types.Moni
 
 func TestMonitoringInfoGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
-	item := createTestMonitoringInfo(ctx, tk.MonitoringProviderKeeper)
-	rst, found := tk.MonitoringProviderKeeper.GetMonitoringInfo(ctx)
 
-	require.True(t, found)
-	require.Equal(t,
-		nullify.Fill(&item),
-		nullify.Fill(&rst),
-	)
+	t.Run("should allow get", func(t *testing.T) {
+		item := createTestMonitoringInfo(ctx, tk.MonitoringProviderKeeper)
+		rst, found := tk.MonitoringProviderKeeper.GetMonitoringInfo(ctx)
+
+		require.True(t, found)
+		require.Equal(t,
+			nullify.Fill(&item),
+			nullify.Fill(&rst),
+		)
+	})
 }
 
 func TestMonitoringInfoRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
-	createTestMonitoringInfo(ctx, tk.MonitoringProviderKeeper)
-	tk.MonitoringProviderKeeper.RemoveMonitoringInfo(ctx)
-	_, found := tk.MonitoringProviderKeeper.GetMonitoringInfo(ctx)
-	require.False(t, found)
+
+	t.Run("should allow remove", func(t *testing.T) {
+		createTestMonitoringInfo(ctx, tk.MonitoringProviderKeeper)
+		tk.MonitoringProviderKeeper.RemoveMonitoringInfo(ctx)
+		_, found := tk.MonitoringProviderKeeper.GetMonitoringInfo(ctx)
+		require.False(t, found)
+	})
 }

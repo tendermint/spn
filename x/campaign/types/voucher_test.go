@@ -13,9 +13,9 @@ import (
 )
 
 var (
-	campaignID         = uint64(10)
-	prefixedVoucherFoo = campaign.VoucherDenom(campaignID, "foo")
-	prefixedVoucherBar = campaign.VoucherDenom(campaignID, "bar")
+	voucherCampaignID  = uint64(10)
+	prefixedVoucherFoo = campaign.VoucherDenom(voucherCampaignID, "foo")
+	prefixedVoucherBar = campaign.VoucherDenom(voucherCampaignID, "bar")
 )
 
 func TestCheckVouchers(t *testing.T) {
@@ -26,23 +26,23 @@ func TestCheckVouchers(t *testing.T) {
 		err        error
 	}{
 		{
-			name:       "one valid coin",
-			campaignID: campaignID,
+			name:       "should allow check with one valid coin",
+			campaignID: voucherCampaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 			),
 		},
 		{
-			name:       "two valid coins",
-			campaignID: campaignID,
+			name:       "should allow check with two valid coins",
+			campaignID: voucherCampaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 				sdk.NewCoin(prefixedVoucherBar, sdkmath.NewInt(200)),
 			),
 		},
 		{
-			name:       "one valid and one invalid coins",
-			campaignID: campaignID,
+			name:       "should prevent check with one valid and one invalid coins",
+			campaignID: voucherCampaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 				sdk.NewCoin("foo", sdkmath.NewInt(200)),
@@ -50,15 +50,15 @@ func TestCheckVouchers(t *testing.T) {
 			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
 		},
 		{
-			name:       "one invalid coin",
-			campaignID: campaignID,
+			name:       "should prevent check with one invalid coin",
+			campaignID: voucherCampaignID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin("foo", sdkmath.NewInt(200)),
 			),
 			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
 		},
 		{
-			name:       "invalid campaign id",
+			name:       "should prevent check with invalid campaign id",
 			campaignID: 1000,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(200)),
@@ -88,25 +88,19 @@ func TestSharesToVouchers(t *testing.T) {
 		err        error
 	}{
 		{
-			name:       "test one share",
-			campaignID: campaignID,
+			name:       "should validate with one valid share",
+			campaignID: voucherCampaignID,
 			shares:     tc.Shares(t, "10foo"),
-			want:       tc.Vouchers(t, "10foo", campaignID),
+			want:       tc.Vouchers(t, "10foo", voucherCampaignID),
 		},
 		{
-			name:       "test two shares",
-			campaignID: campaignID,
+			name:       "should validate with two valid shares",
+			campaignID: voucherCampaignID,
 			shares:     tc.Shares(t, "10foo,11bar"),
-			want:       tc.Vouchers(t, "10foo,11bar", campaignID),
+			want:       tc.Vouchers(t, "10foo,11bar", voucherCampaignID),
 		},
 		{
-			name:       "another campaign id",
-			campaignID: 1000,
-			shares:     tc.Shares(t, "10foo,11bar,12foobar"),
-			want:       tc.Vouchers(t, "10foo,11bar,12foobar", 1000),
-		},
-		{
-			name:       "invalid share prefix",
+			name:       "should prevent validation with invalid share prefix",
 			campaignID: 1000,
 			shares:     campaign.Shares(tc.Coins(t, "10t/foo")),
 			err:        errors.New("t/foo doesn't contain the share prefix s/"),
@@ -134,19 +128,19 @@ func TestVoucherName(t *testing.T) {
 		want       string
 	}{
 		{
-			name:       "test 10/foo",
+			name:       "should prepend to 10/foo",
 			campaignID: 10,
 			coin:       "foo",
 			want:       "v/10/foo",
 		},
 		{
-			name:       "test 0/foo",
+			name:       "should prepend to 0/foo",
 			campaignID: 0,
 			coin:       "foo",
 			want:       "v/0/foo",
 		},
 		{
-			name:       "test empty denom",
+			name:       "should prepend to empty denom",
 			campaignID: 10,
 			coin:       "",
 			want:       "v/10/",
@@ -169,19 +163,19 @@ func TestVouchersToShares(t *testing.T) {
 		err        error
 	}{
 		{
-			name:       "test one voucher",
-			campaignID: campaignID,
-			vouchers:   tc.Vouchers(t, "10foo", campaignID),
+			name:       "should convert one voucher",
+			campaignID: voucherCampaignID,
+			vouchers:   tc.Vouchers(t, "10foo", voucherCampaignID),
 			want:       tc.Shares(t, "10foo"),
 		},
 		{
-			name:       "test two vouchers",
-			campaignID: campaignID,
-			vouchers:   tc.Vouchers(t, "10foo,11bar", campaignID),
+			name:       "should convert two vouchers",
+			campaignID: voucherCampaignID,
+			vouchers:   tc.Vouchers(t, "10foo,11bar", voucherCampaignID),
 			want:       tc.Shares(t, "10foo,11bar"),
 		},
 		{
-			name:       "wrong campaign id",
+			name:       "should fail with wrong campaign id",
 			campaignID: 1000,
 			// use old coin syntax to write incorrect coins
 			vouchers: tc.Coins(t, "10v/10/bar,11v/10/foo"),
@@ -210,19 +204,19 @@ func TestVoucherToShareDenom(t *testing.T) {
 		want       string
 	}{
 		{
-			name:       "foo voucher",
+			name:       "should convert foo voucher",
 			campaignID: 10,
 			denom:      prefixedVoucherFoo,
 			want:       prefixedShareFoo,
 		},
 		{
-			name:       "bar voucher",
+			name:       "should convert bar voucher",
 			campaignID: 10,
 			denom:      prefixedVoucherBar,
 			want:       prefixedShareBar,
 		},
 		{
-			name:       "invalid voucher",
+			name:       "should prepend to invalid voucher",
 			campaignID: 10,
 			denom:      "t/bar",
 			want:       "s/t/bar",
@@ -244,39 +238,39 @@ func TestVoucherCampaign(t *testing.T) {
 		valid      bool
 	}{
 		{
-			name:       "campaign is 0",
+			name:       "should allow with campaign 0",
 			denom:      "v/0/foo",
 			campaignID: uint64(0),
 			valid:      true,
 		},
 		{
-			name:       "campaign is 50",
+			name:       "should allow with campaign 50",
 			denom:      "v/50/bar",
 			campaignID: uint64(50),
 			valid:      true,
 		},
 		{
-			name:  "no voucher prefix",
+			name:  "should fail with no voucher prefix",
 			denom: "0/foo",
 			valid: false,
 		},
 		{
-			name:  "invalid format",
+			name:  "should fail with no invalid format",
 			denom: "v/0/foo/bar",
 			valid: false,
 		},
 		{
-			name:  "campaign ID is not a number",
+			name:  "should fail when campaign ID is not a number",
 			denom: "v/foo/foo",
 			valid: false,
 		},
 		{
-			name:  "empty campaign ID",
+			name:  "should fail with empty campaign ID",
 			denom: "v//foo",
 			valid: false,
 		},
 		{
-			name:  "actual denom is empty",
+			name:  "should fail when actual denom is empty",
 			denom: "v/0/",
 			valid: false,
 		},

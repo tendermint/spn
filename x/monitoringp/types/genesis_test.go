@@ -18,12 +18,12 @@ func TestGenesisState_Validate(t *testing.T) {
 		valid    bool
 	}{
 		{
-			desc:     "default is valid",
+			desc:     "should allow valid default genesis",
 			genState: types.DefaultGenesis(),
 			valid:    true,
 		},
 		{
-			desc: "valid genesis state",
+			desc: "should allow valid genesis state",
 			genState: &types.GenesisState{
 				PortId: types.PortID,
 				ConsumerClientID: &types.ConsumerClientID{
@@ -39,7 +39,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: true,
 		},
 		{
-			desc: "invalid params",
+			desc: "should prevent invalid params",
 			genState: &types.GenesisState{
 				PortId: types.PortID,
 				ConsumerClientID: &types.ConsumerClientID{
@@ -57,7 +57,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc: "invalid monitoring info",
+			desc: "should prevent invalid monitoring info",
 			genState: &types.GenesisState{
 				PortId: types.PortID,
 				ConsumerClientID: &types.ConsumerClientID{

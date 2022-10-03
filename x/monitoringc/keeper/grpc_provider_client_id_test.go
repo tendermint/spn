@@ -19,38 +19,38 @@ func TestProviderClientIDQuerySingle(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	items := createNProviderClientID(ctx, tk.MonitoringConsumerKeeper, 2)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetProviderClientIDRequest
 		response *types.QueryGetProviderClientIDResponse
 		err      error
 	}{
 		{
-			desc: "first",
+			name: "should allow valid first query",
 			request: &types.QueryGetProviderClientIDRequest{
 				LaunchID: items[0].LaunchID,
 			},
 			response: &types.QueryGetProviderClientIDResponse{ProviderClientID: items[0]},
 		},
 		{
-			desc: "second",
+			name: "should allow valid second query",
 			request: &types.QueryGetProviderClientIDRequest{
 				LaunchID: items[1].LaunchID,
 			},
 			response: &types.QueryGetProviderClientIDResponse{ProviderClientID: items[1]},
 		},
 		{
-			desc: "key not found",
+			name: "should return key not found",
 			request: &types.QueryGetProviderClientIDRequest{
 				LaunchID: 100000,
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "invalid request",
+			name: "should return invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.MonitoringConsumerKeeper.ProviderClientID(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
@@ -80,7 +80,7 @@ func TestProviderClientIDQueryPaginated(t *testing.T) {
 			},
 		}
 	}
-	t.Run("by offset", func(t *testing.T) {
+	t.Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(items); i += step {
 			resp, err := tk.MonitoringConsumerKeeper.ProviderClientIDAll(wctx, request(nil, uint64(i), uint64(step), false))
@@ -92,7 +92,7 @@ func TestProviderClientIDQueryPaginated(t *testing.T) {
 			)
 		}
 	})
-	t.Run("by key", func(t *testing.T) {
+	t.Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(items); i += step {
@@ -106,7 +106,7 @@ func TestProviderClientIDQueryPaginated(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("total", func(t *testing.T) {
+	t.Run("should paginate all", func(t *testing.T) {
 		resp, err := tk.MonitoringConsumerKeeper.ProviderClientIDAll(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(items), int(resp.Pagination.Total))
@@ -115,7 +115,7 @@ func TestProviderClientIDQueryPaginated(t *testing.T) {
 			nullify.Fill(resp.ProviderClientID),
 		)
 	})
-	t.Run("InvalidRequest", func(t *testing.T) {
+	t.Run("should return InvalidRequest", func(t *testing.T) {
 		_, err := tk.MonitoringConsumerKeeper.ProviderClientIDAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})

@@ -20,11 +20,14 @@ func createTestConnectionChannelID(ctx sdk.Context, keeper *keeper.Keeper) types
 
 func TestConnectionChannelIDGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
-	item := createTestConnectionChannelID(ctx, tk.MonitoringProviderKeeper)
-	rst, found := tk.MonitoringProviderKeeper.GetConnectionChannelID(ctx)
-	require.True(t, found)
-	require.Equal(t,
-		nullify.Fill(&item),
-		nullify.Fill(&rst),
-	)
+
+	t.Run("should allow get", func(t *testing.T) {
+		item := createTestConnectionChannelID(ctx, tk.MonitoringProviderKeeper)
+		rst, found := tk.MonitoringProviderKeeper.GetConnectionChannelID(ctx)
+		require.True(t, found)
+		require.Equal(t,
+			nullify.Fill(&item),
+			nullify.Fill(&rst),
+		)
+	})
 }
