@@ -23,33 +23,41 @@ func createNCampaign(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []ty
 
 func TestCampaignGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
-	for _, item := range items {
-		got, found := tk.CampaignKeeper.GetCampaign(ctx, item.CampaignID)
-		require.True(t, found)
-		require.Equal(t, item, got)
-	}
+	t.Run("should get campaigns", func(t *testing.T) {
+		items := createNCampaign(tk.CampaignKeeper, ctx, 10)
+		for _, item := range items {
+			got, found := tk.CampaignKeeper.GetCampaign(ctx, item.CampaignID)
+			require.True(t, found)
+			require.Equal(t, item, got)
+		}
+	})
 }
 
 func TestCampaignRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
-	for _, item := range items {
-		tk.CampaignKeeper.RemoveCampaign(ctx, item.CampaignID)
-		_, found := tk.CampaignKeeper.GetCampaign(ctx, item.CampaignID)
-		require.False(t, found)
-	}
+	t.Run("should remove campaigns", func(t *testing.T) {
+		items := createNCampaign(tk.CampaignKeeper, ctx, 10)
+		for _, item := range items {
+			tk.CampaignKeeper.RemoveCampaign(ctx, item.CampaignID)
+			_, found := tk.CampaignKeeper.GetCampaign(ctx, item.CampaignID)
+			require.False(t, found)
+		}
+	})
 }
 
 func TestCampaignGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
-	require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllCampaign(ctx))
+	t.Run("should get all campaigns", func(t *testing.T) {
+		require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllCampaign(ctx))
+	})
 }
 
 func TestCampaignCount(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
-	counter := uint64(len(items))
-	require.Equal(t, counter, tk.CampaignKeeper.GetCampaignCounter(ctx))
+	t.Run("should get campaign count", func(t *testing.T) {
+		items := createNCampaign(tk.CampaignKeeper, ctx, 10)
+		counter := uint64(len(items))
+		require.Equal(t, counter, tk.CampaignKeeper.GetCampaignCounter(ctx))
+	})
 }

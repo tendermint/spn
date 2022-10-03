@@ -11,7 +11,10 @@ import (
 func TestMaximumSharesGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	value := uint64(10)
-	tk.CampaignKeeper.SetTotalShares(ctx, value)
-	got := tk.CampaignKeeper.GetTotalShares(ctx)
-	require.Equal(t, value, got)
+
+	t.Run("should get total shares", func(t *testing.T) {
+		tk.CampaignKeeper.SetTotalShares(ctx, value)
+		got := tk.CampaignKeeper.GetTotalShares(ctx)
+		require.Equal(t, value, got)
+	})
 }

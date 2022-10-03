@@ -21,68 +21,81 @@ var (
 )
 
 func TestEmptyShares(t *testing.T) {
-	shares := campaign.EmptyShares()
-	require.Equal(t, campaign.Shares(nil), shares)
+	t.Run("should allow creation of empty shares", func(t *testing.T) {
+		shares := campaign.EmptyShares()
+		require.Equal(t, campaign.Shares(nil), shares)
+	})
 }
 
 func TestNewShares(t *testing.T) {
-	_, err := campaign.NewShares("invalid")
-	require.Error(t, err)
+	t.Run("should prevent creation of invalid shares", func(t *testing.T) {
+		_, err := campaign.NewShares("invalid")
+		require.Error(t, err)
+	})
 
-	shares, err := campaign.NewShares("100foo,200bar")
-	require.NoError(t, err)
-	require.Equal(t, shares, tc.Shares(t, "100foo,200bar"))
+	t.Run("should allow creation of valid shares", func(t *testing.T) {
+		shares, err := campaign.NewShares("100foo,200bar")
+		require.NoError(t, err)
+		require.Equal(t, shares, tc.Shares(t, "100foo,200bar"))
+	})
 }
 
 func TestNewSharesFromCoins(t *testing.T) {
-	shares := campaign.NewSharesFromCoins(sdk.NewCoins(
-		sdk.NewCoin("foo", sdkmath.NewInt(100)),
-		sdk.NewCoin("bar", sdkmath.NewInt(200)),
-	))
-	require.Equal(t, shares, tc.Shares(t, "100foo,200bar"))
+	t.Run("should allow creation of valid shares from coins", func(t *testing.T) {
+		shares := campaign.NewSharesFromCoins(sdk.NewCoins(
+			sdk.NewCoin("foo", sdkmath.NewInt(100)),
+			sdk.NewCoin("bar", sdkmath.NewInt(200)),
+		))
+		require.Equal(t, shares, tc.Shares(t, "100foo,200bar"))
+	})
 }
 
 func TestCheckShares(t *testing.T) {
-	require.NoError(t, campaign.CheckShares(tc.Shares(t, "100foo,200bar")))
-	require.Error(t, campaign.CheckShares(campaign.Shares(sdk.NewCoins(
-		sdk.NewCoin("foo", sdkmath.NewInt(100)),
-		sdk.NewCoin("s/bar", sdkmath.NewInt(200)),
-	))))
+	t.Run("should allow check of valid shares", func(t *testing.T) {
+		require.NoError(t, campaign.CheckShares(tc.Shares(t, "100foo,200bar")))
+	})
+
+	t.Run("should prevent check of invalid shares", func(t *testing.T) {
+		require.Error(t, campaign.CheckShares(campaign.Shares(sdk.NewCoins(
+			sdk.NewCoin("foo", sdkmath.NewInt(100)),
+			sdk.NewCoin("s/bar", sdkmath.NewInt(200)),
+		))))
+	})
 }
 
 func TestIncreaseShares(t *testing.T) {
 	for _, tc := range []struct {
-		desc      string
+		name      string
 		shares    campaign.Shares
 		newShares campaign.Shares
 		expected  campaign.Shares
 	}{
 		{
-			desc:      "two empty set",
+			name:      "should increase shares",
+			shares:    tc.Shares(t, "100foo,100bar"),
+			newShares: tc.Shares(t, "50foo,50bar,50foobar"),
+			expected:  tc.Shares(t, "150foo,150bar,50foobar"),
+		},
+		{
+			name:      "should perform nothing with two empty sets",
 			shares:    campaign.EmptyShares(),
 			newShares: campaign.EmptyShares(),
 			expected:  campaign.EmptyShares(),
 		},
 		{
-			desc:      "increase empty set",
+			name:      "should increase empty set",
 			shares:    campaign.EmptyShares(),
 			newShares: tc.Shares(t, "100foo,200bar"),
 			expected:  tc.Shares(t, "100foo,200bar"),
 		},
 		{
-			desc:      "no new shares",
+			name:      "should create no new shares",
 			shares:    tc.Shares(t, "100foo,100bar"),
 			newShares: campaign.EmptyShares(),
 			expected:  tc.Shares(t, "100foo,100bar"),
 		},
-		{
-			desc:      "increase shares",
-			shares:    tc.Shares(t, "100foo,100bar"),
-			newShares: tc.Shares(t, "50foo,50bar,50foobar"),
-			expected:  tc.Shares(t, "150foo,150bar,50foobar"),
-		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			require.Equal(t, tc.expected, campaign.IncreaseShares(tc.shares, tc.newShares))
 		})
 	}
@@ -97,25 +110,25 @@ func TestDecreaseShares(t *testing.T) {
 		isError    bool
 	}{
 		{
-			desc:       "decrease empty set",
+			desc:       "should decrease empty set",
 			shares:     campaign.EmptyShares(),
 			toDecrease: tc.Shares(t, "100foo,100bar"),
 			isError:    true,
 		},
 		{
-			desc:       "decrease from empty set",
+			desc:       "should decrease from empty set",
 			shares:     tc.Shares(t, "100foo,100bar"),
 			toDecrease: campaign.EmptyShares(),
 			expected:   tc.Shares(t, "100foo,100bar"),
 		},
 		{
-			desc:       "decrease to negative",
+			desc:       "should decrease to negative shares",
 			shares:     tc.Shares(t, "100foo,50bar"),
 			toDecrease: tc.Shares(t, "100foo,100bar"),
 			isError:    true,
 		},
 		{
-			desc:       "decrease normal set",
+			desc:       "should decrease normal set",
 			shares:     tc.Shares(t, "100foo,100bar,50foobar"),
 			toDecrease: tc.Shares(t, "30foo,100bar"),
 			expected:   tc.Shares(t, "70foo,50foobar"),
@@ -203,7 +216,7 @@ func TestIsEqualShares(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "equal shares",
+			name: "should be equal shares",
 			args: args{
 				share1: tc.Shares(t, fmt.Sprintf("%dfoo,101bar", spntypes.TotalShareNumber)),
 				share2: tc.Shares(t, fmt.Sprintf("%dfoo,101bar", spntypes.TotalShareNumber)),
@@ -211,7 +224,7 @@ func TestIsEqualShares(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "not equal values",
+			name: "should be not equal values",
 			args: args{
 				share1: tc.Shares(t, fmt.Sprintf("%dfoo,10bar", spntypes.TotalShareNumber)),
 				share2: tc.Shares(t, fmt.Sprintf("%dfoo,101bar", spntypes.TotalShareNumber)),
@@ -219,7 +232,7 @@ func TestIsEqualShares(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "invalid coin number",
+			name: "should be false with invalid coin number between sets",
 			args: args{
 				share1: tc.Shares(t, fmt.Sprintf("%dfoo,10bar", spntypes.TotalShareNumber)),
 				share2: tc.Shares(t, fmt.Sprintf("%dfoo", spntypes.TotalShareNumber)),
@@ -242,17 +255,17 @@ func TestSharesAmountOf(t *testing.T) {
 		want   int64
 	}{
 		{
-			name:   "present positive",
+			name:   "should return positive amount",
 			shares: tc.Shares(t, "200foo,205bar,50foobar"),
 			want:   50,
 		},
 		{
-			name:   "present zero",
+			name:   "should return zero amount",
 			shares: tc.Shares(t, "100foo,100bar,0foobar"),
 			want:   0,
 		},
 		{
-			name:   "absent",
+			name:   "should return zero for absent denom",
 			shares: tc.Shares(t, "100foo,100bar"),
 			want:   0,
 		},
@@ -276,7 +289,7 @@ func TestSharesIsAllLTE(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "all less",
+			name: "should return all less than",
 			args: args{
 				share1: tc.Shares(t, "100foo,100bar"),
 				share2: tc.Shares(t, "200foo,205bar"),
@@ -284,23 +297,7 @@ func TestSharesIsAllLTE(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "not everyone less",
-			args: args{
-				share1: tc.Shares(t, "200foo,100bar"),
-				share2: tc.Shares(t, "100foo,105bar"),
-			},
-			want: false,
-		},
-		{
-			name: "no one less",
-			args: args{
-				share1: tc.Shares(t, "200foo,200bar"),
-				share2: tc.Shares(t, "100foo,105bar"),
-			},
-			want: false,
-		},
-		{
-			name: "equal",
+			name: "should return equal",
 			args: args{
 				share1: tc.Shares(t, "200foo,100bar"),
 				share2: tc.Shares(t, "200foo,100bar"),
@@ -308,12 +305,28 @@ func TestSharesIsAllLTE(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "different set less",
+			name: "should return true for different set less",
 			args: args{
 				share1: tc.Shares(t, "5foo"),
 				share2: tc.Shares(t, "50foo,10bar"),
 			},
 			want: true,
+		},
+		{
+			name: "should return false for not all denom less than",
+			args: args{
+				share1: tc.Shares(t, "200foo,100bar"),
+				share2: tc.Shares(t, "100foo,105bar"),
+			},
+			want: false,
+		},
+		{
+			name: "should return false for no denom less than",
+			args: args{
+				share1: tc.Shares(t, "200foo,200bar"),
+				share2: tc.Shares(t, "100foo,105bar"),
+			},
+			want: false,
 		},
 		{
 			name: "different set greater",
@@ -339,19 +352,19 @@ func TestSharesEmpty(t *testing.T) {
 		empty  bool
 	}{
 		{
-			desc:   "empty is valid",
+			desc:   "should be empty",
 			shares: campaign.EmptyShares(),
 			empty:  true,
 		},
 		{
-			desc:   "not empty is invalid",
-			shares: tc.Shares(t, "100foo"),
-			empty:  false,
-		},
-		{
-			desc:   "nil is valid",
+			desc:   "should be empty for nil shares",
 			shares: campaign.Shares(nil),
 			empty:  true,
+		},
+		{
+			desc:   "should be not empty",
+			shares: tc.Shares(t, "100foo"),
+			empty:  false,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
@@ -367,17 +380,17 @@ func TestSharesString(t *testing.T) {
 		str    string
 	}{
 		{
-			desc:   "empty shares",
+			desc:   "should return empty string for empty shares",
 			shares: campaign.EmptyShares(),
 			str:    "",
 		},
 		{
-			desc:   "one denom",
+			desc:   "should return one denom",
 			shares: tc.Shares(t, "100foo"),
 			str:    fmt.Sprintf("100%sfoo", campaign.SharePrefix),
 		},
 		{
-			desc:   "more denoms",
+			desc:   "should return list of denoms",
 			shares: tc.Shares(t, "100foo,100bar"),
 			str:    fmt.Sprintf("100%sbar,100%sfoo", campaign.SharePrefix, campaign.SharePrefix),
 		},
@@ -398,7 +411,7 @@ func TestShares_CoinsFromTotalSupply(t *testing.T) {
 		wantErr          bool
 	}{
 		{
-			name:             "should returns empty for empty total supply",
+			name:             "should return empty for empty total supply",
 			shares:           sample.Shares(r),
 			totalSupply:      sdk.NewCoins(),
 			totalShareNumber: 10000,
@@ -406,7 +419,7 @@ func TestShares_CoinsFromTotalSupply(t *testing.T) {
 			wantErr:          false,
 		},
 		{
-			name:             "should returns empty for empty shares",
+			name:             "should return empty for empty shares",
 			shares:           campaign.EmptyShares(),
 			totalSupply:      sample.Coins(r),
 			totalShareNumber: 10000,
@@ -414,7 +427,7 @@ func TestShares_CoinsFromTotalSupply(t *testing.T) {
 			wantErr:          false,
 		},
 		{
-			name:             "should returns total supply if all share 100%",
+			name:             "should return total supply if all share 100%",
 			shares:           tc.Shares(t, "100foo,100bar,100baz"),
 			totalSupply:      tc.Coins(t, "1000foo,500bar,200baz"),
 			totalShareNumber: 100,

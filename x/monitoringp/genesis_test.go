@@ -26,16 +26,19 @@ func TestGenesis(t *testing.T) {
 	}
 
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
-	monitoringp.InitGenesis(ctx, *tk.MonitoringProviderKeeper, genesisState)
-	got := monitoringp.ExportGenesis(ctx, *tk.MonitoringProviderKeeper)
-	require.NotNil(t, got)
 
-	nullify.Fill(&genesisState)
-	nullify.Fill(got)
+	t.Run("should allow import and export of genesis", func(t *testing.T) {
+		monitoringp.InitGenesis(ctx, *tk.MonitoringProviderKeeper, genesisState)
+		got := monitoringp.ExportGenesis(ctx, *tk.MonitoringProviderKeeper)
+		require.NotNil(t, got)
 
-	require.Equal(t, genesisState.PortId, got.PortId)
-	require.Equal(t, genesisState.ConsumerClientID, got.ConsumerClientID)
-	require.Equal(t, genesisState.ConnectionChannelID, got.ConnectionChannelID)
-	require.Equal(t, genesisState.MonitoringInfo, got.MonitoringInfo)
-	// this line is used by starport scaffolding # genesis/test/assert
+		nullify.Fill(&genesisState)
+		nullify.Fill(got)
+
+		require.Equal(t, genesisState.PortId, got.PortId)
+		require.Equal(t, genesisState.ConsumerClientID, got.ConsumerClientID)
+		require.Equal(t, genesisState.ConnectionChannelID, got.ConnectionChannelID)
+		require.Equal(t, genesisState.MonitoringInfo, got.MonitoringInfo)
+		// this line is used by starport scaffolding # genesis/test/assert
+	})
 }

@@ -16,9 +16,9 @@ import (
 
 func TestMsgMintVouchers(t *testing.T) {
 	var (
-		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
-		ctx            = sdk.WrapSDKContext(sdkCtx)
-
+		sdkCtx, tk, ts  = testkeeper.NewTestSetup(t)
+		ctx             = sdk.WrapSDKContext(sdkCtx)
+		coordID         uint64
 		coord           = sample.Address(r)
 		coordNoCampaign = sample.Address(r)
 
@@ -28,18 +28,19 @@ func TestMsgMintVouchers(t *testing.T) {
 		))
 	)
 
-	// Create coordinators
-	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     coord,
-		Description: sample.CoordinatorDescription(r),
+	t.Run("should allow creation of coordinators", func(t *testing.T) {
+		res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+			Address:     coord,
+			Description: sample.CoordinatorDescription(r),
+		})
+		require.NoError(t, err)
+		coordID = res.CoordinatorID
+		res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+			Address:     coordNoCampaign,
+			Description: sample.CoordinatorDescription(r),
+		})
+		require.NoError(t, err)
 	})
-	require.NoError(t, err)
-	coordID := res.CoordinatorID
-	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     coordNoCampaign,
-		Description: sample.CoordinatorDescription(r),
-	})
-	require.NoError(t, err)
 
 	// Set campaign
 	campaign := sample.Campaign(r, 0)
@@ -52,7 +53,7 @@ func TestMsgMintVouchers(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "mint vouchers",
+			name: "should allow minting  vouchers",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
 				CampaignID:  0,
@@ -60,7 +61,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			},
 		},
 		{
-			name: "mint same vouchers again",
+			name: "should allow minting same vouchers again",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
 				CampaignID:  0,
@@ -68,7 +69,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			},
 		},
 		{
-			name: "mint other vouchers",
+			name: "should allow minting other vouchers",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
 				CampaignID:  0,
@@ -85,7 +86,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			err: types.ErrTotalSharesLimit,
 		},
 		{
-			name: "non existing campaign",
+			name: "should fail with non existing campaign",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
 				CampaignID:  1000,
@@ -94,7 +95,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			err: types.ErrCampaignNotFound,
 		},
 		{
-			name: "non existing coordinator",
+			name: "should fail with non existing coordinator",
 			msg: types.MsgMintVouchers{
 				Coordinator: sample.Address(r),
 				CampaignID:  0,
@@ -103,7 +104,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "invalid coordinator",
+			name: "should fail with invalid coordinator",
 			msg: types.MsgMintVouchers{
 				Coordinator: coordNoCampaign,
 				CampaignID:  0,

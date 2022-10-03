@@ -18,38 +18,38 @@ func TestVerifiedClientIds(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	items := createNVerifiedClientID(ctx, tk.MonitoringConsumerKeeper, 2)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetVerifiedClientIdsRequest
 		response *types.QueryGetVerifiedClientIdsResponse
 		err      error
 	}{
 		{
-			desc: "first",
+			name: "should allow valid first query",
 			request: &types.QueryGetVerifiedClientIdsRequest{
 				LaunchID: items[0].LaunchID,
 			},
 			response: &types.QueryGetVerifiedClientIdsResponse{ClientIds: items[0].ClientIDs},
 		},
 		{
-			desc: "second",
+			name: "should allow valid second query",
 			request: &types.QueryGetVerifiedClientIdsRequest{
 				LaunchID: items[1].LaunchID,
 			},
 			response: &types.QueryGetVerifiedClientIdsResponse{ClientIds: items[1].ClientIDs},
 		},
 		{
-			desc: "key not found",
+			name: "should return key not found",
 			request: &types.QueryGetVerifiedClientIdsRequest{
 				LaunchID: 100000,
 			},
 			err: status.Error(codes.NotFound, "launch id not found 100000"),
 		},
 		{
-			desc: "invalid request",
+			name: "should return invalid request",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.MonitoringConsumerKeeper.VerifiedClientIds(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)

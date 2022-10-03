@@ -24,7 +24,7 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc         string
+		name         string
 		idCampaignID uint64
 		idAddress    string
 
@@ -33,7 +33,7 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 		obj  types.MainnetAccount
 	}{
 		{
-			desc:         "found",
+			name:         "should allow valid query",
 			idCampaignID: accs[0].CampaignID,
 			idAddress:    accs[0].Address,
 
@@ -41,7 +41,7 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 			obj:  accs[0],
 		},
 		{
-			desc:         "not found",
+			name:         "should fail if not found",
 			idCampaignID: 100000,
 			idAddress:    strconv.Itoa(100000),
 
@@ -49,7 +49,7 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		suite.T().Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.name, func(t *testing.T) {
 			args := []string{
 				strconv.Itoa(int(tc.idCampaignID)),
 				tc.idAddress,
@@ -92,7 +92,7 @@ func (suite *QueryTestSuite) TestListMainnetAccount() {
 		}
 		return args
 	}
-	suite.T().Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(accs); i += step {
 			args := request(campaignID, nil, uint64(i), uint64(step), false)
@@ -104,7 +104,7 @@ func (suite *QueryTestSuite) TestListMainnetAccount() {
 			require.Subset(t, accs, resp.MainnetAccount)
 		}
 	})
-	suite.T().Run("ByKey", func(t *testing.T) {
+	suite.T().Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(accs); i += step {
@@ -118,7 +118,7 @@ func (suite *QueryTestSuite) TestListMainnetAccount() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("Total", func(t *testing.T) {
+	suite.T().Run("should paginate all", func(t *testing.T) {
 		args := request(campaignID, nil, 0, uint64(len(accs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 		require.NoError(t, err)

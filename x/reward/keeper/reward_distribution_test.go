@@ -30,25 +30,7 @@ func TestCalculateRewards(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "prevent using block ratio greater than 1",
-			args: args{
-				blockRatio: tc.Dec(t, "1.000001"),
-				sigRatio:   sdk.ZeroDec(),
-				coins:      sample.Coins(r),
-			},
-			wantErr: true,
-		},
-		{
-			name: "prevent using signature ratio greater than 1",
-			args: args{
-				blockRatio: sdk.ZeroDec(),
-				sigRatio:   tc.Dec(t, "1.000001"),
-				coins:      sample.Coins(r),
-			},
-			wantErr: true,
-		},
-		{
-			name: "zero ratios and zero coins should give zero rewards",
+			name: "should give zero rewards with zero ratios and zero coins ",
 			args: args{
 				blockRatio: sdk.ZeroDec(),
 				sigRatio:   sdk.ZeroDec(),
@@ -57,7 +39,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: sdk.NewCoins(),
 		},
 		{
-			name: "nil coins should give zero rewards",
+			name: "should give zero rewards with nil coins ",
 			args: args{
 				blockRatio: sdk.OneDec(),
 				sigRatio:   sdk.OneDec(),
@@ -66,7 +48,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: sdk.NewCoins(),
 		},
 		{
-			name: "0 block ratio should give 0 rewards",
+			name: "should give 0 rewards with 0 block ratio ",
 			args: args{
 				blockRatio: sdk.ZeroDec(),
 				sigRatio:   sdk.OneDec(),
@@ -75,7 +57,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: sdk.NewCoins(),
 		},
 		{
-			name: "0 signature ratio should give 0 rewards",
+			name: "should give 0 rewards with 0 signature ratio ",
 			args: args{
 				blockRatio: sdk.OneDec(),
 				sigRatio:   sdk.ZeroDec(),
@@ -84,7 +66,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: sdk.NewCoins(),
 		},
 		{
-			name: "full block and signature ratios should give all rewards",
+			name: "should give all rewards with full block and signature ratios ",
 			args: args{
 				blockRatio: sdk.OneDec(),
 				sigRatio:   sdk.OneDec(),
@@ -93,7 +75,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: tc.Coins(t, "10aaa,10bbb,10ccc"),
 		},
 		{
-			name: "0.5 block ratio should give half rewards",
+			name: "should give half rewards with 0.5 block ratio ",
 			args: args{
 				blockRatio: tc.Dec(t, "0.5"),
 				sigRatio:   sdk.OneDec(),
@@ -102,7 +84,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: tc.Coins(t, "5aaa,50bbb,500ccc"),
 		},
 		{
-			name: "0.5 signature ratio should give half rewards",
+			name: "should give half rewards with 0.5 signature ratio ",
 			args: args{
 				blockRatio: sdk.OneDec(),
 				sigRatio:   tc.Dec(t, "0.5"),
@@ -111,7 +93,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: tc.Coins(t, "5aaa,50bbb,500ccc"),
 		},
 		{
-			name: "0.5 block ratio and 0.4 signature ratio should give 0.2 rewards",
+			name: "should give 0.2 rewards with 0.5 block ratio and 0.4 signature ratio ",
 			args: args{
 				blockRatio: tc.Dec(t, "0.5"),
 				sigRatio:   tc.Dec(t, "0.4"),
@@ -120,7 +102,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: tc.Coins(t, "2aaa,20bbb,200ccc"),
 		},
 		{
-			name: "decimal rewards should be truncated",
+			name: "should be truncate with decimal rewards ",
 			args: args{
 				blockRatio: tc.Dec(t, "0.5"),
 				sigRatio:   sdk.OneDec(),
@@ -129,7 +111,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: tc.Coins(t, "5bbb,50ccc"),
 		},
 		{
-			name: "0.1 block ratio and 0.1 signature ratio should give 0.01 rewards",
+			name: "should give 0.01 rewards with 0.1 block ratio and 0.1 signature ratio ",
 			args: args{
 				blockRatio: tc.Dec(t, "0.1"),
 				sigRatio:   tc.Dec(t, "0.1"),
@@ -138,7 +120,7 @@ func TestCalculateRewards(t *testing.T) {
 			want: tc.Coins(t, "1bbb,10ccc"),
 		},
 		{
-			name: "rewards should be empty coins if all rewards are fully truncated",
+			name: "should be empty coins rewards if all rewards are fully truncated",
 			args: args{
 				blockRatio: tc.Dec(t, "0.0001"),
 				sigRatio:   sdk.OneDec(),
@@ -147,13 +129,31 @@ func TestCalculateRewards(t *testing.T) {
 			want: sdk.NewCoins(),
 		},
 		{
-			name: "empty coins should return empty coins",
+			name: "should return empty coins with empty coins ",
 			args: args{
 				blockRatio: sdk.OneDec(),
 				sigRatio:   sdk.OneDec(),
 				coins:      sdk.NewCoins(),
 			},
 			want: sdk.NewCoins(),
+		},
+		{
+			name: "should prevent using block ratio greater than 1",
+			args: args{
+				blockRatio: tc.Dec(t, "1.000001"),
+				sigRatio:   sdk.ZeroDec(),
+				coins:      sample.Coins(r),
+			},
+			wantErr: true,
+		},
+		{
+			name: "should prevent using signature ratio greater than 1",
+			args: args{
+				blockRatio: sdk.ZeroDec(),
+				sigRatio:   tc.Dec(t, "1.000001"),
+				coins:      sample.Coins(r),
+			},
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
@@ -269,7 +269,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "current reward height should influence the block ration for reward distribution",
+			name: "should allow current reward height to influence block ratio for reward distribution",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            provider,
@@ -295,7 +295,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "closing the reward pool should distribute all rewards",
+			name: "should distribute all rewards if closing the reward pool ",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -320,7 +320,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "last reward height not reached and reward pool not closed should distribute part of the reward",
+			name: "should distribute part of the reward if last reward height not reached and reward pool not closed ",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -345,7 +345,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "last block height greater than reward pool last reward height should distribute all rewards",
+			name: "should distribute all rewards if last block height greater than reward pool last reward height ",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -370,7 +370,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "clamp block height to 1 if ratio GT 1",
+			name: "should clamp block height to 1 if ratio GT 1",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            provider,
@@ -396,7 +396,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "rewards for validator with no profile should be distributed to the operator address",
+			name: "should distribute rewards to the operator address for validator with no profile ",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -423,7 +423,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "rewards should all be refunded if the reward pool is closed and no signature counts are reported",
+			name: "should refund all rewards if the reward pool is closed and no signature counts are reported",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -443,7 +443,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "rewards should all be refunded if the last reward height is reached and no signature counts are reported",
+			name: "should refund all rewards if the last reward height is reached and no signature counts are reported",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -463,7 +463,8 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "reward should be refunded to the provider relative to the block ratio if the reward pool is not closed and no signature counts are reported",
+			name: "should refund all rewards relative to the block ratio if the reward " +
+				"pool is not closed and no signature counts are reported",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -483,7 +484,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid signature counts yields critical error for negative reward pool",
+			name: "should prevent invalid signature counts for negative reward pool with critical error",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            provider,
@@ -505,7 +506,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			err: ignterrors.ErrCritical,
 		},
 		{
-			name: "critical error for signatureRatio GT 1",
+			name: "should return critical error for signatureRatio GT 1",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            provider,
@@ -558,7 +559,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			err: types.ErrRewardPoolClosed,
 		},
 		{
-			name: "prevent distributing rewards if signature counts are invalid",
+			name: "should prevent distributing rewards if signature counts are invalid",
 			rewardPool: types.RewardPool{
 				LaunchID:         1,
 				Provider:         provider,
@@ -579,7 +580,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			err: types.ErrInvalidSignatureCounts,
 		},
 		{
-			name: "prevent providing a last block height lower than the current reward height",
+			name: "should prevent providing a last block height lower than the current reward height",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            provider,
@@ -598,7 +599,7 @@ func TestKeeper_DistributeRewards(t *testing.T) {
 			err: types.ErrInvalidLastBlockHeight,
 		},
 		{
-			name: "prevent providing a last block height equals to the current reward height",
+			name: "should prevent providing a last block height equals to the current reward height",
 			rewardPool: types.RewardPool{
 				LaunchID:            1,
 				Provider:            provider,
