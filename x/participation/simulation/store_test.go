@@ -41,16 +41,16 @@ func TestRandomAccWithBalance(t *testing.T) {
 		found        bool
 	}{
 		{
+			name:     "should find no accounts with balance",
+			accounts: accs[1:],
+			found:    false,
+		},
+		{
 			name:         "should find one account with balance",
 			accounts:     accs,
 			desiredCoins: newCoins,
 			wantAccount:  accs[0],
 			found:        true,
-		},
-		{
-			name:     "should find no accounts with balance",
-			accounts: accs[1:],
-			found:    false,
 		},
 	}
 	for _, tt := range tests {
@@ -380,20 +380,21 @@ func TestRandomAccWithAuctionUsedAllocationsNotWithdrawn(t *testing.T) {
 		found       bool
 	}{
 		{
-			name:        "should find one account has allocations that can be withdrawn",
-			accounts:    accs,
-			wantAccount: accs[2],
-			found:       true,
+			name:     "should find no account with used allocations that can be withdrawn",
+			accounts: accs[:2],
+			found:    false,
 		},
+
 		{
 			name:     "should find no accounts with allocations",
 			accounts: accs[3:],
 			found:    false,
 		},
 		{
-			name:     "should find no account with used allocations that can be withdrawn",
-			accounts: accs[:2],
-			found:    false,
+			name:        "should find one account has allocations that can be withdrawn",
+			accounts:    accs,
+			wantAccount: accs[2],
+			found:       true,
 		},
 	}
 	for _, tt := range tests {
