@@ -46,7 +46,7 @@ func TestMismatchUsedAllocationsInvariant(t *testing.T) {
 		}
 	)
 
-	t.Run("valid case", func(t *testing.T) {
+	t.Run("should allow valid case", func(t *testing.T) {
 		tk.ParticipationKeeper.SetUsedAllocations(ctx, validUsedAllocs)
 		for _, auction := range auctionUsedAllocs {
 			tk.ParticipationKeeper.SetAuctionUsedAllocations(ctx, auction)
@@ -55,7 +55,7 @@ func TestMismatchUsedAllocationsInvariant(t *testing.T) {
 		require.False(t, isValid)
 	})
 
-	t.Run("invalid case", func(t *testing.T) {
+	t.Run("should prevent invalid case", func(t *testing.T) {
 		tk.ParticipationKeeper.SetUsedAllocations(ctx, invalidUsedAllocs)
 		for _, auction := range auctionUsedAllocs {
 			tk.ParticipationKeeper.SetAuctionUsedAllocations(ctx, auction)

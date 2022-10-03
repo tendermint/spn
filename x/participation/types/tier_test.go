@@ -17,17 +17,17 @@ func TestGetTierFromID(t *testing.T) {
 		found bool
 	}{
 		{
-			name:  "find tier id 1",
+			name:  "should find tier id 1",
 			id:    1,
 			found: true,
 		},
 		{
-			name:  "find tier id 2",
+			name:  "should find tier id 2",
 			id:    2,
 			found: true,
 		},
 		{
-			name:  "tier not found",
+			name:  "should not find tier",
 			id:    111111,
 			found: false,
 		},

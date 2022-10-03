@@ -46,23 +46,25 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 	tk.Mint(sdkCtx, auctioneer, sdk.NewCoins(auctionSellingCoin))
 	cancelledAuctionID := tk.CreateFixedPriceAuction(sdkCtx, r, auctioneer, auctionSellingCoin, auctionStartTime, auctionEndTime)
 
-	// validParticipant participates to auctions
-	_, err := ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
-		Participant: validParticipant,
-		AuctionID:   auctionID,
-		TierID:      1,
+	t.Run("should allow participation", func(t *testing.T) {
+		_, err := ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
+			Participant: validParticipant,
+			AuctionID:   auctionID,
+			TierID:      1,
+		})
+		require.NoError(t, err)
+		_, err = ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
+			Participant: validParticipant,
+			AuctionID:   cancelledAuctionID,
+			TierID:      1,
+		})
+		require.NoError(t, err)
 	})
-	require.NoError(t, err)
-	_, err = ts.ParticipationSrv.Participate(ctx, &types.MsgParticipate{
-		Participant: validParticipant,
-		AuctionID:   cancelledAuctionID,
-		TierID:      1,
-	})
-	require.NoError(t, err)
 
-	// cancel auction
-	err = tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, cancelledAuctionID))
-	require.NoError(t, err)
+	t.Run("should allow auction cancel", func(t *testing.T) {
+		err := tk.FundraisingKeeper.CancelAuction(sdkCtx, fundraisingtypes.NewMsgCancelAuction(auctioneer, cancelledAuctionID))
+		require.NoError(t, err)
+	})
 
 	// manually insert entry for invalidParticipant for later test
 	tk.ParticipationKeeper.SetAuctionUsedAllocations(sdkCtx, types.AuctionUsedAllocations{
@@ -95,7 +97,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			blockTime: auctionStartTime,
 		},
 		{
-			name: "auction does not exist",
+			name: "should return auction not found",
 			msg: &types.MsgWithdrawAllocations{
 				Participant: validParticipant,
 				AuctionID:   auctionID + 1000,
@@ -113,7 +115,7 @@ func Test_msgServer_WithdrawAllocations(t *testing.T) {
 			err:       types.ErrAllocationWithdrawalTimeNotReached,
 		},
 		{
-			name: "used allocations not found",
+			name: "should return used allocations not found",
 			msg: &types.MsgWithdrawAllocations{
 				Participant: sample.Address(r),
 				AuctionID:   auctionID,

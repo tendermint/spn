@@ -32,13 +32,13 @@ func (suite *QueryTestSuite) TestShowUsedAllocations() {
 		obj       types.UsedAllocations
 	}{
 		{
-			desc:      "found",
+			desc:      "should find",
 			idAddress: objs[0].Address,
 			args:      common,
 			obj:       objs[0],
 		},
 		{
-			desc:      "not found",
+			desc:      "should return not found",
 			idAddress: strconv.Itoa(100000),
 			args:      common,
 			err:       status.Error(codes.NotFound, "not found"),
@@ -87,7 +87,7 @@ func (suite *QueryTestSuite) TestListUsedAllocations() {
 		}
 		return args
 	}
-	suite.T().Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
@@ -102,7 +102,7 @@ func (suite *QueryTestSuite) TestListUsedAllocations() {
 			)
 		}
 	})
-	suite.T().Run("ByKey", func(t *testing.T) {
+	suite.T().Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
@@ -119,7 +119,7 @@ func (suite *QueryTestSuite) TestListUsedAllocations() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("Total", func(t *testing.T) {
+	suite.T().Run("should paginate all", func(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListUsedAllocations(), args)
 		require.NoError(t, err)

@@ -14,13 +14,15 @@ func TestGenesis(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	r := sample.Rand()
 
-	genesisState := sample.ParticipationGenesisStateWithAllocations(r)
-	participation.InitGenesis(ctx, *tk.ParticipationKeeper, genesisState)
-	got := participation.ExportGenesis(ctx, *tk.ParticipationKeeper)
+	t.Run("should allow import and export of genesis", func(t *testing.T) {
+		genesisState := sample.ParticipationGenesisStateWithAllocations(r)
+		participation.InitGenesis(ctx, *tk.ParticipationKeeper, genesisState)
+		got := participation.ExportGenesis(ctx, *tk.ParticipationKeeper)
 
-	require.Equal(t, genesisState.Params, got.Params)
+		require.Equal(t, genesisState.Params, got.Params)
 
-	require.ElementsMatch(t, genesisState.UsedAllocationsList, got.UsedAllocationsList)
-	require.ElementsMatch(t, genesisState.AuctionUsedAllocationsList, got.AuctionUsedAllocationsList)
-	// this line is used by starport scaffolding # genesis/test/assert
+		require.ElementsMatch(t, genesisState.UsedAllocationsList, got.UsedAllocationsList)
+		require.ElementsMatch(t, genesisState.AuctionUsedAllocationsList, got.AuctionUsedAllocationsList)
+		// this line is used by starport scaffolding # genesis/test/assert
+	})
 }

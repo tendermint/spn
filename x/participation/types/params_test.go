@@ -18,7 +18,16 @@ func TestParamsValidate(t *testing.T) {
 		err    error
 	}{
 		{
-			name: "invalid allocation price",
+			name: "should allow valid params",
+			params: NewParams(
+				DefaultAllocationPrice,
+				DefaultParticipationTierList,
+				DefaultRegistrationPeriod,
+				DefaultWithdrawalDelay,
+			),
+		},
+		{
+			name: "should prevent invalid allocation price",
 			params: NewParams(
 				AllocationPrice{
 					Bonded: sdkmath.NewInt(-1),
@@ -30,7 +39,7 @@ func TestParamsValidate(t *testing.T) {
 			err: errors.New("value for 'bonded' must be greater than zero"),
 		},
 		{
-			name: "invalid participation tier list",
+			name: "should prevent invalid participation tier list",
 			params: NewParams(
 				DefaultAllocationPrice,
 				[]Tier{
@@ -46,7 +55,7 @@ func TestParamsValidate(t *testing.T) {
 			err: errors.New("max bid amount must be greater than zero"),
 		},
 		{
-			name: "invalid registration period",
+			name: "should prevent invalid registration period",
 			params: NewParams(
 				DefaultAllocationPrice,
 				DefaultParticipationTierList,
@@ -56,7 +65,7 @@ func TestParamsValidate(t *testing.T) {
 			err: errors.New("time frame must be positive"),
 		},
 		{
-			name: "invalid withdrawal delay",
+			name: "should prevent invalid withdrawal delay",
 			params: NewParams(
 				DefaultAllocationPrice,
 				DefaultParticipationTierList,
@@ -64,15 +73,6 @@ func TestParamsValidate(t *testing.T) {
 				0,
 			),
 			err: errors.New("time frame must be positive"),
-		},
-		{
-			name: "valid params",
-			params: NewParams(
-				DefaultAllocationPrice,
-				DefaultParticipationTierList,
-				DefaultRegistrationPeriod,
-				DefaultWithdrawalDelay,
-			),
 		},
 	}
 	for _, tt := range tests {
@@ -95,23 +95,23 @@ func TestValidateAllocationPrice(t *testing.T) {
 		err             error
 	}{
 		{
-			name:            "invalid interface",
+			name:            "should allow valid allocation price",
+			allocationPrice: AllocationPrice{Bonded: sdkmath.OneInt()},
+		},
+		{
+			name:            "should prevent invalid interface",
 			allocationPrice: "test",
 			err:             fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:            "uninitialized bonded amount",
+			name:            "should prevent uninitialized bonded amount",
 			allocationPrice: AllocationPrice{Bonded: sdkmath.Int{}},
 			err:             errors.New("value for 'bonded' should be set"),
 		},
 		{
-			name:            "bonded amount lower or equal than zero",
+			name:            "should prevent bonded amount lower or equal than zero",
 			allocationPrice: AllocationPrice{Bonded: sdkmath.ZeroInt()},
 			err:             errors.New("value for 'bonded' must be greater than zero"),
-		},
-		{
-			name:            "valid allocation price",
-			allocationPrice: AllocationPrice{Bonded: sdkmath.OneInt()},
 		},
 	}
 	for _, tt := range tests {
@@ -134,12 +134,31 @@ func TestValidateParticipationTierList(t *testing.T) {
 		err                   error
 	}{
 		{
-			name:                  "invalid interface",
+			name:                  "should allow empty participation tier list",
+			participationTierList: []Tier{},
+		},
+		{
+			name: "should allow valid participation tier list",
+			participationTierList: []Tier{
+				{
+					TierID:              0,
+					RequiredAllocations: sdkmath.OneInt(),
+					Benefits:            TierBenefits{MaxBidAmount: sdkmath.OneInt()},
+				},
+				{
+					TierID:              1,
+					RequiredAllocations: sdkmath.NewInt(2),
+					Benefits:            TierBenefits{MaxBidAmount: sdkmath.NewInt(2)},
+				},
+			},
+		},
+		{
+			name:                  "should prevent invalid interface",
 			participationTierList: "test",
 			err:                   fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name: "duplicated tier id",
+			name: "should prevent duplicated tier id",
 			participationTierList: []Tier{
 				{
 					TierID:              0,
@@ -155,7 +174,7 @@ func TestValidateParticipationTierList(t *testing.T) {
 			err: errors.New("duplicated tier ID: 0"),
 		},
 		{
-			name: "invalid required allocations",
+			name: "should prevent invalid required allocations",
 			participationTierList: []Tier{
 				{
 					TierID:              0,
@@ -166,7 +185,7 @@ func TestValidateParticipationTierList(t *testing.T) {
 			err: errors.New("required allocations must be greater than zero"),
 		},
 		{
-			name: "invalid tier benefits",
+			name: "should prevent invalid tier benefits",
 			participationTierList: []Tier{
 				{
 					TierID:              0,
@@ -175,25 +194,6 @@ func TestValidateParticipationTierList(t *testing.T) {
 				},
 			},
 			err: errors.New("max bid amount must be greater than zero"),
-		},
-		{
-			name:                  "empty participation tier list",
-			participationTierList: []Tier{},
-		},
-		{
-			name: "valid participation tier list",
-			participationTierList: []Tier{
-				{
-					TierID:              0,
-					RequiredAllocations: sdkmath.OneInt(),
-					Benefits:            TierBenefits{MaxBidAmount: sdkmath.OneInt()},
-				},
-				{
-					TierID:              1,
-					RequiredAllocations: sdkmath.NewInt(2),
-					Benefits:            TierBenefits{MaxBidAmount: sdkmath.NewInt(2)},
-				},
-			},
 		},
 	}
 	for _, tt := range tests {
@@ -216,18 +216,18 @@ func TestValidateTierBenefits(t *testing.T) {
 		err          error
 	}{
 		{
-			name:         "uninitialized max bid amount",
+			name:         "should allow valid tier benefits",
+			tierBenefits: TierBenefits{MaxBidAmount: sdkmath.OneInt()},
+		},
+		{
+			name:         "should prevent uninitialized max bid amount",
 			tierBenefits: TierBenefits{MaxBidAmount: sdkmath.Int{}},
 			err:          errors.New("max bid amount should be set"),
 		},
 		{
-			name:         "max bid amount lower than zero",
+			name:         "should prevent max bid amount lower than zero",
 			tierBenefits: TierBenefits{MaxBidAmount: sdkmath.NewInt(-1)},
 			err:          errors.New("max bid amount must be greater than zero"),
-		},
-		{
-			name:         "valid tier benefits",
-			tierBenefits: TierBenefits{MaxBidAmount: sdkmath.OneInt()},
 		},
 	}
 	for _, tt := range tests {
@@ -250,18 +250,18 @@ func TestValidateTimeDuration(t *testing.T) {
 		err       error
 	}{
 		{
-			name:      "invalid interface",
+			name:      "should allow valid time frame",
+			timeFrame: time.Hour,
+		},
+		{
+			name:      "should prevent invalid interface",
 			timeFrame: "test",
 			err:       fmt.Errorf("invalid parameter type: string"),
 		},
 		{
-			name:      "value not positive",
+			name:      "should prevent value not positive",
 			timeFrame: time.Duration(-rand.Int63n(1000)),
 			err:       errors.New("time frame must be positive"),
-		},
-		{
-			name:      "valid time frame",
-			timeFrame: time.Hour,
 		},
 	}
 	for _, tt := range tests {
