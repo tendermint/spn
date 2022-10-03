@@ -17,7 +17,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "valid message",
+			name: "should allow validation of valid msg",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.Address(r),
 				CampaignID:     sample.Uint64(r),
@@ -27,7 +27,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid address",
+			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    "invalid_address",
 				CampaignID:     sample.Uint64(r),
@@ -38,7 +38,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
-			name: "empty source URL",
+			name: "should prevent validation of msg with empty source URL",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.Address(r),
 				CampaignID:     sample.Uint64(r),
@@ -49,7 +49,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			err: sdkerrortypes.ErrInvalidRequest,
 		},
 		{
-			name: "empty source hash",
+			name: "should prevent validation of msg with empty source hash",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.Address(r),
 				CampaignID:     sample.Uint64(r),
@@ -60,7 +60,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			err: sdkerrortypes.ErrInvalidRequest,
 		},
 		{
-			name: "invalid chain id",
+			name: "should prevent validation of msg with invalid chain id",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.Address(r),
 				CampaignID:     sample.Uint64(r),

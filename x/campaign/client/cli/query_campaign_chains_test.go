@@ -23,7 +23,7 @@ func (suite *QueryTestSuite) TestShowCampaignChains() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc         string
+		name         string
 		idCampaignID uint64
 
 		args []string
@@ -31,21 +31,21 @@ func (suite *QueryTestSuite) TestShowCampaignChains() {
 		obj  types.CampaignChains
 	}{
 		{
-			desc:         "found",
+			name:         "should allow valid query",
 			idCampaignID: objs[0].CampaignID,
 
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			desc:         "not found",
+			name:         "should fail if not found",
 			idCampaignID: 100000,
 
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		suite.T().Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.name, func(t *testing.T) {
 			args := []string{
 				strconv.Itoa(int(tc.idCampaignID)),
 			}

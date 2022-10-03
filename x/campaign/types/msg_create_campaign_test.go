@@ -3,6 +3,8 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
@@ -12,13 +14,15 @@ import (
 )
 
 func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
+	invalidCoins := sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdkmath.ZeroInt()}}
+
 	tests := []struct {
 		name string
 		msg  types.MsgCreateCampaign
 		err  error
 	}{
 		{
-			name: "valid message",
+			name: "should allow validation of valid msg",
 			msg: types.MsgCreateCampaign{
 				Coordinator:  sample.Address(r),
 				CampaignName: sample.CampaignName(r),
@@ -27,7 +31,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid address",
+			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgCreateCampaign{
 				Coordinator:  "invalid_address",
 				CampaignName: sample.CampaignName(r),
@@ -37,7 +41,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 			err: sdkerrortypes.ErrInvalidAddress,
 		},
 		{
-			name: "invalid campaign name",
+			name: "should prevent validation of msg with invalid campaign name",
 			msg: types.MsgCreateCampaign{
 				Coordinator:  sample.Address(r),
 				CampaignName: invalidCampaignName,
@@ -47,7 +51,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidCampaignName,
 		},
 		{
-			name: "invalid total supply",
+			name: "should prevent validation of msg with invalid total supply",
 			msg: types.MsgCreateCampaign{
 				Coordinator:  sample.Address(r),
 				CampaignName: sample.CampaignName(r),
@@ -57,7 +61,7 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 			err: types.ErrInvalidTotalSupply,
 		},
 		{
-			name: "invalid metadata length",
+			name: "should prevent validation of msg with invalid metadata length",
 			msg: types.MsgCreateCampaign{
 				Coordinator:  sample.Address(r),
 				CampaignName: sample.CampaignName(r),

@@ -15,12 +15,14 @@ func TestParamsQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	params := sample.CampaignParams(r)
-	tk.CampaignKeeper.SetParams(ctx, params)
 
-	response, err := tk.CampaignKeeper.Params(wctx, &types.QueryParamsRequest{})
-	require.NoError(t, err)
-	require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
+	t.Run("should allow query for params", func(t *testing.T) {
+		tk.CampaignKeeper.SetParams(ctx, params)
+		response, err := tk.CampaignKeeper.Params(wctx, &types.QueryParamsRequest{})
+		require.NoError(t, err)
+		require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
 
-	_, err = tk.CampaignKeeper.Params(wctx, nil)
-	require.Error(t, err)
+		_, err = tk.CampaignKeeper.Params(wctx, nil)
+		require.Error(t, err)
+	})
 }

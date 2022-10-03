@@ -18,6 +18,7 @@ import (
 
 func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 	var (
+		coordID             uint64
 		coordAddr           = sample.Address(r)
 		coordAddrNoCampaign = sample.Address(r)
 		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
@@ -26,18 +27,19 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 
 	totalShares := tk.CampaignKeeper.GetTotalShares(sdkCtx)
 
-	// Create two coordinators
-	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     coordAddr,
-		Description: sample.CoordinatorDescription(r),
+	t.Run("should allow creation of coordinators", func(t *testing.T) {
+		res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+			Address:     coordAddr,
+			Description: sample.CoordinatorDescription(r),
+		})
+		require.NoError(t, err)
+		coordID = res.CoordinatorID
+		res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+			Address:     coordAddrNoCampaign,
+			Description: sample.CoordinatorDescription(r),
+		})
+		require.NoError(t, err)
 	})
-	require.NoError(t, err)
-	coordID := res.CoordinatorID
-	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     coordAddrNoCampaign,
-		Description: sample.CoordinatorDescription(r),
-	})
-	require.NoError(t, err)
 
 	// utility to initialize a sample campaign with the data we need
 	newCampaign := func(
@@ -82,7 +84,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 		err                     error
 	}{
 		{
-			name: "empty should not update empty allocated shares",
+			name: "should not update empty allocated shares",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
 				1,
@@ -95,7 +97,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			expectedAllocatedShares: types.EmptyShares(),
 		},
 		{
-			name: "new special allocations should increase allocated shares",
+			name: "should increase allocated shares",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
 				2,
@@ -108,7 +110,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			expectedAllocatedShares: tc.Shares(t, "80foo"),
 		},
 		{
-			name: "removing special allocations should decrease allocated shares",
+			name: "should decrease allocated shares",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
 				3,
@@ -211,7 +213,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			expectedAllocatedShares: tc.Shares(t, fmt.Sprintf("%dfoo,%dbar", totalShares, totalShares)),
 		},
 		{
-			name: "should fail if campaign doesn't exist",
+			name: "should fail if campaign does not exist",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
 				10000,
@@ -225,7 +227,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			err:                     types.ErrCampaignNotFound,
 		},
 		{
-			name: "should fail if the coordinator doesn't exist",
+			name: "should fail if the coordinator does not exist",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				sample.Address(r),
 				50,
@@ -281,7 +283,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			err:                     types.ErrTotalSharesLimit,
 		},
 		{
-			name: "should fails with critical error if current special allocations are bigger than allocated shares",
+			name: "should fail with critical error if current special allocations are bigger than allocated shares",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
 				54,
@@ -297,7 +299,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			err:                     ignterrors.ErrCritical,
 		},
 		{
-			name: "updating a campaign with a non-existent initialize mainnet should trigger a critical error",
+			name: "should trigger a critical error when updating a campaign with a non-existent initialize mainnet ",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
 				100,

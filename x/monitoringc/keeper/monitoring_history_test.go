@@ -23,24 +23,30 @@ func createNMonitoringHistory(ctx sdk.Context, keeper *keeper.Keeper, n int) []t
 
 func TestMonitoringHistoryGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 10)
-	for _, item := range items {
-		rst, found := tk.MonitoringConsumerKeeper.GetMonitoringHistory(ctx,
-			item.LaunchID,
-		)
-		require.True(t, found)
-		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
-		)
-	}
+
+	t.Run("should allow get", func(t *testing.T) {
+		items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 10)
+		for _, item := range items {
+			rst, found := tk.MonitoringConsumerKeeper.GetMonitoringHistory(ctx,
+				item.LaunchID,
+			)
+			require.True(t, found)
+			require.Equal(t,
+				nullify.Fill(&item),
+				nullify.Fill(&rst),
+			)
+		}
+	})
 }
 
 func TestMonitoringHistoryGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 10)
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(tk.MonitoringConsumerKeeper.GetAllMonitoringHistory(ctx)),
-	)
+
+	t.Run("should allow get all", func(t *testing.T) {
+		items := createNMonitoringHistory(ctx, tk.MonitoringConsumerKeeper, 10)
+		require.ElementsMatch(t,
+			nullify.Fill(items),
+			nullify.Fill(tk.MonitoringConsumerKeeper.GetAllMonitoringHistory(ctx)),
+		)
+	})
 }

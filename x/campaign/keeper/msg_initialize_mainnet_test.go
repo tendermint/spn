@@ -15,6 +15,7 @@ import (
 
 func TestMsgInitializeMainnet(t *testing.T) {
 	var (
+		coordID                      uint64
 		campaignID                   uint64 = 0
 		campaignMainnetInitializedID uint64 = 1
 		campaignIncorrectCoordID     uint64 = 2
@@ -26,20 +27,20 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		ctx            = sdk.WrapSDKContext(sdkCtx)
 	)
 
-	// Create coordinators
-	res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     coordAddr,
-		Description: sample.CoordinatorDescription(r),
+	t.Run("should allow creation of coordinators", func(t *testing.T) {
+		res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+			Address:     coordAddr,
+			Description: sample.CoordinatorDescription(r),
+		})
+		require.NoError(t, err)
+		coordID = res.CoordinatorID
+		res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
+			Address:     coordAddrNoCampaign,
+			Description: sample.CoordinatorDescription(r),
+		})
+		require.NoError(t, err)
 	})
-	require.NoError(t, err)
-	coordID := res.CoordinatorID
-	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-		Address:     coordAddrNoCampaign,
-		Description: sample.CoordinatorDescription(r),
-	})
-	require.NoError(t, err)
 
-	// Set different campaigns
 	campaign := sample.Campaign(r, campaignID)
 	campaign.CoordinatorID = coordID
 	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
@@ -64,7 +65,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "initialize mainnet",
+			name: "should allow initialize mainnet",
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignID,
 				Coordinator:    coordAddr,
@@ -74,7 +75,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			},
 		},
 		{
-			name: "campaign not found",
+			name: "should fail if campaign not found",
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     1000,
 				Coordinator:    coordAddr,
@@ -85,7 +86,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			err: types.ErrCampaignNotFound,
 		},
 		{
-			name: "mainnet already initialized",
+			name: "should fail if mainnet already initialized",
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignMainnetInitializedID,
 				Coordinator:    coordAddr,
@@ -96,7 +97,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			err: types.ErrMainnetInitialized,
 		},
 		{
-			name: "campaign empty supply",
+			name: "should fail if campaign has empty supply",
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignEmptySupplyID,
 				Coordinator:    coordAddr,
@@ -107,7 +108,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			err: types.ErrInvalidTotalSupply,
 		},
 		{
-			name: "non-existent coordinator",
+			name: "should fail with non-existent coordinator",
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignIncorrectCoordID,
 				Coordinator:    sample.Address(r),
@@ -118,7 +119,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "invalid coordinator",
+			name: "should fail with invalid coordinator",
 			msg: types.MsgInitializeMainnet{
 				CampaignID:     campaignIncorrectCoordID,
 				Coordinator:    coordAddrNoCampaign,

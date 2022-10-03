@@ -13,13 +13,16 @@ import (
 func TestParamsQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	params := types.DefaultParams()
-	tk.MonitoringConsumerKeeper.SetParams(ctx, params)
 
-	response, err := tk.MonitoringConsumerKeeper.Params(wctx, &types.QueryParamsRequest{})
-	require.NoError(t, err)
-	require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
+	t.Run("should allow params query", func(t *testing.T) {
+		params := types.DefaultParams()
+		tk.MonitoringConsumerKeeper.SetParams(ctx, params)
 
-	_, err = tk.MonitoringConsumerKeeper.Params(wctx, nil)
-	require.Error(t, err)
+		response, err := tk.MonitoringConsumerKeeper.Params(wctx, &types.QueryParamsRequest{})
+		require.NoError(t, err)
+		require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
+
+		_, err = tk.MonitoringConsumerKeeper.Params(wctx, nil)
+		require.Error(t, err)
+	})
 }

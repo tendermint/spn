@@ -13,28 +13,33 @@ import (
 
 func TestGetParams(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetupWithMonitoringp(t)
-	params := types.DefaultParams()
-	tk.MonitoringProviderKeeper.SetParams(ctx, params)
-	require.EqualValues(t, params, tk.MonitoringProviderKeeper.GetParams(ctx))
-	require.EqualValues(t, spntypes.ConsensusState{}, tk.MonitoringProviderKeeper.ConsumerConsensusState(ctx))
-	require.EqualValues(t, types.DefaultConsumerChainID, tk.MonitoringProviderKeeper.ConsumerChainID(ctx))
-	require.EqualValues(t, spntypes.DefaultUnbondingPeriod, tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx))
-	require.EqualValues(t, spntypes.DefaultRevisionHeight, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx))
 
-	chainID := sample.GenesisChainID(r)
-	cs := sample.ConsensusState(0)
-	params = types.NewParams(
-		1000,
-		chainID,
-		cs,
-		10,
-		20,
-	)
-	tk.MonitoringProviderKeeper.SetParams(ctx, params)
-	require.EqualValues(t, params, tk.MonitoringProviderKeeper.GetParams(ctx))
-	require.EqualValues(t, 1000, tk.MonitoringProviderKeeper.LastBlockHeight(ctx))
-	require.EqualValues(t, cs, tk.MonitoringProviderKeeper.ConsumerConsensusState(ctx))
-	require.EqualValues(t, chainID, tk.MonitoringProviderKeeper.ConsumerChainID(ctx))
-	require.EqualValues(t, 10, tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx))
-	require.EqualValues(t, 20, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx))
+	t.Run("should allow default params set", func(t *testing.T) {
+		params := types.DefaultParams()
+		tk.MonitoringProviderKeeper.SetParams(ctx, params)
+		require.EqualValues(t, params, tk.MonitoringProviderKeeper.GetParams(ctx))
+		require.EqualValues(t, spntypes.ConsensusState{}, tk.MonitoringProviderKeeper.ConsumerConsensusState(ctx))
+		require.EqualValues(t, types.DefaultConsumerChainID, tk.MonitoringProviderKeeper.ConsumerChainID(ctx))
+		require.EqualValues(t, spntypes.DefaultUnbondingPeriod, tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx))
+		require.EqualValues(t, spntypes.DefaultRevisionHeight, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx))
+	})
+
+	t.Run("should allow params set", func(t *testing.T) {
+		chainID := sample.GenesisChainID(r)
+		cs := sample.ConsensusState(0)
+		params := types.NewParams(
+			1000,
+			chainID,
+			cs,
+			10,
+			20,
+		)
+		tk.MonitoringProviderKeeper.SetParams(ctx, params)
+		require.EqualValues(t, params, tk.MonitoringProviderKeeper.GetParams(ctx))
+		require.EqualValues(t, 1000, tk.MonitoringProviderKeeper.LastBlockHeight(ctx))
+		require.EqualValues(t, cs, tk.MonitoringProviderKeeper.ConsumerConsensusState(ctx))
+		require.EqualValues(t, chainID, tk.MonitoringProviderKeeper.ConsumerChainID(ctx))
+		require.EqualValues(t, 10, tk.MonitoringProviderKeeper.ConsumerUnbondingPeriod(ctx))
+		require.EqualValues(t, 20, tk.MonitoringProviderKeeper.ConsumerRevisionHeight(ctx))
+	})
 }
