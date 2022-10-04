@@ -20,13 +20,13 @@ func TestAuctionUsedAllocationsQuerySingle(t *testing.T) {
 	wctx := sdk.WrapSDKContext(sdkCtx)
 	msgs := createNAuctionUsedAllocations(tk.ParticipationKeeper, sdkCtx, 2)
 	for _, tc := range []struct {
-		desc     string
+		name     string
 		request  *types.QueryGetAuctionUsedAllocationsRequest
 		response *types.QueryGetAuctionUsedAllocationsResponse
 		err      error
 	}{
 		{
-			desc: "First",
+			name: "should allow valid query first",
 			request: &types.QueryGetAuctionUsedAllocationsRequest{
 				Address:   msgs[0].Address,
 				AuctionID: msgs[0].AuctionID,
@@ -34,7 +34,7 @@ func TestAuctionUsedAllocationsQuerySingle(t *testing.T) {
 			response: &types.QueryGetAuctionUsedAllocationsResponse{AuctionUsedAllocations: msgs[0]},
 		},
 		{
-			desc: "Second",
+			name: "should allow valid query second",
 			request: &types.QueryGetAuctionUsedAllocationsRequest{
 				Address:   msgs[1].Address,
 				AuctionID: msgs[1].AuctionID,
@@ -42,7 +42,7 @@ func TestAuctionUsedAllocationsQuerySingle(t *testing.T) {
 			response: &types.QueryGetAuctionUsedAllocationsResponse{AuctionUsedAllocations: msgs[1]},
 		},
 		{
-			desc: "KeyNotFound",
+			name: "should return KeyNotFound",
 			request: &types.QueryGetAuctionUsedAllocationsRequest{
 				Address:   strconv.Itoa(100000),
 				AuctionID: 100000,
@@ -50,11 +50,11 @@ func TestAuctionUsedAllocationsQuerySingle(t *testing.T) {
 			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
-			desc: "InvalidRequest",
+			name: "should return InvalidRequest",
 			err:  status.Error(codes.InvalidArgument, "invalid request"),
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			response, err := tk.ParticipationKeeper.AuctionUsedAllocations(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
@@ -86,13 +86,13 @@ func TestAuctionUsedAllocationsQueryPaginated(t *testing.T) {
 			},
 		}
 	}
-	t.Run("EmptySet", func(t *testing.T) {
+	t.Run("should return empty set", func(t *testing.T) {
 		resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request("invalid", nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, 0, int(resp.Pagination.Total))
 		require.Nil(t, resp.AuctionUsedAllocations)
 	})
-	t.Run("ByOffset", func(t *testing.T) {
+	t.Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
 			resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request(address, nil, uint64(i), uint64(step), false))
@@ -104,7 +104,7 @@ func TestAuctionUsedAllocationsQueryPaginated(t *testing.T) {
 			)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
+	t.Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
@@ -118,7 +118,7 @@ func TestAuctionUsedAllocationsQueryPaginated(t *testing.T) {
 			next = resp.Pagination.NextKey
 		}
 	})
-	t.Run("Total", func(t *testing.T) {
+	t.Run("should paginate all", func(t *testing.T) {
 		resp, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, request(address, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
@@ -127,7 +127,7 @@ func TestAuctionUsedAllocationsQueryPaginated(t *testing.T) {
 			nullify.Fill(resp.AuctionUsedAllocations),
 		)
 	})
-	t.Run("InvalidRequest", func(t *testing.T) {
+	t.Run("should return InvalidRequest", func(t *testing.T) {
 		_, err := tk.ParticipationKeeper.AuctionUsedAllocationsAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
