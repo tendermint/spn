@@ -24,25 +24,26 @@ func TestIsRegistrationEnabled(t *testing.T) {
 		expected         bool
 	}{
 		{
-			name:             "registration window not yet started",
+			name:             "should prevent with registration window not yet started",
 			auctionStartTime: ctx.BlockTime().Add(time.Hour * 5),
 			blockTime:        ctx.BlockTime(),
 			expected:         false,
 		},
 		{
-			name:             "auction is started",
+			name:             "should prevent if auction is started",
 			auctionStartTime: ctx.BlockTime(),
 			blockTime:        ctx.BlockTime(),
 			expected:         false,
 		},
 		{
-			name:             "registration enabled",
+			name:             "should allow with registration enabled",
 			auctionStartTime: ctx.BlockTime().Add(time.Minute * 30),
 			blockTime:        ctx.BlockTime(),
 			expected:         true,
 		},
 		{
-			name:             "registration enabled when registration period is longer than range between Unix time 0 and auction's start time",
+			name: "should allow with registration enabled when registration period is longer " +
+				"than range between Unix time 0 and auction's start time",
 			auctionStartTime: time.Unix(int64((registrationPeriod - time.Minute).Seconds()), 0),
 			blockTime:        time.Unix(1, 0),
 			expected:         true,

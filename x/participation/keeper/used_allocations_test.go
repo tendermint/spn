@@ -26,24 +26,30 @@ func createNUsedAllocations(keeper *keeper.Keeper, ctx sdk.Context, n int) []typ
 
 func TestUsedAllocationsGet(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNUsedAllocations(tk.ParticipationKeeper, sdkCtx, 10)
-	for _, item := range items {
-		rst, found := tk.ParticipationKeeper.GetUsedAllocations(sdkCtx,
-			item.Address,
-		)
-		require.True(t, found)
-		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
-		)
-	}
+
+	t.Run("should allow get", func(t *testing.T) {
+		items := createNUsedAllocations(tk.ParticipationKeeper, sdkCtx, 10)
+		for _, item := range items {
+			rst, found := tk.ParticipationKeeper.GetUsedAllocations(sdkCtx,
+				item.Address,
+			)
+			require.True(t, found)
+			require.Equal(t,
+				nullify.Fill(&item),
+				nullify.Fill(&rst),
+			)
+		}
+	})
 }
 
 func TestUsedAllocationsGetAll(t *testing.T) {
 	sdkCtx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNUsedAllocations(tk.ParticipationKeeper, sdkCtx, 10)
-	require.ElementsMatch(t,
-		nullify.Fill(items),
-		nullify.Fill(tk.ParticipationKeeper.GetAllUsedAllocations(sdkCtx)),
-	)
+
+	t.Run("should allow get all", func(t *testing.T) {
+		items := createNUsedAllocations(tk.ParticipationKeeper, sdkCtx, 10)
+		require.ElementsMatch(t,
+			nullify.Fill(items),
+			nullify.Fill(tk.ParticipationKeeper.GetAllUsedAllocations(sdkCtx)),
+		)
+	})
 }

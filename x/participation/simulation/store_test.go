@@ -22,14 +22,16 @@ func TestRandomAccWithBalance(t *testing.T) {
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		r          = sample.Rand()
 		accs       = simulation.RandomAccounts(r, 5)
+		newCoins   sdk.Coins
 	)
 
-	// give one account balance
-	newCoins := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000)))
-	err := tk.BankKeeper.MintCoins(ctx, minttypes.ModuleName, newCoins)
-	require.NoError(t, err)
-	err = tk.BankKeeper.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, accs[0].Address, newCoins)
-	require.NoError(t, err)
+	t.Run("should set account balance", func(t *testing.T) {
+		newCoins = sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000)))
+		err := tk.BankKeeper.MintCoins(ctx, minttypes.ModuleName, newCoins)
+		require.NoError(t, err)
+		err = tk.BankKeeper.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, accs[0].Address, newCoins)
+		require.NoError(t, err)
+	})
 
 	tests := []struct {
 		name         string
@@ -39,12 +41,12 @@ func TestRandomAccWithBalance(t *testing.T) {
 		found        bool
 	}{
 		{
-			name:     "no accounts with balance",
+			name:     "should find no accounts with balance",
 			accounts: accs[1:],
 			found:    false,
 		},
 		{
-			name:         "one account has balance",
+			name:         "should find one account with balance",
 			accounts:     accs,
 			desiredCoins: newCoins,
 			wantAccount:  accs[0],
@@ -72,7 +74,7 @@ func TestRandomAuctionStandby(t *testing.T) {
 		sellingCoin1 = sample.Coin(r)
 	)
 
-	t.Run("no auction to be found that satisfy requirements", func(t *testing.T) {
+	t.Run("should find no auction that satisfies requirements", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		startTime := ctx.BlockTime().Add(-time.Hour)
 		endTime := ctx.BlockTime().Add(time.Hour * 24 * 7)
@@ -106,7 +108,7 @@ func TestRandomAuctionStandby(t *testing.T) {
 		require.False(t, found)
 	})
 
-	t.Run("one auction to be found", func(t *testing.T) {
+	t.Run("should find one auction", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		startTime := ctx.BlockTime().Add(time.Hour * 10)
 		endTime := ctx.BlockTime().Add(time.Hour * 24 * 7)
@@ -122,7 +124,7 @@ func TestRandomAuctionStandby(t *testing.T) {
 		require.Equal(t, auction1, got)
 	})
 
-	t.Run("no auctions", func(t *testing.T) {
+	t.Run("should not find auctions", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 		_, found := participationsim.RandomAuctionStandby(ctx, r, tk.FundraisingKeeper)
@@ -143,12 +145,12 @@ func TestRandomAuctionParticipationEnabled(t *testing.T) {
 	params.RegistrationPeriod = registrationPeriod
 	tk.ParticipationKeeper.SetParams(ctx, params)
 
-	t.Run("no auctions", func(t *testing.T) {
+	t.Run("should not find auctions", func(t *testing.T) {
 		_, found := participationsim.RandomAuctionParticipationEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.False(t, found)
 	})
 
-	t.Run("no auction to be found that satisfy requirements", func(t *testing.T) {
+	t.Run("should find no auction that satisfies requirements", func(t *testing.T) {
 		startTime := ctx.BlockTime().Add(time.Hour * 10)
 		endTime := ctx.BlockTime().Add(time.Hour * 24 * 7)
 
@@ -162,7 +164,7 @@ func TestRandomAuctionParticipationEnabled(t *testing.T) {
 		require.False(t, found)
 	})
 
-	t.Run("one auction to be found", func(t *testing.T) {
+	t.Run("should find one auction", func(t *testing.T) {
 		startTime := ctx.BlockTime().Add(time.Minute * 30)
 		endTime := ctx.BlockTime().Add(time.Hour * 24 * 7)
 
@@ -194,7 +196,7 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	params.WithdrawalDelay = withdrawalDelay
 	tk.ParticipationKeeper.SetParams(ctx, params)
 
-	t.Run("no auctions", func(t *testing.T) {
+	t.Run("should find no auctions", func(t *testing.T) {
 		_, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.False(t, found)
 	})
@@ -223,7 +225,7 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	invalidAuction = fundraisingtypes.NewFixedPriceAuction(ba, sample.Coin(r))
 	tk.FundraisingKeeper.SetAuction(ctx, invalidAuction)
 
-	t.Run("no auction to be found that satisfy requirements", func(t *testing.T) {
+	t.Run("should find no auction that satisfies requirements", func(t *testing.T) {
 		_, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.False(t, found)
 	})
@@ -234,7 +236,7 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	validAuction, found := tk.FundraisingKeeper.GetAuction(ctx, validAuctionID)
 	require.True(t, found)
 
-	t.Run("find auction where withdrawal delay has passed", func(t *testing.T) {
+	t.Run("should find auction where withdrawal delay has passed", func(t *testing.T) {
 		foundAuction, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.True(t, found)
 		require.Equal(t, validAuction, foundAuction)
@@ -246,7 +248,7 @@ func TestRandomAuctionWithdrawEnabled(t *testing.T) {
 	require.NoError(t, err)
 	tk.FundraisingKeeper.SetAuction(ctx, validAuction)
 
-	t.Run("find cancelled auction", func(t *testing.T) {
+	t.Run("should find cancelled auction", func(t *testing.T) {
 		foundAuction, found := participationsim.RandomAuctionWithdrawEnabled(ctx, r, tk.FundraisingKeeper, *tk.ParticipationKeeper)
 		require.True(t, found)
 		require.Equal(t, validAuction, foundAuction)
@@ -289,19 +291,19 @@ func TestRandomAccWithAvailableAllocations(t *testing.T) {
 		found              bool
 	}{
 		{
-			name:               "no accounts with allocations",
+			name:               "should find no accounts with allocations",
 			accounts:           accs[2:],
 			desiredAllocations: sdkmath.NewInt(10),
 			found:              false,
 		},
 		{
-			name:               "one account with insufficient allocations",
+			name:               "should not find account with sufficient allocations",
 			accounts:           accs[1:],
 			desiredAllocations: sdkmath.NewInt(10),
 			found:              false,
 		},
 		{
-			name:               "one account has sufficient allocations",
+			name:               "should find one account with sufficient allocations",
 			accounts:           accs,
 			desiredAllocations: sdkmath.NewInt(10),
 			wantAccount:        accs[0],
@@ -378,17 +380,18 @@ func TestRandomAccWithAuctionUsedAllocationsNotWithdrawn(t *testing.T) {
 		found       bool
 	}{
 		{
-			name:     "no accounts with allocations",
+			name:     "should find no account with used allocations that can be withdrawn",
+			accounts: accs[:2],
+			found:    false,
+		},
+
+		{
+			name:     "should find no accounts with allocations",
 			accounts: accs[3:],
 			found:    false,
 		},
 		{
-			name:     "no account with used allocations that can be withdrawn",
-			accounts: accs[:2],
-			found:    false,
-		},
-		{
-			name:        "one account has allocations that can be withdrawn",
+			name:        "should find one account has allocations that can be withdrawn",
 			accounts:    accs,
 			wantAccount: accs[2],
 			found:       true,
@@ -425,11 +428,14 @@ func TestRandomTierFromList(t *testing.T) {
 		},
 	}
 
-	tier, found := participationsim.RandomTierFromList(r, tierList)
-	require.True(t, found)
-	require.Equal(t, tier, tierList[0])
+	t.Run("should find valid tier", func(t *testing.T) {
+		tier, found := participationsim.RandomTierFromList(r, tierList)
+		require.True(t, found)
+		require.Equal(t, tier, tierList[0])
+	})
 
-	// no tier found with empty list
-	_, found = participationsim.RandomTierFromList(r, []types.Tier{})
-	require.False(t, found)
+	t.Run("should find no valid tiers with empty list", func(t *testing.T) {
+		_, found := participationsim.RandomTierFromList(r, []types.Tier{})
+		require.False(t, found)
+	})
 }

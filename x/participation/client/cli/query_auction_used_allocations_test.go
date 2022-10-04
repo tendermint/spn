@@ -25,7 +25,7 @@ func (suite *QueryTestSuite) TestShowAuctionUsedAllocations() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		desc        string
+		name        string
 		idAddress   string
 		idAuctionID uint64
 		args        []string
@@ -33,21 +33,21 @@ func (suite *QueryTestSuite) TestShowAuctionUsedAllocations() {
 		obj         types.AuctionUsedAllocations
 	}{
 		{
-			desc:        "found",
+			name:        "should find",
 			idAddress:   objs[0].Address,
 			idAuctionID: objs[0].AuctionID,
 			args:        common,
 			obj:         objs[0],
 		},
 		{
-			desc:        "not found",
+			name:        "should return not found",
 			idAddress:   strconv.Itoa(100000),
 			idAuctionID: 100000,
 			args:        common,
 			err:         status.Error(codes.NotFound, "not found"),
 		},
 	} {
-		suite.T().Run(tc.desc, func(t *testing.T) {
+		suite.T().Run(tc.name, func(t *testing.T) {
 			args := []string{
 				tc.idAddress,
 				strconv.FormatUint(tc.idAuctionID, 10),
@@ -94,7 +94,7 @@ func (suite *QueryTestSuite) TestListAuctionUsedAllocations() {
 		}
 		return args
 	}
-	suite.T().Run("ByOffset", func(t *testing.T) {
+	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(objs); i += step {
 			args := request(address, nil, uint64(i), uint64(step), false)
@@ -109,7 +109,7 @@ func (suite *QueryTestSuite) TestListAuctionUsedAllocations() {
 			)
 		}
 	})
-	suite.T().Run("ByKey", func(t *testing.T) {
+	suite.T().Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(objs); i += step {
@@ -126,7 +126,7 @@ func (suite *QueryTestSuite) TestListAuctionUsedAllocations() {
 			next = resp.Pagination.NextKey
 		}
 	})
-	suite.T().Run("Total", func(t *testing.T) {
+	suite.T().Run("should paginate all", func(t *testing.T) {
 		args := request(address, nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListAuctionUsedAllocations(), args)
 		require.NoError(t, err)

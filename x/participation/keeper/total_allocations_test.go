@@ -28,28 +28,28 @@ func TestTotalAllocationsGet(t *testing.T) {
 	tk.DelegateN(sdkCtx, r, addressNegativeDelegations, -100, 10)
 
 	for _, tc := range []struct {
-		desc       string
+		name       string
 		address    string
 		allocation sdkmath.Int
 		wantError  bool
 	}{
 		{
-			desc:       "valid address",
+			name:       "should allow valid address",
 			address:    validAddress,
 			allocation: sdkmath.NewInt(10), // 100 * 10 / 100 = 10
 		},
 		{
-			desc:      "invalid address returns error",
+			name:      "should prevent invalid address",
 			address:   invalidAddress,
 			wantError: true,
 		},
 		{
-			desc:      "negative delegations will yield invalid allocation",
+			name:      "should prevent negative delegations",
 			address:   addressNegativeDelegations,
 			wantError: true,
 		},
 	} {
-		t.Run(tc.desc, func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
 			alloc, err := tk.ParticipationKeeper.GetTotalAllocations(sdkCtx, tc.address)
 			if tc.wantError {
 				require.Error(t, err)
