@@ -42,7 +42,6 @@ func TestKeeper_AddChainToCampaign(t *testing.T) {
 		err := tk.CampaignKeeper.AddChainToCampaign(ctx, 0, 0)
 		require.Error(t, err)
 	})
-
 }
 
 func createNCampaignChains(k *keeper.Keeper, ctx sdk.Context, n int) []types.CampaignChains {

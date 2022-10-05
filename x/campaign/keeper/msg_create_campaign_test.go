@@ -45,7 +45,6 @@ func initCreationFeeAndFundCoordAccounts(
 			require.NoError(t, err)
 		}
 	})
-
 }
 
 func TestMsgCreateCampaign(t *testing.T) {
