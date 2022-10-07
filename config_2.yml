@@ -1,54 +1,69 @@
-# This configuration file includes the options from config.yml but exposes different ports for the server
-# So another chain can be served with default ports on the same machine (ex: using local `ignite network` commands)
-
+version: 1
+build:
+  binary: spn2d
+  proto:
+    path: proto
+    third_party_paths:
+    - third_party/proto
+    - proto_vendor
 accounts:
-  - name: alice
-    mnemonic: "slide moment original seven milk crawl help text kick fluid boring awkward doll wonder sure fragile plate grid hard next casual expire okay body"
-    coins: ["200000000uspn"]
-  - name: bob
-    mnemonic: "trap possible liquid elite embody host segment fantasy swim cable digital eager tiny broom burden diary earn hen grow engine pigeon fringe claim program"
-    coins: ["200000000uspn"]
-validator:
-  name: alice
-  staked: "100000000uspn"
+- name: alice
+  coins:
+  - 200000000uspn
+  mnemonic: slide moment original seven milk crawl help text kick fluid boring awkward
+    doll wonder sure fragile plate grid hard next casual expire okay body
+- name: bob
+  coins:
+  - 200000000uspn
+  mnemonic: trap possible liquid elite embody host segment fantasy swim cable digital
+    eager tiny broom burden diary earn hen grow engine pigeon fringe claim program
 faucet:
   name: bob
-  coins: ["100000uspn"]
+  coins:
+  - 100000uspn
+  host: 0.0.0.0:4500
   port: 4502
 genesis:
-  chain_id: spn-1
   app_state:
-    staking:
-      params:
-        bond_denom: "uspn"
     crisis:
       constant_fee:
-        denom: "uspn"
+        denom: uspn
     gov:
       deposit_params:
         min_deposit:
-          - "amount": "1"
-            "denom": "uspn"
-    mint:
-      params:
-        mint_denom: "uspn"
+        - amount: "1"
+          denom: uspn
     launch:
       params:
-        revertDelay: "5s"
         launchTimeRange:
-          minLaunchTime: "5s"
+          minLaunchTime: 5s
+        revertDelay: 5s
+    mint:
+      params:
+        mint_denom: uspn
     monitoringp:
       params:
-        lastBlockHeight: "1"
-        consumerChainID: "orbit-1"
-        consumerUnbondingPeriod: "2"
+        consumerChainID: orbit-1
         consumerRevisionHeight: "1"
-host:
-  rpc: ":26661"
-  p2p: ":26660"
-  prof: ":6062"
-  grpc: ":9094"
-  grpc-web: ":9095"
-  api: ":1319"
-build:
-  binary: "spn2d"
+        consumerUnbondingPeriod: "2"
+        lastBlockHeight: "1"
+    staking:
+      params:
+        bond_denom: uspn
+  chain_id: spn-1
+validators:
+- name: alice
+  bonded: 100000000uspn
+  app:
+    api:
+      address: :1319
+    grpc:
+      address: :9094
+    grpc-web:
+      address: :9095
+  config:
+    p2p:
+      laddr: :26660
+    rpc:
+      laddr: :26661
+      pprof_laddr: :6062
