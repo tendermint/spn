@@ -5,11 +5,11 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
@@ -35,7 +35,7 @@ func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 				CampaignID:         1,
 				SpecialAllocations: sample.SpecialAllocations(r),
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: profile.ErrInvalidCoordAddress,
 		},
 		{
 			name: "should prevent validation of msg with invalid special allocations",

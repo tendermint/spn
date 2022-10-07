@@ -13,6 +13,8 @@ import (
 )
 
 func TestMsgCreateChain_ValidateBasic(t *testing.T) {
+	// TODO check error tyeps in test
+
 	invalidGenesisHash := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
 	invalidInitialGenesis := types.NewGenesisURL("foo.com", "NoHash")
 	invalidGenesisHash.InitialGenesis = invalidInitialGenesis

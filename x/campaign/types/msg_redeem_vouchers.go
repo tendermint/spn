@@ -3,7 +3,6 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const TypeMsgRedeemVouchers = "redeem_vouchers"
@@ -43,12 +42,12 @@ func (msg *MsgRedeemVouchers) GetSignBytes() []byte {
 func (msg *MsgRedeemVouchers) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid sender address (%s)", err)
+		return sdkerrors.Wrapf(ErrInvalidVoucherAddress, "invalid sender address (%s)", err)
 	}
 
 	_, err = sdk.AccAddressFromBech32(msg.Account)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid account address (%s)", err)
+		return sdkerrors.Wrapf(ErrInvalidVoucherAddress, "invalid account address (%s)", err)
 	}
 
 	if !msg.Vouchers.IsValid() {

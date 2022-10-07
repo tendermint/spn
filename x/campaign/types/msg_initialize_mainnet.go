@@ -3,9 +3,9 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tendermint/spn/pkg/chainid"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 const TypeMsgInitializeMainnet = "initialize_mainnet"
@@ -52,17 +52,17 @@ func (msg *MsgInitializeMainnet) GetSignBytes() []byte {
 func (msg *MsgInitializeMainnet) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrap(profile.ErrInvalidCoordAddress, err.Error())
 	}
 
 	if msg.SourceURL == "" {
-		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "empty source URL")
+		return sdkerrors.Wrap(ErrInvalidMainnetInfo, "empty source URL")
 	}
 	if msg.SourceHash == "" {
-		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "empty source hash")
+		return sdkerrors.Wrap(ErrInvalidMainnetInfo, "empty source hash")
 	}
 	if _, _, err := chainid.ParseGenesisChainID(msg.MainnetChainID); err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidRequest, err.Error())
+		return sdkerrors.Wrapf(ErrInvalidMainnetInfo, err.Error())
 	}
 
 	return nil

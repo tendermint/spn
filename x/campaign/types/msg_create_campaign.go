@@ -3,9 +3,9 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 const TypeMsgCreateCampaign = "create_campaign"
@@ -50,7 +50,7 @@ func (msg *MsgCreateCampaign) GetSignBytes() []byte {
 func (msg *MsgCreateCampaign) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrap(profile.ErrInvalidCoordAddress, err.Error())
 	}
 
 	if err := CheckCampaignName(msg.CampaignName); err != nil {

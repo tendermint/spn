@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	tc "github.com/tendermint/spn/testutil/constructor"
@@ -173,7 +172,7 @@ func TestMsgSetRewards(t *testing.T) {
 				Coins:            sample.Coins(r),
 				LastRewardHeight: 1000,
 			},
-			err: sdkerrortypes.ErrInsufficientFunds,
+			err: types.ErrInsufficientFunds,
 		},
 		{
 			name: "should prevent set rewards for new pool when coordinator has insufficient funds",
@@ -183,7 +182,7 @@ func TestMsgSetRewards(t *testing.T) {
 				Coins:            sample.Coins(r),
 				LastRewardHeight: 1000,
 			},
-			err: sdkerrortypes.ErrInsufficientFunds,
+			err: types.ErrInsufficientFunds,
 		},
 	}
 	for _, tt := range tests {

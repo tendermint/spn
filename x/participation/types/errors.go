@@ -16,4 +16,5 @@ var (
 	ErrAllocationWithdrawalTimeNotReached = sdkerrors.Register(ModuleName, 9, "unable to withdraw allocations")
 	ErrUsedAllocationsNotFound            = sdkerrors.Register(ModuleName, 10, "used allocations not found")
 	ErrAllocationsAlreadyWithdrawn        = sdkerrors.Register(ModuleName, 11, "used allocations already withdrawn")
+	ErrInvalidAddress                     = sdkerrors.Register(ModuleName, 12, "invalid participant address")
 )

@@ -3,7 +3,8 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	profile "github.com/tendermint/spn/x/profile/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 )
@@ -52,11 +53,11 @@ func (msg *MsgEditChain) GetSignBytes() []byte {
 func (msg *MsgEditChain) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrap(profile.ErrInvalidCoordAddress, err.Error())
 	}
 
 	if len(msg.Metadata) == 0 && !msg.SetCampaignID {
-		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "no value to edit")
+		return sdkerrors.Wrap(ErrCannotUpdateChain, "no value to edit")
 	}
 
 	// TODO parameterize

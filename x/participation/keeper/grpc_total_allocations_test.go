@@ -47,7 +47,7 @@ func TestShowTotalAllocationsQuery(t *testing.T) {
 			request: &types.QueryGetTotalAllocationsRequest{
 				Address: strconv.Itoa(100000),
 			},
-			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6: invalid address"),
+			err: status.Error(codes.InvalidArgument, "decoding bech32 failed: invalid bech32 string length 6: invalid participant address"),
 		},
 		{
 			name: "should return invalid request",

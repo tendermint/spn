@@ -1,11 +1,8 @@
 package keeper
 
 import (
-	"errors"
-
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	clienttypes "github.com/cosmos/ibc-go/v5/modules/core/02-client/types"
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v5/modules/core/24-host"
@@ -53,7 +50,7 @@ func (k Keeper) TransmitMonitoringPacket(
 
 	packetBytes, err := types.ModuleCdc.MarshalJSON(&modulePacket)
 	if err != nil {
-		return sdkerrors.Wrap(sdkerrortypes.ErrJSONMarshal, "cannot marshal the packet: "+err.Error())
+		return sdkerrors.Wrap(types.ErrJSONMarshal, err.Error())
 	}
 
 	packet := channeltypes.NewPacket(
@@ -76,7 +73,7 @@ func (k Keeper) OnRecvMonitoringPacket(
 	_ channeltypes.Packet,
 	_ spntypes.MonitoringPacket,
 ) (packetAck spntypes.MonitoringPacketAck, err error) {
-	return packetAck, errors.New("not implemented")
+	return packetAck, types.ErrNotImplemented
 }
 
 // OnAcknowledgementMonitoringPacket responds to the the success or failure of a packet
@@ -96,13 +93,14 @@ func (k Keeper) OnAcknowledgementMonitoringPacket(
 
 		if err := types.ModuleCdc.UnmarshalJSON(dispatchedAck.Result, &packetAck); err != nil {
 			// The counter-party module doesn't implement the correct acknowledgment format
-			return errors.New("cannot unmarshal acknowledgment")
+			return sdkerrors.Wrap(types.ErrJSONUnmarshal, err.Error())
 		}
 
 		return nil
 	default:
 		// The counter-party module doesn't implement the correct acknowledgment format
-		return errors.New("invalid acknowledgment format")
+		return sdkerrors.Wrapf(types.ErrUnrecognizedAckType, "ack type: %T", ack)
+
 	}
 }
 
@@ -112,5 +110,5 @@ func (k Keeper) OnTimeoutMonitoringPacket(
 	_ channeltypes.Packet,
 	_ spntypes.MonitoringPacket,
 ) error {
-	return errors.New("not implemented")
+	return types.ErrNotImplemented
 }
