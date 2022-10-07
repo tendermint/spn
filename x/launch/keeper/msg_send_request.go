@@ -73,7 +73,7 @@ func (k msgServer) SendRequest(
 			return nil, ignterrors.Criticalf("invalid sender bech32 address %s", err.Error())
 		}
 		if err = k.distrKeeper.FundCommunityPool(ctx, requestFee, sender); err != nil {
-			return nil, err
+			return nil, sdkerrors.Wrap(types.ErrFundCommunityPool, err.Error())
 		}
 	}
 

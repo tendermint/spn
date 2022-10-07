@@ -3,7 +3,6 @@ package types_test
 import (
 	"testing"
 
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -21,13 +20,13 @@ func TestMsgWithdrawAllocations_ValidateBasic(t *testing.T) {
 			msg: types.MsgWithdrawAllocations{
 				Participant: sample.Address(r),
 			},
-		},
+		}, 
 		{
 			name: "should prevent invalid address",
 			msg: types.MsgWithdrawAllocations{
 				Participant: "invalid_address",
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: types.ErrInvalidAddress,
 		},
 	}
 	for _, tt := range tests {

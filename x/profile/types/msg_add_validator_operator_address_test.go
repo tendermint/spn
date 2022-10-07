@@ -3,7 +3,6 @@ package types_test
 import (
 	"testing"
 
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
@@ -53,7 +52,7 @@ func TestMsgAddValidatorOperatorAddress_ValidateBasic(t *testing.T) {
 				ValidatorAddress: "invalid_address",
 				OperatorAddress:  sample.Address(r),
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: types.ErrInvalidValAddress,
 		},
 		{
 			name: "should prevent validate invalid operator address",
@@ -61,7 +60,7 @@ func TestMsgAddValidatorOperatorAddress_ValidateBasic(t *testing.T) {
 				ValidatorAddress: sample.Address(r),
 				OperatorAddress:  "invalid_address",
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: types.ErrInvalidOpAddress,
 		},
 	}
 	for _, tt := range tests {

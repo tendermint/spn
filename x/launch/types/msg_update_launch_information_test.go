@@ -10,6 +10,7 @@ import (
 )
 
 func TestMsgUpdateLaunchInformation_ValidateBasic(t *testing.T) {
+	// TODO check error types in test
 	launchID := uint64(0)
 
 	msgInvalidGenesisHash := sample.MsgUpdateLaunchInformation(r,

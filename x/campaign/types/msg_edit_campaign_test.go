@@ -3,7 +3,8 @@ package types_test
 import (
 	"testing"
 
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+	profile "github.com/tendermint/spn/x/profile/types"
+
 	"github.com/stretchr/testify/require"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -63,7 +64,7 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 				Name:        sample.CampaignName(r),
 				Metadata:    sample.Metadata(r, 20),
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: profile.ErrInvalidCoordAddress,
 		},
 		{
 			name: "should prevent validation of msg with invalid metadata length",
@@ -83,7 +84,7 @@ func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
 				Name:        "",
 				Metadata:    []byte{},
 			},
-			err: sdkerrortypes.ErrInvalidRequest,
+			err: types.ErrCannotUpdateCampaign,
 		},
 	}
 	for _, tt := range tests {

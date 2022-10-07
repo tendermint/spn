@@ -3,10 +3,10 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/tendermint/spn/pkg/chainid"
 	spntypes "github.com/tendermint/spn/pkg/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 const TypeMsgCreateChain = "create_chain"
@@ -61,7 +61,7 @@ func (msg *MsgCreateChain) GetSignBytes() []byte {
 func (msg *MsgCreateChain) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid coordinator address (%s)", err)
+		return sdkerrors.Wrap(profile.ErrInvalidCoordAddress, err.Error())
 	}
 
 	if _, _, err := chainid.ParseGenesisChainID(msg.GenesisChainID); err != nil {
@@ -80,7 +80,7 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 
 	// Coins must be valid
 	if !msg.AccountBalance.IsValid() {
-		return sdkerrors.Wrap(sdkerrortypes.ErrInvalidCoins, "default account balance sdk.Coins is not valid")
+		return sdkerrors.Wrap(ErrInvalidCoins, "default account balance sdk.Coins is not valid")
 	}
 
 	return nil

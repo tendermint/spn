@@ -11,6 +11,7 @@ import (
 )
 
 func TestMsgEditChain_ValidateBasic(t *testing.T) {
+	// TODO check error types in test
 	launchID := uint64(0)
 
 	msgInvalidMetadataLen := sample.MsgEditChain(r,

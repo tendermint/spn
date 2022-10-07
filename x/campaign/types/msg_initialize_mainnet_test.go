@@ -3,11 +3,11 @@ package types_test
 import (
 	"testing"
 
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
+	profile "github.com/tendermint/spn/x/profile/types"
 )
 
 func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
@@ -35,7 +35,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: sample.GenesisChainID(r),
 			},
-			err: sdkerrortypes.ErrInvalidAddress,
+			err: profile.ErrInvalidCoordAddress,
 		},
 		{
 			name: "should prevent validation of msg with empty source URL",
@@ -46,7 +46,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: sample.GenesisChainID(r),
 			},
-			err: sdkerrortypes.ErrInvalidRequest,
+			err: types.ErrInvalidMainnetInfo,
 		},
 		{
 			name: "should prevent validation of msg with empty source hash",
@@ -57,7 +57,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 				SourceHash:     "",
 				MainnetChainID: sample.GenesisChainID(r),
 			},
-			err: sdkerrortypes.ErrInvalidRequest,
+			err: types.ErrInvalidMainnetInfo,
 		},
 		{
 			name: "should prevent validation of msg with invalid chain id",
@@ -68,7 +68,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: "invalid_chain_id",
 			},
-			err: sdkerrortypes.ErrInvalidRequest,
+			err: types.ErrInvalidMainnetInfo,
 		},
 	}
 	for _, tt := range tests {

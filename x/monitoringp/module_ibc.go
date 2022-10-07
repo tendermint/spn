@@ -5,7 +5,6 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
 	porttypes "github.com/cosmos/ibc-go/v5/modules/core/05-port/types"
@@ -113,7 +112,7 @@ func (am AppModule) OnChanCloseInit(
 	_ string,
 ) error {
 	// Disallow user-initiated channel closing for channels
-	return sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "user cannot close channel")
+	return sdkerrors.Wrap(types.ErrCannotCloseChannel, "user cannot close channel")
 }
 
 // OnChanCloseConfirm implements the IBCModule interface
@@ -137,7 +136,7 @@ func (am AppModule) OnRecvPacket(
 
 	var modulePacketData spntypes.MonitoringPacketData
 	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &modulePacketData); err != nil {
-		return channeltypes.NewErrorAcknowledgement(sdkerrors.Wrapf(sdkerrortypes.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error()))
+		return channeltypes.NewErrorAcknowledgement(sdkerrors.Wrap(types.ErrJSONUnmarshal, err.Error()))
 	}
 
 	// Dispatch packet
@@ -150,7 +149,7 @@ func (am AppModule) OnRecvPacket(
 			// Encode packet acknowledgment
 			packetAckBytes, err := types.ModuleCdc.MarshalJSON(&packetAck)
 			if err != nil {
-				return channeltypes.NewErrorAcknowledgement(sdkerrors.Wrap(sdkerrortypes.ErrJSONMarshal, err.Error()))
+				return channeltypes.NewErrorAcknowledgement(sdkerrors.Wrap(types.ErrJSONMarshal, err.Error()))
 			}
 			ack = channeltypes.NewResultAcknowledgement(sdk.MustSortJSON(packetAckBytes))
 		}
@@ -163,7 +162,7 @@ func (am AppModule) OnRecvPacket(
 		)
 		// this line is used by starport scaffolding # ibc/packet/module/recv
 	default:
-		err := fmt.Errorf("unrecognized %s packet type: %T", types.ModuleName, packet)
+		err := sdkerrors.Wrapf(types.ErrUnrecognizedPacketType, "packet type: %T", packet)
 		return channeltypes.NewErrorAcknowledgement(err)
 	}
 
@@ -180,14 +179,14 @@ func (am AppModule) OnAcknowledgementPacket(
 ) error {
 	var ack channeltypes.Acknowledgement
 	if err := types.ModuleCdc.UnmarshalJSON(acknowledgement, &ack); err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrUnknownRequest, "cannot unmarshal packet acknowledgement: %v", err)
+		return sdkerrors.Wrap(types.ErrJSONUnmarshal, err.Error())
 	}
 
 	// this line is used by starport scaffolding # oracle/packet/module/ack
 
 	var modulePacketData spntypes.MonitoringPacketData
 	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &modulePacketData); err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
+		return sdkerrors.Wrap(types.ErrJSONUnmarshal, err.Error())
 	}
 
 	var eventType string
@@ -202,8 +201,7 @@ func (am AppModule) OnAcknowledgementPacket(
 		eventType = types.EventTypeMonitoringPacket
 		// this line is used by starport scaffolding # ibc/packet/module/ack
 	default:
-		errMsg := fmt.Sprintf("unrecognized %s packet type: %T", types.ModuleName, packet)
-		return sdkerrors.Wrap(sdkerrortypes.ErrUnknownRequest, errMsg)
+		return sdkerrors.Wrapf(types.ErrUnrecognizedPacketType, "packet type: %T", packet)
 	}
 
 	ctx.EventManager().EmitEvent(
@@ -242,7 +240,7 @@ func (am AppModule) OnTimeoutPacket(
 ) error {
 	var modulePacketData spntypes.MonitoringPacketData
 	if err := types.ModuleCdc.UnmarshalJSON(modulePacket.GetData(), &modulePacketData); err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrUnknownRequest, "cannot unmarshal packet data: %s", err.Error())
+		return sdkerrors.Wrap(types.ErrJSONUnmarshal, err.Error())
 	}
 
 	// Dispatch packet
@@ -254,8 +252,7 @@ func (am AppModule) OnTimeoutPacket(
 		}
 		// this line is used by starport scaffolding # ibc/packet/module/timeout
 	default:
-		errMsg := fmt.Sprintf("unrecognized %s packet type: %T", types.ModuleName, packet)
-		return sdkerrors.Wrap(sdkerrortypes.ErrUnknownRequest, errMsg)
+		return sdkerrors.Wrapf(types.ErrUnrecognizedPacketType, "packet type: %T", packet)
 	}
 
 	return nil

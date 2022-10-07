@@ -3,7 +3,6 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const TypeMsgUpdateValidatorDescription = "update_validator_description"
@@ -54,7 +53,7 @@ func (msg *MsgUpdateValidatorDescription) GetSignBytes() []byte {
 func (msg *MsgUpdateValidatorDescription) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid validator address (%s)", err)
+		return sdkerrors.Wrap(ErrInvalidValAddress, err.Error())
 	}
 	if msg.Description.Details == "" &&
 		msg.Description.Moniker == "" &&

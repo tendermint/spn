@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/stretchr/testify/require"
 
@@ -131,7 +130,7 @@ func TestMsgCreateChain(t *testing.T) {
 		{
 			name: "should prevent creating a chain with insufficient balance to cover creation fee",
 			msg:  sample.MsgCreateChain(r, coordAddrs[4], "", false, campMap[coordAddrs[4]]),
-			err:  sdkerrortypes.ErrInsufficientFunds,
+			err:  types.ErrFundCommunityPool,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

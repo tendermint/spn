@@ -3,7 +3,6 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const TypeMsgSendRequest = "request_send_request"
@@ -45,7 +44,7 @@ func (msg *MsgSendRequest) GetSignBytes() []byte {
 
 func (msg *MsgSendRequest) ValidateBasic() error {
 	if _, err := sdk.AccAddressFromBech32(msg.Creator); err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(ErrInvalidRequesterAddress, err.Error())
 	}
 
 	if err := msg.Content.Validate(msg.LaunchID); err != nil {
