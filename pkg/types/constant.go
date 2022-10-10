@@ -11,7 +11,7 @@ const (
 	DefaultChainID = "spn-1"
 
 	// MaxMetadataLength is the max length for metadata attached to chain and campaign
-	MaxMetadataLength = 100
+	MaxMetadataLength = 1000
 
 	// DefaultUnbondingPeriod is the default unbonding time in seconds
 	// 1814400 represents 21 days
