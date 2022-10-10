@@ -1,0 +1,8 @@
+version: alpha
+launchpad:
+  overview:
+    repository: https://github.com/ignite/example
+    path: project/description.md
+cli:
+  version:
+    release: v0.24.0
