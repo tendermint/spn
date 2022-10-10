@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	neturl "net/url"
+	"os"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -20,6 +21,7 @@ import (
 )
 
 const (
+	flagMetadataFile      = "metadata-file"
 	flagGenesisURL        = "genesis-url"
 	flagGenesisConfigFile = "genesis-config"
 	flagCampaignID        = "campaign-id"
@@ -79,11 +81,17 @@ func CmdCreateChain() *cobra.Command {
 				return errors.New("cannot use genesisURL and genesis config file")
 			}
 
-			metadata, err := cmd.Flags().GetString(flagMetadata)
-			if err != nil {
-				return err
+			var metadataBytes []byte
+			metadataFile, _ := cmd.Flags().GetString(flagMetadataFile)
+			if metadataFile != "" {
+				metadataBytes, err = os.ReadFile(metadataFile)
+				if err != nil {
+					return err
+				}
+			} else {
+				metadata, _ := cmd.Flags().GetString(flagMetadata)
+				metadataBytes = []byte(metadata)
 			}
-			metadataBytes := []byte(metadata)
 
 			balanceCoins := sdk.NewCoins()
 			balance, err := cmd.Flags().GetString(flagAccountBalance)
@@ -117,6 +125,7 @@ func CmdCreateChain() *cobra.Command {
 	}
 
 	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
+	cmd.Flags().String(flagMetadataFile, "", "Set metadata for chain from file content")
 	cmd.Flags().String(flagGenesisConfigFile, "", "config file for a custom genesis")
 	cmd.Flags().Int64(flagCampaignID, -1, "The campaign id")
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
