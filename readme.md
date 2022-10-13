@@ -36,7 +36,7 @@ ignite chain serve
 
 ## Launching chains with Ignite CLI
 
-Please read our [guides](./docs/ignite_cli/readme.md) for using `spn` with Ignite CLI.
+Please read our [guides](https://docs.ignite.com/network/introduction) for using `spn` with Ignite CLI.
 
 ## Learn more
 
