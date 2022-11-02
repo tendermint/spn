@@ -2,7 +2,9 @@ version: alpha
 launchpad:
   overview:
     repository: https://github.com/ignite/example
-    path: project/description.md
+    description: project/description.md
+    cover: project/cover.png
+    logo: project/logo.png
 cli:
   version:
     release: v0.24.0
