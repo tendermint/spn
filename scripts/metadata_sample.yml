@@ -3,8 +3,8 @@ launchpad:
   overview:
     repository: https://github.com/ignite/example
     description: project/description.md
-    cover: project/cover.png
-    logo: project/logo.png
+    cover: project/cover.jpg
+    logo: project/logo.jpg
     about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a gravida erat. Donec maximus porttitor nibh, in malesuada arcu facilisis eget. Proin congue placerat augue."
 cli:
   version:
