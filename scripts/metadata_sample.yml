@@ -5,6 +5,7 @@ launchpad:
     description: project/description.md
     cover: project/cover.png
     logo: project/logo.png
+    about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a gravida erat. Donec maximus porttitor nibh, in malesuada arcu facilisis eget. Proin congue placerat augue."
 cli:
   version:
     release: v0.24.0
