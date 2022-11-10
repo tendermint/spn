@@ -7,11 +7,11 @@ require (
 	cosmossdk.io/math v1.0.0-beta.3
 	github.com/aws/smithy-go v1.8.0
 	github.com/cosmos/cosmos-proto v1.0.0-alpha7
-	github.com/cosmos/cosmos-sdk v0.46.3
-	github.com/cosmos/ibc-go/v5 v5.0.0
+	github.com/cosmos/cosmos-sdk v0.46.4
+	github.com/cosmos/ibc-go/v5 v5.1.0
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
-	github.com/golangci/golangci-lint v1.49.0
+	github.com/golangci/golangci-lint v1.50.1
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/ignite/modules v0.0.0-20220912090139-7c325cae763a
