@@ -73,7 +73,7 @@ func CmdCreateChain() *cobra.Command {
 				return err
 			}
 			if genesisConfigFile != "" {
-				initialGenesis = types.NewConfigGenesis(genesisConfigFile)
+				initialGenesis = types.NewGenesisConfig(genesisConfigFile)
 			}
 
 			// ensure genesisURL and config not being used simultaneously

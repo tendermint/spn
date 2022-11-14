@@ -20,7 +20,7 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 	invalidGenesisHash.InitialGenesis = invalidInitialGenesis
 
 	invalidConfigFile := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
-	invalidInitialGenesis = types.NewConfigGenesis("")
+	invalidInitialGenesis = types.NewGenesisConfig("")
 	invalidConfigFile.InitialGenesis = invalidInitialGenesis
 
 	invalidGenesisChainID := sample.MsgCreateChain(r, sample.Address(r), "", false, 0)
@@ -58,7 +58,7 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc:  "should prevent validate message with invalid file for ConfigGenesis custom genesis",
+			desc:  "should prevent validate message with invalid file for GenesisConfig custom genesis",
 			msg:   invalidConfigFile,
 			valid: false,
 		},
