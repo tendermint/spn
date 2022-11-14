@@ -112,7 +112,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
-			initialGenesis: types.NewConfigGenesis(sample.String(r, 30)),
+			initialGenesis: types.NewGenesisConfig(sample.String(r, 30)),
 			hasCampaign:    false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
