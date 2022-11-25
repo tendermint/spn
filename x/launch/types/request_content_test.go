@@ -573,7 +573,7 @@ func TestParamChange_Validate(t *testing.T) {
 				Value:    sample.Bytes(r, 10),
 			},
 			launchID: launchID,
-			err:      types.ErrInvalidRequestContent,
+			err:      types.ErrInvalidModuleName,
 		},
 		{
 			name: "should prevent validate change param with empty param string",
@@ -584,7 +584,7 @@ func TestParamChange_Validate(t *testing.T) {
 				Value:    sample.Bytes(r, 10),
 			},
 			launchID: launchID,
-			err:      types.ErrInvalidRequestContent,
+			err:      types.ErrInvalidParamName,
 		},
 		{
 			name: "should prevent validate change param with non alpha module string",
@@ -595,7 +595,7 @@ func TestParamChange_Validate(t *testing.T) {
 				Value:    sample.Bytes(r, 10),
 			},
 			launchID: launchID,
-			err:      types.ErrInvalidRequestContent,
+			err:      types.ErrInvalidModuleName,
 		},
 		{
 			name: "should prevent validate change param with non alpha param string",
@@ -606,7 +606,7 @@ func TestParamChange_Validate(t *testing.T) {
 				Value:    sample.Bytes(r, 10),
 			},
 			launchID: launchID,
-			err:      types.ErrInvalidRequestContent,
+			err:      types.ErrInvalidParamName,
 		},
 		{
 			name: "should prevent validate change param with invalid launchID",
