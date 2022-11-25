@@ -216,20 +216,12 @@ func NewParamChange(launchID uint64, module, param string, value []byte) Request
 
 // Validate implements ParamChange validation
 func (m ParamChange) Validate(launchID uint64) error {
-	if m.Module == "" {
-		return errors.New("empty module name")
+	if m.Module == "" || !isStringAlphabetic(m.Module) {
+		return ErrInvalidModuleName
 	}
 
-	if m.Param == "" {
-		return errors.New("empty param name")
-	}
-
-	if !isStringAlphabetic(m.Module) {
-		return errors.New("module name must be alphabetical")
-	}
-
-	if !isStringAlphabetic(m.Param) {
-		return errors.New("param name must be alphabetical")
+	if m.Param == "" || !isStringAlphabetic(m.Param) {
+		return ErrInvalidParamName
 	}
 
 	if m.LaunchID != launchID {
