@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-var isStringAlphabetic = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
+var isStringAlphabetic = regexp.MustCompile(`^[a-zA-Z_]+$`).MatchString
 
 func (m RequestContent) Validate(launchID uint64) error {
 	switch requestContent := m.Content.(type) {
