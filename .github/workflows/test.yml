@@ -36,8 +36,12 @@ jobs:
           excludelist="$(find ./ -type f -name '*.go' | xargs grep -l 'DONTCOVER')"
           excludelist+=" $(find ./ -type f -name '*.pb.go')"
           excludelist+=" $(find ./ -type f -name '*.pb.gw.go')"
+          excludelist+=" $(find ./app -type d)"
           excludelist+=" $(find ./cmd -type d)"
-          excludelist+=" $(find ./tests -type d)"
+          excludelist+=" $(find ./docs -type d)"
+          excludelist+=" $(find ./localnet -type d)"
+          excludelist+=" $(find ./proto -type d)"
+          excludelist+=" $(find ./scripts -type d)"
           for filename in ${excludelist}; do
             filename=${filename#".//"}
             echo "Excluding ${filename} from coverage report..."
