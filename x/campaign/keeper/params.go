@@ -28,3 +28,9 @@ func (k Keeper) CampaignCreationFee(ctx sdk.Context) (campaignCreationFee sdk.Co
 	k.paramSpace.Get(ctx, types.KeyCampaignCreationFee, &campaignCreationFee)
 	return
 }
+
+// MaxMetadataLength returns the param that defines the max metadata length
+func (k Keeper) MaxMetadataLength(ctx sdk.Context) (maxMetadataLength uint64) {
+	k.paramSpace.Get(ctx, types.KeyMaxMetadataLength, &maxMetadataLength)
+	return
+}

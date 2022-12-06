@@ -19,10 +19,10 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 	)
 
 	// check if the metadata length is valid
-	maxMetadataLength := k.campaignKeeper.GetParams(ctx).MaxMetadataLength
-	if len(msg.Metadata) > int(maxMetadataLength) {
+	maxMetadataLength := k.MaxMetadataLength(ctx)
+	if uint64(len(msg.Metadata)) > maxMetadataLength {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidMetadataLength,
-			"data length %d is greater than maximum %d",
+			"metadata length %d is greater than maximum %d",
 			len(msg.Metadata),
 			maxMetadataLength,
 		)

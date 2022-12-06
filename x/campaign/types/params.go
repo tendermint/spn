@@ -15,7 +15,7 @@ var (
 	DefaultMinTotalSupply             = sdkmath.NewInt(100)                   // One hundred
 	DefaultMaxTotalSupply             = sdkmath.NewInt(1_000_000_000_000_000) // One Quadrillion
 	DefaultCampaignCreationFee        = sdk.Coins(nil)                        // EmptyCoins
-	DefaultMaxMetadataLength   uint64 = 1000
+	DefaultMaxMetadataLength   uint64 = 2000
 
 	KeyTotalSupplyRange    = []byte("TotalSupplyRange")
 	KeyCampaignCreationFee = []byte("CampaignCreationFee")
@@ -79,6 +79,11 @@ func (p Params) ValidateBasic() error {
 	if err := validateTotalSupplyRange(p.TotalSupplyRange); err != nil {
 		return err
 	}
+
+	if err := validateMaxMetadataLength(p.MaxMetadataLength); err != nil {
+		return err
+	}
+
 	return p.CampaignCreationFee.Validate()
 }
 

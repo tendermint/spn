@@ -348,12 +348,20 @@ func GenesisHash(r *rand.Rand) string {
 func LaunchParams(r *rand.Rand) launch.Params {
 	maxLaunchTime := launch.DefaultMaxLaunchTime - time.Second*time.Duration(r.Int63n(10))
 	minLaunchTime := launch.DefaultMinLaunchTime + time.Second*time.Duration(r.Int63n(10))
+	maxMetadataLength := launch.DefaultMaxMetadataLength
 
 	// assign random small amount of staking denom
 	chainCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
 	requestFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
 
-	return launch.NewParams(minLaunchTime, maxLaunchTime, launch.DefaultRevertDelay, chainCreationFee, requestFee)
+	return launch.NewParams(
+		minLaunchTime,
+		maxLaunchTime,
+		launch.DefaultRevertDelay,
+		chainCreationFee,
+		requestFee,
+		maxMetadataLength,
+	)
 }
 
 // LaunchGenesisState returns a sample genesis state for the launch module

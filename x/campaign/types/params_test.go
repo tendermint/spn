@@ -150,3 +150,37 @@ func TestValidateCampaignCreationFee(t *testing.T) {
 		})
 	}
 }
+
+func TestValidateMaxMetadataLength(t *testing.T) {
+	tests := []struct {
+		name              string
+		maxMetadataLength interface{}
+		err               error
+	}{
+		{
+			name:              "invalid interface",
+			maxMetadataLength: "test",
+			err:               fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:              "invalid number type",
+			maxMetadataLength: 1000,
+			err:               fmt.Errorf("invalid parameter type: int"),
+		},
+		{
+			name:              "valid param",
+			maxMetadataLength: uint64(1000),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateMaxMetadataLength(tt.maxMetadataLength)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}

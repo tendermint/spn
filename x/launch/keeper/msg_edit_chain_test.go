@@ -86,7 +86,7 @@ func TestMsgEditChain(t *testing.T) {
 		validCampaignID,
 		false,
 	)
-	maxMetadataLength := tk.CampaignKeeper.GetParams(sdkCtx).MaxMetadataLength
+	maxMetadataLength := tk.LaunchKeeper.MaxMetadataLength(sdkCtx)
 	msgEditChainInvalidMetadata.Metadata = sample.Metadata(r, maxMetadataLength+1)
 
 	for _, tc := range []struct {

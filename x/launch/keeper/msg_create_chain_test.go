@@ -94,7 +94,7 @@ func TestMsgCreateChain(t *testing.T) {
 		false,
 		campMap[coordAddrs[0]],
 	)
-	maxMetadataLength := tk.CampaignKeeper.GetParams(sdkCtx).MaxMetadataLength
+	maxMetadataLength := tk.LaunchKeeper.MaxMetadataLength(sdkCtx)
 	msgCreateChainInvalidMetadata.Metadata = sample.Metadata(r, maxMetadataLength+1)
 
 	for _, tc := range []struct {
@@ -144,7 +144,7 @@ func TestMsgCreateChain(t *testing.T) {
 			err:  types.ErrFundCommunityPool,
 		},
 		{
-			name: "should create a chain with invalid metadata length",
+			name: "should prevent a chain with invalid metadata length",
 			msg:  msgCreateChainInvalidMetadata,
 			err:  types.ErrInvalidMetadataLength,
 		},

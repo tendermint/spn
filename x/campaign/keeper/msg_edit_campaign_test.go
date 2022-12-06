@@ -20,7 +20,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 
 		sdkCtx, tk, ts    = testkeeper.NewTestSetup(t)
 		ctx               = sdk.WrapSDKContext(sdkCtx)
-		maxMetadataLength = tk.CampaignKeeper.GetParams(sdkCtx).MaxMetadataLength
+		maxMetadataLength = tk.CampaignKeeper.MaxMetadataLength(sdkCtx)
 	)
 
 	t.Run("should allow creation of coordinators", func(t *testing.T) {
@@ -102,7 +102,7 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "should prevent validation of msg with invalid metadata length",
+			name: "should fail when the change had too long metadata",
 			msg: types.MsgEditCampaign{
 				CampaignID:  0,
 				Coordinator: sample.Address(r),
