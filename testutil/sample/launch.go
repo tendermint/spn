@@ -14,8 +14,8 @@ import (
 )
 
 // Metadata returns sample metadata bytes
-func Metadata(r *rand.Rand, len int) []byte {
-	return Bytes(r, len)
+func Metadata(r *rand.Rand, len uint64) []byte {
+	return Bytes(r, int(len))
 }
 
 // GenesisChainID returns a sample chain id

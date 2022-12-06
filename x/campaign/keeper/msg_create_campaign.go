@@ -14,6 +14,17 @@ import (
 func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCampaign) (*types.MsgCreateCampaignResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// check if the metadata length is valid
+	p := k.GetParams(ctx)
+	maxMetadataLength := p.MaxMetadataLength
+	if len(msg.Metadata) > int(maxMetadataLength) {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidMetadataLength,
+			"data length %d is greater than maximum %d",
+			len(msg.Metadata),
+			maxMetadataLength,
+		)
+	}
+
 	// Get the coordinator ID associated to the sender address
 	coordID, err := k.profileKeeper.CoordinatorIDFromAddress(ctx, msg.Coordinator)
 	if err != nil {

@@ -14,6 +14,16 @@ import (
 func (k msgServer) EditCampaign(goCtx context.Context, msg *types.MsgEditCampaign) (*types.MsgEditCampaignResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// check if the metadata length is valid
+	maxMetadataLength := k.GetParams(ctx).MaxMetadataLength
+	if len(msg.Metadata) > int(maxMetadataLength) {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidMetadataLength,
+			"data length %d is greater than maximum %d",
+			len(msg.Metadata),
+			maxMetadataLength,
+		)
+	}
+
 	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)

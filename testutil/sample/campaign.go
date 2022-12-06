@@ -94,11 +94,12 @@ func CampaignParams(r *rand.Rand) campaign.Params {
 	// no point in randomizing these values, using defaults
 	minTotalSupply := campaign.DefaultMinTotalSupply
 	maxTotalSupply := campaign.DefaultMaxTotalSupply
+	maxMetadataLength := campaign.DefaultMaxMetadataLength
 
 	// assign random small amount of staking denom
 	campaignCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
 
-	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee)
+	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee, maxMetadataLength)
 }
 
 // CampaignGenesisState returns a sample genesis state for the campaign module

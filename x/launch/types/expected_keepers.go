@@ -3,16 +3,16 @@ package types
 import (
 	"context"
 
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 type CampaignKeeper interface {
+	GetParams(ctx sdk.Context) (params campaigntypes.Params)
 	GetCampaign(ctx sdk.Context, id uint64) (campaigntypes.Campaign, bool)
 	AddChainToCampaign(ctx sdk.Context, campaignID, launchID uint64) error
 	GetAllCampaign(ctx sdk.Context) (list []campaigntypes.Campaign)

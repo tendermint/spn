@@ -16,12 +16,14 @@ import (
 )
 
 func TestMsgEditChain(t *testing.T) {
-	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
-	ctx := sdk.WrapSDKContext(sdkCtx)
-	coordAddress := sample.Address(r)
-	coordAddress2 := sample.Address(r)
-	coordNoExist := sample.Address(r)
-	launchIDNoExist := uint64(1000)
+	var (
+		coordAddress    = sample.Address(r)
+		coordAddress2   = sample.Address(r)
+		coordNoExist    = sample.Address(r)
+		launchIDNoExist = uint64(1000)
+		sdkCtx, tk, ts  = testkeeper.NewTestSetup(t)
+		ctx             = sdk.WrapSDKContext(sdkCtx)
+	)
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
@@ -75,6 +77,17 @@ func TestMsgEditChain(t *testing.T) {
 
 	err = tk.CampaignKeeper.AddChainToCampaign(sdkCtx, campaignDuplicateChain, launchID2)
 	require.NoError(t, err)
+
+	// create message with an invalid metadata length
+	msgEditChainInvalidMetadata := sample.MsgEditChain(r,
+		coordAddress,
+		launchID,
+		true,
+		validCampaignID,
+		false,
+	)
+	maxMetadataLength := tk.CampaignKeeper.GetParams(sdkCtx).MaxMetadataLength
+	msgEditChainInvalidMetadata.Metadata = sample.Metadata(r, maxMetadataLength+1)
 
 	for _, tc := range []struct {
 		name string
@@ -177,6 +190,11 @@ func TestMsgEditChain(t *testing.T) {
 				false,
 			),
 			err: types.ErrAddChainToCampaign,
+		},
+		{
+			name: "should prevent edit a chain with invalid metadata length",
+			msg:  msgEditChainInvalidMetadata,
+			err:  types.ErrInvalidMetadataLength,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
