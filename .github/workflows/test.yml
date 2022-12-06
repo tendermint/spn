@@ -2,12 +2,15 @@ name: Unit Tests
 
 on:
   pull_request:
+    paths-ignore:
+      - "*.md"
   push:
     paths-ignore:
       - '*.md'
     branches:
-      - master
+      - main
       - develop
+
 jobs:
   test:
     runs-on: ubuntu-latest
