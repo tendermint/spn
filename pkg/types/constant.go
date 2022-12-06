@@ -9,7 +9,7 @@ const (
 
 	// DefaultChainID is the default chain ID used
 	DefaultChainID = "spn-1"
-	
+
 	// DefaultUnbondingPeriod is the default unbonding time in seconds
 	// 1814400 represents 21 days
 	DefaultUnbondingPeriod = 1814400

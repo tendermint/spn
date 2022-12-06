@@ -102,8 +102,7 @@ func validateCampaignCreationFee(i interface{}) error {
 }
 
 func validateMaxMetadataLength(i interface{}) error {
-	_, ok := i.(uint64)
-	if !ok {
+	if _, ok := i.(uint64); !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 	return nil

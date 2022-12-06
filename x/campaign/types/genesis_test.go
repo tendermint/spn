@@ -274,14 +274,24 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 		{
 			name: "should prevent validation of genesis with max total supply below min total supply",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Sub(sdkmath.OneInt()), types.DefaultCampaignCreationFee),
+				Params: types.NewParams(
+					types.DefaultMinTotalSupply,
+					types.DefaultMinTotalSupply.Sub(sdkmath.OneInt()),
+					types.DefaultCampaignCreationFee,
+					types.DefaultMaxMetadataLength,
+				),
 			},
 			valid: false,
 		},
 		{
 			name: "should prevent validation of genesis with valid parameters",
 			genState: types.GenesisState{
-				Params: types.NewParams(types.DefaultMinTotalSupply, types.DefaultMinTotalSupply.Add(sdkmath.OneInt()), types.DefaultCampaignCreationFee),
+				Params: types.NewParams(
+					types.DefaultMinTotalSupply,
+					types.DefaultMinTotalSupply.Add(sdkmath.OneInt()),
+					types.DefaultCampaignCreationFee,
+					types.DefaultMaxMetadataLength,
+				),
 			},
 			valid: true,
 		},
