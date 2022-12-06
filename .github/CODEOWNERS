@@ -1,7 +1,4 @@
 # CODEOWNERS: https://help.github.com/articles/about-codeowners/
 
-# Docs
-*.md    @barriebyron
-
 # Primary repo maintainers
-*       @fadeev @ilgooz @lubtd @Pantani @ivanovpetr @aljo242 @giunatale
+*       @fadeev @lubtd @Pantani @aljo242 @giunatale
