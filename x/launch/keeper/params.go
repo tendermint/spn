@@ -33,9 +33,14 @@ func (k Keeper) RequestFee(ctx sdk.Context) (requestFee sdk.Coins) {
 }
 
 // GetParams get all parameters as types.Params
-func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
-	k.paramstore.GetParamSet(ctx, &params)
-	return params
+func (k Keeper) GetParams(ctx sdk.Context) types.Params {
+	return types.NewParams(
+		k.LaunchTimeRange(ctx).MinLaunchTime,
+		k.LaunchTimeRange(ctx).MaxLaunchTime,
+		k.RevertDelay(ctx),
+		k.ChainCreationFee(ctx),
+		k.RequestFee(ctx),
+	)
 }
 
 // SetParams set the params
