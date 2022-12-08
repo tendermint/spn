@@ -1,7 +1,6 @@
 syntax = "proto3";
 package tendermint.spn.monitoringc;
 
-// this line is used by starport scaffolding # proto/tx/import
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
 import "types/ibc.proto";
@@ -11,7 +10,6 @@ option go_package = "github.com/tendermint/spn/x/monitoringc/types";
 // Msg defines the Msg service.
 service Msg {
   rpc CreateClient(MsgCreateClient) returns (MsgCreateClientResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgCreateClient {
@@ -26,5 +24,3 @@ message MsgCreateClient {
 message MsgCreateClientResponse {
   string clientID = 1;
 }
-
-// this line is used by starport scaffolding # proto/tx/message
