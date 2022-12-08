@@ -25,7 +25,6 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the launch module's genesis state.
 type GenesisState struct {
-	// this line is used by starport scaffolding # genesis/proto/state
 	Chains            []Chain            `protobuf:"bytes,1,rep,name=chains,proto3" json:"chains"`
 	ChainCounter      uint64             `protobuf:"varint,2,opt,name=chainCounter,proto3" json:"chainCounter,omitempty"`
 	GenesisAccounts   []GenesisAccount   `protobuf:"bytes,3,rep,name=genesisAccounts,proto3" json:"genesisAccounts"`

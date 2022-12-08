@@ -914,7 +914,6 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// this line is used by starport scaffolding # proto/tx/rpc
 	CreateChain(ctx context.Context, in *MsgCreateChain, opts ...grpc.CallOption) (*MsgCreateChainResponse, error)
 	EditChain(ctx context.Context, in *MsgEditChain, opts ...grpc.CallOption) (*MsgEditChainResponse, error)
 	UpdateLaunchInformation(ctx context.Context, in *MsgUpdateLaunchInformation, opts ...grpc.CallOption) (*MsgUpdateLaunchInformationResponse, error)
@@ -997,7 +996,6 @@ func (c *msgClient) RevertLaunch(ctx context.Context, in *MsgRevertLaunch, opts 
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// this line is used by starport scaffolding # proto/tx/rpc
 	CreateChain(context.Context, *MsgCreateChain) (*MsgCreateChainResponse, error)
 	EditChain(context.Context, *MsgEditChain) (*MsgEditChainResponse, error)
 	UpdateLaunchInformation(context.Context, *MsgUpdateLaunchInformation) (*MsgUpdateLaunchInformationResponse, error)
