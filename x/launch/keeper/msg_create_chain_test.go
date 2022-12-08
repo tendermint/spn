@@ -86,6 +86,17 @@ func TestMsgCreateChain(t *testing.T) {
 	// coordAddrs[4] is not funded
 	initCreationFeeAndFundCoordAccounts(t, tk.LaunchKeeper, tk.BankKeeper, sdkCtx, chainCreationFee, 1, coordAddrs[:4]...)
 
+	// create message with an invalid metadata length
+	msgCreateChainInvalidMetadata := sample.MsgCreateChain(
+		r,
+		coordAddrs[0],
+		"",
+		false,
+		campMap[coordAddrs[0]],
+	)
+	maxMetadataLength := tk.LaunchKeeper.MaxMetadataLength(sdkCtx)
+	msgCreateChainInvalidMetadata.Metadata = sample.Metadata(r, maxMetadataLength+1)
+
 	for _, tc := range []struct {
 		name          string
 		msg           types.MsgCreateChain
@@ -131,6 +142,11 @@ func TestMsgCreateChain(t *testing.T) {
 			name: "should prevent creating a chain with insufficient balance to cover creation fee",
 			msg:  sample.MsgCreateChain(r, coordAddrs[4], "", false, campMap[coordAddrs[4]]),
 			err:  types.ErrFundCommunityPool,
+		},
+		{
+			name: "should prevent a chain with invalid metadata length",
+			msg:  msgCreateChainInvalidMetadata,
+			err:  types.ErrInvalidMetadataLength,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

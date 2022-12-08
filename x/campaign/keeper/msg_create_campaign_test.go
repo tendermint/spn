@@ -53,6 +53,7 @@ func TestMsgCreateCampaign(t *testing.T) {
 		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
 		ctx                 = sdk.WrapSDKContext(sdkCtx)
 		campaignCreationFee = sample.Coins(r)
+		maxMetadataLength   = tk.CampaignKeeper.MaxMetadataLength(sdkCtx)
 	)
 
 	t.Run("should allow creation of coordinators", func(t *testing.T) {
@@ -125,6 +126,16 @@ func TestMsgCreateCampaign(t *testing.T) {
 				Metadata:     sample.Metadata(r, 20),
 			},
 			err: types.ErrFundCommunityPool,
+		},
+		{
+			name: "should fail when the change had too long metadata",
+			msg: types.MsgCreateCampaign{
+				Coordinator:  sample.Address(r),
+				CampaignName: sample.CampaignName(r),
+				TotalSupply:  sample.TotalSupply(r),
+				Metadata:     sample.Metadata(r, maxMetadataLength+1),
+			},
+			err: types.ErrInvalidMetadataLength,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

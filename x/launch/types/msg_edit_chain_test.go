@@ -5,7 +5,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
@@ -13,15 +12,6 @@ import (
 func TestMsgEditChain_ValidateBasic(t *testing.T) {
 	// TODO check error types in test
 	launchID := uint64(0)
-
-	msgInvalidMetadataLen := sample.MsgEditChain(r,
-		sample.Address(r),
-		launchID,
-		false,
-		0,
-		false,
-	)
-	msgInvalidMetadataLen.Metadata = sample.Bytes(r, spntypes.MaxMetadataLength+1)
 
 	for _, tc := range []struct {
 		desc  string
@@ -81,11 +71,6 @@ func TestMsgEditChain_ValidateBasic(t *testing.T) {
 				0,
 				false,
 			),
-			valid: false,
-		},
-		{
-			desc:  "should prevent validate message with invalid metadata length",
-			msg:   msgInvalidMetadataLen,
 			valid: false,
 		},
 	} {

@@ -21,13 +21,27 @@ func TestParamsValidate(t *testing.T) {
 		err    error
 	}{
 		{
-			name:   "should prevent validate params with invalid launch time range",
-			params: NewParams(DefaultMaxLaunchTime, DefaultMinLaunchTime, DefaultRevertDelay, DefaultFee, DefaultFee),
-			err:    errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
+			name: "should prevent validate params with invalid launch time range",
+			params: NewParams(
+				DefaultMaxLaunchTime,
+				DefaultMinLaunchTime,
+				DefaultRevertDelay,
+				DefaultFee,
+				DefaultFee,
+				DefaultMaxMetadataLength,
+			),
+			err: errors.New("MinLaunchTime can't be higher than MaxLaunchTime"),
 		},
 		{
-			name:   "should validate valid params",
-			params: NewParams(DefaultMinLaunchTime, DefaultMaxLaunchTime, DefaultRevertDelay, DefaultFee, DefaultFee),
+			name: "should validate valid params",
+			params: NewParams(
+				DefaultMinLaunchTime,
+				DefaultMaxLaunchTime,
+				DefaultRevertDelay,
+				DefaultFee,
+				DefaultFee,
+				DefaultMaxMetadataLength,
+			),
 		},
 	}
 	for _, tt := range tests {
@@ -165,6 +179,40 @@ func TestValidateFee(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := validateFee(tt.fee)
+			if tt.err != nil {
+				require.Error(t, err, tt.err)
+				require.Equal(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestValidateMaxMetadataLength(t *testing.T) {
+	tests := []struct {
+		name              string
+		maxMetadataLength interface{}
+		err               error
+	}{
+		{
+			name:              "invalid interface",
+			maxMetadataLength: "test",
+			err:               fmt.Errorf("invalid parameter type: string"),
+		},
+		{
+			name:              "invalid number type",
+			maxMetadataLength: 1000,
+			err:               fmt.Errorf("invalid parameter type: int"),
+		},
+		{
+			name:              "valid param",
+			maxMetadataLength: uint64(1000),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := validateMaxMetadataLength(tt.maxMetadataLength)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)
