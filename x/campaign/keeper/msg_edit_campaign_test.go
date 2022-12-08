@@ -3,11 +3,10 @@ package keeper_test
 import (
 	"testing"
 
-	testkeeper "github.com/tendermint/spn/testutil/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -19,8 +18,9 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 		coordAddrNoCampaign = sample.Address(r)
 		campaign            = sample.Campaign(r, 0)
 
-		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
-		ctx            = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, ts    = testkeeper.NewTestSetup(t)
+		ctx               = sdk.WrapSDKContext(sdkCtx)
+		maxMetadataLength = tk.CampaignKeeper.MaxMetadataLength(sdkCtx)
 	)
 
 	t.Run("should allow creation of coordinators", func(t *testing.T) {
@@ -100,6 +100,16 @@ func TestMsgUpdateCampaignName(t *testing.T) {
 				Metadata:    sample.Metadata(r, 20),
 			},
 			err: profiletypes.ErrCoordInvalid,
+		},
+		{
+			name: "should fail when the change had too long metadata",
+			msg: types.MsgEditCampaign{
+				CampaignID:  0,
+				Coordinator: sample.Address(r),
+				Name:        sample.CampaignName(r),
+				Metadata:    sample.Metadata(r, maxMetadataLength+1),
+			},
+			err: types.ErrInvalidMetadataLength,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {

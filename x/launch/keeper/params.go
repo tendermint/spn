@@ -32,6 +32,12 @@ func (k Keeper) RequestFee(ctx sdk.Context) (requestFee sdk.Coins) {
 	return
 }
 
+// MaxMetadataLength returns the param that defines the max metadata length
+func (k Keeper) MaxMetadataLength(ctx sdk.Context) (maxMetadataLength uint64) {
+	k.paramstore.Get(ctx, types.KeyMaxMetadataLength, &maxMetadataLength)
+	return
+}
+
 // GetParams get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
@@ -40,6 +46,7 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 		k.RevertDelay(ctx),
 		k.ChainCreationFee(ctx),
 		k.RequestFee(ctx),
+		k.MaxMetadataLength(ctx),
 	)
 }
 

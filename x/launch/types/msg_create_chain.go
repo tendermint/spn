@@ -5,7 +5,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/tendermint/spn/pkg/chainid"
-	spntypes "github.com/tendermint/spn/pkg/types"
 	profile "github.com/tendermint/spn/x/profile/types"
 )
 
@@ -70,12 +69,6 @@ func (msg *MsgCreateChain) ValidateBasic() error {
 
 	if err = msg.InitialGenesis.Validate(); err != nil {
 		return sdkerrors.Wrap(ErrInvalidInitialGenesis, err.Error())
-	}
-
-	// TODO parameterize
-	if len(msg.Metadata) > spntypes.MaxMetadataLength {
-		return sdkerrors.Wrapf(ErrInvalidMetadataLength, "data length %d is greater than maximum %d",
-			len(msg.Metadata), spntypes.MaxMetadataLength)
 	}
 
 	// Coins must be valid
