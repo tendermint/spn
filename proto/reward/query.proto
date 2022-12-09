@@ -7,7 +7,6 @@ import "reward/params.proto";
 import "reward/reward_pool.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "gogoproto/gogo.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/reward/types";
 
@@ -28,7 +27,6 @@ service Query {
     option (google.api.http).get = "/tendermint/spn/reward/params";
   }
 
-  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetRewardPoolRequest {
@@ -55,5 +53,3 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
-
-// this line is used by starport scaffolding # 3

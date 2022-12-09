@@ -4,12 +4,12 @@ package tendermint.spn.monitoringc;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
+
 import "monitoringc/params.proto";
 import "monitoringc/provider_client_id.proto";
 import "monitoringc/launch_id_from_verified_client_id.proto";
 import "monitoringc/launch_id_from_channel_id.proto";
 import "monitoringc/monitoring_history.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/monitoringc/types";
 
@@ -49,8 +49,6 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/monitoringc/params";
   }
-
-  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetVerifiedClientIdsRequest {
@@ -110,5 +108,3 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
-
-// this line is used by starport scaffolding # 3
