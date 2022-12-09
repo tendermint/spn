@@ -12,6 +12,7 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 		k.TotalSupplyRange(ctx).MinTotalSupply,
 		k.TotalSupplyRange(ctx).MaxTotalSupply,
 		k.CampaignCreationFee(ctx),
+		k.MaxMetadataLength(ctx),
 	)
 }
 
