@@ -12,8 +12,8 @@ message Project {
   string   projectName                         = 2;
   uint64   coordinatorID                        = 3;
   int64    createdAt                            = 4;
-  uint64   projectID                            = 5;
-  bool     projectInitialized                   = 6;
+  uint64   mainnetID                            = 5;
+  bool     mainnetInitialized                   = 6;
   repeated cosmos.base.v1beta1.Coin totalSupply = 7 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
