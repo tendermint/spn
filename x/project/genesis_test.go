@@ -23,7 +23,7 @@ func TestGenesis(t *testing.T) {
 	t.Run("should allow importing and exporting genesis", func(t *testing.T) {
 		genesisState := sample.ProjectGenesisStateWithAccounts(r)
 
-		n.InitGenesis(ctx, *tk.ProjectKeeper, genesisState)
+		project.InitGenesis(ctx, *tk.ProjectKeeper, genesisState)
 		got := *project.ExportGenesis(ctx, *tk.ProjectKeeper)
 
 		require.ElementsMatch(t, genesisState.ProjectChains, got.ProjectChains)
