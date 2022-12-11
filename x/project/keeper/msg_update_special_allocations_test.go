@@ -339,36 +339,36 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			}
 
 			// fetch project
-			camp, found := tk.ProjectKeeper.GetProject(sdkCtx, tt.msg.ProjectID)
+			prjt, found := tk.ProjectKeeper.GetProject(sdkCtx, tt.msg.ProjectID)
 			require.True(t, found)
 
 			// check genesis distribution
 			gdExpected := tt.msg.SpecialAllocations.GenesisDistribution
-			gdGot := camp.SpecialAllocations.GenesisDistribution
+			gdGot := prjt.SpecialAllocations.GenesisDistribution
 			require.True(t, types.IsEqualShares(gdExpected, gdGot),
 				"invalid genesis distribution, expected: %s, got: %s", gdExpected.String(), gdGot.String(),
 			)
 
 			// check claimable airdrop
 			caExpected := tt.msg.SpecialAllocations.ClaimableAirdrop
-			caGot := camp.SpecialAllocations.ClaimableAirdrop
+			caGot := prjt.SpecialAllocations.ClaimableAirdrop
 			require.True(t, types.IsEqualShares(caExpected, caGot),
 				"invalid claimable airdrop, expected: %s, got: %s", caExpected.String(), caGot.String(),
 			)
 
 			// check allocated shares
 			asExpected := tt.expectedAllocatedShares
-			asGot := camp.AllocatedShares
+			asGot := prjt.AllocatedShares
 			require.True(t, types.IsEqualShares(asExpected, asGot),
 				"invalid allocated shares, expected: %s, got: %s", asExpected.String(), asGot.String(),
 			)
 
 			// no other values should be edited
-			camp.SpecialAllocations = types.EmptySpecialAllocations()
+			prjt.SpecialAllocations = types.EmptySpecialAllocations()
 			tt.state.project.SpecialAllocations = types.EmptySpecialAllocations()
-			camp.AllocatedShares = types.EmptyShares()
+			prjt.AllocatedShares = types.EmptyShares()
 			tt.state.project.AllocatedShares = types.EmptyShares()
-			require.EqualValues(t, *tt.state.project, camp)
+			require.EqualValues(t, *tt.state.project, prjt)
 		})
 	}
 }

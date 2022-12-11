@@ -30,11 +30,11 @@ func TestKeeper_AddChainToProject(t *testing.T) {
 		err = tk.ProjectKeeper.AddChainToProject(ctx, 0, 2)
 		require.NoError(t, err)
 
-		campainChains, found := tk.ProjectKeeper.GetProjectChains(ctx, 0)
+		projectChains, found := tk.ProjectKeeper.GetProjectChains(ctx, 0)
 		require.True(t, found)
-		require.EqualValues(t, campainChains.ProjectID, uint64(0))
-		require.Len(t, campainChains.Chains, 3)
-		require.EqualValues(t, []uint64{0, 1, 2}, campainChains.Chains)
+		require.EqualValues(t, projectChains.ProjectID, uint64(0))
+		require.Len(t, projectChains.Chains, 3)
+		require.EqualValues(t, []uint64{0, 1, 2}, projectChains.Chains)
 	})
 
 	// Can't add an existing chain

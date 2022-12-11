@@ -69,8 +69,8 @@ func FindCoordinatorProject(
 ) (uint64, bool) {
 	projects := ck.GetAllProject(ctx)
 
-	campNb := len(projects)
-	if campNb == 0 {
+	prjtNb := len(projects)
+	if prjtNb == 0 {
 		return 0, false
 	}
 

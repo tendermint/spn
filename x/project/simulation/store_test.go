@@ -86,7 +86,7 @@ func TestGetCoordSimAccountWithProjectID(t *testing.T) {
 	coords := populateCoordinators(t, r, ctx, *tk.ProfileKeeper, accs, 10)
 
 	t.Run("should find one project with mainnet launch triggered", func(t *testing.T) {
-		camp := projecttypes.NewProject(
+		prjt := projecttypes.NewProject(
 			0,
 			sample.AlphaString(r, 5),
 			coords[1],
@@ -94,12 +94,12 @@ func TestGetCoordSimAccountWithProjectID(t *testing.T) {
 			sample.Metadata(r, 20),
 			sample.Duration(r).Milliseconds(),
 		)
-		camp.MainnetInitialized = true
+		prjt.MainnetInitialized = true
 		chain := sample.Chain(r, 0, coords[1])
 		chain.LaunchTriggered = true
 		chain.IsMainnet = true
-		camp.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
-		tk.ProjectKeeper.AppendProject(ctx, camp)
+		prjt.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		tk.ProjectKeeper.AppendProject(ctx, prjt)
 		_, _, found := simproject.GetCoordSimAccountWithProjectID(
 			r,
 			ctx,
@@ -113,7 +113,7 @@ func TestGetCoordSimAccountWithProjectID(t *testing.T) {
 	})
 
 	t.Run("should find a project", func(t *testing.T) {
-		camp := projecttypes.NewProject(
+		prjt := projecttypes.NewProject(
 			1,
 			sample.AlphaString(r, 5),
 			coords[0],
@@ -121,12 +121,12 @@ func TestGetCoordSimAccountWithProjectID(t *testing.T) {
 			sample.Metadata(r, 20),
 			sample.Duration(r).Milliseconds(),
 		)
-		camp.MainnetInitialized = true
+		prjt.MainnetInitialized = true
 		chain := sample.Chain(r, 0, coords[1])
 		chain.LaunchTriggered = false
 		chain.IsMainnet = true
-		camp.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
-		tk.ProjectKeeper.AppendProject(ctx, camp)
+		prjt.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		tk.ProjectKeeper.AppendProject(ctx, prjt)
 		acc, id, found := simproject.GetCoordSimAccountWithProjectID(
 			r,
 			ctx,
@@ -140,11 +140,11 @@ func TestGetCoordSimAccountWithProjectID(t *testing.T) {
 		require.Contains(t, accs, acc)
 		_, found = tk.ProjectKeeper.GetProject(ctx, id)
 		require.True(t, found)
-		require.EqualValues(t, id, camp.ProjectID)
+		require.EqualValues(t, id, prjt.ProjectID)
 	})
 
 	t.Run("should find a project with no mainnet initialized", func(t *testing.T) {
-		camp := projecttypes.NewProject(
+		prjt := projecttypes.NewProject(
 			2,
 			sample.AlphaString(r, 5),
 			coords[1],
@@ -152,7 +152,7 @@ func TestGetCoordSimAccountWithProjectID(t *testing.T) {
 			sample.Metadata(r, 20),
 			sample.Duration(r).Milliseconds(),
 		)
-		idNoMainnet := tk.ProjectKeeper.AppendProject(ctx, camp)
+		idNoMainnet := tk.ProjectKeeper.AppendProject(ctx, prjt)
 		acc, id, found := simproject.GetCoordSimAccountWithProjectID(
 			r,
 			ctx,
@@ -167,8 +167,8 @@ func TestGetCoordSimAccountWithProjectID(t *testing.T) {
 		_, found = tk.ProjectKeeper.GetProject(ctx, id)
 		require.True(t, found)
 		require.EqualValues(t, idNoMainnet, id)
-		require.EqualValues(t, camp.ProjectID, id)
-		require.False(t, camp.MainnetInitialized)
+		require.EqualValues(t, prjt.ProjectID, id)
+		require.False(t, prjt.MainnetInitialized)
 	})
 }
 
@@ -182,7 +182,7 @@ func TestGetSharesFromProject(t *testing.T) {
 	})
 
 	t.Run("should find no shares remaining for the project", func(t *testing.T) {
-		camp := projecttypes.NewProject(
+		prjt := projecttypes.NewProject(
 			0,
 			sample.AlphaString(r, 5),
 			0,
@@ -195,14 +195,14 @@ func TestGetSharesFromProject(t *testing.T) {
 			spntypes.TotalShareNumber,
 		))
 		require.NoError(t, err)
-		camp.AllocatedShares = shares
-		campSharesReached := tk.ProjectKeeper.AppendProject(ctx, camp)
-		_, found := simproject.GetSharesFromProject(r, ctx, *tk.ProjectKeeper, campSharesReached)
+		prjt.AllocatedShares = shares
+		prjtSharesReached := tk.ProjectKeeper.AppendProject(ctx, prjt)
+		_, found := simproject.GetSharesFromProject(r, ctx, *tk.ProjectKeeper, prjtSharesReached)
 		require.False(t, found)
 	})
 
 	t.Run("should find project with available shares", func(t *testing.T) {
-		campID := tk.ProjectKeeper.AppendProject(ctx, projecttypes.NewProject(
+		prjtID := tk.ProjectKeeper.AppendProject(ctx, projecttypes.NewProject(
 			1,
 			sample.AlphaString(r, 5),
 			0,
@@ -210,7 +210,7 @@ func TestGetSharesFromProject(t *testing.T) {
 			sample.Metadata(r, 20),
 			sample.Duration(r).Milliseconds(),
 		))
-		shares, found := simproject.GetSharesFromProject(r, ctx, *tk.ProjectKeeper, campID)
+		shares, found := simproject.GetSharesFromProject(r, ctx, *tk.ProjectKeeper, prjtID)
 		require.True(t, found)
 		require.NotEqualValues(t, projecttypes.EmptyShares(), shares)
 	})
@@ -241,9 +241,9 @@ func TestGetAccountWithVouchers(t *testing.T) {
 		project.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
 		project.ProjectID = tk.ProjectKeeper.AppendProject(ctx, project)
 		mint(acc.Address, sample.Vouchers(r, project.ProjectID))
-		campID, acc, coins, found := simproject.GetAccountWithVouchers(r, ctx, tk.BankKeeper, *tk.ProjectKeeper, accs, false)
+		prjtID, acc, coins, found := simproject.GetAccountWithVouchers(r, ctx, tk.BankKeeper, *tk.ProjectKeeper, accs, false)
 		require.True(t, found)
-		require.EqualValues(t, project.ProjectID, campID)
+		require.EqualValues(t, project.ProjectID, prjtID)
 		require.False(t, coins.Empty())
 		require.Contains(t, accs, acc)
 	})
@@ -254,9 +254,9 @@ func TestGetAccountWithVouchers(t *testing.T) {
 		project.MainnetInitialized = false
 		project.ProjectID = tk.ProjectKeeper.AppendProject(ctx, project)
 		mint(acc.Address, sample.Vouchers(r, project.ProjectID))
-		campID, acc, coins, found := simproject.GetAccountWithVouchers(r, ctx, tk.BankKeeper, *tk.ProjectKeeper, accs, true)
+		prjtID, acc, coins, found := simproject.GetAccountWithVouchers(r, ctx, tk.BankKeeper, *tk.ProjectKeeper, accs, true)
 		require.True(t, found)
-		require.EqualValues(t, project.ProjectID, campID)
+		require.EqualValues(t, project.ProjectID, prjtID)
 		require.False(t, coins.Empty())
 		require.Contains(t, accs, acc)
 	})
@@ -299,10 +299,10 @@ func TestGetAccountWithShares(t *testing.T) {
 			Address:    acc.Address.String(),
 			Shares:     share,
 		})
-		campID, acc, shareRetrieved, found := simproject.GetAccountWithShares(r, ctx, *tk.ProjectKeeper, accs, false)
+		prjtID, acc, shareRetrieved, found := simproject.GetAccountWithShares(r, ctx, *tk.ProjectKeeper, accs, false)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
-		require.EqualValues(t, project.ProjectID, campID)
+		require.EqualValues(t, project.ProjectID, prjtID)
 		require.EqualValues(t, share, shareRetrieved)
 	})
 
@@ -317,10 +317,10 @@ func TestGetAccountWithShares(t *testing.T) {
 			Address:    acc.Address.String(),
 			Shares:     share,
 		})
-		campID, acc, shareRetrieved, found := simproject.GetAccountWithShares(r, ctx, *tk.ProjectKeeper, accs, true)
+		prjtID, acc, shareRetrieved, found := simproject.GetAccountWithShares(r, ctx, *tk.ProjectKeeper, accs, true)
 		require.True(t, found)
 		require.Contains(t, accs, acc)
-		require.EqualValues(t, project.ProjectID, campID)
+		require.EqualValues(t, project.ProjectID, prjtID)
 		require.EqualValues(t, share, shareRetrieved)
 	})
 }

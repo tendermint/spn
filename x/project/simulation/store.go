@@ -51,54 +51,54 @@ func GetCoordSimAccountWithProjectID(
 	requireNoMainnetLaunchTriggered bool,
 ) (simtypes.Account, uint64, bool) {
 	projects := k.GetAllProject(ctx)
-	campNb := len(projects)
-	if campNb == 0 {
+	prjtNb := len(projects)
+	if prjtNb == 0 {
 		return simtypes.Account{}, 0, false
 	}
 
-	r.Shuffle(campNb, func(i, j int) {
+	r.Shuffle(prjtNb, func(i, j int) {
 		projects[i], projects[j] = projects[j], projects[i]
 	})
 
 	// select first project after shuffle
-	camp := projects[0]
+	prjt := projects[0]
 	// If a criteria is required for the project, we simply fetch the first one that satisfies the criteria
 	if requireNoMainnetInitialized {
-		var campFound bool
+		var prjtFound bool
 		for _, project := range projects {
 			if !project.MainnetInitialized {
-				camp = project
-				campFound = true
+				prjt = project
+				prjtFound = true
 				break
 			}
 		}
-		if !campFound {
+		if !prjtFound {
 			return simtypes.Account{}, 0, false
 		}
 	}
 	if !requireNoMainnetInitialized && requireNoMainnetLaunchTriggered {
-		var campFound bool
+		var prjtFound bool
 		for _, project := range projects {
 			launched, _ := k.IsProjectMainnetLaunchTriggered(ctx, project.ProjectID)
 			if !launched {
-				camp = project
-				campFound = true
+				prjt = project
+				prjtFound = true
 				break
 			}
 		}
-		if !campFound {
+		if !prjtFound {
 			return simtypes.Account{}, 0, false
 		}
 	}
 
 	// Find the sim account of the project coordinator
-	coord, found := pk.GetCoordinator(ctx, camp.CoordinatorID)
+	coord, found := pk.GetCoordinator(ctx, prjt.CoordinatorID)
 	if !found {
 		return simtypes.Account{}, 0, false
 	}
 	for _, acc := range accs {
 		if acc.Address.String() == coord.Address && coord.Active {
-			return acc, camp.ProjectID, true
+			return acc, prjt.ProjectID, true
 		}
 	}
 
@@ -106,15 +106,15 @@ func GetCoordSimAccountWithProjectID(
 }
 
 // GetSharesFromProject returns a small portion of shares that can be minted as vouchers or added to an account
-func GetSharesFromProject(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campID uint64) (types.Shares, bool) {
-	camp, found := k.GetProject(ctx, campID)
+func GetSharesFromProject(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, prjtID uint64) (types.Shares, bool) {
+	prjt, found := k.GetProject(ctx, prjtID)
 	if !found {
 		return types.EmptyShares(), false
 	}
 
 	var shares sdk.Coins
 	for _, share := range ShareDenoms {
-		remaining := int64(k.GetTotalShares(ctx)) - camp.AllocatedShares.AmountOf(share)
+		remaining := int64(k.GetTotalShares(ctx)) - prjt.AllocatedShares.AmountOf(share)
 		if remaining == 0 {
 			continue
 		}
@@ -142,19 +142,19 @@ func GetAccountWithVouchers(
 	k keeper.Keeper,
 	accs []simtypes.Account,
 	requireNoMainnetLaunchTriggered bool,
-) (campID uint64, account simtypes.Account, coins sdk.Coins, found bool) {
+) (prjtID uint64, account simtypes.Account, coins sdk.Coins, found bool) {
 	var err error
 	var accountAddr sdk.AccAddress
 
 	// Parse all account balances and find one with vouchers
 	bk.IterateAllBalances(ctx, func(addr sdk.AccAddress, coin sdk.Coin) bool {
-		campID, err = types.VoucherProject(coin.Denom)
+		prjtID, err = types.VoucherProject(coin.Denom)
 		if err != nil {
 			return false
 		}
 
 		if requireNoMainnetLaunchTriggered {
-			project, found := k.GetProject(ctx, campID)
+			project, found := k.GetProject(ctx, prjtID)
 			if !found {
 				return false
 			}
@@ -177,7 +177,7 @@ func GetAccountWithVouchers(
 	// Fetch from the vouchers of the project owned by the account
 	bk.IterateAccountBalances(ctx, accountAddr, func(coin sdk.Coin) bool {
 		coinCampID, err := types.VoucherProject(coin.Denom)
-		if err == nil && coinCampID == campID {
+		if err == nil && coinCampID == prjtID {
 			// fetch a part of each voucher hold by the account
 			amt, err := simtypes.RandPositiveInt(r, coin.Amount)
 			if err == nil {
@@ -195,7 +195,7 @@ func GetAccountWithVouchers(
 	// Find the sim account
 	for _, acc := range accs {
 		if found = acc.Address.Equals(accountAddr); found {
-			return campID, acc, coins, true
+			return prjtID, acc, coins, true
 		}
 	}
 	return 0, account, coins, false

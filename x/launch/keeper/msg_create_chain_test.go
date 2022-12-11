@@ -9,10 +9,10 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 func initCreationFeeAndFundCoordAccounts(
@@ -51,7 +51,7 @@ func TestMsgCreateChain(t *testing.T) {
 	var (
 		coordAddrs       = make([]string, 5)
 		coordMap         = make(map[string]uint64)
-		campMap          = make(map[string]uint64)
+		prjtMap          = make(map[string]uint64)
 		sdkCtx, tk, ts   = testkeeper.NewTestSetup(t)
 		ctx              = sdk.WrapSDKContext(sdkCtx)
 		chainCreationFee = sample.Coins(r)
@@ -79,7 +79,7 @@ func TestMsgCreateChain(t *testing.T) {
 		msgCreateProject := sample.MsgCreateProject(r, addr)
 		resProject, err := ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
 		require.NoError(t, err)
-		campMap[addr] = resProject.ProjectID
+		prjtMap[addr] = resProject.ProjectID
 	}
 
 	// assign random sdk.Coins to `chainCreationFee` param and provide balance to coordinators
@@ -92,7 +92,7 @@ func TestMsgCreateChain(t *testing.T) {
 		coordAddrs[0],
 		"",
 		false,
-		campMap[coordAddrs[0]],
+		prjtMap[coordAddrs[0]],
 	)
 	maxMetadataLength := tk.LaunchKeeper.MaxMetadataLength(sdkCtx)
 	msgCreateChainInvalidMetadata.Metadata = sample.Metadata(r, maxMetadataLength+1)
@@ -105,22 +105,22 @@ func TestMsgCreateChain(t *testing.T) {
 	}{
 		{
 			name:          "should create a chain",
-			msg:           sample.MsgCreateChain(r, coordAddrs[0], "", false, campMap[coordAddrs[0]]),
+			msg:           sample.MsgCreateChain(r, coordAddrs[0], "", false, prjtMap[coordAddrs[0]]),
 			wantedChainID: 0,
 		},
 		{
 			name:          "should allow creating a chain with a unique chain ID",
-			msg:           sample.MsgCreateChain(r, coordAddrs[1], "", false, campMap[coordAddrs[1]]),
+			msg:           sample.MsgCreateChain(r, coordAddrs[1], "", false, prjtMap[coordAddrs[1]]),
 			wantedChainID: 1,
 		},
 		{
 			name:          "should allow creating a chain with genesis url",
-			msg:           sample.MsgCreateChain(r, coordAddrs[2], "foo.com", false, campMap[coordAddrs[2]]),
+			msg:           sample.MsgCreateChain(r, coordAddrs[2], "foo.com", false, prjtMap[coordAddrs[2]]),
 			wantedChainID: 2,
 		},
 		{
 			name:          "should allow creating a chain with project",
-			msg:           sample.MsgCreateChain(r, coordAddrs[3], "", true, campMap[coordAddrs[3]]),
+			msg:           sample.MsgCreateChain(r, coordAddrs[3], "", true, prjtMap[coordAddrs[3]]),
 			wantedChainID: 3,
 		},
 		{
@@ -140,7 +140,7 @@ func TestMsgCreateChain(t *testing.T) {
 		},
 		{
 			name: "should prevent creating a chain with insufficient balance to cover creation fee",
-			msg:  sample.MsgCreateChain(r, coordAddrs[4], "", false, campMap[coordAddrs[4]]),
+			msg:  sample.MsgCreateChain(r, coordAddrs[4], "", false, prjtMap[coordAddrs[4]]),
 			err:  types.ErrFundCommunityPool,
 		},
 		{

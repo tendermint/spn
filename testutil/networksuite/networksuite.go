@@ -146,11 +146,11 @@ func populateLaunch(r *rand.Rand, launchState launch.GenesisState) launch.Genesi
 func populateProject(r *rand.Rand, projectState project.GenesisState) project.GenesisState {
 	// add projects
 	for i := 0; i < 5; i++ {
-		camp := project.Project{
+		prjt := project.Project{
 			ProjectID: uint64(i),
 		}
-		nullify.Fill(&camp)
-		projectState.Projects = append(projectState.Projects, camp)
+		nullify.Fill(&prjt)
+		projectState.Projects = append(projectState.Projects, prjt)
 	}
 
 	// add project chains
