@@ -20,7 +20,7 @@ message Chain {
 
   bool   hasProject = 8;
   uint64 projectID  = 9;
-  bool   isMainnet   = 10;
+  bool   isMainnet  = 10;
 
   bool                      launchTriggered = 11;
   google.protobuf.Timestamp launchTime      = 12 [(gogoproto.nullable) = false, (gogoproto.stdtime) = true];

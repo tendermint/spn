@@ -20,13 +20,13 @@ message Params {
   ];
 
   // requestFee is the fee for making a request to a chain
-  repeated cosmos.base.v1beta1.Coin requestFee       = 4 [
+  repeated cosmos.base.v1beta1.Coin requestFee = 4 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
 
-  uint64 maxMetadataLength                           = 5;
+  uint64 maxMetadataLength = 5;
 }
 
 message LaunchTimeRange {

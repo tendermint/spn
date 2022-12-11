@@ -8,8 +8,8 @@ import "project/special_allocations.proto";
 option go_package = "github.com/tendermint/spn/x/project/types";
 
 message Project {
-  uint64   projectID                           = 1;
-  string   projectName                         = 2;
+  uint64   projectID                            = 1;
+  string   projectName                          = 2;
   uint64   coordinatorID                        = 3;
   int64    createdAt                            = 4;
   uint64   mainnetID                            = 5;
