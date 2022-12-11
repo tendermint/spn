@@ -1,0 +1,21 @@
+syntax = "proto3";
+package tendermint.spn.project;
+
+import "gogoproto/gogo.proto";
+import "project/project_chains.proto";
+import "project/vesting.proto";
+import "project/project.proto";
+import "project/mainnet_account.proto";
+import "project/params.proto";
+
+option go_package = "github.com/tendermint/spn/x/project/types";
+
+// GenesisState defines the project module's genesis state.
+message GenesisState {
+  repeated Project       projects       = 1 [(gogoproto.nullable) = false];
+  uint64                  projectCounter = 2;
+  repeated ProjectChains projectChains  = 3 [(gogoproto.nullable) = false];
+  repeated MainnetAccount mainnetAccounts = 4 [(gogoproto.nullable) = false];
+  uint64                  totalShares     = 5;
+  Params                  params          = 6 [(gogoproto.nullable) = false];
+}

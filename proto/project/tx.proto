@@ -1,17 +1,17 @@
 syntax = "proto3";
-package tendermint.spn.campaign;
+package tendermint.spn.project;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
-import "campaign/vesting.proto";
-import "campaign/special_allocations.proto";
+import "project/vesting.proto";
+import "project/special_allocations.proto";
 
 option go_package = "github.com/tendermint/spn/x/project/types";
 
 // Msg defines the Msg service.
 service Msg {
-  rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
-  rpc EditCampaign(MsgEditCampaign) returns (MsgEditCampaignResponse);
+  rpc CreateProject(MsgCreateProject) returns (MsgCreateProjectResponse);
+  rpc EditProject(MsgEditProject) returns (MsgEditProjectResponse);
   rpc UpdateTotalSupply(MsgUpdateTotalSupply) returns (MsgUpdateTotalSupplyResponse);
   rpc UpdateSpecialAllocations(MsgUpdateSpecialAllocations) returns (MsgUpdateSpecialAllocationsResponse);
   rpc InitializeMainnet(MsgInitializeMainnet) returns (MsgInitializeMainnetResponse);
@@ -21,9 +21,9 @@ service Msg {
   rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
 }
 
-message MsgCreateCampaign {
+message MsgCreateProject {
   string   coordinator                          = 1;
-  string   campaignName                         = 2;
+  string   projectName                         = 2;
   repeated cosmos.base.v1beta1.Coin totalSupply = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -32,22 +32,22 @@ message MsgCreateCampaign {
   bytes metadata = 4;
 }
 
-message MsgCreateCampaignResponse {
-  uint64 campaignID = 1;
+message MsgCreateProjectResponse {
+  uint64 projectID = 1;
 }
 
-message MsgEditCampaign {
+message MsgEditProject {
   string coordinator = 1;
-  uint64 campaignID  = 2;
+  uint64 projectID  = 2;
   string name        = 3;
   bytes  metadata    = 4;
 }
 
-message MsgEditCampaignResponse {}
+message MsgEditProjectResponse {}
 
 message MsgUpdateTotalSupply {
   string   coordinator                                = 1;
-  uint64   campaignID                                 = 2;
+  uint64   projectID                                 = 2;
   repeated cosmos.base.v1beta1.Coin totalSupplyUpdate = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -59,7 +59,7 @@ message MsgUpdateTotalSupplyResponse {}
 
 message MsgUpdateSpecialAllocations {
   string             coordinator        = 1;
-  uint64             campaignID         = 2;
+  uint64             projectID         = 2;
   SpecialAllocations specialAllocations = 3 [(gogoproto.nullable) = false];
 }
 
@@ -67,7 +67,7 @@ message MsgUpdateSpecialAllocationsResponse {}
 
 message MsgInitializeMainnet {
   string coordinator    = 1;
-  uint64 campaignID     = 2;
+  uint64 projectID     = 2;
   string sourceURL      = 3;
   string sourceHash     = 4;
   string mainnetChainID = 5;
@@ -79,7 +79,7 @@ message MsgInitializeMainnetResponse {
 
 message MsgMintVouchers {
   string   coordinator                     = 1;
-  uint64   campaignID                      = 2;
+  uint64   projectID                      = 2;
   repeated cosmos.base.v1beta1.Coin shares = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -91,7 +91,7 @@ message MsgMintVouchersResponse {}
 
 message MsgBurnVouchers {
   string   sender                            = 1;
-  uint64   campaignID                        = 2;
+  uint64   projectID                        = 2;
   repeated cosmos.base.v1beta1.Coin vouchers = 3 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -103,7 +103,7 @@ message MsgBurnVouchersResponse {}
 
 message MsgRedeemVouchers {
   string   sender                            = 1;
-  uint64   campaignID                        = 2;
+  uint64   projectID                        = 2;
   string   account                           = 3;
   repeated cosmos.base.v1beta1.Coin vouchers = 4 [
     (gogoproto.nullable)     = false,
@@ -116,7 +116,7 @@ message MsgRedeemVouchersResponse {}
 
 message MsgUnredeemVouchers {
   string   sender                          = 1;
-  uint64   campaignID                      = 2;
+  uint64   projectID                      = 2;
   repeated cosmos.base.v1beta1.Coin shares = 4 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",

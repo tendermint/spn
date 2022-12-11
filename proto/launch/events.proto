@@ -56,8 +56,8 @@ message EventValidatorAdded {
   bytes                    consPubKey         = 4;
   cosmos.base.v1beta1.Coin selfDelegation     = 5 [(gogoproto.nullable) = false];
   Peer                     peer               = 6 [(gogoproto.nullable) = false];
-  bool                     hasCampaign        = 7;
-  uint64                   campaignID         = 8;
+  bool                     hasProject        = 7;
+  uint64                   projectID         = 8;
   string                   coordinatorAddress = 9 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 
@@ -70,8 +70,8 @@ message EventAccountRemoved {
 message EventValidatorRemoved {
   string genesisValidatorAccount = 1;
   uint64 launchID                = 2;
-  bool   hasCampaign             = 3;
-  uint64 campaignID              = 4;
+  bool   hasProject             = 3;
+  uint64 projectID              = 4;
   string coordinatorAddress      = 5 [(cosmos_proto.scalar) = "cosmos.AddressString"];
 }
 

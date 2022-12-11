@@ -1,5 +1,5 @@
 syntax = "proto3";
-package tendermint.spn.campaign;
+package tendermint.spn.project;
 
 import "google/protobuf/timestamp.proto";
 

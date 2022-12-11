@@ -28,8 +28,8 @@ message MsgCreateChain {
   string         sourceURL                         = 3;
   string         sourceHash                        = 4;
   InitialGenesis initialGenesis                    = 5 [(gogoproto.nullable) = false];
-  bool           hasCampaign                       = 6;
-  uint64         campaignID                        = 7;
+  bool           hasProject                       = 6;
+  uint64         projectID                        = 7;
   repeated cosmos.base.v1beta1.Coin AccountBalance = 8 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -45,8 +45,8 @@ message MsgCreateChainResponse {
 message MsgEditChain {
   string coordinator   = 1;
   uint64 launchID      = 2;
-  bool   setCampaignID = 3;
-  uint64 campaignID    = 4;
+  bool   setProjectID = 3;
+  uint64 projectID    = 4;
   bytes  metadata      = 5;
 }
 

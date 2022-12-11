@@ -1,19 +1,19 @@
 syntax = "proto3";
-package tendermint.spn.campaign;
+package tendermint.spn.project;
 
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
-import "campaign/special_allocations.proto";
+import "project/special_allocations.proto";
 
 option go_package = "github.com/tendermint/spn/x/project/types";
 
-message Campaign {
-  uint64   campaignID                           = 1;
-  string   campaignName                         = 2;
+message Project {
+  uint64   projectID                           = 1;
+  string   projectName                         = 2;
   uint64   coordinatorID                        = 3;
   int64    createdAt                            = 4;
-  uint64   mainnetID                            = 5;
-  bool     mainnetInitialized                   = 6;
+  uint64   projectID                            = 5;
+  bool     projectInitialized                   = 6;
   repeated cosmos.base.v1beta1.Coin totalSupply = 7 [
     (gogoproto.nullable)     = false,
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",

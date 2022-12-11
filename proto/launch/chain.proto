@@ -18,8 +18,8 @@ message Chain {
 
   InitialGenesis initialGenesis = 7 [(gogoproto.nullable) = false];
 
-  bool   hasCampaign = 8;
-  uint64 campaignID  = 9;
+  bool   hasProject = 8;
+  uint64 projectID  = 9;
   bool   isMainnet   = 10;
 
   bool                      launchTriggered = 11;
