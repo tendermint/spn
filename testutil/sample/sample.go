@@ -22,7 +22,7 @@ import (
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 
-	campaign "github.com/tendermint/spn/x/campaign/types"
+	campaign "github.com/tendermint/spn/x/project/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	monitoringp "github.com/tendermint/spn/x/monitoringp/types"

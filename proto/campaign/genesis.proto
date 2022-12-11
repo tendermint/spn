@@ -8,7 +8,7 @@ import "campaign/campaign.proto";
 import "campaign/mainnet_account.proto";
 import "campaign/params.proto";
 
-option go_package = "github.com/tendermint/spn/x/campaign/types";
+option go_package = "github.com/tendermint/spn/x/project/types";
 
 // GenesisState defines the campaign module's genesis state.
 message GenesisState {

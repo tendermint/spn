@@ -6,7 +6,7 @@ import "cosmos/base/v1beta1/coin.proto";
 import "campaign/vesting.proto";
 import "campaign/special_allocations.proto";
 
-option go_package = "github.com/tendermint/spn/x/campaign/types";
+option go_package = "github.com/tendermint/spn/x/project/types";
 
 // Msg defines the Msg service.
 service Msg {

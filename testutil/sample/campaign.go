@@ -7,7 +7,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	campaign "github.com/tendermint/spn/x/campaign/types"
+	campaign "github.com/tendermint/spn/x/project/types"
 )
 
 // Shares returns a sample shares

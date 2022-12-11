@@ -18,7 +18,7 @@ import (
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
-	campaign "github.com/tendermint/spn/x/campaign/types"
+	campaign "github.com/tendermint/spn/x/project/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	participation "github.com/tendermint/spn/x/participation/types"

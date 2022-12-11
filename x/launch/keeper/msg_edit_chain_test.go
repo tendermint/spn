@@ -5,7 +5,7 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	campaigntypes "github.com/tendermint/spn/x/project/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"

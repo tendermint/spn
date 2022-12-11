@@ -12,8 +12,8 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	campaignkeeper "github.com/tendermint/spn/x/project/keeper"
+	campaigntypes "github.com/tendermint/spn/x/project/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"

@@ -9,7 +9,7 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	campaigntypes "github.com/tendermint/spn/x/project/types"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 )
 

@@ -7,7 +7,7 @@ import "cosmos_proto/cosmos.proto";
 
 import "campaign/vesting.proto";
 
-option go_package = "github.com/tendermint/spn/x/campaign/types";
+option go_package = "github.com/tendermint/spn/x/project/types";
 
 message EventCampaignCreated {
   uint64 campaignID         = 1;

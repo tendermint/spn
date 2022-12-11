@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	campaigntypes "github.com/tendermint/spn/x/project/types"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
