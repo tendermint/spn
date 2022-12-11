@@ -18,7 +18,7 @@ func NewMsgUpdateSpecialAllocations(
 ) *MsgUpdateSpecialAllocations {
 	return &MsgUpdateSpecialAllocations{
 		Coordinator:        coordinator,
-		ProjectID:         projectID,
+		ProjectID:          projectID,
 		SpecialAllocations: specialAllocations,
 	}
 }

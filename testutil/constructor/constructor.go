@@ -9,8 +9,8 @@ import (
 	abci "github.com/tendermint/tendermint/abci/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 // Vote is a simplified type for abci.VoteInfo for testing purpose

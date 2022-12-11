@@ -8,8 +8,8 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func TestMsgUpdateTotalSupply(t *testing.T) {
@@ -53,7 +53,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "should update total supply",
 			msg: types.MsgUpdateTotalSupply{
-				ProjectID:        0,
+				ProjectID:         0,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
@@ -61,7 +61,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "should allow update total supply again",
 			msg: types.MsgUpdateTotalSupply{
-				ProjectID:        0,
+				ProjectID:         0,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
@@ -69,7 +69,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "should fail if project not found",
 			msg: types.MsgUpdateTotalSupply{
-				ProjectID:        100,
+				ProjectID:         100,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
@@ -78,7 +78,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "should fail with non existing coordinator",
 			msg: types.MsgUpdateTotalSupply{
-				ProjectID:        0,
+				ProjectID:         0,
 				Coordinator:       sample.Address(r),
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
@@ -87,7 +87,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "should fail if coordinator is not associated with project",
 			msg: types.MsgUpdateTotalSupply{
-				ProjectID:        0,
+				ProjectID:         0,
 				Coordinator:       coordAddr2,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
@@ -96,7 +96,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "cannot update total supply when mainnet is initialized",
 			msg: types.MsgUpdateTotalSupply{
-				ProjectID:        1,
+				ProjectID:         1,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
@@ -105,7 +105,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "should fail if total supply outside of valid range",
 			msg: types.MsgUpdateTotalSupply{
-				ProjectID:        0,
+				ProjectID:         0,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.CoinsWithRange(r, 10, 20),
 			},

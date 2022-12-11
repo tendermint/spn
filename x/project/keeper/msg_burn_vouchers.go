@@ -44,7 +44,7 @@ func (k msgServer) BurnVouchers(goCtx context.Context, msg *types.MsgBurnVoucher
 	k.SetProject(ctx, project)
 
 	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectSharesUpdated{
-		ProjectID:      project.ProjectID,
+		ProjectID:       project.ProjectID,
 		AllocatedShares: project.AllocatedShares,
 	})
 

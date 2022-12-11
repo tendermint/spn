@@ -62,8 +62,8 @@ func createNMainnetAccountForProjectIDWithTotalSupply(
 		require.NoError(t, err)
 		items[i] = types.MainnetAccountBalance{
 			ProjectID: projectID,
-			Address:    acc.Address,
-			Coins:      balance,
+			Address:   acc.Address,
+			Coins:     balance,
 		}
 	}
 	return items
@@ -85,7 +85,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 			name: "should allow valid query",
 			request: &types.QueryGetMainnetAccountRequest{
 				ProjectID: msgs[0].ProjectID,
-				Address:    msgs[0].Address,
+				Address:   msgs[0].Address,
 			},
 			response: &types.QueryGetMainnetAccountResponse{MainnetAccount: msgs[0]},
 		},
@@ -93,7 +93,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 			name: "should return KeyNotFound",
 			request: &types.QueryGetMainnetAccountRequest{
 				ProjectID: 100000,
-				Address:    strconv.Itoa(100000),
+				Address:   strconv.Itoa(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
@@ -115,7 +115,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 
 func TestMainnetAccountQueryPaginated(t *testing.T) {
 	var (
-		projectID = uint64(5)
+		projectID  = uint64(5)
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
 		msgs       = createNMainnetAccountForProjectID(tk.ProjectKeeper, ctx, 5, projectID)
@@ -165,7 +165,7 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 
 func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 	var (
-		projectID = uint64(5)
+		projectID  = uint64(5)
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
 		msgs       = createNMainnetAccountForProjectIDWithTotalSupply(t, tk.ProjectKeeper, ctx, 5, projectID)
@@ -180,7 +180,7 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 			desc: "First",
 			request: &types.QueryGetMainnetAccountBalanceRequest{
 				ProjectID: msgs[0].ProjectID,
-				Address:    msgs[0].Address,
+				Address:   msgs[0].Address,
 			},
 			response: &types.QueryGetMainnetAccountBalanceResponse{MainnetAccountBalance: msgs[0]},
 		},
@@ -188,7 +188,7 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 			desc: "Second",
 			request: &types.QueryGetMainnetAccountBalanceRequest{
 				ProjectID: msgs[1].ProjectID,
-				Address:    msgs[1].Address,
+				Address:   msgs[1].Address,
 			},
 			response: &types.QueryGetMainnetAccountBalanceResponse{MainnetAccountBalance: msgs[1]},
 		},
@@ -196,7 +196,7 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 			desc: "project not found",
 			request: &types.QueryGetMainnetAccountBalanceRequest{
 				ProjectID: 10000,
-				Address:    sample.Address(r),
+				Address:   sample.Address(r),
 			},
 			err: status.Error(codes.NotFound, "project not found"),
 		},
@@ -204,7 +204,7 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 			desc: "account not found",
 			request: &types.QueryGetMainnetAccountBalanceRequest{
 				ProjectID: projectID,
-				Address:    sample.Address(r),
+				Address:   sample.Address(r),
 			},
 			err: status.Error(codes.NotFound, "account not found"),
 		},
@@ -226,7 +226,7 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 
 func TestMainnetAccountBalanceQueryPaginated(t *testing.T) {
 	var (
-		projectID = uint64(5)
+		projectID  = uint64(5)
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
 		msgs       = createNMainnetAccountForProjectIDWithTotalSupply(t, tk.ProjectKeeper, ctx, 5, projectID)
@@ -283,13 +283,13 @@ func TestMainnetAccountBalanceAll(t *testing.T) {
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
 
-		projectID  = uint64(5)
+		projectID   = uint64(5)
 		totalSupply = tc.Coins(t, "1000foo,1000bar")
 		totalShares = uint64(100)
 		addr1       = sample.Address(r)
 		addr2       = sample.Address(r)
 		addr3       = sample.Address(r)
-		project    = sample.Project(r, projectID)
+		project     = sample.Project(r, projectID)
 	)
 
 	// set project and sample accounts
@@ -298,18 +298,18 @@ func TestMainnetAccountBalanceAll(t *testing.T) {
 	tk.ProjectKeeper.SetTotalShares(ctx, totalShares)
 	tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 		ProjectID: projectID,
-		Address:    addr1,
-		Shares:     tc.Shares(t, "100foo"),
+		Address:   addr1,
+		Shares:    tc.Shares(t, "100foo"),
 	})
 	tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 		ProjectID: projectID,
-		Address:    addr2,
-		Shares:     tc.Shares(t, "100bar"),
+		Address:   addr2,
+		Shares:    tc.Shares(t, "100bar"),
 	})
 	tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 		ProjectID: projectID,
-		Address:    addr3,
-		Shares:     tc.Shares(t, "100baz"),
+		Address:   addr3,
+		Shares:    tc.Shares(t, "100baz"),
 	})
 
 	t.Run("accounts with empty balance are skipped", func(t *testing.T) {
@@ -326,13 +326,13 @@ func TestMainnetAccountBalanceAll(t *testing.T) {
 		require.Len(t, balances, 2)
 		require.Contains(t, balances, types.MainnetAccountBalance{
 			ProjectID: projectID,
-			Address:    addr1,
-			Coins:      tc.Coins(t, "1000foo"),
+			Address:   addr1,
+			Coins:     tc.Coins(t, "1000foo"),
 		})
 		require.Contains(t, balances, types.MainnetAccountBalance{
 			ProjectID: projectID,
-			Address:    addr2,
-			Coins:      tc.Coins(t, "1000bar"),
+			Address:   addr2,
+			Coins:     tc.Coins(t, "1000bar"),
 		})
 	})
 }

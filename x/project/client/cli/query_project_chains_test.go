@@ -23,7 +23,7 @@ func (suite *QueryTestSuite) TestShowProjectChains() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		name         string
+		name        string
 		idProjectID uint64
 
 		args []string
@@ -31,14 +31,14 @@ func (suite *QueryTestSuite) TestShowProjectChains() {
 		obj  types.ProjectChains
 	}{
 		{
-			name:         "should allow valid query",
+			name:        "should allow valid query",
 			idProjectID: objs[0].ProjectID,
 
 			args: common,
 			obj:  objs[0],
 		},
 		{
-			name:         "should fail if not found",
+			name:        "should fail if not found",
 			idProjectID: 100000,
 
 			args: common,

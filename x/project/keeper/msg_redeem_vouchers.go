@@ -54,8 +54,8 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 		// If not, create the account
 		account = types.MainnetAccount{
 			ProjectID: project.ProjectID,
-			Address:    msg.Account,
-			Shares:     types.EmptyShares(),
+			Address:   msg.Account,
+			Shares:    types.EmptyShares(),
 		}
 	}
 
@@ -66,14 +66,14 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 	if !found {
 		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountCreated{
 			ProjectID: account.ProjectID,
-			Address:    account.Address,
-			Shares:     account.Shares,
+			Address:   account.Address,
+			Shares:    account.Shares,
 		})
 	} else {
 		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{
 			ProjectID: account.ProjectID,
-			Address:    account.Address,
-			Shares:     account.Shares,
+			Address:   account.Address,
+			Shares:    account.Shares,
 		})
 	}
 

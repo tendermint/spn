@@ -32,8 +32,6 @@ import (
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
-	projectkeeper "github.com/tendermint/spn/x/project/keeper"
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -44,6 +42,8 @@ import (
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
 )
@@ -53,7 +53,7 @@ var moduleAccountPerms = map[string][]string{
 	distrtypes.ModuleName:          nil,
 	minttypes.ModuleName:           {authtypes.Minter},
 	ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
-	projecttypes.ModuleName:       {authtypes.Minter, authtypes.Burner},
+	projecttypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
 	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	rewardtypes.ModuleName:         {authtypes.Minter, authtypes.Burner},

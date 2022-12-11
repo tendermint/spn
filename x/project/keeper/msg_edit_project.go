@@ -7,8 +7,8 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func (k msgServer) EditProject(goCtx context.Context, msg *types.MsgEditProject) (*types.MsgEditProjectResponse, error) {
@@ -53,9 +53,9 @@ func (k msgServer) EditProject(goCtx context.Context, msg *types.MsgEditProject)
 	k.SetProject(ctx, project)
 
 	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectInfoUpdated{
-		ProjectID:         project.ProjectID,
+		ProjectID:          project.ProjectID,
 		CoordinatorAddress: msg.Coordinator,
-		ProjectName:       project.ProjectName,
+		ProjectName:        project.ProjectName,
 		Metadata:           project.Metadata,
 	})
 

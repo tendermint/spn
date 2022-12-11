@@ -11,9 +11,9 @@ var _ sdk.Msg = &MsgBurnVouchers{}
 
 func NewMsgBurnVouchers(sender string, projectID uint64, vouchers sdk.Coins) *MsgBurnVouchers {
 	return &MsgBurnVouchers{
-		Sender:     sender,
+		Sender:    sender,
 		ProjectID: projectID,
-		Vouchers:   vouchers,
+		Vouchers:  vouchers,
 	}
 }
 

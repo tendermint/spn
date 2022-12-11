@@ -14,7 +14,7 @@ var _ sdk.Msg = &MsgEditProject{}
 func NewMsgEditProject(coordinator string, projectID uint64, name string, metadata []byte) *MsgEditProject {
 	return &MsgEditProject{
 		Coordinator: coordinator,
-		ProjectID:  projectID,
+		ProjectID:   projectID,
 		Name:        name,
 		Metadata:    metadata,
 	}

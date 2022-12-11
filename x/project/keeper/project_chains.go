@@ -20,7 +20,7 @@ func (k Keeper) AddChainToProject(ctx sdk.Context, projectID, launchID uint64) e
 	if !found {
 		projectChains = types.ProjectChains{
 			ProjectID: projectID,
-			Chains:     []uint64{launchID},
+			Chains:    []uint64{launchID},
 		}
 	} else {
 		// Ensure no duplicated chain ID
@@ -34,7 +34,7 @@ func (k Keeper) AddChainToProject(ctx sdk.Context, projectID, launchID uint64) e
 	k.SetProjectChains(ctx, projectChains)
 	return ctx.EventManager().EmitTypedEvent(&types.EventProjectChainAdded{
 		ProjectID: projectID,
-		LaunchID:   launchID,
+		LaunchID:  launchID,
 	})
 }
 

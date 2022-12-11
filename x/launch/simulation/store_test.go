@@ -10,13 +10,13 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	projectkeeper "github.com/tendermint/spn/x/project/keeper"
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	"github.com/tendermint/spn/x/launch/keeper"
 	launchsimulation "github.com/tendermint/spn/x/launch/simulation"
 	"github.com/tendermint/spn/x/launch/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 func setupMsgServer(t testing.TB) (

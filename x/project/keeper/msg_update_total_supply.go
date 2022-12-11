@@ -9,8 +9,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ignterrors "github.com/ignite/modules/pkg/errors"
 
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdateTotalSupply) (*types.MsgUpdateTotalSupplyResponse, error) {
@@ -51,7 +51,7 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 	k.SetProject(ctx, project)
 
 	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectTotalSupplyUpdated{
-		ProjectID:         project.ProjectID,
+		ProjectID:          project.ProjectID,
 		CoordinatorAddress: msg.Coordinator,
 		TotalSupply:        project.TotalSupply,
 	})

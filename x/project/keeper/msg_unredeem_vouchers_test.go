@@ -26,7 +26,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 
 		project                = sample.Project(r, 0)
 		projectMainnetLaunched = sample.Project(r, 1)
-		shares, _               = types.NewShares("10foo,10bar")
+		shares, _              = types.NewShares("10foo,10bar")
 	)
 	account.Shares = accountShare
 	accountFewShares.Shares = accountFewSharesShare
@@ -53,68 +53,68 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 		{
 			name: "should allow unredeem vouchers",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     accountAddr,
+				Sender:    accountAddr,
 				ProjectID: 0,
-				Shares:     shares,
+				Shares:    shares,
 			},
 		},
 		{
 			name: "should allow unredeem vouchers a second time",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     accountAddr,
+				Sender:    accountAddr,
 				ProjectID: 0,
-				Shares:     shares,
+				Shares:    shares,
 			},
 		},
 		{
 			name: "should allow unredeem vouchers to zero",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     accountAddr,
+				Sender:    accountAddr,
 				ProjectID: 0,
-				Shares:     shares,
+				Shares:    shares,
 			},
 		},
 		{
 			name: "should allow unredeem vouchers from another account",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     accountFewSharesAddr,
+				Sender:    accountFewSharesAddr,
 				ProjectID: 0,
-				Shares:     shares,
+				Shares:    shares,
 			},
 		},
 		{
 			name: "should prevent if not enough shares in balance",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     accountFewSharesAddr,
+				Sender:    accountFewSharesAddr,
 				ProjectID: 0,
-				Shares:     shares,
+				Shares:    shares,
 			},
 			err: types.ErrSharesDecrease,
 		},
 		{
 			name: "should prevent for non existent project",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     accountAddr,
+				Sender:    accountAddr,
 				ProjectID: 1000,
-				Shares:     shares,
+				Shares:    shares,
 			},
 			err: types.ErrProjectNotFound,
 		},
 		{
 			name: "should prevent for non existent account",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     sample.Address(r),
+				Sender:    sample.Address(r),
 				ProjectID: 0,
-				Shares:     shares,
+				Shares:    shares,
 			},
 			err: types.ErrAccountNotFound,
 		},
 		{
 			name: "should prevent for project with launched mainnet",
 			msg: types.MsgUnredeemVouchers{
-				Sender:     accountAddr,
+				Sender:    accountAddr,
 				ProjectID: projectMainnetLaunched.ProjectID,
-				Shares:     sample.Shares(r),
+				Shares:    sample.Shares(r),
 			},
 			err: types.ErrMainnetLaunchTriggered,
 		},

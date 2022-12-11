@@ -12,9 +12,9 @@ import (
 	tc "github.com/tendermint/spn/testutil/constructor"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 func createNGenesisAccountForChainID(keeper *keeper.Keeper, ctx sdk.Context, n int, chainID uint64) []types.GenesisAccount {
@@ -151,8 +151,8 @@ func TestGenesisAccountMainnet(t *testing.T) {
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
 
-		projectID  = uint64(5)
-		project    = sample.Project(r, projectID)
+		projectID   = uint64(5)
+		project     = sample.Project(r, projectID)
 		launchID    = uint64(10)
 		chain       = sample.Chain(r, launchID, sample.Uint64(r))
 		totalSupply = tc.Coins(t, "1000foo")
@@ -167,13 +167,13 @@ func TestGenesisAccountMainnet(t *testing.T) {
 	tk.ProjectKeeper.SetTotalShares(ctx, totalShares)
 	tk.ProjectKeeper.SetMainnetAccount(ctx, projecttypes.MainnetAccount{
 		ProjectID: projectID,
-		Address:    addr1,
-		Shares:     tc.Shares(t, "60foo"),
+		Address:   addr1,
+		Shares:    tc.Shares(t, "60foo"),
 	})
 	tk.ProjectKeeper.SetMainnetAccount(ctx, projecttypes.MainnetAccount{
 		ProjectID: projectID,
-		Address:    addr2,
-		Shares:     tc.Shares(t, "40foo"),
+		Address:   addr2,
+		Shares:    tc.Shares(t, "40foo"),
 	})
 	chain.IsMainnet = true
 	chain.ProjectID = projectID

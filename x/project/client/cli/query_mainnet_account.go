@@ -33,7 +33,7 @@ func CmdListMainnetAccount() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryAllMainnetAccountRequest{
-				ProjectID: projectID,
+				ProjectID:  projectID,
 				Pagination: pageReq,
 			}
 
@@ -70,7 +70,7 @@ func CmdShowMainnetAccount() *cobra.Command {
 
 			params := &types.QueryGetMainnetAccountRequest{
 				ProjectID: argsProjectID,
-				Address:    argsAddress,
+				Address:   argsAddress,
 			}
 
 			res, err := queryClient.MainnetAccount(context.Background(), params)
@@ -108,7 +108,7 @@ func CmdListMainnetAccountBalance() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryAllMainnetAccountBalanceRequest{
-				ProjectID: projectID,
+				ProjectID:  projectID,
 				Pagination: pageReq,
 			}
 
@@ -145,7 +145,7 @@ func CmdShowMainnetAccountBalance() *cobra.Command {
 
 			params := &types.QueryGetMainnetAccountBalanceRequest{
 				ProjectID: argsProjectID,
-				Address:    argsAddress,
+				Address:   argsAddress,
 			}
 
 			res, err := queryClient.MainnetAccountBalance(context.Background(), params)

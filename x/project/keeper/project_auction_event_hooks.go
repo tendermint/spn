@@ -9,8 +9,8 @@ import (
 
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
 
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 // EmitProjectAuctionCreated emits EventProjectAuctionCreated event if an auction is created for a project from a coordinator
@@ -52,7 +52,7 @@ func (k Keeper) EmitProjectAuctionCreated(
 	err = ctx.EventManager().EmitTypedEvents(
 		&types.EventProjectAuctionCreated{
 			ProjectID: projectID,
-			AuctionID:  auctionID,
+			AuctionID: auctionID,
 		},
 	)
 	if err != nil {

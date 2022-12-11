@@ -22,12 +22,12 @@ import (
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 
-	project "github.com/tendermint/spn/x/project/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	monitoringp "github.com/tendermint/spn/x/monitoringp/types"
 	participation "github.com/tendermint/spn/x/participation/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	project "github.com/tendermint/spn/x/project/types"
 	reward "github.com/tendermint/spn/x/reward/types"
 )
 

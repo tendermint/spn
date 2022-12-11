@@ -22,7 +22,7 @@ func CmdEditChain() *cobra.Command {
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var (
-				metadata, _   = cmd.Flags().GetString(flagMetadata)
+				metadata, _  = cmd.Flags().GetString(flagMetadata)
 				projectID, _ = cmd.Flags().GetUint64(flagProjectID)
 			)
 

@@ -60,18 +60,18 @@ func TestProjectSharesInvariant(t *testing.T) {
 		// add accounts with shares
 		tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 			ProjectID: projectID1,
-			Address:    sample.Address(r),
-			Shares:     tc.Shares(t, "20foo,40bar"),
+			Address:   sample.Address(r),
+			Shares:    tc.Shares(t, "20foo,40bar"),
 		})
 		tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 			ProjectID: projectID1,
-			Address:    sample.Address(r),
-			Shares:     tc.Shares(t, "30foo,60bar"),
+			Address:   sample.Address(r),
+			Shares:    tc.Shares(t, "30foo,60bar"),
 		})
 		tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
 			ProjectID: projectID2,
-			Address:    sample.Address(r),
-			Shares:     tc.Shares(t, "5000foo"),
+			Address:   sample.Address(r),
+			Shares:    tc.Shares(t, "5000foo"),
 		})
 
 		msg, broken := keeper.ProjectSharesInvariant(*tk.ProjectKeeper)(ctx)

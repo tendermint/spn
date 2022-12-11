@@ -12,14 +12,14 @@ import (
 )
 
 var (
-	DefaultMinTotalSupply             = sdkmath.NewInt(100)                   // One hundred
-	DefaultMaxTotalSupply             = sdkmath.NewInt(1_000_000_000_000_000) // One Quadrillion
+	DefaultMinTotalSupply            = sdkmath.NewInt(100)                   // One hundred
+	DefaultMaxTotalSupply            = sdkmath.NewInt(1_000_000_000_000_000) // One Quadrillion
 	DefaultProjectCreationFee        = sdk.Coins(nil)                        // EmptyCoins
-	DefaultMaxMetadataLength   uint64 = 2000
+	DefaultMaxMetadataLength  uint64 = 2000
 
-	KeyTotalSupplyRange    = []byte("TotalSupplyRange")
+	KeyTotalSupplyRange   = []byte("TotalSupplyRange")
 	KeyProjectCreationFee = []byte("ProjectCreationFee")
-	KeyMaxMetadataLength   = []byte("MaxMetadataLength")
+	KeyMaxMetadataLength  = []byte("MaxMetadataLength")
 )
 
 // ParamKeyTable returns the parameter key table.
@@ -43,9 +43,9 @@ func NewParams(
 	maxMetadataLength uint64,
 ) Params {
 	return Params{
-		TotalSupplyRange:    NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
+		TotalSupplyRange:   NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
 		ProjectCreationFee: projectCreationFee,
-		MaxMetadataLength:   maxMetadataLength,
+		MaxMetadataLength:  maxMetadataLength,
 	}
 }
 

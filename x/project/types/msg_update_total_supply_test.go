@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
@@ -24,7 +24,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			name: "should allow validation of valid msg",
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator:       sample.Address(r),
-				ProjectID:        0,
+				ProjectID:         0,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 		},
@@ -32,7 +32,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator:       "invalid_address",
-				ProjectID:        0,
+				ProjectID:         0,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 			err: profile.ErrInvalidCoordAddress,
@@ -41,7 +41,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid total supply",
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator:       sample.Address(r),
-				ProjectID:        0,
+				ProjectID:         0,
 				TotalSupplyUpdate: invalidCoins,
 			},
 			err: types.ErrInvalidTotalSupply,
@@ -50,7 +50,7 @@ func TestMsgUpdateTotalSupply_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with empty total supply",
 			msg: types.MsgUpdateTotalSupply{
 				Coordinator:       sample.Address(r),
-				ProjectID:        0,
+				ProjectID:         0,
 				TotalSupplyUpdate: sdk.NewCoins(),
 			},
 			err: types.ErrInvalidTotalSupply,

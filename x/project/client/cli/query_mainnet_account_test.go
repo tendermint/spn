@@ -24,26 +24,26 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
-		name         string
+		name        string
 		idProjectID uint64
-		idAddress    string
+		idAddress   string
 
 		args []string
 		err  error
 		obj  types.MainnetAccount
 	}{
 		{
-			name:         "should allow valid query",
+			name:        "should allow valid query",
 			idProjectID: accs[0].ProjectID,
-			idAddress:    accs[0].Address,
+			idAddress:   accs[0].Address,
 
 			args: common,
 			obj:  accs[0],
 		},
 		{
-			name:         "should fail if not found",
+			name:        "should fail if not found",
 			idProjectID: 100000,
-			idAddress:    strconv.Itoa(100000),
+			idAddress:   strconv.Itoa(100000),
 
 			args: common,
 			err:  status.Error(codes.NotFound, "not found"),

@@ -9,9 +9,9 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
+	profiletypes "github.com/tendermint/spn/x/profile/types"
 	"github.com/tendermint/spn/x/project/keeper"
 	"github.com/tendermint/spn/x/project/types"
-	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
 func initCreationFeeAndFundCoordAccounts(
@@ -48,12 +48,12 @@ func initCreationFeeAndFundCoordAccounts(
 
 func TestMsgCreateProject(t *testing.T) {
 	var (
-		coordAddrs          = make([]string, 3)
-		coordMap            = make(map[string]uint64)
-		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
-		ctx                 = sdk.WrapSDKContext(sdkCtx)
+		coordAddrs         = make([]string, 3)
+		coordMap           = make(map[string]uint64)
+		sdkCtx, tk, ts     = testkeeper.NewTestSetup(t)
+		ctx                = sdk.WrapSDKContext(sdkCtx)
 		projectCreationFee = sample.Coins(r)
-		maxMetadataLength   = tk.ProjectKeeper.MaxMetadataLength(sdkCtx)
+		maxMetadataLength  = tk.ProjectKeeper.MaxMetadataLength(sdkCtx)
 	)
 
 	t.Run("should allow creation of coordinators", func(t *testing.T) {
@@ -81,9 +81,9 @@ func TestMsgCreateProject(t *testing.T) {
 			name: "should allow create a project 1",
 			msg: types.MsgCreateProject{
 				ProjectName: sample.ProjectName(r),
-				Coordinator:  coordAddrs[0],
-				TotalSupply:  sample.TotalSupply(r),
-				Metadata:     sample.Metadata(r, 20),
+				Coordinator: coordAddrs[0],
+				TotalSupply: sample.TotalSupply(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			expectedID: uint64(0),
 		},
@@ -91,9 +91,9 @@ func TestMsgCreateProject(t *testing.T) {
 			name: "should allow create a project from a different coordinator",
 			msg: types.MsgCreateProject{
 				ProjectName: sample.ProjectName(r),
-				Coordinator:  coordAddrs[1],
-				TotalSupply:  sample.TotalSupply(r),
-				Metadata:     sample.Metadata(r, 20),
+				Coordinator: coordAddrs[1],
+				TotalSupply: sample.TotalSupply(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			expectedID: uint64(1),
 		},
@@ -101,9 +101,9 @@ func TestMsgCreateProject(t *testing.T) {
 			name: "should allow create a project from a non existing coordinator",
 			msg: types.MsgCreateProject{
 				ProjectName: sample.ProjectName(r),
-				Coordinator:  sample.Address(r),
-				TotalSupply:  sample.TotalSupply(r),
-				Metadata:     sample.Metadata(r, 20),
+				Coordinator: sample.Address(r),
+				TotalSupply: sample.TotalSupply(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
@@ -111,9 +111,9 @@ func TestMsgCreateProject(t *testing.T) {
 			name: "should allow create a project with an invalid token supply",
 			msg: types.MsgCreateProject{
 				ProjectName: sample.ProjectName(r),
-				Coordinator:  coordAddrs[0],
-				TotalSupply:  sample.CoinsWithRange(r, 10, 20),
-				Metadata:     sample.Metadata(r, 20),
+				Coordinator: coordAddrs[0],
+				TotalSupply: sample.CoinsWithRange(r, 10, 20),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			err: types.ErrInvalidTotalSupply,
 		},
@@ -121,19 +121,19 @@ func TestMsgCreateProject(t *testing.T) {
 			name: "should fail for insufficient balance to cover creation fee",
 			msg: types.MsgCreateProject{
 				ProjectName: sample.ProjectName(r),
-				Coordinator:  coordAddrs[2],
-				TotalSupply:  sample.TotalSupply(r),
-				Metadata:     sample.Metadata(r, 20),
+				Coordinator: coordAddrs[2],
+				TotalSupply: sample.TotalSupply(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			err: types.ErrFundCommunityPool,
 		},
 		{
 			name: "should fail when the change had too long metadata",
 			msg: types.MsgCreateProject{
-				Coordinator:  sample.Address(r),
+				Coordinator: sample.Address(r),
 				ProjectName: sample.ProjectName(r),
-				TotalSupply:  sample.TotalSupply(r),
-				Metadata:     sample.Metadata(r, maxMetadataLength+1),
+				TotalSupply: sample.TotalSupply(r),
+				Metadata:    sample.Metadata(r, maxMetadataLength+1),
 			},
 			err: types.ErrInvalidMetadataLength,
 		},

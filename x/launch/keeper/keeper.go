@@ -20,7 +20,7 @@ type (
 		paramstore        paramtypes.Subspace
 		distrKeeper       types.DistributionKeeper
 		profileKeeper     types.ProfileKeeper
-		projectKeeper    types.ProjectKeeper
+		projectKeeper     types.ProjectKeeper
 		monitoringcKeeper types.MonitoringConsumerKeeper
 	}
 )

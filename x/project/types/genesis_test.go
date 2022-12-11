@@ -17,10 +17,10 @@ func TestGenesisState_Validate(t *testing.T) {
 	var (
 		project1 = sample.Project(r, 0)
 		project2 = sample.Project(r, 1)
-		shares1   = sample.Shares(r)
-		shares2   = sample.Shares(r)
-		shares3   = sample.Shares(r)
-		shares4   = sample.Shares(r)
+		shares1  = sample.Shares(r)
+		shares2  = sample.Shares(r)
+		shares3  = sample.Shares(r)
+		shares4  = sample.Shares(r)
 	)
 	sharesProject1 := types.IncreaseShares(shares1, shares2)
 	project1.AllocatedShares = sharesProject1
@@ -59,13 +59,13 @@ func TestGenesisState_Validate(t *testing.T) {
 				MainnetAccounts: []types.MainnetAccount{
 					{
 						ProjectID: project1.ProjectID,
-						Address:    sample.Address(r),
-						Shares:     shares1,
+						Address:   sample.Address(r),
+						Shares:    shares1,
 					},
 					{
 						ProjectID: project2.ProjectID,
-						Address:    sample.Address(r),
-						Shares:     shares3,
+						Address:   sample.Address(r),
+						Shares:    shares3,
 					},
 				},
 				TotalShares: spntypes.TotalShareNumber,
@@ -111,7 +111,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Project(r, 88),
 				},
 				ProjectCounter: 100,
-				TotalShares:     spntypes.TotalShareNumber,
+				TotalShares:    spntypes.TotalShareNumber,
 			},
 			errorMessage: "project id 2 doesn't exist for chains",
 		},
@@ -142,7 +142,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Project(r, 0),
 				},
 				ProjectCounter: 2,
-				TotalShares:     spntypes.TotalShareNumber,
+				TotalShares:    spntypes.TotalShareNumber,
 			},
 			errorMessage: "duplicated id for project",
 		},
@@ -153,7 +153,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					sample.Project(r, 1),
 				},
 				ProjectCounter: 0,
-				TotalShares:     spntypes.TotalShareNumber,
+				TotalShares:    spntypes.TotalShareNumber,
 			},
 			errorMessage: "project id should be lower or equal than the last id",
 		},
@@ -171,7 +171,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					),
 				},
 				ProjectCounter: 1,
-				TotalShares:     spntypes.TotalShareNumber,
+				TotalShares:    spntypes.TotalShareNumber,
 			},
 			errorMessage: "invalid project 0: project name can only contain alphanumerical characters or hyphen",
 		},
@@ -185,11 +185,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				MainnetAccounts: []types.MainnetAccount{
 					{
 						ProjectID: 0,
-						Address:    "0",
+						Address:   "0",
 					},
 					{
 						ProjectID: 0,
-						Address:    "0",
+						Address:   "0",
 					},
 				},
 				TotalShares: spntypes.TotalShareNumber,
@@ -201,8 +201,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				Projects: []types.Project{
 					{
-						ProjectID:         0,
-						ProjectName:       "test",
+						ProjectID:          0,
+						ProjectName:        "test",
 						CoordinatorID:      0,
 						MainnetID:          0,
 						MainnetInitialized: false,
@@ -215,7 +215,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				MainnetAccounts: []types.MainnetAccount{
 					{
 						ProjectID: 0,
-						Address:    "0",
+						Address:   "0",
 					},
 				},
 				TotalShares: spntypes.TotalShareNumber,

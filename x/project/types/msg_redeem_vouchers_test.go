@@ -23,27 +23,27 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "should allow validation of valid msg",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(r),
-				Account:    sample.Address(r),
-				Vouchers:   sample.Vouchers(r, 0),
+				Sender:    sample.Address(r),
+				Account:   sample.Address(r),
+				Vouchers:  sample.Vouchers(r, 0),
 				ProjectID: 0,
 			},
 		},
 		{
 			name: "should allow validation of valid msg with same account and sender",
 			msg: types.MsgRedeemVouchers{
-				Sender:     addr,
-				Account:    addr,
-				Vouchers:   sample.Vouchers(r, 0),
+				Sender:    addr,
+				Account:   addr,
+				Vouchers:  sample.Vouchers(r, 0),
 				ProjectID: 0,
 			},
 		},
 		{
 			name: "should prevent validation of msg with invalid sender address",
 			msg: types.MsgRedeemVouchers{
-				Sender:     "invalid_address",
-				Account:    sample.Address(r),
-				Vouchers:   sample.Vouchers(r, 0),
+				Sender:    "invalid_address",
+				Account:   sample.Address(r),
+				Vouchers:  sample.Vouchers(r, 0),
 				ProjectID: 0,
 			},
 			err: types.ErrInvalidVoucherAddress,
@@ -51,9 +51,9 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "should prevent validation of msg with invalid account address",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(r),
-				Account:    "invalid_address",
-				Vouchers:   sample.Vouchers(r, 0),
+				Sender:    sample.Address(r),
+				Account:   "invalid_address",
+				Vouchers:  sample.Vouchers(r, 0),
 				ProjectID: 0,
 			},
 			err: types.ErrInvalidVoucherAddress,
@@ -61,9 +61,9 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "should prevent validation of msg with invalid coin voucher",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(r),
-				Account:    sample.Address(r),
-				Vouchers:   invalidCoins,
+				Sender:    sample.Address(r),
+				Account:   sample.Address(r),
+				Vouchers:  invalidCoins,
 				ProjectID: 0,
 			},
 			err: types.ErrInvalidVouchers,
@@ -71,9 +71,9 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "should prevent validation of msg with vouchers not matching project",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(r),
-				Account:    sample.Address(r),
-				Vouchers:   sample.Vouchers(r, 10),
+				Sender:    sample.Address(r),
+				Account:   sample.Address(r),
+				Vouchers:  sample.Vouchers(r, 10),
 				ProjectID: 0,
 			},
 			err: types.ErrNoMatchVouchers,
@@ -93,9 +93,9 @@ func TestMsgRedeemVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "should prevent validation of msg with empty vouchers",
 			msg: types.MsgRedeemVouchers{
-				Sender:     sample.Address(r),
-				Account:    sample.Address(r),
-				Vouchers:   sdk.Coins{},
+				Sender:    sample.Address(r),
+				Account:   sample.Address(r),
+				Vouchers:  sdk.Coins{},
 				ProjectID: 0,
 			},
 			err: types.ErrInvalidVouchers,

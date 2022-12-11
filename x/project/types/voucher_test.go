@@ -13,27 +13,27 @@ import (
 )
 
 var (
-	voucherProjectID  = uint64(10)
+	voucherProjectID   = uint64(10)
 	prefixedVoucherFoo = project.VoucherDenom(voucherProjectID, "foo")
 	prefixedVoucherBar = project.VoucherDenom(voucherProjectID, "bar")
 )
 
 func TestCheckVouchers(t *testing.T) {
 	tests := []struct {
-		name       string
+		name      string
 		projectID uint64
-		vouchers   sdk.Coins
-		err        error
+		vouchers  sdk.Coins
+		err       error
 	}{
 		{
-			name:       "should allow check with one valid coin",
+			name:      "should allow check with one valid coin",
 			projectID: voucherProjectID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 			),
 		},
 		{
-			name:       "should allow check with two valid coins",
+			name:      "should allow check with two valid coins",
 			projectID: voucherProjectID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
@@ -41,7 +41,7 @@ func TestCheckVouchers(t *testing.T) {
 			),
 		},
 		{
-			name:       "should prevent check with one valid and one invalid coins",
+			name:      "should prevent check with one valid and one invalid coins",
 			projectID: voucherProjectID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
@@ -50,7 +50,7 @@ func TestCheckVouchers(t *testing.T) {
 			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
 		},
 		{
-			name:       "should prevent check with one invalid coin",
+			name:      "should prevent check with one invalid coin",
 			projectID: voucherProjectID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin("foo", sdkmath.NewInt(200)),
@@ -58,7 +58,7 @@ func TestCheckVouchers(t *testing.T) {
 			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
 		},
 		{
-			name:       "should prevent check with invalid project id",
+			name:      "should prevent check with invalid project id",
 			projectID: 1000,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(200)),
@@ -81,29 +81,29 @@ func TestCheckVouchers(t *testing.T) {
 
 func TestSharesToVouchers(t *testing.T) {
 	tests := []struct {
-		name       string
+		name      string
 		projectID uint64
-		shares     project.Shares
-		want       sdk.Coins
-		err        error
+		shares    project.Shares
+		want      sdk.Coins
+		err       error
 	}{
 		{
-			name:       "should validate with one valid share",
+			name:      "should validate with one valid share",
 			projectID: voucherProjectID,
-			shares:     tc.Shares(t, "10foo"),
-			want:       tc.Vouchers(t, "10foo", voucherProjectID),
+			shares:    tc.Shares(t, "10foo"),
+			want:      tc.Vouchers(t, "10foo", voucherProjectID),
 		},
 		{
-			name:       "should validate with two valid shares",
+			name:      "should validate with two valid shares",
 			projectID: voucherProjectID,
-			shares:     tc.Shares(t, "10foo,11bar"),
-			want:       tc.Vouchers(t, "10foo,11bar", voucherProjectID),
+			shares:    tc.Shares(t, "10foo,11bar"),
+			want:      tc.Vouchers(t, "10foo,11bar", voucherProjectID),
 		},
 		{
-			name:       "should prevent validation with invalid share prefix",
+			name:      "should prevent validation with invalid share prefix",
 			projectID: 1000,
-			shares:     project.Shares(tc.Coins(t, "10t/foo")),
-			err:        errors.New("t/foo doesn't contain the share prefix s/"),
+			shares:    project.Shares(tc.Coins(t, "10t/foo")),
+			err:       errors.New("t/foo doesn't contain the share prefix s/"),
 		},
 	}
 	for _, tt := range tests {
@@ -122,28 +122,28 @@ func TestSharesToVouchers(t *testing.T) {
 
 func TestVoucherName(t *testing.T) {
 	tests := []struct {
-		name       string
+		name      string
 		projectID uint64
-		coin       string
-		want       string
+		coin      string
+		want      string
 	}{
 		{
-			name:       "should prepend to 10/foo",
+			name:      "should prepend to 10/foo",
 			projectID: 10,
-			coin:       "foo",
-			want:       "v/10/foo",
+			coin:      "foo",
+			want:      "v/10/foo",
 		},
 		{
-			name:       "should prepend to 0/foo",
+			name:      "should prepend to 0/foo",
 			projectID: 0,
-			coin:       "foo",
-			want:       "v/0/foo",
+			coin:      "foo",
+			want:      "v/0/foo",
 		},
 		{
-			name:       "should prepend to empty denom",
+			name:      "should prepend to empty denom",
 			projectID: 10,
-			coin:       "",
-			want:       "v/10/",
+			coin:      "",
+			want:      "v/10/",
 		},
 	}
 	for _, tt := range tests {
@@ -156,26 +156,26 @@ func TestVoucherName(t *testing.T) {
 
 func TestVouchersToShares(t *testing.T) {
 	tests := []struct {
-		name       string
+		name      string
 		projectID uint64
-		vouchers   sdk.Coins
-		want       project.Shares
-		err        error
+		vouchers  sdk.Coins
+		want      project.Shares
+		err       error
 	}{
 		{
-			name:       "should convert one voucher",
+			name:      "should convert one voucher",
 			projectID: voucherProjectID,
-			vouchers:   tc.Vouchers(t, "10foo", voucherProjectID),
-			want:       tc.Shares(t, "10foo"),
+			vouchers:  tc.Vouchers(t, "10foo", voucherProjectID),
+			want:      tc.Shares(t, "10foo"),
 		},
 		{
-			name:       "should convert two vouchers",
+			name:      "should convert two vouchers",
 			projectID: voucherProjectID,
-			vouchers:   tc.Vouchers(t, "10foo,11bar", voucherProjectID),
-			want:       tc.Shares(t, "10foo,11bar"),
+			vouchers:  tc.Vouchers(t, "10foo,11bar", voucherProjectID),
+			want:      tc.Shares(t, "10foo,11bar"),
 		},
 		{
-			name:       "should fail with wrong project id",
+			name:      "should fail with wrong project id",
 			projectID: 1000,
 			// use old coin syntax to write incorrect coins
 			vouchers: tc.Coins(t, "10v/10/bar,11v/10/foo"),
@@ -198,28 +198,28 @@ func TestVouchersToShares(t *testing.T) {
 
 func TestVoucherToShareDenom(t *testing.T) {
 	tests := []struct {
-		name       string
+		name      string
 		projectID uint64
-		denom      string
-		want       string
+		denom     string
+		want      string
 	}{
 		{
-			name:       "should convert foo voucher",
+			name:      "should convert foo voucher",
 			projectID: 10,
-			denom:      prefixedVoucherFoo,
-			want:       prefixedShareFoo,
+			denom:     prefixedVoucherFoo,
+			want:      prefixedShareFoo,
 		},
 		{
-			name:       "should convert bar voucher",
+			name:      "should convert bar voucher",
 			projectID: 10,
-			denom:      prefixedVoucherBar,
-			want:       prefixedShareBar,
+			denom:     prefixedVoucherBar,
+			want:      prefixedShareBar,
 		},
 		{
-			name:       "should prepend to invalid voucher",
+			name:      "should prepend to invalid voucher",
 			projectID: 10,
-			denom:      "t/bar",
-			want:       "s/t/bar",
+			denom:     "t/bar",
+			want:      "s/t/bar",
 		},
 	}
 	for _, tt := range tests {
@@ -232,22 +232,22 @@ func TestVoucherToShareDenom(t *testing.T) {
 
 func TestVoucherProject(t *testing.T) {
 	tests := []struct {
-		name       string
-		denom      string
+		name      string
+		denom     string
 		projectID uint64
-		valid      bool
+		valid     bool
 	}{
 		{
-			name:       "should allow with project 0",
-			denom:      "v/0/foo",
+			name:      "should allow with project 0",
+			denom:     "v/0/foo",
 			projectID: uint64(0),
-			valid:      true,
+			valid:     true,
 		},
 		{
-			name:       "should allow with project 50",
-			denom:      "v/50/bar",
+			name:      "should allow with project 50",
+			denom:     "v/50/bar",
 			projectID: uint64(50),
-			valid:      true,
+			valid:     true,
 		},
 		{
 			name:  "should fail with no voucher prefix",

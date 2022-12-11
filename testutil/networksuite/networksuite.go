@@ -18,11 +18,11 @@ import (
 	"github.com/tendermint/spn/testutil/network"
 	"github.com/tendermint/spn/testutil/nullify"
 	"github.com/tendermint/spn/testutil/sample"
-	project "github.com/tendermint/spn/x/project/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	participation "github.com/tendermint/spn/x/participation/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	project "github.com/tendermint/spn/x/project/types"
 	reward "github.com/tendermint/spn/x/reward/types"
 )
 
@@ -31,7 +31,7 @@ type NetworkTestSuite struct {
 	suite.Suite
 	Network            *network.Network
 	LaunchState        launch.GenesisState
-	ProjectState      project.GenesisState
+	ProjectState       project.GenesisState
 	ClaimState         claim.GenesisState
 	MonitoringcState   monitoringc.GenesisState
 	ParticipationState participation.GenesisState
@@ -157,7 +157,7 @@ func populateProject(r *rand.Rand, projectState project.GenesisState) project.Ge
 	for i := 0; i < 5; i++ {
 		projectState.ProjectChains = append(projectState.ProjectChains, project.ProjectChains{
 			ProjectID: uint64(i),
-			Chains:     []uint64{uint64(i)},
+			Chains:    []uint64{uint64(i)},
 		})
 	}
 

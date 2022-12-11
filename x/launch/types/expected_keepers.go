@@ -7,8 +7,8 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 type ProjectKeeper interface {

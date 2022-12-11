@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
@@ -20,7 +20,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			name: "should allow validation of valid msg",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.Address(r),
-				ProjectID:     sample.Uint64(r),
+				ProjectID:      sample.Uint64(r),
 				SourceURL:      sample.String(r, 30),
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: sample.GenesisChainID(r),
@@ -30,7 +30,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    "invalid_address",
-				ProjectID:     sample.Uint64(r),
+				ProjectID:      sample.Uint64(r),
 				SourceURL:      sample.String(r, 30),
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: sample.GenesisChainID(r),
@@ -41,7 +41,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with empty source URL",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.Address(r),
-				ProjectID:     sample.Uint64(r),
+				ProjectID:      sample.Uint64(r),
 				SourceURL:      "",
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: sample.GenesisChainID(r),
@@ -52,7 +52,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with empty source hash",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.Address(r),
-				ProjectID:     sample.Uint64(r),
+				ProjectID:      sample.Uint64(r),
 				SourceURL:      sample.String(r, 30),
 				SourceHash:     "",
 				MainnetChainID: sample.GenesisChainID(r),
@@ -63,7 +63,7 @@ func TestMsgInitializeMainnet_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid chain id",
 			msg: types.MsgInitializeMainnet{
 				Coordinator:    sample.Address(r),
-				ProjectID:     sample.Uint64(r),
+				ProjectID:      sample.Uint64(r),
 				SourceURL:      sample.String(r, 30),
 				SourceHash:     sample.String(r, 20),
 				MainnetChainID: "invalid_chain_id",

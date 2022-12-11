@@ -9,17 +9,17 @@ import (
 	tc "github.com/tendermint/spn/testutil/constructor"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func TestKeeper_EmitProjectAuctionCreated(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
 	type inputState struct {
-		noProject    bool
+		noProject     bool
 		noCoordinator bool
-		project      types.Project
+		project       types.Project
 		coordinator   profiletypes.Coordinator
 	}
 
@@ -37,7 +37,7 @@ func TestKeeper_EmitProjectAuctionCreated(t *testing.T) {
 		{
 			name: "should prevent emitting event if selling coin is not a voucher",
 			inputState: inputState{
-				noProject:    true,
+				noProject:     true,
 				noCoordinator: true,
 			},
 			sellingCoin: tc.Coin(t, "1000foo"),
@@ -46,7 +46,7 @@ func TestKeeper_EmitProjectAuctionCreated(t *testing.T) {
 		{
 			name: "should return error if selling coin is a voucher of a non existing project",
 			inputState: inputState{
-				noProject:    true,
+				noProject:     true,
 				noCoordinator: true,
 			},
 			sellingCoin: tc.Coin(t, "1000"+types.VoucherDenom(5, "foo")),
@@ -56,7 +56,7 @@ func TestKeeper_EmitProjectAuctionCreated(t *testing.T) {
 			name: "should return error if selling coin is a voucher of a project with non existing coordinator",
 			inputState: inputState{
 				project: types.Project{
-					ProjectID:    10,
+					ProjectID:     10,
 					CoordinatorID: 20,
 				},
 				noCoordinator: true,
@@ -68,7 +68,7 @@ func TestKeeper_EmitProjectAuctionCreated(t *testing.T) {
 			name: "should prevent emitting event if the auctioneer is not the coordinator of the project",
 			inputState: inputState{
 				project: types.Project{
-					ProjectID:    100,
+					ProjectID:     100,
 					CoordinatorID: 200,
 				},
 				coordinator: profiletypes.Coordinator{
@@ -84,7 +84,7 @@ func TestKeeper_EmitProjectAuctionCreated(t *testing.T) {
 			name: "should allow emitting event if the auctioneer is the coordinator of the project",
 			inputState: inputState{
 				project: types.Project{
-					ProjectID:    1000,
+					ProjectID:     1000,
 					CoordinatorID: 2000,
 				},
 				coordinator: profiletypes.Coordinator{

@@ -21,7 +21,7 @@ func NewMsgInitializeMainnet(
 ) *MsgInitializeMainnet {
 	return &MsgInitializeMainnet{
 		Coordinator:    coordinator,
-		ProjectID:     projectID,
+		ProjectID:      projectID,
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
 		MainnetChainID: mainnetChainID,

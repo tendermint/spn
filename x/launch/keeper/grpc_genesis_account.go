@@ -9,8 +9,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	"github.com/tendermint/spn/x/launch/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 func (k Keeper) GenesisAccountAll(c context.Context, req *types.QueryAllGenesisAccountRequest) (*types.QueryAllGenesisAccountResponse, error) {
@@ -33,7 +33,7 @@ func (k Keeper) GenesisAccountAll(c context.Context, req *types.QueryAllGenesisA
 	// if the chain is a mainnet, the account balances must be fetched from the project
 	if chain.IsMainnet {
 		res, err := k.projectKeeper.MainnetAccountBalanceAll(c, &projecttypes.QueryAllMainnetAccountBalanceRequest{
-			ProjectID: chain.ProjectID,
+			ProjectID:  chain.ProjectID,
 			Pagination: req.Pagination,
 		})
 		if err != nil {
@@ -86,7 +86,7 @@ func (k Keeper) GenesisAccount(c context.Context, req *types.QueryGetGenesisAcco
 	if chain.IsMainnet {
 		res, err := k.projectKeeper.MainnetAccountBalance(c, &projecttypes.QueryGetMainnetAccountBalanceRequest{
 			ProjectID: chain.ProjectID,
-			Address:    req.Address,
+			Address:   req.Address,
 		})
 		if err != nil {
 			return nil, err

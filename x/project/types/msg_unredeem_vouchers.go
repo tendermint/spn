@@ -11,9 +11,9 @@ var _ sdk.Msg = &MsgUnredeemVouchers{}
 
 func NewMsgUnredeemVouchers(sender string, projectID uint64, shares Shares) *MsgUnredeemVouchers {
 	return &MsgUnredeemVouchers{
-		Sender:     sender,
+		Sender:    sender,
 		ProjectID: projectID,
-		Shares:     shares,
+		Shares:    shares,
 	}
 }
 

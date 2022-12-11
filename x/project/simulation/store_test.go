@@ -12,10 +12,10 @@ import (
 	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	simproject "github.com/tendermint/spn/x/project/simulation"
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	simproject "github.com/tendermint/spn/x/project/simulation"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 // populateCoordinators populates the profile keeper with some coordinators from simulation accounts
@@ -276,8 +276,8 @@ func TestGetAccountWithShares(t *testing.T) {
 		sampleAddr := sample.Address(r)
 		tk.ProjectKeeper.SetMainnetAccount(ctx, projecttypes.MainnetAccount{
 			ProjectID: 10,
-			Address:    sampleAddr,
-			Shares:     sample.Shares(r),
+			Address:   sampleAddr,
+			Shares:    sample.Shares(r),
 		})
 		_, _, _, found := simproject.GetAccountWithShares(r, ctx, *tk.ProjectKeeper, accs, false)
 		require.False(t, found)
@@ -296,8 +296,8 @@ func TestGetAccountWithShares(t *testing.T) {
 		share := sample.Shares(r)
 		tk.ProjectKeeper.SetMainnetAccount(ctx, projecttypes.MainnetAccount{
 			ProjectID: project.ProjectID,
-			Address:    acc.Address.String(),
-			Shares:     share,
+			Address:   acc.Address.String(),
+			Shares:    share,
 		})
 		prjtID, acc, shareRetrieved, found := simproject.GetAccountWithShares(r, ctx, *tk.ProjectKeeper, accs, false)
 		require.True(t, found)
@@ -314,8 +314,8 @@ func TestGetAccountWithShares(t *testing.T) {
 		share := sample.Shares(r)
 		tk.ProjectKeeper.SetMainnetAccount(ctx, projecttypes.MainnetAccount{
 			ProjectID: project.ProjectID,
-			Address:    acc.Address.String(),
-			Shares:     share,
+			Address:   acc.Address.String(),
+			Shares:    share,
 		})
 		prjtID, acc, shareRetrieved, found := simproject.GetAccountWithShares(r, ctx, *tk.ProjectKeeper, accs, true)
 		require.True(t, found)

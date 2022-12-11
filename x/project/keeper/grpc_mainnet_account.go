@@ -87,8 +87,8 @@ func (k Keeper) MainnetAccountBalanceAll(c context.Context, req *types.QueryAllM
 		if !balance.IsZero() {
 			mainnetAccountBalance := types.MainnetAccountBalance{
 				ProjectID: acc.ProjectID,
-				Address:    acc.Address,
-				Coins:      balance,
+				Address:   acc.Address,
+				Coins:     balance,
 			}
 			mainnetAccountBalances = append(mainnetAccountBalances, mainnetAccountBalance)
 		}
@@ -128,8 +128,8 @@ func (k Keeper) MainnetAccountBalance(c context.Context, req *types.QueryGetMain
 
 	mainnetAccountBalance := types.MainnetAccountBalance{
 		ProjectID: acc.ProjectID,
-		Address:    acc.Address,
-		Coins:      balance,
+		Address:   acc.Address,
+		Coins:     balance,
 	}
 
 	return &types.QueryGetMainnetAccountBalanceResponse{MainnetAccountBalance: mainnetAccountBalance}, nil

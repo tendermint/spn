@@ -14,7 +14,7 @@ var _ sdk.Msg = &MsgMintVouchers{}
 func NewMsgMintVouchers(coordinator string, projectID uint64, shares Shares) *MsgMintVouchers {
 	return &MsgMintVouchers{
 		Coordinator: coordinator,
-		ProjectID:  projectID,
+		ProjectID:   projectID,
 		Shares:      shares,
 	}
 }

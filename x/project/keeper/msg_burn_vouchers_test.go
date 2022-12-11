@@ -19,7 +19,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 
 		ctx            = sdk.WrapSDKContext(sdkCtx)
-		project       = sample.Project(r, 0)
+		project        = sample.Project(r, 0)
 		addr           = sample.AccAddress(r)
 		shares         types.Shares
 		vouchers       sdk.Coins
@@ -59,51 +59,51 @@ func TestMsgBurnVouchers(t *testing.T) {
 		{
 			name: "should allow burn voucher",
 			msg: types.MsgBurnVouchers{
-				Sender:     addr.String(),
+				Sender:    addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[0]),
+				Vouchers:  sdk.NewCoins(vouchers[0]),
 			},
 		},
 		{
 			name: "should allow burn voucher two",
 			msg: types.MsgBurnVouchers{
-				Sender:     addr.String(),
+				Sender:    addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[1]),
+				Vouchers:  sdk.NewCoins(vouchers[1]),
 			},
 		},
 		{
 			name: "should allow burn voucher three",
 			msg: types.MsgBurnVouchers{
-				Sender:     addr.String(),
+				Sender:    addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[2]),
+				Vouchers:  sdk.NewCoins(vouchers[2]),
 			},
 		},
 		{
 			name: "should fail for non existing project",
 			msg: types.MsgBurnVouchers{
-				Sender:     addr.String(),
+				Sender:    addr.String(),
 				ProjectID: 1000,
-				Vouchers:   sample.Coins(r),
+				Vouchers:  sample.Coins(r),
 			},
 			err: types.ErrProjectNotFound,
 		},
 		{
 			name: "should fail for invalid sender address",
 			msg: types.MsgBurnVouchers{
-				Sender:     "invalid_address",
+				Sender:    "invalid_address",
 				ProjectID: project.ProjectID,
-				Vouchers:   sample.Coins(r),
+				Vouchers:  sample.Coins(r),
 			},
 			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "should not burn more than allocated shares",
 			msg: types.MsgBurnVouchers{
-				Sender:     addr.String(),
+				Sender:    addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   vouchersTooBig,
+				Vouchers:  vouchersTooBig,
 			},
 			err: types.ErrInsufficientVouchers,
 		},
@@ -111,9 +111,9 @@ func TestMsgBurnVouchers(t *testing.T) {
 		{
 			name: "should fail for insufficient funds for voucher one",
 			msg: types.MsgBurnVouchers{
-				Sender:     addr.String(),
+				Sender:    addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[0]),
+				Vouchers:  sdk.NewCoins(vouchers[0]),
 			},
 			err: types.ErrInsufficientVouchers,
 		},
@@ -121,9 +121,9 @@ func TestMsgBurnVouchers(t *testing.T) {
 		{
 			name: "should fail for insufficient funds for voucher two",
 			msg: types.MsgBurnVouchers{
-				Sender:     addr.String(),
+				Sender:    addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[1]),
+				Vouchers:  sdk.NewCoins(vouchers[1]),
 			},
 			err: types.ErrInsufficientVouchers,
 		},
@@ -131,9 +131,9 @@ func TestMsgBurnVouchers(t *testing.T) {
 		{
 			name: "should fail for insufficient funds for voucher three",
 			msg: types.MsgBurnVouchers{
-				Sender:     addr.String(),
+				Sender:    addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[2]),
+				Vouchers:  sdk.NewCoins(vouchers[2]),
 			},
 			err: types.ErrInsufficientVouchers,
 		},

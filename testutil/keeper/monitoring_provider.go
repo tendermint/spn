@@ -12,14 +12,14 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	projectkeeper "github.com/tendermint/spn/x/project/keeper"
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
 	participationkeeper "github.com/tendermint/spn/x/participation/keeper"
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
 )
@@ -94,7 +94,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 
 	return ctx, TestKeepers{
 			T:                        t,
-			ProjectKeeper:           projectKeeper,
+			ProjectKeeper:            projectKeeper,
 			LaunchKeeper:             launchKeeper,
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
@@ -108,7 +108,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
-			ProjectSrv:      projectSrv,
+			ProjectSrv:       projectSrv,
 			RewardSrv:        rewardSrv,
 			ParticipationSrv: participationSrv,
 		}

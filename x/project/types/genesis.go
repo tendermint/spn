@@ -9,9 +9,9 @@ import (
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		Projects:       []Project{},
-		ProjectCounter: 1,
-		ProjectChains:  []ProjectChains{},
+		Projects:        []Project{},
+		ProjectCounter:  1,
+		ProjectChains:   []ProjectChains{},
 		MainnetAccounts: []MainnetAccount{},
 		Params:          DefaultParams(),
 		TotalShares:     spntypes.TotalShareNumber,

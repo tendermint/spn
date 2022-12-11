@@ -66,11 +66,11 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 	// Initialize the list of project chains
 	k.SetProjectChains(ctx, types.ProjectChains{
 		ProjectID: projectID,
-		Chains:     []uint64{},
+		Chains:    []uint64{},
 	})
 
 	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectCreated{
-		ProjectID:         projectID,
+		ProjectID:          projectID,
 		CoordinatorAddress: msg.Coordinator,
 		CoordinatorID:      coordID,
 	})

@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func TestMsgCreateProject_ValidateBasic(t *testing.T) {
@@ -23,39 +23,39 @@ func TestMsgCreateProject_ValidateBasic(t *testing.T) {
 		{
 			name: "should allow validation of valid msg",
 			msg: types.MsgCreateProject{
-				Coordinator:  sample.Address(r),
+				Coordinator: sample.Address(r),
 				ProjectName: sample.ProjectName(r),
-				TotalSupply:  sample.TotalSupply(r),
-				Metadata:     sample.Metadata(r, 20),
+				TotalSupply: sample.TotalSupply(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 		},
 		{
 			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgCreateProject{
-				Coordinator:  "invalid_address",
+				Coordinator: "invalid_address",
 				ProjectName: sample.ProjectName(r),
-				TotalSupply:  sample.TotalSupply(r),
-				Metadata:     sample.Metadata(r, 20),
+				TotalSupply: sample.TotalSupply(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			err: profile.ErrInvalidCoordAddress,
 		},
 		{
 			name: "should prevent validation of msg with invalid project name",
 			msg: types.MsgCreateProject{
-				Coordinator:  sample.Address(r),
+				Coordinator: sample.Address(r),
 				ProjectName: invalidProjectName,
-				TotalSupply:  sample.TotalSupply(r),
-				Metadata:     sample.Metadata(r, 20),
+				TotalSupply: sample.TotalSupply(r),
+				Metadata:    sample.Metadata(r, 20),
 			},
 			err: types.ErrInvalidProjectName,
 		},
 		{
 			name: "should prevent validation of msg with invalid total supply",
 			msg: types.MsgCreateProject{
-				Coordinator:  sample.Address(r),
+				Coordinator: sample.Address(r),
 				ProjectName: sample.ProjectName(r),
-				TotalSupply:  invalidCoins,
-				Metadata:     sample.Metadata(r, 20),
+				TotalSupply: invalidCoins,
+				Metadata:    sample.Metadata(r, 20),
 			},
 			err: types.ErrInvalidTotalSupply,
 		},

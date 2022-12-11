@@ -46,8 +46,8 @@ func TestNewProject(t *testing.T) {
 
 func TestProject_Validate(t *testing.T) {
 	var (
-		invalidAllocatedShares            project.Project
-		totalSharesReached                project.Project
+		invalidAllocatedShares           project.Project
+		totalSharesReached               project.Project
 		projectInvalidSpecialAllocations project.Project
 	)
 
@@ -81,14 +81,14 @@ func TestProject_Validate(t *testing.T) {
 	})
 
 	for _, tc := range []struct {
-		desc     string
+		desc    string
 		project project.Project
-		valid    bool
+		valid   bool
 	}{
 		{
-			desc:     "should allow validation of valid project",
+			desc:    "should allow validation of valid project",
 			project: sample.Project(r, 0),
-			valid:    true,
+			valid:   true,
 		},
 		{
 			desc: "invalid project name",
@@ -115,19 +115,19 @@ func TestProject_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc:     "should prevent validation of project with invalid allocated shares",
+			desc:    "should prevent validation of project with invalid allocated shares",
 			project: invalidAllocatedShares,
-			valid:    false,
+			valid:   false,
 		},
 		{
-			desc:     "should prevent validation of project with allocated shares greater than total shares",
+			desc:    "should prevent validation of project with allocated shares greater than total shares",
 			project: totalSharesReached,
-			valid:    false,
+			valid:   false,
 		},
 		{
-			desc:     "should prevent validation of project with invalid special allocations",
+			desc:    "should prevent validation of project with invalid special allocations",
 			project: projectInvalidSpecialAllocations,
-			valid:    false,
+			valid:   false,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

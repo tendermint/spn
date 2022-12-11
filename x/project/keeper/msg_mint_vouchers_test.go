@@ -10,16 +10,16 @@ import (
 	spntypes "github.com/tendermint/spn/pkg/types"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func TestMsgMintVouchers(t *testing.T) {
 	var (
-		sdkCtx, tk, ts  = testkeeper.NewTestSetup(t)
-		ctx             = sdk.WrapSDKContext(sdkCtx)
-		coordID         uint64
-		coord           = sample.Address(r)
+		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
+		ctx            = sdk.WrapSDKContext(sdkCtx)
+		coordID        uint64
+		coord          = sample.Address(r)
 		coordNoProject = sample.Address(r)
 
 		shares, _    = types.NewShares("1000foo,500bar,300foobar")
@@ -56,7 +56,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should allow minting  vouchers",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				ProjectID:  0,
+				ProjectID:   0,
 				Shares:      shares,
 			},
 		},
@@ -64,7 +64,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should allow minting same vouchers again",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				ProjectID:  0,
+				ProjectID:   0,
 				Shares:      shares,
 			},
 		},
@@ -72,7 +72,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should allow minting other vouchers",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				ProjectID:  0,
+				ProjectID:   0,
 				Shares:      sample.Shares(r),
 			},
 		},
@@ -80,7 +80,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should not mint more than total shares",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				ProjectID:  0,
+				ProjectID:   0,
 				Shares:      sharesTooBig,
 			},
 			err: types.ErrTotalSharesLimit,
@@ -89,7 +89,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should fail with non existing project",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				ProjectID:  1000,
+				ProjectID:   1000,
 				Shares:      shares,
 			},
 			err: types.ErrProjectNotFound,
@@ -98,7 +98,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should fail with non existing coordinator",
 			msg: types.MsgMintVouchers{
 				Coordinator: sample.Address(r),
-				ProjectID:  0,
+				ProjectID:   0,
 				Shares:      shares,
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
@@ -107,7 +107,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should fail with invalid coordinator",
 			msg: types.MsgMintVouchers{
 				Coordinator: coordNoProject,
-				ProjectID:  0,
+				ProjectID:   0,
 				Shares:      shares,
 			},
 			err: profiletypes.ErrCoordInvalid,

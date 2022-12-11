@@ -8,8 +8,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ignterrors "github.com/ignite/modules/pkg/errors"
 
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVouchers) (*types.MsgMintVouchersResponse, error) {
@@ -65,7 +65,7 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 
 	err = ctx.EventManager().EmitTypedEvent(
 		&types.EventProjectSharesUpdated{
-			ProjectID:         project.ProjectID,
+			ProjectID:          project.ProjectID,
 			CoordinatorAddress: msg.Coordinator,
 			AllocatedShares:    project.AllocatedShares,
 		})

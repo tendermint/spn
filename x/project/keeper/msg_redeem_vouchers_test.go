@@ -19,15 +19,15 @@ func TestMsgRedeemVouchers(t *testing.T) {
 	var (
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 
-		ctx                     = sdk.WrapSDKContext(sdkCtx)
-		addr                    = sample.AccAddress(r)
-		existAddr               = sample.AccAddress(r)
+		ctx                    = sdk.WrapSDKContext(sdkCtx)
+		addr                   = sample.AccAddress(r)
+		existAddr              = sample.AccAddress(r)
 		project                = sample.Project(r, 0)
 		projectMainnetLaunched = sample.Project(r, 1)
-		shares                  types.Shares
-		vouchers                sdk.Coins
-		err                     error
-		vouchersTooBig          = sdk.NewCoins(
+		shares                 types.Shares
+		vouchers               sdk.Coins
+		err                    error
+		vouchersTooBig         = sdk.NewCoins(
 			sdk.NewCoin("v/0/foo", sdkmath.NewInt(spntypes.TotalShareNumber+1)),
 		)
 	)
@@ -62,8 +62,8 @@ func TestMsgRedeemVouchers(t *testing.T) {
 
 		tk.ProjectKeeper.SetMainnetAccount(sdkCtx, types.MainnetAccount{
 			ProjectID: project.ProjectID,
-			Address:    existAddr.String(),
-			Shares:     shares,
+			Address:   existAddr.String(),
+			Shares:    shares,
 		})
 		err = tk.BankKeeper.MintCoins(sdkCtx, types.ModuleName, vouchers)
 		require.NoError(t, err)
@@ -79,76 +79,76 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		{
 			name: "should allow redeem voucher one",
 			msg: types.MsgRedeemVouchers{
-				Sender:     existAddr.String(),
-				Account:    existAddr.String(),
+				Sender:    existAddr.String(),
+				Account:   existAddr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[0]),
+				Vouchers:  sdk.NewCoins(vouchers[0]),
 			},
 		},
 		{
 			name: "should allow redeem voucher two",
 			msg: types.MsgRedeemVouchers{
-				Sender:     existAddr.String(),
-				Account:    existAddr.String(),
+				Sender:    existAddr.String(),
+				Account:   existAddr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[1]),
+				Vouchers:  sdk.NewCoins(vouchers[1]),
 			},
 		},
 		{
 			name: "should allow redeem voucher three",
 			msg: types.MsgRedeemVouchers{
-				Sender:     existAddr.String(),
-				Account:    existAddr.String(),
+				Sender:    existAddr.String(),
+				Account:   existAddr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[2]),
+				Vouchers:  sdk.NewCoins(vouchers[2]),
 			},
 		},
 		{
 			name: "should allow redeem all",
 			msg: types.MsgRedeemVouchers{
-				Sender:     addr.String(),
-				Account:    sample.Address(r),
+				Sender:    addr.String(),
+				Account:   sample.Address(r),
 				ProjectID: project.ProjectID,
-				Vouchers:   vouchers,
+				Vouchers:  vouchers,
 			},
 		},
 		{
 			name: "should fail with non existing project",
 			msg: types.MsgRedeemVouchers{
-				Sender:     addr.String(),
-				Account:    addr.String(),
+				Sender:    addr.String(),
+				Account:   addr.String(),
 				ProjectID: 10000,
-				Vouchers:   sample.Coins(r),
+				Vouchers:  sample.Coins(r),
 			},
 			err: types.ErrProjectNotFound,
 		},
 		{
 			name: "should fail with invalid vouchers",
 			msg: types.MsgRedeemVouchers{
-				Sender:     addr.String(),
-				Account:    addr.String(),
+				Sender:    addr.String(),
+				Account:   addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sample.Coins(r),
+				Vouchers:  sample.Coins(r),
 			},
 			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "should fail with invalid sender address",
 			msg: types.MsgRedeemVouchers{
-				Sender:     "invalid_address",
-				Account:    addr.String(),
+				Sender:    "invalid_address",
+				Account:   addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   vouchers,
+				Vouchers:  vouchers,
 			},
 			err: ignterrors.ErrCritical,
 		},
 		{
 			name: "should fail with insufficient funds",
 			msg: types.MsgRedeemVouchers{
-				Sender:     addr.String(),
-				Account:    addr.String(),
+				Sender:    addr.String(),
+				Account:   addr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   vouchersTooBig,
+				Vouchers:  vouchersTooBig,
 			},
 			err: types.ErrInsufficientVouchers,
 		},
@@ -156,30 +156,30 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		{
 			name: "should fail with account without funds for vouchers",
 			msg: types.MsgRedeemVouchers{
-				Sender:     existAddr.String(),
-				Account:    existAddr.String(),
+				Sender:    existAddr.String(),
+				Account:   existAddr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   vouchers,
+				Vouchers:  vouchers,
 			},
 			err: types.ErrInsufficientVouchers,
 		},
 		{
 			name: "should fail with account without funds for voucher one",
 			msg: types.MsgRedeemVouchers{
-				Sender:     existAddr.String(),
-				Account:    existAddr.String(),
+				Sender:    existAddr.String(),
+				Account:   existAddr.String(),
 				ProjectID: project.ProjectID,
-				Vouchers:   sdk.NewCoins(vouchers[0]),
+				Vouchers:  sdk.NewCoins(vouchers[0]),
 			},
 			err: types.ErrInsufficientVouchers,
 		},
 		{
 			name: "should fail with project with launched mainnet",
 			msg: types.MsgRedeemVouchers{
-				Sender:     addr.String(),
-				Account:    addr.String(),
+				Sender:    addr.String(),
+				Account:   addr.String(),
 				ProjectID: projectMainnetLaunched.ProjectID,
-				Vouchers:   sample.Coins(r),
+				Vouchers:  sample.Coins(r),
 			},
 			err: types.ErrMainnetLaunchTriggered,
 		},

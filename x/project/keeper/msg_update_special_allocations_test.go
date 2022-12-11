@@ -11,18 +11,18 @@ import (
 	tc "github.com/tendermint/spn/testutil/constructor"
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 	var (
-		coordID             uint64
-		coordAddr           = sample.Address(r)
+		coordID            uint64
+		coordAddr          = sample.Address(r)
 		coordAddrNoProject = sample.Address(r)
-		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
-		ctx                 = sdk.WrapSDKContext(sdkCtx)
+		sdkCtx, tk, ts     = testkeeper.NewTestSetup(t)
+		ctx                = sdk.WrapSDKContext(sdkCtx)
 	)
 
 	totalShares := tk.ProjectKeeper.GetTotalShares(sdkCtx)
@@ -69,7 +69,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 	// if a mainnet is defined, it is the mainnet of the project
 	type inputState struct {
 		project *types.Project
-		mainnet  *launchtypes.Chain
+		mainnet *launchtypes.Chain
 	}
 
 	projectNoExistentMainnet := newProject(100, types.EmptyShares(), types.EmptySpecialAllocations())
@@ -92,7 +92,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			),
 			state: inputState{
 				project: newProject(1, types.EmptyShares(), types.EmptySpecialAllocations()),
-				mainnet:  nil,
+				mainnet: nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
 		},
@@ -105,7 +105,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			),
 			state: inputState{
 				project: newProject(2, types.EmptyShares(), types.EmptySpecialAllocations()),
-				mainnet:  nil,
+				mainnet: nil,
 			},
 			expectedAllocatedShares: tc.Shares(t, "80foo"),
 		},
@@ -208,7 +208,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			),
 			state: inputState{
 				project: newProject(9, types.EmptyShares(), types.EmptySpecialAllocations()),
-				mainnet:  nil,
+				mainnet: nil,
 			},
 			expectedAllocatedShares: tc.Shares(t, fmt.Sprintf("%dfoo,%dbar", totalShares, totalShares)),
 		},
@@ -221,7 +221,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			),
 			state: inputState{
 				project: nil,
-				mainnet:  nil,
+				mainnet: nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
 			err:                     types.ErrProjectNotFound,
@@ -235,7 +235,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			),
 			state: inputState{
 				project: newProject(50, types.EmptyShares(), types.EmptySpecialAllocations()),
-				mainnet:  nil,
+				mainnet: nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
 			err:                     profiletypes.ErrCoordAddressNotFound,
@@ -249,7 +249,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			),
 			state: inputState{
 				project: newProject(51, types.EmptyShares(), types.EmptySpecialAllocations()),
-				mainnet:  nil,
+				mainnet: nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
 			err:                     profiletypes.ErrCoordInvalid,
@@ -263,7 +263,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			),
 			state: inputState{
 				project: newProject(52, types.EmptyShares(), types.EmptySpecialAllocations()),
-				mainnet:  newChain(50, true),
+				mainnet: newChain(50, true),
 			},
 			expectedAllocatedShares: types.EmptyShares(),
 			err:                     types.ErrMainnetLaunchTriggered,
@@ -277,7 +277,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			),
 			state: inputState{
 				project: newProject(53, types.EmptyShares(), types.EmptySpecialAllocations()),
-				mainnet:  nil,
+				mainnet: nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
 			err:                     types.ErrTotalSharesLimit,
@@ -307,7 +307,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			),
 			state: inputState{
 				project: projectNoExistentMainnet,
-				mainnet:  nil,
+				mainnet: nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
 			err:                     ignterrors.ErrCritical,

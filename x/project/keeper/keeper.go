@@ -10,8 +10,8 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
 
-	"github.com/tendermint/spn/x/project/types"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 type LaunchKeeper interface {

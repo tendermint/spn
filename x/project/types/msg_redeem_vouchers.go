@@ -11,10 +11,10 @@ var _ sdk.Msg = &MsgRedeemVouchers{}
 
 func NewMsgRedeemVouchers(sender, account string, projectID uint64, vouchers sdk.Coins) *MsgRedeemVouchers {
 	return &MsgRedeemVouchers{
-		Sender:     sender,
+		Sender:    sender,
 		ProjectID: projectID,
-		Account:    account,
-		Vouchers:   vouchers,
+		Account:   account,
+		Vouchers:  vouchers,
 	}
 }
 

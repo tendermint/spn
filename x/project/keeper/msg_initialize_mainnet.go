@@ -11,8 +11,8 @@ import (
 
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitializeMainnet) (*types.MsgInitializeMainnetResponse, error) {
@@ -70,7 +70,7 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 	k.SetProject(ctx, project)
 
 	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectMainnetInitialized{
-		ProjectID:         project.ProjectID,
+		ProjectID:          project.ProjectID,
 		CoordinatorAddress: msg.Coordinator,
 		MainnetID:          project.MainnetID,
 	})

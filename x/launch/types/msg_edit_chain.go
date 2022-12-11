@@ -19,11 +19,11 @@ func NewMsgEditChain(
 	metadata []byte,
 ) *MsgEditChain {
 	return &MsgEditChain{
-		Coordinator:   coordinator,
-		LaunchID:      launchID,
+		Coordinator:  coordinator,
+		LaunchID:     launchID,
 		SetProjectID: setProject,
 		ProjectID:    projectID,
-		Metadata:      metadata,
+		Metadata:     metadata,
 	}
 }
 

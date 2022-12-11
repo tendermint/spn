@@ -8,8 +8,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	ignterrors "github.com/ignite/modules/pkg/errors"
 
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func (k msgServer) UpdateSpecialAllocations(goCtx context.Context, msg *types.MsgUpdateSpecialAllocations) (*types.MsgUpdateSpecialAllocationsResponse, error) {
@@ -67,7 +67,7 @@ func (k msgServer) UpdateSpecialAllocations(goCtx context.Context, msg *types.Ms
 	k.SetProject(ctx, project)
 	err = ctx.EventManager().EmitTypedEvents(
 		&types.EventProjectSharesUpdated{
-			ProjectID:         project.ProjectID,
+			ProjectID:          project.ProjectID,
 			CoordinatorAddress: msg.Coordinator,
 			AllocatedShares:    project.AllocatedShares,
 		})

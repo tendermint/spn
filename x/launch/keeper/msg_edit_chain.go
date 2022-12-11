@@ -7,9 +7,9 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*types.MsgEditChainResponse, error) {

@@ -18,10 +18,10 @@ func NewMsgCreateProject(
 	metadata []byte,
 ) *MsgCreateProject {
 	return &MsgCreateProject{
-		Coordinator:  coordinator,
+		Coordinator: coordinator,
 		ProjectName: projectName,
-		TotalSupply:  totalSupply,
-		Metadata:     metadata,
+		TotalSupply: totalSupply,
+		Metadata:    metadata,
 	}
 }
 

@@ -29,8 +29,8 @@ func NewMsgCreateChain(
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
 		InitialGenesis: initialGenesis,
-		HasProject:    hasProject,
-		ProjectID:     projectID,
+		HasProject:     hasProject,
+		ProjectID:      projectID,
 		AccountBalance: accountBalance,
 		Metadata:       metadata,
 	}

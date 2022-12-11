@@ -21,8 +21,8 @@ func NewProject(
 	createdAt int64,
 ) Project {
 	return Project{
-		ProjectID:         projectID,
-		ProjectName:       projectName,
+		ProjectID:          projectID,
+		ProjectName:        projectName,
 		CoordinatorID:      coordinatorID,
 		MainnetInitialized: false,
 		TotalSupply:        totalSupply,

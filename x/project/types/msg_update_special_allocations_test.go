@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
@@ -24,7 +24,7 @@ func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 			name: "should allow validation of valid msg",
 			msg: types.MsgUpdateSpecialAllocations{
 				Coordinator:        sample.Address(r),
-				ProjectID:         1,
+				ProjectID:          1,
 				SpecialAllocations: sample.SpecialAllocations(r),
 			},
 		},
@@ -32,7 +32,7 @@ func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgUpdateSpecialAllocations{
 				Coordinator:        "invalid_address",
-				ProjectID:         1,
+				ProjectID:          1,
 				SpecialAllocations: sample.SpecialAllocations(r),
 			},
 			err: profile.ErrInvalidCoordAddress,
@@ -41,7 +41,7 @@ func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid special allocations",
 			msg: types.MsgUpdateSpecialAllocations{
 				Coordinator:        sample.Address(r),
-				ProjectID:         1,
+				ProjectID:          1,
 				SpecialAllocations: types.NewSpecialAllocations(invalidShares, sample.Shares(r)),
 			},
 			err: types.ErrInvalidSpecialAllocations,

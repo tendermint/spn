@@ -22,42 +22,42 @@ func TestMsgBurnVouchers_ValidateBasic(t *testing.T) {
 		{
 			name: "should allow validation of valid msg",
 			msg: types.MsgBurnVouchers{
-				Sender:     sample.Address(r),
+				Sender:    sample.Address(r),
 				ProjectID: 0,
-				Vouchers:   sample.Vouchers(r, 0),
+				Vouchers:  sample.Vouchers(r, 0),
 			},
 		},
 		{
 			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgBurnVouchers{
-				Sender:     "invalid_address",
+				Sender:    "invalid_address",
 				ProjectID: 0,
-				Vouchers:   sample.Coins(r),
+				Vouchers:  sample.Coins(r),
 			},
 			err: types.ErrInvalidVoucherAddress,
 		},
 		{
 			name: "should prevent validation of msg with invalid vouchers",
 			msg: types.MsgBurnVouchers{
-				Sender:     sample.Address(r),
+				Sender:    sample.Address(r),
 				ProjectID: 0,
-				Vouchers:   invalidCoins,
+				Vouchers:  invalidCoins,
 			},
 			err: types.ErrInvalidVouchers,
 		},
 		{
 			name: "should prevent validation of msg with empty vouchers",
 			msg: types.MsgBurnVouchers{
-				Sender:     sample.Address(r),
+				Sender:    sample.Address(r),
 				ProjectID: 0,
-				Vouchers:   sdk.Coins{},
+				Vouchers:  sdk.Coins{},
 			},
 			err: types.ErrInvalidVouchers,
 		},
 		{
 			name: "should prevent validation of msg with vouchers not matching project",
 			msg: types.MsgBurnVouchers{
-				Sender:     sample.Address(r),
+				Sender:    sample.Address(r),
 				ProjectID: 0,
 				Vouchers: sdk.NewCoins(
 					sdk.NewCoin("invalid/foo", sdkmath.NewInt(100)),

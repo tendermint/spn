@@ -8,13 +8,13 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func TestMsgUpdateProjectName(t *testing.T) {
 	var (
-		coordAddr           = sample.Address(r)
+		coordAddr          = sample.Address(r)
 		coordAddrNoProject = sample.Address(r)
 		project            = sample.Project(r, 0)
 
@@ -48,7 +48,7 @@ func TestMsgUpdateProjectName(t *testing.T) {
 			name: "should allow edit name and metadata",
 			msg: types.MsgEditProject{
 				Coordinator: coordAddr,
-				ProjectID:  project.ProjectID,
+				ProjectID:   project.ProjectID,
 				Name:        sample.ProjectName(r),
 				Metadata:    sample.Metadata(r, 20),
 			},
@@ -57,7 +57,7 @@ func TestMsgUpdateProjectName(t *testing.T) {
 			name: "should allow edit name",
 			msg: types.MsgEditProject{
 				Coordinator: coordAddr,
-				ProjectID:  project.ProjectID,
+				ProjectID:   project.ProjectID,
 				Name:        sample.ProjectName(r),
 				Metadata:    []byte{},
 			},
@@ -66,7 +66,7 @@ func TestMsgUpdateProjectName(t *testing.T) {
 			name: "should allow edit metadata",
 			msg: types.MsgEditProject{
 				Coordinator: coordAddr,
-				ProjectID:  project.ProjectID,
+				ProjectID:   project.ProjectID,
 				Name:        "",
 				Metadata:    sample.Metadata(r, 20),
 			},
@@ -75,7 +75,7 @@ func TestMsgUpdateProjectName(t *testing.T) {
 			name: "should fail if invalid project id",
 			msg: types.MsgEditProject{
 				Coordinator: coordAddr,
-				ProjectID:  100,
+				ProjectID:   100,
 				Name:        sample.ProjectName(r),
 				Metadata:    sample.Metadata(r, 20),
 			},
@@ -85,7 +85,7 @@ func TestMsgUpdateProjectName(t *testing.T) {
 			name: "should fail with invalid coordinator address",
 			msg: types.MsgEditProject{
 				Coordinator: sample.Address(r),
-				ProjectID:  project.ProjectID,
+				ProjectID:   project.ProjectID,
 				Name:        sample.ProjectName(r),
 				Metadata:    sample.Metadata(r, 20),
 			},
@@ -95,7 +95,7 @@ func TestMsgUpdateProjectName(t *testing.T) {
 			name: "should fail with wrong coordinator id",
 			msg: types.MsgEditProject{
 				Coordinator: coordAddrNoProject,
-				ProjectID:  project.ProjectID,
+				ProjectID:   project.ProjectID,
 				Name:        sample.ProjectName(r),
 				Metadata:    sample.Metadata(r, 20),
 			},
@@ -104,7 +104,7 @@ func TestMsgUpdateProjectName(t *testing.T) {
 		{
 			name: "should fail when the change had too long metadata",
 			msg: types.MsgEditProject{
-				ProjectID:  0,
+				ProjectID:   0,
 				Coordinator: sample.Address(r),
 				Name:        sample.ProjectName(r),
 				Metadata:    sample.Metadata(r, maxMetadataLength+1),

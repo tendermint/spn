@@ -9,18 +9,18 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/tendermint/spn/testutil/sample"
-	"github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	"github.com/tendermint/spn/x/project/types"
 )
 
 func TestMsgInitializeMainnet(t *testing.T) {
 	var (
-		coordID                      uint64
+		coordID                     uint64
 		projectID                   uint64 = 0
 		projectMainnetInitializedID uint64 = 1
 		projectIncorrectCoordID     uint64 = 2
 		projectEmptySupplyID        uint64 = 3
-		coordAddr                           = sample.Address(r)
+		coordAddr                          = sample.Address(r)
 		coordAddrNoProject                 = sample.Address(r)
 
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
@@ -67,7 +67,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "should allow initialize mainnet",
 			msg: types.MsgInitializeMainnet{
-				ProjectID:     projectID,
+				ProjectID:      projectID,
 				Coordinator:    coordAddr,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
@@ -77,7 +77,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "should fail if project not found",
 			msg: types.MsgInitializeMainnet{
-				ProjectID:     1000,
+				ProjectID:      1000,
 				Coordinator:    coordAddr,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
@@ -88,7 +88,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "should fail if mainnet already initialized",
 			msg: types.MsgInitializeMainnet{
-				ProjectID:     projectMainnetInitializedID,
+				ProjectID:      projectMainnetInitializedID,
 				Coordinator:    coordAddr,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
@@ -99,7 +99,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "should fail if project has empty supply",
 			msg: types.MsgInitializeMainnet{
-				ProjectID:     projectEmptySupplyID,
+				ProjectID:      projectEmptySupplyID,
 				Coordinator:    coordAddr,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
@@ -110,7 +110,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "should fail with non-existent coordinator",
 			msg: types.MsgInitializeMainnet{
-				ProjectID:     projectIncorrectCoordID,
+				ProjectID:      projectIncorrectCoordID,
 				Coordinator:    sample.Address(r),
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
@@ -121,7 +121,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "should fail with invalid coordinator",
 			msg: types.MsgInitializeMainnet{
-				ProjectID:     projectIncorrectCoordID,
+				ProjectID:      projectIncorrectCoordID,
 				Coordinator:    coordAddrNoProject,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),

@@ -46,7 +46,7 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 		k.RemoveMainnetAccount(ctx, msg.ProjectID, msg.Sender)
 		if err := ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountRemoved{
 			ProjectID: project.ProjectID,
-			Address:    account.Address,
+			Address:   account.Address,
 		}); err != nil {
 			return nil, err
 		}
@@ -54,8 +54,8 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 		k.SetMainnetAccount(ctx, account)
 		if err := ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{
 			ProjectID: account.ProjectID,
-			Address:    account.Address,
-			Shares:     account.Shares,
+			Address:   account.Address,
+			Shares:    account.Shares,
 		}); err != nil {
 			return nil, err
 		}
