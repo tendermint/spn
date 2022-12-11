@@ -19,8 +19,8 @@ func (k Keeper) CreateNewChain(
 	sourceURL,
 	sourceHash string,
 	initialGenesis types.InitialGenesis,
-	hasCampaign bool,
-	campaignID uint64,
+	hasProject bool,
+	projectID uint64,
 	isMainnet bool,
 	accountBalance sdk.Coins,
 	metadata []byte,
@@ -37,8 +37,8 @@ func (k Keeper) CreateNewChain(
 		SourceURL:       sourceURL,
 		SourceHash:      sourceHash,
 		InitialGenesis:  initialGenesis,
-		HasCampaign:     hasCampaign,
-		CampaignID:      campaignID,
+		HasProject:     hasProject,
+		ProjectID:      projectID,
 		IsMainnet:       isMainnet,
 		LaunchTriggered: false,
 		LaunchTime:      time.Unix(0, 0).UTC(),
@@ -50,17 +50,17 @@ func (k Keeper) CreateNewChain(
 		return 0, err
 	}
 
-	// If the chain is associated to a campaign, campaign existence and coordinator is checked
-	if hasCampaign {
-		campaign, found := k.campaignKeeper.GetCampaign(ctx, campaignID)
+	// If the chain is associated to a project, project existence and coordinator is checked
+	if hasProject {
+		project, found := k.projectKeeper.GetProject(ctx, projectID)
 		if !found {
-			return 0, fmt.Errorf("campaign %d doesn't exist", campaignID)
+			return 0, fmt.Errorf("project %d doesn't exist", projectID)
 		}
-		if campaign.CoordinatorID != coordinatorID {
+		if project.CoordinatorID != coordinatorID {
 			return 0, fmt.Errorf(
-				"chain coordinator %d and campaign coordinator %d don't match",
+				"chain coordinator %d and project coordinator %d don't match",
 				coordinatorID,
-				campaign.CoordinatorID,
+				project.CoordinatorID,
 			)
 		}
 	}
@@ -68,9 +68,9 @@ func (k Keeper) CreateNewChain(
 	// Append the chain to the store
 	launchID := k.AppendChain(ctx, chain)
 
-	// Register the chain to the campaign
-	if hasCampaign {
-		if err := k.campaignKeeper.AddChainToCampaign(ctx, campaignID, launchID); err != nil {
+	// Register the chain to the project
+	if hasProject {
+		if err := k.projectKeeper.AddChainToProject(ctx, projectID, launchID); err != nil {
 			return 0, err
 		}
 	}

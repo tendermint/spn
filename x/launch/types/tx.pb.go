@@ -41,8 +41,8 @@ type MsgCreateChain struct {
 	SourceURL      string                                   `protobuf:"bytes,3,opt,name=sourceURL,proto3" json:"sourceURL,omitempty"`
 	SourceHash     string                                   `protobuf:"bytes,4,opt,name=sourceHash,proto3" json:"sourceHash,omitempty"`
 	InitialGenesis InitialGenesis                           `protobuf:"bytes,5,opt,name=initialGenesis,proto3" json:"initialGenesis"`
-	HasCampaign    bool                                     `protobuf:"varint,6,opt,name=hasCampaign,proto3" json:"hasCampaign,omitempty"`
-	CampaignID     uint64                                   `protobuf:"varint,7,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	HasProject    bool                                     `protobuf:"varint,6,opt,name=hasProject,proto3" json:"hasProject,omitempty"`
+	ProjectID     uint64                                   `protobuf:"varint,7,opt,name=projectID,proto3" json:"projectID,omitempty"`
 	AccountBalance github_com_cosmos_cosmos_sdk_types.Coins `protobuf:"bytes,8,rep,name=AccountBalance,proto3,casttype=github.com/cosmos/cosmos-sdk/types.Coin,castrepeated=github.com/cosmos/cosmos-sdk/types.Coins" json:"AccountBalance"`
 	Metadata       []byte                                   `protobuf:"bytes,9,opt,name=metadata,proto3" json:"metadata,omitempty"`
 }
@@ -115,16 +115,16 @@ func (m *MsgCreateChain) GetInitialGenesis() InitialGenesis {
 	return InitialGenesis{}
 }
 
-func (m *MsgCreateChain) GetHasCampaign() bool {
+func (m *MsgCreateChain) GetHasProject() bool {
 	if m != nil {
-		return m.HasCampaign
+		return m.HasProject
 	}
 	return false
 }
 
-func (m *MsgCreateChain) GetCampaignID() uint64 {
+func (m *MsgCreateChain) GetProjectID() uint64 {
 	if m != nil {
-		return m.CampaignID
+		return m.ProjectID
 	}
 	return 0
 }
@@ -190,8 +190,8 @@ func (m *MsgCreateChainResponse) GetLaunchID() uint64 {
 type MsgEditChain struct {
 	Coordinator   string `protobuf:"bytes,1,opt,name=coordinator,proto3" json:"coordinator,omitempty"`
 	LaunchID      uint64 `protobuf:"varint,2,opt,name=launchID,proto3" json:"launchID,omitempty"`
-	SetCampaignID bool   `protobuf:"varint,3,opt,name=setCampaignID,proto3" json:"setCampaignID,omitempty"`
-	CampaignID    uint64 `protobuf:"varint,4,opt,name=campaignID,proto3" json:"campaignID,omitempty"`
+	SetProjectID bool   `protobuf:"varint,3,opt,name=setProjectID,proto3" json:"setProjectID,omitempty"`
+	ProjectID    uint64 `protobuf:"varint,4,opt,name=projectID,proto3" json:"projectID,omitempty"`
 	Metadata      []byte `protobuf:"bytes,5,opt,name=metadata,proto3" json:"metadata,omitempty"`
 }
 
@@ -242,16 +242,16 @@ func (m *MsgEditChain) GetLaunchID() uint64 {
 	return 0
 }
 
-func (m *MsgEditChain) GetSetCampaignID() bool {
+func (m *MsgEditChain) GetSetProjectID() bool {
 	if m != nil {
-		return m.SetCampaignID
+		return m.SetProjectID
 	}
 	return false
 }
 
-func (m *MsgEditChain) GetCampaignID() uint64 {
+func (m *MsgEditChain) GetProjectID() uint64 {
 	if m != nil {
-		return m.CampaignID
+		return m.ProjectID
 	}
 	return 0
 }
@@ -1239,14 +1239,14 @@ func (m *MsgCreateChain) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x42
 		}
 	}
-	if m.CampaignID != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
+	if m.ProjectID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ProjectID))
 		i--
 		dAtA[i] = 0x38
 	}
-	if m.HasCampaign {
+	if m.HasProject {
 		i--
-		if m.HasCampaign {
+		if m.HasProject {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -1350,14 +1350,14 @@ func (m *MsgEditChain) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x2a
 	}
-	if m.CampaignID != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.CampaignID))
+	if m.ProjectID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ProjectID))
 		i--
 		dAtA[i] = 0x20
 	}
-	if m.SetCampaignID {
+	if m.SetProjectID {
 		i--
-		if m.SetCampaignID {
+		if m.SetProjectID {
 			dAtA[i] = 1
 		} else {
 			dAtA[i] = 0
@@ -1809,11 +1809,11 @@ func (m *MsgCreateChain) Size() (n int) {
 	}
 	l = m.InitialGenesis.Size()
 	n += 1 + l + sovTx(uint64(l))
-	if m.HasCampaign {
+	if m.HasProject {
 		n += 2
 	}
-	if m.CampaignID != 0 {
-		n += 1 + sovTx(uint64(m.CampaignID))
+	if m.ProjectID != 0 {
+		n += 1 + sovTx(uint64(m.ProjectID))
 	}
 	if len(m.AccountBalance) > 0 {
 		for _, e := range m.AccountBalance {
@@ -1853,11 +1853,11 @@ func (m *MsgEditChain) Size() (n int) {
 	if m.LaunchID != 0 {
 		n += 1 + sovTx(uint64(m.LaunchID))
 	}
-	if m.SetCampaignID {
+	if m.SetProjectID {
 		n += 2
 	}
-	if m.CampaignID != 0 {
-		n += 1 + sovTx(uint64(m.CampaignID))
+	if m.ProjectID != 0 {
+		n += 1 + sovTx(uint64(m.ProjectID))
 	}
 	l = len(m.Metadata)
 	if l > 0 {
@@ -2230,7 +2230,7 @@ func (m *MsgCreateChain) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 6:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field HasCampaign", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field HasProject", wireType)
 			}
 			var v int
 			for shift := uint(0); ; shift += 7 {
@@ -2247,12 +2247,12 @@ func (m *MsgCreateChain) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			m.HasCampaign = bool(v != 0)
+			m.HasProject = bool(v != 0)
 		case 7:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ProjectID", wireType)
 			}
-			m.CampaignID = 0
+			m.ProjectID = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -2262,7 +2262,7 @@ func (m *MsgCreateChain) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.CampaignID |= uint64(b&0x7F) << shift
+				m.ProjectID |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -2507,7 +2507,7 @@ func (m *MsgEditChain) Unmarshal(dAtA []byte) error {
 			}
 		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SetCampaignID", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field SetProjectID", wireType)
 			}
 			var v int
 			for shift := uint(0); ; shift += 7 {
@@ -2524,12 +2524,12 @@ func (m *MsgEditChain) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-			m.SetCampaignID = bool(v != 0)
+			m.SetProjectID = bool(v != 0)
 		case 4:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CampaignID", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ProjectID", wireType)
 			}
-			m.CampaignID = 0
+			m.ProjectID = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -2539,7 +2539,7 @@ func (m *MsgEditChain) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.CampaignID |= uint64(b&0x7F) << shift
+				m.ProjectID |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

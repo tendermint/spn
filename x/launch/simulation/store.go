@@ -58,43 +58,43 @@ func RandomAccWithBalance(ctx sdk.Context, r *rand.Rand,
 	return simtypes.Account{}, sdk.NewCoins(), false
 }
 
-// FindCoordinatorCampaign finds a campaign associated with a coordinator
+// FindCoordinatorProject finds a project associated with a coordinator
 // and returns if it is associated with a chain
-func FindCoordinatorCampaign(
+func FindCoordinatorProject(
 	r *rand.Rand,
 	ctx sdk.Context,
-	ck types.CampaignKeeper,
+	ck types.ProjectKeeper,
 	coordID uint64,
 	chainID uint64,
 ) (uint64, bool) {
-	campaigns := ck.GetAllCampaign(ctx)
+	projects := ck.GetAllProject(ctx)
 
-	campNb := len(campaigns)
+	campNb := len(projects)
 	if campNb == 0 {
 		return 0, false
 	}
 
 	// Randomize the set
-	r.Shuffle(len(campaigns), func(i, j int) {
-		campaigns[i], campaigns[j] = campaigns[j], campaigns[i]
+	r.Shuffle(len(projects), func(i, j int) {
+		projects[i], projects[j] = projects[j], projects[i]
 	})
 
-	// check if campaign is already associated with chain
-	for _, campaign := range campaigns {
-		if campaign.CoordinatorID == coordID {
+	// check if project is already associated with chain
+	for _, project := range projects {
+		if project.CoordinatorID == coordID {
 			// get chain ids
-			campaignChains, hasChains := ck.GetCampaignChains(ctx, campaign.CampaignID)
+			projectChains, hasChains := ck.GetProjectChains(ctx, project.ProjectID)
 			if !hasChains {
-				return campaign.CampaignID, true
+				return project.ProjectID, true
 			}
 
-			for _, campaignChain := range campaignChains.Chains {
-				if campaignChain == chainID {
+			for _, projectChain := range projectChains.Chains {
+				if projectChain == chainID {
 					return 0, false
 				}
 			}
 
-			return campaign.CampaignID, true
+			return project.ProjectID, true
 		}
 	}
 

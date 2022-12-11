@@ -7,23 +7,23 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 
-	campaigntypes "github.com/tendermint/spn/x/project/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-type CampaignKeeper interface {
-	GetCampaign(ctx sdk.Context, id uint64) (campaigntypes.Campaign, bool)
-	AddChainToCampaign(ctx sdk.Context, campaignID, launchID uint64) error
-	GetAllCampaign(ctx sdk.Context) (list []campaigntypes.Campaign)
-	GetCampaignChains(ctx sdk.Context, campaignID uint64) (val campaigntypes.CampaignChains, found bool)
+type ProjectKeeper interface {
+	GetProject(ctx sdk.Context, id uint64) (projecttypes.Project, bool)
+	AddChainToProject(ctx sdk.Context, projectID, launchID uint64) error
+	GetAllProject(ctx sdk.Context) (list []projecttypes.Project)
+	GetProjectChains(ctx sdk.Context, projectID uint64) (val projecttypes.ProjectChains, found bool)
 	MainnetAccountBalanceAll(
 		c context.Context,
-		req *campaigntypes.QueryAllMainnetAccountBalanceRequest,
-	) (*campaigntypes.QueryAllMainnetAccountBalanceResponse, error)
+		req *projecttypes.QueryAllMainnetAccountBalanceRequest,
+	) (*projecttypes.QueryAllMainnetAccountBalanceResponse, error)
 	MainnetAccountBalance(
 		c context.Context,
-		req *campaigntypes.QueryGetMainnetAccountBalanceRequest,
-	) (*campaigntypes.QueryGetMainnetAccountBalanceResponse, error)
+		req *projecttypes.QueryGetMainnetAccountBalanceRequest,
+	) (*projecttypes.QueryGetMainnetAccountBalanceResponse, error)
 }
 
 type MonitoringConsumerKeeper interface {

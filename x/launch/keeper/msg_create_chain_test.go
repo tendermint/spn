@@ -9,7 +9,7 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	campaigntypes "github.com/tendermint/spn/x/project/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
@@ -36,13 +36,13 @@ func initCreationFeeAndFundCoordAccounts(
 	}
 
 	// add `coins` to balance of each coordinator address
-	// using `campaign` module account for minting as `launch` does not have one
+	// using `project` module account for minting as `launch` does not have one
 	for _, addr := range addrs {
 		accAddr, err := sdk.AccAddressFromBech32(addr)
 		require.NoError(t, err)
-		err = bk.MintCoins(sdkCtx, campaigntypes.ModuleName, coins)
+		err = bk.MintCoins(sdkCtx, projecttypes.ModuleName, coins)
 		require.NoError(t, err)
-		err = bk.SendCoinsFromModuleToAccount(sdkCtx, campaigntypes.ModuleName, accAddr, coins)
+		err = bk.SendCoinsFromModuleToAccount(sdkCtx, projecttypes.ModuleName, accAddr, coins)
 		require.NoError(t, err)
 	}
 }
@@ -73,13 +73,13 @@ func TestMsgCreateChain(t *testing.T) {
 		coordMap[addr] = resCoord.CoordinatorID
 	}
 
-	// Create a campaign for each valid coordinator
+	// Create a project for each valid coordinator
 	for i := range coordAddrs {
 		addr := coordAddrs[i]
-		msgCreateCampaign := sample.MsgCreateCampaign(r, addr)
-		resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+		msgCreateProject := sample.MsgCreateProject(r, addr)
+		resProject, err := ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
 		require.NoError(t, err)
-		campMap[addr] = resCampaign.CampaignID
+		campMap[addr] = resProject.ProjectID
 	}
 
 	// assign random sdk.Coins to `chainCreationFee` param and provide balance to coordinators
@@ -119,7 +119,7 @@ func TestMsgCreateChain(t *testing.T) {
 			wantedChainID: 2,
 		},
 		{
-			name:          "should allow creating a chain with campaign",
+			name:          "should allow creating a chain with project",
 			msg:           sample.MsgCreateChain(r, coordAddrs[3], "", true, campMap[coordAddrs[3]]),
 			wantedChainID: 3,
 		},
@@ -129,7 +129,7 @@ func TestMsgCreateChain(t *testing.T) {
 			err:  profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "should prevent creating a chain with invalid campaign id",
+			name: "should prevent creating a chain with invalid project id",
 			msg:  sample.MsgCreateChain(r, coordAddrs[0], "", true, 1000),
 			err:  types.ErrCreateChainFail,
 		},
@@ -177,13 +177,13 @@ func TestMsgCreateChain(t *testing.T) {
 			// Chain created from MsgCreateChain is never a mainnet
 			require.False(t, chain.IsMainnet)
 
-			require.Equal(t, tc.msg.HasCampaign, chain.HasCampaign)
+			require.Equal(t, tc.msg.HasProject, chain.HasProject)
 
-			if tc.msg.HasCampaign {
-				require.Equal(t, tc.msg.CampaignID, chain.CampaignID)
-				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
+			if tc.msg.HasProject {
+				require.Equal(t, tc.msg.ProjectID, chain.ProjectID)
+				projectChains, found := tk.ProjectKeeper.GetProjectChains(sdkCtx, tc.msg.ProjectID)
 				require.True(t, found)
-				require.Contains(t, campaignChains.Chains, chain.LaunchID)
+				require.Contains(t, projectChains.Chains, chain.LaunchID)
 			}
 
 			// check fee deduction

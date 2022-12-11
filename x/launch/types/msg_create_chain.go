@@ -18,8 +18,8 @@ func NewMsgCreateChain(
 	sourceURL,
 	sourceHash string,
 	initialGenesis InitialGenesis,
-	hasCampaign bool,
-	campaignID uint64,
+	hasProject bool,
+	projectID uint64,
 	accountBalance sdk.Coins,
 	metadata []byte,
 ) *MsgCreateChain {
@@ -29,8 +29,8 @@ func NewMsgCreateChain(
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
 		InitialGenesis: initialGenesis,
-		HasCampaign:    hasCampaign,
-		CampaignID:     campaignID,
+		HasProject:    hasProject,
+		ProjectID:     projectID,
 		AccountBalance: accountBalance,
 		Metadata:       metadata,
 	}

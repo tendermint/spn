@@ -33,9 +33,9 @@ func TestInvalidChainInvariant(t *testing.T) {
 	t.Run("should not break with valid state", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		chain := sample.Chain(r, 0, 0)
-		campaign := sample.Campaign(r, 0)
-		chain.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
-		chain.HasCampaign = true
+		project := sample.Project(r, 0)
+		chain.ProjectID = tk.ProjectKeeper.AppendProject(ctx, project)
+		chain.HasProject = true
 		_ = tk.LaunchKeeper.AppendChain(ctx, chain)
 		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
 		require.False(t, broken, msg)
@@ -50,11 +50,11 @@ func TestInvalidChainInvariant(t *testing.T) {
 		require.True(t, broken, msg)
 	})
 
-	t.Run("should break with a chain that does not have a valid associated campaign", func(t *testing.T) {
+	t.Run("should break with a chain that does not have a valid associated project", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
 		chain := sample.Chain(r, 0, 0)
-		chain.HasCampaign = true
-		chain.CampaignID = 1000
+		chain.HasProject = true
+		chain.ProjectID = 1000
 		_ = tk.LaunchKeeper.AppendChain(ctx, chain)
 		msg, broken := keeper.InvalidChainInvariant(*tk.LaunchKeeper)(ctx)
 		require.True(t, broken, msg)

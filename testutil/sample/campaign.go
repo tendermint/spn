@@ -7,56 +7,56 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	campaign "github.com/tendermint/spn/x/project/types"
+	project "github.com/tendermint/spn/x/project/types"
 )
 
 // Shares returns a sample shares
-func Shares(r *rand.Rand) campaign.Shares {
-	return campaign.NewSharesFromCoins(Coins(r))
+func Shares(r *rand.Rand) project.Shares {
+	return project.NewSharesFromCoins(Coins(r))
 }
 
 // SpecialAllocations returns a sample special allocations
-func SpecialAllocations(r *rand.Rand) campaign.SpecialAllocations {
-	return campaign.NewSpecialAllocations(Shares(r), Shares(r))
+func SpecialAllocations(r *rand.Rand) project.SpecialAllocations {
+	return project.NewSpecialAllocations(Shares(r), Shares(r))
 }
 
 // ShareVestingOptions returns a sample ShareVestingOptions
-func ShareVestingOptions(r *rand.Rand) campaign.ShareVestingOptions {
+func ShareVestingOptions(r *rand.Rand) project.ShareVestingOptions {
 	// use vesting shares as total shares
 	vestingShares := Shares(r)
-	return *campaign.NewShareDelayedVesting(vestingShares, vestingShares, Time(r))
+	return *project.NewShareDelayedVesting(vestingShares, vestingShares, Time(r))
 }
 
 // Voucher returns a sample voucher structure
-func Voucher(r *rand.Rand, campaignID uint64) sdk.Coin {
-	denom := campaign.VoucherDenom(campaignID, AlphaString(r, 5))
+func Voucher(r *rand.Rand, projectID uint64) sdk.Coin {
+	denom := project.VoucherDenom(projectID, AlphaString(r, 5))
 	return sdk.NewCoin(denom, sdkmath.NewInt(int64(r.Intn(10000)+1)))
 }
 
 // Vouchers returns a sample vouchers structure
-func Vouchers(r *rand.Rand, campaignID uint64) sdk.Coins {
-	return sdk.NewCoins(Voucher(r, campaignID), Voucher(r, campaignID), Voucher(r, campaignID))
+func Vouchers(r *rand.Rand, projectID uint64) sdk.Coins {
+	return sdk.NewCoins(Voucher(r, projectID), Voucher(r, projectID), Voucher(r, projectID))
 }
 
 // CustomShareVestingOptions returns a sample ShareVestingOptions with shares
-func CustomShareVestingOptions(r *rand.Rand, shares campaign.Shares) campaign.ShareVestingOptions {
-	return *campaign.NewShareDelayedVesting(shares, shares, Time(r))
+func CustomShareVestingOptions(r *rand.Rand, shares project.Shares) project.ShareVestingOptions {
+	return *project.NewShareDelayedVesting(shares, shares, Time(r))
 }
 
-// CampaignName returns a sample campaign name
-func CampaignName(r *rand.Rand) string {
+// ProjectName returns a sample project name
+func ProjectName(r *rand.Rand) string {
 	return String(r, 20)
 }
 
-// Campaign returns a sample campaign
-func Campaign(r *rand.Rand, id uint64) campaign.Campaign {
+// Project returns a sample project
+func Project(r *rand.Rand, id uint64) project.Project {
 	genesisDistribution := Shares(r)
 	claimableAirdrop := Shares(r)
-	shares := campaign.IncreaseShares(genesisDistribution, claimableAirdrop)
+	shares := project.IncreaseShares(genesisDistribution, claimableAirdrop)
 
-	campaign := campaign.NewCampaign(
+	project := project.NewProject(
 		id,
-		CampaignName(r),
+		ProjectName(r),
 		Uint64(r),
 		TotalSupply(r),
 		Metadata(r, 20),
@@ -64,79 +64,79 @@ func Campaign(r *rand.Rand, id uint64) campaign.Campaign {
 	)
 
 	// set random shares for special allocations
-	campaign.AllocatedShares = shares
-	campaign.SpecialAllocations.GenesisDistribution = genesisDistribution
-	campaign.SpecialAllocations.ClaimableAirdrop = claimableAirdrop
+	project.AllocatedShares = shares
+	project.SpecialAllocations.GenesisDistribution = genesisDistribution
+	project.SpecialAllocations.ClaimableAirdrop = claimableAirdrop
 
-	return campaign
+	return project
 }
 
 // MainnetAccount returns a sample MainnetAccount
-func MainnetAccount(r *rand.Rand, campaignID uint64, address string) campaign.MainnetAccount {
-	return campaign.MainnetAccount{
-		CampaignID: campaignID,
+func MainnetAccount(r *rand.Rand, projectID uint64, address string) project.MainnetAccount {
+	return project.MainnetAccount{
+		ProjectID: projectID,
 		Address:    address,
 		Shares:     Shares(r),
 	}
 }
 
-// MsgCreateCampaign returns a sample MsgCreateCampaign
-func MsgCreateCampaign(r *rand.Rand, coordAddr string) campaign.MsgCreateCampaign {
-	return campaign.MsgCreateCampaign{
+// MsgCreateProject returns a sample MsgCreateProject
+func MsgCreateProject(r *rand.Rand, coordAddr string) project.MsgCreateProject {
+	return project.MsgCreateProject{
 		Coordinator:  coordAddr,
-		CampaignName: CampaignName(r),
+		ProjectName: ProjectName(r),
 		TotalSupply:  TotalSupply(r),
 	}
 }
 
-// CampaignParams returns a sample of params for the campaign module
-func CampaignParams(r *rand.Rand) campaign.Params {
+// ProjectParams returns a sample of params for the project module
+func ProjectParams(r *rand.Rand) project.Params {
 	// no point in randomizing these values, using defaults
-	minTotalSupply := campaign.DefaultMinTotalSupply
-	maxTotalSupply := campaign.DefaultMaxTotalSupply
-	maxMetadataLength := campaign.DefaultMaxMetadataLength
+	minTotalSupply := project.DefaultMinTotalSupply
+	maxTotalSupply := project.DefaultMaxTotalSupply
+	maxMetadataLength := project.DefaultMaxMetadataLength
 
 	// assign random small amount of staking denom
-	campaignCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
+	projectCreationFee := sdk.NewCoins(sdk.NewInt64Coin(sdk.DefaultBondDenom, r.Int63n(100)+1))
 
-	return campaign.NewParams(minTotalSupply, maxTotalSupply, campaignCreationFee, maxMetadataLength)
+	return project.NewParams(minTotalSupply, maxTotalSupply, projectCreationFee, maxMetadataLength)
 }
 
-// CampaignGenesisState returns a sample genesis state for the campaign module
-func CampaignGenesisState(r *rand.Rand) campaign.GenesisState {
-	campaign1, campaign2 := Campaign(r, 0), Campaign(r, 1)
+// ProjectGenesisState returns a sample genesis state for the project module
+func ProjectGenesisState(r *rand.Rand) project.GenesisState {
+	project1, project2 := Project(r, 0), Project(r, 1)
 
-	return campaign.GenesisState{
-		Campaigns: []campaign.Campaign{
-			campaign1,
-			campaign2,
+	return project.GenesisState{
+		Projects: []project.Project{
+			project1,
+			project2,
 		},
-		CampaignCounter: 2,
-		CampaignChains: []campaign.CampaignChains{
+		ProjectCounter: 2,
+		ProjectChains: []project.ProjectChains{
 			{
-				CampaignID: 0,
+				ProjectID: 0,
 				Chains:     []uint64{0, 1},
 			},
 		},
 		TotalShares: spntypes.TotalShareNumber,
-		Params:      CampaignParams(r),
+		Params:      ProjectParams(r),
 	}
 }
 
-// CampaignGenesisStateWithAccounts returns a sample genesis state for the campaign module that includes accounts
-func CampaignGenesisStateWithAccounts(r *rand.Rand) campaign.GenesisState {
-	genState := CampaignGenesisState(r)
-	genState.MainnetAccounts = make([]campaign.MainnetAccount, 0)
+// ProjectGenesisStateWithAccounts returns a sample genesis state for the project module that includes accounts
+func ProjectGenesisStateWithAccounts(r *rand.Rand) project.GenesisState {
+	genState := ProjectGenesisState(r)
+	genState.MainnetAccounts = make([]project.MainnetAccount, 0)
 
-	for i, c := range genState.Campaigns {
+	for i, c := range genState.Projects {
 		for j := 0; j < 5; j++ {
-			mainnetAccount := MainnetAccount(r, c.CampaignID, Address(r))
+			mainnetAccount := MainnetAccount(r, c.ProjectID, Address(r))
 			genState.MainnetAccounts = append(genState.MainnetAccounts, mainnetAccount)
 
-			// increase campaign allocated shares accordingly
-			c.AllocatedShares = campaign.IncreaseShares(c.AllocatedShares, mainnetAccount.Shares)
+			// increase project allocated shares accordingly
+			c.AllocatedShares = project.IncreaseShares(c.AllocatedShares, mainnetAccount.Shares)
 		}
-		genState.Campaigns[i] = c
+		genState.Projects[i] = c
 	}
 
 	return genState

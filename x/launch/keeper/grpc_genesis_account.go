@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	campaigntypes "github.com/tendermint/spn/x/project/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
@@ -30,10 +30,10 @@ func (k Keeper) GenesisAccountAll(c context.Context, req *types.QueryAllGenesisA
 		return nil, status.Error(codes.NotFound, "chain not found")
 	}
 
-	// if the chain is a mainnet, the account balances must be fetched from the campaign
+	// if the chain is a mainnet, the account balances must be fetched from the project
 	if chain.IsMainnet {
-		res, err := k.campaignKeeper.MainnetAccountBalanceAll(c, &campaigntypes.QueryAllMainnetAccountBalanceRequest{
-			CampaignID: chain.CampaignID,
+		res, err := k.projectKeeper.MainnetAccountBalanceAll(c, &projecttypes.QueryAllMainnetAccountBalanceRequest{
+			ProjectID: chain.ProjectID,
 			Pagination: req.Pagination,
 		})
 		if err != nil {
@@ -82,10 +82,10 @@ func (k Keeper) GenesisAccount(c context.Context, req *types.QueryGetGenesisAcco
 		return nil, status.Error(codes.NotFound, "chain not found")
 	}
 
-	// if the chain is a mainnet, the account balance must be fetched from the campaign
+	// if the chain is a mainnet, the account balance must be fetched from the project
 	if chain.IsMainnet {
-		res, err := k.campaignKeeper.MainnetAccountBalance(c, &campaigntypes.QueryGetMainnetAccountBalanceRequest{
-			CampaignID: chain.CampaignID,
+		res, err := k.projectKeeper.MainnetAccountBalance(c, &projecttypes.QueryGetMainnetAccountBalanceRequest{
+			ProjectID: chain.ProjectID,
 			Address:    req.Address,
 		})
 		if err != nil {

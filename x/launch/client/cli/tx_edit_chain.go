@@ -23,7 +23,7 @@ func CmdEditChain() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var (
 				metadata, _   = cmd.Flags().GetString(flagMetadata)
-				campaignID, _ = cmd.Flags().GetUint64(flagCampaignID)
+				projectID, _ = cmd.Flags().GetUint64(flagProjectID)
 			)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -31,7 +31,7 @@ func CmdEditChain() *cobra.Command {
 				return err
 			}
 
-			setCampaignID := cmd.Flags().Changed(flagCampaignID)
+			setProjectID := cmd.Flags().Changed(flagProjectID)
 
 			metadataBytes := []byte(metadata)
 
@@ -43,8 +43,8 @@ func CmdEditChain() *cobra.Command {
 			msg := types.NewMsgEditChain(
 				clientCtx.GetFromAddress().String(),
 				launchID,
-				setCampaignID,
-				campaignID,
+				setProjectID,
+				projectID,
 				metadataBytes,
 			)
 			if err := msg.ValidateBasic(); err != nil {
@@ -55,7 +55,7 @@ func CmdEditChain() *cobra.Command {
 	}
 
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
-	cmd.Flags().Uint64(flagCampaignID, 0, "Set the campaign ID if the chain is not associated with a campaign")
+	cmd.Flags().Uint64(flagProjectID, 0, "Set the project ID if the chain is not associated with a project")
 
 	flags.AddTxFlagsToCmd(cmd)
 

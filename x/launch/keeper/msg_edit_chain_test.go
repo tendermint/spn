@@ -5,7 +5,7 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 
-	campaigntypes "github.com/tendermint/spn/x/project/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
@@ -40,28 +40,28 @@ func TestMsgEditChain(t *testing.T) {
 	require.NoError(t, err)
 	launchID := res.LaunchID
 
-	// create a campaign
-	msgCreateCampaign := sample.MsgCreateCampaign(r, coordAddress)
-	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	// create a project
+	msgCreateProject := sample.MsgCreateProject(r, coordAddress)
+	resProject, err := ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
 	require.NoError(t, err)
 
-	// create a chain with an existing campaign
-	msgCreateChain = sample.MsgCreateChain(r, coordAddress, "", true, resCampaign.CampaignID)
+	// create a chain with an existing project
+	msgCreateChain = sample.MsgCreateChain(r, coordAddress, "", true, resProject.ProjectID)
 	res, err = ts.LaunchSrv.CreateChain(ctx, &msgCreateChain)
 	require.NoError(t, err)
-	launchIDHasCampaign := res.LaunchID
+	launchIDHasProject := res.LaunchID
 
-	// create a campaign
-	msgCreateCampaign = sample.MsgCreateCampaign(r, coordAddress)
-	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	// create a project
+	msgCreateProject = sample.MsgCreateProject(r, coordAddress)
+	resProject, err = ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
 	require.NoError(t, err)
-	validCampaignID := resCampaign.CampaignID
+	validProjectID := resProject.ProjectID
 
-	// create a campaign from a different address
-	msgCreateCampaign = sample.MsgCreateCampaign(r, coordAddress2)
-	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	// create a project from a different address
+	msgCreateProject = sample.MsgCreateProject(r, coordAddress2)
+	resProject, err = ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
 	require.NoError(t, err)
-	campaignDifferentCoordinator := resCampaign.CampaignID
+	projectDifferentCoordinator := resProject.ProjectID
 
 	// Create a new chain for more tests
 	msgCreateChain = sample.MsgCreateChain(r, coordAddress, "", false, 0)
@@ -69,13 +69,13 @@ func TestMsgEditChain(t *testing.T) {
 	require.NoError(t, err)
 	launchID2 := res.LaunchID
 
-	// create a new campaign and add a chainCampaigns entry to it
-	msgCreateCampaign = sample.MsgCreateCampaign(r, coordAddress)
-	resCampaign, err = ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	// create a new project and add a chainProjects entry to it
+	msgCreateProject = sample.MsgCreateProject(r, coordAddress)
+	resProject, err = ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
 	require.NoError(t, err)
-	campaignDuplicateChain := resCampaign.CampaignID
+	projectDuplicateChain := resProject.ProjectID
 
-	err = tk.CampaignKeeper.AddChainToCampaign(sdkCtx, campaignDuplicateChain, launchID2)
+	err = tk.ProjectKeeper.AddChainToProject(sdkCtx, projectDuplicateChain, launchID2)
 	require.NoError(t, err)
 
 	// create message with an invalid metadata length
@@ -83,7 +83,7 @@ func TestMsgEditChain(t *testing.T) {
 		coordAddress,
 		launchID,
 		true,
-		validCampaignID,
+		validProjectID,
 		false,
 	)
 	maxMetadataLength := tk.LaunchKeeper.MaxMetadataLength(sdkCtx)
@@ -95,12 +95,12 @@ func TestMsgEditChain(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "should allow setting a campaign ID",
+			name: "should allow setting a project ID",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchID,
 				true,
-				validCampaignID,
+				validProjectID,
 				false,
 			),
 		},
@@ -148,18 +148,18 @@ func TestMsgEditChain(t *testing.T) {
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "should prevent setting campaign id for chain with a campaign",
+			name: "should prevent setting project id for chain with a project",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
-				launchIDHasCampaign,
+				launchIDHasProject,
 				true,
 				0,
 				false,
 			),
-			err: types.ErrChainHasCampaign,
+			err: types.ErrChainHasProject,
 		},
 		{
-			name: "should prevent setting campaign id where campaign does not exist",
+			name: "should prevent setting project id where project does not exist",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchID2,
@@ -167,29 +167,29 @@ func TestMsgEditChain(t *testing.T) {
 				999,
 				false,
 			),
-			err: campaigntypes.ErrCampaignNotFound,
+			err: projecttypes.ErrProjectNotFound,
 		},
 		{
-			name: "should prevent setting campaign id where campaign has a different coordinator",
+			name: "should prevent setting project id where project has a different coordinator",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchID2,
 				true,
-				campaignDifferentCoordinator,
+				projectDifferentCoordinator,
 				false,
 			),
 			err: profiletypes.ErrCoordInvalid,
 		},
 		{
-			name: "should prevent setting campaign id where campaign chain entry is duplicated",
+			name: "should prevent setting project id where project chain entry is duplicated",
 			msg: sample.MsgEditChain(r,
 				coordAddress,
 				launchID2,
 				true,
-				campaignDuplicateChain,
+				projectDuplicateChain,
 				false,
 			),
-			err: types.ErrAddChainToCampaign,
+			err: types.ErrAddChainToProject,
 		},
 		{
 			name: "should prevent edit a chain with invalid metadata length",
@@ -230,19 +230,19 @@ func TestMsgEditChain(t *testing.T) {
 				require.EqualValues(t, previousChain.Metadata, chain.Metadata)
 			}
 
-			if tc.msg.SetCampaignID {
-				require.True(t, chain.HasCampaign)
-				require.EqualValues(t, tc.msg.CampaignID, chain.CampaignID)
-				// ensure campaign exist
-				_, found := tk.CampaignKeeper.GetCampaign(sdkCtx, chain.CampaignID)
+			if tc.msg.SetProjectID {
+				require.True(t, chain.HasProject)
+				require.EqualValues(t, tc.msg.ProjectID, chain.ProjectID)
+				// ensure project exist
+				_, found := tk.ProjectKeeper.GetProject(sdkCtx, chain.ProjectID)
 				require.True(t, found)
-				// ensure campaign chains exist
-				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, chain.CampaignID)
+				// ensure project chains exist
+				projectChains, found := tk.ProjectKeeper.GetProjectChains(sdkCtx, chain.ProjectID)
 				require.True(t, found)
 
-				// check that the chain launch ID is in the campaign chains
+				// check that the chain launch ID is in the project chains
 				found = false
-				for _, chainID := range campaignChains.Chains {
+				for _, chainID := range projectChains.Chains {
 					if chainID == chain.LaunchID {
 						found = true
 						break

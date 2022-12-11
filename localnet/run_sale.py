@@ -2,7 +2,7 @@ import json
 import os
 import datetime
 import time
-from utils import cmd_devnull, cmd, initialize_campaign, date_f
+from utils import cmd_devnull, cmd, initialize_project, date_f
 
 sale_template_file = './auctions/sale_template.json'
 sale_file = './auctions/sale.json'
@@ -20,7 +20,7 @@ def set_sale_json(selling_denom, selling_amount, paying_denom, price, start_time
         json.dump(jf, newF, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    initialize_campaign()
+    initialize_project()
 
     # Define auction start and end from current time
     date_now = datetime.datetime.utcnow()

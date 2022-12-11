@@ -12,8 +12,8 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	campaignkeeper "github.com/tendermint/spn/x/project/keeper"
-	campaigntypes "github.com/tendermint/spn/x/project/types"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringptypes "github.com/tendermint/spn/x/monitoringp/types"
@@ -57,9 +57,9 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
+	projectKeeper := initializer.Project(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
-	launchKeeper.SetCampaignKeeper(campaignKeeper)
+	launchKeeper.SetProjectKeeper(projectKeeper)
 
 	require.NoError(t, initializer.StateStore.LoadLatestVersion())
 
@@ -77,7 +77,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
-	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
+	projectKeeper.SetParams(ctx, projecttypes.DefaultParams())
 	fundraisingKeeper.SetParams(ctx, fundraisingtypes.DefaultParams())
 	participationKeeper.SetParams(ctx, participationtypes.DefaultParams())
 	monitoringProviderKeeper.SetParams(ctx, monitoringptypes.DefaultParams())
@@ -85,16 +85,16 @@ func NewTestSetupWithIBCMocksMonitoringp(
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
-	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
+	projectSrv := projectkeeper.NewMsgServerImpl(*projectKeeper)
 	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
 
 	// set max shares - only set during app InitGenesis
-	campaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
+	projectKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
 
 	return ctx, TestKeepers{
 			T:                        t,
-			CampaignKeeper:           campaignKeeper,
+			ProjectKeeper:           projectKeeper,
 			LaunchKeeper:             launchKeeper,
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
@@ -108,7 +108,7 @@ func NewTestSetupWithIBCMocksMonitoringp(
 			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
-			CampaignSrv:      campaignSrv,
+			ProjectSrv:      projectSrv,
 			RewardSrv:        rewardSrv,
 			ParticipationSrv: participationSrv,
 		}

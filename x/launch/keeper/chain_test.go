@@ -16,7 +16,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddress := sample.Address(r)
-	coordNoCampaignAddress := sample.Address(r)
+	coordNoProjectAddress := sample.Address(r)
 
 	// Create coordinators
 	msgCreateCoordinator := sample.MsgCreateCoordinator(coordAddress)
@@ -24,16 +24,16 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 	require.NoError(t, err)
 	coordID := res.CoordinatorID
 
-	msgCreateCoordinator = sample.MsgCreateCoordinator(coordNoCampaignAddress)
+	msgCreateCoordinator = sample.MsgCreateCoordinator(coordNoProjectAddress)
 	res, err = ts.ProfileSrv.CreateCoordinator(ctx, &msgCreateCoordinator)
 	require.NoError(t, err)
-	coordNoCampaignID := res.CoordinatorID
+	coordNoProjectID := res.CoordinatorID
 
-	// Create a campaign
-	msgCreateCampaign := sample.MsgCreateCampaign(r, coordAddress)
-	resCampaign, err := ts.CampaignSrv.CreateCampaign(ctx, &msgCreateCampaign)
+	// Create a project
+	msgCreateProject := sample.MsgCreateProject(r, coordAddress)
+	resProject, err := ts.ProjectSrv.CreateProject(ctx, &msgCreateProject)
 	require.NoError(t, err)
-	campaignID := resCampaign.CampaignID
+	projectID := resProject.ProjectID
 
 	for _, tc := range []struct {
 		name           string
@@ -42,8 +42,8 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 		sourceURL      string
 		sourceHash     string
 		initialGenesis types.InitialGenesis
-		hasCampaign    bool
-		campaignID     uint64
+		hasProject    bool
+		projectID     uint64
 		isMainnet      bool
 		balance        sdk.Coins
 		metadata       []byte
@@ -57,21 +57,21 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewDefaultInitialGenesis(),
-			hasCampaign:    false,
+			hasProject:    false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       0,
 			valid:          true,
 		},
 		{
-			name:           "should allow creating a chain associated to a campaign",
+			name:           "should allow creating a chain associated to a project",
 			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewDefaultInitialGenesis(),
-			hasCampaign:    true,
-			campaignID:     campaignID,
+			hasProject:    true,
+			projectID:     projectID,
 			isMainnet:      false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
@@ -85,8 +85,8 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewDefaultInitialGenesis(),
-			hasCampaign:    true,
-			campaignID:     0,
+			hasProject:    true,
+			projectID:     0,
 			isMainnet:      true,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
@@ -100,7 +100,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewGenesisURL(sample.String(r, 30), sample.GenesisHash(r)),
-			hasCampaign:    false,
+			hasProject:    false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       3,
@@ -113,7 +113,7 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewGenesisConfig(sample.String(r, 30)),
-			hasCampaign:    false,
+			hasProject:    false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       4,
@@ -126,8 +126,8 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewDefaultInitialGenesis(),
-			hasCampaign:    true,
-			campaignID:     campaignID,
+			hasProject:    true,
+			projectID:     projectID,
 			isMainnet:      false,
 			balance:        sample.Coins(r),
 			wantedID:       5,
@@ -140,35 +140,35 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewDefaultInitialGenesis(),
-			hasCampaign:    false,
+			hasProject:    false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			wantedID:       0,
 			valid:          false,
 		},
 		{
-			name:           "should prevent creating a chain with non-existent campaign ID",
+			name:           "should prevent creating a chain with non-existent project ID",
 			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewDefaultInitialGenesis(),
-			hasCampaign:    true,
-			campaignID:     1000,
+			hasProject:    true,
+			projectID:     1000,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			isMainnet:      false,
 			valid:          false,
 		},
 		{
-			name:           "should prevent creating a chain with invalid campaign coordinator",
-			coordinatorID:  coordNoCampaignID,
+			name:           "should prevent creating a chain with invalid project coordinator",
+			coordinatorID:  coordNoProjectID,
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewDefaultInitialGenesis(),
-			hasCampaign:    true,
-			campaignID:     campaignID,
+			hasProject:    true,
+			projectID:     projectID,
 			isMainnet:      false,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
@@ -176,14 +176,14 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			valid:          false,
 		},
 		{
-			name:           "should prevent creating a chain with invalid chain data (mainnet with campaign)",
+			name:           "should prevent creating a chain with invalid chain data (mainnet with project)",
 			coordinatorID:  coordID,
 			genesisChainID: sample.GenesisChainID(r),
 			sourceURL:      sample.String(r, 30),
 			sourceHash:     sample.String(r, 20),
 			initialGenesis: types.NewDefaultInitialGenesis(),
-			hasCampaign:    false,
-			campaignID:     0,
+			hasProject:    false,
+			projectID:     0,
 			balance:        sample.Coins(r),
 			metadata:       sample.Metadata(r, 20),
 			isMainnet:      true,
@@ -198,8 +198,8 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 				tc.sourceURL,
 				tc.sourceHash,
 				tc.initialGenesis,
-				tc.hasCampaign,
-				tc.campaignID,
+				tc.hasProject,
+				tc.projectID,
 				tc.isMainnet,
 				tc.balance,
 				tc.metadata,
@@ -217,17 +217,17 @@ func TestKeeper_CreateNewChain(t *testing.T) {
 			require.EqualValues(t, tc.genesisChainID, chain.GenesisChainID)
 			require.EqualValues(t, tc.sourceURL, chain.SourceURL)
 			require.EqualValues(t, tc.sourceHash, chain.SourceHash)
-			require.EqualValues(t, tc.hasCampaign, chain.HasCampaign)
-			require.EqualValues(t, tc.campaignID, chain.CampaignID)
+			require.EqualValues(t, tc.hasProject, chain.HasProject)
+			require.EqualValues(t, tc.projectID, chain.ProjectID)
 			require.EqualValues(t, tc.isMainnet, chain.IsMainnet)
 			require.EqualValues(t, tc.metadata, chain.Metadata)
 			require.EqualValues(t, tc.initialGenesis, chain.InitialGenesis)
 
-			// Check chain has been appended in the campaign
-			if tc.hasCampaign {
-				campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, tc.campaignID)
+			// Check chain has been appended in the project
+			if tc.hasProject {
+				projectChains, found := tk.ProjectKeeper.GetProjectChains(sdkCtx, tc.projectID)
 				require.True(t, found)
-				require.Contains(t, campaignChains.Chains, id)
+				require.Contains(t, projectChains.Chains, id)
 			}
 		})
 	}
