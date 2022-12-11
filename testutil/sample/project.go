@@ -75,17 +75,17 @@ func Project(r *rand.Rand, id uint64) project.Project {
 func MainnetAccount(r *rand.Rand, projectID uint64, address string) project.MainnetAccount {
 	return project.MainnetAccount{
 		ProjectID: projectID,
-		Address:    address,
-		Shares:     Shares(r),
+		Address:   address,
+		Shares:    Shares(r),
 	}
 }
 
 // MsgCreateProject returns a sample MsgCreateProject
 func MsgCreateProject(r *rand.Rand, coordAddr string) project.MsgCreateProject {
 	return project.MsgCreateProject{
-		Coordinator:  coordAddr,
+		Coordinator: coordAddr,
 		ProjectName: ProjectName(r),
-		TotalSupply:  TotalSupply(r),
+		TotalSupply: TotalSupply(r),
 	}
 }
 
@@ -115,7 +115,7 @@ func ProjectGenesisState(r *rand.Rand) project.GenesisState {
 		ProjectChains: []project.ProjectChains{
 			{
 				ProjectID: 0,
-				Chains:     []uint64{0, 1},
+				Chains:    []uint64{0, 1},
 			},
 		},
 		TotalShares: spntypes.TotalShareNumber,

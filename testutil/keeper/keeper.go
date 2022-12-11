@@ -24,8 +24,6 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	projectkeeper "github.com/tendermint/spn/x/project/keeper"
-	projecttypes "github.com/tendermint/spn/x/project/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -35,6 +33,8 @@ import (
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
 )
@@ -50,7 +50,7 @@ var (
 // TestKeepers holds all keepers used during keeper tests for all modules
 type TestKeepers struct {
 	T                        testing.TB
-	ProjectKeeper           *projectkeeper.Keeper
+	ProjectKeeper            *projectkeeper.Keeper
 	LaunchKeeper             *launchkeeper.Keeper
 	ProfileKeeper            *profilekeeper.Keeper
 	RewardKeeper             *rewardkeeper.Keeper
@@ -71,7 +71,7 @@ type TestMsgServers struct {
 	T                testing.TB
 	ProfileSrv       profiletypes.MsgServer
 	LaunchSrv        launchtypes.MsgServer
-	ProjectSrv      projecttypes.MsgServer
+	ProjectSrv       projecttypes.MsgServer
 	RewardSrv        rewardtypes.MsgServer
 	MonitoringcSrv   monitoringctypes.MsgServer
 	ParticipationSrv participationtypes.MsgServer
@@ -146,7 +146,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 
 	return ctx, TestKeepers{
 			T:                        t,
-			ProjectKeeper:           projectKeeper,
+			ProjectKeeper:            projectKeeper,
 			LaunchKeeper:             launchKeeper,
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
@@ -163,7 +163,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
-			ProjectSrv:      projectSrv,
+			ProjectSrv:       projectSrv,
 			RewardSrv:        rewardSrv,
 			MonitoringcSrv:   monitoringcSrv,
 			ParticipationSrv: participationSrv,
@@ -240,7 +240,7 @@ func NewTestSetupWithIBCMocks(
 
 	return ctx, TestKeepers{
 			T:                        t,
-			ProjectKeeper:           projectKeeper,
+			ProjectKeeper:            projectKeeper,
 			LaunchKeeper:             launchKeeper,
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
@@ -256,7 +256,7 @@ func NewTestSetupWithIBCMocks(
 			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
-			ProjectSrv:      projectSrv,
+			ProjectSrv:       projectSrv,
 			RewardSrv:        rewardSrv,
 			MonitoringcSrv:   monitoringcSrv,
 			ParticipationSrv: participationSrv,
