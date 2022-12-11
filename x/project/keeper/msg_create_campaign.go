@@ -11,7 +11,7 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCampaign) (*types.MsgCreateCampaignResponse, error) {
+func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProject) (*types.MsgCreateProjectResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// check if the metadata length is valid
@@ -40,8 +40,8 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, err.Error())
 	}
 
-	// Deduct campaign creation fee if set
-	creationFee := k.CampaignCreationFee(ctx)
+	// Deduct project creation fee if set
+	creationFee := k.ProjectCreationFee(ctx)
 	if !creationFee.Empty() {
 		coordAddr, err := sdk.AccAddressFromBech32(msg.Coordinator)
 		if err != nil {
@@ -52,28 +52,28 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		}
 	}
 
-	// Append the new campaign
-	campaign := types.NewCampaign(
+	// Append the new project
+	project := types.NewProject(
 		0,
-		msg.CampaignName,
+		msg.ProjectName,
 		coordID,
 		msg.TotalSupply,
 		msg.Metadata,
 		ctx.BlockTime().Unix(),
 	)
-	campaignID := k.AppendCampaign(ctx, campaign)
+	projectID := k.AppendProject(ctx, project)
 
-	// Initialize the list of campaign chains
-	k.SetCampaignChains(ctx, types.CampaignChains{
-		CampaignID: campaignID,
+	// Initialize the list of project chains
+	k.SetProjectChains(ctx, types.ProjectChains{
+		ProjectID: projectID,
 		Chains:     []uint64{},
 	})
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignCreated{
-		CampaignID:         campaignID,
+	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectCreated{
+		ProjectID:         projectID,
 		CoordinatorAddress: msg.Coordinator,
 		CoordinatorID:      coordID,
 	})
 
-	return &types.MsgCreateCampaignResponse{CampaignID: campaignID}, err
+	return &types.MsgCreateProjectResponse{ProjectID: projectID}, err
 }

@@ -19,7 +19,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 
 		ctx            = sdk.WrapSDKContext(sdkCtx)
-		campaign       = sample.Campaign(r, 0)
+		project       = sample.Project(r, 0)
 		addr           = sample.AccAddress(r)
 		shares         types.Shares
 		vouchers       sdk.Coins
@@ -34,13 +34,13 @@ func TestMsgBurnVouchers(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	// Set campaign
-	campaign.AllocatedShares = shares
-	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
+	// Set project
+	project.AllocatedShares = shares
+	project.ProjectID = tk.ProjectKeeper.AppendProject(sdkCtx, project)
 
 	// Create vouchers
 	t.Run("should allow create valid vouchers", func(t *testing.T) {
-		vouchers, err = types.SharesToVouchers(shares, campaign.CampaignID)
+		vouchers, err = types.SharesToVouchers(shares, project.ProjectID)
 		require.NoError(t, err)
 	})
 
@@ -60,7 +60,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "should allow burn voucher",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
 		},
@@ -68,7 +68,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "should allow burn voucher two",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[1]),
 			},
 		},
@@ -76,24 +76,24 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "should allow burn voucher three",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[2]),
 			},
 		},
 		{
-			name: "should fail for non existing campaign",
+			name: "should fail for non existing project",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: 1000,
+				ProjectID: 1000,
 				Vouchers:   sample.Coins(r),
 			},
-			err: types.ErrCampaignNotFound,
+			err: types.ErrProjectNotFound,
 		},
 		{
 			name: "should fail for invalid sender address",
 			msg: types.MsgBurnVouchers{
 				Sender:     "invalid_address",
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sample.Coins(r),
 			},
 			err: ignterrors.ErrCritical,
@@ -102,7 +102,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "should not burn more than allocated shares",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   vouchersTooBig,
 			},
 			err: types.ErrInsufficientVouchers,
@@ -112,7 +112,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "should fail for insufficient funds for voucher one",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
 			err: types.ErrInsufficientVouchers,
@@ -122,7 +122,7 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "should fail for insufficient funds for voucher two",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[1]),
 			},
 			err: types.ErrInsufficientVouchers,
@@ -132,21 +132,21 @@ func TestMsgBurnVouchers(t *testing.T) {
 			name: "should fail for insufficient funds for voucher three",
 			msg: types.MsgBurnVouchers{
 				Sender:     addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[2]),
 			},
 			err: types.ErrInsufficientVouchers,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			var previousCampaign types.Campaign
+			var previousProject types.Project
 			var previousBalance sdk.Coins
 			var creatorAddr sdk.AccAddress
 
 			// Get values before message execution
 			if tc.err == nil {
 				var found bool
-				previousCampaign, found = tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				previousProject, found = tk.ProjectKeeper.GetProject(sdkCtx, tc.msg.ProjectID)
 				require.True(t, found)
 
 				creatorAddr, err = sdk.AccAddressFromBech32(tc.msg.Sender)
@@ -155,23 +155,23 @@ func TestMsgBurnVouchers(t *testing.T) {
 			}
 
 			// Execute message
-			_, err = ts.CampaignSrv.BurnVouchers(ctx, &tc.msg)
+			_, err = ts.ProjectSrv.BurnVouchers(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
 
-			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			project, found := tk.ProjectKeeper.GetProject(sdkCtx, tc.msg.ProjectID)
 			require.True(t, found)
 
-			// Allocated shares of the campaign must be decreased
-			burned, err := types.VouchersToShares(tc.msg.Vouchers, tc.msg.CampaignID)
+			// Allocated shares of the project must be decreased
+			burned, err := types.VouchersToShares(tc.msg.Vouchers, tc.msg.ProjectID)
 			require.NoError(t, err)
 
-			expectedShares, err := types.DecreaseShares(previousCampaign.AllocatedShares, burned)
+			expectedShares, err := types.DecreaseShares(previousProject.AllocatedShares, burned)
 			require.NoError(t, err)
-			require.True(t, types.IsEqualShares(expectedShares, campaign.AllocatedShares))
+			require.True(t, types.IsEqualShares(expectedShares, project.AllocatedShares))
 
 			// Check coordinator balance
 			balance := tk.BankKeeper.GetAllBalances(sdkCtx, creatorAddr)

@@ -16,9 +16,9 @@ import (
 func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdateTotalSupply) (*types.MsgUpdateTotalSupplyResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
+	project, found := k.GetProject(ctx, msg.ProjectID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrProjectNotFound, "%d", msg.ProjectID)
 	}
 
 	// Get the coordinator ID associated to the sender address
@@ -27,15 +27,15 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 		return nil, err
 	}
 
-	if campaign.CoordinatorID != coordID {
+	if project.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the campaign is %d",
-			campaign.CoordinatorID,
+			"coordinator of the project is %d",
+			project.CoordinatorID,
 		))
 	}
 
-	if campaign.MainnetInitialized {
-		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%d", msg.CampaignID)
+	if project.MainnetInitialized {
+		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%d", msg.ProjectID)
 	}
 
 	// Validate provided totalSupply
@@ -47,13 +47,13 @@ func (k msgServer) UpdateTotalSupply(goCtx context.Context, msg *types.MsgUpdate
 		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, err.Error())
 	}
 
-	campaign.TotalSupply = types.UpdateTotalSupply(campaign.TotalSupply, msg.TotalSupplyUpdate)
-	k.SetCampaign(ctx, campaign)
+	project.TotalSupply = types.UpdateTotalSupply(project.TotalSupply, msg.TotalSupplyUpdate)
+	k.SetProject(ctx, project)
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignTotalSupplyUpdated{
-		CampaignID:         campaign.CampaignID,
+	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectTotalSupplyUpdated{
+		ProjectID:         project.ProjectID,
 		CoordinatorAddress: msg.Coordinator,
-		TotalSupply:        campaign.TotalSupply,
+		TotalSupply:        project.TotalSupply,
 	})
 
 	return &types.MsgUpdateTotalSupplyResponse{}, err

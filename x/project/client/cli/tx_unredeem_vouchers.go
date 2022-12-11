@@ -12,11 +12,11 @@ import (
 
 func CmdUnredeemVouchers() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "unredeem-vouchers [campaign-id] [shares]",
+		Use:   "unredeem-vouchers [project-id] [shares]",
 		Short: "Unredeem vouchers that have been redeemed into an account and get vouchers back",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			campaignID, err := cast.ToUint64E(args[0])
+			projectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
@@ -33,7 +33,7 @@ func CmdUnredeemVouchers() *cobra.Command {
 
 			msg := types.NewMsgUnredeemVouchers(
 				clientCtx.GetFromAddress().String(),
-				campaignID,
+				projectID,
 				shares,
 			)
 			if err := msg.ValidateBasic(); err != nil {

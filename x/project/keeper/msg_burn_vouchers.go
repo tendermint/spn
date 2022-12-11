@@ -13,13 +13,13 @@ import (
 func (k msgServer) BurnVouchers(goCtx context.Context, msg *types.MsgBurnVouchers) (*types.MsgBurnVouchersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
+	project, found := k.GetProject(ctx, msg.ProjectID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrProjectNotFound, "%d", msg.ProjectID)
 	}
 
 	// Convert and validate vouchers first
-	shares, err := types.VouchersToShares(msg.Vouchers, msg.CampaignID)
+	shares, err := types.VouchersToShares(msg.Vouchers, msg.ProjectID)
 	if err != nil {
 		return nil, ignterrors.Criticalf("verified voucher are invalid %s", err.Error())
 	}
@@ -36,16 +36,16 @@ func (k msgServer) BurnVouchers(goCtx context.Context, msg *types.MsgBurnVoucher
 		return nil, ignterrors.Criticalf("can't burn coins %s", err.Error())
 	}
 
-	// Decrease the campaign shares
-	campaign.AllocatedShares, err = types.DecreaseShares(campaign.AllocatedShares, shares)
+	// Decrease the project shares
+	project.AllocatedShares, err = types.DecreaseShares(project.AllocatedShares, shares)
 	if err != nil {
 		return nil, ignterrors.Criticalf("invalid allocated share amount %s", err.Error())
 	}
-	k.SetCampaign(ctx, campaign)
+	k.SetProject(ctx, project)
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignSharesUpdated{
-		CampaignID:      campaign.CampaignID,
-		AllocatedShares: campaign.AllocatedShares,
+	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectSharesUpdated{
+		ProjectID:      project.ProjectID,
+		AllocatedShares: project.AllocatedShares,
 	})
 
 	return &types.MsgBurnVouchersResponse{}, err

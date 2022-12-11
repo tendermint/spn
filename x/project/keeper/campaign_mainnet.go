@@ -6,21 +6,21 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// IsCampaignMainnetLaunchTriggered returns true if the provided campaign has an associated mainnet chain whose launch
+// IsProjectMainnetLaunchTriggered returns true if the provided project has an associated mainnet chain whose launch
 // has been already triggered
-func (k Keeper) IsCampaignMainnetLaunchTriggered(ctx sdk.Context, campaignID uint64) (bool, error) {
-	campaign, found := k.GetCampaign(ctx, campaignID)
+func (k Keeper) IsProjectMainnetLaunchTriggered(ctx sdk.Context, projectID uint64) (bool, error) {
+	project, found := k.GetProject(ctx, projectID)
 	if !found {
-		return false, fmt.Errorf("campaign %d not found", campaignID)
+		return false, fmt.Errorf("project %d not found", projectID)
 	}
 
-	if campaign.MainnetInitialized {
-		chain, found := k.launchKeeper.GetChain(ctx, campaign.MainnetID)
+	if project.MainnetInitialized {
+		chain, found := k.launchKeeper.GetChain(ctx, project.MainnetID)
 		if !found {
-			return false, fmt.Errorf("mainnet chain %d for campaign %d not found", campaign.MainnetID, campaignID)
+			return false, fmt.Errorf("mainnet chain %d for project %d not found", project.MainnetID, projectID)
 		}
 		if !chain.IsMainnet {
-			return false, fmt.Errorf("chain %d for campaign %d is not a mainnet chain", campaign.MainnetID, campaignID)
+			return false, fmt.Errorf("chain %d for project %d is not a mainnet chain", project.MainnetID, projectID)
 		}
 		if chain.LaunchTriggered {
 			return true, nil

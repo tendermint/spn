@@ -12,48 +12,48 @@ import (
 	profile "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
+func TestMsgCreateProject_ValidateBasic(t *testing.T) {
 	invalidCoins := sdk.Coins{sdk.Coin{Denom: "invalid denom", Amount: sdkmath.ZeroInt()}}
 
 	tests := []struct {
 		name string
-		msg  types.MsgCreateCampaign
+		msg  types.MsgCreateProject
 		err  error
 	}{
 		{
 			name: "should allow validation of valid msg",
-			msg: types.MsgCreateCampaign{
+			msg: types.MsgCreateProject{
 				Coordinator:  sample.Address(r),
-				CampaignName: sample.CampaignName(r),
+				ProjectName: sample.ProjectName(r),
 				TotalSupply:  sample.TotalSupply(r),
 				Metadata:     sample.Metadata(r, 20),
 			},
 		},
 		{
 			name: "should prevent validation of msg with invalid address",
-			msg: types.MsgCreateCampaign{
+			msg: types.MsgCreateProject{
 				Coordinator:  "invalid_address",
-				CampaignName: sample.CampaignName(r),
+				ProjectName: sample.ProjectName(r),
 				TotalSupply:  sample.TotalSupply(r),
 				Metadata:     sample.Metadata(r, 20),
 			},
 			err: profile.ErrInvalidCoordAddress,
 		},
 		{
-			name: "should prevent validation of msg with invalid campaign name",
-			msg: types.MsgCreateCampaign{
+			name: "should prevent validation of msg with invalid project name",
+			msg: types.MsgCreateProject{
 				Coordinator:  sample.Address(r),
-				CampaignName: invalidCampaignName,
+				ProjectName: invalidProjectName,
 				TotalSupply:  sample.TotalSupply(r),
 				Metadata:     sample.Metadata(r, 20),
 			},
-			err: types.ErrInvalidCampaignName,
+			err: types.ErrInvalidProjectName,
 		},
 		{
 			name: "should prevent validation of msg with invalid total supply",
-			msg: types.MsgCreateCampaign{
+			msg: types.MsgCreateProject{
 				Coordinator:  sample.Address(r),
-				CampaignName: sample.CampaignName(r),
+				ProjectName: sample.ProjectName(r),
 				TotalSupply:  invalidCoins,
 				Metadata:     sample.Metadata(r, 20),
 			},

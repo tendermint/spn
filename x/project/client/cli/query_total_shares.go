@@ -11,7 +11,7 @@ import (
 func CmdQueryTotalShares() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "total-shares",
-		Short: "Shows the total-shares value of campaigns",
+		Short: "Shows the total-shares value of projects",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)

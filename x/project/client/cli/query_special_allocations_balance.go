@@ -11,11 +11,11 @@ import (
 
 func CmdSpecialAllocationsBalance() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "special-allocations-balance [campaign-id]",
+		Use:   "special-allocations-balance [project-id]",
 		Short: "query the coin balance for special allocations",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqCampaignID, err := cast.ToUint64E(args[0])
+			reqProjectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
@@ -28,7 +28,7 @@ func CmdSpecialAllocationsBalance() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QuerySpecialAllocationsBalanceRequest{
-				CampaignID: reqCampaignID,
+				ProjectID: reqProjectID,
 			}
 
 			res, err := queryClient.SpecialAllocationsBalance(cmd.Context(), params)

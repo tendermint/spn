@@ -23,7 +23,7 @@ func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 			name: "should allow validation of valid msg",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     sample.Address(r),
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     sample.Shares(r),
 			},
 		},
@@ -31,7 +31,7 @@ func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     "invalid_address",
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     sample.Shares(r),
 			},
 			err: types.ErrInvalidVoucherAddress,
@@ -40,7 +40,7 @@ func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid shares",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     sample.Address(r),
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     invalidShares,
 			},
 			err: types.ErrInvalidShares,
@@ -49,7 +49,7 @@ func TestMsgUnredeemVouchers_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with empty shares",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     sample.Address(r),
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     types.EmptyShares(),
 			},
 			err: types.ErrInvalidShares,

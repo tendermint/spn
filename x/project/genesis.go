@@ -7,19 +7,19 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-// InitGenesis initializes the campaign module's state from a provided genesis
+// InitGenesis initializes the project module's state from a provided genesis
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
-	// Set all the campaign
-	for _, elem := range genState.Campaigns {
-		k.SetCampaign(ctx, elem)
+	// Set all the project
+	for _, elem := range genState.Projects {
+		k.SetProject(ctx, elem)
 	}
-	// Set campaign counter
-	k.SetCampaignCounter(ctx, genState.CampaignCounter)
+	// Set project counter
+	k.SetProjectCounter(ctx, genState.ProjectCounter)
 
-	// Set all the campaignChains
-	for _, elem := range genState.CampaignChains {
-		k.SetCampaignChains(ctx, elem)
+	// Set all the projectChains
+	for _, elem := range genState.ProjectChains {
+		k.SetProjectChains(ctx, elem)
 	}
 
 	// Set all the mainnetAccount
@@ -35,13 +35,13 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// this line is used by starport scaffolding # genesis/module/init
 }
 
-// ExportGenesis returns the campaign module's exported genesis.
+// ExportGenesis returns the project module's exported genesis.
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
-	genesis.Campaigns = k.GetAllCampaign(ctx)
-	genesis.CampaignCounter = k.GetCampaignCounter(ctx)
-	genesis.CampaignChains = k.GetAllCampaignChains(ctx)
+	genesis.Projects = k.GetAllProject(ctx)
+	genesis.ProjectCounter = k.GetProjectCounter(ctx)
+	genesis.ProjectChains = k.GetAllProjectChains(ctx)
 	genesis.MainnetAccounts = k.GetAllMainnetAccount(ctx)
 	genesis.Params = k.GetParams(ctx)
 	// this line is used by starport scaffolding # genesis/module/export

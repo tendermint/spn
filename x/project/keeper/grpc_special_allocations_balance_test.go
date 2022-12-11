@@ -19,33 +19,33 @@ func TestSpecialAllocationsBalance(t *testing.T) {
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
 
-		campaignID                           = uint64(1)
-		campaignIDInvalidGenesisDistribution = uint64(2)
-		campaignIDInvalidClaimableAirdrop    = uint64(3)
+		projectID                           = uint64(1)
+		projectIDInvalidGenesisDistribution = uint64(2)
+		projectIDInvalidClaimableAirdrop    = uint64(3)
 	)
 
-	tk.CampaignKeeper.SetTotalShares(ctx, 100)
+	tk.ProjectKeeper.SetTotalShares(ctx, 100)
 
-	// initialize campaigns
-	setCampaign := func(campaignID uint64, genesisDistribution, claimableAirdrop types.Shares) {
-		campaign := sample.Campaign(r, campaignID)
-		campaign.TotalSupply = tc.Coins(t, "1000foo,1000bar,1000baz")
-		campaign.SpecialAllocations = types.NewSpecialAllocations(
+	// initialize projects
+	setProject := func(projectID uint64, genesisDistribution, claimableAirdrop types.Shares) {
+		project := sample.Project(r, projectID)
+		project.TotalSupply = tc.Coins(t, "1000foo,1000bar,1000baz")
+		project.SpecialAllocations = types.NewSpecialAllocations(
 			genesisDistribution,
 			claimableAirdrop,
 		)
-		campaign.AllocatedShares = tc.Shares(t, "100foo,100bar,100baz,100bam")
-		tk.CampaignKeeper.SetCampaign(ctx, campaign)
+		project.AllocatedShares = tc.Shares(t, "100foo,100bar,100baz,100bam")
+		tk.ProjectKeeper.SetProject(ctx, project)
 	}
-	setCampaign(campaignID,
+	setProject(projectID,
 		tc.Shares(t, "50foo,20bar,30bam"),
 		tc.Shares(t, "50foo,100baz,40bam"),
 	)
-	setCampaign(campaignIDInvalidGenesisDistribution,
+	setProject(projectIDInvalidGenesisDistribution,
 		tc.Shares(t, "101foo"),
 		tc.Shares(t, "50foo"),
 	)
-	setCampaign(campaignIDInvalidClaimableAirdrop,
+	setProject(projectIDInvalidClaimableAirdrop,
 		tc.Shares(t, "50foo"),
 		tc.Shares(t, "101foo"),
 	)
@@ -58,30 +58,30 @@ func TestSpecialAllocationsBalance(t *testing.T) {
 	}{
 		{
 			desc:    "should fetch the balance of special allocations",
-			request: &types.QuerySpecialAllocationsBalanceRequest{CampaignID: campaignID},
+			request: &types.QuerySpecialAllocationsBalanceRequest{ProjectID: projectID},
 			response: &types.QuerySpecialAllocationsBalanceResponse{
 				GenesisDistribution: tc.Coins(t, "500foo,200bar"),
 				ClaimableAirdrop:    tc.Coins(t, "500foo,1000baz"),
 			},
 		},
 		{
-			desc:          "should fail if campaign not found",
-			request:       &types.QuerySpecialAllocationsBalanceRequest{CampaignID: 10000},
+			desc:          "should fail if project not found",
+			request:       &types.QuerySpecialAllocationsBalanceRequest{ProjectID: 10000},
 			errStatusCode: codes.NotFound,
 		},
 		{
 			desc:          "should fail if genesis distribution is invalid",
-			request:       &types.QuerySpecialAllocationsBalanceRequest{CampaignID: campaignIDInvalidGenesisDistribution},
+			request:       &types.QuerySpecialAllocationsBalanceRequest{ProjectID: projectIDInvalidGenesisDistribution},
 			errStatusCode: codes.Internal,
 		},
 		{
 			desc:          "should fail if claimable airdrop is invalid",
-			request:       &types.QuerySpecialAllocationsBalanceRequest{CampaignID: campaignIDInvalidClaimableAirdrop},
+			request:       &types.QuerySpecialAllocationsBalanceRequest{ProjectID: projectIDInvalidClaimableAirdrop},
 			errStatusCode: codes.Internal,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := tk.CampaignKeeper.SpecialAllocationsBalance(wctx, tc.request)
+			response, err := tk.ProjectKeeper.SpecialAllocationsBalance(wctx, tc.request)
 			if tc.errStatusCode != codes.OK {
 				require.EqualValues(t, tc.errStatusCode, status.Code(err))
 			} else {

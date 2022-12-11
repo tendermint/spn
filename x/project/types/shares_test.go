@@ -11,30 +11,30 @@ import (
 	spntypes "github.com/tendermint/spn/pkg/types"
 	tc "github.com/tendermint/spn/testutil/constructor"
 	"github.com/tendermint/spn/testutil/sample"
-	campaign "github.com/tendermint/spn/x/project/types"
+	project "github.com/tendermint/spn/x/project/types"
 )
 
 var (
-	prefixedShareFoo    = campaign.SharePrefix + "foo"
-	prefixedShareBar    = campaign.SharePrefix + "bar"
-	prefixedShareFoobar = campaign.SharePrefix + "foobar"
+	prefixedShareFoo    = project.SharePrefix + "foo"
+	prefixedShareBar    = project.SharePrefix + "bar"
+	prefixedShareFoobar = project.SharePrefix + "foobar"
 )
 
 func TestEmptyShares(t *testing.T) {
 	t.Run("should allow creation of empty shares", func(t *testing.T) {
-		shares := campaign.EmptyShares()
-		require.Equal(t, campaign.Shares(nil), shares)
+		shares := project.EmptyShares()
+		require.Equal(t, project.Shares(nil), shares)
 	})
 }
 
 func TestNewShares(t *testing.T) {
 	t.Run("should prevent creation of invalid shares", func(t *testing.T) {
-		_, err := campaign.NewShares("invalid")
+		_, err := project.NewShares("invalid")
 		require.Error(t, err)
 	})
 
 	t.Run("should allow creation of valid shares", func(t *testing.T) {
-		shares, err := campaign.NewShares("100foo,200bar")
+		shares, err := project.NewShares("100foo,200bar")
 		require.NoError(t, err)
 		require.Equal(t, shares, tc.Shares(t, "100foo,200bar"))
 	})
@@ -42,7 +42,7 @@ func TestNewShares(t *testing.T) {
 
 func TestNewSharesFromCoins(t *testing.T) {
 	t.Run("should allow creation of valid shares from coins", func(t *testing.T) {
-		shares := campaign.NewSharesFromCoins(sdk.NewCoins(
+		shares := project.NewSharesFromCoins(sdk.NewCoins(
 			sdk.NewCoin("foo", sdkmath.NewInt(100)),
 			sdk.NewCoin("bar", sdkmath.NewInt(200)),
 		))
@@ -52,11 +52,11 @@ func TestNewSharesFromCoins(t *testing.T) {
 
 func TestCheckShares(t *testing.T) {
 	t.Run("should allow check of valid shares", func(t *testing.T) {
-		require.NoError(t, campaign.CheckShares(tc.Shares(t, "100foo,200bar")))
+		require.NoError(t, project.CheckShares(tc.Shares(t, "100foo,200bar")))
 	})
 
 	t.Run("should prevent check of invalid shares", func(t *testing.T) {
-		require.Error(t, campaign.CheckShares(campaign.Shares(sdk.NewCoins(
+		require.Error(t, project.CheckShares(project.Shares(sdk.NewCoins(
 			sdk.NewCoin("foo", sdkmath.NewInt(100)),
 			sdk.NewCoin("s/bar", sdkmath.NewInt(200)),
 		))))
@@ -66,9 +66,9 @@ func TestCheckShares(t *testing.T) {
 func TestIncreaseShares(t *testing.T) {
 	for _, tc := range []struct {
 		name      string
-		shares    campaign.Shares
-		newShares campaign.Shares
-		expected  campaign.Shares
+		shares    project.Shares
+		newShares project.Shares
+		expected  project.Shares
 	}{
 		{
 			name:      "should increase shares",
@@ -78,25 +78,25 @@ func TestIncreaseShares(t *testing.T) {
 		},
 		{
 			name:      "should perform nothing with two empty sets",
-			shares:    campaign.EmptyShares(),
-			newShares: campaign.EmptyShares(),
-			expected:  campaign.EmptyShares(),
+			shares:    project.EmptyShares(),
+			newShares: project.EmptyShares(),
+			expected:  project.EmptyShares(),
 		},
 		{
 			name:      "should increase empty set",
-			shares:    campaign.EmptyShares(),
+			shares:    project.EmptyShares(),
 			newShares: tc.Shares(t, "100foo,200bar"),
 			expected:  tc.Shares(t, "100foo,200bar"),
 		},
 		{
 			name:      "should create no new shares",
 			shares:    tc.Shares(t, "100foo,100bar"),
-			newShares: campaign.EmptyShares(),
+			newShares: project.EmptyShares(),
 			expected:  tc.Shares(t, "100foo,100bar"),
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			require.Equal(t, tc.expected, campaign.IncreaseShares(tc.shares, tc.newShares))
+			require.Equal(t, tc.expected, project.IncreaseShares(tc.shares, tc.newShares))
 		})
 	}
 }
@@ -104,21 +104,21 @@ func TestIncreaseShares(t *testing.T) {
 func TestDecreaseShares(t *testing.T) {
 	for _, tc := range []struct {
 		desc       string
-		shares     campaign.Shares
-		toDecrease campaign.Shares
-		expected   campaign.Shares
+		shares     project.Shares
+		toDecrease project.Shares
+		expected   project.Shares
 		isError    bool
 	}{
 		{
 			desc:       "should decrease empty set",
-			shares:     campaign.EmptyShares(),
+			shares:     project.EmptyShares(),
 			toDecrease: tc.Shares(t, "100foo,100bar"),
 			isError:    true,
 		},
 		{
 			desc:       "should decrease from empty set",
 			shares:     tc.Shares(t, "100foo,100bar"),
-			toDecrease: campaign.EmptyShares(),
+			toDecrease: project.EmptyShares(),
 			expected:   tc.Shares(t, "100foo,100bar"),
 		},
 		{
@@ -135,7 +135,7 @@ func TestDecreaseShares(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			decreased, err := campaign.DecreaseShares(tc.shares, tc.toDecrease)
+			decreased, err := project.DecreaseShares(tc.shares, tc.toDecrease)
 			require.Equal(t, tc.isError, err != nil)
 			if !tc.isError {
 				require.Equal(t, tc.expected, decreased)
@@ -147,14 +147,14 @@ func TestDecreaseShares(t *testing.T) {
 func TestShareIsTotalReached(t *testing.T) {
 	for _, tc := range []struct {
 		desc           string
-		shares         campaign.Shares
+		shares         project.Shares
 		maxTotalShares uint64
 		reached        bool
 		isValid        bool
 	}{
 		{
 			desc:           "should return false with empty shares",
-			shares:         campaign.EmptyShares(),
+			shares:         project.EmptyShares(),
 			maxTotalShares: 0,
 			reached:        false,
 			isValid:        true,
@@ -175,7 +175,7 @@ func TestShareIsTotalReached(t *testing.T) {
 		},
 		{
 			desc: "should return error if shares are invalid",
-			shares: campaign.NewSharesFromCoins(sdk.Coins{
+			shares: project.NewSharesFromCoins(sdk.Coins{
 				sdk.NewCoin("foo", sdkmath.NewIntFromUint64(500)),
 				sdk.NewCoin("foo", sdkmath.NewIntFromUint64(500)),
 			}),
@@ -185,7 +185,7 @@ func TestShareIsTotalReached(t *testing.T) {
 		},
 		{
 			desc: "should return error if shares have invalid format",
-			shares: campaign.Shares(sdk.Coins{
+			shares: project.Shares(sdk.Coins{
 				sdk.NewCoin("foo", sdkmath.NewIntFromUint64(500)),
 			}),
 			maxTotalShares: 1000,
@@ -194,7 +194,7 @@ func TestShareIsTotalReached(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			reached, err := campaign.IsTotalSharesReached(tc.shares, tc.maxTotalShares)
+			reached, err := project.IsTotalSharesReached(tc.shares, tc.maxTotalShares)
 			if tc.isValid {
 				require.NoError(t, err)
 				require.True(t, tc.reached == reached)
@@ -207,8 +207,8 @@ func TestShareIsTotalReached(t *testing.T) {
 
 func TestIsEqualShares(t *testing.T) {
 	type args struct {
-		share1 campaign.Shares
-		share2 campaign.Shares
+		share1 project.Shares
+		share2 project.Shares
 	}
 	tests := []struct {
 		name string
@@ -242,7 +242,7 @@ func TestIsEqualShares(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := campaign.IsEqualShares(tt.args.share1, tt.args.share2)
+			got := project.IsEqualShares(tt.args.share1, tt.args.share2)
 			require.True(t, got == tt.want)
 		})
 	}
@@ -251,7 +251,7 @@ func TestIsEqualShares(t *testing.T) {
 func TestSharesAmountOf(t *testing.T) {
 	tests := []struct {
 		name   string
-		shares campaign.Shares
+		shares project.Shares
 		want   int64
 	}{
 		{
@@ -272,7 +272,7 @@ func TestSharesAmountOf(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := tt.shares.AmountOf(campaign.SharePrefix + "foobar")
+			got := tt.shares.AmountOf(project.SharePrefix + "foobar")
 			require.True(t, got == tt.want)
 		})
 	}
@@ -280,8 +280,8 @@ func TestSharesAmountOf(t *testing.T) {
 
 func TestSharesIsAllLTE(t *testing.T) {
 	type args struct {
-		share1 campaign.Shares
-		share2 campaign.Shares
+		share1 project.Shares
+		share2 project.Shares
 	}
 	tests := []struct {
 		name string
@@ -348,17 +348,17 @@ func TestSharesIsAllLTE(t *testing.T) {
 func TestSharesEmpty(t *testing.T) {
 	for _, tc := range []struct {
 		desc   string
-		shares campaign.Shares
+		shares project.Shares
 		empty  bool
 	}{
 		{
 			desc:   "should be empty",
-			shares: campaign.EmptyShares(),
+			shares: project.EmptyShares(),
 			empty:  true,
 		},
 		{
 			desc:   "should be empty for nil shares",
-			shares: campaign.Shares(nil),
+			shares: project.Shares(nil),
 			empty:  true,
 		},
 		{
@@ -376,23 +376,23 @@ func TestSharesEmpty(t *testing.T) {
 func TestSharesString(t *testing.T) {
 	for _, tc := range []struct {
 		desc   string
-		shares campaign.Shares
+		shares project.Shares
 		str    string
 	}{
 		{
 			desc:   "should return empty string for empty shares",
-			shares: campaign.EmptyShares(),
+			shares: project.EmptyShares(),
 			str:    "",
 		},
 		{
 			desc:   "should return one denom",
 			shares: tc.Shares(t, "100foo"),
-			str:    fmt.Sprintf("100%sfoo", campaign.SharePrefix),
+			str:    fmt.Sprintf("100%sfoo", project.SharePrefix),
 		},
 		{
 			desc:   "should return list of denoms",
 			shares: tc.Shares(t, "100foo,100bar"),
-			str:    fmt.Sprintf("100%sbar,100%sfoo", campaign.SharePrefix, campaign.SharePrefix),
+			str:    fmt.Sprintf("100%sbar,100%sfoo", project.SharePrefix, project.SharePrefix),
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
@@ -404,7 +404,7 @@ func TestSharesString(t *testing.T) {
 func TestShares_CoinsFromTotalSupply(t *testing.T) {
 	tests := []struct {
 		name             string
-		shares           campaign.Shares
+		shares           project.Shares
 		totalSupply      sdk.Coins
 		totalShareNumber uint64
 		expected         sdk.Coins
@@ -420,7 +420,7 @@ func TestShares_CoinsFromTotalSupply(t *testing.T) {
 		},
 		{
 			name:             "should return empty for empty shares",
-			shares:           campaign.EmptyShares(),
+			shares:           project.EmptyShares(),
 			totalSupply:      sample.Coins(r),
 			totalShareNumber: 10000,
 			expected:         sdk.NewCoins(),

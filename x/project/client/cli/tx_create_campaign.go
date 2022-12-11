@@ -14,10 +14,10 @@ const (
 	flagMetadata = "metadata"
 )
 
-func CmdCreateCampaign() *cobra.Command {
+func CmdCreateProject() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-campaign [campaign-name] [total-supply]",
-		Short: "Create a new campaign",
+		Use:   "create-project [project-name] [total-supply]",
+		Short: "Create a new project",
 		Args:  cobra.RangeArgs(1, 2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -39,7 +39,7 @@ func CmdCreateCampaign() *cobra.Command {
 			}
 			metadataBytes := []byte(metadata)
 
-			msg := types.NewMsgCreateCampaign(
+			msg := types.NewMsgCreateProject(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 				totalSupply,
@@ -52,7 +52,7 @@ func CmdCreateCampaign() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagMetadata, "", "Set metadata field for the campaign")
+	cmd.Flags().String(flagMetadata, "", "Set metadata field for the project")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

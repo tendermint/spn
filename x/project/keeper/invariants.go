@@ -9,39 +9,39 @@ import (
 )
 
 const (
-	accountWithoutCampaignRoute = "account-without-campaign"
-	campaignSharesRoute         = "campaign-shares"
+	accountWithoutProjectRoute = "account-without-project"
+	projectSharesRoute         = "project-shares"
 )
 
 // RegisterInvariants registers all module invariants
 func RegisterInvariants(ir sdk.InvariantRegistry, k Keeper) {
-	ir.RegisterRoute(types.ModuleName, accountWithoutCampaignRoute,
-		AccountWithoutCampaignInvariant(k))
-	ir.RegisterRoute(types.ModuleName, campaignSharesRoute,
-		CampaignSharesInvariant(k))
+	ir.RegisterRoute(types.ModuleName, accountWithoutProjectRoute,
+		AccountWithoutProjectInvariant(k))
+	ir.RegisterRoute(types.ModuleName, projectSharesRoute,
+		ProjectSharesInvariant(k))
 }
 
 // AllInvariants runs all invariants of the module.
 func AllInvariants(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-		res, stop := AccountWithoutCampaignInvariant(k)(ctx)
+		res, stop := AccountWithoutProjectInvariant(k)(ctx)
 		if stop {
 			return res, stop
 		}
-		return CampaignSharesInvariant(k)(ctx)
+		return ProjectSharesInvariant(k)(ctx)
 	}
 }
 
-// AccountWithoutCampaignInvariant invariant that checks if
-// the `MainnetAccount` campaign exist.
-func AccountWithoutCampaignInvariant(k Keeper) sdk.Invariant {
+// AccountWithoutProjectInvariant invariant that checks if
+// the `MainnetAccount` project exist.
+func AccountWithoutProjectInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
 		all := k.GetAllMainnetAccount(ctx)
 		for _, acc := range all {
-			if _, found := k.GetCampaign(ctx, acc.CampaignID); !found {
+			if _, found := k.GetProject(ctx, acc.ProjectID); !found {
 				return sdk.FormatInvariant(
-					types.ModuleName, accountWithoutCampaignRoute,
-					fmt.Sprintf("%s: %d", types.ErrCampaignNotFound, acc.CampaignID),
+					types.ModuleName, accountWithoutProjectRoute,
+					fmt.Sprintf("%s: %d", types.ErrProjectNotFound, acc.ProjectID),
 				), true
 			}
 		}
@@ -49,37 +49,37 @@ func AccountWithoutCampaignInvariant(k Keeper) sdk.Invariant {
 	}
 }
 
-// CampaignSharesInvariant invariant that checks, for all campaigns, if the amount of allocated shares is equal to
+// ProjectSharesInvariant invariant that checks, for all projects, if the amount of allocated shares is equal to
 // the sum of `MainnetVestingAccount` and `MainnetAccount` shares plus
 // the amount of vouchers in circulation plus
 // the total shares of special allocations
-func CampaignSharesInvariant(k Keeper) sdk.Invariant {
+func ProjectSharesInvariant(k Keeper) sdk.Invariant {
 	return func(ctx sdk.Context) (string, bool) {
-		accountSharesByCampaign := make(map[uint64]types.Shares)
+		accountSharesByProject := make(map[uint64]types.Shares)
 
 		// get all mainnet account shares
 		accounts := k.GetAllMainnetAccount(ctx)
 		for _, acc := range accounts {
-			if _, ok := accountSharesByCampaign[acc.CampaignID]; !ok {
-				accountSharesByCampaign[acc.CampaignID] = types.EmptyShares()
+			if _, ok := accountSharesByProject[acc.ProjectID]; !ok {
+				accountSharesByProject[acc.ProjectID] = types.EmptyShares()
 			}
-			accountSharesByCampaign[acc.CampaignID] = types.IncreaseShares(
-				accountSharesByCampaign[acc.CampaignID],
+			accountSharesByProject[acc.ProjectID] = types.IncreaseShares(
+				accountSharesByProject[acc.ProjectID],
 				acc.Shares,
 			)
 		}
 
-		for _, campaign := range k.GetAllCampaign(ctx) {
-			campaignID := campaign.CampaignID
-			expectedAllocatedSharesShares := accountSharesByCampaign[campaignID]
+		for _, project := range k.GetAllProject(ctx) {
+			projectID := project.ProjectID
+			expectedAllocatedSharesShares := accountSharesByProject[projectID]
 
-			// read existing denoms from allocated shares of the campaign to check possible minted vouchers
-			allocated, err := types.SharesToVouchers(campaign.GetAllocatedShares(), campaignID)
+			// read existing denoms from allocated shares of the project to check possible minted vouchers
+			allocated, err := types.SharesToVouchers(project.GetAllocatedShares(), projectID)
 			if err != nil {
 				return sdk.FormatInvariant(
-					types.ModuleName, campaignSharesRoute,
-					fmt.Sprintf("campaign %d: allocated shares can't be converted to vouchers %s",
-						campaignID,
+					types.ModuleName, projectSharesRoute,
+					fmt.Sprintf("project %d: allocated shares can't be converted to vouchers %s",
+						projectID,
 						err.Error(),
 					),
 				), true
@@ -92,24 +92,24 @@ func CampaignSharesInvariant(k Keeper) sdk.Invariant {
 				vouchers = vouchers.Add(voucherSupply)
 			}
 
-			// convert to shares and add to the campaign shares - since we are converting shares to vouchers earlier,
+			// convert to shares and add to the project shares - since we are converting shares to vouchers earlier,
 			// this conversion back to shares will never fail by design, thus we can ignore the error
-			vShares, _ := types.VouchersToShares(vouchers, campaignID)
+			vShares, _ := types.VouchersToShares(vouchers, projectID)
 			expectedAllocatedSharesShares = types.IncreaseShares(expectedAllocatedSharesShares, vShares)
 
 			// increase expected shares with special allocations
 			expectedAllocatedSharesShares = types.IncreaseShares(
 				expectedAllocatedSharesShares,
-				campaign.SpecialAllocations.TotalShares(),
+				project.SpecialAllocations.TotalShares(),
 			)
 
-			if !types.IsEqualShares(expectedAllocatedSharesShares, campaign.GetAllocatedShares()) {
+			if !types.IsEqualShares(expectedAllocatedSharesShares, project.GetAllocatedShares()) {
 				return sdk.FormatInvariant(
-					types.ModuleName, campaignSharesRoute,
-					fmt.Sprintf("campaign %d: expected allocated shares: %s, actual allocated shares: %s",
-						campaignID,
+					types.ModuleName, projectSharesRoute,
+					fmt.Sprintf("project %d: expected allocated shares: %s, actual allocated shares: %s",
+						projectID,
 						expectedAllocatedSharesShares.String(),
-						campaign.GetAllocatedShares().String(),
+						project.GetAllocatedShares().String(),
 					),
 				), true
 			}

@@ -11,10 +11,10 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func CmdListCampaign() *cobra.Command {
+func CmdListProject() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-campaign",
-		Short: "List all campaigns",
+		Use:   "list-project",
+		Short: "List all projects",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -25,11 +25,11 @@ func CmdListCampaign() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllCampaignRequest{
+			params := &types.QueryAllProjectRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.CampaignAll(context.Background(), params)
+			res, err := queryClient.ProjectAll(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -44,26 +44,26 @@ func CmdListCampaign() *cobra.Command {
 	return cmd
 }
 
-func CmdShowCampaign() *cobra.Command {
+func CmdShowProject() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-campaign [id]",
-		Short: "shows a campaign",
+		Use:   "show-project [id]",
+		Short: "shows a project",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			campaignID, err := strconv.ParseUint(args[0], 10, 64)
+			projectID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
 
-			params := &types.QueryGetCampaignRequest{
-				CampaignID: campaignID,
+			params := &types.QueryGetProjectRequest{
+				ProjectID: projectID,
 			}
 
-			res, err := queryClient.Campaign(context.Background(), params)
+			res, err := queryClient.Project(context.Background(), params)
 			if err != nil {
 				return err
 			}

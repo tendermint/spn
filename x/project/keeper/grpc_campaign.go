@@ -12,43 +12,43 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func (k Keeper) CampaignAll(c context.Context, req *types.QueryAllCampaignRequest) (*types.QueryAllCampaignResponse, error) {
+func (k Keeper) ProjectAll(c context.Context, req *types.QueryAllProjectRequest) (*types.QueryAllProjectResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var campaigns []types.Campaign
+	var projects []types.Project
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	campaignStore := prefix.NewStore(store, types.KeyPrefix(types.CampaignKey))
+	projectStore := prefix.NewStore(store, types.KeyPrefix(types.ProjectKey))
 
-	pageRes, err := query.Paginate(campaignStore, req.Pagination, func(key []byte, value []byte) error {
-		var campaign types.Campaign
-		if err := k.cdc.Unmarshal(value, &campaign); err != nil {
+	pageRes, err := query.Paginate(projectStore, req.Pagination, func(key []byte, value []byte) error {
+		var project types.Project
+		if err := k.cdc.Unmarshal(value, &project); err != nil {
 			return err
 		}
 
-		campaigns = append(campaigns, campaign)
+		projects = append(projects, project)
 		return nil
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllCampaignResponse{Campaign: campaigns, Pagination: pageRes}, nil
+	return &types.QueryAllProjectResponse{Project: projects, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Campaign(c context.Context, req *types.QueryGetCampaignRequest) (*types.QueryGetCampaignResponse, error) {
+func (k Keeper) Project(c context.Context, req *types.QueryGetProjectRequest) (*types.QueryGetProjectResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	campaign, found := k.GetCampaign(ctx, req.CampaignID)
+	project, found := k.GetProject(ctx, req.ProjectID)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetCampaignResponse{Campaign: campaign}, nil
+	return &types.QueryGetProjectResponse{Project: project}, nil
 }

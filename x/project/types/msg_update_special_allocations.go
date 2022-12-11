@@ -13,12 +13,12 @@ var _ sdk.Msg = &MsgUpdateSpecialAllocations{}
 
 func NewMsgUpdateSpecialAllocations(
 	coordinator string,
-	campaignID uint64,
+	projectID uint64,
 	specialAllocations SpecialAllocations,
 ) *MsgUpdateSpecialAllocations {
 	return &MsgUpdateSpecialAllocations{
 		Coordinator:        coordinator,
-		CampaignID:         campaignID,
+		ProjectID:         projectID,
 		SpecialAllocations: specialAllocations,
 	}
 }

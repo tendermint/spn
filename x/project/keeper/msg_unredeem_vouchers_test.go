@@ -24,26 +24,26 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 		accountFewShares         = sample.MainnetAccount(r, 0, accountFewSharesAddr)
 		accountFewSharesShare, _ = types.NewShares("30foo,15bar")
 
-		campaign                = sample.Campaign(r, 0)
-		campaignMainnetLaunched = sample.Campaign(r, 1)
+		project                = sample.Project(r, 0)
+		projectMainnetLaunched = sample.Project(r, 1)
 		shares, _               = types.NewShares("10foo,10bar")
 	)
 	account.Shares = accountShare
 	accountFewShares.Shares = accountFewSharesShare
 
-	// Create campaigns
-	tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
+	// Create projects
+	tk.ProjectKeeper.AppendProject(sdkCtx, project)
 
-	campaignMainnetLaunched.MainnetInitialized = true
+	projectMainnetLaunched.MainnetInitialized = true
 	chainLaunched := sample.Chain(r, 0, 0)
 	chainLaunched.LaunchTriggered = true
 	chainLaunched.IsMainnet = true
-	campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
-	campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetLaunched)
+	projectMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
+	projectMainnetLaunched.ProjectID = tk.ProjectKeeper.AppendProject(sdkCtx, projectMainnetLaunched)
 
 	// Create accounts
-	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, account)
-	tk.CampaignKeeper.SetMainnetAccount(sdkCtx, accountFewShares)
+	tk.ProjectKeeper.SetMainnetAccount(sdkCtx, account)
+	tk.ProjectKeeper.SetMainnetAccount(sdkCtx, accountFewShares)
 
 	for _, tc := range []struct {
 		name string
@@ -54,7 +54,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			name: "should allow unredeem vouchers",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     shares,
 			},
 		},
@@ -62,7 +62,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			name: "should allow unredeem vouchers a second time",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     shares,
 			},
 		},
@@ -70,7 +70,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			name: "should allow unredeem vouchers to zero",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     shares,
 			},
 		},
@@ -78,7 +78,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			name: "should allow unredeem vouchers from another account",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountFewSharesAddr,
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     shares,
 			},
 		},
@@ -86,34 +86,34 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			name: "should prevent if not enough shares in balance",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountFewSharesAddr,
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     shares,
 			},
 			err: types.ErrSharesDecrease,
 		},
 		{
-			name: "should prevent for non existent campaign",
+			name: "should prevent for non existent project",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
-				CampaignID: 1000,
+				ProjectID: 1000,
 				Shares:     shares,
 			},
-			err: types.ErrCampaignNotFound,
+			err: types.ErrProjectNotFound,
 		},
 		{
 			name: "should prevent for non existent account",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     sample.Address(r),
-				CampaignID: 0,
+				ProjectID: 0,
 				Shares:     shares,
 			},
 			err: types.ErrAccountNotFound,
 		},
 		{
-			name: "should prevent for campaign with launched mainnet",
+			name: "should prevent for project with launched mainnet",
 			msg: types.MsgUnredeemVouchers{
 				Sender:     accountAddr,
-				CampaignID: campaignMainnetLaunched.CampaignID,
+				ProjectID: projectMainnetLaunched.ProjectID,
 				Shares:     sample.Shares(r),
 			},
 			err: types.ErrMainnetLaunchTriggered,
@@ -129,14 +129,14 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 
 			// Get values before message execution
 			if tc.err == nil {
-				previousAccount, found = tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Sender)
+				previousAccount, found = tk.ProjectKeeper.GetMainnetAccount(sdkCtx, tc.msg.ProjectID, tc.msg.Sender)
 				require.True(t, found)
 
 				previousBalance = tk.BankKeeper.GetAllBalances(sdkCtx, accountAddr)
 			}
 
 			// Execute message
-			_, err = ts.CampaignSrv.UnredeemVouchers(ctx, &tc.msg)
+			_, err = ts.ProjectSrv.UnredeemVouchers(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -145,11 +145,11 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 
 			if types.IsEqualShares(tc.msg.Shares, previousAccount.Shares) {
 				// All unredeemed
-				_, found := tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Sender)
+				_, found := tk.ProjectKeeper.GetMainnetAccount(sdkCtx, tc.msg.ProjectID, tc.msg.Sender)
 				require.False(t, found)
 
 			} else {
-				account, found := tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Sender)
+				account, found := tk.ProjectKeeper.GetMainnetAccount(sdkCtx, tc.msg.ProjectID, tc.msg.Sender)
 				require.True(t, found)
 
 				expectedShares, err := types.DecreaseShares(previousAccount.Shares, tc.msg.Shares)
@@ -158,7 +158,7 @@ func TestMsgUnredeemVouchers(t *testing.T) {
 			}
 
 			// Compare balance
-			unredeemed, err := types.SharesToVouchers(tc.msg.Shares, tc.msg.CampaignID)
+			unredeemed, err := types.SharesToVouchers(tc.msg.Shares, tc.msg.ProjectID)
 			require.NoError(t, err)
 			balance := tk.BankKeeper.GetAllBalances(sdkCtx, accountAddr)
 			require.True(t, balance.IsEqual(previousBalance.Add(unredeemed...)))

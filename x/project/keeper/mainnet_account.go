@@ -12,7 +12,7 @@ func (k Keeper) SetMainnetAccount(ctx sdk.Context, mainnetAccount types.MainnetA
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetAccountKeyPrefix))
 	b := k.cdc.MustMarshal(&mainnetAccount)
 	store.Set(types.AccountKeyPath(
-		mainnetAccount.CampaignID,
+		mainnetAccount.ProjectID,
 		mainnetAccount.Address,
 	), b)
 }
@@ -20,12 +20,12 @@ func (k Keeper) SetMainnetAccount(ctx sdk.Context, mainnetAccount types.MainnetA
 // GetMainnetAccount returns a mainnetAccount from its index
 func (k Keeper) GetMainnetAccount(
 	ctx sdk.Context,
-	campaignID uint64,
+	projectID uint64,
 	address string,
 ) (val types.MainnetAccount, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetAccountKeyPrefix))
 
-	b := store.Get(types.AccountKeyPath(campaignID, address))
+	b := store.Get(types.AccountKeyPath(projectID, address))
 	if b == nil {
 		return val, false
 	}
@@ -37,12 +37,12 @@ func (k Keeper) GetMainnetAccount(
 // RemoveMainnetAccount removes a mainnetAccount from the store
 func (k Keeper) RemoveMainnetAccount(
 	ctx sdk.Context,
-	campaignID uint64,
+	projectID uint64,
 	address string,
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.MainnetAccountKeyPrefix))
 	store.Delete(types.AccountKeyPath(
-		campaignID,
+		projectID,
 		address,
 	))
 }

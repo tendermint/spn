@@ -15,9 +15,9 @@ import (
 func (k msgServer) UpdateSpecialAllocations(goCtx context.Context, msg *types.MsgUpdateSpecialAllocations) (*types.MsgUpdateSpecialAllocationsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
+	project, found := k.GetProject(ctx, msg.ProjectID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrProjectNotFound, "%d", msg.ProjectID)
 	}
 
 	// get the coordinator ID associated to the sender address
@@ -26,50 +26,50 @@ func (k msgServer) UpdateSpecialAllocations(goCtx context.Context, msg *types.Ms
 		return nil, err
 	}
 
-	if campaign.CoordinatorID != coordID {
+	if project.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the campaign is %d",
-			campaign.CoordinatorID,
+			"coordinator of the project is %d",
+			project.CoordinatorID,
 		))
 	}
 
 	// verify mainnet launch is not triggered
-	mainnetLaunched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+	mainnetLaunched, err := k.IsProjectMainnetLaunchTriggered(ctx, project.ProjectID)
 	if err != nil {
 		return nil, ignterrors.Critical(err.Error())
 	}
 	if mainnetLaunched {
 		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
 			"mainnet %d launch is already triggered",
-			campaign.MainnetID,
+			project.MainnetID,
 		))
 	}
 
 	// decrease allocated shares from current special allocations
-	campaign.AllocatedShares, err = types.DecreaseShares(campaign.AllocatedShares, campaign.SpecialAllocations.TotalShares())
+	project.AllocatedShares, err = types.DecreaseShares(project.AllocatedShares, project.SpecialAllocations.TotalShares())
 	if err != nil {
-		return nil, ignterrors.Critical("campaign allocated shares should be bigger than current special allocations" + err.Error())
+		return nil, ignterrors.Critical("project allocated shares should be bigger than current special allocations" + err.Error())
 	}
 
 	// increase with new special allocations
-	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.SpecialAllocations.TotalShares())
+	project.AllocatedShares = types.IncreaseShares(project.AllocatedShares, msg.SpecialAllocations.TotalShares())
 
-	// increase the campaign shares
-	reached, err := types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx))
+	// increase the project shares
+	reached, err := types.IsTotalSharesReached(project.AllocatedShares, k.GetTotalShares(ctx))
 	if err != nil {
 		return nil, ignterrors.Criticalf("verified shares are invalid %s", err.Error())
 	}
 	if reached {
-		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.ProjectID)
 	}
 
-	campaign.SpecialAllocations = msg.SpecialAllocations
-	k.SetCampaign(ctx, campaign)
+	project.SpecialAllocations = msg.SpecialAllocations
+	k.SetProject(ctx, project)
 	err = ctx.EventManager().EmitTypedEvents(
-		&types.EventCampaignSharesUpdated{
-			CampaignID:         campaign.CampaignID,
+		&types.EventProjectSharesUpdated{
+			ProjectID:         project.ProjectID,
 			CoordinatorAddress: msg.Coordinator,
-			AllocatedShares:    campaign.AllocatedShares,
+			AllocatedShares:    project.AllocatedShares,
 		})
 	return &types.MsgUpdateSpecialAllocationsResponse{}, err
 }

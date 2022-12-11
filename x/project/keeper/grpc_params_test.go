@@ -14,15 +14,15 @@ import (
 func TestParamsQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	params := sample.CampaignParams(r)
+	params := sample.ProjectParams(r)
 
 	t.Run("should allow query for params", func(t *testing.T) {
-		tk.CampaignKeeper.SetParams(ctx, params)
-		response, err := tk.CampaignKeeper.Params(wctx, &types.QueryParamsRequest{})
+		tk.ProjectKeeper.SetParams(ctx, params)
+		response, err := tk.ProjectKeeper.Params(wctx, &types.QueryParamsRequest{})
 		require.NoError(t, err)
 		require.Equal(t, &types.QueryParamsResponse{Params: params}, response)
 
-		_, err = tk.CampaignKeeper.Params(wctx, nil)
+		_, err = tk.ProjectKeeper.Params(wctx, nil)
 		require.Error(t, err)
 	})
 }

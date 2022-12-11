@@ -13,11 +13,11 @@ import (
 
 func CmdBurnVouchers() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "burn-vouchers [campaign-id] [vouchers]",
-		Short: "Burn vouchers and decrease allocated shares of the campaign",
+		Use:   "burn-vouchers [project-id] [vouchers]",
+		Short: "Burn vouchers and decrease allocated shares of the project",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			campaignID, err := cast.ToUint64E(args[0])
+			projectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
@@ -34,7 +34,7 @@ func CmdBurnVouchers() *cobra.Command {
 
 			msg := types.NewMsgBurnVouchers(
 				clientCtx.GetFromAddress().String(),
-				campaignID,
+				projectID,
 				vouchers,
 			)
 			if err := msg.ValidateBasic(); err != nil {

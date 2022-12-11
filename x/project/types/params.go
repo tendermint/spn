@@ -14,11 +14,11 @@ import (
 var (
 	DefaultMinTotalSupply             = sdkmath.NewInt(100)                   // One hundred
 	DefaultMaxTotalSupply             = sdkmath.NewInt(1_000_000_000_000_000) // One Quadrillion
-	DefaultCampaignCreationFee        = sdk.Coins(nil)                        // EmptyCoins
+	DefaultProjectCreationFee        = sdk.Coins(nil)                        // EmptyCoins
 	DefaultMaxMetadataLength   uint64 = 2000
 
 	KeyTotalSupplyRange    = []byte("TotalSupplyRange")
-	KeyCampaignCreationFee = []byte("CampaignCreationFee")
+	KeyProjectCreationFee = []byte("ProjectCreationFee")
 	KeyMaxMetadataLength   = []byte("MaxMetadataLength")
 )
 
@@ -39,22 +39,22 @@ func NewTotalSupplyRange(minTotalSupply, maxTotalSupply sdkmath.Int) TotalSupply
 func NewParams(
 	minTotalSupply,
 	maxTotalSupply sdkmath.Int,
-	campaignCreationFee sdk.Coins,
+	projectCreationFee sdk.Coins,
 	maxMetadataLength uint64,
 ) Params {
 	return Params{
 		TotalSupplyRange:    NewTotalSupplyRange(minTotalSupply, maxTotalSupply),
-		CampaignCreationFee: campaignCreationFee,
+		ProjectCreationFee: projectCreationFee,
 		MaxMetadataLength:   maxMetadataLength,
 	}
 }
 
-// DefaultParams returns default campaign parameters
+// DefaultParams returns default project parameters
 func DefaultParams() Params {
 	return NewParams(
 		DefaultMinTotalSupply,
 		DefaultMaxTotalSupply,
-		DefaultCampaignCreationFee,
+		DefaultProjectCreationFee,
 		DefaultMaxMetadataLength,
 	)
 }
@@ -69,12 +69,12 @@ func (p Params) String() string {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyTotalSupplyRange, &p.TotalSupplyRange, validateTotalSupplyRange),
-		paramtypes.NewParamSetPair(KeyCampaignCreationFee, &p.CampaignCreationFee, validateCampaignCreationFee),
+		paramtypes.NewParamSetPair(KeyProjectCreationFee, &p.ProjectCreationFee, validateProjectCreationFee),
 		paramtypes.NewParamSetPair(KeyMaxMetadataLength, &p.MaxMetadataLength, validateMaxMetadataLength),
 	}
 }
 
-// ValidateBasic performs basic validation on campaign parameters.
+// ValidateBasic performs basic validation on project parameters.
 func (p Params) ValidateBasic() error {
 	if err := validateTotalSupplyRange(p.TotalSupplyRange); err != nil {
 		return err
@@ -84,7 +84,7 @@ func (p Params) ValidateBasic() error {
 		return err
 	}
 
-	return p.CampaignCreationFee.Validate()
+	return p.ProjectCreationFee.Validate()
 }
 
 func validateTotalSupplyRange(i interface{}) error {
@@ -98,7 +98,7 @@ func validateTotalSupplyRange(i interface{}) error {
 	return nil
 }
 
-func validateCampaignCreationFee(i interface{}) error {
+func validateProjectCreationFee(i interface{}) error {
 	v, ok := i.(sdk.Coins)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)

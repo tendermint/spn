@@ -9,32 +9,32 @@ import (
 	"github.com/stretchr/testify/require"
 
 	tc "github.com/tendermint/spn/testutil/constructor"
-	campaign "github.com/tendermint/spn/x/project/types"
+	project "github.com/tendermint/spn/x/project/types"
 )
 
 var (
-	voucherCampaignID  = uint64(10)
-	prefixedVoucherFoo = campaign.VoucherDenom(voucherCampaignID, "foo")
-	prefixedVoucherBar = campaign.VoucherDenom(voucherCampaignID, "bar")
+	voucherProjectID  = uint64(10)
+	prefixedVoucherFoo = project.VoucherDenom(voucherProjectID, "foo")
+	prefixedVoucherBar = project.VoucherDenom(voucherProjectID, "bar")
 )
 
 func TestCheckVouchers(t *testing.T) {
 	tests := []struct {
 		name       string
-		campaignID uint64
+		projectID uint64
 		vouchers   sdk.Coins
 		err        error
 	}{
 		{
 			name:       "should allow check with one valid coin",
-			campaignID: voucherCampaignID,
+			projectID: voucherProjectID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 			),
 		},
 		{
 			name:       "should allow check with two valid coins",
-			campaignID: voucherCampaignID,
+			projectID: voucherProjectID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 				sdk.NewCoin(prefixedVoucherBar, sdkmath.NewInt(200)),
@@ -42,7 +42,7 @@ func TestCheckVouchers(t *testing.T) {
 		},
 		{
 			name:       "should prevent check with one valid and one invalid coins",
-			campaignID: voucherCampaignID,
+			projectID: voucherProjectID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(100)),
 				sdk.NewCoin("foo", sdkmath.NewInt(200)),
@@ -51,15 +51,15 @@ func TestCheckVouchers(t *testing.T) {
 		},
 		{
 			name:       "should prevent check with one invalid coin",
-			campaignID: voucherCampaignID,
+			projectID: voucherProjectID,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin("foo", sdkmath.NewInt(200)),
 			),
 			err: errors.New("foo doesn't contain the voucher prefix v/10/"),
 		},
 		{
-			name:       "should prevent check with invalid campaign id",
-			campaignID: 1000,
+			name:       "should prevent check with invalid project id",
+			projectID: 1000,
 			vouchers: sdk.NewCoins(
 				sdk.NewCoin(prefixedVoucherFoo, sdkmath.NewInt(200)),
 			),
@@ -68,7 +68,7 @@ func TestCheckVouchers(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := campaign.CheckVouchers(tt.vouchers, tt.campaignID)
+			err := project.CheckVouchers(tt.vouchers, tt.projectID)
 			if tt.err != nil {
 				require.Error(t, err)
 				require.Equal(t, tt.err, err)
@@ -82,33 +82,33 @@ func TestCheckVouchers(t *testing.T) {
 func TestSharesToVouchers(t *testing.T) {
 	tests := []struct {
 		name       string
-		campaignID uint64
-		shares     campaign.Shares
+		projectID uint64
+		shares     project.Shares
 		want       sdk.Coins
 		err        error
 	}{
 		{
 			name:       "should validate with one valid share",
-			campaignID: voucherCampaignID,
+			projectID: voucherProjectID,
 			shares:     tc.Shares(t, "10foo"),
-			want:       tc.Vouchers(t, "10foo", voucherCampaignID),
+			want:       tc.Vouchers(t, "10foo", voucherProjectID),
 		},
 		{
 			name:       "should validate with two valid shares",
-			campaignID: voucherCampaignID,
+			projectID: voucherProjectID,
 			shares:     tc.Shares(t, "10foo,11bar"),
-			want:       tc.Vouchers(t, "10foo,11bar", voucherCampaignID),
+			want:       tc.Vouchers(t, "10foo,11bar", voucherProjectID),
 		},
 		{
 			name:       "should prevent validation with invalid share prefix",
-			campaignID: 1000,
-			shares:     campaign.Shares(tc.Coins(t, "10t/foo")),
+			projectID: 1000,
+			shares:     project.Shares(tc.Coins(t, "10t/foo")),
 			err:        errors.New("t/foo doesn't contain the share prefix s/"),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := campaign.SharesToVouchers(tt.shares, tt.campaignID)
+			got, err := project.SharesToVouchers(tt.shares, tt.projectID)
 			if tt.err != nil {
 				require.Error(t, err)
 				require.Equal(t, tt.err, err)
@@ -123,32 +123,32 @@ func TestSharesToVouchers(t *testing.T) {
 func TestVoucherName(t *testing.T) {
 	tests := []struct {
 		name       string
-		campaignID uint64
+		projectID uint64
 		coin       string
 		want       string
 	}{
 		{
 			name:       "should prepend to 10/foo",
-			campaignID: 10,
+			projectID: 10,
 			coin:       "foo",
 			want:       "v/10/foo",
 		},
 		{
 			name:       "should prepend to 0/foo",
-			campaignID: 0,
+			projectID: 0,
 			coin:       "foo",
 			want:       "v/0/foo",
 		},
 		{
 			name:       "should prepend to empty denom",
-			campaignID: 10,
+			projectID: 10,
 			coin:       "",
 			want:       "v/10/",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := campaign.VoucherDenom(tt.campaignID, tt.coin)
+			got := project.VoucherDenom(tt.projectID, tt.coin)
 			require.Equal(t, tt.want, got)
 		})
 	}
@@ -157,26 +157,26 @@ func TestVoucherName(t *testing.T) {
 func TestVouchersToShares(t *testing.T) {
 	tests := []struct {
 		name       string
-		campaignID uint64
+		projectID uint64
 		vouchers   sdk.Coins
-		want       campaign.Shares
+		want       project.Shares
 		err        error
 	}{
 		{
 			name:       "should convert one voucher",
-			campaignID: voucherCampaignID,
-			vouchers:   tc.Vouchers(t, "10foo", voucherCampaignID),
+			projectID: voucherProjectID,
+			vouchers:   tc.Vouchers(t, "10foo", voucherProjectID),
 			want:       tc.Shares(t, "10foo"),
 		},
 		{
 			name:       "should convert two vouchers",
-			campaignID: voucherCampaignID,
-			vouchers:   tc.Vouchers(t, "10foo,11bar", voucherCampaignID),
+			projectID: voucherProjectID,
+			vouchers:   tc.Vouchers(t, "10foo,11bar", voucherProjectID),
 			want:       tc.Shares(t, "10foo,11bar"),
 		},
 		{
-			name:       "should fail with wrong campaign id",
-			campaignID: 1000,
+			name:       "should fail with wrong project id",
+			projectID: 1000,
 			// use old coin syntax to write incorrect coins
 			vouchers: tc.Coins(t, "10v/10/bar,11v/10/foo"),
 			err:      errors.New("v/10/bar doesn't contain the voucher prefix v/1000/"),
@@ -184,7 +184,7 @@ func TestVouchersToShares(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := campaign.VouchersToShares(tt.vouchers, tt.campaignID)
+			got, err := project.VouchersToShares(tt.vouchers, tt.projectID)
 			if tt.err != nil {
 				require.Error(t, err)
 				require.Equal(t, tt.err, err)
@@ -199,54 +199,54 @@ func TestVouchersToShares(t *testing.T) {
 func TestVoucherToShareDenom(t *testing.T) {
 	tests := []struct {
 		name       string
-		campaignID uint64
+		projectID uint64
 		denom      string
 		want       string
 	}{
 		{
 			name:       "should convert foo voucher",
-			campaignID: 10,
+			projectID: 10,
 			denom:      prefixedVoucherFoo,
 			want:       prefixedShareFoo,
 		},
 		{
 			name:       "should convert bar voucher",
-			campaignID: 10,
+			projectID: 10,
 			denom:      prefixedVoucherBar,
 			want:       prefixedShareBar,
 		},
 		{
 			name:       "should prepend to invalid voucher",
-			campaignID: 10,
+			projectID: 10,
 			denom:      "t/bar",
 			want:       "s/t/bar",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := campaign.VoucherToShareDenom(tt.campaignID, tt.denom)
+			got := project.VoucherToShareDenom(tt.projectID, tt.denom)
 			require.Equal(t, tt.want, got)
 		})
 	}
 }
 
-func TestVoucherCampaign(t *testing.T) {
+func TestVoucherProject(t *testing.T) {
 	tests := []struct {
 		name       string
 		denom      string
-		campaignID uint64
+		projectID uint64
 		valid      bool
 	}{
 		{
-			name:       "should allow with campaign 0",
+			name:       "should allow with project 0",
 			denom:      "v/0/foo",
-			campaignID: uint64(0),
+			projectID: uint64(0),
 			valid:      true,
 		},
 		{
-			name:       "should allow with campaign 50",
+			name:       "should allow with project 50",
 			denom:      "v/50/bar",
-			campaignID: uint64(50),
+			projectID: uint64(50),
 			valid:      true,
 		},
 		{
@@ -260,12 +260,12 @@ func TestVoucherCampaign(t *testing.T) {
 			valid: false,
 		},
 		{
-			name:  "should fail when campaign ID is not a number",
+			name:  "should fail when project ID is not a number",
 			denom: "v/foo/foo",
 			valid: false,
 		},
 		{
-			name:  "should fail with empty campaign ID",
+			name:  "should fail with empty project ID",
 			denom: "v//foo",
 			valid: false,
 		},
@@ -278,13 +278,13 @@ func TestVoucherCampaign(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			campaignID, err := campaign.VoucherCampaign(tt.denom)
+			projectID, err := project.VoucherProject(tt.denom)
 			if !tt.valid {
 				require.Error(t, err)
 				return
 			}
 			require.NoError(t, err)
-			require.EqualValues(t, tt.campaignID, campaignID)
+			require.EqualValues(t, tt.projectID, projectID)
 		})
 	}
 }

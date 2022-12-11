@@ -12,11 +12,11 @@ import (
 
 func CmdMintVouchers() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "mint-vouchers [campaign-id] [shares]",
-		Short: "Mint vouchers from campaign shares",
+		Use:   "mint-vouchers [project-id] [shares]",
+		Short: "Mint vouchers from project shares",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			campaignID, err := cast.ToUint64E(args[0])
+			projectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
@@ -33,7 +33,7 @@ func CmdMintVouchers() *cobra.Command {
 
 			msg := types.NewMsgMintVouchers(
 				clientCtx.GetFromAddress().String(),
-				campaignID,
+				projectID,
 				shares,
 			)
 			if err := msg.ValidateBasic(); err != nil {

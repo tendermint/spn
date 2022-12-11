@@ -13,8 +13,8 @@ func TestMaximumSharesGet(t *testing.T) {
 	value := uint64(10)
 
 	t.Run("should get total shares", func(t *testing.T) {
-		tk.CampaignKeeper.SetTotalShares(ctx, value)
-		got := tk.CampaignKeeper.GetTotalShares(ctx)
+		tk.ProjectKeeper.SetTotalShares(ctx, value)
+		got := tk.ProjectKeeper.GetTotalShares(ctx)
 		require.Equal(t, value, got)
 	})
 }

@@ -10,10 +10,10 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-// GetCampaignCounter get the counter for campaign
-func (k Keeper) GetCampaignCounter(ctx sdk.Context) uint64 {
+// GetProjectCounter get the counter for project
+func (k Keeper) GetProjectCounter(ctx sdk.Context) uint64 {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
-	byteKey := types.KeyPrefix(types.CampaignCounterKey)
+	byteKey := types.KeyPrefix(types.ProjectCounterKey)
 	bz := store.Get(byteKey)
 
 	// Count doesn't exist: no element
@@ -25,44 +25,44 @@ func (k Keeper) GetCampaignCounter(ctx sdk.Context) uint64 {
 	return binary.BigEndian.Uint64(bz)
 }
 
-// SetCampaignCounter set the counter for campaign
-func (k Keeper) SetCampaignCounter(ctx sdk.Context, counter uint64) {
+// SetProjectCounter set the counter for project
+func (k Keeper) SetProjectCounter(ctx sdk.Context, counter uint64) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte{})
-	byteKey := types.KeyPrefix(types.CampaignCounterKey)
+	byteKey := types.KeyPrefix(types.ProjectCounterKey)
 	bz := make([]byte, 8)
 	binary.BigEndian.PutUint64(bz, counter)
 	store.Set(byteKey, bz)
 }
 
-// AppendCampaign appends a campaign in the store with a new id and update the count
-func (k Keeper) AppendCampaign(ctx sdk.Context, campaign types.Campaign) uint64 {
-	// Create the campaign
-	counter := k.GetCampaignCounter(ctx)
+// AppendProject appends a project in the store with a new id and update the count
+func (k Keeper) AppendProject(ctx sdk.Context, project types.Project) uint64 {
+	// Create the project
+	counter := k.GetProjectCounter(ctx)
 
 	// Set the ID of the appended value
-	campaign.CampaignID = counter
+	project.ProjectID = counter
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
-	appendedValue := k.cdc.MustMarshal(&campaign)
-	store.Set(GetCampaignIDBytes(campaign.CampaignID), appendedValue)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProjectKey))
+	appendedValue := k.cdc.MustMarshal(&project)
+	store.Set(GetProjectIDBytes(project.ProjectID), appendedValue)
 
-	// Update campaign count
-	k.SetCampaignCounter(ctx, counter+1)
+	// Update project count
+	k.SetProjectCounter(ctx, counter+1)
 
 	return counter
 }
 
-// SetCampaign set a specific campaign in the store
-func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
-	b := k.cdc.MustMarshal(&campaign)
-	store.Set(GetCampaignIDBytes(campaign.CampaignID), b)
+// SetProject set a specific project in the store
+func (k Keeper) SetProject(ctx sdk.Context, project types.Project) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProjectKey))
+	b := k.cdc.MustMarshal(&project)
+	store.Set(GetProjectIDBytes(project.ProjectID), b)
 }
 
-// GetCampaign returns a campaign from its id
-func (k Keeper) GetCampaign(ctx sdk.Context, id uint64) (val types.Campaign, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
-	b := store.Get(GetCampaignIDBytes(id))
+// GetProject returns a project from its id
+func (k Keeper) GetProject(ctx sdk.Context, id uint64) (val types.Project, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProjectKey))
+	b := store.Get(GetProjectIDBytes(id))
 	if b == nil {
 		return val, false
 	}
@@ -70,21 +70,21 @@ func (k Keeper) GetCampaign(ctx sdk.Context, id uint64) (val types.Campaign, fou
 	return val, true
 }
 
-// RemoveCampaign removes a campaign from the store
-func (k Keeper) RemoveCampaign(ctx sdk.Context, id uint64) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
-	store.Delete(GetCampaignIDBytes(id))
+// RemoveProject removes a project from the store
+func (k Keeper) RemoveProject(ctx sdk.Context, id uint64) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProjectKey))
+	store.Delete(GetProjectIDBytes(id))
 }
 
-// GetAllCampaign returns all campaign
-func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignKey))
+// GetAllProject returns all project
+func (k Keeper) GetAllProject(ctx sdk.Context) (list []types.Project) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProjectKey))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.Campaign
+		var val types.Project
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
@@ -92,7 +92,7 @@ func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
 	return
 }
 
-// GetCampaignIDBytes returns the byte representation of the ID
-func GetCampaignIDBytes(id uint64) []byte {
+// GetProjectIDBytes returns the byte representation of the ID
+func GetProjectIDBytes(id uint64) []byte {
 	return spntypes.UintBytes(id)
 }

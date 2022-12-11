@@ -11,26 +11,26 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func CmdShowCampaignChains() *cobra.Command {
+func CmdShowProjectChains() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-campaign-chains [campaign-id]",
-		Short: "List all chains of a campaign",
+		Use:   "list-project-chains [project-id]",
+		Short: "List all chains of a project",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsCampaignID, err := cast.ToUint64E(args[0])
+			argsProjectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
 
-			params := &types.QueryGetCampaignChainsRequest{
-				CampaignID: argsCampaignID,
+			params := &types.QueryGetProjectChainsRequest{
+				ProjectID: argsProjectID,
 			}
 
-			res, err := queryClient.CampaignChains(context.Background(), params)
+			res, err := queryClient.ProjectChains(context.Background(), params)
 			if err != nil {
 				return err
 			}

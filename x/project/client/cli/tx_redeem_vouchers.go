@@ -15,11 +15,11 @@ const flagAccount = "account"
 
 func CmdRedeemVouchers() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "redeem-vouchers [campaign-id] [vouchers]",
-		Short: "Redeem vouchers and allocate shares for an account in the mainnet of the campaign",
+		Use:   "redeem-vouchers [project-id] [vouchers]",
+		Short: "Redeem vouchers and allocate shares for an account in the mainnet of the project",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			campaignID, err := cast.ToUint64E(args[0])
+			projectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
@@ -46,7 +46,7 @@ func CmdRedeemVouchers() *cobra.Command {
 			msg := types.NewMsgRedeemVouchers(
 				clientCtx.GetFromAddress().String(),
 				account,
-				campaignID,
+				projectID,
 				vouchers,
 			)
 			if err := msg.ValidateBasic(); err != nil {

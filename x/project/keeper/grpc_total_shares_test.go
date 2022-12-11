@@ -17,7 +17,7 @@ func TestTotalSharesQuery(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
 
-	tk.CampaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
+	tk.ProjectKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
 
 	for _, tc := range []struct {
 		desc     string
@@ -36,7 +36,7 @@ func TestTotalSharesQuery(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := tk.CampaignKeeper.TotalShares(wctx, tc.request)
+			response, err := tk.ProjectKeeper.TotalShares(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

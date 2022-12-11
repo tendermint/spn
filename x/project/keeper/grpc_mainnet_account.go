@@ -21,7 +21,7 @@ func (k Keeper) MainnetAccountAll(c context.Context, req *types.QueryAllMainnetA
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	mainnetAccountStore := prefix.NewStore(store, types.MainnetAccountAllKey(req.CampaignID))
+	mainnetAccountStore := prefix.NewStore(store, types.MainnetAccountAllKey(req.ProjectID))
 
 	pageRes, err := query.Paginate(mainnetAccountStore, req.Pagination, func(key []byte, value []byte) error {
 		var mainnetAccount types.MainnetAccount
@@ -45,7 +45,7 @@ func (k Keeper) MainnetAccount(c context.Context, req *types.QueryGetMainnetAcco
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetMainnetAccount(ctx, req.CampaignID, req.Address)
+	val, found := k.GetMainnetAccount(ctx, req.ProjectID, req.Address)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
@@ -61,16 +61,16 @@ func (k Keeper) MainnetAccountBalanceAll(c context.Context, req *types.QueryAllM
 	var mainnetAccountBalances []types.MainnetAccountBalance
 	ctx := sdk.UnwrapSDKContext(c)
 
-	// get campaign and share information
+	// get project and share information
 	totalShareNumber := k.GetTotalShares(ctx)
-	campaign, found := k.GetCampaign(ctx, req.CampaignID)
+	project, found := k.GetProject(ctx, req.ProjectID)
 	if !found {
-		return nil, status.Error(codes.NotFound, "campaign not found")
+		return nil, status.Error(codes.NotFound, "project not found")
 	}
 
 	// iterate accounts
 	store := ctx.KVStore(k.storeKey)
-	mainnetAccountStore := prefix.NewStore(store, types.MainnetAccountAllKey(req.CampaignID))
+	mainnetAccountStore := prefix.NewStore(store, types.MainnetAccountAllKey(req.ProjectID))
 
 	pageRes, err := query.Paginate(mainnetAccountStore, req.Pagination, func(key []byte, value []byte) error {
 		var acc types.MainnetAccount
@@ -78,7 +78,7 @@ func (k Keeper) MainnetAccountBalanceAll(c context.Context, req *types.QueryAllM
 			return err
 		}
 
-		balance, err := acc.Shares.CoinsFromTotalSupply(campaign.TotalSupply, totalShareNumber)
+		balance, err := acc.Shares.CoinsFromTotalSupply(project.TotalSupply, totalShareNumber)
 		if err != nil {
 			return status.Errorf(codes.Internal, "balance can't be calculated for account %s: %s", acc.Address, err.Error())
 		}
@@ -86,7 +86,7 @@ func (k Keeper) MainnetAccountBalanceAll(c context.Context, req *types.QueryAllM
 		// add the balance if not zero
 		if !balance.IsZero() {
 			mainnetAccountBalance := types.MainnetAccountBalance{
-				CampaignID: acc.CampaignID,
+				ProjectID: acc.ProjectID,
 				Address:    acc.Address,
 				Coins:      balance,
 			}
@@ -108,26 +108,26 @@ func (k Keeper) MainnetAccountBalance(c context.Context, req *types.QueryGetMain
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	// get campaign and share information
+	// get project and share information
 	totalShareNumber := k.GetTotalShares(ctx)
-	campaign, found := k.GetCampaign(ctx, req.CampaignID)
+	project, found := k.GetProject(ctx, req.ProjectID)
 	if !found {
-		return nil, status.Error(codes.NotFound, "campaign not found")
+		return nil, status.Error(codes.NotFound, "project not found")
 	}
 
 	// get account balance
-	acc, found := k.GetMainnetAccount(ctx, req.CampaignID, req.Address)
+	acc, found := k.GetMainnetAccount(ctx, req.ProjectID, req.Address)
 	if !found {
 		return nil, status.Error(codes.NotFound, "account not found")
 	}
 
-	balance, err := acc.Shares.CoinsFromTotalSupply(campaign.TotalSupply, totalShareNumber)
+	balance, err := acc.Shares.CoinsFromTotalSupply(project.TotalSupply, totalShareNumber)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "balance can't be calculated: %s", err.Error())
 	}
 
 	mainnetAccountBalance := types.MainnetAccountBalance{
-		CampaignID: acc.CampaignID,
+		ProjectID: acc.ProjectID,
 		Address:    acc.Address,
 		Coins:      balance,
 	}

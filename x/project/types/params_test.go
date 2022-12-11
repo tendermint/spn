@@ -22,7 +22,7 @@ func TestParamsValidateBasic(t *testing.T) {
 			params: NewParams(
 				DefaultMinTotalSupply,
 				DefaultMaxTotalSupply,
-				DefaultCampaignCreationFee,
+				DefaultProjectCreationFee,
 				DefaultMaxMetadataLength,
 			),
 		},
@@ -31,7 +31,7 @@ func TestParamsValidateBasic(t *testing.T) {
 			params: NewParams(
 				sdkmath.ZeroInt(),
 				DefaultMaxTotalSupply,
-				DefaultCampaignCreationFee,
+				DefaultProjectCreationFee,
 				DefaultMaxMetadataLength,
 			),
 			err: errors.New("minimum total supply should be greater than one: invalid total supply range"),
@@ -41,13 +41,13 @@ func TestParamsValidateBasic(t *testing.T) {
 			params: NewParams(
 				DefaultMaxTotalSupply,
 				DefaultMinTotalSupply,
-				DefaultCampaignCreationFee,
+				DefaultProjectCreationFee,
 				DefaultMaxMetadataLength,
 			),
 			err: errors.New("maximum total supply should be greater or equal than minimum total supply: invalid total supply range"),
 		},
 		{
-			name: "should prevent validate invalid coins for campaign creation fee",
+			name: "should prevent validate invalid coins for project creation fee",
 			params: NewParams(
 				DefaultMinTotalSupply,
 				DefaultMaxTotalSupply,
@@ -110,7 +110,7 @@ func TestValidateTotalSupplyRange(t *testing.T) {
 	}
 }
 
-func TestValidateCampaignCreationFee(t *testing.T) {
+func TestValidateProjectCreationFee(t *testing.T) {
 	tests := []struct {
 		name        string
 		creationFee interface{}
@@ -128,7 +128,7 @@ func TestValidateCampaignCreationFee(t *testing.T) {
 		},
 		{
 			name:        "valid empty param",
-			creationFee: DefaultCampaignCreationFee,
+			creationFee: DefaultProjectCreationFee,
 		},
 		{
 			name: "valid param",
@@ -140,7 +140,7 @@ func TestValidateCampaignCreationFee(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := validateCampaignCreationFee(tt.creationFee)
+			err := validateProjectCreationFee(tt.creationFee)
 			if tt.err != nil {
 				require.Error(t, err, tt.err)
 				require.Equal(t, err, tt.err)

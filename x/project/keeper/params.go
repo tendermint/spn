@@ -11,12 +11,12 @@ func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
 		k.TotalSupplyRange(ctx).MinTotalSupply,
 		k.TotalSupplyRange(ctx).MaxTotalSupply,
-		k.CampaignCreationFee(ctx),
+		k.ProjectCreationFee(ctx),
 		k.MaxMetadataLength(ctx),
 	)
 }
 
-// SetParams sets the campaign parameters to the param space.
+// SetParams sets the project parameters to the param space.
 func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramSpace.SetParamSet(ctx, &params)
 }
@@ -27,9 +27,9 @@ func (k Keeper) TotalSupplyRange(ctx sdk.Context) (totalSupplyRange types.TotalS
 	return
 }
 
-// CampaignCreationFee returns the campaign creation fee param
-func (k Keeper) CampaignCreationFee(ctx sdk.Context) (campaignCreationFee sdk.Coins) {
-	k.paramSpace.Get(ctx, types.KeyCampaignCreationFee, &campaignCreationFee)
+// ProjectCreationFee returns the project creation fee param
+func (k Keeper) ProjectCreationFee(ctx sdk.Context) (projectCreationFee sdk.Coins) {
+	k.paramSpace.Get(ctx, types.KeyProjectCreationFee, &projectCreationFee)
 	return
 }
 

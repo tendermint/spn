@@ -8,21 +8,21 @@ import (
 )
 
 const (
-	CampaignNameMaxLength = 50
+	ProjectNameMaxLength = 50
 )
 
-// NewCampaign returns a new initialized campaign
-func NewCampaign(
-	campaignID uint64,
-	campaignName string,
+// NewProject returns a new initialized project
+func NewProject(
+	projectID uint64,
+	projectName string,
 	coordinatorID uint64,
 	totalSupply sdk.Coins,
 	metadata []byte,
 	createdAt int64,
-) Campaign {
-	return Campaign{
-		CampaignID:         campaignID,
-		CampaignName:       campaignName,
+) Project {
+	return Project{
+		ProjectID:         projectID,
+		ProjectName:       projectName,
 		CoordinatorID:      coordinatorID,
 		MainnetInitialized: false,
 		TotalSupply:        totalSupply,
@@ -33,9 +33,9 @@ func NewCampaign(
 	}
 }
 
-// Validate checks the campaign is valid
-func (m Campaign) Validate(totalShareNumber uint64) error {
-	if err := CheckCampaignName(m.CampaignName); err != nil {
+// Validate checks the project is valid
+func (m Project) Validate(totalShareNumber uint64) error {
+	if err := CheckProjectName(m.ProjectName); err != nil {
 		return err
 	}
 
@@ -58,27 +58,27 @@ func (m Campaign) Validate(totalShareNumber uint64) error {
 	return nil
 }
 
-// CheckCampaignName verifies the name is valid as a campaign name
-func CheckCampaignName(campaignName string) error {
-	if len(campaignName) == 0 {
-		return errors.New("campaign name can't be empty")
+// CheckProjectName verifies the name is valid as a project name
+func CheckProjectName(projectName string) error {
+	if len(projectName) == 0 {
+		return errors.New("project name can't be empty")
 	}
 
-	if len(campaignName) > CampaignNameMaxLength {
-		return fmt.Errorf("campaign name is too big, max length is %d", CampaignNameMaxLength)
+	if len(projectName) > ProjectNameMaxLength {
+		return fmt.Errorf("project name is too big, max length is %d", ProjectNameMaxLength)
 	}
 
 	// Iterate characters
-	for _, c := range campaignName {
-		if !isCampaignAuthorizedChar(c) {
-			return errors.New("campaign name can only contain alphanumerical characters or hyphen")
+	for _, c := range projectName {
+		if !isProjectAuthorizedChar(c) {
+			return errors.New("project name can only contain alphanumerical characters or hyphen")
 		}
 	}
 
 	return nil
 }
 
-// isCampaignAuthorizedChar checks to ensure that all characters in the campaign name are valid
-func isCampaignAuthorizedChar(c rune) bool {
+// isProjectAuthorizedChar checks to ensure that all characters in the project name are valid
+func isProjectAuthorizedChar(c rune) bool {
 	return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '-'
 }

@@ -11,7 +11,7 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-func (k msgServer) EditCampaign(goCtx context.Context, msg *types.MsgEditCampaign) (*types.MsgEditCampaignResponse, error) {
+func (k msgServer) EditProject(goCtx context.Context, msg *types.MsgEditProject) (*types.MsgEditProjectResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// check if the metadata length is valid
@@ -24,9 +24,9 @@ func (k msgServer) EditCampaign(goCtx context.Context, msg *types.MsgEditCampaig
 		)
 	}
 
-	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
+	project, found := k.GetProject(ctx, msg.ProjectID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrProjectNotFound, "%d", msg.ProjectID)
 	}
 
 	// Get the coordinator ID associated to the sender address
@@ -35,29 +35,29 @@ func (k msgServer) EditCampaign(goCtx context.Context, msg *types.MsgEditCampaig
 		return nil, err
 	}
 
-	if campaign.CoordinatorID != coordID {
+	if project.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the campaign is %d",
-			campaign.CoordinatorID,
+			"coordinator of the project is %d",
+			project.CoordinatorID,
 		))
 	}
 
 	if len(msg.Name) > 0 {
-		campaign.CampaignName = msg.Name
+		project.ProjectName = msg.Name
 	}
 
 	if len(msg.Metadata) > 0 {
-		campaign.Metadata = msg.Metadata
+		project.Metadata = msg.Metadata
 	}
 
-	k.SetCampaign(ctx, campaign)
+	k.SetProject(ctx, project)
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignInfoUpdated{
-		CampaignID:         campaign.CampaignID,
+	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectInfoUpdated{
+		ProjectID:         project.ProjectID,
 		CoordinatorAddress: msg.Coordinator,
-		CampaignName:       campaign.CampaignName,
-		Metadata:           campaign.Metadata,
+		ProjectName:       project.ProjectName,
+		Metadata:           project.Metadata,
 	})
 
-	return &types.MsgEditCampaignResponse{}, err
+	return &types.MsgEditProjectResponse{}, err
 }

@@ -14,24 +14,24 @@ import (
 func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVouchers) (*types.MsgRedeemVouchersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
+	project, found := k.GetProject(ctx, msg.ProjectID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrProjectNotFound, "%d", msg.ProjectID)
 	}
 
-	mainnetLaunched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+	mainnetLaunched, err := k.IsProjectMainnetLaunchTriggered(ctx, project.ProjectID)
 	if err != nil {
 		return nil, ignterrors.Critical(err.Error())
 	}
 	if mainnetLaunched {
 		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
 			"mainnet %d launch is already triggered",
-			campaign.MainnetID,
+			project.MainnetID,
 		))
 	}
 
 	// Convert and validate vouchers first
-	shares, err := types.VouchersToShares(msg.Vouchers, msg.CampaignID)
+	shares, err := types.VouchersToShares(msg.Vouchers, msg.ProjectID)
 	if err != nil {
 		return nil, ignterrors.Criticalf("verified voucher are invalid %s", err.Error())
 	}
@@ -49,11 +49,11 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 	}
 
 	// Check if the account already exists
-	account, found := k.GetMainnetAccount(ctx, msg.CampaignID, msg.Account)
+	account, found := k.GetMainnetAccount(ctx, msg.ProjectID, msg.Account)
 	if !found {
 		// If not, create the account
 		account = types.MainnetAccount{
-			CampaignID: campaign.CampaignID,
+			ProjectID: project.ProjectID,
 			Address:    msg.Account,
 			Shares:     types.EmptyShares(),
 		}
@@ -65,13 +65,13 @@ func (k msgServer) RedeemVouchers(goCtx context.Context, msg *types.MsgRedeemVou
 
 	if !found {
 		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountCreated{
-			CampaignID: account.CampaignID,
+			ProjectID: account.ProjectID,
 			Address:    account.Address,
 			Shares:     account.Shares,
 		})
 	} else {
 		err = ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{
-			CampaignID: account.CampaignID,
+			ProjectID: account.ProjectID,
 			Address:    account.Address,
 			Shares:     account.Shares,
 		})

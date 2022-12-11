@@ -38,10 +38,10 @@ func GetCoordSimAccount(
 	return simtypes.Account{}, 0, false
 }
 
-// GetCoordSimAccountWithCampaignID finds an account associated with a coordinator profile from simulation accounts
-// and a campaign created by this coordinator. The boolean flag `requireNoMainnetLaunchTriggered` is ignored if
+// GetCoordSimAccountWithProjectID finds an account associated with a coordinator profile from simulation accounts
+// and a project created by this coordinator. The boolean flag `requireNoMainnetLaunchTriggered` is ignored if
 // the flag `requireNoMainnetInitialized` is set to `true`
-func GetCoordSimAccountWithCampaignID(
+func GetCoordSimAccountWithProjectID(
 	r *rand.Rand,
 	ctx sdk.Context,
 	pk types.ProfileKeeper,
@@ -50,24 +50,24 @@ func GetCoordSimAccountWithCampaignID(
 	requireNoMainnetInitialized bool,
 	requireNoMainnetLaunchTriggered bool,
 ) (simtypes.Account, uint64, bool) {
-	campaigns := k.GetAllCampaign(ctx)
-	campNb := len(campaigns)
+	projects := k.GetAllProject(ctx)
+	campNb := len(projects)
 	if campNb == 0 {
 		return simtypes.Account{}, 0, false
 	}
 
 	r.Shuffle(campNb, func(i, j int) {
-		campaigns[i], campaigns[j] = campaigns[j], campaigns[i]
+		projects[i], projects[j] = projects[j], projects[i]
 	})
 
-	// select first campaign after shuffle
-	camp := campaigns[0]
-	// If a criteria is required for the campaign, we simply fetch the first one that satisfies the criteria
+	// select first project after shuffle
+	camp := projects[0]
+	// If a criteria is required for the project, we simply fetch the first one that satisfies the criteria
 	if requireNoMainnetInitialized {
 		var campFound bool
-		for _, campaign := range campaigns {
-			if !campaign.MainnetInitialized {
-				camp = campaign
+		for _, project := range projects {
+			if !project.MainnetInitialized {
+				camp = project
 				campFound = true
 				break
 			}
@@ -78,10 +78,10 @@ func GetCoordSimAccountWithCampaignID(
 	}
 	if !requireNoMainnetInitialized && requireNoMainnetLaunchTriggered {
 		var campFound bool
-		for _, campaign := range campaigns {
-			launched, _ := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+		for _, project := range projects {
+			launched, _ := k.IsProjectMainnetLaunchTriggered(ctx, project.ProjectID)
 			if !launched {
-				camp = campaign
+				camp = project
 				campFound = true
 				break
 			}
@@ -91,23 +91,23 @@ func GetCoordSimAccountWithCampaignID(
 		}
 	}
 
-	// Find the sim account of the campaign coordinator
+	// Find the sim account of the project coordinator
 	coord, found := pk.GetCoordinator(ctx, camp.CoordinatorID)
 	if !found {
 		return simtypes.Account{}, 0, false
 	}
 	for _, acc := range accs {
 		if acc.Address.String() == coord.Address && coord.Active {
-			return acc, camp.CampaignID, true
+			return acc, camp.ProjectID, true
 		}
 	}
 
 	return simtypes.Account{}, 0, false
 }
 
-// GetSharesFromCampaign returns a small portion of shares that can be minted as vouchers or added to an account
-func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campID uint64) (types.Shares, bool) {
-	camp, found := k.GetCampaign(ctx, campID)
+// GetSharesFromProject returns a small portion of shares that can be minted as vouchers or added to an account
+func GetSharesFromProject(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campID uint64) (types.Shares, bool) {
+	camp, found := k.GetProject(ctx, campID)
 	if !found {
 		return types.EmptyShares(), false
 	}
@@ -134,7 +134,7 @@ func GetSharesFromCampaign(r *rand.Rand, ctx sdk.Context, k keeper.Keeper, campI
 	return types.Shares(shares), true
 }
 
-// GetAccountWithVouchers returns an account that has vouchers for a campaign
+// GetAccountWithVouchers returns an account that has vouchers for a project
 func GetAccountWithVouchers(
 	r *rand.Rand,
 	ctx sdk.Context,
@@ -148,17 +148,17 @@ func GetAccountWithVouchers(
 
 	// Parse all account balances and find one with vouchers
 	bk.IterateAllBalances(ctx, func(addr sdk.AccAddress, coin sdk.Coin) bool {
-		campID, err = types.VoucherCampaign(coin.Denom)
+		campID, err = types.VoucherProject(coin.Denom)
 		if err != nil {
 			return false
 		}
 
 		if requireNoMainnetLaunchTriggered {
-			campaign, found := k.GetCampaign(ctx, campID)
+			project, found := k.GetProject(ctx, campID)
 			if !found {
 				return false
 			}
-			launched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+			launched, err := k.IsProjectMainnetLaunchTriggered(ctx, project.ProjectID)
 			if err != nil || launched {
 				return false
 			}
@@ -174,9 +174,9 @@ func GetAccountWithVouchers(
 		return 0, account, coins, false
 	}
 
-	// Fetch from the vouchers of the campaign owned by the account
+	// Fetch from the vouchers of the project owned by the account
 	bk.IterateAccountBalances(ctx, accountAddr, func(coin sdk.Coin) bool {
-		coinCampID, err := types.VoucherCampaign(coin.Denom)
+		coinCampID, err := types.VoucherProject(coin.Denom)
 		if err == nil && coinCampID == campID {
 			// fetch a part of each voucher hold by the account
 			amt, err := simtypes.RandPositiveInt(r, coin.Amount)
@@ -201,7 +201,7 @@ func GetAccountWithVouchers(
 	return 0, account, coins, false
 }
 
-// GetAccountWithShares returns an account that contains allocated shares with its associated campaign
+// GetAccountWithShares returns an account that contains allocated shares with its associated project
 func GetAccountWithShares(
 	r *rand.Rand,
 	ctx sdk.Context,
@@ -225,11 +225,11 @@ func GetAccountWithShares(
 	var mainnetAccount types.MainnetAccount
 	for _, mAcc := range mainnetAccounts {
 		if requireNoMainnetLaunchTriggered {
-			campaign, found := k.GetCampaign(ctx, mAcc.CampaignID)
+			project, found := k.GetProject(ctx, mAcc.ProjectID)
 			if !found {
 				continue
 			}
-			launched, _ := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+			launched, _ := k.IsProjectMainnetLaunchTriggered(ctx, project.ProjectID)
 			if launched {
 				continue
 			}
@@ -241,7 +241,7 @@ func GetAccountWithShares(
 	// Find the associated sim account
 	for _, acc := range accs {
 		if acc.Address.String() == mainnetAccount.Address {
-			return mainnetAccount.CampaignID, acc, mainnetAccount.Shares, true
+			return mainnetAccount.ProjectID, acc, mainnetAccount.Shares, true
 		}
 	}
 	return 0, simtypes.Account{}, nil, false

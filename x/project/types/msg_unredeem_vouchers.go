@@ -9,10 +9,10 @@ const TypeMsgUnredeemVouchers = "unredeem_vouchers"
 
 var _ sdk.Msg = &MsgUnredeemVouchers{}
 
-func NewMsgUnredeemVouchers(sender string, campaignID uint64, shares Shares) *MsgUnredeemVouchers {
+func NewMsgUnredeemVouchers(sender string, projectID uint64, shares Shares) *MsgUnredeemVouchers {
 	return &MsgUnredeemVouchers{
 		Sender:     sender,
-		CampaignID: campaignID,
+		ProjectID: projectID,
 		Shares:     shares,
 	}
 }

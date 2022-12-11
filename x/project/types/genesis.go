@@ -9,9 +9,9 @@ import (
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		Campaigns:       []Campaign{},
-		CampaignCounter: 1,
-		CampaignChains:  []CampaignChains{},
+		Projects:       []Project{},
+		ProjectCounter: 1,
+		ProjectChains:  []ProjectChains{},
 		MainnetAccounts: []MainnetAccount{},
 		Params:          DefaultParams(),
 		TotalShares:     spntypes.TotalShareNumber,
@@ -22,43 +22,43 @@ func DefaultGenesis() *GenesisState {
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
-	// Check for duplicated ID in campaign
-	campaignIDMap := make(map[uint64]struct{})
-	campaignCounter := gs.GetCampaignCounter()
-	for _, campaign := range gs.Campaigns {
-		if _, ok := campaignIDMap[campaign.CampaignID]; ok {
-			return fmt.Errorf("duplicated id for campaign")
+	// Check for duplicated ID in project
+	projectIDMap := make(map[uint64]struct{})
+	projectCounter := gs.GetProjectCounter()
+	for _, project := range gs.Projects {
+		if _, ok := projectIDMap[project.ProjectID]; ok {
+			return fmt.Errorf("duplicated id for project")
 		}
-		if campaign.CampaignID >= campaignCounter {
-			return fmt.Errorf("campaign id should be lower or equal than the last id")
+		if project.ProjectID >= projectCounter {
+			return fmt.Errorf("project id should be lower or equal than the last id")
 		}
-		if err := campaign.Validate(gs.TotalShares); err != nil {
-			return fmt.Errorf("invalid campaign %d: %s", campaign.CampaignID, err.Error())
+		if err := project.Validate(gs.TotalShares); err != nil {
+			return fmt.Errorf("invalid project %d: %s", project.ProjectID, err.Error())
 		}
-		campaignIDMap[campaign.CampaignID] = struct{}{}
+		projectIDMap[project.ProjectID] = struct{}{}
 	}
 
-	// Check for duplicated index in campaignChains
-	campaignChainsIndexMap := make(map[string]struct{})
-	for _, elem := range gs.CampaignChains {
-		if _, ok := campaignIDMap[elem.CampaignID]; !ok {
-			return fmt.Errorf("campaign id %d doesn't exist for chains", elem.CampaignID)
+	// Check for duplicated index in projectChains
+	projectChainsIndexMap := make(map[string]struct{})
+	for _, elem := range gs.ProjectChains {
+		if _, ok := projectIDMap[elem.ProjectID]; !ok {
+			return fmt.Errorf("project id %d doesn't exist for chains", elem.ProjectID)
 		}
-		index := string(CampaignChainsKey(elem.CampaignID))
-		if _, ok := campaignChainsIndexMap[index]; ok {
-			return fmt.Errorf("duplicated index for campaignChains")
+		index := string(ProjectChainsKey(elem.ProjectID))
+		if _, ok := projectChainsIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for projectChains")
 		}
-		campaignChainsIndexMap[index] = struct{}{}
+		projectChainsIndexMap[index] = struct{}{}
 	}
 
 	// Check for duplicated index in mainnetAccount
 	mainnetAccountIndexMap := make(map[string]struct{})
 	for _, elem := range gs.MainnetAccounts {
-		if _, ok := campaignIDMap[elem.CampaignID]; !ok {
-			return fmt.Errorf("campaign id %d doesn't exist for mainnet account %s",
-				elem.CampaignID, elem.Address)
+		if _, ok := projectIDMap[elem.ProjectID]; !ok {
+			return fmt.Errorf("project id %d doesn't exist for mainnet account %s",
+				elem.ProjectID, elem.Address)
 		}
-		index := string(AccountKeyPath(elem.CampaignID, elem.Address))
+		index := string(AccountKeyPath(elem.ProjectID, elem.Address))
 		if _, ok := mainnetAccountIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for mainnetAccount")
 		}

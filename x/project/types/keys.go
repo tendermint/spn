@@ -4,7 +4,7 @@ import spntypes "github.com/tendermint/spn/pkg/types"
 
 const (
 	// ModuleName defines the module name
-	ModuleName = "campaign"
+	ModuleName = "project"
 
 	// StoreKey defines the primary module store key
 	StoreKey = ModuleName
@@ -16,19 +16,19 @@ const (
 	QuerierRoute = ModuleName
 
 	// MemStoreKey defines the in-memory store key
-	MemStoreKey = "mem_campaign"
+	MemStoreKey = "mem_project"
 
-	// CampaignKey is the prefix to retrieve all Campaign
-	CampaignKey = "Campaign/value/"
+	// ProjectKey is the prefix to retrieve all Project
+	ProjectKey = "Project/value/"
 
-	// CampaignCounterKey is the prefix to store campaign count
-	CampaignCounterKey = "Campaign/count/"
+	// ProjectCounterKey is the prefix to store project count
+	ProjectCounterKey = "Project/count/"
 
 	// TotalSharesKey is the prefix to retrieve TotalShares
 	TotalSharesKey = "TotalShares/value/"
 
-	// CampaignChainsKeyPrefix is the prefix to retrieve all CampaignChains
-	CampaignChainsKeyPrefix = "CampaignChains/value/"
+	// ProjectChainsKeyPrefix is the prefix to retrieve all ProjectChains
+	ProjectChainsKeyPrefix = "ProjectChains/value/"
 
 	// MainnetAccountKeyPrefix is the prefix to retrieve all MainnetAccount
 	MainnetAccountKeyPrefix = "MainnetAccount/value/"
@@ -41,28 +41,28 @@ func KeyPrefix(p string) []byte {
 	return []byte(p)
 }
 
-// CampaignChainsKey returns the store key to retrieve a CampaignChains from the index fields
-func CampaignChainsKey(campaignID uint64) []byte {
-	return append(spntypes.UintBytes(campaignID), byte('/'))
+// ProjectChainsKey returns the store key to retrieve a ProjectChains from the index fields
+func ProjectChainsKey(projectID uint64) []byte {
+	return append(spntypes.UintBytes(projectID), byte('/'))
 }
 
-// AccountKeyPath returns the store key path without prefix for an account defined by a campaign ID and an address
-func AccountKeyPath(campaignID uint64, address string) []byte {
-	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
+// AccountKeyPath returns the store key path without prefix for an account defined by a project ID and an address
+func AccountKeyPath(projectID uint64, address string) []byte {
+	projectIDBytes := append(spntypes.UintBytes(projectID), byte('/'))
 	addressBytes := append([]byte(address), byte('/'))
-	return append(campaignIDBytes, addressBytes...)
+	return append(projectIDBytes, addressBytes...)
 }
 
-// MainnetAccountAllKey returns the store key to retrieve all MainnetAccount by campaign id
-func MainnetAccountAllKey(campaignID uint64) []byte {
+// MainnetAccountAllKey returns the store key to retrieve all MainnetAccount by project id
+func MainnetAccountAllKey(projectID uint64) []byte {
 	prefixBytes := []byte(MainnetAccountKeyPrefix)
-	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
-	return append(prefixBytes, campaignIDBytes...)
+	projectIDBytes := append(spntypes.UintBytes(projectID), byte('/'))
+	return append(prefixBytes, projectIDBytes...)
 }
 
-// MainnetVestingAccountAllKey returns the store key to retrieve all MainnetVestingAccount by campaign id
-func MainnetVestingAccountAllKey(campaignID uint64) []byte {
+// MainnetVestingAccountAllKey returns the store key to retrieve all MainnetVestingAccount by project id
+func MainnetVestingAccountAllKey(projectID uint64) []byte {
 	prefixBytes := []byte(MainnetVestingAccountKeyPrefix)
-	campaignIDBytes := append(spntypes.UintBytes(campaignID), byte('/'))
-	return append(prefixBytes, campaignIDBytes...)
+	projectIDBytes := append(spntypes.UintBytes(projectID), byte('/'))
+	return append(prefixBytes, projectIDBytes...)
 }

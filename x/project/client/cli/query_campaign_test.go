@@ -17,9 +17,9 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func (suite *QueryTestSuite) TestShowCampaign() {
+func (suite *QueryTestSuite) TestShowProject() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	campaigns := suite.CampaignState.Campaigns
+	projects := suite.ProjectState.Projects
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
@@ -29,13 +29,13 @@ func (suite *QueryTestSuite) TestShowCampaign() {
 		id   string
 		args []string
 		err  error
-		obj  types.Campaign
+		obj  types.Project
 	}{
 		{
 			name: "should allow valid query",
-			id:   fmt.Sprintf("%d", campaigns[0].CampaignID),
+			id:   fmt.Sprintf("%d", projects[0].ProjectID),
 			args: common,
-			obj:  campaigns[0],
+			obj:  projects[0],
 		},
 		{
 			name: "should fail if not found",
@@ -47,25 +47,25 @@ func (suite *QueryTestSuite) TestShowCampaign() {
 		suite.T().Run(tc.name, func(t *testing.T) {
 			args := []string{tc.id}
 			args = append(args, tc.args...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowCampaign(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowProject(), args)
 			if tc.err != nil {
 				stat, ok := status.FromError(tc.err)
 				require.True(t, ok)
 				require.ErrorIs(t, stat.Err(), tc.err)
 			} else {
 				require.NoError(t, err)
-				var resp types.QueryGetCampaignResponse
+				var resp types.QueryGetProjectResponse
 				require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				tc.obj.Metadata = []uint8(nil)
-				require.Equal(t, nullify.Fill(tc.obj), nullify.Fill(resp.Campaign))
+				require.Equal(t, nullify.Fill(tc.obj), nullify.Fill(resp.Project))
 			}
 		})
 	}
 }
 
-func (suite *QueryTestSuite) TestListCampaign() {
+func (suite *QueryTestSuite) TestListProject() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	campaigns := suite.CampaignState.Campaigns
+	projects := suite.ProjectState.Projects
 
 	request := func(next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
@@ -84,38 +84,38 @@ func (suite *QueryTestSuite) TestListCampaign() {
 	}
 	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
-		for i := 0; i < len(campaigns); i += step {
+		for i := 0; i < len(projects); i += step {
 			args := request(nil, uint64(i), uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListProject(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllCampaignResponse
+			var resp types.QueryAllProjectResponse
 			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			require.LessOrEqual(t, len(resp.Campaign), step)
-			require.Subset(t, nullify.Fill(campaigns), nullify.Fill(resp.Campaign))
+			require.LessOrEqual(t, len(resp.Project), step)
+			require.Subset(t, nullify.Fill(projects), nullify.Fill(resp.Project))
 		}
 	})
 	suite.T().Run("should paginate by key", func(t *testing.T) {
 		step := 2
 		var next []byte
-		for i := 0; i < len(campaigns); i += step {
+		for i := 0; i < len(projects); i += step {
 			args := request(next, 0, uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListProject(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllCampaignResponse
+			var resp types.QueryAllProjectResponse
 			require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			require.LessOrEqual(t, len(resp.Campaign), step)
-			require.Subset(t, nullify.Fill(campaigns), nullify.Fill(resp.Campaign))
+			require.LessOrEqual(t, len(resp.Project), step)
+			require.Subset(t, nullify.Fill(projects), nullify.Fill(resp.Project))
 			next = resp.Pagination.NextKey
 		}
 	})
 	suite.T().Run("should paginate all", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(campaigns)), true)
-		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
+		args := request(nil, 0, uint64(len(projects)), true)
+		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListProject(), args)
 		require.NoError(t, err)
-		var resp types.QueryAllCampaignResponse
+		var resp types.QueryAllProjectResponse
 		require.NoError(t, suite.Network.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
-		require.Equal(t, len(campaigns), int(resp.Pagination.Total))
-		require.ElementsMatch(t, nullify.Fill(campaigns), nullify.Fill(resp.Campaign))
+		require.Equal(t, len(projects), int(resp.Pagination.Total))
+		require.ElementsMatch(t, nullify.Fill(projects), nullify.Fill(resp.Project))
 	})
 }

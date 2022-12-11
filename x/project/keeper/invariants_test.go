@@ -13,126 +13,126 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func TestAccountWithoutCampaignInvariant(t *testing.T) {
+func TestAccountWithoutProjectInvariant(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	t.Run("should allow valid case", func(t *testing.T) {
-		campaign := sample.Campaign(r, 0)
-		campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaign)
-		tk.CampaignKeeper.SetMainnetAccount(ctx, sample.MainnetAccount(r, campaign.CampaignID, sample.Address(r)))
-		msg, broken := keeper.AccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
+		project := sample.Project(r, 0)
+		project.ProjectID = tk.ProjectKeeper.AppendProject(ctx, project)
+		tk.ProjectKeeper.SetMainnetAccount(ctx, sample.MainnetAccount(r, project.ProjectID, sample.Address(r)))
+		msg, broken := keeper.AccountWithoutProjectInvariant(*tk.ProjectKeeper)(ctx)
 		require.False(t, broken, msg)
 	})
 
 	t.Run("should prevent invalid case", func(t *testing.T) {
-		tk.CampaignKeeper.SetMainnetAccount(ctx, sample.MainnetAccount(r, 100, sample.Address(r)))
-		msg, broken := keeper.AccountWithoutCampaignInvariant(*tk.CampaignKeeper)(ctx)
+		tk.ProjectKeeper.SetMainnetAccount(ctx, sample.MainnetAccount(r, 100, sample.Address(r)))
+		msg, broken := keeper.AccountWithoutProjectInvariant(*tk.ProjectKeeper)(ctx)
 		require.True(t, broken, msg)
 	})
 }
 
-func TestCampaignSharesInvariant(t *testing.T) {
+func TestProjectSharesInvariant(t *testing.T) {
 	t.Run("should allow valid case", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
-		// create campaigns with some allocated shares
-		campaignID1, campaignID2 := uint64(1), uint64(2)
-		campaign := sample.Campaign(r, campaignID1)
-		campaign.AllocatedShares = types.IncreaseShares(
-			campaign.AllocatedShares,
+		// create projects with some allocated shares
+		projectID1, projectID2 := uint64(1), uint64(2)
+		project := sample.Project(r, projectID1)
+		project.AllocatedShares = types.IncreaseShares(
+			project.AllocatedShares,
 			tc.Shares(t, "100foo,200bar"),
 		)
-		tk.CampaignKeeper.SetCampaign(ctx, campaign)
+		tk.ProjectKeeper.SetProject(ctx, project)
 
-		campaign = sample.Campaign(r, campaignID2)
-		campaign.AllocatedShares = types.IncreaseShares(
-			campaign.AllocatedShares,
+		project = sample.Project(r, projectID2)
+		project.AllocatedShares = types.IncreaseShares(
+			project.AllocatedShares,
 			tc.Shares(t, "10000foo"),
 		)
-		tk.CampaignKeeper.SetCampaign(ctx, campaign)
+		tk.ProjectKeeper.SetProject(ctx, project)
 
 		// mint vouchers
-		voucherFoo, voucherBar := types.VoucherDenom(campaignID1, "foo"), types.VoucherDenom(campaignID1, "bar")
+		voucherFoo, voucherBar := types.VoucherDenom(projectID1, "foo"), types.VoucherDenom(projectID1, "bar")
 		tk.Mint(ctx, sample.Address(r), tc.Coins(t, fmt.Sprintf("50%s,100%s", voucherFoo, voucherBar)))
 
-		// mint vouchers for another campaign
-		voucherFoo = types.VoucherDenom(campaignID2, "foo")
+		// mint vouchers for another project
+		voucherFoo = types.VoucherDenom(projectID2, "foo")
 		tk.Mint(ctx, sample.Address(r), tc.Coins(t, fmt.Sprintf("5000%s", voucherFoo)))
 
 		// add accounts with shares
-		tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
-			CampaignID: campaignID1,
+		tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
+			ProjectID: projectID1,
 			Address:    sample.Address(r),
 			Shares:     tc.Shares(t, "20foo,40bar"),
 		})
-		tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
-			CampaignID: campaignID1,
+		tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
+			ProjectID: projectID1,
 			Address:    sample.Address(r),
 			Shares:     tc.Shares(t, "30foo,60bar"),
 		})
-		tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
-			CampaignID: campaignID2,
+		tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
+			ProjectID: projectID2,
 			Address:    sample.Address(r),
 			Shares:     tc.Shares(t, "5000foo"),
 		})
 
-		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		msg, broken := keeper.ProjectSharesInvariant(*tk.ProjectKeeper)(ctx)
 		require.False(t, broken, msg)
 	})
 
-	t.Run("should allow campaign with empty allocated share is valid", func(t *testing.T) {
+	t.Run("should allow project with empty allocated share is valid", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
-		tk.CampaignKeeper.SetCampaign(ctx, sample.Campaign(r, 3))
+		tk.ProjectKeeper.SetProject(ctx, sample.Project(r, 3))
 
-		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		msg, broken := keeper.ProjectSharesInvariant(*tk.ProjectKeeper)(ctx)
 		require.False(t, broken, msg)
 	})
 
 	t.Run("should prevent allocated shares cannot be converted to vouchers", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
-		campaignID := uint64(4)
-		campaign := sample.Campaign(r, campaignID)
+		projectID := uint64(4)
+		project := sample.Project(r, projectID)
 		coins := tc.Coins(t, "100foo,200bar")
 		shares := make(types.Shares, len(coins))
 		for i, coin := range coins {
 			shares[i] = coin
 		}
-		campaign.AllocatedShares = types.IncreaseShares(
-			campaign.AllocatedShares,
+		project.AllocatedShares = types.IncreaseShares(
+			project.AllocatedShares,
 			shares,
 		)
-		tk.CampaignKeeper.SetCampaign(ctx, campaign)
+		tk.ProjectKeeper.SetProject(ctx, project)
 
-		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		msg, broken := keeper.ProjectSharesInvariant(*tk.ProjectKeeper)(ctx)
 		require.True(t, broken, msg)
 	})
 
 	t.Run("should prevent invalid allocated shares", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
-		campaignID := uint64(4)
-		campaign := sample.Campaign(r, campaignID)
-		campaign.AllocatedShares = types.IncreaseShares(
-			campaign.AllocatedShares,
+		projectID := uint64(4)
+		project := sample.Project(r, projectID)
+		project.AllocatedShares = types.IncreaseShares(
+			project.AllocatedShares,
 			tc.Shares(t, "100foo,200bar"),
 		)
-		tk.CampaignKeeper.SetCampaign(ctx, campaign)
+		tk.ProjectKeeper.SetProject(ctx, project)
 
 		// mint vouchers
-		voucherFoo, voucherBar := types.VoucherDenom(campaignID, "foo"), types.VoucherDenom(campaignID, "bar")
+		voucherFoo, voucherBar := types.VoucherDenom(projectID, "foo"), types.VoucherDenom(projectID, "bar")
 		tk.Mint(ctx, sample.Address(r), tc.Coins(t, fmt.Sprintf("99%s,200%s", voucherFoo, voucherBar)))
 
-		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		msg, broken := keeper.ProjectSharesInvariant(*tk.ProjectKeeper)(ctx)
 		require.True(t, broken, msg)
 	})
 
-	t.Run("should prevent campaign with special allocations not tracked by allocated shares", func(t *testing.T) {
+	t.Run("should prevent project with special allocations not tracked by allocated shares", func(t *testing.T) {
 		ctx, tk, _ := testkeeper.NewTestSetup(t)
-		campaign := sample.Campaign(r, 3)
-		campaign.SpecialAllocations.GenesisDistribution = types.IncreaseShares(
-			campaign.SpecialAllocations.GenesisDistribution,
+		project := sample.Project(r, 3)
+		project.SpecialAllocations.GenesisDistribution = types.IncreaseShares(
+			project.SpecialAllocations.GenesisDistribution,
 			sample.Shares(r),
 		)
-		tk.CampaignKeeper.SetCampaign(ctx, campaign)
+		tk.ProjectKeeper.SetProject(ctx, project)
 
-		msg, broken := keeper.CampaignSharesInvariant(*tk.CampaignKeeper)(ctx)
+		msg, broken := keeper.ProjectSharesInvariant(*tk.ProjectKeeper)(ctx)
 		require.True(t, broken, msg)
 	})
 }

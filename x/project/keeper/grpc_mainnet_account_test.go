@@ -18,41 +18,41 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func createNMainnetAccountForCampaignID(
+func createNMainnetAccountForProjectID(
 	keeper *keeper.Keeper,
 	ctx sdk.Context,
 	n int,
-	campaignID uint64,
+	projectID uint64,
 ) []types.MainnetAccount {
 	items := make([]types.MainnetAccount, n)
 	for i := range items {
-		items[i] = sample.MainnetAccount(r, campaignID, strconv.Itoa(i))
+		items[i] = sample.MainnetAccount(r, projectID, strconv.Itoa(i))
 		keeper.SetMainnetAccount(ctx, items[i])
 	}
 	return items
 }
 
-func createNMainnetAccountForCampaignIDWithTotalSupply(
+func createNMainnetAccountForProjectIDWithTotalSupply(
 	t *testing.T,
 	keeper *keeper.Keeper,
 	ctx sdk.Context,
 	n int,
-	campaignID uint64,
+	projectID uint64,
 ) []types.MainnetAccountBalance {
 	totalSupply := tc.Coins(t, "100000foo,200000bar")
 	totalShares := uint64(100000)
 
-	// create and set campaign
-	campaign := sample.Campaign(r, campaignID)
-	campaign.TotalSupply = totalSupply
-	keeper.SetCampaign(ctx, campaign)
+	// create and set project
+	project := sample.Project(r, projectID)
+	project.TotalSupply = totalSupply
+	keeper.SetProject(ctx, project)
 	keeper.SetTotalShares(ctx, totalShares)
 
 	// set account and create n account balance
 	// shares of accounts are foo and bar shares with random share number
 	items := make([]types.MainnetAccountBalance, n)
 	for i := range items {
-		acc := sample.MainnetAccount(r, campaignID, sample.Address(r))
+		acc := sample.MainnetAccount(r, projectID, sample.Address(r))
 		fooShares := r.Intn(int(totalShares))
 		barShares := r.Intn(int(totalShares))
 		acc.Shares = tc.Shares(t, fmt.Sprintf("%dfoo,%dbar", fooShares, barShares))
@@ -61,7 +61,7 @@ func createNMainnetAccountForCampaignIDWithTotalSupply(
 		balance, err := acc.Shares.CoinsFromTotalSupply(totalSupply, totalShares)
 		require.NoError(t, err)
 		items[i] = types.MainnetAccountBalance{
-			CampaignID: campaignID,
+			ProjectID: projectID,
 			Address:    acc.Address,
 			Coins:      balance,
 		}
@@ -73,7 +73,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 	var (
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
-		msgs       = createNMainnetAccount(tk.CampaignKeeper, ctx, 2)
+		msgs       = createNMainnetAccount(tk.ProjectKeeper, ctx, 2)
 	)
 	for _, tc := range []struct {
 		name     string
@@ -84,7 +84,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 		{
 			name: "should allow valid query",
 			request: &types.QueryGetMainnetAccountRequest{
-				CampaignID: msgs[0].CampaignID,
+				ProjectID: msgs[0].ProjectID,
 				Address:    msgs[0].Address,
 			},
 			response: &types.QueryGetMainnetAccountResponse{MainnetAccount: msgs[0]},
@@ -92,7 +92,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 		{
 			name: "should return KeyNotFound",
 			request: &types.QueryGetMainnetAccountRequest{
-				CampaignID: 100000,
+				ProjectID: 100000,
 				Address:    strconv.Itoa(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
@@ -103,7 +103,7 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			response, err := tk.CampaignKeeper.MainnetAccount(wctx, tc.request)
+			response, err := tk.ProjectKeeper.MainnetAccount(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -115,14 +115,14 @@ func TestMainnetAccountQuerySingle(t *testing.T) {
 
 func TestMainnetAccountQueryPaginated(t *testing.T) {
 	var (
-		campaignID = uint64(5)
+		projectID = uint64(5)
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
-		msgs       = createNMainnetAccountForCampaignID(tk.CampaignKeeper, ctx, 5, campaignID)
+		msgs       = createNMainnetAccountForProjectID(tk.ProjectKeeper, ctx, 5, projectID)
 	)
-	request := func(campaignID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllMainnetAccountRequest {
+	request := func(projectID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllMainnetAccountRequest {
 		return &types.QueryAllMainnetAccountRequest{
-			CampaignID: campaignID,
+			ProjectID: projectID,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
@@ -134,7 +134,7 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.CampaignKeeper.MainnetAccountAll(wctx, request(campaignID, nil, uint64(i), uint64(step), false))
+			resp, err := tk.ProjectKeeper.MainnetAccountAll(wctx, request(projectID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetAccount), step)
 			require.Subset(t, msgs, resp.MainnetAccount)
@@ -144,7 +144,7 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.CampaignKeeper.MainnetAccountAll(wctx, request(campaignID, next, 0, uint64(step), false))
+			resp, err := tk.ProjectKeeper.MainnetAccountAll(wctx, request(projectID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetAccount), step)
 			require.Subset(t, msgs, resp.MainnetAccount)
@@ -152,23 +152,23 @@ func TestMainnetAccountQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := tk.CampaignKeeper.MainnetAccountAll(wctx, request(campaignID, nil, 0, 0, true))
+		resp, err := tk.ProjectKeeper.MainnetAccountAll(wctx, request(projectID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.MainnetAccount)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := tk.CampaignKeeper.MainnetAccountAll(wctx, nil)
+		_, err := tk.ProjectKeeper.MainnetAccountAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
 }
 
 func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 	var (
-		campaignID = uint64(5)
+		projectID = uint64(5)
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
-		msgs       = createNMainnetAccountForCampaignIDWithTotalSupply(t, tk.CampaignKeeper, ctx, 5, campaignID)
+		msgs       = createNMainnetAccountForProjectIDWithTotalSupply(t, tk.ProjectKeeper, ctx, 5, projectID)
 	)
 	for _, tc := range []struct {
 		desc     string
@@ -179,7 +179,7 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryGetMainnetAccountBalanceRequest{
-				CampaignID: msgs[0].CampaignID,
+				ProjectID: msgs[0].ProjectID,
 				Address:    msgs[0].Address,
 			},
 			response: &types.QueryGetMainnetAccountBalanceResponse{MainnetAccountBalance: msgs[0]},
@@ -187,23 +187,23 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 		{
 			desc: "Second",
 			request: &types.QueryGetMainnetAccountBalanceRequest{
-				CampaignID: msgs[1].CampaignID,
+				ProjectID: msgs[1].ProjectID,
 				Address:    msgs[1].Address,
 			},
 			response: &types.QueryGetMainnetAccountBalanceResponse{MainnetAccountBalance: msgs[1]},
 		},
 		{
-			desc: "campaign not found",
+			desc: "project not found",
 			request: &types.QueryGetMainnetAccountBalanceRequest{
-				CampaignID: 10000,
+				ProjectID: 10000,
 				Address:    sample.Address(r),
 			},
-			err: status.Error(codes.NotFound, "campaign not found"),
+			err: status.Error(codes.NotFound, "project not found"),
 		},
 		{
 			desc: "account not found",
 			request: &types.QueryGetMainnetAccountBalanceRequest{
-				CampaignID: campaignID,
+				ProjectID: projectID,
 				Address:    sample.Address(r),
 			},
 			err: status.Error(codes.NotFound, "account not found"),
@@ -214,7 +214,7 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := tk.CampaignKeeper.MainnetAccountBalance(wctx, tc.request)
+			response, err := tk.ProjectKeeper.MainnetAccountBalance(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -226,14 +226,14 @@ func TestMainnetAccountBalanceQuerySingle(t *testing.T) {
 
 func TestMainnetAccountBalanceQueryPaginated(t *testing.T) {
 	var (
-		campaignID = uint64(5)
+		projectID = uint64(5)
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
-		msgs       = createNMainnetAccountForCampaignIDWithTotalSupply(t, tk.CampaignKeeper, ctx, 5, campaignID)
+		msgs       = createNMainnetAccountForProjectIDWithTotalSupply(t, tk.ProjectKeeper, ctx, 5, projectID)
 	)
-	request := func(campaignID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllMainnetAccountBalanceRequest {
+	request := func(projectID uint64, next []byte, offset, limit uint64, total bool) *types.QueryAllMainnetAccountBalanceRequest {
 		return &types.QueryAllMainnetAccountBalanceRequest{
-			CampaignID: campaignID,
+			ProjectID: projectID,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
@@ -245,7 +245,7 @@ func TestMainnetAccountBalanceQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.CampaignKeeper.MainnetAccountBalanceAll(wctx, request(campaignID, nil, uint64(i), uint64(step), false))
+			resp, err := tk.ProjectKeeper.MainnetAccountBalanceAll(wctx, request(projectID, nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetAccountBalance), step)
 			require.Subset(t, msgs, resp.MainnetAccountBalance)
@@ -255,7 +255,7 @@ func TestMainnetAccountBalanceQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := tk.CampaignKeeper.MainnetAccountBalanceAll(wctx, request(campaignID, next, 0, uint64(step), false))
+			resp, err := tk.ProjectKeeper.MainnetAccountBalanceAll(wctx, request(projectID, next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.MainnetAccountBalance), step)
 			require.Subset(t, msgs, resp.MainnetAccountBalance)
@@ -263,18 +263,18 @@ func TestMainnetAccountBalanceQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := tk.CampaignKeeper.MainnetAccountBalanceAll(wctx, request(campaignID, nil, 0, 0, true))
+		resp, err := tk.ProjectKeeper.MainnetAccountBalanceAll(wctx, request(projectID, nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t, msgs, resp.MainnetAccountBalance)
 	})
 	t.Run("invalid request", func(t *testing.T) {
-		_, err := tk.CampaignKeeper.MainnetAccountBalanceAll(wctx, nil)
+		_, err := tk.ProjectKeeper.MainnetAccountBalanceAll(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, "invalid request"))
 	})
-	t.Run("campaign not found", func(t *testing.T) {
-		_, err := tk.CampaignKeeper.MainnetAccountBalanceAll(wctx, request(10000, nil, 0, 0, true))
-		require.ErrorIs(t, err, status.Error(codes.NotFound, "campaign not found"))
+	t.Run("project not found", func(t *testing.T) {
+		_, err := tk.ProjectKeeper.MainnetAccountBalanceAll(wctx, request(10000, nil, 0, 0, true))
+		require.ErrorIs(t, err, status.Error(codes.NotFound, "project not found"))
 	})
 }
 
@@ -283,38 +283,38 @@ func TestMainnetAccountBalanceAll(t *testing.T) {
 		ctx, tk, _ = testkeeper.NewTestSetup(t)
 		wctx       = sdk.WrapSDKContext(ctx)
 
-		campaignID  = uint64(5)
+		projectID  = uint64(5)
 		totalSupply = tc.Coins(t, "1000foo,1000bar")
 		totalShares = uint64(100)
 		addr1       = sample.Address(r)
 		addr2       = sample.Address(r)
 		addr3       = sample.Address(r)
-		campaign    = sample.Campaign(r, campaignID)
+		project    = sample.Project(r, projectID)
 	)
 
-	// set campaign and sample accounts
-	campaign.TotalSupply = totalSupply
-	tk.CampaignKeeper.SetCampaign(ctx, campaign)
-	tk.CampaignKeeper.SetTotalShares(ctx, totalShares)
-	tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
-		CampaignID: campaignID,
+	// set project and sample accounts
+	project.TotalSupply = totalSupply
+	tk.ProjectKeeper.SetProject(ctx, project)
+	tk.ProjectKeeper.SetTotalShares(ctx, totalShares)
+	tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
+		ProjectID: projectID,
 		Address:    addr1,
 		Shares:     tc.Shares(t, "100foo"),
 	})
-	tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
-		CampaignID: campaignID,
+	tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
+		ProjectID: projectID,
 		Address:    addr2,
 		Shares:     tc.Shares(t, "100bar"),
 	})
-	tk.CampaignKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
-		CampaignID: campaignID,
+	tk.ProjectKeeper.SetMainnetAccount(ctx, types.MainnetAccount{
+		ProjectID: projectID,
 		Address:    addr3,
 		Shares:     tc.Shares(t, "100baz"),
 	})
 
 	t.Run("accounts with empty balance are skipped", func(t *testing.T) {
-		accountBalances, err := tk.CampaignKeeper.MainnetAccountBalanceAll(wctx, &types.QueryAllMainnetAccountBalanceRequest{
-			CampaignID: campaignID,
+		accountBalances, err := tk.ProjectKeeper.MainnetAccountBalanceAll(wctx, &types.QueryAllMainnetAccountBalanceRequest{
+			ProjectID: projectID,
 			Pagination: &query.PageRequest{
 				CountTotal: true,
 			},
@@ -325,12 +325,12 @@ func TestMainnetAccountBalanceAll(t *testing.T) {
 		balances := accountBalances.MainnetAccountBalance
 		require.Len(t, balances, 2)
 		require.Contains(t, balances, types.MainnetAccountBalance{
-			CampaignID: campaignID,
+			ProjectID: projectID,
 			Address:    addr1,
 			Coins:      tc.Coins(t, "1000foo"),
 		})
 		require.Contains(t, balances, types.MainnetAccountBalance{
-			CampaignID: campaignID,
+			ProjectID: projectID,
 			Address:    addr2,
 			Coins:      tc.Coins(t, "1000bar"),
 		})

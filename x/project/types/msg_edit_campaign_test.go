@@ -10,68 +10,68 @@ import (
 	profile "github.com/tendermint/spn/x/profile/types"
 )
 
-func TestMsgEditCampaign_ValidateBasic(t *testing.T) {
+func TestMsgEditProject_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgEditCampaign
+		msg  types.MsgEditProject
 		err  error
 	}{
 		{
 			name: "should allow validation of msg with both name and metadata modified",
-			msg: types.MsgEditCampaign{
-				CampaignID:  0,
+			msg: types.MsgEditProject{
+				ProjectID:  0,
 				Coordinator: sample.Address(r),
-				Name:        sample.CampaignName(r),
+				Name:        sample.ProjectName(r),
 				Metadata:    sample.Metadata(r, 20),
 			},
 		},
 		{
 			name: "should allow validation of msg with name modified",
-			msg: types.MsgEditCampaign{
-				CampaignID:  0,
+			msg: types.MsgEditProject{
+				ProjectID:  0,
 				Coordinator: sample.Address(r),
-				Name:        sample.CampaignName(r),
+				Name:        sample.ProjectName(r),
 				Metadata:    []byte{},
 			},
 		},
 		{
 			name: "should allow validation of msg with metadata modified",
-			msg: types.MsgEditCampaign{
-				CampaignID:  0,
+			msg: types.MsgEditProject{
+				ProjectID:  0,
 				Coordinator: sample.Address(r),
 				Name:        "",
 				Metadata:    sample.Metadata(r, 20),
 			},
 		},
 		{
-			name: "should prevent validation of msg with invalid campaign name",
-			msg: types.MsgEditCampaign{
-				CampaignID:  0,
+			name: "should prevent validation of msg with invalid project name",
+			msg: types.MsgEditProject{
+				ProjectID:  0,
 				Coordinator: sample.Address(r),
-				Name:        invalidCampaignName,
+				Name:        invalidProjectName,
 				Metadata:    sample.Metadata(r, 20),
 			},
-			err: types.ErrInvalidCampaignName,
+			err: types.ErrInvalidProjectName,
 		},
 		{
 			name: "should prevent validation of msg with invalid coordinator address",
-			msg: types.MsgEditCampaign{
-				CampaignID:  0,
+			msg: types.MsgEditProject{
+				ProjectID:  0,
 				Coordinator: "invalid_address",
-				Name:        sample.CampaignName(r),
+				Name:        sample.ProjectName(r),
 				Metadata:    sample.Metadata(r, 20),
 			},
 			err: profile.ErrInvalidCoordAddress,
 		},
 		{
 			name: "should prevent validation of msg with no fields modified",
-			msg: types.MsgEditCampaign{
-				CampaignID:  0,
+			msg: types.MsgEditProject{
+				ProjectID:  0,
 				Coordinator: sample.Address(r),
 				Name:        "",
 				Metadata:    []byte{},
 			},
-			err: types.ErrCannotUpdateCampaign,
+			err: types.ErrCannotUpdateProject,
 		},
 	}
 	for _, tt := range tests {

@@ -10,15 +10,15 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-const flagName = "flag-campaign-name"
+const flagName = "flag-project-name"
 
-func CmdEditCampaign() *cobra.Command {
+func CmdEditProject() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "edit-campaign [campaign-id]",
-		Short: "Edit the campaign name or metadata",
+		Use:   "edit-project [project-id]",
+		Short: "Edit the project name or metadata",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			campaignID, err := cast.ToUint64E(args[0])
+			projectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
@@ -39,9 +39,9 @@ func CmdEditCampaign() *cobra.Command {
 			}
 			metadataBytes := []byte(metadata)
 
-			msg := types.NewMsgEditCampaign(
+			msg := types.NewMsgEditProject(
 				clientCtx.GetFromAddress().String(),
-				campaignID,
+				projectID,
 				name,
 				metadataBytes,
 			)
@@ -53,8 +53,8 @@ func CmdEditCampaign() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().String(flagName, "", "Set name for the campaign")
-	cmd.Flags().String(flagMetadata, "", "Set metadata field for the campaign")
+	cmd.Flags().String(flagName, "", "Set name for the project")
+	cmd.Flags().String(flagMetadata, "", "Set metadata field for the project")
 	flags.AddTxFlagsToCmd(cmd)
 
 	return cmd

@@ -22,8 +22,8 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		ctx                     = sdk.WrapSDKContext(sdkCtx)
 		addr                    = sample.AccAddress(r)
 		existAddr               = sample.AccAddress(r)
-		campaign                = sample.Campaign(r, 0)
-		campaignMainnetLaunched = sample.Campaign(r, 1)
+		project                = sample.Project(r, 0)
+		projectMainnetLaunched = sample.Project(r, 1)
 		shares                  types.Shares
 		vouchers                sdk.Coins
 		err                     error
@@ -37,20 +37,20 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	// Set campaigns
-	campaign.AllocatedShares = shares
-	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
+	// Set projects
+	project.AllocatedShares = shares
+	project.ProjectID = tk.ProjectKeeper.AppendProject(sdkCtx, project)
 
-	campaignMainnetLaunched.MainnetInitialized = true
-	campaignMainnetLaunched.AllocatedShares = shares
+	projectMainnetLaunched.MainnetInitialized = true
+	projectMainnetLaunched.AllocatedShares = shares
 	chainLaunched := sample.Chain(r, 0, 0)
 	chainLaunched.LaunchTriggered = true
 	chainLaunched.IsMainnet = true
-	campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
-	campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaignMainnetLaunched)
+	projectMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(sdkCtx, chainLaunched)
+	projectMainnetLaunched.ProjectID = tk.ProjectKeeper.AppendProject(sdkCtx, projectMainnetLaunched)
 
 	t.Run("should allow creation of valid vouchers", func(t *testing.T) {
-		vouchers, err = types.SharesToVouchers(shares, campaign.CampaignID)
+		vouchers, err = types.SharesToVouchers(shares, project.ProjectID)
 		require.NoError(t, err)
 	})
 
@@ -60,8 +60,8 @@ func TestMsgRedeemVouchers(t *testing.T) {
 		err = tk.BankKeeper.SendCoinsFromModuleToAccount(sdkCtx, types.ModuleName, addr, vouchers)
 		require.NoError(t, err)
 
-		tk.CampaignKeeper.SetMainnetAccount(sdkCtx, types.MainnetAccount{
-			CampaignID: campaign.CampaignID,
+		tk.ProjectKeeper.SetMainnetAccount(sdkCtx, types.MainnetAccount{
+			ProjectID: project.ProjectID,
 			Address:    existAddr.String(),
 			Shares:     shares,
 		})
@@ -81,7 +81,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
 		},
@@ -90,7 +90,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[1]),
 			},
 		},
@@ -99,7 +99,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[2]),
 			},
 		},
@@ -108,26 +108,26 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    sample.Address(r),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   vouchers,
 			},
 		},
 		{
-			name: "should fail with non existing campaign",
+			name: "should fail with non existing project",
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),
-				CampaignID: 10000,
+				ProjectID: 10000,
 				Vouchers:   sample.Coins(r),
 			},
-			err: types.ErrCampaignNotFound,
+			err: types.ErrProjectNotFound,
 		},
 		{
 			name: "should fail with invalid vouchers",
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sample.Coins(r),
 			},
 			err: ignterrors.ErrCritical,
@@ -137,7 +137,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     "invalid_address",
 				Account:    addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   vouchers,
 			},
 			err: ignterrors.ErrCritical,
@@ -147,7 +147,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   vouchersTooBig,
 			},
 			err: types.ErrInsufficientVouchers,
@@ -158,7 +158,7 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   vouchers,
 			},
 			err: types.ErrInsufficientVouchers,
@@ -168,17 +168,17 @@ func TestMsgRedeemVouchers(t *testing.T) {
 			msg: types.MsgRedeemVouchers{
 				Sender:     existAddr.String(),
 				Account:    existAddr.String(),
-				CampaignID: campaign.CampaignID,
+				ProjectID: project.ProjectID,
 				Vouchers:   sdk.NewCoins(vouchers[0]),
 			},
 			err: types.ErrInsufficientVouchers,
 		},
 		{
-			name: "should fail with campaign with launched mainnet",
+			name: "should fail with project with launched mainnet",
 			msg: types.MsgRedeemVouchers{
 				Sender:     addr.String(),
 				Account:    addr.String(),
-				CampaignID: campaignMainnetLaunched.CampaignID,
+				ProjectID: projectMainnetLaunched.ProjectID,
 				Vouchers:   sample.Coins(r),
 			},
 			err: types.ErrMainnetLaunchTriggered,
@@ -195,24 +195,24 @@ func TestMsgRedeemVouchers(t *testing.T) {
 				accountAddr, err = sdk.AccAddressFromBech32(tc.msg.Account)
 				require.NoError(t, err)
 
-				previousAccount, foundAccount = tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Account)
+				previousAccount, foundAccount = tk.ProjectKeeper.GetMainnetAccount(sdkCtx, tc.msg.ProjectID, tc.msg.Account)
 				if foundAccount {
 					previousBalance = tk.BankKeeper.GetAllBalances(sdkCtx, accountAddr)
 				}
 			}
 
 			// Execute message
-			_, err = ts.CampaignSrv.RedeemVouchers(ctx, &tc.msg)
+			_, err = ts.ProjectSrv.RedeemVouchers(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
 
-			shares, err := types.VouchersToShares(tc.msg.Vouchers, tc.msg.CampaignID)
+			shares, err := types.VouchersToShares(tc.msg.Vouchers, tc.msg.ProjectID)
 			require.NoError(t, err)
 
-			account, found := tk.CampaignKeeper.GetMainnetAccount(sdkCtx, tc.msg.CampaignID, tc.msg.Account)
+			account, found := tk.ProjectKeeper.GetMainnetAccount(sdkCtx, tc.msg.ProjectID, tc.msg.Account)
 			require.True(t, found)
 
 			// Check account shares

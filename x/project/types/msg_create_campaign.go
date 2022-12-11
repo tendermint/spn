@@ -7,33 +7,33 @@ import (
 	profile "github.com/tendermint/spn/x/profile/types"
 )
 
-const TypeMsgCreateCampaign = "create_campaign"
+const TypeMsgCreateProject = "create_project"
 
-var _ sdk.Msg = &MsgCreateCampaign{}
+var _ sdk.Msg = &MsgCreateProject{}
 
-func NewMsgCreateCampaign(
+func NewMsgCreateProject(
 	coordinator string,
-	campaignName string,
+	projectName string,
 	totalSupply sdk.Coins,
 	metadata []byte,
-) *MsgCreateCampaign {
-	return &MsgCreateCampaign{
+) *MsgCreateProject {
+	return &MsgCreateProject{
 		Coordinator:  coordinator,
-		CampaignName: campaignName,
+		ProjectName: projectName,
 		TotalSupply:  totalSupply,
 		Metadata:     metadata,
 	}
 }
 
-func (msg *MsgCreateCampaign) Route() string {
+func (msg *MsgCreateProject) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgCreateCampaign) Type() string {
-	return TypeMsgCreateCampaign
+func (msg *MsgCreateProject) Type() string {
+	return TypeMsgCreateProject
 }
 
-func (msg *MsgCreateCampaign) GetSigners() []sdk.AccAddress {
+func (msg *MsgCreateProject) GetSigners() []sdk.AccAddress {
 	coordinator, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		panic(err)
@@ -41,19 +41,19 @@ func (msg *MsgCreateCampaign) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{coordinator}
 }
 
-func (msg *MsgCreateCampaign) GetSignBytes() []byte {
+func (msg *MsgCreateProject) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgCreateCampaign) ValidateBasic() error {
+func (msg *MsgCreateProject) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Coordinator)
 	if err != nil {
 		return sdkerrors.Wrap(profile.ErrInvalidCoordAddress, err.Error())
 	}
 
-	if err := CheckCampaignName(msg.CampaignName); err != nil {
-		return sdkerrors.Wrap(ErrInvalidCampaignName, err.Error())
+	if err := CheckProjectName(msg.ProjectName); err != nil {
+		return sdkerrors.Wrap(ErrInvalidProjectName, err.Error())
 	}
 
 	if !msg.TotalSupply.IsValid() {

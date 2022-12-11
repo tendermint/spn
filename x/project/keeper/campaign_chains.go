@@ -9,50 +9,50 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-// AddChainToCampaign adds a new chain into an existing campaign
-func (k Keeper) AddChainToCampaign(ctx sdk.Context, campaignID, launchID uint64) error {
-	// Check campaign exist
-	if _, found := k.GetCampaign(ctx, campaignID); !found {
-		return fmt.Errorf("campaign %d not found", campaignID)
+// AddChainToProject adds a new chain into an existing project
+func (k Keeper) AddChainToProject(ctx sdk.Context, projectID, launchID uint64) error {
+	// Check project exist
+	if _, found := k.GetProject(ctx, projectID); !found {
+		return fmt.Errorf("project %d not found", projectID)
 	}
 
-	campaignChains, found := k.GetCampaignChains(ctx, campaignID)
+	projectChains, found := k.GetProjectChains(ctx, projectID)
 	if !found {
-		campaignChains = types.CampaignChains{
-			CampaignID: campaignID,
+		projectChains = types.ProjectChains{
+			ProjectID: projectID,
 			Chains:     []uint64{launchID},
 		}
 	} else {
 		// Ensure no duplicated chain ID
-		for _, existingChainID := range campaignChains.Chains {
+		for _, existingChainID := range projectChains.Chains {
 			if existingChainID == launchID {
-				return fmt.Errorf("chain %d already associated to campaign %d", launchID, campaignID)
+				return fmt.Errorf("chain %d already associated to project %d", launchID, projectID)
 			}
 		}
-		campaignChains.Chains = append(campaignChains.Chains, launchID)
+		projectChains.Chains = append(projectChains.Chains, launchID)
 	}
-	k.SetCampaignChains(ctx, campaignChains)
-	return ctx.EventManager().EmitTypedEvent(&types.EventCampaignChainAdded{
-		CampaignID: campaignID,
+	k.SetProjectChains(ctx, projectChains)
+	return ctx.EventManager().EmitTypedEvent(&types.EventProjectChainAdded{
+		ProjectID: projectID,
 		LaunchID:   launchID,
 	})
 }
 
-// SetCampaignChains set a specific campaignChains in the store from its index
-func (k Keeper) SetCampaignChains(ctx sdk.Context, campaignChains types.CampaignChains) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignChainsKeyPrefix))
-	b := k.cdc.MustMarshal(&campaignChains)
-	store.Set(types.CampaignChainsKey(
-		campaignChains.CampaignID,
+// SetProjectChains set a specific projectChains in the store from its index
+func (k Keeper) SetProjectChains(ctx sdk.Context, projectChains types.ProjectChains) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProjectChainsKeyPrefix))
+	b := k.cdc.MustMarshal(&projectChains)
+	store.Set(types.ProjectChainsKey(
+		projectChains.ProjectID,
 	), b)
 }
 
-// GetCampaignChains returns a campaignChains from its index
-func (k Keeper) GetCampaignChains(ctx sdk.Context, campaignID uint64) (val types.CampaignChains, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignChainsKeyPrefix))
+// GetProjectChains returns a projectChains from its index
+func (k Keeper) GetProjectChains(ctx sdk.Context, projectID uint64) (val types.ProjectChains, found bool) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProjectChainsKeyPrefix))
 
-	b := store.Get(types.CampaignChainsKey(
-		campaignID,
+	b := store.Get(types.ProjectChainsKey(
+		projectID,
 	))
 	if b == nil {
 		return val, false
@@ -62,15 +62,15 @@ func (k Keeper) GetCampaignChains(ctx sdk.Context, campaignID uint64) (val types
 	return val, true
 }
 
-// GetAllCampaignChains returns all campaignChains
-func (k Keeper) GetAllCampaignChains(ctx sdk.Context) (list []types.CampaignChains) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.CampaignChainsKeyPrefix))
+// GetAllProjectChains returns all projectChains
+func (k Keeper) GetAllProjectChains(ctx sdk.Context) (list []types.ProjectChains) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProjectChainsKeyPrefix))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.CampaignChains
+		var val types.ProjectChains
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}

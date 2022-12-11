@@ -16,12 +16,12 @@ import (
 func TestMsgInitializeMainnet(t *testing.T) {
 	var (
 		coordID                      uint64
-		campaignID                   uint64 = 0
-		campaignMainnetInitializedID uint64 = 1
-		campaignIncorrectCoordID     uint64 = 2
-		campaignEmptySupplyID        uint64 = 3
+		projectID                   uint64 = 0
+		projectMainnetInitializedID uint64 = 1
+		projectIncorrectCoordID     uint64 = 2
+		projectEmptySupplyID        uint64 = 3
 		coordAddr                           = sample.Address(r)
-		coordAddrNoCampaign                 = sample.Address(r)
+		coordAddrNoProject                 = sample.Address(r)
 
 		sdkCtx, tk, ts = testkeeper.NewTestSetup(t)
 		ctx            = sdk.WrapSDKContext(sdkCtx)
@@ -35,29 +35,29 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		require.NoError(t, err)
 		coordID = res.CoordinatorID
 		res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-			Address:     coordAddrNoCampaign,
+			Address:     coordAddrNoProject,
 			Description: sample.CoordinatorDescription(r),
 		})
 		require.NoError(t, err)
 	})
 
-	campaign := sample.Campaign(r, campaignID)
-	campaign.CoordinatorID = coordID
-	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
+	project := sample.Project(r, projectID)
+	project.CoordinatorID = coordID
+	tk.ProjectKeeper.SetProject(sdkCtx, project)
 
-	campaignMainnetInitialized := sample.Campaign(r, campaignMainnetInitializedID)
-	campaignMainnetInitialized.CoordinatorID = coordID
-	campaignMainnetInitialized.MainnetInitialized = true
-	tk.CampaignKeeper.SetCampaign(sdkCtx, campaignMainnetInitialized)
+	projectMainnetInitialized := sample.Project(r, projectMainnetInitializedID)
+	projectMainnetInitialized.CoordinatorID = coordID
+	projectMainnetInitialized.MainnetInitialized = true
+	tk.ProjectKeeper.SetProject(sdkCtx, projectMainnetInitialized)
 
-	campaignEmptySupply := sample.Campaign(r, campaignEmptySupplyID)
-	campaignEmptySupply.CoordinatorID = coordID
-	campaignEmptySupply.TotalSupply = sdk.NewCoins()
-	tk.CampaignKeeper.SetCampaign(sdkCtx, campaignEmptySupply)
+	projectEmptySupply := sample.Project(r, projectEmptySupplyID)
+	projectEmptySupply.CoordinatorID = coordID
+	projectEmptySupply.TotalSupply = sdk.NewCoins()
+	tk.ProjectKeeper.SetProject(sdkCtx, projectEmptySupply)
 
-	campaignIncorrectCoord := sample.Campaign(r, campaignIncorrectCoordID)
-	campaignIncorrectCoord.CoordinatorID = coordID
-	tk.CampaignKeeper.SetCampaign(sdkCtx, campaignIncorrectCoord)
+	projectIncorrectCoord := sample.Project(r, projectIncorrectCoordID)
+	projectIncorrectCoord.CoordinatorID = coordID
+	tk.ProjectKeeper.SetProject(sdkCtx, projectIncorrectCoord)
 
 	for _, tc := range []struct {
 		name string
@@ -67,7 +67,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "should allow initialize mainnet",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:     campaignID,
+				ProjectID:     projectID,
 				Coordinator:    coordAddr,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
@@ -75,20 +75,20 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			},
 		},
 		{
-			name: "should fail if campaign not found",
+			name: "should fail if project not found",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:     1000,
+				ProjectID:     1000,
 				Coordinator:    coordAddr,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
 				MainnetChainID: sample.GenesisChainID(r),
 			},
-			err: types.ErrCampaignNotFound,
+			err: types.ErrProjectNotFound,
 		},
 		{
 			name: "should fail if mainnet already initialized",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:     campaignMainnetInitializedID,
+				ProjectID:     projectMainnetInitializedID,
 				Coordinator:    coordAddr,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
@@ -97,9 +97,9 @@ func TestMsgInitializeMainnet(t *testing.T) {
 			err: types.ErrMainnetInitialized,
 		},
 		{
-			name: "should fail if campaign has empty supply",
+			name: "should fail if project has empty supply",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:     campaignEmptySupplyID,
+				ProjectID:     projectEmptySupplyID,
 				Coordinator:    coordAddr,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
@@ -110,7 +110,7 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "should fail with non-existent coordinator",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:     campaignIncorrectCoordID,
+				ProjectID:     projectIncorrectCoordID,
 				Coordinator:    sample.Address(r),
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
@@ -121,8 +121,8 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		{
 			name: "should fail with invalid coordinator",
 			msg: types.MsgInitializeMainnet{
-				CampaignID:     campaignIncorrectCoordID,
-				Coordinator:    coordAddrNoCampaign,
+				ProjectID:     projectIncorrectCoordID,
+				Coordinator:    coordAddrNoProject,
 				SourceHash:     sample.String(r, 30),
 				SourceURL:      sample.String(r, 20),
 				MainnetChainID: sample.GenesisChainID(r),
@@ -131,28 +131,28 @@ func TestMsgInitializeMainnet(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			res, err := ts.CampaignSrv.InitializeMainnet(ctx, &tc.msg)
+			res, err := ts.ProjectSrv.InitializeMainnet(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
-			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			project, found := tk.ProjectKeeper.GetProject(sdkCtx, tc.msg.ProjectID)
 			require.True(t, found)
-			require.True(t, campaign.MainnetInitialized)
-			require.EqualValues(t, res.MainnetID, campaign.MainnetID)
+			require.True(t, project.MainnetInitialized)
+			require.EqualValues(t, res.MainnetID, project.MainnetID)
 
 			// Chain is in launch module
-			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, campaign.MainnetID)
+			chain, found := tk.LaunchKeeper.GetChain(sdkCtx, project.MainnetID)
 			require.True(t, found)
-			require.True(t, chain.HasCampaign)
+			require.True(t, chain.HasProject)
 			require.True(t, chain.IsMainnet)
-			require.EqualValues(t, tc.msg.CampaignID, chain.CampaignID)
+			require.EqualValues(t, tc.msg.ProjectID, chain.ProjectID)
 
-			// Mainnet ID is listed in campaign chains
-			campaignChains, found := tk.CampaignKeeper.GetCampaignChains(sdkCtx, tc.msg.CampaignID)
+			// Mainnet ID is listed in project chains
+			projectChains, found := tk.ProjectKeeper.GetProjectChains(sdkCtx, tc.msg.ProjectID)
 			require.True(t, found)
-			require.Contains(t, campaignChains.Chains, campaign.MainnetID)
+			require.Contains(t, projectChains.Chains, project.MainnetID)
 		})
 	}
 }

@@ -8,56 +8,56 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	campaignkeeper "github.com/tendermint/spn/x/project/keeper"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func createNCampaign(keeper *campaignkeeper.Keeper, ctx sdk.Context, n int) []types.Campaign {
-	items := make([]types.Campaign, n)
+func createNProject(keeper *projectkeeper.Keeper, ctx sdk.Context, n int) []types.Project {
+	items := make([]types.Project, n)
 	for i := range items {
-		items[i] = sample.Campaign(r, 0)
-		items[i].CampaignID = keeper.AppendCampaign(ctx, items[i])
+		items[i] = sample.Project(r, 0)
+		items[i].ProjectID = keeper.AppendProject(ctx, items[i])
 	}
 	return items
 }
 
-func TestCampaignGet(t *testing.T) {
+func TestProjectGet(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	t.Run("should get campaigns", func(t *testing.T) {
-		items := createNCampaign(tk.CampaignKeeper, ctx, 10)
+	t.Run("should get projects", func(t *testing.T) {
+		items := createNProject(tk.ProjectKeeper, ctx, 10)
 		for _, item := range items {
-			got, found := tk.CampaignKeeper.GetCampaign(ctx, item.CampaignID)
+			got, found := tk.ProjectKeeper.GetProject(ctx, item.ProjectID)
 			require.True(t, found)
 			require.Equal(t, item, got)
 		}
 	})
 }
 
-func TestCampaignRemove(t *testing.T) {
+func TestProjectRemove(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	t.Run("should remove campaigns", func(t *testing.T) {
-		items := createNCampaign(tk.CampaignKeeper, ctx, 10)
+	t.Run("should remove projects", func(t *testing.T) {
+		items := createNProject(tk.ProjectKeeper, ctx, 10)
 		for _, item := range items {
-			tk.CampaignKeeper.RemoveCampaign(ctx, item.CampaignID)
-			_, found := tk.CampaignKeeper.GetCampaign(ctx, item.CampaignID)
+			tk.ProjectKeeper.RemoveProject(ctx, item.ProjectID)
+			_, found := tk.ProjectKeeper.GetProject(ctx, item.ProjectID)
 			require.False(t, found)
 		}
 	})
 }
 
-func TestCampaignGetAll(t *testing.T) {
+func TestProjectGetAll(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	items := createNCampaign(tk.CampaignKeeper, ctx, 10)
-	t.Run("should get all campaigns", func(t *testing.T) {
-		require.ElementsMatch(t, items, tk.CampaignKeeper.GetAllCampaign(ctx))
+	items := createNProject(tk.ProjectKeeper, ctx, 10)
+	t.Run("should get all projects", func(t *testing.T) {
+		require.ElementsMatch(t, items, tk.ProjectKeeper.GetAllProject(ctx))
 	})
 }
 
-func TestCampaignCount(t *testing.T) {
+func TestProjectCount(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
-	t.Run("should get campaign count", func(t *testing.T) {
-		items := createNCampaign(tk.CampaignKeeper, ctx, 10)
+	t.Run("should get project count", func(t *testing.T) {
+		items := createNProject(tk.ProjectKeeper, ctx, 10)
 		counter := uint64(len(items))
-		require.Equal(t, counter, tk.CampaignKeeper.GetCampaignCounter(ctx))
+		require.Equal(t, counter, tk.ProjectKeeper.GetProjectCounter(ctx))
 	})
 }

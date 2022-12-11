@@ -15,9 +15,9 @@ import (
 func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVouchers) (*types.MsgMintVouchersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
+	project, found := k.GetProject(ctx, msg.ProjectID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrProjectNotFound, "%d", msg.ProjectID)
 	}
 
 	// Get the coordinator ID associated to the sender address
@@ -26,25 +26,25 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 		return nil, err
 	}
 
-	if campaign.CoordinatorID != coordID {
+	if project.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the campaign is %d",
-			campaign.CoordinatorID,
+			"coordinator of the project is %d",
+			project.CoordinatorID,
 		))
 	}
 
-	// Increase the campaign shares
-	campaign.AllocatedShares = types.IncreaseShares(campaign.AllocatedShares, msg.Shares)
-	reached, err := types.IsTotalSharesReached(campaign.AllocatedShares, k.GetTotalShares(ctx))
+	// Increase the project shares
+	project.AllocatedShares = types.IncreaseShares(project.AllocatedShares, msg.Shares)
+	reached, err := types.IsTotalSharesReached(project.AllocatedShares, k.GetTotalShares(ctx))
 	if err != nil {
 		return nil, ignterrors.Criticalf("verified shares are invalid %s", err.Error())
 	}
 	if reached {
-		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrTotalSharesLimit, "%d", msg.ProjectID)
 	}
 
 	// Mint vouchers to the coordinator account
-	vouchers, err := types.SharesToVouchers(msg.Shares, msg.CampaignID)
+	vouchers, err := types.SharesToVouchers(msg.Shares, msg.ProjectID)
 	if err != nil {
 		return nil, ignterrors.Criticalf("verified shares are invalid %s", err.Error())
 	}
@@ -61,13 +61,13 @@ func (k msgServer) MintVouchers(goCtx context.Context, msg *types.MsgMintVoucher
 		return nil, ignterrors.Criticalf("can't send minted coins %s", err.Error())
 	}
 
-	k.SetCampaign(ctx, campaign)
+	k.SetProject(ctx, project)
 
 	err = ctx.EventManager().EmitTypedEvent(
-		&types.EventCampaignSharesUpdated{
-			CampaignID:         campaign.CampaignID,
+		&types.EventProjectSharesUpdated{
+			ProjectID:         project.ProjectID,
 			CoordinatorAddress: msg.Coordinator,
-			AllocatedShares:    campaign.AllocatedShares,
+			AllocatedShares:    project.AllocatedShares,
 		})
 
 	return &types.MsgMintVouchersResponse{}, err

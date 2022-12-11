@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	tc "github.com/tendermint/spn/testutil/constructor"
-	campaign "github.com/tendermint/spn/x/project/types"
+	project "github.com/tendermint/spn/x/project/types"
 )
 
 func TestUpdateTotalSupply(t *testing.T) {
@@ -51,7 +51,7 @@ func TestUpdateTotalSupply(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			newCoins := campaign.UpdateTotalSupply(tt.previousCoins, tt.updatedCoins)
+			newCoins := project.UpdateTotalSupply(tt.previousCoins, tt.updatedCoins)
 			require.True(t, newCoins.IsEqual(tt.wantedCoins))
 		})
 	}
@@ -61,37 +61,37 @@ func TestValidateTotalSupply(t *testing.T) {
 	tests := []struct {
 		name        string
 		coins       sdk.Coins
-		supplyRange campaign.TotalSupplyRange
+		supplyRange project.TotalSupplyRange
 		valid       bool
 	}{
 		{
 			name:        "should allow validation for valid supply",
 			coins:       tc.Coins(t, "1000foo,1000bar"),
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(100), sdkmath.NewInt(1000)),
+			supplyRange: project.NewTotalSupplyRange(sdkmath.NewInt(100), sdkmath.NewInt(1000)),
 			valid:       true,
 		},
 		{
 			name:        "should prevent validation of invalid supply range",
 			coins:       tc.Coins(t, "1000foo,1000bar"),
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(1_000), sdkmath.NewInt(100)),
+			supplyRange: project.NewTotalSupplyRange(sdkmath.NewInt(1_000), sdkmath.NewInt(100)),
 			valid:       false,
 		},
 		{
 			name:        "should prevent validation of total supply less than min",
 			coins:       tc.Coins(t, "100foo,1000bar"),
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(1000), sdkmath.NewInt(10_000)),
+			supplyRange: project.NewTotalSupplyRange(sdkmath.NewInt(1000), sdkmath.NewInt(10_000)),
 			valid:       false,
 		},
 		{
 			name:        "should prevent validation of total supply greater than max",
 			coins:       tc.Coins(t, "1000foo,10000bar"),
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(1000), sdkmath.NewInt(1000)),
+			supplyRange: project.NewTotalSupplyRange(sdkmath.NewInt(1000), sdkmath.NewInt(1000)),
 			valid:       false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := campaign.ValidateTotalSupply(tt.coins, tt.supplyRange)
+			err := project.ValidateTotalSupply(tt.coins, tt.supplyRange)
 			if tt.valid {
 				require.NoError(t, err)
 			} else {
@@ -104,32 +104,32 @@ func TestValidateTotalSupply(t *testing.T) {
 func TestTotalSupplyRange_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name        string
-		supplyRange campaign.TotalSupplyRange
+		supplyRange project.TotalSupplyRange
 		valid       bool
 	}{
 		{
 			name:        "should allow validation with valid total supply range",
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.OneInt(), sdkmath.OneInt()),
+			supplyRange: project.NewTotalSupplyRange(sdkmath.OneInt(), sdkmath.OneInt()),
 			valid:       true,
 		},
 		{
 			name:        "should prevent validation with min total supply less than one",
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.ZeroInt(), sdkmath.OneInt()),
+			supplyRange: project.NewTotalSupplyRange(sdkmath.ZeroInt(), sdkmath.OneInt()),
 			valid:       false,
 		},
 		{
 			name:        "should prevent validation with min total supply greater than max total supply",
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.NewInt(2), sdkmath.OneInt()),
+			supplyRange: project.NewTotalSupplyRange(sdkmath.NewInt(2), sdkmath.OneInt()),
 			valid:       false,
 		},
 		{
 			name:        "should prevent validation with uninitialized min total supply",
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.Int{}, sdkmath.OneInt()),
+			supplyRange: project.NewTotalSupplyRange(sdkmath.Int{}, sdkmath.OneInt()),
 			valid:       false,
 		},
 		{
 			name:        "should prevent validation with prevent uninitialized max total supply",
-			supplyRange: campaign.NewTotalSupplyRange(sdkmath.OneInt(), sdkmath.Int{}),
+			supplyRange: project.NewTotalSupplyRange(sdkmath.OneInt(), sdkmath.Int{}),
 			valid:       false,
 		},
 	}

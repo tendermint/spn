@@ -15,20 +15,20 @@ import (
 
 func TestGenesisState_Validate(t *testing.T) {
 	var (
-		campaign1 = sample.Campaign(r, 0)
-		campaign2 = sample.Campaign(r, 1)
+		project1 = sample.Project(r, 0)
+		project2 = sample.Project(r, 1)
 		shares1   = sample.Shares(r)
 		shares2   = sample.Shares(r)
 		shares3   = sample.Shares(r)
 		shares4   = sample.Shares(r)
 	)
-	sharesCampaign1 := types.IncreaseShares(shares1, shares2)
-	campaign1.AllocatedShares = sharesCampaign1
-	campaign1.CoordinatorID = 0
+	sharesProject1 := types.IncreaseShares(shares1, shares2)
+	project1.AllocatedShares = sharesProject1
+	project1.CoordinatorID = 0
 
-	sharesCampaign2 := types.IncreaseShares(shares3, shares4)
-	campaign2.AllocatedShares = sharesCampaign2
-	campaign2.CoordinatorID = 1
+	sharesProject2 := types.IncreaseShares(shares3, shares4)
+	project2.AllocatedShares = sharesProject2
+	project2.CoordinatorID = 1
 
 	for _, tc := range []struct {
 		name         string
@@ -43,27 +43,27 @@ func TestGenesisState_Validate(t *testing.T) {
 			name: "should allow validation of valid genesis",
 			genState: &types.GenesisState{
 				// this line is used by starport scaffolding # types/genesis/validField
-				CampaignChains: []types.CampaignChains{
+				ProjectChains: []types.ProjectChains{
 					{
-						CampaignID: campaign1.CampaignID,
+						ProjectID: project1.ProjectID,
 					},
 					{
-						CampaignID: campaign2.CampaignID,
+						ProjectID: project2.ProjectID,
 					},
 				},
-				Campaigns: []types.Campaign{
-					campaign1,
-					campaign2,
+				Projects: []types.Project{
+					project1,
+					project2,
 				},
-				CampaignCounter: 2,
+				ProjectCounter: 2,
 				MainnetAccounts: []types.MainnetAccount{
 					{
-						CampaignID: campaign1.CampaignID,
+						ProjectID: project1.ProjectID,
 						Address:    sample.Address(r),
 						Shares:     shares1,
 					},
 					{
-						CampaignID: campaign2.CampaignID,
+						ProjectID: project2.ProjectID,
 						Address:    sample.Address(r),
 						Shares:     shares3,
 					},
@@ -73,122 +73,122 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 		},
 		{
-			name: "should prevent validation of genesis with non existing campaign for mainnet account",
+			name: "should prevent validation of genesis with non existing project for mainnet account",
 			genState: &types.GenesisState{
-				CampaignChains: []types.CampaignChains{
+				ProjectChains: []types.ProjectChains{
 					{
-						CampaignID: 0,
+						ProjectID: 0,
 					},
 					{
-						CampaignID: 1,
+						ProjectID: 1,
 					},
 				},
-				Campaigns: []types.Campaign{
-					sample.Campaign(r, 0),
-					sample.Campaign(r, 1),
+				Projects: []types.Project{
+					sample.Project(r, 0),
+					sample.Project(r, 1),
 				},
-				CampaignCounter: 2,
+				ProjectCounter: 2,
 				MainnetAccounts: []types.MainnetAccount{
 					sample.MainnetAccount(r, 330, "330"),
 				},
 				TotalShares: spntypes.TotalShareNumber,
 			},
-			errorMessage: "campaign id 330 doesn't exist for mainnet account 330",
+			errorMessage: "project id 330 doesn't exist for mainnet account 330",
 		},
 		{
-			name: "should prevent validation of genesis with non existing campaign for chains",
+			name: "should prevent validation of genesis with non existing project for chains",
 			genState: &types.GenesisState{
-				CampaignChains: []types.CampaignChains{
+				ProjectChains: []types.ProjectChains{
 					{
-						CampaignID: 2,
+						ProjectID: 2,
 					},
 					{
-						CampaignID: 4,
+						ProjectID: 4,
 					},
 				},
-				Campaigns: []types.Campaign{
-					sample.Campaign(r, 99),
-					sample.Campaign(r, 88),
+				Projects: []types.Project{
+					sample.Project(r, 99),
+					sample.Project(r, 88),
 				},
-				CampaignCounter: 100,
+				ProjectCounter: 100,
 				TotalShares:     spntypes.TotalShareNumber,
 			},
-			errorMessage: "campaign id 2 doesn't exist for chains",
+			errorMessage: "project id 2 doesn't exist for chains",
 		},
 		{
-			name: "should prevent validation of genesis with duplicated campaignChains",
+			name: "should prevent validation of genesis with duplicated projectChains",
 			genState: &types.GenesisState{
-				Campaigns: []types.Campaign{
-					sample.Campaign(r, 0),
+				Projects: []types.Project{
+					sample.Project(r, 0),
 				},
-				CampaignCounter: 1,
-				CampaignChains: []types.CampaignChains{
+				ProjectCounter: 1,
+				ProjectChains: []types.ProjectChains{
 					{
-						CampaignID: 0,
+						ProjectID: 0,
 					},
 					{
-						CampaignID: 0,
+						ProjectID: 0,
 					},
 				},
 				TotalShares: spntypes.TotalShareNumber,
 			},
-			errorMessage: "duplicated index for campaignChains",
+			errorMessage: "duplicated index for projectChains",
 		},
 		{
-			name: "should prevent validation of genesis with duplicated campaign",
+			name: "should prevent validation of genesis with duplicated project",
 			genState: &types.GenesisState{
-				Campaigns: []types.Campaign{
-					sample.Campaign(r, 0),
-					sample.Campaign(r, 0),
+				Projects: []types.Project{
+					sample.Project(r, 0),
+					sample.Project(r, 0),
 				},
-				CampaignCounter: 2,
+				ProjectCounter: 2,
 				TotalShares:     spntypes.TotalShareNumber,
 			},
-			errorMessage: "duplicated id for campaign",
+			errorMessage: "duplicated id for project",
 		},
 		{
-			name: "should prevent validation of genesis with invalid campaign count",
+			name: "should prevent validation of genesis with invalid project count",
 			genState: &types.GenesisState{
-				Campaigns: []types.Campaign{
-					sample.Campaign(r, 1),
+				Projects: []types.Project{
+					sample.Project(r, 1),
 				},
-				CampaignCounter: 0,
+				ProjectCounter: 0,
 				TotalShares:     spntypes.TotalShareNumber,
 			},
-			errorMessage: "campaign id should be lower or equal than the last id",
+			errorMessage: "project id should be lower or equal than the last id",
 		},
 		{
-			name: "should prevent validation of genesis with invalid campaign",
+			name: "should prevent validation of genesis with invalid project",
 			genState: &types.GenesisState{
-				Campaigns: []types.Campaign{
-					types.NewCampaign(
+				Projects: []types.Project{
+					types.NewProject(
 						0,
-						invalidCampaignName,
+						invalidProjectName,
 						sample.Uint64(r),
 						sample.TotalSupply(r),
 						sample.Metadata(r, 20),
 						sample.Duration(r).Milliseconds(),
 					),
 				},
-				CampaignCounter: 1,
+				ProjectCounter: 1,
 				TotalShares:     spntypes.TotalShareNumber,
 			},
-			errorMessage: "invalid campaign 0: campaign name can only contain alphanumerical characters or hyphen",
+			errorMessage: "invalid project 0: project name can only contain alphanumerical characters or hyphen",
 		},
 		{
 			name: "should prevent validation of genesis with duplicated mainnetAccount",
 			genState: &types.GenesisState{
-				Campaigns: []types.Campaign{
-					sample.Campaign(r, 0),
+				Projects: []types.Project{
+					sample.Project(r, 0),
 				},
-				CampaignCounter: 1,
+				ProjectCounter: 1,
 				MainnetAccounts: []types.MainnetAccount{
 					{
-						CampaignID: 0,
+						ProjectID: 0,
 						Address:    "0",
 					},
 					{
-						CampaignID: 0,
+						ProjectID: 0,
 						Address:    "0",
 					},
 				},
@@ -199,10 +199,10 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			name: "should prevent validation of genesis with invalid allocations",
 			genState: &types.GenesisState{
-				Campaigns: []types.Campaign{
+				Projects: []types.Project{
 					{
-						CampaignID:         0,
-						CampaignName:       "test",
+						ProjectID:         0,
+						ProjectName:       "test",
 						CoordinatorID:      0,
 						MainnetID:          0,
 						MainnetInitialized: false,
@@ -211,16 +211,16 @@ func TestGenesisState_Validate(t *testing.T) {
 						Metadata:           nil,
 					},
 				},
-				CampaignCounter: 1,
+				ProjectCounter: 1,
 				MainnetAccounts: []types.MainnetAccount{
 					{
-						CampaignID: 0,
+						ProjectID: 0,
 						Address:    "0",
 					},
 				},
 				TotalShares: spntypes.TotalShareNumber,
 			},
-			errorMessage: "invalid campaign 0: more allocated shares than total shares",
+			errorMessage: "invalid project 0: more allocated shares than total shares",
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
@@ -233,30 +233,30 @@ func TestGenesisState_Validate(t *testing.T) {
 			}
 			require.NoError(t, err)
 
-			campaignIDMap := make(map[uint64]types.Shares)
-			for _, elem := range tc.genState.Campaigns {
-				campaignIDMap[elem.CampaignID] = elem.AllocatedShares
+			projectIDMap := make(map[uint64]types.Shares)
+			for _, elem := range tc.genState.Projects {
+				projectIDMap[elem.ProjectID] = elem.AllocatedShares
 			}
 			shares := make(map[uint64]types.Shares)
 
 			for _, acc := range tc.genState.MainnetAccounts {
-				// check if the campaign exists for mainnet accounts
-				_, ok := campaignIDMap[acc.CampaignID]
+				// check if the project exists for mainnet accounts
+				_, ok := projectIDMap[acc.ProjectID]
 				require.True(t, ok)
 
 				// sum mainnet account shares
-				if _, ok := shares[acc.CampaignID]; !ok {
-					shares[acc.CampaignID] = types.EmptyShares()
+				if _, ok := shares[acc.ProjectID]; !ok {
+					shares[acc.ProjectID] = types.EmptyShares()
 				}
-				shares[acc.CampaignID] = types.IncreaseShares(
-					shares[acc.CampaignID],
+				shares[acc.ProjectID] = types.IncreaseShares(
+					shares[acc.ProjectID],
 					acc.Shares,
 				)
 			}
 
-			for campaignID, share := range campaignIDMap {
-				// check if the campaign shares is equal all accounts shares
-				accShares, ok := shares[campaignID]
+			for projectID, share := range projectIDMap {
+				// check if the project shares is equal all accounts shares
+				accShares, ok := shares[projectID]
 				require.True(t, ok)
 				isLowerEqual := accShares.IsAllLTE(share)
 				require.True(t, isLowerEqual)
@@ -277,7 +277,7 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 				Params: types.NewParams(
 					types.DefaultMinTotalSupply,
 					types.DefaultMinTotalSupply.Sub(sdkmath.OneInt()),
-					types.DefaultCampaignCreationFee,
+					types.DefaultProjectCreationFee,
 					types.DefaultMaxMetadataLength,
 				),
 			},
@@ -289,7 +289,7 @@ func TestGenesisState_ValidateParams(t *testing.T) {
 				Params: types.NewParams(
 					types.DefaultMinTotalSupply,
 					types.DefaultMinTotalSupply.Add(sdkmath.OneInt()),
-					types.DefaultCampaignCreationFee,
+					types.DefaultProjectCreationFee,
 					types.DefaultMaxMetadataLength,
 				),
 			},

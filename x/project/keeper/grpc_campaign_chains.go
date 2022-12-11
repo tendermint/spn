@@ -10,19 +10,19 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func (k Keeper) CampaignChains(c context.Context, req *types.QueryGetCampaignChainsRequest) (*types.QueryGetCampaignChainsResponse, error) {
+func (k Keeper) ProjectChains(c context.Context, req *types.QueryGetProjectChainsRequest) (*types.QueryGetProjectChainsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetCampaignChains(
+	val, found := k.GetProjectChains(
 		ctx,
-		req.CampaignID,
+		req.ProjectID,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetCampaignChainsResponse{CampaignChains: val}, nil
+	return &types.QueryGetProjectChainsResponse{ProjectChains: val}, nil
 }

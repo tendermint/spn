@@ -11,10 +11,10 @@ const TypeMsgUpdateTotalSupply = "update_total_supply"
 
 var _ sdk.Msg = &MsgUpdateTotalSupply{}
 
-func NewMsgUpdateTotalSupply(coordinator string, campaignID uint64, totalSupplyUpdate sdk.Coins) *MsgUpdateTotalSupply {
+func NewMsgUpdateTotalSupply(coordinator string, projectID uint64, totalSupplyUpdate sdk.Coins) *MsgUpdateTotalSupply {
 	return &MsgUpdateTotalSupply{
 		Coordinator:       coordinator,
-		CampaignID:        campaignID,
+		ProjectID:        projectID,
 		TotalSupplyUpdate: totalSupplyUpdate,
 	}
 }

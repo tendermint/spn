@@ -12,27 +12,27 @@ import (
 	"github.com/tendermint/spn/x/project/types"
 )
 
-func TestCampaignChainsQuerySingle(t *testing.T) {
+func TestProjectChainsQuerySingle(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNCampaignChains(tk.CampaignKeeper, ctx, 2)
+	msgs := createNProjectChains(tk.ProjectKeeper, ctx, 2)
 	for _, tc := range []struct {
 		name     string
-		request  *types.QueryGetCampaignChainsRequest
-		response *types.QueryGetCampaignChainsResponse
+		request  *types.QueryGetProjectChainsRequest
+		response *types.QueryGetProjectChainsResponse
 		err      error
 	}{
 		{
 			name: "should allow valid query",
-			request: &types.QueryGetCampaignChainsRequest{
-				CampaignID: msgs[0].CampaignID,
+			request: &types.QueryGetProjectChainsRequest{
+				ProjectID: msgs[0].ProjectID,
 			},
-			response: &types.QueryGetCampaignChainsResponse{CampaignChains: msgs[0]},
+			response: &types.QueryGetProjectChainsResponse{ProjectChains: msgs[0]},
 		},
 		{
 			name: "should return KeyNotFound",
-			request: &types.QueryGetCampaignChainsRequest{
-				CampaignID: 100000,
+			request: &types.QueryGetProjectChainsRequest{
+				ProjectID: 100000,
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
@@ -42,7 +42,7 @@ func TestCampaignChainsQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			response, err := tk.CampaignKeeper.CampaignChains(wctx, tc.request)
+			response, err := tk.ProjectKeeper.ProjectChains(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {

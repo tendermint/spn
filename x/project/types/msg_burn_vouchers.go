@@ -9,10 +9,10 @@ const TypeMsgBurnVouchers = "burn_vouchers"
 
 var _ sdk.Msg = &MsgBurnVouchers{}
 
-func NewMsgBurnVouchers(sender string, campaignID uint64, vouchers sdk.Coins) *MsgBurnVouchers {
+func NewMsgBurnVouchers(sender string, projectID uint64, vouchers sdk.Coins) *MsgBurnVouchers {
 	return &MsgBurnVouchers{
 		Sender:     sender,
-		CampaignID: campaignID,
+		ProjectID: projectID,
 		Vouchers:   vouchers,
 	}
 }
@@ -52,7 +52,7 @@ func (msg *MsgBurnVouchers) ValidateBasic() error {
 		return sdkerrors.Wrap(ErrInvalidVouchers, "vouchers is empty")
 	}
 
-	if err := CheckVouchers(msg.Vouchers, msg.CampaignID); err != nil {
+	if err := CheckVouchers(msg.Vouchers, msg.ProjectID); err != nil {
 		return sdkerrors.Wrap(ErrNoMatchVouchers, err.Error())
 	}
 	return nil

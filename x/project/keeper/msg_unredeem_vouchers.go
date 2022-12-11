@@ -14,23 +14,23 @@ import (
 func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredeemVouchers) (*types.MsgUnredeemVouchersResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
+	project, found := k.GetProject(ctx, msg.ProjectID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrProjectNotFound, "%d", msg.ProjectID)
 	}
 
-	mainnetLaunched, err := k.IsCampaignMainnetLaunchTriggered(ctx, campaign.CampaignID)
+	mainnetLaunched, err := k.IsProjectMainnetLaunchTriggered(ctx, project.ProjectID)
 	if err != nil {
 		return nil, ignterrors.Critical(err.Error())
 	}
 	if mainnetLaunched {
 		return nil, sdkerrors.Wrap(types.ErrMainnetLaunchTriggered, fmt.Sprintf(
 			"mainnet %d launch is already triggered",
-			campaign.MainnetID,
+			project.MainnetID,
 		))
 	}
 
-	account, found := k.GetMainnetAccount(ctx, msg.CampaignID, msg.Sender)
+	account, found := k.GetMainnetAccount(ctx, msg.ProjectID, msg.Sender)
 	if !found {
 		return nil, sdkerrors.Wrap(types.ErrAccountNotFound, msg.Sender)
 	}
@@ -43,9 +43,9 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 
 	// If the account no longer has shares, it can be removed from the store
 	if types.IsEqualShares(account.Shares, types.EmptyShares()) {
-		k.RemoveMainnetAccount(ctx, msg.CampaignID, msg.Sender)
+		k.RemoveMainnetAccount(ctx, msg.ProjectID, msg.Sender)
 		if err := ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountRemoved{
-			CampaignID: campaign.CampaignID,
+			ProjectID: project.ProjectID,
 			Address:    account.Address,
 		}); err != nil {
 			return nil, err
@@ -53,7 +53,7 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 	} else {
 		k.SetMainnetAccount(ctx, account)
 		if err := ctx.EventManager().EmitTypedEvent(&types.EventMainnetAccountUpdated{
-			CampaignID: account.CampaignID,
+			ProjectID: account.ProjectID,
 			Address:    account.Address,
 			Shares:     account.Shares,
 		}); err != nil {
@@ -62,7 +62,7 @@ func (k msgServer) UnredeemVouchers(goCtx context.Context, msg *types.MsgUnredee
 	}
 
 	// Mint vouchers from the removed shares and send them to sender balance
-	vouchers, err := types.SharesToVouchers(msg.Shares, msg.CampaignID)
+	vouchers, err := types.SharesToVouchers(msg.Shares, msg.ProjectID)
 	if err != nil {
 		return nil, ignterrors.Criticalf("verified shares are invalid %s", err.Error())
 	}

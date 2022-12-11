@@ -18,16 +18,16 @@ import (
 func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitializeMainnet) (*types.MsgInitializeMainnetResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	campaign, found := k.GetCampaign(ctx, msg.CampaignID)
+	project, found := k.GetProject(ctx, msg.ProjectID)
 	if !found {
-		return nil, sdkerrors.Wrapf(types.ErrCampaignNotFound, "%d", msg.CampaignID)
+		return nil, sdkerrors.Wrapf(types.ErrProjectNotFound, "%d", msg.ProjectID)
 	}
 
-	if campaign.MainnetInitialized {
-		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%d", msg.CampaignID)
+	if project.MainnetInitialized {
+		return nil, sdkerrors.Wrapf(types.ErrMainnetInitialized, "%d", msg.ProjectID)
 	}
 
-	if campaign.TotalSupply.Empty() {
+	if project.TotalSupply.Empty() {
 		return nil, sdkerrors.Wrap(types.ErrInvalidTotalSupply, "total supply is empty")
 	}
 
@@ -37,10 +37,10 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		return nil, err
 	}
 
-	if campaign.CoordinatorID != coordID {
+	if project.CoordinatorID != coordID {
 		return nil, sdkerrors.Wrap(profiletypes.ErrCoordInvalid, fmt.Sprintf(
-			"coordinator of the campaign is %d",
-			campaign.CoordinatorID,
+			"coordinator of the project is %d",
+			project.CoordinatorID,
 		))
 	}
 
@@ -55,7 +55,7 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 		msg.SourceHash,
 		initialGenesis,
 		true,
-		msg.CampaignID,
+		msg.ProjectID,
 		true,
 		sdk.NewCoins(), // no enforced default for mainnet
 		[]byte{},
@@ -65,14 +65,14 @@ func (k msgServer) InitializeMainnet(goCtx context.Context, msg *types.MsgInitia
 	}
 
 	// Set mainnet as initialized and save the change
-	campaign.MainnetID = mainnetID
-	campaign.MainnetInitialized = true
-	k.SetCampaign(ctx, campaign)
+	project.MainnetID = mainnetID
+	project.MainnetInitialized = true
+	k.SetProject(ctx, project)
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventCampaignMainnetInitialized{
-		CampaignID:         campaign.CampaignID,
+	err = ctx.EventManager().EmitTypedEvent(&types.EventProjectMainnetInitialized{
+		ProjectID:         project.ProjectID,
 		CoordinatorAddress: msg.Coordinator,
-		MainnetID:          campaign.MainnetID,
+		MainnetID:          project.MainnetID,
 	})
 
 	return &types.MsgInitializeMainnetResponse{

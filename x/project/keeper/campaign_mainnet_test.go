@@ -9,67 +9,67 @@ import (
 	"github.com/tendermint/spn/testutil/sample"
 )
 
-func TestIsCampaignMainnetLaunchTriggered(t *testing.T) {
+func TestIsProjectMainnetLaunchTriggered(t *testing.T) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 
-	t.Run("should show campaign has mainnet with launch triggered", func(t *testing.T) {
-		campaignMainnetLaunched := sample.Campaign(r, 0)
-		campaignMainnetLaunched.MainnetInitialized = true
+	t.Run("should show project has mainnet with launch triggered", func(t *testing.T) {
+		projectMainnetLaunched := sample.Project(r, 0)
+		projectMainnetLaunched.MainnetInitialized = true
 		chainLaunched := sample.Chain(r, 0, 0)
 		chainLaunched.LaunchTriggered = true
 		chainLaunched.IsMainnet = true
-		campaignMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chainLaunched)
-		campaignMainnetLaunched.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaignMainnetLaunched)
-		res, err := tk.CampaignKeeper.IsCampaignMainnetLaunchTriggered(ctx, campaignMainnetLaunched.CampaignID)
+		projectMainnetLaunched.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chainLaunched)
+		projectMainnetLaunched.ProjectID = tk.ProjectKeeper.AppendProject(ctx, projectMainnetLaunched)
+		res, err := tk.ProjectKeeper.IsProjectMainnetLaunchTriggered(ctx, projectMainnetLaunched.ProjectID)
 		require.NoError(t, err)
 		require.True(t, res)
 	})
 
-	t.Run("should show campaign has mainnet with launch not triggered", func(t *testing.T) {
-		campaignMainnetInitialized := sample.Campaign(r, 1)
-		campaignMainnetInitialized.MainnetInitialized = true
+	t.Run("should show project has mainnet with launch not triggered", func(t *testing.T) {
+		projectMainnetInitialized := sample.Project(r, 1)
+		projectMainnetInitialized.MainnetInitialized = true
 		chain := sample.Chain(r, 0, 0)
 		chain.LaunchTriggered = false
 		chain.IsMainnet = true
-		campaignMainnetInitialized.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
-		campaignMainnetInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaignMainnetInitialized)
-		res, err := tk.CampaignKeeper.IsCampaignMainnetLaunchTriggered(ctx, campaignMainnetInitialized.CampaignID)
+		projectMainnetInitialized.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chain)
+		projectMainnetInitialized.ProjectID = tk.ProjectKeeper.AppendProject(ctx, projectMainnetInitialized)
+		res, err := tk.ProjectKeeper.IsProjectMainnetLaunchTriggered(ctx, projectMainnetInitialized.ProjectID)
 		require.NoError(t, err)
 		require.False(t, res)
 	})
 
-	t.Run("should show campaign with mainnnet not initialized", func(t *testing.T) {
-		campaignMainnetNotInitialized := sample.Campaign(r, 2)
-		campaignMainnetNotInitialized.MainnetInitialized = false
-		campaignMainnetNotInitialized.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaignMainnetNotInitialized)
-		res, err := tk.CampaignKeeper.IsCampaignMainnetLaunchTriggered(ctx, campaignMainnetNotInitialized.CampaignID)
+	t.Run("should show project with mainnnet not initialized", func(t *testing.T) {
+		projectMainnetNotInitialized := sample.Project(r, 2)
+		projectMainnetNotInitialized.MainnetInitialized = false
+		projectMainnetNotInitialized.ProjectID = tk.ProjectKeeper.AppendProject(ctx, projectMainnetNotInitialized)
+		res, err := tk.ProjectKeeper.IsProjectMainnetLaunchTriggered(ctx, projectMainnetNotInitialized.ProjectID)
 		require.NoError(t, err)
 		require.False(t, res)
 	})
 
 	t.Run("should show mainnet not found", func(t *testing.T) {
-		campaignMainnetNotFound := sample.Campaign(r, 3)
-		campaignMainnetNotFound.MainnetInitialized = true
-		campaignMainnetNotFound.MainnetID = 1000
-		campaignMainnetNotFound.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaignMainnetNotFound)
-		_, err := tk.CampaignKeeper.IsCampaignMainnetLaunchTriggered(ctx, campaignMainnetNotFound.CampaignID)
+		projectMainnetNotFound := sample.Project(r, 3)
+		projectMainnetNotFound.MainnetInitialized = true
+		projectMainnetNotFound.MainnetID = 1000
+		projectMainnetNotFound.ProjectID = tk.ProjectKeeper.AppendProject(ctx, projectMainnetNotFound)
+		_, err := tk.ProjectKeeper.IsProjectMainnetLaunchTriggered(ctx, projectMainnetNotFound.ProjectID)
 		require.Error(t, err)
 	})
 
 	t.Run("should show associated mainnet chain is not mainnet", func(t *testing.T) {
-		campaignInvalidMainnet := sample.Campaign(r, 4)
-		campaignInvalidMainnet.MainnetInitialized = true
+		projectInvalidMainnet := sample.Project(r, 4)
+		projectInvalidMainnet.MainnetInitialized = true
 		chainNoMainnet := sample.Chain(r, 0, 0)
 		chainNoMainnet.LaunchTriggered = false
 		chainNoMainnet.IsMainnet = false
-		campaignInvalidMainnet.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chainNoMainnet)
-		campaignInvalidMainnet.CampaignID = tk.CampaignKeeper.AppendCampaign(ctx, campaignInvalidMainnet)
-		_, err := tk.CampaignKeeper.IsCampaignMainnetLaunchTriggered(ctx, campaignInvalidMainnet.CampaignID)
+		projectInvalidMainnet.MainnetID = tk.LaunchKeeper.AppendChain(ctx, chainNoMainnet)
+		projectInvalidMainnet.ProjectID = tk.ProjectKeeper.AppendProject(ctx, projectInvalidMainnet)
+		_, err := tk.ProjectKeeper.IsProjectMainnetLaunchTriggered(ctx, projectInvalidMainnet.ProjectID)
 		require.Error(t, err)
 	})
 
-	t.Run("should show campaign not found", func(t *testing.T) {
-		_, err := tk.CampaignKeeper.IsCampaignMainnetLaunchTriggered(ctx, 1000)
+	t.Run("should show project not found", func(t *testing.T) {
+		_, err := tk.ProjectKeeper.IsProjectMainnetLaunchTriggered(ctx, 1000)
 		require.Error(t, err)
 	})
 }

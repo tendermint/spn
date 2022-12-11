@@ -20,12 +20,12 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 	var (
 		coordID             uint64
 		coordAddr           = sample.Address(r)
-		coordAddrNoCampaign = sample.Address(r)
+		coordAddrNoProject = sample.Address(r)
 		sdkCtx, tk, ts      = testkeeper.NewTestSetup(t)
 		ctx                 = sdk.WrapSDKContext(sdkCtx)
 	)
 
-	totalShares := tk.CampaignKeeper.GetTotalShares(sdkCtx)
+	totalShares := tk.ProjectKeeper.GetTotalShares(sdkCtx)
 
 	t.Run("should allow creation of coordinators", func(t *testing.T) {
 		res, err := ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
@@ -35,19 +35,19 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 		require.NoError(t, err)
 		coordID = res.CoordinatorID
 		res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-			Address:     coordAddrNoCampaign,
+			Address:     coordAddrNoProject,
 			Description: sample.CoordinatorDescription(r),
 		})
 		require.NoError(t, err)
 	})
 
-	// utility to initialize a sample campaign with the data we need
-	newCampaign := func(
-		campaignID uint64,
+	// utility to initialize a sample project with the data we need
+	newProject := func(
+		projectID uint64,
 		as types.Shares,
 		sa types.SpecialAllocations,
-	) *types.Campaign {
-		c := sample.Campaign(r, campaignID)
+	) *types.Project {
+		c := sample.Project(r, projectID)
 		c.CoordinatorID = coordID
 		c.AllocatedShares = as
 		c.SpecialAllocations = sa
@@ -66,15 +66,15 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 
 	// inputState represents input state for TDT cases/
 	// non-defined values are not initialized
-	// if a mainnet is defined, it is the mainnet of the campaign
+	// if a mainnet is defined, it is the mainnet of the project
 	type inputState struct {
-		campaign *types.Campaign
+		project *types.Project
 		mainnet  *launchtypes.Chain
 	}
 
-	campaignNoExistentMainnet := newCampaign(100, types.EmptyShares(), types.EmptySpecialAllocations())
-	campaignNoExistentMainnet.MainnetInitialized = true
-	campaignNoExistentMainnet.MainnetID = 100
+	projectNoExistentMainnet := newProject(100, types.EmptyShares(), types.EmptySpecialAllocations())
+	projectNoExistentMainnet.MainnetInitialized = true
+	projectNoExistentMainnet.MainnetID = 100
 
 	tests := []struct {
 		name                    string
@@ -91,7 +91,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(1, types.EmptyShares(), types.EmptySpecialAllocations()),
+				project: newProject(1, types.EmptyShares(), types.EmptySpecialAllocations()),
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
@@ -104,7 +104,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.NewSpecialAllocations(tc.Shares(t, "50foo"), tc.Shares(t, "30foo")),
 			),
 			state: inputState{
-				campaign: newCampaign(2, types.EmptyShares(), types.EmptySpecialAllocations()),
+				project: newProject(2, types.EmptyShares(), types.EmptySpecialAllocations()),
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: tc.Shares(t, "80foo"),
@@ -117,7 +117,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(3, tc.Shares(t, "200foo"),
+				project: newProject(3, tc.Shares(t, "200foo"),
 					types.NewSpecialAllocations(tc.Shares(t, "50foo"), tc.Shares(t, "30foo")),
 				),
 				mainnet: nil,
@@ -132,7 +132,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.NewSpecialAllocations(tc.Shares(t, "200foo"), tc.Shares(t, "200bar")),
 			),
 			state: inputState{
-				campaign: newCampaign(4, tc.Shares(t, "1000foo,1000bar,1000baz"),
+				project: newProject(4, tc.Shares(t, "1000foo,1000bar,1000baz"),
 					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
 				),
 				mainnet: nil,
@@ -147,7 +147,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.NewSpecialAllocations(tc.Shares(t, "100foo"), tc.Shares(t, "300bar, 500baz")),
 			),
 			state: inputState{
-				campaign: newCampaign(5, tc.Shares(t, "1000foo,1000bar,1000baz"),
+				project: newProject(5, tc.Shares(t, "1000foo,1000bar,1000baz"),
 					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
 				),
 				mainnet: nil,
@@ -162,7 +162,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.NewSpecialAllocations(tc.Shares(t, "200foo"), tc.Shares(t, "500baz")),
 			),
 			state: inputState{
-				campaign: newCampaign(6, tc.Shares(t, "1000foo,200bar"),
+				project: newProject(6, tc.Shares(t, "1000foo,200bar"),
 					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
 				),
 				mainnet: nil,
@@ -177,7 +177,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(7, tc.Shares(t, "200foo,200bar"),
+				project: newProject(7, tc.Shares(t, "200foo,200bar"),
 					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
 				),
 				mainnet: nil,
@@ -192,7 +192,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.NewSpecialAllocations(tc.Shares(t, "100foo"), tc.Shares(t, "300bar, 500baz")),
 			),
 			state: inputState{
-				campaign: newCampaign(8, tc.Shares(t, "1000foo,1000bar,1000baz"),
+				project: newProject(8, tc.Shares(t, "1000foo,1000bar,1000baz"),
 					types.NewSpecialAllocations(tc.Shares(t, "100foo,100bar"), tc.Shares(t, "100foo,100bar")),
 				),
 				mainnet: newChain(1, false),
@@ -207,24 +207,24 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.NewSpecialAllocations(tc.Shares(t, fmt.Sprintf("%dfoo", totalShares)), tc.Shares(t, fmt.Sprintf("%dbar", totalShares))),
 			),
 			state: inputState{
-				campaign: newCampaign(9, types.EmptyShares(), types.EmptySpecialAllocations()),
+				project: newProject(9, types.EmptyShares(), types.EmptySpecialAllocations()),
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: tc.Shares(t, fmt.Sprintf("%dfoo,%dbar", totalShares, totalShares)),
 		},
 		{
-			name: "should fail if campaign does not exist",
+			name: "should fail if project does not exist",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
 				10000,
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: nil,
+				project: nil,
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
-			err:                     types.ErrCampaignNotFound,
+			err:                     types.ErrProjectNotFound,
 		},
 		{
 			name: "should fail if the coordinator does not exist",
@@ -234,21 +234,21 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(50, types.EmptyShares(), types.EmptySpecialAllocations()),
+				project: newProject(50, types.EmptyShares(), types.EmptySpecialAllocations()),
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
 			err:                     profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "should fail if the signer is not the coordinator of the campaign",
+			name: "should fail if the signer is not the coordinator of the project",
 			msg: *types.NewMsgUpdateSpecialAllocations(
-				coordAddrNoCampaign,
+				coordAddrNoProject,
 				51,
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(51, types.EmptyShares(), types.EmptySpecialAllocations()),
+				project: newProject(51, types.EmptyShares(), types.EmptySpecialAllocations()),
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
@@ -262,7 +262,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(52, types.EmptyShares(), types.EmptySpecialAllocations()),
+				project: newProject(52, types.EmptyShares(), types.EmptySpecialAllocations()),
 				mainnet:  newChain(50, true),
 			},
 			expectedAllocatedShares: types.EmptyShares(),
@@ -276,7 +276,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.NewSpecialAllocations(tc.Shares(t, fmt.Sprintf("%dfoo", totalShares)), tc.Shares(t, "1foo")),
 			),
 			state: inputState{
-				campaign: newCampaign(53, types.EmptyShares(), types.EmptySpecialAllocations()),
+				project: newProject(53, types.EmptyShares(), types.EmptySpecialAllocations()),
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
@@ -290,7 +290,7 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: newCampaign(54, tc.Shares(t, "1000foo"),
+				project: newProject(54, tc.Shares(t, "1000foo"),
 					types.NewSpecialAllocations(tc.Shares(t, "600foo"), tc.Shares(t, "600foo")),
 				),
 				mainnet: nil,
@@ -299,14 +299,14 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 			err:                     ignterrors.ErrCritical,
 		},
 		{
-			name: "should trigger a critical error when updating a campaign with a non-existent initialize mainnet ",
+			name: "should trigger a critical error when updating a project with a non-existent initialize mainnet ",
 			msg: *types.NewMsgUpdateSpecialAllocations(
 				coordAddr,
 				100,
 				types.EmptySpecialAllocations(),
 			),
 			state: inputState{
-				campaign: campaignNoExistentMainnet,
+				project: projectNoExistentMainnet,
 				mainnet:  nil,
 			},
 			expectedAllocatedShares: types.EmptyShares(),
@@ -315,31 +315,31 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Create the campaign if defined
-			if tt.state.campaign != nil {
+			// Create the project if defined
+			if tt.state.project != nil {
 
-				// link mainnet to campaign if defined
+				// link mainnet to project if defined
 				if tt.state.mainnet != nil {
 					tt.state.mainnet.IsMainnet = true
-					tt.state.mainnet.CampaignID = tt.state.campaign.CampaignID
-					tt.state.campaign.MainnetInitialized = true
-					tt.state.campaign.MainnetID = tt.state.mainnet.LaunchID
+					tt.state.mainnet.ProjectID = tt.state.project.ProjectID
+					tt.state.project.MainnetInitialized = true
+					tt.state.project.MainnetID = tt.state.mainnet.LaunchID
 
 					tk.LaunchKeeper.SetChain(sdkCtx, *tt.state.mainnet)
 				}
 
-				tk.CampaignKeeper.SetCampaign(sdkCtx, *tt.state.campaign)
+				tk.ProjectKeeper.SetProject(sdkCtx, *tt.state.project)
 			}
 
-			_, err := ts.CampaignSrv.UpdateSpecialAllocations(ctx, &tt.msg)
+			_, err := ts.ProjectSrv.UpdateSpecialAllocations(ctx, &tt.msg)
 
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
 			}
 
-			// fetch campaign
-			camp, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tt.msg.CampaignID)
+			// fetch project
+			camp, found := tk.ProjectKeeper.GetProject(sdkCtx, tt.msg.ProjectID)
 			require.True(t, found)
 
 			// check genesis distribution
@@ -365,10 +365,10 @@ func Test_msgServer_UpdateSpecialAllocations(t *testing.T) {
 
 			// no other values should be edited
 			camp.SpecialAllocations = types.EmptySpecialAllocations()
-			tt.state.campaign.SpecialAllocations = types.EmptySpecialAllocations()
+			tt.state.project.SpecialAllocations = types.EmptySpecialAllocations()
 			camp.AllocatedShares = types.EmptyShares()
-			tt.state.campaign.AllocatedShares = types.EmptyShares()
-			require.EqualValues(t, *tt.state.campaign, camp)
+			tt.state.project.AllocatedShares = types.EmptyShares()
+			require.EqualValues(t, *tt.state.project, camp)
 		})
 	}
 }

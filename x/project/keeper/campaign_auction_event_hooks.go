@@ -13,45 +13,45 @@ import (
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 )
 
-// EmitCampaignAuctionCreated emits EventCampaignAuctionCreated event if an auction is created for a campaign from a coordinator
-func (k Keeper) EmitCampaignAuctionCreated(
+// EmitProjectAuctionCreated emits EventProjectAuctionCreated event if an auction is created for a project from a coordinator
+func (k Keeper) EmitProjectAuctionCreated(
 	ctx sdk.Context,
 	auctionID uint64,
 	auctioneer string,
 	sellingCoin sdk.Coin,
 ) (bool, error) {
-	campaignID, err := types.VoucherCampaign(sellingCoin.Denom)
+	projectID, err := types.VoucherProject(sellingCoin.Denom)
 	if err != nil {
-		// not a campaign auction
+		// not a project auction
 		return false, nil
 	}
 
-	// verify the auctioneer is the coordinator of the campaign
-	campaign, found := k.GetCampaign(ctx, campaignID)
+	// verify the auctioneer is the coordinator of the project
+	project, found := k.GetProject(ctx, projectID)
 	if !found {
-		return false, sdkerrors.Wrapf(types.ErrCampaignNotFound,
-			"voucher %s is associated to an non-existing campaign %d",
+		return false, sdkerrors.Wrapf(types.ErrProjectNotFound,
+			"voucher %s is associated to an non-existing project %d",
 			sellingCoin.Denom,
-			campaignID,
+			projectID,
 		)
 	}
-	coord, found := k.profileKeeper.GetCoordinator(ctx, campaign.CoordinatorID)
+	coord, found := k.profileKeeper.GetCoordinator(ctx, project.CoordinatorID)
 	if !found {
 		return false, sdkerrors.Wrapf(profiletypes.ErrCoordInvalid,
-			"campaign %d coordinator doesn't exist %d",
-			campaignID,
-			campaign.CoordinatorID,
+			"project %d coordinator doesn't exist %d",
+			projectID,
+			project.CoordinatorID,
 		)
 	}
 
-	// if the coordinator if the auctioneer, we emit a CampaignAuctionCreated event
+	// if the coordinator if the auctioneer, we emit a ProjectAuctionCreated event
 	if coord.Address != auctioneer {
 		return false, nil
 	}
 
 	err = ctx.EventManager().EmitTypedEvents(
-		&types.EventCampaignAuctionCreated{
-			CampaignID: campaignID,
+		&types.EventProjectAuctionCreated{
+			ProjectID: projectID,
 			AuctionID:  auctionID,
 		},
 	)
@@ -62,23 +62,23 @@ func (k Keeper) EmitCampaignAuctionCreated(
 	return true, nil
 }
 
-// CampaignAuctionEventHooks returns a CampaignAuctionEventHooks associated with the campaign keeper
-func (k Keeper) CampaignAuctionEventHooks() CampaignAuctionEventHooks {
-	return CampaignAuctionEventHooks{
-		campaignKeeper: k,
+// ProjectAuctionEventHooks returns a ProjectAuctionEventHooks associated with the project keeper
+func (k Keeper) ProjectAuctionEventHooks() ProjectAuctionEventHooks {
+	return ProjectAuctionEventHooks{
+		projectKeeper: k,
 	}
 }
 
-// CampaignAuctionEventHooks implements fundraising hooks and emit events on auction creation
-type CampaignAuctionEventHooks struct {
-	campaignKeeper Keeper
+// ProjectAuctionEventHooks implements fundraising hooks and emit events on auction creation
+type ProjectAuctionEventHooks struct {
+	projectKeeper Keeper
 }
 
 // Implements FundraisingHooks interface
-var _ fundraisingtypes.FundraisingHooks = CampaignAuctionEventHooks{}
+var _ fundraisingtypes.FundraisingHooks = ProjectAuctionEventHooks{}
 
-// AfterFixedPriceAuctionCreated emits a CampaignAuctionCreated event if created for a campaign
-func (h CampaignAuctionEventHooks) AfterFixedPriceAuctionCreated(
+// AfterFixedPriceAuctionCreated emits a ProjectAuctionCreated event if created for a project
+func (h ProjectAuctionEventHooks) AfterFixedPriceAuctionCreated(
 	ctx sdk.Context,
 	auctionID uint64,
 	auctioneer string,
@@ -91,11 +91,11 @@ func (h CampaignAuctionEventHooks) AfterFixedPriceAuctionCreated(
 ) {
 	// TODO: investigate error handling for hooks
 	// https://github.com/tendermint/spn/issues/869
-	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionID, auctioneer, sellingCoin)
+	_, _ = h.projectKeeper.EmitProjectAuctionCreated(ctx, auctionID, auctioneer, sellingCoin)
 }
 
-// AfterBatchAuctionCreated emits a CampaignAuctionCreated event if created for a campaign
-func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
+// AfterBatchAuctionCreated emits a ProjectAuctionCreated event if created for a project
+func (h ProjectAuctionEventHooks) AfterBatchAuctionCreated(
 	ctx sdk.Context,
 	auctionID uint64,
 	auctioneer string,
@@ -111,11 +111,11 @@ func (h CampaignAuctionEventHooks) AfterBatchAuctionCreated(
 ) {
 	// TODO: investigate error handling for hooks
 	// https://github.com/tendermint/spn/issues/869
-	_, _ = h.campaignKeeper.EmitCampaignAuctionCreated(ctx, auctionID, auctioneer, sellingCoin)
+	_, _ = h.projectKeeper.EmitProjectAuctionCreated(ctx, auctionID, auctioneer, sellingCoin)
 }
 
 // BeforeFixedPriceAuctionCreated implements FundraisingHooks
-func (h CampaignAuctionEventHooks) BeforeFixedPriceAuctionCreated(
+func (h ProjectAuctionEventHooks) BeforeFixedPriceAuctionCreated(
 	_ sdk.Context,
 	_ string,
 	_ sdk.Dec,
@@ -128,7 +128,7 @@ func (h CampaignAuctionEventHooks) BeforeFixedPriceAuctionCreated(
 }
 
 // BeforeBatchAuctionCreated implements FundraisingHooks
-func (h CampaignAuctionEventHooks) BeforeBatchAuctionCreated(
+func (h ProjectAuctionEventHooks) BeforeBatchAuctionCreated(
 	_ sdk.Context,
 	_ string,
 	_ sdk.Dec,
@@ -144,7 +144,7 @@ func (h CampaignAuctionEventHooks) BeforeBatchAuctionCreated(
 }
 
 // BeforeAuctionCanceled implements FundraisingHooks
-func (h CampaignAuctionEventHooks) BeforeAuctionCanceled(
+func (h ProjectAuctionEventHooks) BeforeAuctionCanceled(
 	_ sdk.Context,
 	_ uint64,
 	_ string,
@@ -152,7 +152,7 @@ func (h CampaignAuctionEventHooks) BeforeAuctionCanceled(
 }
 
 // BeforeBidPlaced implements FundraisingHooks
-func (h CampaignAuctionEventHooks) BeforeBidPlaced(
+func (h ProjectAuctionEventHooks) BeforeBidPlaced(
 	_ sdk.Context,
 	_ uint64,
 	_ uint64,
@@ -164,7 +164,7 @@ func (h CampaignAuctionEventHooks) BeforeBidPlaced(
 }
 
 // BeforeBidModified implements FundraisingHooks
-func (h CampaignAuctionEventHooks) BeforeBidModified(
+func (h ProjectAuctionEventHooks) BeforeBidModified(
 	_ sdk.Context,
 	_ uint64,
 	_ uint64,
@@ -176,14 +176,14 @@ func (h CampaignAuctionEventHooks) BeforeBidModified(
 }
 
 // BeforeAllowedBiddersAdded implements FundraisingHooks
-func (h CampaignAuctionEventHooks) BeforeAllowedBiddersAdded(
+func (h ProjectAuctionEventHooks) BeforeAllowedBiddersAdded(
 	_ sdk.Context,
 	_ []fundraisingtypes.AllowedBidder,
 ) {
 }
 
 // BeforeAllowedBidderUpdated implements FundraisingHooks
-func (h CampaignAuctionEventHooks) BeforeAllowedBidderUpdated(
+func (h ProjectAuctionEventHooks) BeforeAllowedBidderUpdated(
 	_ sdk.Context,
 	_ uint64,
 	_ sdk.AccAddress,
@@ -192,7 +192,7 @@ func (h CampaignAuctionEventHooks) BeforeAllowedBidderUpdated(
 }
 
 // BeforeSellingCoinsAllocated implements FundraisingHooks
-func (h CampaignAuctionEventHooks) BeforeSellingCoinsAllocated(
+func (h ProjectAuctionEventHooks) BeforeSellingCoinsAllocated(
 	_ sdk.Context,
 	_ uint64,
 	_ map[string]sdkmath.Int,

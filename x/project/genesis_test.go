@@ -21,16 +21,17 @@ func TestGenesis(t *testing.T) {
 	r := sample.Rand()
 
 	t.Run("should allow importing and exporting genesis", func(t *testing.T) {
-		genesisState := sample.CampaignGenesisStateWithAccounts(r)
-		campaign.InitGenesis(ctx, *tk.CampaignKeeper, genesisState)
-		got := *campaign.ExportGenesis(ctx, *tk.CampaignKeeper)
+		genesisState := sample.ProjectGenesisStateWithAccounts(r)
 
-		require.ElementsMatch(t, genesisState.CampaignChains, got.CampaignChains)
-		require.ElementsMatch(t, genesisState.Campaigns, got.Campaigns)
-		require.Equal(t, genesisState.CampaignCounter, got.CampaignCounter)
+		n.InitGenesis(ctx, *tk.ProjectKeeper, genesisState)
+		got := *project.ExportGenesis(ctx, *tk.ProjectKeeper)
+
+		require.ElementsMatch(t, genesisState.ProjectChains, got.ProjectChains)
+		require.ElementsMatch(t, genesisState.Projects, got.Projects)
+		require.Equal(t, genesisState.ProjectCounter, got.ProjectCounter)
 		require.ElementsMatch(t, genesisState.MainnetAccounts, got.MainnetAccounts)
 		require.Equal(t, genesisState.Params, got.Params)
-		maxShares := tk.CampaignKeeper.GetTotalShares(ctx)
+		maxShares := tk.ProjectKeeper.GetTotalShares(ctx)
 		require.Equal(t, uint64(spntypes.TotalShareNumber), maxShares)
 	})
 

@@ -24,7 +24,7 @@ func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 			name: "should allow validation of valid msg",
 			msg: types.MsgUpdateSpecialAllocations{
 				Coordinator:        sample.Address(r),
-				CampaignID:         1,
+				ProjectID:         1,
 				SpecialAllocations: sample.SpecialAllocations(r),
 			},
 		},
@@ -32,7 +32,7 @@ func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid address",
 			msg: types.MsgUpdateSpecialAllocations{
 				Coordinator:        "invalid_address",
-				CampaignID:         1,
+				ProjectID:         1,
 				SpecialAllocations: sample.SpecialAllocations(r),
 			},
 			err: profile.ErrInvalidCoordAddress,
@@ -41,7 +41,7 @@ func TestMsgUpdateSpecialAllocations_ValidateBasic(t *testing.T) {
 			name: "should prevent validation of msg with invalid special allocations",
 			msg: types.MsgUpdateSpecialAllocations{
 				Coordinator:        sample.Address(r),
-				CampaignID:         1,
+				ProjectID:         1,
 				SpecialAllocations: types.NewSpecialAllocations(invalidShares, sample.Shares(r)),
 			},
 			err: types.ErrInvalidSpecialAllocations,

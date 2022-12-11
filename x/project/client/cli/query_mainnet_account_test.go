@@ -18,14 +18,14 @@ import (
 
 func (suite *QueryTestSuite) TestShowMainnetAccount() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	accs := suite.CampaignState.MainnetAccounts
+	accs := suite.ProjectState.MainnetAccounts
 
 	common := []string{
 		fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 	}
 	for _, tc := range []struct {
 		name         string
-		idCampaignID uint64
+		idProjectID uint64
 		idAddress    string
 
 		args []string
@@ -34,7 +34,7 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 	}{
 		{
 			name:         "should allow valid query",
-			idCampaignID: accs[0].CampaignID,
+			idProjectID: accs[0].ProjectID,
 			idAddress:    accs[0].Address,
 
 			args: common,
@@ -42,7 +42,7 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 		},
 		{
 			name:         "should fail if not found",
-			idCampaignID: 100000,
+			idProjectID: 100000,
 			idAddress:    strconv.Itoa(100000),
 
 			args: common,
@@ -51,7 +51,7 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 	} {
 		suite.T().Run(tc.name, func(t *testing.T) {
 			args := []string{
-				strconv.Itoa(int(tc.idCampaignID)),
+				strconv.Itoa(int(tc.idProjectID)),
 				tc.idAddress,
 			}
 			args = append(args, tc.args...)
@@ -73,12 +73,12 @@ func (suite *QueryTestSuite) TestShowMainnetAccount() {
 
 func (suite *QueryTestSuite) TestListMainnetAccount() {
 	ctx := suite.Network.Validators[0].ClientCtx
-	accs := suite.CampaignState.MainnetAccounts
+	accs := suite.ProjectState.MainnetAccounts
 
-	campaignID := accs[0].CampaignID
-	request := func(campaignID uint64, next []byte, offset, limit uint64, total bool) []string {
+	projectID := accs[0].ProjectID
+	request := func(projectID uint64, next []byte, offset, limit uint64, total bool) []string {
 		args := []string{
-			strconv.FormatUint(campaignID, 10),
+			strconv.FormatUint(projectID, 10),
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 		}
 		if next == nil {
@@ -95,7 +95,7 @@ func (suite *QueryTestSuite) TestListMainnetAccount() {
 	suite.T().Run("should paginate by offset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(accs); i += step {
-			args := request(campaignID, nil, uint64(i), uint64(step), false)
+			args := request(projectID, nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllMainnetAccountResponse
@@ -108,7 +108,7 @@ func (suite *QueryTestSuite) TestListMainnetAccount() {
 		step := 2
 		var next []byte
 		for i := 0; i < len(accs); i += step {
-			args := request(campaignID, next, 0, uint64(step), false)
+			args := request(projectID, next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 			require.NoError(t, err)
 			var resp types.QueryAllMainnetAccountResponse
@@ -119,7 +119,7 @@ func (suite *QueryTestSuite) TestListMainnetAccount() {
 		}
 	})
 	suite.T().Run("should paginate all", func(t *testing.T) {
-		args := request(campaignID, nil, 0, uint64(len(accs)), true)
+		args := request(projectID, nil, 0, uint64(len(accs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListMainnetAccount(), args)
 		require.NoError(t, err)
 		var resp types.QueryAllMainnetAccountResponse

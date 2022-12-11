@@ -35,15 +35,15 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	// Set a regular campaign and a campaign with an already initialized mainnet
-	campaign := sample.Campaign(r, 0)
-	campaign.CoordinatorID = coordID
-	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
+	// Set a regular project and a project with an already initialized mainnet
+	project := sample.Project(r, 0)
+	project.CoordinatorID = coordID
+	tk.ProjectKeeper.SetProject(sdkCtx, project)
 
-	campaign = sample.Campaign(r, 1)
-	campaign.CoordinatorID = coordID
-	campaign.MainnetInitialized = true
-	tk.CampaignKeeper.SetCampaign(sdkCtx, campaign)
+	project = sample.Project(r, 1)
+	project.CoordinatorID = coordID
+	project.MainnetInitialized = true
+	tk.ProjectKeeper.SetProject(sdkCtx, project)
 
 	for _, tc := range []struct {
 		name string
@@ -53,7 +53,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "should update total supply",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:        0,
+				ProjectID:        0,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
@@ -61,33 +61,33 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "should allow update total supply again",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:        0,
+				ProjectID:        0,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 		},
 		{
-			name: "should fail if campaign not found",
+			name: "should fail if project not found",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:        100,
+				ProjectID:        100,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
-			err: types.ErrCampaignNotFound,
+			err: types.ErrProjectNotFound,
 		},
 		{
 			name: "should fail with non existing coordinator",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:        0,
+				ProjectID:        0,
 				Coordinator:       sample.Address(r),
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
 		},
 		{
-			name: "should fail if coordinator is not associated with campaign",
+			name: "should fail if coordinator is not associated with project",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:        0,
+				ProjectID:        0,
 				Coordinator:       coordAddr2,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
@@ -96,7 +96,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "cannot update total supply when mainnet is initialized",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:        1,
+				ProjectID:        1,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.TotalSupply(r),
 			},
@@ -105,7 +105,7 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		{
 			name: "should fail if total supply outside of valid range",
 			msg: types.MsgUpdateTotalSupply{
-				CampaignID:        0,
+				ProjectID:        0,
 				Coordinator:       coordAddr1,
 				TotalSupplyUpdate: sample.CoinsWithRange(r, 10, 20),
 			},
@@ -115,20 +115,20 @@ func TestMsgUpdateTotalSupply(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			var previousTotalSupply sdk.Coins
 			if tc.err == nil {
-				campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				project, found := tk.ProjectKeeper.GetProject(sdkCtx, tc.msg.ProjectID)
 				require.True(t, found)
-				previousTotalSupply = campaign.TotalSupply
+				previousTotalSupply = project.TotalSupply
 			}
 
-			_, err := ts.CampaignSrv.UpdateTotalSupply(ctx, &tc.msg)
+			_, err := ts.ProjectSrv.UpdateTotalSupply(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
-			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			project, found := tk.ProjectKeeper.GetProject(sdkCtx, tc.msg.ProjectID)
 			require.True(t, found)
-			require.True(t, campaign.TotalSupply.IsEqual(
+			require.True(t, project.TotalSupply.IsEqual(
 				types.UpdateTotalSupply(previousTotalSupply, tc.msg.TotalSupplyUpdate),
 			))
 		})

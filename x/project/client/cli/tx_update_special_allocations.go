@@ -12,11 +12,11 @@ import (
 
 func CmdUpdateSpecialAllocations() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-special-allocations [campaign-id] [genesis-distribution] [claimable-airdrop]",
-		Short: "Update special allocations for the campaign",
+		Use:   "update-special-allocations [project-id] [genesis-distribution] [claimable-airdrop]",
+		Short: "Update special allocations for the project",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argCampaignID, err := cast.ToUint64E(args[0])
+			argProjectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
@@ -38,7 +38,7 @@ func CmdUpdateSpecialAllocations() *cobra.Command {
 
 			msg := types.NewMsgUpdateSpecialAllocations(
 				clientCtx.GetFromAddress().String(),
-				argCampaignID,
+				argProjectID,
 				types.NewSpecialAllocations(genesisDistribution, claimableAirdrop),
 			)
 			if err := msg.ValidateBasic(); err != nil {

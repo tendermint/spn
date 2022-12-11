@@ -20,23 +20,23 @@ func (k Keeper) SpecialAllocationsBalance(
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// get the campaign
+	// get the project
 	totalShareNumber := k.GetTotalShares(ctx)
-	campaign, found := k.GetCampaign(ctx, req.CampaignID)
+	project, found := k.GetProject(ctx, req.ProjectID)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
 	// calculate special allocations balance from total supply
-	genesisDistribution, err := campaign.SpecialAllocations.GenesisDistribution.CoinsFromTotalSupply(
-		campaign.TotalSupply,
+	genesisDistribution, err := project.SpecialAllocations.GenesisDistribution.CoinsFromTotalSupply(
+		project.TotalSupply,
 		totalShareNumber,
 	)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "genesis distribution can't be calculated: %s", err.Error())
 	}
-	claimableAirdrop, err := campaign.SpecialAllocations.ClaimableAirdrop.CoinsFromTotalSupply(
-		campaign.TotalSupply,
+	claimableAirdrop, err := project.SpecialAllocations.ClaimableAirdrop.CoinsFromTotalSupply(
+		project.TotalSupply,
 		totalShareNumber,
 	)
 	if err != nil {

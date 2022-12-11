@@ -20,7 +20,7 @@ func TestMsgMintVouchers(t *testing.T) {
 		ctx             = sdk.WrapSDKContext(sdkCtx)
 		coordID         uint64
 		coord           = sample.Address(r)
-		coordNoCampaign = sample.Address(r)
+		coordNoProject = sample.Address(r)
 
 		shares, _    = types.NewShares("1000foo,500bar,300foobar")
 		sharesTooBig = types.NewSharesFromCoins(sdk.NewCoins(
@@ -36,16 +36,16 @@ func TestMsgMintVouchers(t *testing.T) {
 		require.NoError(t, err)
 		coordID = res.CoordinatorID
 		res, err = ts.ProfileSrv.CreateCoordinator(ctx, &profiletypes.MsgCreateCoordinator{
-			Address:     coordNoCampaign,
+			Address:     coordNoProject,
 			Description: sample.CoordinatorDescription(r),
 		})
 		require.NoError(t, err)
 	})
 
-	// Set campaign
-	campaign := sample.Campaign(r, 0)
-	campaign.CoordinatorID = coordID
-	campaign.CampaignID = tk.CampaignKeeper.AppendCampaign(sdkCtx, campaign)
+	// Set project
+	project := sample.Project(r, 0)
+	project.CoordinatorID = coordID
+	project.ProjectID = tk.ProjectKeeper.AppendProject(sdkCtx, project)
 
 	for _, tc := range []struct {
 		name string
@@ -56,7 +56,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should allow minting  vouchers",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				CampaignID:  0,
+				ProjectID:  0,
 				Shares:      shares,
 			},
 		},
@@ -64,7 +64,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should allow minting same vouchers again",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				CampaignID:  0,
+				ProjectID:  0,
 				Shares:      shares,
 			},
 		},
@@ -72,7 +72,7 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should allow minting other vouchers",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				CampaignID:  0,
+				ProjectID:  0,
 				Shares:      sample.Shares(r),
 			},
 		},
@@ -80,25 +80,25 @@ func TestMsgMintVouchers(t *testing.T) {
 			name: "should not mint more than total shares",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				CampaignID:  0,
+				ProjectID:  0,
 				Shares:      sharesTooBig,
 			},
 			err: types.ErrTotalSharesLimit,
 		},
 		{
-			name: "should fail with non existing campaign",
+			name: "should fail with non existing project",
 			msg: types.MsgMintVouchers{
 				Coordinator: coord,
-				CampaignID:  1000,
+				ProjectID:  1000,
 				Shares:      shares,
 			},
-			err: types.ErrCampaignNotFound,
+			err: types.ErrProjectNotFound,
 		},
 		{
 			name: "should fail with non existing coordinator",
 			msg: types.MsgMintVouchers{
 				Coordinator: sample.Address(r),
-				CampaignID:  0,
+				ProjectID:  0,
 				Shares:      shares,
 			},
 			err: profiletypes.ErrCoordAddressNotFound,
@@ -106,15 +106,15 @@ func TestMsgMintVouchers(t *testing.T) {
 		{
 			name: "should fail with invalid coordinator",
 			msg: types.MsgMintVouchers{
-				Coordinator: coordNoCampaign,
-				CampaignID:  0,
+				Coordinator: coordNoProject,
+				ProjectID:  0,
 				Shares:      shares,
 			},
 			err: profiletypes.ErrCoordInvalid,
 		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			var previousCampaign types.Campaign
+			var previousProject types.Project
 			var previousBalance sdk.Coins
 
 			coordAddr, err := sdk.AccAddressFromBech32(tc.msg.Coordinator)
@@ -123,29 +123,29 @@ func TestMsgMintVouchers(t *testing.T) {
 			// Get values before message execution
 			if tc.err == nil {
 				var found bool
-				previousCampaign, found = tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+				previousProject, found = tk.ProjectKeeper.GetProject(sdkCtx, tc.msg.ProjectID)
 				require.True(t, found)
 
 				previousBalance = tk.BankKeeper.GetAllBalances(sdkCtx, coordAddr)
 			}
 
 			// Execute message
-			_, err = ts.CampaignSrv.MintVouchers(ctx, &tc.msg)
+			_, err = ts.ProjectSrv.MintVouchers(ctx, &tc.msg)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
 			require.NoError(t, err)
 
-			campaign, found := tk.CampaignKeeper.GetCampaign(sdkCtx, tc.msg.CampaignID)
+			project, found := tk.ProjectKeeper.GetProject(sdkCtx, tc.msg.ProjectID)
 			require.True(t, found)
 
-			// Allocated shares of the campaign must be increased
-			expectedShares := types.IncreaseShares(previousCampaign.AllocatedShares, tc.msg.Shares)
-			require.True(t, types.IsEqualShares(expectedShares, campaign.AllocatedShares))
+			// Allocated shares of the project must be increased
+			expectedShares := types.IncreaseShares(previousProject.AllocatedShares, tc.msg.Shares)
+			require.True(t, types.IsEqualShares(expectedShares, project.AllocatedShares))
 
 			// Check coordinator balance
-			minted, err := types.SharesToVouchers(tc.msg.Shares, tc.msg.CampaignID)
+			minted, err := types.SharesToVouchers(tc.msg.Shares, tc.msg.ProjectID)
 			require.NoError(t, err)
 			balance := tk.BankKeeper.GetAllBalances(sdkCtx, coordAddr)
 			require.True(t, balance.IsEqual(previousBalance.Add(minted...)))

@@ -14,11 +14,11 @@ import (
 
 func CmdListMainnetAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-mainnet-account [campaign-id]",
-		Short: "List all mainnet accounts for a campaign",
+		Use:   "list-mainnet-account [project-id]",
+		Short: "List all mainnet accounts for a project",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			campaignID, err := strconv.ParseUint(args[0], 10, 64)
+			projectID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
@@ -33,7 +33,7 @@ func CmdListMainnetAccount() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryAllMainnetAccountRequest{
-				CampaignID: campaignID,
+				ProjectID: projectID,
 				Pagination: pageReq,
 			}
 
@@ -54,22 +54,22 @@ func CmdListMainnetAccount() *cobra.Command {
 
 func CmdShowMainnetAccount() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-mainnet-account [campaign-id] [address]",
-		Short: "Shows the mainnet account for a campaign",
+		Use:   "show-mainnet-account [project-id] [address]",
+		Short: "Shows the mainnet account for a project",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsCampaignID, err := cast.ToUint64E(args[0])
+			argsProjectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
 			argsAddress := args[1]
 
 			params := &types.QueryGetMainnetAccountRequest{
-				CampaignID: argsCampaignID,
+				ProjectID: argsProjectID,
 				Address:    argsAddress,
 			}
 
@@ -89,11 +89,11 @@ func CmdShowMainnetAccount() *cobra.Command {
 
 func CmdListMainnetAccountBalance() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-mainnet-account-balance [campaign-id]",
-		Short: "List all mainnet account balances for a campaign",
+		Use:   "list-mainnet-account-balance [project-id]",
+		Short: "List all mainnet account balances for a project",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			campaignID, err := strconv.ParseUint(args[0], 10, 64)
+			projectID, err := strconv.ParseUint(args[0], 10, 64)
 			if err != nil {
 				return err
 			}
@@ -108,7 +108,7 @@ func CmdListMainnetAccountBalance() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryAllMainnetAccountBalanceRequest{
-				CampaignID: campaignID,
+				ProjectID: projectID,
 				Pagination: pageReq,
 			}
 
@@ -129,22 +129,22 @@ func CmdListMainnetAccountBalance() *cobra.Command {
 
 func CmdShowMainnetAccountBalance() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-mainnet-account-balance [campaign-id] [address]",
-		Short: "Shows the mainnet account balance for a campaign",
+		Use:   "show-mainnet-account-balance [project-id] [address]",
+		Short: "Shows the mainnet account balance for a project",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argsCampaignID, err := cast.ToUint64E(args[0])
+			argsProjectID, err := cast.ToUint64E(args[0])
 			if err != nil {
 				return err
 			}
 			argsAddress := args[1]
 
 			params := &types.QueryGetMainnetAccountBalanceRequest{
-				CampaignID: argsCampaignID,
+				ProjectID: argsProjectID,
 				Address:    argsAddress,
 			}
 

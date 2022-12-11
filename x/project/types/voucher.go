@@ -18,23 +18,23 @@ const (
 )
 
 // SharesToVouchers returns new Coins vouchers from the Shares representation
-func SharesToVouchers(shares Shares, campaignID uint64) (sdk.Coins, error) {
+func SharesToVouchers(shares Shares, projectID uint64) (sdk.Coins, error) {
 	if err := CheckShares(shares); err != nil {
 		return nil, err
 	}
 	vouchers := make(sdk.Coins, len(shares))
 	for i, coin := range shares {
 		denom := strings.TrimPrefix(coin.Denom, SharePrefix)
-		coin.Denom = VoucherDenom(campaignID, denom)
+		coin.Denom = VoucherDenom(projectID, denom)
 		vouchers[i] = coin
 	}
 	return vouchers, nil
 }
 
 // CheckVouchers checks if given Vouchers are valid
-func CheckVouchers(vouchers sdk.Coins, campaignID uint64) error {
+func CheckVouchers(vouchers sdk.Coins, projectID uint64) error {
 	for _, voucher := range vouchers {
-		prefix := VoucherDenom(campaignID, "")
+		prefix := VoucherDenom(projectID, "")
 		if !strings.HasPrefix(voucher.Denom, prefix) {
 			return fmt.Errorf(
 				"%s doesn't contain the voucher prefix %s",
@@ -47,32 +47,32 @@ func CheckVouchers(vouchers sdk.Coins, campaignID uint64) error {
 }
 
 // VouchersToShares returns new Shares from the Coins vouchers representation
-func VouchersToShares(vouchers sdk.Coins, campaignID uint64) (Shares, error) {
-	if err := CheckVouchers(vouchers, campaignID); err != nil {
+func VouchersToShares(vouchers sdk.Coins, projectID uint64) (Shares, error) {
+	if err := CheckVouchers(vouchers, projectID); err != nil {
 		return nil, err
 	}
 	shares := make(Shares, len(vouchers))
 	for i, coin := range vouchers {
-		coin.Denom = VoucherToShareDenom(campaignID, coin.Denom)
+		coin.Denom = VoucherToShareDenom(projectID, coin.Denom)
 		shares[i] = coin
 	}
 	return shares, nil
 }
 
 // VoucherDenom returns the Voucher name with prefix
-func VoucherDenom(campaignID uint64, denom string) string {
-	return fmt.Sprintf("%s%d%s%s", VoucherPrefix, campaignID, VoucherSeparator, denom)
+func VoucherDenom(projectID uint64, denom string) string {
+	return fmt.Sprintf("%s%d%s%s", VoucherPrefix, projectID, VoucherSeparator, denom)
 }
 
 // VoucherToShareDenom remove the voucher prefix and add the share prefix
-func VoucherToShareDenom(campaignID uint64, denom string) string {
-	prefix := VoucherDenom(campaignID, "")
+func VoucherToShareDenom(projectID uint64, denom string) string {
+	prefix := VoucherDenom(projectID, "")
 	shareDenom := strings.TrimPrefix(denom, prefix)
 	return SharePrefix + shareDenom
 }
 
-// VoucherCampaign returns the campaign associated to a voucher denom
-func VoucherCampaign(denom string) (uint64, error) {
+// VoucherProject returns the project associated to a voucher denom
+func VoucherProject(denom string) (uint64, error) {
 	if !strings.HasPrefix(denom, VoucherPrefix) {
 		return 0, errors.New("no voucher prefix")
 	}

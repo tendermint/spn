@@ -14,14 +14,14 @@ var _ sdk.Msg = &MsgInitializeMainnet{}
 
 func NewMsgInitializeMainnet(
 	coordinator string,
-	campaignID uint64,
+	projectID uint64,
 	sourceURL,
 	sourceHash,
 	mainnetChainID string,
 ) *MsgInitializeMainnet {
 	return &MsgInitializeMainnet{
 		Coordinator:    coordinator,
-		CampaignID:     campaignID,
+		ProjectID:     projectID,
 		SourceURL:      sourceURL,
 		SourceHash:     sourceHash,
 		MainnetChainID: mainnetChainID,

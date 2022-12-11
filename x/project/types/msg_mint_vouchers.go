@@ -11,10 +11,10 @@ const TypeMsgMintVouchers = "mint_vouchers"
 
 var _ sdk.Msg = &MsgMintVouchers{}
 
-func NewMsgMintVouchers(coordinator string, campaignID uint64, shares Shares) *MsgMintVouchers {
+func NewMsgMintVouchers(coordinator string, projectID uint64, shares Shares) *MsgMintVouchers {
 	return &MsgMintVouchers{
 		Coordinator: coordinator,
-		CampaignID:  campaignID,
+		ProjectID:  projectID,
 		Shares:      shares,
 	}
 }

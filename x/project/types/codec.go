@@ -8,23 +8,23 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgCreateCampaign{}, "campaign/CreateCampaign", nil)
-	cdc.RegisterConcrete(&MsgEditCampaign{}, "campaign/EditCampaign", nil)
-	cdc.RegisterConcrete(&MsgUpdateTotalSupply{}, "campaign/UpdateTotalSupply", nil)
-	cdc.RegisterConcrete(&MsgUpdateSpecialAllocations{}, "campaign/UpdateSpecialAllocations", nil)
-	cdc.RegisterConcrete(&MsgInitializeMainnet{}, "campaign/InitializeMainnet", nil)
-	cdc.RegisterConcrete(&MsgMintVouchers{}, "campaign/MintVouchers", nil)
-	cdc.RegisterConcrete(&MsgBurnVouchers{}, "campaign/BurnVouchers", nil)
-	cdc.RegisterConcrete(&MsgRedeemVouchers{}, "campaign/RedeemVouchers", nil)
-	cdc.RegisterConcrete(&MsgUnredeemVouchers{}, "campaign/UnredeemVouchers", nil)
+	cdc.RegisterConcrete(&MsgCreateProject{}, "project/CreateProject", nil)
+	cdc.RegisterConcrete(&MsgEditProject{}, "project/EditProject", nil)
+	cdc.RegisterConcrete(&MsgUpdateTotalSupply{}, "project/UpdateTotalSupply", nil)
+	cdc.RegisterConcrete(&MsgUpdateSpecialAllocations{}, "project/UpdateSpecialAllocations", nil)
+	cdc.RegisterConcrete(&MsgInitializeMainnet{}, "project/InitializeMainnet", nil)
+	cdc.RegisterConcrete(&MsgMintVouchers{}, "project/MintVouchers", nil)
+	cdc.RegisterConcrete(&MsgBurnVouchers{}, "project/BurnVouchers", nil)
+	cdc.RegisterConcrete(&MsgRedeemVouchers{}, "project/RedeemVouchers", nil)
+	cdc.RegisterConcrete(&MsgUnredeemVouchers{}, "project/UnredeemVouchers", nil)
 	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	// this line is used by starport scaffolding # 3
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateCampaign{},
-		&MsgEditCampaign{},
+		&MsgCreateProject{},
+		&MsgEditProject{},
 		&MsgUpdateTotalSupply{},
 		&MsgUpdateSpecialAllocations{},
 		&MsgInitializeMainnet{},
