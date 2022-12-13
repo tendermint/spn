@@ -131,6 +131,9 @@ const (
 
 	// missionIDVoting is the mission ID for voting mission to claim airdrop
 	missionIDVoting = 2
+
+	// missionIDSendingRequest is the mission ID for sending request mission to claim airdrop
+	missionIDSendingRequest = 3
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -607,7 +610,7 @@ func New(
 		app.BankKeeper,
 	)
 
-	// set fundraising hooks
+	// register the fundraising hooks
 	app.FundraisingKeeper = *app.FundraisingKeeper.SetHooks(
 		app.CampaignKeeper.CampaignAuctionEventHooks(),
 	)
@@ -628,6 +631,13 @@ func New(
 	app.GovKeeper = *app.GovKeeper.SetHooks(
 		govtypes.NewMultiGovHooks(
 			app.ClaimKeeper.NewMissionVoteHooks(missionIDVoting),
+		),
+	)
+
+	// register the launch hooks
+	app.LaunchKeeper = *app.LaunchKeeper.SetHooks(
+		launchtypes.NewMultiLaunchHooks(
+			NewMissionSendRequestHooks(app.ClaimKeeper, missionIDSendingRequest),
 		),
 	)
 
