@@ -22,6 +22,7 @@ type (
 		profileKeeper     types.ProfileKeeper
 		campaignKeeper    types.CampaignKeeper
 		monitoringcKeeper types.MonitoringConsumerKeeper
+		hooks             types.LaunchHooks
 	}
 )
 
@@ -46,6 +47,17 @@ func NewKeeper(
 		distrKeeper:   distrKeeper,
 		profileKeeper: profileKeeper,
 	}
+}
+
+// SetHooks sets the launch hooks
+func (k *Keeper) SetHooks(fk types.LaunchHooks) *Keeper {
+	if k.hooks != nil {
+		panic("cannot set launch hooks twice")
+	}
+
+	k.hooks = fk
+
+	return k
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
