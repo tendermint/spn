@@ -170,7 +170,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, bb abci.RequestBeginBlock) {
 	}
 
 	// check and transmit signatures
-	err = am.keeper.TransmitSignatures(ctx, bb.Header.Height)
+	_, err = am.keeper.TransmitSignatures(ctx, bb.Header.Height)
 	if err != nil {
 		ctx.Logger().Error(fmt.Sprintf("error transmitting the validator signatures: %s", err.Error()))
 	}

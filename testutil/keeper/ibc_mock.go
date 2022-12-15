@@ -3,6 +3,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	clienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
 	connectiontypes "github.com/cosmos/ibc-go/v6/modules/core/03-connection/types"
 	channeltypes "github.com/cosmos/ibc-go/v6/modules/core/04-channel/types"
 	"github.com/cosmos/ibc-go/v6/modules/core/exported"
@@ -67,8 +68,16 @@ func (c ChannelMock) GetNextSequenceSend(_ sdk.Context, _, _ string) (uint64, bo
 }
 
 // SendPacket implements ChannelKeeper
-func (c ChannelMock) SendPacket(_ sdk.Context, _ *capabilitytypes.Capability, _ exported.PacketI) error {
-	return nil
+func (c ChannelMock) SendPacket(
+	_ sdk.Context,
+	_ *capabilitytypes.Capability,
+	_ string,
+	_ string,
+	_ clienttypes.Height,
+	_ uint64,
+	_ []byte,
+) (uint64, error) {
+	return 0, nil
 }
 
 // WriteAcknowledgement implements ChannelKeeper

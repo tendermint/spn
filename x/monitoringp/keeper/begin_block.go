@@ -63,26 +63,26 @@ func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.LastCommi
 
 // TransmitSignatures transmits over IBC the signatures to consumer if height is reached
 // and signatures are not yet transmitted
-func (k Keeper) TransmitSignatures(ctx sdk.Context, blockHeight int64) error {
+func (k Keeper) TransmitSignatures(ctx sdk.Context, blockHeight int64) (sequence uint64, err error) {
 	// check condition to transmit packet
 	// IBC connection to consumer must be established
 	// last block height must be reached
 	// monitoring info must exist
 	// signatures must not yet be transmitted
 	if blockHeight < k.LastBlockHeight(ctx) {
-		return nil
+		return 0, nil
 	}
 	cid, cidFound := k.GetConnectionChannelID(ctx)
 	if !cidFound {
-		return nil
+		return 0, nil
 	}
 	mi, miFound := k.GetMonitoringInfo(ctx)
 	if !miFound || mi.Transmitted {
-		return nil
+		return 0, nil
 	}
 
 	// transmit signature packet
-	err := k.TransmitMonitoringPacket(
+	sequence, err = k.TransmitMonitoringPacket(
 		ctx,
 		spntypes.MonitoringPacket{
 			BlockHeight:     blockHeight,
@@ -97,11 +97,11 @@ func (k Keeper) TransmitSignatures(ctx sdk.Context, blockHeight int64) error {
 		k.SetConsumerClientID(ctx, types.ConsumerClientID{
 			ClientID: err.Error(),
 		})
-		return err
+		return 0, err
 	}
 
 	// signatures have been transmitted
 	mi.Transmitted = true
 	k.SetMonitoringInfo(ctx, mi)
-	return nil
+	return sequence, nil
 }
