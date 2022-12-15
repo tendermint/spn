@@ -16,7 +16,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	ibctypes "github.com/cosmos/ibc-go/v5/modules/core/types"
+	ibctypes "github.com/cosmos/ibc-go/v6/modules/core/types"
 	"github.com/stretchr/testify/require"
 	fundraising "github.com/tendermint/fundraising/x/fundraising/types"
 	"github.com/tendermint/tendermint/crypto"
