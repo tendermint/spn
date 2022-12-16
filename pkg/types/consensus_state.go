@@ -9,8 +9,8 @@ import (
 
 	"gopkg.in/yaml.v2"
 
-	committypes "github.com/cosmos/ibc-go/v5/modules/core/23-commitment/types"
-	ibctmtypes "github.com/cosmos/ibc-go/v5/modules/light-clients/07-tendermint/types"
+	committypes "github.com/cosmos/ibc-go/v6/modules/core/23-commitment/types"
+	ibctmtypes "github.com/cosmos/ibc-go/v6/modules/light-clients/07-tendermint/types"
 )
 
 // consensusStateFile represents dumped consensus state from
