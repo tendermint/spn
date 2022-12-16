@@ -4,6 +4,7 @@ package mocks
 
 import (
 	mock "github.com/stretchr/testify/mock"
+
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 
 	types "github.com/cosmos/cosmos-sdk/types"
