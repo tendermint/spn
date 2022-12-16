@@ -14,7 +14,7 @@ require (
 	github.com/golangci/golangci-lint v1.50.1
 	github.com/gorilla/mux v1.8.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
-	github.com/ignite/modules v0.0.0-20220912090139-7c325cae763a
+	github.com/ignite/modules v0.0.0-20221215224430-496fd9a7820c
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
@@ -80,7 +80,6 @@ require (
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gorocksdb v1.2.0 // indirect
 	github.com/cosmos/iavl v0.19.4 // indirect
-	github.com/cosmos/ibc-go/v5 v5.0.0-rc0 // indirect
 	github.com/cosmos/ledger-cosmos-go v0.12.1 // indirect
 	github.com/creachadair/taskgroup v0.3.2 // indirect
 	github.com/curioswitch/go-reassign v0.2.0 // indirect
