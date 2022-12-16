@@ -10,7 +10,7 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	porttypes "github.com/cosmos/ibc-go/v5/modules/core/05-port/types"
+	porttypes "github.com/cosmos/ibc-go/v6/modules/core/05-port/types"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/spf13/cobra"
@@ -170,7 +170,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, bb abci.RequestBeginBlock) {
 	}
 
 	// check and transmit signatures
-	err = am.keeper.TransmitSignatures(ctx, bb.Header.Height)
+	_, err = am.keeper.TransmitSignatures(ctx, bb.Header.Height)
 	if err != nil {
 		ctx.Logger().Error(fmt.Sprintf("error transmitting the validator signatures: %s", err.Error()))
 	}
