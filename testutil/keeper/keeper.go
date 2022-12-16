@@ -24,6 +24,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
+	"github.com/tendermint/spn/testutil/keeper/mocks"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
@@ -227,6 +228,9 @@ func NewTestSetupWithIBCMocks(
 	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
 	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
+
+	// Set hooks
+	launchKeeper = launchKeeper.SetHooks(mocks.NewLaunchHooks(t))
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
