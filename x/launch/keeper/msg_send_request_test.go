@@ -287,6 +287,18 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				tk.LaunchKeeper.SetParams(sdkCtx, params)
 			}
 
+			// hook call assertion
+			if tt.err == nil {
+				tk.HooksMocks.LaunchHooksMock.On(
+					"RequestCreated",
+					sdkCtx,
+					tt.msg.Creator,
+					tt.msg.LaunchID,
+					tt.wantID,
+					tt.msg.Content,
+				).Return(nil).Once()
+			}
+
 			got, err := ts.LaunchSrv.SendRequest(ctx, &tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)

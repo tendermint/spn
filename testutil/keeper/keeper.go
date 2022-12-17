@@ -48,6 +48,11 @@ var (
 	ExampleHeight = int64(1111)
 )
 
+// HookMocks holds mocks for the module hooks
+type HooksMocks struct {
+	LaunchHooksMock *mocks.LaunchHooks
+}
+
 // TestKeepers holds all keepers used during keeper tests for all modules
 type TestKeepers struct {
 	T                        testing.TB
@@ -65,6 +70,7 @@ type TestKeepers struct {
 	FundraisingKeeper        fundraisingkeeper.Keeper
 	ParticipationKeeper      *participationkeeper.Keeper
 	ClaimKeeper              *claimkeeper.Keeper
+	HooksMocks               HooksMocks
 }
 
 // TestMsgServers holds all message servers used during keeper tests for all modules
@@ -134,6 +140,10 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
+	// Set hooks
+	launchHooksMock := mocks.NewLaunchHooks(t)
+	launchKeeper = launchKeeper.SetHooks(launchHooksMock)
+
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
 	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
@@ -160,6 +170,9 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 			ClaimKeeper:              claimKeeper,
+			HooksMocks: HooksMocks{
+				LaunchHooksMock: launchHooksMock,
+			},
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,
@@ -230,7 +243,8 @@ func NewTestSetupWithIBCMocks(
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	// Set hooks
-	launchKeeper = launchKeeper.SetHooks(mocks.NewLaunchHooks(t))
+	launchHooksMock := mocks.NewLaunchHooks(t)
+	launchKeeper = launchKeeper.SetHooks(launchHooksMock)
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
@@ -256,6 +270,9 @@ func NewTestSetupWithIBCMocks(
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 			ClaimKeeper:              claimKeeper,
+			HooksMocks: HooksMocks{
+				LaunchHooksMock: launchHooksMock,
+			},
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,
