@@ -7,6 +7,8 @@ import (
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 )
 
+// MissionSendRequestHooks is an implementation of launch hooks that completes a claim mission
+// when sending a request to  chain launch
 type MissionSendRequestHooks struct {
 	k         claimkeeper.Keeper
 	missionID uint64
