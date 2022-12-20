@@ -85,8 +85,29 @@ type TestMsgServers struct {
 	ClaimSrv         claimtypes.MsgServer
 }
 
+// SetupOption represents an option that can be provided to NewTestSetup
+type SetupOption func(*setupOptions)
+
+// setupOptions represents the set of SetupOption
+type setupOptions struct {
+	LaunchHooksMock bool
+}
+
+// WithHooksMock sets a mock for the hooks in testing launch keeper
+func WithLaunchHooksMock() func(*setupOptions) {
+	return func(o *setupOptions) {
+		o.LaunchHooksMock = true
+	}
+}
+
 // NewTestSetup returns initialized instances of all the keepers and message servers of the modules
-func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
+func NewTestSetup(t testing.TB, options ...SetupOption) (sdk.Context, TestKeepers, TestMsgServers) {
+	// setup options
+	var so setupOptions
+	for _, option := range options {
+		option(&so)
+	}
+
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
@@ -141,8 +162,12 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	setIBCDefaultParams(ctx, ibcKeeper)
 
 	// Set hooks
-	launchHooksMock := mocks.NewLaunchHooks(t)
-	launchKeeper = launchKeeper.SetHooks(launchHooksMock)
+	var hooksMocks HooksMocks
+	if so.LaunchHooksMock {
+		launchHooksMock := mocks.NewLaunchHooks(t)
+		launchKeeper = launchKeeper.SetHooks(launchHooksMock)
+		hooksMocks.LaunchHooksMock = launchHooksMock
+	}
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
@@ -170,9 +195,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 			ClaimKeeper:              claimKeeper,
-			HooksMocks: HooksMocks{
-				LaunchHooksMock: launchHooksMock,
-			},
+			HooksMocks:               hooksMocks,
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,
@@ -242,10 +265,6 @@ func NewTestSetupWithIBCMocks(
 	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
-	// Set hooks
-	launchHooksMock := mocks.NewLaunchHooks(t)
-	launchKeeper = launchKeeper.SetHooks(launchHooksMock)
-
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
 	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
@@ -270,9 +289,6 @@ func NewTestSetupWithIBCMocks(
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 			ClaimKeeper:              claimKeeper,
-			HooksMocks: HooksMocks{
-				LaunchHooksMock: launchHooksMock,
-			},
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,

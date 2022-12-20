@@ -14,7 +14,7 @@ import (
 )
 
 func TestMsgRequestAddAccount(t *testing.T) {
-	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t, testkeeper.WithLaunchHooksMock())
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddr, addr := sample.Address(r), sample.Address(r)
 
