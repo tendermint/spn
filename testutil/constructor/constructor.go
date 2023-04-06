@@ -4,9 +4,9 @@ package constructor
 import (
 	"testing"
 
+	abci "github.com/cometbft/cometbft/abci/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
-	abci "github.com/tendermint/tendermint/abci/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"

@@ -4,11 +4,11 @@ import (
 	"time"
 
 	sdkerrors "cosmossdk.io/errors"
+	"github.com/cometbft/cometbft/light"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	clienttypes "github.com/cosmos/ibc-go/v6/modules/core/02-client/types"
-	committypes "github.com/cosmos/ibc-go/v6/modules/core/23-commitment/types"
-	ibctmtypes "github.com/cosmos/ibc-go/v6/modules/light-clients/07-tendermint/types"
-	"github.com/tendermint/tendermint/light"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	committypes "github.com/cosmos/ibc-go/v7/modules/core/23-commitment/types"
+	ibctmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint/types"
 
 	"github.com/tendermint/spn/pkg/chainid"
 	"github.com/tendermint/spn/x/monitoringp/types"
