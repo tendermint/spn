@@ -46,4 +46,6 @@ var (
 	ErrInvalidRequesterAddress     = sdkerrors.Register(ModuleName, 37, "invalid requester account address")
 	ErrCannotUpdateChain           = sdkerrors.Register(ModuleName, 38, "cannot update chain")
 	ErrFundCommunityPool           = sdkerrors.Register(ModuleName, 39, "unable to fund community pool")
+	ErrInvalidModuleName           = sdkerrors.Register(ModuleName, 40, "invalid module name")
+	ErrInvalidParamName            = sdkerrors.Register(ModuleName, 41, "invalid param name")
 )

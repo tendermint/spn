@@ -17,6 +17,7 @@ message Params {
     (gogoproto.casttype)     = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins"
   ];
+  uint64 maxMetadataLength                              = 3;
 }
 
 // TotalSupplyRange defines the range of allowed values for total supply

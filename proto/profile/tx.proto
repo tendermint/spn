@@ -1,7 +1,6 @@
 syntax = "proto3";
 package tendermint.spn.profile;
 
-// this line is used by starport scaffolding # proto/tx/import
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
 
@@ -18,7 +17,6 @@ service Msg {
   rpc UpdateCoordinatorDescription(MsgUpdateCoordinatorDescription) returns (MsgUpdateCoordinatorDescriptionResponse);
   rpc UpdateCoordinatorAddress(MsgUpdateCoordinatorAddress) returns (MsgUpdateCoordinatorAddressResponse);
   rpc DisableCoordinator(MsgDisableCoordinator) returns (MsgDisableCoordinatorResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgUpdateValidatorDescription {
@@ -65,5 +63,3 @@ message MsgDisableCoordinator {
 message MsgDisableCoordinatorResponse {
   uint64 coordinatorID = 1;
 }
-
-// this line is used by starport scaffolding # proto/tx/message

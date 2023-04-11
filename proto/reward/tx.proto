@@ -1,7 +1,6 @@
 syntax = "proto3";
 package tendermint.spn.reward;
 
-// this line is used by starport scaffolding # proto/tx/import
 import "cosmos/base/v1beta1/coin.proto";
 import "gogoproto/gogo.proto";
 
@@ -10,7 +9,6 @@ option go_package = "github.com/tendermint/spn/x/reward/types";
 // Msg defines the Msg service.
 service Msg {
   rpc SetRewards(MsgSetRewards) returns (MsgSetRewardsResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgSetRewards {
@@ -38,5 +36,3 @@ message MsgSetRewardsResponse {
   ];
   int64 newLastRewardHeight = 4;
 }
-
-// this line is used by starport scaffolding # proto/tx/message

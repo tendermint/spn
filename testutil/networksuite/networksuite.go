@@ -44,7 +44,7 @@ func (nts *NetworkTestSuite) SetupSuite() {
 	r := sample.Rand()
 	cfg := network.DefaultConfig()
 
-	updateConfigGenesisState := func(moduleName string, moduleState proto.Message) {
+	updateGenesisConfigState := func(moduleName string, moduleState proto.Message) {
 		buf, err := cfg.Codec.MarshalJSON(moduleState)
 		require.NoError(nts.T(), err)
 		cfg.GenesisState[moduleName] = buf
@@ -53,37 +53,37 @@ func (nts *NetworkTestSuite) SetupSuite() {
 	// initialize launch
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[launch.ModuleName], &nts.LaunchState))
 	nts.LaunchState = populateLaunch(r, nts.LaunchState)
-	updateConfigGenesisState(launch.ModuleName, &nts.LaunchState)
+	updateGenesisConfigState(launch.ModuleName, &nts.LaunchState)
 
 	// initialize campaign
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[campaign.ModuleName], &nts.CampaignState))
 	nts.CampaignState = populateCampaign(r, nts.CampaignState)
-	updateConfigGenesisState(campaign.ModuleName, &nts.CampaignState)
+	updateGenesisConfigState(campaign.ModuleName, &nts.CampaignState)
 
 	// initialize claim
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[claim.ModuleName], &nts.ClaimState))
 	nts.ClaimState = populateClaim(r, nts.ClaimState)
-	updateConfigGenesisState(claim.ModuleName, &nts.ClaimState)
+	updateGenesisConfigState(claim.ModuleName, &nts.ClaimState)
 
 	// initialize monitoring consumer
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[monitoringc.ModuleName], &nts.MonitoringcState))
 	nts.MonitoringcState = populateMonitoringc(nts.MonitoringcState)
-	updateConfigGenesisState(monitoringc.ModuleName, &nts.MonitoringcState)
+	updateGenesisConfigState(monitoringc.ModuleName, &nts.MonitoringcState)
 
 	// initialize participation
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[participation.ModuleName], &nts.ParticipationState))
 	nts.ParticipationState = populateParticipation(r, nts.ParticipationState)
-	updateConfigGenesisState(participation.ModuleName, &nts.ParticipationState)
+	updateGenesisConfigState(participation.ModuleName, &nts.ParticipationState)
 
 	// initialize profile
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[profile.ModuleName], &nts.ProfileState))
 	nts.ProfileState = populateProfile(r, nts.ProfileState)
-	updateConfigGenesisState(profile.ModuleName, &nts.ProfileState)
+	updateGenesisConfigState(profile.ModuleName, &nts.ProfileState)
 
 	// initialize reward
 	require.NoError(nts.T(), cfg.Codec.UnmarshalJSON(cfg.GenesisState[reward.ModuleName], &nts.RewardState))
 	nts.RewardState = populateReward(nts.RewardState)
-	updateConfigGenesisState(reward.ModuleName, &nts.RewardState)
+	updateGenesisConfigState(reward.ModuleName, &nts.RewardState)
 
 	nts.Network = network.New(nts.T(), cfg)
 }

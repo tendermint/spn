@@ -13,9 +13,20 @@ import (
 )
 
 func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*types.MsgEditChainResponse, error) {
-	var err error
+	var (
+		err error
+		ctx = sdk.UnwrapSDKContext(goCtx)
+	)
 
-	ctx := sdk.UnwrapSDKContext(goCtx)
+	// check if the metadata length is valid
+	maxMetadataLength := k.MaxMetadataLength(ctx)
+	if uint64(len(msg.Metadata)) > maxMetadataLength {
+		return nil, sdkerrors.Wrapf(types.ErrInvalidMetadataLength,
+			"metadata length %d is greater than maximum %d",
+			len(msg.Metadata),
+			maxMetadataLength,
+		)
+	}
 
 	chain, found := k.GetChain(ctx, msg.LaunchID)
 	if !found {

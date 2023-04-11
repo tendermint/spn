@@ -1,7 +1,6 @@
 syntax = "proto3";
 package tendermint.spn.campaign;
 
-// this line is used by starport scaffolding # genesis/proto/import
 import "gogoproto/gogo.proto";
 import "campaign/campaign_chains.proto";
 import "campaign/vesting.proto";
@@ -19,5 +18,4 @@ message GenesisState {
   repeated MainnetAccount mainnetAccounts = 4 [(gogoproto.nullable) = false];
   uint64                  totalShares     = 5;
   Params                  params          = 6 [(gogoproto.nullable) = false];
-  // this line is used by starport scaffolding # genesis/proto/state
 }

@@ -1,7 +1,6 @@
 syntax = "proto3";
 package tendermint.spn.campaign;
 
-// this line is used by starport scaffolding # proto/tx/import
 import "gogoproto/gogo.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "campaign/vesting.proto";
@@ -20,7 +19,6 @@ service Msg {
   rpc BurnVouchers(MsgBurnVouchers) returns (MsgBurnVouchersResponse);
   rpc RedeemVouchers(MsgRedeemVouchers) returns (MsgRedeemVouchersResponse);
   rpc UnredeemVouchers(MsgUnredeemVouchers) returns (MsgUnredeemVouchersResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgCreateCampaign {
@@ -127,5 +125,3 @@ message MsgUnredeemVouchers {
 }
 
 message MsgUnredeemVouchersResponse {}
-
-// this line is used by starport scaffolding # proto/tx/message

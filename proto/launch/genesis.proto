@@ -1,7 +1,6 @@
 syntax = "proto3";
 package tendermint.spn.launch;
 
-// this line is used by starport scaffolding # genesis/proto/import
 import "gogoproto/gogo.proto";
 import "launch/request.proto";
 import "launch/vesting_account.proto";
@@ -14,7 +13,6 @@ option go_package = "github.com/tendermint/spn/x/launch/types";
 
 // GenesisState defines the launch module's genesis state.
 message GenesisState {
-  // this line is used by starport scaffolding # genesis/proto/state
   repeated Chain            chains            = 1 [(gogoproto.nullable) = false];
   uint64                    chainCounter      = 2;
   repeated GenesisAccount   genesisAccounts   = 3 [(gogoproto.nullable) = false];

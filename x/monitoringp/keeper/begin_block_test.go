@@ -352,7 +352,8 @@ func TestKeeper_TransmitSignatures(t *testing.T) {
 			}
 
 			// report
-			err := tk.MonitoringProviderKeeper.TransmitSignatures(ctx, tt.currentBlockHeight)
+			// TODO check sequence in test
+			_, err := tk.MonitoringProviderKeeper.TransmitSignatures(ctx, tt.currentBlockHeight)
 			if tt.wantErr {
 				require.Error(t, err)
 				return

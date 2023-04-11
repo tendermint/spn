@@ -29,10 +29,13 @@ var (
 	MaxParametrableLaunchTime  = time.Hour * 24 * 31
 	MaxParametrableRevertDelay = time.Hour * 24
 
-	KeyLaunchTimeRange  = []byte("LaunchTimeRange")
-	KeyRevertDelay      = []byte("RevertDelay")
-	KeyChainCreationFee = []byte("ChainCreationFee")
-	KeyRequestFee       = []byte("RequestFee")
+	DefaultMaxMetadataLength uint64 = 2000
+
+	KeyLaunchTimeRange   = []byte("LaunchTimeRange")
+	KeyRevertDelay       = []byte("RevertDelay")
+	KeyChainCreationFee  = []byte("ChainCreationFee")
+	KeyRequestFee        = []byte("RequestFee")
+	KeyMaxMetadataLength = []byte("MaxMetadataLength")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -51,12 +54,20 @@ func NewLaunchTimeRange(minLaunchTime, maxLaunchTime time.Duration) LaunchTimeRa
 }
 
 // NewParams creates a new Params instance
-func NewParams(minLaunchTime, maxLaunchTime, revertDelay time.Duration, chainCreationFee, requestFee sdk.Coins) Params {
+func NewParams(
+	minLaunchTime,
+	maxLaunchTime,
+	revertDelay time.Duration,
+	chainCreationFee,
+	requestFee sdk.Coins,
+	maxMetadataLength uint64,
+) Params {
 	return Params{
-		LaunchTimeRange:  NewLaunchTimeRange(minLaunchTime, maxLaunchTime),
-		RevertDelay:      revertDelay,
-		ChainCreationFee: chainCreationFee,
-		RequestFee:       requestFee,
+		LaunchTimeRange:   NewLaunchTimeRange(minLaunchTime, maxLaunchTime),
+		RevertDelay:       revertDelay,
+		ChainCreationFee:  chainCreationFee,
+		RequestFee:        requestFee,
+		MaxMetadataLength: maxMetadataLength,
 	}
 }
 
@@ -68,6 +79,7 @@ func DefaultParams() Params {
 		DefaultRevertDelay,
 		DefaultFee,
 		DefaultFee,
+		DefaultMaxMetadataLength,
 	)
 }
 
@@ -78,6 +90,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyRevertDelay, &p.RevertDelay, validateRevertDelay),
 		paramtypes.NewParamSetPair(KeyChainCreationFee, &p.ChainCreationFee, validateFee),
 		paramtypes.NewParamSetPair(KeyRequestFee, &p.RequestFee, validateFee),
+		paramtypes.NewParamSetPair(KeyMaxMetadataLength, &p.MaxMetadataLength, validateMaxMetadataLength),
 	}
 }
 
@@ -87,6 +100,9 @@ func (p Params) Validate() error {
 		return err
 	}
 	if err := validateRevertDelay(p.RevertDelay); err != nil {
+		return err
+	}
+	if err := validateMaxMetadataLength(p.MaxMetadataLength); err != nil {
 		return err
 	}
 	if err := p.ChainCreationFee.Validate(); err != nil {
@@ -146,4 +162,11 @@ func validateFee(i interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 	return v.Validate()
+}
+
+func validateMaxMetadataLength(i interface{}) error {
+	if _, ok := i.(uint64); !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+	return nil
 }

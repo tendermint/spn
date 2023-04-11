@@ -9,7 +9,6 @@ import "cosmos_proto/cosmos.proto";
 import "participation/params.proto";
 import "participation/used_allocations.proto";
 import "participation/auction_used_allocations.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/participation/types";
 
@@ -50,8 +49,6 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/tendermint/spn/participation/params";
   }
-
-  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetUsedAllocationsRequest {
@@ -121,5 +118,3 @@ message QueryParamsRequest {}
 message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
-
-// this line is used by starport scaffolding # 3

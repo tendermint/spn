@@ -7,7 +7,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/campaign/types"
 	profile "github.com/tendermint/spn/x/profile/types"
@@ -59,16 +58,6 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 				Metadata:     sample.Metadata(r, 20),
 			},
 			err: types.ErrInvalidTotalSupply,
-		},
-		{
-			name: "should prevent validation of msg with invalid metadata length",
-			msg: types.MsgCreateCampaign{
-				Coordinator:  sample.Address(r),
-				CampaignName: sample.CampaignName(r),
-				TotalSupply:  sample.TotalSupply(r),
-				Metadata:     sample.Metadata(r, spntypes.MaxMetadataLength+1),
-			},
-			err: types.ErrInvalidMetadataLength,
 		},
 	}
 	for _, tt := range tests {

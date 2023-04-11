@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-var isStringAlphabetic = regexp.MustCompile(`^[a-zA-Z]+$`).MatchString
+var isStringAlphabetic = regexp.MustCompile(`^[a-zA-Z_]+$`).MatchString
 
 func (m RequestContent) Validate(launchID uint64) error {
 	switch requestContent := m.Content.(type) {
@@ -216,12 +216,12 @@ func NewParamChange(launchID uint64, module, param string, value []byte) Request
 
 // Validate implements ParamChange validation
 func (m ParamChange) Validate(launchID uint64) error {
-	if m.Module == "" || m.Param == "" {
-		return ErrInvalidRequestContent
+	if m.Module == "" || !isStringAlphabetic(m.Module) {
+		return ErrInvalidModuleName
 	}
 
-	if !isStringAlphabetic(m.Module) || !isStringAlphabetic(m.Param) {
-		return ErrInvalidRequestContent
+	if m.Param == "" || !isStringAlphabetic(m.Param) {
+		return ErrInvalidParamName
 	}
 
 	if m.LaunchID != launchID {

@@ -4,7 +4,6 @@ package tendermint.spn.reward;
 import "gogoproto/gogo.proto";
 import "reward/params.proto";
 import "reward/reward_pool.proto";
-// this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/tendermint/spn/x/reward/types";
 
@@ -12,5 +11,4 @@ option go_package = "github.com/tendermint/spn/x/reward/types";
 message GenesisState {
   repeated RewardPool rewardPools = 1 [(gogoproto.nullable) = false];
   Params              params      = 2 [(gogoproto.nullable) = false];
-  // this line is used by starport scaffolding # genesis/proto/state
 }

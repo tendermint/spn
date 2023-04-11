@@ -12,7 +12,6 @@ import "campaign/campaign.proto";
 import "campaign/vesting.proto";
 import "campaign/mainnet_account.proto";
 import "campaign/params.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tendermint/spn/x/campaign/types";
 
@@ -68,8 +67,6 @@ service Query {
   rpc TotalShares(QueryTotalSharesRequest) returns (QueryTotalSharesResponse) {
     option (google.api.http).get = "/tendermint/spn/campaign/total_shares";
   }
-
-  // this line is used by starport scaffolding # 2
 }
 
 message QueryGetCampaignRequest {
@@ -165,5 +162,3 @@ message QueryTotalSharesRequest {}
 message QueryTotalSharesResponse {
   uint64 totalShares = 1;
 }
-
-// this line is used by starport scaffolding # 3

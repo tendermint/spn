@@ -4,30 +4,25 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/stretchr/testify/require"
 
-	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/x/launch/types"
 )
 
 func TestMsgCreateChain_ValidateBasic(t *testing.T) {
-	// TODO check error tyeps in test
+	// TODO check error types in test
 
 	invalidGenesisHash := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
 	invalidInitialGenesis := types.NewGenesisURL("foo.com", "NoHash")
 	invalidGenesisHash.InitialGenesis = invalidInitialGenesis
 
 	invalidConfigFile := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
-	invalidInitialGenesis = types.NewConfigGenesis("")
+	invalidInitialGenesis = types.NewGenesisConfig("")
 	invalidConfigFile.InitialGenesis = invalidInitialGenesis
 
 	invalidGenesisChainID := sample.MsgCreateChain(r, sample.Address(r), "", false, 0)
 	invalidGenesisChainID.GenesisChainID = "invalid"
-
-	msgInvalidMetadataLen := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
-	msgInvalidMetadataLen.Metadata = sample.Bytes(r, spntypes.MaxMetadataLength+1)
 
 	msgInvalidCoins := sample.MsgCreateChain(r, sample.Address(r), "foo.com", false, 0)
 	msgInvalidCoins.AccountBalance = sdk.Coins{sdk.Coin{Denom: "invalid", Amount: sdk.NewInt(-1)}}
@@ -58,18 +53,13 @@ func TestMsgCreateChain_ValidateBasic(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc:  "should prevent validate message with invalid file for ConfigGenesis custom genesis",
+			desc:  "should prevent validate message with invalid file for GenesisConfig custom genesis",
 			msg:   invalidConfigFile,
 			valid: false,
 		},
 		{
 			desc:  "should prevent validate message with invalid genesis chain ID",
 			msg:   invalidGenesisChainID,
-			valid: false,
-		},
-		{
-			desc:  "should prevent validate message with invalid metadata length",
-			msg:   msgInvalidMetadataLen,
 			valid: false,
 		},
 		{

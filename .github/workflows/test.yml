@@ -2,18 +2,21 @@ name: Unit Tests
 
 on:
   pull_request:
+    paths-ignore:
+      - "*.md"
   push:
     paths-ignore:
       - '*.md'
     branches:
-      - master
+      - main
       - develop
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-          
+
       - uses: actions/cache@v2
         with:
           path: |
@@ -28,10 +31,30 @@ jobs:
           go-version: 1.19
 
       - name: Run unit tests
-        run: go test -v -coverprofile=coverage.out -covermode=atomic ./...
+        run: |
+          go test -v -coverprofile=coverage.txt -covermode=atomic -coverpkg=./... $(go list ./...)
+
+      - name: filter non-testable files
+        run: |
+          excludelist="$(find ./ -type f -name '*.go' | xargs grep -l 'DONTCOVER')"
+          excludelist+=" $(find ./ -type f -name '*.pb.go')"
+          excludelist+=" $(find ./ -type f -name '*.pb.gw.go')"
+          excludelist+=" $(find ./app -type d)"
+          excludelist+=" $(find ./cmd -type d)"
+          excludelist+=" $(find ./docs -type d)"
+          excludelist+=" $(find ./localnet -type d)"
+          excludelist+=" $(find ./proto -type d)"
+          excludelist+=" $(find ./scripts -type d)"
+          for filename in ${excludelist}; do
+            filename=${filename#".//"}
+            echo "Excluding ${filename} from coverage report..."
+            filename=$(echo "$filename" | sed 's/\//\\\//g')
+            sed -i.bak "/""$filename""/d" coverage.txt
+          done
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3.1.1
         with:
+          file: ./coverage.txt
           fail_ci_if_error: true
           verbose: true

@@ -6,10 +6,14 @@ import (
 	"github.com/tendermint/spn/x/campaign/types"
 )
 
-// GetParams returns the total set of campaign parameters.
-func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
-	k.paramSpace.GetParamSet(ctx, &params)
-	return params
+// GetParams get all parameters as types.Params
+func (k Keeper) GetParams(ctx sdk.Context) types.Params {
+	return types.NewParams(
+		k.TotalSupplyRange(ctx).MinTotalSupply,
+		k.TotalSupplyRange(ctx).MaxTotalSupply,
+		k.CampaignCreationFee(ctx),
+		k.MaxMetadataLength(ctx),
+	)
 }
 
 // SetParams sets the campaign parameters to the param space.
@@ -26,5 +30,11 @@ func (k Keeper) TotalSupplyRange(ctx sdk.Context) (totalSupplyRange types.TotalS
 // CampaignCreationFee returns the campaign creation fee param
 func (k Keeper) CampaignCreationFee(ctx sdk.Context) (campaignCreationFee sdk.Coins) {
 	k.paramSpace.Get(ctx, types.KeyCampaignCreationFee, &campaignCreationFee)
+	return
+}
+
+// MaxMetadataLength returns the param that defines the max metadata length
+func (k Keeper) MaxMetadataLength(ctx sdk.Context) (maxMetadataLength uint64) {
+	k.paramSpace.Get(ctx, types.KeyMaxMetadataLength, &maxMetadataLength)
 	return
 }
