@@ -1,15 +1,9 @@
 package simutil
 
 import (
+	sdkmath "cosmossdk.io/math"
 	"encoding/json"
 	"fmt"
-	"math"
-	"math/rand"
-	"time"
-
-	sdkmath "cosmossdk.io/math"
-	"cosmossdk.io/simapp"
-	simappparams "cosmossdk.io/simapp/params"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -17,6 +11,11 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	simappparams "github.com/cosmos/ibc-go/v7/testing/simapp/params"
+	"github.com/tendermint/spn/app"
+	"math"
+	"math/rand"
+	"time"
 )
 
 const (
@@ -31,7 +30,7 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 		genesisTimestamp = simtypes.RandTimestamp(r)
 
 		numAccs := int64(len(accs))
-		genesisState := simapp.NewDefaultGenesisState(cdc)
+		genesisState := app.NewDefaultGenesisState(cdc)
 		chainID = config.ChainID
 		appParams := make(simtypes.AppParams)
 
@@ -147,7 +146,8 @@ func CustomAppStateFn(cdc codec.JSONCodec, simManager *module.SimulationManager)
 		}
 
 		// override bank parameters to always enable transfers
-		bankState.Params.SendEnabled = banktypes.SendEnabledParams{}
+		bankState.Params.SendEnabled = []*banktypes.SendEnabled{}
+		bankState.SendEnabled = []banktypes.SendEnabled{}
 		bankState.Params.DefaultSendEnabled = true
 
 		// change appState back

@@ -3,11 +3,6 @@ package app_test
 import (
 	"encoding/json"
 	"fmt"
-	"math/rand"
-	"os"
-	"testing"
-	"time"
-
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
@@ -23,10 +18,13 @@ import (
 	simulationtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	simcli "github.com/cosmos/cosmos-sdk/x/simulation/client/cli"
-	"github.com/stretchr/testify/require"
-
 	"github.com/ignite/modules/app"
 	"github.com/ignite/modules/app/exported"
+	"github.com/stretchr/testify/require"
+	"math/rand"
+	"os"
+	"testing"
+	"time"
 )
 
 type SimApp interface {
@@ -43,7 +41,7 @@ type SimApp interface {
 	LastCommitID() storetypes.CommitID
 }
 
-// Get fl≤≥ags every time the simulator is run
+// Get flags every time the simulator is run
 func init() {
 	simcli.GetSimulatorFlags()
 }

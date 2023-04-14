@@ -4,13 +4,11 @@ package types
 import (
 	"encoding/base64"
 	"encoding/hex"
+	committypes "github.com/cosmos/ibc-go/v7/modules/core/23-commitment/types"
+	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
+	"gopkg.in/yaml.v2"
 	"os"
 	"time"
-
-	"gopkg.in/yaml.v2"
-
-	committypes "github.com/cosmos/ibc-go/v7/modules/core/23-commitment/types"
-	ibctmtypes "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint/types"
 )
 
 // consensusStateFile represents dumped consensus state from
@@ -57,25 +55,25 @@ func NewConsensusState(timestamp, nextValHash, rootHash string) ConsensusState {
 }
 
 // ToTendermintConsensusState returns a new IBC Tendermint Consensus State
-func (cs ConsensusState) ToTendermintConsensusState() (ibctmtypes.ConsensusState, error) {
+func (cs ConsensusState) ToTendermintConsensusState() (ibctm.ConsensusState, error) {
 	// parse the RFC3339 timestamp format
 	t, err := time.Parse(time.RFC3339Nano, cs.Timestamp)
 	if err != nil {
-		return ibctmtypes.ConsensusState{}, err
+		return ibctm.ConsensusState{}, err
 	}
 
 	// decode validator set
 	nextValSetHashBytes, err := hex.DecodeString(cs.NextValidatorsHash)
 	if err != nil {
-		return ibctmtypes.ConsensusState{}, err
+		return ibctm.ConsensusState{}, err
 	}
 
 	// decode root hash
 	rootHashBase64, err := base64.StdEncoding.DecodeString(cs.RootHash())
 	if err != nil {
-		return ibctmtypes.ConsensusState{}, err
+		return ibctm.ConsensusState{}, err
 	}
-	return *ibctmtypes.NewConsensusState(
+	return *ibctm.NewConsensusState(
 		t,
 		committypes.NewMerkleRoot(rootHashBase64),
 		nextValSetHashBytes,

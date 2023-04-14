@@ -2,7 +2,6 @@ package testutil
 
 import (
 	sdkmath "cosmossdk.io/math"
-	"cosmossdk.io/simapp"
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
 	tmtypes "github.com/cometbft/cometbft/types"
@@ -32,7 +31,7 @@ func GenApp(chainID string, withGenesis bool, invCheckPeriod uint) (*spnapp.App,
 			nil,
 			true,
 			map[int64]bool{},
-			simapp.DefaultNodeHome,
+			app.DefaultNodeHome,
 			invCheckPeriod,
 			encCdc,
 			simtestutil.EmptyAppOptions{},

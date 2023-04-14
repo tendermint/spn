@@ -2,7 +2,6 @@ package types
 
 import (
 	"fmt"
-
 	"github.com/pkg/errors"
 )
 
