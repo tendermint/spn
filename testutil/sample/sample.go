@@ -22,13 +22,7 @@ import (
 	"github.com/stretchr/testify/require"
 	fundraising "github.com/tendermint/fundraising/x/fundraising/types"
 
-	launch "github.com/tendermint/spn/x/launch/types"
-	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
-	monitoringp "github.com/tendermint/spn/x/monitoringp/types"
-	participation "github.com/tendermint/spn/x/participation/types"
-	profile "github.com/tendermint/spn/x/profile/types"
 	project "github.com/tendermint/spn/x/project/types"
-	reward "github.com/tendermint/spn/x/reward/types"
 )
 
 // Codec returns a codec with preregistered interfaces
@@ -40,13 +34,13 @@ func Codec() codec.Codec {
 	stakingtypes.RegisterInterfaces(interfaceRegistry)
 	banktypes.RegisterInterfaces(interfaceRegistry)
 	ibctypes.RegisterInterfaces(interfaceRegistry)
-	launch.RegisterInterfaces(interfaceRegistry)
-	profile.RegisterInterfaces(interfaceRegistry)
-	project.RegisterInterfaces(interfaceRegistry)
-	monitoringc.RegisterInterfaces(interfaceRegistry)
-	monitoringp.RegisterInterfaces(interfaceRegistry)
-	reward.RegisterInterfaces(interfaceRegistry)
-	participation.RegisterInterfaces(interfaceRegistry)
+	//launch.RegisterInterfaces(interfaceRegistry)
+	//profile.RegisterInterfaces(interfaceRegistry)
+	//project.RegisterInterfaces(interfaceRegistry)
+	//monitoringc.RegisterInterfaces(interfaceRegistry)
+	//monitoringp.RegisterInterfaces(interfaceRegistry)
+	//reward.RegisterInterfaces(interfaceRegistry)
+	//participation.RegisterInterfaces(interfaceRegistry)
 	fundraising.RegisterInterfaces(interfaceRegistry)
 
 	return codec.NewProtoCodec(interfaceRegistry)
