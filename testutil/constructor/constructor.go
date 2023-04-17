@@ -20,8 +20,8 @@ type Vote struct {
 }
 
 // LastCommitInfo creates a ABCI LastCommitInfo object for test purpose from a list of vote
-func LastCommitInfo(votes ...Vote) abci.LastCommitInfo {
-	var lci abci.LastCommitInfo
+func LastCommitInfo(votes ...Vote) abci.CommitInfo {
+	var lci abci.CommitInfo
 
 	// add votes
 	for _, vote := range votes {

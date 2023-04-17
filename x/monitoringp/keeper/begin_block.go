@@ -20,7 +20,7 @@ const (
 )
 
 // ReportBlockSignatures gets signatures from blocks and update monitoring info
-func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.LastCommitInfo, blockHeight int64) error {
+func (k Keeper) ReportBlockSignatures(ctx sdk.Context, lastCommit abci.CommitInfo, blockHeight int64) error {
 	// skip first block because it is not signed
 	if blockHeight == 1 {
 		return nil

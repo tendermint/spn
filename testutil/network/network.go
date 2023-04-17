@@ -16,6 +16,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/stretchr/testify/require"
 	"github.com/tendermint/spn/app"
+	"github.com/tendermint/spn/cmd"
 	"testing"
 	"time"
 )
@@ -38,7 +39,7 @@ func New(t *testing.T, cfg network.Config) *network.Network {
 // genesis and single validator. All other parameters are inherited from cosmos-sdk/testutil/network.DefaultConfig
 func DefaultConfig() network.Config {
 	var (
-		encoding = app.MakeEncodingConfig()
+		encoding = cmd.MakeEncodingConfig(app.ModuleBasics)
 		chainID  = "chain-" + tmrand.NewRand().Str(6)
 	)
 	return network.Config{

@@ -18,13 +18,14 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/ignite/modules/app"
 	spnapp "github.com/tendermint/spn/app"
+	"github.com/tendermint/spn/cmd"
 	"time"
 )
 
 func GenApp(chainID string, withGenesis bool, invCheckPeriod uint) (*spnapp.App, spnapp.GenesisState) {
 	var (
 		db     = dbm.NewMemDB()
-		encCdc = app.MakeEncodingConfig()
+		encCdc = cmd.MakeEncodingConfig(app.ModuleBasics)
 		app    = spnapp.New(
 			log.NewNopLogger(),
 			db,

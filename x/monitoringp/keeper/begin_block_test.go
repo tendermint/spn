@@ -73,7 +73,7 @@ func TestKeeper_ReportBlockSignatures(t *testing.T) {
 		monitoringInfoExist         bool
 		inputMonitoringInfo         types.MonitoringInfo
 		lastBlockHeight             int64
-		lastCommitInfo              abci.LastCommitInfo
+		lastCommitInfo              abci.CommitInfo
 		currentBlockHeight          int64
 		expectedMonitoringInfoFound bool
 		expectedMonitoringInfo      types.MonitoringInfo
