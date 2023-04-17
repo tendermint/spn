@@ -14,7 +14,7 @@ import (
 )
 
 func TestMsgRequestAddAccount(t *testing.T) {
-	sdkCtx, tk, ts := testkeeper.NewTestSetup(t)
+	sdkCtx, tk, ts := testkeeper.NewTestSetup(t, testkeeper.WithLaunchHooksMock())
 	ctx := sdk.WrapSDKContext(sdkCtx)
 	coordAddr, addr := sample.Address(r), sample.Address(r)
 
@@ -285,6 +285,18 @@ func TestMsgRequestAddAccount(t *testing.T) {
 				params := tk.LaunchKeeper.GetParams(sdkCtx)
 				params.RequestFee = tt.inputState.fee
 				tk.LaunchKeeper.SetParams(sdkCtx, params)
+			}
+
+			// hook call assertion
+			if tt.err == nil {
+				tk.HooksMocks.LaunchHooksMock.On(
+					"RequestCreated",
+					sdkCtx,
+					tt.msg.Creator,
+					tt.msg.LaunchID,
+					tt.wantID,
+					tt.msg.Content,
+				).Return(nil).Once()
 			}
 
 			got, err := ts.LaunchSrv.SendRequest(ctx, &tt.msg)

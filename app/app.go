@@ -6,8 +6,6 @@ import (
 	"os"
 	"path/filepath"
 
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
-
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
@@ -17,6 +15,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	"github.com/cosmos/cosmos-sdk/simapp"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/version"
@@ -81,25 +80,25 @@ import (
 	ibcporttypes "github.com/cosmos/ibc-go/v6/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v6/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v6/modules/core/keeper"
-	"github.com/spf13/cast"
-	abci "github.com/tendermint/tendermint/abci/types"
-	tmjson "github.com/tendermint/tendermint/libs/json"
-	"github.com/tendermint/tendermint/libs/log"
-	tmos "github.com/tendermint/tendermint/libs/os"
-	dbm "github.com/tendermint/tm-db"
-
 	"github.com/ignite/modules/x/claim"
 	claimkeeper "github.com/ignite/modules/x/claim/keeper"
 	claimtypes "github.com/ignite/modules/x/claim/types"
 	"github.com/ignite/modules/x/mint"
 	mintkeeper "github.com/ignite/modules/x/mint/keeper"
 	minttypes "github.com/ignite/modules/x/mint/types"
+	"github.com/spf13/cast"
 	"github.com/tendermint/fundraising/x/fundraising"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+	abci "github.com/tendermint/tendermint/abci/types"
+	tmjson "github.com/tendermint/tendermint/libs/json"
+	"github.com/tendermint/tendermint/libs/log"
+	tmos "github.com/tendermint/tendermint/libs/os"
+	dbm "github.com/tendermint/tm-db"
 
 	"github.com/tendermint/spn/cmd"
 	"github.com/tendermint/spn/docs"
+	"github.com/tendermint/spn/pkg/airdrop"
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/x/campaign"
 	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
@@ -131,6 +130,9 @@ const (
 
 	// missionIDVoting is the mission ID for voting mission to claim airdrop
 	missionIDVoting = 2
+
+	// missionIDSendingRequest is the mission ID for sending request mission to claim airdrop
+	missionIDSendingRequest = 3
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -607,7 +609,7 @@ func New(
 		app.BankKeeper,
 	)
 
-	// set fundraising hooks
+	// register the fundraising hooks
 	app.FundraisingKeeper = *app.FundraisingKeeper.SetHooks(
 		app.CampaignKeeper.CampaignAuctionEventHooks(),
 	)
@@ -628,6 +630,13 @@ func New(
 	app.GovKeeper = *app.GovKeeper.SetHooks(
 		govtypes.NewMultiGovHooks(
 			app.ClaimKeeper.NewMissionVoteHooks(missionIDVoting),
+		),
+	)
+
+	// register the launch hooks
+	app.LaunchKeeper = *app.LaunchKeeper.SetHooks(
+		launchtypes.NewMultiLaunchHooks(
+			airdrop.NewMissionSendRequestHooks(app.ClaimKeeper, missionIDSendingRequest),
 		),
 	)
 
