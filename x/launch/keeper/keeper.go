@@ -20,7 +20,7 @@ type (
 		paramstore        paramtypes.Subspace
 		distrKeeper       types.DistributionKeeper
 		profileKeeper     types.ProfileKeeper
-		campaignKeeper    types.CampaignKeeper
+		projectKeeper     types.ProjectKeeper
 		monitoringcKeeper types.MonitoringConsumerKeeper
 		hooks             types.LaunchHooks
 	}
@@ -65,17 +65,17 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-// SetCampaignKeeper sets the campaign keeper interface of the module
-func (k *Keeper) SetCampaignKeeper(campaignKeeper types.CampaignKeeper) {
-	if k.campaignKeeper != nil {
-		panic("campaign keeper already set for launch module")
+// SetProjectKeeper sets the project keeper interface of the module
+func (k *Keeper) SetProjectKeeper(projectKeeper types.ProjectKeeper) {
+	if k.projectKeeper != nil {
+		panic("project keeper already set for launch module")
 	}
-	k.campaignKeeper = campaignKeeper
+	k.projectKeeper = projectKeeper
 }
 
-// GetCampaignKeeper gets the campaign keeper interface of the module
-func (k *Keeper) GetCampaignKeeper() types.CampaignKeeper {
-	return k.campaignKeeper
+// GetProjectKeeper gets the project keeper interface of the module
+func (k *Keeper) GetProjectKeeper() types.ProjectKeeper {
+	return k.projectKeeper
 }
 
 // SetMonitoringcKeeper sets the monitoring consumer keeper interface of the module

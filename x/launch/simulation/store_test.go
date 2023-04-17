@@ -10,13 +10,13 @@ import (
 
 	testkeeper "github.com/tendermint/spn/testutil/keeper"
 	"github.com/tendermint/spn/testutil/sample"
-	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch/keeper"
 	launchsimulation "github.com/tendermint/spn/x/launch/simulation"
 	"github.com/tendermint/spn/x/launch/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 func setupMsgServer(t testing.TB) (
@@ -24,14 +24,14 @@ func setupMsgServer(t testing.TB) (
 	testkeeper.TestKeepers,
 	types.MsgServer,
 	profiletypes.MsgServer,
-	campaigntypes.MsgServer,
+	projecttypes.MsgServer,
 ) {
 	ctx, tk, _ := testkeeper.NewTestSetup(t)
 	return ctx,
 		tk,
 		keeper.NewMsgServerImpl(*tk.LaunchKeeper),
 		profilekeeper.NewMsgServerImpl(*tk.ProfileKeeper),
-		campaignkeeper.NewMsgServerImpl(*tk.CampaignKeeper)
+		projectkeeper.NewMsgServerImpl(*tk.ProjectKeeper)
 }
 
 func TestFindAccount(t *testing.T) {

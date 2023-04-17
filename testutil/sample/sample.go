@@ -22,12 +22,12 @@ import (
 	"github.com/tendermint/tendermint/crypto"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 
-	campaign "github.com/tendermint/spn/x/campaign/types"
 	launch "github.com/tendermint/spn/x/launch/types"
 	monitoringc "github.com/tendermint/spn/x/monitoringc/types"
 	monitoringp "github.com/tendermint/spn/x/monitoringp/types"
 	participation "github.com/tendermint/spn/x/participation/types"
 	profile "github.com/tendermint/spn/x/profile/types"
+	project "github.com/tendermint/spn/x/project/types"
 	reward "github.com/tendermint/spn/x/reward/types"
 )
 
@@ -42,7 +42,7 @@ func Codec() codec.Codec {
 	ibctypes.RegisterInterfaces(interfaceRegistry)
 	launch.RegisterInterfaces(interfaceRegistry)
 	profile.RegisterInterfaces(interfaceRegistry)
-	campaign.RegisterInterfaces(interfaceRegistry)
+	project.RegisterInterfaces(interfaceRegistry)
 	monitoringc.RegisterInterfaces(interfaceRegistry)
 	monitoringp.RegisterInterfaces(interfaceRegistry)
 	reward.RegisterInterfaces(interfaceRegistry)
@@ -192,7 +192,7 @@ func CoinsWithRangeAmount(r *rand.Rand, denom1, denom2, denom3 string, min, max 
 // TotalSupply returns a sample coins structure where each denom's total supply is within the default
 // allowed supply range
 func TotalSupply(r *rand.Rand) sdk.Coins {
-	return CoinsWithRange(r, campaign.DefaultMinTotalSupply.Int64(), campaign.DefaultMaxTotalSupply.Int64())
+	return CoinsWithRange(r, project.DefaultMinTotalSupply.Int64(), project.DefaultMaxTotalSupply.Int64())
 }
 
 // Duration returns a sample time.Duration between a second and 21 days

@@ -51,15 +51,15 @@ func InvalidChainInvariant(k Keeper) sdk.Invariant {
 					fmt.Sprintf("chain %d is invalid: %s", chain.LaunchID, err.Error()),
 				), true
 			}
-			// if chain as an associated campaign, check that it exists
-			if chain.HasCampaign {
-				_, found := k.campaignKeeper.GetCampaign(ctx, chain.CampaignID)
+			// if chain as an associated project, check that it exists
+			if chain.HasProject {
+				_, found := k.projectKeeper.GetProject(ctx, chain.ProjectID)
 				if !found {
 					return sdk.FormatInvariant(
 						types.ModuleName, invalidChainRoute,
-						fmt.Sprintf("chain %d has an invalid associated campaign %d",
+						fmt.Sprintf("chain %d has an invalid associated project %d",
 							chain.LaunchID,
-							chain.CampaignID,
+							chain.ProjectID,
 						),
 					), true
 				}

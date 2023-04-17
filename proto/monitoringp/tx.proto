@@ -4,5 +4,4 @@ package tendermint.spn.monitoringp;
 option go_package = "github.com/tendermint/spn/x/monitoringp/types";
 
 // Msg defines the Msg service.
-service Msg {
-}
+service Msg {}

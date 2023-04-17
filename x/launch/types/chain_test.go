@@ -15,8 +15,8 @@ func TestChain_Validate(t *testing.T) {
 	invalidGenesisChainID := sample.Chain(r, 0, 0)
 	invalidGenesisChainID.GenesisChainID = "invalid"
 
-	mainnetWithoutCampaign := sample.Chain(r, 0, 0)
-	mainnetWithoutCampaign.IsMainnet = true
+	mainnetWithoutProject := sample.Chain(r, 0, 0)
+	mainnetWithoutProject.IsMainnet = true
 
 	invalidCoins := sample.Chain(r, 0, 0)
 	// add invalid coin amount
@@ -38,8 +38,8 @@ func TestChain_Validate(t *testing.T) {
 			valid: false,
 		},
 		{
-			desc:  "should prevent validate mainnet chain without associated campaign ID",
-			chain: mainnetWithoutCampaign,
+			desc:  "should prevent validate mainnet chain without associated project ID",
+			chain: mainnetWithoutProject,
 			valid: false,
 		},
 		{

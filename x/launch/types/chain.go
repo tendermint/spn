@@ -12,9 +12,9 @@ func (m Chain) Validate() error {
 		return err
 	}
 
-	// A chain that is a mainnet is always associated to a campaign
-	if m.IsMainnet && !m.HasCampaign {
-		return errors.New("chain is a mainnet but not associated to a campaign")
+	// A chain that is a mainnet is always associated to a project
+	if m.IsMainnet && !m.HasProject {
+		return errors.New("chain is a mainnet but not associated to a project")
 	}
 
 	// Coins must be valid

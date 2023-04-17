@@ -7,9 +7,9 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 	"github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 )
 
 func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*types.MsgEditChainResponse, error) {
@@ -50,36 +50,36 @@ func (k msgServer) EditChain(goCtx context.Context, msg *types.MsgEditChain) (*t
 		chain.Metadata = msg.Metadata
 	}
 
-	if msg.SetCampaignID {
+	if msg.SetProjectID {
 		// check if chain already has id associated
-		if chain.HasCampaign {
-			return nil, sdkerrors.Wrapf(types.ErrChainHasCampaign,
-				"campaign with id %d already associated with chain %d",
-				chain.CampaignID,
+		if chain.HasProject {
+			return nil, sdkerrors.Wrapf(types.ErrChainHasProject,
+				"project with id %d already associated with chain %d",
+				chain.ProjectID,
 				chain.LaunchID,
 			)
 		}
 
-		// check if chain coordinator is campaign coordinator
-		campaign, found := k.campaignKeeper.GetCampaign(ctx, msg.CampaignID)
+		// check if chain coordinator is project coordinator
+		project, found := k.projectKeeper.GetProject(ctx, msg.ProjectID)
 		if !found {
-			return nil, sdkerrors.Wrapf(campaigntypes.ErrCampaignNotFound, "campaign with id %d not found", msg.CampaignID)
+			return nil, sdkerrors.Wrapf(projecttypes.ErrProjectNotFound, "project with id %d not found", msg.ProjectID)
 		}
 
-		if campaign.CoordinatorID != chain.CoordinatorID {
+		if project.CoordinatorID != chain.CoordinatorID {
 			return nil, sdkerrors.Wrapf(profiletypes.ErrCoordInvalid,
-				"coordinator of the campaign is %d, chain coordinator is %d",
-				campaign.CoordinatorID,
+				"coordinator of the project is %d, chain coordinator is %d",
+				project.CoordinatorID,
 				chain.CoordinatorID,
 			)
 		}
 
-		chain.CampaignID = msg.CampaignID
-		chain.HasCampaign = true
+		chain.ProjectID = msg.ProjectID
+		chain.HasProject = true
 
-		err = k.campaignKeeper.AddChainToCampaign(ctx, chain.CampaignID, chain.LaunchID)
+		err = k.projectKeeper.AddChainToProject(ctx, chain.ProjectID, chain.LaunchID)
 		if err != nil {
-			return nil, sdkerrors.Wrap(types.ErrAddChainToCampaign, err.Error())
+			return nil, sdkerrors.Wrap(types.ErrAddChainToProject, err.Error())
 		}
 	}
 

@@ -158,17 +158,17 @@
       "supply": [],
       "denom_metadata": []
     },
-    "campaign": {
-      "campaignChainsList": [],
-      "campaignCounter": "1",
-      "campaignList": [],
+    "project": {
+      "projectChainsList": [],
+      "projectCounter": "1",
+      "projectList": [],
       "mainnetAccountList": [],
       "params": {
         "totalSupplyRange": {
           "maxTotalSupply": "1000000000000000",
           "minTotalSupply": "100"
         },
-        "campaignCreationFee": []
+        "projectCreationFee": []
       },
       "totalShares": "100000"
     },
