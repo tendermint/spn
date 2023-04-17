@@ -24,6 +24,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
+	"github.com/tendermint/spn/testutil/keeper/mocks"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -47,6 +48,11 @@ var (
 	ExampleHeight = int64(1111)
 )
 
+// HookMocks holds mocks for the module hooks
+type HooksMocks struct {
+	LaunchHooksMock *mocks.LaunchHooks
+}
+
 // TestKeepers holds all keepers used during keeper tests for all modules
 type TestKeepers struct {
 	T                        testing.TB
@@ -64,6 +70,7 @@ type TestKeepers struct {
 	FundraisingKeeper        fundraisingkeeper.Keeper
 	ParticipationKeeper      *participationkeeper.Keeper
 	ClaimKeeper              *claimkeeper.Keeper
+	HooksMocks               HooksMocks
 }
 
 // TestMsgServers holds all message servers used during keeper tests for all modules
@@ -78,8 +85,29 @@ type TestMsgServers struct {
 	ClaimSrv         claimtypes.MsgServer
 }
 
+// SetupOption represents an option that can be provided to NewTestSetup
+type SetupOption func(*setupOptions)
+
+// setupOptions represents the set of SetupOption
+type setupOptions struct {
+	LaunchHooksMock bool
+}
+
+// WithHooksMock sets a mock for the hooks in testing launch keeper
+func WithLaunchHooksMock() func(*setupOptions) {
+	return func(o *setupOptions) {
+		o.LaunchHooksMock = true
+	}
+}
+
 // NewTestSetup returns initialized instances of all the keepers and message servers of the modules
-func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
+func NewTestSetup(t testing.TB, options ...SetupOption) (sdk.Context, TestKeepers, TestMsgServers) {
+	// setup options
+	var so setupOptions
+	for _, option := range options {
+		option(&so)
+	}
+
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
@@ -133,6 +161,14 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
+	// Set hooks
+	var hooksMocks HooksMocks
+	if so.LaunchHooksMock {
+		launchHooksMock := mocks.NewLaunchHooks(t)
+		launchKeeper = launchKeeper.SetHooks(launchHooksMock)
+		hooksMocks.LaunchHooksMock = launchHooksMock
+	}
+
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
 	projectSrv := projectkeeper.NewMsgServerImpl(*projectKeeper)
@@ -159,6 +195,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 			ClaimKeeper:              claimKeeper,
+			HooksMocks:               hooksMocks,
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,

@@ -22,6 +22,7 @@ type (
 		profileKeeper     types.ProfileKeeper
 		projectKeeper     types.ProjectKeeper
 		monitoringcKeeper types.MonitoringConsumerKeeper
+		hooks             types.LaunchHooks
 	}
 )
 
@@ -48,6 +49,18 @@ func NewKeeper(
 	}
 }
 
+// SetHooks sets the launch hooks
+func (k *Keeper) SetHooks(fk types.LaunchHooks) *Keeper {
+	if k.hooks != nil {
+		panic("cannot set launch hooks twice")
+	}
+
+	k.hooks = fk
+
+	return k
+}
+
+// Logger returns a logger for the module
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }

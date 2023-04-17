@@ -83,6 +83,9 @@ func (k msgServer) SendRequest(
 		Request: request,
 	})
 
+	// call request created hook
+	k.RequestCreated(ctx, msg.Creator, msg.LaunchID, requestID, msg.Content)
+
 	return &types.MsgSendRequestResponse{
 		RequestID:    requestID,
 		AutoApproved: approved,
