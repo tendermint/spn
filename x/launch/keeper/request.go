@@ -200,8 +200,8 @@ func ApplyRequest(
 			SelfDelegation:     ga.SelfDelegation,
 			Peer:               ga.Peer,
 			LaunchID:           chain.LaunchID,
-			HasCampaign:        chain.HasCampaign,
-			CampaignID:         chain.CampaignID,
+			HasProject:         chain.HasProject,
+			ProjectID:          chain.ProjectID,
 			CoordinatorAddress: coord.Address,
 		})
 
@@ -211,8 +211,8 @@ func ApplyRequest(
 		err = ctx.EventManager().EmitTypedEvent(&types.EventValidatorRemoved{
 			GenesisValidatorAccount: vr.ValAddress,
 			LaunchID:                chain.LaunchID,
-			HasCampaign:             chain.HasCampaign,
-			CampaignID:              chain.CampaignID,
+			HasProject:              chain.HasProject,
+			ProjectID:               chain.ProjectID,
 			CoordinatorAddress:      coord.Address,
 		})
 

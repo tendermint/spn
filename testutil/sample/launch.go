@@ -157,7 +157,7 @@ func Request(r *rand.Rand, launchID uint64, address string) launch.Request {
 }
 
 // MsgCreateChain returns a sample MsgCreateChain
-func MsgCreateChain(r *rand.Rand, coordAddress, genesisURL string, hasCampaign bool, campaignID uint64) launch.MsgCreateChain {
+func MsgCreateChain(r *rand.Rand, coordAddress, genesisURL string, hasProject bool, projectID uint64) launch.MsgCreateChain {
 	initialGenesis := launch.NewDefaultInitialGenesis()
 	var genesisHash string
 	if len(genesisURL) > 0 {
@@ -175,8 +175,8 @@ func MsgCreateChain(r *rand.Rand, coordAddress, genesisURL string, hasCampaign b
 		String(r, 10),
 		String(r, 10),
 		initialGenesis,
-		hasCampaign,
-		campaignID,
+		hasProject,
+		projectID,
 		Coins(r),
 		Metadata(r, 20),
 	)
@@ -187,8 +187,8 @@ func MsgEditChain(
 	r *rand.Rand,
 	coordAddress string,
 	launchID uint64,
-	setCampaignID bool,
-	campaignID uint64,
+	setProjectID bool,
+	projectID uint64,
 	modifyMetadata bool,
 ) launch.MsgEditChain {
 	var metadata []byte
@@ -199,8 +199,8 @@ func MsgEditChain(
 	return *launch.NewMsgEditChain(
 		coordAddress,
 		launchID,
-		setCampaignID,
-		campaignID,
+		setProjectID,
+		projectID,
 		metadata,
 	)
 }

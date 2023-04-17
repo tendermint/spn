@@ -14,16 +14,16 @@ var _ sdk.Msg = &MsgEditChain{}
 func NewMsgEditChain(
 	coordinator string,
 	launchID uint64,
-	setCampaign bool,
-	campaignID uint64,
+	setProject bool,
+	projectID uint64,
 	metadata []byte,
 ) *MsgEditChain {
 	return &MsgEditChain{
-		Coordinator:   coordinator,
-		LaunchID:      launchID,
-		SetCampaignID: setCampaign,
-		CampaignID:    campaignID,
-		Metadata:      metadata,
+		Coordinator:  coordinator,
+		LaunchID:     launchID,
+		SetProjectID: setProject,
+		ProjectID:    projectID,
+		Metadata:     metadata,
 	}
 }
 
@@ -54,7 +54,7 @@ func (msg *MsgEditChain) ValidateBasic() error {
 		return sdkerrors.Wrap(profile.ErrInvalidCoordAddress, err.Error())
 	}
 
-	if len(msg.Metadata) == 0 && !msg.SetCampaignID {
+	if len(msg.Metadata) == 0 && !msg.SetProjectID {
 		return sdkerrors.Wrap(ErrCannotUpdateChain, "no value to edit")
 	}
 

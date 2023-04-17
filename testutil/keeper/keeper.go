@@ -24,8 +24,7 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 
 	spntypes "github.com/tendermint/spn/pkg/types"
-	campaignkeeper "github.com/tendermint/spn/x/campaign/keeper"
-	campaigntypes "github.com/tendermint/spn/x/campaign/types"
+	"github.com/tendermint/spn/testutil/keeper/mocks"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	monitoringckeeper "github.com/tendermint/spn/x/monitoringc/keeper"
@@ -35,6 +34,8 @@ import (
 	participationtypes "github.com/tendermint/spn/x/participation/types"
 	profilekeeper "github.com/tendermint/spn/x/profile/keeper"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
+	projectkeeper "github.com/tendermint/spn/x/project/keeper"
+	projecttypes "github.com/tendermint/spn/x/project/types"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
 )
@@ -47,10 +48,15 @@ var (
 	ExampleHeight = int64(1111)
 )
 
+// HookMocks holds mocks for the module hooks
+type HooksMocks struct {
+	LaunchHooksMock *mocks.LaunchHooks
+}
+
 // TestKeepers holds all keepers used during keeper tests for all modules
 type TestKeepers struct {
 	T                        testing.TB
-	CampaignKeeper           *campaignkeeper.Keeper
+	ProjectKeeper            *projectkeeper.Keeper
 	LaunchKeeper             *launchkeeper.Keeper
 	ProfileKeeper            *profilekeeper.Keeper
 	RewardKeeper             *rewardkeeper.Keeper
@@ -64,6 +70,7 @@ type TestKeepers struct {
 	FundraisingKeeper        fundraisingkeeper.Keeper
 	ParticipationKeeper      *participationkeeper.Keeper
 	ClaimKeeper              *claimkeeper.Keeper
+	HooksMocks               HooksMocks
 }
 
 // TestMsgServers holds all message servers used during keeper tests for all modules
@@ -71,15 +78,36 @@ type TestMsgServers struct {
 	T                testing.TB
 	ProfileSrv       profiletypes.MsgServer
 	LaunchSrv        launchtypes.MsgServer
-	CampaignSrv      campaigntypes.MsgServer
+	ProjectSrv       projecttypes.MsgServer
 	RewardSrv        rewardtypes.MsgServer
 	MonitoringcSrv   monitoringctypes.MsgServer
 	ParticipationSrv participationtypes.MsgServer
 	ClaimSrv         claimtypes.MsgServer
 }
 
+// SetupOption represents an option that can be provided to NewTestSetup
+type SetupOption func(*setupOptions)
+
+// setupOptions represents the set of SetupOption
+type setupOptions struct {
+	LaunchHooksMock bool
+}
+
+// WithHooksMock sets a mock for the hooks in testing launch keeper
+func WithLaunchHooksMock() func(*setupOptions) {
+	return func(o *setupOptions) {
+		o.LaunchHooksMock = true
+	}
+}
+
 // NewTestSetup returns initialized instances of all the keepers and message servers of the modules
-func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
+func NewTestSetup(t testing.TB, options ...SetupOption) (sdk.Context, TestKeepers, TestMsgServers) {
+	// setup options
+	var so setupOptions
+	for _, option := range options {
+		option(&so)
+	}
+
 	initializer := newInitializer()
 
 	paramKeeper := initializer.Param()
@@ -94,9 +122,9 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
+	projectKeeper := initializer.Project(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
-	launchKeeper.SetCampaignKeeper(campaignKeeper)
+	launchKeeper.SetProjectKeeper(projectKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
 		*ibcKeeper,
 		*capabilityKeeper,
@@ -124,7 +152,7 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
-	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
+	projectKeeper.SetParams(ctx, projecttypes.DefaultParams())
 	fundraisingParams := fundraisingtypes.DefaultParams()
 	fundraisingParams.AuctionCreationFee = sdk.NewCoins()
 	fundraisingKeeper.SetParams(ctx, fundraisingParams)
@@ -133,20 +161,28 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 	claimKeeper.SetParams(ctx, claimtypes.DefaultParams())
 	setIBCDefaultParams(ctx, ibcKeeper)
 
+	// Set hooks
+	var hooksMocks HooksMocks
+	if so.LaunchHooksMock {
+		launchHooksMock := mocks.NewLaunchHooks(t)
+		launchKeeper = launchKeeper.SetHooks(launchHooksMock)
+		hooksMocks.LaunchHooksMock = launchHooksMock
+	}
+
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
-	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
+	projectSrv := projectkeeper.NewMsgServerImpl(*projectKeeper)
 	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
 	monitoringcSrv := monitoringckeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
 	claimSrv := claimkeeper.NewMsgServerImpl(*claimKeeper)
 
 	// set max shares - only set during app InitGenesis
-	campaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
+	projectKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
 
 	return ctx, TestKeepers{
 			T:                        t,
-			CampaignKeeper:           campaignKeeper,
+			ProjectKeeper:            projectKeeper,
 			LaunchKeeper:             launchKeeper,
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
@@ -159,11 +195,12 @@ func NewTestSetup(t testing.TB) (sdk.Context, TestKeepers, TestMsgServers) {
 			FundraisingKeeper:        fundraisingKeeper,
 			ParticipationKeeper:      participationKeeper,
 			ClaimKeeper:              claimKeeper,
+			HooksMocks:               hooksMocks,
 		}, TestMsgServers{
 			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
-			CampaignSrv:      campaignSrv,
+			ProjectSrv:       projectSrv,
 			RewardSrv:        rewardSrv,
 			MonitoringcSrv:   monitoringcSrv,
 			ParticipationSrv: participationSrv,
@@ -191,9 +228,9 @@ func NewTestSetupWithIBCMocks(
 	profileKeeper := initializer.Profile()
 	launchKeeper := initializer.Launch(profileKeeper, distrKeeper, paramKeeper)
 	rewardKeeper := initializer.Reward(authKeeper, bankKeeper, profileKeeper, launchKeeper, paramKeeper)
-	campaignKeeper := initializer.Campaign(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
+	projectKeeper := initializer.Project(launchKeeper, profileKeeper, bankKeeper, distrKeeper, *rewardKeeper, paramKeeper, fundraisingKeeper)
 	participationKeeper := initializer.Participation(paramKeeper, fundraisingKeeper, stakingKeeper)
-	launchKeeper.SetCampaignKeeper(campaignKeeper)
+	launchKeeper.SetProjectKeeper(projectKeeper)
 	monitoringConsumerKeeper := initializer.Monitoringc(
 		*ibcKeeper,
 		*capabilityKeeper,
@@ -221,7 +258,7 @@ func NewTestSetupWithIBCMocks(
 	stakingKeeper.SetParams(ctx, stakingtypes.DefaultParams())
 	launchKeeper.SetParams(ctx, launchtypes.DefaultParams())
 	rewardKeeper.SetParams(ctx, rewardtypes.DefaultParams())
-	campaignKeeper.SetParams(ctx, campaigntypes.DefaultParams())
+	projectKeeper.SetParams(ctx, projecttypes.DefaultParams())
 	fundraisingKeeper.SetParams(ctx, fundraisingtypes.DefaultParams())
 	participationKeeper.SetParams(ctx, participationtypes.DefaultParams())
 	monitoringConsumerKeeper.SetParams(ctx, monitoringctypes.DefaultParams())
@@ -230,17 +267,17 @@ func NewTestSetupWithIBCMocks(
 
 	profileSrv := profilekeeper.NewMsgServerImpl(*profileKeeper)
 	launchSrv := launchkeeper.NewMsgServerImpl(*launchKeeper)
-	campaignSrv := campaignkeeper.NewMsgServerImpl(*campaignKeeper)
+	projectSrv := projectkeeper.NewMsgServerImpl(*projectKeeper)
 	rewardSrv := rewardkeeper.NewMsgServerImpl(*rewardKeeper)
 	monitoringcSrv := monitoringckeeper.NewMsgServerImpl(*monitoringConsumerKeeper)
 	participationSrv := participationkeeper.NewMsgServerImpl(*participationKeeper)
 
 	// set max shares - only set during app InitGenesis
-	campaignKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
+	projectKeeper.SetTotalShares(ctx, spntypes.TotalShareNumber)
 
 	return ctx, TestKeepers{
 			T:                        t,
-			CampaignKeeper:           campaignKeeper,
+			ProjectKeeper:            projectKeeper,
 			LaunchKeeper:             launchKeeper,
 			ProfileKeeper:            profileKeeper,
 			RewardKeeper:             rewardKeeper,
@@ -256,7 +293,7 @@ func NewTestSetupWithIBCMocks(
 			T:                t,
 			ProfileSrv:       profileSrv,
 			LaunchSrv:        launchSrv,
-			CampaignSrv:      campaignSrv,
+			ProjectSrv:       projectSrv,
 			RewardSrv:        rewardSrv,
 			MonitoringcSrv:   monitoringcSrv,
 			ParticipationSrv: participationSrv,

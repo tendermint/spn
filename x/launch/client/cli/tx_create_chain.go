@@ -24,7 +24,7 @@ const (
 	flagMetadataFile      = "metadata-file"
 	flagGenesisURL        = "genesis-url"
 	flagGenesisConfigFile = "genesis-config"
-	flagCampaignID        = "campaign-id"
+	flagProjectID         = "project-id"
 	flagAccountBalance    = "account-balance"
 )
 
@@ -39,16 +39,16 @@ func CmdCreateChain() *cobra.Command {
 				return err
 			}
 
-			argCampaignID, err := cmd.Flags().GetInt64(flagCampaignID)
+			argProjectID, err := cmd.Flags().GetInt64(flagProjectID)
 			if err != nil {
 				return err
 			}
 
-			hasCampaign := false
-			campaignID := uint64(0)
-			if argCampaignID >= 0 {
-				hasCampaign = true
-				campaignID = uint64(argCampaignID)
+			hasProject := false
+			projectID := uint64(0)
+			if argProjectID >= 0 {
+				hasProject = true
+				projectID = uint64(argProjectID)
 			}
 
 			initialGenesis := types.NewDefaultInitialGenesis()
@@ -112,8 +112,8 @@ func CmdCreateChain() *cobra.Command {
 				args[1],
 				args[2],
 				initialGenesis,
-				hasCampaign,
-				campaignID,
+				hasProject,
+				projectID,
 				balanceCoins,
 				metadataBytes,
 			)
@@ -127,7 +127,7 @@ func CmdCreateChain() *cobra.Command {
 	cmd.Flags().String(flagGenesisURL, "", "URL for a custom genesis")
 	cmd.Flags().String(flagMetadataFile, "", "Set metadata for chain from file content")
 	cmd.Flags().String(flagGenesisConfigFile, "", "config file for a custom genesis")
-	cmd.Flags().Int64(flagCampaignID, -1, "The campaign id")
+	cmd.Flags().Int64(flagProjectID, -1, "The project id")
 	cmd.Flags().String(flagMetadata, "", "Set metadata field for the chain")
 	cmd.Flags().String(flagAccountBalance, "", "Set the chain account coin balance")
 

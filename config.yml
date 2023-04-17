@@ -82,15 +82,18 @@ genesis:
         enabled: true
         missionID: "0"
       missions:
-      - description: initial claim
+      - description: "initial claim"
         missionID: "0"
-        weight: "0.2"
-      - description: staking
+        weight: "0.25"
+      - description: "staking"
         missionID: "1"
-        weight: "0.5"
-      - description: voting
+        weight: "0.25"
+      - description: "voting"
         missionID: "2"
-        weight: "0.3"
+        weight: "0.25"
+      - description: "sending request"
+        missionID: "3"
+        weight: "0.25"
     crisis:
       constant_fee:
         denom: uspn

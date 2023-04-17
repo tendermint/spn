@@ -23,8 +23,8 @@ parser.add_argument('--self_delegation_3',
 def initialize_rewards(lastBlockHeight, selfDelegationVal1, selfDelegationVal2, selfDelegationVal3):
     cmd_devnull('spnd tx profile create-coordinator --from alice -y')
     cmd_devnull('spnd tx launch create-chain orbit-1 orbit.com 0xaaa --from alice -y')
-    cmd_devnull('spnd tx campaign create-campaign orbit 1000000orbit --from alice -y')
-    cmd_devnull('spnd tx campaign mint-vouchers 1 50000orbit --from alice -y')
+    cmd_devnull('spnd tx project create-project orbit 1000000orbit --from alice -y')
+    cmd_devnull('spnd tx project mint-vouchers 1 50000orbit --from alice -y')
     cmd_devnull('spnd tx reward set-rewards 1 50000v/1/orbit {} --from alice -y'.format(lastBlockHeight))
 
     gentx1 = './testnet/node1/config/gentx/gentx.json'
