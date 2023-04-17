@@ -2,6 +2,9 @@
 package keeper
 
 import (
+	"testing"
+	"time"
+
 	"github.com/cometbft/cometbft/libs/log"
 	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -19,6 +22,7 @@ import (
 	"github.com/stretchr/testify/require"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/keeper/mocks"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"
@@ -34,8 +38,6 @@ import (
 	projecttypes "github.com/tendermint/spn/x/project/types"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
-	"testing"
-	"time"
 )
 
 var (

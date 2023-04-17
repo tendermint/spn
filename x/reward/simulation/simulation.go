@@ -1,6 +1,8 @@
 package simulation
 
 import (
+	"math/rand"
+
 	sdkmath "cosmossdk.io/math"
 	simappparams "cosmossdk.io/simapp/params"
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -8,10 +10,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
+
 	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/reward/keeper"
 	"github.com/tendermint/spn/x/reward/types"
-	"math/rand"
 )
 
 const (

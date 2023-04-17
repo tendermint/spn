@@ -29,6 +29,7 @@ import (
 	minttypes "github.com/ignite/modules/x/mint/types"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+
 	spntypes "github.com/tendermint/spn/pkg/types"
 	"github.com/tendermint/spn/testutil/sample"
 	launchkeeper "github.com/tendermint/spn/x/launch/keeper"

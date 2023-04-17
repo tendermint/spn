@@ -1,6 +1,8 @@
 package testutil
 
 import (
+	"time"
+
 	sdkmath "cosmossdk.io/math"
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
@@ -17,9 +19,9 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/ignite/modules/app"
+
 	spnapp "github.com/tendermint/spn/app"
 	"github.com/tendermint/spn/cmd"
-	"time"
 )
 
 func GenApp(chainID string, withGenesis bool, invCheckPeriod uint) (*spnapp.App, spnapp.GenesisState) {

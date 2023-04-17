@@ -3,6 +3,9 @@ package network
 
 import (
 	"fmt"
+	"testing"
+	"time"
+
 	tmdb "github.com/cometbft/cometbft-db"
 	tmrand "github.com/cometbft/cometbft/libs/rand"
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -15,10 +18,9 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/spn/app"
 	"github.com/tendermint/spn/cmd"
-	"testing"
-	"time"
 )
 
 type (

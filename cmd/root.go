@@ -2,6 +2,10 @@ package cmd
 
 import (
 	"errors"
+	"io"
+	"os"
+	"path/filepath"
+
 	dbm "github.com/cometbft/cometbft-db"
 	tmcfg "github.com/cometbft/cometbft/config"
 	tmcli "github.com/cometbft/cometbft/libs/cli"
@@ -32,9 +36,6 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"io"
-	"os"
-	"path/filepath"
 )
 
 type (

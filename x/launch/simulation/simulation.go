@@ -1,17 +1,19 @@
 package simulation
 
 import (
+	"math/rand"
+
 	simappparams "cosmossdk.io/simapp/params"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	sdksimulation "github.com/cosmos/cosmos-sdk/x/simulation"
+
 	"github.com/tendermint/spn/testutil/sample"
 	"github.com/tendermint/spn/testutil/simulation"
 	"github.com/tendermint/spn/x/launch/keeper"
 	"github.com/tendermint/spn/x/launch/types"
-	"math/rand"
 )
 
 // SimulateMsgCreateChain simulates a MsgCreateChain message

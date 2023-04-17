@@ -4,11 +4,12 @@ package types
 import (
 	"encoding/base64"
 	"encoding/hex"
+	"os"
+	"time"
+
 	committypes "github.com/cosmos/ibc-go/v7/modules/core/23-commitment/types"
 	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	"gopkg.in/yaml.v2"
-	"os"
-	"time"
 )
 
 // consensusStateFile represents dumped consensus state from

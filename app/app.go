@@ -1,9 +1,15 @@
 package app
 
 import (
+	"encoding/json"
+	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
 	reflectionv1 "cosmossdk.io/api/cosmos/reflection/v1"
-	"encoding/json"
+
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/libs/log"
@@ -109,6 +115,7 @@ import (
 	"github.com/tendermint/fundraising/x/fundraising"
 	fundraisingkeeper "github.com/tendermint/fundraising/x/fundraising/keeper"
 	fundraisingtypes "github.com/tendermint/fundraising/x/fundraising/types"
+
 	"github.com/tendermint/spn/cmd"
 	"github.com/tendermint/spn/docs"
 	spntypes "github.com/tendermint/spn/pkg/types"
@@ -133,10 +140,6 @@ import (
 	"github.com/tendermint/spn/x/reward"
 	rewardkeeper "github.com/tendermint/spn/x/reward/keeper"
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
-	"io"
-	"net/http"
-	"os"
-	"path/filepath"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 )
 

@@ -1,9 +1,14 @@
 package simutil
 
 import (
-	sdkmath "cosmossdk.io/math"
 	"encoding/json"
 	"fmt"
+	"math"
+	"math/rand"
+	"time"
+
+	sdkmath "cosmossdk.io/math"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -12,10 +17,8 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	simappparams "github.com/cosmos/ibc-go/v7/testing/simapp/params"
+
 	"github.com/tendermint/spn/app"
-	"math"
-	"math/rand"
-	"time"
 )
 
 const (
