@@ -1,4 +1,4 @@
-package app
+package airdrop
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
